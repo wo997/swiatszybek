@@ -1,0 +1,116 @@
+.ql-toolbar.ql-snow {
+    position: sticky !important;
+    top: 0;
+}
+.quill-cloud {
+    position: absolute;
+    background: white;
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+    padding: 6px;
+    display: none;
+    user-select: none;
+    border-radius: 6px;
+}
+
+.quill-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex-grow: 1;
+    position: relative;
+    order: 10;
+}
+.quill-editor-container {
+    /*overflow-y: auto;*/
+    display: flex;
+    height: auto;
+    margin: auto;
+    width: 100%;
+}
+.quill-editor-container .ql-editor {
+    min-height: 100px;
+    width: 100%;
+    -webkit-box-shadow: inset 0px 0px 0px 1px rgba(0,0,0,1);
+    -moz-box-shadow: inset 0px 0px 0px 1px rgba(0,0,0,1);
+    box-shadow: inset 0px 0px 0px 1px rgba(0,0,0,1);
+    position: relative;
+}
+
+.quill-editor-container > * {
+    height: 100%;
+}
+.quill-editor-container.align-vertical-top > *, .quill-editor-container.align-vertical-center > *, .quill-editor-container.align-vertical-bottom > * {
+    height: auto;
+    min-height: 100px;
+}
+
+.quill-editor-container > * {
+    width: 100%;
+}
+.quill-editor-container.align-horizontal-left > *, .quill-editor-container.align-horizontal-center > *, .quill-editor-container.align-horizontal-right > * {
+    width: auto;
+    min-width: 100px;
+}
+/*.align-vertical-top {
+    flex-grow: 1;
+}
+.align-vertical-center {
+    flex-grow: 1;
+}
+.align-vertical-bottom {
+    flex-grow: 1;
+}*/
+
+#quill .ql-editor table td {
+    border: 1px solid #aaa;
+}
+
+.ql-toolbar.ql-snow {
+    position: relative;
+    z-index: 20;
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.07);
+    -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.07);
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.07);
+}
+
+.table_menu img {
+    background: white;
+}
+.table_menu {
+    display: none;
+    position: absolute;
+    transform: translateY(-100%);
+    z-index: 300;
+}
+
+.table_menu img {
+    width: 20px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.table_menu img:hover {
+    filter: brightness(2);
+}
+
+
+.ql-my-video, .ql-yt-video {
+    display: none !important;
+}
+
+.ql-btn-disabled {
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+.ql-active-element {
+    -webkit-box-shadow: 0px 0px 0px 1px rgba(0,50,255,1);
+    -moz-box-shadow: 0px 0px 0px 1px rgba(0,50,255,1);
+    box-shadow: 0px 0px 0px 2px rgba(0,50,255,1);
+    outline: none;
+}
+
+.quill-editor-container {
+    max-width: 100%;
+}

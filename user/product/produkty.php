@@ -1,0 +1,178 @@
+<?php //->[produkty]
+
+  $show_category = null;
+  $category_link = "";
+
+  $parts = explode("/", $url);
+  if (isset($parts[1]) && strlen($parts[1]) > 1) {
+    $category_link = trim($parts[1],"/");
+    $show_category = fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?",[$category_link]);
+  }
+  else {
+    header("Location: /produkty/wszystkie");
+    die;
+  }
+
+  function showCategory($category, $level = 0)
+  {
+    global $category_link;
+    $category_id = intval($category["category_id"]);
+    $subcategories = fetchArray("SELECT category_id, title, link, (
+      SELECT COUNT(1) FROM link_product_category link WHERE link.category_id = pc.category_id
+    ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND published ORDER BY kolejnosc");
+    $count = count($subcategories);
+
+    //if ($level > 0) {
+      $current = $category_link == $category["link"] ? "current" : "";
+      $displayCount = isset($category["product_count"]) ? "<span>(" . $category["product_count"] . ")</span>" : "";
+      $paddingLeft = $level == 0 ? 0 : 20*($level-1);
+      echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' style='padding-left:".($paddingLeft)."px' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
+      if ($count && $level > 0) {
+        echo "<div class='btn expand' onclick='expandWithArrow(this.parentNode.nextSibling,this)'><i class='fas fa-chevron-right'></i></div>";
+      }
+      $hidden = $level > 0 ? "expandY hidden" : "";
+      $styles = $level == 0 ? "style='padding-left:0'" : "";
+      echo "</div><div class='category-picker-column $hidden' $styles>";
+    //}
+
+    foreach ($subcategories as $subcategory) {
+      showCategory($subcategory, $level + 1);
+    }
+    //if ($level > 0) {
+      echo "</div></div>";
+    //}
+  }
+
+?>
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <?php include "includes.php"; ?>
+
+  <style>
+
+    .category-picker-row > *, .category-picker-row > * > * {
+      vertical-align: baseline;
+    }
+
+    .categories-wrapper .categories {
+      min-width: 240px;
+    }
+    .categories-wrapper, .products {
+      padding: 20px;
+    }
+    .category_name {
+      max-width: 200px;
+      display: inline-block;
+    }
+    .categories-wrapper {
+      width: auto;
+      border: 1px solid #eee;
+      -webkit-box-shadow: 0px 3px 10px -3px rgba(0,0,0,0.19);
+      -moz-box-shadow: 0px 3px 10px -3px rgba(0,0,0,0.19);
+      box-shadow: 0px 3px 10px -3px rgba(0,0,0,0.19);
+    }
+    .categories > div > .category-picker-row:before {
+      display: none;
+    }
+    .categories > div > .category-picker-row:after {
+      display: none;
+    }
+    .category_name.current {
+      color: #7c1;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .category-picker-row .expand {
+      color: #999;
+      margin-left: 1px;
+    }
+    .category-picker-row {
+      display: flex;
+    }
+    @media only screen and (max-width: 799px) {
+      .categories-wrapper {
+        width: 100%;
+      }
+      .category-picker-row {
+        justify-content: space-between;
+        border-top: 1px solid #ddd;
+        align-items: center;
+        padding: 2px;
+      }
+      .category-picker-row .expand {
+        width: 2.8em;
+        height: 2.4em;
+      }
+      .category_name {
+        padding: 5px;
+        flex-grow: 1;
+        max-width: unset;
+      }
+      .category-picker-row:before, .category-picker-row:after {
+        display: none;
+      }
+      .category-picker-column {
+        padding: 0;
+      }
+      .categories-wrapper, .products {
+        padding: 10px;
+      }
+      
+    }
+    @media only screen and (min-width: 800px) {
+      .category_name {
+        padding-left: 0 !important;
+      }
+      .category-picker-row .expand {
+        transform: translateY(1px);
+      }
+    }
+  </style>
+
+  <script>
+
+    window.addEventListener("DOMContentLoaded", () => {
+      var e = elem(".category_name.current");
+      if (e) {
+        expandCategoriesAbove(e);
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <?php include "global/header.php"; ?>
+
+  <div class="main-container desktopRow">
+    <div class="categories-wrapper">
+      <h3 style="margin: 40px 0 10px">Kategorie</h3>
+
+      <div class="categories">
+        <?=showCategory([
+          "category_id" => 0,
+          "title" => "Wszystkie produkty"
+        ])?>
+      </div>
+      <br>
+      Tutaj pojawią się niedługo filtry
+    </div>
+    <div class="products">
+      <h1 class="h1" style="margin: 40px 0"><?=$show_category["title"]?></h1>
+      <?=$show_category["description"]?>
+      <?php
+        $moduleParams = [];
+        $moduleParams["category_id"] = $show_category["category_id"];
+        include "modules/product-list/content.php";
+        echo $module_content;
+      ?>
+      <?=getCMSPageHTML($show_category["content"])?>
+    </div>
+  </div>
+
+  <?php include "global/footer.php"; ?>
+</body>
+
+</html>

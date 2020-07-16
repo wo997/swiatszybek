@@ -1,0 +1,28 @@
+#imagePicker .gallery {
+    flex-shrink: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+#imagePicker .btn {
+    margin-top:3px;
+}
+@media only screen and (max-width: 800px) {
+    #imagePicker .gallery > div {
+        width: 100%;
+    }
+}
+#imagePicker .gallery-item {
+    text-align:center;
+    width: 25%;
+    display: block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    position: relative;
+    padding: 6px;
+}
+
+#imagePicker .gallery-item:not(:hover) .btn {
+    visibility: hidden;
+
+}

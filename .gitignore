@@ -1,0 +1,16 @@
+.vscode/
+uploads/
+vendor/
+filmy/
+packages/
+
+dump/
+vendor.zip
+
+# don't tell anyone
+secrets.php
+
+# cached files
+scanned_routes.php
+sitemap.xml
+topmenu.html

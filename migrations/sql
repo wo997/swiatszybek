@@ -1,0 +1,30 @@
+
+
+
+update images set path = replace(path,"uploads/","");
+
+update cms set content = replace(content,"/uploads/","/uploads/df/");
+
+update products set description = replace(description,"/uploads/","/uploads/df/");
+update products set image = replace(image,"/uploads/","/uploads/df/");
+update products set image_desktop = replace(image_desktop,"/uploads/","/uploads/df/");
+
+update products set image = replace(image,"/uploads/df/","");
+update products set image_desktop = replace(image_desktop,"/uploads/df/","");
+
+update variant set zdjecie = replace(zdjecie,"/uploads/","/uploads/df/");
+update variant set zdjecia = replace(zdjecia,"/uploads/","/uploads/df/");
+
+update variant set zdjecie = replace(zdjecie,"/uploads/df/","");
+update variant set zdjecia = replace(zdjecia,"/uploads/df/","");
+
+update slides set tekst = replace(tekst,"/uploads/","/uploads/df/");
+update slides set img = replace(img,"/uploads/","/uploads/df/");
+
+update slides set tekst = replace(tekst,"/uploads/df","");
+update slides set img = replace(img,"/uploads/df","");
+
+ALTER TABLE `variant` CHANGE `variant_published` `published` TINYINT(1) NOT NULL;
+
+move files manually to default dir 
+uploads -> uploads/df

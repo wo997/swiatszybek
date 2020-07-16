@@ -1,0 +1,319 @@
+<?php //->[admin/menu-glowne] ?>
+
+<?php startSection("head"); ?>
+
+<title>Menu</title>
+
+<style>
+
+</style>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+        createTable({
+            name: "mytable",
+            url: "/admin/search_menu",
+            primary: "category_id",
+            db_table: "menu",
+            sortable: true,
+            lang: {
+              subject: "menu",
+              main_category: ">"
+            },
+            tree_view: {
+                form: "editCategory",
+                loadCategoryForm: loadCategoryForm
+            },
+            definition: [{
+                    title: "Menu",
+                    width: "15%",
+                    render: (r) => {
+                        return `${r.title}`;
+                    },
+                },
+                {
+                    title: "Podmenu",
+                    width: "20%",
+                    render: (r) => {
+                        return `${nonull(escapeHTML(r.subcategories),`<i class="fas fa-ban"></i> Brak`)}`;
+                    },
+                    escape: false
+                },
+                {
+                    title: "Publiczne?",
+                    width: "85px",
+                    render: (r) => {
+                        return renderIsPublished(r);
+                    },
+                    escape: false
+                },
+                {
+                    title: "Link",
+                    width: "15%",
+                    render: (r) => {
+                        var icon = "";
+                        if (r.url) icon = `<i class="fas fa-link"></i>`;
+                        if (r.cms_url) icon = `<i class="fas fa-file-alt"></i>`;
+                        if (r.product_id) icon = `<i class="fas fa-cube"></i>`;
+                        return `<a href="${r.actual_link.url}" target="_blank" class="link">${icon} ${r.actual_link.title}</a>`;
+                    },
+                    escape: false
+                },
+                {
+                    title: "",
+                    width: "185px",
+                    render: (r, i, t) => {
+                        return `
+                            <div class="btn secondary" onclick="${t.name}.showEditCategory(${i})">Edytuj <i class="fa fa-cog"></i></div> 
+                            <div class="btn primary" onclick="${t.name}.openCategory(${i})">Więcej <i class="fas fa-chevron-circle-right"></i></div>
+                        `;
+                    },
+                    escape: false
+                }
+            ],
+            controls: `
+                    <div class='float-icon'>
+                        <input type="text" placeholder="Filtruj..." data-param="search">
+                        <i class="fas fa-search"></i>
+                    </div>
+                `
+        });
+
+        createTable({
+            name: "strony",
+            url: "/admin/search_strony",
+            db_table: "cms",
+            primary: "cms_id",
+            lang: {
+                subject: "stron",
+            },
+            rowCount: 10,
+            primary: "cms_id",
+            selectable: {
+                data: null,
+                output: "cms_id",
+                singleselect: true,
+                validate: true
+            },
+            definition: [{
+                    title: "URL (link)",
+                    width: "10%",
+                    render: (r) => {
+                        return `${r.link ? r.link : "STRONA GŁÓWNA"}`
+                    },
+                    escape: false
+                },
+                {
+                    title: "Tytuł",
+                    width: "10%",
+                    render: (r) => {
+                        return r.title;
+                    },
+                    escape: false
+                },
+                {
+                    title: "Opis",
+                    width: "10%",
+                    render: (r) => {
+                        return r.meta_description;
+                    },
+                    escape: false
+                },
+                {
+                    title: "Publiczna?",
+                    width: "3%",
+                    render: (r) => {
+                        return renderIsPublished(r);
+                    },
+                    escape: false
+                },
+                {
+                    title: "",
+                    width: "10%",
+                    render: (r) => {
+                        return `<a class="btn primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i>`;
+                    },
+                    escape: false
+                }
+            ],
+            controlsRight: `
+                <div class='float-icon'>
+                    <input type="text" placeholder="Szukaj..." data-param="search">
+                    <i class="fas fa-search"></i>
+                </div>
+            `
+        });
+
+        createTable({
+            name: "produkty",
+            url: "/admin/search_products",
+            lang: {
+                subject: "produktów",
+            },
+            rowCount: 10,
+            primary: "product_id",
+            db_table: "products",
+            selectable: {
+                data: null,
+                output: "product_id",
+                singleselect: true,
+                validate: true
+            },
+            definition: [{
+                    title: "Nazwa produktu",
+                    width: "50%",
+                    render: (r) => {
+                        return `<a class="btn secondary" target="_blank" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
+                    },
+                    escape: false
+                },
+                {
+                    title: "Publiczny?",
+                    width: "10%",
+                    render: (r) => {
+                        return renderIsPublished(r);
+                    },
+                    escape: false
+                },
+                {
+                    title: "W magazynie",
+                    width: "10%",
+                    render: (r) => {
+                        return `${nonull(r.amount,0)} szt.`;
+                    }
+                },
+            ],
+            controlsRight: `
+                <div class='float-icon'>
+                    <input type="text" placeholder="Szukaj..." data-param="search">
+                    <i class="fas fa-search"></i>
+                </div>
+            `
+        });
+    });
+
+    function loadCategoryForm(form,data,isNew) {
+        if (isNew) {
+            data.title = "";
+            data.published = "0";
+        }
+
+        var formElement = elem(`#${form}`);
+
+        loadFormData(data, formElement);
+
+        strony.setSelectedValues(data.cms_id);
+        produkty.setSelectedValues(data.product_id);
+
+        var canDelete = !data.subcategories;
+
+        var tab_id = 1;
+        if (data.cms_id) tab_id = 2;
+        if (data.product_id) tab_id = 3;
+        showTab(elem(".tab-menu-link"),tab_id);
+
+        formElement.querySelector(".caseCanDelete").classList.toggle("hidden", isNew);
+        toggleDisabled(formElement.querySelector(`.btn.red`), !canDelete);
+        formElement.querySelector(".btn.red + i").classList.toggle("hidden", canDelete);
+
+        clearValidateRequired();
+    }
+
+    function saveCategoryForm(remove = false) {
+        var f = elem("#editCategory");
+        if (!remove && !validateForm({form:f})) return;
+
+        document.querySelectorAll(".tab-menu-link .tab-content.hidden input").forEach(e=>{
+            e.value = "";
+        })
+
+        var params = getFormData(f);
+        if (remove) {
+            params["remove"] = true;
+        }
+        xhr({
+            url: "/admin/save_menu",
+            params: params,
+            success: (res) => {
+                mytable.postSaveCategory(params,remove);
+                loadCategoryPicker("menu",{skip:0});
+            }
+        });
+        hideModal(mytable.tree_view.form);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      loadCategoryPicker("menu",{skip:0});
+    });
+</script>
+
+<?php startSection("content"); ?>
+
+<div class="mytable"></div>
+
+<div id="editCategory" data-modal data-expand>
+    <div class="stretch-vertical">
+        <div class="custom-toolbar">
+            <span class="title">Edycja menu</span>
+            <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
+        </div>
+        <div style="padding:10px">
+            <div class="desktopRow spaceColumns">
+                <div>
+                    <div class="field-title">Nazwa menu</div>
+                    <input type="text" name="title" data-validate autocomplete="off" class="field">
+                </div>
+                <div>
+                    <div class="field-title">Widoczność</div>
+                    <select name="published" class="field">
+                        <option value="1">Publiczna</option>
+                        <option value="0">Ukryta</option>
+                    <select>
+                </div>
+            </div>
+            
+            <div class="field-title">Menu nadrzędne</div>
+            <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="menu" data-single>
+
+            <div class="field-title">Powiązanie</div>
+            <div class="tab-menu tab-menu-link">
+                <div class="tab-header">
+                    <div class="tab-option" data-tab_id="1">
+                        Link URL
+                    </div>
+                    <div class="tab-option" data-tab_id="2">
+                        Strona CMS
+                    </div>
+                    <div class="tab-option" data-tab_id="3">
+                        Produkt
+                    </div>
+                </div>
+                <div class="tab-content hidden" data-tab_id="1">
+                    <div class="field-title">Wpisz link do strony - URL</div>
+                    <input type="text" name="url" autocomplete="off" class="field" data-validate>
+                </div>
+                <div class="tab-content hidden" data-tab_id="2">
+                    <div class="field-title">Wskaż stronę CMS</div>
+                    <div class="strony"></div>
+                </div>
+                <div class="tab-content hidden" data-tab_id="3">
+                    <div class="field-title">Wskaż produkt</div>
+                    <div class="produkty"></div>
+                </div>
+            </div>
+
+            <br>
+            <div class="caseCanDelete">
+                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć to menu?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
+                <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podmenu'></i>
+            </div>
+
+            <input type="hidden" name="category_id">
+
+        </div>
+    </div>
+</div>
+
+<?php include "admin/default_page.php"; ?>
