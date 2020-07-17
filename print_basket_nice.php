@@ -6,13 +6,13 @@ $nr = 0;
 $res = "";
 foreach ($basket_ids as $variant_id)
 {
-    $v = $variants[array_search($variant_id,$variants_id_list)];
+    $v = $app["user"]["basket"]["variants"][array_search($variant_id,$app["user"]["basket"]["variant_id_list"])];
     $product_id = $v["product_id"];
     $title = $v["title"];
     $name = $v["name"];
     $zdjecie = $v["zdjecie"];
-    $price = $v["price_real"];
-    $final_price = $v["final_price"];
+    $price = $v["real_price"];
+    $total_price = $v["total_price"];
     $quantity = $v["quantity"];
     $stock = $v["stock"];
     $zdjecie = $v["zdjecie"];
@@ -45,7 +45,7 @@ foreach ($basket_ids as $variant_id)
                 <td><a class='linkable' target='_blank' href='$product_link'>$title</a></td>
                 <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> $price zł</td>
                 <td class='oneline' data-stock='$stock'>$remove $quantity szt. $add</td>
-                <td class='pln oneline'><label>Suma:</label> $final_price zł</td>
+                <td class='pln oneline'><label>Suma:</label> $total_price zł</td>
             </tr>";
     }
     if ($nr > 0) {

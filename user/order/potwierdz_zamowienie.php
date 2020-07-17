@@ -60,18 +60,18 @@ $basket_all_data = [];
 
 foreach ($basket_ids as $variant_id)
 {
-  $v = $variants[array_search($variant_id,$variants_id_list)];
+  $v = $app["user"]["basket"]["variants"][array_search($variant_id,$app["user"]["basket"]["variant_id_list"])];
   $product_id = $v["product_id"];
   $title = $v["title"];
   $name = $v["name"];
   $price = $priceText = preg_replace("/\.00/","",$v["price"]);
-  $final_price = $v["price_real"];
+  $total_price = $v["total_price"];
   $quantity = $v["quantity"];
 
   if (!empty($name))
     $title .= " ".$name;
 
-  $basket_all_data[] = ['v'=>$variant_id,'q'=>$quantity,'p'=>$price,'f'=>$final_price,'t'=>$title,'i'=>$product_id];
+  $basket_all_data[] = ['v'=>$variant_id,'q'=>$quantity,'p'=>$price,'f'=>$total_price,'t'=>$title,'i'=>$product_id];
 
   query("UPDATE products SET cache_sales = cache_sales + ? WHERE product_id = ?",[$quantity, $product_id]);
   
@@ -79,7 +79,7 @@ foreach ($basket_ids as $variant_id)
 
   // display in email
 
-  $res .= "<tr><td style='padding:4px'>$quantity szt.</td><td style='padding:4px'>$title</td><td style='padding:4px'>$final_price zł</td></tr>";
+  $res .= "<tr><td style='padding:4px'>$quantity szt.</td><td style='padding:4px'>$title</td><td style='padding:4px'>$total_price zł</td></tr>";
 }
 $res .= "</table>";
 
@@ -104,9 +104,9 @@ if ($_POST["dostawa"] == 'p') {
 }
 
 if ($kod_rabatowy_type == "static") {
-  $koszt = $totalBasketCost - $kod_rabatowy_wartosc;
+  $koszt = $app["user"]["basket"]["total_basket_cost"] - $kod_rabatowy_wartosc;
 } else {
-  $koszt = round($totalBasketCost*(1-0.01*$kod_rabatowy_wartosc));
+  $koszt = round($app["user"]["basket"]["total_basket_cost"]*(1-0.01*$kod_rabatowy_wartosc));
 }
 $koszt += $koszt_dostawy;
 
@@ -145,6 +145,9 @@ query("INSERT INTO zamowienia (
 );
 
 $zamowienie_id = getLastInsertedId();
+
+//basket_item_id	zamowienie_id	variant_id	product_id	base_price	quantity	price	title
+
 
 $link = $zamowienie_id . "-" . $link_hash;
 
@@ -219,7 +222,7 @@ $message .= "<tr><td style='vertical-align: top;'>Adres zamawiającego: </td><td
 $message .= "<tr><td>Data utworzenia: </td><td>$data</td></tr>";
 $message .= "<tr><td style='vertical-align: top;'>Rodzaj dostawy: </td><td>$dostawaString ($koszt_dostawy zł)</td></tr>";
 $message .= "<tr><td style='vertical-align: top;'>Adres dostawy: </td><td>$adresWho<div style='height: 7px;'></div>$dostawaAdresString</td></tr>";
-$message .= "<tr><td>Koszt produktów: </td><td>$totalBasketCost zł</td></tr>";
+$message .= "<tr><td>Koszt produktów: </td><td>".$app["user"]["basket"]["total_basket_cost"]." zł</td></tr>";
 $message .= "<tr><td><b>Całkowity koszt zamówienia: </b></td><td><b>$koszt zł</b></td></tr>";
 $message .= "</table>";
 

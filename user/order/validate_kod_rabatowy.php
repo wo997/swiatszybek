@@ -44,7 +44,7 @@ if ($kod_data)
     $error = "";
     foreach (json_decode($kod_data["product_list_metadata"], true) as $required_product_id => $required_product) {
         $basket_variant_quantity = 0;
-        foreach($variants as $variant) {
+        foreach($app["user"]["basket"]["variants"] as $variant) {
             if ($required_product_id == $variant['product_id']) {
                 $basket_variant_quantity += $variant["quantity"];
             }

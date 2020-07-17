@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     require "print_basket_nice.php";
     echo json_encode([
       "html" => $res,
-      "totalBasketCost" => $totalBasketCost
+      "totalBasketCost" => $app["user"]["basket"]["total_basket_cost"]
     ]);
     die;
   }

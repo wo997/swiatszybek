@@ -101,7 +101,7 @@ if ($empty && !isset($_GET['produkt']))
   die;
 }
 
-if (!$totalBasketCost) $totalBasketCost = 0;
+if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_basket_cost"] = 0;
 
 ?>
 
@@ -874,7 +874,7 @@ if (!$totalBasketCost) $totalBasketCost = 0;
       var RABAT = <?= isset($_SESSION["rabat"]) ? $_SESSION["rabat"] : 0 ?>;
       var RABAT_TYPE = "<?= isset($_SESSION["rabat_type"]) ? $_SESSION["rabat_type"] : "static" ?>";
       
-      var BASKET_COST = <?= str_replace(",",".",$totalBasketCost) ?>;
+      var BASKET_COST = <?= $app["user"]["basket"]["total_basket_cost"] ?>;
       function hasKodRabatowy(rabat) {
         if (rabat) {
           RABAT = rabat.kwota;
@@ -984,7 +984,7 @@ if (!$totalBasketCost) $totalBasketCost = 0;
           <div style="margin-top: 30px;text-align:center">
             <div style="margin-top: 13px;text-align: right;padding: 5px;" class="hideifempty mobileTextCenter">
               <span style="display:inline-block;font-size: 18px;padding: 0 3px;">Wartość koszyka:</span>
-              <span style="display:inline-block;font-size: 20px;" class="pln"><span class="total"><?= $totalBasketCost ?></span> zł</span>
+              <span style="display:inline-block;font-size: 20px;" class="pln"><span class="total"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</span>
 
               <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Kurier: <span class="pln"><?= config('kurier_cena',0) ?> zł</span>, Paczkomat: <span class="pln"><?= config('paczkomat_cena',0) ?> zł</span>, Odbiór osobisty: <span class="pln">0 zł</span></p>
 
@@ -1305,7 +1305,7 @@ if (!$totalBasketCost) $totalBasketCost = 0;
                 <button type="button" onclick="aktywujKodRabatowy('remove')" style="cursor:pointer;font-weight: bold;margin-right: 5px;font-size: 11px;line-height: 0;width: 18px;height: 18px;border: none;background: #eee;color: #777;vertical-align: text-top;padding: 0;"><i class="fa fa-times"></i></button>
                 KOD RABATOWY <span class="pln" id="kod_rabatowy_label"></span></span>
                 <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia:</span>
-                <b style="display:inline-block;font-size: 20px;"><span id="total-cost" style="display:inline-block;" class="pln"><?= $totalBasketCost ?></span> zł</b>
+                <b style="display:inline-block;font-size: 20px;"><span id="total-cost" style="display:inline-block;" class="pln"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</b>
               </div>
             </div>
 

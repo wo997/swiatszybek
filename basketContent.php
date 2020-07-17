@@ -18,7 +18,7 @@ else
   {
     if ($basketContent == "") $basketContent = "<div class='basketSplit'><div class='basketItemsWrapper'><div class='scrollableContent'>";
 
-    $v = $variants[array_search($variant_id,$variants_id_list)];
+    $v = $app["user"]["basket"]["variants"][array_search($variant_id,$app["user"]["basket"]["variant_id_list"])];
     $basket_name = $v["name"];
     $basket_quantity = $v["quantity"];
 
@@ -30,7 +30,7 @@ else
     if (!empty($basket_name))
       $title_html .= "<br><span style='font-size:15px'>".$v["name"]."</span>";
 
-    $basketContent .= "<div><a href='".getProductLink($v["product_id"],$v["link"])."'><div class='item-image' style='background-image:url(\"/uploads/df/".$v["zdjecie"]."\")'></div><div class='item-desc'><span><h3>$title_html<b>".$basket_quantity."</b></h3><span class='pln'>".$v["final_price"]." zł</span></span></div></a></div>";
+    $basketContent .= "<div><a href='".getProductLink($v["product_id"],$v["link"])."'><div class='item-image' style='background-image:url(\"/uploads/df/".$v["zdjecie"]."\")'></div><div class='item-desc'><span><h3>$title_html<b>".$basket_quantity."</b></h3><span class='pln'>".$v["total_price"]." zł</span></span></div></a></div>";
   }
 
   $basketContent .=

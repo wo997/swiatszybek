@@ -5,7 +5,7 @@ try
   $fail = false;
   foreach ($basket_ids as $variant_id)
   {
-    $v = $variants[array_search($variant_id,$variants_id_list)];
+    $v = $app["user"]["basket"]["variants"][array_search($variant_id,$app["user"]["basket"]["variant_id_list"])];
 
     if ($v["quantity"] > $v["stock"])
     {
