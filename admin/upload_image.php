@@ -2,20 +2,20 @@
 
 $uploads_path = 'uploads';
 
-$image_wanted_areas = [
-    "lg" => 1600 * 900,
-    "md" => 900 * 900,
-    "sm" => 400 * 400,
+$image_wanted_dimensions = [ // pick higher width or height
+    "lg" => 1600,
+    "md" => 800,
+    "sm" => 350,
 ];
 
 $image_sizes_all = ["df"];
-foreach ($image_wanted_areas as $size_name => $area) {
+foreach ($image_wanted_dimensions as $size_name => $area) {
     $image_sizes_all[] = $size_name;
 }
 
 function processImage($file_tmp, $tag, $file_name, $counter = null)
 {
-    global $image_wanted_areas, $uploads_path;
+    global $image_wanted_dimensions, $uploads_path;
 
     $info = getimagesize($file_tmp);
 
@@ -40,18 +40,19 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
         return false;
     }
 
-    $image_area = $width * $height;
+    $image_dimension = max($width, $height);
 
     $sizes = [
         "df" => [$width, $height]
     ];
 
-    foreach ($image_wanted_areas as $image_wanted_name => $image_wanted_area) {
+    foreach ($image_wanted_dimensions as $image_wanted_name => $image_wanted_dimension) {
         //if ($image_area > $image_wanted_area * 0.8) { // include all ;)
-        $scale = sqrt($image_wanted_area / $image_area);
+            
+        $scale = $image_wanted_dimension / $image_dimension;
         $sizes[$image_wanted_name] = [
-            $width * $scale,
-            $height * $scale,
+            round($width * $scale),
+            round($height * $scale),
         ];
         //}
     }
@@ -118,14 +119,18 @@ if ($app["user"]["is_admin"] && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 if ($app["user"]["is_admin"] && isset($_POST['base64'])) {
-    $image_parts = explode(";base64,", $_POST['base64']);
-    $image_type_aux = explode("image/", $image_parts[0]);
-    $file_type = $image_type_aux[1];
-    $image_base64 = base64_decode($image_parts[1]);
-    $tmp = "$uploads_path/tmp.$file_type";
-    file_put_contents($tmp, $image_base64);
+    $counter = 0;
+    foreach (json_decode($_POST['base64']) as $src) {
+        $counter++;
+        $image_parts = explode(";base64,", $src);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $file_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $tmp = "$uploads_path/tmp.$file_type";
+        file_put_contents($tmp, $image_base64);
 
-    processImage($tmp, nonull($_POST, "tag", date("Y-m-d_H:i:s")), "");
+        processImage($tmp, nonull($_POST, "tag", date("Y-m-d_H:i:s")), "", $counter);
+    }
 }
 
 if (isset($_POST['search'])) { // return list

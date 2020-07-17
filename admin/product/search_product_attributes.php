@@ -11,7 +11,7 @@ if (isset($_POST['attribute_id']))
     $where .= getListCondition("attribute_id",$_POST['attribute_id']);
 }
 
-$where .= " AND parent_value_id = 0";
+$where .= " AND (parent_value_id = 0 OR parent_value_id IS NULL)";
 
 echo getTableData([
     "select" => "attribute_id, name, data_type,

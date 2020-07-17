@@ -16,6 +16,8 @@ $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id"
 
 $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
 
+$attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM link_product_attribute_value WHERE product_id = $product_id");
+
 ?>
 
 
@@ -23,11 +25,57 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
 <style>
 
+
+  select[data-parent_value_id]:not(.visible) {
+      display: none;
+  }
+
+  .combo-select-wrapper {
+    padding: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .combo-select-wrapper + .combo-select-wrapper {
+    border-top: none;
+  }
+
 </style>
 <script>
   useTool("cms");
 
+  function comboSelectValuesChanged(combo) {
+    combo.querySelectorAll("select").forEach(select => {
+      for (option of select.options) {
+        var childSelect = combo.querySelector(`select[data-parent_value_id="${option.value}"]`);
+        if (!childSelect) continue;
+        if (option.value == select.value) {
+          childSelect.classList.add("visible");
+        }
+        else {
+          childSelect.classList.remove("visible");
+          childSelect.value = "";
+        }
+      }
+    });
+  }
+
+  function registerComboSelects() {
+    document.querySelectorAll(".combo-select-wrapper").forEach(combo => {
+
+      combo.querySelectorAll("select:not(.registered)").forEach(select => {
+        select.classList.add("registered");
+
+        select.addEventListener("change", () => {
+          var combo = findParentByClassName(select, "combo-select-wrapper");
+          comboSelectValuesChanged(combo);
+        });
+      });
+    });
+  }
+
   window.addEventListener("DOMContentLoaded", function() {
+
+    registerComboSelects();
 
     showSpecyfikacja();
 
@@ -168,6 +216,17 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     });
 
     loadFormData(<?= json_encode($product_data) ?>, elem("#productForm"));
+
+    var attribute_values = [<?=$attribute_values?>];
+    document.querySelectorAll(".combo-select-wrapper").forEach(combo => {
+      combo.querySelectorAll("select").forEach(select => {
+        var option = [...select.options].find(o => {return attribute_values.indexOf(parseInt(o.value)) !== -1});
+        if (option) {
+          select.value = option.value;
+        }
+      });
+      comboSelectValuesChanged(combo);
+    });
   });
 
   window.addEventListener("load", function() {
@@ -363,9 +422,22 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   }
 
   function saveProductForm() {
+
+    var params = getFormData(elem("#productForm"));
+
+    var attribute_values = [];
+
+    document.querySelectorAll("[data-attribute-value]").forEach(select => {
+      if (select.value) {
+        attribute_values.push(parseInt(select.value));
+      }
+    })
+
+    params.attribute_values = JSON.stringify(attribute_values);
+
     xhr({
       url: "/admin/save_product",
-      params: getFormData(elem("#productForm")),
+      params: params,
       success: () => {
         window.location.reload();
       }
@@ -441,8 +513,43 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
 
+    <div class="field-title">Atrybuty</div>
+    <?php
+      include_once "attributes_service.php";
+
+      $attributes = fetchArray("SELECT name, attribute_id FROM product_attributes");
+
+      function printSelectValuesOfAttribute($values, $value_id = null) {
+        if (!isset($values[0])) return "";
+
+        $attr = $value_id ? "data-parent_value_id='".$value_id."'" : "";
+        $html = "<select $attr data-attribute-value>";
+        $html .= "<option value=''>Nie dotyczy</option>";
+        foreach ($values as $value_data) {
+          $html .= "<option value='".$value_data["values"]["value_id"]."'>".$value_data["values"]["value"]."</option>";
+        }
+        $html .= "</select> ";
+        foreach ($values as $value_data) {
+          $html .= printSelectValuesOfAttribute($value_data["children"], $value_data["values"]["value_id"]);
+        }
+
+        return $html;
+      }
+
+      foreach ($attributes as $attribute) {
+        echo "<div class='combo-select-wrapper'>".$attribute["name"]." ";
+
+        $values = getAttributeValues($attribute["attribute_id"]);
+
+        echo printSelectValuesOfAttribute($values);
+
+        echo"</div>";
+      }
+
+    ?>
+
     <div style="margin-top: 10px">
-      <div class="field-title">Opis krótki (z prawej strony)</div>
+      <div class="field-title">Opis krótki <span style="color:red">(wywalamy)</span></div>
       <div class="quill-wrapper2">
         <div id="product-description" data-html-name="descriptionShort" data-point-child=".ql-editor"></div>
       </div>
@@ -451,7 +558,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     <div style="margin-top: 10px">
       <div style="display:flex" class="mobileRow">
         <div>
-          <span>Specyfikacja (pisz "Atrybut: Wartość" -> ENTER)</span>
+          <span style="color:red">Specyfikacja (chyba to wywalamy, zastąpimy atrybutami)</span>
           <textarea id="specyfikacja" name="specyfikacja" style="width: 100%;height:200px" oninput="showSpecyfikacja()"></textarea>
           <textarea id="specyfikacja_output" name="specyfikacja_output" style="display:none"></textarea>
         </div>

@@ -415,7 +415,7 @@ window.addEventListener("mousemove", function (event) {
 
     var position = e.getAttribute("data-position");
     if (position == "center") {
-      left -= tooltipRect.width / 2 + offsetX;
+      left -= (pos.width / 2 + tooltipRect.width / 2) + offsetX;
     }
 
     var maxLeft = window.innerWidth - 30 - tooltipRect.width;

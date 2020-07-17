@@ -36,13 +36,14 @@ window.imagePicker = {
                 try {
                     images = JSON.parse(res);
                     var out = "";
-                    var replaceImg = elem(".replaceThatImagePlease");
-                    var counter = -1;
+                    var counter = 0;
                     for (image of images) {
                         counter++;
-                        if (counter == 0 && replaceImg) {
+
+                        var replaceImg = document.querySelector(`[upload_image="${counter}"]`);
+                        if (replaceImg) {
                             replaceImg.src = `/uploads/df/${image.path}`;
-                            replaceImg.classList.remove("replaceThatImagePlease");
+                            replaceImg.removeAttribute("upload_image");
                         }
                         out += `
                             <div class='gallery-item'>

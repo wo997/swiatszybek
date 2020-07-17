@@ -440,6 +440,30 @@ window.quillEditor = {
         }
     },
 
+    considerUploadingImages() {
+        if (!imagePicker) return;
+
+        if (!document.querySelector("#quillEditor [upload_image]")) {
+            var counter = 0;
+            var srcs = [];
+            var e = [...document.querySelectorAll("#quillEditor .ql-editor img")].forEach(e => {
+                if (e.src.indexOf("data:image/") == -1) return;
+                counter++;
+                e.setAttribute("upload_image", counter);
+                srcs.push(e.src);
+            });
+            
+            if (counter > 0) {
+                var formData = new FormData();
+                formData.append('tag', imagePicker.defaultTag);
+                formData.append('base64', JSON.stringify(srcs));
+                formData.append('search', "");
+    
+                imagePicker.imageAction(formData);
+            }
+        }
+        
+    },
     loaded: () => {
         var Size = Quill.import('attributors/style/size');
         Size.whitelist = ['14px', '18px', '24px', '30px', '38px', '48px', '60px', '80px'];
@@ -744,20 +768,9 @@ window.quillEditor = {
                     }
                 }
             }
-            document.querySelectorAll("#quillEditor .ql-editor img").forEach((e) => {
-                if (e.src.indexOf("data:image/") === 0) {
-                    var formData = new FormData();
-                    formData.append('tag', imagePicker.defaultTag);
-                    formData.append('base64', e.src);
-                    formData.append('search', "");
-                    e.classList.add("replaceThatImagePlease");
 
-                    if (imagePicker) {
-                        imagePicker.imageAction(formData);
-                    }
-                }
-            });
-            
+            quillEditor.considerUploadingImages();
+
             document.querySelectorAll("#quillEditor .ql-editor a").forEach(e=>{
                 if (e.innerHTML.length > 2) {
                     /*if (e.innerHTML.charAt(0) != " ") {

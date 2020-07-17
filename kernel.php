@@ -365,7 +365,14 @@ function getTableData($data = null)
 
   $order = isset($data["order"]) ? $data["order"] : "";
 
-  $totalRows = fetchValue("SELECT COUNT(1) FROM $from WHERE $where $group");
+  
+  $countQuery = "SELECT COUNT(1) FROM $from WHERE $where $group";
+  
+  if ($group) {
+    $countQuery = "SELECT COUNT(*) FROM($countQuery) t";
+  }
+
+  $totalRows = fetchValue($countQuery);
   $pageCount = ceil($totalRows / $rowCount);
 
   $results = fetchArray("SELECT $select FROM $from WHERE $where $group ORDER BY $order LIMIT $bottomIndex,$rowCount");
@@ -679,10 +686,13 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
 
 $attribute_data_types = [
   "text" => [
-    "description" => "Tekst",
+    "description" => "Tekst (lista)",
   ],
-  "integer" => [
-    "description" => "Liczba",
+  "numberlist" => [
+    "description" => "Liczba (lista)",
+  ],
+  "numberany" => [
+    "description" => "Liczba (dowolna)",
   ],
   /*"integer" => [
     "description" => "Liczba całkowita",

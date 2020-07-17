@@ -103,16 +103,23 @@
             },
             definition: [{
                     title: "Nazwa atrybutu",
-                    width: "50%",
+                    width: "25%",
                     render: (r) => {
                         return `${r.name}`;
                     },
                 },
                 {
                     title: "Typ danych",
-                    width: "50%",
+                    width: "20%",
                     render: (r) => {
                         return `${attribute_data_types[r.data_type].description}`;
+                    },
+                },
+                {
+                    title: "Wartości",
+                    width: "60%",
+                    render: (r) => {
+                        return `${nonull(r.attr_values).replace(/,/g,", ")}`;
                     },
                 },
             ],
