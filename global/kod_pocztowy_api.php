@@ -1,4 +1,4 @@
-<?php
+<?php //->[kod_pocztowy_api]
 if (!isset($_POST['kod'])) die;
 
 echo file_get_contents("http://kodpocztowy.intami.pl/api/".$_POST['kod']);

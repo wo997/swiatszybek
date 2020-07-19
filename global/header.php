@@ -69,7 +69,7 @@
               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 30" style="width: 40px;vertical-align: middle;position: relative;top: -2px;" xml:space="preserve">
                 <path d='M12,4C9.5,4,7.5,6,7.5,8.5v1H4.3C4,9.5,3.8,9.7,3.8,10v14.5C3.8,24.8,4,25,4.3,25h15.4c0.3,0,0.5-0.2,0.5-0.5V10 c0-0.3-0.2-0.5-0.5-0.5h-3.2v-1C16.5,6,14.5,4,12,4z M8.5,8.5C8.5,6.6,10.1,5,12,5c1.9,0,3.5,1.6,3.5,3.5v1H8.59 C8.5,9.5,8.5,8.5,8.5,8.5z M19.2,10.5V24H4.8V10.5h2.7v1.8c0,0.3,0.2,0.5,0.5,0.5c0.3,0,0.5-0.2,0.5-0.5v-1.8h7.1v1.8 c0,0.3,0.2,0.5,0.5,0.5s0.5-0.2,0.5-0.5v-1.8H19.2z'></path>
               </svg>
-              <div id="amount" style="font-weight: bold;position: absolute;display: inline-block;left: -5px;font-size: 12px;width: 50px;text-align: center;top: 19px;"><?= $amount ?></div>
+              <div id="amount" style="font-weight: bold;position: absolute;display: inline-block;left: -5px;font-size: 12px;width: 50px;text-align: center;top: 19px;"><?= $app["user"]["basket"]["item_count"] ?></div>
             </div>
           </div>
         </a>

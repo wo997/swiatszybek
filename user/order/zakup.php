@@ -80,13 +80,13 @@ else
 
 // validate stock
 
-require "get_basket_data.php";
+require_once "get_basket_data.php";
 
 require "helpers/validate_stock.php";
 
+
 $res = "";
-$empty = true;
-if (empty($basket))
+if (empty($app["user"]["basket"]["variants"]))
 {
   $res = "<h3 style='text-align:center'>Twój koszyk jest pusty!</h3>";
 }
@@ -95,7 +95,7 @@ else
   require "print_basket_nice.php";
 }
 
-if ($empty && !isset($_GET['produkt']))
+if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt']))
 {
   header("Location: /");
   die;
@@ -441,12 +441,6 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         pointer-events: none;
       }
 
-      @keyframes fadeOut {
-        0% {opacity: 1}
-        25% {opacity: 0}
-        100% {opacity: 1}
-      }
-
       /* progress-bar end */
     </style>
     <script>
@@ -502,51 +496,46 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
       function addItem(diff,variant_id)
       {
-        if (diff == 1)
-          url = "/basket/add/"+variant_id+"/"+1;
-        else
-          url = "/basket/remove/"+variant_id+"/"+1;
-
-        xhr({
-          url: url,
-          params: {
-            html: true
-          },
-          success: (res) => {
-            res  = JSON.parse(res);
-            if (!res.html)
-            {
-              res.html = `
-                <div style="text-align:center">
-                <h3>Koszyk jest pusty!</h3>
-                <a class="btn primary big" href="/" style='width: 220px'>
-                  Rozpocznij zakupy
-                  <i class="fa fa-chevron-right"></i>
-                </a></div>`;
-              
-              document.querySelectorAll("button, .hideifempty").forEach((e)=>{
-                e.style.display = "none";
-              });
-            }
-
-            BASKET_COST = res.totalBasketCost;
-            document.querySelectorAll(".zamowienie").forEach((e)=>{
-              removeContent(e);
-              e.insertAdjacentHTML("afterbegin", res.html);
-            });
-
-            document.querySelectorAll(`[data-variant_id="${variant_id}"]`).forEach(v => {
-              v.style.animation = "fadeOut 0.5s";
-            });
-
-            document.querySelectorAll(".total").forEach((e)=>{
-              e.innerHTML = BASKET_COST;
-            });
-            updateTotalCost();
+        addItemtoBasket(variant_id, diff, (json) => {
+          if (!json.basket_table_html) {
+            json.basket_table_html = `
+              <div style="text-align:center">
+              <h3>Koszyk jest pusty!</h3>
+              <a class="btn primary big" href="/" style='width: 220px'>
+                Rozpocznij zakupy
+                <i class="fa fa-chevron-right"></i>
+              </a></div>`;
+            
+            emptyBasket();
           }
+
+          document.querySelectorAll(".zamowienie").forEach((e)=>{
+            setContent(e, json.basket_table_html);
+          });
+
+          BASKET_COST = json.total_basket_cost;
+          document.querySelectorAll(".total").forEach((e)=>{
+            e.innerHTML = BASKET_COST;
+          });
+          updateTotalCost();
+
+          document.querySelectorAll(`[data-variant_id="${variant_id}"]`).forEach(v => {
+            v.style.animation = "fadeOut 0.5s";
+          });
         });
       }
 
+      function emptyBasket() {
+        document.querySelectorAll("button, .hideifempty").forEach(e => {
+          e.style.opacity = "0.3";
+          e.style.pointerEvents = "none";
+        });
+      }
+      <?php if (empty($app["user"]["basket"]["variants"])) : ?>
+      window.addEventListener("DOMContentLoaded",function(){
+        emptyBasket();
+      });
+      <?php endif ?>
 
 
       function isFormValid()
@@ -924,7 +913,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       <input type="password" name="password">
     </form>
 
-    <div class="progress-bar-wrapper">
+    <div class="progress-bar-wrapper hideifempty">
       <div class="progress-bar">
         <div class="progress-item current" data-id="1">
           <span class="progress-count"><?= ++$progressBarCounter?></span>

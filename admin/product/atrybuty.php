@@ -6,6 +6,11 @@
 
 <style>
 
+    .inactive {
+        pointer-events: none;
+        opacity: 0.3;
+    }
+
 
     .simple-list > .list {
         overflow-y: auto;
@@ -357,6 +362,11 @@
         hideModalTopMost();
     }
 
+    function toggleValues() {
+        var data_type = elem(`[name="data_type"]`).value;
+        
+        elem(".attribute_values").classList.toggle("inactive", !!attribute_data_types[data_type].field);
+    }
 </script>
 
 <?php startSection("content"); ?>
@@ -375,13 +385,15 @@
                 <div>
                     <div class="field-title">Nazwa atrybutu</div>
                     <input type="text" name="name" data-validate autocomplete="off" class="field">
+
+                    <div class="field-title">Typ danych</div>
+                    <select name="data_type" class="form-field" onchange="toggleValues()"><select>
                     
                     <div class="attribute_values"></div>
                     <input type="hidden" name="attribute_values">
                 </div>
                 <div>
-                    <div class="field-title">Typ danych</div>
-                    <select name="data_type" class="form-field"><select>
+                    
                 </div>
             </div>
             

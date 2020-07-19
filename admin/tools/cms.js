@@ -7,84 +7,87 @@ useTool("quillEditor");
 var cmsHistory = [];
 
 function cmsHistoryPush(hide = true) {
-    if (hide) {
-        hideCMSBlockHeader();
-        hideCMSContainerHeader();
-    }
+  if (hide) {
+    hideCMSBlockHeader();
+    hideCMSContainerHeader();
+  }
 
-    if (cmsHistoryStepBack > 0) {
-        var from = cmsHistory.length - (cmsHistoryStepBack);
-        var count = cmsHistoryStepBack;
-        cmsHistory.splice(from, count);
-    }
-    cmsHistoryStepBack = 0;
+  if (cmsHistoryStepBack > 0) {
+    var from = cmsHistory.length - cmsHistoryStepBack;
+    var count = cmsHistoryStepBack;
+    cmsHistory.splice(from, count);
+  }
+  cmsHistoryStepBack = 0;
 
-    cmsHistory.push(cms.innerHTML);
-    while (cmsHistory.length > 20) cmsHistory.shift();
+  cmsHistory.push(cms.innerHTML);
+  while (cmsHistory.length > 20) cmsHistory.shift();
 }
 var cmsHistoryStepBack = 0;
 
 function cmsHistoryUndo() {
-    hideCMSBlockHeader();
-    if (cmsHistoryStepBack < cmsHistory.length - 1) cmsHistoryStepBack++;
-    cms.innerHTML = cmsHistory[cmsHistory.length - 1 - cmsHistoryStepBack];
+  hideCMSBlockHeader();
+  if (cmsHistoryStepBack < cmsHistory.length - 1) cmsHistoryStepBack++;
+  cms.innerHTML = cmsHistory[cmsHistory.length - 1 - cmsHistoryStepBack];
 
-    cmsUpdate();
+  cmsUpdate();
 }
 
 function cmsHistoryRedo() {
-    hideCMSBlockHeader();
-    if (cmsHistoryStepBack > 0) cmsHistoryStepBack--;
-    cms.innerHTML = cmsHistory[cmsHistory.length - 1 - cmsHistoryStepBack];
+  hideCMSBlockHeader();
+  if (cmsHistoryStepBack > 0) cmsHistoryStepBack--;
+  cms.innerHTML = cmsHistory[cmsHistory.length - 1 - cmsHistoryStepBack];
 
-    cmsUpdate();
+  cmsUpdate();
 }
 
 document.onkeydown = (e) => {
-    if (!isModalActive("cms")) return;
+  if (!isModalActive("cms")) return;
 
-    var evtobj = window.event ? event : e;
-    if (evtobj.key) {
-        if (evtobj.key.toLowerCase() == "z" && evtobj.ctrlKey) {
-            cmsHistoryUndo();
-        }
-        if (evtobj.key.toLowerCase() == "y" && evtobj.ctrlKey) {
-            cmsHistoryRedo();
-        }
+  var evtobj = window.event ? event : e;
+  if (evtobj.key) {
+    if (evtobj.key.toLowerCase() == "z" && evtobj.ctrlKey) {
+      cmsHistoryUndo();
     }
+    if (evtobj.key.toLowerCase() == "y" && evtobj.ctrlKey) {
+      cmsHistoryRedo();
+    }
+  }
 };
 // cms history end
 
 function pasteBlock(input) {
-    var v = input.value;
+  var v = input.value;
 
-    var success = false;
-    if (/<wo997-block>.*<\/wo997-block>/s.test(v)) {
-        var v = v.replace(/.*<wo997-block>/, "").replace(/<\/wo997-block>.*/, "");
-        awaitingScroll = true;
-        if (pasteType == 'container') {
-            cms.insertAdjacentHTML("beforeend", getContainer(v));
-        }
-        else {
-            if (cmsTarget) {
-                cmsTarget.querySelector(".cms-container-content").insertAdjacentHTML("beforeend", v);
-            }
-        }
-
-        success = true;
+  var success = false;
+  if (/<wo997-block>.*<\/wo997-block>/s.test(v)) {
+    var v = v.replace(/.*<wo997-block>/, "").replace(/<\/wo997-block>.*/, "");
+    awaitingScroll = true;
+    if (pasteType == "container") {
+      cms.insertAdjacentHTML("beforeend", getContainer(v));
+    } else {
+      if (cmsTarget) {
+        cmsTarget
+          .querySelector(".cms-container-content")
+          .insertAdjacentHTML("beforeend", v);
+      }
     }
-    if (/<wo997-container>.*<\/wo997-container>/s.test(v)) {
-        var v = v.replace(/.*<wo997-container>/, "").replace(/<\/wo997-container>.*/, "");
-        awaitingScroll = true;
 
-        cms.insertAdjacentHTML("beforeend", v);
+    success = true;
+  }
+  if (/<wo997-container>.*<\/wo997-container>/s.test(v)) {
+    var v = v
+      .replace(/.*<wo997-container>/, "")
+      .replace(/<\/wo997-container>.*/, "");
+    awaitingScroll = true;
 
-        success = true;
-    }
-    if (success) {
-        input.value = '';
-        hideParentModal(input);
-    }
+    cms.insertAdjacentHTML("beforeend", v);
+
+    success = true;
+  }
+  if (success) {
+    input.value = "";
+    hideParentModal(input);
+  }
 }
 
 var cms;
@@ -92,110 +95,130 @@ var cmsSource;
 var cmsTarget;
 
 var cmsModalLoaded = () => {
-    cms = elem("#cms .cms");
-    cmsObserver.observe(cms, {
-        childList: true,
-        subtree: true
-    });
+  cms = elem("#cms .cms");
+  cmsObserver.observe(cms, {
+    childList: true,
+    subtree: true,
+  });
 
-    CMSBlockHeader.options = elem("#cms .cms-block-options");
-    CMSBlockHeader.actions = elem("#cms .cms-block-actions");
+  CMSBlockHeader.options = elem("#cms .cms-block-options");
+  CMSBlockHeader.actions = elem("#cms .cms-block-actions");
 
-    CMSContainerHeader.options = elem("#cms .cms-container-options");
-}
+  CMSContainerHeader.options = elem("#cms .cms-container-options");
+};
 
 function editModule(block) {
-    cmsTarget = block;
-    var moduleName = block.getAttribute("data-module");
-    var module = modules[moduleName];
-    if (!document.getElementById(moduleName)) {
-        if (module.editUrl) {
-            if (confirm(`Czy chcesz otworzyć edycję ${module.description} w nowej karcie?`)) {
-                window.open(module.editUrl);
-            }
-        } else {
-            alert("Edycja niedostępna!");
-        }
-        return;
+  cmsTarget = block;
+  var moduleName = block.getAttribute("data-module");
+  var module = modules[moduleName];
+  if (!document.getElementById(moduleName)) {
+    if (module.editUrl) {
+      if (
+        confirm(
+          `Czy chcesz otworzyć edycję ${module.description} w nowej karcie?`
+        )
+      ) {
+        window.open(module.editUrl);
+      }
+    } else {
+      alert("Edycja niedostępna!");
     }
-    showModal(moduleName, {
-        ontop: true,
-        source: cmsTarget
-    });
-    module.formOpen(block);
+    return;
+  }
+  showModal(moduleName, {
+    ontop: true,
+    source: cmsTarget,
+  });
+  module.formOpen(block);
 }
 
 function saveModule(button) {
-    if (!cmsTarget) return;
-    var moduleName = cmsTarget.getAttribute("data-module");
-    if (!moduleName) return;
-    var module = modules[moduleName];
-    if (!module) return;
-    module.formClose();
-    hideParentModal(button);
+  if (!cmsTarget) return;
+  var moduleName = cmsTarget.getAttribute("data-module");
+  if (!moduleName) return;
+  var module = modules[moduleName];
+  if (!module) return;
+  module.formClose();
+  hideParentModal(button);
 
-    var c = cmsTarget.querySelector(".module-content"); // force update
-    if (c) deleteNode(c);
+  var c = cmsTarget.querySelector(".module-content"); // force update
+  if (c) deleteNode(c);
 }
 
 function editBlock() {
-    if (!cmsTarget) return;
-    if (cmsTarget.hasAttribute("data-module")) {
-        editModule(cmsTarget);
-        return;
-    }
-    var block_content = cmsTarget.querySelector('.cms-block-content');
-    quillEditor.open(block_content, {
-        wrapper: cmsTarget,
-        colorNode: cmsTarget.querySelector(".background-color"),
-        callback: () => {
-            postSaveCmsBlock();
-        }
-    });
+  if (!cmsTarget) return;
+  if (cmsTarget.hasAttribute("data-module")) {
+    editModule(cmsTarget);
+    return;
+  }
+  var block_content = cmsTarget.querySelector(".cms-block-content");
+  quillEditor.open(block_content, {
+    wrapper: cmsTarget,
+    colorNode: cmsTarget.querySelector(".background-color"),
+    callback: () => {
+      postSaveCmsBlock();
+    },
+  });
 }
 
-function getContainer(content = '') {
-    return `
+function getContainer(content = "") {
+  return `
         <div class="cms-container">
             <div class="cms-container-content">${content}</div>
         </div>`;
 }
 
-function getBlock(content = '') {
-    return `
+function getBlock(content = "") {
+  return `
         <div class="cms-block col-lg-12 col-sm-12">
             <div class="cms-block-content ql-editor">${content}</div>
         </div>`;
 }
 
-function addContainer(content = '', previousContainer = false, placeAfter = true) {
-    if (content === '') {
-        content = getBlock(content);
-    }
-    awaitingScroll = true;
-    if (previousContainer !== false) {
-        if (previousContainer) {
-            previousContainer.insertAdjacentHTML(placeAfter ? "afterend" : "beforebegin", getContainer(content));
-        }
-        else {
-            cms.insertAdjacentHTML("afterbegin", getContainer(content));
-        }
-    }
-    else if (!cmsTarget || !cmsTarget.parentNode) {
-        cms.insertAdjacentHTML(placeAfter ? "beforeend" : "afterbegin", getContainer(content));
+function addContainer(
+  content = "",
+  previousContainer = false,
+  placeAfter = true
+) {
+  if (content === "") {
+    content = getBlock(content);
+  }
+  awaitingScroll = true;
+  if (previousContainer !== false) {
+    if (previousContainer) {
+      previousContainer.insertAdjacentHTML(
+        placeAfter ? "afterend" : "beforebegin",
+        getContainer(content)
+      );
     } else {
-        cmsTarget.insertAdjacentHTML(placeAfter ? "afterend" : "beforebegin", getContainer(content));
+      cms.insertAdjacentHTML("afterbegin", getContainer(content));
     }
-    delayActions();
-    cmsHistoryPush();
+  } else if (!cmsTarget || !cmsTarget.parentNode) {
+    cms.insertAdjacentHTML(
+      placeAfter ? "beforeend" : "afterbegin",
+      getContainer(content)
+    );
+  } else {
+    cmsTarget.insertAdjacentHTML(
+      placeAfter ? "afterend" : "beforebegin",
+      getContainer(content)
+    );
+  }
+  delayActions();
+  cmsHistoryPush();
 }
 
-function addBlock(content = '', container = null, placeAfter = true) {
-    awaitingScroll = true;
-    if (container) {
-        container.querySelector(".cms-container-content").insertAdjacentHTML(placeAfter ? "beforeend" : "afterbegin", getBlock(content));
-    }
-    /* if (!cmsTarget || !cmsTarget.parentNode) {
+function addBlock(content = "", container = null, placeAfter = true) {
+  awaitingScroll = true;
+  if (container) {
+    container
+      .querySelector(".cms-container-content")
+      .insertAdjacentHTML(
+        placeAfter ? "beforeend" : "afterbegin",
+        getBlock(content)
+      );
+  } else if (cmsTarget && cmsTarget.parentNode) {
+  /* if (!cmsTarget || !cmsTarget.parentNode) {
         if (!container) {
             container = cmsTarget;
         }
@@ -204,19 +227,21 @@ function addBlock(content = '', container = null, placeAfter = true) {
         }
         container.insertAdjacentHTML(placeAfter ? "beforeend" : "afterbegin", getBlock(content));
     } */
-    else if (cmsTarget && cmsTarget.parentNode) {
-        cmsTarget.insertAdjacentHTML(placeAfter ? "afterend" : "beforebegin", getBlock(content));
-    }
-    delayActions();
-    cmsHistoryPush();
+    cmsTarget.insertAdjacentHTML(
+      placeAfter ? "afterend" : "beforebegin",
+      getBlock(content)
+    );
+  }
+  delayActions();
+  cmsHistoryPush();
 }
 
 var modules = {
-    "product-list": {
-        params: "",
-        description: "Lista produktów",
-        icon: '<i class="fas fa-cube"></i>',
-        form: `
+  "product-list": {
+    params: "",
+    description: "Lista produktów",
+    icon: '<i class="fas fa-cube"></i>',
+    form: `
             <div class="default-form">
                 <label style='margin-top:0'>
                     <span>Liczba produktów</span>
@@ -238,71 +263,76 @@ var modules = {
             </div>
 
             `,
-        formOpen: (block) => {
-            var productListCount = 0;
-            try {
-                var params = JSON.parse(block.getAttribute("data-module-params"));
-                productListCount = params["productListCount"];
-            } catch {}
-            document.getElementById("productListCount").value = productListCount;
-            
-            loadCategoryPicker("product_categories",{skip:2});
-        },
-        formClose: () => {
-            var params = {};
-            params["productListCount"] = document.getElementById("productListCount").value;
-            cmsTarget.setAttribute("data-module-params", JSON.stringify(params));
-        },
-        render: (block) => {
-            var productListCount = 0;
-            try {
-                var params = JSON.parse(block.getAttribute("data-module-params"));
-                productListCount = params["productListCount"];
-            } catch {
-                return "";
-            }
-            return `Liczba produktów: ${productListCount}`;
-        }
+    formOpen: (block) => {
+      var productListCount = 0;
+      try {
+        var params = JSON.parse(block.getAttribute("data-module-params"));
+        productListCount = params["productListCount"];
+      } catch {}
+      document.getElementById("productListCount").value = productListCount;
+
+      loadCategoryPicker("product_categories", { skip: 2 });
     },
-    "newsletter-form": {
-        params: "",
-        description: "Formularz do newslettera",
-        icon: '<i class="far fa-newspaper"></i>'
+    formClose: () => {
+      var params = {};
+      params["productListCount"] = document.getElementById(
+        "productListCount"
+      ).value;
+      cmsTarget.setAttribute("data-module-params", JSON.stringify(params));
     },
-    "slider": {
-        params: "",
-        description: "Slider zdjęć",
-        icon: '<i class="far fa-images"></i>',
-        editUrl: '/admin/slider'
+    render: (block) => {
+      var productListCount = 0;
+      try {
+        var params = JSON.parse(block.getAttribute("data-module-params"));
+        productListCount = params["productListCount"];
+      } catch {
+        return "";
+      }
+      return `Liczba produktów: ${productListCount}`;
     },
-    "contact-form": {
-        params: "",
-        description: "Formularz kontaktowy",
-        icon: '<i class="far fa-address-card"></i>',
-        editUrl: '/admin/konfiguracja'
-    },
+  },
+  "newsletter-form": {
+    params: "",
+    description: "Formularz do newslettera",
+    icon: '<i class="far fa-newspaper"></i>',
+  },
+  slider: {
+    params: "",
+    description: "Slider zdjęć",
+    icon: '<i class="far fa-images"></i>',
+    editUrl: "/admin/slider",
+  },
+  "contact-form": {
+    params: "",
+    description: "Formularz kontaktowy",
+    icon: '<i class="far fa-address-card"></i>',
+    editUrl: "/admin/konfiguracja",
+  },
 };
 
 function insertModule(moduleName) {
-    awaitingScroll = true;
+  awaitingScroll = true;
 
-    var module = modules[moduleName];
-    if (!module) return;
+  var module = modules[moduleName];
+  if (!module) return;
 
-    cms.insertAdjacentHTML("beforeend", getContainer(`
+  cms.insertAdjacentHTML(
+    "beforeend",
+    getContainer(`
             <div class="cms-block" data-module="${moduleName}" data-module-params="${module.params}">
                 <div class="cms-block-content"></div>
-            </div>`));
-    hideModalTopMost();
+            </div>`)
+  );
+  hideModalTopMost();
 }
 
 var moduleList = "";
 for (moduleName in modules) {
-    var module = modules[moduleName];
-    if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
-    moduleList += `<div class="btn primary" onclick="insertModule('${moduleName}')">${module.icon} ${module.description}</div>`;
-    if (module.form) {
-        registerModalContent(`
+  var module = modules[moduleName];
+  if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
+  moduleList += `<div class="btn primary" onclick="insertModule('${moduleName}')">${module.icon} ${module.description}</div>`;
+  if (module.form) {
+    registerModalContent(`
             <div id="${moduleName}">
                 <div>
                     <div class="custom-toolbar">
@@ -316,562 +346,634 @@ for (moduleName in modules) {
                 </div>
             </div>
         `);
-    }
+  }
 }
 
 var moduleListModalLoaded = () => {
-    elem(".moduleList").innerHTML = moduleList;
-}
+  elem(".moduleList").innerHTML = moduleList;
+};
 
 function copyCMS() {
-    copyBlock(elem("#cms .cms"));
+  copyBlock(elem("#cms .cms"));
 }
 
 function copyBlock(block) {
-    if (!block) {
-        block = cmsTarget;
-    }
-    if (!block) {
-        return;
-    }
-    copyTextToClipboard("<wo997-block>" + block.outerHTML + "</wo997-block>");
-    alert("Skopiowano blok do schowka");
+  if (!block) {
+    block = cmsTarget;
+  }
+  if (!block) {
+    return;
+  }
+  copyTextToClipboard("<wo997-block>" + block.outerHTML + "</wo997-block>");
+  alert("Skopiowano blok do schowka");
 }
 
 function copyContainer(container) {
-    if (!container) {
-        container = cmsTarget;
-    }
-    if (!container) {
-        return;
-    }
-    copyTextToClipboard("<wo997-container>" + container.outerHTML + "</wo997-container>");
-    alert("Skopiowano kontener do schowka");
+  if (!container) {
+    container = cmsTarget;
+  }
+  if (!container) {
+    return;
+  }
+  copyTextToClipboard(
+    "<wo997-container>" + container.outerHTML + "</wo997-container>"
+  );
+  alert("Skopiowano kontener do schowka");
 }
 
 function duplicateBlock() {
-    if (!cmsTarget) return;
-    awaitingScroll = true;
-    cmsTarget.insertAdjacentHTML("afterend", cmsTarget.outerHTML);
-    cmsHistoryPush(false);
+  if (!cmsTarget) return;
+  awaitingScroll = true;
+  cmsTarget.insertAdjacentHTML("afterend", cmsTarget.outerHTML);
+  cmsHistoryPush(false);
 }
 
 function duplicateContainer() {
-    if (!cmsTarget) return;
-    awaitingScroll = true;
-    cmsTarget.insertAdjacentHTML("afterend", cmsTarget.outerHTML);
-    cmsHistoryPush(false);
+  if (!cmsTarget) return;
+  awaitingScroll = true;
+  cmsTarget.insertAdjacentHTML("afterend", cmsTarget.outerHTML);
+  cmsHistoryPush(false);
 }
 
 function blockWidth(width) {
-    if (!cmsTarget) return;
-    removeClassesWithPrefix(cmsTarget, "col-");
-    cmsTarget.setAttribute("data-desktop-width", width);
-    cmsTarget.setAttribute("data-mobile-width", "100%");
+  if (!cmsTarget) return;
+  removeClassesWithPrefix(cmsTarget, "col-");
+  cmsTarget.setAttribute("data-desktop-width", width);
+  cmsTarget.setAttribute("data-mobile-width", "100%");
 
-    cmsHistoryPush();
+  cmsHistoryPush();
 
-    cmsUpdate();
+  cmsUpdate();
 }
 
 function deleteContainer(nodeToDelete = null, pushHistory = true) {
-    if (!cmsTarget) return;
-    delayActions();
-    hideCMSContainerHeader();
-    let node = nodeToDelete ? nodeToDelete : cmsTarget;
-    var h = node.getBoundingClientRect().height;
-    node.style.transform = "scale(0)";
-    node.style.opacity = 0;
-    node.style.borderWidth = "0px";
-    node.style.background = "#f22";
-    node.style.marginTop = -h / 2 + "px";
-    node.style.marginBottom = -h / 2 + "px";
-    node.style.pointerEvents = "none";
-    node.classList.add("removing");
-    setTimeout(() => {
-        deleteNode(node);
-    }, 400);
+  if (!cmsTarget) return;
+  delayActions();
+  hideCMSContainerHeader();
+  let node = nodeToDelete ? nodeToDelete : cmsTarget;
+  var h = node.getBoundingClientRect().height;
+  node.style.transform = "scale(0)";
+  node.style.opacity = 0;
+  node.style.borderWidth = "0px";
+  node.style.background = "#f22";
+  node.style.marginTop = -h / 2 + "px";
+  node.style.marginBottom = -h / 2 + "px";
+  node.style.pointerEvents = "none";
+  node.classList.add("removing");
+  setTimeout(() => {
+    deleteNode(node);
+  }, 400);
 
-    if (pushHistory) {
-        cmsHistoryPush();
-    }
+  if (pushHistory) {
+    cmsHistoryPush();
+  }
 }
 
 function deleteBlock(nodeToDelete = null, pushHistory = true) {
-    if (!cmsTarget) return;
-    if (!cmsTarget.nextElementSibling && !cmsTarget.previousElementSibling) {
-        cmsTarget = findParentByClassName(cmsTarget, "cms-container");
-        deleteContainer(cmsTarget, false);
-        return;
-    }
-    delayActions();
-    hideCMSBlockHeader();
-    let node = nodeToDelete ? nodeToDelete : cmsTarget;
+  if (!cmsTarget) return;
+  if (!cmsTarget.nextElementSibling && !cmsTarget.previousElementSibling) {
+    cmsTarget = findParentByClassName(cmsTarget, "cms-container");
+    deleteContainer(cmsTarget, false);
+    return;
+  }
+  delayActions();
+  hideCMSBlockHeader();
+  let node = nodeToDelete ? nodeToDelete : cmsTarget;
 
-    var rect = node.getBoundingClientRect();
-    var h = rect.height;
-    var w = rect.width;
+  var rect = node.getBoundingClientRect();
+  var h = rect.height;
+  var w = rect.width;
 
-    /*var prevRect = node.previousElementSibling ? node.previousElementSibling.getBoundingClientRect() : null;
+  /*var prevRect = node.previousElementSibling ? node.previousElementSibling.getBoundingClientRect() : null;
     var nextRect = node.nextElementSibling ? node.nextElementSibling.getBoundingClientRect() : null;
     var leftDistance = prevRect ? (rect.x - (prevRect.x+prevRect.width)) : 0;
     if (leftDistance < 0) leftDistance = 0;
     var rightDistance = nextRect ? (rect.x+rect.width - nextRect.x) : 0;
     if (rightDistance < 0) rightDistance = 0;*/
 
-    node.style.transform = "scale(0)";
-    node.style.opacity = 0;
-    node.style.background = "#f22";
-    node.style.marginTop = -h / 2 + "px";
-    node.style.marginBottom = -h / 2 + "px";
-    /*node.style.marginLeft = -w * 0.5 - leftDistance * 0.5 + "px";
+  node.style.transform = "scale(0)";
+  node.style.opacity = 0;
+  node.style.background = "#f22";
+  node.style.marginTop = -h / 2 + "px";
+  node.style.marginBottom = -h / 2 + "px";
+  /*node.style.marginLeft = -w * 0.5 - leftDistance * 0.5 + "px";
     node.style.marginRight = -w * 0.5 - rightDistance * 0.5 + "px";*/
-    node.style.marginLeft = -w * 0.5 + "px";
-    node.style.marginRight = -w * 0.5 + "px";
-    node.style.pointerEvents = "none";
-    node.classList.add("removing");
-    setTimeout(() => {
-        deleteNode(node);
-    }, 400);
+  node.style.marginLeft = -w * 0.5 + "px";
+  node.style.marginRight = -w * 0.5 + "px";
+  node.style.pointerEvents = "none";
+  node.classList.add("removing");
+  setTimeout(() => {
+    deleteNode(node);
+  }, 400);
 
-    if (pushHistory) {
-        cmsHistoryPush();
-    }
+  if (pushHistory) {
+    cmsHistoryPush();
+  }
 }
 
-function editCMS(t, params = {}) { // TODO: include parameter for preview?
-    cmsSource = t;
-    removeContent(cms);
-    cms.insertAdjacentHTML("afterbegin", cmsSource.innerHTML);
+function editCMS(t, params = {}) {
+  // TODO: include parameter for preview?
+  cmsSource = t;
+  removeContent(cms);
+  cms.insertAdjacentHTML("afterbegin", cmsSource.innerHTML);
 
-    cms.querySelectorAll(".cms").forEach(e => {
-        e.outerHTML = e.innerHTML;
-    });
-    // we should be checking the structure on dom load, including migrations
+  cms.querySelectorAll(".cms").forEach((e) => {
+    e.outerHTML = e.innerHTML;
+  });
+  // we should be checking the structure on dom load, including migrations
 
-    document.querySelectorAll("#cms .cms-block[data-module]").forEach(e => {
-        var c = e.querySelector(".module-content");
-        if (c) deleteNode(c);
-    });
+  document.querySelectorAll("#cms .cms-block[data-module]").forEach((e) => {
+    var c = e.querySelector(".module-content");
+    if (c) deleteNode(c);
+  });
 
-    cmsHistory = [];
-    cmsHistoryPush();
+  cmsHistory = [];
+  cmsHistoryPush();
 
-    var modalParams = {};
-    if (params.ontop)
-    modalParams.ontop = true;
-    showModal("cms", modalParams);
+  var modalParams = {};
+  if (params.ontop) modalParams.ontop = true;
+  showModal("cms", modalParams);
 
-    cmsUpdate();
+  cmsUpdate();
 }
 
 function cmsUpdate() {
+  resizeCallback();
 
-    resizeCallback();
+  if (cmsHistoryStepBack >= cmsHistory.length - 1)
+    elem(".cms-undo").setAttribute("disabled", "true");
+  else elem(".cms-undo").removeAttribute("disabled");
 
-    if (cmsHistoryStepBack >= cmsHistory.length - 1) elem(".cms-undo").setAttribute("disabled", "true");
-    else elem(".cms-undo").removeAttribute("disabled");
+  if (cmsHistoryStepBack == 0)
+    elem(".cms-redo").setAttribute("disabled", "true");
+  else elem(".cms-redo").removeAttribute("disabled");
 
-    if (cmsHistoryStepBack == 0) elem(".cms-redo").setAttribute("disabled", "true");
-    else elem(".cms-redo").removeAttribute("disabled");
+  document.querySelectorAll("#cms .cms-block").forEach((e) => {
+    e.setAttribute("draggable", true);
+    if (
+      ![...e.children].find((c) => c.classList.contains("background-color"))
+    ) {
+      e.insertAdjacentHTML(
+        "afterbegin",
+        `<div class="background-color"></div>`
+      );
+    }
 
-    document.querySelectorAll("#cms .cms-block").forEach(e => {
-        e.setAttribute("draggable", true);
-        if (![...e.children].find(c => c.classList.contains('background-color'))) {
-            e.insertAdjacentHTML("afterbegin", `<div class="background-color"></div>`);
-        }
-
-        [...e.children].forEach(x => {
-            if (
-                !x.classList.contains("background-color") &&
-                !x.classList.contains("cms-block-content")
-            ) {
-                console.error("Unknown element removed", x.innerHTML);
-                deleteNode(x);
-            }
-        });
+    [...e.children].forEach((x) => {
+      if (
+        !x.classList.contains("background-color") &&
+        !x.classList.contains("cms-block-content")
+      ) {
+        console.error("Unknown element removed", x.innerHTML);
+        deleteNode(x);
+      }
     });
+  });
 
-    document.querySelectorAll("#cms .cms-container").forEach(e => {
-        e.setAttribute("draggable", true);
-        if (![...e.children].find(c => c.classList.contains('background-color'))) {
-            e.insertAdjacentHTML("afterbegin", `<div class="background-color"></div>`);
-        }
+  document.querySelectorAll("#cms .cms-container").forEach((e) => {
+    e.setAttribute("draggable", true);
+    if (
+      ![...e.children].find((c) => c.classList.contains("background-color"))
+    ) {
+      e.insertAdjacentHTML(
+        "afterbegin",
+        `<div class="background-color"></div>`
+      );
+    }
 
-        [...e.children].forEach(x => {
-            if (
-                !x.classList.contains("background-color") &&
-                !x.classList.contains("cms-container-content")
-            ) {
-                console.error("Unknown element removed", x.innerHTML);
-                deleteNode(x);
-            }
-        });
+    [...e.children].forEach((x) => {
+      if (
+        !x.classList.contains("background-color") &&
+        !x.classList.contains("cms-container-content")
+      ) {
+        console.error("Unknown element removed", x.innerHTML);
+        deleteNode(x);
+      }
     });
+  });
 
-    /*if (!elem("#cms .cms-block")) {
+  /*if (!elem("#cms .cms-block")) {
         setTimeout(() => {
             
             addBlock();
         }, 100);
     }*/
 
-    if (!elem("#cms .cms-container")) {
-        setTimeout(() => {
-            addContainer();
-        }, 100);
+  if (!elem("#cms .cms-container")) {
+    setTimeout(() => {
+      addContainer();
+    }, 100);
+  }
+
+  document.querySelectorAll("#cms .cms-container").forEach((e) => {
+    if (!e.querySelector(".cms-block")) {
+      setTimeout(() => {
+        addBlock("", e);
+      }, 100);
     }
+  });
 
-    document.querySelectorAll("#cms .cms-container").forEach(e => {
-        if (!e.querySelector(".cms-block")) {
-            setTimeout(() => {
-                addBlock('', e);
-            }, 100);
-        } 
-    });
+  document.querySelectorAll("#cms .cms-block[data-module]").forEach((e) => {
+    var c = e.querySelector(".module-content");
+    if (!c) {
+      var moduleName = e.getAttribute("data-module");
+      var module = modules[moduleName];
 
-    document.querySelectorAll("#cms .cms-block[data-module]").forEach(e => {
-        var c = e.querySelector(".module-content");
-        if (!c) {
-            var moduleName = e.getAttribute("data-module");
-            var module = modules[moduleName];
-
-            if (module) {
-                e.querySelector(".cms-block-content").innerHTML = `
+      if (module) {
+        e.querySelector(".cms-block-content").innerHTML = `
                         <div class="module-content">
                             <div>
                                 ${module.icon} ${module.description}
-                                <p style="margin:10px 0;font-size:0.8em">${module.render ? module.render(e) : ""}</p>
+                                <p style="margin:10px 0;font-size:0.8em">${
+                                  module.render ? module.render(e) : ""
+                                }</p>
                             </div>
                         </div>`;
-            }
-        }
-    })
-
+      }
+    }
+  });
 }
 
 function closeCms(save) {
-    if (save) {
-        document.querySelectorAll("#cms [draggable]").forEach(e => {
-            e.removeAttribute("draggable");
-            e.style.opacity = "";
-        });
-        var content = elem("#cms .cms").innerHTML;
-        cmsSource.innerHTML = content;
-        var src = document.getElementById(cmsSource.id + "-src");
-        if (src) src.value = content;
-    }
-    cmsSource = null;
+  if (save) {
+    document.querySelectorAll("#cms [draggable]").forEach((e) => {
+      e.removeAttribute("draggable");
+      e.style.opacity = "";
+    });
+    var content = elem("#cms .cms").innerHTML;
+    cmsSource.innerHTML = content;
+    var src = document.getElementById(cmsSource.id + "-src");
+    if (src) src.value = content;
+  }
+  cmsSource = null;
 }
 
 function editContainerSettings() {
-    if (!cmsTarget) return;
-    showModal("cmsContainerSettings", {
-        ontop: true,
-        source: cmsTarget
-    });
+  if (!cmsTarget) return;
+  showModal("cmsContainerSettings", {
+    ontop: true,
+    source: cmsTarget,
+  });
 
-    document.querySelectorAll(`#cmsContainerSettings [data-attribute]`).forEach(e => {
-        var targets = cmsTarget;
-        var attribute = e.getAttribute("data-attribute");
-        var selectChild = e.getAttribute("data-target");
-        if (selectChild) {
-            targets = targets.querySelector(selectChild);
-        }
-        if (e.type == "checkbox") {
-            e.checked = targets.hasAttribute(`data-${attribute}`);    
-        }
-        else {
-            e.value = targets.getAttribute(`data-${attribute}`);
+  document
+    .querySelectorAll(`#cmsContainerSettings [data-attribute]`)
+    .forEach((e) => {
+      var targets = cmsTarget;
+      var attribute = e.getAttribute("data-attribute");
+      var selectChild = e.getAttribute("data-target");
+      if (selectChild) {
+        targets = targets.querySelector(selectChild);
+      }
+      if (e.type == "checkbox") {
+        e.checked = targets.hasAttribute(`data-${attribute}`);
+      } else {
+        e.value = targets.getAttribute(`data-${attribute}`);
 
-            var group = findParentByAttribute(e, "data-select-group");
-            if (group) {
-                var option = group.querySelector(`[data-option="${e.value}"]`);
-                if (option) {
-                    option.click();
-                }
-            }
+        var group = findParentByAttribute(e, "data-select-group");
+        if (group) {
+          var option = group.querySelector(`[data-option="${e.value}"]`);
+          if (option) {
+            option.click();
+          }
         }
+      }
     });
 }
 
 function selectInGroup(option) {
-    var group = findParentByAttribute(option, "data-select-group");
+  var group = findParentByAttribute(option, "data-select-group");
 
-    var input = group.querySelector("input");
-    if (!input) return; 
-    input.value = option.getAttribute("data-option")
+  var input = group.querySelector("input");
+  if (!input) return;
+  input.value = option.getAttribute("data-option");
 
-    var scope = `[data-select-group="${group.getAttribute("data-select-group")}"] .selectedOption`;
-    removeClasses("selectedOption",scope);
+  var scope = `[data-select-group="${group.getAttribute(
+    "data-select-group"
+  )}"] .selectedOption`;
+  removeClasses("selectedOption", scope);
 
-    option.classList.add("selectedOption");
+  option.classList.add("selectedOption");
 }
 
-
 function editBlockSettings() {
-    if (!cmsTarget) return;
-    showModal("cmsBlockSettings", {
-        ontop: true,
-        source: cmsTarget
+  if (!cmsTarget) return;
+  showModal("cmsBlockSettings", {
+    ontop: true,
+    source: cmsTarget,
+  });
+
+  document.querySelectorAll("#cmsBlockSettings .classList").forEach((e) => {
+    e.checked = false;
+  });
+
+  document
+    .querySelectorAll(`#cmsBlockSettings [data-attribute]`)
+    .forEach((e) => {
+      var attribute = e.getAttribute("data-attribute");
+      var targets = cmsTarget;
+      var selectChild = e.getAttribute("data-target");
+      if (selectChild) {
+        targets = targets.querySelector(selectChild);
+      }
+      var defaultValue = e.getAttribute("data-default-value");
+      var value = targets.getAttribute(`data-${attribute}`);
+      e.value = !value && value !== 0 && defaultValue ? defaultValue : value;
     });
 
-    document.querySelectorAll("#cmsBlockSettings .classList").forEach(e => {
-        e.checked = false;
-    });
-
-    document.querySelectorAll(`#cmsBlockSettings [data-attribute]`).forEach(e => {
-        var attribute = e.getAttribute("data-attribute");
-        var targets = cmsTarget;
-        var selectChild = e.getAttribute("data-target");
-        if (selectChild) {
-            targets = targets.querySelector(selectChild);
-        }
-        var defaultValue = e.getAttribute("data-default-value");
-        var value = targets.getAttribute(`data-${attribute}`);
-        e.value = (!value && value !== 0 && defaultValue) ? defaultValue : value;
-    });
-
-    cmsTarget.classList.forEach(e => {
-        if (e.indexOf("col-") == 0 || e.indexOf("align-") == 0 || e.indexOf("block-padding-") == 0) {
-            var s = elem(`.classList[value='${e}']`);
-            if (s) s.checked = true;
-        }
-    });
+  cmsTarget.classList.forEach((e) => {
+    if (
+      e.indexOf("col-") == 0 ||
+      e.indexOf("align-") == 0 ||
+      e.indexOf("block-padding-") == 0
+    ) {
+      var s = elem(`.classList[value='${e}']`);
+      if (s) s.checked = true;
+    }
+  });
 }
 
 function saveContainerSettings() {
-    if (!cmsTarget) return;
+  if (!cmsTarget) return;
 
-    saveBlockAttributes("#cmsContainerSettings");
+  saveBlockAttributes("#cmsContainerSettings");
 
-    postSaveCmsBlock();
+  postSaveCmsBlock();
 }
 
 function saveBlockAttributes(parent) {
-    document.querySelectorAll(`${parent} [data-attribute]`).forEach(e => {
-        var attribute = e.getAttribute("data-attribute");
+  document.querySelectorAll(`${parent} [data-attribute]`).forEach((e) => {
+    var attribute = e.getAttribute("data-attribute");
 
-        var targets = cmsTarget;
-        var selectChild = e.getAttribute("data-target");
-        if (selectChild) {
-            targets = targets.querySelector(selectChild);
-        }
+    var targets = cmsTarget;
+    var selectChild = e.getAttribute("data-target");
+    if (selectChild) {
+      targets = targets.querySelector(selectChild);
+    }
 
-        if (e.type == "checkbox") {
-            if (e.checked) {
-                targets.setAttribute(`data-${attribute}`, 1);
-            }
-            else {
-                targets.removeAttribute(`data-${attribute}`, 1);
-            }
-        }
-        else {
-            var defaultValue = e.getAttribute("data-default-value");
-            var defaultUnit = e.getAttribute("data-default-unit");
+    if (e.type == "checkbox") {
+      if (e.checked) {
+        targets.setAttribute(`data-${attribute}`, 1);
+      } else {
+        targets.removeAttribute(`data-${attribute}`, 1);
+      }
+    } else {
+      var defaultValue = e.getAttribute("data-default-value");
+      var defaultUnit = e.getAttribute("data-default-unit");
 
-            var val = e.value;
-            if (!val && defaultValue) val = defaultValue;
-            else if (val && !val.match(/\D/)) val += defaultUnit;
-            targets.setAttribute(`data-${attribute}`, val);
-        }
+      var val = e.value;
+      if (!val && defaultValue) val = defaultValue;
+      else if (val && !val.match(/\D/)) val += defaultUnit;
+      targets.setAttribute(`data-${attribute}`, val);
+    }
 
-        Object.entries(targets.attributes).forEach(e => {
-            if (e.value === "") {
-                e.removeAttribute(e.name);
-            }
-        });
+    Object.entries(targets.attributes).forEach((e) => {
+      if (e.value === "") {
+        e.removeAttribute(e.name);
+      }
     });
+  });
 }
 
 function saveBlockSettings() {
-    if (!cmsTarget) return;
-    removeClassesWithPrefix(cmsTarget, "col-");
-    removeClassesWithPrefix(cmsTarget, "align-");
-    removeClassesWithPrefix(cmsTarget, "block-padding-");
+  if (!cmsTarget) return;
+  removeClassesWithPrefix(cmsTarget, "col-");
+  removeClassesWithPrefix(cmsTarget, "align-");
+  removeClassesWithPrefix(cmsTarget, "block-padding-");
 
-    document.querySelectorAll(`#cmsBlockSettings .classList:checked`).forEach(e => {
-        cmsTarget.classList.add(e.value);
+  document
+    .querySelectorAll(`#cmsBlockSettings .classList:checked`)
+    .forEach((e) => {
+      cmsTarget.classList.add(e.value);
     });
 
-    saveBlockAttributes("#cmsBlockSettings");
+  saveBlockAttributes("#cmsBlockSettings");
 
-    postSaveCmsBlock();
+  postSaveCmsBlock();
 }
 
 function editBlockAnimation() {
-    if (!cmsTarget) return;
-    showModal("cmsBlockAnimation", {
-        ontop: true,
-        source: cmsTarget
-    });
+  if (!cmsTarget) return;
+  showModal("cmsBlockAnimation", {
+    ontop: true,
+    source: cmsTarget,
+  });
 
-    document.querySelectorAll("#cmsBlockAnimation .classList").forEach(e => {
-        e.checked = false;
-    });
+  document.querySelectorAll("#cmsBlockAnimation .classList").forEach((e) => {
+    e.checked = false;
+  });
 
-    var animation = cmsTarget.getAttribute("data-animation");
-    if (!animation) animation = "none";
+  var animation = cmsTarget.getAttribute("data-animation");
+  if (!animation) animation = "none";
 
-    var s = elem(`.classList[value='${animation}']`);
-    if (s) s.checked = true;
-
+  var s = elem(`.classList[value='${animation}']`);
+  if (s) s.checked = true;
 }
 
 function saveBlockAnimation() {
-    if (!cmsTarget) return;
+  if (!cmsTarget) return;
 
-    document.querySelectorAll(`#cmsBlockAnimation .classList:checked`).forEach(e => {
-        cmsTarget.setAttribute("data-animation", e.value);
+  document
+    .querySelectorAll(`#cmsBlockAnimation .classList:checked`)
+    .forEach((e) => {
+      cmsTarget.setAttribute("data-animation", e.value);
     });
-    postSaveCmsBlock();
+  postSaveCmsBlock();
 }
 
-function editBlockBackground(target = null) {
-    if (!target) {
-        target = cmsTarget;
-    }
-    if (!cmsTarget) return;
+function editCMSBorder() {
+    var target = cmsTarget;
+    if (!target) return;
 
-    var background = elem(".cmsBlockBackgroundPreview");
-    var color = elem(".cmsBlockBackgroundPreview .background-color");
-    var cmstargetColor = target.querySelector(".background-color");
-    background.style.backgroundImage = target.style.backgroundImage;
-
-    var col = color.style.backgroundColor;
-    if (!col) col = "#fff";
-
-    color.style.backgroundColor = col;
-
-    var rgb = cmstargetColor.style.backgroundColor;
-
-    var hex = rgb ? '#' + rgb.match(/\d+/g).map(function(x) {
-        x = parseInt(x).toString(16);
-        return (x.length == 1) ? "0" + x : x;
-    }).join("") : "#fff";
-
-    setJSColorValue(elem('.bckgcolor'), hex.substring(1));
-
-    var op = cmstargetColor.style.opacity;
-    if (op == "") op = 1;
-    color.style.opacity = op;
-    setRangeSliderValue(elem('#cmsBlockBackground .image-opacity'), op * 100);
-
-    setBlockBackgroundColor(elem('.bckgcolor').value);
-
-    showModal("cmsBlockBackground", {
+    showModal("cmsBorder", {
         ontop: true,
-        source: target
+        source: target,
     });
+
+    setValue(elem(`#cmsBorder [data-attribute="border-width"]`), target.style.borderWidth);
+    setValue(elem(`#cmsBorder [data-attribute="border-color"]`), rgbStringToHex(target.style.borderColor));
+    setValue(elem(`#cmsBorder [data-attribute="border-radius"]`), target.style.borderRadius);
 }
 
-function saveBlockBackground() {
-    if (!cmsTarget) return;
+function updateBorderPreview() {
+    var borderPreview = elem(`#cmsBorder .borderPreview`);
 
-    var preview = elem(".cmsBlockBackgroundPreview");
-    cmsTarget.style.backgroundColor = preview.style.backgroundColor;
-    cmsTarget.style.backgroundImage = preview.style.backgroundImage;
+    borderPreview.style.border = `${elem(`#cmsBorder [data-attribute="border-width"]`).value} solid #${elem(`#cmsBorder [data-attribute="border-color"]`).value}`;
+    borderPreview.style.borderRadius = elem(`#cmsBorder [data-attribute="border-radius"]`).value; 
+}
 
-    var background = elem(".cmsBlockBackgroundPreview");
-    var color = elem(".cmsBlockBackgroundPreview .background-color");
-    var cmstargetColor = cmsTarget.querySelector(".background-color");
-    cmsTarget.style.backgroundImage = background.style.backgroundImage;
-    cmstargetColor.style.backgroundColor = color.style.backgroundColor;
-    cmstargetColor.style.opacity = color.style.opacity;
+function saveCMSBorder() {
+    var preview = elem("#cmsBorder .borderPreview");
 
-    postSaveCmsBlock();
+    var target = cmsTarget.querySelector(".cms-container-content");
+    if (!target) {
+        target = cmsTarget;//.querySelector(".cms-block-content");
+    }
+    if (!target) {
+        return false;
+    }
+
+    target.style.border = preview.style.border;
+    target.style.borderRadius = preview.style.borderRadius;
+}
+  
+function updateBorderPreview() {
+    var borderPreview = elem(`#cmsBorder .borderPreview`);
+
+    borderPreview.style.border = `${elem(`#cmsBorder [data-attribute="border-width"]`).value} solid #${elem(`#cmsBorder [data-attribute="border-color"]`).value}`;
+    borderPreview.style.borderRadius = elem(`#cmsBorder [data-attribute="border-radius"]`).value; 
+}
+
+function editCMSBackground() {
+  var target = cmsTarget;
+  if (!target) return;
+
+  var background = elem(".cmsBlockBackgroundPreview");
+  var color = elem(".cmsBlockBackgroundPreview .background-color");
+  var cmstargetColor = target.querySelector(".background-color");
+  background.style.backgroundImage = target.style.backgroundImage;
+
+  var col = color.style.backgroundColor;
+  if (!col) col = "#fff";
+
+  color.style.backgroundColor = col;
+
+  var rgb = cmstargetColor.style.backgroundColor;
+
+  var hex = rgb
+    ? "#" +
+      rgb
+        .match(/\d+/g)
+        .map(function (x) {
+          x = parseInt(x).toString(16);
+          return x.length == 1 ? "0" + x : x;
+        })
+        .join("")
+    : "#fff";
+
+  setValue(elem(".bckgcolor"), hex.substring(1));
+
+  var op = cmstargetColor.style.opacity;
+  if (op == "") op = 1;
+  color.style.opacity = op;
+  setRangeSliderValue(elem("#cmsBlockBackground .image-opacity"), op * 100);
+
+  setBlockBackgroundColor(elem(".bckgcolor").value);
+
+  showModal("cmsBlockBackground", {
+    ontop: true,
+    source: target,
+  });
+}
+
+function saveCMSBackground() {
+  if (!cmsTarget) return;
+
+  var preview = elem(".cmsBlockBackgroundPreview");
+  cmsTarget.style.backgroundColor = preview.style.backgroundColor;
+  cmsTarget.style.backgroundImage = preview.style.backgroundImage;
+
+  var background = elem(".cmsBlockBackgroundPreview");
+  var color = elem(".cmsBlockBackgroundPreview .background-color");
+  var cmstargetColor = cmsTarget.querySelector(".background-color");
+  cmsTarget.style.backgroundImage = background.style.backgroundImage;
+  cmstargetColor.style.backgroundColor = color.style.backgroundColor;
+  cmstargetColor.style.opacity = color.style.opacity;
+
+  postSaveCmsBlock();
 }
 
 function postSaveCmsBlock() {
-    cmsHistoryPush();
-    cmsTarget = null;
-    cmsUpdate();
+  cmsHistoryPush();
+  cmsTarget = null;
+  cmsUpdate();
 }
 
 var cmsObserver = new MutationObserver((mutations) => {
-    for (let mutation of mutations) {
-        if (mutation.addedNodes) {
-            for (let node of mutation.addedNodes) {
-                if (node.classList && node.classList.contains("cms-block")) {
-                    node.classList.remove("activeBlock");
-                    if (awaitingScroll) {
-                        scrollToElement(node, cms.parentNode);
-                        var rect = node.getBoundingClientRect();
-                        var h = rect.height;
-                        var w = rect.width;
+  for (let mutation of mutations) {
+    if (mutation.addedNodes) {
+      for (let node of mutation.addedNodes) {
+        if (node.classList && node.classList.contains("cms-block")) {
+          node.classList.remove("activeBlock");
+          if (awaitingScroll) {
+            scrollToElement(node, cms.parentNode);
+            var rect = node.getBoundingClientRect();
+            var h = rect.height;
+            var w = rect.width;
 
-                        /*var prevRect = node.previousElementSibling ? node.previousElementSibling.getBoundingClientRect() : null;
+            /*var prevRect = node.previousElementSibling ? node.previousElementSibling.getBoundingClientRect() : null;
                         var nextRect = node.nextElementSibling ? node.nextElementSibling.getBoundingClientRect() : null;
                         var leftDistance = prevRect ? (rect.x - (prevRect.x+prevRect.width)) : 0;
                         if (leftDistance < 0) leftDistance = 0;
                         var rightDistance = nextRect ? (rect.x+rect.width - nextRect.x) : 0;
                         if (rightDistance < 0) rightDistance = 0;*/
-                        node.style.transition = "0s";
-                        node.style.transform = "scale(0)";
-                        node.style.opacity = 0;
-                        var animateBackground = !node.style.backgroundColor && !node.style.backgroundImage;
-                        if (animateBackground) {
-                            node.style.background = "#37f";
-                        }
-                        node.style.marginTop = -h / 2 + "px";
-                        node.style.marginBottom = -h / 2 + "px";
-                        node.style.marginLeft = -w * 0.5;
-                        node.style.marginRight = -w * 0.5;
-                        //node.style.marginLeft = -w * 0.5 - leftDistance * 0.5 + "px";
-                        //node.style.marginRight = -w * 0.5 - rightDistance * 0.5 + "px";
-                        setTimeout(() => {
-                            node.style.opacity = 1;
-                            node.style.transition = "";
-                            node.style.transform = "";
-                            if (animateBackground) {
-                                node.style.background = "";
-                            }
-                            node.style.marginTop = "";
-                            node.style.marginBottom = "";
-                            node.style.marginLeft = "";
-                            node.style.marginRight = "";
-                        }, 0);
-                        awaitingScroll = false;
-                    }
-                }
-                if (node.classList && node.classList.contains("cms-container")) {
-                    node.classList.remove("activeContainer");
-                    if (awaitingScroll) {
-                        scrollToElement(node, cms.parentNode);
-                        var rect = node.getBoundingClientRect();
-                        var h = rect.height;
-                        node.style.transition = "0s";
-                        node.style.transform = "scale(0)";
-                        node.style.opacity = 0;
-                        var animateBackground = !node.style.backgroundColor && !node.style.backgroundImage;
-                        if (animateBackground) {
-                            node.style.background = "#37f";
-                        }
-                        node.style.marginTop = -h / 2 + "px";
-                        node.style.marginBottom = -h / 2 + "px";
-                        node.style.marginLeft = -w / 2 + "px";
-                        node.style.marginRight = -w / 2 + "px";
-                        node.style.borderWidth = "0px";
-                        setTimeout(() => {
-                            node.style.opacity = 1;
-                            node.style.transition = "";
-                            node.style.transform = "";
-                            if (animateBackground) {
-                                node.style.background = "";
-                            }
-                            node.style.marginTop = "";
-                            node.style.marginBottom = "";
-                            node.style.marginLeft = "";
-                            node.style.marginRight = "";
-                            node.style.borderWidth = "";
-                        }, 0);
-                        awaitingScroll = false;
-                    }
-                }
+            node.style.transition = "0s";
+            node.style.transform = "scale(0)";
+            node.style.opacity = 0;
+            var animateBackground =
+              !node.style.backgroundColor && !node.style.backgroundImage;
+            if (animateBackground) {
+              node.style.background = "#37f";
             }
+            node.style.marginTop = -h / 2 + "px";
+            node.style.marginBottom = -h / 2 + "px";
+            node.style.marginLeft = -w * 0.5;
+            node.style.marginRight = -w * 0.5;
+            //node.style.marginLeft = -w * 0.5 - leftDistance * 0.5 + "px";
+            //node.style.marginRight = -w * 0.5 - rightDistance * 0.5 + "px";
+            setTimeout(() => {
+              node.style.opacity = 1;
+              node.style.transition = "";
+              node.style.transform = "";
+              if (animateBackground) {
+                node.style.background = "";
+              }
+              node.style.marginTop = "";
+              node.style.marginBottom = "";
+              node.style.marginLeft = "";
+              node.style.marginRight = "";
+            }, 0);
+            awaitingScroll = false;
+          }
         }
+        if (node.classList && node.classList.contains("cms-container")) {
+          node.classList.remove("activeContainer");
+          if (awaitingScroll) {
+            scrollToElement(node, cms.parentNode);
+            var rect = node.getBoundingClientRect();
+            var h = rect.height;
+            node.style.transition = "0s";
+            node.style.transform = "scale(0)";
+            node.style.opacity = 0;
+            var animateBackground =
+              !node.style.backgroundColor && !node.style.backgroundImage;
+            if (animateBackground) {
+              node.style.background = "#37f";
+            }
+            node.style.marginTop = -h / 2 + "px";
+            node.style.marginBottom = -h / 2 + "px";
+            node.style.marginLeft = -w / 2 + "px";
+            node.style.marginRight = -w / 2 + "px";
+            node.style.borderWidth = "0px";
+            setTimeout(() => {
+              node.style.opacity = 1;
+              node.style.transition = "";
+              node.style.transform = "";
+              if (animateBackground) {
+                node.style.background = "";
+              }
+              node.style.marginTop = "";
+              node.style.marginBottom = "";
+              node.style.marginLeft = "";
+              node.style.marginRight = "";
+              node.style.borderWidth = "";
+            }, 0);
+            awaitingScroll = false;
+          }
+        }
+      }
     }
-    cmsUpdate();
+  }
+  cmsUpdate();
 });
 
 // cms end
@@ -881,137 +983,153 @@ var cmsObserver = new MutationObserver((mutations) => {
 var CMSContainerHeader = {};
 
 function hideCMSContainerHeader() {
-    CMSContainerHeader.visible = false;
-    CMSContainerHeader.options.style.display = "";
+  CMSContainerHeader.visible = false;
+  CMSContainerHeader.options.style.display = "";
 
-    removeClasses("activeContainer");
-    document.querySelectorAll(".cms-container").forEach(e => {
-        e.style.opacity = "";
-    });
+  removeClasses("activeContainer");
+  document.querySelectorAll(".cms-container").forEach((e) => {
+    e.style.opacity = "";
+  });
 }
 
 var placeContainerAfter = null;
-var mouseMoveContainer = function(event) {
-    var target = event.target;
-    if (!cmsSource || actionsDelayed) return;
+var mouseMoveContainer = function (event) {
+  var target = event.target;
+  if (!cmsSource || actionsDelayed) return;
 
-    if (!isModalActive("cms")) return;
-    
-    var wrapper = elem(".cms-wrapper");
-    
-    var targetY = event.clientY;
+  if (!isModalActive("cms")) return;
 
-    var nodeBefore = null;
-    var firstY = wrapper.getBoundingClientRect().top;
-    var secondY = wrapper.getBoundingClientRect().top + wrapper.scrollHeight;
-    [...cms.children].forEach(e => {
-        var rect = e.getBoundingClientRect();
-        if (rect.top + rect.height < targetY) {
-            if (rect.top + rect.height > firstY) {
-                firstY = rect.top + rect.height;
-                nodeBefore = e;
-            }
-        }
-        if (targetY < rect.top + rect.height + 20 && rect.top + rect.height + 20 < secondY) {
-            secondY = rect.top + rect.height + 20;
-        }
-        if (targetY < rect.top) {
-            if (rect.top < secondY) {
-                secondY = rect.top;
-            }
-        }
-    });
+  var wrapper = elem(".cms-wrapper");
 
-    placeContainerAfter = nodeBefore;
+  var targetY = event.clientY;
 
-    var insert_container_btn = elem(".insert_container_btn");
-    
-    if (secondY < firstY + 25 && !findParentByClassName(target,"cms-block-actions") && !findParentByClassName(target,"cms-block-options")) {
-        insert_container_btn.style.display = "flex";
-        var h = 20;//(secondY - firstY);
-        //if (h > 25) h = 25;
-        insert_container_btn.style.height = h + "px";
-        insert_container_btn.style.top = (firstY - wrapper.getBoundingClientRect().top + wrapper.scrollTop) + "px";
+  var nodeBefore = null;
+  var firstY = wrapper.getBoundingClientRect().top;
+  var secondY = wrapper.getBoundingClientRect().top + wrapper.scrollHeight;
+  [...cms.children].forEach((e) => {
+    var rect = e.getBoundingClientRect();
+    if (rect.top + rect.height < targetY) {
+      if (rect.top + rect.height > firstY) {
+        firstY = rect.top + rect.height;
+        nodeBefore = e;
+      }
     }
-    else {
-        insert_container_btn.style.display = "none";
+    if (
+      targetY < rect.top + rect.height + 20 &&
+      rect.top + rect.height + 20 < secondY
+    ) {
+      secondY = rect.top + rect.height + 20;
+    }
+    if (targetY < rect.top) {
+      if (rect.top < secondY) {
+        secondY = rect.top;
+      }
+    }
+  });
+
+  placeContainerAfter = nodeBefore;
+
+  var insert_container_btn = elem(".insert_container_btn");
+
+  if (
+    secondY < firstY + 25 &&
+    !findParentByClassName(target, "cms-block-actions") &&
+    !findParentByClassName(target, "cms-block-options")
+  ) {
+    insert_container_btn.style.display = "flex";
+    var h = 20; //(secondY - firstY);
+    //if (h > 25) h = 25;
+    insert_container_btn.style.height = h + "px";
+    insert_container_btn.style.top =
+      firstY - wrapper.getBoundingClientRect().top + wrapper.scrollTop + "px";
+  } else {
+    insert_container_btn.style.display = "none";
+  }
+
+  if (findParentByClassName(target, ["cms-block"])) {
+    hideCMSContainerHeader();
+    return;
+  }
+
+  if (!findParentByClassName(target, ["cms-container-options"])) {
+    var t = findParentByClassName(target, ["cms-container"]);
+
+    CMSContainerHeader.target = null;
+    if (t) {
+      if (parseFloat(getComputedStyle(t).opacity) > 0.99) {
+        CMSContainerHeader.target = t;
+      }
+    }
+  }
+
+  var a = elem(".activeContainer");
+  if (a && a != CMSContainerHeader.target) {
+    a.classList.remove("activeContainer");
+  }
+
+  if (CMSContainerHeader.target) {
+    if (!draggedNode) {
+      cmsTarget = CMSContainerHeader.target;
     }
 
+    CMSContainerHeader.target.classList.add("activeContainer");
 
-    if (findParentByClassName(target, ["cms-block"])) {
-        hideCMSContainerHeader();
-        return;
+    if (!CMSContainerHeader.visible) {
+      CMSContainerHeader.visible = true;
+      CMSContainerHeader.options.style.display = "flex";
     }
-
-    if (!findParentByClassName(target, ["cms-container-options"])) {
-        var t = findParentByClassName(target, ["cms-container"]);
-
-        CMSContainerHeader.target = null;
-        if (t) {
-            if (parseFloat(getComputedStyle(t).opacity) > 0.99) {
-                CMSContainerHeader.target = t;
-            }
-        }
+  } else {
+    if (CMSContainerHeader.visible) {
+      hideCMSContainerHeader();
     }
-
-    var a = elem(".activeContainer");
-    if (a && a != CMSContainerHeader.target) {
-        a.classList.remove("activeContainer");
-    }
-
-    if (CMSContainerHeader.target) {
-
-        if (!draggedNode) {
-            cmsTarget = CMSContainerHeader.target;
-        }
-
-        CMSContainerHeader.target.classList.add("activeContainer");
-
-        if (!CMSContainerHeader.visible) {
-            CMSContainerHeader.visible = true;
-            CMSContainerHeader.options.style.display = "flex";
-        }
-    } else {
-        if (CMSContainerHeader.visible) {
-            hideCMSContainerHeader();
-        }
-    }
+  }
 };
 
-document.addEventListener("mousemove", function(event) {
+document.addEventListener(
+  "mousemove",
+  function (event) {
     mouseMoveContainer(event);
-}, false);
-document.addEventListener("touchstart", function(event) {
+  },
+  false
+);
+document.addEventListener(
+  "touchstart",
+  function (event) {
     mouseMoveContainer(event);
-}, false);
+  },
+  false
+);
 
 cmsContainerHeaderAnimation();
 
 function cmsContainerHeaderAnimation() {
-    if (CMSContainerHeader.target) {
-        var parentRect = CMSContainerHeader.options.parentNode.getBoundingClientRect();
-        var optionsRect = CMSContainerHeader.options.getBoundingClientRect();
-        var blockRect = CMSContainerHeader.target.getBoundingClientRect();
-        var blockPos = position(CMSContainerHeader.target);
+  if (CMSContainerHeader.target) {
+    var parentRect = CMSContainerHeader.options.parentNode.getBoundingClientRect();
+    var optionsRect = CMSContainerHeader.options.getBoundingClientRect();
+    var blockRect = CMSContainerHeader.target.getBoundingClientRect();
+    var blockPos = position(CMSContainerHeader.target);
 
-        var left = blockPos.left - parentRect.left + (blockRect.width - optionsRect.width) / 2;
-        var top = blockPos.top - parentRect.top;
+    var left =
+      blockPos.left -
+      parentRect.left +
+      (blockRect.width - optionsRect.width) / 2;
+    var top = blockPos.top - parentRect.top;
 
-        var width = optionsRect.width;
+    var width = optionsRect.width;
 
-        var maxLeft = parentRect.width - width - 20;
-        if (left > maxLeft) {
-            left = maxLeft;
-        }
-        if (left < 0) {
-            left = 0;
-        }
-
-        CMSContainerHeader.options.style.left = left + "px";
-        CMSContainerHeader.options.style.top = top + 2 + "px";
+    var maxLeft = parentRect.width - width - 20;
+    if (left > maxLeft) {
+      left = maxLeft;
+    }
+    if (left < 0) {
+      left = 0;
     }
 
-    requestAnimationFrame(cmsContainerHeaderAnimation);
+    CMSContainerHeader.options.style.left = left + "px";
+    CMSContainerHeader.options.style.top = top + 2 + "px";
+  }
+
+  requestAnimationFrame(cmsContainerHeaderAnimation);
 }
 
 // cms container header end
@@ -1021,110 +1139,122 @@ function cmsContainerHeaderAnimation() {
 var CMSBlockHeader = {};
 
 function hideCMSBlockHeader() {
-    CMSBlockHeader.visible = false;
-    CMSBlockHeader.options.style.display = "";
-    CMSBlockHeader.actions.style.display = "";
+  CMSBlockHeader.visible = false;
+  CMSBlockHeader.options.style.display = "";
+  CMSBlockHeader.actions.style.display = "";
 
-    removeClasses("activeBlock");
-    document.querySelectorAll(".cms-block").forEach(e => {
-        e.style.opacity = "";
-    });
+  removeClasses("activeBlock");
+  document.querySelectorAll(".cms-block").forEach((e) => {
+    e.style.opacity = "";
+  });
 }
 
 var actionsDelayed = false;
 function delayActions() {
-    actionsDelayed = true;
-    delay("enableActions", 420);
+  actionsDelayed = true;
+  delay("enableActions", 420);
 }
 function enableActions() {
-    actionsDelayed = false;
+  actionsDelayed = false;
 }
 
-var mouseMoveBlock = function(target) {
-    if (!cmsSource || actionsDelayed) return;
+var mouseMoveBlock = function (target) {
+  if (!cmsSource || actionsDelayed) return;
 
-    if (!isModalActive("cms")) return;
+  if (!isModalActive("cms")) return;
 
-    if (!findParentByClassName(target, ["cms-block-options", "cms-block-actions"])) {
-        var t = findParentByClassName(target, ["cms-block"]);
+  if (
+    !findParentByClassName(target, ["cms-block-options", "cms-block-actions"])
+  ) {
+    var t = findParentByClassName(target, ["cms-block"]);
 
-        CMSBlockHeader.target = null;
-        if (t) {
-            if (parseFloat(getComputedStyle(t).opacity) > 0.99) {
-                CMSBlockHeader.target = t;
-            }
-        }
+    CMSBlockHeader.target = null;
+    if (t) {
+      if (parseFloat(getComputedStyle(t).opacity) > 0.99) {
+        CMSBlockHeader.target = t;
+      }
+    }
+  }
+
+  var a = elem(".activeBlock");
+  if (a && a != CMSBlockHeader.target) {
+    a.classList.remove("activeBlock");
+  }
+
+  if (CMSBlockHeader.target) {
+    if (!draggedNode) {
+      cmsTarget = CMSBlockHeader.target;
     }
 
-    var a = elem(".activeBlock");
-    if (a && a != CMSBlockHeader.target) {
-        a.classList.remove("activeBlock");
+    CMSBlockHeader.target.classList.add("activeBlock");
+
+    if (!CMSBlockHeader.visible) {
+      CMSBlockHeader.visible = true;
+      CMSBlockHeader.options.style.display = "flex";
+      CMSBlockHeader.actions.style.display = "block";
     }
-
-    if (CMSBlockHeader.target) {
-
-        if (!draggedNode) {
-            cmsTarget = CMSBlockHeader.target;
-        }
-
-        CMSBlockHeader.target.classList.add("activeBlock");
-
-        if (!CMSBlockHeader.visible) {
-            CMSBlockHeader.visible = true;
-            CMSBlockHeader.options.style.display = "flex";
-            CMSBlockHeader.actions.style.display = "block";
-        }
-    } else {
-        if (CMSBlockHeader.visible) {
-            hideCMSBlockHeader();
-        }
+  } else {
+    if (CMSBlockHeader.visible) {
+      hideCMSBlockHeader();
     }
+  }
 };
 
-document.addEventListener("mousemove", function(event) {
+document.addEventListener(
+  "mousemove",
+  function (event) {
     mouseMoveBlock(event.target);
-}, false);
-document.addEventListener("touchstart", function(event) {
+  },
+  false
+);
+document.addEventListener(
+  "touchstart",
+  function (event) {
     mouseMoveBlock(event.target);
-}, false);
+  },
+  false
+);
 
 cmsBlockHeaderAnimation();
 
 function cmsBlockHeaderAnimation() {
-    if (CMSBlockHeader.target) {
-        var parentRect = CMSBlockHeader.options.parentNode.getBoundingClientRect();
-        var optionsRect = CMSBlockHeader.options.getBoundingClientRect();
-        var actionsRect = CMSBlockHeader.actions.getBoundingClientRect();
-        var blockRect = CMSBlockHeader.target.getBoundingClientRect();
-        var blockPos = position(CMSBlockHeader.target);
+  if (CMSBlockHeader.target) {
+    var parentRect = CMSBlockHeader.options.parentNode.getBoundingClientRect();
+    var optionsRect = CMSBlockHeader.options.getBoundingClientRect();
+    var actionsRect = CMSBlockHeader.actions.getBoundingClientRect();
+    var blockRect = CMSBlockHeader.target.getBoundingClientRect();
+    var blockPos = position(CMSBlockHeader.target);
 
-        var left = blockPos.left - parentRect.left;
-        var top = blockPos.top - parentRect.top;
+    var left = blockPos.left - parentRect.left;
+    var top = blockPos.top - parentRect.top;
 
-        CMSBlockHeader.actions.style.left = left + blockRect.width / 2 + 6 + "px";
-        CMSBlockHeader.actions.style.top = top + 29 + "px";
+    CMSBlockHeader.actions.style.left = left + blockRect.width / 2 + 6 + "px";
+    CMSBlockHeader.actions.style.top = top + 29 + "px";
 
-        CMSBlockHeader.actions.style.width = 0 + "px";
-        CMSBlockHeader.actions.style.height = blockRect.height + "px";
+    CMSBlockHeader.actions.style.width = 0 + "px";
+    CMSBlockHeader.actions.style.height = blockRect.height + "px";
 
-        var left = blockPos.left - parentRect.left + (blockRect.width - optionsRect.width) / 2;
-        var top = blockPos.top - parentRect.top;
+    var left =
+      blockPos.left -
+      parentRect.left +
+      (blockRect.width - optionsRect.width) / 2;
+    var top = blockPos.top - parentRect.top;
 
-        var width = optionsRect.width;
+    var width = optionsRect.width;
 
-        var maxLeft = parentRect.width - width - 20;
-        if (left > maxLeft) {
-            left = maxLeft;
-        }
-        if (left < 0) {
-            left = 0;
-        }
-
-        CMSBlockHeader.options.style.left = left + 6 + "px";
-        CMSBlockHeader.options.style.top = top + 29 + "px";
+    var maxLeft = parentRect.width - width - 20;
+    if (left > maxLeft) {
+      left = maxLeft;
+    }
+    if (left < 0) {
+      left = 0;
     }
 
-    requestAnimationFrame(cmsBlockHeaderAnimation);
+    CMSBlockHeader.options.style.left = left + 6 + "px";
+    CMSBlockHeader.options.style.top = top + 29 + "px";
+  }
+
+  requestAnimationFrame(cmsBlockHeaderAnimation);
 }
 
 // cms block header end
@@ -1136,162 +1266,184 @@ var placeNearNode;
 var isPlaceBefore;
 var allowAddition;
 
-document.addEventListener("dragstart", function(event) {
+document.addEventListener(
+  "dragstart",
+  function (event) {
     event.target = cmsTarget;
     try {
-        //if ((!event.target || !event.target.hasAttribute("draggable")) || !cmsSource) {
-        if ((!event.target || !event.target.hasAttribute("draggable"))) {
-            event.preventDefault();
-            return;
-        }
+      //if ((!event.target || !event.target.hasAttribute("draggable")) || !cmsSource) {
+      if (!event.target || !event.target.hasAttribute("draggable")) {
+        event.preventDefault();
+        return;
+      }
     } catch (e) {}
 
     draggedNode = event.target;
 
     draggedNode.style.opacity = 0.5;
-}, false);
+  },
+  false
+);
 
-document.addEventListener("dragend", function(event) {
+document.addEventListener(
+  "dragend",
+  function (event) {
     if (draggedNode) {
-        draggedNode.style.opacity = "";
+      draggedNode.style.opacity = "";
     }
     draggedNode = null;
-}, false);
+  },
+  false
+);
 
 function dragover(event) {
-    var requestClass = "cms-block";
-    if (draggedNode.classList.contains("cms-container")) {
-        requestClass = "cms-container";
-    }
-    var newplaceNearNode = findParentByClassName(event.target, requestClass);
-    if (placeNearNode && newplaceNearNode != placeNearNode) {
-        placeNearNode.classList.toggle("add_after", false);
-        placeNearNode.classList.toggle("add_before", false);
-    }
-    if (newplaceNearNode || (requestClass == "cms-block")) {
-        placeNearNode = newplaceNearNode;
-    }
-    if (!placeNearNode) return;
-    var rect = placeNearNode.getBoundingClientRect();
-    //isPlaceBefore = event.x < rect.x + rect.width / 2;
-    isPlaceBefore = event.y < rect.y + rect.height / 2;
-    //allowAddition = (event.x < rect.x + 50 || event.x > rect.x + rect.width - 50) && event.y >= rect.y + 28;
-    //allowAddition = (event.y < rect.y + 50 || event.x > rect.x + rect.width - 50) && event.y >= rect.y + 28;
-    if (newplaceNearNode != cmsTarget) {
-        placeNearNode.classList.toggle("add_after", !isPlaceBefore);
-        placeNearNode.classList.toggle("add_before", isPlaceBefore);
-    }
+  var requestClass = "cms-block";
+  if (draggedNode.classList.contains("cms-container")) {
+    requestClass = "cms-container";
+  }
+  var newplaceNearNode = findParentByClassName(event.target, requestClass);
+  if (placeNearNode && newplaceNearNode != placeNearNode) {
+    placeNearNode.classList.toggle("add_after", false);
+    placeNearNode.classList.toggle("add_before", false);
+  }
+  if (newplaceNearNode || requestClass == "cms-block") {
+    placeNearNode = newplaceNearNode;
+  }
+  if (!placeNearNode) return;
+  var rect = placeNearNode.getBoundingClientRect();
+  //isPlaceBefore = event.x < rect.x + rect.width / 2;
+  isPlaceBefore = event.y < rect.y + rect.height / 2;
+  //allowAddition = (event.x < rect.x + 50 || event.x > rect.x + rect.width - 50) && event.y >= rect.y + 28;
+  //allowAddition = (event.y < rect.y + 50 || event.x > rect.x + rect.width - 50) && event.y >= rect.y + 28;
+  if (newplaceNearNode != cmsTarget) {
+    placeNearNode.classList.toggle("add_after", !isPlaceBefore);
+    placeNearNode.classList.toggle("add_before", isPlaceBefore);
+  }
 }
 
-document.addEventListener("dragover", function(event) {
+document.addEventListener(
+  "dragover",
+  function (event) {
     event.preventDefault();
     dragover(event);
-}, false);
+  },
+  false
+);
 
-document.addEventListener("drop", function(event) {
+document.addEventListener(
+  "drop",
+  function (event) {
     event.preventDefault();
 
     removeClasses("add_after");
     removeClasses("add_before");
 
     if (placeNearNode) {
-        var placeNearNodeFinal = placeNearNode;
+      var placeNearNodeFinal = placeNearNode;
 
-        if (!isPlaceBefore) {
-            placeNearNodeFinal = placeNearNode.nextSibling;
+      if (!isPlaceBefore) {
+        placeNearNodeFinal = placeNearNode.nextSibling;
+      }
+
+      if (
+        draggedNode &&
+        draggedNode != placeNearNodeFinal &&
+        (draggedNode.nextElementSibling != placeNearNodeFinal ||
+          !draggedNode.nextElementSibling)
+      ) {
+        awaitingScroll = true;
+
+        copiedNode = draggedNode.cloneNode(true);
+
+        delayActions();
+
+        var isContainer = draggedNode.classList.contains("cms-container");
+        if (isContainer) {
+          deleteContainer(draggedNode, false);
+        } else {
+          deleteBlock(draggedNode, false);
         }
 
-        if (draggedNode
-            && draggedNode != placeNearNodeFinal
-            && (draggedNode.nextElementSibling != placeNearNodeFinal || !draggedNode.nextElementSibling)
-            ) {
-            awaitingScroll = true;
+        var insertInParent = placeNearNode.parentNode;
+        setTimeout(
+          () => {
+            insertInParent.insertBefore(copiedNode, placeNearNodeFinal);
+          },
+          isContainer ? 0 : 150
+        );
 
-            copiedNode = draggedNode.cloneNode(true);
-
-            delayActions();
-            
-            var isContainer = draggedNode.classList.contains("cms-container");
-            if (isContainer) {
-                deleteContainer(draggedNode, false);
-            }
-            else {
-                deleteBlock(draggedNode, false);
-            }
-            
-            var insertInParent = placeNearNode.parentNode;
-            setTimeout(()=>{
-                insertInParent.insertBefore(copiedNode, placeNearNodeFinal);            
-            },isContainer ? 0 : 150);
-
-            cmsHistoryPush();
-        }
+        cmsHistoryPush();
+      }
     }
     placeNearNode = null;
-}, false);
+  },
+  false
+);
 
 function moveBlock(direction) {
-    if (!cmsTarget) return;
-    var isPlaceBefore = cmsTarget;
-    var isPlaceBeforeFinal = isPlaceBefore;
-    if (direction === 1) {
-        isPlaceBeforeFinal = isPlaceBeforeFinal.nextElementSibling;
-        if (!isPlaceBeforeFinal) return; // already bottom
-        isPlaceBeforeFinal = isPlaceBeforeFinal.nextElementSibling;
-    }
-    else if (direction === -1) {
-        isPlaceBeforeFinal = isPlaceBeforeFinal.previousElementSibling;
-        if (!isPlaceBeforeFinal) return; // already top
-    }
-    awaitingScroll = true;
+  if (!cmsTarget) return;
+  var isPlaceBefore = cmsTarget;
+  var isPlaceBeforeFinal = isPlaceBefore;
+  if (direction === 1) {
+    isPlaceBeforeFinal = isPlaceBeforeFinal.nextElementSibling;
+    if (!isPlaceBeforeFinal) return; // already bottom
+    isPlaceBeforeFinal = isPlaceBeforeFinal.nextElementSibling;
+  } else if (direction === -1) {
+    isPlaceBeforeFinal = isPlaceBeforeFinal.previousElementSibling;
+    if (!isPlaceBeforeFinal) return; // already top
+  }
+  awaitingScroll = true;
 
-    delayActions();
-    isPlaceBefore.parentNode.insertBefore(cmsTarget, isPlaceBeforeFinal);
-    cmsHistoryPush();
+  delayActions();
+  isPlaceBefore.parentNode.insertBefore(cmsTarget, isPlaceBeforeFinal);
+  cmsHistoryPush();
 }
 
 var awaitingScroll = false;
 
 // drag end
 
-// quill start        
+// quill start
 window.cmsBlockBackgroundImageCallback = (src) => {
-    setBlockBackgroundImage(src);
+  setBlockBackgroundImage(src);
 
-    if (elem('#cmsBlockBackground .image-opacity').value > 50) {
-        setRangeSliderValue(elem('#cmsBlockBackground .image-opacity'), 50);
-    }
-}
+  if (elem("#cmsBlockBackground .image-opacity").value > 50) {
+    setRangeSliderValue(elem("#cmsBlockBackground .image-opacity"), 50);
+  }
+};
 
-function setBlockBackgroundImage(val = '') {
-    var background = elem(".cmsBlockBackgroundPreview");
-    background.style.backgroundImage = val ? `url("/uploads/df/${val}")` : "";
+function setBlockBackgroundImage(val = "") {
+  var background = elem(".cmsBlockBackgroundPreview");
+  background.style.backgroundImage = val ? `url("/uploads/df/${val}")` : "";
 }
 
 function setBlockBackgroundColorOpacity(val = 1) {
-    var color = elem(".cmsBlockBackgroundPreview .background-color");
-    color.style.opacity = val / 100;
-    setValue(elem('#cmsBlockBackground .image-opacity'), val);
+  var color = elem(".cmsBlockBackgroundPreview .background-color");
+  color.style.opacity = val / 100;
+  setValue(elem("#cmsBlockBackground .image-opacity"), val);
 }
 
-function setBlockBackgroundColor(val = 'FFFFFF') {
-    var color = elem(".cmsBlockBackgroundPreview .background-color");
-    color.style.backgroundColor = "#" + val;
+function setBlockBackgroundColor(val = "FFFFFF") {
+  var color = elem(".cmsBlockBackgroundPreview .background-color");
+  color.style.backgroundColor = "#" + val;
 
-    setJSColorValue(elem('.bckgcolor'), val);
+  setValue(elem(".bckgcolor"), val);
 
-    elem('#cmsBlockBackground .image-opacity-wrapper .range-rect').style.background = `linear-gradient(to right, #fff, #${val})`;
+  elem(
+    "#cmsBlockBackground .image-opacity-wrapper .range-rect"
+  ).style.background = `linear-gradient(to right, #fff, #${val})`;
 
-    if (elem('#cmsBlockBackground .image-opacity').value < 30) {
-        setRangeSliderValue(elem('#cmsBlockBackground .image-opacity'), 30);
-    }
+  if (elem("#cmsBlockBackground .image-opacity").value < 30) {
+    setRangeSliderValue(elem("#cmsBlockBackground .image-opacity"), 30);
+  }
 }
 
 function rewriteURL() {
-    elem(`[name="link"]`).value = getLink(elem(`[name="title"]`).value);
+  elem(`[name="link"]`).value = getLink(elem(`[name="title"]`).value);
 }
 
-registerModalContent(`
+registerModalContent(
+  `
     <div id="cms" data-expand>
         <div class="stretch-vertical">
 
@@ -1316,7 +1468,9 @@ registerModalContent(`
 
                     <div class="btn" onclick="editContainerSettings()" data-tooltip="Wymiary / Rozmieszczenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
 
-                    <div class="btn" onclick="editBlockBackground()" data-tooltip="Tło kontenera - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
+                    <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło kontenera - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
+
+                    <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie kontenera"> <i class="fas fa-border-style"></i> </div>
 
                     <div class="btn" onclick="copyContainer()" data-tooltip="Skopiuj kontener do schowka"> <i class="fas fa-clipboard"></i> </div>
                     
@@ -1338,7 +1492,9 @@ registerModalContent(`
 
                     <div class="btn" onclick="editBlockSettings()" data-tooltip="Wymiary / Ułożenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
                     
-                    <div class="btn" onclick="editBlockBackground()" data-tooltip="Tło bloku - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
+                    <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło bloku - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
+
+                    <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie bloku"> <i class="fas fa-border-style"></i> </div>
 
                     <div class="btn" onclick="editBlockAnimation()" data-tooltip="Animacje"> <i class="fas fa-step-forward"></i> </div>
 
@@ -1373,17 +1529,24 @@ registerModalContent(`
         </div>
         <!--<link href="/admin/tools/cms.css?v=${RELEASE}" rel="stylesheet"> NOW GLOBAL-->
     </div>
-`,()=>{cmsModalLoaded();});
+`,
+  () => {
+    cmsModalLoaded();
+  }
+);
 
 var widths = ``;
 
 Object.keys(screenSizes).forEach((size) => {
-    type = size == "sm" ? "Wersja mobilna <i class='fas fa-mobile-alt'></i>" : "Wersja desktopowa <i class='fas fa-desktop'></i>";
-    widths += `<h4>Szerokość bloku - ${type} <i class='fas fa-info-circle' data-tooltip='Wpisz wartość np 50%, 400px itd.'></i></h4>`;
+  type =
+    size == "sm"
+      ? "Wersja mobilna <i class='fas fa-mobile-alt'></i>"
+      : "Wersja desktopowa <i class='fas fa-desktop'></i>";
+  widths += `<h4>Szerokość bloku - ${type} <i class='fas fa-info-circle' data-tooltip='Wpisz wartość np 50%, 400px itd.'></i></h4>`;
 
-    var attribute = type = size == "sm" ? "mobile-width" : "desktop-width";
+  var attribute = (type = size == "sm" ? "mobile-width" : "desktop-width");
 
-    widths += `
+  widths += `
         <div class="selectbox">
             <input type="text" style="width:150px" data-attribute="${attribute}" data-default-value="100%" data-default-unit="px">
             <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
@@ -1394,15 +1557,6 @@ Object.keys(screenSizes).forEach((size) => {
                 <div data-option="20%">1/5</div>
             </div>
         </div>`;
-    // TODO hide in mobile
-    // 100% full width as checkbox? simpler
-    /*if (size == "lg") {
-        widths += `<span class='space-radios'>|</span><label><input type='radio' class='classList' name='col-lg' value='col-lg-13'>100% szerokości okna <i class='fas fa-info-circle' data-tooltip='Szerokość niezależna od maksymalnej szerokości kontenera głównego'></i></label>`;
-    }
-    if (size == "sm") {
-        widths += `<span class='space-radios'>|</span><label><input type='radio' class='classList' name='col-sm' value='col-sm-0'>Ukryj blok <i class='fas fa-info-circle' data-tooltip='Blok niewidoczny na urządzeniach mobilnych'></i></label>`;
-    }
-    widths += `</div>`;*/
 });
 
 registerModalContent(`
@@ -1420,11 +1574,13 @@ registerModalContent(`
                 <div class="desktopRow spaceColumns">
                     <div>
                         <h4 style="text-align:center;margin-bottom:5px">Margines zewnętrzny</h4>
-                        ${getMarginControl('margin')}
+                        ${getMarginControl("margin")}
                     </div>
                     <div>
                         <h4 style="text-align:center;margin-bottom:5px">Margines wewnętrzny</h4>
-                        ${getMarginControl('padding',".cms-block-content",{all:"12px"})}
+                        ${getMarginControl("padding", ".cms-block-content", {
+                          all: "12px",
+                        })}
                     </div>
                 </div>
                 <h4>Wyrównaj zawartość</h4>
@@ -1474,9 +1630,16 @@ registerModalContent(`
 `);
 
 var justifies = "";
-var justifyOptions = ["flex-start","center","flex-end","space-between","space-around","space-evenly"];
+var justifyOptions = [
+  "flex-start",
+  "center",
+  "flex-end",
+  "space-between",
+  "space-around",
+  "space-evenly",
+];
 for (val of justifyOptions) {
-    justifies += `<div style='border:1px solid #aaa;width:54px;margin: 5px;display:inline-flex;justify-content:${val}' data-option="${val}" onclick='selectInGroup(this)'>
+  justifies += `<div style='border:1px solid #aaa;width:54px;margin: 5px;display:inline-flex;justify-content:${val}' data-option="${val}" onclick='selectInGroup(this)'>
         <div style='width:10px;height:15px;background:#55c;'></div>
         <div style='width:10px;height:15px;background:#c55;'></div>
         <div style='width:10px;height:15px;background:#5c5;'></div>
@@ -1484,9 +1647,9 @@ for (val of justifyOptions) {
 }
 
 var aligns = "";
-var alignOptions = ["stretch","flex-start","center","flex-end"];
+var alignOptions = ["stretch", "flex-start", "center", "flex-end"];
 for (val of alignOptions) {
-    aligns += `<div style='border:1px solid #aaa;margin: 5px;height:30px;display:inline-flex;align-items:${val}' data-option="${val}" onclick='selectInGroup(this)'>
+  aligns += `<div style='border:1px solid #aaa;margin: 5px;height:30px;display:inline-flex;align-items:${val}' data-option="${val}" onclick='selectInGroup(this)'>
         <div style='width:10px;min-height:15px;background:#55c;'></div>
         <div style='width:10px;min-height:25px;background:#c55;'></div>
         <div style='width:10px;min-height:20px;background:#5c5;'></div>
@@ -1494,94 +1657,147 @@ for (val of alignOptions) {
 }
 
 var flows = "";
-var flowOptions = ["row nowrap","row-reverse nowrap",false,"row wrap","row-reverse wrap",false,"column","column-reverse"];
+var flowOptions = [
+  "row nowrap",
+  "row-reverse nowrap",
+  false,
+  "row wrap",
+  "row-reverse wrap",
+  false,
+  "column",
+  "column-reverse",
+];
 for (val of flowOptions) {
-    if (val === false) {
-        flows += "<div style='width:100%'></div>";
-        continue;
-    }
+  if (val === false) {
+    flows += "<div style='width:100%'></div>";
+    continue;
+  }
 
-    var isRow = val.indexOf("row") !== -1;
+  var isRow = val.indexOf("row") !== -1;
 
-    var styles = isRow ? "width:30px;" : "";
+  var styles = isRow ? "width:30px;" : "";
 
-    flows += `<div style='border:1px solid #aaa;margin: 5px;;display:inline-flex;flex-flow:${val};width:75px;' data-option="${val}" onclick='selectInGroup(this)'>
+  flows += `<div style='border:1px solid #aaa;margin: 5px;;display:inline-flex;flex-flow:${val};width:75px;' data-option="${val}" onclick='selectInGroup(this)'>
         <div style='${styles}min-height:15px;background:#c55;display:flex;justify-content:center;align-items:center'>1</div>
         <div style='${styles}min-height:15px;background:#cc5;display:flex;justify-content:center;align-items:center'>2</div>
         <div style='${styles}min-height:15px;background:#5c5;display:flex;justify-content:center;align-items:center'>3</div>`;
 
-    if (isRow) {
-        flows += `<div style='width:30px;min-height:15px;background:#5cc;display:flex;justify-content:center;align-items:center'>4</div>
+  if (isRow) {
+    flows += `<div style='width:30px;min-height:15px;background:#5cc;display:flex;justify-content:center;align-items:center'>4</div>
             <div style='width:30px;min-height:15px;background:#55c;display:flex;justify-content:center;align-items:center'>5</div>`;
-    }
-    flows += `</div>`;
+  }
+  flows += `</div>`;
 }
 
 var margins = "";
 
 function getMarginControl(prefix = "margin", target = "", defaults = {}) {
-    if (target) target = `data-target="${target}"`;
-    for (var direction of ["top","left","right","bottom"]) {
-        defaults[direction] = defaults.all ? defaults.all : "";
-    }
-    return `
-        <div style="max-width:400px">
-            <div style="display:flex;justify-content:center">
-                <div class="selectbox">
-                    <input type="text" style="width:100px" data-attribute="${prefix}_top" data-default-value="${defaults.top}" data-default-unit="px" class="field" ${target}>
-                    <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                        <div data-option="0">0</div>
-                        <div data-option="12px">12px</div>
-                        <div data-option="24px">24px</div>
-                        <div data-option="36px">36px</div>
-                        <div data-option="2%">2%</div>
-                        <div data-option="4%">4%</div>
-                        <div data-option="6%">6%</div>
-                    </div>
+  if (target) target = `data-target="${target}"`;
+  for (var direction of ["top", "left", "right", "bottom"]) {
+    defaults[direction] = defaults.all ? defaults.all : "";
+  }
+  return `
+    <div style="max-width:400px">
+        <div style="display:flex;justify-content:center">
+            <div class="selectbox">
+                <input type="text" style="width:100px" data-attribute="${prefix}_top" data-default-value="${defaults.top}" data-default-unit="px" class="field" ${target}>
+                <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                    <div data-option="0">0</div>
+                    <div data-option="12px">12px</div>
+                    <div data-option="24px">24px</div>
+                    <div data-option="36px">36px</div>
+                    <div data-option="2%">2%</div>
+                    <div data-option="4%">4%</div>
+                    <div data-option="6%">6%</div>
                 </div>
             </div>
-            <div style="display:flex;justify-content: space-around;padding: 20px 0;">
-                <div class="selectbox">
-                    <input type="text" style="width:100px" data-attribute="${prefix}_left" data-default-value="${defaults.left}" data-default-unit="px" class="field" ${target}>
-                    <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                        <div data-option="0">0</div>
-                        <div data-option="12px">12px</div>
-                        <div data-option="24px">24px</div>
-                        <div data-option="36px">36px</div>
-                        <div data-option="2%">2%</div>
-                        <div data-option="4%">4%</div>
-                        <div data-option="6%">6%</div>
-                    </div>
-                </div>
-                <div class="selectbox">
-                    <input type="text" style="width:100px" data-attribute="${prefix}_right" data-default-value="${defaults.right}" data-default-unit="px" class="field" ${target}>
-                    <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                        <div data-option="0">0</div>
-                        <div data-option="12px">12px</div>
-                        <div data-option="24px">24px</div>
-                        <div data-option="36px">36px</div>
-                        <div data-option="2%">2%</div>
-                        <div data-option="4%">4%</div>
-                        <div data-option="6%">6%</div>
-                    </div>
+        </div>
+        <div style="display:flex;justify-content: space-around;padding: 20px 0;">
+            <div class="selectbox">
+                <input type="text" style="width:100px" data-attribute="${prefix}_left" data-default-value="${defaults.left}" data-default-unit="px" class="field" ${target}>
+                <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                    <div data-option="0">0</div>
+                    <div data-option="12px">12px</div>
+                    <div data-option="24px">24px</div>
+                    <div data-option="36px">36px</div>
+                    <div data-option="2%">2%</div>
+                    <div data-option="4%">4%</div>
+                    <div data-option="6%">6%</div>
                 </div>
             </div>
-            <div style="display:flex;justify-content:center">
-                <div class="selectbox">
-                    <input type="text" style="width:100px" data-attribute="${prefix}_bottom" data-default-value="${defaults.bottom}" data-default-unit="px" class="field" ${target}>
-                    <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                        <div data-option="0">0</div>
-                        <div data-option="12px">12px</div>
-                        <div data-option="24px">24px</div>
-                        <div data-option="36px">36px</div>
-                        <div data-option="2%">2%</div>
-                        <div data-option="4%">4%</div>
-                        <div data-option="6%">6%</div>
-                    </div>
+            <div class="selectbox">
+                <input type="text" style="width:100px" data-attribute="${prefix}_right" data-default-value="${defaults.right}" data-default-unit="px" class="field" ${target}>
+                <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                    <div data-option="0">0</div>
+                    <div data-option="12px">12px</div>
+                    <div data-option="24px">24px</div>
+                    <div data-option="36px">36px</div>
+                    <div data-option="2%">2%</div>
+                    <div data-option="4%">4%</div>
+                    <div data-option="6%">6%</div>
                 </div>
             </div>
-        </div>`;
+        </div>
+        <div style="display:flex;justify-content:center">
+            <div class="selectbox">
+                <input type="text" style="width:100px" data-attribute="${prefix}_bottom" data-default-value="${defaults.bottom}" data-default-unit="px" class="field" ${target}>
+                <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                    <div data-option="0">0</div>
+                    <div data-option="12px">12px</div>
+                    <div data-option="24px">24px</div>
+                    <div data-option="36px">36px</div>
+                    <div data-option="2%">2%</div>
+                    <div data-option="4%">4%</div>
+                    <div data-option="6%">6%</div>
+                </div>
+            </div>
+        </div>
+    </div>`;
 }
+
+registerModalContent(`
+    <div id="cmsBorder">
+        <div style="width: 100%;max-width: 500px;height:100%;max-height:500px">
+
+            <div class="custom-toolbar">
+                <span class="title">Obramowanie</span>
+                <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                <div class="btn primary" onclick="saveCMSBorder();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
+            </div>
+
+            <div style="padding:10px;margin-top:-15px">
+                <div class="field-title">Grubość krawędzi</div>
+                <div class="selectbox">
+                    <input type="text" style="width:100px" class="field border-width" data-attribute="border-width" onchange="updateBorderPreview()">
+                    <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                        <div data-option="0">0</div>
+                        <div data-option="1px">1px</div>
+                        <div data-option="2px">2px</div>
+                        <div data-option="5px">5px</div>
+                    </div>
+                </div>
+
+                <div class="field-title">Kolor krawędzi</div>
+                <input class="jscolor" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
+                <div class="btn primary" onclick="setValue(this.previousElementSibling,'')">Brak <i class="fa fa-times"></i></div>
+
+                <div class="field-title">Zaokrąglenie krawędzi</div>
+                <div class="selectbox">
+                    <input type="text" style="width:100px" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
+                    <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                        <div data-option="0">0</div>
+                        <div data-option="4px">4px</div>
+                        <div data-option="8px">8px</div>
+                        <div data-option="50%">50%</div>
+                    </div>
+                </div>
+
+                <div class="field-title">Podgląd</div>
+                <div class="borderPreview"></div>
+            </div>
+        </div>
+    </div>
+`);
 
 registerModalContent(`
     <div id="cmsContainerSettings">
@@ -1597,11 +1813,11 @@ registerModalContent(`
                 <div class="desktopRow spaceColumns">
                     <div>
                         <h4 style="text-align:center;margin-bottom:5px">Margines zewnętrzny</h4>
-                        ${getMarginControl('margin')}
+                        ${getMarginControl("margin")}
                     </div>
                     <div>
                         <h4 style="text-align:center;margin-bottom:5px">Margines wewnętrzny</h4>
-                        ${getMarginControl('padding')}
+                        ${getMarginControl("padding")}
                     </div>
                 </div>
                 <div class="desktopRow spaceColumns">
@@ -1717,7 +1933,8 @@ registerModalContent(`
     </div>
 `);
 
-registerModalContent(`
+registerModalContent(
+  `
     <div id="cmsModules">
         <div>
             <div class="custom-toolbar">
@@ -1729,15 +1946,20 @@ registerModalContent(`
             </div>
         </div>
     </div>
-`,()=>{moduleListModalLoaded();});
+`,
+  () => {
+    moduleListModalLoaded();
+  }
+);
 
-registerModalContent(`
+registerModalContent(
+  `
     <div id="cmsBlockBackground">
         <div style="width:100%;max-width:650px">
             <div class="custom-toolbar">
-                <span class="title">Tło bloku</span>
+                <span class="title">Tło</span>
                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                <div class="btn primary" onclick="saveBlockBackground();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
+                <div class="btn primary" onclick="saveCMSBackground();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
 
             <div style="padding:10px 0;" class="mobileRow default-form">
@@ -1772,4 +1994,9 @@ registerModalContent(`
             </div>
         </div>
     </div>
-`,()=>{registerRangeSliders();jscolor.installByClassName("jscolor")});
+`,
+  () => {
+    registerRangeSliders();
+    jscolor.installByClassName("jscolor");
+  }
+);

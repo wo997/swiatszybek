@@ -4,67 +4,54 @@ $user_basket = [];
 
 $basket = json_decode($_SESSION["basket"],true);
 
-$basket_ids = array_keys($basket);
-$inBasket = implode(",",$basket_ids);
-$variant_id_list = [];
-if ($inBasket) {
-  $variants = fetchArray("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, quantity as stock
-  FROM products i INNER JOIN variant v USING (product_id) WHERE variant_id IN ($inBasket)");
+$basket_variant_id_list = "";
+foreach ($basket as $basket_item) {
+  $basket_variant_id_list .= $basket_item["variant_id"].",";
+}
 
-  foreach($variants as &$variant) {
-    $variant_id_list[] = $variant["variant_id"];
-    $variant["real_price"] = $variant["price"] - $variant["rabat"];
+$where = "1";
+
+if ($basket_variant_id_list) {
+  $where .= " AND variant_id IN (".substr($basket_variant_id_list, 0, -1).")";
+}
+
+$unordered_basket_variants = fetchArray("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, stock
+  FROM products i INNER JOIN variant v USING (product_id) WHERE $where");
+
+$basket_variants = [];
+
+foreach ($basket as $basket_item) { // merge variants with quantity into basket, simple right?
+  foreach ($unordered_basket_variants as $unordered_basket_variant) {
+    if ($unordered_basket_variant["variant_id"] == $basket_item["variant_id"]) {
+      $unordered_basket_variant["quantity"] = $basket_item["quantity"];
+      $basket_variants[] = $unordered_basket_variant;
+      break;
+    }
   }
-  unset($variant);
 }
 
 $totalBasketCost = 0;
 
-foreach ($basket_ids as $basket_variant_id)
-{
-  $empty = false;
-  $index = array_search($basket_variant_id,$variant_id_list);
-  
-  $variants[$index]["quantity"] = $basket[$basket_variant_id];
+$item_count = 0;
 
-  $v = $variants[$index];
-  $basket_product_id = $v["product_id"];
-  $basket_price0 = $v["price"];
-  $basket_rabat = $v["rabat"];
-  $quantity = $v["quantity"];
+foreach($basket_variants as $basket_variant_index => $basket_variant) {
+  $basket_variant["real_price"] = $basket_variant["price"] - $basket_variant["rabat"];
 
-  $basket_price = 0;
-
-  $basket_product_id_count = [];
-
-  $item_count = 0;
-  for ($i=0;$i<$quantity;$i++)
+  $total_price = 0;
+  for ($i=0; $i<$basket_variant["quantity"]; $i++) // u can add special offers here later
   {
-    if (!isset($basket_product_id_count[$basket_product_id])) {
-      $basket_product_id_count[$basket_product_id] = 0; 
-    }
-    $basket_product_id_count[$basket_product_id]++;
-    $c = $basket_product_id_count[$basket_product_id];
-
-    /*if ($basket_different) {
-      if ($c == 1) $basket_price += $basket_price1;
-      else if ($c == 2) $basket_price += $basket_price2;
-      else $basket_price += $basket_price3;
-    }
-    else {
-      
-    }*/
-    $basket_price += $basket_price0;
-    $basket_price -= $basket_rabat;
+    $item_count++;
+    $total_price += $basket_variant["real_price"];
   }
-  $variants[$index]["total_price"] = $basket_price;
+
+  $basket_variant["total_price"] = $total_price;
 
   $totalBasketCost += $basket_price;
-  $item_count++;
+
+  $basket_variants[$basket_variant_index] = $basket_variant;
 }
 
-$user_basket["variants"] = $variants;
-$user_basket["variant_id_list"] = $variant_id_list;
+$user_basket["variants"] = $basket_variants;
 $user_basket["total_basket_cost"] = $totalBasketCost;
 $user_basket["item_count"] = $item_count;
 

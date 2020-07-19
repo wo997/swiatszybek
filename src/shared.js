@@ -237,6 +237,11 @@ function removeContent(node) {
   }
 }
 
+function setContent(node, html = "") {
+  removeContent(node);
+  node.insertAdjacentHTML("afterbegin", html);
+}
+
 function swapNodes(n1, n2) {
   if (!n1 || !n2) return;
   
@@ -1621,7 +1626,12 @@ function moveCursorToEnd(el) {
 }
 
 function setValue(input, val) {
-  if (input.getAttribute("type") == "checkbox") {
+  if (input.classList.contains("jscolor")) {
+    var hex = val.replace("#","");
+    input.value = hex;
+    input.style.background = hex ? "#"+hex : "";
+  }
+  else if (input.getAttribute("type") == "checkbox") {
     input.checked = val ? true : false;
   }
   else {
@@ -2092,7 +2102,7 @@ function getLink(phrase) {
   return phrase
     .toLowerCase()
     .replace(/[^(a-zA-Z0-9-)]/g, "")
-    .replace("--", "-");
+    .replace(/-+/g, "-");
 }
 
 
@@ -2203,7 +2213,7 @@ function setCookie(cname, cvalue) {
   var d = new Date();
   d.setTime(d.getTime() + 60 * 60 * 1000);
   var expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;samesite";
 }
 
 function getCookie(cname) {
@@ -2291,7 +2301,7 @@ function onSignIn(googleUser) {
 function kodPocztowyChange(src)
 {
   xhr({
-    url: `/kod_pocztowy_api.php`,
+    url: `/kod_pocztowy_api`,
     params: {
       kod: src.value
     },
@@ -2504,7 +2514,7 @@ function registerSelectboxes() {
       o.addEventListener("click", ()=>{
         var i = e.querySelector("input");
         if (i) {
-          i.value = o.getAttribute("data-option");
+          setValue(i, o.getAttribute("data-option"));
         }
       });
     });
@@ -2545,3 +2555,37 @@ function registerTextCounters() {
   });
 }
 /* text counter end */
+
+
+function addItemtoBasket(variant_id,diff,callback)
+{
+  if (diff == 1)
+    url = "/basket/add/"+variant_id+"/"+1;
+  else
+    url = "/basket/remove/"+variant_id+"/"+1;
+
+  xhr({
+    url: url,
+    success: (res) => {
+      var json = JSON.parse(res);
+
+      setContent(elem("#basketContent"), json.basket_content_html);
+
+      elem("#amount").innerHTML = json.item_count; // header basket
+
+      if (callback) {
+        callback(json);
+      }
+    }
+  });
+}
+
+
+function rgbStringToHex(rgbString) {
+  if (rgbString.substr(0,3) != "rgb") return rgbString;
+  return rgbString.replace(/rgb\((.+?)\)/ig, (_, rgb) => {
+    return '#' + rgb.split(',')
+      .map(str => parseInt(str, 10).toString(16).padStart(2, '0'))
+      .join('')
+  })
+}

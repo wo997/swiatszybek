@@ -22,13 +22,16 @@
 
                 e = e.querySelector(".cms-block-content");
                 if (a.indexOf("m_left") != -1) {
-                    e.style.transform = "translate(200px,0)";
+                    e.style.transform = "translate(100px,0)";
                 }
                 if (a.indexOf("m_right") != -1) {
                     e.style.transform = "translate(-100px,0)";
                 }
                 if (a.indexOf("m_up") != -1) {
-                    e.style.transform = "translate(0,200px)";
+                    e.style.transform = "translate(0,100px)";
+                }
+                if (a.indexOf("m_down") != -1) {
+                    e.style.transform = "translate(0,-100px)";
                 }
                 if (a.indexOf("s_compress") != -1) {
                     e.style.transform = "scale(1.3)";
@@ -38,9 +41,10 @@
                 }
                 e.style.opacity = 0;
                 setTimeout(() => {
-                    e.style.transition = "opacity 1.6s, transform 1.2s";
+                    //e.style.transition = "opacity 1.6s, transform 0.4s";
+                    e.style.transition = "all 1.6s"; // needs to be equal
                     e.style.opacity = 1;
-                    e.style.transform = "";
+                    e.style.transform = "translate(0,0)";
                 }, 0);
             }
         });

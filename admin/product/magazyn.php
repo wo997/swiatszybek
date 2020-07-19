@@ -65,7 +65,7 @@
   });
 
   function dostawa(now, was, variant_id) {
-    ajax('/admin/change_variant_quantity', {
+    ajax('/admin/change_variant_stock', {
       quantity_difference: now-was,
       variant_id: variant_id
     }, (response) => {

@@ -101,3 +101,8 @@
   box-sizing: content-box;
   resize: none;
 }
+
+.jscolor {
+  width: 65px;
+  text-align: center;
+}

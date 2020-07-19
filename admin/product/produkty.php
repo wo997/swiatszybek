@@ -39,7 +39,7 @@
           title: "W magazynie",
           width: "100px",
           render: (r) => {
-            return `${nonull(r.amount,0)} szt.`;
+            return `${nonull(r.stock,0)} szt.`;
           }
         },
       ],

@@ -9,50 +9,51 @@ $basket = json_decode($_SESSION["basket"],true);
 
 $request = $urlParts[1];
 
+$basket_variant_limit = 10;
+
 if ($request == "add")
 {
   $variant_id = intval($urlParts[2]);
   if ($variant_id == 0) die;
   $quantity = intval($urlParts[3]);
-  if ($quantity == 0) die;
+  if ($quantity <= 0) die;
 
-  if (isset($basket[$variant_id]))
-    $basket[$variant_id] += $quantity;
-  else
-    $basket[$variant_id] = $quantity;
+  if ($quantity > $basket_variant_limit) $quantity = $basket_variant_limit;
 
-  if ($basket[$variant_id] > 10) // top limit
-  {
-    $basket[$variant_id] = 10;
+  $variant_found = false;
+  foreach ($basket as $basket_item_id => $basket_item) {
+    if ($basket[$basket_item_id]["variant_id"] == $variant_id) {
+      $variant_found = true;
+      $basket[$basket_item_id]["quantity"] += $quantity;
+      if ($basket[$basket_item_id]["quantity"] > $basket_variant_limit) {
+        $basket[$basket_item_id]["quantity"] = $basket_variant_limit;
+      }
+      break;
+    }
   }
-  $sayBasket = true;
+
+  if (!$variant_found) {
+    $basket[] = [
+      "variant_id" => $variant_id,
+      "quantity" => $quantity
+    ];
+  }
 }
 else if ($request == "remove")
 {
   $variant_id = intval($urlParts[2]);
   if ($variant_id == 0) die;
   $quantity = intval($urlParts[3]);
-  if ($quantity == 0) die;
+  if ($quantity <= 0) die;
 
-  if (isset($basket[$variant_id]))
-    $basket[$variant_id] -= $quantity;
-
-  if ($basket[$variant_id] < 1)
-  {
-    unset($basket[$variant_id]);
-  }
-
-  $sayBasket = true;
-}
-else if ($request == "set")
-{
-  $basket = json_decode($urlParts[2],true); // prevent sql injection and so on
-  foreach ($basket as $variant => $amount)
-  {
-    if ($amount <= 0)
-    {
-      unset($basket[$variant]);
+  foreach ($basket as $basket_item_id => $basket_item) {
+    if ($basket[$basket_item_id]["variant_id"] == $variant_id) {
+      $basket[$basket_item_id]["quantity"] -= $quantity;
+      if ($basket[$basket_item_id]["quantity"] < 1) {
+        unset($basket[$basket_item_id]);
+      }
     }
+    break;
   }
 }
 else die;
@@ -63,7 +64,6 @@ $_SESSION["basket"] = $basket_string;
 setcookie("basket", $basket_string, (time() + 31536000) , '/');
 
 if ($app["user"]["id"]) {
-  
   query("UPDATE users SET basket = ? WHERE user_id = ?", [
     $basket_string, $app["user"]["id"]
   ]);
@@ -71,32 +71,17 @@ if ($app["user"]["id"]) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-  if (isset($_POST['html']))
-  {
-    require "print_basket_nice.php";
-    echo json_encode([
-      "html" => $res,
-      "totalBasketCost" => $app["user"]["basket"]["total_basket_cost"]
-    ]);
-    die;
-  }
-  else if (isset($sayBasket))
-  {
-    include "basketContent.php";
-    
-    $basket_ids = array_keys($basket);
-    $basket_counts = array_values($basket);
+  $response = [];
 
-    echo json_encode([
-      "basket_ids" => $basket_ids,
-      "basket_counts" => $basket_counts, 
-      "basketContent" => $basketContent
-    ]);
-    die;
-  }
-}
-else
-{
-  header("Location: /koszyk/$specificTime"); // unused
-  die;
+  $response["basket"] = $basket;
+
+  include "basketContent.php";
+  $response["basket_content_html"] = $basketContent;
+
+  require "print_basket_nice.php";
+  $response["basket_table_html"] = $res;
+  $response["total_basket_cost"] = $app["user"]["basket"]["total_basket_cost"];
+  $response["item_count"] = $app["user"]["basket"]["item_count"];
+
+  die(json_encode($response));
 }

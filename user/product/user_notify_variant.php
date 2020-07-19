@@ -26,7 +26,7 @@ if (!$res) {
 }
 
 $v_id = $variant_id;
-$stmt = $con->prepare("SELECT quantity, i.title, v.product_id, image, v.name FROM variant v INNER JOIN products i ON i.product_id = v.product_id WHERE variant_id = " . intval($v_id));
+$stmt = $con->prepare("SELECT stock, i.title, v.product_id, image, v.name FROM variant v INNER JOIN products i ON i.product_id = v.product_id WHERE variant_id = " . intval($v_id));
 $stmt->execute();
 $stmt->bind_result($q,$a_title,$a_product_id,$a_image,$a_v_name);
 mysqli_stmt_fetch($stmt);

@@ -60,7 +60,7 @@ function getLink($phrase)
 { // also shared.js
   $pl = array(',', ' ', 'ę', 'Ę', 'ó', 'Ó', 'ą', 'Ą', 'ś', 'Ś', 'ł', 'Ł', 'ż', 'Ż', 'ź', 'Ź', 'ć', 'Ć', 'ń', 'Ń');
   $en = array('-', '-', 'e', 'E', 'o', 'O', 'a', 'A', 's', 'S', 'l', 'L', 'z', 'Z', 'z', 'Z', 'c', 'C', 'n', 'N');
-  return strtolower(str_replace("--", "-", preg_replace("/[^(a-zA-Z0-9-)]/", "", str_replace($pl, $en, $phrase))));
+  return strtolower(preg_replace("/-+/", "-", preg_replace("/[^(a-zA-Z0-9-)]/", "", str_replace($pl, $en, $phrase))));
 }
 
 function getMenuLink($menu_item)
@@ -152,18 +152,18 @@ if (isset($_SESSION["user"])) {
 }
 
 if (!isset($_SESSION["basket"]) || empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["basket"]) {
-  $b = "{}";
+  $b = "[]";
   if (isset($_COOKIE["basket"])) {
     $b = $_COOKIE["basket"];
   }
   $_SESSION["basket"] = $b;
 }
+//$_SESSION["basket"] = "";
 
 function nonull($arr, $key, $default = "")
 {
   return isset($arr[$key]) ? $arr[$key] : $default;
 }
-
 
 function getTrackingLink($track, $dostawa, $dostawa_name)
 {
@@ -227,8 +227,6 @@ function getEmailFooter()
   global $SITE_URL;
   return "\n<br><br><i>Pozdrawiamy,</i><br><a href='$SITE_URL'><img src='$SITE_URL/img/logo.png' style='width:200px'></a></p>";
 }
-
-
 
 // db helpers start
 function fetchArray($sql, $params = [], $give_response = true)
@@ -682,10 +680,8 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
 }
 
 
-
-
 $attribute_data_types = [
-  "text" => [
+  "textlist" => [
     "description" => "Tekst (lista)",
   ],
   "numberlist" => [
@@ -693,6 +689,19 @@ $attribute_data_types = [
   ],
   "numberany" => [
     "description" => "Liczba (dowolna)",
+    "field" => "numerical_value"
+  ],
+  "colorany" => [
+    "description" => "Kolor (dowolny)",
+    "field" => "text_value",
+  ],
+  "dateany" => [
+    "description" => "Data (dowolna)",
+    "field" => "date_value"
+  ],
+  "textany" => [
+    "description" => "Tekst (dowolny)",
+    "field" => "text_value"
   ],
   /*"integer" => [
     "description" => "Liczba całkowita",

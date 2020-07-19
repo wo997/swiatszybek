@@ -1,7 +1,13 @@
 <?php //->[admin/save_product]
 
+$input = ["exceptions" => ["categories", "description"]];
+include "helpers/safe_post.php";
+
 if (isset($_POST["remove"])) {
     query("DELETE FROM variant WHERE product_id = ?",[
+        $_POST["product_id"]
+    ]);
+    query("DELETE FROM link_variant_attribute_value INNER JOIN variant USING (variant_id) WHERE product_id = ?",[
         $_POST["product_id"]
     ]);
 }
@@ -28,16 +34,6 @@ else {
   }
   $insert = substr($insert, 0, -1);
   query("INSERT INTO link_product_category (product_id, category_id) VALUES $insert");
-
-  // attribute values
-  query("DELETE FROM link_product_attribute_value WHERE product_id = ?",[$product_id]);
-  $insert = "";
-  foreach (json_decode($_POST["attribute_values"], true) as $value_id) {
-    $insert .= "($product_id,".intval($value_id)."),";
-  }
-  $insert = substr($insert, 0, -1);
-  query("INSERT INTO link_product_attribute_value (product_id, value_id) VALUES $insert");
-
 }
 include "../sitemap-create.php";
 die;

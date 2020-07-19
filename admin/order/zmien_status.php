@@ -92,10 +92,10 @@ if ($status != 4 && $zamowienie_data["status"] == 4) {
 }
 if ($add_subtract_stock !== "")
 {
-  $basket_swap = json_decode($zamowienie_data["basket"], true);
+  $basket_swap = json_decode($zamowienie_data["basket"], true); // TODO: REWORK THAT
   $basket = [];
   foreach ($basket_swap as $b) {
-    $stmt = $con->prepare("UPDATE variant SET quantity = quantity $add_subtract_stock " . intval($b['q']) . " where variant_id = " . intval($b['v']));
+    $stmt = $con->prepare("UPDATE variant SET stock = stock $add_subtract_stock " . intval($b['q']) . " WHERE variant_id = " . intval($b['v']));
     $stmt->execute();
     $stmt->close();
   }

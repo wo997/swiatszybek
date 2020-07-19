@@ -17,34 +17,38 @@
   }
 
   //$cansee = $app["user"]["is_admin"] ? "" : "AND published = 1";
-  $stmt = $con->prepare("SELECT product_id, title, link, seo_title, seo_description, description, specyfikacja_output, descriptionShort, price_min, price_max, image, published, cache_avg_rating, cache_rating_count FROM products WHERE product_id = $number");
-  $stmt->execute();
-  $stmt->bind_result($product_id0,$title0,$link0, $title_seo0, $description_seo0,$description0,$specyfikacja_output0,$descriptionShort0,$price_min0,$price_max0,$image0,$published0, $avg_rating,$review_count);
+  //$product_data = fetchRow("SELECT product_id, title, link, seo_title, seo_description, description, specyfikacja_output, descriptionShort, price_min, price_max, image, published, cache_avg_rating, cache_rating_count FROM products WHERE product_id = $number");
   
-  if (!mysqli_stmt_fetch($stmt))
+  $product_data = fetchRow("SELECT * FROM products WHERE product_id = $number");
+
+  if (!$product_data)
   {
     run();
   }
-  $stmt->close();
 
-  if ((!isset($parts[2]) || $parts[2] != $link0) && $link0) {
-    header("Location: ".getProductLink($product_id0, $link0));
+  if ((!isset($parts[2]) || $parts[2] != $product_data["link"]) && $product_data["link"]) {
+    header("Location: ".getProductLink($product_data["product_id"], $product_data["link"]));
     die;
   }
 
-  $priceText = $price_min0;
-  if (!empty($price_max0) && $price_min0 != $price_max0)
-    $priceText .= " - ".$price_max0;
+  $priceText = $product_data["price_min"];
+  if (!empty($product_data["price_max0"]) && $product_data["price_min"] != $product_data["price_max0"])
+    $priceText .= " - ".$product_data["price_max0"];
 
-  $stmt = $con->prepare("SELECT variant_id, name, product_code, price, rabat, color, zdjecie, zdjecia, quantity
-    FROM variant v WHERE product_id = $number AND published = 1 ORDER BY v.kolejnosc");
-  $stmt->execute();
-  $stmt->bind_result($variant_id,$name,$product_code,$price,$rabat,$color,$zdjecie,$zdjecia,$amount);
-  $variants0 = [];
-  $doWeHaveAny = false;
-  while (mysqli_stmt_fetch($stmt))
+  //$variants = fetchArray("SELECT variant_id, name, product_code, price, rabat, color, zdjecie, zdjecia, quantity FROM variant v WHERE product_id = $number AND published = 1 ORDER BY v.kolejnosc");
+  $variants = fetchArray("SELECT * FROM variant v WHERE product_id = $number AND published = 1 ORDER BY v.kolejnosc");
+
+  $anyVariantInStock = false;
+  foreach ($variants as $variant) {
+    if ($variant["stock"] > 0)
+    {
+      $anyVariantInStock = $variant["variant_id"];
+      break;
+    }
+  }
+  /*while (mysqli_stmt_fetch($stmt))
   {
-    $variants0[] = [
+    $variants[] = [
       "variant_id" => $variant_id,
       "name" => htmlspecialchars($name),
       "product_code" => htmlspecialchars($product_code),
@@ -55,9 +59,11 @@
       "zdjecia" => $zdjecia,
       "amount" => $amount
     ];
-    if ($amount > 0) $doWeHaveAny = true;
+    if ($amount > 0) {
+      $doWeHaveAny = true;
+    }
   }
-  $stmt->close();
+  $stmt->close();*/
 
   function addPicture($url)
   {
@@ -75,7 +81,7 @@
 
   $select_first_wyprzedaz_id = null;
 
-  foreach ($variants0 as $v) {
+  foreach ($variants as $v) {
     $zdjecia = explode(";",$v['zdjecie'].";".$v['zdjecia']);
     $main = true;
     foreach ($zdjecia as $z) {
@@ -100,10 +106,10 @@
     $variant_count++;
   }
 
-  if (!in_array($image0, $already_added_pics))
+  if (!in_array($product_data["image"], $already_added_pics))
   {
-    $gallery = addPicture($image0) . $gallery;
-    $already_added_pics = array_merge([$image0],$already_added_pics);
+    $gallery = addPicture($product_data["image"]) . $gallery;
+    $already_added_pics = array_merge([$product_data["image"]],$already_added_pics);
     $pic_count++;
   }
 
@@ -113,21 +119,21 @@
 
   $justOne = $variant_count == 1;
 
-  $des_seo = $description_seo0;
+  $des_seo = $product_data["seo_description"];
 
 
-  $stockSchema = $doWeHaveAny ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
+  $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 ?>
 
 <!DOCTYPE html>
 <html lang="pl">
   <head>
-    <title><?=$title_seo0?></title>
+    <title><?=$product_data["seo_title"]?></title>
     <meta name="description" content="<?=$des_seo?>">
     <?php include "includes.php";include "include/includes_for_cms_page.php"; ?>
 
-    <meta name="image" content="/uploads/md/<?=$image0?>" />
-    <meta property="og:image" content="/uploads/md/<?=$image0?>">
+    <meta name="image" content="/uploads/md/<?=$product_data["image"]?>" />
+    <meta property="og:image" content="/uploads/md/<?=$product_data["image"]?>">
     <meta property="og:image:type" content="image/png">
     <meta name="description" content="<?=$des_seo?>">
   	<meta property="og:title" content="<?=$title0?> - <?=config('main_email_sender')?>"/>
@@ -281,11 +287,6 @@
         -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15), inset 0px 0px 5px 0px rgba(0,0,0,0.05), inset -1px 2px 2px 0px rgba(255,255,255,0.5);
         -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15), inset 0px 0px 5px 0px rgba(0,0,0,0.05), inset -1px 2px 2px 0px rgba(255,255,255,0.5);
         box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.15), inset 0px 0px 5px 0px rgba(0,0,0,0.05), inset -1px 2px 2px 0px rgba(255,255,255,0.5);
-      }
-      #wybierz {
-        color: red;
-        padding: 5px 0;
-        display: none;
       }
 
       .amount {
@@ -481,85 +482,59 @@
             document.querySelector(".my-rating").className = "rating my-rating rating"+rating;
           });
         }
+        var variantButtons = document.querySelectorAll(".boxy"); 
+        for (var i = 0; i < variants.length; i++)
+        {
+          var variant = variants[i];
+
+          var basket_item = user_basket.find(b => {return b.variant_id == variant.variant_id});
+          variant.quantity = basket_item ? basket_item.quantity : 0;
+          var left = variant.stock - variant.quantity;
+
+          if (left > 0)
+          {
+            variantButtons[i].click();
+            break;
+          }
+        }
 
         youAlreadyHaveIt();
 
-        clickVariant(0);
+        userBasketUpdated();
+      });
 
-        var variants = document.querySelectorAll(".boxy"); 
-        for (var i = 0; i < variants.length; i++)
+      function userBasketUpdated() {
+        for (basket_item of user_basket)
         {
-          if (getQuantityOfVariant(i) > 0)
-          {
-            variants[i].click();
-            return;
-          }
+          var variant = variants.find(v => {return v.variant_id = basket_item.variant_id});
+          variant.quantity = basket_item.quantity;
         }
-      });
+      }
 
-      window.addEventListener("load",function(){
-        var c = document.querySelectorAll("colgroup");
-        for (a=0;a<c.length;a++) {
-          c[a].parentNode.removeChild(c[a]);
-        }
-      });
-
-      var ANIMATE_VARIANT = -1;
-      function youAlreadyHaveIt()
+      function youAlreadyHaveIt(animate_variant_id = null) // optional
       {
         var juzMasz = "";
         var total = 0;
-        for (i=0;i<basket_ids.length;i++)
+        for (basket_item of user_basket)
         {
-          var product_id = basket_ids[i];
-          var id = ids.indexOf(product_id);
-          if (id != -1)
+          var variant = variants.find(v => {return v.variant_id = basket_item.variant_id});
+
+          if (!variant) continue;
+
+          var animate = animate_variant_id == basket_item.variant_id ? "style='animation: fadeOut 0.5s'" : "";
+
+          var total_price = 0;
+          for (p=0;p<basket_item.quantity;p++)
           {
-            var animate_this_item = ANIMATE_VARIANT == product_id;
-            var animate = animate_this_item ? "class='seethrough'" : "";
-            if (animate_this_item)
-            {
-              ANIMATE_VARIANT = -1;
-            }
-
-
-            // cena
-            var variant_amount = basket_counts[i];
-            var cena_for_amount = 0;
-            for (p=0;p<variant_amount;p++)
-            {
-              cena_for_amount += ceny[id];
-              total++;
-            }
-
-            var quantity = getQuantityOfVariant(id);
-            var remove = "<button class='removeBtn' onclick='addItem(<?=$product_id0?>,-1,"+product_id+")'>-</button>";
-            var add = "<button class='addBtn' "+(quantity <= 0 ? "style='visibility:hidden'" : "")+" onclick='addItem(<?=$product_id0?>,1,"+product_id+")'>+</button>";
-
-            juzMasz += "<tr "+animate+"><td>"+names[id]+"</td><td class='oneline'>"+remove+variant_amount+" szt."+add+"</td><td class='pln oneline'>"+cena_for_amount+" zł</td></tr>";
-
+            total_price += parseFloat(variant.price);
+            total++;
           }
+
+          var remove = `<button class='removeBtn' onclick='addItem(${basket_item.variant_id},-1)'>-</button>`;
+          var add = `<button class='addBtn' ${basket_item.quantity <= 0 ? "style='visibility:hidden'" : ""} onclick='addItem(${basket_item.variant_id},1)'>+</button>`;
+
+          juzMasz += `<tr ${animate}><td>${variant.name}</td><td class='oneline'>${remove}${basket_item.quantity} szt.${add}</td><td class='pln oneline'>${total_price} zł</td></tr>`;
         }
-
-        AMOUNT = total;
-
-        var min = 1000000;
-        var max = 0;
-        var maxForOne = 0;
-
-        for (i=0;i<ceny.length;i++)
-        {
-          var c = ceny[i];
-          if (c < min) min = c;
-          if (c > max) max = c;
-        }
-        var priceText = min;
-        if (Math.round(min - max) != 0)
-          priceText += " - " + max;
-        document.getElementById("priceText").innerHTML = priceText;
-
-        if (min < maxForOne)
-          document.getElementById("wasPrice").innerHTML = maxForOne + " zł";
 
         clickVariant(VARIANT_ID);
         
@@ -573,208 +548,75 @@
         }
         document.getElementById("juzMasz").innerHTML = juzMasz;
 
-        ANIMATE_VARIANT = -1;
         setTimeout(function(){
-          var seethrough_row = document.querySelector('.seethrough');
-          if (seethrough_row != null)
-            seethrough_row.classList.remove('seethrough');
+          removeClasses('seethrough');
         },10);
       }
 
-      var buying = false;
-      function addItem(id,diff,id_to_remove)
+      function addItem(variant_id, diff)
       {
-        if (buying) return;
+        addItemtoBasket(variant_id, diff, (json) => {
+          user_basket = json.basket;
+          userBasketUpdated();
+          
+          user_basket = json.basket;
 
-        var got = false;
-        var product_id = -1;
+          youAlreadyHaveIt(variant_id);
 
-        if (diff == 0) // add
-        {
-          var variants = document.getElementsByClassName("option");
-          for (i=0;i<variants.length;i++)
-          {
-            if (variants[i].checked)
-            {
-              got = true;
-              product_id = variants[i].value;
-              url = "/basket/add/"+product_id+"/"+1;
-            }
+          var variant = variants.find(v => {return v.variant_id == VARIANT_ID});
+          if (diff == 1 && variant && variant.quantity == 1) {
+            showPopup();
           }
-        }
-        else // remove
-        {
-          got = true;
-          product_id = id_to_remove;
-          if (diff == 1)
-            url = "/basket/add/"+product_id+"/"+1;
-          else
-            url = "/basket/remove/"+product_id+"/"+1;
-        }
-
-        if (got)
-        {
-          xhr({
-            url: url,
-            success: (res) =>  {
-              var basketContent = document.getElementById("basketContent");
-              removeContent(basketContent);
-
-              var json = JSON.parse(res);
-              
-              basket_ids = json.basket_ids;
-              basket_counts = json.basket_counts;
-              ANIMATE_VARIANT = product_id;
-              
-              document.getElementById("basketContent").insertAdjacentHTML("beforeend", json.basketContent);
-              var amount = 0;
-              var scrollableContent = basketContent.querySelector(".scrollableContent");
-              if (scrollableContent != null)
-              amount = scrollableContent.childNodes.length;
-              document.getElementById("amount").innerHTML = amount;
-              document.getElementById("quantity").innerHTML = "";
-              document.getElementById("productCode").innerHTML = "";
-              
-              youAlreadyHaveIt();
-
-              if (diff == 0 && getBasketCountOfVariant(VARIANT_ID) == 1) {
-                showPopup();
-              }
-            }
-          });
-
-          return;
-        }
-
-        document.getElementById("wybierz").style.display = "block";
-      }
-
-      function getBasketCountOfVariant(i) {
-        var variant_id_here = basket_ids.indexOf(ids[i]);
-        if (variant_id_here != -1) {
-          return basket_counts[variant_id_here];
-        }
-        return 0;
-      }
-
-      function getQuantityOfVariant(VARIANT_ID) {
-        var quantity = amount[VARIANT_ID];
-        var variant_id_here = basket_ids.indexOf(ids[VARIANT_ID]);
-        if (variant_id_here != -1)
-          quantity -= basket_counts[variant_id_here];
-          return quantity;
+        });
       }
 
       var variant_to_image = <?=$variant_to_image?>;
       var gallery_urls = <?=$gallery_urls?>;
       var gallery_urls_all = <?=$gallery_urls_all?>;
+      var variants = <?=json_encode($variants)?>;
+      var user_basket = <?=$_SESSION["basket"]?>;
 
-      var VARIANT_ID = 0;
-      var AMOUNT = 0; /// HEY BRO IT WILL GROW
+      var VARIANT_ID = null;
 
-      function clickVariant(i)
+      function clickVariant(variant_id)
       {
-        var variant = names[i];
-        document.getElementById("wybierz").style.display = "none";
+        document.getElementById("buyNow").toggleAttribute("disabled", true);
 
-        VARIANT_ID = i;
-        if (swiper != null && variant_to_image[i] != -1)
-          swiper.slideTo(variant_to_image[i], 300, null);
+        if (!variant_id) return;
+
+        var variant = variants.find(v => {return v.variant_id == variant_id});
+        var basket_item = user_basket.find(b => {return b.variant_id == variant_id});
+        variant.quantity = basket_item ? basket_item.quantity : 0;
+
+        VARIANT_ID = variant_id;
+        if (swiper != null && variant_to_image[VARIANT_ID] != -1)
+          swiper.slideTo(variant_to_image[VARIANT_ID], 300, null);
 
 
-        document.getElementById('updateChoosenImage').style.backgroundImage = `url('/uploads/df/${gallery_urls_all[VARIANT_ID]}')`;
-        document.getElementById('updateChoosenVariant').innerHTML = " " + variant;
-        document.getElementById('updateChoosenAmountCost').innerHTML = ceny[VARIANT_ID] + " zł";
+        document.getElementById('updateChoosenImage').style.backgroundImage = `url('/uploads/df/${variant.zdjecie}')`;
+        document.getElementById('updateChoosenVariant').innerHTML = " " + variant.name;
+        document.getElementById('updateChoosenAmountCost').innerHTML = variant.price - variant.rabat + " zł";
 
+        var low = variant.quantity < 5 ? "style='font-weight:bold;color:red'" : "";
 
-        var priceText = "";
+        var left = variant.stock - variant.quantity;
 
-        var wasPrice = 0;
+        document.getElementById("quantity").innerHTML = `Dostępność: <span class="pln" ${low}>${left} szt.</span>`;
+        
+        document.getElementById("buyNow").toggleAttribute("disabled", left == 0);
 
-        priceText = ceny[VARIANT_ID];
-
-        if (priceText < basePrice[VARIANT_ID]) wasPrice = basePrice[VARIANT_ID];
-
-        document.getElementById("priceText").innerHTML = priceText;
-
-        if (wasPrice != 0)
-        {
-          wasPrice += " zł";
-        }
-        else {
-          wasPrice = "";
-        }
-        document.getElementById("wasPrice").innerHTML = wasPrice;
-
-        var quantity = getQuantityOfVariant(VARIANT_ID);
-
-        var low = quantity < 5 ? "style='font-weight:bold;color:red'" : "";
-
-        document.getElementById("quantity").innerHTML = `Dostępność: <span class="pln" ${low}>${quantity} szt.</span>`;
-        var code = product_code[VARIANT_ID];
-        document.getElementById("productCode").innerHTML = code == "" ? "" : "Kod produktu: "+code;
-
-        document.getElementById("buyNow").toggleAttribute("disabled", quantity == 0);
-
-        document.getElementById("caseLast").style.display = quantity < 1 && amount[VARIANT_ID] > 0 ? "block" : "none";
-        document.getElementById("caseZero").style.display = quantity < 1 ? "block" : "none";
+        document.getElementById("caseLast").style.display = left == 0 && variant.stock > 0 ? "block" : "none";
+        document.getElementById("caseZero").style.display = left == 0 ? "block" : "none";
 
         document.querySelectorAll(".caseZero").forEach((e)=>{
-          e.style.display = quantity == 0 ? "block" : "none";
+          e.style.display = left == 0 ? "block" : "none";
         });
         document.querySelectorAll(".caseMore").forEach((e)=>{
-          e.style.display = quantity > 0 ? "block" : "none";
+          e.style.display = left > 0 ? "block" : "none";
         });
       }
 
-      <?php
-        $ceny = [];
-        $names = [];
-        $ids = [];
-        $percentOff = null;
-        $basePrice = [];
-        $amount = [];
-        $product_code = [];
-        for ($i=0;$i<$variant_count;$i++)
-        {
-          $prices_per_count = [];
-
-          $r = floatval($variants0[$i]['rabat']);
-            $basePrice[] = $variants0[$i]['price'];
-            $prices_per_count = floatval($variants0[$i]['price'] - $r);
-
-          $ceny[] = $prices_per_count;
-          $names[] = $variants0[$i]['name'];
-          $ids[] = $variants0[$i]['variant_id'];
-          $amount[] = $variants0[$i]['amount'];
-          $product_code[] = $variants0[$i]['product_code'];
-        }
-        $ceny = json_encode($ceny);
-        $names = json_encode($names);
-        $ids = json_encode($ids);
-        $percentOff = json_encode($percentOff);
-        $regularPrice = $basePrice[0];
-        $basePrice = json_encode($basePrice);
-        $amount = json_encode($amount);
-        $product_code = json_encode($product_code);
-        echo "var ceny = $ceny;";
-        echo "var names = $names;";
-        echo "var basePrice = $basePrice;";
-        echo "var ids = $ids;";
-        echo "var percentOff = $percentOff;";
-        echo "var amount = $amount;";
-        echo "var product_code = $product_code;";
-
-        $b = json_decode($_SESSION["basket"],true);
-        $basket_ids = array_keys($b);
-        $basket_counts = array_values($b);
-        $basket_ids = json_encode($basket_ids);
-        $basket_counts = json_encode($basket_counts);
-        echo "var basket_ids = $basket_ids;";
-        echo "var basket_counts = $basket_counts;";
-      ?>
-
-      // komentarze
+      // komentarze start
 
       document.addEventListener("DOMContentLoaded", function() {
         createTable({
@@ -785,7 +627,7 @@
             url: "/search_comments",
             params: () => {
                 return {
-                  product_id: <?=$product_id0?>,
+                  product_id: <?=$product_data["product_id"]?>,
                 };
             },
             renderRow: (r) => {
@@ -885,7 +727,7 @@
         xhr({
           url: "/addComment",
           params: {
-            product_id: <?=$product_id0?>,
+            product_id: <?=$product_data["product_id"]?>,
             pseudonim: document.getElementById("pseudonim").value,
             tresc: document.getElementById("tresc").value,
             rating: RATING
@@ -911,7 +753,7 @@
         })
       }
 
-      // komentarze
+      // komentarze end
 
       function validateEmail(email) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -942,12 +784,12 @@
       {
         "@context": "https://schema.org/",
         "@type": "Product",
-        "name": "<?=htmlspecialchars($title0)?>",
+        "name": "<?=htmlspecialchars($product_data["title"])?>",
         "url": "<?=$SITE_URL."/".$url?>",
         "image": [
-          "<?=$zdjecie?>"
+          "<?=$product_data["image"]?>"
         ],
-        "description": "<?=$des_seo?>",
+        "description": "<?=$product_data["seo_description"]?>",
         "brand": {
           "@type": "Thing",
           "name": "<?=config('main_email_sender')?>"
@@ -979,7 +821,7 @@
     <?php
       include "global/header.php";
 
-      if ($published0 || $app["user"]["is_admin"])
+      if ($product_data["published"] || $app["user"]["is_admin"])
       {
         include "produkt_view.php";
       }

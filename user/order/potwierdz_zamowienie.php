@@ -32,7 +32,7 @@ if ($_POST["email"] == '') {
   die;
 }
 
-require "get_basket_data.php";
+require_once "get_basket_data.php";
 
 require "helpers/validate_stock.php";
 
@@ -53,20 +53,20 @@ unset($_SESSION["kod"]);
 unset($_SESSION["rabat"]);
 unset($_SESSION["rabat_type"]);
 
-// end validate stock
+require_once "print_basket_nice.php";
 
 $res = "<table style='border-spacing: 0;'><tr style='background: #60d010;color: white;'><td style='padding:4px'>Ilość</td><td style='padding:4px'>Produkt</td><td style='padding:4px'>Cena</td></tr>";
 $basket_all_data = [];
 
-foreach ($basket_ids as $variant_id)
-{
-  $v = $app["user"]["basket"]["variants"][array_search($variant_id,$app["user"]["basket"]["variant_id_list"])];
+foreach($app["user"]["basket"]["variants"] as $basket_variant) {
+  $v = $basket_variant;
   $product_id = $v["product_id"];
   $title = $v["title"];
   $name = $v["name"];
-  $price = $priceText = preg_replace("/\.00/","",$v["price"]);
+  $price = $v["real_price"];
   $total_price = $v["total_price"];
   $quantity = $v["quantity"];
+  $stock = $v["stock"];
 
   if (!empty($name))
     $title .= " ".$name;
@@ -75,7 +75,7 @@ foreach ($basket_ids as $variant_id)
 
   query("UPDATE products SET cache_sales = cache_sales + ? WHERE product_id = ?",[$quantity, $product_id]);
   
-  query("UPDATE variant SET quantity = quantity - " . intval($quantity) . " where variant_id = " . intval($variant_id));
+  query("UPDATE variant SET stock = stock - " . intval($quantity) . " where variant_id = " . intval($variant_id));
 
   // display in email
 
@@ -146,7 +146,9 @@ query("INSERT INTO zamowienia (
 
 $zamowienie_id = getLastInsertedId();
 
-//basket_item_id	zamowienie_id	variant_id	product_id	base_price	quantity	price	title
+/*foreach ($basket_ids as $variant_id) {
+  query("INSERT INTO basket_content (basket_item_id	zamowienie_id	variant_id	product_id	base_price	quantity	price	title)")
+}*/
 
 
 $link = $zamowienie_id . "-" . $link_hash;

@@ -13,12 +13,6 @@
 
 "use strict";
 
-function setJSColorValue(el, hex) {
-	el.value = hex;
-	el.style.background = "#"+hex;
-}
-
-
 if (!window.jscolor) { window.jscolor = (function () {
 
 

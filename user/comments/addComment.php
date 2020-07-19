@@ -5,6 +5,8 @@ if (!$app["user"]["id"])
   die;
 }
 
+include "helpers/safe_post.php";
+
 $posts = ["pseudonim","tresc","product_id","rating"];
 
 foreach ($posts as $p)

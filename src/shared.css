@@ -1828,6 +1828,7 @@ footer a:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  overflow: hidden;
 }
 
 .cms-block {
@@ -1835,6 +1836,7 @@ footer a:hover {
   position: relative;
   max-width: 100%;
   width: 100%;
+  overflow: hidden;
 }
 .cms-block-content {
   position: relative;
@@ -2455,3 +2457,9 @@ input:placeholder-shown:hover + .miejscowosc-picker-list, input:placeholder-show
   opacity: 1;
 }
 /* top nav end */
+
+@keyframes fadeOut {
+  0% {opacity: 1}
+  25% {opacity: 0}
+  100% {opacity: 1}
+}

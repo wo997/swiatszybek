@@ -16,7 +16,7 @@ $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id"
 
 $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
 
-$attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM link_product_attribute_value WHERE product_id = $product_id");
+//$attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM link_product_attribute_value WHERE product_id = $product_id");
 
 ?>
 
@@ -132,7 +132,7 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
           title: "Ilość",
           width: "10%",
           render: (r) => {
-            return r.quantity;
+            return r.stock;
           }
         },
         {
@@ -216,17 +216,6 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
     });
 
     loadFormData(<?= json_encode($product_data) ?>, elem("#productForm"));
-
-    var attribute_values = [<?=$attribute_values?>];
-    document.querySelectorAll(".combo-select-wrapper").forEach(combo => {
-      combo.querySelectorAll("select").forEach(select => {
-        var option = [...select.options].find(o => {return attribute_values.indexOf(parseInt(o.value)) !== -1});
-        if (option) {
-          select.value = option.value;
-        }
-      });
-      comboSelectValuesChanged(combo);
-    });
   });
 
   window.addEventListener("load", function() {
@@ -387,7 +376,7 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
       name: "",
       price: "",
       rabat: "",
-      quantity: "",
+      stock: "",
       product_code: "",
       color: "",
       zdjecie: "",
@@ -397,7 +386,7 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
     };
     loadFormData(data, elem("#variantEdit"));
 
-    elem(`[name="was_quantity"]`).value = data.quantity;
+    elem(`[name="was_stock"]`).value = data.stock;
 
     showModal("variantEdit");
   }
@@ -406,24 +395,36 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
     var data = variants.results[i];
     loadFormData(data, elem("#variantEdit"));
 
-    elem(`[name="was_quantity"]`).value = data.quantity;
+    elem(`[name="was_stock"]`).value = data.stock;
 
     showModal("variantEdit");
-  }
 
-  function saveVariantForm() {
     xhr({
-      url: "/admin/save_variant",
-      params: getFormData(elem("#variantEdit")),
-      success: () => {
-        variants.search();
-      }
+        url: "/admin/get_variant_attributes",
+        params: {
+          variant_id: data.variant_id
+        },
+        success: (res) => {
+          var data = JSON.parse(res);
+          document.querySelectorAll(".combo-select-wrapper").forEach(combo => {
+            combo.querySelectorAll("select").forEach(select => {
+              var option = [...select.options].find(o => {return data.attribute_selected_values.indexOf(parseInt(o.value)) !== -1});
+              if (option) {
+                select.value = option.value;
+              }
+            });
+            comboSelectValuesChanged(combo);
+          });
+
+          for (attribute of data.attribute_values) {
+            setValue(elem(`[name="attribute_values[${attribute.attribute_id}]"]`), attribute[attribute_data_types[attribute.data_type].field]);
+          }
+        }
     });
   }
 
-  function saveProductForm() {
-
-    var params = getFormData(elem("#productForm"));
+  function saveVariantForm() {
+    var params = getFormData(elem("#variantEdit"));
 
     var attribute_values = [];
 
@@ -433,7 +434,20 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
       }
     })
 
-    params.attribute_values = JSON.stringify(attribute_values);
+    params.attribute_selected_values = JSON.stringify(attribute_values);
+
+    xhr({
+      url: "/admin/save_variant",
+      params: params,
+      success: () => {
+        variants.search();
+      }
+    });
+  }
+
+  function saveProductForm() {
+
+    var params = getFormData(elem("#productForm"));
 
     xhr({
       url: "/admin/save_product",
@@ -513,49 +527,14 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
 
-    <div class="field-title">Atrybuty</div>
-    <?php
-      include_once "attributes_service.php";
-
-      $attributes = fetchArray("SELECT name, attribute_id FROM product_attributes");
-
-      function printSelectValuesOfAttribute($values, $value_id = null) {
-        if (!isset($values[0])) return "";
-
-        $attr = $value_id ? "data-parent_value_id='".$value_id."'" : "";
-        $html = "<select $attr data-attribute-value>";
-        $html .= "<option value=''>Nie dotyczy</option>";
-        foreach ($values as $value_data) {
-          $html .= "<option value='".$value_data["values"]["value_id"]."'>".$value_data["values"]["value"]."</option>";
-        }
-        $html .= "</select> ";
-        foreach ($values as $value_data) {
-          $html .= printSelectValuesOfAttribute($value_data["children"], $value_data["values"]["value_id"]);
-        }
-
-        return $html;
-      }
-
-      foreach ($attributes as $attribute) {
-        echo "<div class='combo-select-wrapper'>".$attribute["name"]." ";
-
-        $values = getAttributeValues($attribute["attribute_id"]);
-
-        echo printSelectValuesOfAttribute($values);
-
-        echo"</div>";
-      }
-
-    ?>
-
-    <div style="margin-top: 10px">
+    <div style="margin-top: 10px;display:none">
       <div class="field-title">Opis krótki <span style="color:red">(wywalamy)</span></div>
       <div class="quill-wrapper2">
         <div id="product-description" data-html-name="descriptionShort" data-point-child=".ql-editor"></div>
       </div>
     </div>
 
-    <div style="margin-top: 10px">
+    <div style="margin-top: 10px;display:none">
       <div style="display:flex" class="mobileRow">
         <div>
           <span style="color:red">Specyfikacja (chyba to wywalamy, zastąpimy atrybutami)</span>
@@ -590,7 +569,7 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
 <div id="variantEdit" data-modal data-expand>
   <div class="stretch-vertical">
     <div class="custom-toolbar">
-      <span class="title">Edycja menu</span>
+      <span class="title">Edycja wariantu produktu</span>
       <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
       <button class="btn primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
@@ -606,7 +585,7 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
       <input type="number" name="rabat" class="field">
 
       <div class="field-title">Ilość</div>
-      <input type="number" name="quantity" class="field">
+      <input type="number" name="stock" class="field">
 
       <div class="field-title">Kod produktu</div>
       <input type="text" name="product_code" class="field">
@@ -614,6 +593,55 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
       <div class="field-title">Kolor</div>
       <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
       <div class="btn primary" onclick="this.previousElementSibling.value='';this.previousElementSibling.style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>
+
+      <div class="field-title">Atrybuty</div>
+
+      <?php
+        include_once "attributes_service.php";
+
+        $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes");
+
+        function printSelectValuesOfAttribute($values, $value_id = null) {
+          if (!isset($values[0])) return "";
+
+          $attr = $value_id ? "data-parent_value_id='".$value_id."'" : "";
+          $html = "<select $attr data-attribute-value>";
+          $html .= "<option value=''>Nie dotyczy</option>";
+          foreach ($values as $value_data) {
+            $html .= "<option value='".$value_data["values"]["value_id"]."'>".$value_data["values"]["value"]."</option>";
+          }
+          $html .= "</select> ";
+          foreach ($values as $value_data) {
+            $html .= printSelectValuesOfAttribute($value_data["children"], $value_data["values"]["value_id"]);
+          }
+
+          return $html;
+        }
+
+        foreach ($attributes as $attribute) {
+          echo "<div class='combo-select-wrapper'>".$attribute["name"]." ";
+
+          if (isset($attribute_data_types[$attribute["data_type"]]["field"])) {
+            $attribute_form_name = 'name="attribute_values['.$attribute["attribute_id"].']"';
+            if (strpos($attribute["data_type"], "color") !== false) {
+              echo '<input type="text" class="jscolor" '.$attribute_form_name.'>';
+            }
+            else if (strpos($attribute["data_type"], "number") !== false) {
+              echo '<input type="number" '.$attribute_form_name.'>';
+            }
+            else {
+              echo '<input type="text" '.$attribute_form_name.'>';
+            }
+          }
+          else {
+            $values = getAttributeValues($attribute["attribute_id"]);
+            echo printSelectValuesOfAttribute($values);
+          }
+
+          echo"</div>";
+        }
+
+      ?>
 
       <div class="field-title">
         Zdjecie
@@ -627,7 +655,7 @@ $attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM
         <option value="0">Ukryty</option>
         <select>
 
-          <input type="hidden" name="was_quantity">
+          <input type="hidden" name="was_stock">
           <input type="hidden" name="product_id">
           <input type="hidden" name="variant_id">
     </div>

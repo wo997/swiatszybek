@@ -12,7 +12,7 @@ if ($action == "remove")
     die;
 }
 
-require "get_basket_data.php";
+require_once "get_basket_data.php";
 
 $kod_data = fetchRow("SELECT kwota, user_id_list, product_list_metadata, ilosc, date_from, date_to, type FROM kody_rabatowe WHERE kod = ? ORDER BY kod_id DESC LIMIT 1",[$kod]);
 

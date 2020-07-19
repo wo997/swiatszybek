@@ -1,7 +1,7 @@
 <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;">
   <div style="width: 60%; margin-top: 20px">
     <?php if ($pic_count == "1") : ?>
-      <div class='item-image' style='background-image:url("/uploads/df/<?=$image0?>")'></div>
+      <div class='item-image' style='background-image:url("/uploads/md/<?=$product_data["image"]?>")'></div>
     <?php else : ?>
       <div class="swiper-container product-main-slider">
         <div class="swiper-wrapper">
@@ -15,8 +15,7 @@
   </div>
   <div style="width: 40%; box-sizing: border-box; margin-top: 20px">
     <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">
-      
-      <h1 class="h1"><?=htmlspecialchars($title0)?>
+      <h1 class="h1"><?=$product_data["title"]?>
         <?php if ($published0 != 1) : ?>
           (Niedostępny!)
         <?php endif ?>
@@ -33,17 +32,15 @@
 
             for ($i=0;$i<$variant_count;$i++)
             {
-              $checked = $justOne ? "checked" : "";
-
-              $color = empty($variants0[$i]['color'])  ? "" : "<b class='colour' style='background:{$variants0[$i]['color']}'></b>";
+              $color = empty($variants[$i]['color'])  ? "" : "<b class='colour' style='background:{$variants[$i]['color']}'></b>";
               
-              $scroll_to_image = "onclick='clickVariant($i)'";
+              $scroll_to_image = "onclick='clickVariant({$variants[$i]['variant_id']})'";
 
-              $wyprz = $variants0[$i]['rabat'] > 0 ? "<div class='percentOff'>-".round($variants0[$i]['rabat'])." zł</div>" : "";
+              $wyprz = $variants[$i]['rabat'] > 0 ? "<div class='percentOff'>-".round($variants[$i]['rabat'])." zł</div>" : "";
 
-              $small_font = strlen($variants0[$i]['name']) > 28 ? "small_font" : "";
+              $small_font = strlen($variants[$i]['name']) > 28 ? "small_font" : "";
 
-              echo "<div class='color $small_font'><label><input type='radio' class='option' name='variant' $checked value='{$variants0[$i]['variant_id']}'><div class='boxy' $scroll_to_image>$color{$variants0[$i]['name']}</div>$wyprz</label></div>";
+              echo "<div class='color $small_font'><label><input type='radio' class='option' name='variant' value='{$variants[$i]['variant_id']}'><div class='boxy' $scroll_to_image>$color{$variants[$i]['name']}</div>$wyprz</label></div>";
             }
 
           ?>
@@ -79,8 +76,7 @@
 
 
         <div style="height:20px"></div>
-        <i id="wybierz">Wybierz wariant powyżej</i>
-        <button id="buyNow" class="btn primary big fill" onclick="addItem('<?=$product_id0?>',0,'')">
+        <button id="buyNow" class="btn primary big fill" onclick="addItem(VARIANT_ID,1)">
           Dodaj do koszyka
           <i class="fa fa-check" style="font-size: 14px;vertical-align: middle;"></i>
         </button>
@@ -125,17 +121,17 @@
       </section>
     </div>
               
-    <div class="cms" style="margin:50px -10px;width: auto;"><?=getCMSPageHTML($description0);?></div>
+    <div class="cms" style="margin:50px -10px;width: auto;"><?=getCMSPageHTML($product_data["description"]);?></div>
 
   <h3 style="padding:12px 0;margin:30px 0 10px" id="opinieLabel"></h3>
 
   <div class="comments">
     <?php 
-      $comments = fetchArray("SELECT dodano, pseudonim, tresc, user_id, comment_id, rating, accepted FROM comments WHERE product_id = $product_id0 AND accepted = 1");
+      $comments = fetchArray("SELECT dodano, pseudonim, tresc, user_id, comment_id, rating, accepted FROM comments WHERE product_id = ".$product_data["product_id"]." AND accepted = 1");
 
       foreach ($comments as $comment)
       {
-        echo '<div style="display:none">'.htmlspecialchars($comment["pseudonim"]).' - '.htmlspecialchars($comment["tresc"]).'</div>';
+        echo '<div style="display:none">'.$comment["pseudonim"].' - '.$comment["tresc"].'</div>';
       }
     ?>
   </div>
@@ -191,11 +187,11 @@
   <div class="old-popup">
     <h3 style="margin: 0 0 19px;text-align:center;font-size:20px">Dodano produkt do koszyka</h3>
     <div style="display:flex" class="mobileRow">
-      <div class="item-image marginAuto" id="updateChoosenImage" style="background-image:url('/uploads/df/<?=$first_pic?>'); min-height: 140px;margin-right: 20px;height: auto;"></div>
+      <div class="item-image marginAuto" id="updateChoosenImage" style="min-height: 140px;margin-right: 20px;height: auto;"></div>
       <div style="display: flex;flex-direction: column;justify-content: center;width: 55%;">
         <div style="font-size: 14px;display: flex;align-items: center;min-height: 80px;">
           <div>
-            <?=htmlspecialchars($title0)?>
+            <?=$product_data["title"]?>
             <span id="updateChoosenVariant" style="text-transform: lowercase;"></span>
             <div id="updateChoosenAmountCost" class="pln" style="text-align: center;font-size: 20px;display: inline-block;position: relative;top: 1px;left: 2px;"></div>
           </div>
@@ -204,7 +200,7 @@
           Kontynuuj zakupy
         </div>
         <a href="/zakup" class="btn primary big fill" type="button" style="margin-bottom: 6px">
-          Przejdź do koszyka
+          Kup teraz
         </a>
       </div>
     </div>
