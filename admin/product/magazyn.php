@@ -37,7 +37,7 @@
           title: "Ilość w magazynie",
           width: "130px",
           render: (r) => {
-            return `<input type="number" value="${r.quantity}" onchange="dostawa(this.value, ${r.quantity}, ${r.variant_id})">`;
+            return `<input type="number" value="${r.stock}" onchange="dostawa(this.value, ${r.stock}, ${r.variant_id})">`;
           },
           escape: false
         },
@@ -66,7 +66,7 @@
 
   function dostawa(now, was, variant_id) {
     ajax('/admin/change_variant_stock', {
-      quantity_difference: now-was,
+      stock_difference: now-was,
       variant_id: variant_id
     }, (response) => {
       mytable.search();

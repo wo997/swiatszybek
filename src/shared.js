@@ -30,7 +30,7 @@ function expand(elem, show = null, options = {}) {
   var duration =
     options.duration || options.duration === 0 ? options.duration : 250;
   var h = elem.scrollHeight;
-  
+
   elem.style.transition = "";
   elem.style.height = (!show ? h : 0) + "px";
 
@@ -48,14 +48,16 @@ function expand(elem, show = null, options = {}) {
     elem.scrollTop = 0;
 
     if (firstChild) {
-      firstChild.style.transition = `margin-top ${duration / (show ? 500 : 1000)}s`;
+      firstChild.style.transition = `margin-top ${
+        duration / (show ? 500 : 1000)
+      }s`;
       //firstChild.style.marginTop = -(!show ? h * 0.15 : 0) + "px";
     }
   }, 0);
   setTimeout(() => {
     elem.style.transition = ``;
     elem.style.height = "";
-    
+
     if (firstChild) {
       firstChild.style.transition = ``;
       //firstChild.style.marginTop = "";
@@ -85,11 +87,9 @@ window.addEventListener("DOMContentLoaded", () => {
       if (location.pathname == "/") {
         a.classList.add("current-route");
       }
-    }
-    else if (location.pathname.indexOf(href) === 0) {
+    } else if (location.pathname.indexOf(href) === 0) {
       a.classList.add("current-route");
-    }
-    else if (location.href.indexOf(href) === 0) {
+    } else if (location.href.indexOf(href) === 0) {
       a.classList.add("current-route");
     }
   });
@@ -120,14 +120,14 @@ window.mobilecheck = function () {
 // popup start
 document.addEventListener("DOMContentLoaded", function () {
   if (!mobilecheck()) {
-    document.querySelectorAll(".navbar_wrapper .dropdown").forEach(e => {
+    document.querySelectorAll(".navbar_wrapper .dropdown").forEach((e) => {
       var a = e.querySelector("a");
       var u = e.querySelector(".dropdown-header");
       if (a && u) {
-          u.addEventListener("click",()=>{
-              window.location = a.href;
-          })
-      }  
+        u.addEventListener("click", () => {
+          window.location = a.href;
+        });
+      }
     });
   }
   var popup = document.querySelector(".old-popupWrapper");
@@ -244,7 +244,7 @@ function setContent(node, html = "") {
 
 function swapNodes(n1, n2) {
   if (!n1 || !n2) return;
-  
+
   var p1 = n1.parentNode;
   var p2 = n2.parentNode;
   var i1, i2;
@@ -420,7 +420,7 @@ window.addEventListener("mousemove", function (event) {
 
     var position = e.getAttribute("data-position");
     if (position == "center") {
-      left -= (pos.width / 2 + tooltipRect.width / 2) + offsetX;
+      left -= pos.width / 2 + tooltipRect.width / 2 + offsetX;
     }
 
     var maxLeft = window.innerWidth - 30 - tooltipRect.width;
@@ -436,8 +436,7 @@ window.addEventListener("mousemove", function (event) {
 
     t.style.left = left + "px";
     t.style.top = pos.top + 4 + pos.height + "px";
-  }
-  else t.style.display = "none";
+  } else t.style.display = "none";
 
   lastTooltip = e;
 });
@@ -468,12 +467,12 @@ function createTable(data) {
   table.results = [];
   table.sortable = data.sortable;
   table.tree_view = data.tree_view;
-  table.selected = {};
+  table.selected = null;
   table.primary = data.primary;
   table.db_table = data.db_table;
   table.metadata = data.metadata;
   if (data.callback) table.callback = data.callback;
-  
+
   if (data.requiredParam) table.requiredParam = data.requiredParam;
 
   if (data.lang) table.lang = data.lang;
@@ -483,7 +482,7 @@ function createTable(data) {
   table.target = document.querySelector("." + data.name);
 
   table.target.classList.add("datatable-wrapper");
-  table.target.setAttribute("datatable-name", table.name);
+  table.target.setAttribute("data-table-name", table.name);
 
   if (data.selectable) {
     table.selectable = data.selectable;
@@ -491,28 +490,48 @@ function createTable(data) {
     table.singleselect = data.selectable.singleselect;
 
     table.setSelectedValues = (v) => {
+      if (Array.isArray(v)) {
+        var out = [];
+        for (val of v) {
+          out.push(parseInt(val));
+        }
+        v = out;
+      }
       table.selected = v;
+      console.log(v);
       table.createList();
-    }
+    };
     table.getSelectedValues = () => {
       if (table.singleselect) {
         return table.selected;
+      } else {
+        var selection = [];
+        table.selectedRowsElement
+          .querySelectorAll("[data-primary]")
+          .forEach((e) => {
+            selection.push(parseInt(e.getAttribute("data-primary")));
+          });
+        table.selected = selection;
+        return JSON.stringify(table.selected);
+        //return JSON.stringify(table.selected);
       }
-      else {
-        return table.selected.join(",");
-      }
-    }
+    };
   }
   if (!table.selected) {
     table.selected = [];
   }
 
   if (table.tree_view) {
-    table.lang.main_category = nonull(table.lang.main_category, "Kategoria główna");
+    table.lang.main_category = nonull(
+      table.lang.main_category,
+      "Kategoria główna"
+    );
 
     table.breadcrumb = [
       {
-        title: `<i class="fas fa-home" style="margin-right: 4px;"></i>` + table.lang.main_category,
+        title:
+          `<i class="fas fa-home" style="margin-right: 4px;"></i>` +
+          table.lang.main_category,
         category_id: -1,
       },
     ];
@@ -548,9 +567,9 @@ function createTable(data) {
       <span class="space-right big no-space-mobile">&nbsp;&nbsp;na stronę</span>
       <div class="pagination"></div>`;
 
-      if (data.controlsRight) {
-        justTable += `${data.controlsRight}`;
-      }
+  if (data.controlsRight) {
+    justTable += `${data.controlsRight}`;
+  }
 
   justTable += `</div>
     <div class="table-wrapper">
@@ -566,11 +585,13 @@ function createTable(data) {
             data.name
           }.toggleSearchVisibility(true)">Wyszukaj <i class="fas fa-plus"></i> </div>
         </div>
-        <input type="hidden" class="table-selection-value" name="${
+        <input type="hiddenx" class="table-selection-value" name="${
           data.selectable.output ? data.selectable.output : data.primary
         }" ${
-          data.selectable.validate ? `data-validate data-validate-target='.${table.name} .selectedRows'` : ""
-        }>
+        data.selectable.validate
+          ? `data-validate data-validate-target='.${table.name} .selectedRows'`
+          : ""
+      }>
         ${
           table.metadata
             ? `<input type="hidden" class="table-metadata-value" name="${table.metadata.output}">`
@@ -605,9 +626,9 @@ function createTable(data) {
 
   if (table.tree_view) {
     table.breadcrumbElement = table.target.querySelector(".breadcrumb");
-    
+
     table.getParentId = () => {
-      if (table.breadcrumb.length == 0) return -1; 
+      if (table.breadcrumb.length == 0) return -1;
       return table.breadcrumb[table.breadcrumb.length - 1].category_id;
     };
     table.backToCategory = (category_id = 0) => {
@@ -684,7 +705,8 @@ function createTable(data) {
       }
     };
     table.postSaveCategory = (params, remove) => {
-      var parentChanged = table.tree_view.form_data.parent_id != params.parent_id;
+      var parentChanged =
+        table.tree_view.form_data.parent_id != params.parent_id;
       var isCurrent = table.getParentId() == params.category_id;
       if ((remove || parentChanged) && isCurrent) {
         table.categoryStepBack(1);
@@ -832,8 +854,7 @@ function createTable(data) {
       });
       if (needsRequired && !hasRequired) {
         canOrder = false;
-      }
-      else {
+      } else {
         canOrder = true;
       }
 
@@ -892,8 +913,14 @@ function createTable(data) {
         }
         output += `</table>`;
 
-        output += `<div class="no-results" style="${table.results.length > 0 ? "display:none;" : ""}width:100%;text-align:center;background: #f8f8f8;margin-top: -10px;padding: 10px;font-weight: 600;">
-          Brak ${createList ? "powiązanych " : ""}${table.lang.subject} <i class="btn secondary fas fa-sync-alt" onclick='${table.name}.search()' style="width: 24px;height: 24px;display: inline-flex;justify-content: center;align-items: center;"></i>
+        output += `<div class="no-results" style="${
+          table.results.length > 0 ? "display:none;" : ""
+        }width:100%;text-align:center;background: #f8f8f8;margin-top: -10px;padding: 10px;font-weight: 600;">
+          Brak ${createList ? "powiązanych " : ""}${
+          table.lang.subject
+        } <i class="btn secondary fas fa-sync-alt" onclick='${
+          table.name
+        }.search()' style="width: 24px;height: 24px;display: inline-flex;justify-content: center;align-items: center;"></i>
         </div>`;
 
         var table_body = output;
@@ -913,8 +940,14 @@ function createTable(data) {
             (i >= center - range && i <= center + range)
           ) {
             if (i == center - range && i > 1) output += " ... ";
-            output += `<div class='pagination_item ${i == table.currPage ? " current" : ``}'
-                      ${i != table.currPage ? `onclick="${data.name}.setPage(${i})"` : ``} 
+            output += `<div class='pagination_item ${
+              i == table.currPage ? " current" : ``
+            }'
+                      ${
+                        i != table.currPage
+                          ? `onclick="${data.name}.setPage(${i})"`
+                          : ``
+                      } 
             }>${i + 1}</div>`;
             if (i == center + range && i < table.pageCount - 2)
               output += " ... ";
@@ -935,14 +968,12 @@ function createTable(data) {
         table.target.querySelectorAll("td").forEach((e) => {
           if (
             //e.classList.contains("tooltipable") &&
-            getNodeTextWidth(e) > e.getBoundingClientRect().width - 5
+            getNodeTextWidth(e) >
+            e.getBoundingClientRect().width - 5
           ) {
             var info = e.textContent.replace(/, /g, "<br>").trim();
             if (info.length > 10) {
-              e.setAttribute(
-                "data-tooltip",
-                info
-              );
+              e.setAttribute("data-tooltip", info);
             }
           }
         });
@@ -982,9 +1013,9 @@ function createTable(data) {
         }
       }
 
-      table.selectionChange();
-    },true);
-  }
+      // table.selectionChange(); it would end up in an infinite loop
+    }, true);
+  };
   if (table.selectable) {
     table.createList();
   } else {
@@ -999,13 +1030,11 @@ function createTable(data) {
   table.removeRow = (data_id) => {
     if (table.singleselect) {
       table.selected = null;
-    }
-    else {
+    } else {
       const index = table.selected.indexOf(data_id);
       if (index !== -1) {
         table.selected.splice(index, 1);
-      }
-      else return;
+      } else return;
     }
 
     deleteNode(table.target.querySelector(`[data-primary='${data_id}']`));
@@ -1018,9 +1047,10 @@ function createTable(data) {
     if (table.singleselect || table.selected.indexOf(data_id) === -1) {
       if (table.singleselect) {
         table.selected = data_id;
-      }
-      else {
+      } else {
+        console.log(data_id);
         table.selected.push(data_id);
+        console.log(table.selected);
       }
       var x = table.target.querySelector(`[data-primary='${data_id}']`);
       table.selectedRowsElement.querySelector("tbody").appendChild(x);
@@ -1033,12 +1063,7 @@ function createTable(data) {
   };
   table.selectionChange = () => {
     var v = table.getSelectedValues();
-    if (table.singleselect) {
-      setValue(table.selectionValueElement,v)
-    }
-    else {
-      setValue(table.selectionValueElement,"," + v + (v ? "," : ""));
-    }
+    table.selectionValueElement.value = v;
     if (table.metadata) {
       table.registerMetadataFields();
       table.metadataChange();
@@ -1194,22 +1219,23 @@ function renderIsPublished(row) {
   if (row.published == 1) {
     label = "Tak";
     color = "#2a2";
-  }
-  else {
+  } else {
     label = "Nie";
     color = "#a22";
   }
-  return `<div class='rect btn' style='background:${color}' onclick='setPublish(this,${1-row.published})'>${label}</div>`;
+  return `<div class='rect btn' style='background:${color}' onclick='setPublish(this,${
+    1 - row.published
+  })'>${label}</div>`;
 }
 
-function setPublish(obj,published) {
-  var tableElement = findParentByClassName(obj,["datatable-wrapper"]);
+function setPublish(obj, published) {
+  var tableElement = findParentByClassName(obj, ["datatable-wrapper"]);
   if (!tableElement) return;
-  var tablename = tableElement.getAttribute("datatable-name");
+  var tablename = tableElement.getAttribute("data-table-name");
   if (!tablename) return;
   var table = window[tablename];
   if (!table || !table.primary || !table.db_table) return;
-  var rowElement = findParentByTagName(obj,"TR");
+  var rowElement = findParentByTagName(obj, "TR");
   if (!rowElement) return;
   var primary_id = rowElement.getAttribute("data-primary");
   if (!primary_id) return;
@@ -1220,18 +1246,21 @@ function setPublish(obj,published) {
       table: table.db_table,
       primary: table.primary,
       primary_id: primary_id,
-      published: published
+      published: published,
     },
-    success: () => {      
-      showNotification(`<i class="fas fa-check"></i> Pomyślnie ustawiono element jako <b>${published ? "publiczny" : "ukryty"}</b>`);
-      if (findParentByClassName(obj,["selectedRows"])) {
+    success: () => {
+      showNotification(
+        `<i class="fas fa-check"></i> Pomyślnie ustawiono element jako <b>${
+          published ? "publiczny" : "ukryty"
+        }</b>`
+      );
+      if (findParentByClassName(obj, ["selectedRows"])) {
         table.createList();
-      }
-      else {
+      } else {
         table.search();
       }
-    }
-  }) 
+    },
+  });
 }
 
 function findParentByAttribute(
@@ -1285,13 +1314,12 @@ function findParentByClassName(elem, parentClassNames, stopAtClassName = null) {
           return elem;
         }
       }
-    }
-    else {
+    } else {
       if (elem.classList && elem.classList.contains(parentClassNames)) {
         return elem;
       }
     }
-    
+
     elem = elem.parentNode;
   }
   return null;
@@ -1516,9 +1544,8 @@ function validateForm(params) {
     if (findParentByClassName(field, ["hidden"])) continue;
 
     if (!validateField(field)) {
-
       var visibleField = getValidationTarget(field);
-      
+
       visibleField.classList.add("required");
       scrollToView(visibleField, {
         callback: () => {
@@ -1551,7 +1578,7 @@ function validateField(field) {
   var val = field.value;
 
   if (val === "") return false;
-  
+
   var validator = field.getAttribute("data-validate");
 
   if (validator == "nip") {
@@ -1568,7 +1595,7 @@ function validateField(field) {
       return false;
     }
   }
-  if (validator.substr(0,6) == "match:") {
+  if (validator.substr(0, 6) == "match:") {
     var target = elem(validator.substr(6));
     if (!target) {
       console.warn("Password field missing");
@@ -1625,19 +1652,68 @@ function moveCursorToEnd(el) {
   }
 }
 
-function setValue(input, val) {
-  if (input.classList.contains("jscolor")) {
-    var hex = val.replace("#","");
+function setValue(input, value) {
+  if (input.classList.contains("table-selection-value")) {
+    var datatable = findParentByClassName(input, "datatable-wrapper");
+    //console.log(value);
+    window[datatable.getAttribute("data-table-name")].setSelectedValues(value);
+    return;
+  } else if (input.classList.contains("jscolor")) {
+    var hex = value.replace("#", "");
     input.value = hex;
-    input.style.background = hex ? "#"+hex : "";
-  }
-  else if (input.getAttribute("type") == "checkbox") {
-    input.checked = val ? true : false;
-  }
-  else {
-    input.value = val;
+    input.style.background = hex ? "#" + hex : "";
+    return;
+  } else if (input.getAttribute("type") == "checkbox") {
+    input.checked = value ? true : false;
+  } else {
+    var type = input.getAttribute("data-type");
+    if (type == "html") {
+      var pointChild = input.getAttribute("data-point-child");
+      if (pointChild) {
+        input = input.querySelector(pointChild);
+      }
+      input.innerHTML = value;
+      return;
+    } else if (type == "src") {
+      var prefix = input.getAttribute(`data-src-prefix`);
+      if (!prefix) prefix = "/uploads/df/";
+      if (value) value = prefix + value;
+      input.setAttribute("src", value);
+      return;
+    } else {
+      input.value = value;
+    }
   }
   input.dispatchEvent(new Event("change"));
+}
+
+function getValue(input) {
+  if (input.classList.contains("jscolor")) {
+    var value = input.value;
+    if (value && value.charAt(0) != "#") {
+      value = "#" + value;
+    }
+    return value;
+  } else if (input.getAttribute("type") == "checkbox") {
+    return input.checked ? 1 : 0;
+  } else {
+    var type = input.getAttribute("data-type");
+    if (type == "html") {
+      var pointChild = input.getAttribute("data-point-child");
+      if (pointChild) {
+        input = input.querySelector(pointChild);
+      }
+      return input.innerHTML;
+    } else if (type == "src") {
+      var prefix = input.getAttribute(`data-src-prefix`);
+      if (!prefix) prefix = "/uploads/df/";
+      var src = input.getAttribute("src");
+      if (src && src.length > prefix.length) src = src.substr(prefix.length);
+      return src;
+    } else {
+      return input.value;
+    }
+  }
 }
 
 function toggleDisabled(elem, disabled) {
@@ -1779,31 +1855,11 @@ function loadFormData(data, form = null) {
       }
     }
     if (e) {
-      if (e.classList.contains("jscolor")) {
-        value = value.replace("#","");
-      }
-      setValue(e,value);
-      return;
-    }
-    var e = form.querySelector(`[data-html-name="${name}"]`);
-    if (e) {
-      var pointChild = e ? e.getAttribute("data-point-child") : null;
-      if (pointChild) {
-        e = e.querySelector(pointChild);
-      }
-      e.innerHTML = value;
-      return;
-    }
-    var e = form.querySelector(`[data-src-name="${name}"]`);
-    if (e) {
-      var prefix = e.getAttribute(`data-src-prefix`);
-      if (!prefix) prefix = "/";
-      if (value) value = prefix + value;
-      e.setAttribute("src", value);
+      setValue(e, value);
       return;
     }
   });
-  
+
   resizeCallback();
 }
 
@@ -1811,30 +1867,7 @@ function getFormData(form = null) {
   if (!form) form = document;
   var data = {};
   form.querySelectorAll(`[name]`).forEach((e) => {
-
-    var value = e.value;
-    if (e.classList.contains("jscolor") && value.charAt(0) != "#") {
-      value = "#"+value;
-    }
-    if (e.getAttribute("type") == "checkbox") {
-      value = e.checked ? 1 : 0;
-    }
-    data[e.getAttribute("name")] = value;
-  });
-  form.querySelectorAll(`[data-html-name]`).forEach((e) => {
-    var name = e.getAttribute("data-html-name");
-    var pointChild = e ? e.getAttribute("data-point-child") : null;
-    if (pointChild) {
-      e = e.querySelector(pointChild);
-    }
-    data[name] = e.innerHTML;
-  });
-  form.querySelectorAll(`[data-src-name]`).forEach((e) => {
-    var prefix = e.getAttribute(`data-src-prefix`);
-    if (!prefix) prefix = "/";
-    var src = e.getAttribute("src");
-    if (src.length > prefix.length) src = src.substr(prefix.length);
-    data[e.getAttribute("data-src-name")] = src;
+    data[e.getAttribute("name")] = getValue(e);
   });
   return data;
 }
@@ -1872,7 +1905,11 @@ function registerCategoryPickers() {
     e.insertAdjacentHTML(
       "afterend",
       `
-          <div class="category-picker" data-category-picker-source="${e.getAttribute("data-category-picker-source")}" data-category-picker-name="${e.getAttribute("name")}" data-select="${select}" data-scope_parent_id="${parent_id}"></div>
+          <div class="category-picker" data-category-picker-source="${e.getAttribute(
+            "data-category-picker-source"
+          )}" data-category-picker-name="${e.getAttribute(
+        "name"
+      )}" data-select="${select}" data-scope_parent_id="${parent_id}"></div>
       `
     );
   });
@@ -1939,7 +1976,11 @@ function setCategoryPickerValues(element, values, params = {}) {
 
 function expandCategoriesAbove(node, alsoCurrent = true) {
   if (alsoCurrent) {
-    var parent = findParentByClassName(node, "category-picker-row", "categories");
+    var parent = findParentByClassName(
+      node,
+      "category-picker-row",
+      "categories"
+    );
     if (parent) {
       var nodeExpander = parent.nextElementSibling;
       if (nodeExpander && parent.querySelector(".expand")) {
@@ -1995,14 +2036,20 @@ function categoryChanged(el) {
   elem(`[name=${name}]`).value = value;
 
   if (el.checked) {
-    var expandWhenClosed = el.parentNode.parentNode.querySelector(".expand:not(.open)");
+    var expandWhenClosed = el.parentNode.parentNode.querySelector(
+      ".expand:not(.open)"
+    );
     if (expandWhenClosed) {
       expandWhenClosed.click();
     }
   }
 }
 
-function loadCategoryPicker(source = "product_categories",options = {}, callback = null) {
+function loadCategoryPicker(
+  source = "product_categories",
+  options = {},
+  callback = null
+) {
   registerCategoryPickers();
   //parent_id = +parent_id;
   xhr({
@@ -2016,30 +2063,39 @@ function loadCategoryPicker(source = "product_categories",options = {}, callback
       document.querySelectorAll(`.category-picker[parent_id="${parent_id}"], .category-picker-template-${parent_id}`).forEach(e=>{
           e.innerHTML = c;
       });*/
-      document.querySelectorAll(`.category-picker[data-category-picker-source="${source}"]`).forEach((e) => {
-        [...e.children].forEach((e) => {
-          deleteNode(e);
-        });
-        e.insertAdjacentHTML("afterbegin", c);
+      document
+        .querySelectorAll(
+          `.category-picker[data-category-picker-source="${source}"]`
+        )
+        .forEach((e) => {
+          [...e.children].forEach((e) => {
+            deleteNode(e);
+          });
+          e.insertAdjacentHTML("afterbegin", c);
 
-        if (options.skip) {
-          var kid = e.querySelector(`.category-picker-column `.repeat(options.skip));
-          if (kid) {
-            e.innerHTML = kid.innerHTML;
+          if (options.skip) {
+            var kid = e.querySelector(
+              `.category-picker-column `.repeat(options.skip)
+            );
+            if (kid) {
+              e.innerHTML = kid.innerHTML;
+            }
+          } else {
+            var main = e.querySelector(".category_name");
+            if (main)
+              main.innerHTML = nonull(
+                options.main_category,
+                "Kategoria główna"
+              );
+
+            var parent_id = e.getAttribute("scope_parent_id");
+            if (parent_id && parent_id != 0) {
+              e.innerHTML = e.querySelector(
+                `[data-parent_id="${parent_id}"]`
+              ).outerHTML;
+            }
           }
-        }
-        else {
-          var main = e.querySelector(".category_name");
-          if (main) main.innerHTML = nonull(options.main_category, "Kategoria główna");
-          
-          var parent_id = e.getAttribute("scope_parent_id");
-          if (parent_id && parent_id != 0) {
-            e.innerHTML = e.querySelector(
-              `[data-parent_id="${parent_id}"]`
-            ).outerHTML;
-          }
-        }
-      });
+        });
 
       if (callback) {
         callback();
@@ -2105,23 +2161,21 @@ function getLink(phrase) {
     .replace(/-+/g, "-");
 }
 
-
 window.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".mobile-hover").forEach(e=>{
+  document.querySelectorAll(".mobile-hover").forEach((e) => {
     if (mobilecheck()) {
-      e.addEventListener("touchstart",()=>{
+      e.addEventListener("touchstart", () => {
         if (!e.classList.contains("hovered")) {
-          setTimeout(()=>{
+          setTimeout(() => {
             e.classList.add("hovered");
-          },0);
+          }, 0);
         }
       });
-    }
-    else {
-      e.addEventListener("mouseover",()=>{
+    } else {
+      e.addEventListener("mouseover", () => {
         e.classList.add("hovered");
       });
-      e.addEventListener("mouseleave",()=>{
+      e.addEventListener("mouseleave", () => {
         e.classList.remove("hovered");
       });
     }
@@ -2132,30 +2186,29 @@ document.addEventListener("touchstart", (event) => {
   var e = document.querySelector(".hovered");
   var toggle = document.querySelector(".hovered .dropdown-header");
   if (e && (!isInNode(event.target, e) || isInNode(event.target, toggle))) {
-  //if (e && !isInNode(event.target, e)) {
+    //if (e && !isInNode(event.target, e)) {
     e.classList.remove("hovered");
   }
 });
 
-
 /* tab menu start */
 
-document.addEventListener("click",(event)=>{
+document.addEventListener("click", (event) => {
   var t = event.target;
-  var option = findParentByClassName(t,"tab-option");
-  var menu = findParentByClassName(t,"tab-menu");
+  var option = findParentByClassName(t, "tab-option");
+  var menu = findParentByClassName(t, "tab-menu");
   if (!option || !header) return;
-  
+
   var tab_id = option.getAttribute("data-tab_id");
 
-  showTab(menu,tab_id);
+  showTab(menu, tab_id);
 });
 
 function showTab(tab_menu, tab_id) {
-  tab_menu.querySelectorAll(".tab-header .tab-option").forEach(e=>{
+  tab_menu.querySelectorAll(".tab-header .tab-option").forEach((e) => {
     e.classList.toggle("current", e.getAttribute("data-tab_id") == tab_id);
-  })
-  tab_menu.querySelectorAll(".tab-content").forEach(e=>{
+  });
+  tab_menu.querySelectorAll(".tab-content").forEach((e) => {
     e.classList.toggle("hidden", e.getAttribute("data-tab_id") != tab_id);
   });
 }
@@ -2165,44 +2218,46 @@ function showTab(tab_menu, tab_id) {
 /* notification start */
 
 function showNotification(message, params = {}) {
-  document.querySelectorAll(".notification").forEach(e=>{
+  document.querySelectorAll(".notification").forEach((e) => {
     e.style.opacity = 0;
     e.style.top = "-10px";
   });
   var notification = document.createElement("DIV");
   notification.className = "notification";
-  notification.insertAdjacentHTML("beforeend",`
+  notification.insertAdjacentHTML(
+    "beforeend",
+    `
     <i class="fa fa-times-circle" onclick="dismissNotification(this.parentNode)"></i>
     ${message}
-  `);
+  `
+  );
   notification.style.top = "-20px";
   notification.style.opacity = "0";
   if (params.width) {
     notification.style.width = params.width;
     notification.style.maxWidth = params.width;
-  }
-  else {
+  } else {
     notification.style.width = "auto";
     notification.style.maxWidth = "unset";
   }
-  document.body.insertAdjacentElement("beforeend",notification);
-  setTimeout(()=>{
+  document.body.insertAdjacentElement("beforeend", notification);
+  setTimeout(() => {
     notification.style.top = "";
     notification.style.opacity = "";
   });
 
-  setTimeout(()=>{
+  setTimeout(() => {
     dismissNotification(notification);
-  },2000);
+  }, 2000);
 }
 
 function dismissNotification(n) {
   if (!n) return;
   n.style.opacity = 0;
   n.style.pointerEvents = "none";
-  setTimeout(()=>{
+  setTimeout(() => {
     deleteNode(n);
-  },200);
+  }, 200);
 }
 
 /* notification end */
@@ -2234,46 +2289,46 @@ function getCookie(cname) {
 // load save fields in cookie
 var ignoreValueChanges = false;
 window.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("[data-cookie]").forEach(e=>{
-    e.addEventListener("change",()=>{
+  document.querySelectorAll("[data-cookie]").forEach((e) => {
+    e.addEventListener("change", () => {
       if (ignoreValueChanges) return;
       var cookieName = e.getAttribute("data-cookie");
       if (!cookieName) cookieName = e.getAttribute("name");
-      setCookie(cookieName,e.value);
-    })
+      setCookie(cookieName, e.value);
+    });
   });
 });
 
 function loadFormFromCookies() {
-  document.querySelectorAll("[data-cookie]").forEach(e=>{
+  document.querySelectorAll("[data-cookie]").forEach((e) => {
     var cookieName = e.getAttribute("data-cookie");
     if (!cookieName) cookieName = e.getAttribute("name");
     var value = getCookie(cookieName);
     if (value) {
-      setValue(e,value);
+      setValue(e, value);
     }
   });
-};
-
+}
 
 /* cookies end */
 
 /* manage user start */
-setInterval(() => { // keep connected
+setInterval(() => {
+  // keep connected
   xhr({
-    url: "/ping.php"
-  })
+    url: "/ping.php",
+  });
 }, 60000);
 
 function logout() {
-  if (USER_TYPE == 'f') {
+  if (USER_TYPE == "f") {
     window.location = "/logout";
     return false;
   }
   if (USER_TYPE == "g") {
     try {
       var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function() {
+      auth2.signOut().then(function () {
         window.location = "/logout";
       });
       auth2.disconnect();
@@ -2288,7 +2343,7 @@ function logout() {
 function onSignIn(googleUser) {
   var form = document.getElementById("google-form");
   if (IS_LOGGED || !form) return;
-    
+
   var id_token = googleUser.getAuthResponse().id_token;
   if (!id_token) return;
 
@@ -2298,49 +2353,45 @@ function onSignIn(googleUser) {
 /* manage user end */
 
 /* miejscowosc picker start */
-function kodPocztowyChange(src)
-{
+function kodPocztowyChange(src) {
   xhr({
     url: `/kod_pocztowy_api`,
     params: {
-      kod: src.value
+      kod: src.value,
     },
     success: (res) => {
       var list = "";
       try {
         res = JSON.parse(res);
         var items = [];
-        for (i=0;i<res.length;i++)
-        {
+        for (i = 0; i < res.length; i++) {
           items.push(res[i].miejscowosc);
         }
 
         var dups = {};
-        items = items.filter(function(el) {
-            var hash = el.valueOf();
-            var isDup = dups[hash];
-            dups[hash] = true;
-            return !isDup;
+        items = items.filter(function (el) {
+          var hash = el.valueOf();
+          var isDup = dups[hash];
+          dups[hash] = true;
+          return !isDup;
         });
 
-        for (i=0;i<items.length;i++)
-        {
+        for (i = 0; i < items.length; i++) {
           var miejscowosc = items[i];
           list += `<div onclick='chooseMiejscowosc(this)'>${miejscowosc}</div>`;
         }
-      }
-      catch (e) {}
+      } catch (e) {}
 
       var targetList = getMiejscowoscPickerList(src);
       if (!targetList) return;
       targetList.innerHTML = list;
-    }
+    },
   });
 }
 
 function getMiejscowoscPickerTarget(obj) {
   if (!obj) return;
-  var wrapper = findParentByClassName(obj,"miejscowosc-picker-wrapper");
+  var wrapper = findParentByClassName(obj, "miejscowosc-picker-wrapper");
   if (!wrapper) {
     console.warn("miejscowosc picker wrapper missing");
     return;
@@ -2355,7 +2406,7 @@ function getMiejscowoscPickerTarget(obj) {
 
 function getMiejscowoscPickerList(obj) {
   if (!obj) return;
-  var wrapper = findParentByClassName(obj,"miejscowosc-picker-wrapper");
+  var wrapper = findParentByClassName(obj, "miejscowosc-picker-wrapper");
   if (!wrapper) {
     console.warn("miejscowosc picker wrapper missing");
     return;
@@ -2368,8 +2419,7 @@ function getMiejscowoscPickerList(obj) {
   return list;
 }
 
-function chooseMiejscowosc(obj)
-{
+function chooseMiejscowosc(obj) {
   var target = getMiejscowoscPickerTarget(obj);
   if (!target) return;
   target.value = obj.textContent;
@@ -2380,7 +2430,7 @@ function chooseMiejscowosc(obj)
 
 window.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("nav > div").forEach((e) => {
-    e.addEventListener("mouseenter", ()=>{
+    e.addEventListener("mouseenter", () => {
       var x = e.querySelector(".float-category");
       if (!x || !x.textContent) return;
       var rect = e.getBoundingClientRect();
@@ -2393,9 +2443,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
       dropdownButtonHovered.classList.add("hovered");
       floatCategoryHovered.style.display = "block";
-      floatCategoryHovered.style.left = rect.left+"px";
-      floatCategoryHovered.style.top = rect.top+rect.height-1+"px";
-      setTimeout(()=>{
+      floatCategoryHovered.style.left = rect.left + "px";
+      floatCategoryHovered.style.top = rect.top + rect.height - 1 + "px";
+      setTimeout(() => {
         floatCategoryHovered.classList.add("visible");
       });
     });
@@ -2405,17 +2455,17 @@ window.addEventListener("DOMContentLoaded", () => {
 function hideFloatingCategory() {
   floatCategoryHovered.classList.remove("visible");
   dropdownButtonHovered.classList.remove("hovered");
-  
+
   let zzz = floatCategoryHovered;
-  setTimeout(()=>{
+  setTimeout(() => {
     zzz.style.display = "";
-  },150);
+  }, 150);
 
   dropdownButtonHovered = null;
   floatCategoryHovered = null;
 }
 
-function findParent(elem,x) {
+function findParent(elem, x) {
   while (elem && elem != document) {
     if (elem == x) return true;
     elem = elem.parentNode;
@@ -2425,9 +2475,9 @@ function findParent(elem,x) {
 
 var dropdownButtonHovered = null;
 var floatCategoryHovered = null;
-document.addEventListener("mousemove", (event)=>{
+document.addEventListener("mousemove", (event) => {
   if (!dropdownButtonHovered) return;
-  if (findParent(event.target,dropdownButtonHovered)) return;
+  if (findParent(event.target, dropdownButtonHovered)) return;
   hideFloatingCategory();
 });
 
@@ -2435,83 +2485,101 @@ document.addEventListener("mousemove", (event)=>{
 
 /* custom css engine start */
 
-window.addEventListener("resize", function() {
+window.addEventListener("resize", function () {
+  resizeCallback();
+});
+window.addEventListener("DOMContentLoaded", function () {
   resizeCallback();
 });
 
 function resizeCallback() {
+  if (window.responsiveImages) {
+    window.responsiveImages();
+  }
+
   var responsiveType = window.innerWidth < 800 ? "mobile" : "desktop";
 
-  document.querySelectorAll(".cms-container").forEach(e => {
+  document.querySelectorAll(".cms-container").forEach((e) => {
     if (responsiveType == "desktop") {
-      e.classList.toggle("desktop-full-width", e.hasAttribute("data-desktop-full-width"));
-    }
-    else {
+      e.classList.toggle(
+        "desktop-full-width",
+        e.hasAttribute("data-desktop-full-width")
+      );
+    } else {
       e.classList.remove("desktop-full-width");
     }
-  })
+  });
 
   var attribute = `data-${responsiveType}-width`;
-  document.querySelectorAll(`[${attribute}]`).forEach(e => {
-      e.style.width = e.getAttribute(attribute);
-  })
+  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+    e.style.width = e.getAttribute(attribute);
+  });
 
-  for (let direction of ["Left","Right","Top","Bottom"]) {
-    for (let type of ["margin","padding"]) {
+  var attribute = `data-${responsiveType}-min-height`;
+  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+    e.style.minHeight = e.getAttribute(attribute);
+  });
+
+  for (let direction of ["Left", "Right", "Top", "Bottom"]) {
+    for (let type of ["margin", "padding"]) {
       var attribute = `data-${type}_${direction.toLowerCase()}`;
-      document.querySelectorAll(`[${attribute}]`).forEach(e => {
+      document.querySelectorAll(`[${attribute}]`).forEach((e) => {
         if (e.classList.contains("removing")) {
           return;
         }
         var v = e.getAttribute(attribute);
         var jsstyle = type + direction;
-        if (e.classList.contains("cms-block") && v.charAt(v.length-1) == "%") {
-          v = e.parentNode.getBoundingClientRect().width * parseInt(v) / 100 + "px";
+        if (
+          e.classList.contains("cms-block") &&
+          v.charAt(v.length - 1) == "%"
+        ) {
+          v =
+            (e.parentNode.getBoundingClientRect().width * parseInt(v)) / 100 +
+            "px";
         }
 
-        if (["Top","Bottom"].indexOf(direction) != -1 && e.classList.contains("cms-container") && findParentById(e, "cms")) {
+        if (
+          ["Top", "Bottom"].indexOf(direction) != -1 &&
+          e.classList.contains("cms-container") &&
+          findParentById(e, "cms")
+        ) {
           v = `calc(${v} + 10px)`;
         }
 
         e.style[jsstyle] = v;
-      })
+      });
     }
   }
 
   var attribute = `data-${responsiveType}-justify-content`;
-  document.querySelectorAll(`[${attribute}]`).forEach(e => {
-      e.style.justifyContent = e.getAttribute(attribute);
-  })
+  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+    e.style.justifyContent = e.getAttribute(attribute);
+  });
 
   var attribute = `data-${responsiveType}-align-items`;
-  document.querySelectorAll(`[${attribute}]`).forEach(e => {
-      e.style.alignItems = e.getAttribute(attribute);
-  })
+  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+    e.style.alignItems = e.getAttribute(attribute);
+  });
 
   var attribute = `data-${responsiveType}-flex-flow`;
-  document.querySelectorAll(`[${attribute}]`).forEach(e => {
-      e.style.flexFlow = e.getAttribute(attribute);
-  })
+  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+    e.style.flexFlow = e.getAttribute(attribute);
+  });
 }
-
-window.addEventListener("DOMContentLoaded", function() {
-  resizeCallback();
-});
 
 /* custom css engine end */
 
-
 /* custom selectbox start */
 
-window.addEventListener("DOMContentLoaded", function() {
+window.addEventListener("DOMContentLoaded", function () {
   registerSelectboxes();
 });
 
 function registerSelectboxes() {
-  document.querySelectorAll(".selectbox:not(.showhover)").forEach(e => {
+  document.querySelectorAll(".selectbox:not(.showhover)").forEach((e) => {
     e.classList.add("showhover");
-    e.querySelectorAll("[data-option]").forEach(o => {
-      o.addEventListener("click", ()=>{
+    e.querySelectorAll("[data-option]").forEach((o) => {
+      o.addEventListener("click", () => {
         var i = e.querySelector("input");
         if (i) {
           setValue(i, o.getAttribute("data-option"));
@@ -2521,48 +2589,48 @@ function registerSelectboxes() {
   });
 }
 
-
 /* custom selextbox end */
 
 /* text counter start */
 function registerTextCounters() {
-  document.querySelectorAll("[data-show-count]:not(.registered)").forEach(e => {
+  document
+    .querySelectorAll("[data-show-count]:not(.registered)")
+    .forEach((e) => {
       e.classList.add("registered");
       e.addEventListener("change", () => {
-          e.nextElementSibling.querySelector("span").innerHTML = e.value.length;
-          if (e.value.length > e.getAttribute("data-show-count")) {
-            e.nextElementSibling.style.color = "#f00";
-            e.nextElementSibling.style.fontWeight = "bold";
-          }
-          else if (e.value.length > 0.9 * e.getAttribute("data-show-count")) {
-            e.nextElementSibling.style.color = "#fa0";
-            e.nextElementSibling.style.fontWeight = "bold";
-          }
-          else {
-            e.nextElementSibling.style.color = "";
-            e.nextElementSibling.style.fontWeight = "";
-          }
+        e.nextElementSibling.querySelector("span").innerHTML = e.value.length;
+        if (e.value.length > e.getAttribute("data-show-count")) {
+          e.nextElementSibling.style.color = "#f00";
+          e.nextElementSibling.style.fontWeight = "bold";
+        } else if (e.value.length > 0.9 * e.getAttribute("data-show-count")) {
+          e.nextElementSibling.style.color = "#fa0";
+          e.nextElementSibling.style.fontWeight = "bold";
+        } else {
+          e.nextElementSibling.style.color = "";
+          e.nextElementSibling.style.fontWeight = "";
+        }
       });
       e.addEventListener("input", () => {
-          e.dispatchEvent(new Event('change'));
+        e.dispatchEvent(new Event("change"));
       });
-      e.insertAdjacentHTML("afterend", `
+      e.insertAdjacentHTML(
+        "afterend",
+        `
           <div style="color:#555">
-            <span></span><span> / ${e.getAttribute("data-show-count")} znaków ${nonull(e.getAttribute("data-count-description"))}</span>
+            <span></span><span> / ${e.getAttribute(
+              "data-show-count"
+            )} znaków ${nonull(e.getAttribute("data-count-description"))}</span>
           </div>
-      `)
-      e.dispatchEvent(new Event('change'));
-  });
+      `
+      );
+      e.dispatchEvent(new Event("change"));
+    });
 }
 /* text counter end */
 
-
-function addItemtoBasket(variant_id,diff,callback)
-{
-  if (diff == 1)
-    url = "/basket/add/"+variant_id+"/"+1;
-  else
-    url = "/basket/remove/"+variant_id+"/"+1;
+function addItemtoBasket(variant_id, diff, callback) {
+  if (diff == 1) url = "/basket/add/" + variant_id + "/" + 1;
+  else url = "/basket/remove/" + variant_id + "/" + 1;
 
   xhr({
     url: url,
@@ -2576,16 +2644,19 @@ function addItemtoBasket(variant_id,diff,callback)
       if (callback) {
         callback(json);
       }
-    }
+    },
   });
 }
 
-
 function rgbStringToHex(rgbString) {
-  if (rgbString.substr(0,3) != "rgb") return rgbString;
-  return rgbString.replace(/rgb\((.+?)\)/ig, (_, rgb) => {
-    return '#' + rgb.split(',')
-      .map(str => parseInt(str, 10).toString(16).padStart(2, '0'))
-      .join('')
-  })
+  if (rgbString.substr(0, 3) != "rgb") return rgbString;
+  return rgbString.replace(/rgb\((.+?)\)/gi, (_, rgb) => {
+    return (
+      "#" +
+      rgb
+        .split(",")
+        .map((str) => parseInt(str, 10).toString(16).padStart(2, "0"))
+        .join("")
+    );
+  });
 }

@@ -4,6 +4,7 @@
     [data-animation] {
         visibility: hidden;
     }
+
     .cms {
         opacity: 0;
         transition: opacity 0.2s;
@@ -53,67 +54,69 @@
     window.addEventListener("DOMContentLoaded", function() {
         scrollCallback();
     });
-    
-    window.addEventListener("DOMContentLoaded",()=>{
-        document.querySelectorAll(".cms").forEach(e=>{
+
+    window.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".cms").forEach(e => {
             e.style.opacity = "1";
         })
 
-        document.querySelectorAll(".cms-block-content").forEach(e=>{
+        document.querySelectorAll(".cms-block-content").forEach(e => {
             e.style.marginBottom = "1px";
-            setTimeout(()=>{e.style.marginBottom = "";})
+            setTimeout(() => {
+                e.style.marginBottom = "";
+            })
         })
 
         var sliderCount = 0;
-        document.querySelectorAll('.swiper-container:not(.product-main-slider)').forEach(e=>{
+        document.querySelectorAll('.swiper-container:not(.product-main-slider)').forEach(e => {
             sliderCount++;
-            var sliderName = "swiper-slider-"+sliderCount;
+            var sliderName = "swiper-slider-" + sliderCount;
             e.classList.add(sliderName);
 
-            swiper = new Swiper('.'+sliderName, {
-            speed: 700,
-            pagination: {
-              el: '.swiper-pagination'
-            },
-            autoplay: {
-              delay: 5000,
-            },
-    	      navigation: {
-    	        nextEl: '.swiper-button-next',
-    	        prevEl: '.swiper-button-prev',
-    	      },
-    	    });
+            swiper = new Swiper('.' + sliderName, {
+                speed: 700,
+                pagination: {
+                    el: '.swiper-pagination'
+                },
+                autoplay: {
+                    delay: 5000,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
         });
 
-        document.querySelectorAll(".ql-editor a").forEach(e=>{
+        document.querySelectorAll(".ql-editor a").forEach(e => {
             if (e.href.indexOf("/") !== 0 && e.href.indexOf(window.location.hostname) === -1) {
-                e.setAttribute("target","_blank");
+                e.setAttribute("target", "_blank");
             }
         })
 
         if (window.innerWidth > 1200) {
-          document.querySelectorAll(".item-image").forEach(e=>{
-            var i = e.getAttribute("data-desktop");
-            if (i) e.style.backgroundImage = "url('"+i+"')";
-          });
+            document.querySelectorAll(".item-image").forEach(e => {
+                var i = e.getAttribute("data-desktop");
+                if (i) e.style.backgroundImage = "url('" + i + "')";
+            });
         }
 
         if (window.innerWidth < 768) {
-            document.querySelectorAll("table").forEach(table=>{
-                var header = table.querySelector("tr").querySelectorAll("td");    
+            document.querySelectorAll("table").forEach(table => {
+                var header = table.querySelector("tr").querySelectorAll("td");
                 if (header.length <= 2) return;
                 //if (header[0].innerText.trim() != "") return;
                 var headers = [];
-                for (i=0;i<header.length;i++) {
+                for (i = 0; i < header.length; i++) {
                     var h = header[i].innerHTML;
-                    headers.push(header[i].textContent ? "<div style='font-weight:bold;display:inline-block'>"+h+" </div>" : "");
+                    headers.push(header[i].textContent ? "<div style='font-weight:bold;display:inline-block'>" + h + " </div>" : "");
                 }
                 var out = "";
                 var rows = table.querySelectorAll("tr");
-                for (i=1;i<rows.length;i++) {
+                for (i = 1; i < rows.length; i++) {
                     var cells = rows[i].querySelectorAll("td");
-                    for (a=0;a<cells.length;a++) {
-                        out += "<div style='margin:8px 0; margin-right:5px'>"+headers[a]+"<div style='display:inline-block'>"+cells[a].innerHTML+"</div> </div>";
+                    for (a = 0; a < cells.length; a++) {
+                        out += "<div style='margin:8px 0; margin-right:5px'>" + headers[a] + "<div style='display:inline-block'>" + cells[a].innerHTML + "</div> </div>";
                     }
                     out += "<hr style='margin:20px 0'>";
                 }
@@ -122,4 +125,58 @@
             });
         }
     });
+
+    var wt = -100;
+
+    window.addEventListener("DOMContentLoaded", function () {
+        resizeCallback();
+        waitForImageLoaded();
+    });
+
+
+    function waitForImageLoaded() {
+        wt++;
+        document.querySelectorAll(".cms img:not(.responsive)").forEach(e => {
+            if (e.naturalWidth) {
+                e.classList.add("responsive");
+                responsiveImage(e);
+                wt = 0;
+            }
+        });
+        if (wt++ < 100) {
+            requestAnimationFrame(waitForImageLoaded);
+        }
+    };
+
+    function responsiveImage(e) {
+        var src = e.getAttribute("src");
+        if (!src) return;
+
+        //console.log(e.naturalWidth);
+        //console.log(e.width, e.naturalWidth);
+        //e.width < e.naturalWidth
+        var current_dimension = Math.max(e.width, e.height);
+        var naturalDimension = Math.max(e.naturalWidth, e.naturalHeight);
+
+        // cannot limit by natural dimension if user requested something bigger hmmm
+
+        //console.log(naturalDimension);
+        var target_size_name = "df";
+        var target_size_dimension = "df";
+        Object.entries(image_default_dimensions).forEach(([size_name, size_dimension]) => {
+            //console.log(size_name, size_dimension);
+            if (current_dimension < size_dimension * 1.4 && current_dimension < naturalDimension) {
+                target_size_name = size_name;
+                target_size_dimension = size_dimension;
+            }
+        });
+
+        e.setAttribute("src", src.replace(/\/uploads\/.{0,4}\//, `/uploads/${target_size_name}/`));
+    }
+
+    function responsiveImages() {
+        document.querySelectorAll(".cms img").forEach(e => {
+            responsiveImage(e);
+        });
+    }
 </script>

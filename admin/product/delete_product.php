@@ -1,4 +1,4 @@
-<?php
+<?php //->[admin/delete_product]
 
 $urlParts = explode("/",$url);
 

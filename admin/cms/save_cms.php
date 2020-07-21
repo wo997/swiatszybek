@@ -2,7 +2,8 @@
 
 $main_page = $_POST["link"] == "";
 
-if (isset($_POST["delete"]) && !$main_page) {
+$isDelete = isset($_POST["delete"]) && !$main_page;
+if ($isDelete) {
     query("DELETE FROM cms WHERE cms_id = ?",[$_POST["cms_id"]]);
 }
 else {
@@ -21,5 +22,12 @@ else {
 
 include "sitemap-create.php";
 
-header("Location: /admin/cms/".$_POST["cms_id"]);
+if ($isDelete) {
+    $return_url = "/admin/strony";
+}
+else {
+    $return_url = "/admin/cms/".$_POST["cms_id"];
+}
+
+header("Location: ".$return_url);
 die;

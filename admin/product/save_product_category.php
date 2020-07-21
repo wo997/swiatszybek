@@ -17,8 +17,8 @@ else {
 
     $parent_id = $_POST["parent_id"] ? intval($_POST["parent_id"]) : 0;
 
-    query("UPDATE product_categories SET title = ?, published = ?, parent_id = ?, link = ?, description = ?, content = ? WHERE category_id = ".intval($category_id),[
-        $_POST["title"], $_POST["published"], $parent_id, $_POST["link"], $_POST["description"], $_POST["content"]
+    query("UPDATE product_categories SET title = ?, published = ?, parent_id = ?, link = ?, description = ?, content = ?, icon = ? WHERE category_id = ".intval($category_id),[
+        $_POST["title"], $_POST["published"], $parent_id, $_POST["link"], $_POST["description"], $_POST["content"], $_POST["icon"]
     ]);
 
     // attributes

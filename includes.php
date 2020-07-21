@@ -2,7 +2,7 @@
 <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Poppins&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
-<?php $RELEASE = 89; ?>
+<?php $RELEASE = 94; ?>
 
 <?php if (/*$app["user"]["is_admin"]*/ strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
   <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
@@ -93,6 +93,8 @@
 
   var statusList = <?=json_encode($statusList)?>;
   var screenSizes = <?=json_encode($sizes)?>
+
+  var image_default_dimensions = <?=json_encode($image_default_dimensions)?>;
 
   <?php if ($app["user"]["is_admin"]) : ?>
     var requiredFilterTables = <?=json_encode($requiredFilterTables)?>;

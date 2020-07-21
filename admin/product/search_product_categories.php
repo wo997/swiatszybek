@@ -14,7 +14,7 @@ else {
 }
 
 echo getTableData([
-    "select" => "category_id, title, link, description, content,
+    "select" => "category_id, title, link, description, content, icon,
         (SELECT GROUP_CONCAT(title SEPARATOR ', ') FROM product_categories WHERE parent_id = c.category_id) as subcategories,
         (SELECT GROUP_CONCAT(attribute_id SEPARATOR ',') FROM link_category_attribute l WHERE l.category_id = c.category_id) as attributes,
     published, parent_id",
@@ -24,6 +24,7 @@ echo getTableData([
     "main_search_fields" => ["c.title"],
     "renderers" => [
         "description_text" => function($row) {return strip_tags($row["description"]);},
-        "content_text" => function($row) {return strip_tags($row["content"]);}
+        "content_text" => function($row) {return strip_tags($row["content"]);},
+        "attributes" => function($row) {return array_map("intval",explode(",",$row["attributes"]));}
     ]
 ]);

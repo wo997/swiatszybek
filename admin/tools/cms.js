@@ -743,7 +743,9 @@ function saveBlockSettings() {
   document
     .querySelectorAll(`#cmsBlockSettings .classList:checked`)
     .forEach((e) => {
-      cmsTarget.classList.add(e.value);
+      if (e.value) {
+        cmsTarget.classList.add(e.value);
+      }
     });
 
   saveBlockAttributes("#cmsBlockSettings");
@@ -1535,30 +1537,6 @@ registerModalContent(
   }
 );
 
-var widths = ``;
-
-Object.keys(screenSizes).forEach((size) => {
-  type =
-    size == "sm"
-      ? "Wersja mobilna <i class='fas fa-mobile-alt'></i>"
-      : "Wersja desktopowa <i class='fas fa-desktop'></i>";
-  widths += `<h4>Szerokość bloku - ${type} <i class='fas fa-info-circle' data-tooltip='Wpisz wartość np 50%, 400px itd.'></i></h4>`;
-
-  var attribute = (type = size == "sm" ? "mobile-width" : "desktop-width");
-
-  widths += `
-        <div class="selectbox">
-            <input type="text" style="width:150px" data-attribute="${attribute}" data-default-value="100%" data-default-unit="px">
-            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                <div data-option="100%">100%</div>
-                <div data-option="50%">1/2</div>
-                <div data-option="33.333%">1/3</div>
-                <div data-option="25%">1/4</div>
-                <div data-option="20%">1/5</div>
-            </div>
-        </div>`;
-});
-
 registerModalContent(`
     <div id="cmsBlockSettings">
         <div style="width: 100%;max-width: 500px">
@@ -1570,7 +1548,59 @@ registerModalContent(`
             </div>
 
             <div style="padding:10px;margin-top:-15px">
-                ${widths}
+                <div class="desktopRow spaceColumns" style="text-align: center;">
+                    <div>
+                        <h3 style="text-align:center">Wersja desktopowa <i class='fas fa-desktop'></i></h3>
+                        <h4>Minimalna wysokość</h4>
+                        <div class="selectbox">
+                            <input type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
+                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div data-option="">Brak</div>
+                                <div data-option="100px">100px</div>
+                                <div data-option="200px">200px</div>
+                                <div data-option="300px">300px</div>
+                                <div data-option="400px">400px</div>
+                            </div>
+                        </div>
+                        <h4>Szerokość bloku</h4>
+                        <div class="selectbox">
+                            <input type="text" style="width:150px" data-attribute="desktop-width" data-default-value="100%" data-default-unit="px">
+                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div data-option="100%">100%</div>
+                                <div data-option="50%">1/2</div>
+                                <div data-option="33.333%">1/3</div>
+                                <div data-option="25%">1/4</div>
+                                <div data-option="20%">1/5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="text-align:center">Wersja mobilna <i class='fas fa-mobile-alt'></i></h3>
+                        <h4>Minimalna wysokość</h4>
+                        <div class="selectbox">
+                            <input type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
+                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div data-option="">Brak</div>
+                                <div data-option="100px">100px</div>
+                                <div data-option="200px">200px</div>
+                                <div data-option="300px">300px</div>
+                                <div data-option="400px">400px</div>
+                            </div>
+                        </div>
+                        <h4>Szerokość bloku</h4>
+                        <div class="selectbox">
+                            <input type="text" style="width:150px" data-attribute="mobile-width" data-default-value="100%" data-default-unit="px">
+                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div data-option="100%">100%</div>
+                                <div data-option="50%">1/2</div>
+                                <div data-option="33.333%">1/3</div>
+                                <div data-option="25%">1/4</div>
+                                <div data-option="20%">1/5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="desktopRow spaceColumns">
                     <div>
                         <h4 style="text-align:center;margin-bottom:5px">Margines zewnętrzny</h4>
@@ -1588,7 +1618,7 @@ registerModalContent(`
                     <div class="default-form">
                         <h4>W pionie <i class="fas fa-arrows-alt-v"></i> <i class='fas fa-info-circle' data-tooltip='Gdy w danym wierszu są przynajmniej 2 bloki'></i></h4>
                         <label>
-                            <input type='radio' class='classList' name='align-vertical' value='align-vertical-none'>
+                            <input type='radio' class='classList' name='align-vertical' value=''>
                             <i class="far fa-square"></i> Brak
                         </label>
                         <label>
@@ -1607,7 +1637,7 @@ registerModalContent(`
                     <div class="default-form">
                         <h4>W poziomie <i class="fas fa-arrows-alt-h"></i> <i class='fas fa-info-circle' data-tooltip='Gdy zawartość nie zajmuje całej dostępnej szerokości'></i></h4>
                         <label>
-                            <input type='radio' class='classList' name='align-horizontal' value='align-horizontal-none'>
+                            <input type='radio' class='classList' name='align-horizontal' value=''>
                             <i class="far fa-square"></i> Brak
                         </label>
                         <label>
@@ -1786,8 +1816,8 @@ registerModalContent(`
                     <input type="text" style="width:100px" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
                     <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                         <div data-option="0">0</div>
-                        <div data-option="4px">4px</div>
-                        <div data-option="8px">8px</div>
+                        <div data-option="6px">6px</div>
+                        <div data-option="10px">10px</div>
                         <div data-option="50%">50%</div>
                     </div>
                 </div>
@@ -1823,6 +1853,17 @@ registerModalContent(`
                 <div class="desktopRow spaceColumns">
                     <div>
                         <h3 style="text-align:center">Wersja desktopowa <i class='fas fa-desktop'></i></h3>
+                        <h4>Minimalna wysokość</h4>
+                        <div class="selectbox">
+                            <input type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
+                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div data-option="">Brak</div>
+                                <div data-option="100px">100px</div>
+                                <div data-option="200px">200px</div>
+                                <div data-option="300px">300px</div>
+                                <div data-option="400px">400px</div>
+                            </div>
+                        </div>
                         <h4>Wyrównaj zawartość w poziomie</h4>
                         <div data-select-group="desktop-justify-content">
                             <input type="hidden" style="width:100px" data-attribute="desktop-justify-content" data-default-value="center" data-target=".cms-container-content">
@@ -1847,6 +1888,17 @@ registerModalContent(`
                     </div>
                     <div>
                         <h3 style="text-align:center">Wersja mobilna <i class='fas fa-mobile-alt'></i></h3>
+                        <h4>Minimalna wysokość</h4>
+                        <div class="selectbox">
+                            <input type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
+                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div data-option="">Brak</div>
+                                <div data-option="100px">100px</div>
+                                <div data-option="200px">200px</div>
+                                <div data-option="300px">300px</div>
+                                <div data-option="400px">400px</div>
+                            </div>
+                        </div>
                         <h4>Wyrównaj zawartość w poziomie</h4>
                         <div data-select-group="mobile-justify-content">
                             <input type="hidden" style="width:100px" data-attribute="mobile-justify-content" data-default-value="center" data-target=".cms-container-content">
@@ -1884,7 +1936,7 @@ registerModalContent(`
                     <div>
                         <h4>Animacje przy pierwszym wyświetleniu</h4>
                         <label>
-                            <input type='radio' class='classList' name='animation' value='none'>
+                            <input type='radio' class='classList' name='animation' value=''>
                             Brak <i class="fa fa-times"></i>
                         </label>
                         <label>
@@ -1967,7 +2019,7 @@ registerModalContent(
 
                     <h4> Zdjęcie </h4>
 
-                    <div class="btn primary" onclick="imagePicker.open(cmsBlockBackgroundImageCallback)">Wybierz <i class="fas fa-image"></i></div>
+                    <div class="btn primary" onclick="imagePicker.open(null,cmsBlockBackgroundImageCallback)">Wybierz <i class="fas fa-image"></i></div>
 
                     <div class="btn primary" onclick="setBlockBackgroundImage()">Usuń <i class="fa fa-times"></i></div>
 

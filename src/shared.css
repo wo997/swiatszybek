@@ -403,6 +403,17 @@ button, input[type=button] {
   -moz-box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.13);
   box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.13);
 }
+.field-title [data-type] {
+  margin-top: 4px;
+}
+
+.field-title [data-type="src"] {
+  max-width: 100%;
+  max-height: 200px;
+  max-width: 200px;
+  display: block;
+}
+
 
 /* new form end */
 
@@ -506,14 +517,6 @@ button, input[type=button] {
   border-right: 1px solid rgb(18, 165, 181);
   font-weight: bold;
 }
-.specyfikacja td:last-child {
-
-}
-
-input[type="radio"]:checked {
-  background-color: #6c1;
-  border: 5px #8e3 solid;
-}
 
 input[type="radio"] {
   display: inline-block;
@@ -526,8 +529,15 @@ input[type="radio"] {
   width: 20px;
   position: relative;
   top: 6px;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+  transition: 0.2s;
+}
+input[type="radio"]:hover:not(:checked) {
+  filter: brightness(0.9);
+  transition: 0.modal-content>*>*:not(.blank)s;
+}
+input[type="radio"]:not([value=""]):checked {
+  background-color: #6c1;
+  border: 5px #8e3 solid;
 }
 
 .username {
@@ -796,18 +806,25 @@ select.inline, .btn.inline {
   margin: 0;
 }
 nav > div > a.current-route {
-  background: #f9fcf9;
-  color: #7c1;
-  font-weight: bold;
+  background: #c22;
+  color: white;
 }
 nav div > a:not(.current-route):hover > * {
-  color: #7c1;
+  color: #c22;
   text-decoration: underline;
 }
 .header-wrapper {
   -webkit-box-shadow: 0px 3px 14px -3px rgba(0,0,0,0.08);
   -moz-box-shadow: 0px 3px 14px -3px rgba(0,0,0,0.08);
   box-shadow: 0px 3px 14px -3px rgba(0,0,0,0.08);
+  background: #fcfcfc;
+  position: fixed;
+  width: 100%;
+  z-index: 400;
+  top: 0;
+  left: 0;
+  z-index: 600;
+  border-bottom: 1px solid #ccc;
 }
 .dropdown-expand {
   -webkit-box-shadow: 0px 3px 14px -3px rgba(0,0,0,0.2);
@@ -815,9 +832,6 @@ nav div > a:not(.current-route):hover > * {
   box-shadow: 0px 3px 14px -3px rgba(0,0,0,0.2);
 }
 
-.header-wrapper {
-  border-bottom: 1px solid #ccc;
-}
 .headerplain {
     display: inline-block;
     margin: 0;
@@ -929,16 +943,6 @@ nav > div > a {
   flex-wrap: wrap;
 }
 
-.header-wrapper {
-  position: fixed;
-  width: 100%;
-  background: white;
-  z-index: 400;
-  top: 0;
-  left: 0;
-  z-index: 600;
-}
-
 @media only screen and (min-width: 750px) {
   #basket:hover #basketContent {
     opacity: 1;
@@ -1012,9 +1016,18 @@ nav > div > a {
   }
 }*/
 
+
+#logo {
+  width: 140px;
+  margin: 10px 0
+}
+
 /*@media (hover: none) {*/
 @media only screen and (max-width: 1199px) {
-  
+  #logo {
+    width: 90px;
+    margin: 0;
+  }
   .header-inner {
     padding: 5px 2vw !important;
   }
@@ -1023,7 +1036,7 @@ nav > div > a {
   }
   #show_kategorie {
     padding: 11px;
-    background: white;
+    background: inherit;
     border: none;
     /*background: #f8f8f8;*/
     color: #333;
@@ -1251,9 +1264,6 @@ body {
   width: 100%;
   padding: 10px;
   box-sizing: border-box;
-}
-#logo {
-  width: 140px;
 }
 
 
@@ -2130,6 +2140,9 @@ ql-icon i span {
   background: white;
   max-height: 100%;
   overflow-y: auto;
+  -webkit-box-shadow: 0px 2px 11px -2px rgba(0,0,0,0.31);
+  -moz-box-shadow: 0px 2px 11px -2px rgba(0,0,0,0.31);
+  box-shadow: 0px 2px 11px -2px rgba(0,0,0,0.31);
 }
 
 label input[type="radio"] {

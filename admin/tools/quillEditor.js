@@ -157,6 +157,10 @@ window.quillEditor = {
             quillEditor.hideCustomQuillButtons();
             quillEditor.fixHeight(40);
         });
+
+        setTimeout(()=>{
+            quillEditor.fixImageResponsive();
+        },500); // 400 for animation
     },
     save: () => {
         var cursor = elem("#quillEditor .ql-cursor");
@@ -343,6 +347,7 @@ window.quillEditor = {
     quillImageCallback: (src) => {
         src = "/uploads/df/"+src;
         quillEditor.editor.insertEmbed(quillEditor.lastSelection.index, 'image', src);
+        quillEditor.fixImageResponsive();
     },
 
 
@@ -438,6 +443,14 @@ window.quillEditor = {
                 quillEditor.fixHeight(repeat-1);
             });
         }
+    },
+
+    fixImageResponsive: () => {
+        document.querySelectorAll("#quillEditor img").forEach(e => {
+            if (!e.style.width) {
+                e.style.width = Math.round(e.getBoundingClientRect().width) + "px";
+            }
+        });
     },
 
     considerUploadingImages() {
@@ -723,7 +736,7 @@ window.quillEditor = {
         elem("#quillEditor .ql-image").outerHTML += "";
         setTimeout(() => {
             elem("#quillEditor .ql-image").onclick = () => {
-                imagePicker.open(quillEditor.quillImageCallback);
+                imagePicker.open(null, quillEditor.quillImageCallback);
             };
         }, 100);
 
@@ -813,8 +826,6 @@ window.quillEditor = {
             }
 
             quillEditor.checkIfTable();
-
-            
         });
 
         quillEditor.editor.on('selection-change', () => {

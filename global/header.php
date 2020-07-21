@@ -7,7 +7,7 @@
 
 <div class="header-wrapper">
   <div class="header-inner centerwhenbig">
-    <a href="/" class="logo-wrapper"><img src="/img/logo.png" id="logo"></a>
+    <a href="/" class="logo-wrapper"><img src="/img/logo.png?a" id="logo"></a>
 
     <button id="show_kategorie" onclick="this.classList.toggle('dropped_kategorie')"><span><!--Menu --><i class="fa fa-bars"></i></span><span><!--Menu --><i class="fa fa-times"></i></span></button>
     <nav class="centerwhenbig">

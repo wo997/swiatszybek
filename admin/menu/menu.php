@@ -195,17 +195,20 @@
 
     function loadCategoryForm(form,data,isNew) {
         if (isNew) {
-            data.title = "";
-            data.published = "0";
+            data = {
+                ...data,
+                cms_id: "",
+                product_id: "",
+                published: "0",
+                title: "Menu",
+                url: ""
+            }
         }
 
         var formElement = elem(`#${form}`);
 
         loadFormData(data, formElement);
-
-        strony.setSelectedValues(data.cms_id);
-        produkty.setSelectedValues(data.product_id);
-
+        
         var canDelete = !data.subcategories;
 
         var tab_id = 1;

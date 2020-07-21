@@ -2,20 +2,14 @@
 
 $uploads_path = 'uploads';
 
-$image_wanted_dimensions = [ // pick higher width or height
-    "lg" => 1600,
-    "md" => 800,
-    "sm" => 350,
-];
-
 $image_sizes_all = ["df"];
-foreach ($image_wanted_dimensions as $size_name => $area) {
+foreach ($image_default_dimensions as $size_name => $area) {
     $image_sizes_all[] = $size_name;
 }
 
 function processImage($file_tmp, $tag, $file_name, $counter = null)
 {
-    global $image_wanted_dimensions, $uploads_path;
+    global $image_default_dimensions, $uploads_path;
 
     $info = getimagesize($file_tmp);
 
@@ -46,15 +40,12 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
         "df" => [$width, $height]
     ];
 
-    foreach ($image_wanted_dimensions as $image_wanted_name => $image_wanted_dimension) {
-        //if ($image_area > $image_wanted_area * 0.8) { // include all ;)
-            
+    foreach ($image_default_dimensions as $image_wanted_name => $image_wanted_dimension) {
         $scale = $image_wanted_dimension / $image_dimension;
         $sizes[$image_wanted_name] = [
             round($width * $scale),
             round($height * $scale),
         ];
-        //}
     }
 
     $file_type = ".jpg";
@@ -86,12 +77,12 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
         $copy_width = $size[0];
         $copy_height = $size[1];
 
-        $image = imagescale($image, $copy_width, $copy_height);
         $output = imagecreatetruecolor($copy_width, $copy_height);
         $white = imagecolorallocate($output,  255, 255, 255);
         imagefilledrectangle($output, 0, 0, $copy_width, $copy_height, $white);
-        imagecopy($output, $image, 0, 0, 0, 0, $copy_width, $copy_height);
-        imagejpeg($output, "$image_type_path/$final_image_path", 100);
+        imagecopyresized($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
+        $final_path = "$image_type_path/$final_image_path";
+        imagejpeg($output, $final_path, 100);
     }
 
     query("INSERT INTO images(name, path, tag, added) VALUES (?,?,?,NOW())", [

@@ -240,21 +240,6 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     document.getElementById("specyfikacja_output").value = out;
   }
 
-
-  function imagePickerZdjeciaCallback(src, target) {
-    var id = target.substr(8);
-    document.getElementById("zdjecia-" + id).insertAdjacentHTML("beforeEnd",
-      '<div class="wrapper"><img src="' + src + '"><div class="delete red" onclick="deleteImg(this,' + id + ')">X</div></div>'
-    );
-    updateZdjeciaRow(id);
-  }
-
-  function imagePickerDefaultCallback(src, target) {
-    var prefix = target.getAttribute(`data-src-prefix`);
-    if (!prefix) prefix = "/";
-    target.setAttribute("src", prefix + src);
-  }
-
   /*function deleteImg(obj, variantId) {
     obj.parentNode.parentNode.removeChild(obj.parentNode);
     updateZdjeciaRow(variantId);
@@ -351,19 +336,17 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       anyChange = true;
     });
   });
+  */
 
   function deleteItem() {
     anyChange = false;
     if (confirm("Czy chcesz usunąć produkt?")) {
-      window.location = '/admin/delete_product/<?= ""; //$kopia ? '' : $product_id 
-                                                ?>';
+      window.location = '/admin/delete_product/<?= $kopia ? '-1' : $product_id ?>';
     }
   }
-  */
 
-  function copyMainImage(id) {
-    var value = document.getElementById("img-main").getAttribute("src");
-    document.getElementById(id).setAttribute("src", value);
+  function copyMainImage(node) {
+    node.setAttribute("src", document.getElementById("img-main").getAttribute("src"));
   }
 
   function editPage() {
@@ -382,7 +365,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       zdjecie: "",
       published: "0",
       variant_id: "-1",
-      product_id: <?= $product_data["product_id"] ?>
+      product_id: <?= $product_id ?>
     };
     loadFormData(data, elem("#variantEdit"));
 
@@ -476,14 +459,14 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         <?php else : ?>
           Edycja
         <?php endif ?>
-        <?= htmlspecialchars($title0) ?>
+        <?= $product_data["title"] ?>
       </div>
       <div>
         <?php if ($kopia) : ?>
           <a href="/admin/produkt/<?= $product_id ?>" class="btn secondary" style="padding: 2px 4px;">Anuluj <i class="fa fa-times"></i></a>
         <?php else : ?>
           <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary" style="padding: 2px 4px;">Kopiuj <i class="fas fa-copy"></i></a>-->
-          <a href="/produkt/<?= $product_id . "/" . getLink($title0) ?>" class="btn secondary" style="padding: 2px 4px;">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
+          <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary" style="padding: 2px 4px;">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
         <?php endif ?>
         <button onclick="saveProductForm()" class="btn primary" style="padding: 2px 4px;" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
       </div>
@@ -512,15 +495,19 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
     <div class="mobileRow">
       <div>
-        <div class="field-title">Zdjęcie na stronę główną</div>
-        <button type="button" class="btn primary" onclick="imagePicker.open((src)=>{imagePickerDefaultCallback(src,elem('#img-main'))})" style="width:auto;display: inline-block;">Wybierz</button>
-        <img id="img-main" data-src-name="image" data-src-prefix="/uploads/df/" style="max-width: 100%;max-height: 200px;max-width: 200px;display: block;margin: 20px auto;" />
+        <div class="field-title">
+          Zdjęcie na stronę główną
+          <div class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</div>
+          <img id="img-main" name="image" data-type="src" data-src-prefix="/uploads/df/"/>
+        </div>
       </div>
       <div style="margin-left:10px">
-        <div class="field-title">Wersja desktopowa</div>
-        <button type="button" class="btn primary" onclick="imagePicker.open((src)=>{imagePickerDefaultCallback(src,elem('#img-desktop'))})" style="width:auto;display: inline-block;">Wybierz</button>
-        <input type="button" class="btn secondary" value="Kopiuj zdjęcie główne" onclick="copyMainImage('img-desktop')" style="width:auto;display: inline-block;">
-        <img id="img-desktop" data-src-name="image_desktop" data-src-prefix="/uploads/df/" style="max-width: 100%;max-height: 200px;max-width: 200px;display: block;margin: 20px auto;" />
+        <div class="field-title">
+          Wersja desktopowa
+          <div class="btn primary" onclick="imagePicker.open(this.nextElementSibling.nextElementSibling)">Wybierz</div>
+          <div class="btn secondary" onclick="copyMainImage(this.nextElementSibling)">Kopiuj zdjęcie główne</div>
+          <img name="image_desktop" data-type="src" data-src-prefix="/uploads/df/" />
+        </div>
       </div>
     </div>
 
@@ -530,7 +517,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     <div style="margin-top: 10px;display:none">
       <div class="field-title">Opis krótki <span style="color:red">(wywalamy)</span></div>
       <div class="quill-wrapper2">
-        <div id="product-description" data-html-name="descriptionShort" data-point-child=".ql-editor"></div>
+        <div id="product-description" name="descriptionShort" data-type="html" data-point-child=".ql-editor"></div>
       </div>
     </div>
 
@@ -550,8 +537,11 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
     <div style="margin-top: 10px">
 
-      <h3>Opis główny <button type="button" onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
-      <div id="product-content" data-html-name="description" class="cms" style="border:1px solid #ccc;max-height: calc(100vh - 352px);overflow-y:auto"><?= $description ?></div>
+      <div class="form-field">
+        Opis główny
+        <div onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
+      </div>
+      <div id="product-content" name="description" data-type="html" class="cms" style="border:1px solid #ccc;max-height: calc(100vh - 352px);overflow-y:auto"></div>
     </div>
 
     <h2 style="text-align:center">Warianty <span style="font-size: 0.7rem">(min. 1)</span></h2>
@@ -561,7 +551,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     <input type="hidden" name="product_id">
 
     <?php if (!$kopia) : ?>
-      <button type="button" style='background:red;color:white;margin-top:10px' onclick="deleteItem()">USUŃ PRODUKT</button>
+      <div class="btn" style='background:red;color:white;margin-top:10px' onclick="deleteItem()">USUŃ PRODUKT</div>
     <?php endif ?>
   </div>
 </div>
@@ -645,9 +635,10 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
       <div class="field-title">
         Zdjecie
-        <button type="button" class="btn primary" onclick='imagePicker.open((src)=>{imagePickerDefaultCallback(src,elem(`[data-src-name="zdjecie"]`))})' style="width:auto;display: inline-block;">Wybierz</button>
+        <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
+        <img name="zdjecie" data-type="src" data-src-prefix="/uploads/md/"/>
       </div>
-      <img data-src-name="zdjecie" data-src-prefix="/uploads/md/" style="max-width: 100%;max-height: 200px;max-width: 200px;display: block;" />
+      
 
       <div class="field-title">Widoczność</div>
       <select name="published" class="field">

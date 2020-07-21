@@ -1,8 +1,10 @@
 window.imagePicker = {
     firstOpen: true, // preload or not?
+    target: null,
     callback: null,
     defaultTag: "",
-    open: (callback) => {
+    open: (target = null, callback = null) => {
+        imagePicker.target = target;
         imagePicker.callback = callback;
         showModal("imagePicker", {ontop: true});
         if (imagePicker.firstOpen) {
@@ -13,7 +15,12 @@ window.imagePicker = {
     },
     choose: (src) => {
         hideModalTopMost();
-        imagePicker.callback(src);
+        if (imagePicker.target) {
+            setValue(imagePicker.target, src);
+        }
+        if (imagePicker.callback) {
+            imagePicker.callback(src);
+        }
     },
     setDefaultTag: (tag, replaceEmptyOnly = true) => {
         imagePicker.defaultTag = tag;

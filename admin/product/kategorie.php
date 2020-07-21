@@ -42,24 +42,32 @@
                 },
                 {
                     title: "Podkategorie",
-                    width: "20%",
+                    width: "10%",
                     render: (r) => {
                         return `${nonull(r.subcategories,"brak")}`;
                     }
                 },
                 {
                     title: "Opis górny",
-                    width: "20%",
+                    width: "10%",
                     render: (r) => {
                         return r.description_text.replace(/\n/g,"");
                     }
                 },
                 {
                     title: "Zawartość (dół)",
-                    width: "20%",
+                    width: "10%",
                     render: (r) => {
                         return r.content_text.replace(/\n/g,"");
                     }
+                },
+                {
+                    title: "Ikonka",
+                    width: "60px",
+                    render: (r) => {
+                        return `<img src="/uploads/sm/${r.icon}" style="max-width: 100%;max-height: 32px;display: block;">`;
+                    },
+                    escape: false
                 },
                 {
                     title: "Publiczna?",
@@ -138,6 +146,21 @@
 
         var formElement = elem(`#${form}`);
 
+        if (isNew) {
+            data = {
+                ...data,
+                title: "",
+                link: "",
+                published: "",
+                icon: "",
+                attributes: [],
+                description: "",
+                content: "",
+                published: "0",
+                variant_id: "-1"
+            };
+        }
+
         loadFormData(data, formElement);
 
         var canDelete = !data.subcategories;
@@ -147,8 +170,6 @@
         formElement.querySelector(".btn.red + i").classList.toggle("hidden", canDelete);
         
         clearValidateRequired();
-
-        atrybuty.setSelectedValues(JSON.parse(`[${nonull(data.attributes)}]`));
     }
 
     function saveCategoryForm(remove = false) {
@@ -206,6 +227,12 @@
                 <option value="0">Ukryta</option>
             <select>
 
+            <div class="field-title">
+                Ikonka
+                <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
+                <img name="icon" data-type="src" data-src-prefix="/uploads/sm/" style="max-width:100px;max-height:100px"/>
+            </div>
+
             <div class="field-title">Kategoria nadrzędna</div>
             <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="product_categories" data-single>
 
@@ -213,10 +240,10 @@
             <div class="atrybuty"></div>
             
             <div class="field-title">Opis górny <button class="btn primary" type="button" onclick='quillEditor.open(elem("#editCategory .description"));'>Edytuj</button></div>
-            <div class="description ql-editor preview_html" data-html-name="description" style="max-height: 300px;"></div>
+            <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
 
             <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS(elem('#editCategory .content'),{ontop:true});">Edytuj </button></div>
-            <div class="content cms preview_html" data-html-name="content" style="max-height: 300px;"></div>
+            <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
             <br>
             <div class="caseCanDelete">

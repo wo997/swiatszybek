@@ -371,7 +371,7 @@ function getTableData($data = null)
   }
 
   $totalRows = fetchValue($countQuery);
-  $pageCount = ceil($totalRows / $rowCount);
+  $pageCount = $rowCount > 0 ? ceil($totalRows / $rowCount) : 0;
 
   $results = fetchArray("SELECT $select FROM $from WHERE $where $group ORDER BY $order LIMIT $bottomIndex,$rowCount");
 
@@ -710,3 +710,11 @@ $attribute_data_types = [
     "description" => "Liczba zmiennoprzecinkowa",
   ]*/
 ];
+
+// image upload definition start
+$image_default_dimensions = [ // pick higher width or height
+  "lg" => 1600,
+  "md" => 800,
+  "sm" => 350,
+];
+// image upload definition end

@@ -99,7 +99,7 @@
     transition: opacity 0.4s, transform 0.4s, margin 0.4s, width 0.2s, background-color 0.4s, border-width 0.4s;
 }
 
-#cms .cms-container:hover .cms-block {
+#cms .cms-container:hover .cms-block:not(:hover) {
     border: 1px solid #fffa;
     -webkit-box-shadow: 0px 0px 0px 1px #000a;
     -moz-box-shadow: 0px 0px 0px 1px #000a;
