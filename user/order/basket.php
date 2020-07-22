@@ -2,9 +2,6 @@
 
 $urlParts = explode("/",$url);
 
-if (empty($_SESSION["basket"]))
-  $_SESSION["basket"] = "";
-
 $basket = json_decode($_SESSION["basket"],true);
 
 $request = $urlParts[1];

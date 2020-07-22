@@ -506,8 +506,10 @@
       function userBasketUpdated() {
         for (basket_item of user_basket)
         {
-          var variant = variants.find(v => {return v.variant_id = basket_item.variant_id});
-          variant.quantity = basket_item.quantity;
+          var variant = variants.find(v => {return v.variant_id == basket_item.variant_id});
+          if (variant) {
+            variant.quantity = basket_item.quantity;
+          }
         }
       }
 
@@ -517,7 +519,7 @@
         var total = 0;
         for (basket_item of user_basket)
         {
-          var variant = variants.find(v => {return v.variant_id = basket_item.variant_id});
+          var variant = variants.find(v => {return v.variant_id == basket_item.variant_id});
 
           if (!variant) continue;
 
@@ -597,9 +599,9 @@
         document.getElementById('updateChoosenVariant').innerHTML = " " + variant.name;
         document.getElementById('updateChoosenAmountCost').innerHTML = variant.price - variant.rabat + " zł";
 
-        var low = variant.quantity < 5 ? "style='font-weight:bold;color:red'" : "";
-
         var left = variant.stock - variant.quantity;
+
+        var low = left < 5 ? "style='font-weight:bold;color:red'" : "";
 
         document.getElementById("quantity").innerHTML = `Dostępność: <span class="pln" ${low}>${left} szt.</span>`;
         

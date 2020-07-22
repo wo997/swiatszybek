@@ -151,14 +151,35 @@ if (isset($_SESSION["user"])) {
   ];
 }
 
-if (!isset($_SESSION["basket"]) || empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["basket"]) {
+if (empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["basket"]) {
   $b = "[]";
   if (isset($_COOKIE["basket"])) {
     $b = $_COOKIE["basket"];
   }
   $_SESSION["basket"] = $b;
 }
-//$_SESSION["basket"] = "";
+
+// validate basket
+try {
+  $basket = json_decode($_SESSION["basket"],true);
+
+  if ($basket === null) {
+    throw new Exception('json parse error');
+  }
+
+  foreach ($basket as $basket_item) {
+    if (
+      !isset($basket_item["variant_id"]) 
+      || !isset($basket_item["quantity"])
+    ) {
+      throw new Exception('missing content');
+      break;
+    }
+  }
+}
+catch (Exception $e) {
+  $_SESSION["basket"] = "[]";
+}
 
 function nonull($arr, $key, $default = "")
 {
