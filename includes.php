@@ -2,7 +2,7 @@
 <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Poppins&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
-<?php $RELEASE = 95; ?>
+<?php $RELEASE = 96; ?>
 
 <?php if (/*$app["user"]["is_admin"]*/ strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
   <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>

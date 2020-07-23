@@ -342,18 +342,11 @@ window.quillEditor = {
         quillEditor.editor.setSelection(selection.index + 1,0 );
     },
 
-
-
     quillImageCallback: (src) => {
         src = "/uploads/df/"+src;
         quillEditor.editor.insertEmbed(quillEditor.lastSelection.index, 'image', src);
         quillEditor.fixImageResponsive();
     },
-
-
-
-
-
 
     fixQLtooltip: () => {
         var tool = elem('.ql-tooltip');
