@@ -161,7 +161,7 @@
             };
         }
 
-        loadFormData(data, formElement);
+        setFormData(data, formElement);
 
         var canDelete = !data.subcategories;
 

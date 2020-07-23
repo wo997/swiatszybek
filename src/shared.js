@@ -1845,7 +1845,7 @@ function scrollToBottom(node) {
   node.scrollTop = node.scrollHeight;
 }
 
-function loadFormData(data, form = null) {
+function setFormData(data, form = null) {
   if (!form) form = document;
   Object.entries(data).forEach(([name, value]) => {
     var e = form.querySelector(`[name="${name}"]`);

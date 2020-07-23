@@ -341,7 +341,7 @@
             attribute_values.setValues([]);
         }
 
-        loadFormData(data, formElement);
+        setFormData(data, formElement);
         showModal(form);
     }
 

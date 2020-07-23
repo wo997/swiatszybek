@@ -120,7 +120,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
     }
 
     window.addEventListener("DOMContentLoaded", function() {
-      loadFormData(<?= json_encode($user_data, true) ?>);
+      setFormData(<?= json_encode($user_data, true) ?>);
 
       document.querySelectorAll("form .field").forEach(e=>{
         e.addEventListener("input", function() {

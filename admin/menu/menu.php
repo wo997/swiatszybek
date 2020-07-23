@@ -207,7 +207,7 @@
 
         var formElement = elem(`#${form}`);
 
-        loadFormData(data, formElement);
+        setFormData(data, formElement);
         
         var canDelete = !data.subcategories;
 

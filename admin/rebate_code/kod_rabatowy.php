@@ -36,7 +36,7 @@ if (!json_decode($kod_data["product_list_metadata"])) {
 </style>
 <script>
     window.addEventListener("DOMContentLoaded", function() {
-        loadFormData(<?= json_encode($kod_data) ?>);
+        setFormData(<?= json_encode($kod_data) ?>);
 
         var tableName = "users";
         createTable({

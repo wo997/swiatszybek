@@ -442,7 +442,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         window.form = document.getElementById("form");
 
         ignoreValueChanges = true;
-        loadFormData(<?=json_encode($zamowienie_data)?>, elem(".main-container"));
+        setFormData(<?=json_encode($zamowienie_data)?>, elem(".main-container"));
         ignoreValueChanges = false;
 
         <?php //if (!$app["user"]["id"]) { ?>
@@ -696,7 +696,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
                 hidePaczkomatPicker();
                 selectDostawa("paczkomat-option", false);
 
-                loadFormData({
+                setFormData({
                   paczkomat: point.name,
                   kraj_dostawa: "Polska",
                   miejscowosc_dostawa: point.address_details.city,
@@ -800,7 +800,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         }
         else if (id == 'osobiscie-option')
         {
-          loadFormData({
+          setFormData({
             kraj_dostawa: "Polska",
             miejscowosc_dostawa: "Warszawa",
             kod_pocztowy_dostawa: "01-460",

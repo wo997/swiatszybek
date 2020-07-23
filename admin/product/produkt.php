@@ -230,7 +230,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       }
     });
 
-    loadFormData(<?= json_encode($product_data) ?>, elem("#productForm"));
+    setFormData(<?= json_encode($product_data) ?>, elem("#productForm"));
   });
 
   window.addEventListener("load", function() {
@@ -266,7 +266,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       variant_id: "-1",
       product_id: <?= $product_id ?>
     };
-    loadFormData(data, elem("#variantEdit"));
+    setFormData(data, elem("#variantEdit"));
 
     elem(`[name="was_stock"]`).value = data.stock;
 
@@ -275,7 +275,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
   function editVariant(i) {
     var data = variants.results[i];
-    loadFormData(data, elem("#variantEdit"));
+    setFormData(data, elem("#variantEdit"));
 
     elem(`[name="was_stock"]`).value = data.stock;
 
