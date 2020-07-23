@@ -20,9 +20,9 @@ function processDir($parent_dir) {
         else if (strpos($file,".php") != strlen($file)-4) {
             continue;
         }
-        $line = nonull(file($path),0,"");
+        $first_line = nonull(file($path),0,"");
         
-        if (!preg_match("/<\?php \/\/->\[.*\]/",$line,$match)) continue;
+        if (!preg_match("/<\?php \/\/->\[.*\]/",$first_line,$match)) continue;
         
         $scanned_routes_string .= "\"".substr($match[0],11,-1)."\" => \"".$path."\",\n";
     }
