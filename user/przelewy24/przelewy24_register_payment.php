@@ -1,5 +1,5 @@
 <?php 
-require_once 'przelewy24/przelewy24.php';
+require_once 'user/przelewy24/przelewy24.php';
 
 $P24 = new Przelewy24(secret("p24_merchantId"), secret("p24_posId"), secret("p24_crc"), secret("p24_testMode"));
 //$RET = $P24->testConnection();

@@ -78,13 +78,6 @@ else
   
 }
 
-// validate stock
-
-require_once "get_basket_data.php";
-
-require "helpers/validate_stock.php";
-
-
 $res = "";
 if (empty($app["user"]["basket"]["variants"]))
 {

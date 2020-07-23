@@ -2,8 +2,6 @@
 
 $basketContent = "";
 
-require_once "get_basket_data.php";
-
 if (!$app["user"]["basket"]["item_count"])
 {
   $basketContent = "<h5 style='text-align:center'>Twój koszyk jest pusty!</h5>";

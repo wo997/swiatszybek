@@ -1,7 +1,5 @@
 <?php 
 
-require_once "get_basket_data.php";
-
 $nr = 0;
 $res = "";
 

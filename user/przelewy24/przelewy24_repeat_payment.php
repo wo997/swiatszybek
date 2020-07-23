@@ -18,6 +18,6 @@ $zamowienie_id = fetchValue("SELECT zamowienie_id FROM zamowienia WHERE link = ?
 else
 {*/
 if ($status == 0) {
-    require "przelewy24/przelewy24_register_payment.php";
+    require "user/przelewy24/przelewy24_register_payment.php";
 }
 //}

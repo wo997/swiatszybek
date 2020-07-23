@@ -138,6 +138,7 @@ function niceDate($time = null)
   return date("d", $date_time) . " " . $m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
 }
 
+// define app scope
 $app = [];
 
 if (isset($_SESSION["user"])) {
@@ -179,7 +180,13 @@ try {
 }
 catch (Exception $e) {
   $_SESSION["basket"] = "[]";
+  $_COOKIE["basket"] = "[]";
 }
+
+require "helpers/basket/get_basket_data.php";
+
+require "helpers/validate_stock.php";
+
 
 function nonull($arr, $key, $default = "")
 {
@@ -733,7 +740,7 @@ $attribute_data_types = [
 ];
 
 // image upload definition start
-$image_default_dimensions = [ // pick higher width or height
+$image_default_dimensions = [ // pick higher of width and height
   "lg" => 1600,
   "md" => 800,
   "sm" => 350,

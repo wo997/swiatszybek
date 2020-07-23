@@ -32,10 +32,6 @@ if ($_POST["email"] == '') {
   die;
 }
 
-require_once "get_basket_data.php";
-
-require "helpers/validate_stock.php";
-
 // lower kod rabatowy count
 $kod_rabatowy = isset($_SESSION["kod"]) ? $_SESSION["kod"] : false;
 $kod_rabatowy_wartosc = isset($_SESSION["rabat"]) ? floatval($_SESSION["rabat"]) : 0;
@@ -72,6 +68,8 @@ foreach($app["user"]["basket"]["variants"] as $basket_variant) {
     $title .= " ".$name;
 
   $basket_all_data[] = ['v'=>$variant_id,'q'=>$quantity,'p'=>$price,'f'=>$total_price,'t'=>$title,'i'=>$product_id];
+
+  // please dont do that man, use event instead, and bring that script lower
 
   query("UPDATE products SET cache_sales = cache_sales + ? WHERE product_id = ?",[$quantity, $product_id]);
   
@@ -146,9 +144,14 @@ query("INSERT INTO zamowienia (
 
 $zamowienie_id = getLastInsertedId();
 
-/*foreach ($basket_ids as $variant_id) {
-  query("INSERT INTO basket_content (basket_item_id	zamowienie_id	variant_id	product_id	base_price	quantity	price	title)")
-}*/
+
+foreach ($app["user"]["basket"]["variants"] as $basket_variant) {
+  $v = $basket_variant;
+
+  query("INSERT INTO basket_content (zamowienie_id, variant_id, product_id, real_price, quantity, total_price, title) VALUES (?,?,?,?,?,?,?)", [
+    $zamowienie_id, $v["variant_id"], $v["product_id"], $v["real_price"], $v["quantity"], $v["total_price"], $v["title"]." ".$v["name"]
+  ]);
+}
 
 
 $link = $zamowienie_id . "-" . $link_hash;
@@ -244,7 +247,7 @@ $mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - ".config('main_email_s
 
 if ($_POST["forma_zaplaty"] == '24')
 {
-  require 'przelewy24/przelewy24_register_payment.php';
+  require 'user/przelewy24/przelewy24_register_payment.php';
 }
 else
 {
