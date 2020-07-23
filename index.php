@@ -148,7 +148,10 @@ if (isset($_GET['url']))
 
 $found = false;
 
-$scanned_routes = require "scanned_routes.php";
+$scanned_routes = @include "scanned_routes.php";
+if (!$scanned_routes) {
+  $scanned_routes = [];
+}
 $pageName = checkUrl($url);
 
 $url_params = explode("/",$url);

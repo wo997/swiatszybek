@@ -12,4 +12,5 @@
 "opening_hours"=>"PONIEDZIAŁEK – PIĄTEK, 09:00 – 17:00",
 "paczkomat_tracking"=>"https://inpost.pl/sledzenie-przesylek?number=",
 "kurier_tracking"=>"https://www.ups.com/track?loc=pl_PL&tracknum=",
+"admins"=>"maciej.ziemichod@gmail.com"
 ];

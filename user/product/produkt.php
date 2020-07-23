@@ -798,15 +798,15 @@
         },
         "aggregateRating": {
           "@type": "AggregateRating",
-          "ratingValue": "<?=$avg_rating?>",
-          "reviewCount": "<?=$review_count?>",
+          "ratingValue": "<?=$product_data["cache_avg_rating"]?>",
+          "reviewCount": "<?=$product_data["cache_rating_count"]?>",
           "bestRating": 5,
           "worstRating": 0
         },
         "offers": {
           "@type": "Offer",
           "priceCurrency": "PLN",
-          "price": "<?=$regularPrice?>",
+          "price": "<?=$product_data["price_min"]?>",
           "itemCondition": "https://schema.org/UsedCondition",
           "availability": "<?=$stockSchema?>",
           "seller": {

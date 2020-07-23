@@ -2,20 +2,18 @@
 <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Poppins&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
-<?php $RELEASE = 96; ?>
-
 <?php if (/*$app["user"]["is_admin"]*/ strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
   <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="/src/vanilla.datepicker.css?v=1" type="text/css" media="screen" />
 
-  <link href="/admin/shared.css?v=<?=$RELEASE?>" rel="stylesheet">
-  <script src="/admin/shared.js?v=<?=$RELEASE?>"></script>
+  <link href="/admin/shared.css?v=<?=RELEASE?>" rel="stylesheet">
+  <script src="/admin/shared.js?v=<?=RELEASE?>"></script>
   
-  <script src="/src/jscolor.js?v=<?=$RELEASE?>"></script>
+  <script src="/src/jscolor.js?v=<?=RELEASE?>"></script>
 <?php endif ?>
 
-<link href="/src/shared.css?v=<?=$RELEASE?>" rel="stylesheet">
-<script src="/src/shared.js?v=<?=$RELEASE?>"></script>
+<link href="/src/shared.css?v=<?=RELEASE?>" rel="stylesheet">
+<script src="/src/shared.js?v=<?=RELEASE?>"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 <link rel="shortcut icon" href="/img/favicon.png" />
@@ -42,17 +40,17 @@
 
 <?php if ($app["user"]["is_admin"] || $page_data["cms_id"]) : ?>
 
-  <link rel="stylesheet" href="/src/range-slider.css?v=<?=$RELEASE?>">
-  <script src="/src/range-slider.js?v=<?=$RELEASE?>"></script>
+  <link rel="stylesheet" href="/src/range-slider.css?v=<?=RELEASE?>">
+  <script src="/src/range-slider.js?v=<?=RELEASE?>"></script>
 
-  <script src="/src/highlight.min.js?v=<?=$RELEASE?>"></script>
-  <script src="/src/quill-2.0.js?v=<?=$RELEASE?>"></script>
+  <script src="/src/highlight.min.js?v=<?=RELEASE?>"></script>
+  <script src="/src/quill-2.0.js?v=<?=RELEASE?>"></script>
 
-  <!--<script src="/src/quill-better-table.min.js?v=<?=$RELEASE?>"></script>-->
+  <!--<script src="/src/quill-better-table.min.js?v=<?=RELEASE?>"></script>-->
 
-  <!--<link rel="stylesheet" href="/src/quill-better-table.css?v=<?=$RELEASE?>" />-->
+  <!--<link rel="stylesheet" href="/src/quill-better-table.css?v=<?=RELEASE?>" />-->
 <?php endif ?>
-<link href="/src/quill.snow.css?v=<?=$RELEASE?>" rel="stylesheet">
+<link href="/src/quill.snow.css?v=<?=RELEASE?>" rel="stylesheet">
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -85,7 +83,7 @@
 
 <script>
 
-  var RELEASE = <?=$RELEASE?>; // manage versioning of assets
+  var RELEASE = <?=RELEASE?>; // manage versioning of assets
   var IS_LOGGED = <?=$app["user"]["id"] ? "true" : "false" ?>;
   var USER_TYPE = "<?= $app["user"]["type"] ?>";
 
@@ -102,4 +100,4 @@
   <?php endif ?>
 </script>
 
-<link href="/admin/tools/cms.css?v=<?=$RELEASE?>" rel="stylesheet">
+<link href="/admin/tools/cms.css?v=<?=RELEASE?>" rel="stylesheet">

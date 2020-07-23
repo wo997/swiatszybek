@@ -4,6 +4,8 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
+define("RELEASE", 96);
+
 // global variables
 
 require "constants.php";
@@ -15,7 +17,7 @@ function config($var, $default = "")
 }
 
 $secrets = [];
-@include "secrets.php"; // overrides empty array
+require "secrets.php"; // overrides empty array
 
 function secret($var, $default = "")
 {

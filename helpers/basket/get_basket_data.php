@@ -46,7 +46,7 @@ foreach($basket_variants as $basket_variant_index => $basket_variant) {
 
   $basket_variant["total_price"] = $total_price;
 
-  $totalBasketCost += $basket_price;
+  $totalBasketCost += $total_price;
 
   $basket_variants[$basket_variant_index] = $basket_variant;
 }

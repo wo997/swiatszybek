@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 $shared_where = "published = 1";
 $where = "WHERE ".$shared_where;
@@ -34,13 +34,13 @@ foreach ($products as $product)
   if (!$product["image_desktop"]) {
     $product["image_desktop"] = $product["image"];
   }
-
+  
   $res .= "<div class='product'>
             <a href='".getProductLink($product["product_id"],$product["link"])."'>
               <div class='item-image' style='background-image:url(\"/uploads/md/".$product["image"]."\")' data-desktop='/uploads/md/".$product["image_desktop"]."'></div>
               <div class='item-desc'><h3>".$product["title"]."</h3>
               <span class='pln'>$priceText zł</span>
-              </div>".ratingBlock($product["avg_rating"])."
+              </div>".ratingBlock($product["cache_avg_rating"])."
               <div class='buynow btn'>KUP TERAZ</div>
             </a>
           </div>";
