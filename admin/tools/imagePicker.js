@@ -54,7 +54,7 @@ window.imagePicker = {
                         }
                         out += `
                             <div class='gallery-item'>
-                                <div class="item-image" style='width:100%;height:250px;background-image:url("/uploads/df/${image.path}")'></div>
+                                <div class="item-image" style='width:100%;height:250px;background-image:url("/uploads/sm/${image.path}")'></div>
                                 <div class="btn primary" onclick='imagePicker.choose("${image.path}")'>Wybierz</div>
                                 <div class="btn secondary" onclick='imagePicker.delete("${image.path}")'>Usuń</div>
                             </div>

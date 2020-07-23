@@ -26,7 +26,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 <style>
 
 
-  select[data-parent_value_id]:not(.visible), .optional-value-wrapper .field:not(.visible) {
+  select[data-parent_value_id].hidden, .optional-value-wrapper .field.hidden {
       display: none !important;
   }
 
@@ -39,6 +39,10 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     border-top: none;
   }
 
+  select.empty:not(:focus) {
+    color: #aaa;
+  }
+
 </style>
 <script>
   useTool("cms");
@@ -49,13 +53,13 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         var childSelect = combo.querySelector(`select[data-parent_value_id="${option.value}"]`);
         if (!childSelect) continue;
         if (option.value == select.value) {
-          childSelect.classList.add("visible");
+          childSelect.classList.remove("hidden");
         }
         else {
-          childSelect.classList.remove("visible");
-          childSelect.value = "";
+          childSelect.classList.add("hidden");
         }
       }
+      select.classList.toggle("empty", select.value == "");
     });
   }
 
@@ -69,6 +73,9 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           var wrapper = findParentByClassName(select, "combo-select-wrapper");
           comboSelectValuesChanged(wrapper);
         });
+
+        var wrapper = findParentByClassName(select, "combo-select-wrapper");
+        comboSelectValuesChanged(wrapper);
       });
     });
   }
@@ -77,7 +84,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     var checkbox = optional.querySelector(`input[type="checkbox"]`);
     var input = optional.querySelector(`.field`);
 
-    input.classList.toggle("visible", checkbox.checked);
+    input.classList.toggle("hidden", !checkbox.checked);
   }
 
   function registerOptionalValues() {
@@ -89,6 +96,10 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         var wrapper = findParentByClassName(checkbox, "optional-value-wrapper");
         optionalValueChanged(wrapper);
       });
+
+      var wrapper = findParentByClassName(checkbox, "optional-value-wrapper");
+      optionalValueChanged(wrapper);
+
     });
   }
 
@@ -152,21 +163,6 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           width: "10%",
           render: (r) => {
             return r.stock;
-          }
-        },
-        {
-          title: "Kolor",
-          width: "6%",
-          render: (r) => {
-            return `<div style='width:20px;height:20px;background:${r.color};border:1px solid #ccc'></div>`;
-          },
-          escape: false
-        },
-        {
-          title: "Kod produktu",
-          width: "12%",
-          render: (r) => {
-            return r.product_code;
           }
         },
         {
@@ -303,14 +299,22 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           });
 
           for (attribute of data.attribute_values) {
+            var wrapper = findParentByClassName(elem(`[name="attribute_values[${attribute.attribute_id}]"]`), "optional-value-wrapper");
+            setValue(wrapper.querySelector(`input[type="checkbox"]`), 0);
+          }
+
+          for (attribute of data.attribute_values) {
             setValue(elem(`[name="attribute_values[${attribute.attribute_id}]"]`), attribute[attribute_data_types[attribute.data_type].field]);
+
+            var wrapper = findParentByClassName(elem(`[name="attribute_values[${attribute.attribute_id}]"]`), "optional-value-wrapper");
+            setValue(wrapper.querySelector(`input[type="checkbox"]`), 1);
           }
         }
     });
   }
 
   function saveVariantForm() {
-    var params = getFormData(elem("#variantEdit"));
+    var params = getFormData(elem("#variantEdit"), {excludeHidden: true});
 
     var attribute_values = [];
 
@@ -547,7 +551,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       <div class="field-title">
         Zdjecie
         <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
-        <img name="zdjecie" data-type="src" data-src-prefix="/uploads/md/"/>
+        <img name="zdjecie" data-type="src" data-src-prefix="/uploads/sm/"/>
       </div>
       
 

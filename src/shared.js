@@ -1863,10 +1863,11 @@ function loadFormData(data, form = null) {
   resizeCallback();
 }
 
-function getFormData(form = null) {
+function getFormData(form = null, options = {}) {
   if (!form) form = document;
   var data = {};
   form.querySelectorAll(`[name]`).forEach((e) => {
+    if (options.excludeHidden && findParentByClassName(e, ["hidden"])) return;
     data[e.getAttribute("name")] = getValue(e);
   });
   return data;
