@@ -26,16 +26,16 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 <style>
 
 
-  select[data-parent_value_id]:not(.visible) {
-      display: none;
+  select[data-parent_value_id]:not(.visible), .optional-value-wrapper .field:not(.visible) {
+      display: none !important;
   }
 
-  .combo-select-wrapper {
+  .attribute-row {
     padding: 5px;
     border: 1px solid #ccc;
   }
 
-  .combo-select-wrapper + .combo-select-wrapper {
+  .attribute-row + .attribute-row {
     border-top: none;
   }
 
@@ -66,9 +66,28 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         select.classList.add("registered");
 
         select.addEventListener("change", () => {
-          var combo = findParentByClassName(select, "combo-select-wrapper");
-          comboSelectValuesChanged(combo);
+          var wrapper = findParentByClassName(select, "combo-select-wrapper");
+          comboSelectValuesChanged(wrapper);
         });
+      });
+    });
+  }
+
+  function optionalValueChanged(optional) {
+    var checkbox = optional.querySelector(`input[type="checkbox"]`);
+    var input = optional.querySelector(`.field`);
+
+    input.classList.toggle("visible", checkbox.checked);
+  }
+
+  function registerOptionalValues() {
+    document.querySelectorAll(".optional-value-wrapper").forEach(optional => {
+      var checkbox = optional.querySelector(`input[type="checkbox"]:not(.registered)`);
+      if (!checkbox) return;
+      checkbox.classList.add("registered");
+      checkbox.addEventListener("change", () => {
+        var wrapper = findParentByClassName(checkbox, "optional-value-wrapper");
+        optionalValueChanged(wrapper);
       });
     });
   }
@@ -77,7 +96,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
     registerComboSelects();
 
-    showSpecyfikacja();
+    registerOptionalValues();
 
     loadCategoryPicker("product_categories", {skip:2}, () => {
       setCategoryPickerValues(
@@ -221,122 +240,6 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   window.addEventListener("load", function() {
     imagePicker.setDefaultTag(elem('[name="title"]').value);
   });
-
-  function showSpecyfikacja() {
-    var v = document.getElementById("specyfikacja").value;
-
-    var out = "<table class='specyfikacja'>";
-    v.split("\n").forEach((e) => {
-      p = e.split(":");
-      if (p.length < 2) {
-        p[1] = "";
-        //p.push("");
-      }
-      out += `<tr><td>${p[0]}</td><td>${p[1]}</td></tr>`;
-      //console.log(e)
-    });
-    out += "</table>";
-    document.getElementById("specyfikacja_preview").innerHTML = out;
-    document.getElementById("specyfikacja_output").value = out;
-  }
-
-  /*function deleteImg(obj, variantId) {
-    obj.parentNode.parentNode.removeChild(obj.parentNode);
-    updateZdjeciaRow(variantId);
-  }
-
-  function updateZdjeciaRow(id) {
-    var out = "";
-    var child = document.getElementById("zdjecia-" + id).childNodes;
-    for (i = 0; i < child.length; i++) {
-      var src = child[i].childNodes[0].src;
-      var index = src.indexOf("/uploads");
-      if (index != -1)
-        src = src.substring(index);
-
-      out += (i > 0 ? ";" : "") + src;
-    }
-    document.getElementById("zdjecia-" + id + '-src').value = out;
-  }
-
-  function changeColor(source, i) {
-    var picker = document.getElementById("colorpicker-" + i);
-    var checkbox = document.getElementById("colornone-" + i);
-    var value = document.getElementById("colorvalue-" + i);;
-    var color = "";
-    if (source == 0 && checkbox.checked) {
-      value.value = "";
-      picker.style.opacity = 0;
-    } else {
-      value.value = "#" + picker.value;
-      checkbox.checked = false;
-      picker.style.opacity = 1;
-    }
-  }
-
-  function showNextVariant() {
-    for (i = 0; i < 8; i++) {
-      var d = document.getElementById("variantdiv-" + i);
-      if (!d) continue;
-
-      if (d.classList.contains("hidden")) {
-        d.classList.remove("hidden");
-        document.getElementById("variantpublished-" + i).value = "1";
-        break;
-      }
-    }
-  }
-
-  function deleteVariant(variant_id, unpublish, button) {
-    var d = document.getElementById("variantdiv-" + variant_id);
-
-    if (unpublish) {
-      if (d.classList.contains("unpublished")) {
-        d.classList.remove("unpublished");
-        button.value = "Ukryj";
-        button.style.background = "";
-        document.getElementById("variantpublished-" + variant_id).value = "1";
-      } else {
-        d.classList.add("unpublished");
-        button.value = "Przywróć";
-        button.style.background = "#0c0";
-        document.getElementById("variantpublished-" + variant_id).value = "0";
-      }
-    } else {
-      d.classList.add("hidden");
-      document.getElementById("variantpublished-" + i).value = "0";
-    }
-  }
-
-
-  function isFormValid() {
-    return validateForm({
-      hiddenClassList: ["unpublished"]
-    });
-  }
-
-  function setPostFields() {
-    elem("#product-content-src").value = elem("#product-content").innerHTML;
-    elem("#product-description-src").value = elem("#product-description .ql-editor").innerHTML;
-  }
-
-
-  var anyChange = true;
-
-  window.addEventListener("DOMContentLoaded", function() {
-    document.querySelector("form").onchange = function() {
-      anyChange = true;
-    }
-
-    window.onbeforeunload = function(e) {
-      if (anyChange) return 'Wszystkie zmiany zostaną utracone!';
-    }
-
-    window.addEventListener("keydown", (e) => {
-      anyChange = true;
-    });
-  });
-  */
 
   function deleteItem() {
     anyChange = false;
@@ -609,18 +512,26 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         }
 
         foreach ($attributes as $attribute) {
-          echo "<div class='combo-select-wrapper'>".$attribute["name"]." ";
+          $isOptional = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-          if (isset($attribute_data_types[$attribute["data_type"]]["field"])) {
+          echo "<div class='".($isOptional ? "optional-value-wrapper" : "combo-select-wrapper")." attribute-row'>".$attribute["name"]." ";
+
+          if ($isOptional) {
+            echo '
+              <label class="field-title">
+                <input type="checkbox">
+                <div class="checkbox"></div>
+              </label>
+            ';
             $attribute_form_name = 'name="attribute_values['.$attribute["attribute_id"].']"';
             if (strpos($attribute["data_type"], "color") !== false) {
-              echo '<input type="text" class="jscolor" '.$attribute_form_name.'>';
+              echo '<input type="text" class="jscolor field" style="display: inline-block;width:65px" '.$attribute_form_name.'>';
             }
             else if (strpos($attribute["data_type"], "number") !== false) {
-              echo '<input type="number" '.$attribute_form_name.'>';
+              echo '<input type="number" class="field" '.$attribute_form_name.'>';
             }
             else {
-              echo '<input type="text" '.$attribute_form_name.'>';
+              echo '<input type="text" class="field" '.$attribute_form_name.'>';
             }
           }
           else {

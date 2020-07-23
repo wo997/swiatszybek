@@ -391,6 +391,7 @@ button, input[type=button] {
 .field-title {
   margin-top: 0.8em;
   margin-bottom: 0.2em;
+  user-select: none;
 }
 .field {
   display: block;
