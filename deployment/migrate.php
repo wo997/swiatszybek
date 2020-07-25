@@ -1,6 +1,7 @@
 <?php
 
-// var_dump(fetchArray("SELECT * FROM products WHERE product_id = ?", [7]));
+// migration from 25.07.2020
+
 if (!tableExists("asdadasafds")) {
   query("CREATE TABLE asdadasafds (
         `dasfdsf` int(11) NOT NULL
