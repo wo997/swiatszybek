@@ -67,7 +67,7 @@ function escapeSQL($var)
 }
 
 /**
- * checks whether table exists
+ * checks whether table exists in db
  *
  * @param  string $name
  * @return bool
@@ -78,7 +78,7 @@ function tableExists($name)
 }
 
 /**
- * checks whether column exists
+ * checks whether column exists in db
  *
  * @param  string $table
  * @param  string $name
