@@ -6,6 +6,14 @@ require_once 'vendor/autoload.php';
 
 define("RELEASE", 96);
 
+// include helpers
+
+include "helpers/db.php";
+
+include "helpers/datatable.php";
+
+include "helpers/order.php";
+
 // global variables
 
 require "constants.php";
@@ -164,7 +172,7 @@ if (empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["b
 
 // validate basket
 try {
-  $basket = json_decode($_SESSION["basket"],true);
+  $basket = json_decode($_SESSION["basket"], true);
 
   if ($basket === null) {
     throw new Exception('json parse error');
@@ -172,15 +180,14 @@ try {
 
   foreach ($basket as $basket_item) {
     if (
-      !isset($basket_item["variant_id"]) 
+      !isset($basket_item["variant_id"])
       || !isset($basket_item["quantity"])
     ) {
       throw new Exception('missing content');
       break;
     }
   }
-}
-catch (Exception $e) {
+} catch (Exception $e) {
   $_SESSION["basket"] = "[]";
   $_COOKIE["basket"] = "[]";
 }
@@ -258,278 +265,7 @@ function getEmailFooter()
   return "\n<br><br><i>Pozdrawiamy,</i><br><a href='$SITE_URL'><img src='$SITE_URL/img/logo.png' style='width:200px'></a></p>";
 }
 
-// db helpers start
-function fetchArray($sql, $params = [], $give_response = true)
-{
-  global $con;
-  $stmt = $con->prepare($sql);
-  $paramCount = count($params);
-  if ($paramCount) $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
-  if (!$give_response) {
-    $res = $stmt->execute();
-  } else {
-    $stmt->execute();
-    $res = $stmt->get_result()->fetch_all(1);
-  }
-  $stmt->close();
-  return $res;
-}
 
-function query($sql, $params = [])
-{
-  return fetchArray($sql, $params, false);
-}
-
-function fetchRow($sql, $params = [])
-{
-  $res = fetchArray($sql, $params);
-  return isset($res[0]) ? $res[0] : [];
-}
-
-function fetchColumn($sql, $params = [])
-{
-  $res = fetchArray($sql, $params);
-  if (!isset($res[0]) || !isset(array_keys($res[0])[0])) return [];
-  return array_column($res, array_keys($res[0])[0]);
-}
-
-
-function fetchValue($sql, $params = [])
-{
-  foreach (fetchRow($sql, $params) as $val) return $val;
-  return null;
-}
-
-function getLastInsertedId()
-{
-  global $con;
-  return mysqli_insert_id($con);
-}
-
-function clean($x)
-{
-  return preg_replace("/[^a-zA-Z0-9_ ]/", "", $x);
-}
-
-function escapeSQL($var)
-{
-  global $con;
-  return mysqli_real_escape_string($con, $var);
-}
-
-// db helpers end
-
-// db datatable start
-
-function getSearchQuery($data = null)
-{
-  $query = "";
-
-  $main_search_value = trim($data["main_search_value"]);
-  $main_search_value = preg_replace("/\s{2}/", " ", $main_search_value);
-
-  $words = explode(" ", $main_search_value);
-
-  $counter = 0;
-  foreach ($words as $word) {
-    $counter++;
-    if ($counter > 4) break;
-
-    $word = escapeSQL($word);
-    if (!$word) {
-      continue;
-    }
-
-    $query .= " AND (";
-    $first = true;
-    foreach ($data["main_search_fields"] as $field) {
-      if (!$first) $query .= " OR";
-      $query .= " $field LIKE '%$word%'";
-      $first = false;
-    }
-    $query .= ")";
-  }
-
-  return $query;
-}
-
-function getTableData($data = null)
-{
-  /*
-    required POSTS:
-    - search
-    - rowCount
-    - pageNumber
-
-    params: 
-    - select
-    - from
-    - where
-    - order
-    - main_search_fields
-
-    optional params:
-    - renderers
-  */
-
-  $rowCount = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 20;
-  $pageNumber = isset($_POST['pageNumber']) ? intval($_POST['pageNumber']) : 0;
-  if ($pageNumber < 0) $pageNumber = 0;
-  $bottomIndex = $pageNumber * $rowCount;
-
-  $select = isset($data["select"]) ? $data["select"] : "";
-
-  $from = isset($data["from"]) ? $data["from"] : "";
-
-  $where = isset($data["where"]) ? $data["where"] : "";
-  if (trim($where) == "") $where = "1";
-
-  $where .= getSearchQuery([
-    "main_search_value" => isset($_POST['search']) ? $_POST['search'] : "",
-    "main_search_fields" => isset($data["main_search_fields"]) ? $data["main_search_fields"] : []
-  ]);
-
-  $group = isset($data["group"]) ? ("GROUP BY " . $data["group"]) : "";
-
-  $order = isset($data["order"]) ? $data["order"] : "";
-
-  
-  $countQuery = "SELECT COUNT(1) FROM $from WHERE $where $group";
-  
-  if ($group) {
-    $countQuery = "SELECT COUNT(*) FROM($countQuery) t";
-  }
-
-  $totalRows = fetchValue($countQuery);
-  $pageCount = $rowCount > 0 ? ceil($totalRows / $rowCount) : 0;
-
-  $results = fetchArray("SELECT $select FROM $from WHERE $where $group ORDER BY $order LIMIT $bottomIndex,$rowCount");
-
-  $index = 0;
-  foreach ($results as &$result) {
-    $index++;
-    $result["kolejnosc"] = $pageNumber * $rowCount + $index;
-
-    if (isset($data["renderers"])) {
-      foreach ($data["renderers"] as $field => $renderer) {
-        $result[$field] = $renderer($result);
-      }
-    }
-  }
-  unset($result);
-
-  return json_encode(["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results]);
-}
-
-function getListCondition($field, $filter)
-{
-  $not = substr($filter, 0, 1) === "!" ? "NOT" : "";
-  $id_list = preg_replace("/[^\d,]/", "", $filter);
-  if ($id_list) return " AND $field $not IN (" . $id_list . ")";
-  return " AND $not 0";
-}
-
-// db datatable end
-
-// rearrange start
-
-$requiredFilterTables = [
-  "product_categories" => "parent_id",
-  "menu" => "parent_id",
-  "variant" => "product_id",
-  "konfiguracja" => "category",
-];
-
-function getRequiredFilterQuery($table, $params = [])
-{
-  global $requiredFilterTables;
-  if (isset($requiredFilterTables[$table])) {
-    $column_name = $requiredFilterTables[$table];
-    if (!isset($params[$column_name])) return false;
-    if (is_integer($params[$column_name])) return "$column_name=" . intval($params[$column_name]);
-    return "$column_name='" . escapeSQL($params[$column_name]) . "'";
-  }
-  return "1";
-}
-
-function rearrangeTable($table, $primary, $itemId = null, $toIndex = null, $params = [])
-{
-  $where = getRequiredFilterQuery($table, $params);
-  if ($where === false) {
-    die("Table must be tree view based!");
-    return;
-  }
-
-  $primary = clean($primary);
-
-  $idList = fetchColumn("SELECT $primary FROM $table WHERE $where ORDER BY kolejnosc ASC");
-  if ($itemId !== null && $toIndex !== null) {
-    $itemId = intval($itemId);
-    $fromIndex = array_search($itemId, $idList) + 1;
-
-    $toIndex = intval($toIndex);
-
-    if ($toIndex == $fromIndex) return;
-    if ($toIndex > $fromIndex) {
-      array_splice($idList, $toIndex, 0, [$itemId]);
-      array_splice($idList, $fromIndex - 1, 1);
-    } else {
-      array_splice($idList, $fromIndex - 1, 1);
-      array_splice($idList, $toIndex - 1, 0, [$itemId]);
-    }
-  }
-
-  $i = 0;
-  foreach ($idList as $id) {
-    $i++;
-    query("UPDATE $table SET kolejnosc = $i WHERE $primary = $id");
-  }
-}
-
-function orderTableBeforeListing($table, $primary, $params = [])
-{
-  $where = getRequiredFilterQuery($table, $params);
-  if ($where === false) return;
-
-  if (
-    fetchValue("SELECT 1 FROM $table WHERE kolejnosc = 0") || // any new?
-    fetchValue("SELECT 1 FROM $table WHERE $where GROUP BY kolejnosc HAVING COUNT(1) > 1") // duplicates
-  ) {
-    rearrangeTable($table, $primary, null, null, $params);
-  }
-}
-
-// rearrange end
-
-$dostawy = ["p" => "Paczkomat", "k" => "Kurier", "o" => "Odbiór osobisty"];
-
-// statuses
-$statusList = [
-  0 => [
-    "title" => "Oczekuje na opłatę",
-    "color" => "dd3",
-  ],
-  1 => [
-    "title" => "Opłacono - w realizacji",
-    "color" => "3a3",
-  ],
-  5 => [
-    "title" => "Do odbioru",
-    "color" => "e90",
-  ],
-  2 => [
-    "title" => "Wysłano",
-    "color" => "44d",
-  ],
-  3 => [
-    "title" => "Odebrano",
-    "color" => "39c",
-  ],
-  4 => [
-    "title" => "Anulowano",
-    "color" => "b33",
-  ],
-];
 
 function renderStatus($status_id)
 { // shared.js

@@ -120,6 +120,7 @@ unset($admin_navigations_branch);
 
 $user_routes = [
   "deployment/build",
+  "deployment/migrate"
 ];
 
 $routes = [];
