@@ -66,12 +66,26 @@ function escapeSQL($var)
   return mysqli_real_escape_string($con, $var);
 }
 
+/**
+ * checks whether table exists in db
+ *
+ * @param  string $name
+ * @return bool
+ */
 function tableExists($name)
 {
-  return fetchValue("show tables like '$name'");
+  return fetchValue("show tables like '" . clean($name) . "'");
 }
 
-function columnExists($name)
+/**
+ * checks whether column exists in db
+ *
+ * @param  string $table
+ * @param  string $name
+ * @return bool
+ */
+function columnExists($table, $name)
 {
-  // SHOW COLUMNS FROM `table` LIKE 'fieldname';
+  if (!tableExists($table)) return null;
+  return fetchValue("SHOW COLUMNS FROM " . clean($table) . " LIKE '" . clean($name) . "'");
 }
