@@ -396,24 +396,24 @@ function getCMSPageHTML($content)
 
       $container_html .= '>';
 
-      $blocks = $container->find(".cms-block");
+      $blocks = $container_content->find(".cms-block");
 
       foreach ($blocks as $block) {
         if (isset($block->attr["data-module"])) {
           $module = $block->attr["data-module"];
           $block_html = "<div";
           foreach ($block->attr as $key => $val) {
-            $block_html .= " $key='$val'";
+            $block_html .= " $key=\"$val\"";
           }
           $block_html .= ">";
 
           $moduleParams = isset($block->attr["data-module-params"]) ? json_decode(html_entity_decode($block->attr["data-module-params"]), true) : null;
           $moduleDir = "/modules/$module";
-          $moduleFile = "modules/$module/content.php";
+          $moduleContentFile = "$moduleDir/content.php";
 
-          if (file_exists($moduleFile)) {
+          if (file_exists($moduleContentFile)) {
             $module_content = "";
-            include $moduleFile;
+            include $moduleContentFile;
 
             $block_html .= "<div class='cms-block-content'>$module_content</div>";
             $block_html .= "</div>";

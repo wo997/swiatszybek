@@ -3,11 +3,7 @@
 $shared_where = "published = 1";
 $where = "WHERE ".$shared_where;
 
-$productListCount = 8;
-if (isset($moduleParams["productListCount"]))
-{
-  $productListCount = $moduleParams["productListCount"];
-}
+$productListCount = nonull($moduleParams, "productListCount", 8);
 
 $join = "";
 if (isset($moduleParams["category_id"]) && $moduleParams["category_id"] != 0)
