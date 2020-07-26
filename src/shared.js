@@ -448,46 +448,33 @@ window.addEventListener("click", function (ev) {
 
 // table start
 
-function createTable(data) {
+function createTable(table) {
   // REQUIRED name, definition | renderRow, url, primary, db_table
   // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), callback
-  // sortable,
+  // sortable (requires primary, db_table),
   // selectable: {data,output},
   // metadata: {data,output}
   // tree_view
   // lang: {subject, main_category}
 
-  var table = {};
-
-  table.name = data.name;
   table.awaitId = null;
   table.currPage = 0;
   table.pageCount = 0;
   table.request = null;
   table.results = [];
-  table.sortable = data.sortable;
-  table.tree_view = data.tree_view;
-  table.selected = null;
-  table.primary = data.primary;
-  table.db_table = data.db_table;
-  table.metadata = data.metadata;
-  if (data.callback) table.callback = data.callback;
 
-  if (data.requiredParam) table.requiredParam = data.requiredParam;
-
-  if (data.lang) table.lang = data.lang;
-  else table.lang = {};
+  if (!table.lang) table.lang = {};
   table.lang.subject = nonull(table.lang.subject, "wyników");
 
-  table.target = document.querySelector("." + data.name);
+  table.target = document.querySelector("." + table.name);
 
   table.target.classList.add("datatable-wrapper");
   table.target.setAttribute("data-table-name", table.name);
 
-  if (data.selectable) {
-    table.selectable = data.selectable;
-    table.selected = data.selectable.data;
-    table.singleselect = data.selectable.singleselect;
+  if (table.selectable) {
+    table.selectable = table.selectable;
+    table.selected = table.selectable.data;
+    table.singleselect = table.selectable.singleselect;
 
     table.setSelectedValues = (v) => {
       if (Array.isArray(v)) {
@@ -536,7 +523,7 @@ function createTable(data) {
       },
     ];
 
-    data.controls += `
+    table.controls += `
       <div style="width:100%">
         <div class="breadcrumb"></div>
         <div class="btn primary" onclick="${table.name}.showEditCategory(null,true)">Dodaj <i class="fa fa-plus"></i></div>
@@ -546,63 +533,63 @@ function createTable(data) {
 
   var justTable = "";
 
-  if (data.controls) {
-    justTable += `<div class="flexbar">${data.controls}</div>`;
+  if (table.controls) {
+    justTable += `<div class="flexbar">${table.controls}</div>`;
   }
 
   justTable += `<div class="flexbar" style="align-items: baseline;">
       <span class="total-rows"></span>
       <span class="space-right">&nbsp;${table.lang.subject}</span>
-      <select data-param="rowCount" oninput="${data.name}.setPage(0)">
+      <select data-param="rowCount" oninput="${table.name}.setPage(0)">
           <option value='10' ${
-            data.rowCount == 10 ? "selected" : ""
+            table.rowCount == 10 ? "selected" : ""
           }>10</option>
           <option value='20' ${
-            !data.rowCount || data.rowCount == 20 ? "selected" : ""
+            !table.rowCount || table.rowCount == 20 ? "selected" : ""
           }>20</option>
           <option value='50' ${
-            data.rowCount == 50 ? "selected" : ""
+            table.rowCount == 50 ? "selected" : ""
           }>50</option>
       </select>
       <span class="space-right big no-space-mobile">&nbsp;&nbsp;na stronę</span>
       <div class="pagination"></div>`;
 
-  if (data.controlsRight) {
-    justTable += `${data.controlsRight}`;
+  if (table.controlsRight) {
+    justTable += `${table.controlsRight}`;
   }
 
   justTable += `</div>
     <div class="table-wrapper">
   </div>`;
 
-  if (data.selectable) {
+  if (table.selectable) {
     table.target.insertAdjacentHTML(
       "afterbegin",
       `
         <div class="selectedRows"></div>
         <div class="showBtn expandY">
           <div class="btn secondary fill" onclick="${
-            data.name
+            table.name
           }.toggleSearchVisibility(true)">Wyszukaj <i class="fas fa-plus"></i> </div>
         </div>
         <input type="hiddenx" class="table-selection-value" name="${
-          data.selectable.output ? data.selectable.output : data.primary
+          table.selectable.output ? table.selectable.output : table.primary
         }" ${
-        data.selectable.validate
+        table.selectable.validate
           ? `data-validate data-validate-target='.${table.name} .selectedRows'`
           : ""
       }>
         ${
           table.metadata
-            ? `<input type="hidden" class="table-metadata-value" name="${table.metadata.output}">`
+            ? `<input type="hidden" class="table-metadata-value" name="${table.metatable.output}">`
             : ""
         }
         <div class="table-search-wrapper ${
-          data.selectable ? `expandY hidden` : ""
+          table.selectable ? `expandY hidden` : ""
         }">
           <div class="table-search-container">
             <div class="btn secondary fill hideBtn" onclick="${
-              data.name
+              table.name
             }.toggleSearchVisibility(false)">Ukryj wyszukiwarkę <i class="fas fa-minus"></i> </div>
             ${justTable}
           </div>
@@ -670,11 +657,11 @@ function createTable(data) {
 
         var params = {};
         if (!isNew) {
-          params.disable_with_children = [data.category_id];
+          params.disable_with_children = [table.category_id];
         }
         setCategoryPickerValues(
           elem(`#${form} [data-category-picker-name="parent_id"]`),
-          data.parent_id,
+          table.parent_id,
           params
         );
       };
@@ -694,7 +681,7 @@ function createTable(data) {
         }
 
         xhr({
-          url: data.url,
+          url: table.url,
           params: {
             category_id: category_id,
           },
@@ -719,34 +706,37 @@ function createTable(data) {
     };
   }
 
-  if (data.width) {
-    table.target.style.maxWidth = data.width + "px";
+  if (table.width) {
+    table.target.style.maxWidth = table.width + "px";
     table.target.style.marginLeft = "auto";
     table.target.style.marginRight = "auto";
   }
 
   if (table.sortable) {
-    data.definition = [
+    if (!table.primary) console.error(`missing primary key in ${table.name}`);
+    if (!table.db_table)
+      console.error(`missing db_table name in ${table.name}`);
+    table.definition = [
       {
         title: "Kolejność",
         width: "85px",
         render: (r, i) => {
-          return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" data-table='${data.name}' data-index='${i}' onchange="rearrange(this)">`;
+          return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" data-table='${table.name}' data-index='${i}' onchange="rearrange(this)">`;
         },
         escape: false,
       },
-      ...data.definition,
+      ...table.definition,
     ];
   }
 
   var headersHTML = "<tr>";
   var columnStyles = [];
 
-  if (data.selectable) {
+  if (table.selectable) {
     headersHTML += `<th style="width:33px"></th>`;
   }
 
-  for (header of data.definition) {
+  for (header of table.definition) {
     var style = "";
     if (header.width) style += `style='width:${header.width}'`;
     if (header.className) style += `class='${header.className}'`;
@@ -778,7 +768,7 @@ function createTable(data) {
     }
   };
 
-  document.querySelectorAll(`.${data.name} *[data-param]`).forEach((e) => {
+  document.querySelectorAll(`.${table.name} *[data-param]`).forEach((e) => {
     e.addEventListener("input", function () {
       if (e.tagName.toLowerCase() == "input") table.awaitSearch();
       else table.search();
@@ -813,20 +803,20 @@ function createTable(data) {
     if (createList) {
       params[table.primary] = table.getSelectedValues();
     } else {
-      params = data.params ? data.params() : "";
+      params = table.params ? table.params() : "";
       if (!params) {
         params = {};
       }
-      if (data.requiredParam) {
-        var x = data.requiredParam();
+      if (table.requiredParam) {
+        var x = table.requiredParam();
         if (x || x === 0) {
-          params[requiredFilterTables[data.db_table]] = x;
+          params[requiredFilterTables[table.db_table]] = x;
         }
       }
-      document.querySelectorAll(`.${data.name} *[data-param]`).forEach((e) => {
+      document.querySelectorAll(`.${table.name} *[data-param]`).forEach((e) => {
         params[e.getAttribute("data-param")] = e.value;
       });
-      if (data.selectable) {
+      if (table.selectable) {
         params[table.primary] = "!" + table.getSelectedValues(); // ! means ignore
       }
       if (table.tree_view) {
@@ -862,7 +852,7 @@ function createTable(data) {
     }
 
     table.request = xhr({
-      url: data.url,
+      url: table.url,
       params: {
         ...params,
         pageNumber: table.currPage,
@@ -882,23 +872,23 @@ function createTable(data) {
             table.primary ? `data-primary=${row[table.primary]}` : ""
           }>`;
 
-          if (data.renderRow) {
-            var cell = data.renderRow(row, i);
+          if (table.renderRow) {
+            var cell = table.renderRow(row, i);
             output += `<td>${cell}</td>`;
           } else {
-            if (data.selectable) {
+            if (table.selectable) {
               if (createList) {
                 output += `<td style="width:33px"> <i class="fas fa-minus-circle" onclick="${
-                  data.name
+                  table.name
                 }.removeRow(${row[table.primary]})"></i> </td>`;
               } else {
                 output += `<td style="width:33px"> <i class="fas fa-plus-circle" onclick="${
-                  data.name
+                  table.name
                 }.addRow(${row[table.primary]})"></i> </td>`;
               }
             }
-            for (x = 0; x < data.definition.length; x++) {
-              var definition = data.definition[x];
+            for (x = 0; x < table.definition.length; x++) {
+              var definition = table.definition[x];
               var cell = definition.render(row, i, table);
               if (
                 !definition.hasOwnProperty("escape") ||
@@ -945,7 +935,7 @@ function createTable(data) {
             }'
                       ${
                         i != table.currPage
-                          ? `onclick="${data.name}.setPage(${i})"`
+                          ? `onclick="${table.name}.setPage(${i})"`
                           : ``
                       } 
             }>${i + 1}</div>`;
@@ -954,7 +944,7 @@ function createTable(data) {
           }
         }
         if (table.pageCount > 20 && !mobile) {
-          output += `<span class='setMyPage'><input class='myPage' type='text' placeholder='Nr strony (1-${table.pageCount})' onkeypress='${data.name}.setPageEvent(this,event)'></span>`;
+          output += `<span class='setMyPage'><input class='myPage' type='text' placeholder='Nr strony (1-${table.pageCount})' onkeypress='${table.name}.setPageEvent(this,event)'></span>`;
         }
 
         if (createList) {
@@ -989,7 +979,7 @@ function createTable(data) {
   };
 
   table.initialSearch = () => {
-    if (!data.hasOwnProperty("nosearch") || data.nosearch === false) {
+    if (!table.hasOwnProperty("nosearch") || table.nosearch === false) {
       table.search();
     }
   };
@@ -999,7 +989,7 @@ function createTable(data) {
 
       if (table.metadata) {
         try {
-          Object.entries(table.metadata.data).forEach(([key, value]) => {
+          Object.entries(table.metatable.data).forEach(([key, value]) => {
             var row = table.selectedRowsElement.querySelector(
               `[data-primary="${key}"]`
             );
@@ -1023,8 +1013,8 @@ function createTable(data) {
   }
 
   table.toggleSearchVisibility = (visible) => {
-    expand(elem(`.${data.name} .showBtn`), !visible);
-    expand(elem(`.${data.name} .table-search-wrapper`), visible);
+    expand(elem(`.${table.name} .showBtn`), !visible);
+    expand(elem(`.${table.name} .table-search-wrapper`), visible);
   };
 
   table.removeRow = (data_id) => {
@@ -1108,7 +1098,7 @@ function createTable(data) {
     };
   }
 
-  window[data.name] = table;
+  window[table.name] = table;
 }
 
 var tableRearrange = {};
@@ -1170,6 +1160,7 @@ function rearrange(input) {
     url: "/admin/rearrange_table",
     params: params,
     success: () => {
+      showNotification("Zapisano zmianę kolejności");
       datatable.search();
     },
   });

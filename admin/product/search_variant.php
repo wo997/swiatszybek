@@ -20,7 +20,7 @@
 
   $order = "v.kolejnosc ASC";
 
-  if ($_POST["order"]) {
+  if (isset($_POST["order"])) {
     $order = clean($_POST["order"]);
   }
 
@@ -35,4 +35,3 @@
     "order" => $order,
     "main_search_fields" => ["p.title","v.name","v.name"],
   ]);
-?>

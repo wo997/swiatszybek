@@ -7,10 +7,10 @@ include_once "helpers.php";
 useCSS("$moduleDir/main.css");
 
 $gallery = "";
-$slides = fetchArray("SELECT img, link, tekst FROM slides ORDER BY kolejnosc");
-foreach ($slides as $slide) {
-  $gallery .= addSlide($slide["img"],$slide["link"], $slide["tekst"]);
-}
+// $slides = fetchArray("SELECT img, link, tekst FROM slides ORDER BY kolejnosc");
+// foreach ($slides as $slide) {
+//   $gallery .= addSlide($slide["img"],$slide["link"], $slide["tekst"]);
+// }
 
 $module_content .= "
   <div class='swipper-wrapper'>
@@ -22,4 +22,3 @@ $module_content .= "
     <div class='swiper-pagination'>
   </div>
 </div>";
-

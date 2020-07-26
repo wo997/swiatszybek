@@ -10,8 +10,7 @@ if (!tableExists("asdadasafds")) {
   echo "table asdadasafds created! <br>";
 }
 
-if (!columnExists("asdadasafds", "col")) {
-  query("ALTER TABLE asdadasafds ADD col VARCHAR(255) NOT NULL AFTER `dasfdsf`;");
 
-  echo "column col in asdadasafds added! <br>";
-}
+dropColumns("slides", ["img", "tekst", "link"]);
+
+addColumns("slides", [["name" => "content", "definition" => "TEXT NOT NULL"]]);

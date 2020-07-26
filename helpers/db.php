@@ -89,3 +89,38 @@ function columnExists($table, $name)
   if (!tableExists($table)) return null;
   return fetchValue("SHOW COLUMNS FROM " . clean($table) . " LIKE '" . clean($name) . "'");
 }
+
+/**
+ *
+ * @param  string $table
+ * @param  array $names
+ * @return void
+ */
+function dropColumns($table, $names)
+{
+  foreach ($names as $name) {
+    if (columnExists($table, $name)) {
+      query("ALTER TABLE " . clean($table) . " DROP COLUMN " . clean($name));
+
+      echo "column $name dropped from $table! <br>";
+    }
+  }
+}
+
+/**
+ * addColumns
+ *
+ * @param  string $table
+ * @param array<array> $columns
+ * @return void
+ */
+function addColumns($table, $columns)
+{
+  foreach ($columns as $column) {
+    if (!columnExists($table, $column["name"])) {
+      query("ALTER TABLE " . clean($table) . " ADD " . clean($column["name"]) . " " . $column["definition"]);
+
+      echo "column " . $column["name"] . " added into $table! <br>";
+    }
+  }
+}
