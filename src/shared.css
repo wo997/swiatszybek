@@ -1802,6 +1802,7 @@ footer a:hover {
 .preview_html {
   border: 1px solid #ccc;
   overflow-y: auto;
+  min-height: 20px;
 }
 
 .cms {
