@@ -1,4 +1,5 @@
-<?php //->[admin/kategorie] ?>
+<?php //->[admin/kategorie] 
+?>
 
 <?php startSection("head"); ?>
 
@@ -51,14 +52,14 @@
                     title: "Opis górny",
                     width: "10%",
                     render: (r) => {
-                        return r.description_text.replace(/\n/g,"");
+                        return r.description_text.replace(/\n/g, "");
                     }
                 },
                 {
                     title: "Zawartość (dół)",
                     width: "10%",
                     render: (r) => {
-                        return r.content_text.replace(/\n/g,"");
+                        return r.content_text.replace(/\n/g, "");
                     }
                 },
                 {
@@ -141,10 +142,10 @@
         });
     });
 
-    function loadCategoryForm(form,data,isNew) {
+    function loadCategoryForm(form, data, isNew) {
         if (!data.name) data.name = "";
 
-        var formElement = elem(`#${form}`);
+        var formElement = $(`#${form}`);
 
         if (isNew) {
             data = {
@@ -168,13 +169,15 @@
         formElement.querySelector(".caseCanDelete").classList.toggle("hidden", isNew);
         toggleDisabled(formElement.querySelector(`.btn.red`), !canDelete);
         formElement.querySelector(".btn.red + i").classList.toggle("hidden", canDelete);
-        
+
         clearValidateRequired();
     }
 
     function saveCategoryForm(remove = false) {
-        var f = elem("#editCategory");
-        if (!remove && !validateForm({form:f})) return;
+        var f = $("#editCategory");
+        if (!remove && !validateForm({
+                form: f
+            })) return;
         var params = getFormData(f);
         if (remove) {
             params["remove"] = true;
@@ -183,21 +186,24 @@
             url: "/admin/save_product_category",
             params: params,
             success: (res) => {
-                mytable.postSaveCategory(params,remove);
-                loadCategoryPicker("product_categories",{skip:0});
+                mytable.postSaveCategory(params, remove);
+                loadCategoryPicker("product_categories", {
+                    skip: 0
+                });
             }
         });
         hideModal(mytable.tree_view.form);
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-        loadCategoryPicker("product_categories",{skip:0});
+        loadCategoryPicker("product_categories", {
+            skip: 0
+        });
     });
 
     function rewriteURL() {
-        elem(`[name="link"]`).value = getLink(elem(`[name="title"]`).value);
+        $(`[name="link"]`).value = getLink($(`[name="title"]`).value);
     }
-
 </script>
 
 <?php startSection("content"); ?>
@@ -225,33 +231,33 @@
             <select name="published" class="form-field">
                 <option value="1">Publiczna</option>
                 <option value="0">Ukryta</option>
-            <select>
+                <select>
 
-            <div class="field-title">
-                Ikonka
-                <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
-                <img name="icon" data-type="src" data-src-prefix="/uploads/sm/" style="max-width:100px;max-height:100px"/>
-            </div>
+                    <div class="field-title">
+                        Ikonka
+                        <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
+                        <img name="icon" data-type="src" data-src-prefix="/uploads/sm/" style="max-width:100px;max-height:100px" />
+                    </div>
 
-            <div class="field-title">Kategoria nadrzędna</div>
-            <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="product_categories" data-single>
+                    <div class="field-title">Kategoria nadrzędna</div>
+                    <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="product_categories" data-single>
 
-            <div class="field-title">Atrybuty produktów kategorii</div>
-            <div class="atrybuty"></div>
-            
-            <div class="field-title">Opis górny <button class="btn primary" type="button" onclick='quillEditor.open(elem("#editCategory .description"));'>Edytuj</button></div>
-            <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
+                    <div class="field-title">Atrybuty produktów kategorii</div>
+                    <div class="atrybuty"></div>
 
-            <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS(elem('#editCategory .content'),{ontop:true});">Edytuj </button></div>
-            <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
+                    <div class="field-title">Opis górny <button class="btn primary" type="button" onclick='quillEditor.open($("#editCategory .description"));'>Edytuj</button></div>
+                    <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
 
-            <br>
-            <div class="caseCanDelete">
-                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
-                <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
-            </div>
+                    <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS($('#editCategory .content'),{ontop:true});">Edytuj </button></div>
+                    <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
-            <input type="hidden" name="category_id">
+                    <br>
+                    <div class="caseCanDelete">
+                        <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
+                        <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
+                    </div>
+
+                    <input type="hidden" name="category_id">
 
         </div>
     </div>

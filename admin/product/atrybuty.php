@@ -1,18 +1,18 @@
-<?php //->[admin/atrybuty] ?>
+<?php //->[admin/atrybuty] 
+?>
 
 <?php startSection("head"); ?>
 
 <title>Atrubuty produktów</title>
 
 <style>
-
     .inactive {
         pointer-events: none;
         opacity: 0.3;
     }
 
 
-    .simple-list > .list {
+    .simple-list>.list {
         overflow-y: auto;
         overflow-x: hidden;
     }
@@ -30,6 +30,7 @@
         display: flex;
         align-items: center;
     }
+
     .simple-list-row .btn.fas {
         height: 25px;
         width: 25px;
@@ -37,35 +38,44 @@
         justify-content: center;
         align-items: center;
     }
-    .simple-list-row > .fa-times {
+
+    .simple-list-row>.fa-times {
         color: #c22;
         border-color: #c22;
     }
-    .simple-list-row > .fa-times:hover {
+
+    .simple-list-row>.fa-times:hover {
         background: #c22;
         color: #fff;
     }
+
     .sub-list {
         padding-left: 35px;
     }
+
     .simple-list-row-wrapper {
         background: #aaa4;
         padding-top: 3px;
         padding-bottom: 3px;
         padding-left: 5px;
     }
-    .sub-list > .list > .simple-list-row-wrapper:first-child {
+
+    .sub-list>.list>.simple-list-row-wrapper:first-child {
         padding-top: 3px;
     }
-    .sub-list > .list > .simple-list-row-wrapper:last-child {
+
+    .sub-list>.list>.simple-list-row-wrapper:last-child {
         margin-bottom: -3px;
     }
+
     .simple-list-row-wrapper {
         border: 1px solid #aaac;
     }
+
     .simple-list-row-wrapper:not(:last-child) {
         border-bottom: none;
     }
+
     .sub-list .simple-list-row-wrapper {
         border-right: none;
     }
@@ -80,7 +90,7 @@
         Object.entries(attribute_data_types).forEach(([value, attribute]) => {
             output += `<option value='${value}'>${attribute.description}</option>`;
         });
-        elem(`[name="data_type"]`).insertAdjacentHTML("afterbegin", output);
+        $(`[name="data_type"]`).insertAdjacentHTML("afterbegin", output);
 
         createTable({
             name: "mytable",
@@ -136,7 +146,7 @@
             name: "attribute_values",
             fields: {
                 value_id: {
-                    
+
                 },
                 value: {
                     unique: true,
@@ -145,7 +155,7 @@
             },
             render: (data) => {
                 var clean = (x) => {
-                    return x.toString().replace(/"/g,"");
+                    return x.toString().replace(/"/g, "");
                 };
                 return `
                     <input type='hidden' data-list-param="value_id" value="${clean(data.value_id)}">
@@ -169,7 +179,7 @@
         list.params = params;
         list.recursive = nonull(params.recursive, 0);
 
-        list.wrapper = elem(`.${params.name}`);
+        list.wrapper = $(`.${params.name}`);
         list.wrapper.classList.add("simple-list");
 
         var className = "";
@@ -182,7 +192,7 @@
             className = "field-title";
         }
 
-        list.wrapper.insertAdjacentHTML("afterbegin",`
+        list.wrapper.insertAdjacentHTML("afterbegin", `
             <div class="${className}">
                 <span>${params.title}</span>
                 <div class="btn primary" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-arrow-up"></i></div>
@@ -192,11 +202,11 @@
         `);
 
         list.insertRow = (btn, begin = true) => {
-            attribute_values.addRow(params.default_row,btn.parentNode.nextElementSibling, begin);
+            attribute_values.addRow(params.default_row, btn.parentNode.nextElementSibling, begin);
         }
-        
-        list.target = elem(`.${params.name} .list`);
-        list.target.setAttribute("data-depth",1);
+
+        list.target = $(`.${params.name} .list`);
+        list.target.setAttribute("data-depth", 1);
 
         list.rows = [];
 
@@ -204,7 +214,7 @@
             removeContent(list.target);
             list.valuesChanged();
         }
-        
+
         list.setValues = (values) => {
             list.clear();
 
@@ -235,9 +245,8 @@
                     }
                 })
             });
-            
-            if (!canAdd)
-            {
+
+            if (!canAdd) {
                 return;
             }
 
@@ -248,10 +257,10 @@
                     <span>Powiązane wartości</span>
                     <div class="btn primary" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-arrow-up"></i></div>
                     <div class="btn primary" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-arrow-down"></i></div>
-                </div>`
-                : "";
+                </div>` :
+                "";
 
-            listTarget.insertAdjacentHTML(begin ? "afterbegin" : "beforeend",`
+            listTarget.insertAdjacentHTML(begin ? "afterbegin" : "beforeend", `
                 <div class='simple-list-row-wrapper'>
                     <div class='simple-list-row'>
                         ${params.render(values)}
@@ -284,7 +293,7 @@
 
         list.valuesChanged = () => {
 
-            var getDirectRows = (listTarget) =>  {
+            var getDirectRows = (listTarget) => {
 
                 var rows = [];
                 [...listTarget.children].forEach(simpleListRowWrapper => {
@@ -306,16 +315,16 @@
             list.values = getDirectRows(list.target);
 
             if (params.output) {
-                elem(params.output).value = JSON.stringify(list.values);
+                $(params.output).value = JSON.stringify(list.values);
             }
         }
-    
+
         window[list.name] = list;
     }
 
     function editAttribute(row_id = null, table = null) {
         var form = "editAttribute";
-        var formElement = elem(`#${form}`);
+        var formElement = $(`#${form}`);
 
         var data = {
             attribute_id: -1,
@@ -336,8 +345,7 @@
                     attribute_values.setValues(JSON.parse(res));
                 }
             });
-        }
-        else {
+        } else {
             attribute_values.setValues([]);
         }
 
@@ -346,8 +354,10 @@
     }
 
     function saveAttribute(remove = false) {
-        var f = elem("#editAttribute");
-        if (!remove && !validateForm({form:f})) return;
+        var f = $("#editAttribute");
+        if (!remove && !validateForm({
+                form: f
+            })) return;
         var params = getFormData(f);
         if (remove) {
             params["remove"] = true;
@@ -363,9 +373,9 @@
     }
 
     function toggleValues() {
-        var data_type = elem(`[name="data_type"]`).value;
-        
-        elem(".attribute_values").classList.toggle("inactive", !!attribute_data_types[data_type].field);
+        var data_type = $(`[name="data_type"]`).value;
+
+        $(".attribute_values").classList.toggle("inactive", !!attribute_data_types[data_type].field);
     }
 </script>
 
@@ -388,15 +398,15 @@
 
                     <div class="field-title">Typ danych</div>
                     <select name="data_type" class="form-field" onchange="toggleValues()"><select>
-                    
-                    <div class="attribute_values"></div>
-                    <input type="hidden" name="attribute_values">
+
+                            <div class="attribute_values"></div>
+                            <input type="hidden" name="attribute_values">
                 </div>
                 <div>
-                    
+
                 </div>
             </div>
-            
+
             <br>
             <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć ten atrybut?')) saveAttribute(true);">Usuń <i class="fa fa-times"></i></button>
 

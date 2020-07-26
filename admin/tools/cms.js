@@ -95,16 +95,16 @@ var cmsSource;
 var cmsTarget;
 
 var cmsModalLoaded = () => {
-  cms = elem("#cms .cms");
+  cms = $("#cms .cms");
   cmsObserver.observe(cms, {
     childList: true,
     subtree: true,
   });
 
-  CMSBlockHeader.options = elem("#cms .cms-block-options");
-  CMSBlockHeader.actions = elem("#cms .cms-block-actions");
+  CMSBlockHeader.options = $("#cms .cms-block-options");
+  CMSBlockHeader.actions = $("#cms .cms-block-actions");
 
-  CMSContainerHeader.options = elem("#cms .cms-container-options");
+  CMSContainerHeader.options = $("#cms .cms-container-options");
 };
 
 function editModule(block) {
@@ -218,7 +218,7 @@ function addBlock(content = "", container = null, placeAfter = true) {
         getBlock(content)
       );
   } else if (cmsTarget && cmsTarget.parentNode) {
-  /* if (!cmsTarget || !cmsTarget.parentNode) {
+    /* if (!cmsTarget || !cmsTarget.parentNode) {
         if (!container) {
             container = cmsTarget;
         }
@@ -350,11 +350,11 @@ for (moduleName in modules) {
 }
 
 var moduleListModalLoaded = () => {
-  elem(".moduleList").innerHTML = moduleList;
+  $(".moduleList").innerHTML = moduleList;
 };
 
 function copyCMS() {
-  copyBlock(elem("#cms .cms"));
+  copyBlock($("#cms .cms"));
 }
 
 function copyBlock(block) {
@@ -482,7 +482,7 @@ function editCMS(t, params = {}) {
   });
   // we should be checking the structure on dom load, including migrations
 
-  document.querySelectorAll("#cms .cms-block[data-module]").forEach((e) => {
+  $$("#cms .cms-block[data-module]").forEach((e) => {
     var c = e.querySelector(".module-content");
     if (c) deleteNode(c);
   });
@@ -501,14 +501,13 @@ function cmsUpdate() {
   resizeCallback();
 
   if (cmsHistoryStepBack >= cmsHistory.length - 1)
-    elem(".cms-undo").setAttribute("disabled", "true");
-  else elem(".cms-undo").removeAttribute("disabled");
+    $(".cms-undo").setAttribute("disabled", "true");
+  else $(".cms-undo").removeAttribute("disabled");
 
-  if (cmsHistoryStepBack == 0)
-    elem(".cms-redo").setAttribute("disabled", "true");
-  else elem(".cms-redo").removeAttribute("disabled");
+  if (cmsHistoryStepBack == 0) $(".cms-redo").setAttribute("disabled", "true");
+  else $(".cms-redo").removeAttribute("disabled");
 
-  document.querySelectorAll("#cms .cms-block").forEach((e) => {
+  $$("#cms .cms-block").forEach((e) => {
     e.setAttribute("draggable", true);
     if (
       ![...e.children].find((c) => c.classList.contains("background-color"))
@@ -530,7 +529,7 @@ function cmsUpdate() {
     });
   });
 
-  document.querySelectorAll("#cms .cms-container").forEach((e) => {
+  $$("#cms .cms-container").forEach((e) => {
     e.setAttribute("draggable", true);
     if (
       ![...e.children].find((c) => c.classList.contains("background-color"))
@@ -552,20 +551,20 @@ function cmsUpdate() {
     });
   });
 
-  /*if (!elem("#cms .cms-block")) {
+  /*if (!$("#cms .cms-block")) {
         setTimeout(() => {
             
             addBlock();
         }, 100);
     }*/
 
-  if (!elem("#cms .cms-container")) {
+  if (!$("#cms .cms-container")) {
     setTimeout(() => {
       addContainer();
     }, 100);
   }
 
-  document.querySelectorAll("#cms .cms-container").forEach((e) => {
+  $$("#cms .cms-container").forEach((e) => {
     if (!e.querySelector(".cms-block")) {
       setTimeout(() => {
         addBlock("", e);
@@ -573,7 +572,7 @@ function cmsUpdate() {
     }
   });
 
-  document.querySelectorAll("#cms .cms-block[data-module]").forEach((e) => {
+  $$("#cms .cms-block[data-module]").forEach((e) => {
     var c = e.querySelector(".module-content");
     if (!c) {
       var moduleName = e.getAttribute("data-module");
@@ -596,11 +595,11 @@ function cmsUpdate() {
 
 function closeCms(save) {
   if (save) {
-    document.querySelectorAll("#cms [draggable]").forEach((e) => {
+    $$("#cms [draggable]").forEach((e) => {
       e.removeAttribute("draggable");
       e.style.opacity = "";
     });
-    var content = elem("#cms .cms").innerHTML;
+    var content = $("#cms .cms").innerHTML;
     cmsSource.innerHTML = content;
     var src = document.getElementById(cmsSource.id + "-src");
     if (src) src.value = content;
@@ -662,7 +661,7 @@ function editBlockSettings() {
     source: cmsTarget,
   });
 
-  document.querySelectorAll("#cmsBlockSettings .classList").forEach((e) => {
+  $$("#cmsBlockSettings .classList").forEach((e) => {
     e.checked = false;
   });
 
@@ -686,7 +685,7 @@ function editBlockSettings() {
       e.indexOf("align-") == 0 ||
       e.indexOf("block-padding-") == 0
     ) {
-      var s = elem(`.classList[value='${e}']`);
+      var s = $(`.classList[value='${e}']`);
       if (s) s.checked = true;
     }
   });
@@ -701,7 +700,7 @@ function saveContainerSettings() {
 }
 
 function saveBlockAttributes(parent) {
-  document.querySelectorAll(`${parent} [data-attribute]`).forEach((e) => {
+  $$(`${parent} [data-attribute]`).forEach((e) => {
     var attribute = e.getAttribute("data-attribute");
 
     var targets = cmsTarget;
@@ -760,14 +759,14 @@ function editBlockAnimation() {
     source: cmsTarget,
   });
 
-  document.querySelectorAll("#cmsBlockAnimation .classList").forEach((e) => {
+  $$("#cmsBlockAnimation .classList").forEach((e) => {
     e.checked = false;
   });
 
   var animation = cmsTarget.getAttribute("data-animation");
   if (!animation) animation = "none";
 
-  var s = elem(`.classList[value='${animation}']`);
+  var s = $(`.classList[value='${animation}']`);
   if (s) s.checked = true;
 }
 
@@ -783,54 +782,71 @@ function saveBlockAnimation() {
 }
 
 function editCMSBorder() {
-    var target = cmsTarget;
-    if (!target) return;
+  var target = cmsTarget;
+  if (!target) return;
 
-    showModal("cmsBorder", {
-        ontop: true,
-        source: target,
-    });
+  showModal("cmsBorder", {
+    ontop: true,
+    source: target,
+  });
 
-    setValue(elem(`#cmsBorder [data-attribute="border-width"]`), target.style.borderWidth);
-    setValue(elem(`#cmsBorder [data-attribute="border-color"]`), rgbStringToHex(target.style.borderColor));
-    setValue(elem(`#cmsBorder [data-attribute="border-radius"]`), target.style.borderRadius);
+  setValue(
+    $(`#cmsBorder [data-attribute="border-width"]`),
+    target.style.borderWidth
+  );
+  setValue(
+    $(`#cmsBorder [data-attribute="border-color"]`),
+    rgbStringToHex(target.style.borderColor)
+  );
+  setValue(
+    $(`#cmsBorder [data-attribute="border-radius"]`),
+    target.style.borderRadius
+  );
 }
 
 function updateBorderPreview() {
-    var borderPreview = elem(`#cmsBorder .borderPreview`);
+  var borderPreview = $(`#cmsBorder .borderPreview`);
 
-    borderPreview.style.border = `${elem(`#cmsBorder [data-attribute="border-width"]`).value} solid #${elem(`#cmsBorder [data-attribute="border-color"]`).value}`;
-    borderPreview.style.borderRadius = elem(`#cmsBorder [data-attribute="border-radius"]`).value; 
+  borderPreview.style.border = `${
+    $(`#cmsBorder [data-attribute="border-width"]`).value
+  } solid #${$(`#cmsBorder [data-attribute="border-color"]`).value}`;
+  borderPreview.style.borderRadius = $(
+    `#cmsBorder [data-attribute="border-radius"]`
+  ).value;
 }
 
 function saveCMSBorder() {
-    var preview = elem("#cmsBorder .borderPreview");
+  var preview = $("#cmsBorder .borderPreview");
 
-    var target = cmsTarget.querySelector(".cms-container-content");
-    if (!target) {
-        target = cmsTarget;//.querySelector(".cms-block-content");
-    }
-    if (!target) {
-        return false;
-    }
+  var target = cmsTarget.querySelector(".cms-container-content");
+  if (!target) {
+    target = cmsTarget; //.querySelector(".cms-block-content");
+  }
+  if (!target) {
+    return false;
+  }
 
-    target.style.border = preview.style.border;
-    target.style.borderRadius = preview.style.borderRadius;
+  target.style.border = preview.style.border;
+  target.style.borderRadius = preview.style.borderRadius;
 }
-  
-function updateBorderPreview() {
-    var borderPreview = elem(`#cmsBorder .borderPreview`);
 
-    borderPreview.style.border = `${elem(`#cmsBorder [data-attribute="border-width"]`).value} solid #${elem(`#cmsBorder [data-attribute="border-color"]`).value}`;
-    borderPreview.style.borderRadius = elem(`#cmsBorder [data-attribute="border-radius"]`).value; 
+function updateBorderPreview() {
+  var borderPreview = $(`#cmsBorder .borderPreview`);
+
+  borderPreview.style.border = `${
+    $(`#cmsBorder [data-attribute="border-width"]`).value
+  } solid #${$(`#cmsBorder [data-attribute="border-color"]`).value}`;
+  borderPreview.style.borderRadius = $(
+    `#cmsBorder [data-attribute="border-radius"]`
+  ).value;
 }
 
 function editCMSBackground() {
   var target = cmsTarget;
   if (!target) return;
 
-  var background = elem(".cmsBlockBackgroundPreview");
-  var color = elem(".cmsBlockBackgroundPreview .background-color");
+  var background = $(".cmsBlockBackgroundPreview");
+  var color = $(".cmsBlockBackgroundPreview .background-color");
   var cmstargetColor = target.querySelector(".background-color");
   background.style.backgroundImage = target.style.backgroundImage;
 
@@ -852,14 +868,14 @@ function editCMSBackground() {
         .join("")
     : "#fff";
 
-  setValue(elem(".bckgcolor"), hex.substring(1));
+  setValue($(".bckgcolor"), hex.substring(1));
 
   var op = cmstargetColor.style.opacity;
   if (op == "") op = 1;
   color.style.opacity = op;
-  setRangeSliderValue(elem("#cmsBlockBackground .image-opacity"), op * 100);
+  setRangeSliderValue($("#cmsBlockBackground .image-opacity"), op * 100);
 
-  setBlockBackgroundColor(elem(".bckgcolor").value);
+  setBlockBackgroundColor($(".bckgcolor").value);
 
   showModal("cmsBlockBackground", {
     ontop: true,
@@ -870,12 +886,12 @@ function editCMSBackground() {
 function saveCMSBackground() {
   if (!cmsTarget) return;
 
-  var preview = elem(".cmsBlockBackgroundPreview");
+  var preview = $(".cmsBlockBackgroundPreview");
   cmsTarget.style.backgroundColor = preview.style.backgroundColor;
   cmsTarget.style.backgroundImage = preview.style.backgroundImage;
 
-  var background = elem(".cmsBlockBackgroundPreview");
-  var color = elem(".cmsBlockBackgroundPreview .background-color");
+  var background = $(".cmsBlockBackgroundPreview");
+  var color = $(".cmsBlockBackgroundPreview .background-color");
   var cmstargetColor = cmsTarget.querySelector(".background-color");
   cmsTarget.style.backgroundImage = background.style.backgroundImage;
   cmstargetColor.style.backgroundColor = color.style.backgroundColor;
@@ -989,7 +1005,7 @@ function hideCMSContainerHeader() {
   CMSContainerHeader.options.style.display = "";
 
   removeClasses("activeContainer");
-  document.querySelectorAll(".cms-container").forEach((e) => {
+  $$(".cms-container").forEach((e) => {
     e.style.opacity = "";
   });
 }
@@ -1001,7 +1017,7 @@ var mouseMoveContainer = function (event) {
 
   if (!isModalActive("cms")) return;
 
-  var wrapper = elem(".cms-wrapper");
+  var wrapper = $(".cms-wrapper");
 
   var targetY = event.clientY;
 
@@ -1031,7 +1047,7 @@ var mouseMoveContainer = function (event) {
 
   placeContainerAfter = nodeBefore;
 
-  var insert_container_btn = elem(".insert_container_btn");
+  var insert_container_btn = $(".insert_container_btn");
 
   if (
     secondY < firstY + 25 &&
@@ -1064,7 +1080,7 @@ var mouseMoveContainer = function (event) {
     }
   }
 
-  var a = elem(".activeContainer");
+  var a = $(".activeContainer");
   if (a && a != CMSContainerHeader.target) {
     a.classList.remove("activeContainer");
   }
@@ -1146,7 +1162,7 @@ function hideCMSBlockHeader() {
   CMSBlockHeader.actions.style.display = "";
 
   removeClasses("activeBlock");
-  document.querySelectorAll(".cms-block").forEach((e) => {
+  $$(".cms-block").forEach((e) => {
     e.style.opacity = "";
   });
 }
@@ -1178,7 +1194,7 @@ var mouseMoveBlock = function (target) {
     }
   }
 
-  var a = elem(".activeBlock");
+  var a = $(".activeBlock");
   if (a && a != CMSBlockHeader.target) {
     a.classList.remove("activeBlock");
   }
@@ -1409,39 +1425,39 @@ var awaitingScroll = false;
 window.cmsBlockBackgroundImageCallback = (src) => {
   setBlockBackgroundImage(src);
 
-  if (elem("#cmsBlockBackground .image-opacity").value > 50) {
-    setRangeSliderValue(elem("#cmsBlockBackground .image-opacity"), 50);
+  if ($("#cmsBlockBackground .image-opacity").value > 50) {
+    setRangeSliderValue($("#cmsBlockBackground .image-opacity"), 50);
   }
 };
 
 function setBlockBackgroundImage(val = "") {
-  var background = elem(".cmsBlockBackgroundPreview");
+  var background = $(".cmsBlockBackgroundPreview");
   background.style.backgroundImage = val ? `url("/uploads/df/${val}")` : "";
 }
 
 function setBlockBackgroundColorOpacity(val = 1) {
-  var color = elem(".cmsBlockBackgroundPreview .background-color");
+  var color = $(".cmsBlockBackgroundPreview .background-color");
   color.style.opacity = val / 100;
-  setValue(elem("#cmsBlockBackground .image-opacity"), val);
+  setValue($("#cmsBlockBackground .image-opacity"), val);
 }
 
 function setBlockBackgroundColor(val = "FFFFFF") {
-  var color = elem(".cmsBlockBackgroundPreview .background-color");
+  var color = $(".cmsBlockBackgroundPreview .background-color");
   color.style.backgroundColor = "#" + val;
 
-  setValue(elem(".bckgcolor"), val);
+  setValue($(".bckgcolor"), val);
 
-  elem(
+  $(
     "#cmsBlockBackground .image-opacity-wrapper .range-rect"
   ).style.background = `linear-gradient(to right, #fff, #${val})`;
 
-  if (elem("#cmsBlockBackground .image-opacity").value < 30) {
-    setRangeSliderValue(elem("#cmsBlockBackground .image-opacity"), 30);
+  if ($("#cmsBlockBackground .image-opacity").value < 30) {
+    setRangeSliderValue($("#cmsBlockBackground .image-opacity"), 30);
   }
 }
 
 function rewriteURL() {
-  elem(`[name="link"]`).value = getLink(elem(`[name="title"]`).value);
+  $(`[name="link"]`).value = getLink($(`[name="title"]`).value);
 }
 
 registerModalContent(

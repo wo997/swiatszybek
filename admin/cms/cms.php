@@ -49,8 +49,8 @@ $static = checkUrl($page_link);
         useTool("cms");
 
         var content = `<?= str_replace("`", "", $page_data["content"]) ?>`;
-        elem("#content1").insertAdjacentHTML("beforeend", content);
-        elem("#content1-src").value = content;
+        $("#content1").insertAdjacentHTML("beforeend", content);
+        $("#content1-src").value = content;
 
         resizeCallback();
 
@@ -58,7 +58,7 @@ $static = checkUrl($page_link);
     });
 
     window.addEventListener("load", function() {
-        elem("#cms").setAttribute("data-expand", "large");
+        $("#cms").setAttribute("data-expand", "large");
     });
 
 
@@ -66,18 +66,18 @@ $static = checkUrl($page_link);
 
     window.addEventListener("DOMContentLoaded", function() {
 
-        elem(`[name='meta_description']`).dispatchEvent(new Event('change'));
+        $(`[name='meta_description']`).dispatchEvent(new Event('change'));
 
         // includes only radio buttons
-        document.querySelectorAll("*[data-type='json'][data-name='metadata']").forEach(f => {
+        $$("*[data-type='json'][data-name='metadata']").forEach(f => {
             var p = f.getAttribute("data-property");
             if (p) f.setAttribute("name", p);
         });
 
-        document.querySelectorAll("*[data-type='json']").forEach(e => {
+        $$("*[data-type='json']").forEach(e => {
             e.addEventListener("change", function() {
                 var metadata = {};
-                document.querySelectorAll("*[data-type='json'][data-name='metadata']").forEach(f => {
+                $$("*[data-type='json'][data-name='metadata']").forEach(f => {
                     if (f.checked) {
                         metadata[f.name] = f.value;
                     }
@@ -91,7 +91,7 @@ $static = checkUrl($page_link);
 
         var m = JSON.parse(metadata);
         for (let key in m) {
-            var e = elem(`input[data-property='${key}'][value='${m[key]}']`);
+            var e = $(`input[data-property='${key}'][value='${m[key]}']`);
             if (e) e.checked = true;
         }
 
@@ -100,26 +100,26 @@ $static = checkUrl($page_link);
     // preview start
     function preview() {
         showModal("pagePreview");
-        elem("#preview_page_content").value = elem("#content1-src").value;
-        elem("#preview_page_metadata").value = elem("#metadata").value;
-        elem(".preview_page").submit();
+        $("#preview_page_content").value = $("#content1-src").value;
+        $("#preview_page_metadata").value = $("#metadata").value;
+        $(".preview_page").submit();
     }
 
     function setWindowSize(width = "", height = "") {
         var e = document.getElementById("preview_iframe");
         e.style.width = width;
         e.style.height = height;
-        elem(".preview_page").submit();
+        $(".preview_page").submit();
     }
     // preview end
 
     function rewriteURL() {
-        elem(`[name="link"]`).value = getLink(elem(`[name="title"]`).value);
+        $(`[name="link"]`).value = getLink($(`[name="title"]`).value);
     }
 
     function editPage() {
-        imagePicker.setDefaultTag(elem('[name="title"]').value);
-        editCMS(elem('#content1'));
+        imagePicker.setDefaultTag($('[name="title"]').value);
+        editCMS($('#content1'));
     }
 </script>
 

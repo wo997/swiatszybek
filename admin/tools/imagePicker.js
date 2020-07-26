@@ -1,111 +1,112 @@
 window.imagePicker = {
-    firstOpen: true, // preload or not?
-    target: null,
-    callback: null,
-    defaultTag: "",
-    open: (target = null, callback = null) => {
-        imagePicker.target = target;
-        imagePicker.callback = callback;
-        showModal("imagePicker", {ontop: true});
-        if (imagePicker.firstOpen) {
-            imagePicker.search();
-            imagePicker.firstOpen = false;
-        }
-        imagePicker.setTag(null,true);
-    },
-    choose: (src) => {
-        hideModalTopMost();
-        if (imagePicker.target) {
-            setValue(imagePicker.target, src);
-        }
-        if (imagePicker.callback) {
-            imagePicker.callback(src);
-        }
-    },
-    setDefaultTag: (tag, replaceEmptyOnly = true) => {
-        imagePicker.defaultTag = tag;
-        imagePicker.setTag(imagePicker.defaultTag, replaceEmptyOnly);
-    },
-    setTag: (tag = null, replaceEmptyOnly = false) => {
-        if (tag === null) {
-            tag = imagePicker.defaultTag;
-        }
-        var tagElement = elem("#imagePicker .tag");
-        if (!replaceEmptyOnly || tagElement.value == "") {
-            tagElement.value = tag;
-        }
-    },
-    imageAction: (formData) => {
-        xhr({
-            url: "/admin/upload_images",
-            formData: formData,
-            success(res) {
-                try {
-                    images = JSON.parse(res);
-                    var out = "";
-                    var counter = 0;
-                    for (image of images) {
-                        counter++;
+  firstOpen: true, // preload or not?
+  target: null,
+  callback: null,
+  defaultTag: "",
+  open: (target = null, callback = null) => {
+    imagePicker.target = target;
+    imagePicker.callback = callback;
+    showModal("imagePicker", { ontop: true });
+    if (imagePicker.firstOpen) {
+      imagePicker.search();
+      imagePicker.firstOpen = false;
+    }
+    imagePicker.setTag(null, true);
+  },
+  choose: (src) => {
+    hideModalTopMost();
+    if (imagePicker.target) {
+      setValue(imagePicker.target, src);
+    }
+    if (imagePicker.callback) {
+      imagePicker.callback(src);
+    }
+  },
+  setDefaultTag: (tag, replaceEmptyOnly = true) => {
+    imagePicker.defaultTag = tag;
+    imagePicker.setTag(imagePicker.defaultTag, replaceEmptyOnly);
+  },
+  setTag: (tag = null, replaceEmptyOnly = false) => {
+    if (tag === null) {
+      tag = imagePicker.defaultTag;
+    }
+    var tagElement = $("#imagePicker .tag");
+    if (!replaceEmptyOnly || tagElement.value == "") {
+      tagElement.value = tag;
+    }
+  },
+  imageAction: (formData) => {
+    xhr({
+      url: "/admin/upload_images",
+      formData: formData,
+      success(res) {
+        try {
+          images = JSON.parse(res);
+          var out = "";
+          var counter = 0;
+          for (image of images) {
+            counter++;
 
-                        var replaceImg = document.querySelector(`[upload_image="${counter}"]`);
-                        if (replaceImg) {
-                            replaceImg.src = `/uploads/df/${image.path}`;
-                            replaceImg.removeAttribute("upload_image");
-                        }
-                        out += `
+            var replaceImg = $(`[upload_image="${counter}"]`);
+            if (replaceImg) {
+              replaceImg.src = `/uploads/df/${image.path}`;
+              replaceImg.removeAttribute("upload_image");
+            }
+            out += `
                             <div class='gallery-item'>
                                 <div class="item-image" style='width:100%;height:250px;background-image:url("/uploads/sm/${image.path}")'></div>
                                 <div class="btn primary" onclick='imagePicker.choose("${image.path}")'>Wybierz</div>
                                 <div class="btn secondary" onclick='imagePicker.delete("${image.path}")'>Usuń</div>
                             </div>
                         `;
-                    }
-                    elem("#imagePicker .gallery").innerHTML = out;
-                } catch (e) {
-                    //console.log(e);
-                }
-            }
-        });
-    },
-    search: () => {
-        var formData = new FormData();
-        formData.append('search', elem("#search").value);
-        imagePicker.imageAction(formData);
-    },
-    delete: (src) => {
-        if (confirm("Czy aby na pewno chcesz usunąć zdjęcie?")) {
-            var formData = new FormData();
-            formData.append('search', elem("#search").value);
-            formData.append('alsoDelete', src);
-            imagePicker.imageAction(formData);
-
-            imagePicker.search(src);
+          }
+          $("#imagePicker .gallery").innerHTML = out;
+        } catch (e) {
+          //console.log(e);
         }
-    },
-    loaded: () => {
-        elem('#imagePicker').addEventListener('submit', e => {
-            e.preventDefault();
-    
-            var input = elem('#imagePicker [type=file]');
-            var files = input.files;
-            var formData = new FormData();
-    
-            for (let i = 0; i < files.length; i++) {
-                let file = files[i];
-    
-                formData.append('files[]', file);
-            }
-            input.value = "";
+      },
+    });
+  },
+  search: () => {
+    var formData = new FormData();
+    formData.append("search", $("#search").value);
+    imagePicker.imageAction(formData);
+  },
+  delete: (src) => {
+    if (confirm("Czy aby na pewno chcesz usunąć zdjęcie?")) {
+      var formData = new FormData();
+      formData.append("search", $("#search").value);
+      formData.append("alsoDelete", src);
+      imagePicker.imageAction(formData);
 
-            formData.append('tag', elem("#imagePicker .tag").value);
-            formData.append('search', elem("#search").value);
-    
-            imagePicker.imageAction(formData);
-        });
+      imagePicker.search(src);
     }
+  },
+  loaded: () => {
+    $("#imagePicker").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      var input = $("#imagePicker [type=file]");
+      var files = input.files;
+      var formData = new FormData();
+
+      for (let i = 0; i < files.length; i++) {
+        let file = files[i];
+
+        formData.append("files[]", file);
+      }
+      input.value = "";
+
+      formData.append("tag", $("#imagePicker .tag").value);
+      formData.append("search", $("#search").value);
+
+      imagePicker.imageAction(formData);
+    });
+  },
 };
 
-registerModalContent(`
+registerModalContent(
+  `
     <form id="imagePicker" data-expand="true">
         <div class="stretch-vertical">
             <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
@@ -134,5 +135,8 @@ registerModalContent(`
         </div>
         <link href="/admin/tools/imagePicker.css?v=${RELEASE}" rel="stylesheet">
     </form>
-    `, ()=>{imagePicker.loaded()}
+    `,
+  () => {
+    imagePicker.loaded();
+  }
 );

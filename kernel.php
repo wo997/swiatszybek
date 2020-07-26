@@ -4,7 +4,7 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 98);
+define("RELEASE", 100);
 
 // include helpers
 

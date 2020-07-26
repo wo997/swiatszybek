@@ -122,9 +122,9 @@ if (strpos($url, "resetowanie-hasla") !== false)
     window.addEventListener("DOMContentLoaded", function() {
       setFormData(<?= json_encode($user_data, true) ?>);
 
-      document.querySelectorAll("form .field").forEach(e=>{
+      $$("form .field").forEach(e => {
         e.addEventListener("input", function() {
-          var btn = document.querySelector("#allowSave:disabled");
+          var btn = $("#allowSave:disabled");
           if (btn) btn.removeAttribute("disabled");
         });
       });
@@ -143,12 +143,12 @@ if (strpos($url, "resetowanie-hasla") !== false)
     <div style="margin-top:20px"></div>
 
     <div style="text-align:center;padding: 25px;font-size: 20px">
-    <?php 
+      <?php
       if ($app["user"]["type"] == 'g') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
       if ($app["user"]["type"] == 'f') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
       if ($app["user"]["type"] == 's') echo '<i class="fas fa-user" style="font-size: 1em;"></i> ';
       echo $app["user"]["name"];
-    ?>
+      ?>
     </div>
 
     <div class="centerwhenbig" style="padding-bottom: 40px">
@@ -264,7 +264,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
                   <div class="field-title">Ulica</div>
                   <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate>
-                  
+
                   <div class="desktopRow spaceColumns">
                     <div>
                       <div class="field-title">Nr domu</div>
@@ -293,7 +293,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
         <div id="menu3" class="menu mobileRow <?php if ($menu == "haslo") echo "showNow"; ?>" style="<?php if ($menu != "haslo") echo 'display:none;'; ?>">
           <form onsubmit="return validateForm({form:this})" action="/reset_password" method="post" style="width:100%;margin:40px auto;max-width:350px">
             <h3 style="text-align: center;font-size: 26px;margin: 15px 0 35px;">Zmiana hasła</h3>
-            
+
             <div class="field-title">Hasło (min. 8 znaów)</div>
             <div class="field-wrapper">
               <input type="password" name="password" class="field" data-validate="password">

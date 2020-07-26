@@ -1,6 +1,7 @@
-<?php //->[admin/zamowienia] ?>
+<?php //->[admin/zamowienia] 
+?>
 
-<?php startSection("head"); 
+<?php startSection("head");
 
 $options = "";
 foreach ($statusList as $k => $status) {
@@ -11,32 +12,34 @@ foreach ($statusList as $k => $status) {
 <title>Zamówienia</title>
 
 <style>
-  .switchControls:not(:hover) > *:last-child {
+  .switchControls:not(:hover)>*:last-child {
     display: none;
   }
+
   .switchControls {
     position: relative;
     text-align: center;
   }
-  .switchControls > *:last-child {
+
+  .switchControls>*:last-child {
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     margin: 0;
     padding: 0.2em 0.5em;
     width: calc(100% - 30px);
   }
 </style>
 
-<script src="/admin/zamowienia_table_definition.js?a=<?=RELEASE?>"></script>
+<script src="/admin/zamowienia_table_definition.js?a=<?= RELEASE ?>"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     useTool("loader");
 
     var tableName = "mytable";
-    
-    var statusDefinition = zamowienia_table_definition.find(e=>e.title=="Status");
+
+    var statusDefinition = zamowienia_table_definition.find(e => e.title == "Status");
 
     if (statusDefinition) {
       statusDefinition.className = "switchControls";
@@ -44,14 +47,13 @@ foreach ($statusList as $k => $status) {
         return `
           ${renderStatus(r.status)}
           <select data-value="${r.status}" onchange="changeStatus('${r.link}',this.value)">
-            <?=$options?>
+            <?= $options ?>
           </select>
         `;
       }
     }
 
-    zamowienia_table_definition = [
-      {
+    zamowienia_table_definition = [{
         title: "",
         width: "36px",
         render: (r) => {
@@ -65,7 +67,7 @@ foreach ($statusList as $k => $status) {
       ...zamowienia_table_definition
     ];
 
-    
+
 
     createTable({
       name: tableName,
@@ -76,9 +78,9 @@ foreach ($statusList as $k => $status) {
       width: 1300,
       params: () => {
         var params = {};
-        if (document.querySelector(".mytable .hasFilter").checked) {
-          var dateFrom = document.querySelector(".mytable .dateFrom").value;
-          var dateTo = document.querySelector(".mytable .dateTo").value;
+        if ($(".mytable .hasFilter").checked) {
+          var dateFrom = $(".mytable .dateFrom").value;
+          var dateTo = $(".mytable .dateTo").value;
           if (dateFrom.length == 10) params["dateFrom"] = dateFrom;
           if (dateTo.length == 10) params["dateTo"] = dateTo;
         }
@@ -94,7 +96,7 @@ foreach ($statusList as $k => $status) {
           <select data-param="status">
             <option value=''>Wszystkie</option>
             <option value='otwarte'>Otwarte</option>
-            <?=$options?>
+            <?= $options ?>
           </select>
           <label style="margin:6px 8px;user-select:none">
             <input type="checkbox" onchange="setFilter()" class="hasFilter">
@@ -111,22 +113,22 @@ foreach ($statusList as $k => $status) {
       `,
       callback: () => {
         selectionChange();
-        setTimeout(()=>{
-          document.querySelectorAll("select[data-value]").forEach(e=>{
+        setTimeout(() => {
+          $$("select[data-value]").forEach(e => {
             e.value = e.getAttribute("data-value");
           })
-        },0);
+        }, 0);
       }
     });
   });
 
   function selectionChange() {
-    document.querySelector(".bulkOptions").style.display = document.querySelector("[data-link]:checked") ? "block" : "none";
+    $(".bulkOptions").style.display = $("[data-link]:checked") ? "block" : "none";
   }
 
   async function bulkStatusUpdate(value) {
     var replaceList = [];
-    document.querySelectorAll("[data-link]:checked").forEach(e=>{
+    $$("[data-link]:checked").forEach(e => {
       replaceList.push(e.getAttribute("data-link"));
     });
     if (replaceList.length == 0) return;
@@ -135,26 +137,25 @@ foreach ($statusList as $k => $status) {
 
     loader.show();
 
-    for (i=0;i<replaceList.length;i++) {
-      await changeStatus(replaceList[i],value,false);
+    for (i = 0; i < replaceList.length; i++) {
+      await changeStatus(replaceList[i], value, false);
     }
 
-    mytable.search(()=>{
+    mytable.search(() => {
       loader.hide();
     });
   }
-    
-  function changeStatus(zamowienie_link,value,search = true) {
+
+  function changeStatus(zamowienie_link, value, search = true) {
     return new Promise(resolve => {
       xhr({
         url: `/admin/zmien_status/${zamowienie_link}/${value}`,
         success: () => {
           if (search) {
-            mytable.search(()=>{
+            mytable.search(() => {
               resolve('resolved');
             });
-          }
-          else resolve('resolved');
+          } else resolve('resolved');
         }
       });
     });
@@ -162,13 +163,13 @@ foreach ($statusList as $k => $status) {
 
   function setFilter() {
     mytable.search(() => {
-      document.querySelector(".mytable .caseFilter").style.display = document.querySelector(".mytable .hasFilter").checked ? "" : "none";
+      $(".mytable .caseFilter").style.display = $(".mytable .hasFilter").checked ? "" : "none";
     });
   }
 
   function changeDate(direction) {
-    var dateFrom = document.querySelector(".mytable .dateFrom");
-    var dateTo = document.querySelector(".mytable .dateTo");
+    var dateFrom = $(".mytable .dateFrom");
+    var dateTo = $(".mytable .dateTo");
 
     var date1 = new Date(dateFrom.value);
     var date2 = new Date(dateTo.value);
@@ -194,7 +195,7 @@ foreach ($statusList as $k => $status) {
   Zmień status dla zaznaczonych zamówień
   <select onchange="bulkStatusUpdate(this.value);this.value=''">
     <option value="">- STATUS -</option>
-    <?=$options?>
+    <?= $options ?>
   </select>
 </div>
 

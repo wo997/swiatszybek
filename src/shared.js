@@ -660,7 +660,7 @@ function createTable(table) {
           params.disable_with_children = [table.category_id];
         }
         setCategoryPickerValues(
-          elem(`#${form} [data-category-picker-name="parent_id"]`),
+          $(`#${form} [data-category-picker-name="parent_id"]`),
           table.parent_id,
           params
         );
@@ -1013,8 +1013,8 @@ function createTable(table) {
   }
 
   table.toggleSearchVisibility = (visible) => {
-    expand(elem(`.${table.name} .showBtn`), !visible);
-    expand(elem(`.${table.name} .table-search-wrapper`), visible);
+    expand($(`.${table.name} .showBtn`), !visible);
+    expand($(`.${table.name} .table-search-wrapper`), visible);
   };
 
   table.removeRow = (data_id) => {
@@ -1377,7 +1377,7 @@ function registerModalContent(html, callback) {
     var div = document.createElement("DIV");
     div.insertAdjacentHTML("afterbegin", html);
     var modal = div.children[0];
-    if (elem("#" + modal.id)) throw "modal defined already";
+    if ($("#" + modal.id)) throw "modal defined already";
     modal.setAttribute("data-modal", "true");
     registerModal(modal);
     if (callback) callback();
@@ -1492,7 +1492,7 @@ function hideModal(name) {
 }
 
 function isModalActive(name) {
-  var next = elem(`#${name}`);
+  var next = $(`#${name}`);
   var anythingAbove = false;
   while (true) {
     next = next.nextElementSibling;
@@ -1510,8 +1510,11 @@ function isModalActive(name) {
 
 // modal end
 
-function elem(querySelector) {
+function $(querySelector) {
   return document.querySelector(querySelector);
+}
+function $$(querySelectorAll) {
+  return document.querySelectorAll(querySelectorAll);
 }
 
 // validate start
@@ -1587,7 +1590,7 @@ function validateField(field) {
     }
   }
   if (validator.substr(0, 6) == "match:") {
-    var target = elem(validator.substr(6));
+    var target = $(validator.substr(6));
     if (!target) {
       console.warn("Password field missing");
       return;
@@ -2025,7 +2028,7 @@ function categoryChanged(el) {
     });
     value = JSON.stringify(checked);
   }
-  elem(`[name=${name}]`).value = value;
+  $(`[name=${name}]`).value = value;
 
   if (el.checked) {
     var expandWhenClosed = el.parentNode.parentNode.querySelector(
@@ -2049,7 +2052,7 @@ function loadCategoryPicker(
     url: `/helpers/categories_template&table=${source}`,
     //url: `/helpers/categories_template&parent_id=${parent_id}`,
     success: (c) => {
-      /*if (!elem(`.category-picker-template-${parent_id}`)) {
+      /*if (!$(`.category-picker-template-${parent_id}`)) {
           document.body.insertAdjacentHTML("beforeend",`<template class="category-picker-template-${parent_id}"></template>`);
       }
       document.querySelectorAll(`.category-picker[parent_id="${parent_id}"], .category-picker-template-${parent_id}`).forEach(e=>{
@@ -2629,9 +2632,9 @@ function addItemtoBasket(variant_id, diff, callback) {
     success: (res) => {
       var json = JSON.parse(res);
 
-      setContent(elem("#basketContent"), json.basket_content_html);
+      setContent($("#basketContent"), json.basket_content_html);
 
-      elem("#amount").innerHTML = json.item_count; // header basket
+      $("#amount").innerHTML = json.item_count; // header basket
 
       if (callback) {
         callback(json);

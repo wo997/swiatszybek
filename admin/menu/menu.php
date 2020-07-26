@@ -1,4 +1,5 @@
-<?php //->[admin/menu-glowne] ?>
+<?php //->[admin/menu-glowne] 
+?>
 
 <?php startSection("head"); ?>
 
@@ -9,7 +10,6 @@
 </style>
 
 <script>
-
     document.addEventListener("DOMContentLoaded", function() {
         createTable({
             name: "mytable",
@@ -18,8 +18,8 @@
             db_table: "menu",
             sortable: true,
             lang: {
-              subject: "menu",
-              main_category: ">"
+                subject: "menu",
+                main_category: ">"
             },
             tree_view: {
                 form: "editCategory",
@@ -193,7 +193,7 @@
         });
     });
 
-    function loadCategoryForm(form,data,isNew) {
+    function loadCategoryForm(form, data, isNew) {
         if (isNew) {
             data = {
                 ...data,
@@ -205,16 +205,16 @@
             }
         }
 
-        var formElement = elem(`#${form}`);
+        var formElement = $(`#${form}`);
 
         setFormData(data, formElement);
-        
+
         var canDelete = !data.subcategories;
 
         var tab_id = 1;
         if (data.cms_id) tab_id = 2;
         if (data.product_id) tab_id = 3;
-        showTab(elem(".tab-menu-link"),tab_id);
+        showTab($(".tab-menu-link"), tab_id);
 
         formElement.querySelector(".caseCanDelete").classList.toggle("hidden", isNew);
         toggleDisabled(formElement.querySelector(`.btn.red`), !canDelete);
@@ -224,10 +224,12 @@
     }
 
     function saveCategoryForm(remove = false) {
-        var f = elem("#editCategory");
-        if (!remove && !validateForm({form:f})) return;
+        var f = $("#editCategory");
+        if (!remove && !validateForm({
+                form: f
+            })) return;
 
-        document.querySelectorAll(".tab-menu-link .tab-content.hidden input").forEach(e=>{
+        $$(".tab-menu-link .tab-content.hidden input").forEach(e => {
             e.value = "";
         })
 
@@ -239,15 +241,19 @@
             url: "/admin/save_menu",
             params: params,
             success: (res) => {
-                mytable.postSaveCategory(params,remove);
-                loadCategoryPicker("menu",{skip:0});
+                mytable.postSaveCategory(params, remove);
+                loadCategoryPicker("menu", {
+                    skip: 0
+                });
             }
         });
         hideModal(mytable.tree_view.form);
     }
 
     document.addEventListener("DOMContentLoaded", function() {
-      loadCategoryPicker("menu",{skip:0});
+        loadCategoryPicker("menu", {
+            skip: 0
+        });
     });
 </script>
 
@@ -273,10 +279,10 @@
                     <select name="published" class="field">
                         <option value="1">Publiczna</option>
                         <option value="0">Ukryta</option>
-                    <select>
+                        <select>
                 </div>
             </div>
-            
+
             <div class="field-title">Menu nadrzędne</div>
             <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="menu" data-single>
 

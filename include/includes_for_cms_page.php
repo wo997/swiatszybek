@@ -16,7 +16,7 @@
     });
 
     function scrollCallback() {
-        document.querySelectorAll("[data-animation]").forEach(e => {
+        $$("[data-animation]").forEach(e => {
             if (e.getBoundingClientRect().top < window.innerHeight * 0.8) {
                 var a = e.getAttribute("data-animation");
                 e.removeAttribute("data-animation");
@@ -56,11 +56,11 @@
     });
 
     window.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".cms").forEach(e => {
+        $$(".cms").forEach(e => {
             e.style.opacity = "1";
         })
 
-        document.querySelectorAll(".cms-block-content").forEach(e => {
+        $$(".cms-block-content").forEach(e => {
             e.style.marginBottom = "1px";
             setTimeout(() => {
                 e.style.marginBottom = "";
@@ -68,7 +68,7 @@
         })
 
         var sliderCount = 0;
-        document.querySelectorAll('.swiper-container:not(.product-main-slider)').forEach(e => {
+        $$('.swiper-container:not(.product-main-slider)').forEach(e => {
             sliderCount++;
             var sliderName = "swiper-slider-" + sliderCount;
             e.classList.add(sliderName);
@@ -88,21 +88,21 @@
             });
         });
 
-        document.querySelectorAll(".ql-editor a").forEach(e => {
+        $$(".ql-editor a").forEach(e => {
             if (e.href.indexOf("/") !== 0 && e.href.indexOf(window.location.hostname) === -1) {
                 e.setAttribute("target", "_blank");
             }
         })
 
         if (window.innerWidth > 1200) {
-            document.querySelectorAll(".item-image").forEach(e => {
+            $$(".item-image").forEach(e => {
                 var i = e.getAttribute("data-desktop");
                 if (i) e.style.backgroundImage = "url('" + i + "')";
             });
         }
 
         if (window.innerWidth < 768) {
-            document.querySelectorAll("table").forEach(table => {
+            $$("table").forEach(table => {
                 var header = table.querySelector("tr").querySelectorAll("td");
                 if (header.length <= 2) return;
                 //if (header[0].innerText.trim() != "") return;
@@ -128,7 +128,7 @@
 
     var wt = -100;
 
-    window.addEventListener("DOMContentLoaded", function () {
+    window.addEventListener("DOMContentLoaded", function() {
         resizeCallback();
         waitForImageLoaded();
     });
@@ -136,7 +136,7 @@
 
     function waitForImageLoaded() {
         wt++;
-        document.querySelectorAll(".cms img:not(.responsive)").forEach(e => {
+        $$(".cms img:not(.responsive)").forEach(e => {
             if (e.naturalWidth) {
                 e.classList.add("responsive");
                 responsiveImage(e);
@@ -175,7 +175,7 @@
     }
 
     function responsiveImages() {
-        document.querySelectorAll(".cms img").forEach(e => {
+        $$(".cms img").forEach(e => {
             responsiveImage(e);
         });
     }
