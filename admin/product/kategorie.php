@@ -231,33 +231,33 @@
             <select name="published" class="form-field">
                 <option value="1">Publiczna</option>
                 <option value="0">Ukryta</option>
-                <select>
+            </select>
 
-                    <div class="field-title">
-                        Ikonka
-                        <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
-                        <img name="icon" data-type="src" data-src-prefix="/uploads/sm/" style="max-width:100px;max-height:100px" />
-                    </div>
+            <div class="field-title">
+                Ikonka
+                <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
+                <img name="icon" data-type="src" data-src-prefix="/uploads/sm/" style="max-width:100px;max-height:100px" />
+            </div>
 
-                    <div class="field-title">Kategoria nadrzędna</div>
-                    <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="product_categories" data-single>
+            <div class="field-title">Kategoria nadrzędna</div>
+            <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="product_categories" data-single>
 
-                    <div class="field-title">Atrybuty produktów kategorii</div>
-                    <div class="atrybuty"></div>
+            <div class="field-title">Atrybuty produktów kategorii</div>
+            <div class="atrybuty"></div>
 
-                    <div class="field-title">Opis górny <button class="btn primary" type="button" onclick='quillEditor.open($("#editCategory .description"));'>Edytuj</button></div>
-                    <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
+            <div class="field-title">Opis górny <button class="btn primary" type="button" onclick='quillEditor.open($("#editCategory .description"));'>Edytuj</button></div>
+            <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
 
-                    <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS($('#editCategory .content'),{ontop:true});">Edytuj </button></div>
-                    <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
+            <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS($('#editCategory .content'),{ontop:true});">Edytuj </button></div>
+            <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
-                    <br>
-                    <div class="caseCanDelete">
-                        <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
-                        <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
-                    </div>
+            <br>
+            <div class="caseCanDelete">
+                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
+                <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
+            </div>
 
-                    <input type="hidden" name="category_id">
+            <input type="hidden" name="category_id">
 
         </div>
     </div>

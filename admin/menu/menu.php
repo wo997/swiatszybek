@@ -279,7 +279,7 @@
                     <select name="published" class="field">
                         <option value="1">Publiczna</option>
                         <option value="0">Ukryta</option>
-                        <select>
+                    </select>
                 </div>
             </div>
 

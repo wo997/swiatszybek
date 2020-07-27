@@ -13,4 +13,7 @@ if (!tableExists("asdadasafds")) {
 
 dropColumns("slides", ["img", "tekst", "link"]);
 
-addColumns("slides", [["name" => "content", "definition" => "TEXT NOT NULL"]]);
+addColumns("slides", [
+  ["name" => "published", "definition" => "TINYINT(1) NOT NULL"],
+  ["name" => "content", "definition" => "TEXT NOT NULL"]
+]);

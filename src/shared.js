@@ -1508,6 +1508,12 @@ function isModalActive(name) {
   return !anythingAbove;
 }
 
+// @maciej
+// #todo dirty form
+// document.addEventListener("keydown", (e) => {
+//   if (e.code === "Escape") hideModalTopMost();
+// });
+
 // modal end
 
 function $(querySelector) {
