@@ -10,15 +10,20 @@ if (tableExists("asdadasafds")) {
 dropColumns("slides", ["img", "tekst", "link"]);
 
 addColumns("slides", [
-  ["name" => "published", "definition" => "TINYINT(1) NOT NULL"],
-  ["name" => "content", "definition" => "TEXT NOT NULL"],
-  ["name" => "content", "type" => "TEXT"]
+  ["name" => "published", "type" => "TINYINT(1)"]
 ]);
 
 // migration from 27.07.2020
 
 addColumns("basket_content", [
   ["name" => "title", "type" => "VARCHAR(255)"]
+]);
+
+dropColumns("slides", ["content"]);
+
+addColumns("slides", [
+  ["name" => "content_desktop", "type" => "VARCHAR(255)"],
+  ["name" => "content_mobile", "type" => "VARCHAR(255)"]
 ]);
 
 
