@@ -215,7 +215,8 @@ function scaleVideos() {
 }
 
 function nonull(a, e = "") {
-  return a ? a : e;
+  if (a === null || a === undefined) return e;
+  return a;
 }
 
 function delay(action, time, context = window) {
