@@ -102,13 +102,18 @@ function dropColumns($table, $names)
     if (columnExists($table, $name)) {
       query("ALTER TABLE " . clean($table) . " DROP COLUMN " . clean($name));
 
-      echo "column $name dropped from $table! <br>";
+      echo "🗑️ Column $name dropped from $table! <br>";
     }
   }
 }
 
 /**
- * addColumns
+ * Add columns to the database or modify existing ones if they differ
+ * Provide columns defined by
+ * - name *required*
+ * - type (f.e int) *required*
+ * - null (boolean, default false - no nulls allowed)
+ * - default / default_string (f.e 0)
  *
  * @param  string $table
  * @param array<array> $columns
@@ -117,10 +122,76 @@ function dropColumns($table, $names)
 function addColumns($table, $columns)
 {
   foreach ($columns as $column) {
-    if (!columnExists($table, $column["name"])) {
-      query("ALTER TABLE " . clean($table) . " ADD " . clean($column["name"]) . " " . $column["definition"]);
+    $column["null"] = nonull($column, "null", false);
+    $column["type"] = strtoupper($column["type"]);
 
-      echo "column " . $column["name"] . " added into $table! <br>";
+    $add = false;
+    $modify = false;
+
+    $columnExists = columnExists($table, $column["name"]);
+
+    if (!$columnExists) {
+      $add = true;
+    } else {
+      foreach (fetchArray("DESC " . clean($table)) as $existing_column) {
+        // early escape if names are different
+        if ($existing_column["Field"] != $column["name"]) {
+          continue;
+        }
+
+        // compare nulls
+        if ($existing_column["Null"] != ($column["null"] ? "YES" : "NO")) {
+          $modify = true;
+          break;
+        }
+
+        // compare defaults
+        if (isset($column["default"]) && $existing_column["Default"] !== $column["default"]) {
+          $modify = true;
+          break;
+        }
+        if (isset($column["default_string"]) && $existing_column["Default"] !== $column["default_string"]) {
+          $modify = true;
+          break;
+        }
+        if (!isset($column["default_string"]) && !isset($column["default"]) && $existing_column["Default"] !== null) {
+          $modify = true;
+          break;
+        }
+
+        // compare types literally only when new type contains any digit meaning that digits in general are limited, kind of hacky
+        $existing_column["Type"] = strtoupper($existing_column["Type"]);
+
+        if (preg_replace("/\D/", "", $column["type"]) === "") { // no digits
+          if (preg_replace("/[^A-Z]/", "", $existing_column["Type"]) != preg_replace("/[^A-Z]/", "", $column["type"])) { // no digit comparision
+            $modify = true;
+            break;
+          }
+        } else {
+          if ($existing_column["Type"] != $column["type"]) { // literal comparision
+            $modify = true;
+            break;
+          }
+        }
+      }
+    }
+
+    $definition = clean($column["name"])
+      . " " . $column["type"]
+      . ($column["null"] ? "" : " NOT NULL");
+
+    if (isset($column["default"])) {
+      $definition .= " DEFAULT " . $column["default"];
+    } else if (isset($column["default_string"])) {
+      $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
+    }
+
+    if ($modify) {
+      query("ALTER TABLE " . clean($table) . " MODIFY COLUMN " . $definition);
+      echo "🔄 Column " . $column["name"] . " modified in $table<br>";
+    } else if ($add) {
+      query("ALTER TABLE " . clean($table) . " ADD COLUMN " . $definition);
+      echo "➕ Column " . $column["name"] . " added into $table<br>";
     }
   }
 }
