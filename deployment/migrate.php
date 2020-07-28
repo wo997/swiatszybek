@@ -16,7 +16,13 @@ addColumns("slides", [
 // migration from 27.07.2020
 
 addColumns("basket_content", [
-  ["name" => "title", "type" => "VARCHAR(255)"]
+  ["name" => "title", "type" => "VARCHAR(255)"],
+  ["name" => "zdjecie", "type" => "VARCHAR(255)"],
+  ["name" => "purchase_price", "previous_name" => "purchased_for", "type" => "DECIMAL(10,2)"]
+]);
+
+addColumns("zamowienia", [
+  ["name" => "cache_basket", "previous_name" => "basket", "type" => "MEDIUMTEXT"]
 ]);
 
 

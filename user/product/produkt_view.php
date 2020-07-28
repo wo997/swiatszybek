@@ -17,7 +17,7 @@
     <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">
       <h1 class="h1"><?= $product_data["title"] ?>
         <?php if ($published0 != 1) : ?>
-          (Niedostępny!)
+          (Ukryty!)
         <?php endif ?>
       </h1>
 
@@ -31,17 +31,17 @@
                               ?>>
           <?php
 
-          for ($i = 0; $i < $variant_count; $i++) {
-            $color = empty($variants[$i]['color'])  ? "" : "<b class='colour' style='background:{$variants[$i]['color']}'></b>";
+        for ($i = 0; $i < $variant_count; $i++) {
+          $color = empty($variants[$i]['color'])  ? "" : "<b class='colour' style='background:{$variants[$i]['color']}'></b>";
 
-            $scroll_to_image = "onclick='clickVariant({$variants[$i]['variant_id']})'";
+          $scroll_to_image = "onclick='clickVariant({$variants[$i]['variant_id']})'";
 
-            $wyprz = $variants[$i]['rabat'] > 0 ? "<div class='percentOff'>-" . round($variants[$i]['rabat']) . " zł</div>" : "";
+          $wyprz = $variants[$i]['rabat'] > 0 ? "<div class='percentOff'>-" . round($variants[$i]['rabat']) . " zł</div>" : "";
 
-            $small_font = strlen($variants[$i]['name']) > 28 ? "small_font" : "";
+          $small_font = strlen($variants[$i]['name']) > 28 ? "small_font" : "";
 
-            echo "<div class='color $small_font'><label><input type='radio' class='option' name='variant' value='{$variants[$i]['variant_id']}'><div class='boxy' $scroll_to_image>$color{$variants[$i]['name']}</div>$wyprz</label></div>";
-          }
+          echo "<div class='color $small_font'><label><input type='radio' class='option' name='variant' value='{$variants[$i]['variant_id']}'><div class='boxy' $scroll_to_image>$color{$variants[$i]['name']}</div>$wyprz</label></div>";
+        }
 
           ?>
         </div>
@@ -152,7 +152,7 @@
     <div id="formComment">
       <?php
       $input = ["product_id" => $number];
-      include 'helpers/can_user_get_comment_rebate.php';
+      include 'helpers/order/can_user_get_comment_rebate.php';
 
       if ($can_user_get_comment_rebate) {
         echo '<h4 class="link" style="font-size: 18px;margin: 5px 0;">Dodaj komentarz, a w zamian otrzymasz kod rabatowy o wartości 25 zł <i class="fas fa-comments-dollar" style="font-size: 32px;vertical-align: bottom;margin: 2px;"></i></h4>';

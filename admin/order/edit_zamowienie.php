@@ -4,7 +4,7 @@ $link = $_POST["link"];
 
 $log = "";
 
-$zamowienie_id = intval(fetchValue("SELECT zamowienie_id FROM zamowienia WHERE link = ?",[$link]));
+$zamowienie_id = intval(fetchValue("SELECT zamowienie_id FROM zamowienia WHERE link = ?", [$link]));
 
 include "helpers/safe_post.php";
 
@@ -25,11 +25,11 @@ foreach ($_POST as $k => $new) {
 
   query("UPDATE zamowienia SET $k = ? WHERE zamowienie_id = $zamowienie_id", [$new]);
 
-  addZamowienieLog("$k: $old ⇨ $new",$zamowienie_id);
+  addZamowienieLog("$k: $old ⇨ $new", $zamowienie_id);
 }
 
 if (strlen($log) > 5) {
-  addLogForZamowienie($zamowienie_id,trim($log,"<br>"),$app["user"]["email"]);
+  addLogForZamowienie($zamowienie_id, trim($log, "<br>"), $app["user"]["email"]);
 }
 
 header("Location: " . getZamowienieLink($link));

@@ -33,5 +33,3 @@ $out .= $scanned_routes_string;
 $out .= "];";
 
 file_put_contents("scanned_routes.php",$out);
-
-?>

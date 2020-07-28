@@ -3,16 +3,20 @@ var zamowienia_table_definition = [
     title: "Nr zamówienia",
     width: "110px",
     render: (r) => {
-      var produkty = JSON.parse(r.basket);
-      var pr = "";
-      for (produkt of produkty) {
-        pr += `${produkt["q"]}szt. ${produkt["t"]}<br>`;
-      }
+      var products_info = "<table>";
+      try {
+        var produkty = JSON.parse(r.cache_basket);
+        for (produkt of produkty) {
+          products_info += `<tr><td><b>${produkt["total_price"]}zł</b></td><td>${produkt["quantity"]}szt. ${produkt["title"]}</td></tr>`;
+        }
+      } catch (e) {}
+      products_info += "</table>";
+
       return `<a class="btn secondary" href='/zamowienie/${
         r.link
       }' style="margin-right:7px">#${escapeHTML(
         r.zamowienie_id
-      )} <i class="fas fa-chevron-circle-right"></i></a><i class="fas fa-shopping-bag" data-tooltip="${pr}"></i>`;
+      )} <i class="fas fa-chevron-circle-right"></i></a><i class="fas fa-shopping-bag" data-tooltip="${products_info}"></i>`;
     },
     escape: false,
   },

@@ -17,7 +17,7 @@ $stmt->bind_param("s", $zamowienie_link);
 $stmt->execute();
 $stmt->bind_result($zamowienie_id, $order_user_id, $basket, $koszt, $zlozono, $oplacono, $wyslano, $odebrano, $nip, $status, $imie, $nazwisko, $email, $telefon, $firma, $paczkomat, $kraj, $miejscowosc, $kod_pocztowy, $ulica, $nr_domu, $nr_lokalu, $dostawa, $uwagi, $koszt_dostawy, $session_id, $rabat_wartosc,  $kod_pocztowy_z, $miejscowosc_z, $kraj, $ulica_z, $nr_domu_z, $nr_lokalu_z,  $imie_d, $nazwisko_d, $firma_d,  $buyer_type, $track, $notes, $history);*/
 
-$basket = $zamowienie_data["basket"];
+$basket = $zamowienie_data["cache_basket"];
 
 if (!$zamowienie_data) {
   header("location: /");
@@ -96,11 +96,11 @@ if (empty($basket)) {
 
   foreach ($basket as $item) {
     $res .= "<tr>
-        <td><img src='/uploads/sm/" . $zdjecia[$item['v']] . "' style='max-width:130px;display:block;margin:auto'></td>
-        <td><a class='linkable' href='" . $links[$item['v']] . "'>" . $item['t'] . "</a></td>
-        <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['f'] . " zł</td>
-        <td class='oneline' data-stock=''>" . $item['q'] . " szt.</td>
-        <td class='pln oneline basket-price'><label>Suma:</label> <span>" . $item['f'] * $item['q'] . "</span> zł</td>";
+        <td><img src='/uploads/sm/" . nonull($zdjecia, $item['variant_id']) . "' style='max-width:130px;display:block;margin:auto'></td>
+        <td><a class='linkable' href='" . nonull($links, $item['variant_id']) . "'>" . $item['title'] . "</a></td>
+        <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['base_price'] . " zł</td>
+        <td class='oneline' data-stock=''>" . $item['quantity'] . " szt.</td>
+        <td class='pln oneline basket-price'><label>Suma:</label> <span>" . $item['total_price'] . "</span> zł</td>";
 
     if ($app["user"]["is_admin"]) {
       $res .= "<td class='pln oneline'><label>Cena&nbsp;nabycia:</label> <input class='nabyto' style='width:70px' type='text' onchange='setNabyto(" . $item['v'] . ",this)' value='" . intval(nonull($item, 'nabyto', "")) . "'> zł</td>";
@@ -186,7 +186,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
       setInterval(() => {
         ajax('/get_zamowienie_status?link=<?= $zamowienie_link ?>', {}, (response) => {
-          if (response != status) {
+          if (JSON.parse(response).status != status) {
             window.location.reload();
           }
         }, null);
