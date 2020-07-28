@@ -7,7 +7,6 @@
 <title>Slider</title>
 
 <style>
-
 </style>
 
 <script>
@@ -30,18 +29,20 @@
                 }
             },
             definition: [{
-                    title: "ID",
-                    width: "30%",
+                    title: "Wersja desktopowa",
+                    width: "40%",
                     render: (r) => {
-                        return `${r.slide_id}`;
-                    }
+                        return `${r.content_desktop}`;
+                    },
+                    escape: false
                 },
                 {
-                    title: "Content",
-                    width: "70%",
+                    title: "Wersja mobilna",
+                    width: "40%",
                     render: (r) => {
-                        return `${r.content}`;
-                    }
+                        return `${r.content_mobile}`;
+                    },
+                    escape: false
                 },
                 {
                     title: "Publiczny?",
@@ -73,7 +74,8 @@
     function newSlide() {
         var data = {
             slide_id: "-1",
-            content: "",
+            content_desktop: "",
+            content_mobile: "",
             published: "0"
         };
         setFormData(data, $("#slideEdit"));
@@ -92,13 +94,16 @@
 
     function saveSlide(remove = false) {
         var f = $("#slideEdit");
+
         if (!remove && !validateForm({
                 form: f
             })) return;
         var params = getFormData(f);
+
         if (remove) {
             params["remove"] = true;
         }
+
         xhr({
             url: "/admin/save_slider",
             params: params,
@@ -111,10 +116,6 @@
     function setTitle(title = "Edycja slajdu") {
         $(`#slideEdit .custom-toolbar .title`).innerHTML = title;
     }
-
-    // function editPage() {
-    //     editCMS($(`#slideEdit [name="content"]`));
-    // }
 </script>
 
 <?php startSection("content"); ?>
@@ -128,20 +129,23 @@
             <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div style="padding:10px">
+        <div>
             <div class="field-title">Widoczność</div>
             <select name="published" class="field">
                 <option value="1">Publiczny</option>
                 <option value="0">Ukryty</option>
             </select>
 
-            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling)" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
-            <div class="cms preview_html" name="content_desktop"></div>
+            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling, {ontop: true})" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <div class="cms preview_html" name="content_desktop" data-type="html"></div>
 
-            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling)" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
-            <div class="cms preview_html" name="content_mobile"></div>
+            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling, {ontop: true})" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <div class="cms preview_html" name="content_mobile" data-type="html"></div>
 
             <input type="hidden" name="slide_id">
+        </div>
+        <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
+            <button class="btn red" onclick="saveSlide(true);hideParentModal(this)">Usuń slajd <i class="fa fa-trash"></i></button>
         </div>
     </div>
 </div>

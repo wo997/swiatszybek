@@ -2494,12 +2494,16 @@ window.addEventListener("DOMContentLoaded", function () {
   resizeCallback();
 });
 
+// remember to switch back to regular responsive type, used in slider edit form
+var forceMobile = false;
+
 function resizeCallback() {
   if (window.responsiveImages) {
     window.responsiveImages();
   }
 
-  var responsiveType = window.innerWidth < 800 ? "mobile" : "desktop";
+  var responsiveType =
+    forceMobile || window.innerWidth < 800 ? "mobile" : "desktop";
 
   document.querySelectorAll(".cms-container").forEach((e) => {
     if (responsiveType == "desktop") {

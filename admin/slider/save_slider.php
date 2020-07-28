@@ -1,8 +1,5 @@
 <?php //->[admin/save_slider]
 
-$input = ["exceptions" => ["categories", "description"]];
-include "helpers/safe_post.php";
-
 if (isset($_POST["remove"])) {
     query("DELETE FROM slides WHERE slide_id = ?", [
         $_POST["slide_id"]
@@ -17,8 +14,8 @@ if (isset($_POST["remove"])) {
         $slide_id = $_POST["slide_id"];
     }
 
-    query("UPDATE slides SET content = ?, published = ? WHERE slide_id = " . intval($slide_id), [
-        $_POST["content"], $_POST["published"]
+    query("UPDATE slides SET content_desktop = ?, content_mobile = ?, published = ? WHERE slide_id = " . intval($slide_id), [
+        $_POST["content_desktop"], $_POST["content_mobile"], $_POST["published"]
     ]);
 }
 

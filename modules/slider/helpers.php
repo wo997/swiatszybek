@@ -1,8 +1,17 @@
 <?php
 
-function addSlide($url,$link,$text)
+
+function get_slider_content()
 {
-  //$l = $link ? "href='$link'" : "";
-  //return "<a $l class='swiper-slide'><div class='item-image' style='background-image:url(\"$url\")'><div class='ql-editor'>$text</div></div></a>";
-  return "<div class='swiper-slide'><div class='item-image' style='background-image:url(\"/uploads/df/$url\")'><div class='ql-editor'>$text</div></div></div>";
+  $slides = fetchArray("SELECT content_desktop, content_mobile FROM slides ORDER BY kolejnosc");
+  $slides_html = "";
+  foreach ($slides as $slide) {
+    $slides_html .= "
+      <div class='swiper-slide'>
+        <div class='cms slide-desktop'>" . $slide["content_desktop"] . "</div>
+        <div class='cms slide-mobile'>" . $slide["content_mobile"] . "</div>
+      </div>
+    ";
+  }
+  return $slides_html;
 }

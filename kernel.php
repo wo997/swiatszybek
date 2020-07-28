@@ -4,7 +4,7 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 100);
+define("RELEASE", 101);
 
 // include helpers
 
@@ -408,7 +408,7 @@ function getCMSPageHTML($content)
           $block_html .= ">";
 
           $moduleParams = isset($block->attr["data-module-params"]) ? json_decode(html_entity_decode($block->attr["data-module-params"]), true) : null;
-          $moduleDir = "/modules/$module";
+          $moduleDir = "modules/$module";
           $moduleContentFile = "$moduleDir/content.php";
 
           if (file_exists($moduleContentFile)) {

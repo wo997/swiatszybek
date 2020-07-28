@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 //include_once "helpers.php";
 
-useJS("$moduleDir/main.js");
-useCSS("$moduleDir/main.css");
+useJS("/$moduleDir/main.js");
+useCSS("/$moduleDir/main.css");
 
 $contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
 
@@ -11,13 +11,13 @@ $module_content .= "
 <div class='default-form'>
     <div class='contact-info'>
         <div>
-            <b>".config('company_name')."</b><br><br>
-            ".config('company_street_name')." ".config('company_street_number')."<br>
-            ".config('company_postal_code')." ".config('company_city')."<br><br>
+            <b>" . config('company_name') . "</b><br><br>
+            " . config('company_street_name') . " " . config('company_street_number') . "<br>
+            " . config('company_postal_code') . " " . config('company_city') . "<br><br>
             Biuro czynne:<br>
-            ".config('opening_hours')."<br><br>
-            <a href='mailto:".config('main_email')."'><i class='fa fa-envelope' style='margin-right:5px;'></i>".config('main_email')."</a><br>
-            <a href='tel:".config('main_phone')."'><i class='fa fa-phone' style='margin-right:5px;'></i>".config('main_phone')."</a>
+            " . config('opening_hours') . "<br><br>
+            <a href='mailto:" . config('main_email') . "'><i class='fa fa-envelope' style='margin-right:5px;'></i>" . config('main_email') . "</a><br>
+            <a href='tel:" . config('main_phone') . "'><i class='fa fa-phone' style='margin-right:5px;'></i>" . config('main_phone') . "</a>
         </div>
         <div>
             <iframe src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3261.2636336885503!2d20.905582677315724!3d52.23998412001319!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecb16c2ce5633%3A0x4cf6063af810a380!2sSolectric%20GmbH%20Polska!5e0!3m2!1spl!2spl!4v1581018622179!5m2!1spl!2spl' width='500' height='250' frameborder='0' style='border:0;width:100%;height:250px' allowfullscreen=''></iframe>
@@ -38,7 +38,7 @@ $module_content .= "
             </label>
             <label>
                 <span>Adres e-mail</span>
-                <input type='text' name='email' placeholder=' ' value='".$contact_email."'>
+                <input type='text' name='email' placeholder=' ' value='" . $contact_email . "'>
             </label>
         </div>
         <label>

@@ -76,7 +76,8 @@
             swiper = new Swiper('.' + sliderName, {
                 speed: 700,
                 pagination: {
-                    el: '.swiper-pagination'
+                    el: '.swiper-pagination',
+                    clickable: true
                 },
                 autoplay: {
                     delay: 5000,

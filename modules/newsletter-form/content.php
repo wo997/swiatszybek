@@ -1,17 +1,17 @@
-<?php 
+<?php
 
-include_once "helpers.php";
+include_once "$moduleDir/helpers.php";
 
-useJS("$moduleDir/main.js");
+useJS("/$moduleDir/main.js");
 
 $contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
 
 $has_already = "";
 if ($hasNewsletter) {
     if ($hasNewsletter["accepted"] == "1")
-        $has_already = "<p style='text-align:center'>".$app["user"]["email"]." został już dodany do Newslettera</p>";
+        $has_already = "<p style='text-align:center'>" . $app["user"]["email"] . " został już dodany do Newslettera</p>";
     else
-        $has_already = "<p style='text-align:center;color:#c22'>Newsletter nie został aktywowany dla ".$app["user"]["email"]."!<br>Sprawdź swoją skrzynkę pocztową</p>";
+        $has_already = "<p style='text-align:center;color:#c22'>Newsletter nie został aktywowany dla " . $app["user"]["email"] . "!<br>Sprawdź swoją skrzynkę pocztową</p>";
     $contact_email = "";
 }
 

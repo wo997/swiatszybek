@@ -22,10 +22,9 @@ addColumns("basket_content", [
 dropColumns("slides", ["content"]);
 
 addColumns("slides", [
-  ["name" => "content_desktop", "type" => "VARCHAR(255)"],
-  ["name" => "content_mobile", "type" => "VARCHAR(255)"]
+  ["name" => "content_desktop", "type" => "TEXT"],
+  ["name" => "content_mobile", "type" => "TEXT"]
 ]);
-
 
 
 echo "<br><br>✅ All migrations completed";
