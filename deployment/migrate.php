@@ -1,5 +1,7 @@
 <?php
 
+echo "<br><h3>Running all migrations:</h3>";
+
 // migration from 25.07.2020
 
 if (tableExists("asdadasafds")) {
@@ -25,6 +27,4 @@ addColumns("zamowienia", [
   ["name" => "cache_basket", "previous_name" => "basket", "type" => "MEDIUMTEXT"]
 ]);
 
-
-
-echo "<br><br>✅ All migrations completed";
+echo "<h3>✅ All migrations completed</h3>";

@@ -1,37 +1,10 @@
-<?php //->[admin/statystyki] ?>
+<?php //->[admin/statystyki] 
+?>
 
 <?php startSection("head"); ?>
 
 <title>Statystyki</title>
 <script src="/src/chart.min.js?v=1"></script>
-
-<script>
-    function sortTable() {
-        var table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("table");
-        switching = true;
-        var IDCOLUMNSORT = 1;
-        while (switching) {
-            switching = false;
-            rows = table.rows;
-            for (i = 0; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                x = parseInt(rows[i].getElementsByTagName("TD")[IDCOLUMNSORT].innerHTML);
-                y = parseInt(rows[i + 1].getElementsByTagName("TD")[IDCOLUMNSORT].innerHTML);
-                if (x < y) {
-                    shouldSwitch = true;
-                    break;
-                }
-            }
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            }
-        }
-    }
-</script>
-
-
 
 <script>
     google.charts.load('current', {
@@ -184,37 +157,23 @@
                     var res = JSON.parse(orderRequest.responseText);
                     drawChart(res);
 
-                    var quantities = [];
-                    var names = [];
-                    var ids = [];
-
-                    var b = res.basket;
-                    for (i = 0; i < b.length; i++) {
-                        var subb = JSON.parse(b[i].basket);
-                        for (u = 0; u < subb.length; u++) {
-                            var q = subb[u].q;
-                            var t = subb[u].t;
-                            var v = subb[u].v;
-                            var ind = ids.indexOf(v);
-                            if (ind === -1) {
-                                ids.push(v);
-                                quantities.push(q);
-                                names.push(t);
-                            } else {
-                                quantities[ind] += q;
-                            }
-                        }
-                    }
-
-                    var table = "";
-                    for (a = 0; a < quantities.length; a++) {
-                        table += `<tr>
-                                <td>${names[a]}</td>
-                                <td style="width:40px">${quantities[a]}</td>
+                    var table_html = `<tr>
+                                <th style="width:50%">Nazwa</th>
+                                <th>Ilość</th>
+                                <th>Wartość</th>
+                                <th>Nabyto za</th>
+                                <th>Zysk</th>
+                            </tr>`;
+                    for (const variant of res.variants) {
+                        table_html += `<tr>
+                                <td>${variant.title}</td>
+                                <td>${variant.all_quantity} szt.</td>
+                                <td>${variant.all_total_price} zł</td>
+                                <td>${variant.all_purchase_price} zł</td>
+                                <td>${variant.all_total_price - variant.all_purchase_price} zł</td>
                             </tr>`;
                     }
-                    document.getElementById("table").innerHTML = table;
-                    sortTable();
+                    setContent($(".variants"), table_html);
                 } else wrong = true;
                 if (wrong) {
 
@@ -287,7 +246,7 @@
         <div id="summary" style="text-align:center;top:20px;position:absolute;z-index:19;width:100%;font-size:17px"></div>
         <div id="chart" style="width: 100%; height: 500px;"></div>
     </div>
-    <table id="table" class="datatable" style="margin: 0 auto;max-width:900px"></table>
+    <table class="variants datatable" style="margin: 0 auto;max-width:1300px"></table>
 </div>
 
 <?php include "admin/default_page.php"; ?>

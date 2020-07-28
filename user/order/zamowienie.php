@@ -87,23 +87,21 @@ if (empty($basket)) {
 
   $products = fetchArray("SELECT product_id, title, link, zdjecie, variant_id FROM variant v INNER JOIN products i USING(product_id) WHERE variant_id IN ($ids)");
   $links = [];
-  $zdjecia = [];
   foreach ($products as $product) {
     $variant_id = $product["variant_id"];
     $links[$variant_id] = getProductLink($product["product_id"], $product["link"]);
-    $zdjecia[$variant_id] = $product["zdjecie"];
   }
 
   foreach ($basket as $item) {
     $res .= "<tr>
-        <td><img src='/uploads/sm/" . nonull($zdjecia, $item['variant_id']) . "' style='max-width:130px;display:block;margin:auto'></td>
+        <td><img src='/uploads/sm/" . $item['zdjecie'] . "' style='max-width:130px;display:block;margin:auto'></td>
         <td><a class='linkable' href='" . nonull($links, $item['variant_id']) . "'>" . $item['title'] . "</a></td>
         <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['base_price'] . " zł</td>
         <td class='oneline' data-stock=''>" . $item['quantity'] . " szt.</td>
         <td class='pln oneline basket-price'><label>Suma:</label> <span>" . $item['total_price'] . "</span> zł</td>";
 
     if ($app["user"]["is_admin"]) {
-      $res .= "<td class='pln oneline'><label>Cena&nbsp;nabycia:</label> <input class='nabyto' style='width:70px' type='text' onchange='setNabyto(" . $item['v'] . ",this)' value='" . intval(nonull($item, 'nabyto', "")) . "'> zł</td>";
+      $res .= "<td class='pln oneline'><label>Cena&nbsp;nabycia:</label> <input class='nabyto' style='width:70px' type='text' onchange='setNabyto(" . $item['basket_item_id'] . ",this)' value='" . intval(nonull($item, 'purchase_price', "")) . "'> zł</td>";
     }
     $res .= "</tr>";
   }
@@ -197,21 +195,13 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
       var basket = <?= json_encode($basket) ?>;
 
-      function setNabyto(basket_variant_id, input) {
+      function setNabyto(basket_item_id, input) {
         input.value = eval(input.value);
-        var value = input.value;
-        var row = basket.find(e => {
-          return e.v == basket_variant_id;
-        });
-        if (!row) return;
-
-        row.nabyto = value;
-
         xhr({
-          url: "/admin/modify_basket",
+          url: "/admin/set_basket_variant_purchase_price",
           params: {
-            zamowienie_id: <?= $zamowienie_data["zamowienie_id"] ?>,
-            basket: JSON.stringify(basket)
+            basket_item_id,
+            purchase_price: input.value
           },
           success(res) {
             showNotification(`<i class="fas fa-check"></i> Zapisano koszt nabycia</b>`);
