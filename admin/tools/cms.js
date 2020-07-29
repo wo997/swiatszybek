@@ -1432,7 +1432,7 @@ window.cmsBlockBackgroundImageCallback = (src) => {
 
 function setBlockBackgroundImage(val = "") {
   var background = $(".cmsBlockBackgroundPreview");
-  background.style.backgroundImage = val ? `url("/uploads/df/${val}")` : "";
+  background.style.backgroundImage = val ? `url("/uploads/lg/${val}")` : "";
 }
 
 function setBlockBackgroundColorOpacity(val = 1) {
