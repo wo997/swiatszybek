@@ -573,7 +573,7 @@ function createTable(table) {
             table.name
           }.toggleSearchVisibility(true)">Wyszukaj <i class="fas fa-plus"></i> </div>
         </div>
-        <input type="hiddenx" class="table-selection-value" name="${
+        <input type="hidden" class="table-selection-value" name="${
           table.selectable.output ? table.selectable.output : table.primary
         }" ${
         table.selectable.validate
