@@ -4,7 +4,7 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 101);
+define("RELEASE", 666);
 
 // include helpers
 
@@ -192,9 +192,9 @@ try {
   $_COOKIE["basket"] = "[]";
 }
 
-require "helpers/basket/get_basket_data.php";
+require "helpers/order/get_basket_data.php";
 
-require "helpers/validate_stock.php";
+require "helpers/order/validate_stock.php";
 
 
 function nonull($arr, $key, $default = "")

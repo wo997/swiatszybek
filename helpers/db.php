@@ -87,7 +87,8 @@ function tableExists($name)
 function columnExists($table, $name)
 {
   if (!tableExists($table)) return null;
-  return fetchValue("SHOW COLUMNS FROM " . clean($table) . " LIKE '" . clean($name) . "'");
+  if (fetchValue("SHOW COLUMNS FROM " . clean($table) . " LIKE '" . clean($name) . "'")) return true;
+  return false;
 }
 
 /**
@@ -112,6 +113,7 @@ function dropColumns($table, $names)
  * Provide columns defined by
  * - name *required*
  * - type (f.e int) *required*
+ * - previous_name (rename old field)
  * - null (boolean, default false - no nulls allowed)
  * - default / default_string (f.e 0)
  *
@@ -125,17 +127,35 @@ function addColumns($table, $columns)
     $column["null"] = nonull($column, "null", false);
     $column["type"] = strtoupper($column["type"]);
 
-    $add = false;
-    $modify = false;
-
     $columnExists = columnExists($table, $column["name"]);
 
-    if (!$columnExists) {
-      $add = true;
-    } else {
+    $isNew = false;
+    $modify = false;
+
+    if (isset($column["previous_name"]) && $column["previous_name"] !== $column["name"]) {
+      $differentNameColumnExists = columnExists($table, $column["previous_name"]);
+
+      if ($differentNameColumnExists && $columnExists) {
+        echo "⚠️ Migration error, tried to change column from " . $column["previous_name"] . " to " . $column["name"] . " but " . $column["name"] . " already exists!";
+        continue;
+      }
+
+      if ($differentNameColumnExists) {
+        $columnExists = true;
+        $modify = true;
+      } else {
+        $column["previous_name"] = $column["name"];
+      }
+    }
+
+    $column["previous_name"] = nonull($column, "previous_name", $column["name"]);
+
+    if (!$modify && !$columnExists) {
+      $isNew = true;
+    } else { // compare new column with already existing one
       foreach (fetchArray("DESC " . clean($table)) as $existing_column) {
         // early escape if names are different
-        if ($existing_column["Field"] != $column["name"]) {
+        if ($existing_column["Field"] != $column["previous_name"]) {
           continue;
         }
 
@@ -187,10 +207,10 @@ function addColumns($table, $columns)
     }
 
     if ($modify) {
-      query("ALTER TABLE " . clean($table) . " MODIFY COLUMN " . $definition);
+      query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);
       echo "🔄 Column " . $column["name"] . " modified in $table<br>";
-    } else if ($add) {
-      query("ALTER TABLE " . clean($table) . " ADD COLUMN " . $definition);
+    } else if ($isNew) {
+      query("ALTER TABLE " . clean($table) . " ADD " . $definition);
       echo "➕ Column " . $column["name"] . " added into $table<br>";
     }
   }

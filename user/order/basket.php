@@ -1,15 +1,14 @@
 <?php //->[basket]
 
-$urlParts = explode("/",$url);
+$urlParts = explode("/", $url);
 
-$basket = json_decode($_SESSION["basket"],true);
+$basket = json_decode($_SESSION["basket"], true);
 
 $request = $urlParts[1];
 
 $basket_variant_limit = 10;
 
-if ($request == "add")
-{
+if ($request == "add") {
   $variant_id = intval($urlParts[2]);
   if ($variant_id == 0) die;
   $quantity = intval($urlParts[3]);
@@ -35,9 +34,7 @@ if ($request == "add")
       "quantity" => $quantity
     ];
   }
-}
-else if ($request == "remove")
-{
+} else if ($request == "remove") {
   $variant_id = intval($urlParts[2]);
   if ($variant_id == 0) die;
   $quantity = intval($urlParts[3]);
@@ -52,13 +49,12 @@ else if ($request == "remove")
     }
     break;
   }
-}
-else die;
+} else die;
 
 $basket_string = json_encode($basket);
 
 $_SESSION["basket"] = $basket_string;
-setcookie("basket", $basket_string, (time() + 31536000) , '/');
+setcookie("basket", $basket_string, (time() + 31536000), '/');
 
 if ($app["user"]["id"]) {
   query("UPDATE users SET basket = ? WHERE user_id = ?", [
@@ -66,8 +62,7 @@ if ($app["user"]["id"]) {
   ]);
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $response = [];
 
   $response["basket"] = $basket;
@@ -75,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   include "basketContent.php";
   $response["basket_content_html"] = $basketContent;
 
-  require "print_basket_nice.php";
+  require "helpers/order/print_basket_nice.php";
   $response["basket_table_html"] = $res;
   $response["total_basket_cost"] = $app["user"]["basket"]["total_basket_cost"];
   $response["item_count"] = $app["user"]["basket"]["item_count"];

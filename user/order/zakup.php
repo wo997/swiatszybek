@@ -54,16 +54,22 @@ $impersonate = 0;
 if (isset($parts[1]) && strlen($parts[1]) > 5) {
   $zamowienie_link = $parts[1];
   // $zamowienie_data = fetchRow("SELECT zamowienie_id, user_id, user_type, basket, koszt, zlozono, oplacono, nip, status, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, dostawa, uwagi, koszt_dostawy, session_id, rabat, kod_pocztowy_z, miejscowosc_z, kraj_z, ulica_z, nr_domu_z, nr_lokalu_z,  imie_d, nazwisko_d, firma_d, buyer_type FROM zamowienia LEFT JOIN users USING (user_id) WHERE link = ?", $zamowienie_link);
-  $zamowienie_data = fetchRow("SELECT *, z.basket, z.imie, z.nazwisko, z.email, z.telefon, z.nip, z.kraj, z.miejscowosc, z.ulica, z.kod_pocztowy, z.nr_domu, z.nr_lokalu FROM zamowienia z LEFT JOIN users USING (user_id) WHERE link = ?", [$zamowienie_link]);
+  $zamowienie_data = fetchRow("SELECT *, z.cache_basket, z.imie, z.nazwisko, z.email, z.telefon, z.nip, z.kraj, z.miejscowosc, z.ulica, z.kod_pocztowy, z.nr_domu, z.nr_lokalu FROM zamowienia z LEFT JOIN users USING (user_id) WHERE link = ?", [$zamowienie_link]);
 
-  $basket_swap = json_decode($zamowienie_data["basket"], true);
+  $basket_swap = json_decode($zamowienie_data["cache_basket"], true);
   $basket = [];
   if ($basket_swap) {
     foreach ($basket_swap as $b) {
-      $basket[$b['v']] = $b['q'];
+      $basket[] = [
+        "variant_id" => $b['variant_id'],
+        "quantity" => $b['quantity']
+      ];
     }
   }
+
   $_SESSION["basket"] = json_encode($basket);
+
+  include "helpers/order/get_basket_data.php";
 
   unset($_SESSION["kod"]);
   $_SESSION["rabat"] = $zamowienie_data["rabat"];
@@ -77,7 +83,7 @@ $res = "";
 if (empty($app["user"]["basket"]["variants"])) {
   $res = "<h3 style='text-align:center'>Twój koszyk jest pusty!</h3>";
 } else {
-  require "print_basket_nice.php";
+  require "helpers/order/print_basket_nice.php";
 }
 
 if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {

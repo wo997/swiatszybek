@@ -1,5 +1,7 @@
 <?php
 
+echo "<br><h3>Running all migrations:</h3>";
+
 // migration from 25.07.2020
 
 if (tableExists("asdadasafds")) {
@@ -16,7 +18,9 @@ addColumns("slides", [
 // migration from 27.07.2020
 
 addColumns("basket_content", [
-  ["name" => "title", "type" => "VARCHAR(255)"]
+  ["name" => "title", "type" => "VARCHAR(255)"],
+  ["name" => "zdjecie", "type" => "VARCHAR(255)"],
+  ["name" => "purchase_price", "previous_name" => "purchased_for", "type" => "DECIMAL(10,2)"]
 ]);
 
 dropColumns("slides", ["content"]);
@@ -26,5 +30,8 @@ addColumns("slides", [
   ["name" => "content_mobile", "type" => "TEXT"]
 ]);
 
+addColumns("zamowienia", [
+  ["name" => "cache_basket", "previous_name" => "basket", "type" => "MEDIUMTEXT"]
+]);
 
-echo "<br><br>✅ All migrations completed";
+echo "<h3>✅ All migrations completed</h3>";
