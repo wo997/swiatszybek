@@ -12,7 +12,7 @@ if (tableExists("asdadasafds")) {
 dropColumns("slides", ["img", "tekst", "link"]);
 
 addColumns("slides", [
-  ["name" => "content", "type" => "TEXT"]
+  ["name" => "published", "type" => "TINYINT(1)"]
 ]);
 
 // migration from 27.07.2020
@@ -21,6 +21,13 @@ addColumns("basket_content", [
   ["name" => "title", "type" => "VARCHAR(255)"],
   ["name" => "zdjecie", "type" => "VARCHAR(255)"],
   ["name" => "purchase_price", "previous_name" => "purchased_for", "type" => "DECIMAL(10,2)"]
+]);
+
+dropColumns("slides", ["content"]);
+
+addColumns("slides", [
+  ["name" => "content_desktop", "type" => "TEXT"],
+  ["name" => "content_mobile", "type" => "TEXT"]
 ]);
 
 addColumns("zamowienia", [

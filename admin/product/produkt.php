@@ -172,14 +172,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           },
           escape: false
         },
-        {
-          title: "Publiczny?",
-          width: "95px",
-          render: (r) => {
-            return renderIsPublished(r);
-          },
-          escape: false
-        },
+        getPublishedDefinition(),
         {
           title: "",
           width: "95px",
@@ -560,11 +553,11 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       <select name="published" class="field">
         <option value="1">Publiczny</option>
         <option value="0">Ukryty</option>
-        <select>
+      </select>
 
-          <input type="hidden" name="was_stock">
-          <input type="hidden" name="product_id">
-          <input type="hidden" name="variant_id">
+      <input type="hidden" name="was_stock">
+      <input type="hidden" name="product_id">
+      <input type="hidden" name="variant_id">
     </div>
   </div>
 

@@ -562,7 +562,7 @@ input[type="radio"]:not([value=""]):checked {
 }
 
 .space-under-header {
-  height: 60px;
+  height: 79px;
 }
 @media only screen and (max-width: 759px) {
   .dropdown-user > .dropdown-expand {
@@ -1636,7 +1636,7 @@ footer a:hover {
 }
 
 
-
+/* deprecated */
 #modal, #modal-wrapper {
   position: fixed;
   width: 100vw;
@@ -1655,6 +1655,15 @@ footer a:hover {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+#modal-wrapper .stretch-vertical {
+  padding: 10px;
+}
+
+#modal-wrapper .stretch-vertical .custom-toolbar {
+    margin: -10px -10px 0 -10px;
+    top: -10px;
 }
 
 .pad0 {
@@ -2151,7 +2160,7 @@ label input[type="radio"] {
   margin-right: 2px;
 }
 
-
+/* todo remove later */
 .modal-padding {
   padding: 10px;
 }

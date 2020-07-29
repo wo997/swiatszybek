@@ -1204,18 +1204,28 @@ window.addEventListener("dragover", (event) => {
   }
 });
 
+function getPublishedDefinition() {
+  return {
+    title: "Widoczność",
+    width: "105px",
+    render: (r) => {
+      return renderIsPublished(r);
+    },
+    escape: false,
+  };
+}
+
 function renderIsPublished(row) {
-  //console.log(row);
   var label = "";
   var color = "";
   if (row.published == 1) {
-    label = "Tak";
+    label = `<i class="fas fa-eye"></i>`;
     color = "#2a2";
   } else {
-    label = "Nie";
+    label = `<i class="fas fa-eye-slash"></i>`;
     color = "#a22";
   }
-  return `<div class='rect btn' style='background:${color}' onclick='setPublish(this,${
+  return `<div class='rect btn' style='color:${color}; border: 1px solid ${color}; text-align: center; width: 45px' onclick='setPublish(this,${
     1 - row.published
   })'>${label}</div>`;
 }
@@ -1508,6 +1518,12 @@ function isModalActive(name) {
   }
   return !anythingAbove;
 }
+
+// @maciej
+// #todo dirty form
+// document.addEventListener("keydown", (e) => {
+//   if (e.code === "Escape") hideModalTopMost();
+// });
 
 // modal end
 
@@ -2488,12 +2504,16 @@ window.addEventListener("DOMContentLoaded", function () {
   resizeCallback();
 });
 
+// remember to switch back to regular responsive type, used in slider edit form
+var forceMobile = false;
+
 function resizeCallback() {
   if (window.responsiveImages) {
     window.responsiveImages();
   }
 
-  var responsiveType = window.innerWidth < 800 ? "mobile" : "desktop";
+  var responsiveType =
+    forceMobile || window.innerWidth < 800 ? "mobile" : "desktop";
 
   document.querySelectorAll(".cms-container").forEach((e) => {
     if (responsiveType == "desktop") {

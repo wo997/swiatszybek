@@ -1,4 +1,5 @@
-<?php //->[admin/produkty] ?>
+<?php //->[admin/produkty] 
+?>
 
 <?php startSection("head"); ?>
 
@@ -16,10 +17,8 @@
         subject: "produktów",
       },
       width: 1100,
-      params: () => {
-      },
-      definition: [
-        {
+      params: () => {},
+      definition: [{
           title: "Nazwa produktu",
           width: "50%",
           render: (r) => {
@@ -27,14 +26,7 @@
           },
           escape: false
         },
-        {
-          title: "Publiczny?",
-          width: "95px",
-          render: (r) => {
-            return renderIsPublished(r);
-          },
-          escape: false
-        },
+        getPublishedDefinition(),
         {
           title: "W magazynie",
           width: "100px",
@@ -84,4 +76,3 @@
 <?php endSection(); ?>
 
 <?php include "admin/default_page.php"; ?>
-
