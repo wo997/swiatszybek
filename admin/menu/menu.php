@@ -40,14 +40,7 @@
                     },
                     escape: false
                 },
-                {
-                    title: "Publiczne?",
-                    width: "85px",
-                    render: (r) => {
-                        return renderIsPublished(r);
-                    },
-                    escape: false
-                },
+                getPublishedDefinition(),
                 {
                     title: "Link",
                     width: "15%",
@@ -120,14 +113,7 @@
                     },
                     escape: false
                 },
-                {
-                    title: "Publiczna?",
-                    width: "3%",
-                    render: (r) => {
-                        return renderIsPublished(r);
-                    },
-                    escape: false
-                },
+                getPublishedDefinition(),
                 {
                     title: "",
                     width: "10%",
@@ -168,14 +154,7 @@
                     },
                     escape: false
                 },
-                {
-                    title: "Publiczny?",
-                    width: "10%",
-                    render: (r) => {
-                        return renderIsPublished(r);
-                    },
-                    escape: false
-                },
+                getPublishedDefinition(),
                 {
                     title: "W magazynie",
                     width: "10%",
@@ -268,7 +247,7 @@
             <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div style="padding:10px">
+        <div style="padding:10px" class="stretch-vertical">
             <div class="desktopRow spaceColumns">
                 <div>
                     <div class="field-title">Nazwa menu</div>
@@ -314,11 +293,10 @@
             </div>
 
             <br>
-            <div class="caseCanDelete">
+            <div class="caseCanDelete" style="margin-top:auto;align-self: flex-end; padding-top:30px">
                 <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć to menu?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
                 <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podmenu'></i>
             </div>
-
             <input type="hidden" name="category_id">
 
         </div>

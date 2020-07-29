@@ -172,14 +172,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           },
           escape: false
         },
-        {
-          title: "Publiczny?",
-          width: "95px",
-          render: (r) => {
-            return renderIsPublished(r);
-          },
-          escape: false
-        },
+        getPublishedDefinition(),
         {
           title: "",
           width: "95px",

@@ -96,7 +96,7 @@ if (!json_decode($kod_data["product_list_metadata"])) {
             selectable: {
                 data: [<?= trim($kod_data["product_id_list"], ",") ?>],
                 output: "product_id_list",
-                
+
             },
             metadata: {
                 data: <?= $kod_data["product_list_metadata"] ?>,
@@ -110,14 +110,7 @@ if (!json_decode($kod_data["product_list_metadata"])) {
                     },
                     escape: false
                 },
-                {
-                    title: "Publiczny?",
-                    width: "10%",
-                    render: (r) => {
-                        return renderIsPublished(r);
-                    },
-                    escape: false
-                },
+                getPublishedDefinition(),
                 {
                     title: "W magazynie",
                     width: "10%",
@@ -183,7 +176,7 @@ if (!json_decode($kod_data["product_list_metadata"])) {
 
         <div class="field-title">Ogranicz do konkretnych użytkowników</div>
         <div class="users"></div>
-        
+
         <div class="field-title">Ogranicz do konkretnych produktów</div>
         <div class="products"></div>
 

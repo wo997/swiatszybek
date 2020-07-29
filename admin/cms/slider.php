@@ -44,14 +44,7 @@
                     },
                     escape: false
                 },
-                {
-                    title: "Publiczny?",
-                    width: "95px",
-                    render: (r) => {
-                        return renderIsPublished(r);
-                    },
-                    escape: false
-                },
+                getPublishedDefinition(),
                 {
                     title: "",
                     width: "95px",

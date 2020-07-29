@@ -70,14 +70,7 @@
                     },
                     escape: false
                 },
-                {
-                    title: "Publiczna?",
-                    width: "95px",
-                    render: (r) => {
-                        return renderIsPublished(r);
-                    },
-                    escape: false
-                },
+                getPublishedDefinition(),
                 {
                     title: "",
                     width: "185px",
@@ -217,7 +210,7 @@
             <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div style="padding:10px">
+        <div style="padding:10px" class="stretch-vertical">
             <div class="field-title">Nazwa kategorii</div>
             <input type="text" name="title" data-validate autocomplete="off" class="field">
 
@@ -252,7 +245,7 @@
             <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
             <br>
-            <div class="caseCanDelete">
+            <div class="caseCanDelete" style="margin-top:auto;align-self: flex-end; padding-top:30px">
                 <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
                 <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
             </div>

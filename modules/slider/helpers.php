@@ -3,7 +3,7 @@
 
 function get_slider_content()
 {
-  $slides = fetchArray("SELECT content_desktop, content_mobile FROM slides ORDER BY kolejnosc");
+  $slides = fetchArray("SELECT content_desktop, content_mobile FROM slides WHERE published = 1 ORDER BY kolejnosc");
   $slides_html = "";
   foreach ($slides as $slide) {
     $slides_html .= "

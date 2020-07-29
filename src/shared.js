@@ -1204,18 +1204,28 @@ window.addEventListener("dragover", (event) => {
   }
 });
 
+function getPublishedDefinition() {
+  return {
+    title: "Widoczność",
+    width: "105px",
+    render: (r) => {
+      return renderIsPublished(r);
+    },
+    escape: false,
+  };
+}
+
 function renderIsPublished(row) {
-  //console.log(row);
   var label = "";
   var color = "";
   if (row.published == 1) {
-    label = "Tak";
+    label = `<i class="fas fa-eye"></i>`;
     color = "#2a2";
   } else {
-    label = "Nie";
+    label = `<i class="fas fa-eye-slash"></i>`;
     color = "#a22";
   }
-  return `<div class='rect btn' style='background:${color}' onclick='setPublish(this,${
+  return `<div class='rect btn' style='color:${color}; border: 1px solid ${color}; text-align: center; width: 45px' onclick='setPublish(this,${
     1 - row.published
   })'>${label}</div>`;
 }

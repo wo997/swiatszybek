@@ -1,4 +1,5 @@
-<?php //->[admin/strony] ?>
+<?php //->[admin/strony] 
+?>
 
 <?php startSection("head"); ?>
 
@@ -40,14 +41,7 @@
                     },
                     escape: false
                 },
-                {
-                    title: "Publiczna?",
-                    width: "95px",
-                    render: (r) => {
-                        return renderIsPublished(r);
-                    },
-                    escape: false
-                },
+                getPublishedDefinition(),
                 {
                     title: "",
                     width: "95px",
