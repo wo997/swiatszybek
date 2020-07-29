@@ -67,17 +67,9 @@ function expand(elem, show = null, options = {}) {
 }
 
 function performSearch(form) {
-  //console.log();
   var s = form.search.value.replace(/[ /]/g, "_");
   if (s.length > 35) s = s.substring(0, 35);
   window.location = "/szukaj/" + s;
-  //var category = document.getElementById("category").value;
-
-  /*if (category == "")
-    window.location.href = "/";
-  else {
-    window.location.href = "/szukaj/"+category;
-  }*/
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -1405,21 +1397,16 @@ function registerModal(e) {
 }
 
 function showModal(name = null, params = {}) {
-  var m = document.getElementById("modal-wrapper");
+  var m = $("#modal-wrapper");
   var visible = name != null;
   m.classList.toggle("displayModal", visible);
   if (visible) {
     var total = 0;
     m.querySelectorAll(".modal-content > *").forEach((e) => {
       var shownow = false;
-      if (params.ontop) {
-        if (e.id == name && e.style.display == "none") {
-          e.style.display = "";
-          shownow = true;
-        }
-      } else {
-        shownow = e.id == name;
-        e.style.display = shownow ? "" : "none";
+      if (e.id == name && e.style.display == "none") {
+        e.style.display = "";
+        shownow = true;
       }
       if (e.style.display != "none") total++;
 
@@ -1468,38 +1455,65 @@ function showModal(name = null, params = {}) {
   return visible;
 }
 
+function hideAllModals() {
+  document
+    .querySelectorAll("#modal-wrapper .modal-content > *")
+    .forEach((e) => {
+      hideModal(e.id);
+    });
+
+  toggleBodyScroll(true);
+}
+
 function hideModalTopMost() {
   var o = document.querySelectorAll("#modal-wrapper .modal-content > *");
   for (i = o.length - 1; i >= 0; i--) {
-    if (o[i].style.display != "none") {
-      o[i].style.display = "none";
+    var modal = o[i];
+    if (modal.style.display != "none") {
+      hideModal(modal ? modal.id : null);
       break;
     }
   }
-  hideParentModal();
 }
 
 function hideParentModal(obj = null) {
   if (obj) {
-    var m = findParentByAttribute(obj, "data-modal");
-    hideModal(m ? m.id : null);
+    var modal = findParentByAttribute(obj, "data-modal");
+    hideModal(modal ? modal.id : null);
   }
   hideModal(null);
 }
 
 function hideModal(name) {
+  var m = $("#modal-wrapper");
+
   if (name) {
-    var m = document.getElementById(name);
-    if (m) m.style.display = "none";
+    var modal = $(`#${name}`);
+    if (modal) {
+      modal.style.animation = "fadeOut 0.4s";
+      visibleModalCount--;
+      setTimeout(() => {
+        modal.style.display = "none";
+        modal.style.animation = "";
+      }, 200);
+    }
   }
 
-  var m = document.getElementById("modal-wrapper");
-  var visible = false;
+  var visibleModalCount = 0;
   m.querySelectorAll(".modal-content > *").forEach((e) => {
-    if (e.style.display == "") visible = true;
+    if (e.style.display == "" && e.style.animation == "") visibleModalCount++;
   });
-  m.classList.toggle("displayModal", visible);
-  if (!visible) toggleBodyScroll(false);
+
+  if (visibleModalCount > 0) {
+    m.classList.add("displayModal");
+  } else {
+    toggleBodyScroll(false);
+    m.style.animation = "fadeOut 0.4s";
+    setTimeout(() => {
+      m.classList.remove("displayModal");
+      m.style.animation = "";
+    }, 200);
+  }
 }
 
 function isModalActive(name) {
@@ -2353,7 +2367,7 @@ function logout() {
 }
 
 function onSignIn(googleUser) {
-  var form = document.getElementById("google-form");
+  var form = $("#google-form");
   if (IS_LOGGED || !form) return;
 
   var id_token = googleUser.getAuthResponse().id_token;
