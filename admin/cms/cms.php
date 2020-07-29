@@ -136,9 +136,6 @@ $static = checkUrl($page_link);
         <div class="custom-toolbar">
             <span class="title">Edycja strony</span>
             <a class="btn primary" href="/admin/strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
-            <?php if ($page_data["cms_id"] != -1) : ?>
-                <button class="btn primary" type="submit" name="delete" style="color:red" onclick='return confirm("Czy chcesz usunąć podstronę?")'>Usuń <i class="fa fa-times"></i></button>
-            <?php endif ?>
             <?php if ($published) : ?>
                 <a type="button" class="btn primary" href="/<?= $page_link ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
             <?php endif ?>
@@ -182,11 +179,24 @@ $static = checkUrl($page_link);
         </div>
 
         <input type="hidden" id="metadata" name='metadata'>
+        <div class="stretch-vertical">
+            <div>
+                <h3>Zawartość strony <button type="button" onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+                <div id="content1" class="cms preview_html"></div>
+                <input type="hidden" id="content1-src" name="content">
+            </div>
 
-        <h3>Zawartość strony <button type="button" onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
-
-        <div id="content1" class="cms preview_html"></div>
-        <input type="hidden" id="content1-src" name="content">
+            <?php if ($page_data["cms_id"] == -1) : ?>
+                <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
+                    <a href="/admin/strony" class="btn red">Usuń <i class="fa fa-trash"></i></a>
+                </div>
+            <?php endif ?>
+            <?php if ($page_data["cms_id"] != -1) : ?>
+                <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
+                    <button type="submit" name="delete" class="btn red" onclick='return confirm("Czy chcesz usunąć podstronę?")'>Usuń <i class="fa fa-trash"></i></button>
+                </div>
+            <?php endif ?>
+        </div>
     </div>
 </form>
 

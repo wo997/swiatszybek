@@ -1,4 +1,5 @@
-<?php //->[admin/magazyn] ?>
+<?php //->[admin/magazyn] 
+?>
 
 <?php startSection("head"); ?>
 
@@ -24,8 +25,7 @@
           order: "product_id ASC"
         }
       },
-      definition: [
-        {
+      definition: [{
           title: "Nazwa wariantu produktu",
           width: "70%",
           render: (r) => {
@@ -41,14 +41,7 @@
           },
           escape: false
         },
-        {
-          title: "Publiczny?",
-          width: "10%",
-          render: (r) => {
-            return `<div style='pointer-events:none'>${renderIsPublished(r)}</div>`;
-          },
-          escape: false
-        },
+        getPublishedDefinition(),
       ],
       controls: `
             <div class='float-icon'>
@@ -66,7 +59,7 @@
 
   function dostawa(now, was, variant_id) {
     ajax('/admin/change_variant_stock', {
-      stock_difference: now-was,
+      stock_difference: now - was,
       variant_id: variant_id
     }, (response) => {
       mytable.search();
