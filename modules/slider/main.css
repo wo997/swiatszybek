@@ -54,6 +54,7 @@
   -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
   margin: 2px;
+  transform: scale(1.2);
 }
 
 .module-slider.swiper-container:not(:hover) .swiper-button-prev,
@@ -76,6 +77,9 @@
 .swiper-button-next {
   background: none;
   outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .swiper-pagination-bullet:not(.swiper-pagination-bullet-active):hover {
@@ -99,6 +103,12 @@
 .swiper-container .swiper-button-next i {
   font-size: 30px;
   color: white;
+  opacity: 0.7;
   /* text-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4); */
-  /* text-shadow: 4px 4px 2px rgb(0, 0, 0); */
+  text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.swiper-container .swiper-button-prev i:hover,
+.swiper-container .swiper-button-next i:hover {
+  opacity: 1;
 }

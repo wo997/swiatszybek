@@ -4,7 +4,7 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 2137);
+define("RELEASE", 2138);
 
 define("BUILDS_PATH", "builds/");
 
@@ -434,10 +434,10 @@ function getCMSPageHTML($content)
   }
 
   foreach ($CSS_files as $file) {
-    $page_content = "<link rel='stylesheet' href='$file?v=$RELEASE'>" . $page_content;
+    $page_content = "<link rel='stylesheet' href='$file?v=" . RELEASE . "'>" . $page_content;
   }
   foreach ($JS_files as $file) {
-    $page_content = "<script src='$file?v=$RELEASE'></script>" . $page_content;
+    $page_content = "<script src='$file?v=" . RELEASE . "'></script>" . $page_content;
   }
   return $page_content;
 }

@@ -390,7 +390,7 @@
             <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveAttribute();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div style="padding:10px">
+        <div class="stretch-vertical">
             <div class="desktopRow spaceColumns">
                 <div>
                     <div class="field-title">Nazwa atrybutu</div>
@@ -408,7 +408,9 @@
             </div>
 
             <br>
-            <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć ten atrybut?')) saveAttribute(true);">Usuń <i class="fa fa-times"></i></button>
+            <div style="margin-top:auto; align-self: flex-end; padding-top:30px; margin-bottom:10px">
+                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć ten atrybut?')) saveAttribute(true);">Usuń <i class="fa fa-times"></i></button>
+            </div>
 
             <input type="hidden" name="attribute_id">
 

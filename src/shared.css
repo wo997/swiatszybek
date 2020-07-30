@@ -1657,11 +1657,11 @@ footer a:hover {
   flex-direction: column;
 }
 
-#modal-wrapper .stretch-vertical {
+#modal-wrapper [data-modal] > .stretch-vertical {
   padding: 10px;
 }
 
-#modal-wrapper .stretch-vertical .custom-toolbar {
+#modal-wrapper [data-modal] > .stretch-vertical > .custom-toolbar {
     margin: -10px -10px 0 -10px;
     top: -10px;
 }

@@ -454,10 +454,12 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     <input type="hidden" name="product_id">
 
     <?php if (!$kopia) : ?>
-      <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
+      <!-- <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
         <button class="btn red" onclick="saveSlide(true);hideParentModal(this)">Usuń slajd <i class="fa fa-trash"></i></button>
+      </div> -->
+      <div style="display: flex; justify-content: flex-end">
+        <div class="btn red" style='margin-top:30px' onclick="deleteItem()">Usuń produkt <i class="fa fa-trash"></i></div>
       </div>
-      <div class="btn" style='background:red;color:white;margin-top:10px' onclick="deleteItem()">USUŃ PRODUKT</div>
     <?php endif ?>
   </div>
 </div>
