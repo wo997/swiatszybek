@@ -4,7 +4,9 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 666);
+define("RELEASE", 2137);
+
+define("BUILDS_PATH", "builds/");
 
 // include helpers
 
@@ -13,6 +15,8 @@ include "helpers/db.php";
 include "helpers/datatable.php";
 
 include "helpers/order.php";
+
+include "helpers/deployment.php";
 
 // global variables
 
@@ -430,10 +434,10 @@ function getCMSPageHTML($content)
   }
 
   foreach ($CSS_files as $file) {
-    $page_content = "<link rel='stylesheet' href='$file'>" . $page_content;
+    $page_content = "<link rel='stylesheet' href='$file?v=$RELEASE'>" . $page_content;
   }
   foreach ($JS_files as $file) {
-    $page_content = "<script src='$file'></script>" . $page_content;
+    $page_content = "<script src='$file?v=$RELEASE'></script>" . $page_content;
   }
   return $page_content;
 }

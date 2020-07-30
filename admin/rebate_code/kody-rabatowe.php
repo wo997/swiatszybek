@@ -1,4 +1,5 @@
-<?php //->[admin/kody-rabatowe] ?>
+<?php //route[admin/kody-rabatowe] 
+?>
 
 <?php startSection("head"); ?>
 

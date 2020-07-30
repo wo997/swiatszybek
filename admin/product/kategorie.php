@@ -1,4 +1,4 @@
-<?php //->[admin/kategorie] 
+<?php //route[admin/kategorie] 
 ?>
 
 <?php startSection("head"); ?>

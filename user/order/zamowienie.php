@@ -1,4 +1,4 @@
-<?php //->[zamowienie]
+<?php //route[zamowienie]
 
 $parts = explode("/", $url);
 if (isset($parts[1]) && strlen($parts[1]) > 5)

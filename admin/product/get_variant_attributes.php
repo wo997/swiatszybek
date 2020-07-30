@@ -1,4 +1,4 @@
-<?php //->[admin/get_variant_attributes]
+<?php //route[admin/get_variant_attributes]
 
 $variant_id = intval($_POST["variant_id"]);
 

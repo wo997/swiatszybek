@@ -1,6 +1,6 @@
-<?php //->[admin/delete_product]
+<?php //route[admin/delete_product]
 
-$urlParts = explode("/",$url);
+$urlParts = explode("/", $url);
 
 $product_id = intval($urlParts[2]);
 

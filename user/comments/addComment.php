@@ -1,4 +1,4 @@
-<?php //->[addComment]
+<?php //route[addComment]
 
 if (!$app["user"]["id"]) {
   die;

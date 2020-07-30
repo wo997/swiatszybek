@@ -1,4 +1,4 @@
-<?php //->[produkt]
+<?php //route[produkt]
 
 $_SESSION["redirect"] = "/" . $url;
 
@@ -559,7 +559,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
         if (!variant) continue;
 
-        var animate = animate_variant_id == basket_item.variant_id ? "style='animation: fadeOut 0.5s'" : "";
+        var animate = animate_variant_id == basket_item.variant_id ? "style='animation: blink 0.5s'" : "";
 
         var total_price = 0;
         for (p = 0; p < basket_item.quantity; p++) {

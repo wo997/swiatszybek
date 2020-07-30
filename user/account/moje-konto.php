@@ -1,4 +1,4 @@
-<?php //->[moje-konto]
+<?php //route[moje-konto]
 
 if (!$app["user"]["id"]) {
   header("Location: /");

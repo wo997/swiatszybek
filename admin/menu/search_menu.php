@@ -1,16 +1,15 @@
-<?php //->[admin/search_menu]
+<?php //route[admin/search_menu]
 
 if (isset($_POST["parent_id"])) {
-    orderTableBeforeListing("menu","category_id",["parent_id" => intval($_POST["parent_id"])]);
+    orderTableBeforeListing("menu", "category_id", ["parent_id" => intval($_POST["parent_id"])]);
 }
 
 $where = "1";
 
 if (isset($_POST["category_id"])) {
-    $where .= " AND category_id = ".intval($_POST["category_id"]);
-}
-else {
-    $where .= " AND parent_id = ".intval($_POST["parent_id"]);
+    $where .= " AND category_id = " . intval($_POST["category_id"]);
+} else {
+    $where .= " AND parent_id = " . intval($_POST["parent_id"]);
 }
 
 echo getTableData([

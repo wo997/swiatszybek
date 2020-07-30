@@ -1,4 +1,4 @@
-<?php //->[google/login]
+<?php //route[google/login]
 
 // Get $id_token via HTTPS POST.
 
@@ -7,8 +7,7 @@ if (!isset($_POST['id_token']) || strlen($_POST['id_token']) < 10) {
   die;
 }
 
-if (strpos($_SERVER["HTTP_REFERER"],"/zakup") !== false)
-{
+if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
   $_SESSION["redirect"] = "/zakup";
 }
 
@@ -26,13 +25,11 @@ $user_type = 'g';
 $authentication_token = $payload['sub'];
 $google_email = $payload['email'];
 
-$user_data = fetchRow("SELECT user_id, email, imie FROM users WHERE user_type = '$user_type' AND authentication_token = ?",[$authentication_token]);
+$user_data = fetchRow("SELECT user_id, email, imie FROM users WHERE user_type = '$user_type' AND authentication_token = ?", [$authentication_token]);
 
-if ($user_data)
-{
+if ($user_data) {
   $user_id = $user_data["user_id"];
-}
-else // new user
+} else // new user
 {
   query("INSERT INTO users (user_type,email,authenticated,authentication_token,kraj,stworzono) VALUES (?,?,?,?,?,NOW())", [
     $user_type, $google_email, "1", $authentication_token, "Polska"

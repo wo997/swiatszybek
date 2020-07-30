@@ -1,4 +1,4 @@
-<?php //->[admin/search_konfiguracja]  
+<?php //route[admin/search_konfiguracja]  
 
 orderTableBeforeListing("konfiguracja","category");
 
@@ -15,5 +15,3 @@ echo getTableData([
 "order" => "k.kolejnosc ASC",
 "main_search_fields" => ["prop_name","prop_value","prop_name_nice"],
 ]);
-
-?>

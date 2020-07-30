@@ -67,6 +67,10 @@
             })
         })
 
+        $$('.module-slider .cms-block-content').forEach(e => {
+            e.setAttribute("data-swiper-parallax", '-300');
+        });
+
         var sliderCount = 0;
         $$('.swiper-container:not(.product-main-slider)').forEach(e => {
             sliderCount++;
@@ -75,6 +79,7 @@
 
             swiper = new Swiper('.' + sliderName, {
                 speed: 700,
+                parallax: true,
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true

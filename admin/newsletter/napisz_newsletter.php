@@ -1,4 +1,4 @@
-<?php //->[admin/napisz_newsletter] 
+<?php //route[admin/napisz_newsletter] 
 ?>
 
 <?php startSection("head"); ?>

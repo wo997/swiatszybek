@@ -1,4 +1,4 @@
-<?php //->[admin/statystyki] 
+<?php //route[admin/statystyki] 
 ?>
 
 <?php startSection("head"); ?>

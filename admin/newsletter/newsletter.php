@@ -1,4 +1,5 @@
-<?php //->[admin/newsletter] ?>
+<?php //route[admin/newsletter] 
+?>
 
 <?php startSection("head"); ?>
 

@@ -1,6 +1,6 @@
-<?php //->[admin/create_product]
+<?php //route[admin/create_product]
 
-query("INSERT INTO products (title) VALUES (?)",[$_POST["title"]]);
+query("INSERT INTO products (title) VALUES (?)", [$_POST["title"]]);
 $id = getLastInsertedId();
 
 header("Location: /admin/produkt/$id");

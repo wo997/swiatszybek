@@ -1,4 +1,4 @@
-<?php //->[admin/upload_images]
+<?php //route[admin/upload_images]
 
 $uploads_path = 'uploads';
 
@@ -105,7 +105,7 @@ if ($app["user"]["is_admin"] && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 unlink($file_path);
             }
         }
-        query("DELETE FROM images WHERE path = ?",[$path]);
+        query("DELETE FROM images WHERE path = ?", [$path]);
         die;
     }
 }

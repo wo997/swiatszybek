@@ -1,4 +1,4 @@
-<?php //->[admin/search_strony]
+<?php //route[admin/search_strony]
   
 
   $where = "1";
@@ -30,4 +30,3 @@
     "order" => "c.cms_id DESC",
     "main_search_fields" => ["c.link","c.title","c.meta_description"],
   ]);
-?>

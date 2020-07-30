@@ -1,4 +1,4 @@
-<?php //->[register]
+<?php //route[register]
 
 $posts = ["password","email","telefon","imie","nazwisko"];
 
@@ -62,4 +62,3 @@ $mailTitle = "Aktywacja konta ".config('main_email_sender')." ".date("d-m-Y");
 sendEmail($_POST["email"], $message, $mailTitle);
 
 quit("Wysłaliśmy link aktywacyjny na twoją skrzynkę pocztową",1);
-?>

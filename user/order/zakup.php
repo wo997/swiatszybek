@@ -1,4 +1,4 @@
-<?php //->[zakup]
+<?php //route[zakup]
 
 $basket = json_decode($_SESSION["basket"], true);
 $progressBarCounter = 0;
@@ -548,7 +548,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         updateTotalCost();
 
         $$(`[data-variant_id="${variant_id}"]`).forEach(v => {
-          v.style.animation = "fadeOut 0.5s";
+          v.style.animation = "blink 0.5s";
         });
       });
     }

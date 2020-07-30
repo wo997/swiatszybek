@@ -1,4 +1,4 @@
-<?php //->[admin/search_activity_log]  
+<?php //route[admin/search_activity_log]  
 
   $where = "1";
 
@@ -16,4 +16,3 @@
     "order" => "a.activity_id DESC",
     "main_search_fields" => ["imie", "nazwisko", "email", "log"],
   ]);
-?>

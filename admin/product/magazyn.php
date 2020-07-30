@@ -1,4 +1,4 @@
-<?php //->[admin/magazyn] 
+<?php //route[admin/magazyn] 
 ?>
 
 <?php startSection("head"); ?>

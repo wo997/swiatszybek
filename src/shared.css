@@ -2482,8 +2482,19 @@ input:placeholder-shown:hover + .miejscowosc-picker-list, input:placeholder-show
 }
 /* top nav end */
 
-@keyframes fadeOut {
+@keyframes blink {
   0% {opacity: 1}
   25% {opacity: 0}
+  100% {opacity: 1}
+}
+
+@keyframes fadeOut { /* finish at 50% to prevent weird behaviour */
+  0% {opacity: 1}
+  50% {opacity: 0}
+  100% {opacity: 0}
+}
+
+@keyframes fadeIn {
+  0% {opacity: 0}
   100% {opacity: 1}
 }

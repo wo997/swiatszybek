@@ -1,4 +1,4 @@
-<?php //->[admin/search_products]  
+<?php //route[admin/search_products]  
 
   $where = "1";
 
@@ -32,4 +32,3 @@
     "order" => "p.product_id DESC",
     "main_search_fields" => ["p.title"],
   ]);
-?>

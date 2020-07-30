@@ -1,16 +1,15 @@
-<?php //->[admin/search_product_categories]
+<?php //route[admin/search_product_categories]
 
 if (isset($_POST["parent_id"])) {
-    orderTableBeforeListing("product_categories","category_id",["parent_id" => intval($_POST["parent_id"])]);
+    orderTableBeforeListing("product_categories", "category_id", ["parent_id" => intval($_POST["parent_id"])]);
 }
 
 $where = "1";
 
 if (isset($_POST["category_id"])) {
-    $where .= " AND category_id = ".intval($_POST["category_id"]);
-}
-else {
-    $where .= " AND parent_id = ".intval($_POST["parent_id"]);
+    $where .= " AND category_id = " . intval($_POST["category_id"]);
+} else {
+    $where .= " AND parent_id = " . intval($_POST["parent_id"]);
 }
 
 echo getTableData([
@@ -23,8 +22,14 @@ echo getTableData([
     "order" => "c.kolejnosc ASC",
     "main_search_fields" => ["c.title"],
     "renderers" => [
-        "description_text" => function($row) {return strip_tags($row["description"]);},
-        "content_text" => function($row) {return strip_tags($row["content"]);},
-        "attributes" => function($row) {return array_map("intval",explode(",",$row["attributes"]));}
+        "description_text" => function ($row) {
+            return strip_tags($row["description"]);
+        },
+        "content_text" => function ($row) {
+            return strip_tags($row["content"]);
+        },
+        "attributes" => function ($row) {
+            return array_map("intval", explode(",", $row["attributes"]));
+        }
     ]
 ]);

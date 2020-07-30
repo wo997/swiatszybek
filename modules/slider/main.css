@@ -56,13 +56,6 @@
   margin: 2px;
 }
 
-@media only screen and (max-width: 800px) {
-  .module-slider .swiper-button-prev,
-  .swiper-button-next {
-    display: none !important;
-  }
-}
-
 .module-slider.swiper-container:not(:hover) .swiper-button-prev,
 .module-slider.swiper-container:not(:hover) .swiper-button-next {
   display: none !important;

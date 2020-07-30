@@ -1,11 +1,11 @@
 window.loader = {
-    show: () => {
-        showModal("loader",{ontop:true});
-    },
-    hide: () => {
-        hideModal("loader");
-    }
-}
+  show: () => {
+    showModal("loader", { ontop: true });
+  },
+  hide: () => {
+    hideModal("loader");
+  },
+};
 
 registerModalContent(`
     <div id="loader">
@@ -25,5 +25,4 @@ registerModalContent(`
         </div>
         <link href="/admin/tools/loader.css?v=${RELEASE}" rel="stylesheet">
     </div>
-    `
-);
+    `);

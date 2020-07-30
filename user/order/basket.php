@@ -1,4 +1,4 @@
-<?php //->[basket]
+<?php //route[basket]
 
 $urlParts = explode("/", $url);
 
@@ -63,6 +63,9 @@ if ($app["user"]["id"]) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  require "helpers/order/get_basket_data.php"; // refresh data
+
   $response = [];
 
   $response["basket"] = $basket;

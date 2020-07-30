@@ -1,4 +1,4 @@
-<?php //->[oplacono]
+<?php //route[oplacono]
 
 if (isset($_SESSION["p24_back_url"])) {
     $p24_back_url = $_SESSION["p24_back_url"];

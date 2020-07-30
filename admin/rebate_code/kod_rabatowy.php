@@ -1,4 +1,4 @@
-<?php //->[admin/kod_rabatowy]
+<?php //route[admin/kod_rabatowy]
 
 $parts = explode("/", $url);
 if (isset($parts[2])) {

@@ -1,4 +1,4 @@
-<?php //->[admin/search_oczekujacy]
+<?php //route[admin/search_oczekujacy]
 
   $where = "1";
 
@@ -19,4 +19,3 @@
     "order" => "n.notification_id DESC",
     "main_search_fields" => ["n.email","i.title","v.name"],
   ]);
-?>
