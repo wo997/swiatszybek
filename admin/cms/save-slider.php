@@ -1,4 +1,4 @@
-<?php //->[admin/save-slider]
+<?php //route[admin/save-slider]
 
 
 
@@ -32,7 +32,6 @@ foreach ($typ as $k) {
     $valid = $img != "";
 
     if ($typ_exists) {
-
     } else if ($valid) {
         $stmt = $con->prepare("INSERT INTO slides () VALUES ()");
         $stmt->execute();
@@ -45,14 +44,12 @@ foreach ($typ as $k) {
         $stmt->close();
     }
 
-    if ($valid)
-    {
-        $stmt = $con->prepare("UPDATE slides SET img = ?, kolejnosc = ?, link = ?, tekst = ? WHERE slide_id = ".intval($slide_id));
+    if ($valid) {
+        $stmt = $con->prepare("UPDATE slides SET img = ?, kolejnosc = ?, link = ?, tekst = ? WHERE slide_id = " . intval($slide_id));
         $stmt->bind_param("ssss", $img, $kolejnosc, $link, $tekst);
         $stmt->execute();
         $stmt->close();
-    }
-    else if ($slide_id) {
+    } else if ($slide_id) {
         $stmt = $con->prepare("DELETE FROM slides WHERE slide_id = ?");
         $stmt->bind_param("s", $slide_id);
         $stmt->execute();

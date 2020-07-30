@@ -1,4 +1,4 @@
-<?php //->[admin/uzytkownicy]
+<?php //route[admin/uzytkownicy]
 
 if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
     $user_id = $url_params[2];
@@ -10,7 +10,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
 <title>Użytkownicy</title>
 
-<script src="/admin/zamowienia_table_definition.js?a=<?=RELEASE?>"></script>
+<script src="/admin/zamowienia_table_definition.js?a=<?= RELEASE ?>"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 

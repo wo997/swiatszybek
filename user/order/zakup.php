@@ -1,4 +1,4 @@
-<?php //->[zakup]
+<?php //route[zakup]
 
 $basket = json_decode($_SESSION["basket"], true);
 $progressBarCounter = 0;

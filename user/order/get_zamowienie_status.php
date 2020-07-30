@@ -1,4 +1,4 @@
-<?php //->[get_zamowienie_status]
+<?php //route[get_zamowienie_status]
 
 $status = fetchValue("SELECT status FROM zamowienia WHERE link = ?", [$_GET['link']]);
 

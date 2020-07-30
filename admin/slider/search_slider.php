@@ -1,4 +1,4 @@
-<?php //->[admin/search_slider]  
+<?php //route[admin/search_slider]  
 
 echo getTableData([
     "select" => "slide_id, kolejnosc, content_desktop, content_mobile, published",

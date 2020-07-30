@@ -149,18 +149,24 @@ if (isset($_GET['url']))
 
 $found = false;
 
-$scanned_routes = @include "scanned_routes.php";
-if (!$scanned_routes) {
-  $scanned_routes = [];
+$link_route_path = @include BUILDS_PATH . "link_route_path.php";
+if (!$link_route_path) {
+  $link_route_path = [];
 }
+
+$link_module_path = @include BUILDS_PATH . "link_module_path.php";
+if (!$link_module_path) {
+  $link_module_path = [];
+}
+
 $pageName = checkUrl($url);
 
 $url_params = explode("/",$url);
 
 function checkUrl($url) {
-  global $routes, $scanned_routes;
+  global $routes, $link_route_path;
   
-  foreach ($scanned_routes as $route => $file) // new routing
+  foreach ($link_route_path as $route => $file) // new routing
   {
     if (strpos($url."/",$route."/") === 0 || $url == $route)
     {
@@ -223,4 +229,3 @@ if ($url == "") {
 
 header("Location: /");
 die;
-?>

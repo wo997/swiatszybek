@@ -1,11 +1,10 @@
-<?php //->[admin/save-konfiguracja]
+<?php //route[admin/save-konfiguracja]
 
 
 
 $posts = ["prop_val"];
 
-foreach ($posts as $p)
-{
+foreach ($posts as $p) {
   if (!isset($_POST[$p]))
     die($p);
 
@@ -14,7 +13,7 @@ foreach ($posts as $p)
 
 foreach ($prop_val as $k => $v) {
   $stmt = $con->prepare("UPDATE konfiguracja SET prop_value = ? WHERE prop_id = ?");
-  $stmt->bind_param("si",$v,$k);
+  $stmt->bind_param("si", $v, $k);
   $stmt->execute();
   $stmt->close();
 }
@@ -28,16 +27,15 @@ $out = "<?php \$config=[";
 foreach ($props as $p) {
   $k = addslashes($p["prop_name"]);
   $v = addslashes($p["prop_value"]);
-  $out .= PHP_EOL."\"$k\"=>\"$v\",";
+  $out .= PHP_EOL . "\"$k\"=>\"$v\",";
 }
-$out .= PHP_EOL."];";
+$out .= PHP_EOL . "];";
 
-file_put_contents("constants.php",$out);
+file_put_contents("constants.php", $out);
 
-if (strpos($_SERVER['HTTP_REFERER'],"/admin/konfiguracja") !== false) {
-  header("Location: ".$_SERVER['HTTP_REFERER']);
-}
-else {
+if (strpos($_SERVER['HTTP_REFERER'], "/admin/konfiguracja") !== false) {
+  header("Location: " . $_SERVER['HTTP_REFERER']);
+} else {
   header("Location: /admin/konfiguracja/");
 }
 die;

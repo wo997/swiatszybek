@@ -1,4 +1,4 @@
-<?php //->[facebook/login_callback]
+<?php //route[facebook/login_callback]
 
 if (strpos($_SERVER["HTTP_REFERER"],"/zakup") !== false)
 {
@@ -98,5 +98,3 @@ else {
   $user_id = getLastInsertedId();
 }
 login_user($user_id, $email, $user_type, ["name" => $first_name . " " . $last_name]);
-
-?>

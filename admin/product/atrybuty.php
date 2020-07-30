@@ -1,4 +1,4 @@
-<?php //->[admin/atrybuty] 
+<?php //route[admin/atrybuty] 
 ?>
 
 <?php startSection("head"); ?>

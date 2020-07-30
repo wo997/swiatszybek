@@ -1,4 +1,4 @@
-<?php //->[potwierdz_zamowienie]
+<?php //route[potwierdz_zamowienie]
 
 $impersonate = false;
 if (isset($_POST["impersonate"]) && $_POST["impersonate"] == 1) {

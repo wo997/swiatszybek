@@ -1,4 +1,5 @@
-<?php //->[admin/oczekujacy] ?>
+<?php //route[admin/oczekujacy] 
+?>
 
 <?php startSection("head"); ?>
 
@@ -14,10 +15,8 @@
       lang: {
         subject: "oczekujących",
       },
-      params: () => {
-      },
-      definition: [
-        {
+      params: () => {},
+      definition: [{
           title: "E-mail",
           width: "10%",
           render: (r) => {
@@ -68,7 +67,6 @@
       `
     });
   });
-
 </script>
 
 <?php startSection("content"); ?>

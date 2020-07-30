@@ -1,4 +1,4 @@
-<?php //->[produkt]
+<?php //route[produkt]
 
 $_SESSION["redirect"] = "/" . $url;
 

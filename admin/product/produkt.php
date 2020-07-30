@@ -1,4 +1,4 @@
-<?php //->[admin/produkt]
+<?php //route[admin/produkt]
 
 $parts = explode("/", $url);
 if (isset($parts[2]))

@@ -1,4 +1,5 @@
-<?php //->[admin/komentarze] ?>
+<?php //route[admin/komentarze] 
+?>
 
 <?php startSection("head"); ?>
 

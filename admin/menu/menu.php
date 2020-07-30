@@ -1,4 +1,4 @@
-<?php //->[admin/menu-glowne] 
+<?php //route[admin/menu-glowne] 
 ?>
 
 <?php startSection("head"); ?>

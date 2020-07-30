@@ -1,4 +1,4 @@
-<?php //->[helpers/categories_template]
+<?php //route[helpers/categories_template]
 $raw = $_SERVER["REQUEST_METHOD"] == "POST";
 
 if (!$raw) {
@@ -57,5 +57,3 @@ showCategory($category); // recursive
 if (!$raw) {
     echo "</template>";
 }
-
-?>

@@ -4,7 +4,9 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 2138);
+define("RELEASE", 2137);
+
+define("BUILDS_PATH", "builds/");
 
 // include helpers
 
@@ -13,6 +15,8 @@ include "helpers/db.php";
 include "helpers/datatable.php";
 
 include "helpers/order.php";
+
+include "helpers/deployment.php";
 
 // global variables
 

@@ -1,6 +1,6 @@
-<?php //->[user_notify_variant]
+<?php //route[user_notify_variant]
 
-$posts = ["variant_id","email"];
+$posts = ["variant_id", "email"];
 
 foreach ($posts as $p) {
     if (!isset($_POST[$p]))
@@ -28,7 +28,7 @@ if (!$res) {
 $v_id = $variant_id;
 $stmt = $con->prepare("SELECT stock, i.title, v.product_id, image, v.name FROM variant v INNER JOIN products i ON i.product_id = v.product_id WHERE variant_id = " . intval($v_id));
 $stmt->execute();
-$stmt->bind_result($q,$a_title,$a_product_id,$a_image,$a_v_name);
+$stmt->bind_result($q, $a_title, $a_product_id, $a_image, $a_v_name);
 mysqli_stmt_fetch($stmt);
 $stmt->close();
 
@@ -38,8 +38,7 @@ if ($app["user"]["id"]) {
     $stmt->bind_result($a_imie, $a_nazwisko, $a_email);
     mysqli_stmt_fetch($stmt);
     $stmt->close();
-}
-else {
+} else {
     $a_imie = "";
     $a_nazwisko = "";
     $a_email = $email;
@@ -47,7 +46,7 @@ else {
 
 $name = getLink($a_title);
 
-$mailTitle = "$a_imie $a_nazwisko $a_email oczekuje na $a_title - ".config('main_email_sender');
+$mailTitle = "$a_imie $a_nazwisko $a_email oczekuje na $a_title - " . config('main_email_sender');
 
 $message = "<p>$a_imie $a_nazwisko $a_email oczekuje na $a_title $a_v_name</p>";
 $message .= "<a href='$SITE_URL/produkt/$a_product_id/$name' style='color:#37f;font-weight:bold;font-size:16px'>Zobacz produkt</a><br><br>";

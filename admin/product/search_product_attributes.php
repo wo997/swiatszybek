@@ -1,14 +1,13 @@
-<?php //->[admin/search_product_attributes]
+<?php //route[admin/search_product_attributes]
 
 if (isset($_POST["parent_id"])) {
-    orderTableBeforeListing("product_attributes","attribute_id");
+    orderTableBeforeListing("product_attributes", "attribute_id");
 }
 
 $where = "1";
 
-if (isset($_POST['attribute_id']))
-{
-    $where .= getListCondition("attribute_id",$_POST['attribute_id']);
+if (isset($_POST['attribute_id'])) {
+    $where .= getListCondition("attribute_id", $_POST['attribute_id']);
 }
 
 $where .= " AND (parent_value_id = 0 OR parent_value_id IS NULL)";

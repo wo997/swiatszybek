@@ -1,4 +1,4 @@
-<?php //->[admin/search_kody_rabatowe]  
+<?php //route[admin/search_kody_rabatowe]  
 
   $where = "1";
 
@@ -11,4 +11,3 @@
     "order" => "k.kod_id DESC",
     "main_search_fields" => ["k.kod","k.kwota",$getUserListQuery],
   ]);
-?>

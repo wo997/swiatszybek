@@ -1,4 +1,4 @@
-<?php //->[validate_kod_rabatowy]
+<?php //route[validate_kod_rabatowy]
 
 if (!$app["user"]["id"]) die;
 
@@ -83,4 +83,3 @@ if ($kod_data)
 else {
     die('{"error":"Błędny kod rabatowy!"}');
 }
-?>

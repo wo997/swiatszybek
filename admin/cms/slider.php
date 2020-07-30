@@ -1,4 +1,4 @@
-<?php //->[admin/slider] 
+<?php //route[admin/slider] 
 ?>
 
 <?php startSection("head"); ?>

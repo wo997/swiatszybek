@@ -1,19 +1,17 @@
-<?php //->[login]
+<?php //route[login]
 
-$posts = ["password","email"];
+$posts = ["password", "email"];
 
-foreach ($posts as $p)
-{
+foreach ($posts as $p) {
   if (!isset($_POST[$p]))
     die;
 }
 
-if (strpos($_SERVER["HTTP_REFERER"],"/zakup") !== false)
-{
+if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
   $_SESSION["redirect"] = "/zakup";
 }
 
-function quit($message,$type)
+function quit($message, $type)
 {
   echo '<form style="display:none" id="myForm" action="/logowanie" method="post">';
   if ($type == 0)
@@ -22,12 +20,12 @@ function quit($message,$type)
     $color = "#4c4";
 
   $message = "<div style='text-align:center;'><h4 style='color: $color;display: inline-block;border: 1px solid $color;padding: 7px;margin: 0 auto;border-radius: 5px;'>$message</h4></div>";
-  echo '<input type="text" name="message" value="'.$message.'">';
+  echo '<input type="text" name="message" value="' . $message . '">';
   echo '</form>';
-	echo '<script>';
-	echo 'document.getElementById("myForm").submit();';
-	echo '</script>';
-	die;
+  echo '<script>';
+  echo 'document.getElementById("myForm").submit();';
+  echo '</script>';
+  die;
 }
 
 $password = $_POST["password"];
@@ -39,14 +37,10 @@ $stmt->execute();
 $stmt->bind_result($user_id, $authenticated, $password_hash);
 //mysqli_stmt_fetch($stmt);
 
-if (mysqli_stmt_fetch($stmt) && password_verify($password,$password_hash))
-{
+if (mysqli_stmt_fetch($stmt) && password_verify($password, $password_hash)) {
   $stmt->close();
-  if ($authenticated == "1")
-  {
+  if ($authenticated == "1") {
     login_user($user_id, $email, "s", ["name" => $email]);
-  }
-  else quit("Konto nie zostało aktywowane",0);
-}
-else quit("Wpisz poprawny e-mail i hasło",0);
+  } else quit("Konto nie zostało aktywowane", 0);
+} else quit("Wpisz poprawny e-mail i hasło", 0);
 $stmt->close();

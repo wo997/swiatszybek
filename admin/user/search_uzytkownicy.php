@@ -1,4 +1,4 @@
-<?php //->[admin/search_uzytkownicy]  
+<?php //route[admin/search_uzytkownicy]  
 
   $where = "u.authenticated = 1";
 
@@ -14,4 +14,3 @@
     "order" => "u.user_id DESC",
     "main_search_fields" => ["u.imie","u.nazwisko","u.firma","u.email"],
   ]);
-?>

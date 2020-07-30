@@ -1,4 +1,4 @@
-<?php //->[basket]
+<?php //route[basket]
 
 $urlParts = explode("/", $url);
 
