@@ -3,6 +3,7 @@
 $base_path = str_replace("\\", "/", getcwd()) . "/";
 $link_route_path = [];
 $link_module_path = [];
+$link_event_listener_paths = [];
 
 function getAnnotation($type, $line)
 {
@@ -13,7 +14,7 @@ function getAnnotation($type, $line)
 
 function processDir($parent_dir)
 {
-    global $base_path, $link_route_path, $link_module_path;
+    global $base_path, $link_route_path, $link_module_path, $link_event_listener_paths;
     $exclude = ["vendor", "uploads"];
     foreach (scandir($base_path . $parent_dir) as $file) {
         $path = $parent_dir . $file;
@@ -34,8 +35,9 @@ function processDir($parent_dir)
             }
             $link_route_path[$url] = $path;
         } else if ($module_name = getAnnotation("module", $first_line)) {
-
             $link_module_path[$module_name] = $path;
+        } else if ($event_listener = getAnnotation("listen", $first_line)) {
+            $link_event_listener_paths[$event_listener][] = "  '$path'";
         }
     }
 }
@@ -62,3 +64,12 @@ foreach ($link_module_path as $module_name => $path) {
 $out .= "];";
 
 file_put_contents(BUILDS_PATH . "link_module_path.php", $out);
+
+
+$out = "<?php return [\n";
+foreach ($link_event_listener_paths as $event_listener => $paths_strings) {
+    $out .= " '$event_listener' => [\n" . implode(",\n", $paths_strings) . "\n ],\n";
+}
+$out .= "];";
+
+file_put_contents(BUILDS_PATH . "link_event_listener_paths.php", $out);
