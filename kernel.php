@@ -18,6 +18,8 @@ include_once "helpers/order.php";
 
 include_once "helpers/deployment.php";
 
+include_once "helpers/events.php";
+
 // global variables
 
 require "constants.php";
