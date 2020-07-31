@@ -13,7 +13,7 @@ include "basketContent.php";
         <!--Menu --><i class="fa fa-bars"></i></span><span>
         <!--Menu --><i class="fa fa-times"></i></span></button>
     <nav class="centerwhenbig">
-      <? @include "builds/topmenu.html"; ?>
+      <?php @include "builds/topmenu.html"; ?>
     </nav>
 
     <div class="basket-wrapper">
