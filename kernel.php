@@ -10,13 +10,13 @@ define("BUILDS_PATH", "builds/");
 
 // include helpers
 
-include "helpers/db.php";
+include_once "helpers/db.php";
 
-include "helpers/datatable.php";
+include_once "helpers/datatable.php";
 
-include "helpers/order.php";
+include_once "helpers/order.php";
 
-include "helpers/deployment.php";
+include_once "helpers/deployment.php";
 
 // global variables
 

@@ -46,10 +46,6 @@ processDir("");
 
 echo "<h3>✅ Scanning annotations completed</h3>";
 
-
-createDir(BUILDS_PATH);
-
-
 $out = "<?php return [\n";
 foreach ($link_route_path as $url => $path) {
     $out .= "'$url' => '$path',\n";
