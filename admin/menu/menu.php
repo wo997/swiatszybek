@@ -247,7 +247,7 @@
             <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div style="padding:10px" class="stretch-vertical">
+        <div class="stretch-vertical">
             <div class="desktopRow spaceColumns">
                 <div>
                     <div class="field-title">Nazwa menu</div>

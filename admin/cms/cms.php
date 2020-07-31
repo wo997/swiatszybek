@@ -188,12 +188,12 @@ $static = checkUrl($page_link);
 
             <?php if ($page_data["cms_id"] == -1) : ?>
                 <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                    <a href="/admin/strony" class="btn red">Usuń <i class="fa fa-trash"></i></a>
+                    <a href="/admin/strony" class="btn red">Usuń stronę <i class="fa fa-trash"></i></a>
                 </div>
             <?php endif ?>
             <?php if ($page_data["cms_id"] != -1) : ?>
                 <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                    <button type="submit" name="delete" class="btn red" onclick='return confirm("Czy chcesz usunąć podstronę?")'>Usuń <i class="fa fa-trash"></i></button>
+                    <button type="submit" name="delete" class="btn red" onclick='return confirm("Czy chcesz usunąć podstronę?")'>Usuń stronę <i class="fa fa-trash"></i></button>
                 </div>
             <?php endif ?>
         </div>

@@ -316,14 +316,6 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
       cursor: auto !important;
     }
 
-    .swiper-button-prev {
-      left: 10px;
-    }
-
-    .swiper-button-next {
-      right: 10px;
-    }
-
     .swiper-pagination {
       font-size: 16px;
       position: relative;
@@ -335,13 +327,34 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     .swiper-button-next {
       background: none;
       outline: none;
-      opacity: 0.25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .swiper-button-prev img,
-    .swiper-button-next img {
-      position: relative;
-      left: -8px;
+    .swiper-container:not(:hover) .swiper-button-prev,
+    .swiper-container:not(:hover) .swiper-button-next {
+      display: none !important;
+    }
+
+    .swiper-container .swiper-button-prev img {
+      transform: scaleX(-0.8);
+    }
+
+    .swiper-container .swiper-button-next img {
+      transform: scaleX(0.8);
+    }
+
+    .swiper-container .swiper-button-prev img,
+    .swiper-container .swiper-button-next img {
+      padding: 8px;
+      width: 46px;
+      opacity: 0.5;
+    }
+
+    .swiper-container .swiper-button-prev img:hover,
+    .swiper-container .swiper-button-next img:hover {
+      opacity: 0.8;
     }
 
     .swiper-slide {
@@ -815,7 +828,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     }
   </script>
 
-  <?php if ($review_count > 0) : ?>
+  <?php if ($product_data["cache_rating_count"] > 0) : ?>
     <script <?= 'type="application/ld+json"' ?>>
       {
         "@context": "https://schema.org/",

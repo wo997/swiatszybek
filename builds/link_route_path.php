@@ -1,7 +1,6 @@
 <?php return [
 'admin/search_activity_log' => 'admin/activity-log/search_activity_log.php',
 'admin/cms' => 'admin/cms/cms.php',
-'admin/save-slider' => 'admin/cms/save-slider.php',
 'admin/save_cms' => 'admin/cms/save_cms.php',
 'admin/search_strony' => 'admin/cms/search_strony.php',
 'admin/slider' => 'admin/cms/slider.php',

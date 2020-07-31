@@ -7,8 +7,8 @@
         <div class="swiper-wrapper">
           <?= $gallery ?>
         </div>
-        <div class="swiper-button-next"><img style="transform:scale(-0.8,0.8)" src="/img/chevron-left.png"></div>
-        <div class="swiper-button-prev"><img style="transform:scale(0.8,0.8)" src="/img/chevron-left.png"></div>
+        <div class="swiper-button-next"><img src="/img/chevron.svg"></div>
+        <div class="swiper-button-prev"><img src="/img/chevron.svg"></div>
       </div>
       <div class="swiper-pagination"></div>
     <?php endif ?>
@@ -16,7 +16,7 @@
   <div style="width: 40%; box-sizing: border-box; margin-top: 20px">
     <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">
       <h1 class="h1"><?= $product_data["title"] ?>
-        <?php if ($published0 != 1) : ?>
+        <?php if ($product_data["published"] != 1) : ?>
           (Ukryty!)
         <?php endif ?>
       </h1>
@@ -50,7 +50,7 @@
           <span>Cena: </span><span id="priceText" class="pln"><?= $priceText ?></span> <span class="pln">zł</span> <span id="wasPrice" class='slash'></span> <span id="kolejnyTaniej"></span>
 
           <div style="display:inline-block;cursor:pointer" data-tooltip="Przejdź do komentarzy" data-position="center" onclick='scrollToView($(".comments"),{margin:0.5,time:100})'>
-            <?= ratingBlock($avg_rating); ?>
+            <?= ratingBlock($product_data["cache_avg_rating"]); ?>
 
             <span style="font-size:15px;">(<?php
                                             function ileOcen($n)
@@ -60,7 +60,7 @@
                                               if ($n > 1 && $n < 5) return "$n oceny";
                                               return "$n ocen";
                                             }
-                                            echo ileOcen($review_count);
+                                            echo ileOcen($product_data["cache_rating_count"]);
                                             ?>)</span>
 
           </div>
