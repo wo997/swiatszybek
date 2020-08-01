@@ -113,6 +113,11 @@ if ($app["user"]["id"]) {
         <span>Hasło</span>
         <input type="password" autocomplete="password" name="password">
       </label>
+      <label class="checkbox-wrapper" style="margin-top:10px;text-align:center">
+        <input type="checkbox" name="remember_me" value="1">
+        <div class="checkbox"></div>
+        Zapamiętaj mnie
+      </label>
       <button class="btn primary big" style="margin:10px 0; width: 100%">
         Zaloguj się
         <i class="fa fa-chevron-right"></i>

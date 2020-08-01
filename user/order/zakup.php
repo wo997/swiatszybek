@@ -501,8 +501,8 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         }
       });
 
-      <?php if (isset($_SESSION["just_logged"])) {
-        unset($_SESSION["just_logged"]); ?>
+      <?php if (isset($_SESSION["just_logged_from_order"])) {
+        unset($_SESSION["just_logged_from_order"]); ?>
         showMenu(3);
       <?php } ?>
 

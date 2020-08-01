@@ -42,5 +42,8 @@ addColumns("kody_rabatowe", [
 
 dropColumns("kody_rabatowe", ["product_id_list"]);
 
+addColumns("users", [
+  ["name" => "remember_me_token", "type" => "TINYTEXT"]
+]);
 
 echo "<h3>✅ All migrations completed</h3>";
