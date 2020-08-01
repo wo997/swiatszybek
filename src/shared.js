@@ -1958,11 +1958,13 @@ function setFormData(data, form = null) {
   resizeCallback();
 }
 
-function getFormData(form = null, options = {}) {
+function getFormData(form = null) {
   if (!form) form = document;
   var data = {};
+
+  var excludeHidden = form.hasAttribute("data-exclude-hidden");
   form.querySelectorAll(`[name]`).forEach((e) => {
-    if (options.excludeHidden && findParentByClassName(e, ["hidden"])) return;
+    if (excludeHidden && findParentByClassName(e, ["hidden"])) return;
     data[e.getAttribute("name")] = getValue(e);
   });
   return data;

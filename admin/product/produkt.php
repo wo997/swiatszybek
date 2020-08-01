@@ -312,9 +312,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   }
 
   function saveVariantForm() {
-    var params = getFormData($("#variantEdit"), {
-      excludeHidden: true
-    });
+    var params = getFormData($("#variantEdit"));
 
     var attribute_values = [];
 
@@ -468,7 +466,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   </div>
 </div>
 
-<div id="variantEdit" data-modal data-expand>
+<div id="variantEdit" data-modal data-expand data-exclude-hidden>
   <div class="stretch-vertical">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
@@ -507,8 +505,14 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       {
         if (!isset($values[0])) return "";
 
+        $first_value_as_name = "";
+        foreach ($values as $value_data) {
+          $first_value_as_name = "name='select_" . $value_data["values"]["value_id"] . "'";
+          break;
+        }
+
         $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
-        $html = "<select $attr data-attribute-value>";
+        $html = "<select $attr data-attribute-value $first_value_as_name>";
         $html .= "<option value=''>Nie dotyczy</option>";
         foreach ($values as $value_data) {
           $html .= "<option value='" . $value_data["values"]["value_id"] . "'>" . $value_data["values"]["value"] . "</option>";
