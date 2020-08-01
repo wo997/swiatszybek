@@ -28,27 +28,25 @@ function showMenu($category_id, $depth = 0)
             */
             $html .= "
                 <div data-depth='$depth'>
-                    <a href='".getMenuLink($submenu)["url"]."'>
-                        <h3 class='headerplain'>".$submenu["title"]."</h3>
+                    <a href='" . getMenuLink($submenu)["url"] . "'>
+                        <h3 class='headerplain'>" . $submenu["title"] . "</h3>
                     </a>
                 </div>
             ";
         }
-    }
-    else {
+    } else {
         foreach ($menu as $submenu) {
             if ($depth === 1) {
-                $title = "<h4 class='headerplain'>".$submenu["title"]."</h4>";
-            }
-            else {
-                $title = "<h5 class='headerplain'>".$submenu["title"]."</h5>";
+                $title = "<h4 class='headerplain'>" . $submenu["title"] . "</h4>";
+            } else {
+                $title = "<h5 class='headerplain'>" . $submenu["title"] . "</h5>";
             }
             $html .= "
                 <div data-depth='$depth'>
-                    <a href='".getMenuLink($submenu)["url"]."'>
+                    <a href='" . getMenuLink($submenu)["url"] . "'>
                         $title
                     </a>
-                    <div>".showMenu($submenu["category_id"], $depth + 1)."</div>
+                    <div>" . showMenu($submenu["category_id"], $depth + 1) . "</div>
                 </div>
             ";
         }
@@ -57,4 +55,4 @@ function showMenu($category_id, $depth = 0)
     return $html;
 }
 
-file_put_contents("topmenu.html",showMenu(0)); // resursive
+file_put_contents("builds/topmenu.html", showMenu(0)); // resursive

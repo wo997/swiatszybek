@@ -2,16 +2,18 @@
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=2750096011694583&autoLogAppEvents=1"></script>
 
 <?php
-  include "basketContent.php";
+include "basketContent.php";
 ?>
 
 <div class="header-wrapper">
   <div class="header-inner centerwhenbig">
     <a href="/" class="logo-wrapper"><img src="/img/logo.png?a" id="logo"></a>
 
-    <button id="show_kategorie" onclick="this.classList.toggle('dropped_kategorie')"><span><!--Menu --><i class="fa fa-bars"></i></span><span><!--Menu --><i class="fa fa-times"></i></span></button>
+    <button id="show_kategorie" onclick="this.classList.toggle('dropped_kategorie')"><span>
+        <!--Menu --><i class="fa fa-bars"></i></span><span>
+        <!--Menu --><i class="fa fa-times"></i></span></button>
     <nav class="centerwhenbig">
-      <? @include "topmenu.html"; ?>
+      <?php @include "builds/topmenu.html"; ?>
     </nav>
 
     <div class="basket-wrapper">
@@ -23,23 +25,24 @@
               <!--<a href="/moje-konto"><div style="display: inline-block;max-width: 250px;text-overflow: ellipsis;overflow: hidden;vertical-align: text-top;"><?= "" //htmlspecialchars($_SESSION["email"])
                                                                                                                                                                 ?></div> <i class="fa fa-user"></i></a>-->
               <div class="dropdown-header" style="padding:8px 8px;margin-right: 5px;">
-                <div style="display: inline-block;max-width: 250px;text-overflow: ellipsis;overflow: hidden;vertical-align: text-top;"><?= ''//htmlspecialchars($_SESSION["email"]) ?><span class="case-desktop">Moje konto</span></div> <i class="fa fa-user-check"></i>
+                <div style="display: inline-block;max-width: 250px;text-overflow: ellipsis;overflow: hidden;vertical-align: text-top;"><?= '' //htmlspecialchars($_SESSION["email"]) 
+                                                                                                                                        ?><span class="case-desktop">Moje konto</span></div> <i class="fa fa-user-check"></i>
               </div>
               <div class="dropdown-expand">
                 <div class="username">
-                <?php 
+                  <?php
                   if ($app["user"]["type"] == 'g') echo '<img src="/img/google.png" style="width: 15px;vertical-align: sub;"> ';
                   if ($app["user"]["type"] == 'f') echo '<i class="fab fa-facebook-square" style="font-size: 15px;color: #3b5998;"></i> ';
                   echo $app["user"]["name"];
-                ?>
+                  ?>
                 </div>
                 <?php if ($app["user"]["is_admin"]) : ?>
                   <div style="color: #05c;background: #fafafa;">
                     <a class="menu_item" href="/admin/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
-                    <?php 
+                    <?php
                     foreach ($admin_navigations as $page) {
                       if (isset($page['quick_menu'])) {
-                        echo '<a class="menu_item" href="/'.$page['url'].'">'.$page['title'].' '.renderNotification($page['notifcation_count']).'</a>';
+                        echo '<a class="menu_item" href="/' . $page['url'] . '">' . $page['title'] . ' ' . renderNotification($page['notifcation_count']) . '</a>';
                       }
                     }
                     ?>
@@ -80,7 +83,7 @@
     </div>
   </div>
   <nav class="centerwhenbig">
-    
+
   </nav>
 </div>
 <div class="space-under-header"></div>

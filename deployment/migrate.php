@@ -30,6 +30,8 @@ addColumns("slides", [
   ["name" => "content_mobile", "type" => "TEXT"]
 ]);
 
+// migration from 28.07.2020
+
 addColumns("zamowienia", [
   ["name" => "cache_basket", "previous_name" => "basket", "type" => "MEDIUMTEXT"]
 ]);

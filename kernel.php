@@ -10,13 +10,15 @@ define("BUILDS_PATH", "builds/");
 
 // include helpers
 
-include "helpers/db.php";
+include_once "helpers/db.php";
 
-include "helpers/datatable.php";
+include_once "helpers/datatable.php";
 
-include "helpers/order.php";
+include_once "helpers/order.php";
 
-include "helpers/deployment.php";
+include_once "helpers/deployment.php";
+
+include_once "helpers/events.php";
 
 // global variables
 
@@ -434,10 +436,10 @@ function getCMSPageHTML($content)
   }
 
   foreach ($CSS_files as $file) {
-    $page_content = "<link rel='stylesheet' href='$file?v=$RELEASE'>" . $page_content;
+    $page_content = "<link rel='stylesheet' href='$file?v=" . RELEASE . "'>" . $page_content;
   }
   foreach ($JS_files as $file) {
-    $page_content = "<script src='$file?v=$RELEASE'></script>" . $page_content;
+    $page_content = "<script src='$file?v=" . RELEASE . "'></script>" . $page_content;
   }
   return $page_content;
 }
