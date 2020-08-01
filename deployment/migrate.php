@@ -34,4 +34,11 @@ addColumns("zamowienia", [
   ["name" => "cache_basket", "previous_name" => "basket", "type" => "MEDIUMTEXT"]
 ]);
 
+addColumns("kody_rabatowe", [
+  ["name" => "product_list", "previous_name" => "product_list_metadata", "type" => "TEXT"]
+]);
+
+dropColumns("kody_rabatowe", ["product_id_list"]);
+
+
 echo "<h3>✅ All migrations completed</h3>";

@@ -446,7 +446,7 @@ function createTable(table) {
   // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), callback
   // sortable (requires primary, db_table),
   // selectable: {data,output},
-  // metadata: {data,output}
+  // hasMetadata: (boolean, enables outputting metadata from additional row inputs)
   // tree_view
   // lang: {subject, main_category}
 
@@ -466,39 +466,59 @@ function createTable(table) {
 
   if (table.selectable) {
     table.selectable = table.selectable;
-    table.selected = table.selectable.data;
+    table.selection = "";
     table.singleselect = table.selectable.singleselect;
+    if (table.hasMetadata) {
+      table.metadata = "";
+    }
 
-    table.setSelectedValues = (v) => {
-      if (Array.isArray(v)) {
-        var out = [];
-        for (val of v) {
-          out.push(parseInt(val));
+    table.setSelectedValuesString = (v) => {
+      var selection = null;
+      if (table.singleselect) {
+        selection = v;
+      } else if (table.hasMetadata) {
+        var metadata = [];
+        selection = [];
+        try {
+          Object.entries(JSON.parse(v)).forEach(([row_id, row_metadata]) => {
+            selection.push(parseInt(row_id));
+            metadata[parseInt(row_id)] = row_metadata;
+          });
+        } catch (e) {
+          console.log(e);
         }
-        v = out;
+
+        table.metadata = metadata;
+      } else {
+        // no metadata, raw table
+        selection = [];
+
+        try {
+          for (val of JSON.parse(v)) {
+            selection.push(parseInt(val));
+          }
+        } catch (e) {}
       }
-      table.selected = v;
-      console.log(v);
+      table.selection = selection;
+
+      table.selectionValueElement.value = v;
+
       table.createList();
     };
-    table.getSelectedValues = () => {
-      if (table.singleselect) {
-        return table.selected;
+    table.getSelectedValuesString = () => {
+      if (table.singleselect && !table.hasMetadata) {
+        return table.selection;
       } else {
-        var selection = [];
-        table.selectedRowsElement
-          .querySelectorAll("[data-primary]")
-          .forEach((e) => {
-            selection.push(parseInt(e.getAttribute("data-primary")));
-          });
-        table.selected = selection;
-        return JSON.stringify(table.selected);
-        //return JSON.stringify(table.selected);
+        return JSON.stringify(table.selection);
       }
     };
+    table.getSelectedValuesAllString = () => {
+      // for metadata
+      return JSON.stringify(table.metadata);
+    };
   }
-  if (!table.selected) {
-    table.selected = [];
+  if (!table.selection) {
+    table.selection = [];
   }
 
   if (table.tree_view) {
@@ -572,11 +592,6 @@ function createTable(table) {
           ? `data-validate data-validate-target='.${table.name} .selectedRows'`
           : ""
       }>
-        ${
-          table.metadata
-            ? `<input type="hidden" class="table-metadata-value" name="${table.metatable.output}">`
-            : ""
-        }
         <div class="table-search-wrapper ${
           table.selectable ? `expandY hidden` : ""
         }">
@@ -596,12 +611,9 @@ function createTable(table) {
   table.tableElement = table.target.querySelector(".table-wrapper");
   table.totalRowsElement = table.target.querySelector(".total-rows");
   table.paginationElement = table.target.querySelector(".pagination");
-  table.selectedRowsElement = table.target.querySelector(".selectedRows");
+  table.selectionElement = table.target.querySelector(".selectedRows");
   table.selectionValueElement = table.target.querySelector(
     ".table-selection-value"
-  );
-  table.metadataValueElement = table.target.querySelector(
-    ".table-metadata-value"
   );
 
   if (table.tree_view) {
@@ -794,7 +806,7 @@ function createTable(table) {
     var params = {};
 
     if (createList) {
-      params[table.primary] = table.getSelectedValues();
+      params[table.primary] = table.getSelectedValuesString();
     } else {
       params = table.params ? table.params() : "";
       if (!params) {
@@ -810,7 +822,8 @@ function createTable(table) {
         params[e.getAttribute("data-param")] = e.value;
       });
       if (table.selectable) {
-        params[table.primary] = "!" + table.getSelectedValues(); // ! means ignore
+        // TODO get values from metadata or regular array
+        params[table.primary] = "!" + table.getSelectedValuesString(); // ! means ignore
       }
       if (table.tree_view) {
         params.parent_id = table.getParentId();
@@ -941,7 +954,7 @@ function createTable(table) {
         }
 
         if (createList) {
-          table.selectedRowsElement.innerHTML = table_body;
+          table.selectionElement.innerHTML = table_body;
         } else {
           table.paginationElement.innerHTML = output;
           table.totalRowsElement.innerHTML = res.totalRows;
@@ -961,7 +974,7 @@ function createTable(table) {
           }
         });
 
-        if (table.metadata) {
+        if (table.hasMetadata) {
           table.registerMetadataFields();
         }
 
@@ -972,35 +985,43 @@ function createTable(table) {
   };
 
   table.initialSearch = () => {
-    if (!table.hasOwnProperty("nosearch") || table.nosearch === false) {
+    if (
+      !table.hasOwnProperty("nosearch") ||
+      table.nosearch === false ||
+      table.selectable
+    ) {
       table.search();
     }
   };
-  table.createList = () => {
+  table.createList = (firstLoad) => {
+    if (firstLoad && table.nosearch === true) {
+      return;
+    }
+
     table.search(() => {
       table.initialSearch();
 
-      if (table.metadata) {
+      if (table.hasMetadata) {
         try {
-          Object.entries(table.metatable.data).forEach(([key, value]) => {
-            var row = table.selectedRowsElement.querySelector(
+          Object.entries(table.metadata).forEach(([key, value]) => {
+            var row = table.selectionElement.querySelector(
               `[data-primary="${key}"]`
             );
-            Object.entries(value).forEach(([key, value]) => {
-              var m = row.querySelector(`[data-metadata="${key}"]`);
-              if (m) m.value = value;
-            });
+            if (row) {
+              Object.entries(value).forEach(([key, value]) => {
+                var m = row.querySelector(`[data-metadata="${key}"]`);
+                if (m) m.value = value;
+              });
+            }
           });
         } catch (e) {
           console.error(e);
         }
       }
-
-      // table.selectionChange(); it would end up in an infinite loop
     }, true);
   };
   if (table.selectable) {
-    table.createList();
+    table.createList(true);
   } else {
     table.initialSearch();
   }
@@ -1012,11 +1033,11 @@ function createTable(table) {
 
   table.removeRow = (data_id) => {
     if (table.singleselect) {
-      table.selected = null;
+      table.selection = null;
     } else {
-      const index = table.selected.indexOf(data_id);
+      const index = table.selection.indexOf(data_id);
       if (index !== -1) {
-        table.selected.splice(index, 1);
+        table.selection.splice(index, 1);
       } else return;
     }
 
@@ -1024,19 +1045,20 @@ function createTable(table) {
     table.selectionChange();
   };
   table.addRow = (data_id) => {
-    if (table.singleselect && table.selected) {
-      table.removeRow(table.selected);
+    if (table.singleselect && table.selection) {
+      table.removeRow(table.selection);
     }
-    if (table.singleselect || table.selected.indexOf(data_id) === -1) {
+    if (table.singleselect || table.selection.indexOf(data_id) === -1) {
       if (table.singleselect) {
-        table.selected = data_id;
+        table.selection = data_id;
+        if (table.hasMetadata) {
+          table.metadataChange();
+        }
       } else {
-        console.log(data_id);
-        table.selected.push(data_id);
-        console.log(table.selected);
+        table.selection.push(data_id);
       }
       var x = table.target.querySelector(`[data-primary='${data_id}']`);
-      table.selectedRowsElement.querySelector("tbody").appendChild(x);
+      table.selectionElement.querySelector("tbody").appendChild(x);
       var d = x.querySelector(".fa-plus-circle");
       d.outerHTML = d.outerHTML
         .replace("plus", "minus")
@@ -1045,16 +1067,13 @@ function createTable(table) {
     }
   };
   table.selectionChange = () => {
-    var v = table.getSelectedValues();
-    table.selectionValueElement.value = v;
-    if (table.metadata) {
+    if (table.hasMetadata) {
       table.registerMetadataFields();
-      table.metadataChange();
     }
 
-    var e = table.selectedRowsElement.querySelector(".no-results");
+    var e = table.selectionElement.querySelector(".no-results");
     if (e)
-      e.style.display = table.selectedRowsElement.querySelector("td")
+      e.style.display = table.selectionElement.querySelector("td")
         ? "none"
         : "";
     var e = table.target.querySelector(".table-search-container .no-results");
@@ -1062,11 +1081,36 @@ function createTable(table) {
       e.style.display = table.target.querySelector(".table-search-container td")
         ? "none"
         : "";
+
+    if (table.hasMetadata) {
+      var metadata = {};
+      table.selectionElement
+        .querySelectorAll("tr[data-primary]")
+        .forEach((e) => {
+          var row = {};
+          e.querySelectorAll("[data-metadata]").forEach((m) => {
+            row[m.getAttribute("data-metadata")] = m.value;
+          });
+          metadata[parseInt(e.getAttribute("data-primary"))] = row;
+        });
+      table.metadata = metadata;
+    }
+
+    var selection = [];
+    table.selectionElement.querySelectorAll("[data-primary]").forEach((e) => {
+      selection.push(parseInt(e.getAttribute("data-primary")));
+    });
+
+    table.selection = selection;
+
+    table.selectionValueElement.value = table.hasMetadata
+      ? table.getSelectedValuesAllString()
+      : table.getSelectedValuesString();
   };
-  if (table.metadata) {
+  if (table.hasMetadata) {
     table.metadataChange = () => {
       var out = {};
-      table.selectedRowsElement
+      table.selectionElement
         .querySelectorAll("tr[data-primary]")
         .forEach((e) => {
           var row = {};
@@ -1075,10 +1119,10 @@ function createTable(table) {
           });
           out[e.getAttribute("data-primary")] = row;
         });
-      table.metadataValueElement.value = JSON.stringify(out);
+      table.selectionChange();
     };
     table.registerMetadataFields = () => {
-      table.selectedRowsElement
+      table.selectionElement
         .querySelectorAll("[data-metadata]")
         .forEach((m) => {
           m.oninput = () => {
@@ -1681,7 +1725,9 @@ function setValue(input, value) {
   if (input.classList.contains("table-selection-value")) {
     var datatable = findParentByClassName(input, "datatable-wrapper");
     //console.log(value);
-    window[datatable.getAttribute("data-table-name")].setSelectedValues(value);
+    window[datatable.getAttribute("data-table-name")].setSelectedValuesString(
+      value
+    );
     return;
   } else if (input.classList.contains("jscolor")) {
     var hex = value.replace("#", "");
@@ -2660,7 +2706,7 @@ function registerTextCounters() {
 
 function addItemtoBasket(variant_id, diff, callback) {
   if (diff > 0) url = "/basket/add/" + variant_id + "/" + diff;
-  else url = "/basket/remove/" + variant_id + "/" + diff;
+  else url = "/basket/remove/" + variant_id + "/" + -diff;
 
   xhr({
     url: url,

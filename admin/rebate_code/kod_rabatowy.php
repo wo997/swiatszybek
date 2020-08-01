@@ -4,7 +4,8 @@ $parts = explode("/", $url);
 if (isset($parts[2])) {
     $kod_id = intval($parts[2]);
 
-    $kod_data = fetchRow("SELECT kod_id, kwota, kod, user_id_list, product_id_list, product_list_metadata, date_from, date_to, ilosc, type FROM kody_rabatowe WHERE kod_id = $kod_id");
+    //$kod_data = fetchRow("SELECT kod_id, kwota, kod, user_id_list, product_id_list, product_list_metadata, date_from, date_to, ilosc, type FROM kody_rabatowe WHERE kod_id = $kod_id");
+    $kod_data = fetchRow("SELECT * FROM kody_rabatowe WHERE kod_id = $kod_id");
 } else {
     $kod_data = [
         "kod_id" => -1,
@@ -12,7 +13,6 @@ if (isset($parts[2])) {
         "kod" => "",
         "user_id_list" => "",
         "product_id_list" => "",
-        "product_list_metadata" => "{}",
         "user" => "",
         "od" => "",
         "do" => "",
@@ -21,8 +21,11 @@ if (isset($parts[2])) {
     ];
 }
 
-if (!json_decode($kod_data["product_list_metadata"])) {
-    $kod_data["product_list_metadata"] = "{}";
+if (!json_decode($kod_data["user_id_list"])) {
+    $kod_data["user_id_list"] = "[]";
+}
+if (!json_decode($kod_data["product_list"])) {
+    $kod_data["product_list"] = "[]";
 }
 
 ?>
@@ -36,8 +39,6 @@ if (!json_decode($kod_data["product_list_metadata"])) {
 </style>
 <script>
     window.addEventListener("DOMContentLoaded", function() {
-        setFormData(<?= json_encode($kod_data) ?>);
-
         var tableName = "users";
         createTable({
             name: tableName,
@@ -48,9 +49,9 @@ if (!json_decode($kod_data["product_list_metadata"])) {
             rowCount: 10,
             primary: "user_id",
             selectable: {
-                data: [<?= trim($kod_data["user_id_list"], ",") ?>],
                 output: "user_id_list",
             },
+            nosearch: true,
             definition: [{
                     title: "Imię, Nazwisko",
                     width: "15%",
@@ -82,7 +83,7 @@ if (!json_decode($kod_data["product_list_metadata"])) {
             `
         });
 
-        var tableName = "products";
+        var tableName = "product_list";
         createTable({
             name: tableName,
             url: "/admin/search_products",
@@ -94,14 +95,10 @@ if (!json_decode($kod_data["product_list_metadata"])) {
             rowCount: 10,
             primary: "product_id",
             selectable: {
-                data: [<?= trim($kod_data["product_id_list"], ",") ?>],
-                output: "product_id_list",
-
+                output: "product_list",
             },
-            metadata: {
-                data: <?= $kod_data["product_list_metadata"] ?>,
-                output: "product_list_metadata"
-            },
+            hasMetadata: true,
+            nosearch: true,
             definition: [{
                     title: "Nazwa produktu",
                     width: "50%",
@@ -115,7 +112,7 @@ if (!json_decode($kod_data["product_list_metadata"])) {
                     title: "W magazynie",
                     width: "10%",
                     render: (r) => {
-                        return `${nonull(r.amount,0)} szt.`;
+                        return `${nonull(r.stock,0)} szt.`;
                     }
                 },
                 {
@@ -134,6 +131,8 @@ if (!json_decode($kod_data["product_list_metadata"])) {
                 </div>
             `
         });
+
+        setFormData(<?= json_encode($kod_data) ?>);
     });
 </script>
 
@@ -178,7 +177,7 @@ if (!json_decode($kod_data["product_list_metadata"])) {
         <div class="users"></div>
 
         <div class="field-title">Ogranicz do konkretnych produktów</div>
-        <div class="products"></div>
+        <div class="product_list"></div>
 
         <input type="hidden" name="kod_id" value="<?= $kod_id ?>">
         <div style="margin-top:10px;text-align:right">
