@@ -308,6 +308,36 @@ var modules = {
     icon: '<i class="far fa-address-card"></i>',
     editUrl: "/admin/konfiguracja",
   },
+  "html-module": {
+    params: "",
+    description: "Moduł HTML",
+    icon: '<i class="fas fa-code"></i>',
+    form: `
+            <div class="default-form" style="width:600px; max-width:90vw;">
+              <div class="field-title">HTML</div>
+                <textarea style="width:100%; resize:none; height:400px"></textarea>
+              <div class="field-title">CSS</div>
+                <textarea></textarea>
+            </div>
+            `,
+    formOpen: (block) => {
+      var productListCount = 0;
+      try {
+        var params = JSON.parse(block.getAttribute("data-module-params"));
+        productListCount = params["productListCount"];
+      } catch {}
+      document.getElementById("productListCount").value = productListCount;
+
+      loadCategoryPicker("product_categories", { skip: 2 });
+    },
+    formClose: () => {
+      var params = {};
+      params["productListCount"] = document.getElementById(
+        "productListCount"
+      ).value;
+      cmsTarget.setAttribute("data-module-params", JSON.stringify(params));
+    },
+  },
 };
 
 function insertModule(moduleName) {
@@ -578,7 +608,7 @@ function cmsUpdate() {
       var moduleName = e.getAttribute("data-module");
       var module = modules[moduleName];
 
-      if (module) {
+      if (module && module.render) {
         e.querySelector(".cms-block-content").innerHTML = `
                         <div class="module-content">
                             <div>
