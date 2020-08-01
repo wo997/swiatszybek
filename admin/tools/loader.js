@@ -1,6 +1,6 @@
 window.loader = {
   show: () => {
-    showModal("loader", { ontop: true });
+    showModal("loader");
   },
   hide: () => {
     hideModal("loader");

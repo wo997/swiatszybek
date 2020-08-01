@@ -99,9 +99,9 @@ $static = checkUrl($page_link);
 
     // preview start
     function preview() {
-        showModal("pagePreview");
         $("#preview_page_content").value = $("#content1-src").value;
         $("#preview_page_metadata").value = $("#metadata").value;
+        showModal("pagePreview");
         $(".preview_page").submit();
     }
 

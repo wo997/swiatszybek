@@ -194,12 +194,13 @@ window.quillEditor = {
     qlContainer.innerHTML = source.innerHTML;
     qlContainer.style.padding = window.getComputedStyle(source).padding;
 
-    showModal("quillEditor", { ontop: true, source: source });
     setTimeout(() => {
       quillEditor.editor.history.clear();
       quillEditor.hideCustomQuillButtons();
       quillEditor.fixHeight(40);
     });
+
+    showModal("quillEditor", { source: source });
 
     setTimeout(() => {
       quillEditor.fixImageResponsive();
@@ -836,7 +837,7 @@ window.quillEditor = {
       $("#quillEditor .ql-video").onclick = () => {
         //beforeImageInsert();
         if (quillEditor.source) {
-          showModal("putVideo", { ontop: true, source: quillEditor.source });
+          showModal("putVideo", { source: quillEditor.source });
         }
       };
     }, 100);

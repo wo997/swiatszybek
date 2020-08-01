@@ -55,17 +55,53 @@ body, button, input, textarea, .cms {
 
 
 
-.showhover {
+/* custom selectbox and showhover start */
+.showhover, .selectbox {
   position: relative;
 }
-.showhover:not(:hover) .showhovercontent {
+.showhover:not(:hover) .menucontent {
   display: none !important;
 }
-.showhover .showhovercontent {
+.showhover:not(:focus-within) .menucontent {
+  display: none !important;
+}
+.showhover .menucontent, .selectbox .menucontent {
   position: absolute;
   right: 0;
   top: 100%;
+  z-index: 50;
 }
+
+.selectbox:not(:focus-within) .menucontent {
+  display: none !important;
+}
+
+
+
+.selectbox {
+  display: inline-block;
+}
+
+.selectbox .showhovercontent {
+  background: white;
+  z-index: 1000;
+}
+.selectbox [data-option] {
+  cursor: pointer;
+  padding: 1px 5px;
+  min-width: 70px;
+  background: #fff;
+}
+.selectbox [data-option]:hover {
+  background: #eee;
+}
+
+.selectbox input {
+  background: url(/img/dropdown.png) 100% / 20px no-repeat white;
+  padding-right: 30px!important;
+}
+
+/* custom selextbox end */
 
 
 /* buttons start */
@@ -1977,6 +2013,7 @@ ql-icon i span {
 .checkbox-wrapper {
   user-select:none;
   display:inline-block;
+  cursor: pointer;
 }
 
 

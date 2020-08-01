@@ -266,12 +266,14 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   }
 
   function editVariant(i) {
+    var formName = "variantEdit";
     var data = variants.results[i];
-    setFormData(data, $("#variantEdit"));
 
-    $(`[name="was_stock"]`).value = data.stock;
+    data.was_stock = data.stock;
 
-    showModal("variantEdit");
+    setFormData(data, $(`#${formName}`));
+
+    showModal(formName);
 
     xhr({
       url: "/admin/get_variant_attributes",
@@ -303,6 +305,8 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           var wrapper = findParentByClassName($(`[name="attribute_values[${attribute.attribute_id}]"]`), "optional-value-wrapper");
           setValue(wrapper.querySelector(`input[type="checkbox"]`), 1);
         }
+
+        setModalInitialState(formName);
       }
     });
   }
@@ -468,7 +472,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   <div class="stretch-vertical">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
-      <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+      <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
       <button class="btn primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
     <div style="padding:10px">

@@ -387,7 +387,7 @@
     <div class="stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja atrybutu</span>
-            <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveAttribute();">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="stretch-vertical">
