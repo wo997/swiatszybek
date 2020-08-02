@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 require_once 'vendor/autoload.php';
@@ -156,6 +155,13 @@ function niceDate($time = null)
 
 // define app scope
 $app = [];
+
+if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
+  $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 's' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
+  if ($user_data) {
+    login_user($user_data["user_id"], $user_data["email"], "s", ["name" => $user_data["email"]], false);
+  }
+}
 
 if (isset($_SESSION["user"])) {
   $app["user"] = $_SESSION["user"];

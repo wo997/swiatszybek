@@ -31,16 +31,20 @@ function quit($message, $type)
 $password = $_POST["password"];
 $email = $_POST["email"];
 
-$stmt = $con->prepare("SELECT user_id, authenticated, password_hash FROM `users` WHERE user_type = 's' AND email = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$stmt->bind_result($user_id, $authenticated, $password_hash);
-//mysqli_stmt_fetch($stmt);
+$user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 's' AND email = ?", [$email]);
+if (!$user_data || !password_verify($password, $user_data["password_hash"])) {
+  quit("Wpisz poprawny e-mail i hasło", 0);
+}
+if (!$user_data["authenticated"]) {
+  quit("Konto nie zostało aktywowane", 0);
+}
 
-if (mysqli_stmt_fetch($stmt) && password_verify($password, $password_hash)) {
-  $stmt->close();
-  if ($authenticated == "1") {
-    login_user($user_id, $email, "s", ["name" => $email]);
-  } else quit("Konto nie zostało aktywowane", 0);
-} else quit("Wpisz poprawny e-mail i hasło", 0);
-$stmt->close();
+$remember_me = nonull($_POST, "remember_me", 0);
+
+if ($remember_me) {
+  $remember_me_token = $user_data["user_id"] . "-" . uniqid();
+  setcookie("remember_me_token", $remember_me_token, time() + 3600 * 24 * 30);
+  query("UPDATE users SET remember_me_token = ? WHERE user_id = " . intval($user_data["user_id"]), [$remember_me_token]);
+}
+
+login_user($user_data["user_id"], $user_data["email"], "s", ["name" => $user_data["email"]]);

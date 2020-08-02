@@ -1,8 +1,10 @@
 <?php
 
-function login_user($user_id, $email, $user_type, $data = [])
+function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 {
-  $adminList = explode(",", str_replace(" ", "", config("admins").",wojtekwo997@gmail.com" ) );
+  global $app;
+
+  $adminList = explode(",", str_replace(" ", "", config("admins") . ",wojtekwo997@gmail.com"));
 
   $user = [
     "id" => $user_id,
@@ -18,43 +20,33 @@ function login_user($user_id, $email, $user_type, $data = [])
   $_SESSION["user"] = $user;
 
   $basket = fetchValue("SELECT basket FROM users WHERE user_id = $user_id");
-  
+
   if ($basket && strlen($_SESSION["basket"]) <= 3) {
     $_SESSION["basket"] = $basket;
+    $_COOKIE["basket"] = $basket;
   }
-  
-  if (strlen($_SESSION["basket"]) > 3) {
+
+  /*if ($app["user"]["basket"]["item_count"] > 0) {
     $_SESSION["redirect"] = "/zakup";
-  }
+  }*/
 
-  $redirect = isset($_SESSION["redirect"]) ? $_SESSION["redirect"] : "";
-  unset($_SESSION["redirect"]);
+  if ($redirect) {
+    $redirectRoute = isset($_SESSION["redirect"]) ? $_SESSION["redirect"] : "";
+    unset($_SESSION["redirect"]);
 
-  if ($redirect == "/zakup")
-  {
-    $_SESSION["just_logged"] = true;
-    header("Location: $redirect");
-    die;
-  }
-  else if (empty($email) || (isset($data["imie"]) && empty($data["imie"])))
-  {
-    header("Location: /moje-konto/dane-uzytkownika");
-    die;
-  }
-  else if ($redirect)
-  {
-
-    if ($redirect == "/zakup")
-    {
-      $_SESSION["just_logged"] = true;
+    if ($redirectRoute == "/zakup") {
+      $_SESSION["just_logged_from_order"] = true;
+      header("Location: $redirectRoute");
+      die;
+    } else if (empty($email) || (isset($data["imie"]) && empty($data["imie"]))) {
+      header("Location: /moje-konto/dane-uzytkownika");
+      die;
+    } else if ($redirectRoute) {
+      header("Location: $redirectRoute");
+      die;
+    } else {
+      header("Location: /moje-konto/zamowienia");
+      die;
     }
-
-    header("Location: $redirect");
-    die;
-  }
-  else
-  {
-    header("Location: /moje-konto/zamowienia");
-    die;
   }
 }

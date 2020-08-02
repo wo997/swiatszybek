@@ -665,8 +665,6 @@ function createTable(table) {
     table.showEditCategory = (row_id = null, isNew = false) => {
       var form = table.tree_view.form;
 
-      showModal(form);
-
       var lcf = (data) => {
         table.tree_view.form_data = data;
         table.tree_view.loadCategoryForm(form, data, isNew);
@@ -681,6 +679,8 @@ function createTable(table) {
           params
         );
       };
+
+      showModal(form);
 
       if (isNew) {
         lcf({
@@ -703,6 +703,7 @@ function createTable(table) {
           },
           success: (res) => {
             lcf(JSON.parse(res).results[0]);
+            setModalInitialState(form);
           },
         });
       }
@@ -1457,7 +1458,15 @@ function registerModal(e) {
   registerSelectboxes();
 }
 
+var modalInitialStates = {};
+
+function setModalInitialState(name) {
+  modalInitialStates[name] = getFormData($(`#${name}`));
+}
+
 function showModal(name = null, params = {}) {
+  setModalInitialState(name);
+
   var m = $("#modal-wrapper");
   var visible = name != null;
   m.classList.toggle("displayModal", visible);
@@ -1537,18 +1546,33 @@ function hideModalTopMost() {
   }
 }
 
-function hideParentModal(obj = null) {
+function hideParentModal(obj = null, isCancel = false) {
   if (obj) {
     var modal = findParentByAttribute(obj, "data-modal");
-    hideModal(modal ? modal.id : null);
+    hideModal(modal ? modal.id : null, isCancel);
   }
   hideModal(null);
 }
 
-function hideModal(name) {
+function hideModal(name, isCancel = false) {
   var m = $("#modal-wrapper");
 
   if (name) {
+    if (isCancel) {
+      var wasState = modalInitialStates[name];
+      var nowState = getFormData($(`#${name}`));
+
+      if (JSON.stringify(wasState) !== JSON.stringify(nowState)) {
+        if (
+          !confirm(
+            "Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
+          )
+        ) {
+          return;
+        }
+      }
+    }
+
     var modal = $(`#${name}`);
     if (modal) {
       modal.style.animation = "fadeOut 0.4s";
@@ -1951,11 +1975,13 @@ function setFormData(data, form = null) {
   resizeCallback();
 }
 
-function getFormData(form = null, options = {}) {
+function getFormData(form = null) {
   if (!form) form = document;
   var data = {};
+
+  var excludeHidden = form.hasAttribute("data-exclude-hidden");
   form.querySelectorAll(`[name]`).forEach((e) => {
-    if (options.excludeHidden && findParentByClassName(e, ["hidden"])) return;
+    if (excludeHidden && findParentByClassName(e, ["hidden"])) return;
     data[e.getAttribute("name")] = getValue(e);
   });
   return data;
@@ -2669,7 +2695,19 @@ window.addEventListener("DOMContentLoaded", function () {
 });
 
 function registerSelectboxes() {
-  document.querySelectorAll(".selectbox:not(.showhover)").forEach((e) => {
+  document.querySelectorAll(".selectbox:not(.registered)").forEach((e) => {
+    e.classList.add("registered");
+    e.querySelectorAll("[data-option]").forEach((o) => {
+      o.addEventListener("click", () => {
+        var i = e.querySelector("input");
+        if (i) {
+          setValue(i, o.getAttribute("data-option"));
+          o.blur();
+        }
+      });
+    });
+  });
+  /*document.querySelectorAll(".selectbox:not(.showhover)").forEach((e) => {
     e.classList.add("showhover");
     e.querySelectorAll("[data-option]").forEach((o) => {
       o.addEventListener("click", () => {
@@ -2679,7 +2717,7 @@ function registerSelectboxes() {
         }
       });
     });
-  });
+  });*/
 }
 
 /* custom selextbox end */

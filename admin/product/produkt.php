@@ -266,12 +266,14 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   }
 
   function editVariant(i) {
+    var formName = "variantEdit";
     var data = variants.results[i];
-    setFormData(data, $("#variantEdit"));
 
-    $(`[name="was_stock"]`).value = data.stock;
+    data.was_stock = data.stock;
 
-    showModal("variantEdit");
+    setFormData(data, $(`#${formName}`));
+
+    showModal(formName);
 
     xhr({
       url: "/admin/get_variant_attributes",
@@ -303,14 +305,14 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           var wrapper = findParentByClassName($(`[name="attribute_values[${attribute.attribute_id}]"]`), "optional-value-wrapper");
           setValue(wrapper.querySelector(`input[type="checkbox"]`), 1);
         }
+
+        setModalInitialState(formName);
       }
     });
   }
 
   function saveVariantForm() {
-    var params = getFormData($("#variantEdit"), {
-      excludeHidden: true
-    });
+    var params = getFormData($("#variantEdit"));
 
     var attribute_values = [];
 
@@ -464,11 +466,11 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   </div>
 </div>
 
-<div id="variantEdit" data-modal data-expand>
+<div id="variantEdit" data-modal data-expand data-exclude-hidden>
   <div class="stretch-vertical">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
-      <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+      <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
       <button class="btn primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
     <div style="padding:10px">
@@ -503,8 +505,14 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       {
         if (!isset($values[0])) return "";
 
+        $first_value_as_name = "";
+        foreach ($values as $value_data) {
+          $first_value_as_name = "name='select_" . $value_data["values"]["value_id"] . "'";
+          break;
+        }
+
         $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
-        $html = "<select $attr data-attribute-value>";
+        $html = "<select $attr data-attribute-value $first_value_as_name>";
         $html .= "<option value=''>Nie dotyczy</option>";
         foreach ($values as $value_data) {
           $html .= "<option value='" . $value_data["values"]["value_id"] . "'>" . $value_data["values"]["value"] . "</option>";

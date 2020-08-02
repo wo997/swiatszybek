@@ -207,7 +207,7 @@
     <div class="stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja kategorii</span>
-            <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div style="padding:10px" class="stretch-vertical">
@@ -242,7 +242,7 @@
                 <div class="field-title">Opis górny <button class="btn primary" type="button" onclick='quillEditor.open($("#editCategory .description"));'>Edytuj</button></div>
                 <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
 
-                <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS($('#editCategory .content'),{ontop:true});">Edytuj </button></div>
+                <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS($('#editCategory .content'));">Edytuj </button></div>
                 <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
                 <br>

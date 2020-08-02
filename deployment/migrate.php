@@ -48,5 +48,8 @@ addColumns("cms", [
   ["name" => "metadata", "type" => "TEXT"]
 ]);
 
+addColumns("users", [
+  ["name" => "remember_me_token", "type" => "TINYTEXT"]
+]);
 
 echo "<h3>✅ All migrations completed</h3>";

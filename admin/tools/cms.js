@@ -126,7 +126,6 @@ function editModule(block) {
     return;
   }
   showModal(moduleName, {
-    ontop: true,
     source: cmsTarget,
   });
   module.formOpen(block);
@@ -538,7 +537,7 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
   }
 }
 
-function editCMS(t, params = {}) {
+function editCMS(t) {
   // TODO: include parameter for preview?
   cmsSource = t;
   removeContent(cms);
@@ -557,9 +556,7 @@ function editCMS(t, params = {}) {
   cmsHistory = [];
   cmsHistoryPush();
 
-  var modalParams = {};
-  if (params.ontop) modalParams.ontop = true;
-  showModal("cms", modalParams);
+  showModal("cms");
 
   cmsUpdate();
 
@@ -715,10 +712,6 @@ function closeCms(save) {
 
 function editContainerSettings() {
   if (!cmsTarget) return;
-  showModal("cmsContainerSettings", {
-    ontop: true,
-    source: cmsTarget,
-  });
 
   document
     .querySelectorAll(`#cmsContainerSettings [data-attribute]`)
@@ -743,6 +736,10 @@ function editContainerSettings() {
         }
       }
     });
+
+  showModal("cmsContainerSettings", {
+    source: cmsTarget,
+  });
 }
 
 function selectInGroup(option) {
@@ -762,10 +759,6 @@ function selectInGroup(option) {
 
 function editBlockSettings() {
   if (!cmsTarget) return;
-  showModal("cmsBlockSettings", {
-    ontop: true,
-    source: cmsTarget,
-  });
 
   $$("#cmsBlockSettings .classList").forEach((e) => {
     e.checked = false;
@@ -794,6 +787,10 @@ function editBlockSettings() {
       var s = $(`.classList[value='${e}']`);
       if (s) s.checked = true;
     }
+  });
+
+  showModal("cmsBlockSettings", {
+    source: cmsTarget,
   });
 }
 
@@ -860,10 +857,6 @@ function saveBlockSettings() {
 
 function editBlockAnimation() {
   if (!cmsTarget) return;
-  showModal("cmsBlockAnimation", {
-    ontop: true,
-    source: cmsTarget,
-  });
 
   $$("#cmsBlockAnimation .classList").forEach((e) => {
     e.checked = false;
@@ -874,6 +867,10 @@ function editBlockAnimation() {
 
   var s = $(`.classList[value='${animation}']`);
   if (s) s.checked = true;
+
+  showModal("cmsBlockAnimation", {
+    source: cmsTarget,
+  });
 }
 
 function saveBlockAnimation() {
@@ -891,11 +888,6 @@ function editCMSBorder() {
   var target = cmsTarget;
   if (!target) return;
 
-  showModal("cmsBorder", {
-    ontop: true,
-    source: target,
-  });
-
   setValue(
     $(`#cmsBorder [data-attribute="border-width"]`),
     target.style.borderWidth
@@ -908,6 +900,10 @@ function editCMSBorder() {
     $(`#cmsBorder [data-attribute="border-radius"]`),
     target.style.borderRadius
   );
+
+  showModal("cmsBorder", {
+    source: target,
+  });
 }
 
 function updateBorderPreview() {
@@ -984,7 +980,6 @@ function editCMSBackground() {
   setBlockBackgroundColor($(".bckgcolor").value);
 
   showModal("cmsBlockBackground", {
-    ontop: true,
     source: target,
   });
 }
@@ -1576,8 +1571,8 @@ registerModalContent(
                     Edycja zawartości
                     <div class="btn primary cms-undo" onclick="cmsHistoryUndo()"> <i class="fas fa-undo-alt"></i> </div>
                     <div class="btn primary cms-redo" onclick="cmsHistoryRedo()"> <i class="fas fa-redo-alt"></i> </div>
-                    <div class="btn primary" onclick="showModal('cmsModules',{ontop: true})" data-tooltip="Wstaw moduł"><i class="fas fa-puzzle-piece"></i></div>
-                    <div class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock',{ontop: true})" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></div>
+                    <div class="btn primary" onclick="showModal('cmsModules')" data-tooltip="Wstaw moduł"><i class="fas fa-puzzle-piece"></i></div>
+                    <div class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></div>
                     <div class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </div>
                 </span>
                 <div class="btn secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
@@ -1600,7 +1595,7 @@ registerModalContent(
                     
                     <div class="btn" onclick="duplicateContainer()" data-tooltip="Duplikuj kontener"> <i class="fas fa-clone"></i> </div>
 
-                    <div class="btn" onclick="window.pasteType='block';showModal('pasteBlock',{ontop: true})" data-tooltip="Wklej skopiowany blok"><i class="fas fa-paste"></i></div>
+                    <div class="btn" onclick="window.pasteType='block';showModal('pasteBlock')" data-tooltip="Wklej skopiowany blok"><i class="fas fa-paste"></i></div>
 
                     <div class="btn" class="delete_block_btn" onclick="deleteContainer()" data-tooltip="Usuń kontener"> <i class="fas fa-times"></i> </div>
                 </div>
@@ -1624,7 +1619,7 @@ registerModalContent(
 
                     <div class="showhover">
                         <div class="btn" data-tooltip="Szerokość"> <i class="fas fa-arrows-alt-h"></i> </div>
-                        <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                        <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                             <div class="btn" onclick="blockWidth('100%')" data-tooltip="100% szerokości strony"> 100% </div>
                             <div class="btn" onclick="blockWidth('50%')" data-tooltip="50% szerokości strony"> 1/2 </div>
                             <div class="btn" onclick="blockWidth('33.333%')" data-tooltip="33.3% szerokości strony"> 1/3 </div>
@@ -1635,7 +1630,7 @@ registerModalContent(
 
                     <div class="showhover">
                         <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać blok i go upuścić"> <i class="fas fa-sort"></i> </div>
-                        <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                        <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                             <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-up"></i> </div>
                             <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-down"></i> </div>
                         </div>
@@ -1676,23 +1671,23 @@ registerModalContent(`
                         <h4>Minimalna wysokość</h4>
                         <div class="selectbox">
                             <input type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
-                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div data-option="">Brak</div>
-                                <div data-option="100px">100px</div>
-                                <div data-option="200px">200px</div>
-                                <div data-option="300px">300px</div>
-                                <div data-option="400px">400px</div>
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <button data-option="">Brak</button>
+                                <button data-option="100px">100px</button>
+                                <button data-option="200px">200px</button>
+                                <button data-option="300px">300px</button>
+                                <button data-option="400px">400px</button>
                             </div>
                         </div>
                         <h4>Szerokość bloku</h4>
                         <div class="selectbox">
                             <input type="text" style="width:150px" data-attribute="desktop-width" data-default-value="100%" data-default-unit="px">
-                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div data-option="100%">100%</div>
-                                <div data-option="50%">1/2</div>
-                                <div data-option="33.333%">1/3</div>
-                                <div data-option="25%">1/4</div>
-                                <div data-option="20%">1/5</div>
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <button data-option="100%">100%</button>
+                                <button data-option="50%">1/2</button>
+                                <button data-option="33.333%">1/3</button>
+                                <button data-option="25%">1/4</button>
+                                <button data-option="20%">1/5</button>
                             </div>
                         </div>
                     </div>
@@ -1701,23 +1696,23 @@ registerModalContent(`
                         <h4>Minimalna wysokość</h4>
                         <div class="selectbox">
                             <input type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
-                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div data-option="">Brak</div>
-                                <div data-option="100px">100px</div>
-                                <div data-option="200px">200px</div>
-                                <div data-option="300px">300px</div>
-                                <div data-option="400px">400px</div>
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <button data-option="">Brak</button>
+                                <button data-option="100px">100px</button>
+                                <button data-option="200px">200px</button>
+                                <button data-option="300px">300px</button>
+                                <button data-option="400px">400px</button>
                             </div>
                         </div>
                         <h4>Szerokość bloku</h4>
                         <div class="selectbox">
                             <input type="text" style="width:150px" data-attribute="mobile-width" data-default-value="100%" data-default-unit="px">
-                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div data-option="100%">100%</div>
-                                <div data-option="50%">1/2</div>
-                                <div data-option="33.333%">1/3</div>
-                                <div data-option="25%">1/4</div>
-                                <div data-option="20%">1/5</div>
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <button data-option="100%">100%</button>
+                                <button data-option="50%">1/2</button>
+                                <button data-option="33.333%">1/3</button>
+                                <button data-option="25%">1/4</button>
+                                <button data-option="20%">1/5</button>
                             </div>
                         </div>
                     </div>
@@ -1853,7 +1848,7 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
         <div style="display:flex;justify-content:center">
             <div class="selectbox">
                 <input type="text" style="width:100px" data-attribute="${prefix}_top" data-default-value="${defaults.top}" data-default-unit="px" class="field" ${target}>
-                <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                     <div data-option="0">0</div>
                     <div data-option="12px">12px</div>
                     <div data-option="24px">24px</div>
@@ -1867,7 +1862,7 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
         <div style="display:flex;justify-content: space-around;padding: 20px 0;">
             <div class="selectbox">
                 <input type="text" style="width:100px" data-attribute="${prefix}_left" data-default-value="${defaults.left}" data-default-unit="px" class="field" ${target}>
-                <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                     <div data-option="0">0</div>
                     <div data-option="12px">12px</div>
                     <div data-option="24px">24px</div>
@@ -1879,7 +1874,7 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
             </div>
             <div class="selectbox">
                 <input type="text" style="width:100px" data-attribute="${prefix}_right" data-default-value="${defaults.right}" data-default-unit="px" class="field" ${target}>
-                <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                     <div data-option="0">0</div>
                     <div data-option="12px">12px</div>
                     <div data-option="24px">24px</div>
@@ -1893,7 +1888,7 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
         <div style="display:flex;justify-content:center">
             <div class="selectbox">
                 <input type="text" style="width:100px" data-attribute="${prefix}_bottom" data-default-value="${defaults.bottom}" data-default-unit="px" class="field" ${target}>
-                <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                     <div data-option="0">0</div>
                     <div data-option="12px">12px</div>
                     <div data-option="24px">24px</div>
@@ -1921,7 +1916,7 @@ registerModalContent(`
                 <div class="field-title">Grubość krawędzi</div>
                 <div class="selectbox">
                     <input type="text" style="width:100px" class="field border-width" data-attribute="border-width" onchange="updateBorderPreview()">
-                    <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                    <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                         <div data-option="0">0</div>
                         <div data-option="1px">1px</div>
                         <div data-option="2px">2px</div>
@@ -1936,7 +1931,7 @@ registerModalContent(`
                 <div class="field-title">Zaokrąglenie krawędzi</div>
                 <div class="selectbox">
                     <input type="text" style="width:100px" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
-                    <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                    <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                         <div data-option="0">0</div>
                         <div data-option="6px">6px</div>
                         <div data-option="10px">10px</div>
@@ -1978,7 +1973,7 @@ registerModalContent(`
                         <h4>Minimalna wysokość</h4>
                         <div class="selectbox">
                             <input type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
-                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <div data-option="">Brak</div>
                                 <div data-option="100px">100px</div>
                                 <div data-option="200px">200px</div>
@@ -2013,7 +2008,7 @@ registerModalContent(`
                         <h4>Minimalna wysokość</h4>
                         <div class="selectbox">
                             <input type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
-                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <div data-option="">Brak</div>
                                 <div data-option="100px">100px</div>
                                 <div data-option="200px">200px</div>

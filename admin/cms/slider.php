@@ -119,7 +119,7 @@
     <div class="stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja slajdu</span>
-            <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div>
@@ -129,10 +129,10 @@
                 <option value="0">Ukryty</option>
             </select>
 
-            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling, {ontop: true})" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling)" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
             <div class="cms preview_html" name="content_desktop" data-type="html"></div>
 
-            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling, {ontop: true})" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling)" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
             <div class="cms preview_html" name="content_mobile" data-type="html"></div>
 
             <input type="hidden" name="slide_id">

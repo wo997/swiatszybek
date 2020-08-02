@@ -6,12 +6,12 @@ window.imagePicker = {
   open: (target = null, callback = null) => {
     imagePicker.target = target;
     imagePicker.callback = callback;
-    showModal("imagePicker", { ontop: true });
     if (imagePicker.firstOpen) {
       imagePicker.search();
       imagePicker.firstOpen = false;
     }
     imagePicker.setTag(null, true);
+    showModal("imagePicker");
   },
   choose: (src) => {
     hideModalTopMost();
