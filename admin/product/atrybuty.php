@@ -127,7 +127,7 @@
                     width: "95px",
                     render: (r, i, t) => {
                         return `
-                            <div class="btn secondary" onclick="editAttribute(${i},${t.name})">Edytuj <i class="fa fa-cog"></i></div>
+                            <div class="btn secondary" onclick="editAttribute(this,${i},${t.name})">Edytuj <i class="fa fa-cog"></i></div>
                         `;
                     },
                     escape: false
@@ -138,7 +138,7 @@
                         <input type="text" placeholder="Filtruj..." data-param="search">
                         <i class="fas fa-search"></i>
                     </div>
-                    <div class="btn primary" onclick="editAttribute()"><span>Dodaj atrybut</span> <i class="fa fa-plus"></i></div>
+                    <div class="btn primary" onclick="editAttribute(this)"><span>Dodaj atrybut</span> <i class="fa fa-plus"></i></div>
                 `
         });
 
@@ -322,9 +322,9 @@
         window[list.name] = list;
     }
 
-    function editAttribute(row_id = null, table = null) {
-        var form = "editAttribute";
-        var formElement = $(`#${form}`);
+    function editAttribute(btn = null, row_id = null, table = null) {
+        var formName = "editAttribute";
+        var form = $(`#${formName}`);
 
         var data = {
             attribute_id: -1,
@@ -343,14 +343,17 @@
                 },
                 success: (res) => {
                     attribute_values.setValues(JSON.parse(res));
+                    setModalInitialState(formName);
                 }
             });
         } else {
             attribute_values.setValues([]);
         }
 
-        setFormData(data, formElement);
-        showModal(form);
+        setFormData(data, form);
+        showModal(formName, {
+            source: btn
+        });
     }
 
     function saveAttribute(remove = false) {

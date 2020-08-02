@@ -177,7 +177,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           title: "",
           width: "95px",
           render: (r, i) => {
-            return `<div class='btn primary' onclick='editVariant(${i})'>Edytuj <i class="fas fa-cog"></i></div>`;
+            return `<div class='btn primary' onclick='editVariant(${i},this)'>Edytuj <i class="fas fa-cog"></i></div>`;
           },
           escape: false
         }
@@ -187,7 +187,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
                     <input type="text" placeholder="Szukaj..." data-param="search">
                     <i class="fas fa-search"></i>
                 </div>
-                <div class="btn primary" onclick="newVariant()"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
+                <div class="btn primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
             `
     });
 
@@ -245,7 +245,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     editCMS($('#product-content'));
   }
 
-  function newVariant() {
+  function newVariant(btn) {
     var data = {
       name: "",
       price: "",
@@ -262,10 +262,12 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
     $(`[name="was_stock"]`).value = data.stock;
 
-    showModal("variantEdit");
+    showModal("variantEdit", {
+      source: btn
+    });
   }
 
-  function editVariant(i) {
+  function editVariant(i, btn) {
     var formName = "variantEdit";
     var data = variants.results[i];
 
@@ -273,7 +275,9 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
     setFormData(data, $(`#${formName}`));
 
-    showModal(formName);
+    showModal(formName, {
+      source: btn
+    });
 
     xhr({
       url: "/admin/get_variant_attributes",

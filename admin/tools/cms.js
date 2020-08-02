@@ -489,7 +489,7 @@ function editCMS(t) {
   cmsHistory = [];
   cmsHistoryPush();
 
-  showModal("cms");
+  showModal("cms", { source: cmsSource });
 
   cmsUpdate();
 }
