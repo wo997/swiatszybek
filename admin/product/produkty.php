@@ -44,13 +44,15 @@
           <option value=''>Wszystkie</option>
           <option value='published'>Tylko publiczne</option>
         </select>
-        <button class="btn primary" onclick="addNew()"><span>Nowy produkt</span> <i class="fa fa-plus"></i></button>
+        <button class="btn primary" onclick="addNew(this)"><span>Nowy produkt</span> <i class="fa fa-plus"></i></button>
       `
     });
   });
 
-  function addNew() {
-    showModal("newProduct");
+  function addNew(btn) {
+    showModal("newProduct", {
+      source: btn
+    });
   }
 </script>
 

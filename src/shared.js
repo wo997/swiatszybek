@@ -550,7 +550,7 @@ function createTable(table) {
     table.controls += `
       <div style="width:100%">
         <div class="breadcrumb"></div>
-        <div class="btn primary" onclick="${table.name}.showEditCategory(null,true)">Dodaj <i class="fa fa-plus"></i></div>
+        <div class="btn primary" onclick="${table.name}.showEditCategory(this,null,true)">Dodaj <i class="fa fa-plus"></i></div>
       </div>
     `;
   }
@@ -662,10 +662,10 @@ function createTable(table) {
       });
       table.search();
     };
-    table.showEditCategory = (row_id = null, isNew = false) => {
+    table.showEditCategory = (btn = null, row_id = null, isNew = false) => {
       var form = table.tree_view.form;
 
-      var lcf = (data) => {
+      var loadCategoryFormCallback = (data) => {
         table.tree_view.form_data = data;
         table.tree_view.loadCategoryForm(form, data, isNew);
 
@@ -678,12 +678,14 @@ function createTable(table) {
           table.parent_id,
           params
         );
+
+        setModalInitialState(form);
       };
 
-      showModal(form);
+      showModal(form, { source: btn });
 
       if (isNew) {
-        lcf({
+        loadCategoryFormCallback({
           parent_id: table.getParentId(),
           category_id: -1,
         });
@@ -702,8 +704,7 @@ function createTable(table) {
             category_id: category_id,
           },
           success: (res) => {
-            lcf(JSON.parse(res).results[0]);
-            setModalInitialState(form);
+            loadCategoryFormCallback(JSON.parse(res).results[0]);
           },
         });
       }
@@ -811,7 +812,7 @@ function createTable(table) {
         }</div>`;
       }
       if (table.breadcrumb.length > 1)
-        out += ` <div class="btn primary" onclick="${table.name}.showEditCategory(null)" style="margin-left:10px">Edytuj <i class="fa fa-cog"></i></div>`;
+        out += ` <div class="btn primary" onclick="${table.name}.showEditCategory(this,null)" style="margin-left:10px">Edytuj <i class="fa fa-cog"></i></div>`;
       table.breadcrumbElement.innerHTML = out;
     }
 
@@ -2058,7 +2059,9 @@ function setCategoryPickerValues(element, values, params = {}) {
 
     var check = false;
     if (singleselect) {
-      check = values.toString() == e.getAttribute("data-category_id");
+      if (values) {
+        check = values.toString() == e.getAttribute("data-category_id");
+      }
     } else {
       check = values.indexOf(e.getAttribute("data-category_id")) !== -1;
     }

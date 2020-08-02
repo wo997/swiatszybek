@@ -59,7 +59,7 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
                     width: "185px",
                     render: (r, i, t) => {
                         return `
-                            <div class="btn secondary" onclick="${t.name}.showEditCategory(${i})">Edytuj <i class="fa fa-cog"></i></div>
+                            <div class="btn secondary" onclick="${t.name}.showEditCategory(this,${i})">Edytuj <i class="fa fa-cog"></i></div>
                             <div class="btn primary" onclick="${t.name}.openCategory(${i})">Więcej <i class="fas fa-chevron-circle-right"></i></div>
                         `;
                     },

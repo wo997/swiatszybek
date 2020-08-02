@@ -11,7 +11,7 @@ window.imagePicker = {
       imagePicker.firstOpen = false;
     }
     imagePicker.setTag(null, true);
-    showModal("imagePicker");
+    showModal("imagePicker", { source: target });
   },
   choose: (src) => {
     hideModalTopMost();
