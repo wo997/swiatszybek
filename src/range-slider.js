@@ -4,24 +4,27 @@ function registerRangeSliders() {
     var background = range.getAttribute("data-background");
     var cl = range.getAttribute("data-class");
 
-    range.insertAdjacentHTML("afterend", `
+    range.insertAdjacentHTML(
+      "afterend",
+      `
       <div class="range-wrap">
         <div class="range-rect"></div>
         ${range.outerHTML}
         <output class="bubble"></output>
       </div>
-    `);
+    `
+    );
 
     const wrap = range.nextElementSibling;
 
-    deleteNode(range);
+    removeNode(range);
 
     range = wrap.querySelector("input[type=range]");
     range.classList.add("range");
 
     if (cl) {
       range.classList.add(cl);
-      wrap.classList.add(cl+"-wrapper");
+      wrap.classList.add(cl + "-wrapper");
     }
 
     const rect = wrap.querySelector(".range-rect");
@@ -43,7 +46,7 @@ function registerRangeSliders() {
     const val = range.value;
 
     const min = range.min || 0;
-    const max =  range.max || 100;
+    const max = range.max || 100;
 
     const offset = Number(((val - min) * 100) / (max - min));
 
@@ -54,7 +57,7 @@ function registerRangeSliders() {
   }
 }
 
-function setRangeSliderValue(slider,value) {
+function setRangeSliderValue(slider, value) {
   slider.value = value;
   slider.dispatchEvent(new Event("input"));
 }

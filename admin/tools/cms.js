@@ -142,7 +142,7 @@ function saveModule(button) {
   hideParentModal(button);
 
   var c = cmsTarget.querySelector(".module-content"); // force update
-  if (c) deleteNode(c);
+  if (c) removeNode(c);
 }
 
 function editBlock() {
@@ -308,34 +308,71 @@ var modules = {
     icon: '<i class="far fa-address-card"></i>',
     editUrl: "/admin/konfiguracja",
   },
-  "html-module": {
+  "custom-html": {
     params: "",
     description: "Moduł HTML",
     icon: '<i class="fas fa-code"></i>',
     form: `
             <div class="default-form" style="width:600px; max-width:90vw;">
               <div class="field-title">HTML</div>
-                <textarea style="width:100%; resize:none; height:400px"></textarea>
+                <textarea class="field html" style="width:100%; height:400px"></textarea>
               <div class="field-title">CSS</div>
-                <textarea></textarea>
+                <textarea class="field css" style="width:100%; height:400px"></textarea>
+              <div class="field-title">JS</div>
+                <textarea class="field js" style="width:100%; height:400px"></textarea>
             </div>
             `,
     formOpen: (block) => {
-      var productListCount = 0;
-      try {
-        var params = JSON.parse(block.getAttribute("data-module-params"));
-        productListCount = params["productListCount"];
-      } catch {}
-      document.getElementById("productListCount").value = productListCount;
+      var content = block.querySelector(".cms-block-content");
 
-      loadCategoryPicker("product_categories", { skip: 2 });
+      $("#custom-html .html").value = content.querySelector(
+        ".html-container"
+      ).innerHTML;
+      $("#custom-html .css").value = block.getAttribute("data-css");
+      $("#custom-html .js").value = content.querySelector("script").innerHTML;
     },
     formClose: () => {
-      var params = {};
-      params["productListCount"] = document.getElementById(
-        "productListCount"
+      // TODO: consider cloning module
+
+      // checks whether it is new container or not
+      var id = cmsTarget.getAttribute("data-custom-html-id");
+      if (!id) {
+        id = Math.floor(Math.random() * 99999 + 1);
+        while (true) {
+          if (!$(`.cms-block[data-custom-html-id="${id}"]`)) break;
+          id++;
+        }
+      }
+
+      var blockContent = cmsTarget.querySelector(`.cms-block-content`);
+      blockContent.querySelector(`.html-container`).innerHTML = $(
+        "#custom-html .html"
       ).value;
-      cmsTarget.setAttribute("data-module-params", JSON.stringify(params));
+
+      blockContent.querySelector(`script`).innerHTML = $(
+        "#custom-html .js"
+      ).value;
+
+      cmsTarget.setAttribute("data-css", $("#custom-html .css").value);
+
+      removeNode(blockContent.querySelector(`style`));
+
+      // // scope css
+      // if (css) {
+      //   css = css
+      //     .split("}")
+      //     .map((elem) => ` .cms-block[data-custom-html-id="${id}"] ${elem}`)
+      //     .join("}");
+      // }
+      // var id = block.getAttribute("data-custom-html-id");
+      // var re = `div\\[data-custom-html-id="${id}"\\]`;
+      // var regex = new RegExp(`div\\[data-custom-html-id="${id}"\\]`, "g");
+
+      //  BUG: it doesn't show up changes when removing styles involving things that were previously saved as page content
+      // (because the elements already have styles applied, they don't read it from style tag)
+      //  possible solution 1: maybe instead of adding <style> tags, i should change elements style directly
+      //  possible solution 2: try to re render cms-block-content
+      //  possible solution 3: https://css-tricks.com/almanac/properties/a/all/ on children
     },
   },
 };
@@ -451,7 +488,7 @@ function deleteContainer(nodeToDelete = null, pushHistory = true) {
   node.style.pointerEvents = "none";
   node.classList.add("removing");
   setTimeout(() => {
-    deleteNode(node);
+    removeNode(node);
   }, 400);
 
   if (pushHistory) {
@@ -493,7 +530,7 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
   node.style.pointerEvents = "none";
   node.classList.add("removing");
   setTimeout(() => {
-    deleteNode(node);
+    removeNode(node);
   }, 400);
 
   if (pushHistory) {
@@ -514,7 +551,7 @@ function editCMS(t, params = {}) {
 
   $$("#cms .cms-block[data-module]").forEach((e) => {
     var c = e.querySelector(".module-content");
-    if (c) deleteNode(c);
+    if (c) removeNode(c);
   });
 
   cmsHistory = [];
@@ -525,6 +562,19 @@ function editCMS(t, params = {}) {
   showModal("cms", modalParams);
 
   cmsUpdate();
+
+  // cleaning up global css and js
+  cmsSource.querySelectorAll(`style`).forEach((elem) => {
+    elem.outerHTML = elem.outerHTML
+      .replace(`<style>`, "<styleDisabled>")
+      .replace(`</style>`, "</styleDisabled>");
+  });
+
+  cmsSource.querySelectorAll(`script`).forEach((elem) => {
+    elem.outerHTML = elem.outerHTML
+      .replace(`<script>`, "<scriptDisabled>")
+      .replace(`</script>`, "</scriptDisabled>");
+  });
 }
 
 function cmsUpdate() {
@@ -537,46 +587,72 @@ function cmsUpdate() {
   if (cmsHistoryStepBack == 0) $(".cms-redo").setAttribute("disabled", "true");
   else $(".cms-redo").removeAttribute("disabled");
 
-  $$("#cms .cms-block").forEach((e) => {
-    e.setAttribute("draggable", true);
-    if (
-      ![...e.children].find((c) => c.classList.contains("background-color"))
-    ) {
-      e.insertAdjacentHTML(
-        "afterbegin",
-        `<div class="background-color"></div>`
-      );
-    }
+  $$("#cms .cms-block").forEach((block) => {
+    block.setAttribute("draggable", true);
 
-    [...e.children].forEach((x) => {
+    addMissingDirectChildren(
+      block,
+      (c) => c.classList.contains("background-color"),
+      `<div class="background-color"></div>`,
+      "afterbegin"
+    );
+
+    addMissingDirectChildren(
+      block,
+      (c) => c.classList.contains("cms-block-content"),
+      `<div class="cms-block-content"></div>`
+    );
+
+    [...block.children].forEach((x) => {
       if (
         !x.classList.contains("background-color") &&
         !x.classList.contains("cms-block-content")
       ) {
         console.error("Unknown element removed", x.innerHTML);
-        deleteNode(x);
+        removeNode(x);
       }
     });
+
+    if (block.getAttribute("data-module") == "custom-html") {
+      const content = block.querySelector(".cms-block-content");
+      addMissingDirectChildren(
+        content,
+        (c) => c.classList.contains("html-container"),
+        `<div class="html-container"></div>`
+      );
+      addMissingDirectChildren(
+        content,
+        (c) => c.tagName == "STYLE",
+        `<style>${nonull(block.getAttribute("data-css"))}</style>`
+      );
+      addMissingDirectChildren(
+        content,
+        (c) => c.tagName == "SCRIPT",
+        `<script></script>`
+      );
+    }
   });
 
-  $$("#cms .cms-container").forEach((e) => {
-    e.setAttribute("draggable", true);
+  $$("#cms .cms-container").forEach((container) => {
+    container.setAttribute("draggable", true);
     if (
-      ![...e.children].find((c) => c.classList.contains("background-color"))
+      ![...container.children].find((c) =>
+        c.classList.contains("background-color")
+      )
     ) {
-      e.insertAdjacentHTML(
+      container.insertAdjacentHTML(
         "afterbegin",
         `<div class="background-color"></div>`
       );
     }
 
-    [...e.children].forEach((x) => {
+    [...container.children].forEach((x) => {
       if (
         !x.classList.contains("background-color") &&
         !x.classList.contains("cms-container-content")
       ) {
         console.error("Unknown element removed", x.innerHTML);
-        deleteNode(x);
+        removeNode(x);
       }
     });
   });

@@ -218,7 +218,7 @@ function delay(action, time, context = window) {
   }, time);
 }
 
-function deleteNode(n) {
+function removeNode(n) {
   if (n && n.parentNode) n.parentNode.removeChild(n);
 }
 
@@ -233,6 +233,17 @@ function removeContent(node) {
 function setContent(node, html = "") {
   removeContent(node);
   node.insertAdjacentHTML("afterbegin", html);
+}
+
+function addMissingDirectChildren(
+  parent,
+  isMissingCallback,
+  html,
+  position = "beforeend"
+) {
+  if (![...parent.children].find(isMissingCallback)) {
+    parent.insertAdjacentHTML(position, html);
+  }
 }
 
 function swapNodes(n1, n2) {
@@ -1041,7 +1052,7 @@ function createTable(table) {
       } else return;
     }
 
-    deleteNode(table.target.querySelector(`[data-primary='${data_id}']`));
+    removeNode(table.target.querySelector(`[data-primary='${data_id}']`));
     table.selectionChange();
   };
   table.addRow = (data_id) => {
@@ -1160,7 +1171,7 @@ window.addEventListener("dragend", () => {
   }
   removeClasses("grabbed");
   document.querySelectorAll(".tableRearrange").forEach((e) => {
-    deleteNode(e);
+    removeNode(e);
   });
   tableRearrange.element = null;
 });
@@ -1394,6 +1405,12 @@ function escapeHTML(unsafeText) {
   let div = document.createElement("div");
   div.innerText = unsafeText;
   return div.innerHTML;
+}
+
+function decodeHtml(html) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
 }
 
 function renderStatus(status_id) {
@@ -2141,7 +2158,7 @@ function loadCategoryPicker(
         )
         .forEach((e) => {
           [...e.children].forEach((e) => {
-            deleteNode(e);
+            removeNode(e);
           });
           e.insertAdjacentHTML("afterbegin", c);
 
@@ -2328,7 +2345,7 @@ function dismissNotification(n) {
   n.style.opacity = 0;
   n.style.pointerEvents = "none";
   setTimeout(() => {
-    deleteNode(n);
+    removeNode(n);
   }, 200);
 }
 

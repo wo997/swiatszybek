@@ -42,5 +42,11 @@ addColumns("kody_rabatowe", [
 
 dropColumns("kody_rabatowe", ["product_id_list"]);
 
+// migration from 31.07.2020
+
+addColumns("cms", [
+  ["name" => "metadata", "type" => "TEXT"]
+]);
+
 
 echo "<h3>✅ All migrations completed</h3>";

@@ -268,7 +268,7 @@
                         <i class="btn secondary fas fa-arrow-up" onclick="swapNodes(this.parentNode.parentNode,this.parentNode.parentNode.previousElementSibling);${list.name}.valuesChanged();"></i>
                         <i class="btn secondary fas fa-arrow-down" onclick="swapNodes(this.parentNode.parentNode,this.parentNode.parentNode.nextElementSibling);${list.name}.valuesChanged();"></i>
                         <div style="width:10px"></div>
-                        <i class="btn secondary fas fa-times" onclick="deleteNode(this.parentNode.parentNode);${list.name}.valuesChanged();"></i>
+                        <i class="btn secondary fas fa-times" onclick="removeNode(this.parentNode.parentNode);${list.name}.valuesChanged();"></i>
                     </div>
                     <div class="sub-list">
                         ${addBtn}
