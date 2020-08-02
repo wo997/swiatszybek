@@ -1458,6 +1458,7 @@ function registerModal(e) {
   registerSelectboxes();
 }
 
+var modalHideCallbacks = {};
 var modalInitialStates = {};
 
 function setModalInitialState(name) {
@@ -1466,6 +1467,7 @@ function setModalInitialState(name) {
 
 function showModal(name = null, params = {}) {
   setModalInitialState(name);
+  modalHideCallbacks[name] = params.hideCallback;
 
   var m = $("#modal-wrapper");
   var visible = name != null;
@@ -1582,6 +1584,12 @@ function hideModal(name, isCancel = false) {
         modal.style.animation = "";
       }, 200);
     }
+
+    const hideCallback = modalHideCallbacks[name];
+    if (hideCallback) {
+      hideCallBack();
+    }
+    // TODO: add cms hidecallback in cms
   }
 
   var visibleModalCount = 0;

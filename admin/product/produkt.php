@@ -311,7 +311,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     });
   }
 
-  function saveVariantForm() {
+  function saveVariantForm(remove = false) {
     var params = getFormData($("#variantEdit"));
 
     var attribute_values = [];
@@ -323,6 +323,10 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     })
 
     params.attribute_selected_values = JSON.stringify(attribute_values);
+
+    if (remove) {
+      params["remove"] = true;
+    }
 
     xhr({
       url: "/admin/save_variant",
@@ -456,9 +460,6 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     <input type="hidden" name="product_id">
 
     <?php if (!$kopia) : ?>
-      <!-- <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-        <button class="btn red" onclick="saveSlide(true);hideParentModal(this)">Usuń slajd <i class="fa fa-trash"></i></button>
-      </div> -->
       <div style="display: flex; justify-content: flex-end">
         <div class="btn red" style='margin-top:30px' onclick="deleteItem()">Usuń produkt <i class="fa fa-trash"></i></div>
       </div>
@@ -553,6 +554,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         echo "</div>";
       }
 
+
       ?>
 
       <div class="field-title">
@@ -571,6 +573,9 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       <input type="hidden" name="was_stock">
       <input type="hidden" name="product_id">
       <input type="hidden" name="variant_id">
+      <div style="display: flex; justify-content: flex-end; margin-top: 20px">
+        <button class=" btn red" onclick="saveVariantForm(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
+      </div>
     </div>
   </div>
 
