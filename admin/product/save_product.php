@@ -1,6 +1,6 @@
 <?php //route[admin/save_product]
 
-$input = ["exceptions" => ["categories", "description"]];
+$input = ["exceptions" => ["categories", "description", "gallery"]];
 include "helpers/safe_post.php";
 
 if (isset($_POST["remove"])) {
@@ -19,10 +19,10 @@ if (isset($_POST["remove"])) {
 
     query("UPDATE products SET title = ?, link = ?, seo_title = ?, seo_description = ?,
       specyfikacja = ?, specyfikacja_output = ?, description = ?, descriptionShort = ?,
-      image = ?, image_desktop = ?, published = ? WHERE product_id = " . intval($product_id), [
+      image = ?, gallery = ?, published = ? WHERE product_id = " . intval($product_id), [
         $_POST["title"], $_POST["link"], $_POST["seo_title"], $_POST["seo_description"],
         $_POST["specyfikacja"], $_POST["specyfikacja_output"], $_POST["description"], $_POST["descriptionShort"],
-        $_POST["image"], $_POST["image_desktop"], $_POST["published"]
+        $_POST["image"], $_POST["gallery"], $_POST["published"]
     ]);
 
     // categories

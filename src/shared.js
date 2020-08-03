@@ -1749,16 +1749,13 @@ function moveCursorToEnd(el) {
 function setValue(input, value) {
   if (input.classList.contains("table-selection-value")) {
     var datatable = findParentByClassName(input, "datatable-wrapper");
-    //console.log(value);
     window[datatable.getAttribute("data-table-name")].setSelectedValuesString(
       value
     );
-    return;
   } else if (input.classList.contains("jscolor")) {
     var hex = value.replace("#", "");
     input.value = hex;
     input.style.background = hex ? "#" + hex : "";
-    return;
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
   } else {
@@ -1769,13 +1766,11 @@ function setValue(input, value) {
         input = input.querySelector(pointChild);
       }
       input.innerHTML = value;
-      return;
     } else if (type == "src") {
       var prefix = input.getAttribute(`data-src-prefix`);
       if (!prefix) prefix = "/uploads/df/";
       if (value) value = prefix + value;
       input.setAttribute("src", value);
-      return;
     } else {
       input.value = value;
     }
@@ -2777,3 +2772,205 @@ function rgbStringToHex(rgbString) {
     );
   });
 }
+
+// simple list start
+
+function createSimpleList(params = {}) {
+  var list = {};
+  list.name = params.name;
+  list.fields = params.fields;
+  list.params = params;
+  list.recursive = nonull(params.recursive, 0);
+
+  list.wrapper = $(`.${params.name}`);
+  list.wrapper.classList.add("simple-list");
+
+  var className = "";
+
+  if (!params.title) {
+    params.title = "";
+  }
+
+  if (params.title) {
+    className = "field-title";
+  }
+
+  list.wrapper.insertAdjacentHTML(
+    "afterbegin",
+    `
+      <div class="${className}">
+          <span>${params.title}</span>
+          <div class="btn primary" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-arrow-up"></i></div>
+          <div class="btn primary" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-arrow-down"></i></div>
+      </div>
+      <div class="list"></div>
+      <input type="hidden" class="simple-list-value" name="${list.name}" onchange="${list.name}.setValuesFromString(this.value)">
+  `
+  );
+
+  list.insertRow = (btn, begin = true) => {
+    list.addRow(params.default_row, btn.parentNode.nextElementSibling, begin);
+  };
+
+  list.target = $(`.${params.name} .list`);
+  list.target.setAttribute("data-depth", 1);
+
+  list.outputNode = document.querySelector(
+    `.${params.name} .simple-list-value`
+  );
+
+  list.rows = [];
+
+  list.clear = () => {
+    removeContent(list.target);
+    list.valuesChanged();
+  };
+
+  list.setValuesFromString = (valuesString) => {
+    var values;
+    try {
+      values = JSON.parse(valuesString);
+    } catch (e) {
+      values = [];
+    }
+    list.setValues(values);
+  };
+
+  list.setValues = (values) => {
+    list.clear();
+
+    addValues = (values, listTarget = null) => {
+      if (listTarget === null) {
+        listTarget = list.target;
+      }
+      for (var value_data of values) {
+        var parent_value_list = list.addRow(value_data.values, listTarget);
+        if (value_data.children) {
+          addValues(value_data.children, parent_value_list);
+        }
+      }
+    };
+    addValues(values);
+  };
+
+  list.addRow = (values, listTarget = null, begin = false) => {
+    if (listTarget === null) {
+      listTarget = list.target;
+    }
+
+    var canAdd = true;
+
+    [...listTarget.children].forEach((simpleListRowWrapper) => {
+      simpleListRowWrapper
+        .querySelector(".simple-list-row")
+        .querySelectorAll("[data-list-param]")
+        .forEach((e) => {
+          var param = e.getAttribute("data-list-param");
+          if (
+            list.fields[param].unique &&
+            getValue(e) == values[param] &&
+            getValue(e) !== ""
+          ) {
+            canAdd = false;
+          }
+        });
+    });
+
+    if (!canAdd) {
+      return;
+    }
+
+    var depth = parseInt(listTarget.getAttribute("data-depth"));
+
+    var addBtn =
+      depth < list.recursive
+        ? `<div style="padding: 5px 0">
+              <span>Powiązane wartości</span>
+              <div class="btn primary" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-arrow-up"></i></div>
+              <div class="btn primary" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-arrow-down"></i></div>
+          </div>`
+        : "";
+
+    listTarget.insertAdjacentHTML(
+      begin ? "afterbegin" : "beforeend",
+      `
+          <div class='simple-list-row-wrapper'>
+              <div class='simple-list-row'>
+                  ${params.render(values)}
+                  <div style="flex-grow:1"></div>
+                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes(this.parentNode.parentNode,this.parentNode.parentNode.previousElementSibling);${
+                    list.name
+                  }.valuesChanged();"></i>
+                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes(this.parentNode.parentNode,this.parentNode.parentNode.nextElementSibling);${
+                    list.name
+                  }.valuesChanged();"></i>
+                  <div style="width:10px"></div>
+                  <i class="btn secondary fas fa-times" onclick="deleteNode(this.parentNode.parentNode);${
+                    list.name
+                  }.valuesChanged();"></i>
+              </div>
+              <div class="sub-list">
+                  ${addBtn}
+                  <div class="list" data-depth="${1 + depth}"></div>
+              </div>
+          </div>
+      `
+    );
+
+    list.valuesChanged();
+
+    [
+      ...list.target.querySelectorAll(
+        "[data-list-param]:not(.param-registered)"
+      ),
+    ].forEach((e) => {
+      e.classList.add("param-registered");
+
+      e.addEventListener("change", () => {
+        list.valuesChanged();
+      });
+    });
+
+    var n = begin ? 0 : listTarget.children.length - 1;
+    return listTarget.children[n].querySelector(".list");
+  };
+
+  list.valuesChanged = () => {
+    var getDirectRows = (listTarget, level) => {
+      var rows = [];
+      [...listTarget.children].forEach((simpleListRowWrapper) => {
+        var row = {
+          values: {},
+        };
+        simpleListRowWrapper
+          .querySelector(".simple-list-row")
+          .querySelectorAll("[data-list-param]")
+          .forEach((e) => {
+            var param = e.getAttribute("data-list-param");
+            row.values[param] = getValue(e);
+          });
+        if (level < list.recursive) {
+          row.children = getDirectRows(
+            simpleListRowWrapper.querySelector(".sub-list > .list"),
+            level++
+          );
+        }
+
+        rows.push(row);
+      });
+      return rows;
+    };
+
+    list.values = getDirectRows(list.target, 1);
+
+    list.outputNode.value = JSON.stringify(list.values);
+  };
+
+  if (params.output) {
+    $(params.output).setAttribute("data-type", "simple-list");
+  }
+
+  window[list.name] = list;
+}
+
+// simple list end

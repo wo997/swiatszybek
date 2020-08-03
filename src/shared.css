@@ -2535,3 +2535,75 @@ input:placeholder-shown:hover + .miejscowosc-picker-list, input:placeholder-show
   0% {opacity: 0}
   100% {opacity: 1}
 }
+
+/* simple list start */
+
+.simple-list>.list {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.simple-list .controls {
+  display: flex;
+  padding: 5px;
+  background: #ccc;
+  border: 1px solid #bbb;
+}
+
+.simple-list-row {
+  margin: -1px;
+  padding-right: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.simple-list-row .btn.fas {
+  height: 25px;
+  width: 25px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.simple-list-row>.fa-times {
+  color: #c22;
+  border-color: #c22;
+}
+
+.simple-list-row>.fa-times:hover {
+  background: #c22;
+  color: #fff;
+}
+
+.sub-list {
+  padding-left: 35px;
+}
+
+.simple-list-row-wrapper {
+  background: #aaa4;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+}
+
+.sub-list>.list>.simple-list-row-wrapper:first-child {
+  padding-top: 3px;
+}
+
+.sub-list>.list>.simple-list-row-wrapper:last-child {
+  margin-bottom: -3px;
+}
+
+.simple-list-row-wrapper {
+  border: 1px solid #aaac;
+}
+
+.simple-list-row-wrapper:not(:last-child) {
+  border-bottom: none;
+}
+
+.sub-list .simple-list-row-wrapper {
+  border-right: none;
+}
+
+/* simple list end */

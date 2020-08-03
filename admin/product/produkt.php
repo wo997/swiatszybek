@@ -222,6 +222,28 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       }
     });
 
+    createSimpleList({
+      name: "gallery",
+      fields: {
+        src: {
+          unique: true,
+        }
+      },
+      render: (data) => {
+        var clean = (x) => {
+          return x.toString().replace(/"/g, "");
+        };
+        return `
+            <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
+            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin: 10px;max-width:200px;max-height:200px">
+          `;
+      },
+      default_row: {
+        src: ""
+      },
+      title: "Galeria zdjęć produktu"
+    });
+
     setFormData(<?= json_encode($product_data) ?>, $("#productForm"));
   });
 
@@ -419,6 +441,8 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         </div>
       </div>
     </div>
+
+    <div class="gallery"></div>
 
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">

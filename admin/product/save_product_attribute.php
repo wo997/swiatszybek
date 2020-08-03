@@ -49,7 +49,9 @@ if (isset($_POST["remove"])) {
 
             $value_ids .= $value_id . ",";
 
-            manageAttributeValuesRows($attribute["children"], $depth++, $value_id);
+            if (isset($attribute["children"])) {
+                manageAttributeValuesRows($attribute["children"], $depth++, $value_id);
+            }
         }
     }
 

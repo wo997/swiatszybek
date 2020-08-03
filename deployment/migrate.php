@@ -46,4 +46,10 @@ addColumns("users", [
   ["name" => "remember_me_token", "type" => "TINYTEXT"]
 ]);
 
+// migration from 02.08.2020
+addColumns("products", [
+  ["name" => "gallery", "previous_name" => "image_desktop", "type" => "TEXT"],
+  ["name" => "image", "type" => "TINYTEXT"]
+]);
+
 echo "<h3>✅ All migrations completed</h3>";
