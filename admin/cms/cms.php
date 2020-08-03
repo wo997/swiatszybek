@@ -47,8 +47,7 @@ $static = checkUrl($page_link);
 <script>
     window.addEventListener("DOMContentLoaded", function() {
         useTool("cms");
-
-        var content = `<?= str_replace("`", "", $page_data["content"]) ?>`;
+        var content = decodeHtml(`<?= htmlentities($page_data["content"]) ?>`);
         $("#content1").insertAdjacentHTML("beforeend", content);
         $("#content1-src").value = content;
 

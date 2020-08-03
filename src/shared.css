@@ -139,6 +139,10 @@ input[type=button] {
   border-radius: 4px;
 }
 
+textarea {
+  resize: none; 
+}
+
 .btn {
   border-radius: 0.2em;
   padding: 0.1em 0.5em;

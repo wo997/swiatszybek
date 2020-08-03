@@ -218,7 +218,7 @@ function delay(action, time, context = window) {
   }, time);
 }
 
-function deleteNode(n) {
+function removeNode(n) {
   if (n && n.parentNode) n.parentNode.removeChild(n);
 }
 
@@ -233,6 +233,17 @@ function removeContent(node) {
 function setContent(node, html = "") {
   removeContent(node);
   node.insertAdjacentHTML("afterbegin", html);
+}
+
+function addMissingDirectChildren(
+  parent,
+  isMissingCallback,
+  html,
+  position = "beforeend"
+) {
+  if (![...parent.children].find(isMissingCallback)) {
+    parent.insertAdjacentHTML(position, html);
+  }
 }
 
 function swapNodes(n1, n2) {
@@ -1043,7 +1054,7 @@ function createTable(table) {
       } else return;
     }
 
-    deleteNode(table.target.querySelector(`[data-primary='${data_id}']`));
+    removeNode(table.target.querySelector(`[data-primary='${data_id}']`));
     table.selectionChange();
   };
   table.addRow = (data_id) => {
@@ -1162,7 +1173,7 @@ window.addEventListener("dragend", () => {
   }
   removeClasses("grabbed");
   document.querySelectorAll(".tableRearrange").forEach((e) => {
-    deleteNode(e);
+    removeNode(e);
   });
   tableRearrange.element = null;
 });
@@ -1398,6 +1409,12 @@ function escapeHTML(unsafeText) {
   return div.innerHTML;
 }
 
+function decodeHtml(html) {
+  var txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+}
+
 function renderStatus(status_id) {
   // kernel.php
   return `<div class='rect status_rect' style='background:#${statusList[status_id]["color"]}'>${statusList[status_id]["title"]}</div>`;
@@ -1442,6 +1459,7 @@ function registerModal(e) {
   registerSelectboxes();
 }
 
+var modalHideCallbacks = {};
 var modalInitialStates = {};
 
 function setModalInitialState(name) {
@@ -1450,6 +1468,7 @@ function setModalInitialState(name) {
 
 function showModal(name = null, params = {}) {
   setModalInitialState(name);
+  modalHideCallbacks[name] = params.hideCallback;
 
   var m = $("#modal-wrapper");
   var visible = name != null;
@@ -1566,6 +1585,12 @@ function hideModal(name, isCancel = false) {
         modal.style.animation = "";
       }, 200);
     }
+
+    const hideCallback = modalHideCallbacks[name];
+    if (hideCallback) {
+      hideCallBack();
+    }
+    // TODO: add cms hidecallback in cms
   }
 
   var visibleModalCount = 0;
@@ -2165,7 +2190,7 @@ function loadCategoryPicker(
         )
         .forEach((e) => {
           [...e.children].forEach((e) => {
-            deleteNode(e);
+            removeNode(e);
           });
           e.insertAdjacentHTML("afterbegin", c);
 
@@ -2352,7 +2377,7 @@ function dismissNotification(n) {
   n.style.opacity = 0;
   n.style.pointerEvents = "none";
   setTimeout(() => {
-    deleteNode(n);
+    removeNode(n);
   }, 200);
 }
 
