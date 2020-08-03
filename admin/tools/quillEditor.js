@@ -827,17 +827,20 @@ window.quillEditor = {
 
     $("#quillEditor .ql-image").outerHTML += "";
     setTimeout(() => {
-      $("#quillEditor .ql-image").onclick = () => {
-        imagePicker.open(null, quillEditor.quillImageCallback);
+      $("#quillEditor .ql-image").onclick = function () {
+        imagePicker.open(null, {
+          callback: quillEditor.quillImageCallback,
+          source: this,
+        });
       };
     }, 100);
 
     $("#quillEditor .ql-video").outerHTML += "";
     setTimeout(() => {
-      $("#quillEditor .ql-video").onclick = () => {
+      $("#quillEditor .ql-video").onclick = function () {
         //beforeImageInsert();
         if (quillEditor.source) {
-          showModal("putVideo", { source: quillEditor.source });
+          showModal("putVideo", { source: this });
         }
       };
     }, 100);

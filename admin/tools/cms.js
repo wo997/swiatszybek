@@ -2136,7 +2136,7 @@ registerModalContent(
 
                     <h4> Zdjęcie </h4>
 
-                    <div class="btn primary" onclick="imagePicker.open(null,cmsBlockBackgroundImageCallback)">Wybierz <i class="fas fa-image"></i></div>
+                    <div class="btn primary" onclick="imagePicker.open(null, {callback: cmsBlockBackgroundImageCallback, source: this})">Wybierz <i class="fas fa-image"></i></div>
 
                     <div class="btn primary" onclick="setBlockBackgroundImage()">Usuń <i class="fa fa-times"></i></div>
 

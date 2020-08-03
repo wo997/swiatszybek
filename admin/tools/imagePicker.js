@@ -3,15 +3,16 @@ window.imagePicker = {
   target: null,
   callback: null,
   defaultTag: "",
-  open: (target = null, callback = null) => {
+  open: (target = null, params = {}) => {
     imagePicker.target = target;
-    imagePicker.callback = callback;
+    imagePicker.callback = params.callback;
+
     if (imagePicker.firstOpen) {
       imagePicker.search();
       imagePicker.firstOpen = false;
     }
     imagePicker.setTag(null, true);
-    showModal("imagePicker", { source: target });
+    showModal("imagePicker", { source: nonull(params.source, target) });
   },
   choose: (src) => {
     hideModalTopMost();

@@ -49,7 +49,7 @@
                     title: "",
                     width: "95px",
                     render: (r, i) => {
-                        return `<div class='btn primary' onclick='editSlide(${i})'>Edytuj <i class="fas fa-cog"></i></div>`;
+                        return `<div class='btn primary' onclick='editSlide(this, ${i})'>Edytuj <i class="fas fa-cog"></i></div>`;
                     },
                     escape: false
                 }
@@ -59,12 +59,12 @@
                     <input type="text" placeholder="Szukaj..." data-param="search">
                     <i class="fas fa-search"></i>
                 </div>
-                <div class="btn primary" onclick="newSlide()"><span>Nowy slajd</span> <i class="fa fa-plus"></i></div>
+                <div class="btn primary" onclick="newSlide(this)"><span>Nowy slajd</span> <i class="fa fa-plus"></i></div>
                 `
         });
     });
 
-    function newSlide() {
+    function newSlide(btn) {
         var data = {
             slide_id: "-1",
             content_desktop: "",
@@ -74,15 +74,19 @@
         setFormData(data, $("#slideEdit"));
 
         setTitle("Nowy slajd");
-        showModal("slideEdit");
+        showModal("slideEdit", {
+            source: btn
+        });
     }
 
-    function editSlide(i) {
+    function editSlide(btn, i) {
         var data = mytable.results[i];
         setFormData(data, $("#slideEdit"));
 
         setTitle("Edycja slajdu");
-        showModal("slideEdit");
+        showModal("slideEdit", {
+            source: btn
+        });
     }
 
     function saveSlide(remove = false) {
