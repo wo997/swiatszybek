@@ -6,6 +6,6 @@ include "deployment/create_directories.php";
 
 include "deployment/migrate.php";
 
-include "events/topmenu_change.php";
+triggerEvent("topmenu_change");
 
 include "deployment/scan_annotations.php";

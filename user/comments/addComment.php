@@ -25,8 +25,7 @@ query(
   [$pseudonim, $tresc, $product_id, $app["user"]["id"], $rating]
 );
 
-$input = ["product_id" => $product_id];
-include 'events/rating_change.php';
+triggerEvent("product_rating_change", ["product_id" => $product_id]);
 
 $input = ["product_id" => $product_id];
 include 'helpers/order/can_user_get_comment_rebate.php';

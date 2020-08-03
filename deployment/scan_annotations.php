@@ -36,7 +36,7 @@ function processDir($parent_dir)
             $link_route_path[$url] = $path;
         } else if ($module_name = getAnnotation("module", $first_line)) {
             $link_module_path[$module_name] = $path;
-        } else if ($event = getAnnotation("listen", $first_line)) {
+        } else if ($event = getAnnotation("event", $first_line)) {
             $link_event_paths[$event][] = "  '$path'";
         }
     }
