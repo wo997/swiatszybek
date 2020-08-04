@@ -673,9 +673,10 @@ function createTable(table) {
         if (!isNew) {
           params.disable_with_children = [table.category_id];
         }
+
         setCategoryPickerValues(
           $(`#${form} [data-category-picker-name="parent_id"]`),
-          table.parent_id,
+          data.parent_id,
           params
         );
 
@@ -2047,6 +2048,7 @@ function setCategoryPickerValues(element, values, params = {}) {
     values = values.map((e) => e.toString());
   }
   var example = null;
+
   element.querySelectorAll("[data-category_id]").forEach((e) => {
     if (!example) example = e;
 
@@ -2054,7 +2056,7 @@ function setCategoryPickerValues(element, values, params = {}) {
 
     var check = false;
     if (singleselect) {
-      if (values) {
+      if (values != null && values != undefined) {
         check = values.toString() == e.getAttribute("data-category_id");
       }
     } else {
@@ -2930,7 +2932,7 @@ function createSimpleList(params = {}) {
                     list.name
                   }.valuesChanged();"></i>
                   <div style="width:10px"></div>
-                  <i class="btn secondary fas fa-times" onclick="deleteNode(this.parentNode.parentNode);${
+                  <i class="btn secondary fas fa-times" onclick="removeNode(this.parentNode.parentNode);${
                     list.name
                   }.valuesChanged();"></i>
               </div>
