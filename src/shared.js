@@ -2930,7 +2930,7 @@ function createSimpleList(params = {}) {
                     list.name
                   }.valuesChanged();"></i>
                   <div style="width:10px"></div>
-                  <i class="btn secondary fas fa-times" onclick="deleteNode(this.parentNode.parentNode);${
+                  <i class="btn secondary fas fa-times" onclick="removeNode(this.parentNode.parentNode);${
                     list.name
                   }.valuesChanged();"></i>
               </div>
