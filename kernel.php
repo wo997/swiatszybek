@@ -6,6 +6,7 @@ require_once 'vendor/autoload.php';
 define("RELEASE", 2142);
 
 define("BUILDS_PATH", "builds/");
+define("UPLOADS_PATH", "uploads/");
 
 // include helpers
 
@@ -491,6 +492,7 @@ $attribute_data_types = [
 
 // image upload definition start
 $image_default_dimensions = [ // pick higher of width and height
+  "df" => null,
   "lg" => 1600,
   "md" => 800,
   "sm" => 350,

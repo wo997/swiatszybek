@@ -1,15 +1,12 @@
 <?php //route[admin/upload_images]
 
-$uploads_path = 'uploads';
-
-$image_sizes_all = ["df"];
 foreach ($image_default_dimensions as $size_name => $area) {
     $image_sizes_all[] = $size_name;
 }
 
 function processImage($file_tmp, $tag, $file_name, $counter = null)
 {
-    global $image_default_dimensions, $uploads_path;
+    global $image_default_dimensions;
 
     $info = getimagesize($file_tmp);
 
@@ -36,16 +33,16 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
 
     $image_dimension = max($width, $height);
 
-    $sizes = [
-        "df" => [$width, $height]
-    ];
-
     foreach ($image_default_dimensions as $image_wanted_name => $image_wanted_dimension) {
-        $scale = $image_wanted_dimension / $image_dimension;
-        $sizes[$image_wanted_name] = [
-            round($width * $scale),
-            round($height * $scale),
-        ];
+        if ($image_wanted_dimension) {
+            $scale = $image_wanted_dimension / $image_dimension;
+            $sizes[$image_wanted_name] = [
+                round($width * $scale),
+                round($height * $scale),
+            ];
+        } else {
+            $sizes[$image_wanted_name] = [$width, $height];
+        }
     }
 
     $file_type = ".jpg";
@@ -68,7 +65,7 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
     }
 
     foreach ($sizes as $size_name => $size) {
-        $image_type_path = "$uploads_path/$size_name";
+        $image_type_path = UPLOADS_PATH . $size_name;
 
         if (!is_dir($image_type_path)) {
             mkdir($image_type_path);
@@ -100,7 +97,7 @@ if ($app["user"]["is_admin"] && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['alsoDelete'])) {
         $path = $_POST['alsoDelete'];
         foreach ($image_sizes_all as $size_name) {
-            $file_path = "$uploads_path/$size_name/$path";
+            $file_path = UPLOADS_PATH . $size_name . "/" . $path;
             if (file_exists($file_path)) {
                 unlink($file_path);
             }
@@ -117,7 +114,7 @@ if ($app["user"]["is_admin"] && isset($_POST['base64'])) {
         $image_type_aux = explode("image/", $image_parts[0]);
         $file_type = $image_type_aux[1];
         $image_base64 = base64_decode($image_parts[1]);
-        $tmp = "$uploads_path/tmp.$file_type";
+        $tmp = UPLOADS_PATH . "tmp." . $file_type;
         file_put_contents($tmp, $image_base64);
 
         processImage($tmp, nonull($_POST, "tag", date("Y-m-d_H:i:s")), "", $counter);
