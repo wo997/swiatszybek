@@ -22,6 +22,6 @@ if (isset($_POST["remove"])) {
     ]);
 }
 
-include "events/topmenu_change.php";
+triggerEvent("topmenu_change");
 
 die;

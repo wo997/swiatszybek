@@ -3,9 +3,10 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 2143);
+define("RELEASE", 2145);
 
 define("BUILDS_PATH", "builds/");
+define("UPLOADS_PATH", "uploads/");
 
 // include helpers
 
@@ -491,8 +492,43 @@ $attribute_data_types = [
 
 // image upload definition start
 $image_default_dimensions = [ // pick higher of width and height
+  "df" => null,
   "lg" => 1600,
   "md" => 800,
   "sm" => 350,
 ];
 // image upload definition end
+
+$base_path = str_replace("\\", "/", getcwd()) . "/";
+
+function getModificationTimeTotal($parent_dir = "")
+{
+  global $base_path, $build_time_lock_path;
+
+  $time = 0;
+
+  $exclude = ["vendor", "uploads", "tmp", "builds", $build_time_lock_path];
+  foreach (scandir($base_path . $parent_dir) as $file) {
+    $path = $parent_dir . $file;
+    if (substr($file, 0, 1) == "." || in_array($file, $exclude)) {
+      continue;
+    }
+    if (is_dir($path)) {
+      $time += getModificationTimeTotal($path . "/");
+    } else if (strpos($file, ".php")) {
+      $time += filemtime($path);
+    }
+  }
+  return $time;
+}
+
+// only when url is different than deployment maybe?
+$build_time_lock_path = "build_time.lock";
+$last_modification_time = file_exists($build_time_lock_path) ? file_get_contents($build_time_lock_path) : "";
+$modification_time = getModificationTimeTotal();
+
+if ($last_modification_time != $modification_time) {
+  //var_dump($last_modification_time, $modification_time);
+  file_put_contents($build_time_lock_path, $modification_time); // must go first
+  file_get_contents("http://dev.padmate.pl/deployment/build"); // trigger build automatically
+}

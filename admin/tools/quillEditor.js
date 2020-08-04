@@ -1272,7 +1272,7 @@ registerModalContent(
                         <div class="btn primary" onclick="quillEditor.removeLink()">Usuń <i class="fa fa-times"></i></div>
                         <div class="showhover" style="display:inline-block">
                             <div id="my-link-style" class="btn primary">Styl <i class="fas fa-chevron-down"></i></div>
-                            <div class="showhovercontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <button type="button" onclick="quillEditor.modifyNode('mylinkstyle','')"> Zwykły </button>
                                 <button type="button" onclick="quillEditor.modifyNode('mylinkstyle','przycisk')"> Przycisk </button>
                             </div>

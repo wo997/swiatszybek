@@ -7,6 +7,4 @@ if (!$tableExists) die;
 
 query("UPDATE " . clean($_POST["table"]) . " SET published = " . intval($_POST["published"]) . " WHERE " . clean($_POST["primary"]) . " = " . intval($_POST["primary_id"]));
 
-if ($table == "menu") {
-    include "events/topmenu_change.php";
-}
+triggerEvent("table_values_change", ["table" => $_POST["table"]]);

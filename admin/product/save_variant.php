@@ -21,11 +21,9 @@ if (isset($_POST["remove"])) {
         $_POST["name"], $_POST["product_code"], $_POST["zdjecie"], $_POST["color"], $_POST["published"], $_POST["price"], $_POST["rabat"], $_POST["product_id"]
     ]);
 
-    $input = ["variant_id" => intval($variant_id), "stock_difference" => intval($_POST["stock"]) - intval($_POST["was_stock"])];
-    include "events/variant_stock_change.php";
+    triggerEvent("variant_stock_change", ["variant_id" => intval($variant_id), "stock_difference" => intval($_POST["stock"]) - intval($_POST["was_stock"])]);
 
-    $input = ["product_id" => intval($_POST["product_id"])];
-    include "events/variant_price_change.php";
+    triggerEvent("variant_price_change", ["product_id" => intval($_POST["product_id"])]);
 
     // attribute values
     query("DELETE FROM link_variant_attribute_value WHERE variant_id = ?", [$variant_id]);

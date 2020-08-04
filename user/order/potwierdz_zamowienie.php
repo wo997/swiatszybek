@@ -119,8 +119,7 @@ foreach ($app["user"]["basket"]["variants"] as $v) {
 }
 $res .= "</table>";
 
-$input = ["zamowienie_id" => $zamowienie_id];
-include "events/basket_change.php";
+triggerEvent("order_basket_change", ["zamowienie_id" => $zamowienie_id]);
 
 $link = $zamowienie_id . "-" . $link_hash;
 

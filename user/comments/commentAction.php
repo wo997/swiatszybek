@@ -18,5 +18,4 @@ if ($action == -1 && $app["user"]["id"]) {
   query("UPDATE comments SET accepted = 1 WHERE comment_id = ?", [$comment_id]);
 }
 
-$input = ["product_id" => $product_id];
-include 'events/rating_change.php';
+triggerEvent("product_rating_change", ["product_id" => $product_id]);

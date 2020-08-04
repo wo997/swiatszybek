@@ -1,4 +1,4 @@
-<?php
+<?php //event[topmenu_change]
 
 function showMenu($category_id, $depth = 0)
 {
