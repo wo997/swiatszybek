@@ -1849,13 +1849,13 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
             <div class="selectbox">
                 <input type="text" style="width:100px" data-attribute="${prefix}_top" data-default-value="${defaults.top}" data-default-unit="px" class="field" ${target}>
                 <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                    <div data-option="0">0</div>
-                    <div data-option="12px">12px</div>
-                    <div data-option="24px">24px</div>
-                    <div data-option="36px">36px</div>
-                    <div data-option="2%">2%</div>
-                    <div data-option="4%">4%</div>
-                    <div data-option="6%">6%</div>
+                    <button data-option="0">0</button>
+                    <button data-option="12px">12px</button>
+                    <button data-option="24px">24px</button>
+                    <button data-option="36px">36px</button>
+                    <button data-option="2%">2%</button>
+                    <button data-option="4%">4%</button>
+                    <button data-option="6%">6%</button>
                 </div>
             </div>
         </div>
@@ -1863,25 +1863,25 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
             <div class="selectbox">
                 <input type="text" style="width:100px" data-attribute="${prefix}_left" data-default-value="${defaults.left}" data-default-unit="px" class="field" ${target}>
                 <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                    <div data-option="0">0</div>
-                    <div data-option="12px">12px</div>
-                    <div data-option="24px">24px</div>
-                    <div data-option="36px">36px</div>
-                    <div data-option="2%">2%</div>
-                    <div data-option="4%">4%</div>
-                    <div data-option="6%">6%</div>
+                    <button data-option="0">0</button>
+                    <button data-option="12px">12px</button>
+                    <button data-option="24px">24px</button>
+                    <button data-option="36px">36px</button>
+                    <button data-option="2%">2%</button>
+                    <button data-option="4%">4%</button>
+                    <button data-option="6%">6%</button>
                 </div>
             </div>
             <div class="selectbox">
                 <input type="text" style="width:100px" data-attribute="${prefix}_right" data-default-value="${defaults.right}" data-default-unit="px" class="field" ${target}>
                 <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                    <div data-option="0">0</div>
-                    <div data-option="12px">12px</div>
-                    <div data-option="24px">24px</div>
-                    <div data-option="36px">36px</div>
-                    <div data-option="2%">2%</div>
-                    <div data-option="4%">4%</div>
-                    <div data-option="6%">6%</div>
+                    <button data-option="0">0</button>
+                    <button data-option="12px">12px</button>
+                    <button data-option="24px">24px</button>
+                    <button data-option="36px">36px</button>
+                    <button data-option="2%">2%</button>
+                    <button data-option="4%">4%</button>
+                    <button data-option="6%">6%</button>
                 </div>
             </div>
         </div>
@@ -1889,13 +1889,13 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
             <div class="selectbox">
                 <input type="text" style="width:100px" data-attribute="${prefix}_bottom" data-default-value="${defaults.bottom}" data-default-unit="px" class="field" ${target}>
                 <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                    <div data-option="0">0</div>
-                    <div data-option="12px">12px</div>
-                    <div data-option="24px">24px</div>
-                    <div data-option="36px">36px</div>
-                    <div data-option="2%">2%</div>
-                    <div data-option="4%">4%</div>
-                    <div data-option="6%">6%</div>
+                    <button data-option="0">0</button>
+                    <button data-option="12px">12px</button>
+                    <button data-option="24px">24px</button>
+                    <button data-option="36px">36px</button>
+                    <button data-option="2%">2%</button>
+                    <button data-option="4%">4%</button>
+                    <button data-option="6%">6%</button>
                 </div>
             </div>
         </div>
@@ -1917,10 +1917,10 @@ registerModalContent(`
                 <div class="selectbox">
                     <input type="text" style="width:100px" class="field border-width" data-attribute="border-width" onchange="updateBorderPreview()">
                     <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                        <div data-option="0">0</div>
-                        <div data-option="1px">1px</div>
-                        <div data-option="2px">2px</div>
-                        <div data-option="5px">5px</div>
+                        <button data-option="0">0</button>
+                        <button data-option="1px">1px</button>
+                        <button data-option="2px">2px</button>
+                        <button data-option="5px">5px</button>
                     </div>
                 </div>
 
@@ -1932,10 +1932,10 @@ registerModalContent(`
                 <div class="selectbox">
                     <input type="text" style="width:100px" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
                     <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                        <div data-option="0">0</div>
-                        <div data-option="6px">6px</div>
-                        <div data-option="10px">10px</div>
-                        <div data-option="50%">50%</div>
+                        <button data-option="0">0</button>
+                        <button data-option="6px">6px</button>
+                        <button data-option="10px">10px</button>
+                        <button data-option="50%">50%</button>
                     </div>
                 </div>
 
@@ -1974,11 +1974,11 @@ registerModalContent(`
                         <div class="selectbox">
                             <input type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div data-option="">Brak</div>
-                                <div data-option="100px">100px</div>
-                                <div data-option="200px">200px</div>
-                                <div data-option="300px">300px</div>
-                                <div data-option="400px">400px</div>
+                                <button data-option="">Brak</button>
+                                <button data-option="100px">100px</button>
+                                <button data-option="200px">200px</button>
+                                <button data-option="300px">300px</button>
+                                <button data-option="400px">400px</button>
                             </div>
                         </div>
                         <h4>Wyrównaj zawartość w poziomie</h4>
@@ -2009,11 +2009,11 @@ registerModalContent(`
                         <div class="selectbox">
                             <input type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div data-option="">Brak</div>
-                                <div data-option="100px">100px</div>
-                                <div data-option="200px">200px</div>
-                                <div data-option="300px">300px</div>
-                                <div data-option="400px">400px</div>
+                                <button data-option="">Brak</button>
+                                <button data-option="100px">100px</button>
+                                <button data-option="200px">200px</button>
+                                <button data-option="300px">300px</button>
+                                <button data-option="400px">400px</button>
                             </div>
                         </div>
                         <h4>Wyrównaj zawartość w poziomie</h4>

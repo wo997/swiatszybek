@@ -103,9 +103,64 @@ function dropColumns($table, $names)
     if (columnExists($table, $name)) {
       query("ALTER TABLE " . clean($table) . " DROP COLUMN " . clean($name));
 
-      echo "🗑️ Column $name dropped from $table! <br>";
+      echo "🗑️ Column '$name' dropped from $table! <br>";
     }
   }
+}
+
+/**
+ *
+ * @param  string $table
+ * @param  array $names
+ * @return void
+ */
+function dropTable($table)
+{
+  if (tableExists($table)) {
+    query("DROP TABLE " . clean($table));
+    echo "🗑️ Table '$table' dropped! <br>";
+  }
+}
+
+/**
+ * Create table in DB with specified columns allowing to modify the table if necessary
+ * parameter details in function addColumns($table, $columns)
+ * @param  string $table
+ * @param array<array> $columns
+ * @return void
+ */
+function createTable($table, $columns)
+{
+  if (tableExists($table)) {
+    addColumns($table, $columns); // possibly modify columns at this point, totally flexible
+    return;
+  }
+
+  $sql = "CREATE TABLE $table (";
+
+  foreach ($columns as $column) {
+    $column["null"] = nonull($column, "null", false);
+    $column["type"] = strtoupper($column["type"]);
+
+    $definition = clean($column["name"])
+      . " " . $column["type"]
+      . ($column["null"] ? "" : " NOT NULL");
+
+    if (isset($column["default"])) {
+      $definition .= " DEFAULT " . $column["default"];
+    } else if (isset($column["default_string"])) {
+      $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
+    }
+
+    $sql .= $definition . ",";
+  }
+
+  $sql = rtrim($sql, ",");
+  $sql .= ")";
+
+  query($sql);
+
+  echo "➕ Table '$table' created<br>";
 }
 
 /**
@@ -136,7 +191,7 @@ function addColumns($table, $columns)
       $differentNameColumnExists = columnExists($table, $column["previous_name"]);
 
       if ($differentNameColumnExists && $columnExists) {
-        echo "⚠️ Migration error, tried to change column from " . $column["previous_name"] . " to " . $column["name"] . " but " . $column["name"] . " already exists!";
+        echo "⚠️ Migration error, tried to change column from '" . $column["previous_name"] . "' to '" . $column["name"] . "' but '" . $column["name"] . "' already exists in '" . $table . "'!";
         continue;
       }
 
@@ -208,10 +263,10 @@ function addColumns($table, $columns)
 
     if ($modify) {
       query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);
-      echo "🔄 Column " . $column["name"] . " modified in $table<br>";
+      echo "🔄 Column '" . $column["name"] . "' modified in $table<br>";
     } else if ($isNew) {
       query("ALTER TABLE " . clean($table) . " ADD " . $definition);
-      echo "➕ Column " . $column["name"] . " added into $table<br>";
+      echo "➕ Column '" . $column["name"] . "' added into $table<br>";
     }
   }
 }

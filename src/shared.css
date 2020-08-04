@@ -62,9 +62,6 @@ body, button, input, textarea, .cms {
 .showhover:not(:hover) .menucontent {
   display: none !important;
 }
-.showhover:not(:focus-within) .menucontent {
-  display: none !important;
-}
 .showhover .menucontent, .selectbox .menucontent {
   position: absolute;
   right: 0;
@@ -82,7 +79,7 @@ body, button, input, textarea, .cms {
   display: inline-block;
 }
 
-.selectbox .showhovercontent {
+.selectbox .menu {
   background: white;
   z-index: 1000;
 }
@@ -2133,6 +2130,10 @@ ql-icon i span {
   color: white;
   border-color: white;
   background: transparent;
+}
+
+.custom-toolbar .btn.secondary:not(:disabled):hover {
+  background: #fff2;
 }
 
 .custom-toolbar .btn.primary {

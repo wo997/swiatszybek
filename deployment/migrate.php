@@ -4,11 +4,6 @@ echo "<br><h3>Running all migrations:</h3>";
 
 // migration from 25.07.2020
 
-if (tableExists("asdadasafds")) {
-  query("DROP TABLE asdadasafds");
-  echo "table asdadasafds fucked off [: ! <br>";
-}
-
 dropColumns("slides", ["img", "tekst", "link"]);
 
 addColumns("slides", [
@@ -55,7 +50,11 @@ addColumns("users", [
 // migration from 02.08.2020
 addColumns("products", [
   ["name" => "gallery", "previous_name" => "image_desktop", "type" => "TEXT"],
-  ["name" => "image", "type" => "TINYTEXT"]
+  ["name" => "image", "type" => "TINYTEXT"],
+]);
+
+createTable("environment", [
+  ["name" => "modification_time", "type" => "INT"]
 ]);
 
 echo "<h3>✅ All migrations completed</h3>";

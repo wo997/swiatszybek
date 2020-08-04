@@ -24,7 +24,7 @@ function processDir($parent_dir)
         if (is_dir($path)) {
             processDir($path . "/");
             continue;
-        } else if (strpos($file, ".php") != strlen($file) - 4) {
+        } else if (!strpos($file, ".php")) {
             continue;
         }
         $first_line = nonull(file($path), 0, "");
