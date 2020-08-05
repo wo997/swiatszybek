@@ -28,9 +28,5 @@ foreach ($_POST as $k => $new) {
   addZamowienieLog("$k: $old ⇨ $new", $zamowienie_id);
 }
 
-if (strlen($log) > 5) {
-  addLogForZamowienie($zamowienie_id, trim($log, "<br>"), $app["user"]["email"]);
-}
-
 header("Location: " . getZamowienieLink($link));
 die;
