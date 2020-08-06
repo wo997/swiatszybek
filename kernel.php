@@ -481,7 +481,7 @@ $attribute_data_types = [
 // image upload definition start
 $image_default_dimensions = [ // pick higher of width and height
   "df" => null,
-  "lg" => 1600,
+  "lg" => 1920,
   "md" => 800,
   "sm" => 350,
 ];

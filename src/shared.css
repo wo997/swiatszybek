@@ -2630,9 +2630,10 @@ input:placeholder-shown:hover + .miejscowosc-picker-list, input:placeholder-show
   transform: translateX(-50%);
   font-weight: 600;
   transition: 0.3s;
+  white-space: nowrap;
 }
 
 .offline.shown {
   opacity: 1;
-  top: 20px;
+  top: 70px;
 }
