@@ -3001,3 +3001,15 @@ function createSimpleList(params = {}) {
 }
 
 // simple list end
+
+function updateOnlineStatus() {
+  $(".offline").classList.toggle("shown", !navigator.onLine);
+}
+window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("offline", () => {
+    updateOnlineStatus();
+  });
+  window.addEventListener("online", () => {
+    updateOnlineStatus();
+  });
+});
