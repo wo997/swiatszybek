@@ -885,20 +885,33 @@ function saveBlockAnimation() {
 }
 
 function editCMSBorder() {
-  var target = cmsTarget;
+  var target = cmsTarget.querySelector(".cms-container-content");
+  if (!target) {
+    target = cmsTarget; //.querySelector(".cms-block-content");
+  }
   if (!target) return;
+
+  if (
+    target.style.border ||
+    target.style.borderWidth ||
+    target.style.borderColor
+  ) {
+    var styles = window.getComputedStyle(target);
+  } else {
+    var styles = {};
+  }
 
   setValue(
     $(`#cmsBorder [data-attribute="border-width"]`),
-    target.style.borderWidth
+    nonull(styles["border-width"])
   );
   setValue(
     $(`#cmsBorder [data-attribute="border-color"]`),
-    rgbStringToHex(target.style.borderColor)
+    rgbStringToHex(nonull(styles["border-color"]))
   );
   setValue(
     $(`#cmsBorder [data-attribute="border-radius"]`),
-    target.style.borderRadius
+    nonull(styles["border-radius"])
   );
 
   showModal("cmsBorder", {
@@ -951,6 +964,7 @@ function editCMSBackground() {
   var color = $(".cmsBlockBackgroundPreview .background-color");
   var cmstargetColor = target.querySelector(".background-color");
   background.style.backgroundImage = target.style.backgroundImage;
+  console.log(target, target.style.backgroundImage);
 
   var col = color.style.backgroundColor;
   if (!col) col = "#fff";
@@ -1522,7 +1536,6 @@ var awaitingScroll = false;
 
 // drag end
 
-// quill start
 window.cmsBlockBackgroundImageCallback = (src) => {
   setBlockBackgroundImage(src);
 

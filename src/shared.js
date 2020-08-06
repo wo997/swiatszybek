@@ -1784,6 +1784,8 @@ function setValue(input, value) {
     input.style.background = hex ? "#" + hex : "";
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
+
+    input.dispatchEvent(new Event("change"));
   } else {
     var type = input.getAttribute("data-type");
     if (type == "html") {
@@ -1792,16 +1794,21 @@ function setValue(input, value) {
         input = input.querySelector(pointChild);
       }
       input.innerHTML = value;
+
+      input.dispatchEvent(new Event("change"));
     } else if (type == "src") {
       var prefix = input.getAttribute(`data-src-prefix`);
       if (!prefix) prefix = "/uploads/df/";
       if (value) value = prefix + value;
       input.setAttribute("src", value);
+
+      input.dispatchEvent(new Event("change"));
     } else {
       input.value = value;
+
+      input.dispatchEvent(new Event("change"));
     }
   }
-  input.dispatchEvent(new Event("change"));
 }
 
 function getValue(input) {

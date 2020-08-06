@@ -145,12 +145,12 @@
   user-select: none;
 }
 
-.cms-block.activeBlock {
+#cms .cms-block.activeBlock {
   -webkit-box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.34);
   -moz-box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.34);
   box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.34);
   z-index: 10000;
-  border-color: #ddd !important;
+  border-color: #ddd;
 }
 
 .cms-container-options {
