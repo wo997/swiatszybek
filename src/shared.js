@@ -1409,7 +1409,7 @@ function escapeHTML(unsafeText) {
   return div.innerHTML;
 }
 
-function decodeHtml(html) {
+function decodeHtmlEntities(html) {
   var txt = document.createElement("textarea");
   txt.innerHTML = html;
   return txt.value;

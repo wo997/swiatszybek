@@ -169,6 +169,7 @@ function showCategory($category, $level = 0)
 
       <div class="categories">
         <?= showCategory([
+          "link" => "wszystkie",
           "category_id" => 0,
           "title" => "Wszystkie produkty"
         ]) ?>
@@ -181,6 +182,7 @@ function showCategory($category, $level = 0)
       <?= $show_category["description"] ?>
       <?php
       $moduleParams = [];
+      $module_content = "";
       $moduleParams["category_id"] = $show_category["category_id"];
       include "modules/product-list/content.php";
       echo $module_content;

@@ -71,8 +71,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
   include "include/includes_for_cms_page.php";
   ?>
 
-  <meta name="image" content="/uploads/md/<?= $product_data["image"] ?>" />
-  <meta property="og:image" content="/uploads/md/<?= $product_data["image"] ?>">
+  <meta name="image" content="/uploads/md/<?= $product_data["cache_thumbnail"] ?>" />
+  <meta property="og:image" content="/uploads/md/<?= $product_data["cache_thumbnail"] ?>">
   <meta property="og:image:type" content="image/png">
   <meta name="description" content="<?= $seo_description ?>">
   <meta property="og:title" content="<?= $seo_title ?> - <?= config('main_email_sender') ?>" />
@@ -806,7 +806,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         "name": "<?= htmlspecialchars($product_data["title"]) ?>",
         "url": "<?= $SITE_URL . "/" . $url ?>",
         "image": [
-          "<?= $product_data["image"] ?>"
+          "<?= $product_data["cache_thumbnail"] ?>"
         ],
         "description": "<?= $product_data["seo_description"] ?>",
         "brand": {
