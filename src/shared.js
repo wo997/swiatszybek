@@ -1323,11 +1323,11 @@ function findParentByAttribute(
   while (elem && elem != document) {
     if (parentAttributeValue) {
       if (elem.getAttribute(parentAttribute) == parentAttributeValue) {
-        return elem;
+        return $(elem);
       }
     } else {
       if (elem.hasAttribute(parentAttribute)) {
-        return elem;
+        return $(elem);
       }
     }
     elem = elem.parentNode;
@@ -1338,7 +1338,7 @@ function findParentByAttribute(
 function findParentByTagName(elem, parentTagName) {
   while (elem && elem != document) {
     if (elem.tagName == parentTagName) {
-      return elem;
+      return $(elem);
     }
     elem = elem.parentNode;
   }
@@ -1348,7 +1348,7 @@ function findParentByTagName(elem, parentTagName) {
 function findParentById(elem, id) {
   while (elem && elem != document) {
     if (elem.id == id) {
-      return elem;
+      return $(elem);
     }
     elem = elem.parentNode;
   }
@@ -1363,12 +1363,12 @@ function findParentByClassName(elem, parentClassNames, stopAtClassName = null) {
     if (Array.isArray(parentClassNames)) {
       for (c of parentClassNames) {
         if (elem.classList && elem.classList.contains(c)) {
-          return elem;
+          return $(elem);
         }
       }
     } else {
       if (elem.classList && elem.classList.contains(parentClassNames)) {
-        return elem;
+        return $(elem);
       }
     }
 
@@ -1379,7 +1379,7 @@ function findParentByClassName(elem, parentClassNames, stopAtClassName = null) {
 function findParentByStyle(elem, style, value) {
   while (elem && elem != document) {
     if (elem.style[style] == value) {
-      return elem;
+      return $(elem);
     }
     elem = elem.parentNode;
   }
@@ -1628,19 +1628,29 @@ function isModalActive(name) {
   return !anythingAbove;
 }
 
-// @maciej
-// #todo dirty form
-// document.addEventListener("keydown", (e) => {
-//   if (e.code === "Escape") hideModalTopMost();
-// });
-
 // modal end
 
-function $(querySelector) {
-  return document.querySelector(querySelector);
+function $(node) {
+  // query selector or html node
+  var node = node instanceof HTMLElement ? node : document.querySelector(node);
+  if (!node) return null;
+  node.$ = node.querySelector;
+  node.$$ = node.querySelectorAll;
+  node.setValue = (value) => {
+    setValue(node, value);
+  };
+  node.getValue = () => {
+    return getValue(node);
+  };
+  return node;
 }
 function $$(querySelectorAll) {
-  return document.querySelectorAll(querySelectorAll);
+  var group = document.querySelectorAll(querySelectorAll);
+  var res = [];
+  group.forEach((node) => {
+    res.push($(node));
+  });
+  return res;
 }
 
 // validate start
@@ -2595,19 +2605,11 @@ function hideFloatingCategory() {
   floatCategoryHovered = null;
 }
 
-function findParent(elem, x) {
-  while (elem && elem != document) {
-    if (elem == x) return true;
-    elem = elem.parentNode;
-  }
-  return false;
-}
-
 var dropdownButtonHovered = null;
 var floatCategoryHovered = null;
 document.addEventListener("mousemove", (event) => {
   if (!dropdownButtonHovered) return;
-  if (findParent(event.target, dropdownButtonHovered)) return;
+  if (isInNode(event.target, dropdownButtonHovered)) return;
   hideFloatingCategory();
 });
 

@@ -530,25 +530,21 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
       $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes");
 
-      function printSelectValuesOfAttribute($values, $value_id = null)
+      function printSelectValuesOfAttribute($values, $attribute, $value_id = null)
       {
         if (!isset($values[0])) return "";
 
-        $first_value_as_name = "";
-        foreach ($values as $value_data) {
-          $first_value_as_name = "name='select_" . $value_data["values"]["value_id"] . "'";
-          break;
-        }
+        $field_name = "attribute-" . $attribute["attribute_id"] . ($value_id ? "_" . $value_id : "");
 
         $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
-        $html = "<select $attr data-attribute-value $first_value_as_name>";
+        $html = "<select $attr data-attribute-value name='$field_name'>";
         $html .= "<option value=''>Nie dotyczy</option>";
         foreach ($values as $value_data) {
           $html .= "<option value='" . $value_data["values"]["value_id"] . "'>" . $value_data["values"]["value"] . "</option>";
         }
         $html .= "</select> ";
         foreach ($values as $value_data) {
-          $html .= printSelectValuesOfAttribute($value_data["children"], $value_data["values"]["value_id"]);
+          $html .= printSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
         }
 
         return $html;
@@ -576,7 +572,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           }
         } else {
           $values = getAttributeValues($attribute["attribute_id"]);
-          echo printSelectValuesOfAttribute($values);
+          echo printSelectValuesOfAttribute($values, $attribute);
         }
 
         echo "</div>";

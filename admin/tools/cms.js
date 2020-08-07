@@ -539,11 +539,12 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
 
 function editCMS(t) {
   // TODO: include parameter for preview?
-  cmsSource = t;
+  cmsSource = $(t);
   removeContent(cms);
   cms.insertAdjacentHTML("afterbegin", cmsSource.innerHTML);
 
-  cms.querySelectorAll(".cms").forEach((e) => {
+  cms.$$(".cms").forEach((e) => {
+    console.log(e);
     e.outerHTML = e.innerHTML;
   });
   // we should be checking the structure on dom load, including migrations
