@@ -1,16 +1,22 @@
 <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;">
-  <div style="width: 60%; margin-top: 20px">
-    <?php if ($pic_count == "1") : ?>
+  <div style="width: 50%; margin-top: 20px">
+    <?php if (count($gallery) == "1") : ?>
       <div class='item-image' style='background-image:url("/uploads/md/<?= $product_data["image"] ?>")'></div>
     <?php else : ?>
       <div class="swiper-container product-main-slider">
         <div class="swiper-wrapper">
-          <?= $gallery ?>
+          <?= $galleryhtml ?>
         </div>
         <div class="swiper-button-next"><img src="/img/chevron.svg"></div>
         <div class="swiper-button-prev"><img src="/img/chevron.svg"></div>
       </div>
-      <div class="swiper-pagination"></div>
+      <div class="swiper-container gallery-thumbs">
+        <div class="swiper-wrapper">
+          <?= $gallerythumbshtml ?>
+        </div>
+      </div>
+
+
     <?php endif ?>
   </div>
   <div style="width: 40%; box-sizing: border-box; margin-top: 20px">
@@ -27,21 +33,20 @@
 
       <div class="sameButtons">
 
-        <div class="variants" <?php if ($justOne) //echo 'style="display:none"'; 
-                              ?>>
+        <div class="variants">
           <?php
 
-        for ($i = 0; $i < $variant_count; $i++) {
-          $color = empty($variants[$i]['color'])  ? "" : "<b class='colour' style='background:{$variants[$i]['color']}'></b>";
+          for ($i = 0; $i < count($variants); $i++) {
+            $color = empty($variants[$i]['color'])  ? "" : "<b class='colour' style='background:{$variants[$i]['color']}'></b>";
 
-          $scroll_to_image = "onclick='clickVariant({$variants[$i]['variant_id']})'";
+            $scroll_to_image = "onclick='clickVariant({$variants[$i]['variant_id']})'";
 
-          $wyprz = $variants[$i]['rabat'] > 0 ? "<div class='percentOff'>-" . round($variants[$i]['rabat']) . " zł</div>" : "";
+            $wyprz = $variants[$i]['rabat'] > 0 ? "<div class='percentOff'>-" . round($variants[$i]['rabat']) . " zł</div>" : "";
 
-          $small_font = strlen($variants[$i]['name']) > 28 ? "small_font" : "";
+            $small_font = strlen($variants[$i]['name']) > 28 ? "small_font" : "";
 
-          echo "<div class='color $small_font'><label><input type='radio' class='option' name='variant' value='{$variants[$i]['variant_id']}'><div class='boxy' $scroll_to_image>$color{$variants[$i]['name']}</div>$wyprz</label></div>";
-        }
+            echo "<div class='color $small_font'><label><input type='radio' class='option' name='variant' value='{$variants[$i]['variant_id']}'><div class='boxy' $scroll_to_image>$color{$variants[$i]['name']}</div>$wyprz</label></div>";
+          }
 
           ?>
         </div>

@@ -25,7 +25,7 @@ if (isset($_POST["remove"])) {
 
     triggerEvent("variant_price_change", ["product_id" => intval($_POST["product_id"])]);
 
-    // attribute values
+    // link attribute values
     query("DELETE FROM link_variant_attribute_value WHERE variant_id = ?", [$variant_id]);
     $insert = "";
     foreach (json_decode($_POST["attribute_selected_values"], true) as $value_id) {
@@ -34,7 +34,7 @@ if (isset($_POST["remove"])) {
     $insert = substr($insert, 0, -1);
     query("INSERT INTO link_variant_attribute_value (variant_id, value_id) VALUES $insert");
 
-    // attribute values
+    // any attribute values
     query("DELETE FROM variant_attribute_values WHERE variant_id = ?", [$variant_id]);
     foreach ($_POST["attribute_values"] as $attribute_id => $value) {
         $data_type = fetchValue("SELECT data_type FROM product_attributes WHERE attribute_id = " . intval($attribute_id));

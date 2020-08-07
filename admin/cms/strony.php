@@ -19,32 +19,36 @@
             params: () => {},
             definition: [{
                     title: "URL (link)",
-                    width: "10%",
+                    width: "20%",
                     render: (r) => {
                         return `${r.link ? r.link : "STRONA GŁÓWNA"}`
                     },
-                    escape: false
                 },
                 {
                     title: "Tytuł",
-                    width: "10%",
+                    width: "20%",
                     render: (r) => {
-                        return r.title;
+                        return r.title
                     },
-                    escape: false
                 },
                 {
-                    title: "Opis",
-                    width: "10%",
+                    title: "Tytuł SEO",
+                    width: "20%",
                     render: (r) => {
-                        return r.meta_description;
+                        return r.seo_title
                     },
-                    escape: false
+                },
+                {
+                    title: "Opis SEO",
+                    width: "20%",
+                    render: (r) => {
+                        return r.seo_description;
+                    },
                 },
                 getPublishedDefinition(),
                 {
                     title: "",
-                    width: "95px",
+                    width: "195px",
                     render: (r) => {
                         return `<a class="btn primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i></a> <a class='btn primary' href='/admin/cms/${r.cms_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
                     },

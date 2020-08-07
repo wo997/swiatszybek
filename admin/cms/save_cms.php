@@ -12,10 +12,9 @@ if ($isDelete) {
     }
 
     $published = (isset($_POST["published"]) || $main_page) ? 1 : 0;
-    var_dump($_POST);
 
-    query("UPDATE cms SET title = ?, meta_description = ?, content = ?, link = ?, metadata = ?, published = ? WHERE cms_id = " . intval($_POST["cms_id"]), [
-        $_POST["title"], $_POST["meta_description"], $_POST["content"], getLink($_POST["link"]), $_POST["metadata"], $published
+    query("UPDATE cms SET title = ?, seo_title = ?, seo_description = ?, content = ?, link = ?, metadata = ?, published = ? WHERE cms_id = " . intval($_POST["cms_id"]), [
+        $_POST["title"], $_POST["seo_title"], $_POST["seo_description"], $_POST["content"], getLink($_POST["link"]), $_POST["metadata"], $published
     ]);
 }
 

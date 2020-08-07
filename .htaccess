@@ -1,4 +1,5 @@
 RewriteEngine On
 
-RewriteRule ^([^\.]+)$ index.php?url=$1 [QSA]
+RewriteRule ^([^\.]*)$ routing.php?url=$1 [QSA]
 
+    
