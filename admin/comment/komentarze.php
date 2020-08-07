@@ -31,7 +31,8 @@
                     className: "auto-width",
                     render: (r) => {
                         return `${r.tresc}`;
-                    }
+                    },
+                    escape: false
                 },
                 {
                     title: "Kiedy",

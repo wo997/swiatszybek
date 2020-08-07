@@ -673,9 +673,10 @@ function createTable(table) {
         if (!isNew) {
           params.disable_with_children = [table.category_id];
         }
+
         setCategoryPickerValues(
           $(`#${form} [data-category-picker-name="parent_id"]`),
-          table.parent_id,
+          data.parent_id,
           params
         );
 
@@ -1783,6 +1784,8 @@ function setValue(input, value) {
     input.style.background = hex ? "#" + hex : "";
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
+
+    input.dispatchEvent(new Event("change"));
   } else {
     var type = input.getAttribute("data-type");
     if (type == "html") {
@@ -1791,16 +1794,21 @@ function setValue(input, value) {
         input = input.querySelector(pointChild);
       }
       input.innerHTML = value;
+
+      input.dispatchEvent(new Event("change"));
     } else if (type == "src") {
       var prefix = input.getAttribute(`data-src-prefix`);
       if (!prefix) prefix = "/uploads/df/";
       if (value) value = prefix + value;
       input.setAttribute("src", value);
+
+      input.dispatchEvent(new Event("change"));
     } else {
       input.value = value;
+
+      input.dispatchEvent(new Event("change"));
     }
   }
-  input.dispatchEvent(new Event("change"));
 }
 
 function getValue(input) {
@@ -2047,6 +2055,7 @@ function setCategoryPickerValues(element, values, params = {}) {
     values = values.map((e) => e.toString());
   }
   var example = null;
+
   element.querySelectorAll("[data-category_id]").forEach((e) => {
     if (!example) example = e;
 
@@ -2054,7 +2063,7 @@ function setCategoryPickerValues(element, values, params = {}) {
 
     var check = false;
     if (singleselect) {
-      if (values) {
+      if (values != null && values != undefined) {
         check = values.toString() == e.getAttribute("data-category_id");
       }
     } else {
@@ -2999,3 +3008,15 @@ function createSimpleList(params = {}) {
 }
 
 // simple list end
+
+function updateOnlineStatus() {
+  $(".offline").classList.toggle("shown", !navigator.onLine);
+}
+window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("offline", () => {
+    updateOnlineStatus();
+  });
+  window.addEventListener("online", () => {
+    updateOnlineStatus();
+  });
+});

@@ -22,7 +22,6 @@ query("UPDATE zamowienia SET status = ? $case_oplacono $case_wyslano $case_odebr
 
 $oldStatusString = $statusList[$zamowienie_data["status"]]["title"];
 $newStatusString = $statusList[$status]["title"];
-addLogForZamowienie($zamowienie_data["zamowienie_id"], "Status: $oldStatusString => $newStatusString");
 addZamowienieLog("Status: $oldStatusString ⇨ $newStatusString", $zamowienie_data["zamowienie_id"]);
 
 // send mail

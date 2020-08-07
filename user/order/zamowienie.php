@@ -8,14 +8,7 @@ else {
   die;
 }
 
-$errors = "";
-
-//$zamowienie_data  = fetchRow("SELECT zamowienie_id, user_id, basket, koszt, zlozono, oplacono, wyslano, odebrano, nip, status, imie, nazwisko, email, telefon, firma, paczkomat, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, dostawa, uwagi, koszt_dostawy, session_id, rabat,  kod_pocztowy_z, miejscowosc_z, kraj, ulica_z, nr_domu_z, nr_lokalu_z,  imie_d, nazwisko_d, firma_d, buyer_type, track, notes, history FROM zamowienia WHERE link = ?",[$zamowienie_link]);
 $zamowienie_data = fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
-/*$stmt = $con->prepare("SELECT zamowienie_id, user_id, basket, koszt, zlozono, oplacono, wyslano, odebrano, nip, status, imie, nazwisko, email, telefon, firma, paczkomat, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, dostawa, uwagi, koszt_dostawy, session_id, rabat,  kod_pocztowy_z, miejscowosc_z, kraj, ulica_z, nr_domu_z, nr_lokalu_z,  imie_d, nazwisko_d, firma_d, buyer_type, track, notes, history FROM zamowienia WHERE link = ?");
-$stmt->bind_param("s", $zamowienie_link);
-$stmt->execute();
-$stmt->bind_result($zamowienie_id, $order_user_id, $basket, $koszt, $zlozono, $oplacono, $wyslano, $odebrano, $nip, $status, $imie, $nazwisko, $email, $telefon, $firma, $paczkomat, $kraj, $miejscowosc, $kod_pocztowy, $ulica, $nr_domu, $nr_lokalu, $dostawa, $uwagi, $koszt_dostawy, $session_id, $rabat_wartosc,  $kod_pocztowy_z, $miejscowosc_z, $kraj, $ulica_z, $nr_domu_z, $nr_lokalu_z,  $imie_d, $nazwisko_d, $firma_d,  $buyer_type, $track, $notes, $history);*/
 
 $basket = $zamowienie_data["cache_basket"];
 
@@ -23,42 +16,8 @@ if (!$zamowienie_data) {
   header("location: /");
   die;
 }
-//$stmt->close();
 
-// validate payment przelewy24
-
-if (isset($parts[2]) && $parts[2] == 'status') {
-
-  $p24_session_id = $_POST["p24_session_id"];
-  $p24_order_id = $_POST["p24_order_id"];
-  //[{"url":"zamowienie\/64-63c87b78f711\/status"},{"p24_session_id":"63c87b78f711d61a82a102ae8530d9432419625882e7","p24_amount":"28300","p24_order_id":"304805004","p24_pos_id":"98046","p24_merchant_id":"98046","p24_method":"85","p24_statement":"p24-G80-A50-E04","p24_currency":"PLN","p24_sign":"ca1727002fa0a44f7191920c4136560a"}]
-
-  // use session_id from db, less secure but more reliable
-  //$session_id = session_id();
-
-  require_once 'przelewy24/przelewy24.php';
-
-  $P24 = new Przelewy24(secret("p24_merchantId"), secret("p24_posId"), secret("p24_crc"), secret("p24_testMode"));
-  $P24->addValue("p24_session_id", $zamowienie_data["session_id"]);
-  $P24->addValue("p24_amount", round($zamowienie_data["koszt"] * 100));
-  $P24->addValue("p24_currency", $currency);
-  $P24->addValue("p24_order_id", $p24_order_id);
-
-  $RET = $P24->trnVerify();
-
-  if (isset($RET["error"]) && $RET["error"] === '0') {
-    //echo "poprawna transakcja";
-    require "charged_zamowienie.php";
-    //header("Location: /zamowienie/$link/oplacono"); // reload the page
-  } else {
-    //$errors = "<h2 style='color:red; text-align:center;margin-top: 50px;'>Błąd płatności przelewy24</h2>";
-  }
-  die;
-}
-
-// validate payment przelewy24
-
-$dostawaString = isset($dostawy[$zamowienie_data["dostawa"]]) ? $dostawy[$zamowienie_data["dostawa"]] : "";
+$dostawaString = nonull($dostawy, $zamowienie_data["dostawa"]);
 
 $res = "<table class='item-list item-list-full'><tr style='background: #60d010;color: white;'>
   <td>Przedmiot</td>
@@ -492,9 +451,9 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
             <div class="mobileRow">
               <b style="display:block;font-size: 20px; text-align: center; margin: 15px 0 35px;min-width:300px">Zapłać <?= $zamowienie_data["koszt"] ?> zł</b>
 
-              <a href="/przelewy24_repeat_payment?link=<?= $zamowienie_link ?>" style="border: 1px solid #ddd;background: #fafafa;display: flex;width: 100%;justify-content: center;cursor: pointer;align-items: center;height: 50px;">
-                Zapłać teraz <img style="width: 100px;margin-left:10px" src="/img/p24.png">
-              </a>
+              <?php
+              triggerEvent("display_payment_methods", ["zamowienie_data" => $zamowienie_data]);
+              ?>
 
               <div id="hideOnSuccess" style="display:none">
                 <!--<div id="casegpay" style="display:none;margin-bottom: 5px;">Zapłać za pomocą <img src="/img/gpay.png" style="display: inline-block;width: 40px;vertical-align: bottom;margin-left: 2px;">:</div>-->

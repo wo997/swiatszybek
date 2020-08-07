@@ -3,7 +3,7 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 2145);
+define("RELEASE", 2146);
 
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
@@ -286,18 +286,6 @@ function renderStatus($status_id)
   return "<div class='rect' style='background:#" . $statusList[$status_id]["color"] . "'>" . $statusList[$status_id]["title"] . "</div>";
 }
 
-function getLogString($who, $log)
-{ // deprecated
-  return "$who (" . date("Y-m-d H:i") . ") <br>$log<br><br>";
-}
-
-function addLogForZamowienie($zamowienie_id, $log, $who = null)
-{ // deprecated
-  global $app;
-  if (!$who) $who = $app["user"]["email"];
-  query("UPDATE zamowienia SET history = CONCAT(history,?) WHERE zamowienie_id = $zamowienie_id", [getLogString($who, $log)]);
-}
-
 function addZamowienieLog($log, $zamowienie_id, $log_user_id = null)
 {
   addLog($log, $log_user_id, "order", $zamowienie_id);
@@ -491,11 +479,13 @@ $attribute_data_types = [
 ];
 
 // image upload definition start
-$image_default_dimensions = [ // pick higher of width and height
+$image_default_dimensions = [ // pick higher value of width and height
   "df" => null,
-  "lg" => 1600,
-  "md" => 800,
-  "sm" => 350,
+  "lg" => 1920,
+  "bg" => 1200,
+  "md" => 600,
+  "sm" => 300,
+  "tn" => 100,
 ];
 // image upload definition end
 

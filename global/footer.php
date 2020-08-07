@@ -14,3 +14,5 @@
 </form>
 
 <div class="g-signin2" data-onsuccess="onSignIn" style="display:none"></div>
+
+<div class="offline"><i class="fas fa-exclamation-circle"></i> Brak połączenia z internetem!</div>
