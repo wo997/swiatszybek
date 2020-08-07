@@ -12,7 +12,7 @@ if (isset($parts[2])) {
         "kwota" => 0,
         "kod" => "",
         "user_id_list" => "",
-        "product_id_list" => "",
+        "product_list" => "",
         "user" => "",
         "od" => "",
         "do" => "",
@@ -179,10 +179,10 @@ if (!json_decode($kod_data["product_list"])) {
         <div class="field-title">Ogranicz do konkretnych produktów</div>
         <div class="product_list"></div>
 
-        <input type="hidden" name="kod_id" value="<?= $kod_id ?>">
+        <input type="hidden" name="kod_id" value="<?= $kod_data["kod_id"] ?>">
         <div style="margin-top:10px;text-align:right">
             <a href="/admin/kody-rabatowe" class="btn secondary"><i class="fas fa-chevron-circle-left"></i> Wróć</a>
-            <?php if ($kod_id != -1) : ?>
+            <?php if ($kod_data["kod_id"] != -1) : ?>
                 <button type="submit" name="submit" value="delete" class="btn secondary red" onclick="return confirm('Czy aby na pewno chcesz usunąć kod rabatowy?')">Usuń <i class="fa fa-times"></i></button>
             <?php endif ?>
             <button type="submit" name="submit" value="save" class="btn primary">Zapisz <i class="fa fa-save"></i></button>

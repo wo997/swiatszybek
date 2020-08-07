@@ -34,7 +34,7 @@ if (!empty($product_data["price_max0"]) && $product_data["price_min"] != $produc
   $priceText .= " - " . $product_data["price_max0"];
 
 //$variants = fetchArray("SELECT variant_id, name, product_code, price, rabat, color, zdjecie, zdjecia, quantity FROM variant v WHERE product_id = $number AND published = 1 ORDER BY v.kolejnosc");
-$variants = fetchArray("SELECT * FROM variant v WHERE product_id = $number AND published = 1 ORDER BY v.kolejnosc");
+$variants = fetchArray("SELECT * FROM variant WHERE product_id = $number AND published = 1 ORDER BY kolejnosc");
 
 $anyVariantInStock = false;
 foreach ($variants as $variant) {
@@ -43,78 +43,20 @@ foreach ($variants as $variant) {
     break;
   }
 }
-/*while (mysqli_stmt_fetch($stmt))
-  {
-    $variants[] = [
-      "variant_id" => $variant_id,
-      "name" => htmlspecialchars($name),
-      "product_code" => htmlspecialchars($product_code),
-      "price" => $price,
-      "rabat" => $rabat,
-      "color" => htmlspecialchars($color),
-      "zdjecie" => $zdjecie,
-      "zdjecia" => $zdjecia,
-      "amount" => $amount
-    ];
-    if ($amount > 0) {
-      $doWeHaveAny = true;
-    }
-  }
-  $stmt->close();*/
 
-function addPicture($url)
-{
-  return "<div class='swiper-slide'><div class='item-image' style='background-image:url(\"/uploads/df/$url\")'></div></div>";
-}
-$variant_to_image = "";
-$gallery_urls = "";
-$gallery_urls_all = "";
-$first_pic = "";
-$pic_count = 0;
-$gallery = "";
-$variant_count = 0;
+$gallery = json_decode($product_data["gallery"], true);
 
-$already_added_pics = [];
-
-$select_first_wyprzedaz_id = null;
-
-foreach ($variants as $v) {
-  $zdjecia = explode(";", $v['zdjecie'] . ";" . $v['zdjecia']);
-  $main = true;
-  foreach ($zdjecia as $z) {
-    if ($z == "") continue;
-    $gallery_urls_all .= "'$z',";
-    if ($first_pic == "") $first_pic = $z;
-    if (in_array($z, $already_added_pics)) {
-      $variant_to_image .= "-1,";
-      continue;
-    }
-    $gallery .= addPicture($z);
-    $already_added_pics[] = $z;
-    if ($main) {
-      $variant_to_image .= $pic_count . ",";
-      $gallery_urls .= "'$z',";
-    }
-    $main = false;
-    $pic_count++;
-  }
-  $variant_count++;
+$galleryhtml = "";
+$gallerythumbshtml = "";
+foreach ($gallery as $pic) {
+  $galleryhtml .= "<div class='swiper-slide'><div class='item-image' style='background-image:url(\"/uploads/md/" . $pic["values"]["src"] . "\")'></div></div>";
+  $gallerythumbshtml .= "<div class='swiper-slide' style='background-image:url(\"/uploads/sm/" . $pic["values"]["src"] . "\")'></div>";
 }
 
-if (!in_array($product_data["image"], $already_added_pics)) {
-  $gallery = addPicture($product_data["image"]) . $gallery;
-  $already_added_pics = array_merge([$product_data["image"]], $already_added_pics);
-  $pic_count++;
-}
 
-$variant_to_image = "[" . rtrim($variant_to_image, ",") . "]";
-$gallery_urls = "[" . rtrim($gallery_urls, ",") . "]";
-$gallery_urls_all = "[" . rtrim($gallery_urls_all, ",") . "]";
 
-$justOne = $variant_count == 1;
-
-$des_seo = $product_data["seo_description"];
-
+$seo_description = $product_data["seo_description"];
+$seo_title = $product_data["seo_title"];
 
 $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 ?>
@@ -124,19 +66,20 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
 <head>
   <title><?= $product_data["seo_title"] ?></title>
-  <meta name="description" content="<?= $des_seo ?>">
+  <meta name="description" content="<?= $seo_description ?>">
   <?php include "includes.php";
-  include "include/includes_for_cms_page.php"; ?>
+  include "include/includes_for_cms_page.php";
+  ?>
 
-  <meta name="image" content="/uploads/md/<?= $product_data["image"] ?>" />
-  <meta property="og:image" content="/uploads/md/<?= $product_data["image"] ?>">
+  <meta name="image" content="/uploads/md/<?= $product_data["cache_thumbnail"] ?>" />
+  <meta property="og:image" content="/uploads/md/<?= $product_data["cache_thumbnail"] ?>">
   <meta property="og:image:type" content="image/png">
-  <meta name="description" content="<?= $des_seo ?>">
-  <meta property="og:title" content="<?= $title0 ?> - <?= config('main_email_sender') ?>" />
-  <meta property="og:description" content="<?= $des_seo ?>" />
-  <meta property="og:site_name" content="<?= $des_seo ?>" />
-  <meta name="twitter:description" content="<?= $des_seo ?>" />
-  <meta name="twitter:title" content="<?= $title0 ?>" />
+  <meta name="description" content="<?= $seo_description ?>">
+  <meta property="og:title" content="<?= $seo_title ?> - <?= config('main_email_sender') ?>" />
+  <meta property="og:description" content="<?= $seo_description ?>" />
+  <meta property="og:site_name" content="<?= $seo_description ?>" />
+  <meta name="twitter:description" content="<?= $seo_description ?>" />
+  <meta name="twitter:title" content="<?= $seo_title ?>" />
 
   <style>
     .comments th {
@@ -225,9 +168,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     }
 
     .color {
-      <?php if ($variant_count == 3 || $variant_count > 4) : ?>width: 31.33333%;
-      <?php else : ?>width: 48%;
-      <?php endif ?>height: 100px;
+      width: 48%;
+      height: 100px;
       margin: 0 2% 2% 0;
       position: relative;
       user-select: none;
@@ -250,7 +192,6 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
       flex-direction: column;
       justify-content: center;
       text-align: center;
-      box-sizing: border-box;
       border-radius: 4px;
       cursor: pointer;
       transition: 0.1s;
@@ -359,7 +300,26 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
     .swiper-slide {
       padding: 0 40px;
-      box-sizing: border-box;
+    }
+
+    .gallery-thumbs {
+      height: 100px;
+      padding: 2px 0;
+      max-width: 500px;
+      transform: scale(0.95);
+    }
+
+    .gallery-thumbs .swiper-slide {
+      height: 100%;
+      opacity: 0.4;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      transform: scale(0.95);
+    }
+
+    .gallery-thumbs .swiper-slide-thumb-active {
+      opacity: 1;
     }
 
     @media only screen and (max-width: 750px) {
@@ -384,7 +344,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
     @media only screen and (min-width: 1000px) {
       .item-image {
-        height: 600px;
+        height: 480px;
       }
 
       .popup {
@@ -443,7 +403,6 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     form textarea {
       border-radius: 0;
       padding: 3px;
-      box-sizing: border-box;
     }
 
     .smallText {
@@ -502,20 +461,33 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
   </style>
   <script>
     var swiper;
+    var galleryThumbs;
 
     var RATING = 0;
 
     window.addEventListener("DOMContentLoaded", function() {
       if ($('.swiper-container') != null) {
-        swiper = new Swiper('.swiper-container', {
-          pagination: {
-            el: '.swiper-pagination',
-            type: 'fraction',
-          },
+        galleryThumbs = new Swiper('.gallery-thumbs', {
+          centerInsufficientSlides: true,
+          grabCursor: true,
+          // spaceBetween: 10,
+          slidesPerView: 4,
+          freeMode: true,
+          watchSlidesVisibility: true,
+          watchSlidesProgress: true,
+
+        });
+
+        swiper = new Swiper('.product-main-slider', {
           navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
           },
+          thumbs: {
+            swiper: galleryThumbs,
+            autoScrollOffset: 1
+          },
+          grabCursor: true,
         });
       }
 
@@ -620,9 +592,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
       });
     }
 
-    var variant_to_image = <?= $variant_to_image ?>;
-    var gallery_urls = <?= $gallery_urls ?>;
-    var gallery_urls_all = <?= $gallery_urls_all ?>;
+    var variant_to_image = [];
     var variants = <?= json_encode($variants) ?>;
     var user_basket = <?= $_SESSION["basket"] ?>;
 
@@ -836,7 +806,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         "name": "<?= htmlspecialchars($product_data["title"]) ?>",
         "url": "<?= $SITE_URL . "/" . $url ?>",
         "image": [
-          "<?= $product_data["image"] ?>"
+          "<?= $product_data["cache_thumbnail"] ?>"
         ],
         "description": "<?= $product_data["seo_description"] ?>",
         "brand": {

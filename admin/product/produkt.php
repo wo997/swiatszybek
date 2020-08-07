@@ -428,23 +428,6 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       </div>
     </div>
 
-    <div class="mobileRow">
-      <div>
-        <div class="field-title">
-          Zdjęcie na stronę główną
-          <div class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</div>
-          <img id="img-main" name="image" data-type="src" data-src-prefix="/uploads/df/" />
-        </div>
-      </div>
-      <div style="margin-left:10px">
-        <div class="field-title">
-          Wersja desktopowa
-          <div class="btn primary" onclick="imagePicker.open(this.nextElementSibling.nextElementSibling)">Wybierz</div>
-          <div class="btn secondary" onclick="copyMainImage(this.nextElementSibling)">Kopiuj zdjęcie główne</div>
-          <img name="image_desktop" data-type="src" data-src-prefix="/uploads/df/" />
-        </div>
-      </div>
-    </div>
 
     <div class="gallery"></div>
 

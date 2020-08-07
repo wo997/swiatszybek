@@ -72,7 +72,7 @@
         });
 
         var sliderCount = 0;
-        $$('.swiper-container:not(.product-main-slider)').forEach(e => {
+        $$('.cms-block .swiper-container:not(.swiper-container-initialized)').forEach(e => {
             sliderCount++;
             var sliderName = "swiper-slider-" + sliderCount;
             e.classList.add(sliderName);

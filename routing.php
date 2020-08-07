@@ -123,7 +123,7 @@ foreach ($admin_navigations_tree as &$admin_navigations_branch) {
 }
 unset($admin_navigations_branch);
 
-$user_routes = [
+$deployment_routes = [
   "deployment/build",
   "deployment/migrate"
 ];
@@ -137,7 +137,7 @@ $routes = [];
 /*foreach ($admin_routes as $admin_route) {
   $routes[] = $admin_route;
 }*/
-foreach ($user_routes as $route) {
+foreach ($deployment_routes as $route) {
   $routes[] = $route;
 }
 //$admin_routes
@@ -195,22 +195,13 @@ function checkUrl($url)
   return null;
 }
 
-$page_data["cms_id"] = null;
-if ($pageName == "admin/podglad_strony.php") {
-  $page_data["content"] = isset($_POST["content"]) ? $_POST["content"] : "Pusta strona";
-  $page_data["metadata"] = isset($_POST["metadata"]) ? $_POST["metadata"] : null;
-
-  include "cms_page.php";
-  die;
-} else if ($pageName) {
-  $stmt = $con->prepare("SELECT meta_description, title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1");
-
-  $url_like = explode("/", $url)[0] . "%";
-  $stmt->bind_param("s", $url_like);
-  $stmt->execute();
-  $stmt->bind_result($page_data["meta_description"], $page_data["title"]);
-  mysqli_stmt_fetch($stmt);
-  $stmt->close();
+if ($pageName) {
+  if (strpos($url, "deployment") !== 0) {
+    $page_data = fetchRow(
+      "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
+      [explode("/", $url)[0] . "%"]
+    );
+  }
 
   if (strpos($url, "admin") === 0) {
     adminRequired();
@@ -221,7 +212,16 @@ if ($pageName == "admin/podglad_strony.php") {
 } else {
 
   $canSee = $app["user"]["is_admin"] ? "1" : "published = 1";
-  $page_data = fetchRow("SELECT cms_id, meta_description, title, content, metadata, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [$url]);
+  $page_data = fetchRow("SELECT cms_id, seo_description, seo_title, content, metadata, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [$url]);
+
+  if (isset($_POST["content"])) {
+    $page_data["content"] = $_POST["content"];
+  }
+
+  if (isset($_POST["metadata"])) {
+    $page_data["metadata"] = $_POST["metadata"];
+  }
+
   if ($page_data) {
     include "cms_page.php";
     die;

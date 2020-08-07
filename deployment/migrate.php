@@ -48,13 +48,22 @@ addColumns("users", [
 ]);
 
 // migration from 02.08.2020
+
 addColumns("products", [
   ["name" => "gallery", "previous_name" => "image_desktop", "type" => "TEXT"],
-  ["name" => "image", "type" => "TINYTEXT"],
 ]);
 
-createTable("environment", [
-  ["name" => "modification_time", "type" => "INT"]
+// migration from 04.08.2020
+
+addColumns("products", [
+  ["name" => "cache_thumbnail", "type" => "TINYTEXT"]
 ]);
+
+addColumns("cms", [
+  ["name" => "seo_description", "previous_name" => "meta_description", "type" => "TINYTEXT"],
+  ["name" => "title", "previous_name" => "seo_title", "type" => "TINYTEXT"],
+  ["name" => "seo_title", "type" => "TINYTEXT"]
+]);
+
 
 echo "<h3>✅ All migrations completed</h3>";

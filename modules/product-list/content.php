@@ -11,7 +11,7 @@
     $where .= " AND category_id = " . intval($moduleParams["category_id"]);
   }
 
-  $products = fetchArray("SELECT product_id, title, link, image, gallery, price_min, price_max, cache_avg_rating
+  $products = fetchArray("SELECT product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating
 FROM products i $join $where ORDER BY product_id DESC LIMIT " . intval($productListCount));
 
   $total = 0;
@@ -26,12 +26,12 @@ FROM products i $join $where ORDER BY product_id DESC LIMIT " . intval($productL
     $total++;
 
     if (!$product["gallery"]) {
-      $product["gallery"] = $product["image"];
+      $product["gallery"] = $product["cache_thumbnail"];
     }
 
     $res .= "<div class='product'>
             <a href='" . getProductLink($product["product_id"], $product["link"]) . "'>
-              <div class='item-image' style='background-image:url(\"/uploads/md/" . $product["image"] . "\")' data-desktop='/uploads/md/" . $product["gallery"] . "'></div>
+              <div class='item-image' style='background-image:url(\"/uploads/md/" . $product["cache_thumbnail"] . "\")' data-desktop='/uploads/md/" . $product["gallery"] . "'></div>
               <div class='item-desc'><h3>" . $product["title"] . "</h3>
               <span class='pln'>$priceText zł</span>
               </div>" . ratingBlock($product["cache_avg_rating"]) . "

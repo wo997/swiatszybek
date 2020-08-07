@@ -18,11 +18,9 @@ if (isset($_POST["remove"])) {
     }
 
     query("UPDATE products SET title = ?, link = ?, seo_title = ?, seo_description = ?,
-      specyfikacja = ?, specyfikacja_output = ?, description = ?, descriptionShort = ?,
-      image = ?, gallery = ?, published = ? WHERE product_id = " . intval($product_id), [
+      specyfikacja = ?, specyfikacja_output = ?, description = ?, descriptionShort = ?, gallery = ?, published = ? WHERE product_id = " . intval($product_id), [
         $_POST["title"], $_POST["link"], $_POST["seo_title"], $_POST["seo_description"],
-        $_POST["specyfikacja"], $_POST["specyfikacja_output"], $_POST["description"], $_POST["descriptionShort"],
-        $_POST["image"], $_POST["gallery"], $_POST["published"]
+        $_POST["specyfikacja"], $_POST["specyfikacja_output"], $_POST["description"], $_POST["descriptionShort"], $_POST["gallery"], $_POST["published"]
     ]);
 
     // categories
@@ -33,6 +31,8 @@ if (isset($_POST["remove"])) {
     }
     $insert = substr($insert, 0, -1);
     query("INSERT INTO link_product_category (product_id, category_id) VALUES $insert");
+
+    triggerEvent("product_gallery_change", ["product_id" => intval($product_id)]);
 }
 include "../sitemap-create.php";
 die;
