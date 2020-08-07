@@ -315,63 +315,17 @@ var modules = {
             <div class="default-form" style="width:600px; max-width:90vw;">
               <div class="field-title">HTML</div>
                 <textarea class="field html" style="width:100%; height:400px"></textarea>
-              <div class="field-title">CSS</div>
-                <textarea class="field css" style="width:100%; height:400px"></textarea>
-              <div class="field-title">JS</div>
-                <textarea class="field js" style="width:100%; height:400px"></textarea>
             </div>
             `,
     formOpen: (block) => {
-      var content = block.querySelector(".cms-block-content");
-
-      $("#custom-html .html").value = content.querySelector(
-        ".html-container"
+      $("#custom-html .html").value = block.querySelector(
+        ".cms-block-content"
       ).innerHTML;
-      $("#custom-html .css").value = block.getAttribute("data-css");
-      $("#custom-html .js").value = content.querySelector("script").innerHTML;
     },
     formClose: () => {
-      // TODO: consider cloning module
-
-      // checks whether it is new container or not
-      var id = cmsTarget.getAttribute("data-custom-html-id");
-      if (!id) {
-        id = Math.floor(Math.random() * 99999 + 1);
-        while (true) {
-          if (!$(`.cms-block[data-custom-html-id="${id}"]`)) break;
-          id++;
-        }
-      }
-
-      var blockContent = cmsTarget.querySelector(`.cms-block-content`);
-      blockContent.querySelector(`.html-container`).innerHTML = $(
+      cmsTarget.querySelector(`.cms-block-content`).innerHTML = $(
         "#custom-html .html"
       ).value;
-
-      blockContent.querySelector(`script`).innerHTML = $(
-        "#custom-html .js"
-      ).value;
-
-      cmsTarget.setAttribute("data-css", $("#custom-html .css").value);
-
-      removeNode(blockContent.querySelector(`style`));
-
-      // // scope css
-      // if (css) {
-      //   css = css
-      //     .split("}")
-      //     .map((elem) => ` .cms-block[data-custom-html-id="${id}"] ${elem}`)
-      //     .join("}");
-      // }
-      // var id = block.getAttribute("data-custom-html-id");
-      // var re = `div\\[data-custom-html-id="${id}"\\]`;
-      // var regex = new RegExp(`div\\[data-custom-html-id="${id}"\\]`, "g");
-
-      //  BUG: it doesn't show up changes when removing styles involving things that were previously saved as page content
-      // (because the elements already have styles applied, they don't read it from style tag)
-      //  possible solution 1: maybe instead of adding <style> tags, i should change elements style directly
-      //  possible solution 2: try to re render cms-block-content
-      //  possible solution 3: https://css-tricks.com/almanac/properties/a/all/ on children
     },
   },
 };
@@ -609,25 +563,6 @@ function cmsUpdate() {
         removeNode(x);
       }
     });
-
-    if (block.getAttribute("data-module") == "custom-html") {
-      const content = block.querySelector(".cms-block-content");
-      addMissingDirectChildren(
-        content,
-        (c) => c.classList.contains("html-container"),
-        `<div class="html-container"></div>`
-      );
-      addMissingDirectChildren(
-        content,
-        (c) => c.tagName == "STYLE",
-        `<style>${nonull(block.getAttribute("data-css"))}</style>`
-      );
-      addMissingDirectChildren(
-        content,
-        (c) => c.tagName == "SCRIPT",
-        `<script></script>`
-      );
-    }
   });
 
   $$("#cms .cms-container").forEach((container) => {
