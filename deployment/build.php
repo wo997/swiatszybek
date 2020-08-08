@@ -7,5 +7,6 @@ include "deployment/create_directories.php";
 include "deployment/migrate.php";
 
 triggerEvent("topmenu_change");
+triggerEvent("sitemap_change");
 
 include "deployment/scan_annotations.php";

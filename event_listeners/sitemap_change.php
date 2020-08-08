@@ -20,7 +20,7 @@ $cmss = fetchArray("SELECT link FROM cms WHERE published = 1");
 foreach ($cmss as $cms) {
   $prio = 1 - 0.2 * (1 + substr_count($cms["link"], "/"));
   if ($link == "") $prio = 1;
-  $cmsXML .= "<url>
+  $cmssXML .= "<url>
         <loc>$SITE_URL/" . $cms["$link"] . "</loc>
         <lastmod>$now</lastmod>
         <priority>$prio</priority>
