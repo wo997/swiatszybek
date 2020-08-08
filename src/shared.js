@@ -1850,6 +1850,8 @@ function setValue(input, value) {
     input.checked = value ? true : false;
 
     input.dispatchEvent(new Event("change"));
+  } else if (input.hasAttribute("data-category-picker")) {
+    setCategoryPickerValues(input.next(), JSON.parse(value));
   } else {
     var type = input.getAttribute("data-type");
     if (type == "html") {
@@ -2055,6 +2057,7 @@ function getFormData(form = null) {
   if (!form) form = document;
   var data = {};
 
+  form = $(form);
   var excludeHidden = form.hasAttribute("data-exclude-hidden");
   $(form)
     .$$(`[name]`)
@@ -2109,6 +2112,11 @@ function registerCategoryPickers() {
 }
 
 function setCategoryPickerValues(element, values, params = {}) {
+  if (!element) {
+    console.warn(`Category picker element doesn't exist`);
+    return;
+  }
+  element = $(element);
   element.$$(".expandY").forEach((e) => {
     e.classList.add("hidden");
   });
@@ -2121,7 +2129,6 @@ function setCategoryPickerValues(element, values, params = {}) {
     values = values.map((e) => e.toString());
   }
   var example = null;
-
   element.$$("[data-category_id]").forEach((e) => {
     if (!example) example = e;
 

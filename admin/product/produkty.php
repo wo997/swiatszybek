@@ -56,7 +56,6 @@
   }
 </script>
 
-<?php endSection(); ?>
 
 <?php startSection("content"); ?>
 
@@ -75,6 +74,5 @@
   </form>
 </div>
 
-<?php endSection(); ?>
 
 <?php include "admin/default_page.php"; ?>

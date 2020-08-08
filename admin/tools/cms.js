@@ -128,7 +128,12 @@ function editModule(block) {
   showModal(moduleName, {
     source: cmsTarget,
   });
-  module.formOpen(block);
+  let params = {};
+  try {
+    params = JSON.parse(block.getAttribute("data-module-params"));
+  } catch {}
+  setFormData(params, $(`#${moduleName}`));
+  module.formOpen(params, block, moduleName);
 }
 
 function saveModule(button) {
@@ -244,11 +249,11 @@ var modules = {
             <div class="default-form">
                 <label style='margin-top:0'>
                     <span>Liczba produktów</span>
-                    <input type='number' id='productListCount'>
+                    <input type='number' name="product_list_count">
                 </label>
                 <label>
                     <span>Sortuj wg</span>
-                    <select>
+                    <select name='order_by'>
                         <option value='new'>Najnowsze</option>
                         <option value='sale'>Bestsellery</option>
                         <option value='cheap'>Najtańsze</option>
@@ -258,36 +263,24 @@ var modules = {
                 <label>
                     <span>Kategorie</span>
                 </label>
-                <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
+                <input type="hidden" name="category_ids" data-category-picker data-category-picker-source="product_categories">
             </div>
 
             `,
-    formOpen: (block) => {
-      var productListCount = 0;
-      try {
-        var params = JSON.parse(block.getAttribute("data-module-params"));
-        productListCount = params["productListCount"];
-      } catch {}
-      $("#productListCount").value = productListCount;
-
-      loadCategoryPicker("product_categories", { skip: 2 });
+    formOpen: (params, block, moduleName) => {
+      loadCategoryPicker("product_categories", { skip: 2 }, () => {
+        $(`#${moduleName} [name="category_ids"]`).setValue(
+          params["category_ids"]
+        );
+      });
     },
     formClose: () => {
-      var params = {};
-      params["productListCount"] = document.getElementById(
-        "productListCount"
-      ).value;
+      const params = getFormData("#product-list");
       cmsTarget.setAttribute("data-module-params", JSON.stringify(params));
     },
-    render: (block) => {
-      var productListCount = 0;
-      try {
-        var params = JSON.parse(block.getAttribute("data-module-params"));
-        productListCount = params["productListCount"];
-      } catch {
-        return "";
-      }
-      return `Liczba produktów: ${productListCount}`;
+    render: (params) => {
+      const productListCount = params["product_list_count"];
+      return productListCount ? `Liczba produktów: ${productListCount}` : "";
     },
   },
   "newsletter-form": {
@@ -315,59 +308,17 @@ var modules = {
             <div class="default-form" style="width:600px; max-width:90vw;">
               <div class="field-title">HTML</div>
                 <textarea class="field html" style="width:100%; height:400px"></textarea>
-              <div class="field-title">CSS</div>
-                <textarea class="field css" style="width:100%; height:400px"></textarea>
-              <div class="field-title">JS</div>
-                <textarea class="field js" style="width:100%; height:400px"></textarea>
             </div>
             `,
-    formOpen: (block) => {
-      var content = block.$(".cms-block-content");
-
-      $("#custom-html .html").value = content.$(".html-container").innerHTML;
-      $("#custom-html .css").value = block.getAttribute("data-css");
-      $("#custom-html .js").value = content.$("script").innerHTML;
+    formOpen: (params, block) => {
+      $("#custom-html .html").getValue() = block.querySelector(
+        ".cms-block-content"
+      ).innerHTML;
     },
     formClose: () => {
-      // TODO: consider cloning module
-
-      // checks whether it is new container or not
-      var id = cmsTarget.getAttribute("data-custom-html-id");
-      if (!id) {
-        id = Math.floor(Math.random() * 99999 + 1);
-        while (true) {
-          if (!$(`.cms-block[data-custom-html-id="${id}"]`)) break;
-          id++;
-        }
-      }
-
-      var blockContent = cmsTarget.$(`.cms-block-content`);
-      blockContent.$(`.html-container`).innerHTML = $(
+      cmsTarget.querySelector(`.cms-block-content`).innerHTML = $(
         "#custom-html .html"
-      ).value;
-
-      blockContent.$(`script`).innerHTML = $("#custom-html .js").value;
-
-      cmsTarget.setAttribute("data-css", $("#custom-html .css").value);
-
-      removeNode(blockContent.$(`style`));
-
-      // // scope css
-      // if (css) {
-      //   css = css
-      //     .split("}")
-      //     .map((elem) => ` .cms-block[data-custom-html-id="${id}"] ${elem}`)
-      //     .join("}");
-      // }
-      // var id = block.getAttribute("data-custom-html-id");
-      // var re = `div\\[data-custom-html-id="${id}"\\]`;
-      // var regex = new RegExp(`div\\[data-custom-html-id="${id}"\\]`, "g");
-
-      //  BUG: it doesn't show up changes when removing styles involving things that were previously saved as page content
-      // (because the elements already have styles applied, they don't read it from style tag)
-      //  possible solution 1: maybe instead of adding <style> tags, i should change elements style directly
-      //  possible solution 2: try to re render cms-block-content
-      //  possible solution 3: https://css-tricks.com/almanac/properties/a/all/ on children
+      ).getValue();
     },
   },
 };
@@ -677,13 +628,18 @@ function cmsUpdate() {
       var moduleName = e.getAttribute("data-module");
       var module = modules[moduleName];
 
+      let params = {};
+      try {
+        params = JSON.parse(e.getAttribute("data-module-params"));
+      } catch {}
+
       if (module && module.render) {
         e.$(".cms-block-content").innerHTML = `
                         <div class="module-content">
                             <div>
                                 ${module.icon} ${module.description}
                                 <p style="margin:10px 0;font-size:0.8em">${
-                                  module.render ? module.render(e) : ""
+                                  module.render ? module.render(params, e) : ""
                                 }</p>
                             </div>
                         </div>`;

@@ -1,18 +1,26 @@
   <?php
 
-  $shared_where = "published = 1";
+  $shared_where = "p.published = 1 AND v.published = 1";
   $where = "WHERE " . $shared_where;
 
-  $productListCount = nonull($moduleParams, "productListCount", 8);
+  $product_list_count = nonull($moduleParams, "product_list_count", 8);
 
   $join = "";
-  if (isset($moduleParams["category_id"]) && $moduleParams["category_id"] != 0) {
-    $join = " INNER JOIN link_product_category USING(product_id)";
-    $where .= " AND category_id = " . intval($moduleParams["category_id"]);
+  $join .= "INNER JOIN variant v USING(product_id)";
+  if (isset($moduleParams["category_ids"])) {
+    if (is_array($moduleParams["category_ids"])) {
+      $category_ids =  $moduleParams["category_ids"] = array_filter($moduleParams["category_ids"], function ($id) {
+        return $id !== "0" && $id !== 0;
+      });
+      if ($category_ids) {
+        $join .= " INNER JOIN link_product_category USING(product_id)";
+        $where .= " AND category_id IN (" . clean(implode(",", $moduleParams["category_ids"])) . ")";
+      }
+    }
   }
 
   $products = fetchArray("SELECT product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating
-FROM products i $join $where ORDER BY product_id DESC LIMIT " . intval($productListCount));
+FROM products p $join $where ORDER BY product_id DESC LIMIT " . intval($product_list_count));
 
   $total = 0;
   $res = "";
