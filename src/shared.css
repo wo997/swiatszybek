@@ -774,7 +774,7 @@ hr {
   flex-wrap: wrap;
 }
 
-input[type="text"] {
+input[type="text"]:not(.field) {
   padding-left: 4px;
   padding-right: 4px;
 }
