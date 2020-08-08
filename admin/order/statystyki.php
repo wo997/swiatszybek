@@ -14,7 +14,7 @@
 
     var chart;
     google.charts.setOnLoadCallback(() => {
-        chart = new google.visualization.LineChart(document.getElementById('chart'));
+        chart = new google.visualization.LineChart($('#chart'));
         search();
     });
 
@@ -37,8 +37,8 @@
         data.addColumn('number', "Nowe zamówienia");
         data.addColumn('number', "Wpłacono");
 
-        var dateFrom = new Date(document.getElementById("dateFrom").value);
-        var dateTo = new Date(document.getElementById("dateTo").value);
+        var dateFrom = new Date($("#dateFrom").value);
+        var dateTo = new Date($("#dateTo").value);
 
         var chartData = [];
 
@@ -82,7 +82,7 @@
             dateFrom.setDate(dateFrom.getDate() + 1);
         }
 
-        document.getElementById("summary").innerHTML = "Nowe zamówienia: " + zamowien + ", Wpłacono: " + suma + " zł";
+        $("#summary").innerHTML = "Nowe zamówienia: " + zamowien + ", Wpłacono: " + suma + " zł";
 
         data.addRows(chartData);
 
@@ -183,8 +183,8 @@
         }
 
         var dateFilterQuery = "";
-        var dateFrom = document.getElementById("dateFrom");
-        var dateTo = document.getElementById("dateTo");
+        var dateFrom = $("#dateFrom");
+        var dateTo = $("#dateTo");
 
         if (data.source) {
             var date1 = new Date(dateFrom.value);
@@ -214,8 +214,8 @@
     }
 
     function changeDate(direction) {
-        var dateFrom = document.getElementById("dateFrom");
-        var dateTo = document.getElementById("dateTo");
+        var dateFrom = $("#dateFrom");
+        var dateTo = $("#dateTo");
 
         var date1 = new Date(dateFrom.value);
         var date2 = new Date(dateTo.value);

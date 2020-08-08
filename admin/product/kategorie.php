@@ -159,9 +159,9 @@
 
         var canDelete = !data.subcategories;
 
-        formElement.querySelector(".caseCanDelete").classList.toggle("hidden", isNew);
-        toggleDisabled(formElement.querySelector(`.btn.red`), !canDelete);
-        formElement.querySelector(".btn.red + i").classList.toggle("hidden", canDelete);
+        formElement.$(".caseCanDelete").classList.toggle("hidden", isNew);
+        toggleDisabled(formElement.$(`.btn.red`), !canDelete);
+        formElement.$(".btn.red + i").classList.toggle("hidden", canDelete);
 
         clearValidateRequired();
     }
@@ -229,7 +229,7 @@
 
                 <div class="field-title">
                     Ikonka
-                    <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
+                    <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
                     <img name="icon" data-type="src" data-src-prefix="/uploads/sm/" style="max-width:100px;max-height:100px" />
                 </div>
 

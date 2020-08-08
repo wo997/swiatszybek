@@ -46,9 +46,9 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   useTool("cms");
 
   function comboSelectValuesChanged(combo) {
-    combo.querySelectorAll("select").forEach(select => {
+    combo.$$("select").forEach(select => {
       for (option of select.options) {
-        var childSelect = combo.querySelector(`select[data-parent_value_id="${option.value}"]`);
+        var childSelect = combo.$(`select[data-parent_value_id="${option.value}"]`);
         if (!childSelect) continue;
         if (option.value == select.value) {
           childSelect.classList.remove("hidden");
@@ -63,7 +63,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   function registerComboSelects() {
     $$(".combo-select-wrapper").forEach(combo => {
 
-      combo.querySelectorAll("select:not(.registered)").forEach(select => {
+      combo.$$("select:not(.registered)").forEach(select => {
         select.classList.add("registered");
 
         select.addEventListener("change", () => {
@@ -78,15 +78,15 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   }
 
   function optionalValueChanged(optional) {
-    var checkbox = optional.querySelector(`input[type="checkbox"]`);
-    var input = optional.querySelector(`.field`);
+    var checkbox = optional.$(`input[type="checkbox"]`);
+    var input = optional.$(`.field`);
 
     input.classList.toggle("hidden", !checkbox.checked);
   }
 
   function registerOptionalValues() {
     $$(".optional-value-wrapper").forEach(optional => {
-      var checkbox = optional.querySelector(`input[type="checkbox"]:not(.registered)`);
+      var checkbox = optional.$(`input[type="checkbox"]:not(.registered)`);
       if (!checkbox) return;
       checkbox.classList.add("registered");
       checkbox.addEventListener("change", () => {
@@ -234,7 +234,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           return x.toString().replace(/"/g, "");
         };
         return `
-            <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
+            <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
             <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin: 10px;max-width:200px;max-height:200px">
           `;
       },
@@ -259,7 +259,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   }
 
   function copyMainImage(node) {
-    node.setAttribute("src", document.getElementById("img-main").getAttribute("src"));
+    node.setAttribute("src", $("#img-main").getAttribute("src"));
   }
 
   function editPage() {
@@ -309,7 +309,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       success: (res) => {
         var data = JSON.parse(res);
         $$(".combo-select-wrapper").forEach(combo => {
-          combo.querySelectorAll("select").forEach(select => {
+          combo.$$("select").forEach(select => {
             var option = [...select.options].find(o => {
               return data.attribute_selected_values.indexOf(parseInt(o.value)) !== -1
             });
@@ -321,15 +321,15 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         });
 
         for (attribute of data.attribute_values) {
-          var wrapper = findParentByClassName($(`[name="attribute_values[${attribute.attribute_id}]"]`), "optional-value-wrapper");
-          setValue(wrapper.querySelector(`input[type="checkbox"]`), 0);
+          var wrapper = findParentByClassName(`[name="attribute_values[${attribute.attribute_id}]"]`, "optional-value-wrapper");
+          setValue(wrapper.$(`input[type="checkbox"]`), 0);
         }
 
         for (attribute of data.attribute_values) {
           setValue($(`[name="attribute_values[${attribute.attribute_id}]"]`), attribute[attribute_data_types[attribute.data_type].field]);
 
-          var wrapper = findParentByClassName($(`[name="attribute_values[${attribute.attribute_id}]"]`), "optional-value-wrapper");
-          setValue(wrapper.querySelector(`input[type="checkbox"]`), 1);
+          var wrapper = findParentByClassName(`[name="attribute_values[${attribute.attribute_id}]"]`, "optional-value-wrapper");
+          setValue(wrapper.$(`input[type="checkbox"]`), 1);
         }
 
         setModalInitialState(formName);
@@ -504,7 +504,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
       <div class="field-title">Kolor</div>
       <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
-      <div class="btn primary" onclick="this.previousElementSibling.value='';this.previousElementSibling.style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>
+      <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>
 
       <div class="field-title">Atrybuty</div>
 
@@ -513,25 +513,21 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
       $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes");
 
-      function printSelectValuesOfAttribute($values, $value_id = null)
+      function printSelectValuesOfAttribute($values, $attribute, $value_id = null)
       {
         if (!isset($values[0])) return "";
 
-        $first_value_as_name = "";
-        foreach ($values as $value_data) {
-          $first_value_as_name = "name='select_" . $value_data["values"]["value_id"] . "'";
-          break;
-        }
+        $field_name = "attribute-" . $attribute["attribute_id"] . ($value_id ? "_" . $value_id : "");
 
         $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
-        $html = "<select $attr data-attribute-value $first_value_as_name>";
+        $html = "<select $attr data-attribute-value name='$field_name'>";
         $html .= "<option value=''>Nie dotyczy</option>";
         foreach ($values as $value_data) {
           $html .= "<option value='" . $value_data["values"]["value_id"] . "'>" . $value_data["values"]["value"] . "</option>";
         }
         $html .= "</select> ";
         foreach ($values as $value_data) {
-          $html .= printSelectValuesOfAttribute($value_data["children"], $value_data["values"]["value_id"]);
+          $html .= printSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
         }
 
         return $html;
@@ -559,7 +555,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
           }
         } else {
           $values = getAttributeValues($attribute["attribute_id"]);
-          echo printSelectValuesOfAttribute($values);
+          echo printSelectValuesOfAttribute($values, $attribute);
         }
 
         echo "</div>";
@@ -570,7 +566,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
       <div class="field-title">
         Zdjecie
-        <button type="button" class="btn primary" onclick="imagePicker.open(this.nextElementSibling)">Wybierz</button>
+        <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
         <img name="zdjecie" data-type="src" data-src-prefix="/uploads/sm/" />
       </div>
 

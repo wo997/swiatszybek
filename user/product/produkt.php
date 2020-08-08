@@ -567,7 +567,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
                         <i class="fa fa-chevron-right"></i>
                       </a>`;
       }
-      document.getElementById("juzMasz").innerHTML = juzMasz;
+      $("#juzMasz").innerHTML = juzMasz;
 
       setTimeout(function() {
         removeClasses('seethrough');
@@ -599,7 +599,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     var VARIANT_ID = null;
 
     function clickVariant(variant_id) {
-      document.getElementById("buyNow").toggleAttribute("disabled", true);
+      $("#buyNow").toggleAttribute("disabled", true);
 
       if (!variant_id) return;
 
@@ -616,20 +616,20 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         swiper.slideTo(variant_to_image[VARIANT_ID], 300, null);
 
 
-      document.getElementById('updateChoosenImage').style.backgroundImage = `url('/uploads/df/${variant.zdjecie}')`;
-      document.getElementById('updateChoosenVariant').innerHTML = " " + variant.name;
-      document.getElementById('updateChoosenAmountCost').innerHTML = variant.price - variant.rabat + " zł";
+      $('#updateChoosenImage').style.backgroundImage = `url('/uploads/df/${variant.zdjecie}')`;
+      $('#updateChoosenVariant').innerHTML = " " + variant.name;
+      $('#updateChoosenAmountCost').innerHTML = variant.price - variant.rabat + " zł";
 
       var left = variant.stock - variant.quantity;
 
       var low = left < 5 ? "style='font-weight:bold;color:red'" : "";
 
-      document.getElementById("quantity").innerHTML = `Dostępność: <span class="pln" ${low}>${left} szt.</span>`;
+      $("#quantity").innerHTML = `Dostępność: <span class="pln" ${low}>${left} szt.</span>`;
 
-      document.getElementById("buyNow").toggleAttribute("disabled", left == 0);
+      $("#buyNow").toggleAttribute("disabled", left == 0);
 
-      document.getElementById("caseLast").style.display = left == 0 && variant.stock > 0 ? "block" : "none";
-      document.getElementById("caseZero").style.display = left == 0 ? "block" : "none";
+      $("#caseLast").style.display = left == 0 && variant.stock > 0 ? "block" : "none";
+      $("#caseZero").style.display = left == 0 ? "block" : "none";
 
       $$(".caseZero").forEach((e) => {
         e.style.display = left == 0 ? "block" : "none";
@@ -725,8 +725,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         action: action
       }, () => {
         comments.search(() => {
-          document.getElementById("formComment").style.display = "block";
-          document.getElementById("commentSent").style.display = "none";
+          $("#formComment").style.display = "block";
+          $("#commentSent").style.display = "none";
         });
       }, () => {});
     }
@@ -748,13 +748,13 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         url: "/addComment",
         params: {
           product_id: <?= $product_data["product_id"] ?>,
-          pseudonim: document.getElementById("pseudonim").value,
-          tresc: document.getElementById("tresc").value,
+          pseudonim: $("#pseudonim").value,
+          tresc: $("#tresc").value,
           rating: RATING
         },
         success: (res) => {
           comments.search(() => {
-            document.getElementById("formComment").style.display = "none";
+            $("#formComment").style.display = "none";
 
             var out = "<h3>Dziękujemy za przekazaną opinię!</h3>";
             try {
@@ -766,8 +766,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
               }
             } catch (e) {}
 
-            document.getElementById("commentSent").innerHTML = out;
-            document.getElementById("commentSent").style.display = "block";
+            $("#commentSent").innerHTML = out;
+            $("#commentSent").style.display = "block";
           });
         }
       })
@@ -781,9 +781,9 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     }
 
     function sendNotification() {
-      var e = document.getElementById("notification_email");
+      var e = $("#notification_email");
       var email = e.value;
-      document.getElementById("user_email").innerHTML = email;
+      $("#user_email").innerHTML = email;
       if (!validateEmail(email)) {
         e.style.borderColor = "red";
         return;
@@ -792,8 +792,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         variant_id: ids[VARIANT_ID],
         email: email
       }, () => {
-        document.getElementById("whenNotificationAdded").style.display = "block";
-        document.getElementById("hideWhenNotificationAdded").style.display = "none";
+        $("#whenNotificationAdded").style.display = "block";
+        $("#hideWhenNotificationAdded").style.display = "none";
       }, null);
     }
   </script>

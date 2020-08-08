@@ -467,7 +467,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
   </style>
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      window.form = document.getElementById("form");
+      window.form = $("#form");
 
       ignoreValueChanges = true;
       setFormData(<?= json_encode($zamowienie_data) ?>, $(".main-container"));
@@ -494,7 +494,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         type: RABAT_TYPE
       });
 
-      document.getElementById("form").addEventListener('keypress', function(e) {
+      $("#form").addEventListener('keypress', function(e) {
         if (e.key == 'Enter' && e.target.tagName != "TEXTAREA") {
           e.preventDefault();
           return false;
@@ -515,7 +515,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       $$(`[name*="_kurier"]`).forEach(e => {
         e.addEventListener("change", () => {
           var name = e.getAttribute("name").replace("_kurier", "_dostawa");
-          var input = form.querySelector(`input[name="${name}"]`);
+          var input = form.$(`input[name="${name}"]`);
           if (input) {
             setValue(input, e.value);
           }
@@ -568,8 +568,8 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
     function isFormValid() {
       if (currentMenu == 4) {
-        if (!document.getElementById("accept-regulamin").checked) {
-          document.getElementById("regulamin-warn").style.display = "inline-block";
+        if (!$("#accept-regulamin").checked) {
+          $("#regulamin-warn").style.display = "inline-block";
           return false;
         }
       }
@@ -625,7 +625,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       var was = $("#menu" + wasMenu);
       var now = $("#menu" + i);
       was.classList.remove("showNow");
-      document.getElementById("menu" + i).style.display = "flex";
+      $("#menu" + i).style.display = "flex";
       now.style.position = "fixed";
       now.style.height = "";
       setTimeout(function() {
@@ -641,7 +641,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       }, 200);
 
       if (i == 4) {
-        var form = document.getElementById("form");
+        var form = $("#form");
 
         var daneKontaktoweInfo = "";
         if (BUYER_TYPE == 'p') {
@@ -653,13 +653,13 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
         daneKontaktoweInfo += '<div style="height: 7px;"></div>' + form.kod_pocztowy.value + " " + form.miejscowosc.value + ", " + form.kraj.value + "<br>" + form.ulica.value + " " + form.nr_domu.value + (form.nr_lokalu.value ? "/" : "") + form.nr_lokalu.value;
 
-        document.getElementById("daneKontaktoweInfo").innerHTML = daneKontaktoweInfo;
+        $("#daneKontaktoweInfo").innerHTML = daneKontaktoweInfo;
 
-        if (document.getElementById("dostawaRodzaj").innerHTML == "Paczkomat") {
-          document.getElementById("adresInfo").innerHTML = document.getElementById("paczkomatAdres").innerHTML;
+        if ($("#dostawaRodzaj").innerHTML == "Paczkomat") {
+          $("#adresInfo").innerHTML = $("#paczkomatAdres").innerHTML;
 
           DELIVERY_COST = <?= config('paczkomat_cena', 0) ?>;
-        } else if (document.getElementById("dostawaRodzaj").innerHTML == "Kurier") {
+        } else if ($("#dostawaRodzaj").innerHTML == "Kurier") {
           /*form.kraj_dostawa.value = form.kraj.value;
           form.miejscowosc_dostawa.value = form.miejscowosc.value;
           form.kod_pocztowy_dostawa.value = form.kod_pocztowy.value;
@@ -674,7 +674,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
         var adresInfo = "";
 
-        if (document.getElementById("dostawaRodzaj").innerHTML == "Kurier") {
+        if ($("#dostawaRodzaj").innerHTML == "Kurier") {
           adresInfo += form.imie_dostawa.value + " " + form.nazwisko_dostawa.value + (form.firma_dostawa.value == '' ? '' : "<br>" + form.firma_dostawa.value) +
             '<span style="height: 7px;display:block"></span>'
         }
@@ -683,22 +683,22 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           form.ulica_dostawa.value + " " + form.nr_domu_dostawa.value + (form.nr_lokalu_dostawa.value ? "/" : "") + form.nr_lokalu_dostawa.value +
           "<br>" + form.kod_pocztowy_dostawa.value + " " + form.miejscowosc_dostawa.value + ", " + form.kraj_dostawa.value;
 
-        document.getElementById("adresInfo").innerHTML = adresInfo;
+        $("#adresInfo").innerHTML = adresInfo;
 
         var forma_zaplaty = "po";
-        if (document.getElementById("p24").checked) {
+        if ($("#p24").checked) {
           forma_zaplaty = "24";
         }
 
         form.forma_zaplaty.value = forma_zaplaty;
 
-        document.getElementById("submit_text").innerHTML = forma_zaplaty == "po" ? "POTWIERDZAM ZAMÓWIENIE" : "ZAMAWIAM I PŁACĘ";
+        $("#submit_text").innerHTML = forma_zaplaty == "po" ? "POTWIERDZAM ZAMÓWIENIE" : "ZAMAWIAM I PŁACĘ";
 
-        document.getElementById("zaplataInfo").innerHTML = document.getElementById("forma_" + forma_zaplaty).innerHTML.replace(/<input.*>/, "");
+        $("#zaplataInfo").innerHTML = $("#forma_" + forma_zaplaty).innerHTML.replace(/<input.*>/, "");
 
-        document.getElementById("koszt_dostawy_label").innerHTML = DELIVERY_COST + " zł";
+        $("#koszt_dostawy_label").innerHTML = DELIVERY_COST + " zł";
 
-        if (document.getElementById("dostawaRodzaj").innerHTML == "Kurier") {
+        if ($("#dostawaRodzaj").innerHTML == "Kurier") {
           $("#estimatedDelivery").style.display = "block";
         } else {
           $("#estimatedDelivery").style.display = "none";
@@ -729,15 +729,15 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
               nr_lokalu_dostawa: ""
             }, $(".main-container"));
 
-            document.getElementById("paczkomatAdres").innerHTML = "Paczkomat " + form.paczkomat.value + "<br>" + form.ulica_dostawa.value + " " + form.nr_domu_dostawa.value + "<br>" + form.kod_pocztowy_dostawa.value + " " + form.miejscowosc_dostawa.value + " Polska";
+            $("#paczkomatAdres").innerHTML = "Paczkomat " + form.paczkomat.value + "<br>" + form.ulica_dostawa.value + " " + form.nr_domu_dostawa.value + "<br>" + form.kod_pocztowy_dostawa.value + " " + form.miejscowosc_dostawa.value + " Polska";
 
-            document.getElementById("dostawaRodzaj").innerHTML = "Paczkomat";
+            $("#dostawaRodzaj").innerHTML = "Paczkomat";
             setValue($("#dostawaInput"), "p");
           });
         };
         firstPaczkomat = false;
       }
-      var picker = document.getElementById('paczkomat-picker');
+      var picker = $('#paczkomat-picker');
       picker.style.display = "block";
       setTimeout(function() {
         picker.classList.add('paczkomat-picker-open');
@@ -779,7 +779,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
     function hidePaczkomatPicker() {
       $("html").style.overflowY = "auto";
-      var picker = document.getElementById('paczkomat-picker');
+      var picker = $('#paczkomat-picker');
       picker.classList.remove('paczkomat-picker-open');
       setTimeout(function() {
         picker.style.display = "none"
@@ -795,7 +795,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         expandOneDostawa("paczkomat");
 
         setTimeout(() => {
-          document.getElementById("paczkomatAdres").innerHTML = "Paczkomat " + form.paczkomat.value + "<br>" + form.ulica_dostawa.value + " " + form.nr_domu_dostawa.value + "<br>" + form.kod_pocztowy_dostawa.value + " " + form.miejscowosc_dostawa.value + " Polska";
+          $("#paczkomatAdres").innerHTML = "Paczkomat " + form.paczkomat.value + "<br>" + form.ulica_dostawa.value + " " + form.nr_domu_dostawa.value + "<br>" + form.kod_pocztowy_dostawa.value + " " + form.miejscowosc_dostawa.value + " Polska";
         }, 100);
       } else if (value == "o") {
         selectDostawa("osobiscie-option", false);
@@ -810,7 +810,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       }
 
       if (id == 'kurier-option') {
-        document.getElementById("dostawaRodzaj").innerHTML = "Kurier";
+        $("#dostawaRodzaj").innerHTML = "Kurier";
         dostawaInput = "k";
 
         expandOneDostawa("kurier");
@@ -828,7 +828,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           nr_lokalu_dostawa: ""
         }, $(".main-container"));
 
-        document.getElementById("dostawaRodzaj").innerHTML = "Odbiór osobisty";
+        $("#dostawaRodzaj").innerHTML = "Odbiór osobisty";
         dostawaInput = "o";
 
         expandOneDostawa("osobiscie");
@@ -847,7 +847,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
     function aktywujKodRabatowy(action) {
       ajax('/validate_kod_rabatowy', {
-        code: document.getElementById("kod_rabatowy").value,
+        code: $("#kod_rabatowy").value,
         action: action
       }, (response) => {
         if (action == "remove") {
@@ -857,8 +857,8 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           if (response.success) {
             hasKodRabatowy(response);
           } else {
-            document.getElementById("kod_rabatowy").style.borderColor = "red";
-            document.getElementById("kod_rabatowy_reason").innerHTML = response.error;
+            $("#kod_rabatowy").style.borderColor = "red";
+            $("#kod_rabatowy_reason").innerHTML = response.error;
           }
         }
       }, null);
@@ -881,20 +881,20 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       }
 
       if (rabat == 0) {
-        document.getElementById("kod_rabatowy_wrapper").style.display = "none";
-        document.getElementById("rabat_hide").style.display = "block";
+        $("#kod_rabatowy_wrapper").style.display = "none";
+        $("#rabat_hide").style.display = "block";
       } else {
-        document.getElementById("kod_rabatowy").style.borderColor = "";
-        document.getElementById("kod_rabatowy_wrapper").style.display = "block";
-        document.getElementById("kod_rabatowy_label").innerHTML = "-" + RABAT + (RABAT_TYPE == "static" ? "zł" : "%");
-        document.getElementById("rabat_hide").style.display = "none";
+        $("#kod_rabatowy").style.borderColor = "";
+        $("#kod_rabatowy_wrapper").style.display = "block";
+        $("#kod_rabatowy_label").innerHTML = "-" + RABAT + (RABAT_TYPE == "static" ? "zł" : "%");
+        $("#rabat_hide").style.display = "none";
       }
 
       updateTotalCost();
     }
 
     function updateTotalCost() {
-      var t = document.getElementById("total-cost");
+      var t = $("#total-cost");
       t.innerHTML = (RABAT_TYPE == "static" ? (BASKET_COST - RABAT) : Math.round(BASKET_COST * (1 - 0.01 * RABAT))) + DELIVERY_COST;
     }
   </script>
@@ -1007,10 +1007,10 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
                 echo "<div style='text-align:center; padding: 5px'><h3 style='color: #c44;display: inline-block;border: 1px solid #c44;padding: 7px;margin: 0 auto;border-radius: 5px;'>{$_POST["message"]}</h3></div>";
               ?>
               <div class="field-title">E-mail</div>
-              <input type="text" class="field" autocomplete="username" onchange="document.getElementById('zaloguj').email.value = this.value">
+              <input type="text" class="field" autocomplete="username" onchange="$('#zaloguj').email.value = this.value">
               <div class="field-title">Hasło</div>
-              <input type="password" class="field" autocomplete="password" onchange="document.getElementById('zaloguj').password.value = this.value">
-              <button class="btn primary big fill" type="button" style="margin:10px 0; width: 100%" onclick="document.getElementById('zaloguj').submit()">
+              <input type="password" class="field" autocomplete="password" onchange="$('#zaloguj').password.value = this.value">
+              <button class="btn primary big fill" type="button" style="margin:10px 0; width: 100%" onclick="$('#zaloguj').submit()">
                 Zaloguj się
                 <i class="fa fa-chevron-right"></i>
               </button>
@@ -1322,7 +1322,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           <h4 style="margin-top: 40px">Twoje uwagi dotyczące zamówienia</h4>
           <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($uwagi) ?></textarea>
 
-          <label style="user-select:none;cursor:pointer;display:inline-block" onclick="document.getElementById('regulamin-warn').style.display='none'">
+          <label style="user-select:none;cursor:pointer;display:inline-block" onclick="$('#regulamin-warn').style.display='none'">
             <input type="checkbox" id="accept-regulamin">
             <div class="checkbox"></div>
             Akceptuję <a href="/regulamin" target="_blank" style="font-weight: bold;color: #4b0;text-decoration: underline;">REGULAMIN</a> <span style="color:red;font-weight: bold;display:none" id="regulamin-warn"> Wymagane*</span>

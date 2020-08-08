@@ -41,13 +41,13 @@ if ($request == "add") {
   if ($quantity <= 0) die;
 
   foreach ($basket as $basket_item_id => $basket_item) {
-    if ($basket[$basket_item_id]["variant_id"] == $variant_id) {
+    if ($basket_item["variant_id"] == $variant_id) {
       $basket[$basket_item_id]["quantity"] -= $quantity;
       if ($basket[$basket_item_id]["quantity"] < 1) {
         unset($basket[$basket_item_id]);
       }
+      break;
     }
-    break;
   }
 } else die;
 

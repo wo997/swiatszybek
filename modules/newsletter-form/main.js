@@ -1,22 +1,21 @@
-function sendNews(form)
-{
+function sendNews(form) {
+  form = $(form);
   var email = form.email.value;
 
-  if (email == "")
-  {
-    form.querySelector(".uzupelnij").style.display = "inline-block";
+  if (email == "") {
+    form.$(".uzupelnij").style.display = "inline-block";
     return;
   }
 
   xhr({
-    url: '/newsletter_invite',
+    url: "/newsletter_invite",
     params: {
-      email: email
+      email: email,
     },
-    success: ()=>{
+    success: () => {
       form.style.opacity = "0";
       form.style.maxHeight = "0";
       form.style.marginBottom = "145px";
-    }
+    },
   });
 }

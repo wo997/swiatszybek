@@ -11,7 +11,7 @@ window.addEventListener("load", function () {
 });
 
 function mobileDrop(obj) {
-  obj = obj.parentNode.parentNode;
+  obj = obj.parent().parent();
   if (obj.className == "") {
     obj.className = "mobile-drop";
   } else {
@@ -73,7 +73,7 @@ function performSearch(form) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("nav a").forEach((a) => {
+  $$("nav a").forEach((a) => {
     href = a.getAttribute("href");
     if (href == "/") {
       if (location.pathname == "/") {
@@ -86,8 +86,8 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.querySelectorAll(".expandClick").forEach((e) => {
-    e.querySelector(".expandHeader").addEventListener("click", () => {
+  $$(".expandClick").forEach((e) => {
+    e.$(".expandHeader").addEventListener("click", () => {
       e.classList.toggle("expanded");
     });
   });
@@ -112,9 +112,9 @@ window.mobilecheck = function () {
 // popup start
 document.addEventListener("DOMContentLoaded", function () {
   if (!mobilecheck()) {
-    document.querySelectorAll(".navbar_wrapper .dropdown").forEach((e) => {
-      var a = e.querySelector("a");
-      var u = e.querySelector(".dropdown-header");
+    $$(".navbar_wrapper .dropdown").forEach((e) => {
+      var a = e.$("a");
+      var u = e.$(".dropdown-header");
       if (a && u) {
         u.addEventListener("click", () => {
           window.location = a.href;
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-  var popup = document.querySelector(".old-popupWrapper");
+  var popup = $(".old-popupWrapper");
   if (popup) {
     popup.addEventListener("click", function (e) {
       if (e.target == popup) hidePopup();
@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function hidePopup() {
-  var p = document.querySelector(".old-popupWrapper");
+  var p = $(".old-popupWrapper");
   if (!p) return;
   p.style.opacity = 0;
   setTimeout(function () {
@@ -141,7 +141,7 @@ function hidePopup() {
 }
 
 function showPopup() {
-  var p = document.querySelector(".old-popupWrapper");
+  var p = $(".old-popupWrapper");
   if (!p) return;
   p.style.top = "0";
   p.style.opacity = 1;
@@ -199,7 +199,7 @@ function ajax(url, data, good, wrong) {
 window.addEventListener("DOMContentLoaded", scaleVideos);
 window.addEventListener("resize", scaleVideos);
 function scaleVideos() {
-  document.querySelectorAll("iframe.ql-video").forEach((e) => {
+  $$("iframe.ql-video").forEach((e) => {
     var h = Math.round(0.56 * e.getBoundingClientRect().width);
     if (h > 500) h = 500;
     e.style.height = h + "px";
@@ -219,7 +219,8 @@ function delay(action, time, context = window) {
 }
 
 function removeNode(n) {
-  if (n && n.parentNode) n.parentNode.removeChild(n);
+  n = $(n);
+  if (n && n.parent()) n.parent().removeChild(n);
 }
 
 function removeContent(node) {
@@ -249,8 +250,8 @@ function addMissingDirectChildren(
 function swapNodes(n1, n2) {
   if (!n1 || !n2) return;
 
-  var p1 = n1.parentNode;
-  var p2 = n2.parentNode;
+  var p1 = n1.parent();
+  var p2 = n2.parent();
   var i1, i2;
 
   if (!p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1)) return;
@@ -289,7 +290,7 @@ function toggleBodyScroll(disable) {
 }
 
 function stopAllVideos() {
-  videos = document.querySelectorAll("video");
+  var videos = $$("video");
   for (video of videos) {
     video.pause();
   }
@@ -405,7 +406,7 @@ function getWindowScroll() {
 // tooltip start
 var lastTooltip = null;
 window.addEventListener("mousemove", function (event) {
-  var t = document.querySelector(".tooltip");
+  var t = $(".tooltip");
   if (!t) return;
 
   var e = findParentByAttribute(event.target, "data-tooltip");
@@ -445,7 +446,7 @@ window.addEventListener("mousemove", function (event) {
   lastTooltip = e;
 });
 window.addEventListener("click", function (ev) {
-  var t = document.querySelector(".tooltip");
+  var t = $(".tooltip");
   if (t) t.style.display = "none";
 });
 // tooltip end
@@ -470,7 +471,7 @@ function createTable(table) {
   if (!table.lang) table.lang = {};
   table.lang.subject = nonull(table.lang.subject, "wyników");
 
-  table.target = document.querySelector("." + table.name);
+  table.target = $("." + table.name);
 
   table.target.classList.add("datatable-wrapper");
   table.target.setAttribute("data-table-name", table.name);
@@ -618,17 +619,15 @@ function createTable(table) {
   } else {
     table.target.insertAdjacentHTML("afterbegin", justTable);
   }
-  table.searchElement = table.target.querySelector(".search-wrapper");
-  table.tableElement = table.target.querySelector(".table-wrapper");
-  table.totalRowsElement = table.target.querySelector(".total-rows");
-  table.paginationElement = table.target.querySelector(".pagination");
-  table.selectionElement = table.target.querySelector(".selectedRows");
-  table.selectionValueElement = table.target.querySelector(
-    ".table-selection-value"
-  );
+  table.searchElement = table.target.$(".search-wrapper");
+  table.tableElement = table.target.$(".table-wrapper");
+  table.totalRowsElement = table.target.$(".total-rows");
+  table.paginationElement = table.target.$(".pagination");
+  table.selectionElement = table.target.$(".selectedRows");
+  table.selectionValueElement = table.target.$(".table-selection-value");
 
   if (table.tree_view) {
-    table.breadcrumbElement = table.target.querySelector(".breadcrumb");
+    table.breadcrumbElement = table.target.$(".breadcrumb");
 
     table.getParentId = () => {
       if (table.breadcrumb.length == 0) return -1;
@@ -787,7 +786,7 @@ function createTable(table) {
     }
   };
 
-  document.querySelectorAll(`.${table.name} *[data-param]`).forEach((e) => {
+  $$(`.${table.name} *[data-param]`).forEach((e) => {
     e.addEventListener("input", function () {
       if (e.tagName.toLowerCase() == "input") table.awaitSearch();
       else table.search();
@@ -832,7 +831,7 @@ function createTable(table) {
           params[requiredFilterTables[table.db_table]] = x;
         }
       }
-      document.querySelectorAll(`.${table.name} *[data-param]`).forEach((e) => {
+      $$(`.${table.name} *[data-param]`).forEach((e) => {
         params[e.getAttribute("data-param")] = e.value;
       });
       if (table.selectable) {
@@ -975,7 +974,7 @@ function createTable(table) {
           table.tableElement.innerHTML = table_body;
         }
 
-        table.target.querySelectorAll("td").forEach((e) => {
+        table.target.$$("td").forEach((e) => {
           if (
             //e.classList.contains("tooltipable") &&
             getNodeTextWidth(e) >
@@ -1018,12 +1017,10 @@ function createTable(table) {
       if (table.hasMetadata) {
         try {
           Object.entries(table.metadata).forEach(([key, value]) => {
-            var row = table.selectionElement.querySelector(
-              `[data-primary="${key}"]`
-            );
+            var row = table.selectionElement.$(`[data-primary="${key}"]`);
             if (row) {
               Object.entries(value).forEach(([key, value]) => {
-                var m = row.querySelector(`[data-metadata="${key}"]`);
+                var m = row.$(`[data-metadata="${key}"]`);
                 if (m) m.value = value;
               });
             }
@@ -1055,7 +1052,7 @@ function createTable(table) {
       } else return;
     }
 
-    removeNode(table.target.querySelector(`[data-primary='${data_id}']`));
+    removeNode(table.target.$(`[data-primary='${data_id}']`));
     table.selectionChange();
   };
   table.addRow = (data_id) => {
@@ -1071,9 +1068,9 @@ function createTable(table) {
       } else {
         table.selection.push(data_id);
       }
-      var x = table.target.querySelector(`[data-primary='${data_id}']`);
-      table.selectionElement.querySelector("tbody").appendChild(x);
-      var d = x.querySelector(".fa-plus-circle");
+      var x = table.target.$(`[data-primary='${data_id}']`);
+      table.selectionElement.$("tbody").appendChild(x);
+      var d = x.$(".fa-plus-circle");
       d.outerHTML = d.outerHTML
         .replace("plus", "minus")
         .replace("addRow", "removeRow");
@@ -1085,33 +1082,28 @@ function createTable(table) {
       table.registerMetadataFields();
     }
 
-    var e = table.selectionElement.querySelector(".no-results");
+    var e = table.selectionElement.$(".no-results");
+    if (e) e.style.display = table.selectionElement.$("td") ? "none" : "";
+    var e = table.target.$(".table-search-container .no-results");
     if (e)
-      e.style.display = table.selectionElement.querySelector("td")
-        ? "none"
-        : "";
-    var e = table.target.querySelector(".table-search-container .no-results");
-    if (e)
-      e.style.display = table.target.querySelector(".table-search-container td")
+      e.style.display = table.target.$(".table-search-container td")
         ? "none"
         : "";
 
     if (table.hasMetadata) {
       var metadata = {};
-      table.selectionElement
-        .querySelectorAll("tr[data-primary]")
-        .forEach((e) => {
-          var row = {};
-          e.querySelectorAll("[data-metadata]").forEach((m) => {
-            row[m.getAttribute("data-metadata")] = m.value;
-          });
-          metadata[parseInt(e.getAttribute("data-primary"))] = row;
+      table.selectionElement.$$("tr[data-primary]").forEach((e) => {
+        var row = {};
+        e.$$("[data-metadata]").forEach((m) => {
+          row[m.getAttribute("data-metadata")] = m.value;
         });
+        metadata[parseInt(e.getAttribute("data-primary"))] = row;
+      });
       table.metadata = metadata;
     }
 
     var selection = [];
-    table.selectionElement.querySelectorAll("[data-primary]").forEach((e) => {
+    table.selectionElement.$$("[data-primary]").forEach((e) => {
       selection.push(parseInt(e.getAttribute("data-primary")));
     });
 
@@ -1124,28 +1116,24 @@ function createTable(table) {
   if (table.hasMetadata) {
     table.metadataChange = () => {
       var out = {};
-      table.selectionElement
-        .querySelectorAll("tr[data-primary]")
-        .forEach((e) => {
-          var row = {};
-          e.querySelectorAll("[data-metadata]").forEach((m) => {
-            row[m.getAttribute("data-metadata")] = m.value;
-          });
-          out[e.getAttribute("data-primary")] = row;
+      table.selectionElement.$$("tr[data-primary]").forEach((e) => {
+        var row = {};
+        e.$$("[data-metadata]").forEach((m) => {
+          row[m.getAttribute("data-metadata")] = m.value;
         });
+        out[e.getAttribute("data-primary")] = row;
+      });
       table.selectionChange();
     };
     table.registerMetadataFields = () => {
-      table.selectionElement
-        .querySelectorAll("[data-metadata]")
-        .forEach((m) => {
-          m.oninput = () => {
-            table.metadataChange();
-          };
-          m.onchange = () => {
-            table.metadataChange();
-          };
-        });
+      table.selectionElement.$$("[data-metadata]").forEach((m) => {
+        m.oninput = () => {
+          table.metadataChange();
+        };
+        m.onchange = () => {
+          table.metadataChange();
+        };
+      });
     };
   }
 
@@ -1157,9 +1145,7 @@ var tableRearrange = {};
 window.addEventListener("dragstart", (event) => {
   if (event.target.tagName == "TR") {
     tableRearrange.source = event.target;
-    tableRearrange.placeFrom = tableRearrange.source.querySelector(
-      ".kolejnosc"
-    ).value;
+    tableRearrange.placeFrom = tableRearrange.source.$(".kolejnosc").value;
   }
   if (tableRearrange.source && tableRearrange.source.classList) {
     tableRearrange.source.classList.add("grabbed");
@@ -1168,12 +1154,12 @@ window.addEventListener("dragstart", (event) => {
 
 window.addEventListener("dragend", () => {
   if (tableRearrange.source) {
-    var input = tableRearrange.source.querySelector(".kolejnosc");
+    var input = tableRearrange.source.$(".kolejnosc");
     input.value = tableRearrange.placeTo;
     rearrange(input);
   }
   removeClasses("grabbed");
-  document.querySelectorAll(".tableRearrange").forEach((e) => {
+  $$(".tableRearrange").forEach((e) => {
     removeNode(e);
   });
   tableRearrange.element = null;
@@ -1248,7 +1234,7 @@ window.addEventListener("dragover", (event) => {
     tableRearrange.element.style.height = h + "px";
     tableRearrange.element.classList.add("tableRearrange");
     tableRearrange.placeTo =
-      +tableRearrange.target.querySelector(".kolejnosc").value + isAfter * 1;
+      +tableRearrange.target.$(".kolejnosc").value + isAfter * 1;
     if (tableRearrange.placeTo > tableRearrange.placeFrom)
       tableRearrange.placeTo--;
   }
@@ -1320,6 +1306,7 @@ function findParentByAttribute(
   parentAttribute,
   parentAttributeValue = null
 ) {
+  elem = $(elem);
   while (elem && elem != document) {
     if (parentAttributeValue) {
       if (elem.getAttribute(parentAttribute) == parentAttributeValue) {
@@ -1330,32 +1317,35 @@ function findParentByAttribute(
         return elem;
       }
     }
-    elem = elem.parentNode;
+    elem = elem.parent();
   }
   return null;
 }
 
 function findParentByTagName(elem, parentTagName) {
+  elem = $(elem);
   while (elem && elem != document) {
     if (elem.tagName == parentTagName) {
       return elem;
     }
-    elem = elem.parentNode;
+    elem = elem.parent();
   }
   return null;
 }
 
 function findParentById(elem, id) {
+  elem = $(elem);
   while (elem && elem != document) {
     if (elem.id == id) {
       return elem;
     }
-    elem = elem.parentNode;
+    elem = elem.parent();
   }
   return null;
 }
 
 function findParentByClassName(elem, parentClassNames, stopAtClassName = null) {
+  elem = $(elem);
   while (elem && elem != document) {
     if (stopAtClassName && elem.classList.contains(stopAtClassName)) {
       return null;
@@ -1372,32 +1362,34 @@ function findParentByClassName(elem, parentClassNames, stopAtClassName = null) {
       }
     }
 
-    elem = elem.parentNode;
+    elem = elem.parent();
   }
   return null;
 }
 function findParentByStyle(elem, style, value) {
+  elem = $(elem);
   while (elem && elem != document) {
     if (elem.style[style] == value) {
       return elem;
     }
-    elem = elem.parentNode;
+    elem = elem.parent();
   }
   return null;
 }
 function isInNode(elem, parent) {
+  elem = $(elem);
   while (elem && elem != document) {
     if (elem == parent) {
       return true;
     }
-    elem = elem.parentNode;
+    elem = elem.parent();
   }
   return false;
 }
 
 function removeClasses(className, selector = null) {
   if (selector === null) selector = `.${className}`;
-  document.querySelectorAll(selector).forEach((e) => {
+  $$(selector).forEach((e) => {
     e.classList.remove(className);
   });
 }
@@ -1427,7 +1419,7 @@ window.addEventListener("DOMContentLoaded", function () {
   registerModals();
 });
 function registerModals() {
-  document.querySelectorAll("[data-modal]").forEach((e) => {
+  $$("[data-modal]").forEach((e) => {
     registerModal(e);
   });
 }
@@ -1454,7 +1446,7 @@ function registerModalContent(html, callback) {
 }
 
 function registerModal(e) {
-  document.querySelector("#modal-wrapper .modal-content").appendChild(e);
+  $("#modal-wrapper .modal-content").appendChild(e);
   e.style.display = "none";
 
   registerSelectboxes();
@@ -1476,7 +1468,7 @@ function showModal(name = null, params = {}) {
   m.classList.toggle("displayModal", visible);
   if (visible) {
     var total = 0;
-    m.querySelectorAll(".modal-content > *").forEach((e) => {
+    m.$$(".modal-content > *").forEach((e) => {
       var shownow = false;
       if (e.id == name && e.style.display == "none") {
         e.style.display = "";
@@ -1486,12 +1478,10 @@ function showModal(name = null, params = {}) {
 
       if (shownow) {
         var node = e;
-        m.querySelector(".modal-content").appendChild(node);
+        m.$(".modal-content").appendChild(node);
         if (params.source) {
           var r = params.source.getBoundingClientRect();
-          var p = document
-            .querySelector(".modal-content")
-            .getBoundingClientRect();
+          var p = $(".modal-content").getBoundingClientRect();
           var x = 1 * (r.left - p.left) + r.width / 2;
           var y = 1 * (r.top - p.top) + r.height / 2;
           node.style.transformOrigin = `${x}px ${y}px`;
@@ -1506,9 +1496,9 @@ function showModal(name = null, params = {}) {
         }, 0);
       }
     });
-    var modal = document.querySelector(`#${name}`);
+    var modal = $(`#${name}`);
     if (modal.hasAttribute("data-expand")) {
-      var q = document.querySelector(`#${name} > div`);
+      var q = $(`#${name} > div`);
       if (window.innerWidth >= 800) {
         if (modal.getAttribute("data-expand") == "large") total--;
         q.classList.toggle("pad0", total == 0);
@@ -1530,17 +1520,15 @@ function showModal(name = null, params = {}) {
 }
 
 function hideAllModals() {
-  document
-    .querySelectorAll("#modal-wrapper .modal-content > *")
-    .forEach((e) => {
-      hideModal(e.id);
-    });
+  $$("#modal-wrapper .modal-content > *").forEach((e) => {
+    hideModal(e.id);
+  });
 
   toggleBodyScroll(true);
 }
 
 function hideModalTopMost() {
-  var o = document.querySelectorAll("#modal-wrapper .modal-content > *");
+  var o = $$("#modal-wrapper .modal-content > *");
   for (i = o.length - 1; i >= 0; i--) {
     var modal = o[i];
     if (modal.style.display != "none") {
@@ -1595,7 +1583,7 @@ function hideModal(name, isCancel = false) {
   }
 
   var visibleModalCount = 0;
-  m.querySelectorAll(".modal-content > *").forEach((e) => {
+  m.$$(".modal-content > *").forEach((e) => {
     if (e.style.display == "" && e.style.animation == "") visibleModalCount++;
   });
 
@@ -1615,7 +1603,7 @@ function isModalActive(name) {
   var next = $(`#${name}`);
   var anythingAbove = false;
   while (true) {
-    next = next.nextElementSibling;
+    next = next.next();
     if (!next) {
       break; // top most :)
     }
@@ -1628,19 +1616,56 @@ function isModalActive(name) {
   return !anythingAbove;
 }
 
-// @maciej
-// #todo dirty form
-// document.addEventListener("keydown", (e) => {
-//   if (e.code === "Escape") hideModalTopMost();
-// });
-
 // modal end
 
-function $(querySelector) {
-  return document.querySelector(querySelector);
+function $(node, parent = null) {
+  if (!node) return null;
+  if (node.$) return node;
+
+  if (parent === null) {
+    parent = document;
+  }
+
+  // query selector or html node
+  node = typeof node == "string" ? parent.querySelector(node) : node;
+  if (!node) return null;
+  node.$ = (query) => {
+    return $(query, node);
+  };
+  node.$$ = (query) => {
+    return $$(query, node);
+  };
+  node.setValue = (value) => {
+    setValue(node, value);
+  };
+  node.getValue = () => {
+    return getValue(node);
+  };
+  node.next = () => {
+    // TODO parameter includeTextNodes
+    return $(node.nextElementSibling);
+  };
+  node.prev = () => {
+    return $(node.previousElementSibling);
+  };
+  node.parent = () => {
+    return $(node.parentNode);
+  };
+  /*node.children = () => {
+    return $(node.parentNode);
+  };*/
+  return node;
 }
-function $$(querySelectorAll) {
-  return document.querySelectorAll(querySelectorAll);
+function $$(querySelectorAll, parent = null) {
+  if (parent === null) {
+    parent = document;
+  }
+  var group = parent.querySelectorAll(querySelectorAll);
+  var res = [];
+  group.forEach((node) => {
+    res.push($(node));
+  });
+  return res;
 }
 
 // validate start
@@ -1650,7 +1675,7 @@ function validateForm(params) {
 
   var elem = params.form ? params.form : document;
 
-  var fields = elem.querySelectorAll("[data-validate]");
+  var fields = elem.$$("[data-validate]");
   for (field of fields) {
     if (params.hiddenClassList) {
       // if any parant has a class like one of these ignore that field
@@ -1682,15 +1707,15 @@ function validateForm(params) {
 function getValidationTarget(field) {
   var target = field.getAttribute("data-validate-target");
   if (target) {
-    return document.querySelector(target);
+    return $(target);
   }
   return field;
 }
 
 function toggleFieldCorrect(field, isCorrect) {
-  var ok = field.parentNode.querySelector(".correct");
+  var ok = field.parent().$(".correct");
   if (ok) ok.style.display = isCorrect ? "block" : "";
-  var wrong = field.parentNode.querySelector(".wrong");
+  var wrong = field.parent().$(".wrong");
   if (wrong) wrong.style.display = isCorrect ? "" : "block";
 }
 
@@ -1738,9 +1763,7 @@ function validateField(field) {
 }
 
 function registerValidateFields() {
-  var fields = document.querySelectorAll(
-    "[data-validate]:not([data-validate-registered])"
-  );
+  var fields = $$("[data-validate]:not([data-validate-registered])");
   for (field of fields) {
     field.setAttribute("data-validate-registered", true);
 
@@ -1773,6 +1796,7 @@ function moveCursorToEnd(el) {
 }
 
 function setValue(input, value) {
+  input = $(input);
   if (input.classList.contains("table-selection-value")) {
     var datatable = findParentByClassName(input, "datatable-wrapper");
     window[datatable.getAttribute("data-table-name")].setSelectedValuesString(
@@ -1791,7 +1815,7 @@ function setValue(input, value) {
     if (type == "html") {
       var pointChild = input.getAttribute("data-point-child");
       if (pointChild) {
-        input = input.querySelector(pointChild);
+        input = input.$(pointChild);
       }
       input.innerHTML = value;
 
@@ -1825,7 +1849,7 @@ function getValue(input) {
     if (type == "html") {
       var pointChild = input.getAttribute("data-point-child");
       if (pointChild) {
-        input = input.querySelector(pointChild);
+        input = input.$(pointChild);
       }
       return input.innerHTML;
     } else if (type == "src") {
@@ -1972,7 +1996,7 @@ function scrollToBottom(node) {
 function setFormData(data, form = null) {
   if (!form) form = document;
   Object.entries(data).forEach(([name, value]) => {
-    var e = form.querySelector(`[name="${name}"]`);
+    var e = $(form).$(`[name="${name}"]`);
     if (e && e.tagName == "SELECT") {
       if (![...e.options].find((e) => e.value == value)) {
         return;
@@ -1992,10 +2016,12 @@ function getFormData(form = null) {
   var data = {};
 
   var excludeHidden = form.hasAttribute("data-exclude-hidden");
-  form.querySelectorAll(`[name]`).forEach((e) => {
-    if (excludeHidden && findParentByClassName(e, ["hidden"])) return;
-    data[e.getAttribute("name")] = getValue(e);
-  });
+  $(form)
+    .$$(`[name]`)
+    .forEach((e) => {
+      if (excludeHidden && findParentByClassName(e, ["hidden"])) return;
+      data[e.getAttribute("name")] = getValue(e);
+    });
   return data;
 }
 
@@ -2012,8 +2038,8 @@ function getNodeTextWidth(node) {
 
 // category picker start
 function registerCategoryPickers() {
-  document.querySelectorAll("[data-category-picker]").forEach((e) => {
-    var n = e.nextElementSibling;
+  $$("[data-category-picker]").forEach((e) => {
+    var n = e.next();
     if (n && n.classList.contains("category-picker")) return;
 
     var parent_id = e.getAttribute("data-parent_id");
@@ -2043,10 +2069,10 @@ function registerCategoryPickers() {
 }
 
 function setCategoryPickerValues(element, values, params = {}) {
-  element.querySelectorAll(".expandY").forEach((e) => {
+  element.$$(".expandY").forEach((e) => {
     e.classList.add("hidden");
   });
-  element.querySelectorAll(".expand").forEach((e) => {
+  element.$$(".expand").forEach((e) => {
     e.classList.remove("open");
   });
 
@@ -2056,7 +2082,7 @@ function setCategoryPickerValues(element, values, params = {}) {
   }
   var example = null;
 
-  element.querySelectorAll("[data-category_id]").forEach((e) => {
+  element.$$("[data-category_id]").forEach((e) => {
     if (!example) example = e;
 
     toggleDisabled(e, false);
@@ -2080,7 +2106,7 @@ function setCategoryPickerValues(element, values, params = {}) {
 
   if (params.disable) {
     params.disable.forEach((i) => {
-      var el = element.querySelector(`[data-category_id="${i}"]`);
+      var el = element.$(`[data-category_id="${i}"]`);
       if (el) {
         toggleDisabled(el, true);
         el.checked = false;
@@ -2089,12 +2115,14 @@ function setCategoryPickerValues(element, values, params = {}) {
   }
   if (params.disable_with_children) {
     params.disable_with_children.forEach((i) => {
-      var el = element.querySelector(`[data-category_id="${i}"]`);
+      var el = element.$(`[data-category_id="${i}"]`);
       if (el) {
         toggleDisabled(el, true);
         el.checked = false;
-        el.parentNode.parentNode.nextSibling
-          .querySelectorAll("[data-category_id]")
+        el.parent()
+          .parent()
+          .next()
+          .$$("[data-category_id]")
           .forEach((xu) => {
             toggleDisabled(xu, true);
             xu.checked = false;
@@ -2112,8 +2140,8 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
       "categories"
     );
     if (parent) {
-      var nodeExpander = parent.nextElementSibling;
-      if (nodeExpander && parent.querySelector(".expand")) {
+      var nodeExpander = parent.next();
+      if (nodeExpander && parent.$(".expand")) {
         return expandCategoriesAbove(nodeExpander, false);
       }
     }
@@ -2123,12 +2151,12 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
   while (true) {
     var parent = findParentByClassName(parent, "expandY", "categories");
     if (!parent) break;
-    var btn = parent.previousSibling.querySelector(".btn");
+    var btn = parent.prev().$(".btn");
     if (!btn) break;
-    expandWithArrow(btn.parentNode.nextSibling, btn, {
+    expandWithArrow(btn.parent().next(), btn, {
       duration: 0,
     });
-    parent = parent.parentNode;
+    parent = parent.parent();
   }
 }
 
@@ -2138,17 +2166,17 @@ function categoryChanged(el) {
   var singleselect = element.getAttribute("data-select") == "single";
   if (singleselect) {
     if (el.checked) {
-      element.querySelectorAll("[data-category_id]").forEach((e) => {
+      element.$$("[data-category_id]").forEach((e) => {
         if (e != el) e.checked = false;
       });
-    } else if (!element.querySelector("[data-category_id]:checked")) {
+    } else if (!element.$("[data-category_id]:checked")) {
       el.checked = true;
     }
   }
 
   var value = "";
   if (singleselect) {
-    element.querySelectorAll("[data-category_id]").forEach((e) => {
+    element.$$("[data-category_id]").forEach((e) => {
       if (e.checked) {
         value = parseInt(e.getAttribute("data-category_id"));
         return;
@@ -2156,7 +2184,7 @@ function categoryChanged(el) {
     });
   } else {
     checked = [];
-    element.querySelectorAll("[data-category_id]").forEach((e) => {
+    element.$$("[data-category_id]").forEach((e) => {
       if (e.checked) {
         checked.push(parseInt(e.getAttribute("data-category_id")));
       }
@@ -2166,9 +2194,7 @@ function categoryChanged(el) {
   $(`[name=${name}]`).value = value;
 
   if (el.checked) {
-    var expandWhenClosed = el.parentNode.parentNode.querySelector(
-      ".expand:not(.open)"
-    );
+    var expandWhenClosed = el.parent().parent().$(".expand:not(.open)");
     if (expandWhenClosed) {
       expandWhenClosed.click();
     }
@@ -2190,28 +2216,23 @@ function loadCategoryPicker(
       /*if (!$(`.category-picker-template-${parent_id}`)) {
           document.body.insertAdjacentHTML("beforeend",`<template class="category-picker-template-${parent_id}"></template>`);
       }
-      document.querySelectorAll(`.category-picker[parent_id="${parent_id}"], .category-picker-template-${parent_id}`).forEach(e=>{
+      $$(`.category-picker[parent_id="${parent_id}"], .category-picker-template-${parent_id}`).forEach(e=>{
           e.innerHTML = c;
       });*/
-      document
-        .querySelectorAll(
-          `.category-picker[data-category-picker-source="${source}"]`
-        )
-        .forEach((e) => {
+      $$(`.category-picker[data-category-picker-source="${source}"]`).forEach(
+        (e) => {
           [...e.children].forEach((e) => {
             removeNode(e);
           });
           e.insertAdjacentHTML("afterbegin", c);
 
           if (options.skip) {
-            var kid = e.querySelector(
-              `.category-picker-column `.repeat(options.skip)
-            );
+            var kid = e.$(`.category-picker-column `.repeat(options.skip));
             if (kid) {
               e.innerHTML = kid.innerHTML;
             }
           } else {
-            var main = e.querySelector(".category_name");
+            var main = e.$(".category_name");
             if (main)
               main.innerHTML = nonull(
                 options.main_category,
@@ -2220,12 +2241,11 @@ function loadCategoryPicker(
 
             var parent_id = e.getAttribute("scope_parent_id");
             if (parent_id && parent_id != 0) {
-              e.innerHTML = e.querySelector(
-                `[data-parent_id="${parent_id}"]`
-              ).outerHTML;
+              e.innerHTML = e.$(`[data-parent_id="${parent_id}"]`).outerHTML;
             }
           }
-        });
+        }
+      );
 
       if (callback) {
         callback();
@@ -2292,7 +2312,7 @@ function getLink(phrase) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".mobile-hover").forEach((e) => {
+  $$(".mobile-hover").forEach((e) => {
     if (mobilecheck()) {
       e.addEventListener("touchstart", () => {
         if (!e.classList.contains("hovered")) {
@@ -2313,8 +2333,8 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("touchstart", (event) => {
-  var e = document.querySelector(".hovered");
-  var toggle = document.querySelector(".hovered .dropdown-header");
+  var e = $(".hovered");
+  var toggle = $(".hovered .dropdown-header");
   if (e && (!isInNode(event.target, e) || isInNode(event.target, toggle))) {
     //if (e && !isInNode(event.target, e)) {
     e.classList.remove("hovered");
@@ -2335,10 +2355,10 @@ document.addEventListener("click", (event) => {
 });
 
 function showTab(tab_menu, tab_id) {
-  tab_menu.querySelectorAll(".tab-header .tab-option").forEach((e) => {
+  tab_menu.$$(".tab-header .tab-option").forEach((e) => {
     e.classList.toggle("current", e.getAttribute("data-tab_id") == tab_id);
   });
-  tab_menu.querySelectorAll(".tab-content").forEach((e) => {
+  tab_menu.$$(".tab-content").forEach((e) => {
     e.classList.toggle("hidden", e.getAttribute("data-tab_id") != tab_id);
   });
 }
@@ -2348,7 +2368,7 @@ function showTab(tab_menu, tab_id) {
 /* notification start */
 
 function showNotification(message, params = {}) {
-  document.querySelectorAll(".notification").forEach((e) => {
+  $$(".notification").forEach((e) => {
     e.style.opacity = 0;
     e.style.top = "-10px";
   });
@@ -2357,7 +2377,7 @@ function showNotification(message, params = {}) {
   notification.insertAdjacentHTML(
     "beforeend",
     `
-    <i class="fa fa-times-circle" onclick="dismissNotification(this.parentNode)"></i>
+    <i class="fa fa-times-circle" onclick="dismissNotification(this.parent())"></i>
     ${message}
   `
   );
@@ -2419,7 +2439,7 @@ function getCookie(cname) {
 // load save fields in cookie
 var ignoreValueChanges = false;
 window.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("[data-cookie]").forEach((e) => {
+  $$("[data-cookie]").forEach((e) => {
     e.addEventListener("change", () => {
       if (ignoreValueChanges) return;
       var cookieName = e.getAttribute("data-cookie");
@@ -2430,7 +2450,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadFormFromCookies() {
-  document.querySelectorAll("[data-cookie]").forEach((e) => {
+  $$("[data-cookie]").forEach((e) => {
     var cookieName = e.getAttribute("data-cookie");
     if (!cookieName) cookieName = e.getAttribute("name");
     var value = getCookie(cookieName);
@@ -2526,7 +2546,7 @@ function getMiejscowoscPickerTarget(obj) {
     console.warn("miejscowosc picker wrapper missing");
     return;
   }
-  var target = wrapper.querySelector(".miejscowosc-picker-target");
+  var target = wrapper.$(".miejscowosc-picker-target");
   if (!target) {
     console.warn("miejscowosc picker target missing");
     return;
@@ -2541,7 +2561,7 @@ function getMiejscowoscPickerList(obj) {
     console.warn("miejscowosc picker wrapper missing");
     return;
   }
-  var list = wrapper.querySelector(".miejscowosc-picker-list");
+  var list = wrapper.$(".miejscowosc-picker-list");
   if (!list) {
     console.warn("miejscowosc picker list missing");
     return;
@@ -2559,9 +2579,9 @@ function chooseMiejscowosc(obj) {
 /* top nav start */
 
 window.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("nav > div").forEach((e) => {
+  $$("nav > div").forEach((e) => {
     e.addEventListener("mouseenter", () => {
-      var x = e.querySelector(".float-category");
+      var x = e.$(".float-category");
       if (!x || !x.textContent) return;
       var rect = e.getBoundingClientRect();
 
@@ -2595,19 +2615,11 @@ function hideFloatingCategory() {
   floatCategoryHovered = null;
 }
 
-function findParent(elem, x) {
-  while (elem && elem != document) {
-    if (elem == x) return true;
-    elem = elem.parentNode;
-  }
-  return false;
-}
-
 var dropdownButtonHovered = null;
 var floatCategoryHovered = null;
 document.addEventListener("mousemove", (event) => {
   if (!dropdownButtonHovered) return;
-  if (findParent(event.target, dropdownButtonHovered)) return;
+  if (isInNode(event.target, dropdownButtonHovered)) return;
   hideFloatingCategory();
 });
 
@@ -2633,7 +2645,7 @@ function resizeCallback() {
   var responsiveType =
     forceMobile || window.innerWidth < 800 ? "mobile" : "desktop";
 
-  document.querySelectorAll(".cms-container").forEach((e) => {
+  $$(".cms-container").forEach((e) => {
     if (responsiveType == "desktop") {
       e.classList.toggle(
         "desktop-full-width",
@@ -2645,19 +2657,19 @@ function resizeCallback() {
   });
 
   var attribute = `data-${responsiveType}-width`;
-  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+  $$(`[${attribute}]`).forEach((e) => {
     e.style.width = e.getAttribute(attribute);
   });
 
   var attribute = `data-${responsiveType}-min-height`;
-  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+  $$(`[${attribute}]`).forEach((e) => {
     e.style.minHeight = e.getAttribute(attribute);
   });
 
   for (let direction of ["Left", "Right", "Top", "Bottom"]) {
     for (let type of ["margin", "padding"]) {
       var attribute = `data-${type}_${direction.toLowerCase()}`;
-      document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+      $$(`[${attribute}]`).forEach((e) => {
         if (e.classList.contains("removing")) {
           return;
         }
@@ -2668,7 +2680,7 @@ function resizeCallback() {
           v.charAt(v.length - 1) == "%"
         ) {
           v =
-            (e.parentNode.getBoundingClientRect().width * parseInt(v)) / 100 +
+            (e.parent().getBoundingClientRect().width * parseInt(v)) / 100 +
             "px";
         }
 
@@ -2686,17 +2698,17 @@ function resizeCallback() {
   }
 
   var attribute = `data-${responsiveType}-justify-content`;
-  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+  $$(`[${attribute}]`).forEach((e) => {
     e.style.justifyContent = e.getAttribute(attribute);
   });
 
   var attribute = `data-${responsiveType}-align-items`;
-  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+  $$(`[${attribute}]`).forEach((e) => {
     e.style.alignItems = e.getAttribute(attribute);
   });
 
   var attribute = `data-${responsiveType}-flex-flow`;
-  document.querySelectorAll(`[${attribute}]`).forEach((e) => {
+  $$(`[${attribute}]`).forEach((e) => {
     e.style.flexFlow = e.getAttribute(attribute);
   });
 }
@@ -2710,11 +2722,11 @@ window.addEventListener("DOMContentLoaded", function () {
 });
 
 function registerSelectboxes() {
-  document.querySelectorAll(".selectbox:not(.registered)").forEach((e) => {
+  $$(".selectbox:not(.registered)").forEach((e) => {
     e.classList.add("registered");
-    e.querySelectorAll("[data-option]").forEach((o) => {
+    e.$$("[data-option]").forEach((o) => {
       o.addEventListener("click", () => {
-        var i = e.querySelector("input");
+        var i = e.$("input");
         if (i) {
           setValue(i, o.getAttribute("data-option"));
           o.blur();
@@ -2722,11 +2734,11 @@ function registerSelectboxes() {
       });
     });
   });
-  /*document.querySelectorAll(".selectbox:not(.showhover)").forEach((e) => {
+  /*$$(".selectbox:not(.showhover)").forEach((e) => {
     e.classList.add("showhover");
-    e.querySelectorAll("[data-option]").forEach((o) => {
+    e.$$("[data-option]").forEach((o) => {
       o.addEventListener("click", () => {
-        var i = e.querySelector("input");
+        var i = e.$("input");
         if (i) {
           setValue(i, o.getAttribute("data-option"));
         }
@@ -2739,38 +2751,36 @@ function registerSelectboxes() {
 
 /* text counter start */
 function registerTextCounters() {
-  document
-    .querySelectorAll("[data-show-count]:not(.registered)")
-    .forEach((e) => {
-      e.classList.add("registered");
-      e.addEventListener("change", () => {
-        e.nextElementSibling.querySelector("span").innerHTML = e.value.length;
-        if (e.value.length > e.getAttribute("data-show-count")) {
-          e.nextElementSibling.style.color = "#f00";
-          e.nextElementSibling.style.fontWeight = "bold";
-        } else if (e.value.length > 0.9 * e.getAttribute("data-show-count")) {
-          e.nextElementSibling.style.color = "#fa0";
-          e.nextElementSibling.style.fontWeight = "bold";
-        } else {
-          e.nextElementSibling.style.color = "";
-          e.nextElementSibling.style.fontWeight = "";
-        }
-      });
-      e.addEventListener("input", () => {
-        e.dispatchEvent(new Event("change"));
-      });
-      e.insertAdjacentHTML(
-        "afterend",
-        `
+  $$("[data-show-count]:not(.registered)").forEach((e) => {
+    e.classList.add("registered");
+    e.addEventListener("change", () => {
+      e.next().$("span").innerHTML = e.value.length;
+      if (e.value.length > e.getAttribute("data-show-count")) {
+        e.next().style.color = "#f00";
+        e.next().style.fontWeight = "bold";
+      } else if (e.value.length > 0.9 * e.getAttribute("data-show-count")) {
+        e.next().style.color = "#fa0";
+        e.next().style.fontWeight = "bold";
+      } else {
+        e.next().style.color = "";
+        e.next().style.fontWeight = "";
+      }
+    });
+    e.addEventListener("input", () => {
+      e.dispatchEvent(new Event("change"));
+    });
+    e.insertAdjacentHTML(
+      "afterend",
+      `
           <div style="color:#555">
             <span></span><span> / ${e.getAttribute(
               "data-show-count"
             )} znaków ${nonull(e.getAttribute("data-count-description"))}</span>
           </div>
       `
-      );
-      e.dispatchEvent(new Event("change"));
-    });
+    );
+    e.dispatchEvent(new Event("change"));
+  });
 }
 /* text counter end */
 
@@ -2843,15 +2853,13 @@ function createSimpleList(params = {}) {
   );
 
   list.insertRow = (btn, begin = true) => {
-    list.addRow(params.default_row, btn.parentNode.nextElementSibling, begin);
+    list.addRow(params.default_row, btn.parent().next(), begin);
   };
 
   list.target = $(`.${params.name} .list`);
   list.target.setAttribute("data-depth", 1);
 
-  list.outputNode = document.querySelector(
-    `.${params.name} .simple-list-value`
-  );
+  list.outputNode = $(`.${params.name} .simple-list-value`);
 
   list.rows = [];
 
@@ -2895,9 +2903,9 @@ function createSimpleList(params = {}) {
     var canAdd = true;
 
     [...listTarget.children].forEach((simpleListRowWrapper) => {
-      simpleListRowWrapper
-        .querySelector(".simple-list-row")
-        .querySelectorAll("[data-list-param]")
+      $(simpleListRowWrapper)
+        .$(".simple-list-row")
+        .$$("[data-list-param]")
         .forEach((e) => {
           var param = e.getAttribute("data-list-param");
           if (
@@ -2932,14 +2940,14 @@ function createSimpleList(params = {}) {
               <div class='simple-list-row'>
                   ${params.render(values)}
                   <div style="flex-grow:1"></div>
-                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes(this.parentNode.parentNode,this.parentNode.parentNode.previousElementSibling);${
+                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes(this.parent().parent(),this.parent().parent().prev());${
                     list.name
                   }.valuesChanged();"></i>
-                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes(this.parentNode.parentNode,this.parentNode.parentNode.nextElementSibling);${
+                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes(this.parent().parent(),this.parent().parent().next());${
                     list.name
                   }.valuesChanged();"></i>
                   <div style="width:10px"></div>
-                  <i class="btn secondary fas fa-times" onclick="removeNode(this.parentNode.parentNode);${
+                  <i class="btn secondary fas fa-times" onclick="removeNode(this.parent().parent());${
                     list.name
                   }.valuesChanged();"></i>
               </div>
@@ -2953,11 +2961,7 @@ function createSimpleList(params = {}) {
 
     list.valuesChanged();
 
-    [
-      ...list.target.querySelectorAll(
-        "[data-list-param]:not(.param-registered)"
-      ),
-    ].forEach((e) => {
+    list.target.$$("[data-list-param]:not(.param-registered)").forEach((e) => {
       e.classList.add("param-registered");
 
       e.addEventListener("change", () => {
@@ -2966,7 +2970,7 @@ function createSimpleList(params = {}) {
     });
 
     var n = begin ? 0 : listTarget.children.length - 1;
-    return listTarget.children[n].querySelector(".list");
+    return listTarget.children[n].$(".list");
   };
 
   list.valuesChanged = () => {
@@ -2976,16 +2980,16 @@ function createSimpleList(params = {}) {
         var row = {
           values: {},
         };
-        simpleListRowWrapper
-          .querySelector(".simple-list-row")
-          .querySelectorAll("[data-list-param]")
+        $(simpleListRowWrapper)
+          .$(".simple-list-row")
+          .$$("[data-list-param]")
           .forEach((e) => {
             var param = e.getAttribute("data-list-param");
             row.values[param] = getValue(e);
           });
         if (level < list.recursive) {
           row.children = getDirectRows(
-            simpleListRowWrapper.querySelector(".sub-list > .list"),
+            $(simpleListRowWrapper).$(".sub-list > .list"),
             level++
           );
         }

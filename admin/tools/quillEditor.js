@@ -228,9 +228,9 @@ window.quillEditor = {
     var sel_node = getSelection().focusNode;
     if (!sel_node) return false;
     if (sel_node.tagName == tagName) return sel_node;
-    sel_node = sel_node.parentNode;
+    sel_node = sel_node.parent();
     if (sel_node.tagName == tagName) return sel_node;
-    sel_node = sel_node.parentNode;
+    sel_node = sel_node.parent();
     if (sel_node.tagName == tagName) return sel_node;
     return false;
   },
@@ -254,7 +254,7 @@ window.quillEditor = {
   isInTable: (elem) => {
     if (elem) {
       while (true) {
-        elem = elem.parentNode;
+        elem = elem.parent();
         if (!elem || elem.className == "ql-editor") return false;
         if (elem.tagName == "TABLE") {
           return elem;
@@ -295,11 +295,9 @@ window.quillEditor = {
   },
 
   toggleButtonsDisablationInTable: (disabled) => {
-    document
-      .querySelectorAll(".ql-header, .ql-list, .ql-video, .ql-table")
-      .forEach((e) => {
-        e.classList.toggle("ql-btn-disabled", disabled);
-      });
+    $$(".ql-header, .ql-list, .ql-video, .ql-table").forEach((e) => {
+      e.classList.toggle("ql-btn-disabled", disabled);
+    });
   },
 
   selectHyperLink: () => {
@@ -421,12 +419,12 @@ window.quillEditor = {
         tool.style.top = "20px";
       }
       var maxleft =
-        tool.parentNode.getBoundingClientRect().width -
+        tool.parent().getBoundingClientRect().width -
         tool.getBoundingClientRect().width -
         30;
       if (left > maxleft) tool.style.left = maxleft + "px";
       var maxtop =
-        tool.parentNode.getBoundingClientRect().height -
+        tool.parent().getBoundingClientRect().height -
         tool.getBoundingClientRect().height -
         30;
       if (top > maxtop) tool.style.top = maxtop + "px";
@@ -657,7 +655,7 @@ window.quillEditor = {
       }
 
       static value(node) {
-        var img = node.querySelector("img");
+        var img = node.$("img");
         return {
           value: img.getAttribute("src"),
           width: img.style.width,
@@ -684,10 +682,10 @@ window.quillEditor = {
       }
 
       static value(node) {
-        var n = node.querySelector("i");
+        var n = node.$("i");
         var v = n ? n.className : "";
         return { value: v };
-        //return {value: node.querySelector("img").getAttribute('src')};
+        //return {value: node.$("img").getAttribute('src')};
       }
     }
     CustomIcon.blotName = "customIcon";
@@ -815,7 +813,7 @@ window.quillEditor = {
     });
 
     var toolbar = $("#quillEditor .ql-toolbar.ql-snow");
-    toolbar.parentNode.parentNode.appendChild(toolbar);
+    toolbar.parent().parent().appendChild(toolbar);
 
     $(".quill-editor-container").insertAdjacentHTML(
       "afterbegin",
@@ -983,7 +981,7 @@ window.quillEditor = {
       for (var m of mutations) {
         for (var n of m.addedNodes) {
           if (quillEditor.wasInTable && n.tagName == "P") {
-            if (!findParentByTagName(n, "TD") && n.parentNode) {
+            if (!findParentByTagName(n, "TD") && n.parent()) {
               removeNode(n);
             }
           }
@@ -1019,7 +1017,7 @@ window.quillEditor = {
       });
 
       $$("#quillEditor break-line").forEach((e) => {
-        var n = e.nextSibling;
+        var n = e.next();
         e.classList.toggle(
           "break-grow",
           (n && n.tagName == "BREAK-LINE") || !n
@@ -1076,20 +1074,20 @@ window.quillEditor = {
         findParentByTagName(nativeSelection.anchorNode, "TD")
       ) {
         if (e.key === "Delete") {
-          var n = nativeSelection.focusNode;
+          var n = $(nativeSelection.focusNode);
           var deleted = false;
           if (
             (n && n.tagName == "BREAK-LINE") ||
-            (n && n.parentNode && n.parentNode.tagName == "BREAK-LINE")
+            (n && n.parent() && n.parent().tagName == "BREAK-LINE")
           ) {
             quillEditor.editor.deleteText(quillEditor.lastSelection.index, 1);
             deleted = true;
           }
           if (!deleted && n) {
-            n = n.nextSibling;
+            n = n.next();
             if (
               (n && n.tagName == "BREAK-LINE") ||
-              (n && n.parentNode && n.parentNode.tagName == "BREAK-LINE")
+              (n && n.parent() && n.parent().tagName == "BREAK-LINE")
             ) {
               quillEditor.editor.deleteText(quillEditor.lastSelection.index, 1);
             }
@@ -1142,38 +1140,32 @@ window.quillEditor = {
               // lol, you never know when it starts
             }
             cloud = $(".video-buttons");
-            document.getElementById("edit_yt_link").value =
-              quillEditor.active_elem.src;
-            document.getElementById("szerokosc_yt").value =
-              quillEditor.active_elem.style.width;
+            $("#edit_yt_link").value = quillEditor.active_elem.src;
+            $("#szerokosc_yt").value = quillEditor.active_elem.style.width;
           } else {
             quillEditor.menu_sub = "youtube";
             cloud = $(".video-buttons");
-            document.getElementById("edit_yt_link").value = getUrlFromYoutubeId(
+            $("#edit_yt_link").value = getUrlFromYoutubeId(
               getIdFromYoutubeThumbnail(quillEditor.active_elem.src)
             );
-            document.getElementById("szerokosc_yt").value =
-              quillEditor.active_elem.style.width;
+            $("#szerokosc_yt").value = quillEditor.active_elem.style.width;
           }
         } else if (quillEditor.active_elem.tagName == "A") {
           quillEditor.menu_sub = "link";
           cloud = $(".my-link");
-          document.getElementById("my-link-href").value =
-            quillEditor.active_elem.href;
-          document.getElementById("my-link-title").value =
-            quillEditor.active_elem.innerHTML;
+          $("#my-link-href").value = quillEditor.active_elem.href;
+          $("#my-link-title").value = quillEditor.active_elem.innerHTML;
 
           /*var style = "Zwykły";
                     quillEditor.active_elem.classList.forEach(e=>{
                         if (e == "przycisk") style = "Przycisk";
                     });
-                    document.getElementById("my-link-style").innerHTML = style;*/
+                    $("#my-link-style").innerHTML = style;*/
         } else {
           quillEditor.menu_sub = "img";
           cloud = $(".image-buttons");
-          document.getElementById("szerokosc").value =
-            quillEditor.active_elem.style.width;
-          document.getElementById("imgalt").value = quillEditor.active_elem.alt;
+          $("#szerokosc").value = quillEditor.active_elem.style.width;
+          $("#imgalt").value = quillEditor.active_elem.alt;
           document.getElementById(
             "img-href"
           ).value = quillEditor.active_elem.getAttribute("data-href");
@@ -1182,7 +1174,7 @@ window.quillEditor = {
         if (cloud) {
           cloud.style.display = "block";
 
-          var pr = cloud.parentNode.getBoundingClientRect();
+          var pr = cloud.parent().getBoundingClientRect();
           var er = quillEditor.active_elem.getBoundingClientRect();
           var cr = cloud.getBoundingClientRect();
 
@@ -1198,7 +1190,7 @@ window.quillEditor = {
           if (top > maxTop) top = maxTop;
 
           cloud.style.left = left + "px";
-          cloud.style.top = top + cloud.parentNode.scrollTop + "px";
+          cloud.style.top = top + cloud.parent().scrollTop + "px";
         }
         return;
       }
@@ -1253,7 +1245,7 @@ registerModalContent(
                     </div>
                 </div>
                 <div class="video-buttons quill-cloud">
-                    Link do filmu: <div class="btn primary" onclick="window.open(document.getElementById('edit_yt_link').value);">Otwórz <i class="fas fa-external-link-alt"></i></div>
+                    Link do filmu: <div class="btn primary" onclick="window.open($('#edit_yt_link').value);">Otwórz <i class="fas fa-external-link-alt"></i></div>
                     Szerokość: <input type='text' autocomplete="off" placeholder='30px, 100%...' id="szerokosc_yt" oninput="quillEditor.modifyNode('width',this.value)" style='width:90px'>
                     <br>
                     <input type='text' autocomplete="off" placeholder='https://www.youtube.com/watch?v=...' id="edit_yt_link" oninput="quillEditor.modifyNode('youtube',this.value)" style='margin-top: 4px;width:350px'>

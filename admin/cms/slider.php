@@ -133,10 +133,10 @@
                 <option value="0">Ukryty</option>
             </select>
 
-            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling)" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button type="button" onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
             <div class="cms preview_html" name="content_desktop" data-type="html"></div>
 
-            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button type="button" onclick="editCMS(this.parentNode.nextElementSibling)" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button type="button" onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
             <div class="cms preview_html" name="content_mobile" data-type="html"></div>
 
             <input type="hidden" name="slide_id">

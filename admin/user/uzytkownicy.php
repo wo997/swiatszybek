@@ -124,10 +124,10 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
                     USER_ID = r.user_id;
                     zamowieniatable.search(() => {
-                        document.getElementById('caseSingleUser').style.display = 'block';
-                        document.getElementById('caseAllUsers').style.display = 'none';
+                        $('#caseSingleUser').style.display = 'block';
+                        $('#caseAllUsers').style.display = 'none';
 
-                        document.getElementById('username').innerHTML = `<td><a class='link' href='/moje-konto/dane-uzytkownika/${USER_ID}'>${client}</a></td>`;
+                        $('#username').innerHTML = `<td><a class='link' href='/moje-konto/dane-uzytkownika/${USER_ID}'>${client}</a></td>`;
                     });
                 }
             }
@@ -136,8 +136,8 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
     function back() {
         mytable.search(() => {
-            document.getElementById('caseSingleUser').style.display = 'none';
-            document.getElementById('caseAllUsers').style.display = 'block';
+            $('#caseSingleUser').style.display = 'none';
+            $('#caseAllUsers').style.display = 'block';
         });
     }
 </script>

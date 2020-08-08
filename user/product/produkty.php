@@ -27,7 +27,7 @@ function showCategory($category, $level = 0)
   $paddingLeft = $level == 0 ? 0 : 20 * ($level - 1);
   echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' style='padding-left:" . ($paddingLeft) . "px' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
   if ($count && $level > 0) {
-    echo "<div class='btn expand' onclick='expandWithArrow(this.parentNode.nextSibling,this)'><i class='fas fa-chevron-right'></i></div>";
+    echo "<div class='btn expand' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
   }
   $hidden = $level > 0 ? "expandY hidden" : "";
   $styles = $level == 0 ? "style='padding-left:0'" : "";
@@ -148,6 +148,16 @@ function showCategory($category, $level = 0)
         transform: translateY(1px);
       }
     }
+
+    .attribute-label {
+      display: block;
+      padding: 2px 0;
+    }
+
+    .attribute-list .attribute-list {
+      margin-left: 25px;
+
+    }
   </style>
 
   <script>
@@ -175,7 +185,91 @@ function showCategory($category, $level = 0)
         ]) ?>
       </div>
       <br>
-      Tutaj pojawią się niedługo filtry
+
+      <?php
+      include_once "admin/product/attributes_service.php";
+
+      function printSelectValuesOfAttribute($values, $attribute, $value_id = null)
+      {
+        if (!isset($values[0])) return "";
+
+        $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
+        $attr .= " data-attribute_id='" . $attribute["attribute_id"] . "'";
+
+        $classes = "attribute-list";
+
+        if ($value_id) {
+          $classes .= " expandY hidden";
+        }
+
+        $html = "<div class='$classes' $attr>";
+        foreach ($values as $value_data) {
+          if ($value_data["values"]["value"] === "") {
+            continue;
+          }
+          $html .= "<label class='attribute-label'>";
+          $html .= "<input type='checkbox' value='" . $value_data["values"]["value_id"] . "'";
+          if (nonull($value_data, "children", [])) {
+            $html .= " onchange='expand(this.parent().next(),this.checked)'";
+          }
+          $html .= ">";
+          $html .= "<div class='checkbox'></div> ";
+          $html .= $value_data["values"]["value"];
+
+          $html .= "</label>";
+
+          $html .= printSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
+        }
+        $html .= "</div>";
+
+        return $html;
+      }
+
+      $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes");
+
+      foreach ($attributes as $attribute) {
+
+        $isOptional = isset($attribute_data_types[$attribute["data_type"]]["field"]);
+
+        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . " attribute-row'>" . $attribute["name"] . " ";
+
+        if ($isOptional) {
+        } else {
+          $values = getAttributeValues($attribute["attribute_id"]);
+          echo printSelectValuesOfAttribute($values, $attribute);
+        }
+
+        echo "</div>";
+
+        /*$isOptional = isset($attribute_data_types[$attribute["data_type"]]["field"]);
+
+        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . " attribute-row'>" . $attribute["name"] . " ";
+
+        if ($isOptional) {
+          echo '
+              <label class="field-title">
+                <input type="checkbox">
+                <div class="checkbox"></div>
+              </label>
+            ';
+          $attribute_form_name = 'name="attribute_values[' . $attribute["attribute_id"] . ']"';
+          if (strpos($attribute["data_type"], "color") !== false) {
+            echo '<input type="text" class="jscolor field" style="display: inline-block;width:65px" ' . $attribute_form_name . '>';
+          } else if (strpos($attribute["data_type"], "number") !== false) {
+            echo '<input type="number" class="field" ' . $attribute_form_name . '>';
+          } else {
+            echo '<input type="text" class="field" ' . $attribute_form_name . '>';
+          }
+        } else {
+          $values = getAttributeValues($attribute["attribute_id"]);
+          echo printSelectValuesOfAttribute($values);
+        }
+
+        echo "</div>";*/
+      }
+
+
+      ?>
     </div>
     <div class="products">
       <h1 class="h1" style="margin: 40px 0"><?= $show_category["title"] ?></h1>

@@ -8,14 +8,9 @@ $anuluj = isset($parts[2]);
 
 $accepted = $anuluj ? "0" : "1";
 
-$stmt = $con->prepare("UPDATE newsletter SET accepted = $accepted WHERE token = ?");
-$stmt->bind_param("s", $token);
-$stmt->execute();
+query("UPDATE newsletter SET accepted = $accepted WHERE token = ?", [$token]);
 
-$stmt = $con->prepare("SELECT email FROM newsletter WHERE token = ?");
-$stmt->bind_param("s", $token);
-$stmt->execute();
-$stmt->bind_result($email);
+$email = fetchValue("SELECT email FROM newsletter WHERE token = ?", [$token]);
 
 function quit($message, $type)
 {
@@ -29,12 +24,12 @@ function quit($message, $type)
     echo '<input type="text" name="message" value="' . $message . '">';
     echo '</form>';
     echo '<script>';
-    echo 'document.getElementById("myForm").submit();';
+    echo 'document.querySelector("#myForm").submit();';
     echo '</script>';
     die;
 }
 
-if (mysqli_stmt_fetch($stmt)) {
+if ($email) {
     if ($anuluj)
         $message = "<h3 style='color:#a44'>Zrezygnowaleś z newslettera " . config('main_email_sender') . "</h3><br><a style='font-size:16px;' href='$SITE_URL/potwierdz_newsletter/$token'>Zapisz się ponownie</a>";
     else {
