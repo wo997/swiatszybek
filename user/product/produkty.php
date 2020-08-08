@@ -277,7 +277,7 @@ function showCategory($category, $level = 0)
       <?php
       $moduleParams = [];
       $module_content = "";
-      $moduleParams["category_id"] = $show_category["category_id"];
+      $moduleParams["category_ids"] = [$show_category["category_id"]];
       include "modules/product-list/content.php";
       echo $module_content;
       ?>

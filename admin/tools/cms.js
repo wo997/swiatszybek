@@ -128,7 +128,12 @@ function editModule(block) {
   showModal(moduleName, {
     source: cmsTarget,
   });
-  module.formOpen(block);
+  let params = {};
+  try {
+    params = JSON.parse(block.getAttribute("data-module-params"));
+  } catch {}
+  setFormData(params, $(`#${moduleName}`));
+  module.formOpen(params, block, moduleName);
 }
 
 function saveModule(button) {
@@ -244,11 +249,11 @@ var modules = {
             <div class="default-form">
                 <label style='margin-top:0'>
                     <span>Liczba produktów</span>
-                    <input type='number' id='productListCount'>
+                    <input type='number' name="product_list_count">
                 </label>
                 <label>
                     <span>Sortuj wg</span>
-                    <select>
+                    <select name='order_by'>
                         <option value='new'>Najnowsze</option>
                         <option value='sale'>Bestsellery</option>
                         <option value='cheap'>Najtańsze</option>
@@ -258,36 +263,24 @@ var modules = {
                 <label>
                     <span>Kategorie</span>
                 </label>
-                <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
+                <input type="hidden" name="category_ids" data-category-picker data-category-picker-source="product_categories">
             </div>
 
             `,
-    formOpen: (block) => {
-      var productListCount = 0;
-      try {
-        var params = JSON.parse(block.getAttribute("data-module-params"));
-        productListCount = params["productListCount"];
-      } catch {}
-      $("#productListCount").value = productListCount;
-
-      loadCategoryPicker("product_categories", { skip: 2 });
+    formOpen: (params, block, moduleName) => {
+      loadCategoryPicker("product_categories", { skip: 2 }, () => {
+        $(`#${moduleName} [name="category_ids"]`).setValue(
+          params["category_ids"]
+        );
+      });
     },
     formClose: () => {
-      var params = {};
-      params["productListCount"] = document.getElementById(
-        "productListCount"
-      ).value;
+      const params = getFormData("#product-list");
       cmsTarget.setAttribute("data-module-params", JSON.stringify(params));
     },
-    render: (block) => {
-      var productListCount = 0;
-      try {
-        var params = JSON.parse(block.getAttribute("data-module-params"));
-        productListCount = params["productListCount"];
-      } catch {
-        return "";
-      }
-      return `Liczba produktów: ${productListCount}`;
+    render: (params) => {
+      const productListCount = params["product_list_count"];
+      return productListCount ? `Liczba produktów: ${productListCount}` : "";
     },
   },
   "newsletter-form": {
@@ -317,15 +310,15 @@ var modules = {
                 <textarea class="field html" style="width:100%; height:400px"></textarea>
             </div>
             `,
-    formOpen: (block) => {
-      $("#custom-html .html").value = block.querySelector(
+    formOpen: (params, block) => {
+      $("#custom-html .html").getValue() = block.querySelector(
         ".cms-block-content"
       ).innerHTML;
     },
     formClose: () => {
       cmsTarget.querySelector(`.cms-block-content`).innerHTML = $(
         "#custom-html .html"
-      ).value;
+      ).getValue();
     },
   },
 };
@@ -635,13 +628,18 @@ function cmsUpdate() {
       var moduleName = e.getAttribute("data-module");
       var module = modules[moduleName];
 
+      let params = {};
+      try {
+        params = JSON.parse(e.getAttribute("data-module-params"));
+      } catch {}
+
       if (module && module.render) {
         e.$(".cms-block-content").innerHTML = `
                         <div class="module-content">
                             <div>
                                 ${module.icon} ${module.description}
                                 <p style="margin:10px 0;font-size:0.8em">${
-                                  module.render ? module.render(e) : ""
+                                  module.render ? module.render(params, e) : ""
                                 }</p>
                             </div>
                         </div>`;
