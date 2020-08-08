@@ -124,7 +124,7 @@ function a($name)
 <body>
   <?php include "global/header.php"; ?>
 
-  <div class="centerVerticallyMenu default-form">
+  <div class="centerVerticallyMenu">
     <h1 class="h1">Rejestracja</h1>
     <?php
     if (isset($_POST["message"]))
@@ -136,34 +136,34 @@ function a($name)
           <div style="width: 50%;">
             <div style="width:100%;margin:auto;max-width:300px">
               <label>
-                <span>Imię</span>
-                <input type="text" name="imie" <?= a("imie") ?> autocomplete="first-name" data-validate>
+                <span class="field-title">Imię</span>
+                <input type="text" name="imie" <?= a("imie") ?> autocomplete="first-name" data-validate class="field">
               </label>
               <label>
-                <span>Nazwisko</span>
-                <input type="text" name="nazwisko" <?= a("nazwisko") ?> autocomplete="family-name" data-validate>
+                <span class="field-title">Nazwisko</span>
+                <input type="text" name="nazwisko" <?= a("nazwisko") ?> autocomplete="family-name" data-validate class="field">
               </label>
               <label>
-                <span>Nr telefonu</span>
-                <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate>
+                <span class="field-title">Nr telefonu</span>
+                <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate class="field">
               </label>
             </div>
           </div>
           <div style="width: 50%;">
             <div style="width:100%;margin:auto;max-width:300px">
               <label>
-                <span>E-mail</span>
-                <input type="text" name="email" <?= a("email") ?> autocomplete="email" data-validate>
+                <span class="field-title">E-mail</span>
+                <input type="text" name="email" <?= a("email") ?> autocomplete="email" data-validate class="field">
               </label>
               <label style="position:relative">
-                <span>Hasło (min. 8 znaków)</span>
-                <input type="password" name="password" id="password" autocomplete="new-password">
+                <span class="field-title">Hasło (min. 8 znaków)</span>
+                <input type="password" name="password" id="password" autocomplete="new-password" class="field">
                 <i id="password_ok" class="fa fa-check" style="position: absolute;right: 5px;bottom: 6px;color: #0d0b;display:none"></i>
                 <i id="password_wrong" class="fa fa-times" style="position: absolute;right: 5px;bottom: 6px;color: #d00b;display:none"></i>
               </label>
               <label style="position:relative">
-                <span>Powtórz hasło</span>
-                <input type="password" name="password2" oninput="samePassword(this)" autocomplete="new-password">
+                <span class="field-title">Powtórz hasło</span>
+                <input type="password" name="password2" oninput="samePassword(this)" autocomplete="new-password" class="field">
                 <i id="password2_ok" class="fa fa-check" style="position: absolute;right: 5px;bottom: 6px;color: #0d0b;display:none"></i>
                 <i id="password2_wrong" class="fa fa-times" style="position: absolute;right: 5px;bottom: 6px;color: #d00b;display:none"></i>
               </label>

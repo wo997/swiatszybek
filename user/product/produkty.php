@@ -167,6 +167,32 @@ function showCategory($category, $level = 0)
         expandCategoriesAbove(e);
       }
     });
+
+    function searchProducts() {
+      var attribute_value_ids = [];
+      $$(".combo-select-wrapper[data-attribute_id]").forEach(list => {
+        var attribute_value_sub_ids = [];
+        list.$$(":checked").forEach(checkbox => {
+          var subCheckboxes = checkbox.findParentByClassName("attributes-list-wrapper").$(".attribute-list");
+          var anySubChecked = subCheckboxes ? subCheckboxes.$(":checked") : false;
+          if (!anySubChecked) {
+            attribute_value_sub_ids.push(checkbox.value);
+          }
+        });
+        if (attribute_value_sub_ids.length > 0) {
+          attribute_value_ids.push(attribute_value_sub_ids);
+        }
+      })
+      xhr({
+        url: "/search_products",
+        params: {
+          attribute_value_ids: JSON.stringify(attribute_value_ids)
+        },
+        success: (res) => {
+          console.log(res);
+        }
+      })
+    }
   </script>
 </head>
 
@@ -207,6 +233,7 @@ function showCategory($category, $level = 0)
           if ($value_data["values"]["value"] === "") {
             continue;
           }
+          $html .= "<div class='attributes-list-wrapper'>";
           $html .= "<label class='attribute-label'>";
           $html .= "<input type='checkbox' value='" . $value_data["values"]["value_id"] . "'";
           if (nonull($value_data, "children", [])) {
@@ -219,6 +246,8 @@ function showCategory($category, $level = 0)
           $html .= "</label>";
 
           $html .= printSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
+
+          $html .= "</div>";
         }
         $html .= "</div>";
 
@@ -231,7 +260,7 @@ function showCategory($category, $level = 0)
 
         $isOptional = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . " attribute-row'>" . $attribute["name"] . " ";
+        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>" . $attribute["name"] . " ";
 
         if ($isOptional) {
         } else {

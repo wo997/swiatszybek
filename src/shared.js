@@ -1654,6 +1654,46 @@ function $(node, parent = null) {
   /*node.children = () => {
     return $(node.parentNode);
   };*/
+
+  node.findParentByAttribute = (
+    parentAttribute,
+    parentAttributeValue = null
+  ) => {
+    return window.findParentByAttribute(
+      node,
+      parentAttribute,
+      parentAttributeValue
+    );
+  };
+
+  node.findParentByTagName = (parentAttribute, parentAttributeValue = null) => {
+    return window.findParentByTagName(
+      node,
+      parentAttribute,
+      parentAttributeValue
+    );
+  };
+
+  node.findParentById = (id) => {
+    return window.findParentById(node, id);
+  };
+
+  node.findParentByStyle = (style, value) => {
+    return window.findParentByStyle(node, style, value);
+  };
+
+  node.findParentByClassName = (parentClassNames, stopAtClassName = null) => {
+    return window.findParentByClassName(
+      node,
+      parentClassNames,
+      stopAtClassName
+    );
+  };
+
+  node.isInNode = (parent) => {
+    return window.isInNode(node, parent);
+  };
+
   return node;
 }
 function $$(querySelectorAll, parent = null) {

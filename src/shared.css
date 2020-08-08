@@ -449,6 +449,7 @@ input[type="button"] {
   margin-bottom: 0.2em;
   user-select: none;
   font-weight: 600;
+  display: inline-block;
 }
 .field {
   display: block;
