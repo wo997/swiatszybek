@@ -386,7 +386,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 <?php startSection("content"); ?>
 
 <div>
-  <div id="productForm" action="/admin/save_product" method="post">
+  <div id="productForm">
     <div class="custom-toolbar">
       <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
         <?php if ($kopia) : ?>
@@ -417,7 +417,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         <div class="field-title">Link strony</div>
         <div style="display:flex;flex-wrap: wrap;">
           <input type="text" name="link" data-validate autocomplete="off" class="field" style="max-width: 600px;">
-          <div class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</div>
+          <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
         </div>
 
         <div class="field-title">Tytuł (SEO)</div>

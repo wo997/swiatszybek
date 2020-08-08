@@ -469,7 +469,6 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
       if ($('.swiper-container') != null) {
         galleryThumbs = new Swiper('.gallery-thumbs', {
           centerInsufficientSlides: true,
-          grabCursor: true,
           // spaceBetween: 10,
           slidesPerView: 4,
           freeMode: true,
@@ -487,7 +486,6 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
             swiper: galleryThumbs,
             autoScrollOffset: 1
           },
-          grabCursor: true,
         });
       }
 

@@ -1,40 +1,31 @@
-<?php 
+<?php //event[sitemap_change]
 
-include_once "kernel.php";
+global $SITE_URL;
 
-$products = "";
+$productsXML = "";
 //$now = str_replace("/","T",date("Y-m-d/H:i:s+00.00"));
 $now = date("Y-m-d");
 
-$stmt = $con->prepare("SELECT i.product_id, title, link FROM products i WHERE i.published = 1");
-$stmt->execute();
-$stmt->bind_result($product_id, $title, $link);
-while (mysqli_stmt_fetch($stmt))
-{
-    $products .= "<url>
-        <loc>".getProductLink($product_id,$link)."</loc>
+$products = fetchArray("SELECT i.product_id, title, link FROM products i WHERE i.published = 1");
+foreach ($products as $product) {
+  $productsXML .= "<url>
+        <loc>" . getProductLink($product["product_id"], $product["link"]) . "</loc>
         <lastmod>$now</lastmod>
         <priority>0.80</priority>
         </url>";
 }
-$stmt->close();
 
-$cms = "";
-
-$stmt = $con->prepare("SELECT link FROM cms WHERE published = 1");
-$stmt->execute();
-$stmt->bind_result($link);
-while (mysqli_stmt_fetch($stmt))
-{
-    $prio = 1-0.2*(1+substr_count($link,"/"));
-    if ($link == "") $prio = 1;
-    $cms .= "<url>
-        <loc>$SITE_URL/$link</loc>
+$cmssXML = "";
+$cmss = fetchArray("SELECT link FROM cms WHERE published = 1");
+foreach ($cmss as $cms) {
+  $prio = 1 - 0.2 * (1 + substr_count($cms["link"], "/"));
+  if ($link == "") $prio = 1;
+  $cmsXML .= "<url>
+        <loc>$SITE_URL/" . $cms["$link"] . "</loc>
         <lastmod>$now</lastmod>
         <priority>$prio</priority>
         </url>";
 }
-$stmt->close();
 
 $sitemap = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -46,16 +37,16 @@ $sitemap = <<<XML
 <url>
   <loc>$SITE_URL/logowanie</loc>
   <lastmod>$now</lastmod>
-  <priority>0.80</priority>
+  <priority>0.8</priority>
 </url>
 <url>
   <loc>$SITE_URL/rejestracja</loc>
   <lastmod>$now</lastmod>
   <priority>0.8</priority>
 </url>
-$products
-$cms
+$productsXML
+$cmssXML
 </urlset>
 XML;
 
-file_put_contents("sitemap.xml",$sitemap);
+file_put_contents("sitemap.xml", $sitemap);
