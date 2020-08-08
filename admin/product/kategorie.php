@@ -218,7 +218,7 @@
                 <div class="field-title">Link</div>
                 <div style="display:flex">
                     <input type="text" name="link" data-validate autocomplete="off" class="field">
-                    <div class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</div>
+                    <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
                 </div>
 
                 <div class="field-title">Widoczność</div>

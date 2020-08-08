@@ -122,6 +122,27 @@ $static = checkUrl($page_data["link"]);
         imagePicker.setDefaultTag($('[name="seo_title"]').value);
         editCMS($('#content1'));
     }
+
+    function saveProductForm(remove = false) {
+        var f = $("#cmsForm");
+
+        if (!remove && !validateForm({
+                form: f
+            })) return;
+        var params = getFormData(f);
+
+        if (remove) {
+            params["remove"] = true;
+        }
+
+        xhr({
+            url: "/admin/save_cms",
+            params: params,
+            success: () => {
+                window.location.reload();
+            }
+        });
+    }
 </script>
 
 <?php startSection("content"); ?>
@@ -131,7 +152,13 @@ $static = checkUrl($page_data["link"]);
     <input type="text" name="metadata">
 </form>
 
-<form class="admin-wrapper" method="post" action="/admin/save_cms">
+</script>
+
+<title>Edycja produktu</title>
+
+<?php startSection("content"); ?>
+
+<div id="cmsForm">
 
     <div class="sticky-top">
         <div class="custom-toolbar">
@@ -141,7 +168,7 @@ $static = checkUrl($page_data["link"]);
                 <a type="button" class="btn primary" href="/<?= $page_data["link"] ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
             <?php endif ?>
             <button onclick="preview()" type="button" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
-            <button class="btn primary" type="submit" onclick="anyChange=false">Zapisz <i class="fa fa-save"></i></button>
+            <button class="btn primary" onclick="saveProductForm()">Zapisz <i class="fa fa-save"></i></button>
         </div>
     </div>
 
@@ -156,7 +183,7 @@ $static = checkUrl($page_data["link"]);
     <div class="field-title">Link strony (URL)</div>
     <div style="display:flex;flex-wrap: wrap;">
         <input type='text' name='link' value='<?= $page_data["link"] ?>' style='width:100%;max-width:500px' class="field">
-        <div class="btn primary" onclick="rewriteURL()">Uzupełnij na podstawie tytułu</div>
+        <button class="btn primary" onclick="rewriteURL()">Uzupełnij na podstawie tytułu</button>
     </div>
 
     <div class="field-title">Opis (SEO)</div>
@@ -198,12 +225,12 @@ $static = checkUrl($page_data["link"]);
             <?php endif ?>
             <?php if ($page_data["cms_id"] != -1) : ?>
                 <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                    <button type="submit" name="delete" class="btn red" onclick='return confirm("Czy chcesz usunąć podstronę?")'>Usuń stronę <i class="fa fa-trash"></i></button>
+                    <button class="btn red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) saveProductForm(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
                 </div>
             <?php endif ?>
         </div>
     </div>
-</form>
+</div>
 
 <div id="pagePreview" class="hugeModalDesktop" data-modal>
     <div class="stretch-vertical">

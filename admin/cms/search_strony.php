@@ -1,14 +1,6 @@
 <?php //route[admin/search_strony]
 
-
 $where = "1";
-
-// interesting but useful?
-/*foreach($res as &$r) {
-    foreach ($r as &$v) {
-      $v = htmlspecialchars($v);
-    }
-  }*/
 
 if (isset($_POST['cms_id'])) {
   $where .= getListCondition("cms_id", $_POST['cms_id']);
