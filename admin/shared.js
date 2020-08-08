@@ -7,7 +7,7 @@ window.addEventListener("DOMContentLoaded", () => {
     nv.insertAdjacentHTML(
       "beforebegin",
       `
-            <div class="btn secondary fill medium" onclick='expandWithArrow(this.nextElementSibling,this.querySelector(".expand"))'>
+            <div class="btn secondary fill medium" onclick='expandWithArrow(this.next(),$(this).$(".expand"))'>
                 <b>Menu</b> <div class='btn expand'><i class='fas fa-chevron-right'></i></div>
             </div>
         `

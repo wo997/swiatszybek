@@ -27,7 +27,7 @@ function showCategory($category, $level = 0)
   $paddingLeft = $level == 0 ? 0 : 20 * ($level - 1);
   echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' style='padding-left:" . ($paddingLeft) . "px' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
   if ($count && $level > 0) {
-    echo "<div class='btn expand' onclick='expandWithArrow(this.parentNode.nextSibling,this)'><i class='fas fa-chevron-right'></i></div>";
+    echo "<div class='btn expand' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
   }
   $hidden = $level > 0 ? "expandY hidden" : "";
   $styles = $level == 0 ? "style='padding-left:0'" : "";
@@ -210,7 +210,7 @@ function showCategory($category, $level = 0)
           $html .= "<label class='attribute-label'>";
           $html .= "<input type='checkbox' value='" . $value_data["values"]["value_id"] . "'";
           if (nonull($value_data, "children", [])) {
-            $html .= " onchange='expand(this.parentNode.nextSibling,this.checked)'";
+            $html .= " onchange='expand(this.parent().next(),this.checked)'";
           }
           $html .= ">";
           $html .= "<div class='checkbox'></div> ";

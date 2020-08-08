@@ -104,16 +104,16 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
       wait = true;
       var wasMenu = currentMenu;
-      document.getElementById("menu" + wasMenu).classList.remove("showNow");
-      document.getElementById("menu" + i).style.display = "flex";
-      document.getElementById("menu" + i).style.position = "fixed";
-      document.getElementById("menu" + i).style.height = "";
-      document.getElementById("menuHeader" + wasMenu).classList.remove("selected");
-      document.getElementById("menuHeader" + i).classList.add("selected");
+      $("#menu" + wasMenu).classList.remove("showNow");
+      $("#menu" + i).style.display = "flex";
+      $("#menu" + i).style.position = "fixed";
+      $("#menu" + i).style.height = "";
+      $("#menuHeader" + wasMenu).classList.remove("selected");
+      $("#menuHeader" + i).classList.add("selected");
       setTimeout(function() {
-        document.getElementById("menu" + wasMenu).style.display = "none";
-        document.getElementById("menu" + i).classList.add("showNow");
-        document.getElementById("menu" + i).style.position = "";
+        $("#menu" + wasMenu).style.display = "none";
+        $("#menu" + i).classList.add("showNow");
+        $("#menu" + i).style.position = "";
         wait = false;
       }, 200);
       currentMenu = i;

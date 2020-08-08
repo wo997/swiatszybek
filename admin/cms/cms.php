@@ -83,12 +83,12 @@ $static = checkUrl($page_data["link"]);
                         metadata[f.name] = f.value;
                     }
                 });
-                document.getElementById("metadata").value = JSON.stringify(metadata);
+                $("#metadata").value = JSON.stringify(metadata);
             });
         });
 
         var metadata = "<?= addslashes($page_data["metadata"]) ?>";
-        document.getElementById("metadata").value = metadata;
+        $("#metadata").value = metadata;
 
         var m = JSON.parse(metadata);
         for (let key in m) {
@@ -107,7 +107,7 @@ $static = checkUrl($page_data["link"]);
     }
 
     function setWindowSize(width = "", height = "") {
-        var e = document.getElementById("preview_iframe");
+        var e = $("#preview_iframe");
         e.style.width = width;
         e.style.height = height;
         $(".preview_page").submit();

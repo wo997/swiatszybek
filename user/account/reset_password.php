@@ -12,7 +12,7 @@ function quit($message, $type, $destitation)
   echo '<input type="text" name="message" value="' . $message . '">';
   echo '</form>';
   echo '<script>';
-  echo 'document.getElementById("myForm").submit();';
+  echo '$("#myForm").submit();';
   echo '</script>';
   die;
 }

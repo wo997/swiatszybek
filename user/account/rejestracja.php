@@ -78,8 +78,8 @@ function a($name)
         if (input.value.length >= limit) {
           this.style.borderColor = "";
           if (input.id == "password") {
-            document.getElementById("password_ok").style.display = "block";
-            document.getElementById("password_wrong").style.display = "none";
+            $("#password_ok").style.display = "block";
+            $("#password_wrong").style.display = "none";
           }
         }
       }
@@ -96,13 +96,13 @@ function a($name)
       }
 
       if (form.password.value.length < 8) {
-        document.getElementById("password_wrong").style.display = "block";
+        $("#password_wrong").style.display = "block";
         lockInput(form.password, 8);
         return false;
       }
 
       if (form.password2.value != form.password.value) {
-        document.getElementById("password2_wrong").style.display = "block";
+        $("#password2_wrong").style.display = "block";
         form.password2.style.borderColor = "red";
         return false;
       }
@@ -111,12 +111,12 @@ function a($name)
     }
 
     function samePassword(password2) {
-      var p = document.getElementById("password");
+      var p = $("#password");
       var good = password2.value == p.value;
       if (password2.style.borderColor != "")
         password2.style.borderColor = good ? "" : "red";
-      document.getElementById("password2_ok").style.display = good ? "block" : "none";
-      document.getElementById("password2_wrong").style.display = !good ? "block" : "none";
+      $("#password2_ok").style.display = good ? "block" : "none";
+      $("#password2_wrong").style.display = !good ? "block" : "none";
     }
   </script>
 </head>

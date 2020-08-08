@@ -67,7 +67,7 @@ function pasteBlock(input) {
     } else {
       if (cmsTarget) {
         cmsTarget
-          .querySelector(".cms-container-content")
+          .$(".cms-container-content")
           .insertAdjacentHTML("beforeend", v);
       }
     }
@@ -140,7 +140,7 @@ function saveModule(button) {
   module.formClose();
   hideParentModal(button);
 
-  var c = cmsTarget.querySelector(".module-content"); // force update
+  var c = cmsTarget.$(".module-content"); // force update
   if (c) removeNode(c);
 }
 
@@ -150,10 +150,10 @@ function editBlock() {
     editModule(cmsTarget);
     return;
   }
-  var block_content = cmsTarget.querySelector(".cms-block-content");
+  var block_content = cmsTarget.$(".cms-block-content");
   quillEditor.open(block_content, {
     wrapper: cmsTarget,
-    colorNode: cmsTarget.querySelector(".background-color"),
+    colorNode: cmsTarget.$(".background-color"),
     callback: () => {
       postSaveCmsBlock();
     },
@@ -192,7 +192,7 @@ function addContainer(
     } else {
       cms.insertAdjacentHTML("afterbegin", getContainer(content));
     }
-  } else if (!cmsTarget || !cmsTarget.parentNode) {
+  } else if (!cmsTarget || !cmsTarget.parent()) {
     cms.insertAdjacentHTML(
       placeAfter ? "beforeend" : "afterbegin",
       getContainer(content)
@@ -211,13 +211,13 @@ function addBlock(content = "", container = null, placeAfter = true) {
   awaitingScroll = true;
   if (container) {
     container
-      .querySelector(".cms-container-content")
+      .$(".cms-container-content")
       .insertAdjacentHTML(
         placeAfter ? "beforeend" : "afterbegin",
         getBlock(content)
       );
-  } else if (cmsTarget && cmsTarget.parentNode) {
-    /* if (!cmsTarget || !cmsTarget.parentNode) {
+  } else if (cmsTarget && cmsTarget.parent()) {
+    /* if (!cmsTarget || !cmsTarget.parent()) {
         if (!container) {
             container = cmsTarget;
         }
@@ -268,7 +268,7 @@ var modules = {
         var params = JSON.parse(block.getAttribute("data-module-params"));
         productListCount = params["productListCount"];
       } catch {}
-      document.getElementById("productListCount").value = productListCount;
+      $("#productListCount").value = productListCount;
 
       loadCategoryPicker("product_categories", { skip: 2 });
     },
@@ -322,13 +322,11 @@ var modules = {
             </div>
             `,
     formOpen: (block) => {
-      var content = block.querySelector(".cms-block-content");
+      var content = block.$(".cms-block-content");
 
-      $("#custom-html .html").value = content.querySelector(
-        ".html-container"
-      ).innerHTML;
+      $("#custom-html .html").value = content.$(".html-container").innerHTML;
       $("#custom-html .css").value = block.getAttribute("data-css");
-      $("#custom-html .js").value = content.querySelector("script").innerHTML;
+      $("#custom-html .js").value = content.$("script").innerHTML;
     },
     formClose: () => {
       // TODO: consider cloning module
@@ -343,18 +341,16 @@ var modules = {
         }
       }
 
-      var blockContent = cmsTarget.querySelector(`.cms-block-content`);
-      blockContent.querySelector(`.html-container`).innerHTML = $(
+      var blockContent = cmsTarget.$(`.cms-block-content`);
+      blockContent.$(`.html-container`).innerHTML = $(
         "#custom-html .html"
       ).value;
 
-      blockContent.querySelector(`script`).innerHTML = $(
-        "#custom-html .js"
-      ).value;
+      blockContent.$(`script`).innerHTML = $("#custom-html .js").value;
 
       cmsTarget.setAttribute("data-css", $("#custom-html .css").value);
 
-      removeNode(blockContent.querySelector(`style`));
+      removeNode(blockContent.$(`style`));
 
       // // scope css
       // if (css) {
@@ -497,7 +493,7 @@ function deleteContainer(nodeToDelete = null, pushHistory = true) {
 
 function deleteBlock(nodeToDelete = null, pushHistory = true) {
   if (!cmsTarget) return;
-  if (!cmsTarget.nextElementSibling && !cmsTarget.previousElementSibling) {
+  if (!cmsTarget.next() && !cmsTarget.prev()) {
     cmsTarget = findParentByClassName(cmsTarget, "cms-container");
     deleteContainer(cmsTarget, false);
     return;
@@ -510,8 +506,8 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
   var h = rect.height;
   var w = rect.width;
 
-  /*var prevRect = node.previousElementSibling ? node.previousElementSibling.getBoundingClientRect() : null;
-    var nextRect = node.nextElementSibling ? node.nextElementSibling.getBoundingClientRect() : null;
+  /*var prevRect = node.prev() ? node.prev().getBoundingClientRect() : null;
+    var nextRect = node.next() ? node.next().getBoundingClientRect() : null;
     var leftDistance = prevRect ? (rect.x - (prevRect.x+prevRect.width)) : 0;
     if (leftDistance < 0) leftDistance = 0;
     var rightDistance = nextRect ? (rect.x+rect.width - nextRect.x) : 0;
@@ -544,13 +540,12 @@ function editCMS(t) {
   cms.insertAdjacentHTML("afterbegin", cmsSource.innerHTML);
 
   cms.$$(".cms").forEach((e) => {
-    console.log(e);
     e.outerHTML = e.innerHTML;
   });
   // we should be checking the structure on dom load, including migrations
 
   $$("#cms .cms-block[data-module]").forEach((e) => {
-    var c = e.querySelector(".module-content");
+    var c = e.$(".module-content");
     if (c) removeNode(c);
   });
 
@@ -562,13 +557,13 @@ function editCMS(t) {
   cmsUpdate();
 
   // cleaning up global css and js
-  cmsSource.querySelectorAll(`style`).forEach((elem) => {
+  cmsSource.$$(`style`).forEach((elem) => {
     elem.outerHTML = elem.outerHTML
       .replace(`<style>`, "<styleDisabled>")
       .replace(`</style>`, "</styleDisabled>");
   });
 
-  cmsSource.querySelectorAll(`script`).forEach((elem) => {
+  cmsSource.$$(`script`).forEach((elem) => {
     elem.outerHTML = elem.outerHTML
       .replace(`<script>`, "<scriptDisabled>")
       .replace(`</script>`, "</scriptDisabled>");
@@ -612,7 +607,7 @@ function cmsUpdate() {
     });
 
     if (block.getAttribute("data-module") == "custom-html") {
-      const content = block.querySelector(".cms-block-content");
+      const content = block.$(".cms-block-content");
       addMissingDirectChildren(
         content,
         (c) => c.classList.contains("html-container"),
@@ -669,7 +664,7 @@ function cmsUpdate() {
   }
 
   $$("#cms .cms-container").forEach((e) => {
-    if (!e.querySelector(".cms-block")) {
+    if (!e.$(".cms-block")) {
       setTimeout(() => {
         addBlock("", e);
       }, 100);
@@ -677,13 +672,13 @@ function cmsUpdate() {
   });
 
   $$("#cms .cms-block[data-module]").forEach((e) => {
-    var c = e.querySelector(".module-content");
+    var c = e.$(".module-content");
     if (!c) {
       var moduleName = e.getAttribute("data-module");
       var module = modules[moduleName];
 
       if (module && module.render) {
-        e.querySelector(".cms-block-content").innerHTML = `
+        e.$(".cms-block-content").innerHTML = `
                         <div class="module-content">
                             <div>
                                 ${module.icon} ${module.description}
@@ -714,29 +709,27 @@ function closeCms(save) {
 function editContainerSettings() {
   if (!cmsTarget) return;
 
-  document
-    .querySelectorAll(`#cmsContainerSettings [data-attribute]`)
-    .forEach((e) => {
-      var targets = cmsTarget;
-      var attribute = e.getAttribute("data-attribute");
-      var selectChild = e.getAttribute("data-target");
-      if (selectChild) {
-        targets = targets.querySelector(selectChild);
-      }
-      if (e.type == "checkbox") {
-        e.checked = targets.hasAttribute(`data-${attribute}`);
-      } else {
-        e.value = targets.getAttribute(`data-${attribute}`);
+  $$(`#cmsContainerSettings [data-attribute]`).forEach((e) => {
+    var targets = cmsTarget;
+    var attribute = e.getAttribute("data-attribute");
+    var selectChild = e.getAttribute("data-target");
+    if (selectChild) {
+      targets = targets.$(selectChild);
+    }
+    if (e.type == "checkbox") {
+      e.checked = targets.hasAttribute(`data-${attribute}`);
+    } else {
+      e.value = targets.getAttribute(`data-${attribute}`);
 
-        var group = findParentByAttribute(e, "data-select-group");
-        if (group) {
-          var option = group.querySelector(`[data-option="${e.value}"]`);
-          if (option) {
-            option.click();
-          }
+      var group = findParentByAttribute(e, "data-select-group");
+      if (group) {
+        var option = group.$(`[data-option="${e.value}"]`);
+        if (option) {
+          option.click();
         }
       }
-    });
+    }
+  });
 
   showModal("cmsContainerSettings", {
     source: cmsTarget,
@@ -746,7 +739,7 @@ function editContainerSettings() {
 function selectInGroup(option) {
   var group = findParentByAttribute(option, "data-select-group");
 
-  var input = group.querySelector("input");
+  var input = group.$("input");
   if (!input) return;
   input.value = option.getAttribute("data-option");
 
@@ -765,19 +758,17 @@ function editBlockSettings() {
     e.checked = false;
   });
 
-  document
-    .querySelectorAll(`#cmsBlockSettings [data-attribute]`)
-    .forEach((e) => {
-      var attribute = e.getAttribute("data-attribute");
-      var targets = cmsTarget;
-      var selectChild = e.getAttribute("data-target");
-      if (selectChild) {
-        targets = targets.querySelector(selectChild);
-      }
-      var defaultValue = e.getAttribute("data-default-value");
-      var value = targets.getAttribute(`data-${attribute}`);
-      e.value = !value && value !== 0 && defaultValue ? defaultValue : value;
-    });
+  $$(`#cmsBlockSettings [data-attribute]`).forEach((e) => {
+    var attribute = e.getAttribute("data-attribute");
+    var targets = cmsTarget;
+    var selectChild = e.getAttribute("data-target");
+    if (selectChild) {
+      targets = targets.$(selectChild);
+    }
+    var defaultValue = e.getAttribute("data-default-value");
+    var value = targets.getAttribute(`data-${attribute}`);
+    e.value = !value && value !== 0 && defaultValue ? defaultValue : value;
+  });
 
   cmsTarget.classList.forEach((e) => {
     if (
@@ -810,7 +801,7 @@ function saveBlockAttributes(parent) {
     var targets = cmsTarget;
     var selectChild = e.getAttribute("data-target");
     if (selectChild) {
-      targets = targets.querySelector(selectChild);
+      targets = targets.$(selectChild);
     }
 
     if (e.type == "checkbox") {
@@ -843,13 +834,11 @@ function saveBlockSettings() {
   removeClassesWithPrefix(cmsTarget, "align-");
   removeClassesWithPrefix(cmsTarget, "block-padding-");
 
-  document
-    .querySelectorAll(`#cmsBlockSettings .classList:checked`)
-    .forEach((e) => {
-      if (e.value) {
-        cmsTarget.classList.add(e.value);
-      }
-    });
+  $$(`#cmsBlockSettings .classList:checked`).forEach((e) => {
+    if (e.value) {
+      cmsTarget.classList.add(e.value);
+    }
+  });
 
   saveBlockAttributes("#cmsBlockSettings");
 
@@ -877,18 +866,16 @@ function editBlockAnimation() {
 function saveBlockAnimation() {
   if (!cmsTarget) return;
 
-  document
-    .querySelectorAll(`#cmsBlockAnimation .classList:checked`)
-    .forEach((e) => {
-      cmsTarget.setAttribute("data-animation", e.value);
-    });
+  $$(`#cmsBlockAnimation .classList:checked`).forEach((e) => {
+    cmsTarget.setAttribute("data-animation", e.value);
+  });
   postSaveCmsBlock();
 }
 
 function editCMSBorder() {
-  var target = cmsTarget.querySelector(".cms-container-content");
+  var target = cmsTarget.$(".cms-container-content");
   if (!target) {
-    target = cmsTarget; //.querySelector(".cms-block-content");
+    target = cmsTarget; //.$(".cms-block-content");
   }
   if (!target) return;
 
@@ -934,9 +921,9 @@ function updateBorderPreview() {
 function saveCMSBorder() {
   var preview = $("#cmsBorder .borderPreview");
 
-  var target = cmsTarget.querySelector(".cms-container-content");
+  var target = cmsTarget.$(".cms-container-content");
   if (!target) {
-    target = cmsTarget; //.querySelector(".cms-block-content");
+    target = cmsTarget; //.$(".cms-block-content");
   }
   if (!target) {
     return false;
@@ -963,9 +950,8 @@ function editCMSBackground() {
 
   var background = $(".cmsBlockBackgroundPreview");
   var color = $(".cmsBlockBackgroundPreview .background-color");
-  var cmstargetColor = target.querySelector(".background-color");
+  var cmstargetColor = target.$(".background-color");
   background.style.backgroundImage = target.style.backgroundImage;
-  console.log(target, target.style.backgroundImage);
 
   var col = color.style.backgroundColor;
   if (!col) col = "#fff";
@@ -1008,7 +994,7 @@ function saveCMSBackground() {
 
   var background = $(".cmsBlockBackgroundPreview");
   var color = $(".cmsBlockBackgroundPreview .background-color");
-  var cmstargetColor = cmsTarget.querySelector(".background-color");
+  var cmstargetColor = cmsTarget.$(".background-color");
   cmsTarget.style.backgroundImage = background.style.backgroundImage;
   cmstargetColor.style.backgroundColor = color.style.backgroundColor;
   cmstargetColor.style.opacity = color.style.opacity;
@@ -1029,13 +1015,13 @@ var cmsObserver = new MutationObserver((mutations) => {
         if (node.classList && node.classList.contains("cms-block")) {
           node.classList.remove("activeBlock");
           if (awaitingScroll) {
-            scrollToElement(node, cms.parentNode);
+            scrollToElement(node, cms.parent());
             var rect = node.getBoundingClientRect();
             var h = rect.height;
             var w = rect.width;
 
-            /*var prevRect = node.previousElementSibling ? node.previousElementSibling.getBoundingClientRect() : null;
-                        var nextRect = node.nextElementSibling ? node.nextElementSibling.getBoundingClientRect() : null;
+            /*var prevRect = node.prev() ? node.prev().getBoundingClientRect() : null;
+                        var nextRect = node.next() ? node.next().getBoundingClientRect() : null;
                         var leftDistance = prevRect ? (rect.x - (prevRect.x+prevRect.width)) : 0;
                         if (leftDistance < 0) leftDistance = 0;
                         var rightDistance = nextRect ? (rect.x+rect.width - nextRect.x) : 0;
@@ -1072,7 +1058,7 @@ var cmsObserver = new MutationObserver((mutations) => {
         if (node.classList && node.classList.contains("cms-container")) {
           node.classList.remove("activeContainer");
           if (awaitingScroll) {
-            scrollToElement(node, cms.parentNode);
+            scrollToElement(node, cms.parent());
             var rect = node.getBoundingClientRect();
             var h = rect.height;
             node.style.transition = "0s";
@@ -1238,7 +1224,9 @@ cmsContainerHeaderAnimation();
 
 function cmsContainerHeaderAnimation() {
   if (CMSContainerHeader.target) {
-    var parentRect = CMSContainerHeader.options.parentNode.getBoundingClientRect();
+    var parentRect = CMSContainerHeader.options
+      .parent()
+      .getBoundingClientRect();
     var optionsRect = CMSContainerHeader.options.getBoundingClientRect();
     var blockRect = CMSContainerHeader.target.getBoundingClientRect();
     var blockPos = position(CMSContainerHeader.target);
@@ -1353,7 +1341,7 @@ cmsBlockHeaderAnimation();
 
 function cmsBlockHeaderAnimation() {
   if (CMSBlockHeader.target) {
-    var parentRect = CMSBlockHeader.options.parentNode.getBoundingClientRect();
+    var parentRect = CMSBlockHeader.options.parent().getBoundingClientRect();
     var optionsRect = CMSBlockHeader.options.getBoundingClientRect();
     var actionsRect = CMSBlockHeader.actions.getBoundingClientRect();
     var blockRect = CMSBlockHeader.target.getBoundingClientRect();
@@ -1476,14 +1464,13 @@ document.addEventListener(
       var placeNearNodeFinal = placeNearNode;
 
       if (!isPlaceBefore) {
-        placeNearNodeFinal = placeNearNode.nextSibling;
+        placeNearNodeFinal = placeNearNode.next();
       }
 
       if (
         draggedNode &&
         draggedNode != placeNearNodeFinal &&
-        (draggedNode.nextElementSibling != placeNearNodeFinal ||
-          !draggedNode.nextElementSibling)
+        (draggedNode.next() != placeNearNodeFinal || !draggedNode.next())
       ) {
         awaitingScroll = true;
 
@@ -1498,7 +1485,7 @@ document.addEventListener(
           deleteBlock(draggedNode, false);
         }
 
-        var insertInParent = placeNearNode.parentNode;
+        var insertInParent = placeNearNode.parent();
         setTimeout(
           () => {
             insertInParent.insertBefore(copiedNode, placeNearNodeFinal);
@@ -1519,17 +1506,17 @@ function moveBlock(direction) {
   var isPlaceBefore = cmsTarget;
   var isPlaceBeforeFinal = isPlaceBefore;
   if (direction === 1) {
-    isPlaceBeforeFinal = isPlaceBeforeFinal.nextElementSibling;
+    isPlaceBeforeFinal = isPlaceBeforeFinal.next();
     if (!isPlaceBeforeFinal) return; // already bottom
-    isPlaceBeforeFinal = isPlaceBeforeFinal.nextElementSibling;
+    isPlaceBeforeFinal = isPlaceBeforeFinal.next();
   } else if (direction === -1) {
-    isPlaceBeforeFinal = isPlaceBeforeFinal.previousElementSibling;
+    isPlaceBeforeFinal = isPlaceBeforeFinal.prev();
     if (!isPlaceBeforeFinal) return; // already top
   }
   awaitingScroll = true;
 
   delayActions();
-  isPlaceBefore.parentNode.insertBefore(cmsTarget, isPlaceBeforeFinal);
+  isPlaceBefore.parent().insertBefore(cmsTarget, isPlaceBeforeFinal);
   cmsHistoryPush();
 }
 
@@ -1940,7 +1927,7 @@ registerModalContent(`
 
                 <div class="field-title">Kolor krawędzi</div>
                 <input class="jscolor" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
-                <div class="btn primary" onclick="setValue(this.previousElementSibling,'')">Brak <i class="fa fa-times"></i></div>
+                <div class="btn primary" onclick="setValue(this.prev(),'')">Brak <i class="fa fa-times"></i></div>
 
                 <div class="field-title">Zaokrąglenie krawędzi</div>
                 <div class="selectbox">

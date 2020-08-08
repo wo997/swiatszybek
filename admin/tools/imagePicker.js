@@ -117,7 +117,7 @@ registerModalContent(
                     <input style="display:inline-block; width: auto;flex-grow: 1" type="text" name="tag" class="tag">
                 </label>
                 <label style="display:inline-block;margin: 0 5px">
-                    <input id="files" type="file" name="files[]" accept=".png,.jpg,.jpeg,.gif" multiple onchange="document.getElementById('submitbtn').click()" style="display:none">
+                    <input id="files" type="file" name="files[]" accept=".png,.jpg,.jpeg,.gif" multiple onchange="$('#submitbtn').click()" style="display:none">
                     <input type="submit" id="submitbtn" value="Upload File" name="submit" style="display:none">
                     <div class="btn primary">Wyślij zdjęcie <i class="fas fa-cloud-upload-alt"></i></div>
                 </label>
