@@ -54,8 +54,9 @@ function getTableData($data = null)
 
     $rowCount = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 20;
     $pageNumber = isset($_POST['pageNumber']) ? intval($_POST['pageNumber']) : 0;
-    if ($pageNumber < 0) $pageNumber = 0;
-    $bottomIndex = $pageNumber * $rowCount;
+    $pageIndex = $pageNumber - 1; // start from 0
+    if ($pageIndex < 0) $pageIndex = 0;
+    $bottomIndex = $pageIndex * $rowCount;
 
     $select = isset($data["select"]) ? $data["select"] : "";
 
@@ -90,7 +91,7 @@ function getTableData($data = null)
     $index = 0;
     foreach ($results as &$result) {
         $index++;
-        $result["kolejnosc"] = $pageNumber * $rowCount + $index;
+        $result["kolejnosc"] = $pageIndex * $rowCount + $index;
 
         if (isset($data["renderers"])) {
             foreach ($data["renderers"] as $field => $renderer) {
@@ -99,11 +100,8 @@ function getTableData($data = null)
         }
     }
     unset($result);
-    $results = array_merge($results, $results);
-    $results = array_merge($results, $results);
-    $results = array_merge($results, $results);
-    $results = array_merge($results, $results);
-    $responseArray = ["pageCount" => 16 * $pageCount, "totalRows" => 16 * $totalRows, "results" => $results];
+
+    $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
 
     return isset($data["raw"]) ? $responseArray : json_encode($responseArray);
 }

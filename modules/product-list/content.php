@@ -1,5 +1,7 @@
   <?php
 
+  useCSS(__DIR__ . "/main.css");
+
   $shared_where = "p.published = 1"; // AND v.published = 1";
   $where = $shared_where;
   $join = "";
@@ -20,7 +22,7 @@
 
   $hasAnyAttribute = false;
   if (isset($moduleParams["attribute_value_ids"])) {
-    $attribute_value_ids = json_decode($moduleParams["attribute_value_ids"]);
+    $attribute_value_ids = $moduleParams["attribute_value_ids"];
 
     if ($attribute_value_ids) {
       foreach ($attribute_value_ids as $attribute_value_sub_ids) {
@@ -52,7 +54,6 @@
   //$products = fetchArray("SELECT product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating
   //FROM products p $join $where ORDER BY product_id DESC LIMIT " . intval($product_list_count));
 
-  $total = 0;
   $res = "";
   foreach ($products["results"] as $product) {
     $priceText = $product["price_min"];
@@ -60,8 +61,6 @@
       $priceText .= " - " . $product["price_max"];
 
     $priceText = preg_replace("/\.00/", "", $priceText);
-
-    $total++;
 
     if (!$product["gallery"]) {
       $product["gallery"] = $product["cache_thumbnail"];
@@ -78,10 +77,13 @@
           </div>";
   }
 
-  $module_content .=
-    "<div class='items count-$total'>$res</div>";
+  //$module_content .=
+  //"<div class='items count-$total'>$res</div>";
 
-  $module_content .= "<style>
+  $module_content .= "<div class='product-list'>$res</div>";
+
+
+  /*$module_content .= "<style>
       div[data-module='product-list'] .product {width: 48%;}
       @media only screen and (max-width: 749px) {
         div[data-module='product-list'] .product {width: 98%;}
@@ -91,5 +93,5 @@
           border-right: 2px solid #eee;
         }
       }
-    </style>";
+    </style>";*/
   ?>

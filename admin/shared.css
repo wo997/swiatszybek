@@ -39,7 +39,8 @@
   #wyszukiwarka {
     overflow-x: auto;
   }
-  .navbar_admin > *, .navbar_admin .menu_item {
+  .navbar_admin > *,
+  .navbar_admin .menu_item {
     width: 100%;
   }
   .navbar_admin .dropdown-expand {
@@ -62,8 +63,8 @@
 }
 
 .search-wrapper {
-  justify-content:center;
-  display:flex;
+  justify-content: center;
+  display: flex;
   flex-wrap: wrap;
   align-items: stretch;
 }
@@ -84,11 +85,10 @@
   text-align: center;
 }
 
-
-
-
-.admin-wrapper, .admin-wrapper input, .admin-wrapper textarea {
-  font-family: 'Open Sans', sans-serif;
+.admin-wrapper,
+.admin-wrapper input,
+.admin-wrapper textarea {
+  font-family: "Open Sans", sans-serif;
 }
 
 .seo_description {
@@ -97,7 +97,7 @@
   padding: 4px;
   height: 42px;
   font-size: 14px;
-  font-family: arial,sans-serif;
+  font-family: arial, sans-serif;
   box-sizing: content-box;
   resize: none;
 }

@@ -1,9 +1,7 @@
 <?php
 
-//include_once "helpers.php";
-
-useJS("/$moduleDir/main.js");
-useCSS("/$moduleDir/main.css");
+useJS(__DIR__ . "/main.js");
+useCSS(__DIR__ . "/main.css");
 
 $contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
 

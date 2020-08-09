@@ -49,6 +49,8 @@ function showCategory($category, $level = 0)
 <head>
   <?php include "includes.php"; ?>
 
+  <link rel="stylesheet" href="/modules/product-list/main.css">
+
   <style>
     .category-picker-row>*,
     .category-picker-row>*>* {
@@ -86,7 +88,7 @@ function showCategory($category, $level = 0)
     }
 
     .category_name.current {
-      color: #7c1;
+      color: #cc2229;
       text-decoration: underline;
       font-weight: bold;
     }
@@ -158,14 +160,39 @@ function showCategory($category, $level = 0)
       margin-left: 25px;
 
     }
+
+
+    .product-list-wrapper {
+      padding: 2vw;
+    }
+
+    .product-list-container {
+      margin: 30px 0;
+    }
+
+    .combo-select-wrapper .attribute-header {
+      font-weight: 600;
+      margin-top: 1em;
+      margin-bottom: 0.3em;
+    }
+
+    .categories-wrapper .fas {
+      color: #c22;
+    }
   </style>
 
   <script>
+    var currPage = 1;
+    var rowCount = 6;
+    var searchParams = {};
+
     window.addEventListener("DOMContentLoaded", () => {
       var e = $(".category_name.current");
       if (e) {
         expandCategoriesAbove(e);
       }
+
+      searchProducts();
     });
 
     function searchProducts() {
@@ -183,15 +210,59 @@ function showCategory($category, $level = 0)
           attribute_value_ids.push(attribute_value_sub_ids);
         }
       })
+
+      var newSearchParams = JSON.stringify({
+        attribute_value_ids: attribute_value_ids,
+        category_ids: [<?= $show_category["category_id"] ?>],
+        phrase: "xxx"
+      });
+
+      //console.log(newSearchParams);
+
+
+      if (newSearchParams != searchParams) {
+        currPage = 0;
+        searchParams = newSearchParams;
+      }
+
       xhr({
         url: "/search_products",
         params: {
-          attribute_value_ids: JSON.stringify(attribute_value_ids)
+          filters: searchParams,
+          rowCount: rowCount,
+          pageNumber: currPage
         },
         success: (res) => {
-          $(".products").setContent(res);
+          if (res.totalRows == 0) {
+            res.content = "<div style='font-size:20px;margin:100px 0;padding: 10px;text-align:center;font-weight:bold'>Brak produktów</div>";
+          }
+
+          $(".product-list-container").setContent(res.content);
+
+          renderPagination(
+            $(".pagination"),
+            currPage,
+            res.pageCount,
+            (i) => {
+              currPage = i;
+              searchProducts();
+            }
+          );
         }
       })
+    }
+
+    function attributeSelectionChange(checkbox, hasChildren) {
+      if (hasChildren) {
+        var list = checkbox.parent().next();
+        if (!checkbox.checked) {
+          list.findAll(":checked").forEach(subCheckbox => {
+            subCheckbox.checked = 0;
+          });
+        }
+        expand(list, checkbox.checked);
+      }
+      searchProducts();
     }
   </script>
 </head>
@@ -201,7 +272,7 @@ function showCategory($category, $level = 0)
 
   <div class="main-container desktopRow">
     <div class="categories-wrapper">
-      <h3 style="margin: 40px 0 10px">Kategorie</h3>
+      <div style="margin: 40px 0 10px;font-weight:bold;font-size:16px"><i class="fas fa-list"></i> Kategorie</div>
 
       <div class="categories">
         <?= showCategory([
@@ -210,7 +281,8 @@ function showCategory($category, $level = 0)
           "title" => "Wszystkie produkty"
         ]) ?>
       </div>
-      <br>
+
+      <div style="margin: 40px 0 10px;font-weight:bold;font-size:16px"><i class="fas fa-sliders-h"></i> Filtry</div>
 
       <?php
       include_once "admin/product/attributes_service.php";
@@ -236,9 +308,9 @@ function showCategory($category, $level = 0)
           $html .= "<div class='attributes-list-wrapper'>";
           $html .= "<label class='attribute-label'>";
           $html .= "<input type='checkbox' value='" . $value_data["values"]["value_id"] . "'";
-          if (nonull($value_data, "children", [])) {
-            $html .= " onchange='expand(this.parent().next(),this.checked)'";
-          }
+          $html .= " onchange='attributeSelectionChange(this,";
+          $html .= nonull($value_data, "children", []) ? "true" : "false";
+          $html .= ")'";
           $html .= ">";
           $html .= "<div class='checkbox'></div> ";
           $html .= $value_data["values"]["value"];
@@ -260,7 +332,7 @@ function showCategory($category, $level = 0)
 
         $isOptional = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>" . $attribute["name"] . " ";
+        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'><div class='attribute-header'>" . $attribute["name"] . "</div> ";
 
         if ($isOptional) {
         } else {
@@ -300,16 +372,24 @@ function showCategory($category, $level = 0)
 
       ?>
     </div>
-    <div class="products">
+    <div class="product-list-wrapper">
       <h1 class="h1" style="margin: 40px 0"><?= $show_category["title"] ?></h1>
       <?= $show_category["description"] ?>
-      <?php
-      $moduleParams = [];
-      $module_content = "";
-      $moduleParams["category_ids"] = [$show_category["category_id"]];
-      include "modules/product-list/content.php";
-      echo $module_content;
-      ?>
+
+      <div class="product-list-container">
+        <?php
+        /*$moduleParams = [];
+        $module_content = "";
+        $moduleParams["category_ids"] = [$show_category["category_id"]];
+        include "modules/product-list/content.php";
+        echo $module_content;*/
+        ?>
+      </div>
+
+      <div class="flexbar">
+        <div class="pagination"></div>
+      </div>
+
       <?= getCMSPageHTML($show_category["content"]) ?>
     </div>
   </div>

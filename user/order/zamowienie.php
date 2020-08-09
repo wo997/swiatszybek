@@ -162,7 +162,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
             basket_item_id,
             purchase_price: input.value
           },
-          success(res) {
+          success() {
             showNotification(`<i class="fas fa-check"></i> Zapisano koszt nabycia</b>`);
             updateZysk();
           }

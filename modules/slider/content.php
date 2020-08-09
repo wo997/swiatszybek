@@ -1,10 +1,10 @@
 <?php
 
-include_once "$moduleDir/helpers.php";
+include_once __DIR__ . "/helpers.php";
 
 //useJS("/src/swiper.min.js");
 //useCSS("/src/swiper.min.css");
-useCSS("/$moduleDir/main.css");
+useCSS(__DIR__ . "/main.css");
 
 
 $slides_html = get_slider_content();

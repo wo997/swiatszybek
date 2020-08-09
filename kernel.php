@@ -3,7 +3,7 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 2154);
+define("RELEASE", 2157);
 
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");

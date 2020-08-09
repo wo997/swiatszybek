@@ -117,7 +117,6 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                 user_id: USER_ID
             },
             success: (res) => {
-                res = JSON.parse(res);
                 if (res.results.length > 0) {
                     var r = res.results[0];
                     var client = escapeHTML(`${r.imie} ${r.nazwisko} ${r.firma}`);

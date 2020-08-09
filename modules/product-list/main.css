@@ -1,0 +1,23 @@
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product-list > .product {
+  width: 100%;
+}
+@media only screen and (min-width: 800px) {
+  .product-list > .product {
+    width: 50%;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .product-list > .product {
+    width: 33.333%;
+  }
+}
+@media only screen and (min-width: 1800px) {
+  .product-list > .product {
+    width: 25%;
+  }
+}

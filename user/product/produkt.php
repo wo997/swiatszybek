@@ -759,10 +759,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
             var out = "<h3>Dziękujemy za przekazaną opinię!</h3>";
             try {
-              var json = JSON.parse(res);
-
-              if (json.kod_rabatowy) {
-                out += `<div style='font-size: 24px;margin: 10px 0;display:block;'>Twój kod rabatowy: <span style='font-weight: bold;color: #37f;'>${json.kod_rabatowy}</span></div>`;
+              if (res.kod_rabatowy) {
+                out += `<div style='font-size: 24px;margin: 10px 0;display:block;'>Twój kod rabatowy: <span style='font-weight: bold;color: #37f;'>${res.kod_rabatowy}</span></div>`;
                 out += `<div>Kopię otrzymasz na skrzynkę pocztową</div>`;
               }
             } catch (e) {}

@@ -1,8 +1,8 @@
 <?php
 
-include_once "$moduleDir/helpers.php";
+include_once __DIR__ . "/helpers.php";
 
-useJS("/$moduleDir/main.js");
+useJS(__DIR__ . "/main.js");
 
 $contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
 

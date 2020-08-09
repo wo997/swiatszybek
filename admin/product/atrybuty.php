@@ -122,7 +122,7 @@
                     attribute_id: data.attribute_id
                 },
                 success: (res) => {
-                    attribute_values.setValues(JSON.parse(res));
+                    attribute_values.setValues(res);
                     setModalInitialState(formName);
                 }
             });

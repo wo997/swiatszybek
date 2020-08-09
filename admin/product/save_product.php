@@ -29,8 +29,10 @@ if (isset($_POST["remove"])) {
     foreach (json_decode($_POST["categories"], true) as $category_id) {
         $insert .= "($product_id," . intval($category_id) . "),";
     }
-    $insert = substr($insert, 0, -1);
-    query("INSERT INTO link_product_category (product_id, category_id) VALUES $insert");
+    if ($insert) {
+        $insert = substr($insert, 0, -1);
+        query("INSERT INTO link_product_category (product_id, category_id) VALUES $insert");
+    }
 
     triggerEvent("product_gallery_change", ["product_id" => intval($product_id)]);
 }

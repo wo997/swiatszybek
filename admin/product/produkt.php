@@ -306,8 +306,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       params: {
         variant_id: data.variant_id
       },
-      success: (res) => {
-        var data = JSON.parse(res);
+      success: (data) => {
         $$(".combo-select-wrapper").forEach(combo => {
           combo.findAll("select").forEach(select => {
             var option = [...select.options].find(o => {
@@ -424,7 +423,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         <input type="text" name="seo_title" class="field" style="max-width: 600px;" data-show-count="60" data-count-description="(zalecane 50-58)">
 
         <div class="field-title">Opis (SEO)</div>
-        <textarea class="seo_description" name="seo_description" data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
+        <textarea class="seo_description field" name="seo_description" data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
       </div>
     </div>
 

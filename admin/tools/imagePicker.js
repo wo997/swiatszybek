@@ -40,9 +40,8 @@ window.imagePicker = {
     xhr({
       url: "/admin/upload_images",
       formData: formData,
-      success(res) {
+      success(images) {
         try {
-          images = JSON.parse(res);
           var out = "";
           var counter = 0;
           for (image of images) {

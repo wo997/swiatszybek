@@ -167,7 +167,14 @@ function xhr(data) {
   xhr.setRequestHeader("enctype", "multipart/form-data");
   xhr.onload = function () {
     if (data.success) {
-      data.success(xhr.responseText);
+      var res = xhr.responseText;
+      data.type = nonull(data.type, "json");
+      if (data.type == "json") {
+        try {
+          res = JSON.parse(res);
+        } catch {}
+      }
+      data.success(res);
     }
   };
 
@@ -206,9 +213,9 @@ function scaleVideos() {
   });
 }
 
-function nonull(a, e = "") {
-  if (a === null || a === undefined) return e;
-  return a;
+function nonull(value, defaultValue = "") {
+  if (value === null || value === undefined) return defaultValue;
+  return value;
 }
 
 function delay(action, time, context = window) {
@@ -565,7 +572,7 @@ function createTable(table) {
   justTable += `<div class="flexbar" style="align-items: baseline;">
       <span class="total-rows"></span>
       <span class="space-right">&nbsp;${table.lang.subject}</span>
-      <select data-param="rowCount" oninput="${table.name}.setPage(0)">
+      <select data-param="rowCount">
           <option value='10' ${
             table.rowCount == 10 ? "selected" : ""
           }>10</option>
@@ -704,7 +711,7 @@ function createTable(table) {
             category_id: category_id,
           },
           success: (res) => {
-            loadCategoryFormCallback(JSON.parse(res).results[0]);
+            loadCategoryFormCallback(res.results[0]);
           },
         });
       }
@@ -773,16 +780,9 @@ function createTable(table) {
     }, 400);
   };
 
-  table.setPage = function (i) {
-    if (i < 0) i = 0;
-    else if (i > table.pageCount - 1) i = table.pageCount - 1;
-    table.currPage = i;
-    table.search();
-  };
-
   $$(`.${table.name} *[data-param]`).forEach((e) => {
     e.addEventListener("input", function () {
-      if (e.tagName.toLowerCase() == "input") table.awaitSearch();
+      if (e.tagName == "INPUT") table.awaitSearch();
       else table.search();
     });
   });
@@ -870,8 +870,7 @@ function createTable(table) {
         ...params,
         pageNumber: table.currPage,
       },
-      success: (response) => {
-        var res = JSON.parse(response);
+      success: (res) => {
         table.pageCount = res.pageCount;
         table.results = res.results;
         var output = "";
@@ -929,14 +928,15 @@ function createTable(table) {
         if (createList) {
           table.selectionElement.setContent(output);
         } else {
-          createPagination(
+          renderPagination(
             table.paginationElement,
             table.currPage,
             table.pageCount,
             (i) => {
               table.currPage = i;
               table.search();
-            }
+            },
+            { allow_my_page: true }
           );
           table.totalRowsElement.setContent(res.totalRows);
           table.tableElement.setContent(output);
@@ -1108,16 +1108,22 @@ function createTable(table) {
   window[table.name] = table;
 }
 
-setPageEvent = function (obj, e) {
-  if (e.keyCode == 13) {
-    table.setPage(parseInt(obj.value) - 1);
-  }
-};
+function getSafePageIndex(i, pageCount) {
+  if (i < 1) return 1;
+  if (i > pageCount) return pageCount;
+  return i;
+}
 
-// reacting to enter key built in create pagination, so that there is only one callback needed
-function createPagination(paginationElement, currPage, pageCount, callback) {
+function renderPagination(
+  paginationElement,
+  currPage,
+  pageCount,
+  callback,
+  options = {}
+) {
+  currPage = getSafePageIndex(currPage, pageCount);
   var output = "";
-  var range = 3;
+  var range = 4;
   var mobile = window.innerWidth < 760;
   if (mobile) range = 1;
   var center = currPage;
@@ -1127,35 +1133,31 @@ function createPagination(paginationElement, currPage, pageCount, callback) {
     if (
       i == 1 ||
       i == pageCount ||
-      (i >= 1 + center - range && i <= 1 + center + range)
+      (i >= center - range && i <= center + range)
     ) {
-      if (i == 1 + center - range && i > 2) {
+      if (i == center - range && i > 2) {
         output += " ... ";
       }
       output += `<div data-index='${i}' class='pagination_item ${
         i == currPage ? " current" : ``
       }'>${i}</div>`;
-      if (i == 1 + center + range && i < pageCount - 1) output += " ... ";
+      if (i == center + range && i < pageCount - 1) output += " ... ";
     }
   }
-  if (pageCount > 20 && !mobile) {
+  if (pageCount > 20 && !mobile && options.allow_my_page) {
     output += `<span class='setMyPage'><input class='myPage' type='number' placeholder='Nr strony (1-${pageCount})'></span>`;
   }
 
-  const getSafePageIndex = (i, pageCount) => {
-    if (i < 1) return 1;
-    if (i > pageCount) return pageCount;
-    return i;
-  };
-
   paginationElement.setContent(output);
-  paginationElement.findAll(".pagination_item").forEach((elem) => {
-    var i = parseInt(elem.getAttribute("data-index"));
-    i = getSafePageIndex(i, pageCount);
-    elem.addEventListener("click", () => {
-      callback(i);
+  paginationElement
+    .findAll(".pagination_item:not(.current)")
+    .forEach((elem) => {
+      var i = parseInt(elem.getAttribute("data-index"));
+      i = getSafePageIndex(i, pageCount);
+      elem.addEventListener("click", () => {
+        callback(i);
+      });
     });
-  });
   paginationElement.findAll(".myPage").forEach((elem) => {
     elem.addEventListener("keypress", (event) => {
       if (event.code == "Enter") {
@@ -2297,6 +2299,7 @@ function loadCategoryPicker(
   xhr({
     //url: `/helpers/categories_template`,
     url: `/helpers/categories_template&table=${source}`,
+    type: "text",
     //url: `/helpers/categories_template&parent_id=${parent_id}`,
     success: (c) => {
       /*if (!$(`.category-picker-template-${parent_id}`)) {
@@ -2598,7 +2601,6 @@ function kodPocztowyChange(src) {
     success: (res) => {
       var list = "";
       try {
-        res = JSON.parse(res);
         var items = [];
         for (i = 0; i < res.length; i++) {
           items.push(res[i].miejscowosc);
@@ -2877,14 +2879,12 @@ function addItemtoBasket(variant_id, diff, callback) {
   xhr({
     url: url,
     success: (res) => {
-      var json = JSON.parse(res);
+      setContent($("#basketContent"), res.basket_content_html);
 
-      setContent($("#basketContent"), json.basket_content_html);
-
-      $("#amount").innerHTML = json.item_count; // header basket
+      $("#amount").innerHTML = res.item_count; // header basket
 
       if (callback) {
-        callback(json);
+        callback(res);
       }
     },
   });

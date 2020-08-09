@@ -100,12 +100,12 @@
             }
         })
 
-        if (window.innerWidth > 1200) {
+        /*if (window.innerWidth > 1200) {
             $$(".item-image").forEach(e => {
                 var i = e.getAttribute("data-desktop");
                 if (i) e.style.backgroundImage = "url('" + i + "')";
             });
-        }
+        }*/
 
         if (window.innerWidth < 768) {
             $$("table").forEach(table => {

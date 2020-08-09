@@ -1482,11 +1482,13 @@ input:read-only {
   text-align: center;
   background: #eee;
   color: #555;
-  cursor: pointer;
   -webkit-box-shadow: inset 0px -1px 2px 0px rgba(0, 0, 0, 0.06);
   -moz-box-shadow: inset 0px -1px 2px 0px rgba(0, 0, 0, 0.06);
   box-shadow: inset 0px 0px 2px 0px rgba(0, 0, 0, 0.06);
   font-weight: 600;
+}
+.pagination_item:not(.current) {
+  cursor: pointer;
 }
 .pagination > .pagination_item:hover:not(.current) {
   background: #ddd;
