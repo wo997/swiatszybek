@@ -463,7 +463,7 @@ function createTable(table) {
   // lang: {subject, main_category}
 
   table.awaitId = null;
-  table.currPage = 0;
+  table.currPage = 1;
   table.pageCount = 0;
   table.request = null;
   table.results = [];
@@ -780,12 +780,6 @@ function createTable(table) {
     table.search();
   };
 
-  table.setPageEvent = function (obj, e) {
-    if (e.keyCode == 13) {
-      table.setPage(parseInt(obj.value) - 1);
-    }
-  };
-
   $$(`.${table.name} *[data-param]`).forEach((e) => {
     e.addEventListener("input", function () {
       if (e.tagName.toLowerCase() == "input") table.awaitSearch();
@@ -845,7 +839,7 @@ function createTable(table) {
 
     var paramsJson = JSON.stringify(params);
     if (table.lastParamsJson && table.lastParamsJson != paramsJson) {
-      table.currPage = 0;
+      table.currPage = 1;
     }
     table.lastParamsJson = paramsJson;
 
@@ -932,46 +926,20 @@ function createTable(table) {
         }.search()' style="width: 24px;height: 24px;display: inline-flex;justify-content: center;align-items: center;"></i>
         </div>`;
 
-        var table_body = output;
-
-        output = "";
-        var range = 3;
-        var mobile = window.innerWidth < 760;
-        if (mobile) range = 1;
-        var center = table.currPage;
-        if (table.currPage < range) center = range;
-        if (table.currPage > table.pageCount - range - 1)
-          center = table.pageCount - range - 1;
-        for (i = 0; i < table.pageCount; i++) {
-          if (
-            i == 0 ||
-            i == table.pageCount - 1 ||
-            (i >= center - range && i <= center + range)
-          ) {
-            if (i == center - range && i > 1) output += " ... ";
-            output += `<div class='pagination_item ${
-              i == table.currPage ? " current" : ``
-            }'
-                      ${
-                        i != table.currPage
-                          ? `onclick="${table.name}.setPage(${i})"`
-                          : ``
-                      } 
-            }>${i + 1}</div>`;
-            if (i == center + range && i < table.pageCount - 2)
-              output += " ... ";
-          }
-        }
-        if (table.pageCount > 20 && !mobile) {
-          output += `<span class='setMyPage'><input class='myPage' type='text' placeholder='Nr strony (1-${table.pageCount})' onkeypress='${table.name}.setPageEvent(this,event)'></span>`;
-        }
-
         if (createList) {
-          table.selectionElement.innerHTML = table_body;
+          table.selectionElement.setContent(output);
         } else {
-          table.paginationElement.innerHTML = output;
-          table.totalRowsElement.innerHTML = res.totalRows;
-          table.tableElement.innerHTML = table_body;
+          createPagination(
+            table.paginationElement,
+            table.currPage,
+            table.pageCount,
+            (i) => {
+              table.currPage = i;
+              table.search();
+            }
+          );
+          table.totalRowsElement.setContent(res.totalRows);
+          table.tableElement.setContent(output);
         }
 
         table.target.findAll("td").forEach((e) => {
@@ -1138,6 +1106,65 @@ function createTable(table) {
   }
 
   window[table.name] = table;
+}
+
+setPageEvent = function (obj, e) {
+  if (e.keyCode == 13) {
+    table.setPage(parseInt(obj.value) - 1);
+  }
+};
+
+// reacting to enter key built in create pagination, so that there is only one callback needed
+function createPagination(paginationElement, currPage, pageCount, callback) {
+  var output = "";
+  var range = 3;
+  var mobile = window.innerWidth < 760;
+  if (mobile) range = 1;
+  var center = currPage;
+  if (currPage < range + 1) center = range + 1;
+  if (currPage > pageCount - range) center = pageCount - range;
+  for (i = 1; i <= pageCount; i++) {
+    if (
+      i == 1 ||
+      i == pageCount ||
+      (i >= 1 + center - range && i <= 1 + center + range)
+    ) {
+      if (i == 1 + center - range && i > 2) {
+        output += " ... ";
+      }
+      output += `<div data-index='${i}' class='pagination_item ${
+        i == currPage ? " current" : ``
+      }'>${i}</div>`;
+      if (i == 1 + center + range && i < pageCount - 1) output += " ... ";
+    }
+  }
+  if (pageCount > 20 && !mobile) {
+    output += `<span class='setMyPage'><input class='myPage' type='number' placeholder='Nr strony (1-${pageCount})'></span>`;
+  }
+
+  const getSafePageIndex = (i, pageCount) => {
+    if (i < 1) return 1;
+    if (i > pageCount) return pageCount;
+    return i;
+  };
+
+  paginationElement.setContent(output);
+  paginationElement.findAll(".pagination_item").forEach((elem) => {
+    var i = parseInt(elem.getAttribute("data-index"));
+    i = getSafePageIndex(i, pageCount);
+    elem.addEventListener("click", () => {
+      callback(i);
+    });
+  });
+  paginationElement.findAll(".myPage").forEach((elem) => {
+    elem.addEventListener("keypress", (event) => {
+      if (event.code == "Enter") {
+        var i = parseInt(elem.value);
+        i = getSafePageIndex(i, pageCount);
+        callback(i);
+      }
+    });
+  });
 }
 
 var tableRearrange = {};

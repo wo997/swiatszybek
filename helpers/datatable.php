@@ -99,8 +99,11 @@ function getTableData($data = null)
         }
     }
     unset($result);
-
-    $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
+    $results = array_merge($results, $results);
+    $results = array_merge($results, $results);
+    $results = array_merge($results, $results);
+    $results = array_merge($results, $results);
+    $responseArray = ["pageCount" => 16 * $pageCount, "totalRows" => 16 * $totalRows, "results" => $results];
 
     return isset($data["raw"]) ? $responseArray : json_encode($responseArray);
 }
