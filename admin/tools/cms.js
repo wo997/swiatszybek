@@ -67,7 +67,7 @@ function pasteBlock(input) {
     } else {
       if (cmsTarget) {
         cmsTarget
-          .$(".cms-container-content")
+          .find(".cms-container-content")
           .insertAdjacentHTML("beforeend", v);
       }
     }
@@ -145,7 +145,7 @@ function saveModule(button) {
   module.formClose();
   hideParentModal(button);
 
-  var c = cmsTarget.$(".module-content"); // force update
+  var c = cmsTarget.find(".module-content"); // force update
   if (c) removeNode(c);
 }
 
@@ -155,10 +155,10 @@ function editBlock() {
     editModule(cmsTarget);
     return;
   }
-  var block_content = cmsTarget.$(".cms-block-content");
+  var block_content = cmsTarget.find(".cms-block-content");
   quillEditor.open(block_content, {
     wrapper: cmsTarget,
-    colorNode: cmsTarget.$(".background-color"),
+    colorNode: cmsTarget.find(".background-color"),
     callback: () => {
       postSaveCmsBlock();
     },
@@ -216,7 +216,7 @@ function addBlock(content = "", container = null, placeAfter = true) {
   awaitingScroll = true;
   if (container) {
     container
-      .$(".cms-container-content")
+      .find(".cms-container-content")
       .insertAdjacentHTML(
         placeAfter ? "beforeend" : "afterbegin",
         getBlock(content)
@@ -490,13 +490,13 @@ function editCMS(t) {
   removeContent(cms);
   cms.insertAdjacentHTML("afterbegin", cmsSource.innerHTML);
 
-  cms.$$(".cms").forEach((e) => {
+  cms.findAll(".cms").forEach((e) => {
     e.outerHTML = e.innerHTML;
   });
   // we should be checking the structure on dom load, including migrations
 
   $$("#cms .cms-block[data-module]").forEach((e) => {
-    var c = e.$(".module-content");
+    var c = e.find(".module-content");
     if (c) removeNode(c);
   });
 
@@ -508,13 +508,13 @@ function editCMS(t) {
   cmsUpdate();
 
   // cleaning up global css and js
-  cmsSource.$$(`style`).forEach((elem) => {
+  cmsSource.findAll(`style`).forEach((elem) => {
     elem.outerHTML = elem.outerHTML
       .replace(`<style>`, "<styleDisabled>")
       .replace(`</style>`, "</styleDisabled>");
   });
 
-  cmsSource.$$(`script`).forEach((elem) => {
+  cmsSource.findAll(`script`).forEach((elem) => {
     elem.outerHTML = elem.outerHTML
       .replace(`<script>`, "<scriptDisabled>")
       .replace(`</script>`, "</scriptDisabled>");
@@ -558,7 +558,7 @@ function cmsUpdate() {
     });
 
     if (block.getAttribute("data-module") == "custom-html") {
-      const content = block.$(".cms-block-content");
+      const content = block.find(".cms-block-content");
       addMissingDirectChildren(
         content,
         (c) => c.classList.contains("html-container"),
@@ -615,7 +615,7 @@ function cmsUpdate() {
   }
 
   $$("#cms .cms-container").forEach((e) => {
-    if (!e.$(".cms-block")) {
+    if (!e.find(".cms-block")) {
       setTimeout(() => {
         addBlock("", e);
       }, 100);
@@ -623,7 +623,7 @@ function cmsUpdate() {
   });
 
   $$("#cms .cms-block[data-module]").forEach((e) => {
-    var c = e.$(".module-content");
+    var c = e.find(".module-content");
     if (!c) {
       var moduleName = e.getAttribute("data-module");
       var module = modules[moduleName];
@@ -634,7 +634,7 @@ function cmsUpdate() {
       } catch {}
 
       if (module && module.render) {
-        e.$(".cms-block-content").innerHTML = `
+        e.find(".cms-block-content").innerHTML = `
                         <div class="module-content">
                             <div>
                                 ${module.icon} ${module.description}
@@ -670,7 +670,7 @@ function editContainerSettings() {
     var attribute = e.getAttribute("data-attribute");
     var selectChild = e.getAttribute("data-target");
     if (selectChild) {
-      targets = targets.$(selectChild);
+      targets = targets.find(selectChild);
     }
     if (e.type == "checkbox") {
       e.checked = targets.hasAttribute(`data-${attribute}`);
@@ -679,7 +679,7 @@ function editContainerSettings() {
 
       var group = findParentByAttribute(e, "data-select-group");
       if (group) {
-        var option = group.$(`[data-option="${e.value}"]`);
+        var option = group.find(`[data-option="${e.value}"]`);
         if (option) {
           option.click();
         }
@@ -695,7 +695,7 @@ function editContainerSettings() {
 function selectInGroup(option) {
   var group = findParentByAttribute(option, "data-select-group");
 
-  var input = group.$("input");
+  var input = group.find("input");
   if (!input) return;
   input.value = option.getAttribute("data-option");
 
@@ -719,7 +719,7 @@ function editBlockSettings() {
     var targets = cmsTarget;
     var selectChild = e.getAttribute("data-target");
     if (selectChild) {
-      targets = targets.$(selectChild);
+      targets = targets.find(selectChild);
     }
     var defaultValue = e.getAttribute("data-default-value");
     var value = targets.getAttribute(`data-${attribute}`);
@@ -757,7 +757,7 @@ function saveBlockAttributes(parent) {
     var targets = cmsTarget;
     var selectChild = e.getAttribute("data-target");
     if (selectChild) {
-      targets = targets.$(selectChild);
+      targets = targets.find(selectChild);
     }
 
     if (e.type == "checkbox") {
@@ -829,9 +829,9 @@ function saveBlockAnimation() {
 }
 
 function editCMSBorder() {
-  var target = cmsTarget.$(".cms-container-content");
+  var target = cmsTarget.find(".cms-container-content");
   if (!target) {
-    target = cmsTarget; //.$(".cms-block-content");
+    target = cmsTarget; //.find(".cms-block-content");
   }
   if (!target) return;
 
@@ -877,9 +877,9 @@ function updateBorderPreview() {
 function saveCMSBorder() {
   var preview = $("#cmsBorder .borderPreview");
 
-  var target = cmsTarget.$(".cms-container-content");
+  var target = cmsTarget.find(".cms-container-content");
   if (!target) {
-    target = cmsTarget; //.$(".cms-block-content");
+    target = cmsTarget; //.find(".cms-block-content");
   }
   if (!target) {
     return false;
@@ -906,7 +906,7 @@ function editCMSBackground() {
 
   var background = $(".cmsBlockBackgroundPreview");
   var color = $(".cmsBlockBackgroundPreview .background-color");
-  var cmstargetColor = target.$(".background-color");
+  var cmstargetColor = target.find(".background-color");
   background.style.backgroundImage = target.style.backgroundImage;
 
   var col = color.style.backgroundColor;
@@ -950,7 +950,7 @@ function saveCMSBackground() {
 
   var background = $(".cmsBlockBackgroundPreview");
   var color = $(".cmsBlockBackgroundPreview .background-color");
-  var cmstargetColor = cmsTarget.$(".background-color");
+  var cmstargetColor = cmsTarget.find(".background-color");
   cmsTarget.style.backgroundImage = background.style.backgroundImage;
   cmstargetColor.style.backgroundColor = color.style.backgroundColor;
   cmstargetColor.style.opacity = color.style.opacity;

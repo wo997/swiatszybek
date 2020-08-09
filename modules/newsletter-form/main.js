@@ -3,7 +3,7 @@ function sendNews(form) {
   var email = form.email.value;
 
   if (email == "") {
-    form.$(".uzupelnij").style.display = "inline-block";
+    form.find(".uzupelnij").style.display = "inline-block";
     return;
   }
 

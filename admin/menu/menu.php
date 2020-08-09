@@ -195,9 +195,9 @@
         if (data.product_id) tab_id = 3;
         showTab($(".tab-menu-link"), tab_id);
 
-        formElement.$(".caseCanDelete").classList.toggle("hidden", isNew);
-        toggleDisabled(formElement.$(`.btn.red`), !canDelete);
-        formElement.$(".btn.red + i").classList.toggle("hidden", canDelete);
+        formElement.find(".caseCanDelete").classList.toggle("hidden", isNew);
+        toggleDisabled(formElement.find(`.btn.red`), !canDelete);
+        formElement.find(".btn.red + i").classList.toggle("hidden", canDelete);
 
         clearValidateRequired();
     }

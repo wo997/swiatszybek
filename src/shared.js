@@ -87,7 +87,7 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   $$(".expandClick").forEach((e) => {
-    e.$(".expandHeader").addEventListener("click", () => {
+    e.find(".expandHeader").addEventListener("click", () => {
       e.classList.toggle("expanded");
     });
   });
@@ -113,8 +113,8 @@ window.mobilecheck = function () {
 document.addEventListener("DOMContentLoaded", function () {
   if (!mobilecheck()) {
     $$(".navbar_wrapper .dropdown").forEach((e) => {
-      var a = e.$("a");
-      var u = e.$(".dropdown-header");
+      var a = e.find("a");
+      var u = e.find(".dropdown-header");
       if (a && u) {
         u.addEventListener("click", () => {
           window.location = a.href;
@@ -619,15 +619,15 @@ function createTable(table) {
   } else {
     table.target.insertAdjacentHTML("afterbegin", justTable);
   }
-  table.searchElement = table.target.$(".search-wrapper");
-  table.tableElement = table.target.$(".table-wrapper");
-  table.totalRowsElement = table.target.$(".total-rows");
-  table.paginationElement = table.target.$(".pagination");
-  table.selectionElement = table.target.$(".selectedRows");
-  table.selectionValueElement = table.target.$(".table-selection-value");
+  table.searchElement = table.target.find(".search-wrapper");
+  table.tableElement = table.target.find(".table-wrapper");
+  table.totalRowsElement = table.target.find(".total-rows");
+  table.paginationElement = table.target.find(".pagination");
+  table.selectionElement = table.target.find(".selectedRows");
+  table.selectionValueElement = table.target.find(".table-selection-value");
 
   if (table.tree_view) {
-    table.breadcrumbElement = table.target.$(".breadcrumb");
+    table.breadcrumbElement = table.target.find(".breadcrumb");
 
     table.getParentId = () => {
       if (table.breadcrumb.length == 0) return -1;
@@ -974,7 +974,7 @@ function createTable(table) {
           table.tableElement.innerHTML = table_body;
         }
 
-        table.target.$$("td").forEach((e) => {
+        table.target.findAll("td").forEach((e) => {
           if (
             //e.classList.contains("tooltipable") &&
             getNodeTextWidth(e) >
@@ -1017,10 +1017,10 @@ function createTable(table) {
       if (table.hasMetadata) {
         try {
           Object.entries(table.metadata).forEach(([key, value]) => {
-            var row = table.selectionElement.$(`[data-primary="${key}"]`);
+            var row = table.selectionElement.find(`[data-primary="${key}"]`);
             if (row) {
               Object.entries(value).forEach(([key, value]) => {
-                var m = row.$(`[data-metadata="${key}"]`);
+                var m = row.find(`[data-metadata="${key}"]`);
                 if (m) m.value = value;
               });
             }
@@ -1052,7 +1052,7 @@ function createTable(table) {
       } else return;
     }
 
-    removeNode(table.target.$(`[data-primary='${data_id}']`));
+    removeNode(table.target.find(`[data-primary='${data_id}']`));
     table.selectionChange();
   };
   table.addRow = (data_id) => {
@@ -1068,9 +1068,9 @@ function createTable(table) {
       } else {
         table.selection.push(data_id);
       }
-      var x = table.target.$(`[data-primary='${data_id}']`);
-      table.selectionElement.$("tbody").appendChild(x);
-      var d = x.$(".fa-plus-circle");
+      var x = table.target.find(`[data-primary='${data_id}']`);
+      table.selectionElement.find("tbody").appendChild(x);
+      var d = x.find(".fa-plus-circle");
       d.outerHTML = d.outerHTML
         .replace("plus", "minus")
         .replace("addRow", "removeRow");
@@ -1082,19 +1082,19 @@ function createTable(table) {
       table.registerMetadataFields();
     }
 
-    var e = table.selectionElement.$(".no-results");
-    if (e) e.style.display = table.selectionElement.$("td") ? "none" : "";
-    var e = table.target.$(".table-search-container .no-results");
+    var e = table.selectionElement.find(".no-results");
+    if (e) e.style.display = table.selectionElement.find("td") ? "none" : "";
+    var e = table.target.find(".table-search-container .no-results");
     if (e)
-      e.style.display = table.target.$(".table-search-container td")
+      e.style.display = table.target.find(".table-search-container td")
         ? "none"
         : "";
 
     if (table.hasMetadata) {
       var metadata = {};
-      table.selectionElement.$$("tr[data-primary]").forEach((e) => {
+      table.selectionElement.findAll("tr[data-primary]").forEach((e) => {
         var row = {};
-        e.$$("[data-metadata]").forEach((m) => {
+        e.findAll("[data-metadata]").forEach((m) => {
           row[m.getAttribute("data-metadata")] = m.value;
         });
         metadata[parseInt(e.getAttribute("data-primary"))] = row;
@@ -1103,7 +1103,7 @@ function createTable(table) {
     }
 
     var selection = [];
-    table.selectionElement.$$("[data-primary]").forEach((e) => {
+    table.selectionElement.findAll("[data-primary]").forEach((e) => {
       selection.push(parseInt(e.getAttribute("data-primary")));
     });
 
@@ -1116,9 +1116,9 @@ function createTable(table) {
   if (table.hasMetadata) {
     table.metadataChange = () => {
       var out = {};
-      table.selectionElement.$$("tr[data-primary]").forEach((e) => {
+      table.selectionElement.findAll("tr[data-primary]").forEach((e) => {
         var row = {};
-        e.$$("[data-metadata]").forEach((m) => {
+        e.findAll("[data-metadata]").forEach((m) => {
           row[m.getAttribute("data-metadata")] = m.value;
         });
         out[e.getAttribute("data-primary")] = row;
@@ -1126,7 +1126,7 @@ function createTable(table) {
       table.selectionChange();
     };
     table.registerMetadataFields = () => {
-      table.selectionElement.$$("[data-metadata]").forEach((m) => {
+      table.selectionElement.findAll("[data-metadata]").forEach((m) => {
         m.oninput = () => {
           table.metadataChange();
         };
@@ -1145,7 +1145,7 @@ var tableRearrange = {};
 window.addEventListener("dragstart", (event) => {
   if (event.target.tagName == "TR") {
     tableRearrange.source = event.target;
-    tableRearrange.placeFrom = tableRearrange.source.$(".kolejnosc").value;
+    tableRearrange.placeFrom = tableRearrange.source.find(".kolejnosc").value;
   }
   if (tableRearrange.source && tableRearrange.source.classList) {
     tableRearrange.source.classList.add("grabbed");
@@ -1154,7 +1154,7 @@ window.addEventListener("dragstart", (event) => {
 
 window.addEventListener("dragend", () => {
   if (tableRearrange.source) {
-    var input = tableRearrange.source.$(".kolejnosc");
+    var input = tableRearrange.source.find(".kolejnosc");
     input.value = tableRearrange.placeTo;
     rearrange(input);
   }
@@ -1234,7 +1234,7 @@ window.addEventListener("dragover", (event) => {
     tableRearrange.element.style.height = h + "px";
     tableRearrange.element.classList.add("tableRearrange");
     tableRearrange.placeTo =
-      +tableRearrange.target.$(".kolejnosc").value + isAfter * 1;
+      +tableRearrange.target.find(".kolejnosc").value + isAfter * 1;
     if (tableRearrange.placeTo > tableRearrange.placeFrom)
       tableRearrange.placeTo--;
   }
@@ -1468,7 +1468,7 @@ function showModal(name = null, params = {}) {
   m.classList.toggle("displayModal", visible);
   if (visible) {
     var total = 0;
-    m.$$(".modal-content > *").forEach((e) => {
+    m.findAll(".modal-content > *").forEach((e) => {
       var shownow = false;
       if (e.id == name && e.style.display == "none") {
         e.style.display = "";
@@ -1478,7 +1478,7 @@ function showModal(name = null, params = {}) {
 
       if (shownow) {
         var node = e;
-        m.$(".modal-content").appendChild(node);
+        m.find(".modal-content").appendChild(node);
         if (params.source) {
           var r = params.source.getBoundingClientRect();
           var p = $(".modal-content").getBoundingClientRect();
@@ -1583,7 +1583,7 @@ function hideModal(name, isCancel = false) {
   }
 
   var visibleModalCount = 0;
-  m.$$(".modal-content > *").forEach((e) => {
+  m.findAll(".modal-content > *").forEach((e) => {
     if (e.style.display == "" && e.style.animation == "") visibleModalCount++;
   });
 
@@ -1620,7 +1620,7 @@ function isModalActive(name) {
 
 function $(node, parent = null) {
   if (!node) return null;
-  if (node.$) return node;
+  if (node.find) return node;
 
   if (parent === null) {
     parent = document;
@@ -1629,10 +1629,10 @@ function $(node, parent = null) {
   // query selector or html node
   node = typeof node == "string" ? parent.querySelector(node) : node;
   if (!node) return null;
-  node.$ = (query) => {
+  node.find = (query) => {
     return $(query, node);
   };
-  node.$$ = (query) => {
+  node.findAll = (query) => {
     return $$(query, node);
   };
   node.setValue = (value) => {
@@ -1694,6 +1694,18 @@ function $(node, parent = null) {
     return window.isInNode(node, parent);
   };
 
+  node.removeNode = () => {
+    return window.removeNode(node);
+  };
+
+  node.removeContent = () => {
+    return window.removeContent(node);
+  };
+
+  node.setContent = (html = "") => {
+    return window.setContent(node, html);
+  };
+
   return node;
 }
 function $$(querySelectorAll, parent = null) {
@@ -1715,7 +1727,7 @@ function validateForm(params) {
 
   var elem = params.form ? params.form : document;
 
-  var fields = elem.$$("[data-validate]");
+  var fields = elem.findAll("[data-validate]");
   for (field of fields) {
     if (params.hiddenClassList) {
       // if any parant has a class like one of these ignore that field
@@ -1753,9 +1765,9 @@ function getValidationTarget(field) {
 }
 
 function toggleFieldCorrect(field, isCorrect) {
-  var ok = field.parent().$(".correct");
+  var ok = field.parent().find(".correct");
   if (ok) ok.style.display = isCorrect ? "block" : "";
-  var wrong = field.parent().$(".wrong");
+  var wrong = field.parent().find(".wrong");
   if (wrong) wrong.style.display = isCorrect ? "" : "block";
 }
 
@@ -1857,7 +1869,7 @@ function setValue(input, value) {
     if (type == "html") {
       var pointChild = input.getAttribute("data-point-child");
       if (pointChild) {
-        input = input.$(pointChild);
+        input = input.find(pointChild);
       }
       input.innerHTML = value;
 
@@ -1891,7 +1903,7 @@ function getValue(input) {
     if (type == "html") {
       var pointChild = input.getAttribute("data-point-child");
       if (pointChild) {
-        input = input.$(pointChild);
+        input = input.find(pointChild);
       }
       return input.innerHTML;
     } else if (type == "src") {
@@ -2038,7 +2050,7 @@ function scrollToBottom(node) {
 function setFormData(data, form = null) {
   if (!form) form = document;
   Object.entries(data).forEach(([name, value]) => {
-    var e = $(form).$(`[name="${name}"]`);
+    var e = $(form).find(`[name="${name}"]`);
     if (e && e.tagName == "SELECT") {
       if (![...e.options].find((e) => e.value == value)) {
         return;
@@ -2060,7 +2072,7 @@ function getFormData(form = null) {
   form = $(form);
   var excludeHidden = form.hasAttribute("data-exclude-hidden");
   $(form)
-    .$$(`[name]`)
+    .findAll(`[name]`)
     .forEach((e) => {
       if (excludeHidden && findParentByClassName(e, ["hidden"])) return;
       data[e.getAttribute("name")] = getValue(e);
@@ -2117,10 +2129,10 @@ function setCategoryPickerValues(element, values, params = {}) {
     return;
   }
   element = $(element);
-  element.$$(".expandY").forEach((e) => {
+  element.findAll(".expandY").forEach((e) => {
     e.classList.add("hidden");
   });
-  element.$$(".expand").forEach((e) => {
+  element.findAll(".expand").forEach((e) => {
     e.classList.remove("open");
   });
 
@@ -2129,7 +2141,7 @@ function setCategoryPickerValues(element, values, params = {}) {
     values = values.map((e) => e.toString());
   }
   var example = null;
-  element.$$("[data-category_id]").forEach((e) => {
+  element.findAll("[data-category_id]").forEach((e) => {
     if (!example) example = e;
 
     toggleDisabled(e, false);
@@ -2153,7 +2165,7 @@ function setCategoryPickerValues(element, values, params = {}) {
 
   if (params.disable) {
     params.disable.forEach((i) => {
-      var el = element.$(`[data-category_id="${i}"]`);
+      var el = element.find(`[data-category_id="${i}"]`);
       if (el) {
         toggleDisabled(el, true);
         el.checked = false;
@@ -2162,14 +2174,14 @@ function setCategoryPickerValues(element, values, params = {}) {
   }
   if (params.disable_with_children) {
     params.disable_with_children.forEach((i) => {
-      var el = element.$(`[data-category_id="${i}"]`);
+      var el = element.find(`[data-category_id="${i}"]`);
       if (el) {
         toggleDisabled(el, true);
         el.checked = false;
         el.parent()
           .parent()
           .next()
-          .$$("[data-category_id]")
+          .findAll("[data-category_id]")
           .forEach((xu) => {
             toggleDisabled(xu, true);
             xu.checked = false;
@@ -2188,7 +2200,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
     );
     if (parent) {
       var nodeExpander = parent.next();
-      if (nodeExpander && parent.$(".expand")) {
+      if (nodeExpander && parent.find(".expand")) {
         return expandCategoriesAbove(nodeExpander, false);
       }
     }
@@ -2198,7 +2210,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
   while (true) {
     var parent = findParentByClassName(parent, "expandY", "categories");
     if (!parent) break;
-    var btn = parent.prev().$(".btn");
+    var btn = parent.prev().find(".btn");
     if (!btn) break;
     expandWithArrow(btn.parent().next(), btn, {
       duration: 0,
@@ -2213,17 +2225,17 @@ function categoryChanged(el) {
   var singleselect = element.getAttribute("data-select") == "single";
   if (singleselect) {
     if (el.checked) {
-      element.$$("[data-category_id]").forEach((e) => {
+      element.findAll("[data-category_id]").forEach((e) => {
         if (e != el) e.checked = false;
       });
-    } else if (!element.$("[data-category_id]:checked")) {
+    } else if (!element.find("[data-category_id]:checked")) {
       el.checked = true;
     }
   }
 
   var value = "";
   if (singleselect) {
-    element.$$("[data-category_id]").forEach((e) => {
+    element.findAll("[data-category_id]").forEach((e) => {
       if (e.checked) {
         value = parseInt(e.getAttribute("data-category_id"));
         return;
@@ -2231,7 +2243,7 @@ function categoryChanged(el) {
     });
   } else {
     checked = [];
-    element.$$("[data-category_id]").forEach((e) => {
+    element.findAll("[data-category_id]").forEach((e) => {
       if (e.checked) {
         checked.push(parseInt(e.getAttribute("data-category_id")));
       }
@@ -2241,7 +2253,7 @@ function categoryChanged(el) {
   $(`[name=${name}]`).value = value;
 
   if (el.checked) {
-    var expandWhenClosed = el.parent().parent().$(".expand:not(.open)");
+    var expandWhenClosed = el.parent().parent().find(".expand:not(.open)");
     if (expandWhenClosed) {
       expandWhenClosed.click();
     }
@@ -2274,12 +2286,12 @@ function loadCategoryPicker(
           e.insertAdjacentHTML("afterbegin", c);
 
           if (options.skip) {
-            var kid = e.$(`.category-picker-column `.repeat(options.skip));
+            var kid = e.find(`.category-picker-column `.repeat(options.skip));
             if (kid) {
               e.innerHTML = kid.innerHTML;
             }
           } else {
-            var main = e.$(".category_name");
+            var main = e.find(".category_name");
             if (main)
               main.innerHTML = nonull(
                 options.main_category,
@@ -2288,7 +2300,7 @@ function loadCategoryPicker(
 
             var parent_id = e.getAttribute("scope_parent_id");
             if (parent_id && parent_id != 0) {
-              e.innerHTML = e.$(`[data-parent_id="${parent_id}"]`).outerHTML;
+              e.innerHTML = e.find(`[data-parent_id="${parent_id}"]`).outerHTML;
             }
           }
         }
@@ -2402,10 +2414,10 @@ document.addEventListener("click", (event) => {
 });
 
 function showTab(tab_menu, tab_id) {
-  tab_menu.$$(".tab-header .tab-option").forEach((e) => {
+  tab_menu.findAll(".tab-header .tab-option").forEach((e) => {
     e.classList.toggle("current", e.getAttribute("data-tab_id") == tab_id);
   });
-  tab_menu.$$(".tab-content").forEach((e) => {
+  tab_menu.findAll(".tab-content").forEach((e) => {
     e.classList.toggle("hidden", e.getAttribute("data-tab_id") != tab_id);
   });
 }
@@ -2593,7 +2605,7 @@ function getMiejscowoscPickerTarget(obj) {
     console.warn("miejscowosc picker wrapper missing");
     return;
   }
-  var target = wrapper.$(".miejscowosc-picker-target");
+  var target = wrapper.find(".miejscowosc-picker-target");
   if (!target) {
     console.warn("miejscowosc picker target missing");
     return;
@@ -2608,7 +2620,7 @@ function getMiejscowoscPickerList(obj) {
     console.warn("miejscowosc picker wrapper missing");
     return;
   }
-  var list = wrapper.$(".miejscowosc-picker-list");
+  var list = wrapper.find(".miejscowosc-picker-list");
   if (!list) {
     console.warn("miejscowosc picker list missing");
     return;
@@ -2628,7 +2640,7 @@ function chooseMiejscowosc(obj) {
 window.addEventListener("DOMContentLoaded", () => {
   $$("nav > div").forEach((e) => {
     e.addEventListener("mouseenter", () => {
-      var x = e.$(".float-category");
+      var x = e.find(".float-category");
       if (!x || !x.textContent) return;
       var rect = e.getBoundingClientRect();
 
@@ -2771,9 +2783,9 @@ window.addEventListener("DOMContentLoaded", function () {
 function registerSelectboxes() {
   $$(".selectbox:not(.registered)").forEach((e) => {
     e.classList.add("registered");
-    e.$$("[data-option]").forEach((o) => {
+    e.findAll("[data-option]").forEach((o) => {
       o.addEventListener("click", () => {
-        var i = e.$("input");
+        var i = e.find("input");
         if (i) {
           setValue(i, o.getAttribute("data-option"));
           o.blur();
@@ -2783,9 +2795,9 @@ function registerSelectboxes() {
   });
   /*$$(".selectbox:not(.showhover)").forEach((e) => {
     e.classList.add("showhover");
-    e.$$("[data-option]").forEach((o) => {
+    e.findAll("[data-option]").forEach((o) => {
       o.addEventListener("click", () => {
-        var i = e.$("input");
+        var i = e.find("input");
         if (i) {
           setValue(i, o.getAttribute("data-option"));
         }
@@ -2801,7 +2813,7 @@ function registerTextCounters() {
   $$("[data-show-count]:not(.registered)").forEach((e) => {
     e.classList.add("registered");
     e.addEventListener("change", () => {
-      e.next().$("span").innerHTML = e.value.length;
+      e.next().find("span").innerHTML = e.value.length;
       if (e.value.length > e.getAttribute("data-show-count")) {
         e.next().style.color = "#f00";
         e.next().style.fontWeight = "bold";
@@ -2951,8 +2963,8 @@ function createSimpleList(params = {}) {
 
     [...listTarget.children].forEach((simpleListRowWrapper) => {
       $(simpleListRowWrapper)
-        .$(".simple-list-row")
-        .$$("[data-list-param]")
+        .find(".simple-list-row")
+        .findAll("[data-list-param]")
         .forEach((e) => {
           var param = e.getAttribute("data-list-param");
           if (
@@ -3008,16 +3020,18 @@ function createSimpleList(params = {}) {
 
     list.valuesChanged();
 
-    list.target.$$("[data-list-param]:not(.param-registered)").forEach((e) => {
-      e.classList.add("param-registered");
+    list.target
+      .findAll("[data-list-param]:not(.param-registered)")
+      .forEach((e) => {
+        e.classList.add("param-registered");
 
-      e.addEventListener("change", () => {
-        list.valuesChanged();
+        e.addEventListener("change", () => {
+          list.valuesChanged();
+        });
       });
-    });
 
     var n = begin ? 0 : listTarget.children.length - 1;
-    return listTarget.children[n].$(".list");
+    return listTarget.children[n].find(".list");
   };
 
   list.valuesChanged = () => {
@@ -3028,15 +3042,15 @@ function createSimpleList(params = {}) {
           values: {},
         };
         $(simpleListRowWrapper)
-          .$(".simple-list-row")
-          .$$("[data-list-param]")
+          .find(".simple-list-row")
+          .findAll("[data-list-param]")
           .forEach((e) => {
             var param = e.getAttribute("data-list-param");
             row.values[param] = getValue(e);
           });
         if (level < list.recursive) {
           row.children = getDirectRows(
-            $(simpleListRowWrapper).$(".sub-list > .list"),
+            $(simpleListRowWrapper).find(".sub-list > .list"),
             level++
           );
         }

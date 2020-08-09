@@ -45,6 +45,9 @@ foreach ($variants as $variant) {
 }
 
 $gallery = json_decode($product_data["gallery"], true);
+if (!$gallery) {
+  $gallery = [];
+}
 
 $galleryhtml = "";
 $gallerythumbshtml = "";

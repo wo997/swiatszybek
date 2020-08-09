@@ -172,9 +172,9 @@ function showCategory($category, $level = 0)
       var attribute_value_ids = [];
       $$(".combo-select-wrapper[data-attribute_id]").forEach(list => {
         var attribute_value_sub_ids = [];
-        list.$$(":checked").forEach(checkbox => {
-          var subCheckboxes = checkbox.findParentByClassName("attributes-list-wrapper").$(".attribute-list");
-          var anySubChecked = subCheckboxes ? subCheckboxes.$(":checked") : false;
+        list.findAll(":checked").forEach(checkbox => {
+          var subCheckboxes = checkbox.findParentByClassName("attributes-list-wrapper").find(".attribute-list");
+          var anySubChecked = subCheckboxes ? subCheckboxes.find(":checked") : false;
           if (!anySubChecked) {
             attribute_value_sub_ids.push(checkbox.value);
           }
@@ -189,7 +189,7 @@ function showCategory($category, $level = 0)
           attribute_value_ids: JSON.stringify(attribute_value_ids)
         },
         success: (res) => {
-          console.log(res);
+          $(".products").setContent(res);
         }
       })
     }

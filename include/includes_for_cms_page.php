@@ -21,7 +21,7 @@
                 var a = e.getAttribute("data-animation");
                 e.removeAttribute("data-animation");
 
-                e = e.$(".cms-block-content");
+                e = e.find(".cms-block-content");
                 if (a.indexOf("m_left") != -1) {
                     e.style.transform = "translate(100px,0)";
                 }
@@ -109,7 +109,7 @@
 
         if (window.innerWidth < 768) {
             $$("table").forEach(table => {
-                var header = table.$("tr").$$("td");
+                var header = table.find("tr").findAll("td");
                 if (header.length <= 2) return;
                 //if (header[0].innerText.trim() != "") return;
                 var headers = [];
@@ -118,9 +118,9 @@
                     headers.push(header[i].textContent ? "<div style='font-weight:bold;display:inline-block'>" + h + " </div>" : "");
                 }
                 var out = "";
-                var rows = table.$("tr");
+                var rows = table.find("tr");
                 for (i = 1; i < rows.length; i++) {
-                    var cells = rows[i].$("td");
+                    var cells = rows[i].find("td");
                     for (a = 0; a < cells.length; a++) {
                         out += "<div style='margin:8px 0; margin-right:5px'>" + headers[a] + "<div style='display:inline-block'>" + cells[a].innerHTML + "</div> </div>";
                     }

@@ -125,7 +125,8 @@ unset($admin_navigations_branch);
 
 $deployment_routes = [
   "deployment/build",
-  "deployment/migrate"
+  "deployment/migrate",
+  "deployment/warmup_cache"
 ];
 
 $routes = [];

@@ -49,6 +49,7 @@ function getTableData($data = null)
 
     optional params:
     - renderers
+    - raw (return array)
   */
 
     $rowCount = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 20;
@@ -79,6 +80,8 @@ function getTableData($data = null)
         $countQuery = "SELECT COUNT(*) FROM($countQuery) t";
     }
 
+    //var_dump($countQuery);die;
+
     $totalRows = fetchValue($countQuery);
     $pageCount = $rowCount > 0 ? ceil($totalRows / $rowCount) : 0;
 
@@ -97,7 +100,9 @@ function getTableData($data = null)
     }
     unset($result);
 
-    return json_encode(["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results]);
+    $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
+
+    return isset($data["raw"]) ? $responseArray : json_encode($responseArray);
 }
 
 function getListCondition($field, $filter)

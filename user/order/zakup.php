@@ -515,7 +515,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       $$(`[name*="_kurier"]`).forEach(e => {
         e.addEventListener("change", () => {
           var name = e.getAttribute("name").replace("_kurier", "_dostawa");
-          var input = form.$(`input[name="${name}"]`);
+          var input = form.find(`input[name="${name}"]`);
           if (input) {
             setValue(input, e.value);
           }

@@ -46,9 +46,9 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   useTool("cms");
 
   function comboSelectValuesChanged(combo) {
-    combo.$$("select").forEach(select => {
+    combo.findAll("select").forEach(select => {
       for (option of select.options) {
-        var childSelect = combo.$(`select[data-parent_value_id="${option.value}"]`);
+        var childSelect = combo.find(`select[data-parent_value_id="${option.value}"]`);
         if (!childSelect) continue;
         if (option.value == select.value) {
           childSelect.classList.remove("hidden");
@@ -63,7 +63,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   function registerComboSelects() {
     $$(".combo-select-wrapper").forEach(combo => {
 
-      combo.$$("select:not(.registered)").forEach(select => {
+      combo.findAll("select:not(.registered)").forEach(select => {
         select.classList.add("registered");
 
         select.addEventListener("change", () => {
@@ -78,15 +78,15 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
   }
 
   function optionalValueChanged(optional) {
-    var checkbox = optional.$(`input[type="checkbox"]`);
-    var input = optional.$(`.field`);
+    var checkbox = optional.find(`input[type="checkbox"]`);
+    var input = optional.find(`.field`);
 
     input.classList.toggle("hidden", !checkbox.checked);
   }
 
   function registerOptionalValues() {
     $$(".optional-value-wrapper").forEach(optional => {
-      var checkbox = optional.$(`input[type="checkbox"]:not(.registered)`);
+      var checkbox = optional.find(`input[type="checkbox"]:not(.registered)`);
       if (!checkbox) return;
       checkbox.classList.add("registered");
       checkbox.addEventListener("change", () => {
@@ -309,7 +309,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       success: (res) => {
         var data = JSON.parse(res);
         $$(".combo-select-wrapper").forEach(combo => {
-          combo.$$("select").forEach(select => {
+          combo.findAll("select").forEach(select => {
             var option = [...select.options].find(o => {
               return data.attribute_selected_values.indexOf(parseInt(o.value)) !== -1
             });
@@ -322,14 +322,14 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
         for (attribute of data.attribute_values) {
           var wrapper = findParentByClassName(`[name="attribute_values[${attribute.attribute_id}]"]`, "optional-value-wrapper");
-          setValue(wrapper.$(`input[type="checkbox"]`), 0);
+          setValue(wrapper.find(`input[type="checkbox"]`), 0);
         }
 
         for (attribute of data.attribute_values) {
           setValue($(`[name="attribute_values[${attribute.attribute_id}]"]`), attribute[attribute_data_types[attribute.data_type].field]);
 
           var wrapper = findParentByClassName(`[name="attribute_values[${attribute.attribute_id}]"]`, "optional-value-wrapper");
-          setValue(wrapper.$(`input[type="checkbox"]`), 1);
+          setValue(wrapper.find(`input[type="checkbox"]`), 1);
         }
 
         setModalInitialState(formName);

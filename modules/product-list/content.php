@@ -1,12 +1,11 @@
   <?php
 
-  $shared_where = "p.published = 1 AND v.published = 1";
-  $where = "WHERE " . $shared_where;
+  $shared_where = "p.published = 1"; // AND v.published = 1";
+  $where = $shared_where;
+  $join = "";
 
   $product_list_count = nonull($moduleParams, "product_list_count", 8);
 
-  $join = "";
-  $join .= "INNER JOIN variant v USING(product_id)";
   if (isset($moduleParams["category_ids"])) {
     if (is_array($moduleParams["category_ids"])) {
       $category_ids =  $moduleParams["category_ids"] = array_filter($moduleParams["category_ids"], function ($id) {
@@ -19,12 +18,43 @@
     }
   }
 
-  $products = fetchArray("SELECT product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating
-FROM products p $join $where ORDER BY product_id DESC LIMIT " . intval($product_list_count));
+  $hasAnyAttribute = false;
+  if (isset($moduleParams["attribute_value_ids"])) {
+    $attribute_value_ids = json_decode($moduleParams["attribute_value_ids"]);
+
+    if ($attribute_value_ids) {
+      foreach ($attribute_value_ids as $attribute_value_sub_ids) {
+        $subAttributeValues = "";
+        foreach ($attribute_value_sub_ids as $attribute_value_id) {
+          $subAttributeValues .= "$attribute_value_id,";
+        }
+        if ($subAttributeValues) {
+          $hasAnyAttribute = true;
+          $where .= " AND value_id IN(" . rtrim($subAttributeValues, ",") . ")";
+        }
+      }
+    }
+  }
+
+  if ($hasAnyAttribute) {
+    $join .= " INNER JOIN variant v USING(product_id) INNER JOIN link_variant_attribute_value a USING(variant_id)";
+  }
+
+  $products = getTableData([
+    "select" => "product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating",
+    "from" => "products p $join",
+    "where" => $where,
+    "order" => "product_id DESC",
+    "group" => "product_id",
+    "raw" => true,
+  ]);
+
+  //$products = fetchArray("SELECT product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating
+  //FROM products p $join $where ORDER BY product_id DESC LIMIT " . intval($product_list_count));
 
   $total = 0;
   $res = "";
-  foreach ($products as $product) {
+  foreach ($products["results"] as $product) {
     $priceText = $product["price_min"];
     if (!empty($product["price_max"]) && $product["price_min"] != $product["price_max"])
       $priceText .= " - " . $product["price_max"];

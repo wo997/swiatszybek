@@ -1,9 +1,9 @@
 <?php
 
-$base_path = str_replace("\\", "/", getcwd()) . "/";
-$link_route_path = [];
-$link_module_path = [];
-$link_event_paths = [];
+$_base_path = str_replace("\\", "/", getcwd()) . "/";
+$_link_route_path = [];
+$_link_module_path = [];
+$_link_event_paths = [];
 
 function getAnnotation($type, $line)
 {
@@ -14,9 +14,9 @@ function getAnnotation($type, $line)
 
 function processDir($parent_dir)
 {
-    global $base_path, $link_route_path, $link_module_path, $link_event_paths;
+    global $_base_path, $_link_route_path, $_link_module_path, $_link_event_paths;
     $exclude = ["vendor", "uploads"];
-    foreach (scandir($base_path . $parent_dir) as $file) {
+    foreach (scandir($_base_path . $parent_dir) as $file) {
         $path = $parent_dir . $file;
         if (substr($file, 0, 1) == "." || in_array($file, $exclude)) {
             continue;
@@ -30,14 +30,14 @@ function processDir($parent_dir)
         $first_line = nonull(file($path), 0, "");
 
         if ($url = getAnnotation("route", $first_line)) {
-            if (isset($link_route_path[$url])) {
-                echo "⚠️ Routes conflict: <b>$url</b> found in <b>" . $link_route_path[$url] . "</b> and <b>" . $path . "</b><br>";
+            if (isset($_link_route_path[$url])) {
+                echo "⚠️ Routes conflict: <b>$url</b> found in <b>" . $_link_route_path[$url] . "</b> and <b>" . $path . "</b><br>";
             }
-            $link_route_path[$url] = $path;
+            $_link_route_path[$url] = $path;
         } else if ($module_name = getAnnotation("module", $first_line)) {
-            $link_module_path[$module_name] = $path;
+            $_link_module_path[$module_name] = $path;
         } else if ($event = getAnnotation("event", $first_line)) {
-            $link_event_paths[$event][] = "  '$path'";
+            $_link_event_paths[$event][] = "  '$path'";
         }
     }
 }
@@ -49,7 +49,7 @@ processDir("");
 echo "<h3>✅ Scanning annotations completed</h3>";
 
 $out = "<?php return [\n";
-foreach ($link_route_path as $url => $path) {
+foreach ($_link_route_path as $url => $path) {
     $out .= "'$url' => '$path',\n";
 }
 $out .= "];";
@@ -58,7 +58,7 @@ file_put_contents(BUILDS_PATH . "link_route_path.php", $out);
 
 
 $out = "<?php return [\n";
-foreach ($link_module_path as $module_name => $path) {
+foreach ($_link_module_path as $module_name => $path) {
     $out .= "'$module_name' => '$path',\n";
 }
 $out .= "];";
@@ -67,7 +67,7 @@ file_put_contents(BUILDS_PATH . "link_module_path.php", $out);
 
 
 $out = "<?php return [\n";
-foreach ($link_event_paths as $event => $paths_strings) {
+foreach ($_link_event_paths as $event => $paths_strings) {
     $out .= " '$event' => [\n" . implode(",\n", $paths_strings) . "\n ],\n";
 }
 $out .= "];";

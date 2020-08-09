@@ -6,7 +6,7 @@ function sendContact(form) {
   var message = form.message.value;
 
   if (name == "" || email == "" || subject == "" || message == "") {
-    form.$(".uzupelnij").style.display = "inline-block";
+    form.find(".uzupelnij").style.display = "inline-block";
     return;
   }
 

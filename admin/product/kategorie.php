@@ -159,9 +159,9 @@
 
         var canDelete = !data.subcategories;
 
-        formElement.$(".caseCanDelete").classList.toggle("hidden", isNew);
-        toggleDisabled(formElement.$(`.btn.red`), !canDelete);
-        formElement.$(".btn.red + i").classList.toggle("hidden", canDelete);
+        formElement.find(".caseCanDelete").classList.toggle("hidden", isNew);
+        toggleDisabled(formElement.find(`.btn.red`), !canDelete);
+        formElement.find(".btn.red + i").classList.toggle("hidden", canDelete);
 
         clearValidateRequired();
     }
@@ -239,7 +239,7 @@
                 <div class="field-title">Atrybuty produktów kategorii</div>
                 <div class="atrybuty"></div>
 
-                <div class="field-title">Opis górny <button class="btn primary" type="button" onclick='quillEditor.open($("#editCategory .description"));'>Edytuj</button></div>
+                <div class="field-title kupa">Opis górny <button class="btn primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>
                 <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
 
                 <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS($('#editCategory .content'));">Edytuj </button></div>

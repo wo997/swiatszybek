@@ -225,7 +225,7 @@ window.quillEditor = {
     });
   },
   isSelectionInNode: (tagName) => {
-    var sel_node = getSelection().focusNode;
+    var sel_node = $(getSelection().focusNode);
     if (!sel_node) return false;
     if (sel_node.tagName == tagName) return sel_node;
     sel_node = sel_node.parent();
@@ -655,7 +655,7 @@ window.quillEditor = {
       }
 
       static value(node) {
-        var img = node.$("img");
+        var img = node.find("img");
         return {
           value: img.getAttribute("src"),
           width: img.style.width,
@@ -682,10 +682,10 @@ window.quillEditor = {
       }
 
       static value(node) {
-        var n = node.$("i");
+        var n = node.find("i");
         var v = n ? n.className : "";
         return { value: v };
-        //return {value: node.$("img").getAttribute('src')};
+        //return {value: node.find("img").getAttribute('src')};
       }
     }
     CustomIcon.blotName = "customIcon";

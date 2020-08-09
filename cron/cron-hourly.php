@@ -11,7 +11,8 @@ function sendPaymentNotification($delayHours = 5)
 
     $zamowienia = fetchArray(
         "SELECT zamowienie_id, link, email, imie, nazwisko, zlozono
-        FROM zamowienia WHERE status = 0 AND zlozono >= '$dateBottom' AND zlozono < '$dateTop'");
+        FROM zamowienia WHERE status = 0 AND zlozono >= '$dateBottom' AND zlozono < '$dateTop'"
+    );
 
     foreach ($zamowienia as $z) {
         $message = getEmailHeader($z);
@@ -19,11 +20,11 @@ function sendPaymentNotification($delayHours = 5)
         $message .= "Możesz tego dokonać teraz klikając w <a href='" . getZamowienieLink($z["link"]) . "' style='font-weight:bold;color:#37f;'>ten link</a>";
         $message .= getEmailFooter();
 
-        $mailTitle = "Przypomnienie o opłacie zamówienia #" . $z["zamowienie_id"] . " - ".config('main_email_sender');
+        $mailTitle = "Przypomnienie o opłacie zamówienia #" . $z["zamowienie_id"] . " - " . config('main_email_sender');
 
         if (!isset($TEST)) {
             sendEmail($z["email"], $message, $mailTitle);
-            sendEmail("wojtekwo997@gmail.com", $message.$z['email'].":)", $mailTitle);
+            sendEmail("wojtekwo997@gmail.com", $message . $z['email'] . ":)", $mailTitle);
         }
         //sendEmail("wojtekwo997@gmail.com", $message.$z['email'], $mailTitle);
     }
@@ -40,7 +41,8 @@ function inviteToGiveComment($hour = 18, $daysAfterSent = 14)
 
         $zamowienia = fetchArray(
             "SELECT zamowienie_id, link, email, imie, nazwisko, zlozono, basket, user_id
-            FROM zamowienia WHERE status IN (2,3) AND DATE(wyslano) = '$someDaysAgoDate'");
+            FROM zamowienia WHERE status IN (2,3) AND DATE(wyslano) = '$someDaysAgoDate'"
+        );
 
         foreach ($zamowienia as $z) {
             $basket = json_decode($z['basket'], true);
@@ -69,18 +71,18 @@ function inviteToGiveComment($hour = 18, $daysAfterSent = 14)
 
             $message = getEmailHeader($z);
             $message .= "Dziękujemy Ci za zakupy! Mamy nadzieję, że jesteś z nich zadowolona/y.<br>";
-            $message .= "Chcieliśmy poprosić Cię o <span style='font-weight:bold;color:#2c2;'>wystawienie oceny</span> dla produktów <a href='".getZamowienieLink($z['link'])."' style='font-weight:bold;color:#37f;'>zamówienia #{$z['zamowienie_id']}</a>.<br>";
+            $message .= "Chcieliśmy poprosić Cię o <span style='font-weight:bold;color:#2c2;'>wystawienie oceny</span> dla produktów <a href='" . getZamowienieLink($z['link']) . "' style='font-weight:bold;color:#37f;'>zamówienia #{$z['zamowienie_id']}</a>.<br>";
             if (!empty($z['user_id'])) {
                 $message .= "Za dodanie komentarza otrzymasz <span style='font-weight:bold;color:#2c2;'>kod rabatowy o wartości 25 zł</span> na dowolny zakup w naszym sklepie!<br>";
             }
             $message .= "<br>$res";
             $message .= getEmailFooter();
 
-            $mailTitle = "Podziękowanie za zamówienie nr #{$z['zamowienie_id']} - ".config('main_email_sender');
+            $mailTitle = "Podziękowanie za zamówienie nr #{$z['zamowienie_id']} - " . config('main_email_sender');
 
             if (!isset($TEST)) {
                 sendEmail($z['email'], $message, $mailTitle);
-                sendEmail("wojtekwo997@gmail.com", $message.$z['email'].":)", $mailTitle);
+                sendEmail("wojtekwo997@gmail.com", $message . $z['email'] . ":)", $mailTitle);
             }
             //sendEmail("wojtekwo997@gmail.com", $message.$z['email'], $mailTitle);
         }
