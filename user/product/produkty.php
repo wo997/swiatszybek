@@ -164,10 +164,7 @@ function showCategory($category, $level = 0)
 
     .product-list-wrapper {
       padding: 2vw;
-    }
-
-    .product-list-container {
-      margin: 30px 0;
+      overflow: hidden;
     }
 
     .combo-select-wrapper .attribute-header {
@@ -179,12 +176,43 @@ function showCategory($category, $level = 0)
     .categories-wrapper .fas {
       color: #c22;
     }
+
+    .product-list-animation-wrapper {
+      transition: height 0.3s;
+      position: relative;
+      height: 0px;
+      margin: 30px 0;
+    }
+
+    .product-list-container-swap,
+    .product-list-container-swap-background {
+      position: absolute;
+      transition: opacity 0.3s;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      pointer-events: none;
+    }
+
+    .product-list-container-swap-background {
+      /*top: 100%;*/
+      height: 10000px;
+    }
+
+    .product-list-container {}
+
+    /*.product-list-container, .product-list-container-swap {
+      position: absolute;
+      transition: opacity 0.3s;
+    }*/
   </style>
 
   <script>
     var currPage = 1;
     var rowCount = 6;
     var searchParams = {};
+    var searchingProducts = false;
 
     window.addEventListener("DOMContentLoaded", () => {
       var e = $(".category_name.current");
@@ -192,10 +220,25 @@ function showCategory($category, $level = 0)
         expandCategoriesAbove(e);
       }
 
+      window.productListNode = $(".product-list-container");
+      window.productListAnimationNode = $(".product-list-animation-wrapper");
+      window.productListSwapNode = $(".product-list-container-swap");
+      window.productListSwapBackgroundNode = $(".product-list-container-swap-background");
+
       searchProducts();
     });
 
     function searchProducts() {
+      if (searchingProducts) {
+        setTimeout(() => {
+          searchingProducts = false;
+        }, 300);
+        delay("searchProducts", 300);
+        return;
+      }
+
+      searchingProducts = true;
+
       var attribute_value_ids = [];
       $$(".combo-select-wrapper[data-attribute_id]").forEach(list => {
         var attribute_value_sub_ids = [];
@@ -217,12 +260,11 @@ function showCategory($category, $level = 0)
         phrase: "xxx"
       });
 
-      //console.log(newSearchParams);
-
-
       if (newSearchParams != searchParams) {
         currPage = 0;
         searchParams = newSearchParams;
+      } else {
+        return;
       }
 
       xhr({
@@ -234,10 +276,33 @@ function showCategory($category, $level = 0)
         },
         success: (res) => {
           if (res.totalRows == 0) {
-            res.content = "<div style='font-size:20px;margin:100px 0;padding: 10px;text-align:center;font-weight:bold'>Brak produktów</div>";
+            res.content = "<div style='font-size:20px;padding: 100px 10px;text-align:center;font-weight:bold'>Brak produktów</div>";
           }
+          productListSwapNode.style.animation = "fadeIn 0.3s";
+          productListSwapBackgroundNode.style.animation = "fadeIn 0.3s";
+          productListSwapBackgroundNode.style.visibility = "";
 
-          $(".product-list-container").setContent(res.content);
+          productListSwapNode.setContent(res.content);
+          //productListNode.style.animation = "fadeOut 0.3s";
+
+          var h = productListSwapNode.getBoundingClientRect().height;
+
+          productListAnimationNode.style.height = h + "px";
+
+          productListSwapBackgroundNode.style.top = h + "px";
+
+          setTimeout(() => {
+            productListNode.setContent(res.content);
+            productListSwapNode.removeContent();
+
+            productListSwapNode.style.animation = "";
+            productListSwapBackgroundNode.style.animation = "";
+            productListSwapBackgroundNode.style.visibility = "hidden";
+            productListNode.style.animation = "";
+
+            searchingProducts = false;
+            //productListAnimationNode.style.height = "";
+          }, 300);
 
           renderPagination(
             $(".pagination"),
@@ -246,6 +311,12 @@ function showCategory($category, $level = 0)
             (i) => {
               currPage = i;
               searchProducts();
+              scrollToElement($(".hook_view"), {
+                top: true,
+                offset: 250,
+                sag: 100,
+                duration: 30
+              });
             }
           );
         }
@@ -262,6 +333,7 @@ function showCategory($category, $level = 0)
         }
         expand(list, checkbox.checked);
       }
+
       searchProducts();
     }
   </script>
@@ -376,21 +448,30 @@ function showCategory($category, $level = 0)
       <h1 class="h1" style="margin: 40px 0"><?= $show_category["title"] ?></h1>
       <?= $show_category["description"] ?>
 
-      <div class="product-list-container">
-        <?php
-        /*$moduleParams = [];
+      <div class="hook_view"></div>
+
+      <div class="product-list-animation-wrapper">
+        <div class="product-list-container">
+          <?php
+          /*$moduleParams = [];
         $module_content = "";
         $moduleParams["category_ids"] = [$show_category["category_id"]];
         include "modules/product-list/content.php";
         echo $module_content;*/
-        ?>
+          ?>
+        </div>
+
+        <div class="product-list-container-swap-background"></div>
+        <div class="product-list-container-swap"></div>
       </div>
 
-      <div class="flexbar">
-        <div class="pagination"></div>
-      </div>
+      <div style="position:relative">
+        <div class="flexbar">
+          <div class="pagination"></div>
+        </div>
 
-      <?= getCMSPageHTML($show_category["content"]) ?>
+        <?= getCMSPageHTML($show_category["content"]) ?>
+      </div>
     </div>
   </div>
 

@@ -611,8 +611,10 @@ input[type="radio"] {
   top: 6px;
   transition: 0.2s;
 }
-input[type="radio"]:hover:not(:checked) {
-  filter: brightness(0.9);
+@media (hover: none) {
+  input[type="radio"]:hover:not(:checked) {
+    filter: brightness(0.9);
+  }
 }
 input[type="radio"]:not([value=""]):checked {
   background-color: #6c1;
@@ -1598,8 +1600,11 @@ input[type="checkbox"]:checked + .checkbox {
   border: 1px solid #aaa;
   vertical-align: text-bottom;
 }
-label:hover:not(:checked) .checkbox {
-  filter: brightness(0.9);
+
+@media (hover: hover) {
+  label:hover:not(:checked) .checkbox {
+    filter: brightness(0.9);
+  }
 }
 
 .checkbox::after {

@@ -375,24 +375,27 @@ function positionWithOffset(elem, offsetX, offestY) {
   };
 }
 
-function scrollToElement(elem, parent = null, offset = 0, center = true) {
+function scrollToElement(elem, options = {}) {
   if (!elem) return;
-  var pos = position(elem);
-  var diff = pos.top - offset;
-  if (parent) {
-    diff -= parent.scrollTop;
+  var rect = elem.getBoundingClientRect();
+  var diff =
+    (options.parent ? position(elem) : rect).top - nonull(options.offset, 0);
+  if (options.parent) {
+    diff -= options.parent.scrollTop;
   }
-  if (center) {
-    diff += (elem.getBoundingClientRect().height - window.innerHeight) * 0.5;
+  if (!options.top) {
+    diff += (rect.height - window.innerHeight) * 0.5;
   }
-  var sag = 100;
+  var sag = nonull(options.sag, 100);
   if (Math.abs(diff) > sag) {
     diff -= sag * Math.sign(diff);
-    scrollFromTo(parent, diff, 50, 0);
+    scrollFromTo(options.parent, diff, nonull(options.duration, 50));
   }
 }
-function scrollFromTo(parent, diff, time, t) {
-  // if (window.innerWidth > 767) return;
+function scrollFromTo(parent, diff, time, t = 0) {
+  if (time < 2) {
+    time = 2;
+  }
   var d = (4 * diff * (time / 2 - Math.abs(time / 2 - t))) / (time * time);
   if (parent) parent.scrollTop += d;
   else window.scrollBy(0, d);
