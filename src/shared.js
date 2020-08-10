@@ -1923,6 +1923,17 @@ function setValue(input, value) {
         any.find(`input[type="checkbox"]`).setValue(false);
       });
 
+      value.values.forEach((e) => {
+        //console.log();
+
+        var attribute_input = input.find(
+          `[data-attribute_id="${e.getAttribute("attribute_id")}"]`
+        );
+        input.findAll(".any-value-wrapper").forEach((any) => {
+          any.find(`input[type="checkbox"]`).setValue(false);
+        });
+      });
+
       /*var attribute_selected_values = [];
       input.findAll("[data-attribute-value]").forEach((select) => {
         if (select.value) {
