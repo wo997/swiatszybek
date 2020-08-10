@@ -465,6 +465,7 @@ input[type="button"] {
   display: block;
   width: 100%;
   padding: 5px 7px;
+  background-color: #fdfdfd;
 }
 .field:hover {
   border-color: #aaa;
@@ -1596,9 +1597,10 @@ input[type="checkbox"]:checked + .checkbox {
   display: inline-block;
   margin-right: 4px;
   border-radius: 6px;
-  -webkit-transition: 0.1s;
+  transition: 0.1s;
   border: 1px solid #aaa;
-  vertical-align: text-bottom;
+  vertical-align: middle;
+  transform: translateY(-1px);
 }
 
 @media (hover: hover) {
@@ -2501,8 +2503,8 @@ label input[type="radio"] {
 .correct,
 .wrong {
   position: absolute;
-  right: 5px;
-  bottom: 6px;
+  right: 8px;
+  bottom: 9px;
   color: #0d0b;
   display: none;
 }

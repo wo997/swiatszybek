@@ -228,7 +228,7 @@ function showCategory($category, $level = 0)
       searchProducts();
     });
 
-    function searchProducts() {
+    function searchProducts(forceSearch = false) {
       if (searchingProducts) {
         setTimeout(() => {
           searchingProducts = false;
@@ -263,7 +263,7 @@ function showCategory($category, $level = 0)
       if (newSearchParams != searchParams) {
         currPage = 0;
         searchParams = newSearchParams;
-      } else {
+      } else if (!forceSearch) {
         return;
       }
 
@@ -310,13 +310,15 @@ function showCategory($category, $level = 0)
             res.pageCount,
             (i) => {
               currPage = i;
-              searchProducts();
               scrollToElement($(".hook_view"), {
                 top: true,
                 offset: 250,
                 sag: 100,
                 duration: 30
               });
+              searchProducts(true);
+              //setTimeout(() => {
+              //}, 50);
             }
           );
         }
@@ -359,7 +361,7 @@ function showCategory($category, $level = 0)
       <?php
       include_once "admin/product/attributes_service.php";
 
-      function printSelectValuesOfAttribute($values, $attribute, $value_id = null)
+      function printUserSelectValuesOfAttribute($values, $attribute, $value_id = null)
       {
         if (!isset($values[0])) return "";
 
@@ -389,7 +391,7 @@ function showCategory($category, $level = 0)
 
           $html .= "</label>";
 
-          $html .= printSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
+          $html .= printUserSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
 
           $html .= "</div>";
         }
@@ -402,23 +404,23 @@ function showCategory($category, $level = 0)
 
       foreach ($attributes as $attribute) {
 
-        $isOptional = isset($attribute_data_types[$attribute["data_type"]]["field"]);
+        $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'><div class='attribute-header'>" . $attribute["name"] . "</div> ";
+        echo "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'><div class='attribute-header'>" . $attribute["name"] . "</div> ";
 
-        if ($isOptional) {
+        if ($any) {
         } else {
           $values = getAttributeValues($attribute["attribute_id"]);
-          echo printSelectValuesOfAttribute($values, $attribute);
+          echo printUserSelectValuesOfAttribute($values, $attribute);
         }
 
         echo "</div>";
 
-        /*$isOptional = isset($attribute_data_types[$attribute["data_type"]]["field"]);
+        /*$any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . " attribute-row'>" . $attribute["name"] . " ";
+        echo "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . " attribute-row'>" . $attribute["name"] . " ";
 
-        if ($isOptional) {
+        if ($any) {
           echo '
               <label class="field-title">
                 <input type="checkbox">
@@ -435,7 +437,7 @@ function showCategory($category, $level = 0)
           }
         } else {
           $values = getAttributeValues($attribute["attribute_id"]);
-          echo printSelectValuesOfAttribute($values);
+          echo printUserSelectValuesOfAttribute($values);
         }
 
         echo "</div>";*/

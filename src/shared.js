@@ -1125,6 +1125,7 @@ function renderPagination(
   options = {}
 ) {
   currPage = getSafePageIndex(currPage, pageCount);
+
   var output = "";
   var range = 4;
   var mobile = window.innerWidth < 760;
@@ -1906,6 +1907,36 @@ function setValue(input, value) {
       input.innerHTML = value;
 
       input.dispatchEvent(new Event("change"));
+    } else if (type == "attribute_values") {
+      input.findAll(".combo-select-wrapper").forEach((combo) => {
+        combo.findAll("select").forEach((select) => {
+          var option = [...select.options].find((o) => {
+            return value.selected.indexOf(parseInt(o.value)) !== -1;
+          });
+          if (option) {
+            select.setValue(option.value);
+          }
+        });
+      });
+
+      input.findAll(".any-value-wrapper").forEach((any) => {
+        any.find(`input[type="checkbox"]`).setValue(false);
+      });
+
+      /*var attribute_selected_values = [];
+      input.findAll("[data-attribute-value]").forEach((select) => {
+        if (select.value) {
+          attribute_selected_values.push(parseInt(select.value));
+        }
+      });
+      var attribute_values = {};
+      input.findAll(".any-value-wrapper [data-attribute_id]:not(.hidden)").forEach((input) => {
+        attribute_values[input.getAttribute("data-attribute_id")] = input.value;
+      });
+      return JSON.stringify({
+        selected: attribute_selected_values,
+        values: attribute_values
+      });*/
     } else if (type == "src") {
       var prefix = input.getAttribute(`data-src-prefix`);
       if (!prefix) prefix = "/uploads/df/";
@@ -1938,6 +1969,24 @@ function getValue(input) {
         input = input.find(pointChild);
       }
       return input.innerHTML;
+    } else if (type == "attribute_values") {
+      var attribute_selected_values = [];
+      input.findAll("[data-attribute-value]").forEach((select) => {
+        if (select.value) {
+          attribute_selected_values.push(parseInt(select.value));
+        }
+      });
+      var attribute_values = {};
+      input
+        .findAll(".any-value-wrapper [data-attribute_id]:not(.hidden)")
+        .forEach((input) => {
+          attribute_values[input.getAttribute("data-attribute_id")] =
+            input.value;
+        });
+      return JSON.stringify({
+        selected: attribute_selected_values,
+        values: attribute_values,
+      });
     } else if (type == "src") {
       var prefix = input.getAttribute(`data-src-prefix`);
       if (!prefix) prefix = "/uploads/df/";

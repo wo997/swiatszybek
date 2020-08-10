@@ -1285,7 +1285,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
                 <div id="rabat_hide">
                   <span>Kod rabatowy</span>
                   <div style="display:flex">
-                    <input type="text" id="kod_rabatowy">
+                    <input type="text" id="kod_rabatowy" class="field">
                     <button type="button" style="margin-left:-1px;width: auto;font-size: 15px;" class="btn primary big" onclick="aktywujKodRabatowy('add')">Aktywuj</button>
                   </div>
                   <div id="kod_rabatowy_reason" style="color: red;font-size: 13px;"></div>
@@ -1322,7 +1322,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           <h4 style="margin-top: 40px">Twoje uwagi dotyczące zamówienia</h4>
           <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($uwagi) ?></textarea>
 
-          <label style="user-select:none;cursor:pointer;display:inline-block" onclick="$('#regulamin-warn').style.display='none'">
+          <label class="checkbox-wrapper field-title" onclick="$('#regulamin-warn').style.display='none'">
             <input type="checkbox" id="accept-regulamin">
             <div class="checkbox"></div>
             Akceptuję <a href="/regulamin" target="_blank" style="font-weight: bold;color: #4b0;text-decoration: underline;">REGULAMIN</a> <span style="color:red;font-weight: bold;display:none" id="regulamin-warn"> Wymagane*</span>

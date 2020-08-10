@@ -45,7 +45,7 @@ if ($authenticated) {
         echo $_POST["message"];
       ?>
       <?php if ($authenticated) : ?>
-        <div class="field-title">Hasło (min. 8 znaów)</div>
+        <div class="field-title">Hasło (min. 8 znaków)</div>
         <div class="field-wrapper">
           <input type="password" name="password" class="field" data-validate="password">
           <i class="correct fa fa-check"></i>

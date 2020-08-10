@@ -18,14 +18,24 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
 //$attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM link_product_attribute_value WHERE product_id = $product_id");
 
+include_once "attributes_service.php";
+
+$displayAllAttributeOptions = displayAllAttributeOptions();
+
 ?>
 
 
 <?php startSection("head"); ?>
 
 <style>
-  select[data-parent_value_id].hidden,
-  .optional-value-wrapper .field.hidden {
+  .attribute-row .field {
+    width: auto;
+    display: inline-block;
+    margin: 0px 2px;
+  }
+
+  .combo-select-wrapper select[data-parent_value_id].hidden,
+  .any-value-wrapper .field.hidden {
     display: none !important;
   }
 
@@ -38,7 +48,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     border-top: none;
   }
 
-  select.empty:not(:focus) {
+  .combo-select-wrapper select.empty:not(:focus) {
     color: #aaa;
   }
 </style>
@@ -77,25 +87,25 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
     });
   }
 
-  function optionalValueChanged(optional) {
-    var checkbox = optional.find(`input[type="checkbox"]`);
-    var input = optional.find(`.field`);
+  function anythingValueChanged(anything) {
+    var checkbox = anything.find(`input[type="checkbox"]`);
+    var input = anything.find(`.field`);
 
     input.classList.toggle("hidden", !checkbox.checked);
   }
 
-  function registerOptionalValues() {
-    $$(".optional-value-wrapper").forEach(optional => {
-      var checkbox = optional.find(`input[type="checkbox"]:not(.registered)`);
+  function registerAnythingValues() {
+    $$(".any-value-wrapper").forEach(anything => {
+      var checkbox = anything.find(`input[type="checkbox"]:not(.registered)`);
       if (!checkbox) return;
       checkbox.classList.add("registered");
       checkbox.addEventListener("change", () => {
-        var wrapper = findParentByClassName(checkbox, "optional-value-wrapper");
-        optionalValueChanged(wrapper);
+        var wrapper = findParentByClassName(checkbox, "any-value-wrapper");
+        anythingValueChanged(wrapper);
       });
 
-      var wrapper = findParentByClassName(checkbox, "optional-value-wrapper");
-      optionalValueChanged(wrapper);
+      var wrapper = findParentByClassName(checkbox, "any-value-wrapper");
+      anythingValueChanged(wrapper);
 
     });
   }
@@ -104,7 +114,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
     registerComboSelects();
 
-    registerOptionalValues();
+    registerAnythingValues();
 
     loadCategoryPicker("product_categories", {
       skip: 2
@@ -307,29 +317,9 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
         variant_id: data.variant_id
       },
       success: (data) => {
-        $$(".combo-select-wrapper").forEach(combo => {
-          combo.findAll("select").forEach(select => {
-            var option = [...select.options].find(o => {
-              return data.attribute_selected_values.indexOf(parseInt(o.value)) !== -1
-            });
-            if (option) {
-              select.value = option.value;
-            }
-          });
-          comboSelectValuesChanged(combo);
+        setFormData(data, {
+          form: $("#variantEdit")
         });
-
-        for (attribute of data.attribute_values) {
-          var wrapper = findParentByClassName(`[name="attribute_values[${attribute.attribute_id}]"]`, "optional-value-wrapper");
-          setValue(wrapper.find(`input[type="checkbox"]`), 0);
-        }
-
-        for (attribute of data.attribute_values) {
-          setValue($(`[name="attribute_values[${attribute.attribute_id}]"]`), attribute[attribute_data_types[attribute.data_type].field]);
-
-          var wrapper = findParentByClassName(`[name="attribute_values[${attribute.attribute_id}]"]`, "optional-value-wrapper");
-          setValue(wrapper.find(`input[type="checkbox"]`), 1);
-        }
 
         setModalInitialState(formName);
       }
@@ -338,16 +328,6 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
   function saveVariantForm(remove = false) {
     var params = getFormData($("#variantEdit"));
-
-    var attribute_values = [];
-
-    $$("[data-attribute-value]").forEach(select => {
-      if (select.value) {
-        attribute_values.push(parseInt(select.value));
-      }
-    })
-
-    params.attribute_selected_values = JSON.stringify(attribute_values);
 
     if (remove) {
       params["remove"] = true;
@@ -484,7 +464,7 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
       <button class="btn primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
-    <div style="padding:10px">
+    <div>
 
       <div class="field-title">Nazwa wariantu</div>
       <input type="text" name="name" class="field">
@@ -501,67 +481,15 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
       <div class="field-title">Kod produktu</div>
       <input type="text" name="product_code" class="field">
 
-      <div class="field-title">Kolor</div>
-      <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
-      <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>
+      <div style="display:none">
+        <div class="field-title">Kolor</div>
+        <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
+        <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
+      </div>
 
       <div class="field-title">Atrybuty</div>
 
-      <?php
-      include_once "attributes_service.php";
-
-      $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes");
-
-      function printSelectValuesOfAttribute($values, $attribute, $value_id = null)
-      {
-        if (!isset($values[0])) return "";
-
-        $field_name = "attribute-" . $attribute["attribute_id"] . ($value_id ? "_" . $value_id : "");
-
-        $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
-        $html = "<select $attr data-attribute-value name='$field_name'>";
-        $html .= "<option value=''>Nie dotyczy</option>";
-        foreach ($values as $value_data) {
-          $html .= "<option value='" . $value_data["values"]["value_id"] . "'>" . $value_data["values"]["value"] . "</option>";
-        }
-        $html .= "</select> ";
-        foreach ($values as $value_data) {
-          $html .= printSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
-        }
-
-        return $html;
-      }
-
-      foreach ($attributes as $attribute) {
-        $isOptional = isset($attribute_data_types[$attribute["data_type"]]["field"]);
-
-        echo "<div class='" . ($isOptional ? "optional-value-wrapper" : "combo-select-wrapper") . " attribute-row'>" . $attribute["name"] . " ";
-
-        if ($isOptional) {
-          echo '
-              <label class="field-title">
-                <input type="checkbox">
-                <div class="checkbox"></div>
-              </label>
-            ';
-          $attribute_form_name = 'name="attribute_values[' . $attribute["attribute_id"] . ']"';
-          if (strpos($attribute["data_type"], "color") !== false) {
-            echo '<input type="text" class="jscolor field" style="display: inline-block;width:65px" ' . $attribute_form_name . '>';
-          } else if (strpos($attribute["data_type"], "number") !== false) {
-            echo '<input type="number" class="field" ' . $attribute_form_name . '>';
-          } else {
-            echo '<input type="text" class="field" ' . $attribute_form_name . '>';
-          }
-        } else {
-          $values = getAttributeValues($attribute["attribute_id"]);
-          echo printSelectValuesOfAttribute($values, $attribute);
-        }
-
-        echo "</div>";
-      }
-
-
-      ?>
+      <div name="variant_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
       <div class="field-title">
         Zdjecie

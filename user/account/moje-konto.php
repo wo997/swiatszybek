@@ -294,7 +294,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
           <form onsubmit="return validateForm({form:this})" action="/reset_password" method="post" style="width:100%;margin:40px auto;max-width:350px">
             <h3 style="text-align: center;font-size: 26px;margin: 15px 0 35px;">Zmiana hasła</h3>
 
-            <div class="field-title">Hasło (min. 8 znaów)</div>
+            <div class="field-title">Hasło (min. 8 znaków)</div>
             <div class="field-wrapper">
               <input type="password" name="password" class="field" data-validate="password">
               <i class="correct fa fa-check"></i>

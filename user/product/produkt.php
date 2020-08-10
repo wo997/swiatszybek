@@ -534,8 +534,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
       }
     }
 
-    function youAlreadyHaveIt(animate_variant_id = null) // optional
-    {
+    function youAlreadyHaveIt(animate_variant_id = null) {
       var juzMasz = "";
       var total = 0;
       for (basket_item of user_basket) {

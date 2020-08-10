@@ -72,52 +72,7 @@ function a($name)
     }
   </style>
   <script>
-    function lockInput(input, limit) {
-      input.style.borderColor = "red";
-      input.oninput = function() {
-        if (input.value.length >= limit) {
-          this.style.borderColor = "";
-          if (input.id == "password") {
-            $("#password_ok").style.display = "block";
-            $("#password_wrong").style.display = "none";
-          }
-        }
-      }
-    }
 
-    function validateForm(form) {
-      var req = document.getElementsByClassName("required");
-      for (i = 0; i < req.length; i++) {
-        var input = req[i];
-        if (input.value == "") {
-          lockInput(input, 0);
-          return false;
-        }
-      }
-
-      if (form.password.value.length < 8) {
-        $("#password_wrong").style.display = "block";
-        lockInput(form.password, 8);
-        return false;
-      }
-
-      if (form.password2.value != form.password.value) {
-        $("#password2_wrong").style.display = "block";
-        form.password2.style.borderColor = "red";
-        return false;
-      }
-
-      return true;
-    }
-
-    function samePassword(password2) {
-      var p = $("#password");
-      var good = password2.value == p.value;
-      if (password2.style.borderColor != "")
-        password2.style.borderColor = good ? "" : "red";
-      $("#password2_ok").style.display = good ? "block" : "none";
-      $("#password2_wrong").style.display = !good ? "block" : "none";
-    }
   </script>
 </head>
 
@@ -135,38 +90,39 @@ function a($name)
         <div class="menu mobileRow" style="max-width: 700px">
           <div style="width: 50%;">
             <div style="width:100%;margin:auto;max-width:300px">
-              <label>
+              <div>
                 <span class="field-title">Imię</span>
                 <input type="text" name="imie" <?= a("imie") ?> autocomplete="first-name" data-validate class="field">
-              </label>
-              <label>
+              </div>
+              <div>
                 <span class="field-title">Nazwisko</span>
                 <input type="text" name="nazwisko" <?= a("nazwisko") ?> autocomplete="family-name" data-validate class="field">
-              </label>
-              <label>
+              </div>
+              <div>
                 <span class="field-title">Nr telefonu</span>
                 <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate class="field">
-              </label>
+              </div>
             </div>
           </div>
           <div style="width: 50%;">
             <div style="width:100%;margin:auto;max-width:300px">
-              <label>
+              <div>
                 <span class="field-title">E-mail</span>
-                <input type="text" name="email" <?= a("email") ?> autocomplete="email" data-validate class="field">
-              </label>
-              <label style="position:relative">
-                <span class="field-title">Hasło (min. 8 znaków)</span>
-                <input type="password" name="password" id="password" autocomplete="new-password" class="field">
-                <i id="password_ok" class="fa fa-check" style="position: absolute;right: 5px;bottom: 6px;color: #0d0b;display:none"></i>
-                <i id="password_wrong" class="fa fa-times" style="position: absolute;right: 5px;bottom: 6px;color: #d00b;display:none"></i>
-              </label>
-              <label style="position:relative">
-                <span class="field-title">Powtórz hasło</span>
-                <input type="password" name="password2" oninput="samePassword(this)" autocomplete="new-password" class="field">
-                <i id="password2_ok" class="fa fa-check" style="position: absolute;right: 5px;bottom: 6px;color: #0d0b;display:none"></i>
-                <i id="password2_wrong" class="fa fa-times" style="position: absolute;right: 5px;bottom: 6px;color: #d00b;display:none"></i>
-              </label>
+                <input type="text" name="email" <?= a("email") ?> autocomplete="email" data-validate="email" class="field">
+              </div>
+              <div class="field-title">Hasło (min. 8 znaków)</div>
+              <div class="field-wrapper">
+                <input type="password" name="password" class="field" data-validate="password">
+                <i class="correct fa fa-check"></i>
+                <i class="wrong fa fa-times"></i>
+              </div>
+
+              <div class="field-title">Powtórz hasło</div>
+              <div class="field-wrapper">
+                <input type="password" name="password_rewrite" class="field" data-validate="match:form .field[name='password']">
+                <i class="correct fa fa-check"></i>
+                <i class="wrong fa fa-times"></i>
+              </div>
               <button type="submit" class="btn primary big fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
                 Zarejestruj się
                 <i class="fa fa-chevron-right"></i>
