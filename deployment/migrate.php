@@ -65,9 +65,17 @@ addColumns("cms", [
   ["name" => "seo_title", "type" => "TINYTEXT"]
 ]);
 
-addColumns("variant_attribute_values", [
-  ["name" => "date_value", "type" => "DATE"]
+createTable("product_attribute_values", [
+  ["name" => "product_id", "type" => "INT"],
+  ["name" => "attribute_id", "type" => "INT"],
+  ["name" => "numerical_value", "type" => "INT", "null" => true],
+  ["name" => "text_value", "type" => "TEXT", "null" => true],
+  ["name" => "date_value", "type" => "DATE", "null" => true],
 ]);
 
+createTable("link_product_attribute_value",  [
+  ["name" => "product_id", "type" => "INT"],
+  ["name" => "attribute_id", "type" => "INT"]
+]);
 
 echo "<h3>✅ All migrations completed</h3>";

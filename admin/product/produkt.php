@@ -18,9 +18,12 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
 //$attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM link_product_attribute_value WHERE product_id = $product_id");
 
-include_once "attributes_service.php";
+include_once "admin/product/attributes_service.php";
 
 $displayAllAttributeOptions = displayAllAttributeOptions();
+
+$product_data["product_attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
+
 
 ?>
 
@@ -177,37 +180,6 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
                 </div>
                 <div class="btn primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
             `
-    });
-
-    var quillShort = new Quill('#product-description', {
-      theme: 'snow',
-      modules: {
-        'toolbar': [
-          [{
-            'size': []
-          }],
-          ['bold', 'italic', 'underline', 'strike'],
-          [{
-            'color': []
-          }, {
-            'background': []
-          }],
-          [{
-            'list': 'ordered'
-          }, {
-            'list': 'bullet'
-          }, {
-            'indent': '-1'
-          }, {
-            'indent': '+1'
-          }],
-          [{
-            'align': []
-          }],
-          ['link'],
-          ['clean'],
-        ],
-      }
     });
 
     createSimpleList({
@@ -389,26 +361,8 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
 
-    <div style="margin-top: 10px;display:none">
-      <div class="field-title">Opis krótki <span style="color:red">(wywalamy)</span></div>
-      <div class="quill-wrapper2">
-        <div id="product-description" name="descriptionShort" data-type="html" data-point-child=".ql-editor"></div>
-      </div>
-    </div>
-
-    <div style="margin-top: 10px;display:none">
-      <div style="display:flex" class="mobileRow">
-        <div>
-          <span style="color:red">Specyfikacja (chyba to wywalamy, zastąpimy atrybutami)</span>
-          <textarea id="specyfikacja" name="specyfikacja" style="width: 100%;height:200px" oninput="showSpecyfikacja()"></textarea>
-          <textarea id="specyfikacja_output" name="specyfikacja_output" style="display:none"></textarea>
-        </div>
-        <div style="padding: 0 20px">
-          Podgląd:
-          <div id="specyfikacja_preview"></div>
-        </div>
-      </div>
-    </div>
+    <div class="field-title">Atrybuty produktu (ogólne)</div>
+    <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
     <div style="margin-top: 10px">
 
@@ -463,8 +417,7 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
         <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
       </div>
 
-      <div class="field-title">Atrybuty</div>
-
+      <div class="field-title">Atrybuty wariantu (inne niż ogólne dla produktu)</div>
       <div name="variant_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
       <div class="field-title">

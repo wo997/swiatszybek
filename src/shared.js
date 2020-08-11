@@ -1915,6 +1915,8 @@ function setValue(input, value) {
           });
           if (option) {
             select.setValue(option.value);
+          } else {
+            select.setValue("");
           }
         });
       });

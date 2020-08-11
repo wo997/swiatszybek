@@ -32,14 +32,21 @@
         }
         if ($subAttributeValues) {
           $hasAnyAttribute = true;
-          $where .= " AND value_id IN(" . rtrim($subAttributeValues, ",") . ")";
+          $subAttributeValues = rtrim($subAttributeValues, ",");
+          $where .= " AND (" .
+            "av.value_id IN($subAttributeValues)" .
+            " OR " .
+            "ap.value_id IN($subAttributeValues)" .
+            ")";
         }
       }
     }
   }
 
   if ($hasAnyAttribute) {
-    $join .= " INNER JOIN variant v USING(product_id) INNER JOIN link_variant_attribute_value a USING(variant_id)";
+    $join .= " INNER JOIN variant v USING(product_id)
+      LEFT JOIN link_variant_attribute_value av USING(variant_id)
+      LEFT JOIN link_product_attribute_value ap USING(product_id)";
   }
 
   $products = getTableData([

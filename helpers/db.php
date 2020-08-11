@@ -8,16 +8,23 @@ function query($sql, $params = []) // returns nothing; update delete insert purp
 function fetchArray($sql, $params = [], $give_response = true)
 {
   global $con;
-  $stmt = $con->prepare($sql);
-  $paramCount = count($params);
-  if ($paramCount) $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
-  if (!$give_response) {
-    $res = $stmt->execute();
-  } else {
-    $stmt->execute();
-    $res = $stmt->get_result()->fetch_all(1);
+
+  try {
+    $stmt = $con->prepare($sql);
+    $paramCount = count($params);
+    if ($paramCount) $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
+
+    if (!$give_response) {
+      $res = $stmt->execute();
+    } else {
+      $stmt->execute();
+      $res = $stmt->get_result()->fetch_all(1);
+    }
+    $stmt->close();
+  } catch (Exception $e) {
+    echo "SQL EXCEPTION:<br>$sql<br>[" . join(",", $params) . "]<br>";
+    die($e);
   }
-  $stmt->close();
   return $res;
 }
 
@@ -122,6 +129,20 @@ function dropTable($table)
   }
 }
 
+function getColumnDefinition($column)
+{
+  $definition = clean($column["name"])
+    . " " . $column["type"]
+    . ($column["null"] ? "" : " NOT NULL");
+
+  if (isset($column["default"])) {
+    $definition .= " DEFAULT " . $column["default"];
+  } else if (isset($column["default_string"])) {
+    $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
+  }
+  return $definition;
+}
+
 /**
  * Create table in DB with specified columns allowing to modify the table if necessary
  * parameter details in function addColumns($table, $columns)
@@ -142,15 +163,7 @@ function createTable($table, $columns)
     $column["null"] = nonull($column, "null", false);
     $column["type"] = strtoupper($column["type"]);
 
-    $definition = clean($column["name"])
-      . " " . $column["type"]
-      . ($column["null"] ? "" : " NOT NULL");
-
-    if (isset($column["default"])) {
-      $definition .= " DEFAULT " . $column["default"];
-    } else if (isset($column["default_string"])) {
-      $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
-    }
+    $definition = getColumnDefinition($column);
 
     $sql .= $definition . ",";
   }
@@ -251,15 +264,7 @@ function addColumns($table, $columns)
       }
     }
 
-    $definition = clean($column["name"])
-      . " " . $column["type"]
-      . ($column["null"] ? "" : " NOT NULL");
-
-    if (isset($column["default"])) {
-      $definition .= " DEFAULT " . $column["default"];
-    } else if (isset($column["default_string"])) {
-      $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
-    }
+    $definition = getColumnDefinition($column);
 
     if ($modify) {
       query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);
