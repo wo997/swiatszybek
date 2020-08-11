@@ -65,5 +65,23 @@ addColumns("cms", [
   ["name" => "seo_title", "type" => "TINYTEXT"]
 ]);
 
+createTable("product_attribute_values", [
+  ["name" => "product_id", "type" => "INT"],
+  ["name" => "attribute_id", "type" => "INT"],
+  ["name" => "numerical_value", "type" => "INT", "null" => true],
+  ["name" => "text_value", "type" => "TEXT", "null" => true],
+  ["name" => "date_value", "type" => "DATE", "null" => true],
+]);
+
+createTable("link_product_attribute_value",  [
+  ["name" => "product_id", "type" => "INT"],
+  ["name" => "value_id", "type" => "INT"]
+]);
+
+addIndex("link_product_attribute_value", "product_id", "index");
+addIndex("link_product_attribute_value", "value_id", "index");
+
+addIndex("link_variant_attribute_value", "variant_id", "index");
+addIndex("link_variant_attribute_value", "value_id", "index");
 
 echo "<h3>✅ All migrations completed</h3>";

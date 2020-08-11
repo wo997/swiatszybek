@@ -8,16 +8,23 @@ function query($sql, $params = []) // returns nothing; update delete insert purp
 function fetchArray($sql, $params = [], $give_response = true)
 {
   global $con;
-  $stmt = $con->prepare($sql);
-  $paramCount = count($params);
-  if ($paramCount) $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
-  if (!$give_response) {
-    $res = $stmt->execute();
-  } else {
-    $stmt->execute();
-    $res = $stmt->get_result()->fetch_all(1);
+
+  try {
+    $stmt = $con->prepare($sql);
+    $paramCount = count($params);
+    if ($paramCount) $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
+
+    if (!$give_response) {
+      $res = $stmt->execute();
+    } else {
+      $stmt->execute();
+      $res = $stmt->get_result()->fetch_all(1);
+    }
+    $stmt->close();
+  } catch (Exception $e) {
+    echo "SQL EXCEPTION:<br>$sql<br>[" . join(",", $params) . "]<br>";
+    die($e);
   }
-  $stmt->close();
   return $res;
 }
 
@@ -50,14 +57,14 @@ function getLastInsertedId()
 }
 
 /**
- * removes everything except  (a-z) (A-Z) (0-9) "_" " "
+ * removes everything except  (a-z) (A-Z) (0-9) "_" " " ","
  *
  * @param  string $x
  * @return string
  */
 function clean($x)
 {
-  return preg_replace("/[^a-zA-Z0-9_ ]/", "", $x);
+  return preg_replace("/[^a-zA-Z0-9_ ,]/", "", $x);
 }
 
 function escapeSQL($var)
@@ -122,6 +129,106 @@ function dropTable($table)
   }
 }
 
+function getColumnDefinition($column)
+{
+  $definition = clean($column["name"])
+    . " " . $column["type"]
+    . ($column["null"] ? "" : " NOT NULL");
+
+  if (isset($column["default"])) {
+    $definition .= " DEFAULT " . $column["default"];
+  } else if (isset($column["default_string"])) {
+    $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
+  }
+  return $definition;
+}
+
+function getIndex($table, $column)
+{
+  return fetchRow("SHOW INDEX FROM " . clean($table) . " WHERE Column_name = '" . clean($column) . "'");
+}
+
+/**
+ * - table name
+ * - column name
+ * - index type ["index", "unique", "primary"]
+ * 
+ * @param  mixed $table
+ * @param  mixed $column
+ * @param  mixed $type
+ * @return void
+ */
+function addIndex($table, $column, $type = "index")
+{
+  $type = strtolower($type);
+
+  $index_types = ["index", "unique", "primary"];
+  if (!in_array($type, $index_types)) {
+    echo "⚠️ Undefined index type '" . $type . "'!";
+  }
+
+  $currentIndex = getIndex($table, $column);
+
+  if ($currentIndex) {
+    if ($type == "index") {
+      $doDrop = false;
+      if ($currentIndex["Non_unique"] && $currentIndex["Key_name"] != "PRIMARY") {
+        return;
+      } else {
+        $doDrop = true;
+      }
+    } else if ($type == "unique") {
+      if (!$currentIndex["Non_unique"] && $currentIndex["Key_name"] != "PRIMARY") {
+        return;
+      } else {
+        $doDrop = true;
+      }
+    } else if ($type == "primary") {
+      if (!$currentIndex["Non_unique"] && $currentIndex["Key_name"] == "PRIMARY") {
+        return;
+      } else {
+        $doDrop = true;
+      }
+    }
+    if ($doDrop) {
+      dropIndex($table, $currentIndex["Key_name"]);
+    }
+  }
+
+  if ($type == "index") {
+    query("ALTER TABLE " . clean($table) . " ADD INDEX (" . clean($column) . ")");
+    echo "➕ INDEX '$column' added to '$table<br>";
+  } else if ($type == "unique") {
+    query("ALTER TABLE " . clean($table) . " ADD CONSTRAINT " . clean($column) . " UNIQUE (" . clean($column) . ")");
+    echo "➕ UNIQUE '$column' added to '$table<br>";
+  } else if ($type == "primary") {
+    query("ALTER TABLE " . clean($table) . " ADD PRIMARY KEY (" . clean($column) . ")");
+    echo "➕ PRIMARY key '$column' added to '$table<br>";
+  }
+}
+
+function dropIndex($table, $column)
+{
+  $index = getIndex($table, $column);
+  if ($index) {
+    dropIndexByName($table, $index["Key_name"]);
+  }
+}
+
+function dropIndexByName($table, $key_name)
+{
+  try {
+    if ($key_name == "PRIMARY") {
+      query("ALTER TABLE " . clean($table) . " DROP PRIMARY KEY");
+      echo "🗑️ PRIMARY KEY dropped from '$table<br>";
+    } else {
+      query("ALTER TABLE " . clean($table) . " DROP INDEX " . clean($key_name));
+      echo "🗑️ Key '$key_name' dropped from '$table<br>";
+    }
+  } catch (Exception $e) {
+  }
+}
+
 /**
  * Create table in DB with specified columns allowing to modify the table if necessary
  * parameter details in function addColumns($table, $columns)
@@ -142,15 +249,7 @@ function createTable($table, $columns)
     $column["null"] = nonull($column, "null", false);
     $column["type"] = strtoupper($column["type"]);
 
-    $definition = clean($column["name"])
-      . " " . $column["type"]
-      . ($column["null"] ? "" : " NOT NULL");
-
-    if (isset($column["default"])) {
-      $definition .= " DEFAULT " . $column["default"];
-    } else if (isset($column["default_string"])) {
-      $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
-    }
+    $definition = getColumnDefinition($column);
 
     $sql .= $definition . ",";
   }
@@ -191,7 +290,7 @@ function addColumns($table, $columns)
       $differentNameColumnExists = columnExists($table, $column["previous_name"]);
 
       if ($differentNameColumnExists && $columnExists) {
-        echo "⚠️ Migration error, tried to change column from '" . $column["previous_name"] . "' to '" . $column["name"] . "' but '" . $column["name"] . "' already exists in '" . $table . "'!";
+        echo "⚠️ Migration error, tried to change column from '" . $column["previous_name"] . "' to '" . $column["name"] . "' but '" . $column["name"] . "' already exists in '" . $table . "'!<br>";
         continue;
       }
 
@@ -251,15 +350,7 @@ function addColumns($table, $columns)
       }
     }
 
-    $definition = clean($column["name"])
-      . " " . $column["type"]
-      . ($column["null"] ? "" : " NOT NULL");
-
-    if (isset($column["default"])) {
-      $definition .= " DEFAULT " . $column["default"];
-    } else if (isset($column["default_string"])) {
-      $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
-    }
+    $definition = getColumnDefinition($column);
 
     if ($modify) {
       query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);

@@ -1,6 +1,6 @@
 <?php //route[admin/get_attribute_values]
 
-include_once "attributes_service.php";
+include_once "admin/product/attributes_service.php";
 
 $values = getAttributeValues(intval($_POST['attribute_id'])); // recursive
 

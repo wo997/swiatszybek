@@ -6,7 +6,7 @@ useCSS(__DIR__ . "/main.css");
 $contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
 
 $module_content .= "
-<div class='default-form'>
+<div>
     <div class='contact-info'>
         <div>
             <b>" . config('company_name') . "</b><br><br>
@@ -31,21 +31,21 @@ $module_content .= "
         <div class='uzupelnij' style='color:red;display:none;margin: 0 8px;'>Uzupełnij wszystkie pola</div>
         <div class='mobileRow'>
             <label>
-                <span>Imię i nazwisko</span>
-                <input type='text' name='name' placeholder=' '>
+                <span class='field-title'>Imię i nazwisko</span>
+                <input class='field' type='text' name='name' placeholder=' '>
             </label>
             <label>
-                <span>Adres e-mail</span>
-                <input type='text' name='email' placeholder=' ' value='" . $contact_email . "'>
+                <span class='field-title'>Adres e-mail</span>
+                <input class='field' type='text' name='email' placeholder=' ' value='" . $contact_email . "'>
             </label>
         </div>
         <label>
-            <span>Temat</span>
-            <input type='text' name='subject' placeholder=' '>
+            <span class='field-title'>Temat</span>
+            <input class='field' type='text' name='subject' placeholder=' '>
         </label>
         <label style='margin-top: 16px'>
-            <span>Treść wiadomości</span>
-            <textarea name='message' placeholder=' '></textarea>
+            <span class='field-title'>Treść wiadomości</span>
+            <textarea class='field' name='message' placeholder=' '></textarea>
         </label>
         <div style='margin: 8px'>
             <button type='submit' class='btn primary medium fill'>Wyślij <i class='fas fa-paper-plane'></i></button>

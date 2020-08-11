@@ -180,7 +180,7 @@
                     <input type="text" name="name" data-validate autocomplete="off" class="field">
 
                     <div class="field-title">Typ danych</div>
-                    <select name="data_type" class="form-field" onchange="toggleValues()"></select>
+                    <select name="data_type" class="field" onchange="toggleValues()"></select>
 
                     <div class="attribute_values"></div>
                 </div>

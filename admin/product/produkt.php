@@ -18,9 +18,12 @@ $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM li
 
 //$attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM link_product_attribute_value WHERE product_id = $product_id");
 
-include_once "attributes_service.php";
+include_once "admin/product/attributes_service.php";
 
 $displayAllAttributeOptions = displayAllAttributeOptions();
+
+$product_data["product_attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
+
 
 ?>
 
@@ -28,29 +31,7 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
 <?php startSection("head"); ?>
 
 <style>
-  .attribute-row .field {
-    width: auto;
-    display: inline-block;
-    margin: 0px 2px;
-  }
 
-  .combo-select-wrapper select[data-parent_value_id].hidden,
-  .any-value-wrapper .field.hidden {
-    display: none !important;
-  }
-
-  .attribute-row {
-    padding: 5px;
-    border: 1px solid #ccc;
-  }
-
-  .attribute-row+.attribute-row {
-    border-top: none;
-  }
-
-  .combo-select-wrapper select.empty:not(:focus) {
-    color: #aaa;
-  }
 </style>
 <script>
   useTool("cms");
@@ -201,37 +182,6 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
             `
     });
 
-    var quillShort = new Quill('#product-description', {
-      theme: 'snow',
-      modules: {
-        'toolbar': [
-          [{
-            'size': []
-          }],
-          ['bold', 'italic', 'underline', 'strike'],
-          [{
-            'color': []
-          }, {
-            'background': []
-          }],
-          [{
-            'list': 'ordered'
-          }, {
-            'list': 'bullet'
-          }, {
-            'indent': '-1'
-          }, {
-            'indent': '+1'
-          }],
-          [{
-            'align': []
-          }],
-          ['link'],
-          ['clean'],
-        ],
-      }
-    });
-
     createSimpleList({
       name: "gallery",
       fields: {
@@ -317,9 +267,7 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
         variant_id: data.variant_id
       },
       success: (data) => {
-        setFormData(data, {
-          form: $("#variantEdit")
-        });
+        setFormData(data, $("#variantEdit"));
 
         setModalInitialState(formName);
       }
@@ -413,30 +361,12 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
 
-    <div style="margin-top: 10px;display:none">
-      <div class="field-title">Opis krótki <span style="color:red">(wywalamy)</span></div>
-      <div class="quill-wrapper2">
-        <div id="product-description" name="descriptionShort" data-type="html" data-point-child=".ql-editor"></div>
-      </div>
-    </div>
-
-    <div style="margin-top: 10px;display:none">
-      <div style="display:flex" class="mobileRow">
-        <div>
-          <span style="color:red">Specyfikacja (chyba to wywalamy, zastąpimy atrybutami)</span>
-          <textarea id="specyfikacja" name="specyfikacja" style="width: 100%;height:200px" oninput="showSpecyfikacja()"></textarea>
-          <textarea id="specyfikacja_output" name="specyfikacja_output" style="display:none"></textarea>
-        </div>
-        <div style="padding: 0 20px">
-          Podgląd:
-          <div id="specyfikacja_preview"></div>
-        </div>
-      </div>
-    </div>
+    <div class="field-title">Atrybuty produktu (wspólne)</div>
+    <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
     <div style="margin-top: 10px">
 
-      <div class="form-field">
+      <div class="field-title">
         Opis główny
         <div onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
       </div>
@@ -487,8 +417,7 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
         <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
       </div>
 
-      <div class="field-title">Atrybuty</div>
-
+      <div class="field-title">Atrybuty wariantu (inne niż ogólne dla produktu)</div>
       <div name="variant_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
       <div class="field-title">

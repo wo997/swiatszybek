@@ -1,6 +1,6 @@
 <?php //route[admin/save_product]
 
-$input = ["exceptions" => ["categories", "description", "gallery"]];
+$input = ["exceptions" => ["categories", "description", "gallery", "product_attributes"]];
 include "helpers/safe_post.php";
 
 if (isset($_POST["remove"])) {
@@ -18,9 +18,9 @@ if (isset($_POST["remove"])) {
     }
 
     query("UPDATE products SET title = ?, link = ?, seo_title = ?, seo_description = ?,
-      specyfikacja = ?, specyfikacja_output = ?, description = ?, descriptionShort = ?, gallery = ?, published = ? WHERE product_id = " . intval($product_id), [
+        description = ?, gallery = ?, published = ? WHERE product_id = " . intval($product_id), [
         $_POST["title"], $_POST["link"], $_POST["seo_title"], $_POST["seo_description"],
-        $_POST["specyfikacja"], $_POST["specyfikacja_output"], $_POST["description"], $_POST["descriptionShort"], $_POST["gallery"], $_POST["published"]
+        $_POST["description"], $_POST["gallery"], $_POST["published"]
     ]);
 
     // categories
@@ -35,6 +35,10 @@ if (isset($_POST["remove"])) {
     }
 
     triggerEvent("product_gallery_change", ["product_id" => intval($product_id)]);
+
+    include_once "admin/product/attributes_service.php";
+    $product_attributes = json_decode($_POST["product_attributes"], true);
+    updateAttributesInDB($product_attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 }
 include "../sitemap-create.php";
 die;

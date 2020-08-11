@@ -246,26 +246,19 @@ var modules = {
     description: "Lista produktów",
     icon: '<i class="fas fa-cube"></i>',
     form: `
-            <div class="default-form">
-                <label style='margin-top:0'>
-                    <span>Liczba produktów</span>
-                    <input type='number' name="product_list_count">
-                </label>
-                <label>
-                    <span>Sortuj wg</span>
-                    <select name='order_by'>
-                        <option value='new'>Najnowsze</option>
-                        <option value='sale'>Bestsellery</option>
-                        <option value='cheap'>Najtańsze</option>
-                        <option value='random'>Losowo</option>
-                    </select>
-                </label>
-                <label>
-                    <span>Kategorie</span>
-                </label>
-                <input type="hidden" name="category_ids" data-category-picker data-category-picker-source="product_categories">
-            </div>
-
+            <span class="field-title" style='margin-top:0'>Liczba produktów</span>
+            <input type='number' name="product_list_count" class="field">
+        
+            <span class="field-title">Sortuj wg</span>
+            <select name='order_by' class="field">
+                <option value='new'>Najnowsze</option>
+                <option value='sale'>Bestsellery</option>
+                <option value='cheap'>Najtańsze</option>
+                <option value='random'>Losowo</option>
+            </select>
+               
+            <span class="field-title">Kategorie</span>               
+            <input type="hidden" name="category_ids" data-category-picker data-category-picker-source="product_categories" class="field">
             `,
     formOpen: (params, block, moduleName) => {
       loadCategoryPicker("product_categories", { skip: 2 }, () => {
@@ -287,27 +280,36 @@ var modules = {
     params: "",
     description: "Formularz do newslettera",
     icon: '<i class="far fa-newspaper"></i>',
+    render: (params) => {
+      return "";
+    },
   },
   slider: {
     params: "",
     description: "Slider zdjęć",
     icon: '<i class="far fa-images"></i>',
     editUrl: "/admin/slider",
+    render: (params) => {
+      return "";
+    },
   },
   "contact-form": {
     params: "",
     description: "Formularz kontaktowy",
     icon: '<i class="far fa-address-card"></i>',
     editUrl: "/admin/konfiguracja",
+    render: (params) => {
+      return "";
+    },
   },
   "custom-html": {
     params: "",
     description: "Moduł HTML",
     icon: '<i class="fas fa-code"></i>',
     form: `
-            <div class="default-form" style="width:600px; max-width:90vw;">
+            <div style="width:600px; max-width:90vw;">
               <div class="field-title">HTML</div>
-                <textarea class="field html" style="width:100%; height:400px"></textarea>
+              <textarea class="field html" style="height:400px"></textarea>
             </div>
             `,
     formOpen: (params, block) => {
@@ -1627,7 +1629,7 @@ registerModalContent(`
                         <h3 style="text-align:center">Wersja desktopowa <i class='fas fa-desktop'></i></h3>
                         <h4>Minimalna wysokość</h4>
                         <div class="selectbox">
-                            <input type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
+                            <input class="field" type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <button data-option="">Brak</button>
                                 <button data-option="100px">100px</button>
@@ -1638,7 +1640,7 @@ registerModalContent(`
                         </div>
                         <h4>Szerokość bloku</h4>
                         <div class="selectbox">
-                            <input type="text" style="width:150px" data-attribute="desktop-width" data-default-value="100%" data-default-unit="px">
+                            <input class="field" type="text" style="width:150px" data-attribute="desktop-width" data-default-value="100%" data-default-unit="px">
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <button data-option="100%">100%</button>
                                 <button data-option="50%">1/2</button>
@@ -1652,7 +1654,7 @@ registerModalContent(`
                         <h3 style="text-align:center">Wersja mobilna <i class='fas fa-mobile-alt'></i></h3>
                         <h4>Minimalna wysokość</h4>
                         <div class="selectbox">
-                            <input type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
+                            <input class="field" type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <button data-option="">Brak</button>
                                 <button data-option="100px">100px</button>
@@ -1663,7 +1665,7 @@ registerModalContent(`
                         </div>
                         <h4>Szerokość bloku</h4>
                         <div class="selectbox">
-                            <input type="text" style="width:150px" data-attribute="mobile-width" data-default-value="100%" data-default-unit="px">
+                            <input class="field" type="text" style="width:150px" data-attribute="mobile-width" data-default-value="100%" data-default-unit="px">
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <button data-option="100%">100%</button>
                                 <button data-option="50%">1/2</button>
@@ -1689,40 +1691,40 @@ registerModalContent(`
                 </div>
                 <h4>Wyrównaj zawartość</h4>
                 <div class="desktopRow spacecolumns" style="justify-content:space-evenly">
-                    <div class="default-form">
+                    <div>
                         <h4>W pionie <i class="fas fa-arrows-alt-v"></i> <i class='fas fa-info-circle' data-tooltip='Gdy w danym wierszu są przynajmniej 2 bloki'></i></h4>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='align-vertical' value=''>
                             <i class="far fa-square"></i> Brak
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='align-vertical' value='align-vertical-top'>
                             <i class="far fa-caret-square-up"></i> Góra
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='align-vertical' value='align-vertical-center'>
                             <i class="far fa-minus-square"></i> Środek
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='align-vertical' value='align-vertical-bottom'>
                             <i class="far fa-caret-square-down"></i> Dół
                         </label>
                     </div>
-                    <div class="default-form">
+                    <div>
                         <h4>W poziomie <i class="fas fa-arrows-alt-h"></i> <i class='fas fa-info-circle' data-tooltip='Gdy zawartość nie zajmuje całej dostępnej szerokości'></i></h4>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='align-horizontal' value=''>
                             <i class="far fa-square"></i> Brak
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='align-horizontal' value='align-horizontal-left'>
                             <i class="far fa-caret-square-left"></i> Lewo
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='align-horizontal' value='align-horizontal-center'>
                             <i class="far fa-minus-square" style="transform:rotate(90deg)"></i> Środek
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='align-horizontal' value='align-horizontal-right'>
                             <i class="far fa-caret-square-right"></i> Prawo
                         </label>
@@ -1929,7 +1931,7 @@ registerModalContent(`
                         <h3 style="text-align:center">Wersja desktopowa <i class='fas fa-desktop'></i></h3>
                         <h4>Minimalna wysokość</h4>
                         <div class="selectbox">
-                            <input type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
+                            <input class="field" type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <button data-option="">Brak</button>
                                 <button data-option="100px">100px</button>
@@ -1964,7 +1966,7 @@ registerModalContent(`
                         <h3 style="text-align:center">Wersja mobilna <i class='fas fa-mobile-alt'></i></h3>
                         <h4>Minimalna wysokość</h4>
                         <div class="selectbox">
-                            <input type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
+                            <input class="field" type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
                                 <button data-option="">Brak</button>
                                 <button data-option="100px">100px</button>
@@ -2006,34 +2008,34 @@ registerModalContent(`
 
             <div style="padding:10px;margin-top:-15px">
 
-                <div class="mobileRow default-form row-padding" style="justify-content:space-evenly">
+                <div class="mobileRow row-padding" style="justify-content:space-evenly">
                     <div>
                         <h4>Animacje przy pierwszym wyświetleniu</h4>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='animation' value=''>
                             Brak <i class="fa fa-times"></i>
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='animation' value='opacity'>
                             Przezroczystość <i class="opacity-icon"></i>
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='animation' value='opacity-m_left'>
                             Przezroczystość <i class="opacity-icon"></i> + Ruch <i class="fas fa-angle-double-left"></i>
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='animation' value='opacity-m_right'>
                             Przezroczystość <i class="opacity-icon"></i> + Ruch <i class="fas fa-angle-double-right"></i>
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='animation' value='opacity-m_up'>
                             Przezroczystość <i class="opacity-icon"></i> + Ruch <i class="fas fa-angle-double-up"></i>
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='animation' value='opacity-s_expand'>
                             Przezroczystość <i class="opacity-icon"></i> + Powiększanie <i class="fas fa-expand-arrows-alt"></i>
                         </label>
-                        <label>
+                        <label style="display:block">
                             <input type='radio' class='classList' name='animation' value='opacity-s_compress'>
                             Przezroczystość <i class="opacity-icon"></i> + Pomniejszanie <i class="fas fa-compress-arrows-alt"></i>
                         </label>
@@ -2088,34 +2090,39 @@ registerModalContent(
                 <div class="btn primary" onclick="saveCMSBackground();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
 
-            <div style="padding:10px 0;" class="mobileRow default-form">
-                <div style="padding: 20px;">
+            <div style="padding:10px 0;" class="mobileRow">
+              <div style="padding: 20px;">
 
-                    <h4> Zdjęcie </h4>
+                <div class="field-title">
+                  <span> Zdjęcie </span>
 
-                    <div class="btn primary" onclick="imagePicker.open(null, {callback: cmsBlockBackgroundImageCallback, source: this})">Wybierz <i class="fas fa-image"></i></div>
+                  <div class="btn primary" onclick="imagePicker.open(null, {callback: cmsBlockBackgroundImageCallback, source: this})">Wybierz <i class="fas fa-image"></i></div>
 
-                    <div class="btn primary" onclick="setBlockBackgroundImage()">Usuń <i class="fa fa-times"></i></div>
-
-                    <br>
-
-                    <h4> Kolor <i class='fas fa-info-circle' data-tooltip='Wpisz kolor lub kliknij w pole i wybierz'></i> </h4>
-
-                    <input class="bckgcolor jscolor" onclick="this.select()" onchange="setBlockBackgroundColor(this.value)" style="width: 65px;text-align: center;">
-                    <div class="btn primary" onclick="setBlockBackgroundColor();setBlockBackgroundColorOpacity(0)">Brak <i class="fa fa-times"></i></div>
-
-                    <div style="padding-right:10px">
-                        <label style="margin: 0.7em 0 0;">Widoczność koloru <i class='fas fa-info-circle' data-tooltip='Aby zmienić kontrast pomiędzy tekstem, a zdjęciem'></i></label>
-
-                        <input type="range" data-class="image-opacity" min="0" max="100" step="1" data-background="linear-gradient(to right, #fff, #000)" ; oninput="setBlockBackgroundColorOpacity(this.value)">
-                    </div>
+                  <div class="btn primary" onclick="setBlockBackgroundImage()">Usuń <i class="fa fa-times"></i></div>
                 </div>
 
-                <div style="padding: 20px;flex-grow: 1;">
-                    <div class="cmsBlockBackgroundPreview" style="border: 1px solid #ccc;position:relative;height: 200px;">
-                        <div class="background-color"></div>
-                    </div>
+                <br>
+
+                <div class="field-title">
+                  Kolor <i class='fas fa-info-circle' data-tooltip='Wpisz kolor lub kliknij w pole i wybierz'></i>
                 </div>
+
+                <div style="display:flex">
+                  <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setBlockBackgroundColor(this.value)" style="width: 65px;text-align: center;">
+                  <button class="btn primary" onclick="setBlockBackgroundColor();setBlockBackgroundColorOpacity(0)">Brak <i class="fa fa-times"></i></button>
+                </div>
+
+                <div style="padding-right:10px">
+                    <label style="margin: 0.7em 0 0;">Widoczność koloru <i class='fas fa-info-circle' data-tooltip='Aby zmienić kontrast pomiędzy tekstem, a zdjęciem'></i></label>
+                    <input type="range" class="field" data-class="image-opacity" min="0" max="100" step="1" data-background="linear-gradient(to right, #fff, #000)"; oninput="setBlockBackgroundColorOpacity(this.value)">
+                </div>
+              </div>
+
+              <div style="padding: 20px;flex-grow: 1;">
+                  <div class="cmsBlockBackgroundPreview" style="border: 1px solid #ccc;position:relative;height: 200px;">
+                      <div class="background-color"></div>
+                  </div>
+              </div>
 
             </div>
         </div>
