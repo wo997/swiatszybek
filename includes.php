@@ -38,7 +38,7 @@
   <meta property="og:type" content="website" />
 <?php endif ?>
 
-<?php if ($app["user"]["is_admin"] || $page_data["cms_id"]) : ?>
+<?php if ($app["user"]["is_admin"] || (isset($page_data) && isset($page_data["cms_id"]))) : ?>
 
   <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
   <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>

@@ -1757,7 +1757,6 @@ function $$(querySelectorAll, parent = null) {
 
 function validateForm(params) {
   registerValidateFields();
-
   var elem = params.form ? params.form : document;
 
   var fields = elem.findAll("[data-validate]");
@@ -1805,40 +1804,75 @@ function toggleFieldCorrect(field, isCorrect) {
 }
 
 function validateField(field) {
-  var val = field.value;
+  var val = field.getValue();
 
   if (val === "") return false;
 
   var validator = field.getAttribute("data-validate");
+  var [validatorType, ...validatorParams] = validator.split("|");
 
-  if (validator == "nip") {
+  if (validatorParams !== undefined && validatorParams.length !== 0) {
+    var params = {};
+    validatorParams.forEach((param) => {
+      params[param.slice(0, param.indexOf(":"))] = param.slice(
+        param.indexOf(":") + 1
+      );
+    });
+
+    if (params["match"]) {
+      var target = $(params["match"]);
+      if (!target) {
+        console.warn("Password field missing");
+        return;
+      }
+      var isCorrect = val == target.getValue();
+      toggleFieldCorrect(field, isCorrect);
+      if (!isCorrect) {
+        return false;
+      }
+    }
+
+    if (params["length"]) {
+      var valLen = val.length;
+
+      if (params["length"].indexOf("+") > 0) {
+        var isCorrect = valLen >= params["length"].replace("+", "");
+      } else if (/\d-\d/.test(params["length"])) {
+        var [from, to] = params["length"].split("-");
+        var isCorrect = valLen >= from && valLen <= to;
+      } else {
+        var isCorrect = valLen == params["length"];
+      }
+
+      toggleFieldCorrect(field, isCorrect);
+      if (!isCorrect) {
+        return false;
+      }
+    }
+  }
+
+  if (validatorType == "tel") {
+    const re = /^\d{6,}$/;
+    if (!re.test(val)) return false;
+  }
+  if (validatorType == "nip") {
     if (val.replace(/[^0-9]/g, "").length != 10) return false;
   }
-  if (validator == "email") {
+  if (validatorType == "email") {
     const re = /\S+@\S+\.\S+/;
     if (!re.test(String(val).toLowerCase())) return false;
   }
-  if (validator == "password") {
-    var isCorrect = val.length >= 8;
-    toggleFieldCorrect(field, isCorrect);
-    if (!isCorrect) {
-      return false;
+  if (validatorType == "password") {
+    // default password length
+    if (!params || !params["length"]) {
+      var isCorrect = val.length >= 8;
+      toggleFieldCorrect(field, isCorrect);
+      if (!isCorrect) {
+        return false;
+      }
     }
   }
-  if (validator.substr(0, 6) == "match:") {
-    var target = $(validator.substr(6));
-    if (!target) {
-      console.warn("Password field missing");
-      return;
-    }
-    var isCorrect = val == target.value;
-    toggleFieldCorrect(field, isCorrect);
-    if (!isCorrect) {
-      return false;
-    }
-  }
-
-  if (validator == "price") {
+  if (validatorType == "price") {
     if (+val <= 0.001) {
       return false;
     }

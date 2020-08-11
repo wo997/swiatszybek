@@ -100,7 +100,7 @@ function a($name)
               </div>
               <div>
                 <span class="field-title">Nr telefonu</span>
-                <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate class="field">
+                <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate="tel" class="field">
               </div>
             </div>
           </div>
@@ -119,7 +119,7 @@ function a($name)
 
               <div class="field-title">Powtórz hasło</div>
               <div class="field-wrapper">
-                <input type="password" name="password_rewrite" class="field" data-validate="match:form .field[name='password']">
+                <input type="password" name="password_rewrite" class="field" data-validate="password|match:form .field[name='password']">
                 <i class="correct fa fa-check"></i>
                 <i class="wrong fa fa-times"></i>
               </div>
