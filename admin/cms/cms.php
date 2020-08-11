@@ -140,6 +140,7 @@ $static = checkUrl($page_data["link"]);
             params: params,
             success: () => {
                 window.location.reload();
+                //showNotification(`<i class="fas fa-check"></i> Zapisano zmiany</b>`); // TODO XD
             }
         });
     }
@@ -198,16 +199,16 @@ $static = checkUrl($page_data["link"]);
         <div class="single-row-labels">
 
             <div class="field-title">Maksymalna szerokość strony</div>
-            <label><input type="radio" data-property="page_width" value="1500px" data-type="json" data-name="metadata">1500px</label>
-            <label><input type="radio" data-property="page_width" value="1300px" data-type="json" data-name="metadata">1300px</label>
-            <label><input type="radio" data-property="page_width" value="1100px" data-type="json" data-name="metadata">1100px</label>
-            <label><input type="radio" data-property="page_width" value="100%" data-type="json" data-name="metadata">brak (100%)</label>
+            <label style="display:block"><input type="radio" data-property="page_width" value="1500px" data-type="json" data-name="metadata"> 1500px</label>
+            <label style="display:block"><input type="radio" data-property="page_width" value="1300px" data-type="json" data-name="metadata"> 1300px</label>
+            <label style="display:block"><input type="radio" data-property="page_width" value="1100px" data-type="json" data-name="metadata"> 1100px</label>
+            <label style="display:block"><input type="radio" data-property="page_width" value="100%" data-type="json" data-name="metadata"> brak (100%)</label>
 
             <div class="field-title">Odstępy z góry i dołu</div>
-            <label><input type="radio" data-property="page_padding" value="80px" data-type="json" data-name="metadata">80px</label>
-            <label><input type="radio" data-property="page_padding" value="45px" data-type="json" data-name="metadata">45px</label>
-            <label><input type="radio" data-property="page_padding" value="25px" data-type="json" data-name="metadata">25px</label>
-            <label><input type="radio" data-property="page_padding" value="0" data-type="json" data-name="metadata">brak (0px)</label>
+            <label style="display:block"><input type="radio" data-property="page_padding" value="80px" data-type="json" data-name="metadata"> 80px</label>
+            <label style="display:block"><input type="radio" data-property="page_padding" value="45px" data-type="json" data-name="metadata"> 45px</label>
+            <label style="display:block"><input type="radio" data-property="page_padding" value="25px" data-type="json" data-name="metadata"> 25px</label>
+            <label style="display:block"><input type="radio" data-property="page_padding" value="0" data-type="json" data-name="metadata"> brak (0px)</label>
         </div>
 
         <input type="hidden" id="metadata" name='metadata'>

@@ -1282,20 +1282,18 @@ registerModalContent(
 );
 
 registerModalContent(`
-    <div id="putVideo" class="default-form form-spacing">
+    <div id="putVideo" class="form-spacing">
         <div style="width: 100%;max-width: 300px;">
             <div class="custom-toolbar">
                 <span class="title">Wstawianie filmu</span>
                 <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
             </div>
             <div style="padding:10px;width:100%;max-width:300px;margin-top: -15px;">
-                <label>
-                    <span>Wklej źródło filmu <i class='fas fa-info-circle' data-tooltip='Z Youtube lub serwera'></i></span>
-                    <div style="display:flex">
-                        <input type="text" id="videoUrl">
-                        <button class="btn primary" onclick="quillEditor.insertVideo($('#videoUrl').value);hideParentModal(this);$('#videoUrl').value=''">Wstaw</button>
-                    </div>
-                </label>
+              <span class="field-title">Wklej źródło filmu <i class='fas fa-info-circle' data-tooltip='Z Youtube lub serwera'></i></span>
+              <div style="display:flex">
+                  <input type="text" id="videoUrl" class="field">
+                  <button class="btn primary" onclick="quillEditor.insertVideo($('#videoUrl').value);hideParentModal(this);$('#videoUrl').value=''">Wstaw</button>
+              </div>
             </div>
         </div>
     </div>

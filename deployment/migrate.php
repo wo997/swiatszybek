@@ -65,5 +65,9 @@ addColumns("cms", [
   ["name" => "seo_title", "type" => "TINYTEXT"]
 ]);
 
+addColumns("variant_attribute_values", [
+  ["name" => "date_value", "type" => "DATE"]
+]);
+
 
 echo "<h3>✅ All migrations completed</h3>";

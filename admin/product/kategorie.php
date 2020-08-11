@@ -222,7 +222,7 @@
                 </div>
 
                 <div class="field-title">Widoczność</div>
-                <select name="published" class="form-field">
+                <select name="published" class="field">
                     <option value="1">Publiczna</option>
                     <option value="0">Ukryta</option>
                 </select>

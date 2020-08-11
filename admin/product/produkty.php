@@ -62,10 +62,10 @@
 <div class="mytable"></div>
 
 <div id="newProduct" data-modal>
-  <form onsubmit="return validateForm({form:this})" action="/admin/create_product" method="post" class="default-form modal-padding">
+  <form onsubmit="return validateForm({form:this})" action="/admin/create_product" method="post" class="modal-padding">
     <label>
       <span>Nazwa produktu</span>
-      <input type="text" name="title" id="title" data-validate>
+      <input type="text" name="title" id="title" data-validate class="field">
     </label>
     <div style="text-align:right;padding-top:15px">
       <button class="btn secondary" type="button" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>

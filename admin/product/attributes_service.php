@@ -53,16 +53,18 @@ function displayAllAttributeOptions()
         if ($any) {
             $res .=  '
               <label>
-                <input type="checkbox">
+                <input type="checkbox" class="has_attribute">
                 <div class="checkbox"></div>
               </label>
             ';
             if (strpos($attribute["data_type"], "color") !== false) {
-                $res .=  '<input type="text" class="jscolor field" style="display: inline-block;width:65px">';
+                $res .=  '<input type="text" class="jscolor field attribute_value" style="display: inline-block;width:65px">';
             } else if (strpos($attribute["data_type"], "number") !== false) {
-                $res .=  '<input type="number" class="field">';
+                $res .=  '<input type="number" class="field attribute_value">';
+            } else if (strpos($attribute["data_type"], "date") !== false) {
+                $res .=  '<input type="text" class="field datepicker attribute_value">';
             } else {
-                $res .=  '<input type="text" class="field">';
+                $res .=  '<input type="text" class="field attribute_value">';
             }
         } else {
             $values = getAttributeValues($attribute["attribute_id"]);

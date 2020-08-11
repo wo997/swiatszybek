@@ -459,13 +459,13 @@ input[type="button"] {
   margin-bottom: 0.2em;
   user-select: none;
   font-weight: 600;
-  display: inline-block;
+  display: block;
 }
 .field {
   display: block;
   width: 100%;
   padding: 5px 7px;
-  background-color: #fdfdfd;
+  background-color: #fbfbfb;
 }
 .field:hover {
   border-color: #aaa;
@@ -474,13 +474,14 @@ input[type="button"] {
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.09);
 }
 .field:hover:not(:focus) {
-  background-color: #fcfcfc;
+  background-color: #fff;
 }
 .field:focus {
   border-color: #888;
   -webkit-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.13);
   -moz-box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.13);
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.13);
+  background-color: #fff;
 }
 .field-title [data-type] {
   margin-top: 4px;
@@ -494,37 +495,6 @@ input[type="button"] {
 }
 
 /* new form end */
-
-.default-form label input:not([type="checkbox"]):not([type="radio"]),
-.default-form label textarea,
-.default-form select {
-  display: block;
-  width: 100%;
-  padding: 2px 4px;
-}
-.default-form label {
-  margin-top: 3px;
-  display: block;
-}
-/*.label {
-  margin-top: 0.5em;
-  display: block;
-}
-.label-margin-small .label, .label-margin-small {
-  margin-top: 3px;
-}*/
-.form-field {
-  display: block;
-  width: 100%;
-  padding: 2px 4px;
-}
-.default-form h4 {
-  margin: 0.7em 0 0.4em;
-}
-.default-form .datepicker {
-  text-align: left;
-}
-
 .row-padding {
   margin: 0 -8px;
 }
@@ -612,7 +582,7 @@ input[type="radio"] {
   top: 6px;
   transition: 0.2s;
 }
-@media (hover: none) {
+@media (hover: hover) {
   input[type="radio"]:hover:not(:checked) {
     filter: brightness(0.9);
   }
@@ -2251,10 +2221,6 @@ ql-icon i span {
   box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
 }
 
-label input[type="radio"] {
-  margin-right: 2px;
-}
-
 /* todo remove later */
 .modal-padding {
   padding: 10px;
@@ -2710,3 +2676,29 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   opacity: 1;
   top: 70px;
 }
+
+/* attributes start */
+.attribute-row .field {
+  width: auto;
+  display: inline-block;
+  margin: 0px 2px;
+}
+
+.combo-select-wrapper select[data-parent_value_id].hidden,
+.any-value-wrapper .field.hidden {
+  display: none !important;
+}
+
+.attribute-row {
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+}
+
+.attribute-row + .attribute-row {
+  border-top: none;
+}
+
+.combo-select-wrapper select.empty:not(:focus) {
+  color: #aaa;
+}
+/* attributes end */

@@ -1920,34 +1920,23 @@ function setValue(input, value) {
       });
 
       input.findAll(".any-value-wrapper").forEach((any) => {
-        any.find(`input[type="checkbox"]`).setValue(false);
+        any.find(`.has_attribute`).setValue(false);
       });
 
       value.values.forEach((e) => {
-        //console.log();
-
-        var attribute_input = input.find(
-          `[data-attribute_id="${e.getAttribute("attribute_id")}"]`
+        var attribute_row = input.find(
+          `[data-attribute_id="${e.attribute_id}"]`
         );
-        input.findAll(".any-value-wrapper").forEach((any) => {
-          any.find(`input[type="checkbox"]`).setValue(false);
-        });
-      });
 
-      /*var attribute_selected_values = [];
-      input.findAll("[data-attribute-value]").forEach((select) => {
-        if (select.value) {
-          attribute_selected_values.push(parseInt(select.value));
+        if (attribute_row) {
+          attribute_row.find(`.has_attribute`).setValue(true);
+          attribute_row
+            .find(`.attribute_value`)
+            .setValue(
+              nonull(e.numerical_value, nonull(e.text_value, e.date_value))
+            );
         }
       });
-      var attribute_values = {};
-      input.findAll(".any-value-wrapper [data-attribute_id]:not(.hidden)").forEach((input) => {
-        attribute_values[input.getAttribute("data-attribute_id")] = input.value;
-      });
-      return JSON.stringify({
-        selected: attribute_selected_values,
-        values: attribute_values
-      });*/
     } else if (type == "src") {
       var prefix = input.getAttribute(`data-src-prefix`);
       if (!prefix) prefix = "/uploads/df/";
@@ -1988,12 +1977,14 @@ function getValue(input) {
         }
       });
       var attribute_values = {};
-      input
-        .findAll(".any-value-wrapper [data-attribute_id]:not(.hidden)")
-        .forEach((input) => {
-          attribute_values[input.getAttribute("data-attribute_id")] =
-            input.value;
-        });
+      input.findAll(".any-value-wrapper").forEach((attribute_row) => {
+        var attr_id = attribute_row.getAttribute("data-attribute_id");
+        var attr_val_node = attribute_row.find(".attribute_value:not(.hidden)");
+
+        if (attr_val_node) {
+          attribute_values[attr_id] = attr_val_node.getValue();
+        }
+      });
       return JSON.stringify({
         selected: attribute_selected_values,
         values: attribute_values,

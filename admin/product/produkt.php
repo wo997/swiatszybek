@@ -28,29 +28,7 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
 <?php startSection("head"); ?>
 
 <style>
-  .attribute-row .field {
-    width: auto;
-    display: inline-block;
-    margin: 0px 2px;
-  }
 
-  .combo-select-wrapper select[data-parent_value_id].hidden,
-  .any-value-wrapper .field.hidden {
-    display: none !important;
-  }
-
-  .attribute-row {
-    padding: 5px;
-    border: 1px solid #ccc;
-  }
-
-  .attribute-row+.attribute-row {
-    border-top: none;
-  }
-
-  .combo-select-wrapper select.empty:not(:focus) {
-    color: #aaa;
-  }
 </style>
 <script>
   useTool("cms");
@@ -317,9 +295,7 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
         variant_id: data.variant_id
       },
       success: (data) => {
-        setFormData(data, {
-          form: $("#variantEdit")
-        });
+        setFormData(data, $("#variantEdit"));
 
         setModalInitialState(formName);
       }
@@ -436,7 +412,7 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
 
     <div style="margin-top: 10px">
 
-      <div class="form-field">
+      <div class="field-title">
         Opis główny
         <div onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
       </div>
