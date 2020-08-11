@@ -361,7 +361,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
 
-    <div class="field-title">Atrybuty produktu (ogólne)</div>
+    <div class="field-title">Atrybuty produktu (wspólne)</div>
     <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
     <div style="margin-top: 10px">

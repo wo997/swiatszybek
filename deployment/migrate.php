@@ -75,7 +75,13 @@ createTable("product_attribute_values", [
 
 createTable("link_product_attribute_value",  [
   ["name" => "product_id", "type" => "INT"],
-  ["name" => "attribute_id", "type" => "INT"]
+  ["name" => "value_id", "type" => "INT"]
 ]);
+
+addIndex("link_product_attribute_value", "product_id", "index");
+addIndex("link_product_attribute_value", "value_id", "index");
+
+addIndex("link_variant_attribute_value", "variant_id", "index");
+addIndex("link_variant_attribute_value", "value_id", "index");
 
 echo "<h3>✅ All migrations completed</h3>";
