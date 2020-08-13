@@ -487,7 +487,6 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
 }
 
 function editCMS(t) {
-  // TODO: include parameter for preview?
   cmsSource = $(t);
   removeContent(cms);
   cms.insertAdjacentHTML("afterbegin", cmsSource.innerHTML);
@@ -495,7 +494,6 @@ function editCMS(t) {
   cms.findAll(".cms").forEach((e) => {
     e.outerHTML = e.innerHTML;
   });
-  // we should be checking the structure on dom load, including migrations
 
   $$("#cms .cms-block[data-module]").forEach((e) => {
     var c = e.find(".module-content");
@@ -508,19 +506,6 @@ function editCMS(t) {
   showModal("cms", { source: cmsSource });
 
   cmsUpdate();
-
-  // cleaning up global css and js
-  cmsSource.findAll(`style`).forEach((elem) => {
-    elem.outerHTML = elem.outerHTML
-      .replace(`<style>`, "<styleDisabled>")
-      .replace(`</style>`, "</styleDisabled>");
-  });
-
-  cmsSource.findAll(`script`).forEach((elem) => {
-    elem.outerHTML = elem.outerHTML
-      .replace(`<script>`, "<scriptDisabled>")
-      .replace(`</script>`, "</scriptDisabled>");
-  });
 }
 
 function cmsUpdate() {
