@@ -254,31 +254,20 @@ function addMissingDirectChildren(
   }
 }
 
-function swapNodes(n1, n2) {
-  if (!n1 || !n2) return;
+function swapNodes(a, b) {
+  if (!a || !b) return;
 
-  var p1 = n1.parent();
-  var p2 = n2.parent();
-  var i1, i2;
+  var aParent = a.parentNode;
+  var bParent = b.parentNode;
 
-  if (!p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1)) return;
+  var aHolder = document.createElement("div");
+  var bHolder = document.createElement("div");
 
-  for (var i = 0; i < p1.children.length; i++) {
-    if (p1.children[i].isEqualNode(n1)) {
-      i1 = i;
-    }
-  }
-  for (var i = 0; i < p2.children.length; i++) {
-    if (p2.children[i].isEqualNode(n2)) {
-      i2 = i;
-    }
-  }
+  aParent.replaceChild(aHolder, a);
+  bParent.replaceChild(bHolder, b);
 
-  if (p1.isEqualNode(p2) && i1 < i2) {
-    i2++;
-  }
-  p1.insertBefore(n2, p1.children[i1]);
-  p2.insertBefore(n1, p2.children[i2]);
+  aParent.replaceChild(b, aHolder);
+  bParent.replaceChild(a, bHolder);
 }
 
 function toggleBodyScroll(disable) {
@@ -1653,7 +1642,7 @@ function isModalActive(name) {
 
 function $(node, parent = null) {
   if (!node) return null;
-  if (node.find) return node;
+  if (node.find) return node; // already initialized
 
   if (parent === null) {
     parent = document;
@@ -1727,11 +1716,11 @@ function $(node, parent = null) {
     return window.isInNode(node, parent);
   };
 
-  node.removeNode = () => {
+  node.remove = () => {
     return window.removeNode(node);
   };
 
-  node.removeContent = () => {
+  node.empty = () => {
     return window.removeContent(node);
   };
 
@@ -2986,22 +2975,35 @@ function createSimpleList(params = {}) {
     `
       <div class="${className}">
           <span>${params.title}</span>
-          <div class="btn primary" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-arrow-up"></i></div>
-          <div class="btn primary" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-arrow-down"></i></div>
       </div>
+      <div class="btn primary add_btn add_begin" onclick="${
+        list.name
+      }.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
       <div class="list"></div>
-      <input type="hidden" class="simple-list-value" name="${list.name}" onchange="${list.name}.setValuesFromString(this.value)">
+      <div class="btn primary add_btn add_end" onclick="${
+        list.name
+      }.insertRow(this,false)">Dodaj <i class="fas fa-plus"></i></div>
+    </div>
+    <div class="list-empty" style="display:none">${nonull(
+      params.empty,
+      ""
+    )}</div>
+    <input type="hidden" class="simple-list-value" name="${
+      list.name
+    }" onchange="${list.name}.setValuesFromString(this.value)">
   `
   );
 
   list.insertRow = (btn, begin = true) => {
-    list.addRow(params.default_row, btn.parent().next(), begin);
+    list.addRow(params.default_row, btn.parent().find(".list"), begin);
   };
 
   list.target = $(`.${params.name} .list`);
   list.target.setAttribute("data-depth", 1);
 
   list.outputNode = $(`.${params.name} .simple-list-value`);
+
+  list.emptyNode = $(`.${params.name} .list-empty`);
 
   list.rows = [];
 
@@ -3066,39 +3068,45 @@ function createSimpleList(params = {}) {
 
     var depth = parseInt(listTarget.getAttribute("data-depth"));
 
-    var addBtn =
-      depth < list.recursive
-        ? `<div style="padding: 5px 0">
-              <span>Powiązane wartości</span>
-              <div class="btn primary" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-arrow-up"></i></div>
-              <div class="btn primary" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-arrow-down"></i></div>
-          </div>`
-        : "";
+    var btnTop = "";
+    var btnBottom = "";
+    var btnAddTop = "";
+
+    if (depth < list.recursive) {
+      btnAddTop = `<i class="btn secondary fas fa-list-ul add_btn_top" style="margin-right:10px" onclick="${list.name}.insertRow($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom dalej)"></i>`;
+      btnTop = `
+        <div class="btn primary add_btn add_begin" style="margin-top:10px" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
+        `;
+      btnBottom = `
+        <div class="btn primary add_btn add_end" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-plus"></i></div>
+        <div style="margin-bottom:5px"></div>
+      `;
+    }
 
     listTarget.insertAdjacentHTML(
       begin ? "afterbegin" : "beforeend",
-      `
-          <div class='simple-list-row-wrapper'>
-              <div class='simple-list-row'>
-                  ${params.render(values)}
-                  <div style="flex-grow:1"></div>
-                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes(this.parent().parent(),this.parent().parent().prev());${
-                    list.name
-                  }.valuesChanged();"></i>
-                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes(this.parent().parent(),this.parent().parent().next());${
-                    list.name
-                  }.valuesChanged();"></i>
-                  <div style="width:10px"></div>
-                  <i class="btn secondary fas fa-times" onclick="removeNode(this.parent().parent());${
-                    list.name
-                  }.valuesChanged();"></i>
-              </div>
-              <div class="sub-list">
-                  ${addBtn}
-                  <div class="list" data-depth="${1 + depth}"></div>
-              </div>
+      `<div class='simple-list-row-wrapper'>
+          <div class='simple-list-row'>
+              ${params.render(values)}
+              <div style="width:10px"></div>
+              ${btnAddTop}
+              <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
+                list.name
+              }.valuesChanged();"></i>
+              <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
+                list.name
+              }.valuesChanged();"></i>
+              <div style="width:10px"></div>
+              <i class="btn secondary fas fa-times" onclick="$(this).parent().parent().remove();${
+                list.name
+              }.valuesChanged();"></i>
           </div>
-      `
+          <div class="sub-list">
+              ${btnTop}
+              <div class="list" data-depth="${1 + depth}"></div>
+              ${btnBottom}
+          </div>
+      </div>`
     );
 
     list.valuesChanged();
@@ -3114,7 +3122,7 @@ function createSimpleList(params = {}) {
       });
 
     var n = begin ? 0 : listTarget.children.length - 1;
-    return listTarget.children[n].find(".list");
+    return $(listTarget.children[n]).find(".list");
   };
 
   list.valuesChanged = () => {
@@ -3140,12 +3148,28 @@ function createSimpleList(params = {}) {
 
         rows.push(row);
       });
+
+      list.emptyNode.style.display = rows.length === 0 ? "block" : "none";
+
       return rows;
     };
 
     list.values = getDirectRows(list.target, 1);
 
     list.outputNode.value = JSON.stringify(list.values);
+
+    list.target.findAll(".simple-list-row-wrapper").forEach((listRow) => {
+      var empty = !listRow.find(".sub-list").find(".simple-list-row-wrapper");
+
+      var add_btn_top = listRow.find(".add_btn_top");
+      if (add_btn_top) {
+        add_btn_top.style.display = empty ? "" : "none";
+      }
+      var add_begin = listRow.find(".add_begin");
+      if (add_begin) {
+        add_begin.style.display = empty ? "none" : "";
+      }
+    });
   };
 
   if (params.output) {

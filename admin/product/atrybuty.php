@@ -90,7 +90,7 @@
                 };
                 return `
                     <input type='hidden' data-list-param="value_id" value="${clean(data.value_id)}">
-                    <input type='text' style='width:190px' data-list-param="value" value="${clean(data.value)}">
+                    <input type='text' class='field' style='flex-grow:1' data-list-param="value" value="${clean(data.value)}">
                 `;
             },
             default_row: {

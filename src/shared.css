@@ -2625,17 +2625,13 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .simple-list-row-wrapper {
   background: #aaa4;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
 }
 
 .sub-list > .list > .simple-list-row-wrapper:first-child {
-  padding-top: 3px;
-}
-
-.sub-list > .list > .simple-list-row-wrapper:last-child {
-  margin-bottom: -3px;
+  padding-top: 5px;
 }
 
 .simple-list-row-wrapper {
@@ -2648,6 +2644,58 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .sub-list .simple-list-row-wrapper {
   border-right: none;
+}
+
+.simple-list .list:empty + .btn {
+  display: none;
+}
+
+.simple-list .field {
+  padding: 1px 5px;
+}
+
+.simple-list .add_btn {
+  border: none;
+  width: 100%;
+}
+
+.simple-list .add_begin {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.simple-list .add_end {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.simple-list > .add_btn {
+  background: #5c5;
+}
+.simple-list
+  .list[data-depth="1"]
+  > .simple-list-row-wrapper
+  > .sub-list
+  > .add_btn {
+  background: #6bb;
+}
+.simple-list
+  .list[data-depth="2"]
+  > .simple-list-row-wrapper
+  > .sub-list
+  > .add_btn {
+  background: #66b;
+}
+
+.simple-list .list[data-depth="1"] {
+  background: #dfd;
+}
+
+.simple-list .list[data-depth="2"] {
+  background: #dff;
+}
+
+.simple-list .list[data-depth="3"] {
+  background: #ddf;
 }
 
 /* simple list end */

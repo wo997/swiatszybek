@@ -201,7 +201,8 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       default_row: {
         src: ""
       },
-      title: "Galeria zdjęć produktu"
+      title: "Galeria zdjęć produktu",
+      empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
     });
 
     setFormData(<?= json_encode($product_data) ?>, $("#productForm"));
