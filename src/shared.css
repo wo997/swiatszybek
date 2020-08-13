@@ -2627,7 +2627,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   background: #aaa4;
   padding-top: 5px;
   padding-bottom: 5px;
-  padding-left: 10px;
+  padding-left: 5px;
 }
 
 .sub-list > .list > .simple-list-row-wrapper:first-child {
@@ -2666,6 +2666,13 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 .simple-list .add_end {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+
+.simple-list .list .add_begin {
+  margin-top: 10px;
+}
+.simple-list .list .add_end {
+  margin-bottom: 5px;
 }
 
 .simple-list > .add_btn {

@@ -3044,7 +3044,7 @@ function createSimpleList(params = {}) {
       listTarget = list.target;
     }
 
-    var canAdd = true;
+    /*var canAdd = true;
 
     [...listTarget.children].forEach((simpleListRowWrapper) => {
       $(simpleListRowWrapper)
@@ -3064,7 +3064,7 @@ function createSimpleList(params = {}) {
 
     if (!canAdd) {
       return;
-    }
+    }*/
 
     var depth = parseInt(listTarget.getAttribute("data-depth"));
 
@@ -3075,11 +3075,10 @@ function createSimpleList(params = {}) {
     if (depth < list.recursive) {
       btnAddTop = `<i class="btn secondary fas fa-list-ul add_btn_top" style="margin-right:10px" onclick="${list.name}.insertRow($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom dalej)"></i>`;
       btnTop = `
-        <div class="btn primary add_btn add_begin" style="margin-top:10px" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
+        <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
         `;
       btnBottom = `
         <div class="btn primary add_btn add_end" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-plus"></i></div>
-        <div style="margin-bottom:5px"></div>
       `;
     }
 

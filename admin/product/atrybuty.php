@@ -82,7 +82,6 @@
                 value: {
                     unique: true,
                 }
-
             },
             render: (data) => {
                 var clean = (x) => {
@@ -182,7 +181,7 @@
                     <div class="field-title">Typ danych</div>
                     <select name="data_type" class="field" onchange="toggleValues()"></select>
 
-                    <div class="attribute_values"></div>
+                    <div class="attribute_values" data-validate></div>
                 </div>
                 <div>
 
