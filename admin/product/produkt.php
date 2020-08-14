@@ -195,7 +195,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         };
         return `
             <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
-            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin: 10px;max-width:200px;max-height:200px">
+            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin: 10px;max-width:200px;max-height:200px;">
           `;
       },
       default_row: {

@@ -3,6 +3,10 @@
   flex-wrap: wrap;
 }
 
+.product-list .product {
+  padding: 2% 1%;
+}
+
 .product-list > .product {
   width: 100%;
 }

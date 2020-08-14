@@ -3141,7 +3141,7 @@ function createSimpleList(params = {}) {
     var btnAddTop = "";
 
     if (depth < list.recursive) {
-      btnAddTop = `<i class="btn secondary fas fa-list-ul add_btn_top" style="margin-right:10px" onclick="${list.name}.insertRow($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom dalej)"></i>`;
+      btnAddTop = `<i class="btn secondary fas fa-list-ul add_btn_top" style="margin-right:5px" onclick="${list.name}.insertRow($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom dalej)"></i>`;
       btnTop = `
         <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
         `;
@@ -3155,7 +3155,7 @@ function createSimpleList(params = {}) {
       `<div class='simple-list-row-wrapper'>
           <div class='simple-list-row'>
               ${params.render(values)}
-              <div style="width:10px"></div>
+              <div style="width:5px;margin-left:auto"></div>
               ${btnAddTop}
               <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
                 list.name
@@ -3163,7 +3163,7 @@ function createSimpleList(params = {}) {
               <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
                 list.name
               }.valuesChanged();"></i>
-              <div style="width:10px"></div>
+              <div style="width:5px"></div>
               <i class="btn secondary fas fa-times" onclick="$(this).parent().parent().remove();${
                 list.name
               }.valuesChanged();"></i>

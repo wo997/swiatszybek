@@ -65,7 +65,7 @@ include "basketContent.php";
         </div>
       <?php endif ?>
       <div id="basket">
-        <a href="/zakup">
+        <a href="/zakup" onclick="return !!+$('#amount').innerHTML">
           <div style="text-align: center;font-size: 14px;font-weight: normal;">
             <span><span class="case-desktop">Koszyk</span></span>
             <div style="display:inline-block;position:relative">
