@@ -161,6 +161,10 @@ function dateToString(d, type = "") {
     : d.getFullYear() + "-" + mon + "-" + day;
 }
 
+function reverseDateString(dateString, splitter) {
+  return dateString.split(splitter).reverse().join(splitter);
+}
+
 function xhr(data) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", data.url, true);
@@ -772,10 +776,16 @@ function createTable(table) {
     }, 400);
   };
 
-  $$(`.${table.name} *[data-param]`).forEach((e) => {
-    e.addEventListener("input", function () {
+  $$(`.${table.name} [data-param]`).forEach((e) => {
+    const onParamsChange = () => {
       if (e.tagName == "INPUT") table.awaitSearch();
       else table.search();
+    };
+    e.addEventListener("input", function () {
+      onParamsChange();
+    });
+    e.addEventListener("change", function () {
+      onParamsChange();
     });
   });
 
@@ -817,8 +827,22 @@ function createTable(table) {
           params[requiredFilterTables[table.db_table]] = x;
         }
       }
-      $$(`.${table.name} *[data-param]`).forEach((e) => {
-        params[e.getAttribute("data-param")] = e.value;
+      $$(`.${table.name} [data-param]`).forEach((e) => {
+        // var result = [];
+        // for (var id in e) {
+        //   try {
+        //     if (typeof e[id] == "function") {
+        //       result.push(id + ": " + e[id].toString());
+        //     }
+        //   } catch (err) {
+        //     result.push(id + ": inaccessible");
+        //   }
+        // }
+        // console.log(result);
+        if (e.findParentByClassName("hidden", "datatable-wrapper")) {
+          return;
+        }
+        params[e.getAttribute("data-param")] = e.getValue();
       });
       if (table.selectable) {
         // TODO get values from metadata or regular array
@@ -1289,6 +1313,7 @@ function renderIsPublished(row) {
 }
 
 function setPublish(obj, published) {
+  obj = $(obj);
   var tableElement = findParentByClassName(obj, ["datatable-wrapper"]);
   if (!tableElement) return;
   var tablename = tableElement.getAttribute("data-table-name");
@@ -1314,7 +1339,7 @@ function setPublish(obj, published) {
           published ? "publiczny" : "ukryty"
         }</b>`
       );
-      if (findParentByClassName(obj, ["selectedRows"])) {
+      if (obj.findParentByClassName("selectedRows")) {
         table.createList();
       } else {
         table.search();
@@ -1746,7 +1771,6 @@ function $$(querySelectorAll, parent = null) {
 
 function validateForm(params) {
   registerValidateFields();
-
   var elem = params.form ? params.form : document;
 
   var fields = elem.findAll("[data-validate]");
@@ -1754,13 +1778,13 @@ function validateForm(params) {
     if (params.hiddenClassList) {
       // if any parant has a class like one of these ignore that field
       var found = false;
-      if (findParentByClassName(field, params.hiddenClassList)) {
+      if (field.findParentByClassName(params.hiddenClassList)) {
         found = true;
         break;
       }
       if (found) continue;
     }
-    if (findParentByClassName(field, ["hidden"])) continue;
+    if (field.findParentByClassName("hidden")) continue;
 
     if (!validateField(field)) {
       var visibleField = getValidationTarget(field);
@@ -1794,40 +1818,75 @@ function toggleFieldCorrect(field, isCorrect) {
 }
 
 function validateField(field) {
-  var val = field.value;
+  var val = field.getValue();
 
   if (val === "") return false;
 
   var validator = field.getAttribute("data-validate");
+  var [validatorType, ...validatorParams] = validator.split("|");
 
-  if (validator == "nip") {
+  if (validatorParams !== undefined && validatorParams.length !== 0) {
+    var params = {};
+    validatorParams.forEach((param) => {
+      params[param.slice(0, param.indexOf(":"))] = param.slice(
+        param.indexOf(":") + 1
+      );
+    });
+
+    if (params["match"]) {
+      var target = $(params["match"]);
+      if (!target) {
+        console.warn("Password field missing");
+        return;
+      }
+      var isCorrect = val == target.getValue();
+      toggleFieldCorrect(field, isCorrect);
+      if (!isCorrect) {
+        return false;
+      }
+    }
+
+    if (params["length"]) {
+      var valLen = val.length;
+
+      if (params["length"].indexOf("+") > 0) {
+        var isCorrect = valLen >= params["length"].replace("+", "");
+      } else if (/\d-\d/.test(params["length"])) {
+        var [from, to] = params["length"].split("-");
+        var isCorrect = valLen >= from && valLen <= to;
+      } else {
+        var isCorrect = valLen == params["length"];
+      }
+
+      toggleFieldCorrect(field, isCorrect);
+      if (!isCorrect) {
+        return false;
+      }
+    }
+  }
+
+  if (validatorType == "tel") {
+    const re = /^\d{6,}$/;
+    if (!re.test(val)) return false;
+  }
+  if (validatorType == "nip") {
     if (val.replace(/[^0-9]/g, "").length != 10) return false;
   }
-  if (validator == "email") {
+  if (validatorType == "email") {
     const re = /\S+@\S+\.\S+/;
     if (!re.test(String(val).toLowerCase())) return false;
   }
-  if (validator == "password") {
-    var isCorrect = val.length >= 8;
-    toggleFieldCorrect(field, isCorrect);
-    if (!isCorrect) {
-      return false;
+  if (validatorType == "password") {
+    // default password length
+    if (!params || !params["length"]) {
+      var isCorrect = val.length >= 8;
+      toggleFieldCorrect(field, isCorrect);
+      if (!isCorrect) {
+        return false;
+      }
     }
   }
-  if (validator.substr(0, 6) == "match:") {
-    var target = $(validator.substr(6));
-    if (!target) {
-      console.warn("Password field missing");
-      return;
-    }
-    var isCorrect = val == target.value;
-    toggleFieldCorrect(field, isCorrect);
-    if (!isCorrect) {
-      return false;
-    }
-  }
-
-  if (validator == "price") {
+  if (validatorType == "price") {
     if (+val <= 0.001) {
       return false;
     }
@@ -1872,7 +1931,7 @@ function moveCursorToEnd(el) {
 function setValue(input, value) {
   input = $(input);
   if (input.classList.contains("table-selection-value")) {
-    var datatable = findParentByClassName(input, "datatable-wrapper");
+    var datatable = input.findParentByClassName("datatable-wrapper");
     window[datatable.getAttribute("data-table-name")].setSelectedValuesString(
       value
     );
@@ -1986,6 +2045,12 @@ function getValue(input) {
       var src = input.getAttribute("src");
       if (src && src.length > prefix.length) src = src.substr(prefix.length);
       return src;
+    } else if (type == "date") {
+      var format = input.getAttribute(`data-format`);
+      if (format == "dmy") {
+        return reverseDateString(input.value, "-");
+      }
+      return input.value;
     } else {
       return input.value;
     }
@@ -2148,7 +2213,7 @@ function getFormData(form = null) {
   $(form)
     .findAll(`[name]`)
     .forEach((e) => {
-      if (excludeHidden && findParentByClassName(e, ["hidden"])) return;
+      if (excludeHidden && e.findParentByClassName("hidden")) return;
       data[e.getAttribute("name")] = getValue(e);
     });
   return data;
@@ -2266,12 +2331,12 @@ function setCategoryPickerValues(element, values, params = {}) {
 }
 
 function expandCategoriesAbove(node, alsoCurrent = true) {
+  node = $(node);
   if (alsoCurrent) {
-    var parent = findParentByClassName(
-      node,
+    var parent = node.findParentByClassName([
       "category-picker-row",
-      "categories"
-    );
+      "categories",
+    ]);
     if (parent) {
       var nodeExpander = parent.next();
       if (nodeExpander && parent.find(".expand")) {
@@ -2282,7 +2347,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 
   parent = node;
   while (true) {
-    var parent = findParentByClassName(parent, "expandY", "categories");
+    var parent = parent.findParentByClassName(["expandY", "categories"]);
     if (!parent) break;
     var btn = parent.prev().find(".btn");
     if (!btn) break;
@@ -2294,7 +2359,8 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 }
 
 function categoryChanged(el) {
-  var element = findParentByClassName(el, ["category-picker"]);
+  el = $(el);
+  var element = el.findParentByClassName("category-picker");
   var name = element.getAttribute(`data-category-picker-name`);
   var singleselect = element.getAttribute("data-select") == "single";
   if (singleselect) {
@@ -2478,9 +2544,9 @@ document.addEventListener("touchstart", (event) => {
 /* tab menu start */
 
 document.addEventListener("click", (event) => {
-  var t = event.target;
-  var option = findParentByClassName(t, "tab-option");
-  var menu = findParentByClassName(t, "tab-menu");
+  var t = $(event.target);
+  var option = t.findParentByClassName("tab-option");
+  var menu = t.findParentByClassName("tab-menu");
   if (!option || !header) return;
 
   var tab_id = option.getAttribute("data-tab_id");
@@ -2674,7 +2740,8 @@ function kodPocztowyChange(src) {
 
 function getMiejscowoscPickerTarget(obj) {
   if (!obj) return;
-  var wrapper = findParentByClassName(obj, "miejscowosc-picker-wrapper");
+  obj = $(obj);
+  var wrapper = obj.findParentByClassName("miejscowosc-picker-wrapper");
   if (!wrapper) {
     console.warn("miejscowosc picker wrapper missing");
     return;
@@ -2689,7 +2756,8 @@ function getMiejscowoscPickerTarget(obj) {
 
 function getMiejscowoscPickerList(obj) {
   if (!obj) return;
-  var wrapper = findParentByClassName(obj, "miejscowosc-picker-wrapper");
+  obj = $(obj);
+  var wrapper = obj.findParentByClassName("miejscowosc-picker-wrapper");
   if (!wrapper) {
     console.warn("miejscowosc picker wrapper missing");
     return;
