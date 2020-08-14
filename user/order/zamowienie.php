@@ -37,12 +37,9 @@ $basket = json_decode($basket, true);
 if (empty($basket)) {
   $res = "<h3>Twój koszyk jest pusty!</h3>";
 } else {
-  function ids($v)
-  {
-    return $v['v'];
-  }
-
-  $ids = trim(json_encode(array_map('ids', $basket)), "[]");
+  $ids = trim(json_encode(array_map(function ($v) {
+    return $v['variant_id'];
+  }, $basket)), "[]");
 
   $products = fetchArray("SELECT product_id, title, link, zdjecie, variant_id FROM variant v INNER JOIN products i USING(product_id) WHERE variant_id IN ($ids)");
   $links = [];
@@ -55,7 +52,7 @@ if (empty($basket)) {
     $res .= "<tr>
         <td><img src='/uploads/sm/" . $item['zdjecie'] . "' style='max-width:130px;display:block;margin:auto'></td>
         <td><a class='linkable' href='" . nonull($links, $item['variant_id']) . "'>" . $item['title'] . "</a></td>
-        <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['base_price'] . " zł</td>
+        <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['real_price'] . " zł</td>
         <td class='oneline' data-stock=''>" . $item['quantity'] . " szt.</td>
         <td class='pln oneline basket-price'><label>Suma:</label> <span>" . $item['total_price'] . "</span> zł</td>";
 
@@ -245,8 +242,6 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         Moje zamówienia
       </a>
     <?php } ?>
-
-    <?= $errors ?>
 
     <h3 style="text-align: center;font-size: 20px;margin: 45px 0 35px;">
       <?php

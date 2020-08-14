@@ -3,8 +3,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 <?php if (/*$app["user"]["is_admin"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
-  <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
-  <link rel="stylesheet" href="/src/vanilla.datepicker.css?v=1" type="text/css" media="screen" />
+  <!-- <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
+  <link rel="stylesheet" href="/src/vanilla.datepicker.css?v=1" type="text/css" media="screen" /> -->
 
   <link href="/admin/shared.css?v=<?= RELEASE ?>" rel="stylesheet">
   <script src="/admin/shared.js?v=<?= RELEASE ?>"></script>
@@ -14,11 +14,13 @@
 
 <link href="/src/shared.css?v=<?= RELEASE ?>" rel="stylesheet">
 <script src="/src/shared.js?v=<?= RELEASE ?>"></script>
+<script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
+<link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.min.css?v=<?= RELEASE ?>">
+<script src="/node_modules/vanillajs-datepicker/js/i18n/locales/pl.js?v=<?= RELEASE ?>"></script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 <link rel="shortcut icon" href="/img/favicon.png" />
-<meta name="google-site-verification" content="YgKUmLL06h2yr2esaxeD8RwPVBmjdC6TZDmG1EozuQs" />
-<meta name="google-site-verification" content="vKcYEIHRy2wz5BdvwnAObE14QHMae6LhN79tyeik0NU" />
 
 <?php if ($url != "produkt" && isset($page_data["seo_description"])) : ?>
   <?php if ($url != "produkt" && isset($page_data["seo_description"])) : ?>
@@ -52,31 +54,6 @@
 <?php endif ?>
 <link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">
 
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-128557676-3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag('js', new Date());
-
-  gtag('config', 'UA-128557676-3');
-</script>
-
-<!-- Global site tag (gtag.js) - Google Ads: 651368023 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-651368023"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-  gtag('js', new Date());
-  gtag('config', 'AW-651368023');
-</script>
 
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">

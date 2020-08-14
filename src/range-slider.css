@@ -26,7 +26,8 @@
 }
 
 /*  Hide Original */
-.range {
+
+.range-wrap .range {
   width: 100%;
   cursor: pointer;
   opacity: 0;
@@ -43,7 +44,7 @@
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none; /* Remove pointer events on Bubble so user can click on the actual thumb beaneath it!  */
-  color: black/*transparent*/;
+  color: black /*transparent*/;
   display: grid;
   place-items: center; /*  Place the number on the center  */
   font-weight: bold;
@@ -54,6 +55,6 @@
 /*.range-wrap:hover .bubble,
 .range-wrap:focus .bubble {
   color: black;*/
-  /*transform: translateY(-50%) scale(1.2);
+/*transform: translateY(-50%) scale(1.2);
   padding: 0.1em;
 }*/
