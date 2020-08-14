@@ -16,7 +16,7 @@
 <script src="/src/shared.js?v=<?= RELEASE ?>"></script>
 <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
 <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.min.css?v=<?= RELEASE ?>">
-<script src="/node_modules/vanillajs-datepicker/js/i18n/locales/pl.js?v=<?= RELEASE ?>"></script>
+<script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= RELEASE ?>"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
