@@ -362,7 +362,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     </div>
 
 
-    <div name="gallery" data-validate></div>
+    <div name="gallery" data-validate="count:1+"></div>
 
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">

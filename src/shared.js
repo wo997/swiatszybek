@@ -1201,8 +1201,9 @@ window.addEventListener("dragstart", (event) => {
 window.addEventListener("dragend", () => {
   if (tableRearrange.source) {
     var input = tableRearrange.source.find(".kolejnosc");
+    var wasIndex = input.value;
     input.value = tableRearrange.placeTo;
-    rearrange(input);
+    rearrange(input, wasIndex);
   }
   removeClasses("grabbed");
   $$(".tableRearrange").forEach((e) => {
@@ -1211,11 +1212,13 @@ window.addEventListener("dragend", () => {
   tableRearrange.element = null;
 });
 
-function rearrange(input) {
+function rearrange(input, wasIndex = 0) {
   var datatable = window[input.getAttribute("data-table")];
   var rowId = input.getAttribute("data-index");
   var toIndex = input.value;
   if (toIndex < 1) toIndex = 1;
+
+  if (toIndex === wasIndex) return;
 
   var table = datatable.db_table;
   var primary = datatable.primary;
@@ -1830,12 +1833,26 @@ function toggleFieldCorrect(field, isCorrect) {
   if (wrong) wrong.style.display = isCorrect ? "" : "block";
 }
 
+function validateSize(value, condition) {
+  var valLen = value.length;
+  if (condition.indexOf("+") > 0) {
+    return valLen >= condition.replace("+", "");
+  } else if (/\d-\d/.test(condition)) {
+    var [from, to] = condition.split("-");
+    return valLen >= from && valLen <= to;
+  }
+  return valLen == condition;
+}
+
 function validateField(field) {
   field = $(field);
   var val = field.getValue();
   if (val === "") return false;
 
+  var isSimpleList = false;
+
   if (field.classList.contains("simple-list")) {
+    isSimpleList = true;
     var valid = true;
 
     var list = window[field.getAttribute("data-list-name")];
@@ -1890,7 +1907,9 @@ function validateField(field) {
         });
       }
     });
-    return valid;
+    if (!valid) {
+      return false;
+    }
   }
 
   var validator = field.getAttribute("data-validate");
@@ -1899,16 +1918,15 @@ function validateField(field) {
   if (validatorParams !== undefined && validatorParams.length !== 0) {
     var params = {};
     validatorParams.forEach((param) => {
-      params[param.slice(0, param.indexOf(":"))] = param.slice(
-        param.indexOf(":") + 1
-      );
+      var colonPos = param.indexOf(":");
+      params[param.slice(0, colonPos)] = param.slice(colonPos + 1);
     });
 
     if (params["match"]) {
       var target = $(params["match"]);
       if (!target) {
-        console.warn("Password field missing");
-        return;
+        console.warn("Field missing");
+        return true;
       }
       var isCorrect = val == target.getValue();
       toggleFieldCorrect(field, isCorrect);
@@ -1918,36 +1936,37 @@ function validateField(field) {
     }
 
     if (params["length"]) {
-      var valLen = val.length;
-
-      if (params["length"].indexOf("+") > 0) {
-        var isCorrect = valLen >= params["length"].replace("+", "");
-      } else if (/\d-\d/.test(params["length"])) {
-        var [from, to] = params["length"].split("-");
-        var isCorrect = valLen >= from && valLen <= to;
-      } else {
-        var isCorrect = valLen == params["length"];
-      }
-
+      var isCorrect = validateSize(val, params["length"]);
       toggleFieldCorrect(field, isCorrect);
       if (!isCorrect) {
         return false;
       }
     }
+
+    if (isSimpleList) {
+      var list = window[field.getAttribute("data-list-name")];
+
+      if (params["count"]) {
+      }
+    }
   }
 
-  if (validatorType == "tel") {
-    const re = /^\d{6,}$/;
-    if (!re.test(val)) return false;
-  }
-  if (validatorType == "nip") {
-    if (val.replace(/[^0-9]/g, "").length != 10) return false;
-  }
-  if (validatorType == "email") {
+  if (isSimpleList) {
+    return true;
+  } else if (validatorType == "tel") {
+    if (!/[\d\+\- ]{6,}/.test(val)) {
+      return false;
+    }
+  } else if (validatorType == "nip") {
+    if (val.replace(/[^0-9]/g, "").length != 10) {
+      return false;
+    }
+  } else if (validatorType == "email") {
     const re = /\S+@\S+\.\S+/;
-    if (!re.test(String(val).toLowerCase())) return false;
-  }
-  if (validatorType == "password") {
+    if (!re.test(String(val).toLowerCase())) {
+      return false;
+    }
+  } else if (validatorType == "password") {
     // default password length
     if (!params || !params["length"]) {
       var isCorrect = val.length >= 8;
@@ -1956,8 +1975,7 @@ function validateField(field) {
         return false;
       }
     }
-  }
-  if (validatorType == "price") {
+  } else if (validatorType == "price") {
     if (+val <= 0.001) {
       return false;
     }
@@ -2053,12 +2071,14 @@ function setValue(input, value) {
         );
 
         if (attribute_row) {
-          attribute_row.find(`.has_attribute`).setValue(true);
-          attribute_row
-            .find(`.attribute_value`)
-            .setValue(
+          var has_attribute_node = attribute_row.find(`.has_attribute`);
+          var attribute_value_node = attribute_row.find(`.attribute_value`);
+          if (has_attribute_node && attribute_value_node) {
+            has_attribute_node.setValue(true);
+            attribute_value_node.setValue(
               nonull(e.numerical_value, nonull(e.text_value, e.date_value))
             );
+          }
         }
       });
     } else if (type == "src") {
