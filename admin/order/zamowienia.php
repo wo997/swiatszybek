@@ -76,16 +76,6 @@ foreach ($statusList as $k => $status) {
         subject: "zamówień",
       },
       width: 1300,
-      // params: () => {
-      //   //   var params = {};
-      //   //   if ($(".mytable .hasFilter").checked) {
-      //   //     var dateFrom = reverseDateString($(`.mytable [name="start"]`).getValue(), "-");
-      //   //     var dateTo = reverseDateString($(`.mytable [name="end"]`).getValue(), "-");
-      //   //     if (dateFrom.length == 10) params["dateFrom"] = dateFrom;
-      //   //     if (dateTo.length == 10) params["dateTo"] = dateTo;
-      //   //   }
-      //   //   return params;
-      // },
       definition: zamowienia_table_definition,
       controls: `
           <div class='float-icon'>
@@ -106,28 +96,30 @@ foreach ($statusList as $k => $status) {
         </div>
         <div  class="flexbar caseFilter hidden">
           <button onclick="changeDate(-1)" class="timeBtn"><i class="fa fa-chevron-left"></i></button>
-          <div id="datepicker">
-            <input type="text" name="start" data-type="date" data-format="dmy" data-param="dateFrom" value="<?= date("d-m-Y", time() - 60 * 60 * 24 * 7) ?>">
+          <div class="datarangepicker_inputs">
+            <input class="field inline daterangepicker_start" type="text" data-type="date" data-format="dmy" data-param="dateFrom" value="<?= date("d-m-Y", time() - 60 * 60 * 24 * 6) ?>">
             <span> - </span>
-            <input type="text" name="end" data-type="date" data-format="dmy" data-param="dateTo" value="<?= date("d-m-Y", time()) ?>">
+            <input class="field inline daterangepicker_end" type="text" data-type="date" data-format="dmy" data-param="dateTo" value="<?= date("d-m-Y", time()) ?>">
           </div> 
           <button onclick="changeDate(1)" class="timeBtn"><i class="fa fa-chevron-right"></i></button>
         </div>
       `,
-      callback: () => {
+      onSearch: () => {
         selectionChange();
         setTimeout(() => {
           $$("select[data-value]").forEach(e => {
             e.value = e.getAttribute("data-value");
           })
         }, 0);
-
-        const rangepicker = new DateRangePicker($('#datepicker'), {
+      },
+      onCreate: () => {
+        window[tableName].dateRangePicker = new DateRangePicker($('.mytable .datarangepicker_inputs'), {
           todayHighlight: true,
           todayBtn: true,
           clearBtn: true,
           maxView: 2,
           language: "pl",
+          autohide: true,
         });
       }
     });
@@ -179,8 +171,8 @@ foreach ($statusList as $k => $status) {
   }
 
   function changeDate(direction) {
-    var dateFrom = $(`.mytable [name="start"]`);
-    var dateTo = $(`.mytable [name="end"]`);
+    var dateFrom = $(`.mytable .daterangepicker_start`);
+    var dateTo = $(`.mytable .daterangepicker_end`);
 
     var date1 = new Date(dateFrom.getValue());
     var date2 = new Date(dateTo.getValue());
@@ -193,8 +185,15 @@ foreach ($statusList as $k => $status) {
     var date1string = dateToString(date1, "dmy")
     var date2string = dateToString(date2, "dmy")
 
-    dateFrom.setValue(date1string);
-    dateTo.setValue(date2string);
+    var datePickers = mytable.dateRangePicker.datepickers;
+    if (direction === -1) {
+      datePickers[0].setDate(date1string)
+      datePickers[1].setDate(date2string)
+    } else {
+      datePickers[1].setDate(date2string)
+      datePickers[0].setDate(date1string)
+    }
+
     mytable.search();
   }
 </script>
