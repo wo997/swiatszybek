@@ -2227,14 +2227,6 @@ ql-icon i span {
 }
 
 /* modal end */
-
-.required {
-  border-color: red !important;
-  -webkit-box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
-  -moz-box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
-  box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
-}
-
 .onelinecut {
   overflow: hidden;
   white-space: nowrap;
@@ -2483,6 +2475,20 @@ ql-icon i span {
 .field-wrapper {
   position: relative;
 }
+
+.field.required {
+  border-color: red !important;
+  -webkit-box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
+  -moz-box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
+  box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
+}
+
+.simple-list.required .field-title:after {
+  color: red;
+  content: "Wartości nie mogą się powtarzać!";
+  font-weight: bold;
+}
+
 /* form validate end */
 
 /* miejscowosc picker start */

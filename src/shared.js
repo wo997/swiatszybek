@@ -1622,6 +1622,12 @@ function hideModal(name, isCancel = false) {
       }, 200);
     }
 
+    modal.findAll("[data-validate]").forEach((e) => {
+      e.removeEventListener("input", removeRequired);
+      e.removeEventListener("change", removeRequired);
+      e.classList.remove("required");
+    });
+
     const hideCallback = modalHideCallbacks[name];
     if (hideCallback) {
       hideCallBack();
@@ -1697,6 +1703,13 @@ function $(node, parent = null) {
   };
   node.parent = () => {
     return $(node.parentNode);
+  };
+  node.directChildren = () => {
+    var res = [];
+    [...node.children].forEach((node) => {
+      res.push($(node));
+    });
+    return res;
   };
   /*node.children = () => {
     return $(node.parentNode);
@@ -1818,9 +1831,67 @@ function toggleFieldCorrect(field, isCorrect) {
 }
 
 function validateField(field) {
+  field = $(field);
   var val = field.getValue();
-
   if (val === "") return false;
+
+  if (field.classList.contains("simple-list")) {
+    var valid = true;
+
+    var list = window[field.getAttribute("data-list-name")];
+    Object.entries(list.fields).forEach(([fieldName, fieldParams]) => {
+      if (fieldParams.unique) {
+        field.findAll(".list").forEach((listNode) => {
+          var rowValueInputs = {};
+          listNode
+            .directChildren()
+            .filter((listRow) => {
+              return listRow.classList.contains("simple-list-row-wrapper");
+            })
+            .forEach((listRowWrapper) => {
+              var rowField = listRowWrapper.find(
+                `[data-list-param="${fieldName}"]`
+              );
+
+              var fieldValue = rowField.getValue();
+
+              if (!(fieldValue === "" && fieldParams.allow_empty)) {
+                if (!rowValueInputs[fieldValue]) {
+                  rowValueInputs[fieldValue] = [];
+                }
+                rowValueInputs[fieldValue].push(rowField);
+              }
+            });
+
+          Object.entries(rowValueInputs).forEach(([fieldValue, inputs]) => {
+            if (inputs.length < 2) return;
+
+            valid = false;
+            inputs.forEach((list_field) => {
+              list_field.classList.add("required");
+
+              var listFieldRemoveRequired = () => {
+                inputs.forEach((list_field) => {
+                  list_field.classList.remove("required");
+                  list_field.removeEventListener(
+                    "input",
+                    listFieldRemoveRequired
+                  );
+                  list_field.removeEventListener(
+                    "change",
+                    listFieldRemoveRequired
+                  );
+                });
+              };
+              list_field.addEventListener("input", listFieldRemoveRequired);
+              list_field.addEventListener("change", listFieldRemoveRequired);
+            });
+          });
+        });
+      }
+    });
+    return valid;
+  }
 
   var validator = field.getAttribute("data-validate");
   var [validatorType, ...validatorParams] = validator.split("|");
@@ -1895,17 +1966,16 @@ function validateField(field) {
   return true;
 }
 
+function removeRequired() {
+  if (validateField(field)) {
+    var visibleField = getValidationTarget(field);
+    visibleField.classList.remove("required");
+  }
+}
 function registerValidateFields() {
   var fields = $$("[data-validate]:not([data-validate-registered])");
   for (field of fields) {
     field.setAttribute("data-validate-registered", true);
-
-    var removeRequired = () => {
-      if (validateField(field)) {
-        var visibleField = getValidationTarget(field);
-        visibleField.classList.remove("required");
-      }
-    };
     field.addEventListener("input", removeRequired);
     field.addEventListener("change", removeRequired);
   }
@@ -1930,6 +2000,10 @@ function moveCursorToEnd(el) {
 
 function setValue(input, value) {
   input = $(input);
+  if (input.classList.contains("simple-list")) {
+    list = window[input.getAttribute("data-list-name")];
+    list.setValuesFromString(value);
+  }
   if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[datatable.getAttribute("data-table-name")].setSelectedValuesString(
@@ -2003,6 +2077,10 @@ function setValue(input, value) {
 }
 
 function getValue(input) {
+  if (input.classList.contains("simple-list")) {
+    list = window[input.getAttribute("data-list-name")];
+    return JSON.stringify(list.values);
+  }
   if (input.classList.contains("jscolor")) {
     var value = input.value;
     if (value && value.charAt(0) != "#") {
@@ -3020,13 +3098,18 @@ function rgbStringToHex(rgbString) {
 
 function createSimpleList(params = {}) {
   var list = {};
+
+  window[params.name] = list;
+
   list.name = params.name;
   list.fields = params.fields;
   list.params = params;
   list.recursive = nonull(params.recursive, 0);
 
-  list.wrapper = $(`.${params.name}`);
+  list.wrapper = $(`[name="${params.name}"]`);
   list.wrapper.classList.add("simple-list");
+
+  list.wrapper.setAttribute("data-list-name", list.name);
 
   var className = "";
 
@@ -3056,22 +3139,23 @@ function createSimpleList(params = {}) {
       params.empty,
       ""
     )}</div>
-    <input type="hidden" class="simple-list-value" name="${
+  `
+    /*  <input type="hidden" class="simple-list-value" name="${
       list.name
     }" onchange="${list.name}.setValuesFromString(this.value)">
-  `
+  `*/
   );
 
   list.insertRow = (btn, begin = true) => {
     list.addRow(params.default_row, btn.parent().find(".list"), begin);
   };
 
-  list.target = $(`.${params.name} .list`);
+  list.target = list.wrapper.find(`.list`);
   list.target.setAttribute("data-depth", 1);
 
-  list.outputNode = $(`.${params.name} .simple-list-value`);
+  //list.outputNode = $(`.${params.name} .simple-list-value`);
 
-  list.emptyNode = $(`.${params.name} .list-empty`);
+  list.emptyNode = list.wrapper.find(`.list-empty`);
 
   list.rows = [];
 
@@ -3223,7 +3307,7 @@ function createSimpleList(params = {}) {
 
     list.values = getDirectRows(list.target, 1);
 
-    list.outputNode.value = JSON.stringify(list.values);
+    //list.outputNode.value = JSON.stringify(list.values);
 
     list.target.findAll(".simple-list-row-wrapper").forEach((listRow) => {
       var empty = !listRow.find(".sub-list").find(".simple-list-row-wrapper");
@@ -3242,8 +3326,6 @@ function createSimpleList(params = {}) {
   if (params.output) {
     $(params.output).setAttribute("data-type", "simple-list");
   }
-
-  window[list.name] = list;
 }
 
 // simple list end
