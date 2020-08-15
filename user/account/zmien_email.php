@@ -14,7 +14,7 @@ function quit($message, $type)
   echo '<input type="text" name="message" value="' . $message . '">';
   echo '</form>';
   echo '<script>';
-  echo '$("#myForm").submit();';
+  echo 'document.querySelector("#myForm").submit();';
   echo '</script>';
   die;
 }

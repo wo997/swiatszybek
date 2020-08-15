@@ -1,5 +1,12 @@
 <?php
 
+if (isset($_POST["preview_params"])) {
+    $preview_params = json_decode($_POST["preview_params"], true);
+
+    $page_data["content"] = $preview_params["content"];
+    $page_data["metadata"] = $preview_params["metadata"];
+}
+
 $page_content = getCMSPageHTML($page_data["content"]);
 
 if (isset($page_data["metadata"])) {

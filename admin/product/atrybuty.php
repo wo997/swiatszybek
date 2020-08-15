@@ -81,8 +81,8 @@
                 },
                 value: {
                     unique: true,
+                    allow_empty: true
                 }
-
             },
             render: (data) => {
                 var clean = (x) => {
@@ -90,7 +90,7 @@
                 };
                 return `
                     <input type='hidden' data-list-param="value_id" value="${clean(data.value_id)}">
-                    <input type='text' style='width:190px' data-list-param="value" value="${clean(data.value)}">
+                    <input type='text' class='field' style='flex-grow:1' data-list-param="value" value="${clean(data.value)}">
                 `;
             },
             default_row: {
@@ -158,7 +158,17 @@
     function toggleValues() {
         var data_type = $(`[name="data_type"]`).value;
 
-        $(".attribute_values").classList.toggle("inactive", !!attribute_data_types[data_type].field);
+        var inactive = !!attribute_data_types[data_type].field;
+
+        var values = $(`[name="attribute_values"]`);
+        values.classList.toggle("inactive", inactive);
+
+        if (inactive) {
+            values.removeAttribute("data-validate");
+        } else {
+            values.setAttribute("data-validate", 1);
+        }
+
     }
 </script>
 
@@ -182,7 +192,7 @@
                     <div class="field-title">Typ danych</div>
                     <select name="data_type" class="field" onchange="toggleValues()"></select>
 
-                    <div class="attribute_values"></div>
+                    <div name="attribute_values"></div>
                 </div>
                 <div>
 

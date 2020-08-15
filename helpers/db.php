@@ -150,7 +150,7 @@ function getIndex($table, $column)
 
 /**
  * - table name
- * - column name
+ * - column name (or comma separated names f.e for unique constraint)
  * - index type ["index", "unique", "primary"]
  * 
  * @param  mixed $table

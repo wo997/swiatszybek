@@ -293,7 +293,7 @@ function showCategory($category, $level = 0)
 
           setTimeout(() => {
             productListNode.setContent(res.content);
-            productListSwapNode.removeContent();
+            productListSwapNode.empty();
 
             productListSwapNode.style.animation = "";
             productListSwapBackgroundNode.style.animation = "";

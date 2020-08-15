@@ -35,23 +35,19 @@ $static = checkUrl($page_data["link"]);
 <title>CMS</title>
 
 <style>
-    #preview_iframe {
-        width: 100%;
-        height: 100%;
-        margin: auto;
-        -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
-        -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
-        box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
-        border: none;
-    }
+
 </style>
 
 <script>
+    useTool("cms");
+    useTool("preview");
+
     window.addEventListener("DOMContentLoaded", function() {
-        useTool("cms");
-        var content = decodeHtmlEntities(`<?= htmlentities($page_data["content"]) ?>`);
+        setFormData(<?= json_encode($page_data) ?>);
+
+        /*var content = decodeHtmlEntities(`<?= htmlentities($page_data["content"]) ?>`);
         $("#content1").insertAdjacentHTML("beforeend", content);
-        $("#content1-src").value = content;
+        $("#content1-src").value = content;*/
 
         resizeCallback();
 
@@ -98,21 +94,12 @@ $static = checkUrl($page_data["link"]);
 
     });
 
-    // preview start
-    function preview() {
-        $("#preview_page_content").value = $("#content1-src").value;
-        $("#preview_page_metadata").value = $("#metadata").value;
-        showModal("pagePreview");
-        $(".preview_page").submit();
+    function showPreview() {
+        window.preview.open("/<?= nonull($page_data, "link") ?>", {
+            content: $(`[name="content"]`).getValue(),
+            metadata: $("#metadata").value
+        });
     }
-
-    function setWindowSize(width = "", height = "") {
-        var e = $("#preview_iframe");
-        e.style.width = width;
-        e.style.height = height;
-        $(".preview_page").submit();
-    }
-    // preview end
 
     function rewriteURL() {
         $(`[name="link"]`).value = getLink($(`[name="seo_title"]`).value);
@@ -120,10 +107,10 @@ $static = checkUrl($page_data["link"]);
 
     function editPage() {
         imagePicker.setDefaultTag($('[name="seo_title"]').value);
-        editCMS($('#content1'));
+        editCMS(`[name="content"]`);
     }
 
-    function saveProductForm(remove = false) {
+    function save(remove = false) {
         var f = $("#cmsForm");
 
         if (!remove && !validateForm({
@@ -148,17 +135,6 @@ $static = checkUrl($page_data["link"]);
 
 <?php startSection("content"); ?>
 
-<form class="preview_page" style="display:none" method="post" target="preview_iframe" action="/<?= nonull($page_data, "link") ?>">
-    <input type="text" name="content">
-    <input type="text" name="metadata">
-</form>
-
-</script>
-
-<title>Edycja produktu</title>
-
-<?php startSection("content"); ?>
-
 <div id="cmsForm">
 
     <div class="sticky-top">
@@ -168,8 +144,8 @@ $static = checkUrl($page_data["link"]);
             <?php if ($page_data["published"]) : ?>
                 <a type="button" class="btn primary" href="/<?= $page_data["link"] ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
             <?php endif ?>
-            <button onclick="preview()" type="button" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
-            <button class="btn primary" onclick="saveProductForm()">Zapisz <i class="fa fa-save"></i></button>
+            <button onclick="showPreview()" type="button" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
+            <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
         </div>
     </div>
 
@@ -215,8 +191,7 @@ $static = checkUrl($page_data["link"]);
         <div class="stretch-vertical">
             <div>
                 <div class="field-title">Zawartość strony <button type="button" onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></div>
-                <div id="content1" class="cms preview_html"></div>
-                <input type="hidden" id="content1-src" name="content">
+                <div class="cms preview_html" name="content" data-type="html"></div>
             </div>
 
             <?php if ($page_data["cms_id"] == -1) : ?>
@@ -226,25 +201,10 @@ $static = checkUrl($page_data["link"]);
             <?php endif ?>
             <?php if ($page_data["cms_id"] != -1) : ?>
                 <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                    <button class="btn red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) saveProductForm(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
+                    <button class="btn red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) save(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
                 </div>
             <?php endif ?>
         </div>
-    </div>
-</div>
-
-<div id="pagePreview" class="hugeModalDesktop" data-modal>
-    <div class="stretch-vertical">
-        <div class="custom-toolbar">
-            <span class="title">
-                Podgląd strony
-                <button class="btn primary" onclick="setWindowSize('','')">Komputer <i class="fas fa-desktop"></i></button>
-                <button class="btn primary" onclick="setWindowSize('410px','850px')">Telefon <i class="fas fa-mobile-alt"></i></button>
-                <button class="btn primary" onclick="setWindowSize('340px','568px')">iPhone SE <i class="fas fa-mobile-alt"></i> <i class='fas fa-info-circle' data-tooltip='Najmniejsza rozdzielczość z urządzeń mobilnych'></i></button>
-            </span>
-            <button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fa fa-times"></i></button>
-        </div>
-        <iframe id="preview_iframe" name="preview_iframe"></iframe>
     </div>
 </div>
 

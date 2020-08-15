@@ -258,31 +258,20 @@ function addMissingDirectChildren(
   }
 }
 
-function swapNodes(n1, n2) {
-  if (!n1 || !n2) return;
+function swapNodes(a, b) {
+  if (!a || !b) return;
 
-  var p1 = n1.parent();
-  var p2 = n2.parent();
-  var i1, i2;
+  var aParent = a.parentNode;
+  var bParent = b.parentNode;
 
-  if (!p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1)) return;
+  var aHolder = document.createElement("div");
+  var bHolder = document.createElement("div");
 
-  for (var i = 0; i < p1.children.length; i++) {
-    if (p1.children[i].isEqualNode(n1)) {
-      i1 = i;
-    }
-  }
-  for (var i = 0; i < p2.children.length; i++) {
-    if (p2.children[i].isEqualNode(n2)) {
-      i2 = i;
-    }
-  }
+  aParent.replaceChild(aHolder, a);
+  bParent.replaceChild(bHolder, b);
 
-  if (p1.isEqualNode(p2) && i1 < i2) {
-    i2++;
-  }
-  p1.insertBefore(n2, p1.children[i1]);
-  p2.insertBefore(n1, p2.children[i2]);
+  aParent.replaceChild(b, aHolder);
+  bParent.replaceChild(a, bHolder);
 }
 
 function toggleBodyScroll(disable) {
@@ -1214,8 +1203,9 @@ window.addEventListener("dragstart", (event) => {
 window.addEventListener("dragend", () => {
   if (tableRearrange.source) {
     var input = tableRearrange.source.find(".kolejnosc");
+    var wasIndex = input.value;
     input.value = tableRearrange.placeTo;
-    rearrange(input);
+    rearrange(input, wasIndex);
   }
   removeClasses("grabbed");
   $$(".tableRearrange").forEach((e) => {
@@ -1224,11 +1214,13 @@ window.addEventListener("dragend", () => {
   tableRearrange.element = null;
 });
 
-function rearrange(input) {
+function rearrange(input, wasIndex = 0) {
   var datatable = window[input.getAttribute("data-table")];
   var rowId = input.getAttribute("data-index");
   var toIndex = input.value;
   if (toIndex < 1) toIndex = 1;
+
+  if (toIndex === wasIndex) return;
 
   var table = datatable.db_table;
   var primary = datatable.primary;
@@ -1635,6 +1627,12 @@ function hideModal(name, isCancel = false) {
       }, 200);
     }
 
+    modal.findAll("[data-validate]").forEach((e) => {
+      e.removeEventListener("input", removeRequired);
+      e.removeEventListener("change", removeRequired);
+      e.classList.remove("required");
+    });
+
     const hideCallback = modalHideCallbacks[name];
     if (hideCallback) {
       hideCallBack();
@@ -1680,7 +1678,7 @@ function isModalActive(name) {
 
 function $(node, parent = null) {
   if (!node) return null;
-  if (node.find) return node;
+  if (node.find) return node; // already initialized
 
   if (parent === null) {
     parent = document;
@@ -1710,6 +1708,13 @@ function $(node, parent = null) {
   };
   node.parent = () => {
     return $(node.parentNode);
+  };
+  node.directChildren = () => {
+    var res = [];
+    [...node.children].forEach((node) => {
+      res.push($(node));
+    });
+    return res;
   };
   /*node.children = () => {
     return $(node.parentNode);
@@ -1754,11 +1759,11 @@ function $(node, parent = null) {
     return window.isInNode(node, parent);
   };
 
-  node.removeNode = () => {
+  node.remove = () => {
     return window.removeNode(node);
   };
 
-  node.removeContent = () => {
+  node.empty = () => {
     return window.removeContent(node);
   };
 
@@ -1830,10 +1835,84 @@ function toggleFieldCorrect(field, isCorrect) {
   if (wrong) wrong.style.display = isCorrect ? "" : "block";
 }
 
-function validateField(field) {
-  var val = field.getValue();
+function validateSize(value, condition) {
+  var valLen = value.length;
+  if (condition.indexOf("+") > 0) {
+    return valLen >= condition.replace("+", "");
+  } else if (/\d-\d/.test(condition)) {
+    var [from, to] = condition.split("-");
+    return valLen >= from && valLen <= to;
+  }
+  return valLen == condition;
+}
 
+function validateField(field) {
+  field = $(field);
+  var val = field.getValue();
   if (val === "") return false;
+
+  var isSimpleList = false;
+
+  if (field.classList.contains("simple-list")) {
+    isSimpleList = true;
+    var valid = true;
+
+    var list = window[field.getAttribute("data-list-name")];
+    Object.entries(list.fields).forEach(([fieldName, fieldParams]) => {
+      if (fieldParams.unique) {
+        field.findAll(".list").forEach((listNode) => {
+          var rowValueInputs = {};
+          listNode
+            .directChildren()
+            .filter((listRow) => {
+              return listRow.classList.contains("simple-list-row-wrapper");
+            })
+            .forEach((listRowWrapper) => {
+              var rowField = listRowWrapper.find(
+                `[data-list-param="${fieldName}"]`
+              );
+
+              var fieldValue = rowField.getValue();
+
+              if (!(fieldValue === "" && fieldParams.allow_empty)) {
+                if (!rowValueInputs[fieldValue]) {
+                  rowValueInputs[fieldValue] = [];
+                }
+                rowValueInputs[fieldValue].push(rowField);
+              }
+            });
+
+          Object.entries(rowValueInputs).forEach(([fieldValue, inputs]) => {
+            if (inputs.length < 2) return;
+
+            valid = false;
+            inputs.forEach((list_field) => {
+              list_field.classList.add("required");
+
+              var listFieldRemoveRequired = () => {
+                inputs.forEach((list_field) => {
+                  list_field.classList.remove("required");
+                  list_field.removeEventListener(
+                    "input",
+                    listFieldRemoveRequired
+                  );
+                  list_field.removeEventListener(
+                    "change",
+                    listFieldRemoveRequired
+                  );
+                });
+              };
+              list_field.addEventListener("input", listFieldRemoveRequired);
+              list_field.addEventListener("change", listFieldRemoveRequired);
+            });
+          });
+        });
+      }
+    });
+    if (!valid) {
+      return false;
+    }
+  }
 
   var validator = field.getAttribute("data-validate");
   var [validatorType, ...validatorParams] = validator.split("|");
@@ -1841,16 +1920,15 @@ function validateField(field) {
   if (validatorParams !== undefined && validatorParams.length !== 0) {
     var params = {};
     validatorParams.forEach((param) => {
-      params[param.slice(0, param.indexOf(":"))] = param.slice(
-        param.indexOf(":") + 1
-      );
+      var colonPos = param.indexOf(":");
+      params[param.slice(0, colonPos)] = param.slice(colonPos + 1);
     });
 
     if (params["match"]) {
       var target = $(params["match"]);
       if (!target) {
-        console.warn("Password field missing");
-        return;
+        console.warn("Field missing");
+        return true;
       }
       var isCorrect = val == target.getValue();
       toggleFieldCorrect(field, isCorrect);
@@ -1860,36 +1938,37 @@ function validateField(field) {
     }
 
     if (params["length"]) {
-      var valLen = val.length;
-
-      if (params["length"].indexOf("+") > 0) {
-        var isCorrect = valLen >= params["length"].replace("+", "");
-      } else if (/\d-\d/.test(params["length"])) {
-        var [from, to] = params["length"].split("-");
-        var isCorrect = valLen >= from && valLen <= to;
-      } else {
-        var isCorrect = valLen == params["length"];
-      }
-
+      var isCorrect = validateSize(val, params["length"]);
       toggleFieldCorrect(field, isCorrect);
       if (!isCorrect) {
         return false;
       }
     }
+
+    if (isSimpleList) {
+      var list = window[field.getAttribute("data-list-name")];
+
+      if (params["count"]) {
+      }
+    }
   }
 
-  if (validatorType == "tel") {
-    const re = /^\d{6,}$/;
-    if (!re.test(val)) return false;
-  }
-  if (validatorType == "nip") {
-    if (val.replace(/[^0-9]/g, "").length != 10) return false;
-  }
-  if (validatorType == "email") {
+  if (isSimpleList) {
+    return true;
+  } else if (validatorType == "tel") {
+    if (!/[\d\+\- ]{6,}/.test(val)) {
+      return false;
+    }
+  } else if (validatorType == "nip") {
+    if (val.replace(/[^0-9]/g, "").length != 10) {
+      return false;
+    }
+  } else if (validatorType == "email") {
     const re = /\S+@\S+\.\S+/;
-    if (!re.test(String(val).toLowerCase())) return false;
-  }
-  if (validatorType == "password") {
+    if (!re.test(String(val).toLowerCase())) {
+      return false;
+    }
+  } else if (validatorType == "password") {
     // default password length
     if (!params || !params["length"]) {
       var isCorrect = val.length >= 8;
@@ -1898,8 +1977,7 @@ function validateField(field) {
         return false;
       }
     }
-  }
-  if (validatorType == "price") {
+  } else if (validatorType == "price") {
     if (+val <= 0.001) {
       return false;
     }
@@ -1908,17 +1986,16 @@ function validateField(field) {
   return true;
 }
 
+function removeRequired() {
+  if (validateField(field)) {
+    var visibleField = getValidationTarget(field);
+    visibleField.classList.remove("required");
+  }
+}
 function registerValidateFields() {
   var fields = $$("[data-validate]:not([data-validate-registered])");
   for (field of fields) {
     field.setAttribute("data-validate-registered", true);
-
-    var removeRequired = () => {
-      if (validateField(field)) {
-        var visibleField = getValidationTarget(field);
-        visibleField.classList.remove("required");
-      }
-    };
     field.addEventListener("input", removeRequired);
     field.addEventListener("change", removeRequired);
   }
@@ -1943,6 +2020,10 @@ function moveCursorToEnd(el) {
 
 function setValue(input, value, quiet = false) {
   input = $(input);
+  if (input.classList.contains("simple-list")) {
+    list = window[input.getAttribute("data-list-name")];
+    list.setValuesFromString(value);
+  }
   if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[datatable.getAttribute("data-table-name")].setSelectedValuesString(
@@ -1995,12 +2076,14 @@ function setValue(input, value, quiet = false) {
         );
 
         if (attribute_row) {
-          attribute_row.find(`.has_attribute`).setValue(true);
-          attribute_row
-            .find(`.attribute_value`)
-            .setValue(
+          var has_attribute_node = attribute_row.find(`.has_attribute`);
+          var attribute_value_node = attribute_row.find(`.attribute_value`);
+          if (has_attribute_node && attribute_value_node) {
+            has_attribute_node.setValue(true);
+            attribute_value_node.setValue(
               nonull(e.numerical_value, nonull(e.text_value, e.date_value))
             );
+          }
         }
       });
     } else if (type == "src") {
@@ -2023,6 +2106,10 @@ function setValue(input, value, quiet = false) {
 }
 
 function getValue(input) {
+  if (input.classList.contains("simple-list")) {
+    list = window[input.getAttribute("data-list-name")];
+    return JSON.stringify(list.values);
+  }
   if (input.classList.contains("jscolor")) {
     var value = input.value;
     if (value && value.charAt(0) != "#") {
@@ -3040,13 +3127,18 @@ function rgbStringToHex(rgbString) {
 
 function createSimpleList(params = {}) {
   var list = {};
+
+  window[params.name] = list;
+
   list.name = params.name;
   list.fields = params.fields;
   list.params = params;
   list.recursive = nonull(params.recursive, 0);
 
-  list.wrapper = $(`.${params.name}`);
+  list.wrapper = $(`[name="${params.name}"]`);
   list.wrapper.classList.add("simple-list");
+
+  list.wrapper.setAttribute("data-list-name", list.name);
 
   var className = "";
 
@@ -3063,22 +3155,36 @@ function createSimpleList(params = {}) {
     `
       <div class="${className}">
           <span>${params.title}</span>
-          <div class="btn primary" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-arrow-up"></i></div>
-          <div class="btn primary" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-arrow-down"></i></div>
       </div>
+      <div class="btn primary add_btn add_begin" onclick="${
+        list.name
+      }.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
       <div class="list"></div>
-      <input type="hidden" class="simple-list-value" name="${list.name}" onchange="${list.name}.setValuesFromString(this.value)">
+      <div class="btn primary add_btn add_end" onclick="${
+        list.name
+      }.insertRow(this,false)">Dodaj <i class="fas fa-plus"></i></div>
+    </div>
+    <div class="list-empty" style="display:none">${nonull(
+      params.empty,
+      ""
+    )}</div>
   `
+    /*  <input type="hidden" class="simple-list-value" name="${
+      list.name
+    }" onchange="${list.name}.setValuesFromString(this.value)">
+  `*/
   );
 
   list.insertRow = (btn, begin = true) => {
-    list.addRow(params.default_row, btn.parent().next(), begin);
+    list.addRow(params.default_row, btn.parent().find(".list"), begin);
   };
 
-  list.target = $(`.${params.name} .list`);
+  list.target = list.wrapper.find(`.list`);
   list.target.setAttribute("data-depth", 1);
 
-  list.outputNode = $(`.${params.name} .simple-list-value`);
+  //list.outputNode = $(`.${params.name} .simple-list-value`);
+
+  list.emptyNode = list.wrapper.find(`.list-empty`);
 
   list.rows = [];
 
@@ -3119,7 +3225,7 @@ function createSimpleList(params = {}) {
       listTarget = list.target;
     }
 
-    var canAdd = true;
+    /*var canAdd = true;
 
     [...listTarget.children].forEach((simpleListRowWrapper) => {
       $(simpleListRowWrapper)
@@ -3139,43 +3245,48 @@ function createSimpleList(params = {}) {
 
     if (!canAdd) {
       return;
-    }
+    }*/
 
     var depth = parseInt(listTarget.getAttribute("data-depth"));
 
-    var addBtn =
-      depth < list.recursive
-        ? `<div style="padding: 5px 0">
-              <span>Powiązane wartości</span>
-              <div class="btn primary" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-arrow-up"></i></div>
-              <div class="btn primary" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-arrow-down"></i></div>
-          </div>`
-        : "";
+    var btnTop = "";
+    var btnBottom = "";
+    var btnAddTop = "";
+
+    if (depth < list.recursive) {
+      btnAddTop = `<i class="btn secondary fas fa-list-ul add_btn_top" style="margin-right:5px" onclick="${list.name}.insertRow($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom dalej)"></i>`;
+      btnTop = `
+        <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
+        `;
+      btnBottom = `
+        <div class="btn primary add_btn add_end" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-plus"></i></div>
+      `;
+    }
 
     listTarget.insertAdjacentHTML(
       begin ? "afterbegin" : "beforeend",
-      `
-          <div class='simple-list-row-wrapper'>
-              <div class='simple-list-row'>
-                  ${params.render(values)}
-                  <div style="flex-grow:1"></div>
-                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes(this.parent().parent(),this.parent().parent().prev());${
-                    list.name
-                  }.valuesChanged();"></i>
-                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes(this.parent().parent(),this.parent().parent().next());${
-                    list.name
-                  }.valuesChanged();"></i>
-                  <div style="width:10px"></div>
-                  <i class="btn secondary fas fa-times" onclick="removeNode(this.parent().parent());${
-                    list.name
-                  }.valuesChanged();"></i>
-              </div>
-              <div class="sub-list">
-                  ${addBtn}
-                  <div class="list" data-depth="${1 + depth}"></div>
-              </div>
+      `<div class='simple-list-row-wrapper'>
+          <div class='simple-list-row'>
+              ${params.render(values)}
+              <div style="width:5px;margin-left:auto"></div>
+              ${btnAddTop}
+              <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
+                list.name
+              }.valuesChanged();"></i>
+              <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
+                list.name
+              }.valuesChanged();"></i>
+              <div style="width:5px"></div>
+              <i class="btn secondary fas fa-times" onclick="$(this).parent().parent().remove();${
+                list.name
+              }.valuesChanged();"></i>
           </div>
-      `
+          <div class="sub-list">
+              ${btnTop}
+              <div class="list" data-depth="${1 + depth}"></div>
+              ${btnBottom}
+          </div>
+      </div>`
     );
 
     list.valuesChanged();
@@ -3217,19 +3328,33 @@ function createSimpleList(params = {}) {
 
         rows.push(row);
       });
+
+      list.emptyNode.style.display = rows.length === 0 ? "block" : "none";
+
       return rows;
     };
 
     list.values = getDirectRows(list.target, 1);
 
-    list.outputNode.value = JSON.stringify(list.values);
+    //list.outputNode.value = JSON.stringify(list.values);
+
+    list.target.findAll(".simple-list-row-wrapper").forEach((listRow) => {
+      var empty = !listRow.find(".sub-list").find(".simple-list-row-wrapper");
+
+      var add_btn_top = listRow.find(".add_btn_top");
+      if (add_btn_top) {
+        add_btn_top.style.display = empty ? "" : "none";
+      }
+      var add_begin = listRow.find(".add_begin");
+      if (add_begin) {
+        add_begin.style.display = empty ? "none" : "";
+      }
+    });
   };
 
   if (params.output) {
     $(params.output).setAttribute("data-type", "simple-list");
   }
-
-  window[list.name] = list;
 }
 
 // simple list end

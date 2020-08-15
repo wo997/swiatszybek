@@ -3,25 +3,11 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 2137);
+define("RELEASE", 2138);
 
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
 
-// include helpers
-
-include_once "helpers/db.php";
-
-include_once "helpers/datatable.php";
-
-include_once "helpers/order.php";
-
-include_once "helpers/deployment.php";
-
-include_once "helpers/events.php";
-
-include_once "helpers/layout/cms.php";
-include_once "helpers/layout/templates.php";
 
 // global variables
 
@@ -50,14 +36,31 @@ $SITE_URL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : 
 
 $currency = "PLN"; // used by p24
 
-// services
-require_once 'helpers/facebook_register.php';
-require_once 'login_user.php'; // TODO: it's dumb to split it like that
 
 // db
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 date_default_timezone_set("Europe/Warsaw");
 require "database.php";
+
+
+// include helpers
+
+include_once "helpers/db.php";
+
+include_once "helpers/datatable.php";
+
+include_once "helpers/order.php";
+
+include_once "helpers/deployment.php";
+
+include_once "helpers/events.php";
+
+include_once "helpers/layout/cms.php";
+include_once "helpers/layout/templates.php";
+
+require_once 'helpers/facebook_register.php'; // should be a part of FB module instead
+
+require_once 'login_user.php'; // TODO: it's dumb to split it like that
 
 // helpers
 

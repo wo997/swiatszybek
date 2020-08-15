@@ -186,7 +186,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       name: "gallery",
       fields: {
         src: {
-          unique: true,
+          unique: true
         }
       },
       render: (data) => {
@@ -195,13 +195,14 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         };
         return `
             <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
-            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin: 10px;max-width:200px;max-height:200px">
+            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin: 10px;max-width:200px;max-height:200px;">
           `;
       },
       default_row: {
         src: ""
       },
-      title: "Galeria zdjęć produktu"
+      title: "Galeria zdjęć produktu",
+      empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
     });
 
     setFormData(<?= json_encode($product_data) ?>, $("#productForm"));
@@ -210,13 +211,6 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   window.addEventListener("load", function() {
     imagePicker.setDefaultTag($('[name="title"]').value);
   });
-
-  function deleteItem() {
-    anyChange = false;
-    if (confirm("Czy chcesz usunąć produkt?")) {
-      window.location = '/admin/delete_product/<?= $kopia ? '-1' : $product_id ?>';
-    }
-  }
 
   function copyMainImage(node) {
     node.setAttribute("src", $("#img-main").getAttribute("src"));
@@ -290,9 +284,21 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     });
   }
 
-  function saveProductForm() {
+  function deleteProduct() {
+    anyChange = false;
+    if (confirm("Czy chcesz usunąć produkt?")) {
+      window.location = '/admin/delete_product/<?= $kopia ? '-1' : $product_id ?>';
+    }
+  }
 
-    var params = getFormData($("#productForm"));
+  function saveProductForm() {
+    var form = $(`#productForm`);
+
+    if (!validateForm({
+        form: form
+      })) return;
+
+    var params = getFormData(form);
 
     xhr({
       url: "/admin/save_product",
@@ -356,7 +362,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     </div>
 
 
-    <div class="gallery"></div>
+    <div name="gallery" data-validate="count:1+"></div>
 
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
@@ -381,7 +387,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
     <?php if (!$kopia) : ?>
       <div style="display: flex; justify-content: flex-end">
-        <div class="btn red" style='margin-top:30px' onclick="deleteItem()">Usuń produkt <i class="fa fa-trash"></i></div>
+        <div class="btn red" style='margin-top:30px' onclick="deleteProduct()">Usuń produkt <i class="fa fa-trash"></i></div>
       </div>
     <?php endif ?>
   </div>
