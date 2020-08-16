@@ -194,9 +194,36 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           return x.toString().replace(/"/g, "");
         };
         return `
-            <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz <i class="fas fa-image"></i></button>
-            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin:5px;max-width:200px;max-height:200px;">
+            <div class='select-image-wrapper' style="display: flex;align-items: center">
+              <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin-right:5px;max-width:200px;max-height:150px;">
+              <button class="btn primary add_img_btn" onclick="imagePicker.open(this.prev())" img> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+            </div>
           `;
+      },
+      onChange: (values, list) => {
+        var rowIndex = -1;
+        list.wrapper.findAll(".simple-list-row-wrapper").forEach(row => {
+          rowIndex++;
+          if (rowIndex === 0) {
+            row.style.backgroundColor = "#eee";
+
+            if (!row.find(".main-img")) {
+              row.find(".select-image-wrapper").insertAdjacentHTML("beforeend",
+                `<span class="main-img" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;padding: 3px 8px;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
+              );
+            }
+          } else {
+            row.style.backgroundColor = "";
+            removeNode(row.find(".main-img"));
+          }
+
+          var img = row.find("img");
+          row.find(".add_img_btn span").setContent(img.getValue() ? "zmień" : "wybierz");
+          img.style.display = img.getValue() ? "" : "none";
+        })
+      },
+      onRowInserted: (row) => {
+        row.find(".add_img_btn").dispatchEvent(new Event("click"));
       },
       default_row: {
         src: ""

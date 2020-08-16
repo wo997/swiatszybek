@@ -231,7 +231,10 @@ function delay(action, time, context = window) {
 
 function removeNode(n) {
   n = $(n);
-  if (n && n.parent()) n.parent().removeChild(n);
+  if (!n) {
+    return;
+  }
+  if (n.parent()) n.parent().removeChild(n);
 }
 
 function removeContent(node) {
@@ -1784,6 +1787,7 @@ function $$(querySelectorAll, parent = null) {
 // validate start
 
 function markFieldWrong(field, errors = null) {
+  // look inside or above
   var field_title = field.find(".field-title");
   if (!field_title) {
     var previousNode = field.prev();
@@ -3221,25 +3225,30 @@ function createSimpleList(params = {}) {
       </div>
       <div class="btn primary add_btn add_begin" onclick="${
         list.name
-      }.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
+      }.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
       <div class="list"></div>
       <div class="btn primary add_btn add_end" onclick="${
         list.name
-      }.insertRow(this,false)">Dodaj <i class="fas fa-plus"></i></div>
+      }.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>
     </div>
     <div class="list-empty" style="display:none">${nonull(
       params.empty,
       ""
     )}</div>
   `
-    /*  <input type="hidden" class="simple-list-value" name="${
-      list.name
-    }" onchange="${list.name}.setValuesFromString(this.value)">
-  `*/
   );
 
-  list.insertRow = (btn, begin = true) => {
-    list.addRow(params.default_row, btn.parent().find(".list"), begin);
+  list.insertRowFromBtn = (btn, begin = true, user = true) => {
+    var row = list.insertRow(
+      params.default_row,
+      btn.parent().find(".list"),
+      begin,
+      user
+    );
+
+    if (user && params.onRowInserted) {
+      params.onRowInserted(row);
+    }
   };
 
   list.target = list.wrapper.find(`.list`);
@@ -3274,7 +3283,9 @@ function createSimpleList(params = {}) {
         listTarget = list.target;
       }
       for (var value_data of values) {
-        var parent_value_list = list.addRow(value_data.values, listTarget);
+        var parent_value_list = list
+          .insertRow(value_data.values, listTarget)
+          .find(".list");
         if (value_data.children) {
           addValues(value_data.children, parent_value_list);
         }
@@ -3283,32 +3294,10 @@ function createSimpleList(params = {}) {
     addValues(values);
   };
 
-  list.addRow = (values, listTarget = null, begin = false) => {
+  list.insertRow = (values, listTarget = null, begin = false, user = false) => {
     if (listTarget === null) {
       listTarget = list.target;
     }
-
-    /*var canAdd = true;
-
-    [...listTarget.children].forEach((simpleListRowWrapper) => {
-      $(simpleListRowWrapper)
-        .find(".simple-list-row")
-        .findAll("[data-list-param]")
-        .forEach((e) => {
-          var param = e.getAttribute("data-list-param");
-          if (
-            list.fields[param].unique &&
-            getValue(e) == values[param] &&
-            getValue(e) !== ""
-          ) {
-            canAdd = false;
-          }
-        });
-    });
-
-    if (!canAdd) {
-      return;
-    }*/
 
     var depth = parseInt(listTarget.getAttribute("data-depth"));
 
@@ -3317,12 +3306,12 @@ function createSimpleList(params = {}) {
     var btnAddTop = "";
 
     if (depth < list.recursive) {
-      btnAddTop = `<i class="btn secondary fas fa-list-ul add_btn_top" style="margin-right:5px" onclick="${list.name}.insertRow($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom dalej)"></i>`;
+      btnAddTop = `<i class="btn secondary fas fa-list-ul add_btn_top" style="margin-right:5px" onclick="${list.name}.insertRowFromBtn($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom dalej)"></i>`;
       btnTop = `
-        <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRow(this,true)">Dodaj <i class="fas fa-plus"></i></div>
+        <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
         `;
       btnBottom = `
-        <div class="btn primary add_btn add_end" onclick="${list.name}.insertRow(this,false)">Dodaj <i class="fas fa-plus"></i></div>
+        <div class="btn primary add_btn add_end" onclick="${list.name}.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>
       `;
     }
 
@@ -3365,7 +3354,7 @@ function createSimpleList(params = {}) {
       });
 
     var n = begin ? 0 : listTarget.children.length - 1;
-    return $(listTarget.children[n]).find(".list");
+    return $(listTarget.children[n]);
   };
 
   list.valuesChanged = () => {
@@ -3415,6 +3404,11 @@ function createSimpleList(params = {}) {
     });
 
     list.wrapper.dispatchEvent(new Event("change"));
+    if (params.onChange) {
+      params.onChange(list.values, list);
+    }
+
+    list.wrapper.setAttribute("data-count", list.values.length);
   };
 
   if (params.output) {
