@@ -1123,7 +1123,6 @@ function createTable(table) {
       });
     };
   }
-
 }
 
 function getSafePageIndex(i, pageCount) {
@@ -1427,6 +1426,30 @@ function findParentByStyle(elem, style, value) {
     elem = elem.parent();
   }
   return null;
+}
+function findParentByComputedStyle(elem, style, value, invert = false) {
+  elem = $(elem);
+
+  while (elem && elem != document) {
+    var computedStyle = window.getComputedStyle(elem)[style];
+    if (invert) {
+      if (computedStyle != value) {
+        return elem;
+      }
+    } else {
+      if (computedStyle == value) {
+        return elem;
+      }
+    }
+    elem = elem.parent();
+  }
+  return null;
+}
+function findScrollableParent(elem) {
+  return nonull(
+    findParentByComputedStyle(elem, "position", "static", true),
+    document.body
+  );
 }
 function isInNode(elem, parent) {
   elem = $(elem);
@@ -1747,6 +1770,14 @@ function $(node, parent = null) {
     return window.findParentByStyle(node, style, value);
   };
 
+  node.findParentByComputedStyle = (style, value) => {
+    return window.findParentByComputedStyle(node, style, value);
+  };
+
+  node.findScrollableParent = () => {
+    return window.findScrollableParent(node);
+  };
+
   node.findParentByClassName = (parentClassNames, stopAtClassName = null) => {
     return window.findParentByClassName(
       node,
@@ -2035,9 +2066,6 @@ function setValue(input, value, quiet = false) {
     input.style.background = hex ? "#" + hex : "";
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
-    if (quiet) {
-      input.dispatchEvent(new Event("change"));
-    }
   } else if (input.hasAttribute("data-category-picker")) {
     setCategoryPickerValues(input.next(), JSON.parse(value));
   } else {
@@ -2048,10 +2076,6 @@ function setValue(input, value, quiet = false) {
         input = input.find(pointChild);
       }
       input.innerHTML = value;
-
-      if (quiet) {
-        input.dispatchEvent(new Event("change"));
-      }
     } else if (type == "attribute_values") {
       input.findAll(".combo-select-wrapper").forEach((combo) => {
         combo.findAll("select").forEach((select) => {
@@ -2091,17 +2115,18 @@ function setValue(input, value, quiet = false) {
       if (!prefix) prefix = "/uploads/df/";
       if (value) value = prefix + value;
       input.setAttribute("src", value);
-
-      if (quiet) {
-        input.dispatchEvent(new Event("change"));
+    } else if (input.tagName == "SELECT") {
+      if (![...input.options].find((e) => e.value == value)) {
+        return;
       }
-    } else {
       input.value = value;
-
-      if (quiet) {
-        input.dispatchEvent(new Event("change"));
-      }
+    } else {
+      // for text fields
+      input.value = value;
     }
+  }
+  if (!quiet) {
+    input.dispatchEvent(new Event("change"));
   }
 }
 
@@ -2297,15 +2322,10 @@ function setFormData(data, form = null) {
   if (!form) form = document;
   Object.entries(data).forEach(([name, value]) => {
     var e = $(form).find(`[name="${name}"]`);
-    if (e && e.tagName == "SELECT") {
-      if (![...e.options].find((e) => e.value == value)) {
-        return;
-      }
-    }
-    if (e) {
-      setValue(e, value);
+    if (!e) {
       return;
     }
+    setValue(e, value);
   });
 
   resizeCallback();
@@ -3370,3 +3390,29 @@ window.addEventListener("DOMContentLoaded", () => {
     updateOnlineStatus();
   });
 });
+
+// datapicker start
+function getDatepickerDefaultOptions(e) {
+  return {
+    todayHighlight: true,
+    todayBtn: true,
+    clearBtn: true,
+    maxView: 2,
+    language: "pl",
+    autohide: true,
+    container: e.findScrollableParent(),
+  };
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  registerDatepickers();
+});
+
+function registerDatepickers() {
+  $$(".default_datepicker:not(.registered)").forEach((e) => {
+    e.classList.add("registered");
+
+    new Datepicker(e, getDatepickerDefaultOptions(e));
+  });
+}
+// datapicker end

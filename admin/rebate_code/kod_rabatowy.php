@@ -163,11 +163,11 @@ if (!json_decode($kod_data["product_list"])) {
                 <div class="desktopRow spaceColumns">
                     <div>
                         <div class="field-title">Dostępny od</div>
-                        <input class="field datepicker" type="text" name="date_from">
+                        <input class="field default_datepicker" type="text" name="date_from">
                     </div>
                     <div>
                         <div class="field-title">Dostępny do</div>
-                        <input class="field datepicker" type="text" name="date_to">
+                        <input class="field default_datepicker" type="text" name="date_to">
                     </div>
                 </div>
             </div>
