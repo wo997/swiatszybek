@@ -2502,10 +2502,8 @@ ql-icon i span {
   box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
 }
 
-.simple-list.required .field-title:after {
-  color: red;
-  content: "Wartości nie mogą się powtarzać!";
-  font-weight: bold;
+.simple-list.required > .add_btn.add_begin {
+  background: #d33;
 }
 
 /* form validate end */
@@ -2621,7 +2619,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .simple-list-row {
   margin: -1px;
-  padding-right: 5px;
+  padding-right: 10px;
   display: flex;
   align-items: center;
 }
@@ -2644,18 +2642,16 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   color: #fff;
 }
 
-.sub-list {
+.simple-list .sub-list {
   padding-left: 35px;
 }
 
 .simple-list-row-wrapper {
   background: #aaa4;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 5px;
+  padding: 10px 0 10px 10px;
 }
 
-.sub-list > .list > .simple-list-row-wrapper:first-child {
+.simple-list .sub-list > .list > .simple-list-row-wrapper:first-child {
   padding-top: 5px;
 }
 
@@ -2667,7 +2663,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   border-bottom: none;
 }
 
-.sub-list .simple-list-row-wrapper {
+.simple-list .sub-list .simple-list-row-wrapper {
   border-right: none;
 }
 
@@ -2728,6 +2724,18 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .simple-list .list[data-depth="3"] {
   background: #ddf;
+}
+
+.simple-list[data-count="0"] > .add_btn.add_begin {
+  border-radius: 4px;
+}
+
+/* slim paddings */
+.simple-list.slim .simple-list-row {
+  padding-right: 5px;
+}
+.simple-list.slim .simple-list-row-wrapper {
+  padding: 5px 0 5px 5px;
 }
 
 /* simple list end */

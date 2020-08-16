@@ -161,14 +161,7 @@
         var inactive = !!attribute_data_types[data_type].field;
 
         var values = $(`[name="attribute_values"]`);
-        values.classList.toggle("inactive", inactive);
-
-        if (inactive) {
-            values.removeAttribute("data-validate");
-        } else {
-            values.setAttribute("data-validate", 1);
-        }
-
+        values.classList.toggle("hidden", inactive);
     }
 </script>
 
@@ -192,7 +185,7 @@
                     <div class="field-title">Typ danych</div>
                     <select name="data_type" class="field" onchange="toggleValues()"></select>
 
-                    <div name="attribute_values"></div>
+                    <div name="attribute_values" class="slim"></div>
                 </div>
                 <div>
 

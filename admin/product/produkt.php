@@ -194,15 +194,44 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           return x.toString().replace(/"/g, "");
         };
         return `
-            <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
-            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin: 10px;max-width:200px;max-height:200px;">
+            <div class='select-image-wrapper' style="display: flex;align-items: center">
+              <div class='image-wrapper' style='width:200px'>
+                <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="max-width:190px;max-height:150px;display: block;">
+              </div>
+              <button class="btn primary add_img_btn" onclick="imagePicker.open(this.prev().find('img'))" img> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+            </div>
           `;
+      },
+      onChange: (values, list) => {
+        var rowIndex = -1;
+        list.wrapper.findAll(".simple-list-row-wrapper").forEach(row => {
+          rowIndex++;
+          if (rowIndex === 0) {
+            row.style.backgroundColor = "#eee";
+
+            if (!row.find(".main-img")) {
+              row.find(".select-image-wrapper").insertAdjacentHTML("beforeend",
+                `<span class="main-img" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;padding: 3px 8px;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
+              );
+            }
+          } else {
+            row.style.backgroundColor = "";
+            removeNode(row.find(".main-img"));
+          }
+
+          var img = row.find("img");
+          row.find(".add_img_btn span").setContent(img.getValue() ? "zmień" : "wybierz");
+          row.find(".image-wrapper").style.display = img.getValue() ? "" : "none";
+        })
+      },
+      onRowInserted: (row) => {
+        row.find(".add_img_btn").dispatchEvent(new Event("click"));
       },
       default_row: {
         src: ""
       },
       title: "Galeria zdjęć produktu",
-      empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
+      //empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
     });
 
     setFormData(<?= json_encode($product_data) ?>, $("#productForm"));
@@ -345,7 +374,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     <div style="display: flex" class="mobileRow">
       <div style="flex-grow:1; padding-right: 15px">
         <div class="field-title">Nazwa produktu</div>
-        <input type="text" name="title" class="field" style="max-width: 600px;">
+        <input type="text" name="title" class="field" data-validate style="max-width: 600px;">
 
         <div class="field-title">Link strony</div>
         <div style="display:flex;flex-wrap: wrap;">
@@ -362,7 +391,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     </div>
 
 
-    <div name="gallery" data-validate="count:1+"></div>
+    <div name="gallery" data-validate="|count:1+" style="max-width:600px"></div>
 
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
