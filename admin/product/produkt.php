@@ -195,8 +195,10 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         };
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
-              <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin-right:5px;max-width:200px;max-height:150px;">
-              <button class="btn primary add_img_btn" onclick="imagePicker.open(this.prev())" img> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+              <div class='image-wrapper' style='width:200px'>
+                <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="max-width:190px;max-height:150px;display: block;">
+              </div>
+              <button class="btn primary add_img_btn" onclick="imagePicker.open(this.prev().find('img'))" img> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
       },
@@ -219,7 +221,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
           var img = row.find("img");
           row.find(".add_img_btn span").setContent(img.getValue() ? "zmień" : "wybierz");
-          img.style.display = img.getValue() ? "" : "none";
+          row.find(".image-wrapper").style.display = img.getValue() ? "" : "none";
         })
       },
       onRowInserted: (row) => {

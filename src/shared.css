@@ -2612,7 +2612,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .simple-list-row {
   margin: -1px;
-  padding-right: 5px;
+  padding-right: 10px;
   display: flex;
   align-items: center;
 }
@@ -2641,9 +2641,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .simple-list-row-wrapper {
   background: #aaa4;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 5px;
+  padding: 10px 0 10px 10px;
 }
 
 .simple-list .sub-list > .list > .simple-list-row-wrapper:first-child {
@@ -2723,6 +2721,14 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .simple-list[data-count="0"] > .add_btn.add_begin {
   border-radius: 4px;
+}
+
+/* slim paddings */
+.simple-list.slim .simple-list-row {
+  padding-right: 5px;
+}
+.simple-list.slim .simple-list-row-wrapper {
+  padding: 5px 0 5px 5px;
 }
 
 /* simple list end */
