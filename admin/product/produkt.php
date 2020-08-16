@@ -194,15 +194,15 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           return x.toString().replace(/"/g, "");
         };
         return `
-            <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
-            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin: 10px;max-width:200px;max-height:200px;">
+            <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz <i class="fas fa-image"></i></button>
+            <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" src="${data.src ? "/uploads/sm/" + clean(data.src) : ""}" style="margin:5px;max-width:200px;max-height:200px;">
           `;
       },
       default_row: {
         src: ""
       },
       title: "Galeria zdjęć produktu",
-      empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
+      //empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
     });
 
     setFormData(<?= json_encode($product_data) ?>, $("#productForm"));
@@ -345,7 +345,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     <div style="display: flex" class="mobileRow">
       <div style="flex-grow:1; padding-right: 15px">
         <div class="field-title">Nazwa produktu</div>
-        <input type="text" name="title" class="field" style="max-width: 600px;">
+        <input type="text" name="title" class="field" data-validate style="max-width: 600px;">
 
         <div class="field-title">Link strony</div>
         <div style="display:flex;flex-wrap: wrap;">
@@ -362,7 +362,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     </div>
 
 
-    <div name="gallery" data-validate="count:1+"></div>
+    <div name="gallery" data-validate="|count:1+" style="max-width:600px"></div>
 
     <div class="field-title">Kategorie</div>
     <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">

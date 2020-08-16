@@ -602,11 +602,7 @@ function createTable(table) {
         </div>
         <input type="hidden" class="table-selection-value" name="${
           table.selectable.output ? table.selectable.output : table.primary
-        }" ${
-        table.selectable.validate
-          ? `data-validate data-validate-target='.${table.name} .selectedRows'`
-          : ""
-      }>
+        }" ${table.selectable.validate ? `data-validate` : ""}>
         <div class="table-search-wrapper ${
           table.selectable ? `expandY hidden` : ""
         }">
@@ -1626,9 +1622,11 @@ function hideModal(name, isCancel = false) {
     }
 
     modal.findAll("[data-validate]").forEach((e) => {
-      e.removeEventListener("input", removeRequired);
-      e.removeEventListener("change", removeRequired);
-      e.classList.remove("required");
+      if (e.classList.contains("required")) {
+        e.removeEventListener("input", checkRemoveRequired);
+        e.removeEventListener("change", checkRemoveRequired);
+        e.classList.remove("required");
+      }
     });
 
     const hideCallback = modalHideCallbacks[name];
@@ -1785,8 +1783,54 @@ function $$(querySelectorAll, parent = null) {
 
 // validate start
 
+function markFieldWrong(field, errors = null) {
+  var field_title = field.find(".field-title");
+  if (!field_title) {
+    var previousNode = field.prev();
+    if (previousNode && previousNode.classList.contains("field-title")) {
+      field_title = previousNode;
+    }
+  }
+
+  if (!field_title) {
+    return;
+  }
+
+  var warning = field_title.find(".fa-exclamation-triangle");
+  if (warning) {
+    warning.remove();
+  }
+
+  if (Array.isArray(errors) && errors.length > 0) {
+    var warning = field_title.find(".fa-exclamation-triangle");
+    if (warning) {
+      warning.remove();
+    }
+
+    field_title.insertAdjacentHTML(
+      "beforeend",
+      `<i
+        class="fas fa-exclamation-triangle"
+        style="color: red;font-size: 1.3em;margin-left:4px"
+        data-tooltip="${errors.join("<br>")}">
+      </i>`
+    );
+
+    if (!field.classList.contains("required")) {
+      field.addEventListener("input", checkRemoveRequired);
+      field.addEventListener("change", checkRemoveRequired);
+      field.classList.add("required");
+    }
+  } else {
+    if (field.classList.contains("required")) {
+      field.removeEventListener("input", checkRemoveRequired);
+      field.removeEventListener("change", checkRemoveRequired);
+      field.classList.remove("required");
+    }
+  }
+}
+
 function validateForm(params) {
-  registerValidateFields();
   var elem = params.form ? params.form : document;
 
   var fields = elem.findAll("[data-validate]");
@@ -1802,11 +1846,10 @@ function validateForm(params) {
     }
     if (field.findParentByClassName("hidden")) continue;
 
-    if (!validateField(field)) {
-      var visibleField = getValidationTarget(field);
-
-      visibleField.classList.add("required");
-      scrollToView(visibleField, {
+    var valid = validateField(field);
+    markFieldWrong(field, valid);
+    if (valid !== true) {
+      scrollToView(field, {
         callback: () => {
           field.focus();
         },
@@ -1818,41 +1861,57 @@ function validateForm(params) {
   return true;
 }
 
-function getValidationTarget(field) {
-  var target = field.getAttribute("data-validate-target");
-  if (target) {
-    return $(target);
-  }
-  return field;
-}
-
-function toggleFieldCorrect(field, isCorrect) {
+function toggleFieldCorrect(field, correct) {
   var ok = field.parent().find(".correct");
-  if (ok) ok.style.display = isCorrect ? "block" : "";
+  if (ok) ok.style.display = correct === true ? "block" : "";
   var wrong = field.parent().find(".wrong");
-  if (wrong) wrong.style.display = isCorrect ? "" : "block";
+  if (wrong) wrong.style.display = correct === true ? "" : "block";
 }
 
-function validateSize(value, condition) {
-  var valLen = value.length;
+function validateSize(valLen, condition, message) {
+  var lengthInfo = "";
   if (condition.indexOf("+") > 0) {
-    return valLen >= condition.replace("+", "");
+    var minLen = condition.replace("+", "");
+    if (valLen < minLen) {
+      lengthInfo = `min. ${minLen}`;
+    }
   } else if (/\d-\d/.test(condition)) {
     var [from, to] = condition.split("-");
-    return valLen >= from && valLen <= to;
+    if (valLen < from || valLen > to) {
+      lengthInfo = `${from}-${to}`;
+    }
+  } else {
+    var reqLen = condition;
+    if (valLen != reqLen) {
+      lengthInfo = reqLen;
+    }
   }
-  return valLen == condition;
+  if (lengthInfo) {
+    return message(lengthInfo);
+  }
+  return true;
 }
 
 function validateField(field) {
   field = $(field);
-  var val = field.getValue();
-  if (val === "") return false;
 
-  var isSimpleList = false;
+  var errors = [];
+  var newError = (message) => {
+    message = message.trim();
+    if (errors.indexOf(message)) {
+      errors.push(message);
+    }
+  };
+
+  var val = field.getValue();
+  if (val === "") {
+    newError("Uzupełnij to pole");
+  }
+
+  var isList = false;
 
   if (field.classList.contains("simple-list")) {
-    isSimpleList = true;
+    isList = true;
     var valid = true;
 
     var list = window[field.getAttribute("data-list-name")];
@@ -1885,30 +1944,40 @@ function validateField(field) {
 
             valid = false;
             inputs.forEach((list_field) => {
-              list_field.classList.add("required");
-
-              var listFieldRemoveRequired = () => {
+              var listFieldcheckRemoveRequired = () => {
                 inputs.forEach((list_field) => {
-                  list_field.classList.remove("required");
-                  list_field.removeEventListener(
-                    "input",
-                    listFieldRemoveRequired
-                  );
-                  list_field.removeEventListener(
-                    "change",
-                    listFieldRemoveRequired
-                  );
+                  if (list_field.classList.contains("required")) {
+                    list_field.classList.remove("required");
+                    list_field.removeEventListener(
+                      "input",
+                      listFieldcheckRemoveRequired
+                    );
+                    list_field.removeEventListener(
+                      "change",
+                      listFieldcheckRemoveRequired
+                    );
+                  }
                 });
               };
-              list_field.addEventListener("input", listFieldRemoveRequired);
-              list_field.addEventListener("change", listFieldRemoveRequired);
+
+              if (!list_field.classList.contains("required")) {
+                list_field.classList.add("required");
+                list_field.addEventListener(
+                  "input",
+                  listFieldcheckRemoveRequired
+                );
+                list_field.addEventListener(
+                  "change",
+                  listFieldcheckRemoveRequired
+                );
+              }
             });
           });
         });
       }
     });
     if (!valid) {
-      return false;
+      newError("Wartości nie mogą się powtarzać");
     }
   }
 
@@ -1926,45 +1995,55 @@ function validateField(field) {
       var target = $(params["match"]);
       if (!target) {
         console.warn("Field missing");
-        return true;
       }
       var isCorrect = val == target.getValue();
       toggleFieldCorrect(field, isCorrect);
       if (!isCorrect) {
-        return false;
+        newError("Wartości nie są identyczne");
       }
     }
 
     if (params["length"]) {
-      var isCorrect = validateSize(val, params["length"]);
-      toggleFieldCorrect(field, isCorrect);
-      if (!isCorrect) {
-        return false;
+      var correct = validateSize(val.length, params["length"], (info) => {
+        return `Wymagana ilość znaków: ${info}`;
+      });
+      toggleFieldCorrect(field, isCorcorrectrect);
+      if (correct !== true) {
+        newError(correct);
       }
     }
 
-    if (isSimpleList) {
+    if (isList) {
       var list = window[field.getAttribute("data-list-name")];
 
       if (params["count"]) {
+        var correct = validateSize(
+          list.values.length,
+          params["count"],
+          (info) => {
+            return `Wymagana ilość elementów: ${info}`;
+          }
+        );
+
+        if (correct !== true) {
+          newError(correct);
+        }
       }
     }
   }
 
-  if (isSimpleList) {
-    return true;
-  } else if (validatorType == "tel") {
+  if (validatorType == "tel") {
     if (!/[\d\+\- ]{6,}/.test(val)) {
-      return false;
+      newError("Wpisz poprawny numer telefonu");
     }
   } else if (validatorType == "nip") {
     if (val.replace(/[^0-9]/g, "").length != 10) {
-      return false;
+      newError("Wpisz poprawny NIP (10 cyfr)");
     }
   } else if (validatorType == "email") {
     const re = /\S+@\S+\.\S+/;
     if (!re.test(String(val).toLowerCase())) {
-      return false;
+      newError("Wpisz poprawny adres email");
     }
   } else if (validatorType == "password") {
     // default password length
@@ -1972,31 +2051,24 @@ function validateField(field) {
       var isCorrect = val.length >= 8;
       toggleFieldCorrect(field, isCorrect);
       if (!isCorrect) {
-        return false;
+        newError("Wymagana długość: 8 znaków");
       }
     }
   } else if (validatorType == "price") {
     if (+val <= 0.001) {
-      return false;
+      newError("Wpisz dodatnią wartość");
     }
   }
 
-  return true;
+  if (errors.length === 0) {
+    return true;
+  }
+  return errors;
 }
 
-function removeRequired() {
-  if (validateField(field)) {
-    var visibleField = getValidationTarget(field);
-    visibleField.classList.remove("required");
-  }
-}
-function registerValidateFields() {
-  var fields = $$("[data-validate]:not([data-validate-registered])");
-  for (field of fields) {
-    field.setAttribute("data-validate-registered", true);
-    field.addEventListener("input", removeRequired);
-    field.addEventListener("change", removeRequired);
-  }
+function checkRemoveRequired() {
+  var valid = validateField(this);
+  markFieldWrong(this, valid);
 }
 
 function clearValidateRequired() {
@@ -3341,6 +3413,8 @@ function createSimpleList(params = {}) {
         add_begin.style.display = empty ? "none" : "";
       }
     });
+
+    list.wrapper.dispatchEvent(new Event("change"));
   };
 
   if (params.output) {

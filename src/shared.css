@@ -2495,12 +2495,6 @@ ql-icon i span {
   box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
 }
 
-.simple-list.required .field-title:after {
-  color: red;
-  content: "Wartości nie mogą się powtarzać!";
-  font-weight: bold;
-}
-
 /* form validate end */
 
 /* miejscowosc picker start */
