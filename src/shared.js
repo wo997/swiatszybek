@@ -461,13 +461,13 @@ window.addEventListener("click", function (ev) {
 
 function createTable(table) {
   // REQUIRED name, definition | renderRow, url, primary, db_table
-  // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), callback
+  // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate
   // sortable (requires primary, db_table),
   // selectable: {data,output},
   // hasMetadata: (boolean, enables outputting metadata from additional row inputs)
   // tree_view
   // lang: {subject, main_category}
-
+  window[table.name] = table;
   table.awaitId = null;
   table.currPage = 1;
   table.pageCount = 0;
@@ -491,14 +491,16 @@ function createTable(table) {
     }
 
     table.setSelectedValuesString = (v) => {
+      // Works also with json to make it easier to use
+      var values = typeof v == "string" ? JSON.parse(v) : v;
       var selection = null;
       if (table.singleselect) {
-        selection = v;
+        selection = values;
       } else if (table.hasMetadata) {
         var metadata = [];
         selection = [];
         try {
-          Object.entries(JSON.parse(v)).forEach(([row_id, row_metadata]) => {
+          Object.entries(values).forEach(([row_id, row_metadata]) => {
             selection.push(parseInt(row_id));
             metadata[parseInt(row_id)] = row_metadata;
           });
@@ -512,14 +514,14 @@ function createTable(table) {
         selection = [];
 
         try {
-          for (val of JSON.parse(v)) {
+          for (val of values) {
             selection.push(parseInt(val));
           }
         } catch (e) {}
       }
       table.selection = selection;
 
-      table.selectionValueElement.value = v;
+      table.selectionValueElement.value = values;
 
       table.createList();
     };
@@ -621,6 +623,9 @@ function createTable(table) {
   } else {
     table.target.insertAdjacentHTML("afterbegin", justTable);
   }
+
+  if (table.onCreate) table.onCreate();
+
   table.searchElement = table.target.find(".search-wrapper");
   table.tableElement = table.target.find(".table-wrapper");
   table.totalRowsElement = table.target.find(".total-rows");
@@ -788,7 +793,7 @@ function createTable(table) {
     });
   });
 
-  table.search = function (callback = null, createList = false) {
+  table.search = (callback = null, createList = false) => {
     clearTimeout(table.awaitId);
 
     if (table.request) table.request.abort();
@@ -975,7 +980,7 @@ function createTable(table) {
         }
 
         if (callback) callback(res); // custom
-        if (table.callback) table.callback(res); // default
+        if (table.onSearch) table.onSearch(res); // default
       },
     });
   };
@@ -1119,8 +1124,6 @@ function createTable(table) {
       });
     };
   }
-
-  window[table.name] = table;
 }
 
 function getSafePageIndex(i, pageCount) {
@@ -1425,6 +1428,36 @@ function findParentByStyle(elem, style, value) {
   }
   return null;
 }
+function findParentByComputedStyle(elem, style, value, invert = false) {
+  elem = $(elem);
+
+  while (elem && elem != document) {
+    var computedStyle = window.getComputedStyle(elem)[style];
+    if (invert) {
+      if (computedStyle != value) {
+        return elem;
+      }
+    } else {
+      if (computedStyle == value) {
+        return elem;
+      }
+    }
+    elem = elem.parent();
+  }
+  return null;
+}
+function findScrollableParent(elem) {
+  elem = $(elem);
+
+  while (elem && elem != document.body) {
+    var overflowY = window.getComputedStyle(elem)["overflow-y"];
+    if (overflowY === "scroll" || overflowY === "auto") {
+      return elem;
+    }
+    elem = elem.parent();
+  }
+  return null;
+}
 function isInNode(elem, parent) {
   elem = $(elem);
   while (elem && elem != document) {
@@ -1692,8 +1725,8 @@ function $(node, parent = null) {
   node.findAll = (query) => {
     return $$(query, node);
   };
-  node.setValue = (value) => {
-    setValue(node, value);
+  node.setValue = (value, quiet = false) => {
+    setValue(node, value, quiet);
   };
   node.getValue = () => {
     return getValue(node);
@@ -1746,6 +1779,14 @@ function $(node, parent = null) {
     return window.findParentByStyle(node, style, value);
   };
 
+  node.findParentByComputedStyle = (style, value) => {
+    return window.findParentByComputedStyle(node, style, value);
+  };
+
+  node.findScrollableParent = () => {
+    return window.findScrollableParent(node);
+  };
+
   node.findParentByClassName = (parentClassNames, stopAtClassName = null) => {
     return window.findParentByClassName(
       node,
@@ -1795,7 +1836,12 @@ function markFieldWrong(field, errors = null) {
       field_title = previousNode;
     }
   }
-
+  if (!field_title) {
+    var field_wrapper = field.findParentByClassName("field-wrapper");
+    if (field_wrapper) {
+      field_title = field_wrapper.find(".field-title");
+    }
+  }
   if (!field_title) {
     return;
   }
@@ -1815,7 +1861,7 @@ function markFieldWrong(field, errors = null) {
       "beforeend",
       `<i
         class="fas fa-exclamation-triangle"
-        style="color: red;font-size: 1.3em;margin-left:4px"
+        style="color: red;transform: scale(1.25);margin-left:4px"
         data-tooltip="${errors.join("<br>")}">
       </i>`
     );
@@ -2092,7 +2138,7 @@ function moveCursorToEnd(el) {
   }
 }
 
-function setValue(input, value) {
+function setValue(input, value, quiet = false) {
   input = $(input);
   if (input.classList.contains("simple-list")) {
     list = window[input.getAttribute("data-list-name")];
@@ -2109,8 +2155,6 @@ function setValue(input, value) {
     input.style.background = hex ? "#" + hex : "";
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
-
-    input.dispatchEvent(new Event("change"));
   } else if (input.hasAttribute("data-category-picker")) {
     setCategoryPickerValues(input.next(), JSON.parse(value));
   } else {
@@ -2121,8 +2165,6 @@ function setValue(input, value) {
         input = input.find(pointChild);
       }
       input.innerHTML = value;
-
-      input.dispatchEvent(new Event("change"));
     } else if (type == "attribute_values") {
       input.findAll(".combo-select-wrapper").forEach((combo) => {
         combo.findAll("select").forEach((select) => {
@@ -2162,13 +2204,18 @@ function setValue(input, value) {
       if (!prefix) prefix = "/uploads/df/";
       if (value) value = prefix + value;
       input.setAttribute("src", value);
-
-      input.dispatchEvent(new Event("change"));
-    } else {
+    } else if (input.tagName == "SELECT") {
+      if (![...input.options].find((e) => e.value == value)) {
+        return;
+      }
       input.value = value;
-
-      input.dispatchEvent(new Event("change"));
+    } else {
+      // for text fields
+      input.value = value;
     }
+  }
+  if (!quiet) {
+    input.dispatchEvent(new Event("change"));
   }
 }
 
@@ -2364,15 +2411,10 @@ function setFormData(data, form = null) {
   if (!form) form = document;
   Object.entries(data).forEach(([name, value]) => {
     var e = $(form).find(`[name="${name}"]`);
-    if (e && e.tagName == "SELECT") {
-      if (![...e.options].find((e) => e.value == value)) {
-        return;
-      }
-    }
-    if (e) {
-      setValue(e, value);
+    if (!e) {
       return;
     }
+    setValue(e, value);
   });
 
   resizeCallback();
@@ -3429,3 +3471,29 @@ window.addEventListener("DOMContentLoaded", () => {
     updateOnlineStatus();
   });
 });
+
+// datapicker start
+function getDatepickerDefaultOptions(e) {
+  return {
+    todayHighlight: true,
+    todayBtn: true,
+    clearBtn: true,
+    maxView: 2,
+    language: "pl",
+    autohide: true,
+    container: e.findScrollableParent(),
+  };
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  registerDatepickers();
+});
+
+function registerDatepickers() {
+  $$(".default_datepicker:not(.registered)").forEach((e) => {
+    e.classList.add("registered");
+
+    new Datepicker(e, getDatepickerDefaultOptions(e));
+  });
+}
+// datapicker end

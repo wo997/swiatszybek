@@ -62,7 +62,7 @@ function displayAllAttributeOptions()
             } else if (strpos($attribute["data_type"], "number") !== false) {
                 $res .=  '<input type="number" class="field attribute_value">';
             } else if (strpos($attribute["data_type"], "date") !== false) {
-                $res .=  '<input type="text" class="field datepicker attribute_value">';
+                $res .=  '<input type="text" class="field default_datepicker attribute_value">';
             } else {
                 $res .=  '<input type="text" class="field attribute_value">';
             }

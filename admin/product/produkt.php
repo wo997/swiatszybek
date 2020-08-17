@@ -339,7 +339,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   }
 
   function rewriteURL() {
-    $(`[name="link"]`).value = getLink($(`[name="title"]`).value);
+    $(`[name="link"]`).setValue(getLink($(`[name="title"]`).value));
   }
 </script>
 
@@ -376,10 +376,12 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         <div class="field-title">Nazwa produktu</div>
         <input type="text" name="title" class="field" data-validate style="max-width: 600px;">
 
-        <div class="field-title">Link strony</div>
-        <div style="display:flex;flex-wrap: wrap;">
-          <input type="text" name="link" data-validate autocomplete="off" class="field" style="max-width: 600px;">
-          <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
+        <div class="field-wrapper">
+          <div class="field-title">Link strony</div>
+          <div style="display:flex;flex-wrap: wrap;">
+            <input type="text" name="link" data-validate autocomplete="off" class="field" style="max-width: 600px;">
+            <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
+          </div>
         </div>
 
         <div class="field-title">Tytuł (SEO)</div>

@@ -7,7 +7,8 @@ if (!function_exists('isCurrent')) {
     return strpos($url, $some_url) !== false ? "current" : "";
   }
 
-  function renderPageItem($page,$params = []) {
+  function renderPageItem($page, $params = [])
+  {
     $className = "";
 
     if (isset($params["dropdown"])) {
@@ -15,12 +16,11 @@ if (!function_exists('isCurrent')) {
     }
     if (isset($params["current"]) && $params["current"]) {
       $className .= " current";
-    }
-    else {
+    } else {
       $className .= isCurrent($page['url']);
     }
 
-    return "<a class='menu_item $className' href='/{$page['url']}'>{$page['title']} ".renderNotification($page['notifcation_count'])." </a>";
+    return "<a class='menu_item $className' href='/{$page['url']}'>{$page['title']} " . renderNotification($page['notification_count']) . " </a>";
   }
 }
 
@@ -38,11 +38,11 @@ foreach ($admin_navigations_tree as $page) {
   }
 
   if (isset($page['sub'])) {
-    $notifcation = renderNotification($page['notifcation_count']);
+    $notifcation = renderNotification($page['notification_count']);
     if ($notifcation) $notifcation .= " ";
 
     echo "<div class='dropdown mobile-hover $current' >
-        ".renderPageItem($page,["dropdown"=>true,"current"=>$current])."
+        " . renderPageItem($page, ["dropdown" => true, "current" => $current]) . "
         <div class='dropdown-expand'>
       ";
 

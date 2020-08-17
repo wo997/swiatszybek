@@ -22,7 +22,7 @@ if (isset($_POST["remove"])) {
     // attributes
     query("DELETE FROM link_category_attribute WHERE category_id = ?", [$category_id]);
     $insert = "";
-    foreach (explode(",", trim($_POST["attributes"], ",")) as $attribute_id) {
+    foreach (json_decode($_POST["attributes"], true) as $attribute_id) {
         $insert .= "($category_id," . intval($attribute_id) . "),";
     }
     $insert = substr($insert, 0, -1);

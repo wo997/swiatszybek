@@ -283,19 +283,23 @@
                     <input type="text" name="url" autocomplete="off" class="field" data-validate>
                 </div>
                 <div class="tab-content hidden" data-tab_id="2">
-                    <div class="field-title">Wskaż stronę CMS</div>
-                    <div class="strony"></div>
+                    <div class="field-wrapper">
+                        <div class="field-title">Wskaż stronę CMS</div>
+                        <div class="strony"></div>
+                    </div>
                 </div>
                 <div class="tab-content hidden" data-tab_id="3">
-                    <div class="field-title">Wskaż produkt</div>
-                    <div class="produkty"></div>
+                    <div class="field-wrapper">
+                        <div class="field-title">Wskaż produkt</div>
+                        <div class="produkty"></div>
+                    </div>
                 </div>
             </div>
 
             <br>
             <div class="caseCanDelete" style="margin-top:auto;align-self: flex-end; padding-top:30px">
                 <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć to menu?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
-                <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podmenu'></i>
+                <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu wszystkich podmenu'></i>
             </div>
             <input type="hidden" name="category_id">
 

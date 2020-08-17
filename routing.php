@@ -57,23 +57,23 @@ $admin_navigations_tree = [
 
 function getNotificationCountForPage(&$page, $children_notification_count = 0)
 {
-  $notifcation_count = $children_notification_count;
+  $notification_count = $children_notification_count;
   if (isset($page['url'])) {
     if ($page['url'] == "admin/zamowienia") {
-      $notifcation_count += fetchValue("SELECT COUNT(1) FROM zamowienia WHERE status IN (0,1) AND zamowienie_id > 103");
+      $notification_count += fetchValue("SELECT COUNT(1) FROM zamowienia WHERE status IN (0,1) AND zamowienie_id > 103");
     } else if ($page['url'] == "admin/komentarze") {
-      $notifcation_count += fetchValue("SELECT COUNT(1) FROM comments WHERE accepted = 0");
+      $notification_count += fetchValue("SELECT COUNT(1) FROM comments WHERE accepted = 0");
     } else if ($page['url'] == "admin/oczekujacy") {
-      $notifcation_count += fetchValue("SELECT COUNT(1) FROM notifications WHERE sent = 0");
+      $notification_count += fetchValue("SELECT COUNT(1) FROM notifications WHERE sent = 0");
     }
   }
-  return $notifcation_count;
+  return $notification_count;
 }
 
-function renderNotification($notifcation_count)
+function renderNotification($notification_count)
 {
-  if ($notifcation_count > 0) {
-    return "<span class='red-notification'>$notifcation_count</span>";
+  if ($notification_count > 0) {
+    return "<span class='red-notification'>$notification_count</span>";
   }
   return "";
 }
@@ -98,17 +98,17 @@ foreach ($admin_navigations_tree as &$admin_navigations_branch) {
   setDefaultsForAdminPage($admin_navigations_branch);
 }
 
-// set notifcation_count for each page at each level
+// set notification_count for each page at each level
 foreach ($admin_navigations_tree as &$admin_navigations_branch) {
   $children_notification_count = 0;
   if (isset($admin_navigations_branch['sub'])) {
     foreach ($admin_navigations_branch['sub'] as &$sub_navigation) {
-      $sub_navigation['notifcation_count'] = getNotificationCountForPage($sub_navigation);
-      $children_notification_count += $sub_navigation['notifcation_count'];
+      $sub_navigation['notification_count'] = getNotificationCountForPage($sub_navigation);
+      $children_notification_count += $sub_navigation['notification_count'];
     }
     unset($sub_navigation);
   }
-  $admin_navigations_branch['notifcation_count'] = getNotificationCountForPage($admin_navigations_branch, $children_notification_count);
+  $admin_navigations_branch['notification_count'] = getNotificationCountForPage($admin_navigations_branch, $children_notification_count);
 }
 
 $admin_navigations = []; // flatten admin page array

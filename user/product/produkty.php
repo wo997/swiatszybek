@@ -404,7 +404,8 @@ function showCategory($category, $level = 0)
         return $html;
       }
 
-      $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes");
+      $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes
+        INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($show_category["category_id"]));
 
       foreach ($attributes as $attribute) {
 
