@@ -491,14 +491,16 @@ function createTable(table) {
     }
 
     table.setSelectedValuesString = (v) => {
+      // Works also with json to make it easier to use
+      var values = typeof v == "string" ? JSON.parse(v) : v;
       var selection = null;
       if (table.singleselect) {
-        selection = v;
+        selection = values;
       } else if (table.hasMetadata) {
         var metadata = [];
         selection = [];
         try {
-          Object.entries(JSON.parse(v)).forEach(([row_id, row_metadata]) => {
+          Object.entries(values).forEach(([row_id, row_metadata]) => {
             selection.push(parseInt(row_id));
             metadata[parseInt(row_id)] = row_metadata;
           });
@@ -512,14 +514,14 @@ function createTable(table) {
         selection = [];
 
         try {
-          for (val of JSON.parse(v)) {
+          for (val of values) {
             selection.push(parseInt(val));
           }
         } catch (e) {}
       }
       table.selection = selection;
 
-      table.selectionValueElement.value = v;
+      table.selectionValueElement.value = values;
 
       table.createList();
     };
@@ -1445,10 +1447,16 @@ function findParentByComputedStyle(elem, style, value, invert = false) {
   return null;
 }
 function findScrollableParent(elem) {
-  return nonull(
-    findParentByComputedStyle(elem, "position", "static", true),
-    document.body
-  );
+  elem = $(elem);
+
+  while (elem && elem != document.body) {
+    var overflowY = window.getComputedStyle(elem)["overflow-y"];
+    if (overflowY === "scroll" || overflowY === "auto") {
+      return elem;
+    }
+    elem = elem.parent();
+  }
+  return null;
 }
 function isInNode(elem, parent) {
   elem = $(elem);

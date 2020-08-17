@@ -2235,6 +2235,7 @@ ql-icon i span {
   background: white;
   max-height: 100%;
   overflow-y: auto;
+  position: relative;
   -webkit-box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
   -moz-box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
   box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
@@ -2503,7 +2504,7 @@ ql-icon i span {
 }
 
 .simple-list[data-count="0"].required > .add_btn.add_begin {
-  background: #d33;
+.modal-content > * > *:not(.blank)  background: #d33;
 }
 
 img.required {
