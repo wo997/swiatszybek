@@ -1501,10 +1501,6 @@ function setBlockBackgroundColor(val = "FFFFFF") {
   }
 }
 
-function rewriteURL() {
-  $(`[name="link"]`).value = getLink($(`[name="title"]`).value);
-}
-
 registerModalContent(
   `
     <div id="cms" data-expand>

@@ -195,7 +195,7 @@
     });
 
     function rewriteURL() {
-        $(`[name="link"]`).value = getLink($(`[name="title"]`).value);
+        $(`[name="link"]`).setValue(getLink($(`[name="title"]`).value));
     }
 </script>
 

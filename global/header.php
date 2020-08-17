@@ -42,7 +42,7 @@ include "basketContent.php";
                     <?php
                     foreach ($admin_navigations as $page) {
                       if (isset($page['quick_menu'])) {
-                        echo '<a class="menu_item" href="/' . $page['url'] . '">' . $page['title'] . ' ' . renderNotification($page['notifcation_count']) . '</a>';
+                        echo '<a class="menu_item" href="/' . $page['url'] . '">' . $page['title'] . ' ' . renderNotification($page['notification_count']) . '</a>';
                       }
                     }
                     ?>

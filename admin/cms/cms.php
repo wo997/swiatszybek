@@ -102,7 +102,8 @@ $static = checkUrl($page_data["link"]);
     }
 
     function rewriteURL() {
-        $(`[name="link"]`).value = getLink($(`[name="seo_title"]`).value);
+        $(`[name="link"]`).setValue(getLink($(`[name="seo_title"]`).value));
+
     }
 
     function editPage() {

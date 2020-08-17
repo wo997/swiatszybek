@@ -1828,7 +1828,12 @@ function markFieldWrong(field, errors = null) {
       field_title = previousNode;
     }
   }
-
+  if (!field_title) {
+    var field_wrapper = field.findParentByClassName("field-wrapper");
+    if (field_wrapper) {
+      field_title = field_wrapper.find(".field-title");
+    }
+  }
   if (!field_title) {
     return;
   }
@@ -1848,7 +1853,7 @@ function markFieldWrong(field, errors = null) {
       "beforeend",
       `<i
         class="fas fa-exclamation-triangle"
-        style="color: red;font-size: 1.3em;margin-left:4px"
+        style="color: red;transform: scale(1.25);margin-left:4px"
         data-tooltip="${errors.join("<br>")}">
       </i>`
     );
