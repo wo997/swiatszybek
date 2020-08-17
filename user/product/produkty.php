@@ -181,7 +181,7 @@ function showCategory($category, $level = 0)
       transition: height 0.3s;
       position: relative;
       height: 0px;
-      margin: 30px 0;
+      overflow: hidden;
     }
 
     .product-list-container-swap,
@@ -202,10 +202,12 @@ function showCategory($category, $level = 0)
 
     .product-list-container {}
 
-    /*.product-list-container, .product-list-container-swap {
-      position: absolute;
-      transition: opacity 0.3s;
-    }*/
+    .under-products {
+      position: relative;
+      -webkit-box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
+      -moz-box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
+      box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
+    }
   </style>
 
   <script>
@@ -277,6 +279,8 @@ function showCategory($category, $level = 0)
         success: (res) => {
           if (res.totalRows == 0) {
             res.content = "<div style='font-size:20px;padding: 100px 10px;text-align:center;font-weight:bold'>Brak produktów</div>";
+          } else {
+            res.content = `<div style='height:50px'></div>${res.content}<div style='height:50px'></div>`;
           }
           productListSwapNode.style.animation = "fadeIn 0.3s";
           productListSwapBackgroundNode.style.animation = "fadeIn 0.3s";
@@ -467,7 +471,7 @@ function showCategory($category, $level = 0)
         <div class="product-list-container-swap"></div>
       </div>
 
-      <div style="position:relative">
+      <div class="under-products">
         <div class="flexbar">
           <div class="pagination"></div>
         </div>
