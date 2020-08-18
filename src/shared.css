@@ -57,11 +57,7 @@ input[type="number"] {
   -moz-appearance: textfield; /* Firefox */
 }
 
-body,
-button,
-input,
-textarea,
-.cms {
+body, button, input, textarea, .cms, select {
   font-family: "Open Sans", sans-serif;
   /*font-family: 'Poppins', sans-serif;*/
   font-size: 14px;
@@ -2795,3 +2791,33 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   color: #aaa;
 }
 /* attributes end */
+
+
+.color-circle {
+  width: 1.2em;
+  height: 1.2em;
+  display: inline-block;
+  vertical-align: sub;
+  margin-left: 5px;
+  border-radius: 50%;
+  -webkit-box-shadow: inset 2px -2px 3px 0px rgba(0,0,0,0.15), inset -2px 2px 3px 0px rgb(255 255 255 / 20%), 0px 2px 2px 0px rgba(0,0,0,0.4);
+  -moz-box-shadow: inset 2px -2px 3px 0px rgba(0,0,0,0.15), inset -2px 2px 3px 0px rgb(255 255 255 / 20%), 0px 2px 2px 0px rgba(0,0,0,0.4);
+  box-shadow: inset 2px -2px 3px 0px rgba(0,0,0,0.15), inset -2px 2px 3px 0px rgb(255 255 255 / 20%), 0px 2px 2px 0px rgba(0,0,0,0.4);
+  position: relative;
+}
+.color-circle:after {
+  content: "";
+  position: absolute;
+  right: 0.3em;
+  top: 0.3em;
+  width: 0.01em;
+  height: 0.01em;
+  display: block;
+  background: #fff;
+  -webkit-box-shadow: 0px 0px 3px 0px rgba(255,255,255,1);
+  -moz-box-shadow: 0px 0px 3px 0px rgba(255,255,255,1);
+  box-shadow: 0px 0px 2px 3px rgba(255,255,255,1);
+  border-radius: 50%;
+  transform: rotate(45deg) scaleY(0.5);
+  opacity: 0.5;
+}

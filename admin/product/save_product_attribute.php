@@ -1,7 +1,6 @@
 <?php //route[admin/save_product_attribute]
 
-//$_POST["attribute_values"] = [{"id":"-1","value":"79807890"},{"id":"-1","value":"3456"}];
-$attributes = json_decode($_POST["attribute_values"], true);
+$attributes = json_decode($_POST["attribute_values_" . $_POST["data_type"]], true);
 
 if (isset($_POST["remove"])) {
     query("DELETE FROM product_attributes WHERE attribute_id = ?", [
@@ -37,14 +36,20 @@ if (isset($_POST["remove"])) {
         foreach ($attributes as $attribute) {
             $value_data = $attribute["values"];
             $value_id = intval($value_data["value_id"]);
+            $value_value = $value_data["value"];
             if ($value_id == "-1") {
                 query("INSERT INTO attribute_values () VALUES ()");
                 $value_id = getLastInsertedId();
             }
 
+            // additional_data, ⚠️ the array will be missing the rest of data
+            unset($value_data["value_id"]);
+            unset($value_data["value"]);
+            $additional_data = $value_data ? json_encode($value_data) : "";
+
             $kolejnosc++;
-            query("UPDATE attribute_values SET value = ?, attribute_id = ?, kolejnosc = ?, parent_value_id = ? WHERE value_id = " . $value_id, [
-                $value_data["value"], $attribute_id, $kolejnosc, $parent_id
+            query("UPDATE attribute_values SET value = ?, attribute_id = ?, kolejnosc = ?, parent_value_id = ?, additional_data = ? WHERE value_id = " . $value_id, [
+                $value_value, $attribute_id, $kolejnosc, $parent_id, $additional_data
             ]);
 
             $value_ids .= $value_id . ",";

@@ -74,11 +74,9 @@
         });
 
         createSimpleList({
-            name: "attribute_values",
+            name: "attribute_values_textlist",
             fields: {
-                value_id: {
-
-                },
+                value_id: {},
                 value: {
                     unique: true,
                     allow_empty: true
@@ -100,6 +98,38 @@
             recursive: 3,
             title: "Wszystkie wartości"
         });
+
+        createSimpleList({
+            name: "attribute_values_colorlist",
+            fields: {
+                value_id: {},
+                value: {
+                    unique: true,
+                    allow_empty: true
+                },
+                color: {}
+            },
+            render: (data) => {
+                var clean = (x) => {
+                    return x.toString().replace(/"/g, "");
+                };
+                return `
+                    <input type='hidden' data-list-param="value_id" value="${clean(data.value_id)}">
+                    <input type='text' class='field inline jscolor' data-list-param="color" value="${clean(data.color)}">
+                    <input type='text' class='field' style='flex-grow:1' data-list-param="value" value="${clean(data.value)}">
+                `;
+            },
+            default_row: {
+                value_id: -1,
+                value: "",
+                color: "",
+            },
+            onChange: () => {
+                jscolor.installByClassName("jscolor");
+            },
+            recursive: 3,
+            title: "Wszystkie kolory"
+        });
     });
 
     function editAttribute(btn = null, row_id = null, table = null) {
@@ -113,6 +143,7 @@
             attr_ids: "",
             attr_values: ""
         };
+
         if (row_id !== null) {
             data = table.results[row_id];
 
@@ -122,12 +153,20 @@
                     attribute_id: data.attribute_id
                 },
                 success: (res) => {
-                    attribute_values.setValues(res);
+                    var list = window[`attribute_values_${data.data_type}`];
+
+                    if (list) {
+                        list.setValues(res)
+                    };
                     setModalInitialState(formName);
                 }
             });
         } else {
-            attribute_values.setValues([]);
+            var list = window[`attribute_values_${data.data_type}`];
+
+            if (list) {
+                list.setValues([]);
+            };
         }
 
         setFormData(data, form);
@@ -158,10 +197,15 @@
     function toggleValues() {
         var data_type = $(`[name="data_type"]`).value;
 
-        var inactive = !!attribute_data_types[data_type].field;
-
-        var values = $(`[name="attribute_values"]`);
-        values.classList.toggle("hidden", inactive);
+        Object.entries(attribute_data_types).forEach(([type, params]) => {
+            if (params.field) {
+                return;
+            }
+            var node = $(`[name="attribute_values_${type}"]`);
+            if (node) {
+                node.classList.toggle("hidden", data_type != type)
+            };
+        });
     }
 </script>
 
@@ -169,7 +213,7 @@
 
 <div class="mytable"></div>
 
-<div id="editAttribute" data-modal data-expand>
+<div id="editAttribute" data-modal data-expand data-exclude-hidden>
     <div class="stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja atrybutu</span>
@@ -185,7 +229,9 @@
                     <div class="field-title">Typ danych</div>
                     <select name="data_type" class="field" onchange="toggleValues()"></select>
 
-                    <div name="attribute_values" class="slim"></div>
+                    <div name="attribute_values_textlist" class="slim"></div>
+                    <div name="attribute_values_colorlist" class="slim"></div>
+
                 </div>
                 <div>
 

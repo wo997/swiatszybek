@@ -3,7 +3,7 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 2140);
+define("RELEASE", 2141);
 
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
@@ -319,13 +319,12 @@ $attribute_data_types = [
   "numberlist" => [
     "description" => "Liczba (lista)",
   ],
+  "colorlist" => [
+    "description" => "Kolor (lista)"
+  ],
   "numberany" => [
     "description" => "Liczba (dowolna)",
     "field" => "numerical_value"
-  ],
-  "colorany" => [
-    "description" => "Kolor (dowolny)",
-    "field" => "text_value",
   ],
   "dateany" => [
     "description" => "Data (dowolna)",

@@ -2408,7 +2408,7 @@ function scrollToBottom(node) {
 }
 
 function setFormData(data, form = null) {
-  if (!form) form = document;
+  if (!form) form = document.body;
   Object.entries(data).forEach(([name, value]) => {
     var e = $(form).find(`[name="${name}"]`);
     if (!e) {
@@ -2421,7 +2421,7 @@ function setFormData(data, form = null) {
 }
 
 function getFormData(form = null) {
-  if (!form) form = document;
+  if (!form) form = document.body;
   var data = {};
 
   form = $(form);
@@ -3416,7 +3416,7 @@ function createSimpleList(params = {}) {
         if (level < list.recursive) {
           row.children = getDirectRows(
             $(simpleListRowWrapper).find(".sub-list > .list"),
-            level++
+            level + 1
           );
         }
 
@@ -3456,6 +3456,9 @@ function createSimpleList(params = {}) {
   if (params.output) {
     $(params.output).setAttribute("data-type", "simple-list");
   }
+
+  //set data-count etc.
+  list.valuesChanged();
 }
 
 // simple list end

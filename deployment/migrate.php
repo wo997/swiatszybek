@@ -84,4 +84,8 @@ addIndex("link_product_attribute_value", "value_id", "index");
 addIndex("link_variant_attribute_value", "variant_id", "index");
 addIndex("link_variant_attribute_value", "value_id", "index");
 
+addColumns("attribute_values", [
+  ["name" => "additional_data", "type" => "TINYTEXT"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";

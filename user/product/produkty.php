@@ -167,7 +167,7 @@ function showCategory($category, $level = 0)
       overflow: hidden;
     }
 
-    .combo-select-wrapper .attribute-header {
+    .attribute-header {
       font-weight: 600;
       margin-top: 1em;
       margin-bottom: 0.3em;
@@ -393,6 +393,10 @@ function showCategory($category, $level = 0)
           $html .= "<div class='checkbox'></div> ";
           $html .= $value_data["values"]["value"];
 
+          if (isset($value_data["values"]["color"])) {
+            $html .= "<div class='color-circle' style='background-color:" . $value_data["values"]["color"] . "'></div>";
+          }
+
           $html .= "</label>";
 
           $html .= printUserSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
@@ -411,7 +415,8 @@ function showCategory($category, $level = 0)
 
         $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-        echo "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'><div class='attribute-header'>" . $attribute["name"] . "</div> ";
+        echo "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
+        echo "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
 
         if ($any) {
         } else {
