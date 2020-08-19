@@ -88,4 +88,11 @@ addColumns("attribute_values", [
   ["name" => "additional_data", "type" => "TINYTEXT"],
 ]);
 
+addColumns("users", [
+  ["name" => "user_type", "type" => "VARCHAR(64)"],
+  ["name" => "permissions", "type" => "TINYINT"],
+]);
+
+addIndex("users", "user_type", "index");
+
 echo "<h3>✅ All migrations completed</h3>";

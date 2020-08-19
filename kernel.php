@@ -9,10 +9,10 @@ define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
 
 
+include_once "helpers/general.php";
+
 // global variables
-
-require "constants.php";
-
+@include "builds/config.php";
 function config($var, $default = "")
 {
   global $config;
@@ -20,8 +20,7 @@ function config($var, $default = "")
 }
 
 $secrets = [];
-require "secrets.php"; // overrides empty array
-
+@include "secrets.php";
 function secret($var, $default = "")
 {
   global $secrets;
@@ -36,355 +35,51 @@ $SITE_URL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : 
 
 $currency = "PLN"; // used by p24
 
-
-// db
+// use db
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 date_default_timezone_set("Europe/Warsaw");
 require "database.php";
 
+// define app scope
+$app = [];
 
 // include helpers
+include_once "helpers/date.php";
+include_once "helpers/string.php";
+include_once "helpers/rating.php";
 
 include_once "helpers/db.php";
 
-include_once "helpers/datatable.php";
+include_once "helpers/user.php";
 
-include_once "helpers/order.php";
-
-include_once "helpers/deployment.php";
+include_once "helpers/email.php";
 
 include_once "helpers/events.php";
+include_once "helpers/datatable.php";
+include_once "helpers/deployment.php";
+
+include_once "helpers/order.php";
+include_once "helpers/activity_log.php";
+include_once "helpers/images.php";
+include_once "helpers/product.php";
+
+include_once "helpers/links.php";
 
 include_once "helpers/layout/cms.php";
 include_once "helpers/layout/templates.php";
 
 require_once 'helpers/facebook_register.php'; // should be a part of FB module instead
 
-require_once 'login_user.php'; // TODO: it's dumb to split it like that
 
-// helpers
+initUser();
 
-function getProductLink($product_id, $link)
-{
-  global $SITE_URL;
-  return "$SITE_URL/produkt/$product_id/" . getLink($link);
-}
-
-function getZamowienieLink($link)
-{
-  global $SITE_URL;
-  return "$SITE_URL/zamowienie/$link";
-}
-
-$specificTime = abs(floor(microtime(true) * 100) % 1000); // return with refresh, no longer used, supports shit servers
-
-function getLink($phrase)
-{ // also shared.js
-  $pl = array(',', ' ', 'ę', 'Ę', 'ó', 'Ó', 'ą', 'Ą', 'ś', 'Ś', 'ł', 'Ł', 'ż', 'Ż', 'ź', 'Ź', 'ć', 'Ć', 'ń', 'Ń');
-  $en = array('-', '-', 'e', 'E', 'o', 'O', 'a', 'A', 's', 'S', 'l', 'L', 'z', 'Z', 'z', 'Z', 'c', 'C', 'n', 'N');
-  return strtolower(preg_replace("/-+/", "-", preg_replace("/[^(a-zA-Z0-9-)]/", "", str_replace($pl, $en, $phrase))));
-}
-
-function getMenuLink($menu_item)
-{
-  $title = "";
-  $url = "";
-
-  if ($menu_item["url"]) {
-    $title = $menu_item["url"];
-    $url = $menu_item["url"];
-  } else if ($menu_item["cms_url"]) {
-    $title = $menu_item["cms_title"];
-    $url = "/" . $menu_item["cms_url"];
-  } else if ($menu_item["product_id"]) {
-    $title = $menu_item["product_title"];
-    $url = getProductLink($menu_item["product_id"], $menu_item["product_link"]);
-  }
-  return ["title" => $title, "url" => $url];
-}
-
-function oneline($str)
-{
-  return str_replace("\n", " ", htmlspecialchars($str));
-}
-
-function ratingBlock($rating)
-{
-  $d = fmod($rating - 0.25, 1);
-  $half = $d < 0.5 ? "rating" . round($rating - 0.75) . "5" : "";
-
-  return $rating == 0 ? '' : '<div class="rating rating' . round($rating + 0.25) . ' ' . $half . '">
-      <span><img src="/img/star-gray.png"></span>
-      <span><img src="/img/star-gray.png"></span>
-      <span><img src="/img/star-gray.png"></span>
-      <span><img src="/img/star-gray.png"></span>
-      <span><img src="/img/star-gray.png"></span>
-    </div>';
-}
-
-$m_pol = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"];
-
-function dateDifference($time)
-{
-  global $m_pol;
-
-  $date_time = strtotime($time);
-
-  $diff = time() - $date_time;
-
-  if ($diff < 60) {
-    return "Przed chwilą";
-  } else if ($diff < 3600) {
-    $m = floor($diff / 60);
-    if ($m == 1) return "minutę temu";
-    else if ($m == 2 || $m == 3 || $m == 4) return $m . " minuty temu";
-    else return $m . " minut temu";
-  } else if ($diff < 12 * 3600) {
-    $m = floor($diff / 3600);
-    if ($m == 1) return "godzinę temu";
-    else if ($m == 2 || $m == 3 || $m == 4) return $m . " godziny temu";
-    else return $m . " godzin temu";
-  } else {
-    return date("d", $date_time) . " " . $m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
-  }
-}
-
-function niceDate($time = null)
-{
-  global $m_pol;
-
-  if (!$time) $time = date("Y-m-d");
-
-  $date_time = strtotime($time);
-
-  return date("d", $date_time) . " " . $m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
-}
-
-// define app scope
-$app = [];
-
-if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
-  $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 's' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
-  if ($user_data) {
-    login_user($user_data["user_id"], $user_data["email"], "s", ["name" => $user_data["email"]], false);
-  }
-}
-
-if (isset($_SESSION["user"])) {
-  $app["user"] = $_SESSION["user"];
-} else {
-  $app["user"] = [
-    "id" => null,
-    "is_admin" => false,
-    "type" => "",
-    "email" => ""
-  ];
-}
-
-if (empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["basket"]) {
-  $b = "[]";
-  if (isset($_COOKIE["basket"])) {
-    $b = $_COOKIE["basket"];
-  }
-  $_SESSION["basket"] = $b;
-}
-
-// validate basket
-try {
-  $basket = json_decode($_SESSION["basket"], true);
-
-  if ($basket === null) {
-    throw new Exception('json parse error');
-  }
-
-  foreach ($basket as $basket_item) {
-    if (
-      !isset($basket_item["variant_id"])
-      || !isset($basket_item["quantity"])
-    ) {
-      throw new Exception('missing content');
-      break;
-    }
-  }
-} catch (Exception $e) {
-  $_SESSION["basket"] = "[]";
-  $_COOKIE["basket"] = "[]";
-}
-
-require "helpers/order/get_basket_data.php";
-
-require "helpers/order/validate_stock.php";
-
-
-function nonull($arr, $key, $default = "")
-{
-  return isset($arr[$key]) ? $arr[$key] : $default;
-}
-
-function getTrackingLink($track, $dostawa, $dostawa_name)
-{
-  global $config;
-  if (!$track) return "";
-  $track = htmlspecialchars($track);
-  if ($dostawa == 'k') {
-    return $config['kurier_tracking'] . $track;
-  } else if ($dostawa == 'p') {
-    return $config['paczkomat_tracking'] . $track;
-  }
-  return "";
-}
-
-
-function adminRequired()
-{
-  global $app;
-  if (!$app["user"]["is_admin"]) {
-    $_SESSION["redirect"] = $_SERVER["REQUEST_URI"];
-    header("Location: /logowanie");
-    die;
-  }
-}
-
-
-// send emails
-$default_headers  = 'MIME-Version: 1.0' . "\r\n";
-$default_headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-$default_headers .= 'From: ' . config('main_email_sender') . ' <' . config('main_email') . "> \r\n" .
-  'Reply-To: ' . config('main_email') . "\r\n" .
-  'X-Mailer: PHP/' . phpversion();
-
-function sendEmail($recipient, $message, $title, $headers = null, $from = null)
-{
-  global $default_headers;
-  if ($headers === null) {
-    $headers = $default_headers;
-  }
-  if ($from === null) {
-    $from = config('main_email');
-  }
-  $title = "=?UTF-8?B?" . base64_encode($title) . "?=";
-  mail($recipient, $title, $message, $headers, "-f " . $from);
-}
-
-function getEmailHeader($lang)
-{
-  $person = "";
-  if ($lang["firma"]) {
-    $person = nonull($lang, "firma", "");
-  } else {
-    $person = nonull($lang, "imie", "") . " " . nonull($lang, "nazwisko", "");
-  }
-
-  return "<p style='font-size: 16px;max-width:700px'>$person,<br><br>";
-}
-
-function getEmailFooter()
-{
-  global $SITE_URL;
-  return "\n<br><br><i>Pozdrawiamy,</i><br><a href='$SITE_URL'><img src='$SITE_URL/img/logo.png' style='width:200px'></a></p>";
-}
-
-
-
-function renderStatus($status_id)
-{ // shared.js
-  global $statusList;
-  return "<div class='rect' style='background:#" . $statusList[$status_id]["color"] . "'>" . $statusList[$status_id]["title"] . "</div>";
-}
-
-function addZamowienieLog($log, $zamowienie_id, $log_user_id = null)
-{
-  addLog($log, $log_user_id, "order", $zamowienie_id);
-}
-
-function addLog($log, $log_user_id = null, $scope = "", $scope_item_id = null)
-{
-  global $app;
-  if (!$log_user_id) $log_user_id = $app["user"]["id"];
-  query("INSERT INTO activity_log (log, user_id, scope, scope_item_id) VALUES (?,?,?,?)", [
-    $log, $log_user_id, $scope, $scope_item_id
-  ]);
-}
+validateBasket();
+validateStock();
+getBasketData();
 
 if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) {
   header("Location: /oplacono");
   die;
 }
 
-
-$attribute_data_types = [
-  "textlist" => [
-    "description" => "Tekst (lista)",
-  ],
-  "numberlist" => [
-    "description" => "Liczba (lista)",
-  ],
-  "colorlist" => [
-    "description" => "Kolor (lista)"
-  ],
-  "numberany" => [
-    "description" => "Liczba (dowolna)",
-    "field" => "numerical_value"
-  ],
-  "dateany" => [
-    "description" => "Data (dowolna)",
-    "field" => "date_value"
-  ],
-  "textany" => [
-    "description" => "Tekst (dowolny)",
-    "field" => "text_value"
-  ],
-  /*"integer" => [
-    "description" => "Liczba całkowita",
-  ],
-  "decimal" => [  
-    "description" => "Liczba zmiennoprzecinkowa",
-  ]*/
-];
-
-// image upload definition start
-$image_default_dimensions = [ // pick higher value of width and height
-  "df" => null,
-  "lg" => 1920,
-  "bg" => 1200,
-  "md" => 600,
-  "sm" => 300,
-  "tn" => 100,
-];
-// image upload definition end
-
-$base_path = str_replace("\\", "/", getcwd()) . "/";
-
-function getModificationTimeTotal($parent_dir = "")
-{
-  global $base_path, $build_time_lock_path;
-
-  $time = 0;
-
-  $exclude = ["vendor", "uploads", "tmp", "builds", $build_time_lock_path];
-  foreach (scandir($base_path . $parent_dir) as $file) {
-    $path = $parent_dir . $file;
-    if (substr($file, 0, 1) == "." || in_array($file, $exclude)) {
-      continue;
-    }
-    if (is_dir($path)) {
-      $time += getModificationTimeTotal($path . "/");
-    } else if (strpos($file, ".php")) {
-      $time += filemtime($path);
-    }
-  }
-  return $time;
-}
-
-if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
-  // only when url is different than deployment maybe?
-  $build_time_lock_path = "build_time.lock";
-  $last_modification_time = file_exists($build_time_lock_path) ? file_get_contents($build_time_lock_path) : "";
-  $modification_time = getModificationTimeTotal();
-
-  if ($last_modification_time != $modification_time) {
-    //var_dump($last_modification_time, $modification_time);
-    file_put_contents($build_time_lock_path, $modification_time); // must go first
-    file_get_contents("http://dev.padmate.pl/deployment/build"); // trigger build automatically
-  }
-}
+include "deployment/automatic_build.php";

@@ -55,6 +55,13 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                     }
                 },
                 {
+                    title: "Uprawnienia",
+                    width: "8%",
+                    render: (r) => {
+                        return r.permissions;
+                    }
+                },
+                {
                     title: "Data utworzenia",
                     width: "10%",
                     render: (r) => {

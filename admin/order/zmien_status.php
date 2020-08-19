@@ -95,5 +95,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   die;
 }
 
-header("Location: $SITE_URL/zamowienie/" . $zamowienie_data["link"] . "/$specificTime");
+header("Location: $SITE_URL/zamowienie/" . $zamowienie_data["link"]);
 die;

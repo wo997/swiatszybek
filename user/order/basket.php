@@ -53,14 +53,7 @@ if ($request == "add") {
 
 $basket_string = json_encode($basket);
 
-$_SESSION["basket"] = $basket_string;
-setcookie("basket", $basket_string, (time() + 31536000), '/');
-
-if ($app["user"]["id"]) {
-  query("UPDATE users SET basket = ? WHERE user_id = ?", [
-    $basket_string, $app["user"]["id"]
-  ]);
-}
+setBasketData($basket_string);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -70,8 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $response["basket"] = $basket;
 
-  include "basketContent.php";
-  $response["basket_content_html"] = $basketContent;
+  $response["basket_content_html"] = getBasketContent();
 
   require "helpers/order/print_basket_nice.php";
   $response["basket_table_html"] = $res;

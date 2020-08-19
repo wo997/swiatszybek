@@ -12,5 +12,5 @@ $stmt = $con->prepare("DELETE FROM variant WHERE product_id = $product_id");
 $stmt->execute();
 $stmt->close();
 
-header("Location: /admin/produkty/$specificTime");
+header("Location: /admin/produkty");
 die;

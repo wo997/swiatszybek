@@ -1,10 +1,6 @@
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=2750096011694583&autoLogAppEvents=1"></script>
 
-<?php
-include "basketContent.php";
-?>
-
 <div class="header-wrapper">
   <div class="header-inner centerwhenbig">
     <a href="/" class="logo-wrapper"><img src="/img/logo.png?a" id="logo"></a>
@@ -77,7 +73,7 @@ include "basketContent.php";
           </div>
         </a>
         <div id="basketContent">
-          <?= $basketContent ?>
+          <?= getBasketContent() ?>
         </div>
       </div>
     </div>

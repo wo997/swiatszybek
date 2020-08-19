@@ -31,7 +31,7 @@ foreach ($props as $p) {
 }
 $out .= PHP_EOL . "];";
 
-file_put_contents("constants.php", $out);
+file_put_contents("builds/config.php", $out);
 
 if (strpos($_SERVER['HTTP_REFERER'], "/admin/konfiguracja") !== false) {
   header("Location: " . $_SERVER['HTTP_REFERER']);
