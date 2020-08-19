@@ -65,8 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $response["basket_content_html"] = getBasketContent();
 
-  require "helpers/order/print_basket_nice.php";
-  $response["basket_table_html"] = $res;
+  $response["basket_table_html"] = printBasketTable();
   $response["total_basket_cost"] = $app["user"]["basket"]["total_basket_cost"];
   $response["item_count"] = $app["user"]["basket"]["item_count"];
 

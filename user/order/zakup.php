@@ -83,7 +83,7 @@ $res = "";
 if (empty($app["user"]["basket"]["variants"])) {
   $res = "<h3 style='text-align:center'>Twój koszyk jest pusty!</h3>";
 } else {
-  require "helpers/order/print_basket_nice.php";
+  $res = printBasketTable();
 }
 
 if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
