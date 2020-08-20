@@ -69,8 +69,8 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
     }
 
     /*if ($app["user"]["basket"]["item_count"] > 0) {
-    $_SESSION["redirect"] = "/zakup";
-  }*/
+        $_SESSION["redirect"] = "/zakup";
+    }*/
 
     if ($redirect) {
         $redirectRoute = isset($_SESSION["redirect"]) ? $_SESSION["redirect"] : "";
