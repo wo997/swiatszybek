@@ -405,6 +405,9 @@ window.quillEditor = {
       src
     );
     quillEditor.fixImageResponsive();
+    setTimeout(() => {
+      quillEditor.fixImageResponsive();
+    }, 500); // let it show up
   },
 
   fixQLtooltip: () => {
@@ -513,7 +516,10 @@ window.quillEditor = {
   fixImageResponsive: () => {
     $$("#quillEditor img").forEach((e) => {
       if (!e.style.width) {
-        e.style.width = Math.round(e.getBoundingClientRect().width) + "px";
+        var width = Math.round(e.getBoundingClientRect().width);
+        if (width) {
+          e.style.width = width + "px";
+        }
       }
     });
   },
