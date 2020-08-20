@@ -27,10 +27,18 @@ function getCMSPageHTML($content)
 
   if ($html) {
 
-    $links = $html->find("*[data-href]");
+    $links = $html->find("[data-href]");
     foreach ($links as $link) {
       $link->outertext = "<a href=" . $link->attr["data-href"] . ">" . $link->outertext . "</a>";
     }
+
+    if (strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false) {
+      $links = $html->find("img");
+      foreach ($links as $link) {
+        $link->src = str_replace(".jpg", ".webp", $link->src);
+      }
+    }
+
 
     $ytvideos = $html->find("img.ql-video");
     foreach ($ytvideos as $ytvideo) {

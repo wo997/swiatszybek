@@ -27,6 +27,8 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
         $image = imagecreatefromgif($file_tmp);
     } else if ($file_extension == 'bmp') {
         $image = imagecreatefrombmp($file_tmp);
+    } else if ($file_extension == 'webp') {
+        $image = imagecreatefromwebp($file_tmp);
     } else {
         return false;
     }
@@ -45,21 +47,21 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
         }
     }
 
-    $file_type = ".jpg";
+    $file_type = "jpg";
 
     if (!$tag) $tag = rand(100, 999);
     $tag_clean = getLink($tag);
 
-    $final_image_path = $tag_clean . $file_type;
+    $final_image_path = $tag_clean . "." . $file_type;
 
     $iterator = 0;
     while (true) {
         if (fetchValue("SELECT COUNT(1) FROM images WHERE path = ?", [$final_image_path])) {
             $iterator++;
-            $final_image_path = $tag_clean . "-" . $iterator . $file_type;
+            $final_image_path = $tag_clean . "-" . $iterator . "." . $file_type;
         } else break;
         if ($iterator > 100) {
-            $final_image_path = time() . $counter . "-" . $tag_clean . $file_type;
+            $final_image_path = time() . $counter . "-" . $tag_clean . "." . $file_type;
             break;
         }
     }
@@ -80,6 +82,9 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
         imagecopyresized($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
         $final_path = "$image_type_path/$final_image_path";
         imagejpeg($output, $final_path, 100);
+
+        $webp_path = str_replace("." . $file_type, ".webp", $final_path);
+        imagewebp($output, $webp_path, 100);
     }
 
     query("INSERT INTO images(name, path, tag, added) VALUES (?,?,?,NOW())", [
@@ -131,8 +136,7 @@ if (isset($_POST['search'])) { // return list
 
     $paths = fetchArray("SELECT path FROM images WHERE $where ORDER BY added DESC LIMIT 120");
 
-    ob_clean();
-    echo json_encode($paths);
+    die(json_encode($paths));
 }
 
 function mime2ext($mime)
