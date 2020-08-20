@@ -67,10 +67,18 @@ function clean($x)
   return preg_replace("/[^a-zA-Z0-9_ ,]/", "", $x);
 }
 
-function escapeSQL($var)
+function escapeSQL($var, $quote = true)
 {
   global $con;
-  return mysqli_real_escape_string($con, $var);
+  if (is_numeric($var)) {
+    $ret = intval($var);
+  } else {
+    $ret = mysqli_real_escape_string($con, $var);
+  }
+  if ($quote) {
+    $ret = "'$ret'";
+  }
+  return $ret;
 }
 
 /**
@@ -138,7 +146,7 @@ function getColumnDefinition($column)
   if (isset($column["default"])) {
     $definition .= " DEFAULT " . $column["default"];
   } else if (isset($column["default_string"])) {
-    $definition .= " DEFAULT '" . escapeSQL($column["default_string"]) . "'";
+    $definition .= " DEFAULT " . escapeSQL($column["default_string"]);
   }
   return $definition;
 }

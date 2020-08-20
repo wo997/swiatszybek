@@ -27,7 +27,8 @@ if (isset($_POST["remove"])) {
 
     $value_ids = "";
 
-    function manageAttributeValuesRows($attributes, $depth = 1, $parent_id = 0)
+    // move it to service if u want to reuse it 
+    function saveAttributeValuesRows($attributes, $depth = 1, $parent_id = 0)
     {
         global $value_ids, $attribute_id;
 
@@ -55,12 +56,12 @@ if (isset($_POST["remove"])) {
             $value_ids .= $value_id . ",";
 
             if (isset($attribute["children"])) {
-                manageAttributeValuesRows($attribute["children"], $depth++, $value_id);
+                saveAttributeValuesRows($attribute["children"], $depth++, $value_id);
             }
         }
     }
 
-    manageAttributeValuesRows($attributes);
+    saveAttributeValuesRows($attributes);
 
     if (!$value_ids) {
         $value_ids = "-1,";

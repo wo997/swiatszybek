@@ -118,6 +118,7 @@ if (!json_decode($kod_data["product_list"])) {
                 {
                     title: "Wymagana ilość",
                     width: "10%",
+                    className: "metadata-column",
                     render: (r) => {
                         return `<input type='number' data-metadata='qty' value='1'>`;
                     },
@@ -149,9 +150,9 @@ if (!json_decode($kod_data["product_list"])) {
                 <div class="field-title">Kod</div>
                 <input class="field" type="text" name="kod">
                 <div class="field-title">Kwota</div>
-                <div style="display:flex;">
+                <div class="glue-children">
                     <input type="text" name="kwota" class="field" style="flex-grow:1">
-                    <select name="type">
+                    <select name="type" class="field inline">
                         <option value='static'>zł</option>
                         <option value='percent'>%</option>
                     </select>

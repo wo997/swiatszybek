@@ -3,13 +3,9 @@
 
 <?php startSection("head"); ?>
 
-<title>Atrubuty produktów</title>
+<title>Atrybuty produktów</title>
 
 <style>
-    .inactive {
-        pointer-events: none;
-        opacity: 0.3;
-    }
 </style>
 
 <script>
@@ -43,7 +39,11 @@
                     title: "Typ danych",
                     width: "20%",
                     render: (r) => {
-                        return `${attribute_data_types[r.data_type].description}`;
+                        var type_def = attribute_data_types[r.data_type]
+                        if (type_def) {
+                            return `${type_def.description}`;
+                        }
+                        return "";
                     },
                 },
                 {
@@ -125,10 +125,51 @@
                 color: "",
             },
             onChange: () => {
-                jscolor.installByClassName("jscolor");
+                jscolor.installByClassName();
             },
             recursive: 3,
             title: "Wszystkie kolory"
+        });
+
+        createTable({
+            name: "kategorie",
+            url: "/admin/search_product_categories",
+            lang: {
+                subject: "kategorii",
+            },
+            primary: "category_id",
+            db_table: "product_categories",
+            selectable: {
+                data: [],
+                output: "categories"
+            },
+            definition: [{
+                    title: "Kategoria",
+                    render: (r) => {
+                        return `${r.title}`;
+                    },
+                },
+                {
+                    title: "Główny filtr",
+                    width: "20%",
+                    className: "metadata-column center",
+                    render: (r) => {
+                        return `
+                            <label>
+                                <input type='checkbox' data-metadata='main_filter'>
+                                <div class="checkbox standalone"></div>
+                            </label>`;
+                    },
+                    escape: false
+                },
+            ],
+            controlsRight: `
+                    <div class='float-icon'>
+                        <input type="text" placeholder="Filtruj..." data-param="search">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <a href="/admin/atrybuty" target="_blank" class="btn primary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a>
+                `
         });
     });
 
@@ -196,7 +237,6 @@
 
     function toggleValues() {
         var data_type = $(`[name="data_type"]`).value;
-
         Object.entries(attribute_data_types).forEach(([type, params]) => {
             if (params.field) {
                 return;
@@ -234,7 +274,8 @@
 
                 </div>
                 <div>
-
+                    <div class="field-title">Powiąż z kategoriami</div>
+                    <div class="kategorie"></div>
                 </div>
             </div>
 

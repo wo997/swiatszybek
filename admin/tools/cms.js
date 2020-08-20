@@ -2111,6 +2111,6 @@ registerModalContent(
 `,
   () => {
     registerRangeSliders();
-    jscolor.installByClassName("jscolor");
+    jscolor.installByClassName();
   }
 );
