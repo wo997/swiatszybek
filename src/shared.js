@@ -184,7 +184,10 @@ function xhr(data) {
 
   var formData = data.formData ? data.formData : new FormData();
   if (data.params) {
-    for (const [key, value] of Object.entries(data.params)) {
+    for (var [key, value] of Object.entries(data.params)) {
+      if (typeof value === "object" && value !== null) {
+        value = JSON.stringify(value);
+      }
       formData.append(key, value);
     }
   }
@@ -483,22 +486,26 @@ function createTable(table) {
   table.target.setAttribute("data-table-name", table.name);
 
   if (table.selectable) {
-    table.selectable = table.selectable;
-    table.selection = "";
+    table.selection = [];
     table.singleselect = table.selectable.singleselect;
     if (table.hasMetadata) {
-      table.metadata = "";
+      table.metadata = {};
     }
 
     table.setSelectedValuesString = (v) => {
       // Works also with json to make it easier to use
       var values = typeof v == "string" ? JSON.parse(v) : v;
-      var selection = null;
+      var selection = [];
+
+      // If someone didn't provide array
       if (table.singleselect) {
-        selection = values;
-      } else if (table.hasMetadata) {
+        if (!Array.isArray(values)) {
+          values = [values];
+        }
+      }
+
+      if (table.hasMetadata) {
         var metadata = [];
-        selection = [];
         try {
           Object.entries(values).forEach(([row_id, row_metadata]) => {
             selection.push(parseInt(row_id));
@@ -511,8 +518,6 @@ function createTable(table) {
         table.metadata = metadata;
       } else {
         // no metadata, raw table
-        selection = [];
-
         try {
           for (val of values) {
             selection.push(parseInt(val));
@@ -526,11 +531,7 @@ function createTable(table) {
       table.createList();
     };
     table.getSelectedValuesString = () => {
-      if (table.singleselect && !table.hasMetadata) {
-        return table.selection;
-      } else {
-        return JSON.stringify(table.selection);
-      }
+      return JSON.stringify(table.selection);
     };
     table.getSelectedValuesAllString = () => {
       // for metadata
@@ -817,13 +818,17 @@ function createTable(table) {
     }
 
     var params = {};
+    params.filters = [];
 
     if (createList) {
-      params[table.primary] = table.getSelectedValuesString();
+      params.filters.push({
+        type: "=",
+        values: table.selection,
+        field: table.primary,
+      });
     } else {
-      params = table.params ? table.params() : "";
-      if (!params) {
-        params = {};
+      if (table.params) {
+        Object.assign(params, table.params());
       }
       if (table.requiredParam) {
         var x = table.requiredParam();
@@ -832,17 +837,6 @@ function createTable(table) {
         }
       }
       $$(`.${table.name} [data-param]`).forEach((e) => {
-        // var result = [];
-        // for (var id in e) {
-        //   try {
-        //     if (typeof e[id] == "function") {
-        //       result.push(id + ": " + e[id].toString());
-        //     }
-        //   } catch (err) {
-        //     result.push(id + ": inaccessible");
-        //   }
-        // }
-        // console.log(result);
         if (e.findParentByClassName("hidden", "datatable-wrapper")) {
           return;
         }
@@ -850,7 +844,11 @@ function createTable(table) {
       });
       if (table.selectable) {
         // TODO get values from metadata or regular array
-        params[table.primary] = "!" + table.getSelectedValuesString(); // ! means ignore
+        params.filters.push({
+          type: "!=",
+          values: table.selection,
+          field: table.primary,
+        });
       }
       if (table.tree_view) {
         params.parent_id = table.getParentId();
@@ -1031,21 +1029,19 @@ function createTable(table) {
   };
 
   table.removeRow = (data_id) => {
-    if (table.singleselect) {
-      table.selection = null;
+    const index = table.selection.indexOf(data_id);
+    if (index !== -1) {
+      table.selection.splice(index, 1);
     } else {
-      const index = table.selection.indexOf(data_id);
-      if (index !== -1) {
-        table.selection.splice(index, 1);
-      } else return;
+      return;
     }
 
     removeNode(table.target.find(`[data-primary='${data_id}']`));
     table.selectionChange();
   };
   table.addRow = (data_id) => {
-    if (table.singleselect && table.selection) {
-      table.removeRow(table.selection);
+    if (table.singleselect && table.selection.length > 0) {
+      table.removeRow(table.selection[0]);
     }
     if (table.singleselect || table.selection.indexOf(data_id) === -1) {
       if (table.singleselect) {
@@ -1065,7 +1061,7 @@ function createTable(table) {
       table.selectionChange();
     }
   };
-  table.selectionChange = () => {
+  table.selectionChange = (doSearch = true) => {
     if (table.hasMetadata) {
       table.registerMetadataFields();
     }
@@ -1100,6 +1096,10 @@ function createTable(table) {
     table.selectionValueElement.value = table.hasMetadata
       ? table.getSelectedValuesAllString()
       : table.getSelectedValuesString();
+
+    if (doSearch) {
+      table.search();
+    }
   };
   if (table.hasMetadata) {
     table.metadataChange = () => {
@@ -1111,7 +1111,7 @@ function createTable(table) {
         });
         out[e.getAttribute("data-primary")] = row;
       });
-      table.selectionChange();
+      table.selectionChange(false);
     };
     table.registerMetadataFields = () => {
       table.selectionElement.findAll("[data-metadata]").forEach((m) => {
@@ -2205,10 +2205,9 @@ function setValue(input, value, quiet = false) {
       if (value) value = prefix + value;
       input.setAttribute("src", value);
     } else if (input.tagName == "SELECT") {
-      if (![...input.options].find((e) => e.value == value)) {
-        return;
+      if ([...input.options].find((e) => e.value == value)) {
+        input.value = value;
       }
-      input.value = value;
     } else {
       // for text fields
       input.value = value;

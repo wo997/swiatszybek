@@ -124,13 +124,26 @@
                         return `${nonull(r.attr_values).replace(/,/g,", ")}`;
                     },
                 },
+                {
+                    title: "Główny filtr",
+                    width: "20%",
+                    className: "metadata-column center",
+                    render: (r) => {
+                        return `
+                            <label>
+                                <input type='checkbox' data-metadata='main_filter'>
+                                <div class="checkbox standalone"></div>
+                            </label>`;
+                    },
+                    escape: false
+                },
             ],
             controlsRight: `
                     <div class='float-icon'>
                         <input type="text" placeholder="Filtruj..." data-param="search">
                         <i class="fas fa-search"></i>
                     </div>
-                    <a href="/admin/atrybuty" target="_blank" class="btn primary" onclick="editAttribute()"><span>Zarządaj</span> <i class="fa fa-cog"></i></a>
+                    <a href="/admin/atrybuty" target="_blank" class="btn primary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a>
                 `
         });
     });
@@ -236,7 +249,7 @@
                 <div class="field-title">Kategoria nadrzędna</div>
                 <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="product_categories" data-single>
 
-                <div class="field-title">Atrybuty produktów kategorii</div>
+                <div class="field-title">Wyświetlane filtry (atrybuty)</div>
                 <div class="atrybuty"></div>
 
                 <div class="field-title kupa">Opis górny <button class="btn primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>

@@ -2,10 +2,6 @@
 
 $where = "1";
 
-if (isset($_POST['cms_id'])) {
-  $where .= getListCondition("cms_id", $_POST['cms_id']);
-}
-
 $status = isset($_POST["status"]) ? $_POST["status"] : "";
 
 if ($status != "") {

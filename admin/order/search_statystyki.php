@@ -5,10 +5,10 @@ $where = "oplacono IS NOT NULL AND status NOT IN (4)";
 
 $dateLimit = "";
 if (isset($_POST['dateFrom'])) {
-    $dateLimit .= " AND DATE(oplacono) >= '" . escapeSQL($_POST['dateFrom']) . "'";
+    $dateLimit .= " AND DATE(oplacono) >= " . escapeSQL($_POST['dateFrom']);
 }
 if (isset($_POST['dateTo'])) {
-    $dateLimit .= " AND DATE(oplacono) <= '" . escapeSQL($_POST['dateTo']) . "'";
+    $dateLimit .= " AND DATE(oplacono) <= " . escapeSQL($_POST['dateTo']);
 }
 $where .= $dateLimit;
 

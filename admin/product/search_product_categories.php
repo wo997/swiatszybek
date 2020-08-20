@@ -8,7 +8,7 @@ $where = "1";
 
 if (isset($_POST["category_id"])) {
     $where .= " AND category_id = " . intval($_POST["category_id"]);
-} else {
+} else if (isset($_POST["parent_id"])) {
     $where .= " AND parent_id = " . intval($_POST["parent_id"]);
 }
 
