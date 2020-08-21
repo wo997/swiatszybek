@@ -35,8 +35,7 @@ function secret($var, $default = "")
 $domain = config("domain");
 if (!$domain) $domain = $_SERVER["HTTP_HOST"];
 
-$SITE_URL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain;
-// I would recommend moving it to $app global var
+define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain);
 
 $currency = "PLN"; // used by p24
 

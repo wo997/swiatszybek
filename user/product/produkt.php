@@ -802,7 +802,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         "@context": "https://schema.org/",
         "@type": "Product",
         "name": "<?= htmlspecialchars($product_data["title"]) ?>",
-        "url": "<?= $SITE_URL . "/" . $url ?>",
+        "url": "<?= SITE_URL . "/" . $url ?>",
         "image": [
           "<?= $product_data["cache_thumbnail"] ?>"
         ],

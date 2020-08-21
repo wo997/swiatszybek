@@ -1,6 +1,6 @@
 <?php //event[sitemap_change]
 
-global $SITE_URL;
+$site_url = SITE_URL;
 
 $productsXML = "";
 //$now = str_replace("/","T",date("Y-m-d/H:i:s+00.00"));
@@ -21,7 +21,7 @@ foreach ($cmss as $cms) {
   $prio = 1 - 0.2 * (1 + substr_count($cms["link"], "/"));
   if ($link == "") $prio = 1;
   $cmssXML .= "<url>
-        <loc>$SITE_URL/" . $cms["$link"] . "</loc>
+        <loc>$site_url/" . $cms["$link"] . "</loc>
         <lastmod>$now</lastmod>
         <priority>$prio</priority>
         </url>";
@@ -35,12 +35,12 @@ $sitemap = <<<XML
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
-  <loc>$SITE_URL/logowanie</loc>
+  <loc>$site_url/logowanie</loc>
   <lastmod>$now</lastmod>
   <priority>0.8</priority>
 </url>
 <url>
-  <loc>$SITE_URL/rejestracja</loc>
+  <loc>$site_url/rejestracja</loc>
   <lastmod>$now</lastmod>
   <priority>0.8</priority>
 </url>
@@ -49,4 +49,4 @@ $cmssXML
 </urlset>
 XML;
 
-file_put_contents("sitemap.xml", $sitemap);
+file_put_contents(BUILDS_PATH . "sitemap.xml", $sitemap);

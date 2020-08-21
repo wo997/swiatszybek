@@ -49,8 +49,8 @@ $name = getLink($a_title);
 $mailTitle = "$a_imie $a_nazwisko $a_email oczekuje na $a_title - " . config('main_email_sender');
 
 $message = "<p>$a_imie $a_nazwisko $a_email oczekuje na $a_title $a_v_name</p>";
-$message .= "<a href='$SITE_URL/produkt/$a_product_id/$name' style='color:#37f;font-weight:bold;font-size:16px'>Zobacz produkt</a><br><br>";
-$message .= "<img style='max-width:300px' src=\"$SITE_URL/uploads/sm/$a_image\"'>";
+$message .= "<a href='" . SITE_URL . "/produkt/$a_product_id/$name' style='color:#37f;font-weight:bold;font-size:16px'>Zobacz produkt</a><br><br>";
+$message .= "<img style='max-width:300px' src=\"" . SITE_URL . "/uploads/sm/$a_image\"'>";
 
 sendEmail(config('main_email'), $message, $mailTitle);
 sendEmail("wojtekwo997@gmail.com", $message, $mailTitle);

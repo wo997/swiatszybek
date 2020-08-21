@@ -63,7 +63,7 @@ if ($can_user_get_comment_rebate) {
   $message = getEmailHeader($can_user_get_comment_rebate);
   $message .= "Dziękujemy Ci za komentarz! Oto Twój kod rabatowy o wartości $kwota zł:";
   $message .= "<span style='font-size: 24px;margin: 10px 0;display:block;font-weight: bold;color: #37f;'>$kod_rabatowy_example</span>";
-  $message .= "Możesz go wykorzystać w <a style='font-weight: bold;color: #37f;' href='$SITE_URL'>naszym sklepie</a> lub przekazać znajomemu.";
+  $message .= "Możesz go wykorzystać w <a style='font-weight: bold;color: #37f;' href='" . SITE_URL . "'>naszym sklepie</a> lub przekazać znajomemu.";
   $message .= getEMailFooter();
 
   $mailTitle = "Kod rabatowy za zamówienie #" . $can_user_get_comment_rebate["zamowienie_id"] . " - " . config('main_email_sender');

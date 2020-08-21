@@ -32,6 +32,6 @@ if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
     if ($last_modification_time != $modification_time) {
         //var_dump($last_modification_time, $modification_time);
         file_put_contents($build_time_lock_path, $modification_time); // must go first
-        file_get_contents("$SITE_URL/deployment/build"); // trigger build automatically
+        file_get_contents(SITE_URL . "/deployment/build"); // trigger build automatically
     }
 }
