@@ -10,10 +10,10 @@
 function getAssociativeArray($array, $key)
 {
     $output = [];
-    foreach ($array as $selected_attribute) {
-        $selection_id = $selected_attribute[$key];
-        unset($selected_attribute[$key]);
-        $output[$selection_id] = $selected_attribute;
+    foreach ($array as $row) {
+        $key_value = $row[$key];
+        unset($row[$key]);
+        $output[$key_value] = $row;
     }
     return $output;
 }
