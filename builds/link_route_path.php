@@ -23,7 +23,6 @@
 'admin/change_variant_stock' => 'admin/product/change_variant_stock.php',
 'admin/create_product' => 'admin/product/create_produkt.php',
 'admin/delete_product' => 'admin/product/delete_product.php',
-'admin/get_attribute_values' => 'admin/product/get_attribute_values.php',
 'admin/get_variant_attributes' => 'admin/product/get_variant_attributes.php',
 'admin/kategorie' => 'admin/product/kategorie.php',
 'admin/magazyn' => 'admin/product/magazyn.php',
