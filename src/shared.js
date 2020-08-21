@@ -467,7 +467,7 @@ function createTable(table) {
   // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate
   // sortable (requires primary, db_table),
   // selectable: {data,output},
-  // hasMetadata: (boolean, enables outputting metadata from additional row inputs)
+  // has_metadata: (boolean, enables outputting metadata from additional row inputs)
   // tree_view
   // lang: {subject, main_category}
   window[table.name] = table;
@@ -488,7 +488,7 @@ function createTable(table) {
   if (table.selectable) {
     table.selection = [];
     table.singleselect = table.selectable.singleselect;
-    if (table.hasMetadata) {
+    if (table.selectable.has_metadata) {
       table.metadata = {};
     }
 
@@ -504,7 +504,7 @@ function createTable(table) {
         }
       }
 
-      if (table.hasMetadata) {
+      if (table.selectable.has_metadata) {
         var metadata = [];
         try {
           Object.entries(values).forEach(([row_id, row_metadata]) => {
@@ -706,11 +706,12 @@ function createTable(table) {
           category_id = row.category_id;
         }
 
+        var formParams = nonull(table.tree_view.formParams, {});
+        formParams.category_id = category_id;
+
         xhr({
           url: table.url,
-          params: {
-            category_id: category_id,
-          },
+          params: formParams,
           success: (res) => {
             loadCategoryFormCallback(res.results[0]);
           },
@@ -759,7 +760,7 @@ function createTable(table) {
   var columnStyles = [];
 
   if (table.selectable) {
-    headersHTML += `<th style="width:33px"></th>`;
+    headersHTML += `<th style="width:35px"></th>`;
   }
 
   for (header of table.definition) {
@@ -973,7 +974,7 @@ function createTable(table) {
           }
         });
 
-        if (table.hasMetadata) {
+        if (table.selectable && table.selectable.has_metadata) {
           table.registerMetadataFields();
         }
 
@@ -1000,14 +1001,14 @@ function createTable(table) {
     table.search(() => {
       table.initialSearch();
 
-      if (table.hasMetadata) {
+      if (table.selectable && table.selectable.has_metadata) {
         try {
           Object.entries(table.metadata).forEach(([key, value]) => {
             var row = table.selectionElement.find(`[data-primary="${key}"]`);
             if (row) {
               Object.entries(value).forEach(([key, value]) => {
                 var m = row.find(`[data-metadata="${key}"]`);
-                if (m) m.value = value;
+                if (m) m.setValue(value);
               });
             }
           });
@@ -1015,6 +1016,8 @@ function createTable(table) {
           console.error(e);
         }
       }
+
+      table.selectionChange(false);
     }, true);
   };
   if (table.selectable) {
@@ -1044,14 +1047,7 @@ function createTable(table) {
       table.removeRow(table.selection[0]);
     }
     if (table.singleselect || table.selection.indexOf(data_id) === -1) {
-      if (table.singleselect) {
-        table.selection = data_id;
-        if (table.hasMetadata) {
-          table.metadataChange();
-        }
-      } else {
-        table.selection.push(data_id);
-      }
+      table.selection.push(data_id);
       var x = table.target.find(`[data-primary='${data_id}']`);
       table.selectionElement.find("tbody").appendChild(x);
       var d = x.find(".fa-plus-circle");
@@ -1062,7 +1058,7 @@ function createTable(table) {
     }
   };
   table.selectionChange = (doSearch = true) => {
-    if (table.hasMetadata) {
+    if (table.selectable.has_metadata) {
       table.registerMetadataFields();
     }
 
@@ -1074,12 +1070,12 @@ function createTable(table) {
         ? "none"
         : "";
 
-    if (table.hasMetadata) {
+    if (table.selectable.has_metadata) {
       var metadata = {};
       table.selectionElement.findAll("tr[data-primary]").forEach((e) => {
         var row = {};
         e.findAll("[data-metadata]").forEach((m) => {
-          row[m.getAttribute("data-metadata")] = m.value;
+          row[m.getAttribute("data-metadata")] = m.getValue();
         });
         metadata[parseInt(e.getAttribute("data-primary"))] = row;
       });
@@ -1093,7 +1089,7 @@ function createTable(table) {
 
     table.selection = selection;
 
-    table.selectionValueElement.value = table.hasMetadata
+    table.selectionValueElement.value = table.selectable.has_metadata
       ? table.getSelectedValuesAllString()
       : table.getSelectedValuesString();
 
@@ -1101,25 +1097,14 @@ function createTable(table) {
       table.search();
     }
   };
-  if (table.hasMetadata) {
-    table.metadataChange = () => {
-      var out = {};
-      table.selectionElement.findAll("tr[data-primary]").forEach((e) => {
-        var row = {};
-        e.findAll("[data-metadata]").forEach((m) => {
-          row[m.getAttribute("data-metadata")] = m.value;
-        });
-        out[e.getAttribute("data-primary")] = row;
-      });
-      table.selectionChange(false);
-    };
+  if (table.selectable && table.selectable.has_metadata) {
     table.registerMetadataFields = () => {
       table.selectionElement.findAll("[data-metadata]").forEach((m) => {
         m.oninput = () => {
-          table.metadataChange();
+          table.selectionChange(false);
         };
         m.onchange = () => {
-          table.metadataChange();
+          table.selectionChange(false);
         };
       });
     };
@@ -2406,10 +2391,14 @@ function scrollToBottom(node) {
   node.scrollTop = node.scrollHeight;
 }
 
-function setFormData(data, form = null) {
+function setFormData(data, form = null, params = {}) {
   if (!form) form = document.body;
   Object.entries(data).forEach(([name, value]) => {
-    var e = $(form).find(`[name="${name}"]`);
+    var selector = `[name="${name}"]`;
+    if (params.type == "simple-list") {
+      selector = `[data-list-param="${name}"]`;
+    }
+    var e = $(form).find(selector);
     if (!e) {
       return;
     }
@@ -3347,7 +3336,11 @@ function createSimpleList(params = {}) {
     var btnAddTop = "";
 
     if (depth < list.recursive) {
-      btnAddTop = `<i class="btn secondary fas fa-list-ul add_btn_top" style="margin-right:5px" onclick="${list.name}.insertRowFromBtn($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom dalej)"></i>`;
+      btnAddTop = `<div class="btn secondary add_btn_top" style="margin-right:5px;white-space:nowrap" onclick="${list.name}.insertRowFromBtn($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom niżej)">
+          <i class="fas fa-plus"></i>
+          <i class="fas fa-list-ul add_btn_top"></i>
+        </div>`;
+
       btnTop = `
         <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
         `;
@@ -3360,7 +3353,7 @@ function createSimpleList(params = {}) {
       begin ? "afterbegin" : "beforeend",
       `<div class='simple-list-row-wrapper'>
           <div class='simple-list-row'>
-              ${params.render(values)}
+              ${params.render()}
               <div style="width:5px;margin-left:auto"></div>
               ${btnAddTop}
               <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
@@ -3395,7 +3388,10 @@ function createSimpleList(params = {}) {
       });
 
     var n = begin ? 0 : listTarget.children.length - 1;
-    return $(listTarget.children[n]);
+    var addedNode = $(listTarget.children[n]);
+
+    setFormData(values, addedNode, { type: "simple-list" });
+    return addedNode;
   };
 
   list.valuesChanged = () => {

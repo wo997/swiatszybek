@@ -1,6 +1,6 @@
 <?php //route[search_products]
 
-$filters = json_decode(nonull($_POST, "filters", "{}"), true);
+$filters = json_decode(nonull($_POST, "product_filters", "{}"), true);
 
 $moduleParams = [];
 $module_content = "";

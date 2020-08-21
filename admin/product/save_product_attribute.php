@@ -18,7 +18,7 @@ if (isset($_POST["remove"])) {
         $attribute_id = intval($_POST["attribute_id"]);
     }
 
-    $parent_id = $_POST["parent_id"] ? intval($_POST["parent_id"]) : 0;
+    $parent_id = isset($_POST["parent_id"]) ? intval($_POST["parent_id"]) : 0;
 
     query("UPDATE product_attributes SET name = ?, data_type = ? WHERE attribute_id = " . $attribute_id, [
         $_POST["name"], $_POST["data_type"]
@@ -68,6 +68,16 @@ if (isset($_POST["remove"])) {
     }
     $value_ids = substr($value_ids, 0, -1);
     query("DELETE FROM attribute_values WHERE attribute_id = $attribute_id AND value_id NOT IN ($value_ids)");
+
+
+    // link attributes
+    query("DELETE FROM link_category_attribute WHERE attribute_id = ?", [$attribute_id]);
+    $insert = "";
+    foreach (json_decode($_POST["categories"], true) as $category_id => $attribute_metadata) {
+        $insert .= "(" . intval($category_id) . ",$attribute_id," . intval($attribute_metadata["main_filter"]) . "),";
+    }
+    $insert = substr($insert, 0, -1);
+    query("INSERT INTO link_category_attribute (category_id, attribute_id, main_filter) VALUES $insert");
 }
 
 

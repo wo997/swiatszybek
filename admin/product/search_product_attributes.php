@@ -8,14 +8,32 @@ $where = "1";
 
 $where .= " AND (parent_value_id = 0 OR parent_value_id IS NULL)";
 
-echo getTableData([
+if (isset($_POST["attribute_id"])) {
+    $where .= " AND attribute_id = " . intval($_POST["attribute_id"]);
+}
+
+$responseArray = getTableData([
     "select" => "attribute_id, name, data_type,
-        GROUP_CONCAT(v.value_id ORDER BY v.kolejnosc ASC) as attr_ids,
         GROUP_CONCAT(v.value ORDER BY v.kolejnosc ASC) as attr_values
     ",
     "from" => "product_attributes a LEFT JOIN attribute_values v USING(attribute_id)",
     "where" => $where,
     "order" => "a.kolejnosc ASC",
     "group" => "attribute_id",
-    "main_search_fields" => ["a.name"]
+    "main_search_fields" => ["a.name"],
+    "raw" => true
 ]);
+
+if (isset($_POST["everything"])) {
+    include_once "admin/product/attributes_service.php";
+
+    foreach ($responseArray["results"] as $row_id => $row) {
+        $selected_attributes = fetchArray("SELECT category_id, main_filter FROM link_category_attribute WHERE attribute_id = " . $row["attribute_id"]);
+        $responseArray["results"][$row_id]["categories"] = json_encode(getAssociativeArray($selected_attributes, "category_id"));
+
+        $values = getAttributeValues(intval($row['attribute_id']));
+        $responseArray["results"][$row_id]["attribute_values_" . $row['data_type']] = json_encode($values);
+    }
+}
+
+die(json_encode($responseArray));

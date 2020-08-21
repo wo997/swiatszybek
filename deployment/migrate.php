@@ -95,4 +95,9 @@ addColumns("users", [
 
 addIndex("users", "user_type", "index");
 
+addColumns("link_category_attribute", [
+  ["name" => "main_filter", "type" => "TINYINT(1)"],
+]);
+
+
 echo "<h3>✅ All migrations completed</h3>";

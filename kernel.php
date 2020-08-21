@@ -52,6 +52,7 @@ $app = [];
 include_once "helpers/date.php";
 include_once "helpers/string.php";
 include_once "helpers/rating.php";
+include_once "helpers/array.php";
 
 include_once "helpers/db.php";
 

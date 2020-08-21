@@ -78,15 +78,6 @@ function getTableData($data = null)
             $where .= getFilterCondition($filter["field"], $filter["type"], $filter["values"]);
         }
     }
-    // TODO: filters
-    // var_dump($selected_ids_filter);
-    // foreach ($selected_ids_filter as $selected_id) {
-    //     $selected_id_condition = nonull($_POST, $selected_id, false);
-    //     if ($selected_id_condition) {
-    //         $where .= getFilterCondition($selected_id, $selected_id_condition);
-    //     }
-    // }
-
 
     $where .= getSearchQuery([
         "main_search_value" => nonull($_POST, 'search'),

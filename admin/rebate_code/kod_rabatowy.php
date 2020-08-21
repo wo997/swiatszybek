@@ -96,8 +96,8 @@ if (!json_decode($kod_data["product_list"])) {
             primary: "product_id",
             selectable: {
                 output: "product_list",
+                has_metadata: true,
             },
-            hasMetadata: true,
             nosearch: true,
             definition: [{
                     title: "Nazwa produktu",

@@ -87,8 +87,8 @@
                     return x.toString().replace(/"/g, "");
                 };
                 return `
-                    <input type='hidden' data-list-param="value_id" value="${clean(data.value_id)}">
-                    <input type='text' class='field' style='flex-grow:1' data-list-param="value" value="${clean(data.value)}">
+                    <input type='hidden' data-list-param="value_id">
+                    <input type='text' class='field' style='flex-grow:1' data-list-param="value">
                 `;
             },
             default_row: {
@@ -114,9 +114,9 @@
                     return x.toString().replace(/"/g, "");
                 };
                 return `
-                    <input type='hidden' data-list-param="value_id" value="${clean(data.value_id)}">
-                    <input type='text' class='field inline jscolor' data-list-param="color" value="${clean(data.color)}">
-                    <input type='text' class='field' style='flex-grow:1' data-list-param="value" value="${clean(data.value)}">
+                    <input type='hidden' data-list-param="value_id">
+                    <input type='text' class='field inline jscolor' data-list-param="color">
+                    <input type='text' class='field' style='flex-grow:1' data-list-param="value">
                 `;
             },
             default_row: {
@@ -141,7 +141,8 @@
             db_table: "product_categories",
             selectable: {
                 data: [],
-                output: "categories"
+                output: "categories",
+                has_metadata: true,
             },
             definition: [{
                     title: "Kategoria",
@@ -150,8 +151,8 @@
                     },
                 },
                 {
-                    title: "Główny filtr",
-                    width: "20%",
+                    title: "Główny filtr <i class='fas fa-info-circle' data-tooltip='Wyświetl powyżej listy produktów'></i>",
+                    width: "130px",
                     className: "metadata-column center",
                     render: (r) => {
                         return `
@@ -168,7 +169,6 @@
                         <input type="text" placeholder="Filtruj..." data-param="search">
                         <i class="fas fa-search"></i>
                     </div>
-                    <a href="/admin/atrybuty" target="_blank" class="btn primary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a>
                 `
         });
     });
@@ -181,7 +181,6 @@
             attribute_id: -1,
             name: "",
             data_type: Object.keys(attribute_data_types)[0],
-            attr_ids: "",
             attr_values: ""
         };
 
@@ -189,16 +188,14 @@
             data = table.results[row_id];
 
             xhr({
-                url: "/admin/get_attribute_values",
+                url: "/admin/search_product_attributes",
                 params: {
-                    attribute_id: data.attribute_id
+                    attribute_id: data.attribute_id,
+                    rowCount: 1,
+                    everything: true
                 },
                 success: (res) => {
-                    var list = window[`attribute_values_${data.data_type}`];
-
-                    if (list) {
-                        list.setValues(res)
-                    };
+                    setFormData(res.results[0], form);
                     setModalInitialState(formName);
                 }
             });
@@ -271,10 +268,9 @@
 
                     <div name="attribute_values_textlist" class="slim"></div>
                     <div name="attribute_values_colorlist" class="slim"></div>
-
                 </div>
                 <div>
-                    <div class="field-title">Powiąż z kategoriami</div>
+                    <div class="field-title">Wyświetl filtry w kategoriach <a href="/admin/kategorie" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a></div>
                     <div class="kategorie"></div>
                 </div>
             </div>

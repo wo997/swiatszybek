@@ -19,14 +19,14 @@ if (isset($_POST["remove"])) {
         $_POST["title"], $_POST["published"], $parent_id, $_POST["link"], $_POST["description"], $_POST["content"], $_POST["icon"]
     ]);
 
-    // attributes
+    // link attributes
     query("DELETE FROM link_category_attribute WHERE category_id = ?", [$category_id]);
     $insert = "";
-    foreach (json_decode($_POST["attributes"], true) as $attribute_id) {
-        $insert .= "($category_id," . intval($attribute_id) . "),";
+    foreach (json_decode($_POST["attributes"], true) as $attribute_id => $attribute_metadata) {
+        $insert .= "($category_id," . intval($attribute_id) . "," . intval($attribute_metadata["main_filter"]) . "),";
     }
     $insert = substr($insert, 0, -1);
-    query("INSERT INTO link_category_attribute (category_id, attribute_id) VALUES $insert");
+    query("INSERT INTO link_category_attribute (category_id, attribute_id, main_filter) VALUES $insert");
 }
 
 die;

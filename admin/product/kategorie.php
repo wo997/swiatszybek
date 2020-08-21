@@ -26,6 +26,9 @@
             tree_view: {
                 form: "editCategory",
                 loadCategoryForm: loadCategoryForm,
+                formParams: {
+                    include_attributes: true
+                }
             },
             definition: [{
                     title: "Kategoria",
@@ -101,7 +104,8 @@
             db_table: "product_attributes",
             selectable: {
                 data: [],
-                output: "attributes"
+                output: "attributes",
+                has_metadata: true,
             },
             definition: [{
                     title: "Nazwa atrybutu",
@@ -125,8 +129,8 @@
                     },
                 },
                 {
-                    title: "Główny filtr",
-                    width: "20%",
+                    title: "Główny filtr <i class='fas fa-info-circle' data-tooltip='Wyświetl powyżej listy produktów'></i>",
+                    width: "130px",
                     className: "metadata-column center",
                     render: (r) => {
                         return `
@@ -143,7 +147,6 @@
                         <input type="text" placeholder="Filtruj..." data-param="search">
                         <i class="fas fa-search"></i>
                     </div>
-                    <a href="/admin/atrybuty" target="_blank" class="btn primary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a>
                 `
         });
     });
@@ -164,7 +167,7 @@
                 description: "",
                 content: "",
                 published: "0",
-                variant_id: "-1"
+                category_id: "-1"
             };
         }
 
@@ -249,10 +252,10 @@
                 <div class="field-title">Kategoria nadrzędna</div>
                 <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="product_categories" data-single>
 
-                <div class="field-title">Wyświetlane filtry (atrybuty)</div>
+                <div class="field-title">Wyświetlane filtry (atrybuty) <a href="/admin/atrybuty" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a> </div>
                 <div class="atrybuty"></div>
 
-                <div class="field-title kupa">Opis górny <button class="btn primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>
+                <div class="field-title">Opis górny <button class="btn primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>
                 <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
 
                 <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS($('#editCategory .content'));">Edytuj </button></div>

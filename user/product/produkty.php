@@ -272,7 +272,7 @@ function showCategory($category, $level = 0)
       xhr({
         url: "/search_products",
         params: {
-          filters: searchParams,
+          product_filters: searchParams,
           rowCount: rowCount,
           pageNumber: currPage
         },
