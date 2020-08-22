@@ -1,5 +1,7 @@
 <?php
 
+define("time", microtime(true));
+
 require_once 'kernel.php';
 
 if (config("ssl")) {

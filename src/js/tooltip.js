@@ -12,15 +12,15 @@ window.addEventListener("mousemove", function (event) {
       t.innerHTML = tooltipText;
     }
 
-    var pos = e.getBoundingClientRect();
+    var nodeRect = e.getBoundingClientRect();
     var tooltipRect = t.getBoundingClientRect();
 
     var offsetX = 7;
-    var left = pos.left + offsetX + pos.width;
+    var left = nodeRect.left + offsetX + nodeRect.width;
 
-    var position = e.getAttribute("data-position");
+    var nodeRectition = e.getAttribute("data-position");
     if (position == "center") {
-      left -= pos.width / 2 + tooltipRect.width / 2 + offsetX;
+      left -= nodeRect.width / 2 + tooltipRect.width / 2 + offsetX;
     }
 
     var maxLeft = window.innerWidth - 30 - tooltipRect.width;
@@ -34,8 +34,18 @@ window.addEventListener("mousemove", function (event) {
       left = 10;
     }
 
+    var top = nodeRect.top + 4 + nodeRect.height;
+    if (top < 10) {
+      top = 10;
+    }
+    var maxH = window.innerHeight - tooltipRect.height - 10;
+    if (top > maxH) {
+      top = maxH - nodeRect.height;
+    }
+    console.log(top);
+
     t.style.left = left + "px";
-    t.style.top = pos.top + 4 + pos.height + "px";
+    t.style.top = top + "px";
   } else t.style.display = "none";
 
   lastTooltip = e;

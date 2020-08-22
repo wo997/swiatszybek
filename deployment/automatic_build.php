@@ -9,7 +9,7 @@ $modificationTimeJS = 0;
 scanDirectories(
     [
         "include_paths" => [
-            "admin", "cron", "deployment", "event_listeners", "global", "helpers", "img", "migrations", "modules", "node_modules", "packages", "src", "user", "vendor",
+            "admin", "cron", "deployment", "event_listeners", "global", "helpers", "migrations", "modules", "src", "user",
             ".htaccess", "kernel.php", "routing.php", "ping.php", "robots.txt"
         ]
     ],
@@ -66,5 +66,4 @@ PHP;
     }
 }
 
-$jsChange = true;
 triggerEvent("assets_change", ["css" => $cssChange, "js" => $jsChange]);
