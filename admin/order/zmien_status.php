@@ -66,7 +66,7 @@ if ($status == 2) {
   $message .= getEmailFooter();
 } else if ($status == 1) {
   query("UPDATE zamowienia SET oplacono = NOW() WHERE zamowienie_id = " . $zamowienie_data["zamowienie_id"]);
-  include "oplacono_mail.php";
+  include "user/oplacono_mail.php";
 }
 
 if (isset($mailTitle)) {

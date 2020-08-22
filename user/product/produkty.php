@@ -47,7 +47,7 @@ function showCategory($category, $level = 0)
 <html lang="pl">
 
 <head>
-  <?php include "includes.php"; ?>
+  <?php include "global/includes.php"; ?>
 
   <link rel="stylesheet" href="/modules/product-list/main.css">
 

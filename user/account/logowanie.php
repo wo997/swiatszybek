@@ -12,7 +12,7 @@ if ($app["user"]["id"]) {
   <title>Logowanie</title>
   <meta name="description" content="Zaloguj się do sklepu <?= config('main_email_sender') ?>">
 
-  <?php include "includes.php"; ?>
+  <?php include "global/includes.php"; ?>
   <style>
     #total {
       display: inline-block;

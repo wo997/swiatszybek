@@ -18,8 +18,6 @@ if (config("ssl")) {
   }
 }
 
-
-
 $admin_navigations_tree = [
   ["url" => "zamowienia", "title" => '<i class="fas fa-clipboard-list"></i> Zamówienia', "quick_menu" => true],
   ["url" => "statystyki", "title" => '<i class="fas fa-chart-line"></i> Statystyki', "quick_menu" => true],
@@ -126,32 +124,23 @@ unset($admin_navigations_branch);
 $deployment_routes = [
   "deployment/build",
   "deployment/migrate",
-  "deployment/warmup_cache"
+  "deployment/warmup_cache",
+  "deployment/export",
+  "deployment/install",
 ];
 
 $routes = [];
 
-/*foreach ($admin_navigations as $admin_navigation) {
-  $routes[] = $admin_navigation["base_url"];
-}*/
-
-/*foreach ($admin_routes as $admin_route) {
-  $routes[] = $admin_route;
-}*/
 foreach ($deployment_routes as $route) {
   $routes[] = $route;
 }
-//$admin_routes
-
 $routes[] = "admin/podglad_strony";
 
-//$main = 0;
 $pageName = "";
 
 $url = "";
 if (isset($_GET['url']))
   $url = rtrim($_GET['url'], "/");
-//else $url = $pages[$main];
 
 $found = false;
 
@@ -182,7 +171,6 @@ function checkUrl($url)
   {
     if (strpos($url . "/", $route . "/") === 0 || $url == $route) {
       return $file;
-      //return ltrim($file,"/");
     }
   }
 
@@ -224,14 +212,14 @@ if ($pageName) {
   }
 
   if ($page_data) {
-    include "cms_page.php";
+    include "user/cms_page.php";
     die;
   }
 }
 if ($url == "") {
   $page_data["content"] = "Pusta strona";
   $page_data["metadata"] = null;
-  include "cms_page.php";
+  include "user/cms_page.php";
   die;
 }
 

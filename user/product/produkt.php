@@ -70,8 +70,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 <head>
   <title><?= $product_data["seo_title"] ?></title>
   <meta name="description" content="<?= $seo_description ?>">
-  <?php include "includes.php";
-  include "include/includes_for_cms_page.php";
+  <?php include "global/includes.php";
+  include "global/includes_for_cms_page.php";
   ?>
 
   <meta name="image" content="/uploads/md/<?= $product_data["cache_thumbnail"] ?>" />
