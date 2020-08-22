@@ -1,6 +1,6 @@
 <?php
 $zip = new ZipArchive;
-if ($zip->open('export.zip') === TRUE) {
+if ($zip->open('piepsklep.zip') === TRUE) {
     $zip->extractTo('/');
     $zip->close();
     echo 'ok';
