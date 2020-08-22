@@ -14,5 +14,8 @@ scanned_routes.php
 sitemap.xml
 topmenu.html
 builds/
+builds/link_route_path.php
 
 build_time.lock
+
+piepsklep.zip
