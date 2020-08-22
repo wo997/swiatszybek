@@ -9,6 +9,6 @@ if ($input["info"]) {
     addZamowienieLog($input["info"], $zamowienie_data["zamowienie_id"]);
 }
 
-include "oplacono_mail.php";
+include "user/oplacono_mail.php";
 
 sendEmail($email, $message, $mailTitle);

@@ -4,13 +4,13 @@ vendor/
 filmy/
 
 dump/
-piepsklep.zip
 
 # don't tell anyone
 secrets.php
 
 # cached files
 sitemap.xml
+topmenu.html
 builds/
 
-build_time.lock
+piepsklep.zip

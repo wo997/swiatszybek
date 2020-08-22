@@ -1,3 +1,4 @@
+/* css[global] */
 html {
   height: 100%;
   overflow-x: hidden;
@@ -433,7 +434,7 @@ input[type="button"] {
 }
 
 .fb_button {
-  padding: 9px 0px;
+  padding: 5px 0px;
   display: inline-block;
   background: #3b5998;
   color: white;
@@ -2202,68 +2203,6 @@ ql-icon i span {
 
 /* toolbar end */
 
-/* modal start */
-
-.modal-content {
-  height: 100%;
-  width: 100%;
-  position: relative;
-  max-width: 1500px;
-  margin: auto;
-}
-
-.modal-content > * {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 20;
-  transition: 0.4s all;
-}
-.modal-content > *:before {
-  width: 300%;
-  height: 300%;
-  background: #0003;
-  content: "";
-  position: absolute;
-  z-index: -1;
-}
-.modal-content > * > div {
-  transition: 0.4s all;
-}
-
-@media only screen and (min-width: 1700px) {
-  .hugeModalDesktop {
-    margin: 0 -100px;
-    width: calc(100% + 200px);
-  }
-}
-
-@media only screen and (min-width: 1000pxpx) {
-  .modal-content > * > * {
-    min-width: 400px;
-  }
-}
-.modal-content > * > *:not(.blank) {
-  background: white;
-  max-height: 100%;
-  overflow-y: auto;
-  position: relative;
-  -webkit-box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
-  -moz-box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
-  box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
-}
-
-/* todo remove later */
-.modal-padding {
-  padding: 10px;
-}
-
-/* modal end */
 .onelinecut {
   overflow: hidden;
   white-space: nowrap;

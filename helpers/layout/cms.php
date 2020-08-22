@@ -33,9 +33,9 @@ function getCMSPageHTML($content)
     }
 
     if (strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false) {
-      $links = $html->find("img");
-      foreach ($links as $link) {
-        $link->src = str_replace(".jpg", ".webp", $link->src);
+      $images = $html->find("img");
+      foreach ($images as $img) {
+        $img->src = str_replace(".jpg", ".webp", $img->src);
       }
     }
 

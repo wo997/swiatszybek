@@ -78,7 +78,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
   <script async src="https://geowidget.easypack24.net/js/sdk-for-javascript.js"></script>
   <link rel="stylesheet" href="https://geowidget.easypack24.net/css/easypack.css" />
   <meta name="robots" content="noindex">
-  <?php include "includes.php"; ?>
+  <?php include "global/includes.php"; ?>
   <style>
     .body h4 {
       margin: 20px 0 5px;

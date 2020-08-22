@@ -14,7 +14,7 @@ if (isset($_SESSION["p24_back_url"])) {
 
 <head>
     <title>Dziękujemy za zamówienie</title>
-    <?php include "includes.php"; ?>
+    <?php include "global/includes.php"; ?>
     <style>
 
     </style>

@@ -21,7 +21,7 @@ if ($authenticated) {
 
 <head>
   <title>Logowanie</title>
-  <?php include "includes.php"; ?>
+  <?php include "global/includes.php"; ?>
   <style>
 
   </style>

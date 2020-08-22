@@ -31,8 +31,8 @@ if (isset($page_data["metadata"])) {
 <html lang="pl">
 
 <head>
-    <?php include "includes.php";
-    include "include/includes_for_cms_page.php"; ?>
+    <?php include "global/includes.php";
+    include "global/includes_for_cms_page.php"; ?>
     <style>
         <?php
         if (strpos($page_width, "px") !== false) {

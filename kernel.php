@@ -3,8 +3,6 @@ session_start();
 
 require_once 'vendor/autoload.php';
 
-define("RELEASE", 2141);
-
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
 
@@ -47,17 +45,33 @@ require "database.php";
 // define app scope
 $app = [];
 
+// use annotations
+$link_route_path = @include BUILDS_PATH . "link_route_path.php";
+if (!$link_route_path) {
+  $link_route_path = [];
+}
+
+$link_module_path = @include BUILDS_PATH . "link_module_path.php";
+if (!$link_module_path) {
+  $link_module_path = [];
+}
+
+$link_event_paths = @include BUILDS_PATH . "link_event_paths.php";
+if (!$link_event_paths) {
+  $link_event_paths = [];
+}
+
 // include helpers
 include_once "helpers/date.php";
 include_once "helpers/string.php";
 include_once "helpers/rating.php";
 include_once "helpers/array.php";
+include_once "helpers/directories.php";
 
 include_once "helpers/db.php";
+include_once "helpers/email.php";
 
 include_once "helpers/user.php";
-
-include_once "helpers/email.php";
 
 include_once "helpers/events.php";
 include_once "helpers/datatable.php";
@@ -82,9 +96,26 @@ validateBasket();
 validateStock();
 getBasketData();
 
+// todo remove or tigger an event here
 if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) {
   header("Location: /oplacono");
   die;
 }
 
+$build_info_path = "builds/build_info.php";
+
+// default values - ovverriden by 'build_info'
+$previousModificationTimePHP = 0;
+$previousModificationTimeCSS = 0;
+$previousModificationTimeJS = 0;
+$versionPHP = 0;
+$versionCSS = 0;
+$versionJS = 0;
+
+@include $build_info_path;
+
 include "deployment/automatic_build.php";
+
+define("RELEASE", 2141);
+define("CSS_RELEASE", $versionCSS);
+define("JS_RELEASE", $versionJS);

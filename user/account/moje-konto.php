@@ -31,7 +31,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
 <head>
   <title>Moje konto</title>
-  <?php include "includes.php"; ?>
+  <?php include "global/includes.php"; ?>
   <link href="/src/zamowienia.css" rel="stylesheet">
   <style>
     .nav {

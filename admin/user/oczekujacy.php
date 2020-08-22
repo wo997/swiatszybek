@@ -36,7 +36,7 @@
           title: "Ilość",
           width: "3%",
           render: (r) => {
-            return r.quantity;
+            return r.stock;
           }
         },
         {
