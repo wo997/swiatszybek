@@ -2,6 +2,9 @@
  'order_charged' => [
   'charged_zamowienie.php'
  ],
+ 'config_change' => [
+  'event_listeners/config_change.php'
+ ],
  'table_values_change' => [
   'event_listeners/db/table_values_change.php'
  ],

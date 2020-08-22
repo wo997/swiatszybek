@@ -46,7 +46,8 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 {
     global $app;
 
-    $adminList = explode(",", str_replace(" ", "", config("admins") . ",wojtekwo997@gmail.com"));
+    $adminList = explode(",", str_replace(" ", "", config("admins")));
+    $adminList[] = secret("super_admin_email");
 
     $user = [
         "id" => $user_id,
