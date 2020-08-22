@@ -144,21 +144,6 @@ if (isset($_GET['url']))
 
 $found = false;
 
-$link_route_path = @include BUILDS_PATH . "link_route_path.php";
-if (!$link_route_path) {
-  $link_route_path = [];
-}
-
-$link_module_path = @include BUILDS_PATH . "link_module_path.php";
-if (!$link_module_path) {
-  $link_module_path = [];
-}
-
-$link_event_paths = @include BUILDS_PATH . "link_event_paths.php";
-if (!$link_event_paths) {
-  $link_event_paths = [];
-}
-
 $pageName = checkUrl($url);
 
 $url_params = explode("/", $url);

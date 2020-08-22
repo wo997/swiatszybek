@@ -19,6 +19,7 @@ function endSection()
   $sections[$current_section_name] = ob_get_clean();
   $current_section_name = null;
 }
+
 /*function renderTemplate($template_name) {
   global $con, $admin_navigations;
   if ($template_name == "admin_page") {

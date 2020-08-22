@@ -13,6 +13,6 @@ secrets.php
 scanned_routes.php
 sitemap.xml
 topmenu.html
-builds/config.php
+builds/
 
 build_time.lock

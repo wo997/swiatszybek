@@ -1,9 +1,13 @@
 <?php return [
  'order_charged' => [
-  'charged_zamowienie.php'
+  'charged_zamowienie.php',
+  'user/order/charged_zamowienie.php'
  ],
  'table_values_change' => [
   'event_listeners/db/table_values_change.php'
+ ],
+ 'assets_change' => [
+  'event_listeners/deployment/assets_change.php'
  ],
  'topmenu_change' => [
   'event_listeners/layout/topmenu_change.php'

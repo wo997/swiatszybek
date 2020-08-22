@@ -1,6 +1,7 @@
 <?php return [
 'admin/search_activity_log' => 'admin/activity-log/search_activity_log.php',
 'admin/cms' => 'admin/cms/cms.php',
+'admin/save-slider' => 'admin/cms/save-slider.php',
 'admin/save_cms' => 'admin/cms/save_cms.php',
 'admin/search_strony' => 'admin/cms/search_strony.php',
 'admin/slider' => 'admin/cms/slider.php',
@@ -19,6 +20,7 @@
 'admin/statystyki' => 'admin/order/statystyki.php',
 'admin/zamowienia' => 'admin/order/zamowienia.php',
 'admin/zmien_status' => 'admin/order/zmien_status.php',
+'admin/processImage' => 'admin/processImage.php',
 'admin/atrybuty' => 'admin/product/atrybuty.php',
 'admin/change_variant_stock' => 'admin/product/change_variant_stock.php',
 'admin/create_product' => 'admin/product/create_produkt.php',
@@ -54,6 +56,7 @@
 'admin/search_oczekujacy' => 'admin/user/search_oczekujacy.php',
 'admin/search_uzytkownicy' => 'admin/user/search_uzytkownicy.php',
 'admin/uzytkownicy' => 'admin/user/uzytkownicy.php',
+'minify' => 'deployment/minify.php',
 'warmup_cache' => 'deployment/warmup_cache.php',
 'kod_pocztowy_api' => 'global/kod_pocztowy_api.php',
 'helpers/categories_template' => 'helpers/categories_template.php',
