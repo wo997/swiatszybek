@@ -42,7 +42,6 @@ window.addEventListener("mousemove", function (event) {
     if (top > maxH) {
       top = maxH - nodeRect.height;
     }
-    console.log(top);
 
     t.style.left = left + "px";
     t.style.top = top + "px";

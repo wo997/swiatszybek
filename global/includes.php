@@ -17,7 +17,7 @@
 
 <!-- styles / scripts to footer? -->
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
-<link href="/src/shared.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+<link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
 <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
 <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">

@@ -146,7 +146,7 @@ function saveModule(button) {
   hideParentModal(button);
 
   var c = cmsTarget.find(".module-content"); // force update
-  if (c) removeNode(c);
+  if (c) c.remove();
 }
 
 function editBlock() {
@@ -160,7 +160,7 @@ function editBlock() {
     wrapper: cmsTarget,
     colorNode: cmsTarget.find(".background-color"),
     callback: () => {
-      postSaveCmsBlock();
+      postSaveCmsNode();
     },
   });
 }
@@ -425,7 +425,7 @@ function deleteContainer(nodeToDelete = null, pushHistory = true) {
   if (!cmsTarget) return;
   delayActions();
   hideCMSContainerHeader();
-  let node = nodeToDelete ? nodeToDelete : cmsTarget;
+  let node = $(nodeToDelete ? nodeToDelete : cmsTarget);
   var h = node.getBoundingClientRect().height;
   node.style.transform = "scale(0)";
   node.style.opacity = 0;
@@ -436,7 +436,7 @@ function deleteContainer(nodeToDelete = null, pushHistory = true) {
   node.style.pointerEvents = "none";
   node.classList.add("removing");
   setTimeout(() => {
-    removeNode(node);
+    node.remove();
   }, 400);
 
   if (pushHistory) {
@@ -478,7 +478,7 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
   node.style.pointerEvents = "none";
   node.classList.add("removing");
   setTimeout(() => {
-    removeNode(node);
+    node.remove();
   }, 400);
 
   if (pushHistory) {
@@ -508,15 +508,48 @@ function editCMS(t) {
   cmsUpdate();
 }
 
+function setNodeImageBackground(node, src = "") {
+  if (src === "") {
+    var bi = node.find(".background-image");
+    if (bi) {
+      bi.remove();
+    }
+    return;
+  }
+  addMissingDirectChildren(
+    node,
+    (c) => c.classList.contains("background-image"),
+    `<img class="background-image">`,
+    "afterbegin"
+  );
+  var bi = node.find(".background-image");
+  if (bi) {
+    bi.setAttribute("src", src);
+  }
+}
+
+function getNodeImageBackground(node) {
+  var bi = node.find(".background-image");
+  if (bi) {
+    return bi.getAttribute("src");
+  }
+  return "";
+}
+
+function migrateImageBackground(node) {
+  var src = window.getComputedStyle(node).backgroundImage;
+  var urls = src.match(/(?<=url\(").*(?="\))/);
+  if (urls && urls.length > 0) {
+    setNodeImageBackground(node, urls[0].replace(window.location.origin, ""));
+    node.style.backgroundImage = "";
+  }
+}
+
 function cmsUpdate() {
   resizeCallback();
 
-  if (cmsHistoryStepBack >= cmsHistory.length - 1)
-    $(".cms-undo").setAttribute("disabled", "true");
-  else $(".cms-undo").removeAttribute("disabled");
-
-  if (cmsHistoryStepBack == 0) $(".cms-redo").setAttribute("disabled", "true");
-  else $(".cms-redo").removeAttribute("disabled");
+  toggleDisabled($(".cms-undo"), cmsHistoryStepBack >= cmsHistory.length - 1);
+  toggleDisabled($(".cms-redo"), cmsHistoryStepBack == 0);
 
   $$("#cms .cms-block").forEach((block) => {
     block.setAttribute("draggable", true);
@@ -534,13 +567,16 @@ function cmsUpdate() {
       `<div class="cms-block-content"></div>`
     );
 
-    [...block.children].forEach((x) => {
+    migrateImageBackground(block);
+
+    block.directChildren().forEach((x) => {
       if (
+        !x.classList.contains("background-image") &&
         !x.classList.contains("background-color") &&
         !x.classList.contains("cms-block-content")
       ) {
         console.error("Unknown element removed", x.innerHTML);
-        removeNode(x);
+        x.remove();
       }
     });
 
@@ -551,41 +587,31 @@ function cmsUpdate() {
         (c) => c.classList.contains("html-container"),
         `<div class="html-container"></div>`
       );
-      addMissingDirectChildren(
-        content,
-        (c) => c.tagName == "STYLE",
-        `<style>${nonull(block.getAttribute("data-css"))}</style>`
-      );
-      addMissingDirectChildren(
-        content,
-        (c) => c.tagName == "SCRIPT",
-        `<script></script>`
-      );
     }
   });
 
   $$("#cms .cms-container").forEach((container) => {
     container.setAttribute("draggable", true);
-    if (
-      ![...container.children].find((c) =>
-        c.classList.contains("background-color")
-      )
-    ) {
-      container.insertAdjacentHTML(
-        "afterbegin",
-        `<div class="background-color"></div>`
-      );
-    }
 
-    [...container.children].forEach((x) => {
+    addMissingDirectChildren(
+      container,
+      (c) => c.classList.contains("background-color"),
+      `<div class="background-color"></div>`,
+      "afterbegin"
+    );
+
+    container.directChildren().forEach((x) => {
       if (
+        !x.classList.contains("background-image") &&
         !x.classList.contains("background-color") &&
         !x.classList.contains("cms-container-content")
       ) {
         console.error("Unknown element removed", x.innerHTML);
-        removeNode(x);
+        x.remove();
       }
     });
+
+    migrateImageBackground(container);
   });
 
   /*if (!$("#cms .cms-block")) {
@@ -734,7 +760,7 @@ function saveContainerSettings() {
 
   saveBlockAttributes("#cmsContainerSettings");
 
-  postSaveCmsBlock();
+  postSaveCmsNode();
 }
 
 function saveBlockAttributes(parent) {
@@ -785,7 +811,7 @@ function saveBlockSettings() {
 
   saveBlockAttributes("#cmsBlockSettings");
 
-  postSaveCmsBlock();
+  postSaveCmsNode();
 }
 
 function editBlockAnimation() {
@@ -812,7 +838,7 @@ function saveBlockAnimation() {
   $$(`#cmsBlockAnimation .classList:checked`).forEach((e) => {
     cmsTarget.setAttribute("data-animation", e.value);
   });
-  postSaveCmsBlock();
+  postSaveCmsNode();
 }
 
 function editCMSBorder() {
@@ -896,6 +922,8 @@ function editCMSBackground() {
   var cmstargetColor = target.find(".background-color");
   background.style.backgroundImage = target.style.backgroundImage;
 
+  setNodeImageBackground(background, getNodeImageBackground(target));
+
   var col = color.style.backgroundColor;
   if (!col) col = "#fff";
 
@@ -921,7 +949,7 @@ function editCMSBackground() {
   color.style.opacity = op;
   setRangeSliderValue($("#cmsBlockBackground .image-opacity"), op * 100);
 
-  setBlockBackgroundColor($(".bckgcolor").value);
+  setNodeBackgroundColorPreview($(".bckgcolor").value);
 
   showModal("cmsBlockBackground", {
     source: target,
@@ -942,10 +970,12 @@ function saveCMSBackground() {
   cmstargetColor.style.backgroundColor = color.style.backgroundColor;
   cmstargetColor.style.opacity = color.style.opacity;
 
-  postSaveCmsBlock();
+  setNodeImageBackground(cmsTarget, getNodeImageBackground(background));
+
+  postSaveCmsNode();
 }
 
-function postSaveCmsBlock() {
+function postSaveCmsNode() {
   cmsHistoryPush();
   cmsTarget = null;
   cmsUpdate();
@@ -1467,30 +1497,31 @@ var awaitingScroll = false;
 
 // drag end
 
-window.cmsBlockBackgroundImageCallback = (src) => {
-  setBlockBackgroundImage(src);
-
-  if ($("#cmsBlockBackground .image-opacity").value > 50) {
-    setRangeSliderValue($("#cmsBlockBackground .image-opacity"), 50);
+function setNodeBackgroundImagePreview(src = "") {
+  if (src.length > 0 && src.charAt(0) !== "/") {
+    src = "/uploads/df/" + src;
   }
-};
+  setNodeImageBackground($(".cmsBlockBackgroundPreview"), src);
 
-function setBlockBackgroundImage(val = "") {
-  var background = $(".cmsBlockBackgroundPreview");
-  background.style.backgroundImage = val ? `url("/uploads/lg/${val}")` : "";
+  var io = $("#cmsBlockBackground .image-opacity");
+  if (io.value > 75) {
+    setRangeSliderValue(io, 75);
+  }
 }
 
-function setBlockBackgroundColorOpacity(val = 1) {
+function sePreviewBackgroundColorOpacity(val = 1) {
   var color = $(".cmsBlockBackgroundPreview .background-color");
   color.style.opacity = val / 100;
   setValue($("#cmsBlockBackground .image-opacity"), val);
 }
 
-function setBlockBackgroundColor(val = "FFFFFF") {
+function setNodeBackgroundColorPreview(val = "FFFFFF", quiet = false) {
   var color = $(".cmsBlockBackgroundPreview .background-color");
   color.style.backgroundColor = "#" + val;
 
-  setValue($(".bckgcolor"), val);
+  if (!quiet) {
+    setValue($(".bckgcolor"), val);
+  }
 
   $(
     "#cmsBlockBackground .image-opacity-wrapper .range-rect"
@@ -2077,9 +2108,9 @@ registerModalContent(
                 <div class="field-title">
                   <span> Zdjęcie </span>
 
-                  <div class="btn primary" onclick="imagePicker.open(null, {callback: cmsBlockBackgroundImageCallback, source: this})">Wybierz <i class="fas fa-image"></i></div>
+                  <div class="btn primary" onclick="imagePicker.open(null, {callback: setNodeBackgroundImagePreview, source: this})">Wybierz <i class="fas fa-image"></i></div>
 
-                  <div class="btn primary" onclick="setBlockBackgroundImage()">Usuń <i class="fa fa-times"></i></div>
+                  <div class="btn primary" onclick="setNodeBackgroundImagePreview()">Usuń <i class="fa fa-times"></i></div>
                 </div>
 
                 <br>
@@ -2089,13 +2120,13 @@ registerModalContent(
                 </div>
 
                 <div style="display:flex">
-                  <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setBlockBackgroundColor(this.value)" style="width: 65px;text-align: center;">
-                  <button class="btn primary" onclick="setBlockBackgroundColor();setBlockBackgroundColorOpacity(0)">Brak <i class="fa fa-times"></i></button>
+                  <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
+                  <button class="btn primary" onclick="setNodeBackgroundColorPreview();sePreviewBackgroundColorOpacity(0)">Brak <i class="fa fa-times"></i></button>
                 </div>
 
                 <div style="padding-right:10px">
                     <label style="margin: 0.7em 0 0;">Widoczność koloru <i class='fas fa-info-circle' data-tooltip='Aby zmienić kontrast pomiędzy tekstem, a zdjęciem'></i></label>
-                    <input type="range" class="field" data-class="image-opacity" min="0" max="100" step="1" data-background="linear-gradient(to right, #fff, #000)"; oninput="setBlockBackgroundColorOpacity(this.value)">
+                    <input type="range" class="field" data-class="image-opacity" min="0" max="100" step="1" data-background="linear-gradient(to right, #fff, #000)"; oninput="sePreviewBackgroundColorOpacity(this.value)">
                 </div>
               </div>
 

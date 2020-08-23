@@ -60,15 +60,33 @@ function getCMSPageHTML($content)
       foreach ($container->attr as $key => $val) {
         $container_html .= " $key='$val'";
       }
+      $container_html .= '>';
 
-      $container_html .= '><div class="cms-container-content"';
+      $container_content = null;
+      $container_image = null;
+      $container_color = null;
+      foreach ($container->children() as $child) {
+        if (strpos($child->class, "cms-container-content") !== false) {
+          $container_content = $child;
+        } else if (strpos($child->class, "background-image") !== false) {
+          $container_image = $child;
+        } else if (strpos($child->class, "background-color") !== false) {
+          $container_color = $child;
+        }
+      }
 
-      $container_content = $container->find(".cms-container-content")[0];
 
+      if ($container_image) {
+        $container_html .= $container_image->outertext;
+      }
+      if ($container_color) {
+        $container_html .= $container_color->outertext;
+      }
+
+      $container_html .= '<div class="cms-container-content"';
       foreach ($container_content->attr as $key => $val) {
         $container_html .= " $key='$val'";
       }
-
       $container_html .= '>';
 
       $blocks = $container_content->find(".cms-block");
