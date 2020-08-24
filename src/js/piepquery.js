@@ -130,7 +130,7 @@ function setValue(input, value, quiet = false) {
       value
     );
   } else if (input.classList.contains("jscolor")) {
-    var hex = value.replace("#", "");
+    var hex = rgbOrHexStringToHex(value).replace("#", "");
     input.value = hex;
     input.style.background = hex ? "#" + hex : "";
   } else if (input.getAttribute("type") == "checkbox") {

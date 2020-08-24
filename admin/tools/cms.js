@@ -510,7 +510,9 @@ function editCMS(t) {
 
 function setNodeImageBackground(node, src = "") {
   if (src === "") {
-    var bi = node.find(".background-image");
+    var bi = node.directChildren().find((e) => {
+      return e.classList.contains("background-image");
+    });
     if (bi) {
       bi.remove();
     }
@@ -528,12 +530,75 @@ function setNodeImageBackground(node, src = "") {
   }
 }
 
+function setNodeBackgroundColor(node, backgroundColor = "") {
+  if (backgroundColor.indexOf("rgb") == -1) {
+    backgroundColor = "#" + backgroundColor.replace("#", "");
+  }
+  if (backgroundColor === "") {
+    var bi = node.directChildren().find((e) => {
+      return e.classList.contains("background-color");
+    });
+    if (bi) {
+      bi.remove();
+    }
+    return;
+  }
+  addMissingDirectChildren(
+    node,
+    (c) => c.classList.contains("background-color"),
+    `<div class="background-color"></div>`,
+    "afterbegin"
+  );
+  var bi = node.find(".background-color");
+  if (bi) {
+    bi.style.backgroundColor = backgroundColor;
+  }
+}
+
+function setNodeBackgroundColorOpacity(node, op) {
+  if (op == 0) {
+    var bi = node.directChildren().find((e) => {
+      return e.classList.contains("background-color");
+    });
+    if (bi) {
+      bi.remove();
+    }
+    return;
+  }
+  addMissingDirectChildren(
+    node,
+    (c) => c.classList.contains("background-color"),
+    `<div class="background-color"></div>`,
+    "afterbegin"
+  );
+  var bi = node.find(".background-color");
+  if (bi) {
+    bi.style.opacity = op;
+  }
+}
+
 function getNodeImageBackground(node) {
   var bi = node.find(".background-image");
   if (bi) {
     return bi.getAttribute("src");
   }
   return "";
+}
+
+function getNodeBackgroundColor(node) {
+  var bi = node.find(".background-color");
+  if (bi) {
+    return bi.style.backgroundColor;
+  }
+  return "";
+}
+
+function getNodeBackgroundColorOpacity(node) {
+  var bi = node.find(".background-color");
+  if (bi) {
+    return bi.style.opacity;
+  }
+  return 0;
 }
 
 function migrateImageBackground(node) {
@@ -556,18 +621,9 @@ function cmsUpdate() {
 
     addMissingDirectChildren(
       block,
-      (c) => c.classList.contains("background-color"),
-      `<div class="background-color"></div>`,
-      "afterbegin"
-    );
-
-    addMissingDirectChildren(
-      block,
       (c) => c.classList.contains("cms-block-content"),
       `<div class="cms-block-content"></div>`
     );
-
-    migrateImageBackground(block);
 
     block.directChildren().forEach((x) => {
       if (
@@ -588,6 +644,8 @@ function cmsUpdate() {
         `<div class="html-container"></div>`
       );
     }
+
+    migrateImageBackground(block);
   });
 
   $$("#cms .cms-container").forEach((container) => {
@@ -864,7 +922,7 @@ function editCMSBorder() {
   );
   setValue(
     $(`#cmsBorder [data-attribute="border-color"]`),
-    rgbStringToHex(nonull(styles["border-color"]))
+    nonull(styles["border-color"])
   );
   setValue(
     $(`#cmsBorder [data-attribute="border-radius"]`),
@@ -917,39 +975,20 @@ function editCMSBackground() {
   var target = cmsTarget;
   if (!target) return;
 
-  var background = $(".cmsBlockBackgroundPreview");
-  var color = $(".cmsBlockBackgroundPreview .background-color");
-  var cmstargetColor = target.find(".background-color");
-  background.style.backgroundImage = target.style.backgroundImage;
+  var background = $(".cmsNodeBackgroundPreview");
 
   setNodeImageBackground(background, getNodeImageBackground(target));
 
-  var col = color.style.backgroundColor;
-  if (!col) col = "#fff";
+  var col = getNodeBackgroundColor(target);
+  if (!col) col = "fffff";
 
-  color.style.backgroundColor = col;
+  $("#cmsBlockBackground .bckgcolor").setValue(col);
 
-  var rgb = cmstargetColor.style.backgroundColor;
-
-  var hex = rgb
-    ? "#" +
-      rgb
-        .match(/\d+/g)
-        .map(function (x) {
-          x = parseInt(x).toString(16);
-          return x.length == 1 ? "0" + x : x;
-        })
-        .join("")
-    : "#fff";
-
-  setValue($(".bckgcolor"), hex.substring(1));
-
-  var op = cmstargetColor.style.opacity;
-  if (op == "") op = 1;
-  color.style.opacity = op;
+  var op = getNodeBackgroundColorOpacity(target);
+  if (op == 0) {
+    op = 0.5;
+  }
   setRangeSliderValue($("#cmsBlockBackground .image-opacity"), op * 100);
-
-  setNodeBackgroundColorPreview($(".bckgcolor").value);
 
   showModal("cmsBlockBackground", {
     source: target,
@@ -959,18 +998,23 @@ function editCMSBackground() {
 function saveCMSBackground() {
   if (!cmsTarget) return;
 
-  var preview = $(".cmsBlockBackgroundPreview");
-  cmsTarget.style.backgroundColor = preview.style.backgroundColor;
-  cmsTarget.style.backgroundImage = preview.style.backgroundImage;
+  var preview = $(".cmsNodeBackgroundPreview");
 
-  var background = $(".cmsBlockBackgroundPreview");
-  var color = $(".cmsBlockBackgroundPreview .background-color");
-  var cmstargetColor = cmsTarget.find(".background-color");
-  cmsTarget.style.backgroundImage = background.style.backgroundImage;
-  cmstargetColor.style.backgroundColor = color.style.backgroundColor;
-  cmstargetColor.style.opacity = color.style.opacity;
+  setNodeImageBackground(cmsTarget, getNodeImageBackground(preview));
 
-  setNodeImageBackground(cmsTarget, getNodeImageBackground(background));
+  var color = getNodeBackgroundColor(preview);
+  var opacity = getNodeBackgroundColorOpacity(preview);
+  if (opacity > 0) {
+    setNodeBackgroundColor(cmsTarget, color);
+    setNodeBackgroundColorOpacity(cmsTarget, opacity);
+  } else {
+    var bi = cmsTarget.directChildren().find((e) => {
+      return e.classList.contains("background-color");
+    });
+    if (bi) {
+      bi.remove();
+    }
+  }
 
   postSaveCmsNode();
 }
@@ -1501,7 +1545,7 @@ function setNodeBackgroundImagePreview(src = "") {
   if (src.length > 0 && src.charAt(0) !== "/") {
     src = "/uploads/df/" + src;
   }
-  setNodeImageBackground($(".cmsBlockBackgroundPreview"), src);
+  setNodeImageBackground($(".cmsNodeBackgroundPreview"), src);
 
   var io = $("#cmsBlockBackground .image-opacity");
   if (io.value > 75) {
@@ -1509,26 +1553,23 @@ function setNodeBackgroundImagePreview(src = "") {
   }
 }
 
-function sePreviewBackgroundColorOpacity(val = 1) {
-  var color = $(".cmsBlockBackgroundPreview .background-color");
-  color.style.opacity = val / 100;
-  setValue($("#cmsBlockBackground .image-opacity"), val);
+function setPreviewBackgroundColorOpacity(val = 1) {
+  setNodeBackgroundColorOpacity($(".cmsNodeBackgroundPreview"), val / 100);
 }
 
-function setNodeBackgroundColorPreview(val = "FFFFFF", quiet = false) {
-  var color = $(".cmsBlockBackgroundPreview .background-color");
-  color.style.backgroundColor = "#" + val;
-
-  if (!quiet) {
-    setValue($(".bckgcolor"), val);
-  }
+function setNodeBackgroundColorPreview(val = "FFFFFF", makeVisible = false) {
+  var node = $(".cmsNodeBackgroundPreview");
+  setNodeBackgroundColor(node, val);
 
   $(
     "#cmsBlockBackground .image-opacity-wrapper .range-rect"
   ).style.background = `linear-gradient(to right, #fff, #${val})`;
 
-  if ($("#cmsBlockBackground .image-opacity").value < 30) {
-    setRangeSliderValue($("#cmsBlockBackground .image-opacity"), 30);
+  if (makeVisible) {
+    var io = $("#cmsBlockBackground .image-opacity");
+    if (io.value < 25) {
+      setRangeSliderValue(io, 25);
+    }
   }
 }
 
@@ -2121,19 +2162,17 @@ registerModalContent(
 
                 <div style="display:flex">
                   <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
-                  <button class="btn primary" onclick="setNodeBackgroundColorPreview();sePreviewBackgroundColorOpacity(0)">Brak <i class="fa fa-times"></i></button>
+                  <button class="btn primary" onclick="$(this).prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
                 </div>
 
                 <div style="padding-right:10px">
                     <label style="margin: 0.7em 0 0;">Widoczność koloru <i class='fas fa-info-circle' data-tooltip='Aby zmienić kontrast pomiędzy tekstem, a zdjęciem'></i></label>
-                    <input type="range" class="field" data-class="image-opacity" min="0" max="100" step="1" data-background="linear-gradient(to right, #fff, #000)"; oninput="sePreviewBackgroundColorOpacity(this.value)">
+                    <input type="range" class="field" data-class="image-opacity" min="0" max="100" step="1" data-background="linear-gradient(to right, #fff, #000)"; oninput="this.dispatchEvent(new Event('change'))" onchange="setPreviewBackgroundColorOpacity(this.value)">
                 </div>
               </div>
 
               <div style="padding: 20px;flex-grow: 1;">
-                  <div class="cmsBlockBackgroundPreview" style="border: 1px solid #ccc;position:relative;height: 200px;">
-                      <div class="background-color"></div>
-                  </div>
+                  <div class="cmsNodeBackgroundPreview" style="border: 1px solid #ccc;position:relative;height: 200px;"></div>
               </div>
 
             </div>

@@ -1,5 +1,4 @@
 /* js[global] */
-
 function createTable(table) {
   // REQUIRED name, definition | renderRow, url, primary, db_table
   // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate

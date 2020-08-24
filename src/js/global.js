@@ -1,6 +1,6 @@
 /* js[global] */
 window.addEventListener("load", function () {
-  if ("ontouchstart" in window) {
+  if (window.hasOwnProperty("ontouchstart")) {
     var expandable = document.getElementsByClassName("expandable");
     for (i = 0; i < expandable.length; i++) {
       expandable[i].insertAdjacentHTML(
@@ -610,9 +610,11 @@ function addItemtoBasket(variant_id, diff, callback) {
   });
 }
 
-function rgbStringToHex(rgbString) {
-  if (rgbString.substr(0, 3) != "rgb") return rgbString;
-  return rgbString.replace(/rgb\((.+?)\)/gi, (_, rgb) => {
+function rgbOrHexStringToHex(rgbOrHexString = "") {
+  if (rgbOrHexString.substr(0, 3) != "rgb") {
+    return rgbOrHexString;
+  }
+  return rgbOrHexString.replace(/rgb\((.+?)\)/gi, (_, rgb) => {
     return (
       "#" +
       rgb

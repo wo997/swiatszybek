@@ -2023,6 +2023,18 @@ footer a:hover {
   padding: 6%;
 }
 
+.background-image {
+  z-index: 1;
+}
+.background-color {
+  z-index: 2;
+}
+.cms-block-content,
+.cms-container-content,
+.ql-editor {
+  z-index: 3;
+}
+
 /* cms end */
 
 /*.tooltip-wrapper {
