@@ -1,24 +1,23 @@
 <?php //route[facebook/login_callback]
 
-if (strpos($_SERVER["HTTP_REFERER"],"/zakup") !== false)
-{
+if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
   $_SESSION["redirect"] = "/zakup";
 }
 
 try {
   $accessToken = $fb_helper->getAccessToken();
-} catch(Facebook\Exceptions\FacebookResponseException $e) {
+} catch (Facebook\Exceptions\FacebookResponseException $e) {
   // When Graph returns an error
   echo 'Graph returned an error: ' . $e->getMessage();
   header("Location: /");
   die;
-} catch(Facebook\Exceptions\FacebookSDKException $e) {
+} catch (Facebook\Exceptions\FacebookSDKException $e) {
   // When validation fails or other local issues
   echo 'Facebook SDK returned an error: ' . $e->getMessage();
   exit;
 }
 
-if (! isset($accessToken)) {
+if (!isset($accessToken)) {
   /*if ($fb_helper->getError()) {
     header('HTTP/1.0 401 Unauthorized');
     echo "Error: " . $fb_helper->getError() . "\n";
@@ -44,12 +43,12 @@ $tokenMetadata = $oAuth2Client->debugToken($accessToken);
 $user_key = $tokenMetadata->getProperty('user_id');
 
 // Validation (these will throw FacebookSDKException's when they fail)
-$tokenMetadata->validateAppId($secrets['facebook_app_id']); // Replace {app-id} with your app id
+$tokenMetadata->validateAppId(secret('facebook_app_id')); // Replace {app-id} with your app id
 // If you know the user ID this access token belongs to, you can validate it here
 //$tokenMetadata->validateUserId('123');
 $tokenMetadata->validateExpiration();
 
-if (! $accessToken->isLongLived()) {
+if (!$accessToken->isLongLived()) {
   try {
     $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
   } catch (Facebook\Exceptions\FacebookSDKException $e) {
@@ -69,9 +68,7 @@ if ($accessToken !== null) {
   $fb_email = $user->getProperty('email');
   $first_name = $user->getProperty('first_name');
   $last_name = $user->getProperty('last_name');
-}
-else 
-{
+} else {
   header("Location: /");
   die;
 }
@@ -83,11 +80,9 @@ $user_data = fetchRow("SELECT user_id, email FROM users WHERE user_type = '$user
 if ($user_data) {
   $user_id = $user_data["user_id"];
   $email = $user_data["email"];
-}
-else {
+} else {
   $email = $fb_email;
-  if (empty($email))
-  {
+  if (empty($email)) {
     $email = "";
   }
 

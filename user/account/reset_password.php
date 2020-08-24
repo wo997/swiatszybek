@@ -30,10 +30,9 @@ if (isset($_POST["password"]) && isset($_POST["user_id"]) && isset($_POST["authe
   $password = $_POST["password"];
   $user_id = $_POST["user_id"];
   $authentication_token = $_POST["authentication_token"];
-  $password_hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
   query("UPDATE users SET password_hash = ?, authenticated = '1' WHERE user_id = ? AND authentication_token = ?", [
-    $password_hash, $_POST["user_id"], $authentication_token
+    getPasswordHash($password), $_POST["user_id"], $authentication_token
   ]);
 
   $back = "logowanie";
@@ -46,7 +45,7 @@ if (isset($_POST["password"]) && isset($_POST["user_id"]) && isset($_POST["authe
 $user_data = fetchRow("SELECT user_id, authentication_token FROM users WHERE email = ?", [$email]);
 
 if ($user_data) {
-  $message = "<h2>Kliknij w link poniżej, żeby zmienić swoje hasło</h2><br><a style='font-size:18px' href='$SITE_URL/resetowanie-hasla/" . $user_data["user_id"] . "/" . $user_data["authentication_token"] . "'>Zmień hasło</a>";
+  $message = "<h2>Kliknij w link poniżej, żeby zmienić swoje hasło</h2><br><a style='font-size:18px' href='" . SITE_URL . "/resetowanie-hasla/" . $user_data["user_id"] . "/" . $user_data["authentication_token"] . "'>Zmień hasło</a>";
 
   $mailTitle = "Zmiana hasła konta " . config('main_email_sender') . " " . date("d-m-Y");
 

@@ -2,7 +2,7 @@
 <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Poppins&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
-<?php if (/*$app["user"]["is_admin"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
+<?php if (/*$app["user"]["permissions"]["backend_access"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
   <!-- <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="/src/vanilla.datepicker.css?v=1" type="text/css" media="screen" /> -->
 
@@ -45,7 +45,7 @@
   <meta property="og:type" content="website" />
 <?php endif ?>
 
-<?php if ($app["user"]["is_admin"] || (isset($page_data) && isset($page_data["cms_id"]))) : ?>
+<?php if ($app["user"]["permissions"]["backend_access"] || (isset($page_data) && isset($page_data["cms_id"]))) : ?>
 
   <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
   <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>
@@ -64,20 +64,22 @@
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
 
 <script>
-  var RELEASE = <?= RELEASE ?>; // manage versioning of assets
-  var IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
-  var USER_TYPE = "<?= $app["user"]["type"] ?>";
+  const RELEASE = <?= RELEASE ?>; // manage versioning of assets
+  const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
+  const USER_TYPE = "<?= $app["user"]["type"] ?>";
 
   <?php $sizes = ["lg" => null, "sm" => 800]; ?>
 
-  var statusList = <?= json_encode($statusList) ?>;
-  var screenSizes = <?= json_encode($sizes) ?>
+  const statusList = <?= json_encode($statusList) ?>;
+  const screenSizes = <?= json_encode($sizes) ?>
 
-  var image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
+  const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
 
-  <?php if ($app["user"]["is_admin"]) : ?>
-    var requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
-    var attribute_data_types = <?= json_encode($attribute_data_types) ?>
+  <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
+    const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
+    const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
+    const permission_list = <?= json_encode($permission_list) ?>;
+
   <?php endif ?>
 </script>
 

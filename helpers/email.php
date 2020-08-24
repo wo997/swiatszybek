@@ -34,6 +34,5 @@ function getEmailHeader($lang)
 
 function getEmailFooter()
 {
-    global $SITE_URL;
-    return "\n<br><br><i>Pozdrawiamy,</i><br><a href='$SITE_URL'><img src='$SITE_URL/img/logo.png' style='width:200px'></a></p>";
+    return "\n<br><br><i>Pozdrawiamy,</i><br><a href='" . SITE_URL . "'><img src='" . SITE_URL . "/img/logo.png' style='width:200px'></a></p>";
 }

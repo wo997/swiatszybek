@@ -1,6 +1,6 @@
   <?php
 
-  useCSS(__DIR__ . "/main.css");
+  useCSS($moduleDir . "/main.css");
 
   $shared_where = "p.published = 1"; // AND v.published = 1";
   $where = $shared_where;

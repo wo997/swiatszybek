@@ -44,11 +44,12 @@ scanDirectories(
 );
 
 foreach ($jsFileGroups as $jsGroup => $files) {
-    (new Minify\JS(...$files))->minify("/builds/$jsGroup.js");
+    (new Minify\JS(...$files))->minify("builds/$jsGroup.js");
 }
 foreach ($cssFileGroups as $cssGroup => $files) {
-    (new Minify\CSS(...$files))->minify("/builds/$cssGroup.css");
+    (new Minify\CSS(...$files))->minify("builds/$cssGroup.css");
 }
+
 
 //$minifier = new Minify\CSS($sourcePath);
 

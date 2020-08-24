@@ -32,7 +32,7 @@
                   echo $app["user"]["name"];
                   ?>
                 </div>
-                <?php if ($app["user"]["is_admin"]) : ?>
+                <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
                   <div style="color: #05c;background: #fafafa;">
                     <a class="menu_item" href="/admin/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
                     <?php

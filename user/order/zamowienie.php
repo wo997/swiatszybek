@@ -26,7 +26,7 @@ $res = "<table class='item-list item-list-full'><tr style='background: #60d010;c
   <td>Ilość</td>
   <td>Suma</td>";
 
-if ($app["user"]["is_admin"]) {
+if ($app["user"]["permissions"]["backend_access"]) {
   $res .= "<td>Cena&nbsp;nabycia:</td>";
 }
 
@@ -56,7 +56,7 @@ if (empty($basket)) {
         <td class='oneline' data-stock=''>" . $item['quantity'] . " szt.</td>
         <td class='pln oneline basket-price'><label>Suma:</label> <span>" . $item['total_price'] . "</span> zł</td>";
 
-    if ($app["user"]["is_admin"]) {
+    if ($app["user"]["permissions"]["backend_access"]) {
       $res .= "<td class='pln oneline'><label>Cena&nbsp;nabycia:</label> <input class='nabyto' style='width:70px' type='text' onchange='setNabyto(" . $item['basket_item_id'] . ",this)' value='" . intval(nonull($item, 'purchase_price', "")) . "'> zł</td>";
     }
     $res .= "</tr>";
@@ -147,7 +147,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
       }, 3000);
     <?php endif ?>
 
-    <?php if ($app["user"]["is_admin"]) : ?>
+    <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
 
       var basket = <?= json_encode($basket) ?>;
 
@@ -230,7 +230,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 <body class="default-form">
   <?php include "global/header.php"; ?>
   <div class="body" style="width:100%;max-width: 1100px; margin: auto;padding: 10px 10px 60px; box-sizing: border-box;">
-    <?php if ($app["user"]["is_admin"]) { ?>
+    <?php if ($app["user"]["permissions"]["backend_access"]) { ?>
       <div class="navbar_wrapper">
         <div class="navbar_admin">
           <?php include "admin/navbar.php" ?>
@@ -252,7 +252,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
       }
       echo " #" . $zamowienie_data["zamowienie_id"];
 
-      if ($app["user"]["is_admin"]) { // status is an actual ID
+      if ($app["user"]["permissions"]["backend_access"]) { // status is an actual ID
         echo "<button class='btn primary' style='font-size:14px;margin-left:5px;font-weight:normal' onclick='showModal(\"zamowienieForm\");'>Edytuj</button>";
         echo "<a class='btn primary' style='font-size:14px;margin-left:5px;font-weight:normal' href='/zakup/$zamowienie_link'>Ponów</a>";
       }
@@ -266,7 +266,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
     <div style="text-align:center">
       <?php
-      if ($app["user"]["is_admin"]) { // status is an actual ID
+      if ($app["user"]["permissions"]["backend_access"]) { // status is an actual ID
         $c = 0;
         foreach ($statusList as $status_id => $status) {
           $status_text = $status["title"];
@@ -339,7 +339,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
         <p><?= $dostawaString ?></p>
 
-        <?php if ($app["user"]["is_admin"]) : ?>
+        <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
           <div>
             <span>Nr śledzenia paczki</span>
             <button type="button" class="btn primary" onclick='showModal("zamowienieForm");document.getElementsByName("e_track")[0].focus()'>Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button>
@@ -405,7 +405,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
           <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia</span>
           <b style="display:inline-block;font-size: 18px;"><span id="total-cost" style="display:inline-block;" class="pln"><?= $zamowienie_data["koszt"] ?> zł</span></b>
 
-          <?php if ($app["user"]["is_admin"]) : ?>
+          <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
             <br>
             <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Zysk</span>
             <b style="display:inline-block;font-size: 18px;"><span id="zysk" style="display:inline-block;" class="pln"> zł</span></b>
@@ -415,7 +415,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         <h4>Uwagi dotyczące zamówienia</h4>
         <textarea name="uwagi" readonly style="width: 100%; height: 80px; resize: none;"><?= $zamowienie_data["uwagi"] ?></textarea>
 
-        <?php if ($app["user"]["is_admin"]) : ?>
+        <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
           <h4>Notatki (niewidoczne dla klienta)</h4>
           <textarea onclick='showModal("notatkaForm",{source:this});moveCursorToEnd(document.getElementsByName("e_notes")[0])' name="notes" readonly style="width: 100%;cursor:pointer; height: 80px; resize: none;"><?= $zamowienie_data["notes"] ?></textarea>
 
@@ -468,7 +468,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
     </div>
   </div>
 
-  <?php if ($app["user"]["is_admin"]) : ?>
+  <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
     <div id="zamowienieForm" data-modal>
       <form action="/admin/edit_zamowienie" method="post" class="mobileRow modal-padding">
         <div style="margin-right:5px;width:50%">

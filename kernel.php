@@ -33,8 +33,7 @@ function secret($var, $default = "")
 $domain = config("domain");
 if (!$domain) $domain = $_SERVER["HTTP_HOST"];
 
-$SITE_URL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain;
-// I would recommend moving it to $app global var
+define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain);
 
 $currency = "PLN"; // used by p24
 
@@ -69,7 +68,9 @@ include_once "helpers/rating.php";
 include_once "helpers/array.php";
 include_once "helpers/directories.php";
 
-include_once "helpers/db.php";
+include_once "helpers/db/general.php";
+include_once "helpers/db/entity.php";
+include_once "helpers/db/migration.php";
 include_once "helpers/email.php";
 
 include_once "helpers/user.php";
@@ -87,6 +88,7 @@ include_once "helpers/links.php";
 
 include_once "helpers/layout/cms.php";
 include_once "helpers/layout/templates.php";
+include_once "helpers/form.php";
 
 require_once 'helpers/facebook_register.php'; // should be a part of FB module instead
 

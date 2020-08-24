@@ -27,7 +27,7 @@ function quit($message, $type)
   die;
 }
 
-if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL) || strlen($_POST["password"]) < 8)
+if (!validateEmail($_POST["email"]) || validatePassword($_POST["password"]))
   quit("Wpisz poprawny email i hasło", 0);
 
 // check if has email
@@ -35,8 +35,8 @@ $user_data = fetchRow("SELECT user_id, authenticated, authentication_token, pass
 
 $user_exists = false;
 
-$password_hash = password_hash($_POST["password"], PASSWORD_BCRYPT, ['cost' => 12]);
-$authentication_token = bin2hex(random_bytes(10));
+$password_hash = getPasswordHash($_POST["password"]);
+$authentication_token = generateAuthenticationToken();
 
 if ($user_data) {
   if ($user_data["authenticated"] == "0") {
@@ -54,7 +54,7 @@ if ($user_data) {
 }
 
 // send mail no matter if exists to make sure he will receive it
-$message = "<h2>Kliknij w link poniżej, żeby aktywować swoje konto</h2><br><a style='font-size:18px' href='$SITE_URL/aktywuj/" . $user_data["user_id"] . "/$authentication_token'>Aktywuj</a>";
+$message = "<h2>Kliknij w link poniżej, żeby aktywować swoje konto</h2><br><a style='font-size:18px' href='" . SITE_URL . "/aktywuj/" . $user_data["user_id"] . "/$authentication_token'>Aktywuj</a>";
 $mailTitle = "Aktywacja konta " . config('main_email_sender') . " " . date("d-m-Y");
 sendEmail($_POST["email"], $message, $mailTitle);
 

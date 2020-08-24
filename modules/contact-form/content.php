@@ -1,7 +1,7 @@
 <?php
 
-useJS(__DIR__ . "/main.js");
-useCSS(__DIR__ . "/main.css");
+useJS($moduleDir . "/main.js");
+useCSS($moduleDir . "/main.css");
 
 $contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
 

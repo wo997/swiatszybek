@@ -8,7 +8,7 @@ if ($new_stock < 0) $new_stock = 0;
 query("UPDATE variant SET stock = $new_stock WHERE variant_id = " . intval($input["variant_id"]));
 
 $product_link = getProductLink($variant_data["product_id"], $variant_data["link"]);
-$product_image = "<img style='max-width:300px' src='" . $SITE_URL . "/md/" . $variant_data["image"] . "'>";
+$product_image = "<img style='max-width:300px' src='" . SITE_URL . "/md/" . $variant_data["image"] . "'>";
 
 if ($new_stock > 0) // $variant_data["stock"] == 0 && 
 {

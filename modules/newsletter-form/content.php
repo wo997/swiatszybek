@@ -2,7 +2,7 @@
 
 include_once __DIR__ . "/helpers.php";
 
-useJS(__DIR__ . "/main.js");
+useJS($moduleDir . "/main.js");
 
 $contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
 

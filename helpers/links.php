@@ -10,14 +10,12 @@ function getLink($phrase)
 
 function getProductLink($product_id, $link)
 {
-    global $SITE_URL;
-    return "$SITE_URL/produkt/$product_id/" . getLink($link);
+    return SITE_URL . "/produkt/$product_id/" . getLink($link);
 }
 
 function getZamowienieLink($link)
 {
-    global $SITE_URL;
-    return "$SITE_URL/zamowienie/$link";
+    return SITE_URL . "/zamowienie/$link";
 }
 
 function getMenuLink($menu_item)

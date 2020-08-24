@@ -15,7 +15,7 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         createTable({
-            name: "mytable",
+            name: "config_table",
             url: "/admin/search_konfiguracja",
             lang: {
                 subject: "stałych"
@@ -73,6 +73,9 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
                     </div>
                 `
         });
+
+        // TODO instead of createtable
+        // createSimpleList();
     });
 </script>
 
@@ -102,6 +105,6 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
     </div>
 </form>
 
-<div class="mytable"></div>
+<div class="config_table"></div>
 
 <?php include "admin/default_page.php"; ?>

@@ -7,13 +7,7 @@ if (!$app["user"]["id"]) {
 
 $parts = explode("/", $url);
 
-$impersonate = false;
-if ($app["user"]["is_admin"] && isset($parts[2])) {
-  $user_id = $parts[2];
-  $impersonate = true;
-} else {
-  $user_id = $app["user"]["id"];
-}
+$user_id = $app["user"]["id"];
 
 //$user_data = fetchRow("SELECT user_id, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, nip, authentication_token FROM `users` WHERE user_id = ".intval($user_id));
 $user_data = fetchRow("SELECT * FROM users WHERE user_id = " . intval($user_id));
@@ -161,18 +155,16 @@ if (strpos($url, "resetowanie-hasla") !== false)
           <i class="fas fa-address-book"></i>
           <span>Dane użytkownika</span>
         </div>
-        <?php if (!$impersonate) : ?>
-          <?php if ($app["user"]["type"] == 's') : ?>
-            <div id="menuHeader3" onclick="showMenu(3)" <?php if ($menu == "haslo") echo 'class="selected"'; ?>>
-              <i class="fas fa-unlock-alt"></i>
-              <span>Zmiana hasła</span>
-            </div>
-          <?php endif ?>
-          <a href="/logout" onclick="return logout()">
-            <i class="fa fa-sign-out-alt"></i>
-            <span>Wyloguj się</span>
-          </a>
+        <?php if ($app["user"]["type"] == 's') : ?>
+          <div id="menuHeader3" onclick="showMenu(3)" <?php if ($menu == "haslo") echo 'class="selected"'; ?>>
+            <i class="fas fa-unlock-alt"></i>
+            <span>Zmiana hasła</span>
+          </div>
         <?php endif ?>
+        <a href="/logout" onclick="return logout()">
+          <i class="fa fa-sign-out-alt"></i>
+          <span>Wyloguj się</span>
+        </a>
       </div>
       <div style="padding: 15px 5px">
         <div id="menu1" class="menu mobileRow <?php if ($menu == "zamowienia") echo "showNow"; ?>" style="<?php if ($menu != "zamowienia") echo 'display:none;'; ?>">
@@ -275,8 +267,6 @@ if (strpos($url, "resetowanie-hasla") !== false)
                       <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3">
                     </div>
                   </div>
-
-                  <input type="hidden" name="user_id_edit" value="<?= $user_id ?>">
 
                   <div style="margin-top: 70px;text-align: right;">
                     <button type="submit" class="btn primary big" id="allowSave" disabled>

@@ -40,7 +40,7 @@ if ($zamowienie_data["status"] === 0) {
 
   $P24->addValue("p24_email", trim($zamowienie_data["email"]));
   $P24->addValue("p24_url_return", $link);
-  $P24->addValue("p24_url_status", $SITE_URL . "/przelewy24_confirm_payment");
+  $P24->addValue("p24_url_status", SITE_URL . "/przelewy24_confirm_payment");
   $P24->addValue("p24_api_version", "3.2");
   $P24->addValue("p24_channel", "2");
 
