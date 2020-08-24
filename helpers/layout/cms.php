@@ -32,11 +32,12 @@ function getCMSPageHTML($content)
       $link->outertext = "<a href=" . $link->attr["data-href"] . ">" . $link->outertext . "</a>";
     }
 
-    if (strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false) {
-      $images = $html->find("img");
-      foreach ($images as $img) {
-        $img->src = str_replace(".jpg", ".webp", $img->src);
-      }
+    $webp = strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false;
+
+    $images = $html->find("img");
+    foreach ($images as $img) {
+      $img->setAttribute("data-src", $webp ? str_replace(".jpg", ".webp", $img->src) : $img->src);
+      $img->removeAttribute("src");
     }
 
 

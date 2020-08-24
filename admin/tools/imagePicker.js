@@ -41,6 +41,9 @@ window.imagePicker = {
       url: "/admin/upload_images",
       formData: formData,
       success(images) {
+        if (!images) {
+          return;
+        }
         try {
           var out = "";
           var counter = 0;
@@ -60,7 +63,7 @@ window.imagePicker = {
                             </div>
                         `;
           }
-          $("#imagePicker .gallery").innerHTML = out;
+          $("#imagePicker .gallery").setContent(out);
         } catch (e) {
           //console.log(e);
         }
