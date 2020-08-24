@@ -284,11 +284,11 @@
 }
 
 #cms .add_after_btn {
-  bottom: -25px;
+  bottom: -23px;
 }
 
 #cms .add_before_btn {
-  top: -25px;
+  top: -23px;
 }
 
 [data-select-group] .selectedOption {

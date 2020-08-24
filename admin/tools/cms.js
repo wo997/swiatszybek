@@ -603,9 +603,15 @@ function getNodeBackgroundColorOpacity(node) {
 
 function migrateImageBackground(node) {
   var src = window.getComputedStyle(node).backgroundImage;
-  var urls = src.match(/(?<=url\(").*(?="\))/);
+  var urls = src.match(/url\(".*"\)/);
   if (urls && urls.length > 0) {
-    setNodeImageBackground(node, urls[0].replace(window.location.origin, ""));
+    setNodeImageBackground(
+      node,
+      urls[0]
+        .replace(window.location.origin, "")
+        .replace(`url("`, "")
+        .replace(`")`, "")
+    );
     node.style.backgroundImage = "";
   }
 }

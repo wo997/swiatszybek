@@ -119,6 +119,6 @@ $versionJS = 0;
 
 include "deployment/automatic_build.php";
 
-define("RELEASE", 2141);
+define("RELEASE", 2146);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);

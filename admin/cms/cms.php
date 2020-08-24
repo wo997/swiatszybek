@@ -56,7 +56,10 @@ $static = checkUrl($page_data["link"]);
     });
 
     window.addEventListener("load", function() {
-        $("#cms").setAttribute("data-expand", "large");
+        var cms = $("#cms");
+        if (cms) {
+            cms.setAttribute("data-expand", "large");
+        }
     });
 
 
