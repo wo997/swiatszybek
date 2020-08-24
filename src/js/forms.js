@@ -297,3 +297,35 @@ function checkRemoveRequired() {
 function clearValidateRequired() {
   removeClasses("required");
 }
+
+function setFormData(data, form = null, params = {}) {
+  if (!form) form = document.body;
+  Object.entries(data).forEach(([name, value]) => {
+    var selector = `[name="${name}"]`;
+    if (params.type == "simple-list") {
+      selector = `[data-list-param="${name}"]`;
+    }
+    var e = $(form).find(selector);
+    if (!e) {
+      return;
+    }
+    setValue(e, value);
+  });
+
+  resizeCallback();
+}
+
+function getFormData(form = null) {
+  if (!form) form = document.body;
+  var data = {};
+
+  form = $(form);
+  var excludeHidden = form.hasAttribute("data-exclude-hidden");
+  $(form)
+    .findAll(`[name]`)
+    .forEach((e) => {
+      if (excludeHidden && e.findParentByClassName("hidden")) return;
+      data[e.getAttribute("name")] = getValue(e);
+    });
+  return data;
+}
