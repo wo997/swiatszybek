@@ -220,7 +220,7 @@ function addMissingDirectChildren(
   html,
   position = "beforeend"
 ) {
-  if (![...parent.children].find(isMissingCallback)) {
+  if (!$(parent).directChildren().find(isMissingCallback)) {
     parent.insertAdjacentHTML(position, html);
   }
 }

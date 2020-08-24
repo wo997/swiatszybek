@@ -1918,7 +1918,8 @@ footer a:hover {
   box-shadow: inset 0px 0px 20px 0px rgb(255, 253, 113) !important;
 }
 
-.background-color {
+.background-color,
+.background-image {
   position: absolute;
   width: 100% !important;
   height: 100% !important;
@@ -1999,6 +2000,10 @@ footer a:hover {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.background-image {
+  object-fit: cover;
 }
 
 .block-padding-none > *,
