@@ -13,7 +13,6 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 <script src="/admin/zamowienia_table_definition.js?a=<?= RELEASE ?>"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-
         var tableName = "mytable";
         createTable({
             name: tableName,
@@ -64,7 +63,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                     title: "Uprawnienia",
                     width: "8%",
                     render: (r) => {
-                        return r.permissions;
+                        return permission_list[r.permissions].name;
                     }
                 },
                 {
@@ -168,9 +167,12 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
         }
 
         setFormData(data, form);
+        $("#editUser .passwordCheckbox").setValue(0);
         showModal(formName, {
             source: src
         });
+
+
     }
 
 
@@ -188,6 +190,10 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
             }
         });
         hideModalTopMost();
+    }
+
+    function togglePasswordField(elem) {
+        expand($("#editUser .changePassword"), $(elem).getValue());
     }
 </script>
 
@@ -207,75 +213,89 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
         </div>
         <div class="stretch-vertical">
             <div class="desktopRow spaceColumns">
-                <div class="mobileRow" style="max-width: 820px;margin: 0 auto;">
-                    <div style="width: 50%; padding:10px">
-                        <div style="width:100%;margin:auto;max-width:350px">
-                            <h3 style="text-align: center;font-size: 26px;margin: 45px 0 35px;">Dane kontaktowe</h3>
+                <div>
+                    <h3 style="text-align: center;font-size: 18px;margin: 10px 0;">Dane kontaktowe</h3>
 
-                            <div class="field-title">Imię</div>
-                            <input type="text" class="field" name="imie" autocomplete="first-name" data-validate>
+                    <div class="field-title">Imię</div>
+                    <input type="text" class="field" name="imie" autocomplete="first-name" data-validate>
 
-                            <div class="field-title">Nazwisko</div>
-                            <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate>
+                    <div class="field-title">Nazwisko</div>
+                    <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate>
 
-                            <div class="field-title">Adres e-mail</div>
-                            <input type="text" class="field" name="email" autocomplete="email" data-validate="email">
+                    <div class="field-title">Adres e-mail</div>
+                    <input type="text" class="field" name="email" autocomplete="email" data-validate="email">
 
-                            <div class="field-title">Nr telefonu</div>
-                            <input type="text" class="field" name="telefon" autocomplete="tel" data-validate>
+                    <div class="field-title">Nr telefonu</div>
+                    <input type="text" class="field" name="telefon" autocomplete="tel" data-validate="tel">
 
-                            <div class="field-title">Nazwa firmy</div>
-                            <input type="text" class="field" name="firma" autocomplete="organization">
+                    <div class="field-title">Nazwa firmy</div>
+                    <input type="text" class="field" name="firma" autocomplete="organization">
 
-                            <div class="field-title">NIP</div>
-                            <input type="text" class="field" name="nip">
+                    <div class="field-title">NIP</div>
+                    <input type="text" class="field" name="nip">
+                </div>
+                <div>
+                    <h3 style="text-align: center;font-size: 18px;margin: 10px 0;">Adres</h3>
+                    <div class="field-title">Kraj</div>
+                    <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
 
-                            <div class="field-title">Uprawnienia</div>
-                            <select name="permissions" class="field">
-                                <option value="0">Użytkownik</option>
-                                <option value="1">Admin</option>
-                            </select>
+                    <div class="miejscowosc-picker-wrapper">
+                        <div class="field-title">Kod pocztowy</div>
+                        <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-cookie>
+
+                        <div class="field-title">Miejscowość</div>
+                        <input class="field miejscowosc-picker-target" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate data-cookie>
+                        <div class="miejscowosc-picker-list"></div>
+                    </div>
+
+                    <div class="field-title">Ulica</div>
+                    <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate>
+
+                    <div class="desktopRow spaceColumns">
+                        <div>
+                            <div class="field-title">Nr domu</div>
+                            <input type="text" class="field" name="nr_domu" autocomplete="address-line2" data-validate>
+                        </div>
+                        <div>
+                            <div class="field-title">Nr lokalu</div>
+                            <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3">
                         </div>
                     </div>
-                    <div style="width: 50%; padding:10px;">
-                        <div style="width:100%;margin:auto;max-width:350px">
-                            <h3 style="text-align: center;font-size: 26px;margin: 45px 0 35px;">Adres</h3>
-                            <div class="field-title">Kraj</div>
-                            <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
 
-                            <div class="miejscowosc-picker-wrapper">
-                                <div class="field-title">Kod pocztowy</div>
-                                <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-cookie>
+                    <input type="hidden" name="user_id">
+                </div>
 
-                                <div class="field-title">Miejscowość</div>
-                                <input class="field miejscowosc-picker-target" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate data-cookie>
-                                <div class="miejscowosc-picker-list"></div>
-                            </div>
+            </div>
 
-                            <div class="field-title">Ulica</div>
-                            <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate>
+            <br>
+            <br>
 
-                            <div class="desktopRow spaceColumns">
-                                <div>
-                                    <div class="field-title">Nr domu</div>
-                                    <input type="text" class="field" name="nr_domu" autocomplete="address-line2" data-validate>
-                                </div>
-                                <div>
-                                    <div class="field-title">Nr lokalu</div>
-                                    <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3">
-                                </div>
-                            </div>
+            <div class="desktopRow spaceColumns">
+                <div>
+                    <div class="field-title">Uprawnienia</div>
+                    <select name="permissions" class="field">
+                        <?php foreach ($permission_list as $permission_id => $permission) : ?>
+                            <option value="<?= $permission_id ?>"><?= $permission["name"] ?></option>
+                        <?php endforeach; ?>
+                    </select>
 
-                            <input type="hidden" name="user_id_edit" value="<?= $user_id ?>">
+                    <label class="checkbox-wrapper field-title">
+                        <input class="passwordCheckbox" type="checkbox" onchange="togglePasswordField(this);">
+                        <div class="checkbox"></div>
+                        Zmień hasło
+                    </label>
 
-                            <div style="margin-top: 70px;text-align: right;">
-                                <button type="submit" class="btn primary big" id="allowSave" disabled>
-                                    Zapisz zmiany
-                                    <i class="fa fa-cog"></i>
-                                </button>
-                            </div>
+                    <div class="expandY changePassword">
+                        <div class="field-title">Hasło (min. 8 znaków)</div>
+                        <div class="field-wrapper">
+                            <input type="password" name="password" class="field" data-validate="password">
+                            <i class="correct fa fa-check"></i>
+                            <i class="wrong fa fa-times"></i>
                         </div>
                     </div>
+                </div>
+                <div>
+
                 </div>
             </div>
 
@@ -283,9 +303,6 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
             <div style="margin-top:auto; align-self: flex-end; padding-top:30px; margin-bottom:10px">
                 <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć użytkownika?')) saveUser(true);">Usuń <i class="fa fa-times"></i></button>
             </div>
-
-            <input type="hidden" name="user_id">
-
         </div>
     </div>
 </div>

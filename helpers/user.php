@@ -1,8 +1,15 @@
 <?php
 
+$visitor_permissions = ["backend_access" => false];
+$permission_list = [
+    0 => ["name" => "Klient", "backend_access" => false],
+    1 => ["name" => "Admin", "backend_access" => true],
+    2 => ["name" => "Sprzedawca", "backend_access" => true],
+];
+
 function initUser()
 {
-    global $app;
+    global $app, $visitor_permissions;
 
     if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
         $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 's' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
@@ -16,7 +23,7 @@ function initUser()
     } else {
         $app["user"] = [
             "id" => null,
-            "is_admin" => false,
+            "permissions" => $visitor_permissions,
             "type" => "",
             "email" => ""
         ];
@@ -34,7 +41,7 @@ function initUser()
 function adminRequired()
 {
     global $app;
-    if (!$app["user"]["is_admin"]) {
+    if (!$app["user"]["permissions"]["backend_access"]) {
         $_SESSION["redirect"] = $_SERVER["REQUEST_URI"];
         header("Location: /logowanie");
         die;
@@ -44,14 +51,15 @@ function adminRequired()
 
 function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 {
-    global $app;
+    global $app, $permission_list;
 
-    $adminList = explode(",", str_replace(" ", "", config("admins")));
-    $adminList[] = secret("super_admin_email");
+    // $adminList = explode(",", str_replace(" ", "", config("admins")));
+    // $adminList[] = secret("super_admin_email");
+    $user_data = fetchRow("SELECT * FROM users WHERE user_id = $user_id");
 
     $user = [
         "id" => $user_id,
-        "is_admin" => $user_type == "s" && in_array($email, $adminList),
+        "permissions" => $permission_list[$user_data["permissions"]],
         "type" => $user_type,
         "email" => $email,
     ];
@@ -62,11 +70,10 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 
     $_SESSION["user"] = $user;
 
-    $basket = fetchValue("SELECT basket FROM users WHERE user_id = $user_id");
+    $basket = $user_data["basket"];
 
     if ($basket && strlen($_SESSION["basket"]) <= 3) {
-        $_SESSION["basket"] = $basket;
-        $_COOKIE["basket"] = $basket;
+        setBasketData($basket);
     }
 
     /*if ($app["user"]["basket"]["item_count"] > 0) {
@@ -92,4 +99,14 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
             die;
         }
     }
+}
+
+function getPasswordHash($val)
+{
+    return password_hash($val, PASSWORD_BCRYPT, ['cost' => 12]);
+}
+
+function generateAuthenticationToken()
+{
+    return bin2hex(random_bytes(10));
 }

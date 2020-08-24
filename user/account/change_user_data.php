@@ -4,7 +4,7 @@ if (!$app["user"]["id"]) {
   die;
 }
 
-$posts = ["imie", "nazwisko", "email", "telefon", "firma", "kraj", "miejscowosc", "kod_pocztowy", "ulica", "nr_domu", "nip", "nr_lokalu", "user_id_edit"];
+$posts = ["imie", "nazwisko", "email", "telefon", "firma", "kraj", "miejscowosc", "kod_pocztowy", "ulica", "nr_domu", "nip", "nr_lokalu"];
 
 foreach ($posts as $p) {
   if (!isset($_POST[$p]))
@@ -13,15 +13,7 @@ foreach ($posts as $p) {
   $$p = $_POST[$p];
 }
 
-$impersonate = false;
-
 $user_id = $app["user"]["id"];
-if ($app["user"]["is_admin"]) {
-  if ($user_id != $user_id_edit) {
-    $impersonate = true;
-    $user_id = $user_id_edit;
-  }
-}
 
 function quit($message, $type)
 {
@@ -65,8 +57,6 @@ if ($app["user"]["type"] == 's') {
   ]);
 }
 
-if ($impersonate)
-  header("Location: /moje-konto/dane-uzytkownika/$user_id");
-else
-  header("Location: /moje-konto/dane-uzytkownika");
+
+header("Location: /moje-konto/dane-uzytkownika");
 die;

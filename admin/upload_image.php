@@ -92,13 +92,13 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
     ]);
 }
 
-if ($app["user"]["is_admin"] && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
+if ($app["user"]["permissions"]["backend_access"] && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
     for ($counter = 0; $counter < count($_FILES['files']['tmp_name']); $counter++) {
         processImage($_FILES['files']['tmp_name'][$counter], nonull($_POST, "tag", date("Y-m-d_H:i:s")), $_FILES['files']['name'][$counter], $counter);
     }
 }
 
-if ($app["user"]["is_admin"] && $_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($app["user"]["permissions"]["backend_access"] && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['alsoDelete'])) {
         $path = $_POST['alsoDelete'];
         foreach ($image_sizes_all as $size_name) {
@@ -111,7 +111,7 @@ if ($app["user"]["is_admin"] && $_SERVER['REQUEST_METHOD'] === 'POST') {
         die;
     }
 }
-if ($app["user"]["is_admin"] && isset($_POST['base64'])) {
+if ($app["user"]["permissions"]["backend_access"] && isset($_POST['base64'])) {
     $counter = 0;
     foreach (json_decode($_POST['base64']) as $src) {
         $counter++;

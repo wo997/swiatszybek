@@ -27,7 +27,7 @@
         <?php endif ?>
       </h1>
 
-      <?php if ($app["user"]["is_admin"]) : ?>
+      <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
         <a href="/admin/produkt/<?= $number ?>" style="position:relative;top:-20px;" class="btn primary medium">Edytuj</a>
       <?php endif ?>
 

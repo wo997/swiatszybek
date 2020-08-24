@@ -3,10 +3,7 @@
 $where = "u.authenticated = 1";
 
 echo getTableData([
-  "select" => "user_id, imie, nazwisko, email, telefon, user_type, permissions, 
-  DATE_FORMAT(stworzono, '%d-%m-%Y %H:%i') as stworzono,
-  (select count(1) from zamowienia z where z.user_id = u.user_id) as zamowienia_count,
-  firma",
+  "select" => "*, (select count(1) from zamowienia z where z.user_id = u.user_id) as zamowienia_count",
   "from" => "users u",
   "where" => $where,
   "order" => "u.user_id DESC",

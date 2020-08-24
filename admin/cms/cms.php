@@ -41,6 +41,7 @@ $static = checkUrl($page_data["link"]);
 <script>
     useTool("cms");
     useTool("preview");
+    const cms_id = <?= $cms_id ?>;
 
     window.addEventListener("DOMContentLoaded", function() {
         setFormData(<?= json_encode($page_data) ?>);
@@ -102,7 +103,7 @@ $static = checkUrl($page_data["link"]);
     }
 
     function rewriteURL() {
-        $(`[name="link"]`).setValue(getLink($(`[name="seo_title"]`).value));
+        $(`[name="link"]`).setValue(getLink($(`[name="title"]`).value));
 
     }
 
@@ -112,6 +113,11 @@ $static = checkUrl($page_data["link"]);
     }
 
     function save(remove = false) {
+        if (cms_id == -1 && remove) {
+            window.location = "/admin/strony";
+            return;
+        }
+
         var f = $("#cmsForm");
 
         if (!remove && !validateForm({
@@ -126,8 +132,12 @@ $static = checkUrl($page_data["link"]);
         xhr({
             url: "/admin/save_cms",
             params: params,
-            success: () => {
-                window.location.reload();
+            success: (res) => {
+                if (res.cms_link) {
+                    window.location = res.cms_link
+                } else {
+                    window.location.reload();
+                }
                 //showNotification(`<i class="fas fa-check"></i> Zapisano zmiany</b>`); // TODO XD
             }
         });
@@ -195,16 +205,9 @@ $static = checkUrl($page_data["link"]);
                 <div class="cms preview_html" name="content" data-type="html"></div>
             </div>
 
-            <?php if ($page_data["cms_id"] == -1) : ?>
-                <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                    <a href="/admin/strony" class="btn red">Usuń stronę <i class="fa fa-trash"></i></a>
-                </div>
-            <?php endif ?>
-            <?php if ($page_data["cms_id"] != -1) : ?>
-                <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                    <button class="btn red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) save(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
-                </div>
-            <?php endif ?>
+            <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
+                <button class="btn red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) save(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
+            </div>
         </div>
     </div>
 </div>

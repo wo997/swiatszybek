@@ -68,7 +68,9 @@ include_once "helpers/rating.php";
 include_once "helpers/array.php";
 include_once "helpers/directories.php";
 
-include_once "helpers/db.php";
+include_once "helpers/db/general.php";
+include_once "helpers/db/entity.php";
+include_once "helpers/db/migration.php";
 include_once "helpers/email.php";
 
 include_once "helpers/user.php";
@@ -86,6 +88,7 @@ include_once "helpers/links.php";
 
 include_once "helpers/layout/cms.php";
 include_once "helpers/layout/templates.php";
+include_once "helpers/form.php";
 
 require_once 'helpers/facebook_register.php'; // should be a part of FB module instead
 

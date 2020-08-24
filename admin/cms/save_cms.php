@@ -4,20 +4,25 @@ $main_page = $_POST["link"] == "";
 
 $isRemove = isset($_POST["remove"]) && !$main_page;
 if ($isRemove) {
-    query("DELETE FROM cms WHERE cms_id = ?", [$_POST["cms_id"]]);
+    removeEntity("cms", "cms_id", $_POST["cms_id"]);
+    $cms_link = "/admin/strony";
 } else {
-    if ($_POST["cms_id"] == -1) {
-        query("INSERT INTO cms () VALUES ()");
-        $_POST["cms_id"] = getLastInsertedId();
-    }
+    $cms_id = getEntityId("cms", $_POST["cms_id"]);
 
-    $published = (isset($_POST["published"]) || $main_page) ? 1 : 0;
+    $data = [
+        "title" => $_POST["title"],
+        "seo_title" => $_POST["seo_title"],
+        "seo_description" => $_POST["seo_description"],
+        "content" => $_POST["content"],
+        "link" => getLink($_POST["link"]),
+        "metadata" => $_POST["metadata"],
+        "published" => (isset($_POST["published"]) || $main_page) ? 1 : 0,
+    ];
 
-    query("UPDATE cms SET title = ?, seo_title = ?, seo_description = ?, content = ?, link = ?, metadata = ?, published = ? WHERE cms_id = " . intval($_POST["cms_id"]), [
-        $_POST["title"], $_POST["seo_title"], $_POST["seo_description"], $_POST["content"], getLink($_POST["link"]), $_POST["metadata"], $published
-    ]);
+    updateEntity($data, "cms", "cms_id", $cms_id);
 
-    $cms_link = "/admin/cms/" . $_POST["cms_id"];
+    // TODO: use cms_link to reload cms page
+    $cms_link = "/admin/cms/" . $cms_id;
 }
 
 triggerEvent("sitemap_change");

@@ -30,10 +30,9 @@ if (isset($_POST["password"]) && isset($_POST["user_id"]) && isset($_POST["authe
   $password = $_POST["password"];
   $user_id = $_POST["user_id"];
   $authentication_token = $_POST["authentication_token"];
-  $password_hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
   query("UPDATE users SET password_hash = ?, authenticated = '1' WHERE user_id = ? AND authentication_token = ?", [
-    $password_hash, $_POST["user_id"], $authentication_token
+    getPasswordHash($password), $_POST["user_id"], $authentication_token
   ]);
 
   $back = "logowanie";
