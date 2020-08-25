@@ -9,6 +9,10 @@
         opacity: 0;
         transition: opacity 0.2s;
     }
+
+    .cms img[data-src] {
+        display: inline-block;
+    }
 </style>
 <script>
     window.addEventListener("scroll", () => {
@@ -100,13 +104,6 @@
             }
         })
 
-        /*if (window.innerWidth > 1200) {
-            $$(".item-image").forEach(e => {
-                var i = e.getAttribute("data-desktop");
-                if (i) e.style.backgroundImage = "url('" + i + "')";
-            });
-        }*/
-
         if (window.innerWidth < 768) {
             $$("table").forEach(table => {
                 var header = table.find("tr").findAll("td");
@@ -131,58 +128,4 @@
             });
         }
     });
-
-    var wt = -100;
-
-    window.addEventListener("DOMContentLoaded", function() {
-        resizeCallback();
-        waitForImageLoaded();
-    });
-
-
-    function waitForImageLoaded() {
-        wt++;
-        $$(".cms img:not(.responsive)").forEach(e => {
-            if (e.naturalWidth) {
-                e.classList.add("responsive");
-                responsiveImage(e);
-                wt = 0;
-            }
-        });
-        if (wt++ < 100) {
-            requestAnimationFrame(waitForImageLoaded);
-        }
-    };
-
-    function responsiveImage(e) {
-        var src = e.getAttribute("src");
-        if (!src) return;
-
-        //console.log(e.naturalWidth);
-        //console.log(e.width, e.naturalWidth);
-        //e.width < e.naturalWidth
-        var current_dimension = Math.max(e.width, e.height);
-        var naturalDimension = Math.max(e.naturalWidth, e.naturalHeight);
-
-        // cannot limit by natural dimension if user requested something bigger hmmm
-
-        //console.log(naturalDimension);
-        var target_size_name = "df";
-        var target_size_dimension = "df";
-        Object.entries(image_default_dimensions).forEach(([size_name, size_dimension]) => {
-            //console.log(size_name, size_dimension);
-            if (current_dimension < size_dimension * 1.4 && current_dimension < naturalDimension) {
-                target_size_name = size_name;
-                target_size_dimension = size_dimension;
-            }
-        });
-
-        e.setAttribute("src", src.replace(/\/uploads\/.{0,4}\//, `/uploads/${target_size_name}/`));
-    }
-
-    function responsiveImages() {
-        $$(".cms img").forEach(e => {
-            responsiveImage(e);
-        });
-    }
 </script>

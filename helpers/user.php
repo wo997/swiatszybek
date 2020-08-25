@@ -29,6 +29,8 @@ function initUser()
         ];
     }
 
+    $app["user"]["permissions"] = array_merge($visitor_permissions, $app["user"]["permissions"]);
+
     if (empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["basket"]) {
         $b = "[]";
         if (isset($_COOKIE["basket"])) {

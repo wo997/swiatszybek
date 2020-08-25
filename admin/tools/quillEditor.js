@@ -201,10 +201,6 @@ window.quillEditor = {
     });
 
     showModal("quillEditor", { source: source });
-
-    setTimeout(() => {
-      quillEditor.fixImageResponsive();
-    }, 500); // 400 for animation
   },
   save: () => {
     var cursor = $("#quillEditor .ql-cursor");
@@ -404,10 +400,6 @@ window.quillEditor = {
       "image",
       src
     );
-    quillEditor.fixImageResponsive();
-    setTimeout(() => {
-      quillEditor.fixImageResponsive();
-    }, 500); // let it show up
   },
 
   fixQLtooltip: () => {
@@ -511,17 +503,6 @@ window.quillEditor = {
         quillEditor.fixHeight(repeat - 1);
       });
     }
-  },
-
-  fixImageResponsive: () => {
-    $$("#quillEditor img").forEach((e) => {
-      if (!e.style.width) {
-        var width = Math.round(e.getBoundingClientRect().width);
-        if (width) {
-          e.style.width = width + "px";
-        }
-      }
-    });
   },
 
   considerUploadingImages() {

@@ -111,7 +111,11 @@ $static = checkUrl($page_data["link"]);
     }
 
     function editPage() {
-        imagePicker.setDefaultTag($('[name="seo_title"]').value);
+        var t = $('[name="seo_title"]').getValue();
+        if (!t) {
+            t = $('[name="title"]').getValue();
+        }
+        imagePicker.setDefaultTag(t);
         editCMS(`[name="content"]`);
     }
 
