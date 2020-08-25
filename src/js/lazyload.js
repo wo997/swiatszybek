@@ -13,7 +13,7 @@ function isNodeOnScreen(node, offset = -10) {
   return true;
 }
 
-var lazyLoadOffset = 800;
+var lazyLoadOffset = 1000;
 
 function preloadImage(img) {
   if (!img.hasAttribute("data-src")) {
@@ -52,17 +52,14 @@ function preloadImage(img) {
         .replace(/\/uploads\/.{0,4}\//, `/uploads/${target_size_name}/`)
     );
     img.removeAttribute("data-src");
-    img.style.height = "";
   }
 
   img.style.opacity = 0;
   img.classList.add("lazy_image");
 
-  if (isNodeOnScreen(img)) {
-    setTimeout(() => {
-      showImage(img);
-    }, 0);
-  }
+  setTimeout(() => {
+    showImage(img);
+  }, 0);
 }
 
 function showImage(img) {
@@ -70,43 +67,42 @@ function showImage(img) {
     img.style.animation = "fadeIn 0.45s";
     img.style.opacity = 1;
     img.classList.remove("lazy_image");
+    setTimeout(() => {
+      img.style.height = ""; // that's the solution
+    }, 2000);
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  var preload_count = 2; // 2 by default + fill with size, in reality returns more
+function setImageHeight(img, r) {
+  var [w, h] = img.getAttribute("data-d").split("x");
+  var real_height = Math.round((r.width * parseInt(h)) / parseInt(w));
+  img.style.height = `${real_height}px`;
+  //return real_height;
+}
 
-  var cmsArea = null; // singleton
+document.addEventListener("DOMContentLoaded", () => {
+  //var preload_count = 2; // 2 by default + fill with size, in reality returns more
+
+  //var cmsArea = null; // singleton
 
   $$("img[data-src]").forEach((img) => {
     var r = img.getBoundingClientRect();
+    //var real_height =
+    setImageHeight(img, r);
 
-    var [w, h] = img.getAttribute("data-d").split("x");
-    var real_height = Math.round((r.width * parseInt(h)) / parseInt(w));
-    img.style.height = `${real_height}px`;
-
-    if (cmsArea === null) {
+    /*if (cmsArea === null) {
       cmsArea =
         img.findParentByClassName("cms").getBoundingClientRect().width *
         window.innerHeight;
-    }
+    }*/
 
     if (r.top < window.innerHeight + lazyLoadOffset) {
-      var image_area = r.width * real_height;
+      //var image_area = r.width * real_height;
 
-      cmsArea -= image_area + 100;
-
-      if (cmsArea > 0) {
-        preload_count++;
-      }
-    }
-  });
-
-  var images_shown = 0;
-  $$("img[data-src]").forEach((img) => {
-    if (images_shown < preload_count) {
-      images_shown++;
+      //if (cmsArea > 0) {
       preloadImage(img);
+      //}
+      //cmsArea -= image_area;
     }
   });
 });
