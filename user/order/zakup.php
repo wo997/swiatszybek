@@ -467,10 +467,10 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
   </style>
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      window.form = $("#form");
+      window.form = $("#zakupForm");
 
       ignoreValueChanges = true;
-      setFormData(<?= json_encode($zamowienie_data) ?>, $(".main-container"));
+      setFormData(<?= json_encode($zamowienie_data) ?>, window.form);
       ignoreValueChanges = false;
 
       <?php //if (!$app["user"]["id"]) { 
@@ -494,7 +494,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         type: RABAT_TYPE
       });
 
-      $("#form").addEventListener('keypress', function(e) {
+      window.form.addEventListener('keypress', function(e) {
         if (e.key == 'Enter' && e.target.tagName != "TEXTAREA") {
           e.preventDefault();
           return false;
@@ -574,9 +574,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         }
       }
 
-      return validateForm({
-        form: $("#menu" + currentMenu)
-      });
+      return validateForm($("#menu" + currentMenu));
     }
 
     function copyAdres() {
@@ -641,8 +639,6 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       }, 200);
 
       if (i == 4) {
-        var form = $("#form");
-
         var daneKontaktoweInfo = "";
         if (BUYER_TYPE == 'p') {
           daneKontaktoweInfo = form.imie.value + " " + form.nazwisko.value;
@@ -727,7 +723,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
               ulica_dostawa: point.address_details.street,
               nr_domu_dostawa: point.address_details.building_number,
               nr_lokalu_dostawa: ""
-            }, $(".main-container"));
+            }, window.form);
 
             $("#paczkomatAdres").innerHTML = "Paczkomat " + form.paczkomat.value + "<br>" + form.ulica_dostawa.value + " " + form.nr_domu_dostawa.value + "<br>" + form.kod_pocztowy_dostawa.value + " " + form.miejscowosc_dostawa.value + " Polska";
 
@@ -826,7 +822,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           ulica_dostawa: "Górczewska",
           nr_domu_dostawa: "216",
           nr_lokalu_dostawa: ""
-        }, $(".main-container"));
+        }, window.form);
 
         $("#dostawaRodzaj").innerHTML = "Odbiór osobisty";
         dostawaInput = "o";
@@ -960,7 +956,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
     </div>
   </div>
 
-  <form class="main-container" action="/potwierdz_zamowienie" method="post" id="form" style="margin-bottom: 50px;width: 100%;" onsubmit="return isFormValid()">
+  <form class="main-container" action="/potwierdz_zamowienie" method="post" id="zakupForm" style="margin-bottom: 50px;width: 100%;" onsubmit="return isFormValid()">
 
     <div id="menu1" class="menu showNow" style="max-width: 1000px;">
       <div style="margin: auto;width:100%;padding: 20px 10px;">

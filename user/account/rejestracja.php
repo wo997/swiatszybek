@@ -85,7 +85,7 @@ function a($name)
     if (isset($_POST["message"]))
       echo $_POST["message"];
     ?>
-    <form onsubmit="return validateForm({form:this})" class="paddingable" action="/register" method="post">
+    <form onsubmit="return validateForm(this)" class="paddingable" action="/register" method="post">
       <div class="main-container">
         <div class="menu mobileRow" style="max-width: 700px">
           <div style="width: 50%;">

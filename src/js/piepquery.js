@@ -103,6 +103,22 @@ function $(node, parent = null) {
     return window.setContent(node, html);
   };
 
+  node.setFormData = (data, params = {}) => {
+    return setFormData(data, node, params);
+  };
+
+  node.getFormData = () => {
+    return getFormData(node);
+  };
+
+  node.validateForm = (params = {}) => {
+    return validateForm(node, params);
+  };
+
+  node.validateField = () => {
+    return validateField(node);
+  };
+
   return node;
 }
 

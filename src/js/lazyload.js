@@ -2,11 +2,11 @@
 
 function isNodeOnScreen(e, offset = -10) {
   var r = e.getBoundingClientRect();
-  console.log(r.height);
-  console.log(
-    $(e).findParentByClassName("cms-block-content").getBoundingClientRect()
-      .height
-  );
+  //   console.log(r.height);
+  //   console.log(
+  //     $(e).findParentByClassName("cms-block-content").getBoundingClientRect()
+  //       .height
+  //   );
   if (
     r.y > window.innerHeight + offset ||
     r.y + r.height < -offset ||

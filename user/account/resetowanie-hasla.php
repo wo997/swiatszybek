@@ -34,7 +34,7 @@ if ($authenticated) {
   <?php include "global/header.php"; ?>
   <div class="main-container">
 
-    <form onsubmit="return validateForm({form:this})" action="/reset_password" method="post" class="centerVerticallyMenu paddingable" style="margin:auto;padding-bottom:50px;max-width:350px">
+    <form onsubmit="return validateForm(this)" action="/reset_password" method="post" class="centerVerticallyMenu paddingable" style="margin:auto;padding-bottom:50px;max-width:350px">
       <?php if ($authenticated) : ?>
         <h1 class="h1" style="text-align:center">Resetowanie hasła<br><span style="font-size:18px"><i class="fa fa-user"></i> <?= $email ?></span></h1>
       <?php else : ?>

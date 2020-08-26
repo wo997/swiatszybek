@@ -71,7 +71,7 @@
             content_mobile: "",
             published: "0"
         };
-        setFormData(data, $("#slideEdit"));
+        setFormData(data, "#slideEdit");
 
         setTitle("Nowy slajd");
         showModal("slideEdit", {
@@ -81,7 +81,7 @@
 
     function editSlide(btn, i) {
         var data = mytable.results[i];
-        setFormData(data, $("#slideEdit"));
+        setFormData(data, "#slideEdit");
 
         setTitle("Edycja slajdu");
         showModal("slideEdit", {
@@ -92,9 +92,9 @@
     function saveSlide(remove = false) {
         var f = $("#slideEdit");
 
-        if (!remove && !validateForm({
-                form: f
-            })) return;
+        if (!remove && !validateForm(f)) {
+            return;
+        }
         var params = getFormData(f);
 
         if (remove) {
