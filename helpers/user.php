@@ -11,13 +11,6 @@ function initUser()
 {
     global $app, $visitor_permissions;
 
-    if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
-        $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 's' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
-        if ($user_data) {
-            login_user($user_data["user_id"], $user_data["email"], "s", ["name" => $user_data["email"]], false);
-        }
-    }
-
     if (isset($_SESSION["user"])) {
         $app["user"] = $_SESSION["user"];
     } else {
@@ -27,6 +20,13 @@ function initUser()
             "type" => "",
             "email" => ""
         ];
+    }
+
+    if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
+        $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 's' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
+        if ($user_data) {
+            login_user($user_data["user_id"], $user_data["email"], "s", ["name" => $user_data["email"]], false);
+        }
     }
 
     $app["user"]["permissions"] = array_merge($visitor_permissions, $app["user"]["permissions"]);
@@ -74,7 +74,7 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 
     $basket = $user_data["basket"];
 
-    if ($basket && strlen($_SESSION["basket"]) <= 3) {
+    if ($basket && strlen(nonull($_SESSION, "basket")) <= 3) {
         setBasketData($basket);
     }
 
@@ -108,7 +108,7 @@ function getPasswordHash($val)
     return password_hash($val, PASSWORD_BCRYPT, ['cost' => 12]);
 }
 
-function generateAuthenticationToken()
+function generateAuthenticationToken($length = 10)
 {
-    return bin2hex(random_bytes(10));
+    return bin2hex(random_bytes($length));
 }
