@@ -723,8 +723,6 @@ function cmsUpdate() {
       }
     }
   });
-
-  fixImagesResponsive();
 }
 
 function closeCms(save) {
@@ -2192,18 +2190,3 @@ registerModalContent(
     jscolor.installByClassName();
   }
 );
-
-function fixImagesResponsive() {
-  $$("#cms img").forEach((e) => {
-    var realWidth = e.naturalWidth;
-    if (realWidth) {
-      var realHeight = e.naturalHeight;
-      if (!e.hasAttribute("data-d")) {
-        e.setAttribute("data-d", realWidth + "x" + realHeight);
-      }
-      if (!e.style.width) {
-        e.style.width = realWidth + "px";
-      }
-    }
-  });
-}

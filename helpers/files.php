@@ -1,43 +1,64 @@
-<?php //route[admin/upload_images]
+<?php
 
-foreach ($image_default_dimensions as $size_name => $area) {
-    $image_sizes_all[] = $size_name;
-}
+$image_default_dimensions = [ // pick higher value of width and height
+    "df" => null,
+    "lg" => 1920,
+    "bg" => 1200,
+    "md" => 600,
+    "sm" => 300,
+    "tn" => 100,
+];
 
-function processImage($file_tmp, $tag, $file_name, $counter = null)
+$image_minified_formats = [
+    "jpg",
+    "webp"
+];
+
+/**
+ * Accepts single or multiple urls string as entry
+ */
+/*function getOptimisedImageUrl($url)
+{
+    if (WEBP_SUPPORT) {
+        return str_replace(".jpg" , ".webp", $url);
+    }
+    return $url;
+}*/
+
+function minifyImage($file_path)
 {
     global $image_default_dimensions;
 
-    $info = getimagesize($file_tmp);
+    $size_info = getimagesize($file_path);
 
-    $width = $info[0];
-    $height = $info[1];
-
-    if ($width * $height > 500971520) {
-        return false;
-    }
-
-    $file_extension = mime2ext($info['mime']);
+    $file_extension = mime2ext($size_info['mime']);
 
     if ($file_extension == 'jpg') {
-        $image = imagecreatefromjpeg($file_tmp);
+        $image = imagecreatefromjpeg($file_path);
     } else if ($file_extension == 'png') {
-        $image = imagecreatefrompng($file_tmp);
+        $image = imagecreatefrompng($file_path);
     } else if ($file_extension == 'gif') {
-        $image = imagecreatefromgif($file_tmp);
+        $image = imagecreatefromgif($file_path);
     } else if ($file_extension == 'bmp') {
-        $image = imagecreatefrombmp($file_tmp);
+        $image = imagecreatefrombmp($file_path);
     } else if ($file_extension == 'webp') {
-        $image = imagecreatefromwebp($file_tmp);
+        $image = imagecreatefromwebp($file_path);
     } else {
         return false;
     }
+
+    $width = $size_info[0];
+    $height = $size_info[1];
 
     $image_dimension = max($width, $height);
 
     foreach ($image_default_dimensions as $image_wanted_name => $image_wanted_dimension) {
         if ($image_wanted_dimension) {
             $scale = $image_wanted_dimension / $image_dimension;
+            if ($scale >= 1) {
+                continue; // we dont want to scale images up
+            }
+
             $sizes[$image_wanted_name] = [
                 round($width * $scale),
                 round($height * $scale),
@@ -47,24 +68,7 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
         }
     }
 
-    $file_type = "jpg";
-
-    if (!$tag) $tag = rand(100, 999);
-    $tag_clean = getLink($tag);
-
-    $final_image_path = $tag_clean . "." . $file_type;
-
-    $iterator = 0;
-    while (true) {
-        if (fetchValue("SELECT COUNT(1) FROM images WHERE path = ?", [$final_image_path])) {
-            $iterator++;
-            $final_image_path = $tag_clean . "-" . $iterator . "." . $file_type;
-        } else break;
-        if ($iterator > 100) {
-            $final_image_path = time() . $counter . "-" . $tag_clean . "." . $file_type;
-            break;
-        }
-    }
+    $file_name_wo_extension = getFilenameWithoutExtension($file_path);
 
     foreach ($sizes as $size_name => $size) {
         $image_type_path = UPLOADS_PATH . $size_name;
@@ -80,64 +84,81 @@ function processImage($file_tmp, $tag, $file_name, $counter = null)
         $white = imagecolorallocate($output,  255, 255, 255);
         imagefilledrectangle($output, 0, 0, $copy_width, $copy_height, $white);
         imagecopyresized($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
-        $final_path = "$image_type_path/$final_image_path";
+        $final_path = "$image_type_path/$file_name_wo_extension.jpg";
         imagejpeg($output, $final_path, 100);
 
-        $webp_path = str_replace("." . $file_type, ".webp", $final_path);
-        imagewebp($output, $webp_path, 100);
-    }
-
-    query("INSERT INTO images(name, path, tag, added) VALUES (?,?,?,NOW())", [
-        $file_name, $final_image_path, $tag_clean
-    ]);
-}
-
-if ($app["user"]["permissions"]["backend_access"] && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
-    for ($counter = 0; $counter < count($_FILES['files']['tmp_name']); $counter++) {
-        processImage($_FILES['files']['tmp_name'][$counter], nonull($_POST, "tag", date("Y-m-d_H:i:s")), $_FILES['files']['name'][$counter], $counter);
+        imagewebp($output, "$image_type_path/$file_name_wo_extension.webp", 100);
     }
 }
 
-if ($app["user"]["permissions"]["backend_access"] && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['alsoDelete'])) {
-        $path = $_POST['alsoDelete'];
-        foreach ($image_sizes_all as $size_name) {
-            $file_path = UPLOADS_PATH . $size_name . "/" . $path;
-            if (file_exists($file_path)) {
-                unlink($file_path);
+
+function getFilenameWithoutExtension($file_path)
+{
+    $path_info = pathinfo($file_path);
+    $file_name = $path_info["basename"];
+    $file_extension = $path_info["extension"];
+    return substr($file_name, 0, - (1 + strlen($file_extension)));
+}
+
+/**
+ * Inserts image into DB
+ *
+ * @param  mixed $file_tmp
+ * @param  mixed $tag
+ * @param  mixed $file_name
+ * @param  mixed $counter
+ * @return void
+ */
+function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_image = true)
+{
+    $info = getimagesize($tmp_file_path);
+
+    $width = $info[0];
+    $height = $info[1];
+
+    if ($width * $height > 500971520) {
+        return false;
+    }
+
+    $file_type = mime2ext($info['mime']);
+
+    if (!$name) $name = rand(1000, 9999);
+    $name = getLink($name) . "(" . $width . "x" . $height . ")";
+
+    $iterator = 0;
+
+    $file_path = UPLOADS_PLAIN_PATH . $name . "." . $file_type;
+    while (true) {
+        if (fetchValue("SELECT 1 FROM uploads WHERE file_path = ?", [$file_path])) {
+            if ($iterator < 10) {
+                $iterator++;
+            } else if ($iterator > 10000) {
+                die("CRITICAL ERROR!");
+            } else {
+                $iterator += rand(10, 100);
             }
-        }
-        query("DELETE FROM images WHERE path = ?", [$path]);
-        die;
+            $file_path = UPLOADS_PLAIN_PATH . $name . "-" . $iterator . "." . $file_type;
+        } else break;
     }
-}
-if ($app["user"]["permissions"]["backend_access"] && isset($_POST['base64'])) {
-    $counter = 0;
-    foreach (json_decode($_POST['base64']) as $src) {
-        $counter++;
-        $image_parts = explode(";base64,", $src);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $file_type = $image_type_aux[1];
-        $image_base64 = base64_decode($image_parts[1]);
-        $tmp = UPLOADS_PATH . "tmp." . $file_type;
-        file_put_contents($tmp, $image_base64);
 
-        processImage($tmp, nonull($_POST, "tag", date("Y-m-d_H:i:s")), "", $counter);
-    }
-}
+    copy($tmp_file_path, $file_path);
 
-if (isset($_POST['search'])) { // return list
-    $where = "1";
-    $searchQuery = getSearchQuery([
-        "main_search_value" => $_POST['search'],
-        "main_search_fields" => ["path", "name", "tag"]
+    $asset_type = getAssetTypeFromMime($info['mime']);
+
+    query("INSERT INTO uploads(file_path, uploaded_file_name, asset_type) VALUES (?,?,?)", [
+        $file_path, $uploaded_file_name, $asset_type
     ]);
-    $where .= $searchQuery;
 
-    $paths = fetchArray("SELECT path FROM images WHERE $where ORDER BY added DESC LIMIT 120");
+    if ($try_to_minify_image && $asset_type == "image") {
+        minifyImage($file_path);
+    }
 
-    die(json_encode($paths));
+    return [
+        "file_path" => $file_path,
+        "asset_type" => $asset_type,
+    ];
 }
+
 
 function mime2ext($mime)
 {
@@ -329,5 +350,14 @@ function mime2ext($mime)
         'text/x-scriptzsh'                                                          => 'zsh',
     ];
 
-    return isset($mime_map[$mime]) ? $mime_map[$mime] : false;
+    return nonull($mime_map, $mime, false);
+}
+
+function getAssetTypeFromMime($mime)
+{
+    $x = explode("/", $mime);
+    if (isset($x[1])) {
+        return $x[0];
+    }
+    return null;
 }

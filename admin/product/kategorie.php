@@ -246,7 +246,7 @@
                 <div class="field-title">
                     Ikonka
                     <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
-                    <img name="icon" data-type="src" data-src-prefix="/uploads/sm/" style="max-width:100px;max-height:100px" />
+                    <img name="icon" data-type="src" style="max-width:100px;max-height:100px" />
                 </div>
 
                 <div class="field-title">Kategoria nadrzędna</div>

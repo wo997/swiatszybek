@@ -1,16 +1,42 @@
 <?php
-session_start();
 
+ini_set('max_execution_time', '3');
+
+session_start();
 require_once 'vendor/autoload.php';
 
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
+define("UPLOADS_PLAIN_PATH", UPLOADS_PATH . "-/");
 
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+
+
+$build_info_path = "builds/build_info.php";
+
+// default values - ovverriden by 'build_info'
+$previousModificationTimePHP = 0;
+$previousModificationTimeCSS = 0;
+$previousModificationTimeJS = 0;
+$versionPHP = 0;
+$versionCSS = 0;
+$versionJS = 0;
+
+@include $build_info_path;
+
+define("RELEASE", 2148);
+define("CSS_RELEASE", $versionCSS);
+define("JS_RELEASE", $versionJS);
+
+// define WebP support also for XHR requests
+define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false);
+if (WEBP_SUPPORT) {
+  $_SESSION["HAS_WEBP_SUPPORT"] = true;
+}
 
 include_once "helpers/general.php";
 
@@ -81,7 +107,7 @@ include_once "helpers/deployment.php";
 
 include_once "helpers/order.php";
 include_once "helpers/activity_log.php";
-include_once "helpers/images.php";
+include_once "helpers/files.php";
 include_once "helpers/product.php";
 
 include_once "helpers/links.php";
@@ -105,20 +131,4 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
   die;
 }
 
-$build_info_path = "builds/build_info.php";
-
-// default values - ovverriden by 'build_info'
-$previousModificationTimePHP = 0;
-$previousModificationTimeCSS = 0;
-$previousModificationTimeJS = 0;
-$versionPHP = 0;
-$versionCSS = 0;
-$versionJS = 0;
-
-@include $build_info_path;
-
 include "deployment/automatic_build.php";
-
-define("RELEASE", 2146);
-define("CSS_RELEASE", $versionCSS);
-define("JS_RELEASE", $versionJS);

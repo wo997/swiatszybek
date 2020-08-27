@@ -73,6 +73,8 @@
   const statusList = <?= json_encode($statusList) ?>;
   const screenSizes = <?= json_encode($sizes) ?>
 
+  const WEBP_SUPPORT = <?= WEBP_SUPPORT ?>;
+
   const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
 
   <?php if ($app["user"]["permissions"]["backend_access"]) : ?>

@@ -49,7 +49,7 @@ function showCategory($category, $level = 0)
 <head>
   <?php include "global/includes.php"; ?>
 
-  <link rel="stylesheet" href="/modules/product-list/main.css">
+  <link rel="stylesheet" href="/modules/product-list/main.css?v=<?= RELEASE ?>">
 
   <style>
     .category-picker-row>*,
@@ -287,6 +287,10 @@ function showCategory($category, $level = 0)
           productListSwapBackgroundNode.style.visibility = "";
 
           productListSwapNode.setContent(res.content);
+
+          lazyLoadImages(false);
+
+          setCustomHeights();
           //productListNode.style.animation = "fadeOut 0.3s";
 
           var h = productListSwapNode.getBoundingClientRect().height;
@@ -296,7 +300,7 @@ function showCategory($category, $level = 0)
           productListSwapBackgroundNode.style.top = h + "px";
 
           setTimeout(() => {
-            productListNode.setContent(res.content);
+            productListNode.setContent(productListSwapNode.innerHTML);
             productListSwapNode.empty();
 
             productListSwapNode.style.animation = "";

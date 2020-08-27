@@ -26,11 +26,9 @@ function getCMSPageHTML($content)
   $page_content = "";
 
   if ($html) {
-    $webp = strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false;
-
     $images = $html->find("img");
     foreach ($images as $img) {
-      $img->setAttribute("data-src", $webp ? str_replace(".jpg", ".webp", $img->src) : $img->src);
+      $img->setAttribute("data-src", WEBP_SUPPORT ? str_replace(".jpg", ".webp", $img->src) : $img->src);
       $img->removeAttribute("src");
     }
 

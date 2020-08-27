@@ -181,7 +181,7 @@ function setValue(input, value, quiet = false) {
       });
     } else if (type == "src") {
       var prefix = input.getAttribute(`data-src-prefix`);
-      if (!prefix) prefix = "/uploads/df/";
+      if (!prefix) prefix = ""; // "/uploads/df/";
       if (value) value = prefix + value;
       input.setAttribute("src", value);
     } else if (input.tagName == "SELECT") {
@@ -241,7 +241,7 @@ function getValue(input) {
       });
     } else if (type == "src") {
       var prefix = input.getAttribute(`data-src-prefix`);
-      if (!prefix) prefix = "/uploads/df/";
+      if (!prefix) prefix = ""; // "/uploads/df/";
       var src = input.getAttribute("src");
       if (src && src.length > prefix.length) src = src.substr(prefix.length);
       return src;

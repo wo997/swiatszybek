@@ -1,7 +1,7 @@
 <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;">
-  <div style="width: 50%;margin: 62px auto 0;">
+  <div style="width: 50%;margin: 32px auto 0;">
     <?php if (count($gallery) == 1) : ?>
-      <div class='item-image' style='background-image:url("/uploads/md/<?= $product_data["cache_thumbnail"] ?>")'></div>
+      <img data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image'>
     <?php else : ?>
       <div class="swiper-container product-main-slider">
         <div class="swiper-wrapper">
@@ -116,7 +116,7 @@
         <h3 style="margin:0">Opis produktu <i class="fas fa-plus"></i><i class="fas fa-minus"></i></h3>
       </div>
       <div class="expandContent">
-        <div class="short-description ql-editor"><?= $descriptionShort0 ?></div>
+        <div class="short-description ql-editor"><?= "" ?></div>
         <p style='font-weight:normal;margin-top: 0;' id="productCode"></p>
       </div>
     </section>
@@ -126,7 +126,7 @@
         <h3 style="margin:0">Specyfikacja <i class="fas fa-plus"></i><i class="fas fa-minus"></i></h3>
       </div>
       <div class="expandContent">
-        <?= $specyfikacja_output0 ?>
+        <?= "" ?>
       </div>
     </section>
   </div>

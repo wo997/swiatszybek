@@ -67,6 +67,11 @@ function getColumnDefinition($column)
     } else if (isset($column["default_string"])) {
         $definition .= " DEFAULT " . escapeSQL($column["default_string"]);
     }
+
+    if (isset($column["increment"])) {
+        $definition .= " AUTO_INCREMENT";
+    }
+
     return $definition;
 }
 
@@ -197,6 +202,7 @@ function createTable($table, $columns)
  * - previous_name (rename old field)
  * - null (boolean, default false - no nulls allowed)
  * - default / default_string (f.e 0)
+ * - increment: bool
  *
  * @param  string $table
  * @param array<array> $columns
@@ -256,6 +262,10 @@ function addColumns($table, $columns)
                     break;
                 }
                 if (!isset($column["default_string"]) && !isset($column["default"]) && $existing_column["Default"] !== null) {
+                    $modify = true;
+                    break;
+                }
+                if (isset($column["increment"]) xor isset($existing_column["increment"])) {
                     $modify = true;
                     break;
                 }

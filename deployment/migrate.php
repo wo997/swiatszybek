@@ -99,5 +99,21 @@ addColumns("link_category_attribute", [
   ["name" => "main_filter", "type" => "TINYINT(1)"],
 ]);
 
+createTable(
+  "uploads",
+  [
+    ["name" => "file_id", "type" => "INT", "increment" => true],
+    ["name" => "file_path", "type" => "VARCHAR(255)"],
+    ["name" => "uploaded_file_name", "type" => "VARCHAR(255)"],
+    ["name" => "creation_time", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
+    ["name" => "asset_type", "type" => "VARCHAR(255)"],
+  ]
+);
+
+addIndex("uploads", "file_id", "primary");
+addIndex("uploads", "asset_type", "index");
+addIndex("uploads", "file_path", "unique");
+
+dropTable("images");
 
 echo "<h3>✅ All migrations completed</h3>";

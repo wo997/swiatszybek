@@ -36,9 +36,9 @@ window.imagePicker = {
       tagElement.value = tag;
     }
   },
-  imageAction: (formData) => {
+  imageAction: (formData, callback = null) => {
     xhr({
-      url: "/admin/upload_images",
+      url: "/admin/uploads_action",
       formData: formData,
       success(images) {
         try {
@@ -49,18 +49,22 @@ window.imagePicker = {
 
             var replaceImg = $(`[upload_image="${counter}"]`);
             if (replaceImg) {
-              replaceImg.src = `/uploads/df/${image.path}`;
+              replaceImg.src = "/" + image.file_path;
               replaceImg.removeAttribute("upload_image");
             }
             out += `
-                            <div class='gallery-item'>
-                                <div class="item-image" style='width:100%;height:250px;background-image:url("/uploads/sm/${image.path}")'></div>
-                                <div class="btn primary" onclick='imagePicker.choose("${image.path}")'>Wybierz</div>
-                                <div class="btn secondary" onclick='imagePicker.delete("${image.path}")'>Usuń</div>
-                            </div>
-                        `;
+                <div class='gallery-item'>
+                    <div class="item-image" style='width:100%;height:250px;background-image:url("/${image.file_path}")'></div>
+                    <div class="btn primary" onclick='imagePicker.choose("/${image.file_path}")'>Wybierz</div>
+                    <div class="btn secondary" onclick='imagePicker.delete("/${image.file_path}")'>Usuń</div>
+                </div>
+            `;
           }
           $("#imagePicker .gallery").innerHTML = out;
+
+          if (callback) {
+            callback();
+          }
         } catch (e) {
           //console.log(e);
         }
@@ -75,11 +79,11 @@ window.imagePicker = {
   delete: (src) => {
     if (confirm("Czy aby na pewno chcesz usunąć zdjęcie?")) {
       var formData = new FormData();
-      formData.append("search", $("#search").value);
-      formData.append("alsoDelete", src);
-      imagePicker.imageAction(formData);
-
-      imagePicker.search(src);
+      //formData.append("search", $("#search").value);
+      formData.append("delete_path", src);
+      imagePicker.imageAction(formData, () => {
+        imagePicker.search(src);
+      });
     }
   },
   loaded: () => {
@@ -116,7 +120,7 @@ registerModalContent(
                     <input style="display:inline-block; width: auto;flex-grow: 1" type="text" name="tag" class="tag">
                 </label>
                 <label style="display:inline-block;margin: 0 5px">
-                    <input id="files" type="file" name="files[]" accept=".png,.jpg,.jpeg,.gif" multiple onchange="$('#submitbtn').click()" style="display:none">
+                    <input id="files" type="file" name="files[]" multiple onchange="$('#submitbtn').click()" style="display:none">
                     <input type="submit" id="submitbtn" value="Upload File" name="submit" style="display:none">
                     <div class="btn primary">Wyślij zdjęcie <i class="fas fa-cloud-upload-alt"></i></div>
                 </label>

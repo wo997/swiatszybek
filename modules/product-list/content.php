@@ -1,6 +1,6 @@
   <?php
 
-  useCSS($moduleDir . "/main.css");
+  //useCSS($moduleDir . "/main.css?v=" . RELEASE); already global
 
   $shared_where = "p.published = 1"; // AND v.published = 1";
   $where = $shared_where;
@@ -72,10 +72,11 @@
     if (!$product["gallery"]) {
       $product["gallery"] = $product["cache_thumbnail"];
     }
+    //<div class='item-image' style='background-image:url(\"/uploads/md/" . $product["cache_thumbnail"] . "\")' data-desktop='/uploads/md/" . $product["gallery"] . "'></div>
 
     $res .= "<div class='product'>
-            <a href='" . getProductLink($product["product_id"], $product["link"]) . "'>
-              <div class='item-image' style='background-image:url(\"/uploads/md/" . $product["cache_thumbnail"] . "\")' data-desktop='/uploads/md/" . $product["gallery"] . "'></div>
+            <a href='" . getProductLink($product["product_id"], $product["link"]) . "' data-gallery='" . $product["gallery"] . "'>
+              <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image'>
               <div class='item-desc'><h3>" . $product["title"] . "</h3>
               <span class='pln'>$priceText zł</span>
               </div>" . ratingBlock($product["cache_avg_rating"]) . "

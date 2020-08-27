@@ -52,8 +52,10 @@ if (!$gallery) {
 $galleryhtml = "";
 $gallerythumbshtml = "";
 foreach ($gallery as $pic) {
-  $galleryhtml .= "<div class='swiper-slide'><div class='item-image' style='background-image:url(\"/uploads/md/" . $pic["values"]["src"] . "\")'></div></div>";
-  $gallerythumbshtml .= "<div class='swiper-slide' style='background-image:url(\"/uploads/sm/" . $pic["values"]["src"] . "\")'></div>";
+  $galleryhtml .= "<div class='swiper-slide'><img data-src='" . $pic["values"]["src"] . "' data-height='1w' class='swiper-slide product-image'></div>";
+  //$galleryhtml .= "<div class='swiper-slide'><div class='item-image' style='background-image:url(\"/uploads/md/" . $pic["values"]["src"] . "\")'></div></div>";
+  //$gallerythumbshtml .= "<div class='swiper-slide' style='background-image:url(\"/uploads/sm/" . $pic["values"]["src"] . "\")'></div>";
+  $gallerythumbshtml .= "<img data-src='" . $pic["values"]["src"] . "' data-height='1w' class='swiper-slide product-image'>";
 }
 
 
@@ -302,11 +304,11 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     }
 
     .swiper-slide {
-      padding: 0 40px;
+      padding: 0 10px;
     }
 
     .gallery-thumbs {
-      height: 100px;
+      /*height: 100px;*/
       padding: 2px 0;
       max-width: 500px;
       transform: scale(0.95);
@@ -490,6 +492,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
             autoScrollOffset: 1
           },
         });
+
+        setCustomHeights();
       }
 
       // rating
@@ -616,7 +620,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         swiper.slideTo(variant_to_image[VARIANT_ID], 300, null);
 
 
-      $('#updateChoosenImage').style.backgroundImage = `url('/uploads/df/${variant.zdjecie}')`;
+      $('#updateChoosenImage').style.backgroundImage = `url('${variant.zdjecie}')`;
       $('#updateChoosenVariant').innerHTML = " " + variant.name;
       $('#updateChoosenAmountCost').innerHTML = variant.price - variant.rabat + " zł";
 

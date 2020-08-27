@@ -11,9 +11,7 @@ window.addEventListener("DOMContentLoaded", function () {
 var forceMobile = false;
 
 function resizeCallback() {
-  if (window.responsiveImages) {
-    window.responsiveImages();
-  }
+  setCustomHeights();
 
   var responsiveType =
     forceMobile || window.innerWidth < 800 ? "mobile" : "desktop";
@@ -83,5 +81,17 @@ function resizeCallback() {
   var attribute = `data-${responsiveType}-flex-flow`;
   $$(`[${attribute}]`).forEach((e) => {
     e.style.flexFlow = e.getAttribute(attribute);
+  });
+}
+
+function setCustomHeights() {
+  $$("[data-height]").forEach((node) => {
+    var height = node.getAttribute("data-height");
+    if (height.indexOf("w") !== -1) {
+      height = height.replace("w", "");
+      var r = node.getBoundingClientRect();
+      var real_height = Math.round(r.width * parseFloat(height));
+      node.style.height = `${real_height}px`;
+    }
   });
 }

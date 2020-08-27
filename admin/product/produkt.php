@@ -196,7 +196,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
               <div class='image-wrapper' style='width:200px'>
-                <img data-list-param="src" data-type="src" data-src-prefix="/uploads/sm/" style="max-width:190px;max-height:150px;display: block;">
+                <img data-list-param="src" data-type="src" style="max-width:190px;max-height:150px;display: block;">
               </div>
               <button class="btn primary add_img_btn" onclick="imagePicker.open(this.prev().find('img'))" img> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
@@ -460,7 +460,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       <div class="field-title">
         Zdjecie
         <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
-        <img name="zdjecie" data-type="src" data-src-prefix="/uploads/sm/" />
+        <img name="zdjecie" data-type="src" />
       </div>
 
 
