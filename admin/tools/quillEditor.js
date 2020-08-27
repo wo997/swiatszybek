@@ -164,21 +164,12 @@ window.quillEditor = {
     if (!source) return;
     quillEditor.source = source;
     quillEditor.callback = params.callback;
-    var quillColorNode = $("#quillEditor .background-color");
-    if (params.colorNode) {
-      quillColorNode.style.backgroundColor =
-        params.colorNode.style.backgroundColor;
-      quillColorNode.style.opacity = params.colorNode.style.opacity;
-    } else {
-      quillColorNode.style.backgroundColor = "#fff";
-      quillColorNode.style.opacity = 1;
-    }
     var w = $("#quillEditor .quill-editor-container");
     removeClassesWithPrefix(w, "align-");
     removeClassesWithPrefix(w, "block-padding-");
     if (params.wrapper) {
       quillEditor.wrapper = params.wrapper;
-      w.style.backgroundImage = params.wrapper.style.backgroundImage;
+      //w.style.backgroundImage = params.wrapper.style.backgroundImage;
       quillEditor.toggleQuillSize(true);
       matchClassesWithPrefix(params.wrapper, "align-").forEach((u) => {
         w.classList.add(u);
@@ -186,8 +177,19 @@ window.quillEditor = {
       matchClassesWithPrefix(params.wrapper, "block-padding-").forEach((u) => {
         w.classList.add(u);
       });
+
+      setNodeImageBackground(w, getNodeImageBackground(params.wrapper));
+
+      var color = getNodeBackgroundColor(params.wrapper);
+      var opacity = getNodeBackgroundColorOpacity(params.wrapper);
+      if (opacity > 0) {
+        setNodeBackgroundColor(w, color);
+        setNodeBackgroundColorOpacity(w, opacity);
+      } else {
+        removeNodeColorBackground(w);
+      }
     } else {
-      w.style.backgroundImage = "";
+      setNodeImageBackground(w, getNodeImageBackground(params.wrapper));
     }
     quillEditor.wasInTable = false;
     var qlContainer = $(".quill-editor-container .ql-editor");
@@ -394,7 +396,7 @@ window.quillEditor = {
   },
 
   quillImageCallback: (src) => {
-    src = "/uploads/df/" + src;
+    //src = "/uploads/df/" + src;
     quillEditor.editor.insertEmbed(
       quillEditor.lastSelection.index,
       "image",
@@ -467,18 +469,6 @@ window.quillEditor = {
         v = "…";
       }
       quillEditor.active_elem.innerHTML = v;
-    }
-  },
-
-  setBlockBackground: (val = "", type = "") => {
-    var preview = $(".cmsBlockBackgroundPreview");
-    preview.style.backgroundColor = ``;
-    preview.style.backgroundImage = ``;
-    if (type == "image") {
-      preview.style.backgroundImage = `url("/uploads/df/${val}")`;
-    }
-    if (type == "color") {
-      preview.style.backgroundColor = "#" + val;
     }
   },
 
@@ -801,11 +791,6 @@ window.quillEditor = {
 
     var toolbar = $("#quillEditor .ql-toolbar.ql-snow");
     toolbar.parent().parent().appendChild(toolbar);
-
-    $(".quill-editor-container").insertAdjacentHTML(
-      "afterbegin",
-      `<div class="background-color"></div>`
-    );
 
     //window.better_table = quill.getModule('better-table');
     table = quillEditor.editor.getModule("table");

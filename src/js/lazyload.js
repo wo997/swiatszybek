@@ -13,7 +13,7 @@ function isNodeOnScreen(node, offset = -10) {
   return true;
 }
 
-var lazyLoadOffset = 1000;
+var lazyLoadOffset = 700;
 
 function preloadImage(img, animate = true) {
   if (!img.hasAttribute("data-src")) {
@@ -21,26 +21,14 @@ function preloadImage(img, animate = true) {
   }
 
   if (isNodeOnScreen(img, lazyLoadOffset)) {
-    var src = img.getAttribute("data-src");
-    var last = src.lastIndexOf(".");
-    new_src = src.substring(0, last);
-
-    var split = new_src.split("(");
-    if (split.length < 2) {
-      img.setAttribute("src", src);
-      img.removeAttribute("data-src");
-      return;
-    }
-    var dimensions = split[1].replace(")", "").split("x");
-
-    w = parseInt(dimensions[0]);
-    h = parseInt(dimensions[1]);
+    var w = img.calculated_width;
+    var h = img.calculated_height;
 
     var r = img.getBoundingClientRect();
     var image_dimension = Math.max(r.width, r.height);
 
     var natural_image_dimension = Math.max(w, h);
-    console.log(natural_image_dimension, image_dimension);
+    //console.log(natural_image_dimension, image_dimension);
     var target_size_name = "df";
 
     if (image_dimension < natural_image_dimension) {
@@ -62,18 +50,24 @@ function preloadImage(img, animate = true) {
       );
     }
 
-    new_src = new_src.replace(
+    var src = img.setSrcBase.replace(
       /\/uploads\/.{0,10}\//,
       `/uploads/${target_size_name}/`
     );
 
     if (WEBP_SUPPORT) {
-      new_src += ".webp";
+      src += ".webp";
     } else {
-      new_src += ".jpg";
+      src += ".jpg";
     }
 
-    img.setAttribute("src", new_src);
+    if (!img.hasAttribute("data-height")) {
+      img.addEventListener("load", () => {
+        img.style.height = "";
+      });
+    }
+
+    img.setAttribute("src", src);
     img.removeAttribute("data-src");
   }
 
@@ -92,23 +86,42 @@ function showImage(img) {
     img.style.animation = "fadeIn 0.45s";
     img.style.opacity = 1;
     img.classList.remove("lazy_image");
-    if (img.hasAttribute("data-d")) {
-      setTimeout(() => {
-        img.style.height = ""; // that's the solution
-      }, 2000);
-    }
   }
 }
 
-function setImageHeight(img, r) {
-  var dimension = img.getAttribute("data-d");
-  if (!dimension) {
-    return;
+function setImageDimensions(img) {
+  var src = img.getAttribute("data-src");
+  var last = src.lastIndexOf(".");
+  var new_src = src.substring(0, last);
+
+  var rect = img.getBoundingClientRect();
+
+  var split = new_src.split("(");
+  if (split.length < 2) {
+    img.setAttribute("src", src);
+    img.removeAttribute("data-src");
+    return rect;
   }
-  var [w, h] = dimension.split("x");
-  var real_height = Math.round((r.width * parseInt(h)) / parseInt(w));
+  var dimensions = split[1].replace(")", "").split("x");
+
+  w = parseInt(dimensions[0]);
+  h = parseInt(dimensions[1]);
+
+  if (!rect.width) {
+    img.style.width = `${w}px`;
+    rect = img.getBoundingClientRect();
+  }
+
+  img.calculated_width = w;
+  img.calculated_height = h;
+  img.setSrcBase = new_src;
+
+  var real_height = Math.round((rect.width * parseInt(h)) / parseInt(w));
   img.style.height = `${real_height}px`;
-  //return real_height;
+  img.classList.add("remove_height");
+
+  //alert(img.getBoundingClientRect().height);
+  return rect;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -121,9 +134,8 @@ function lazyLoadImages(animate = true) {
   //var cmsArea = null; // singleton
 
   $$("img[data-src]").forEach((img) => {
-    var r = img.getBoundingClientRect();
     //var real_height =
-    setImageHeight(img, r);
+    var rect = setImageDimensions(img);
 
     /*if (cmsArea === null) {
       cmsArea =
@@ -131,7 +143,7 @@ function lazyLoadImages(animate = true) {
         window.innerHeight;
     }*/
 
-    if (r.top < window.innerHeight + lazyLoadOffset) {
+    if (rect.top < window.innerHeight + lazyLoadOffset) {
       //var image_area = r.width * real_height;
 
       //if (cmsArea > 0) {
@@ -150,7 +162,6 @@ document.addEventListener("mousemove", () => {
 });
 
 function scrollCallbackLazy() {
-  console.log(1);
   $$("img[data-src]").forEach((img) => {
     preloadImage(img);
   });

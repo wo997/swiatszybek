@@ -158,7 +158,6 @@ function editBlock() {
   var block_content = cmsTarget.find(".cms-block-content");
   quillEditor.open(block_content, {
     wrapper: cmsTarget,
-    colorNode: cmsTarget.find(".background-color"),
     callback: () => {
       postSaveCmsNode();
     },
@@ -535,12 +534,7 @@ function setNodeBackgroundColor(node, backgroundColor = "") {
     backgroundColor = "#" + backgroundColor.replace("#", "");
   }
   if (backgroundColor === "") {
-    var bi = node.directChildren().find((e) => {
-      return e.classList.contains("background-color");
-    });
-    if (bi) {
-      bi.remove();
-    }
+    removeNodeColorBackground(node);
     return;
   }
   addMissingDirectChildren(
@@ -557,12 +551,7 @@ function setNodeBackgroundColor(node, backgroundColor = "") {
 
 function setNodeBackgroundColorOpacity(node, op) {
   if (op == 0) {
-    var bi = node.directChildren().find((e) => {
-      return e.classList.contains("background-color");
-    });
-    if (bi) {
-      bi.remove();
-    }
+    removeNodeColorBackground(node);
     return;
   }
   addMissingDirectChildren(
@@ -986,12 +975,15 @@ function editCMSBackground() {
   setNodeImageBackground(background, getNodeImageBackground(target));
 
   var col = getNodeBackgroundColor(target);
-  if (!col) col = "fffff";
+  console.log(col);
+  if (!col) col = "ffffff";
+
+  console.log(col);
 
   $("#cmsBlockBackground .bckgcolor").setValue(col);
 
   var op = getNodeBackgroundColorOpacity(target);
-  if (op == 0) {
+  if (!op) {
     op = 0.5;
   }
   setRangeSliderValue($("#cmsBlockBackground .image-opacity"), op * 100);
@@ -1014,15 +1006,19 @@ function saveCMSBackground() {
     setNodeBackgroundColor(cmsTarget, color);
     setNodeBackgroundColorOpacity(cmsTarget, opacity);
   } else {
-    var bi = cmsTarget.directChildren().find((e) => {
-      return e.classList.contains("background-color");
-    });
-    if (bi) {
-      bi.remove();
-    }
+    removeNodeColorBackground(cmsTarget);
   }
 
   postSaveCmsNode();
+}
+
+function removeNodeColorBackground(node) {
+  var bi = node.directChildren().find((e) => {
+    return e.classList.contains("background-color");
+  });
+  if (bi) {
+    bi.remove();
+  }
 }
 
 function postSaveCmsNode() {
