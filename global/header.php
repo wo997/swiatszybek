@@ -6,23 +6,22 @@
     <a href="/" class="logo-wrapper"><img src="/img/logo.png?a" id="logo"></a>
 
     <button id="show_kategorie" onclick="this.classList.toggle('dropped_kategorie')"><span>
-        <!--Menu --><i class="fa fa-bars"></i></span><span>
-        <!--Menu --><i class="fa fa-times"></i></span></button>
+        <i class="fa fa-bars"></i></span><span>
+        <i class="fa fa-times"></i></span></button>
     <nav class="centerwhenbig">
       <?php @include "builds/topmenu.html"; ?>
     </nav>
 
     <div class="basket-wrapper">
-      <?php if (true) : //!in_array($pageName,["logowanie"])) : 
-      ?>
+      <?php if (true) : ?>
         <div style="text-align:center; font-size: 14px;margin:auto;">
           <?php if ($app["user"]["id"]) : ?>
             <div class="dropdown mobile-hover dropdown-user">
-              <!--<a href="/moje-konto"><div style="display: inline-block;max-width: 250px;text-overflow: ellipsis;overflow: hidden;vertical-align: text-top;"><?= "" //htmlspecialchars($_SESSION["email"])
-                                                                                                                                                                ?></div> <i class="fa fa-user"></i></a>-->
               <div class="dropdown-header" style="padding:8px 8px;margin-right: 5px;">
-                <div style="display: inline-block;max-width: 250px;text-overflow: ellipsis;overflow: hidden;vertical-align: text-top;"><?= '' //htmlspecialchars($_SESSION["email"]) 
-                                                                                                                                        ?><span class="case-desktop">Moje konto</span></div> <i class="fa fa-user-check"></i>
+                <div style="display: inline-block;max-width: 250px;text-overflow: ellipsis;overflow: hidden;vertical-align: text-top;">
+                  <span class="case-desktop">Moje konto</span>
+                </div>
+                <i class="fa fa-user-check"></i>
               </div>
               <div class="dropdown-expand">
                 <div class="username">

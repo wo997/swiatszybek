@@ -40,6 +40,7 @@ function preloadImage(img, animate = true) {
           if (size_name == "df") {
             return;
           }
+          console.log(image_dimension, size_dimension / pixelDensityFactor);
           if (
             image_dimension < size_dimension / pixelDensityFactor &&
             size_dimension < natural_image_dimension
@@ -96,13 +97,14 @@ function setImageDimensions(img) {
 
   var rect = img.getBoundingClientRect();
 
-  var split = new_src.split("(");
-  if (split.length < 2) {
+  var index = new_src.lastIndexOf("_");
+  if (index === -1) {
     img.setAttribute("src", src);
     img.removeAttribute("data-src");
     return rect;
   }
-  var dimensions = split[1].replace(")", "").split("x");
+
+  var dimensions = new_src.substring(index + 1).split("x");
 
   w = parseInt(dimensions[0]);
   h = parseInt(dimensions[1]);
@@ -120,7 +122,6 @@ function setImageDimensions(img) {
   img.style.height = `${real_height}px`;
   img.classList.add("remove_height");
 
-  //alert(img.getBoundingClientRect().height);
   return rect;
 }
 
@@ -129,27 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function lazyLoadImages(animate = true) {
-  //var preload_count = 2; // 2 by default + fill with size, in reality returns more
-
-  //var cmsArea = null; // singleton
-
   $$("img[data-src]").forEach((img) => {
-    //var real_height =
     var rect = setImageDimensions(img);
 
-    /*if (cmsArea === null) {
-      cmsArea =
-        img.findParentByClassName("cms").getBoundingClientRect().width *
-        window.innerHeight;
-    }*/
-
     if (rect.top < window.innerHeight + lazyLoadOffset) {
-      //var image_area = r.width * real_height;
-
-      //if (cmsArea > 0) {
       preloadImage(img, animate);
-      //}
-      //cmsArea -= image_area;
     }
   });
 }

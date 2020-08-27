@@ -1,6 +1,7 @@
 <?php
 
-$image_default_dimensions = [ // pick higher value of width and height
+// pick higher value of width and height
+$image_default_dimensions = [
     "df" => null,
     "lg" => 1920,
     "bg" => 1200,
@@ -13,17 +14,6 @@ $image_minified_formats = [
     "jpg",
     "webp"
 ];
-
-/**
- * Accepts single or multiple urls string as entry
- */
-/*function getOptimisedImageUrl($url)
-{
-    if (WEBP_SUPPORT) {
-        return str_replace(".jpg" , ".webp", $url);
-    }
-    return $url;
-}*/
 
 function minifyImage($file_path)
 {
@@ -111,23 +101,35 @@ function getFilenameWithoutExtension($file_path)
  */
 function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_image = true)
 {
-    $info = getimagesize($tmp_file_path);
-
-    $width = $info[0];
-    $height = $info[1];
-
-    if ($width * $height > 500971520) {
-        return false;
-    }
-
-    $file_type = mime2ext($info['mime']);
+    $mime_type = mime_content_type($tmp_file_path);
+    $file_type = mime2ext($mime_type);
+    $asset_type = getAssetTypeFromMime($mime_type);
 
     if (!$name) $name = rand(1000, 9999);
-    $name = getLink($name) . "(" . $width . "x" . $height . ")";
+
+    // escape
+    $name = getLink($name);
+
+    $name_suffix = "";
+
+    if ($try_to_minify_image && $asset_type == "image") {
+        $info = getimagesize($tmp_file_path);
+
+        $width = $info[0];
+        $height = $info[1];
+
+        /*if ($width * $height > 500971520) {
+            return false;
+        }*/
+
+        // necessary for lazy loading and image optimization
+        $name_suffix = "_" . $width . "x" . $height;
+    }
 
     $iterator = 0;
 
-    $file_path = UPLOADS_PLAIN_PATH . $name . "." . $file_type;
+    // check available file_path
+    $file_path = UPLOADS_PLAIN_PATH . $name . $name_suffix . "." . $file_type;
     while (true) {
         if (fetchValue("SELECT 1 FROM uploads WHERE file_path = ?", [$file_path])) {
             if ($iterator < 10) {
@@ -137,13 +139,12 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_im
             } else {
                 $iterator += rand(10, 100);
             }
-            $file_path = UPLOADS_PLAIN_PATH . $name . "-" . $iterator . "." . $file_type;
+            $file_path = UPLOADS_PLAIN_PATH . $name . "-" . $iterator . $name_suffix . "." . $file_type;
         } else break;
     }
 
+    // save plain file
     copy($tmp_file_path, $file_path);
-
-    $asset_type = getAssetTypeFromMime($info['mime']);
 
     query("INSERT INTO uploads(file_path, uploaded_file_name, asset_type) VALUES (?,?,?)", [
         $file_path, $uploaded_file_name, $asset_type
