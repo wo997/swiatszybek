@@ -1,5 +1,5 @@
 // dependencies
-useTool("imagePicker");
+useTool("fileManager");
 
 var fontAwesomeList = [
   "fas fa-address-book",
@@ -496,7 +496,7 @@ window.quillEditor = {
   },
 
   considerUploadingImages() {
-    if (!imagePicker) return;
+    if (!fileManager) return;
 
     if (!$("#quillEditor [upload_image]")) {
       var counter = 0;
@@ -510,11 +510,11 @@ window.quillEditor = {
 
       if (counter > 0) {
         var formData = new FormData();
-        formData.append("tag", imagePicker.defaultTag);
+        formData.append("tag", fileManager.defaultTag);
         formData.append("base64", JSON.stringify(srcs));
         formData.append("search", "");
 
-        imagePicker.imageAction(formData);
+        fileManager.fileAction(formData);
       }
     }
   },
@@ -798,7 +798,7 @@ window.quillEditor = {
     $("#quillEditor .ql-image").outerHTML += "";
     setTimeout(() => {
       $("#quillEditor .ql-image").onclick = function () {
-        imagePicker.open(null, {
+        fileManager.open(null, {
           callback: quillEditor.quillImageCallback,
           source: this,
         });

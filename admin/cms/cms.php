@@ -115,7 +115,7 @@ $static = checkUrl($page_data["link"]);
         if (!t) {
             t = $('[name="title"]').getValue();
         }
-        imagePicker.setDefaultTag(t);
+        fileManager.setDefaultTag(t);
         editCMS(`[name="content"]`);
     }
 

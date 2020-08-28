@@ -15,6 +15,11 @@ $image_minified_formats = [
     "webp"
 ];
 
+function getPlainFileName($file_path)
+{
+    return substr($file_path, strlen(UPLOADS_PLAIN_PATH));
+}
+
 function minifyImage($file_path)
 {
     global $image_default_dimensions;
@@ -128,8 +133,10 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_im
 
     $iterator = 0;
 
+    $base_path = $asset_type == "image" ? UPLOADS_PLAIN_PATH : UPLOADS_VIDEOS_PATH;
+
     // check available file_path
-    $file_path = UPLOADS_PLAIN_PATH . $name . $name_suffix . "." . $file_type;
+    $file_path = $base_path . $name . $name_suffix . "." . $file_type;
     while (true) {
         if (fetchValue("SELECT 1 FROM uploads WHERE file_path = ?", [$file_path])) {
             if ($iterator < 10) {
@@ -139,7 +146,7 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_im
             } else {
                 $iterator += rand(10, 100);
             }
-            $file_path = UPLOADS_PLAIN_PATH . $name . "-" . $iterator . $name_suffix . "." . $file_type;
+            $file_path = $base_path . $name . "-" . $iterator . $name_suffix . "." . $file_type;
         } else break;
     }
 

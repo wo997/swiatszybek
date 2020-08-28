@@ -8,7 +8,7 @@ require_once 'vendor/autoload.php';
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
 define("UPLOADS_PLAIN_PATH", UPLOADS_PATH . "-/");
-
+define("UPLOADS_VIDEOS_PATH", UPLOADS_PATH . "videos/");
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

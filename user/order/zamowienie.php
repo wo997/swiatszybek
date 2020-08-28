@@ -50,7 +50,7 @@ if (empty($basket)) {
 
   foreach ($basket as $item) {
     $res .= "<tr>
-        <td><img src='/uploads/sm/" . $item['zdjecie'] . "' style='max-width:130px;display:block;margin:auto'></td>
+        <td><img src='/uploads/sm" . getPlainFileName($item['zdjecie']) . "' style='max-width:130px;display:block;margin:auto'></td>
         <td><a class='linkable' href='" . nonull($links, $item['variant_id']) . "'>" . $item['title'] . "</a></td>
         <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['real_price'] . " zł</td>
         <td class='oneline' data-stock=''>" . $item['quantity'] . " szt.</td>

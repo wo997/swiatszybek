@@ -2151,7 +2151,7 @@ registerModalContent(
                 <div class="field-title">
                   <span> Zdjęcie </span>
 
-                  <div class="btn primary" onclick="imagePicker.open(null, {callback: setNodeBackgroundImagePreview, source: this})">Wybierz <i class="fas fa-image"></i></div>
+                  <div class="btn primary" onclick="fileManager.open(null, {callback: setNodeBackgroundImagePreview, source: this})">Wybierz <i class="fas fa-image"></i></div>
 
                   <div class="btn primary" onclick="setNodeBackgroundImagePreview()">Usuń <i class="fa fa-times"></i></div>
                 </div>

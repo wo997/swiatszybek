@@ -159,7 +159,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           title: "Zdjęcie",
           width: "10%",
           render: (r) => {
-            return `<img style='display:block;width:70px;' src='/uploads/sm/${r.zdjecie}'>`;
+            return `<img style='display:block;width:70px;' src='${r.zdjecie}'>`;
           },
           escape: false
         },
@@ -198,7 +198,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
               <div class='image-wrapper' style='width:200px'>
                 <img data-list-param="src" data-type="src" style="max-width:190px;max-height:150px;display: block;">
               </div>
-              <button class="btn primary add_img_btn" onclick="imagePicker.open(this.prev().find('img'))" img> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev().find('img'))" img> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
       },
@@ -238,7 +238,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   });
 
   window.addEventListener("load", function() {
-    imagePicker.setDefaultTag($('[name="title"]').value);
+    fileManager.setDefaultTag($('[name="title"]').value);
   });
 
   function copyMainImage(node) {
@@ -246,8 +246,8 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   }
 
   function editPage() {
-    imagePicker.setDefaultTag($('[name="title"]').value);
-    editCMS($('#product-content'));
+    fileManager.setDefaultTag($('[name="title"]').value);
+    editCMS($('[name="description"]'));
   }
 
   function newVariant(btn) {
@@ -407,7 +407,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         Opis główny
         <div onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
       </div>
-      <div id="product-content" name="description" data-type="html" class="cms" style="border:1px solid #ccc;max-height: calc(100vh - 352px);overflow-y:auto"></div>
+      <div name="description" data-type="html" class="cms preview_html" style="max-height: 400px"></div>
     </div>
 
     <h2 style="text-align:center">Warianty <span style="font-size: 0.7rem">(min. 1)</span></h2>
@@ -459,10 +459,9 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
       <div class="field-title">
         Zdjecie
-        <button type="button" class="btn primary" onclick="imagePicker.open(this.next())">Wybierz</button>
+        <button type="button" class="btn primary" onclick="fileManager.open(this.next())">Wybierz</button>
         <img name="zdjecie" data-type="src" />
       </div>
-
 
       <div class="field-title">Widoczność</div>
       <select name="published" class="field">

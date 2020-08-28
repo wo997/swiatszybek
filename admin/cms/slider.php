@@ -13,7 +13,7 @@
     useTool("cms");
 
     window.addEventListener("load", () => {
-        imagePicker.setDefaultTag("slider");
+        fileManager.setDefaultTag("slider");
     });
 
     document.addEventListener("DOMContentLoaded", function() {

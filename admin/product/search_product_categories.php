@@ -30,7 +30,10 @@ $responseArray = getTableData([
         },
         "attributes" => function ($row) {
             return array_map("intval", explode(",", $row["attributes"]));
-        }
+        },
+        "icon" => function ($row) {
+            return getPlainFileName($row["icon"]);
+        },
     ],
     "raw" => true
 ]);

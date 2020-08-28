@@ -1,42 +1,42 @@
-window.imagePicker = {
+window.fileManager = {
   firstOpen: true, // preload or not?
   target: null,
   callback: null,
   defaultTag: "",
   open: (target = null, params = {}) => {
-    imagePicker.target = target;
-    imagePicker.callback = params.callback;
+    fileManager.target = target;
+    fileManager.callback = params.callback;
 
-    if (imagePicker.firstOpen) {
-      imagePicker.search();
-      imagePicker.firstOpen = false;
+    if (fileManager.firstOpen) {
+      fileManager.search();
+      fileManager.firstOpen = false;
     }
-    imagePicker.setTag(null, true);
-    showModal("imagePicker", { source: nonull(params.source, target) });
+    fileManager.setTag(null, true);
+    showModal("fileManager", { source: nonull(params.source, target) });
   },
   choose: (src) => {
     hideModalTopMost();
-    if (imagePicker.target) {
-      setValue(imagePicker.target, src);
+    if (fileManager.target) {
+      setValue(fileManager.target, src);
     }
-    if (imagePicker.callback) {
-      imagePicker.callback(src);
+    if (fileManager.callback) {
+      fileManager.callback(src);
     }
   },
   setDefaultTag: (tag, replaceEmptyOnly = true) => {
-    imagePicker.defaultTag = tag;
-    imagePicker.setTag(imagePicker.defaultTag, replaceEmptyOnly);
+    fileManager.defaultTag = tag;
+    fileManager.setTag(fileManager.defaultTag, replaceEmptyOnly);
   },
   setTag: (tag = null, replaceEmptyOnly = false) => {
     if (tag === null) {
-      tag = imagePicker.defaultTag;
+      tag = fileManager.defaultTag;
     }
-    var tagElement = $("#imagePicker .tag");
+    var tagElement = $("#fileManager .tag");
     if (!replaceEmptyOnly || tagElement.value == "") {
       tagElement.value = tag;
     }
   },
-  imageAction: (formData, callback = null) => {
+  fileAction: (formData, callback = null) => {
     xhr({
       url: "/admin/uploads_action",
       formData: formData,
@@ -52,15 +52,24 @@ window.imagePicker = {
               replaceImg.src = "/" + image.file_path;
               replaceImg.removeAttribute("upload_image");
             }
+
+            var display = "";
+
+            if (image.asset_type == "video") {
+              display = `<video src="/${image.file_path}" class="ql-video" controls="true" style='width:100%;height:250px;'></video>`;
+            } else {
+              display = `<img style='width:100%;height:250px;object-fit:contain' src='/${image.file_path}'>`;
+            }
+
             out += `
                 <div class='gallery-item'>
-                    <div class="item-image" style='width:100%;height:250px;background-image:url("/${image.file_path}")'></div>
-                    <div class="btn primary" onclick='imagePicker.choose("/${image.file_path}")'>Wybierz</div>
-                    <div class="btn secondary" onclick='imagePicker.delete("/${image.file_path}")'>Usuń</div>
+                    ${display}
+                    <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")'>Wybierz</div>
+                    <div class="btn secondary" onclick='fileManager.delete("/${image.file_path}")'>Usuń</div>
                 </div>
             `;
           }
-          $("#imagePicker .gallery").innerHTML = out;
+          $("#fileManager .gallery").innerHTML = out;
 
           if (callback) {
             callback();
@@ -74,23 +83,23 @@ window.imagePicker = {
   search: () => {
     var formData = new FormData();
     formData.append("search", $("#search").value);
-    imagePicker.imageAction(formData);
+    fileManager.fileAction(formData);
   },
   delete: (src) => {
     if (confirm("Czy aby na pewno chcesz usunąć zdjęcie?")) {
       var formData = new FormData();
       //formData.append("search", $("#search").value);
       formData.append("delete_path", src);
-      imagePicker.imageAction(formData, () => {
-        imagePicker.search(src);
+      fileManager.fileAction(formData, () => {
+        fileManager.search(src);
       });
     }
   },
   loaded: () => {
-    $("#imagePicker").addEventListener("submit", (e) => {
+    $("#fileManager").addEventListener("submit", (e) => {
       e.preventDefault();
 
-      var input = $("#imagePicker [type=file]");
+      var input = $("#fileManager [type=file]");
       var files = input.files;
       var formData = new FormData();
 
@@ -101,17 +110,17 @@ window.imagePicker = {
       }
       input.value = "";
 
-      formData.append("tag", $("#imagePicker .tag").value);
+      formData.append("tag", $("#fileManager .tag").value);
       formData.append("search", $("#search").value);
 
-      imagePicker.imageAction(formData);
+      fileManager.fileAction(formData);
     });
   },
 };
 
 registerModalContent(
   `
-    <form id="imagePicker" data-expand="true">
+    <form id="fileManager" data-expand="true">
         <div class="stretch-vertical">
             <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
                 <i class="fa fa-cloud-upload" style="font-size: 22px;vertical-align: middle;"></i>
@@ -127,7 +136,7 @@ registerModalContent(
 
                 <label style="display:inline-block;margin: 0 25px">
                     <span>Filtruj galerię: </span>
-                    <input style="display:inline-block; width: auto;" type="text" name="search" id="search" oninput="delay('search',500,imagePicker)">
+                    <input style="display:inline-block; width: auto;" type="text" name="search" id="search" oninput="delay('search',500,fileManager)">
                 </label>
 
                 <button type="button" class="btn primary" onclick="hideParentModal(this)" style="margin-left: auto">Zamknij <i class="fa fa-times"></i></button>
@@ -137,10 +146,10 @@ registerModalContent(
 
             </div>
         </div>
-        <link href="/admin/tools/imagePicker.css?v=${RELEASE}" rel="stylesheet">
+        <link href="/admin/tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
     </form>
     `,
   () => {
-    imagePicker.loaded();
+    fileManager.loaded();
   }
 );
