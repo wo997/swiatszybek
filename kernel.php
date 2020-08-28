@@ -40,7 +40,7 @@ $currency = "PLN"; // used by p24
 // use db
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 date_default_timezone_set("Europe/Warsaw");
-require "database.php";
+require "helpers/db/connect.php";
 
 // define app scope
 $app = [];
@@ -61,7 +61,7 @@ if (!$link_event_paths) {
   $link_event_paths = [];
 }
 
-// include helpers
+// include other helpers
 include_once "helpers/date.php";
 include_once "helpers/string.php";
 include_once "helpers/rating.php";
