@@ -549,8 +549,8 @@ function setNodeBackgroundColor(node, backgroundColor = "") {
   }
 }
 
-function setNodeBackgroundColorOpacity(node, op) {
-  if (op == 0) {
+function setNodeBackgroundColorOpacity(node, op, remove_if_transparent = true) {
+  if (op == 0 && remove_if_transparent) {
     removeNodeColorBackground(node);
     return;
   }
@@ -577,7 +577,7 @@ function getNodeImageBackground(node) {
 function getNodeBackgroundColor(node) {
   var bi = node.find(".background-color");
   if (bi) {
-    return bi.style.backgroundColor;
+    return rgbStringToHex(bi.style.backgroundColor);
   }
   return "";
 }
@@ -975,17 +975,11 @@ function editCMSBackground() {
   setNodeImageBackground(background, getNodeImageBackground(target));
 
   var col = getNodeBackgroundColor(target);
-  console.log(col);
   if (!col) col = "ffffff";
-
-  console.log(col);
 
   $("#cmsBlockBackground .bckgcolor").setValue(col);
 
   var op = getNodeBackgroundColorOpacity(target);
-  if (!op) {
-    op = 0.5;
-  }
   setRangeSliderValue($("#cmsBlockBackground .image-opacity"), op * 100);
 
   showModal("cmsBlockBackground", {
@@ -1556,7 +1550,11 @@ function setNodeBackgroundImagePreview(src = "") {
 }
 
 function setPreviewBackgroundColorOpacity(val = 1) {
-  setNodeBackgroundColorOpacity($(".cmsNodeBackgroundPreview"), val / 100);
+  setNodeBackgroundColorOpacity(
+    $(".cmsNodeBackgroundPreview"),
+    val / 100,
+    false
+  );
 }
 
 function setNodeBackgroundColorPreview(val = "FFFFFF", makeVisible = false) {
