@@ -191,15 +191,10 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         }
       },
       render: (data) => {
-        var clean = (x) => {
-          return x.toString().replace(/"/g, "");
-        };
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
-              <div class='image-wrapper' style='width:200px'>
-                <img data-list-param="src" data-type="src" style="max-width:190px;max-height:150px;display: block;">
-              </div>
-              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev().find('img'))" img> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+              <img data-list-param="src" data-type="src" style="object-fit:contain;width:120px;height:120px;display: block;margin-right:10px;">
+              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev())"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
       },
@@ -222,7 +217,6 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
           var img = row.find("img");
           row.find(".add_img_btn span").setContent(img.getValue() ? "zmień" : "wybierz");
-          row.find(".image-wrapper").style.display = img.getValue() ? "" : "none";
         })
       },
       onRowInserted: (row) => {
@@ -236,7 +230,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     });
 
     setFormData(<?= json_encode($product_data) ?>, "#productForm");
-    addFormLeavingWarning($("#productForm"));
+    addMainFormLeavingWarning($("#productForm"));
   });
 
   window.addEventListener("load", function() {

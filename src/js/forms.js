@@ -303,16 +303,27 @@ function clearValidateRequired() {
 
 const formInitialStates = {};
 
-function addFormLeavingWarning(form) {
+function addMainFormLeavingWarning(form) {
   form = $(form);
   window.addEventListener("beforeunload", function (e) {
     const wasState = JSON.stringify(formInitialStates[form.id]);
     const nowState = JSON.stringify(getFormData(form));
     if (wasState !== nowState) {
-      // Chrome requires returnValue to be set
       e.returnValue = "Czy na pewno chcesz opuścić stronę?";
     }
   });
+}
+
+function checkFormCloseWarning(name) {
+  var wasState = formInitialStates[name];
+  var nowState = getFormData($(`#${name}`));
+
+  if (JSON.stringify(wasState) !== JSON.stringify(nowState)) {
+    return confirm(
+      "Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
+    );
+  }
+  return true;
 }
 
 function setFormInitialState(form) {
@@ -321,22 +332,6 @@ function setFormInitialState(form) {
     formInitialStates[form.id] = getFormData(form);
   }
 }
-
-// isModalDirty
-//   if (isCancel) {
-//     var wasState = modalInitialStates[name];
-//     var nowState = getFormData($(`#${name}`));
-
-//     if (JSON.stringify(wasState) !== JSON.stringify(nowState)) {
-//       if (
-//         !confirm(
-//           "Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
-//         )
-//       ) {
-//         return;
-//       }
-//     }
-//   }
 
 // form can be piepquery or selector
 function setFormData(data, form, params = {}) {

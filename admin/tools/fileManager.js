@@ -64,10 +64,10 @@ window.fileManager = {
             out += `
                 <div class='gallery-item'>
                     ${display}
-                    <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")'>Wybierz</div>
-                    <div class="btn secondary" onclick='fileManager.delete("/${image.file_path}")'>Usuń</div>
+                    <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz"><i class="fas fa-check"></i></div>
+                    <div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń"><i class="fas fa-times"></i></div>
 
-                    <i class='fas fa-info-circle' data-tooltip='Ścieżka: ${image.file_path}<hr>Nazwa: ${image.uploaded_file_name}'></i>
+                    <i class='fas fa-info-circle' data-tooltip='<b>Ścieżka:</b> ${image.file_path}<hr style="margin:2px 0"><b>Nazwa:</b> ${image.uploaded_file_name}'></i>
                 </div>
             `;
           }

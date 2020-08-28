@@ -25,3 +25,13 @@
 /*#fileManager .gallery-item:not(:hover) .btn {
   visibility: hidden;
 }*/
+
+#fileManager .gallery-item .fa-info-circle {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+#fileManager .gallery-item .btn {
+  min-width: 37px;
+}

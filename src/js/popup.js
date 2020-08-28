@@ -1,7 +1,7 @@
 /* js[global] */
 document.addEventListener("DOMContentLoaded", function () {
   if (!mobilecheck()) {
-    $$(".navbar_wrapper .dropdown").forEach((e) => {
+    /*$$(".navbar_wrapper .dropdown").forEach((e) => {
       var a = e.find("a");
       var u = e.find(".dropdown-header");
       if (a && u) {
@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
           window.location = a.href;
         });
       }
-    });
+    });*/
   }
   var popup = $(".old-popupWrapper");
   if (popup) {

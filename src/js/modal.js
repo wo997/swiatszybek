@@ -38,11 +38,6 @@ function registerModal(e) {
 }
 
 var modalHideCallbacks = {};
-// var modalInitialStates = {};
-
-// function setModalInitialState(name) {
-//   modalInitialStates[name] = getFormData($(`#${name}`));
-// }
 
 function showModal(name = null, params = {}) {
   // setModalInitialState(name);
@@ -132,25 +127,15 @@ function hideParentModal(obj = null, isCancel = false) {
 }
 
 function hideModal(name, isCancel = false) {
+  if (isCancel) {
+    if (!checkFormCloseWarning(name)) {
+      return false;
+    }
+  }
+
   var m = $("#modal-wrapper");
 
   if (name) {
-    // isModalDirty
-    //   if (isCancel) {
-    //     var wasState = modalInitialStates[name];
-    //     var nowState = getFormData($(`#${name}`));
-
-    //     if (JSON.stringify(wasState) !== JSON.stringify(nowState)) {
-    //       if (
-    //         !confirm(
-    //           "Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
-    //         )
-    //       ) {
-    //         return;
-    //       }
-    //     }
-    //   }
-
     var modal = $(`#${name}`);
     if (modal) {
       modal.style.animation = "fadeOut 0.4s";
@@ -173,7 +158,6 @@ function hideModal(name, isCancel = false) {
     if (hideCallback) {
       hideCallBack();
     }
-    // TODO: add cms hidecallback in cms
   }
 
   var visibleModalCount = 0;
