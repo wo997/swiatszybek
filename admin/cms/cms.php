@@ -44,11 +44,7 @@ $static = checkUrl($page_data["link"]);
     const cms_id = <?= $cms_id ?>;
 
     window.addEventListener("DOMContentLoaded", function() {
-        setFormData(<?= json_encode($page_data) ?>);
-
-        /*var content = decodeHtmlEntities(`<?= htmlentities($page_data["content"]) ?>`);
-        $("#content1").insertAdjacentHTML("beforeend", content);
-        $("#content1-src").value = content;*/
+        setFormData(<?= json_encode($page_data) ?>, "#cmsForm");
 
         resizeCallback();
 
@@ -127,9 +123,9 @@ $static = checkUrl($page_data["link"]);
 
         var f = $("#cmsForm");
 
-        if (!remove && !validateForm({
-                form: f
-            })) return;
+        if (!remove && !validateForm(f)) {
+            return;
+        }
         var params = getFormData(f);
 
         if (remove) {

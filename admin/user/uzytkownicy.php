@@ -150,8 +150,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
     }
 
     function editUser(src = null, data = null) {
-        const formName = "editUser";
-        const form = $(`#${formName}`);
+        const form = $("#editUser");
         if (data === null) {
             data = {
                 email: "",
@@ -168,7 +167,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
         setFormData(data, form);
         $("#editUser .passwordCheckbox").setValue(0);
-        showModal(formName, {
+        showModal(form.id, {
             source: src
         });
 
@@ -178,9 +177,9 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
     function saveUser() {
         const form = $("#editUser");
-        if (!validateForm({
-                form
-            })) return;
+        if (!validateForm(form)) {
+            return;
+        }
         const params = getFormData(form);
         xhr({
             url: "/admin/save_user",

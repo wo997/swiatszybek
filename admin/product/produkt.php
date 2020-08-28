@@ -104,6 +104,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         $(`[data-category-picker-name="categories"]`),
         [<?= $categories ?>]
       );
+      setFormInitialState($("#productForm"));
     });
 
     <?php if ($kopia) : ?>
@@ -234,7 +235,8 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       //empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
     });
 
-    setFormData(<?= json_encode($product_data) ?>, $("#productForm"));
+    setFormData(<?= json_encode($product_data) ?>, "#productForm");
+    addFormLeavingWarning($("#productForm"));
   });
 
   window.addEventListener("load", function() {
@@ -263,7 +265,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       variant_id: "-1",
       product_id: <?= $product_id ?>
     };
-    setFormData(data, $("#variantEdit"));
+    setFormData(data, "#variantEdit");
 
     $(`[name="was_stock"]`).value = data.stock;
 
@@ -273,14 +275,14 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   }
 
   function editVariant(i, btn) {
-    var formName = "variantEdit";
+    const form = $(`#variantEdit`);
     var data = variants.results[i];
 
     data.was_stock = data.stock;
 
-    setFormData(data, $(`#${formName}`));
+    setFormData(data, form);
 
-    showModal(formName, {
+    showModal(form.id, {
       source: btn
     });
 
@@ -290,9 +292,9 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         variant_id: data.variant_id
       },
       success: (data) => {
-        setFormData(data, $("#variantEdit"));
+        setFormData(data, form);
 
-        setModalInitialState(formName);
+        // setModalInitialState(formId);
       }
     });
   }
@@ -323,9 +325,9 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   function saveProductForm() {
     var form = $(`#productForm`);
 
-    if (!validateForm({
-        form: form
-      })) return;
+    if (!validateForm(form)) {
+      return;
+    }
 
     var params = getFormData(form);
 

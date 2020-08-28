@@ -133,7 +133,7 @@ if (!json_decode($kod_data["product_list"])) {
             `
         });
 
-        setFormData(<?= json_encode($kod_data) ?>);
+        setFormData(<?= json_encode($kod_data) ?>, "#kodForm");
     });
 </script>
 
@@ -142,7 +142,7 @@ if (!json_decode($kod_data["product_list"])) {
 
 <?php startSection("content"); ?>
 
-<div>
+<div id="kodForm">
     <form style="max-width:1200px;margin:20px auto" method="post" action="/admin/save_kod_rabatowy" autocomplete="off">
         <h2 style="text-align:center">Kod rabatowy</h2>
         <div class="desktopRow spaceColumns">

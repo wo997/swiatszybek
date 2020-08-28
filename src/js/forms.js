@@ -1,6 +1,7 @@
 /* js[global] */
 
 function markFieldWrong(field, errors = null) {
+  field = $(field);
   // look inside or above
   var field_title = field.find(".field-title");
   if (!field_title) {
@@ -53,13 +54,14 @@ function markFieldWrong(field, errors = null) {
   }
 }
 
-function validateForm(params) {
-  var elem = params.form ? params.form : document;
+function validateForm(form, params = {}) {
+  // var elem = params.form ? $(params.form) : document;
+  form = $(form);
 
-  var fields = elem.findAll("[data-validate]");
+  var fields = form.findAll("[data-validate]");
   for (field of fields) {
     if (params.hiddenClassList) {
-      // if any parant has a class like one of these ignore that field
+      // if any parent has a class like one of these ignore that field
       var found = false;
       if (field.findParentByClassName(params.hiddenClassList)) {
         found = true;
@@ -85,6 +87,7 @@ function validateForm(params) {
 }
 
 function toggleFieldCorrect(field, correct) {
+  field = $(field);
   var ok = field.parent().find(".correct");
   if (ok) ok.style.display = correct === true ? "block" : "";
   var wrong = field.parent().find(".wrong");
@@ -296,4 +299,73 @@ function checkRemoveRequired() {
 
 function clearValidateRequired() {
   removeClasses("required");
+}
+
+const formInitialStates = {};
+
+function addFormLeavingWarning(form) {
+  form = $(form);
+  window.addEventListener("beforeunload", function (e) {
+    const wasState = JSON.stringify(formInitialStates[form.id]);
+    const nowState = JSON.stringify(getFormData(form));
+    if (wasState !== nowState) {
+      // Chrome requires returnValue to be set
+      e.returnValue = "Czy na pewno chcesz opuścić stronę?";
+    }
+  });
+}
+
+function setFormInitialState(form) {
+  form = $(form);
+  if (form.id) {
+    formInitialStates[form.id] = getFormData(form);
+  }
+}
+
+// isModalDirty
+//   if (isCancel) {
+//     var wasState = modalInitialStates[name];
+//     var nowState = getFormData($(`#${name}`));
+
+//     if (JSON.stringify(wasState) !== JSON.stringify(nowState)) {
+//       if (
+//         !confirm(
+//           "Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
+//         )
+//       ) {
+//         return;
+//       }
+//     }
+//   }
+
+// form can be piepquery or selector
+function setFormData(data, form, params = {}) {
+  form = $(form);
+  Object.entries(data).forEach(([name, value]) => {
+    var selector = `[name="${name}"]`;
+    if (params.type == "simple-list") {
+      selector = `[data-list-param="${name}"]`;
+    }
+    var e = form.find(selector);
+    if (!e) {
+      return;
+    }
+    setValue(e, value);
+  });
+  setFormInitialState(form);
+  resizeCallback();
+}
+
+function getFormData(form) {
+  form = $(form);
+  var data = {};
+
+  var excludeHidden = form.hasAttribute("data-exclude-hidden");
+  $(form)
+    .findAll(`[name]`)
+    .forEach((e) => {
+      if (excludeHidden && e.findParentByClassName("hidden")) return;
+      data[e.getAttribute("name")] = getValue(e);
+    });
+  return data;
 }

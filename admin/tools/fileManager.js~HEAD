@@ -41,6 +41,9 @@ window.fileManager = {
       url: "/admin/uploads_action",
       formData: formData,
       success(images) {
+        if (!images) {
+          return;
+        }
         try {
           var out = "";
           var counter = 0;
@@ -66,8 +69,6 @@ window.fileManager = {
                     ${display}
                     <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")'>Wybierz</div>
                     <div class="btn secondary" onclick='fileManager.delete("/${image.file_path}")'>Usuń</div>
-
-                    <i class='fas fa-info-circle' data-tooltip='Ścieżka: ${image.file_path}<hr>Nazwa: ${image.uploaded_file_name}'></i>
                 </div>
             `;
           }
@@ -76,6 +77,10 @@ window.fileManager = {
           if (callback) {
             callback();
           }
+<<<<<<< HEAD:admin/tools/fileManager.js
+=======
+          $("#imagePicker .gallery").setContent(out);
+>>>>>>> 54f01dc77d19af87394c972e595c968abaffde94:admin/tools/imagePicker.js
         } catch (e) {
           //console.log(e);
         }
@@ -127,7 +132,7 @@ registerModalContent(
             <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
                 <i class="fa fa-cloud-upload" style="font-size: 22px;vertical-align: middle;"></i>
                 <label style="display:flex;margin: 0 5px;flex-grow: 1;align-items: center;max-width:400px">
-                    <span style="margin-right:4px">Nazwa: <i class='fas fa-info-circle' data-tooltip='Stosowanie nazw pozwala na łatwiejsze wyszukiwanie zdjęć'></i></span>
+                    <span style="margin-right:4px">Tag: <i class='fas fa-info-circle' data-tooltip='Stosowanie tagów pozwala na łatwiejsze wyszukiwanie zdjęć'></i></span>
                     <input style="display:inline-block; width: auto;flex-grow: 1" type="text" name="tag" class="tag">
                 </label>
                 <label style="display:inline-block;margin: 0 5px">

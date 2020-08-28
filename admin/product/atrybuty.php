@@ -174,8 +174,7 @@
     });
 
     function editAttribute(btn = null, row_id = null, table = null) {
-        var formName = "editAttribute";
-        var form = $(`#${formName}`);
+        const form = $("#editAttribute");
 
         var data = {
             attribute_id: -1,
@@ -196,7 +195,7 @@
                 },
                 success: (res) => {
                     setFormData(res.results[0], form);
-                    setModalInitialState(formName);
+                    // setModalInitialState(formId);
                 }
             });
         } else {
@@ -208,16 +207,16 @@
         }
 
         setFormData(data, form);
-        showModal(formName, {
+        showModal(form.id, {
             source: btn
         });
     }
 
     function saveAttribute(remove = false) {
         var f = $("#editAttribute");
-        if (!remove && !validateForm({
-                form: f
-            })) return;
+        if (!remove && !validateForm(f)) {
+            return;
+        }
         var params = getFormData(f);
         if (remove) {
             params["remove"] = true;

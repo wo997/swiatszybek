@@ -224,7 +224,7 @@ function createTable(table) {
           params
         );
 
-        setModalInitialState(form);
+        // setModalInitialState(form);
       };
 
       showModal(form, { source: btn });

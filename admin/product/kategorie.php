@@ -151,10 +151,10 @@
         });
     });
 
-    function loadCategoryForm(form, data, isNew) {
+    function loadCategoryForm(formId, data, isNew) {
         if (!data.name) data.name = "";
 
-        var formElement = $(`#${form}`);
+        var formElement = $(`#${formId}`);
 
         if (isNew) {
             data = {
@@ -184,9 +184,9 @@
 
     function saveCategoryForm(remove = false) {
         var f = $("#editCategory");
-        if (!remove && !validateForm({
-                form: f
-            })) return;
+        if (!remove && !validateForm(f)) {
+            return;
+        }
         var params = getFormData(f);
         if (remove) {
             params["remove"] = true;

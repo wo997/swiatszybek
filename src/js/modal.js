@@ -38,14 +38,14 @@ function registerModal(e) {
 }
 
 var modalHideCallbacks = {};
-var modalInitialStates = {};
+// var modalInitialStates = {};
 
-function setModalInitialState(name) {
-  modalInitialStates[name] = getFormData($(`#${name}`));
-}
+// function setModalInitialState(name) {
+//   modalInitialStates[name] = getFormData($(`#${name}`));
+// }
 
 function showModal(name = null, params = {}) {
-  setModalInitialState(name);
+  // setModalInitialState(name);
   modalHideCallbacks[name] = params.hideCallback;
 
   var m = $("#modal-wrapper");
@@ -135,20 +135,21 @@ function hideModal(name, isCancel = false) {
   var m = $("#modal-wrapper");
 
   if (name) {
-    if (isCancel) {
-      var wasState = modalInitialStates[name];
-      var nowState = getFormData($(`#${name}`));
+    // isModalDirty
+    //   if (isCancel) {
+    //     var wasState = modalInitialStates[name];
+    //     var nowState = getFormData($(`#${name}`));
 
-      if (JSON.stringify(wasState) !== JSON.stringify(nowState)) {
-        if (
-          !confirm(
-            "Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
-          )
-        ) {
-          return;
-        }
-      }
-    }
+    //     if (JSON.stringify(wasState) !== JSON.stringify(nowState)) {
+    //       if (
+    //         !confirm(
+    //           "Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
+    //         )
+    //       ) {
+    //         return;
+    //       }
+    //     }
+    //   }
 
     var modal = $(`#${name}`);
     if (modal) {

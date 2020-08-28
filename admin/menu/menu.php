@@ -172,7 +172,7 @@
         });
     });
 
-    function loadCategoryForm(form, data, isNew) {
+    function loadCategoryForm(formId, data, isNew) {
         if (isNew) {
             data = {
                 ...data,
@@ -184,7 +184,7 @@
             }
         }
 
-        var formElement = $(`#${form}`);
+        var formElement = $(`#${formId}`);
 
         setFormData(data, formElement);
 
@@ -204,9 +204,9 @@
 
     function saveCategoryForm(remove = false) {
         var f = $("#editCategory");
-        if (!remove && !validateForm({
-                form: f
-            })) return;
+        if (!remove && !validateForm(f)) {
+            return;
+        }
 
         $$(".tab-menu-link .tab-content.hidden input").forEach(e => {
             e.value = "";

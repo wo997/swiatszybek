@@ -22,6 +22,6 @@
   padding: 6px;
 }
 
-#fileManager .gallery-item:not(:hover) .btn {
+/*#fileManager .gallery-item:not(:hover) .btn {
   visibility: hidden;
-}
+}*/
