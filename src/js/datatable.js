@@ -2,7 +2,7 @@
 function createDatatable(datatable) {
   // REQUIRED name, definition | renderRow, url, primary, db_table
   // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate
-  // sortable (requires primary, db_table),
+  // sortable (requires primary, db_table) IMPORTANT - not the same as column sortable
   // selectable: {data,output},
   // has_metadata: (boolean, enables outputting metadata from additional row inputs)
   // tree_view
@@ -13,6 +13,8 @@ function createDatatable(datatable) {
   datatable.pageCount = 0;
   datatable.request = null;
   datatable.results = [];
+  datatable.filters = [];
+  datatable.sort = null;
 
   if (!datatable.lang) datatable.lang = {};
   datatable.lang.subject = nonull(datatable.lang.subject, "wyników");
@@ -129,9 +131,53 @@ function createDatatable(datatable) {
     justTable += `${datatable.controlsRight}`;
   }
 
-  justTable += `</div>
-      <div class="table-wrapper">
-    </div>`;
+  var headersHTML = "<tr>";
+  var columnStyles = [];
+
+  if (datatable.selectable) {
+    headersHTML += `<th style="width:35px"></th>`;
+  }
+
+  var sumWidthPercentages = 0;
+  for (def of datatable.definition) {
+    if (def.width.indexOf("%") != -1) {
+      sumWidthPercentages += parseFloat(def.width);
+    }
+  }
+  var scalePercentages = 100 / sumWidthPercentages;
+  for (def of datatable.definition) {
+    if (def.width.indexOf("%") != -1) {
+      def.width = Math.round(parseFloat(def.width) * scalePercentages);
+    }
+  }
+
+  for (header of datatable.definition) {
+    var additional_html = "";
+    if (header.sortable) {
+      var sortBy = header.sortable === true ? header.column : header.sortable;
+      additional_html += ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')"></i>`;
+    }
+    if (header.searchable) {
+      additional_html += ` <i class="btn primary fas fa-search datatable-search-btn"></i>`;
+    }
+
+    var style = "";
+    if (header.width) style += `style='width:${header.width}'`;
+    if (header.className) style += `class='${header.className}'`;
+    headersHTML += `<th ${style}>` + header.title + additional_html + `</th>`;
+    columnStyles.push(style);
+  }
+  headersHTML += "</tr>";
+
+  datatable.headersHTML = headersHTML;
+  datatable.columnStyles = columnStyles;
+
+  justTable += `
+    <table class='datatable'>
+      <thead>${datatable.headersHTML}</thead>
+      <tbody></tbody>
+    </table>
+    `;
 
   if (datatable.selectable) {
     datatable.target.insertAdjacentHTML(
@@ -167,7 +213,7 @@ function createDatatable(datatable) {
   if (datatable.onCreate) datatable.onCreate();
 
   datatable.searchElement = datatable.target.find(".search-wrapper");
-  datatable.tableElement = datatable.target.find(".table-wrapper");
+  datatable.tableBodyElement = datatable.target.find("tbody");
   datatable.totalRowsElement = datatable.target.find(".total-rows");
   datatable.paginationElement = datatable.target.find(".pagination");
   datatable.selectionElement = datatable.target.find(".selectedRows");
@@ -299,25 +345,6 @@ function createDatatable(datatable) {
     ];
   }
 
-  var headersHTML = "<tr>";
-  var columnStyles = [];
-
-  if (datatable.selectable) {
-    headersHTML += `<th style="width:35px"></th>`;
-  }
-
-  for (header of datatable.definition) {
-    var style = "";
-    if (header.width) style += `style='width:${header.width}'`;
-    if (header.className) style += `class='${header.className}'`;
-    headersHTML += `<th ${style}>` + header.title + `</th>`;
-    columnStyles.push(style);
-  }
-  headersHTML += "</tr>";
-
-  datatable.headersHTML = headersHTML;
-  datatable.columnStyles = columnStyles;
-
   datatable.awaitSearch = function () {
     clearTimeout(datatable.awaitId);
     datatable.awaitId = setTimeout(function () {
@@ -399,6 +426,12 @@ function createDatatable(datatable) {
       }
     }
 
+    if (datatable.sort) {
+      params.sort = datatable.sort;
+    } else {
+      delete params.sort;
+    }
+
     var paramsJson = JSON.stringify(params);
     if (datatable.lastParamsJson && datatable.lastParamsJson != paramsJson) {
       datatable.currPage = 1;
@@ -437,7 +470,7 @@ function createDatatable(datatable) {
         datatable.results = res.results;
         var output = "";
 
-        output = `<table class='datatable'>${datatable.headersHTML}`;
+        output = "";
         for (i = 0; i < datatable.results.length; i++) {
           var row = datatable.results[i];
           var attr = "";
@@ -463,19 +496,23 @@ function createDatatable(datatable) {
             }
             for (x = 0; x < datatable.definition.length; x++) {
               var definition = datatable.definition[x];
-              var cell = definition.render(row, i, datatable);
+              var cell_html = "";
+              if (definition.render) {
+                cell_html = definition.render(row, i, datatable);
+              } else if (definition.column) {
+                cell_html = row[definition.column];
+              }
               if (
                 !definition.hasOwnProperty("escape") ||
                 definition.escape === true
               ) {
-                cell = escapeHTML(cell);
+                cell_html = escapeHTML(cell_html);
               }
-              output += `<td ${datatable.columnStyles[x]}>${cell}</td>`;
+              output += `<td ${datatable.columnStyles[x]}>${cell_html}</td>`;
             }
           }
           output += "</tr>";
         }
-        output += `</table>`;
 
         output += `<div class="no-results" style="${
           datatable.results.length > 0 ? "display:none;" : ""
@@ -501,7 +538,7 @@ function createDatatable(datatable) {
             { allow_my_page: true }
           );
           datatable.totalRowsElement.setContent(res.totalRows);
-          datatable.tableElement.setContent(output);
+          datatable.tableBodyElement.setContent(output);
         }
 
         datatable.target.findAll("td").forEach((e) => {
@@ -719,6 +756,7 @@ function renderPagination(
   });
 }
 
+// rearrange start
 var datatableRearrange = {};
 
 window.addEventListener("dragstart", (event) => {
@@ -824,6 +862,10 @@ window.addEventListener("dragover", (event) => {
   }
 });
 
+// rearrange end
+
+// published start
+
 function getPublishedDefinition() {
   return {
     title: "Widoczność",
@@ -884,4 +926,65 @@ function setPublish(obj, published) {
       }
     },
   });
+}
+
+// published end
+
+function datatableSort(btn, column) {
+  btn = $(btn);
+
+  var tableNode = btn.findParentByClassName("datatable-wrapper");
+  if (!tableNode) return;
+  var tablename = tableNode.getAttribute("data-datatable-name");
+  if (!tablename) return;
+  var datatable = window[tablename];
+  if (!datatable) return;
+
+  var was_sort = 0;
+  if (btn.classList.contains("fa-arrow-up")) {
+    was_sort = 1;
+  } else if (btn.classList.contains("fa-arrow-down")) {
+    was_sort = -1;
+  }
+
+  tableNode.findAll(".datatable-sort-btn").forEach((e) => {
+    e.classList.remove("fa-sort");
+    e.classList.remove("fa-arrow-up");
+    e.classList.remove("fa-arrow-down");
+
+    e.classList.remove("primary");
+    e.classList.remove("secondary");
+
+    if (e !== btn) {
+      e.classList.add("fa-sort");
+      e.classList.add("primary");
+    }
+  });
+
+  var sort = 0;
+  if (was_sort === 0) {
+    sort = -1;
+  } else if (was_sort === -1) {
+    sort = 1;
+  } else if (was_sort === 1) {
+    sort = 0;
+  }
+
+  if (sort === 0) {
+    btn.classList.add("fa-sort");
+    btn.classList.add("primary");
+  } else if (sort === 1) {
+    btn.classList.add("fa-arrow-up");
+    btn.classList.add("secondary");
+  } else if (sort === -1) {
+    btn.classList.add("fa-arrow-down");
+    btn.classList.add("secondary");
+  }
+
+  if (sort !== 0) {
+    datatable.sort = (sort === 1 ? "+" : "-") + column;
+  } else {
+    datatable.sort = null;
+  }
+  datatable.search();
 }

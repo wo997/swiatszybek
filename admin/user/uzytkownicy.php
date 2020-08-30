@@ -47,16 +47,16 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                 {
                     title: "Email",
                     width: "10%",
-                    render: (r) => {
-                        return r.email;
-                    }
+                    column: "email",
+                    sortable: true,
+                    searchable: true,
                 },
                 {
                     title: "Telefon",
                     width: "8%",
-                    render: (r) => {
-                        return r.telefon;
-                    }
+                    column: "telefon",
+                    sortable: true,
+                    searchable: true,
                 },
                 {
                     title: "Uprawnienia",
@@ -93,7 +93,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                     escape: false
                 },
             ],
-            controls: `
+            controlsRight: `
                 <div class='float-icon'>
                     <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>

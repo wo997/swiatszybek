@@ -54,7 +54,10 @@ function paginateData($data = null)
 
     optional params:
     - renderers
-    - raw (return array)
+    - raw (return array instead of json)
+
+    optional POSTS:
+    - sort
   */
 
     $rowCount = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 20;
@@ -87,6 +90,11 @@ function paginateData($data = null)
     $group = isset($data["group"]) ? ("GROUP BY " . $data["group"]) : "";
 
     $order = nonull($data, "order");
+
+    $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
+    if ($sort) {
+        $order = $sort . " " . (strpos($_POST['sort'], "+") !== false ? "ASC" : "DESC");
+    }
 
     $countQuery = "SELECT COUNT(1) FROM $from WHERE $where $group";
 

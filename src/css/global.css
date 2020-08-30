@@ -348,17 +348,17 @@ i.fa.fa-chevron-left {
   text-align: left;
   width: 100%;
 }
-@media only screen and (min-width: 800px) {
+/*@media only screen and (min-width: 800px) {
   .datatable {
     table-layout: fixed;
   }
-}
-.datatable th {
-  font-weight: 600;
-}
+}*/
 .datatable td:not(.auto-width),
 .datatable th:not(.auto-width) {
   padding: 6px 8px;
+  white-space: nowrap;
+}
+.datatable td:not(.auto-width) {
   max-width: 400px;
   overflow: hidden;
   white-space: nowrap;
@@ -373,11 +373,26 @@ i.fa.fa-chevron-left {
 .datatable th {
   background: #60d010;
   color: white;
+  font-weight: 600;
+  user-select: none;
 }
 
 .datatable-wrapper.noOrder td:nth-child(1) * {
   visibility: hidden;
   pointer-events: none;
+}
+
+.datatable-sort-btn {
+  width: 28px;
+  text-align: center;
+}
+.datatable-search-btn {
+  width: 30px;
+  text-align: center;
+}
+.datatable th:not(:first-child),
+.datatable td:not(:first-child) {
+  border-left: 1px solid #0001;
 }
 
 .table-search-toggle {
