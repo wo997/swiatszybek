@@ -2439,15 +2439,25 @@ ql-icon i span {
   border-radius: 8px;
   transition: all 0.2s;
 }
-.notification .fa-times-circle {
+.notification .fa-times {
   float: right;
   padding: 5px;
-  margin-right: -5px;
+  margin-right: -3px;
+  margin-left: 5px;
   cursor: pointer;
-  color: #888;
+  color: #222;
+  margin-top: 0px;
+  background: #0002;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
 }
-.notification .fa-times-circle:hover {
+.notification .fa-times:hover {
   color: #000;
+  background: #0004;
 }
 /* notification end */
 

@@ -10,7 +10,7 @@ function showNotification(message, params = {}) {
   notification.insertAdjacentHTML(
     "beforeend",
     `
-      <i class="fa fa-times-circle" onclick="dismissNotification(this.parent())"></i>
+      <i class="fa fa-times" onclick="dismissNotification(this.parent())"></i>
       ${message}
     `
   );
@@ -29,9 +29,18 @@ function showNotification(message, params = {}) {
     notification.style.opacity = "";
   });
 
-  setTimeout(() => {
-    //dismissNotification(notification);
-  }, 2000);
+  notification.addDismissTimeout = () => {
+    notification.timeout = setTimeout(() => {
+      dismissNotification(notification);
+    }, 2000);
+  };
+  notification.addDismissTimeout();
+  notification.addEventListener("mouseenter", () => {
+    clearTimeout(notification.timeout);
+  });
+  notification.addEventListener("mouseleave", () => {
+    notification.addDismissTimeout();
+  });
 }
 
 function dismissNotification(n) {
