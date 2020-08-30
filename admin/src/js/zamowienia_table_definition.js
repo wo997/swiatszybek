@@ -1,3 +1,5 @@
+/* js[admin] */
+
 var zamowienia_table_definition = [
   {
     title: "Nr zamówienia",

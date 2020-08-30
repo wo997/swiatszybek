@@ -10,7 +10,6 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
 <title>Użytkownicy</title>
 
-<script src="/admin/zamowienia_table_definition.js?a=<?= RELEASE ?>"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var tableName = "mytable";

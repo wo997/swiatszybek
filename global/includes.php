@@ -6,14 +6,11 @@
   <!-- <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="/src/vanilla.datepicker.css?v=1" type="text/css" media="screen" /> -->
 
-  <link href="/admin/shared.css?v=<?= RELEASE ?>" rel="stylesheet">
-  <script src="/admin/shared.js?v=<?= RELEASE ?>"></script>
+  <link href="/builds/admin.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+  <script src="/builds/admin.js?v=<?= JS_RELEASE ?>"></script>
 
   <script src="/src/jscolor.js?v=<?= RELEASE ?>"></script>
 <?php endif ?>
-
-<!--<link href="/src/shared.css?v=<?= RELEASE ?>" rel="stylesheet">-->
-<!--<script src="/src/shared.js?v=<?= RELEASE ?>"></script>-->
 
 <!-- styles / scripts to footer? -->
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>

@@ -1,7 +1,7 @@
 /* js[global] */
 
+// keep connected
 setInterval(() => {
-  // keep connected
   xhr({
     url: "/ping.php",
   });

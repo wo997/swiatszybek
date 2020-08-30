@@ -20,7 +20,7 @@ function createDatatable(datatable) {
   datatable.target = $("." + datatable.name);
 
   datatable.target.classList.add("datatable-wrapper");
-  datatable.target.setAttribute("data-table-name", datatable.name);
+  datatable.target.setAttribute("data-datatable-name", datatable.name);
 
   if (datatable.selectable) {
     datatable.selection = [];
@@ -130,7 +130,7 @@ function createDatatable(datatable) {
   }
 
   justTable += `</div>
-      <div class="datatable-wrapper">
+      <div class="table-wrapper">
     </div>`;
 
   if (datatable.selectable) {
@@ -167,7 +167,7 @@ function createDatatable(datatable) {
   if (datatable.onCreate) datatable.onCreate();
 
   datatable.searchElement = datatable.target.find(".search-wrapper");
-  datatable.tableElement = datatable.target.find(".datatable-wrapper");
+  datatable.tableElement = datatable.target.find(".table-wrapper");
   datatable.totalRowsElement = datatable.target.find(".total-rows");
   datatable.paginationElement = datatable.target.find(".pagination");
   datatable.selectionElement = datatable.target.find(".selectedRows");
@@ -852,12 +852,12 @@ function renderIsPublished(row) {
 
 function setPublish(obj, published) {
   obj = $(obj);
-  var tableElement = findParentByClassName(obj, ["datatable-wrapper"]);
+  var tableElement = obj.findParentByClassName("datatable-wrapper");
   if (!tableElement) return;
-  var tablename = tableElement.getAttribute("data-table-name");
+  var tablename = tableElement.getAttribute("data-datatable-name");
   if (!tablename) return;
-  var table = window[tablename];
-  if (!table || !table.primary || !table.db_table) return;
+  var datatable = window[tablename];
+  if (!datatable || !datatable.primary || !datatable.db_table) return;
   var rowElement = findParentByTagName(obj, "TR");
   if (!rowElement) return;
   var primary_id = rowElement.getAttribute("data-primary");
@@ -866,8 +866,8 @@ function setPublish(obj, published) {
   xhr({
     url: "/admin/set_publish",
     params: {
-      table: table.db_table,
-      primary: table.primary,
+      table: datatable.db_table,
+      primary: datatable.primary,
       primary_id: primary_id,
       published: published,
     },
@@ -878,9 +878,9 @@ function setPublish(obj, published) {
         }</b>`
       );
       if (obj.findParentByClassName("selectedRows")) {
-        table.createList();
+        datatable.createList();
       } else {
-        table.search();
+        datatable.search();
       }
     },
   });

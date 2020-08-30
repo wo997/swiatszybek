@@ -32,7 +32,6 @@ foreach ($statusList as $k => $status) {
   }
 </style>
 
-<script src="/admin/zamowienia_table_definition.js?a=<?= RELEASE ?>"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     useTool("loader");
