@@ -164,13 +164,12 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
             }
         }
 
-        setFormData(data, form);
         $("#editUser .passwordCheckbox").setValue(0);
+        setFormData(data, form);
+
         showModal(form.id, {
             source: src
         });
-
-
     }
 
 

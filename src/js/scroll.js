@@ -22,8 +22,9 @@ function scrollFromTo(parent, diff, time, t = 0) {
     time = 2;
   }
   var d = (4 * diff * (time / 2 - Math.abs(time / 2 - t))) / (time * time);
-  if (parent) parent.scrollTop += d;
-  else window.scrollBy(0, d);
+  if (parent) {
+    parent.scrollTop += d;
+  } else window.scrollBy(0, d);
 
   if (t < time)
     window.requestAnimationFrame(function () {

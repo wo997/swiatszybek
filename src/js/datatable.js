@@ -147,7 +147,7 @@ function createDatatable(datatable) {
   var scalePercentages = 100 / sumWidthPercentages;
   for (def of datatable.definition) {
     if (def.width.indexOf("%") != -1) {
-      def.width = Math.round(parseFloat(def.width) * scalePercentages);
+      def.width = Math.round(parseFloat(def.width) * scalePercentages) + "%";
     }
   }
 

@@ -46,8 +46,8 @@ function expand(elem, show = null, options = {}) {
       duration / (show ? 500 : 1000)
     }s, height ${duration / 1000}s, padding ${duration / 1000}s`;
     elem.style.height = (show ? h : 0) + "px";
-    elem.classList.toggle("hidden", !show);
     elem.scrollTop = 0;
+    elem.classList.toggle("hidden", !show); // think about it
 
     if (firstChild) {
       firstChild.style.transition = `margin-top ${

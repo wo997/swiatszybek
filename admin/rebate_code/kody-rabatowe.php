@@ -60,7 +60,7 @@
         },
         {
           title: "",
-          width: "10%",
+          width: "100px",
           render: (r) => {
             return `<a class='btn primary' href='/admin/kod_rabatowy/${r.kod_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
           },

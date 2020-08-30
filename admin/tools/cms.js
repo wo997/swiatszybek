@@ -329,10 +329,10 @@ var modules = {
 };
 
 function insertModule(moduleName) {
-  awaitingScroll = true;
-
   var module = modules[moduleName];
   if (!module) return;
+
+  awaitingScroll = true;
 
   cmsContainer.insertAdjacentHTML(
     "beforeend",
@@ -342,6 +342,7 @@ function insertModule(moduleName) {
             </div>`)
   );
   hideModalTopMost();
+  cmsHistoryPush();
 }
 
 var moduleList = "";
@@ -736,15 +737,15 @@ function cmsUpdate() {
       } catch {}
 
       if (module && module.render) {
-        e.find(".cms-block-content").innerHTML = `
-                        <div class="module-content">
-                            <div>
-                                ${module.icon} ${module.description}
-                                <p style="margin:10px 0;font-size:0.8em">${
-                                  module.render ? module.render(params, e) : ""
-                                }</p>
-                            </div>
-                        </div>`;
+        e.find(".cms-block-content").setContent(`
+            <div class="module-content">
+                <div>
+                    ${module.icon} ${module.description}
+                    <p style="margin:10px 0;font-size:0.8em">${
+                      module.render ? module.render(params, e) : ""
+                    }</p>
+                </div>
+            </div>`);
       }
     }
   });
@@ -1047,10 +1048,14 @@ var cmsObserver = new MutationObserver((mutations) => {
   for (let mutation of mutations) {
     if (mutation.addedNodes) {
       for (let node of mutation.addedNodes) {
-        if (node.classList && node.classList.contains("cms-block")) {
+        if (
+          node.classList &&
+          (node.classList.contains("cms-block") ||
+            node.classList.contains("cms-container"))
+        ) {
           node.classList.remove("activeBlock");
           if (awaitingScroll) {
-            scrollToElement(node, cmsContainer.parent());
+            scrollToElement(node, { parent: cmsContainer.parent() });
             var rect = node.getBoundingClientRect();
             var h = rect.height;
             var w = rect.width;

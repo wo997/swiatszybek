@@ -403,6 +403,28 @@ i.fa.fa-chevron-left {
   border: 1px solid #bbb;
 }
 
+.datatable th {
+  position: relative;
+}
+.datatable th:before {
+  position: absolute;
+  content: "";
+  width: calc(100% + 1px);
+  height: 1px;
+  background: #0006;
+  top: calc(100% + 0px);
+  left: -1px;
+}
+.datatable th:after {
+  position: absolute;
+  content: "";
+  width: calc(100% + 1px);
+  height: 1px;
+  background: #0002;
+  top: calc(100% + 1px);
+  left: -1px;
+}
+
 .datatable .fa-minus-circle,
 .datatable .fa-plus-circle {
   color: #555;
