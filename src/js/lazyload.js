@@ -50,7 +50,7 @@ function preloadImage(img, animate = true) {
       );
     }
 
-    var src = UPLOADS_PATH + target_size_name + "/" + img.name;
+    var src = "/" + UPLOADS_PATH + target_size_name + "/" + img.filename;
 
     if (WEBP_SUPPORT) {
       src += ".webp";
@@ -97,10 +97,10 @@ function getResponsiveImageData(src) {
 
   var dimensions = path_wo_ext.substring(last_floor_index + 1).split("x");
 
-  var name = path_wo_ext.replace(/\/uploads\/.{0,10}\//, ``);
+  var filename = path_wo_ext.replace(/\/uploads\/.{0,10}\//, ``);
 
   return {
-    name: name,
+    filename: filename,
     w: parseInt(dimensions[0]),
     h: parseInt(dimensions[1]),
   };
@@ -124,7 +124,7 @@ function setImageDimensions(img) {
 
   img.calculated_width = data.w;
   img.calculated_height = data.h;
-  img.name = data.name;
+  img.filename = data.filename;
 
   var real_height = Math.round((rect.width * data.h) / data.w);
   img.style.height = `${real_height}px`;
