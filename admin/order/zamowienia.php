@@ -69,7 +69,7 @@ foreach ($statusList as $k => $status) {
 
 
 
-    createTable({
+    createDatatable({
       name: tableName,
       url: "/admin/search_zamowienia",
       lang: {

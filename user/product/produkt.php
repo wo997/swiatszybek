@@ -646,7 +646,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     // komentarze start
 
     document.addEventListener("DOMContentLoaded", function() {
-      createTable({
+      createDatatable({
         name: "comments",
         lang: {
           subject: "komentarzy",

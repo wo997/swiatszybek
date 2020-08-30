@@ -114,7 +114,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
     registerTextCounters();
 
-    createTable({
+    createDatatable({
       name: "variants",
       url: "/admin/search_variant",
       db_table: "variant",

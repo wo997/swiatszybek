@@ -168,7 +168,7 @@ function dropIndexByName($table, $key_name)
  * @param array<array> $columns
  * @return void
  */
-function createTable($table, $columns)
+function createDatatable($table, $columns)
 {
     if (tableExists($table)) {
         addColumns($table, $columns); // possibly modify columns at this point, totally flexible

@@ -11,7 +11,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        createTable({
+        createDatatable({
             name: "mytable",
             url: "/admin/search_menu",
             primary: "category_id",
@@ -73,7 +73,7 @@
                 `
         });
 
-        createTable({
+        createDatatable({
             name: "strony",
             url: "/admin/search_strony",
             db_table: "cms",
@@ -131,7 +131,7 @@
             `
         });
 
-        createTable({
+        createDatatable({
             name: "produkty",
             url: "/admin/search_products",
             lang: {

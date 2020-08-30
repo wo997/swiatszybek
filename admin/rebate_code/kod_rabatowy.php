@@ -40,7 +40,7 @@ if (!json_decode($kod_data["product_list"])) {
 <script>
     window.addEventListener("DOMContentLoaded", function() {
         var tableName = "users";
-        createTable({
+        createDatatable({
             name: tableName,
             url: "/admin/search_uzytkownicy",
             lang: {
@@ -84,7 +84,7 @@ if (!json_decode($kod_data["product_list"])) {
         });
 
         var tableName = "product_list";
-        createTable({
+        createDatatable({
             name: tableName,
             url: "/admin/search_products",
             db_table: "products",

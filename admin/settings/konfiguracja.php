@@ -14,7 +14,7 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        createTable({
+        createDatatable({
             name: "config_table",
             url: "/admin/search_konfiguracja",
             lang: {
@@ -74,7 +74,7 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
                 `
         });
 
-        // TODO instead of createtable
+        // TODO instead of createDatatable
         // createSimpleList();
     });
 </script>

@@ -19,7 +19,7 @@
         });
         $(`[name="data_type"]`).insertAdjacentHTML("afterbegin", output);
 
-        createTable({
+        createDatatable({
             name: "mytable",
             url: "/admin/search_product_attributes",
             lang: {
@@ -131,7 +131,7 @@
             title: "Wszystkie kolory"
         });
 
-        createTable({
+        createDatatable({
             name: "kategorie",
             url: "/admin/search_product_categories",
             lang: {

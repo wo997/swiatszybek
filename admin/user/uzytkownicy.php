@@ -14,7 +14,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var tableName = "mytable";
-        createTable({
+        createDatatable({
             name: tableName,
             url: "/admin/search_uzytkownicy",
             lang: {
@@ -107,7 +107,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
     document.addEventListener("DOMContentLoaded", function() {
 
         var tableName = "zamowieniatable";
-        createTable({
+        createDatatable({
             name: tableName,
             url: "/admin/search_zamowienia",
             lang: {

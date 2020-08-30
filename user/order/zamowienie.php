@@ -179,7 +179,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
       document.addEventListener("DOMContentLoaded", function() {
         updateZysk();
-        createTable({
+        createDatatable({
           name: "historytable",
           url: "/admin/search_activity_log",
           lang: {

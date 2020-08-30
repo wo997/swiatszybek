@@ -13,7 +13,7 @@
     useTool("cms");
 
     document.addEventListener("DOMContentLoaded", function() {
-        createTable({
+        createDatatable({
             name: "mytable",
             url: "/admin/search_product_categories",
             lang: {
@@ -94,7 +94,7 @@
                 `
         });
 
-        createTable({
+        createDatatable({
             name: "atrybuty",
             url: "/admin/search_product_attributes",
             lang: {

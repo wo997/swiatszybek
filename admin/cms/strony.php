@@ -8,7 +8,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var tableName = "mytable";
-        createTable({
+        createDatatable({
             name: tableName,
             url: "/admin/search_strony",
             db_table: "cms",

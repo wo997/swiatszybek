@@ -318,7 +318,7 @@ i.fa.fa-chevron-left {
 /* flexbar */
 
 /* datatable */
-.table-wrapper {
+.datatable-wrapper {
   overflow-x: auto;
 }
 .datatable-wrapper .flexbar {

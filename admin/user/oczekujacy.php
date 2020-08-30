@@ -9,7 +9,7 @@
   document.addEventListener("DOMContentLoaded", function() {
     var tableName = "mytable"; //notification_id, CONCAT(imie, ' ', nazwisko) as user, n.email, DATE_FORMAT(requested, '%d-%m-%Y %H:%i') as requested, sent, quantity, CONCAT(i.title,' ',v.name) as product
 
-    createTable({
+    createDatatable({
       name: tableName,
       url: "/admin/search_oczekujacy",
       lang: {

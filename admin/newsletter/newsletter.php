@@ -7,7 +7,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        createTable({
+        createDatatable({
             name: "mytable",
             url: "/admin/search_newsletter",
             width: 800,

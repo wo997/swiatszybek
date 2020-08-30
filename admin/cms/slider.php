@@ -17,7 +17,7 @@
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-        createTable({
+        createDatatable({
             name: "mytable",
             url: "/admin/search_slider",
             primary: "slide_id",

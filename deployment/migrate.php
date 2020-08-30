@@ -65,7 +65,7 @@ addColumns("cms", [
   ["name" => "seo_title", "type" => "TINYTEXT"]
 ]);
 
-createTable("product_attribute_values", [
+createDatatable("product_attribute_values", [
   ["name" => "product_id", "type" => "INT"],
   ["name" => "attribute_id", "type" => "INT"],
   ["name" => "numerical_value", "type" => "INT", "null" => true],
@@ -73,7 +73,7 @@ createTable("product_attribute_values", [
   ["name" => "date_value", "type" => "DATE", "null" => true],
 ]);
 
-createTable("link_product_attribute_value",  [
+createDatatable("link_product_attribute_value",  [
   ["name" => "product_id", "type" => "INT"],
   ["name" => "value_id", "type" => "INT"]
 ]);
@@ -99,7 +99,7 @@ addColumns("link_category_attribute", [
   ["name" => "main_filter", "type" => "TINYINT(1)"],
 ]);
 
-createTable(
+createDatatable(
   "uploads",
   [
     ["name" => "file_id", "type" => "INT", "increment" => true],

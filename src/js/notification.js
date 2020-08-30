@@ -30,7 +30,7 @@ function showNotification(message, params = {}) {
   });
 
   setTimeout(() => {
-    dismissNotification(notification);
+    //dismissNotification(notification);
   }, 2000);
 }
 
