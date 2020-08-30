@@ -230,7 +230,7 @@ function printBasketTable()
             : "<button type='button' style='visibility:hidden'>+</button>";
 
         $res .= "<tr data-variant_id='" . $v["variant_id"] . "'>
-                <td><img src='/uploads/sm" . getPlainFileName($v["zdjecie"]) . "' style='max-width:130px;display:block;margin:auto'></td>
+                <td><img src='/uploads/sm" . getUploadedFileName($v["zdjecie"]) . "' style='max-width:130px;display:block;margin:auto'></td>
                 <td><a class='linkable' href='" . getProductLink($v["product_id"], $v["link"]) . "'>" . $v["title"] . " " . $v["name"] . "</a></td>
                 <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</td>
                 <td class='oneline' data-stock='$stock'>$remove $quantity szt. $add</td>

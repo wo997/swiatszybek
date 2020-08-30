@@ -76,8 +76,8 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
   include "global/includes_for_cms_page.php";
   ?>
 
-  <meta name="image" content="/uploads/sm<?= getPlainFileName($product_data["cache_thumbnail"]) ?>" />
-  <meta property="og:image" content="/uploads/sm<?= getPlainFileName($product_data["cache_thumbnail"]) ?>">
+  <meta name="image" content="/uploads/sm<?= getUploadedFileName($product_data["cache_thumbnail"]) ?>" />
+  <meta property="og:image" content="/uploads/sm<?= getUploadedFileName($product_data["cache_thumbnail"]) ?>">
   <!--<meta property="og:image:type" content="image/png">-->
   <meta name="description" content="<?= $seo_description ?>">
   <meta property="og:title" content="<?= $seo_title ?> - <?= config('main_email_sender') ?>" />

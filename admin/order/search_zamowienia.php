@@ -29,7 +29,7 @@ if (isset($_POST['dateTo'])) {
 }
 $where .= $dateLimit;
 
-echo getTableData([
+echo paginateData([
   "select" => "zamowienie_id, imie, nazwisko, link, dostawa, koszt, status, DATE_FORMAT(zlozono, '%d-%m-%Y %H:%i') as zlozono, DATE_FORMAT(wyslano, '%d-%m-%Y %H:%i') as wyslano, firma, user_id, cache_basket",
   "from" => "zamowienia z",
   "where" => $where,

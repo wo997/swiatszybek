@@ -211,8 +211,8 @@ window.quillEditor = {
     var target = quillEditor.source;
     var content = $("#quillEditor .ql-editor").innerHTML;
     target.innerHTML = content;
-    var src = document.getElementById(target.id + "-src");
-    if (src) src.value = content;
+    /*var src = document.getElementById(target.id + "-src"); // deprecated?
+    if (src) src.value = content;*/
     if (quillEditor.callback) {
       quillEditor.callback();
     }
@@ -432,6 +432,26 @@ window.quillEditor = {
     $$(".quill-cloud").forEach((e) => {
       e.style.display = "";
     });
+  },
+
+  chooseVideoFromGallery: (btn) => {
+    fileManager.open(null, {
+      callback: (src) => {
+        quillEditor.insertVideo(src);
+        hideModal("putVideo");
+      },
+      source: btn,
+      asset_types: ["video"],
+    });
+  },
+
+  putVideoBySource: (input, pseudo_form = null) => {
+    if (!validateForm(pseudo_form ? pseudo_form : "#putVideo")) {
+      return false;
+    }
+    quillEditor.insertVideo(input.value);
+    input.value = "";
+    hideModal("putVideo");
   },
 
   /*selectElementContents: (el) => {
@@ -801,6 +821,7 @@ window.quillEditor = {
         fileManager.open(null, {
           callback: quillEditor.quillImageCallback,
           source: this,
+          asset_types: ["image"],
         });
       };
     }, 100);
@@ -825,10 +846,10 @@ window.quillEditor = {
       "beforeend",
       `
             <span class="ql-formats">
-                <button class="ql-table" onclick="table.insertTable(1, 2);" type="button" style="white-space: nowrap;width: auto;"><i class="fas fa-table"></i></button>
+                <button class="ql-table" data-tooltip="Wstaw tabelkę" onclick="table.insertTable(1, 2);" style="white-space: nowrap;width: auto;"><i class="fas fa-table"></i></button>
             </span>
             <span class="ql-formats tooltip-wrapper tooltip-icons" onclick="this.classList.toggle('active')">
-                <i class="fas fa-icons"></i>
+                <i class="fas fa-icons" data-tooltip="Wstaw ikonkę" style="margin-top: 3px;"></i>
                 <div class="tooltip-content" style='margin-top: 3px;'>
                     ${fa}
                 </div>
@@ -980,7 +1001,19 @@ window.quillEditor = {
       }
 
       var x = $("#quillEditor .ql-clean:not([data-tooltip])");
-      if (x) x.setAttribute("data-tooltip", "Usuń formatowanie");
+      if (x) {
+        x.setAttribute("data-tooltip", "Usuń formatowanie");
+      }
+
+      var x = $("#quillEditor .ql-image:not([data-tooltip])");
+      if (x) {
+        x.setAttribute("data-tooltip", "Wstaw zdjęcie");
+      }
+
+      var x = $("#quillEditor .ql-video:not([data-tooltip])");
+      if (x) {
+        x.setAttribute("data-tooltip", "Wstaw film");
+      }
 
       scaleVideos();
 
@@ -1188,7 +1221,7 @@ window.quillEditor = {
 registerModalContent(
   `
     <div id="quillEditor" data-expand="true">
-        <div class="stretch-vertical">
+        <div class="modal-body stretch-vertical">
             <div class="custom-toolbar">
                 <span class="title">Edytor bloku</span>
                 <button class="btn secondary toggle_size" onclick="quillEditor.toggleQuillSize();" data-tooltip="Ustaw na szerokość bloku / cały ekran"> <i class="fas fa-expand"></i> </button>
@@ -1237,8 +1270,8 @@ registerModalContent(
                         <div class="showhover" style="display:inline-block">
                             <div id="my-link-style" class="btn primary">Styl <i class="fas fa-chevron-down"></i></div>
                             <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <button type="button" onclick="quillEditor.modifyNode('mylinkstyle','')"> Zwykły </button>
-                                <button type="button" onclick="quillEditor.modifyNode('mylinkstyle','przycisk')"> Przycisk </button>
+                                <button onclick="quillEditor.modifyNode('mylinkstyle','')"> Zwykły </button>
+                                <button onclick="quillEditor.modifyNode('mylinkstyle','przycisk')"> Przycisk </button>
                             </div>
                         </div>
                     </div>
@@ -1255,17 +1288,33 @@ registerModalContent(
 
 registerModalContent(`
     <div id="putVideo" class="form-spacing">
-        <div style="width: 100%;max-width: 300px;">
+        <div class="modal-body" style="width: 100%;max-width: 300px;">
             <div class="custom-toolbar">
                 <span class="title">Wstawianie filmu</span>
                 <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
             </div>
-            <div style="padding:10px;width:100%;max-width:300px;margin-top: -15px;">
-              <span class="field-title">Wklej źródło filmu <i class='fas fa-info-circle' data-tooltip='Z Youtube lub serwera'></i></span>
-              <div style="display:flex">
-                  <input type="text" id="videoUrl" class="field">
-                  <button class="btn primary" onclick="quillEditor.insertVideo($('#videoUrl').value);hideParentModal(this);$('#videoUrl').value=''">Wstaw</button>
+            <div>
+              <div class="field-wrapper">
+                <span class="field-title">Link do filmu Youtube</span>
+                <div class="glue-children">
+                    <input type="text" class="field" data-validate="youtube-video">
+                    <button class="btn primary" onclick="quillEditor.putVideoBySource($(this).prev(), $(this).parent())">Wstaw</button>
+                </div>
               </div>
+
+              <div class="field-wrapper">
+                <span class="field-title">Link do dowolnego filmu</span>
+                <div class="glue-children">
+                    <input type="text" class="field" data-validate="">
+                    <button class="btn primary" onclick="quillEditor.putVideoBySource($(this).prev(), $(this).parent())">Wstaw</button>
+                </div>
+              </div>
+
+              <span class="field-title">
+                Wybierz z galerii filmów
+                <button class="btn primary" onclick="quillEditor.chooseVideoFromGallery(this);">Wybierz</button>
+              </span>
+              
             </div>
         </div>
     </div>

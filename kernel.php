@@ -41,7 +41,7 @@ if (WEBP_SUPPORT) {
 include_once "helpers/general.php";
 
 // global variables
-@include "builds/config.php";
+@require_once "builds/config.php";
 function config($var, $default = "")
 {
   global $config;
@@ -49,7 +49,7 @@ function config($var, $default = "")
 }
 
 $secrets = [];
-@include "secrets.php";
+@require_once "secrets.php";
 function secret($var, $default = "")
 {
   global $secrets;
@@ -66,23 +66,23 @@ $currency = "PLN"; // used by p24
 // use db
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 date_default_timezone_set("Europe/Warsaw");
-require "helpers/db/connect.php";
+require_once "helpers/db/connect.php";
 
 // define app scope
 $app = [];
 
 // use annotations
-$link_route_path = @include BUILDS_PATH . "link_route_path.php";
+$link_route_path = @require_once BUILDS_PATH . "link_route_path.php";
 if (!$link_route_path) {
   $link_route_path = [];
 }
 
-$link_module_path = @include BUILDS_PATH . "link_module_path.php";
+$link_module_path = @require_once BUILDS_PATH . "link_module_path.php";
 if (!$link_module_path) {
   $link_module_path = [];
 }
 
-$link_event_paths = @include BUILDS_PATH . "link_event_paths.php";
+$link_event_paths = @require_once BUILDS_PATH . "link_event_paths.php";
 if (!$link_event_paths) {
   $link_event_paths = [];
 }

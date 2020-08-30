@@ -15,7 +15,8 @@ $image_minified_formats = [
     "webp"
 ];
 
-function getPlainFileName($file_path)
+// also global.js
+function getUploadedFileName($file_path)
 {
     return substr($file_path, strlen(UPLOADS_PLAIN_PATH));
 }
@@ -167,6 +168,29 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_im
     ];
 }
 
+function deleteAssetByPath($path)
+{
+    global $image_default_dimensions, $image_minified_formats;
+
+    $image_file_path = ltrim($path, "/");
+    $file_name = getFilenameWithoutExtension($image_file_path);
+    $asset_type = fetchValue("SELECT asset_type FROM uploads WHERE file_path = ?", [$image_file_path]);
+
+    @unlink($image_file_path);
+
+    if ($asset_type == "image") {
+        foreach ($image_default_dimensions as $size_name => $area) {
+            foreach ($image_minified_formats as $format) {
+                $file_path = UPLOADS_PATH . $size_name . "/" . $file_name . "." . $format;
+                if (file_exists($file_path)) {
+                    @unlink($file_path);
+                }
+            }
+        }
+    }
+
+    query("DELETE FROM uploads WHERE file_path = ?", [$image_file_path]);
+}
 
 function mime2ext($mime)
 {

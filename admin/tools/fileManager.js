@@ -1,39 +1,59 @@
 window.fileManager = {
-  firstOpen: true, // preload or not?
   target: null,
   callback: null,
-  defaultTag: "",
+  defaultName: "",
+  asset_types: [],
+  size: null,
   open: (target = null, params = {}) => {
     fileManager.target = target;
     fileManager.callback = params.callback;
+    fileManager.size = params.size;
 
-    if (fileManager.firstOpen) {
-      fileManager.search();
-      fileManager.firstOpen = false;
+    fileManager.setName(null, true);
+
+    if (!params.asset_types) {
+      params.asset_types = ["image", "video"];
     }
-    fileManager.setTag(null, true);
+    fileManager.asset_types = params.asset_types;
+
+    var can_use_external_image_btn = false;
+    if (params.asset_types.length === 1 && params.asset_types[0] === "image") {
+      can_use_external_image_btn = true;
+    }
+    $(".use_external_image_btn").style.display = can_use_external_image_btn
+      ? ""
+      : "none";
+
     showModal("fileManager", { source: nonull(params.source, target) });
+
+    fileManager.search();
   },
   choose: (src) => {
-    hideModalTopMost();
+    if (fileManager.size) {
+      //src
+      src = "/" + UPLOADS_PATH + fileManager.size + getUploadedFileName(src);
+    }
+
     if (fileManager.target) {
       setValue(fileManager.target, src);
     }
     if (fileManager.callback) {
       fileManager.callback(src);
     }
+
+    hideModal("fileManager");
   },
-  setDefaultTag: (tag, replaceEmptyOnly = true) => {
-    fileManager.defaultTag = tag;
-    fileManager.setTag(fileManager.defaultTag, replaceEmptyOnly);
+  setDefaultName: (name, replaceEmptyOnly = true) => {
+    fileManager.defaultName = name;
+    fileManager.setName(fileManager.defaultName, replaceEmptyOnly);
   },
-  setTag: (tag = null, replaceEmptyOnly = false) => {
-    if (tag === null) {
-      tag = fileManager.defaultTag;
+  setName: (name = null, replaceEmptyOnly = false) => {
+    if (name === null) {
+      name = fileManager.defaultName;
     }
-    var tagElement = $("#fileManager .tag");
-    if (!replaceEmptyOnly || tagElement.value == "") {
-      tagElement.value = tag;
+    var nameElement = $("#uploadFiles .name");
+    if (!replaceEmptyOnly || nameElement.value == "") {
+      nameElement.value = name;
     }
   },
   fileAction: (formData, callback = null) => {
@@ -71,7 +91,7 @@ window.fileManager = {
                 </div>
             `;
           }
-          $("#fileManager .gallery").innerHTML = out;
+          $("#fileManager .gallery").setContent(out);
 
           if (callback) {
             callback();
@@ -85,12 +105,12 @@ window.fileManager = {
   search: () => {
     var formData = new FormData();
     formData.append("search", $("#search").value);
+    formData.append("asset_types", fileManager.asset_types.join(","));
     fileManager.fileAction(formData);
   },
   delete: (src) => {
-    if (confirm("Czy aby na pewno chcesz usunąć zdjęcie?")) {
+    if (confirm("Czy aby na pewno chcesz usunąć ten plik?")) {
       var formData = new FormData();
-      //formData.append("search", $("#search").value);
       formData.append("delete_path", src);
       fileManager.fileAction(formData, () => {
         fileManager.search(src);
@@ -98,10 +118,10 @@ window.fileManager = {
     }
   },
   loaded: () => {
-    $("#fileManager").addEventListener("submit", (e) => {
+    $("#uploadFiles form").addEventListener("submit", (e) => {
       e.preventDefault();
 
-      var input = $("#fileManager [type=file]");
+      var input = $("#uploadFiles [type=file]");
       var files = input.files;
       var formData = new FormData();
 
@@ -112,36 +132,43 @@ window.fileManager = {
       }
       input.value = "";
 
-      formData.append("tag", $("#fileManager .tag").value);
+      formData.append("name", $("#uploadFiles .name").value);
       formData.append("search", $("#search").value);
 
       fileManager.fileAction(formData);
+
+      hideModal("uploadFiles");
     });
+  },
+  addExternalImage: (btn) => {
+    if (!validateForm("#externalImage")) {
+      return;
+    }
+    hideParentModal(btn);
+
+    fileManager.choose($("#externalImage .external_link").getValue());
   },
 };
 
 registerModalContent(
   `
-    <form id="fileManager" data-expand="true">
-        <div class="stretch-vertical">
+    <div id="fileManager" data-expand="true">
+        <div class="modal-body stretch-vertical">
             <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
-                <i class="fa fa-cloud-upload" style="font-size: 22px;vertical-align: middle;"></i>
-                <label style="display:flex;margin: 0 5px;flex-grow: 1;align-items: center;max-width:400px">
-                    <span style="margin-right:4px">Nazwa: <i class='fas fa-info-circle' data-tooltip='Stosowanie nazw pozwala na łatwiejsze wyszukiwanie zdjęć'></i></span>
-                    <input style="display:inline-block; width: auto;flex-grow: 1" type="text" name="tag" class="tag">
-                </label>
-                <label style="display:inline-block;margin: 0 5px">
-                    <input id="files" type="file" name="files[]" multiple onchange="$('#submitbtn').click()" style="display:none">
-                    <input type="submit" id="submitbtn" value="Upload File" name="submit" style="display:none">
-                    <div class="btn primary">Wyślij zdjęcie <i class="fas fa-cloud-upload-alt"></i></div>
-                </label>
+                <span class="title">
+                  Menedżer plików
 
-                <label style="display:inline-block;margin: 0 25px">
-                    <span>Filtruj galerię: </span>
-                    <input style="display:inline-block; width: auto;" type="text" name="search" id="search" oninput="delay('search',500,fileManager)">
-                </label>
+                  <div class='float-icon inline' style='margin:0 4px'>
+                    <input class="field inline small" type="text" name="search" id="search" oninput="delay('search',500,fileManager)" placeholder="Wyszukaj...">
+                    <i class="fas fa-search" style='color:black'></i>
+                  </div>
 
-                <button type="button" class="btn primary" onclick="hideParentModal(this)" style="margin-left: auto">Zamknij <i class="fa fa-times"></i></button>
+                  <button class="btn primary" onclick="showModal('uploadFiles')">Prześlij nowe <i class="fas fa-plus"></i></button>
+
+                  <button class="btn secondary use_external_image_btn" onclick="showModal('externalImage')">Użyj zdjęcia zewnętrznego <i class="fas fa-external-link-alt"></i></button>
+                </span>
+                
+                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
             </div>
 
             <div class="gallery">
@@ -149,7 +176,61 @@ registerModalContent(
             </div>
         </div>
         <link href="/admin/tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
-    </form>
+    </div>
+    `
+);
+
+registerModalContent(
+  `
+    <div id="externalImage">
+        <div class="modal-body">
+            <div class="custom-toolbar">
+                <span class="title">
+                  Wybór zdjęcia zewnętrznego
+                </span>
+                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+            </div>
+
+            <div class="field-wrapper">
+              <div class="field-title">Wstaw link do zdjęcia zewnętrznego</div>
+              <div class="glue-children">
+                <input type="text" data-validate class="external_link field">
+                <button class="btn primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
+              </div>
+            </div>
+
+            <div style="margin-top:8px">
+              <i class="fas fa-info-circle"></i> Wstawienie zdjęcia zewnętrznego wiąże się z:<br>
+              - możliwością jego utraty<br>
+              - brakiem optymalizacji
+            </div>
+        </div>
+    </div>
+    `
+);
+
+registerModalContent(
+  `
+    <div id="uploadFiles">
+        <div class="modal-body">
+            <div class="custom-toolbar">
+                <span class="title">
+                  Przesyłanie plików
+                </span>
+                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+            </div>
+
+            <form>
+              <div class="field-title">Nazwa zdjęcia</div>
+              <input type="text" class="name field">
+              <label style="text-align:right;display: block;margin-top: 10px;">
+                  <input type="file" name="files[]" multiple onchange="$(this).next().click()" style="display:none">
+                  <input type="submit" name="submit" style="display:none">
+                  <div class="btn primary">Prześlij <i class="fas fa-cloud-upload-alt"></i></div>
+              </label>
+            </form>
+        </div>
+    </div>
     `,
   () => {
     fileManager.loaded();

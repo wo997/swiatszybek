@@ -13,7 +13,7 @@
     useTool("cms");
 
     window.addEventListener("load", () => {
-        fileManager.setDefaultTag("slider");
+        fileManager.setDefaultName("slider");
     });
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -32,7 +32,7 @@
                     title: "Wersja desktopowa",
                     width: "40%",
                     render: (r) => {
-                        return `${r.content_desktop}`;
+                        return `<div class='cms'>${r.content_desktop}</div>`;
                     },
                     escape: false
                 },
@@ -40,7 +40,7 @@
                     title: "Wersja mobilna",
                     width: "40%",
                     render: (r) => {
-                        return `${r.content_mobile}`;
+                        return `<div class='cms'>${r.content_mobile}</div>`;
                     },
                     escape: false
                 },
@@ -56,7 +56,7 @@
             ],
             controls: `
                 <div class='float-icon'>
-                    <input type="text" placeholder="Szukaj..." data-param="search">
+                    <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>
                 <div class="btn primary" onclick="newSlide(this)"><span>Nowy slajd</span> <i class="fa fa-plus"></i></div>
@@ -120,7 +120,7 @@
 <div class="mytable"></div>
 
 <div id="slideEdit" data-modal data-expand>
-    <div class="stretch-vertical">
+    <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja slajdu</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
@@ -133,10 +133,10 @@
                 <option value="0">Ukryty</option>
             </select>
 
-            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button type="button" onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
             <div class="cms preview_html" name="content_desktop" data-type="html"></div>
 
-            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button type="button" onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
             <div class="cms preview_html" name="content_mobile" data-type="html"></div>
 
             <input type="hidden" name="slide_id">

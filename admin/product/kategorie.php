@@ -69,7 +69,7 @@
                     title: "Ikonka",
                     width: "60px",
                     render: (r) => {
-                        return `<img src="/uploads/sm/${r.icon}" style="max-width: 100%;max-height: 32px;display: block;">`;
+                        return `<img src="/uploads/sm${getUploadedFileName(r.icon)}" style="max-width: 100%;max-height: 32px;display: block;">`;
                     },
                     escape: false
                 },
@@ -88,7 +88,7 @@
             ],
             controls: `
                     <div class='float-icon'>
-                        <input type="text" placeholder="Filtruj..." data-param="search">
+                        <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
                 `
@@ -144,7 +144,7 @@
             ],
             controlsRight: `
                     <div class='float-icon'>
-                        <input type="text" placeholder="Filtruj..." data-param="search">
+                        <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
                 `
@@ -220,13 +220,13 @@
 <div class="mytable"></div>
 
 <div id="editCategory" data-modal data-expand>
-    <div class="stretch-vertical">
+    <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja kategorii</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div style="padding:10px" class="stretch-vertical">
+        <div style="padding:10px" class="modal-body stretch-vertical">
             <div>
                 <div class="field-title">Nazwa kategorii</div>
                 <input type="text" name="title" data-validate autocomplete="off" class="field">
@@ -245,7 +245,7 @@
 
                 <div class="field-title">
                     Ikonka
-                    <button type="button" class="btn primary" onclick="fileManager.open(this.next())">Wybierz</button>
+                    <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types:["image"], size: "sm"})'>Wybierz</button>
                     <img name="icon" data-type="src" style="max-width:100px;max-height:100px" />
                 </div>
 
@@ -258,7 +258,7 @@
                 <div class="field-title">Opis górny <button class="btn primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>
                 <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
 
-                <div class="field-title">Zawartość (dół) <button class="btn primary" type="button" onclick="editCMS($('#editCategory .content'));">Edytuj </button></div>
+                <div class="field-title">Zawartość (dół) <button class="btn primary" onclick="editCMS($('#editCategory .content'));">Edytuj </button></div>
                 <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
                 <br>

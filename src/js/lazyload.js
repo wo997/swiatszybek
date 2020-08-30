@@ -40,7 +40,6 @@ function preloadImage(img, animate = true) {
           if (size_name == "df") {
             return;
           }
-          console.log(image_dimension, size_dimension / pixelDensityFactor);
           if (
             image_dimension < size_dimension / pixelDensityFactor &&
             size_dimension < natural_image_dimension
@@ -51,10 +50,7 @@ function preloadImage(img, animate = true) {
       );
     }
 
-    var src = img.setSrcBase.replace(
-      /\/uploads\/.{0,10}\//,
-      `/uploads/${target_size_name}/`
-    );
+    var src = UPLOADS_PATH + target_size_name + "/" + img.name;
 
     if (WEBP_SUPPORT) {
       src += ".webp";
@@ -90,37 +86,48 @@ function showImage(img) {
   }
 }
 
+function getResponsiveImageData(src) {
+  var last_dot_index = src.lastIndexOf(".");
+  var path_wo_ext = src.substring(0, last_dot_index);
+
+  var last_floor_index = path_wo_ext.lastIndexOf("_");
+  if (last_floor_index === -1) {
+    return null;
+  }
+
+  var dimensions = path_wo_ext.substring(last_floor_index + 1).split("x");
+
+  var name = path_wo_ext.replace(/\/uploads\/.{0,10}\//, ``);
+
+  return {
+    name: name,
+    w: parseInt(dimensions[0]),
+    h: parseInt(dimensions[1]),
+  };
+}
+
 function setImageDimensions(img) {
   var src = img.getAttribute("data-src");
-  var last = src.lastIndexOf(".");
-  var new_src = src.substring(0, last);
-
+  var data = getResponsiveImageData(src);
   var rect = img.getBoundingClientRect();
 
-  var index = new_src.lastIndexOf("_");
-  if (index === -1) {
+  if (!data) {
+    img.style.animation = "fadeIn 0.45s";
     img.setAttribute("src", src);
     img.removeAttribute("data-src");
     return rect;
   }
-
-  var dimensions = new_src.substring(index + 1).split("x");
-
-  w = parseInt(dimensions[0]);
-  h = parseInt(dimensions[1]);
-
   if (!rect.width) {
-    img.style.width = `${w}px`;
+    img.style.width = `${data.w}px`;
     rect = img.getBoundingClientRect();
   }
 
-  img.calculated_width = w;
-  img.calculated_height = h;
-  img.setSrcBase = new_src;
+  img.calculated_width = data.w;
+  img.calculated_height = data.h;
+  img.name = data.name;
 
-  var real_height = Math.round((rect.width * parseInt(h)) / parseInt(w));
+  var real_height = Math.round((rect.width * data.h) / data.w);
   img.style.height = `${real_height}px`;
-  img.classList.add("remove_height");
 
   return rect;
 }

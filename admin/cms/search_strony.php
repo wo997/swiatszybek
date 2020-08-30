@@ -9,7 +9,7 @@ if ($status != "") {
     $where .= " AND published";
 }
 
-echo getTableData([
+echo paginateData([
   "select" => "cms_id, link, title, seo_title, seo_description, published",
   "from" => "cms c",
   "where" => $where,

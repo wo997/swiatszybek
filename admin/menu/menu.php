@@ -67,7 +67,7 @@
             ],
             controls: `
                     <div class='float-icon'>
-                        <input type="text" placeholder="Filtruj..." data-param="search">
+                        <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
                 `
@@ -125,7 +125,7 @@
             ],
             controlsRight: `
                 <div class='float-icon'>
-                    <input type="text" placeholder="Szukaj..." data-param="search">
+                    <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>
             `
@@ -165,7 +165,7 @@
             ],
             controlsRight: `
                 <div class='float-icon'>
-                    <input type="text" placeholder="Szukaj..." data-param="search">
+                    <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>
             `
@@ -241,13 +241,13 @@
 <div class="mytable"></div>
 
 <div id="editCategory" data-modal data-expand>
-    <div class="stretch-vertical">
+    <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja menu</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div class="stretch-vertical">
+        <div class="modal-body stretch-vertical">
             <div class="desktopRow spaceColumns">
                 <div>
                     <div class="field-title">Nazwa menu</div>

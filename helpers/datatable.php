@@ -35,7 +35,7 @@ function getSearchQuery($data = null)
     return $query;
 }
 
-function getTableData($data = null)
+function paginateData($data = null)
 {
     /*
     required POSTS:

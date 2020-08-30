@@ -9,7 +9,7 @@ if (isset($_POST['scope_item_id'])) {
   $where .= " AND scope_item_id = " . intval($_POST['scope_item_id']);
 }
 
-echo getTableData([
+echo paginateData([
   "select" => "CONCAT(imie, ' ', nazwisko, ' ', email) as user, logged_at, log",
   "from" => "activity_log a LEFT JOIN users u USING(user_id)",
   "where" => $where,

@@ -12,7 +12,7 @@ if (isset($_POST["category_id"])) {
     $where .= " AND parent_id = " . intval($_POST["parent_id"]);
 }
 
-$responseArray = getTableData([
+$responseArray = paginateData([
     "select" => "category_id, title, link, description, content, icon,
         (SELECT GROUP_CONCAT(title SEPARATOR ', ') FROM product_categories WHERE parent_id = c.category_id) as subcategories,
         (SELECT GROUP_CONCAT(attribute_id SEPARATOR ',') FROM link_category_attribute l WHERE l.category_id = c.category_id) as attributes,
@@ -30,9 +30,6 @@ $responseArray = getTableData([
         },
         "attributes" => function ($row) {
             return array_map("intval", explode(",", $row["attributes"]));
-        },
-        "icon" => function ($row) {
-            return getPlainFileName($row["icon"]);
         },
     ],
     "raw" => true

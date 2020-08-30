@@ -75,6 +75,9 @@
 
   const WEBP_SUPPORT = <?= WEBP_SUPPORT ?>;
 
+  const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
+  const UPLOADS_PLAIN_PATH = "<?= UPLOADS_PLAIN_PATH ?>";
+
   const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
 
   <?php if ($app["user"]["permissions"]["backend_access"]) : ?>

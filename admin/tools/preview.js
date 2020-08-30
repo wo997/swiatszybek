@@ -18,7 +18,7 @@ window.preview = {
 registerModalContent(
   `
     <div id="preview" class="hugeModalDesktop" data-modal>
-        <div class="stretch-vertical">
+        <div class="modal-body stretch-vertical">
             <div class="custom-toolbar">
                 <span class="title">
                     Podgląd strony

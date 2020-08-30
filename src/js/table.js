@@ -111,7 +111,7 @@ function createTable(table) {
   justTable += `<div class="flexbar" style="align-items: baseline;">
         <span class="total-rows"></span>
         <span class="space-right">&nbsp;${table.lang.subject}</span>
-        <select data-param="rowCount">
+        <select data-param="rowCount" class="field inline">
             <option value='10' ${
               table.rowCount == 10 ? "selected" : ""
             }>10</option>

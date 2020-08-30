@@ -19,7 +19,7 @@ function cmsHistoryPush(hide = true) {
   }
   cmsHistoryStepBack = 0;
 
-  cmsHistory.push(cms.innerHTML);
+  cmsHistory.push(cmsContainer.innerHTML);
   while (cmsHistory.length > 20) cmsHistory.shift();
 }
 var cmsHistoryStepBack = 0;
@@ -27,7 +27,8 @@ var cmsHistoryStepBack = 0;
 function cmsHistoryUndo() {
   hideCMSBlockHeader();
   if (cmsHistoryStepBack < cmsHistory.length - 1) cmsHistoryStepBack++;
-  cms.innerHTML = cmsHistory[cmsHistory.length - 1 - cmsHistoryStepBack];
+  cmsContainer.innerHTML =
+    cmsHistory[cmsHistory.length - 1 - cmsHistoryStepBack];
 
   cmsUpdate();
 }
@@ -35,13 +36,14 @@ function cmsHistoryUndo() {
 function cmsHistoryRedo() {
   hideCMSBlockHeader();
   if (cmsHistoryStepBack > 0) cmsHistoryStepBack--;
-  cms.innerHTML = cmsHistory[cmsHistory.length - 1 - cmsHistoryStepBack];
+  cmsContainer.innerHTML =
+    cmsHistory[cmsHistory.length - 1 - cmsHistoryStepBack];
 
   cmsUpdate();
 }
 
 document.onkeydown = (e) => {
-  if (!isModalActive("cms")) return;
+  if (!isModalActive("cms") && !isModalActive("cmsAdditional")) return;
 
   var evtobj = window.event ? event : e;
   if (evtobj.key) {
@@ -63,7 +65,7 @@ function pasteBlock(input) {
     var v = v.replace(/.*<wo997-block>/, "").replace(/<\/wo997-block>.*/, "");
     awaitingScroll = true;
     if (pasteType == "container") {
-      cms.insertAdjacentHTML("beforeend", getContainer(v));
+      cmsContainer.insertAdjacentHTML("beforeend", getContainer(v));
     } else {
       if (cmsTarget) {
         cmsTarget
@@ -80,7 +82,7 @@ function pasteBlock(input) {
       .replace(/<\/wo997-container>.*/, "");
     awaitingScroll = true;
 
-    cms.insertAdjacentHTML("beforeend", v);
+    cmsContainer.insertAdjacentHTML("beforeend", v);
 
     success = true;
   }
@@ -90,21 +92,23 @@ function pasteBlock(input) {
   }
 }
 
-var cms;
+var cmsContainer;
+var cmsWrapper;
 var cmsSource;
 var cmsTarget;
 
 var cmsModalLoaded = () => {
-  cms = $("#cms .cms");
-  cmsObserver.observe(cms, {
+  cmsWrapper = $("#actual_cms_wrapper");
+  cmsContainer = cmsWrapper.find(".cms");
+  cmsObserver.observe(cmsContainer, {
     childList: true,
     subtree: true,
   });
 
-  CMSBlockHeader.options = $("#cms .cms-block-options");
-  CMSBlockHeader.actions = $("#cms .cms-block-actions");
+  CMSBlockHeader.options = cmsWrapper.find(".cms-block-options");
+  CMSBlockHeader.actions = cmsWrapper.find(".cms-block-actions");
 
-  CMSContainerHeader.options = $("#cms .cms-container-options");
+  CMSContainerHeader.options = cmsWrapper.find(".cms-container-options");
 };
 
 function editModule(block) {
@@ -194,10 +198,10 @@ function addContainer(
         getContainer(content)
       );
     } else {
-      cms.insertAdjacentHTML("afterbegin", getContainer(content));
+      cmsContainer.insertAdjacentHTML("afterbegin", getContainer(content));
     }
   } else if (!cmsTarget || !cmsTarget.parent()) {
-    cms.insertAdjacentHTML(
+    cmsContainer.insertAdjacentHTML(
       placeAfter ? "beforeend" : "afterbegin",
       getContainer(content)
     );
@@ -330,7 +334,7 @@ function insertModule(moduleName) {
   var module = modules[moduleName];
   if (!module) return;
 
-  cms.insertAdjacentHTML(
+  cmsContainer.insertAdjacentHTML(
     "beforeend",
     getContainer(`
             <div class="cms-block" data-module="${moduleName}" data-module-params="${module.params}">
@@ -368,7 +372,7 @@ var moduleListModalLoaded = () => {
 };
 
 function copyCMS() {
-  copyBlock($("#cms .cms"));
+  copyBlock(cmsContainer);
 }
 
 function copyBlock(block) {
@@ -485,16 +489,17 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
   }
 }
 
-function editCMS(t) {
+function editCMS(t, show_modal = true) {
   cmsSource = $(t);
-  removeContent(cms);
-  cms.insertAdjacentHTML("afterbegin", cmsSource.innerHTML);
+  cmsContainer.setContent(cmsSource.innerHTML);
 
-  cms.findAll(".cms").forEach((e) => {
+  // just in case
+  cmsContainer.findAll(".cms").forEach((e) => {
     e.outerHTML = e.innerHTML;
   });
 
-  $$("#cms .cms-block[data-module]").forEach((e) => {
+  // trigger cache warmup
+  cmsContainer.findAll(".cms-block[data-module]").forEach((e) => {
     var c = e.find(".module-content");
     if (c) removeNode(c);
   });
@@ -502,9 +507,47 @@ function editCMS(t) {
   cmsHistory = [];
   cmsHistoryPush();
 
-  showModal("cms", { source: cmsSource });
+  if (show_modal) {
+    showModal("cms", { source: cmsSource });
+  }
 
   cmsUpdate();
+}
+
+var backupStateOfCMS = null;
+function editCMSAdditional(t) {
+  $("#cmsAdditional").appendChild(cmsWrapper);
+  $("#cms").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
+
+  backupStateOfCMS = {
+    content: cmsContainer.innerHTML,
+    history: cmsHistory,
+    source: cmsSource,
+  };
+
+  editCMS(t, false);
+
+  showModal("cmsAdditional", {
+    hideCallback: () => {
+      $("#cms").empty();
+      $("#cms").appendChild(cmsWrapper);
+      cmsHistory = backupStateOfCMS.history;
+      cmsContainer.setContent(backupStateOfCMS.content);
+      cmsSource = backupStateOfCMS.source;
+    },
+  });
+}
+
+function closeCms(save) {
+  if (save) {
+    cmsWrapper.findAll("[draggable]").forEach((e) => {
+      e.removeAttribute("draggable");
+      e.style.opacity = "";
+    });
+    var content = cmsContainer.innerHTML;
+    cmsSource.setContent(content);
+  }
+  cmsSource = null;
 }
 
 function setNodeImageBackground(node, src = "") {
@@ -611,7 +654,7 @@ function cmsUpdate() {
   toggleDisabled($(".cms-undo"), cmsHistoryStepBack >= cmsHistory.length - 1);
   toggleDisabled($(".cms-redo"), cmsHistoryStepBack == 0);
 
-  $$("#cms .cms-block").forEach((block) => {
+  cmsWrapper.findAll(".cms-block").forEach((block) => {
     block.setAttribute("draggable", true);
 
     addMissingDirectChildren(
@@ -643,7 +686,7 @@ function cmsUpdate() {
     migrateImageBackground(block);
   });
 
-  $$("#cms .cms-container").forEach((container) => {
+  cmsWrapper.findAll(".cms-container").forEach((container) => {
     container.setAttribute("draggable", true);
 
     addMissingDirectChildren(
@@ -667,20 +710,13 @@ function cmsUpdate() {
     migrateImageBackground(container);
   });
 
-  /*if (!$("#cms .cms-block")) {
-        setTimeout(() => {
-            
-            addBlock();
-        }, 100);
-    }*/
-
-  if (!$("#cms .cms-container")) {
+  if (!cmsWrapper.find(".cms-container")) {
     setTimeout(() => {
       addContainer();
     }, 100);
   }
 
-  $$("#cms .cms-container").forEach((e) => {
+  cmsWrapper.findAll(".cms-container").forEach((e) => {
     if (!e.find(".cms-block")) {
       setTimeout(() => {
         addBlock("", e);
@@ -688,7 +724,7 @@ function cmsUpdate() {
     }
   });
 
-  $$("#cms .cms-block[data-module]").forEach((e) => {
+  cmsWrapper.findAll(".cms-block[data-module]").forEach((e) => {
     var c = e.find(".module-content");
     if (!c) {
       var moduleName = e.getAttribute("data-module");
@@ -712,20 +748,6 @@ function cmsUpdate() {
       }
     }
   });
-}
-
-function closeCms(save) {
-  if (save) {
-    $$("#cms [draggable]").forEach((e) => {
-      e.removeAttribute("draggable");
-      e.style.opacity = "";
-    });
-    var content = $("#cms .cms").innerHTML;
-    cmsSource.innerHTML = content;
-    var src = document.getElementById(cmsSource.id + "-src");
-    if (src) src.value = content;
-  }
-  cmsSource = null;
 }
 
 function editContainerSettings() {
@@ -1028,7 +1050,7 @@ var cmsObserver = new MutationObserver((mutations) => {
         if (node.classList && node.classList.contains("cms-block")) {
           node.classList.remove("activeBlock");
           if (awaitingScroll) {
-            scrollToElement(node, cms.parent());
+            scrollToElement(node, cmsContainer.parent());
             var rect = node.getBoundingClientRect();
             var h = rect.height;
             var w = rect.width;
@@ -1071,7 +1093,7 @@ var cmsObserver = new MutationObserver((mutations) => {
         if (node.classList && node.classList.contains("cms-container")) {
           node.classList.remove("activeContainer");
           if (awaitingScroll) {
-            scrollToElement(node, cms.parent());
+            scrollToElement(node, cmsContainer.parent());
             var rect = node.getBoundingClientRect();
             var h = rect.height;
             node.style.transition = "0s";
@@ -1130,16 +1152,17 @@ var mouseMoveContainer = function (event) {
   var target = event.target;
   if (!cmsSource || actionsDelayed) return;
 
-  if (!isModalActive("cms")) return;
+  if (!isModalActive("cms") && !isModalActive("cmsAdditional")) return;
 
-  var wrapper = $(".cms-wrapper");
+  var wrapper = cmsWrapper.find(".cms-wrapper");
 
   var targetY = event.clientY;
 
   var nodeBefore = null;
-  var firstY = wrapper.getBoundingClientRect().top;
-  var secondY = wrapper.getBoundingClientRect().top + wrapper.scrollHeight;
-  [...cms.children].forEach((e) => {
+  var wrapperRect = wrapper.getBoundingClientRect();
+  var firstY = wrapperRect.top;
+  var secondY = wrapperRect.top + wrapper.scrollHeight;
+  cmsContainer.directChildren().forEach((e) => {
     var rect = e.getBoundingClientRect();
     if (rect.top + rect.height < targetY) {
       if (rect.top + rect.height > firstY) {
@@ -1296,7 +1319,7 @@ function enableActions() {
 var mouseMoveBlock = function (target) {
   if (!cmsSource || actionsDelayed) return;
 
-  if (!isModalActive("cms")) return;
+  if (!isModalActive("cms") && !isModalActive("cmsAdditional")) return;
 
   if (
     !findParentByClassName(target, ["cms-block-options", "cms-block-actions"])
@@ -1432,6 +1455,9 @@ document.addEventListener(
 );
 
 function dragover(event) {
+  if (!draggedNode) {
+    return;
+  }
   var requestClass = "cms-block";
   if (draggedNode.classList.contains("cms-container")) {
     requestClass = "cms-container";
@@ -1516,20 +1542,62 @@ document.addEventListener(
 
 function moveBlock(direction) {
   if (!cmsTarget) return;
-  var isPlaceBefore = cmsTarget;
-  var isPlaceBeforeFinal = isPlaceBefore;
+  var put_near = null;
+  var did_jump = false;
   if (direction === 1) {
-    isPlaceBeforeFinal = isPlaceBeforeFinal.next();
-    if (!isPlaceBeforeFinal) return; // already bottom
-    isPlaceBeforeFinal = isPlaceBeforeFinal.next();
+    put_near = cmsTarget.next();
+    if (!put_near) {
+      var nextParent = cmsTarget.parent().parent().next();
+      if (nextParent) {
+        var nextParentChildren = nextParent
+          .find(".cms-container-content")
+          .directChildren();
+        if (nextParentChildren.length > 0) {
+          put_near = nextParentChildren[0];
+          did_jump = true;
+        }
+      }
+    }
   } else if (direction === -1) {
-    isPlaceBeforeFinal = isPlaceBeforeFinal.prev();
-    if (!isPlaceBeforeFinal) return; // already top
+    put_near = cmsTarget.prev();
+    if (!put_near) {
+      var previousParent = cmsTarget.parent().parent().prev();
+      if (previousParent) {
+        var previousParentChildren = previousParent
+          .find(".cms-container-content")
+          .directChildren();
+        if (previousParentChildren.length > 0) {
+          put_near = previousParentChildren[previousParentChildren.length - 1];
+          did_jump = true;
+        }
+      }
+    }
   }
+
+  if (!put_near) {
+    return;
+  }
+
   awaitingScroll = true;
 
   delayActions();
-  isPlaceBefore.parent().insertBefore(cmsTarget, isPlaceBeforeFinal);
+
+  if (direction === 1) {
+    var parent = put_near.parent();
+    if (did_jump) {
+    } else {
+      put_near = put_near.next();
+    }
+    parent.insertBefore(cmsTarget, put_near);
+  } else if (direction === -1) {
+    var parent = put_near.parent();
+    if (did_jump) {
+      put_near = put_near.next();
+    } else {
+    }
+    parent.insertBefore(cmsTarget, put_near);
+  }
+
   cmsHistoryPush();
 }
 
@@ -1575,9 +1643,8 @@ function setNodeBackgroundColorPreview(val = "FFFFFF", makeVisible = false) {
 
 registerModalContent(
   `
-    <div id="cms" data-expand>
-        <div class="stretch-vertical">
-
+    <div id="cms" data-expand="large">
+        <div class="modal-body stretch-vertical" id="actual_cms_wrapper">
             <div class="custom-toolbar">
                 <span class="title">
                     Edycja zawartości
@@ -2149,7 +2216,7 @@ registerModalContent(
                 <div class="field-title">
                   <span> Zdjęcie </span>
 
-                  <div class="btn primary" onclick="fileManager.open(null, {callback: setNodeBackgroundImagePreview, source: this})">Wybierz <i class="fas fa-image"></i></div>
+                  <div class="btn primary" onclick='fileManager.open(null, {callback: setNodeBackgroundImagePreview, source: this, asset_types: ["image"]})'>Wybierz <i class="fas fa-image"></i></div>
 
                   <div class="btn primary" onclick="setNodeBackgroundImagePreview()">Usuń <i class="fa fa-times"></i></div>
                 </div>
@@ -2183,4 +2250,12 @@ registerModalContent(
     registerRangeSliders();
     jscolor.installByClassName();
   }
+);
+
+registerModalContent(
+  `
+    <div id="cmsAdditional" data-expand="idklarge">
+
+    </div>
+  `
 );

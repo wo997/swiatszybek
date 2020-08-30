@@ -49,7 +49,7 @@
       LEFT JOIN link_product_attribute_value ap USING(product_id)";
   }
 
-  $products = getTableData([
+  $products = paginateData([
     "select" => "product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating",
     "from" => "products p $join",
     "where" => $where,

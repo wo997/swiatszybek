@@ -176,7 +176,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       ],
       controls: `
                 <div class='float-icon'>
-                    <input type="text" placeholder="Szukaj..." data-param="search">
+                    <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>
                 <div class="btn primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
@@ -194,7 +194,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
               <img data-list-param="src" data-type="src" style="object-fit:contain;width:120px;height:120px;display: block;margin-right:10px;">
-              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev())"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ["image"]})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
       },
@@ -234,7 +234,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   });
 
   window.addEventListener("load", function() {
-    fileManager.setDefaultTag($('[name="title"]').value);
+    fileManager.setDefaultName($('[name="title"]').value);
   });
 
   function copyMainImage(node) {
@@ -242,7 +242,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   }
 
   function editPage() {
-    fileManager.setDefaultTag($('[name="title"]').value);
+    fileManager.setDefaultName($('[name="title"]').value);
     editCMS($('[name="description"]'));
   }
 
@@ -421,7 +421,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 </div>
 
 <div id="variantEdit" data-modal data-expand data-exclude-hidden>
-  <div class="stretch-vertical">
+  <div class="modal-body stretch-vertical">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
       <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
@@ -455,7 +455,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
       <div class="field-title">
         Zdjecie
-        <button type="button" class="btn primary" onclick="fileManager.open(this.next())">Wybierz</button>
+        <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types: ["image"]})'>Wybierz</button>
         <img name="zdjecie" data-type="src" />
       </div>
 

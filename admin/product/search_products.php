@@ -18,7 +18,7 @@ if ($status != "") {
     $where .= " AND published";
 }
 
-echo getTableData([
+echo paginateData([
   "select" => "p.product_id, title, p.published, sum(stock) as stock",
   "from" => "products p LEFT JOIN variant v USING(product_id)",
   "where" => $where,

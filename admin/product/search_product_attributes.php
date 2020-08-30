@@ -12,7 +12,7 @@ if (isset($_POST["attribute_id"])) {
     $where .= " AND attribute_id = " . intval($_POST["attribute_id"]);
 }
 
-$responseArray = getTableData([
+$responseArray = paginateData([
     "select" => "attribute_id, name, data_type,
         GROUP_CONCAT(v.value ORDER BY v.kolejnosc ASC) as attr_values
     ",

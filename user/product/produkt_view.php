@@ -179,7 +179,7 @@
 
       </label>
       <textarea id="tresc" data-required placeholder="Treść komentarza" style="padding: 3px 5px;box-sizing: border-box;display:block;width:100%;height:150px;min-height:100px;max-height:200px;resize:vertical;margin-top:8px"></textarea>
-      <button type="button" class="btn primary medium" onclick="newComment()" style="margin:8px 0 8px auto;display: block">Wyślij <i class="fas fa-paper-plane"></i></button>
+      <button class="btn primary medium" onclick="newComment()" style="margin:8px 0 8px auto;display: block">Wyślij <i class="fas fa-paper-plane"></i></button>
     </div>
     <div id="commentSent" style="display:none">
       <h3>Dziękujemy za przekazaną opinię!</h3>
@@ -205,10 +205,10 @@
             <div id="updateChoosenAmountCost" class="pln" style="text-align: center;font-size: 20px;display: inline-block;position: relative;top: 1px;left: 2px;"></div>
           </div>
         </div>
-        <div class="btn primary big fill" type="button" style="margin: 10px 0" onclick="hidePopup()">
+        <div class="btn primary big fill" style="margin: 10px 0" onclick="hidePopup()">
           Kontynuuj zakupy
         </div>
-        <a href="/zakup" class="btn primary big fill" type="button" style="margin-bottom: 6px">
+        <a href="/zakup" class="btn primary big fill" style="margin-bottom: 6px">
           Kup teraz
         </a>
       </div>

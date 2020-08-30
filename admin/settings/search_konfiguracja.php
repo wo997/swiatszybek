@@ -8,7 +8,7 @@ if (isset($_POST["category"])) {
   $where .= " AND category = " . escapeSQL($_POST["category"]);
 }
 
-echo getTableData([
+echo paginateData([
   "select" => "prop_id, prop_name, prop_value, prop_name_nice, category",
   "from" => "konfiguracja k",
   "where" => $where,

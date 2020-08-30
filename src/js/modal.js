@@ -79,17 +79,19 @@ function showModal(name = null, params = {}) {
     var modal = $(`#${name}`);
     if (modal.hasAttribute("data-expand")) {
       var q = $(`#${name} > div`);
-      if (window.innerWidth >= 800) {
-        if (modal.getAttribute("data-expand") == "large") total--;
-        q.classList.toggle("pad0", total == 0);
-        q.classList.toggle("pad1", total == 1);
-        q.classList.toggle("pad2", total == 2);
-        q.classList.toggle("pad3", total >= 3);
-      } else {
-        q.classList.toggle("pad0", false);
-        q.classList.toggle("pad1", false);
-        q.classList.toggle("pad2", false);
-        q.classList.toggle("pad3", false);
+      if (q) {
+        if (window.innerWidth >= 800) {
+          if (modal.getAttribute("data-expand") == "large") total = 0; //total--;
+          q.classList.toggle("pad0", total == 0);
+          q.classList.toggle("pad1", total == 1);
+          q.classList.toggle("pad2", total == 2);
+          q.classList.toggle("pad3", total >= 3);
+        } else {
+          q.classList.toggle("pad0", false);
+          q.classList.toggle("pad1", false);
+          q.classList.toggle("pad2", false);
+          q.classList.toggle("pad3", false);
+        }
       }
     }
   }
@@ -146,6 +148,7 @@ function hideModal(name, isCancel = false) {
       }, 200);
     }
 
+    // cleanup validators
     modal.findAll("[data-validate]").forEach((e) => {
       if (e.classList.contains("required")) {
         e.removeEventListener("input", checkRemoveRequired);
@@ -154,9 +157,13 @@ function hideModal(name, isCancel = false) {
       }
     });
 
+    modal.findAll(".fa-exclamation-triangle").forEach((e) => {
+      e.remove();
+    });
+
     const hideCallback = modalHideCallbacks[name];
     if (hideCallback) {
-      hideCallBack();
+      hideCallback();
     }
   }
 

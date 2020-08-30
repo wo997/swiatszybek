@@ -69,7 +69,7 @@
       ],
       controls: `
         <div class='float-icon'>
-          <input type="text" placeholder="Szukaj..." data-param="search">
+          <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
         <a class="btn primary" href="/admin/kod_rabatowy"><span>Nowy kod rabatowy</span> <i class="fa fa-plus"></i></a>

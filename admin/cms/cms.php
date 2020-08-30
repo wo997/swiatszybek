@@ -51,14 +51,6 @@ $static = checkUrl($page_data["link"]);
         registerTextCounters();
     });
 
-    window.addEventListener("load", function() {
-        var cms = $("#cms");
-        if (cms) {
-            cms.setAttribute("data-expand", "large");
-        }
-    });
-
-
     // metadata
 
     window.addEventListener("DOMContentLoaded", function() {
@@ -111,7 +103,7 @@ $static = checkUrl($page_data["link"]);
         if (!t) {
             t = $('[name="title"]').getValue();
         }
-        fileManager.setDefaultTag(t);
+        fileManager.setDefaultName(t);
         editCMS(`[name="content"]`);
     }
 
@@ -156,9 +148,9 @@ $static = checkUrl($page_data["link"]);
             <span class="title">Edycja strony</span>
             <a class="btn primary" href="/admin/strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
             <?php if ($page_data["published"]) : ?>
-                <a type="button" class="btn primary" href="/<?= $page_data["link"] ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
+                <a class="btn primary" href="/<?= $page_data["link"] ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
             <?php endif ?>
-            <button onclick="showPreview()" type="button" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
+            <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
             <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
         </div>
     </div>
@@ -202,9 +194,9 @@ $static = checkUrl($page_data["link"]);
         </div>
 
         <input type="hidden" id="metadata" name='metadata'>
-        <div class="stretch-vertical">
+        <div class="modal-body stretch-vertical">
             <div>
-                <div class="field-title">Zawartość strony <button type="button" onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></div>
+                <div class="field-title">Zawartość strony <button onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></div>
                 <div class="cms preview_html" name="content" data-type="html"></div>
             </div>
 

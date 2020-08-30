@@ -33,7 +33,7 @@
             ],
             controls: `
                     <div class='float-icon'>
-                        <input type="text" placeholder="Szukaj..." data-param="search">
+                        <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
                     <a class="btn primary" href="/admin/napisz_newsletter">Wyślij wiadomość&nbsp;<i class="fa fa-envelope"></i></a>

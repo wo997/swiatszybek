@@ -284,6 +284,10 @@ function validateField(field) {
     if (+val <= 0.001) {
       newError("Wpisz dodatnią wartość");
     }
+  } else if (validatorType == "youtube-video") {
+    if (!getIdFromYoutubeUrl(val)) {
+      newError("Wpisz poprawny link do filmu z Youtube");
+    }
   }
 
   if (errors.length === 0) {

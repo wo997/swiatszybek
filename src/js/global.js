@@ -170,8 +170,13 @@ function validURL(str) {
   return !!pattern.test(str);
 }
 
+// also helpers/files.php
+function getUploadedFileName(file_path) {
+  return file_path.substr(UPLOADS_PLAIN_PATH.length);
+}
+
+// also kernel.php
 function getLink(phrase) {
-  // also kernel.php
   const pl = [
     ",",
     " ",

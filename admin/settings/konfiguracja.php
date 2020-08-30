@@ -68,7 +68,7 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
             ],
             controls: `
                     <div class='float-icon'>
-                        <input type="text" placeholder="Filtruj..." data-param="search">
+                        <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
                 `

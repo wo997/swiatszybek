@@ -50,7 +50,7 @@ if (empty($basket)) {
 
   foreach ($basket as $item) {
     $res .= "<tr>
-        <td><img src='/uploads/sm" . getPlainFileName($item['zdjecie']) . "' style='max-width:130px;display:block;margin:auto'></td>
+        <td><img src='/uploads/sm" . getUploadedFileName($item['zdjecie']) . "' style='max-width:130px;display:block;margin:auto'></td>
         <td><a class='linkable' href='" . nonull($links, $item['variant_id']) . "'>" . $item['title'] . "</a></td>
         <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['real_price'] . " zł</td>
         <td class='oneline' data-stock=''>" . $item['quantity'] . " szt.</td>
@@ -217,7 +217,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
           ],
           controlsRight: `
                 <div class='float-icon'>
-                  <input type="text" placeholder="Szukaj..." data-param="search">
+                  <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                   <i class="fas fa-search"></i>
                 </div>
               `
@@ -342,7 +342,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
           <div>
             <span>Nr śledzenia paczki</span>
-            <button type="button" class="btn primary" onclick='showModal("zamowienieForm");document.getElementsByName("e_track")[0].focus()'>Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button>
+            <button class="btn primary" onclick='showModal("zamowienieForm");document.getElementsByName("e_track")[0].focus()'>Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button>
             <br>
             <a style="font-weight:bold" target="_blank" class="link" href="<?= $tracking_link ?>"><?= $tracking_link ?></a>
           </div>

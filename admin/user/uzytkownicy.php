@@ -78,7 +78,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                     width: "10%",
                     render: (r, i, t) => {
                         var zamowienia = nonull(r.zamowienia_count);
-                        if (r.zamowienia_count > 0) zamowienia += `<button type="button" class="btn secondary" style="margin-left:7px" onclick="showUser(${i}, '${t.name}')"> Pokaż <i class="fas fa-chevron-circle-right"></i></a>`;
+                        if (r.zamowienia_count > 0) zamowienia += `<button class="btn secondary" style="margin-left:7px" onclick="showUser(${i}, '${t.name}')"> Pokaż <i class="fas fa-chevron-circle-right"></i></a>`;
                         return zamowienia;
                     },
                     escape: false
@@ -96,7 +96,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
             ],
             controls: `
                 <div class='float-icon'>
-                    <input type="text" placeholder="Szukaj..." data-param="search">
+                    <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>                `
         });
@@ -204,16 +204,16 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 </div>
 
 <div id="editUser" data-modal data-expand data-exclude-hidden>
-    <div class="stretch-vertical">
+    <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja użytkownika</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveUser();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div class="stretch-vertical">
+        <div class="modal-body stretch-vertical">
             <div class="desktopRow spaceColumns">
                 <div>
-                    <h3 style="text-align: center;font-size: 18px;margin: 10px 0;">Dane kontaktowe</h3>
+                    <h3 style="text-align: center;font-size: 18px;margin: 20px 0 10px;">Dane kontaktowe</h3>
 
                     <div class="field-title">Imię</div>
                     <input type="text" class="field" name="imie" autocomplete="first-name" data-validate>
@@ -234,7 +234,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                     <input type="text" class="field" name="nip">
                 </div>
                 <div>
-                    <h3 style="text-align: center;font-size: 18px;margin: 10px 0;">Adres</h3>
+                    <h3 style="text-align: center;font-size: 18px;margin: 20px 0 10px;">Adres</h3>
                     <div class="field-title">Kraj</div>
                     <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
 

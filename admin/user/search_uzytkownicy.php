@@ -2,7 +2,7 @@
 
 $where = "u.authenticated = 1";
 
-echo getTableData([
+echo paginateData([
   "select" => "*, (select count(1) from zamowienia z where z.user_id = u.user_id) as zamowienia_count",
   "from" => "users u",
   "where" => $where,

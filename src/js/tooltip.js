@@ -18,14 +18,14 @@ window.addEventListener("mousemove", function (event) {
     var offsetX = 7;
     var left = nodeRect.left + offsetX + nodeRect.width;
 
-    var nodeRectition = e.getAttribute("data-position");
-    if (position == "center") {
+    var nodeRectPosition = e.getAttribute("data-position");
+    if (nodeRectPosition == "center") {
       left -= nodeRect.width / 2 + tooltipRect.width / 2 + offsetX;
     }
 
     var maxLeft = window.innerWidth - 30 - tooltipRect.width;
     if (left > maxLeft) {
-      left -= tooltipRect.width / 2 + offsetX;
+      left -= tooltipRect.width + offsetX * 2 + nodeRect.width;
     }
     if (left > maxLeft) {
       left = maxLeft;

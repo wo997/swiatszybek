@@ -79,11 +79,11 @@ foreach ($statusList as $k => $status) {
       definition: zamowienia_table_definition,
       controls: `
           <div class='float-icon'>
-            <input type="text" placeholder="Szukaj..." data-param="search">
+            <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
             <i class="fas fa-search"></i>
           </div>
 
-          <select data-param="status">
+          <select data-param="status" class="field inline">
             <option value=''>Wszystkie</option>
             <option value='otwarte'>Otwarte</option>
             <?= $options ?>
