@@ -81,6 +81,24 @@ function createDatatable(datatable) {
     datatable.selection = [];
   }
 
+  if (datatable.sortable) {
+    if (!datatable.primary)
+      console.error(`missing primary key in ${datatable.name}`);
+    if (!datatable.db_table)
+      console.error(`missing db_table name in ${datatable.name}`);
+    datatable.definition = [
+      {
+        title: "Kolejność",
+        width: "85px",
+        render: (r, i) => {
+          return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" data-table='${datatable.name}' data-index='${i}' onchange="rearrange(this)">`;
+        },
+        escape: false,
+      },
+      ...datatable.definition,
+    ];
+  }
+
   if (datatable.tree_view) {
     datatable.lang.main_category = nonull(
       datatable.lang.main_category,
@@ -125,11 +143,9 @@ function createDatatable(datatable) {
             }>50</option>
         </select>
         <span class="space-right big no-space-mobile">&nbsp;&nbsp;na stronę</span>
-        <div class="pagination"></div>`;
-
-  if (datatable.controlsRight) {
-    justTable += `${datatable.controlsRight}`;
-  }
+        <div class="pagination"></div>
+        ${nonull(datatable.controlsRight)}
+      </div>`;
 
   var headersHTML = "<tr>";
   var columnStyles = [];
@@ -155,16 +171,16 @@ function createDatatable(datatable) {
     var additional_html = "";
     if (header.sortable) {
       var sortBy = header.sortable === true ? header.column : header.sortable;
-      additional_html += ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')"></i>`;
+      additional_html += ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')"></i>&nbsp;`;
     }
     if (header.searchable) {
-      additional_html += ` <i class="btn primary fas fa-search datatable-search-btn"></i>`;
+      additional_html += `<i class="btn primary fas fa-search datatable-search-btn"></i>`;
     }
 
     var style = "";
     if (header.width) style += `style='width:${header.width}'`;
     if (header.className) style += `class='${header.className}'`;
-    headersHTML += `<th ${style}>` + header.title + additional_html + `</th>`;
+    headersHTML += `<th ${style}>${header.title}<span style='display:inline-block'>${additional_html}</span></th>`;
     columnStyles.push(style);
   }
   headersHTML += "</tr>";
@@ -325,24 +341,6 @@ function createDatatable(datatable) {
     datatable.target.style.maxWidth = datatable.width + "px";
     datatable.target.style.marginLeft = "auto";
     datatable.target.style.marginRight = "auto";
-  }
-
-  if (datatable.sortable) {
-    if (!datatable.primary)
-      console.error(`missing primary key in ${datatable.name}`);
-    if (!datatable.db_table)
-      console.error(`missing db_table name in ${datatable.name}`);
-    datatable.definition = [
-      {
-        title: "Kolejność",
-        width: "85px",
-        render: (r, i) => {
-          return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" data-table='${datatable.name}' data-index='${i}' onchange="rearrange(this)">`;
-        },
-        escape: false,
-      },
-      ...datatable.definition,
-    ];
   }
 
   datatable.awaitSearch = function () {

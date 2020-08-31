@@ -29,7 +29,7 @@
         getPublishedDefinition(),
         {
           title: "W magazynie",
-          width: "100px",
+          width: "120px",
           render: (r) => {
             return `${nonull(r.stock,0)} szt.`;
           }

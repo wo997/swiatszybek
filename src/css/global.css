@@ -348,21 +348,21 @@ i.fa.fa-chevron-left {
   text-align: left;
   width: 100%;
 }
-/*@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 800px) {
   .datatable {
     table-layout: fixed;
   }
-}*/
+}
 .datatable td:not(.auto-width),
 .datatable th:not(.auto-width) {
   padding: 6px 8px;
-  white-space: nowrap;
 }
 .datatable td:not(.auto-width) {
   max-width: 400px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .datatable tr:nth-child(even) {
   background: #fcfcfc;
