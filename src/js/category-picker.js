@@ -39,6 +39,7 @@ function setCategoryPickerValues(element, values, params = {}) {
   element = $(element);
   element.findAll(".expandY").forEach((e) => {
     e.classList.add("hidden");
+    e.style.height = "0";
   });
   element.findAll(".expand").forEach((e) => {
     e.classList.remove("open");
@@ -120,7 +121,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
     if (!parent) break;
     var btn = parent.prev().find(".btn");
     if (!btn) break;
-    expandWithArrow(btn.parent().next(), btn, {
+    expandWithArrow(btn.parent().next(), btn, true, {
       duration: 0,
     });
     parent = parent.parent();

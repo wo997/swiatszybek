@@ -2308,15 +2308,9 @@ ql-icon i span {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#000000', GradientType=1 );
 }
 
-.expandY > :first-child {
-  margin-top: 0;
-}
 .expandY.hidden {
-  overflow: hidden;
   pointer-events: none;
   min-height: 0 !important;
-  height: 0 !important;
-  opacity: 0;
 }
 .hidden:not(.expandY) {
   display: none;
@@ -2860,4 +2854,8 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .center {
   text-align: center;
+}
+
+.expander_space {
+  /*display: inline-block;*/
 }

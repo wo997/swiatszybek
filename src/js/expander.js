@@ -22,49 +22,70 @@ function mobileDrop(obj) {
   return false;
 }
 
-function expandWithArrow(elem, source, options = {}) {
-  source.classList.toggle("open", expand(elem, null, options));
+function expandWithArrow(elem, source, open = null, options = {}) {
+  source.classList.toggle("open", expand(elem, open, options));
 }
 
 function expand(elem, show = null, options = {}) {
   if (show === null) show = elem.classList.contains("hidden");
   if (show ^ elem.classList.contains("hidden")) return;
+
+  var animation_node = elem.find(".expander_space");
+  if (!animation_node) {
+    elem.insertAdjacentHTML("afterbegin", "<div class='expander_space'></div>");
+    animation_node = elem.find(".expander_space");
+  }
+
   var duration =
     options.duration || options.duration === 0 ? options.duration : 250;
   var h = elem.scrollHeight;
 
-  elem.style.transition = "";
-  elem.style.height = (!show ? h : 0) + "px";
+  var h1 = (!show ? h : 0) + "px";
+  var h2 = (show ? h : 0) + "px";
 
-  var firstChild = elem.children ? elem.children[0] : null;
-  if (firstChild) {
-    firstChild.style.transition = "0s all";
-    //firstChild.style.marginTop = -(show ? h * 0.15 : 0) + "px";
-  }
-  setTimeout(() => {
-    elem.style.transition = `opacity ${
-      duration / (show ? 500 : 1000)
-    }s, height ${duration / 1000}s, padding ${duration / 1000}s`;
-    elem.style.height = (show ? h : 0) + "px";
-    elem.scrollTop = 0;
-    elem.classList.toggle("hidden", !show); // think about it
+  var o1 = !show ? 1 : 0;
+  var o2 = show ? 1 : 0;
 
-    if (firstChild) {
-      firstChild.style.transition = `margin-top ${
-        duration / (show ? 500 : 1000)
-      }s`;
-      //firstChild.style.marginTop = -(!show ? h * 0.15 : 0) + "px";
+  elem.classList.toggle("hidden", !show);
+  elem.style.overflow = "hidden";
+
+  var m1 = (show ? -25 : 0) + "px";
+  var m2 = (!show ? -25 : 0) + "px";
+
+  animate(
+    animation_node,
+    duration,
+    `
+    0% {
+      margin-top: ${m1};
     }
-  }, 0);
-  setTimeout(() => {
-    elem.style.transition = ``;
-    elem.style.height = "";
-
-    if (firstChild) {
-      firstChild.style.transition = ``;
-      //firstChild.style.marginTop = "";
+    100% {
+      margin-top: ${m2};
     }
-  }, duration);
+  `
+  );
+
+  animate(
+    elem,
+    duration,
+    `
+      0% {
+        height: ${h1};
+        opacity: ${o1};
+      }
+      100% {
+        height: ${h2};
+        opacity: ${o2};
+      }
+    `,
+    () => {
+      if (show) {
+        elem.style.overflow = "";
+      }
+      elem.style.height = show ? "" : "0px";
+    }
+  );
+
   return show;
 }
 
