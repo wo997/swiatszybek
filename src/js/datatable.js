@@ -184,7 +184,7 @@ function createDatatable(datatable) {
       "afterbegin",
       `
           <div class="selectedRows"></div>
-          <div class="showBtn expandY">
+          <div class="showBtn expand_y">
             <div class="btn secondary fill" onclick="${
               datatable.name
             }.toggleSearchVisibility(true)">Wyszukaj <i class="fas fa-plus"></i> </div>
@@ -195,7 +195,7 @@ function createDatatable(datatable) {
               : datatable.primary
           }" ${datatable.selectable.validate ? `data-validate` : ""}>
           <div class="table-search-wrapper ${
-            datatable.selectable ? `expandY hidden` : ""
+            datatable.selectable ? `expand_y hidden animate_hidden` : ""
           }">
             <div class="table-search-container">
               <div class="btn secondary fill hideBtn" onclick="${

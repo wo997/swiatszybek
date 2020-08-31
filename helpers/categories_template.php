@@ -22,7 +22,7 @@ function showCategory($category, $level = 0)
     if ($count) {
         echo "<div class='btn secondary expand' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
     }
-    echo "</div><div class='category-picker-column expandY hidden'>";
+    echo "</div><div class='category-picker-column expand_y hidden animate_hidden'>";
     foreach ($subcategories as $subcategory) {
         showCategory($subcategory, $level + 1);
     }

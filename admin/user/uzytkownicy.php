@@ -282,7 +282,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                         Zmień hasło
                     </label>
 
-                    <div class="expandY changePassword">
+                    <div class="expand_y changePassword">
                         <div class="field-title">Hasło (min. 8 znaków)</div>
                         <div class="field-wrapper">
                             <input type="password" name="password" class="field" data-validate="password">

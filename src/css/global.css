@@ -2308,11 +2308,17 @@ ql-icon i span {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#000000', GradientType=1 );
 }
 
-.expandY.hidden {
-  pointer-events: none;
+.expand_y.animate_hidden {
+  height: 0 !important;
   min-height: 0 !important;
+  pointer-events: none;
 }
-.hidden:not(.expandY) {
+.expand_y.hidden,
+.expand_y.animate_hidden {
+  pointer-events: none;
+  overflow: hidden;
+}
+.hidden:not(.expand_y) {
   display: none;
 }
 .expand.btn {

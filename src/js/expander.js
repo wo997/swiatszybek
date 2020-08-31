@@ -47,7 +47,10 @@ function expand(elem, show = null, options = {}) {
   var o2 = show ? 1 : 0;
 
   elem.classList.toggle("hidden", !show);
-  elem.style.overflow = "hidden";
+
+  if (show) {
+    elem.classList.remove("animate_hidden");
+  }
 
   var m1 = (show ? -25 : 0) + "px";
   var m2 = (!show ? -25 : 0) + "px";
@@ -79,10 +82,11 @@ function expand(elem, show = null, options = {}) {
       }
     `,
     () => {
-      if (show) {
-        elem.style.overflow = "";
-      }
       elem.style.height = show ? "" : "0px";
+
+      if (!show) {
+        elem.classList.add("animate_hidden");
+      }
     }
   );
 
