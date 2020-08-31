@@ -59,7 +59,9 @@ function createDatatable(datatable) {
         // no metadata, raw table
         try {
           for (val of values) {
-            selection.push(parseInt(val));
+            if (val) {
+              selection.push(parseInt(val));
+            }
           }
         } catch (e) {}
       }
@@ -199,7 +201,7 @@ function createDatatable(datatable) {
     datatable.target.insertAdjacentHTML(
       "afterbegin",
       `
-          <div class="selectedRows"></div>
+          <div class="selected_rows">${justTable}</div>
           <div class="showBtn expand_y">
             <div class="btn secondary fill" onclick="${
               datatable.name
@@ -223,16 +225,23 @@ function createDatatable(datatable) {
         `
     );
   } else {
-    datatable.target.insertAdjacentHTML("afterbegin", justTable);
+    datatable.target.insertAdjacentHTML(
+      "afterbegin",
+      `<div class="table-search-wrapper">${justTable}</div>`
+    );
   }
 
   if (datatable.onCreate) datatable.onCreate();
 
   datatable.searchElement = datatable.target.find(".search-wrapper");
-  datatable.tableBodyElement = datatable.target.find("tbody");
+  datatable.tableBodyElement = datatable.target.find(
+    ".table-search-wrapper tbody"
+  );
   datatable.totalRowsElement = datatable.target.find(".total-rows");
   datatable.paginationElement = datatable.target.find(".pagination");
-  datatable.selectionElement = datatable.target.find(".selectedRows");
+  datatable.selectionBodyElement = datatable.target.find(
+    ".selected_rows tbody"
+  );
   datatable.selectionValueElement = datatable.target.find(
     ".table-selection-value"
   );
@@ -390,11 +399,13 @@ function createDatatable(datatable) {
     params.filters = [];
 
     if (createList) {
-      params.filters.push({
-        type: "=",
-        values: datatable.selection,
-        field: datatable.primary,
-      });
+      if (datatable.selection) {
+        params.filters.push({
+          type: "=",
+          values: datatable.selection,
+          field: datatable.primary,
+        });
+      }
     } else {
       if (datatable.params) {
         Object.assign(params, datatable.params());
@@ -464,13 +475,18 @@ function createDatatable(datatable) {
         pageNumber: datatable.currPage,
       },
       success: (res) => {
-        datatable.pageCount = res.pageCount;
-        datatable.results = res.results;
+        if (createList) {
+          datatable.selectionPageCount = res.pageCount;
+          datatable.selectionResults = res.results;
+        } else {
+          datatable.pageCount = res.pageCount;
+          datatable.results = res.results;
+        }
         var output = "";
 
         output = "";
-        for (i = 0; i < datatable.results.length; i++) {
-          var row = datatable.results[i];
+        for (i = 0; i < res.results.length; i++) {
+          var row = res.results[i];
           var attr = "";
           if (canOrder) attr = "draggable='true'";
           output += `<tr data-index='${i}' ${attr} ${
@@ -512,18 +528,18 @@ function createDatatable(datatable) {
           output += "</tr>";
         }
 
-        output += `<div class="no-results" style="${
-          datatable.results.length > 0 ? "display:none;" : ""
-        }width:100%;text-align:center;background: #f8f8f8;margin-top: -10px;padding: 10px;font-weight: 600;">
+        output += `<tr><td class="no-results" colspan="${
+          datatable.definition.length + (datatable.selectable ? 1 : 0)
+        }" style="${res.results.length !== 0 ? "display:none" : ""}">
             Brak ${createList ? "powiązanych " : ""}${
           datatable.lang.subject
         } <i class="btn secondary fas fa-sync-alt" onclick='${
           datatable.name
         }.search()' style="width: 24px;height: 24px;display: inline-flex;justify-content: center;align-items: center;"></i>
-          </div>`;
+          </td></tr>`;
 
         if (createList) {
-          datatable.selectionElement.setContent(output);
+          datatable.selectionBodyElement.setContent(output);
         } else {
           renderPagination(
             datatable.paginationElement,
@@ -582,7 +598,7 @@ function createDatatable(datatable) {
       if (datatable.selectable && datatable.selectable.has_metadata) {
         try {
           Object.entries(datatable.metadata).forEach(([key, value]) => {
-            var row = datatable.selectionElement.find(
+            var row = datatable.selectionBodyElement.find(
               `[data-primary="${key}"]`
             );
             if (row) {
@@ -619,17 +635,31 @@ function createDatatable(datatable) {
       return;
     }
 
+    const index2 = datatable.selectionResults
+      .map((e) => {
+        return e[datatable.primary];
+      })
+      .indexOf(data_id);
+    if (index2 !== -1) {
+      datatable.selectionResults.splice(index2, 1);
+    }
+
     removeNode(datatable.target.find(`[data-primary='${data_id}']`));
-    datatable.selectionChange();
+    datatable.selectionChange(false);
   };
   datatable.addRow = (data_id) => {
     if (datatable.singleselect && datatable.selection.length > 0) {
       datatable.removeRow(datatable.selection[0]);
     }
     if (datatable.singleselect || datatable.selection.indexOf(data_id) === -1) {
+      datatable.selectionResults.push(
+        datatable.results.find((e) => {
+          return e[datatable.primary] == data_id;
+        })
+      );
       datatable.selection.push(data_id);
       var x = datatable.target.find(`[data-primary='${data_id}']`);
-      datatable.selectionElement.find("tbody").appendChild(x);
+      datatable.selectionBodyElement.appendChild(x);
       var d = x.find(".fa-plus-circle");
       d.outerHTML = d.outerHTML
         .replace("plus", "minus")
@@ -642,29 +672,31 @@ function createDatatable(datatable) {
       datatable.registerMetadataFields();
     }
 
-    var e = datatable.selectionElement.find(".no-results");
-    if (e)
-      e.style.display = datatable.selectionElement.find("td") ? "none" : "";
+    var e = datatable.selectionBodyElement.find(".no-results");
+    if (e) {
+      e.style.display = datatable.selectionResults.length !== 0 ? "none" : "";
+    }
     var e = datatable.target.find(".table-search-container .no-results");
-    if (e)
-      e.style.display = datatable.target.find(".table-search-container td")
-        ? "none"
-        : "";
+    if (e) {
+      //e.style.display = datatable.results.length !== 0 ? "none" : "";
+    }
 
     if (datatable.selectable.has_metadata) {
       var metadata = {};
-      datatable.selectionElement.findAll("tr[data-primary]").forEach((e) => {
-        var row = {};
-        e.findAll("[data-metadata]").forEach((m) => {
-          row[m.getAttribute("data-metadata")] = m.getValue();
+      datatable.selectionBodyElement
+        .findAll("tr[data-primary]")
+        .forEach((e) => {
+          var row = {};
+          e.findAll("[data-metadata]").forEach((m) => {
+            row[m.getAttribute("data-metadata")] = m.getValue();
+          });
+          metadata[parseInt(e.getAttribute("data-primary"))] = row;
         });
-        metadata[parseInt(e.getAttribute("data-primary"))] = row;
-      });
       datatable.metadata = metadata;
     }
 
     var selection = [];
-    datatable.selectionElement.findAll("[data-primary]").forEach((e) => {
+    datatable.selectionBodyElement.findAll("[data-primary]").forEach((e) => {
       selection.push(parseInt(e.getAttribute("data-primary")));
     });
 
@@ -680,7 +712,7 @@ function createDatatable(datatable) {
   };
   if (datatable.selectable && datatable.selectable.has_metadata) {
     datatable.registerMetadataFields = () => {
-      datatable.selectionElement.findAll("[data-metadata]").forEach((m) => {
+      datatable.selectionBodyElement.findAll("[data-metadata]").forEach((m) => {
         m.oninput = () => {
           datatable.selectionChange(false);
         };
@@ -917,7 +949,7 @@ function setPublish(obj, published) {
           published ? "publiczny" : "ukryty"
         }</b>`
       );
-      if (obj.findParentByClassName("selectedRows")) {
+      if (obj.findParentByClassName("selected_rows")) {
         datatable.createList();
       } else {
         datatable.search();

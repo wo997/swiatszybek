@@ -109,7 +109,7 @@
                     title: "Opis",
                     width: "10%",
                     render: (r) => {
-                        return r.meta_description;
+                        return r.seo_description;
                     },
                     escape: false
                 },

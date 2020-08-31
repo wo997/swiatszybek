@@ -294,9 +294,9 @@ function setValue(input, value, quiet = false) {
   }
   if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
-    window[datatable.getAttribute("data-table-name")].setSelectedValuesString(
-      value
-    );
+    window[
+      datatable.getAttribute("data-datatable-name")
+    ].setSelectedValuesString(value);
   } else if (input.classList.contains("jscolor")) {
     var hex = value.replace("#", "");
     input.value = hex;

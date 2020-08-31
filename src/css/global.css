@@ -318,6 +318,15 @@ i.fa.fa-chevron-left {
 /* flexbar */
 
 /* datatable */
+.no-results {
+  display: table-cell;
+  width: 100%;
+  text-align: center;
+  background: #f8f8f8;
+  margin-top: -10px;
+  padding: 10px;
+  font-weight: 600;
+}
 .datatable-wrapper {
   overflow-x: auto;
 }
@@ -437,13 +446,13 @@ i.fa.fa-chevron-left {
 .fa-plus-circle:hover {
   color: #0c0;
 }
-.selectedRows {
+.selected_rows {
   overflow-x: auto;
 }
-.selectedRows .datatable {
+.selected_rows .datatable {
   margin-top: 0;
 }
-.selectedRows.required:before {
+.selected_rows.required:before {
   content: "Musisz wybrać min. 1 element";
   padding: 4px;
   display: block;
@@ -453,7 +462,7 @@ i.fa.fa-chevron-left {
   border: 1px solid;
   font-weight: bold;
 }
-.selectedRows.required {
+.selected_rows.required {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
