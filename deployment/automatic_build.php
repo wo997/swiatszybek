@@ -26,12 +26,11 @@ scanDirectories(
     }
 );
 
+$anyChange = false;
+$cssChange = false;
+$jsChange = false;
 // only when url is different than deployment so we can debug the app
 if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
-    $anyChange = false;
-    $cssChange = false;
-    $jsChange = false;
-
     if ($previousModificationTimePHP != $modificationTimePHP) {
         $anyChange = true;
         ob_start();

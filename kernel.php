@@ -1,7 +1,5 @@
 <?php
 
-ini_set('max_execution_time', '3');
-
 session_start();
 require_once 'vendor/autoload.php';
 

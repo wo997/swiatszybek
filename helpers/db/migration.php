@@ -68,6 +68,10 @@ function getColumnDefinition($column)
         $definition .= " DEFAULT " . escapeSQL($column["default_string"]);
     }
 
+    if (isset($column["primary"])) {
+        $definition .= " PRIMARY KEY";
+    }
+
     if (isset($column["increment"])) {
         $definition .= " AUTO_INCREMENT";
     }
@@ -202,6 +206,7 @@ function createDatatable($table, $columns)
  * - previous_name (rename old field)
  * - null (boolean, default false - no nulls allowed)
  * - default / default_string (f.e 0)
+ * - primary: bool
  * - increment: bool
  *
  * @param  string $table
@@ -218,6 +223,7 @@ function addColumns($table, $columns)
 
         $isNew = false;
         $modify = false;
+        $skip = false;
 
         if (isset($column["previous_name"]) && $column["previous_name"] !== $column["name"]) {
             $differentNameColumnExists = columnExists($table, $column["previous_name"]);
@@ -241,6 +247,10 @@ function addColumns($table, $columns)
             $isNew = true;
         } else { // compare new column with already existing one
             foreach (fetchArray("DESC " . clean($table)) as $existing_column) {
+                if (isset($column["primary"]) && $existing_column["Key"] === "PRI") {
+                    $skip = true;
+                    break;
+                }
                 // early escape if names are different
                 if ($existing_column["Field"] != $column["previous_name"]) {
                     continue;
@@ -289,7 +299,7 @@ function addColumns($table, $columns)
 
         $definition = getColumnDefinition($column);
 
-        if ($modify) {
+        if ($modify && !$skip) {
             query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);
             echo "🔄 Column '" . $column["name"] . "' modified in $table<br>";
         } else if ($isNew) {

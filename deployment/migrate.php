@@ -102,7 +102,7 @@ addColumns("link_category_attribute", [
 createDatatable(
   "uploads",
   [
-    ["name" => "file_id", "type" => "INT", "increment" => true],
+    ["name" => "file_id", "type" => "INT", "primary" => true, "increment" => true],
     ["name" => "file_path", "type" => "VARCHAR(255)"],
     ["name" => "uploaded_file_name", "type" => "VARCHAR(255)"],
     ["name" => "creation_time", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
@@ -110,7 +110,6 @@ createDatatable(
   ]
 );
 
-addIndex("uploads", "file_id", "primary");
 addIndex("uploads", "asset_type", "index");
 addIndex("uploads", "file_path", "unique");
 
