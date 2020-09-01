@@ -113,7 +113,10 @@ if (!json_decode($kod_data["product_list"])) {
                     width: "10%",
                     render: (r) => {
                         return `${nonull(r.stock,0)} szt.`;
-                    }
+                    },
+                    field: "stock",
+                    sortable: true,
+                    searchable: "text"
                 },
                 {
                     title: "Wymagana ilość",

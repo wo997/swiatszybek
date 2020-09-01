@@ -70,7 +70,7 @@ function clean($x)
 function escapeSQL($var, $quote = true)
 {
   global $con;
-  if (is_numeric($var)) {
+  if (!preg_match("/\D/", $var)) {
     $ret = intval($var);
   } else {
     $ret = mysqli_real_escape_string($con, $var);

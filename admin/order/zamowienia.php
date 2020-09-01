@@ -77,23 +77,22 @@ foreach ($statusList as $k => $status) {
       width: 1300,
       definition: zamowienia_table_definition,
       controls: `
-          <div class='float-icon'>
-            <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
-            <i class="fas fa-search"></i>
-          </div>
-
-          <select data-param="status" class="field inline">
-            <option value=''>Wszystkie</option>
-            <option value='otwarte'>Otwarte</option>
-            <?= $options ?>
-          </select>
-          <label style="margin:6px 8px;user-select:none">
-            <input type="checkbox" onchange="setFilter()" class="hasFilter">
-            <div class="checkbox"></div>
-            Filtruj wg daty
-          </label>
+        <div class='float-icon'>
+          <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
+          <i class="fas fa-search"></i>
         </div>
-        <div  class="flexbar caseFilter hidden">
+
+        <select data-param="status" class="field inline">
+          <option value=''>Wszystkie</option>
+          <option value='otwarte'>Otwarte</option>
+          <?= $options ?>
+        </select>
+        <label style="margin:6px 8px;user-select:none">
+          <input type="checkbox" onchange="setFilter()" class="hasFilter">
+          <div class="checkbox"></div>
+          Filtruj wg daty
+        </label>
+        <div class="flexbar caseFilter hidden">
           <button onclick="changeDate(-1)" class="timeBtn"><i class="fa fa-chevron-left"></i></button>
           <div class="datarangepicker_inputs">
             <input class="field inline daterangepicker_start" type="text" data-type="date" data-format="dmy" data-param="dateFrom" value="<?= date("d-m-Y", time() - 60 * 60 * 24 * 6) ?>">

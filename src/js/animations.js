@@ -20,8 +20,11 @@ function removeAnimation(animation_name) {
 
 function animate(node, duration, keyframes, callback = null) {
   var animation_name = createAnimation(keyframes);
+  if (node.animationTimeout) {
+    window.clearTimeout(node.animationTimeout);
+  }
   node.style.animation = `${animation_name} ${duration}ms forwards`;
-  setTimeout(() => {
+  node.animationTimeout = setTimeout(() => {
     if (node.style.animation == animation_name) {
       node.style.animation = "";
     }

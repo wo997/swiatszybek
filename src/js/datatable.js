@@ -169,20 +169,22 @@ function createDatatable(datatable) {
     }
   }
 
+  var def_id = -1;
   for (header of datatable.definition) {
+    def_id++;
     var additional_html = "";
     if (header.sortable) {
-      var sortBy = header.sortable === true ? header.column : header.sortable;
-      additional_html += ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')"></i>&nbsp;`;
+      var sortBy = header.sortable === true ? header.field : header.sortable;
+      additional_html += ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')" data-tooltip="Sortuj malejąco / rosnąco"></i>&nbsp;`;
     }
     if (header.searchable) {
-      additional_html += `<i class="btn primary fas fa-search datatable-search-btn"></i>`;
+      additional_html += `<i class="btn primary fas fa-search datatable-search-btn" data-field="${header.field}" onclick="datatableFilter(this,'${def_id}')" data-tooltip="Filtruj wyniki"></i>`;
     }
 
     var style = "";
     if (header.width) style += `style='width:${header.width}'`;
     if (header.className) style += `class='${header.className}'`;
-    headersHTML += `<th ${style}>${header.title}<span style='display:inline-block'>${additional_html}</span></th>`;
+    headersHTML += `<th ${style}><span>${header.title} </span><span style='display:inline-block'>${additional_html}</span></th>`;
     columnStyles.push(style);
   }
   headersHTML += "</tr>";
@@ -234,9 +236,8 @@ function createDatatable(datatable) {
   if (datatable.onCreate) datatable.onCreate();
 
   datatable.searchElement = datatable.target.find(".search-wrapper");
-  datatable.tableBodyElement = datatable.target.find(
-    ".table-search-wrapper tbody"
-  );
+  datatable.tableSearchElement = datatable.target.find(".table-search-wrapper");
+  datatable.tableBodyElement = datatable.tableSearchElement.find("tbody");
   datatable.totalRowsElement = datatable.target.find(".total-rows");
   datatable.paginationElement = datatable.target.find(".pagination");
   datatable.selectionBodyElement = datatable.target.find(
@@ -395,20 +396,22 @@ function createDatatable(datatable) {
       datatable.breadcrumbElement.innerHTML = out;
     }
 
-    var params = {};
-    params.filters = [];
+    var params = {
+      filters: [],
+    };
+    Object.assign(params.filters, datatable.filters);
 
     if (createList) {
       if (datatable.selection) {
         params.filters.push({
           type: "=",
-          values: datatable.selection,
+          value: datatable.selection,
           field: datatable.primary,
         });
       }
     } else {
       if (datatable.params) {
-        Object.assign(params, datatable.params());
+        Object.assign(params, datatable.params);
       }
       if (datatable.requiredParam) {
         var x = datatable.requiredParam();
@@ -426,7 +429,7 @@ function createDatatable(datatable) {
         // TODO get values from metadata or regular array
         params.filters.push({
           type: "!=",
-          values: datatable.selection,
+          value: datatable.selection,
           field: datatable.primary,
         });
       }
@@ -513,8 +516,8 @@ function createDatatable(datatable) {
               var cell_html = "";
               if (definition.render) {
                 cell_html = definition.render(row, i, datatable);
-              } else if (definition.column) {
-                cell_html = row[definition.column];
+              } else if (definition.field) {
+                cell_html = row[definition.field];
               }
               if (
                 !definition.hasOwnProperty("escape") ||
@@ -961,14 +964,11 @@ function setPublish(obj, published) {
 // published end
 
 function datatableSort(btn, column) {
-  btn = $(btn);
+  var datatable = findParentDatatable(btn);
 
-  var tableNode = btn.findParentByClassName("datatable-wrapper");
-  if (!tableNode) return;
-  var tablename = tableNode.getAttribute("data-datatable-name");
-  if (!tablename) return;
-  var datatable = window[tablename];
-  if (!datatable) return;
+  if (!datatable) {
+    return;
+  }
 
   var was_sort = 0;
   if (btn.classList.contains("fa-arrow-up")) {
@@ -977,7 +977,7 @@ function datatableSort(btn, column) {
     was_sort = -1;
   }
 
-  tableNode.findAll(".datatable-sort-btn").forEach((e) => {
+  datatable.target.findAll(".datatable-sort-btn").forEach((e) => {
     e.classList.remove("fa-sort");
     e.classList.remove("fa-arrow-up");
     e.classList.remove("fa-arrow-down");
@@ -1017,4 +1017,232 @@ function datatableSort(btn, column) {
     datatable.sort = null;
   }
   datatable.search();
+}
+
+function datatableFilter(btn, column_id) {
+  hideFilterMenu();
+
+  var datatable = findParentDatatable(btn);
+
+  if (!datatable) {
+    return;
+  }
+
+  var col_def = datatable.definition[column_id];
+  var filters = col_def.searchable;
+
+  var menu_html = "";
+
+  if (filters == "text") {
+    menu_html += `<span class='field-title header first'>
+      Wpisz frazę </span>
+      <input type="text" class="field" style='margin-bottom:5px'>
+      <label class='checkbox-wrapper block' style='margin-bottom:5px;text-align:center;color:#555'>
+        <input type='checkbox' name='exact'><div class='checkbox'></div> Dopasuj całą frazę
+      </label>
+    `;
+  } else if (filters == "select") {
+    menu_html += `<span class='field-title header first'>Zaznacz pola</span>`;
+    for (i = 0; i < col_def.select_values.length; i++) {
+      var val = col_def.select_values[i];
+      var label = col_def.select_labels ? col_def.select_labels[i] : val;
+
+      menu_html += `<label class='checkbox-wrapper block'>
+        <input type='checkbox' value='${val}'><div class='checkbox'></div> ${label}
+      </label>`;
+    }
+  }
+
+  menu_html += `<div style='display:flex'>
+    <button class="btn primary fill" style='margin-right:5px' onclick='setFilters(${datatable.name},${column_id})'>Szukaj <i class="fas fa-check"></i></button>
+    <button class="btn secondary fill" onclick='removeFilters(${datatable.name},${column_id})'>Wyczyść <i class="fas fa-times"></i></button>
+  </div>`;
+
+  filter_menu.style.display = "block";
+  filter_menu.setContent(menu_html);
+
+  var nonstatic_parent = datatable.target.findNonStaticParent();
+  var offset_y =
+    nonstatic_parent === document.body ? 0 : nonstatic_parent.scrollTop;
+
+  nonstatic_parent.appendChild(filter_menu);
+
+  var btn_rect = btn.getBoundingClientRect();
+  var filter_rect = filter_menu.getBoundingClientRect();
+  var nonstatic_rect = nonstatic_parent.getBoundingClientRect();
+
+  filter_menu.style.left =
+    clamp(
+      30,
+      btn_rect.left +
+        (btn_rect.width - filter_rect.width) / 2 -
+        nonstatic_rect.left,
+      nonstatic_rect.width - filter_rect.width - 30
+    ) + "px";
+
+  filter_menu.style.top =
+    clamp(
+      30,
+      btn_rect.top + btn_rect.height - nonstatic_rect.top + offset_y,
+      nonull(nonstatic_parent.scrollHeight, nonstatic_rect.height) -
+        filter_rect.height -
+        30
+    ) + "px";
+
+  btn.findParentByTagName("th").classList.add("datatable-column-highlighted");
+  btn.classList.add("secondary");
+  btn.classList.remove("primary");
+
+  // set values
+
+  var filter_value = null;
+
+  var current_filter = datatable.filters.find((e) => {
+    return e.field == col_def.field;
+  });
+
+  if (current_filter) {
+    filter_value = current_filter.value;
+  }
+
+  if (filter_value !== null) {
+    if (col_def.searchable == "select") {
+      filter_menu.findAll(`input[type='checkbox']`).forEach((e) => {
+        if (filter_value.indexOf(e.value) != -1) {
+          e.setValue(1);
+        }
+      });
+    } else {
+      var exact = current_filter.type != "%";
+      if (!exact && filter_value.length >= 2) {
+        filter_value = filter_value.substring(1, filter_value.length - 1);
+      }
+      filter_menu.find(`[name='exact']`).setValue(exact);
+      filter_menu.find(`.field`).setValue(filter_value);
+    }
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    "<div class='filter_menu'></div>"
+  );
+  window.filter_menu = $(".filter_menu");
+
+  window.addEventListener("click", (e) => {
+    var hide = true;
+    var btn = $(e.target).findParentByClassName("datatable-search-btn");
+    if (btn) {
+      hide = false;
+    } else {
+      if ($(e.target).findParentByClassName("filter_menu")) {
+        hide = false;
+      }
+    }
+
+    if (hide) {
+      hideFilterMenu();
+    }
+  });
+});
+
+window.addEventListener("resize", () => {
+  hideFilterMenu();
+});
+
+function setFilters(datatable, column_id) {
+  var col_def = datatable.definition[column_id];
+
+  var filter_value = null;
+
+  if (col_def.searchable == "select") {
+    var values = [];
+    filter_menu.findAll(`input[type='checkbox']`).forEach((e) => {
+      if (e.checked) {
+        values.push(e.value);
+      }
+    });
+    if (values) {
+    }
+    filter_value = values;
+  } else {
+    filter_value = filter_menu.find(`.field`).getValue();
+  }
+
+  removeFilterByField(datatable, col_def.field);
+
+  var exact = filter_menu.find(`[name='exact']`).getValue();
+
+  if (filter_value || exact) {
+    if (!exact) {
+      filter_value = `%${filter_value}%`;
+    }
+    datatable.filters.push({
+      field: col_def.field,
+      type: exact ? "=" : "%",
+      value: filter_value,
+    });
+  }
+
+  hideFilterMenu();
+
+  datatable.search();
+}
+
+function removeFilterByField(datatable, field) {
+  var current_filter_index = datatable.filters
+    .map((e) => {
+      return e.field;
+    })
+    .indexOf(field);
+
+  if (current_filter_index != -1) {
+    datatable.filters.splice(current_filter_index, 1);
+  }
+}
+
+function removeFilters(datatable, column_id) {
+  var col_def = datatable.definition[column_id];
+
+  removeFilterByField(datatable, col_def.field);
+
+  hideFilterMenu();
+
+  datatable.search();
+}
+
+function hideFilterMenu() {
+  filter_menu.style.display = "none";
+  removeClasses("datatable-column-highlighted");
+
+  $$(".datatable-wrapper").forEach((datatableElem) => {
+    var datatable = window[datatableElem.getAttribute("data-datatable-name")];
+    datatable.tableSearchElement
+      .findAll(".datatable-search-btn")
+      .forEach((elem) => {
+        var field = elem.getAttribute("data-field");
+        if (
+          datatable.filters.find((e) => {
+            return e.field == field;
+          })
+        ) {
+          return;
+        }
+
+        elem.classList.remove("secondary");
+        elem.classList.add("primary");
+      });
+  });
+}
+
+function findParentDatatable(node) {
+  node = $(node);
+  var tableNode = node.findParentByClassName("datatable-wrapper");
+  if (!tableNode) return null;
+  var tablename = tableNode.getAttribute("data-datatable-name");
+  if (!tablename) return null;
+  var datatable = window[tablename];
+
+  return datatable;
 }

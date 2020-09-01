@@ -448,6 +448,7 @@ function findParentByAttribute(
 
 function findParentByTagName(elem, parentTagName) {
   elem = $(elem);
+  parentTagName = parentTagName.toUpperCase();
   while (elem && elem != document) {
     if (elem.tagName == parentTagName) {
       return elem;
@@ -529,6 +530,18 @@ function findScrollableParent(elem) {
     elem = elem.parent();
   }
   return null;
+}
+function findNonStaticParent(elem) {
+  elem = $(elem);
+
+  while (elem && elem != document.body) {
+    var position = window.getComputedStyle(elem)["position"];
+    if (position !== "static") {
+      return elem;
+    }
+    elem = elem.parent();
+  }
+  return document.body;
 }
 function isInNode(elem, parent) {
   elem = $(elem);
@@ -659,4 +672,8 @@ function getNodeTextWidth(node) {
 function toggleDisabled(elem, disabled) {
   if (disabled) elem.setAttribute("disabled", true);
   else elem.removeAttribute("disabled");
+}
+
+function clamp(min, val, max) {
+  return Math.max(min, Math.min(val, max));
 }

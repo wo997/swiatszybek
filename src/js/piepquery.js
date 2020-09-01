@@ -79,6 +79,10 @@ function $(node, parent = null) {
     return window.findScrollableParent(node);
   };
 
+  node.findNonStaticParent = () => {
+    return window.findNonStaticParent(node);
+  };
+
   node.findParentByClassName = (parentClassNames, stopAtClassName = null) => {
     return window.findParentByClassName(
       node,
