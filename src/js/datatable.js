@@ -198,10 +198,12 @@ function createDatatable(datatable) {
   datatable.columnStyles = columnStyles;
 
   justTable += `
-    <table class='datatable'>
-      <thead>${datatable.headersHTML}</thead>
-      <tbody></tbody>
-    </table>
+    <div class="table-wrapper">
+      <table class='datatable'>
+        <thead>${datatable.headersHTML}</thead>
+        <tbody></tbody>
+      </table>
+    </div>
     `;
 
   if (datatable.selectable) {
@@ -1024,7 +1026,9 @@ function datatableFilter(btn, column_id) {
     $("#filter_menu .menu_body").setContent(
       `<span class="field-title">${menu_header}</span>${menu_body}`
     );
-    showModal("filter_menu");
+    showModal("filter_menu", {
+      source: btn,
+    });
   } else {
     if (menu_header) {
       menu_html = `<span class='field-title header first'>${menu_header}</span>${menu_body}`;

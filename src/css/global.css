@@ -369,7 +369,7 @@ i.fa.fa-chevron-left {
   padding: 10px;
   font-weight: 600;
 }
-.datatable-wrapper {
+.table-wrapper {
   overflow-x: auto;
 }
 .datatable-wrapper .flexbar {
@@ -391,6 +391,9 @@ i.fa.fa-chevron-left {
 @media only screen and (max-width: 799px) {
   .datatable-wrapper .pagination {
     margin-left: auto;
+  }
+  .datatable th:not(.auto-width) {
+    white-space: nowrap;
   }
 }
 .datatable {
