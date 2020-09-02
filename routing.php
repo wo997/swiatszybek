@@ -60,7 +60,7 @@ function getNotificationCountForPage(&$page, $children_notification_count = 0)
   $notification_count = $children_notification_count;
   if (isset($page['url'])) {
     if ($page['url'] == "admin/zamowienia") {
-      $notification_count += fetchValue("SELECT COUNT(1) FROM zamowienia WHERE status IN (0,1) AND zamowienie_id > 103");
+      $notification_count += fetchValue("SELECT COUNT(1) FROM zamowienia WHERE status_id IN (0,1)");
     } else if ($page['url'] == "admin/komentarze") {
       $notification_count += fetchValue("SELECT COUNT(1) FROM comments WHERE accepted = 0");
     } else if ($page['url'] == "admin/oczekujacy") {

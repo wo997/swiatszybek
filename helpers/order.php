@@ -3,30 +3,36 @@
 $dostawy = ["p" => "Paczkomat", "k" => "Kurier", "o" => "Odbiór osobisty"];
 
 // statuses
-$statusList = [
-    0 => [
+$status_list = [
+    [
         "title" => "Oczekuje na opłatę",
         "color" => "dd3",
+        "id" => 0,
     ],
-    1 => [
+    [
         "title" => "Opłacono - w realizacji",
         "color" => "3a3",
+        "id" => 1,
     ],
-    5 => [
+    [
         "title" => "Do odbioru",
         "color" => "e90",
+        "id" => 5,
     ],
-    2 => [
+    [
         "title" => "Wysłano",
         "color" => "44d",
+        "id" => 2,
     ],
-    3 => [
+    [
         "title" => "Odebrano",
         "color" => "39c",
+        "id" => 3,
     ],
-    4 => [
+    [
         "title" => "Anulowano",
         "color" => "b33",
+        "id" => 4,
     ],
 ];
 
@@ -163,10 +169,12 @@ function validateStock()
     }
 }
 
+// also order.js
 function renderStatus($status_id)
-{ // shared.js
-    global $statusList;
-    return "<div class='rect' style='background:#" . $statusList[$status_id]["color"] . "'>" . $statusList[$status_id]["title"] . "</div>";
+{
+    global $status_list;
+    $status = getRowById($status_list, $status_id);
+    return "<div class='rect' style='background:#" . $status["color"] . "'>" . $status["title"] . "</div>";
 }
 
 function getBasketContent()

@@ -67,7 +67,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                     field: "permissions",
                     searchable: "select",
                     select_values: Object.keys(permission_list),
-                    select_labels: permission_list.map(e => {
+                    select_labels: Object.values(permission_list).map(e => {
                         return e.name
                     }),
                 },
@@ -277,8 +277,8 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                 <div>
                     <div class="field-title">Uprawnienia</div>
                     <select name="permissions" class="field">
-                        <?php foreach ($permission_list as $permission_id => $permission) : ?>
-                            <option value="<?= $permission_id ?>"><?= $permission["name"] ?></option>
+                        <?php foreach ($permission_list as $permission) : ?>
+                            <option value="<?= $permission["id"] ?>"><?= $permission["name"] ?></option>
                         <?php endforeach; ?>
                     </select>
 

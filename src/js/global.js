@@ -109,11 +109,6 @@ function decodeHtmlEntities(html) {
   return txt.value;
 }
 
-function renderStatus(status_id) {
-  // kernel.php
-  return `<div class='rect status_rect' style='background:#${statusList[status_id]["color"]}'>${statusList[status_id]["title"]}</div>`;
-}
-
 function moveCursorToEnd(el) {
   el.focus();
   if (typeof el.selectionStart == "number") {

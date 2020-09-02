@@ -146,6 +146,7 @@
         if (requestOn) return;
         requestOn = true;
 
+        // TODO: XHR
         orderRequest = new XMLHttpRequest();
         orderRequest.open("POST", "/admin/search_statystyki", true);
         orderRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

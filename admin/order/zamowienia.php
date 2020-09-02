@@ -4,8 +4,8 @@
 <?php startSection("head");
 
 $options = "";
-foreach ($statusList as $k => $status) {
-  $options .= "<option value='$k'>{$status['title']}</option>";
+foreach ($status_list as $status) {
+  $options .= "<option value='" . $status['id'] . "'>" . $status['title'] . "</option>";
 }
 ?>
 
@@ -44,8 +44,8 @@ foreach ($statusList as $k => $status) {
       statusDefinition.className = "switchControls";
       statusDefinition.render = (r) => {
         return `
-          ${renderStatus(r.status)}
-          <select data-value="${r.status}" onchange="changeStatus('${r.link}',this.value)">
+          ${renderStatus(r.status_id)}
+          <select data-value="${r.status_id}" onchange="changeStatus('${r.link}',this.value)">
             <?= $options ?>
           </select>
         `;
@@ -82,7 +82,7 @@ foreach ($statusList as $k => $status) {
           <i class="fas fa-search"></i>
         </div>
 
-        <select data-param="status" class="field inline">
+        <select data-param="status_id" class="field inline">
           <option value=''>Wszystkie</option>
           <option value='otwarte'>Otwarte</option>
           <?= $options ?>

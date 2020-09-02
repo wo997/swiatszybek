@@ -1,7 +1,7 @@
 <?php //route[admin/search_statystyki]
 
 
-$where = "oplacono IS NOT NULL AND status NOT IN (4)";
+$where = "oplacono IS NOT NULL AND status_id NOT IN (4)";
 
 $dateLimit = "";
 if (isset($_POST['dateFrom'])) {

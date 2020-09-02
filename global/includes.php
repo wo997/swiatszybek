@@ -2,6 +2,31 @@
 <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Poppins&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
+<script>
+  const RELEASE = <?= RELEASE ?>; // manage versioning of assets
+  const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
+  const USER_TYPE = "<?= $app["user"]["type"] ?>";
+
+  <?php $sizes = ["lg" => null, "sm" => 800]; ?>
+
+  const status_list = <?= json_encode($status_list) ?>;
+  const screenSizes = <?= json_encode($sizes) ?>
+
+  const WEBP_SUPPORT = <?= WEBP_SUPPORT ?>;
+
+  const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
+  const UPLOADS_PLAIN_PATH = "<?= UPLOADS_PLAIN_PATH ?>";
+
+  const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
+
+  <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
+    const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
+    const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
+    const permission_list = <?= json_encode($permission_list) ?>;
+
+  <?php endif ?>
+</script>
+
 <?php if (/*$app["user"]["permissions"]["backend_access"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
   <!-- <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="/src/vanilla.datepicker.css?v=1" type="text/css" media="screen" /> -->
@@ -59,30 +84,5 @@
 
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
-
-<script>
-  const RELEASE = <?= RELEASE ?>; // manage versioning of assets
-  const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
-  const USER_TYPE = "<?= $app["user"]["type"] ?>";
-
-  <?php $sizes = ["lg" => null, "sm" => 800]; ?>
-
-  const statusList = <?= json_encode($statusList) ?>;
-  const screenSizes = <?= json_encode($sizes) ?>
-
-  const WEBP_SUPPORT = <?= WEBP_SUPPORT ?>;
-
-  const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
-  const UPLOADS_PLAIN_PATH = "<?= UPLOADS_PLAIN_PATH ?>";
-
-  const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
-
-  <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
-    const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
-    const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
-    const permission_list = <?= json_encode($permission_list) ?>;
-
-  <?php endif ?>
-</script>
 
 <link href="/admin/tools/cms.css?v=<?= RELEASE ?>" rel="stylesheet">

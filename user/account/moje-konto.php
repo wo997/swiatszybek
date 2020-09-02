@@ -172,24 +172,24 @@ if (strpos($url, "resetowanie-hasla") !== false)
             <?php
             $table = "";
             $tableMobile = "<div class='mobileTable' style='text-align:left'>";
-            $stmt = $con->prepare("SELECT zamowienie_id, link, koszt, status, DATE_FORMAT(zlozono, '%d-%m-%Y %H:%i'), oplacono FROM zamowienia WHERE user_id = ? ORDER BY zlozono DESC");
+            $stmt = $con->prepare("SELECT zamowienie_id, link, koszt, status_id, DATE_FORMAT(zlozono, '%d-%m-%Y %H:%i'), oplacono FROM zamowienia WHERE user_id = ? ORDER BY zlozono DESC");
             $stmt->bind_param("s", $user_id);
             $stmt->execute();
-            $stmt->bind_result($zamowienie_id, $link, $koszt, $status, $zlozono, $oplacono);
+            $stmt->bind_result($zamowienie_id, $link, $koszt, $status_id, $zlozono, $oplacono);
             $rowCount = 0;
             while (mysqli_stmt_fetch($stmt)) {
-              $status = renderStatus($status);
+              $status_html = renderStatus($status_id);
 
               $rowCount++;
 
               if ($rowCount == 1) {
                 $table .= "<h3 style='margin: 0 auto; font-size: 26px;text-align:center'>Twoje zamówienia</h3><table class='zamowienia_table hideMobile'><tr style='background: #60d010;color: white;'><td>Nr zamówienia</td><td>Koszt</td><td>Status</td><td>Data utworzenia</td><td></td></tr>";
               }
-              $table .= "<tr><td>#$zamowienie_id</td><td>$koszt zł</td><td>$status</td><td>$zlozono</td><td><a class='btn primary fill' href='/zamowienie/$link'>Szczegóły <i class='fa fa-chevron-right'></i></a></td></tr>";
+              $table .= "<tr><td>#$zamowienie_id</td><td>$koszt zł</td><td>$status_html</td><td>$zlozono</td><td><a class='btn primary fill' href='/zamowienie/$link'>Szczegóły <i class='fa fa-chevron-right'></i></a></td></tr>";
               $tableMobile .= "<div>
                                     <div style='text-align:center'><span style='font-weight: bold;font-size: 18px;'>Zamówienie: #$zamowienie_id</span></div>
                                     <div>Koszt: $koszt zł</div>
-                                    <div>Status: $status</div>
+                                    <div>Status: $status_html</div>
                                     <div>Data utworzenia: $zlozono</div>
                                     <a class='btn primary fill' href='/zamowienie/$link'>Szczegóły <i class='fa fa-chevron-right'></i></a>
                                     </div>";

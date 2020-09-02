@@ -21,7 +21,7 @@ query("UPDATE zamowienia SET session_id = ? WHERE link = ?", [$zamowienie_link .
 
 $zamowienie_data = fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
 
-if ($zamowienie_data["status"] === 0) {
+if ($zamowienie_data["status_id"] === 0) {
   $link = getZamowienieLink($zamowienie_data["link"]);
 
   $P24->addValue("p24_session_id", $zamowienie_data["session_id"]);
@@ -40,7 +40,7 @@ if ($zamowienie_data["status"] === 0) {
 
   $P24->addValue("p24_email", trim($zamowienie_data["email"]));
   $P24->addValue("p24_url_return", $link);
-  $P24->addValue("p24_url_status", SITE_URL . "/przelewy24_confirm_payment");
+  $P24->addValue("p24_url_status_id", SITE_URL . "/przelewy24_confirm_payment");
   $P24->addValue("p24_api_version", "3.2");
   $P24->addValue("p24_channel", "2");
 

@@ -2,9 +2,9 @@
 
 $visitor_permissions = ["backend_access" => false];
 $permission_list = [
-    0 => ["name" => "Klient", "backend_access" => false],
-    1 => ["name" => "Admin", "backend_access" => true],
-    2 => ["name" => "Sprzedawca", "backend_access" => true],
+    ["id" => 0, "name" => "Klient", "backend_access" => false],
+    ["id" => 1, "name" => "Admin", "backend_access" => true],
+    ["id" => 2, "name" => "Sprzedawca", "backend_access" => true],
 ];
 
 function initUser()
@@ -50,7 +50,6 @@ function adminRequired()
     }
 }
 
-
 function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 {
     global $app, $permission_list;
@@ -61,7 +60,7 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 
     $user = [
         "id" => $user_id,
-        "permissions" => $permission_list[$user_data["permissions"]],
+        "permissions" => getRowById($permission_list, $user_data["permissions"]),
         "type" => $user_type,
         "email" => $email,
     ];

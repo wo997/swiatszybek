@@ -1,5 +1,20 @@
 /* js[admin] */
 
+var zamowienia_table_filter_status_list = [
+  {
+    title: `Otwarte <i class="fas fa-hourglass-half"></i>`,
+    color: "",
+  },
+  {
+    title: `Zamknięte <i class='fas fa-times'></i>`,
+    color: "",
+  },
+];
+
+Object.entries(status_list).forEach(([key, value]) => {
+  zamowienia_table_filter_status_list[key] = value;
+});
+
 var zamowienia_table_definition = [
   {
     title: "Nr zamówienia",
@@ -53,9 +68,17 @@ var zamowienia_table_definition = [
     title: "Status",
     width: "205px",
     render: (r) => {
-      return renderStatus(r.status);
+      return renderStatus(r.status_id);
     },
     escape: false,
+    field: "status_id",
+    searchable: "select",
+    select_values: Object.keys(zamowienia_table_filter_status_list),
+    select_labels: Object.values(zamowienia_table_filter_status_list).map(
+      (e) => {
+        return e.title;
+      }
+    ),
   },
   {
     title: "Utworzono",

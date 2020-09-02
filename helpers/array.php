@@ -26,3 +26,14 @@ function filterArrayKeys($array, $keys)
     }
     return $res;
 }
+
+// also array.js 
+function getRowById($array, $id, $id_name = "id")
+{
+    foreach ($array as $row) {
+        if ($row[$id_name] == $id) {
+            return $row;
+        }
+    }
+    return null;
+}

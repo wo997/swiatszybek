@@ -116,4 +116,8 @@ addIndex("uploads", "file_path", "unique");
 
 dropTable("images");
 
+addColumns("zamowienia", [
+  ["name" => "status_id", "previous_name" => "status", "type" => "TINYINT(1)"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";
