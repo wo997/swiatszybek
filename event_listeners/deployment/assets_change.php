@@ -3,8 +3,8 @@
 
 global $cssFileGroups, $jsFileGroups, $modifyCSS, $modifyJS; // event it already a function
 
-$modifyJS = nonull($input, "js", true);
 $modifyCSS = nonull($input, "css", true);
+$modifyJS = nonull($input, "js", true);
 
 if (!$modifyJS && !$modifyCSS) {
     return;
@@ -43,12 +43,28 @@ scanDirectories(
     }
 );
 
-foreach ($jsFileGroups as $jsGroup => $files) {
-    (new Minify\JS(...$files))->minify("builds/$jsGroup.js");
-}
 foreach ($cssFileGroups as $cssGroup => $files) {
     (new Minify\CSS(...$files))->minify("builds/$cssGroup.css");
 }
+foreach ($jsFileGroups as $jsGroup => $files) {
+    (new Minify\JS(...$files))->minify("builds/$jsGroup.js");
+}
+
+$out = "<?php return [\n";
+foreach ($cssFileGroups as $group => $file_path) {
+    $out .= " '$group' => [\n  '" . implode("',\n  '", $file_path) . "'\n ],\n";
+}
+$out .= "];";
+
+file_put_contents(BUILDS_PATH . "css_schema.php", $out);
+
+$out = "<?php return [\n";
+foreach ($jsFileGroups as $group => $file_path) {
+    $out .= " '$group' => [\n  '" . implode("',\n  '", $file_path) . "'\n ],\n";
+}
+$out .= "];";
+
+file_put_contents(BUILDS_PATH . "js_schema.php", $out);
 
 
 //$minifier = new Minify\CSS($sourcePath);

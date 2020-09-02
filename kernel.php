@@ -12,8 +12,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
-
 $build_info_path = "builds/build_info.php";
 
 // default values - ovverriden by 'build_info'
@@ -70,17 +68,17 @@ require_once "helpers/db/connect.php";
 $app = [];
 
 // use annotations
-$link_route_path = @require_once BUILDS_PATH . "link_route_path.php";
+$link_route_path = @include BUILDS_PATH . "link_route_path.php";
 if (!$link_route_path) {
   $link_route_path = [];
 }
 
-$link_module_path = @require_once BUILDS_PATH . "link_module_path.php";
+$link_module_path = @include BUILDS_PATH . "link_module_path.php";
 if (!$link_module_path) {
   $link_module_path = [];
 }
 
-$link_event_paths = @require_once BUILDS_PATH . "link_event_paths.php";
+$link_event_paths = @include BUILDS_PATH . "link_event_paths.php";
 if (!$link_event_paths) {
   $link_event_paths = [];
 }

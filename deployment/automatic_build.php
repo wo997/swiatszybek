@@ -8,10 +8,7 @@ $modificationTimeJS = 0;
 
 scanDirectories(
     [
-        "include_paths" => [
-            "admin", "cron", "deployment", "event_listeners", "global", "helpers", "migrations", "modules", "src", "user",
-            ".htaccess", "kernel.php", "routing.php", "ping.php", "robots.txt"
-        ]
+        "include_paths" => $deployable_paths
     ],
     function ($path) {
         global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS;
@@ -64,6 +61,6 @@ if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
 PHP;
         file_put_contents($build_info_path, $content);
     }
-}
 
-triggerEvent("assets_change", ["css" => $cssChange, "js" => $jsChange]);
+    triggerEvent("assets_change", ["css" => $cssChange, "js" => $jsChange]);
+}

@@ -7,3 +7,8 @@ function createDir($dir)
     }
     mkdir($dir);
 }
+
+$deployable_paths = [
+    "admin", "cron", "deployment", "event_listeners", "global", "helpers", "migrations", "modules", "src", "user",
+    ".htaccess", "kernel.php", "routing.php", "ping.php", "robots.txt"
+];
