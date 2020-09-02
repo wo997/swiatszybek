@@ -336,7 +336,8 @@ i.fa.fa-chevron-left {
   border: 1px solid #ccc;
   width: 200px;
 }
-.filter_menu .checkbox-wrapper {
+.filter_menu .checkbox-wrapper,
+#filter_menu .checkbox-wrapper {
   margin: 5px 0;
 }
 .filter_menu .btn {

@@ -730,68 +730,24 @@ function createDatatable(datatable) {
       });
     };
   }
+
+  /*datatable.tableBodyElement.addEventListener("dblclick", function (e) {
+    var td = $(e.target).findParentByTagName("td");
+    if (!td) {
+      return;
+    }
+
+    //console.log(123, td);
+    var val = td.innerHTML;
+    td.setContent(`<input type="text" class="field">`);
+    td.find(`.field`).setValue(val);
+  });*/
 }
 
 function getSafePageIndex(i, pageCount) {
   if (i < 1) return 1;
   if (i > pageCount) return pageCount;
   return i;
-}
-
-function renderPagination(
-  paginationElement,
-  currPage,
-  pageCount,
-  callback,
-  options = {}
-) {
-  currPage = getSafePageIndex(currPage, pageCount);
-
-  var output = "";
-  var range = 4;
-  var mobile = window.innerWidth < 760;
-  if (mobile) range = 1;
-  var center = currPage;
-  if (currPage < range + 1) center = range + 1;
-  if (currPage > pageCount - range) center = pageCount - range;
-  for (i = 1; i <= pageCount; i++) {
-    if (
-      i == 1 ||
-      i == pageCount ||
-      (i >= center - range && i <= center + range)
-    ) {
-      if (i == center - range && i > 2) {
-        output += " ... ";
-      }
-      output += `<div data-index='${i}' class='pagination_item ${
-        i == currPage ? " current" : ``
-      }'>${i}</div>`;
-      if (i == center + range && i < pageCount - 1) output += " ... ";
-    }
-  }
-  if (pageCount > 20 && !mobile && options.allow_my_page) {
-    output += `<span class='setMyPage'><input class='myPage' type='number' placeholder='Nr strony (1-${pageCount})'></span>`;
-  }
-
-  paginationElement.setContent(output);
-  paginationElement
-    .findAll(".pagination_item:not(.current)")
-    .forEach((elem) => {
-      var i = parseInt(elem.getAttribute("data-index"));
-      i = getSafePageIndex(i, pageCount);
-      elem.addEventListener("click", () => {
-        callback(i);
-      });
-    });
-  paginationElement.findAll(".myPage").forEach((elem) => {
-    elem.addEventListener("keypress", (event) => {
-      if (event.code == "Enter") {
-        var i = parseInt(elem.value);
-        i = getSafePageIndex(i, pageCount);
-        callback(i);
-      }
-    });
-  });
 }
 
 // rearrange start
@@ -969,7 +925,7 @@ function setPublish(obj, published) {
 // published end
 
 function datatableSort(btn, column) {
-  var datatable = findParentDatatable(btn);
+  var datatable = getParentDatatable(btn);
 
   if (!datatable) {
     return;
@@ -1025,9 +981,9 @@ function datatableSort(btn, column) {
 }
 
 function datatableFilter(btn, column_id) {
-  hideFilterMenu();
+  filtersVisibility();
 
-  var datatable = findParentDatatable(btn);
+  var datatable = getParentDatatable(btn);
 
   if (!datatable) {
     return;
@@ -1036,67 +992,76 @@ function datatableFilter(btn, column_id) {
   var col_def = datatable.definition[column_id];
   var filters = col_def.searchable;
 
-  var menu_html = "";
+  var menu_header = "";
+  var menu_body = "";
 
   if (filters == "text") {
-    menu_html += `<span class='field-title header first'>
-      Wpisz frazę </span>
-      <input type="text" class="field" style='margin-bottom:5px'>
+    menu_header += `Wpisz frazę`;
+    menu_body += `<input type="text" class="field" style='margin-bottom:5px'>
       <label class='checkbox-wrapper block' style='margin-bottom:5px;text-align:center;color:#555'>
         <input type='checkbox' name='exact'><div class='checkbox'></div> Dopasuj całą frazę
       </label>
     `;
   } else if (filters == "select") {
-    menu_html += `<span class='field-title header first'>Zaznacz pola</span>`;
+    menu_header += `Zaznacz pola`;
     for (i = 0; i < col_def.select_values.length; i++) {
       var val = col_def.select_values[i];
       var label = col_def.select_labels ? col_def.select_labels[i] : val;
 
-      menu_html += `<label class='checkbox-wrapper block'>
+      menu_body += `<label class='checkbox-wrapper block'>
         <input type='checkbox' value='${val}'><div class='checkbox'></div> ${label}
       </label>`;
     }
   }
 
-  menu_html += `<div style='display:flex'>
+  menu_body += `<div style='display:flex'>
     <button class="btn primary fill" style='margin-right:5px' onclick='setFilters(${datatable.name},${column_id})'>Szukaj <i class="fas fa-check"></i></button>
     <button class="btn secondary fill" onclick='removeFilters(${datatable.name},${column_id})'>Wyczyść <i class="fas fa-times"></i></button>
   </div>`;
 
-  filter_menu.style.display = "block";
-  filter_menu.setContent(menu_html);
+  if (IS_MOBILE) {
+    setModalTitle("#filter_menu", "Filtruj " + col_def.title);
+    $("#filter_menu .menu_body").setContent(
+      `<span class="field-title">${menu_header}</span>${menu_body}`
+    );
+    showModal("filter_menu");
+  } else {
+    if (menu_header) {
+      menu_html = `<span class='field-title header first'>${menu_header}</span>${menu_body}`;
+    }
+    filter_menu.setContent(menu_html);
+    filter_menu.style.display = "block";
 
-  var nonstatic_parent = datatable.target.findNonStaticParent();
-  var offset_y =
-    nonstatic_parent === document.body ? 0 : nonstatic_parent.scrollTop;
+    var nonstatic_parent = datatable.target.findNonStaticParent();
+    var offset_y =
+      nonstatic_parent === document.body ? 0 : nonstatic_parent.scrollTop;
 
-  nonstatic_parent.appendChild(filter_menu);
+    nonstatic_parent.appendChild(filter_menu);
 
-  var btn_rect = btn.getBoundingClientRect();
-  var filter_rect = filter_menu.getBoundingClientRect();
-  var nonstatic_rect = nonstatic_parent.getBoundingClientRect();
+    var btn_rect = btn.getBoundingClientRect();
+    var filter_rect = filter_menu.getBoundingClientRect();
+    var nonstatic_rect = nonstatic_parent.getBoundingClientRect();
 
-  filter_menu.style.left =
-    clamp(
-      30,
-      btn_rect.left +
-        (btn_rect.width - filter_rect.width) / 2 -
-        nonstatic_rect.left,
-      nonstatic_rect.width - filter_rect.width - 30
-    ) + "px";
+    filter_menu.style.left =
+      clamp(
+        30,
+        btn_rect.left +
+          (btn_rect.width - filter_rect.width) / 2 -
+          nonstatic_rect.left,
+        nonstatic_rect.width - filter_rect.width - 30
+      ) + "px";
 
-  filter_menu.style.top =
-    clamp(
-      30,
-      btn_rect.top + btn_rect.height - nonstatic_rect.top + offset_y,
-      nonull(nonstatic_parent.scrollHeight, nonstatic_rect.height) -
-        filter_rect.height -
-        30
-    ) + "px";
+    filter_menu.style.top =
+      clamp(
+        30,
+        btn_rect.top + btn_rect.height - nonstatic_rect.top + offset_y,
+        nonull(nonstatic_parent.scrollHeight, nonstatic_rect.height) -
+          filter_rect.height -
+          30
+      ) + "px";
 
-  btn.findParentByTagName("th").classList.add("datatable-column-highlighted");
-  btn.classList.add("secondary");
-  btn.classList.remove("primary");
+    btn.findParentByTagName("th").classList.add("datatable-column-highlighted");
+  }
 
   // set values
 
@@ -1129,31 +1094,42 @@ function datatableFilter(btn, column_id) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    "<div class='filter_menu'></div>"
-  );
-  window.filter_menu = $(".filter_menu");
+  if (IS_MOBILE) {
+    registerModalContent(`
+        <div id="filter_menu">
+            <div class="modal-body">
+                <div class="custom-toolbar">
+                    <span class="title"></span>
+                    <div class="btn secondary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></div>
+                </div>
+                <div class="menu_body"></div>
+            </div>
+        </div>
+    `);
+  } else {
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      "<div class='filter_menu'></div>"
+    );
 
-  window.addEventListener("click", (e) => {
-    var hide = true;
-    var btn = $(e.target).findParentByClassName("datatable-search-btn");
-    if (btn) {
-      hide = false;
-    } else {
-      if ($(e.target).findParentByClassName("filter_menu")) {
+    window.filter_menu = $(".filter_menu");
+
+    window.addEventListener("click", (e) => {
+      var hide = true;
+      var btn = $(e.target).findParentByClassName("datatable-search-btn");
+      if (btn) {
         hide = false;
+      } else {
+        if ($(e.target).findParentByClassName("filter_menu")) {
+          hide = false;
+        }
       }
-    }
 
-    if (hide) {
-      hideFilterMenu();
-    }
-  });
-});
-
-window.addEventListener("resize", () => {
-  hideFilterMenu();
+      if (hide) {
+        filtersVisibility(true);
+      }
+    });
+  }
 });
 
 function setFilters(datatable, column_id) {
@@ -1191,7 +1167,7 @@ function setFilters(datatable, column_id) {
     }
   }
 
-  hideFilterMenu();
+  filtersVisibility(true);
 
   datatable.search();
 }
@@ -1213,13 +1189,20 @@ function removeFilters(datatable, column_id) {
 
   removeFilterByField(datatable, col_def.field);
 
-  hideFilterMenu();
+  filtersVisibility(true);
 
   datatable.search();
 }
 
-function hideFilterMenu() {
-  filter_menu.style.display = "none";
+function filtersVisibility(hide = false) {
+  if (hide) {
+    if (IS_MOBILE) {
+      hideModal("filter_menu");
+    } else {
+      filter_menu.style.display = "none";
+    }
+  }
+
   removeClasses("datatable-column-highlighted");
 
   $$(".datatable-wrapper").forEach((datatableElem) => {
@@ -1228,21 +1211,17 @@ function hideFilterMenu() {
       .findAll(".datatable-search-btn")
       .forEach((elem) => {
         var field = elem.getAttribute("data-field");
-        if (
-          datatable.filters.find((e) => {
-            return e.field == field;
-          })
-        ) {
-          return;
-        }
+        var active = !!datatable.filters.find((e) => {
+          return e.field == field;
+        });
 
-        elem.classList.remove("secondary");
-        elem.classList.add("primary");
+        elem.classList.toggle("secondary", active);
+        elem.classList.toggle("primary", !active);
       });
   });
 }
 
-function findParentDatatable(node) {
+function getParentDatatable(node) {
   node = $(node);
   var tableNode = node.findParentByClassName("datatable-wrapper");
   if (!tableNode) return null;

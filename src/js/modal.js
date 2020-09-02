@@ -200,3 +200,7 @@ function isModalActive(name) {
   }
   return !anythingAbove;
 }
+
+function setModalTitle(modal, title) {
+  $(modal).find(`.custom-toolbar .title`).innerHTML = title;
+}

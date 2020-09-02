@@ -17,3 +17,12 @@ function getAssociativeArray($array, $key)
     }
     return $output;
 }
+
+function filterArrayKeys($array, $keys)
+{
+    $res = [];
+    foreach ($keys as $key) {
+        $res[$key] = $array[$key];
+    }
+    return $res;
+}

@@ -1,6 +1,6 @@
 /* js[global] */
 document.addEventListener("DOMContentLoaded", function () {
-  if (!mobilecheck()) {
+  if (!IS_MOBILE) {
     /*$$(".navbar_wrapper .dropdown").forEach((e) => {
       var a = e.find("a");
       var u = e.find(".dropdown-header");

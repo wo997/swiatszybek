@@ -1,3 +1,5 @@
+/* js[admin] */
+
 window.addEventListener("DOMContentLoaded", () => {
   if (window.innerWidth < 800) {
     var nv = $(".navbar_wrapper");
