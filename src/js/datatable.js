@@ -184,7 +184,12 @@ function createDatatable(datatable) {
     var style = "";
     if (header.width) style += `style='width:${header.width}'`;
     if (header.className) style += `class='${header.className}'`;
-    headersHTML += `<th ${style}><span>${header.title} </span><span style='display:inline-block'>${additional_html}</span></th>`;
+
+    if (additional_html) {
+      additional_html = `<span style='display:inline-block;margin-bottom: -3px;'>${additional_html}</span>`;
+    }
+
+    headersHTML += `<th ${style}><span>${header.title} </span>${additional_html}</th>`;
     columnStyles.push(style);
   }
   headersHTML += "</tr>";
@@ -1154,7 +1159,7 @@ window.addEventListener("resize", () => {
 function setFilters(datatable, column_id) {
   var col_def = datatable.definition[column_id];
 
-  var filter_value = null;
+  removeFilterByField(datatable, col_def.field);
 
   if (col_def.searchable == "select") {
     var values = [];
@@ -1163,26 +1168,27 @@ function setFilters(datatable, column_id) {
         values.push(e.value);
       }
     });
-    if (values) {
+    if (values.length > 0) {
+      datatable.filters.push({
+        field: col_def.field,
+        type: "=",
+        value: values,
+      });
     }
-    filter_value = values;
   } else {
-    filter_value = filter_menu.find(`.field`).getValue();
-  }
+    var value = filter_menu.find(`.field`).getValue();
+    var exact = filter_menu.find(`[name='exact']`).getValue();
 
-  removeFilterByField(datatable, col_def.field);
-
-  var exact = filter_menu.find(`[name='exact']`).getValue();
-
-  if (filter_value || exact) {
-    if (!exact) {
-      filter_value = `%${filter_value}%`;
+    if (value || exact) {
+      if (!exact) {
+        value = `%${value}%`;
+      }
+      datatable.filters.push({
+        field: col_def.field,
+        type: exact ? "=" : "%",
+        value: value,
+      });
     }
-    datatable.filters.push({
-      field: col_def.field,
-      type: exact ? "=" : "%",
-      value: filter_value,
-    });
   }
 
   hideFilterMenu();
