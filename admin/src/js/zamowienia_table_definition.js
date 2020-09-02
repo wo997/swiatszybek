@@ -3,7 +3,7 @@
 var zamowienia_table_definition = [
   {
     title: "Nr zamówienia",
-    width: "110px",
+    width: "128px",
     render: (r) => {
       var products_info = "<table>";
       try {
@@ -51,7 +51,7 @@ var zamowienia_table_definition = [
   },
   {
     title: "Status",
-    width: "185px",
+    width: "205px",
     render: (r) => {
       return renderStatus(r.status);
     },

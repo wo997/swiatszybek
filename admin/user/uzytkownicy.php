@@ -47,30 +47,36 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                 {
                     title: "Email",
                     width: "10%",
-                    column: "email",
+                    field: "email",
                     sortable: true,
-                    searchable: true,
+                    searchable: "",
                 },
                 {
                     title: "Telefon",
-                    width: "8%",
-                    column: "telefon",
+                    width: "9%",
+                    field: "telefon",
                     sortable: true,
-                    searchable: true,
+                    searchable: "text",
                 },
                 {
                     title: "Uprawnienia",
                     width: "8%",
                     render: (r) => {
                         return permission_list[r.permissions].name;
-                    }
+                    },
+                    field: "permissions",
+                    searchable: "select",
+                    select_values: Object.keys(permission_list),
+                    select_labels: permission_list.map(e => {
+                        return e.name
+                    }),
                 },
                 {
                     title: "Data utworzenia",
                     width: "10%",
-                    render: (r) => {
-                        return nonull(r.stworzono);
-                    }
+                    field: "stworzono",
+                    sortable: true,
+                    searchable: "text",
                 },
                 {
                     title: "Zamówienia",
@@ -282,8 +288,8 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                         Zmień hasło
                     </label>
 
-                    <div class="expandY changePassword">
-                        <div class="field-title">Hasło (min. 8 znaków)</div>
+                    <div class="expand_y changePassword">
+                        <div class="field-title first">Hasło (min. 8 znaków)</div>
                         <div class="field-wrapper">
                             <input type="password" name="password" class="field" data-validate="password">
                             <i class="correct fa fa-check"></i>

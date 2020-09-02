@@ -29,7 +29,7 @@ function showCategory($category, $level = 0)
   if ($count && $level > 0) {
     echo "<div class='btn expand' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
   }
-  $hidden = $level > 0 ? "expandY hidden" : "";
+  $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
   $styles = $level == 0 ? "style='padding-left:0'" : "";
   echo "</div><div class='category-picker-column $hidden' $styles>";
   //}
@@ -379,7 +379,7 @@ function showCategory($category, $level = 0)
         $classes = "attribute-list";
 
         if ($value_id) {
-          $classes .= " expandY hidden";
+          $classes .= " expand_y hidden animate_hidden";
         }
 
         $html = "<div class='$classes' $attr>";

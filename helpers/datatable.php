@@ -78,7 +78,7 @@ function paginateData($data = null)
     if ($filters) {
         $filters = json_decode($filters, true);
         foreach ($filters as $filter) {
-            $where .= getFilterCondition($filter["field"], $filter["type"], $filter["values"]);
+            $where .= getFilterCondition($filter["field"], $filter["type"], $filter["value"]);
         }
     }
 
@@ -139,25 +139,34 @@ function paginateData($data = null)
  */
 function getFilterCondition($field, $type, $filter_value)
 {
-    if (in_array($type, ["=", "!="])) {
-        if (is_array($filter_value)) {
-            if ($filter_value) {
-                $list = "";
-                foreach ($filter_value as $value) {
-                    $list .= escapeSQL($value) . ",";
-                }
-                $list = substr($list, 0, -1);
-                return " AND $field " . ($type == "!=" ? " NOT IN" : " IN") . "(" . $list . ")";
-            } else {
-                if ($type == "=") {
-                    return " AND 0";
-                }
+    //if (in_array($type, ["=", "!=", "%"])) {
+    if (is_array($filter_value)) {
+        if ($filter_value) {
+            $list = "";
+            foreach ($filter_value as $value) {
+                $list .= escapeSQL($value) . ",";
+            }
+            $list = substr($list, 0, -1);
+            return " AND $field " . ($type == "!=" ? " NOT IN" : " IN") . "(" . $list . ")";
+        } else {
+            if ($type == "=") {
+                return " AND 0";
+            }
+            return "";
+        }
+    } else {
+        $q = "=";
+        if ($type == "!=") {
+            $q = "!=";
+        } else if ($type == "%") {
+            $q = "LIKE";
+            if (!preg_replace("/[^%]/", "", $filter_value)) {
                 return "";
             }
-        } else {
-            return " AND $field " . ($type == "!=" ? "!=" : "=") . escapeSQL($filter_value);
         }
+        return " AND $field " . $q . escapeSQL($filter_value);
     }
+    //}
 }
 
 $requiredFilterTables = [

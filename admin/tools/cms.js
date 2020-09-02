@@ -1545,13 +1545,13 @@ document.addEventListener(
   false
 );
 
-function moveBlock(direction) {
+function moveBlock(direction, deep_scan = false) {
   if (!cmsTarget) return;
   var put_near = null;
   var did_jump = false;
   if (direction === 1) {
     put_near = cmsTarget.next();
-    if (!put_near) {
+    if (deep_scan && !put_near) {
       var nextParent = cmsTarget.parent().parent().next();
       if (nextParent) {
         var nextParentChildren = nextParent
@@ -1565,7 +1565,7 @@ function moveBlock(direction) {
     }
   } else if (direction === -1) {
     put_near = cmsTarget.prev();
-    if (!put_near) {
+    if (deep_scan && !put_near) {
       var previousParent = cmsTarget.parent().parent().prev();
       if (previousParent) {
         var previousParentChildren = previousParent
@@ -1675,6 +1675,14 @@ registerModalContent(
 
                     <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie kontenera"> <i class="fas fa-border-style"></i> </div>
 
+                    <div class="showhover">
+                        <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać kontener i go upuścić"> <i class="fas fa-sort"></i> </div>
+                        <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                            <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-up"></i> </div>
+                            <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-down"></i> </div>
+                        </div>
+                    </div>
+
                     <div class="btn" onclick="copyContainer()" data-tooltip="Skopiuj kontener do schowka"> <i class="fas fa-clipboard"></i> </div>
                     
                     <div class="btn" onclick="duplicateContainer()" data-tooltip="Duplikuj kontener"> <i class="fas fa-clone"></i> </div>
@@ -1715,8 +1723,8 @@ registerModalContent(
                     <div class="showhover">
                         <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać blok i go upuścić"> <i class="fas fa-sort"></i> </div>
                         <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                            <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-up"></i> </div>
-                            <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-down"></i> </div>
+                            <div class="btn" onclick="moveBlock(-1,true)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-up"></i> </div>
+                            <div class="btn" onclick="moveBlock(1,true)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-down"></i> </div>
                         </div>
                     </div>
 

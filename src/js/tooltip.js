@@ -16,11 +16,15 @@ window.addEventListener("mousemove", function (event) {
     var tooltipRect = t.getBoundingClientRect();
 
     var offsetX = 7;
+    var offsetY = 4;
     var left = nodeRect.left + offsetX + nodeRect.width;
+    var top = nodeRect.top + offsetY + nodeRect.height;
 
     var nodeRectPosition = e.getAttribute("data-position");
     if (nodeRectPosition == "center") {
       left -= nodeRect.width / 2 + tooltipRect.width / 2 + offsetX;
+    } else if (nodeRectPosition == "right") {
+      top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
     }
 
     var maxLeft = window.innerWidth - 30 - tooltipRect.width;
@@ -34,7 +38,6 @@ window.addEventListener("mousemove", function (event) {
       left = 10;
     }
 
-    var top = nodeRect.top + 4 + nodeRect.height;
     if (top < 10) {
       top = 10;
     }

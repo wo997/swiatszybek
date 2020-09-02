@@ -349,11 +349,9 @@ function setFormData(data, form, params = {}) {
     if (!e) {
       return;
     }
-    setValue(e, value);
+    e.setValue(value);
   });
-  setTimeout(() => {
-    setFormInitialState(form);
-  }, 0);
+  setFormInitialState(form);
   resizeCallback();
 }
 

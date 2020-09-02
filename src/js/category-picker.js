@@ -8,14 +8,6 @@ function registerCategoryPickers() {
     var parent_id = e.getAttribute("data-parent_id");
     if (!parent_id) parent_id = "";
 
-    /*Object.defineProperty(e, "value", {
-          get: function() {return this._value;},
-          set: function(v) {
-              this._value = v;
-              setCategoryPickerValues(e.nextSibling);
-          }
-      });*/
-
     var select = e.hasAttribute("data-single") ? "single" : "multiple";
 
     e.insertAdjacentHTML(
@@ -37,8 +29,10 @@ function setCategoryPickerValues(element, values, params = {}) {
     return;
   }
   element = $(element);
-  element.findAll(".expandY").forEach((e) => {
+
+  element.findAll(".expand_y").forEach((e) => {
     e.classList.add("hidden");
+    e.style.height = "0";
   });
   element.findAll(".expand").forEach((e) => {
     e.classList.remove("open");
@@ -116,11 +110,11 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 
   parent = node;
   while (true) {
-    var parent = parent.findParentByClassName(["expandY", "categories"]);
+    var parent = parent.findParentByClassName(["expand_y", "categories"]);
     if (!parent) break;
     var btn = parent.prev().find(".btn");
     if (!btn) break;
-    expandWithArrow(btn.parent().next(), btn, {
+    expandWithArrow(btn.parent().next(), btn, true, {
       duration: 0,
     });
     parent = parent.parent();

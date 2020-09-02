@@ -73,7 +73,7 @@
         };
         setFormData(data, "#slideEdit");
 
-        setTitle("Nowy slajd");
+        setModalTitle("#slideEdit", "Nowy slajd");
         showModal("slideEdit", {
             source: btn
         });
@@ -83,7 +83,8 @@
         var data = mytable.results[i];
         setFormData(data, "#slideEdit");
 
-        setTitle("Edycja slajdu");
+        setModalTitle("#slideEdit", "Edycja slajdu");
+
         showModal("slideEdit", {
             source: btn
         });
@@ -109,10 +110,6 @@
             }
         });
     }
-
-    function setTitle(title = "Edycja slajdu") {
-        $(`#slideEdit .custom-toolbar .title`).innerHTML = title;
-    }
 </script>
 
 <?php startSection("content"); ?>
@@ -122,7 +119,7 @@
 <div id="slideEdit" data-modal data-expand>
     <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
-            <span class="title">Edycja slajdu</span>
+            <span class="title"></span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
