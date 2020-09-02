@@ -224,6 +224,20 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         });
       });
     <?php endif; ?>
+
+    function save(form) {
+      form = $(form);
+
+      const params = getFormData(form);
+
+      xhr({
+        url: "/admin/edit_zamowienie",
+        params,
+        success: (res) => {
+          window.location.reload();
+        }
+      });
+    }
   </script>
 </head>
 
@@ -470,7 +484,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
   <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
     <div id="zamowienieForm" data-modal>
-      <form action="/admin/edit_zamowienie" method="post" class="mobileRow modal-padding">
+      <div class="mobileRow modal-padding">
         <div style="margin-right:5px;width:50%">
           <p>Dane kontaktowe</p>
           <label>
@@ -591,13 +605,13 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
           <input type="hidden" value="<?= $zamowienie_link ?>" name="link">
           <div style="text-align:right;padding-top:20px">
             <div class="btn secondary" onclick="hideParentModal(this)">Anuluj</div>
-            <input type="submit" class="btn primary" value="Zapisz">
+            <button class="btn primary" onclick="save($('#zamowienieForm'))">Zapisz <i class="fa fa-save"></i></button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
     <div id="notatkaForm" data-modal>
-      <form action="/admin/edit_zamowienie" method="post" class="modal-padding" style="width:100%;max-width:500px">
+      <div class="modal-padding" style="width:100%;max-width:500px">
         <label>
           <span class="field-title">Notatki</span>
           <textarea name="e_notes" class="field" style="width: 100%; height: 80px; resize: none; border-radius: 4px;box-sizing: border-box;padding:4px"><?= $zamowienie_data["notes"] ?></textarea>
@@ -606,9 +620,9 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         <input type="hidden" value="<?= $zamowienie_link ?>" name="link">
         <div style="text-align:right;padding-top:20px">
           <div class="btn secondary" onclick="hideParentModal(this)">Anuluj</div>
-          <input type="submit" class="btn primary" value="Zapisz">
+          <button class="btn primary" onclick="save($('#notatkaForm'))">Zapisz <i class="fa fa-save"></i></button>
         </div>
-      </form>
+      </div>
     </div>
   <?php endif ?>
 

@@ -50,8 +50,31 @@
   });
 
   function addNew(btn) {
+    setFormData({
+      title: ""
+    }, "#newProduct");
+
     showModal("newProduct", {
       source: btn
+    });
+  }
+
+  function saveNewProduct() {
+    var f = $("#newProduct");
+
+    if (!validateForm(f)) {
+      return;
+    }
+
+    var params = getFormData(f);
+
+    xhr({
+      url: "/admin/create_product",
+      params: params,
+      success: (res) => {
+        // window.location.reload();
+        mytable.search();
+      }
     });
   }
 </script>
@@ -62,16 +85,16 @@
 <div class="mytable"></div>
 
 <div id="newProduct" data-modal>
-  <form onsubmit="return validateForm(this)" action="/admin/create_product" method="post" class="modal-padding">
+  <div class="modal-padding">
     <label>
       <span>Nazwa produktu</span>
       <input type="text" name="title" id="title" data-validate class="field">
     </label>
     <div style="text-align:right;padding-top:15px">
-      <button class="btn secondary" type="button" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-      <button type="submit" class="btn primary">Dodaj <i class="fa fa-plus"></i></button>
+      <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+      <button class="btn primary" onclick="saveNewProduct(); hideParentModal(this)">Dodaj <i class="fa fa-plus"></i></button>
     </div>
-  </form>
+  </div>
 </div>
 
 

@@ -116,13 +116,77 @@ if (strpos($url, "resetowanie-hasla") !== false)
     window.addEventListener("DOMContentLoaded", function() {
       setFormData(<?= json_encode($user_data, true) ?>, "#accountForm");
 
-      $$("form .field").forEach(e => {
+      $$("#dataForm .field").forEach(e => {
         e.addEventListener("input", function() {
-          var btn = $("#allowSave:disabled");
+          const btn = $("#allowSave:disabled");
           if (btn) btn.removeAttribute("disabled");
         });
       });
     });
+
+    function saveDataForm() {
+      form = $("#dataForm");
+
+      if (!validateForm(form)) {
+        return;
+      }
+
+      const params = getFormData(form);
+
+      xhr({
+        url: "/save_user",
+        params,
+        success: (res) => {
+          console.log(res);
+          if (res.message) {
+            $("#message .message").innerHTML = res.message;
+            showModal("message");
+          }
+
+          if (res.redirect) {
+            $("#message button").addEventListener("click", () => {
+              window.location = res.redirect;
+            })
+          }
+
+          if (res.data) {
+            setFormData(res.data, form);
+          }
+        }
+      });
+    }
+
+    function savePasswordForm() {
+      form = $("#passwordForm");
+
+      if (!validateForm(form)) {
+        return;
+      }
+
+      const params = getFormData(form);
+
+      xhr({
+        url: "/save_user",
+        params,
+        success: (res) => {
+          console.log(res);
+          if (res.message) {
+            $("#message .message").innerHTML = res.message;
+            showModal("message");
+          }
+
+          if (res.redirect) {
+            $("#message button").addEventListener("click", () => {
+              window.location = res.redirect;
+            })
+          }
+
+          if (res.data) {
+            setFormData(res.data, form);
+          }
+        }
+      });
+    }
   </script>
 </head>
 
@@ -130,10 +194,20 @@ if (strpos($url, "resetowanie-hasla") !== false)
   <?php include "global/header.php"; ?>
   <div id="accountForm" class="main-container">
     <div style="margin-top:30px"></div>
-    <?php
-    if (isset($_POST["message"]))
-      echo $_POST["message"];
-    ?>
+    <div id="message" data-modal data-expand>
+      <div style="display: flex;
+                  width: 300px;
+                  height: auto;
+                  background: #fff;
+                  padding: 10px;
+                  border-radius: 5px;
+                  flex-direction: column;
+                  justify-content: space-between;">
+        <div class="message" style="margin-bottom: 20px; text-align: center;"></div>
+        <button style="margin:auto;" class="btn primary" onclick="hideParentModal(this)">Okej <i class='fas fa-check'></i></button>
+      </div>
+    </div>
+
     <div style="margin-top:20px"></div>
 
     <div style="text-align:center;padding: 25px;font-size: 20px">
@@ -213,8 +287,8 @@ if (strpos($url, "resetowanie-hasla") !== false)
           </div>
         </div>
 
-        <div id="menu2" class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
-          <form method="post" action="/change_user_data" style="width:100%;" onsubmit="return validateForm(this)">
+        <div id="dataForm" class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
+          <div style="width:100%;">
             <div class="mobileRow" style="max-width: 820px;margin: 0 auto;">
               <div style="width: 50%; padding:10px">
                 <div style="width:100%;margin:auto;max-width:350px">
@@ -267,9 +341,8 @@ if (strpos($url, "resetowanie-hasla") !== false)
                       <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3">
                     </div>
                   </div>
-
                   <div style="margin-top: 70px;text-align: right;">
-                    <button type="submit" class="btn primary big" id="allowSave" disabled>
+                    <button class="btn primary big" id="allowSave" onclick="saveDataForm()" disabled>
                       Zapisz zmiany
                       <i class="fa fa-cog"></i>
                     </button>
@@ -277,11 +350,11 @@ if (strpos($url, "resetowanie-hasla") !== false)
                 </div>
               </div>
             </div>
-          </form>
+          </div>
         </div>
 
-        <div id="menu3" class="menu mobileRow <?php if ($menu == "haslo") echo "showNow"; ?>" style="<?php if ($menu != "haslo") echo 'display:none;'; ?>">
-          <form onsubmit="return validateForm(this)" action="/reset_password" method="post" style="width:100%;margin:40px auto;max-width:350px">
+        <div id="passwordForm" class="menu mobileRow <?php if ($menu == "haslo") echo "showNow"; ?>" style="<?php if ($menu != "haslo") echo 'display:none;'; ?>">
+          <div style="width:100%;margin:40px auto;max-width:350px">
             <h3 style="text-align: center;font-size: 26px;margin: 15px 0 35px;">Zmiana hasła</h3>
 
             <div class="field-title">Hasło (min. 8 znaków)</div>
@@ -293,7 +366,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
             <div class="field-title">Powtórz hasło</div>
             <div class="field-wrapper">
-              <input type="password" name="password_rewrite" class="field" data-validate="match:#menu3 .field[name='password']">
+              <input type="password" name="password_rewrite" class="field" data-validate="|match:#passwordForm .field[name='password']">
               <i class="correct fa fa-check"></i>
               <i class="wrong fa fa-times"></i>
             </div>
@@ -302,11 +375,11 @@ if (strpos($url, "resetowanie-hasla") !== false)
             <input type="hidden" name="moje-konto" value="1">
 
             <input type="hidden" name="email">
-            <button class="btn primary big" style="margin:10px 0; width: 100%">
+            <button class="btn primary big" style="margin:10px 0; width: 100%" onclick="savePasswordForm()">
               Akceptuj zmianę hasła
               <i class="fa fa-chevron-right"></i>
             </button>
-          </form>
+          </div>
         </div>
       </div>
 
