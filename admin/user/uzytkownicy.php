@@ -74,15 +74,15 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                     }),
                 },
                 {
-                    title: "Data utworzenia",
+                    title: "Utworzono",
                     width: "10%",
                     field: "stworzono",
                     sortable: true,
-                    searchable: "text",
+                    searchable: "date",
                 },
                 {
                     title: "Zamówienia",
-                    width: "10%",
+                    width: "7%",
                     render: (r, i, t) => {
                         var zamowienia = nonull(r.zamowienia_count);
                         if (r.zamowienia_count > 0) zamowienia += `<button class="btn secondary" style="margin-left:7px" onclick="showUser(${i}, '${t.name}')"> Pokaż <i class="fas fa-chevron-circle-right"></i></a>`;
@@ -204,6 +204,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
 <?php startSection("content"); ?>
 
+<br>
 <div class="mytable" id="caseAllUsers"></div>
 <div id="caseSingleUser" style="display:none">
     <div class="zamowieniatable"></div>

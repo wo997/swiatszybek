@@ -894,11 +894,16 @@ window.addEventListener("dragover", (event) => {
 function getPublishedDefinition() {
   return {
     title: "Widoczność",
-    width: "105px",
+    width: "135px",
     render: (r) => {
       return renderIsPublished(r);
     },
     escape: false,
+    field: "p.published",
+    searchable: "select",
+    select_single: true,
+    select_values: [1, 0],
+    select_labels: ["Tak", "Nie"],
   };
 }
 
@@ -1036,28 +1041,39 @@ function datatableFilter(btn, column_id) {
   } else if (filters == "date") {
     menu_header += `Wybierz datę`;
     menu_body += `
-      <select class="field margin_bottom">
+      <span class="field-title first">Typ wyszukiwania</span>
+      <select class="field margin_bottom date_type" onchange="dateTypeChanged(this)">
         <option value='='>Dokładna data</option>
-        <option value='>'>Data większa od</option>
-        <option value='>'>Data mniejsza od</option>
+        <option value='>'>Data od</option>
+        <option value='<'>Data do</option>
         <option value='<>'>Przedział</option>
       </select>
-      <input type="text" class="field default_datepicker margin_bottom" data-orientation="auto bottom" style='width: 254px;'>
-
-      <div class="glue-children margin_bottom" style='width: 254px;'>
-        <input type="text" class="field default_datepicker" data-orientation="left bottom">
-        <input type="text" class="field default_datepicker" data-orientation="right bottom">
+      <div class="singledate_wrapper">
+        <span class="field-title">Data</span>
+        <input type="text" class="field default_datepicker margin_bottom" data-orientation="auto bottom" style='width: 254px;'>
       </div>
-      
+
+      <div class="margin_bottom date_range_picker hidden" style='width: 254px;display:flex;align-items:center;'>
+        <div>
+          <span class="field-title">Od</span>
+          <input type="text" class="field start" data-orientation="left bottom">
+        </div>
+        <span style="font-weight:600;margin:3px">-</span>
+        <div>
+          <span class="field-title">Do</span>
+          <input type="text" class="field end" data-orientation="right bottom">
+        </div>
+      </div>
     `;
   } else if (filters == "select") {
     menu_header += `Zaznacz pola`;
     for (i = 0; i < col_def.select_values.length; i++) {
       var val = col_def.select_values[i];
       var label = col_def.select_labels ? col_def.select_labels[i] : val;
+      var select_single = col_def.select_single ? "true" : "false";
 
       menu_body += `<label class='checkbox-wrapper block'>
-        <input type='checkbox' value='${val}'><div class='checkbox'></div> ${label}
+        <input type='checkbox' value='${val}' onchange='filterCheckboxChanged(this,${select_single})'><div class='checkbox'></div> ${label}
       </label>`;
     }
   }
@@ -1119,7 +1135,12 @@ function datatableFilter(btn, column_id) {
 
   registerDatepickers();
 
-  // set values
+  var date_range_picker = $(".date_range_picker");
+  if (date_range_picker) {
+    createDateRangePicker(date_range_picker);
+  }
+
+  // set values in the filter form
 
   var filter_value = null;
 
@@ -1138,6 +1159,14 @@ function datatableFilter(btn, column_id) {
           e.setValue(1);
         }
       });
+    } else if (col_def.searchable == "date") {
+      filter_menu.find(".date_type").setValue(current_filter.type);
+      if (current_filter.type == "<>") {
+        $(".date_range_picker .start").setValue(filter_value[0]);
+        $(".date_range_picker .end").setValue(filter_value[1]);
+      } else {
+        $(".default_datepicker").setValue(filter_value);
+      }
     } else {
       var exact = current_filter.type != "%";
       if (!exact && filter_value.length >= 2) {
@@ -1147,6 +1176,26 @@ function datatableFilter(btn, column_id) {
       filter_menu.find(`.field`).setValue(filter_value);
     }
   }
+}
+
+function filterCheckboxChanged(checkbox, select_single) {
+  if (select_single) {
+    filter_menu.findAll(`input[type="checkbox"]`).forEach((e) => {
+      if (e != checkbox) {
+        e.setValue(0, true);
+      }
+    });
+  }
+}
+
+function dateTypeChanged(select) {
+  var isRange = false;
+  if (select.getValue() == "<>") {
+    isRange = true;
+  }
+
+  filter_menu.find(".singledate_wrapper").classList.toggle("hidden", isRange);
+  filter_menu.find(".date_range_picker").classList.toggle("hidden", !isRange);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -1207,6 +1256,25 @@ function setFilters(datatable, column_id) {
         field: col_def.field,
         type: "=",
         value: values,
+      });
+    }
+  } else if (col_def.searchable == "date") {
+    var date_type = filter_menu.find(".date_type").getValue();
+
+    if (date_type == "<>") {
+      datatable.filters.push({
+        field: col_def.field,
+        type: date_type,
+        value: [
+          reverseDateString($(".date_range_picker .start").getValue(), "-"),
+          reverseDateString($(".date_range_picker .end").getValue(), "-"),
+        ],
+      });
+    } else {
+      datatable.filters.push({
+        field: col_def.field,
+        type: date_type,
+        value: reverseDateString($(".default_datepicker").getValue(), "-"),
       });
     }
   } else {

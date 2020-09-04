@@ -269,11 +269,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function setValue(input, value, quiet = false) {
   input = $(input);
-  if (input.classList.contains("simple-list")) {
+  if (input.datepicker) {
+    if (value.substr(0, 4).match(/\d{4}/)) {
+      value = reverseDateString(value, "-");
+    }
+    input.datepicker.setDate(value);
+  } else if (input.classList.contains("simple-list")) {
     list = window[input.getAttribute("data-list-name")];
     list.setValuesFromString(value);
-  }
-  if (input.classList.contains("table-selection-value")) {
+  } else if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[
       datatable.getAttribute("data-datatable-name")

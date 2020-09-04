@@ -37,3 +37,8 @@ function niceDate($time = null)
 
     return date("d", $date_time) . " " . $m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
 }
+
+function changeDate($date_string, $offset)
+{
+    return date("Y-m-d", strtotime("$date_string $offset"));
+}

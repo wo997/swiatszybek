@@ -59,32 +59,12 @@ foreach ($status_list as $status) {
         subject: "zamówień",
       },
       bulk_edit: true,
-      width: 1300,
+      width: 1400,
       definition: zamowienia_table_definition,
-      controls: `
+      controlsRight: `
         <div class='float-icon'>
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
-        </div>
-
-        <select data-param="status_id" class="field inline">
-          <option value=''>Wszystkie</option>
-          <option value='otwarte'>Otwarte</option>
-          <?= $options ?>
-        </select>
-        <label style="margin:6px 8px;user-select:none">
-          <input type="checkbox" onchange="setFilter()" class="hasFilter">
-          <div class="checkbox"></div>
-          Filtruj wg daty
-        </label>
-        <div class="flexbar caseFilter hidden">
-          <button onclick="changeDate(-1)" class="timeBtn"><i class="fa fa-chevron-left"></i></button>
-          <div class="datarangepicker_inputs">
-            <input class="field inline daterangepicker_start" type="text" data-type="date" data-format="dmy" data-param="dateFrom" value="<?= date("d-m-Y", time() - 60 * 60 * 24 * 6) ?>">
-            <span> - </span>
-            <input class="field inline daterangepicker_end" type="text" data-type="date" data-format="dmy" data-param="dateTo" value="<?= date("d-m-Y", time()) ?>">
-          </div> 
-          <button onclick="changeDate(1)" class="timeBtn"><i class="fa fa-chevron-right"></i></button>
         </div>
       `,
       onSearch: () => {
@@ -95,16 +75,6 @@ foreach ($status_list as $status) {
           })
         }, 0);
       },
-      onCreate: () => {
-        window[tableName].dateRangePicker = new DateRangePicker($('.mytable .datarangepicker_inputs'), {
-          todayHighlight: true,
-          todayBtn: true,
-          clearBtn: true,
-          maxView: 2,
-          language: "pl",
-          autohide: true,
-        });
-      }
     });
   });
 
@@ -146,43 +116,11 @@ foreach ($status_list as $status) {
       });
     });
   }
-
-  function setFilter() {
-    // TODO: fix ugly animation when toggling filtering
-    $(".mytable .caseFilter").classList.toggle("hidden", !$(".mytable .hasFilter").checked);
-    mytable.search(() => {});
-  }
-
-  function changeDate(direction) {
-    var dateFrom = $(`.mytable .daterangepicker_start`);
-    var dateTo = $(`.mytable .daterangepicker_end`);
-
-    var date1 = new Date(dateFrom.getValue());
-    var date2 = new Date(dateTo.getValue());
-
-    var diff = date2.getTime() + 1000 * 3600 * 24 - date1.getTime();
-
-    date1.setTime(date1.getTime() + diff * direction);
-    date2.setTime(date2.getTime() + diff * direction);
-
-    var date1string = dateToString(date1, "dmy")
-    var date2string = dateToString(date2, "dmy")
-
-    var datePickers = mytable.dateRangePicker.datepickers;
-    if (direction === -1) {
-      datePickers[0].setDate(date1string)
-      datePickers[1].setDate(date2string)
-    } else {
-      datePickers[1].setDate(date2string)
-      datePickers[0].setDate(date1string)
-    }
-
-    mytable.search();
-  }
 </script>
 
 <?php startSection("content"); ?>
 
+<br>
 <div class="mytable"></div>
 
 <div class="bulkOptions" style="text-align:center;margin: 40px 0;display:none">

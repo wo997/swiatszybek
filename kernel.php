@@ -123,7 +123,9 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
   die;
 }
 
-include "deployment/automatic_build.php";
+if (config("dev_mode", true)) {
+  include "deployment/automatic_build.php";
+}
 
 // automatic_build can override
 define("RELEASE", 2137);

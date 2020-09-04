@@ -428,9 +428,11 @@ textarea {
     table-layout: fixed;
   }
 }
-.datatable td:not(.auto-width),
-.datatable th:not(.auto-width) {
+.datatable td:not(.auto-width) {
   padding: 6px 8px;
+}
+.datatable th:not(.auto-width) {
+  padding: 9px 8px;
 }
 .datatable td:not(.auto-width) {
   max-width: 400px;
@@ -552,6 +554,19 @@ textarea {
 
 .bulk_edit_checkbox + .checkbox {
   margin: -2px 0;
+}
+
+.datatable th:first-child {
+  border-top-left-radius: 5px;
+}
+.datatable th:last-child {
+  border-top-right-radius: 5px;
+}
+.datatable tr:nth-last-child(2) td:first-child {
+  border-bottom-left-radius: 5px;
+}
+.datatable tr:nth-last-child(2) td:last-child {
+  border-bottom-right-radius: 5px;
 }
 
 /* datatable */
@@ -2409,7 +2424,7 @@ ql-icon i span {
   overflow: hidden;
 }
 .hidden:not(.expand_y) {
-  display: none;
+  display: none !important;
 }
 .expand.btn {
   margin-left: 5px;
