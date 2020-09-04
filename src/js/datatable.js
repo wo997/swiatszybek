@@ -891,7 +891,7 @@ window.addEventListener("dragover", (event) => {
 
 // published start
 
-function getPublishedDefinition() {
+function getPublishedDefinition(options = {}) {
   return {
     title: "Widoczność",
     width: "135px",
@@ -899,11 +899,11 @@ function getPublishedDefinition() {
       return renderIsPublished(r);
     },
     escape: false,
-    field: "p.published",
+    field: nonull(options.field, "published"),
     searchable: "select",
     select_single: true,
     select_values: [1, 0],
-    select_labels: ["Tak", "Nie"],
+    select_labels: ["Publiczny", "Ukryty"],
   };
 }
 
@@ -1053,12 +1053,11 @@ function datatableFilter(btn, column_id) {
         <input type="text" class="field default_datepicker margin_bottom" data-orientation="auto bottom" style='width: 254px;'>
       </div>
 
-      <div class="margin_bottom date_range_picker hidden" style='width: 254px;display:flex;align-items:center;'>
-        <div>
+      <div class="margin_bottom date_range_picker hidden" style='width: 254px;display:flex;'>
+        <div style="margin-right:5px">
           <span class="field-title">Od</span>
           <input type="text" class="field start" data-orientation="left bottom">
         </div>
-        <span style="font-weight:600;margin:3px">-</span>
         <div>
           <span class="field-title">Do</span>
           <input type="text" class="field end" data-orientation="right bottom">
