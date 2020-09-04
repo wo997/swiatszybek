@@ -140,6 +140,11 @@ function paginateData($data = null)
 function getFilterCondition($field, $type, $filter_value)
 {
     //if (in_array($type, ["=", "!=", "%"])) {
+
+    if ($type == "<>") {
+        return " AND $field BETWEEN " . escapeSQL($filter_value[0]) . " AND " . escapeSQL(changeDate($filter_value[1], "+1 day"));
+    }
+
     if (is_array($filter_value)) {
         if ($filter_value) {
             $list = "";
@@ -154,19 +159,24 @@ function getFilterCondition($field, $type, $filter_value)
             }
             return "";
         }
-    } else {
-        $q = "=";
-        if ($type == "!=") {
-            $q = "!=";
-        } else if ($type == "%") {
-            $q = "LIKE";
-            if (!preg_replace("/[^%]/", "", $filter_value)) {
-                return "";
-            }
-        }
-        return " AND $field " . $q . escapeSQL($filter_value);
     }
-    //}
+
+    if ($type == "%") {
+        if (!preg_replace("/[^%]/", "", $filter_value)) {
+            return "";
+        }
+        return " AND $field LIKE " . escapeSQL($filter_value);
+    }
+
+    if ($type == ">") {
+        return " AND $field > " . escapeSQL($filter_value);
+    }
+
+    if ($type == "<") {
+        return " AND $field < " . escapeSQL(changeDate($filter_value, "+1 day"));
+    }
+
+    return " AND $field " . ($type == "!=" ? "!=" : "=") . escapeSQL($filter_value);
 }
 
 $requiredFilterTables = [

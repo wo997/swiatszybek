@@ -1,5 +1,5 @@
 <?php //route[get_zamowienie_status]
 
-$status = fetchValue("SELECT status FROM zamowienia WHERE link = ?", [$_GET['link']]);
+$status_id = fetchValue("SELECT status_id FROM zamowienia WHERE link = ?", [$_GET['link']]);
 
-die(json_encode(["status" => $status]));
+die(json_encode(["status_id" => $status_id]));

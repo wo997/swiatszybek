@@ -1,32 +1,63 @@
 <?php
 
-$dostawy = ["p" => "Paczkomat", "k" => "Kurier", "o" => "Odbiór osobisty"];
+$dostawy = ["paczkomat" => "Paczkomat", "kurier" => "Kurier", "osobisty" => "Odbiór osobisty"];
 
 // statuses
-$statusList = [
-    0 => [
+$status_list = [
+    [
+        "id" => 0,
         "title" => "Oczekuje na opłatę",
         "color" => "dd3",
+        "state" => "open",
     ],
-    1 => [
-        "title" => "Opłacono - w realizacji",
+    [
+        "id" => 1,
+        "title" => "W realizacji",
         "color" => "3a3",
+        "state" => "open",
     ],
-    5 => [
+    [
+        "id" => 2,
         "title" => "Do odbioru",
         "color" => "e90",
+        "state" => "open",
     ],
-    2 => [
+    [
+        "id" => 3,
         "title" => "Wysłano",
         "color" => "44d",
+        "state" => "closed",
     ],
-    3 => [
+    [
+        "id" => 4,
         "title" => "Odebrano",
         "color" => "39c",
+        "state" => "closed",
     ],
-    4 => [
+    [
+        "id" => 100,
         "title" => "Anulowano",
         "color" => "b33",
+        "state" => "closed",
+    ],
+];
+
+$zamowienia_status_groups = [
+    [
+        "name" => "open",
+        "label" => '<span style="color:#3c3;font-weight:600">Otwarte <i class="fas fa-chevron-right"></i></span>',
+        "ids" => flatMapArray(
+            filterArrayByKey($status_list, "state", "open"),
+            "id"
+        ),
+    ],
+    [
+        "name" => "closed",
+        "label" => '<span style="color:#c33;font-weight:600">Zamknięte <i class="fas fa-chevron-right"></i></span>',
+        "ids" => flatMapArray(
+            filterArrayByKey($status_list, "state", "closed"),
+            "id"
+        ),
     ],
 ];
 
@@ -163,10 +194,12 @@ function validateStock()
     }
 }
 
+// also order.js
 function renderStatus($status_id)
-{ // shared.js
-    global $statusList;
-    return "<div class='rect' style='background:#" . $statusList[$status_id]["color"] . "'>" . $statusList[$status_id]["title"] . "</div>";
+{
+    global $status_list;
+    $status = getRowById($status_list, $status_id);
+    return "<div class='rect' style='background:#" . $status["color"] . "'>" . $status["title"] . "</div>";
 }
 
 function getBasketContent()

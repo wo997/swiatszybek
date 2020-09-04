@@ -1,6 +1,6 @@
 <?php
 
-// also shared.js
+// also globaj.js 
 function getLink($phrase)
 {
     $pl = array(',', ' ', 'ę', 'Ę', 'ó', 'Ó', 'ą', 'Ą', 'ś', 'Ś', 'ł', 'Ł', 'ż', 'Ż', 'ź', 'Ź', 'ć', 'Ć', 'ń', 'Ń');

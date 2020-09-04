@@ -1,7 +1,7 @@
 /* js[global] */
 
 function getDatepickerDefaultOptions(e) {
-  return {
+  var options = {
     todayHighlight: true,
     todayBtn: true,
     clearBtn: true,
@@ -10,6 +10,11 @@ function getDatepickerDefaultOptions(e) {
     autohide: true,
     container: e.findScrollableParent(),
   };
+  var orientation = e.getAttribute("data-orientation");
+  if (orientation) {
+    options.orientation = orientation;
+  }
+  return options;
 }
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -19,7 +24,25 @@ window.addEventListener("DOMContentLoaded", () => {
 function registerDatepickers() {
   $$(".default_datepicker:not(.registered)").forEach((e) => {
     e.classList.add("registered");
-
-    new Datepicker(e, getDatepickerDefaultOptions(e));
+    createDatePicker(e);
   });
+}
+
+function createDatePicker(node) {
+  return new Datepicker(node, getDatepickerDefaultOptions(node));
+}
+
+function createDateRangePicker(node) {
+  var dateRangePicker = new DateRangePicker(
+    node,
+    getDatepickerDefaultOptions(node)
+  );
+
+  for (let i = 0; i < 2; i++) {
+    dateRangePicker.datepickers[i].setOptions(
+      getDatepickerDefaultOptions($(dateRangePicker.inputs[i]))
+    );
+  }
+
+  return dateRangePicker;
 }

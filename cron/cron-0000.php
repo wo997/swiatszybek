@@ -10,7 +10,7 @@ function dailyReport()
 {
     $day = date("Y-m-d", time() - 3600 * 5);
 
-    $where = "DATE(oplacono) = '$day' AND status NOT IN (4)";
+    $where = "DATE(oplacono) = '$day' AND status_id NOT IN (4)";
 
     $variant_list = [];
 

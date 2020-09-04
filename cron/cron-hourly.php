@@ -11,7 +11,7 @@ function sendPaymentNotification($delayHours = 5)
 
     $zamowienia = fetchArray(
         "SELECT zamowienie_id, link, email, imie, nazwisko, zlozono
-        FROM zamowienia WHERE status = 0 AND zlozono >= '$dateBottom' AND zlozono < '$dateTop'"
+        FROM zamowienia WHERE status_id = 0 AND zlozono >= '$dateBottom' AND zlozono < '$dateTop'"
     );
 
     foreach ($zamowienia as $z) {
@@ -41,7 +41,7 @@ function inviteToGiveComment($hour = 18, $daysAfterSent = 14)
 
         $zamowienia = fetchArray(
             "SELECT zamowienie_id, link, email, imie, nazwisko, zlozono, basket, user_id
-            FROM zamowienia WHERE status IN (2,3) AND DATE(wyslano) = '$someDaysAgoDate'"
+            FROM zamowienia WHERE status_id IN (2,3) AND DATE(wyslano) = '$someDaysAgoDate'"
         );
 
         foreach ($zamowienia as $z) {

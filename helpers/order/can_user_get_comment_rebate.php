@@ -6,7 +6,7 @@ if ($app["user"]["id"]) {
     $sql = "
         SELECT * FROM basket_content INNER JOIN zamowienia USING (zamowienie_id)
         WHERE user_id = {$app["user"]["id"]}
-        AND status IN (2,3)
+        AND status_id IN (2,3)
         AND product_id = " . $input["product_id"] . "
         AND rebate_generated = 0
         GROUP BY product_id

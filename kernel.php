@@ -12,8 +12,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
-
 $build_info_path = "builds/build_info.php";
 
 // default values - ovverriden by 'build_info'
@@ -25,10 +23,6 @@ $versionCSS = 0;
 $versionJS = 0;
 
 @include $build_info_path;
-
-define("RELEASE", 2137);
-define("CSS_RELEASE", $versionCSS);
-define("JS_RELEASE", $versionJS);
 
 // define WebP support also for XHR requests
 define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
@@ -70,17 +64,17 @@ require_once "helpers/db/connect.php";
 $app = [];
 
 // use annotations
-$link_route_path = @require_once BUILDS_PATH . "link_route_path.php";
+$link_route_path = @include BUILDS_PATH . "link_route_path.php";
 if (!$link_route_path) {
   $link_route_path = [];
 }
 
-$link_module_path = @require_once BUILDS_PATH . "link_module_path.php";
+$link_module_path = @include BUILDS_PATH . "link_module_path.php";
 if (!$link_module_path) {
   $link_module_path = [];
 }
 
-$link_event_paths = @require_once BUILDS_PATH . "link_event_paths.php";
+$link_event_paths = @include BUILDS_PATH . "link_event_paths.php";
 if (!$link_event_paths) {
   $link_event_paths = [];
 }
@@ -129,4 +123,11 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
   die;
 }
 
-include "deployment/automatic_build.php";
+if (config("dev_mode", true)) {
+  include "deployment/automatic_build.php";
+}
+
+// automatic_build can override
+define("RELEASE", 2137);
+define("CSS_RELEASE", $versionCSS);
+define("JS_RELEASE", $versionJS);

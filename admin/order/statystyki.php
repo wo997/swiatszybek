@@ -37,8 +37,8 @@
         data.addColumn('number', "Nowe zamówienia");
         data.addColumn('number', "Wpłacono");
 
-        var dateFrom = new Date($("#dateFrom").value);
-        var dateTo = new Date($("#dateTo").value);
+        var dateFrom = new Date($(".daterangepicker_start").value);
+        var dateTo = new Date($(".daterangepicker_end").value);
 
         var chartData = [];
 
@@ -138,6 +138,11 @@
         }
     }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        var e = $('.datarangepicker_inputs');
+        window.dateRangePicker = createDateRangePicker(e);
+    });
+
     var currPage = 0;
     var pages = 1;
     var requestOn = false;
@@ -146,6 +151,7 @@
         if (requestOn) return;
         requestOn = true;
 
+        // TODO: XHR
         orderRequest = new XMLHttpRequest();
         orderRequest.open("POST", "/admin/search_statystyki", true);
         orderRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -183,8 +189,8 @@
         }
 
         var dateFilterQuery = "";
-        var dateFrom = $("#dateFrom");
-        var dateTo = $("#dateTo");
+        var dateFrom = $(".daterangepicker_start");
+        var dateTo = $(".daterangepicker_end");
 
         if (data.source) {
             var date1 = new Date(dateFrom.value);
@@ -213,22 +219,31 @@
         orderRequest.send("chart=1" + dateFilterQuery);
     }
 
+
     function changeDate(direction) {
-        var dateFrom = $("#dateFrom");
-        var dateTo = $("#dateTo");
+        var dateFrom = $(`.daterangepicker_start`);
+        var dateTo = $(`.daterangepicker_end`);
 
-        var date1 = new Date(dateFrom.value);
-        var date2 = new Date(dateTo.value);
+        var date1 = new Date(dateFrom.getValue());
+        var date2 = new Date(dateTo.getValue());
 
-        var diff = date2.getTime() + 86400000 - date1.getTime();
+        var diff = date2.getTime() + 1000 * 3600 * 24 - date1.getTime();
 
         date1.setTime(date1.getTime() + diff * direction);
         date2.setTime(date2.getTime() + diff * direction);
 
-        requestOn = true;
-        dateFrom.value = date1.toISOString().substring(0, 10);
-        dateTo.value = date2.toISOString().substring(0, 10);
-        requestOn = false;
+        var date1string = dateToString(date1, "dmy")
+        var date2string = dateToString(date2, "dmy")
+
+        var datePickers = dateRangePicker.datepickers;
+        if (direction === -1) {
+            datePickers[0].setDate(date1string)
+            datePickers[1].setDate(date2string)
+        } else {
+            datePickers[1].setDate(date2string)
+            datePickers[0].setDate(date1string)
+        }
+
         search();
     }
 </script>
@@ -238,10 +253,14 @@
 <div>
     <div style="text-align:center;padding: 5px;display: flex;justify-content: center;align-items: center;">
         <button onclick="changeDate(-1)" class="timeBtn"><i class="fa fa-chevron-left"></i></button>
-        <input type="text" class="datepicker center" id="dateFrom" onchange="search({source:this})" value="<?= date("Y-m-d", strtotime("-6 days")) ?>">
-        <span style='margin:5px'> - </span><input type="text" class="datepicker center" id="dateTo" onchange="search({source:this})" value="<?= date("Y-m-d") ?>">
+        <div class="datarangepicker_inputs">
+            <input class="field inline daterangepicker_start" data-orientation="right bottom" type="text" data-type="date" data-format="dmy" data-param="dateFrom" value="<?= date("d-m-Y", time() - 60 * 60 * 24 * 6) ?>">
+            <span> - </span>
+            <input class="field inline daterangepicker_end" type="text" data-type="date" data-format="dmy" data-param="dateTo" value="<?= date("d-m-Y", time()) ?>">
+        </div>
         <button onclick="changeDate(1)" class="timeBtn"><i class="fa fa-chevron-right"></i></button>
     </div>
+
     <div style="position:relative">
         <div id="summary" style="text-align:center;top:20px;position:absolute;z-index:19;width:100%;font-size:17px"></div>
         <div id="chart" style="width: 100%; height: 500px;"></div>

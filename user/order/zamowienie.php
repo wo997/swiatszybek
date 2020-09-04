@@ -26,7 +26,7 @@ $res = "<table class='item-list item-list-full'><tr style='background: #60d010;c
   <td>Ilość</td>
   <td>Suma</td>";
 
-if ($app["user"]["permissions"]["backend_access"]) {
+if ($app["user"]["priveleges"]["backend_access"]) {
   $res .= "<td>Cena&nbsp;nabycia:</td>";
 }
 
@@ -56,7 +56,7 @@ if (empty($basket)) {
         <td class='oneline' data-stock=''>" . $item['quantity'] . " szt.</td>
         <td class='pln oneline basket-price'><label>Suma:</label> <span>" . $item['total_price'] . "</span> zł</td>";
 
-    if ($app["user"]["permissions"]["backend_access"]) {
+    if ($app["user"]["priveleges"]["backend_access"]) {
       $res .= "<td class='pln oneline'><label>Cena&nbsp;nabycia:</label> <input class='nabyto' style='width:70px' type='text' onchange='setNabyto(" . $item['basket_item_id'] . ",this)' value='" . intval(nonull($item, 'purchase_price', "")) . "'> zł</td>";
     }
     $res .= "</tr>";
@@ -135,19 +135,19 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
     }
   </style>
   <script>
-    <?php if ($zamowienie_data["status"] == 0) : ?>
-      status = <?= $zamowienie_data["status"] ?>;
+    <?php if ($zamowienie_data["status_id"] == 0) : ?>
+      const status_id = <?= $zamowienie_data["status_id"] ?>;
 
       setInterval(() => {
-        ajax('/get_zamowienie_status?link=<?= $zamowienie_link ?>', {}, (response) => {
-          if (JSON.parse(response).status != status) {
+        ajax('/get_zamowienie_status_id?link=<?= $zamowienie_link ?>', {}, (response) => {
+          if (JSON.parse(response).status_id != status_id) {
             window.location.reload();
           }
         }, null);
       }, 3000);
     <?php endif ?>
 
-    <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
+    <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
 
       var basket = <?= json_encode($basket) ?>;
 
@@ -244,7 +244,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 <body class="default-form">
   <?php include "global/header.php"; ?>
   <div class="body" style="width:100%;max-width: 1100px; margin: auto;padding: 10px 10px 60px; box-sizing: border-box;">
-    <?php if ($app["user"]["permissions"]["backend_access"]) { ?>
+    <?php if ($app["user"]["priveleges"]["backend_access"]) { ?>
       <div class="navbar_wrapper">
         <div class="navbar_admin">
           <?php include "admin/navbar.php" ?>
@@ -259,14 +259,14 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
     <h3 style="text-align: center;font-size: 20px;margin: 45px 0 35px;">
       <?php
-      if ($zamowienie_data["status"] == 0) {
+      if ($zamowienie_data["status_id"] == 0) {
         echo "Opłata za zamówienie";
       } else {
         echo "Zamówienie";
       }
       echo " #" . $zamowienie_data["zamowienie_id"];
 
-      if ($app["user"]["permissions"]["backend_access"]) { // status is an actual ID
+      if ($app["user"]["priveleges"]["backend_access"]) { // status_id is an actual ID
         echo "<button class='btn primary' style='font-size:14px;margin-left:5px;font-weight:normal' onclick='showModal(\"zamowienieForm\");'>Edytuj</button>";
         echo "<a class='btn primary' style='font-size:14px;margin-left:5px;font-weight:normal' href='/zakup/$zamowienie_link'>Ponów</a>";
       }
@@ -275,25 +275,25 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
     <h4 style="margin-bottom: 24px;text-align: center;font-size:17px">Status: <?php
                                                                               //include "status_div.php";
-                                                                              echo renderStatus($zamowienie_data["status"]);
+                                                                              echo renderStatus($zamowienie_data["status_id"]);
                                                                               ?></h4>
 
     <div style="text-align:center">
       <?php
-      if ($app["user"]["permissions"]["backend_access"]) { // status is an actual ID
+      if ($app["user"]["priveleges"]["backend_access"]) { // status_id is an actual ID
         $c = 0;
-        foreach ($statusList as $status_id => $status) {
+        foreach ($status_list as $status) {
           $status_text = $status["title"];
-          if ($status_id == 2 && $zamowienie_data["dostawa"] == 'o') continue;
-          if ($status_id == 5 && $zamowienie_data["dostawa"] != 'o') continue;
+          if ($status["id"] == 2 && $zamowienie_data["dostawa"] == 'o') continue;
+          if ($status["id"] == 5 && $zamowienie_data["dostawa"] != 'o') continue;
           $c++;
 
           //$current = $k == $status ? "style='background:#60d010;color:white' onclick='return false;'" : "";
-          $current = $zamowienie_data["status"] == $status_id ? "style='background:#" . $status["color"] . ";color:white' " : "";
-          if ($status_id == 2 && !$tracking_link)
+          $current = $zamowienie_data["status_id"] == $status["id"] ? "style='background:#" . $status["color"] . ";color:white' " : "";
+          if ($status["id"] == 2 && !$tracking_link)
             $current .=  " onclick='return confirm(\"Nie podałeś nr śledzenia paczki, kontynuować pomimo tego?\");' ";
 
-          echo "<a class='status_btn' $current href='/admin/zmien_status/" . $zamowienie_link . "/$status_id'>$c. $status_text</a>";
+          echo "<a class='status_btn' $current href='/admin/zmien_status/" . $zamowienie_link . "/" . $status["id"] . "'>$c. $status_text</a>";
         }
 
         if (!empty($zamowienie_data["user_id"])) {
@@ -353,7 +353,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
         <p><?= $dostawaString ?></p>
 
-        <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
+        <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
           <div>
             <span>Nr śledzenia paczki</span>
             <button class="btn primary" onclick='showModal("zamowienieForm");document.getElementsByName("e_track")[0].focus()'>Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button>
@@ -419,7 +419,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
           <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia</span>
           <b style="display:inline-block;font-size: 18px;"><span id="total-cost" style="display:inline-block;" class="pln"><?= $zamowienie_data["koszt"] ?> zł</span></b>
 
-          <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
+          <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
             <br>
             <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Zysk</span>
             <b style="display:inline-block;font-size: 18px;"><span id="zysk" style="display:inline-block;" class="pln"> zł</span></b>
@@ -429,7 +429,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         <h4>Uwagi dotyczące zamówienia</h4>
         <textarea name="uwagi" readonly style="width: 100%; height: 80px; resize: none;"><?= $zamowienie_data["uwagi"] ?></textarea>
 
-        <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
+        <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
           <h4>Notatki (niewidoczne dla klienta)</h4>
           <textarea onclick='showModal("notatkaForm",{source:this});moveCursorToEnd(document.getElementsByName("e_notes")[0])' name="notes" readonly style="width: 100%;cursor:pointer; height: 80px; resize: none;"><?= $zamowienie_data["notes"] ?></textarea>
 
@@ -456,7 +456,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         <?php endif ?>
 
         <div style="margin: 30px 0 70px">
-          <?php if ($zamowienie_data["status"] == 0) : ?>
+          <?php if ($zamowienie_data["status_id"] == 0) : ?>
             <div class="mobileRow">
               <b style="display:block;font-size: 20px; text-align: center; margin: 15px 0 35px;min-width:300px">Zapłać <?= $zamowienie_data["koszt"] ?> zł</b>
 
@@ -482,7 +482,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
     </div>
   </div>
 
-  <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
+  <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
     <div id="zamowienieForm" data-modal>
       <div class="mobileRow modal-padding">
         <div style="margin-right:5px;width:50%">

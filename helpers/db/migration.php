@@ -56,7 +56,7 @@ function dropTable($table)
     }
 }
 
-function getColumnDefinition($column)
+function getColumnDefinition($column, $keys = true)
 {
     $definition = clean($column["name"])
         . " " . $column["type"]
@@ -68,12 +68,22 @@ function getColumnDefinition($column)
         $definition .= " DEFAULT " . escapeSQL($column["default_string"]);
     }
 
-    if (isset($column["primary"])) {
-        $definition .= " PRIMARY KEY";
+    if (!$keys) {
+        return $definition;
     }
 
-    if (isset($column["increment"])) {
-        $definition .= " AUTO_INCREMENT";
+    if (isset($column["index"])) {
+        if ($column["index"] == "primary") {
+            $definition .= " PRIMARY KEY";
+        } else if ($column["index"] == "unique") {
+            $definition .= " UNIQUE KEY";
+        } else if ($column["index"] == "index") {
+            // do it after the table is created
+        }
+
+        if (isset($column["increment"])) {
+            $definition .= " AUTO_INCREMENT";
+        }
     }
 
     return $definition;
@@ -167,15 +177,15 @@ function dropIndexByName($table, $key_name)
 
 /**
  * Create table in DB with specified columns allowing to modify the table if necessary
- * parameter details in function addColumns($table, $columns)
+ * parameter details in function alterTable($table, $columns)
  * @param  string $table
  * @param array<array> $columns
  * @return void
  */
-function createDatatable($table, $columns)
+function createTable($table, $columns)
 {
     if (tableExists($table)) {
-        addColumns($table, $columns); // possibly modify columns at this point, totally flexible
+        alterTable($table, $columns); // possibly modify columns at this point, totally flexible
         return;
     }
 
@@ -213,7 +223,7 @@ function createDatatable($table, $columns)
  * @param array<array> $columns
  * @return void
  */
-function addColumns($table, $columns)
+function alterTable($table, $columns)
 {
     foreach ($columns as $column) {
         $column["null"] = nonull($column, "null", false);
@@ -223,7 +233,6 @@ function addColumns($table, $columns)
 
         $isNew = false;
         $modify = false;
-        $skip = false;
 
         if (isset($column["previous_name"]) && $column["previous_name"] !== $column["name"]) {
             $differentNameColumnExists = columnExists($table, $column["previous_name"]);
@@ -247,13 +256,14 @@ function addColumns($table, $columns)
             $isNew = true;
         } else { // compare new column with already existing one
             foreach (fetchArray("DESC " . clean($table)) as $existing_column) {
-                if (isset($column["primary"]) && $existing_column["Key"] === "PRI") {
-                    $skip = true;
-                    break;
-                }
                 // early escape if names are different
                 if ($existing_column["Field"] != $column["previous_name"]) {
                     continue;
+                }
+
+                if ($existing_column["Key"] === "PRI" xor in_array(nonull($column, "index"), ["primary", "unique"])) {
+                    $modify = true;
+                    break;
                 }
 
                 // compare nulls
@@ -275,7 +285,11 @@ function addColumns($table, $columns)
                     $modify = true;
                     break;
                 }
-                if (isset($column["increment"]) xor isset($existing_column["increment"])) {
+                if (isset($column["increment"]) xor $existing_column["Extra"] == "auto_increment") {
+                    $def = getColumnDefinition($column, false);
+                    $def = str_replace($column["name"], $column["previous_name"], str_replace("AUTO_INCREMENT", "", $def));
+                    query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $def);
+                    dropIndex($table, $column["name"]);
                     $modify = true;
                     break;
                 }
@@ -299,12 +313,19 @@ function addColumns($table, $columns)
 
         $definition = getColumnDefinition($column);
 
-        if ($modify && !$skip) {
+        if ($modify) {
             query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);
             echo "🔄 Column '" . $column["name"] . "' modified in $table<br>";
         } else if ($isNew) {
             query("ALTER TABLE " . clean($table) . " ADD " . $definition);
             echo "➕ Column '" . $column["name"] . "' added into $table<br>";
+        }
+    }
+
+    // do it after the table is created
+    foreach ($columns as $column) {
+        if (nonull($column, "index") == "index") {
+            addIndex($table, $column["name"], "index");
         }
     }
 }

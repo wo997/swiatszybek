@@ -53,22 +53,46 @@ var zamowienia_table_definition = [
     title: "Status",
     width: "205px",
     render: (r) => {
-      return renderStatus(r.status);
+      return renderStatus(r.status_id);
     },
     escape: false,
+    field: "status_id",
+    searchable: "select",
+    select_values: status_list.map((e) => {
+      return e.id;
+    }),
+    select_labels: status_list.map((e) => {
+      return e.title;
+    }),
+    renderSearch: (filters_html) => {
+      var html = "";
+
+      var first = true;
+      zamowienia_status_groups.forEach((group) => {
+        html += `<button class="btn subtle fill" style="background: #fafafa;${
+          !first ? "margin-top:5px" : ""
+        }" onclick="selectFilterCheckboxes(${JSON.stringify(group.ids)})">${
+          group.label
+        }</button>`;
+        first = false;
+      });
+
+      html += filters_html;
+      return html;
+    },
   },
   {
     title: "Utworzono",
     width: "10%",
-    render: (r) => {
-      return nonull(r.zlozono);
-    },
+    field: "zlozono",
+    sortable: true,
+    searchable: "date",
   },
   {
     title: "Wysłano",
     width: "10%",
-    render: (r) => {
-      return nonull(r.wyslano);
-    },
+    field: "wyslano",
+    sortable: true,
+    searchable: "date",
   },
 ];

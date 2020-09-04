@@ -15,7 +15,7 @@ else {
   run();
 }
 
-//$cansee = $app["user"]["permissions"]["backend_access"] ? "" : "AND published = 1";
+//$cansee = $app["user"]["priveleges"]["backend_access"] ? "" : "AND published = 1";
 //$product_data = fetchRow("SELECT product_id, title, link, seo_title, seo_description, description, specyfikacja_output, descriptionShort, price_min, price_max, image, published, cache_avg_rating, cache_rating_count FROM products WHERE product_id = $number");
 
 $product_data = fetchRow("SELECT * FROM products WHERE product_id = $number");
@@ -660,7 +660,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         renderRow: (r) => {
           var canDelete = r.user_id == <?= $app["user"]["id"] ? $app["user"]["id"] : 0 ?>;
           var canAccept = r.accepted == 0;
-          var isAdmin = <?= $app["user"]["permissions"]["backend_access"] ? "true" : "false" ?>;
+          var isAdmin = <?= $app["user"]["priveleges"]["backend_access"] ? "true" : "false" ?>;
           if (!isAdmin) canAccept = false;
           if (isAdmin) canDelete = true;
 
@@ -705,7 +705,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
             render: (r) => {
               var canDelete = r.user_id == <?= $app["user"]["id"] ? $app["user"]["id"] : 0 ?>;
               var canAccept = r.accepted == 0;
-              var isAdmin = <?= $app["user"]["permissions"]["backend_access"] ? "true" : "false" ?>;
+              var isAdmin = <?= $app["user"]["priveleges"]["backend_access"] ? "true" : "false" ?>;
               if (!isAdmin) canAccept = false;
               if (isAdmin) canDelete = true;
 
@@ -843,7 +843,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
   <?php
   include "global/header.php";
 
-  if ($product_data["published"] || $app["user"]["permissions"]["backend_access"]) {
+  if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"]) {
     include "produkt_view.php";
   } else {
     echo '<div class="centerVerticallyMenu" style="text-align:center">
