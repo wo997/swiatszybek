@@ -1,12 +1,17 @@
 /* js[global] */
 function createDatatable(datatable) {
   // REQUIRED name, definition | renderRow, url, primary, db_table
-  // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate
+  // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate, bulk_edit
   // sortable (requires primary, db_table) IMPORTANT - not the same as column sortable
   // selectable: {data,output},
   // has_metadata: (boolean, enables outputting metadata from additional row inputs)
   // tree_view
   // lang: {subject, main_category}
+  //
+  // COLUMNS:
+  // sortable
+  // searchable
+  // ?renderSearch
   window[datatable.name] = datatable;
   datatable.awaitId = null;
   datatable.currPage = 1;
@@ -81,6 +86,30 @@ function createDatatable(datatable) {
   }
   if (!datatable.selection) {
     datatable.selection = [];
+  }
+
+  if (datatable.bulk_edit) {
+    datatable.definition = [
+      {
+        title: `<label class="checkbox-wrapper">
+          <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable.name}.bulkEditSelectAll()">
+          <div class="checkbox standalone"></div>
+        </label>`,
+        width: "36px",
+        render: (r) => {
+          return `<label class="checkbox-wrapper">
+            <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable.name}.bulkEditChange()">
+            <div class="checkbox standalone"></div>
+          </label>`;
+        },
+        escape: false,
+      },
+      ...datatable.definition,
+    ];
+
+    datatable.bulkEditChange = () => {
+      console.log(123);
+    };
   }
 
   if (datatable.sortable) {
@@ -999,10 +1028,27 @@ function datatableFilter(btn, column_id) {
 
   if (filters == "text") {
     menu_header += `Wpisz frazę`;
-    menu_body += `<input type="text" class="field" style='margin-bottom:5px'>
-      <label class='checkbox-wrapper block' style='margin-bottom:5px;text-align:center;color:#555'>
+    menu_body += `<input type="text" class="field margin_bottom">
+      <label class='checkbox-wrapper block margin_bottom' text-align:center;color:#555'>
         <input type='checkbox' name='exact'><div class='checkbox'></div> Dopasuj całą frazę
       </label>
+    `;
+  } else if (filters == "date") {
+    menu_header += `Wybierz datę`;
+    menu_body += `
+      <select class="field margin_bottom">
+        <option value='='>Dokładna data</option>
+        <option value='>'>Data większa od</option>
+        <option value='>'>Data mniejsza od</option>
+        <option value='<>'>Przedział</option>
+      </select>
+      <input type="text" class="field default_datepicker margin_bottom" data-orientation="auto bottom" style='width: 254px;'>
+
+      <div class="glue-children margin_bottom" style='width: 254px;'>
+        <input type="text" class="field default_datepicker" data-orientation="left bottom">
+        <input type="text" class="field default_datepicker" data-orientation="right bottom">
+      </div>
+      
     `;
   } else if (filters == "select") {
     menu_header += `Zaznacz pola`;
@@ -1016,22 +1062,26 @@ function datatableFilter(btn, column_id) {
     }
   }
 
-  menu_body += `<div style='display:flex'>
+  var menu_footer = `<div class='filter_menu_footer'>
     <button class="btn primary fill" style='margin-right:5px' onclick='setFilters(${datatable.name},${column_id})'>Szukaj <i class="fas fa-check"></i></button>
     <button class="btn secondary fill" onclick='removeFilters(${datatable.name},${column_id})'>Wyczyść <i class="fas fa-times"></i></button>
   </div>`;
 
+  if (col_def.renderSearch) {
+    menu_body = col_def.renderSearch(menu_body);
+  }
+
   if (IS_MOBILE) {
-    setModalTitle("#filter_menu", "Filtruj " + col_def.title);
-    $("#filter_menu .menu_body").setContent(
-      `<span class="field-title">${menu_header}</span>${menu_body}`
+    setModalTitle("#filter_menu", "Filtruj " + col_def.title.toLowerCase());
+    filter_menu.setContent(
+      `<span class="field-title">${menu_header}</span>${menu_body}${menu_footer}`
     );
     showModal("filter_menu", {
       source: btn,
     });
   } else {
     if (menu_header) {
-      menu_html = `<span class='field-title header first'>${menu_header}</span>${menu_body}`;
+      menu_html = `<span class='field-title header first'>${menu_header}</span>${menu_body}${menu_footer}`;
     }
     filter_menu.setContent(menu_html);
     filter_menu.style.display = "block";
@@ -1066,6 +1116,8 @@ function datatableFilter(btn, column_id) {
 
     btn.findParentByTagName("th").classList.add("datatable-column-highlighted");
   }
+
+  registerDatepickers();
 
   // set values
 
@@ -1110,6 +1162,8 @@ window.addEventListener("DOMContentLoaded", () => {
             </div>
         </div>
     `);
+
+    window.filter_menu = $("#filter_menu .menu_body");
   } else {
     document.body.insertAdjacentHTML(
       "beforeend",
@@ -1234,4 +1288,10 @@ function getParentDatatable(node) {
   var datatable = window[tablename];
 
   return datatable;
+}
+
+function selectFilterCheckboxes(values) {
+  filter_menu.findAll(`input[type='checkbox']`).forEach((e) => {
+    e.setValue(values.indexOf(+e.value) != -1 ? 1 : 0);
+  });
 }

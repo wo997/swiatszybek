@@ -1,38 +1,63 @@
 <?php
 
-$dostawy = ["p" => "Paczkomat", "k" => "Kurier", "o" => "Odbiór osobisty"];
+$dostawy = ["paczkomat" => "Paczkomat", "kurier" => "Kurier", "osobisty" => "Odbiór osobisty"];
 
 // statuses
 $status_list = [
     [
+        "id" => 0,
         "title" => "Oczekuje na opłatę",
         "color" => "dd3",
-        "id" => 0,
+        "state" => "open",
     ],
     [
-        "title" => "Opłacono - w realizacji",
-        "color" => "3a3",
         "id" => 1,
+        "title" => "W realizacji",
+        "color" => "3a3",
+        "state" => "open",
     ],
     [
+        "id" => 2,
         "title" => "Do odbioru",
         "color" => "e90",
-        "id" => 5,
+        "state" => "open",
     ],
     [
+        "id" => 3,
         "title" => "Wysłano",
         "color" => "44d",
-        "id" => 2,
+        "state" => "closed",
     ],
     [
+        "id" => 4,
         "title" => "Odebrano",
         "color" => "39c",
-        "id" => 3,
+        "state" => "closed",
     ],
     [
+        "id" => 100,
         "title" => "Anulowano",
         "color" => "b33",
-        "id" => 4,
+        "state" => "closed",
+    ],
+];
+
+$zamowienia_status_groups = [
+    [
+        "name" => "open",
+        "label" => '<span style="color:#3c3;font-weight:600">Otwarte <i class="fas fa-chevron-right"></i></span>',
+        "ids" => flatMapArray(
+            filterArrayByKey($status_list, "state", "open"),
+            "id"
+        ),
+    ],
+    [
+        "name" => "closed",
+        "label" => '<span style="color:#c33;font-weight:600">Zamknięte <i class="fas fa-chevron-right"></i></span>',
+        "ids" => flatMapArray(
+            filterArrayByKey($status_list, "state", "closed"),
+            "id"
+        ),
     ],
 ];
 

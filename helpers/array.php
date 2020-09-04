@@ -37,3 +37,43 @@ function getRowById($array, $id, $id_name = "id")
     }
     return null;
 }
+
+function flatMapArray($array, $key)
+{
+    $res = [];
+    foreach ($array as $row) {
+        $res[] = $row[$key];
+    }
+    return $res;
+}
+
+// never used
+function jsonIntArray($array)
+{
+    return "[" . join(",", $array) . "]";
+}
+
+function filterArrayByKey($array, $key, $value, $invert = false)
+{
+    if (is_array($value)) {
+        if ($invert) {
+            return array_filter($array, function ($row) use ($value, $key) {
+                return !in_array($value, $row[$key]);
+            });
+        } else {
+            return array_filter($array, function ($row) use ($value, $key) {
+                return in_array($value, $row[$key]);
+            });
+        }
+    } else {
+        if ($invert) {
+            return array_filter($array, function ($row) use ($value, $key) {
+                return $row[$key] != $value;
+            });
+        } else {
+            return array_filter($array, function ($row) use ($value, $key) {
+                return $row[$key] == $value;
+            });
+        }
+    }
+}

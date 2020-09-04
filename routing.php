@@ -187,7 +187,7 @@ if ($pageName) {
   die;
 } else {
 
-  $canSee = $app["user"]["permissions"]["backend_access"] ? "1" : "published = 1";
+  $canSee = $app["user"]["priveleges"]["backend_access"] ? "1" : "published = 1";
   $page_data = fetchRow("SELECT cms_id, seo_description, seo_title, content, metadata, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [$url]);
 
   if (isset($_POST["content"])) {

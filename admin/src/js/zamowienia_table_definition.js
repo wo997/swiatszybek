@@ -1,20 +1,5 @@
 /* js[admin] */
 
-var zamowienia_table_filter_status_list = [
-  {
-    title: `Otwarte <i class="fas fa-hourglass-half"></i>`,
-    color: "",
-  },
-  {
-    title: `Zamknięte <i class='fas fa-times'></i>`,
-    color: "",
-  },
-];
-
-Object.entries(status_list).forEach(([key, value]) => {
-  zamowienia_table_filter_status_list[key] = value;
-});
-
 var zamowienia_table_definition = [
   {
     title: "Nr zamówienia",
@@ -73,25 +58,41 @@ var zamowienia_table_definition = [
     escape: false,
     field: "status_id",
     searchable: "select",
-    select_values: Object.keys(zamowienia_table_filter_status_list),
-    select_labels: Object.values(zamowienia_table_filter_status_list).map(
-      (e) => {
-        return e.title;
-      }
-    ),
+    select_values: status_list.map((e) => {
+      return e.id;
+    }),
+    select_labels: status_list.map((e) => {
+      return e.title;
+    }),
+    renderSearch: (filters_html) => {
+      var html = "";
+
+      var first = true;
+      zamowienia_status_groups.forEach((group) => {
+        html += `<button class="btn subtle fill" style="background: #fafafa;${
+          !first ? "margin-top:5px" : ""
+        }" onclick="selectFilterCheckboxes(${JSON.stringify(group.ids)})">${
+          group.label
+        }</button>`;
+        first = false;
+      });
+
+      html += filters_html;
+      return html;
+    },
   },
   {
     title: "Utworzono",
     width: "10%",
-    render: (r) => {
-      return nonull(r.zlozono);
-    },
+    field: "zlozono",
+    sortable: true,
+    searchable: "date",
   },
   {
     title: "Wysłano",
     width: "10%",
-    render: (r) => {
-      return nonull(r.wyslano);
-    },
+    field: "wyslano",
+    sortable: true,
+    searchable: "date",
   },
 ];

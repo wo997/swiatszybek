@@ -62,13 +62,15 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                     title: "Uprawnienia",
                     width: "8%",
                     render: (r) => {
-                        return permission_list[r.permissions].name;
+                        return privelege_list[r.privelege_id].name;
                     },
-                    field: "permissions",
+                    field: "privelege_id",
                     searchable: "select",
-                    select_values: Object.keys(permission_list),
-                    select_labels: Object.values(permission_list).map(e => {
-                        return e.name
+                    select_values: privelege_list.map((e) => {
+                        return e.id;
+                    }),
+                    select_labels: privelege_list.map((e) => {
+                        return e.name;
                     }),
                 },
                 {
@@ -163,7 +165,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                 imie: "",
                 nazwisko: "",
                 kolejnosc: 1,
-                permissions: 0,
+                privelege_id: 0,
                 telefon: "",
                 user_id: -1,
                 zamowienia_count: 0
@@ -276,8 +278,8 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
             <div class="desktopRow spaceColumns">
                 <div>
                     <div class="field-title">Uprawnienia</div>
-                    <select name="permissions" class="field">
-                        <?php foreach ($permission_list as $permission) : ?>
+                    <select name="privelege_id" class="field">
+                        <?php foreach ($privelege_list as $permission) : ?>
                             <option value="<?= $permission["id"] ?>"><?= $permission["name"] ?></option>
                         <?php endforeach; ?>
                     </select>

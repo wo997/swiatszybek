@@ -20,6 +20,12 @@ function registerDatepickers() {
   $$(".default_datepicker:not(.registered)").forEach((e) => {
     e.classList.add("registered");
 
-    new Datepicker(e, getDatepickerDefaultOptions(e));
+    var option = getDatepickerDefaultOptions(e);
+    var orientation = e.getAttribute("data-orientation");
+    if (orientation) {
+      option.orientation = orientation;
+    }
+
+    new Datepicker(e, option);
   });
 }

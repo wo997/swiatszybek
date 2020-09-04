@@ -56,6 +56,17 @@ function dropTable($table)
     }
 }
 
+function renameTable($was_name, $now_name)
+{
+    if (tableExists($was_name)) {
+        query("ALTER TABLE " . clean($now_name) . " RENAME TO " . clean($now_name));
+        echo "🗑️ Table '$now_name' renamed from '$was_name'! <br>";
+    }
+}
+
+
+
+
 function getColumnDefinition($column)
 {
     $definition = clean($column["name"])

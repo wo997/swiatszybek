@@ -24,10 +24,6 @@ $versionJS = 0;
 
 @include $build_info_path;
 
-define("RELEASE", 2137);
-define("CSS_RELEASE", $versionCSS);
-define("JS_RELEASE", $versionJS);
-
 // define WebP support also for XHR requests
 define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
 if (WEBP_SUPPORT) {
@@ -128,3 +124,8 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
 }
 
 include "deployment/automatic_build.php";
+
+// automatic_build can override
+define("RELEASE", 2137);
+define("CSS_RELEASE", $versionCSS);
+define("JS_RELEASE", $versionJS);

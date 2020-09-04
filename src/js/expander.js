@@ -47,6 +47,7 @@ function expand(elem, show = null, options = {}) {
   var o2 = show ? 1 : 0;
 
   elem.classList.toggle("hidden", !show);
+  elem.classList.add("animating");
 
   if (show) {
     elem.classList.remove("animate_hidden");
@@ -87,6 +88,7 @@ function expand(elem, show = null, options = {}) {
       if (!show) {
         elem.classList.add("animate_hidden");
       }
+      elem.classList.remove("animating");
     }
   );
 

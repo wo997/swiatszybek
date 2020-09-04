@@ -90,7 +90,7 @@ addColumns("attribute_values", [
 
 addColumns("users", [
   ["name" => "user_type", "type" => "VARCHAR(64)"],
-  ["name" => "permissions", "type" => "TINYINT"],
+  ["name" => "privelege_id", "previous_name" => "permissions", "type" => "TINYINT"],
 ]);
 
 addIndex("users", "user_type", "index");
@@ -117,7 +117,9 @@ addIndex("uploads", "file_path", "unique");
 dropTable("images");
 
 addColumns("zamowienia", [
-  ["name" => "status_id", "previous_name" => "status", "type" => "TINYINT(1)"],
+  ["name" => "status_id", "previous_name" => "status", "type" => "INT"],
 ]);
+
+//renameTable("variant", "variants");
 
 echo "<h3>✅ All migrations completed</h3>";

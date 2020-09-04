@@ -12,16 +12,16 @@ foreach ($status_list as $status) {
 <title>Zamówienia</title>
 
 <style>
-  .switchControls:not(:hover)>*:last-child {
+  td.switchControls:not(:hover)>*:last-child {
     display: none;
   }
 
-  .switchControls {
+  td.switchControls {
     position: relative;
     text-align: center;
   }
 
-  .switchControls>*:last-child {
+  td.switchControls>*:last-child {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -52,28 +52,13 @@ foreach ($status_list as $status) {
       }
     }
 
-    zamowienia_table_definition = [{
-        title: "",
-        width: "36px",
-        render: (r) => {
-          return `<label>
-            <input type="checkbox" data-link="${r.link}" onchange="selectionChange()">
-            <div class="checkbox"></div>
-          </label>`;
-        },
-        escape: false
-      },
-      ...zamowienia_table_definition
-    ];
-
-
-
     createDatatable({
       name: tableName,
       url: "/admin/search_zamowienia",
       lang: {
         subject: "zamówień",
       },
+      bulk_edit: true,
       width: 1300,
       definition: zamowienia_table_definition,
       controls: `

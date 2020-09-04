@@ -1,7 +1,7 @@
 <?php
 
-$visitor_permissions = ["backend_access" => false];
-$permission_list = [
+$visitor_priveleges = ["backend_access" => false];
+$privelege_list = [
     ["id" => 0, "name" => "Klient", "backend_access" => false],
     ["id" => 1, "name" => "Admin", "backend_access" => true],
     ["id" => 2, "name" => "Sprzedawca", "backend_access" => true],
@@ -9,14 +9,14 @@ $permission_list = [
 
 function initUser()
 {
-    global $app, $visitor_permissions;
+    global $app, $visitor_priveleges;
 
     if (isset($_SESSION["user"])) {
         $app["user"] = $_SESSION["user"];
     } else {
         $app["user"] = [
             "id" => null,
-            "permissions" => $visitor_permissions,
+            "privelege_id" => $visitor_priveleges,
             "type" => "",
             "email" => ""
         ];
@@ -29,7 +29,7 @@ function initUser()
         }
     }
 
-    $app["user"]["permissions"] = array_merge($visitor_permissions, $app["user"]["permissions"]);
+    $app["user"]["priveleges"] = array_merge($visitor_priveleges, $app["user"]["privelege_id"]);
 
     if (empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["basket"]) {
         $b = "[]";
@@ -43,7 +43,7 @@ function initUser()
 function adminRequired()
 {
     global $app;
-    if (!$app["user"]["permissions"]["backend_access"]) {
+    if (!$app["user"]["priveleges"]["backend_access"]) {
         $_SESSION["redirect"] = $_SERVER["REQUEST_URI"];
         header("Location: /logowanie");
         die;
@@ -52,7 +52,7 @@ function adminRequired()
 
 function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 {
-    global $app, $permission_list;
+    global $app, $privelege_list;
 
     // $adminList = explode(",", str_replace(" ", "", config("admins")));
     // $adminList[] = secret("super_admin_email");
@@ -60,7 +60,7 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
 
     $user = [
         "id" => $user_id,
-        "permissions" => getRowById($permission_list, $user_data["permissions"]),
+        "privelege_id" => getRowById($privelege_list, $user_data["privelege_id"]),
         "type" => $user_type,
         "email" => $email,
     ];

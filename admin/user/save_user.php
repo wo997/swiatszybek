@@ -22,6 +22,6 @@ $data = [
     "nr_domu" => $_POST["nr_domu"],
     "nip" => $_POST["nip"],
     "nr_lokalu" => $_POST["nr_lokalu"],
-    "permissions" => $_POST["permissions"],
+    "privelege_id" => $_POST["privelege_id"],
 ];
 updateEntity($data, "users", "user_id", $user_id);

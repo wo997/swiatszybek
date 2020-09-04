@@ -21,5 +21,10 @@ function addItemtoBasket(variant_id, diff, callback) {
 // also order.php
 function renderStatus(status_id) {
   var status = getRowById(status_list, status_id);
-  return `<div class='rect status_rect' style='background:#${status["color"]}'>${status["title"]}</div>`;
+  if (!status) {
+    return "";
+  }
+  return `<div class='rect status_rect' style='background:#${nonull(
+    status.color
+  )}'>${status.title}</div>`;
 }

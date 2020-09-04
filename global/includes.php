@@ -19,15 +19,17 @@
 
   const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
 
-  <?php if ($app["user"]["permissions"]["backend_access"]) : ?>
+  <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
     const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
     const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
-    const permission_list = <?= json_encode($permission_list) ?>;
+    const privelege_list = <?= json_encode($privelege_list) ?>;
 
   <?php endif ?>
+
+  const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 </script>
 
-<?php if (/*$app["user"]["permissions"]["backend_access"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
+<?php if (/*$app["user"]["priveleges"]["backend_access"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
   <!-- <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
   <link rel="stylesheet" href="/src/vanilla.datepicker.css?v=1" type="text/css" media="screen" /> -->
 
@@ -67,7 +69,7 @@
   <meta property="og:type" content="website" />
 <?php endif ?>
 
-<?php if ($app["user"]["permissions"]["backend_access"] || (isset($page_data) && isset($page_data["cms_id"]))) : ?>
+<?php if ($app["user"]["priveleges"]["backend_access"] || (isset($page_data) && isset($page_data["cms_id"]))) : ?>
 
   <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
   <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>
