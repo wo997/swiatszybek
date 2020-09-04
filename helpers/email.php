@@ -1,5 +1,14 @@
 <?php
 
+$email_client_list = [
+    "gmail.com" => "https://mail.google.com/",
+    "wp.pl" => "https://profil.wp.pl/",
+    "outlook.com" => "https://outlook.live.com/",
+    "yahoo.com" => "https://mail.yahoo.com/",
+    "icloud.com" => "https://icloud.com/mail",
+    "aol.com" => "https://mail.aol.com/",
+];
+
 // send emails
 $default_headers  = 'MIME-Version: 1.0' . "\r\n";
 $default_headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";

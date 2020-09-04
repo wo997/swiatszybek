@@ -2926,3 +2926,14 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 .expander_space {
   /*display: inline-block;*/
 }
+
+.message-container {
+  margin: 10px auto 0;
+  color: #7b7;
+  width: fit-content;
+  /* height: fit-content; */
+  border: 1px solid #7b7;
+  border-radius: 5px;
+  background: #efe;
+  padding: 10px;
+}

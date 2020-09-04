@@ -73,6 +73,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
     }
   </style>
   <script>
+    let emailRequest = "<?= $user_data["email_request"]; ?>";
     /*var menus = ['/moje-konto/dane-uzytkownika']
       window.onpopstate = history.onpushstate = function(e) {
         e.state == "";
@@ -116,16 +117,21 @@ if (strpos($url, "resetowanie-hasla") !== false)
     window.addEventListener("DOMContentLoaded", function() {
       setFormData(<?= json_encode($user_data, true) ?>, "#accountForm");
 
-      $$("#dataForm .field").forEach(e => {
+      $$("#menu2 .field").forEach(e => {
         e.addEventListener("input", function() {
           const btn = $("#allowSave:disabled");
           if (btn) btn.removeAttribute("disabled");
         });
       });
+
+      if (emailRequest) {
+        addMessageBox($(".message-box-container"), `Wysłaliśmy link do zmiany adresu email na ${emailRequest}`);
+        toggleMessageBox();
+      }
     });
 
     function saveDataForm() {
-      form = $("#dataForm");
+      form = $("#menu2");
 
       if (!validateForm(form)) {
         return;
@@ -137,27 +143,23 @@ if (strpos($url, "resetowanie-hasla") !== false)
         url: "/save_user",
         params,
         success: (res) => {
-          console.log(res);
           if (res.message) {
-            $("#message .message").innerHTML = res.message;
-            showModal("message");
+            showMessageModal(res.message, res.email ? true : false);
           }
 
-          if (res.redirect) {
-            $("#message button").addEventListener("click", () => {
-              window.location = res.redirect;
-            })
-          }
-
-          if (res.data) {
-            setFormData(res.data, form);
+          if (res.email) {
+            addMessageBox($(".message-box-container"), `Wysłaliśmy link do zmiany adresu email na ${res.email.new}`);
+            toggleMessageBox();
+            setFormData({
+              email: res.email.old
+            }, form);
           }
         }
       });
     }
 
     function savePasswordForm() {
-      form = $("#passwordForm");
+      form = $("#menu3");
 
       if (!validateForm(form)) {
         return;
@@ -169,23 +171,39 @@ if (strpos($url, "resetowanie-hasla") !== false)
         url: "/save_user",
         params,
         success: (res) => {
-          console.log(res);
           if (res.message) {
-            $("#message .message").innerHTML = res.message;
-            showModal("message");
+            showMessageModal(res.message);
           }
-
-          if (res.redirect) {
-            $("#message button").addEventListener("click", () => {
-              window.location = res.redirect;
-            })
-          }
-
-          if (res.data) {
-            setFormData(res.data, form);
-          }
+          setFormData({
+            password: "",
+            password_rewrite: ""
+          }, form);
         }
       });
+    }
+
+
+    function addMessageBox(elem, message) {
+      elem.innerHTML = `
+      <div class="message-box expand_y hidden animate_hidden">
+        <div class="message-container">
+            <i class="fas fa-info-circle"></i>
+            <span style="margin: 0 10px;">
+              ${message}
+            </span>
+            <i class="fas fa-times" onclick="toggleMessageBox(false)"></i>
+          </div>
+        </div>
+          `;
+    }
+
+    function toggleMessageBox(show = true) {
+      expand($(".message-box"), show);
+    }
+
+    function showMessageModal(message) {
+      $("#message-modal .modal-message").innerHTML = message;
+      showModal("message-modal");
     }
   </script>
 </head>
@@ -194,23 +212,25 @@ if (strpos($url, "resetowanie-hasla") !== false)
   <?php include "global/header.php"; ?>
   <div id="accountForm" class="main-container">
     <div style="margin-top:30px"></div>
-    <div id="message" data-modal data-expand>
-      <div style="display: flex;
-                  width: 300px;
-                  height: auto;
-                  background: #fff;
-                  padding: 10px;
-                  border-radius: 5px;
-                  flex-direction: column;
-                  justify-content: space-between;">
-        <div class="message" style="margin-bottom: 20px; text-align: center;"></div>
-        <button style="margin:auto;" class="btn primary" onclick="hideParentModal(this)">Okej <i class='fas fa-check'></i></button>
+
+    <div id="message-modal" data-modal data-expand>
+      <div style="width: fit-content;
+      height: fit-content;
+      padding: 20px 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-radius: 5px;">
+        <div class="modal-message">
+        </div>
+        <div>
+          <span class="link details-btn" style="display: none; width: 100px; margin-left: 10px;">Co dalej?</span>
+        </div>
       </div>
     </div>
 
-    <div style="margin-top:20px"></div>
-
-    <div style="text-align:center;padding: 25px;font-size: 20px">
+    <div style=" text-align:center;padding: 25px;font-size: 20px">
       <?php
       if ($app["user"]["type"] == 'g') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
       if ($app["user"]["type"] == 'f') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
@@ -240,6 +260,9 @@ if (strpos($url, "resetowanie-hasla") !== false)
           <span>Wyloguj się</span>
         </a>
       </div>
+
+      <div class="message-box-container"></div>
+
       <div style="padding: 15px 5px">
         <div id="menu1" class="menu mobileRow <?php if ($menu == "zamowienia") echo "showNow"; ?>" style="<?php if ($menu != "zamowienia") echo 'display:none;'; ?>">
           <div style="text-align:center;margin:30px auto">
@@ -287,7 +310,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
           </div>
         </div>
 
-        <div id="dataForm" class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
+        <div id="menu2" class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
           <div style="width:100%;">
             <div class="mobileRow" style="max-width: 820px;margin: 0 auto;">
               <div style="width: 50%; padding:10px">
@@ -353,7 +376,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
           </div>
         </div>
 
-        <div id="passwordForm" class="menu mobileRow <?php if ($menu == "haslo") echo "showNow"; ?>" style="<?php if ($menu != "haslo") echo 'display:none;'; ?>">
+        <div id="menu3" class="menu mobileRow <?php if ($menu == "haslo") echo "showNow"; ?>" style="<?php if ($menu != "haslo") echo 'display:none;'; ?>">
           <div style="width:100%;margin:40px auto;max-width:350px">
             <h3 style="text-align: center;font-size: 26px;margin: 15px 0 35px;">Zmiana hasła</h3>
 
@@ -366,7 +389,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
             <div class="field-title">Powtórz hasło</div>
             <div class="field-wrapper">
-              <input type="password" name="password_rewrite" class="field" data-validate="|match:#passwordForm .field[name='password']">
+              <input type="password" name="password_rewrite" class="field" data-validate="|match:#menu3 .field[name='password']">
               <i class="correct fa fa-check"></i>
               <i class="wrong fa fa-times"></i>
             </div>
