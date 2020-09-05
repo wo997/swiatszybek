@@ -22,7 +22,7 @@ if ($isRemove) {
     updateEntity($data, "cms", "cms_id", $cms_id);
 
     // TODO: use cms_link to reload cms page
-    $cms_link = "/admin/cms/" . $cms_id;
+    $cms_link = "/admin/strona/" . $cms_id;
 }
 
 triggerEvent("sitemap_change");

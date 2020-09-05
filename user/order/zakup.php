@@ -1245,15 +1245,15 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
         <div style="width:100%;max-width: 300px; margin: 0 auto;padding: 10px;" class="noMaxWidthMobile">
 
-          <h4>Dane kontaktowe <button type="button" class="btn primary" onclick="showMenu(3,'kontakt')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Dane kontaktowe <button type="button" class="btn subtle" onclick="showMenu(3,'kontakt')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="daneKontaktoweInfo"></p>
 
-          <h4>Rodzaj dostawy <button type="button" class="btn primary" onclick="showMenu(3,'dostawa')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Rodzaj dostawy <button type="button" class="btn subtle" onclick="showMenu(3,'dostawa')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="dostawaRodzaj"></p>
 
-          <h4>Adres dostawy <button type="button" class="btn primary" onclick="showMenu(3,'adres')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Adres dostawy <button type="button" class="btn subtle" onclick="showMenu(3,'adres')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="adresInfo"></p>
 

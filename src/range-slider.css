@@ -48,7 +48,7 @@
   display: grid;
   place-items: center; /*  Place the number on the center  */
   font-weight: bold;
-  transition: color 100ms ease, transform 100ms ease;
+  /*transition: color 100ms ease, transform 100ms ease;*/
   user-select: none; /*  Prevent Accidentally highlighting the number while sliding the cursor  */
 }
 

@@ -1,4 +1,4 @@
-<?php //route[admin/cms]
+<?php //route[admin/strona]
 
 $parts = explode("/", $url);
 if (isset($parts[2])) {

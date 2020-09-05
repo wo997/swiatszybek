@@ -209,7 +209,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
             if (!row.find(".main-img")) {
               row.find(".select-image-wrapper").insertAdjacentHTML("beforeend",
-                `<span class="main-img" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;padding: 3px 8px;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
+                `<span class="main-img" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;padding: 5px 9px;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
               );
             }
           } else {
@@ -358,12 +358,12 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       </div>
       <div>
         <?php if ($kopia) : ?>
-          <a href="/admin/produkt/<?= $product_id ?>" class="btn secondary" style="padding: 2px 4px;">Anuluj <i class="fa fa-times"></i></a>
+          <a href="/admin/produkt/<?= $product_id ?>" class="btn secondary">Anuluj <i class="fa fa-times"></i></a>
         <?php else : ?>
-          <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary" style="padding: 2px 4px;">Kopiuj <i class="fas fa-copy"></i></a>-->
-          <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary" style="padding: 2px 4px;">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
+          <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
+          <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
         <?php endif ?>
-        <button onclick="saveProductForm()" class="btn primary" style="padding: 2px 4px;" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
+        <button onclick="saveProductForm()" class="btn primary" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
       </div>
     </div>
     <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">

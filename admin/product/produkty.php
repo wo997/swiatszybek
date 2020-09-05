@@ -47,7 +47,7 @@
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <button class="btn important" style="height:32px" onclick="addNew(this)">
+        <button class="btn important" onclick="addNew(this)">
           <span class='hide-mobile'>Nowy produkt</span>
           <i class='fas fa-cube hide-desktop'></i>
           <i class="fa fa-plus"></i>
@@ -98,9 +98,9 @@
       <span>Nazwa produktu</span>
       <input type="text" name="title" id="title" data-validate class="field">
     </label>
-    <div style="text-align:right;padding-top:15px">
-      <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-      <button class="btn primary" onclick="saveNewProduct(); hideParentModal(this)">Dodaj <i class="fa fa-plus"></i></button>
+    <div class="flexbar slim single-line">
+      <button class="btn primary fill space-right" onclick="saveNewProduct(); hideParentModal(this)">Dodaj <i class="fa fa-check"></i></button>
+      <button class="btn secondary fill" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
     </div>
   </div>
 </div>

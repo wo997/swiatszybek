@@ -50,7 +50,7 @@
                     title: "",
                     width: "195px",
                     render: (r) => {
-                        return `<a class="btn primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i></a> <a class='btn primary' href='/admin/cms/${r.cms_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
+                        return `<a class="btn primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i></a> <a class='btn primary' href='/admin/strona/${r.cms_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
                     },
                     escape: false
                 }
@@ -64,7 +64,7 @@
                     <option value=''>Wszystkie</option>
                     <option value='published'>Tylko publiczne</option>
                 </select>            
-                <a class="btn primary" href="/admin/cms"><span>Nowa strona</span> <i class="fa fa-plus"></i></a>
+                <button class="btn primary" onclick='window.location="/admin/strona"'><span>Nowa strona</span> <i class="fa fa-plus"></i></button>
             `
         });
     });

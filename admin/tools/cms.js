@@ -1678,8 +1678,8 @@ registerModalContent(
                     <div class="showhover">
                         <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać kontener i go upuścić"> <i class="fas fa-sort"></i> </div>
                         <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                            <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-up"></i> </div>
-                            <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-down"></i> </div>
+                            <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wyżej"> <i class="fas fa-arrow-up"></i> </div>
+                            <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń niżej"> <i class="fas fa-arrow-down"></i> </div>
                         </div>
                     </div>
 
@@ -1721,10 +1721,10 @@ registerModalContent(
                     </div>
 
                     <div class="showhover">
-                        <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać blok i go upuścić"> <i class="fas fa-sort"></i> </div>
+                        <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać blok i go upuścić"> <i class="fas fa-sort" style="transform:rotate(90deg)"></i> </div>
                         <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                            <div class="btn" onclick="moveBlock(-1,true)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-up"></i> </div>
-                            <div class="btn" onclick="moveBlock(1,true)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-down"></i> </div>
+                            <div class="btn" onclick="moveBlock(-1,true)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-left"></i> </div>
+                            <div class="btn" onclick="moveBlock(1,true)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-right"></i> </div>
                         </div>
                     </div>
 
@@ -1761,50 +1761,54 @@ registerModalContent(`
                     <div>
                         <h3 style="text-align:center">Wersja desktopowa <i class='fas fa-desktop'></i></h3>
                         <h4>Minimalna wysokość</h4>
-                        <div class="selectbox">
-                            <input class="field" type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <button data-option="">Brak</button>
-                                <button data-option="100px">100px</button>
-                                <button data-option="200px">200px</button>
-                                <button data-option="300px">300px</button>
-                                <button data-option="400px">400px</button>
+                        <div class="select inline" style="width:150px">
+                            <input type="text" class="field" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
+                            <div class="select-arrow"></div>
+                            <div class="options">
+                                <option>100px</option>
+                                <option>200px</option>
+                                <option>300px</option>
+                                <option>400px</option>
                             </div>
                         </div>
+
                         <h4>Szerokość bloku</h4>
-                        <div class="selectbox">
-                            <input class="field" type="text" style="width:150px" data-attribute="desktop-width" data-default-value="100%" data-default-unit="px">
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <button data-option="100%">100%</button>
-                                <button data-option="50%">1/2</button>
-                                <button data-option="33.333%">1/3</button>
-                                <button data-option="25%">1/4</button>
-                                <button data-option="20%">1/5</button>
+                        <div class="select inline" style="width:150px">
+                            <input type="text" class="field" data-attribute="desktop-width" data-default-value="100%" data-default-unit="px">
+                            <div class="select-arrow"></div>
+                            <div class="options">
+                                <option>100%</option>
+                                <option data-value="50%">1/2</option>
+                                <option data-value="33.333%">1/3</option>
+                                <option data-value="25%">1/4</option>
+                                <option data-value="20%">1/5</option>
                             </div>
                         </div>
                     </div>
                     <div>
                         <h3 style="text-align:center">Wersja mobilna <i class='fas fa-mobile-alt'></i></h3>
                         <h4>Minimalna wysokość</h4>
-                        <div class="selectbox">
-                            <input class="field" type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <button data-option="">Brak</button>
-                                <button data-option="100px">100px</button>
-                                <button data-option="200px">200px</button>
-                                <button data-option="300px">300px</button>
-                                <button data-option="400px">400px</button>
+                        <div class="select inline" style="width:150px">
+                            <input type="text" class="field" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
+                            <div class="select-arrow"></div>
+                            <div class="options">
+                                <option>100px</option>
+                                <option>200px</option>
+                                <option>300px</option>
+                                <option>400px</option>
                             </div>
                         </div>
+
                         <h4>Szerokość bloku</h4>
-                        <div class="selectbox">
-                            <input class="field" type="text" style="width:150px" data-attribute="mobile-width" data-default-value="100%" data-default-unit="px">
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <button data-option="100%">100%</button>
-                                <button data-option="50%">1/2</button>
-                                <button data-option="33.333%">1/3</button>
-                                <button data-option="25%">1/4</button>
-                                <button data-option="20%">1/5</button>
+                        <div class="select inline" style="width:150px">
+                            <input type="text" class="field" data-attribute="mobile-width" data-default-value="100%" data-default-unit="px">
+                            <div class="select-arrow"></div>
+                            <div class="options">
+                                <option>100%</option>
+                                <option data-value="50%">1/2</option>
+                                <option data-value="33.333%">1/3</option>
+                                <option data-value="25%">1/4</option>
+                                <option data-value="20%">1/5</option>
                             </div>
                         </div>
                     </div>
@@ -1938,56 +1942,60 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
   return `
     <div style="max-width:400px">
         <div style="display:flex;justify-content:center">
-            <div class="selectbox">
-                <input type="text" style="width:100px" data-attribute="${prefix}_top" data-default-value="${defaults.top}" data-default-unit="px" class="field" ${target}>
-                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                    <button data-option="0">0</button>
-                    <button data-option="12px">12px</button>
-                    <button data-option="24px">24px</button>
-                    <button data-option="36px">36px</button>
-                    <button data-option="2%">2%</button>
-                    <button data-option="4%">4%</button>
-                    <button data-option="6%">6%</button>
+            <div class="select" style="width:100px">
+                <input type="text" class="field" data-attribute="${prefix}_top" data-default-value="${defaults.top}" data-default-unit="px" ${target}>
+                <div class="select-arrow"></div>
+                <div class="options">
+                    <option>0</option>
+                    <option>12px</option>
+                    <option>24px</option>
+                    <option>36px</option>
+                    <option>2%</option>
+                    <option>4%</option>
+                    <option>6%</option>
                 </div>
             </div>
         </div>
         <div style="display:flex;justify-content: space-around;padding: 20px 0;">
-            <div class="selectbox">
-                <input type="text" style="width:100px" data-attribute="${prefix}_left" data-default-value="${defaults.left}" data-default-unit="px" class="field" ${target}>
-                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                    <button data-option="0">0</button>
-                    <button data-option="12px">12px</button>
-                    <button data-option="24px">24px</button>
-                    <button data-option="36px">36px</button>
-                    <button data-option="2%">2%</button>
-                    <button data-option="4%">4%</button>
-                    <button data-option="6%">6%</button>
+            <div class="select" style="width:100px">
+                <input type="text" class="field" data-attribute="${prefix}_left" data-default-value="${defaults.top}" data-default-unit="px" ${target}>
+                <div class="select-arrow"></div>
+                <div class="options">
+                    <option>0</option>
+                    <option>12px</option>
+                    <option>24px</option>
+                    <option>36px</option>
+                    <option>2%</option>
+                    <option>4%</option>
+                    <option>6%</option>
                 </div>
             </div>
-            <div class="selectbox">
-                <input type="text" style="width:100px" data-attribute="${prefix}_right" data-default-value="${defaults.right}" data-default-unit="px" class="field" ${target}>
-                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                    <button data-option="0">0</button>
-                    <button data-option="12px">12px</button>
-                    <button data-option="24px">24px</button>
-                    <button data-option="36px">36px</button>
-                    <button data-option="2%">2%</button>
-                    <button data-option="4%">4%</button>
-                    <button data-option="6%">6%</button>
+            <div class="select" style="width:100px">
+                <input type="text" class="field" data-attribute="${prefix}_right" data-default-value="${defaults.top}" data-default-unit="px" ${target}>
+                <div class="select-arrow"></div>
+                <div class="options">
+                    <option>0</option>
+                    <option>12px</option>
+                    <option>24px</option>
+                    <option>36px</option>
+                    <option>2%</option>
+                    <option>4%</option>
+                    <option>6%</option>
                 </div>
             </div>
         </div>
         <div style="display:flex;justify-content:center">
-            <div class="selectbox">
-                <input type="text" style="width:100px" data-attribute="${prefix}_bottom" data-default-value="${defaults.bottom}" data-default-unit="px" class="field" ${target}>
-                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                    <button data-option="0">0</button>
-                    <button data-option="12px">12px</button>
-                    <button data-option="24px">24px</button>
-                    <button data-option="36px">36px</button>
-                    <button data-option="2%">2%</button>
-                    <button data-option="4%">4%</button>
-                    <button data-option="6%">6%</button>
+            <div class="select" style="width:100px">
+                <input type="text" class="field" data-attribute="${prefix}_bottom" data-default-value="${defaults.top}" data-default-unit="px" ${target}>
+                <div class="select-arrow"></div>
+                <div class="options">
+                    <option>0</option>
+                    <option>12px</option>
+                    <option>24px</option>
+                    <option>36px</option>
+                    <option>2%</option>
+                    <option>4%</option>
+                    <option>6%</option>
                 </div>
             </div>
         </div>
@@ -2006,28 +2014,32 @@ registerModalContent(`
 
             <div style="padding:10px;margin-top:-15px">
                 <div class="field-title">Grubość krawędzi</div>
-                <div class="selectbox">
-                    <input type="text" style="width:100px" class="field border-width" data-attribute="border-width" onchange="updateBorderPreview()">
-                    <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                        <button data-option="0">0</button>
-                        <button data-option="1px">1px</button>
-                        <button data-option="2px">2px</button>
-                        <button data-option="5px">5px</button>
+                <div class="select" style="width:100px">
+                    <input type="text" class="field" data-attribute="border-width" onchange="updateBorderPreview()">
+                    <div class="select-arrow"></div>
+                    <div class="options">
+                        <option>0</option>
+                        <option>1px</option>
+                        <option>2px</option>
+                        <option>5px</option>
                     </div>
                 </div>
 
                 <div class="field-title">Kolor krawędzi</div>
-                <input class="jscolor" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
-                <div class="btn primary" onclick="setValue(this.prev(),'')">Brak <i class="fa fa-times"></i></div>
+                <div class="glue-children">
+                  <input class="jscolor field inline" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
+                  <button class="btn primary" onclick="$(this).prev().setValue('')">Brak <i class="fa fa-times"></i></button>
+                </div>
 
                 <div class="field-title">Zaokrąglenie krawędzi</div>
-                <div class="selectbox">
-                    <input type="text" style="width:100px" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
-                    <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                        <button data-option="0">0</button>
-                        <button data-option="6px">6px</button>
-                        <button data-option="10px">10px</button>
-                        <button data-option="50%">50%</button>
+                <div class="select" style="width:100px">
+                    <input type="text" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
+                    <div class="select-arrow"></div>
+                    <div class="options">
+                        <option>0</option>
+                        <option>6px</option>
+                        <option>10px</option>
+                        <option>10%</option>
                     </div>
                 </div>
 
@@ -2063,16 +2075,17 @@ registerModalContent(`
                     <div>
                         <h3 style="text-align:center">Wersja desktopowa <i class='fas fa-desktop'></i></h3>
                         <h4>Minimalna wysokość</h4>
-                        <div class="selectbox">
-                            <input class="field" type="text" style="width:150px" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <button data-option="">Brak</button>
-                                <button data-option="100px">100px</button>
-                                <button data-option="200px">200px</button>
-                                <button data-option="300px">300px</button>
-                                <button data-option="400px">400px</button>
+                        <div class="select" style="width:150px">
+                            <input type="text" class="field" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
+                            <div class="select-arrow"></div>
+                            <div class="options">
+                                <option data-value="">Brak</option>
+                                <option>150px</option>
+                                <option>300px</option>
+                                <option>400px</option>
                             </div>
                         </div>
+
                         <h4>Wyrównaj zawartość w poziomie</h4>
                         <div data-select-group="desktop-justify-content">
                             <input type="hidden" style="width:100px" data-attribute="desktop-justify-content" data-default-value="center" data-target=".cms-container-content">
@@ -2098,16 +2111,17 @@ registerModalContent(`
                     <div>
                         <h3 style="text-align:center">Wersja mobilna <i class='fas fa-mobile-alt'></i></h3>
                         <h4>Minimalna wysokość</h4>
-                        <div class="selectbox">
-                            <input class="field" type="text" style="width:150px" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <button data-option="">Brak</button>
-                                <button data-option="100px">100px</button>
-                                <button data-option="200px">200px</button>
-                                <button data-option="300px">300px</button>
-                                <button data-option="400px">400px</button>
+                        <div class="select" style="width:150px">
+                            <input type="text" class="field" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
+                            <div class="select-arrow"></div>
+                            <div class="options">
+                                <option data-value="">Brak</option>
+                                <option>150px</option>
+                                <option>300px</option>
+                                <option>400px</option>
                             </div>
                         </div>
+
                         <h4>Wyrównaj zawartość w poziomie</h4>
                         <div data-select-group="mobile-justify-content">
                             <input type="hidden" style="width:100px" data-attribute="mobile-justify-content" data-default-value="center" data-target=".cms-container-content">
@@ -2237,18 +2251,19 @@ registerModalContent(
                 <br>
 
                 <div class="field-title">
-                  Kolor <i class='fas fa-info-circle' data-tooltip='Wpisz kolor lub kliknij w pole i wybierz'></i>
+                  Kolor tła <i class='fas fa-info-circle' data-tooltip='Wpisz kolor lub kliknij w pole i wybierz'></i>
                 </div>
 
-                <div style="display:flex">
+                <div class="glue-children">
                   <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
                   <button class="btn primary" onclick="$(this).prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
                 </div>
 
-                <div style="padding-right:10px">
-                    <label style="margin: 0.7em 0 0;">Widoczność koloru <i class='fas fa-info-circle' data-tooltip='Aby zmienić kontrast pomiędzy tekstem, a zdjęciem'></i></label>
-                    <input type="range" class="field" data-class="image-opacity" min="0" max="100" step="1" data-background="linear-gradient(to right, #fff, #000)"; oninput="this.dispatchEvent(new Event('change'))" onchange="setPreviewBackgroundColorOpacity(this.value)">
+                <div class="field-title">
+                  Widoczność koloru
+                  <i class='fas fa-info-circle' data-tooltip='Pozwala dostosować kontrast pomiędzy tekstem, a zdjęciem'></i>
                 </div>
+                <input type="range" class="field" data-class="image-opacity" min="0" max="100" step="1" data-background="linear-gradient(to right, #fff, #000)"; oninput="this.dispatchEvent(new Event('change'))" onchange="setPreviewBackgroundColorOpacity(this.value)">
               </div>
 
               <div style="padding: 20px;flex-grow: 1;">

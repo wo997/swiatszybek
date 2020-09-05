@@ -3,5 +3,4 @@
 query("INSERT INTO products (title) VALUES (?)", [$_POST["title"]]);
 $id = getLastInsertedId();
 
-header("Location: /admin/produkt/$id");
-die;
+json_response(["redirect" => "/admin/produkt/$id"]);

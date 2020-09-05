@@ -160,7 +160,7 @@ function createDatatable(datatable) {
   }
 
   justTable += `<div class="flexbar" style="align-items: baseline;">
-        <div class="flexbar auto-width-desktop" style="margin:0;align-items: baseline;"">
+        <div class="flexbar auto-width-desktop" style="margin:0;align-items: baseline;">
           <span class="total-rows"></span>
           <span class="space-right">&nbsp;${datatable.lang.subject}</span>
           <select data-param="rowCount" class="field inline">
@@ -176,7 +176,7 @@ function createDatatable(datatable) {
                 datatable.rowCount == 50 ? "selected" : ""
               }>50</option>
           </select>
-          <span class="big space-right">&nbsp;&nbsp;na stronę</span>
+          <span class="big space-right no-space-mobile">&nbsp;&nbsp;na stronę</span>
           <div class="pagination"></div>
         </div>
         <div style='flex-grow:1'></div>

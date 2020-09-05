@@ -283,6 +283,7 @@ function setValue(input, value, quiet = false) {
       datatable.getAttribute("data-datatable-name")
     ].setSelectedValuesString(value);
   } else if (input.classList.contains("jscolor")) {
+    value = rgbStringToHex(value);
     var hex = value.replace("#", "");
     input.value = hex;
     input.style.background = hex ? "#" + hex : "";

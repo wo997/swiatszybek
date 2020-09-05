@@ -83,50 +83,21 @@ select {
   margin: 0;
 }
 
-/* custom selectbox and showhover start */
-.showhover,
-.selectbox {
+/* showhover start */
+.showhover {
   position: relative;
 }
 .showhover:not(:hover) .menucontent {
   display: none !important;
 }
-.showhover .menucontent,
-.selectbox .menucontent {
+.showhover .menucontent {
   position: absolute;
   right: 0;
   top: 100%;
   z-index: 50;
 }
 
-.selectbox:not(:focus-within) .menucontent {
-  display: none !important;
-}
-
-.selectbox {
-  display: inline-block;
-}
-
-.selectbox .menu {
-  background: white;
-  z-index: 1000;
-}
-.selectbox [data-option] {
-  cursor: pointer;
-  padding: 1px 5px;
-  min-width: 70px;
-  background: #fff;
-}
-.selectbox [data-option]:hover {
-  background: #eee;
-}
-
-.selectbox input {
-  background: url(/img/dropdown.png) 100% / 20px no-repeat white;
-  padding-right: 30px !important;
-}
-
-/* custom selextbox end */
+/* showhover end */
 
 /* buttons start */
 
@@ -176,7 +147,7 @@ textarea {
 
 .btn {
   border-radius: 0.2em;
-  padding: 0.1em 0.5em;
+  padding: 0.2em 0.5em;
   display: inline-block;
   text-align: center;
   cursor: pointer;
@@ -229,13 +200,11 @@ textarea {
 
 .btn.big {
   font-size: 1.3em;
-  padding: 0.3em 0.9em;
-  font-weight: 500;
+  font-weight: 600;
 }
 .btn.medium {
   font-size: 1.15em;
-  padding: 0.2em 0.7em;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .btn .fa-chevron-right,
@@ -287,11 +256,8 @@ textarea {
   border: 1px solid #aaa;
 }
 
-*[data-tooltip] * {
-  /*pointer-events: none;*/
-}
 .fa-info-circle[data-tooltip] {
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 /* tooltip end */
@@ -300,11 +266,16 @@ textarea {
 .flexbar {
   display: flex;
   align-items: stretch;
-  flex-wrap: wrap;
   margin-top: 10px;
   justify-content: center;
   width: 100%;
+  margin-bottom: -10px;
 }
+
+.flexbar:not(.single-line) {
+  flex-wrap: wrap;
+}
+
 .flexbar > * {
   margin-bottom: 10px;
 }
@@ -336,13 +307,6 @@ textarea {
   }
 }
 
-.flexbar > .btn {
-  align-items: center;
-  display: inline-flex;
-  justify-content: center;
-  /*margin-left: 10px;
-  margin-right: 10px;*/
-}
 .flexbar > .btn > *:not(:first-child) {
   margin-left: 0.3em;
 }
@@ -354,7 +318,8 @@ textarea {
 
 /* datatable */
 
-.filter_menu .margin_bottom {
+/*.filter_menu default */
+.margin_bottom {
   margin-bottom: 5px;
 }
 .filter_menu {
@@ -655,8 +620,12 @@ input[type="button"] {
   display: block;
 }
 
+.flexbar:not(.slim) .btn,
 .field {
-  padding: 5px 7px;
+  padding: 0.42em 0.6em;
+}
+
+.field {
   background-color: #fbfbfb;
   -webkit-box-shadow: inset 0px 1px 5px -2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0px 1px 5px -2px rgba(0, 0, 0, 0.2);
@@ -1401,9 +1370,9 @@ a {
 }
 
 @media only screen and (max-width: 750px) {
-  .sameButtons .btn {
+  /*.sameButtons .btn {
     width: 100% !important;
-  }
+  }*/
   .items > div {
     width: 50%;
   }
@@ -1444,13 +1413,14 @@ a {
   #basket {
     max-width: initial;
   }
-  .sameButtons .btn {
+  /*.sameButtons .btn {
     margin: 2px 0;
-  }
+  }*/
 }
-.sameButtons .btn {
+/*.sameButtons .btn {
   padding: 5px 10px;
-}
+}*/
+/* deprecated */
 .item-image {
   height: 300px;
   background-position: center;
@@ -2432,8 +2402,8 @@ ql-icon i span {
 }
 
 .custom-toolbar .btn.primary {
-  background: white;
-  color: black;
+  background: #fafafa;
+  color: #125;
   font-weight: 600;
 }
 
@@ -3088,4 +3058,11 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .footer-fill.space-right > *:not(:last-child) {
   margin-right: 10px;
+}
+
+.jscolor.field {
+  border: none !important;
+  -webkit-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.18);
+  -moz-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.18);
 }

@@ -48,12 +48,11 @@ function registerRangeSliders() {
     const min = range.min || 0;
     const max = range.max || 100;
 
-    const offset = Number(((val - min) * 100) / (max - min));
-
+    const part = (val - min) / (max - min);
     bubble.textContent = val;
 
-    // yes, 14px is a magic number
-    bubble.style.left = `calc(${offset}% - 14px)`;
+    bubble.style.left = `${part * 100}%`;
+    bubble.style.transform = `translate(-${part * 100}%,-50%)`;
   }
 }
 
