@@ -93,7 +93,7 @@
 <div class="mytable"></div>
 
 <div id="newProduct" data-modal>
-  <div class="modal-padding">
+  <div class="modal-body">
     <label>
       <span>Nazwa produktu</span>
       <input type="text" name="title" id="title" data-validate class="field">

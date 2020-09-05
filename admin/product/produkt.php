@@ -164,7 +164,9 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           },
           escape: false
         },
-        getPublishedDefinition(),
+        getPublishedDefinition({
+          field: "v.published"
+        }),
         {
           title: "",
           width: "95px",
