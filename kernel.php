@@ -90,6 +90,7 @@ include_once "helpers/db/general.php";
 include_once "helpers/db/entity.php";
 include_once "helpers/db/migration.php";
 include_once "helpers/email.php";
+include_once "helpers/request.php";
 
 include_once "helpers/user.php";
 

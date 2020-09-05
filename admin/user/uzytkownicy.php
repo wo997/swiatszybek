@@ -188,7 +188,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
         }
         const params = getFormData(form);
         xhr({
-            url: "/admin/save_user",
+            url: "/save_user",
             params,
             success: (res) => {
                 mytable.search();

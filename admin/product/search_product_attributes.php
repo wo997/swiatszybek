@@ -36,4 +36,4 @@ if (isset($_POST["everything"])) {
     }
 }
 
-die(json_encode($responseArray));
+json_response($responseArray);

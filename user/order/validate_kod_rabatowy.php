@@ -65,11 +65,11 @@ if ($kod_data) {
     $_SESSION["rabat"] = $kod_data["kwota"];
     $_SESSION["rabat_type"] = $kod_data["type"];
 
-    die(json_encode([
+    json_response([
         "success" => true,
         "kwota" => $kod_data["kwota"],
         "type" => $kod_data["type"]
-    ]));
+    ]);
 } else {
     die('{"error":"Błędny kod rabatowy!"}');
 }

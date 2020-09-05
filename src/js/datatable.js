@@ -926,6 +926,7 @@ window.addEventListener("dragover", (event) => {
 // published start
 
 function getPublishedDefinition(options = {}) {
+  console.log(options);
   return {
     title: "Widoczność",
     width: "135px",
@@ -1076,7 +1077,7 @@ function datatableFilter(btn, column_id) {
     menu_header += `Wybierz datę`;
     menu_body += `
       <span class="field-title first">Typ wyszukiwania</span>
-      <select class="field margin_bottom date_type" onchange="dateTypeChanged(this)">
+      <select class="field date_type" onchange="dateTypeChanged(this)">
         <option value='='>Dokładna data</option>
         <option value='>'>Data od</option>
         <option value='<'>Data do</option>

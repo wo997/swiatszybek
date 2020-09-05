@@ -39,9 +39,9 @@
 }
 
 @media only screen and (min-width: 1000px) {
-  .modal-content > * > * {
+  /*.modal-content > * > * {
     min-width: 400px;
-  }
+  }*/
 }
 .modal-content > * > *:not(.blank) {
   background: white;
