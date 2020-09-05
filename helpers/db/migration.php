@@ -329,3 +329,69 @@ function alterTable($table, $columns)
         }
     }
 }
+
+function getForeignKey($table_1, $field_1, $table_2, $field_2 = null)
+{
+    if ($field_2 === null) {
+        $field_2 = $field_1;
+    }
+
+    $table_1 = clean($table_1);
+    $field_1 = clean($field_1);
+    $table_2 = clean($table_2);
+    $field_2 = clean($field_2);
+
+    $sql = <<<SQL
+        SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+        FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+        WHERE TABLE_NAME = '$table_1' AND COLUMN_NAME = '$field_1'
+        AND REFERENCED_TABLE_NAME = '$table_2' AND REFERENCED_COLUMN_NAME = '$field_2'
+SQL;
+    return fetchRow($sql);
+}
+
+function addForeignKey($table_1, $field_1, $table_2, $field_2 = null)
+{
+    if ($field_2 === null) {
+        $field_2 = $field_1;
+    }
+
+    $table_1 = clean($table_1);
+    $field_1 = clean($field_1);
+    $table_2 = clean($table_2);
+    $field_2 = clean($field_2);
+
+    if (getForeignKey($table_1, $field_1, $table_2, $field_2)) {
+        return;
+    }
+
+    $sql = <<<SQL
+        ALTER TABLE $table_1
+        ADD FOREIGN KEY ($field_1)
+        REFERENCES $table_2($field_2)
+        ON DELETE CASCADE
+        ON UPDATE NO ACTION
+SQL;
+    query($sql);
+    echo "🔗 Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
+}
+
+function dropForeignKey($table_1, $field_1, $table_2, $field_2 = null)
+{
+    if ($field_2 === null) {
+        $field_2 = $field_1;
+    }
+
+    $table_1 = clean($table_1);
+    $field_1 = clean($field_1);
+    $table_2 = clean($table_2);
+    $field_2 = clean($field_2);
+
+    $key = getForeignKey($table_1, $field_1, $table_2, $field_2);
+    if (!$key) {
+        return;
+    }
+
+    query("ALTER TABLE $table_1 DROP FOREIGN KEY " . $key["CONSTRAINT_NAME"]);
+    echo "🗑️ Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
+}

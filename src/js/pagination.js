@@ -9,10 +9,10 @@ function renderPagination(
 ) {
   currPage = getSafePageIndex(currPage, pageCount);
 
-  var output = "";
-  var range = 4;
+  var output = "<div class='pages-wrapper'>";
+  var range = 3;
   var mobile = window.innerWidth < 760;
-  if (mobile) range = 1;
+  //if (mobile) range = 2;
   var center = currPage;
   if (currPage < range + 1) center = range + 1;
   if (currPage > pageCount - range) center = pageCount - range;
@@ -20,19 +20,23 @@ function renderPagination(
     if (
       i == 1 ||
       i == pageCount ||
-      (i >= center - range && i <= center + range)
+      (i > center - range && i < center + range)
     ) {
-      if (i == center - range && i > 2) {
-        output += " ... ";
+      if (i == center - range + 1 && i > 2) {
+        output += `<div class='splitter'>...</div>`;
       }
       output += `<div data-index='${i}' class='pagination_item ${
         i == currPage ? " current" : ``
       }'>${i}</div>`;
-      if (i == center + range && i < pageCount - 1) output += " ... ";
+      if (i == center + range - 1 && i < pageCount - 1) {
+        output += `<div class='splitter'>...</div>`;
+      }
     }
   }
+  output += "</div>";
+
   if (pageCount > 20 && !mobile && options.allow_my_page) {
-    output += `<span class='setMyPage'><input class='myPage' type='number' placeholder='Nr strony (1-${pageCount})'></span>`;
+    output += `<span class='setMyPage'><input class='myPage field inline' type='number' placeholder='Wpisz nr'></span>`;
   }
 
   paginationElement.setContent(output);

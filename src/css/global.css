@@ -178,6 +178,14 @@ textarea {
   text-align: center;
   cursor: pointer;
 }
+.btn.important {
+  background: #34e;
+  color: white;
+  border: 1px solid #23d;
+  border-bottom-color: #12e;
+  border-top-color: #34e;
+  font-weight: 600;
+}
 .btn.primary {
   background: #6c1;
   color: white;
@@ -292,6 +300,7 @@ textarea {
   flex-wrap: wrap;
   margin-top: 10px;
   justify-content: center;
+  width: 100%;
 }
 .flexbar > * {
   margin-bottom: 10px;
@@ -302,6 +311,9 @@ textarea {
 }
 .flexbar .space-right {
   margin-right: 10px;
+}
+.flexbar .space-left {
+  margin-left: 10px;
 }
 .flexbar .big.space {
   margin-left: 18px;
@@ -315,14 +327,18 @@ textarea {
     margin-right: 0;
     margin-left: 0;
   }
+  .flexbar .no-space-mobile {
+    margin-right: 0;
+    margin-left: 0;
+  }
 }
 
 .flexbar > .btn {
   align-items: center;
   display: inline-flex;
   justify-content: center;
-  margin-left: 10px;
-  margin-right: 10px;
+  /*margin-left: 10px;
+  margin-right: 10px;*/
 }
 .flexbar > .btn > *:not(:first-child) {
   margin-left: 0.3em;
@@ -392,6 +408,7 @@ textarea {
 }
 .table-wrapper {
   overflow-x: auto;
+  margin: 0 -10px;
 }
 .datatable-wrapper .flexbar {
   user-select: none;
@@ -406,9 +423,9 @@ textarea {
   background: white;
   font-weight: 600;
 }
-.datatable-wrapper .pagination {
+/*.datatable-wrapper .pagination {
   margin-right: auto;
-}
+}*/
 @media only screen and (max-width: 799px) {
   .datatable-wrapper .pagination {
     margin-left: auto;
@@ -1622,12 +1639,24 @@ input:read-only {
   margin-top: 15px;
 }
 .pagination {
-  text-align: center;
-  display: inline-block;
-  border-radius: 4px;
-  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
 }
-.pagination > .pagination_item {
+.pages-wrapper {
+  overflow: hidden;
+  text-align: center;
+  border-radius: 4px;
+  background: #eee;
+}
+.pagination_item:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.pagination_item:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.pagination .pagination_item {
   display: inline-block;
   padding: 7px 0;
   width: 35px;
@@ -1642,29 +1671,61 @@ input:read-only {
 .pagination_item:not(.current) {
   cursor: pointer;
 }
-.pagination > .pagination_item:hover:not(.current) {
+.pagination .pagination_item:hover:not(.current) {
   background: #ddd;
   color: #777;
 }
 
-.pagination > span > * {
-  height: 34px;
-  box-sizing: border-box;
-}
 .pagination .setMyPage > button {
   width: 24px;
 }
-.pagination > .pagination_item.current {
+.pagination .pagination_item.current {
   background: #60c216;
   color: white;
+  border-radius: 4px;
+}
+.pagination .splitter {
+  background: white;
+  pointer-events: none;
+  box-shadow: none;
+  width: 25px;
+  display: inline-block;
+  height: 35px;
+  padding: 7px 0;
+  position: relative;
+}
+.splitter:before,
+.splitter:after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 10px;
+  top: 0;
+  border-radius: 3px;
+}
+.splitter:after {
+  -webkit-box-shadow: -4px 0px 0px 0px rgba(255, 255, 255, 1);
+  -moz-box-shadow: -4px 0px 0px 0px rgba(255, 255, 255, 1);
+  box-shadow: -4px 0px 0px 0px rgba(255, 255, 255, 1);
+  right: -10px;
+}
+.splitter:before {
+  -webkit-box-shadow: 4px 0px 0px 0px rgba(255, 255, 255, 1);
+  -moz-box-shadow: 4px 0px 0px 0px rgba(255, 255, 255, 1);
+  box-shadow: 4px 0px 0px 0px rgba(255, 255, 255, 1);
+  left: -10px;
+}
+.pagination-bottom {
+  justify-content: center;
 }
 .setMyPage {
   display: inline-block;
 }
 .myPage {
-  margin-left: 5px;
-  width: 120px;
+  margin-left: 8px;
+  width: 80px;
   text-align: center;
+  height: 35px;
 }
 /* pagination end */
 
@@ -2967,6 +3028,23 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   text-align: center;
 }
 
-.expander_space {
-  /*display: inline-block;*/
+@media only screen and (max-width: 799px) {
+  .hide-mobile {
+    display: none;
+  }
+  .full-width-mobile {
+    width: 100%;
+  }
+  .auto-width-mobile {
+    width: auto;
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .auto-width-desktop {
+    width: auto;
+  }
+  .hide-desktop {
+    display: none;
+  }
 }

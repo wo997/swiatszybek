@@ -160,21 +160,26 @@ function createDatatable(datatable) {
   }
 
   justTable += `<div class="flexbar" style="align-items: baseline;">
-        <span class="total-rows"></span>
-        <span class="space-right">&nbsp;${datatable.lang.subject}</span>
-        <select data-param="rowCount" class="field inline">
-            <option value='10' ${
-              datatable.rowCount == 10 ? "selected" : ""
-            }>10</option>
-            <option value='20' ${
-              !datatable.rowCount || datatable.rowCount == 20 ? "selected" : ""
-            }>20</option>
-            <option value='50' ${
-              datatable.rowCount == 50 ? "selected" : ""
-            }>50</option>
-        </select>
-        <span class="space-right big no-space-mobile">&nbsp;&nbsp;na stronę</span>
-        <div class="pagination"></div>
+        <div class="flexbar auto-width-desktop" style="margin:0;align-items: baseline;"">
+          <span class="total-rows"></span>
+          <span class="space-right">&nbsp;${datatable.lang.subject}</span>
+          <select data-param="rowCount" class="field inline">
+              <option value='10' ${
+                datatable.rowCount == 10 ? "selected" : ""
+              }>10</option>
+              <option value='20' ${
+                !datatable.rowCount || datatable.rowCount == 20
+                  ? "selected"
+                  : ""
+              }>20</option>
+              <option value='50' ${
+                datatable.rowCount == 50 ? "selected" : ""
+              }>50</option>
+          </select>
+          <span class="big space-right">&nbsp;&nbsp;na stronę</span>
+          <div class="pagination"></div>
+        </div>
+        <div style='flex-grow:1'></div>
         ${nonull(datatable.controlsRight)}
       </div>`;
 
@@ -187,13 +192,13 @@ function createDatatable(datatable) {
 
   var sumWidthPercentages = 0;
   for (def of datatable.definition) {
-    if (def.width.indexOf("%") != -1) {
+    if (def.width && def.width.indexOf("%") != -1) {
       sumWidthPercentages += parseFloat(def.width);
     }
   }
   var scalePercentages = 100 / sumWidthPercentages;
   for (def of datatable.definition) {
-    if (def.width.indexOf("%") != -1) {
+    if (def.width && def.width.indexOf("%") != -1) {
       def.width = Math.round(parseFloat(def.width) * scalePercentages) + "%";
     }
   }
@@ -228,10 +233,12 @@ function createDatatable(datatable) {
 
   justTable += `
     <div class="table-wrapper">
-      <table class='datatable'>
-        <thead>${datatable.headersHTML}</thead>
-        <tbody></tbody>
-      </table>
+      <div style="padding:0 10px;width: fit-content;">
+        <table class='datatable'>
+          <thead>${datatable.headersHTML}</thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
     `;
 
@@ -265,7 +272,7 @@ function createDatatable(datatable) {
   } else {
     datatable.target.insertAdjacentHTML(
       "afterbegin",
-      `<div class="table-search-wrapper">${justTable}</div>`
+      `<div class="table-search-wrapper">${justTable}<div class="pagination pagination-bottom"></div></div>`
     );
   }
 
@@ -276,6 +283,9 @@ function createDatatable(datatable) {
   datatable.tableBodyElement = datatable.tableSearchElement.find("tbody");
   datatable.totalRowsElement = datatable.target.find(".total-rows");
   datatable.paginationElement = datatable.target.find(".pagination");
+  datatable.paginationBottomElement = datatable.target.find(
+    ".pagination-bottom"
+  );
   datatable.selectionBodyElement = datatable.target.find(
     ".selected_rows tbody"
   );
@@ -580,6 +590,19 @@ function createDatatable(datatable) {
         if (createList) {
           datatable.selectionBodyElement.setContent(output);
         } else {
+          datatable.totalRowsElement.setContent(res.totalRows);
+          datatable.tableBodyElement.setContent(output);
+
+          datatable.paginationElement.style.display =
+            window.innerWidth > 1000 ? "" : "none";
+
+          datatable.paginationBottomElement.style.display =
+            window.innerWidth <= 1000 ||
+            datatable.tableBodyElement.getBoundingClientRect().height >
+              window.innerHeight - 100
+              ? ""
+              : "none";
+
           renderPagination(
             datatable.paginationElement,
             datatable.currPage,
@@ -590,8 +613,19 @@ function createDatatable(datatable) {
             },
             { allow_my_page: true }
           );
-          datatable.totalRowsElement.setContent(res.totalRows);
-          datatable.tableBodyElement.setContent(output);
+
+          if (datatable.paginationBottomElement) {
+            renderPagination(
+              datatable.paginationBottomElement,
+              datatable.currPage,
+              datatable.pageCount,
+              (i) => {
+                datatable.currPage = i;
+                datatable.search();
+              },
+              { allow_my_page: true }
+            );
+          }
         }
 
         datatable.target.findAll("td").forEach((e) => {
@@ -1236,6 +1270,15 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  filter_menu.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      var action = filter_menu.find(".filter_menu_footer .primary");
+      if (action) {
+        action.click();
+      }
+    }
+  });
 });
 
 function setFilters(datatable, column_id) {

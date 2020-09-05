@@ -226,7 +226,7 @@ registerModalContent(
               <label style="text-align:right;display: block;margin-top: 10px;">
                   <input type="file" name="files[]" multiple onchange="$(this).next().click()" style="display:none">
                   <input type="submit" name="submit" style="display:none">
-                  <div class="btn primary">Prześlij <i class="fas fa-cloud-upload-alt"></i></div>
+                  <div class="btn primary">Wybierz pliki <i class="fas fa-cloud-upload-alt"></i></div>
               </label>
             </form>
         </div>

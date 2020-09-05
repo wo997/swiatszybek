@@ -109,6 +109,9 @@ alterTable("zamowienia", [
   ["name" => "status_id", "previous_name" => "status", "type" => "INT"],
 ]);
 
+addForeignKey("link_variant_attribute_value", "variant_id", "variant");
+//dropForeignKey("link_variant_attribute_value", "variant_id", "variant");
+
 //renameTable("variant", "variants");
 
 echo "<h3>✅ All migrations completed</h3>";

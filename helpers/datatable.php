@@ -120,7 +120,10 @@ function paginateData($data = null)
     }
     unset($result);
 
-    $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
+    //$pageCount = $pageCount * 4;
+    //$results = array_merge($results, $results, $results, $results);
+
+    $responseArray = ["pageCount" => $pageCount * 10, "totalRows" => $totalRows, "results" => $results];
 
     return isset($data["raw"]) ? $responseArray : json_encode($responseArray);
 }
@@ -139,6 +142,7 @@ function paginateData($data = null)
  */
 function getFilterCondition($field, $type, $filter_value)
 {
+    $field = clean($field);
     //if (in_array($type, ["=", "!=", "%"])) {
 
     if ($type == "<>") {

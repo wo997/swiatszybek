@@ -24,27 +24,34 @@
           render: (r) => {
             return `<a class="btn secondary" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
           },
-          escape: false
+          escape: false,
+          field: "title",
+          searchable: "text",
+          sortable: true,
         },
-        getPublishedDefinition(),
+        getPublishedDefinition({
+          field: "p.published"
+        }),
         {
           title: "W magazynie",
-          width: "120px",
+          width: "145px",
           render: (r) => {
             return `${nonull(r.stock,0)} szt.`;
-          }
+          },
+          field: "stock",
+          sortable: true,
         },
       ],
-      controls: `
-        <div class='float-icon'>
+      controlsRight: `
+        <div class='float-icon space-right'>
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <select data-param="status" class="field inline">
-          <option value=''>Wszystkie</option>
-          <option value='published'>Tylko publiczne</option>
-        </select>
-        <button class="btn primary" onclick="addNew(this)"><span>Nowy produkt</span> <i class="fa fa-plus"></i></button>
+        <button class="btn important" style="height:32px" onclick="addNew(this)">
+          <span class='hide-mobile'>Nowy produkt</span>
+          <i class='fas fa-cube hide-desktop'></i>
+          <i class="fa fa-plus"></i>
+        </button>
       `
     });
   });
@@ -59,6 +66,7 @@
 
 <?php startSection("content"); ?>
 
+<br>
 <div class="mytable"></div>
 
 <div id="newProduct" data-modal>
@@ -69,7 +77,7 @@
     </label>
     <div style="text-align:right;padding-top:15px">
       <button class="btn secondary" type="button" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-      <button type="submit" class="btn primary">Dodaj <i class="fa fa-plus"></i></button>
+      <button type="submit" class="btn primary">Dodaj <i class="fa fa-check"></i></button>
     </div>
   </form>
 </div>

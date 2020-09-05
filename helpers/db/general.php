@@ -57,14 +57,14 @@ function getLastInsertedId()
 }
 
 /**
- * removes everything except  (a-z) (A-Z) (0-9) "_" " " ","
+ * removes everything except  (a-z) (A-Z) (0-9) "_" " " "," "."
  *
  * @param  string $x
  * @return string
  */
 function clean($x)
 {
-  return preg_replace("/[^a-zA-Z0-9_ ,]/", "", $x);
+  return preg_replace("/[^a-zA-Z0-9_ ,.]/", "", $x);
 }
 
 function escapeSQL($var, $quote = true)
