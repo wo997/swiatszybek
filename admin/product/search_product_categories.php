@@ -42,4 +42,4 @@ if (isset($_POST["include_attributes"])) {
     }
 }
 
-die(json_encode($responseArray));
+json_response($responseArray);

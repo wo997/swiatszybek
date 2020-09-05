@@ -2,4 +2,4 @@
 
 $status_id = fetchValue("SELECT status_id FROM zamowienia WHERE link = ?", [$_GET['link']]);
 
-die(json_encode(["status_id" => $status_id]));
+json_response(["status_id" => $status_id]);

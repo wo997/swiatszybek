@@ -1,5 +1,15 @@
 <?php
 
+$email_client_url_list = [
+    "gmail.com" => "https://mail.google.com/",
+    "wp.pl" => "https://profil.wp.pl/",
+    "outlook.com" => "https://outlook.live.com/",
+    "yahoo.com" => "https://mail.yahoo.com/",
+    "icloud.com" => "https://icloud.com/mail",
+    "aol.com" => "https://mail.aol.com/",
+    "o2.pl" => "https://poczta.o2.pl/",
+];
+
 // send emails
 $default_headers  = 'MIME-Version: 1.0' . "\r\n";
 $default_headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
@@ -17,7 +27,7 @@ function sendEmail($recipient, $message, $title, $headers = null, $from = null)
         $from = config('main_email');
     }
     $title = "=?UTF-8?B?" . base64_encode($title) . "?=";
-    mail($recipient, $title, $message, $headers, "-f " . $from);
+    @mail($recipient, $title, $message, $headers, "-f " . $from);
 }
 
 function getEmailHeader($lang)

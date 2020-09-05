@@ -138,6 +138,27 @@ if (!json_decode($kod_data["product_list"])) {
 
         setFormData(<?= json_encode($kod_data) ?>, "#kodForm");
     });
+
+    function save(remove = false) {
+        var f = $("#kodForm");
+
+        if (!remove && !validateForm(f)) {
+            return;
+        }
+        var params = getFormData(f);
+
+        if (remove) {
+            params["remove"] = true;
+        }
+
+        xhr({
+            url: "/admin/save_kod_rabatowy",
+            params,
+            success: (res) => {
+                window.location = "/admin/kody-rabatowe";
+            }
+        });
+    }
 </script>
 
 <title>Kod rabatowy</title>
@@ -146,7 +167,7 @@ if (!json_decode($kod_data["product_list"])) {
 <?php startSection("content"); ?>
 
 <div id="kodForm">
-    <form style="max-width:1200px;margin:20px auto" method="post" action="/admin/save_kod_rabatowy" autocomplete="off">
+    <div style="max-width:1200px;margin:20px auto">
         <h2 style="text-align:center">Kod rabatowy</h2>
         <div class="desktopRow spaceColumns">
             <div>
@@ -187,11 +208,11 @@ if (!json_decode($kod_data["product_list"])) {
         <div style="margin-top:10px;text-align:right">
             <a href="/admin/kody-rabatowe" class="btn secondary"><i class="fas fa-chevron-circle-left"></i> Wróć</a>
             <?php if ($kod_data["kod_id"] != -1) : ?>
-                <button type="submit" name="submit" value="delete" class="btn secondary red" onclick="return confirm('Czy aby na pewno chcesz usunąć kod rabatowy?')">Usuń <i class="fa fa-times"></i></button>
+                <button class="btn secondary red" onclick='if (confirm("Czy aby na pewno chcesz usunąć kod rabatowy?")) {save(true)};'>Usuń <i class="fa fa-times"></i></button>
             <?php endif ?>
-            <button type="submit" name="submit" value="save" class="btn primary">Zapisz <i class="fa fa-save"></i></button>
+            <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
         </div>
-    </form>
+    </div>
 </div>
 
 <?php include "admin/default_page.php"; ?>

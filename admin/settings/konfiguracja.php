@@ -77,11 +77,25 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
         // TODO instead of createDatatable
         // createSimpleList();
     });
+
+    function save() {
+        const f = $("#configForm");
+
+        const params = getFormData(f);
+
+        xhr({
+            url: "/admin/save-konfiguracja",
+            params,
+            success: (res) => {
+                window.location.reload();
+            }
+        });
+    }
 </script>
 
 <?php startSection("content"); ?>
 
-<form action="/admin/save-konfiguracja" method="post">
+<div id="configForm">
     <div style="max-width:500px;margin:30px auto"><?php
 
                                                     $where = "WHERE 1";
@@ -101,9 +115,10 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
                                                     }
                                                     $stmt->close();
                                                     ?>
-        <input type='submit' class='btn primary fill' value='Zapisz' style="width:100%;margin-top:10px;">
+        <!-- <input type='submit' class='btn primary fill' value='Zapisz' style="width:100%;margin-top:10px;"> -->
+        <button class='btn primary fill' style="width:100%;margin-top:10px;" onclick="save()">Zapisz</button>
     </div>
-</form>
+</div>
 
 <div class="config_table"></div>
 

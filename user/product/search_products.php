@@ -10,10 +10,10 @@ $moduleDir = "modules/product-list";
 
 include $moduleDir . "/content.php";
 
-die(json_encode(
+json_response(
     [
         "content" => $module_content,
         "pageCount" => $products["pageCount"],
         "totalRows" => $products["totalRows"]
     ]
-));
+);

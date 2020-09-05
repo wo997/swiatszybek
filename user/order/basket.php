@@ -69,5 +69,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $response["total_basket_cost"] = $app["user"]["basket"]["total_basket_cost"];
   $response["item_count"] = $app["user"]["basket"]["item_count"];
 
-  die(json_encode($response));
+  json_response($response);
 }

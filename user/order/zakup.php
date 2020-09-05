@@ -1332,7 +1332,11 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
                 <div id="payment-request-button"></div>
               </div>-->
 
-            <button type="submit" class="btn primary big" style="margin-top: 10px;width: 260px;margin-left:auto">
+            <!-- <button type="submit" class="btn primary big" style="margin-top: 10px;width: 260px;margin-left:auto">
+              <span id="submit_text">ZAMAWIAM I PŁACĘ</span>
+              <i class="fa fa-chevron-right"></i>
+            </button> -->
+            <button onclick="" class="btn primary big" style="margin-top: 10px;width: 260px;margin-left:auto">
               <span id="submit_text">ZAMAWIAM I PŁACĘ</span>
               <i class="fa fa-chevron-right"></i>
             </button>

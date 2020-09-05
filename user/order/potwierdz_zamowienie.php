@@ -1,5 +1,7 @@
 <?php //route[potwierdz_zamowienie]
 
+$response = [];
+
 $impersonate = false;
 if (isset($_POST["impersonate"]) && $_POST["impersonate"] == 1) {
   $impersonate = true;
@@ -23,8 +25,10 @@ if ($_POST["buyer_type"] == 'f') {
 }
 
 if ($_POST["email"] == '') {
-  header("Location: /zakup");
-  die;
+  $response["redirect"] = "/zakup";
+  json_response($response);
+  // header("Location: /zakup");
+  // die;
 }
 
 // lower kod rabatowy count
@@ -208,6 +212,7 @@ $mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . config('main_email
   header("Location: $link");
   die;
 }*/
-
-header("Location: $link");
-die;
+$response["redirect"] = $link;
+json_response($response);
+// header("Location: $link");
+// die;
