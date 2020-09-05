@@ -28,5 +28,5 @@ if ($isRemove) {
 triggerEvent("sitemap_change");
 
 if (isset($cms_link)) {
-    die(json_encode(["cms_link" => $cms_link]));
+    json_response(["cms_link" => $cms_link]);
 }

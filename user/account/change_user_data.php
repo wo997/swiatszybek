@@ -70,4 +70,4 @@ if ($app["user"]["type"] == 's') {
   ]);
 }
 $response["data"] = fetchRow("SELECT imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nip, nr_lokalu FROM users WHERE user_id = ?", [$user_id]);
-die(json_encode($response));
+json_response($response);

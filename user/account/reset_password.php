@@ -76,7 +76,7 @@ if ($user_data) {
 // if ($user_id) {
 //   $response["message"] = quit("Wyloguj się i przejdź proces rejestracji", 0);
 //   $response["redirect"] = '/moje-konto';
-//   die(json_encode($response));
+//   json_response($response));
 // }
 
 // if (isset($_POST["password"]) && isset($_POST["user_id"]) && isset($_POST["authentication_token"])) {
@@ -95,7 +95,7 @@ if ($user_data) {
 
 //   $response["message"] = quit("Zmieniono hasło konta $email", 1);
 //   $response["redirect"] = $back;
-//   die(json_encode($response));
+//   json_response($response));
 // }
 
 // $user_data = fetchRow("SELECT user_id, authentication_token FROM users WHERE email = ?", [$email]);
@@ -110,8 +110,8 @@ if ($user_data) {
 //   // sendEmail($email, $message, $mailTitle);
 
 //   $response["message"] = quit("Wysłaliśmy link do zmiany hasła na $email", 1);
-//   die(json_encode($response));
+//   json_response($response));
 // } else {
 //   $response["message"] = quit("Konto $email nie istnieje", 0);
-//   die(json_encode($response));
+//   json_response($response));
 // }

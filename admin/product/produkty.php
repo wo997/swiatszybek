@@ -26,7 +26,9 @@
           },
           escape: false
         },
-        getPublishedDefinition(),
+        getPublishedDefinition({
+          field: "p.published"
+        }),
         {
           title: "W magazynie",
           width: "120px",

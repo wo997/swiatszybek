@@ -126,7 +126,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
       if (emailRequest) {
         addMessageBox($(".message-box-container"), `Wysłaliśmy link do zmiany adresu email na ${emailRequest}`);
-        toggleMessageBox();
+        toggleMessageBox(true, true);
       }
     });
 
@@ -144,14 +144,14 @@ if (strpos($url, "resetowanie-hasla") !== false)
         params,
         success: (res) => {
           if (res.message) {
-            showMessageModal(res.message, res.email ? true : false);
+            showMessageModal(res.message);
           }
 
-          if (res.email) {
-            addMessageBox($(".message-box-container"), `Wysłaliśmy link do zmiany adresu email na ${res.email.new}`);
-            toggleMessageBox();
+          if (res.emails) {
+            addMessageBox($(".message-box-container"), `Wysłaliśmy link do zmiany adresu email na ${res.emails.new}`);
+            toggleMessageBox(true);
             setFormData({
-              email: res.email.old
+              email: res.emails.old
             }, form);
           }
         }
@@ -191,14 +191,16 @@ if (strpos($url, "resetowanie-hasla") !== false)
             <span style="margin: 0 10px;">
               ${message}
             </span>
-            <i class="fas fa-times" onclick="toggleMessageBox(false)"></i>
+            <i class="fas fa-times btn" onclick="toggleMessageBox(false)"></i>
           </div>
         </div>
           `;
     }
 
-    function toggleMessageBox(show = true) {
-      expand($(".message-box"), show);
+    function toggleMessageBox(show = null, instant = false) {
+      expand($(".message-box"), show, {
+        duration: instant ? 0 : 350
+      });
     }
 
     function showMessageModal(message) {
@@ -213,15 +215,15 @@ if (strpos($url, "resetowanie-hasla") !== false)
   <div id="accountForm" class="main-container">
     <div style="margin-top:30px"></div>
 
-    <div id="message-modal" data-modal data-expand>
-      <div style="width: fit-content;
-      height: fit-content;
-      padding: 20px 50px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      border-radius: 5px;">
+    <div id="message-modal" data-modal>
+      <div style="
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-radius: 5px;
+      ">
         <div class="modal-message">
         </div>
         <div>
@@ -230,7 +232,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
       </div>
     </div>
 
-    <div style=" text-align:center;padding: 25px;font-size: 20px">
+    <div style=" text-align:center;padding: 25px;font-size: 17px">
       <?php
       if ($app["user"]["type"] == 'g') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
       if ($app["user"]["type"] == 'f') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
@@ -280,7 +282,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
               $rowCount++;
 
               if ($rowCount == 1) {
-                $table .= "<h3 style='margin: 0 auto; font-size: 26px;text-align:center'>Twoje zamówienia</h3><table class='zamowienia_table hideMobile'><tr style='background: #60d010;color: white;'><td>Nr zamówienia</td><td>Koszt</td><td>Status</td><td>Data utworzenia</td><td></td></tr>";
+                $table .= "<h3 class='form-header'>Twoje zamówienia</h3><table class='zamowienia_table hideMobile'><tr style='background: #60d010;color: white;'><td>Nr zamówienia</td><td>Koszt</td><td>Status</td><td>Data utworzenia</td><td></td></tr>";
               }
               $table .= "<tr><td>#$zamowienie_id</td><td>$koszt zł</td><td>$status_html</td><td>$zlozono</td><td><a class='btn primary fill' href='/zamowienie/$link'>Szczegóły <i class='fa fa-chevron-right'></i></a></td></tr>";
               $tableMobile .= "<div>
@@ -315,7 +317,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
             <div class="mobileRow" style="max-width: 820px;margin: 0 auto;">
               <div style="width: 50%; padding:10px">
                 <div style="width:100%;margin:auto;max-width:350px">
-                  <h3 style="text-align: center;font-size: 26px;margin: 45px 0 35px;">Dane kontaktowe</h3>
+                  <h3 class="form-header">Dane kontaktowe</h3>
 
                   <div class="field-title">Imię</div>
                   <input type="text" class="field" name="imie" autocomplete="first-name" data-validate>
@@ -338,7 +340,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
               </div>
               <div style="width: 50%; padding:10px;">
                 <div style="width:100%;margin:auto;max-width:350px">
-                  <h3 style="text-align: center;font-size: 26px;margin: 45px 0 35px;">Adres</h3>
+                  <h3 class="form-header">Adres</h3>
                   <div class="field-title">Kraj</div>
                   <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
 
@@ -365,7 +367,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
                     </div>
                   </div>
                   <div style="margin-top: 70px;text-align: right;">
-                    <button class="btn primary big" id="allowSave" onclick="saveDataForm()" disabled>
+                    <button class="btn primary medium" id="allowSave" onclick="saveDataForm()" disabled>
                       Zapisz zmiany
                       <i class="fa fa-cog"></i>
                     </button>
@@ -378,7 +380,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
         <div id="menu3" class="menu mobileRow <?php if ($menu == "haslo") echo "showNow"; ?>" style="<?php if ($menu != "haslo") echo 'display:none;'; ?>">
           <div style="width:100%;margin:40px auto;max-width:350px">
-            <h3 style="text-align: center;font-size: 26px;margin: 15px 0 35px;">Zmiana hasła</h3>
+            <h3 class="form-header">Zmiana hasła</h3>
 
             <div class="field-title">Hasło (min. 8 znaków)</div>
             <div class="field-wrapper">

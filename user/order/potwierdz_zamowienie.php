@@ -1,10 +1,6 @@
 <?php //route[potwierdz_zamowienie]
 
 $response = [];
-function json_response($response)
-{
-  die(json_encode($response));
-}
 
 $impersonate = false;
 if (isset($_POST["impersonate"]) && $_POST["impersonate"] == 1) {

@@ -99,7 +99,7 @@ alterTable("link_category_attribute", [
   ["name" => "main_filter", "type" => "TINYINT(1)"],
 ]);
 
-createTatable(
+createTable(
   "uploads",
   [
     ["name" => "file_id", "type" => "INT", "index" => "primary", "increment" => true],
