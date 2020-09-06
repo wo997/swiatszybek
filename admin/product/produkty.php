@@ -48,9 +48,7 @@
           <i class="fas fa-search"></i>
         </div>
         <button class="btn important" onclick="addNew(this)">
-          <span class='hide-mobile'>Nowy produkt</span>
-          <i class='fas fa-cube hide-desktop'></i>
-          <i class="fa fa-plus"></i>
+          Produkt <i class="fas fa-plus-circle"></i>
         </button>
       `
     });
