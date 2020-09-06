@@ -491,16 +491,16 @@ textarea {
   left: -1px;
 }
 
-.datatable .fa-minus-circle,
-.datatable .fa-plus-circle {
+.datatable td .fa-minus-circle,
+.datatable td .fa-plus-circle {
   color: #555;
   cursor: pointer;
   transform: scale(1.3);
 }
-.fa-minus-circle:hover {
+.datatable td .fa-minus-circle:hover {
   color: #c00;
 }
-.fa-plus-circle:hover {
+.datatable td .fa-plus-circle:hover {
   color: #0c0;
 }
 .selected_rows {

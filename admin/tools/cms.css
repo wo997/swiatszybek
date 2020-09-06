@@ -234,6 +234,8 @@
 
 .cms-container-content {
   min-height: 20px;
+}
+#cms .cms-container-content {
   padding: 2px;
 }
 
