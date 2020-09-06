@@ -1,9 +1,5 @@
 <?php //route[admin/uzytkownicy]
 
-if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
-    $user_id = $url_params[2];
-} else
-    $user_id = null;
 ?>
 
 <?php startSection("head"); ?>
@@ -22,41 +18,47 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
             width: 1300,
             definition: [{
                     title: "Imię",
-                    width: "7.5%",
-                    render: (r) => {
-                        // if (r.user_type == 'g') client = '<img src="/img/google.png" style="width: 15px;vertical-align: sub;"> ' + client;
-                        // if (r.user_type == 'f') client = '<i class="fab fa-facebook-square" style="font-size: 15px;color: #3b5998;"></i> ' + client;
-                        // return `<a class="btn secondary" href='/moje-konto/dane-uzytkownika/${r.user_id}'><i class="fas fa-cog"></i></a> ${client}`;
-                        return r.imie;
-                    }
+                    width: "7%",
+                    field: "imie",
+                    searchable: "text",
                 },
                 {
                     title: "Nazwisko",
-                    width: "7.5%",
-                    render: (r) => {
-                        return r.nazwisko;
-                    }
+                    width: "7%",
+                    field: "nazwisko",
+                    searchable: "text",
                 },
                 {
                     title: "Firma",
-                    width: "10%",
-                    render: (r) => {
-                        return r.firma;
-                    }
+                    width: "7%",
+                    field: "firma",
+                    searchable: "text",
                 },
                 {
                     title: "Email",
-                    width: "10%",
+                    width: "12%",
                     field: "email",
                     sortable: true,
                     searchable: "",
                 },
                 {
                     title: "Telefon",
-                    width: "9%",
+                    width: "6%",
                     field: "telefon",
-                    sortable: true,
                     searchable: "text",
+                },
+                {
+                    title: "Typ konta",
+                    width: "5%",
+                    render: (r) => {
+                        if (r.user_type == 'google') {
+                            return '<img src="/img/google.png" style="width: 15px;vertical-align: sub;">';
+                        }
+                        if (r.user_type == 'facebook') {
+                            return '<i class="fab fa-facebook-square" style="font-size: 15px;color: #3b5998;"></i>';
+                        }
+                        return "";
+                    }
                 },
                 {
                     title: "Uprawnienia",
@@ -73,29 +75,28 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                         return e.name;
                     }),
                 },
-                {
-                    title: "Utworzono",
-                    width: "10%",
-                    field: "stworzono",
-                    sortable: true,
-                    searchable: "date",
-                },
+                // {
+                //     title: "Utworzono",
+                //     width: "9%",
+                //     field: "stworzono",
+                //     sortable: true,
+                //     searchable: "date",
+                // },
                 {
                     title: "Zamówienia",
-                    width: "7%",
+                    width: "6%",
                     render: (r, i, t) => {
                         var zamowienia = nonull(r.zamowienia_count);
-                        if (r.zamowienia_count > 0) zamowienia += `<button class="btn secondary" style="margin-left:7px" onclick="showUser(${i}, '${t.name}')"> Pokaż <i class="fas fa-chevron-circle-right"></i></a>`;
                         return zamowienia;
                     },
                     escape: false
                 },
                 {
                     title: "",
-                    width: "95px",
+                    width: "110px",
                     render: (r, i, t) => {
                         return `
-                            <div class="btn secondary" onclick="editUser(this, ${t.name}.results[${i}])">Edytuj <i class="fa fa-cog"></i></div>
+                            <div class="btn secondary" onclick="editUser(this, ${t.name}.results[${i}])">Szczegóły <i class="fa fa-chevron-right"></i></div>
                         `;
                     },
                     escape: false
@@ -108,10 +109,10 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                 </div>                `
         });
 
-        <?php if ($user_id) echo "showUser($user_id);"; ?>
     });
 
     document.addEventListener("DOMContentLoaded", function() {
+        const definition = zamowienia_table_definition.filter(elem => ["imie", "nazwisko", "firma"].indexOf(elem.field) === -1);
 
         var tableName = "zamowieniatable";
         createDatatable({
@@ -122,39 +123,9 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
             },
             width: 1300,
             nosearch: true,
-            params: () => {
-                return {
-                    user_id: USER_ID
-                }
-            },
-            definition: zamowienia_table_definition,
-            controls: `
-                    <h3><button class="btn primary" style="margin-right:10px" onclick="back()"><i class="fas fa-chevron-circle-left"></i>&nbsp;Cofnij</button> Zamówienia użytkownika <span id="username"></span></h3>
-                `
+            definition,
         });
     });
-
-    var USER_ID = null;
-
-    function showUser(row_id, table_name) {
-
-        const r = window[table_name].results[row_id];
-        USER_ID = r.user_id;
-        const client = escapeHTML(`${r.imie} ${r.nazwisko} ${r.firma}`);
-        zamowieniatable.search(() => {
-            $('#caseSingleUser').style.display = 'block';
-            $('#caseAllUsers').style.display = 'none';
-
-            $('#username').innerHTML = `<td><a class='link' href='/moje-konto/dane-uzytkownika/${USER_ID}'>${client}</a></td>`;
-        });
-    }
-
-    function back() {
-        mytable.search(() => {
-            $('#caseSingleUser').style.display = 'none';
-            $('#caseAllUsers').style.display = 'block';
-        });
-    }
 
     function editUser(src = null, data = null) {
         const form = $("#editUser");
@@ -174,6 +145,14 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
         $("#editUser .passwordCheckbox").setValue(0);
         setFormData(data, form);
+
+        removeFilterByField(zamowieniatable, "user_id");
+        zamowieniatable.filters.push({
+            field: "user_id",
+            type: "=",
+            value: $(`#editUser [name="user_id"]`).getValue(),
+        })
+        zamowieniatable.search();
 
         showModal(form.id, {
             source: src
@@ -206,9 +185,6 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
 <br>
 <div class="mytable" id="caseAllUsers"></div>
-<div id="caseSingleUser" style="display:none">
-    <div class="zamowieniatable"></div>
-</div>
 
 <div id="editUser" data-modal data-expand data-exclude-hidden>
     <div class="modal-body stretch-vertical">
@@ -242,6 +218,7 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                 </div>
                 <div>
                     <h3 style="text-align: center;font-size: 18px;margin: 20px 0 10px;">Adres</h3>
+
                     <div class="field-title">Kraj</div>
                     <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
 
@@ -270,7 +247,6 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
 
                     <input type="hidden" name="user_id">
                 </div>
-
             </div>
 
             <br>
@@ -303,6 +279,14 @@ if (isset($url_params[2]) && strlen($url_params[2]) > 0) {
                 <div>
 
                 </div>
+            </div>
+
+            <br>
+            <br>
+
+            <div>
+                <h3 class="form-header">Zamówienia</h3>
+                <div class="zamowieniatable"></div>
             </div>
 
             <br>

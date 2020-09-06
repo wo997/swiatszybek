@@ -10,7 +10,7 @@ if (isset($_POST['scope_item_id'])) {
 }
 
 echo paginateData([
-  "select" => "CONCAT(imie, ' ', nazwisko, ' ', email) as user, logged_at, log",
+  "select" => "imie, nazwisko, email, logged_at, log, previous_state, current_state",
   "from" => "activity_log a LEFT JOIN users u USING(user_id)",
   "where" => $where,
   "order" => "a.activity_id DESC",

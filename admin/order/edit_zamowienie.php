@@ -25,7 +25,7 @@ foreach ($_POST as $k => $new) {
 
   query("UPDATE zamowienia SET $k = ? WHERE zamowienie_id = $zamowienie_id", [$new]);
 
-  addZamowienieLog("$k: $old ⇨ $new", $zamowienie_id);
+  addZamowienieLog($zamowienie_id, $k, $old, $new);
 }
 
 header("Location: " . getZamowienieLink($link));

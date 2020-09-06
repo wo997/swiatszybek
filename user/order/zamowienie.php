@@ -194,16 +194,19 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
           },
           definition: [{
               title: "Kto",
-              width: "10%",
+              width: "250px",
               render: (r) => {
-                return nonull(r.user);
-              }
+                return `<span data-tooltip="${r.imie} ${r.nazwisko}">${r.email}</span>`;
+              },
+              escape: false,
             },
             {
               title: "Zmiana",
               width: "30%",
-              className: "auto-width",
               render: (r) => {
+                if (r.previous_state) {
+                  return `${r.log}: ${r.previous_state} ⇨ ${r.current_state}`;
+                }
                 return r.log;
               }
             },
@@ -432,9 +435,6 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
           <h4>Notatki (niewidoczne dla klienta)</h4>
           <textarea onclick='showModal("notatkaForm",{source:this});moveCursorToEnd(document.getElementsByName("e_notes")[0])' name="notes" readonly style="width: 100%;cursor:pointer; height: 80px; resize: none;"><?= $zamowienie_data["notes"] ?></textarea>
-
-          <h3>Pełna historia zamówienia:</h3>
-          <div class="historytable"></div>
         <?php else : ?>
           <h4>Data złożenia zamówienia</h4>
           <p><?= dateDifference($zamowienie_data["zlozono"]) ?></p>
@@ -476,10 +476,12 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
             </div>
           <?php endif ?>
         </div>
-
       </div>
-
     </div>
+    <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+      <h3>Pełna historia zamówienia:</h3>
+      <div class="historytable"></div>
+    <?php endif ?>
   </div>
 
   <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
