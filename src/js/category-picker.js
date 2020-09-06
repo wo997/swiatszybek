@@ -1,34 +1,9 @@
 /* js[global] */
 
-function registerCategoryPickers() {
-  $$("[data-category-picker]").forEach((e) => {
-    var n = e.next();
-    if (n && n.classList.contains("category-picker")) return;
-
-    var parent_id = e.getAttribute("data-parent_id");
-    if (!parent_id) parent_id = "";
-
-    var select = e.hasAttribute("data-single") ? "single" : "multiple";
-
-    e.insertAdjacentHTML(
-      "afterend",
-      `
-            <div class="category-picker" data-category-picker-source="${e.getAttribute(
-              "data-category-picker-source"
-            )}" data-category-picker-name="${e.getAttribute(
-        "name"
-      )}" data-select="${select}" data-scope_parent_id="${parent_id}"></div>
-        `
-    );
-  });
-}
-
-function setCategoryPickerValues(element, values, params = {}) {
-  if (!element) {
-    console.warn(`Category picker element doesn't exist`);
-    return;
-  }
+function setCategoryPickerValuesString(element, values, params = {}) {
   element = $(element);
+
+  element.setAttribute("value", values);
 
   element.findAll(".expand_y").forEach((e) => {
     e.classList.add("hidden");
@@ -38,7 +13,7 @@ function setCategoryPickerValues(element, values, params = {}) {
     e.classList.remove("open");
   });
 
-  var singleselect = element.getAttribute("data-select") == "single";
+  var singleselect = element.hasAttribute("data-single");
   if (!singleselect) {
     values = values.map((e) => e.toString());
   }
@@ -77,6 +52,7 @@ function setCategoryPickerValues(element, values, params = {}) {
   if (params.disable_with_children) {
     params.disable_with_children.forEach((i) => {
       var el = element.find(`[data-category_id="${i}"]`);
+      console.log(i, el);
       if (el) {
         toggleDisabled(el, true);
         el.checked = false;
@@ -124,8 +100,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 function categoryChanged(el) {
   el = $(el);
   var element = el.findParentByClassName("category-picker");
-  var name = element.getAttribute(`data-category-picker-name`);
-  var singleselect = element.getAttribute("data-select") == "single";
+  var singleselect = element.hasAttribute("data-single");
   if (singleselect) {
     if (el.checked) {
       element.findAll("[data-category_id]").forEach((e) => {
@@ -153,7 +128,7 @@ function categoryChanged(el) {
     });
     value = JSON.stringify(checked);
   }
-  $(`[name=${name}]`).value = value;
+  element.setAttribute("value", value);
 
   if (el.checked) {
     var expandWhenClosed = el.parent().parent().find(".expand:not(.open)");
@@ -168,47 +143,32 @@ function loadCategoryPicker(
   options = {},
   callback = null
 ) {
-  registerCategoryPickers();
-  //parent_id = +parent_id;
   xhr({
-    //url: `/helpers/categories_template`,
     url: `/helpers/categories_template&table=${source}`,
     type: "text",
-    //url: `/helpers/categories_template&parent_id=${parent_id}`,
     success: (c) => {
-      /*if (!$(`.category-picker-template-${parent_id}`)) {
-            document.body.insertAdjacentHTML("beforeend",`<template class="category-picker-template-${parent_id}"></template>`);
-        }
-        $$(`.category-picker[parent_id="${parent_id}"], .category-picker-template-${parent_id}`).forEach(e=>{
-            e.innerHTML = c;
-        });*/
-      $$(`.category-picker[data-category-picker-source="${source}"]`).forEach(
-        (e) => {
-          [...e.children].forEach((e) => {
-            removeNode(e);
-          });
-          e.insertAdjacentHTML("afterbegin", c);
+      $$(`.category-picker[data-source="${source}"]`).forEach((e) => {
+        [...e.children].forEach((e) => {
+          removeNode(e);
+        });
+        e.insertAdjacentHTML("afterbegin", c);
 
-          if (options.skip) {
-            var kid = e.find(`.category-picker-column `.repeat(options.skip));
-            if (kid) {
-              e.innerHTML = kid.innerHTML;
-            }
-          } else {
-            var main = e.find(".category_name");
-            if (main)
-              main.innerHTML = nonull(
-                options.main_category,
-                "Kategoria główna"
-              );
+        if (options.skip) {
+          var kid = e.find(`.category-picker-column `.repeat(options.skip)); // TODO: idk what it is
+          if (kid) {
+            e.innerHTML = kid.innerHTML;
+          }
+        } else {
+          var main = e.find(".category_name");
+          if (main)
+            main.innerHTML = nonull(options.main_category, "Kategoria główna");
 
-            var parent_id = e.getAttribute("scope_parent_id");
-            if (parent_id && parent_id != 0) {
-              e.innerHTML = e.find(`[data-parent_id="${parent_id}"]`).outerHTML;
-            }
+          var parent_id = e.getAttribute("scope_parent_id");
+          if (parent_id && parent_id != 0) {
+            e.innerHTML = e.find(`[data-parent_id="${parent_id}"]`).outerHTML;
           }
         }
-      );
+      });
 
       if (callback) {
         callback();

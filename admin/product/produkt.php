@@ -100,11 +100,9 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     loadCategoryPicker("product_categories", {
       skip: 2
     }, () => {
-      setCategoryPickerValues(
-        $(`[data-category-picker-name="categories"]`),
-        [<?= $categories ?>]
-      );
-      setFormInitialState($("#productForm"));
+      setFormData({
+        categories: [<?= $categories ?>]
+      }, "#productForm");
     });
 
     <?php if ($kopia) : ?>
@@ -394,7 +392,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     <div name="gallery" data-validate="|count:1+" style="max-width:600px"></div>
 
     <div class="field-title">Kategorie</div>
-    <input type="hidden" name="categories" data-category-picker data-category-picker-source="product_categories">
+    <div class="category-picker" name="categories" data-source="product_categories"></div>
 
     <div class="field-title">Atrybuty produktu (wspólne)</div>
     <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>

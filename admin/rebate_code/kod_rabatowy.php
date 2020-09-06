@@ -14,8 +14,8 @@ if (isset($parts[2])) {
         "user_id_list" => "",
         "product_list" => "",
         "user" => "",
-        "od" => "",
-        "do" => "",
+        "date_from" => "",
+        "date_to" => "",
         "ilosc" => 1,
         "type" => "static",
     ];
@@ -75,7 +75,7 @@ if (!json_decode($kod_data["product_list"])) {
                     }
                 },
             ],
-            controls: `
+            controlsRight: `
                 <div class='float-icon'>
                     <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
@@ -128,7 +128,7 @@ if (!json_decode($kod_data["product_list"])) {
                     escape: false
                 },
             ],
-            controls: `
+            controlsRight: `
                 <div class='float-icon'>
                     <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>

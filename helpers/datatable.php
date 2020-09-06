@@ -123,7 +123,7 @@ function paginateData($data = null)
     //$pageCount = $pageCount * 4;
     //$results = array_merge($results, $results, $results, $results);
 
-    $responseArray = ["pageCount" => $pageCount * 10, "totalRows" => $totalRows, "results" => $results];
+    $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
 
     return isset($data["raw"]) ? $responseArray : json_encode($responseArray);
 }

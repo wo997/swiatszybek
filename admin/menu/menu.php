@@ -263,7 +263,7 @@
             </div>
 
             <div class="field-title">Menu nadrzędne</div>
-            <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="menu" data-single>
+            <div class="category-picker" name="parent_id" data-source="menu" data-single></div>
 
             <div class="field-title">Powiązanie</div>
             <div class="tab-menu tab-menu-link">

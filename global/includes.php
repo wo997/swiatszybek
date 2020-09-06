@@ -27,25 +27,24 @@
   <?php endif ?>
 
   const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
+
+  var modules = {};
 </script>
 
 <?php if (/*$app["user"]["priveleges"]["backend_access"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
-  <!-- <script src="/src/vanilla.datepicker.js" type="text/javascript" charset="utf-8"></script>
-  <link rel="stylesheet" href="/src/vanilla.datepicker.css?v=1" type="text/css" media="screen" /> -->
 
   <link href="/builds/admin.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
   <script src="/builds/admin.js?v=<?= JS_RELEASE ?>"></script>
+  <script src="/builds/modules.js?v=<?= JS_RELEASE ?>"></script>
 
-  <script src="/src/jscolor.js?v=<?= RELEASE ?>"></script>
+  <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
+  <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">
+  <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= RELEASE ?>"></script>
 <?php endif ?>
 
 <!-- styles / scripts to footer? -->
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
 <link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-
-<script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
-<link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">
-<script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= RELEASE ?>"></script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
