@@ -1785,6 +1785,22 @@ input:read-only {
   color: #13b;
 }
 
+/* used in f.e. tables */
+.goto {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.goto-label {
+  display: inline-block;
+  max-width: calc(100% - 16px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 3px;
+}
+
 input[type="checkbox"] {
   display: none !important;
 }

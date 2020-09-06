@@ -34,7 +34,7 @@
                     title: "Kategoria",
                     width: "10%",
                     render: (r, i, t) => {
-                        return `<div class="btn subtle" onclick="${t.name}.showEditCategory(this,${i})"><i class="fa fa-cog"></i> ${r.title}</div>`;
+                        return `<div class="link goto" onclick="${t.name}.showEditCategory(this,${i})"><div class="goto-label">${r.title}</div><i class="fa fa-cog"></i></div>`;
                     },
                     escape: false
                 },
@@ -42,16 +42,25 @@
                     title: "Podkategorie",
                     width: "13%",
                     render: (r, i, t) => {
-                        return `<div class="link" onclick="${t.name}.openCategory(${i})"><i class="fas fa-chevron-circle-right"></i> ${nonull(r.subcategories,"Brak")}</div>`;
+                        return `<div class="link goto" onclick="${t.name}.openCategory(${i})"><div class="goto-label">${nonull(r.subcategories,"Brak")}</div><i class="fas fa-chevron-circle-right"></i></div>`;
                     },
                     escape: false
                 },
+                getPublishedDefinition(),
                 {
                     title: "link",
                     width: "7%",
                     render: (r) => {
                         return `${r.link}`;
                     },
+                },
+                {
+                    title: "Ikonka",
+                    width: "60px",
+                    render: (r) => {
+                        return `<img data-src="${r.icon}" style="max-width: 100%;max-height: 32px;display: block;">`;
+                    },
+                    escape: false
                 },
                 {
                     title: "Opis górny",
@@ -67,22 +76,16 @@
                         return r.content_text.replace(/\n/g, "");
                     }
                 },
-                {
-                    title: "Ikonka",
-                    width: "60px",
-                    render: (r) => {
-                        return `<img src="/uploads/sm${getUploadedFileName(r.icon)}" style="max-width: 100%;max-height: 32px;display: block;">`;
-                    },
-                    escape: false
-                },
-                getPublishedDefinition(),
             ],
             controlsRight: `
                     <div class='float-icon'>
                         <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
-                `
+                `,
+            onSearch: () => {
+                lazyLoadImages(false);
+            }
         });
 
         createDatatable({

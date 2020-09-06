@@ -633,16 +633,10 @@ function createDatatable(datatable) {
           }
         }
 
-        datatable.target.findAll("td").forEach((e) => {
-          if (
-            //e.classList.contains("tooltipable") &&
-            getNodeTextWidth(e) >
-            e.getBoundingClientRect().width - 20
-          ) {
+        datatable.target.findAll("td, td *").forEach((e) => {
+          if (e.offsetWidth < e.scrollWidth) {
             var info = e.textContent.replace(/, /g, "<br>").trim();
-            if (info.length > 10) {
-              e.setAttribute("data-tooltip", info);
-            }
+            e.setAttribute("data-tooltip", info);
           }
         });
 

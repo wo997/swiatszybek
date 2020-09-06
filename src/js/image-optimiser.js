@@ -16,7 +16,7 @@ function isNodeOnScreen(node, offset = -10) {
 var lazyLoadOffset = 700;
 
 function preloadImage(img, animate = true) {
-  if (!img.hasAttribute("data-src")) {
+  if (!img.filename) {
     return;
   }
 
@@ -66,15 +66,16 @@ function preloadImage(img, animate = true) {
 
     img.setAttribute("src", src);
     img.removeAttribute("data-src");
-  }
+    delete img.filename;
 
-  if (animate) {
-    img.style.opacity = 0;
-    img.classList.add("lazy_image");
+    if (animate) {
+      img.style.opacity = 0;
+      img.classList.add("lazy_image");
 
-    setTimeout(() => {
-      showImage(img);
-    }, 0);
+      setTimeout(() => {
+        showImage(img);
+      }, 0);
+    }
   }
 }
 
@@ -83,6 +84,10 @@ function showImage(img) {
     img.style.animation = "fadeIn 0.45s";
     img.style.opacity = 1;
     img.classList.remove("lazy_image");
+    setTimeout(() => {
+      img.style.opacity = "";
+      img.style.animation = "";
+    }, 450);
   }
 }
 

@@ -22,7 +22,12 @@
           title: "Nazwa produktu",
           width: "50%",
           render: (r) => {
-            return `<a class="link" href='/admin/produkt/${r.product_id}'><i class="fas fa-chevron-circle-right"></i> ${escapeHTML(r.title)}</a>`
+            return `
+              <div class="link goto" onclick="window.location='/admin/produkt/${r.product_id}'">
+                <div class="goto-label">${escapeHTML(r.title)}</div>
+                <i class="fas fa-chevron-circle-right"></i>
+              </div>
+            `;
           },
           escape: false,
           field: "title",
