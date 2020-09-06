@@ -22,7 +22,7 @@ query("UPDATE zamowienia SET status_id = ? $case_oplacono $case_wyslano $case_od
 
 $oldStatusString = getRowById($status_list, $zamowienie_data["status_id"])["title"];
 $newStatusString = getRowById($status_list, $status_id)["title"];
-addZamowienieLog("Status: $oldStatusString ⇨ $newStatusString", $zamowienie_data["zamowienie_id"]);
+addZamowienieLog($zamowienie_data["zamowienie_id"], "Status", $oldStatusString, $newStatusString);
 
 // send mail
 

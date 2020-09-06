@@ -3,7 +3,7 @@
 var zamowienia_table_definition = [
   {
     title: "Nr zamówienia",
-    width: "128px",
+    width: "184px",
     render: (r) => {
       var products_info = "<table>";
       try {
@@ -20,31 +20,41 @@ var zamowienia_table_definition = [
         r.zamowienie_id
       )} <i class="fas fa-chevron-circle-right"></i></a><i class="fas fa-shopping-bag" data-tooltip="${products_info}"></i>`;
     },
+    field: "zamowienie_id",
     escape: false,
+    sortable: true,
+    searchable: "text",
   },
   {
-    title: "Klient",
-    width: "20%",
-    render: (r) => {
-      var client = `${r.imie} ${r.nazwisko} ${r.firma}`;
-      return r.user_id
-        ? `<a href='/moje-konto/dane-uzytkownika/${
-            r.user_id
-          }'><i class='fa fa-user'></i> ${escapeHTML(client)}</a>`
-        : `${client}`;
-    },
-    escape: false,
+    title: "Imię",
+    width: "7%",
+    field: "imie",
+    searchable: "text",
+  },
+  {
+    title: "Nazwisko",
+    width: "7%",
+    field: "nazwisko",
+    searchable: "text",
+  },
+  {
+    title: "Firma",
+    width: "7%",
+    field: "firma",
+    searchable: "text",
   },
   {
     title: "Koszt",
-    width: "8%",
+    width: "6%",
     render: (r) => {
       return `${r.koszt} zł`;
     },
+    field: "koszt",
+    sortable: true,
   },
   {
     title: "Dostawa",
-    width: "10%",
+    width: "6%",
     render: (r) => {
       return r.dostawa;
     },

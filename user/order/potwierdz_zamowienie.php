@@ -130,7 +130,7 @@ $link = $zamowienie_id . "-" . $link_hash;
 $_SESSION["basket"] = "";
 setcookie("basket", "", (time() + 31536000), '/');
 
-addZamowienieLog("Utworzono zamówienie", $zamowienie_id);
+addZamowienieLog($zamowienie_id, "Utworzono zamówienie");
 
 $link = getZamowienieLink($link);
 

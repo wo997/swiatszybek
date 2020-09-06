@@ -124,4 +124,10 @@ addForeignKey("link_variant_attribute_value", "variant_id", "variant");
 
 //renameTable("variant", "variants");
 
+alterTable("activity_log", [
+  ["name" => "log", "type" => "TINYTEXT"],
+  ["name" => "current_state", "type" => "VARCHAR(255)"],
+  ["name" => "previous_state", "type" => "VARCHAR(255)"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";
