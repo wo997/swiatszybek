@@ -1,7 +1,16 @@
 // dependencies
 useTool("fileManager");
 
-var fontAwesomeList = [
+const button_styles = [
+  "primary",
+  "secondary",
+  "subtle",
+  "black",
+  "black-outline",
+  "important",
+];
+
+const fontAwesomeList = [
   "fas fa-address-book",
   "far fa-address-book",
 
@@ -106,6 +115,8 @@ var fontAwesomeList = [
   "far fa-frown",
   "fas fa-thumbs-down",
   "far fa-thumbs-down",
+  "fas fa-star",
+  "far fa-star",
 ];
 
 window.quillEditor = {
@@ -250,21 +261,16 @@ window.quillEditor = {
     }
   },
   isInTable: (elem) => {
-    if (elem) {
-      while (true) {
-        elem = elem.parent();
-        if (!elem || elem.className == "ql-editor") return false;
-        if (elem.tagName == "TABLE") {
-          return elem;
-        }
-      }
-    }
+    return findParentByTagName(elem, "TABLE");
   },
   checkIfTable: () => {
     var table = quillEditor.isInTable(getSelection().focusNode);
+    if (table && table.findParentByClassName("quill-cloud")) {
+      return;
+    }
     var table_menu = $("#quillEditor .table_menu");
-    var container = $("#quillEditor .quill-wrapper");
     if (table) {
+      var container = $("#quillEditor .quill-wrapper");
       table_menu.style.display = "block";
       var tr = table.getBoundingClientRect();
       var cr = container.getBoundingClientRect();
@@ -283,7 +289,8 @@ window.quillEditor = {
     var nativeSelection = getSelection();
     if (
       nativeSelection &&
-      findParentByTagName(nativeSelection.anchorNode, "TD")
+      findParentByTagName(nativeSelection.anchorNode, "TD") &&
+      !findParentByClassName(nativeSelection.anchorNode, "quill-cloud")
     ) {
       quillEditor.wasInTable = true;
       quillEditor.lastSelecitonInTable = quillEditor.lastSelection;
@@ -386,7 +393,7 @@ window.quillEditor = {
         selection.index,
         "MyVideo",
         {
-          value: `${src}`,
+          src: `${src}`,
         },
         "api"
       );
@@ -428,12 +435,6 @@ window.quillEditor = {
     }
   },
 
-  hideCustomQuillButtons: () => {
-    $$(".quill-cloud").forEach((e) => {
-      e.style.display = "";
-    });
-  },
-
   chooseVideoFromGallery: (btn) => {
     fileManager.open(null, {
       callback: (src) => {
@@ -454,41 +455,44 @@ window.quillEditor = {
     hideModal("putVideo");
   },
 
-  /*selectElementContents: (el) => {
-        if (window.getSelection && document.createRange) {
-            var sel = window.getSelection();
-            var range = document.createRange();
-            range.selectNodeContents(el);
-            sel.removeAllRanges();
-            sel.addRange(range);
-        } else if (document.selection && document.body.createTextRange) {
-            var textRange = document.body.createTextRange();
-            textRange.moveToElementText(el);
-            textRange.select();
-        }
-    },*/
-
   modifyNode: (prop, v) => {
-    if (!quillEditor.active_elem) return;
-    if (["alt", "data-href"].indexOf(prop) != -1)
-      quillEditor.active_elem.setAttribute(prop, v);
-    else if (prop == "width") quillEditor.active_elem.style[prop] = v;
-    else if (prop == "youtube") {
+    var n = quillEditor.active_elem;
+    if (!n) return;
+    if (["width"].indexOf(prop) != -1) {
+      n.style[prop] = v;
+    } else if (prop == "youtube") {
       if (quillEditor.menu_sub == "myvideo") {
-        quillEditor.active_elem.src = v;
-      } else
-        quillEditor.active_elem.src = getThumbnailFromYoutubeId(
-          getIdFromYoutubeUrl(v)
-        );
-    } else if (prop == "mylink") {
-      quillEditor.active_elem.href = v;
+        n.src = v;
+      } else n.src = getThumbnailFromYoutubeId(getIdFromYoutubeUrl(v));
     } else if (prop == "mylinkstyle") {
-      quillEditor.active_elem.className = v;
-    } else if (prop == "mylinktitle") {
+      n.className = v;
+    } else if (prop == "linktitle") {
       if (!v) {
         v = "…";
       }
-      quillEditor.active_elem.innerHTML = v;
+      n.innerHTML = v;
+    } else if (prop == "buttontitle") {
+      n.find("span").innerHTML = v;
+    } else if (prop == "buttonhref") {
+      n.setAttribute("data-href", v);
+    } else if (prop == "buttonstyle") {
+      for (let style of button_styles) {
+        n.classList.remove(style);
+      }
+      n.classList.add("btn");
+      n.classList.add(v);
+    } else if (prop == "buttonfontsize") {
+      for (let style of ["medium", "big", "large"]) {
+        n.classList.remove(style);
+      }
+      n.classList.add(v);
+    } else if (prop == "buttonheight") {
+      for (let style of ["tall"]) {
+        n.classList.remove(style);
+      }
+      n.classList.add(v);
+    } else {
+      n.setAttribute(prop, v);
     }
   },
 
@@ -578,15 +582,15 @@ window.quillEditor = {
     Przycisk.tagName = "przycisk";
     Quill.register(Przycisk);
 
-    class Video extends BlockEmbed {
+    class Video extends Embed {
       static create(data) {
         let node = super.create();
-        node.setAttribute("src", data.value);
+        /*node.setAttribute("src", data.value);
         node.setAttribute("class", "ql-video");
-        node.setAttribute("controls", true);
+        node.setAttribute("controls", true);*/
+        node.cssText = data.style;
+        node.innerHTML = `<video class='ql-video"' src='${data.src}'></video>`;
         return node;
-
-        stopAllVideos();
       }
 
       deleteAt(index, length) {
@@ -598,34 +602,64 @@ window.quillEditor = {
       }
 
       static value(node) {
+        var vid = $(node).find("video");
         return {
-          value: node.getAttribute("src"),
-          width: node.style.width,
+          /*value: node.getAttribute("src"),
+          width: node.style.width,*/
+          src: vid.src,
+          style: node.cssText,
         };
       }
     }
     Video.blotName = "MyVideo";
-    Video.tagName = "video";
+    Video.tagName = "myvideo";
     Quill.register(Video);
 
     class MyLink extends Inline {
       static create(data) {
         let node = super.create();
         if (data.href) node.setAttribute("href", data.href);
-        if (data.classList) node.classList = data.classList; // yay, it can be anything :)
         return node;
       }
 
       static formats(node) {
         return {
           href: node.getAttribute("href"),
-          classList: node.classList,
         };
       }
     }
     MyLink.blotName = "myLink";
     MyLink.tagName = "a";
     Quill.register(MyLink);
+
+    class Button extends Embed {
+      static create(data) {
+        let node = super.create();
+        node.innerHTML = nonull(data.label);
+        node.className = nonull(data.class);
+        node.setAttribute("data-href", nonull(data.href));
+        return node;
+      }
+
+      static deleteAt(index, length) {
+        super.deleteAt(0, 1);
+      }
+
+      static length() {
+        return 1;
+      }
+
+      static value(node) {
+        return {
+          label: node.innerHTML,
+          class: node.className,
+          href: node.getAttribute("data-href"),
+        };
+      }
+    }
+    Button.blotName = "button";
+    Button.tagName = "button";
+    Quill.register(Button);
 
     class YTVideo extends Inline {
       static create(data) {
@@ -679,10 +713,9 @@ window.quillEditor = {
       }
 
       static value(node) {
-        var n = node.find("i");
+        var n = $(node).find("i");
         var v = n ? n.className : "";
         return { value: v };
-        //return {value: node.find("img").getAttribute('src')};
       }
     }
     CustomIcon.blotName = "customIcon";
@@ -801,7 +834,7 @@ window.quillEditor = {
               align: [],
             },
           ],
-          ["myLink", "image", "video"],
+          ["myLink", "button", "image", "video"],
           ["clean"],
           ["shadow"],
         ],
@@ -824,21 +857,40 @@ window.quillEditor = {
           asset_types: ["image"],
         });
       };
-    }, 100);
+    }, 200);
 
     $("#quillEditor .ql-video").outerHTML += "";
     setTimeout(() => {
       $("#quillEditor .ql-video").onclick = function () {
-        //beforeImageInsert();
         if (quillEditor.source) {
           showModal("putVideo", { source: this });
         }
       };
-    }, 100);
+    }, 200);
+
+    $("#quillEditor .ql-button").outerHTML += "";
+    setTimeout(() => {
+      $("#quillEditor .ql-button").onclick = function () {
+        quillEditor.selectAnything();
+        var selection = quillEditor.lastSelection;
+
+        quillEditor.editor.insertEmbed(
+          selection.index,
+          "button",
+          {
+            label: "Mój link",
+            class: "btn primary",
+          },
+          "api"
+        );
+
+        quillEditor.editor.setSelection(selection.index + 1, 0);
+      };
+    }, 200);
 
     var fa = "";
 
-    for (let f of window.fontAwesomeList) {
+    for (let f of fontAwesomeList) {
       fa += `<div onclick='quillEditor.insertSpecialChar("${f}")'><i class='${f}'></i></div>`;
     }
 
@@ -959,7 +1011,7 @@ window.quillEditor = {
     });
 
     var observer = new MutationObserver((mutations) => {
-      if (!$(".ql-myLink.ql-active")) {
+      /*if (!$(".ql-myLink.ql-active")) {
         var x = getSelection().anchorNode;
         var cloud = false;
         if (x) {
@@ -970,7 +1022,7 @@ window.quillEditor = {
         if (!cloud) {
           quillEditor.hideCustomQuillButtons();
         }
-      }
+      }*/
       for (var m of mutations) {
         for (var n of m.addedNodes) {
           if (quillEditor.wasInTable && n.tagName == "P") {
@@ -1008,6 +1060,15 @@ window.quillEditor = {
       var x = $("#quillEditor .ql-image:not([data-tooltip])");
       if (x) {
         x.setAttribute("data-tooltip", "Wstaw zdjęcie");
+      }
+
+      var x = $("#quillEditor .ql-button:not([data-tooltip])");
+      if (x) {
+        x.setAttribute("data-tooltip", "Wstaw przycisk");
+        x.innerHTML = `<div style="padding: 0 3px;font-size: 0.8em;font-weight: 600;height: 15px;width: 21px;position: relative;color: #444;border: 2px solid #444;background: #fff;border-radius: 3px;">
+          <i class="fas fa-mouse-pointer" style="position: absolute;left: 9px;top: 2px;color: white;transform: scale(1.5);"></i>
+          <i class="fas fa-mouse-pointer" style="position: absolute;left: 9px;top: 1px;"></i>
+        </div>`;
       }
 
       var x = $("#quillEditor .ql-video:not([data-tooltip])");
@@ -1102,6 +1163,9 @@ window.quillEditor = {
     });
 
     $("#quillEditor").addEventListener("click", (event) => {
+      if (findParentByClassName(event.target, "quill-cloud")) {
+        return;
+      }
       removeClasses("ql-active-element");
       var touchQL = event.target == $(".quill-editor-container");
       if (event.toElement == $(".quill-wrapper") || touchQL) {
@@ -1119,31 +1183,26 @@ window.quillEditor = {
 
     $("#quillEditor .ql-editor").addEventListener("click", (e) => {
       quillEditor.hideCustomQuillButtons();
+    });
 
-      var prevActive = quillEditor.active_elem;
-      quillEditor.active_elem = e.target;
-
-      setTimeout(() => {
-        if (quillEditor.active_elem) {
-          quillEditor.active_elem.classList.add("ql-active-element");
-        }
-      });
+    $("#quillEditor .ql-editor").addEventListener("dblclick", (e) => {
+      quillEditor.active_elem = $(e.target);
+      var parent = quillEditor.active_elem.findParentByTagName("MYVIDEO");
+      if (parent) {
+        quillEditor.active_elem = parent;
+      }
+      quillEditor.active_elem.classList.add("ql-active-element");
 
       if (
-        ["IMG", "VIDEO", "A"].indexOf(quillEditor.active_elem.tagName) != -1 &&
+        ["IMG", "MYVIDEO", "A", "BUTTON"].indexOf(
+          quillEditor.active_elem.tagName
+        ) != -1 &&
         !quillEditor.active_elem.classList.contains("ql-icon")
       ) {
         var cloud = null;
         if (quillEditor.active_elem.classList.contains("ql-video")) {
-          if (quillEditor.active_elem.tagName == "VIDEO") {
+          if (quillEditor.active_elem.tagName == "MYVIDEO") {
             quillEditor.menu_sub = "myvideo";
-            if (prevActive != quillEditor.active_elem) {
-              setTimeout(stopAllVideos, 300);
-              setTimeout(stopAllVideos, 700);
-              setTimeout(stopAllVideos, 1000);
-              setTimeout(stopAllVideos, 1500);
-              // lol, you never know when it starts
-            }
             cloud = $(".video-buttons");
             $("#edit_yt_link").value = quillEditor.active_elem.src;
             $("#szerokosc_yt").value = quillEditor.active_elem.style.width;
@@ -1158,14 +1217,15 @@ window.quillEditor = {
         } else if (quillEditor.active_elem.tagName == "A") {
           quillEditor.menu_sub = "link";
           cloud = $(".my-link");
-          $("#my-link-href").value = quillEditor.active_elem.href;
-          $("#my-link-title").value = quillEditor.active_elem.innerHTML;
-
-          /*var style = "Zwykły";
-                    quillEditor.active_elem.classList.forEach(e=>{
-                        if (e == "przycisk") style = "Przycisk";
-                    });
-                    $("#my-link-style").innerHTML = style;*/
+          cloud.find(".href").value = quillEditor.active_elem.href;
+          cloud.find(".title").value = quillEditor.active_elem.innerHTML;
+        } else if (quillEditor.active_elem.tagName == "BUTTON") {
+          quillEditor.menu_sub = "button";
+          cloud = $(".button-options");
+          cloud.find(".title").value = quillEditor.active_elem.textContent;
+          cloud.find(".href").value = quillEditor.active_elem.getAttribute(
+            "data-href"
+          );
         } else {
           quillEditor.menu_sub = "img";
           cloud = $(".image-buttons");
@@ -1196,6 +1256,8 @@ window.quillEditor = {
 
           cloud.style.left = left + "px";
           cloud.style.top = top + cloud.parent().scrollTop + "px";
+
+          quillEditor.editor.setSelection();
         }
         return;
       }
@@ -1217,6 +1279,16 @@ window.quillEditor = {
     });
   },
 };
+
+var button_styles_html = "";
+
+for (let style of button_styles) {
+  button_styles_html += `
+    <div onclick="quillEditor.modifyNode('buttonstyle','${style}')" style='display:inline-block'>
+      <div class="btn ${style}">A</div>
+    </div>
+  `;
+}
 
 registerModalContent(
   `
@@ -1255,32 +1327,80 @@ registerModalContent(
                     <br>
                     <input type='text' autocomplete="off" placeholder='https://www.youtube.com/watch?v=...' id="edit_yt_link" oninput="quillEditor.modifyNode('youtube',this.value)" style='margin-top: 4px;width:350px'>
                 </div>
-                <div class="my-link quill-cloud" style="display: block; left: 296.258px; top: 139.219px;">
-                    <div>
-                        Link:
-                        <input type="text" autocomplete="off" placeholder="https://google.com" id="my-link-href" oninput="quillEditor.modifyNode('mylink',this.value)" style="margin-top: 4px;width:300px">
-                    </div>
-                    <div>
-                        Tytuł:
-                        <input type="text" autocomplete="off" id="my-link-title" oninput="quillEditor.modifyNode('mylinktitle',this.value)" style="margin-top: 4px;width:300px">
-                    </div>
-                    <div style="text-align: center;padding-top: 5px;">
-                        <div class="btn primary" onclick="window.open($('#my-link-href').value);">Otwórz <i class="fas fa-external-link-alt"></i></div>
-                        <div class="btn primary" onclick="quillEditor.removeLink()">Usuń <i class="fa fa-times"></i></div>
-                        <div class="showhover" style="display:inline-block">
-                            <div id="my-link-style" class="btn primary">Styl <i class="fas fa-chevron-down"></i></div>
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <button onclick="quillEditor.modifyNode('mylinkstyle','')"> Zwykły </button>
-                                <button onclick="quillEditor.modifyNode('mylinkstyle','przycisk')"> Przycisk </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="my-link quill-cloud">
+                    <table style="width:300px">
+                      <tr>
+                        <td>Napis:</td>
+                        <td>
+                          <input type="text" autocomplete="off" class="title field slim" oninput="quillEditor.modifyNode('linktitle',this.value)">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Link:</td>
+                        <td>
+                          <div class="glue-children">
+                            <input type="text" autocomplete="off" placeholder="https://google.com" class="href field slim" oninput="quillEditor.modifyNode('href',this.value)" style="flex-grow: 1;">
+                            <button class="btn secondary" onclick="quillEditor.removeLink()" data-tooltip="Usuń link"><i class="fas fa-unlink"></i></button>
+                            <button class="btn primary" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                </div>
+                <div class="button-options quill-cloud">
+                    
+                    <table style="width:300px">
+                      <tr>
+                        <td>Napis</td>
+                        <td>
+                          <input type="text" autocomplete="off" class="title field slim" oninput="quillEditor.modifyNode('buttontitle',this.value)">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Link</td>
+                        <td>
+                          <div class="glue-children">
+                            <input type="text" autocomplete="off" placeholder="https://google.com" class="href field slim" oninput="quillEditor.modifyNode('data-href',this.value)" style="flex-grow: 1;">
+                            <button class="btn primary" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Szerokość</td>
+                        <td>
+                          <input type='text' autocomplete="off" placeholder='30px, 100%...' class='width field slim' oninput="quillEditor.modifyNode('width',this.value)">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Rozmiar</td>
+                        <td>
+                          <select class='fontsize field slim inline' oninput="quillEditor.modifyNode('buttonfontsize',this.value)">
+                            <option value="">S</option>
+                            <option value="medium">M</option>
+                            <option value="big">L</option>
+                            <option value="large">XL</option>
+                          </select>
+                          <select class='height field slim inline' oninput="quillEditor.modifyNode('buttonheight',this.value)">
+                            <option value="">Niski</option>
+                            <option value="tall">Wysoki</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Styl</td>
+                        <td>
+                          
+                          ${button_styles_html}
+                        </td>
+                      </tr>
+                    </table>
                 </div>
             </div>
         </div>
         <link href="/admin/tools/quillEditor.css?v=${RELEASE}" rel="stylesheet">
     </div>
     `,
+  //<div class="btn primary slim" onclick="buttonGallery.open(quillEditor.active_elem)">Wybierz <i class="fas fa-paint-brush"></i></div>
   () => {
     quillEditor.loaded();
   }

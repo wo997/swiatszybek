@@ -95,6 +95,9 @@ select {
   right: 0;
   top: 100%;
   z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 /* showhover end */
@@ -145,6 +148,15 @@ textarea {
   resize: none;
 }
 
+.field.slim,
+.btn.slim {
+  padding: 0.1em 0.4em;
+}
+.field.tall,
+.btn.tall {
+  padding: 0.5em 0.5em;
+}
+
 .btn {
   border-radius: 0.2em;
   padding: 0.2em 0.5em;
@@ -185,6 +197,15 @@ textarea {
   border-right: 1px solid #ddd;
   border-top: 1px solid #eee;
 }
+.btn.black-outline {
+  color: black;
+  border: 1px solid black;
+  background: white;
+}
+.btn.black {
+  background: black;
+  color: white;
+}
 .btn.buff {
   padding: 0.45em 1.2em;
 }
@@ -198,6 +219,10 @@ textarea {
   width: 100%;
 }
 
+.btn.large {
+  font-size: 1.5.no-results.no-resultsem;
+  font-weight: 600;
+}
 .btn.big {
   font-size: 1.3em;
   font-weight: 600;
@@ -370,11 +395,9 @@ textarea {
 }
 
 .no-results {
-  display: table-cell;
   width: 100%;
   text-align: center;
   background: #f8f8f8;
-  margin-top: -10px;
   padding: 10px;
   font-weight: 600;
 }
@@ -388,6 +411,7 @@ textarea {
 .table-scroll-width {
   padding: 0 10px;
   width: fit-content;
+  min-width: 100%;
 }
 .default-form
   .datatable-wrapper
@@ -475,7 +499,7 @@ textarea {
 .datatable th {
   position: relative;
 }
-.datatable th span {
+.datatable th > span {
   min-height: 29px;
 }
 .datatable th:before {
@@ -500,6 +524,11 @@ textarea {
 .datatable th:first-child::after {
   left: 0;
   width: 100%;
+}
+.has_selected_rows .selected-results-count,
+.has_selected_rows .na-strone,
+.has_selected_rows [data-param="rowCount"] {
+  display: none;
 }
 
 .datatable td .fa-minus-circle,
@@ -540,6 +569,12 @@ textarea {
   max-height: 1000px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.selected-results-count {
+  text-align: center;
+  width: 100%;
+  display: inline-block;
 }
 
 .datatable .kolejnosc {
@@ -635,9 +670,8 @@ input[type="button"] {
 
 .flexbar:not(.slim) .btn,
 .field {
-  padding: 0.42em 0.6em;
+  padding: 0.42em 0.8em;
 }
-
 .field {
   background-color: #fbfbfb;
   -webkit-box-shadow: inset 0px 1px 5px -2px rgba(0, 0, 0, 0.2);
