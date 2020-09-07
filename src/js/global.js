@@ -153,6 +153,7 @@ function validURL(str) {
 
 // also helpers/files.php
 function getUploadedFileName(file_path) {
+  // it doesn't work, file extension needs to be removed, look for getResponsiveImageData instead
   return file_path.substr(UPLOADS_PLAIN_PATH.length);
 }
 
@@ -267,10 +268,10 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function setValue(input, value, quiet = false) {
+function setValue(input, value, params = {}) {
   input = $(input);
   if (input.datepicker) {
-    if (value.substr(0, 4).match(/\d{4}/)) {
+    if (value && value.substr(0, 4).match(/\d{4}/)) {
       value = reverseDateString(value, "-");
     }
     input.datepicker.setDate(value);
@@ -289,8 +290,12 @@ function setValue(input, value, quiet = false) {
     input.style.background = hex ? "#" + hex : "";
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
-  } else if (input.hasAttribute("data-category-picker")) {
-    setCategoryPickerValues(input.next(), JSON.parse(value));
+  } else if (input.classList.contains("category-picker")) {
+    var v = [];
+    try {
+      var v = JSON.parse(value);
+    } catch {}
+    setCategoryPickerValuesString(input, v, params);
   } else {
     var type = input.getAttribute("data-type");
     if (type == "html") {
@@ -326,7 +331,7 @@ function setValue(input, value, quiet = false) {
           var has_attribute_node = attribute_row.find(`.has_attribute`);
           var attribute_value_node = attribute_row.find(`.attribute_value`);
           if (has_attribute_node && attribute_value_node) {
-            has_attribute_node.setValue(true);
+            has_attribute_node.setValue(1);
             attribute_value_node.setValue(
               nonull(e.numerical_value, nonull(e.text_value, e.date_value))
             );
@@ -347,7 +352,7 @@ function setValue(input, value, quiet = false) {
       input.value = value;
     }
   }
-  if (!quiet) {
+  if (!params.quiet) {
     input.dispatchEvent(new Event("change"));
   }
 }
@@ -365,6 +370,8 @@ function getValue(input) {
     return value;
   } else if (input.getAttribute("type") == "checkbox") {
     return input.checked ? 1 : 0;
+  } else if (input.classList.contains("category-picker")) {
+    return input.getAttribute("value");
   } else {
     var type = input.getAttribute("data-type");
     if (type == "html") {

@@ -8,6 +8,7 @@ window.fileManager = {
     fileManager.target = target;
     fileManager.callback = params.callback;
     fileManager.size = params.size;
+    fileManager.optimise = params.optimise ? true : false;
 
     fileManager.setName(null, true);
 
@@ -35,7 +36,12 @@ window.fileManager = {
     }
 
     if (fileManager.target) {
-      setValue(fileManager.target, src);
+      if (fileManager.optimise) {
+        fileManager.target.setAttribute("data-src", src);
+        lazyLoadImages(true);
+      } else {
+        setValue(fileManager.target, src);
+      }
     }
     if (fileManager.callback) {
       fileManager.callback(src);

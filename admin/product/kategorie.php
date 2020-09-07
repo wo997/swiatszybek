@@ -33,65 +33,59 @@
             definition: [{
                     title: "Kategoria",
                     width: "10%",
-                    render: (r) => {
-                        return `${r.title}`;
+                    render: (r, i, t) => {
+                        return `<div class="link goto" onclick="${t.name}.showEditCategory(this,${i})"><div class="goto-label">${r.title}</div><i class="fa fa-cog"></i></div>`;
                     },
+                    escape: false
                 },
                 {
+                    title: "Podkategorie",
+                    width: "13%",
+                    render: (r, i, t) => {
+                        return `<div class="link goto" onclick="${t.name}.openCategory(${i})"><div class="goto-label">${nonull(r.subcategories,"Brak")}</div><i class="fas fa-chevron-circle-right"></i></div>`;
+                    },
+                    escape: false
+                },
+                getPublishedDefinition(),
+                {
                     title: "link",
-                    width: "10%",
+                    width: "7%",
                     render: (r) => {
                         return `${r.link}`;
                     },
                 },
                 {
-                    title: "Podkategorie",
-                    width: "10%",
+                    title: "Ikonka",
+                    width: "60px",
                     render: (r) => {
-                        return `${nonull(r.subcategories,"brak")}`;
-                    }
+                        return `<img data-src="${r.icon}" style="max-width: 100%;max-height: 32px;display: block;">`;
+                    },
+                    escape: false
                 },
                 {
                     title: "Opis górny",
-                    width: "10%",
+                    width: "6%",
                     render: (r) => {
                         return r.description_text.replace(/\n/g, "");
                     }
                 },
                 {
                     title: "Zawartość (dół)",
-                    width: "10%",
+                    width: "6%",
                     render: (r) => {
                         return r.content_text.replace(/\n/g, "");
                     }
                 },
-                {
-                    title: "Ikonka",
-                    width: "60px",
-                    render: (r) => {
-                        return `<img src="/uploads/sm${getUploadedFileName(r.icon)}" style="max-width: 100%;max-height: 32px;display: block;">`;
-                    },
-                    escape: false
-                },
-                getPublishedDefinition(),
-                {
-                    title: "",
-                    width: "185px",
-                    render: (r, i, t) => {
-                        return `
-                            <div class="btn secondary" onclick="${t.name}.showEditCategory(this,${i})">Edytuj <i class="fa fa-cog"></i></div>
-                            <div class="btn primary" onclick="${t.name}.openCategory(${i})">Więcej <i class="fas fa-chevron-circle-right"></i></div>
-                        `;
-                    },
-                    escape: false
-                }
             ],
-            controls: `
+            controlsRight: `
                     <div class='float-icon'>
                         <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
-                `
+                `,
+            onSearch: () => {
+                lazyLoadImages(false);
+            }
         });
 
         createDatatable({
@@ -250,7 +244,7 @@
                 </div>
 
                 <div class="field-title">Kategoria nadrzędna</div>
-                <input type="hidden" name="parent_id" data-category-picker data-category-picker-source="product_categories" data-single>
+                <div class="category-picker" name="parent_id" data-source="product_categories" data-single></div>
 
                 <div class="field-title">Wyświetlane filtry (atrybuty) <a href="/admin/atrybuty" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a> </div>
                 <div class="atrybuty"></div>

@@ -349,7 +349,12 @@ function setFormData(data, form, params = {}) {
     if (!e) {
       return;
     }
-    e.setValue(value);
+    var value_params = {};
+    if (params.data && params.data[name]) {
+      value_params = params.data[name];
+    }
+
+    e.setValue(value, value_params);
   });
   setFormInitialState(form);
   resizeCallback();

@@ -130,6 +130,8 @@ function createDatatable(datatable) {
     ];
   }
 
+  var breadcrumb_html = "";
+
   if (datatable.tree_view) {
     datatable.lang.main_category = nonull(
       datatable.lang.main_category,
@@ -145,21 +147,22 @@ function createDatatable(datatable) {
       },
     ];
 
-    datatable.controls += `
-        <div style="width:100%">
-          <div class="breadcrumb"></div>
-          <div class="btn primary" onclick="${datatable.name}.showEditCategory(this,null,true)">Dodaj <i class="fa fa-plus"></i></div>
-        </div>
+    breadcrumb_html = `
+        <div class="breadcrumb"></div>
+        <div class="btn important" onclick="${datatable.name}.showEditCategory(this,null,true)">Dodaj <i class="fa fa-plus"></i></div>
       `;
   }
 
-  var justTable = "";
+  var above_table_html = "";
 
   if (datatable.controls) {
-    justTable += `<div class="flexbar">${datatable.controls}</div>`;
+    above_table_html += `<div class="flexbar">${datatable.controls}</div><div class="flexbar"></div>`;
+  }
+  if (breadcrumb_html) {
+    above_table_html += `<div>${breadcrumb_html}</div>`;
   }
 
-  justTable += `<div class="flexbar" style="align-items: baseline;">
+  above_table_html += `<div class="flexbar" style="align-items: baseline;">
         <div class="flexbar auto-width-desktop" style="margin:0;align-items: baseline;">
           <span class="total-rows"></span>
           <span class="space-right">&nbsp;${datatable.lang.subject}</span>
@@ -220,7 +223,7 @@ function createDatatable(datatable) {
     if (header.className) style += `class='${header.className}'`;
 
     if (additional_html) {
-      additional_html = `<span style='display:inline-block;margin-bottom: -3px;'>${additional_html}</span>`;
+      additional_html = `<span class='table-header-buttons'>${additional_html}</span>`;
     }
 
     headersHTML += `<th ${style}><span>${header.title} </span>${additional_html}</th>`;
@@ -231,9 +234,9 @@ function createDatatable(datatable) {
   datatable.headersHTML = headersHTML;
   datatable.columnStyles = columnStyles;
 
-  justTable += `
+  var table_html = `
     <div class="table-wrapper">
-      <div style="padding:0 10px;width: fit-content;">
+      <div class="table-scroll-width">
         <table class='datatable'>
           <thead>${datatable.headersHTML}</thead>
           <tbody></tbody>
@@ -242,11 +245,13 @@ function createDatatable(datatable) {
     </div>
     `;
 
+  var below_table_html = `<div class="pagination pagination-bottom"></div>`;
+
   if (datatable.selectable) {
     datatable.target.insertAdjacentHTML(
       "afterbegin",
       `
-          <div class="selected_rows">${justTable}</div>
+          <div class="selected_rows">${table_html}</div>
           <div class="showBtn expand_y">
             <div class="btn secondary fill" onclick="${
               datatable.name
@@ -264,7 +269,7 @@ function createDatatable(datatable) {
               <div class="btn secondary fill hideBtn" onclick="${
                 datatable.name
               }.toggleSearchVisibility(false)">Ukryj wyszukiwarkę <i class="fas fa-minus"></i> </div>
-              ${justTable}
+              ${above_table_html}${table_html}${below_table_html}
             </div>
           </div>
         `
@@ -272,7 +277,7 @@ function createDatatable(datatable) {
   } else {
     datatable.target.insertAdjacentHTML(
       "afterbegin",
-      `<div class="table-search-wrapper">${justTable}<div class="pagination pagination-bottom"></div></div>`
+      `<div class="table-search-wrapper">${above_table_html}${table_html}${below_table_html}</div>`
     );
   }
 
@@ -337,14 +342,14 @@ function createDatatable(datatable) {
 
         var params = {};
         if (!isNew) {
-          params.disable_with_children = [datatable.category_id];
+          params.data = {
+            parent_id: {
+              disable_with_children: [data.category_id],
+            },
+          };
         }
 
-        setCategoryPickerValues(
-          $(`#${form} [data-category-picker-name="parent_id"]`),
-          data.parent_id,
-          params
-        );
+        setFormData({ parent_id: data.parent_id }, `#${form}`, params);
 
         // setModalInitialState(form);
       };
@@ -432,13 +437,13 @@ function createDatatable(datatable) {
         index++;
         if (index > 0) out += ` <i class="fas fa-chevron-right"></i> `;
         out += `<div class="${
-          index < datatable.breadcrumb.length - 1 ? "btn secondary" : "current"
+          index < datatable.breadcrumb.length - 1 ? "btn subtle" : "current"
         }" onclick="${datatable.name}.backToCategory(${
           category.category_id
         })">${category.title}</div>`;
       }
       if (datatable.breadcrumb.length > 1)
-        out += ` <div class="btn primary" onclick="${datatable.name}.showEditCategory(this,null)" style="margin-left:10px">Edytuj <i class="fa fa-cog"></i></div>`;
+        out += ` <div class="btn subtle" onclick="${datatable.name}.showEditCategory(this,null)" style="margin-left:6px"><i class="fa fa-cog"></i></div>`;
       datatable.breadcrumbElement.innerHTML = out;
     }
 
@@ -596,13 +601,6 @@ function createDatatable(datatable) {
           datatable.paginationElement.style.display =
             window.innerWidth > 1000 ? "" : "none";
 
-          datatable.paginationBottomElement.style.display =
-            window.innerWidth <= 1000 ||
-            datatable.tableBodyElement.getBoundingClientRect().height >
-              window.innerHeight - 100
-              ? ""
-              : "none";
-
           renderPagination(
             datatable.paginationElement,
             datatable.currPage,
@@ -615,6 +613,13 @@ function createDatatable(datatable) {
           );
 
           if (datatable.paginationBottomElement) {
+            datatable.paginationBottomElement.style.display =
+              window.innerWidth <= 1000 ||
+              datatable.tableBodyElement.getBoundingClientRect().height >
+                window.innerHeight - 100
+                ? ""
+                : "none";
+
             renderPagination(
               datatable.paginationBottomElement,
               datatable.currPage,
@@ -628,16 +633,10 @@ function createDatatable(datatable) {
           }
         }
 
-        datatable.target.findAll("td").forEach((e) => {
-          if (
-            //e.classList.contains("tooltipable") &&
-            getNodeTextWidth(e) >
-            e.getBoundingClientRect().width - 5
-          ) {
+        datatable.target.findAll("td, td *").forEach((e) => {
+          if (e.offsetWidth < e.scrollWidth) {
             var info = e.textContent.replace(/, /g, "<br>").trim();
-            if (info.length > 10) {
-              e.setAttribute("data-tooltip", info);
-            }
+            e.setAttribute("data-tooltip", info);
           }
         });
 
@@ -717,8 +716,22 @@ function createDatatable(datatable) {
       datatable.selectionResults.splice(index2, 1);
     }
 
-    removeNode(datatable.target.find(`[data-primary='${data_id}']`));
-    datatable.selectionChange(false);
+    /*removeNode(datatable.target.find(`[data-primary='${data_id}']`));
+    datatable.selectionChange();*/
+
+    datatable.selectionResults.push(
+      datatable.results.find((e) => {
+        return e[datatable.primary] == data_id;
+      })
+    );
+    datatable.selection.push(data_id);
+    var x = datatable.target.find(`[data-primary='${data_id}']`);
+    datatable.tableBodyElement.appendChild(x);
+    var d = x.find(".fa-minus-circle");
+    d.outerHTML = d.outerHTML
+      .replace("minus", "plus")
+      .replace("removeRow", "addRow");
+    datatable.selectionChange();
   };
   datatable.addRow = (data_id) => {
     if (datatable.singleselect && datatable.selection.length > 0) {
@@ -926,7 +939,6 @@ window.addEventListener("dragover", (event) => {
 // published start
 
 function getPublishedDefinition(options = {}) {
-  console.log(options);
   return {
     title: "Widoczność",
     width: "135px",
@@ -1067,14 +1079,16 @@ function datatableFilter(btn, column_id) {
   var menu_body = "";
 
   if (filters == "text") {
-    menu_header += `Wpisz frazę`;
+    menu_header = `Wpisz frazę`;
     menu_body += `<input type="text" class="field margin_bottom">
       <label class='checkbox-wrapper block margin_bottom' text-align:center;color:#555'>
         <input type='checkbox' name='exact'><div class='checkbox'></div> Dopasuj całą frazę
       </label>
     `;
   } else if (filters == "date") {
-    menu_header += `Wybierz datę`;
+    if (!IS_MOBILE) {
+      menu_header = `Wybierz datę`;
+    }
     menu_body += `
       <span class="field-title first">Typ wyszukiwania</span>
       <select class="field date_type" onchange="dateTypeChanged(this)">
@@ -1100,7 +1114,7 @@ function datatableFilter(btn, column_id) {
       </div>
     `;
   } else if (filters == "select") {
-    menu_header += `Zaznacz pola`;
+    menu_header = `Zaznacz pola`;
     for (i = 0; i < col_def.select_values.length; i++) {
       var val = col_def.select_values[i];
       var label = col_def.select_labels ? col_def.select_labels[i] : val;
@@ -1216,7 +1230,7 @@ function filterCheckboxChanged(checkbox, select_single) {
   if (select_single) {
     filter_menu.findAll(`input[type="checkbox"]`).forEach((e) => {
       if (e != checkbox) {
-        e.setValue(0, true);
+        e.setValue(0, { quiet: true });
       }
     });
   }

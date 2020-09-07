@@ -14,11 +14,11 @@ var zamowienia_table_definition = [
       } catch (e) {}
       products_info += "</table>";
 
-      return `<a class="btn secondary" href='/zamowienie/${
+      return `<div class="link goto"><a href='/zamowienie/${
         r.link
       }' style="margin-right:7px">#${escapeHTML(
         r.zamowienie_id
-      )} <i class="fas fa-chevron-circle-right"></i></a><i class="fas fa-shopping-bag" data-tooltip="${products_info}"></i>`;
+      )} <i class="fas fa-chevron-circle-right"></i></a><i class="fas fa-shopping-bag" data-tooltip="${products_info}"></i></div>`;
     },
     field: "zamowienie_id",
     escape: false,
