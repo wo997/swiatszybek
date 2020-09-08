@@ -3,6 +3,23 @@ useTool("quillEditor");
 
 // cms start
 
+var cmsPreview = null;
+
+function showCmsPreview() {
+  if (!cmsPreview) {
+    return;
+  }
+
+  cmsPrepareOutput();
+
+  var params = nonull(cmsPreview.data, {});
+  params[cmsPreview.content_name] = cmsContainer.innerHTML;
+
+  window.preview.open(cmsPreview.url, params);
+
+  cmsUpdate();
+}
+
 // cms history start
 var cmsHistory = [];
 
@@ -427,7 +444,7 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
   }
 }
 
-function editCMS(t, show_modal = true) {
+function editCMS(t, params = {}) {
   cmsSource = $(t);
   cmsContainer.setContent(cmsSource.innerHTML);
 
@@ -445,11 +462,15 @@ function editCMS(t, show_modal = true) {
   cmsHistory = [];
   cmsHistoryPush();
 
-  if (show_modal) {
+  if (nonull(params.show_modal, true)) {
     showModal("cms", { source: cmsSource });
   }
 
   cmsUpdate();
+
+  cmsPreview = params.preview;
+
+  cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
 }
 
 var backupStateOfCMS = null;
@@ -463,7 +484,7 @@ function editCMSAdditional(t) {
     source: cmsSource,
   };
 
-  editCMS(t, false);
+  editCMS(t, { show_modal: false });
 
   showModal("cmsAdditional", {
     hideCallback: () => {
@@ -472,16 +493,21 @@ function editCMSAdditional(t) {
       cmsHistory = backupStateOfCMS.history;
       cmsContainer.setContent(backupStateOfCMS.content);
       cmsSource = backupStateOfCMS.source;
+      cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
     },
+  });
+}
+
+function cmsPrepareOutput() {
+  cmsWrapper.findAll("[draggable]").forEach((e) => {
+    e.removeAttribute("draggable");
+    e.style.opacity = "";
   });
 }
 
 function closeCms(save) {
   if (save) {
-    cmsWrapper.findAll("[draggable]").forEach((e) => {
-      e.removeAttribute("draggable");
-      e.style.opacity = "";
-    });
+    cmsPrepareOutput();
     var content = cmsContainer.innerHTML;
     cmsSource.setContent(content);
   }
@@ -1635,8 +1661,9 @@ registerModalContent(
                     <div class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></div>
                     <div class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </div>
                 </span>
-                <div class="btn secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                <div class="btn primary" onclick="closeCms(true);hideParentModal(this);">Zapisz <i class="fa fa-save"></i></div>
+                <button class="btn secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+                <button onclick="showCmsPreview()" class="btn primary preview_btn">Podgląd <i class="fas fa-eye"></i></button>
+                <button class="btn primary" onclick="closeCms(true);hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
             </div>
 
             <div class="desktopRow" style="flex-shrink: 1;overflow-y: hidden;">
@@ -1745,56 +1772,56 @@ registerModalContent(`
                     <div>
                         <h3 style="text-align:center">Wersja desktopowa <i class='fas fa-desktop'></i></h3>
                         <h4>Minimalna wysokość</h4>
-                        <div class="select inline" style="width:150px">
+                        <c-select class="inline" style="width:150px">
                             <input type="text" class="field" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
-                            <div class="select-arrow"></div>
-                            <div class="options">
-                                <option>100px</option>
-                                <option>200px</option>
-                                <option>300px</option>
-                                <option>400px</option>
-                            </div>
-                        </div>
+                            <c-arrow></c-arrow>
+                            <c-options>
+                                <c-option>100px</c-option>
+                                <c-option>200px</c-option>
+                                <c-option>300px</c-option>
+                                <c-option>400px</c-option>
+                            </c-options>
+                        </c-select>
 
                         <h4>Szerokość bloku</h4>
-                        <div class="select inline" style="width:150px">
+                        <c-select class="inline" style="width:150px">
                             <input type="text" class="field" data-attribute="desktop-width" data-default-value="100%" data-default-unit="px">
-                            <div class="select-arrow"></div>
-                            <div class="options">
-                                <option>100%</option>
-                                <option data-value="50%">1/2</option>
-                                <option data-value="33.333%">1/3</option>
-                                <option data-value="25%">1/4</option>
-                                <option data-value="20%">1/5</option>
-                            </div>
-                        </div>
+                            <c-arrow></c-arrow>
+                            <c-options>
+                                <c-option>100%</c-option>
+                                <c-option data-value="50%">1/2</c-option>
+                                <c-option data-value="33.333%">1/3</c-option>
+                                <c-option data-value="25%">1/4</c-option>
+                                <c-option data-value="20%">1/5</c-option>
+                            </c-options>
+                        </c-select>
                     </div>
                     <div>
                         <h3 style="text-align:center">Wersja mobilna <i class='fas fa-mobile-alt'></i></h3>
                         <h4>Minimalna wysokość</h4>
-                        <div class="select inline" style="width:150px">
+                        <c-select class="inline" style="width:150px">
                             <input type="text" class="field" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
-                            <div class="select-arrow"></div>
-                            <div class="options">
-                                <option>100px</option>
-                                <option>200px</option>
-                                <option>300px</option>
-                                <option>400px</option>
-                            </div>
-                        </div>
+                            <c-arrow></c-arrow>
+                            <c-options>
+                                <c-option>100px</c-option>
+                                <c-option>200px</c-option>
+                                <c-option>300px</c-option>
+                                <c-option>400px</c-option>
+                            </c-options>
+                        </c-select>
 
                         <h4>Szerokość bloku</h4>
-                        <div class="select inline" style="width:150px">
+                        <c-select class="inline" style="width:150px">
                             <input type="text" class="field" data-attribute="mobile-width" data-default-value="100%" data-default-unit="px">
-                            <div class="select-arrow"></div>
-                            <div class="options">
-                                <option>100%</option>
-                                <option data-value="50%">1/2</option>
-                                <option data-value="33.333%">1/3</option>
-                                <option data-value="25%">1/4</option>
-                                <option data-value="20%">1/5</option>
-                            </div>
-                        </div>
+                            <c-arrow></c-arrow>
+                            <c-options>
+                                <c-option>100%</c-option>
+                                <c-option data-value="50%">1/2</c-option>
+                                <c-option data-value="33.333%">1/3</c-option>
+                                <c-option data-value="25%">1/4</c-option>
+                                <c-option data-value="20%">1/5</c-option>
+                            </c-options>
+                        </c-select>
                     </div>
                 </div>
 
@@ -1926,62 +1953,62 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
   return `
     <div style="max-width:400px">
         <div style="display:flex;justify-content:center">
-            <div class="select" style="width:100px">
+            <c-select style="width:100px">
                 <input type="text" class="field" data-attribute="${prefix}_top" data-default-value="${defaults.top}" data-default-unit="px" ${target}>
-                <div class="select-arrow"></div>
-                <div class="options">
-                    <option>0</option>
-                    <option>12px</option>
-                    <option>24px</option>
-                    <option>36px</option>
-                    <option>2%</option>
-                    <option>4%</option>
-                    <option>6%</option>
-                </div>
-            </div>
+                <c-arrow></c-arrow>
+                <c-options>
+                    <c-option>0</c-option>
+                    <c-option>12px</c-option>
+                    <c-option>24px</c-option>
+                    <c-option>36px</c-option>
+                    <c-option>2%</c-option>
+                    <c-option>4%</c-option>
+                    <c-option>6%</c-option>
+                </c-options>
+            </c-select>
         </div>
         <div style="display:flex;justify-content: space-around;padding: 20px 0;">
-            <div class="select" style="width:100px">
+            <c-select style="width:100px">
                 <input type="text" class="field" data-attribute="${prefix}_left" data-default-value="${defaults.top}" data-default-unit="px" ${target}>
-                <div class="select-arrow"></div>
-                <div class="options">
-                    <option>0</option>
-                    <option>12px</option>
-                    <option>24px</option>
-                    <option>36px</option>
-                    <option>2%</option>
-                    <option>4%</option>
-                    <option>6%</option>
-                </div>
-            </div>
-            <div class="select" style="width:100px">
+                <c-arrow></c-arrow>
+                <c-options>
+                    <c-option>0</c-option>
+                    <c-option>12px</c-option>
+                    <c-option>24px</c-option>
+                    <c-option>36px</c-option>
+                    <c-option>2%</c-option>
+                    <c-option>4%</c-option>
+                    <c-option>6%</c-option>
+                </c-options>
+            </c-select>
+            <c-select style="width:100px">
                 <input type="text" class="field" data-attribute="${prefix}_right" data-default-value="${defaults.top}" data-default-unit="px" ${target}>
-                <div class="select-arrow"></div>
-                <div class="options">
-                    <option>0</option>
-                    <option>12px</option>
-                    <option>24px</option>
-                    <option>36px</option>
-                    <option>2%</option>
-                    <option>4%</option>
-                    <option>6%</option>
-                </div>
-            </div>
+                <c-arrow></c-arrow>
+                <c-options>
+                    <c-option>0</c-option>
+                    <c-option>12px</c-option>
+                    <c-option>24px</c-option>
+                    <c-option>36px</c-option>
+                    <c-option>2%</c-option>
+                    <c-option>4%</c-option>
+                    <c-option>6%</c-option>
+                </c-options>
+            </c-select>
         </div>
         <div style="display:flex;justify-content:center">
-            <div class="select" style="width:100px">
+            <c-select style="width:100px">
                 <input type="text" class="field" data-attribute="${prefix}_bottom" data-default-value="${defaults.top}" data-default-unit="px" ${target}>
-                <div class="select-arrow"></div>
-                <div class="options">
-                    <option>0</option>
-                    <option>12px</option>
-                    <option>24px</option>
-                    <option>36px</option>
-                    <option>2%</option>
-                    <option>4%</option>
-                    <option>6%</option>
-                </div>
-            </div>
+                <c-arrow></c-arrow>
+                <c-options>
+                    <c-option>0</c-option>
+                    <c-option>12px</c-option>
+                    <c-option>24px</c-option>
+                    <c-option>36px</c-option>
+                    <c-option>2%</c-option>
+                    <c-option>4%</c-option>
+                    <c-option>6%</c-option>
+                </c-options>
+            </c-select>
         </div>
     </div>`;
 }
@@ -1998,16 +2025,16 @@ registerModalContent(`
 
             <div style="padding:10px;margin-top:-15px">
                 <div class="field-title">Grubość krawędzi</div>
-                <div class="select" style="width:100px">
+                <c-select style="width:100px">
                     <input type="text" class="field" data-attribute="border-width" onchange="updateBorderPreview()">
-                    <div class="select-arrow"></div>
-                    <div class="options">
-                        <option>0</option>
-                        <option>1px</option>
-                        <option>2px</option>
-                        <option>5px</option>
-                    </div>
-                </div>
+                    <c-arrow></c-arrow>
+                    <c-options>
+                        <c-option>0</c-option>
+                        <c-option>1px</c-option>
+                        <c-option>2px</c-option>
+                        <c-option>5px</c-option>
+                    </c-options>
+                </c-select>
 
                 <div class="field-title">Kolor krawędzi</div>
                 <div class="glue-children">
@@ -2016,16 +2043,16 @@ registerModalContent(`
                 </div>
 
                 <div class="field-title">Zaokrąglenie krawędzi</div>
-                <div class="select" style="width:100px">
+                <c-select style="width:100px">
                     <input type="text" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
-                    <div class="select-arrow"></div>
-                    <div class="options">
-                        <option>0</option>
-                        <option>6px</option>
-                        <option>10px</option>
-                        <option>10%</option>
-                    </div>
-                </div>
+                    <c-arrow></c-arrow>
+                    <c-options>
+                        <c-option>0</c-option>
+                        <c-option>6px</c-option>
+                        <c-option>10px</c-option>
+                        <c-option>10%</c-option>
+                    </c-options>
+                </c-select>
 
                 <div class="field-title">Podgląd</div>
                 <div class="borderPreview"></div>
@@ -2059,16 +2086,16 @@ registerModalContent(`
                     <div>
                         <h3 style="text-align:center">Wersja desktopowa <i class='fas fa-desktop'></i></h3>
                         <h4>Minimalna wysokość</h4>
-                        <div class="select" style="width:150px">
+                        <c-select class="inline" style="width:150px">
                             <input type="text" class="field" data-attribute="desktop-min-height" data-default-value="" data-default-unit="px">
-                            <div class="select-arrow"></div>
-                            <div class="options">
-                                <option data-value="">Brak</option>
-                                <option>150px</option>
-                                <option>300px</option>
-                                <option>400px</option>
-                            </div>
-                        </div>
+                            <c-arrow></c-arrow>
+                            <c-options>
+                                <c-option data-value="">Brak</c-option>
+                                <c-option>150px</c-option>
+                                <c-option>300px</c-option>
+                                <c-option>400px</c-option>
+                            </c-options>
+                        </c-select>
 
                         <h4>Wyrównaj zawartość w poziomie</h4>
                         <div data-select-group="desktop-justify-content">
@@ -2088,23 +2115,23 @@ registerModalContent(`
 
                         <br>
 
-                        <label><input type="checkbox" data-attribute="desktop-full-width"><div class="checkbox"></div>100% szerokości okna przeglądarki</label>
+                        <label class="checkbox-wrapper field-title"><input type="checkbox" data-attribute="desktop-full-width"><div class="checkbox"></div>100% szerokości okna przeglądarki</label>
 
                         <br><br>
                     </div>
                     <div>
                         <h3 style="text-align:center">Wersja mobilna <i class='fas fa-mobile-alt'></i></h3>
                         <h4>Minimalna wysokość</h4>
-                        <div class="select" style="width:150px">
+                        <c-select class="inline" style="width:150px">
                             <input type="text" class="field" data-attribute="mobile-min-height" data-default-value="" data-default-unit="px">
-                            <div class="select-arrow"></div>
-                            <div class="options">
-                                <option data-value="">Brak</option>
-                                <option>150px</option>
-                                <option>300px</option>
-                                <option>400px</option>
-                            </div>
-                        </div>
+                            <c-arrow></c-arrow>
+                            <c-options>
+                                <c-option data-value="">Brak</c-option>
+                                <c-option>150px</c-option>
+                                <c-option>300px</c-option>
+                                <c-option>400px</c-option>
+                            </c-options>
+                        </c-select>
 
                         <h4>Wyrównaj zawartość w poziomie</h4>
                         <div data-select-group="mobile-justify-content">

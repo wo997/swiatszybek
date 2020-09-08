@@ -1,8 +1,8 @@
 /* css[global] */
-.select {
+c-select {
   position: relative;
 }
-.select-arrow {
+c-arrow {
   content: "";
   background: url(/img/dropdown.png) 100% / 20px no-repeat white;
   width: 20px;
@@ -15,13 +15,13 @@
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-.select-arrow:hover {
+c-arrow:hover {
   filter: brightness(0.95);
 }
-.select > input {
+c-select > input {
   padding-right: 30px !important;
 }
-.select .options {
+c-select c-options {
   position: absolute;
   top: 100%;
   width: 100%;
@@ -36,17 +36,18 @@
   overflow-y: auto;
   z-index: 300;
 }
-.select:not(.open) .options {
+c-select:not(.open) c-options {
   display: none;
 }
-.select option {
+c-select c-option {
   padding: 2px 7px;
   cursor: pointer;
   text-align: left;
+  display: block;
 }
-.select option:not(:first-child) {
+c-select c-option:not(:first-child) {
   border-top: 1px solid #ddd;
 }
-.select option:hover {
+c-select c-option:hover {
   background: #eee;
 }

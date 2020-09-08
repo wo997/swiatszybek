@@ -104,7 +104,15 @@ $static = checkUrl($page_data["link"]);
             t = $('[name="title"]').getValue();
         }
         fileManager.setDefaultName(t);
-        editCMS(`[name="content"]`);
+        editCMS(`[name="content"]`, {
+            preview: {
+                url: "/<?= nonull($page_data, "link") ?>",
+                content_name: "content",
+                data: {
+                    metadata: $("#metadata").value
+                }
+            }
+        });
     }
 
     function save(remove = false) {
