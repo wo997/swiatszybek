@@ -10,12 +10,12 @@ modules["custom-html"] = {
     </div>
     `,
   formOpen: (params, block) => {
-    $("#custom-html .html").getValue() = block.querySelector(
-      ".cms-block-content"
-    ).innerHTML;
+    $("#custom-html .html").setValue(
+      block.querySelector(".cms-block-content .html-container").innerHTML
+    );
   },
   formClose: () => {
-    cmsTarget.querySelector(`.cms-block-content`).innerHTML = $(
+    cmsTarget.querySelector(`.cms-block-content .html-container`).innerHTML = $(
       "#custom-html .html"
     ).getValue();
   },

@@ -143,8 +143,8 @@ myvideo {
 }
 myvideo * {
   pointer-events: none;
+  display: inline-block;
 }
 myvideo video {
-  width: 100%;
-  display: block;
+  max-width: 100%;
 }

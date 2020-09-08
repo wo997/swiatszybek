@@ -198,7 +198,7 @@ function createDatatable(datatable) {
           <div class="pagination"></div>
         </div>
         <div style='flex-grow:1'></div>
-        <div class="btn subtle space-right clear-filters-btn hidden" data-tooltip="Wyczyść filtry" onclick="${
+        <div class="btn subtle space-right clear-filters-btn hidden" data-tooltip="Wyczyść wszystkie filtry" onclick="${
           datatable.name
         }.clearFilters()">
           <img src="/src/img/clear-filters.png" style="width: 25px;margin: -7px;">

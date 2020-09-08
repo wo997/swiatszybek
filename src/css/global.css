@@ -220,7 +220,11 @@ textarea {
 }
 
 .btn.large {
-  font-size: 1.5.no-results.no-resultsem;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+.btn.xlarge {
+  font-size: 1.75em;
   font-weight: 600;
 }
 .btn.big {
@@ -230,11 +234,6 @@ textarea {
 .btn.medium {
   font-size: 1.15em;
   font-weight: 600;
-}
-
-.btn .fa-chevron-right,
-.fa-chevron-left {
-  transform: scale(0.7, 0.9);
 }
 
 .btn {

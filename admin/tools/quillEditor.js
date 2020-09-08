@@ -169,7 +169,6 @@ window.quillEditor = {
   isLastNodeLink: null,
   source: null,
   wrapper: null,
-  menu_sub: null,
   active_elem: null,
   open: (source, params = {}) => {
     if (!source) return;
@@ -457,13 +456,22 @@ window.quillEditor = {
 
   modifyNode: (prop, v) => {
     var n = quillEditor.active_elem;
+
+    var isMyVideo = false;
+    if (n.tagName == "MYVIDEO") {
+      isMyVideo = true;
+      n = n.find("video");
+    }
+
     if (!n) return;
     if (["width"].indexOf(prop) != -1) {
       n.style[prop] = v;
     } else if (prop == "youtube") {
-      if (quillEditor.menu_sub == "myvideo") {
+      if (isMyVideo) {
         n.src = v;
-      } else n.src = getThumbnailFromYoutubeId(getIdFromYoutubeUrl(v));
+      } else {
+        n.src = getThumbnailFromYoutubeId(getIdFromYoutubeUrl(v));
+      }
     } else if (prop == "mylinkstyle") {
       n.className = v;
     } else if (prop == "linktitle") {
@@ -480,17 +488,23 @@ window.quillEditor = {
         n.classList.remove(style);
       }
       n.classList.add("btn");
-      n.classList.add(v);
+      if (v) {
+        n.classList.add(v);
+      }
     } else if (prop == "buttonfontsize") {
-      for (let style of ["medium", "big", "large"]) {
+      for (let style of ["medium", "big", "large", "xlarge"]) {
         n.classList.remove(style);
       }
-      n.classList.add(v);
+      if (v) {
+        n.classList.add(v);
+      }
     } else if (prop == "buttonheight") {
       for (let style of ["tall"]) {
         n.classList.remove(style);
       }
-      n.classList.add(v);
+      if (v) {
+        n.classList.add(v);
+      }
     } else {
       n.setAttribute(prop, v);
     }
@@ -582,14 +596,14 @@ window.quillEditor = {
     Przycisk.tagName = "przycisk";
     Quill.register(Przycisk);
 
-    class Video extends Embed {
+    class MyVideo extends Embed {
       static create(data) {
         let node = super.create();
         /*node.setAttribute("src", data.value);
         node.setAttribute("class", "ql-video");
         node.setAttribute("controls", true);*/
         node.cssText = data.style;
-        node.innerHTML = `<video class='ql-video"' src='${data.src}'></video>`;
+        node.innerHTML = `<video controls="true" class='ql-video"' src='${data.src}'></video>`;
         return node;
       }
 
@@ -611,9 +625,9 @@ window.quillEditor = {
         };
       }
     }
-    Video.blotName = "MyVideo";
-    Video.tagName = "myvideo";
-    Quill.register(Video);
+    MyVideo.blotName = "MyVideo";
+    MyVideo.tagName = "myvideo";
+    Quill.register(MyVideo);
 
     class MyLink extends Inline {
       static create(data) {
@@ -661,7 +675,7 @@ window.quillEditor = {
     Button.tagName = "button";
     Quill.register(Button);
 
-    class YTVideo extends Inline {
+    class YTVideo extends Embed {
       static create(data) {
         var src = data.value;
         if (!isYTThumbnail(src)) {
@@ -686,9 +700,9 @@ window.quillEditor = {
       }
 
       static value(node) {
-        var img = node.find("img");
+        var img = $(node).find("img");
         return {
-          value: img.getAttribute("src"),
+          src: img.getAttribute("src"),
           width: img.style.width,
         };
       }
@@ -943,6 +957,10 @@ window.quillEditor = {
         }
       });
 
+      $$(`[contenteditable="false"] [contenteditable="false"]`).forEach((e) => {
+        e.outerHTML = e.innerHTML.replace(/﻿/g, "");
+      });
+
       quillEditor.markLastSelection();
 
       if (keyPressed && false) {
@@ -1163,17 +1181,16 @@ window.quillEditor = {
     });
 
     $("#quillEditor").addEventListener("click", (event) => {
-      if (findParentByClassName(event.target, "quill-cloud")) {
+      if (
+        findParentByClassName(event.target, "quill-cloud") ||
+        findParentByClassName(event.target, "ql-active-element")
+      ) {
         return;
       }
       removeClasses("ql-active-element");
+      quillEditor.hideCustomQuillButtons();
       var touchQL = event.target == $(".quill-editor-container");
       if (event.toElement == $(".quill-wrapper") || touchQL) {
-        /*if (touchQL) {
-                    quillEditor.toggleQuillSize(false);
-                }*/
-        quillEditor.hideCustomQuillButtons();
-
         $("#quillEditor .ql-editor").classList.add("attention");
         setTimeout(() => {
           $("#quillEditor .ql-editor").classList.remove("attention");
@@ -1181,66 +1198,53 @@ window.quillEditor = {
       }
     });
 
-    $("#quillEditor .ql-editor").addEventListener("click", (e) => {
-      quillEditor.hideCustomQuillButtons();
-    });
-
     $("#quillEditor .ql-editor").addEventListener("dblclick", (e) => {
-      quillEditor.active_elem = $(e.target);
-      var parent = quillEditor.active_elem.findParentByTagName("MYVIDEO");
-      if (parent) {
-        quillEditor.active_elem = parent;
-      }
-      quillEditor.active_elem.classList.add("ql-active-element");
+      var n = $(e.target);
+      quillEditor.active_elem = null;
 
       if (
-        ["IMG", "MYVIDEO", "A", "BUTTON"].indexOf(
-          quillEditor.active_elem.tagName
-        ) != -1 &&
-        !quillEditor.active_elem.classList.contains("ql-icon")
+        ["IMG", "MYVIDEO", "A", "BUTTON"].indexOf(n.tagName) != -1 &&
+        !n.classList.contains("ql-icon")
       ) {
+        n.classList.add("ql-active-element");
+        quillEditor.active_elem = n;
+
         var cloud = null;
-        if (quillEditor.active_elem.classList.contains("ql-video")) {
-          if (quillEditor.active_elem.tagName == "MYVIDEO") {
-            quillEditor.menu_sub = "myvideo";
-            cloud = $(".video-buttons");
-            $("#edit_yt_link").value = quillEditor.active_elem.src;
-            $("#szerokosc_yt").value = quillEditor.active_elem.style.width;
-          } else {
-            quillEditor.menu_sub = "youtube";
-            cloud = $(".video-buttons");
-            $("#edit_yt_link").value = getUrlFromYoutubeId(
-              getIdFromYoutubeThumbnail(quillEditor.active_elem.src)
-            );
-            $("#szerokosc_yt").value = quillEditor.active_elem.style.width;
-          }
-        } else if (quillEditor.active_elem.tagName == "A") {
-          quillEditor.menu_sub = "link";
-          cloud = $(".my-link");
-          cloud.find(".href").value = quillEditor.active_elem.href;
-          cloud.find(".title").value = quillEditor.active_elem.innerHTML;
-        } else if (quillEditor.active_elem.tagName == "BUTTON") {
-          quillEditor.menu_sub = "button";
-          cloud = $(".button-options");
-          cloud.find(".title").value = quillEditor.active_elem.textContent;
-          cloud.find(".href").value = quillEditor.active_elem.getAttribute(
-            "data-href"
+        if (n.tagName == "MYVIDEO") {
+          cloud = $(".video-buttons");
+          var vid = n.find("video");
+          cloud.find(".src").value = vid.src;
+          cloud.find(".width").value = vid.style.width;
+          cloud.find(".alt").value = vid.getAttribute("alt");
+        } else if (n.classList.contains("ql-video")) {
+          cloud = $(".video-buttons");
+          cloud.find(".src").value = getUrlFromYoutubeId(
+            getIdFromYoutubeThumbnail(n.src)
           );
+          cloud.find(".width").value = n.style.width;
+          cloud.find(".alt").value = n.getAttribute("alt");
+        } else if (n.tagName == "A") {
+          cloud = $(".my-link");
+          cloud.find(".href").value = n.href;
+          cloud.find(".title").value = n.innerHTML;
+          cloud.find(".alt").value = n.getAttribute("alt");
+        } else if (n.tagName == "BUTTON") {
+          cloud = $(".button-options");
+          cloud.find(".title").value = n.textContent;
+          cloud.find(".href").value = n.getAttribute("data-href");
+          cloud.find(".alt").value = n.getAttribute("alt");
         } else {
-          quillEditor.menu_sub = "img";
           cloud = $(".image-buttons");
-          $("#szerokosc").value = quillEditor.active_elem.style.width;
-          $("#imgalt").value = quillEditor.active_elem.alt;
-          document.getElementById(
-            "img-href"
-          ).value = quillEditor.active_elem.getAttribute("data-href");
+          cloud.find(".width").value = n.style.width;
+          cloud.find(".alt").value = n.getAttribute("alt");
+          cloud.find(".href").value = n.getAttribute("data-href");
         }
 
         if (cloud) {
           cloud.style.display = "block";
 
           var pr = cloud.parent().getBoundingClientRect();
-          var er = quillEditor.active_elem.getBoundingClientRect();
+          var er = n.getBoundingClientRect();
           var cr = cloud.getBoundingClientRect();
 
           var left = er.x - pr.x + (er.width - cr.width) / 2;
@@ -1261,7 +1265,6 @@ window.quillEditor = {
         }
         return;
       }
-      quillEditor.active_elem = null;
     });
 
     /*var wasY = 0;
@@ -1312,37 +1315,78 @@ registerModalContent(
                     <img onclick="table.deleteTable()" src="/img/tabledelete.png">
                 </div>
                 <div class="image-buttons quill-cloud">
-                    <div>
-                        Szerokość: <input type='text' autocomplete="off" placeholder='30px, 100%...' id="szerokosc" oninput="quillEditor.modifyNode('width',this.value)" style='width:90px'>
-                        Opis ALT: <input type='text' autocomplete="off" placeholder='Słuchawki padmate...' id="imgalt" oninput="quillEditor.modifyNode('alt',this.value)" style='width:180px'>
-                    </div>
-                    <div style="margin-top:4px">
-                        Link: <input type='text' autocomplete="off" placeholder='https://google.com' id="img-href" oninput="quillEditor.modifyNode('data-href',this.value)" style='width:300px'>
-                        <div class="btn primary" onclick="window.open($('#img-href').value);">Otwórz <i class="fas fa-external-link-alt"></i></div>
-                    </div>
+                  <table style="width:300px">
+                    <tr>
+                      <td>Szerokość</td>
+                      <td>
+                        <input type='text' autocomplete="off" placeholder='30px, 100%...' class='width field slim' oninput="quillEditor.modifyNode('width',this.value)">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Opis ALT</td>
+                      <td>
+                        <input type='text' autocomplete="off" placeholder='' class='alt field slim' oninput="quillEditor.modifyNode('alt',this.value)">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Link</td>
+                      <td>
+                        <div class="glue-children">
+                          <input type="text" autocomplete="off" class="href field slim" placeholder='Opcjonalny link' oninput="quillEditor.modifyNode('data-href',this.value)">
+                          <button class="btn primary slim" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
                 <div class="video-buttons quill-cloud">
-                    Link do filmu: <div class="btn primary" onclick="window.open($('#edit_yt_link').value);">Otwórz <i class="fas fa-external-link-alt"></i></div>
-                    Szerokość: <input type='text' autocomplete="off" placeholder='30px, 100%...' id="szerokosc_yt" oninput="quillEditor.modifyNode('width',this.value)" style='width:90px'>
-                    <br>
-                    <input type='text' autocomplete="off" placeholder='https://www.youtube.com/watch?v=...' id="edit_yt_link" oninput="quillEditor.modifyNode('youtube',this.value)" style='margin-top: 4px;width:350px'>
+                  <table style="width:300px">
+                    <tr>
+                      <td>Żródło</td>
+                      <td>
+                        <div class="glue-children">
+                          <input type="text" autocomplete="off" class="src field slim" placeholder='https://www.youtube.com/watch?v=...' oninput="quillEditor.modifyNode('youtube',this.value)">
+                          <button class="btn primary slim" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Szerokość</td>
+                      <td>
+                        <input type='text' autocomplete="off" placeholder='30px, 100%...' class='width field slim' oninput="quillEditor.modifyNode('width',this.value)">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Opis ALT</td>
+                      <td>
+                        <input type='text' autocomplete="off" placeholder='' class='alt field slim' oninput="quillEditor.modifyNode('alt',this.value)">
+                      </td>
+                    </tr>
+
+                  </table>
                 </div>
                 <div class="my-link quill-cloud">
                     <table style="width:300px">
                       <tr>
-                        <td>Napis:</td>
+                        <td>Napis</td>
                         <td>
                           <input type="text" autocomplete="off" class="title field slim" oninput="quillEditor.modifyNode('linktitle',this.value)">
                         </td>
                       </tr>
                       <tr>
-                        <td>Link:</td>
+                        <td>Link</td>
                         <td>
                           <div class="glue-children">
                             <input type="text" autocomplete="off" placeholder="https://google.com" class="href field slim" oninput="quillEditor.modifyNode('href',this.value)" style="flex-grow: 1;">
                             <button class="btn secondary" onclick="quillEditor.removeLink()" data-tooltip="Usuń link"><i class="fas fa-unlink"></i></button>
-                            <button class="btn primary" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                            <button class="btn primary slim" onclick="window.open($(this).prev().prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
                           </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Opis ALT</td>
+                        <td>
+                          <input type='text' autocomplete="off" placeholder='' class='alt field slim' oninput="quillEditor.modifyNode('alt',this.value)">
                         </td>
                       </tr>
                     </table>
@@ -1366,6 +1410,12 @@ registerModalContent(
                         </td>
                       </tr>
                       <tr>
+                        <td>Opis ALT</td>
+                        <td>
+                          <input type='text' autocomplete="off" placeholder='' class='alt field slim' oninput="quillEditor.modifyNode('alt',this.value)">
+                        </td>
+                      </tr>
+                      <tr>
                         <td>Szerokość</td>
                         <td>
                           <input type='text' autocomplete="off" placeholder='30px, 100%...' class='width field slim' oninput="quillEditor.modifyNode('width',this.value)">
@@ -1375,10 +1425,11 @@ registerModalContent(
                         <td>Rozmiar</td>
                         <td>
                           <select class='fontsize field slim inline' oninput="quillEditor.modifyNode('buttonfontsize',this.value)">
-                            <option value="">S</option>
-                            <option value="medium">M</option>
-                            <option value="big">L</option>
-                            <option value="large">XL</option>
+                            <option value="">XS</option>
+                            <option value="medium">S</option>
+                            <option value="big">M</option>
+                            <option value="large">L</option>
+                            <option value="xlarge">XL</option>
                           </select>
                           <select class='height field slim inline' oninput="quillEditor.modifyNode('buttonheight',this.value)">
                             <option value="">Niski</option>

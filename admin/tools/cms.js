@@ -109,7 +109,29 @@ var cmsModalLoaded = () => {
   CMSBlockHeader.actions = cmsWrapper.find(".cms-block-actions");
 
   CMSContainerHeader.options = cmsWrapper.find(".cms-container-options");
+
+  loadSideModules();
 };
+
+function loadSideModules() {
+  var modules_html = "";
+  for (moduleName in modules) {
+    var module = modules[moduleName];
+    if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
+    modules_html += `
+    <div class="cms-block side-module" data-module="${moduleName}" data-module-params="" draggable="true">
+      <div class="cms-block-content">${module.icon} ${module.description}</div>
+    </div>
+  `;
+  }
+
+  /*(for (moduleName in modules) {
+    var module = modules[moduleName];
+    if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
+    modules_html += `<div class="btn primary" onclick="insertModule('${moduleName}')">${module.icon} ${module.description}</div>`;*/
+
+  $(".modules-sidebar .modules").innerHTML = modules_html;
+}
 
 function editModule(block) {
   cmsTarget = block;
@@ -260,30 +282,30 @@ function insertModule(moduleName) {
   cmsHistoryPush();
 }
 
-var moduleList = "";
-for (moduleName in modules) {
-  var module = modules[moduleName];
-  if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
-  moduleList += `<div class="btn primary" onclick="insertModule('${moduleName}')">${module.icon} ${module.description}</div>`;
-  if (module.form) {
-    registerModalContent(`
-            <div id="${moduleName}">
-                <div>
-                    <div class="custom-toolbar">
-                        <span class="title">${module.description}</span>
-                        <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                        <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
-                    </div>
-                    <div style="padding:10px">
-                        ${module.form}
-                    </div>
-                </div>
-            </div>
-        `);
-  }
-}
-
 var moduleListModalLoaded = () => {
+  var moduleList = "";
+  for (moduleName in modules) {
+    var module = modules[moduleName];
+    if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
+    moduleList += `<div class="btn primary" onclick="insertModule('${moduleName}')">${module.icon} ${module.description}</div>`;
+    if (module.form) {
+      registerModalContent(`
+              <div id="${moduleName}">
+                  <div>
+                      <div class="custom-toolbar">
+                          <span class="title">${module.description}</span>
+                          <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                          <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
+                      </div>
+                      <div style="padding:10px">
+                          ${module.form}
+                      </div>
+                  </div>
+              </div>
+          `);
+    }
+  }
+
   $(".moduleList").innerHTML = moduleList;
 };
 
@@ -641,8 +663,8 @@ function cmsUpdate() {
   });
 
   cmsWrapper.findAll(".cms-block[data-module]").forEach((e) => {
-    var c = e.find(".module-content");
-    if (!c) {
+    var c = e.find(".cms-block-content");
+    if (!c.innerHTML) {
       var moduleName = e.getAttribute("data-module");
       var module = modules[moduleName];
 
@@ -1247,6 +1269,7 @@ var mouseMoveBlock = function (target) {
     var t = findParentByClassName(target, ["cms-block"]);
 
     CMSBlockHeader.target = null;
+
     if (t) {
       if (parseFloat(getComputedStyle(t).opacity) > 0.99) {
         CMSBlockHeader.target = t;
@@ -1275,6 +1298,16 @@ var mouseMoveBlock = function (target) {
     if (CMSBlockHeader.visible) {
       hideCMSBlockHeader();
     }
+  }
+
+  if (
+    CMSBlockHeader.target &&
+    CMSBlockHeader.target.classList.contains("side-module")
+  ) {
+    CMSBlockHeader.target = null;
+    CMSBlockHeader.options.style.display = "";
+    CMSBlockHeader.actions.style.display = "";
+    return;
   }
 };
 
@@ -1378,11 +1411,17 @@ function dragover(event) {
   if (!draggedNode) {
     return;
   }
+
   var requestClass = "cms-block";
   if (draggedNode.classList.contains("cms-container")) {
     requestClass = "cms-container";
   }
   var newplaceNearNode = findParentByClassName(event.target, requestClass);
+
+  if (newplaceNearNode && newplaceNearNode.classList.contains("side-module")) {
+    return;
+  }
+
   if (placeNearNode && newplaceNearNode != placeNearNode) {
     placeNearNode.classList.toggle("add_after", false);
     placeNearNode.classList.toggle("add_before", false);
@@ -1433,23 +1472,34 @@ document.addEventListener(
       ) {
         awaitingScroll = true;
 
-        copiedNode = draggedNode.cloneNode(true);
+        copiedNode = $(draggedNode.cloneNode(true));
 
         delayActions();
 
-        var isContainer = draggedNode.classList.contains("cms-container");
-        if (isContainer) {
-          deleteContainer(draggedNode, false);
-        } else {
-          deleteBlock(draggedNode, false);
+        var is_side_module = draggedNode.classList.contains("side-module");
+
+        if (!is_side_module) {
+          var isContainer = draggedNode.classList.contains("cms-container");
+          if (isContainer) {
+            deleteContainer(draggedNode, false);
+          } else {
+            deleteBlock(draggedNode, false);
+          }
         }
 
         var insertInParent = placeNearNode.parent();
         setTimeout(
           () => {
             insertInParent.insertBefore(copiedNode, placeNearNodeFinal);
+
+            if (is_side_module) {
+              copiedNode.classList.remove("side-module");
+              copiedNode.find(".cms-block-content").empty();
+            }
+            removeClasses("add_after");
+            removeClasses("add_before");
           },
-          isContainer ? 0 : 150
+          isContainer || is_side_module ? 0 : 150
         );
 
         cmsHistoryPush();
@@ -1561,16 +1611,27 @@ function setNodeBackgroundColorPreview(val = "FFFFFF", makeVisible = false) {
   }
 }
 
+function toggleModuleSidebar() {
+  var shown = $(".modules-sidebar").classList.toggle("shown");
+  if (shown) {
+  }
+  var btn = $(".modules-sidebar .toggle-sidebar-btn");
+  btn.classList.toggle("subtle", shown);
+  btn.classList.toggle("important", !shown);
+
+  btn.setAttribute("data-tooltip", shown ? "Ukryj moduły" : "Wstaw moduły");
+}
+
 registerModalContent(
   `
     <div id="cms" data-expand="large">
-        <div class="modal-body stretch-vertical" id="actual_cms_wrapper">
+        <div class="stretch-vertical" id="actual_cms_wrapper">
             <div class="custom-toolbar">
                 <span class="title">
                     Edycja zawartości
                     <div class="btn primary cms-undo" onclick="cmsHistoryUndo()"> <i class="fas fa-undo-alt"></i> </div>
                     <div class="btn primary cms-redo" onclick="cmsHistoryRedo()"> <i class="fas fa-redo-alt"></i> </div>
-                    <div class="btn primary" onclick="showModal('cmsModules')" data-tooltip="Wstaw moduł"><i class="fas fa-puzzle-piece"></i></div>
+                    <div class="btn primary add_module_top_btn" onclick="showModal('cmsModules')" data-tooltip="Wstaw moduł"><i class="fas fa-puzzle-piece"></i></div>
                     <div class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></div>
                     <div class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </div>
                 </span>
@@ -1578,78 +1639,86 @@ registerModalContent(
                 <div class="btn primary" onclick="closeCms(true);hideParentModal(this);">Zapisz <i class="fa fa-save"></i></div>
             </div>
 
-            <div class="cms-wrapper">
-                <div style="position:absolute;display:none;z-index:1000" onclick="addContainer('',placeContainerAfter,true)" class="action_block insert_container_btn" data-tooltip="Wstaw kontener" data-position="center"> <i class="fas fa-plus-square"></i> </div>
-                <div class="cms"></div>
-
-                <div class="cms-container-options cms-toolbar-shadow">
-
-                    <div class="btn" onclick="editContainerSettings()" data-tooltip="Wymiary / Rozmieszczenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
-
-                    <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło kontenera - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
-
-                    <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie kontenera"> <i class="fas fa-border-style"></i> </div>
-
-                    <div class="showhover">
-                        <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać kontener i go upuścić"> <i class="fas fa-sort"></i> </div>
-                        <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                            <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wyżej"> <i class="fas fa-arrow-up"></i> </div>
-                            <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń niżej"> <i class="fas fa-arrow-down"></i> </div>
-                        </div>
-                    </div>
-
-                    <div class="btn" onclick="copyContainer()" data-tooltip="Skopiuj kontener do schowka"> <i class="fas fa-clipboard"></i> </div>
-                    
-                    <div class="btn" onclick="duplicateContainer()" data-tooltip="Duplikuj kontener"> <i class="fas fa-clone"></i> </div>
-
-                    <div class="btn" onclick="window.pasteType='block';showModal('pasteBlock')" data-tooltip="Wklej skopiowany blok"><i class="fas fa-paste"></i></div>
-
-                    <div class="btn" class="delete_block_btn" onclick="deleteContainer()" data-tooltip="Usuń kontener"> <i class="fas fa-times"></i> </div>
+            <div class="desktopRow" style="flex-shrink: 1;overflow-y: hidden;">
+                <div class="modules-sidebar shown">
+                  <button class="toggle-sidebar-btn btn subtle" onclick="toggleModuleSidebar()" data-tooltip="Ukryj moduły"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
+                  <span class="field-title modules-sidebar-title" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i> Moduły</span>
+                  <div class="modules"></div>
                 </div>
 
-                <div class="cms-block-actions">
-                    <div onclick="addBlock('',null,false)" data-tooltip="Wstaw blok" class="action_block add_before_btn"> <i class="fas fa-plus-square"></i> </div>
-                    <div onclick="addBlock('',null,true)" data-tooltip="Wstaw blok" class="action_block add_after_btn"> <i class="fas fa-plus-square"></i> </div>
-                </div>
+                <div class="cms-wrapper">
+                    <div style="position:absolute;display:none;z-index:1000" onclick="addContainer('',placeContainerAfter,true)" class="action_block insert_container_btn" data-tooltip="Wstaw kontener" data-position="center"> <i class="fas fa-plus-square"></i> </div>
+                    <div class="cms"></div>
 
-                <div class="cms-block-options cms-toolbar-shadow">
+                    <div class="cms-container-options cms-toolbar-shadow">
 
-                    <div class="btn" onclick="editBlock()" data-tooltip="Edytuj zawartość"> <i class="fas fa-edit"></i> </div>
+                        <div class="btn" onclick="editContainerSettings()" data-tooltip="Wymiary / Rozmieszczenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
 
-                    <div class="btn" onclick="editBlockSettings()" data-tooltip="Wymiary / Ułożenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
-                    
-                    <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło bloku - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
+                        <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło kontenera - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
 
-                    <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie bloku"> <i class="fas fa-border-style"></i> </div>
+                        <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie kontenera"> <i class="fas fa-border-style"></i> </div>
 
-                    <div class="btn" onclick="editBlockAnimation()" data-tooltip="Animacje"> <i class="fas fa-step-forward"></i> </div>
-
-                    <div class="showhover">
-                        <div class="btn" data-tooltip="Szerokość"> <i class="fas fa-arrows-alt-h"></i> </div>
-                        <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                            <div class="btn" onclick="blockWidth('100%')" data-tooltip="100% szerokości strony"> 100% </div>
-                            <div class="btn" onclick="blockWidth('50%')" data-tooltip="50% szerokości strony"> 1/2 </div>
-                            <div class="btn" onclick="blockWidth('33.333%')" data-tooltip="33.3% szerokości strony"> 1/3 </div>
-                            <div class="btn" onclick="editBlockSettings()" data-tooltip="Więcej"><i class="fas fa-ellipsis-h"></i></div>
-
+                        <div class="showhover">
+                            <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać kontener i go upuścić"> <i class="fas fa-sort"></i> </div>
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wyżej"> <i class="fas fa-arrow-up"></i> </div>
+                                <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń niżej"> <i class="fas fa-arrow-down"></i> </div>
+                            </div>
                         </div>
+
+                        <div class="btn" onclick="copyContainer()" data-tooltip="Skopiuj kontener do schowka"> <i class="fas fa-clipboard"></i> </div>
+                        
+                        <div class="btn" onclick="duplicateContainer()" data-tooltip="Duplikuj kontener"> <i class="fas fa-clone"></i> </div>
+
+                        <div class="btn" onclick="window.pasteType='block';showModal('pasteBlock')" data-tooltip="Wklej skopiowany blok"><i class="fas fa-paste"></i></div>
+
+                        <div class="btn" class="delete_block_btn" onclick="deleteContainer()" data-tooltip="Usuń kontener"> <i class="fas fa-times"></i> </div>
                     </div>
 
-                    <div class="showhover">
-                        <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać blok i go upuścić"> <i class="fas fa-sort" style="transform:rotate(90deg)"></i> </div>
-                        <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                            <div class="btn" onclick="moveBlock(-1,true)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-left"></i> </div>
-                            <div class="btn" onclick="moveBlock(1,true)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-right"></i> </div>
-                        </div>
+                    <div class="cms-block-actions">
+                        <div onclick="addBlock('',null,false)" data-tooltip="Wstaw blok" class="action_block add_before_btn"> <i class="fas fa-plus-square"></i> </div>
+                        <div onclick="addBlock('',null,true)" data-tooltip="Wstaw blok" class="action_block add_after_btn"> <i class="fas fa-plus-square"></i> </div>
                     </div>
 
-                    <div class="btn" onclick="duplicateBlock()" data-tooltip="Duplikuj blok"> <i class="fas fa-clone"></i> </div>
+                    <div class="cms-block-options cms-toolbar-shadow">
 
-                    <div class="btn" onclick="copyBlock()" data-tooltip="Skopiuj blok do schowka"> <i class="fas fa-clipboard"></i> </div>
+                        <div class="btn" onclick="editBlock()" data-tooltip="Edytuj zawartość"> <i class="fas fa-edit"></i> </div>
 
-                    <div class="btn" class="delete_block_btn" onclick="deleteBlock()" data-tooltip="Usuń blok"> <i class="fas fa-times"></i> </div>
+                        <div class="btn" onclick="editBlockSettings()" data-tooltip="Wymiary / Ułożenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
+                        
+                        <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło bloku - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
+
+                        <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie bloku"> <i class="fas fa-border-style"></i> </div>
+
+                        <div class="btn" onclick="editBlockAnimation()" data-tooltip="Animacje"> <i class="fas fa-step-forward"></i> </div>
+
+                        <div class="showhover">
+                            <div class="btn" data-tooltip="Szerokość"> <i class="fas fa-arrows-alt-h"></i> </div>
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div class="btn" onclick="blockWidth('100%')" data-tooltip="100% szerokości strony"> 100% </div>
+                                <div class="btn" onclick="blockWidth('50%')" data-tooltip="50% szerokości strony"> 1/2 </div>
+                                <div class="btn" onclick="blockWidth('33.333%')" data-tooltip="33.3% szerokości strony"> 1/3 </div>
+                                <div class="btn" onclick="editBlockSettings()" data-tooltip="Więcej"><i class="fas fa-ellipsis-h"></i></div>
+
+                            </div>
+                        </div>
+
+                        <div class="showhover">
+                            <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać blok i go upuścić"> <i class="fas fa-sort" style="transform:rotate(90deg)"></i> </div>
+                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                <div class="btn" onclick="moveBlock(-1,true)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-left"></i> </div>
+                                <div class="btn" onclick="moveBlock(1,true)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-right"></i> </div>
+                            </div>
+                        </div>
+
+                        <div class="btn" onclick="duplicateBlock()" data-tooltip="Duplikuj blok"> <i class="fas fa-clone"></i> </div>
+
+                        <div class="btn" onclick="copyBlock()" data-tooltip="Skopiuj blok do schowka"> <i class="fas fa-clipboard"></i> </div>
+
+                        <div class="btn" class="delete_block_btn" onclick="deleteBlock()" data-tooltip="Usuń blok"> <i class="fas fa-times"></i> </div>
+                    </div>
+
                 </div>
-
             </div>
 
         </div>
