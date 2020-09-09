@@ -34,6 +34,6 @@ function scanDirectories($options = [], $callback, $parent_dir = "", $level = 0)
             $first_line = "";
         }
 
-        $callback($path, $first_line);
+        $callback($path, $first_line, $parent_dir);
     }
 }

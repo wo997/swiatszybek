@@ -49,7 +49,7 @@ function showCategory($category, $level = 0)
 <head>
   <?php include "global/includes.php"; ?>
 
-  <link rel="stylesheet" href="/modules/product-list/main.css?v=<?= RELEASE ?>">
+  <link rel="stylesheet" href="/modules/product_list/main.css?v=<?= RELEASE ?>">
 
   <style>
     .category-picker-row>*,
@@ -162,7 +162,7 @@ function showCategory($category, $level = 0)
     }
 
 
-    .product-list-wrapper {
+    .product_list-wrapper {
       padding: 2vw;
       overflow: hidden;
     }
@@ -177,15 +177,15 @@ function showCategory($category, $level = 0)
       color: #c22;
     }
 
-    .product-list-animation-wrapper {
+    .product_list-animation-wrapper {
       transition: height 0.3s;
       position: relative;
       height: 0px;
       overflow: hidden;
     }
 
-    .product-list-container-swap,
-    .product-list-container-swap-background {
+    .product_list-container-swap,
+    .product_list-container-swap-background {
       position: absolute;
       transition: opacity 0.3s;
       top: 0;
@@ -195,12 +195,12 @@ function showCategory($category, $level = 0)
       pointer-events: none;
     }
 
-    .product-list-container-swap-background {
+    .product_list-container-swap-background {
       /*top: 100%;*/
       height: 10000px;
     }
 
-    .product-list-container {}
+    .product_list-container {}
 
     .under-products {
       position: relative;
@@ -222,10 +222,10 @@ function showCategory($category, $level = 0)
         expandCategoriesAbove(e);
       }
 
-      window.productListNode = $(".product-list-container");
-      window.productListAnimationNode = $(".product-list-animation-wrapper");
-      window.productListSwapNode = $(".product-list-container-swap");
-      window.productListSwapBackgroundNode = $(".product-list-container-swap-background");
+      window.productListNode = $(".product_list-container");
+      window.productListAnimationNode = $(".product_list-animation-wrapper");
+      window.productListSwapNode = $(".product_list-container-swap");
+      window.productListSwapBackgroundNode = $(".product_list-container-swap-background");
 
       searchProducts();
     });
@@ -460,25 +460,25 @@ function showCategory($category, $level = 0)
 
       ?>
     </div>
-    <div class="product-list-wrapper">
+    <div class="product_list-wrapper">
       <h1 class="h1" style="margin: 40px 0"><?= $show_category["title"] ?></h1>
       <?= $show_category["description"] ?>
 
       <div class="hook_view"></div>
 
-      <div class="product-list-animation-wrapper">
-        <div class="product-list-container">
+      <div class="product_list-animation-wrapper">
+        <div class="product_list-container">
           <?php
           /*$moduleParams = [];
         $module_content = "";
         $moduleParams["category_ids"] = [$show_category["category_id"]];
-        include "modules/product-list/content.php";
+        include "modules/product_list/content.php";
         echo $module_content;*/
           ?>
         </div>
 
-        <div class="product-list-container-swap-background"></div>
-        <div class="product-list-container-swap"></div>
+        <div class="product_list-container-swap-background"></div>
+        <div class="product_list-container-swap"></div>
       </div>
 
       <div class="under-products">

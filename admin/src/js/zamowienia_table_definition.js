@@ -2,8 +2,8 @@
 
 var zamowienia_table_definition = [
   {
-    title: "Nr zamówienia",
-    width: "184px",
+    title: "Zamówienie",
+    width: "167px",
     render: (r) => {
       var products_info = "<table>";
       try {

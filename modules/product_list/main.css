@@ -1,34 +1,34 @@
 /* css[global] */
 
-.product-list {
+.product_list {
   display: flex;
   flex-wrap: wrap;
 }
 
-.product-list .product {
+.product_list .product {
   padding: 2% 1%;
 }
 
-.product-list > .product {
+.product_list > .product {
   width: 100%;
 }
 @media only screen and (min-width: 800px) {
-  .product-list > .product {
+  .product_list > .product {
     width: 50%;
   }
 }
 @media only screen and (min-width: 1200px) {
-  .product-list > .product {
+  .product_list > .product {
     width: 33.333%;
   }
 }
 @media only screen and (min-width: 1800px) {
-  .product-list > .product {
+  .product_list > .product {
     width: 25%;
   }
 }
 
-.product-list .product-image {
+.product_list .product-image {
   width: 100%;
 }
 

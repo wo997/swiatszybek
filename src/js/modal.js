@@ -33,6 +33,7 @@ function registerModalContent(html, callback) {
 function registerModal(e) {
   $("#modal-wrapper .modal-content").appendChild(e);
   e.style.display = "none";
+  e.style.pointerEvents = "none";
 
   registerSelectboxes();
 }
@@ -52,9 +53,16 @@ function showModal(name = null, params = {}) {
       var shownow = false;
       if (e.id == name && e.style.display == "none") {
         e.style.display = "";
+        e.style.pointerEvents = "";
         shownow = true;
       }
-      if (e.style.display != "none") total++;
+      if (e.style.display != "none") {
+        if (e.getAttribute("data-expand") == "large") {
+          total = 1;
+        } else {
+          total++;
+        }
+      }
 
       if (shownow) {
         var node = e;
@@ -144,6 +152,7 @@ function hideModal(name, isCancel = false) {
       visibleModalCount--;
       setTimeout(() => {
         modal.style.display = "none";
+        modal.style.pointerEvents = "none";
         modal.style.animation = "";
       }, 200);
     }
@@ -187,6 +196,9 @@ function hideModal(name, isCancel = false) {
 function isModalActive(name) {
   var next = $(`#${name}`);
   var anythingAbove = false;
+  if (next.style.display != "") {
+    return false;
+  }
   while (true) {
     next = next.next();
     if (!next) {

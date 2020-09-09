@@ -6,7 +6,7 @@ $moduleParams = [];
 $module_content = "";
 $moduleParams["category_id"] = nonull($filters, "category_id", "[]");
 $moduleParams["attribute_value_ids"] = nonull($filters, "attribute_value_ids", "[]");
-$moduleDir = "modules/product-list";
+$moduleDir = "modules/product_list";
 
 include $moduleDir . "/content.php";
 

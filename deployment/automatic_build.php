@@ -11,13 +11,15 @@ scanDirectories(
         "include_paths" => $deployable_paths
     ],
     function ($path) {
-        global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS;
+        global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS, $modificationTimeHTML;
 
         if (strpos($path, ".php")) {
             $modificationTimePHP += filemtime($path);
         } else if (strpos($path, ".css")) {
             $modificationTimeCSS += filemtime($path);
         } else if (strpos($path, ".js")) {
+            $modificationTimeJS += filemtime($path);
+        } else if (strpos($path, ".html")) {
             $modificationTimeJS += filemtime($path);
         }
     }
