@@ -194,7 +194,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
               <img data-list-param="src" data-type="src" style="object-fit:contain;width:120px;height:120px;display: block;margin-right:10px;">
-              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image'], optimise: true})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
       },
@@ -218,6 +218,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           var img = row.find("img");
           row.find(".add_img_btn span").setContent(img.getValue() ? "Zmień" : "Wybierz");
         })
+        lazyLoadImages();
       },
       onRowInserted: (row) => {
         row.find(".add_img_btn").dispatchEvent(new Event("click"));

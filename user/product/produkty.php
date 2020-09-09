@@ -100,6 +100,7 @@ function showCategory($category, $level = 0)
 
     .category-picker-row {
       display: flex;
+      padding: 2px;
     }
 
     @media only screen and (max-width: 799px) {
@@ -173,9 +174,9 @@ function showCategory($category, $level = 0)
       margin-bottom: 0.3em;
     }
 
-    .categories-wrapper .fas {
+    /*.categories-wrapper .fas {
       color: #c22;
-    }
+    }*/
 
     .product_list-animation-wrapper {
       transition: height 0.3s;
@@ -208,6 +209,54 @@ function showCategory($category, $level = 0)
       -moz-box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
       box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
     }
+
+    .order_by_item {
+      display: block;
+    }
+
+    .order_by_item input {
+      display: none;
+    }
+
+    .order_by_item span {
+      background: #fafafa;
+      padding: 3px 9px;
+      display: block;
+      margin-bottom: 3px;
+      -webkit-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.16);
+      -moz-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.16);
+      box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.16);
+      border-radius: 4px;
+      transition: 0.1s all;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .order_by_item input:not(:checked)+span:hover {
+      filter: brightness(0.95);
+    }
+
+    .order_by_item input:checked+span {
+      background: #6c1;
+      color: #fffd;
+      cursor: default;
+    }
+
+    .order_by_item input:not(:checked)+span .fas {
+      opacity: 0.8;
+    }
+
+    .order_by_item .fas {
+      width: 16px;
+      text-align: center;
+      transform: scale(1.1);
+    }
+
+    .search-header {
+      margin: 30px 0 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
   </style>
 
   <script>
@@ -226,6 +275,16 @@ function showCategory($category, $level = 0)
       window.productListAnimationNode = $(".product_list-animation-wrapper");
       window.productListSwapNode = $(".product_list-container-swap");
       window.productListSwapBackgroundNode = $(".product_list-container-swap-background");
+
+      $$(".order_by_item input").forEach(e => {
+        e.addEventListener("change", () => {
+          searchProducts();
+        });
+      });
+
+      if (!$(".order_by_item input:checked")) {
+        $(`.order_by_item input[value="sale"]`).checked = true;
+      }
 
       searchProducts();
     });
@@ -259,7 +318,8 @@ function showCategory($category, $level = 0)
       var newSearchParams = JSON.stringify({
         attribute_value_ids: attribute_value_ids,
         category_ids: [<?= $show_category["category_id"] ?>],
-        phrase: "xxx"
+        phrase: "xxx",
+        order_by: $(`[name="order_by"]:checked`).getValue()
       });
 
       if (newSearchParams != searchParams) {
@@ -338,7 +398,7 @@ function showCategory($category, $level = 0)
         var list = checkbox.parent().next();
         if (!checkbox.checked) {
           list.findAll(":checked").forEach(subCheckbox => {
-            subCheckbox.checked = 0;
+            subCheckbox.setValue(0);
           });
         }
         expand(list, checkbox.checked);
@@ -354,7 +414,7 @@ function showCategory($category, $level = 0)
 
   <div class="main-container desktopRow">
     <div class="categories-wrapper">
-      <div style="margin: 40px 0 10px;font-weight:bold;font-size:16px"><i class="fas fa-list"></i> Kategorie</div>
+      <div class="search-header"><i class="fas fa-list"></i> Kategorie</div>
 
       <div class="categories">
         <?= showCategory([
@@ -364,7 +424,23 @@ function showCategory($category, $level = 0)
         ]) ?>
       </div>
 
-      <div style="margin: 40px 0 10px;font-weight:bold;font-size:16px"><i class="fas fa-sliders-h"></i> Filtry</div>
+      <div class="search-header"><i class="fas fa-sort-amount-down-alt"></i> Sortuj</div>
+      <label class="order_by_item">
+        <input type="radio" name="order_by" value="new">
+        <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
+      </label>
+      <label class="order_by_item">
+        <input type="radio" name="order_by" value="sale">
+        <span><i class="fas fa-star"></i> Bestsellery</span>
+      </label>
+      <label class="order_by_item">
+        <input type="radio" name="order_by" value="cheap">
+        <span><i class="fas fa-dollar-sign"></i> Najtańsze</span>
+      </label>
+      <label class="order_by_item">
+        <input type="radio" name="order_by" value="random">
+        <span><i class="fas fa-dice-three"></i> Losowo</span>
+      </label>
 
       <?php
       include_once "admin/product/attributes_service.php";
@@ -415,20 +491,22 @@ function showCategory($category, $level = 0)
       $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes
         INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($show_category["category_id"]));
 
+      $output = "";
+
       foreach ($attributes as $attribute) {
 
         $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-        echo "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
-        echo "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
+        $output .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
+        $output .= "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
 
         if ($any) {
         } else {
           $values = getAttributeValues($attribute["attribute_id"]);
-          echo printUserSelectValuesOfAttribute($values, $attribute);
+          $output .= printUserSelectValuesOfAttribute($values, $attribute);
         }
 
-        echo "</div>";
+        $output .= "</div>";
 
         /*$any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
@@ -457,6 +535,10 @@ function showCategory($category, $level = 0)
         echo "</div>";*/
       }
 
+      if ($output) {
+        echo '<div class="search-header"><i class="fas fa-sliders-h"></i> Filtry</div>';
+        echo $output;
+      }
 
       ?>
     </div>

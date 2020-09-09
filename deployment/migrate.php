@@ -130,4 +130,6 @@ alterTable("activity_log", [
   ["name" => "previous_state", "type" => "VARCHAR(255)"],
 ]);
 
+dropColumns("zamowienia", ["history"]);
+
 echo "<h3>✅ All migrations completed</h3>";

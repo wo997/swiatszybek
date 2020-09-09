@@ -17,7 +17,8 @@ function getDatepickerDefaultOptions(e) {
   return options;
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+// can't go before modals are created from raw html
+window.addEventListener("load", () => {
   registerDatepickers();
 });
 

@@ -2255,6 +2255,7 @@ ql-icon i span {
 .expand_y.animate_hidden {
   height: 0 !important;
   min-height: 0 !important;
+  padding: 0 !important;
   pointer-events: none;
 }
 .expand_y.animating,

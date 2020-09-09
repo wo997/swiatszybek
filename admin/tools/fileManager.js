@@ -36,12 +36,8 @@ window.fileManager = {
     }
 
     if (fileManager.target) {
-      if (fileManager.optimise) {
-        fileManager.target.setAttribute("data-src", src);
-        lazyLoadImages(true);
-      } else {
-        setValue(fileManager.target, src);
-      }
+      $(fileManager.target).setValue(src);
+      lazyLoadImages(true);
     }
     if (fileManager.callback) {
       fileManager.callback(src);

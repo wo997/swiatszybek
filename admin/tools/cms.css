@@ -477,11 +477,11 @@
   margin-left: 0;
 }
 
-@media (hover: hover) {
+/*@media (hover: hover) {
   .add_module_top_btn {
     display: none;
   }
-}
+}*/
 
 .toggle-sidebar-btn {
   position: absolute;

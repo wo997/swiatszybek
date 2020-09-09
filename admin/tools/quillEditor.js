@@ -199,7 +199,7 @@ window.quillEditor = {
         removeNodeColorBackground(w);
       }
     } else {
-      setNodeImageBackground(w, getNodeImageBackground(params.wrapper));
+      setNodeImageBackground(w);
     }
     quillEditor.wasInTable = false;
     var qlContainer = $(".quill-editor-container .ql-editor");
@@ -1300,6 +1300,7 @@ registerModalContent(
             <div class="custom-toolbar">
                 <span class="title">Edytor bloku</span>
                 <button class="btn secondary toggle_size" onclick="quillEditor.toggleQuillSize();" data-tooltip="Ustaw na szerokość bloku / cały ekran"> <i class="fas fa-expand"></i> </button>
+                <button class="btn secondary" onclick="showModal('quill_poradnik')">Poradnik <i class="fas fa-info-circle"></i></button>
                 <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
                 <button class="btn primary" onclick="quillEditor.save();hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
             </div>

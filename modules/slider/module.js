@@ -1,18 +1,20 @@
 /* js[modules] */
 MODULE = {
   params: "",
-  description: "Slider zdjęć",
+  description: "Slider",
   icon: '<i class="far fa-images"></i>',
   firstOpen: (params, form) => {
     createSimpleList({
       name: "cms_slides",
       fields: {
+        title: {},
+        published: {},
         slide: {},
       },
       render: () => {
         return `
               <div style="flex-grow: 1;">
-                    <span class="field-title">Tytuł <input type='text' class='field inline' data-list-param="color"></span>
+                    <span class="field-title">Tytuł <input type='text' class='field inline' data-list-param="title"></span>
                     <label class="field-title checkbox-wrapper">
                       Czy publiczny?
                       <input type="checkbox" data-list-param="published">
@@ -29,9 +31,18 @@ MODULE = {
           `;
       },
       default_row: {
-        value_id: -1,
-        value: "",
-        color: "",
+        title: "",
+        published: 1,
+        content: `
+          <div class="cms-container" style="" data-desktop-min-height="">
+            <div class="background-color" style="background-color: rgb(20, 0, 205); opacity: 0.25;"></div>
+            <div class="cms-container-content">
+              <div class="cms-block align-vertical-center align-horizontal-center" data-desktop-min-height="" data-desktop-width="100%" data-mobile-min-height="" data-mobile-width="100%" data-margin_top="" data-margin_left="" data-margin_right="" data-margin_bottom="" style="width: 100%;">
+                <div class="cms-block-content ql-editor" data-padding_top="12px" data-padding_left="12px" data-padding_right="12px" data-padding_bottom="12px" style="padding: 12px;"><p class="ql-align-center"><br></p><p class="ql-align-center"><br></p><h2 class="ql-align-center">Mój slajd</h2><p class="ql-align-center"><br></p><p class="ql-align-center"><br></p></div>
+              </div>
+            </div>
+          </div>
+        `,
       },
       title: "Banery",
       onChange: () => {

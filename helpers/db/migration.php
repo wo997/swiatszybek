@@ -26,18 +26,20 @@ function columnExists($table, $name)
 }
 
 /**
+ * - table: string
+ * - names: []
  *
  * @param  string $table
  * @param  array $names
  * @return void
  */
-function dropColumns($table, $names)
+function dropColumns($table, $columns)
 {
-    foreach ($names as $name) {
-        if (columnExists($table, $name)) {
-            query("ALTER TABLE " . clean($table) . " DROP COLUMN " . clean($name));
+    foreach ($columns as $column) {
+        if (columnExists($table, $column)) {
+            query("ALTER TABLE " . clean($table) . " DROP COLUMN " . clean($column));
 
-            echo "🗑️ Column '$name' dropped from $table! <br>";
+            echo "🗑️ Column '$column' dropped from $table! <br>";
         }
     }
 }

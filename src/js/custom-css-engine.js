@@ -2,6 +2,8 @@
 
 window.addEventListener("resize", function () {
   resizeCallback();
+
+  delay("resizeCallback", 200);
 });
 window.addEventListener("DOMContentLoaded", function () {
   resizeCallback();
@@ -13,8 +15,10 @@ var forceMobile = false;
 function getCustomSize(node, val) {
   if (val.charAt(val.length - 1) == "%") {
     return (
-      ($(node).parent().getBoundingClientRect().width * parseInt(val)) / 100 +
-      "px"
+      Math.floor(
+        ($(node).parent().getBoundingClientRect().width * parseInt(val)) / 100 -
+          0.5
+      ) + "px"
     );
   }
   return val;
@@ -93,7 +97,7 @@ function setCustomHeights() {
     if (height.indexOf("w") !== -1) {
       height = height.replace("w", "");
       var r = node.getBoundingClientRect();
-      var real_height = Math.round(r.width * parseFloat(height));
+      var real_height = Math.floor(r.width * parseFloat(height));
       node.style.height = `${real_height}px`;
     }
   });

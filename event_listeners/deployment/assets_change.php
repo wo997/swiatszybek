@@ -69,13 +69,13 @@ $jsGroup = "modules";
 $modules_js = "";
 
 foreach ($modules as $module_name => $module_js) {
-    $case_form = "modules['MODULE_NAME'].form_html = `" . $module_forms[$module_name] . "`;";
+    if (isset($module_forms[$module_name])) {
+        $module_js .= " modules['MODULE_NAME'].form_html = `" . $module_forms[$module_name] . "`;";
+    }
 
     $module_js = "
         window.addEventListener(\"DOMContentLoaded\", () => {
-            var module_form = $(`#module_$module_name`);
-            " . $module_js . "
-            $case_form
+            $module_js
         });";
 
     $module_js = str_replace("MODULE_NAME", $module_name, $module_js);

@@ -339,10 +339,16 @@ function setValue(input, value, params = {}) {
         }
       });
     } else if (type == "src") {
-      var prefix = input.getAttribute(`data-src-prefix`);
+      if (getResponsiveImageData(value)) {
+        input.setAttribute("data-real-src", value);
+        input.setAttribute("data-src", value);
+      } else {
+        input.setAttribute("src", value);
+      }
+      /*var prefix = input.getAttribute(`data-src-prefix`);
       if (!prefix) prefix = ""; // "/uploads/df/";
       if (value) value = prefix + value;
-      input.setAttribute("src", value);
+      input.setAttribute("src", value);*/
     } else if (input.tagName == "SELECT") {
       if ([...input.options].find((e) => e.value == value)) {
         input.value = value;
@@ -401,10 +407,15 @@ function getValue(input) {
         values: attribute_values,
       });
     } else if (type == "src") {
-      var prefix = input.getAttribute(`data-src-prefix`);
-      if (!prefix) prefix = ""; // "/uploads/df/";
+      var real_src = input.getAttribute(`data-real-src`);
+      if (real_src) {
+        return real_src;
+      }
+
+      //var prefix = input.getAttribute(`data-src-prefix`);
+      //if (!prefix) prefix = ""; // "/uploads/df/";
       var src = input.getAttribute("src");
-      if (src && src.length > prefix.length) src = src.substr(prefix.length);
+      //if (src && src.length > prefix.length) src = src.substr(prefix.length);
       return src;
     } else if (type == "date") {
       var format = input.getAttribute(`data-format`);

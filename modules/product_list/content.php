@@ -49,11 +49,23 @@
       LEFT JOIN link_product_attribute_value ap USING(product_id)";
   }
 
+  $order_by = "product_id DESC"; // new by default
+
+  $order_by_name = nonull($moduleParams, "order_by", "new");
+
+  if ($order_by_name == "sale") {
+    $order_by = "cache_sales DESC";
+  } else if ($order_by_name == "cheap") {
+    $order_by = "price_min DESC";
+  } else if ($order_by_name == "random") {
+    $order_by = "RAND() DESC";
+  }
+
   $products = paginateData([
     "select" => "product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating",
     "from" => "products p $join",
     "where" => $where,
-    "order" => "product_id DESC",
+    "order" => $order_by,
     "group" => "product_id",
     "raw" => true,
   ]);
