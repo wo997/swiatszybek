@@ -124,6 +124,7 @@ include_once "helpers/form.php";
 
 require_once 'helpers/facebook_register.php'; // should be a part of FB module instead
 
+include "packages/simple_html_dom.php";
 
 initUser();
 
@@ -142,6 +143,6 @@ if (config("dev_mode", true)) {
 }
 
 // automatic_build can override
-define("RELEASE", 2140);
+define("RELEASE", 2141);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);

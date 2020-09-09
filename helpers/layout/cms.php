@@ -19,8 +19,6 @@ function getCMSPageHTML($content)
 {
   global $JS_files, $CSS_files, $app;
 
-  include "packages/simple_html_dom.php";
-
   $html = str_get_html($content);
 
   $page_content = "";

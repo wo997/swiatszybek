@@ -113,6 +113,9 @@ var cmsContainer;
 var cmsWrapper;
 var cmsSource;
 var cmsTarget;
+var cmsInsertContainerBtn;
+
+var cmsParams = {};
 
 var cmsModalLoaded = () => {
   cmsWrapper = $("#actual_cms_wrapper");
@@ -127,34 +130,34 @@ var cmsModalLoaded = () => {
 
   CMSContainerHeader.options = cmsWrapper.find(".cms-container-options");
 
+  cmsInsertContainerBtn = $(".insert_container_btn");
+
   loadSideModules();
 };
 
 function loadSideModules() {
   var modules_html = "";
-  for (moduleName in modules) {
-    var module = modules[moduleName];
+  for (module_name in modules) {
+    var module = modules[module_name];
     if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
     modules_html += `
-    <div class="cms-block side-module" data-module="${moduleName}" data-module-params="" draggable="true">
+    <div class="cms-block side-module" data-module="${module_name}" data-module-params="" draggable="true">
       <div class="cms-block-content">${module.icon} ${module.description}</div>
     </div>
   `;
   }
-
-  /*(for (moduleName in modules) {
-    var module = modules[moduleName];
-    if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
-    modules_html += `<div class="btn primary" onclick="insertModule('${moduleName}')">${module.icon} ${module.description}</div>`;*/
 
   $(".modules-sidebar .modules").innerHTML = modules_html;
 }
 
 function editModule(block) {
   cmsTarget = block;
-  var moduleName = block.getAttribute("data-module");
-  var module = modules[moduleName];
-  if (!document.getElementById(moduleName)) {
+  cmsTarget.classList.add("during-module-edit");
+
+  var module_name = block.getAttribute("data-module");
+  var module = modules[module_name];
+  var modal_name = `module_${module_name}`;
+  if (!document.getElementById(modal_name)) {
     if (module.editUrl) {
       if (
         confirm(
@@ -168,25 +171,39 @@ function editModule(block) {
     }
     return;
   }
-  showModal(moduleName, {
+  showModal(modal_name, {
     source: cmsTarget,
   });
   let params = {};
   try {
     params = JSON.parse(block.getAttribute("data-module-params"));
   } catch {}
-  setFormData(params, $(`#${moduleName}`));
-  module.formOpen(params, block, moduleName);
+  var modal = $(`#${modal_name}`);
+
+  if (module.firstOpen) {
+    module.firstOpen(params, modal, block);
+    delete module.firstOpen;
+  }
+  setFormData(params, modal);
+  module.formOpen(params, modal, block);
 }
 
 function saveModule(button) {
-  if (!cmsTarget) return;
-  var moduleName = cmsTarget.getAttribute("data-module");
-  if (!moduleName) return;
-  var module = modules[moduleName];
-  if (!module) return;
-  module.formClose();
   hideParentModal(button);
+
+  cmsTarget = cmsWrapper.find(".during-module-edit");
+  if (!cmsTarget) return;
+  var module_name = cmsTarget.getAttribute("data-module");
+  if (!module_name) return;
+  var module = modules[module_name];
+  if (!module) return;
+
+  var form_data = getFormData(`#module_${module_name}`);
+  form_data = module.formClose(form_data);
+
+  if (form_data !== null) {
+    cmsTarget.setAttribute("data-module-params", JSON.stringify(form_data));
+  }
 
   var c = cmsTarget.find(".module-content"); // force update
   if (c) c.remove();
@@ -282,8 +299,8 @@ function addBlock(content = "", container = null, placeAfter = true) {
   cmsHistoryPush();
 }
 
-function insertModule(moduleName) {
-  var module = modules[moduleName];
+function insertModule(module_name) {
+  var module = modules[module_name];
   if (!module) return;
 
   awaitingScroll = true;
@@ -291,7 +308,7 @@ function insertModule(moduleName) {
   cmsContainer.insertAdjacentHTML(
     "beforeend",
     getContainer(`
-            <div class="cms-block" data-module="${moduleName}" data-module-params="${module.params}">
+            <div class="cms-block" data-module="${module_name}" data-module-params="${module.params}">
                 <div class="cms-block-content"></div>
             </div>`)
   );
@@ -301,13 +318,13 @@ function insertModule(moduleName) {
 
 var moduleListModalLoaded = () => {
   var moduleList = "";
-  for (moduleName in modules) {
-    var module = modules[moduleName];
+  for (module_name in modules) {
+    var module = modules[module_name];
     if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
-    moduleList += `<div class="btn primary" onclick="insertModule('${moduleName}')">${module.icon} ${module.description}</div>`;
-    if (module.form) {
+    moduleList += `<div class="btn primary" onclick="insertModule('${module_name}')">${module.icon} ${module.description}</div>`;
+    if (module.form_html) {
       registerModalContent(`
-              <div id="${moduleName}">
+              <div id="module_${module_name}" data-expand>
                   <div>
                       <div class="custom-toolbar">
                           <span class="title">${module.description}</span>
@@ -315,11 +332,13 @@ var moduleListModalLoaded = () => {
                           <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
                       </div>
                       <div style="padding:10px">
-                          ${module.form}
+                          ${module.form_html}
                       </div>
                   </div>
               </div>
           `);
+
+      module.form = $(`#module_${module_name}`);
     }
   }
 
@@ -405,9 +424,11 @@ function deleteContainer(nodeToDelete = null, pushHistory = true) {
 function deleteBlock(nodeToDelete = null, pushHistory = true) {
   if (!cmsTarget) return;
   if (!cmsTarget.next() && !cmsTarget.prev()) {
-    cmsTarget = findParentByClassName(cmsTarget, "cms-container");
-    deleteContainer(cmsTarget, false);
-    return;
+    if (cmsParams.delete_block_with_parent !== false) {
+      cmsTarget = findParentByClassName(cmsTarget, "cms-container");
+      deleteContainer(cmsTarget, false);
+      return;
+    }
   }
   delayActions();
   hideCMSBlockHeader();
@@ -462,37 +483,59 @@ function editCMS(t, params = {}) {
   cmsHistory = [];
   cmsHistoryPush();
 
-  if (nonull(params.show_modal, true)) {
+  if (params.show_modal !== false) {
     showModal("cms", { source: cmsSource });
+    cmsPreview = params.preview;
+
+    cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
+  } else {
+    cmsWrapper.find(".preview_btn").classList.toggle("hidden", true);
   }
 
-  cmsUpdate();
+  cmsTarget = null;
 
-  cmsPreview = params.preview;
+  cmsParams = params;
 
-  cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
+  setTimeout(() => {
+    cmsUpdate();
+  }, 200);
+
+  setTimeout(() => {
+    resizeCallback();
+  }, 450);
 }
 
 var backupStateOfCMS = null;
-function editCMSAdditional(t) {
-  $("#cmsAdditional").appendChild(cmsWrapper);
-  $("#cms").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
+function editCMSAdditional(t, params) {
+  $("#cmsAdditional .stretch-vertical").empty();
+  $("#cmsAdditional .stretch-vertical").appendChild(cmsWrapper);
+  $("#cms .stretch-vertical").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
 
   backupStateOfCMS = {
     content: cmsContainer.innerHTML,
     history: cmsHistory,
     source: cmsSource,
+    target: cmsTarget,
+    params: cmsParams,
   };
 
-  editCMS(t, { show_modal: false });
+  editCMS(t, { show_modal: false, ...params });
 
   showModal("cmsAdditional", {
     hideCallback: () => {
-      $("#cms").empty();
-      $("#cms").appendChild(cmsWrapper);
+      $("#cms .stretch-vertical").empty();
+      $("#cms .stretch-vertical").appendChild(cmsWrapper);
+
+      $("#cmsAdditional .stretch-vertical").appendChild(
+        cmsWrapper.cloneNode(true)
+      ); // don't make it disappear
+
       cmsHistory = backupStateOfCMS.history;
       cmsContainer.setContent(backupStateOfCMS.content);
       cmsSource = backupStateOfCMS.source;
+      cmsTarget = backupStateOfCMS.target;
+      cmsParams = backupStateOfCMS.params;
+
       cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
     },
   });
@@ -509,7 +552,10 @@ function closeCms(save) {
   if (save) {
     cmsPrepareOutput();
     var content = cmsContainer.innerHTML;
-    cmsSource.setContent(content);
+    cmsSource.setValue(content);
+  }
+  if (cmsParams.hideCallback) {
+    cmsParams.hideCallback();
   }
   cmsSource = null;
 }
@@ -615,8 +661,11 @@ function migrateImageBackground(node) {
 function cmsUpdate() {
   resizeCallback();
 
-  toggleDisabled($(".cms-undo"), cmsHistoryStepBack >= cmsHistory.length - 1);
-  toggleDisabled($(".cms-redo"), cmsHistoryStepBack == 0);
+  toggleDisabled(
+    cmsWrapper.find(".cms-undo"),
+    cmsHistoryStepBack >= cmsHistory.length - 1
+  );
+  toggleDisabled(cmsWrapper.find(".cms-redo"), cmsHistoryStepBack == 0);
 
   cmsWrapper.findAll(".cms-block").forEach((block) => {
     block.setAttribute("draggable", true);
@@ -690,9 +739,9 @@ function cmsUpdate() {
 
   cmsWrapper.findAll(".cms-block[data-module]").forEach((e) => {
     var c = e.find(".cms-block-content");
-    if (!c.innerHTML) {
-      var moduleName = e.getAttribute("data-module");
-      var module = modules[moduleName];
+    if (!c.innerHTML.trim()) {
+      var module_name = e.getAttribute("data-module");
+      var module = modules[module_name];
 
       let params = {};
       try {
@@ -712,6 +761,10 @@ function cmsUpdate() {
       }
     }
   });
+
+  if (cmsParams.onChange) {
+    cmsParams.onChange(cmsContainer);
+  }
 }
 
 function editContainerSettings() {
@@ -1153,21 +1206,19 @@ var mouseMoveContainer = function (event) {
 
   placeContainerAfter = nodeBefore;
 
-  var insert_container_btn = $(".insert_container_btn");
-
   if (
     secondY < firstY + 25 &&
     !findParentByClassName(target, "cms-block-actions") &&
     !findParentByClassName(target, "cms-block-options")
   ) {
-    insert_container_btn.style.display = "flex";
+    cmsInsertContainerBtn.style.display = "flex";
     var h = 20; //(secondY - firstY);
     //if (h > 25) h = 25;
-    insert_container_btn.style.height = h + "px";
-    insert_container_btn.style.top =
+    cmsInsertContainerBtn.style.height = h + "px";
+    cmsInsertContainerBtn.style.top =
       firstY - wrapper.getBoundingClientRect().top + wrapper.scrollTop + "px";
   } else {
-    insert_container_btn.style.display = "none";
+    cmsInsertContainerBtn.style.display = "none";
   }
 
   if (findParentByClassName(target, ["cms-block"])) {
@@ -1651,22 +1702,23 @@ function toggleModuleSidebar() {
 registerModalContent(
   `
     <div id="cms" data-expand="large">
-        <div class="stretch-vertical" id="actual_cms_wrapper">
+        <div class="stretch-vertical">
+          <div id="actual_cms_wrapper">
             <div class="custom-toolbar">
                 <span class="title">
                     Edycja zawartości
-                    <div class="btn primary cms-undo" onclick="cmsHistoryUndo()"> <i class="fas fa-undo-alt"></i> </div>
-                    <div class="btn primary cms-redo" onclick="cmsHistoryRedo()"> <i class="fas fa-redo-alt"></i> </div>
-                    <div class="btn primary add_module_top_btn" onclick="showModal('cmsModules')" data-tooltip="Wstaw moduł"><i class="fas fa-puzzle-piece"></i></div>
-                    <div class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></div>
-                    <div class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </div>
+                    <button class="btn primary cms-undo" onclick="cmsHistoryUndo()"> <i class="fas fa-undo-alt"></i> </button>
+                    <button class="btn primary cms-redo" onclick="cmsHistoryRedo()"> <i class="fas fa-redo-alt"></i> </button>
+                    <button class="btn primary add_module_top_btn" onclick="showModal('cmsModules')" data-tooltip="Wstaw moduł"><i class="fas fa-puzzle-piece"></i></button>
+                    <button class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></button>
+                    <button class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </button>
                 </span>
                 <button class="btn secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
                 <button onclick="showCmsPreview()" class="btn primary preview_btn">Podgląd <i class="fas fa-eye"></i></button>
                 <button class="btn primary" onclick="closeCms(true);hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
             </div>
 
-            <div class="desktopRow" style="flex-shrink: 1;overflow-y: hidden;">
+            <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
                 <div class="modules-sidebar shown">
                   <button class="toggle-sidebar-btn btn subtle" onclick="toggleModuleSidebar()" data-tooltip="Ukryj moduły"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
                   <span class="field-title modules-sidebar-title" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i> Moduły</span>
@@ -1699,7 +1751,7 @@ registerModalContent(
 
                         <div class="btn" onclick="window.pasteType='block';showModal('pasteBlock')" data-tooltip="Wklej skopiowany blok"><i class="fas fa-paste"></i></div>
 
-                        <div class="btn" class="delete_block_btn" onclick="deleteContainer()" data-tooltip="Usuń kontener"> <i class="fas fa-times"></i> </div>
+                        <div class="btn delete_block_btn" onclick="deleteContainer()" data-tooltip="Usuń kontener"> <i class="fas fa-times"></i> </div>
                     </div>
 
                     <div class="cms-block-actions">
@@ -1747,6 +1799,7 @@ registerModalContent(
 
                 </div>
             </div>
+          </div>
 
         </div>
         <!--<link href="/admin/tools/cms.css?v=${RELEASE}" rel="stylesheet"> NOW GLOBAL-->
@@ -1763,6 +1816,7 @@ registerModalContent(`
 
             <div class="custom-toolbar">
                 <span class="title">Wymiary / Położenie</span>
+                ${hide_complicated_btn}
                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
                 <div class="btn primary" onclick="saveBlockSettings();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
@@ -1931,14 +1985,21 @@ for (val of flowOptions) {
 
   var styles = isRow ? "width:30px;" : "";
 
-  flows += `<div style='border:1px solid #aaa;margin: 5px;;display:inline-flex;flex-flow:${val};width:75px;' data-option="${val}" onclick='selectInGroup(this)'>
-        <div style='${styles}min-height:15px;background:#c55;display:flex;justify-content:center;align-items:center'>1</div>
-        <div style='${styles}min-height:15px;background:#cc5;display:flex;justify-content:center;align-items:center'>2</div>
-        <div style='${styles}min-height:15px;background:#5c5;display:flex;justify-content:center;align-items:center'>3</div>`;
+  var is_complicated = ["row nowrap", "row wrap", "column"].indexOf(val) == -1;
+
+  var is_complicated_attr = is_complicated ? "data-complicated" : "";
+
+  var getDiv = (index) => {
+    return `<div style='${styles}min-height:15px;background:#fff;filter:brightness(${
+      1 - index * 0.1
+    });display:flex;justify-content:center;align-items:center'>${index}</div>`;
+  };
+
+  flows += `<div ${is_complicated_attr} style='border:1px solid #aaa;margin: 5px;;display:inline-flex;flex-flow:${val};width:75px;' data-option="${val}" onclick='selectInGroup(this)'>
+      ${getDiv(1)}${getDiv(2)}${getDiv(3)}`;
 
   if (isRow) {
-    flows += `<div style='width:30px;min-height:15px;background:#5cc;display:flex;justify-content:center;align-items:center'>4</div>
-            <div style='width:30px;min-height:15px;background:#55c;display:flex;justify-content:center;align-items:center'>5</div>`;
+    flows += `${getDiv(4)}${getDiv(5)}`;
   }
   flows += `</div>`;
 }
@@ -2025,7 +2086,7 @@ registerModalContent(`
 
             <div style="padding:10px;margin-top:-15px">
                 <div class="field-title">Grubość krawędzi</div>
-                <c-select style="width:100px">
+                <c-select style="width:100px" class="inline">
                     <input type="text" class="field" data-attribute="border-width" onchange="updateBorderPreview()">
                     <c-arrow></c-arrow>
                     <c-options>
@@ -2043,7 +2104,7 @@ registerModalContent(`
                 </div>
 
                 <div class="field-title">Zaokrąglenie krawędzi</div>
-                <c-select style="width:100px">
+                <c-select style="width:100px" class="inline">
                     <input type="text" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
                     <c-arrow></c-arrow>
                     <c-options>
@@ -2067,6 +2128,7 @@ registerModalContent(`
 
             <div class="custom-toolbar">
                 <span class="title">Wymiary / Położenie</span>
+                ${hide_complicated_btn}
                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
                 <div class="btn primary" onclick="saveContainerSettings();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
@@ -2097,6 +2159,11 @@ registerModalContent(`
                             </c-options>
                         </c-select>
 
+                        <h4>Kierunek układania się bloków</h4>
+                        <div data-select-group="desktop-flex-flow" style="display:flex;flex-wrap:wrap">
+                            <input type="hidden" style="width:100px" data-attribute="desktop-flex-flow" data-target=".cms-container-content">
+                            ${flows}
+                        </div>
                         <h4>Wyrównaj zawartość w poziomie</h4>
                         <div data-select-group="desktop-justify-content">
                             <input type="hidden" style="width:100px" data-attribute="desktop-justify-content" data-default-value="center" data-target=".cms-container-content">
@@ -2106,11 +2173,6 @@ registerModalContent(`
                         <div data-select-group="desktop-align-items" style="display:flex">
                             <input type="hidden" style="width:100px" data-attribute="desktop-align-items" data-default-value="stretch" data-target=".cms-container-content">
                             ${aligns}
-                        </div>
-                        <h4>Kierunek układania się bloków</h4>
-                        <div data-select-group="desktop-flex-flow" style="display:flex;flex-wrap:wrap">
-                            <input type="hidden" style="width:100px" data-attribute="desktop-flex-flow" data-target=".cms-container-content">
-                            ${flows}
                         </div>
 
                         <br>
@@ -2133,6 +2195,11 @@ registerModalContent(`
                             </c-options>
                         </c-select>
 
+                        <h4>Kierunek układania się bloków</h4>
+                        <div data-select-group="mobile-flex-flow" style="display:flex;flex-wrap:wrap">
+                            <input type="hidden" style="width:100px" data-attribute="mobile-flex-flow" data-target=".cms-container-content">
+                            ${flows}
+                        </div>
                         <h4>Wyrównaj zawartość w poziomie</h4>
                         <div data-select-group="mobile-justify-content">
                             <input type="hidden" style="width:100px" data-attribute="mobile-justify-content" data-default-value="center" data-target=".cms-container-content">
@@ -2142,11 +2209,6 @@ registerModalContent(`
                         <div data-select-group="mobile-align-items" style="display:flex">
                             <input type="hidden" style="width:100px" data-attribute="mobile-align-items" data-default-value="stretch" data-target=".cms-container-content">
                             ${aligns}
-                        </div>
-                        <h4>Kierunek układania się bloków</h4>
-                        <div data-select-group="mobile-flex-flow" style="display:flex;flex-wrap:wrap">
-                            <input type="hidden" style="width:100px" data-attribute="mobile-flex-flow" data-target=".cms-container-content">
-                            ${flows}
                         </div>
                     </div>
                 </div>
@@ -2294,7 +2356,9 @@ registerModalContent(
 registerModalContent(
   `
     <div id="cmsAdditional" data-expand="idklarge">
+      <div class="stretch-vertical">
 
+      </div>
     </div>
   `
 );

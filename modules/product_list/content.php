@@ -88,13 +88,13 @@
   //$module_content .=
   //"<div class='items count-$total'>$res</div>";
 
-  $module_content .= "<div class='product-list'>$res</div>";
+  $module_content .= "<div class='product_list'>$res</div>";
 
 
   /*$module_content .= "<style>
-      div[data-module='product-list'] .product {width: 48%;}
+      div[data-module='product_list'] .product {width: 48%;}
       @media only screen and (max-width: 749px) {
-        div[data-module='product-list'] .product {width: 98%;}
+        div[data-module='product_list'] .product {width: 98%;}
       }
       @media only screen and (min-width: 750px) {
         .items > div:not(:nth-child(3n)):not(:last-child) {

@@ -85,7 +85,7 @@ function createSimpleList(params = {}) {
   list.setValues = (values) => {
     list.clear();
 
-    addValues = (values, listTarget = null) => {
+    var addValues = (values, listTarget = null) => {
       if (listTarget === null) {
         listTarget = list.target;
       }

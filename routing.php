@@ -49,7 +49,7 @@ $admin_navigations_tree = [
     "sub" => [
       ["url" => "strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
       ["url" => "menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
-      ["url" => "slider", "title" => '<i class="fas fa-images"></i> Slider'],
+      //["url" => "slider", "title" => '<i class="fas fa-images"></i> Slider'],
       ["url" => "stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
 
     ]

@@ -6,8 +6,25 @@ include_once __DIR__ . "/helpers.php";
 //useCSS("/src/swiper.min.css");
 useCSS($moduleDir . "/main.css");
 
+$slides = json_decode(nonull($moduleParams, "cms_slides", ""), true);
 
-$slides_html = get_slider_content();
+$slides_html = "";
+
+foreach ($slides as $slide) {
+  if (!$slide["values"]["published"]) {
+    continue;
+  }
+
+  $slides_html .= "
+    <div class='swiper-slide'>
+      <div class='cms slide-desktop'>" . getCMSPageHTML($slide["values"]["content"]) . "</div>
+      <div class='cms slide-mobile'>" . getCMSPageHTML($slide["values"]["content"])  . "</div>
+    </div>
+  ";
+}
+
+
+//$slides_html = get_slider_content();
 
 $module_content .= "
   <div class='swiper-container module-slider'>

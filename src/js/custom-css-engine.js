@@ -10,6 +10,16 @@ window.addEventListener("DOMContentLoaded", function () {
 // remember to switch back to regular responsive type, used in slider edit form
 var forceMobile = false;
 
+function getCustomSize(node, val) {
+  if (val.charAt(val.length - 1) == "%") {
+    return (
+      ($(node).parent().getBoundingClientRect().width * parseInt(val)) / 100 +
+      "px"
+    );
+  }
+  return val;
+}
+
 function resizeCallback() {
   setCustomHeights();
 
@@ -34,7 +44,7 @@ function resizeCallback() {
 
   var attribute = `data-${responsiveType}-min-height`;
   $$(`[${attribute}]`).forEach((e) => {
-    e.style.minHeight = e.getAttribute(attribute);
+    e.style.minHeight = getCustomSize(e, e.getAttribute(attribute));
   });
 
   for (let direction of ["Left", "Right", "Top", "Bottom"]) {
@@ -46,19 +56,12 @@ function resizeCallback() {
         }
         var v = e.getAttribute(attribute);
         var jsstyle = type + direction;
-        if (
-          e.classList.contains("cms-block") &&
-          v.charAt(v.length - 1) == "%"
-        ) {
-          v =
-            (e.parent().getBoundingClientRect().width * parseInt(v)) / 100 +
-            "px";
-        }
+        v = getCustomSize(e, v);
 
         if (
           ["Top", "Bottom"].indexOf(direction) != -1 &&
           e.classList.contains("cms-container") &&
-          findParentById(e, "cms")
+          findParentById(e, "actual_cms_wrapper")
         ) {
           v = `calc(${v} + 10px)`;
         }

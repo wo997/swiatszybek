@@ -7,7 +7,6 @@
   font-weight: 600;
   background: #fafafa;
   border-radius: 4px;
-  display: inline-block;
 }
 .navbar_admin .menu_item.current {
   color: white;
