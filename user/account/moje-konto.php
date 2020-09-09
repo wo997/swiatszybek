@@ -143,17 +143,20 @@ if (strpos($url, "resetowanie-hasla") !== false)
       xhr({
         url: "/save_user",
         params,
-        success: (res) => {
-          if (res.message) {
-            showMessageModal(res.message);
+        success: ({
+          message,
+          emails
+        }) => {
+          if (message) {
+            showMessageModal(message);
           }
 
-          if (res.emails) {
+          if (emails) {
             messageElem = $(".message-box-container");
-            addMessageBox(messageElem, `Wysłaliśmy link do zmiany adresu email na ${res.emails.new}`);
+            addMessageBox(messageElem, `Wysłaliśmy link do zmiany adresu email na ${emails.new}`);
             toggleMessageBox(messageElem, true);
             setFormData({
-              email: res.emails.old
+              email: emails.old
             }, form);
           }
         }
@@ -172,9 +175,11 @@ if (strpos($url, "resetowanie-hasla") !== false)
       xhr({
         url: "/save_user",
         params,
-        success: (res) => {
-          if (res.message) {
-            showMessageModal(res.message);
+        success: ({
+          message
+        }) => {
+          if (message) {
+            showMessageModal(message);
           }
           setFormData({
             password: "",

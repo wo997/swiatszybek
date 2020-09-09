@@ -72,20 +72,63 @@ function a($name)
     }
   </style>
   <script>
+    function register() {
+      const registerForm = $(`#registerForm`);
 
+      if (!validateForm(registerForm)) {
+        return;
+      }
+
+      const params = getFormData(registerForm);
+
+      xhr({
+        url: "/register",
+        params,
+        success: ({
+          message,
+          error_field_name
+        }) => {
+          if (message && error_field_name) {
+            markFieldWrong(registerForm.find(`[name="${error_field_name}"]`), [
+              message,
+            ]);
+          } else if (message) {
+            showMessageModal(message)
+          }
+        },
+      });
+    }
+
+    function showMessageModal(message) {
+      $("#message-modal .modal-message").innerHTML = message;
+      showModal("message-modal");
+    }
   </script>
 </head>
 
 <body>
   <?php include "global/header.php"; ?>
 
+  <div id="message-modal" data-modal>
+    <div style="
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-radius: 5px;
+      ">
+      <div class="modal-message">
+      </div>
+      <div>
+        <span class="link details-btn" style="display: none; width: 100px; margin-left: 10px;">Co dalej?</span>
+      </div>
+    </div>
+  </div>
+
   <div class="centerVerticallyMenu">
     <h1 class="h1">Rejestracja</h1>
-    <?php
-    if (isset($_POST["message"]))
-      echo $_POST["message"];
-    ?>
-    <form onsubmit="return validateForm(this)" class="paddingable" action="/register" method="post">
+    <div class="paddingable" id="registerForm" data-form>
       <div class="main-container">
         <div class="menu mobileRow" style="max-width: 700px">
           <div style="width: 50%;">
@@ -110,20 +153,16 @@ function a($name)
                 <span class="field-title">E-mail</span>
                 <input type="text" name="email" <?= a("email") ?> autocomplete="email" data-validate="email" class="field">
               </div>
-              <div class="field-title">Hasło (min. 8 znaków)</div>
               <div class="field-wrapper">
+                <div class="field-title">Hasło (min. 8 znaków)</div>
                 <input type="password" name="password" class="field" data-validate="password">
-                <i class="correct fa fa-check"></i>
-                <i class="wrong fa fa-times"></i>
               </div>
 
-              <div class="field-title">Powtórz hasło</div>
               <div class="field-wrapper">
-                <input type="password" name="password_rewrite" class="field" data-validate="password|match:form [name='password']">
-                <i class="correct fa fa-check"></i>
-                <i class="wrong fa fa-times"></i>
+                <div class="field-title">Powtórz hasło</div>
+                <input type="password" name="password_rewrite" class="field" data-validate="password|match:#registerForm [name='password']">
               </div>
-              <button type="submit" class="btn primary big fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
+              <button onclick="register()" class="btn primary big fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
                 Zarejestruj się
                 <i class="fa fa-chevron-right"></i>
               </button>
@@ -131,7 +170,7 @@ function a($name)
           </div>
         </div>
       </div>
-    </form>
+    </div>
   </div>
   <?php include "global/footer.php"; ?>
 </body>

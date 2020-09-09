@@ -271,8 +271,14 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function setValue(input, value, params = {}) {
+function setValue(input, value = null, params = {}) {
   input = $(input);
+
+  if (value === null) {
+    input.dispatchEvent(new Event("change"));
+    return;
+  }
+
   if (input.datepicker) {
     if (value && value.substr(0, 4).match(/\d{4}/)) {
       value = reverseDateString(value, "-");

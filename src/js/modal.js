@@ -33,8 +33,6 @@ function registerModalContent(html, callback) {
 function registerModal(e) {
   $("#modal-wrapper .modal-content").appendChild(e);
   e.style.display = "none";
-
-  registerSelectboxes();
 }
 
 var modalHideCallbacks = {};
