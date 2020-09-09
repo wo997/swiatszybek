@@ -10,3 +10,9 @@ function json_response($response)
 {
     die(json_encode($response));
 }
+
+function redirect($url)
+{
+    $_SESSION["redirect"] = $url;
+    json_response(["redirect" => $url]);
+}

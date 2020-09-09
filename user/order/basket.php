@@ -57,7 +57,7 @@ setBasketData($basket_string);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  require "helpers/order/get_basket_data.php"; // refresh data
+  prepareBasketData();
 
   $response = [];
 

@@ -79,10 +79,10 @@ if (isset($page_data["metadata"])) {
             if (isset($_POST["message"]))
                 echo "<div style='margin:30px auto'>" . $_POST["message"] . "</div>";
 
-            if ($url == "") {
-                if (!isset($_SESSION["redirect"]) && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "/login") === false && strpos($_SERVER["HTTP_REFERER"], "/logowanie") === false)
-                    $_SESSION["redirect"] = $_SERVER["HTTP_REFERER"]; //"/moje-konto/zamowienia";
-            }
+            // if ($url == "") {
+            //     if (!isset($_SESSION["redirect"]) && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "/login") === false && strpos($_SERVER["HTTP_REFERER"], "/logowanie") === false)
+            //         $_SESSION["redirect"] = $_SERVER["HTTP_REFERER"]; //"/moje-konto/zamowienia";
+            // }
             ?>
 
             <?= $page_content ?>

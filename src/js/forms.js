@@ -1,6 +1,12 @@
 /* js[global] */
 
-function markFieldWrong(field, errors = null) {
+window.addEventListener("DOMContentLoaded", () => {
+  $$("[data-form]").forEach((form) => {
+    registerInputs(form);
+  });
+});
+
+function showFieldErrors(field, errors = [], params = {}) {
   field = $(field);
   // look inside or above
   var field_title = field.find(".field-title");
@@ -11,7 +17,7 @@ function markFieldWrong(field, errors = null) {
     }
   }
   if (!field_title) {
-    var field_wrapper = field.findParentByClassName("field-wrapper");
+    const field_wrapper = field.findParentByClassName("field-wrapper");
     if (field_wrapper) {
       field_title = field_wrapper.find(".field-title");
     }
@@ -25,32 +31,55 @@ function markFieldWrong(field, errors = null) {
     warning.remove();
   }
 
-  if (Array.isArray(errors) && errors.length > 0) {
+  const inputElements = field.next();
+  const validationBox = inputElements.find(".validation-error-box");
+  const correctIndicator = inputElements.find(
+    ".input-error-indicator .correct"
+  );
+  const wrongIndicator = inputElements.find(".input-error-indicator .wrong");
+  const toggleErrorIcons = (isFieldCorrect) => {
+    if (isFieldCorrect) {
+      wrongIndicator.classList.remove("visible");
+      correctIndicator.classList.add("visible");
+    } else {
+      correctIndicator.classList.remove("visible");
+      wrongIndicator.classList.add("visible");
+    }
+  };
+
+  if (errors.length > 0) {
     var warning = field_title.find(".fa-exclamation-triangle");
     if (warning) {
       warning.remove();
     }
 
-    field_title.insertAdjacentHTML(
-      "beforeend",
-      `<i
-          class="fas fa-exclamation-triangle"
-          style="color: red;transform: scale(1.25);margin-left:4px"
-          data-tooltip="${errors.join("<br>")}">
-        </i>`
-    );
+    // adding error boxes instead of icons with tooltip
+    // always for non-admin route and mobile
+    if (window.IS_MOBILE || !window.location.pathname.includes("admin")) {
+      toggleErrorIcons(false);
+      validationBox.find(".message").innerHTML = errors.join("<br>");
+      expand(validationBox, true, {
+        duration: 350,
+      });
+    } else {
+      field_title.insertAdjacentHTML(
+        "beforeend",
+        `<i
+            class="fas fa-exclamation-triangle"
+            style="color: red;transform: scale(1.25);margin-left:4px"
+            data-tooltip="${errors.join("<br>")}">
+          </i>`
+      );
+    }
 
-    if (!field.classList.contains("required")) {
-      field.addEventListener("input", checkRemoveRequired);
-      field.addEventListener("change", checkRemoveRequired);
-      field.classList.add("required");
+    if (!params.noScroll) {
+      scrollToInvalid(field);
     }
   } else {
-    if (field.classList.contains("required")) {
-      field.removeEventListener("input", checkRemoveRequired);
-      field.removeEventListener("change", checkRemoveRequired);
-      field.classList.remove("required");
-    }
+    toggleErrorIcons(true);
+    expand(validationBox, false, {
+      duration: 350,
+    });
   }
 }
 
@@ -71,14 +100,8 @@ function validateForm(form, params = {}) {
     }
     if (field.findParentByClassName("hidden")) continue;
 
-    var valid = validateField(field);
-    markFieldWrong(field, valid);
+    formInputChange();
     if (valid !== true) {
-      scrollToView(field, {
-        callback: () => {
-          field.focus();
-        },
-      });
       return false;
     }
   }
@@ -118,7 +141,7 @@ function validateSize(valLen, condition, message) {
   return true;
 }
 
-function validateField(field) {
+function fieldErrors(field) {
   field = $(field);
 
   var errors = [];
@@ -132,6 +155,7 @@ function validateField(field) {
   var val = field.getValue();
   if (val === "") {
     newError("Uzupełnij to pole");
+    return errors;
   }
 
   var isList = false;
@@ -290,16 +314,13 @@ function validateField(field) {
     }
   }
 
-  if (errors.length === 0) {
-    return true;
-  }
   return errors;
 }
 
-function checkRemoveRequired() {
-  var valid = validateField(this);
-  markFieldWrong(this, valid);
-}
+// function checkRemoveRequired() {
+//   var valid = fieldErrors(this);
+//   showFieldErrors(this, valid);
+// }
 
 function clearValidateRequired() {
   removeClasses("required");
@@ -372,4 +393,101 @@ function getFormData(form) {
       data[e.getAttribute("name")] = getValue(e);
     });
   return data;
+}
+
+function addMessageBox(elem, message, params = {}) {
+  elem = $(elem);
+  const type = nonull(params.type, "info");
+  const show = nonull(params.show, true);
+  const inline = nonull(params.inline, false);
+
+  const types = {
+    // default type
+    info: {
+      className: "",
+      icon: "<i class='fas fa-info-circle'></i>",
+    },
+    warning: {
+      className: "warning",
+      icon: "<i class='fas fa-exclamation-circle'></i>",
+    },
+  };
+
+  let selector = "";
+  elem.classList.forEach((elem) => {
+    selector += "." + elem;
+  });
+
+  elem.innerHTML = `
+    <div class="message-box expand_y hidden animate_hidden">
+      <div class="message-container ${types[type].className} ${
+    inline ? "inline" : ""
+  }"
+      >
+        ${types[type].icon}
+        <span style="margin: 0 10px;">
+          ${message}
+        </span>
+        <i class="fas fa-times btn" onclick="toggleMessageBox($('${selector}'), false)"></i>  
+      </div>
+    </div>
+      `;
+
+  if (show) {
+    toggleMessageBox(elem, true);
+  }
+}
+
+function toggleMessageBox(elem, show = null, instant = false) {
+  elem = $(elem);
+  expand(elem.find(".message-box"), show, {
+    duration: instant ? 0 : 350,
+  });
+}
+
+function scrollToInvalid(field) {
+  scrollToView(field, {
+    callback: () => {
+      field.focus();
+    },
+  });
+}
+
+function registerInputs(form) {
+  form
+    .findAll("[data-validate]:not([data-change-registered])")
+    .forEach((elem) => {
+      elem.setAttribute("data-change-registered", "");
+
+      elem.addEventListener("change", () => {
+        formInputChange(elem);
+
+        if (!elem.hasAttribute("data-input-registered")) {
+          elem.setAttribute("data-input-registered", "");
+          elem.addEventListener("input", () => {
+            formInputChange(elem);
+          });
+        }
+      });
+
+      elem.insertAdjacentHTML(
+        "afterend",
+        `
+        <div class="input-elements">
+          <div class="input-error-indicator">
+            <i class="correct fa fa-check"></i>
+            <i class="wrong fa fa-times"></i>
+          </div>
+          <div class="validation-error-box expand_y hidden animate_hidden">
+           <div class="message"></div>
+          </div>
+        </div>
+      `
+      );
+    });
+}
+
+function formInputChange(field) {
+  const errors = fieldErrors(field);
+  showFieldErrors(field, errors);
 }

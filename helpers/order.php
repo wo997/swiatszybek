@@ -100,7 +100,7 @@ function validateBasket()
     }
 }
 
-function getBasketData()
+function prepareBasketData()
 {
     global $app;
 
@@ -165,7 +165,7 @@ function validateStock()
 {
     global $app;
 
-    getBasketData();
+    prepareBasketData();
 
     try {
         $fail = false;

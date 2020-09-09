@@ -37,3 +37,26 @@ function onSignIn(googleUser) {
   form.id_token.value = id_token;
   form.submit();
 }
+
+// requires login_form included
+function login() {
+  const zalogujForm = $(`#loginForm`);
+
+  if (!validateForm(zalogujForm)) {
+    return;
+  }
+
+  const params = getFormData(zalogujForm);
+
+  xhr({
+    url: "/login",
+    params,
+    success: ({ message, error_field_name }) => {
+      if (message && error_field_name) {
+        markFieldWrong(zalogujForm.find(`[name="${error_field_name}"]`), [
+          message,
+        ]);
+      }
+    },
+  });
+}

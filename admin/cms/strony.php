@@ -27,23 +27,20 @@
                 {
                     title: "Tytuł",
                     width: "20%",
-                    render: (r) => {
-                        return r.title
-                    },
+                    field: "title",
+                    searchable: "text",
                 },
                 {
                     title: "Tytuł SEO",
                     width: "20%",
-                    render: (r) => {
-                        return r.seo_title
-                    },
+                    field: "seo_title",
+                    searchable: "text",
                 },
                 {
                     title: "Opis SEO",
                     width: "20%",
-                    render: (r) => {
-                        return r.seo_description;
-                    },
+                    field: "seo_description",
+                    searchable: "text",
                 },
                 getPublishedDefinition(),
                 {

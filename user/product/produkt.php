@@ -1,7 +1,5 @@
 <?php //route[produkt]
 
-$_SESSION["redirect"] = "/" . $url;
-
 function run()
 {
   header("Location: /");
@@ -65,7 +63,6 @@ $seo_title = $product_data["seo_title"];
 
 $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 ?>
-
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -528,6 +525,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     });
 
     function userBasketUpdated() {
+
       for (basket_item of user_basket) {
         var variant = variants.find(v => {
           return v.variant_id == basket_item.variant_id
@@ -583,8 +581,6 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         user_basket = json.basket;
         userBasketUpdated();
 
-        user_basket = json.basket;
-
         youAlreadyHaveIt(variant_id);
 
         var variant = variants.find(v => {
@@ -599,6 +595,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     var variant_to_image = [];
     var variants = <?= json_encode($variants) ?>;
     var user_basket = <?= $_SESSION["basket"] ?>;
+    console.log(user_basket);
 
     var VARIANT_ID = null;
 

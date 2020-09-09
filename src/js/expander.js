@@ -89,6 +89,10 @@ function expand(elem, show = null, options = {}) {
         elem.classList.add("animate_hidden");
       }
       elem.classList.remove("animating");
+
+      if (options.callback) {
+        options.callback();
+      }
     }
   );
 

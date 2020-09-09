@@ -7,9 +7,9 @@ if (!isset($_POST['id_token']) || strlen($_POST['id_token']) < 10) {
   die;
 }
 
-if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
-  $_SESSION["redirect"] = "/zakup";
-}
+// if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
+//   $_SESSION["redirect"] = "/zakup";
+// }
 
 $id_token = $_POST['id_token'];
 

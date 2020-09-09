@@ -216,7 +216,7 @@ function createTable($table, $columns)
  * - previous_name (rename old field)
  * - null (boolean, default false - no nulls allowed)
  * - default / default_string (f.e 0)
- * - primary: bool
+ * - index: [primary, unique]
  * - increment: bool
  *
  * @param  string $table

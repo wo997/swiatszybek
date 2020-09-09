@@ -1,0 +1,54 @@
+/* css[global] */
+
+.input-elements .input-error-indicator {
+  position: relative;
+  height: 0;
+  width: 100%;
+  display: block;
+}
+.input-elements .input-error-indicator .correct,
+.input-elements .input-error-indicator .wrong {
+  position: absolute;
+  pointer-events: none;
+  right: 8px;
+  top: -29px;
+  width: 15px;
+  text-align: center;
+  opacity: 0;
+  transition: 0.2s opacity;
+}
+.input-elements .input-error-indicator .correct.visible,
+.input-elements .input-error-indicator .wrong.visible {
+  opacity: 1;
+}
+.input-elements .input-error-indicator .correct {
+  color: #0d0b;
+}
+.input-elements .input-error-indicator .wrong {
+  color: #d00b;
+}
+.input-elements .validation-error-box {
+  color: red;
+  padding-top: 0.2em;
+}
+
+.field-wrapper {
+  position: relative;
+}
+
+.field.required {
+  border-color: red !important;
+  -webkit-box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
+  -moz-box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
+  box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
+}
+
+.simple-list[data-count="0"].required > .add_btn.add_begin {
+  background: #d33;
+}
+
+img.required {
+  -webkit-box-shadow: 0px 0px 0px 2px rgba(255, 0, 0, 1);
+  -moz-box-shadow: 0px 0px 0px 2px rgba(255, 0, 0, 1);
+  box-shadow: 0px 0px 0px 2px rgba(255, 0, 0, 1);
+}
