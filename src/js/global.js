@@ -7,14 +7,17 @@ function xhr(data) {
   xhr.open("POST", data.url, true);
   xhr.setRequestHeader("enctype", "multipart/form-data");
   xhr.onload = function () {
+    var res = xhr.responseText;
+    data.type = nonull(data.type, "json");
+    if (data.type == "json") {
+      try {
+        res = JSON.parse(res);
+      } catch {}
+    }
+    if (res.redirect) {
+      window.location = res.redirect;
+    }
     if (data.success) {
-      var res = xhr.responseText;
-      data.type = nonull(data.type, "json");
-      if (data.type == "json") {
-        try {
-          res = JSON.parse(res);
-        } catch {}
-      }
       data.success(res);
     }
   };

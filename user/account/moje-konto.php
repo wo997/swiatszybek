@@ -125,8 +125,9 @@ if (strpos($url, "resetowanie-hasla") !== false)
       });
 
       if (emailRequest) {
-        addMessageBox($(".message-box-container"), `Wysłaliśmy link do zmiany adresu email na ${emailRequest}`);
-        toggleMessageBox(true, true);
+        messageElem = $(".message-box-container");
+        addMessageBox(messageElem, `Wysłaliśmy link do zmiany adresu email na ${emailRequest}`);
+        toggleMessageBox(messageElem, true, true);
       }
     });
 
@@ -148,8 +149,9 @@ if (strpos($url, "resetowanie-hasla") !== false)
           }
 
           if (res.emails) {
-            addMessageBox($(".message-box-container"), `Wysłaliśmy link do zmiany adresu email na ${res.emails.new}`);
-            toggleMessageBox(true);
+            messageElem = $(".message-box-container");
+            addMessageBox(messageElem, `Wysłaliśmy link do zmiany adresu email na ${res.emails.new}`);
+            toggleMessageBox(messageElem, true);
             setFormData({
               email: res.emails.old
             }, form);
@@ -179,27 +181,6 @@ if (strpos($url, "resetowanie-hasla") !== false)
             password_rewrite: ""
           }, form);
         }
-      });
-    }
-
-
-    function addMessageBox(elem, message) {
-      elem.innerHTML = `
-      <div class="message-box expand_y hidden animate_hidden">
-        <div class="message-container">
-            <i class="fas fa-info-circle"></i>
-            <span style="margin: 0 10px;">
-              ${message}
-            </span>
-            <i class="fas fa-times btn" onclick="toggleMessageBox(false)"></i>
-          </div>
-        </div>
-          `;
-    }
-
-    function toggleMessageBox(show = null, instant = false) {
-      expand($(".message-box"), show, {
-        duration: instant ? 0 : 350
       });
     }
 
@@ -263,8 +244,6 @@ if (strpos($url, "resetowanie-hasla") !== false)
         </a>
       </div>
 
-      <div class="message-box-container"></div>
-
       <div style="padding: 15px 5px">
         <div id="menu1" class="menu mobileRow <?php if ($menu == "zamowienia") echo "showNow"; ?>" style="<?php if ($menu != "zamowienia") echo 'display:none;'; ?>">
           <div style="text-align:center;margin:30px auto">
@@ -314,6 +293,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
         <div id="menu2" class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
           <div style="width:100%;">
+            <div class="message-box-container"></div>
             <div class="mobileRow" style="max-width: 820px;margin: 0 auto;">
               <div style="width: 50%; padding:10px">
                 <div style="width:100%;margin:auto;max-width:350px">

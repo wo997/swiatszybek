@@ -468,6 +468,9 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       window.form = $("#zakupForm");
+      window.form.findAll("[name]").forEach(input => {
+        window.form[input.name] = input;
+      });
 
       ignoreValueChanges = true;
       setFormData(<?= json_encode($zamowienie_data) ?>, window.form);
@@ -593,7 +596,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
     var currentMenu = 1;
     var wait = false;
 
-    function showMenu(i, scroll) {
+    function showMenu(i, scroll, ignoreForm = false) {
       if (i - currentMenu > 1) {
         i = +currentMenu + 1;
       }
@@ -602,13 +605,15 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       }
 
       <?php if ($app["user"]["id"]) { ?>
-        if (i == 2) i = 2 * i - currentMenu;
+        // if (i == 2) i = 2 * i - currentMenu;
       <?php } ?>
 
 
       if (wait || currentMenu == i) return;
 
-      if (i > currentMenu && isFormValid() == false) return;
+      if (!ignoreForm) {
+        if (i > currentMenu && isFormValid() == false) return;
+      }
 
       var wasMenu = currentMenu;
       currentMenu = i;
@@ -893,6 +898,21 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       var t = $("#total-cost");
       t.innerHTML = (RABAT_TYPE == "static" ? (BASKET_COST - RABAT) : Math.round(BASKET_COST * (1 - 0.01 * RABAT))) + DELIVERY_COST;
     }
+
+    function confirmOrder() {
+      const zakupForm = $(`#zakupForm`);
+
+      if (!isFormValid(zakupForm)) {
+        return;
+      }
+
+      const params = getFormData(zakupForm);
+
+      xhr({
+        url: "/potwierdz_zamowienie",
+        params,
+      });
+    }
   </script>
 </head>
 
@@ -907,11 +927,6 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
     <div id="easypack-map"></div>
   </div>
 
-  <form action="/login" method="post" style="display:none" id="zaloguj">
-    <input type="text" name="email">
-    <input type="password" name="password">
-  </form>
-
   <div class="progress-bar-wrapper hideifempty">
     <div class="progress-bar">
       <div class="progress-item current" data-id="1">
@@ -922,21 +937,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         </span>
       </div>
 
-      <?php if (!$app["user"]["id"]) : ?>
-
-        <div class="progress-item" data-id="2">
-          <span class="progress-count"><?= ++$progressBarCounter ?></span>
-          <span class="progress-title">
-            <i class="far fa-user" style="font-size: 24px"></i>
-            <span>
-              Wybór konta
-            </span>
-          </span>
-        </div>
-
-      <?php endif ?>
-
-      <div class="progress-item" data-id="3">
+      <div class="progress-item" data-id="2">
         <span class="progress-count"><?= ++$progressBarCounter ?></span>
         <span class="progress-title">
           <img src="/img/courier.png" style="width:36px">
@@ -946,7 +947,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         </span>
       </div>
 
-      <div class="progress-item" data-id="4">
+      <div class="progress-item" data-id="3">
         <span class="progress-count"><?= ++$progressBarCounter ?></span>
         <span class="progress-title">
           <i class="far fa-check-square" style="font-size: 24px"></i>
@@ -956,7 +957,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
     </div>
   </div>
 
-  <form class="main-container" action="/potwierdz_zamowienie" method="post" id="zakupForm" style="margin-bottom: 50px;width: 100%;" onsubmit="return isFormValid()">
+  <div class="main-container" id="zakupForm" style="margin-bottom: 50px;width: 100%;">
 
     <div id="menu1" class="menu showNow" style="max-width: 1000px;">
       <div style="margin: auto;width:100%;padding: 20px 10px;">
@@ -969,7 +970,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
         <div class="zamowienie adjustable-list"><?= $res ?></div>
 
-        <div style="margin-top: 30px;text-align:center">
+        <div style="margin-top: 30px;">
           <div style="margin-top: 13px;text-align: right;padding: 5px;" class="hideifempty mobileTextCenter">
             <span style="display:inline-block;font-size: 18px;padding: 0 3px;">Wartość koszyka:</span>
             <span style="display:inline-block;font-size: 20px;" class="pln"><span class="total"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</span>
@@ -978,61 +979,67 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
             <p style='font-weight:normal;margin:0;font-size: 1.1em'>Czas realizacji: <span class="pln">24h</span></p>
           </div>
-          <div style="margin:10px 0;text-align:center">
-            <!--<a style="display:inline-block;border-bottom: 1px solid #666;color:#666;font-style:italic" href="/koszyk">Chcesz zmienić zawartość koszyka?</a>-->
-          </div>
 
-          <div class="sameButtons" style="margin-top: 40px;text-align:right;">
-            <button class="btn primary big" type="button" onclick="showMenu(2)" style="margin-top: 30px;width:200px; display:inline-block;">
-              Złóż zamówienie
-              <i class="fa fa-chevron-right"></i>
-            </button>
+          <div style="display: flex; justify-content: center; margin-top: 35px;">
+            <?php if (!$app["user"]["id"]) : ?>
+              <div style="display: flex; flex-direction:column; align-items: flex-end; width: 50%; margin-right: 10px;">
+                <button class="btn primary big" onclick="this.style.display = 'none'; expand($('#menu1 .login-container'), true, {duration: 350})" style="width: 228px;">Zaloguj się <i class="fa fa-user"></i></button>
+                <div class="login-container expand_y hidden animate_hidden" style="width: 350px; max-width: 100%;">
+                  <?php include "user/account/login_form.php"; ?>
+                  <div style="margin:25px 0 15px;line-height: 1.6;color: #333;">
+                    <strong>Zalety korzystania z konta <?= config('main_email_sender') ?>:</strong>
+                    <div>- Możliwość przeglądania swoich zamówień</div>
+                    <div>- Zapisanie danych osobowych oraz adresu do przyszłych zamówień</div>
+                  </div>
+                </div>
+              </div>
+            <?php endif ?>
+            <div class="sameButtons" <?= !$app["user"]["id"] ? "style='width: 50%; margin-left: 10px;'" : '' ?>>
+              <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> big" onclick="showMenu(2, undefined, true)">
+                <?php
+                if ($app["user"]["id"]) {
+                  echo "Złóż zamówienie";
+                } else {
+                  echo "Zakupy bez rejestracji";
+                }
+                ?>
+                <i class="fa fa-chevron-right"></i>
+              </button>
+            </div>
           </div>
+          <!-- <div style="margin:10px 0;text-align:center">
+            <a style="display:inline-block;border-bottom: 1px solid #666;color:#666;font-style:italic" href="/koszyk">Chcesz zmienić zawartość koszyka?</a>
+          </div> -->
+
+
         </div>
       </div>
     </div>
 
-    <div id="menu2" class="menu mobileRow" style="max-width: 1000px;display:none;">
+    <!-- <div id="menu2" class="menu mobileRow" style="max-width: 1000px;display:none;">
       <div style="padding:10px">
         <div class="mobileRow" style="margin-top: 20px">
           <div style="width: 50%; margin-top:15px">
             <div style="width:100%;margin:auto;max-width:300px">
-              <h2 style="text-align:center">Mam konto</h2>
-              <?php
-              if (isset($_POST["message"]))
-                echo "<div style='text-align:center; padding: 5px'><h3 style='color: #c44;display: inline-block;border: 1px solid #c44;padding: 7px;margin: 0 auto;border-radius: 5px;'>{$_POST["message"]}</h3></div>";
-              ?>
-              <div class="field-title">E-mail</div>
-              <input type="text" class="field" autocomplete="username" onchange="$('#zaloguj').email.value = this.value">
-              <div class="field-title">Hasło</div>
-              <input type="password" class="field" autocomplete="password" onchange="$('#zaloguj').password.value = this.value">
-              <button class="btn primary big fill" type="button" style="margin:10px 0; width: 100%" onclick="$('#zaloguj').submit()">
-                Zaloguj się
-                <i class="fa fa-chevron-right"></i>
-              </button>
-
-              <div style="text-align: center;margin-top: 5px;">lub</div>
-              <div class="g-signin2" data-onsuccess="onSignIn"></div>
-
-              <?= $fb_login_btn ?>
+              <?php include "user/account/login_form.php"; ?>
             </div>
           </div>
           <div style="width: 50%;margin-top: 15px">
             <div style="width:100%;margin:auto;max-width:300px">
-              <h2 style="text-align:center">Nie mam konta</h2>
-              <a href="/rejestracja/zakup" class="btn primary big fill" style="margin-top:20px">
+              <h1 class="h1">Bez rejestracji</h1> -->
+    <!-- <a href="/rejestracja/zakup" class="btn primary big fill" style="margin-top:20px">
                 Zarejestruj się
                 <i class="fa fa-user-plus"></i>
               </a>
               <div style="margin: 15px 0 0;background: #ccc;height: 1px;width: 100%;"></div>
-              <div style="margin: -10px auto 15px;height:10px;background-color:white;width:50px;text-align:center;font-size: 15px;color: #333;">lub</div>
-              <button class="btn primary big fill" type="button" onclick="showMenu(3)">
-                Zakupy bez rejestracji
+              <div style="margin: -10px auto 15px;height:10px;background-color:white;width:50px;text-align:center;font-size: 15px;color: #333;">lub</div> -->
+    <!-- <button class="btn secondary big fill" type="button" onclick="showMenu(3)">
+                Dalej
                 <i class="fa fa-chevron-right"></i>
               </button>
               <div style="margin:25px 0 15px;line-height: 1.6;color: #333;">
                 <b>Zalety korzystania z konta <?= config('main_email_sender') ?>:</b>
-                <div>- Możliwość przeglądania Twoich zamówień</div>
+                <div>- Możliwość przeglądania swoich zamówień</div>
                 <div style="display:flex;line-height: 1.3;">
                   <div style='margin-right:3px'>-</div>
                   <div>Zapisanie danych osobowych oraz adresu do przyszłych zamówień</div>
@@ -1049,9 +1056,9 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div id="menu3" class="menu" style="max-width: 1200px; display:none">
+    <div id="menu2" class="menu" style="max-width: 1200px; display:none">
       <div class="mobileRow">
         <div style="width:100%;padding: 20px 10px;">
           <div style="max-width: 550px;margin: 0 auto;">
@@ -1228,18 +1235,18 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
 
       <div class="sameButtons" style="padding: 10px;display: flex;justify-content: space-between;max-width: 1170px;margin: 0 auto;width: 100%;">
-        <button class="btn primary big desktopSpaceRight btn secondary" type="button" onclick="showMenu(2)" style="margin-top: 30px; display:inline-block;width:220px">
+        <button class="btn primary big desktopSpaceRight btn secondary" type="button" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>
-        <button class="btn primary big" type="button" onclick="showMenu(4)" style="margin-top: 30px; display:inline-block;width:220px">
+        <button class="btn primary big" type="button" onclick="showMenu(3)" style="margin-top: 30px; display:inline-block;width:220px">
           Dalej
           <i class="fa fa-chevron-right"></i>
         </button>
       </div>
     </div>
 
-    <div id="menu4" class="menu mobileRow podsumowanie" style="max-width: 1100px; display:none;padding:20px 0">
+    <div id="menu3" class="menu mobileRow podsumowanie" style="max-width: 1100px; display:none;padding:20px 0">
       <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;">Podsumowanie</h3>
       <div class="mobileRow">
 
@@ -1332,11 +1339,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
                 <div id="payment-request-button"></div>
               </div>-->
 
-            <!-- <button type="submit" class="btn primary big" style="margin-top: 10px;width: 260px;margin-left:auto">
-              <span id="submit_text">ZAMAWIAM I PŁACĘ</span>
-              <i class="fa fa-chevron-right"></i>
-            </button> -->
-            <button onclick="" class="btn primary big" style="margin-top: 10px;width: 260px;margin-left:auto">
+            <button onclick="confirmOrder()" class="btn primary big" style="margin-top: 10px;width: 260px;margin-left:auto">
               <span id="submit_text">ZAMAWIAM I PŁACĘ</span>
               <i class="fa fa-chevron-right"></i>
             </button>
@@ -1346,7 +1349,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
       </div>
 
       <div class="sameButtons" style="padding: 10px">
-        <button class="btn secondary big pullHigherDesktop" type="button" onclick="showMenu(3)" style="display:inline-block;width:170px">
+        <button class="btn secondary big pullHigherDesktop" type="button" onclick="showMenu(2)" style="display:inline-block;width:170px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>
@@ -1354,7 +1357,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
     </div>
 
-  </form>
+  </div>
   <?php include "global/footer.php"; ?>
 </body>
 

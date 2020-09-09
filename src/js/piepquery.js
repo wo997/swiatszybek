@@ -5,7 +5,7 @@ function $(node, parent = null) {
   if (node.find) return node; // already initialized
 
   if (parent === null) {
-    parent = document;
+    parent = document.body;
   }
 
   // query selector or html node

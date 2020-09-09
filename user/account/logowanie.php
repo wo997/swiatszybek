@@ -96,50 +96,14 @@ if ($app["user"]["id"]) {
 <body>
   <?php include "global/header.php"; ?>
   <div class="main-container centerVerticallyMenu">
-    <form action="/login" method="post" class="paddingable" style="margin:auto;max-width:350px">
-      <h1 class="h1">Logowanie</h1>
+    <div class="paddingable" style="margin:auto;max-width:350px">
       <?php
-      if (isset($_POST["message"]))
-        echo $_POST["message"];
-
-      if (!isset($_SESSION["redirect"]) && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "/login") === false && strpos($_SERVER["HTTP_REFERER"], "/logowanie") === false)
-        $_SESSION["redirect"] = $_SERVER["HTTP_REFERER"]; //"/moje-konto/zamowienia";
+      // if (!isset($_SESSION["redirect"]) && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "/login") === false && strpos($_SERVER["HTTP_REFERER"], "/logowanie") === false)
+      //   $_SESSION["redirect"] = $_SERVER["HTTP_REFERER"]; //"/moje-konto/zamowienia";
       ?>
-      <div class="field-title">E-mail</div>
-      <input class="field" type="text" autocomplete="username" name="email">
+      <?php include "user/account/login_form.php"; ?>
 
-      <div class="field-title">Hasło</div>
-      <input class="field" type="password" autocomplete="password" name="password">
-
-      <div style="margin-top:10px;text-align:center">
-        <label class="checkbox-wrapper">
-          <input type="checkbox" name="remember_me" value="1">
-          <div class="checkbox"></div>
-          Zapamiętaj mnie
-        </label>
-      </div>
-
-      <button class="btn primary big" style="margin:10px 0; width: 100%">
-        Zaloguj się
-        <i class="fa fa-chevron-right"></i>
-      </button>
-
-      <div style="text-align: center; padding: 10px 0">
-        <a href="/rejestracja" class="btn buff subtle">
-          Zarejestruj się <i class="fa fa-user-plus"></i>
-        </a>
-        <div style="height: 10px;"></div>
-        <a href="/resetowanie-hasla" class="btn buff subtle">
-          Zresetuj hasło <i class="fa fa-lock-open"></i>
-        </a>
-      </div>
-
-      <div style="text-align: center;">lub</div>
-      <div class="g-signin2" data-onsuccess="onSignIn"></div>
-
-      <?= $fb_login_btn ?>
-
-    </form>
+    </div>
   </div>
   <?php include "global/footer.php"; ?>
 </body>

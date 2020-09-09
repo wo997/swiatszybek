@@ -11,7 +11,7 @@ function markFieldWrong(field, errors = null) {
     }
   }
   if (!field_title) {
-    var field_wrapper = field.findParentByClassName("field-wrapper");
+    const field_wrapper = field.findParentByClassName("field-wrapper");
     if (field_wrapper) {
       field_title = field_wrapper.find(".field-title");
     }
@@ -31,14 +31,34 @@ function markFieldWrong(field, errors = null) {
       warning.remove();
     }
 
-    field_title.insertAdjacentHTML(
-      "beforeend",
-      `<i
-          class="fas fa-exclamation-triangle"
-          style="color: red;transform: scale(1.25);margin-left:4px"
-          data-tooltip="${errors.join("<br>")}">
-        </i>`
-    );
+    // adding error boxes instead of icons with tooltip
+    // always for non-admin route and mobile
+    if (window.IS_MOBILE || !window.location.pathname.includes("admin")) {
+      if (!field.next().classList.contains("validation-error-box")) {
+        field.insertAdjacentHTML(
+          "afterend",
+          `<div class="validation-error-box expand_y hidden animate_hidden">
+            <div class="message" style="color: red; margin-top: .2em;">
+              ${errors.join("<br>")}
+            </div>
+          </div>`
+        );
+        expand(field.next(), true, {
+          duration: 350,
+        });
+      } else {
+        field.next().find(".message").innerHTML = errors.join("<br>");
+      }
+    } else {
+      field_title.insertAdjacentHTML(
+        "beforeend",
+        `<i
+            class="fas fa-exclamation-triangle"
+            style="color: red;transform: scale(1.25);margin-left:4px"
+            data-tooltip="${errors.join("<br>")}">
+          </i>`
+      );
+    }
 
     if (!field.classList.contains("required")) {
       field.addEventListener("input", checkRemoveRequired);
@@ -50,6 +70,16 @@ function markFieldWrong(field, errors = null) {
       field.removeEventListener("input", checkRemoveRequired);
       field.removeEventListener("change", checkRemoveRequired);
       field.classList.remove("required");
+    }
+
+    const fieldNext = field.next();
+    if (fieldNext && fieldNext.classList.contains("validation-error-box")) {
+      expand(field.next(), false, {
+        duration: 350,
+        callback: () => {
+          fieldNext.remove();
+        },
+      });
     }
   }
 }
@@ -132,6 +162,7 @@ function validateField(field) {
   var val = field.getValue();
   if (val === "") {
     newError("Uzupełnij to pole");
+    return errors;
   }
 
   var isList = false;
@@ -372,4 +403,54 @@ function getFormData(form) {
       data[e.getAttribute("name")] = getValue(e);
     });
   return data;
+}
+
+function addMessageBox(elem, message, params = {}) {
+  elem = $(elem);
+  const type = nonull(params.type, "info");
+  const show = nonull(params.show, true);
+  const inline = nonull(params.inline, false);
+
+  const types = {
+    // default type
+    info: {
+      className: "",
+      icon: "<i class='fas fa-info-circle'></i>",
+    },
+    warning: {
+      className: "warning",
+      icon: "<i class='fas fa-exclamation-circle'></i>",
+    },
+  };
+
+  let selector = "";
+  elem.classList.forEach((elem) => {
+    selector += "." + elem;
+  });
+
+  elem.innerHTML = `
+    <div class="message-box expand_y hidden animate_hidden">
+      <div class="message-container ${types[type].className} ${
+    inline ? "inline" : ""
+  }"
+      >
+        ${types[type].icon}
+        <span style="margin: 0 10px;">
+          ${message}
+        </span>
+        <i class="fas fa-times btn" onclick="toggleMessageBox($('${selector}'), false)"></i>  
+      </div>
+    </div>
+      `;
+
+  if (show) {
+    toggleMessageBox(elem, true);
+  }
+}
+
+function toggleMessageBox(elem, show = null, instant = false) {
+  elem = $(elem);
+  expand(elem.find(".message-box"), show, {
+    duration: instant ? 0 : 350,
+  });
 }

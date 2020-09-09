@@ -3071,11 +3071,21 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   background: #efe;
   padding: 10px;
 }
-
 .message-container .fa-times {
   margin: -5px;
   padding: 5px;
   display: inline-block;
+}
+.message-container.warning {
+  color: #f25151;
+  border: 1px solid #f25151;
+  background: #fee;
+}
+.message-container.inline {
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .footer-fill {
