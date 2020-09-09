@@ -34,7 +34,9 @@ function getCMSPageHTML($content)
 
     $links = $html->find("[data-href]");
     foreach ($links as $link) {
-      $link->outertext = "<a href=" . $link->attr["data-href"] . ">" . $link->outertext . "</a>";
+      $href = $link->attr["data-href"];
+      $link->removeAttribute("src");
+      $link->outertext = "<a href=" . $href  . ">" . $link->outertext . "</a>";
     }
 
     $ytvideos = $html->find("img.ql-video");

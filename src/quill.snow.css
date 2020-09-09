@@ -104,7 +104,6 @@ break-line {
 }
 
 .ql-video {
-  margin: auto;
   width: 1000px;
 }
 
@@ -797,7 +796,7 @@ table.quill-better-table {
   font-family: monospace;
 }
 .ql-editor .ql-video {
-  display: block;
+  display: inline-block;
   max-width: 100%;
 }
 .ql-editor .ql-video.ql-align-center {

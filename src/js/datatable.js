@@ -30,6 +30,21 @@ function createDatatable(datatable) {
   datatable.target.setAttribute("data-datatable-name", datatable.name);
 
   if (datatable.selectable) {
+    datatable.definition = [
+      {
+        title: `<span class='selected-results-count'>0</span>`,
+        width: "36px",
+        render: (r) => {
+          return ``;
+        },
+      },
+      ...datatable.definition,
+    ];
+
+    datatable.bulkEditChange = () => {
+      console.log(123);
+    };
+
     datatable.selection = [];
     datatable.singleselect = datatable.selectable.singleselect;
     if (datatable.selectable.has_metadata) {
@@ -179,19 +194,20 @@ function createDatatable(datatable) {
                 datatable.rowCount == 50 ? "selected" : ""
               }>50</option>
           </select>
-          <span class="big space-right no-space-mobile">&nbsp;&nbsp;na stronę</span>
+          <span class="big space-right no-space-mobile na-strone">&nbsp;&nbsp;na stronę</span>
           <div class="pagination"></div>
         </div>
         <div style='flex-grow:1'></div>
+        <div class="btn subtle space-right clear-filters-btn hidden" data-tooltip="Wyczyść wszystkie filtry" onclick="${
+          datatable.name
+        }.clearFilters()">
+          <img src="/src/img/clear-filters.png" style="width: 25px;margin: -7px;">
+        </div>
         ${nonull(datatable.controlsRight)}
       </div>`;
 
   var headersHTML = "<tr>";
   var columnStyles = [];
-
-  if (datatable.selectable) {
-    headersHTML += `<th style="width:35px"></th>`;
-  }
 
   var sumWidthPercentages = 0;
   for (def of datatable.definition) {
@@ -262,7 +278,7 @@ function createDatatable(datatable) {
               ? datatable.selectable.output
               : datatable.primary
           }" ${datatable.selectable.validate ? `data-validate` : ""}>
-          <div class="table-search-wrapper ${
+          <div class="has_selected_rows table-search-wrapper ${
             datatable.selectable ? `expand_y hidden animate_hidden` : ""
           }">
             <div class="table-search-container">
@@ -274,29 +290,43 @@ function createDatatable(datatable) {
           </div>
         `
     );
+
+    datatable.target
+      .find(".selected_rows .datatable")
+      .insertAdjacentHTML(
+        "afterend",
+        `<div class="no-results">Brak powiązanych ${datatable.lang.subject}</div>`
+      );
   } else {
     datatable.target.insertAdjacentHTML(
       "afterbegin",
       `<div class="table-search-wrapper">${above_table_html}${table_html}${below_table_html}</div>`
     );
   }
-
-  if (datatable.onCreate) datatable.onCreate();
+  datatable.target
+    .find(".table-search-wrapper .datatable")
+    .insertAdjacentHTML(
+      "afterend",
+      `<div class="no-results">Brak ${datatable.lang.subject}</div>`
+    );
 
   datatable.searchElement = datatable.target.find(".search-wrapper");
   datatable.tableSearchElement = datatable.target.find(".table-search-wrapper");
+  datatable.tableSelectionElement = datatable.target.find(".selected_rows");
   datatable.tableBodyElement = datatable.tableSearchElement.find("tbody");
   datatable.totalRowsElement = datatable.target.find(".total-rows");
   datatable.paginationElement = datatable.target.find(".pagination");
   datatable.paginationBottomElement = datatable.target.find(
     ".pagination-bottom"
   );
-  datatable.selectionBodyElement = datatable.target.find(
-    ".selected_rows tbody"
-  );
+  datatable.selectionBodyElement = datatable.tableSelectionElement
+    ? datatable.tableSelectionElement.find("tbody")
+    : null;
   datatable.selectionValueElement = datatable.target.find(
     ".table-selection-value"
   );
+
+  if (datatable.onCreate) datatable.onCreate();
 
   if (datatable.tree_view) {
     datatable.breadcrumbElement = datatable.target.find(".breadcrumb");
@@ -424,6 +454,12 @@ function createDatatable(datatable) {
     });
   });
 
+  datatable.clearFilters = () => {
+    datatable.filters = [];
+    clearTableSorting(datatable);
+    datatable.search();
+  };
+
   datatable.search = (callback = null, createList = false) => {
     clearTimeout(datatable.awaitId);
 
@@ -536,6 +572,12 @@ function createDatatable(datatable) {
           datatable.pageCount = res.pageCount;
           datatable.results = res.results;
         }
+
+        var e = datatable.tableSearchElement.find(".no-results");
+        if (e) {
+          e.style.display = res.results.length !== 0 ? "none" : "";
+        }
+
         var output = "";
 
         output = "";
@@ -551,18 +593,20 @@ function createDatatable(datatable) {
             var cell = datatable.renderRow(row, i);
             output += `<td>${cell}</td>`;
           } else {
-            if (datatable.selectable) {
-              if (createList) {
-                output += `<td style="width:33px"> <i class="fas fa-minus-circle" onclick="${
-                  datatable.name
-                }.removeRow(${row[datatable.primary]})"></i> </td>`;
-              } else {
-                output += `<td style="width:33px"> <i class="fas fa-plus-circle" onclick="${
-                  datatable.name
-                }.addRow(${row[datatable.primary]})"></i> </td>`;
-              }
-            }
             for (x = 0; x < datatable.definition.length; x++) {
+              if (datatable.selectable && x === 0) {
+                if (createList) {
+                  output += `<td style="width:33px;text-align:center"> <i class="fas fa-minus-circle" onclick="${
+                    datatable.name
+                  }.removeRow(${row[datatable.primary]})"></i> </td>`;
+                } else {
+                  output += `<td style="width:33px;text-align:center"> <i class="fas fa-plus-circle" onclick="${
+                    datatable.name
+                  }.addRow(${row[datatable.primary]})"></i> </td>`;
+                }
+                continue;
+              }
+
               var definition = datatable.definition[x];
               var cell_html = "";
               if (definition.render) {
@@ -581,16 +625,6 @@ function createDatatable(datatable) {
           }
           output += "</tr>";
         }
-
-        output += `<tr><td class="no-results" colspan="${
-          datatable.definition.length + (datatable.selectable ? 1 : 0)
-        }" style="${res.results.length !== 0 ? "display:none" : ""}">
-            Brak ${createList ? "powiązanych " : ""}${
-          datatable.lang.subject
-        } <i class="btn secondary fas fa-sync-alt" onclick='${
-          datatable.name
-        }.search()' style="width: 24px;height: 24px;display: inline-flex;justify-content: center;align-items: center;"></i>
-          </td></tr>`;
 
         if (createList) {
           datatable.selectionBodyElement.setContent(output);
@@ -712,18 +746,13 @@ function createDatatable(datatable) {
         return e[datatable.primary];
       })
       .indexOf(data_id);
+
+    datatable.results.push(datatable.selectionResults[index2]);
+
     if (index2 !== -1) {
       datatable.selectionResults.splice(index2, 1);
     }
 
-    /*removeNode(datatable.target.find(`[data-primary='${data_id}']`));
-    datatable.selectionChange();*/
-
-    datatable.selectionResults.push(
-      datatable.results.find((e) => {
-        return e[datatable.primary] == data_id;
-      })
-    );
     datatable.selection.push(data_id);
     var x = datatable.target.find(`[data-primary='${data_id}']`);
     datatable.tableBodyElement.appendChild(x);
@@ -758,13 +787,9 @@ function createDatatable(datatable) {
       datatable.registerMetadataFields();
     }
 
-    var e = datatable.selectionBodyElement.find(".no-results");
+    var e = datatable.tableSelectionElement.find(".no-results");
     if (e) {
       e.style.display = datatable.selectionResults.length !== 0 ? "none" : "";
-    }
-    var e = datatable.target.find(".table-search-container .no-results");
-    if (e) {
-      //e.style.display = datatable.results.length !== 0 ? "none" : "";
     }
 
     if (datatable.selectable.has_metadata) {
@@ -795,6 +820,9 @@ function createDatatable(datatable) {
     if (doSearch) {
       datatable.search();
     }
+
+    datatable.tableSelectionElement.find(".selected-results-count").innerHTML =
+      datatable.selection.length;
   };
   if (datatable.selectable && datatable.selectable.has_metadata) {
     datatable.registerMetadataFields = () => {
@@ -1021,19 +1049,7 @@ function datatableSort(btn, column) {
     was_sort = -1;
   }
 
-  datatable.target.findAll(".datatable-sort-btn").forEach((e) => {
-    e.classList.remove("fa-sort");
-    e.classList.remove("fa-arrow-up");
-    e.classList.remove("fa-arrow-down");
-
-    e.classList.remove("primary");
-    e.classList.remove("secondary");
-
-    if (e !== btn) {
-      e.classList.add("fa-sort");
-      e.classList.add("primary");
-    }
-  });
+  clearTableSorting(datatable, btn);
 
   var sort = 0;
   if (was_sort === 0) {
@@ -1061,10 +1077,29 @@ function datatableSort(btn, column) {
     datatable.sort = null;
   }
   datatable.search();
+
+  filterOrSortChanged();
+}
+
+function clearTableSorting(datatable, exceptBtn = null) {
+  datatable.sort = null;
+  datatable.target.findAll(".datatable-sort-btn").forEach((e) => {
+    e.classList.remove("fa-sort");
+    e.classList.remove("fa-arrow-up");
+    e.classList.remove("fa-arrow-down");
+
+    e.classList.remove("primary");
+    e.classList.remove("secondary");
+
+    if (e !== exceptBtn) {
+      e.classList.add("fa-sort");
+      e.classList.add("primary");
+    }
+  });
 }
 
 function datatableFilter(btn, column_id) {
-  filtersVisibility();
+  filtersChanged();
 
   var datatable = getParentDatatable(btn);
 
@@ -1281,7 +1316,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
 
       if (hide) {
-        filtersVisibility(true);
+        filtersChanged(true);
       }
     });
   }
@@ -1350,7 +1385,7 @@ function setFilters(datatable, column_id) {
     }
   }
 
-  filtersVisibility(true);
+  filtersChanged(true);
 
   datatable.search();
 }
@@ -1372,12 +1407,12 @@ function removeFilters(datatable, column_id) {
 
   removeFilterByField(datatable, col_def.field);
 
-  filtersVisibility(true);
+  filtersChanged(true);
 
   datatable.search();
 }
 
-function filtersVisibility(hide = false) {
+function filtersChanged(hide = false) {
   if (hide) {
     if (IS_MOBILE) {
       hideModal("filter_menu");
@@ -1401,6 +1436,18 @@ function filtersVisibility(hide = false) {
         elem.classList.toggle("secondary", active);
         elem.classList.toggle("primary", !active);
       });
+  });
+
+  filterOrSortChanged();
+}
+
+function filterOrSortChanged() {
+  $$(".datatable-wrapper").forEach((datatableElem) => {
+    var datatable = window[datatableElem.getAttribute("data-datatable-name")];
+    $(".clear-filters-btn").classList.toggle(
+      "hidden",
+      datatable.filters.length === 0 && !datatable.sort
+    );
   });
 }
 

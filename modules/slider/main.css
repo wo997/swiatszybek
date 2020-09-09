@@ -46,6 +46,11 @@
   } 
 */
 
+.swiper-container .btn .fa-chevron-right,
+.swiper-container .fa-chevron-left {
+  transform: scale(0.7, 0.9);
+}
+
 .swiper-container .swiper-pagination.swiper-pagination-bullets {
   margin-top: -25px;
 }
