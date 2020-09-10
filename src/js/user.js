@@ -51,9 +51,13 @@ function login() {
     params: getFormData(loginForm),
     success: (res) => {
       if (res.message && res.error_field_name) {
-        showFieldErrors(loginForm.find(`[name="${res.error_field_name}"]`), [
-          res.message,
-        ]);
+        showFieldErrors(
+          loginForm.find(`[name="${res.error_field_name}"]`),
+          [res.message],
+          {
+            backend_only: true,
+          }
+        );
       }
     },
   });

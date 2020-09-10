@@ -1,6 +1,6 @@
 /* js[global] */
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   $$("[data-form]").forEach((form) => {
     registerForm(form);
   });
@@ -26,6 +26,12 @@ function showFieldErrors(field, errors = [], params = {}) {
     return;
   }
 
+  if (params.backend_only) {
+    field.removeEventListener("change", formFieldChangeEvent);
+    field.removeEventListener("input", formFieldInputEvent);
+  }
+
+  // just desktop admin
   var warning = field_title.find(".fa-exclamation-triangle");
   if (warning) {
     warning.remove();
@@ -38,7 +44,7 @@ function showFieldErrors(field, errors = [], params = {}) {
   );
   if (!correctIndicator) {
     console.error(
-      "The form needs to be registered with registerForm(form) or data-form attribute before content is loaded"
+      "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded"
     );
     return;
   }
@@ -106,7 +112,7 @@ function validateForm(form, params = {}) {
     }
     if (field.findParentByClassName("hidden")) continue;
 
-    var errors = formInputChange(field);
+    var errors = formFieldChange(field);
     if (errors.length > 0) {
       return false;
     }
@@ -472,21 +478,12 @@ function registerForm(form = null) {
     inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
   }
 
-  inputs.forEach((elem) => {
-    elem.setAttribute("data-change-registered", "");
+  inputs.forEach((field) => {
+    field.setAttribute("data-change-registered", "");
 
-    elem.addEventListener("change", () => {
-      formInputChange(elem);
+    field.addEventListener("change", formFieldChangeEvent);
 
-      if (!elem.hasAttribute("data-input-registered")) {
-        elem.setAttribute("data-input-registered", "");
-        elem.addEventListener("input", () => {
-          formInputChange(elem);
-        });
-      }
-    });
-
-    elem.insertAdjacentHTML(
+    field.insertAdjacentHTML(
       "afterend",
       `
         <div class="input-elements">
@@ -503,9 +500,24 @@ function registerForm(form = null) {
   });
 }
 
-function formInputChange(field) {
-  if (ignoreValueChanges) return;
+function formFieldChangeEvent(event) {
+  formFieldChange(event.target);
+}
 
+function formFieldChange(field) {
+  if (!field.hasAttribute("data-input-registered")) {
+    field.setAttribute("data-input-registered", "");
+    field.addEventListener("input", formFieldInputEvent);
+  }
+  return formFieldInput(field);
+}
+
+function formFieldInputEvent(event) {
+  formFieldInput(event.target);
+}
+
+function formFieldInput(field) {
+  if (ignoreValueChanges) return;
   const errors = fieldErrors(field);
   showFieldErrors(field, errors);
   return errors;

@@ -179,6 +179,10 @@ textarea {
   color: var(--primary-clr);
   border: 1px solid var(--primary-clr);
 }
+.btn.subtle {
+  background: var(--subtle-background-clr);
+  color: var(--subtle-font-clr);
+}
 /*.btn.important {
   background: #34e;
   color: white;

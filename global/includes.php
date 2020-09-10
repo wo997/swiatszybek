@@ -90,6 +90,8 @@
   :root {
     --primary-clr: <?= primary_clr ?>;
     --buynow-clr: <?= buynow_clr ?>;
+    --subtle-font-clr: <?= subtle_font_clr ?>;
+    --subtle-background-clr: <?= subtle_background_clr ?>;
   }
 </style>
 

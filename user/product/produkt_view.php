@@ -1,7 +1,7 @@
 <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;">
   <div style="width: 50%;margin: 32px auto 0;">
     <?php if (count($gallery) == 1) : ?>
-      <img data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image'>
+      <img style='max-width:100%' data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image'>
     <?php else : ?>
       <div class="swiper-container product-main-slider">
         <div class="swiper-wrapper">

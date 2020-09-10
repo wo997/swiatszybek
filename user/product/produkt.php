@@ -50,10 +50,10 @@ if (!$gallery) {
 $galleryhtml = "";
 $gallerythumbshtml = "";
 foreach ($gallery as $pic) {
-  $galleryhtml .= "<div class='swiper-slide'><img data-src='" . $pic["values"]["src"] . "' data-height='1w' class='swiper-slide product-image'></div>";
+  $galleryhtml .= "<div class='swiper-slide'><img style='max-width:100%' data-src='" . $pic["values"]["src"] . "' data-height='1w' class='swiper-slide product-image'></div>";
   //$galleryhtml .= "<div class='swiper-slide'><div class='item-image' style='background-image:url(\"/uploads/md/" . $pic["values"]["src"] . "\")'></div></div>";
   //$gallerythumbshtml .= "<div class='swiper-slide' style='background-image:url(\"/uploads/sm/" . $pic["values"]["src"] . "\")'></div>";
-  $gallerythumbshtml .= "<img data-src='" . $pic["values"]["src"] . "' data-height='1w' class='swiper-slide product-image'>";
+  $gallerythumbshtml .= "<img style='max-width:100%' data-src='" . $pic["values"]["src"] . "' data-height='1w' class='swiper-slide product-image'>";
 }
 
 
