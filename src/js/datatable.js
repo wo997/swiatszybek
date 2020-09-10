@@ -164,7 +164,7 @@ function createDatatable(datatable) {
 
     breadcrumb_html = `
         <div class="breadcrumb"></div>
-        <div class="btn admin-important" onclick="${datatable.name}.showEditCategory(this,null,true)">Dodaj <i class="fa fa-plus"></i></div>
+        <div class="btn important" onclick="${datatable.name}.showEditCategory(this,null,true)">Dodaj <i class="fa fa-plus"></i></div>
       `;
   }
 

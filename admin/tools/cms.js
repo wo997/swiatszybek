@@ -1,7 +1,8 @@
 // dependencies
 useTool("quillEditor");
 
-// cms start
+// notes:
+// everything needs to be scoped from cmsWrapper because of the recursive mode
 
 var cmsPreview = null;
 
@@ -321,15 +322,15 @@ var moduleListModalLoaded = () => {
   for (module_name in modules) {
     var module = modules[module_name];
     if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
-    moduleList += `<div class="btn admin-primary" onclick="insertModule('${module_name}')">${module.icon} ${module.description}</div>`;
+    moduleList += `<div class="btn primary" onclick="insertModule('${module_name}')">${module.icon} ${module.description}</div>`;
     if (module.form_html) {
       registerModalContent(`
               <div id="module_${module_name}" data-expand>
                   <div>
                       <div class="custom-toolbar">
                           <span class="title">${module.description}</span>
-                          <div class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                          <div class="btn admin-primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
+                          <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                          <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
                       </div>
                       <div style="padding:10px">
                           ${module.form_html}
@@ -1694,7 +1695,7 @@ function toggleModuleSidebar() {
   }
   var btn = $(".modules-sidebar .toggle-sidebar-btn");
   btn.classList.toggle("subtle", shown);
-  btn.classList.toggle("admin-important", !shown);
+  btn.classList.toggle("important", !shown);
 
   btn.setAttribute("data-tooltip", shown ? "Ukryj moduły" : "Wstaw moduły");
 }
@@ -1707,17 +1708,17 @@ registerModalContent(
             <div class="custom-toolbar">
                 <span class="title">
                     Edycja zawartości
-                    <button class="btn admin-primary cms-undo" onclick="cmsHistoryUndo()"> <i class="fas fa-undo-alt"></i> </button>
-                    <button class="btn admin-primary cms-redo" onclick="cmsHistoryRedo()"> <i class="fas fa-redo-alt"></i> </button>
-                    <!--<button class="btn admin-primary add_module_top_btn" onclick="showModal('cmsModules')" data-tooltip="Wstaw moduł"><i class="fas fa-puzzle-piece"></i></button>-->
-                    <button class="btn admin-primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></button>
-                    <button class="btn admin-primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </button>
+                    <button class="btn primary cms-undo" onclick="cmsHistoryUndo()"> <i class="fas fa-undo-alt"></i> </button>
+                    <button class="btn primary cms-redo" onclick="cmsHistoryRedo()"> <i class="fas fa-redo-alt"></i> </button>
+                    <!--<button class="btn primary add_module_top_btn" onclick="showModal('cmsModules')" data-tooltip="Wstaw moduł"><i class="fas fa-puzzle-piece"></i></button>-->
+                    <button class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></button>
+                    <button class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </button>
                 </span>
                 
-                <button class="btn admin-secondary" onclick="showModal('cms_poradnik')">Poradnik <i class="fas fa-info-circle"></i></button>
-                <button class="btn admin-secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-                <button onclick="showCmsPreview()" class="btn admin-primary preview_btn">Podgląd <i class="fas fa-eye"></i></button>
-                <button class="btn admin-primary" onclick="closeCms(true);hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
+                <button class="btn secondary" onclick="showModal('cms_poradnik')">Poradnik <i class="fas fa-info-circle"></i></button>
+                <button class="btn secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+                <button onclick="showCmsPreview()" class="btn primary preview_btn">Podgląd <i class="fas fa-eye"></i></button>
+                <button class="btn primary" onclick="closeCms(true);hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
             </div>
 
             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
@@ -1822,8 +1823,8 @@ registerModalContent(`
             <div class="custom-toolbar">
                 <span class="title">Wymiary / Położenie</span>
                 ${hide_complicated_btn}
-                <div class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                <div class="btn admin-primary" onclick="saveBlockSettings();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
+                <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                <div class="btn primary" onclick="saveBlockSettings();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
 
             <div style="padding:10px;margin-top:-15px">
@@ -2085,8 +2086,8 @@ registerModalContent(`
 
             <div class="custom-toolbar">
                 <span class="title">Obramowanie</span>
-                <div class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                <div class="btn admin-primary" onclick="saveCMSBorder();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
+                <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                <div class="btn primary" onclick="saveCMSBorder();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
 
             <div style="padding:10px;margin-top:-15px">
@@ -2105,7 +2106,7 @@ registerModalContent(`
                 <div class="field-title">Kolor krawędzi</div>
                 <div class="glue-children">
                   <input class="jscolor field inline" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
-                  <button class="btn admin-primary" onclick="$(this).prev().setValue('')">Brak <i class="fa fa-times"></i></button>
+                  <button class="btn primary" onclick="$(this).prev().setValue('')">Brak <i class="fa fa-times"></i></button>
                 </div>
 
                 <div class="field-title">Zaokrąglenie krawędzi</div>
@@ -2134,8 +2135,8 @@ registerModalContent(`
             <div class="custom-toolbar">
                 <span class="title">Wymiary / Położenie</span>
                 ${hide_complicated_btn}
-                <div class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                <div class="btn admin-primary" onclick="saveContainerSettings();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
+                <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                <div class="btn primary" onclick="saveContainerSettings();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
 
             <div style="padding:10px;margin-top:-15px">
@@ -2227,8 +2228,8 @@ registerModalContent(`
         <div>
             <div class="custom-toolbar">
                 <span class="title">Animacje</span>
-                <div class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                <div class="btn admin-primary" onclick="saveBlockAnimation();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
+                <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                <div class="btn primary" onclick="saveBlockAnimation();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
 
             <div style="padding:10px;margin-top:-15px">
@@ -2276,7 +2277,7 @@ registerModalContent(`
         <div>
             <div class="custom-toolbar">
                 <span class="title">Wstawianie skopiowanego bloku</span>
-                <div class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
             </div>
             <div style="padding:10px;">
                 <div class="field-title">Wklej kod w pole poniżej (Kliknij -> CTRL+V)</div>
@@ -2292,7 +2293,7 @@ registerModalContent(
         <div>
             <div class="custom-toolbar">
                 <span class="title">Wstawianie modułu</span>
-                <div class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
             </div>
             <div style="padding:10px;" class="moduleList">
 
@@ -2311,8 +2312,8 @@ registerModalContent(
         <div style="width:100%;max-width:650px">
             <div class="custom-toolbar">
                 <span class="title">Tło</span>
-                <div class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                <div class="btn admin-primary" onclick="saveCMSBackground();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
+                <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                <div class="btn primary" onclick="saveCMSBackground();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
             </div>
 
             <div style="padding:10px 0;" class="mobileRow">
@@ -2321,9 +2322,9 @@ registerModalContent(
                 <div class="field-title">
                   <span> Zdjęcie </span>
 
-                  <div class="btn admin-primary" onclick='fileManager.open(null, {callback: setNodeBackgroundImagePreview, source: this, asset_types: ["image"]})'>Wybierz <i class="fas fa-image"></i></div>
+                  <div class="btn primary" onclick='fileManager.open(null, {callback: setNodeBackgroundImagePreview, source: this, asset_types: ["image"]})'>Wybierz <i class="fas fa-image"></i></div>
 
-                  <div class="btn admin-primary" onclick="setNodeBackgroundImagePreview()">Usuń <i class="fa fa-times"></i></div>
+                  <div class="btn primary" onclick="setNodeBackgroundImagePreview()">Usuń <i class="fa fa-times"></i></div>
                 </div>
 
                 <br>
@@ -2334,7 +2335,7 @@ registerModalContent(
 
                 <div class="glue-children">
                   <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
-                  <button class="btn admin-primary" onclick="$(this).prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
+                  <button class="btn primary" onclick="$(this).prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
                 </div>
 
                 <div class="field-title">

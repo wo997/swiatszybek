@@ -154,12 +154,12 @@ $static = checkUrl($page_data["link"]);
     <div class="sticky-top">
         <div class="custom-toolbar">
             <span class="title">Edycja strony</span>
-            <a class="btn admin-primary" href="/admin/strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
+            <a class="btn primary" href="/admin/strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
             <?php if ($page_data["published"]) : ?>
-                <a class="btn admin-primary" href="/<?= $page_data["link"] ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
+                <a class="btn primary" href="/<?= $page_data["link"] ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
             <?php endif ?>
-            <button onclick="showPreview()" class="btn admin-primary">Podgląd <i class="fas fa-eye"></i></button>
-            <button class="btn admin-primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
+            <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
+            <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
         </div>
     </div>
 
@@ -174,7 +174,7 @@ $static = checkUrl($page_data["link"]);
     <div class="field-title">Link strony (URL)</div>
     <div style="display:flex;flex-wrap: wrap;">
         <input type='text' name='link' value='<?= $page_data["link"] ?>' style='width:100%;max-width:500px' class="field">
-        <button class="btn admin-primary" onclick="rewriteURL()">Uzupełnij na podstawie tytułu</button>
+        <button class="btn primary" onclick="rewriteURL()">Uzupełnij na podstawie tytułu</button>
     </div>
 
     <div class="field-title">Opis (SEO)</div>
@@ -204,12 +204,12 @@ $static = checkUrl($page_data["link"]);
         <input type="hidden" id="metadata" name='metadata'>
         <div class="modal-body stretch-vertical">
             <div>
-                <div class="field-title">Zawartość strony <button onclick="editPage()" class="btn admin-primary">Edytuj <i class="far fa-edit"></i></button></div>
+                <div class="field-title">Zawartość strony <button onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></div>
                 <div class="cms preview_html" name="content" data-type="html"></div>
             </div>
 
             <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                <button class="btn admin-red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) save(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
+                <button class="btn red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) save(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
             </div>
         </div>
     </div>

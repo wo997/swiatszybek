@@ -120,7 +120,8 @@ foreach ($status_list as $status) {
 
 <?php startSection("content"); ?>
 
-<br>
+<h1>Zamówienia</h1>
+
 <div class="mytable"></div>
 
 <div class="bulkOptions" style="text-align:center;margin: 40px 0;display:none">

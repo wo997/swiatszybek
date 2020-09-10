@@ -47,27 +47,25 @@
                     title: "",
                     width: "195px",
                     render: (r) => {
-                        return `<a class="btn admin-primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i></a> <a class='btn admin-primary' href='/admin/strona/${r.cms_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
+                        return `<a class="btn primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i></a> <a class='btn primary' href='/admin/strona/${r.cms_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
                     },
                     escape: false
                 }
             ],
-            controls: `
-                <div class='float-icon'>
+            controlsRight: `
+                <div class='float-icon space-right'>
                     <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
-                </div>
-                <select data-param="status" class="field inline">
-                    <option value=''>Wszystkie</option>
-                    <option value='published'>Tylko publiczne</option>
-                </select>            
-                <button class="btn admin-primary" onclick='window.location="/admin/strona"'><span>Nowa strona</span> <i class="fa fa-plus"></i></button>
+                </div>        
+                <button class="btn important" onclick='window.location="/admin/strona"'>Strona <i class="fa fa-plus"></i></button>
             `
         });
     });
 </script>
 
 <?php startSection("content"); ?>
+
+<h1>Strony</h1>
 
 <div class="mytable"></div>
 

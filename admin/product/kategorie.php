@@ -217,8 +217,8 @@
     <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja kategorii</span>
-            <button class="btn admin-secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
-            <button class="btn admin-primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div style="padding:10px" class="modal-body stretch-vertical">
             <div>
@@ -228,7 +228,7 @@
                 <div class="field-title">Link</div>
                 <div style="display:flex">
                     <input type="text" name="link" data-validate autocomplete="off" class="field">
-                    <button class="btn admin-primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
+                    <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
                 </div>
 
                 <div class="field-title">Widoczność</div>
@@ -239,26 +239,26 @@
 
                 <div class="field-title">
                     Ikonka
-                    <button class="btn admin-primary" onclick='fileManager.open(this.next(),{asset_types:["image"], size: "sm"})'>Wybierz</button>
+                    <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types:["image"], size: "sm"})'>Wybierz</button>
                     <img name="icon" data-type="src" style="max-width:100px;max-height:100px" />
                 </div>
 
                 <div class="field-title">Kategoria nadrzędna</div>
                 <div class="category-picker" name="parent_id" data-source="product_categories" data-single></div>
 
-                <div class="field-title">Wyświetlane filtry (atrybuty) <a href="/admin/atrybuty" target="_blank" class="btn admin-secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a> </div>
+                <div class="field-title">Wyświetlane filtry (atrybuty) <a href="/admin/atrybuty" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a> </div>
                 <div class="atrybuty"></div>
 
-                <div class="field-title">Opis górny <button class="btn admin-primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>
+                <div class="field-title">Opis górny <button class="btn primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>
                 <div class="description ql-editor preview_html" name="description" data-type="html" style="max-height: 300px;"></div>
 
-                <div class="field-title">Zawartość (dół) <button class="btn admin-primary" onclick="editCMS($('#editCategory .content'));">Edytuj </button></div>
+                <div class="field-title">Zawartość (dół) <button class="btn primary" onclick="editCMS($('#editCategory .content'));">Edytuj </button></div>
                 <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
                 <br>
             </div>
             <div class="caseCanDelete" style="margin-top:auto;align-self: flex-end; padding-top:30px; padding-bottom: 15px">
-                <button class="btn admin-red" onclick="if(confirm('Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
+                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
                 <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
             </div>
 

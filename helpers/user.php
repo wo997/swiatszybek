@@ -81,7 +81,7 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
         $_SESSION["redirect"] = "/zakup";
     }*/
 
-    $redirect_url = "/";
+    /*$redirect_url = "/";
     if ($_SERVER['HTTP_REFERER']) {
         $url = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
         $redirect_list = [
@@ -89,7 +89,7 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
         ];
         $redirect_url = nonull($redirect_list, $url, $url);
     }
-    redirect($redirect_url);
+    redirect($redirect_url);*/
 
     // if ($redirect) {
     //     $redirectRoute = isset($_SESSION["redirect"]) ? $_SESSION["redirect"] : "";

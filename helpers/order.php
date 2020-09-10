@@ -247,7 +247,7 @@ function printBasketTable()
         $stock = $v["stock"];
 
         if ($nr == 0) {
-            $res .= "<table class='item-list item-list-full'><tr style='background: #60d010;color: white;'>
+            $res .= "<table class='item-list item-list-full'><tr style='background: var(--primary-clr);color: white;'>
         <td>Produkt</td>
         <td></td>
         <td>Cena</td>

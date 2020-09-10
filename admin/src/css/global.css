@@ -1,23 +1,23 @@
 /* css[admin] */
 
-.btn.admin-important {
-  background: var(--admin-important-clr);
+.btn.important {
+  background: var(--important-clr);
   color: white;
   font-weight: 600;
 }
-.btn.admin-primary {
-  background: var(--admin-primary-clr);
+.btn.primary {
+  background: var(--primary-clr);
   color: white;
 }
-.btn.admin-secondary {
+.btn.secondary {
   background: white;
-  color: var(--admin-primary-clr);
+  color: var(--primary-clr);
 }
-.btn.admin-red {
-  background: var(--admin-red-clr);
+.btn.red {
+  background: var(--red-clr);
   color: white;
 }
-.btn.admin-subtle {
-  background: var(--admin-subtle-background-clr);
-  color: var(--admin-subtle-font-clr);
+.btn.subtle {
+  background: var(--subtle-background-clr);
+  color: var(--subtle-font-clr);
 }

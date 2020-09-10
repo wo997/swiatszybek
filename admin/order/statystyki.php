@@ -250,6 +250,8 @@
 
 <?php startSection("content"); ?>
 
+<h1>Statystyki</h1>
+
 <div>
     <div style="text-align:center;padding: 5px;display: flex;justify-content: center;align-items: center;">
         <button onclick="changeDate(-1)" class="timeBtn"><i class="fa fa-chevron-left"></i></button>

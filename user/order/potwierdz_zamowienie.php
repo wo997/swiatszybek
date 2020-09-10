@@ -101,7 +101,7 @@ query(
 $zamowienie_id = getLastInsertedId();
 
 // cannot use order/print_basket_nice because in email no css stylesheets are allowed, would we want to merge it?
-$res = "<table style='border-spacing: 0;'><tr style='background: #60d010;color: white;'><td style='padding:4px'>Ilość</td><td style='padding:4px'>Produkt</td><td style='padding:4px'>Cena</td></tr>";
+$res = "<table style='border-spacing: 0;'><tr style='background: " . primary_clr . ";color: white;'><td style='padding:4px'>Ilość</td><td style='padding:4px'>Produkt</td><td style='padding:4px'>Cena</td></tr>";
 
 foreach ($app["user"]["basket"]["variants"] as $v) {
   query("INSERT INTO basket_content (zamowienie_id, variant_id, product_id, real_price, quantity, total_price, title, zdjecie) VALUES (?,?,?,?,?,?,?,?)", [
@@ -191,7 +191,7 @@ $message .= "<h4 style='margin:20px 0 10px'>Szczegóły zamówienia</h4>";
 $message .= $res;
 $message .= "</div>";
 
-$message .= '<p style="font-size: 16px;">Jeśli jeszcze nie opłaciłaś/eś Twojego zamówienia,<br>możesz to zrobić teraz korzystając <a href="' . $link . '" style="font-weight:bold;color:#60c216;">z tego linku</a></p>';
+$message .= '<p style="font-size: 16px;">Jeśli jeszcze nie opłaciłaś/eś Twojego zamówienia,<br>możesz to zrobić teraz korzystając <a href="' . $link . '" style="font-weight:bold;color:' . primary_clr . ';">z tego linku</a></p>';
 $message .= getEmailFooter();
 
 $mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . config('main_email_sender') . "";

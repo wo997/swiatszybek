@@ -86,8 +86,8 @@ window.fileManager = {
             out += `
                 <div class='gallery-item'>
                     ${display}
-                    <div class="btn admin-primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz"><i class="fas fa-check"></i></div>
-                    <div class="btn admin-red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń"><i class="fas fa-times"></i></div>
+                    <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz"><i class="fas fa-check"></i></div>
+                    <div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń"><i class="fas fa-times"></i></div>
 
                     <i class='fas fa-info-circle' data-tooltip='<b>Ścieżka:</b> ${image.file_path}<hr style="margin:2px 0"><b>Nazwa:</b> ${image.uploaded_file_name}'></i>
                 </div>
@@ -165,12 +165,12 @@ registerModalContent(
                     <i class="fas fa-search" style='color:black'></i>
                   </div>
 
-                  <button class="btn admin-primary" onclick="showModal('uploadFiles')">Prześlij nowe <i class="fas fa-plus"></i></button>
+                  <button class="btn primary" onclick="showModal('uploadFiles')">Prześlij nowe <i class="fas fa-plus"></i></button>
 
-                  <button class="btn admin-secondary use_external_image_btn" onclick="showModal('externalImage')">Użyj zdjęcia zewnętrznego <i class="fas fa-external-link-alt"></i></button>
+                  <button class="btn secondary use_external_image_btn" onclick="showModal('externalImage')">Użyj zdjęcia zewnętrznego <i class="fas fa-external-link-alt"></i></button>
                 </span>
                 
-                <button class="btn admin-primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
             </div>
 
             <div class="gallery">
@@ -190,14 +190,14 @@ registerModalContent(
                 <span class="title">
                   Wybór zdjęcia zewnętrznego
                 </span>
-                <button class="btn admin-primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
             </div>
 
             <div class="field-wrapper">
               <div class="field-title">Wstaw link do zdjęcia zewnętrznego</div>
               <div class="glue-children">
                 <input type="text" data-validate class="external_link field">
-                <button class="btn admin-primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
+                <button class="btn primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
               </div>
             </div>
 
@@ -219,7 +219,7 @@ registerModalContent(
                 <span class="title">
                   Przesyłanie plików
                 </span>
-                <button class="btn admin-primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
             </div>
 
             <form>
@@ -228,7 +228,7 @@ registerModalContent(
               <label style="text-align:right;display: block;margin-top: 10px;">
                   <input type="file" name="files[]" multiple onchange="$(this).next().click()" style="display:none">
                   <input type="submit" name="submit" style="display:none">
-                  <div class="btn admin-primary">Wybierz pliki <i class="fas fa-cloud-upload-alt"></i></div>
+                  <div class="btn primary">Wybierz pliki <i class="fas fa-cloud-upload-alt"></i></div>
               </label>
             </form>
         </div>

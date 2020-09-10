@@ -58,14 +58,14 @@
                     width: "185px",
                     render: (r, i, t) => {
                         return `
-                            <div class="btn admin-secondary" onclick="${t.name}.showEditCategory(this,${i})">Edytuj <i class="fa fa-cog"></i></div> 
-                            <div class="btn admin-primary" onclick="${t.name}.openCategory(${i})">Więcej <i class="fas fa-chevron-circle-right"></i></div>
+                            <div class="btn secondary" onclick="${t.name}.showEditCategory(this,${i})">Edytuj <i class="fa fa-cog"></i></div> 
+                            <div class="btn primary" onclick="${t.name}.openCategory(${i})">Więcej <i class="fas fa-chevron-circle-right"></i></div>
                         `;
                     },
                     escape: false
                 }
             ],
-            controls: `
+            controlsRight: `
                     <div class='float-icon'>
                         <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
@@ -118,7 +118,7 @@
                     title: "",
                     width: "10%",
                     render: (r) => {
-                        return `<a class="btn admin-primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i>`;
+                        return `<a class="btn primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i>`;
                     },
                     escape: false
                 }
@@ -150,7 +150,7 @@
                     title: "Nazwa produktu",
                     width: "50%",
                     render: (r) => {
-                        return `<a class="btn admin-secondary" target="_blank" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
+                        return `<a class="btn secondary" target="_blank" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
                     },
                     escape: false
                 },
@@ -238,14 +238,16 @@
 
 <?php startSection("content"); ?>
 
+<h1>Menu główne</h1>
+
 <div class="mytable"></div>
 
 <div id="editCategory" data-modal data-expand>
     <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja menu</span>
-            <button class="btn admin-secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
-            <button class="btn admin-primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="modal-body stretch-vertical">
             <div class="desktopRow spaceColumns">
@@ -298,7 +300,7 @@
 
             <br>
             <div class="caseCanDelete" style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                <button class="btn admin-red" onclick="if(confirm('Czy aby na pewno chcesz usunąć to menu?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
+                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć to menu?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
                 <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu wszystkich podmenu'></i>
             </div>
             <input type="hidden" name="category_id">

@@ -1,6 +1,6 @@
 /* css[admin] */
 
-.navbar_admin .menu_item {
+/*.navbar_admin .menu_item {
   margin: 2px 2px;
   padding: 3px 5px;
   color: #670;
@@ -10,7 +10,7 @@
 }
 .navbar_admin .menu_item.current {
   color: white;
-  background: #60c216;
+  background: var(--primary-clr);
 }
 .admin-wrapper {
   padding: 10px;
@@ -37,9 +37,7 @@
 }
 
 @media only screen and (max-width: 759px) {
-  #wyszukiwarka {
-    overflow-x: auto;
-  }
+
   .navbar_admin > *,
   .navbar_admin .menu_item {
     width: 100%;
@@ -83,9 +81,6 @@
 .search-input {
   padding: 5px;
 }
-#wyszukiwarka {
-  text-align: center;
-}
 
 .admin-wrapper,
 .admin-wrapper input,
@@ -108,3 +103,4 @@
   width: 65px;
   text-align: center;
 }
+*/

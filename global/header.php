@@ -34,14 +34,14 @@
                 <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
                   <div style="color: #05c;background: #fafafa;">
                     <a class="menu_item" href="/admin/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
-                    <?php
-                    foreach ($admin_navigations as $page) {
-                      if (isset($page['quick_menu'])) {
-                        echo '<a class="menu_item" href="/' . $page['url'] . '">' . $page['title'] . ' ' . renderNotification($page['notification_count']) . '</a>';
-                      }
-                    }
-                    ?>
-                    <a class="menu_item" href="/admin/zamowienia"> <i class="fas fa-cog"></i> Więcej ...</a>
+                    <!--<?php
+                        foreach ($admin_navigations as $page) {
+                          if (isset($page['quick_menu'])) {
+                            echo '<a class="menu_item" href="/' . $page['url'] . '">' . $page['title'] . ' ' . renderNotification($page['notification_count']) . '</a>';
+                          }
+                        }
+                        ?>
+                    <a class="menu_item" href="/admin/zamowienia"> <i class="fas fa-cog"></i> Więcej ...</a>-->
                   </div>
                   <hr style="margin:0">
                 <?php endif ?>

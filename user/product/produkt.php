@@ -89,8 +89,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     }
 
     #buyNow {
-      background: #f90;
-      border-color: #e80;
+      background: var(--buynow-clr);
     }
 
     .short-description {
@@ -146,7 +145,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     }
 
     .variant input:checked::before {
-      background: #60c216;
+      background: var(--primary-clr);
       border-color: #26e;
     }
 
@@ -213,7 +212,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
     }
 
     .color input:checked+div {
-      border: 2px solid #60c216;
+      border: 2px solid var(--primary-clr);
       opacity: 1 !important;
     }
 

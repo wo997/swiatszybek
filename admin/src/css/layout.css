@@ -1,0 +1,70 @@
+/* css[admin] */
+
+.main-container {
+  flex-grow: 1;
+  display: flex;
+  height: 100%;
+}
+
+.menu_item {
+  display: block;
+  padding: 4px;
+  font-size: 15px;
+}
+
+.home {
+  display: block;
+  text-align: center;
+  border-bottom: 1px solid #aaa;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.home img {
+  width: 120px;
+  display: inline-block;
+}
+
+.navbar_admin {
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 220px;
+  padding: 10px;
+  border: 1px solid #eee;
+  -webkit-box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.19);
+  box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.19);
+  background: #eee;
+  color: #333;
+}
+
+footer {
+  display: none;
+}
+.footer {
+  background: #222;
+  color: #eee;
+  padding: 10px;
+  text-align: center;
+}
+
+.content {
+  padding: 10px;
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+.main-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+.menu_item.current {
+  background: #0001;
+}
+
+h1 {
+  font-weight: bold;
+  margin: 20px;
+  font-size: 24px;
+}

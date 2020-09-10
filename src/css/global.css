@@ -163,6 +163,11 @@ textarea {
   display: inline-block;
   text-align: center;
   cursor: pointer;
+  border: none;
+  -webkit-box-shadow: inset 0px -1px 2px 0px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: inset 0px -1px 2px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0px -1px 2px 0px rgba(0, 0, 0, 0.3);
+  transition: 0.1s all;
 }
 
 .btn.primary {
@@ -226,24 +231,21 @@ textarea {
 
 .btn.large {
   font-size: 1.5em;
-  font-weight: 600;
+  /*font-weight: 600;*/
 }
 .btn.xlarge {
   font-size: 1.75em;
-  font-weight: 600;
+  /*font-weight: 600;*/
 }
 .btn.big {
   font-size: 1.3em;
-  font-weight: 600;
+  /*font-weight: 600;*/
 }
 .btn.medium {
   font-size: 1.15em;
-  font-weight: 600;
+  /*font-weight: 600;*/
 }
 
-.btn {
-  transition: 0.1s all;
-}
 .btn:active {
   -webkit-box-shadow: inset 0px 1px 4px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: inset 0px 1px 4px 0px rgba(0, 0, 0, 0.15);
@@ -1445,7 +1447,7 @@ input:read-only {
   width: 24px;
 }
 .pagination .pagination_item.current {
-  background: #60c216;
+  background: var(--primary-clr);
   color: white;
   border-radius: 4px;
 }
@@ -1849,7 +1851,7 @@ footer a:hover {
 }
 
 .product .buynow {
-  background: #c22;
+  background: var(--buynow-clr);
   color: white;
   padding: 6px 8px;
   text-align: center;

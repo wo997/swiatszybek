@@ -86,4 +86,13 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
 
+<?php include "theme/variables.php"; ?>
+
+<style>
+  :root {
+    --primary-clr: <?= primary_clr ?>;
+    --buynow-clr: <?= buynow_clr ?>;
+  }
+</style>
+
 <!--<link href="/admin/tools/cms.css?v=<?= RELEASE ?>" rel="stylesheet">-->

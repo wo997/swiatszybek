@@ -169,7 +169,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           title: "",
           width: "95px",
           render: (r, i) => {
-            return `<div class='btn admin-primary' onclick='editVariant(${i},this)'>Edytuj <i class="fas fa-cog"></i></div>`;
+            return `<div class='btn primary' onclick='editVariant(${i},this)'>Edytuj <i class="fas fa-cog"></i></div>`;
           },
           escape: false
         }
@@ -179,7 +179,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
                     <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>
-                <div class="btn admin-primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
+                <div class="btn primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
             `
     });
 
@@ -194,7 +194,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
               <img data-list-param="src" data-type="src" style="object-fit:contain;width:120px;height:120px;display: block;margin-right:10px;">
-              <button class="btn admin-primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
       },
@@ -344,89 +344,88 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
 <?php startSection("content"); ?>
 
-<div>
-  <div id="productForm">
-    <div class="custom-toolbar">
-      <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-        <?php if ($kopia) : ?>
-          Kopiowanie
-        <?php else : ?>
-          Edycja
-        <?php endif ?>
-        <?= $product_data["title"] ?>
-      </div>
-      <div>
-        <?php if ($kopia) : ?>
-          <a href="/admin/produkt/<?= $product_id ?>" class="btn admin-secondary">Anuluj <i class="fa fa-times"></i></a>
-        <?php else : ?>
-          <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn admin-secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
-          <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn admin-secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
-        <?php endif ?>
-        <button onclick="saveProductForm()" class="btn admin-primary" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
-      </div>
+<div id="productForm">
+  <div class="custom-toolbar">
+    <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+      <?php if ($kopia) : ?>
+        Kopiowanie
+      <?php else : ?>
+        Edycja
+      <?php endif ?>
+      <?= $product_data["title"] ?>
     </div>
-    <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">
-      <div class="checkbox"></div>
-    </label>
-    <div style="display: flex" class="mobileRow">
-      <div style="flex-grow:1; padding-right: 15px">
-        <div class="field-title">Nazwa produktu</div>
-        <input type="text" name="title" class="field" data-validate style="max-width: 600px;">
-
-        <div class="field-wrapper">
-          <div class="field-title">Link strony</div>
-          <div style="display:flex;flex-wrap: wrap;">
-            <input type="text" name="link" data-validate autocomplete="off" class="field" style="max-width: 600px;">
-            <button class="btn admin-primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
-          </div>
-        </div>
-
-        <div class="field-title">Tytuł (SEO)</div>
-        <input type="text" name="seo_title" class="field" style="max-width: 600px;" data-show-count="60" data-count-description="(zalecane 50-58)">
-
-        <div class="field-title">Opis (SEO)</div>
-        <textarea class="seo_description field" name="seo_description" data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
-      </div>
+    <div>
+      <?php if ($kopia) : ?>
+        <a href="/admin/produkt/<?= $product_id ?>" class="btn secondary">Anuluj <i class="fa fa-times"></i></a>
+      <?php else : ?>
+        <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
+        <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
+      <?php endif ?>
+      <button onclick="saveProductForm()" class="btn primary" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
     </div>
-
-
-    <div name="gallery" data-validate="|count:1+" style="max-width:600px"></div>
-
-    <div class="field-title">Kategorie</div>
-    <div class="category-picker" name="categories" data-source="product_categories"></div>
-
-    <div class="field-title">Atrybuty produktu (wspólne)</div>
-    <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
-
-    <div style="margin-top: 10px">
-
-      <div class="field-title">
-        Opis główny
-        <div onclick="editPage()" class="btn admin-primary">Edytuj <i class="far fa-edit"></i></div>
-      </div>
-      <div name="description" data-type="html" class="cms preview_html" style="max-height: 400px"></div>
-    </div>
-
-    <h2 style="text-align:center">Warianty <span style="font-size: 0.7rem">(min. 1)</span></h2>
-
-    <div class="variants"></div>
-
-    <input type="hidden" name="product_id">
-
-    <?php if (!$kopia) : ?>
-      <div style="display: flex; justify-content: flex-end">
-        <div class="btn admin-red" style='margin-top:30px' onclick="deleteProduct()">Usuń produkt <i class="fa fa-trash"></i></div>
-      </div>
-    <?php endif ?>
   </div>
+  <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">
+    <div class="checkbox"></div>
+  </label>
+  <div style="display: flex" class="mobileRow">
+    <div style="flex-grow:1; padding-right: 15px">
+      <div class="field-title">Nazwa produktu</div>
+      <input type="text" name="title" class="field" data-validate style="max-width: 600px;">
+
+      <div class="field-wrapper">
+        <div class="field-title">Link strony</div>
+        <div style="display:flex;flex-wrap: wrap;">
+          <input type="text" name="link" data-validate autocomplete="off" class="field" style="max-width: 600px;">
+          <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
+        </div>
+      </div>
+
+      <div class="field-title">Tytuł (SEO)</div>
+      <input type="text" name="seo_title" class="field" style="max-width: 600px;" data-show-count="60" data-count-description="(zalecane 50-58)">
+
+      <div class="field-title">Opis (SEO)</div>
+      <textarea class="seo_description field" name="seo_description" data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
+    </div>
+  </div>
+
+
+  <div name="gallery" data-validate="|count:1+" style="max-width:600px"></div>
+
+  <div class="field-title">Kategorie</div>
+  <div class="category-picker" name="categories" data-source="product_categories"></div>
+
+  <div class="field-title">Atrybuty produktu (wspólne)</div>
+  <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
+
+  <div style="margin-top: 10px">
+
+    <div class="field-title">
+      Opis główny
+      <div onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
+    </div>
+    <div name="description" data-type="html" class="cms preview_html" style="max-height: 400px"></div>
+  </div>
+
+  <h2 style="text-align:center">Warianty <span style="font-size: 0.7rem">(min. 1)</span></h2>
+
+  <div class="variants"></div>
+
+  <input type="hidden" name="product_id">
+
+  <?php if (!$kopia) : ?>
+    <div style="display: flex; justify-content: flex-end">
+      <div class="btn red" style='margin-top:30px' onclick="deleteProduct()">Usuń produkt <i class="fa fa-trash"></i></div>
+    </div>
+  <?php endif ?>
+</div>
 </div>
 
 <div id="variantEdit" data-modal data-expand data-exclude-hidden>
   <div class="modal-body stretch-vertical">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
-      <button class="btn admin-secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
-      <button class="btn admin-primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
+      <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+      <button class="btn primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
     <div>
 
@@ -448,7 +447,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       <div style="display:none">
         <div class="field-title">Kolor</div>
         <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
-        <div class="btn admin-primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
+        <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
       </div>
 
       <div class="field-title">Atrybuty wariantu (inne niż ogólne dla produktu)</div>
@@ -456,7 +455,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
       <div class="field-title">
         Zdjecie
-        <button class="btn admin-primary" onclick='fileManager.open(this.next(),{asset_types: ["image"]})'>Wybierz</button>
+        <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types: ["image"]})'>Wybierz</button>
         <img name="zdjecie" data-type="src" />
       </div>
 
@@ -470,7 +469,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       <input type="hidden" name="product_id">
       <input type="hidden" name="variant_id">
       <div style="display: flex; justify-content: flex-end; margin-top: 20px">
-        <button class=" btn admin-red" onclick="saveVariantForm(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
+        <button class=" btn red" onclick="saveVariantForm(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
       </div>
     </div>
   </div>

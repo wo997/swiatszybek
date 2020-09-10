@@ -95,7 +95,7 @@
                     width: "110px",
                     render: (r, i, t) => {
                         return `
-                            <div class="btn admin-secondary" onclick="editUser(this, ${t.name}.results[${i}])">Szczegóły <i class="fa fa-chevron-right"></i></div>
+                            <div class="btn secondary" onclick="editUser(this, ${t.name}.results[${i}])">Szczegóły <i class="fa fa-chevron-right"></i></div>
                         `;
                     },
                     escape: false
@@ -182,15 +182,16 @@
 
 <?php startSection("content"); ?>
 
-<br>
+<h1>Użytkownicy</h1>
+
 <div class="mytable" id="caseAllUsers"></div>
 
 <div id="editUser" data-modal data-expand data-exclude-hidden>
     <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja użytkownika</span>
-            <button class="btn admin-secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
-            <button class="btn admin-primary" onclick="saveUser();">Zapisz <i class="fa fa-save"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn primary" onclick="saveUser();">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="modal-body stretch-vertical">
             <div class="desktopRow spaceColumns">
@@ -290,7 +291,7 @@
 
             <br>
             <div style="margin-top:auto; align-self: flex-end; padding-top:30px; margin-bottom:10px">
-                <button class="btn admin-red" onclick="if(confirm('Czy aby na pewno chcesz usunąć użytkownika?')) saveUser(true);">Usuń <i class="fa fa-times"></i></button>
+                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć użytkownika?')) saveUser(true);">Usuń <i class="fa fa-times"></i></button>
             </div>
         </div>
     </div>

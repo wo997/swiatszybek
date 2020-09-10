@@ -53,8 +53,8 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
     .selected {
       color: white;
-      background: #60c216;
-      border-color: #60c216;
+      background: var(--primary-clr);
+      border-color: var(--primary-clr);
     }
 
     .menu {
@@ -266,7 +266,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
               $rowCount++;
 
               if ($rowCount == 1) {
-                $table .= "<h3 class='form-header'>Twoje zamówienia</h3><table class='zamowienia_table hideMobile'><tr style='background: #60d010;color: white;'><td>Nr zamówienia</td><td>Koszt</td><td>Status</td><td>Data utworzenia</td><td></td></tr>";
+                $table .= "<h3 class='form-header'>Twoje zamówienia</h3><table class='zamowienia_table hideMobile'><tr style='background: var(--primary-clr);color: white;'><td>Nr zamówienia</td><td>Koszt</td><td>Status</td><td>Data utworzenia</td><td></td></tr>";
               }
               $table .= "<tr><td>#$zamowienie_id</td><td>$koszt zł</td><td>$status_html</td><td>$zlozono</td><td><a class='btn primary fill' href='/zamowienie/$link'>Szczegóły <i class='fa fa-chevron-right'></i></a></td></tr>";
               $tableMobile .= "<div>

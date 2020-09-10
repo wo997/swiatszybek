@@ -19,7 +19,7 @@ if (!$zamowienie_data) {
 
 $dostawaString = nonull($dostawy, $zamowienie_data["dostawa"]);
 
-$res = "<table class='item-list item-list-full'><tr style='background: #60d010;color: white;'>
+$res = "<table class='item-list item-list-full'><tr style='background: var(--primary-clr);color: white;'>
   <td>Przedmiot</td>
   <td></td>
   <td>Cena</td>
@@ -291,7 +291,6 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
           if ($status["id"] == 5 && $zamowienie_data["dostawa"] != 'o') continue;
           $c++;
 
-          //$current = $k == $status ? "style='background:#60d010;color:white' onclick='return false;'" : "";
           $current = $zamowienie_data["status_id"] == $status["id"] ? "style='background:#" . $status["color"] . ";color:white' " : "";
           if ($status["id"] == 2 && !$tracking_link)
             $current .=  " onclick='return confirm(\"Nie podałeś nr śledzenia paczki, kontynuować pomimo tego?\");' ";

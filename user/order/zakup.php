@@ -145,12 +145,12 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
         margin-top: 4px;
       }*/
     .selectedDostawa {
-      /*color: #60c216;
+      /*color: var(--primary-clr);
         font-weight: bold;
-        border-color: #60c216;*/
+        border-color: var(--primary-clr);*/
       color: white;
-      background: #60c216;
-      border-color: #60c216;
+      background: var(--primary-clr);
+      border-color: var(--primary-clr);
     }
 
     .dostawa img {
@@ -275,7 +275,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
     }
 
     .select-link {
-      background-color: #60c216 !important;
+      background-color: var(--primary-clr) !important;
       width: 100%;
       text-align: center;
       background-image: none !important;
@@ -1235,7 +1235,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
 
       <div class="sameButtons" style="padding: 10px;display: flex;justify-content: space-between;max-width: 1170px;margin: 0 auto;width: 100%;">
-        <button class="btn primary big desktopSpaceRight btn secondary" type="button" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
+        <button class="btn secondary big desktopSpaceRight btn secondary" type="button" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>
