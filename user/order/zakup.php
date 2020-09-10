@@ -957,7 +957,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
     </div>
   </div>
 
-  <div class="main-container" id="zakupForm" style="margin-bottom: 50px;width: 100%;">
+  <div class="main-container" id="zakupForm" style="margin-bottom: 50px;width: 100%;" data-form>
 
     <div id="menu1" class="menu showNow" style="max-width: 1000px;">
       <div style="margin: auto;width:100%;padding: 20px 10px;">
@@ -983,9 +983,9 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           <div style="display: flex; justify-content: center; margin-top: 35px;">
             <?php if (!$app["user"]["id"]) : ?>
               <div style="display: flex; flex-direction:column; align-items: flex-end; width: 50%; margin-right: 10px;">
-                <button class="btn primary big" onclick="this.style.display = 'none'; expand($('#menu1 .login-container'), true, {duration: 350})" style="width: 228px;">Zaloguj się <i class="fa fa-user"></i></button>
+                <button class="btn primary big" onclick="showModal('loginForm')" style="width: 228px;">Zaloguj się <i class="fa fa-user"></i></button>
                 <div class="login-container expand_y hidden animate_hidden" style="width: 350px; max-width: 100%;">
-                  <?php include "user/account/login_form.php"; ?>
+
                   <div style="margin:25px 0 15px;line-height: 1.6;color: #333;">
                     <strong>Zalety korzystania z konta <?= config('main_email_sender') ?>:</strong>
                     <div>- Możliwość przeglądania swoich zamówień</div>

@@ -55,7 +55,7 @@
               </div>
             </div>
           <?php else : ?>
-            <a class="menu_item" style="padding:12px" href="/logowanie"><span class="case-desktop">Zaloguj się </span><i class="fa fa-user"></i></a>
+            <a class="menu_item" style="padding:12px" onclick="showModal('loginForm')"><span class="case-desktop">Zaloguj się </span><i class="fa fa-user"></i></a>
           <?php endif ?>
         </div>
       <?php endif ?>

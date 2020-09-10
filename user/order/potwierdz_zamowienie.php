@@ -126,6 +126,7 @@ setcookie("basket", "", (time() + 31536000), '/');
 addZamowienieLog($zamowienie_id, "Utworzono zamówienie");
 
 $link = getZamowienieLink($link);
+$link_relative = getZamowienieLink($link, true);
 
 // update user data
 
@@ -205,4 +206,4 @@ $mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . config('main_email
   header("Location: $link");
   die;
 }*/
-redirect($link);
+redirect($link_relative);

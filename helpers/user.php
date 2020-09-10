@@ -77,6 +77,9 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
         setBasketData($basket);
     }
 
+    redirect();
+    //redirect("/");
+
     /*if ($app["user"]["basket"]["item_count"] > 0) {
         $_SESSION["redirect"] = "/zakup";
     }*/

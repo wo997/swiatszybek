@@ -2,7 +2,7 @@
 
 window.addEventListener("DOMContentLoaded", () => {
   $$("[data-form]").forEach((form) => {
-    registerInputs(form);
+    registerForm(form);
   });
 });
 
@@ -36,6 +36,12 @@ function showFieldErrors(field, errors = [], params = {}) {
   const correctIndicator = inputElements.find(
     ".input-error-indicator .correct"
   );
+  if (!correctIndicator) {
+    console.error(
+      "The form needs to be registered with registerForm(form) or data-form attribute before content is loaded"
+    );
+    return;
+  }
   const wrongIndicator = inputElements.find(".input-error-indicator .wrong");
   const toggleErrorIcons = (isFieldCorrect) => {
     if (isFieldCorrect) {
@@ -100,8 +106,8 @@ function validateForm(form, params = {}) {
     }
     if (field.findParentByClassName("hidden")) continue;
 
-    formInputChange();
-    if (valid !== true) {
+    var errors = formInputChange(field);
+    if (errors.length > 0) {
       return false;
     }
   }
@@ -453,26 +459,36 @@ function scrollToInvalid(field) {
   });
 }
 
-function registerInputs(form) {
-  form
-    .findAll("[data-validate]:not([data-change-registered])")
-    .forEach((elem) => {
-      elem.setAttribute("data-change-registered", "");
+window.addEventListener("DOMContentLoaded", () => {
+  registerForm();
+});
 
-      elem.addEventListener("change", () => {
-        formInputChange(elem);
+function registerForm(form = null) {
+  if (form === null) {
+    inputs = $(document.body).findAll(
+      "[data-form] [data-validate]:not([data-change-registered])"
+    );
+  } else {
+    inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
+  }
 
-        if (!elem.hasAttribute("data-input-registered")) {
-          elem.setAttribute("data-input-registered", "");
-          elem.addEventListener("input", () => {
-            formInputChange(elem);
-          });
-        }
-      });
+  inputs.forEach((elem) => {
+    elem.setAttribute("data-change-registered", "");
 
-      elem.insertAdjacentHTML(
-        "afterend",
-        `
+    elem.addEventListener("change", () => {
+      formInputChange(elem);
+
+      if (!elem.hasAttribute("data-input-registered")) {
+        elem.setAttribute("data-input-registered", "");
+        elem.addEventListener("input", () => {
+          formInputChange(elem);
+        });
+      }
+    });
+
+    elem.insertAdjacentHTML(
+      "afterend",
+      `
         <div class="input-elements">
           <div class="input-error-indicator">
             <i class="correct fa fa-check"></i>
@@ -483,11 +499,14 @@ function registerInputs(form) {
           </div>
         </div>
       `
-      );
-    });
+    );
+  });
 }
 
 function formInputChange(field) {
+  if (ignoreValueChanges) return;
+
   const errors = fieldErrors(field);
   showFieldErrors(field, errors);
+  return errors;
 }

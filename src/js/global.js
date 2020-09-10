@@ -17,6 +17,9 @@ function xhr(data) {
     if (res.redirect) {
       window.location = res.redirect;
     }
+    if (res.reload) {
+      window.location.reload();
+    }
     if (data.success) {
       data.success(res);
     }
@@ -542,7 +545,7 @@ function findScrollableParent(elem) {
     }
     elem = elem.parent();
   }
-  return null;
+  return window;
 }
 function findNonStaticParent(elem) {
   elem = $(elem);

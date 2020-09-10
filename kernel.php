@@ -146,3 +146,6 @@ if (config("dev_mode", true)) {
 define("RELEASE", 2141);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);
+
+// theme
+include "theme/variables.php";

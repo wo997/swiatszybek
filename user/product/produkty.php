@@ -96,6 +96,10 @@ function showCategory($category, $level = 0)
     .category-picker-row .expand {
       color: #999;
       margin-left: 1px;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      transition: 0.2s all;
     }
 
     .category-picker-row {
@@ -150,6 +154,12 @@ function showCategory($category, $level = 0)
       .category-picker-row .expand {
         transform: translateY(1px);
       }
+
+
+      .category-picker-row .expand:hover {
+        border-radius: 5px;
+        background: #dadada;
+      }
     }
 
     .attribute-label {
@@ -162,6 +172,9 @@ function showCategory($category, $level = 0)
 
     }
 
+    .category_name:hover {
+      text-decoration: underline #000c;
+    }
 
     .product_list-wrapper {
       padding: 2vw;

@@ -1,4 +1,4 @@
-<?php //route[logowanie] 
+<?php //deprecated route[logowanie] 
 if ($app["user"]["id"]) {
   header("Location: /moje-konto");
   die;

@@ -40,18 +40,20 @@ function getWindowScroll() {
 }
 
 function smoothScroll(diff, params = {}) {
-  var time = 40;
-  var t = 0;
-  if (params.time) time = params.time;
-  if (params.t) t = params.t;
+  var duration = nonull(params.duration, 40);
+  var t = nonull(params.t, 0);
 
-  window.scrollBy(
+  var scroll_parent = nonull(params.scroll_parent, window);
+
+  scroll_parent.scrollBy(
     0,
-    (4 * diff * (time / 2 - Math.abs(time / 2 - t))) / (time * time)
+    (4 * diff * (duration / 2 - Math.abs(duration / 2 - t))) /
+      (duration * duration)
   );
-  if (t < time) {
+  if (t < duration) {
     requestAnimationFrame(() => {
-      smoothScroll(diff, { time: time, t: t + 1 });
+      params.t = t + 1;
+      smoothScroll(diff, params);
     });
   } else if (params.callback) {
     params.callback();
@@ -59,12 +61,9 @@ function smoothScroll(diff, params = {}) {
 }
 
 function scrollToView(elem, params = {}) {
-  var time = 40;
-  var offset = 0;
-  var margin = 0.2;
-  if (params.time) time = params.time;
-  if (params.offset) time = params.offset;
-  if (params.margin) margin = params.margin;
+  var duration = nonull(params.duration, 40);
+  var offset = nonull(params.offset, 0);
+  var margin = nonull(params.margin, 0.2);
 
   var r = elem.getBoundingClientRect();
 
@@ -82,7 +81,18 @@ function scrollToView(elem, params = {}) {
     diff = bottom - bottomMin;
   }
 
-  smoothScroll(diff, { time: time, callback: params.callback });
+  var scroll_parent = findScrollableParent(elem);
+
+  /*if (scroll_parent !== window) {
+    diff -= scroll_parent.scrollTop;
+    console.log(diff);
+  }*/
+
+  smoothScroll(diff, {
+    duration: duration,
+    callback: params.callback,
+    scroll_parent: scroll_parent,
+  });
 }
 
 function scrollToBottom(node) {

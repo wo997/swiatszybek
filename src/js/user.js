@@ -40,21 +40,19 @@ function onSignIn(googleUser) {
 
 // requires login_form included
 function login() {
-  const zalogujForm = $(`#loginForm`);
+  const loginForm = $(`#loginForm`);
 
-  if (!validateForm(zalogujForm)) {
+  if (!validateForm(loginForm)) {
     return;
   }
 
-  const params = getFormData(zalogujForm);
-
   xhr({
     url: "/login",
-    params,
-    success: ({ message, error_field_name }) => {
-      if (message && error_field_name) {
-        markFieldWrong(zalogujForm.find(`[name="${error_field_name}"]`), [
-          message,
+    params: getFormData(loginForm),
+    success: (res) => {
+      if (res.message && res.error_field_name) {
+        showFieldErrors(loginForm.find(`[name="${res.error_field_name}"]`), [
+          res.message,
         ]);
       }
     },

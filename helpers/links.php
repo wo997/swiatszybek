@@ -13,9 +13,9 @@ function getProductLink($product_id, $link)
     return SITE_URL . "/produkt/$product_id/" . getLink($link);
 }
 
-function getZamowienieLink($link)
+function getZamowienieLink($link, $relative = false)
 {
-    return SITE_URL . "/zamowienie/$link";
+    return ($relative ? "" : SITE_URL) . "/zamowienie/$link";
 }
 
 function getMenuLink($menu_item)

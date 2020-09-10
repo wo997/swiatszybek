@@ -1,0 +1,8 @@
+/* css[global] */
+
+#loginForm .modal-body {
+  width: 350px;
+  padding: 15px;
+  max-height: calc(100% - 20px);
+  max-width: calc(100% - 20px);
+}
