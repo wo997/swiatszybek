@@ -19,9 +19,8 @@
       definition: [{
           title: "Kod",
           width: "10%",
-          render: (r) => {
-            return r.kod;
-          }
+          field: "kod",
+          searchable: "text",
         },
         {
           title: "Wartość",
@@ -35,28 +34,25 @@
           width: "10%",
           render: (r) => {
             return r.user_list || !r.user_id_list ? r.user_list : "Wszyscy";
-          }
+          },
         },
         {
           title: "Od",
           width: "10%",
-          render: (r) => {
-            return r.date_from;
-          }
+          field: "date_from",
+          searchable: "date",
+
         },
         {
           title: "Do",
           width: "10%",
-          render: (r) => {
-            return r.date_to;
-          }
+          field: "date_to",
+          searchable: "date",
         },
         {
           title: "Ilość",
           width: "10%",
-          render: (r) => {
-            return r.ilosc;
-          }
+          field: "ilosc",
         },
         {
           title: "",

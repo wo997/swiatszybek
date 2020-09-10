@@ -1,7 +1,5 @@
 <?php //route[potwierdz_zamowienie]
 
-$response = [];
-
 $impersonate = false;
 if (isset($_POST["impersonate"]) && $_POST["impersonate"] == 1) {
   $impersonate = true;
@@ -11,8 +9,6 @@ if (isset($_POST["impersonate"]) && $_POST["impersonate"] == 1) {
   $user_id = $app["user"]["id"];
   $user_type = $app["user"]["type"];
 }
-
-//$posts = ["imie","nazwisko","email","telefon","firma","paczkomat_i","kraj_i", "miejscowosc_i", "kod_pocztowy_i", "ulica_i", "nr_domu_i","dostawa","uwagi","oddzial_id","buyer_type","nr_lokalu_i","nip","kraj_z","kod_pocztowy_z","miejscowosc_z","ulica_z","nr_domu_z","nr_lokalu_z","imie_d","nazwisko_d","firma_d","forma_zaplaty"];
 
 include "helpers/safe_post.php";
 
@@ -25,10 +21,7 @@ if ($_POST["buyer_type"] == 'f') {
 }
 
 if ($_POST["email"] == '') {
-  $response["redirect"] = "/zakup";
-  json_response($response);
-  // header("Location: /zakup");
-  // die;
+  redirect("/zakup");
 }
 
 // lower kod rabatowy count
@@ -76,7 +69,7 @@ $paczkomat = $_POST["dostawa"] == 'p' ? nonull($_POST, "paczkomat", NULL) : NULL
 
 query(
   "INSERT INTO zamowienia (
-    user_id, link, koszt, zlozono, status,
+    user_id, link, koszt, zlozono, status_id,
     imie, nazwisko, email, telefon, firma, nip,
     dostawa, paczkomat, oddzial_id,
     kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu,
@@ -119,7 +112,7 @@ foreach ($app["user"]["basket"]["variants"] as $v) {
 
   query("UPDATE variant SET stock = stock - " . intval($v["quantity"]) . " where variant_id = " . intval($v["quantity"]));
 
-  $res .= "<tr><td style='padding:4px'>" . $v["quantity"] . " szt.</td><td style='padding:4px'>" . $v["title"] . " " . $v["name"] . "</td><td style='padding:4px'>$total_price zł</td></tr>";
+  $res .= "<tr><td style='padding:4px'>" . $v["quantity"] . " szt.</td><td style='padding:4px'>" . $v["title"] . " " . $v["name"] . "</td><td style='padding:4px'>" . $v["total_price"] . " zł</td></tr>";
 }
 $res .= "</table>";
 
@@ -137,9 +130,9 @@ $link = getZamowienieLink($link);
 // update user data
 
 if (!$impersonate) {
-  if ($_POST["dostawa"] == 'k' && $_POST["miejscowosc_i"] != "") {
+  if ($_POST["dostawa"] == 'k' && $_POST["miejscowosc"] != "") {
     query("UPDATE users SET kraj = ?, miejscowosc = ?, kod_pocztowy = ?, ulica = ?, nr_domu = ? WHERE user_id = ? LIMIT 1", [
-      $_POST["kraj_i"], $_POST["miejscowosc_i"], $_POST["kod_pocztowy_i"], $_POST["ulica_i"], $_POST["nr_domu_i"], $user_id
+      $_POST["kraj"], $_POST["miejscowosc"], $_POST["kod_pocztowy"], $_POST["ulica"], $_POST["nr_domu"], $user_id
     ]);
   }
 
@@ -161,9 +154,9 @@ if (!$impersonate) {
 }
 
 // send mail
-$adresWho = $_POST["imie_d"] . " " . $_POST["nazwisko_d"];
-if ($_POST["firma_d"] != '') {
-  $adresWho .= $_POST["firma_d"];
+$adresWho = $_POST["imie_dostawa"] . " " . $_POST["nazwisko_dostawa"];
+if ($_POST["firma_dostawa"] != '') {
+  $adresWho .= $_POST["firma_dostawa"];
 }
 
 $kontaktAdresString =  $_POST["kod_pocztowy"] . " " . $_POST["miejscowosc"] . ", " . $_POST["kraj"] . "<br>" . $_POST["ulica"] . ", " . $_POST["nr_domu"] . ($_POST["nr_lokalu"] ? "/" : "") . $_POST["nr_lokalu"];
@@ -212,7 +205,4 @@ $mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . config('main_email
   header("Location: $link");
   die;
 }*/
-$response["redirect"] = $link;
-json_response($response);
-// header("Location: $link");
-// die;
+redirect($link);

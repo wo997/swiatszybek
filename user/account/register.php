@@ -7,28 +7,33 @@ foreach ($posts as $p) {
     die;
 }
 
-function quit($message, $type)
-{
-  echo '<form style="display:none" id="myForm" action="/rejestracja" method="post">';
-  foreach ($_POST as $a => $b) {
-    echo '<input type="text" name="' . htmlentities($a) . '" value="' . htmlentities($b) . '">';
-  }
-  if ($type == 0)
-    $color = "#c44";
-  else
-    $color = "#4c4";
+$response = [];
 
-  $message = "<div style='text-align:center;'><h4 style='color: $color;display: inline-block;border: 1px solid $color;padding: 7px;margin: 0 auto;border-radius: 5px;'>$message</h4></div>";
-  echo '<input type="text" name="message" value="' . $message . '">';
-  echo '</form>';
-  echo '<script>';
-  echo 'document.querySelector("#myForm").submit();';
-  echo '</script>';
-  die;
+// function quit($message, $type)
+// {
+//   echo '<form style="display:none" id="myForm" action="/rejestracja" method="post">';
+//   foreach ($_POST as $a => $b) {
+//     echo '<input type="text" name="' . htmlentities($a) . '" value="' . htmlentities($b) . '">';
+//   }
+//   if ($type == 0)
+//     $color = "#c44";
+//   else
+//     $color = "#4c4";
+
+//   $message = "<div style='text-align:center;'><h4 style='color: $color;display: inline-block;border: 1px solid $color;padding: 7px;margin: 0 auto;border-radius: 5px;'>$message</h4></div>";
+//   echo '<input type="text" name="message" value="' . $message . '">';
+//   echo '</form>';
+//   echo '<script>';
+//   echo 'document.querySelector("#myForm").submit();';
+//   echo '</script>';
+//   die;
+// }
+
+if (!validateEmail($_POST["email"]) || validatePassword($_POST["password"])) {
+  $response["message"] = "Wpisz poprawny adres email";
+  // $response[]
 }
-
-if (!validateEmail($_POST["email"]) || validatePassword($_POST["password"]))
-  quit("Wpisz poprawny email i hasło", 0);
+quit("Wpisz poprawny email i hasło", 0);
 
 // check if has email
 $user_data = fetchRow("SELECT user_id, authenticated, authentication_token, password_hash FROM `users` WHERE user_type = 's' AND email = ?", [$_POST["email"]]);
@@ -56,6 +61,6 @@ if ($user_data) {
 // send mail no matter if exists to make sure he will receive it
 $message = "<h2>Kliknij w link poniżej, żeby aktywować swoje konto</h2><br><a style='font-size:18px' href='" . SITE_URL . "/aktywuj/" . $user_data["user_id"] . "/$authentication_token'>Aktywuj</a>";
 $mailTitle = "Aktywacja konta " . config('main_email_sender') . " " . date("d-m-Y");
-sendEmail($_POST["email"], $message, $mailTitle);
+@sendEmail($_POST["email"], $message, $mailTitle);
 
 quit("Wysłaliśmy link aktywacyjny na twoją skrzynkę pocztową", 1);

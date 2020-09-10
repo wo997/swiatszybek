@@ -3,6 +3,19 @@
 session_start();
 require_once 'vendor/autoload.php';
 
+define("IS_XHR", !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+// var_dump($_SESSION["redirect"]);
+// unset($_SESSION["redirect"]);
+// die;
+if (isset($_SESSION["redirect"]) && !IS_XHR) {
+  $redirect = $_SESSION["redirect"];
+  unset($_SESSION["redirect"]);
+  if ($_SERVER["REQUEST_URI"] != $redirect) {
+    header("Location: $redirect");
+    die;
+  }
+}
+
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
 define("UPLOADS_PLAIN_PATH", UPLOADS_PATH . "-/");
@@ -117,7 +130,7 @@ initUser();
 
 validateBasket();
 validateStock();
-getBasketData();
+prepareBasketData();
 
 // todo remove or tigger an event here
 if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) {

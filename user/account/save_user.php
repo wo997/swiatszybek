@@ -90,7 +90,7 @@ if (isset($_POST["imie"])) {
                 <br>
                 <a style='font-size:18px' href='" . SITE_URL . "/zmien_email/$user_id/" . $user_old_data["authentication_token"] . "'>Potwierdzam</a>";
             $mailTitle = "Zmiana emaila konta " . config('main_email_sender') . " " . date("d-m-Y");
-            sendEmail($email, $message, $mailTitle);
+            @sendEmail($email, $message, $mailTitle);
 
             $response_body[] = "Wysłaliśmy link do zmiany adresu email<br>na $email.";
 

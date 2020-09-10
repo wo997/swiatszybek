@@ -1,8 +1,8 @@
 <?php //route[facebook/login_callback]
 
-if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
-  $_SESSION["redirect"] = "/zakup";
-}
+// if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
+//   $_SESSION["redirect"] = "/zakup";
+// }
 
 try {
   $accessToken = $fb_helper->getAccessToken();

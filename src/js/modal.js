@@ -34,8 +34,6 @@ function registerModal(e) {
   $("#modal-wrapper .modal-content").appendChild(e);
   e.style.display = "none";
   e.style.pointerEvents = "none";
-
-  registerSelectboxes();
 }
 
 var modalHideCallbacks = {};

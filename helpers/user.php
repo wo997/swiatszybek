@@ -81,25 +81,35 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
         $_SESSION["redirect"] = "/zakup";
     }*/
 
-    if ($redirect) {
-        $redirectRoute = isset($_SESSION["redirect"]) ? $_SESSION["redirect"] : "";
-        unset($_SESSION["redirect"]);
-
-        if ($redirectRoute == "/zakup") {
-            $_SESSION["just_logged_from_order"] = true;
-            header("Location: $redirectRoute");
-            die;
-        } else if (empty($email) || (isset($data["imie"]) && empty($data["imie"]))) {
-            header("Location: /moje-konto/dane-uzytkownika");
-            die;
-        } else if ($redirectRoute) {
-            header("Location: $redirectRoute");
-            die;
-        } else {
-            header("Location: /moje-konto/zamowienia");
-            die;
-        }
+    $redirect_url = "/";
+    if ($_SERVER['HTTP_REFERER']) {
+        $url = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
+        $redirect_list = [
+            "/logowanie" => "/",
+        ];
+        $redirect_url = nonull($redirect_list, $url, $url);
     }
+    redirect($redirect_url);
+
+    // if ($redirect) {
+    //     $redirectRoute = isset($_SESSION["redirect"]) ? $_SESSION["redirect"] : "";
+    //     unset($_SESSION["redirect"]);
+
+    //     if ($redirectRoute == "/zakup") {
+    //         $_SESSION["just_logged_from_order"] = true;
+    //         header("Location: $redirectRoute");
+    //         die;
+    //     } else if (empty($email) || (isset($data["imie"]) && empty($data["imie"]))) {
+    //         header("Location: /moje-konto/dane-uzytkownika");
+    //         die;
+    //     } else if ($redirectRoute) {
+    //         header("Location: $redirectRoute");
+    //         die;
+    //     } else {
+    //         header("Location: /moje-konto/zamowienia");
+    //         die;
+    //     }
+    // }
 }
 
 function getPasswordHash($val)

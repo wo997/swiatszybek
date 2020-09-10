@@ -38,8 +38,7 @@
                     title: "Email",
                     width: "12%",
                     field: "email",
-                    sortable: true,
-                    searchable: "",
+                    searchable: "text",
                 },
                 {
                     title: "Telefon",
