@@ -62,7 +62,7 @@
           title: "",
           width: "100px",
           render: (r) => {
-            return `<a class='btn primary' href='/admin/kod_rabatowy/${r.kod_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
+            return `<a class='btn admin-primary' href='/admin/kod_rabatowy/${r.kod_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
           },
           escape: false
         },
@@ -72,7 +72,7 @@
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <a class="btn primary" href="/admin/kod_rabatowy"><span>Nowy kod rabatowy</span> <i class="fa fa-plus"></i></a>
+        <a class="btn admin-primary" href="/admin/kod_rabatowy"><span>Nowy kod rabatowy</span> <i class="fa fa-plus"></i></a>
       `
     });
   });

@@ -22,11 +22,11 @@ registerModalContent(
             <div class="custom-toolbar">
                 <span class="title">
                     Podgląd strony
-                    <button class="btn primary" onclick="window.preview.setSize('','')">Komputer <i class="fas fa-desktop"></i></button>
-                    <button class="btn primary" onclick="window.preview.setSize('410px','850px')">Telefon <i class="fas fa-mobile-alt"></i></button>
-                    <button class="btn primary" onclick="window.preview.setSize('340px','568px')">iPhone SE <i class="fas fa-mobile-alt"></i> <i class='fas fa-info-circle' data-tooltip='Najmniejsza rozdzielczość z urządzeń mobilnych'></i></button>
+                    <button class="btn admin-primary" onclick="window.preview.setSize('','')">Komputer <i class="fas fa-desktop"></i></button>
+                    <button class="btn admin-primary" onclick="window.preview.setSize('410px','850px')">Telefon <i class="fas fa-mobile-alt"></i></button>
+                    <button class="btn admin-primary" onclick="window.preview.setSize('340px','568px')">iPhone SE <i class="fas fa-mobile-alt"></i> <i class='fas fa-info-circle' data-tooltip='Najmniejsza rozdzielczość z urządzeń mobilnych'></i></button>
                 </span>
-                <button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fa fa-times"></i></button>
+                <button class="btn admin-primary" onclick="hideParentModal(this)">Ukryj <i class="fa fa-times"></i></button>
             </div>
             <div style="margin: -10px;height: 100%;margin-top: 0;display:flex">
                 <iframe name="preview_iframe"></iframe>

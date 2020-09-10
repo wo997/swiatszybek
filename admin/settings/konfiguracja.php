@@ -59,8 +59,8 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
                     width: "185px",
                     render: (r, i, t) => {
                         return `
-                            <div class="btn secondary" onclick="${t.name}.showEditCategory(this,${i})">Edytuj <i class="fa fa-cog"></i></div>
-                            <div class="btn primary" onclick="${t.name}.openCategory(${i})">Więcej <i class="fas fa-chevron-circle-right"></i></div>
+                            <div class="btn admin-secondary" onclick="${t.name}.showEditCategory(this,${i})">Edytuj <i class="fa fa-cog"></i></div>
+                            <div class="btn admin-primary" onclick="${t.name}.openCategory(${i})">Więcej <i class="fas fa-chevron-circle-right"></i></div>
                         `;
                     },
                     escape: false
@@ -115,8 +115,8 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
                                                     }
                                                     $stmt->close();
                                                     ?>
-        <!-- <input type='submit' class='btn primary fill' value='Zapisz' style="width:100%;margin-top:10px;"> -->
-        <button class='btn primary fill' style="width:100%;margin-top:10px;" onclick="save()">Zapisz</button>
+        <!-- <input type='submit' class='btn admin-primary fill' value='Zapisz' style="width:100%;margin-top:10px;"> -->
+        <button class='btn admin-primary fill' style="width:100%;margin-top:10px;" onclick="save()">Zapisz</button>
     </div>
 </div>
 

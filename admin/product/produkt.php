@@ -169,7 +169,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           title: "",
           width: "95px",
           render: (r, i) => {
-            return `<div class='btn primary' onclick='editVariant(${i},this)'>Edytuj <i class="fas fa-cog"></i></div>`;
+            return `<div class='btn admin-primary' onclick='editVariant(${i},this)'>Edytuj <i class="fas fa-cog"></i></div>`;
           },
           escape: false
         }
@@ -179,7 +179,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
                     <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>
-                <div class="btn primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
+                <div class="btn admin-primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
             `
     });
 
@@ -194,7 +194,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
               <img data-list-param="src" data-type="src" style="object-fit:contain;width:120px;height:120px;display: block;margin-right:10px;">
-              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+              <button class="btn admin-primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
       },
@@ -357,12 +357,12 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       </div>
       <div>
         <?php if ($kopia) : ?>
-          <a href="/admin/produkt/<?= $product_id ?>" class="btn secondary">Anuluj <i class="fa fa-times"></i></a>
+          <a href="/admin/produkt/<?= $product_id ?>" class="btn admin-secondary">Anuluj <i class="fa fa-times"></i></a>
         <?php else : ?>
-          <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
-          <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
+          <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn admin-secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
+          <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn admin-secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
         <?php endif ?>
-        <button onclick="saveProductForm()" class="btn primary" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
+        <button onclick="saveProductForm()" class="btn admin-primary" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
       </div>
     </div>
     <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">
@@ -377,7 +377,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
           <div class="field-title">Link strony</div>
           <div style="display:flex;flex-wrap: wrap;">
             <input type="text" name="link" data-validate autocomplete="off" class="field" style="max-width: 600px;">
-            <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
+            <button class="btn admin-primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
           </div>
         </div>
 
@@ -402,7 +402,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
       <div class="field-title">
         Opis główny
-        <div onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
+        <div onclick="editPage()" class="btn admin-primary">Edytuj <i class="far fa-edit"></i></div>
       </div>
       <div name="description" data-type="html" class="cms preview_html" style="max-height: 400px"></div>
     </div>
@@ -415,7 +415,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
     <?php if (!$kopia) : ?>
       <div style="display: flex; justify-content: flex-end">
-        <div class="btn red" style='margin-top:30px' onclick="deleteProduct()">Usuń produkt <i class="fa fa-trash"></i></div>
+        <div class="btn admin-red" style='margin-top:30px' onclick="deleteProduct()">Usuń produkt <i class="fa fa-trash"></i></div>
       </div>
     <?php endif ?>
   </div>
@@ -425,8 +425,8 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   <div class="modal-body stretch-vertical">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
-      <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
-      <button class="btn primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
+      <button class="btn admin-secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+      <button class="btn admin-primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
     <div>
 
@@ -448,7 +448,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       <div style="display:none">
         <div class="field-title">Kolor</div>
         <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
-        <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
+        <div class="btn admin-primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
       </div>
 
       <div class="field-title">Atrybuty wariantu (inne niż ogólne dla produktu)</div>
@@ -456,7 +456,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
       <div class="field-title">
         Zdjecie
-        <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types: ["image"]})'>Wybierz</button>
+        <button class="btn admin-primary" onclick='fileManager.open(this.next(),{asset_types: ["image"]})'>Wybierz</button>
         <img name="zdjecie" data-type="src" />
       </div>
 
@@ -470,7 +470,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       <input type="hidden" name="product_id">
       <input type="hidden" name="variant_id">
       <div style="display: flex; justify-content: flex-end; margin-top: 20px">
-        <button class=" btn red" onclick="saveVariantForm(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
+        <button class=" btn admin-red" onclick="saveVariantForm(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
       </div>
     </div>
   </div>

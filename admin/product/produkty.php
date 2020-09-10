@@ -52,7 +52,7 @@
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <button class="btn important" onclick="addNew(this)">
+        <button class="btn admin-important" onclick="addNew(this)">
           Produkt <i class="fas fa-plus-circle"></i>
         </button>
       `
@@ -102,8 +102,8 @@
       <input type="text" name="title" id="title" data-validate class="field">
     </label>
     <div class="flexbar slim single-line">
-      <button class="btn primary fill space-right" onclick="saveNewProduct(); hideParentModal(this)">Dodaj <i class="fa fa-check"></i></button>
-      <button class="btn secondary fill" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+      <button class="btn admin-primary fill space-right" onclick="saveNewProduct(); hideParentModal(this)">Dodaj <i class="fa fa-check"></i></button>
+      <button class="btn admin-secondary fill" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
     </div>
   </div>
 </div>

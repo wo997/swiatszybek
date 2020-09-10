@@ -62,9 +62,9 @@
                     width: "10%",
                     render: (r) => {
                         var action = "";
-                        action = `<button class='btn red' style='margin-left:10px' onclick='commentAction(${r.comment_id},-1)'>Usuń</button>`;
+                        action = `<button class='btn admin-red' style='margin-left:10px' onclick='commentAction(${r.comment_id},-1)'>Usuń</button>`;
                         if (r.accepted == 0)
-                            action += `<button class='btn primary' style='margin-left:10px' onclick='commentAction(${r.comment_id},1)'>Akceptuj</button>`;
+                            action += `<button class='btn admin-primary' style='margin-left:10px' onclick='commentAction(${r.comment_id},1)'>Akceptuj</button>`;
                         return action;
                     },
                     escape: false,

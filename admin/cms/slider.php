@@ -49,7 +49,7 @@
                     title: "",
                     width: "95px",
                     render: (r, i) => {
-                        return `<div class='btn primary' onclick='editSlide(this, ${i})'>Edytuj <i class="fas fa-cog"></i></div>`;
+                        return `<div class='btn admin-primary' onclick='editSlide(this, ${i})'>Edytuj <i class="fas fa-cog"></i></div>`;
                     },
                     escape: false
                 }
@@ -59,7 +59,7 @@
                     <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>
-                <div class="btn primary" onclick="newSlide(this)"><span>Nowy slajd</span> <i class="fa fa-plus"></i></div>
+                <div class="btn admin-primary" onclick="newSlide(this)"><span>Nowy slajd</span> <i class="fa fa-plus"></i></div>
                 `
         });
     });
@@ -120,8 +120,8 @@
     <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title"></span>
-            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
-            <button class="btn primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
+            <button class="btn admin-secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn admin-primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div>
             <div class="field-title">Widoczność</div>
@@ -130,16 +130,16 @@
                 <option value="0">Ukryty</option>
             </select>
 
-            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button onclick="editCMS(this.parent().next())" class="btn admin-primary">Edytuj <i class="far fa-edit"></i></button></h3>
             <div class="cms preview_html" name="content_desktop" data-type="html"></div>
 
-            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button onclick="editCMS(this.parent().next())" class="btn admin-primary">Edytuj <i class="far fa-edit"></i></button></h3>
             <div class="cms preview_html" name="content_mobile" data-type="html"></div>
 
             <input type="hidden" name="slide_id">
         </div>
         <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-            <button class="btn red" onclick="saveSlide(true);hideParentModal(this)">Usuń slajd <i class="fa fa-trash"></i></button>
+            <button class="btn admin-red" onclick="saveSlide(true);hideParentModal(this)">Usuń slajd <i class="fa fa-trash"></i></button>
         </div>
     </div>
 </div>

@@ -36,7 +36,7 @@
                         <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
-                    <a class="btn primary" href="/admin/napisz_newsletter">Wyślij wiadomość&nbsp;<i class="fa fa-envelope"></i></a>
+                    <a class="btn admin-primary" href="/admin/napisz_newsletter">Wyślij wiadomość&nbsp;<i class="fa fa-envelope"></i></a>
                 `
         });
     });

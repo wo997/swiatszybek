@@ -28,7 +28,7 @@ if (isset($_SESSION["p24_back_url"])) {
 
     <div class="main-container" style="padding:50px 10px;max-width: 850px;margin:0 auto;min-height: 50vh;display: flex;align-items: center;">
         <div style="padding: 20px;border: 1px solid #ddd;background: #fcfcfc;">
-            <h1>Zamówienie zostało złożone<i class="fas fa-check-circle" style="margin-left: 5px;color: #6c1;"></i></h1>
+            <h1>Zamówienie zostało złożone<i class="fas fa-check-circle" style="margin-left: 5px;color: var(--primary-clr);"></i></h1>
             <p style="font-size: 16px;padding: 6px;">Dziękujemy za zakupy w naszym sklepie.<br>Potwierdzenie wysłaliśmy na Twoją skrzynkę pocztową.<br>Zapraszamy do dalszych zakupów w przyszłości.</p>
             <div class="mobileRow">
                 <?php if ($app["user"]["id"]) : ?>

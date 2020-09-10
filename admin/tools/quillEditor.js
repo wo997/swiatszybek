@@ -124,7 +124,7 @@ window.quillEditor = {
     "rgb(255, 85, 118)",
     "rgb(255,43,0)",
     "#FFD700",
-    "#6c1",
+    "var(--primary-clr)",
     "#3f00b5",
     "rgb(160,65,112)",
     "rgb(65,160,113)",
@@ -893,7 +893,7 @@ window.quillEditor = {
           "button",
           {
             label: "Mój link",
-            class: "btn primary",
+            class: "btn admin-primary",
           },
           "api"
         );
@@ -1299,10 +1299,10 @@ registerModalContent(
         <div class="modal-body stretch-vertical">
             <div class="custom-toolbar">
                 <span class="title">Edytor bloku</span>
-                <button class="btn secondary toggle_size" onclick="quillEditor.toggleQuillSize();" data-tooltip="Ustaw na szerokość bloku / cały ekran"> <i class="fas fa-expand"></i> </button>
-                <button class="btn secondary" onclick="showModal('quill_poradnik')">Poradnik <i class="fas fa-info-circle"></i></button>
-                <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-                <button class="btn primary" onclick="quillEditor.save();hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
+                <button class="btn admin-secondary toggle_size" onclick="quillEditor.toggleQuillSize();" data-tooltip="Ustaw na szerokość bloku / cały ekran"> <i class="fas fa-expand"></i> </button>
+                <button class="btn admin-secondary" onclick="showModal('quill_poradnik')">Poradnik <i class="fas fa-info-circle"></i></button>
+                <button class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+                <button class="btn admin-primary" onclick="quillEditor.save();hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
             </div>
             <div class="quill-wrapper stretch-vertical">
                 <div class="quill-editor-container"></div>
@@ -1334,7 +1334,7 @@ registerModalContent(
                       <td>
                         <div class="glue-children">
                           <input type="text" autocomplete="off" class="href field slim" placeholder='Opcjonalny link' oninput="quillEditor.modifyNode('data-href',this.value)">
-                          <button class="btn primary slim" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                          <button class="btn admin-primary slim" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
                         </div>
                       </td>
                     </tr>
@@ -1347,7 +1347,7 @@ registerModalContent(
                       <td>
                         <div class="glue-children">
                           <input type="text" autocomplete="off" class="src field slim" placeholder='https://www.youtube.com/watch?v=...' oninput="quillEditor.modifyNode('youtube',this.value)">
-                          <button class="btn primary slim" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                          <button class="btn admin-primary slim" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
                         </div>
                       </td>
                     </tr>
@@ -1379,8 +1379,8 @@ registerModalContent(
                         <td>
                           <div class="glue-children">
                             <input type="text" autocomplete="off" placeholder="https://google.com" class="href field slim" oninput="quillEditor.modifyNode('href',this.value)" style="flex-grow: 1;">
-                            <button class="btn secondary" onclick="quillEditor.removeLink()" data-tooltip="Usuń link"><i class="fas fa-unlink"></i></button>
-                            <button class="btn primary slim" onclick="window.open($(this).prev().prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                            <button class="btn admin-secondary" onclick="quillEditor.removeLink()" data-tooltip="Usuń link"><i class="fas fa-unlink"></i></button>
+                            <button class="btn admin-primary slim" onclick="window.open($(this).prev().prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
                           </div>
                         </td>
                       </tr>
@@ -1406,7 +1406,7 @@ registerModalContent(
                         <td>
                           <div class="glue-children">
                             <input type="text" autocomplete="off" placeholder="https://google.com" class="href field slim" oninput="quillEditor.modifyNode('data-href',this.value)" style="flex-grow: 1;">
-                            <button class="btn primary" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
+                            <button class="btn admin-primary" onclick="window.open($(this).prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
                           </div>
                         </td>
                       </tr>
@@ -1452,7 +1452,7 @@ registerModalContent(
         <link href="/admin/tools/quillEditor.css?v=${RELEASE}" rel="stylesheet">
     </div>
     `,
-  //<div class="btn primary slim" onclick="buttonGallery.open(quillEditor.active_elem)">Wybierz <i class="fas fa-paint-brush"></i></div>
+  //<div class="btn admin-primary slim" onclick="buttonGallery.open(quillEditor.active_elem)">Wybierz <i class="fas fa-paint-brush"></i></div>
   () => {
     quillEditor.loaded();
   }
@@ -1463,14 +1463,14 @@ registerModalContent(`
         <div class="modal-body" style="width: 100%;max-width: 300px;">
             <div class="custom-toolbar">
                 <span class="title">Wstawianie filmu</span>
-                <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+                <button class="btn admin-secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
             </div>
             <div>
               <div class="field-wrapper">
                 <span class="field-title">Link do filmu Youtube</span>
                 <div class="glue-children">
                     <input type="text" class="field" data-validate="youtube-video">
-                    <button class="btn primary" onclick="quillEditor.putVideoBySource($(this).prev(), $(this).parent())">Wstaw</button>
+                    <button class="btn admin-primary" onclick="quillEditor.putVideoBySource($(this).prev(), $(this).parent())">Wstaw</button>
                 </div>
               </div>
 
@@ -1478,13 +1478,13 @@ registerModalContent(`
                 <span class="field-title">Link do dowolnego filmu</span>
                 <div class="glue-children">
                     <input type="text" class="field" data-validate="">
-                    <button class="btn primary" onclick="quillEditor.putVideoBySource($(this).prev(), $(this).parent())">Wstaw</button>
+                    <button class="btn admin-primary" onclick="quillEditor.putVideoBySource($(this).prev(), $(this).parent())">Wstaw</button>
                 </div>
               </div>
 
               <span class="field-title">
                 Wybierz z galerii filmów
-                <button class="btn primary" onclick="quillEditor.chooseVideoFromGallery(this);">Wybierz</button>
+                <button class="btn admin-primary" onclick="quillEditor.chooseVideoFromGallery(this);">Wybierz</button>
               </span>
               
             </div>

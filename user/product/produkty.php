@@ -237,7 +237,7 @@ function showCategory($category, $level = 0)
     }
 
     .order_by_item input:checked+span {
-      background: #6c1;
+      background: var(--primary-clr);
       color: #fffd;
       cursor: default;
     }

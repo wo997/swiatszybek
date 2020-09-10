@@ -51,7 +51,7 @@ if (isset($_POST["imie"])) {
             {
                 if ($email_client) {
                     return "
-                        <a class='btn primary' target='_blank' rel='noopener noreferrer' href='$email_client'>
+                        <a class='btn admin-primary' target='_blank' rel='noopener noreferrer' href='$email_client'>
                             Przejdź do poczty <i class='fas fa-envelope'></i>
                         </a>
                     ";
@@ -77,7 +77,7 @@ if (isset($_POST["imie"])) {
             // sendEmail($email, $message, $mailTitle);
             $response["message"] .= "Wysłaliśmy link do zmiany adresu email<br>na $email.<br></p>" . get_email_redirect_button($email_client);
             $response["message"] .= "
-                <button class='btn secondary' style='width: 100px;' onclick='hideParentModal(this)'>
+                <button class='btn admin-secondary' style='width: 100px;' onclick='hideParentModal(this)'>
                     Zamknij <i class='fas fa-times'></i>
                 </button>
             ";

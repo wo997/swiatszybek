@@ -164,7 +164,12 @@ textarea {
   text-align: center;
   cursor: pointer;
 }
-.btn.important {
+
+.btn.primary {
+  background: var(--primary-clr);
+  color: white;
+}
+/*.btn.important {
   background: #34e;
   color: white;
   border: 1px solid #23d;
@@ -173,16 +178,16 @@ textarea {
   font-weight: 600;
 }
 .btn.primary {
-  background: #6c1;
+  background: var(--primary-clr);
   color: white;
   border: 1px solid #5b1;
   border-bottom-color: #4a1;
-  border-top-color: #6c1;
+  border-top-color: var(--primary-clr);
 }
 .btn.secondary {
   background: white;
-  color: #6c1;
-  border: 1px solid #6c1;
+  color: var(--primary-clr);
+  border: 1px solid var(--primary-clr);
 }
 .btn.red {
   background: #d22;
@@ -196,7 +201,7 @@ textarea {
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
   border-top: 1px solid #eee;
-}
+}*/
 .btn.black-outline {
   color: black;
   border: 1px solid black;
@@ -544,7 +549,7 @@ input[type="radio"] {
   }
 }
 input[type="radio"]:not([value=""]):checked {
-  background-color: #6c1;
+  background-color: var(--primary-clr);
   border: 5px #8e3 solid;
 }
 
@@ -817,11 +822,11 @@ select.inline,
   margin: 0;
 }
 nav > div > a.current-route {
-  background: #c22;
+  background: var(--primary-clr);
   color: white;
 }
 nav div > a:not(.current-route):hover > * {
-  color: #c22;
+  color: var(--primary-clr);
   text-decoration: underline;
 }
 .header-wrapper {
@@ -2168,7 +2173,7 @@ ql-icon i span {
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.14);
   -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.14);
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.14);
-  background: #6c1;
+  background: var(--primary-clr);
   color: white;
   flex-wrap: wrap;
   flex-shrink: 0;

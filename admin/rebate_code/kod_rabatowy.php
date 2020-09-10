@@ -103,7 +103,7 @@ if (!json_decode($kod_data["product_list"])) {
                     title: "Nazwa produktu",
                     width: "50%",
                     render: (r) => {
-                        return `<a class="btn secondary" target="_blank" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
+                        return `<a class="btn admin-secondary" target="_blank" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
                     },
                     escape: false
                 },
@@ -206,11 +206,11 @@ if (!json_decode($kod_data["product_list"])) {
 
         <input type="hidden" name="kod_id" value="<?= $kod_data["kod_id"] ?>">
         <div style="margin-top:10px;text-align:right">
-            <a href="/admin/kody-rabatowe" class="btn secondary"><i class="fas fa-chevron-circle-left"></i> Wróć</a>
+            <a href="/admin/kody-rabatowe" class="btn admin-secondary"><i class="fas fa-chevron-circle-left"></i> Wróć</a>
             <?php if ($kod_data["kod_id"] != -1) : ?>
-                <button class="btn secondary red" onclick='if (confirm("Czy aby na pewno chcesz usunąć kod rabatowy?")) {save(true)};'>Usuń <i class="fa fa-times"></i></button>
+                <button class="btn admin-secondary red" onclick='if (confirm("Czy aby na pewno chcesz usunąć kod rabatowy?")) {save(true)};'>Usuń <i class="fa fa-times"></i></button>
             <?php endif ?>
-            <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
+            <button class="btn admin-primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
         </div>
     </div>
 </div>

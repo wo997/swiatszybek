@@ -25,7 +25,7 @@ if ($password && validatePassword($password)) {
 
 
     $response_header = "
-        <div style='margin: -10px;margin-bottom: 0;background: #6c1;color: white;'>
+        <div style='margin: -10px;margin-bottom: 0;background: var(--primary-clr);color: white;'>
             <i class='fas fa-check-circle' style='font-size:30px'></i>
         </div>
     ";
@@ -134,7 +134,7 @@ if (isset($_POST["imie"])) {
         }
 
         $response_header = "
-            <div style='margin: -10px;margin-bottom: 0;background: #6c1;color: white;'>
+            <div style='margin: -10px;margin-bottom: 0;background: var(--primary-clr);color: white;'>
                 <i class='fas fa-check-circle' style='font-size:30px'></i>
             </div>";
 

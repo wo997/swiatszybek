@@ -29,7 +29,7 @@
           title: "Nazwa wariantu produktu",
           width: "70%",
           render: (r) => {
-            return `<a class="btn secondary" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.full_name)}`
+            return `<a class="btn admin-secondary" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.full_name)}`
           },
           escape: false
         },
