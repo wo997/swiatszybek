@@ -73,7 +73,7 @@ if ($accessToken !== null) {
   die;
 }
 
-$user_type = 'f';
+$user_type = 'facebook';
 $authentication_token = $user_key;
 
 $user_data = fetchRow("SELECT user_id, email FROM users WHERE user_type = '$user_type' AND authentication_token = ?", [$authentication_token]);

@@ -13,7 +13,7 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    /*document.addEventListener("DOMContentLoaded", function() {
         createDatatable({
             name: "config_table",
             url: "/admin/search_konfiguracja",
@@ -76,7 +76,7 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
 
         // TODO instead of createDatatable
         // createSimpleList();
-    });
+    });*/
 
     function save() {
         const f = $("#configForm");

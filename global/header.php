@@ -26,8 +26,8 @@
               <div class="dropdown-expand">
                 <div class="username">
                   <?php
-                  if ($app["user"]["type"] == 'g') echo '<img src="/img/google.png" style="width: 15px;vertical-align: sub;"> ';
-                  if ($app["user"]["type"] == 'f') echo '<i class="fab fa-facebook-square" style="font-size: 15px;color: #3b5998;"></i> ';
+                  if ($app["user"]["type"] == 'google') echo '<img src="/img/google.png" style="width: 15px;vertical-align: sub;"> ';
+                  if ($app["user"]["type"] == 'facebook') echo '<i class="fab fa-facebook-square" style="font-size: 15px;color: #3b5998;"></i> ';
                   echo $app["user"]["name"];
                   ?>
                 </div>
@@ -51,11 +51,11 @@
                   <a class="menu_item" href="/moje-konto/resetowanie-hasla"> <i class="fas fa-unlock-alt"></i> Zmiana hasła </a>
                 <?php endif ?>
                 <hr style="margin:0">
-                <a class="menu_item" onclick="return logout()" href="/logout"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
+                <a class="menu_item" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
               </div>
             </div>
           <?php else : ?>
-            <a class="menu_item" style="padding:12px" onclick="showModal('loginForm')"><span class="case-desktop">Zaloguj się </span><i class="fa fa-user"></i></a>
+            <a class="menu_item" style="padding:12px;cursor:pointer" onclick="showModal('loginForm',{source:this})"><span class="case-desktop">Zaloguj się </span><i class="fa fa-user"></i></a>
           <?php endif ?>
         </div>
       <?php endif ?>

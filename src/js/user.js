@@ -9,24 +9,25 @@ setInterval(() => {
 
 function logout() {
   if (USER_TYPE == "f") {
-    window.location = "/logout";
-    return false;
-  }
-  if (USER_TYPE == "g") {
+    xhr({ url: "/logout" });
+  } else if (USER_TYPE == "g") {
     try {
       var auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function () {
-        window.location = "/logout";
+        xhr({ url: "/logout" });
       });
       auth2.disconnect();
     } catch (error) {
       console.log(error);
-      window.location = "/logout";
+
+      xhr({ url: "/logout" });
     }
-    return false;
+  } else {
+    xhr({ url: "/logout" });
   }
 }
 
+// TODO: replace with XHR
 function onSignIn(googleUser) {
   var form = $("#google-form");
   if (IS_LOGGED || !form) return;
@@ -38,7 +39,7 @@ function onSignIn(googleUser) {
   form.submit();
 }
 
-// requires login_form included
+// requires login_form included, basically everywhere, chill
 function login() {
   const loginForm = $(`#loginForm`);
 

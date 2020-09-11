@@ -416,7 +416,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         <div style="margin-top: 13px;text-align: right;padding: 5px;" class="mobileTextCenter">
           <span style="display:block;font-size: 14px;">Koszt dostawy <span class="pln" id="koszt_dostawy_label"><?= $zamowienie_data["koszt_dostawy"] ?> zł</span></span>
           <?php if ($zamowienie_data["rabat_wartosc"] > 0) : ?>
-            <span style="font-size: 14px;display:block;color: #4b0;font-weight: bold;" id="kod_rabatowy_wrapper">KOD RABATOWY <span class="pln" id="kod_rabatowy_label"><?= -intval($zamowienie_data["rabat_wartosc"]) ?> <?= $zamowienie_data["rabat_type"] == "static" ? "zł" : "%" ?></span></span>
+            <span style="font-size: 14px;display:block;color: var(--primary-clr);font-weight: bold;" id="kod_rabatowy_wrapper">KOD RABATOWY <span class="pln" id="kod_rabatowy_label"><?= -intval($zamowienie_data["rabat_wartosc"]) ?> <?= $zamowienie_data["rabat_type"] == "static" ? "zł" : "%" ?></span></span>
           <?php endif ?>
           <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia</span>
           <b style="display:inline-block;font-size: 18px;"><span id="total-cost" style="display:inline-block;" class="pln"><?= $zamowienie_data["koszt"] ?> zł</span></b>

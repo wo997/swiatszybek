@@ -15,11 +15,13 @@
   width: 15px;
   text-align: center;
   opacity: 0;
-  transition: 0.2s opacity;
+  transition: 0.2s all;
+  transform: scale(0);
 }
 .input-elements .input-error-indicator .correct.visible,
 .input-elements .input-error-indicator .wrong.visible {
   opacity: 1;
+  transform: scale(1);
 }
 .input-elements .input-error-indicator .correct {
   color: #0d0b;

@@ -1,4 +1,6 @@
 /* js[global] */
+
+/* kind of deprecated */
 document.addEventListener("DOMContentLoaded", function () {
   if (!IS_MOBILE) {
     /*$$(".navbar_wrapper .dropdown").forEach((e) => {
@@ -26,7 +28,7 @@ function hidePopup() {
   setTimeout(function () {
     p.style.top = "-100vh";
   }, 400);
-  toggleBodyScroll(false);
+  toggleBodyScroll(true);
 }
 
 function showPopup() {
@@ -34,5 +36,5 @@ function showPopup() {
   if (!p) return;
   p.style.top = "0";
   p.style.opacity = 1;
-  toggleBodyScroll(true);
+  toggleBodyScroll(false);
 }

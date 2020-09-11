@@ -190,14 +190,10 @@ if ($pageName) {
 } else {
 
   $canSee = $app["user"]["priveleges"]["backend_access"] ? "1" : "published = 1";
-  $page_data = fetchRow("SELECT cms_id, seo_description, seo_title, content, metadata, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [$url]);
+  $page_data = fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [$url]);
 
   if (isset($_POST["content"])) {
     $page_data["content"] = $_POST["content"];
-  }
-
-  if (isset($_POST["metadata"])) {
-    $page_data["metadata"] = $_POST["metadata"];
   }
 
   if ($page_data) {
@@ -207,7 +203,6 @@ if ($pageName) {
 }
 if ($url == "") {
   $page_data["content"] = "Pusta strona";
-  $page_data["metadata"] = null;
   include "user/cms_page.php";
   die;
 }

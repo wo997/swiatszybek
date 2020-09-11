@@ -222,7 +222,18 @@ function getBasketContent()
             if (!empty($basket_name))
                 $title_html .= "<br><span style='font-size:15px'>" . $basket_variant["name"] . "</span>";
 
-            $basketContent .= "<div><a href='" . getProductLink($basket_variant["product_id"], $basket_variant["link"]) . "'><div class='item-image' style='background-image:url(\"/uploads/df/" . $basket_variant["zdjecie"] . "\")'></div><div class='item-desc'><span><h3>$title_html<b>" . $basket_quantity . "</b></h3><span class='pln'>" . $basket_variant["total_price"] . " zł</span></span></div></a></div>";
+            $basketContent .= "
+                <div>
+                    <a href='" . getProductLink($basket_variant["product_id"], $basket_variant["link"]) . "'>
+                        <img data-src='" . $basket_variant["zdjecie"] . "' style='width: 100%;height: 120px;object-fit: contain;margin-top:10px'>
+                        <div class='item-desc'>
+                            <span>
+                                <h3>$title_html<b>" . $basket_quantity . "</b></h3>
+                                <span class='pln'>" . $basket_variant["total_price"] . " zł</span>
+                            </span>
+                        </div>
+                    </a>
+                </div>";
         }
 
         $basketContent .=

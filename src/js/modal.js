@@ -102,7 +102,7 @@ function showModal(name = null, params = {}) {
     }
   }
 
-  toggleBodyScroll(visible);
+  toggleBodyScroll(!visible);
 
   return visible;
 }
@@ -112,7 +112,7 @@ function hideAllModals() {
     hideModal(e.id);
   });
 
-  toggleBodyScroll(true);
+  toggleBodyScroll(false);
 }
 
 function hideModalTopMost() {
@@ -182,7 +182,7 @@ function hideModal(name, isCancel = false) {
   if (visibleModalCount > 0) {
     m.classList.add("displayModal");
   } else {
-    toggleBodyScroll(false);
+    toggleBodyScroll(true);
     m.style.animation = "fadeOut 0.4s";
     setTimeout(() => {
       m.classList.remove("displayModal");

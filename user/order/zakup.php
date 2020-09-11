@@ -101,7 +101,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 <head>
   <title>Zakup</title>
   <script async src="/src/inpost_map.js"></script>
-  <link rel="stylesheet" href="/src/inpost_map.css" />
+  <link rel="stylesheet" href="/src/inpost_map.css?a=2" />
   <?php include "global/includes.php"; ?>
   <style>
     label {
@@ -712,7 +712,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
     var firstPaczkomat = true;
 
     function showPaczkomatPicker() {
-      $("html").style.overflowY = "hidden";
+      toggleBodyScroll(false);
       if (firstPaczkomat) {
         window.easyPackAsyncInit = function() {
           easyPack.init({});
@@ -779,7 +779,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
     }
 
     function hidePaczkomatPicker() {
-      $("html").style.overflowY = "auto";
+      toggleBodyScroll(true);
       var picker = $('#paczkomat-picker');
       picker.classList.remove('paczkomat-picker-open');
       setTimeout(function() {
@@ -983,7 +983,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           <div style="display: flex; justify-content: center; margin-top: 35px;">
             <?php if (!$app["user"]["id"]) : ?>
               <div style="display: flex; flex-direction:column; align-items: flex-end; width: 50%; margin-right: 10px;">
-                <button class="btn primary big" onclick="showModal('loginForm')" style="width: 228px;">Zaloguj się <i class="fa fa-user"></i></button>
+                <button class="btn primary big" onclick="showModal('loginForm',{source:this})" style="width: 228px;">Zaloguj się <i class="fa fa-user"></i></button>
                 <div class="login-container expand_y hidden animate_hidden" style="width: 350px; max-width: 100%;">
 
                   <div style="margin:25px 0 15px;line-height: 1.6;color: #333;">
@@ -1302,7 +1302,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
 
             <div style="margin-top: 13px;text-align: right;padding: 5px;" class="mobileTextCenter">
               <span style="display:block;font-size: 15px;">Koszt dostawy: <span class="pln" id="koszt_dostawy_label"></span></span>
-              <span style="font-size: 15px;display:none;color: #4b0;font-weight: bold;" id="kod_rabatowy_wrapper">
+              <span style="font-size: 15px;display:none;color: var(--primary-clr);font-weight: bold;" id="kod_rabatowy_wrapper">
                 <button type="button" onclick="aktywujKodRabatowy('remove')" style="cursor:pointer;font-weight: bold;margin-right: 5px;font-size: 11px;line-height: 0;width: 18px;height: 18px;border: none;background: #eee;color: #777;vertical-align: text-top;padding: 0;"><i class="fa fa-times"></i></button>
                 KOD RABATOWY <span class="pln" id="kod_rabatowy_label"></span></span>
               <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia:</span>
@@ -1328,7 +1328,7 @@ if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_
           <label class="checkbox-wrapper field-title" onclick="$('#regulamin-warn').style.display='none'">
             <input type="checkbox" id="accept-regulamin">
             <div class="checkbox"></div>
-            Akceptuję <a href="/regulamin" target="_blank" style="font-weight: bold;color: #4b0;text-decoration: underline;">REGULAMIN</a> <span style="color:red;font-weight: bold;display:none" id="regulamin-warn"> Wymagane*</span>
+            Akceptuję <a href="/regulamin" target="_blank" style="font-weight: bold;color: var(--primary-clr);text-decoration: underline;">REGULAMIN</a> <span style="color:red;font-weight: bold;display:none" id="regulamin-warn"> Wymagane*</span>
           </label>
 
 

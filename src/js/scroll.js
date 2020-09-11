@@ -99,17 +99,17 @@ function scrollToBottom(node) {
   node.scrollTop = node.scrollHeight;
 }
 
-function toggleBodyScroll(disable) {
+function toggleBodyScroll(enable) {
   if (!window.tempScrollTop) {
     window.tempScrollTop = window.pageYOffset;
   }
-  if (disable) {
-    document.body.classList.add("disable-scroll");
-    document.body.style.top = `-${window.tempScrollTop}px`;
-  } else {
+  if (enable) {
     document.body.classList.remove("disable-scroll");
     document.body.style.top = `0px`;
     window.scrollTo({ top: window.tempScrollTop });
     window.tempScrollTop = null;
+  } else {
+    document.body.classList.add("disable-scroll");
+    document.body.style.top = `-${window.tempScrollTop}px`;
   }
 }

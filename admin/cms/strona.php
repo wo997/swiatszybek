@@ -16,15 +16,11 @@ if (!$page_data) {
         "seo_title" => "",
         "content" => "",
         "link" => "",
-        "metadata" => null,
+        //"metadata" => null,
         "published" => 0,
         "cms_id" => -1
     ];
 }
-
-$page_metadata_json = json_decode($page_data["metadata"], true);
-include "helpers/set_page_metadata_defaults.php";
-$page_data["metadata"] = json_encode($page_metadata_json);
 
 $static = checkUrl($page_data["link"]);
 
@@ -165,6 +161,13 @@ $static = checkUrl($page_data["link"]);
 
     <input type='hidden' name='cms_id' value='<?= $page_data["cms_id"] ?>'>
 
+    <div <?= $static ? "style='display:none'" : "" ?>>
+        <br>
+        <label class="checkbox-wrapper">Czy strona jest publiczna? <input type="checkbox" name="published" <?php if ($page_data["published"] == 1) echo "checked"; ?>>
+            <div class="checkbox"></div>
+        </label>
+    </div>
+
     <div class="field-title">Nazwa strony</div>
     <input type="text" name="title" class="field" value="<?= $page_data["title"] ?>" style='width:100%;max-width:500px'>
 
@@ -181,12 +184,8 @@ $static = checkUrl($page_data["link"]);
     <textarea class="seo_description field" name='seo_description' data-show-count="158" data-count-description="(zalecane 130-155)"><?= $page_data["seo_description"] ?></textarea>
 
     <div <?php if ($static) echo "style='display:none'" ?>>
-        <br>
-        <label class="checkbox-wrapper">Czy strona jest publiczna? <input type="checkbox" name="published" <?php if ($page_data["published"] == 1) echo "checked"; ?>>
-            <div class="checkbox"></div>
-        </label>
 
-        <div class="single-row-labels">
+        <!--<div class="single-row-labels">
 
             <div class="field-title">Maksymalna szerokość strony</div>
             <label style="display:block"><input type="radio" data-property="page_width" value="1500px" data-type="json" data-name="metadata"> 1500px</label>
@@ -199,7 +198,7 @@ $static = checkUrl($page_data["link"]);
             <label style="display:block"><input type="radio" data-property="page_padding" value="45px" data-type="json" data-name="metadata"> 45px</label>
             <label style="display:block"><input type="radio" data-property="page_padding" value="25px" data-type="json" data-name="metadata"> 25px</label>
             <label style="display:block"><input type="radio" data-property="page_padding" value="0" data-type="json" data-name="metadata"> brak (0px)</label>
-        </div>
+    </div>-->
 
         <input type="hidden" id="metadata" name='metadata'>
         <div class="modal-body stretch-vertical">

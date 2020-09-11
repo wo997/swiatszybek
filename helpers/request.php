@@ -11,11 +11,13 @@ function json_response($response)
     die(json_encode($response));
 }
 
-function redirect($url = null)
+function redirect($url)
 {
-    if ($url === null) {
-        json_response(["reload" => true]);
-    }
     $_SESSION["redirect"] = $url;
     json_response(["redirect" => $url]);
+}
+
+function reload()
+{
+    json_response(["reload" => true]);
 }

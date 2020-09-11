@@ -21,7 +21,7 @@ if (!$payload) {
   die;
 }
 
-$user_type = 'g';
+$user_type = 'google';
 $authentication_token = $payload['sub'];
 $google_email = $payload['email'];
 

@@ -26,9 +26,14 @@ function showFieldErrors(field, errors = [], params = {}) {
     return;
   }
 
+  if (field.hasAttribute("backend_checked")) {
+    return;
+  }
+
   if (params.backend_only) {
     field.removeEventListener("change", formFieldChangeEvent);
     field.removeEventListener("input", formFieldInputEvent);
+    field.setAttribute("backend_checked", "");
   }
 
   // just desktop admin

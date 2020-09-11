@@ -220,9 +220,9 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
     <div style=" text-align:center;padding: 25px;font-size: 17px">
       <?php
-      if ($app["user"]["type"] == 'g') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
-      if ($app["user"]["type"] == 'f') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
-      if ($app["user"]["type"] == 's') echo '<i class="fas fa-user" style="font-size: 1em;"></i> ';
+      if ($app["user"]["type"] == 'google') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
+      if ($app["user"]["type"] == 'facebook') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
+      if ($app["user"]["type"] == 'regular') echo '<i class="fas fa-user" style="font-size: 1em;"></i> ';
       echo $app["user"]["name"];
       ?>
     </div>

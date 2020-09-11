@@ -58,7 +58,10 @@ function preloadImage(img, animate = true) {
       src += ".jpg";
     }
 
-    if (!img.hasAttribute("data-height")) {
+    if (
+      !img.hasAttribute("data-height") &&
+      !img.hasAttribute("has-own-height")
+    ) {
       img.addEventListener("load", () => {
         img.style.height = "";
       });
@@ -131,8 +134,12 @@ function setImageDimensions(img) {
   img.calculated_height = data.h;
   img.filename = data.filename;
 
-  var real_height = Math.round((rect.width * data.h) / data.w);
-  img.style.height = `${real_height}px`;
+  if (rect.height) {
+    img.setAttribute("has-own-height", "");
+  } else {
+    var real_height = Math.round((rect.width * data.h) / data.w);
+    img.style.height = `${real_height}px`;
+  }
 
   return rect;
 }

@@ -178,6 +178,9 @@ textarea {
   background: #fafafa;
   color: var(--primary-clr);
   border: 1px solid var(--primary-clr);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 .btn.subtle {
   background: var(--subtle-background-clr);
@@ -699,8 +702,9 @@ table input[type="number"] {
 
 hr {
   height: 1px;
-  background: #eee;
+  background: #0002;
   border: none;
+  margin: 0;
 }
 .heading {
   width: 100%;
@@ -726,6 +730,9 @@ hr {
   margin: 0 4px;
   font-size: 14px;
   text-align: center;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 .status_rect {
   width: 179px;
@@ -1333,6 +1340,10 @@ body {
   z-index: 200;
 }
 
+.menu_item {
+  cursor: pointer;
+}
+
 .dropdown-expand .menu_item,
 .dropdown-user .menu_item .dropdown-header {
   display: block;
@@ -1594,11 +1605,13 @@ input[type="checkbox"] {
   display: none !important;
 }
 input[type="checkbox"]:checked + .checkbox {
-  background-color: #5c0;
+  background-color: var(--primary-clr);
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  border: 1px solid #4b0;
+  -webkit-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.17);
+  -moz-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.17);
+  box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.17);
 }
 
 .checkbox {

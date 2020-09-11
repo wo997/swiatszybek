@@ -8,8 +8,11 @@ function getDatepickerDefaultOptions(e) {
     maxView: 2,
     language: "pl",
     autohide: true,
-    container: e.findScrollableParent(),
   };
+  var scroll_parent = e.findScrollableParent();
+  if (scroll_parent != window) {
+    options.container = scroll_parent;
+  }
   var orientation = e.getAttribute("data-orientation");
   if (orientation) {
     options.orientation = orientation;

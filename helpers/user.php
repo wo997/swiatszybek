@@ -77,7 +77,7 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
         setBasketData($basket);
     }
 
-    redirect();
+    reload();
     //redirect("/");
 
     /*if ($app["user"]["basket"]["item_count"] > 0) {
