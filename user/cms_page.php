@@ -4,28 +4,12 @@ if (isset($_POST["preview_params"])) {
     $preview_params = json_decode($_POST["preview_params"], true);
 
     $page_data["content"] = $preview_params["content"];
-    $page_data["metadata"] = $preview_params["metadata"];
 }
 
 $page_content = getCMSPageHTML($page_data["content"]);
 
-if (isset($page_data["metadata"])) {
-    $page_metadata_json = json_decode($page_data["metadata"], true);
+$page_width = "1500px";
 
-    include "helpers/set_page_metadata_defaults.php";
-
-    function setProp(&$var, $name)
-    {
-        global $page_metadata_json;
-        if (isset($page_metadata_json[$name])) {
-            $var = $page_metadata_json[$name];
-        }
-    }
-    if ($page_metadata_json) {
-        setProp($page_width, "page_width");
-        setProp($page_padding, "page_padding");
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="pl">

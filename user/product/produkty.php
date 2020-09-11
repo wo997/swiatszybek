@@ -88,7 +88,7 @@ function showCategory($category, $level = 0)
     }
 
     .category_name.current {
-      color: #cc2229;
+      color: var(--primary-clr);
       text-decoration: underline;
       font-weight: bold;
     }
