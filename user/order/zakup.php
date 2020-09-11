@@ -91,8 +91,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
   die;
 }
 
-if (!$app["user"]["basket"]["total_basket_cost"]) $app["user"]["basket"]["total_basket_cost"] = 0;
-
 ?>
 
 <!DOCTYPE html>

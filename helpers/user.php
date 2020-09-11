@@ -44,7 +44,7 @@ function adminRequired()
 {
     global $app;
     if (!$app["user"]["priveleges"]["backend_access"]) {
-        $_SESSION["redirect"] = $_SERVER["REQUEST_URI"];
+        $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
         header("Location: /logowanie");
         die;
     }
@@ -77,7 +77,12 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
         setBasketData($basket);
     }
 
-    reload();
+    if (isset($_SESSION["redirect_on_login"])) {
+        redirect($_SESSION["redirect_on_login"]);
+    } else {
+        reload();
+    }
+
     //redirect("/");
 
     /*if ($app["user"]["basket"]["item_count"] > 0) {
