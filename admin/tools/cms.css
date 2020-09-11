@@ -496,10 +496,10 @@
 .modules-sidebar .toggle-sidebar-btn .fas {
   position: absolute;
   transition: all 0.2s;
-  left: 5px;
+  left: 50%;
   top: 50%;
   opacity: 1;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
 }
 .modules-sidebar.shown .toggle-sidebar-btn {
   right: 0;

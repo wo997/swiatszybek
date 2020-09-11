@@ -78,7 +78,9 @@ function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
     }
 
     if (isset($_SESSION["redirect_on_login"])) {
-        redirect($_SESSION["redirect_on_login"]);
+        $url = $_SESSION["redirect_on_login"];
+        unset($_SESSION["redirect_on_login"]);
+        redirect($url);
     } else {
         reload();
     }

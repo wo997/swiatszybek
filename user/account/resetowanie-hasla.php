@@ -20,7 +20,7 @@ if ($authenticated) {
 <html lang="pl">
 
 <head>
-  <title>Logowanie</title>
+  <title>Resetowanie hasła</title>
   <?php include "global/includes.php"; ?>
   <style>
 

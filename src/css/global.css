@@ -2735,3 +2735,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   -moz-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.18);
   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.18);
 }
+
+.jscolor.field.inline {
+  width: 60px;
+}

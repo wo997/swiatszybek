@@ -527,3 +527,17 @@ function formFieldInput(field) {
   showFieldErrors(field, errors);
   return errors;
 }
+
+window.addEventListener("click", (event) => {
+  var form = null;
+
+  if (event.target.classList.contains("close-form-btn")) {
+    form = event.target.findParentByAttribute("data-modal");
+  } else if (event.target.hasAttribute("data-dismissable")) {
+    form = event.target;
+  }
+
+  if (form) {
+    hideModal(form.id);
+  }
+});

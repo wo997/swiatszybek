@@ -35,11 +35,6 @@ $sitemap = <<<XML
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
-  <loc>$site_url/logowanie</loc>
-  <lastmod>$now</lastmod>
-  <priority>0.8</priority>
-</url>
-<url>
   <loc>$site_url/rejestracja</loc>
   <lastmod>$now</lastmod>
   <priority>0.8</priority>

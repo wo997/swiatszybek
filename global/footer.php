@@ -22,9 +22,11 @@
   </div>
 <?php endif ?>
 
-<div id="loginForm" data-form data-modal>
+<div id="loginForm" data-form data-modal data-dismissable>
   <div class="modal-body">
-    <h1 class="h1">Logowanie</h1>
+    <button class="fas fa-times close-form-btn"></button>
+
+    <h3 class="h1" style="margin:0.4em 0;font-size: 24px;text-align:center">Logowanie</h3>
 
     <div class="field-title">E-mail</div>
     <input class="field" type="text" autocomplete="username" name="email" data-validate="email">
@@ -46,11 +48,11 @@
     </button>
 
     <div style="text-align: center; padding: 10px 0">
-      <a href="/rejestracja" class="btn buff subtle">
+      <a href="/rejestracja" class="btn buff subtle" style="font-weight: 600;">
         Zarejestruj się <i class="fa fa-user-plus"></i>
       </a>
       <div style="height: 10px;"></div>
-      <a href="/resetowanie-hasla" class="btn buff subtle">
+      <a href="/resetowanie-hasla" class="btn buff subtle" style="font-weight: 600;">
         Zresetuj hasło <i class="fa fa-lock-open"></i>
       </a>
     </div>
