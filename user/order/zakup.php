@@ -472,16 +472,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
       ignoreValueChanges = true;
       setFormData(<?= json_encode($zamowienie_data) ?>, window.form);
+      loadFormFromCookies();
       ignoreValueChanges = false;
-
-      <?php //if (!$app["user"]["id"]) { 
-      ?>
-      //loadFormFromCookies();
-      <?php //} 
-      ?>
-      setTimeout(() => {
-        loadFormFromCookies();
-      });
 
 
       if (BASKET_COST == 0) {
@@ -641,7 +633,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         }, 10);
       }, 200);
 
-      if (i == 4) {
+      if (i == 3) {
         var daneKontaktoweInfo = "";
         if (BUYER_TYPE == 'p') {
           daneKontaktoweInfo = form.imie.value + " " + form.nazwisko.value;
