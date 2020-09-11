@@ -28,13 +28,13 @@
 }
 
 .simple-list-row > .fa-times {
-  color: #c22;
-  border-color: #c22;
+  color: #c22 !important;
+  border-color: #c22 !important;
 }
 
 .simple-list-row > .fa-times:hover {
-  background: #c22;
-  color: #fff;
+  background: #c22 !important;
+  color: #fff !important;
 }
 
 .simple-list .sub-list {

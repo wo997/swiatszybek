@@ -137,7 +137,7 @@ if (!$impersonate) {
     ]);
   }
 
-  if ($user_type != 's') {
+  if ($user_type != 'regular') {
     query("UPDATE users SET email = ? WHERE user_id = ? LIMIT 1", [
       $_POST["email"], $user_id
     ]);

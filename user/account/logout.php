@@ -1,12 +1,13 @@
 <?php //route[logout]
 
 unset($_SESSION["user"]);
-setcookie("remember_me_token", "", time() - 3600);
+unset($_SESSION["redirect_on_login"]);
+unset($_SESSION["redirect"]);
 
-/*if (isset($_SERVER["HTTP_REFERER"]) && strpos(nonull(parse_url($_SERVER["HTTP_REFERER"]), "path", ""), SITE_URL . "/admin")) {
+setcookie("remember_me_token", "", 0);
+
+if (isset($_SERVER["HTTP_REFERER"]) && strpos(nonull(parse_url($_SERVER["HTTP_REFERER"]), "path", ""), "/admin") === 0) {
     redirect("/");
 } else {
     reload();
-}*/
-// cmon, we are redirected anyways
-reload();
+}

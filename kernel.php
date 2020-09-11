@@ -3,18 +3,7 @@
 session_start();
 require_once 'vendor/autoload.php';
 
-define("IS_XHR", !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
-// var_dump($_SESSION["redirect"]);
-// unset($_SESSION["redirect"]);
-// die;
-if (isset($_SESSION["redirect"]) && !IS_XHR) {
-  $redirect = $_SESSION["redirect"];
-  unset($_SESSION["redirect"]);
-  if ($_SERVER["REQUEST_URI"] != $redirect) {
-    header("Location: $redirect");
-    die;
-  }
-}
+define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');
 
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
@@ -149,3 +138,22 @@ define("JS_RELEASE", $versionJS);
 
 // theme
 include "theme/variables.php";
+
+// requests
+$just_logged_in = false;
+
+if (!IS_XHR) {
+  if (isset($_SESSION["redirect"])) {
+    $redirect = $_SESSION["redirect"];
+    unset($_SESSION["redirect"]);
+    if ($_SERVER["REQUEST_URI"] != $redirect) {
+      header("Location: $redirect");
+      die;
+    }
+  }
+
+  if (isset($_SESSION["just_logged_in"])) {
+    $just_logged_in = true;
+    unset($_SESSION["just_logged_in"]);
+  }
+}

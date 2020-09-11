@@ -237,7 +237,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
           <i class="fas fa-address-book"></i>
           <span>Dane użytkownika</span>
         </div>
-        <?php if ($app["user"]["type"] == 's') : ?>
+        <?php if ($app["user"]["type"] == 'regular') : ?>
           <div id="menuHeader3" onclick="showMenu(3)" <?php if ($menu == "haslo") echo 'class="selected"'; ?>>
             <i class="fas fa-unlock-alt"></i>
             <span>Zmiana hasła</span>

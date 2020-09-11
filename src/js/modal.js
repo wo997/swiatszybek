@@ -141,6 +141,8 @@ function hideModal(name, isCancel = false) {
     }
   }
 
+  clearAllErrors();
+
   var m = $("#modal-wrapper");
 
   if (name) {
@@ -214,3 +216,17 @@ function isModalActive(name) {
 function setModalTitle(modal, title) {
   $(modal).find(`.custom-toolbar .title`).innerHTML = title;
 }
+
+window.addEventListener("mousedown", (event) => {
+  var form = null;
+
+  if (event.target.classList.contains("close-form-btn")) {
+    form = event.target.findParentByAttribute("data-modal");
+  } else if (event.target.hasAttribute("data-dismissable")) {
+    form = event.target;
+  }
+
+  if (form) {
+    hideModal(form.id);
+  }
+});

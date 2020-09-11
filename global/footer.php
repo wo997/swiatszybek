@@ -29,10 +29,13 @@
     <h3 class="h1" style="margin:0.4em 0;font-size: 24px;text-align:center">Logowanie</h3>
 
     <div class="field-title">E-mail</div>
-    <input class="field" type="text" autocomplete="username" name="email" data-validate="email">
+    <input class="field" type="text" autocomplete="username" name="email" data-validate="backend|custom:validateLoginUserEmail|delay:300">
 
-    <div class="field-title">Hasło</div>
-    <input class="field" type="password" autocomplete="password" name="password" data-validate="password">
+    <div class="field-title">
+      <span>Hasło</span>
+      <i class="fas fa-eye btn" onclick="togglePasswordFieldType(this,$(this).parent().next())" data-tooltip="Pokaż hasło" data-position="right"></i>
+    </div>
+    <input class="field" type="password" autocomplete="password" name="password" data-validate="backend|blank_on_change:true">
 
     <div style="margin-top:10px;text-align:center">
       <label class="checkbox-wrapper">
@@ -42,7 +45,7 @@
       </label>
     </div>
 
-    <button class="btn primary big" style="margin:10px 0; width: 100%" onclick="login()">
+    <button class="btn primary big" style="margin:10px 0; width: 100%" onclick="login()" data-submit>
       Zaloguj się
       <i class="fa fa-chevron-right"></i>
     </button>

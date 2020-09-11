@@ -15,9 +15,9 @@ $response = [];
 $password = $_POST["password"];
 $email = $_POST["email"];
 
-$user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 's' AND email = ?", [$email]);
+$user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 'regular' AND email = ?", [$email]);
 if (!$user_data) {
-  $response["message"] = "Nie odnaleziono konta";
+  $response["message"] = "Takie konto nie istnieje";
   $response["error_field_name"] = "email";
   json_response($response);
 }
@@ -40,4 +40,4 @@ if ($remember_me) {
   query("UPDATE users SET remember_me_token = ? WHERE user_id = " . intval($user_data["user_id"]), [$remember_me_token]);
 }
 
-login_user($user_data["user_id"], $user_data["email"], "s", ["name" => $user_data["email"]]);
+login_user($user_data["user_id"], $user_data["email"], "regular", ["name" => $user_data["email"]]);

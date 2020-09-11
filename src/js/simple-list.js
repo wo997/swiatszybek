@@ -101,6 +101,15 @@ function createSimpleList(params = {}) {
     addValues(values);
   };
 
+  list.removeRow = (btn) => {
+    var row = $(btn).parent().parent();
+
+    row.findAll("[data-list-param]").forEach((e) => {
+      e.setValue("ZGFSDFG et5y745b7 6dfghfgh"); // remove validation issues - red border
+    });
+    row.remove();
+  };
+
   list.insertRow = (values, listTarget = null, begin = false, user = false) => {
     if (listTarget === null) {
       listTarget = list.target;
@@ -140,9 +149,10 @@ function createSimpleList(params = {}) {
                   list.name
                 }.valuesChanged();"></i>
                 <div style="width:5px"></div>
-                <i class="btn secondary fas fa-times" onclick="$(this).parent().parent().remove();${
-                  list.name
-                }.valuesChanged();"></i>
+                <i class="btn secondary fas fa-times" 
+                  onclick="${list.name}.removeRow(this);
+                  ${list.name}.valuesChanged();">
+                </i>
             </div>
             <div class="sub-list">
                 ${btnTop}

@@ -10,7 +10,7 @@ function showNotification(message, params = {}) {
   notification.insertAdjacentHTML(
     "beforeend",
     `
-      <i class="fa fa-times" onclick="dismissNotification(this.parent())"></i>
+      <i class="far fa-check-circle" onclick="dismissNotification(this.parent())"></i>
       ${message}
     `
   );
@@ -20,7 +20,7 @@ function showNotification(message, params = {}) {
     notification.style.width = params.width;
     notification.style.maxWidth = params.width;
   } else {
-    notification.style.width = "auto";
+    notification.style.width = "fit-content";
     notification.style.maxWidth = "unset";
   }
   document.body.insertAdjacentElement("beforeend", notification);

@@ -449,6 +449,15 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       .progress-title span {
         display: none;
       }
+
+      .lub-span {
+        display: none;
+      }
+
+      .mobile-column {
+        flex-direction: column;
+        align-items: center;
+      }
     }
 
     @media only screen and (max-width: 350px) {
@@ -493,11 +502,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           return false;
         }
       });
-
-      <?php if (isset($_SESSION["just_logged_from_order"])) {
-        unset($_SESSION["just_logged_from_order"]); ?>
-        showMenu(3);
-      <?php } ?>
 
       $$(".progress-item[data-id]").forEach(e => {
         e.addEventListener("click", () => {
@@ -970,27 +974,26 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             <p style='font-weight:normal;margin:0;font-size: 1.1em'>Czas realizacji: <span class="pln">24h</span></p>
           </div>
 
-          <div style="display: flex; justify-content: center; margin-top: 35px;">
+          <div class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
             <?php if (!$app["user"]["id"]) : ?>
-              <div style="display: flex; flex-direction:column; align-items: flex-end; width: 50%; margin-right: 10px;">
-                <button class="btn primary big" onclick="showModal('loginForm',{source:this})" style="width: 228px;">Zaloguj się <i class="fa fa-user"></i></button>
-                <div class="login-container expand_y hidden animate_hidden" style="width: 350px; max-width: 100%;">
-
-                  <div style="margin:25px 0 15px;line-height: 1.6;color: #333;">
-                    <strong>Zalety korzystania z konta <?= config('main_email_sender') ?>:</strong>
-                    <div>- Możliwość przeglądania swoich zamówień</div>
-                    <div>- Zapisanie danych osobowych oraz adresu do przyszłych zamówień</div>
-                  </div>
-                </div>
+              <div>
+                <button class="btn primary big" onclick="showModal('loginForm',{source:this});hideLoginFormPassword()" style="max-width: 100%;width:270px;margin-top: 25px;">Zaloguj się <i class="fa fa-user"></i></button>
+                <br><br>
+                <strong>Co zyskasz?</strong>
+                <div>- Dostęp do historii zamówień</div>
+                <div>- Zapisanie danych kontaktowych</div>
               </div>
+              <div style='margin:12px;margin-top:34px' class="lub-span">lub</div>
+            <?php else : ?>
+              <div style="flex-grow:1"></div>
             <?php endif ?>
-            <div class="sameButtons" <?= !$app["user"]["id"] ? "style='width: 50%; margin-left: 10px;'" : '' ?>>
-              <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> big" onclick="showMenu(2, undefined, true)">
+            <div>
+              <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> big" onclick="showMenu(2, undefined, true)" style="margin-top: 25px;min-width:250px">
                 <?php
                 if ($app["user"]["id"]) {
                   echo "Złóż zamówienie";
                 } else {
-                  echo "Zakupy bez rejestracji";
+                  echo "Kontynuuj bez rejestracji";
                 }
                 ?>
                 <i class="fa fa-chevron-right"></i>
@@ -1039,7 +1042,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           </div>
         </div>
 
-        <div class="sameButtons" style="margin: 40px auto 0;max-width:780px;display: flex; justify-content: space-between;padding:20px">
+        <div style="margin: 40px auto 0;max-width:780px;display: flex; justify-content: space-between;padding:20px">
           <button class="btn secondary big" type="button" onclick="showMenu(1)" style="margin-top: 10px; display:inline-block;width:220px">
             <i class="fa fa-chevron-left"></i>
             Cofnij
@@ -1224,7 +1227,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       </div>
 
 
-      <div class="sameButtons" style="padding: 10px;display: flex;justify-content: space-between;max-width: 1170px;margin: 0 auto;width: 100%;">
+      <div style="padding: 10px;display: flex;justify-content: space-between;max-width: 1170px;margin: 0 auto;width: 100%;">
         <button class="btn secondary big desktopSpaceRight btn secondary" type="button" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
@@ -1242,15 +1245,15 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
         <div style="width:100%;max-width: 300px; margin: 0 auto;padding: 10px;" class="noMaxWidthMobile">
 
-          <h4>Dane kontaktowe <button type="button" class="btn subtle" onclick="showMenu(3,'kontakt')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Dane kontaktowe <button type="button" class="btn subtle" onclick="showMenu(2,'kontakt')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="daneKontaktoweInfo"></p>
 
-          <h4>Rodzaj dostawy <button type="button" class="btn subtle" onclick="showMenu(3,'dostawa')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Rodzaj dostawy <button type="button" class="btn subtle" onclick="showMenu(2,'dostawa')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="dostawaRodzaj"></p>
 
-          <h4>Adres dostawy <button type="button" class="btn subtle" onclick="showMenu(3,'adres')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Adres dostawy <button type="button" class="btn subtle" onclick="showMenu(2,'adres')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="adresInfo"></p>
 
@@ -1322,7 +1325,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           </label>
 
 
-          <div class="sameButtons mobileRow">
+          <div class="mobileRow" style="align-items:flex-start">
             <p style="font-size: 15px;">Zostaniesz przeniesiony do strony płatności <img src="/img/p24.png" style="width: 100px;vertical-align: bottom;transform: translateY(4px);"></p>
             <!--<div id="hideOnSuccess">
                 <div id="casegpay" style="display:none;margin-bottom: 5px;">Zapłać za pomocą <img src="/img/gpay.png" style="display: inline-block;width: 40px;vertical-align: bottom;margin-left: 2px;">:</div>
@@ -1338,7 +1341,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
       </div>
 
-      <div class="sameButtons" style="padding: 10px">
+      <div style="padding: 10px">
         <button class="btn secondary big pullHigherDesktop" type="button" onclick="showMenu(2)" style="display:inline-block;width:170px">
           <i class="fa fa-chevron-left"></i>
           Cofnij

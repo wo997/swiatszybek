@@ -60,7 +60,7 @@ function preloadImage(img, animate = true) {
 
     if (
       !img.hasAttribute("data-height") &&
-      !img.hasAttribute("has-own-height")
+      !img.hasAttribute("data-has-own-height")
     ) {
       img.addEventListener("load", () => {
         img.style.height = "";
@@ -135,7 +135,7 @@ function setImageDimensions(img) {
   img.filename = data.filename;
 
   if (rect.height) {
-    img.setAttribute("has-own-height", "");
+    img.setAttribute("data-has-own-height", "");
   } else {
     var real_height = Math.round((rect.width * data.h) / data.w);
     img.style.height = `${real_height}px`;
@@ -144,9 +144,15 @@ function setImageDimensions(img) {
   return rect;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  lazyLoadImages();
-});
+if (optimise_images_on_load) {
+  window.addEventListener("load", () => {
+    lazyLoadImages();
+  });
+} else {
+  document.addEventListener("DOMContentLoaded", () => {
+    lazyLoadImages();
+  });
+}
 
 function lazyLoadImages(animate = true) {
   $$("img[data-src]").forEach((img) => {
@@ -161,7 +167,8 @@ function lazyLoadImages(animate = true) {
 document.addEventListener("scroll", scrollCallbackLazy);
 document.addEventListener("click", scrollCallbackLazy);
 document.addEventListener("touchmove", scrollCallbackLazy);
-document.addEventListener("mousemove", () => {
+document.addEventListener("drag", scrollCallbackLazy);
+document.addEventListener("mouseover", () => {
   delay("scrollCallbackLazy", 100);
 });
 

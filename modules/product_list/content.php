@@ -56,7 +56,7 @@
   if ($order_by_name == "sale") {
     $order_by = "cache_sales DESC";
   } else if ($order_by_name == "cheap") {
-    $order_by = "price_min DESC";
+    $order_by = "price_min ASC";
   } else if ($order_by_name == "random") {
     $order_by = "RAND() DESC";
   }

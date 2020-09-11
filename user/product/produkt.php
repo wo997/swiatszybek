@@ -112,10 +112,6 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
       width: 100%;
     }
 
-    .sameButtons .button {
-      width: 100%;
-    }
-
     .variants {
       margin-bottom: 25px;
       display: flex;

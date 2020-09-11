@@ -31,7 +31,7 @@
         <a href="/admin/produkt/<?= $number ?>" style="position:relative;top:-20px;" class="btn primary medium">Edytuj</a>
       <?php endif ?>
 
-      <div class="sameButtons">
+      <div>
 
         <div class="variants">
           <?php

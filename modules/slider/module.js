@@ -100,7 +100,7 @@ MODULE = {
   setAllCSS: (parent) => {
     var h = MODULE.form.find(`[name="desktop-slider-height"]`).getValue();
     parent.findAll(".cms-container").forEach((e) => {
-      console.log(e);
+      //console.log(e);
       e.setAttribute("data-desktop-min-height", h);
     });
     resizeCallback();

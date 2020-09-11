@@ -24,6 +24,7 @@ function showCmsPreview() {
 // cms history start
 var cmsHistory = [];
 
+var ignoreHistory = false;
 function cmsHistoryPush(hide = true) {
   if (hide) {
     hideCMSBlockHeader();
@@ -726,6 +727,9 @@ function cmsUpdate() {
 
   if (!cmsWrapper.find(".cms-container")) {
     setTimeout(() => {
+      if (cmsHistory.length > 0) {
+        cmsHistory.pop();
+      }
       addContainer();
     }, 100);
   }
@@ -879,7 +883,13 @@ function saveBlockAttributes(parent) {
       var val = e.value;
       if (!val && defaultValue) val = defaultValue;
       else if (val && !val.match(/\D/)) val += defaultUnit;
-      targets.setAttribute(`data-${attribute}`, val);
+
+      console.log(val);
+      if (val === "") {
+        targets.removeAttribute(`data-${attribute}`);
+      } else {
+        targets.setAttribute(`data-${attribute}`, val);
+      }
     }
 
     Object.entries(targets.attributes).forEach((e) => {

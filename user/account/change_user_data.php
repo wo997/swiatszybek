@@ -50,7 +50,7 @@ query("UPDATE users SET imie = ?, nazwisko = ?, telefon = ?, firma = ?, kraj = ?
 
 $response["message"] = quit("Zapisano zmiany", 1);
 
-if ($app["user"]["type"] == 's') {
+if ($app["user"]["type"] == 'regular') {
   $user_old_data = fetchRow("SELECT email, authentication_token FROM users WHERE user_id = ?", [$user_id]);
 
   if (trim($email) != trim($user_old_data["email"])) {

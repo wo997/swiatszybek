@@ -198,8 +198,6 @@
         formElement.find(".caseCanDelete").classList.toggle("hidden", isNew);
         toggleDisabled(formElement.find(`.btn.red`), !canDelete);
         formElement.find(".btn.red + i").classList.toggle("hidden", canDelete);
-
-        clearValidateRequired();
     }
 
     function saveCategoryForm(remove = false) {

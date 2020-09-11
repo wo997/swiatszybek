@@ -55,11 +55,35 @@ function login() {
         showFieldErrors(
           loginForm.find(`[name="${res.error_field_name}"]`),
           [res.message],
-          {
-            backend_only: true,
-          }
+          { scroll: true }
         );
       }
     },
   });
+}
+
+function validateLoginUserEmail(input) {
+  const loginForm = $(`#loginForm`);
+
+  xhr({
+    url: "/user-exists",
+    params: getFormData(loginForm),
+    success: (res) => {
+      var errors = [];
+      if (res === 0) {
+        errors.push("Takie konto nie istnieje");
+      }
+      showFieldErrors(input, errors);
+    },
+  });
+}
+
+function hideLoginFormPassword() {
+  var btn = $("#loginForm .fa-eye-slash");
+  var input = $("#loginForm [name='password']");
+
+  if (!btn || !input) {
+    return;
+  }
+  togglePasswordFieldType(btn, input, false);
 }

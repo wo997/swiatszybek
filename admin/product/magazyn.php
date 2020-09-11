@@ -63,7 +63,7 @@
       variant_id: variant_id
     }, (response) => {
       mytable.search();
-      showNotification(`<i class="fas fa-check"></i> Pomyślnie zmieniono stan magazynowy na <b>${now} szt.</b>`);
+      showNotification(`Pomyślnie zmieniono stan magazynowy na <b>${now} szt.</b>`);
     }, null);
   }
 </script>

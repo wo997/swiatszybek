@@ -344,7 +344,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
 <?php startSection("content"); ?>
 
-<div id="productForm">
+<div id="productForm" data-form>
   <div class="custom-toolbar">
     <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
       <?php if ($kopia) : ?>
@@ -369,19 +369,21 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   </label>
   <div style="display: flex" class="mobileRow">
     <div style="flex-grow:1; padding-right: 15px">
-      <div class="field-title">Nazwa produktu</div>
-      <input type="text" name="title" class="field" data-validate style="max-width: 600px;">
+      <div style="max-width: 600px">
+        <div class="field-title">Nazwa produktu</div>
+        <input type="text" name="title" class="field" data-validate>
 
-      <div class="field-wrapper">
-        <div class="field-title">Link strony</div>
-        <div style="display:flex;flex-wrap: wrap;">
-          <input type="text" name="link" data-validate autocomplete="off" class="field" style="max-width: 600px;">
-          <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
+        <div class="field-wrapper">
+          <div class="field-title">Link strony</div>
+          <div class="glue-children">
+            <input type="text" name="link" data-validate autocomplete="off" class="field">
+            <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
+          </div>
         </div>
-      </div>
 
-      <div class="field-title">Tytuł (SEO)</div>
-      <input type="text" name="seo_title" class="field" style="max-width: 600px;" data-show-count="60" data-count-description="(zalecane 50-58)">
+        <div class="field-title">Tytuł (SEO)</div>
+        <input type="text" name="seo_title" class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
+      </div>
 
       <div class="field-title">Opis (SEO)</div>
       <textarea class="seo_description field" name="seo_description" data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>

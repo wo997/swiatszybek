@@ -9,11 +9,14 @@ foreach ($posts as $p) {
 
 $response = [];
 
-if (!validateEmail($_POST["email"]) || validatePassword($_POST["password"])) {
+/*if (!validateEmail($_POST["email"])) {
   $response["message"] = "Wpisz poprawny adres email";
   // $response[]
 }
-quit("Wpisz poprawny email i hasło", 0);
+if (validatePassword($_POST["password"])) {
+  $response["message"] = "Wpisz poprawny adres email";
+  // $response[]
+}*/
 
 $user_type = "regular";
 
@@ -28,7 +31,8 @@ if ($user_data) {
     query("UPDATE users SET imie = ?, nazwisko = ?, telefon = ?, password_hash = ?, authentication_token = ? WHERE user_id = " . intval($user_data["user_id"]), [
       $_POST["imie"], $_POST["nazwisko"], $_POST["telefon"], $password_hash, $authentication_token
     ]);
-  } else quit("Użytkownik " . $_POST["email"] . " już istnieje", 0);
+    json_response("Użytkownik " . $_POST["email"] . " już istnieje");
+  }
 } else {
   query("INSERT INTO users (user_type,imie,    nazwisko,           email,          telefon,             password_hash,    authenticated,authentication_token,    basket,             stworzono) VALUES (?,?,?,?,?,?,?,?,?,NOW())", [
     $user_type, $_POST["imie"], $_POST["nazwisko"], $_POST["email"], $_POST["telefon"], $password_hash,   "0",         $authentication_token,   $_SESSION["basket"]
@@ -41,4 +45,4 @@ $message = "<h2>Kliknij w link poniżej, żeby aktywować swoje konto</h2><br><a
 $mailTitle = "Aktywacja konta " . config('main_email_sender') . " " . date("d-m-Y");
 @sendEmail($_POST["email"], $message, $mailTitle);
 
-quit("Wysłaliśmy link aktywacyjny na twoją skrzynkę pocztową", 1);
+json_response("Wysłaliśmy link aktywacyjny na twoją skrzynkę pocztową");

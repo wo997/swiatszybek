@@ -23,9 +23,9 @@ function initUser()
     }
 
     if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
-        $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 's' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
+        $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 'regular' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
         if ($user_data) {
-            login_user($user_data["user_id"], $user_data["email"], "s", ["name" => $user_data["email"]], false);
+            login_user($user_data["user_id"], $user_data["email"], "regular", ["name" => $user_data["email"]], false);
         }
     }
 
@@ -50,9 +50,11 @@ function adminRequired()
     }
 }
 
-function login_user($user_id, $email, $user_type, $data = [], $redirect = true)
+function login_user($user_id, $email, $user_type, $data = [])
 {
     global $app, $privelege_list;
+
+    $_SESSION["just_logged_in"] = true;
 
     // $adminList = explode(",", str_replace(" ", "", config("admins")));
     // $adminList[] = secret("super_admin_email");

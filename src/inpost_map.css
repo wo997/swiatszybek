@@ -1,8 +1,11 @@
 #easypack-map button.btn.btn-search {
   background-color: #fafafa;
 }
+#easypack-map button.btn.btn-search:not(:hover) {
+  filter: brightness(0.95);
+}
 #easypack-map button.btn.btn-search:hover {
-  filter: brightness(1.05);
+  filter: brightness(1);
 }
 
 .easypack-widget .links a {

@@ -72,7 +72,7 @@
         })
 
         $$('.module-slider .cms-block-content').forEach(e => {
-            e.setAttribute("data-swiper-parallax", '-300');
+            e.setAttribute("data-swiper-parallax", '-180');
         });
 
         var sliderCount = 0;

@@ -34,12 +34,13 @@ function xhr(data) {
       formData.append(key, value);
     }
   }
+  formData.append("xhr", true);
   xhr.send(formData);
   return xhr;
 }
 
+// deprecated
 function ajax(url, data, good, wrong) {
-  // deprecated
   var xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   xhr.setRequestHeader("enctype", "multipart/form-data");
@@ -58,10 +59,10 @@ function nonull(value, defaultValue = "") {
   return value;
 }
 
-function delay(action, time, context = window) {
+function delay(action, time, context = window, params = []) {
   if (context["await" + action]) clearTimeout(context["await" + action]);
   context["await" + action] = setTimeout(function () {
-    context[action](true);
+    context[action](...params);
   }, time);
 }
 

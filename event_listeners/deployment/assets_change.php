@@ -55,41 +55,41 @@ scanDirectories(
     }
 );
 
-foreach ($cssFileGroups as $cssGroup => $files) {
-    (new Minify\CSS(...$files))->minify("builds/$cssGroup.css");
-}
-foreach ($jsFileGroups as $jsGroup => $files) {
-    $minifier = new Minify\JS(...$files);
-    $minifier->minify("builds/$jsGroup.js");
-}
-
-
-$jsGroup = "modules";
-
-$modules_js = "";
-
-foreach ($modules as $module_name => $module_js) {
-    if (isset($module_forms[$module_name])) {
-        $module_js .= " modules['MODULE_NAME'].form_html = `" . $module_forms[$module_name] . "`;";
+if ($modifyCSS) {
+    foreach ($cssFileGroups as $cssGroup => $files) {
+        (new Minify\CSS(...$files))->minify("builds/$cssGroup.css");
     }
+}
+if ($modifyJS) {
+    foreach ($jsFileGroups as $jsGroup => $files) {
+        $minifier = new Minify\JS(...$files);
+        $minifier->minify("builds/$jsGroup.js");
 
-    $module_js = "
+        $jsGroup = "modules";
+
+        $modules_js = "";
+
+        foreach ($modules as $module_name => $module_js) {
+            if (isset($module_forms[$module_name])) {
+                $module_js .= " modules['MODULE_NAME'].form_html = `" . $module_forms[$module_name] . "`;";
+            }
+
+            $module_js = "
         window.addEventListener(\"DOMContentLoaded\", () => {
             $module_js
         });";
 
-    $module_js = str_replace("MODULE_NAME", $module_name, $module_js);
-    $module_js = str_replace("MODULE", "modules.$module_name", $module_js);
+            $module_js = str_replace("MODULE_NAME", $module_name, $module_js);
+            $module_js = str_replace("MODULE", "modules.$module_name", $module_js);
 
-    $modules_js .= $module_js;
+            $modules_js .= $module_js;
+        }
+
+        $minifier = new Minify\JS($modules_js);
+
+        $minifier->minify("builds/$jsGroup.js");
+    }
 }
-
-$minifier = new Minify\JS($modules_js);
-
-$minifier->minify("builds/$jsGroup.js");
-
-
-
 
 
 $out = "<?php return [\n";

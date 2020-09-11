@@ -47,7 +47,7 @@
                 <?php endif ?>
                 <a class="menu_item" href="/moje-konto"> <i class="fas fa-box"></i> Moje zamówienia</a>
                 <a class="menu_item" href="/moje-konto/dane-uzytkownika"> <i class="fas fa-address-book"></i> Dane użytkownika</a>
-                <?php if ($app["user"]["type"] == 's') : ?>
+                <?php if ($app["user"]["type"] == 'regular') : ?>
                   <a class="menu_item" href="/moje-konto/resetowanie-hasla"> <i class="fas fa-unlock-alt"></i> Zmiana hasła </a>
                 <?php endif ?>
                 <hr style="margin:0">
@@ -55,7 +55,7 @@
               </div>
             </div>
           <?php else : ?>
-            <a class="menu_item" style="padding:12px;cursor:pointer" onclick="showModal('loginForm',{source:this})"><span class="case-desktop">Zaloguj się </span><i class="fa fa-user"></i></a>
+            <a class="menu_item" style="padding:12px;cursor:pointer" onclick="showModal('loginForm',{source:this});hideLoginFormPassword()"><span class="case-desktop">Zaloguj się </span><i class="fa fa-user"></i></a>
           <?php endif ?>
         </div>
       <?php endif ?>

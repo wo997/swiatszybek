@@ -6,7 +6,11 @@ window.addEventListener("load", () => {
   });
 });
 
-function showFieldErrors(field, errors = [], params = {}) {
+function showFieldErrors(field, errors = [], options = {}) {
+  if (errors === null) {
+    return;
+  }
+
   field = $(field);
   // look inside or above
   var field_title = field.find(".field-title");
@@ -26,16 +30,6 @@ function showFieldErrors(field, errors = [], params = {}) {
     return;
   }
 
-  if (field.hasAttribute("backend_checked")) {
-    return;
-  }
-
-  if (params.backend_only) {
-    field.removeEventListener("change", formFieldChangeEvent);
-    field.removeEventListener("input", formFieldInputEvent);
-    field.setAttribute("backend_checked", "");
-  }
-
   // just desktop admin
   var warning = field_title.find(".fa-exclamation-triangle");
   if (warning) {
@@ -47,24 +41,27 @@ function showFieldErrors(field, errors = [], params = {}) {
   const correctIndicator = inputElements.find(
     ".input-error-indicator .correct"
   );
-  if (!correctIndicator) {
+  if (!correctIndicator && field.hasAttribute("data-validate")) {
     console.error(
       "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded"
     );
     return;
   }
   const wrongIndicator = inputElements.find(".input-error-indicator .wrong");
-  const toggleErrorIcons = (isFieldCorrect) => {
-    if (isFieldCorrect) {
+  const toggleErrorIcons = (type) => {
+    if (type == "correct") {
       wrongIndicator.classList.remove("visible");
       correctIndicator.classList.add("visible");
-    } else {
+    } else if (type == "wrong") {
       correctIndicator.classList.remove("visible");
       wrongIndicator.classList.add("visible");
+    } else {
+      correctIndicator.classList.remove("visible");
+      wrongIndicator.classList.remove("visible");
     }
   };
 
-  if (errors.length > 0) {
+  if (Array.isArray(errors) && errors.length > 0) {
     var warning = field_title.find(".fa-exclamation-triangle");
     if (warning) {
       warning.remove();
@@ -73,7 +70,7 @@ function showFieldErrors(field, errors = [], params = {}) {
     // adding error boxes instead of icons with tooltip
     // always for non-admin route and mobile
     if (window.IS_MOBILE || !window.location.pathname.includes("admin")) {
-      toggleErrorIcons(false);
+      toggleErrorIcons("wrong");
       validationBox.find(".message").innerHTML = errors.join("<br>");
       expand(validationBox, true, {
         duration: 350,
@@ -89,11 +86,16 @@ function showFieldErrors(field, errors = [], params = {}) {
       );
     }
 
-    if (!params.noScroll) {
+    if (options.scroll) {
       scrollToInvalid(field);
     }
+  } else if (errors === "blank") {
+    toggleErrorIcons("blank");
+    expand(validationBox, false, {
+      duration: 350,
+    });
   } else {
-    toggleErrorIcons(true);
+    toggleErrorIcons("correct");
     expand(validationBox, false, {
       duration: 350,
     });
@@ -117,8 +119,8 @@ function validateForm(form, params = {}) {
     }
     if (field.findParentByClassName("hidden")) continue;
 
-    var errors = formFieldChange(field);
-    if (errors.length > 0) {
+    var errors = formFieldOnChange(field, { scroll: true });
+    if (Array.isArray(errors) && errors.length > 0) {
       return false;
     }
   }
@@ -126,15 +128,7 @@ function validateForm(form, params = {}) {
   return true;
 }
 
-function toggleFieldCorrect(field, correct) {
-  field = $(field);
-  var ok = field.parent().find(".correct");
-  if (ok) ok.style.display = correct === true ? "block" : "";
-  var wrong = field.parent().find(".wrong");
-  if (wrong) wrong.style.display = correct === true ? "" : "block";
-}
-
-function validateSize(valLen, condition, message) {
+function getSizeValidationErrors(valLen, condition, message) {
   var lengthInfo = "";
   if (condition.indexOf("+") > 0) {
     var minLen = condition.replace("+", "");
@@ -155,24 +149,24 @@ function validateSize(valLen, condition, message) {
   if (lengthInfo) {
     return message(lengthInfo);
   }
-  return true;
+  return false;
 }
 
 function fieldErrors(field) {
   field = $(field);
 
-  var errors = [];
+  var field_errors = [];
   var newError = (message) => {
-    message = message.trim();
-    if (errors.indexOf(message)) {
-      errors.push(message);
+    message = message ? message.trim() : "";
+    if (field_errors.indexOf(message)) {
+      field_errors.push(message);
     }
   };
 
   var val = field.getValue();
   if (val === "") {
     newError("Uzupełnij to pole");
-    return errors;
+    return field_errors;
   }
 
   var isList = false;
@@ -251,11 +245,11 @@ function fieldErrors(field) {
   var validator = field.getAttribute("data-validate");
   var [validatorType, ...validatorParams] = validator.split("|");
 
+  var params = {};
   if (validatorParams !== undefined && validatorParams.length !== 0) {
-    var params = {};
     validatorParams.forEach((param) => {
-      var colonPos = param.indexOf(":");
-      params[param.slice(0, colonPos)] = param.slice(colonPos + 1);
+      var parts = param.split(":");
+      params[parts[0]] = parts[1];
     });
 
     if (params["match"]) {
@@ -264,27 +258,45 @@ function fieldErrors(field) {
         console.warn("Field missing");
       }
       var isCorrect = val == target.getValue();
-      toggleFieldCorrect(field, isCorrect);
       if (!isCorrect) {
         newError("Wartości nie są identyczne");
       }
     }
 
     if (params["length"]) {
-      var correct = validateSize(val.length, params["length"], (info) => {
-        return `Wymagana ilość znaków: ${info}`;
-      });
-      toggleFieldCorrect(field, isCorcorrectrect);
-      if (correct !== true) {
-        newError(correct);
+      var errors = getSizeValidationErrors(
+        val.length,
+        params["length"],
+        (info) => {
+          return `Wymagana ilość znaków: ${info}`;
+        }
+      );
+      if (errors) {
+        newError(errors);
       }
+    }
+
+    if (params["custom"]) {
+      if (params["delay"]) {
+        delay(params["custom"], params["delay"], window, [field]);
+        return null;
+      } else {
+        var errors = window[params["custom"]](field);
+        if (errors) {
+          newError(errors);
+        }
+      }
+    }
+
+    if (params["blank_on_change"]) {
+      return "blank";
     }
 
     if (isList) {
       var list = window[field.getAttribute("data-list-name")];
 
       if (params["count"]) {
-        var correct = validateSize(
+        var errors = getSizeValidationErrors(
           list.values.length,
           params["count"],
           (info) => {
@@ -292,8 +304,8 @@ function fieldErrors(field) {
           }
         );
 
-        if (correct !== true) {
-          newError(correct);
+        if (errors) {
+          newError(errors);
         }
       }
     }
@@ -316,7 +328,7 @@ function fieldErrors(field) {
     // default password length
     if (!params || !params["length"]) {
       var isCorrect = val.length >= 8;
-      toggleFieldCorrect(field, isCorrect);
+
       if (!isCorrect) {
         newError("Wymagana długość: 8 znaków");
       }
@@ -329,18 +341,17 @@ function fieldErrors(field) {
     if (!getIdFromYoutubeUrl(val)) {
       newError("Wpisz poprawny link do filmu z Youtube");
     }
+  } else if (validatorType == "backend") {
+    return null;
   }
 
-  return errors;
+  return field_errors;
 }
 
-// function checkRemoveRequired() {
-//   var valid = fieldErrors(this);
-//   showFieldErrors(this, valid);
-// }
-
-function clearValidateRequired() {
-  removeClasses("required");
+function clearAllErrors() {
+  $$("[data-form] [data-validate]").forEach((field) => {
+    showFieldErrors(field, "blank");
+  });
 }
 
 const formInitialStates = {};
@@ -462,9 +473,15 @@ function toggleMessageBox(elem, show = null, instant = false) {
   });
 }
 
+var scrollingToInvalid = false;
 function scrollToInvalid(field) {
+  if (scrollingToInvalid) {
+    return;
+  }
+  scrollingToInvalid = true;
   scrollToView(field, {
     callback: () => {
+      scrollingToInvalid = false;
       field.focus();
     },
   });
@@ -481,12 +498,25 @@ function registerForm(form = null) {
     );
   } else {
     inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
+
+    form.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        var submit = $(form).find("[data-submit]");
+        if (submit) {
+          submit.click();
+        }
+      }
+    });
   }
 
   inputs.forEach((field) => {
     field.setAttribute("data-change-registered", "");
 
-    field.addEventListener("change", formFieldChangeEvent);
+    field.addEventListener("change", formFieldOnChangeEvent);
+
+    /*if (field.getAttribute("data-validate").indexOf("backend") === 0) {
+      field.setValue();
+    }*/
 
     field.insertAdjacentHTML(
       "afterend",
@@ -505,39 +535,39 @@ function registerForm(form = null) {
   });
 }
 
-function formFieldChangeEvent(event) {
-  formFieldChange(event.target);
+function formFieldOnChangeEvent(event) {
+  formFieldOnChange(event.target);
 }
 
-function formFieldChange(field) {
+function formFieldOnChange(field, options = {}) {
   if (!field.hasAttribute("data-input-registered")) {
     field.setAttribute("data-input-registered", "");
-    field.addEventListener("input", formFieldInputEvent);
+    field.addEventListener("input", formFieldOnInputEvent);
   }
-  return formFieldInput(field);
+  return formFieldOnInput(field, options);
 }
 
-function formFieldInputEvent(event) {
-  formFieldInput(event.target);
+function formFieldOnInputEvent(event) {
+  formFieldOnInput(event.target);
 }
 
-function formFieldInput(field) {
+function formFieldOnInput(field, options = {}) {
   if (ignoreValueChanges) return;
   const errors = fieldErrors(field);
-  showFieldErrors(field, errors);
+
+  showFieldErrors(field, errors, options);
   return errors;
 }
 
-window.addEventListener("click", (event) => {
-  var form = null;
-
-  if (event.target.classList.contains("close-form-btn")) {
-    form = event.target.findParentByAttribute("data-modal");
-  } else if (event.target.hasAttribute("data-dismissable")) {
-    form = event.target;
+function togglePasswordFieldType(btn, input, make_visible = null) {
+  var make_visible = nonull(make_visible, btn.classList.contains("fa-eye"));
+  if (make_visible) {
+    btn.classList.replace("fa-eye", "fa-eye-slash");
+    btn.setAttribute("data-tooltip", "Ukryj hasło");
+    input.type = "text";
+  } else {
+    btn.classList.replace("fa-eye-slash", "fa-eye");
+    btn.setAttribute("data-tooltip", "Pokaż hasło");
+    input.type = "password";
   }
-
-  if (form) {
-    hideModal(form.id);
-  }
-});
+}
