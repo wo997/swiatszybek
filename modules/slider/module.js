@@ -34,10 +34,10 @@ MODULE = {
         title: "",
         published: 1,
         content: `
-          <div class="cms-container" style="" data-desktop-min-height="">
+          <div class="cms-container">
             <div class="background-color" style="background-color: rgb(20, 0, 205); opacity: 0.25;"></div>
             <div class="cms-container-content">
-              <div class="cms-block align-vertical-center align-horizontal-center" data-desktop-min-height="" data-desktop-width="100%" data-mobile-min-height="" data-mobile-width="100%" data-margin_top="" data-margin_left="" data-margin_right="" data-margin_bottom="" style="width: 100%;">
+              <div class="cms-block align-vertical-center align-horizontal-center" data-desktop-width="100%" data-mobile-min-height="" data-mobile-width="100%" style="width: 100%;">
                 <div class="cms-block-content ql-editor" data-padding_top="12px" data-padding_left="12px" data-padding_right="12px" data-padding_bottom="12px" style="padding: 12px;"><p class="ql-align-center"><br></p><p class="ql-align-center"><br></p><h2 class="ql-align-center">Mój slajd</h2><p class="ql-align-center"><br></p><p class="ql-align-center"><br></p></div>
               </div>
             </div>

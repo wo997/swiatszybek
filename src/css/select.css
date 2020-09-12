@@ -44,6 +44,7 @@ c-select c-option {
   cursor: pointer;
   text-align: left;
   display: block;
+  user-select: none;
 }
 c-select c-option:not(:first-child) {
   border-top: 1px solid #ddd;

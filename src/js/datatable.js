@@ -894,10 +894,10 @@ var datatableRearrange = {};
 
 window.addEventListener("dragstart", (event) => {
   var target = $(event.target);
-  if (
-    target.tagName != "TR" ||
-    target.findParentByClassName("has_selected_rows")
-  ) {
+  if (!target.findParentByClassName("has_selected_rows")) {
+    return;
+  }
+  if (target.tagName != "TR") {
     event.preventDefault();
     return;
   }

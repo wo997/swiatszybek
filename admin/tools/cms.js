@@ -186,6 +186,13 @@ function editModule(block) {
     module.firstOpen(params, modal, block);
     delete module.firstOpen;
   }
+  if (!module.default_form_values) {
+    module.default_form_values = getFormData(modal);
+  }
+
+  if (module.default_form_values) {
+    setFormData(module.default_form_values, modal);
+  }
   setFormData(params, modal);
   module.formOpen(params, modal, block);
 }
@@ -195,13 +202,16 @@ function saveModule(button) {
 
   cmsTarget = cmsWrapper.find(".during-module-edit");
   if (!cmsTarget) return;
+  removeClasses("during-module-edit");
   var module_name = cmsTarget.getAttribute("data-module");
   if (!module_name) return;
   var module = modules[module_name];
   if (!module) return;
 
   var form_data = getFormData(`#module_${module_name}`);
-  form_data = module.formClose(form_data);
+  if (module.formClose) {
+    form_data = module.formClose(form_data);
+  }
 
   if (form_data !== null) {
     cmsTarget.setAttribute("data-module-params", JSON.stringify(form_data));
@@ -481,6 +491,8 @@ function editCMS(t, params = {}) {
     var c = e.find(".module-content");
     if (c) removeNode(c);
   });
+
+  removeClasses("during-module-edit");
 
   cmsHistory = [];
   cmsHistoryPush();
@@ -1471,7 +1483,7 @@ document.addEventListener(
     event.target = cmsTarget;
     try {
       //if ((!event.target || !event.target.hasAttribute("draggable")) || !cmsSource) {
-      if (!$(event.target).findParentByClassName("cms")) {
+      if (!$(event.target).findParentById("actual_cms_wrapper")) {
         return;
       }
       if (!event.target || !event.target.hasAttribute("draggable")) {

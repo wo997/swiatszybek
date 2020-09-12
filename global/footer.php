@@ -35,7 +35,7 @@
       <span>Hasło</span>
       <i class="fas fa-eye btn" onclick="togglePasswordFieldType(this,$(this).parent().next())" data-tooltip="Pokaż hasło" data-position="right"></i>
     </div>
-    <input class="field" type="password" autocomplete="password" name="password" data-validate="backend|blank_on_change:true">
+    <input class="field" type="password" autocomplete="current-password" name="password" data-validate="backend|blank_on_change:true">
 
     <div style="margin-top:10px;text-align:center">
       <label class="checkbox-wrapper">

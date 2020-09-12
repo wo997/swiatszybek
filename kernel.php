@@ -132,7 +132,7 @@ if (config("dev_mode", true)) {
 }
 
 // automatic_build can override
-define("RELEASE", 2141);
+define("RELEASE", 2142);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);
 

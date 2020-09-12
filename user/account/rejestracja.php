@@ -155,12 +155,12 @@ function a($name)
               </div>
               <div class="field-wrapper">
                 <div class="field-title">Hasło (min. 8 znaków)</div>
-                <input type="password" name="password" class="field" data-validate="password">
+                <input type="password" name="password" class="field" data-validate="password" autocomplete="new-password">
               </div>
 
               <div class="field-wrapper">
                 <div class="field-title">Powtórz hasło</div>
-                <input type="password" name="password_rewrite" class="field" data-validate="password|match:#registerForm [name='password']">
+                <input type="password" name="password_rewrite" class="field" data-validate="password|match:#registerForm [name='password']" autocomplete="new-password">
               </div>
               <button onclick="register()" class="btn primary big fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
                 Zarejestruj się

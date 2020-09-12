@@ -93,6 +93,9 @@ function getCMSPageHTML($content)
           $module = $block->attr["data-module"];
           $block_html = "<div";
           foreach ($block->attr as $key => $val) {
+            if ($key == "data-module-params") {
+              continue;
+            }
             $block_html .= " $key=\"$val\"";
           }
           $block_html .= ">";

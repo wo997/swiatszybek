@@ -185,6 +185,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
             password: "",
             password_rewrite: ""
           }, form);
+          clearAllErrors();
         }
       });
     }
@@ -201,7 +202,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
   <div id="accountForm" class="main-container">
     <div style="margin-top:30px"></div>
 
-    <div id="message-modal" data-modal>
+    <div id="message-modal" data-modal data-dismissable>
       <div style="
     padding: 10px;
     display: flex;
@@ -250,7 +251,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
       </div>
 
       <div style="padding: 15px 5px">
-        <div id="menu1" class="menu mobileRow <?php if ($menu == "zamowienia") echo "showNow"; ?>" style="<?php if ($menu != "zamowienia") echo 'display:none;'; ?>">
+        <div id="menu1" data-form class="menu mobileRow <?php if ($menu == "zamowienia") echo "showNow"; ?>" style="<?php if ($menu != "zamowienia") echo 'display:none;'; ?>">
           <div style="text-align:center;margin:30px auto">
             <?php
             $table = "";
@@ -296,7 +297,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
           </div>
         </div>
 
-        <div id="menu2" class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
+        <div id="menu2" data-form class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
           <div style="width:100%;">
             <div class="message-box-container"></div>
             <div class="mobileRow" style="max-width: 820px;margin: 0 auto;">
@@ -363,29 +364,22 @@ if (strpos($url, "resetowanie-hasla") !== false)
           </div>
         </div>
 
-        <div id="menu3" class="menu mobileRow <?php if ($menu == "haslo") echo "showNow"; ?>" style="<?php if ($menu != "haslo") echo 'display:none;'; ?>">
+        <div id="menu3" data-form class="menu mobileRow <?php if ($menu == "haslo") echo "showNow"; ?>" style="<?php if ($menu != "haslo") echo 'display:none;'; ?>">
           <div style="width:100%;margin:40px auto;max-width:350px">
             <h3 class="form-header">Zmiana hasła</h3>
 
             <div class="field-title">Hasło (min. 8 znaków)</div>
-            <div class="field-wrapper">
-              <input type="password" name="password" class="field" data-validate="password">
-              <i class="correct fa fa-check"></i>
-              <i class="wrong fa fa-times"></i>
-            </div>
+            <input type="password" name="password" class="field" data-validate="password" autocomplete="new-password">
 
             <div class="field-title">Powtórz hasło</div>
-            <div class="field-wrapper">
-              <input type="password" name="password_rewrite" class="field" data-validate="|match:#menu3 .field[name='password']">
-              <i class="correct fa fa-check"></i>
-              <i class="wrong fa fa-times"></i>
-            </div>
+            <input type="password" name="password_rewrite" class="field" data-validate="|match:#menu3 .field[name='password']" autocomplete="new-password">
+
             <input type="hidden" name="user_id">
             <input type="hidden" name="authentication_token">
             <input type="hidden" name="moje-konto" value="1">
 
             <input type="hidden" name="email">
-            <button class="btn primary big" style="margin:10px 0; width: 100%" onclick="savePasswordForm()">
+            <button data-submit class="btn primary big" style="margin:10px 0; width: 100%" onclick="savePasswordForm()">
               Akceptuj zmianę hasła
               <i class="fa fa-chevron-right"></i>
             </button>

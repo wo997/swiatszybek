@@ -4,6 +4,7 @@ MODULE = {
   description: "Lista produktów",
   icon: '<i class="fas fa-cube"></i>',
   formOpen: (params, form) => {
+    console.log(params);
     loadCategoryPicker("product_categories", { skip: 2 }, () => {
       form
         .find(`[name="category_ids"]`)
