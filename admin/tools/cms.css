@@ -184,6 +184,7 @@
 
 .cms-block-options .btn {
   background: #f8f8f8;
+  border-radius: 0;
 }
 
 .cms-toolbar-shadow {

@@ -479,7 +479,7 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
 
 function editCMS(t, params = {}) {
   cmsSource = $(t);
-  cmsContainer.setContent(cmsSource.innerHTML);
+  cmsContainer.setValue(cmsSource.innerHTML);
 
   // just in case
   cmsContainer.findAll(".cms").forEach((e) => {
@@ -545,7 +545,7 @@ function editCMSAdditional(t, params) {
       ); // don't make it disappear
 
       cmsHistory = backupStateOfCMS.history;
-      cmsContainer.setContent(backupStateOfCMS.content);
+      cmsContainer.setValue(backupStateOfCMS.content);
       cmsSource = backupStateOfCMS.source;
       cmsTarget = backupStateOfCMS.target;
       cmsParams = backupStateOfCMS.params;
@@ -1758,7 +1758,7 @@ registerModalContent(
 
                 <div class="cms-wrapper">
                     <div style="position:absolute;display:none;z-index:1000" onclick="addContainer('',placeContainerAfter,true)" class="action_block insert_container_btn" data-tooltip="Wstaw kontener" data-position="center"> <i class="fas fa-plus-square"></i> </div>
-                    <div class="cms"></div>
+                    <div class="cms" data-type="html"></div>
 
                     <div class="cms-container-options cms-toolbar-shadow">
 
