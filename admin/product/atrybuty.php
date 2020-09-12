@@ -83,9 +83,6 @@
                 }
             },
             render: (data) => {
-                var clean = (x) => {
-                    return x.toString().replace(/"/g, "");
-                };
                 return `
                     <input type='hidden' data-list-param="value_id">
                     <input type='text' class='field' style='flex-grow:1' data-list-param="value">
@@ -110,9 +107,6 @@
                 color: {}
             },
             render: (data) => {
-                var clean = (x) => {
-                    return x.toString().replace(/"/g, "");
-                };
                 return `
                     <input type='hidden' data-list-param="value_id">
                     <input type='text' class='field inline jscolor' data-list-param="color">
@@ -249,7 +243,7 @@
 
 <div class="mytable"></div>
 
-<div id="editAttribute" data-modal data-expand data-exclude-hidden>
+<div id="editAttribute" data-modal data-expand data-exclude-hidden data-form>
     <div class="modal-body stretch-vertical">
         <div class="custom-toolbar">
             <span class="title">Edycja atrybutu</span>

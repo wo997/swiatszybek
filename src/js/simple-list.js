@@ -24,16 +24,35 @@ function createSimpleList(params = {}) {
     className = "field-title";
   }
 
+  var btnTop = "";
+  var btnTopTitle = "";
+  if (params.header) {
+    btnTopTitle = `
+      <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">
+        Dodaj <i class="fas fa-plus"></i>
+      </div>
+    `;
+    list.wrapper.classList.add("has_header");
+  } else {
+    btnTop = `
+      <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
+      `;
+  }
+
   list.wrapper.insertAdjacentHTML(
     "afterbegin",
     `
         <div class="${className}">
-            <span>${params.title}</span>
+            <span>${params.title} ${btnTopTitle}</span>
         </div>
-        <div class="btn primary add_btn add_begin" onclick="${
-          list.name
-        }.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
-        <div class="list"></div>
+        ${btnTop}
+        ${
+          params.table
+            ? `<table class="list"><thead><tr>${nonull(
+                params.header
+              )}</tr></thead><tbody></tbody></table>`
+            : `<div class="list"></div>`
+        }
         <div class="btn primary add_btn add_end" onclick="${
           list.name
         }.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>
@@ -48,7 +67,9 @@ function createSimpleList(params = {}) {
   list.insertRowFromBtn = (btn, begin = true, user = true) => {
     var row = list.insertRow(
       params.default_row,
-      btn.parent().find(".list"),
+      params.table
+        ? btn.parent().find(".list tbody")
+        : btn.parent().find(".list"),
       begin,
       user
     );
@@ -58,7 +79,9 @@ function createSimpleList(params = {}) {
     }
   };
 
-  list.target = list.wrapper.find(`.list`);
+  list.target = params.table
+    ? list.wrapper.find(`.list tbody`)
+    : list.wrapper.find(`.list`);
   list.target.setAttribute("data-depth", 1);
 
   //list.outputNode = $(`.${params.name} .simple-list-value`);
@@ -128,16 +151,37 @@ function createSimpleList(params = {}) {
           </div>`;
 
       btnTop = `
-          <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
-          `;
+        <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
+        `;
+
       btnBottom = `
           <div class="btn primary add_btn add_end" onclick="${list.name}.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>
         `;
     }
 
-    listTarget.insertAdjacentHTML(
-      begin ? "afterbegin" : "beforeend",
-      `<div class='simple-list-row-wrapper'>
+    if (params.table) {
+      listTarget.insertAdjacentHTML(
+        begin ? "afterbegin" : "beforeend",
+        `<tr class='simple-list-row'>
+            ${params.render()}
+            <td style='width:92px'>
+              <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
+                list.name
+              }.valuesChanged();"></i>
+              <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
+                list.name
+              }.valuesChanged();"></i>
+              <i class="btn secondary fas fa-times" 
+                onclick="${list.name}.removeRow(this);
+                ${list.name}.valuesChanged();">
+              </i>
+            </td>
+        </tr>`
+      );
+    } else {
+      listTarget.insertAdjacentHTML(
+        begin ? "afterbegin" : "beforeend",
+        `<div class='simple-list-row-wrapper'>
             <div class='simple-list-row'>
                 ${params.render()}
                 <div style="width:5px;margin-left:auto"></div>
@@ -148,7 +192,6 @@ function createSimpleList(params = {}) {
                 <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
                   list.name
                 }.valuesChanged();"></i>
-                <div style="width:5px"></div>
                 <i class="btn secondary fas fa-times" 
                   onclick="${list.name}.removeRow(this);
                   ${list.name}.valuesChanged();">
@@ -160,7 +203,8 @@ function createSimpleList(params = {}) {
                 ${btnBottom}
             </div>
         </div>`
-    );
+      );
+    }
 
     list.valuesChanged();
 
@@ -177,33 +221,45 @@ function createSimpleList(params = {}) {
     var n = begin ? 0 : listTarget.children.length - 1;
     var addedNode = $(listTarget.children[n]);
 
-    setFormData(values, addedNode, { type: "simple-list" });
+    setFormData(values, addedNode, { find_by: "data-list-param" });
     return addedNode;
   };
 
   list.valuesChanged = () => {
     var getDirectRows = (listTarget, level) => {
       var rows = [];
-      [...listTarget.children].forEach((simpleListRowWrapper) => {
-        var row = {
-          values: {},
-        };
-        $(simpleListRowWrapper)
-          .find(".simple-list-row")
-          .findAll("[data-list-param]")
-          .forEach((e) => {
-            var param = e.getAttribute("data-list-param");
-            row.values[param] = getValue(e);
-          });
-        if (level < list.recursive) {
-          row.children = getDirectRows(
-            $(simpleListRowWrapper).find(".sub-list > .list"),
-            level + 1
-          );
-        }
 
-        rows.push(row);
-      });
+      if (params.table) {
+        listTarget.findAll("tr").forEach((row_node) => {
+          var row = {};
+          row_node.findAll("[data-list-param]").forEach((e) => {
+            var param = e.getAttribute("data-list-param");
+            row[param] = getValue(e);
+          });
+          rows.push(row);
+        });
+      } else {
+        listTarget.directChildren().forEach((simpleListRowWrapper) => {
+          var row = {
+            values: {},
+          };
+          $(simpleListRowWrapper)
+            .find(".simple-list-row")
+            .findAll("[data-list-param]")
+            .forEach((e) => {
+              var param = e.getAttribute("data-list-param");
+              row.values[param] = getValue(e);
+            });
+          if (level < list.recursive) {
+            row.children = getDirectRows(
+              $(simpleListRowWrapper).find(".sub-list > .list"),
+              level + 1
+            );
+          }
+
+          rows.push(row);
+        });
+      }
 
       list.emptyNode.style.display = rows.length === 0 ? "block" : "none";
 

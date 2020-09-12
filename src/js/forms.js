@@ -389,11 +389,11 @@ function setFormInitialState(form) {
 // form can be piepquery or selector
 function setFormData(data, form, params = {}) {
   form = $(form);
+
+  var find_by = nonull(params.find_by, "name");
+
   Object.entries(data).forEach(([name, value]) => {
-    var selector = `[name="${name}"]`;
-    if (params.type == "simple-list") {
-      selector = `[data-list-param="${name}"]`;
-    }
+    var selector = `[${find_by}="${name}"]`;
     var e = form.find(selector);
     if (!e) {
       return;
@@ -409,16 +409,18 @@ function setFormData(data, form, params = {}) {
   resizeCallback();
 }
 
-function getFormData(form) {
+function getFormData(form, params = {}) {
   form = $(form);
   var data = {};
 
+  var find_by = nonull(params.find_by, "name");
+
   var excludeHidden = form.hasAttribute("data-exclude-hidden");
   $(form)
-    .findAll(`[name]`)
+    .findAll(`[${find_by}]`)
     .forEach((e) => {
       if (excludeHidden && e.findParentByClassName("hidden")) return;
-      data[e.getAttribute("name")] = getValue(e);
+      data[e.getAttribute(find_by)] = getValue(e);
     });
   return data;
 }

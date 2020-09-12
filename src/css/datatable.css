@@ -276,3 +276,11 @@
 .datatable-wrapper .showBtn {
   width: 100%;
 }
+
+.kolejnosc-column i {
+  opacity: 0.6;
+}
+
+.has_selected_rows .kolejnosc-column {
+  display: none;
+}

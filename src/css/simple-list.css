@@ -12,7 +12,7 @@
   border: 1px solid #bbb;
 }
 
-.simple-list-row {
+div.list .simple-list-row {
   margin: -1px;
   padding-right: 10px;
   display: flex;
@@ -27,12 +27,14 @@
   align-items: center;
 }
 
-.simple-list-row > .fa-times {
+.simple-list-row > .fa-times,
+.simple-list-row > td > .fa-times {
   color: #c22 !important;
   border-color: #c22 !important;
+  margin-left: 5px;
 }
-
-.simple-list-row > .fa-times:hover {
+.simple-list-row > .fa-times:hover,
+.simple-list-row > td > .fa-times:hover {
   background: #c22 !important;
   color: #fff !important;
 }
@@ -60,10 +62,6 @@
 
 .simple-list .sub-list .simple-list-row-wrapper {
   border-right: none;
-}
-
-.simple-list .list:empty + .btn {
-  display: none;
 }
 
 .simple-list .field {
@@ -121,8 +119,13 @@
   background: #ddf;
 }
 
+/* if empty */
 .simple-list[data-count="0"] > .add_btn.add_begin {
   border-radius: 4px;
+}
+.simple-list[data-count="0"] > .add_btn.add_end,
+.simple-list[data-count="0"] table {
+  display: none;
 }
 
 /* slim paddings */
@@ -135,4 +138,22 @@
 
 .simple-list[data-count="0"].required > .add_btn.add_begin {
   background: #d33;
+}
+
+.simple-list table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+.simple-list th {
+  background: var(--primary-clr);
+  color: white;
+  font-weight: 600;
+  padding: 4px 6px;
+}
+
+.simple-list.has_header .add_begin {
+  width: 90px;
+  border-radius: 4px;
+  margin-left: 3px;
 }

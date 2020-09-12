@@ -71,10 +71,11 @@ if (isset($_POST["remove"])) {
 
 
     // link attributes
+
     query("DELETE FROM link_category_attribute WHERE attribute_id = ?", [$attribute_id]);
     $insert = "";
-    foreach (json_decode($_POST["categories"], true) as $category_id => $attribute_metadata) {
-        $insert .= "(" . intval($category_id) . ",$attribute_id," . intval($attribute_metadata["main_filter"]) . "),";
+    foreach (json_decode($_POST["categories"], true) as $attribute_metadata) {
+        $insert .= "(" . intval($attribute_metadata["category_id"]) . ",$attribute_id," . intval($attribute_metadata["main_filter"]) . "),";
     }
     $insert = substr($insert, 0, -1);
     query("INSERT INTO link_category_attribute (category_id, attribute_id, main_filter) VALUES $insert");

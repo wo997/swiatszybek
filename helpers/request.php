@@ -13,11 +13,21 @@ function json_response($response)
 
 function redirect($url)
 {
-    $_SESSION["redirect"] = $url;
-    json_response(["redirect" => $url]);
+    if (IS_XHR) {
+        $_SESSION["redirect"] = $url;
+        json_response(["redirect" => $url]);
+    } else {
+        header("Location: $url");
+        die;
+    }
 }
 
 function reload()
 {
-    json_response(["reload" => true]);
+    if (IS_XHR) {
+        json_response(["reload" => true]);
+    } else {
+        header("Refresh:0");
+        die;
+    }
 }

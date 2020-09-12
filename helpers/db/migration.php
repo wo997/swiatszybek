@@ -186,28 +186,28 @@ function dropIndexByName($table, $key_name)
  */
 function createTable($table, $columns)
 {
-    if (tableExists($table)) {
-        alterTable($table, $columns); // possibly modify columns at this point, totally flexible
-        return;
+    if (!tableExists($table)) {
+        $sql = "CREATE TABLE $table (";
+
+        foreach ($columns as $column) {
+            $column["null"] = nonull($column, "null", false);
+            $column["type"] = strtoupper($column["type"]);
+
+            $definition = getColumnDefinition($column);
+
+            $sql .= $definition . ",";
+        }
+
+        $sql = rtrim($sql, ",");
+        $sql .= ")";
+
+        query($sql);
+
+        echo "➕ Table '$table' created<br>";
     }
 
-    $sql = "CREATE TABLE $table (";
-
-    foreach ($columns as $column) {
-        $column["null"] = nonull($column, "null", false);
-        $column["type"] = strtoupper($column["type"]);
-
-        $definition = getColumnDefinition($column);
-
-        $sql .= $definition . ",";
-    }
-
-    $sql = rtrim($sql, ",");
-    $sql .= ")";
-
-    query($sql);
-
-    echo "➕ Table '$table' created<br>";
+    alterTable($table, $columns); // do your job ;)
+    return;
 }
 
 /**

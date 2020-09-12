@@ -1471,6 +1471,9 @@ document.addEventListener(
     event.target = cmsTarget;
     try {
       //if ((!event.target || !event.target.hasAttribute("draggable")) || !cmsSource) {
+      if (!$(event.target).findParentByClassName("cms")) {
+        return;
+      }
       if (!event.target || !event.target.hasAttribute("draggable")) {
         event.preventDefault();
         return;

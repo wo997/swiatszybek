@@ -29,7 +29,9 @@ if (isset($_POST["everything"])) {
 
     foreach ($responseArray["results"] as $row_id => $row) {
         $selected_attributes = fetchArray("SELECT category_id, main_filter FROM link_category_attribute WHERE attribute_id = " . $row["attribute_id"]);
-        $responseArray["results"][$row_id]["categories"] = json_encode(getAssociativeArray($selected_attributes, "category_id"));
+        //$responseArray["results"][$row_id]["categories"] = json_encode(getAssociativeArray($selected_attributes, "category_id"));
+        $responseArray["results"][$row_id]["categories"] = json_encode($selected_attributes);
+        //categories
 
         $values = getAttributeValues(intval($row['attribute_id']));
         $responseArray["results"][$row_id]["attribute_values_" . $row['data_type']] = json_encode($values);

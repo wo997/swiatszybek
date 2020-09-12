@@ -29,6 +29,25 @@ function createDatatable(datatable) {
   datatable.target.classList.add("datatable-wrapper");
   datatable.target.setAttribute("data-datatable-name", datatable.name);
 
+  if (datatable.sortable) {
+    if (!datatable.primary)
+      console.error(`missing primary key in ${datatable.name}`);
+    if (!datatable.db_table)
+      console.error(`missing db_table name in ${datatable.name}`);
+    datatable.definition = [
+      {
+        title: "Kolejność",
+        width: "85px",
+        className: "kolejnosc-column",
+        render: (r, i) => {
+          return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" onchange="rearrange(this)">`;
+        },
+        escape: false,
+      },
+      ...datatable.definition,
+    ];
+  }
+
   if (datatable.selectable) {
     datatable.definition = [
       {
@@ -48,10 +67,10 @@ function createDatatable(datatable) {
     datatable.selection = [];
     datatable.singleselect = datatable.selectable.singleselect;
     if (datatable.selectable.has_metadata) {
-      datatable.metadata = {};
+      datatable.metadata = [];
     }
 
-    datatable.setSelectedValuesString = (v) => {
+    datatable.setSelectedValuesFromString = (v) => {
       // Works also with json to make it easier to use
       var values = typeof v == "string" ? JSON.parse(v) : v;
       var selection = [];
@@ -64,17 +83,16 @@ function createDatatable(datatable) {
       }
 
       if (datatable.selectable.has_metadata) {
-        var metadata = [];
+        datatable.metadata = values;
+        console.log(values);
+
         try {
-          Object.entries(values).forEach(([row_id, row_metadata]) => {
-            selection.push(parseInt(row_id));
-            metadata[parseInt(row_id)] = row_metadata;
+          values.forEach((row) => {
+            selection.push(parseInt(row[datatable.primary]));
           });
         } catch (e) {
           console.log(e);
         }
-
-        datatable.metadata = metadata;
       } else {
         // no metadata, raw table
         try {
@@ -125,24 +143,6 @@ function createDatatable(datatable) {
     datatable.bulkEditChange = () => {
       console.log(123);
     };
-  }
-
-  if (datatable.sortable) {
-    if (!datatable.primary)
-      console.error(`missing primary key in ${datatable.name}`);
-    if (!datatable.db_table)
-      console.error(`missing db_table name in ${datatable.name}`);
-    datatable.definition = [
-      {
-        title: "Kolejność",
-        width: "85px",
-        render: (r, i) => {
-          return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" data-table='${datatable.name}' data-index='${i}' onchange="rearrange(this)">`;
-        },
-        escape: false,
-      },
-      ...datatable.definition,
-    ];
   }
 
   var breadcrumb_html = "";
@@ -555,6 +555,10 @@ function createDatatable(datatable) {
         canOrder = true;
       }
 
+      if (datatable.filters.length > 0 || datatable.sort) {
+        canOrder = false;
+      }
+
       datatable.target.classList.toggle("noOrder", !canOrder);
     }
 
@@ -566,7 +570,23 @@ function createDatatable(datatable) {
       },
       success: (res) => {
         if (createList) {
-          datatable.selectionPageCount = res.pageCount;
+          if (datatable.sortable) {
+            var r = [];
+            for (let sel of datatable.selection) {
+              var row = res.results.find((e) => {
+                return e[datatable.primary] == sel;
+              });
+              if (row) {
+                r.push(row);
+              }
+            }
+            res.results = r;
+            //console.log(datatable.selection, res.results);
+            /*res.results.sort(function(a, b) {
+              return parseFloat(a.price) - parseFloat(b.price);
+            });*/
+          }
+
           datatable.selectionResults = res.results;
         } else {
           datatable.pageCount = res.pageCount;
@@ -693,6 +713,7 @@ function createDatatable(datatable) {
       datatable.search();
     }
   };
+
   datatable.createList = (firstLoad) => {
     if (firstLoad && datatable.nosearch === true) {
       return;
@@ -703,12 +724,12 @@ function createDatatable(datatable) {
 
       if (datatable.selectable && datatable.selectable.has_metadata) {
         try {
-          Object.entries(datatable.metadata).forEach(([key, value]) => {
+          datatable.metadata.forEach((row_data) => {
             var row = datatable.selectionBodyElement.find(
-              `[data-primary="${key}"]`
+              `[data-primary="${row_data[datatable.primary]}"]`
             );
             if (row) {
-              Object.entries(value).forEach(([key, value]) => {
+              Object.entries(row_data).forEach(([key, value]) => {
                 var m = row.find(`[data-metadata="${key}"]`);
                 if (m) m.setValue(value);
               });
@@ -793,7 +814,7 @@ function createDatatable(datatable) {
     }
 
     if (datatable.selectable.has_metadata) {
-      var metadata = {};
+      var metadata = [];
       datatable.selectionBodyElement
         .findAll("tr[data-primary]")
         .forEach((e) => {
@@ -801,8 +822,10 @@ function createDatatable(datatable) {
           e.findAll("[data-metadata]").forEach((m) => {
             row[m.getAttribute("data-metadata")] = m.getValue();
           });
-          metadata[parseInt(e.getAttribute("data-primary"))] = row;
+          row[datatable.primary] = parseInt(e.getAttribute("data-primary"));
+          metadata.push(row);
         });
+      console.log(metadata);
       datatable.metadata = metadata;
     }
 
@@ -823,6 +846,16 @@ function createDatatable(datatable) {
 
     datatable.tableSelectionElement.find(".selected-results-count").innerHTML =
       datatable.selection.length;
+
+    if (datatable.sortable) {
+      var index = 0;
+      datatable.selectionBodyElement
+        .findAll(".kolejnosc-column .kolejnosc")
+        .forEach((e) => {
+          index++;
+          e.value = index;
+        });
+    }
   };
   if (datatable.selectable && datatable.selectable.has_metadata) {
     datatable.registerMetadataFields = () => {
@@ -860,12 +893,20 @@ function getSafePageIndex(i, pageCount) {
 var datatableRearrange = {};
 
 window.addEventListener("dragstart", (event) => {
-  if (event.target.tagName == "TR") {
-    datatableRearrange.source = event.target;
-    datatableRearrange.placeFrom = datatableRearrange.source.find(
-      ".kolejnosc"
-    ).value;
+  var target = $(event.target);
+  if (
+    target.tagName != "TR" ||
+    target.findParentByClassName("has_selected_rows")
+  ) {
+    event.preventDefault();
+    return;
   }
+
+  datatableRearrange.source = target;
+  datatableRearrange.placeFrom = datatableRearrange.source.find(
+    ".kolejnosc"
+  ).value;
+
   if (datatableRearrange.source && datatableRearrange.source.classList) {
     datatableRearrange.source.classList.add("grabbed");
   }
@@ -886,16 +927,32 @@ window.addEventListener("dragend", () => {
 });
 
 function rearrange(input, wasIndex = 0) {
-  var datatable = window[input.getAttribute("data-table")];
-  var rowId = input.getAttribute("data-index");
+  input = $(input);
+
+  var datatable = getParentDatatable(input);
+
   var toIndex = input.value;
-  if (toIndex < 1) toIndex = 1;
+  if (toIndex < 0) toIndex = 0;
 
   if (toIndex === wasIndex) return;
 
+  if (datatable.selectable) {
+    if (toIndex < wasIndex) {
+      toIndex--;
+    }
+    var row2 = datatable.selectionBodyElement.findAll("tr")[toIndex];
+    var row1 = input.parent().parent();
+    row1.parent().insertBefore(row1, row2);
+
+    datatable.selectionChange();
+    return;
+  }
+
+  if (toIndex < 1) toIndex = 1;
+
   var table = datatable.db_table;
   var primary = datatable.primary;
-  var itemId = datatable.results[rowId][primary];
+  var itemId = input.findParentByTagName("TR").getAttribute("data-primary");
 
   var params = {
     table: table,

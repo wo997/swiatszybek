@@ -132,4 +132,10 @@ alterTable("activity_log", [
 
 dropColumns("zamowienia", ["history"]);
 
+createTable("link_variant_attribute_option", [
+  ["name" => "product_id", "type" => "INT", "index" => "index"],
+  ["name" => "attribute_id", "type" => "INT", "index" => "index"],
+  ["name" => "kolejnosc", "type" => "INT", "index" => "index"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";

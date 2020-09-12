@@ -24,6 +24,7 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
 
 $product_data["product_attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
+$product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FROM link_variant_attribute_option WHERE product_id = " . intval($product_id) . " ORDER BY kolejnosc ASC");
 
 ?>
 
@@ -112,8 +113,8 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
 
     registerTextCounters();
 
-    createDatatable({
-      name: "variants",
+    /*createDatatable({
+      name: "variants2",
       url: "/admin/search_variant",
       db_table: "variant",
       primary: "variant_id",
@@ -181,7 +182,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
                 </div>
                 <div class="btn primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
             `
-    });
+    });*/
 
     createSimpleList({
       name: "gallery",
@@ -230,6 +231,111 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       //empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
     });
 
+    // will go deprecated soon
+    createDatatable({
+      name: "atrybuty_wariantow",
+      url: "/admin/search_product_attributes",
+      lang: {
+        subject: "atrybutów",
+      },
+      primary: "attribute_id",
+      db_table: "product_attributes",
+      sortable: true,
+      selectable: {
+        data: <?= json_encode($product_data["variant_attribute_options"]) ?>,
+        output: "variant_attribute_options"
+      },
+      definition: [{
+          title: "Nazwa atrybutu",
+          width: "25%",
+          render: (r) => {
+            return `${r.name}`;
+          },
+        },
+        {
+          title: "Typ danych",
+          width: "20%",
+          render: (r) => {
+            return `${attribute_data_types[r.data_type].description}`;
+          },
+        },
+        {
+          title: "Wartości",
+          width: "60%",
+          render: (r) => {
+            return `${nonull(r.attr_values).replace(/,/g,", ")}`;
+          },
+        },
+      ],
+      controlsRight: `
+          <div class='float-icon'>
+              <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
+              <i class="fas fa-search"></i>
+          </div>
+      `
+    });
+
+    createSimpleList({
+      name: "variants",
+      fields: {
+        value_id: {},
+        name: {
+          unique: true,
+          allow_empty: true
+        },
+        price: {},
+        rabat: {},
+        stock: {},
+        zdjecie: {},
+      },
+      table: true,
+      header: `
+        <th>Nazwa</th>
+        <th>Cena</th>
+        <th>Rabat</th>
+        <th>W magazynie</th>
+        <th>Zdjęcie</th>
+        <th></th>
+        <th></th>
+      `,
+      render: (data) => {
+        return `
+            <td>
+              <input type='hidden' data-list-param="variant_id">
+              <span data-list-param="name" data-type="html"></span>
+            </td>
+            <td>
+              <span data-list-param="price" data-type="html"></span> zł
+            </td>
+            <td>
+              <span data-list-param="rabat" data-type="html"></span> zł
+            </td>
+            <td>
+              <span data-list-param="stock" data-type="html"></span> szt.
+            </td>
+            <td>
+              <img data-list-param="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
+            </td>
+            <td style="width:80px;">
+              <button class='btn primary' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
+            </td>
+        `;
+      },
+      default_row: {
+        name: "",
+        price: 0,
+        rabat: 0,
+        stock: 0,
+        product_code: "",
+        zdjecie: "",
+        published: 0,
+        variant_id: -1
+      },
+      title: "Warianty (min. 1)"
+    });
+
+
+
     setFormData(<?= json_encode($product_data) ?>, "#productForm");
     addMainFormLeavingWarning($("#productForm"));
   });
@@ -247,7 +353,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     editCMS($('[name="description"]'));
   }
 
-  function newVariant(btn) {
+  /*function newVariant(btn) {
     var data = {
       name: "",
       price: "",
@@ -267,11 +373,31 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     showModal("variantEdit", {
       source: btn
     });
+  }*/
+
+  var variantRow = null;
+
+  function editVariant(row, btn) {
+    variantRow = $(row);
+
+    const form = $(`#variantEdit`);
+    var data = getFormData(row, {
+      find_by: "data-list-param"
+    });
+
+    //data.was_stock = data.stock;
+    console.log(row, data);
+
+    setFormData(data, form);
+
+    showModal(form.id, {
+      source: btn
+    });
   }
 
-  function editVariant(i, btn) {
+  /*function editVariant(i, btn) {
     const form = $(`#variantEdit`);
-    var data = variants.results[i];
+    var data = variants2.results[i];
 
     data.was_stock = data.stock;
 
@@ -292,22 +418,20 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
         // setModalInitialState(formId);
       }
     });
-  }
+  }*/
 
-  function saveVariantForm(remove = false) {
-    var params = getFormData($("#variantEdit"));
-
+  function saveVariant(remove = false) {
     if (remove) {
-      params["remove"] = true;
+      variantRow.remove();
     }
 
-    xhr({
-      url: "/admin/save_variant",
-      params: params,
-      success: () => {
-        variants.search();
-      }
+    const data = $(`#variantEdit`).getFormData();
+
+    setFormData(data, variantRow, {
+      find_by: "data-list-param"
     });
+
+    lazyLoadImages();
   }
 
   function deleteProduct() {
@@ -396,9 +520,6 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
   <div class="field-title">Kategorie</div>
   <div class="category-picker" name="categories" data-source="product_categories"></div>
 
-  <div class="field-title">Atrybuty produktu (wspólne)</div>
-  <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
-
   <div style="margin-top: 10px">
 
     <div class="field-title">
@@ -408,9 +529,16 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     <div name="description" data-type="html" class="cms preview_html" style="max-height: 400px"></div>
   </div>
 
-  <h2 style="text-align:center">Warianty <span style="font-size: 0.7rem">(min. 1)</span></h2>
+  <div class="field-title">Atrybuty produktu (wspólne)</div>
+  <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
-  <div class="variants"></div>
+  <div class="field-title">Atrybuty wariantów</div>
+  <div class="atrybuty_wariantow"></div>
+
+  <!--<div class="field-title">Warianty <span style="font-size: 0.7rem">(min. 1)</span></div>
+  <div class="variants2"></div>-->
+
+  <div name="variants" data-validate="|count:1+"></div>
 
   <input type="hidden" name="product_id">
 
@@ -427,7 +555,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
       <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
-      <button class="btn primary" onclick="saveVariantForm();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
+      <button class="btn primary" onclick="saveVariant();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
     <div>
 
@@ -471,7 +599,7 @@ $product_data["product_attributes"] = getAttributesFromDB("link_product_attribut
       <input type="hidden" name="product_id">
       <input type="hidden" name="variant_id">
       <div style="display: flex; justify-content: flex-end; margin-top: 20px">
-        <button class=" btn red" onclick="saveVariantForm(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
+        <button class=" btn red" onclick="saveVariant(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
       </div>
     </div>
   </div>

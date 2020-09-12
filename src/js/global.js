@@ -295,7 +295,7 @@ function setValue(input, value = null, params = {}) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[
       datatable.getAttribute("data-datatable-name")
-    ].setSelectedValuesString(value);
+    ].setSelectedValuesFromString(value);
   } else if (input.classList.contains("jscolor")) {
     value = rgbStringToHex(value);
     var hex = value.replace("#", "");
