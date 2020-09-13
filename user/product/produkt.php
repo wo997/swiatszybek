@@ -13,10 +13,17 @@ else {
   run();
 }
 
+if (isset($_POST["preview_params"])) {
+  $preview_params = json_decode($_POST["preview_params"], true);
+}
+
 //$cansee = $app["user"]["priveleges"]["backend_access"] ? "" : "AND published = 1";
 //$product_data = fetchRow("SELECT product_id, title, link, seo_title, seo_description, description, specyfikacja_output, descriptionShort, price_min, price_max, image, published, cache_avg_rating, cache_rating_count FROM products WHERE product_id = $number");
 
 $product_data = fetchRow("SELECT * FROM products WHERE product_id = $number");
+if ($preview_params) {
+  $product_data = array_merge($product_data, $preview_params);
+}
 
 if (!$product_data) {
   run();
@@ -33,6 +40,12 @@ if (!empty($product_data["price_max0"]) && $product_data["price_min"] != $produc
 
 //$variants = fetchArray("SELECT variant_id, name, product_code, price, rabat, color, zdjecie, zdjecia, quantity FROM variant v WHERE product_id = $number AND published = 1 ORDER BY v.kolejnosc");
 $variants = fetchArray("SELECT * FROM variant WHERE product_id = $number AND published = 1 ORDER BY kolejnosc");
+
+if ($preview_params) {
+  $variants = json_decode($preview_params["variants"], true);
+}
+
+
 
 $anyVariantInStock = false;
 foreach ($variants as $variant) {
@@ -835,7 +848,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
   <?php
   include "global/header.php";
 
-  if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"]) {
+  if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] || $preview_params) {
     include "produkt_view.php";
   } else {
     echo '<div class="centerVerticallyMenu" style="text-align:center">

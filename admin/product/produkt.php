@@ -38,6 +38,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
 </style>
 <script>
   useTool("cms");
+  useTool("preview");
 
   function comboSelectValuesChanged(combo) {
     combo.findAll("select").forEach(select => {
@@ -437,6 +438,10 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
   function rewriteURL() {
     $(`[name="link"]`).setValue(getLink($(`[name="title"]`).value));
   }
+
+  function showPreview() {
+    window.preview.open("<?= getProductLink($product_id, $product_data["link"]) ?>", getFormData("#productForm"));
+  }
 </script>
 
 <title>Edycja produktu</title>
@@ -460,6 +465,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
         <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
         <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
       <?php endif ?>
+      <button onclick="showPreview()" class="btn secondary">Podgląd <i class="fas fa-external-link-alt"></i></button>
       <button onclick="saveProductForm()" class="btn primary" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
     </div>
   </div>

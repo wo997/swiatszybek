@@ -17,8 +17,8 @@ window.preview = {
 
 registerModalContent(
   `
-    <div id="preview" class="hugeModalDesktop" data-modal>
-        <div class="modal-body stretch-vertical">
+    <div id="preview" class="hugeModalDesktop" data-modal data-expand>
+        <div class="modal-body">
             <div class="custom-toolbar">
                 <span class="title">
                     Podgląd strony
@@ -28,8 +28,8 @@ registerModalContent(
                 </span>
                 <button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fa fa-times"></i></button>
             </div>
-            <div style="margin: -10px;height: 100%;margin-top: 0;display:flex">
-                <iframe name="preview_iframe"></iframe>
+            <div class="stretch-vertical">
+              <iframe name="preview_iframe"></iframe>
             </div>
         </div>
         <form class="preview_form" method="post" target="preview_iframe">
