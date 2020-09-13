@@ -86,20 +86,15 @@ function showModal(name = null, params = {}) {
     if (modal.hasAttribute("data-expand")) {
       var q = $(`#${name} > div`);
       if (q) {
-        if (window.innerWidth >= 800) {
-          if (modal.getAttribute("data-expand") == "large") total = 0; //total--;
-          q.classList.toggle("pad0", total == 0);
-          q.classList.toggle("pad1", total == 1);
-          q.classList.toggle("pad2", total == 2);
-          q.classList.toggle("pad3", total >= 3);
-        } else {
-          q.classList.toggle("pad0", false);
-          q.classList.toggle("pad1", false);
-          q.classList.toggle("pad2", false);
-          q.classList.toggle("pad3", false);
-        }
+        if (modal.getAttribute("data-expand") == "large") total = 0; //total--;
+        q.classList.toggle("pad0", total == 0);
+        q.classList.toggle("pad1", total == 1);
+        q.classList.toggle("pad2", total == 2);
+        q.classList.toggle("pad3", total >= 3);
       }
     }
+
+    registerScrollShadows();
   }
 
   toggleBodyScroll(!visible);
@@ -220,7 +215,7 @@ function setModalTitle(modal, title) {
 window.addEventListener("mousedown", (event) => {
   var form = null;
 
-  if (event.target.classList.contains("close-form-btn")) {
+  if (event.target.classList.contains("close-modal-btn")) {
     form = event.target.findParentByAttribute("data-modal");
   } else if (event.target.hasAttribute("data-dismissable")) {
     form = event.target;

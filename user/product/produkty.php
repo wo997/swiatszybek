@@ -57,11 +57,11 @@ function showCategory($category, $level = 0)
       vertical-align: baseline;
     }
 
-    .categories-wrapper .categories {
+    .search-wrapper .categories {
       min-width: 240px;
     }
 
-    .categories-wrapper,
+    .search-wrapper,
     .products {
       padding: 20px;
     }
@@ -69,9 +69,10 @@ function showCategory($category, $level = 0)
     .category_name {
       max-width: 200px;
       display: inline-block;
+      padding: 2px;
     }
 
-    .categories-wrapper {
+    .search-wrapper {
       width: auto;
       border: 1px solid #eee;
       -webkit-box-shadow: 0px 3px 10px -3px rgba(0, 0, 0, 0.19);
@@ -102,17 +103,18 @@ function showCategory($category, $level = 0)
       transition: 0.2s all;
     }
 
-    .category-picker-row {
-      display: flex;
-      padding: 2px;
+    .attribute-label {
+      display: block;
+      padding: 2px 0;
     }
 
     @media only screen and (max-width: 799px) {
-      .categories-wrapper {
+      .search-wrapper {
         width: 100%;
       }
 
       .category-picker-row {
+        display: flex;
         justify-content: space-between;
         border-top: 1px solid #ddd;
         align-items: center;
@@ -139,11 +141,14 @@ function showCategory($category, $level = 0)
         padding: 0;
       }
 
-      .categories-wrapper,
+      .search-wrapper,
       .products {
         padding: 10px;
       }
 
+      .attribute-label {
+        padding: 4px 0;
+      }
     }
 
     @media only screen and (min-width: 800px) {
@@ -160,11 +165,10 @@ function showCategory($category, $level = 0)
         border-radius: 5px;
         background: #dadada;
       }
-    }
 
-    .attribute-label {
-      display: block;
-      padding: 2px 0;
+      .search-wrapper .mobile-search-btn {
+        display: none;
+      }
     }
 
     .attribute-list .attribute-list {
@@ -187,7 +191,7 @@ function showCategory($category, $level = 0)
       margin-bottom: 0.3em;
     }
 
-    /*.categories-wrapper .fas {
+    /*.search-wrapper .fas {
       color: #c22;
     }*/
 
@@ -218,8 +222,6 @@ function showCategory($category, $level = 0)
 
     .under-products {
       position: relative;
-      -webkit-box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
-      -moz-box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
       box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
     }
 
@@ -236,8 +238,6 @@ function showCategory($category, $level = 0)
       padding: 3px 9px;
       display: block;
       margin-bottom: 3px;
-      -webkit-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.16);
-      -moz-box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.16);
       box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.16);
       border-radius: 4px;
       transition: 0.1s all;
@@ -270,6 +270,28 @@ function showCategory($category, $level = 0)
       font-weight: bold;
       font-size: 16px;
     }
+
+    .search-wrapper .mobile-search-btn {
+      margin-bottom: 10px;
+    }
+
+    .sorting-wrapper.horizontal .order_by_item span {
+      padding: 6px 10px;
+      margin: 0 5px;
+    }
+
+    .sorting-wrapper.horizontal .order_by_item:first-child span {
+      margin-left: 10px;
+    }
+
+    .sorting-wrapper.horizontal .order_by_item:last-child span {
+      margin-right: 10px;
+    }
+
+    .horizontal-scroll-wrapper {
+      display: flex;
+      margin: 0 -10px
+    }
   </style>
 
   <script>
@@ -300,6 +322,63 @@ function showCategory($category, $level = 0)
       }
 
       searchProducts();
+
+      if (window.innerWidth < 800) {
+        $$(".search-wrapper .search-header").forEach(e => {
+          e.remove();
+        });
+
+        registerModalContent(`
+            <div id="searchCategory" data-expand>
+                <div class="modal-body">
+                    <button class="fas fa-times close-modal-btn"></button>
+                    <h3 class="header">Kategorie</h3>
+                    <div class="scroll-panel scroll-shadow panel-padding">
+                      
+                    </div>
+                </div>
+            </div>
+        `);
+
+        registerModalContent(`
+            <div id="searchFilters" data-expand>
+                <div class="modal-body">
+                    <button class="fas fa-times close-modal-btn"></button>
+                    <h3 class="header">Filtry</h3>
+                    <div class="scroll-panel scroll-shadow panel-padding">
+                      
+                    </div>
+                </div>
+            </div>
+        `);
+
+        $(`#searchCategory .modal-body .scroll-panel`).appendChild(
+          $('.search-wrapper .categories')
+        );
+
+        var filters = $('.search-wrapper .filters');
+
+        if (!filters.find("*")) {
+          $(`.search-filters-btn`).style.display = "none";
+        } else {
+          $(`#searchFilters .modal-body .scroll-panel`).appendChild(
+            filters
+          );
+        }
+
+        // sorting horizontal
+        var scroll_wrapper = $('.sorting-wrapper');
+        scroll_wrapper.classList.add("scroll-panel");
+        scroll_wrapper.classList.add("scroll-shadow");
+        scroll_wrapper.classList.add("horizontal");
+        scroll_wrapper.classList.add("light");
+
+        scroll_wrapper.insertAdjacentHTML("afterend", "<div class='horizontal-scroll-wrapper'></div>");
+        var container = scroll_wrapper.next();
+        container.appendChild(scroll_wrapper);
+
+        registerScrollShadows();
+      }
     });
 
     function searchProducts(forceSearch = false) {
@@ -426,7 +505,15 @@ function showCategory($category, $level = 0)
   <?php include "global/header.php"; ?>
 
   <div class="main-container desktopRow">
-    <div class="categories-wrapper">
+    <div class="search-wrapper">
+      <button class="btn primary medium fill mobile-search-btn" onclick="showModal('searchCategory', {source:this})">
+        <i class="fas fa-list"></i> Kategorie
+      </button>
+
+      <button class="btn secondary medium fill mobile-search-btn search-filters-btn" onclick="showModal('searchFilters', {source:this})">
+        <i class="fas fa-sliders-h"></i> Filtry
+      </button>
+
       <div class="search-header"><i class="fas fa-list"></i> Kategorie</div>
 
       <div class="categories">
@@ -437,91 +524,94 @@ function showCategory($category, $level = 0)
         ]) ?>
       </div>
 
-      <div class="search-header"><i class="fas fa-sort-amount-down-alt"></i> Sortuj</div>
-      <label class="order_by_item">
-        <input type="radio" name="order_by" value="new">
-        <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
-      </label>
-      <label class="order_by_item">
-        <input type="radio" name="order_by" value="sale">
-        <span><i class="fas fa-star"></i> Bestsellery</span>
-      </label>
-      <label class="order_by_item">
-        <input type="radio" name="order_by" value="cheap">
-        <span><i class="fas fa-dollar-sign"></i> Najtańsze</span>
-      </label>
-      <label class="order_by_item">
-        <input type="radio" name="order_by" value="random">
-        <span><i class="fas fa-dice-three"></i> Losowo</span>
-      </label>
+      <div class="sorting-wrapper">
+        <div class="search-header"><i class="fas fa-sort-amount-down-alt"></i> Sortuj</div>
+        <label class="order_by_item">
+          <input type="radio" name="order_by" value="new">
+          <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
+        </label>
+        <label class="order_by_item">
+          <input type="radio" name="order_by" value="sale">
+          <span><i class="fas fa-star"></i> Bestsellery</span>
+        </label>
+        <label class="order_by_item">
+          <input type="radio" name="order_by" value="cheap">
+          <span><i class="fas fa-dollar-sign"></i> Najtańsze</span>
+        </label>
+        <label class="order_by_item">
+          <input type="radio" name="order_by" value="random">
+          <span><i class="fas fa-dice-three"></i> Losuj</span>
+        </label>
+      </div>
 
-      <?php
-      include_once "admin/product/attributes_service.php";
+      <div class="filters">
+        <?php
+        include_once "admin/product/attributes_service.php";
 
-      function printUserSelectValuesOfAttribute($values, $attribute, $value_id = null)
-      {
-        if (!isset($values[0])) return "";
+        function printUserSelectValuesOfAttribute($values, $attribute, $value_id = null)
+        {
+          if (!isset($values[0])) return "";
 
-        $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
-        $attr .= " data-attribute_id='" . $attribute["attribute_id"] . "'";
+          $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
+          $attr .= " data-attribute_id='" . $attribute["attribute_id"] . "'";
 
-        $classes = "attribute-list";
+          $classes = "attribute-list";
 
-        if ($value_id) {
-          $classes .= " expand_y hidden animate_hidden";
-        }
-
-        $html = "<div class='$classes' $attr>";
-        foreach ($values as $value_data) {
-          if ($value_data["values"]["value"] === "") {
-            continue;
-          }
-          $html .= "<div class='attributes-list-wrapper'>";
-          $html .= "<label class='attribute-label'>";
-          $html .= "<input type='checkbox' value='" . $value_data["values"]["value_id"] . "'";
-          $html .= " onchange='attributeSelectionChange(this,";
-          $html .= nonull($value_data, "children", []) ? "true" : "false";
-          $html .= ")'";
-          $html .= ">";
-          $html .= "<div class='checkbox'></div> ";
-          $html .= $value_data["values"]["value"];
-
-          if (isset($value_data["values"]["color"])) {
-            $html .= "<div class='color-circle' style='background-color:" . $value_data["values"]["color"] . "'></div>";
+          if ($value_id) {
+            $classes .= " expand_y hidden animate_hidden";
           }
 
-          $html .= "</label>";
+          $html = "<div class='$classes' $attr>";
+          foreach ($values as $value_data) {
+            if ($value_data["values"]["value"] === "") {
+              continue;
+            }
+            $html .= "<div class='attributes-list-wrapper'>";
+            $html .= "<label class='attribute-label'>";
+            $html .= "<input type='checkbox' value='" . $value_data["values"]["value_id"] . "'";
+            $html .= " onchange='attributeSelectionChange(this,";
+            $html .= nonull($value_data, "children", []) ? "true" : "false";
+            $html .= ")'";
+            $html .= ">";
+            $html .= "<div class='checkbox'></div> ";
+            $html .= $value_data["values"]["value"];
 
-          $html .= printUserSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
+            if (isset($value_data["values"]["color"])) {
+              $html .= "<div class='color-circle' style='background-color:" . $value_data["values"]["color"] . "'></div>";
+            }
 
+            $html .= "</label>";
+
+            $html .= printUserSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
+
+            $html .= "</div>";
+          }
           $html .= "</div>";
+
+          return $html;
         }
-        $html .= "</div>";
 
-        return $html;
-      }
-
-      $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes
+        $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes
         INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($show_category["category_id"]));
 
-      $output = "";
+        $output = "";
 
-      foreach ($attributes as $attribute) {
+        foreach ($attributes as $attribute) {
 
-        $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
+          $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-        $output .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
-        $output .= "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
+          $output .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
+          $output .= "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
 
-        if ($any) {
-        } else {
-          $values = getAttributeValues($attribute["attribute_id"]);
-          $output .= printUserSelectValuesOfAttribute($values, $attribute);
-        }
+          if ($any) {
+          } else {
+            $values = getAttributeValues($attribute["attribute_id"]);
+            $output .= printUserSelectValuesOfAttribute($values, $attribute);
+          }
 
-        $output .= "</div>";
+          $output .= "</div>";
 
-        /*$any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
+          /*$any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
         echo "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . " attribute-row'>" . $attribute["name"] . " ";
 
@@ -546,14 +636,15 @@ function showCategory($category, $level = 0)
         }
 
         echo "</div>";*/
-      }
+        }
 
-      if ($output) {
-        echo '<div class="search-header"><i class="fas fa-sliders-h"></i> Filtry</div>';
-        echo $output;
-      }
+        if ($output) {
+          echo '<div class="search-header"><i class="fas fa-sliders-h"></i> Filtry</div>';
+          echo $output;
+        }
 
-      ?>
+        ?>
+      </div>
     </div>
     <div class="product_list-wrapper">
       <h1 class="h1" style="margin: 40px 0"><?= $show_category["title"] ?></h1>

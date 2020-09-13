@@ -590,7 +590,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
     var currentMenu = 1;
     var wait = false;
 
-    function showMenu(i, scroll, ignoreForm = false) {
+    function showMenu(i, scroll) {
       if (i - currentMenu > 1) {
         i = +currentMenu + 1;
       }
@@ -605,9 +605,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
       if (wait || currentMenu == i) return;
 
-      if (!ignoreForm) {
-        if (i > currentMenu && isFormValid() == false) return;
-      }
+      if (i > currentMenu && isFormValid() == false) return;
 
       var wasMenu = currentMenu;
       currentMenu = i;
@@ -632,8 +630,15 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         wait = false;
 
         setTimeout(function() {
-          var view = $('.view_' + scroll);
-          if (view) scrollToView(view);
+          var view = $(`[data-view='${scroll}`);
+          if (view) {
+            scrollToView(view);
+          } else {
+            var view = now.find(`*`);
+            if (view) {
+              scrollToView(view);
+            }
+          }
         }, 10);
       }, 200);
 
@@ -988,7 +993,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               <div style="flex-grow:1"></div>
             <?php endif ?>
             <div>
-              <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> big" onclick="showMenu(2, undefined, true)" style="margin-top: 25px;min-width:250px">
+              <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> big" onclick="showMenu(2, 'kontakt')" style="margin-top: 25px;min-width:250px">
                 <?php
                 if ($app["user"]["id"]) {
                   echo "Złóż zamówienie";
@@ -1055,7 +1060,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       <div class="mobileRow">
         <div style="width:100%;padding: 20px 10px;">
           <div style="max-width: 550px;margin: 0 auto;">
-            <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" class="view_kontakt">Dane kontaktowe</h3>
+            <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="kontakt">Dane kontaktowe</h3>
 
             <div style="display:flex;justify-content:space-evenly;padding:10px">
               <input name="buyer_type" type="hidden" onchange="setBuyerFromInput(this.value)" data-cookie="buyer_type">
@@ -1121,7 +1126,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
         <div style="width:100%;padding: 20px 10px;">
           <div style="max-width: 550px;margin: 0 auto;">
-            <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" class="view_dostawa">Rodzaj dostawy</h3>
+            <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="dostawa">Rodzaj dostawy</h3>
 
             <input id="dostawaInput" name="dostawa" type="hidden" onchange="selectDostawaFromInput(this.value)" data-cookie />
             <input name="paczkomat" type="hidden" data-cookie="paczkomat">
@@ -1151,7 +1156,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               </div>
 
               <div id="caseKurier" class="expand_y hidden animate_hidden">
-                <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;" class="view_adres">Adres dostawy</h3>
+                <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;" data-view="adres">Adres dostawy</h3>
 
                 <button class="btn primary medium" type="button" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button>
 
@@ -1232,7 +1237,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>
-        <button class="btn primary big" type="button" onclick="showMenu(3)" style="margin-top: 30px; display:inline-block;width:220px">
+        <button class="btn primary big" type="button" onclick="showMenu(3,'podsumowanie')" style="margin-top: 30px; display:inline-block;width:220px">
           Dalej
           <i class="fa fa-chevron-right"></i>
         </button>
@@ -1240,7 +1245,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
     </div>
 
     <div id="menu3" class="menu mobileRow podsumowanie" style="max-width: 1100px; display:none;padding:20px 0">
-      <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;">Podsumowanie</h3>
+      <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="podsumowanie">Podsumowanie</h3>
       <div class="mobileRow">
 
         <div style="width:100%;max-width: 300px; margin: 0 auto;padding: 10px;" class="noMaxWidthMobile">
@@ -1332,7 +1337,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 <div id="payment-request-button"></div>
               </div>-->
 
-            <button onclick="confirmOrder()" class="btn primary big" style="margin-top: 10px;width: 260px;margin-left:auto">
+            <button onclick="confirmOrder()" class="btn primary big full-width-mobile" style="margin-top: 10px;width: 260px;margin-left:auto">
               <span id="submit_text">ZAMAWIAM I PŁACĘ</span>
               <i class="fa fa-chevron-right"></i>
             </button>
@@ -1342,7 +1347,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       </div>
 
       <div style="padding: 10px">
-        <button class="btn secondary big pullHigherDesktop" type="button" onclick="showMenu(2)" style="display:inline-block;width:170px">
+        <button class="btn secondary big pullHigherDesktop" type="button" onclick="showMenu(2,'kontakt')" style="display:inline-block;width:170px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>

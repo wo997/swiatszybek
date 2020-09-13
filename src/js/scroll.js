@@ -1,5 +1,14 @@
 /* js[global] */
 
+// add actual virtual height to css as a variable
+function windowHeightResizeCallback() {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+}
+windowHeightResizeCallback();
+window.addEventListener("resize", windowHeightResizeCallback);
+window.addEventListener("touchend", windowHeightResizeCallback);
+
 function scrollToElement(elem, options = {}) {
   if (!elem) return;
   var rect = elem.getBoundingClientRect();

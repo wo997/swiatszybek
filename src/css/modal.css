@@ -1,4 +1,44 @@
 /* css[global] */
+
+#modal,
+#modal-wrapper {
+  position: fixed;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
+  background-color: rgba(0, 0, 0, 0.4);
+  top: 0;
+  left: 0;
+  opacity: 0;
+  display: none;
+  transition: opacity 0.3s;
+  z-index: 700;
+}
+
+.stretch-vertical {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#modal-wrapper .modal-body {
+  /*padding: 10px;*/
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+/*#modal-wrapper .modal-body > .custom-toolbar {
+  margin: -10px -10px 0 -10px;
+  top: -10px;
+}*/
+
+#modal.displayModal,
+#modal-wrapper.displayModal {
+  opacity: 1;
+  display: block;
+}
+
 .modal-content {
   height: 100%;
   width: 100%;
@@ -46,7 +86,7 @@
 .modal-content > * > *:not(.blank) {
   background: white;
   max-height: 100%;
-  overflow-y: auto;
+  /*overflow-y: auto;*/
   position: relative;
   -webkit-box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
   -moz-box-shadow: 0px 2px 11px -2px rgba(0, 0, 0, 0.31);
@@ -56,4 +96,145 @@
 /* todo remove later */
 .modal-padding {
   padding: 10px;
+}
+
+.pad0 {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+}
+
+.pad1 {
+  width: calc(100% - 50px);
+  height: calc(100% - 50px);
+  margin: 25px;
+}
+
+.pad2 {
+  width: calc(100% - 100px);
+  height: calc(100% - 100px);
+  margin: 50px;
+}
+
+.pad3 {
+  width: calc(100% - 150px);
+  height: calc(100% - 150px);
+  margin: 75px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .pad0 {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+  }
+
+  .pad1 {
+    width: calc(100% - 14px);
+    height: calc(100% - 14px);
+    margin: 7px;
+  }
+
+  .pad2 {
+    width: calc(100% - 28px);
+    height: calc(100% - 28px);
+    margin: 14px;
+  }
+
+  .pad3 {
+    width: calc(100% - 42px);
+    height: calc(100% - 42px);
+    margin: 21px;
+  }
+}
+
+.scroll-panel {
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow-y: auto;
+  position: relative;
+}
+.scroll-panel.horizontal {
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow-y: initial;
+  overflow-x: auto;
+  display: flex;
+  white-space: nowrap;
+}
+
+.panel-padding {
+  padding: 10px;
+}
+
+.shadow-node {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.shadow-node.top {
+  box-shadow: inset 0 5px 5px 0 rgba(0, 0, 0, 0.14);
+  margin-bottom: -20px;
+  height: 20px;
+  width: 100%;
+}
+.shadow-node.bottom {
+  box-shadow: inset 0 -5px 5px 0 rgba(0, 0, 0, 0.14);
+  margin-top: -20px;
+  height: 20px;
+  width: 100%;
+}
+
+.shadow-node.left {
+  box-shadow: inset 5px 0 5px 0 rgba(0, 0, 0, 0.14);
+  margin-right: -20px;
+  width: 20px;
+}
+.shadow-node.right {
+  box-shadow: inset -5px 0 5px 0 rgba(0, 0, 0, 0.14);
+  margin-left: -20px;
+  width: 20px;
+}
+
+.shadow-node.top.light {
+  box-shadow: inset 0 7px 7px 0 rgba(255, 255, 255, 1);
+}
+.shadow-node.bottom.light {
+  box-shadow: inset 0 -7px 7px 0 rgba(255, 255, 255, 1);
+}
+
+.shadow-node.left.light {
+  box-shadow: inset 7px 0 7px 0 rgba(255, 255, 255, 1);
+}
+.shadow-node.right.light {
+  box-shadow: inset -7px 0 7px 0 rgba(255, 255, 255, 1);
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 54px;
+  height: 54px;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border: none;
+  font-size: 17px;
+  opacity: 0.7;
+  transition: 0.1s all;
+}
+
+.close-modal-btn:hover {
+  opacity: 1;
+  color: #800;
+}
+
+[data-modal] .header {
+  margin: calc(0.2em + min(1vw, 10px)) 0;
+  font-size: 24px;
+  text-align: center;
 }
