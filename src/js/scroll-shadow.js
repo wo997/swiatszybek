@@ -2,7 +2,7 @@
 
 function registerScrollShadows() {
   $$(".scroll-shadow:not(.registered)").forEach((e) => {
-    const offset = 10.0;
+    const offset = 25.0;
     const light = e.classList.contains("light");
     var class_list = "shadow-node";
     if (light) {

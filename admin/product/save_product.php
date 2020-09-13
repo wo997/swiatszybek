@@ -1,6 +1,6 @@
 <?php //route[admin/save_product]
 
-$input = ["exceptions" => ["categories", "description", "gallery", "product_attributes"]];
+$input = ["exceptions" => ["categories", "description", "gallery", "product_attributes", "variants"]];
 include "helpers/safe_post.php";
 
 if (isset($_POST["remove"])) {
@@ -52,6 +52,34 @@ if (isset($_POST["remove"])) {
         $insert = substr($insert, 0, -1);
         query("INSERT INTO link_variant_attribute_option (product_id, attribute_id, kolejnosc) VALUES $insert");
     }
+
+    // variants
+    /*query("DELETE FROM link_variant_attribute_value WHERE variant_id = ?", [ // create foreign key?
+        $_POST["variant_id"]
+    ]);*/
+    $variant_ids = "";
+    foreach (json_decode($_POST["variants"], true) as $variant) {
+        $variant_id =  getEntityId("variants", $variant["variant_id"]);
+        $variant_ids .= $variant_id;
+
+        $data = filterArrayKeys($variant, ["name", "product_code", "zdjecie", "published", "price", "rabat"]);
+
+        updateEntity($data, "variant", "variant_id", $variant_id);
+
+        triggerEvent("variant_stock_change", ["variant_id" => intval($variant_id), "stock_difference" => intval($variant["stock"]) - intval($variant["was_stock"])]);
+
+        triggerEvent("variant_price_change", ["product_id" => $product_id]);
+
+        //include_once "admin/product/attributes_service.php";
+        //$variant_attributes = json_decode($_POST["variant_attributes"], true);
+        //updateAttributesInDB($variant_attributes, "link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant_id);
+    }
+
+    if (!$variant_ids) {
+        $variant_ids = "-1,";
+    }
+    $variant_ids = substr($variant_ids, 0, -1);
+    query("DELETE FROM variants WHERE product_id = $product_id AND variant_id NOT IN ($variant_ids)");
 }
 include "../sitemap-create.php";
 die;

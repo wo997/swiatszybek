@@ -1,5 +1,7 @@
 <?php //route[admin/save_variant]
 
+// deprecated
+
 $input = ["exceptions" => ["variant_attributes"]];
 include "helpers/safe_post.php";
 

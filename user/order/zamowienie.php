@@ -196,7 +196,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
               title: "Kto",
               width: "250px",
               render: (r) => {
-                return `<span data-tooltip="${r.imie} ${r.nazwisko}">${r.email}</span>`;
+                return r.email ? `<span data-tooltip="${r.imie} ${r.nazwisko}">${r.email}</span>` : "Gość";
               },
               escape: false,
             },
@@ -478,8 +478,13 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
       </div>
     </div>
     <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-      <h3>Pełna historia zamówienia:</h3>
-      <div class="historytable"></div>
+      <div class="btn secondary medium fill" onclick='expandWithArrow(this.next(),$(this).find(".expand_arrow"))'>
+        <b>Pełna historia zamówienia</b>
+        <div class='expand_arrow'><i class='fas fa-chevron-right'></i></div>
+      </div>
+      <div class="expand_y animate_hidden hidden">
+        <div class="historytable"></div>
+      </div>
     <?php endif ?>
   </div>
 

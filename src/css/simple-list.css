@@ -150,6 +150,7 @@ div.list .simple-list-row {
   color: white;
   font-weight: 600;
   padding: 4px 6px;
+  text-align: left;
 }
 
 .simple-list.has_header .add_begin {

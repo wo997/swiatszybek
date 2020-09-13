@@ -10,8 +10,8 @@ window.addEventListener("DOMContentLoaded", () => {
     nv.insertAdjacentHTML(
       "beforebegin",
       `
-            <div class="btn secondary fill medium" onclick='expandWithArrow(this.next(),$(this).find(".expand"))'>
-                <b>Menu</b> <div class='btn expand'><i class='fas fa-chevron-right'></i></div>
+            <div class="btn secondary fill medium" onclick='expandWithArrow(this.next(),$(this).find(".expand_arrow"))'>
+                <b>Menu</b> <div class='expand_arrow'><i class='fas fa-chevron-right'></i></div>
             </div>
         `
     );

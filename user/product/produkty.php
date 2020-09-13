@@ -27,7 +27,7 @@ function showCategory($category, $level = 0)
   $paddingLeft = $level == 0 ? 0 : 20 * ($level - 1);
   echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' style='padding-left:" . ($paddingLeft) . "px' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
   if ($count && $level > 0) {
-    echo "<div class='btn expand' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
+    echo "<div class='btn expand_arrow' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
   }
   $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
   $styles = $level == 0 ? "style='padding-left:0'" : "";
@@ -94,7 +94,7 @@ function showCategory($category, $level = 0)
       font-weight: bold;
     }
 
-    .category-picker-row .expand {
+    .category-picker-row .expand_arrow {
       color: #999;
       margin-left: 1px;
       -webkit-box-shadow: none;
@@ -121,7 +121,7 @@ function showCategory($category, $level = 0)
         padding: 2px;
       }
 
-      .category-picker-row .expand {
+      .category-picker-row .expand_arrow {
         width: 2.8em;
         height: 2.4em;
       }
@@ -156,12 +156,12 @@ function showCategory($category, $level = 0)
         padding-left: 0 !important;
       }
 
-      .category-picker-row .expand {
+      .category-picker-row .expand_arrow {
         transform: translateY(1px);
       }
 
 
-      .category-picker-row .expand:hover {
+      .category-picker-row .expand_arrow:hover {
         border-radius: 5px;
         background: #dadada;
       }

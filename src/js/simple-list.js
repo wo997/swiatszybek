@@ -112,12 +112,21 @@ function createSimpleList(params = {}) {
       if (listTarget === null) {
         listTarget = list.target;
       }
-      for (var value_data of values) {
-        var parent_value_list = list
-          .insertRow(value_data.values, listTarget)
-          .find(".list");
-        if (value_data.children) {
-          addValues(value_data.children, parent_value_list);
+
+      if (params.table) {
+        for (var value_data of values) {
+          var parent_value_list = list
+            .insertRow(value_data, listTarget)
+            .find(".list");
+        }
+      } else {
+        for (var value_data of values) {
+          var parent_value_list = list
+            .insertRow(value_data.values, listTarget)
+            .find(".list");
+          if (value_data.children) {
+            addValues(value_data.children, parent_value_list);
+          }
         }
       }
     };

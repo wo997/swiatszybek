@@ -40,7 +40,7 @@ function createDatatable(datatable) {
         width: "85px",
         className: "kolejnosc-column",
         render: (r, i) => {
-          return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" onchange="rearrange(this)">`;
+          return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" data-value="${r.kolejnosc}" onchange="rearrange(this)">`;
         },
         escape: false,
       },
@@ -84,7 +84,6 @@ function createDatatable(datatable) {
 
       if (datatable.selectable.has_metadata) {
         datatable.metadata = values;
-        console.log(values);
 
         try {
           values.forEach((row) => {
@@ -630,7 +629,7 @@ function createDatatable(datatable) {
               var definition = datatable.definition[x];
               var cell_html = "";
               if (definition.render) {
-                cell_html = definition.render(row, i, datatable);
+                cell_html = nonull(definition.render(row, i, datatable));
               } else if (definition.field) {
                 cell_html = row[definition.field];
               }
@@ -894,10 +893,10 @@ var datatableRearrange = {};
 
 window.addEventListener("dragstart", (event) => {
   var target = $(event.target);
-  if (!target.findParentByClassName("has_selected_rows")) {
+  if (target.tagName != "TR") {
     return;
   }
-  if (target.tagName != "TR") {
+  if (target.findParentByClassName("has_selected_rows")) {
     event.preventDefault();
     return;
   }
@@ -915,9 +914,8 @@ window.addEventListener("dragstart", (event) => {
 window.addEventListener("dragend", () => {
   if (datatableRearrange.source) {
     var input = datatableRearrange.source.find(".kolejnosc");
-    var wasIndex = input.value;
     input.value = datatableRearrange.placeTo;
-    rearrange(input, wasIndex);
+    rearrange(input);
   }
   removeClasses("grabbed");
   $$(".tableRearrange").forEach((e) => {
@@ -926,8 +924,9 @@ window.addEventListener("dragend", () => {
   datatableRearrange.element = null;
 });
 
-function rearrange(input, wasIndex = 0) {
-  input = $(input);
+function rearrange(input) {
+  var wasIndex = input.getAttribute("data-value");
+  input.setAttribute("data-value", input.getValue());
 
   var datatable = getParentDatatable(input);
 
@@ -1057,7 +1056,15 @@ function renderIsPublished(row) {
 function setPublish(obj, published) {
   obj = $(obj);
   var tableElement = obj.findParentByClassName("datatable-wrapper");
-  if (!tableElement) return;
+  var listElement = obj.findParentByClassName("simple-list");
+  if (!tableElement && !listElement) return;
+
+  if (listElement) {
+    var input = obj.parent().prev();
+    input.setValue(1 - input.getValue());
+    return;
+  }
+
   var tablename = tableElement.getAttribute("data-datatable-name");
   if (!tablename) return;
   var datatable = window[tablename];

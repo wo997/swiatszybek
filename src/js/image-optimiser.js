@@ -144,15 +144,12 @@ function setImageDimensions(img) {
   return rect;
 }
 
-if (optimise_images_on_load) {
-  window.addEventListener("load", () => {
-    lazyLoadImages();
-  });
-} else {
-  document.addEventListener("DOMContentLoaded", () => {
-    lazyLoadImages();
-  });
-}
+document.addEventListener("DOMContentLoaded", () => {
+  lazyLoadImages();
+});
+window.addEventListener("load", () => {
+  lazyLoadImages();
+});
 
 function lazyLoadImages(animate = true) {
   $$("img[data-src]").forEach((img) => {

@@ -9,7 +9,7 @@ function setCategoryPickerValuesString(element, values, params = {}) {
     e.classList.add("hidden");
     e.style.height = "0";
   });
-  element.findAll(".expand").forEach((e) => {
+  element.findAll(".expand_arrow").forEach((e) => {
     e.classList.remove("open");
   });
 
@@ -78,7 +78,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
     ]);
     if (parent) {
       var nodeExpander = parent.next();
-      if (nodeExpander && parent.find(".expand")) {
+      if (nodeExpander && parent.find(".expand_arrow")) {
         return expandCategoriesAbove(nodeExpander, false);
       }
     }
@@ -131,7 +131,10 @@ function categoryChanged(el) {
   element.setAttribute("value", value);
 
   if (el.checked) {
-    var expandWhenClosed = el.parent().parent().find(".expand:not(.open)");
+    var expandWhenClosed = el
+      .parent()
+      .parent()
+      .find(".expand_arrow:not(.open)");
     if (expandWhenClosed) {
       expandWhenClosed.click();
     }

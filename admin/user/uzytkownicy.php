@@ -187,13 +187,13 @@
 <div class="mytable" id="caseAllUsers"></div>
 
 <div id="editUser" data-modal data-expand data-exclude-hidden>
-    <div class="modal-body stretch-vertical">
+    <div class="modal-body">
         <div class="custom-toolbar">
             <span class="title">Edycja użytkownika</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveUser();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div class="modal-body stretch-vertical">
+        <div class="scroll-panel scroll-shadow panel-padding">
             <div class="desktopRow spaceColumns">
                 <div>
                     <h3 style="text-align: center;font-size: 18px;margin: 20px 0 10px;">Dane kontaktowe</h3>
@@ -290,9 +290,9 @@
             </div>
 
             <br>
-            <div style="margin-top:auto; align-self: flex-end; padding-top:30px; margin-bottom:10px">
+            <!--<div style="margin-top:auto; align-self: flex-end; padding-top:30px; margin-bottom:10px">
                 <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć użytkownika?')) saveUser(true);">Usuń <i class="fa fa-times"></i></button>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>

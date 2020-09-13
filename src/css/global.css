@@ -2133,14 +2133,10 @@ ql-icon i span {
   display: flex;
   padding: 5px;
   align-items: center;
-  
-  
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.14);
   background: var(--primary-clr);
   color: white;
   flex-wrap: wrap;
   flex-shrink: 0;
-  position: sticky;
   top: 0;
   z-index: 150;
 }
@@ -2234,8 +2230,7 @@ ql-icon i span {
 .hidden:not(.expand_y) {
   display: none !important;
 }
-.expand.btn {
-  margin-left: 5px;
+.expand_arrow {
   width: 1.4em;
   height: 1.4em;
   padding: 0;
@@ -2243,10 +2238,10 @@ ql-icon i span {
   justify-content: center;
   align-items: center;
 }
-.expand.btn .fas {
+.expand_arrow .fas {
   transition: transform 0.2s;
 }
-.expand.btn.open .fas {
+.expand_arrow.open .fas {
   transform: rotate(90deg);
 }
 

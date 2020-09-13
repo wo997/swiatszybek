@@ -28,8 +28,6 @@
 
   const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 
-  const optimise_images_on_load = <?= isset($optimise_images_on_load) ? $optimise_images_on_load : 0 ?>;
-
   var modules = {};
 
   <?php if ($just_logged_in) : ?>

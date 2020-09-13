@@ -24,7 +24,9 @@ $displayAllAttributeOptions = displayAllAttributeOptions();
 
 $product_data["product_attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
-$product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FROM link_variant_attribute_option WHERE product_id = " . intval($product_id) . " ORDER BY kolejnosc ASC");
+$product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FROM link_variant_attribute_option WHERE product_id = $product_id ORDER BY kolejnosc ASC");
+
+$product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE product_id = $product_id ORDER BY kolejnosc ASC"), true);
 
 ?>
 
@@ -242,7 +244,6 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
       db_table: "product_attributes",
       sortable: true,
       selectable: {
-        data: <?= json_encode($product_data["variant_attribute_options"]) ?>,
         output: "variant_attribute_options"
       },
       definition: [{
@@ -278,7 +279,7 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
     createSimpleList({
       name: "variants",
       fields: {
-        value_id: {},
+        variant_id: {},
         name: {
           unique: true,
           allow_empty: true
@@ -292,9 +293,12 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
       header: `
         <th>Nazwa</th>
         <th>Cena</th>
+        <th>Widoczny</th>
         <th>Rabat</th>
+        <th>Kod produktu</th>
         <th>W magazynie</th>
         <th>Zdjęcie</th>
+        <th>Atrybuty</th>
         <th></th>
         <th></th>
       `,
@@ -308,13 +312,25 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
               <span data-list-param="price" data-type="html"></span> zł
             </td>
             <td>
+              <input type='hidden' data-list-param="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
+              <span></span>
+            </td>
+            <td>
               <span data-list-param="rabat" data-type="html"></span> zł
             </td>
             <td>
+              <span data-list-param="product_code" data-type="html"></span>
+            </td>
+            <td>
               <span data-list-param="stock" data-type="html"></span> szt.
+              <input type='hidden' data-list-param="was_stock">
             </td>
             <td>
               <img data-list-param="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
+            </td>
+            <td>
+              <input type='hiddenx' data-list-param="all_attributes">
+              <span data-list-param="all_attributes_preview" data-type="html"></span>
             </td>
             <td style="width:80px;">
               <button class='btn primary' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
@@ -322,21 +338,30 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
         `;
       },
       default_row: {
+        variant_id: -1,
         name: "",
         price: 0,
         rabat: 0,
         stock: 0,
+        was_stock: 0,
         product_code: "",
         zdjecie: "",
         published: 0,
-        variant_id: -1
+        all_attributes: "[]",
       },
       title: "Warianty (min. 1)"
     });
 
+    var data = <?= json_encode($product_data) ?>;
 
+    var variants_data = [];
+    JSON.parse(data.variants).forEach(e => {
+      e.was_stock = e.stock;
+      variants_data.push(e);
+    })
+    data.variants = JSON.stringify(variants_data);
 
-    setFormData(<?= json_encode($product_data) ?>, "#productForm");
+    setFormData(data, "#productForm");
     addMainFormLeavingWarning($("#productForm"));
   });
 
@@ -353,28 +378,6 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
     editCMS($('[name="description"]'));
   }
 
-  /*function newVariant(btn) {
-    var data = {
-      name: "",
-      price: "",
-      rabat: "",
-      stock: "",
-      product_code: "",
-      color: "",
-      zdjecie: "",
-      published: "0",
-      variant_id: "-1",
-      product_id: <?= $product_id ?>
-    };
-    setFormData(data, "#variantEdit");
-
-    $(`[name="was_stock"]`).value = data.stock;
-
-    showModal("variantEdit", {
-      source: btn
-    });
-  }*/
-
   var variantRow = null;
 
   function editVariant(row, btn) {
@@ -385,9 +388,6 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
       find_by: "data-list-param"
     });
 
-    //data.was_stock = data.stock;
-    console.log(row, data);
-
     setFormData(data, form);
 
     showModal(form.id, {
@@ -395,37 +395,12 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
     });
   }
 
-  /*function editVariant(i, btn) {
-    const form = $(`#variantEdit`);
-    var data = variants2.results[i];
-
-    data.was_stock = data.stock;
-
-    setFormData(data, form);
-
-    showModal(form.id, {
-      source: btn
-    });
-
-    xhr({
-      url: "/admin/get_variant_attributes",
-      params: {
-        variant_id: data.variant_id
-      },
-      success: (data) => {
-        setFormData(data, form);
-
-        // setModalInitialState(formId);
-      }
-    });
-  }*/
-
   function saveVariant(remove = false) {
     if (remove) {
       variantRow.remove();
     }
 
-    const data = $(`#variantEdit`).getFormData();
+    var data = $(`#variantEdit`).getFormData();
 
     setFormData(data, variantRow, {
       find_by: "data-list-param"
@@ -551,13 +526,13 @@ $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FR
 </div>
 
 <div id="variantEdit" data-modal data-expand data-exclude-hidden>
-  <div class="modal-body stretch-vertical">
+  <div class="modal-body">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
       <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
       <button class="btn primary" onclick="saveVariant();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
-    <div>
+    <div class="scroll-panel scroll-shadow panel-padding">
 
       <div class="field-title">Nazwa wariantu</div>
       <input type="text" name="name" class="field">
