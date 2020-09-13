@@ -542,6 +542,9 @@ function formFieldOnChangeEvent(event) {
 }
 
 function formFieldOnChange(field, options = {}) {
+  if (!field.hasAttribute("data-change-registered")) {
+    return;
+  }
   if (!field.hasAttribute("data-input-registered")) {
     field.setAttribute("data-input-registered", "");
     field.addEventListener("input", formFieldOnInputEvent);
@@ -554,6 +557,9 @@ function formFieldOnInputEvent(event) {
 }
 
 function formFieldOnInput(field, options = {}) {
+  if (!field.hasAttribute("data-input-registered")) {
+    return;
+  }
   if (ignoreValueChanges) return;
   const errors = fieldErrors(field);
 

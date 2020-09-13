@@ -64,7 +64,7 @@ div.list .simple-list-row {
   border-right: none;
 }
 
-.simple-list .field {
+.simple-list.slim .field {
   padding: 1px 5px;
 }
 
@@ -127,6 +127,9 @@ div.list .simple-list-row {
 .simple-list[data-count="0"] table {
   display: none;
 }
+.simple-list .list:empty + .add_btn.add_end {
+  display: none;
+}
 
 /* slim paddings */
 .simple-list.slim .simple-list-row {
@@ -157,4 +160,8 @@ div.list .simple-list-row {
   width: 90px;
   border-radius: 4px;
   margin-left: 3px;
+}
+
+tr.simple-list-row td {
+  border-bottom: 1px solid #aaa;
 }

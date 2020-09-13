@@ -55,21 +55,19 @@
           escape: false
         },
       ],
-      controls: `
+      controlsRight: `
         <div class='float-icon'>
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <select data-param="status" class="field inline">
-          <option value='wszystkie'>Wszystkie</option>
-          <option value='oczekujace'>Oczekujące</option>
-        </select>
       `
     });
   });
 </script>
 
 <?php startSection("content"); ?>
+
+<h1>Oczekujący na produkty</h1>
 
 <div class="mytable"></div>
 

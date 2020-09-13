@@ -26,16 +26,25 @@
         }
       },
       definition: [{
-          title: "Nazwa wariantu produktu",
+          title: "Produkt",
           width: "70%",
+          field: "title",
           render: (r) => {
-            return `<a class="btn secondary" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.full_name)}`
+            return `<a class="link" href='/admin/produkt/${r.product_id}'>${escapeHTML(r.title)}</a>`;
           },
-          escape: false
+          escape: false,
+          searchable: "text",
+          sortable: true,
+        },
+        {
+          title: "Wariant",
+          width: "30%",
+          field: "name",
+          searchable: "text",
         },
         {
           title: "Ilość w magazynie",
-          width: "130px",
+          width: "180px",
           render: (r) => {
             return `<input type="number" value="${r.stock}" onchange="dostawa(this.value, ${r.stock}, ${r.variant_id})">`;
           },
@@ -43,16 +52,11 @@
         },
         getPublishedDefinition(),
       ],
-      controls: `
-            <div class='float-icon'>
+      controlsRight: `
+            <div class='float-icon space-right'>
               <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
               <i class="fas fa-search"></i>
             </div>
-            <select data-param="status" class="field inline">
-              <option value=''>Wszystkie</option>
-              <option value='published'>Tylko publiczne</option>
-              <option value='brak'>Brak w magazynie</option>
-            </select>
           `
     });
   });
@@ -69,6 +73,8 @@
 </script>
 
 <?php startSection("content"); ?>
+
+<h1>Stan magazynu</h1>
 
 <div class="mytable"></div>
 

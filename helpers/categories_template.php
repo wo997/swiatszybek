@@ -20,7 +20,7 @@ function showCategory($category, $level = 0)
     $checkbox = "<input type='checkbox' onchange='categoryChanged(this)' data-category_id='$category_id'><div class='checkbox'></div>";
     echo "<div data-parent_id='$category_id'><div class='category-picker-row'><label>$checkbox</label><span style='color:#555' data-tooltip='Nr kategorii'>$category_id </span><span class='category_name' $published>" . $category["title"] . "</span> <span data-tooltip='Ilość produktów'>($count)</span>";
     if ($count) {
-        echo "<div class='btn secondary expand' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
+        echo " <div class='btn secondary expand_arrow' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
     }
     echo "</div><div class='category-picker-column expand_y hidden animate_hidden'>";
     foreach ($subcategories as $subcategory) {

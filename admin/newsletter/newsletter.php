@@ -31,12 +31,12 @@
                     }
                 },
             ],
-            controls: `
-                    <div class='float-icon'>
+            controlsRight: `
+                    <div class='float-icon space-right'>
                         <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
-                    <a class="btn primary" href="/admin/napisz_newsletter">Wyślij wiadomość&nbsp;<i class="fa fa-envelope"></i></a>
+                    <a class="btn important" href="/admin/napisz_newsletter">Wyślij <i class="fa fa-envelope"></i></a>
                 `
         });
     });
@@ -49,6 +49,9 @@ if (isset($_GET["wyslano"])) {
     echo "<h3 style='text-align:center'>Wysłano newsletter!</h3>";
 }
 ?>
+
+<h1>Newsletter</h1>
+
 <div class="mytable"></div>
 
 <?php include "admin/default_page.php"; ?>

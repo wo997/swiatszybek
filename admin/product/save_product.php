@@ -58,15 +58,19 @@ if (isset($_POST["remove"])) {
         $_POST["variant_id"]
     ]);*/
     $variant_ids = "";
+    $kolejnosc = 0;
     foreach (json_decode($_POST["variants"], true) as $variant) {
-        $variant_id =  getEntityId("variants", $variant["variant_id"]);
-        $variant_ids .= $variant_id;
+        $kolejnosc++;
+        $variant_id = getEntityId("variant", $variant["variant_id"]);
+        $variant_ids .= "$variant_id,";
 
         $data = filterArrayKeys($variant, ["name", "product_code", "zdjecie", "published", "price", "rabat"]);
+        $data["product_id"] = $product_id;
+        $data["kolejnosc"] = $kolejnosc;
 
         updateEntity($data, "variant", "variant_id", $variant_id);
 
-        triggerEvent("variant_stock_change", ["variant_id" => intval($variant_id), "stock_difference" => intval($variant["stock"]) - intval($variant["was_stock"])]);
+        triggerEvent("variant_stock_change", ["variant_id" => $variant_id, "stock_difference" => intval($variant["stock"]) - intval($variant["was_stock"])]);
 
         triggerEvent("variant_price_change", ["product_id" => $product_id]);
 
@@ -79,12 +83,7 @@ if (isset($_POST["remove"])) {
         $variant_ids = "-1,";
     }
     $variant_ids = substr($variant_ids, 0, -1);
-    query("DELETE FROM variants WHERE product_id = $product_id AND variant_id NOT IN ($variant_ids)");
+    query("DELETE FROM variant WHERE product_id = $product_id AND variant_id NOT IN ($variant_ids)");
 }
-include "../sitemap-create.php";
+triggerEvent("sitemap_change");
 die;
-
-//
-
-//header("Location: ".getProductLink($number,$_POST["title"]));
-//die;

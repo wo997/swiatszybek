@@ -16,7 +16,6 @@ if (!$page_data) {
         "seo_title" => "",
         "content" => "",
         "link" => "",
-        //"metadata" => null,
         "published" => 0,
         "cms_id" => -1
     ];
@@ -47,45 +46,13 @@ $static = checkUrl($page_data["link"]);
         registerTextCounters();
     });
 
-    // metadata
-
     window.addEventListener("DOMContentLoaded", function() {
-
-        $(`[name='seo_description']`).dispatchEvent(new Event('change'));
-
-        // includes only radio buttons
-        $$("*[data-type='json'][data-name='metadata']").forEach(f => {
-            var p = f.getAttribute("data-property");
-            if (p) f.setAttribute("name", p);
-        });
-
-        $$("*[data-type='json']").forEach(e => {
-            e.addEventListener("change", function() {
-                var metadata = {};
-                $$("*[data-type='json'][data-name='metadata']").forEach(f => {
-                    if (f.checked) {
-                        metadata[f.name] = f.value;
-                    }
-                });
-                $("#metadata").value = JSON.stringify(metadata);
-            });
-        });
-
-        var metadata = "<?= addslashes($page_data["metadata"]) ?>";
-        $("#metadata").value = metadata;
-
-        var m = JSON.parse(metadata);
-        for (let key in m) {
-            var e = $(`input[data-property='${key}'][value='${m[key]}']`);
-            if (e) e.checked = true;
-        }
-
+        $(`[name='seo_description']`).setValue();
     });
 
     function showPreview() {
         window.preview.open("/<?= nonull($page_data, "link") ?>", {
             content: $(`[name="content"]`).getValue(),
-            metadata: $("#metadata").value
         });
     }
 
@@ -104,9 +71,6 @@ $static = checkUrl($page_data["link"]);
             preview: {
                 url: "/<?= nonull($page_data, "link") ?>",
                 content_name: "content",
-                data: {
-                    metadata: $("#metadata").value
-                }
             }
         });
     }
@@ -185,31 +149,13 @@ $static = checkUrl($page_data["link"]);
 
     <div <?php if ($static) echo "style='display:none'" ?>>
 
-        <!--<div class="single-row-labels">
+        <div>
+            <div class="field-title">Zawartość strony <button onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></div>
+            <div class="cms preview_html" name="content" data-type="html"></div>
+        </div>
 
-            <div class="field-title">Maksymalna szerokość strony</div>
-            <label style="display:block"><input type="radio" data-property="page_width" value="1500px" data-type="json" data-name="metadata"> 1500px</label>
-            <label style="display:block"><input type="radio" data-property="page_width" value="1300px" data-type="json" data-name="metadata"> 1300px</label>
-            <label style="display:block"><input type="radio" data-property="page_width" value="1100px" data-type="json" data-name="metadata"> 1100px</label>
-            <label style="display:block"><input type="radio" data-property="page_width" value="100%" data-type="json" data-name="metadata"> brak (100%)</label>
-
-            <div class="field-title">Odstępy z góry i dołu</div>
-            <label style="display:block"><input type="radio" data-property="page_padding" value="80px" data-type="json" data-name="metadata"> 80px</label>
-            <label style="display:block"><input type="radio" data-property="page_padding" value="45px" data-type="json" data-name="metadata"> 45px</label>
-            <label style="display:block"><input type="radio" data-property="page_padding" value="25px" data-type="json" data-name="metadata"> 25px</label>
-            <label style="display:block"><input type="radio" data-property="page_padding" value="0" data-type="json" data-name="metadata"> brak (0px)</label>
-    </div>-->
-
-        <input type="hidden" id="metadata" name='metadata'>
-        <div class="modal-body stretch-vertical">
-            <div>
-                <div class="field-title">Zawartość strony <button onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></div>
-                <div class="cms preview_html" name="content" data-type="html"></div>
-            </div>
-
-            <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                <button class="btn red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) save(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
-            </div>
+        <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
+            <button class="btn red" onclick='if (confirm("Czy chcesz usunąć podstronę?")) save(true);'>Usuń stronę <i class="fa fa-trash"></i></button>
         </div>
     </div>
 </div>

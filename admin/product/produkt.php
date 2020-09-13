@@ -292,11 +292,11 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
       table: true,
       header: `
         <th>Nazwa</th>
-        <th>Cena</th>
+        <th>Cena (zł)</th>
         <th>Widoczny</th>
-        <th>Rabat</th>
+        <th>Rabat (zł)</th>
         <th>Kod produktu</th>
-        <th>W magazynie</th>
+        <th>W magazynie (szt.)</th>
         <th>Zdjęcie</th>
         <th>Atrybuty</th>
         <th></th>
@@ -306,23 +306,23 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
         return `
             <td>
               <input type='hidden' data-list-param="variant_id">
-              <span data-list-param="name" data-type="html"></span>
+              <input type='text' data-list-param="name" class="field inline">
             </td>
             <td>
-              <span data-list-param="price" data-type="html"></span> zł
+              <input type='number' data-list-param="price" class="field inline">
             </td>
             <td>
               <input type='hidden' data-list-param="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
               <span></span>
             </td>
             <td>
-              <span data-list-param="rabat" data-type="html"></span> zł
+            <input type='number' data-list-param="rabat" class="field inline">
             </td>
             <td>
-              <span data-list-param="product_code" data-type="html"></span>
+              <input type='text' data-list-param="product_code" class="field inline">
             </td>
             <td>
-              <span data-list-param="stock" data-type="html"></span> szt.
+              <input type='number' data-list-param="stock" class="field inline">
               <input type='hidden' data-list-param="was_stock">
             </td>
             <td>
@@ -444,7 +444,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
 <?php startSection("content"); ?>
 
 <div id="productForm" data-form>
-  <div class="custom-toolbar">
+  <div class="custom-toolbar sticky-top">
     <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
       <?php if ($kopia) : ?>
         Kopiowanie

@@ -155,7 +155,7 @@ window.fileManager = {
 registerModalContent(
   `
     <div id="fileManager" data-expand="true">
-        <div class="modal-body stretch-vertical">
+        <div class="modal-body">
             <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
                 <span class="title">
                   Menedżer plików
@@ -173,7 +173,11 @@ registerModalContent(
                 <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
             </div>
 
-            <div class="gallery">
+            <div class="scroll-panel scroll-shadow panel-padding">
+
+              <div class="gallery">
+
+              </div>
 
             </div>
         </div>

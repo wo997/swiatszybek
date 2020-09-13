@@ -28,7 +28,7 @@ if (isset($_POST["order"])) {
 //(SELECT GROUP_CONCAT(CONCAT(attribute_id, ',', numerical_value, ',', text_value, ',', date_value) SEPARATOR ',') FROM variant_attribute_values WHERE variant_id = v.variant_id) as attribute_values
 
 echo paginateData([
-  "select" => "variant_id, CONCAT(p.title, ' ', v.name) as full_name, name, stock, v.published published, p.published product_published, product_id, price, rabat, color, product_code, zdjecie",
+  "select" => "variant_id, title, name, stock, v.published published, p.published product_published, product_id, price, rabat, color, product_code, zdjecie",
   "from" => "variant v LEFT JOIN products p USING(product_id)",
   "where" => $where,
   "order" => $order,
