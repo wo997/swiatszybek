@@ -71,17 +71,16 @@
             })
         })
 
-        $$('.module-slider .cms-block-content').forEach(e => {
+        $$('.slider_module .cms-block-content').forEach(e => {
             e.setAttribute("data-swiper-parallax", '-180');
         });
 
         var sliderCount = 0;
-        $$('.cms-block .swiper-container:not(.swiper-container-initialized)').forEach(e => {
+        $$('.cms-block .swiper-container.slider_module:not(.swiper-container-initialized)').forEach(e => {
             sliderCount++;
-            var sliderName = "swiper-slider-" + sliderCount;
+            var sliderName = "swiper_slider_" + sliderCount;
             e.classList.add(sliderName);
-
-            swiper = new Swiper('.' + sliderName, {
+            var swiper = new Swiper('.' + sliderName, {
                 speed: 700,
                 parallax: true,
                 pagination: {
@@ -98,11 +97,42 @@
             });
         });
 
-        $$(".ql-editor a").forEach(e => {
-            if (e.href.indexOf("/") !== 0 && e.href.indexOf(window.location.hostname) === -1) {
-                e.setAttribute("target", "_blank");
-            }
-        })
+        $$('.product_list_module .swiper-container:not(.swiper-container-initialized)').forEach(e => {
+            sliderCount++;
+            var sliderName = "swiper_slider_" + sliderCount;
+            e.classList.add(sliderName);
+
+            var swiper_all = e.parent();
+            var clprev = sliderName + "_prev_btn";
+            var clnext = sliderName + "_next_btn";
+            swiper_all.find('.swiper-button-prev').classList.add(clprev);
+            swiper_all.find('.swiper-button-next').classList.add(clnext);
+
+            var swiper = new Swiper('.' + sliderName, {
+                speed: 700,
+                navigation: {
+                    prevEl: '.' + clprev,
+                    nextEl: '.' + clnext,
+                },
+            });
+            e.swiper = swiper;
+
+            var event = new CustomEvent('swiper-created', {
+                detail: {
+                    node: e
+                }
+            });
+            window.dispatchEvent(event);
+        });
+
+        centeredSlides: true,
+
+
+            $$(".ql-editor a").forEach(e => {
+                if (e.href.indexOf("/") !== 0 && e.href.indexOf(window.location.hostname) === -1) {
+                    e.setAttribute("target", "_blank");
+                }
+            })
 
         if (window.innerWidth < 768) {
             $$("table").forEach(table => {

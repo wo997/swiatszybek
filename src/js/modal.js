@@ -136,13 +136,13 @@ function hideModal(name, isCancel = false) {
     }
   }
 
-  clearAllErrors();
-
   var m = $("#modal-wrapper");
 
   if (name) {
     var modal = $(`#${name}`);
     if (modal) {
+      clearAllErrors(modal);
+
       modal.style.animation = "fadeOut 0.4s";
       visibleModalCount--;
       setTimeout(() => {

@@ -348,8 +348,11 @@ function fieldErrors(field) {
   return field_errors;
 }
 
-function clearAllErrors() {
-  $$("[data-form] [data-validate]").forEach((field) => {
+function clearAllErrors(node = null) {
+  var fields = node
+    ? $(node).findAll(`[data-validate]`)
+    : $$(`[data-form] [data-validate]`);
+  fields.forEach((field) => {
     showFieldErrors(field, "blank");
   });
 }
@@ -419,7 +422,9 @@ function getFormData(form, params = {}) {
   $(form)
     .findAll(`[${find_by}]`)
     .forEach((e) => {
-      if (excludeHidden && e.findParentByClassName("hidden")) return;
+      if (excludeHidden && e.findParentByClassName("hidden")) {
+        return;
+      }
       data[e.getAttribute(find_by)] = getValue(e);
     });
   return data;

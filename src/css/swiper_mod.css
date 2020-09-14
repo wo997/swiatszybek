@@ -1,0 +1,48 @@
+/* css[global]*/
+
+.swiper-nav {
+  transition: 0.2s all;
+}
+.swiper-nav.swiper-button-disabled {
+  transform: scale(0);
+}
+
+.swiper-all .fa-chevron-right,
+.swiper-all .fa-chevron-left {
+  transform: scale(0.8, 1);
+}
+
+.swiper-all .swiper-pagination.swiper-pagination-bullets {
+  margin-top: -25px;
+}
+.swiper-all span.swiper-pagination-bullet {
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
+  margin: 2px;
+  transform: scale(1.2);
+}
+
+@media only screen and (max-width: 799px) {
+  .slide-desktop {
+    display: none;
+  }
+}
+@media only screen and (min-width: 800px) {
+  .slide-mobile {
+    display: none;
+  }
+}
+
+.swiper-nav {
+  background-image: none !important;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.swiper-all .swiper-nav i {
+  font-size: 30px;
+  color: white;
+}

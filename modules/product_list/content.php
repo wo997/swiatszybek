@@ -1,107 +1,134 @@
-  <?php
+<?php
 
-  //useCSS($moduleDir . "/main.css?v=" . RELEASE); already global
+useJS($moduleDir . "/main.js");
+//useCSS($moduleDir . "/main.css?v=" . RELEASE); already global
 
-  $shared_where = "p.published = 1"; // AND v.published = 1";
-  $where = $shared_where;
-  $join = "";
+$shared_where = "p.published = 1"; // AND v.published = 1";
+$where = $shared_where;
+$join = "";
 
-  $product_list_count = nonull($moduleParams, "product_list_count", 8);
+$product_list_count = nonull($moduleParams, "product_list_count", 8);
 
-  if (isset($moduleParams["category_ids"])) {
-    if (is_array($moduleParams["category_ids"])) {
-      $category_ids =  $moduleParams["category_ids"] = array_filter($moduleParams["category_ids"], function ($id) {
-        return $id !== "0" && $id !== 0;
-      });
-      if ($category_ids) {
-        $join .= " INNER JOIN link_product_category USING(product_id)";
-        $where .= " AND category_id IN (" . clean(implode(",", $moduleParams["category_ids"])) . ")";
+$layout = nonull($moduleParams, "layout", "grid");
+
+if (isset($moduleParams["category_ids"])) {
+  if (is_array($moduleParams["category_ids"])) {
+    $category_ids =  $moduleParams["category_ids"] = array_filter($moduleParams["category_ids"], function ($id) {
+      return $id !== "0" && $id !== 0;
+    });
+    if ($category_ids) {
+      $join .= " INNER JOIN link_product_category USING(product_id)";
+      $where .= " AND category_id IN (" . clean(implode(",", $moduleParams["category_ids"])) . ")";
+    }
+  }
+}
+
+$hasAnyAttribute = false;
+if (isset($moduleParams["attribute_value_ids"])) {
+  $attribute_value_ids = $moduleParams["attribute_value_ids"];
+
+  if ($attribute_value_ids) {
+    foreach ($attribute_value_ids as $attribute_value_sub_ids) {
+      $subAttributeValues = "";
+      foreach ($attribute_value_sub_ids as $attribute_value_id) {
+        $subAttributeValues .= "$attribute_value_id,";
+      }
+      if ($subAttributeValues) {
+        $hasAnyAttribute = true;
+        $subAttributeValues = rtrim($subAttributeValues, ",");
+        $where .= " AND (" .
+          "av.value_id IN($subAttributeValues)" .
+          " OR " .
+          "ap.value_id IN($subAttributeValues)" .
+          ")";
       }
     }
   }
+}
 
-  $hasAnyAttribute = false;
-  if (isset($moduleParams["attribute_value_ids"])) {
-    $attribute_value_ids = $moduleParams["attribute_value_ids"];
-
-    if ($attribute_value_ids) {
-      foreach ($attribute_value_ids as $attribute_value_sub_ids) {
-        $subAttributeValues = "";
-        foreach ($attribute_value_sub_ids as $attribute_value_id) {
-          $subAttributeValues .= "$attribute_value_id,";
-        }
-        if ($subAttributeValues) {
-          $hasAnyAttribute = true;
-          $subAttributeValues = rtrim($subAttributeValues, ",");
-          $where .= " AND (" .
-            "av.value_id IN($subAttributeValues)" .
-            " OR " .
-            "ap.value_id IN($subAttributeValues)" .
-            ")";
-        }
-      }
-    }
-  }
-
-  if ($hasAnyAttribute) {
-    $join .= " INNER JOIN variant v USING(product_id)
+if ($hasAnyAttribute) {
+  $join .= " INNER JOIN variant v USING(product_id)
       LEFT JOIN link_variant_attribute_value av USING(variant_id)
       LEFT JOIN link_product_attribute_value ap USING(product_id)";
+}
+
+$order_by = "product_id DESC"; // new by default
+
+$order_by_name = nonull($moduleParams, "order_by", "new");
+
+if ($order_by_name == "sale") {
+  $order_by = "cache_sales DESC";
+} else if ($order_by_name == "cheap") {
+  $order_by = "price_min ASC";
+} else if ($order_by_name == "random") {
+  $order_by = "RAND() DESC";
+}
+
+$products = paginateData([
+  "select" => "product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating",
+  "from" => "products p $join",
+  "where" => $where,
+  "order" => $order_by,
+  "group" => "product_id",
+  "raw" => true,
+]);
+
+//$products = fetchArray("SELECT product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating
+//FROM products p $join $where ORDER BY product_id DESC LIMIT " . intval($product_list_count));
+
+$res = "";
+foreach ($products["results"] as $product) {
+  $priceText = $product["price_min"];
+  if (!empty($product["price_max"]) && $product["price_min"] != $product["price_max"])
+    $priceText .= " - " . $product["price_max"];
+
+  $priceText = preg_replace("/\.00/", "", $priceText);
+
+  if (!$product["gallery"]) {
+    $product["gallery"] = $product["cache_thumbnail"];
+  }
+  //<div class='item-image' style='background-image:url(\"/uploads/md/" . $product["cache_thumbnail"] . "\")' data-desktop='/uploads/md/" . $product["gallery"] . "'></div>
+
+  if ($layout == "slider") {
+    $res .= "<div class='swiper-slide'>";
   }
 
-  $order_by = "product_id DESC"; // new by default
+  $res .= "
+      <div class='product'>
+        <a href='" . getProductLink($product["product_id"], $product["link"]) . "' data-gallery='" . $product["gallery"] . "'>
+          <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image'>
+          <div class='item-desc'>
+            <h3>" . $product["title"] . "</h3>
+            <span class='pln'>$priceText zł</span>
+          </div>" . ratingBlock($product["cache_avg_rating"]) . "
+          <div class='buynow btn'>KUP TERAZ</div>
+        </a>
+      </div>
+    ";
 
-  $order_by_name = nonull($moduleParams, "order_by", "new");
-
-  if ($order_by_name == "sale") {
-    $order_by = "cache_sales DESC";
-  } else if ($order_by_name == "cheap") {
-    $order_by = "price_min ASC";
-  } else if ($order_by_name == "random") {
-    $order_by = "RAND() DESC";
+  if ($layout == "slider") {
+    $res .= "</div>";
   }
+}
 
-  $products = paginateData([
-    "select" => "product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating",
-    "from" => "products p $join",
-    "where" => $where,
-    "order" => $order_by,
-    "group" => "product_id",
-    "raw" => true,
-  ]);
+//$module_content .=
+//"<div class='items count-$total'>$res</div>";
 
-  //$products = fetchArray("SELECT product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating
-  //FROM products p $join $where ORDER BY product_id DESC LIMIT " . intval($product_list_count));
 
-  $res = "";
-  foreach ($products["results"] as $product) {
-    $priceText = $product["price_min"];
-    if (!empty($product["price_max"]) && $product["price_min"] != $product["price_max"])
-      $priceText .= " - " . $product["price_max"];
 
-    $priceText = preg_replace("/\.00/", "", $priceText);
-
-    if (!$product["gallery"]) {
-      $product["gallery"] = $product["cache_thumbnail"];
-    }
-    //<div class='item-image' style='background-image:url(\"/uploads/md/" . $product["cache_thumbnail"] . "\")' data-desktop='/uploads/md/" . $product["gallery"] . "'></div>
-
-    $res .= "<div class='product'>
-            <a href='" . getProductLink($product["product_id"], $product["link"]) . "' data-gallery='" . $product["gallery"] . "'>
-              <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image'>
-              <div class='item-desc'><h3>" . $product["title"] . "</h3>
-              <span class='pln'>$priceText zł</span>
-              </div>" . ratingBlock($product["cache_avg_rating"]) . "
-              <div class='buynow btn'>KUP TERAZ</div>
-            </a>
-          </div>";
-  }
-
-  //$module_content .=
-  //"<div class='items count-$total'>$res</div>";
-
-  $module_content .= "<div class='product_list'>$res</div>";
-
+if ($layout == "slider") {
+  $module_content .= "
+      <div class='product_list_module slider swiper-all'>
+        <div class='swiper-container'>
+          <div class='swiper-wrapper'>$res</div>
+        </div>
+        <div class='swiper-button-prev swiper-nav'><i class='fas fa-chevron-left'></i></div>
+        <div class='swiper-button-next swiper-nav'><i class='fas fa-chevron-right'></i></div>
+      </div>
+    ";
+} else {
+  $module_content .= "<div class='product_list grid'>$res</div>";
+}
 
   /*$module_content .= "<style>
       div[data-module='product_list'] .product {width: 48%;}
@@ -114,4 +141,3 @@
         }
       }
     </style>";*/
-  ?>

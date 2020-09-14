@@ -3,7 +3,8 @@
 session_start();
 require_once 'vendor/autoload.php';
 
-define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');
+//define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');
+define("IS_XHR", isset($_GET["xhr"]) || isset($_POST["xhr"]));
 
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
@@ -132,7 +133,7 @@ if (config("dev_mode", true)) {
 }
 
 // automatic_build can override
-define("RELEASE", 2145);
+define("RELEASE", 2146);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);
 

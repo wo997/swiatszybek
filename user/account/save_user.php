@@ -102,7 +102,7 @@ if (isset($_POST["imie"])) {
                 </button>
             ";
 
-            $response_footer = "<div class='footer-fill space-right'>$response_footer</div>";
+            $response_footer = "<div class='message-footer'>$response_footer</div>";
 
             $response["emails"] = ["previous" => $user_old_data["email"], "new" => $email];
         } else {

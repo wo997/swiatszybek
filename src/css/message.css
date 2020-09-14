@@ -44,3 +44,16 @@
   text-align: center;
   border-radius: 5px;
 }
+
+.message-footer {
+  display: flex;
+  align-items: center;
+}
+
+.message-footer > * {
+  flex-grow: 1;
+}
+
+.message-footer > .btn:not(:last-child) {
+  margin-right: 10px;
+}

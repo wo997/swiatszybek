@@ -78,3 +78,18 @@
     </div>
   </div>
 </div>
+
+<?php
+
+if (isset($CSS_files)) {
+  foreach ($CSS_files as $file) {
+    echo "<link rel='stylesheet' href='$file?v=" . RELEASE . "'>";
+  }
+}
+if (isset($JS_files)) {
+  foreach ($JS_files as $file) {
+    echo "<script src='$file?v=" . RELEASE . "'></script>";
+  }
+}
+
+?>

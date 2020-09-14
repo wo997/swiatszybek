@@ -1,34 +1,5 @@
 <?php //route[admin/search_zamowienia]
 
-
-$status_id = isset($_POST['status_id']) ? $_POST['status_id'] : "";
-
-$where = "1";
-
-if ($status_id != "") {
-  if ($status_id == "otwarte") {
-    $where = "status_id IN (0,1)";
-  } else {
-    $status_id = intval($status_id);
-    $where = "status_id = $status_id";
-  }
-}
-
-if (isset($_POST['user_id'])) {
-  $where .= " AND user_id = " . intval($_POST['user_id']);
-}
-
-$dateLimit = "";
-if (isset($_POST['dateFrom'])) {
-  $date = mysqli_real_escape_string($con, $_POST['dateFrom']);
-  $dateLimit .= " AND DATE(zlozono) >= '$date'";
-}
-if (isset($_POST['dateTo'])) {
-  $date = mysqli_real_escape_string($con, $_POST['dateTo']);
-  $dateLimit .= " AND DATE(zlozono) <= '$date'";
-}
-$where .= $dateLimit;
-
 echo paginateData([
   "select" => "zamowienie_id, imie, nazwisko, link, dostawa, koszt, status_id, DATE_FORMAT(zlozono, '%d-%m-%Y %H:%i') as zlozono, DATE_FORMAT(wyslano, '%d-%m-%Y %H:%i') as wyslano, firma, user_id, cache_basket",
   "from" => "zamowienia z",

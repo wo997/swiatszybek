@@ -53,7 +53,10 @@ if ($user_data) {
 }
 
 // send mail no matter if exists to make sure he will receive it
-$message = "<h3>Kliknij w link poniżej, żeby aktywować swoje konto</h3><br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/aktywuj/" . $user_data["user_id"] . "/$authentication_token'>Aktywuj</a>";
+$message = "
+  <h3>Kliknij w link poniżej, żeby aktywować swoje konto</h3>
+  <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/aktywuj/" . $user_data["user_id"] . "/$authentication_token'>Aktywuj</a>
+";
 $mailTitle = "Aktywacja konta " . config('main_email_sender') . " " . date("d-m-Y");
 @sendEmail($_POST["email"], $message, $mailTitle);
 
@@ -86,7 +89,7 @@ $response_footer .= "
     </button>
 ";
 
-$response_footer = "<div class='footer-fill space-right'>$response_footer</div>";
+$response_footer = "<div class='message-footer'>$response_footer</div>";
 
 
 $response["message"] =

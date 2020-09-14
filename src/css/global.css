@@ -1905,7 +1905,7 @@ footer a:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 .cms-block {
@@ -1913,7 +1913,7 @@ footer a:hover {
   position: relative;
   max-width: 100%;
   width: 100%;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 .cms-block-content {
   position: relative;
@@ -2591,18 +2591,6 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   }
 }
 
-.footer-fill {
-  display: flex;
-  align-items: center;
-}
-
-.footer-fill > * {
-  flex-grow: 1;
-}
-
-.footer-fill.space-right > *:not(:last-child) {
-  margin-right: 10px;
-}
 
 .jscolor.field {
   border: none !important;

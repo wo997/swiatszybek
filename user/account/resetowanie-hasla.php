@@ -34,9 +34,9 @@ if ($authenticated) {
   <?php include "global/header.php"; ?>
   <div class="main-container">
 
-    <form onsubmit="return validateForm(this)" action="/reset_password" method="post" class="centerVerticallyMenu paddingable" style="margin:auto;padding-bottom:50px;max-width:350px">
+    <form data-form onsubmit="return validateForm(this)" action="/reset_password" method="post" class="centerVerticallyMenu paddingable" style="margin:auto;padding-bottom:50px;max-width:350px">
       <?php if ($authenticated) : ?>
-        <h1 class="h1" style="text-align:center">Resetowanie hasła<br><span style="font-size:18px"><i class="fa fa-user"></i> <?= $email ?></span></h1>
+        <h1 class="h1" style="text-align:center">Resetowanie hasła<br><span style="font-size:16px"><i class="fa fa-user"></i> <?= $email ?></span></h1>
       <?php else : ?>
         <h1 class="h1" style="text-align:center">Resetowanie hasła</h1>
       <?php endif ?>
@@ -46,18 +46,10 @@ if ($authenticated) {
       ?>
       <?php if ($authenticated) : ?>
         <div class="field-title">Hasło (min. 8 znaków)</div>
-        <div class="field-wrapper">
-          <input type="password" name="password" class="field" data-validate="password">
-          <i class="correct fa fa-check"></i>
-          <i class="wrong fa fa-times"></i>
-        </div>
+        <input type="password" name="password" class="field" data-validate="password">
 
         <div class="field-title">Powtórz hasło</div>
-        <div class="field-wrapper">
-          <input type="password" name="password_rewrite" class="field" data-validate="match:form [name='password']">
-          <i class="correct fa fa-check"></i>
-          <i class="wrong fa fa-times"></i>
-        </div>
+        <input type="password" name="password_rewrite" class="field" data-validate="|match:form [name='password']">
 
         <input type="hidden" name="user_id" value="<?= $user_id ?>">
         <input type="hidden" name="authentication_token" value="<?= $authentication_token ?>">

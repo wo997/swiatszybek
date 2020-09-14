@@ -283,7 +283,14 @@ function setValue(input, value = null, params = {}) {
     return;
   }
 
-  if (input.datepicker) {
+  if (input.tagName == "RADIO-INPUT") {
+    var radio = input.find(`radio-option[value="${value}"]`);
+    if (radio) {
+      input.findAll(`radio-option`).forEach((e) => {
+        e.classList.toggle("selected", e.getAttribute("value") == value);
+      });
+    }
+  } else if (input.datepicker) {
     if (value && value.substr(0, 4).match(/\d{4}/)) {
       value = reverseDateString(value, "-");
     }
@@ -381,15 +388,28 @@ function getValue(input) {
     list = window[input.getAttribute("data-list-name")];
     return JSON.stringify(list.values);
   }
+  if (input.tagName == "RADIO-INPUT") {
+    var value = "";
+    var selected = input.find(".selected");
+    if (!selected) {
+      selected = input.find("[data-default]");
+    }
+    if (selected) {
+      value = selected.getAttribute("value");
+    }
+    return value;
+  }
   if (input.classList.contains("jscolor")) {
     var value = input.value;
     if (value && value.charAt(0) != "#") {
       value = "#" + value;
     }
     return value;
-  } else if (input.getAttribute("type") == "checkbox") {
+  }
+  if (input.getAttribute("type") == "checkbox") {
     return input.checked ? 1 : 0;
-  } else if (input.classList.contains("category-picker")) {
+  }
+  if (input.classList.contains("category-picker")) {
     return input.getAttribute("value");
   } else {
     var type = input.getAttribute("data-type");

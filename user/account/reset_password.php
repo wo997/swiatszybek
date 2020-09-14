@@ -35,11 +35,21 @@ if (isset($_POST["password"]) && isset($_POST["user_id"]) && isset($_POST["authe
     getPasswordHash($password), $_POST["user_id"], $authentication_token
   ]);
 
-  $back = "logowanie";
-  if (isset($_POST["moje-konto"]))
-    $back = "moje-konto/resetowanie-hasla";
+  $response_footer = "
+    <button class='btn success medium hide_case_logged_in' onclick='showModal(\"loginForm\",{source:this});hideParentModal(this)'>
+      Zaloguj się <i class='fas fa-user'></i>
+    </button>
+    <button class='btn subtle medium' onclick='hideParentModal(this)'>
+      Zamknij <i class='fas fa-times'></i>
+    </button>
+  ";
+  $response_body = MESSAGE_HEADER_SUCCESS
+    . "<div class='default-message-text'>Hasło zostało zmienione dla<br>konta "
+    . $email . "</div>";
 
-  quit("Zmieniono hasło konta $email", 1, $back);
+
+  $_SESSION["message_modal"] = $response_body . "<div class='message-footer'>$response_footer</div>";
+  redirect("/");
 }
 
 $user_data = fetchRow("SELECT user_id, authentication_token FROM users WHERE email = ?", [$email]);

@@ -26,5 +26,5 @@ if ($user_data["authenticated"] == "1") {
   $response_body = MESSAGE_HEADER_ERROR . "<div class='default-message-text'>Wystąpił błąd aktywacji konta</div>";
 }
 
-$_SESSION["message_modal"] = $response_body . "<div class='footer-fill space-right'>$response_footer</div>";
+$_SESSION["message_modal"] = $response_body . "<div class='message-footer'>$response_footer</div>";
 redirect("/");

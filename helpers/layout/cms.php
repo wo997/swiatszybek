@@ -121,12 +121,5 @@ function getCMSPageHTML($content)
 
     $page_content .= $container_html;
   }
-
-  foreach ($CSS_files as $file) {
-    $page_content = "<link rel='stylesheet' href='$file?v=" . RELEASE . "'>" . $page_content;
-  }
-  foreach ($JS_files as $file) {
-    $page_content = "<script src='$file?v=" . RELEASE . "'></script>" . $page_content;
-  }
   return $page_content;
 }
