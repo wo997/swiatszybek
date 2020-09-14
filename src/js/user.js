@@ -66,11 +66,13 @@ function validateLoginUserEmail(input) {
   const loginForm = $(`#loginForm`);
 
   xhr({
-    url: "/user-exists",
+    url: "/validate-email",
     params: getFormData(loginForm),
     success: (res) => {
       var errors = [];
-      if (res === 0) {
+      if (res == "unauthenticated") {
+        errors.push("Konto nie zostało aktywowane");
+      } else if (res != "exists") {
         errors.push("Takie konto nie istnieje");
       }
       showFieldErrors(input, errors);
