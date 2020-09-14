@@ -35,6 +35,13 @@
       showNotification("Zalogowano pomyślnie");
     });
   <?php endif ?>
+
+  <?php if (isset($_SESSION["message_modal"])) : ?>
+    window.addEventListener("load", () => {
+      showMessageModal(`<?= $_SESSION["message_modal"] ?>`);
+      <?php unset($_SESSION["message_modal"]); ?>
+    });
+  <?php endif ?>
 </script>
 
 <!-- styles / scripts to footer? -->
@@ -99,6 +106,12 @@
     --subtle-font-clr: <?= subtle_font_clr ?>;
     --subtle-background-clr: <?= subtle_background_clr ?>;
   }
+
+  <?php if ($app["user"]["id"]) : ?>.hide_case_logged_in {
+    display: none;
+  }
+
+  <?php endif ?>
 </style>
 
 <!--<link href="/admin/tools/cms.css?v=<?= RELEASE ?>" rel="stylesheet">-->

@@ -32,7 +32,7 @@ function showNotification(message, params = {}) {
   notification.addDismissTimeout = () => {
     notification.timeout = setTimeout(() => {
       dismissNotification(notification);
-    }, 2000);
+    }, nonull(params.duration, 2000));
   };
   notification.addDismissTimeout();
   notification.addEventListener("mouseenter", () => {

@@ -165,6 +165,7 @@ textarea {
   cursor: pointer;
   border: none;
   transition: 0.1s all;
+  user-select: none;
 }
 
 .btn.primary,
@@ -193,6 +194,17 @@ textarea {
   background: var(--subtle-background-clr);
   color: var(--subtle-font-clr);
 }
+
+.btn.success {
+  background: var(--success-clr);
+  color: white;
+}
+.btn.error {
+  background: var(--error-clr);
+  color: white;
+}
+
+
 /*.btn.important {
   background: #34e;
   color: white;
@@ -2577,33 +2589,6 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   .hide-desktop {
     display: none;
   }
-}
-
-.message-container {
-  margin: 10px auto 0;
-  color: #7b7;
-  width: fit-content;
-  /* height: fit-content; */
-  border: 1px solid #7b7;
-  border-radius: 5px;
-  background: #efe;
-  padding: 10px;
-}
-.message-container .fa-times {
-  margin: -5px;
-  padding: 5px;
-  display: inline-block;
-}
-.message-container.warning {
-  color: #f25151;
-  border: 1px solid #f25151;
-  background: #fee;
-}
-.message-container.inline {
-  padding: 5px 10px;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
 }
 
 .footer-fill {

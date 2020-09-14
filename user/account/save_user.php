@@ -21,26 +21,14 @@ $password = nonull($_POST, "password");
 // in case the password was filled
 if ($password && validatePassword($password)) {
     updateEntity(["password_hash" => getPasswordHash($password), "authentication_token" => generateAuthenticationToken()], "users", "user_id", $user_id);
-    $response_body[] = "Hasło zostało zmienione.";
 
+    $response_footer = MESSAGE_OK_BUTTON;
 
-    $response_header = "
-        <div style='margin: -10px;margin-bottom: 0;background: var(--primary-clr);color: white;'>
-            <i class='fas fa-check-circle' style='font-size:30px'></i>
-        </div>
-    ";
-
-    $response_footer = "
-        <button class='btn primary' onclick='hideParentModal(this)' style='width:80px'>
-            Ok
-        </button>
-    ";
+    // TODO: send email
 
     $response["message"] =
-        $response_header
-        . "<div style='margin:27px 10px'>"
-        . "Hasło zostało zmienione."
-        . "</div>"
+        MESSAGE_HEADER_SUCCESS
+        . "<div class='default-message-text'>Hasło zostało zmienione.</div>"
         . $response_footer;
 }
 
@@ -49,11 +37,7 @@ if (isset($_POST["imie"])) {
     $response_body = [];
     $response_body[] = "Dane zostały zapisane.";
 
-    $response_footer = "
-        <button class='btn secondary' onclick='hideParentModal(this)'>
-            Zamknij <i class='fas fa-times'></i>
-        </button>
-    ";
+    $response_footer = MESSAGE_OK_BUTTON;
 
     $data = filterArrayKeys($_POST, [
         "imie",
@@ -81,9 +65,6 @@ if (isset($_POST["imie"])) {
                 $email, $user_id
             ]);
 
-            $email_domain = nonull(explode("@", $email), 1);
-            $email_client_url = nonull($email_client_url_list, $email_domain);
-
             // send email
             $message = "
                 <p>Kliknij w link poniżej, żeby potwierdzić zmianę emaila z " . $user_old_data["email"] . " na $email</p>
@@ -92,13 +73,16 @@ if (isset($_POST["imie"])) {
             $mailTitle = "Zmiana emaila konta " . config('main_email_sender') . " " . date("d-m-Y");
             @sendEmail($email, $message, $mailTitle);
 
-            $response_body[] = "Wysłaliśmy link do zmiany adresu email<br>na $email.";
+            $response_body[] = "Wysłaliśmy link do zmiany adresu email na $email.";
 
             $response_footer = "";
 
+            $email_domain = nonull(explode("@", $email), 1);
+            $email_client_url = nonull($email_client_url_list, $email_domain);
+
             if ($email_client_url) {
                 $response_footer .= "
-                    <a class='btn primary' target='_blank' rel='noopener noreferrer' href='$email_client_url'>
+                    <a class='btn success medium' target='_blank' rel='noopener noreferrer' href='$email_client_url'>
                         Przejdź do poczty <i class='fas fa-envelope-open'></i>
                     </a>
                 ";
@@ -107,20 +91,20 @@ if (isset($_POST["imie"])) {
                     <span style='color: #444;
                     font-weight: 600;'>
                         Nieznany adres pocztowy 
-                        <i class='fas fa-info-circle' style='opacity:0.85' data-tooltip='Sprawdź poprawność adresu email.<br>Jeśli jest prawidłowy - przejdź na pocztę.'></i>
+                        <i class='fas fa-info-circle' style='opacity:0.85' data-tooltip='Czy aby na pewno adres email jest prawidłowy?<br>Sprawdź swoją skrzynkę pocztową.'></i>
                     </span>
                 ";
             }
 
             $response_footer .= "
-                <button class='btn secondary' onclick='hideParentModal(this)'>
+                <button class='btn subtle medium' onclick='hideParentModal(this)'>
                     Zamknij <i class='fas fa-times'></i>
                 </button>
             ";
 
             $response_footer = "<div class='footer-fill space-right'>$response_footer</div>";
 
-            $response["emails"] = ["old" => $user_old_data["email"], "new" => $email];
+            $response["emails"] = ["previous" => $user_old_data["email"], "new" => $email];
         } else {
             updateEntity(["email" => $email], "users", "user_id", $user_id);
         }
@@ -133,14 +117,9 @@ if (isset($_POST["imie"])) {
             $response_message = $response_body[0];
         }
 
-        $response_header = "
-            <div style='margin: -10px;margin-bottom: 0;background: var(--primary-clr);color: white;'>
-                <i class='fas fa-check-circle' style='font-size:30px'></i>
-            </div>";
-
         $response["message"] =
-            $response_header
-            . "<div style='margin:27px 10px'>"
+            MESSAGE_HEADER_SUCCESS
+            . "<div class='default-message-text'>"
             . $response_message
             . "</div>"
             . $response_footer;

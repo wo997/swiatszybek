@@ -17,6 +17,7 @@ $page_width = "1500px";
 <head>
     <?php include "global/includes.php";
     include "global/includes_for_cms_page.php"; ?>
+
     <style>
         <?php
         if (strpos($page_width, "px") !== false) {

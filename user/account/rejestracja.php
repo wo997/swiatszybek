@@ -72,36 +72,53 @@ function a($name)
     }
   </style>
   <script>
-    function register() {
+    function validateUserEmailExists(input) {
       const registerForm = $(`#registerForm`);
 
-      if (!validateForm(registerForm)) {
-        return;
-      }
-
-      const params = getFormData(registerForm);
-
       xhr({
-        url: "/register",
-        params,
-        success: ({
-          message,
-          error_field_name
-        }) => {
-          if (message && error_field_name) {
-            markFieldWrong(registerForm.find(`[name="${error_field_name}"]`), [
-              message,
-            ]);
-          } else if (message) {
-            showMessageModal(message)
+        url: "/validate-email",
+        params: getFormData(registerForm),
+        success: (res) => {
+          var errors = [];
+          if (res == "exists") {
+            var m = "<span style='color: black'>To konto jest aktywne";
+            if (!IS_LOGGED) {
+              m += ` <button class='btn primary' onclick='showModal("loginForm",{source:this})'>ZALOGUJ SIĘ</button></span>`;
+            }
+            errors.push(m);
+          } else if (res == "unauthenticated") {
+            errors.push("<span style='color: black'>Konto istnieje <b style='color:var(--success-clr)' onclick='register(false)'>WYŚLIJ LINK AKTYWACYJNY</b></span>");
+          } else if (res == "invalid") {
+            errors.push("Wpisz poprawny adres email");
           }
+
+          toggleDisabled("#registerForm [data-submit]", errors.length);
+
+          showFieldErrors(input, errors);
         },
       });
     }
 
-    function showMessageModal(message) {
-      $("#message-modal .modal-message").innerHTML = message;
-      showModal("message-modal");
+    function register(validate = true) {
+      const registerForm = $(`#registerForm`);
+
+      if (validate && !validateForm(registerForm)) {
+        return;
+      }
+
+      xhr({
+        url: "/register",
+        params: getFormData(registerForm),
+        success: (res) => {
+          if (res.message && res.error_field_name) {
+            markFieldWrong(registerForm.find(`[name="${res.error_field_name}"]`), [
+              res.message,
+            ]);
+          } else if (res.message) {
+            showMessageModal(res.message);
+          }
+        },
+      });
     }
   </script>
 </head>
@@ -109,60 +126,36 @@ function a($name)
 <body>
   <?php include "global/header.php"; ?>
 
-  <div id="message-modal" data-modal>
-    <div style="
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    border-radius: 5px;
-      ">
-      <div class="modal-message">
-      </div>
-      <div>
-        <span class="link details-btn" style="display: none; width: 100px; margin-left: 10px;">Co dalej?</span>
-      </div>
-    </div>
-  </div>
-
   <div class="centerVerticallyMenu">
     <h1 class="h1">Rejestracja</h1>
-    <div class="paddingable" id="registerForm" data-form>
+    <div class="paddingable" id="registerForm" data-form style="min-height: 400px;">
       <div class="main-container">
         <div class="menu mobileRow" style="max-width: 700px">
           <div style="width: 50%;">
             <div style="width:100%;margin:auto;max-width:300px">
-              <div>
-                <span class="field-title">Imię</span>
-                <input type="text" name="imie" <?= a("imie") ?> autocomplete="first-name" data-validate class="field">
-              </div>
-              <div>
-                <span class="field-title">Nazwisko</span>
-                <input type="text" name="nazwisko" <?= a("nazwisko") ?> autocomplete="family-name" data-validate class="field">
-              </div>
-              <div>
-                <span class="field-title">Nr telefonu</span>
-                <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate="tel" class="field">
-              </div>
+              <span class="field-title">E-mail</span>
+              <input type="text" name="email" <?= a("email") ?> autocomplete="email" data-validate="email|custom:validateUserEmailExists|delay:300" class="field">
+
+              <div class="field-title">Hasło (min. 8 znaków)</div>
+              <input type="password" name="password" class="field" data-validate="password" autocomplete="new-password">
+
+              <div class="field-title">Powtórz hasło</div>
+              <input type="password" name="password_rewrite" class="field" data-validate="|match:#registerForm [name='password']" autocomplete="new-password">
             </div>
           </div>
           <div style="width: 50%;">
             <div style="width:100%;margin:auto;max-width:300px">
-              <div>
-                <span class="field-title">E-mail</span>
-                <input type="text" name="email" <?= a("email") ?> autocomplete="email" data-validate="email" class="field">
-              </div>
-              <div class="field-wrapper">
-                <div class="field-title">Hasło (min. 8 znaków)</div>
-                <input type="password" name="password" class="field" data-validate="password" autocomplete="new-password">
-              </div>
+              <span class="field-title">Imię</span>
+              <input type="text" name="imie" <?= a("imie") ?> autocomplete="first-name" data-validate class="field">
 
-              <div class="field-wrapper">
-                <div class="field-title">Powtórz hasło</div>
-                <input type="password" name="password_rewrite" class="field" data-validate="password|match:#registerForm [name='password']" autocomplete="new-password">
-              </div>
-              <button onclick="register()" class="btn primary big fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
+              <span class="field-title">Nazwisko</span>
+              <input type="text" name="nazwisko" <?= a("nazwisko") ?> autocomplete="family-name" data-validate class="field">
+
+
+              <span class="field-title">Nr telefonu</span>
+              <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate="tel" class="field">
+
+              <button data-submit onclick="register()" class="btn primary big fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
                 Zarejestruj się
                 <i class="fa fa-chevron-right"></i>
               </button>

@@ -125,11 +125,37 @@ if (strpos($url, "resetowanie-hasla") !== false)
       });
 
       if (emailRequest) {
-        messageElem = $(".message-box-container");
-        addMessageBox(messageElem, `Wysłaliśmy link do zmiany adresu email na ${emailRequest}`);
-        toggleMessageBox(messageElem, true, true);
+        wyslalismyLinkDoZmianyEmaila(emailRequest, true);
       }
+
+      <?php if (isset($_SESSION["message"])) : ?>
+        addMessageBox($(".message-box-container2"), `<?= $_SESSION["message"]["text"] ?>`, {
+          type: `<?= $_SESSION["message"]["type"] ?>`,
+          dismissable: true,
+        });
+        <?php unset($_SESSION["message"]); ?>
+      <?php endif ?>
     });
+
+    function cancelEmailChange() {
+      xhr({
+        url: "/cancel_email_change_request",
+        success: (res) => {
+          addMessageBox($(".message-box-container"), `Anulowano zmianę adresu e-mail`, {
+            dismissable: true,
+          });
+        }
+      })
+    }
+
+    function wyslalismyLinkDoZmianyEmaila(emailRequest, instant = false) {
+      addMessageBox($(".message-box-container"), `
+        Wysłaliśmy link do zmiany adresu
+        <br>email na ${emailRequest}
+        <br><b class='btn' onclick='cancelEmailChange()'>ANULUJ ZMIANĘ</b>`, {
+        instant: instant,
+      });
+    }
 
     function saveDataForm() {
       form = $("#menu2");
@@ -148,16 +174,16 @@ if (strpos($url, "resetowanie-hasla") !== false)
           emails
         }) => {
           if (message) {
-            showMessageModal(message);
-          }
-
-          if (emails) {
-            messageElem = $(".message-box-container");
-            addMessageBox(messageElem, `Wysłaliśmy link do zmiany adresu email na ${emails.new}`);
-            toggleMessageBox(messageElem, true);
-            setFormData({
-              email: emails.old
-            }, form);
+            showMessageModal(message, {
+              hideCallback: () => {
+                if (emails) {
+                  wyslalismyLinkDoZmianyEmaila(emails.new);
+                  setFormData({
+                    email: emails.previous
+                  }, form);
+                }
+              }
+            });
           }
         }
       });
@@ -189,11 +215,6 @@ if (strpos($url, "resetowanie-hasla") !== false)
         }
       });
     }
-
-    function showMessageModal(message) {
-      $("#message-modal .modal-message").innerHTML = message;
-      showModal("message-modal");
-    }
   </script>
 </head>
 
@@ -201,23 +222,6 @@ if (strpos($url, "resetowanie-hasla") !== false)
   <?php include "global/header.php"; ?>
   <div id="accountForm" class="main-container">
     <div style="margin-top:30px"></div>
-
-    <div id="message-modal" data-modal data-dismissable>
-      <div style="
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    border-radius: 5px;
-      ">
-        <div class="modal-message">
-        </div>
-        <div>
-          <span class="link details-btn" style="display: none; width: 100px; margin-left: 10px;">Co dalej?</span>
-        </div>
-      </div>
-    </div>
 
     <div style=" text-align:center;padding: 25px;font-size: 17px">
       <?php
@@ -300,6 +304,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
         <div id="menu2" data-form class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
           <div style="width:100%;">
             <div class="message-box-container"></div>
+            <div class="message-box-container2"></div>
             <div class="mobileRow" style="max-width: 820px;margin: 0 auto;">
               <div style="width: 50%; padding:10px">
                 <div style="width:100%;margin:auto;max-width:350px">

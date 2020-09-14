@@ -96,11 +96,6 @@ $static = checkUrl($page_data["link"]);
             url: "/admin/save_cms",
             params: params,
             success: (res) => {
-                if (res.cms_link) {
-                    window.location = res.cms_link
-                } else {
-                    window.location.reload();
-                }
                 //showNotification(`<i class="fas fa-check"></i> Zapisano zmiany</b>`); // TODO XD
             }
         });

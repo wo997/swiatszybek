@@ -687,6 +687,7 @@ function getNodeTextWidth(node) {
 }
 
 function toggleDisabled(elem, disabled) {
+  elem = $(elem);
   if (disabled) elem.setAttribute("disabled", true);
   else elem.removeAttribute("disabled");
 }

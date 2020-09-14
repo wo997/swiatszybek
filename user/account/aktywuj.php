@@ -1,23 +1,30 @@
 <?php //route[aktywuj]
 
-$parts = explode("/", $url);
+$user_id = $url_params[1];
+$authentication_token = $url_params[2];
 
-$user_id = $parts[1];
-$authentication_token = $parts[2];
+query("UPDATE users SET authenticated = '1', stworzono = NOW() WHERE user_id = ? AND authentication_token = ?", [
+  $user_id, $authentication_token
+]);
 
-$stmt = $con->prepare("UPDATE users SET authenticated = '1', stworzono = NOW() WHERE user_id = ? AND authentication_token = ?");
-$stmt->bind_param("ss", $user_id, $authentication_token);
-$stmt->execute();
+$user_data = fetchRow("SELECT email, authenticated FROM users WHERE user_id = ?", [$user_id]);
 
-$stmt = $con->prepare("SELECT email, authenticated FROM users WHERE user_id = ?");
-$stmt->bind_param("s", $user_id);
-$stmt->execute();
-$stmt->bind_result($email, $authenticated);
-mysqli_stmt_fetch($stmt);
-
-// TODO return messages with redirect idk do it
-/*if ($authenticated == "1") {
-  quit("Konto $email zostało aktywowane", 1);
+if ($user_data["authenticated"] == "1") {
+  $response_footer = "
+    <button class='btn success medium hide_case_logged_in' onclick='showModal(\"loginForm\",{source:this});hideParentModal(this)'>
+      Zaloguj się <i class='fas fa-user'></i>
+    </button>
+    <button class='btn subtle medium' onclick='hideParentModal(this)'>
+      Zamknij <i class='fas fa-times'></i>
+    </button>
+  ";
+  $response_body = MESSAGE_HEADER_SUCCESS
+    . "<div class='default-message-text'>Konto "
+    . $user_data["email"] . "<br>zostało aktywowane</div>";
 } else {
-  quit("Wystąpił błąd aktywacji konta", 0);
-}*/
+  $response_footer = MESSAGE_OK_BUTTON;
+  $response_body = MESSAGE_HEADER_ERROR . "<div class='default-message-text'>Wystąpił błąd aktywacji konta</div>";
+}
+
+$_SESSION["message_modal"] = $response_body . "<div class='footer-fill space-right'>$response_footer</div>";
+redirect("/");

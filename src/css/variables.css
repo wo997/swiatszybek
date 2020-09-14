@@ -1,6 +1,6 @@
 /* css[global] */
 
-/*:root {
-  --primary-clr: #13e;
-  --buynow-clr: #d22;
-} moved to includes cause needs a build */
+:root {
+  --success-clr: #28a745;
+  --error-clr: #dc3545;
+}

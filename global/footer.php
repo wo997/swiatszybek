@@ -68,3 +68,13 @@
     </div>
   </div>
 </div>
+
+<div id="message-modal" data-modal data-dismissable>
+  <div>
+    <div class="modal-message">
+    </div>
+    <div>
+      <span class="link details-btn" style="display: none; width: 100px; margin-left: 10px;">Co dalej?</span>
+    </div>
+  </div>
+</div>
