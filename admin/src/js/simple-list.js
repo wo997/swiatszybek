@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[admin] */
 function createSimpleList(params = {}) {
   var list = {};
 

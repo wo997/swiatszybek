@@ -1,7 +1,7 @@
 <?php
 
-useJS($moduleDir . "/main.js");
-//useCSS($moduleDir . "/main.css?v=" . RELEASE); already global
+/*useJS($moduleDir . "/main.js?v=" . RELEASE); // global
+useCSS($moduleDir . "/main.css?v=" . RELEASE);*/
 
 $shared_where = "p.published = 1"; // AND v.published = 1";
 $where = $shared_where;
@@ -90,25 +90,26 @@ foreach ($products["results"] as $product) {
   //<div class='item-image' style='background-image:url(\"/uploads/md/" . $product["cache_thumbnail"] . "\")' data-desktop='/uploads/md/" . $product["gallery"] . "'></div>
 
   if ($layout == "slider") {
-    $res .= "<div class='swiper-slide'>";
+    $res .= "<div class='product-block-wapper swiper-slide'>";
+  } else {
+    $res .= "<div class='product-block-wapper'>";
   }
 
   $res .= "
-      <div class='product'>
+      <div class='product-block'>
         <a href='" . getProductLink($product["product_id"], $product["link"]) . "' data-gallery='" . $product["gallery"] . "'>
           <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image'>
-          <div class='item-desc'>
-            <h3>" . $product["title"] . "</h3>
-            <span class='pln'>$priceText zł</span>
-          </div>" . ratingBlock($product["cache_avg_rating"]) . "
-          <div class='buynow btn'>KUP TERAZ</div>
+          <h3 class='product-title'>" . $product["title"] . "</h3>
+          <span class='product-price pln'>$priceText zł</span>
+          <div class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</div>
+          <!--<div class='buynow btn'>KUP TERAZ</div>-->
         </a>
       </div>
     ";
 
-  if ($layout == "slider") {
-    $res .= "</div>";
-  }
+  //if ($layout == "slider") {
+  //}
+  $res .= "</div>";
 }
 
 //$module_content .=
@@ -127,7 +128,7 @@ if ($layout == "slider") {
       </div>
     ";
 } else {
-  $module_content .= "<div class='product_list grid'>$res</div>";
+  $module_content .= "<div class='product_list_module grid'>$res</div>";
 }
 
   /*$module_content .= "<style>

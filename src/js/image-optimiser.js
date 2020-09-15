@@ -59,8 +59,10 @@ function preloadImage(img, animate = true) {
     }
 
     if (
-      !img.hasAttribute("data-height") &&
-      !img.hasAttribute("data-has-own-height")
+      !img.hasAttribute(
+        "data-height"
+      ) /*&&
+      !img.hasAttribute("data-has-own-height")*/
     ) {
       img.addEventListener("load", () => {
         img.style.height = "";
@@ -134,25 +136,30 @@ function setImageDimensions(img) {
   img.calculated_height = data.h;
   img.filename = data.filename;
 
-  if (rect.height) {
+  /*if (rect.height) {
     img.setAttribute("data-has-own-height", "");
-  } else {
-    var real_height = Math.round((rect.width * data.h) / data.w);
-    img.style.height = `${real_height}px`;
-  }
+    console.log(rect.height);
+  } else {*/
+  var real_height = Math.round((rect.width * data.h) / data.w);
+  img.style.height = `${real_height}px`;
+  /*}*/
 
   return rect;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  lazyLoadImages();
+  // to help with flexbox
+  setTimeout(() => {
+    lazyLoadImages();
+  });
 });
 window.addEventListener("load", () => {
   lazyLoadImages();
 });
 
 function lazyLoadImages(animate = true) {
-  $$("img[data-src]").forEach((img) => {
+  setCustomHeights();
+  $$("img[data-src]:not(.lazy_image)").forEach((img) => {
     var rect = setImageDimensions(img);
 
     if (rect.top < window.innerHeight + lazyLoadOffset) {

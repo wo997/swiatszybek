@@ -485,11 +485,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       ignoreValueChanges = false;
 
 
-      if (BASKET_COST == 0) {
+      /*if (BASKET_COST == 0) {
         $$("btn primary big").forEach((e) => {
           e.style.display = "none"
         });
-      }
+      }*/
 
       if (RABAT > 0) hasKodRabatowy({
         kwota: RABAT,
@@ -526,7 +526,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           json.basket_table_html = `
               <div style="text-align:center">
               <h3>Koszyk jest pusty!</h3>
-              <a class="btn primary big" href="/" style='width: 220px'>
+              <a class="btn primary medium" href="/" style='width: 220px'>
                 Rozpocznij zakupy
                 <i class="fa fa-chevron-right"></i>
               </a></div>`;
@@ -982,7 +982,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           <div class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
             <?php if (!$app["user"]["id"]) : ?>
               <div>
-                <button class="btn primary big" onclick="showModal('loginForm',{source:this});hideLoginFormPassword()" style="max-width: 100%;width:270px;margin-top: 25px;">Zaloguj się <i class="fa fa-user"></i></button>
+                <button class="btn primary medium" onclick="showModal('loginForm',{source:this});hideLoginFormPassword()" style="max-width: 100%;width:270px;margin-top: 25px;">Zaloguj się <i class="fa fa-user"></i></button>
                 <br><br>
                 <strong>Co zyskasz?</strong>
                 <div>- Dostęp do historii zamówień</div>
@@ -993,7 +993,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               <div style="flex-grow:1"></div>
             <?php endif ?>
             <div>
-              <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> big" onclick="showMenu(2, 'kontakt')" style="margin-top: 25px;min-width:250px">
+              <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> medium" onclick="showMenu(2, 'kontakt')" style="margin-top: 25px;min-width:250px">
                 <?php
                 if ($app["user"]["id"]) {
                   echo "Złóż zamówienie";
@@ -1005,56 +1005,9 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               </button>
             </div>
           </div>
-          <!-- <div style="margin:10px 0;text-align:center">
-            <a style="display:inline-block;border-bottom: 1px solid #666;color:#666;font-style:italic" href="/koszyk">Chcesz zmienić zawartość koszyka?</a>
-          </div> -->
-
-
         </div>
       </div>
     </div>
-
-    <!-- <div id="menu2" class="menu mobileRow" style="max-width: 1000px;display:none;">
-      <div style="padding:10px">
-        <div class="mobileRow" style="margin-top: 20px">
-          <div style="width: 50%; margin-top:15px">
-            <div style="width:100%;margin:auto;max-width:300px">
-              <?php include "user/account/login_form.php"; ?>
-            </div>
-          </div>
-          <div style="width: 50%;margin-top: 15px">
-            <div style="width:100%;margin:auto;max-width:300px">
-              <h1 class="h1">Bez rejestracji</h1> -->
-    <!-- <a href="/rejestracja/zakup" class="btn primary big fill" style="margin-top:20px">
-                Zarejestruj się
-                <i class="fa fa-user-plus"></i>
-              </a>
-              <div style="margin: 15px 0 0;background: #ccc;height: 1px;width: 100%;"></div>
-              <div style="margin: -10px auto 15px;height:10px;background-color:white;width:50px;text-align:center;font-size: 15px;color: #333;">lub</div> -->
-    <!-- <button class="btn secondary big fill" type="button" onclick="showMenu(3)">
-                Dalej
-                <i class="fa fa-chevron-right"></i>
-              </button>
-              <div style="margin:25px 0 15px;line-height: 1.6;color: #333;">
-                <b>Zalety korzystania z konta <?= config('main_email_sender') ?>:</b>
-                <div>- Możliwość przeglądania swoich zamówień</div>
-                <div style="display:flex;line-height: 1.3;">
-                  <div style='margin-right:3px'>-</div>
-                  <div>Zapisanie danych osobowych oraz adresu do przyszłych zamówień</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin: 40px auto 0;max-width:780px;display: flex; justify-content: space-between;padding:20px">
-          <button class="btn secondary big" type="button" onclick="showMenu(1)" style="margin-top: 10px; display:inline-block;width:220px">
-            <i class="fa fa-chevron-left"></i>
-            Cofnij
-          </button>
-        </div>
-      </div>
-    </div> -->
 
     <div id="menu2" class="menu" style="max-width: 1200px; display:none">
       <div class="mobileRow">
@@ -1158,7 +1111,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               <div id="caseKurier" class="expand_y hidden animate_hidden">
                 <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;" data-view="adres">Adres dostawy</h3>
 
-                <button class="btn primary medium" type="button" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button>
+                <button class="btn primary" type="button" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button>
 
                 <div class="field-title">Imię</div>
                 <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-cookie>
@@ -1233,11 +1186,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
 
       <div style="padding: 10px;display: flex;justify-content: space-between;max-width: 1170px;margin: 0 auto;width: 100%;">
-        <button class="btn secondary big desktopSpaceRight btn secondary" type="button" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
+        <button class="btn secondary medium desktopSpaceRight btn secondary" type="button" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>
-        <button class="btn primary big" type="button" onclick="showMenu(3,'podsumowanie')" style="margin-top: 30px; display:inline-block;width:220px">
+        <button class="btn primary medium" type="button" onclick="showMenu(3,'podsumowanie')" style="margin-top: 30px; display:inline-block;width:220px">
           Dalej
           <i class="fa fa-chevron-right"></i>
         </button>
@@ -1287,7 +1240,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                   <span>Kod rabatowy</span>
                   <div style="display:flex">
                     <input type="text" id="kod_rabatowy" class="field">
-                    <button type="button" style="margin-left:-1px;width: auto;font-size: 15px;" class="btn primary big" onclick="aktywujKodRabatowy('add')">Aktywuj</button>
+                    <button type="button" style="margin-left:-1px;width: auto;font-size: 15px;" class="btn primary medium" onclick="aktywujKodRabatowy('add')">Aktywuj</button>
                   </div>
                   <div id="kod_rabatowy_reason" style="color: red;font-size: 13px;"></div>
                 </div>
@@ -1337,7 +1290,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 <div id="payment-request-button"></div>
               </div>-->
 
-            <button onclick="confirmOrder()" class="btn primary big full-width-mobile" style="margin-top: 10px;width: 260px;margin-left:auto">
+            <button onclick="confirmOrder()" class="btn primary medium full-width-mobile" style="margin-top: 10px;width: 260px;margin-left:auto">
               <span id="submit_text">ZAMAWIAM I PŁACĘ</span>
               <i class="fa fa-chevron-right"></i>
             </button>
@@ -1347,7 +1300,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       </div>
 
       <div style="padding: 10px">
-        <button class="btn secondary big pullHigherDesktop" type="button" onclick="showMenu(2,'kontakt')" style="display:inline-block;width:170px">
+        <button class="btn secondary medium pullHigherDesktop" type="button" onclick="showMenu(2,'kontakt')" style="display:inline-block;width:170px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>

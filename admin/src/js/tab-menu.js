@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[admin] */
 
 document.addEventListener("click", (event) => {
   var t = $(event.target);

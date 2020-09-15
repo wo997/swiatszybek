@@ -1,5 +1,3 @@
-<script src="/src/swiper.min.js"></script>
-<link rel="stylesheet" href="/src/swiper.min.css">
 <style>
     [data-animation] {
         visibility: hidden;

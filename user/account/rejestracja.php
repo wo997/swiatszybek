@@ -155,7 +155,7 @@ function a($name)
               <span class="field-title">Nr telefonu</span>
               <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate="tel" class="field">
 
-              <button data-submit onclick="register()" class="btn primary big fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
+              <button data-submit onclick="register()" class="btn primary medium fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
                 Zarejestruj się
                 <i class="fa fa-chevron-right"></i>
               </button>

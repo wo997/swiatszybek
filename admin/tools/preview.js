@@ -17,7 +17,7 @@ window.preview = {
 
 registerModalContent(
   `
-    <div id="preview" class="hugeModalDesktop" data-modal data-expand>
+    <div id="preview" class="hugeModalDesktop" data-modal data-expand="large">
         <div class="modal-body">
             <div class="custom-toolbar">
                 <span class="title">

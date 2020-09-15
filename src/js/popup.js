@@ -1,18 +1,7 @@
 /* js[global] */
 
-/* kind of deprecated */
+/* deprecated */
 document.addEventListener("DOMContentLoaded", function () {
-  if (!IS_MOBILE) {
-    /*$$(".navbar_wrapper .dropdown").forEach((e) => {
-      var a = e.find("a");
-      var u = e.find(".dropdown-header");
-      if (a && u) {
-        u.addEventListener("click", () => {
-          window.location = a.href;
-        });
-      }
-    });*/
-  }
   var popup = $(".old-popupWrapper");
   if (popup) {
     popup.addEventListener("click", function (e) {

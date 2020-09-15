@@ -286,7 +286,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
 
             if ($rowCount == 0) {
               $table = '<h3 style="margin: 40px 0 50px; font-size: 26px;">Brak zamówień</h3>
-                            <a class="btn primary big" href="/">
+                            <a class="btn primary medium" href="/">
                               Rozpocznij zakupy
                               <i class="fa fa-chevron-right"></i>
                             </a>';
@@ -384,7 +384,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
             <input type="hidden" name="moje-konto" value="1">
 
             <input type="hidden" name="email">
-            <button data-submit class="btn primary big" style="margin:10px 0; width: 100%" onclick="savePasswordForm()">
+            <button data-submit class="btn primary medium" style="margin:10px 0; width: 100%" onclick="savePasswordForm()">
               Akceptuj zmianę hasła
               <i class="fa fa-chevron-right"></i>
             </button>

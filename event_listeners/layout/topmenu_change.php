@@ -16,23 +16,22 @@ function showMenu($category_id, $depth = 0)
 
     if ($depth == 0) {
         foreach ($menu as $submenu) {
-            /* 
-            $html .= "
-                <div data-depth='$depth'>
-                    <a href='".getMenuLink($submenu)["url"]."'>
-                        <h3 class='headerplain'>".$submenu["title"]."</h3>
-                    </a>
-                    <div class='float-category'>".showMenu($submenu["category_id"], $depth + 1)."</div>
-                </div>
-            ";
-            */
+
             $html .= "
                 <div data-depth='$depth'>
                     <a href='" . getMenuLink($submenu)["url"] . "'>
                         <h3 class='headerplain'>" . $submenu["title"] . "</h3>
                     </a>
+                    <div class='float-category'>" . showMenu($submenu["category_id"], $depth + 1) . "</div>
                 </div>
             ";
+            /*$html .= "
+                <div data-depth='$depth'>
+                    <a href='" . getMenuLink($submenu)["url"] . "'>
+                        <h3 class='headerplain'>" . $submenu["title"] . "</h3>
+                    </a>
+                </div>
+            ";*/
         }
     } else {
         foreach ($menu as $submenu) {

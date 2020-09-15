@@ -237,7 +237,7 @@ function getBasketContent()
         }
 
         $basketContent .=
-            '</div></div><div><a class="btn primary big fill" href="/zakup" style="position:relative">
+            '</div></div><div><a class="btn primary medium fill" href="/zakup" style="position:relative">
             Przejdź do kasy
             <i class="fa fa-chevron-right"></i>
             </a></div></div>';

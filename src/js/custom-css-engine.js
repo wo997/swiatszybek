@@ -98,7 +98,15 @@ function setCustomHeights() {
       height = height.replace("w", "");
       var r = node.getBoundingClientRect();
       var real_height = Math.floor(r.width * parseFloat(height));
-      node.style.height = `${real_height}px`;
+      if (Math.abs(parseInt(r.height) - real_height) > 2) {
+        node.style.height = `${real_height}px`;
+      }
     }
   });
 }
+
+function fixHeightsAutomatically() {
+  setCustomHeights();
+  setTimeout(fixHeightsAutomatically, 500);
+}
+fixHeightsAutomatically();

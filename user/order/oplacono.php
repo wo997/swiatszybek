@@ -32,11 +32,11 @@ if (isset($_SESSION["p24_back_url"])) {
             <p style="font-size: 16px;padding: 6px;">Dziękujemy za zakupy w naszym sklepie.<br>Potwierdzenie wysłaliśmy na Twoją skrzynkę pocztową.<br>Zapraszamy do dalszych zakupów w przyszłości.</p>
             <div class="mobileRow">
                 <?php if ($app["user"]["id"]) : ?>
-                    <a href="/moje-konto" class="btn primary big" style="margin: 5px;flex-grow: 1">Moje zamówienia</a>
+                    <a href="/moje-konto" class="btn primary medium" style="margin: 5px;flex-grow: 1">Moje zamówienia</a>
                 <?php else : ?>
-                    <a href="<?= $p24_back_url ?>" class="btn primary big" style="margin: 5px;flex-grow: 1;">Przejdź do zamówienia</a>
+                    <a href="<?= $p24_back_url ?>" class="btn primary medium" style="margin: 5px;flex-grow: 1;">Przejdź do zamówienia</a>
                 <?php endif ?>
-                <a href="/" class="btn secondary big" style="margin: 5px;flex-grow: 1">Strona główna</a>
+                <a href="/" class="btn secondary medium" style="margin: 5px;flex-grow: 1">Strona główna</a>
             </div>
         </div>
     </div>

@@ -560,6 +560,7 @@ function cmsPrepareOutput() {
     e.removeAttribute("draggable");
     e.style.opacity = "";
   });
+  removeClasses("during-module-edit");
 }
 
 function closeCms(save) {

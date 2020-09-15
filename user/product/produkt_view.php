@@ -82,7 +82,7 @@
 
 
         <div style="height:20px"></div>
-        <button id="buyNow" class="btn primary big fill" onclick="addItem(VARIANT_ID,1)">
+        <button id="buyNow" class="btn primary medium fill" onclick="addItem(VARIANT_ID,1)">
           Dodaj do koszyka
           <i class="fa fa-check" style="font-size: 14px;vertical-align: middle;"></i>
         </button>
@@ -97,7 +97,7 @@
               <span>Twój e-mail: </span>
               <input type="text" value="<?= $app["user"]["email"] ?>" id="notification_email" style="width: auto;flex-grow: 1;margin-left: 10px;padding: 1px 4px;">
             </label>
-            <button id="notify" class="btn primary big fill" onclick="sendNotification()">
+            <button id="notify" class="btn primary medium fill" onclick="sendNotification()">
               Potwierdź powiadomienie
               <i class="fa fa-envelope" style="font-size: 14px;"></i>
             </button>
@@ -205,10 +205,10 @@
             <div id="updateChoosenAmountCost" class="pln" style="text-align: center;font-size: 20px;display: inline-block;position: relative;top: 1px;left: 2px;"></div>
           </div>
         </div>
-        <div class="btn primary big fill" style="margin: 10px 0" onclick="hidePopup()">
+        <div class="btn primary medium fill" style="margin: 10px 0" onclick="hidePopup()">
           Kontynuuj zakupy
         </div>
-        <a href="/zakup" class="btn primary big fill" style="margin-bottom: 6px">
+        <a href="/zakup" class="btn primary medium fill" style="margin-bottom: 6px">
           Kup teraz
         </a>
       </div>

@@ -54,7 +54,7 @@ if ($authenticated) {
         <input type="hidden" name="user_id" value="<?= $user_id ?>">
         <input type="hidden" name="authentication_token" value="<?= $authentication_token ?>">
         <input type="hidden" name="email" value="<?= $email ?>">
-        <button class="btn primary big" style="margin:10px 0; width: 100%">
+        <button class="btn primary medium" style="margin:10px 0; width: 100%">
           Akceptuj zmianę hasła
           <i class="fa fa-chevron-right"></i>
         </button>
@@ -62,7 +62,7 @@ if ($authenticated) {
         <div class="field-title">Twój e-mail</div>
         <input type="text" class="field" name="email" data-validate="email">
 
-        <button class="btn primary big" style="margin:10px 0; width: 100%">
+        <button class="btn primary medium" style="margin:10px 0; width: 100%">
           Wyślij link na maila
           <i class="fa fa-chevron-right"></i>
         </button>

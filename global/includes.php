@@ -1,7 +1,3 @@
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
-<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Poppins&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-
 <script>
   const RELEASE = <?= RELEASE ?>; // manage versioning of assets
   const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
@@ -57,6 +53,12 @@
   <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
   <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">
   <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= RELEASE ?>"></script>
+
+  <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
+  <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>
+
+  <script src="/src/highlight.min.js?v=<?= RELEASE ?>"></script>
+  <script src="/src/quill-2.0.js?v=<?= RELEASE ?>"></script>
 <?php endif ?>
 
 <meta charset="utf-8">
@@ -81,21 +83,6 @@
   <meta property="og:type" content="website" />
 <?php endif ?>
 
-<?php if ($app["user"]["priveleges"]["backend_access"] || (isset($page_data) && isset($page_data["cms_id"]))) : ?>
-
-  <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
-  <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>
-
-  <script src="/src/highlight.min.js?v=<?= RELEASE ?>"></script>
-  <script src="/src/quill-2.0.js?v=<?= RELEASE ?>"></script>
-
-  <!--<script src="/src/quill-better-table.min.js?v=<?= RELEASE ?>"></script>-->
-
-  <!--<link rel="stylesheet" href="/src/quill-better-table.css?v=<?= RELEASE ?>" />-->
-<?php endif ?>
-<link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">
-
-
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
 
@@ -113,5 +100,3 @@
 
   <?php endif ?>
 </style>
-
-<!--<link href="/admin/tools/cms.css?v=<?= RELEASE ?>" rel="stylesheet">-->

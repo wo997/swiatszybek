@@ -46,7 +46,7 @@
         </label>
       </div>
 
-      <button class="btn primary big" style="margin:10px 0; width: 100%" onclick="login()" data-submit>
+      <button class="btn primary medium" style="margin:10px 0; width: 100%" onclick="login()" data-submit>
         Zaloguj się
         <i class="fa fa-chevron-right"></i>
       </button>
@@ -93,3 +93,11 @@ if (isset($JS_files)) {
 }
 
 ?>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script src="/src/swiper.min.js"></script>
+<link rel="stylesheet" href="/src/swiper.min.css">
+
+<link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">

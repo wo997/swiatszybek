@@ -1,0 +1,52 @@
+/* css[global] */
+
+input,
+select {
+  font-size: 1em;
+}
+
+/* buttons */
+.btn {
+  font-size: 15px;
+}
+.btn.medium {
+  font-size: 18px;
+  padding: 0.3em 0.7em;
+}
+.btn.big {
+  font-size: 22px;
+  padding: 0.35em 0.9em;
+}
+.btn.large {
+  font-size: 29px;
+  padding: 0.35em 0.9em;
+}
+.btn.xlarge {
+  font-size: 38px;
+  padding: 0.35em 0.9em;
+}
+/* buttons */
+
+body,
+.ql-editor,
+.ql-size .ql-picker-options {
+  font-size: 15px;
+}
+
+/*
+@media only screen and (min-width: 900px) {
+  body,
+  .ql-editor,
+  .ql-size .ql-picker-options {
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  body,
+  .ql-editor,
+  .ql-size .ql-picker-options {
+    font-size: 17px;
+  }
+}
+*/

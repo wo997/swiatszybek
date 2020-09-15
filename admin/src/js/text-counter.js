@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[admin] */
 
 function registerTextCounters() {
   $$("[data-show-count]:not(.registered)").forEach((e) => {

@@ -4,7 +4,6 @@ $parts = explode("/", $url);
 if (isset($parts[2])) {
     $kod_id = intval($parts[2]);
 
-    //$kod_data = fetchRow("SELECT kod_id, kwota, kod, user_id_list, product_id_list, product_list_metadata, date_from, date_to, ilosc, type FROM kody_rabatowe WHERE kod_id = $kod_id");
     $kod_data = fetchRow("SELECT * FROM kody_rabatowe WHERE kod_id = $kod_id");
 } else {
     $kod_data = [

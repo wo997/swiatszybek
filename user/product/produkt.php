@@ -572,7 +572,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
       if (juzMasz != "") {
         juzMasz = "<h3 style='margin:25px 0 10px'>W Twoim koszyku już " + (total == 1 && false ? "jest" : "są") + ":</h3><table class='item-list'>" + juzMasz + "</table>";
-        juzMasz += `<a class="btn primary big fill" href="/zakup" style="margin-top: 20px">
+        juzMasz += `<a class="btn primary medium fill" href="/zakup" style="margin-top: 20px">
                         Przejdź do koszyka
                         <i class="fa fa-chevron-right"></i>
                       </a>`;

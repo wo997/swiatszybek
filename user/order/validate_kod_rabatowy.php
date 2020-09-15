@@ -11,7 +11,7 @@ if ($action == "remove") {
     die;
 }
 
-$kod_data = fetchRow("SELECT kwota, user_id_list, product_list_metadata, ilosc, date_from, date_to, type FROM kody_rabatowe WHERE kod = ? ORDER BY kod_id DESC LIMIT 1", [$kod]);
+$kod_data = fetchRow("SELECT kwota, user_id_list, product_list, ilosc, date_from, date_to, type FROM kody_rabatowe WHERE kod = ? ORDER BY kod_id DESC LIMIT 1", [$kod]);
 
 if ($kod_data) {
     $now = strtotime(date("Y-m-d"));
@@ -33,7 +33,7 @@ if ($kod_data) {
 
     // products start
     $error = "";
-    foreach (json_decode($kod_data["product_list_metadata"], true) as $required_product_id => $required_product) {
+    foreach (json_decode($kod_data["product_list"], true) as $required_product_id => $required_product) {
         $basket_product_quantity = 0;
         foreach ($app["user"]["basket"]["variants"] as $variant) {
             if ($required_product_id == $variant['product_id']) {

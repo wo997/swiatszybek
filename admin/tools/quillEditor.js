@@ -117,6 +117,7 @@ const fontAwesomeList = [
   "far fa-thumbs-down",
   "fas fa-star",
   "far fa-star",
+  "fas fa-dice-three",
 ];
 
 window.quillEditor = {
@@ -558,16 +559,11 @@ window.quillEditor = {
   },
   loaded: () => {
     var Size = Quill.import("attributors/style/size");
-    Size.whitelist = [
-      "14px",
-      "18px",
-      "24px",
-      "30px",
-      "38px",
-      "48px",
-      "60px",
-      "80px",
-    ];
+    Size.whitelist = [];
+    for (let i = 0; i < 10; i++) {
+      Size.whitelist.push(Math.round(Math.pow(1.25, i - 2) * 100) / 100 + "em");
+    }
+
     Quill.register(Size, true);
 
     let Inline = Quill.import("blots/inline");
@@ -854,6 +850,10 @@ window.quillEditor = {
         ],
         table: true,
       },
+    });
+
+    $$(".ql-size .ql-picker-options .ql-picker-item").forEach((e) => {
+      e.style.fontSize = e.getAttribute("data-value");
     });
 
     var toolbar = $("#quillEditor .ql-toolbar.ql-snow");

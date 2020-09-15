@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[admin] */
 
 var hide_complicated_btn = `<div class="btn secondary fas fa-tools complicated_btn" onclick='toggleComplicatedVisibility()' data-tooltip="Pokaż zaawansowane opcje"></div>`;
 

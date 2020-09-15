@@ -49,8 +49,6 @@ function showCategory($category, $level = 0)
 <head>
   <?php include "global/includes.php"; ?>
 
-  <link rel="stylesheet" href="/modules/product_list/main.css?v=<?= RELEASE ?>">
-
   <style>
     .category-picker-row>*,
     .category-picker-row>*>* {
@@ -191,21 +189,14 @@ function showCategory($category, $level = 0)
       margin-bottom: 0.3em;
     }
 
-    /*.search-wrapper .fas {
-      color: #c22;
-    }*/
-
     .product_list-animation-wrapper {
-      transition: height 0.3s;
       position: relative;
-      height: 0px;
       overflow: hidden;
     }
 
     .product_list-container-swap,
     .product_list-container-swap-background {
       position: absolute;
-      transition: opacity 0.3s;
       top: 0;
       left: 0;
       width: 100%;
@@ -214,15 +205,14 @@ function showCategory($category, $level = 0)
     }
 
     .product_list-container-swap-background {
-      /*top: 100%;*/
       height: 10000px;
+      top: 100%;
     }
-
-    .product_list-container {}
 
     .under-products {
       position: relative;
       box-shadow: 0px 0px 25px 25px rgba(255, 255, 255, 1);
+      margin-bottom: 50px;
     }
 
     .order_by_item {
@@ -292,11 +282,23 @@ function showCategory($category, $level = 0)
       display: flex;
       margin: 0 -10px
     }
+
+    .horizontal-scroll-wrapper .order_by_item>span {
+      min-width: 38vw !important;
+      text-align: center;
+    }
+
+    @media only screen and (min-width: 500px) {
+      .horizontal-scroll-wrapper .order_by_item>span {
+        min-width: 21vw !important;
+        text-align: center;
+      }
+    }
   </style>
 
   <script>
     var currPage = 1;
-    var rowCount = 6;
+    var rowCount = 24;
     var searchParams = {};
     var searchingProducts = false;
 
@@ -310,6 +312,7 @@ function showCategory($category, $level = 0)
       window.productListAnimationNode = $(".product_list-animation-wrapper");
       window.productListSwapNode = $(".product_list-container-swap");
       window.productListSwapBackgroundNode = $(".product_list-container-swap-background");
+      window.paginationNode = $(".under-products .pagination");
 
       $$(".order_by_item input").forEach(e => {
         e.addEventListener("change", () => {
@@ -434,55 +437,97 @@ function showCategory($category, $level = 0)
           } else {
             res.content = `<div style='height:50px'></div>${res.content}<div style='height:50px'></div>`;
           }
-          productListSwapNode.style.animation = "fadeIn 0.3s";
-          productListSwapBackgroundNode.style.animation = "fadeIn 0.3s";
-          productListSwapBackgroundNode.style.visibility = "";
+          var duration = 300;
+
+          var was_h = productListAnimationNode.getBoundingClientRect().height;
 
           productListSwapNode.setContent(res.content);
+
+          setProductListGridDimensions(productListSwapNode.find(".product_list_module.grid"));
 
           lazyLoadImages(false);
 
           setCustomHeights();
-          //productListNode.style.animation = "fadeOut 0.3s";
 
           var h = productListSwapNode.getBoundingClientRect().height;
 
-          productListAnimationNode.style.height = h + "px";
+          animate(
+            productListAnimationNode,
+            duration,
+            `
+              0% {
+                height: ${Math.round(was_h)}px;
+              }
+              100% {
+                height: ${Math.round(h)}px;
+              }
+            `
+          );
 
-          productListSwapBackgroundNode.style.top = h + "px";
+          animate(
+            productListSwapNode,
+            duration,
+            `
+              0% {
+                opacity: 0;
+              }
+              100% {
+                opacity: 1;
+              }
+            `
+          );
+
+          productListSwapBackgroundNode.style.visibility = "";
+          animate(
+            productListSwapBackgroundNode,
+            duration,
+            `
+            0% {
+              height: ${Math.round(was_h)}px;
+            }
+            100% {
+              height: ${Math.round(h)}px;
+            }
+          `,
+            () => {
+              productListSwapBackgroundNode.style.visibility = "hidden";
+            }
+          );
+
 
           setTimeout(() => {
             productListNode.setContent(productListSwapNode.innerHTML);
             productListSwapNode.empty();
-
-            productListSwapNode.style.animation = "";
-            productListSwapBackgroundNode.style.animation = "";
-            productListSwapBackgroundNode.style.visibility = "hidden";
-            productListNode.style.animation = "";
-
             searchingProducts = false;
-            //productListAnimationNode.style.height = "";
           }, 300);
 
-          renderPagination(
-            $(".pagination"),
-            currPage,
-            res.pageCount,
-            (i) => {
-              currPage = i;
-              scrollToElement($(".hook_view"), {
-                top: true,
-                offset: 250,
-                sag: 100,
-                duration: 30
-              });
-              searchProducts(true);
-              //setTimeout(() => {
-              //}, 50);
-            }
-          );
+          if ($(".order_by_item input[value='random']:checked")) {
+            paginationNode.setContent(`
+              <button class='btn primary medium' onclick='beforeSearchProducts()'>Losuj więcej <i class='fas fa-dice-three'></i></button>
+            `);
+          } else {
+            renderPagination(
+              paginationNode,
+              currPage,
+              res.pageCount,
+              (i) => {
+                currPage = i;
+                scrollToTopOfProductList();
+              }
+            );
+          }
         }
       })
+    }
+
+    function beforeSearchProducts() {
+      scrollToElement($(".hook_view"), {
+        top: true,
+        offset: 300,
+        sag: 100,
+        duration: 30
+      });
+      searchProducts(true);
     }
 
     function attributeSelectionChange(checkbox, hasChildren) {
