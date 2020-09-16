@@ -536,7 +536,6 @@ input[type="radio"]:not([value=""]):checked {
 table input[type="number"] {
   width: 100px;
   text-align: center;
-  padding: 1px;
 }
 
 .oneline {

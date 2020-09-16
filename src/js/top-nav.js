@@ -1,6 +1,6 @@
 /* js[global] */
 
-if (!IS_MOBILE) {
+if (window.innerWidth >= 1200) {
   window.addEventListener("DOMContentLoaded", () => {
     $$("nav > div").forEach((e) => {
       e.addEventListener("mouseenter", () => {

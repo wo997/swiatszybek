@@ -22,6 +22,7 @@
   color: var(--subtle-font-clr);
 }
 
-body {
+body,
+.btn {
   font-size: 14px;
 }

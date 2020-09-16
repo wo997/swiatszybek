@@ -188,6 +188,10 @@ function hideModal(name, isCancel = false) {
   }
 }
 
+function anyModalActive() {
+  return !!$("#modal-wrapper.displayModal");
+}
+
 function isModalActive(name) {
   var next = $(`#${name}`);
   var anythingAbove = false;

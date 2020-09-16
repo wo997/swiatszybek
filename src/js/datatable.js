@@ -850,12 +850,11 @@ function createDatatable(datatable) {
 
     if (datatable.sortable) {
       var index = 0;
-      datatable.selectionBodyElement
-        .findAll(".kolejnosc-column .kolejnosc")
-        .forEach((e) => {
-          index++;
-          e.value = index;
-        });
+      datatable.selectionBodyElement.findAll(".kolejnosc").forEach((e) => {
+        index++;
+        e.value = index;
+        e.setAttribute("data-value", index);
+      });
     }
   };
   if (datatable.selectable && datatable.selectable.has_metadata) {
@@ -919,8 +918,7 @@ window.addEventListener("dragstart", (event) => {
 window.addEventListener("dragend", () => {
   if (datatableRearrange.source) {
     var input = datatableRearrange.source.find(".kolejnosc");
-    input.value = datatableRearrange.placeTo;
-    rearrange(input);
+    input.setValue(datatableRearrange.placeTo);
   }
   removeClasses("grabbed");
   $$(".tableRearrange").forEach((e) => {
@@ -931,7 +929,6 @@ window.addEventListener("dragend", () => {
 
 function rearrange(input) {
   var wasIndex = input.getAttribute("data-value");
-  input.setAttribute("data-value", input.getValue());
 
   var datatable = getParentDatatable(input);
 

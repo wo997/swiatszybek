@@ -20,6 +20,9 @@ function setProductListSwiperDimensions(node) {
 
 var productListCounter = 0;
 function setProductListGridDimensions(node) {
+  if (!node) {
+    return;
+  }
   var product_list_id = "";
 
   if (node.hasAttribute("data-product-list-id")) {

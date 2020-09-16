@@ -7,8 +7,8 @@
         <div class="swiper-wrapper">
           <?= $galleryhtml ?>
         </div>
-        <div class="swiper-button-next"><img src="/img/chevron.svg"></div>
-        <div class="swiper-button-prev"><img src="/img/chevron.svg"></div>
+        <div class="swiper-nav swiper-button-next"><img src="/img/chevron.svg"></div>
+        <div class="swiper-nav swiper-button-prev"><img src="/img/chevron.svg"></div>
       </div>
       <div class="swiper-container gallery-thumbs">
         <div class="swiper-wrapper">

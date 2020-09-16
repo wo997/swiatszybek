@@ -311,6 +311,7 @@ function showCategory($category, $level = 0)
       window.productListNode = $(".product_list-container");
       window.productListAnimationNode = $(".product_list-animation-wrapper");
       window.productListSwapNode = $(".product_list-container-swap");
+      window.productListSwapContentNode = $(".product_list-container-swap-content");
       window.productListSwapBackgroundNode = $(".product_list-container-swap-background");
       window.paginationNode = $(".under-products .pagination");
 
@@ -325,6 +326,10 @@ function showCategory($category, $level = 0)
       }
 
       searchProducts();
+
+      attributeSelectionChange(null, null);
+
+      window.filtersInitialState = getFormData(".filters");
 
       if (window.innerWidth < 800) {
         $$(".search-wrapper .search-header").forEach(e => {
@@ -346,10 +351,20 @@ function showCategory($category, $level = 0)
         registerModalContent(`
             <div id="searchFilters" data-expand>
                 <div class="modal-body">
-                    <button class="fas fa-times close-modal-btn"></button>
-                    <h3 class="header">Filtry</h3>
+                    <button class="fas fa-times close-modal-btn" onclick="restoreFilters();afterFiltersHidden();"></button>
+                    <h3 class="header">Filtry <span class="filter_count"></span></h3>
                     <div class="scroll-panel scroll-shadow panel-padding">
                       
+                    </div>
+                    <div style='display:flex;padding:5px'>
+                      <button class="btn secondary fill" onclick="clearAllFilters()">
+                        Wyczyść filtry
+                        <i class="fas fa-times"></i>
+                      </button>
+                      <button class="btn primary fill" style='margin-left:5px' onclick="hideParentModal(this);afterFiltersHidden()">
+                        Pokaż wyniki
+                        <i class="fas fa-chevron-right"></i>
+                      </button>
                     </div>
                 </div>
             </div>
@@ -384,7 +399,35 @@ function showCategory($category, $level = 0)
       }
     });
 
+    var blockSearch = false;
+
+    function beforeFiltersShown() {
+      blockSearch = true;
+      window.filtersStateBeforeOpen = getFormData(".filters");
+    }
+
+    function restoreFilters() {
+      setFormData(window.filtersStateBeforeOpen, ".filters");
+    }
+
+    function afterFiltersHidden() {
+      blockSearch = false;
+      searchProducts();
+    }
+
+    function clearAllFilters() {
+      /*$$(".filters input[type='checkbox']").forEach(e => {
+        e.setValue(0);
+      })*/
+
+      setFormData(window.filtersInitialState, ".filters");
+    }
+
     function searchProducts(forceSearch = false) {
+      if (blockSearch) {
+        return;
+      }
+
       if (searchingProducts) {
         setTimeout(() => {
           searchingProducts = false;
@@ -394,7 +437,6 @@ function showCategory($category, $level = 0)
       }
 
       searchingProducts = true;
-
       var attribute_value_ids = [];
       $$(".combo-select-wrapper[data-attribute_id]").forEach(list => {
         var attribute_value_sub_ids = [];
@@ -433,7 +475,7 @@ function showCategory($category, $level = 0)
         },
         success: (res) => {
           if (res.totalRows == 0) {
-            res.content = "<div style='font-size:20px;padding: 100px 10px;text-align:center;font-weight:bold'>Brak produktów</div>";
+            res.content = "<div style='font-size:20px;padding: 60px 10px;text-align:center;font-weight:bold'>Brak produktów</div>";
           } else {
             res.content = `<div style='height:50px'></div>${res.content}<div style='height:50px'></div>`;
           }
@@ -441,15 +483,15 @@ function showCategory($category, $level = 0)
 
           var was_h = productListAnimationNode.getBoundingClientRect().height;
 
-          productListSwapNode.setContent(res.content);
+          productListSwapContentNode.setContent(res.content);
 
-          setProductListGridDimensions(productListSwapNode.find(".product_list_module.grid"));
+          setProductListGridDimensions(productListSwapContentNode.find(".product_list_module.grid"));
 
           lazyLoadImages(false);
 
           setCustomHeights();
 
-          var h = productListSwapNode.getBoundingClientRect().height;
+          var h = productListSwapContentNode.getBoundingClientRect().height;
 
           animate(
             productListAnimationNode,
@@ -464,6 +506,7 @@ function showCategory($category, $level = 0)
             `
           );
 
+          productListSwapBackgroundNode.style.visibility = "";
           animate(
             productListSwapNode,
             duration,
@@ -474,32 +517,14 @@ function showCategory($category, $level = 0)
               100% {
                 opacity: 1;
               }
-            `
-          );
-
-          productListSwapBackgroundNode.style.visibility = "";
-          animate(
-            productListSwapBackgroundNode,
-            duration,
-            `
-            0% {
-              height: ${Math.round(was_h)}px;
-            }
-            100% {
-              height: ${Math.round(h)}px;
-            }
-          `,
+            `,
             () => {
               productListSwapBackgroundNode.style.visibility = "hidden";
+              searchingProducts = false;
+              productListNode.setContent(productListSwapNode.innerHTML);
+              productListSwapContentNode.empty();
             }
           );
-
-
-          setTimeout(() => {
-            productListNode.setContent(productListSwapNode.innerHTML);
-            productListSwapNode.empty();
-            searchingProducts = false;
-          }, 300);
 
           if ($(".order_by_item input[value='random']:checked")) {
             paginationNode.setContent(`
@@ -513,6 +538,7 @@ function showCategory($category, $level = 0)
               (i) => {
                 currPage = i;
                 scrollToTopOfProductList();
+                searchProducts(true);
               }
             );
           }
@@ -520,18 +546,22 @@ function showCategory($category, $level = 0)
       })
     }
 
-    function beforeSearchProducts() {
+    function scrollToTopOfProductList() {
       scrollToElement($(".hook_view"), {
         top: true,
         offset: 300,
         sag: 100,
         duration: 30
       });
+    }
+
+    function beforeSearchProducts() {
+      scrollToTopOfProductList();
       searchProducts(true);
     }
 
     function attributeSelectionChange(checkbox, hasChildren) {
-      if (hasChildren) {
+      if (checkbox && hasChildren) {
         var list = checkbox.parent().next();
         if (!checkbox.checked) {
           list.findAll(":checked").forEach(subCheckbox => {
@@ -540,6 +570,21 @@ function showCategory($category, $level = 0)
         }
         expand(list, checkbox.checked);
       }
+
+      var filter_count = $$(".filters input[type='checkbox']:checked").length;
+      if (filter_count > 0) {
+        filter_count = `(${filter_count})`;
+      } else {
+        filter_count = "";
+      }
+
+      $$(".filter_count").forEach(e => {
+        e.innerHTML = filter_count;
+      });
+
+      $$(".case_any_filters").forEach(e => {
+        e.style.display = filter_count ? "" : "none";
+      });
 
       searchProducts();
     }
@@ -555,8 +600,8 @@ function showCategory($category, $level = 0)
         <i class="fas fa-list"></i> Kategorie
       </button>
 
-      <button class="btn secondary medium fill mobile-search-btn search-filters-btn" onclick="showModal('searchFilters', {source:this})">
-        <i class="fas fa-sliders-h"></i> Filtry
+      <button class="btn secondary medium fill mobile-search-btn search-filters-btn" onclick="beforeFiltersShown();showModal('searchFilters', {source:this})">
+        <i class="fas fa-sliders-h"></i> Filtry <span class="filter_count"></span>
       </button>
 
       <div class="search-header"><i class="fas fa-list"></i> Kategorie</div>
@@ -613,7 +658,7 @@ function showCategory($category, $level = 0)
             }
             $html .= "<div class='attributes-list-wrapper'>";
             $html .= "<label class='attribute-label'>";
-            $html .= "<input type='checkbox' value='" . $value_data["values"]["value_id"] . "'";
+            $html .= "<input type='checkbox' name='chk_" . $value_data["values"]["value_id"] . "' value='" . $value_data["values"]["value_id"] . "'";
             $html .= " onchange='attributeSelectionChange(this,";
             $html .= nonull($value_data, "children", []) ? "true" : "false";
             $html .= ")'";
@@ -684,8 +729,17 @@ function showCategory($category, $level = 0)
         }
 
         if ($output) {
-          echo '<div class="search-header"><i class="fas fa-sliders-h"></i> Filtry</div>';
-          echo $output;
+          echo "
+            <div class='search-header'>
+            <i class='fas fa-sliders-h'></i>
+              Filtry
+              <span class='filter_count'></span>
+              <button class='btn subtle case_any_filters' onclick='clearAllFilters()' data-tooltip='Wyczyść filtry' data-position='right' style='margin:-10px 0'>
+                <img src='/src/img/clear-filters.png' style='width: 25px;margin: -7px;'>
+              </button>
+            </div>
+            $output
+          ";
         }
 
         ?>
@@ -708,8 +762,10 @@ function showCategory($category, $level = 0)
           ?>
         </div>
 
-        <div class="product_list-container-swap-background"></div>
-        <div class="product_list-container-swap"></div>
+        <div class="product_list-container-swap">
+          <div class="product_list-container-swap-content"></div>
+          <div class="product_list-container-swap-background"></div>
+        </div>
       </div>
 
       <div class="under-products">
