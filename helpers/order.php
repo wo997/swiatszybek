@@ -225,7 +225,7 @@ function getBasketContent()
             $basketContent .= "
                 <div>
                     <a href='" . getProductLink($basket_variant["product_id"], $basket_variant["link"]) . "'>
-                        <img data-src='" . $basket_variant["zdjecie"] . "' style='width: 100%;height: 120px;object-fit: contain;margin-top:10px'>
+                        <img data-src='" . $basket_variant["zdjecie"] . "' style='width: 80%;margin:10px 10% 5px;object-fit: contain;'>
                         <div class='item-desc'>
                             <span>
                                 <h3>$title_html<b>" . $basket_quantity . "</b></h3>
@@ -274,7 +274,7 @@ function printBasketTable()
             : "<button type='button' style='visibility:hidden'>+</button>";
 
         $res .= "<tr data-variant_id='" . $v["variant_id"] . "'>
-                <td><img src='/uploads/sm" . getUploadedFileName($v["zdjecie"]) . "' style='max-width:130px;display:block;margin:auto'></td>
+                <td><img src='/uploads/sm" . getUploadedFileName($v["zdjecie"]) . "' data-height='1w' style='width:min(130px,100%);display:block;margin:auto;object-fit:contain'></td>
                 <td><a class='linkable' href='" . getProductLink($v["product_id"], $v["link"]) . "'>" . $v["title"] . " " . $v["name"] . "</a></td>
                 <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</td>
                 <td class='oneline' data-stock='$stock'>$remove $quantity szt. $add</td>

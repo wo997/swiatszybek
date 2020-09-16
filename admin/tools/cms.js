@@ -337,13 +337,13 @@ var moduleListModalLoaded = () => {
     if (module.form_html) {
       registerModalContent(`
               <div id="module_${module_name}" data-expand>
-                  <div>
+                  <div class="modal-body">
                       <div class="custom-toolbar">
                           <span class="title">${module.description}</span>
                           <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
                           <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
                       </div>
-                      <div style="padding:10px">
+                      <div class="scroll-panel scroll-shadow panel-padding">
                           ${module.form_html}
                       </div>
                   </div>

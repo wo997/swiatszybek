@@ -24,10 +24,9 @@
   order: 10;
 }
 .quill-editor-container {
-  /*overflow-y: auto;*/
   display: flex;
   height: auto;
-  margin: auto;
+  margin: auto !important;
   width: 100%;
 }
 .quill-editor-container .ql-editor {

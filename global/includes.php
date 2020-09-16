@@ -1,6 +1,8 @@
 <script>
   const RELEASE = <?= RELEASE ?>; // manage versioning of assets
   const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
+  const USER_ID = <?= nonull($app["user"], "id", 0) ?>;
+  const IS_ADMIN = <?= $app["user"]["priveleges"]["backend_access"] ? "true" : "false" ?>;
   const USER_TYPE = "<?= $app["user"]["type"] ?>";
 
   <?php $sizes = ["lg" => null, "sm" => 800]; ?>

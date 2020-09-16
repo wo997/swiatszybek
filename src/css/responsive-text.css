@@ -8,22 +8,19 @@ select {
 /* buttons */
 .btn {
   font-size: 15px;
+  padding: 0.3em 0.7em;
 }
 .btn.medium {
   font-size: 18px;
-  padding: 0.3em 0.7em;
 }
 .btn.big {
   font-size: 22px;
-  padding: 0.35em 0.9em;
 }
 .btn.large {
   font-size: 29px;
-  padding: 0.35em 0.9em;
 }
 .btn.xlarge {
   font-size: 38px;
-  padding: 0.35em 0.9em;
 }
 /* buttons */
 

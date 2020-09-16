@@ -208,43 +208,45 @@ function createDatatable(datatable) {
   var headersHTML = "<tr>";
   var columnStyles = [];
 
-  var sumWidthPercentages = 0;
-  for (def of datatable.definition) {
-    if (def.width && def.width.indexOf("%") != -1) {
-      sumWidthPercentages += parseFloat(def.width);
+  if (datatable.definition) {
+    var sumWidthPercentages = 0;
+    for (def of datatable.definition) {
+      if (def.width && def.width.indexOf("%") != -1) {
+        sumWidthPercentages += parseFloat(def.width);
+      }
     }
+    var scalePercentages = 100 / sumWidthPercentages;
+    for (def of datatable.definition) {
+      if (def.width && def.width.indexOf("%") != -1) {
+        def.width = Math.round(parseFloat(def.width) * scalePercentages) + "%";
+      }
+    }
+
+    var def_id = -1;
+    for (header of datatable.definition) {
+      def_id++;
+      var additional_html = "";
+      if (header.sortable) {
+        var sortBy = header.sortable === true ? header.field : header.sortable;
+        additional_html += ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')" data-tooltip="Sortuj malejąco / rosnąco"></i>&nbsp;`;
+      }
+      if (header.searchable) {
+        additional_html += `<i class="btn primary fas fa-search datatable-search-btn" data-field="${header.field}" onclick="datatableFilter(this,'${def_id}')" data-tooltip="Filtruj wyniki"></i>`;
+      }
+
+      var style = "";
+      if (header.width) style += `style='width:${header.width}'`;
+      if (header.className) style += `class='${header.className}'`;
+
+      if (additional_html) {
+        additional_html = `<span class='table-header-buttons'>${additional_html}</span>`;
+      }
+
+      headersHTML += `<th ${style}><span>${header.title} </span>${additional_html}</th>`;
+      columnStyles.push(style);
+    }
+    headersHTML += "</tr>";
   }
-  var scalePercentages = 100 / sumWidthPercentages;
-  for (def of datatable.definition) {
-    if (def.width && def.width.indexOf("%") != -1) {
-      def.width = Math.round(parseFloat(def.width) * scalePercentages) + "%";
-    }
-  }
-
-  var def_id = -1;
-  for (header of datatable.definition) {
-    def_id++;
-    var additional_html = "";
-    if (header.sortable) {
-      var sortBy = header.sortable === true ? header.field : header.sortable;
-      additional_html += ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')" data-tooltip="Sortuj malejąco / rosnąco"></i>&nbsp;`;
-    }
-    if (header.searchable) {
-      additional_html += `<i class="btn primary fas fa-search datatable-search-btn" data-field="${header.field}" onclick="datatableFilter(this,'${def_id}')" data-tooltip="Filtruj wyniki"></i>`;
-    }
-
-    var style = "";
-    if (header.width) style += `style='width:${header.width}'`;
-    if (header.className) style += `class='${header.className}'`;
-
-    if (additional_html) {
-      additional_html = `<span class='table-header-buttons'>${additional_html}</span>`;
-    }
-
-    headersHTML += `<th ${style}><span>${header.title} </span>${additional_html}</th>`;
-    columnStyles.push(style);
-  }
-  headersHTML += "</tr>";
 
   datatable.headersHTML = headersHTML;
   datatable.columnStyles = columnStyles;
@@ -893,11 +895,14 @@ var datatableRearrange = {};
 
 window.addEventListener("dragstart", (event) => {
   var target = $(event.target);
-  if (target.tagName != "TR") {
+  if (!target.hasAttribute("draggable")) {
+    event.preventDefault();
     return;
   }
-  if (target.findParentByClassName("has_selected_rows")) {
-    event.preventDefault();
+  if (
+    target.tagName != "TR" ||
+    target.findParentByClassName("has_selected_rows")
+  ) {
     return;
   }
 

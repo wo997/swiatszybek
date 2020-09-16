@@ -197,7 +197,7 @@ textarea {
   color: white;
 }
 .btn.buff {
-  padding: 0.45em 1.2em;
+  padding: .55em 1.3em;
 }
 .btn:not(:disabled):hover {
   filter: brightness(1.1);
@@ -456,9 +456,7 @@ input[type="radio"] {
 }
 input[type="radio"]:not([value=""]):checked {
   background-color: var(--primary-clr);
-  
-  
-  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.2);
 }
 
 .username {

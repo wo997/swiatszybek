@@ -630,6 +630,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         wait = false;
 
         setTimeout(function() {
+          setCustomHeights();
           var view = $(`[data-view='${scroll}`);
           if (view) {
             scrollToView(view);

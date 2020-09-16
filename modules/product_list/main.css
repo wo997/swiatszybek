@@ -37,34 +37,17 @@
   display: block;
 }
 
+@media only screen and (min-width: 1200px) {
+  .product-block {
+    font-size: 1.1em;
+  }
+}
+
 /* grid */
 .grid {
   display: flex;
   flex-wrap: wrap;
 }
-
-/*.grid .product {
-  padding: 2% 1%;
-}
-
-.grid > .product {
-  width: 100%;
-}
-@media only screen and (min-width: 700px) {
-  .grid > .product {
-    width: 50%;
-  }
-}
-@media only screen and (min-width: 1000px) {
-  .grid > .product {
-    width: 33.333%;
-  }
-}
-@media only screen and (min-width: 1400px) {
-  .grid > .product {
-    width: 25%;
-  }
-}*/
 
 /* slider */
 .slider .swiper-slide > .product img {

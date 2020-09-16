@@ -26,6 +26,9 @@ if (!IS_MOBILE) {
   });
 
   function hideFloatingCategory() {
+    if (!floatCategoryHovered) {
+      return;
+    }
     floatCategoryHovered.classList.remove("visible");
     dropdownButtonHovered.classList.remove("hovered");
 
