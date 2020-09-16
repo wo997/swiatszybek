@@ -19,7 +19,9 @@ if (window.innerWidth >= 1200) {
         floatCategoryHovered.style.left = rect.left + "px";
         floatCategoryHovered.style.top = rect.top + rect.height - 1 + "px";
         setTimeout(() => {
-          floatCategoryHovered.classList.add("visible");
+          if (floatCategoryHovered) {
+            floatCategoryHovered.classList.add("visible");
+          }
         });
       });
     });
