@@ -25,6 +25,11 @@ function preloadImage(img, animate = true) {
     var h = img.calculated_height;
 
     var r = img.getBoundingClientRect();
+
+    if (!r.width) {
+      return;
+    }
+
     var image_dimension = Math.max(r.width, r.height);
 
     var natural_image_dimension = Math.max(w, h);
@@ -127,10 +132,10 @@ function setImageDimensions(img) {
     img.removeAttribute("data-src");
     return rect;
   }
-  if (!rect.width) {
+  /*if (!rect.width) {
     img.style.width = `${data.w}px`;
     rect = img.getBoundingClientRect();
-  }
+  }*/
 
   img.calculated_width = data.w;
   img.calculated_height = data.h;

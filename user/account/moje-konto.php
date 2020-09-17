@@ -51,7 +51,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
       }
     }
 
-    .selected {
+    #accountForm .selected {
       color: white;
       background: var(--primary-clr);
       border-color: var(--primary-clr);

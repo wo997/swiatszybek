@@ -107,7 +107,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
     }
 
     header .navigation {
-      display: none;
+      transform: translateY(-100%);
+      pointer-events: none;
     }
 
     @media only screen and (min-width: 750px) {

@@ -99,6 +99,8 @@ function showModal(name = null, params = {}) {
 
   toggleBodyScroll(!visible);
 
+  lazyLoadImages();
+
   return visible;
 }
 

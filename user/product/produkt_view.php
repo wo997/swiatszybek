@@ -19,7 +19,7 @@
 
     <?php endif ?>
   </div>
-  <div style="width: 40%; box-sizing: border-box; margin-top: 20px">
+  <div style="width: 40%; margin-top: 20px">
     <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">
       <h1 class="h1"><?= $product_data["title"] ?>
         <?php if ($product_data["published"] != 1) : ?>
@@ -109,8 +109,8 @@
   </div>
 </div>
 
-<div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px; box-sizing:border-box">
-  <div style="align-items:flex-start;justify-content:space-evenly" class="mobileRow">
+<div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
+  <!--<div style="align-items:flex-start;justify-content:space-evenly" class="mobileRow">
     <section style="width:98%;margin:0 1%;max-width:450px" class="expandClick">
       <div class="expandHeader">
         <h3 style="margin:0">Opis produktu <i class="fas fa-plus"></i><i class="fas fa-minus"></i></h3>
@@ -129,7 +129,7 @@
         <?= "" ?>
       </div>
     </section>
-  </div>
+  </div>-->
 
   <div class="cms" style="margin:50px -10px;width: auto;"><?= getCMSPageHTML($product_data["description"]); ?></div>
 
@@ -178,7 +178,7 @@
         <input type="text" id="pseudonim" placeholder="Pseudonim" style="padding: 3px 5px;width:180px;" value="<?= isset($pseudonim) ? $pseudonim : "" ?>">
 
       </label>
-      <textarea id="tresc" data-required placeholder="Treść komentarza" style="padding: 3px 5px;box-sizing: border-box;display:block;width:100%;height:150px;min-height:100px;max-height:200px;resize:vertical;margin-top:8px"></textarea>
+      <textarea id="tresc" data-required placeholder="Treść komentarza" style="padding: 3px 5px;display:block;width:100%;height:150px;min-height:100px;max-height:200px;resize:vertical;margin-top:8px"></textarea>
       <button class="btn primary medium" onclick="newComment()" style="margin:8px 0 8px auto;display: block">Wyślij <i class="fas fa-paper-plane"></i></button>
     </div>
     <div id="commentSent" style="display:none">

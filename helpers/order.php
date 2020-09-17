@@ -218,29 +218,22 @@ function getBasketContent()
             $basket_quantity = $basket_variant["quantity"];
             $basket_quantity = $basket_quantity > 1 ? " - $basket_quantity szt." : "";
 
-            $title_html = "<span style='font-size:16px'>" . $basket_variant["title"] . "</span>";
+            /*$title_html = "<span style='font-size:16px'>" . $basket_variant["title"] . "</span>";
             if (!empty($basket_name))
-                $title_html .= "<br><span style='font-size:15px'>" . $basket_variant["name"] . "</span>";
+                $title_html .= "<br><span style='font-size:15px'>" . $basket_variant["name"] . "</span>";*/
 
             $basketContent .= "
                 <div>
                     <a href='" . getProductLink($basket_variant["product_id"], $basket_variant["link"]) . "'>
-                        <img data-src='" . $basket_variant["zdjecie"] . "' style='width: 80%;margin:10px 10% 5px;object-fit: contain;'>
-                        <div class='item-desc'>
-                            <span>
-                                <h3>$title_html<b>" . $basket_quantity . "</b></h3>
-                                <span class='pln'>" . $basket_variant["total_price"] . " zł</span>
-                            </span>
-                        </div>
+                        <img class='product-image' data-src='" . $basket_variant["zdjecie"] . "'>
+                        <h3 class='product-title'>" . $basket_variant["title"] . " " . $basket_variant["name"] . "</h3>
+                        <span class='product-price pln'>" . $basket_variant["total_price"] . " zł</span>
                     </a>
                 </div>";
         }
 
         $basketContent .=
-            '</div></div><div><a class="btn primary medium fill" href="/zakup" style="position:relative">
-            Przejdź do kasy
-            <i class="fa fa-chevron-right"></i>
-            </a></div></div>';
+            '</div></div></div>';
     }
     return $basketContent;
 }

@@ -55,6 +55,22 @@ if (window.innerWidth >= 1200) {
 
 window.addEventListener("DOMContentLoaded", () => {
   var top_nav = $(".navigation");
+  if (!top_nav) {
+    return;
+  }
+
+  var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  var collapsed = scrollTop > 100;
+  top_nav.classList.toggle("collapsed", collapsed);
+  setTimeout(() => {
+    top_nav.style.transition = "all 0.5s";
+  });
+
+  headerResizeCallback();
+});
+
+window.addEventListener("load", () => {
+  var top_nav = $(".navigation");
 
   document.addEventListener("scroll", () => {
     if (window.tempScrollTop) {
@@ -62,18 +78,12 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
     var movingDown = scrollTop >= nonull(window.scrollTop, 0);
-
-    //var offset = movingDown ? 50 : 250;
-
-    //top_nav.classList.toggle("collapsed", scrollTop > offset);
-    top_nav.classList.toggle("collapsed", movingDown && scrollTop > 100);
+    var collapsed = movingDown && scrollTop > 100;
+    top_nav.classList.toggle("collapsed", collapsed);
 
     window.scrollTop = scrollTop;
   });
-
-  headerResizeCallback();
 });
 
 window.addEventListener("resize", headerResizeCallback);
@@ -83,9 +93,12 @@ function headerResizeCallback() {
   if (!header) {
     return;
   }
+
   $(".header-height").style.marginBottom =
-    $(".navigation").getBoundingClientRect().height +
     $(".header-top").getBoundingClientRect().height +
+    (window.innerWidth >= 800
+      ? $(".navigation").getBoundingClientRect().height
+      : 0) +
     "px";
 }
 
@@ -94,6 +107,77 @@ window.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  //search
+  registerModalContent(`
+      <div id="mainSearch" data-expand>
+          <div class="modal-body">
+              <button class="fas fa-times close-modal-btn"></button>
+              <h3 class="header">Wyszukiwarka</h3>
+              <div class="scroll-panel scroll-shadow panel-padding">
+                
+              </div>
+          </div>
+      </div>
+  `);
+
+  $("#mainSearch .scroll-panel").appendChild($("header .main-search-wrapper"));
+
+  //user
+  var um = $("header .user-menu");
+  if (um) {
+    registerModalContent(`
+      <div id="userMenu" data-expand>
+          <div class="modal-body">
+              <button class="fas fa-times close-modal-btn"></button>
+              <h3 class="header">Moje konto</h3>
+              <div class="scroll-panel scroll-shadow panel-padding">
+                
+              </div>
+          </div>
+      </div>
+    `);
+
+    $("#userMenu .scroll-panel").appendChild(um);
+  }
+
+  $("#loginForm").setAttribute("data-expand", "");
+
+  $("header .user-wrapper a").addEventListener("click", function (event) {
+    showModal("userMenu", { source: this });
+    event.preventDefault();
+    return false;
+  });
+
+  //basket
+  registerModalContent(`
+    <div id="basketMenu" data-expand>
+        <div class="modal-body">
+            <button class="fas fa-times close-modal-btn"></button>
+            <h3 class="header">Koszyk</h3>
+            <div class="scroll-panel scroll-shadow panel-padding">
+              
+            </div>
+            <div style='display:flex;padding:5px'>
+              <a class="btn primary medium fill gotobuy" href="/zakup" style="position:relative">
+                Przejdź do kasy
+                <i class="fa fa-chevron-right"></i>
+              </a>
+            </div>
+        </div>
+    </div>
+  `);
+
+  var sc = $("header .nav_basket_content .scrollableContent");
+  $("#basketMenu .scroll-panel").appendChild(sc);
+  sc.classList.remove("scrollableContent");
+
+  $("header .basket-wrapper a").addEventListener("click", function (event) {
+    showModal("basketMenu", { source: this });
+    event.preventDefault();
+    return false;
+  });
+
+  //menu
   registerModalContent(`
       <div id="mainMenu" data-expand>
           <div class="modal-body">
@@ -107,15 +191,6 @@ window.addEventListener("DOMContentLoaded", () => {
   `);
 
   $("#mainMenu .scroll-panel").appendChild($(".navigation"));
-
-  $("header .nav-wrapper").insertAdjacentHTML(
-    "beforeend",
-    `
-      <button class='btn transparent' onclick='showModal("mainMenu", {source:this})'>
-        <img class="menu-icon" src="/src/img/menu_icon.svg">
-      </button>
-    `
-  );
 });
 
 // perform search
@@ -227,6 +302,9 @@ function topSearch() {
 
 window.addEventListener("DOMContentLoaded", () => {
   var ss = $("header .nav_basket_content .scrollableContent");
+  if (!ss) {
+    return;
+  }
   ss.addEventListener("mousewheel", (event) => {
     var h = ss.getBoundingClientRect().height;
     var y = ss.scrollTop;
@@ -240,6 +318,9 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   var uw = $("header .user-wrapper");
+  if (!uw) {
+    return;
+  }
   uw.addEventListener("mousewheel", (event) => {
     event.preventDefault();
   });

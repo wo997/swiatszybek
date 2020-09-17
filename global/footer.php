@@ -28,7 +28,7 @@
 
     <h3 class="header">Logowanie</h3>
 
-    <div class="scroll-panel scroll-shadow">
+    <div class="scroll-panel scroll-shadow panel-padding">
       <div class="field-title">E-mail</div>
       <input class="field" type="text" autocomplete="username" name="email" data-validate="backend|custom:validateLoginUserEmail|delay:300">
 
@@ -101,3 +101,5 @@ if (isset($JS_files)) {
 <link rel="stylesheet" href="/src/swiper.min.css">
 
 <link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">
+
+<div class="pretend-scrollbar"></div>

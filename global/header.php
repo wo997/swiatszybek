@@ -5,24 +5,26 @@
   <div class="header-top">
     <a href="/" class="logo-wrapper"><img src="/img/logo.png"></a>
 
-    <div class="main-search-wrapper glue-children case-desktop">
-      <input type="text" class="field inline" placeholder="Czego szukasz?">
+    <div class="main-search-wrapper case-desktop">
+      <label for="main_search" class="glue-children">
+        <input type="text" id="main_search" class="field inline" placeholder="Czego szukasz?">
+        <button class="btn primary">
+          <img class="search-icon" src="/src/img/search_icon.svg">
+        </button>
+      </label>
       <div class="search-results"></div>
-      <button class="btn primary">
-        <img class="search-icon" src="/src/img/search_icon.svg">
-      </button>
     </div>
 
     <div class="nav-wrapper">
       <div class="mobile-main-search-wrapper case-mobile">
-        <button class="btn transparent">
+        <button class="btn transparent" onclick='showModal("mainSearch", {source:this});$(".main-search-wrapper label").click()'>
           <img class="search-icon" src="/src/img/search_icon.svg">
         </button>
       </div>
       <div class="user-wrapper">
         <?php if ($app["user"]["id"]) : ?>
           <a href="/moje-konto" style="padding:8px 8px;margin-right: 5px;">
-            <div href="/moje-konto" style="display: inline-block;max-width: 250px;text-overflow: ellipsis;overflow: hidden;vertical-align: text-top;">
+            <div class="my-acc-text">
               <span class="case-desktop">Moje konto</span>
             </div>
             <img class="user-icon" src="/src/img/user_icon.svg">
@@ -54,8 +56,8 @@
           </a>
         <?php endif ?>
       </div>
-      <div class="basket">
-        <a href="/zakup" onclick="return !IS_MOBILE && !!+$('.basket_item_count').innerHTML">
+      <div class="basket-wrapper">
+        <a href="/zakup" onclick="return !!+$('.basket_item_count').innerHTML">
           <div style="text-align: center;font-size: 14px;font-weight: normal;">
             <span class="case-desktop">Koszyk</span>
             <div class="basket-icon-wrapper">
@@ -66,8 +68,16 @@
         </a>
         <div class="nav_basket_content">
           <?= getBasketContent() ?>
+          <a class="btn primary medium fill gotobuy" href="/zakup" style="position:relative">
+            Przejdź do kasy
+            <i class="fa fa-chevron-right"></i>
+          </a>
         </div>
       </div>
+
+      <button class='btn transparent case-mobile' onclick='showModal("mainMenu", {source:this})'>
+        <img class="menu-icon" src="/src/img/menu_icon.svg">
+      </button>
     </div>
   </div>
 

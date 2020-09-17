@@ -30,7 +30,8 @@ header .nav-wrapper {
 
 header {
   position: fixed;
-  width: 100%;
+  min-width: calc(100vw - 20px);
+  width: calc(100vw - var(--scrollbar-width));
   top: 0;
   left: 0;
   z-index: 600;
@@ -60,7 +61,6 @@ header nav {
   justify-content: space-around;
   background: #fafafa;
   overflow: hidden;
-  transition: all 0.5s;
   box-shadow: 0px 3px 14px -3px rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid #ccc;
 }
@@ -159,32 +159,40 @@ header .nav-wrapper {
   align-items: center;
 }
 
+.my-acc-text {
+  display: inline-block;
+  max-width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  vertical-align: text-top;
+}
+
 /* user end */
 
 /* basket start */
 
-header .basket {
+header .basket-wrapper {
   position: relative;
   max-width: 250px;
   height: 50px;
   min-width: 50px;
 }
-header .basket > a {
+header .basket-wrapper > a {
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 100%;
 }
-header .basket h2 {
+header .basket-wrapper h2 {
   margin: 0;
 }
 
-header .basket:hover .nav_basket_content {
+header .basket-wrapper:hover .nav_basket_content {
   opacity: 1;
   pointer-events: auto;
 }
 
-.basket .basket-icon {
+.basket-wrapper .basket-icon {
   width: 40px;
   vertical-align: middle;
   margin-bottom: 4px;
@@ -200,13 +208,13 @@ header .basket:hover .nav_basket_content {
   content: "";
 }
 
-.basket .basket-icon-wrapper {
+.basket-wrapper .basket-icon-wrapper {
   display: inline-block;
   position: relative;
   margin-top: 3px;
 }
 
-header .basket .basket_item_count {
+header .basket-wrapper .basket_item_count {
   font-weight: bold;
   position: absolute;
   display: inline-block;
@@ -239,6 +247,15 @@ header .basket .basket_item_count {
   z-index: 10000;
   right: 0;
 }
+
+.nav_basket_content .product-image,
+#basketMenu .product-image {
+  width: 80%;
+  margin: 10px 10% 5px;
+  object-fit: contain;
+  max-width: 80vw;
+}
+
 .basketSplit {
   display: flex;
   flex-direction: column;
@@ -250,10 +267,11 @@ header .basket .basket_item_count {
 .basketItemsWrapper {
   position: relative;
 }
-.scrollableContent {
+header .scrollableContent {
   padding: 20px 0;
   max-height: calc(100vh - 280px);
   overflow-y: auto;
+  padding: 10px;
 }
 .basketItemsWrapper::before {
   content: "";
@@ -313,7 +331,7 @@ header .main-search-wrapper {
   position: relative;
 }
 
-.main-search-wrapper:not(.active) .search-results {
+header .main-search-wrapper:not(.active) .search-results {
   display: none;
 }
 
@@ -360,4 +378,21 @@ header .main-search-wrapper input {
   width: 100%;
   padding: 8px 12px;
 }
+
+.main-search-wrapper {
+  position: relative;
+}
+#mainSearch .main-search-wrapper {
+  display: flex;
+}
+#mainSearch .main-search-wrapper label {
+  flex-grow: 1;
+}
+#mainSearch .main-search-wrapper label input {
+  width: 100%;
+}
+#mainSearch .result {
+  padding: 6px 9px;
+}
+
 /* search end */

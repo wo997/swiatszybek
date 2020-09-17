@@ -4,8 +4,22 @@
 function windowHeightResizeCallback() {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
+
+  if (document.body && !window.tempScrollTop) {
+    document.documentElement.style.setProperty(
+      "--scrollbar-width",
+      `${window.innerWidth - document.querySelector("html").clientWidth}px`
+    );
+  }
 }
+window.addEventListener("DOMContentLoaded", () => {
+  const observer = new ResizeObserver(() => {
+    windowHeightResizeCallback();
+  });
+  observer.observe(document.body);
+});
 windowHeightResizeCallback();
+
 window.addEventListener("resize", windowHeightResizeCallback);
 window.addEventListener("touchend", windowHeightResizeCallback);
 
@@ -117,6 +131,7 @@ function toggleBodyScroll(enable) {
     document.body.style.top = `0px`;
     window.scrollTo({ top: window.tempScrollTop });
     window.tempScrollTop = null;
+    windowHeightResizeCallback();
   } else {
     document.body.classList.add("disable-scroll");
     document.body.style.top = `-${window.tempScrollTop}px`;

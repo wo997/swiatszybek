@@ -9,6 +9,13 @@ function addItemtoBasket(variant_id, diff, callback) {
     success: (res) => {
       setContent($(".nav_basket_content"), res.basket_content_html);
 
+      var bm = $("#basketMenu .scroll-panel");
+      var sc = $("header .nav_basket_content .scrollableContent");
+      if (bm && sc) {
+        bm.empty();
+        bm.appendChild(sc);
+      }
+
       $$(".basket_item_count").forEach((e) => {
         e.innerHTML = res.item_count;
       });
