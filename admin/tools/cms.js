@@ -279,7 +279,7 @@ function addContainer(
       getContainer(content)
     );
   }
-  delayActions();
+  cmsDelayActions();
   cmsHistoryPush();
 }
 
@@ -307,7 +307,7 @@ function addBlock(content = "", container = null, placeAfter = true) {
       getBlock(content)
     );
   }
-  delayActions();
+  cmsDelayActions();
   cmsHistoryPush();
 }
 
@@ -412,7 +412,7 @@ function blockWidth(width) {
 
 function deleteContainer(nodeToDelete = null, pushHistory = true) {
   if (!cmsTarget) return;
-  delayActions();
+  cmsDelayActions();
   hideCMSContainerHeader();
   let node = $(nodeToDelete ? nodeToDelete : cmsTarget);
   var h = node.getBoundingClientRect().height;
@@ -442,7 +442,7 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
       return;
     }
   }
-  delayActions();
+  cmsDelayActions();
   hideCMSBlockHeader();
   let node = nodeToDelete ? nodeToDelete : cmsTarget;
 
@@ -1351,7 +1351,7 @@ function hideCMSBlockHeader() {
 }
 
 var actionsDelayed = false;
-function delayActions() {
+function cmsDelayActions() {
   actionsDelayed = true;
   delay("enableActions", 420);
 }
@@ -1578,7 +1578,7 @@ document.addEventListener(
 
         copiedNode = $(draggedNode.cloneNode(true));
 
-        delayActions();
+        cmsDelayActions();
 
         var is_side_module = draggedNode.classList.contains("side-module");
 
@@ -1654,7 +1654,7 @@ function moveBlock(direction, deep_scan = false) {
 
   awaitingScroll = true;
 
-  delayActions();
+  cmsDelayActions();
 
   if (direction === 1) {
     var parent = put_near.parent();

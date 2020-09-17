@@ -363,7 +363,6 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
     data.variants = JSON.stringify(variants_data);
 
     setFormData(data, "#productForm");
-    addMainFormLeavingWarning($("#productForm"));
   });
 
   window.addEventListener("load", function() {
@@ -411,7 +410,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
   }
 
   function deleteProduct() {
-    anyChange = false;
+    setFormInitialState(`#productForm`);
     if (confirm("Czy chcesz usunąć produkt?")) {
       window.location = '/admin/delete_product/<?= $kopia ? '-1' : $product_id ?>';
     }
@@ -430,6 +429,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
       url: "/admin/save_product",
       params: params,
       success: () => {
+        setFormInitialState(form);
         window.location.reload();
       }
     });
@@ -448,7 +448,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
 
 <?php startSection("content"); ?>
 
-<div id="productForm" data-form>
+<div id="productForm" data-form data-warn-before-leave>
   <div class="custom-toolbar sticky-top">
     <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
       <?php if ($kopia) : ?>
@@ -466,7 +466,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
         <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
       <?php endif ?>
       <button onclick="showPreview()" class="btn secondary">Podgląd <i class="fas fa-external-link-alt"></i></button>
-      <button onclick="saveProductForm()" class="btn primary" onclick="anyChange=false">Zapisz <i class="fas fa-save"></i></button>
+      <button onclick="saveProductForm()" class="btn primary" onclick="">Zapisz <i class="fas fa-save"></i></button>
     </div>
   </div>
   <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">

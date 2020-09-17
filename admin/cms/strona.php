@@ -76,17 +76,18 @@ $static = checkUrl($page_data["link"]);
     }
 
     function save(remove = false) {
+        var form = $("#cmsForm");
+
+        setFormInitialState(form);
         if (cms_id == -1 && remove) {
             window.location = "/admin/strony";
             return;
         }
 
-        var f = $("#cmsForm");
-
-        if (!remove && !validateForm(f)) {
+        if (!remove && !validateForm(form)) {
             return;
         }
-        var params = getFormData(f);
+        var params = getFormData(form);
 
         if (remove) {
             params["remove"] = true;
@@ -104,7 +105,7 @@ $static = checkUrl($page_data["link"]);
 
 <?php startSection("content"); ?>
 
-<div id="cmsForm">
+<div id="cmsForm" data-form data-warn-before-leave>
 
     <div class="sticky-top">
         <div class="custom-toolbar">

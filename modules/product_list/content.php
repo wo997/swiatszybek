@@ -8,8 +8,9 @@ $where = $shared_where;
 $join = "";
 
 $product_list_count = nonull($moduleParams, "product_list_count", 8);
-
 $layout = nonull($moduleParams, "layout", "grid");
+$search = nonull($moduleParams, "search", "");
+$is_basic = nonull($moduleParams, "basic", "");
 
 if (isset($moduleParams["category_ids"])) {
   if (is_array($moduleParams["category_ids"])) {
@@ -27,7 +28,7 @@ $hasAnyAttribute = false;
 if (isset($moduleParams["attribute_value_ids"])) {
   $attribute_value_ids = $moduleParams["attribute_value_ids"];
 
-  if ($attribute_value_ids) {
+  if (is_array($attribute_value_ids)) {
     foreach ($attribute_value_ids as $attribute_value_sub_ids) {
       $subAttributeValues = "";
       foreach ($attribute_value_sub_ids as $attribute_value_id) {
@@ -46,11 +47,11 @@ if (isset($moduleParams["attribute_value_ids"])) {
   }
 }
 
-if ($hasAnyAttribute) {
-  $join .= " INNER JOIN variant v USING(product_id)
+//if ($hasAnyAttribute) {
+$join .= " INNER JOIN variant v USING(product_id)
       LEFT JOIN link_variant_attribute_value av USING(variant_id)
       LEFT JOIN link_product_attribute_value ap USING(product_id)";
-}
+//}
 
 $order_by = "product_id DESC"; // new by default
 
@@ -64,38 +65,52 @@ if ($order_by_name == "sale") {
   $order_by = "RAND() DESC";
 }
 
-$products = paginateData([
-  "select" => "product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating",
+
+$select_query = "product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating";
+if ($is_basic) {
+  $select_query = "product_id, title, link";
+}
+
+$params = [
+  "select" => $select_query,
   "from" => "products p $join",
   "where" => $where,
   "order" => $order_by,
   "group" => "product_id",
   "raw" => true,
-]);
+  "main_search_fields" => ["title", "name"]
+];
 
-//$products = fetchArray("SELECT product_id, title, link, cache_thumbnail, gallery, price_min, price_max, cache_avg_rating
-//FROM products p $join $where ORDER BY product_id DESC LIMIT " . intval($product_list_count));
+if ($search) {
+  $params["search"] = $search;
+}
+
+$products = paginateData($params);
 
 $res = "";
-foreach ($products["results"] as $product) {
-  $priceText = $product["price_min"];
-  if (!empty($product["price_max"]) && $product["price_min"] != $product["price_max"])
-    $priceText .= " - " . $product["price_max"];
-
-  $priceText = preg_replace("/\.00/", "", $priceText);
-
-  if (!$product["gallery"]) {
-    $product["gallery"] = $product["cache_thumbnail"];
+if ($is_basic) {
+  foreach ($products["results"] as $product) {
+    $res .= "<a class='result' href='" . getProductLink($product["product_id"], $product["link"]) . "'>" . $product["title"] . "</a>";
   }
-  //<div class='item-image' style='background-image:url(\"/uploads/md/" . $product["cache_thumbnail"] . "\")' data-desktop='/uploads/md/" . $product["gallery"] . "'></div>
+  $module_content .= $res;
+} else {
+  foreach ($products["results"] as $product) {
+    $priceText = $product["price_min"];
+    if (!empty($product["price_max"]) && $product["price_min"] != $product["price_max"])
+      $priceText .= " - " . $product["price_max"];
 
-  if ($layout == "slider") {
-    $res .= "<div class='product-block-wapper swiper-slide'>";
-  } else {
-    $res .= "<div class='product-block-wapper'>";
-  }
+    $priceText = preg_replace("/\.00/", "", $priceText);
 
-  $res .= "
+    if (!$product["gallery"]) {
+      $product["gallery"] = $product["cache_thumbnail"];
+    }
+    if ($layout == "slider") {
+      $res .= "<div class='product-block-wapper swiper-slide'>";
+    } else {
+      $res .= "<div class='product-block-wapper'>";
+    }
+
+    $res .= "
       <div class='product-block'>
         <a href='" . getProductLink($product["product_id"], $product["link"]) . "' data-gallery='" . $product["gallery"] . "'>
           <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image'>
@@ -107,18 +122,11 @@ foreach ($products["results"] as $product) {
       </div>
     ";
 
-  //if ($layout == "slider") {
-  //}
-  $res .= "</div>";
-}
+    $res .= "</div>";
+  }
 
-//$module_content .=
-//"<div class='items count-$total'>$res</div>";
-
-
-
-if ($layout == "slider") {
-  $module_content .= "
+  if ($layout == "slider") {
+    $module_content .= "
       <div class='product_list_module slider swiper-all'>
         <div class='swiper-container'>
           <div class='swiper-wrapper'>$res</div>
@@ -127,18 +135,7 @@ if ($layout == "slider") {
         <div class='swiper-button-next swiper-nav'><i class='fas fa-chevron-right'></i></div>
       </div>
     ";
-} else {
-  $module_content .= "<div class='product_list_module grid'>$res</div>";
+  } else {
+    $module_content .= "<div class='product_list_module grid'>$res</div>";
+  }
 }
-
-  /*$module_content .= "<style>
-      div[data-module='product_list'] .product {width: 48%;}
-      @media only screen and (max-width: 749px) {
-        div[data-module='product_list'] .product {width: 98%;}
-      }
-      @media only screen and (min-width: 750px) {
-        .items > div:not(:nth-child(3n)):not(:last-child) {
-          border-right: 2px solid #eee;
-        }
-      }
-    </style>";*/

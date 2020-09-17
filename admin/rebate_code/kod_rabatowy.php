@@ -139,12 +139,13 @@ if (!json_decode($kod_data["product_list"])) {
     });
 
     function save(remove = false) {
-        var f = $("#kodForm");
+        var form = $("#kodForm");
 
-        if (!remove && !validateForm(f)) {
+        setFormInitialState(form);
+        if (!remove && !validateForm(form)) {
             return;
         }
-        var params = getFormData(f);
+        var params = getFormData(form);
 
         if (remove) {
             params["remove"] = true;
@@ -165,7 +166,7 @@ if (!json_decode($kod_data["product_list"])) {
 
 <?php startSection("content"); ?>
 
-<div id="kodForm">
+<div id="kodForm" data-form data-warn-before-leave>
     <div style="max-width:1200px;margin:20px auto">
         <h2 style="text-align:center">Kod rabatowy</h2>
         <div class="desktopRow spaceColumns">

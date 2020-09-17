@@ -455,7 +455,7 @@ function showCategory($category, $level = 0)
       var newSearchParams = JSON.stringify({
         attribute_value_ids: attribute_value_ids,
         category_ids: [<?= $show_category["category_id"] ?>],
-        phrase: "xxx",
+        search: "",
         order_by: $(`[name="order_by"]:checked`).getValue()
       });
 

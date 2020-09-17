@@ -9,7 +9,9 @@ function addItemtoBasket(variant_id, diff, callback) {
     success: (res) => {
       setContent($("#basketContent"), res.basket_content_html);
 
-      $("#amount").innerHTML = res.item_count; // header basket
+      $$(".basket_item_count").forEach((e) => {
+        e.innerHTML = res.item_count;
+      });
 
       if (callback) {
         callback(res);

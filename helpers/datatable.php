@@ -83,7 +83,7 @@ function paginateData($data = null)
     }
 
     $where .= getSearchQuery([
-        "main_search_value" => nonull($_POST, 'search'),
+        "main_search_value" => nonull($data, "search", nonull($_POST, 'search')),
         "main_search_fields" => nonull($data, "main_search_fields", [])
     ]);
 

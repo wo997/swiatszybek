@@ -26,3 +26,7 @@ body,
 .btn {
   font-size: 14px;
 }
+
+.btn {
+  padding: 0.23em 0.6em;
+}

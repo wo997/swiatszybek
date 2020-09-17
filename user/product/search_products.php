@@ -7,6 +7,8 @@ $module_content = "";
 $moduleParams["category_id"] = nonull($filters, "category_id", "[]");
 $moduleParams["attribute_value_ids"] = nonull($filters, "attribute_value_ids", "[]");
 $moduleParams["order_by"] = nonull($filters, "order_by", "");
+$moduleParams["search"] = nonull($filters, "search", "");
+$moduleParams["basic"] = nonull($filters, "basic", false);
 $moduleDir = "modules/product_list";
 
 include $moduleDir . "/content.php";

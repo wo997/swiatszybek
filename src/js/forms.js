@@ -359,16 +359,18 @@ function clearAllErrors(node = null) {
 
 const formInitialStates = {};
 
-function addMainFormLeavingWarning(form) {
-  form = $(form);
-  window.addEventListener("beforeunload", function (e) {
-    const wasState = JSON.stringify(formInitialStates[form.id]);
-    const nowState = JSON.stringify(getFormData(form));
-    if (wasState !== nowState) {
-      e.returnValue = "Czy na pewno chcesz opuścić stronę?";
-    }
-  });
-}
+window.addEventListener("beforeunload", function (e) {
+  var form = $("[data-warn-before-leave]");
+  if (!form) {
+    return;
+  }
+
+  const wasState = JSON.stringify(formInitialStates[form.id]);
+  const nowState = JSON.stringify(getFormData(form));
+  if (wasState !== nowState) {
+    e.returnValue = "Czy na pewno chcesz opuścić stronę?";
+  }
+});
 
 function checkFormCloseWarning(name) {
   var wasState = formInitialStates[name];
