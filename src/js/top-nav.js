@@ -57,6 +57,10 @@ window.addEventListener("DOMContentLoaded", () => {
   var top_nav = $(".navigation");
 
   document.addEventListener("scroll", () => {
+    if (window.tempScrollTop) {
+      return;
+    }
+
     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
     var movingDown = scrollTop >= nonull(window.scrollTop, 0);
@@ -79,14 +83,14 @@ function headerResizeCallback() {
   if (!header) {
     return;
   }
-  header.style.marginBottom =
+  $(".header-height").style.marginBottom =
     $(".navigation").getBoundingClientRect().height +
     $(".header-top").getBoundingClientRect().height +
     "px";
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  if (window.innerWidth > 800) {
+  if (window.innerWidth >= 800) {
     return;
   }
 
@@ -104,20 +108,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
   $("#mainMenu .scroll-panel").appendChild($(".navigation"));
 
-  $("header .basket-wrapper").insertAdjacentHTML(
+  $("header .nav-wrapper").insertAdjacentHTML(
     "beforeend",
     `
       <button class='btn transparent' onclick='showModal("mainMenu", {source:this})'>
-        <i class="fas fa-bars"></i>
+        <img class="menu-icon" src="/src/img/menu_icon.svg">
       </button>
     `
   );
-
-  $$("header .case-desktop").forEach((e) => {
-    e.remove();
-  });
-
-  $(".main-search-wrapper").remove();
 });
 
 // perform search
@@ -226,3 +224,23 @@ function topSearch() {
     },
   });
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  var ss = $("header .nav_basket_content .scrollableContent");
+  ss.addEventListener("mousewheel", (event) => {
+    var h = ss.getBoundingClientRect().height;
+    var y = ss.scrollTop;
+
+    if (
+      (event.deltaY < 0 && y < 1) ||
+      (event.deltaY > 0 && y > ss.scrollHeight - h - 1)
+    ) {
+      event.preventDefault();
+    }
+  });
+
+  var uw = $("header .user-wrapper");
+  uw.addEventListener("mousewheel", (event) => {
+    event.preventDefault();
+  });
+});

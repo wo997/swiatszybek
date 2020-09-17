@@ -106,6 +106,10 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       margin-top: 3px;
     }
 
+    header .navigation {
+      display: none;
+    }
+
     @media only screen and (min-width: 750px) {
       .pullHigherDesktop {
         margin-top: -58px;

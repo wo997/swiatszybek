@@ -186,8 +186,10 @@
     </div>
   <?php else : ?>
     <p style="font-size:16px;">
-      Żeby dodać opinię musisz najpierw się zalogować
-      <a href="/logowanie/" class="primary-link">tutaj</i></a>
+      Zeby móc dodać komentarz musisz się zalogować
+      <button class='btn subtle' onclick='showModal("loginForm",{source:this});hideParentModal(this)'>
+        Zaloguj się <i class='fas fa-user'></i>
+      </button>
     </p>
   <?php endif ?>
 </div>

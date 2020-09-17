@@ -5,6 +5,14 @@
   padding: 8%;
 }
 
+.product-block a {
+  display: block;
+}
+
+.product-block:hover h3 {
+  text-decoration: underline;
+}
+
 .product-title {
   font-size: 1em;
   font-weight: 400;

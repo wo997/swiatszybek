@@ -7,7 +7,7 @@ function addItemtoBasket(variant_id, diff, callback) {
   xhr({
     url: url,
     success: (res) => {
-      setContent($("#basketContent"), res.basket_content_html);
+      setContent($(".nav_basket_content"), res.basket_content_html);
 
       $$(".basket_item_count").forEach((e) => {
         e.innerHTML = res.item_count;
