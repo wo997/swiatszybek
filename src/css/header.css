@@ -179,6 +179,10 @@ header .main-search-wrapper {
   position: relative;
 }
 
+.main-search-wrapper:not(.active) .search-results {
+  display: none;
+}
+
 .search-results {
   position: absolute;
   left: 0;
@@ -194,8 +198,12 @@ header .main-search-wrapper {
   background: white;
   cursor: pointer;
   display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-.search-results .result:hover {
+/*.search-results .result:hover,*/
+.search-results .result.selected {
   background: #eee;
 }
 

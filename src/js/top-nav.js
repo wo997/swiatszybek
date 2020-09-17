@@ -127,8 +127,65 @@ window.addEventListener("DOMContentLoaded", () => {
   if (!input) {
     return;
   }
+  var main_search_wrapper = $(".main-search-wrapper");
+  document.addEventListener("click", (event) => {
+    main_search_wrapper.classList.toggle(
+      "active",
+      $(event.target).findParentByClassName("main-search-wrapper")
+    );
+  });
   input.addEventListener("input", () => {
     delay("topSearch", 400);
+  });
+  main_search_wrapper.addEventListener("mousemove", (event) => {
+    if (event.target.classList.contains("result")) {
+      main_search_wrapper.findAll(".selected").forEach((e) => {
+        e.classList.remove("selected");
+      });
+      event.target.classList.add("selected");
+    }
+  });
+
+  input.addEventListener("keydown", (event) => {
+    var down = event.key == "ArrowDown";
+    var up = event.key == "ArrowUp";
+
+    var selected = main_search_wrapper.find(".selected");
+    var select = null;
+
+    if (event.key == "Enter" && selected) {
+      selected.click();
+    }
+
+    if (!up && !down) {
+      return;
+    }
+
+    if (selected) {
+      if (down) {
+        select = selected.next();
+      } else if (up) {
+        select = selected.prev();
+      }
+    }
+
+    if (down) {
+      if (!select) {
+        select = main_search_wrapper.find(".result");
+      }
+    } else if (up) {
+      if (!select) {
+        select = main_search_wrapper.find(".result:last-child");
+      }
+    }
+
+    main_search_wrapper.findAll(".selected").forEach((e) => {
+      e.classList.remove("selected");
+    });
+
+    if (select) {
+      select.classList.add("selected");
+    }
   });
 });
 
@@ -159,7 +216,7 @@ function topSearch() {
     params: {
       product_filters: searchParams,
       rowCount: 10,
-      pageNumber: currPage,
+      pageNumber: 0,
     },
     success: (res) => {
       if (!res.content) {
