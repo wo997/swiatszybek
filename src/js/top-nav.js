@@ -71,6 +71,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("load", () => {
   var top_nav = $(".navigation");
+  if (!top_nav) {
+    return;
+  }
 
   document.addEventListener("scroll", () => {
     if (window.tempScrollTop) {

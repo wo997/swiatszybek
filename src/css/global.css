@@ -50,12 +50,12 @@ p {
 .desktopRow > * {
   width: 100%;
 }
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 799px) {
   .desktopRow {
     flex-wrap: wrap;
   }
 }
-@media only screen and (min-width: 801px) {
+@media only screen and (min-width: 800px) {
   .desktopRow.spaceColumns > * {
     margin: 0 10px;
   }
@@ -639,9 +639,7 @@ input[type="text"]:not(.field) {
   padding-right: 4px;
 }
 
-/*input[type=radio] {
-  border: none !important;
-}*/
+input[type=radio]
 select {
   background: url(/img/dropdown.png) 100% / 20px no-repeat white;
   padding-right: 30px !important;
@@ -651,11 +649,6 @@ select.inline,
 .btn.inline {
   width: auto;
 }
-/*@font-face {
-	font-family: MYRIADPROREGULAR;
-	src: url(MyriadProLight.otf);
-}*/
-
 
 .dropdown-expand {
   box-shadow: 0px 3px 14px -3px rgba(0, 0, 0, 0.2);
@@ -696,45 +689,6 @@ nav > div > a {
 }
 .hideTablet {
   display: inline-block;
-}
-@media only screen and (max-width: 800px) {
-  .searchBar {
-    order: 10;
-    width: 100%;
-  }
-  .searchBar button {
-    padding: 8px 12px;
-  }
-}
-@media only screen and (max-width: 400px) {
-  .searchBar {
-    order: 10;
-    width: 100%;
-  }
-}
-@media only screen and (min-width: 801px) {
-  .searchBar input {
-    width: 170px;
-  }
-}
-@media only screen and (min-width: 950px) {
-  .searchBar input {
-    width: 230px;
-  }
-}
-@media only screen and (min-width: 1300px) {
-  .searchBar input {
-    width: 260px;
-  }
-}
-@media only screen and (min-width: 551px) and (max-width: 800px) {
-  .searchBar input {
-    width: 290px;
-  }
-}
-.searchBar button {
-  margin-left: -4px;
-  width: auto;
 }
 h1 {
   text-align: center;
@@ -851,57 +805,10 @@ a {
   .items > div {
     width: 100%;
   }
-  .searchBar * {
-    width: 100%;
-  }
-  .searchBar:not(:first-child) {
-    margin-left: -1px;
-  }
-}
-/* deprecated */
-.item-image {
-  height: 300px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-.item-desc {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 8px 0;
-}
-.item-desc h3 {
-  margin: 0;
-  text-align: center;
-  font-weight: normal;
-  font-size: 16px;
-  margin-bottom: 5px;
-}
-.item-desc > span {
-  text-align: center;
-  display: inline-block;
-  font-size: 24px;
 }
 .pln {
   /*font-family: "Nanum Gothic", sans-serif !important;*/
   font-weight: 600;
-}
-.item-desc b {
-  font-size: 14px;
-}
-.searchBar {
-  display: flex;
-  justify-content: center;
-  padding: 5px;
-  box-sizing: border-box;
-  margin: auto;
-}
-.searchBar input,
-.searchBar select {
-  padding: 5px 10px;
-  font-size: 14px;
-  box-sizing: border-box;
 }
 .mobileRow {
   display: flex;

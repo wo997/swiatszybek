@@ -198,7 +198,7 @@
   <div class="old-popup">
     <h3 style="margin: 0 0 19px;text-align:center;font-size:20px">Dodano produkt do koszyka</h3>
     <div style="display:flex" class="mobileRow">
-      <div class="item-image marginAuto" id="updateChoosenImage" style="min-height: 140px;margin-right: 20px;height: auto;"></div>
+      <img class="marginAuto" id="updateChoosenImage" style="width:100%;object-fit:contain;margin-right: 20px;" data-height="1w">
       <div style="display: flex;flex-direction: column;justify-content: center;width: 55%;">
         <div style="font-size: 14px;display: flex;align-items: center;min-height: 80px;">
           <div>

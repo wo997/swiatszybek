@@ -1,6 +1,3 @@
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=2750096011694583&autoLogAppEvents=1"></script>
-
 <header>
   <div class="header-top">
     <a href="/" class="logo-wrapper"><img src="/img/logo.png"></a>

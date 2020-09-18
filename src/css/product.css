@@ -24,14 +24,6 @@
   text-align: left;
 }
 
-.item-image {
-  height: 370px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 100%;
-}
-
 .variants {
   margin-bottom: 25px;
   display: flex;
@@ -245,6 +237,10 @@
   opacity: 1;
 }
 
+#updateChoosenImage {
+  max-width: 250px;
+}
+
 @media only screen and (max-width: 750px) {
   .marginAuto {
     margin: 10px auto !important;
@@ -259,17 +255,7 @@
   }
 }
 
-@media only screen and (min-width: 800px) and (max-width: 999px) {
-  .item-image {
-    height: 500px;
-  }
-}
-
 @media only screen and (min-width: 1000px) {
-  .item-image {
-    height: 480px;
-  }
-
   .popup {
     padding: 35px 20px;
   }
@@ -280,10 +266,6 @@
 }
 
 @media only screen and (max-width: 450px) {
-  .item-image {
-    height: 300px;
-  }
-
   .old-popupWrapper {
     padding: 10px;
   }

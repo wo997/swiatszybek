@@ -161,7 +161,9 @@ function clickVariant(variant_id) {
   if (swiper != null && variant_to_image[VARIANT_ID] != -1)
     swiper.slideTo(variant_to_image[VARIANT_ID], 300, null);
 
-  $("#updateChoosenImage").style.backgroundImage = `url('${variant.zdjecie}')`;
+  $("#updateChoosenImage").setAttribute("data-src", variant.zdjecie);
+  lazyLoadImages();
+
   $("#updateChoosenVariant").innerHTML = " " + variant.name;
   $("#updateChoosenAmountCost").innerHTML =
     variant.price - variant.rabat + " zł";

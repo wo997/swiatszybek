@@ -14,10 +14,10 @@ endSection();
 
 <body id="admin">
   <div class="main-container">
-    <div class="main-wrapper">
+    <div class="main-wrapper desktopRow">
       <div class="navbar_admin">
         <a href="/" class="home">
-          <img src="/img/logo.png?a">
+          <img src="/img/logo.png">
           <br>
           Strona główna
         </a>

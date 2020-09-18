@@ -113,7 +113,7 @@ if ($is_basic) {
     $res .= "
       <div class='product-block'>
         <a href='" . getProductLink($product["product_id"], $product["link"]) . "' data-gallery='" . $product["gallery"] . "'>
-          <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image'>
+          <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image' alt='" . $product["title"] . "'>
           <h3 class='product-title'>" . $product["title"] . "</h3>
           <span class='product-price pln'>$priceText zł</span>
           <span class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>

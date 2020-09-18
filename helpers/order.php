@@ -223,7 +223,7 @@ function getBasketContent()
                 $title_html .= "<br><span style='font-size:15px'>" . $basket_variant["name"] . "</span>";*/
 
             $basketContent .= "
-                <div>
+                <div class='product-block'>
                     <a href='" . getProductLink($basket_variant["product_id"], $basket_variant["link"]) . "'>
                         <img class='product-image' data-src='" . $basket_variant["zdjecie"] . "'>
                         <h3 class='product-title'>" . $basket_variant["title"] . " " . $basket_variant["name"] . "</h3>
@@ -251,13 +251,15 @@ function printBasketTable()
         $stock = $v["stock"];
 
         if ($nr == 0) {
-            $res .= "<table class='item-list item-list-full'><tr style='background: var(--primary-clr);color: white;'>
-        <td>Produkt</td>
-        <td></td>
-        <td>Cena</td>
-        <td>Ilość</td>
-        <td>Suma</td>
-        </tr>";
+            $res .= "
+                <table class='item-list item-list-full'><tr style='background: var(--primary-clr);color: white;'>
+                <td>Produkt</td>
+                <td></td>
+                <td>Cena</td>
+                <td>Ilość</td>
+                <td>Suma</td>
+                </tr>
+            ";
         }
         $nr++;
 
@@ -267,7 +269,7 @@ function printBasketTable()
             : "<button type='button' style='visibility:hidden'>+</button>";
 
         $res .= "<tr data-variant_id='" . $v["variant_id"] . "'>
-                <td><img src='/uploads/sm" . getUploadedFileName($v["zdjecie"]) . "' data-height='1w' style='width:min(130px,100%);display:block;margin:auto;object-fit:contain'></td>
+                <td><img data-src='" . $v["zdjecie"] . "' data-height='1w' style='width:min(130px,100%);display:block;margin:auto;object-fit:contain'></td>
                 <td><a class='linkable' href='" . getProductLink($v["product_id"], $v["link"]) . "'>" . $v["title"] . " " . $v["name"] . "</a></td>
                 <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</td>
                 <td class='oneline' data-stock='$stock'>$remove $quantity szt. $add</td>

@@ -277,7 +277,6 @@ header .scrollableContent {
   padding: 20px 0;
   max-height: calc(100vh - 280px);
   overflow-y: auto;
-  padding: 10px;
 }
 .basketItemsWrapper::before {
   content: "";
@@ -307,21 +306,6 @@ header .scrollableContent {
 .scrollableContent::-webkit-scrollbar-thumb {
   background-color: #ddd;
   border-radius: 5px;
-}
-
-.nav_basket_content .item-image {
-  height: 100px;
-}
-.nav_basket_content .item-desc {
-  padding: 8px;
-}
-.nav_basket_content .scrollableContent * {
-  font-size: 16px;
-  line-height: 1.1em;
-}
-
-.nav_basket_content a:hover {
-  text-decoration: underline;
 }
 
 /* basket end */
