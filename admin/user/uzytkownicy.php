@@ -92,7 +92,7 @@
                 },
                 {
                     title: "",
-                    width: "110px",
+                    width: "116px",
                     render: (r, i, t) => {
                         return `
                             <div class="btn secondary" onclick="editUser(this, ${t.name}.results[${i}])">Szczegóły <i class="fa fa-chevron-right"></i></div>

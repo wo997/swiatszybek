@@ -1175,82 +1175,8 @@ input[type="checkbox"]:checked + .checkbox::after {
   color: #35f;
 }
 
-/* rating */
-/*.comments .rating span {
-  font-size: 20px !important;
-}*/
-.rating span img {
-  width: 18px;
-  margin: 0 -1px;
-}
-
-.rating {
-  direction: rtl;
-  white-space: nowrap;
-  user-select: none;
-  display: inline-block;
-  margin: 0 5px;
-  vertical-align: middle;
-  transform: translateY(1px);
-}
-.rating > span {
-  display: inline-block;
-  position: relative;
-  color: #bbb;
-  font-size: 0;
-  line-height: 0;
-}
-.rating1 > span:nth-child(5):before,
-.rating2 > span:nth-child(5):before,
-.rating2 > span:nth-child(4):before,
-.rating3 > span:nth-child(5):before,
-.rating3 > span:nth-child(4):before,
-.rating3 > span:nth-child(3):before,
-.rating4 > span:nth-child(5):before,
-.rating4 > span:nth-child(4):before,
-.rating4 > span:nth-child(3):before,
-.rating4 > span:nth-child(2):before,
-.rating5 > span:nth-child(5):before,
-.rating5 > span:nth-child(4):before,
-.rating5 > span:nth-child(3):before,
-.rating5 > span:nth-child(2):before,
-.rating5 > span:nth-child(1):before,
-.my-rating > span:hover:before,
-.my-rating > span:hover ~ span:before {
-  position: absolute;
-  background: url(/img/star.png);
-  content: " ";
-  width: 18px;
-  height: 18px;
-  background-size: 18px 18px;
-  top: 0;
-  left: -1px;
-}
-.my-rating > span:hover:before {
-  opacity: 0.7;
-  transform: scale(1.05);
-}
-
-.my-rating {
-  cursor: pointer;
-}
-
-.rating15 > span:nth-child(4):before,
-.rating25 > span:nth-child(3):before,
-.rating35 > span:nth-child(2):before,
-.rating45 > span:nth-child(1):before {
-  width: 9px !important;
-}
-
 footer a:hover {
   text-decoration: underline;
-}
-
-.items .rating {
-  text-align: center;
-  width: 99%;
-  margin: 0;
-  transform: scale(0.75);
 }
 
 /* deprecated */

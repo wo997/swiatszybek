@@ -167,11 +167,11 @@
       <h4 style="font-size: 16px; margin: 20px 0 10px">
         Twoja ocena
         <div class="rating my-rating">
-          <span><img src="/img/star-gray.png"></span>
-          <span><img src="/img/star-gray.png"></span>
-          <span><img src="/img/star-gray.png"></span>
-          <span><img src="/img/star-gray.png"></span>
-          <span><img src="/img/star-gray.png"></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
       </h4>
       <label>

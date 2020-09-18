@@ -1,0 +1,94 @@
+/* css[global] */
+
+.rating {
+  direction: rtl;
+  white-space: nowrap;
+  user-select: none;
+  display: inline-block;
+  margin: 0 5px;
+}
+.rating > span {
+  display: inline-block;
+  position: relative;
+  color: #bbb;
+  font-size: 0;
+  line-height: 0;
+}
+
+.rating > span:after {
+  content: "";
+  background: url(/img/star-gray.png);
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-size: 18px 18px;
+}
+
+.rating1 > span:nth-child(5):before,
+.rating2 > span:nth-child(5):before,
+.rating2 > span:nth-child(4):before,
+.rating3 > span:nth-child(5):before,
+.rating3 > span:nth-child(4):before,
+.rating3 > span:nth-child(3):before,
+.rating4 > span:nth-child(5):before,
+.rating4 > span:nth-child(4):before,
+.rating4 > span:nth-child(3):before,
+.rating4 > span:nth-child(2):before,
+.rating5 > span:nth-child(5):before,
+.rating5 > span:nth-child(4):before,
+.rating5 > span:nth-child(3):before,
+.rating5 > span:nth-child(2):before,
+.rating5 > span:nth-child(1):before,
+.my-rating > span:hover:before,
+.my-rating > span:hover ~ span:before {
+  position: absolute;
+  background: url(/img/star.png);
+  content: " ";
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  top: 0;
+  left: -1px;
+}
+
+.rating1 > span:nth-child(5):before,
+.rating2 > span:nth-child(5):before,
+.rating2 > span:nth-child(4):before,
+.rating3 > span:nth-child(5):before,
+.rating3 > span:nth-child(4):before,
+.rating3 > span:nth-child(3):before,
+.rating4 > span:nth-child(5):before,
+.rating4 > span:nth-child(4):before,
+.rating4 > span:nth-child(3):before,
+.rating4 > span:nth-child(2):before,
+.rating5 > span:nth-child(5):before,
+.rating5 > span:nth-child(4):before,
+.rating5 > span:nth-child(3):before,
+.rating5 > span:nth-child(2):before,
+.rating5 > span:nth-child(1):before,
+.my-rating > span:hover:before,
+.my-rating > span:hover ~ span:before {
+  position: absolute;
+  background: url(/img/star.png);
+  content: " ";
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  top: 0;
+  left: -1px;
+}
+.my-rating > span:hover:before {
+  opacity: 0.7;
+  transform: scale(1.05);
+}
+
+.my-rating {
+  cursor: pointer;
+}
+
+.rating15 > span:nth-child(4):before,
+.rating25 > span:nth-child(3):before,
+.rating35 > span:nth-child(2):before,
+.rating45 > span:nth-child(1):before {
+  width: 50% !important;
+}

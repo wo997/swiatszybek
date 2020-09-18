@@ -116,7 +116,7 @@ if ($is_basic) {
           <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image'>
           <h3 class='product-title'>" . $product["title"] . "</h3>
           <span class='product-price pln'>$priceText zł</span>
-          <div class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</div>
+          <span class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>
           <!--<div class='buynow btn'>KUP TERAZ</div>-->
         </a>
       </div>
