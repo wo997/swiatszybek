@@ -171,6 +171,10 @@ function lazyLoadImages(animate = true) {
       preloadImage(img, animate);
     }
   });
+
+  setTimeout(() => {
+    setCustomHeights();
+  });
 }
 
 document.addEventListener("scroll", scrollCallbackLazy);

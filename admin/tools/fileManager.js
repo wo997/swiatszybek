@@ -80,7 +80,7 @@ window.fileManager = {
             if (image.asset_type == "video") {
               display = `<video src="/${image.file_path}" class="ql-video" controls="true" style='width:100%;height:250px;'></video>`;
             } else {
-              display = `<img style='width:100%;height:250px;object-fit:contain' src='/${image.file_path}'>`;
+              display = `<img style='width:100%;object-fit:contain' data-height='1w' data-src='/${image.file_path}'>`;
             }
 
             out += `
@@ -94,6 +94,8 @@ window.fileManager = {
             `;
           }
           $("#fileManager .gallery").setContent(out);
+
+          lazyLoadImages();
 
           if (callback) {
             callback();

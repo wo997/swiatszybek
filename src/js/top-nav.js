@@ -168,8 +168,10 @@ window.addEventListener("DOMContentLoaded", () => {
   `);
 
   var sc = $("header .nav_basket_content .scrollableContent");
-  $("#basketMenu .scroll-panel").appendChild(sc);
-  sc.classList.remove("scrollableContent");
+  if (sc) {
+    $("#basketMenu .scroll-panel").appendChild(sc);
+    sc.classList.remove("scrollableContent");
+  }
 
   $("header .basket-wrapper a").addEventListener("click", function (event) {
     showModal("basketMenu", { source: this });

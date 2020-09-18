@@ -118,10 +118,3 @@
     display: none;
   }
 }
-
-.product_list_module .rating span:before,
-.product_list_module .rating span:after {
-  width: 14px !important;
-  height: 14px !important;
-  background-size: 14px 14px !important;
-}

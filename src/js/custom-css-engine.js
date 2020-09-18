@@ -101,6 +101,8 @@ function setCustomHeights() {
       if (Math.abs(parseInt(r.height) - real_height) > 2) {
         node.style.height = `${real_height}px`;
       }
+    } else {
+      node.style.height = height;
     }
   });
 }
