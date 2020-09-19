@@ -28,18 +28,19 @@ window.addEventListener("DOMContentLoaded", () => {
   $$("[data-cookie]").forEach((e) => {
     e.addEventListener("change", () => {
       if (ignoreValueChanges) return;
-      var cookieName = e.getAttribute("data-cookie");
-      if (!cookieName) cookieName = e.getAttribute("name");
-      setCookie(cookieName, e.value);
+      var name = e.getAttribute("data-cookie");
+      if (!name) name = e.getAttribute("name");
+      localStorage.setItem(name, e.getValue());
     });
   });
 });
 
-function loadFormFromCookies() {
+function loadFormFromLocalStorage() {
   $$("[data-cookie]").forEach((e) => {
-    var cookieName = e.getAttribute("data-cookie");
-    if (!cookieName) cookieName = e.getAttribute("name");
-    var value = getCookie(cookieName);
+    var name = e.getAttribute("data-cookie");
+    if (!name) name = e.getAttribute("name");
+
+    var value = localStorage.getItem(name);
     if (value) {
       setValue(e, value);
     }

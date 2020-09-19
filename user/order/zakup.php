@@ -486,7 +486,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
       ignoreValueChanges = true;
       setFormData(<?= json_encode($zamowienie_data) ?>, window.form);
-      loadFormFromCookies();
+      loadFormFromLocalStorage();
       ignoreValueChanges = false;
 
 
