@@ -726,6 +726,8 @@ function preventLongPressMenu(node) {
   }
   node.prevent_long_press = true;
   node.oncontextmenu = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
     return false;
   };
 }

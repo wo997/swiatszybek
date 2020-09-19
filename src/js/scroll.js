@@ -17,8 +17,11 @@ window.addEventListener("DOMContentLoaded", () => {
     windowHeightResizeCallback();
   });
   observer.observe(document.body);
+  windowHeightResizeCallback();
 });
-windowHeightResizeCallback();
+setTimeout(() => {
+  windowHeightResizeCallback();
+});
 
 window.addEventListener("resize", windowHeightResizeCallback);
 window.addEventListener("touchend", windowHeightResizeCallback);

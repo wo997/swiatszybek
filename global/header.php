@@ -14,7 +14,7 @@
 
     <div class="nav-wrapper">
       <div class="mobile-main-search-wrapper case-mobile">
-        <button class="btn transparent" onclick='showModal("mainSearch", {source:this});$(".main-search-wrapper label").click()'>
+        <button class="btn transparent" onclick='showModal("mainSearch", {source:this});setTimeout(()=>{$(".main-search-wrapper label").click()},200)'>
           <img class="search-icon" src="/src/img/search_icon.svg">
         </button>
       </div>

@@ -48,7 +48,7 @@ header .header-top {
 }
 
 header .logo-wrapper img {
-  width: clamp(85px, 10vw, 120px);
+  width: max(85px, min(10vw, 120px));
   display: block;
   margin: 10px;
 }
