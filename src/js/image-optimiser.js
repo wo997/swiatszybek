@@ -152,7 +152,9 @@ function setImageDimensions(img) {
     console.log(rect.height);
   } else {*/
   var real_height = Math.round((rect.width * data.h) / data.w);
-  img.style.height = `${real_height}px`;
+  if (!img.style.height) {
+    img.style.height = `${real_height}px`;
+  }
   /*}*/
 
   return rect;

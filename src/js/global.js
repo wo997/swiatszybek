@@ -719,3 +719,13 @@ function clamp(min, val, max) {
 function isHidden(el) {
   return el.offsetParent === null;
 }
+
+function preventLongPressMenu(node) {
+  if (node.prevent_long_press) {
+    return;
+  }
+  node.prevent_long_press = true;
+  node.oncontextmenu = function (event) {
+    return false;
+  };
+}

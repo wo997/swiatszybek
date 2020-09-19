@@ -228,7 +228,7 @@ registerModalContent(
                 <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
             </div>
 
-            <form>
+            <form class="panel-padding">
               <div class="field-title">Nazwa zdjęcia</div>
               <input type="text" class="name field">
               <label style="text-align:right;display: block;margin-top: 10px;">

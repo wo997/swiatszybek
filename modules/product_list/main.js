@@ -62,6 +62,7 @@ window.addEventListener("products-swiper-created", (event) => {
   setProductListSwiperDimensions(event.detail.node);
   setCustomHeights();
   tooltipResizeCallback();
+  preventProductImagesLongPress();
 });
 
 window.addEventListener("resize", (event) => {
@@ -81,8 +82,30 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 var animateProduct = {};
+
+window.addEventListener("mousemove", function (event) {
+  currentlyFocusedProduct(event.target);
+});
+
+window.addEventListener("touchstart", function (event) {
+  currentlyFocusedProduct(event.target);
+});
+
 window.addEventListener("DOMContentLoaded", function () {
-  //if (!mobilecheck()) return;
+  preventProductImagesLongPress();
+});
+
+function preventProductImagesLongPress() {
+  if (!IS_MOBILE) return;
+  $$(".product-image").forEach((e) => {
+    preventLongPressMenu(e);
+  });
+}
+
+/*
+
+window.addEventListener("DOMContentLoaded", function () {
+  if (!IS_MOBILE) return;
   mobileFocusProductFrame();
 });
 
@@ -112,10 +135,11 @@ function mobileFocusProductFrame() {
   }
 
   setTimeout(mobileFocusProductFrame, 300);
-}
+}*/
 
 function currentlyFocusedProduct(node) {
-  var x = findParentByClassName(node, "product-block");
+  //var x = findParentByClassName(node, "product-block");
+  var x = node.classList.contains("product-image") ? node : null;
   if (animateProduct.target != x) {
     if (animateProduct.target) {
       animateProduct.image.src = animateProduct.defaultImage;
@@ -127,9 +151,9 @@ function currentlyFocusedProduct(node) {
     }
     if (x) {
       animateProduct.target = x;
-      animateProduct.image = animateProduct.target.querySelector(
+      animateProduct.image = x; /*animateProduct.target.querySelector(
         ".product-image"
-      );
+      );*/
       animateProduct.frames = JSON.parse(
         animateProduct.image.getAttribute("data-gallery")
       ).map((e) => e.values.src);
@@ -155,9 +179,6 @@ function nextProductImageSlide(x) {
   animateProduct.image.setAttribute("data-src", img_src);
   animateProduct.image.awaitImageReplace = true;
   lazyLoadImages(false);
-  //preloadImage(img_src);
-  //preloadImage(animateProduct.frames[(animateProduct.frameId+1) % animateProduct.frames.length]);
-  //preloadImage(animateProduct.frames[(animateProduct.frameId+2) % animateProduct.frames.length]);
 
   setTimeout(() => {
     if (animateProduct.target != x) return;

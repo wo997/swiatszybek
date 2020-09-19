@@ -79,11 +79,12 @@ function minifyImage($file_path)
         $output = imagecreatetruecolor($copy_width, $copy_height);
         $white = imagecolorallocate($output,  255, 255, 255);
         imagefilledrectangle($output, 0, 0, $copy_width, $copy_height, $white);
-        imagecopyresized($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
+        //imagecopyresized($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
+        imagecopyresampled($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
         $final_path = "$image_type_path/$file_name_wo_extension.jpg";
-        imagejpeg($output, $final_path, 100);
+        imagejpeg($output, $final_path, 35);
 
-        imagewebp($output, "$image_type_path/$file_name_wo_extension.webp", 100);
+        imagewebp($output, "$image_type_path/$file_name_wo_extension.webp", 20);
     }
 }
 
