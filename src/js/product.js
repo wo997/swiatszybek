@@ -242,24 +242,17 @@ function commentAction(i, action) {
 }
 
 function newComment() {
-  var req = document.getElementsByClassName("required");
-  for (i = 0; i < req.length; i++) {
-    var input = req[i];
-    if (input.value == "") {
-      input.style.borderColor = "red";
-      input.oninput = function () {
-        this.style.borderColor = "";
-      };
-      return;
-    }
+  var form = $("#formComment");
+  if (!validateForm(form)) {
+    return;
   }
 
   xhr({
     url: "/addComment",
     params: {
       product_id: PRODUCT_ID,
-      pseudonim: $("#pseudonim").value,
-      tresc: $("#tresc").value,
+      pseudonim: form.find(".pseudonim").value,
+      tresc: form.find(".tresc").value,
       rating: RATING,
     },
     success: (res) => {

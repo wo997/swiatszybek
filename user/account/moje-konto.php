@@ -152,7 +152,7 @@ if (strpos($url, "resetowanie-hasla") !== false)
       addMessageBox($(".message-box-container"), `
         Wysłaliśmy link do zmiany adresu
         <br>email na ${emailRequest}
-        <br><b class='btn' onclick='cancelEmailChange()'>ANULUJ ZMIANĘ</b>`, {
+        <br><b class='btn' onclick='cancelEmailChange()' style="margin-bottom: -0.7em">ANULUJ ZMIANĘ</b>`, {
         instant: instant,
       });
     }

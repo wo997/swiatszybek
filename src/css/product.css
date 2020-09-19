@@ -287,18 +287,18 @@
   background: #eee;
 }
 
-.comment_header {
+table .comment_header {
   display: flex;
   align-items: center;
   margin-bottom: 12px;
 }
 
-.pseudonim {
+table .pseudonim {
   font-size: 15px;
   font-weight: bold;
 }
 
-.dodano {
+table .dodano {
   margin-left: auto;
   color: #666;
   font-size: 0.9em;
@@ -362,4 +362,15 @@ form textarea {
 .small_font .colour {
   width: 26px;
   height: 26px;
+}
+
+.rebate-info {
+  border: 1px solid var(--success-clr);
+  border-radius: 4px;
+  font-size: 16px;
+  margin: 5px 0;
+  color: var(--success-clr);
+  font-weight: 600;
+  padding: 5px 10px;
+  display: inline-block;
 }

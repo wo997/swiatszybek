@@ -133,7 +133,7 @@
 
   <div class="cms" style="margin:50px -10px;width: auto;"><?= getCMSPageHTML($product_data["description"]); ?></div>
 
-  <h3 style="padding:12px 0;margin:30px 0 10px" id="opinieLabel"></h3>
+  <h3 style="margin:30px 0 30px;font-size:22px"><i class="fas fa-comments"></i> Komentarze</h3>
 
   <div class="comments">
     <?php
@@ -154,35 +154,42 @@
     mysqli_stmt_fetch($stmt);
     $stmt->close();
     ?>
-    <div id="formComment">
+    <div id="formComment" data-form>
+      <h4 style="font-size: 22px; margin: 100px 0 10px;">Podziel się swoją opinią</h4>
       <?php
       $input = ["product_id" => $number];
       include 'helpers/order/can_user_get_comment_rebate.php';
 
       if ($can_user_get_comment_rebate) {
-        echo '<h4 class="link" style="font-size: 18px;margin: 5px 0;">Dodaj komentarz, a w zamian otrzymasz kod rabatowy o wartości 25 zł <i class="fas fa-comments-dollar" style="font-size: 32px;vertical-align: bottom;margin: 2px;"></i></h4>';
+        echo '<h4 class="rebate-info">W nagrodę otrzymasz kod rabatowy o wartości 25 zł <i class="fas fa-comments-dollar" style="font-size: 26px;margin: -8px 0;"></i></h4>';
       }
       ?>
+      <div style="height:10px"></div>
+      <div class="field-title">
+        Ocena
+      </div>
+      <div class="rating my-rating" style="margin:0;font-size: 20px;">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 
-      <h4 style="font-size: 16px; margin: 20px 0 10px">
-        Twoja ocena
-        <div class="rating my-rating">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </h4>
       <label>
-        <input type="text" id="pseudonim" placeholder="Pseudonim" style="padding: 3px 5px;width:180px;" value="<?= isset($pseudonim) ? $pseudonim : "" ?>">
-
+        <div class="field-title">Pseudonim</div>
+        <input type="text" class="field pseudonim" value="<?= isset($pseudonim) ? $pseudonim : "" ?>">
       </label>
-      <textarea id="tresc" data-required placeholder="Treść komentarza" style="padding: 3px 5px;display:block;width:100%;height:150px;min-height:100px;max-height:200px;resize:vertical;margin-top:8px"></textarea>
-      <button class="btn primary medium" onclick="newComment()" style="margin:8px 0 8px auto;display: block">Wyślij <i class="fas fa-paper-plane"></i></button>
+
+      <label>
+        <div class="field-title">Komentarz</div>
+        <textarea class="field tresc" data-validate style=height:150px;min-height:100px;max-height:200px;"></textarea>
+      </label>
+
+      <button data-submit class="btn primary medium block full-width-mobile" onclick="newComment()" style="margin:8px 0 8px auto;width:170px">Wyślij <i class="fas fa-paper-plane"></i></button>
     </div>
     <div id="commentSent" style="display:none">
-      <h3>Dziękujemy za przekazaną opinię!</h3>
+      <p style="font-size:20px;font-weight:600;">Dziękujemy za przekazaną opinię!</p>
     </div>
   <?php else : ?>
     <p style="font-size:16px;">

@@ -115,7 +115,7 @@
             });
             e.swiper = swiper;
 
-            var event = new CustomEvent('swiper-created', {
+            var event = new CustomEvent('products-swiper-created', {
                 detail: {
                     node: e
                 }
@@ -123,14 +123,11 @@
             window.dispatchEvent(event);
         });
 
-        centeredSlides: true,
-
-
-            $$(".ql-editor a").forEach(e => {
-                if (e.href.indexOf("/") !== 0 && e.href.indexOf(window.location.hostname) === -1) {
-                    e.setAttribute("target", "_blank");
-                }
-            })
+        $$(".ql-editor a").forEach(e => {
+            if (e.href.indexOf("/") !== 0 && e.href.indexOf(window.location.hostname) === -1) {
+                e.setAttribute("target", "_blank");
+            }
+        })
 
         if (window.innerWidth < 768) {
             $$("table").forEach(table => {

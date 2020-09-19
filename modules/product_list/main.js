@@ -58,9 +58,10 @@ function setProductListGridDimensions(node) {
   `;
 }
 
-window.addEventListener("swiper-created", (event) => {
+window.addEventListener("products-swiper-created", (event) => {
   setProductListSwiperDimensions(event.detail.node);
   setCustomHeights();
+  tooltipResizeCallback();
 });
 
 window.addEventListener("resize", (event) => {
@@ -78,3 +79,101 @@ window.addEventListener("DOMContentLoaded", () => {
     setProductListGridDimensions(e);
   });
 });
+
+var animateProduct = {};
+window.addEventListener("DOMContentLoaded", function () {
+  //if (!mobilecheck()) return;
+  mobileFocusProductFrame();
+});
+
+function mobileFocusProductFrame() {
+  var closest = null;
+  var distance = window.innerHeight * 0.3 * window.innerWidth * 0.3;
+  document.querySelectorAll(".product-image").forEach((e) => {
+    var p = e.getBoundingClientRect();
+    var dx = p.x + p.width / 2 - window.innerWidth / 2;
+    var dy = p.y + p.height / 2 - window.innerHeight / 2;
+    var d = dx * dx + dy * dy;
+    if (d < distance) {
+      distance = d;
+      closest = e;
+    }
+  });
+  if (animateProduct.awaitTarget != closest) {
+    animateProduct.delay = 3;
+  }
+  animateProduct.awaitTarget = closest;
+
+  if (animateProduct.delay <= 0) {
+    currentlyFocusedProduct(animateProduct.awaitTarget);
+  } else {
+    currentlyFocusedProduct(null);
+    animateProduct.delay--;
+  }
+
+  setTimeout(mobileFocusProductFrame, 300);
+}
+
+function currentlyFocusedProduct(node) {
+  var x = findParentByClassName(node, "product-block");
+  if (animateProduct.target != x) {
+    if (animateProduct.target) {
+      animateProduct.image.src = animateProduct.defaultImage;
+      animateProduct.image.style.transition = "";
+      animateProduct.image.style.opacity = "1";
+      animateProduct.target = null;
+
+      window.clearTimeout(animateProduct.timeout);
+    }
+    if (x) {
+      animateProduct.target = x;
+      animateProduct.image = animateProduct.target.querySelector(
+        ".product-image"
+      );
+      animateProduct.frames = JSON.parse(
+        animateProduct.image.getAttribute("data-gallery")
+      ).map((e) => e.values.src);
+
+      animateProduct.defaultImage = animateProduct.image.src;
+      animateProduct.frameId = 0;
+      if (animateProduct.frames.length > 1) {
+        nextProductImageSlide(x);
+      }
+    }
+  }
+}
+
+function nextProductImageSlide(x) {
+  if (animateProduct.target != x) return;
+
+  animateProduct.frameId++;
+  if (animateProduct.frameId >= animateProduct.frames.length)
+    animateProduct.frameId = 0;
+  animateProduct.image.style.transition = "opacity 0.2s";
+  animateProduct.image.style.opacity = "0";
+  var img_src = animateProduct.frames[animateProduct.frameId];
+  animateProduct.image.setAttribute("data-src", img_src);
+  animateProduct.image.awaitImageReplace = true;
+  lazyLoadImages(false);
+  //preloadImage(img_src);
+  //preloadImage(animateProduct.frames[(animateProduct.frameId+1) % animateProduct.frames.length]);
+  //preloadImage(animateProduct.frames[(animateProduct.frameId+2) % animateProduct.frames.length]);
+
+  setTimeout(() => {
+    if (animateProduct.target != x) return;
+
+    var awaiting_src = animateProduct.image.getAttribute("awaiting-src");
+    if (awaiting_src) {
+      animateProduct.image.setAttribute("src", awaiting_src);
+    }
+    setTimeout(() => {
+      animateProduct.image.style.opacity = "1";
+    }, 100);
+  }, 200);
+
+  animateProduct.timeout = setTimeout(() => {
+    setTimeout(() => {
+      nextProductImageSlide(x);
+    }, waitingForImageLoad * 1000);
+  }, 2000);
+}

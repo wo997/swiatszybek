@@ -193,7 +193,7 @@ header .basket-wrapper h2 {
   margin: 0;
 }
 
-header .basket-wrapper:hover .nav_basket_content {
+header .basket-wrapper:hover .nav_basket_container {
   opacity: 1;
   pointer-events: auto;
 }
@@ -217,7 +217,6 @@ header .basket-wrapper:hover .nav_basket_content {
 .basket-wrapper .basket-icon-wrapper {
   display: inline-block;
   position: relative;
-  margin-top: 3px;
 }
 
 header .basket-wrapper .basket_item_count {
@@ -237,7 +236,7 @@ header .basket-wrapper .basket_item_count {
   margin-right: -5px;
 }
 
-.nav_basket_content {
+.nav_basket_container {
   opacity: 0;
   pointer-events: none;
   position: absolute;
@@ -254,7 +253,7 @@ header .basket-wrapper .basket_item_count {
   right: 0;
 }
 
-.nav_basket_content .product-image,
+.nav_basket_container .product-image,
 #basketMenu .product-image {
   width: 80%;
   margin: 10px 10% 5px;

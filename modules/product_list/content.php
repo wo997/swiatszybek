@@ -3,6 +3,14 @@
 /*useJS($moduleDir . "/main.js?v=" . RELEASE); // global
 useCSS($moduleDir . "/main.css?v=" . RELEASE);*/
 
+global $already_shown_product_ids_string;
+
+if ($already_shown_product_ids_string === null) {
+  $already_shown_product_ids_string = "";
+}
+
+
+
 $shared_where = "p.published = 1"; // AND v.published = 1";
 $where = $shared_where;
 $join = "";
@@ -71,6 +79,10 @@ if ($is_basic) {
   $select_query = "product_id, title, link";
 }
 
+if (!empty($already_shown_product_ids_string)) {
+  //$where .= " AND product_id NOT IN(" . substr($already_shown_product_ids_string, 0, -1) . ")";
+}
+
 $params = [
   "select" => $select_query,
   "from" => "products p $join",
@@ -95,6 +107,8 @@ if ($is_basic) {
   $module_content .= $res;
 } else {
   foreach ($products["results"] as $product) {
+    $already_shown_product_ids_string .= $product["product_id"] . ",";
+
     $priceText = $product["price_min"];
     if (!empty($product["price_max"]) && $product["price_min"] != $product["price_max"])
       $priceText .= " - " . $product["price_max"];
@@ -112,9 +126,9 @@ if ($is_basic) {
 
     $res .= "
       <div class='product-block'>
-        <a href='" . getProductLink($product["product_id"], $product["link"]) . "' data-gallery='" . $product["gallery"] . "'>
-          <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image' alt='" . $product["title"] . "'>
-          <h3 class='product-title'>" . $product["title"] . "</h3>
+        <a href='" . getProductLink($product["product_id"], $product["link"]) . "'>
+          <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image' alt='" . $product["title"] . "' data-gallery='" . $product["gallery"] . "'>
+          <h3 class='product-title'><span class='check-tooltip'>" . $product["title"] . "</span></h3>
           <span class='product-price pln'>$priceText zł</span>
           <span class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>
           <!--<div class='buynow btn'>KUP TERAZ</div>-->

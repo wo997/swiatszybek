@@ -43,6 +43,9 @@ p {
 .checkbox-wrapper.block {
   display: block;
 }
+.btn.block {
+  display: block;
+}
 
 .desktopRow {
   display: flex;
@@ -113,7 +116,7 @@ select {
 
 .btn:disabled {
   opacity: 0.5;
-  cursor: default !important;
+  cursor: not-allowed !important;
 }
 
 button,

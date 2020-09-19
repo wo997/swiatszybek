@@ -54,21 +54,25 @@
         <?php endif ?>
       </div>
       <div class="basket-wrapper">
-        <a href="/zakup" onclick="return !!+$('.basket_item_count').innerHTML">
-          <div style="text-align: center;font-size: 14px;font-weight: normal;">
-            <span class="case-desktop">Koszyk</span>
-            <div class="basket-icon-wrapper">
-              <img class="basket-icon" src="/src/img/basket_icon.svg">
-              <div class="basket_item_count"><?= $app["user"]["basket"]["item_count"] ?></div>
+        <div class="basket-btn" style="text-align: center;font-size: 14px;font-weight: normal;">
+          <span class="case-desktop">Koszyk</span>
+          <div class="basket-icon-wrapper">
+            <img class="basket-icon" src="/src/img/basket_icon.svg">
+            <div class="basket_item_count"><?= $app["user"]["basket"]["item_count"] ?></div>
+          </div>
+        </div>
+        <div class="nav_basket_container">
+          <div class='basketSplit'>
+            <div class='basketItemsWrapper'>
+              <div class='scrollableContent nav_basket_content'>
+                <?= getBasketContent() ?>
+              </div>
             </div>
           </div>
-        </a>
-        <div class="nav_basket_content">
-          <?= getBasketContent() ?>
-          <a class="btn primary medium fill gotobuy" href="/zakup" style="position:relative">
+          <button class="btn primary medium fill gotobuy" onclick="window.location='/zakup';" style="position:relative">
             Przejdź do kasy
             <i class="fa fa-chevron-right"></i>
-          </a>
+          </button>
         </div>
       </div>
 

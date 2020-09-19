@@ -715,3 +715,7 @@ function toggleDisabled(elem, disabled) {
 function clamp(min, val, max) {
   return Math.max(min, Math.min(val, max));
 }
+
+function isHidden(el) {
+  return el.offsetParent === null;
+}

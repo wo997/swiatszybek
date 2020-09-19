@@ -14,9 +14,14 @@
 }
 
 .product-title {
+  margin: 0.4em 0 0.2em;
   font-size: 1em;
   font-weight: 400;
-  margin: 0.4em 0 0.2em;
+  height: 3em;
+  position: relative;
+}
+
+.product-title span {
   overflow: hidden;
   display: -webkit-box;
   -moz-box-orient: vertical;
@@ -26,6 +31,21 @@
   line-clamp: 2;
   line-height: 1.5;
   height: 3em;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.product-title span.require-tooltip:hover {
+  overflow: unset;
+  display: block;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+  height: auto;
+  background: white;
+  padding: 3px 5px;
+  margin: 0 -5px;
+  border-radius: 4px;
 }
 
 .product-block .buynow {

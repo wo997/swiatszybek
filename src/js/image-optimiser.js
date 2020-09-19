@@ -15,7 +15,7 @@ function isNodeOnScreen(node, offset = -10) {
 
 var lazyLoadOffset = 700;
 
-function preloadImage(img, animate = true) {
+function loadImage(img, animate = true) {
   if (!img.filename) {
     return;
   }
@@ -74,9 +74,15 @@ function preloadImage(img, animate = true) {
       });
     }
 
-    img.setAttribute("src", src);
-    img.removeAttribute("data-src");
-    delete img.filename;
+    if (img.awaitImageReplace) {
+      img.setAttribute("awaiting-src", src);
+      delete img.awaitImageReplace;
+      delete img.filename;
+    } else {
+      img.setAttribute("src", src);
+      img.removeAttribute("data-src");
+      delete img.filename;
+    }
 
     if (animate) {
       img.style.opacity = 0;
@@ -132,10 +138,10 @@ function setImageDimensions(img) {
     img.removeAttribute("data-src");
     return rect;
   }
-  /*if (!rect.width) {
+  if (!rect.width && !isHidden(img)) {
     img.style.width = `${data.w}px`;
     rect = img.getBoundingClientRect();
-  }*/
+  }
 
   img.calculated_width = data.w;
   img.calculated_height = data.h;
@@ -168,7 +174,7 @@ function lazyLoadImages(animate = true) {
     var rect = setImageDimensions(img);
 
     if (rect.top < window.innerHeight + lazyLoadOffset) {
-      preloadImage(img, animate);
+      loadImage(img, animate);
     }
   });
 
@@ -187,9 +193,22 @@ document.addEventListener("mouseover", () => {
 
 function scrollCallbackLazy() {
   $$("img[data-src]").forEach((img) => {
-    preloadImage(img);
+    loadImage(img);
   });
   $$(".lazy_image").forEach((img) => {
     showImage(img);
   });
+}
+
+var waitingForImageLoad = false;
+function preloadImage(url) {
+  waitingForImageLoad = true;
+  var img = new Image();
+  img.src = url;
+  img.onload = () => {
+    waitingForImageLoad = false;
+  };
+  setTimeout(() => {
+    waitingForImageLoad = false;
+  }, 1500);
 }

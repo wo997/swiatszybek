@@ -7,17 +7,19 @@ function addItemtoBasket(variant_id, diff, callback) {
   xhr({
     url: url,
     success: (res) => {
-      setContent($(".nav_basket_content"), res.basket_content_html);
-
       var bm = $("#basketMenu .scroll-panel");
-      var sc = $("header .nav_basket_content .scrollableContent");
-      if (bm && sc) {
-        bm.empty();
-        bm.appendChild(sc);
+      if (bm) {
+        bm.setContent(res.basket_content_html);
+      } else {
+        setContent($(".nav_basket_content"), res.basket_content_html);
       }
 
       $$(".basket_item_count").forEach((e) => {
         e.innerHTML = res.item_count;
+      });
+
+      $$(".gotobuy").forEach((e) => {
+        toggleDisabled(e, res.item_count === 0);
       });
 
       if (callback) {

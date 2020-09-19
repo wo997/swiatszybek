@@ -212,9 +212,7 @@ function getBasketContent()
         $basketContent = "<h5 style='text-align:center'>Twój koszyk jest pusty!</h5>";
     } else {
         foreach ($app["user"]["basket"]["variants"] as $basket_variant_index => $basket_variant) {
-            if ($basketContent == "") $basketContent = "<div class='basketSplit'><div class='basketItemsWrapper'><div class='scrollableContent'>";
 
-            $basket_name = $basket_variant["name"];
             $basket_quantity = $basket_variant["quantity"];
             $basket_quantity = $basket_quantity > 1 ? " - $basket_quantity szt." : "";
 
@@ -226,14 +224,11 @@ function getBasketContent()
                 <div class='product-block'>
                     <a href='" . getProductLink($basket_variant["product_id"], $basket_variant["link"]) . "'>
                         <img class='product-image' data-src='" . $basket_variant["zdjecie"] . "'>
-                        <h3 class='product-title'>" . $basket_variant["title"] . " " . $basket_variant["name"] . "</h3>
+                        <h3 class='product-title'><span class='check-tooltip'>" . $basket_variant["title"] . " " . $basket_variant["name"] . "</span></h3>
                         <span class='product-price pln'>" . $basket_variant["total_price"] . " zł</span>
                     </a>
                 </div>";
         }
-
-        $basketContent .=
-            '</div></div></div>';
     }
     return $basketContent;
 }

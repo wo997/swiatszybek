@@ -107,6 +107,9 @@ function headerResizeCallback() {
 
 window.addEventListener("DOMContentLoaded", () => {
   if (window.innerWidth >= 800) {
+    $("header .basket-wrapper .basket-btn").addEventListener("click", () => {
+      $(".gotobuy").click();
+    });
     return;
   }
 
@@ -161,22 +164,24 @@ window.addEventListener("DOMContentLoaded", () => {
               
             </div>
             <div style='display:flex;padding:5px'>
-              <a class="btn primary medium fill gotobuy" href="/zakup" style="position:relative">
+              <button class="btn primary medium fill gotobuy" onclick="window.location='/zakup';" style="position:relative">
                 Przejdź do kasy
                 <i class="fa fa-chevron-right"></i>
-              </a>
+              </button>
             </div>
         </div>
     </div>
   `);
 
-  var sc = $("header .nav_basket_content .scrollableContent");
+  var sc = $("header .nav_basket_container .scrollableContent");
   if (sc) {
     $("#basketMenu .scroll-panel").appendChild(sc);
     sc.classList.remove("scrollableContent");
   }
 
-  $("header .basket-wrapper a").addEventListener("click", function (event) {
+  $("header .basket-wrapper .basket-btn").addEventListener("click", function (
+    event
+  ) {
     showModal("basketMenu", { source: this });
     event.preventDefault();
     return false;
@@ -306,7 +311,7 @@ function topSearch() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  var ss = $("header .nav_basket_content .scrollableContent");
+  var ss = $("header .nav_basket_container .scrollableContent");
   if (!ss) {
     return;
   }

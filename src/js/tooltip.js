@@ -7,6 +7,15 @@ window.addEventListener("mousemove", function (event) {
   var e = findParentByAttribute(event.target, "data-tooltip");
   if (e) {
     var tooltipText = e.getAttribute("data-tooltip");
+
+    if (tooltipText === "") {
+      if (e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight) {
+        tooltipText = e.textContent;
+      } else {
+        return;
+      }
+    }
+
     if (lastTooltip != e) {
       t.style.display = "block";
       t.innerHTML = tooltipText;
@@ -56,3 +65,15 @@ window.addEventListener("click", function (ev) {
   var t = $(".tooltip");
   if (t) t.style.display = "none";
 });
+
+window.addEventListener("resize", tooltipResizeCallback);
+window.addEventListener("DOMContentLoaded", tooltipResizeCallback);
+
+function tooltipResizeCallback() {
+  $$(".check-tooltip").forEach((e) => {
+    e.classList.toggle(
+      "require-tooltip",
+      e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight
+    );
+  });
+}

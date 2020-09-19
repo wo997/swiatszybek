@@ -22,6 +22,22 @@
   height: 1em;
   display: inline-block;
   background-size: 1em 1em;
+  transition: 0.2s all;
+  z-index: 2;
+}
+
+.rating > span:before {
+  position: absolute;
+  background: url(/img/star.png);
+  content: " ";
+  width: 1em;
+  height: 1em;
+  background-size: 1em 1em;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: 0.2s all;
+  z-index: 1;
 }
 
 .rating1 > span:nth-child(5):before,
@@ -41,19 +57,16 @@
 .rating5 > span:nth-child(1):before,
 .my-rating > span:hover:before,
 .my-rating > span:hover ~ span:before {
-  position: absolute;
-  background: url(/img/star.png);
-  content: " ";
-  width: 1em;
-  height: 1em;
-  background-size: 1em 1em;
-  top: 0;
-  left: 0;
+  opacity: 1;
 }
 
-.my-rating > span:hover:before {
-  opacity: 0.7;
-  transform: scale(1.05);
+.my-rating > span:hover:not(:active):before {
+  transform: scale(1.15);
+  filter: brightness(1.15) drop-shadow(0px 2px 0 #0005);
+}
+.my-rating > span:active:before {
+  filter: brightness(1.07);
+  transform: scale(1.07);
 }
 
 .my-rating {
