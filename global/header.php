@@ -64,9 +64,7 @@
         <div class="nav_basket_container">
           <div class='basketSplit'>
             <div class='basketItemsWrapper'>
-              <div class='scrollableContent nav_basket_content'>
-                <?= getBasketContent() ?>
-              </div>
+              <div class='scrollableContent nav_basket_content'></div>
             </div>
           </div>
           <button class="btn primary medium fill gotobuy" onclick="window.location='/zakup';" style="position:relative">

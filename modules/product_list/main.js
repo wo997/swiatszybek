@@ -143,6 +143,7 @@ function currentlyFocusedProduct(node) {
   if (animateProduct.target != x) {
     if (animateProduct.target) {
       animateProduct.image.src = animateProduct.defaultImage;
+      animateProduct.image.removeAttribute("data-src");
       animateProduct.image.style.transition = "";
       animateProduct.image.style.opacity = "1";
       animateProduct.target = null;
@@ -150,13 +151,15 @@ function currentlyFocusedProduct(node) {
       window.clearTimeout(animateProduct.timeout);
     }
     if (x) {
+      var g = x.getAttribute("data-gallery");
+      if (!g) {
+        return;
+      }
       animateProduct.target = x;
       animateProduct.image = x; /*animateProduct.target.querySelector(
         ".product-image"
       );*/
-      animateProduct.frames = JSON.parse(
-        animateProduct.image.getAttribute("data-gallery")
-      ).map((e) => e.values.src);
+      animateProduct.frames = JSON.parse(g).map((e) => e.values.src);
 
       animateProduct.defaultImage = animateProduct.image.src;
       animateProduct.frameId = 0;

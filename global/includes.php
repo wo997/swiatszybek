@@ -40,6 +40,13 @@
       <?php unset($_SESSION["message_modal"]); ?>
     });
   <?php endif ?>
+
+  window.addEventListener("DOMContentLoaded", () => {
+    basketChange({
+      basket_content_html: `<?= getBasketContent() ?>`,
+      item_count: <?= $app["user"]["basket"]["item_count"] ?>
+    });
+  });
 </script>
 
 <!-- styles / scripts to footer? -->

@@ -80,9 +80,12 @@ window.addEventListener("load", () => {
       return;
     }
 
+    var bottomOfPage =
+      window.innerHeight + window.scrollY >= document.body.offsetHeight;
+
     var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     var movingDown = scrollTop >= nonull(window.scrollTop, 0);
-    var collapsed = movingDown && scrollTop > 100;
+    var collapsed = (movingDown && scrollTop > 100) || bottomOfPage;
     top_nav.classList.toggle("collapsed", collapsed);
 
     window.scrollTop = scrollTop;

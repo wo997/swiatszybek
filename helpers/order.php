@@ -209,7 +209,7 @@ function getBasketContent()
     $basketContent = "";
 
     if (!$app["user"]["basket"]["item_count"]) {
-        $basketContent = "<h5 style='text-align:center'>Twój koszyk jest pusty!</h5>";
+        $basketContent = "<h3 style='text-align:center;font-size:17px'>Twój koszyk jest pusty!</h3>";
     } else {
         foreach ($app["user"]["basket"]["variants"] as $basket_variant_index => $basket_variant) {
 

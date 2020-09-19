@@ -1,5 +1,22 @@
 /* js[global] */
 
+function basketChange(res) {
+  var bm = $("#basketMenu .scroll-panel");
+  if (bm) {
+    bm.setContent(res.basket_content_html);
+  } else {
+    setContent($(".nav_basket_content"), res.basket_content_html);
+  }
+
+  $$(".basket_item_count").forEach((e) => {
+    e.innerHTML = res.item_count;
+  });
+
+  $$(".gotobuy").forEach((e) => {
+    toggleDisabled(e, res.item_count === 0);
+  });
+}
+
 function addItemtoBasket(variant_id, diff, callback) {
   if (diff > 0) url = "/basket/add/" + variant_id + "/" + diff;
   else url = "/basket/remove/" + variant_id + "/" + -diff;
@@ -7,20 +24,7 @@ function addItemtoBasket(variant_id, diff, callback) {
   xhr({
     url: url,
     success: (res) => {
-      var bm = $("#basketMenu .scroll-panel");
-      if (bm) {
-        bm.setContent(res.basket_content_html);
-      } else {
-        setContent($(".nav_basket_content"), res.basket_content_html);
-      }
-
-      $$(".basket_item_count").forEach((e) => {
-        e.innerHTML = res.item_count;
-      });
-
-      $$(".gotobuy").forEach((e) => {
-        toggleDisabled(e, res.item_count === 0);
-      });
+      basketChange(res);
 
       if (callback) {
         callback(res);
