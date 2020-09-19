@@ -196,7 +196,7 @@ textarea {
 .btn.success {
   background: var(--success-clr);
   color: white;
-  border: 1px solid var(--success-clr).centerwhenbig;
+  border: 1px solid var(--success-clr);
 }
 .btn.error {
   background: var(--error-clr);

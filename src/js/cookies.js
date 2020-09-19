@@ -25,10 +25,10 @@ function getCookie(cname) {
 // load save fields in cookie
 var ignoreValueChanges = false;
 window.addEventListener("DOMContentLoaded", () => {
-  $$("[data-cookie]").forEach((e) => {
+  $$("[data-store]").forEach((e) => {
     e.addEventListener("change", () => {
       if (ignoreValueChanges) return;
-      var name = e.getAttribute("data-cookie");
+      var name = e.getAttribute("data-store");
       if (!name) name = e.getAttribute("name");
       localStorage.setItem(name, e.getValue());
     });
@@ -36,8 +36,8 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadFormFromLocalStorage() {
-  $$("[data-cookie]").forEach((e) => {
-    var name = e.getAttribute("data-cookie");
+  $$("[data-store]").forEach((e) => {
+    var name = e.getAttribute("data-store");
     if (!name) name = e.getAttribute("name");
 
     var value = localStorage.getItem(name);

@@ -552,6 +552,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         $$(`[data-variant_id="${variant_id}"]`).forEach(v => {
           v.style.animation = "blink 0.5s";
         });
+
+        lazyLoadImages(false);
       });
     }
 
@@ -1022,7 +1024,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="kontakt">Dane kontaktowe</h3>
 
             <div style="display:flex;justify-content:space-evenly;padding:10px">
-              <input name="buyer_type" type="hidden" onchange="setBuyerFromInput(this.value)" data-cookie="buyer_type">
+              <input name="buyer_type" type="hidden" onchange="setBuyerFromInput(this.value)" data-store="buyer_type">
               <label>
                 <input type="radio" id="priv" name="buyer" value="p" onchange="setBuyer()">
                 Osoba prywatna
@@ -1035,49 +1037,49 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
             <div id="casePerson" class="expand_y">
               <div class="field-title">Imię</div>
-              <input type="text" class="field" name="imie" autocomplete="first-name" data-validate data-cookie>
+              <input type="text" class="field" name="imie" autocomplete="first-name" data-validate data-store>
 
               <div class="field-title">Nazwisko</div>
-              <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate data-cookie>
+              <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate data-store>
             </div>
 
             <div class="expand_y caseFirma hidden animate_hidden">
               <div class="field-title">Nazwa firmy</div>
-              <input type="text" class="field" name="firma" autocomplete="organization" data-validate data-cookie>
+              <input type="text" class="field" name="firma" autocomplete="organization" data-validate data-store>
 
               <div class="field-title">NIP</div>
-              <input type="text" class="field" name="nip" data-validate="nip" data-cookie>
+              <input type="text" class="field" name="nip" data-validate="nip" data-store>
             </div>
 
             <div class="field-title">Adres e-mail</div>
-            <input type="text" class="field" name="email" autocomplete="email" data-validate="email" data-cookie>
+            <input type="text" class="field" name="email" autocomplete="email" data-validate="email" data-store>
 
             <div class="field-title">Nr telefonu</div>
-            <input type="text" class="field" name="telefon" autocomplete="tel" data-validate data-cookie>
+            <input type="text" class="field" name="telefon" autocomplete="tel" data-validate data-store>
 
             <div class="field-title">Kraj</div>
-            <input type="text" class="field" name="kraj" data-validate data-cookie>
+            <input type="text" class="field" name="kraj" data-validate data-store>
 
             <div class="miejscowosc-picker-wrapper">
               <div class="field-title">Kod pocztowy</div>
-              <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-cookie>
+              <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-store>
 
               <div class="field-title">Miejscowość</div>
-              <input class="field miejscowosc-picker-target" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate data-cookie>
+              <input class="field miejscowosc-picker-target" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate data-store>
               <div class="miejscowosc-picker-list"></div>
             </div>
 
             <div class="field-title">Ulica</div>
-            <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate data-cookie>
+            <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate data-store>
 
             <div class="desktopRow spaceColumns">
               <div>
                 <div class="field-title">Nr domu</div>
-                <input type="text" class="field" name="nr_domu" autocomplete="address-line2" data-validate data-cookie>
+                <input type="text" class="field" name="nr_domu" autocomplete="address-line2" data-validate data-store>
               </div>
               <div>
                 <div class="field-title">Nr lokalu</div>
-                <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3" data-cookie>
+                <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3" data-store>
               </div>
             </div>
           </div>
@@ -1087,8 +1089,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           <div style="max-width: 550px;margin: 0 auto;">
             <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="dostawa">Rodzaj dostawy</h3>
 
-            <input id="dostawaInput" name="dostawa" type="hidden" onchange="selectDostawaFromInput(this.value)" data-cookie />
-            <input name="paczkomat" type="hidden" data-cookie="paczkomat">
+            <input id="dostawaInput" name="dostawa" type="hidden" onchange="selectDostawaFromInput(this.value)" data-store />
+            <input name="paczkomat" type="hidden" data-store="paczkomat">
 
             <div>
               <div class="dostawa" id="kurier-option" onclick="selectDostawa(this.id)">
@@ -1101,7 +1103,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
               <div class="dostawa" id="osobiscie-option" onclick="selectDostawa(this.id)">
                 <i class="fa fa-user" style="font-size: 26px;margin: 4px;"></i> <span>Odbiór osobisty</span> <span class="pln" style="margin-left:10px;font-size: 1.1em;">0 zł</span>
-                <input name="oddzial_id" value="0" type="hidden" data-cookie>
+                <input name="oddzial_id" value="0" type="hidden" data-store>
               </div>
             </div>
 
@@ -1120,37 +1122,37 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 <button class="btn primary" type="button" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button>
 
                 <div class="field-title">Imię</div>
-                <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-cookie>
+                <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-store>
 
                 <div class="field-title">Nazwisko</div>
-                <input type="text" class="field" name="nazwisko_kurier" autocomplete="family-name" data-validate data-cookie>
+                <input type="text" class="field" name="nazwisko_kurier" autocomplete="family-name" data-validate data-store>
 
                 <div class="field-title">Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></div>
-                <input type="text" class="field" name="firma_kurier" autocomplete="organization" data-cookie>
+                <input type="text" class="field" name="firma_kurier" autocomplete="organization" data-store>
 
                 <div class="field-title">Kraj</div>
-                <input type="text" class="field" name="kraj_kurier" data-validate data-cookie>
+                <input type="text" class="field" name="kraj_kurier" data-validate data-store>
 
                 <div class="miejscowosc-picker-wrapper">
                   <div class="field-title">Kod pocztowy</div>
-                  <input type="text" class="field" name="kod_pocztowy_kurier" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-cookie>
+                  <input type="text" class="field" name="kod_pocztowy_kurier" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-store>
 
                   <div class="field-title">Miejscowość</div>
-                  <input class="field miejscowosc-picker-target" type="text" name="miejscowosc_kurier" autocomplete="address-level2" placeholder=" " data-validate data-cookie>
+                  <input class="field miejscowosc-picker-target" type="text" name="miejscowosc_kurier" autocomplete="address-level2" placeholder=" " data-validate data-store>
                   <div class="miejscowosc-picker-list"></div>
                 </div>
 
                 <div class="field-title">Ulica</div>
-                <input type="text" class="field" autocomplete="address-line1" name="ulica_kurier" data-validate data-cookie>
+                <input type="text" class="field" autocomplete="address-line1" name="ulica_kurier" data-validate data-store>
 
                 <div class="desktopRow spaceColumns">
                   <div>
                     <div class="field-title">Nr domu</div>
-                    <input type="text" class="field" autocomplete="address-line2" name="nr_domu_kurier" data-validate data-cookie>
+                    <input type="text" class="field" autocomplete="address-line2" name="nr_domu_kurier" data-validate data-store>
                   </div>
                   <div>
                     <div class="field-title">Nr lokalu</div>
-                    <input type="text" class="field" autocomplete="address-line3" name="nr_lokalu_kurier" data-cookie>
+                    <input type="text" class="field" autocomplete="address-line3" name="nr_lokalu_kurier" data-store>
                   </div>
                 </div>
               </div>
@@ -1175,15 +1177,15 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               </div>
 
               <div style="display:none">
-                <input type="text" name="imie_dostawa">
-                <input type="text" name="nazwisko_dostawa">
-                <input type="text" name="firma_dostawa">
-                <input type="text" name="kraj_dostawa">
-                <input type="text" name="kod_pocztowy_dostawa">
-                <input type="text" name="miejscowosc_dostawa">
-                <input type="text" name="ulica_dostawa">
-                <input type="text" name="nr_domu_dostawa">
-                <input type="text" name="nr_lokalu_dostawa">
+                <input type="text" name="imie_dostawa" data-store>
+                <input type="text" name="nazwisko_dostawa" data-store>
+                <input type="text" name="firma_dostawa" data-store>
+                <input type="text" name="kraj_dostawa" data-store>
+                <input type="text" name="kod_pocztowy_dostawa" data-store>
+                <input type="text" name="miejscowosc_dostawa" data-store>
+                <input type="text" name="ulica_dostawa" data-store>
+                <input type="text" name="nr_domu_dostawa" data-store>
+                <input type="text" name="nr_lokalu_dostawa" data-store>
               </div>
             </div>
           </div>
@@ -1229,7 +1231,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
           <!--<input id="adresInfoInput" name="adresInfo" type="hidden">-->
 
-          <input name="forma_zaplaty" type="hidden" data-cookie="forma_zaplaty">
+          <input name="forma_zaplaty" type="hidden" data-store="forma_zaplaty">
           <input name="impersonate" type="hidden" value="<?= $impersonate ?>">
 
 

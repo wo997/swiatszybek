@@ -1,6 +1,9 @@
 <?php
 
-session_start();
+if (!isset($_SESSION)) {
+  session_start();
+}
+
 require_once 'vendor/autoload.php';
 
 //define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');

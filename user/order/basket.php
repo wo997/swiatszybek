@@ -6,7 +6,7 @@ $basket = json_decode($_SESSION["basket"], true);
 
 $request = $urlParts[1];
 
-$basket_variant_limit = 10;
+$basket_variant_limit = 100;
 
 if ($request == "add") {
   $variant_id = intval($urlParts[2]);

@@ -54,7 +54,7 @@
         <?php endif ?>
       </div>
       <div class="basket-wrapper">
-        <div class="basket-btn" style="text-align: center;font-size: 14px;font-weight: normal;">
+        <div class="basket-btn">
           <span class="case-desktop">Koszyk</span>
           <div class="basket-icon-wrapper">
             <img class="basket-icon" src="/src/img/basket_icon.svg">
