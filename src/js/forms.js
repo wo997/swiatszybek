@@ -535,12 +535,14 @@ function registerForm(form = null) {
     inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
 
     form.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        var submit = $(form).find("[data-submit]");
-        if (submit) {
-          submit.click();
+      setTimeout(() => {
+        if (e.key === "Enter") {
+          var submit = $(form).find("[data-submit]");
+          if (submit) {
+            submit.click();
+          }
         }
-      }
+      });
     });
   }
 

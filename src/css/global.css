@@ -1517,7 +1517,7 @@ ql-icon i span {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: 0.4em;
+  right: 0.6em;
 }
 .float-icon .fa-search {
   opacity: 0.4;

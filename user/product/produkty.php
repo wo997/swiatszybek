@@ -17,7 +17,7 @@ function showCategory($category, $level = 0)
   global $category_link;
   $category_id = intval($category["category_id"]);
   $subcategories = fetchArray("SELECT category_id, title, link, (
-      SELECT COUNT(1) FROM link_product_category link WHERE link.category_id = pc.category_id
+      SELECT COUNT(1) FROM link_product_category link INNER JOIN products USING(product_id) WHERE link.category_id = pc.category_id AND published
     ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND published ORDER BY kolejnosc");
   $count = count($subcategories);
 
@@ -73,8 +73,6 @@ function showCategory($category, $level = 0)
     .search-wrapper {
       width: auto;
       border: 1px solid #eee;
-      -webkit-box-shadow: 0px 3px 10px -3px rgba(0, 0, 0, 0.19);
-      -moz-box-shadow: 0px 3px 10px -3px rgba(0, 0, 0, 0.19);
       box-shadow: 0px 3px 10px -3px rgba(0, 0, 0, 0.19);
     }
 
@@ -261,7 +259,8 @@ function showCategory($category, $level = 0)
       font-size: 16px;
     }
 
-    .search-wrapper .mobile-search-btn {
+    .search-wrapper .mobile-search-btn,
+    .mobile-margin-bottom {
       margin-bottom: 10px;
     }
 
@@ -325,9 +324,15 @@ function showCategory($category, $level = 0)
         $(`.order_by_item input[value="sale"]`).checked = true;
       }
 
-      searchProducts();
+      var products_search = localStorage.getItem("products_search");
+      if (products_search) {
+        $(".products_search").value = products_search;
+        localStorage.removeItem("products_search");
+      }
 
       attributeSelectionChange(null, null);
+
+      searchProducts();
 
       window.filtersInitialState = getFormData(".filters");
 
@@ -396,6 +401,11 @@ function showCategory($category, $level = 0)
         container.appendChild(scroll_wrapper);
 
         registerScrollShadows();
+      } else {
+        var products_search = $(".products_search");
+        products_search.addEventListener("input", () => {
+          delay("searchProducts", 400);
+        });
       }
     });
 
@@ -421,6 +431,10 @@ function showCategory($category, $level = 0)
       })*/
 
       setFormData(window.filtersInitialState, ".filters");
+    }
+
+    function clearSearch() {
+      $(".products_search").setValue("");
     }
 
     function searchProducts(forceSearch = false) {
@@ -455,7 +469,7 @@ function showCategory($category, $level = 0)
       var newSearchParams = JSON.stringify({
         attribute_value_ids: attribute_value_ids,
         category_ids: [<?= $show_category["category_id"] ?>],
-        search: "",
+        search: $(".products_search").getValue(),
         order_by: $(`[name="order_by"]:checked`).getValue()
       });
 
@@ -475,7 +489,15 @@ function showCategory($category, $level = 0)
         },
         success: (res) => {
           if (res.totalRows == 0) {
-            res.content = "<div style='font-size:20px;padding: 60px 10px;text-align:center;font-weight:bold'>Brak produktów</div>";
+            var parms = JSON.parse(searchParams);
+            var caseFilters = parms.attribute_value_ids.length > 0 || parms.search !== "" ?
+              `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class='fas fa-times'></i> Usuń filtry</button>` : "Wyszukaj inną kategorię";
+            res.content = `
+              <div style='font-size:22px;padding: 60px 10px;text-align:center;font-weight:bold'>
+                <span style='color: var(--error-clr);'><i class="fas fa-exclamation-circle"></i> Brak produktów!</span>
+                <div style='font-size:0.8em;margin:0.7em'>${caseFilters}</div>
+              </div>
+              `;
           } else {
             res.content = `<div style='height:50px'></div>${res.content}<div style='height:50px'></div>`;
           }
@@ -612,6 +634,12 @@ function showCategory($category, $level = 0)
           "category_id" => 0,
           "title" => "Wszystkie produkty"
         ]) ?>
+      </div>
+
+      <div class="search-header"><i class="fas fa-search"></i> Szukaj</div>
+      <div class='float-icon mobile-margin-bottom'>
+        <input type="text" placeholder="Nazwa produktu..." class="field products_search">
+        <i class="fas fa-search"></i>
       </div>
 
       <div class="sorting-wrapper">

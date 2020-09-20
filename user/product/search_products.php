@@ -4,7 +4,7 @@ $filters = json_decode(nonull($_POST, "product_filters", "{}"), true);
 
 $moduleParams = [];
 $module_content = "";
-$moduleParams["category_id"] = nonull($filters, "category_id", "[]");
+$moduleParams["category_ids"] = nonull($filters, "category_ids", "[]");
 $moduleParams["attribute_value_ids"] = nonull($filters, "attribute_value_ids", "[]");
 $moduleParams["order_by"] = nonull($filters, "order_by", "");
 $moduleParams["search"] = nonull($filters, "search", "");

@@ -5,7 +5,7 @@
     <div class="main-search-wrapper case-desktop">
       <label for="main_search" class="glue-children">
         <input type="text" id="main_search" class="field inline" placeholder="Czego szukasz?">
-        <button class="btn primary">
+        <button class="btn primary" onclick="goToSearchProducts()">
           <img class="search-icon" src="/src/img/search_icon.svg">
         </button>
       </label>

@@ -253,8 +253,14 @@ window.addEventListener("DOMContentLoaded", () => {
     var selected = main_search_wrapper.find(".selected");
     var select = null;
 
-    if (event.key == "Enter" && selected) {
-      selected.click();
+    if (event.key == "Enter") {
+      if (selected) {
+        selected.click();
+        event.preventDefault();
+        return false;
+      } else if ($(".main-search-wrapper input").value.trim()) {
+        goToSearchProducts();
+      }
     }
 
     if (!up && !down) {
@@ -269,13 +275,15 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    if (down) {
-      if (!select) {
-        select = main_search_wrapper.find(".result");
-      }
-    } else if (up) {
-      if (!select) {
-        select = main_search_wrapper.find(".result:last-child");
+    if (!selected) {
+      if (down) {
+        if (!select) {
+          select = main_search_wrapper.find(".result");
+        }
+      } else if (up) {
+        if (!select) {
+          select = main_search_wrapper.find(".result:last-child");
+        }
       }
     }
 
@@ -352,3 +360,11 @@ window.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
   });
 });
+
+function goToSearchProducts() {
+  localStorage.setItem(
+    "products_search",
+    $(".main-search-wrapper input").getValue()
+  );
+  window.location = "/produkty/wszystkie";
+}
