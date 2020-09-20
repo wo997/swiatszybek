@@ -154,6 +154,8 @@
   overflow-y: auto;
   position: relative;
   display: flex;
+}
+.scroll-panel:not(.horizontal) {
   flex-direction: column;
 }
 .scroll-panel.horizontal {

@@ -237,21 +237,25 @@ function showCategory($category, $level = 0)
       filter: brightness(0.95);
     }
 
-    .sorting-wrapper:not(.disabled) .order_by_item input:checked+span,
-    .order_by_item.relevance input+span {
+    .sorting-wrapper .order_by_item input:checked+span {
       background: var(--primary-clr);
       color: #fffd;
       cursor: default;
     }
 
-    .order_by_item input:not(:checked)+span .fas,
-    .sorting-wrapper.disabled span .fas {
-      opacity: 0.8;
+    .sorting-wrapper .order_by_item input:checked+span {
+      background: var(--primary-clr);
+      color: #fffd;
+      cursor: default;
     }
 
-    .sorting-wrapper.disabled .order_by_item:not(.relevance) {
-      opacity: 0.5;
-      pointer-events: none;
+    .sorting-wrapper .order_by_item input:checked+span img {
+      filter: invert();
+    }
+
+    .order_by_item input:not(:checked)+span .fas,
+    .order_by_item input:not(:checked)+span svg {
+      opacity: 0.8;
     }
 
     .order_by_item .fas {
@@ -476,14 +480,14 @@ function showCategory($category, $level = 0)
         }
       })
 
-      var newSearchParams = JSON.stringify({
+      var newSearchParams = {
         attribute_value_ids: attribute_value_ids,
         category_ids: [<?= $show_category["category_id"] ?>],
         search: $(".products_search").getValue(),
         order_by: $(`[name="order_by"]:checked`).getValue()
-      });
+      };
 
-      if (newSearchParams != searchParams) {
+      if (JSON.stringify(newSearchParams) != JSON.stringify(searchParams)) {
         currPage = 0;
         searchParams = newSearchParams;
       } else if (!forceSearch) {
@@ -493,14 +497,13 @@ function showCategory($category, $level = 0)
       xhr({
         url: "/search_products",
         params: {
-          product_filters: searchParams,
+          product_filters: JSON.stringify(searchParams),
           rowCount: rowCount,
           pageNumber: currPage
         },
         success: (res) => {
           if (res.totalRows == 0) {
-            var parms = JSON.parse(searchParams);
-            var caseFilters = parms.attribute_value_ids.length > 0 || parms.search !== "" ?
+            var caseFilters = searchParams.attribute_value_ids.length > 0 || searchParams.search !== "" ?
               `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class='fas fa-times'></i> Wyczyść filtry</button>` : "Wyszukaj inną kategorię";
             res.content = `
               <div style='font-size:22px;padding: 60px 10px;text-align:center;font-weight:bold'>
@@ -559,9 +562,13 @@ function showCategory($category, $level = 0)
           );
 
           if ($(".order_by_item input[value='random']:checked")) {
-            paginationNode.setContent(`
+            if (res.totalRows > 0) {
+              paginationNode.setContent(`
               <button class='btn primary medium' onclick='beforeSearchProducts()'>Losuj więcej <i class='fas fa-dice-three'></i></button>
             `);
+            } else {
+              paginationNode.setContent(``);
+            }
           } else {
             renderPagination(
               paginationNode,
@@ -623,12 +630,21 @@ function showCategory($category, $level = 0)
 
     function productsSearchChange(input) {
       input = $(input);
-      $$(".case_search").forEach(e => {
-        e.style.display = input.getValue() !== "" ? "" : "none";
-      });
-      delay("searchProducts", 400);
 
-      $(".sorting-wrapper").classList.toggle("disabled", input.getValue() !== "");
+      var value = input.getValue();
+      var filled = value !== "";
+      $$(".case_search").forEach(e => {
+        e.style.display = filled ? "" : "none";
+      });
+      $$(".case_no_search").forEach(e => {
+        e.style.display = !filled ? "" : "none";
+      });
+
+      if (searchParams.search === "" && value !== "") {
+        $(`.order_by_item .relevance_option`).checked = true;
+      }
+
+      delay("searchProducts", 400);
     }
   </script>
 </head>
@@ -690,9 +706,9 @@ function showCategory($category, $level = 0)
           <input type="radio" name="order_by" value="random">
           <span><i class="fas fa-dice-three"></i> Losuj</span>
         </label>
-        <label class="order_by_item relevance case_search">
-          <input type="radio" name="order_by" value="relevance">
-          <span><img src="/src/img/target_icon.svg" style="width: 1em;transform: translateY(2px);filter:invert()"> Trafność</span>
+        <label class="order_by_item case_search">
+          <input type="radio" name="order_by" value="relevance" class="relevance_option">
+          <span><img src="/src/img/target_icon.svg" style="width: 1em;transform: translateY(2px);"> Trafność</span>
         </label>
       </div>
 

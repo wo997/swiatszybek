@@ -55,10 +55,12 @@
   background: #f8f8f8;
   padding: 10px;
   font-weight: 600;
+  margin-top: -10px;
+  position: relative;
 }
 .table-wrapper {
   overflow-x: auto;
-  margin: 10px -10px;
+  margin: 0 -10px;
 }
 .datatable-wrapper .flexbar {
   user-select: none;
@@ -263,10 +265,9 @@
 }
 
 .datatable {
-  -webkit-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
-  -moz-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
-  margin-bottom: 2px;
+  position: relative;
+  padding: 10px 0;
 }
 
 .selected_rows th:first-child {

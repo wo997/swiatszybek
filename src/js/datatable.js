@@ -894,14 +894,14 @@ var datatableRearrange = {};
 
 window.addEventListener("dragstart", (event) => {
   var target = $(event.target);
-  if (!target.hasAttribute("draggable")) {
-    event.preventDefault();
+  if (target.tagName != "TR") {
     return;
   }
   if (
-    target.tagName != "TR" ||
+    !target.hasAttribute("draggable") ||
     target.findParentByClassName("has_selected_rows")
   ) {
+    event.preventDefault();
     return;
   }
 
@@ -988,12 +988,19 @@ window.addEventListener("dragover", (event) => {
   var tr = findParentByTagName(event.target, "TR");
   if (!tr) return;
 
+  var nonstatic_parent = tr.findNonStaticParent();
+
+  /*var scroll_parent = tr.findScrollableParent();
+  if (scroll_parent === window) {
+    scroll_parent = document.body;
+  }*/
+
   if (!datatableRearrange.element) {
     datatableRearrange.element = document.createElement("DIV");
     datatableRearrange.element.classList.add("rearrange-splitter");
     datatableRearrange.element.style.background = "#5557";
     datatableRearrange.element.style.position = "absolute";
-    document.body.appendChild(datatableRearrange.element);
+    nonstatic_parent.appendChild(datatableRearrange.element);
   }
 
   if (tr != datatableRearrange.target) {
@@ -1001,15 +1008,17 @@ window.addEventListener("dragover", (event) => {
   }
 
   if (datatableRearrange.target) {
-    var pos = position(datatableRearrange.target);
+    //var pos = position(datatableRearrange.target);
+    //var pos = position(datatableRearrange.target);
     var rect = datatableRearrange.target.getBoundingClientRect();
+    var parent_rect = nonstatic_parent.getBoundingClientRect();
     var h = 10;
 
     var isAfter = event.offsetY > rect.height / 2;
 
-    datatableRearrange.element.style.left = pos.left + "px";
+    datatableRearrange.element.style.left = rect.left - parent_rect.left + "px";
     datatableRearrange.element.style.top =
-      pos.top - h / 2 + isAfter * rect.height + "px";
+      rect.top - parent_rect.top - h / 2 + isAfter * rect.height + "px";
     datatableRearrange.element.style.width = rect.width + "px";
     datatableRearrange.element.style.height = h + "px";
     datatableRearrange.element.classList.add("tableRearrange");
