@@ -32,11 +32,11 @@ if ($zamowienie_data["status_id"] === 0) {
   $P24->addValue("p24_currency", $currency);
 
   $P24->addValue("p24_description", config('main_email_sender') . " zamowienie #" . $zamowienie_data["zamowienie_id"]);
-  $P24->addValue("p24_client", $zamowienie_data["imie"] . " " . $zamowienie_data["nazwisko"]);
+  /*$P24->addValue("p24_client", $zamowienie_data["imie"] . " " . $zamowienie_data["nazwisko"]);
   $P24->addValue("p24_address", "ul. " . $zamowienie_data["ulica"] . " " . $zamowienie_data["nr_domu"] . "/" . $zamowienie_data["nr_lokalu"]);
   $P24->addValue("p24_zip", $zamowienie_data["kod_pocztowy"]);
   $P24->addValue("p24_city", $zamowienie_data["miejscowosc"]);
-  $P24->addValue("p24_country", $zamowienie_data["kraj"]);
+  $P24->addValue("p24_country", $zamowienie_data["kraj"]);*/
 
   $P24->addValue("p24_email", trim($zamowienie_data["email"]));
   $P24->addValue("p24_url_return", $link);

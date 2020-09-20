@@ -593,7 +593,6 @@ function formFieldOnInput(field, options = {}) {
   if (!field.hasAttribute("data-input-registered")) {
     return;
   }
-  if (ignoreValueChanges) return;
   const errors = fieldErrors(field);
 
   showFieldErrors(field, errors, options);

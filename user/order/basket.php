@@ -56,18 +56,5 @@ $basket_string = json_encode($basket);
 setBasketData($basket_string);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-  prepareBasketData();
-
-  $response = [];
-
-  $response["basket"] = $basket;
-
-  $response["basket_content_html"] = getBasketContent();
-
-  $response["basket_table_html"] = printBasketTable();
-  $response["total_basket_cost"] = $app["user"]["basket"]["total_basket_cost"];
-  $response["item_count"] = $app["user"]["basket"]["item_count"];
-
-  json_response($response);
+  json_response(getBasketDataAll());
 }

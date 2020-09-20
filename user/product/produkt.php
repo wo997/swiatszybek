@@ -102,7 +102,6 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
   </style>
   <script>
     var variants = <?= json_encode($variants) ?>;
-    var user_basket = <?= $_SESSION["basket"] ?>;
     const PRODUCT_ID = <?= $product_data["product_id"] ?>;
   </script>
 

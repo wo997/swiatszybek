@@ -1,6 +1,28 @@
 /* js[global] */
 
-function basketChange(res) {
+function addItemtoBasket(variant_id, diff) {
+  if (diff > 0) url = "/basket/add/" + variant_id + "/" + diff;
+  else url = "/basket/remove/" + variant_id + "/" + -diff;
+
+  xhr({
+    url: url,
+    success: (res) => {
+      res.variant_id = variant_id;
+      var event = new CustomEvent("basket-change", {
+        detail: {
+          res: res,
+        },
+      });
+      window.dispatchEvent(event);
+    },
+  });
+}
+
+window.addEventListener("basket-change", (event) => {
+  var res = event.detail.res;
+
+  window.basket_data = res;
+
   var bm = $("#basketMenu .scroll-panel");
   if (bm) {
     bm.setContent(res.basket_content_html);
@@ -15,23 +37,15 @@ function basketChange(res) {
   $$(".gotobuy").forEach((e) => {
     toggleDisabled(e, res.item_count === 0);
   });
-}
 
-function addItemtoBasket(variant_id, diff, callback) {
-  if (diff > 0) url = "/basket/add/" + variant_id + "/" + diff;
-  else url = "/basket/remove/" + variant_id + "/" + -diff;
-
-  xhr({
-    url: url,
-    success: (res) => {
-      basketChange(res);
-
-      if (callback) {
-        callback(res);
-      }
-    },
+  $$(".total_basket_cost").forEach((e) => {
+    e.innerHTML = basket_data.total_basket_cost;
   });
-}
+
+  setTimeout(() => {
+    lazyLoadImages();
+  });
+});
 
 // also order.php
 function renderStatus(status_id) {

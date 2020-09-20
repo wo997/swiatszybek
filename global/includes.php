@@ -42,10 +42,12 @@
   <?php endif ?>
 
   window.addEventListener("DOMContentLoaded", () => {
-    basketChange({
-      basket_content_html: `<?= getBasketContent() ?>`,
-      item_count: <?= $app["user"]["basket"]["item_count"] ?>
+    var event = new CustomEvent("basket-change", {
+      detail: {
+        res: <?= json_encode(getBasketDataAll()) ?>,
+      },
     });
+    window.dispatchEvent(event);
   });
 </script>
 

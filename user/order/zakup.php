@@ -489,13 +489,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       loadFormFromLocalStorage();
       ignoreValueChanges = false;
 
-
-      /*if (BASKET_COST == 0) {
-        $$("btn primary big").forEach((e) => {
-          e.style.display = "none"
-        });
-      }*/
-
       if (RABAT > 0) hasKodRabatowy({
         kwota: RABAT,
         type: RABAT_TYPE
@@ -525,10 +518,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       });
     });
 
-    function addItem(diff, variant_id) {
-      addItemtoBasket(variant_id, diff, (json) => {
-        if (!json.basket_table_html) {
-          json.basket_table_html = `
+    window.addEventListener("basket-change", (event) => {
+      var res = event.detail.res;
+
+      if (!res.basket_table_html) {
+        res.basket_table_html = `
               <div style="text-align:center">
               <h3>Koszyk jest pusty!</h3>
               <a class="btn primary medium" href="/" style='width: 220px'>
@@ -536,26 +530,21 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 <i class="fa fa-chevron-right"></i>
               </a></div>`;
 
-          emptyBasket();
-        }
+        emptyBasket();
+      }
 
-        $$(".zamowienie").forEach((e) => {
-          setContent(e, json.basket_table_html);
-        });
-
-        BASKET_COST = json.total_basket_cost;
-        $$(".total").forEach((e) => {
-          e.innerHTML = BASKET_COST;
-        });
-        updateTotalCost();
-
-        $$(`[data-variant_id="${variant_id}"]`).forEach(v => {
-          v.style.animation = "blink 0.5s";
-        });
-
-        lazyLoadImages(false);
+      $$(".zamowienie").forEach((e) => {
+        setContent(e, res.basket_table_html);
       });
-    }
+
+      updateTotalCost();
+
+      $$(`[data-variant_id="${res.variant_id}"]`).forEach(v => {
+        v.style.animation = "blink 0.5s";
+      });
+
+      lazyLoadImages(false);
+    });
 
     function emptyBasket() {
       $$("button, .hideifempty").forEach(e => {
@@ -877,8 +866,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
     var RABAT = <?= isset($_SESSION["rabat"]) ? $_SESSION["rabat"] : 0 ?>;
     var RABAT_TYPE = "<?= isset($_SESSION["rabat_type"]) ? $_SESSION["rabat_type"] : "static" ?>";
 
-    var BASKET_COST = <?= $app["user"]["basket"]["total_basket_cost"] ?>;
-
     function hasKodRabatowy(rabat) {
       if (rabat) {
         RABAT = rabat.kwota;
@@ -902,8 +889,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
     }
 
     function updateTotalCost() {
-      var t = $("#total-cost");
-      t.innerHTML = (RABAT_TYPE == "static" ? (BASKET_COST - RABAT) : Math.round(BASKET_COST * (1 - 0.01 * RABAT))) + DELIVERY_COST;
+      var t = $("#final-cost");
+      t.innerHTML = (RABAT_TYPE == "static" ? (basket_data.total_basket_cost - RABAT) : Math.round(basket_data.total_basket_cost * (1 - 0.01 * RABAT))) + DELIVERY_COST;
     }
 
     function confirmOrder() {
@@ -980,7 +967,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         <div style="margin-top: 30px;">
           <div style="margin-top: 13px;text-align: right;padding: 5px;" class="hideifempty mobileTextCenter">
             <span style="display:inline-block;font-size: 18px;padding: 0 3px;">Wartość koszyka:</span>
-            <span style="display:inline-block;font-size: 20px;" class="pln"><span class="total"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</span>
+            <span style="display:inline-block;font-size: 20px;" class="pln"><span class="total_basket_cost"></span> zł</span>
 
             <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Kurier: <span class="pln"><?= config('kurier_cena', 0) ?> zł</span>, Paczkomat: <span class="pln"><?= config('paczkomat_cena', 0) ?> zł</span>, Odbiór osobisty: <span class="pln">0 zł</span></p>
 
@@ -1120,6 +1107,12 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;" data-view="adres">Adres dostawy</h3>
 
                 <button class="btn primary" type="button" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button>
+                <!--<label class="checkbox-wrapper">
+                  <input type="checkbox" name="same_address">
+                  <div class="checkbox"></div>
+                  Użyj tego samego adresu 
+                </label>--->
+
 
                 <div class="field-title">Imię</div>
                 <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-store>
@@ -1265,7 +1258,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 <button type="button" onclick="aktywujKodRabatowy('remove')" style="cursor:pointer;font-weight: bold;margin-right: 5px;font-size: 11px;line-height: 0;width: 18px;height: 18px;border: none;background: #eee;color: #777;vertical-align: text-top;padding: 0;"><i class="fa fa-times"></i></button>
                 KOD RABATOWY <span class="pln" id="kod_rabatowy_label"></span></span>
               <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia:</span>
-              <b style="display:inline-block;font-size: 20px;"><span id="total-cost" style="display:inline-block;" class="pln"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</b>
+              <b style="display:inline-block;font-size: 20px;"><span id="final-cost" style="display:inline-block;" class="pln"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</b>
             </div>
           </div>
 

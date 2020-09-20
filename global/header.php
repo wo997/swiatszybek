@@ -58,7 +58,7 @@
           <span class="case-desktop">Koszyk</span>
           <div class="basket-icon-wrapper">
             <img class="basket-icon" src="/src/img/basket_icon.svg">
-            <div class="basket_item_count"><?= $app["user"]["basket"]["item_count"] ?></div>
+            <div class="basket_item_count"></div>
           </div>
         </div>
         <div class="nav_basket_container">
