@@ -1,6 +1,6 @@
 <?php //route[admin/save_product]
 
-$input = ["exceptions" => ["categories", "description", "gallery", "product_attributes", "variants"]];
+$input = ["exceptions" => ["categories", "description", "gallery", "attributes", "variants"]];
 include "helpers/safe_post.php";
 
 if (isset($_POST["remove"])) {
@@ -37,8 +37,8 @@ if (isset($_POST["remove"])) {
     triggerEvent("product_gallery_change", ["product_id" => intval($product_id)]);
 
     include_once "admin/product/attributes_service.php";
-    $product_attributes = json_decode($_POST["product_attributes"], true);
-    updateAttributesInDB($product_attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
+    $attributes = json_decode($_POST["attributes"], true);
+    updateAttributesInDB($attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
     // attributes
     query("DELETE FROM link_variant_attribute_option WHERE product_id = ?", [$product_id]);
@@ -74,9 +74,8 @@ if (isset($_POST["remove"])) {
 
         triggerEvent("variant_price_change", ["product_id" => $product_id]);
 
-        //include_once "admin/product/attributes_service.php";
-        //$variant_attributes = json_decode($_POST["variant_attributes"], true);
-        //updateAttributesInDB($variant_attributes, "link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant_id);
+        //$attributes = json_decode($variant["attributes"], true);
+        //updateAttributesInDB($attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
     }
 
     if (!$variant_ids) {

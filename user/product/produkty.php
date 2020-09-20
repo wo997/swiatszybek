@@ -237,14 +237,21 @@ function showCategory($category, $level = 0)
       filter: brightness(0.95);
     }
 
-    .order_by_item input:checked+span {
+    .sorting-wrapper:not(.disabled) .order_by_item input:checked+span,
+    .order_by_item.relevance input+span {
       background: var(--primary-clr);
       color: #fffd;
       cursor: default;
     }
 
-    .order_by_item input:not(:checked)+span .fas {
+    .order_by_item input:not(:checked)+span .fas,
+    .sorting-wrapper.disabled span .fas {
       opacity: 0.8;
+    }
+
+    .sorting-wrapper.disabled .order_by_item:not(.relevance) {
+      opacity: 0.5;
+      pointer-events: none;
     }
 
     .order_by_item .fas {
@@ -326,9 +333,11 @@ function showCategory($category, $level = 0)
 
       var products_search = localStorage.getItem("products_search");
       if (products_search) {
-        $(".products_search").value = products_search;
         localStorage.removeItem("products_search");
+      } else {
+        products_search = "";
       }
+      $(".products_search").setValue(products_search);
 
       attributeSelectionChange(null, null);
 
@@ -404,7 +413,7 @@ function showCategory($category, $level = 0)
       } else {
         var products_search = $(".products_search");
         products_search.addEventListener("input", () => {
-          delay("searchProducts", 400);
+          products_search.setValue();
         });
       }
     });
@@ -435,6 +444,7 @@ function showCategory($category, $level = 0)
 
     function clearSearch() {
       $(".products_search").setValue("");
+      searchProducts();
     }
 
     function searchProducts(forceSearch = false) {
@@ -491,7 +501,7 @@ function showCategory($category, $level = 0)
           if (res.totalRows == 0) {
             var parms = JSON.parse(searchParams);
             var caseFilters = parms.attribute_value_ids.length > 0 || parms.search !== "" ?
-              `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class='fas fa-times'></i> Usuń filtry</button>` : "Wyszukaj inną kategorię";
+              `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class='fas fa-times'></i> Wyczyść filtry</button>` : "Wyszukaj inną kategorię";
             res.content = `
               <div style='font-size:22px;padding: 60px 10px;text-align:center;font-weight:bold'>
                 <span style='color: var(--error-clr);'><i class="fas fa-exclamation-circle"></i> Brak produktów!</span>
@@ -610,6 +620,16 @@ function showCategory($category, $level = 0)
 
       searchProducts();
     }
+
+    function productsSearchChange(input) {
+      input = $(input);
+      $$(".case_search").forEach(e => {
+        e.style.display = input.getValue() !== "" ? "" : "none";
+      });
+      delay("searchProducts", 400);
+
+      $(".sorting-wrapper").classList.toggle("disabled", input.getValue() !== "");
+    }
   </script>
 </head>
 
@@ -636,14 +656,24 @@ function showCategory($category, $level = 0)
         ]) ?>
       </div>
 
-      <div class="search-header"><i class="fas fa-search"></i> Szukaj</div>
+      <div class="search-header">
+        <i class="fas fa-search"></i>
+        Szukaj
+        <button class='btn subtle case_search' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-position='right' style='margin:-10px 0'>
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
       <div class='float-icon mobile-margin-bottom'>
-        <input type="text" placeholder="Nazwa produktu..." class="field products_search">
+        <input type="text" placeholder="Nazwa produktu..." class="field products_search" onchange="productsSearchChange(this)">
         <i class="fas fa-search"></i>
       </div>
 
       <div class="sorting-wrapper">
-        <div class="search-header"><i class="fas fa-sort-amount-down-alt"></i> Sortuj</div>
+        <div class="search-header">
+          <i class="fas fa-sort-amount-down-alt"></i>
+          Sortuj
+          <i class="fas fa-info-circle case_search" data-tooltip="Żeby użyć innego sortowania wyczyść wyszukiwanie"></i>
+        </div>
         <label class="order_by_item">
           <input type="radio" name="order_by" value="new">
           <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
@@ -659,6 +689,10 @@ function showCategory($category, $level = 0)
         <label class="order_by_item">
           <input type="radio" name="order_by" value="random">
           <span><i class="fas fa-dice-three"></i> Losuj</span>
+        </label>
+        <label class="order_by_item relevance case_search">
+          <input type="radio" name="order_by" value="relevance">
+          <span><img src="/src/img/target_icon.svg" style="width: 1em;transform: translateY(2px);filter:invert()"> Trafność</span>
         </label>
       </div>
 
@@ -763,7 +797,7 @@ function showCategory($category, $level = 0)
               Filtry
               <span class='filter_count'></span>
               <button class='btn subtle case_any_filters' onclick='clearAllFilters()' data-tooltip='Wyczyść filtry' data-position='right' style='margin:-10px 0'>
-                <img src='/src/img/clear-filters.png' style='width: 25px;margin: -7px;'>
+                <i class='fas fa-times'></i>
               </button>
             </div>
             $output

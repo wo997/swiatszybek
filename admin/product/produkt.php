@@ -22,7 +22,7 @@ include_once "admin/product/attributes_service.php";
 
 $displayAllAttributeOptions = displayAllAttributeOptions();
 
-$product_data["product_attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
+$product_data["attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
 $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FROM link_variant_attribute_option WHERE product_id = $product_id ORDER BY kolejnosc ASC");
 
@@ -330,8 +330,8 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
               <img data-list-param="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
             </td>
             <td>
-              <input type='hiddenx' data-list-param="all_attributes">
-              <span data-list-param="all_attributes_preview" data-type="html"></span>
+              <input type='hiddenx' data-list-param="attributes" onchange="">
+              <span data-type="html"></span>
             </td>
             <td style="width:80px;">
               <button class='btn primary' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
@@ -348,7 +348,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
         product_code: "",
         zdjecie: "",
         published: 0,
-        all_attributes: "[]",
+        attributes: "[]",
       },
       title: "Warianty (min. 1)"
     });
@@ -383,7 +383,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
   function editVariant(row, btn) {
     variantRow = $(row);
 
-    const form = $(`#variantEdit`);
+    const form = $(`#variantForm`);
     var data = getFormData(row, {
       find_by: "data-list-param"
     });
@@ -400,7 +400,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
       variantRow.remove();
     }
 
-    var data = $(`#variantEdit`).getFormData();
+    var data = $(`#variantForm`).getFormData();
 
     setFormData(data, variantRow, {
       find_by: "data-list-param"
@@ -446,29 +446,32 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
 
 <title>Edycja produktu</title>
 
+<?php startSection("header"); ?>
+
+<div class="custom-toolbar">
+  <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+    <?php if ($kopia) : ?>
+      Kopiowanie
+    <?php else : ?>
+      Edycja
+    <?php endif ?>
+    <?= $product_data["title"] ?>
+  </div>
+  <div>
+    <?php if ($kopia) : ?>
+      <a href="/admin/produkt/<?= $product_id ?>" class="btn secondary">Anuluj <i class="fa fa-times"></i></a>
+    <?php else : ?>
+      <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
+      <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
+    <?php endif ?>
+    <button onclick="showPreview()" class="btn secondary">Podgląd <i class="fas fa-external-link-alt"></i></button>
+    <button onclick="saveProductForm()" class="btn primary" onclick="">Zapisz <i class="fas fa-save"></i></button>
+  </div>
+</div>
+
 <?php startSection("content"); ?>
 
 <div id="productForm" data-form data-warn-before-leave>
-  <div class="custom-toolbar sticky-top">
-    <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-      <?php if ($kopia) : ?>
-        Kopiowanie
-      <?php else : ?>
-        Edycja
-      <?php endif ?>
-      <?= $product_data["title"] ?>
-    </div>
-    <div>
-      <?php if ($kopia) : ?>
-        <a href="/admin/produkt/<?= $product_id ?>" class="btn secondary">Anuluj <i class="fa fa-times"></i></a>
-      <?php else : ?>
-        <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
-        <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
-      <?php endif ?>
-      <button onclick="showPreview()" class="btn secondary">Podgląd <i class="fas fa-external-link-alt"></i></button>
-      <button onclick="saveProductForm()" class="btn primary" onclick="">Zapisz <i class="fas fa-save"></i></button>
-    </div>
-  </div>
   <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">
     <div class="checkbox"></div>
   </label>
@@ -511,7 +514,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
   </div>
 
   <div class="field-title">Atrybuty produktu (wspólne)</div>
-  <div name="product_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
+  <div name="attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
   <div class="field-title">Atrybuty wariantów</div>
   <div class="atrybuty_wariantow"></div>
@@ -529,9 +532,8 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
     </div>
   <?php endif ?>
 </div>
-</div>
 
-<div id="variantEdit" data-modal data-expand data-exclude-hidden>
+<div id="variantForm" data-modal data-expand data-exclude-hidden>
   <div class="modal-body">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>
@@ -562,7 +564,7 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
       </div>
 
       <div class="field-title">Atrybuty wariantu (inne niż ogólne dla produktu)</div>
-      <div name="variant_attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
+      <div name="attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
 
       <div class="field-title">
         Zdjecie
@@ -584,5 +586,6 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
       </div>
     </div>
   </div>
+</div>
 
-  <?php include "admin/default_page.php"; ?>
+<?php include "admin/default_page.php"; ?>

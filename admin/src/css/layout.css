@@ -1,5 +1,9 @@
 /* css[admin] */
 
+body {
+  height: 100%;
+}
+
 .main-container {
   flex-grow: 1;
   display: flex;
@@ -46,13 +50,16 @@ footer {
   color: #eee;
   padding: 10px;
   text-align: center;
+  margin-top: auto;
 }
 
 .content {
-  padding: 10px;
   flex-shrink: 1;
   flex-grow: 1;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .main-wrapper {

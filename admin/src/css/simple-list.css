@@ -165,3 +165,7 @@ div.list .simple-list-row {
 tr.simple-list-row td {
   border-bottom: 1px solid #aaa;
 }
+
+.simple-list.has_header {
+  overflow-x: auto;
+}

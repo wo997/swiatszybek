@@ -28,15 +28,19 @@ endSection();
         <a class="menu_item" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
       </div>
       <div class="content">
-        <?php if (isset($sections["content"])) echo $sections["content"]; ?>
+        <?php if (isset($sections["header"])) echo $sections["header"]; ?>
+        <div class="scroll-panel scroll-shadow">
+          <div class="panel-padding">
+            <?php if (isset($sections["content"])) echo $sections["content"]; ?>
+          </div>
+          <div class="footer">Piepsklep <?= date("Y") ?></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="footer">Piepsklep <?= date("Y") ?></div>
-
+  <!-- hidden -->
   <?php include "global/footer.php"; ?>
-
 
 </body>
 
