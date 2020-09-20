@@ -8,6 +8,7 @@ function addItemtoBasket(variant_id, diff) {
     url: url,
     success: (res) => {
       res.variant_id = variant_id;
+      res.diff = diff;
       var event = new CustomEvent("basket-change", {
         detail: {
           res: res,

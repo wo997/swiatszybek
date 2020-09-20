@@ -95,11 +95,12 @@ function updateAttributesInDB($attributes, $link_selection_table, $link_values_t
         $insert = substr($insert, 0, -1);
         query("INSERT INTO $link_selection_table ($column_name, value_id) VALUES $insert");
     }
-
     // any attribute values
     query("DELETE FROM $link_values_table WHERE $column_name = ?", [$object_id]);
-    foreach ($attributes["values"] as $attribute_id => $value) {
-        $data_type = fetchValue("SELECT data_type FROM product_attributes WHERE attribute_id = " . intval($attribute_id));
+    foreach ($attributes["values"] as $attribute) {
+        $attribute_id = intval($attribute["attribute_id"]);
+        $value = $attribute["value"];
+        $data_type = fetchValue("SELECT data_type FROM product_attributes WHERE attribute_id = $attribute_id");
         $field_name = $attribute_data_types[$data_type]["field"];
         query("INSERT INTO $link_values_table ($column_name, attribute_id, $field_name) VALUES ($object_id, $attribute_id, ?)", [$value]);
     }

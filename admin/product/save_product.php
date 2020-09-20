@@ -38,6 +38,7 @@ if (isset($_POST["remove"])) {
 
     include_once "admin/product/attributes_service.php";
     $attributes = json_decode($_POST["attributes"], true);
+
     updateAttributesInDB($attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
     // attributes
@@ -74,8 +75,8 @@ if (isset($_POST["remove"])) {
 
         triggerEvent("variant_price_change", ["product_id" => $product_id]);
 
-        //$attributes = json_decode($variant["attributes"], true);
-        //updateAttributesInDB($attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
+        $attributes = json_decode($variant["attributes"], true);
+        updateAttributesInDB($attributes, "link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant_id);
     }
 
     if (!$variant_ids) {
@@ -84,5 +85,7 @@ if (isset($_POST["remove"])) {
     $variant_ids = substr($variant_ids, 0, -1);
     query("DELETE FROM variant WHERE product_id = $product_id AND variant_id NOT IN ($variant_ids)");
 }
+
 triggerEvent("sitemap_change");
-die;
+
+reload();

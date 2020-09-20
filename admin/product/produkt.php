@@ -26,7 +26,14 @@ $product_data["attributes"] = getAttributesFromDB("link_product_attribute_value"
 
 $product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FROM link_variant_attribute_option WHERE product_id = $product_id ORDER BY kolejnosc ASC");
 
-$product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE product_id = $product_id ORDER BY kolejnosc ASC"), true);
+$variants = fetchArray("SELECT * FROM variant WHERE product_id = $product_id ORDER BY kolejnosc ASC");
+
+foreach ($variants as $key => $variant) {
+  $variant["attributes"] = json_encode(getAttributesFromDB("link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant["variant_id"]));
+  $variants[$key] = $variant;
+}
+
+$product_data["variants"] = json_encode($variants);
 
 ?>
 
@@ -115,77 +122,6 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
     <?php endif ?>
 
     registerTextCounters();
-
-    /*createDatatable({
-      name: "variants2",
-      url: "/admin/search_variant",
-      db_table: "variant",
-      primary: "variant_id",
-      sortable: {
-        required_filter: "product_id"
-      },
-      lang: {
-        subject: "wariantów",
-      },
-      requiredParam: () => {
-        return <?= $product_id ?>;
-      },
-      definition: [{
-          title: "Nazwa wariantu",
-          width: "35%",
-          render: (r) => {
-            return r.name
-          }
-        },
-        {
-          title: "Cena",
-          width: "10%",
-          render: (r) => {
-            return r.price;
-          }
-        },
-        {
-          title: "Rabat",
-          width: "10%",
-          render: (r) => {
-            return r.rabat;
-          }
-        },
-        {
-          title: "Ilość",
-          width: "10%",
-          render: (r) => {
-            return r.stock;
-          }
-        },
-        {
-          title: "Zdjęcie",
-          width: "10%",
-          render: (r) => {
-            return `<img style='display:block;width:70px;' src='${r.zdjecie}'>`;
-          },
-          escape: false
-        },
-        getPublishedDefinition({
-          field: "v.published"
-        }),
-        {
-          title: "",
-          width: "95px",
-          render: (r, i) => {
-            return `<div class='btn primary' onclick='editVariant(${i},this)'>Edytuj <i class="fas fa-cog"></i></div>`;
-          },
-          escape: false
-        }
-      ],
-      controls: `
-                <div class='float-icon'>
-                    <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
-                    <i class="fas fa-search"></i>
-                </div>
-                <div class="btn primary" onclick="newVariant(this)"><span>Nowy wariant</span> <i class="fa fa-plus"></i></div>
-            `
-    });*/
 
     createSimpleList({
       name: "gallery",
@@ -430,7 +366,6 @@ $product_data["variants"] = json_encode(fetchArray("SELECT * FROM variant WHERE 
       params: params,
       success: () => {
         setFormInitialState(form);
-        window.location.reload();
       }
     });
   }

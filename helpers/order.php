@@ -242,8 +242,8 @@ function getBasketContent()
                     <a href='" . getProductLink($basket_variant["product_id"], $basket_variant["link"]) . "'>
                         <img class='product-image' data-src='" . $basket_variant["zdjecie"] . "' data-gallery='" . $basket_variant["gallery"] . "' data-height='1w'>
                         <h3 class='product-title'><span class='check-tooltip'>" . $basket_variant["title"] . " " . $basket_variant["name"] . "</span></h3>
-                        <span>$basket_quantity</span>
                         <span class='product-price pln'>" . $basket_variant["total_price"] . " zł</span>
+                        <span>$basket_quantity</span>
                     </a>
                 </div>";
         }

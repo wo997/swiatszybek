@@ -325,11 +325,20 @@ function setValue(input, value = null, params = {}) {
       }
       input.innerHTML = value;
     } else if (type == "attribute_values") {
+      if (typeof value === "string") {
+        try {
+          value = JSON.parse(value);
+        } catch {
+          value = "";
+        }
+      }
       input.findAll(".combo-select-wrapper").forEach((combo) => {
         combo.findAll("select").forEach((select) => {
-          var option = [...select.options].find((o) => {
-            return value.selected.indexOf(parseInt(o.value)) !== -1;
-          });
+          var option = value.selected
+            ? [...select.options].find((o) => {
+                return value.selected.indexOf(parseInt(o.value)) !== -1;
+              })
+            : null;
           if (option) {
             select.setValue(option.value);
           } else {
@@ -342,22 +351,24 @@ function setValue(input, value = null, params = {}) {
         any.find(`.has_attribute`).setValue(false);
       });
 
-      value.values.forEach((e) => {
-        var attribute_row = input.find(
-          `[data-attribute_id="${e.attribute_id}"]`
-        );
+      if (value.values) {
+        value.values.forEach((e) => {
+          var attribute_row = input.find(
+            `[data-attribute_id="${e.attribute_id}"]`
+          );
 
-        if (attribute_row) {
-          var has_attribute_node = attribute_row.find(`.has_attribute`);
-          var attribute_value_node = attribute_row.find(`.attribute_value`);
-          if (has_attribute_node && attribute_value_node) {
-            has_attribute_node.setValue(1);
-            attribute_value_node.setValue(
-              nonull(e.numerical_value, nonull(e.text_value, e.date_value))
-            );
+          if (attribute_row) {
+            var has_attribute_node = attribute_row.find(`.has_attribute`);
+            var attribute_value_node = attribute_row.find(`.attribute_value`);
+            if (has_attribute_node && attribute_value_node) {
+              has_attribute_node.setValue(1);
+              attribute_value_node.setValue(
+                nonull(e.numerical_value, nonull(e.text_value, e.date_value))
+              );
+            }
           }
-        }
-      });
+        });
+      }
     } else if (type == "src") {
       if (getResponsiveImageData(value)) {
         input.setAttribute("data-real-src", value);
@@ -398,6 +409,12 @@ function getValue(input) {
       value = selected.getAttribute("value");
     }
     return value;
+  } else if (input.datepicker) {
+    var value = input.value;
+    if (value && value.substr(6, 4).match(/\d{4}/)) {
+      value = reverseDateString(value, "-");
+    }
+    return value;
   }
   if (input.classList.contains("jscolor")) {
     var value = input.value;
@@ -426,13 +443,16 @@ function getValue(input) {
           attribute_selected_values.push(parseInt(select.value));
         }
       });
-      var attribute_values = {};
+      var attribute_values = [];
       input.findAll(".any-value-wrapper").forEach((attribute_row) => {
         var attr_id = attribute_row.getAttribute("data-attribute_id");
         var attr_val_node = attribute_row.find(".attribute_value:not(.hidden)");
 
         if (attr_val_node) {
-          attribute_values[attr_id] = attr_val_node.getValue();
+          attribute_values.push({
+            attribute_id: attr_id,
+            value: attr_val_node.getValue(),
+          });
         }
       });
       return JSON.stringify({

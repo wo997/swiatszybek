@@ -169,3 +169,7 @@ tr.simple-list-row td {
 .simple-list.has_header {
   overflow-x: auto;
 }
+
+.simple-list.has_header .add_end {
+  background: var(--primary-clr);
+}

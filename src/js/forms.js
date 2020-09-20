@@ -397,6 +397,11 @@ function setFormData(data, form, params = {}) {
 
   var find_by = nonull(params.find_by, "name");
 
+  // just in case
+  registerDatepickers();
+  registerRangeSliders();
+  jscolor.installByClassName();
+
   Object.entries(data).forEach(([name, value]) => {
     var selector = `[${find_by}="${name}"]`;
     var e = form.find(selector);

@@ -124,15 +124,16 @@ function youAlreadyHaveIt(animate_variant_id = null) {
   }, 10);
 }
 
-window.addEventListener("basket-change", () => {
+window.addEventListener("basket-change", (event) => {
+  var res = event.detail.res;
   userBasketUpdated();
 
-  youAlreadyHaveIt(variant_id);
+  youAlreadyHaveIt(res.variant_id);
 
   var variant = variants.find((v) => {
     return v.variant_id == VARIANT_ID;
   });
-  if (diff == 1 && variant && variant.quantity == 1) {
+  if (res.diff == 1 && variant && variant.quantity == 1) {
     showPopup();
   }
 });

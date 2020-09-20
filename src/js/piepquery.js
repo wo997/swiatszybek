@@ -4,7 +4,7 @@ function $(node, parent = null) {
   if (!node) return null;
   if (node.find) return node; // already initialized
 
-  if (parent === null) {
+  if (!parent) {
     parent = document.body;
   }
 
