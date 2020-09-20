@@ -103,22 +103,21 @@ $static = checkUrl($page_data["link"]);
     }
 </script>
 
+<?php startSection("header"); ?>
+
+<div class="custom-toolbar">
+    <span class="title">Edycja strony</span>
+    <a class="btn primary" href="/admin/strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
+    <?php if ($page_data["published"]) : ?>
+        <a class="btn primary" href="/<?= $page_data["link"] ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
+    <?php endif ?>
+    <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
+    <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
+</div>
+
 <?php startSection("content"); ?>
 
 <div id="cmsForm" data-form data-warn-before-leave>
-
-    <div class="sticky-top">
-        <div class="custom-toolbar">
-            <span class="title">Edycja strony</span>
-            <a class="btn primary" href="/admin/strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
-            <?php if ($page_data["published"]) : ?>
-                <a class="btn primary" href="/<?= $page_data["link"] ?>">Otwórz stronę <i class="fas fa-chevron-circle-right"></i></a>
-            <?php endif ?>
-            <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
-            <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
-        </div>
-    </div>
-
     <input type='hidden' name='cms_id' value='<?= $page_data["cms_id"] ?>'>
 
     <div <?= $static ? "style='display:none'" : "" ?>>
