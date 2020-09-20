@@ -944,31 +944,6 @@ input:read-only {
   transform: rotate(-10deg);
 }
 
-.old-popupWrapper {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  left: 0;
-  background: rgba(150, 150, 150, 0.2);
-  opacity: 0;
-  box-sizing: border-box;
-  padding: 30px;
-  transition: opacity 0.4s;
-  top: -200vh;
-  display: flex;
-  z-index: 1000000;
-}
-.old-popup {
-  width: 100%;
-  max-width: 460px;
-  margin: auto;
-  padding: 25px 10px;
-  border-radius: 4px;
-  background-color: white;
-  
-  
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.17);
-}
 .item-list {
   width: 100%;
   border-spacing: 0;
