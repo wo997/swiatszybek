@@ -179,7 +179,6 @@ textarea {
 .btn.primary {
   background: var(--primary-clr);
   color: white;
-  border: 1px solid var(--primary-clr);
 }
 .btn.secondary {
   background: #fafafa;
@@ -190,18 +189,15 @@ textarea {
 .btn.subtle {
   background: var(--subtle-background-clr);
   color: var(--subtle-font-clr);
-  border: 1px solid var(--subtle-background-clr);
 }
 
 .btn.success {
   background: var(--success-clr);
   color: white;
-  border: 1px solid var(--success-clr);
 }
 .btn.error {
   background: var(--error-clr);
   color: white;
-  border: 1px solid var(--error-clr);
 }
 
 .btn.black-outline {
@@ -212,7 +208,6 @@ textarea {
 .btn.black {
   background: black;
   color: white;
-  border: 1px solid black;
 
 }
 .btn.buff {

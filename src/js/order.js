@@ -27,7 +27,10 @@ window.addEventListener("basket-change", (event) => {
   if (bm) {
     bm.setContent(res.basket_content_html);
   } else {
-    setContent($(".nav_basket_content"), res.basket_content_html);
+    var bc = $(".nav_basket_content");
+    if (bc) {
+      setContent(bc, res.basket_content_html);
+    }
   }
 
   $$(".basket_item_count").forEach((e) => {

@@ -132,7 +132,11 @@ window.addEventListener("DOMContentLoaded", () => {
       </div>
   `);
 
-  $("#mainSearch .scroll-panel").appendChild($("header .main-search-wrapper"));
+  var sc = $("#mainSearch .scroll-panel");
+  var sw = $("header .main-search-wrapper");
+  if (sc && sw) {
+    sc.appendChild(sw);
+  }
 
   //user
   var um = $("header .user-menu");
@@ -154,11 +158,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
   $("#loginForm").setAttribute("data-expand", "");
 
-  $("header .user-wrapper a").addEventListener("click", function (event) {
-    showModal("userMenu", { source: this });
-    event.preventDefault();
-    return false;
-  });
+  var hua = $("header .user-wrapper a");
+  if (hua) {
+    hua.addEventListener("click", function (event) {
+      showModal("userMenu", { source: this });
+      event.preventDefault();
+      return false;
+    });
+  }
 
   //basket
   registerModalContent(`
@@ -206,7 +213,11 @@ window.addEventListener("DOMContentLoaded", () => {
       </div>
   `);
 
-  $("#mainMenu .scroll-panel").appendChild($(".navigation"));
+  var mm = $("#mainMenu .scroll-panel");
+  var nvg = $(".navigation");
+  if (mm && nvg) {
+    mm.appendChild(nvg);
+  }
 });
 
 // perform search
