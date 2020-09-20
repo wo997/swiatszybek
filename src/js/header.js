@@ -291,7 +291,7 @@ window.addEventListener("DOMContentLoaded", () => {
       e.classList.remove("selected");
     });
 
-    if (select) {
+    if (select && !select.classList.contains("no-results")) {
       select.classList.add("selected");
     }
   });
@@ -328,7 +328,7 @@ function topSearch() {
     },
     success: (res) => {
       if (!res.content) {
-        res.content = `<div class='result' style='pointer-events:none'><i class="fas fa-ban"></i> Brak wyników</div>`;
+        res.content = `<div class='result no-results' style='pointer-events:none'><i class="fas fa-ban"></i> Brak wyników</div>`;
       }
       callback(res.content);
     },

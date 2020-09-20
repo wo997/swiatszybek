@@ -47,6 +47,12 @@ $product_data["variants"] = json_encode($variants);
   useTool("cms");
   useTool("preview");
 
+  var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id FROM attribute_values'), true) ?>;
+  var attribute_values = {};
+  attribute_values_array.forEach(attribute => {
+    attribute_values[attribute["value_id"]] = attribute["value"];
+  });
+
   function comboSelectValuesChanged(combo) {
     combo.findAll("select").forEach(select => {
       for (option of select.options) {
@@ -266,8 +272,8 @@ $product_data["variants"] = json_encode($variants);
               <img data-list-param="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
             </td>
             <td>
-              <input type='hiddenx' data-list-param="attributes" onchange="">
-              <span data-type="html"></span>
+              <input type='hidden' data-list-param="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
+              <div data-tooltip class='clamp-lines clamp-4'></div>
             </td>
             <td style="width:80px;">
               <button class='btn primary' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
@@ -304,6 +310,18 @@ $product_data["variants"] = json_encode($variants);
   window.addEventListener("load", function() {
     fileManager.setDefaultName($('[name="title"]').value);
   });
+
+  function displayAttributesPreview(target, data) {
+    var attributes = JSON.parse(data);
+    var output = "";
+    attributes.selected.forEach(attribute_id => {
+      output += attribute_values[+attribute_id] + "<br>";
+    })
+    attributes.values.forEach(attribute => {
+      output += attribute.value + "<br>";
+    });
+    target.setContent(output);
+  }
 
   function copyMainImage(node) {
     node.setAttribute("src", $("#img-main").getAttribute("src"));

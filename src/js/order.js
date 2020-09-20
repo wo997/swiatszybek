@@ -1,6 +1,6 @@
 /* js[global] */
 
-function addItemtoBasket(variant_id, diff) {
+function addItemToBasket(variant_id, diff) {
   if (diff > 0) url = "/basket/add/" + variant_id + "/" + diff;
   else url = "/basket/remove/" + variant_id + "/" + -diff;
 

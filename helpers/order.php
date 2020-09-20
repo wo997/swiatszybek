@@ -276,9 +276,9 @@ function printBasketTable()
         }
         $nr++;
 
-        $remove = "<button class='removeBtn' type='button' onclick='addItemtoBasket(" . $v["variant_id"] . ",-1)'>-</button>";
+        $remove = "<button class='removeBtn' type='button' onclick='addItemToBasket(" . $v["variant_id"] . ",-1)'>-</button>";
         $add = $quantity < $stock ?
-            "<button class='addBtn' type='button' onclick='addItemtoBasket(" . $v["variant_id"] . ",1)'>+</button>"
+            "<button class='addBtn' type='button' onclick='addItemToBasket(" . $v["variant_id"] . ",1)'>+</button>"
             : "<button type='button' style='visibility:hidden'>+</button>";
 
         $res .= "<tr data-variant_id='" . $v["variant_id"] . "'>

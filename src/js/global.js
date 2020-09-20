@@ -14,14 +14,14 @@ function xhr(data) {
         res = JSON.parse(res);
       } catch {}
     }
+    if (data.success) {
+      data.success(res);
+    }
     if (res.redirect) {
       window.location = res.redirect;
     }
     if (res.reload) {
       window.location.reload();
-    }
-    if (data.success) {
-      data.success(res);
     }
   };
 
@@ -352,9 +352,9 @@ function setValue(input, value = null, params = {}) {
       });
 
       if (value.values) {
-        value.values.forEach((e) => {
+        value.values.forEach((attribute) => {
           var attribute_row = input.find(
-            `[data-attribute_id="${e.attribute_id}"]`
+            `[data-attribute_id="${attribute.attribute_id}"]`
           );
 
           if (attribute_row) {
@@ -362,9 +362,7 @@ function setValue(input, value = null, params = {}) {
             var attribute_value_node = attribute_row.find(`.attribute_value`);
             if (has_attribute_node && attribute_value_node) {
               has_attribute_node.setValue(1);
-              attribute_value_node.setValue(
-                nonull(e.numerical_value, nonull(e.text_value, e.date_value))
-              );
+              attribute_value_node.setValue(attribute.value);
             }
           }
         });

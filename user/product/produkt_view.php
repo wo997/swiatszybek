@@ -82,7 +82,7 @@
 
 
         <div style="height:20px"></div>
-        <button id="buyNow" class="btn primary medium fill" onclick="addItem(VARIANT_ID,1)">
+        <button id="buyNow" class="btn primary medium fill" onclick="addItemToBasket(VARIANT_ID,1)">
           Dodaj do koszyka
           <i class="fa fa-check" style="font-size: 14px;vertical-align: middle;"></i>
         </button>
@@ -201,12 +201,15 @@
   <?php endif ?>
 </div>
 
-<div class="old-popupWrapper">
-  <div class="old-popup">
-    <h3 style="margin: 0 0 19px;text-align:center;font-size:20px">Dodano produkt do koszyka</h3>
-    <div style="display:flex" class="mobileRow">
+<div id="productAdded" data-form data-modal data-dismissable>
+  <div class="modal-body">
+    <button class="fas fa-times close-modal-btn"></button>
+
+    <h3 class="header">Dodano do koszyka</h3>
+
+    <div style="display:flex;padding: min(2vw,15px);align-items: center;" class="mobileRow">
       <img class="marginAuto" id="updateChoosenImage" style="width:100%;object-fit:contain;margin-right: 20px;" data-height="1w">
-      <div style="display: flex;flex-direction: column;justify-content: center;width: 55%;">
+      <div style="width: 55%;max-width: 300px;">
         <div style="font-size: 14px;display: flex;align-items: center;min-height: 80px;">
           <div>
             <?= $product_data["title"] ?>
@@ -214,7 +217,7 @@
             <div id="updateChoosenAmountCost" class="pln" style="text-align: center;font-size: 20px;display: inline-block;position: relative;top: 1px;left: 2px;"></div>
           </div>
         </div>
-        <div class="btn primary medium fill" style="margin: 10px 0" onclick="hidePopup()">
+        <div class="btn primary medium fill" style="margin: 10px 0" onclick="hideParentModal(this)">
           Kontynuuj zakupy
         </div>
         <a href="/zakup" class="btn primary medium fill" style="margin-bottom: 6px">

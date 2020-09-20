@@ -112,3 +112,14 @@ function fixHeightsAutomatically() {
   setTimeout(fixHeightsAutomatically, 500);
 }
 fixHeightsAutomatically();
+
+/* when modal is showed it has transform scale, so it causes that issue */
+function setCustomHeightsQuickly(time = 30) {
+  if (time < 0) {
+    return;
+  }
+  setCustomHeights();
+  requestAnimationFrame(() => {
+    setCustomHeightsQuickly(time - 1);
+  });
+}

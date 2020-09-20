@@ -60,11 +60,14 @@ window.addEventListener("DOMContentLoaded", function () {
 
   youAlreadyHaveIt();
 
-  userBasketUpdated();
+  //userBasketUpdated();
 });
 
-function userBasketUpdated() {
-  for (basket_item of basket_data.basket) {
+/*function userBasketUpdated() {
+  basket_data.basket.forEach(e=>{
+
+  })
+  for (basket_item of ) {
     var variant = variants.find((v) => {
       return v.variant_id == basket_item.variant_id;
     });
@@ -72,7 +75,7 @@ function userBasketUpdated() {
       variant.quantity = basket_item.quantity;
     }
   }
-}
+}*/
 
 function youAlreadyHaveIt(animate_variant_id = null) {
   var juzMasz = "";
@@ -95,10 +98,10 @@ function youAlreadyHaveIt(animate_variant_id = null) {
       total++;
     }
 
-    var remove = `<button class='removeBtn' onclick='addItemtoBasket(${basket_item.variant_id},-1)'>-</button>`;
+    var remove = `<button class='removeBtn' onclick='addItemToBasket(${basket_item.variant_id},-1)'>-</button>`;
     var add = `<button class='addBtn' ${
       basket_item.quantity <= 0 ? "style='visibility:hidden'" : ""
-    } onclick='addItemtoBasket(${basket_item.variant_id},1)'>+</button>`;
+    } onclick='addItemToBasket(${basket_item.variant_id},1)'>+</button>`;
 
     juzMasz += `<tr ${animate}><td>${variant.name}</td><td class='oneline'>${remove}${basket_item.quantity} szt.${add}</td><td class='pln oneline'>${total_price} zł</td></tr>`;
   }
@@ -126,7 +129,7 @@ function youAlreadyHaveIt(animate_variant_id = null) {
 
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
-  userBasketUpdated();
+  //userBasketUpdated();
 
   youAlreadyHaveIt(res.variant_id);
 
@@ -134,7 +137,7 @@ window.addEventListener("basket-change", (event) => {
     return v.variant_id == VARIANT_ID;
   });
   if (res.diff == 1 && variant && variant.quantity == 1) {
-    showPopup();
+    showModal("productAdded");
   }
 });
 

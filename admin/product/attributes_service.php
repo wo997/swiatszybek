@@ -85,6 +85,7 @@ function displayAllAttributeOptions()
 function updateAttributesInDB($attributes, $link_selection_table, $link_values_table, $column_name, $object_id)
 {
     global $attribute_data_types;
+
     // link attribute values
     query("DELETE FROM $link_selection_table WHERE $column_name = ?", [$object_id]);
     $insert = "";
@@ -108,9 +109,25 @@ function updateAttributesInDB($attributes, $link_selection_table, $link_values_t
 
 function getAttributesFromDB($link_selection_table, $link_values_table, $column_name, $object_id)
 {
+    global $attribute_data_types;
+
     $object_id = intval($object_id);
+
+    $values_all = fetchArray("SELECT * FROM $link_values_table INNER JOIN product_attributes USING (attribute_id) WHERE $column_name = $object_id");
+    $values = [];
+
+    foreach ($values_all as $attribute) {
+        $attribute_id = $attribute["attribute_id"];
+        $data_type = fetchValue("SELECT data_type FROM product_attributes WHERE attribute_id = $attribute_id");
+        $field_name = $attribute_data_types[$data_type]["field"];
+        $values[] = [
+            "attribute_id" => $attribute_id,
+            "value" => $attribute[$field_name]
+        ];
+    }
+
     return [
         "selected" => fetchColumn("SELECT value_id FROM $link_selection_table WHERE $column_name = $object_id"),
-        "values" => fetchArray("SELECT * FROM $link_values_table INNER JOIN product_attributes USING (attribute_id) WHERE $column_name = $object_id")
+        "values" => $values
     ];
 }

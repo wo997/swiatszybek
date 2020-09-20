@@ -10,7 +10,7 @@ window.addEventListener("mousemove", function (event) {
 
     if (tooltipText === "") {
       if (e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight) {
-        tooltipText = e.textContent;
+        tooltipText = e.innerHTML;
       } else {
         return;
       }
