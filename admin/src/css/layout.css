@@ -80,4 +80,7 @@ h1 {
   .navbar_admin {
     width: 100%;
   }
+  .content {
+    height: auto;
+  }
 }

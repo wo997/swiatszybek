@@ -222,20 +222,30 @@ window.addEventListener("DOMContentLoaded", () => {
 
 // perform search
 
+function btnSearchProducts() {
+  var search = $(".main-search-wrapper input").value.trim();
+
+  if (search === "") {
+    topSearchProducts(true);
+  } else {
+    goToSearchProducts();
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   var input = $(".main-search-wrapper input");
   if (!input) {
     return;
   }
   var main_search_wrapper = $(".main-search-wrapper");
-  document.addEventListener("click", (event) => {
+  document.addEventListener("mousedown", (event) => {
     main_search_wrapper.classList.toggle(
       "active",
       $(event.target).findParentByClassName("main-search-wrapper")
     );
   });
   input.addEventListener("input", () => {
-    delay("topSearch", 400);
+    delay("topSearchProducts", 400);
   });
   main_search_wrapper.addEventListener("mousemove", (event) => {
     if (event.target.classList.contains("result")) {
@@ -260,6 +270,8 @@ window.addEventListener("DOMContentLoaded", () => {
         return false;
       } else if ($(".main-search-wrapper input").value.trim()) {
         goToSearchProducts();
+      } else {
+        topSearchProducts(true);
       }
     }
 
@@ -297,14 +309,16 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function topSearch() {
+function topSearchProducts(force) {
   var search = $(".main-search-wrapper input").value.trim();
 
   var callback = (content) => {
-    $(".main-search-wrapper .search-results").setContent(content);
+    var sr = $(".main-search-wrapper .search-results");
+    sr.setContent(content);
+    sr.style.display = content ? "block" : "none";
   };
 
-  if (search.length === 0) {
+  if (search.length === 0 && !force) {
     return callback("");
   }
 

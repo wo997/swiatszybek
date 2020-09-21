@@ -26,7 +26,6 @@ body {
 *::before {
   box-sizing: border-box;
   line-height: 1.55;
-  min-width: 0; /* flexbox sucks */
 }
 p {
   margin: 0;

@@ -95,6 +95,10 @@ function $(node, parent = null) {
     return window.isInNode(node, parent);
   };
 
+  node.isEmpty = () => {
+    return isEmpty(node);
+  };
+
   node.remove = () => {
     return window.removeNode(node);
   };

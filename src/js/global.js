@@ -630,6 +630,10 @@ function setContent(node, html = "") {
   node.insertAdjacentHTML("afterbegin", html);
 }
 
+function isEmpty(node) {
+  return node.innerHTML.trim() === "";
+}
+
 function addMissingDirectChildren(
   parent,
   isMissingCallback,

@@ -281,7 +281,7 @@ function showCategory($category, $level = 0)
 
     .sorting-wrapper.horizontal .order_by_item span {
       padding: 6px 10px;
-      margin: 0 5px;
+      margin-right: 10px;
     }
 
     .sorting-wrapper.horizontal .order_by_item:first-child span {
