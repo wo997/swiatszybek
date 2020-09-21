@@ -59,10 +59,10 @@ if (isset($moduleParams["attribute_value_ids"])) {
 }
 
 $price_query = "";
-if ($price_min !== "") {
+if ($price_min) {
   $price_query .= " AND price_max >= " . intval($price_min);
 }
-if ($price_max !== "") {
+if ($price_max) {
   $price_query .= " AND price_min <= " . intval($price_max);
 }
 $where .= $price_query;

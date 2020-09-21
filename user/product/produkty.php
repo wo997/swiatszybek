@@ -204,6 +204,7 @@ function showCategory($category, $level = 0)
       width: 100%;
       background: white;
       pointer-events: none;
+      z-index: 100;
     }
 
     .product_list-container-swap-background {
@@ -443,10 +444,6 @@ function showCategory($category, $level = 0)
     }
 
     function clearAllFilters() {
-      /*$$(".filters input[type='checkbox']").forEach(e => {
-        e.setValue(0);
-      })*/
-
       setFormData(window.filtersInitialState, ".filters");
     }
 
@@ -521,7 +518,7 @@ function showCategory($category, $level = 0)
             res.content = `<div style='height:50px'></div>${res.content}<div style='height:50px'></div>`;
           }
 
-          $(".price_range_info").setContent(`(${res.price_info.min} zł - ${res.price_info.max} zł)`);
+          $(".price_range_info").setContent((res.price_info.min && res.price_info.max) ? `(${res.price_info.min} zł - ${res.price_info.max} zł)` : "");
 
           var duration = 300;
           var was_h = productListAnimationNode.getBoundingClientRect().height;
@@ -613,25 +610,31 @@ function showCategory($category, $level = 0)
         expand(list, checkbox.checked);
       }
 
+      filterChange(true);
+    }
+
+    function filterChange(instant = false) {
       var filter_count = $$(".filters input[type='checkbox']:checked").length;
-      if (filter_count > 0) {
-        filter_count = `(${filter_count})`;
-      } else {
-        filter_count = "";
+
+      if ($(".price_min_search").getValue()) {
+        filter_count++;
+      }
+      if ($(".price_max_search").getValue()) {
+        filter_count++;
       }
 
       $$(".filter_count").forEach(e => {
-        e.innerHTML = filter_count;
+        e.innerHTML = filter_count ? `(${filter_count})` : "";
       });
 
       $$(".case_any_filters").forEach(e => {
         e.style.display = filter_count ? "" : "none";
       });
 
-      searchProducts();
+      anySearchChange(instant);
     }
 
-    function productsSearchChange(input) {
+    function productsSearchChange(input, instant = false) {
       input = $(input);
 
       var value = input.getValue();
@@ -647,7 +650,15 @@ function showCategory($category, $level = 0)
         $(`.order_by_item .relevance_option`).checked = true;
       }
 
-      delay("searchProducts", 400);
+      anySearchChange(instant);
+    }
+
+    function anySearchChange(instant = false) {
+      if (instant) {
+        searchProducts();
+      } else {
+        delay("searchProducts", 400);
+      }
     }
   </script>
 </head>
@@ -683,7 +694,7 @@ function showCategory($category, $level = 0)
         </button>
       </div>
       <div class='float-icon mobile-margin-bottom'>
-        <input type="text" placeholder="Nazwa produktu..." class="field products_search" onchange="productsSearchChange(this)">
+        <input type="text" placeholder="Nazwa produktu..." class="field products_search" data-input-change onchange="productsSearchChange(this)">
         <i class="fas fa-search"></i>
       </div>
 
@@ -715,7 +726,7 @@ function showCategory($category, $level = 0)
         </label>
       </div>
 
-      <div class="filters">
+      <div class="filters" data-form>
         <div class='search-header'>
           <i class='fas fa-sliders-h'></i>
           Filtry
@@ -727,18 +738,18 @@ function showCategory($category, $level = 0)
 
         <div class='attribute-header'>Cena <span class="price_range_info"></span></div>
 
-        <div style="display: flex">
-          <div style="margin-right:5px;display: flex;flex-direction: column;">
+        <div class="flex-children-width">
+          <div class="flex-column" style="margin-right:15px;">
             Min.
-            <div class='float-icon mobile-margin-bottom' style="display: flex;">
-              <input type="number" class="field inline price_min_search" style="padding-right: 24px;" oninput="delay('searchProducts',400)">
+            <div class='float-icon mobile-margin-bottom flex'>
+              <input type="number" class="field inline price_min_search" name="price_min_search" style="padding-right: 24px;" oninput="filterChange()" onchange="filterChange(true);">
               <i>zł</i>
             </div>
           </div>
-          <div style="display: flex;flex-direction: column;">
+          <div class="flex-column">
             Max.
-            <div class='float-icon mobile-margin-bottom' style="display: flex;">
-              <input type="number" class="field inline price_max_search" style="padding-right: 24px;" oninput="delay('searchProducts',400)">
+            <div class='float-icon mobile-margin-bottom flex'>
+              <input type="number" class="field inline price_max_search" name="price_max_search" style="padding-right: 24px;" oninput="filterChange()" onchange="filterChange(true);">
               <i>zł</i>
             </div>
           </div>

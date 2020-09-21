@@ -580,6 +580,19 @@ function registerForm(form = null) {
         </div>
       `
     );
+
+    if (field.hasAttribute("data-input-change")) {
+      field.addEventListener("input", () => {
+        var ddc = field.getAttribute("data-input-change");
+        if (ddc) {
+          setTimeout(() => {
+            field.setValue();
+          }, ddc);
+        } else {
+          field.setValue();
+        }
+      });
+    }
   });
 }
 

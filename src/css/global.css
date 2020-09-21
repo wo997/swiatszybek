@@ -1760,3 +1760,19 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 .align-middle {
   vertical-align: middle;
 }
+
+.flex-children-width {
+  display: flex;
+}
+.flex-children-width * {
+  min-width: 0;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex {
+  display: flex;
+}
