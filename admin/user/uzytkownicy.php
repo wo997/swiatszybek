@@ -186,7 +186,7 @@
 
 <div class="mytable" id="caseAllUsers"></div>
 
-<div id="editUser" data-modal data-expand data-exclude-hidden>
+<div id="editUser" data-modal data-expand data-exclude-hidden data-form>
     <div class="modal-body">
         <div class="custom-toolbar">
             <span class="title">Edycja użytkownika</span>

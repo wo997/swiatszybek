@@ -826,7 +826,6 @@ function createDatatable(datatable) {
           row[datatable.primary] = parseInt(e.getAttribute("data-primary"));
           metadata.push(row);
         });
-      console.log(metadata);
       datatable.metadata = metadata;
     }
 

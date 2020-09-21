@@ -486,7 +486,7 @@ $product_data["variants"] = json_encode($variants);
   <?php endif ?>
 </div>
 
-<div id="variantForm" data-modal data-expand data-exclude-hidden>
+<div id="variantForm" data-modal data-expand data-exclude-hidden data-form>
   <div class="modal-body">
     <div class="custom-toolbar">
       <span class="title">Edycja wariantu produktu</span>

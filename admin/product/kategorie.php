@@ -253,16 +253,14 @@
                 <div class="field-title">Zawartość (dół) <button class="btn primary" onclick="editCMS($('#editCategory .content'));">Edytuj </button></div>
                 <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
-                <br>
+                <div class="caseCanDelete" style="margin-left:auto;margin-top:auto;align-self: flex-end; padding-top:30px; padding-bottom: 15px">
+                    <button class="btn red" onclick="if(confirm(' Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
+                    <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
+                </div>
             </div>
-            <div class="caseCanDelete" style="margin-top:auto;align-self: flex-end; padding-top:30px; padding-bottom: 15px">
-                <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
-                <button class="btn red" onclick="if(confirm(' Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
-            </div>
-
-            <input type="hidden" name="category_id">
-
         </div>
+
+        <input type="hidden" name="category_id">
     </div>
 </div>
 

@@ -52,7 +52,6 @@ function setCategoryPickerValuesString(element, values, params = {}) {
   if (params.disable_with_children) {
     params.disable_with_children.forEach((i) => {
       var el = element.find(`[data-category_id="${i}"]`);
-      console.log(i, el);
       if (el) {
         toggleDisabled(el, true);
         el.checked = false;

@@ -203,26 +203,26 @@
 }
 
 .shadow-node.top.light {
-  width: 40px;
-  margin-bottom: -40px;
+  width: 30px;
+  margin-bottom: -30px;
   background: linear-gradient(to top, #fff0 0%, #fff 100%);
   box-shadow: none;
 }
 .shadow-node.bottom.light {
-  width: 40px;
-  margin-top: -40px;
+  width: 30px;
+  margin-top: -30px;
   background: linear-gradient(to bottom, #fff0 0%, #fff 100%);
   box-shadow: none;
 }
 .shadow-node.left.light {
-  width: 40px;
-  margin-right: -40px;
+  width: 30px;
+  margin-right: -30px;
   background: linear-gradient(to left, #fff0 0%, #fff 100%);
   box-shadow: none;
 }
 .shadow-node.right.light {
-  width: 40px;
-  margin-left: -40px;
+  width: 30px;
+  margin-left: -30px;
   background: linear-gradient(to right, #fff0 0%, #fff 100%);
   box-shadow: none;
 }

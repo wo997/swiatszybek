@@ -96,7 +96,7 @@
 
 <div class="mytable"></div>
 
-<div id="newProduct" data-modal>
+<div id="newProduct" data-modal data-form>
   <div class="modal-body">
     <label>
       <span>Nazwa produktu</span>

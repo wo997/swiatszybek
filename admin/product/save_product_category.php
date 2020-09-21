@@ -22,8 +22,10 @@ if (isset($_POST["remove"])) {
     // link attributes
     query("DELETE FROM link_category_attribute WHERE category_id = ?", [$category_id]);
     $insert = "";
-    foreach (json_decode($_POST["attributes"], true) as $attribute_id => $attribute_metadata) {
-        $insert .= "($category_id," . intval($attribute_id) . "," . intval($attribute_metadata["main_filter"]) . "),";
+    foreach (json_decode($_POST["attributes"], true) as $attribute) {
+        $attribute_id = intval($attribute["attribute_id"]);
+        $main_filter = intval($attribute["main_filter"]);
+        $insert .= "($category_id,$attribute_id,$main_filter),";
     }
     $insert = substr($insert, 0, -1);
     query("INSERT INTO link_category_attribute (category_id, attribute_id, main_filter) VALUES $insert");
