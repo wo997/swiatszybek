@@ -104,7 +104,7 @@ function createDatatable(datatable) {
       }
       datatable.selection = selection;
 
-      datatable.selectionValueElement.value = values;
+      datatable.selectionValueElement.value = JSON.stringify(values);
 
       datatable.createList();
     };
@@ -820,10 +820,10 @@ function createDatatable(datatable) {
         .findAll("tr[data-primary]")
         .forEach((e) => {
           var row = {};
+          row[datatable.primary] = parseInt(e.getAttribute("data-primary"));
           e.findAll("[data-metadata]").forEach((m) => {
             row[m.getAttribute("data-metadata")] = m.getValue();
           });
-          row[datatable.primary] = parseInt(e.getAttribute("data-primary"));
           metadata.push(row);
         });
       datatable.metadata = metadata;

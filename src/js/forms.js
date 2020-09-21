@@ -387,6 +387,9 @@ function checkFormCloseWarning(name) {
 function setFormInitialState(form) {
   form = $(form);
   if (form.id) {
+    setTimeout(() => {
+      console.log(getFormData(form));
+    }, 0);
     formInitialStates[form.id] = getFormData(form);
   }
 }
