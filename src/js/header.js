@@ -225,7 +225,7 @@ window.addEventListener("DOMContentLoaded", () => {
 function btnSearchProducts() {
   var search = $(".main-search-wrapper input").value.trim();
 
-  if (search === "") {
+  if (search.length < 3) {
     topSearchProducts(true);
   } else {
     goToSearchProducts();
@@ -279,6 +279,9 @@ window.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    /* prevent moving cursor sideways on up/down keys */
+    event.preventDefault();
+
     if (selected) {
       if (down) {
         select = selected.next();
@@ -313,9 +316,7 @@ function topSearchProducts(force) {
   var search = $(".main-search-wrapper input").value.trim();
 
   var callback = (content) => {
-    var sr = $(".main-search-wrapper .search-results");
-    sr.setContent(content);
-    sr.style.display = content ? "block" : "none";
+    $(".main-search-wrapper .search-results").setContent(content);
   };
 
   if (search.length === 0 && !force) {
@@ -324,7 +325,9 @@ function topSearchProducts(force) {
 
   if (search.length < 3) {
     return callback(
-      `<i class='result' style='pointer-events:none'> Wpisz mininum 3 znaki...</i>`
+      force
+        ? `<i class='result' style='pointer-events:none'> Wpisz mininum 3 znaki...</i>`
+        : ""
     );
   }
 
