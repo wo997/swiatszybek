@@ -9,6 +9,9 @@ $moduleParams["attribute_value_ids"] = nonull($filters, "attribute_value_ids", "
 $moduleParams["order_by"] = nonull($filters, "order_by", "");
 $moduleParams["search"] = nonull($filters, "search", "");
 $moduleParams["basic"] = nonull($filters, "basic", false);
+$moduleParams["price_min"] = nonull($filters, "price_min", "");
+$moduleParams["price_max"] = nonull($filters, "price_max", "");
+
 $moduleDir = "modules/product_list";
 
 include $moduleDir . "/content.php";
@@ -17,6 +20,7 @@ json_response(
     [
         "content" => $module_content,
         "pageCount" => $products["pageCount"],
-        "totalRows" => $products["totalRows"]
+        "totalRows" => $products["totalRows"],
+        "price_info" => $price_info
     ]
 );

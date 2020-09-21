@@ -20,6 +20,9 @@ $layout = nonull($moduleParams, "layout", "grid");
 $search = nonull($moduleParams, "search", "");
 $is_basic = nonull($moduleParams, "basic", "");
 
+$price_min = trim(nonull($moduleParams, "price_min", ""));
+$price_max = trim(nonull($moduleParams, "price_max", ""));
+
 if (isset($moduleParams["category_ids"])) {
   if (is_array($moduleParams["category_ids"])) {
     $category_ids =  $moduleParams["category_ids"] = array_filter($moduleParams["category_ids"], function ($id) {
@@ -54,6 +57,15 @@ if (isset($moduleParams["attribute_value_ids"])) {
     }
   }
 }
+
+$price_query = "";
+if ($price_min !== "") {
+  $price_query .= " AND price_max >= " . intval($price_min);
+}
+if ($price_max !== "") {
+  $price_query .= " AND price_min <= " . intval($price_max);
+}
+$where .= $price_query;
 
 //if ($hasAnyAttribute) {
 $join .= " INNER JOIN variant v USING(product_id)
@@ -92,6 +104,8 @@ $params = [
   "raw" => true,
   "main_search_fields" => ["title", "name"]
 ];
+
+$price_info = fetchRow("SELECT MIN(price_min) as min, MAX(price_max) as max FROM products p $join WHERE " . str_replace($price_query, "", $where));
 
 if ($search) {
   $params["search"] = $search;

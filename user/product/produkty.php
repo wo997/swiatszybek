@@ -165,6 +165,10 @@ function showCategory($category, $level = 0)
       .search-wrapper .mobile-search-btn {
         display: none;
       }
+
+      .search-wrapper {
+        max-width: 300px;
+      }
     }
 
     .attribute-list .attribute-list {
@@ -484,7 +488,9 @@ function showCategory($category, $level = 0)
         attribute_value_ids: attribute_value_ids,
         category_ids: [<?= $show_category["category_id"] ?>],
         search: $(".products_search").getValue(),
-        order_by: $(`[name="order_by"]:checked`).getValue()
+        order_by: $(`[name="order_by"]:checked`).getValue(),
+        price_min: $(`.price_min_search`).getValue(),
+        price_max: $(`.price_max_search`).getValue()
       };
 
       if (JSON.stringify(newSearchParams) != JSON.stringify(searchParams)) {
@@ -514,18 +520,15 @@ function showCategory($category, $level = 0)
           } else {
             res.content = `<div style='height:50px'></div>${res.content}<div style='height:50px'></div>`;
           }
+
+          $(".price_range_info").setContent(`(${res.price_info.min} zł - ${res.price_info.max} zł)`);
+
           var duration = 300;
-
           var was_h = productListAnimationNode.getBoundingClientRect().height;
-
           productListSwapContentNode.setContent(res.content);
-
           setProductListGridDimensions(productListSwapContentNode.find(".product_list_module.grid"));
-
           lazyLoadImages(false);
-
           setCustomHeights();
-
           var h = productListSwapContentNode.getBoundingClientRect().height;
 
           animate(
@@ -713,6 +716,35 @@ function showCategory($category, $level = 0)
       </div>
 
       <div class="filters">
+        <div class='search-header'>
+          <i class='fas fa-sliders-h'></i>
+          Filtry
+          <span class='filter_count'></span>
+          <button class='btn subtle case_any_filters' onclick='clearAllFilters()' data-tooltip='Wyczyść filtry' data-position='right' style='margin:-10px 0'>
+            <i class='fas fa-times'></i>
+          </button>
+        </div>
+
+        <div class='attribute-header'>Cena <span class="price_range_info"></span></div>
+
+        <div style="display: flex">
+          <div style="margin-right:5px;display: flex;flex-direction: column;">
+            Min.
+            <div class='float-icon mobile-margin-bottom' style="display: flex;">
+              <input type="number" class="field inline price_min_search" style="padding-right: 24px;" oninput="delay('searchProducts',400)">
+              <i>zł</i>
+            </div>
+          </div>
+          <div style="display: flex;flex-direction: column;">
+            Max.
+            <div class='float-icon mobile-margin-bottom' style="display: flex;">
+              <input type="number" class="field inline price_max_search" style="padding-right: 24px;" oninput="delay('searchProducts',400)">
+              <i>zł</i>
+            </div>
+          </div>
+        </div>
+
+
         <?php
         include_once "admin/product/attributes_service.php";
 
@@ -778,47 +810,9 @@ function showCategory($category, $level = 0)
           }
 
           $output .= "</div>";
-
-          /*$any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
-
-        echo "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . " attribute-row'>" . $attribute["name"] . " ";
-
-        if ($any) {
-          echo '
-              <label class="field-title">
-                <input type="checkbox">
-                <div class="checkbox"></div>
-              </label>
-            ';
-          $attribute_form_name = 'name="attribute_values[' . $attribute["attribute_id"] . ']"';
-          if (strpos($attribute["data_type"], "color") !== false) {
-            echo '<input type="text" class="jscolor field" style="display: inline-block;width:65px" ' . $attribute_form_name . '>';
-          } else if (strpos($attribute["data_type"], "number") !== false) {
-            echo '<input type="number" class="field" ' . $attribute_form_name . '>';
-          } else {
-            echo '<input type="text" class="field" ' . $attribute_form_name . '>';
-          }
-        } else {
-          $values = getAttributeValues($attribute["attribute_id"]);
-          echo printUserSelectValuesOfAttribute($values);
         }
 
-        echo "</div>";*/
-        }
-
-        if ($output) {
-          echo "
-            <div class='search-header'>
-            <i class='fas fa-sliders-h'></i>
-              Filtry
-              <span class='filter_count'></span>
-              <button class='btn subtle case_any_filters' onclick='clearAllFilters()' data-tooltip='Wyczyść filtry' data-position='right' style='margin:-10px 0'>
-                <i class='fas fa-times'></i>
-              </button>
-            </div>
-            $output
-          ";
-        }
+        echo $output;
 
         ?>
       </div>

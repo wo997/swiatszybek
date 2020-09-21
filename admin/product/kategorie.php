@@ -211,7 +211,7 @@
 
 <div class="mytable"></div>
 
-<div id="editCategory" data-modal data-expand>
+<div id="editCategory" data-modal data-expand data-form>
     <div class="modal-body">
         <div class="custom-toolbar">
             <span class="title">Edycja kategorii</span>
