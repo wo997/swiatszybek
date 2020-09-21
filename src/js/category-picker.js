@@ -156,7 +156,7 @@ function loadCategoryPicker(
         e.insertAdjacentHTML("afterbegin", c);
 
         if (options.skip) {
-          var kid = e.find(`.category-picker-column `.repeat(options.skip)); // TODO: idk what it is
+          var kid = e.find(`.category-picker-column `.repeat(options.skip));
           if (kid) {
             e.innerHTML = kid.innerHTML;
           }

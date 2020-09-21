@@ -67,7 +67,6 @@ function setBasketData($basket_json)
 
     $_SESSION["basket"] = $basket_json;
     setcookie("basket", $basket_json, (time() + 31536000), '/');
-    //$_COOKIE["basket"] = "[]"; // TODO reserach comparing cookies
 
     if ($app["user"]["id"]) {
         query("UPDATE users SET basket = ? WHERE user_id = ?", [

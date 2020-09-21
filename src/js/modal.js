@@ -80,6 +80,13 @@ function showModal(name = null, params = {}) {
           node.style.transition = "";
           node.style.transform = "";
         }, 0);
+
+        var event = new CustomEvent("modal-show", {
+          detail: {
+            node: e,
+          },
+        });
+        window.dispatchEvent(event);
       }
     });
     var modal = $(`#${name}`);
@@ -168,10 +175,18 @@ function hideModal(name, isCancel = false) {
       e.remove();
     });
 
+    // TODO: replace with event listeners ;)
     const hideCallback = modalHideCallbacks[name];
     if (hideCallback) {
       hideCallback();
     }
+
+    var event = new CustomEvent("modal-show", {
+      detail: {
+        node: e,
+      },
+    });
+    window.dispatchEvent(event);
   }
 
   var visibleModalCount = 0;

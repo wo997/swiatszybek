@@ -15,8 +15,6 @@
 
 <div class="g-signin2" data-onsuccess="onSignIn" style="display:none"></div>
 <div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=<?= secret('facebook_app_id') ?>&autoLogAppEvents=1"></script>
-
 
 <div class="offline"><i class="fas fa-exclamation-circle"></i> Brak połączenia z internetem!</div>
 <?php if (config("debug_mode", false)) : ?>

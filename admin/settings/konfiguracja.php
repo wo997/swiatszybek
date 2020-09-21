@@ -74,7 +74,7 @@ $category = isset($url_params[2]) ? $url_params[2] : null;
                 `
         });
 
-        // TODO instead of createDatatable
+        // TODO instead of createDatatable, hmm, maybe not
         // createSimpleList();
     });*/
 

@@ -49,6 +49,18 @@
     });
     window.dispatchEvent(event);
   });
+
+  window.addEventListener("modal-show", (event) => {
+    var node = event.detail.node;
+
+    if (!node || node.id != "loginForm") {
+      return;
+    }
+    loadScript("https://apis.google.com/js/platform.js");
+    loadScript("https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=<?= secret('facebook_app_id') ?>&autoLogAppEvents=1", {
+      crossorigin: "anonymous"
+    });
+  });
 </script>
 
 <!-- styles / scripts to footer? -->
@@ -94,7 +106,6 @@
   <meta property="og:type" content="website" />
 <?php endif ?>
 
-<script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
 
 <style>

@@ -514,7 +514,6 @@ function createDatatable(datatable) {
         params[e.getAttribute("data-param")] = e.getValue();
       });
       if (datatable.selectable) {
-        // TODO get values from metadata or regular array
         params.filters.push({
           type: "!=",
           value: datatable.selection,

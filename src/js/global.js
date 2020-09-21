@@ -753,3 +753,12 @@ function preventLongPressMenu(node) {
     return false;
   };
 }
+
+function loadScript(src, options = {}) {
+  var script = document.createElement("script");
+  Object.entries(options).forEach(([key, value]) => {
+    script.setAttribute(key, value);
+  });
+  script.src = src;
+  document.head.appendChild(script);
+}
