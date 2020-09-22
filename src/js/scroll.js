@@ -87,11 +87,16 @@ function smoothScroll(diff, params = {}) {
 }
 
 function scrollToView(elem, params = {}) {
+  elem = $(elem);
   var duration = nonull(params.duration, 40);
   var offset = nonull(params.offset, 0);
   var margin = nonull(params.margin, 0.2);
 
   var r = elem.getBoundingClientRect();
+  if (r.left == 0) {
+    elem = elem.parent();
+    r = elem.getBoundingClientRect();
+  }
 
   var top = r.top + offset;
   var bottom = r.top + r.height + offset;

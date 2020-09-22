@@ -484,10 +484,9 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         window.form[input.name] = input;
       });
 
-      ignoreValueChanges = true;
       setFormData(<?= json_encode($zamowienie_data) ?>, window.form);
       loadFormFromLocalStorage();
-      ignoreValueChanges = false;
+      clearAllErrors(".main-container");
 
       if (RABAT > 0) hasKodRabatowy({
         kwota: RABAT,
@@ -560,13 +559,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
 
     function isFormValid() {
-      if (currentMenu == 4) {
-        if (!$("#accept-regulamin").checked) {
-          $("#regulamin-warn").style.display = "inline-block";
-          return false;
-        }
-      }
-
       return validateForm($("#menu" + currentMenu));
     }
 
@@ -1277,10 +1269,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           <h4 style="margin-top: 40px">Twoje uwagi dotyczące zamówienia</h4>
           <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($uwagi) ?></textarea>
 
-          <label class="checkbox-wrapper field-title" onclick="$('#regulamin-warn').style.display='none'">
-            <input type="checkbox" id="accept-regulamin">
+          <label class="checkbox-wrapper field-title">
+            <input type="checkbox" data-validate="checkbox|value:1">
             <div class="checkbox"></div>
-            Akceptuję <a href="/regulamin" target="_blank" style="font-weight: bold;color: var(--primary-clr);text-decoration: underline;">REGULAMIN</a> <span style="color:red;font-weight: bold;display:none" id="regulamin-warn"> Wymagane*</span>
+            Akceptuję
+            <a href="/regulamin" target="_blank" style="font-weight: bold;color: var(--primary-clr);text-decoration: underline;">REGULAMIN</a>
           </label>
 
 

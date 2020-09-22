@@ -12,6 +12,13 @@ function showFieldErrors(field, errors = [], options = {}) {
   }
 
   field = $(field);
+
+  // rare
+  var error_target = field.getAttribute("data-error-target");
+  if (error_target) {
+    $(error_target).classList.toggle("field-error-visible", errors.length > 0);
+  }
+
   // look inside or above
   var field_title = field.find(".field-title");
   if (!field_title) {
@@ -26,17 +33,20 @@ function showFieldErrors(field, errors = [], options = {}) {
       field_title = field_wrapper.find(".field-title");
     }
   }
-  if (!field_title) {
-    return;
-  }
-
   // just desktop admin
-  var warning = field_title.find(".fa-exclamation-triangle");
-  if (warning) {
-    warning.remove();
+  if (field_title) {
+    var warning = field_title.find(".fa-exclamation-triangle");
+    if (warning) {
+      warning.remove();
+    }
   }
 
-  const inputElements = field.next();
+  var wrapper = field;
+  if (field.type == "checkbox") {
+    wrapper = wrapper.parent();
+  }
+
+  const inputElements = wrapper.next();
   const validationBox = inputElements.find(".validation-error-box");
   const correctIndicator = inputElements.find(
     ".input-error-indicator .correct"
@@ -62,14 +72,13 @@ function showFieldErrors(field, errors = [], options = {}) {
   };
 
   if (Array.isArray(errors) && errors.length > 0) {
-    var warning = field_title.find(".fa-exclamation-triangle");
-    if (warning) {
-      warning.remove();
-    }
-
     // adding error boxes instead of icons with tooltip
     // always for non-admin route and mobile
-    if (window.IS_MOBILE || !window.location.pathname.includes("admin")) {
+    if (
+      window.IS_MOBILE ||
+      !window.location.pathname.includes("admin") ||
+      !field_title
+    ) {
       toggleErrorIcons("wrong");
       validationBox.find(".message").innerHTML = errors.join("<br>");
       expand(validationBox, true, {
@@ -252,6 +261,17 @@ function fieldErrors(field) {
       params[parts[0]] = parts[1];
     });
 
+    if (params["value"]) {
+      var isCorrect = val == params["value"];
+      if (!isCorrect) {
+        if (params["value"] == 0) {
+          newError("Musi być odznaczone");
+        } else {
+          newError("Pole wymagane");
+        }
+      }
+    }
+
     if (params["match"]) {
       var target = $(params["match"]);
       if (!target) {
@@ -353,7 +373,11 @@ function clearAllErrors(node = null) {
     ? $(node).findAll(`[data-validate]`)
     : $$(`[data-form] [data-validate]`);
   fields.forEach((field) => {
-    showFieldErrors(field, "blank");
+    var errors = fieldErrors(field);
+    if (errors.length > 0) {
+      showFieldErrors(field, "blank");
+      field.removeEventListener("input", formFieldOnInputEvent);
+    }
   });
 }
 
@@ -566,7 +590,12 @@ function registerForm(form = null) {
       field.setValue();
     }*/
 
-    field.insertAdjacentHTML(
+    var obj = field;
+    if (field.type == "checkbox") {
+      obj = obj.parent();
+    }
+
+    obj.insertAdjacentHTML(
       "afterend",
       `
         <div class="input-elements">
@@ -636,4 +665,27 @@ function togglePasswordFieldType(btn, input, make_visible = null) {
     btn.setAttribute("data-tooltip", "Pokaż hasło");
     input.type = "password";
   }
+}
+
+// load saved fields from local storage
+window.addEventListener("DOMContentLoaded", () => {
+  $$("[data-store]").forEach((e) => {
+    e.addEventListener("change", () => {
+      var name = e.getAttribute("data-store");
+      if (!name) name = e.getAttribute("name");
+      localStorage.setItem(name, e.getValue());
+    });
+  });
+});
+
+function loadFormFromLocalStorage() {
+  $$("[data-store]").forEach((e) => {
+    var name = e.getAttribute("data-store");
+    if (!name) name = e.getAttribute("name");
+
+    var value = localStorage.getItem(name);
+    if (value) {
+      setValue(e, value);
+    }
+  });
 }

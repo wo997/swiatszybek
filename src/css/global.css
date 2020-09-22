@@ -999,7 +999,7 @@ input:read-only {
 input[type="checkbox"] {
   display: none !important;
 }
-input[type="checkbox"]:checked + .checkbox {
+input[type="checkbox"]:checked ~ .checkbox {
   background-color: var(--primary-clr);
   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.17);
 }
@@ -1038,14 +1038,14 @@ input[type="checkbox"]:checked + .checkbox {
   border-width: 0 2.5px 2.5px 0;
   transform: rotate(40deg);
 }
-input[type="checkbox"]:checked + .checkbox::after {
+input[type="checkbox"]:checked ~ .checkbox::after {
   display: block;
 }
-:disabled + .checkbox {
+:disabled ~ .checkbox {
   opacity: 0.5;
   background: #aaa;
 }
-:disabled + .checkbox {
+:disabled ~ .checkbox {
   cursor: not-allowed;
 }
 

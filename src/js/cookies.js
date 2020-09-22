@@ -21,28 +21,3 @@ function getCookie(cname) {
   }
   return "";
 }
-
-// load save fields in cookie
-var ignoreValueChanges = false;
-window.addEventListener("DOMContentLoaded", () => {
-  $$("[data-store]").forEach((e) => {
-    e.addEventListener("change", () => {
-      if (ignoreValueChanges) return;
-      var name = e.getAttribute("data-store");
-      if (!name) name = e.getAttribute("name");
-      localStorage.setItem(name, e.getValue());
-    });
-  });
-});
-
-function loadFormFromLocalStorage() {
-  $$("[data-store]").forEach((e) => {
-    var name = e.getAttribute("data-store");
-    if (!name) name = e.getAttribute("name");
-
-    var value = localStorage.getItem(name);
-    if (value) {
-      setValue(e, value);
-    }
-  });
-}

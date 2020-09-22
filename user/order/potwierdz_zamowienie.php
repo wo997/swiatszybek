@@ -125,8 +125,8 @@ setcookie("basket", "", (time() + 31536000), '/');
 
 addZamowienieLog($zamowienie_id, "Utworzono zamówienie");
 
-$link = getZamowienieLink($link);
 $link_relative = getZamowienieLink($link, true);
+$link_full = getZamowienieLink($link);
 
 // update user data
 
@@ -192,7 +192,7 @@ $message .= "<h4 style='margin:20px 0 10px'>Szczegóły zamówienia</h4>";
 $message .= $res;
 $message .= "</div>";
 
-$message .= '<p style="font-size: 16px;">Jeśli jeszcze nie opłaciłaś/eś Twojego zamówienia,<br>możesz to zrobić teraz korzystając <a href="' . $link . '" style="font-weight:bold;color:' . primary_clr . ';">z tego linku</a></p>';
+$message .= '<p style="font-size: 16px;">Jeśli jeszcze nie opłaciłaś/eś Twojego zamówienia,<br>możesz to zrobić teraz korzystając <a href="' . $link_full . '" style="font-weight:bold;color:' . primary_clr . ';">z tego linku</a></p>';
 $message .= getEmailFooter();
 
 $mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . config('main_email_sender') . "";

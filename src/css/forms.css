@@ -1,1 +1,71 @@
 /* css[global] */
+
+.input-elements .input-error-indicator {
+  position: relative;
+  height: 0;
+  width: 100%;
+  display: block;
+}
+.input-elements .input-error-indicator .correct,
+.input-elements .input-error-indicator .wrong {
+  position: absolute;
+  pointer-events: none;
+  right: 0.7em;
+  top: -2em;
+  width: 15px;
+  text-align: center;
+  opacity: 0;
+  transition: 0.2s all;
+  transform: scale(0);
+}
+.input-elements .input-error-indicator .correct.visible,
+.input-elements .input-error-indicator .wrong.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+.input-elements .input-error-indicator .correct {
+  color: var(--success-clr);
+}
+.input-elements .input-error-indicator .wrong {
+  color: var(--error-clr);
+}
+.input-elements .validation-error-box {
+  color: var(--error-clr);
+  padding-top: 0.2em;
+  font-weight: 600;
+}
+
+.field-wrapper {
+  position: relative;
+}
+
+.field.required {
+  border-color: red !important;
+  box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
+}
+
+.simple-list[data-count="0"].required > .add_btn.add_begin {
+  background: #d33;
+}
+
+img.required {
+  box-shadow: 0px 0px 0px 2px rgba(255, 0, 0, 1);
+}
+
+textarea + .input-elements .input-error-indicator {
+  display: none;
+}
+
+.field-error {
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s opacity;
+}
+.field-error.field-error-visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.checkbox-wrapper + .input-elements .input-error-indicator {
+  display: none !important;
+}
