@@ -9,6 +9,8 @@ if (isset($input["info"])) {
     addZamowienieLog($zamowienie_data["zamowienie_id"], $input["info"]);
 }
 
+$zamowienie_link = $zamowienie_data["link"];
+
 include "user/oplacono_mail.php";
 
 sendEmail($email, $message, $mailTitle);

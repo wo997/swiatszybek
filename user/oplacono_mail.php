@@ -4,5 +4,5 @@ $mailTitle = "Opłacono zamówienie #" . $zamowienie_data["zamowienie_id"] . " -
 
 $message = getEmailHeader($zamowienie_data);
 $message .= "Uprzejmie informujemy, że odnotowaliśmy wpłatę za zamówienie o numerze #" . $zamowienie_data["zamowienie_id"] . ".<br>";
-$message .= "Zobacz <a href='" . getZamowienieLink($link) . "' style='font-weight:bold;color:" . primary_clr . ";'>szczegóły zamówienia</a> oraz śledź jego status.";
+$message .= "Zobacz <a href='" . getZamowienieLink($zamowienie_link) . "' style='font-weight:bold;color:" . primary_clr . ";'>szczegóły zamówienia</a> oraz śledź jego status.";
 $message .= getEmailFooter();
