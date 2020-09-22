@@ -487,7 +487,8 @@ function showCategory($category, $level = 0)
         search: $(".products_search").getValue(),
         order_by: $(`[name="order_by"]:checked`).getValue(),
         price_min: $(`.price_min_search`).getValue(),
-        price_max: $(`.price_max_search`).getValue()
+        price_max: $(`.price_max_search`).getValue(),
+        layout: "grid",
       };
 
       if (JSON.stringify(newSearchParams) != JSON.stringify(searchParams)) {
@@ -702,7 +703,6 @@ function showCategory($category, $level = 0)
         <div class="search-header">
           <i class="fas fa-sort-amount-down-alt"></i>
           Sortuj
-          <i class="fas fa-info-circle case_search" data-tooltip="Żeby użyć innego sortowania wyczyść wyszukiwanie"></i>
         </div>
         <label class="order_by_item">
           <input type="radio" name="order_by" value="new">

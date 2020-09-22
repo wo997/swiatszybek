@@ -16,7 +16,7 @@ $where = $shared_where;
 $join = "";
 
 $product_list_count = nonull($moduleParams, "product_list_count", 8);
-$layout = nonull($moduleParams, "layout", "grid");
+$layout = nonull($moduleParams, "layout", "slider");
 $search = nonull($moduleParams, "search", "");
 $is_basic = nonull($moduleParams, "basic", "");
 
