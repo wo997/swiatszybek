@@ -1,5 +1,8 @@
 <script>
-  const RELEASE = <?= RELEASE ?>; // manage versioning of assets
+  const RELEASE = <?= RELEASE ?>; // general asset version
+  const JS_RELEASE = <?= JS_RELEASE ?>;
+  const CSS_RELEASE = <?= CSS_RELEASE ?>;
+
   const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
   const USER_ID = <?= nonull($app["user"], "id", 0) ?>;
   const IS_ADMIN = <?= $app["user"]["priveleges"]["backend_access"] ? "true" : "false" ?>;

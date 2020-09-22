@@ -36,12 +36,7 @@ function registerModal(e) {
   e.style.pointerEvents = "none";
 }
 
-var modalHideCallbacks = {};
-
 function showModal(name = null, params = {}) {
-  // setModalInitialState(name);
-  modalHideCallbacks[name] = params.hideCallback;
-
   var m = $("#modal-wrapper");
   var visible = name != null;
   m.classList.toggle("displayModal", visible);
@@ -175,15 +170,9 @@ function hideModal(name, isCancel = false) {
       e.remove();
     });
 
-    // TODO: replace with event listeners ;)
-    const hideCallback = modalHideCallbacks[name];
-    if (hideCallback) {
-      hideCallback();
-    }
-
-    var event = new CustomEvent("modal-show", {
+    var event = new CustomEvent("modal-hide", {
       detail: {
-        node: e,
+        node: modal,
       },
     });
     window.dispatchEvent(event);

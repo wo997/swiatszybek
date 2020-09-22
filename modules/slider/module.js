@@ -65,27 +65,12 @@ MODULE = {
     return `xxx`;
   },
   editSlide: (node) => {
-    //fileManager.setDefaultName(); // inherit from top
-    var id = "dsfgsdfgsgfdf";
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      `<style id='${id}'>
-        /*.delete_block_btn,*/ .insert_container_btn {
-          display: none !important;
-        }
-    </style>`
-    );
     editCMSAdditional(node, {
       onChange: (cms_container) => {
         MODULE.setAllCSS(cms_container);
       },
-      hideCallback: () => {
-        var x = $(`#${id}`);
-        if (x) {
-          x.remove();
-        }
-      },
       delete_block_with_parent: false,
+      type: "slide",
     });
 
     setTimeout(() => {

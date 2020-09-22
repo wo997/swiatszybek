@@ -89,3 +89,10 @@ function hideLoginFormPassword() {
   }
   togglePasswordFieldType(btn, input, false);
 }
+
+window.addEventListener("modal-show", (event) => {
+  if (event.detail.node.id != "loginForm") {
+    return;
+  }
+  hideLoginFormPassword();
+});

@@ -969,7 +969,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           <div class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
             <?php if (!$app["user"]["id"]) : ?>
               <div>
-                <button class="btn primary medium" onclick="showModal('loginForm',{source:this});hideLoginFormPassword()" style="max-width: 100%;width:270px;margin-top: 25px;">Zaloguj się <i class="fa fa-user"></i></button>
+                <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="max-width: 100%;width:270px;margin-top: 25px;">Zaloguj się <i class="fa fa-user"></i></button>
                 <br><br>
                 <strong>Co zyskasz?</strong>
                 <div>- Dostęp do historii zamówień</div>

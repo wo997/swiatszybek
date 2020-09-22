@@ -174,20 +174,27 @@ if (strpos($url, "resetowanie-hasla") !== false)
           emails
         }) => {
           if (message) {
-            showMessageModal(message, {
-              hideCallback: () => {
-                if (emails) {
-                  wyslalismyLinkDoZmianyEmaila(emails.new);
-                  setFormData({
-                    email: emails.previous
-                  }, form);
-                }
-              }
-            });
+            showMessageModal(message);
           }
+          window.userEmails = emails;
         }
       });
     }
+
+    window.addEventListener("modal-hide", (event) => {
+      if (event.detail.node.id != "message-modal") {
+        return;
+      }
+      var form = $("#menu2");
+      var emails = window.userEmails;
+      if (emails) {
+        wyslalismyLinkDoZmianyEmaila(emails.new);
+        setFormData({
+          email: emails.previous
+        }, form);
+      }
+    });
+
 
     function savePasswordForm() {
       form = $("#menu3");

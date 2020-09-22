@@ -47,7 +47,7 @@
             <a class="menu_item" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
           </div>
         <?php else : ?>
-          <a class="menu_item" style="padding:12px;cursor:pointer" onclick="showModal('loginForm',{source:this});hideLoginFormPassword()">
+          <a class="menu_item" style="padding:12px;cursor:pointer" onclick="showModal('loginForm',{source:this});">
             <span class="case-desktop">Zaloguj się </span>
             <img class="user-icon" src="/src/img/user_icon.svg">
           </a>

@@ -1,0 +1,5 @@
+/* css[cms] */
+
+#cmsAdditional[data-type="slide"] .insert_container_btn {
+  display: none !important;
+}

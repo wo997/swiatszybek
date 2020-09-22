@@ -143,13 +143,13 @@ function loadSideModules() {
     var module = modules[module_name];
     if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
     modules_html += `
-    <div class="cms-block side-module" data-module="${module_name}" data-module-params="" draggable="true">
-      <div class="cms-block-content">${module.icon} ${module.description}</div>
-    </div>
-  `;
+      <div class="cms-block side-module" data-module="${module_name}" data-module-params="" draggable="true">
+        <div class="cms-block-content">${module.icon} ${module.description}</div>
+      </div>
+    `;
   }
 
-  $(".modules-sidebar .modules").innerHTML = modules_html;
+  $(".modules-sidebar .modules").setContent(modules_html);
 }
 
 function editModule(block) {
@@ -535,25 +535,32 @@ function editCMSAdditional(t, params) {
 
   editCMS(t, { show_modal: false, ...params });
 
-  showModal("cmsAdditional", {
-    hideCallback: () => {
-      $("#cms .stretch-vertical").empty();
-      $("#cms .stretch-vertical").appendChild(cmsWrapper);
+  if (params.type) {
+    $("#cmsAdditional").setAttribute("data-type", params.type);
+  }
 
-      $("#cmsAdditional .stretch-vertical").appendChild(
-        cmsWrapper.cloneNode(true)
-      ); // don't make it disappear
-
-      cmsHistory = backupStateOfCMS.history;
-      cmsContainer.setValue(backupStateOfCMS.content);
-      cmsSource = backupStateOfCMS.source;
-      cmsTarget = backupStateOfCMS.target;
-      cmsParams = backupStateOfCMS.params;
-
-      cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
-    },
-  });
+  showModal("cmsAdditional");
 }
+
+window.addEventListener("modal-hide", (event) => {
+  if (event.detail.node.id != "cmsAdditional") {
+    return;
+  }
+  $("#cms .stretch-vertical").empty();
+  $("#cms .stretch-vertical").appendChild(cmsWrapper);
+
+  $("#cmsAdditional .stretch-vertical").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
+
+  cmsHistory = backupStateOfCMS.history;
+  cmsContainer.setValue(backupStateOfCMS.content);
+  cmsSource = backupStateOfCMS.source;
+  cmsTarget = backupStateOfCMS.target;
+  cmsParams = backupStateOfCMS.params;
+
+  cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
+
+  $("#cmsAdditional").removeAttribute("data-type");
+});
 
 function cmsPrepareOutput() {
   cmsWrapper.findAll("[draggable]").forEach((e) => {
@@ -568,9 +575,6 @@ function closeCms(save) {
     cmsPrepareOutput();
     var content = cmsContainer.innerHTML;
     cmsSource.setValue(content);
-  }
-  if (cmsParams.hideCallback) {
-    cmsParams.hideCallback();
   }
   cmsSource = null;
 }
@@ -1834,7 +1838,7 @@ registerModalContent(
           </div>
 
         </div>
-        <!--<link href="/admin/tools/cms.css?v=${RELEASE}" rel="stylesheet"> NOW GLOBAL-->
+        <link href="/builds/cms.css?v=${CSS_RELEASE}" rel="stylesheet">
     </div>
 `,
   () => {
