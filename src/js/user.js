@@ -8,6 +8,9 @@ setInterval(() => {
 }, 60000);
 
 function logout() {
+  if (!confirm("Czy aby na pewno chesz się wylogować?")) {
+    return;
+  }
   if (USER_TYPE == "f") {
     xhr({ url: "/logout" });
   } else if (USER_TYPE == "g") {

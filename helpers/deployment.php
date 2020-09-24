@@ -9,6 +9,6 @@ function createDir($dir)
 }
 
 $deployable_paths = [
-    "admin", "cron", "deployment", "event_listeners", "global", "helpers", "migrations", "modules", "src", "user",
-    ".htaccess", "kernel.php", "routing.php", "ping.php", "robots.txt"
+    "admin", "cron", "deployment", "event_listeners", "global", "helpers", "migrations", "modules", "src", "user", "theme",
+    ".htaccess", "kernel.php", "routing.php", "ping.php", "robots.txt",
 ];

@@ -218,7 +218,6 @@ if (strpos($url, "resetowanie-hasla") !== false)
             password: "",
             password_rewrite: ""
           }, form);
-          clearAllErrors();
         }
       });
     }

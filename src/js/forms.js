@@ -445,7 +445,10 @@ function setFormData(data, form, params = {}) {
 
     e.setValue(value, value_params);
   });
-  setFormInitialState(form);
+
+  if (params.is_load !== false) {
+    setFormInitialState(form);
+  }
   resizeCallback();
 }
 
