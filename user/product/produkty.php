@@ -445,12 +445,16 @@ function showCategory($category, $level = 0)
 
     function clearAllFilters() {
       setFormData(window.filtersInitialState, ".filters");
+      searchingProducts = false;
+      searchProducts();
     }
 
     function clearSearch() {
       $(".products_search").setValue("");
       searchProducts();
     }
+
+    var firstSearch = true;
 
     function searchProducts(forceSearch = false) {
       if (blockSearch) {
@@ -521,7 +525,8 @@ function showCategory($category, $level = 0)
 
           $(".price_range_info").setContent((res.price_info.min && res.price_info.max) ? `(${res.price_info.min} zł - ${res.price_info.max} zł)` : "");
 
-          var duration = 300;
+          var duration = firstSearch ? 0 : 300;
+          firstSearch = false;
           var was_h = productListAnimationNode.getBoundingClientRect().height;
           productListSwapContentNode.setContent(res.content);
           setProductListGridDimensions(productListSwapContentNode.find(".product_list_module.grid"));
@@ -658,7 +663,7 @@ function showCategory($category, $level = 0)
       if (instant) {
         searchProducts();
       } else {
-        delay("searchProducts", 400);
+        delay("searchProducts", 500);
       }
     }
   </script>

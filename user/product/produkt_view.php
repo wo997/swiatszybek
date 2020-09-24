@@ -155,7 +155,7 @@
     $stmt->close();
     ?>
     <div id="formComment" data-form>
-      <h4 style="font-size: 22px; margin: 100px 0 10px;">Podziel się swoją opinią</h4>
+      <h4 style="font-size: 22px; margin: 70px 0 10px;">Podziel się swoją opinią</h4>
       <?php
       $input = ["product_id" => $number];
       include 'helpers/order/can_user_get_comment_rebate.php';
