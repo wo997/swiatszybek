@@ -1,17 +1,19 @@
 <?php
 
+global $_link_route_path, $_link_event_paths;
+
 $_link_route_path = [];
 $_link_event_paths = [];
 
-echo "<br><h3>Scanning annotations (routes / modules):</h3>";
+echo "<br><h3>Scanning annotations:</h3>";
 
 scanDirectories(
     [
         "get_first_line" => true,
-        "exclude_paths" => ["vendor", "uploads", "modules"],
+        "exclude_paths" => ["vendor", "uploads"],
     ],
     function ($path, $first_line) {
-        global $_link_route_path, $_link_module_path, $_link_event_paths;
+        global $_link_route_path, $_link_event_paths;
 
         if (!strpos($path, ".php")) {
             return;

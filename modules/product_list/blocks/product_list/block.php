@@ -113,7 +113,7 @@ if ($is_basic) {
   foreach ($products["results"] as $product) {
     $res .= "<a class='result' href='" . getProductLink($product["product_id"], $product["link"]) . "'>" . $product["title"] . "</a>";
   }
-  $module_block_html .= $res;
+  echo $res;
 } else {
   foreach ($products["results"] as $product) {
     $already_shown_product_ids_string .= $product["product_id"] . ",";
@@ -149,7 +149,7 @@ if ($is_basic) {
   }
 
   if ($layout == "slider") {
-    $module_block_html .= "
+    echo "
       <div class='product_list_module slider swiper-all'>
         <div class='swiper-container'>
           <div class='swiper-wrapper'>$res</div>
@@ -159,6 +159,11 @@ if ($is_basic) {
       </div>
     ";
   } else {
-    $module_block_html .= "<div class='product_list_module grid'>$res</div>";
+    echo "<div class='product_list_module grid'>$res</div>";
   }
 }
+
+return [
+  "products" => $products,
+  "price_info" => $price_info
+];

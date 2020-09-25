@@ -104,10 +104,7 @@ function getCMSPageHTML($content)
           $block_html .= ">";
 
           $params = isset($block->attr["data-module-block-params"]) ? json_decode(html_entity_decode($block->attr["data-module-block-params"]), true) : [];
-          $module_block_html = "";
-          $module_block_path = $link_module_block_path[$block->attr["data-module-block"]];
-          $module_block_dir = pathinfo($module_block_path)['dirname'];
-          include $module_block_path;
+          $module_block_html = getModuleBlockData($block->attr["data-module-block"], $params)["content"];
           $block_html .= "<div class='cms-block-content'>$module_block_html</div>";
           $block_html .= "</div>";
 
@@ -125,9 +122,23 @@ function getCMSPageHTML($content)
   return $page_content;
 }
 
+function getModuleBlockData($module_block_name, $params)
+{
+  global $app, $link_module_block_path;
+
+  ob_start();
+  $module_block_path = $link_module_block_path[$module_block_name];
+  $module_block_dir = pathinfo($module_block_path)['dirname'];
+  $data = include $module_block_path;
+  return [
+    "content" => ob_get_clean(),
+    "data" => $data
+  ];
+}
+
 function prepareModuleBlock($module_block_file, $module_block_name)
 {
   $module_block_file = str_replace("MODULE_BLOCK_NAME", $module_block_name, $module_block_file);
   $module_block_file = str_replace("MODULE_BLOCK", "module_blocks.$module_block_name", $module_block_file);
-  return $module_block_file;
+  return " " . $module_block_file;
 }

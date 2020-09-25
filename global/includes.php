@@ -2,6 +2,7 @@
   const RELEASE = <?= RELEASE ?>; // general asset version
   const JS_RELEASE = <?= JS_RELEASE ?>;
   const CSS_RELEASE = <?= CSS_RELEASE ?>;
+  const MODULES_RELEASE = <?= MODULES_RELEASE ?>;
 
   const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
   const USER_ID = <?= nonull($app["user"], "id", 0) ?>;
@@ -36,8 +37,6 @@
   <?php endif ?>
 
   const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
-
-  var module_blocks = {};
 
   <?php if ($just_logged_in) : ?>
     window.addEventListener("DOMContentLoaded", () => {
@@ -86,7 +85,9 @@
 
   <link href="/builds/admin.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
   <script src="/builds/admin.js?v=<?= JS_RELEASE ?>"></script>
-  <script src="/builds/module_blocks.js?v=<?= JS_RELEASE ?>" defer></script>
+
+  <script src="/builds/modules.js?v=<?= MODULES_RELEASE ?>" defer></script>
+  <script src="/builds/module_blocks.js?v=<?= MODULES_RELEASE ?>" defer></script>
 
   <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
   <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">

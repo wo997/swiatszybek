@@ -38,7 +38,7 @@ scanDirectories(
 if ($modifyCSS) {
     foreach ($cssFileGroups as $cssGroup => $files) {
         $minifier = new Minify\CSS(...$files);
-        $minifier->minify("builds/$cssGroup.js");
+        $minifier->minify("builds/$cssGroup.css");
     }
 }
 if ($modifyJS) {

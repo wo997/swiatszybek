@@ -4,28 +4,24 @@ useCSS("/$module_block_dir/styles.css");
 
 $slides = json_decode(nonull($params, "cms_slides", ""), true);
 
-$slides_html = "";
+?>
+<div class='swiper-container slider_module swiper-all'>
+  <div class='swiper-wrapper'>
+    <?php
+    foreach ($slides as $slide) {
+      if (!$slide["values"]["published"]) {
+        continue;
+      }
 
-foreach ($slides as $slide) {
-  if (!$slide["values"]["published"]) {
-    continue;
-  }
-
-  $slides_html .= "
-    <div class='swiper-slide'>
-      <div class='cms slide-desktop'>" . getCMSPageHTML($slide["values"]["content"]) . "</div>
-      <div class='cms slide-mobile'>" . getCMSPageHTML($slide["values"]["content"])  . "</div>
-    </div>
-  ";
-}
-
-
-//$slides_html = get_slider_content();
-
-$module_block_html .= "
-  <div class='swiper-container slider_module swiper-all'>
-    <div class='swiper-wrapper'>$slides_html</div>
-    <div class='swiper-button-prev swiper-nav'><i class='fas fa-chevron-left'></i></div>
-    <div class='swiper-button-next swiper-nav'><i class='fas fa-chevron-right'></i></div>
-    <div class='swiper-pagination'></div>
-  </div>";
+    ?>
+      <div class='swiper-slide'>
+        <div class='cms slide-desktop'><?= getCMSPageHTML($slide["values"]["content"]) ?></div>
+        <div class='cms slide-mobile'><?= getCMSPageHTML($slide["values"]["content"]) ?></div>
+      </div>
+    <?php
+    }
+    ?></div>
+  <div class='swiper-button-prev swiper-nav'><i class='fas fa-chevron-left'></i></div>
+  <div class='swiper-button-next swiper-nav'><i class='fas fa-chevron-right'></i></div>
+  <div class='swiper-pagination'></div>
+</div>

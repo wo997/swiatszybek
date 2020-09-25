@@ -1,5 +1,5 @@
 /* js[modules] */
-var module_block_name = "custom-html";
+/*var module_block_name = "custom-html";
 module_blocks[module_block_name] = {
   params: "",
   description: "Moduł HTML",
@@ -21,3 +21,4 @@ module_blocks[module_block_name] = {
     ).getValue();
   },
 };
+*/

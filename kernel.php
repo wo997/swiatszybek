@@ -19,9 +19,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$build_info_path = "builds/build_info.php";
+define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
 
-// default values - ovverriden by 'build_info'
+// default values - overriden by 'build_info'
 $previousModificationTimePHP = 0;
 $previousModificationTimeCSS = 0;
 $previousModificationTimeJS = 0;
@@ -29,7 +29,7 @@ $versionPHP = 0;
 $versionCSS = 0;
 $versionJS = 0;
 
-@include $build_info_path;
+@include BUILD_INFO_PATH;
 
 // define WebP support also for XHR requests
 define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
@@ -150,6 +150,7 @@ if (config("dev_mode", true)) {
 define("RELEASE", 2139);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);
+define("MODULES_RELEASE", $versionModules);
 
 // theme
 include "theme/variables.php";

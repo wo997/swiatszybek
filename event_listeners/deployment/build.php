@@ -1,4 +1,4 @@
-<?php
+<?php //event[build]
 
 echo "<style>body{font-family: Verdana;font-size:14px}</style>";
 
@@ -8,4 +8,6 @@ include "deployment/migrate.php";
 
 include "deployment/scan_annotations.php";
 
-include "deployment/scan_modules.php";
+if (nonull($input, "modules", true)) {
+    include "deployment/scan_modules.php";
+}

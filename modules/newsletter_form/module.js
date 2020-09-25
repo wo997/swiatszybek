@@ -1,5 +1,5 @@
 /* js[modules] */
-var module_block_name = "newsletter-form";
+/*var module_block_name = "newsletter-form";
 module_blocks[module_block_name] = {
   params: "",
   description: "Formularz do newslettera",
@@ -8,3 +8,4 @@ module_blocks[module_block_name] = {
     return "";
   },
 };
+*/
