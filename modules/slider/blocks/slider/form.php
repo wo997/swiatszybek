@@ -1,13 +1,9 @@
+<?php //module_block_form[slider] 
+?>
+
 <span class="field-title">Wysokość slidera</span>
 <c-select class="inline" style="width: 150px">
-  <input
-    type="text"
-    class="field"
-    name="desktop-slider-height"
-    data-default-value=""
-    data-default-unit="px"
-    onchange="MODULE.sliderHeightChanged(this)"
-  />
+  <input type="text" class="field" name="desktop-slider-height" data-default-value="" data-default-unit="px" onchange="MODULE_BLOCK.sliderHeightChanged(this)" />
   <c-arrow></c-arrow>
   <c-options>
     <c-option>35%</c-option>

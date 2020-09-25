@@ -138,63 +138,74 @@ var cmsModalLoaded = () => {
 };
 
 function loadSideModules() {
-  var modules_html = "";
-  for (module_name in modules) {
-    var module = modules[module_name];
-    if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
-    modules_html += `
-      <div class="cms-block side-module" data-module="${module_name}" data-module-params="" draggable="true">
-        <div class="cms-block-content">${module.icon} ${module.description}</div>
+  var module_blocks_html = "";
+  for (module_block_name in module_blocks) {
+    var module_block = module_blocks[module_block_name];
+    if (!module_block.icon)
+      module_block.icon = '<i class="fas fa-puzzle-piece"></i>';
+    module_blocks_html += `
+      <div class="cms-block side-module" data-module-block="${module_block_name}" data-module-block-params="" draggable="true">
+        <div class="cms-block-content">${module_block.icon} ${module_block.title}</div>
       </div>
     `;
   }
 
-  $(".modules-sidebar .modules").setContent(modules_html);
+  $(".modules-sidebar .modules").setContent(module_blocks_html);
 }
 
 function editModule(block) {
   cmsTarget = block;
   cmsTarget.classList.add("during-module-edit");
 
-  var module_name = block.getAttribute("data-module");
-  var module = modules[module_name];
-  var modal_name = `module_${module_name}`;
-  if (!document.getElementById(modal_name)) {
-    if (module.editUrl) {
+  var module_block_name = block.getAttribute("data-module-block");
+  var module_block = module_blocks[module_block_name];
+  var modal_module_block_name = `modal_module_block_${module_block_name}`;
+  if (!$(`#${modal_module_block_name}`)) {
+    if (module_block.editUrl) {
       if (
         confirm(
-          `Czy chcesz otworzyć edycję ${module.description} w nowej karcie?`
+          `Czy chcesz otworzyć edycję ${module_block.description} w nowej karcie?`
         )
       ) {
-        window.open(module.editUrl);
+        window.open(module_block.editUrl);
       }
     } else {
       alert("Edycja niedostępna!");
     }
     return;
   }
-  showModal(modal_name, {
+  showModal(modal_module_block_name, {
     source: cmsTarget,
   });
   let params = {};
   try {
-    params = JSON.parse(block.getAttribute("data-module-params"));
+    params = JSON.parse(block.getAttribute("data-module-block-params"));
   } catch {}
-  var modal = $(`#${modal_name}`);
+  var modal = $(`#${modal_module_block_name}`);
 
-  if (module.firstOpen) {
-    module.firstOpen(params, modal, block);
-    delete module.firstOpen;
+  /*if (module_block.firstOpen) {
+    module_block.firstOpen(params, modal, block);
+    delete module_block.firstOpen;
   }
-  if (!module.default_form_values) {
-    module.default_form_values = getFormData(modal);
+  if (!module_block.default_form_values) {
+    module_block.default_form_values = getFormData(modal);
   }
 
-  if (module.default_form_values) {
-    setFormData(module.default_form_values, modal);
-  }
-  setFormData(params, modal);
-  module.formOpen(params, modal, block);
+  if (module_block.default_form_values) {
+    setFormData(module_block.default_form_values, modal);
+  }*/
+  xhr({
+    url: "/admin/module_block_form",
+    type: "html",
+    params: {
+      module_block_name: module_block_name,
+    },
+    success: (res) => {
+      modal.find(".scroll-panel").setContent(res);
+      module_block.formOpen(params, modal, block);
+      setFormData(params, modal);
+    },
+  });
 }
 
 function saveModule(button) {
@@ -203,18 +214,21 @@ function saveModule(button) {
   cmsTarget = cmsWrapper.find(".during-module-edit");
   if (!cmsTarget) return;
   removeClasses("during-module-edit");
-  var module_name = cmsTarget.getAttribute("data-module");
-  if (!module_name) return;
-  var module = modules[module_name];
-  if (!module) return;
+  var module_block_name = cmsTarget.getAttribute("data-module-block");
+  if (!module_block_name) return;
+  var module_block = module_blocks[module_block_name];
+  if (!module_block) return;
 
-  var form_data = getFormData(`#module_${module_name}`);
-  if (module.formClose) {
-    form_data = module.formClose(form_data);
+  var form_data = getFormData(`#modal_module_block_${module_block_name}`);
+  if (module_block.formClose) {
+    form_data = module_block.formClose(form_data);
   }
 
   if (form_data !== null) {
-    cmsTarget.setAttribute("data-module-params", JSON.stringify(form_data));
+    cmsTarget.setAttribute(
+      "data-module-block-params",
+      JSON.stringify(form_data)
+    );
   }
 
   var c = cmsTarget.find(".module-content"); // force update
@@ -223,7 +237,7 @@ function saveModule(button) {
 
 function editBlock() {
   if (!cmsTarget) return;
-  if (cmsTarget.hasAttribute("data-module")) {
+  if (cmsTarget.hasAttribute("data-module-block")) {
     editModule(cmsTarget);
     return;
   }
@@ -312,7 +326,7 @@ function addBlock(content = "", container = null, placeAfter = true) {
 }
 
 function insertModule(module_name) {
-  var module = modules[module_name];
+  var module = module_blocks[module_name];
   if (!module) return;
 
   awaitingScroll = true;
@@ -320,7 +334,7 @@ function insertModule(module_name) {
   cmsContainer.insertAdjacentHTML(
     "beforeend",
     getContainer(`
-            <div class="cms-block" data-module="${module_name}" data-module-params="${module.params}">
+            <div class="cms-block" data-module-block="${module_name}" data-module-block-params="${module.params}">
                 <div class="cms-block-content"></div>
             </div>`)
   );
@@ -330,27 +344,28 @@ function insertModule(module_name) {
 
 var moduleListModalLoaded = () => {
   var moduleList = "";
-  for (module_name in modules) {
-    var module = modules[module_name];
-    if (!module.icon) module.icon = '<i class="fas fa-puzzle-piece"></i>';
-    moduleList += `<div class="btn primary" onclick="insertModule('${module_name}')">${module.icon} ${module.description}</div>`;
-    if (module.form_html) {
+  for (module_block_name in module_blocks) {
+    var module_block = module_blocks[module_block_name];
+    if (!module_block.icon)
+      module_block.icon = '<i class="fas fa-puzzle-piece"></i>';
+    moduleList += `<div class="btn primary" onclick="insertModule('${module_block_name}')">${module_block.icon} ${module_block.description}</div>`;
+    if (link_module_block_form_path[module_block_name]) {
       registerModalContent(`
-              <div id="module_${module_name}" data-expand>
-                  <div class="modal-body">
-                      <div class="custom-toolbar">
-                          <span class="title">${module.description}</span>
-                          <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
-                          <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
-                      </div>
-                      <div class="scroll-panel scroll-shadow panel-padding">
-                          ${module.form_html}
-                      </div>
+          <div id="modal_module_block_${module_block_name}" data-expand>
+              <div class="modal-body">
+                  <div class="custom-toolbar">
+                      <span class="title">${module_block.description}</span>
+                      <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+                      <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
+                  </div>
+                  <div class="scroll-panel scroll-shadow panel-padding">
+                      
                   </div>
               </div>
-          `);
+          </div>
+      `);
 
-      module.form = $(`#module_${module_name}`);
+      module_block.form = $(`#modal_module_block_${module_block_name}`);
     }
   }
 
@@ -487,7 +502,7 @@ function editCMS(t, params = {}) {
   });
 
   // trigger cache warmup
-  cmsContainer.findAll(".cms-block[data-module]").forEach((e) => {
+  cmsContainer.findAll(".cms-block[data-module-block]").forEach((e) => {
     var c = e.find(".module-content");
     if (c) removeNode(c);
   });
@@ -686,6 +701,18 @@ function cmsUpdate() {
   );
   toggleDisabled(cmsWrapper.find(".cms-redo"), cmsHistoryStepBack == 0);
 
+  $$("[data-module]").forEach((e) => {
+    e.setAttribute("data-module-block", e.getAttribute("data-module"));
+    e.removeAttribute("data-module");
+  });
+  $$("[data-module-params]").forEach((e) => {
+    e.setAttribute(
+      "data-module-block-params",
+      e.getAttribute("data-module-params")
+    );
+    e.removeAttribute("data-module-params");
+  });
+
   cmsWrapper.findAll(".cms-block").forEach((block) => {
     block.setAttribute("draggable", true);
 
@@ -706,7 +733,7 @@ function cmsUpdate() {
       }
     });
 
-    if (block.getAttribute("data-module") == "custom-html") {
+    if (block.getAttribute("data-module-block") == "custom-html") {
       const content = block.find(".cms-block-content");
       addMissingDirectChildren(
         content,
@@ -759,24 +786,24 @@ function cmsUpdate() {
     }
   });
 
-  cmsWrapper.findAll(".cms-block[data-module]").forEach((e) => {
+  cmsWrapper.findAll(".cms-block[data-module-block]").forEach((e) => {
     var c = e.find(".cms-block-content");
     if (!c.innerHTML.trim()) {
-      var module_name = e.getAttribute("data-module");
-      var module = modules[module_name];
+      var module_block_name = e.getAttribute("data-module-block");
+      var module_block = module_blocks[module_block_name];
 
       let params = {};
       try {
-        params = JSON.parse(e.getAttribute("data-module-params"));
+        params = JSON.parse(e.getAttribute("data-module-block-params"));
       } catch {}
 
-      if (module && module.render) {
+      if (module_block && module_block.render) {
         e.find(".cms-block-content").setContent(`
             <div class="module-content">
                 <div>
-                    ${module.icon} ${module.description}
+                    ${module_block.icon} ${module_block.title}
                     <p style="margin:10px 0;font-size:0.8em">${
-                      module.render ? module.render(params, e) : ""
+                      module_block.render ? module_block.render(params, e) : ""
                     }</p>
                 </div>
             </div>`);

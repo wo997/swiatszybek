@@ -1,6 +1,6 @@
 /* js[modules] */
-var module_name = "custom-html";
-modules[module_name] = {
+var module_block_name = "custom-html";
+module_blocks[module_block_name] = {
   params: "",
   description: "Moduł HTML",
   icon: '<i class="fas fa-code"></i>',

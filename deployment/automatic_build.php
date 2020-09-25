@@ -11,15 +11,13 @@ scanDirectories(
         "include_paths" => $deployable_paths
     ],
     function ($path) {
-        global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS, $modificationTimeHTML;
+        global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS;
 
         if (strpos($path, ".php")) {
             $modificationTimePHP += filemtime($path);
         } else if (strpos($path, ".css")) {
             $modificationTimeCSS += filemtime($path);
         } else if (strpos($path, ".js")) {
-            $modificationTimeJS += filemtime($path);
-        } else if (strpos($path, ".html")) {
             $modificationTimeJS += filemtime($path);
         }
     }
@@ -32,9 +30,6 @@ $jsChange = false;
 if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
     if ($previousModificationTimePHP != $modificationTimePHP) {
         $anyChange = true;
-        ob_start();
-        include "deployment/build.php";
-        ob_clean();
         $versionPHP++;
     }
 
@@ -51,6 +46,10 @@ if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
     }
 
     if ($anyChange) {
+        ob_start();
+        include "deployment/build.php";
+        ob_clean();
+
         $content = <<<PHP
 <?php
     \$previousModificationTimePHP = $modificationTimePHP;
@@ -64,4 +63,8 @@ PHP;
     }
 
     triggerEvent("assets_change", ["css" => $cssChange, "js" => $jsChange]);
+
+    if ($anyChange) {
+        reload();
+    }
 }

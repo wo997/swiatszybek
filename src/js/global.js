@@ -697,9 +697,17 @@ function positionWithOffset(elem, offsetX, offestY) {
 
 function removeClasses(className, selector = null) {
   if (selector === null) selector = `.${className}`;
-  $$(selector).forEach((e) => {
-    e.classList.remove(className);
-  });
+  var classList = null;
+  if (Array.isArray(className)) {
+    classList = className;
+  } else {
+    classList = [className];
+  }
+  for (let cn of classList) {
+    $$(selector).forEach((e) => {
+      e.classList.remove(cn);
+    });
+  }
 }
 
 function removeClassesWithPrefix(node, prefix) {

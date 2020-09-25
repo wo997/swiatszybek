@@ -55,6 +55,7 @@ $admin_navigations_tree = [
     ]
   ],
   ["url" => "konfiguracja/serwer", "title" => '<i class="fas fa-cog"></i> Zaawansowane', "base_url" => "konfiguracja"],
+  ["url" => "moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
 ];
 
 function getNotificationCountForPage(&$page, $children_notification_count = 0)

@@ -6,12 +6,9 @@
  * - ?$parent_dir
  */
 
-$_base_path = str_replace("\\", "/", getcwd()) . "/";
-
 function scanDirectories($options = [], $callback, $parent_dir = "", $level = 0)
 {
-    global $_base_path;
-    foreach (scandir($_base_path . $parent_dir) as $file) {
+    foreach (scandir(APP_PATH . $parent_dir) as $file) {
         $path = $parent_dir . $file;
         if (substr($file, 0, 1) == ".") {
             continue;
@@ -36,4 +33,19 @@ function scanDirectories($options = [], $callback, $parent_dir = "", $level = 0)
 
         $callback($path, $first_line, $parent_dir);
     }
+}
+
+function getAnnotationPHP($type, $line)
+{
+    if (preg_match("/<\?php \/\/$type\[.*\]/", $line, $match)) {
+        return substr($match[0], strlen("<?php //" . $type . "["), -1);
+    }
+}
+
+function getAnnotation($type, $line)
+{
+    if (preg_match("/(?<=$type\[).*(?=\])/", $line, $match)) {
+        return $match[0];
+    }
+    return null;
 }

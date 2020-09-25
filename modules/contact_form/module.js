@@ -1,6 +1,6 @@
 /* js[modules] */
-module_name = "contact-form";
-modules[module_name] = {
+module_block_name = "contact-form";
+module_blocks[module_block_name] = {
   params: "",
   description: "Formularz kontaktowy",
   icon: '<i class="far fa-address-card"></i>',

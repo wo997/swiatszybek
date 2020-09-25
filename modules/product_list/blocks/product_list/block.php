@@ -1,7 +1,4 @@
-<?php
-
-/*useJS($moduleDir . "/main.js?v=" . RELEASE); // global
-useCSS($moduleDir . "/main.css?v=" . RELEASE);*/
+<?php //module_block[product_list]
 
 global $already_shown_product_ids_string;
 
@@ -9,35 +6,33 @@ if ($already_shown_product_ids_string === null) {
   $already_shown_product_ids_string = "";
 }
 
-
-
 $shared_where = "p.published = 1"; // AND v.published = 1";
 $where = $shared_where;
 $join = "";
 
-$product_list_count = nonull($moduleParams, "product_list_count", 8);
-$layout = nonull($moduleParams, "layout", "slider");
-$search = nonull($moduleParams, "search", "");
-$is_basic = nonull($moduleParams, "basic", "");
+$product_list_count = nonull($params, "product_list_count", 8);
+$layout = nonull($params, "layout", "slider");
+$search = nonull($params, "search", "");
+$is_basic = nonull($params, "basic", "");
 
-$price_min = trim(nonull($moduleParams, "price_min", ""));
-$price_max = trim(nonull($moduleParams, "price_max", ""));
+$price_min = trim(nonull($params, "price_min", ""));
+$price_max = trim(nonull($params, "price_max", ""));
 
-if (isset($moduleParams["category_ids"])) {
-  if (is_array($moduleParams["category_ids"])) {
-    $category_ids =  $moduleParams["category_ids"] = array_filter($moduleParams["category_ids"], function ($id) {
+if (isset($params["category_ids"])) {
+  if (is_array($params["category_ids"])) {
+    $category_ids =  $params["category_ids"] = array_filter($params["category_ids"], function ($id) {
       return $id !== "0" && $id !== 0;
     });
     if ($category_ids) {
       $join .= " INNER JOIN link_product_category USING(product_id)";
-      $where .= " AND category_id IN (" . clean(implode(",", $moduleParams["category_ids"])) . ")";
+      $where .= " AND category_id IN (" . clean(implode(",", $params["category_ids"])) . ")";
     }
   }
 }
 
 $hasAnyAttribute = false;
-if (isset($moduleParams["attribute_value_ids"])) {
-  $attribute_value_ids = $moduleParams["attribute_value_ids"];
+if (isset($params["attribute_value_ids"])) {
+  $attribute_value_ids = $params["attribute_value_ids"];
 
   if (is_array($attribute_value_ids)) {
     foreach ($attribute_value_ids as $attribute_value_sub_ids) {
@@ -75,7 +70,7 @@ $join .= " INNER JOIN variant v USING(product_id)
 
 $order_by = "product_id DESC"; // new by default
 
-$order_by_name = nonull($moduleParams, "order_by", "new");
+$order_by_name = nonull($params, "order_by", "new");
 
 if ($order_by_name == "sale") {
   $order_by = "cache_sales DESC";
@@ -118,7 +113,7 @@ if ($is_basic) {
   foreach ($products["results"] as $product) {
     $res .= "<a class='result' href='" . getProductLink($product["product_id"], $product["link"]) . "'>" . $product["title"] . "</a>";
   }
-  $module_content .= $res;
+  $module_block_html .= $res;
 } else {
   foreach ($products["results"] as $product) {
     $already_shown_product_ids_string .= $product["product_id"] . ",";
@@ -154,7 +149,7 @@ if ($is_basic) {
   }
 
   if ($layout == "slider") {
-    $module_content .= "
+    $module_block_html .= "
       <div class='product_list_module slider swiper-all'>
         <div class='swiper-container'>
           <div class='swiper-wrapper'>$res</div>
@@ -164,6 +159,6 @@ if ($is_basic) {
       </div>
     ";
   } else {
-    $module_content .= "<div class='product_list_module grid'>$res</div>";
+    $module_block_html .= "<div class='product_list_module grid'>$res</div>";
   }
 }

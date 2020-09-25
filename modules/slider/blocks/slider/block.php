@@ -1,12 +1,8 @@
-<?php
+<?php //module_block[slider]
 
-include_once __DIR__ . "/helpers.php";
+useCSS("/$module_block_dir/styles.css");
 
-//useJS("/src/swiper.min.js");
-//useCSS("/src/swiper.min.css");
-useCSS($moduleDir . "/main.css");
-
-$slides = json_decode(nonull($moduleParams, "cms_slides", ""), true);
+$slides = json_decode(nonull($params, "cms_slides", ""), true);
 
 $slides_html = "";
 
@@ -26,7 +22,7 @@ foreach ($slides as $slide) {
 
 //$slides_html = get_slider_content();
 
-$module_content .= "
+$module_block_html .= "
   <div class='swiper-container slider_module swiper-all'>
     <div class='swiper-wrapper'>$slides_html</div>
     <div class='swiper-button-prev swiper-nav'><i class='fas fa-chevron-left'></i></div>

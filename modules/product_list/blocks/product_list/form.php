@@ -1,3 +1,6 @@
+<?php //module_block_form[product_list] 
+?>
+
 <span class="field-title" style="margin-top: 0">Liczba produktów</span>
 <input type="number" name="product_list_count" class="field" />
 
@@ -16,8 +19,4 @@
 </radio-input>
 
 <span class="field-title">Kategorie</span>
-<div
-  class="category-picker"
-  name="category_ids"
-  data-source="product_categories"
-></div>
+<div class="category-picker" name="category_ids" data-source="product_categories"></div>

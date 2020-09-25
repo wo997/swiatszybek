@@ -17,7 +17,7 @@ function useCSS($file)
 }
 function getCMSPageHTML($content)
 {
-  global $JS_files, $CSS_files, $app;
+  global $JS_files, $CSS_files, $app, $link_module_block_path;
 
   $html = str_get_html($content);
 
@@ -89,31 +89,32 @@ function getCMSPageHTML($content)
       $blocks = $container_content->find(".cms-block");
 
       foreach ($blocks as $block) {
-        if (isset($block->attr["data-module"]) && $block->attr["data-module"] != "custom-html") {
-          $module = $block->attr["data-module"];
+        if (
+          isset($block->attr["data-module-block"])
+          && isset($link_module_block_path[$block->attr["data-module-block"]])
+          && $block->attr["data-module-block"] != "custom-html"
+        ) {
           $block_html = "<div";
           foreach ($block->attr as $key => $val) {
-            if ($key == "data-module-params") {
+            if ($key == "data-module-block-params") {
               continue;
             }
             $block_html .= " $key=\"$val\"";
           }
           $block_html .= ">";
 
-          $moduleParams = isset($block->attr["data-module-params"]) ? json_decode(html_entity_decode($block->attr["data-module-params"]), true) : null;
-          $moduleDir = "modules/$module";
-          $moduleContentFile = "$moduleDir/content.php";
+          $params = isset($block->attr["data-module-block-params"]) ? json_decode(html_entity_decode($block->attr["data-module-block-params"]), true) : [];
+          $module_block_html = "";
+          $module_block_path = $link_module_block_path[$block->attr["data-module-block"]];
+          $module_block_dir = pathinfo($module_block_path)['dirname'];
+          include $module_block_path;
+          $block_html .= "<div class='cms-block-content'>$module_block_html</div>";
+          $block_html .= "</div>";
 
-          if (file_exists($moduleContentFile)) {
-            $module_content = "";
-            include $moduleContentFile;
-
-            $block_html .= "<div class='cms-block-content'>$module_content</div>";
-            $block_html .= "</div>";
-
-            $container_html .= $block_html;
-          }
-        } else $container_html .= $block->outertext;
+          $container_html .= $block_html;
+        } else {
+          $container_html .= $block->outertext;
+        }
       }
 
       $container_html .= "</div></div>";
@@ -122,4 +123,11 @@ function getCMSPageHTML($content)
     $page_content .= $container_html;
   }
   return $page_content;
+}
+
+function prepareModuleBlock($module_block_file, $module_block_name)
+{
+  $module_block_file = str_replace("MODULE_BLOCK_NAME", $module_block_name, $module_block_file);
+  $module_block_file = str_replace("MODULE_BLOCK", "module_blocks.$module_block_name", $module_block_file);
+  return $module_block_file;
 }

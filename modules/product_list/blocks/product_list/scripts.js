@@ -138,7 +138,6 @@ function mobileFocusProductFrame() {
 }*/
 
 function currentlyFocusedProduct(node) {
-  //var x = findParentByClassName(node, "product-block");
   var x = node.classList.contains("product-image") ? node : null;
   if (animateProduct.target != x) {
     if (animateProduct.target) {
@@ -156,9 +155,7 @@ function currentlyFocusedProduct(node) {
         return;
       }
       animateProduct.target = x;
-      animateProduct.image = x; /*animateProduct.target.querySelector(
-        ".product-image"
-      );*/
+      animateProduct.image = x;
       animateProduct.frames = JSON.parse(g).map((e) => e.values.src);
 
       animateProduct.defaultImage = animateProduct.image.src;

@@ -9,6 +9,7 @@ require_once 'vendor/autoload.php';
 //define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');
 define("IS_XHR", isset($_GET["xhr"]) || isset($_POST["xhr"]));
 
+define("APP_PATH", str_replace("\\", "/", getcwd()) . "/");
 define("BUILDS_PATH", "builds/");
 define("UPLOADS_PATH", "uploads/");
 define("UPLOADS_PLAIN_PATH", UPLOADS_PATH . "-/");
@@ -69,7 +70,7 @@ require_once "helpers/db/connect.php";
 // define app scope
 $app = [];
 
-// use annotations
+// use builds
 $link_route_path = @include BUILDS_PATH . "link_route_path.php";
 if (!$link_route_path) {
   $link_route_path = [];
@@ -83,6 +84,16 @@ if (!$link_module_path) {
 $link_event_paths = @include BUILDS_PATH . "link_event_paths.php";
 if (!$link_event_paths) {
   $link_event_paths = [];
+}
+
+$link_module_block_path = @include BUILDS_PATH . "link_module_block_path.php";
+if (!$link_module_block_path) {
+  $link_module_block_path = [];
+}
+
+$link_module_block_form_path = @include BUILDS_PATH . "link_module_block_form_path.php";
+if (!$link_module_block_form_path) {
+  $link_module_block_form_path = [];
 }
 
 // include other helpers

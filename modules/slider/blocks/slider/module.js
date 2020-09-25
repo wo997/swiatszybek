@@ -1,9 +1,8 @@
-/* js[modules] */
-MODULE = {
-  params: "",
-  description: "Slider",
+/* module_block[slider] */
+MODULE_BLOCK = {
+  title: "Slider",
   icon: '<i class="far fa-images"></i>',
-  firstOpen: (params, form) => {
+  formOpen: (params, form) => {
     createSimpleList({
       name: "cms_slides",
       fields: {
@@ -22,7 +21,7 @@ MODULE = {
                     </label>
                     <span class="field-title">
                       Zawartość
-                      <button onclick="MODULE.editSlide($(this).parent().next())" class="btn primary" style="white-space: nowrap;">
+                      <button onclick="MODULE_BLOCK.editSlide($(this).parent().next())" class="btn primary" style="white-space: nowrap;">
                         Edytuj <i class="far fa-edit"></i>
                       </button>
                     </span>
@@ -46,14 +45,13 @@ MODULE = {
       },
       title: "Banery",
       onChange: () => {
-        MODULE.form
+        MODULE_BLOCK.form
           .find(`[name="desktop-slider-height"]`)
           .dispatchEvent(new Event("change"));
         resizeCallback();
       },
     });
-  },
-  formOpen: (params, form) => {
+
     setTimeout(() => {
       resizeCallback();
     }, 450);
@@ -67,7 +65,7 @@ MODULE = {
   editSlide: (node) => {
     editCMSAdditional(node, {
       onChange: (cms_container) => {
-        MODULE.setAllCSS(cms_container);
+        MODULE_BLOCK.setAllCSS(cms_container);
       },
       delete_block_with_parent: false,
       type: "slide",
@@ -78,12 +76,11 @@ MODULE = {
     }, 450);
   },
   sliderHeightChanged: (input) => {
-    MODULE.setAllCSS(MODULE.form);
-
+    MODULE_BLOCK.setAllCSS(MODULE_BLOCK.form);
     //name="desktop-slider-height"
   },
   setAllCSS: (parent) => {
-    var h = MODULE.form.find(`[name="desktop-slider-height"]`).getValue();
+    var h = MODULE_BLOCK.form.find(`[name="desktop-slider-height"]`).getValue();
     parent.findAll(".cms-container").forEach((e) => {
       //console.log(e);
       e.setAttribute("data-desktop-min-height", h);

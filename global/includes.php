@@ -18,6 +18,14 @@
   const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
   const UPLOADS_PLAIN_PATH = "<?= UPLOADS_PLAIN_PATH ?>";
 
+  function domload(callback) {
+    document.addEventListener("DOMContentLoaded", callback);
+  }
+
+  function windowload(callback) {
+    window.addEventListener("load", callback);
+  }
+
   const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
 
   <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
@@ -29,7 +37,7 @@
 
   const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 
-  var modules = {};
+  var module_blocks = {};
 
   <?php if ($just_logged_in) : ?>
     window.addEventListener("DOMContentLoaded", () => {
@@ -72,9 +80,13 @@
 
 <?php if (/*$app["user"]["priveleges"]["backend_access"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
 
+  <script>
+    const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;
+  </script>
+
   <link href="/builds/admin.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
   <script src="/builds/admin.js?v=<?= JS_RELEASE ?>"></script>
-  <script src="/builds/modules.js?v=<?= JS_RELEASE ?>" defer></script>
+  <script src="/builds/module_blocks.js?v=<?= JS_RELEASE ?>" defer></script>
 
   <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
   <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">
