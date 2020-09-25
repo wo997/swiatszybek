@@ -15,40 +15,20 @@ function getSearchQuery($data)
 
     if ($search_type == "extended") {
         return getRelevanceQuery($main_search_fields, $words);
+    } else {
+        getRegularSearchQuery($main_search_fields, $words);
     }
-
-    $query = "";
-    $counter = 0;
-    foreach ($words as $word) {
-        $counter++;
-        if ($counter > 4) break;
-
-        $word = escapeSQL($word, false);
-        if (!$word) {
-            continue;
-        }
-
-        $query .= " AND (";
-        $first = true;
-        foreach ($main_search_fields as $field) {
-            if (!$first) $query .= " OR";
-            if ($search_type == "extended") {
-            }
-            $query .= " $field LIKE '%$word%'";
-            $first = false;
-        }
-        $query .= ")";
-    }
-
-    return $query;
 }
 
-function getRegularSearchQuery($fields, $words) {
+function getRegularSearchQuery($fields, $words)
+{
     $query = "";
     $counter = 0;
     foreach ($words as $word) {
         $counter++;
-        if ($counter > 4) break;
+        if ($counter > 4) {
+            break;
+        }
 
         $word = escapeSQL($word, false);
         if (!$word) {
@@ -57,8 +37,11 @@ function getRegularSearchQuery($fields, $words) {
 
         $query .= " AND (";
         $first = true;
-        foreach ($main_search_fields as $field) {
-            if (!$first) $query .= " OR";
+        foreach ($fields as $field) {
+            if (!$first) {
+                $query .= " OR";
+            }
+
             $query .= " $field LIKE '%$word%'";
             $first = false;
         }
@@ -71,53 +54,58 @@ function getRegularSearchQuery($fields, $words) {
 function getRelevanceQuery($fields, $words)
 {
     $query = "";
+    $counter = 0;
+    $first = true;
+    foreach ($words as $word) {
+        $counter++;
+        if ($counter > 4) {
+            break;
+        }
 
-        foreach ($words as $word) {
-            $counter++;
+        $len = strlen($word);
 
-            $c = strlen($word);
-            $short = "";
-            if ($c > 4) {
-                $words = [];
-                for ($i = 0; $i < strlen($word); $i++) {
-                    $words[] = [1, substr($word, 0, $i) . '_' . substr($word, $i)];
-                    $words[] = [1, substr($word, 0, $i) . substr($word, $i + 1)];
-                    $words[] = [1, substr($word, 0, $i) . '_' . substr($word, $i + 1)];
-                }
-                $words[] = [2, $word . '_'];
+        $letter_groups = [];
 
-                $c = strlen($word);
-                if ($c > 4) {
-                    $short = substr($word, 0, floor(0.7 * $c));
-                    $words[] = [20, $short];
-                }
-            } else {
-                $words = [[50, $word]];
-            }
+        if ($len > 5) {
+            $letter_groups[substr($word, 0, -2)] = 100;
+        } else if ($len > 4) {
+            $letter_groups[substr($word, 0, -1)] = 100;
+        }
 
-            if (count($words) > 0) {
-                foreach ($words as $word) {
-                    if ($hasAny) $relevance .= " + ";
-                    $hasAny = true;
-                    $relevance .= " CASE WHEN search LIKE '%" . mysqli_real_escape_string($con, $word[1]) . "%' THEN " . $word[0] . " ELSE 0 END";
+        for ($i = 0; $i < $len - 2; $i++) {
+            $letter_groups[substr($word, $i, 3)] = 4;
+            $letter_groups[substr($word, $i, 1) . "_" . substr($word, $i + 1, 2)] = 2;
+            $letter_groups[substr($word, $i, 2) . "_" . substr($word, $i + 2, 1)] = 2;
+        }
+
+        for ($i = 0; $i < $len - 3; $i++) {
+            $letter_groups[substr($word, $i, 1) . "_" . substr($word, $i + 2, 2)] = 2;
+            $letter_groups[substr($word, $i, 2) . "_" . substr($word, $i + 3, 1)] = 2;
+            $letter_groups[substr($word, $i, 1) . substr($word, $i + 2, 2)] = 2;
+            $letter_groups[substr($word, $i, 2) . substr($word, $i + 3, 1)] = 2;
+        }
+
+        foreach ($letter_groups as $letter_group => $points) {
+            $letter_group = escapeSQL($letter_group, false);
+
+            foreach ($fields as $field) {
+                if (!$first) {
+                    $query .= " + ";
                 }
-                if ($short) {
-                    if ($hasAny) $relevance .= " + ";
-                    $hasAny = true;
-                    $relevance .= " CASE WHEN search LIKE '%" . $short . "%' THEN 200 ELSE 0 END";
-                }
+                $query .= "CASE WHEN $field LIKE '%$letter_group%' THEN $points ELSE 0 END";
+
+                $first = false;
             }
         }
+    }
 
     if (!$query) {
         return "";
     }
 
     $query = "SELECT SUM($query)";
-
     return $query;
 }
-
 
 function paginateData($data = null)
 {
@@ -128,7 +116,7 @@ function paginateData($data = null)
     - pageNumber
     - primary
 
-    params: 
+    params:
     - select
     - from
     - where
@@ -142,12 +130,15 @@ function paginateData($data = null)
 
     optional POSTS:
     - sort
-  */
+     */
 
     $rowCount = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 20;
     $pageNumber = isset($_POST['pageNumber']) ? intval($_POST['pageNumber']) : 0;
     $pageIndex = $pageNumber - 1; // start from 0
-    if ($pageIndex < 0) $pageIndex = 0;
+    if ($pageIndex < 0) {
+        $pageIndex = 0;
+    }
+
     $bottomIndex = $pageIndex * $rowCount;
 
     $select = nonull($data, "select");
@@ -156,7 +147,9 @@ function paginateData($data = null)
 
     $where = nonull($data, "where");
 
-    if (trim($where) == "") $where = "1";
+    if (trim($where) == "") {
+        $where = "1";
+    }
 
     $filters = nonull($_POST, "filters");
     if ($filters) {
@@ -168,11 +161,17 @@ function paginateData($data = null)
 
     $search_type = nonull($data, "search_type", "regular");
 
-    $where .= getSearchQuery([
+    $search_query = getSearchQuery([
         "main_search_value" => nonull($data, "search", nonull($_POST, 'search')),
         "main_search_fields" => nonull($data, "main_search_fields", []),
         "search_type" => $search_type
     ]);
+
+    if ($search_type == "extended") {
+        $where .= " AND ($search_query) > 1";
+    } else {
+        $where .= $search_query;
+    }
 
     $group = isset($data["group"]) ? ("GROUP BY " . $data["group"]) : "";
 
@@ -181,6 +180,10 @@ function paginateData($data = null)
     $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
     if ($sort) {
         $order = $sort . " " . (strpos($_POST['sort'], "+") !== false ? "ASC" : "DESC");
+    }
+
+    if ($search_type == "extended") {
+        $order = "($search_query) DESC";
     }
 
     $countQuery = "SELECT COUNT(1) FROM $from WHERE $where $group";
@@ -207,8 +210,7 @@ function paginateData($data = null)
     }
     unset($result);
 
-    //$pageCount = $pageCount * 4;
-    //$results = array_merge($results, $results, $results, $results);
+    //$pageCount = $pageCount * 4;$results = array_merge($results, $results, $results, $results);
 
     $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
 
@@ -222,9 +224,9 @@ function paginateData($data = null)
  * - "abc", include "abc"
  * - [1, 2, 3], include 1, 2, 3
  * - !["a", "b", "c"], exclude "a", "b", "c"
- * 
+ *
  * @param  string $field column name
- * @param  string $filter_string json 
+ * @param  string $filter_string json
  * @return void
  */
 function getFilterCondition($field, $type, $filter_value)
@@ -282,8 +284,14 @@ function getRequiredFilterQuery($table, $params = [])
     global $requiredFilterTables;
     if (isset($requiredFilterTables[$table])) {
         $column_name = $requiredFilterTables[$table];
-        if (!isset($params[$column_name])) return false;
-        if (is_integer($params[$column_name])) return "$column_name=" . intval($params[$column_name]);
+        if (!isset($params[$column_name])) {
+            return false;
+        }
+
+        if (is_integer($params[$column_name])) {
+            return "$column_name=" . intval($params[$column_name]);
+        }
+
         return "$column_name=" . escapeSQL($params[$column_name]);
     }
     return "1";
@@ -306,7 +314,10 @@ function rearrangeTable($table, $primary, $itemId = null, $toIndex = null, $para
 
         $toIndex = intval($toIndex);
 
-        if ($toIndex == $fromIndex) return;
+        if ($toIndex == $fromIndex) {
+            return;
+        }
+
         if ($toIndex > $fromIndex) {
             array_splice($idList, $toIndex, 0, [$itemId]);
             array_splice($idList, $fromIndex - 1, 1);
@@ -326,7 +337,9 @@ function rearrangeTable($table, $primary, $itemId = null, $toIndex = null, $para
 function orderTableBeforeListing($table, $primary, $params = [])
 {
     $where = getRequiredFilterQuery($table, $params);
-    if ($where === false) return;
+    if ($where === false) {
+        return;
+    }
 
     if (
         fetchValue("SELECT 1 FROM $table WHERE kolejnosc = 0") || // any new?
