@@ -1,8 +1,10 @@
 <?php
 
-function getSearchQuery($data = null)
+function getSearchQuery($data)
 {
     $main_search_fields = $data["main_search_fields"];
+    $search_type = nonull($data, "search_type", "regular");
+
     if (!$main_search_fields) {
         return "";
     }
@@ -11,6 +13,37 @@ function getSearchQuery($data = null)
 
     $words = explode(" ", $main_search_value);
 
+    if ($search_type == "extended") {
+        return getRelevanceQuery($main_search_fields, $words);
+    }
+
+    $query = "";
+    $counter = 0;
+    foreach ($words as $word) {
+        $counter++;
+        if ($counter > 4) break;
+
+        $word = escapeSQL($word, false);
+        if (!$word) {
+            continue;
+        }
+
+        $query .= " AND (";
+        $first = true;
+        foreach ($main_search_fields as $field) {
+            if (!$first) $query .= " OR";
+            if ($search_type == "extended") {
+            }
+            $query .= " $field LIKE '%$word%'";
+            $first = false;
+        }
+        $query .= ")";
+    }
+
+    return $query;
+}
+
+function getRegularSearchQuery($fields, $words) {
     $query = "";
     $counter = 0;
     foreach ($words as $word) {
@@ -35,11 +68,62 @@ function getSearchQuery($data = null)
     return $query;
 }
 
+function getRelevanceQuery($fields, $words)
+{
+    $query = "";
+
+        foreach ($words as $word) {
+            $counter++;
+
+            $c = strlen($word);
+            $short = "";
+            if ($c > 4) {
+                $words = [];
+                for ($i = 0; $i < strlen($word); $i++) {
+                    $words[] = [1, substr($word, 0, $i) . '_' . substr($word, $i)];
+                    $words[] = [1, substr($word, 0, $i) . substr($word, $i + 1)];
+                    $words[] = [1, substr($word, 0, $i) . '_' . substr($word, $i + 1)];
+                }
+                $words[] = [2, $word . '_'];
+
+                $c = strlen($word);
+                if ($c > 4) {
+                    $short = substr($word, 0, floor(0.7 * $c));
+                    $words[] = [20, $short];
+                }
+            } else {
+                $words = [[50, $word]];
+            }
+
+            if (count($words) > 0) {
+                foreach ($words as $word) {
+                    if ($hasAny) $relevance .= " + ";
+                    $hasAny = true;
+                    $relevance .= " CASE WHEN search LIKE '%" . mysqli_real_escape_string($con, $word[1]) . "%' THEN " . $word[0] . " ELSE 0 END";
+                }
+                if ($short) {
+                    if ($hasAny) $relevance .= " + ";
+                    $hasAny = true;
+                    $relevance .= " CASE WHEN search LIKE '%" . $short . "%' THEN 200 ELSE 0 END";
+                }
+            }
+        }
+
+    if (!$query) {
+        return "";
+    }
+
+    $query = "SELECT SUM($query)";
+
+    return $query;
+}
+
+
 function paginateData($data = null)
 {
     /*
     required POSTS:
-    - search
+    - search (+search_type)
     - rowCount
     - pageNumber
     - primary
@@ -82,9 +166,12 @@ function paginateData($data = null)
         }
     }
 
+    $search_type = nonull($data, "search_type", "regular");
+
     $where .= getSearchQuery([
         "main_search_value" => nonull($data, "search", nonull($_POST, 'search')),
-        "main_search_fields" => nonull($data, "main_search_fields", [])
+        "main_search_fields" => nonull($data, "main_search_fields", []),
+        "search_type" => $search_type
     ]);
 
     $group = isset($data["group"]) ? ("GROUP BY " . $data["group"]) : "";

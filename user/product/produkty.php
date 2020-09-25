@@ -7,7 +7,9 @@ $parts = explode("/", $url);
 if (isset($parts[1]) && strlen($parts[1]) > 1) {
   $category_link = trim($parts[1], "/");
   $show_category = fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
-} else {
+}
+
+if (!$show_category) {
   header("Location: /produkty/wszystkie");
   die;
 }
@@ -652,8 +654,12 @@ function showCategory($category, $level = 0)
         e.style.display = !filled ? "" : "none";
       });
 
-      if (searchParams.search === "" && value !== "") {
+      /*if (searchParams.search === "" && value !== "") {
         $(`.order_by_item .relevance_option`).checked = true;
+      }*/
+
+      if (!filled && $(".relevance_option:checked")) {
+        $(`.order_by_item input`).checked = true;
       }
 
       anySearchChange(instant);

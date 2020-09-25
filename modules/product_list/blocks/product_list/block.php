@@ -104,6 +104,7 @@ $price_info = fetchRow("SELECT MIN(price_min) as min, MAX(price_max) as max FROM
 
 if ($search) {
   $params["search"] = $search;
+  $params["search_type"] = "extended";
 }
 
 $products = paginateData($params);
