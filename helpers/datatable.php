@@ -67,9 +67,11 @@ function getRelevanceQuery($fields, $words)
         $letter_groups = [];
 
         if ($len > 5) {
-            $letter_groups[substr($word, 0, -2)] = 100;
+            $letter_groups[substr($word, 0, -2) . "%"] = 15 * $len;
         } else if ($len > 4) {
-            $letter_groups[substr($word, 0, -1)] = 100;
+            $letter_groups[substr($word, 0, -1) . "%"] = 15 * $len;
+        } else {
+            $letter_groups[$word . "%"] = 15 * $len;
         }
 
         for ($i = 0; $i < $len - 2; $i++) {
@@ -92,18 +94,16 @@ function getRelevanceQuery($fields, $words)
                 if (!$first) {
                     $query .= " + ";
                 }
-                $query .= "CASE WHEN $field LIKE '%$letter_group%' THEN $points ELSE 0 END";
+                if (strrpos($letter_group, "%") !== 0) {
+                    $letter_group = "%$letter_group%";
+                }
+                $query .= "CASE WHEN $field LIKE '$letter_group' THEN $points ELSE 0 END";
 
                 $first = false;
             }
         }
     }
 
-    if (!$query) {
-        return "";
-    }
-
-    $query = "SELECT SUM($query)";
     return $query;
 }
 
@@ -159,18 +159,22 @@ function paginateData($data = null)
         }
     }
 
+    $main_search_value = nonull($data, "search", nonull($_POST, 'search'));
+    $main_search_fields = nonull($data, "main_search_fields", []);
     $search_type = nonull($data, "search_type", "regular");
 
     $search_query = getSearchQuery([
-        "main_search_value" => nonull($data, "search", nonull($_POST, 'search')),
-        "main_search_fields" => nonull($data, "main_search_fields", []),
-        "search_type" => $search_type
+        "main_search_value" => $main_search_value,
+        "main_search_fields" => $main_search_fields,
+        "search_type" => $search_type,
     ]);
 
-    if ($search_type == "extended") {
-        $where .= " AND ($search_query) > 1";
-    } else {
-        $where .= $search_query;
+    if ($search_query) {
+        if ($search_type == "extended") {
+            $where .= " AND $search_query > 1";
+        } else {
+            $where .= $search_query;
+        }
     }
 
     $group = isset($data["group"]) ? ("GROUP BY " . $data["group"]) : "";
@@ -178,12 +182,31 @@ function paginateData($data = null)
     $order = nonull($data, "order");
 
     $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
+
     if ($sort) {
         $order = $sort . " " . (strpos($_POST['sort'], "+") !== false ? "ASC" : "DESC");
     }
 
     if ($search_type == "extended") {
-        $order = "($search_query) DESC";
+        if ($order) {
+            [$order_key, $order_dir] = explode(" ", $order);
+
+            $test_order_key = $order_key == "RAND()" ? "1" : $order_key;
+
+            $frmq = "$from WHERE $where $group";
+            if ($group) {
+                $frmq = "(SELECT $order_key, " . join(",", $main_search_fields) . " FROM $frmq) t";
+            }
+            $order_info = fetchRow("SELECT MAX($test_order_key) as order_max, MAX($search_query) as relevance_max FROM $from WHERE $where");
+
+            $ratio = round(30 * $order_info["relevance_max"] / max($order_info["order_max"], 5)) / 100; // 30 % care about the order key, we want a match right?
+
+            $order = "(SELECT $search_query"
+                . ($order_dir == "DESC" ? "+" : "-")
+                . " $ratio * $order_key) DESC";
+        } else {
+            $order = "$search_query DESC";
+        }
     }
 
     $countQuery = "SELECT COUNT(1) FROM $from WHERE $where $group";
@@ -195,7 +218,11 @@ function paginateData($data = null)
     $totalRows = fetchValue($countQuery);
     $pageCount = $rowCount > 0 ? ceil($totalRows / $rowCount) : 0;
 
-    $results = fetchArray("SELECT $select FROM $from WHERE $where $group ORDER BY $order LIMIT $bottomIndex,$rowCount");
+    if ($order) {
+        $order = "ORDER BY $order";
+    }
+
+    $results = fetchArray("SELECT $select FROM $from WHERE $where $group $order LIMIT $bottomIndex,$rowCount");
 
     $index = 0;
     foreach ($results as &$result) {
