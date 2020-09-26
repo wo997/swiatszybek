@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($_SESSION)) {
-  session_start();
+    session_start();
 }
 
 require_once 'vendor/autoload.php';
@@ -34,7 +34,7 @@ $versionJS = 0;
 // define WebP support also for XHR requests
 define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
 if (WEBP_SUPPORT) {
-  $_SESSION["HAS_WEBP_SUPPORT"] = true;
+    $_SESSION["HAS_WEBP_SUPPORT"] = true;
 }
 
 include_once "helpers/general.php";
@@ -43,20 +43,22 @@ include_once "helpers/general.php";
 @require_once "builds/config.php";
 function config($var, $default = "")
 {
-  global $config;
-  return nonull($config, $var, $default);
+    global $config;
+    return nonull($config, $var, $default);
 }
 
 $secrets = [];
 @require_once "secrets.php";
 function secret($var, $default = "")
 {
-  global $secrets;
-  return nonull($secrets, $var, $default);
+    global $secrets;
+    return nonull($secrets, $var, $default);
 }
 
 $domain = config("domain");
-if (!$domain) $domain = $_SERVER["HTTP_HOST"];
+if (!$domain) {
+    $domain = $_SERVER["HTTP_HOST"];
+}
 
 define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain);
 
@@ -73,27 +75,32 @@ $app = [];
 // use builds
 $link_route_path = @include BUILDS_PATH . "link_route_path.php";
 if (!$link_route_path) {
-  $link_route_path = [];
+    $link_route_path = [];
 }
 
 $link_module_path = @include BUILDS_PATH . "link_module_path.php";
 if (!$link_module_path) {
-  $link_module_path = [];
+    $link_module_path = [];
 }
 
 $link_event_paths = @include BUILDS_PATH . "link_event_paths.php";
 if (!$link_event_paths) {
-  $link_event_paths = [];
+    $link_event_paths = [];
 }
 
 $link_module_block_path = @include BUILDS_PATH . "link_module_block_path.php";
 if (!$link_module_block_path) {
-  $link_module_block_path = [];
+    $link_module_block_path = [];
 }
 
 $link_module_block_form_path = @include BUILDS_PATH . "link_module_block_form_path.php";
 if (!$link_module_block_form_path) {
-  $link_module_block_form_path = [];
+    $link_module_block_form_path = [];
+}
+
+$link_module_form_path = @include BUILDS_PATH . "link_module_form_path.php";
+if (!$link_module_form_path) {
+    $link_module_form_path = [];
 }
 
 // include other helpers
@@ -138,12 +145,8 @@ prepareBasketData();
 
 // todo remove or tigger an event here
 if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) {
-  header("Location: /oplacono");
-  die;
-}
-
-if (config("dev_mode", true)) {
-  include "deployment/automatic_build.php";
+    header("Location: /oplacono");
+    die;
 }
 
 // automatic_build can override
@@ -159,17 +162,21 @@ include "theme/variables.php";
 $just_logged_in = false;
 
 if (!IS_XHR) {
-  if (isset($_SESSION["redirect"])) {
-    $redirect = $_SESSION["redirect"];
-    unset($_SESSION["redirect"]);
-    if ($_SERVER["REQUEST_URI"] != $redirect) {
-      header("Location: $redirect");
-      die;
+    if (isset($_SESSION["redirect"])) {
+        $redirect = $_SESSION["redirect"];
+        unset($_SESSION["redirect"]);
+        if ($_SERVER["REQUEST_URI"] != $redirect) {
+            header("Location: $redirect");
+            die;
+        }
     }
-  }
 
-  if (isset($_SESSION["just_logged_in"])) {
-    $just_logged_in = true;
-    unset($_SESSION["just_logged_in"]);
-  }
+    if (isset($_SESSION["just_logged_in"])) {
+        $just_logged_in = true;
+        unset($_SESSION["just_logged_in"]);
+    }
+}
+
+if (config("dev_mode", true)) {
+    include "deployment/automatic_build.php";
 }

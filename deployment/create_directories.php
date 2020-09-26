@@ -1,5 +1,7 @@
 <?php
 
+global $image_default_dimensions;
+
 $project_directories = [
     UPLOADS_PATH,
     BUILDS_PATH,

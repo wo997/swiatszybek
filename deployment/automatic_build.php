@@ -29,18 +29,20 @@ scanDirectories(
 scanDirectories(
     [
         "get_first_line" => true,
-        "include_paths" => ["modules"]
+        "include_paths" => ["modules"],
     ],
     function ($path, $first_line) {
         global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS, $modificationTimeModules;
 
         $mtime = filemtime($path);
 
+        // same in scan modules ;)
         if (
             getAnnotationPHP("module", $first_line)
             || getAnnotation("module", $first_line)
             || getAnnotation("module_block", $first_line)
             || getAnnotation("module_block_form", $first_line)
+            || getAnnotationPHP("module_form", $first_line)
         ) {
             $modificationTimeModules += $mtime;
             // else is important, no need to upgrade

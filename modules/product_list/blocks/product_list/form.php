@@ -1,7 +1,7 @@
-<?php //module_block_form[product_list] 
+<?php //module_block_form[product_list]
 ?>
 
-<span class="field-title" style="margin-top: 0">Liczba produktów</span>
+<span class="field-title first">Liczba produktów</span>
 <input type="number" name="product_list_count" class="field" />
 
 <span class="field-title">Sortuj wg</span>
