@@ -27,7 +27,7 @@ $variables = [
 
 
 <?php
-foreach ($variables as $variable) {
+/*foreach ($variables as $variable) {
     $name = $variable["name"];
     echo "<input class='field' name='$name' value='" . '' . "'>";
 
@@ -35,5 +35,5 @@ foreach ($variables as $variable) {
         ($page_data["published"] == 1) echo "checked"; ?>>
             <div class='checkbox'></div>
         </label>";
-}
+}*/
 ?>

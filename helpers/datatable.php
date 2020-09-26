@@ -197,9 +197,9 @@ function paginateData($data = null)
             if ($group) {
                 $frmq = "(SELECT $order_key, " . join(",", $main_search_fields) . " FROM $frmq) t";
             }
-            $order_info = fetchRow("SELECT MAX($test_order_key) as order_max, MAX($search_query) as relevance_max FROM $from WHERE $where");
+            $order_info = fetchRow("SELECT MAX($test_order_key) as order_max, MIN($test_order_key) as order_min, MAX($search_query) as relevance_max FROM $from WHERE $where");
 
-            $ratio = round(30 * $order_info["relevance_max"] / max($order_info["order_max"], 5)) / 100; // 30 % care about the order key, we want a match right?
+            $ratio = 1000; //round(30 * $order_info["relevance_max"] / max(abs($order_info["order_max"] - $order_info["order_min"]), 5)) / 100; // 30 % care about the order key, we want a match right?
 
             $order = "(SELECT $search_query"
                 . ($order_dir == "DESC" ? "+" : "-")
