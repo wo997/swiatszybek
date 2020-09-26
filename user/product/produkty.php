@@ -345,6 +345,7 @@ function showCategory($category, $level = 0)
       var products_search = localStorage.getItem("products_search");
       if (products_search) {
         localStorage.removeItem("products_search");
+        $(`.relevance_option`).checked = true;
       } else {
         products_search = "";
       }
@@ -660,11 +661,11 @@ function showCategory($category, $level = 0)
       }
 
       if (!filled && $(".relevance_option:checked")) {
-        $(`.order_by_item input`).checked = true;
+        $(`.sale_option`).checked = true;
       }
 
       if (filled && $(".random_option:checked")) {
-        $(`.order_by_item input`).checked = true;
+        $(`.sale_option`).checked = true;
       }
 
       anySearchChange(instant);
@@ -721,12 +722,12 @@ function showCategory($category, $level = 0)
           Sortuj
         </div>
         <label class="order_by_item">
-          <input type="radio" name="order_by" value="new">
-          <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
+          <input type="radio" name="order_by" value="sale" class="sale_option">
+          <span><i class="fas fa-star"></i> Bestsellery</span>
         </label>
         <label class="order_by_item">
-          <input type="radio" name="order_by" value="sale">
-          <span><i class="fas fa-star"></i> Bestsellery</span>
+          <input type="radio" name="order_by" value="new">
+          <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
         </label>
         <label class="order_by_item">
           <input type="radio" name="order_by" value="cheap">
