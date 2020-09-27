@@ -6,6 +6,7 @@ $modificationTimePHP = 0;
 $modificationTimeCSS = 0;
 $modificationTimeJS = 0;
 $modificationTimeModules = 0;
+$modificationTimeSettings = 0;
 
 scanDirectories(
     [
@@ -56,13 +57,28 @@ scanDirectories(
     }
 );
 
+scanDirectories(
+    [
+        "get_first_line" => true,
+        "include_paths" => ["settings"],
+    ],
+    function ($path, $first_line) {
+        global $modificationTimeSettings;
+
+        $mtime = filemtime($path);
+
+        $modificationTimeSettings += $mtime;
+    }
+);
+
 $anyChange = false;
 $phpChange = false;
 $cssChange = false;
 $jsChange = false;
 $modulesChange = false;
+$settingsChange = false;
 // only when url is different than deployment so we can debug the app
-if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
+if (!IS_DEPLOYMENT_URL) {
     if ($previousModificationTimePHP != $modificationTimePHP) {
         $anyChange = true;
         $phpChange = true;
@@ -87,6 +103,12 @@ if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
         $versionModules++;
     }
 
+    $settingsChange = false;
+    if ($previousModificationTimeSettings != $modificationTimeSettings) {
+        $settingsChange = true;
+        $versionSettings++;
+    }
+
     if ($anyChange) {
         $content = <<<PHP
 <?php
@@ -94,22 +116,23 @@ if (strpos(nonull($_GET, 'url', ""), "deployment") !== 0) {
     \$previousModificationTimeCSS = $modificationTimeCSS;
     \$previousModificationTimeJS = $modificationTimeJS;
     \$previousModificationTimeModules = $modificationTimeModules;
+    \$previousModificationTimeSettings = $modificationTimeSettings;
     \$versionPHP = $versionPHP;
     \$versionCSS = $versionCSS;
     \$versionJS = $versionJS;
     \$versionModules = $versionModules;
+    \$versionSettings = $versionSettings;
 PHP;
         file_put_contents(BUILD_INFO_PATH, $content);
     }
-
-    if ($phpChange || $modulesChange) {
+    if ($phpChange || $modulesChange || $settingsChange) {
         ob_start();
-        triggerEvent("build", ["modules" => $modulesChange]);
+        triggerEvent("build", ["modules" => $modulesChange, "settings" => $settingsChange]);
         ob_clean();
     }
 
     if ($anyChange) {
         triggerEvent("assets_change", ["css" => $cssChange, "js" => $jsChange]);
-        reload();
+        reload(true);
     }
 }

@@ -9,18 +9,38 @@ function xhr(data) {
   xhr.onload = function () {
     var res = xhr.responseText;
     data.type = nonull(data.type, "json");
-    if (data.type == "json") {
-      try {
-        res = JSON.parse(res);
-      } catch {}
+    var res_json = null;
+
+    var match_reload_required = "[reload_required]";
+    var reload_required = false;
+    if (
+      res.substring(0, match_reload_required.length) === match_reload_required
+    ) {
+      res = res.substring(match_reload_required.length);
+      reload_required = true;
     }
+
+    try {
+      res_json = JSON.parse(res);
+    } catch {}
+
     if (data.success) {
-      data.success(res);
+      data.success(data.type == "json" ? res_json : res);
     }
-    if (res.redirect) {
-      window.location = res.redirect;
+
+    if (res_json) {
+      if (res_json.redirect) {
+        window.location = res_json.redirect;
+      }
+      if (res_json.reload) {
+        window.location.reload();
+      }
     }
-    if (res.reload) {
+
+    if (
+      reload_required &&
+      confirm("Wymagane jest odświeżenie strony, czy checesz kontynuować?")
+    ) {
       window.location.reload();
     }
   };

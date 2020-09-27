@@ -6,8 +6,49 @@ if (!isset($_SESSION)) {
 
 require_once 'vendor/autoload.php';
 
+// include helpers
+include_once "helpers/general.php";
+
+include_once "helpers/date.php";
+include_once "helpers/string.php";
+include_once "helpers/rating.php";
+include_once "helpers/array.php";
+include_once "helpers/files.php";
+
+include_once "helpers/db/general.php";
+include_once "helpers/db/entity.php";
+include_once "helpers/db/migration.php";
+include_once "helpers/email.php";
+include_once "helpers/request.php";
+
+include_once "helpers/user.php";
+
+include_once "helpers/events.php";
+include_once "helpers/datatable.php";
+include_once "helpers/deployment.php";
+
+include_once "helpers/order.php";
+include_once "helpers/activity_log.php";
+include_once "helpers/product.php";
+
+include_once "helpers/links.php";
+
+include_once "helpers/layout/cms.php";
+include_once "helpers/layout/templates.php";
+include_once "helpers/form.php";
+
+include "packages/simple_html_dom.php";
+
+// define WebP support also for XHR requests
+define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
+if (WEBP_SUPPORT) {
+    $_SESSION["HAS_WEBP_SUPPORT"] = true;
+}
+
 //define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');
 define("IS_XHR", isset($_GET["xhr"]) || isset($_POST["xhr"]));
+
+define("IS_DEPLOYMENT_URL", strpos(nonull($_GET, 'url', ""), "deployment") === 0);
 
 define("APP_PATH", str_replace("\\", "/", getcwd()) . "/");
 define("BUILDS_PATH", "builds/");
@@ -15,9 +56,8 @@ define("UPLOADS_PATH", "uploads/");
 define("UPLOADS_PLAIN_PATH", UPLOADS_PATH . "-/");
 define("UPLOADS_VIDEOS_PATH", UPLOADS_PATH . "videos/");
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+define("SETTINGS_PATH", "settings/");
+define("MODULE_SETTINGS_PATH", "settings/modules/");
 
 define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
 
@@ -30,14 +70,6 @@ $versionCSS = 0;
 $versionJS = 0;
 
 @include BUILD_INFO_PATH;
-
-// define WebP support also for XHR requests
-define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
-if (WEBP_SUPPORT) {
-    $_SESSION["HAS_WEBP_SUPPORT"] = true;
-}
-
-include_once "helpers/general.php";
 
 // global variables
 @require_once "builds/config.php";
@@ -65,9 +97,9 @@ define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "ht
 $currency = "PLN"; // used by p24
 
 // use db
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 date_default_timezone_set("Europe/Warsaw");
 require_once "helpers/db/connect.php";
+
 
 // define app scope
 $app = [];
@@ -103,40 +135,6 @@ if (!$link_module_form_path) {
     $link_module_form_path = [];
 }
 
-// include other helpers
-include_once "helpers/date.php";
-include_once "helpers/string.php";
-include_once "helpers/rating.php";
-include_once "helpers/array.php";
-include_once "helpers/directories.php";
-
-include_once "helpers/db/general.php";
-include_once "helpers/db/entity.php";
-include_once "helpers/db/migration.php";
-include_once "helpers/email.php";
-include_once "helpers/request.php";
-
-include_once "helpers/user.php";
-
-include_once "helpers/events.php";
-include_once "helpers/datatable.php";
-include_once "helpers/deployment.php";
-
-include_once "helpers/order.php";
-include_once "helpers/activity_log.php";
-include_once "helpers/files.php";
-include_once "helpers/product.php";
-
-include_once "helpers/links.php";
-
-include_once "helpers/layout/cms.php";
-include_once "helpers/layout/templates.php";
-include_once "helpers/form.php";
-
-require_once 'helpers/facebook_register.php'; // should be a part of FB module instead
-
-include "packages/simple_html_dom.php";
-
 initUser();
 
 validateBasket();
@@ -149,7 +147,6 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
     die;
 }
 
-// automatic_build can override
 define("RELEASE", 2139);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);
@@ -176,7 +173,17 @@ if (!IS_XHR) {
         unset($_SESSION["just_logged_in"]);
     }
 }
-
 if (config("dev_mode", true)) {
     include "deployment/automatic_build.php";
 }
+
+// errors
+if (config("dev_mode", true)) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+}
+
+
+require_once 'helpers/facebook_register.php'; // should be a part of FB module instead

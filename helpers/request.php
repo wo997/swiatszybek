@@ -34,10 +34,14 @@ function redirect($url)
     }
 }
 
-function reload()
+function reload($ask = false)
 {
     if (IS_XHR) {
-        json_response(["reload" => true]);
+        if ($ask) {
+            echo "[reload_required]";
+        } else {
+            json_response(["reload" => true]);
+        }
     } else {
         header("Refresh:0");
         die;

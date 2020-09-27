@@ -1,6 +1,8 @@
 <?php
 
-echo "<br><h3>Running all migrations:</h3>";
+if (IS_DEPLOYMENT_URL) {
+  echo "<br><h3>Running all migrations:</h3>";
+}
 
 // migration from 25.07.2020
 
@@ -138,4 +140,6 @@ createTable("link_variant_attribute_option", [
   ["name" => "kolejnosc", "type" => "INT", "index" => "index"],
 ]);
 
-echo "<h3>✅ All migrations completed</h3>";
+if (IS_DEPLOYMENT_URL) {
+  echo "<h3>✅ All migrations completed</h3>";
+}

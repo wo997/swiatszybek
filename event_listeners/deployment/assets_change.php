@@ -1,10 +1,10 @@
 <?php //event[assets_change]
-// input [js: boolean, css: boolean] or empty for both
+// args [js: boolean, css: boolean] or empty for both
 
 global $cssFileGroups, $jsFileGroups, $modifyCSS, $modifyJS; // event is already a function
 
-$modifyCSS = nonull($input, "css", true);
-$modifyJS = nonull($input, "js", true);
+$modifyCSS = nonull($args, "css", true);
+$modifyJS = nonull($args, "js", true);
 
 if (!$modifyJS && !$modifyCSS) {
     return;

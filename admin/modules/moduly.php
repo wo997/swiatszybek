@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head");?>
+<?php startSection("head"); ?>
 
 <title>Moduły</title>
 
@@ -88,7 +88,7 @@
     }
 </script>
 
-<?php startSection("content");?>
+<?php startSection("content"); ?>
 
 <h1>Moduły</h1>
 
@@ -97,4 +97,4 @@
 <div class="desktopRow">
 </div>
 
-<?php include "admin/default_page.php";?>
+<?php include "admin/default_page.php"; ?>

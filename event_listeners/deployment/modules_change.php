@@ -1,4 +1,4 @@
-<?php
+<?php //event[modules_change]
 
 use MatthiasMullie\Minify;
 
@@ -11,7 +11,9 @@ $_module_block_php_path = [];
 $_module_block_form_path = [];
 $_module_form_path = [];
 
-echo "<br><h3>Scanning modules:</h3>";
+if (IS_DEPLOYMENT_URL) {
+    echo "<br><h3>Scanning modules:</h3>";
+}
 
 scanDirectories(
     [
@@ -36,7 +38,9 @@ scanDirectories(
     }
 );
 
-echo "<h3>✅ Scanning modules completed</h3>";
+if (IS_DEPLOYMENT_URL) {
+    echo "<h3>✅ Scanning modules completed</h3>";
+}
 
 $out = "<?php return [\n";
 foreach ($_module_path as $module_name => $path) {
