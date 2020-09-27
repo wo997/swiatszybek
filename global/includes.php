@@ -51,14 +51,7 @@
     });
   <?php endif ?>
 
-  window.addEventListener("DOMContentLoaded", () => {
-    var event = new CustomEvent("basket-change", {
-      detail: {
-        res: <?= json_encode(getBasketDataAll()) ?>,
-      },
-    });
-    window.dispatchEvent(event);
-  });
+  var basket_data = <?= json_encode(getBasketDataAll()) ?>;
 
   window.addEventListener("modal-show", (event) => {
     var node = event.detail.node;

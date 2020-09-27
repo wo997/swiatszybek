@@ -70,7 +70,8 @@
 }
 
 @media only screen and (min-width: 1200px) {
-  .product-block {
+  .product_list_module .product-block,
+  .item-list {
     font-size: 1.1em;
   }
 }

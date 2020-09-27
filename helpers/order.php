@@ -66,7 +66,7 @@ function setBasketData($basket_json)
     global $app;
 
     $_SESSION["basket"] = $basket_json;
-    setcookie("basket", $basket_json, (time() + 31536000), '/');
+    setcookie("basket", $basket_json, (time() + 31536000));
 
     if ($app["user"]["id"]) {
         query("UPDATE users SET basket = ? WHERE user_id = ?", [
@@ -107,26 +107,26 @@ function prepareBasketData()
 
     $basket = json_decode($_SESSION["basket"], true);
 
-    $basket_variant_id_list = "";
+    $variant_id_list = "";
     foreach ($basket as $basket_item) {
-        $basket_variant_id_list .= $basket_item["variant_id"] . ",";
+        $variant_id_list .= $basket_item["variant_id"] . ",";
     }
 
     $where = "1";
 
-    if ($basket_variant_id_list) {
-        $where .= " AND variant_id IN (" . substr($basket_variant_id_list, 0, -1) . ")";
+    if ($variant_id_list) {
+        $where .= " AND variant_id IN (" . substr($variant_id_list, 0, -1) . ")";
     }
 
-    $unordered_basket_variants = fetchArray("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, stock, gallery FROM products i INNER JOIN variant v USING (product_id) WHERE $where");
+    $unordered_variants = fetchArray("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, stock, gallery FROM products i INNER JOIN variant v USING (product_id) WHERE $where");
 
-    $basket_variants = [];
+    $variants = [];
 
     foreach ($basket as $basket_item) { // merge variants with quantity into basket, simple right?
-        foreach ($unordered_basket_variants as $unordered_basket_variant) {
-            if ($unordered_basket_variant["variant_id"] == $basket_item["variant_id"]) {
-                $unordered_basket_variant["quantity"] = $basket_item["quantity"];
-                $basket_variants[] = $unordered_basket_variant;
+        foreach ($unordered_variants as $unordered_variant) {
+            if ($unordered_variant["variant_id"] == $basket_item["variant_id"]) {
+                $unordered_variant["quantity"] = $basket_item["quantity"];
+                $variants[] = $unordered_variant;
                 break;
             }
         }
@@ -136,24 +136,24 @@ function prepareBasketData()
 
     $item_count = 0;
 
-    foreach ($basket_variants as $basket_variant_index => $basket_variant) {
-        $basket_variant["real_price"] = $basket_variant["price"] - $basket_variant["rabat"];
+    foreach ($variants as $variant_index => $variant) {
+        $variant["real_price"] = $variant["price"] - $variant["rabat"];
 
         $total_price = 0;
-        for ($i = 0; $i < $basket_variant["quantity"]; $i++) // u can add special offers here later
+        for ($i = 0; $i < $variant["quantity"]; $i++) // u can add special offers here later
         {
             $item_count++;
-            $total_price += $basket_variant["real_price"];
+            $total_price += $variant["real_price"];
         }
 
-        $basket_variant["total_price"] = $total_price;
+        $variant["total_price"] = $total_price;
 
         $totalBasketCost += $total_price;
 
-        $basket_variants[$basket_variant_index] = $basket_variant;
+        $variants[$variant_index] = $variant;
     }
 
-    $user_basket["variants"] = $basket_variants;
+    $user_basket["variants"] = $variants;
     $user_basket["total_basket_cost"] = $totalBasketCost;
     $user_basket["item_count"] = $item_count;
 
@@ -169,13 +169,13 @@ function validateStock()
     try {
         $fail = false;
 
-        foreach ($app["user"]["basket"]["variants"] as $basket_variant_index => $basket_variant) {
-            if ($basket_variant["quantity"] > $basket_variant["stock"]) {
-                $app["user"]["basket"]["variants"][$basket_variant_index]["quantity"] = $basket_variant["stock"];
+        foreach ($app["user"]["basket"]["variants"] as $variant_index => $variant) {
+            if ($variant["quantity"] > $variant["stock"]) {
+                $app["user"]["basket"]["variants"][$variant_index]["quantity"] = $variant["stock"];
                 $fail = true;
             }
-            if ($basket_variant["quantity"] <= 0) {
-                unset($app["user"]["basket"]["variants"][$basket_variant_index]);
+            if ($variant["quantity"] <= 0) {
+                unset($app["user"]["basket"]["variants"][$variant_index]);
             }
         }
 
@@ -231,23 +231,44 @@ function getBasketContent()
     if (!$app["user"]["basket"]["item_count"]) {
         $basketContent = "<h3 style='text-align:center;font-size:17px'>Twój koszyk jest pusty!</h3>";
     } else {
-        foreach ($app["user"]["basket"]["variants"] as $basket_variant) {
+        foreach ($app["user"]["basket"]["variants"] as $variant) {
+            $variant_id = $variant["variant_id"];
+            $stock = $variant["stock"];
+            $quantity = $variant["quantity"];
 
-            $basket_quantity = $basket_variant["quantity"];
-            $basket_quantity = $basket_quantity > 1 ? " - $basket_quantity szt." : "";
+            $qty_buttons = getQtyControl($variant_id, $quantity, $stock);
 
             $basketContent .= "
                 <div class='product-block'>
-                    <a href='" . getProductLink($basket_variant["product_id"], $basket_variant["link"]) . "'>
-                        <img class='product-image' data-src='" . $basket_variant["zdjecie"] . "' data-gallery='" . $basket_variant["gallery"] . "' data-height='1w'>
-                        <h3 class='product-title'><span class='check-tooltip'>" . $basket_variant["title"] . " " . $basket_variant["name"] . "</span></h3>
-                        <span class='product-price pln'>" . $basket_variant["total_price"] . " zł</span>
-                        <span>$basket_quantity</span>
+                    <a href='" . getProductLink($variant["product_id"], $variant["link"]) . "'>
+                        <img class='product-image' data-src='" . $variant["zdjecie"] . "' data-gallery='" . $variant["gallery"] . "' data-height='1w'>
+                        <h3 class='product-title'><span class='check-tooltip'>" . $variant["title"] . " " . $variant["name"] . "</span></h3>
                     </a>
+                    <div style='text-align:center'>
+                        $qty_buttons
+                        <span class='product-price pln'>" . $variant["total_price"] . " zł</span>
+                    </div>
                 </div>";
         }
     }
     return $basketContent;
+}
+
+function getQtyControl($variant_id, $quantity, $stock)
+{
+    $remove = "
+        <button class='btn subtle qty-btn' onclick='addItemToBasket($variant_id,-1)'>
+            <i class='custom-minus'></i>
+        </button>
+    ";
+    $add_visibility = $quantity < $stock ? "" : "disabled";
+    $add = "
+        <button $add_visibility class='btn subtle qty-btn' onclick='addItemToBasket($variant_id,1)'>
+            <i class='custom-plus'></i>
+        </button>
+    ";
+
+    return "<div class='qty-control glue-children'>$remove <span class='qty-label'>$quantity</span> $add</div>";
 }
 
 function printBasketTable()
@@ -257,10 +278,11 @@ function printBasketTable()
     $nr = 0;
     $res = "";
 
-    foreach ($app["user"]["basket"]["variants"] as $basket_variant) {
-        $v = $basket_variant;
+    foreach ($app["user"]["basket"]["variants"] as $variant) {
+        $v = $variant;
         $quantity = $v["quantity"];
         $stock = $v["stock"];
+        $variant_id = $v["variant_id"];
 
         if ($nr == 0) {
             $res .= "
@@ -275,16 +297,13 @@ function printBasketTable()
         }
         $nr++;
 
-        $remove = "<button class='removeBtn' type='button' onclick='addItemToBasket(" . $v["variant_id"] . ",-1)'>-</button>";
-        $add = $quantity < $stock ?
-            "<button class='addBtn' type='button' onclick='addItemToBasket(" . $v["variant_id"] . ",1)'>+</button>"
-            : "<button type='button' style='visibility:hidden'>+</button>";
+        $qty_buttons = getQtyControl($variant_id, $quantity, $stock);
 
-        $res .= "<tr data-variant_id='" . $v["variant_id"] . "'>
+        $res .= "<tr data-variant_id='$variant_id'>
                 <td><img data-src='" . $v["zdjecie"] . "' data-height='1w' style='width:min(130px,100%);display:block;margin:auto;object-fit:contain'></td>
                 <td><a class='linkable' href='" . getProductLink($v["product_id"], $v["link"]) . "'>" . $v["title"] . " " . $v["name"] . "</a></td>
                 <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</td>
-                <td class='oneline' data-stock='$stock'>$remove $quantity szt. $add</td>
+                <td class='oneline'>$qty_buttons</td>
                 <td class='pln oneline'><label>Suma:</label> " . $v["total_price"] . " zł</td>
             </tr>";
     }

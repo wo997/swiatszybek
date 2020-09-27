@@ -1,0 +1,22 @@
+/* css[global] */
+
+.comment:nth-child(odd) {
+  background: #eee;
+}
+
+table .comment_header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+table .pseudonim {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+table .dodano {
+  margin-left: auto;
+  color: #666;
+  font-size: 0.9em;
+}

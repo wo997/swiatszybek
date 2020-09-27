@@ -19,6 +19,15 @@ function addItemToBasket(variant_id, diff) {
   });
 }
 
+function basketReady() {
+  var event = new CustomEvent("basket-change", {
+    detail: {
+      res: window.basket_data,
+    },
+  });
+  window.dispatchEvent(event);
+}
+
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
 
@@ -26,16 +35,16 @@ window.addEventListener("basket-change", (event) => {
 
   var bm = $("#basketMenu .scroll-panel");
   if (bm) {
-    bm.setContent(res.basket_content_html);
+    setContentAndMaintainHeight(bm, res.basket_content_html);
   } else {
     var bc = $(".nav_basket_content");
     if (bc) {
-      setContent(bc, res.basket_content_html);
+      setContentAndMaintainHeight(bc, res.basket_content_html);
     }
   }
 
   $$(".basket_item_count").forEach((e) => {
-    e.innerHTML = res.item_count;
+    e.setContent(res.item_count);
   });
 
   $$(".gotobuy").forEach((e) => {
@@ -43,11 +52,12 @@ window.addEventListener("basket-change", (event) => {
   });
 
   $$(".total_basket_cost").forEach((e) => {
-    e.innerHTML = basket_data.total_basket_cost;
+    e.setContent(basket_data.total_basket_cost);
   });
 
   setTimeout(() => {
     lazyLoadImages();
+    tooltipResizeCallback();
   });
 });
 

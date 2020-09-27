@@ -116,6 +116,7 @@ window.addEventListener("DOMContentLoaded", () => {
         $(".gotobuy").click();
       });
     }
+    basketReady();
     return;
   }
 
@@ -124,7 +125,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div id="mainSearch" data-expand>
           <div class="modal-body">
               <button class="fas fa-times close-modal-btn"></button>
-              <h3 class="header">Wyszukiwarka</h3>
+              <h3 class="header"><img class="search-icon" src="/src/img/search_icon.svg"> Wyszukiwarka</h3>
               <div class="scroll-panel scroll-shadow panel-padding">
                 
               </div>
@@ -145,7 +146,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div id="userMenu" data-expand>
           <div class="modal-body">
               <button class="fas fa-times close-modal-btn"></button>
-              <h3 class="header">Moje konto</h3>
+              <h3 class="header"><img class="user-icon" src="/src/img/user_icon.svg"> Moje konto</h3>
               <div class="scroll-panel scroll-shadow panel-padding">
                 
               </div>
@@ -172,25 +173,21 @@ window.addEventListener("DOMContentLoaded", () => {
     <div id="basketMenu" data-expand>
         <div class="modal-body">
             <button class="fas fa-times close-modal-btn"></button>
-            <h3 class="header">Koszyk</h3>
+            <h3 class="header"><img class="basket-icon" src="/src/img/basket_icon.svg"> Koszyk</h3>
             <div class="scroll-panel scroll-shadow panel-padding">
               
             </div>
-            <div style='display:flex;padding:5px'>
-              <button class="btn primary medium fill gotobuy" onclick="window.location='/zakup';" style="position:relative">
-                Przejdź do kasy
-                <i class="fa fa-chevron-right"></i>
-              </button>
-            </div>
+            <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary'></div>
         </div>
     </div>
   `);
 
-  var sc = $("header .nav_basket_container .scrollableContent");
+  var sc = $("header .nav_basket_summary");
   if (sc) {
-    $("#basketMenu .scroll-panel").appendChild(sc);
-    sc.classList.remove("scrollableContent");
+    $("#basketMenu .basket_menu_mobile_summary").appendChild(sc);
   }
+
+  basketReady();
 
   var btn = $("header .basket-wrapper .basket-btn");
   if (btn) {
@@ -205,7 +202,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div id="mainMenu" data-expand>
           <div class="modal-body">
               <button class="fas fa-times close-modal-btn"></button>
-              <h3 class="header">Menu</h3>
+              <h3 class="header"><img class="menu-icon" src="/src/img/menu_icon.svg"> Menu</h3>
               <div class="scroll-panel scroll-shadow panel-padding">
                 
               </div>
@@ -353,7 +350,7 @@ function topSearchProducts(force) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  var ss = $("header .nav_basket_container .scrollableContent");
+  var ss = $("header .nav_basket_content");
   if (!ss) {
     return;
   }

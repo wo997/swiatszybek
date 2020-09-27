@@ -203,13 +203,15 @@ header .basket-wrapper:hover .nav_basket_container {
   pointer-events: auto;
 }
 
-.basket-wrapper .basket-icon {
+.basket-wrapper .basket-icon,
+#basketMenu .basket-icon {
   width: 40px;
   vertical-align: middle;
   margin-bottom: 4px;
 }
 
-.nav-wrapper .user-icon {
+.nav-wrapper .user-icon,
+#userMenu .user-icon {
   width: 27px;
   vertical-align: middle;
   margin-bottom: 4px;
@@ -235,10 +237,15 @@ header .basket-wrapper .basket_item_count {
   top: 19px;
 }
 
-.nav-wrapper .menu-icon {
+.nav-wrapper .menu-icon,
+#mainMenu .menu-icon {
   width: 21px;
   transform: scaleY(1.3) translateY(2px);
+}
+.nav-wrapper .menu-icon {
   margin-right: -5px;
+}
+#mainMenu .menu-icon {
 }
 
 .nav_basket_container {
@@ -258,6 +265,10 @@ header .basket-wrapper .basket_item_count {
   right: 0;
 }
 
+.nav_basket_content {
+  max-height: calc(90vh - 150px);
+}
+
 .nav_basket_container .product-image,
 #basketMenu .product-image {
   width: 80%;
@@ -266,50 +277,25 @@ header .basket-wrapper .basket_item_count {
   max-width: 80vw;
 }
 
-.basketSplit {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-  overflow: hidden;
-  position: relative;
-}
-.basketItemsWrapper {
-  position: relative;
-}
-header .scrollableContent {
-  padding: 20px 0;
-  max-height: calc(100vh - 280px);
-  overflow-y: auto;
-}
-.basketItemsWrapper::before {
-  content: "";
-  position: absolute;
-  top: -15px;
-  width: 100%;
-  height: 20px;
-  background-color: white;
-  filter: blur(10px);
-  left: 0;
-}
-.basketItemsWrapper::after {
-  content: "";
-  position: absolute;
-  bottom: -15px;
-  width: 100%;
-  height: 20px;
-  background-color: white;
-  filter: blur(10px);
-  left: 0;
-}
-.scrollableContent::-webkit-scrollbar {
+.nav_basket_content::-webkit-scrollbar {
   width: 10px;
   background-color: #efefef;
   border-radius: 5px;
 }
-.scrollableContent::-webkit-scrollbar-thumb {
+.nav_basket_content::-webkit-scrollbar-thumb {
   background-color: #ddd;
   border-radius: 5px;
+}
+
+.nav_basket_summary {
+  width: 100%;
+}
+
+@media only screen and (max-width: 799px) {
+  #basketMenu .product-title span {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 /* basket end */
@@ -369,9 +355,14 @@ header .main-search-wrapper:not(.active) .search-results,
   transform: translateY(2px);
 }
 
-.mobile-main-search-wrapper .search-icon {
-  width: 25px;
+.mobile-main-search-wrapper .search-icon,
+#mainSearch .search-icon {
+  width: 23px;
   transform: translateY(2px);
+}
+
+#mainSearch .search-icon {
+  transform: translateY(4px);
 }
 
 header .main-search-wrapper input {

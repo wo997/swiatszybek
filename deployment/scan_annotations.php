@@ -5,9 +5,7 @@ global $_link_route_path, $_link_event_paths;
 $_link_route_path = [];
 $_link_event_paths = [];
 
-if (IS_DEPLOYMENT_URL) {
-    echo "<br><h3>Scanning annotations:</h3>";
-}
+echo "<br><h3>Scanning annotations:</h3>";
 
 scanDirectories(
     [
@@ -32,9 +30,8 @@ scanDirectories(
     }
 );
 
-if (IS_DEPLOYMENT_URL) {
-    echo "<h3>✅ Scanning annotations completed</h3>";
-}
+echo "<h3>✅ Scanning annotations completed</h3>";
+
 
 $out = "<?php return [\n";
 foreach ($_link_route_path as $url => $path) {

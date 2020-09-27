@@ -283,44 +283,19 @@
   padding: 8px 12px 12px;
 }
 
-.comment:nth-child(odd) {
-  background: #eee;
-}
-
-table .comment_header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-table .pseudonim {
-  font-size: 15px;
-  font-weight: bold;
-}
-
-table .dodano {
-  margin-left: auto;
-  color: #666;
-  font-size: 0.9em;
-}
-
-form input,
-form textarea {
-  border-radius: 0;
-  padding: 3px;
-}
-
-.smallText {
-  font-size: 16px;
-  color: #555;
-}
-
 .item-list td:first-child {
   width: auto !important;
 }
 
 .item-list tr {
   transition: 0.5s;
+}
+
+.item-list tr:first-child td {
+  border-top: 1px solid #ccc;
+}
+.item-list tr td {
+  border-bottom: 1px solid #ccc;
 }
 
 .seethrough {

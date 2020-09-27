@@ -11,9 +11,7 @@ $_module_block_php_path = [];
 $_module_block_form_path = [];
 $_module_form_path = [];
 
-if (IS_DEPLOYMENT_URL) {
-    echo "<br><h3>Scanning modules:</h3>";
-}
+echo "<br><h3>Scanning modules:</h3>";
 
 scanDirectories(
     [
@@ -38,9 +36,7 @@ scanDirectories(
     }
 );
 
-if (IS_DEPLOYMENT_URL) {
-    echo "<h3>✅ Scanning modules completed</h3>";
-}
+echo "<h3>✅ Scanning modules completed</h3>";
 
 $out = "<?php return [\n";
 foreach ($_module_path as $module_name => $path) {

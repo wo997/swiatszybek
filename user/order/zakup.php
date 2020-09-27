@@ -119,9 +119,18 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       }
     }
 
-    .podsumowanie table button {
+    /*.podsumowanie table button {
       display: none;
     }
+
+    .podsumowanie table .qty-control {
+      background: transparent;
+      border: none;
+    }
+
+    .podsumowanie table .qty-label:after {
+      content: " szt.";
+    }*/
 
     .dostawa {
       padding: 7px 3px;
@@ -563,16 +572,16 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
     }
 
     function copyAdres() {
-      setValue(form.kraj_kurier, form.kraj.value);
-      setValue(form.miejscowosc_kurier, form.miejscowosc.value);
-      setValue(form.kod_pocztowy_kurier, form.kod_pocztowy.value);
-      setValue(form.ulica_kurier, form.ulica.value);
-      setValue(form.nr_domu_kurier, form.nr_domu.value);
-      setValue(form.nr_lokalu_kurier, form.nr_lokalu.value);
-
       setValue(form.imie_kurier, form.imie.value);
       setValue(form.nazwisko_kurier, form.nazwisko.value);
       setValue(form.firma_kurier, form.firma.value);
+
+      setValue(form.kraj_kurier, form.kraj.value);
+      setValue(form.kod_pocztowy_kurier, form.kod_pocztowy.value);
+      setValue(form.miejscowosc_kurier, form.miejscowosc.value);
+      setValue(form.ulica_kurier, form.ulica.value);
+      setValue(form.nr_domu_kurier, form.nr_domu.value);
+      setValue(form.nr_lokalu_kurier, form.nr_lokalu.value);
     }
 
     var currentMenu = 1;

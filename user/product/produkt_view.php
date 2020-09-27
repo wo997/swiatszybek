@@ -28,7 +28,7 @@
       </h1>
 
       <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-        <a href="/admin/produkt/<?= $number ?>" style="position:relative;top:-20px;" class="btn primary medium">Edytuj</a>
+        <a href="/admin/produkt/<?= $number ?>" style="position:relative;top:-20px;" class="btn primary medium">Edytuj <i class="fas fa-cog"></i></a>
       <?php endif ?>
 
       <div>

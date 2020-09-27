@@ -98,12 +98,31 @@ function youAlreadyHaveIt(animate_variant_id = null) {
       total++;
     }
 
-    var remove = `<button class='removeBtn' onclick='addItemToBasket(${basket_item.variant_id},-1)'>-</button>`;
-    var add = `<button class='addBtn' ${
-      basket_item.quantity <= 0 ? "style='visibility:hidden'" : ""
-    } onclick='addItemToBasket(${basket_item.variant_id},1)'>+</button>`;
+    var remove = `
+      <button class='btn subtle qty-btn' onclick='addItemToBasket(${basket_item.variant_id},-1)'>
+        <i class='custom-minus'></i>
+      </button>
+    `;
+    var add = `
+      <button class='btn subtle qty-btn' ${
+        basket_item.quantity <= 0 ? "disabled" : ""
+      } onclick='addItemToBasket(${basket_item.variant_id},1)'>
+        <i class='custom-plus'></i>
+      </button>
+    `;
 
-    juzMasz += `<tr ${animate}><td>${variant.name}</td><td class='oneline'>${remove}${basket_item.quantity} szt.${add}</td><td class='pln oneline'>${total_price} zł</td></tr>`;
+    juzMasz += `
+      <tr ${animate}>
+        <td>${variant.name}</td>
+        <td> 
+          <div class='qty-control glue-children'>
+            ${remove} <span class='qty-label'>${basket_item.quantity}</span> ${add}
+          </div>
+          <span class="product-price">
+            ${total_price} zł
+          </span>
+        </td>
+      </tr>`;
   }
 
   clickVariant(VARIANT_ID);

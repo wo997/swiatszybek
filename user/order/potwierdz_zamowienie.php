@@ -120,8 +120,7 @@ triggerEvent("order_basket_change", ["zamowienie_id" => $zamowienie_id]);
 
 $link = $zamowienie_id . "-" . $link_hash;
 
-$_SESSION["basket"] = "";
-setcookie("basket", "", (time() + 31536000), '/');
+setBasketData("[]");
 
 addZamowienieLog($zamowienie_id, "Utworzono zamówienie");
 

@@ -39,6 +39,7 @@ function xhr(data) {
 
     if (
       reload_required &&
+      IS_ADMIN &&
       confirm("Wymagane jest odświeżenie strony, czy checesz kontynuować?")
     ) {
       window.location.reload();
@@ -646,8 +647,21 @@ function removeContent(node) {
 }
 
 function setContent(node, html = "") {
+  node = $(node);
   removeContent(node);
   node.insertAdjacentHTML("afterbegin", html);
+}
+
+function setContentAndMaintainHeight(node, html = "") {
+  var st = node.scrollTop;
+  node.style.height = node.scrollHeight + "px";
+  setTimeout(() => {
+    node.setContent(html);
+    setTimeout(() => {
+      node.scrollTop = st;
+      node.style.height = "";
+    }, 0);
+  });
 }
 
 function isEmpty(node) {

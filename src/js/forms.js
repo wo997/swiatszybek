@@ -98,16 +98,21 @@ function showFieldErrors(field, errors = [], options = {}) {
     if (options.scroll) {
       scrollToInvalid(field);
     }
-  } else if (errors === "blank") {
-    toggleErrorIcons("blank");
-    expand(validationBox, false, {
-      duration: 350,
-    });
   } else {
-    toggleErrorIcons("correct");
-    expand(validationBox, false, {
-      duration: 350,
-    });
+    if (window.fieldRequiringFilling == field) {
+      window.fieldRequiringFilling = null;
+    }
+    if (errors === "blank") {
+      toggleErrorIcons("blank");
+      expand(validationBox, false, {
+        duration: 350,
+      });
+    } else {
+      toggleErrorIcons("correct");
+      expand(validationBox, false, {
+        duration: 350,
+      });
+    }
   }
 }
 
@@ -173,7 +178,14 @@ function fieldErrors(field) {
   };
 
   var val = field.getValue();
+
   if (val === "") {
+    // show just one field that requires filling, dont abuse our cute user
+    if (window.fieldRequiringFilling && window.fieldRequiringFilling != field) {
+      return null;
+    }
+
+    window.fieldRequiringFilling = field;
     newError("Uzupełnij to pole");
     return field_errors;
   }
@@ -374,7 +386,7 @@ function clearAllErrors(node = null) {
     : $$(`[data-form] [data-validate]`);
   fields.forEach((field) => {
     var errors = fieldErrors(field);
-    if (errors.length > 0) {
+    if (Array.isArray(errors) && errors.length > 0) {
       showFieldErrors(field, "blank");
       field.removeEventListener("input", formFieldOnInputEvent);
     }

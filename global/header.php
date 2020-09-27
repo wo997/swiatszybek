@@ -62,15 +62,20 @@
           </div>
         </div>
         <div class="nav_basket_container">
-          <div class='basketSplit'>
-            <div class='basketItemsWrapper'>
-              <div class='scrollableContent nav_basket_content'></div>
+          <div class='scroll-panel scroll-shadow scroll-padding nav_basket_content'></div>
+          <div class='nav_basket_summary'>
+            <div style='text-align:center;padding:5px'>
+              Wartość koszyka:
+              <span class="pln">
+                <span class="total_basket_cost"></span>
+                zł
+              </span>
             </div>
+            <button class="btn primary medium fill gotobuy" onclick="window.location='/zakup';">
+              Przejdź do kasy
+              <i class="fa fa-chevron-right"></i>
+            </button>
           </div>
-          <button class="btn primary medium fill gotobuy" onclick="window.location='/zakup';" style="position:relative">
-            Przejdź do kasy
-            <i class="fa fa-chevron-right"></i>
-          </button>
         </div>
       </div>
 

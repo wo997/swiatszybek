@@ -53,7 +53,7 @@ if (empty($basket)) {
         <td><img src='/uploads/sm" . getUploadedFileName($item['zdjecie']) . "' style='max-width:130px;display:block;margin:auto'></td>
         <td><a class='linkable' href='" . nonull($links, $item['variant_id']) . "'>" . $item['title'] . "</a></td>
         <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['real_price'] . " zł</td>
-        <td class='oneline' data-stock=''>" . $item['quantity'] . " szt.</td>
+        <td class='oneline'>" . $item['quantity'] . " szt.</td>
         <td class='pln oneline basket-price'><label>Suma:</label> <span>" . $item['total_price'] . "</span> zł</td>";
 
     if ($app["user"]["priveleges"]["backend_access"]) {

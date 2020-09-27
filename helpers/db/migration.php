@@ -39,9 +39,7 @@ function dropColumns($table, $columns)
         if (columnExists($table, $column)) {
             query("ALTER TABLE " . clean($table) . " DROP COLUMN " . clean($column));
 
-            if (IS_DEPLOYMENT_URL) {
-                echo "🗑️ Column '$column' dropped from $table! <br>";
-            }
+            echo "🗑️ Column '$column' dropped from $table! <br>";
         }
     }
 }
@@ -56,9 +54,7 @@ function dropTable($table)
 {
     if (tableExists($table)) {
         query("DROP TABLE " . clean($table));
-        if (IS_DEPLOYMENT_URL) {
-            echo "🗑️ Table '$table' dropped! <br>";
-        }
+        echo "🗑️ Table '$table' dropped! <br>";
     }
 }
 
@@ -116,9 +112,7 @@ function addIndex($table, $column, $type = "index")
 
     $index_types = ["index", "unique", "primary"];
     if (!in_array($type, $index_types)) {
-        if (IS_DEPLOYMENT_URL) {
-            echo "⚠️ Undefined index type '" . $type . "'!";
-        }
+        echo "⚠️ Undefined index type '" . $type . "'!";
     }
 
     $currentIndex = getIndex($table, $column);
@@ -151,19 +145,13 @@ function addIndex($table, $column, $type = "index")
 
     if ($type == "index") {
         query("ALTER TABLE " . clean($table) . " ADD INDEX (" . clean($column) . ")");
-        if (IS_DEPLOYMENT_URL) {
-            echo "➕ INDEX '$column' added to '$table<br>";
-        }
+        echo "➕ INDEX '$column' added to '$table<br>";
     } else if ($type == "unique") {
         query("ALTER TABLE " . clean($table) . " ADD CONSTRAINT " . clean($column) . " UNIQUE (" . clean($column) . ")");
-        if (IS_DEPLOYMENT_URL) {
-            echo "➕ UNIQUE '$column' added to '$table<br>";
-        }
+        echo "➕ UNIQUE '$column' added to '$table<br>";
     } else if ($type == "primary") {
         query("ALTER TABLE " . clean($table) . " ADD PRIMARY KEY (" . clean($column) . ")");
-        if (IS_DEPLOYMENT_URL) {
-            echo "➕ PRIMARY key '$column' added to '$table<br>";
-        }
+        echo "➕ PRIMARY key '$column' added to '$table<br>";
     }
 }
 
@@ -180,14 +168,10 @@ function dropIndexByName($table, $key_name)
     try {
         if ($key_name == "PRIMARY") {
             query("ALTER TABLE " . clean($table) . " DROP PRIMARY KEY");
-            if (IS_DEPLOYMENT_URL) {
-                echo "🗑️ PRIMARY KEY dropped from '$table<br>";
-            }
+            echo "🗑️ PRIMARY KEY dropped from '$table<br>";
         } else {
             query("ALTER TABLE " . clean($table) . " DROP INDEX " . clean($key_name));
-            if (IS_DEPLOYMENT_URL) {
-                echo "🗑️ Key '$key_name' dropped from '$table<br>";
-            }
+            echo "🗑️ Key '$key_name' dropped from '$table<br>";
         }
     } catch (Exception $e) {
     }
@@ -219,9 +203,7 @@ function createTable($table, $columns)
 
         query($sql);
 
-        if (IS_DEPLOYMENT_URL) {
-            echo "➕ Table '$table' created<br>";
-        }
+        echo "➕ Table '$table' created<br>";
     }
 
     alterTable($table, $columns); // do your job ;)
@@ -258,9 +240,7 @@ function alterTable($table, $columns)
             $differentNameColumnExists = columnExists($table, $column["previous_name"]);
 
             if ($differentNameColumnExists && $columnExists) {
-                if (IS_DEPLOYMENT_URL) {
-                    echo "⚠️ Migration error, tried to change column from '" . $column["previous_name"] . "' to '" . $column["name"] . "' but '" . $column["name"] . "' already exists in '" . $table . "'!<br>";
-                }
+                echo "⚠️ Migration error, tried to change column from '" . $column["previous_name"] . "' to '" . $column["name"] . "' but '" . $column["name"] . "' already exists in '" . $table . "'!<br>";
                 continue;
             }
 
@@ -337,14 +317,10 @@ function alterTable($table, $columns)
 
         if ($modify) {
             query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);
-            if (IS_DEPLOYMENT_URL) {
-                echo "🔄 Column '" . $column["name"] . "' modified in $table<br>";
-            }
+            echo "🔄 Column '" . $column["name"] . "' modified in $table<br>";
         } else if ($isNew) {
             query("ALTER TABLE " . clean($table) . " ADD " . $definition);
-            if (IS_DEPLOYMENT_URL) {
-                echo "➕ Column '" . $column["name"] . "' added into $table<br>";
-            }
+            echo "➕ Column '" . $column["name"] . "' added into $table<br>";
         }
     }
 
@@ -399,9 +375,7 @@ function addForeignKey($table_1, $field_1, $table_2, $field_2 = null)
         ON UPDATE NO ACTION
 SQL;
     query($sql);
-    if (IS_DEPLOYMENT_URL) {
-        echo "🔗 Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
-    }
+    echo "🔗 Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
 }
 
 function dropForeignKey($table_1, $field_1, $table_2, $field_2 = null)
@@ -421,7 +395,5 @@ function dropForeignKey($table_1, $field_1, $table_2, $field_2 = null)
     }
 
     query("ALTER TABLE $table_1 DROP FOREIGN KEY " . $key["CONSTRAINT_NAME"]);
-    if (IS_DEPLOYMENT_URL) {
-        echo "🗑️ Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
-    }
+    echo "🗑️ Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
 }

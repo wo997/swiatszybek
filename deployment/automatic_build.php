@@ -125,9 +125,11 @@ if (!IS_DEPLOYMENT_URL) {
 PHP;
         file_put_contents(BUILD_INFO_PATH, $content);
     }
+
     if ($phpChange || $modulesChange || $settingsChange) {
         ob_start();
         triggerEvent("build", ["modules" => $modulesChange, "settings" => $settingsChange]);
+        echo "okxosk";
         ob_clean();
     }
 
