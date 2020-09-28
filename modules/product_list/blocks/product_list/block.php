@@ -137,7 +137,7 @@ if ($is_basic) {
         }
 
         $res .= "
-      <div class='product-block'>
+      <div class='product-block' data-product_id='" . $product["product_id"] . "'>
         <a href='" . getProductLink($product["product_id"], $product["link"]) . "'>
           <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image' alt='" . $product["title"] . "' data-gallery='" . $product["gallery"] . "'>
           <h3 class='product-title'><span class='check-tooltip'>" . $product["title"] . "</span></h3>

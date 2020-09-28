@@ -48,6 +48,8 @@
 .qty-control .btn.subtle {
   box-shadow: unset;
   background: #f3f3f3;
+  margin: -1px;
+  border: 1px solid #ddd;
 }
 
 .qty-control + .product-price {

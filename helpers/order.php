@@ -66,10 +66,20 @@ function setBasketData($basket_json_or_array)
     global $app;
 
     if (is_array($basket_json_or_array)) {
-        $basket_json = json_encode($basket_json_or_array);
+        $basket_all = $basket_json_or_array;
     } else {
-        $basket_json = $basket_json_or_array;
+        $basket_all = json_decode($basket_json_or_array, true);
     }
+
+    $basket = [];
+    foreach ($basket_all as $basket_item) {
+        $basket[] = [
+            "variant_id" => $basket_item['variant_id'],
+            "quantity" => $basket_item['quantity']
+        ];
+    }
+
+    $basket_json = json_encode($basket);
 
     $_SESSION["basket"] = $basket_json;
     setcookie("basket", $basket_json, (time() + 31536000));
@@ -234,7 +244,7 @@ function getBasketContent()
     $basketContent = "";
 
     if (!$app["user"]["basket"]["item_count"]) {
-        $basketContent = "<h3 style='text-align:center;font-size:17px'>Twój koszyk jest pusty!</h3>";
+        $basketContent = "<h3 style='text-align:center;font-size:17px;margin:2em 0'>Twój koszyk jest pusty!</h3>";
     } else {
         foreach ($app["user"]["basket"]["variants"] as $variant) {
             $variant_id = $variant["variant_id"];

@@ -141,6 +141,14 @@ header .user-menu {
   padding: 4px 9px;
   background: white;
 }
+
+.user-menu .menu_item.border-top {
+  border-top: 1px solid #ddd;
+}
+.user-menu .menu_item.border-bottom {
+  border-bottom: 1px solid #ddd;
+}
+
 .menu_item.admin {
   color: #05c;
   background: #fafafa;
@@ -172,6 +180,19 @@ header .nav-wrapper {
 @media only screen and (max-width: 799px) {
   .user-menu .menu_item {
     padding: 7px 10px;
+    border-top: 1px solid #ddd;
+  }
+  .user-menu .menu_item:last-child {
+    border-bottom: 1px solid #ddd;
+  }
+  .user-menu .menu_item:not(:last-child) {
+    border-bottom: unset !important;
+  }
+
+  .user-menu .username {
+    max-width: unset !important;
+    font-size: 15px;
+    text-align: center;
   }
 }
 
@@ -263,7 +284,7 @@ header .basket_item_count,
   opacity: 0;
   pointer-events: none;
   position: absolute;
-  width: 250px;
+  min-width: 250px;
   box-sizing: border-box;
   margin: 0 5%;
   background-color: white;
@@ -298,14 +319,30 @@ header .basket_item_count,
   border-radius: 5px;
 }
 
+.nav_basket_content .product-block {
+  width: 250px;
+}
+
+.nav_basket_content .product-title span,
+#basketMenu .product-title span {
+  width: 100%;
+  text-align: center;
+}
+
 .nav_basket_summary {
   width: 100%;
 }
 
-@media only screen and (max-width: 799px) {
+/*@media only screen and (max-width: 799px) {
   #basketMenu .product-title span {
     width: 100%;
     text-align: center;
+  }
+}*/
+
+@media only screen and (min-width: 1300) {
+  .nav_basket_container {
+    right: -30px;
   }
 }
 

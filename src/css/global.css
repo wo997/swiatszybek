@@ -500,10 +500,6 @@ input[type="radio"]:not([value=""]):checked {
     top: unset !important;
   }
 
-  .username {
-    max-width: unset !important;
-  }
-
   .item-list-full tr {
     display: flex;
     flex-direction: column;

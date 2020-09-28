@@ -236,12 +236,12 @@
   height: 54px;
   justify-content: center;
   align-items: center;
-  background: white;
+  background: #fff;
   border: none;
-  font-size: 17px;
+  font-size: 19px;
   opacity: 0.7;
   transition: 0.1s all;
-  color: #0008;
+  color: #000d;
 }
 
 .close-modal-btn:hover {

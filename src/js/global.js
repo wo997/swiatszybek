@@ -650,6 +650,10 @@ function setContent(node, html = "") {
   node = $(node);
   removeContent(node);
   node.insertAdjacentHTML("afterbegin", html);
+  node.dispatchEvent(new Event("scroll"));
+  setTimeout(() => {
+    node.dispatchEvent(new Event("scroll"));
+  }, 200);
 }
 
 function setContentAndMaintainHeight(node, html = "") {

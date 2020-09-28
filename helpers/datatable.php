@@ -16,7 +16,7 @@ function getSearchQuery($data)
     if ($search_type == "extended") {
         return getRelevanceQuery($main_search_fields, $words);
     } else {
-        getRegularSearchQuery($main_search_fields, $words);
+        return getRegularSearchQuery($main_search_fields, $words);
     }
 }
 

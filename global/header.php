@@ -35,16 +35,14 @@
               ?>
             </div>
             <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-              <a class="menu_item admin" href="/admin/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
-              <hr style="margin:0">
+              <a class="menu_item admin border-bottom border-top" href="/admin/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
             <?php endif ?>
             <a class="menu_item" href="/moje-konto"> <i class="fas fa-box"></i> Moje zamówienia</a>
             <a class="menu_item" href="/moje-konto/dane-uzytkownika"> <i class="fas fa-address-book"></i> Dane użytkownika</a>
             <?php if ($app["user"]["type"] == 'regular') : ?>
               <a class="menu_item" href="/moje-konto/resetowanie-hasla"> <i class="fas fa-unlock-alt"></i> Zmiana hasła </a>
             <?php endif ?>
-            <hr style="margin:0">
-            <a class="menu_item" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
+            <a class="menu_item border-top" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
           </div>
         <?php else : ?>
           <a class="menu_item" style="padding:12px;cursor:pointer" onclick="showModal('loginForm',{source:this});">
@@ -63,8 +61,9 @@
         </div>
         <div class="nav_basket_container">
           <div class='scroll-panel scroll-shadow scroll-padding nav_basket_content'></div>
+          <hr style='margin:0'>
           <div class='nav_basket_summary'>
-            <div style='text-align:center;padding:5px'>
+            <div style='text-align:center;padding:5px;font-size:1.1em'>
               Wartość koszyka:
               <span class="pln">
                 <span class="total_basket_cost"></span>

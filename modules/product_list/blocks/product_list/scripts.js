@@ -80,6 +80,8 @@ function productListLoaded() {
     return;
   }
   $$(".product_list_module .product-row").forEach((e) => {
+    // onclick='addVariantToBasket(${basket_item.variant_id},-1,{show_modal:true})'
+
     if (!e.find(".product-actions")) {
       e.insertAdjacentHTML(
         "beforeend",
@@ -88,7 +90,7 @@ function productListLoaded() {
             <img class='heart-icon below' src='/src/img/heart_icon.svg'>
             <img class='heart-icon over' src='/src/img/heart_icon_fill.svg'>
           </div>
-          <div class='btn-wrapper'>
+          <div class='btn-wrapper' onclick='showOffersOntopBabbyohohohohohoh'>
             <img class='basket-icon below' src='/src/img/basket_icon.svg'>
             <img class='basket-icon over' src='/src/img/basket_icon_fill.svg'>
           </div>

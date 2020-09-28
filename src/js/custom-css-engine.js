@@ -95,9 +95,15 @@ function setCustomHeights() {
   $$("[data-height]").forEach((node) => {
     var height = node.getAttribute("data-height");
     if (height.indexOf("w") !== -1) {
-      height = height.replace("w", "");
       var r = node.getBoundingClientRect();
+
+      if (!r.width) {
+        return;
+      }
+
+      height = height.replace("w", "");
       var real_height = Math.floor(r.width * parseFloat(height));
+
       if (Math.abs(parseInt(r.height) - real_height) > 2) {
         node.style.height = `${real_height}px`;
       }
