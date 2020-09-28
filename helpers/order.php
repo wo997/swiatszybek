@@ -61,9 +61,15 @@ $zamowienia_status_groups = [
     ],
 ];
 
-function setBasketData($basket_json)
+function setBasketData($basket_json_or_array)
 {
     global $app;
+
+    if (is_array($basket_json_or_array)) {
+        $basket_json = json_encode($basket_json_or_array);
+    } else {
+        $basket_json = $basket_json_or_array;
+    }
 
     $_SESSION["basket"] = $basket_json;
     setcookie("basket", $basket_json, (time() + 31536000));
@@ -94,8 +100,7 @@ function validateBasket()
             }
         }
     } catch (Exception $e) {
-        $_SESSION["basket"] = "[]";
-        $_COOKIE["basket"] = "[]";
+        setBasketData([]);
     }
 }
 
@@ -248,7 +253,7 @@ function getBasketContent()
                         $qty_buttons
                         <span class='product-price pln'>" . $variant["total_price"] . " zł</span>
                     </div>
-                    <button class='fas fa-times remove-product-btn' onclick='addItemToBasket($variant_id,-100000);return false;'></button>
+                    <button class='fas fa-times remove-product-btn' onclick='addVariantToBasket($variant_id,-100000);return false;'></button>
                 </div>";
         }
     }
@@ -258,13 +263,13 @@ function getBasketContent()
 function getQtyControl($variant_id, $quantity, $stock)
 {
     $remove = "
-        <button class='btn subtle qty-btn' onclick='addItemToBasket($variant_id,-1)'>
+        <button class='btn subtle qty-btn' onclick='addVariantToBasket($variant_id,-1)'>
             <i class='custom-minus'></i>
         </button>
     ";
     $add_visibility = $quantity < $stock ? "" : "disabled";
     $add = "
-        <button $add_visibility class='btn subtle qty-btn' onclick='addItemToBasket($variant_id,1)'>
+        <button $add_visibility class='btn subtle qty-btn' onclick='addVariantToBasket($variant_id,1)'>
             <i class='custom-plus'></i>
         </button>
     ";
@@ -307,7 +312,7 @@ function printBasketTable()
                 <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</td>
                 <td class='oneline'>$qty_buttons</td>
                 <td class='pln oneline'><label>Suma:</label> " . $v["total_price"] . " zł</td>
-                <td><button class='fas fa-times remove-product-btn' onclick='addItemToBasket($variant_id,-100000);return false;'></button></td>
+                <td><button class='fas fa-times remove-product-btn' onclick='addVariantToBasket($variant_id,-100000);return false;'></button></td>
             </tr>";
     }
     if ($nr > 0) {

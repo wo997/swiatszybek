@@ -51,9 +51,7 @@ if ($request == "add") {
   }
 } else die;
 
-$basket_string = json_encode($basket);
-
-setBasketData($basket_string);
+setBasketData($basket);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   json_response(getBasketDataAll());

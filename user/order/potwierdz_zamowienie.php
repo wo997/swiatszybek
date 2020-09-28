@@ -120,7 +120,7 @@ triggerEvent("order_basket_change", ["zamowienie_id" => $zamowienie_id]);
 
 $link = $zamowienie_id . "-" . $link_hash;
 
-setBasketData("[]");
+setBasketData([]);
 
 addZamowienieLog($zamowienie_id, "Utworzono zamówienie");
 

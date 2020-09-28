@@ -1,14 +1,16 @@
 /* js[global] */
 
-function addItemToBasket(variant_id, diff) {
+function addVariantToBasket(variant_id, diff, options = {}) {
   if (diff > 0) url = "/basket/add/" + variant_id + "/" + diff;
   else url = "/basket/remove/" + variant_id + "/" + -diff;
 
   xhr({
     url: url,
     success: (res) => {
+      window.basket_data = res;
       res.variant_id = variant_id;
       res.diff = diff;
+      res.options = options;
       var event = new CustomEvent("basket-change", {
         detail: {
           res: res,
@@ -18,6 +20,18 @@ function addItemToBasket(variant_id, diff) {
     },
   });
 }
+
+window.addEventListener("basket-change", (event) => {
+  var res = event.detail.res;
+
+  if (res.options && res.options.show_modal) {
+    var variant = basket_data.basket.find((v) => {
+      return v.variant_id == res.variant_id;
+    });
+    console.log(res, variant);
+    showModal("variantAdded");
+  }
+});
 
 function basketReady() {
   var event = new CustomEvent("basket-change", {
@@ -31,6 +45,7 @@ function basketReady() {
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
 
+  // should never cause change because it's set right before that event
   window.basket_data = res;
 
   var bm = $("#basketMenu .scroll-panel");

@@ -382,7 +382,7 @@ function showCategory($category, $level = 0)
                     <div class="scroll-panel scroll-shadow panel-padding">
 
                     </div>
-                    <div style='display:flex;padding:5px'>
+                    <div class='footer' style='display:flex;padding:5px'>
                       <button class="btn secondary fill" onclick="clearAllFilters()">
                         Wyczyść filtry
                         <i class="fas fa-times"></i>

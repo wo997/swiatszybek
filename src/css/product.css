@@ -237,12 +237,15 @@
   opacity: 1;
 }
 
-#updateChoosenImage {
+#variantAdded .variant_image {
   max-width: 250px;
+  width: 100%;
+  object-fit: contain;
+  margin-right: 20px;
 }
 
 @media only screen and (max-width: 750px) {
-  .marginAuto {
+  #variantAdded .variant_image {
     margin: 10px auto !important;
   }
 }
@@ -256,30 +259,12 @@
 }
 
 @media only screen and (min-width: 1000px) {
-  .popup {
-    padding: 35px 20px;
-  }
-
-  #updateChoosenImage {
+  #variantAdded .variant_image {
     max-width: 45%;
   }
 
-  #productAdded .modal-body {
+  #variantAdded .modal-body {
     width: 500px;
-  }
-}
-
-@media only screen and (max-width: 450px) {
-  .old-popupWrapper {
-    padding: 10px;
-  }
-
-  .old-popup h3 {
-    font-size: 18px !important;
-  }
-
-  .old-popup {
-    text-align: center;
   }
 }
 

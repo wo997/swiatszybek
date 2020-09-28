@@ -118,21 +118,6 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         top: 25px;
       }
     }
-
-    .popup label {
-      font-size: 11px;
-      margin-top: 2px;
-    }
-
-    .popup label input,
-    .popup label textarea {
-      font-size: 12px;
-      padding: 0 2px;
-    }
-
-    .popup {
-      padding: 20px;
-    }
   </style>
   <script>
     <?php if ($zamowienie_data["status_id"] == 0) : ?>

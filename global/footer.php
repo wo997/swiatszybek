@@ -27,10 +27,13 @@
   <div class="modal-body">
     <button class="fas fa-times close-modal-btn"></button>
 
-    <h3 class="header">Logowanie</h3>
+    <h3 class="header">
+      <img class="user-icon" src="/src/img/user_icon.svg">
+      Logowanie
+    </h3>
 
     <div class="scroll-panel scroll-shadow panel-padding">
-      <div class="field-title">E-mail</div>
+      <div class="field-title first">E-mail</div>
       <input class="field" type="text" autocomplete="username" name="email" data-validate="backend|custom:validateLoginUserEmail|delay:300">
 
       <div class="field-title">
@@ -104,3 +107,29 @@ if (isset($JS_files)) {
 <link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">
 
 <div class="pretend-scrollbar"></div>
+
+<div id="variantAdded" data-form data-modal data-dismissable>
+  <div class="modal-body">
+    <button class="fas fa-times close-modal-btn"></button>
+
+    <h3 class="header">Dodano do koszyka</h3>
+
+    <div style="display:flex;padding: min(2vw,15px);align-items: center;" class="mobileRow">
+      <img class="variant_image" data-height="1w">
+      <div style="width: 55%;max-width: 300px;">
+        <div style="font-size: 14px;display: flex;align-items: center;min-height: 80px;">
+          <div>
+            <span class="variant_name"></span>
+            <div class="variant_price" class="pln" style="text-align: center;font-size: 20px;display: inline-block;position: relative;top: 1px;left: 2px;"></div>
+          </div>
+        </div>
+        <div class="btn primary medium fill" style="margin: 10px 0" onclick="hideParentModal(this)">
+          Kontynuuj zakupy
+        </div>
+        <a href="/zakup" class="btn primary medium fill" style="margin-bottom: 6px">
+          Kup teraz
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

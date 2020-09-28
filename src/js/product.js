@@ -59,23 +59,7 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   youAlreadyHaveIt();
-
-  //userBasketUpdated();
 });
-
-/*function userBasketUpdated() {
-  basket_data.basket.forEach(e=>{
-
-  })
-  for (basket_item of ) {
-    var variant = variants.find((v) => {
-      return v.variant_id == basket_item.variant_id;
-    });
-    if (variant) {
-      variant.quantity = basket_item.quantity;
-    }
-  }
-}*/
 
 function youAlreadyHaveIt(animate_variant_id = null) {
   var juzMasz = "";
@@ -99,14 +83,14 @@ function youAlreadyHaveIt(animate_variant_id = null) {
     }
 
     var remove = `
-      <button class='btn subtle qty-btn' onclick='addItemToBasket(${basket_item.variant_id},-1)'>
+      <button class='btn subtle qty-btn' onclick='addVariantToBasket(${basket_item.variant_id},-1)'>
         <i class='custom-minus'></i>
       </button>
     `;
     var add = `
       <button class='btn subtle qty-btn' ${
         basket_item.quantity <= 0 ? "disabled" : ""
-      } onclick='addItemToBasket(${basket_item.variant_id},1)'>
+      } onclick='addVariantToBasket(${basket_item.variant_id},1)'>
         <i class='custom-plus'></i>
       </button>
     `;
@@ -148,16 +132,7 @@ function youAlreadyHaveIt(animate_variant_id = null) {
 
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
-  //userBasketUpdated();
-
   youAlreadyHaveIt(res.variant_id);
-
-  var variant = variants.find((v) => {
-    return v.variant_id == VARIANT_ID;
-  });
-  if (res.diff == 1 && variant && variant.quantity == 1) {
-    showModal("productAdded");
-  }
 });
 
 var variant_to_image = [];
@@ -181,12 +156,7 @@ function clickVariant(variant_id) {
   if (swiper != null && variant_to_image[VARIANT_ID] != -1)
     swiper.slideTo(variant_to_image[VARIANT_ID], 300, null);
 
-  $("#updateChoosenImage").setAttribute("data-src", variant.zdjecie);
   lazyLoadImages();
-
-  $("#updateChoosenVariant").innerHTML = " " + variant.name;
-  $("#updateChoosenAmountCost").innerHTML =
-    variant.price - variant.rabat + " zł";
 
   var left = variant.stock - variant.quantity;
 

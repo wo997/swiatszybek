@@ -14,8 +14,8 @@
   display: block;
 }
 
-.product-block:hover .product-title,
-.product-block:hover .product-title * {
+.product-block a:hover .product-title,
+.product-block a:hover .product-title * {
   text-decoration: underline;
 }
 

@@ -67,9 +67,9 @@ if (isset($parts[1]) && strlen($parts[1]) > 5) {
     }
   }
 
-  $_SESSION["basket"] = json_encode($basket);
-
-  include "helpers/order/get_basket_data.php";
+  setBasketData($basket);
+  prepareBasketData();
+  // TODO: check if that even works, maybe a reload is a better idea here? simple af
 
   unset($_SESSION["kod"]);
   $_SESSION["rabat"] = $zamowienie_data["rabat"];
