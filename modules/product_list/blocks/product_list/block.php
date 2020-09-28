@@ -141,9 +141,10 @@ if ($is_basic) {
         <a href='" . getProductLink($product["product_id"], $product["link"]) . "'>
           <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image' alt='" . $product["title"] . "' data-gallery='" . $product["gallery"] . "'>
           <h3 class='product-title'><span class='check-tooltip'>" . $product["title"] . "</span></h3>
-          <span class='product-price pln'>$priceText zł</span>
-          <span class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>
-          <!--<div class='buynow btn'>KUP TERAZ</div>-->
+          <div class='product-row'>
+            <span class='product-price pln'>$priceText zł</span>
+            <span class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>
+          </div>
         </a>
       </div>
     ";

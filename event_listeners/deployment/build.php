@@ -1,8 +1,6 @@
 <?php //event[build]
 
-if (IS_DEPLOYMENT_URL) {
-    echo "<style>body{font-family: Verdana;font-size:14px}</style>";
-}
+echo "<style>body{font-family: Verdana;font-size:14px}</style>";
 
 include "deployment/create_directories.php";
 

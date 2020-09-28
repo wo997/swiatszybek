@@ -263,6 +263,10 @@
   #updateChoosenImage {
     max-width: 45%;
   }
+
+  #productAdded .modal-body {
+    width: 500px;
+  }
 }
 
 @media only screen and (max-width: 450px) {
@@ -303,8 +307,7 @@
 }
 
 .item-list td:last-child {
-  width: auto !important;
-  text-align: right;
+  min-width: 180px;
 }
 
 .taniej {

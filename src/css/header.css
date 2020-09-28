@@ -205,9 +205,9 @@ header .basket-wrapper:hover .nav_basket_container {
 
 .basket-wrapper .basket-icon,
 #basketMenu .basket-icon {
-  width: 40px;
+  width: 38px;
   vertical-align: middle;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .nav-wrapper .user-icon,
@@ -234,7 +234,7 @@ header .basket-wrapper .basket_item_count {
   font-size: 12px;
   width: 50px;
   text-align: center;
-  top: 19px;
+  top: 17px;
 }
 
 .nav-wrapper .menu-icon,

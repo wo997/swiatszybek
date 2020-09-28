@@ -75,10 +75,35 @@ window.addEventListener("resize", (event) => {
   setCustomHeights();
 });
 
+function productListLoaded() {
+  if (window.innerWidth < 1000) {
+    return;
+  }
+  $$(".product_list_module .product-row").forEach((e) => {
+    if (!e.find(".product-actions")) {
+      e.insertAdjacentHTML(
+        "beforeend",
+        `<div class='product-actions'>
+          <div class='btn-wrapper'>
+            <img class='heart-icon below' src='/src/img/heart_icon.svg'>
+            <img class='heart-icon over' src='/src/img/heart_icon_fill.svg'>
+          </div>
+          <div class='btn-wrapper'>
+            <img class='basket-icon below' src='/src/img/basket_icon.svg'>
+            <img class='basket-icon over' src='/src/img/basket_icon_fill.svg'>
+          </div>
+        </div>
+        `
+      );
+    }
+  });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   $$(".product_list_module.grid").forEach((e) => {
     setProductListGridDimensions(e);
   });
+  productListLoaded();
 });
 
 var animateProduct = {};

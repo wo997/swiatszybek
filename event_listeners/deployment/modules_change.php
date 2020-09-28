@@ -72,9 +72,11 @@ foreach ($_module_block_js_path as $module_block_name => $path) {
 }
 (new Minify\JS($out))->minify(BUILDS_PATH . "module_blocks.js");
 
-$out = "var modules = {";
-foreach ($_module_path as $module_name => $path) {
-    $out .= "\"$module_name\": " . json_encode(include $path) . ",";
+if (count($_module_path) > 0) {
+    $out = "var modules = {";
+    foreach ($_module_path as $module_name => $path) {
+        $out .= "\"$module_name\": " . json_encode(include $path) . ",";
+    }
+    $out .= "};";
+    (new Minify\JS($out))->minify(BUILDS_PATH . "modules.js");
 }
-$out .= "};";
-(new Minify\JS($out))->minify(BUILDS_PATH . "modules.js");

@@ -5,43 +5,43 @@ $category_link = "";
 
 $parts = explode("/", $url);
 if (isset($parts[1]) && strlen($parts[1]) > 1) {
-    $category_link = trim($parts[1], "/");
-    $show_category = fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
+  $category_link = trim($parts[1], "/");
+  $show_category = fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
 }
 
 if (!$show_category) {
-    header("Location: /produkty/wszystkie");
-    die;
+  header("Location: /produkty/wszystkie");
+  die;
 }
 
 function showCategory($category, $level = 0)
 {
-    global $category_link;
-    $category_id = intval($category["category_id"]);
-    $subcategories = fetchArray("SELECT category_id, title, link, (
+  global $category_link;
+  $category_id = intval($category["category_id"]);
+  $subcategories = fetchArray("SELECT category_id, title, link, (
       SELECT COUNT(1) FROM link_product_category link INNER JOIN products USING(product_id) WHERE link.category_id = pc.category_id AND published
     ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND published ORDER BY kolejnosc");
-    $count = count($subcategories);
+  $count = count($subcategories);
 
-    //if ($level > 0) {
-    $current = $category_link == $category["link"] ? "current" : "";
-    $displayCount = isset($category["product_count"]) ? "<span>(" . $category["product_count"] . ")</span>" : "";
-    $paddingLeft = $level == 0 ? 0 : 20 * ($level - 1);
-    echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' style='padding-left:" . ($paddingLeft) . "px' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
-    if ($count && $level > 0) {
-        echo "<div class='btn expand_arrow' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
-    }
-    $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
-    $styles = $level == 0 ? "style='padding-left:0'" : "";
-    echo "</div><div class='category-picker-column $hidden' $styles>";
-    //}
+  //if ($level > 0) {
+  $current = $category_link == $category["link"] ? "current" : "";
+  $displayCount = isset($category["product_count"]) ? "<span>(" . $category["product_count"] . ")</span>" : "";
+  $paddingLeft = $level == 0 ? 0 : 20 * ($level - 1);
+  echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' style='padding-left:" . ($paddingLeft) . "px' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
+  if ($count && $level > 0) {
+    echo "<div class='btn expand_arrow' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
+  }
+  $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
+  $styles = $level == 0 ? "style='padding-left:0'" : "";
+  echo "</div><div class='category-picker-column $hidden' $styles>";
+  //}
 
-    foreach ($subcategories as $subcategory) {
-        showCategory($subcategory, $level + 1);
-    }
-    //if ($level > 0) {
-    echo "</div></div>";
-    //}
+  foreach ($subcategories as $subcategory) {
+    showCategory($subcategory, $level + 1);
+  }
+  //if ($level > 0) {
+  echo "</div></div>";
+  //}
 }
 
 ?>
@@ -49,7 +49,7 @@ function showCategory($category, $level = 0)
 <html lang="pl">
 
 <head>
-  <?php include "global/includes.php";?>
+  <?php include "global/includes.php"; ?>
 
   <style>
     .category-picker-row>*,
@@ -490,7 +490,7 @@ function showCategory($category, $level = 0)
 
       var newSearchParams = {
         attribute_value_ids: attribute_value_ids,
-        category_ids: [<?=$show_category["category_id"]?>],
+        category_ids: [<?= $show_category["category_id"] ?>],
         search: $(".products_search").getValue(),
         order_by: $(`[name="order_by"]:checked`).getValue(),
         price_min: $(`.price_min_search`).getValue(),
@@ -568,6 +568,7 @@ function showCategory($category, $level = 0)
               productListNode.setContent(productListSwapNode.innerHTML);
               productListSwapContentNode.empty();
               tooltipResizeCallback();
+              productListLoaded();
             }
           );
 
@@ -682,7 +683,7 @@ function showCategory($category, $level = 0)
 </head>
 
 <body>
-  <?php include "global/header.php";?>
+  <?php include "global/header.php"; ?>
 
   <div class="main-container desktopRow">
     <div class="search-wrapper">
@@ -697,11 +698,11 @@ function showCategory($category, $level = 0)
       <div class="search-header"><i class="fas fa-list"></i> Kategorie</div>
 
       <div class="categories">
-        <?=showCategory([
-    "link" => "wszystkie",
-    "category_id" => 0,
-    "title" => "Wszystkie produkty",
-])?>
+        <?= showCategory([
+          "link" => "wszystkie",
+          "category_id" => 0,
+          "title" => "Wszystkie produkty",
+        ]) ?>
       </div>
 
       <div class="search-header">
@@ -774,94 +775,94 @@ function showCategory($category, $level = 0)
 
 
         <?php
-include_once "admin/product/attributes_service.php";
+        include_once "admin/product/attributes_service.php";
 
-function printUserSelectValuesOfAttribute($values, $attribute, $value_id = null)
-{
-    if (!isset($values[0])) {
-        return "";
-    }
+        function printUserSelectValuesOfAttribute($values, $attribute, $value_id = null)
+        {
+          if (!isset($values[0])) {
+            return "";
+          }
 
-    $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
-    $attr .= " data-attribute_id='" . $attribute["attribute_id"] . "'";
+          $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
+          $attr .= " data-attribute_id='" . $attribute["attribute_id"] . "'";
 
-    $classes = "attribute-list";
+          $classes = "attribute-list";
 
-    if ($value_id) {
-        $classes .= " expand_y hidden animate_hidden";
-    }
+          if ($value_id) {
+            $classes .= " expand_y hidden animate_hidden";
+          }
 
-    $html = "<div class='$classes' $attr>";
-    foreach ($values as $value_data) {
-        if ($value_data["values"]["value"] === "") {
-            continue;
+          $html = "<div class='$classes' $attr>";
+          foreach ($values as $value_data) {
+            if ($value_data["values"]["value"] === "") {
+              continue;
+            }
+            $html .= "<div class='attributes-list-wrapper'>";
+            $html .= "<label class='attribute-label'>";
+            $html .= "<input type='checkbox' name='chk_" . $value_data["values"]["value_id"] . "' value='" . $value_data["values"]["value_id"] . "'";
+            $html .= " onchange='attributeSelectionChange(this,";
+            $html .= nonull($value_data, "children", []) ? "true" : "false";
+            $html .= ")'";
+            $html .= ">";
+            $html .= "<div class='checkbox'></div> ";
+            $html .= $value_data["values"]["value"];
+
+            if (isset($value_data["values"]["color"])) {
+              $html .= "<div class='color-circle' style='background-color:" . $value_data["values"]["color"] . "'></div>";
+            }
+
+            $html .= "</label>";
+
+            $html .= printUserSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
+
+            $html .= "</div>";
+          }
+          $html .= "</div>";
+
+          return $html;
         }
-        $html .= "<div class='attributes-list-wrapper'>";
-        $html .= "<label class='attribute-label'>";
-        $html .= "<input type='checkbox' name='chk_" . $value_data["values"]["value_id"] . "' value='" . $value_data["values"]["value_id"] . "'";
-        $html .= " onchange='attributeSelectionChange(this,";
-        $html .= nonull($value_data, "children", []) ? "true" : "false";
-        $html .= ")'";
-        $html .= ">";
-        $html .= "<div class='checkbox'></div> ";
-        $html .= $value_data["values"]["value"];
 
-        if (isset($value_data["values"]["color"])) {
-            $html .= "<div class='color-circle' style='background-color:" . $value_data["values"]["color"] . "'></div>";
-        }
-
-        $html .= "</label>";
-
-        $html .= printUserSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
-
-        $html .= "</div>";
-    }
-    $html .= "</div>";
-
-    return $html;
-}
-
-$attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes
+        $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes
         INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($show_category["category_id"]));
 
-$output = "";
+        $output = "";
 
-foreach ($attributes as $attribute) {
+        foreach ($attributes as $attribute) {
 
-    $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
+          $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-    $output .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
-    $output .= "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
+          $output .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
+          $output .= "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
 
-    if ($any) {
-    } else {
-        $values = getAttributeValues($attribute["attribute_id"]);
-        $output .= printUserSelectValuesOfAttribute($values, $attribute);
-    }
+          if ($any) {
+          } else {
+            $values = getAttributeValues($attribute["attribute_id"]);
+            $output .= printUserSelectValuesOfAttribute($values, $attribute);
+          }
 
-    $output .= "</div>";
-}
+          $output .= "</div>";
+        }
 
-echo $output;
+        echo $output;
 
-?>
+        ?>
       </div>
     </div>
     <div class="product_list-wrapper">
-      <h1 class="h1" style="margin: 40px 0"><?=$show_category["title"]?></h1>
-      <?=$show_category["description"]?>
+      <h1 class="h1" style="margin: 40px 0"><?= $show_category["title"] ?></h1>
+      <?= $show_category["description"] ?>
 
       <div class="hook_view"></div>
 
       <div class="product_list-animation-wrapper">
         <div class="product_list-container">
           <?php
-/*$moduleParams = [];
+          /*$moduleParams = [];
 $module_content = "";
 $moduleParams["category_ids"] = [$show_category["category_id"]];
 include "modules/product_list/content.php";
 echo $module_content;*/
-?>
+          ?>
         </div>
 
         <div class="product_list-container-swap">
@@ -875,12 +876,12 @@ echo $module_content;*/
           <div class="pagination"></div>
         </div>
 
-        <?=getCMSPageHTML($show_category["content"])?>
+        <?= getCMSPageHTML($show_category["content"]) ?>
       </div>
     </div>
   </div>
 
-  <?php include "global/footer.php";?>
+  <?php include "global/footer.php"; ?>
 </body>
 
 </html>

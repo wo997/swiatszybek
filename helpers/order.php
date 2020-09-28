@@ -248,6 +248,7 @@ function getBasketContent()
                         $qty_buttons
                         <span class='product-price pln'>" . $variant["total_price"] . " zł</span>
                     </div>
+                    <button class='fas fa-times remove-product-btn' onclick='addItemToBasket($variant_id,-100000);return false;'></button>
                 </div>";
         }
     }
@@ -292,6 +293,7 @@ function printBasketTable()
                 <td>Cena</td>
                 <td>Ilość</td>
                 <td>Suma</td>
+                <td></td>
                 </tr>
             ";
         }
@@ -305,6 +307,7 @@ function printBasketTable()
                 <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</td>
                 <td class='oneline'>$qty_buttons</td>
                 <td class='pln oneline'><label>Suma:</label> " . $v["total_price"] . " zł</td>
+                <td><button class='fas fa-times remove-product-btn' onclick='addItemToBasket($variant_id,-100000);return false;'></button></td>
             </tr>";
     }
     if ($nr > 0) {
