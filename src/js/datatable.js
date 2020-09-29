@@ -446,6 +446,7 @@ function createDatatable(datatable) {
     const onParamsChange = () => {
       if (e.tagName == "INPUT") datatable.awaitSearch();
       else datatable.search();
+      filterOrSortChanged();
     };
     e.addEventListener("input", function () {
       onParamsChange();
@@ -458,6 +459,10 @@ function createDatatable(datatable) {
   datatable.clearFilters = () => {
     datatable.filters = [];
     clearTableSorting(datatable);
+    var se = datatable.target.find(`[data-param="search"]`);
+    if (se) {
+      se.setValue("");
+    }
     datatable.search();
   };
 
@@ -1517,10 +1522,19 @@ function filtersChanged(hide = false) {
 function filterOrSortChanged() {
   $$(".datatable-wrapper").forEach((datatableElem) => {
     var datatable = window[datatableElem.getAttribute("data-datatable-name")];
-    $(".clear-filters-btn").classList.toggle(
-      "hidden",
-      datatable.filters.length === 0 && !datatable.sort
-    );
+
+    var search_value = "";
+    var se = datatableElem.find(`[data-param="search"]`);
+    if (se) {
+      search_value = se.getValue();
+    }
+
+    datatableElem
+      .find(".clear-filters-btn")
+      .classList.toggle(
+        "hidden",
+        datatable.filters.length === 0 && !datatable.sort && !search_value
+      );
   });
 }
 

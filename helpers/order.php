@@ -222,11 +222,11 @@ function getBasketDataAll()
 
     prepareBasketData();
 
-    $basket = json_decode($_SESSION["basket"], true);
+    //$basket = json_decode($_SESSION["basket"], true);
 
     $response = [];
 
-    $response["basket"] = $basket;
+    $response["basket"] = $app["user"]["basket"]["variants"];
 
     $response["basket_content_html"] = getBasketContent();
 
@@ -302,31 +302,32 @@ function printBasketTable()
 
         if ($nr == 0) {
             $res .= "
-                <table class='item-list item-list-full'><tr style='background: var(--primary-clr);color: white;'>
-                <td>Produkt</td>
-                <td></td>
-                <td>Cena</td>
-                <td>Ilość</td>
-                <td>Suma</td>
-                <td></td>
-                </tr>
+                <div class='variant_list_full'>
+                    <div style='background: var(--primary-clr);color: white;'>
+                        <div>Produkt</div>
+                        <div></div>
+                        <div>Cena</div>
+                        <div>Ilość</div>
+                        <div>Suma</div>
+                        <div></div>
+                    </div>
             ";
         }
         $nr++;
 
         $qty_buttons = getQtyControl($variant_id, $quantity, $stock);
 
-        $res .= "<tr data-variant_id='$variant_id'>
-                <td><img data-src='" . $v["zdjecie"] . "' data-height='1w' style='width:min(130px,100%);display:block;margin:auto;object-fit:contain'></td>
-                <td><a class='linkable' href='" . getProductLink($v["product_id"], $v["link"]) . "'>" . $v["title"] . " " . $v["name"] . "</a></td>
-                <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</td>
-                <td class='oneline'>$qty_buttons</td>
-                <td class='pln oneline'><label>Suma:</label> " . $v["total_price"] . " zł</td>
-                <td><button class='fas fa-times remove-product-btn' onclick='addVariantToBasket($variant_id,-100000);return false;'></button></td>
-            </tr>";
+        $res .= "<div data-variant_id='$variant_id' class='expand_y'>
+                <div><img data-src='" . $v["zdjecie"] . "' data-height='1w'></div>
+                <div><a class='link' href='" . getProductLink($v["product_id"], $v["link"]) . "'>" . $v["title"] . " " . $v["name"] . "</a></div>
+                <div class='pln' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</div>
+                <div>$qty_buttons</div>
+                <div class='pln'><label>Suma:</label> " . $v["total_price"] . " zł</div>
+                <button class='fas fa-times remove-product-btn' onclick='addVariantToBasket($variant_id,-100000);return false;'></button>
+            </div>";
     }
     if ($nr > 0) {
-        $res .= "</table>";
+        $res .= "</div>";
     }
 
     return $res;

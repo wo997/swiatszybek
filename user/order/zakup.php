@@ -541,9 +541,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         emptyBasket();
       }
 
-      $$(".zamowienie").forEach((e) => {
+      /*$$(".zamowienie").forEach((e) => {
         setContent(e, res.basket_table_html);
-      });
+      });*/
+
+
 
       updateTotalCost();
 

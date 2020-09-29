@@ -9,6 +9,5 @@
 
   #loginForm .modal-body .scroll-panel {
     padding: min(calc(10px + 1vw), 20px);
-    padding-top: 0;
   }
 }

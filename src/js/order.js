@@ -7,7 +7,35 @@ function addVariantToBasket(variant_id, diff, options = {}) {
   xhr({
     url: url,
     success: (res) => {
+      window.was_basket_data = window.basket_data;
       window.basket_data = res;
+
+      for (let item of window.basket_data.basket) {
+        if (
+          !window.was_basket_data.basket.find((e) => {
+            return e.variant_id === item.variant_id;
+          })
+        ) {
+          console.log(item.variant_id, "NEW");
+        } else if (
+          !window.was_basket_data.basket.find((e) => {
+            return e.quantity === item.quantity;
+          })
+        ) {
+          console.log(item.variant_id, "QUANTITY");
+        }
+      }
+
+      for (let item of window.was_basket_data.basket) {
+        if (
+          !window.basket_data.basket.find((e) => {
+            return e.variant_id === item.variant_id;
+          })
+        ) {
+          console.log(item.variant_id, "REMOVED");
+        }
+      }
+
       res.variant_id = variant_id;
       res.diff = diff;
       res.options = options;
@@ -44,9 +72,6 @@ function basketReady() {
 
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
-
-  // should never cause change because it's set right before that event
-  window.basket_data = res;
 
   var bm = $("#basketMenu .scroll-panel");
   if (bm) {

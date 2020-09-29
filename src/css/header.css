@@ -228,16 +228,16 @@ header .basket-wrapper:hover .nav_basket_container {
 
 .basket-wrapper .basket-icon,
 #basketMenu .basket-icon {
-  width: 38px;
+  width: 36px;
   vertical-align: middle;
   margin-bottom: 2px;
 }
 
 .basket-wrapper .basket-icon {
-  margin-bottom: 2px;
+  transform: translateY(-1px);
 }
 #basketMenu .basket-icon {
-  margin-top: -3px;
+  transform: translateY(-3px);
 }
 
 .nav-wrapper .user-icon,
@@ -266,7 +266,7 @@ header .basket_item_count,
   font-size: 12px;
   width: 50px;
   text-align: center;
-  top: 17px;
+  top: 13px;
 }
 
 .nav-wrapper .menu-icon,
