@@ -23,8 +23,6 @@
   border-radius: 5px;
 }
 .ql-active:not(.ql-shadow) {
-  -webkit-box-shadow: inset 0px 0px 2px 1px rgba(0, 102, 204, 1);
-  -moz-box-shadow: inset 0px 0px 2px 1px rgba(0, 102, 204, 1);
   box-shadow: inset 0px 0px 2px 1px rgba(0, 102, 204, 1);
   border-radius: 5px;
 }

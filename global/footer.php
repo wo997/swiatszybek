@@ -18,7 +18,7 @@
 
 <div class="offline"><i class="fas fa-exclamation-circle"></i> Brak połączenia z internetem!</div>
 <?php if (config("debug_mode", false)) : ?>
-  <div data-tooltip="Całkowity czas generowania po stronie serwera" style="position:fixed;font-weight:600;right:5px;bottom:5px;background:#eee;color:#444;padding:7px 10px;border-radius:5px;-webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.24);-moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.24);box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.24);z-index:100">
+  <div data-tooltip="Całkowity czas generowania po stronie serwera" style="position:fixed;font-weight:600;right:5px;bottom:5px;background:#eee;color:#444;padding:7px 10px;border-radius:5px;box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.24);z-index:100">
     <i class="far fa-clock"></i> <?= round(1000 * (microtime(true) - time)); ?>ms
   </div>
 <?php endif ?>
@@ -115,12 +115,16 @@ if (isset($JS_files)) {
     <h3 class="header">Dodano do koszyka</h3>
 
     <div style="display:flex;padding: min(2vw,15px);align-items: center;" class="mobileRow">
-      <img class="variant_image" data-height="1w">
+      <img class="variant_image" data-height="1w" data-type="src">
       <div style="width: 55%;max-width: 300px;">
         <div style="font-size: 14px;display: flex;align-items: center;min-height: 80px;">
           <div>
-            <span class="variant_name"></span>
-            <div class="variant_price" class="pln" style="text-align: center;font-size: 20px;display: inline-block;position: relative;top: 1px;left: 2px;"></div>
+            <span class="variant_name" style="font-size:1.15em"></span>
+            <div>
+              <span class="variant_qty" style="font-size: 1.1em;word-spacing: -0.1em;"></span>
+              <span style="margin: 3px">x</span>
+              <span class="variant_price pln" style="font-size: 1.3em;"></span>
+            </div>
           </div>
         </div>
         <div class="btn primary medium fill" style="margin: 10px 0" onclick="hideParentModal(this)">

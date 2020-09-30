@@ -53,6 +53,8 @@ if ($request == "add") {
 
 setBasketData($basket);
 
+validateStock();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   json_response(getBasketDataAll());
 }

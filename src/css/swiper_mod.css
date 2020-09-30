@@ -16,8 +16,6 @@
   margin-top: -25px;
 }
 .swiper-all span.swiper-pagination-bullet {
-  -webkit-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.4);
   margin: 2px;
   transform: scale(1.2);

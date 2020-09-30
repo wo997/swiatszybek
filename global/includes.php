@@ -39,7 +39,7 @@
   const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 
   <?php if ($just_logged_in) : ?>
-    window.addEventListener("DOMContentLoaded", () => {
+    domload(() => {
       showNotification("Zalogowano pomyślnie");
     });
   <?php endif ?>
@@ -50,8 +50,6 @@
       <?php unset($_SESSION["message_modal"]); ?>
     });
   <?php endif ?>
-
-  var basket_data = <?= json_encode(getBasketDataAll()) ?>;
 
   window.addEventListener("modal-show", (event) => {
     var node = event.detail.node;
@@ -64,6 +62,12 @@
       crossorigin: "anonymous"
     });
   });
+
+  function basketReady() {
+    _setBasketData(<?= json_encode(getBasketDataAll()) ?>, {
+      instant: true
+    });
+  };
 </script>
 
 <!-- styles / scripts to footer? -->

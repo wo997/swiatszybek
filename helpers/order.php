@@ -163,6 +163,8 @@ function prepareBasketData()
 
         $variant["total_price"] = $total_price;
 
+        $variant["full_link"] = getProductLink($variant["product_id"], $variant["link"]);
+
         $totalBasketCost += $total_price;
 
         $variants[$variant_index] = $variant;
@@ -184,27 +186,29 @@ function validateStock()
     try {
         $fail = false;
 
-        foreach ($app["user"]["basket"]["variants"] as $variant_index => $variant) {
+        foreach ($app["user"]["basket"]["variants"] as $key => $variant) {
             if ($variant["quantity"] > $variant["stock"]) {
-                $app["user"]["basket"]["variants"][$variant_index]["quantity"] = $variant["stock"];
+                $app["user"]["basket"]["variants"][$key]["quantity"] = $variant["stock"];
                 $fail = true;
             }
             if ($variant["quantity"] <= 0) {
-                unset($app["user"]["basket"]["variants"][$variant_index]);
+                unset($app["user"]["basket"]["variants"][$key]);
             }
         }
 
-        setBasketData(json_encode(($app["user"]["basket"]["variants"])));
+        setBasketData($app["user"]["basket"]["variants"]);
 
         if ($fail) {
             throw new Exception("out of stock");
         }
     } catch (Exception $e) {
         // TODO: rework that script man, it's bad to redirect no matter what the request is
-        if (!isset($_GET['produkt'])) { // cannot loop man
+        // redirect when kupuje ziom xd, reload?
+        /*if (!isset($_GET['produkt'])) { // cannot loop man
             header("Location: /zakup?produkt=brak");
             die;
-        }
+        }*/
+        //if (!IS_XHR)
     }
 }
 
@@ -229,6 +233,7 @@ function getBasketDataAll()
     $response["basket"] = $app["user"]["basket"]["variants"];
 
     $response["basket_content_html"] = getBasketContent();
+    // TODO: might not these in the future
 
     $response["basket_table_html"] = printBasketTable();
     $response["total_basket_cost"] = $app["user"]["basket"]["total_basket_cost"];
@@ -273,13 +278,13 @@ function getBasketContent()
 function getQtyControl($variant_id, $quantity, $stock)
 {
     $remove = "
-        <button class='btn subtle qty-btn' onclick='addVariantToBasket($variant_id,-1)'>
+        <button class='btn subtle qty-btn remove' onclick='addVariantToBasket($variant_id,-1)'>
             <i class='custom-minus'></i>
         </button>
     ";
     $add_visibility = $quantity < $stock ? "" : "disabled";
     $add = "
-        <button $add_visibility class='btn subtle qty-btn' onclick='addVariantToBasket($variant_id,1)'>
+        <button $add_visibility class='btn subtle qty-btn add' onclick='addVariantToBasket($variant_id,1)'>
             <i class='custom-plus'></i>
         </button>
     ";

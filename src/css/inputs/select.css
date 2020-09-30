@@ -28,8 +28,6 @@ c-select c-options {
   left: 0;
   background: white;
   border: 1px solid #ccc;
-  -webkit-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.23);
-  -moz-box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.23);
   box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.23);
   transition: opacity 0.1s;
   max-height: 190px;

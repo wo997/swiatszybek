@@ -95,8 +95,6 @@ function showCategory($category, $level = 0)
     .category-picker-row .expand_arrow {
       color: #999;
       margin-left: 1px;
-      -webkit-box-shadow: none;
-      -moz-box-shadow: none;
       box-shadow: none;
       transition: 0.2s all;
     }

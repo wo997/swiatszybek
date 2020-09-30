@@ -305,6 +305,7 @@ input[type="button"] {
   display: flex;
   justify-content: center;
   margin-top: 10px;
+  min-height: 35px; /* prevent bump */
 }
 
 /* new form start */
@@ -797,6 +798,7 @@ a {
 .pln {
   /*font-family: "Nanum Gothic", sans-serif !important;*/
   font-weight: 600;
+  word-spacing: -0.1em;
 }
 .mobileRow {
   display: flex;
@@ -1369,6 +1371,7 @@ ql-icon i span {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  min-height: 0 !important;
 }
 .expand_arrow .fas {
   transition: transform 0.2s;
@@ -1755,56 +1758,69 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 }*/
 
 /* row */
-.variant_list_full > div {
+.variant_list_full .product_row {
   display: flex;
   align-items: center;
 }
 /* cell */
-.variant_list_full > div > * {
+.variant_list_full .product_row > * {
   padding: 6px 8px;
   flex-shrink: 0;
   position: relative;
 }
 
 /* header cells */
-.variant_list_full > div:first-child > * {
-  text-align: center;
+.variant_list_full .header .product_row > * {
   padding: 6px 8px;
 }
 
-.variant_list_full > div > *:first-child {
-  width: 20%;
-}
-.variant_list_full > div > *:first-child img {
-  width: min(130px, 100%);
+.variant_list_full .cl1 img {
+  width: 100%;
   display: block;
   margin: auto;
   object-fit: contain;
-}
-
-.variant_list_full > div > *:nth-child(2) {
-  flex-shrink: 1;
 }
 
 @media only screen and (min-width: 800px) {
   .variant_list_full label {
     display: none;
   }
-  .variant_list_full > div {
+  .variant_list_full .product_row {
     border-bottom: 1px solid #ccc;
+  }
+  .variant_list_full .cl1 {
+    width: min(130px, 100%);
+  }
+
+  .variant_list_full .cl2 {
+    flex-shrink: 1;
+    flex-grow: 1;
+  }
+
+  .variant_list_full .cl3 {
+    width: 70px;
+  }
+  .variant_list_full .cl4 {
+    width: 120px;
+  }
+  .variant_list_full .cl5 {
+    width: 80px;
+  }
+  .variant_list_full .cl6 {
+    width: 36px;
   }
 }
 @media only screen and (max-width: 799px) {
-  .variant_list_full > div {
+  .variant_list_full .product_row {
     flex-direction: column;
   }
-  .variant_list_full > div > *:first-child {
+  .variant_list_full .cl1 {
     width: 90%;
   }
-  .variant_list_full > div:first-child {
+  .variant_list_full .cl1 {
     display: none;
   }
-  .variant_list_full > div > *:first-child img {
+  .variant_list_full .cl1 img {
     width: min(240px, 100%);
   }
 }

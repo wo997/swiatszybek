@@ -35,8 +35,6 @@ body {
   width: 220px;
   padding: 10px;
   border: 1px solid #ccc;
-  -webkit-box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.19);
-  -moz-box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.19);
   box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.19);
   background: #eee;
   color: #333;

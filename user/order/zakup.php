@@ -79,12 +79,12 @@ if (isset($parts[1]) && strlen($parts[1]) > 5) {
 } else {
 }
 
-$res = "";
+/*$res = "";
 if (empty($app["user"]["basket"]["variants"])) {
   $res = "<h3 style='text-align:center'>Twój koszyk jest pusty!</h3>";
 } else {
   $res = printBasketTable();
-}
+}*/
 
 if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
   header("Location: /");
@@ -526,36 +526,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       });
     });
 
-    window.addEventListener("basket-change", (event) => {
-      var res = event.detail.res;
-
-      if (!res.basket_table_html) {
-        res.basket_table_html = `
-              <div style="text-align:center">
-              <h3>Koszyk jest pusty!</h3>
-              <a class="btn primary medium" href="/" style='width: 220px'>
-                Rozpocznij zakupy
-                <i class="fa fa-chevron-right"></i>
-              </a></div>`;
-
-        emptyBasket();
-      }
-
-      /*$$(".zamowienie").forEach((e) => {
-        setContent(e, res.basket_table_html);
-      });*/
-
-
-
-      updateTotalCost();
-
-      $$(`[data-variant_id="${res.variant_id}"]`).forEach(v => {
-        v.style.animation = "blink 0.5s";
-      });
-
-      lazyLoadImages(false);
-    });
-
     function emptyBasket() {
       $$("button, .hideifempty").forEach(e => {
         e.style.opacity = "0.3";
@@ -910,6 +880,115 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         params,
       });
     }
+
+    // just basket pls
+
+    function setVariantRowQty(variant_node, variant_data) {
+      variant_node.find(".qty-label").setContent(variant_data.quantity);
+      toggleDisabled(variant_node.find(".add"), variant_data.quantity >= variant_data.stock);
+    }
+
+    window.addEventListener("basket-change", (event) => {
+      var res = event.detail.res;
+
+      if (!res.basket_table_html) {
+        res.basket_table_html = `
+              <div style="text-align:center">
+              <h3>Koszyk jest pusty!</h3>
+              <a class="btn primary medium" href="/" style='width: 220px'>
+                Rozpocznij zakupy
+                <i class="fa fa-chevron-right"></i>
+              </a></div>`;
+
+        emptyBasket();
+      }
+
+      /*$$(".zamowienie").forEach((e) => {
+        setContent(e, res.basket_table_html);
+      });*/
+
+      //console.log(res);
+
+      if (res.changes) {
+        res.changes.quantity.forEach(variant_id => {
+          var variant_node = $(`.variant_list_full [data-variant_id="${variant_id}"]`);
+          var variant_data = basket_data.basket.find(e => {
+            return e.variant_id == variant_id
+          });
+
+          animate(variant_node.find(".qty-label"), 400, ANIMATIONS.blink);
+
+          setTimeout(() => {
+            setVariantRowQty(variant_node, variant_data);
+          }, 200);
+        });
+        res.changes.added.forEach(variant_id => {
+          $(`.variant_list_full`).insertAdjacentHTML("beforeend", basket_row_html);
+          var variant_node = $(`.variant_list_full > div:last-child`);
+          var variant_data = basket_data.basket.find(e => {
+            return e.variant_id == variant_id
+          });
+
+          if (!res.options.instant) {
+            variant_node.classList.add("hidden");
+            variant_node.classList.add("animate_hidden");
+          }
+
+          setVariantRowQty(variant_node, variant_data);
+          variant_node.find(".product_image").setValue(variant_data.zdjecie);
+          variant_node.find(".product_price").setContent(variant_data.real_price);
+          variant_node.find(".product_total_price").setContent(variant_data.total_price);
+          variant_node.find(".product_link_name").setContent(variant_data.title + " " + variant_data.name);
+          variant_node.find(".product_link_name").setAttribute("href", variant_data.full_link);
+
+          variant_node.setAttribute("data-variant_id", variant_id);
+
+          lazyLoadImages(false);
+          setCustomHeights();
+
+          if (!res.options.instant) {
+            expand(variant_node, true);
+          }
+        });
+        res.changes.removed.forEach(variant_id => {
+          var variant_node = $(`.variant_list_full [data-variant_id="${variant_id}"]`);
+          expand(variant_node, false, {
+            callback: () => {
+              variant_node.remove();
+            }
+          });
+        });
+      }
+
+      lazyLoadImages(false);
+      setCustomHeights();
+
+      // TODO: rebate as a part of basket ;)
+      updateTotalCost();
+    });
+
+    var basket_row_html = `
+      <div class='expand_y'>
+        <div class='product_row'>
+          <div class='cl cl1'><img class='product_image' data-height='1w' data-type="src"></div>
+          <div class='cl cl2'><a class='link product_link_name'></a></div>
+          <div class='pln cl cl3' style='font-weight:normal'><label>Cena:</label> <span class='product_price'></span> zł</div>
+          <div class='cl cl4'>
+            <div class='qty-control glue-children'>
+              <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
+                <i class='custom-minus'></i>
+              </button>
+              <span class='qty-label'>66</span>
+              <button $add_visibility class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
+                <i class='custom-plus'></i>
+              </button>
+            </div>
+          </div>
+          <div class='pln cl cl5'><label>Suma:</label> <span class='product_total_price'></span> zł</div>
+          <button class='cl cl6 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'></button>
+        </div>
+      </div>
+    `;
   </script>
 </head>
 
@@ -965,7 +1044,20 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
         <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;">Twój koszyk</h3>
 
-        <div class="zamowienie adjustable-list"><?= $res ?></div>
+        <!--<div class="zamowienie adjustable-list"></div>-->
+
+        <div class='variant_list_full'>
+          <div class='header' style='background: var(--primary-clr);color: white;'>
+            <div class="product_row">
+              <div class="cl1">Produkt</div>
+              <div class="cl2"></div>
+              <div class="cl3">Cena</div>
+              <div class="cl4">Ilość</div>
+              <div class="cl5">Suma</div>
+              <div class="cl6"></div>
+            </div>
+          </div>
+        </div>
 
         <div style="margin-top: 30px;">
           <div style="margin-top: 13px;text-align: right;padding: 5px;" class="hideifempty mobileTextCenter">
@@ -1235,7 +1327,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         <div style="width: 100%;margin: 0 auto;padding: 10px;">
           <h4>Produkty</h4>
 
-          <div class="zamowienie"><?= $res ?></div>
+          <div class="zamowienie"></div>
 
           <div class="mobileRow" style="justify-content:space-between;margin-top: 10px;">
             <label style="margin:10px 0">

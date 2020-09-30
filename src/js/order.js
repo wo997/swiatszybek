@@ -1,50 +1,74 @@
 /* js[global] */
 
+function _setBasketData(res, options = {}) {
+  window.was_basket_data = nonull(window.basket_data, {
+    basket: [],
+  });
+  if (res.basket) {
+    window.basket_data = res;
+  } else {
+    return;
+  }
+
+  res.options = options;
+  res.changes = {
+    added: [],
+    removed: [],
+    quantity: [],
+  };
+
+  for (let item of window.basket_data.basket) {
+    if (
+      !window.was_basket_data.basket.find((e) => {
+        return e.variant_id === item.variant_id;
+      })
+    ) {
+      res.changes.added.push(item.variant_id);
+    } else if (
+      !window.was_basket_data.basket.find((e) => {
+        return e.quantity === item.quantity;
+      })
+    ) {
+      res.changes.quantity.push(item.variant_id);
+    }
+  }
+
+  for (let item of window.was_basket_data.basket) {
+    if (
+      !window.basket_data.basket.find((e) => {
+        return e.variant_id === item.variant_id;
+      })
+    ) {
+      res.changes.removed.push(item.variant_id);
+    }
+  }
+
+  var event = new CustomEvent("basket-change", {
+    detail: {
+      res: res,
+    },
+  });
+  window.dispatchEvent(event);
+}
+
 function addVariantToBasket(variant_id, diff, options = {}) {
+  if (typeof variant_id === "object") {
+    variant_id = $(variant_id)
+      .findParentByAttribute("data-variant_id")
+      .getAttribute("data-variant_id");
+
+    if (!variant_id) {
+      return;
+    }
+  }
+
   if (diff > 0) url = "/basket/add/" + variant_id + "/" + diff;
   else url = "/basket/remove/" + variant_id + "/" + -diff;
 
   xhr({
     url: url,
     success: (res) => {
-      window.was_basket_data = window.basket_data;
-      window.basket_data = res;
-
-      for (let item of window.basket_data.basket) {
-        if (
-          !window.was_basket_data.basket.find((e) => {
-            return e.variant_id === item.variant_id;
-          })
-        ) {
-          console.log(item.variant_id, "NEW");
-        } else if (
-          !window.was_basket_data.basket.find((e) => {
-            return e.quantity === item.quantity;
-          })
-        ) {
-          console.log(item.variant_id, "QUANTITY");
-        }
-      }
-
-      for (let item of window.was_basket_data.basket) {
-        if (
-          !window.basket_data.basket.find((e) => {
-            return e.variant_id === item.variant_id;
-          })
-        ) {
-          console.log(item.variant_id, "REMOVED");
-        }
-      }
-
-      res.variant_id = variant_id;
-      res.diff = diff;
-      res.options = options;
-      var event = new CustomEvent("basket-change", {
-        detail: {
-          res: res,
-        },
-      });
-      window.dispatchEvent(event);
+      _setBasketData(res, options);
     },
   });
 }
@@ -56,19 +80,19 @@ window.addEventListener("basket-change", (event) => {
     var variant = basket_data.basket.find((v) => {
       return v.variant_id == res.variant_id;
     });
-    console.log(res, variant);
-    showModal("variantAdded");
+
+    var modal_name = "variantAdded";
+
+    $(`#${modal_name} .variant_image`).setValue(variant.zdjecie);
+    $(`#${modal_name} .variant_name`).setContent(
+      variant.title + " " + variant.name
+    );
+    $(`#${modal_name} .variant_qty`).setContent(variant.quantity + " szt.");
+    $(`#${modal_name} .variant_price`).setContent(variant.real_price + " zł");
+
+    showModal(modal_name);
   }
 });
-
-function basketReady() {
-  var event = new CustomEvent("basket-change", {
-    detail: {
-      res: window.basket_data,
-    },
-  });
-  window.dispatchEvent(event);
-}
 
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
