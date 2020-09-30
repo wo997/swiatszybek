@@ -226,114 +226,11 @@ function getBasketDataAll()
 
     prepareBasketData();
 
-    //$basket = json_decode($_SESSION["basket"], true);
-
     $response = [];
 
     $response["basket"] = $app["user"]["basket"]["variants"];
-
-    $response["basket_content_html"] = getBasketContent();
-    // TODO: might not these in the future
-
-    $response["basket_table_html"] = printBasketTable();
     $response["total_basket_cost"] = $app["user"]["basket"]["total_basket_cost"];
     $response["item_count"] = $app["user"]["basket"]["item_count"];
 
     return $response;
-}
-
-function getBasketContent()
-{
-    global $app;
-
-    $basketContent = "";
-
-    if (!$app["user"]["basket"]["item_count"]) {
-        $basketContent = "<h3 style='text-align:center;font-size:17px;margin:2em 0'>Twój koszyk jest pusty!</h3>";
-    } else {
-        foreach ($app["user"]["basket"]["variants"] as $variant) {
-            $variant_id = $variant["variant_id"];
-            $stock = $variant["stock"];
-            $quantity = $variant["quantity"];
-
-            $qty_buttons = getQtyControl($variant_id, $quantity, $stock);
-
-            $basketContent .= "
-                <div class='product-block'>
-                    <a href='" . getProductLink($variant["product_id"], $variant["link"]) . "'>
-                        <img class='product-image' data-src='" . $variant["zdjecie"] . "' data-gallery='" . $variant["gallery"] . "' data-height='1w'>
-                        <h3 class='product-title'><span class='check-tooltip'>" . $variant["title"] . " " . $variant["name"] . "</span></h3>
-                    </a>
-                    <div style='text-align:center'>
-                        $qty_buttons
-                        <span class='product-price pln'>" . $variant["total_price"] . " zł</span>
-                    </div>
-                    <button class='fas fa-times remove-product-btn' onclick='addVariantToBasket($variant_id,-100000);return false;'></button>
-                </div>";
-        }
-    }
-    return $basketContent;
-}
-
-function getQtyControl($variant_id, $quantity, $stock)
-{
-    $remove = "
-        <button class='btn subtle qty-btn remove' onclick='addVariantToBasket($variant_id,-1)'>
-            <i class='custom-minus'></i>
-        </button>
-    ";
-    $add_visibility = $quantity < $stock ? "" : "disabled";
-    $add = "
-        <button $add_visibility class='btn subtle qty-btn add' onclick='addVariantToBasket($variant_id,1)'>
-            <i class='custom-plus'></i>
-        </button>
-    ";
-
-    return "<div class='qty-control glue-children'>$remove <span class='qty-label'>$quantity</span> $add</div>";
-}
-
-function printBasketTable()
-{
-    global $app;
-
-    $nr = 0;
-    $res = "";
-
-    foreach ($app["user"]["basket"]["variants"] as $variant) {
-        $v = $variant;
-        $quantity = $v["quantity"];
-        $stock = $v["stock"];
-        $variant_id = $v["variant_id"];
-
-        if ($nr == 0) {
-            $res .= "
-                <div class='variant_list_full'>
-                    <div style='background: var(--primary-clr);color: white;'>
-                        <div>Produkt</div>
-                        <div></div>
-                        <div>Cena</div>
-                        <div>Ilość</div>
-                        <div>Suma</div>
-                        <div></div>
-                    </div>
-            ";
-        }
-        $nr++;
-
-        $qty_buttons = getQtyControl($variant_id, $quantity, $stock);
-
-        $res .= "<div data-variant_id='$variant_id' class='expand_y'>
-                <div><img data-src='" . $v["zdjecie"] . "' data-height='1w'></div>
-                <div><a class='link' href='" . getProductLink($v["product_id"], $v["link"]) . "'>" . $v["title"] . " " . $v["name"] . "</a></div>
-                <div class='pln' style='font-weight:normal'><label>Cena:</label> " . $v["real_price"] . " zł</div>
-                <div>$qty_buttons</div>
-                <div class='pln'><label>Suma:</label> " . $v["total_price"] . " zł</div>
-                <button class='fas fa-times remove-product-btn' onclick='addVariantToBasket($variant_id,-100000);return false;'></button>
-            </div>";
-    }
-    if ($nr > 0) {
-        $res .= "</div>";
-    }
-
-    return $res;
 }

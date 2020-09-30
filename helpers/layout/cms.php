@@ -139,6 +139,6 @@ function getModuleBlockData($module_block_name, $params)
 function prepareModuleBlock($module_block_file, $module_block_name)
 {
   $module_block_file = str_replace("MODULE_BLOCK_NAME", $module_block_name, $module_block_file);
-  $module_block_file = str_replace("MODULE_BLOCK", "module_blocks.$module_block_name", $module_block_file);
+  $module_block_file = str_replace("MODULE_BLOCK", "app_module_blocks.$module_block_name", $module_block_file);
   return " " . $module_block_file;
 }

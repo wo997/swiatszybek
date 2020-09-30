@@ -62,7 +62,7 @@ window.addEventListener("DOMContentLoaded", function () {
 });
 
 function youAlreadyHaveIt(animate_variant_id = null) {
-  var juzMasz = "";
+  /*var juzMasz = "";
   var total = 0;
   for (basket_item of basket_data.basket) {
     var variant = variants.find((v) => {
@@ -127,13 +127,56 @@ function youAlreadyHaveIt(animate_variant_id = null) {
 
   setTimeout(function () {
     removeClasses("seethrough");
-  }, 10);
+  }, 10);*/
 }
 
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
-  youAlreadyHaveIt(res.variant_id);
+  //youAlreadyHaveIt(res.variant_id);
+
+  showBasketChanges(
+    res,
+    $(`.product_basket_variants`),
+    product_basket_row_template
+  );
+
+  var cbne = $(".case_basket_not_empty");
+
+  cbne.setContent(
+    `<h3 style='padding:25px 0 10px;margin:0'> Twoim koszyku 
+        ${basket_data.basket.length > 1 ? "znajdują" : "znajduje"} się
+      </h3>`
+  );
+
+  var options = {};
+  if (res.options.instant) {
+    options.duration = 0;
+  }
+  expand(cbne, basket_data.basket.length > 0, options);
+
+  clickVariant(VARIANT_ID);
 });
+
+const product_basket_row_template = `
+  <div class='expand_y'>
+    <div class='product_row'>
+      <div class='cl cl1'><span class='product_variant_name clamp-lines clamp-2' data-tooltip></span></div>
+      <div class='cl cl2'>
+        <div class='qty-control glue-children'>
+          <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
+            <i class='custom-minus'></i>
+          </button>
+          <span class='qty-label'>66</span>
+          <button class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
+            <i class='custom-plus'></i>
+          </button>
+        </div>
+      </div>
+      <div class='cl cl3'><span class='pln product_total_price'></span></div>
+      <button class='cl cl4 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'></button>
+    </div>
+  </div>
+`;
 
 var variant_to_image = [];
 

@@ -388,3 +388,32 @@ function goToSearchProducts() {
   );
   window.location = "/produkty/wszystkie";
 }
+
+window.addEventListener("basket-change", (event) => {
+  var res = event.detail.res;
+  showBasketChanges(res, $(`.nav_basket_content`), header_basket_row_template);
+});
+
+const header_basket_row_template = `
+  <div class='expand_y'>
+    <div class='product_row product-block'>
+      <a class='product_link'>
+        <img class='product-image product_image' data-height='1w' data-type="src">
+        <h3 class='product-title'><span class='check-tooltip product_name'></span></h3>
+      </a>
+      <div style='text-align:center'>
+        <div class='qty-control glue-children'>
+          <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
+            <i class='custom-minus'></i>
+          </button>
+          <span class='qty-label'></span>
+          <button class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
+            <i class='custom-plus'></i>
+          </button>
+        </div>
+        <span class='product-price pln product_total_price'></span>
+      </div>
+      <button class='cl cl6 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'></button>
+    </div>
+  </div>
+`;

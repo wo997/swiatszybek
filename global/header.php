@@ -65,10 +65,7 @@
           <div class='nav_basket_summary'>
             <div style='text-align:center;padding:5px;font-size:1.1em'>
               Wartość koszyka:
-              <span class="pln">
-                <span class="total_basket_cost"></span>
-                zł
-              </span>
+              <span class="total_basket_cost pln"></span>
             </div>
             <button class="btn primary medium fill gotobuy" onclick="window.location='/zakup';">
               Przejdź do kasy

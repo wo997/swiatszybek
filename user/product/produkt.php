@@ -8,7 +8,7 @@ function run()
 
 $parts = explode("/", $url);
 if (isset($parts[1]))
-  $number = intval($parts[1]);
+  $product_id = intval($parts[1]);
 else {
   run();
 }
@@ -18,9 +18,9 @@ if (isset($_POST["preview_params"])) {
 }
 
 //$cansee = $app["user"]["priveleges"]["backend_access"] ? "" : "AND published = 1";
-//$product_data = fetchRow("SELECT product_id, title, link, seo_title, seo_description, description, specyfikacja_output, descriptionShort, price_min, price_max, image, published, cache_avg_rating, cache_rating_count FROM products WHERE product_id = $number");
+//$product_data = fetchRow("SELECT product_id, title, link, seo_title, seo_description, description, specyfikacja_output, descriptionShort, price_min, price_max, image, published, cache_avg_rating, cache_rating_count FROM products WHERE product_id = $product_id");
 
-$product_data = fetchRow("SELECT * FROM products WHERE product_id = $number");
+$product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
 if (isset($preview_params)) {
   $product_data = array_merge($product_data, $preview_params);
 }
@@ -38,8 +38,8 @@ $priceText = $product_data["price_min"];
 if (!empty($product_data["price_max0"]) && $product_data["price_min"] != $product_data["price_max0"])
   $priceText .= " - " . $product_data["price_max0"];
 
-//$variants = fetchArray("SELECT variant_id, name, product_code, price, rabat, color, zdjecie, zdjecia, quantity FROM variant v WHERE product_id = $number AND published = 1 ORDER BY v.kolejnosc");
-$variants = fetchArray("SELECT * FROM variant WHERE product_id = $number AND published = 1 ORDER BY kolejnosc");
+//$variants = fetchArray("SELECT variant_id, name, product_code, price, rabat, color, zdjecie, zdjecia, quantity FROM variant v WHERE product_id = $product_id AND published = 1 ORDER BY v.kolejnosc");
+$variants = fetchArray("SELECT * FROM variant WHERE product_id = $product_id AND published = 1 ORDER BY kolejnosc");
 
 if (isset($preview_params)) {
   $variants = json_decode($preview_params["variants"], true);
@@ -181,7 +181,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
           </h1>
 
           <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-            <a href="/admin/produkt/<?= $number ?>" style="position:relative;top:-20px;" class="btn primary medium">Edytuj <i class="fas fa-cog"></i></a>
+            <a href="/admin/produkt/<?= $product_id ?>" style="position:relative;top:-20px;" class="btn primary medium">Edytuj <i class="fas fa-cog"></i></a>
           <?php endif ?>
 
           <div>
@@ -236,12 +236,14 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
 
             <div style="height:20px"></div>
-            <button id="buyNow" class="btn primary medium fill" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true})">
+            <button id="buyNow" class="btn primary medium fill" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true,modal_source:this})">
               Dodaj do koszyka
               <i class="fa fa-check" style="font-size: 14px;vertical-align: middle;"></i>
             </button>
 
             <div id="juzMasz"></div>
+            <div class="expand_y hidden animate_hidden case_basket_not_empty"></div>
+            <div class="product_basket_variants" data-product_id="<?= $product_id ?>"></div>
 
             <div style="margin-top: 13px;display:none" id="caseZero">
               <div id="hideWhenNotificationAdded">
@@ -290,7 +292,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
         <div id="formComment" data-form>
           <h4 style="font-size: 22px; margin: 70px 0 10px;">Podziel się swoją opinią</h4>
           <?php
-          $input = ["product_id" => $number];
+          $input = ["product_id" => $product_id];
           include 'helpers/order/can_user_get_comment_rebate.php';
 
           if ($can_user_get_comment_rebate) {

@@ -66,17 +66,15 @@ foreach ($_module_form_path as $module_form_name => $path) {
 $out .= "];";
 file_put_contents(BUILDS_PATH . "link_module_form_path.php", $out);
 
-$out = "var module_blocks = {};";
+$out = "var app_module_blocks = {};";
 foreach ($_module_block_js_path as $module_block_name => $path) {
     $out .= prepareModuleBlock(file_get_contents($path), $module_block_name);
 }
-(new Minify\JS($out))->minify(BUILDS_PATH . "module_blocks.js");
+(new Minify\JS($out))->minify(BUILDS_PATH . "app_module_blocks.js");
 
-if (count($_module_path) > 0) {
-    $out = "var modules = {";
-    foreach ($_module_path as $module_name => $path) {
-        $out .= "\"$module_name\": " . json_encode(include $path) . ",";
-    }
-    $out .= "};";
-    (new Minify\JS($out))->minify(BUILDS_PATH . "modules.js");
+$out = "var app_modules = {";
+foreach ($_module_path as $module_name => $path) {
+    $out .= "\"$module_name\": " . json_encode(include $path) . ",";
 }
+$out .= "};";
+(new Minify\JS($out))->minify(BUILDS_PATH . "app_modules.js");

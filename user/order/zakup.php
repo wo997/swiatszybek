@@ -79,12 +79,6 @@ if (isset($parts[1]) && strlen($parts[1]) > 5) {
 } else {
 }
 
-/*$res = "";
-if (empty($app["user"]["basket"]["variants"])) {
-  $res = "<h3 style='text-align:center'>Twój koszyk jest pusty!</h3>";
-} else {
-  $res = printBasketTable();
-}*/
 
 if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
   header("Location: /");
@@ -101,390 +95,9 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
   <script async src="/src/inpost_map.js"></script>
   <link rel="stylesheet" href="/src/inpost_map.css?a=2" />
   <?php include "global/includes.php"; ?>
+  <link href="/builds/order.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
   <style>
-    label {
-      margin-top: 3px;
-    }
 
-    header .navigation {
-      transform: translateY(-100%);
-      pointer-events: none;
-    }
-
-    @media only screen and (min-width: 750px) {
-      .pullHigherDesktop {
-        margin-top: -58px;
-        margin-bottom: 58px;
-        display: block !important;
-      }
-    }
-
-    /*.podsumowanie table button {
-      display: none;
-    }
-
-    .podsumowanie table .qty-control {
-      background: transparent;
-      border: none;
-    }
-
-    .podsumowanie table .qty-label:after {
-      content: " szt.";
-    }*/
-
-    .dostawa {
-      padding: 7px 3px;
-      border: 1px solid #ccc;
-      /*width: 50%;*/
-      margin: 3px;
-      border-radius: 4px;
-      text-align: center;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
-      height: 47px;
-    }
-
-    .dostawa * {
-      vertical-align: middle;
-      margin: 2px;
-    }
-
-    /*#osobiscie-option * {
-        margin-top: 4px;
-      }*/
-    .selectedDostawa {
-      /*color: var(--primary-clr);
-        font-weight: bold;
-        border-color: var(--primary-clr);*/
-      color: white;
-      background: var(--primary-clr);
-      border-color: var(--primary-clr);
-    }
-
-    .dostawa img {
-      transition: 0.2s;
-    }
-
-    .selectedDostawa img {
-      filter: invert() hue-rotate(180deg) brightness(3.5);
-    }
-
-    #total {
-      display: inline-block;
-      padding: 10px;
-    }
-
-    .items>div {
-      margin: 14px 0 !important;
-    }
-
-    h4 {
-      margin: 20px 0 5px;
-      font-size: 16px;
-    }
-
-    p {
-      margin: 10px 0;
-    }
-
-    .desktopSpaceRight {
-      margin-right: 60px;
-    }
-
-    @media only screen and (max-width: 500px) {
-      .table>div {
-        flex-direction: column;
-      }
-
-      .table>div>div:nth-child(2) {
-        text-align: right;
-        margin-top: 8px;
-      }
-    }
-
-    @media only screen and (min-width: 800px) {
-      #zaplataInfo {
-        margin-bottom: 60px;
-      }
-    }
-
-    @media only screen and (max-width: 800px) {
-      .desktopSpaceRight {
-        margin-right: 10px !important;
-      }
-
-      #closeBtn {
-        margin-left: 0 !important;
-      }
-
-      .mobileRow>.dostawa {
-        width: 100% !important;
-        margin: 10px 0 !important;
-        padding: 10px !important;
-      }
-    }
-
-    #closeBtn {
-      width: 100px;
-      margin-left: -120px;
-      margin-right: 10px;
-      border: none;
-      background: none;
-      cursor: pointer;
-    }
-
-    .button {
-      width: 100%;
-    }
-
-    .menu {
-      transition: opacity 0.2s;
-      width: 100%;
-      margin: auto;
-      justify-content: center;
-      flex-direction: column;
-      display: flex;
-    }
-
-    .showNow {
-      opacity: 1;
-    }
-
-    .menu:not(.showNow) {
-      opacity: 0;
-    }
-
-    #paczkomat-picker {
-      position: fixed;
-      background: white;
-      width: 100vw;
-      height: 100vh;
-      top: 0;
-      left: 0;
-      display: flex;
-      flex-direction: column;
-      opacity: 0;
-      pointer-events: none;
-      transition: 0.3s;
-      transform: scale(0.9) translateY(-300px);
-      padding-bottom: 10px;
-    }
-
-    .paczkomat-picker-open {
-      opacity: 1 !important;
-      pointer-events: all !important;
-      transform: translateY(0px) !important;
-      z-index: 200000 !important;
-    }
-
-    #easypack-map {
-      width: 100%;
-      height: calc(100vh - 44px);
-    }
-
-    .select-link {
-      background-color: var(--primary-clr) !important;
-      width: 100%;
-      text-align: center;
-      background-image: none !important;
-      padding: 2px !important;
-    }
-
-    @media only screen and (min-width: 768px) {
-      #searchWidget {
-        padding: 0 !important;
-        border: 1px solid #eee;
-        margin: 0 10px !important;
-        background: white;
-        width: calc(100% - 20px);
-      }
-
-      .input-group-btn {
-        width: auto !important;
-      }
-    }
-
-    .easypack-widget .search-widget .input-group {
-      padding: 0 !important;
-      box-sizing: border-box !important;
-    }
-
-    .easypack-widget .input-group {
-      display: flex;
-    }
-
-    #searchWidget {
-      padding: 10px 10px 0;
-    }
-
-    .current-type-wrapper {
-      padding: 10px !important;
-    }
-
-    /* progress-bar start */
-    .progress-bar-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-      margin-bottom: 20px;
-      user-select: none;
-    }
-
-    .progress-bar {
-      display: inline-flex;
-      justify-content: center;
-      position: relative;
-    }
-
-    .progress-bar:before {
-      content: "";
-      background: #ccc;
-      width: 100%;
-      height: 6px;
-      position: absolute;
-      display: block;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-
-    }
-
-    .progress-item.current~.progress-item:after {
-      width: 0;
-    }
-
-    .progress-item:not(:first-child):after {
-      content: "";
-      background: #2647ff;
-      width: calc(100% - 34px);
-      height: 6px;
-      position: absolute;
-      display: block;
-      top: 50%;
-      left: calc(17px - 50%);
-      transform: translateY(-50%);
-      transition: 0.2s width;
-    }
-
-    .progress-count {
-      background: #2647ff;
-      color: white;
-      display: inline-flex;
-      width: 33px;
-      height: 33px;
-      justify-content: center;
-      align-items: center;
-      border-radius: 100%;
-      position: relative;
-      border: 3px solid #2647ff;
-      font-weight: 600;
-      transition: 0.2s all;
-    }
-
-    .progress-item.current~.progress-item .progress-count {
-      color: #bbb;
-      border-color: #bbb;
-      background: white;
-    }
-
-    .progress-item.current .progress-count {
-      background: #fff;
-      color: #2647ff;
-      width: 39px;
-      height: 39px;
-      margin: -4px;
-      font-size: 1.3em;
-    }
-
-    .progress-item:first-child:before,
-    .progress-item:last-child:before {
-      content: "";
-      background: white;
-      height: 100%;
-      width: 50%;
-      display: block;
-      position: absolute;
-    }
-
-    .progress-item:first-child:before {
-      left: 0;
-    }
-
-    .progress-item:last-child:before {
-      right: 0;
-    }
-
-    .progress-item {
-      position: relative;
-      min-width: 95px;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .progress-title {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      padding-top: 10px;
-      transform: translateX(-50%);
-      width: 100%;
-      transition: 0.2s 0.1s all;
-    }
-
-    .progress-item:not(.current) .progress-title {
-      opacity: 0.35;
-    }
-
-    .progress-title * {
-      vertical-align: middle;
-    }
-
-    .progress-title span {
-      transform: translateY(2px);
-      display: inline-block;
-    }
-
-    @media only screen and (min-width: 800px) {
-      .progress-bar-wrapper {
-        margin-top: 50px;
-        margin-bottom: 20px;
-      }
-
-      .progress-item {
-        min-width: 170px;
-      }
-    }
-
-    @media only screen and (max-width: 800px) {
-      .progress-title span {
-        display: none;
-      }
-
-      .lub-span {
-        display: none;
-      }
-
-      .mobile-column {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
-
-    @media only screen and (max-width: 350px) {
-      .progress-item {
-        min-width: 80px;
-      }
-    }
-
-    .progress-item.current {
-      pointer-events: none;
-    }
-
-    /* progress-bar end */
   </style>
   <script>
     window.addEventListener("DOMContentLoaded", function() {
@@ -883,15 +496,10 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
     // just basket pls
 
-    function setVariantRowQty(variant_node, variant_data) {
-      variant_node.find(".qty-label").setContent(variant_data.quantity);
-      toggleDisabled(variant_node.find(".add"), variant_data.quantity >= variant_data.stock);
-    }
-
     window.addEventListener("basket-change", (event) => {
       var res = event.detail.res;
 
-      if (!res.basket_table_html) {
+      /*if (!res.basket_table_html) {
         res.basket_table_html = `
               <div style="text-align:center">
               <h3>Koszyk jest pusty!</h3>
@@ -901,90 +509,36 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               </a></div>`;
 
         emptyBasket();
-      }
+      }*/
 
       /*$$(".zamowienie").forEach((e) => {
         setContent(e, res.basket_table_html);
       });*/
 
-      //console.log(res);
-
-      if (res.changes) {
-        res.changes.quantity.forEach(variant_id => {
-          var variant_node = $(`.variant_list_full [data-variant_id="${variant_id}"]`);
-          var variant_data = basket_data.basket.find(e => {
-            return e.variant_id == variant_id
-          });
-
-          animate(variant_node.find(".qty-label"), 400, ANIMATIONS.blink);
-
-          setTimeout(() => {
-            setVariantRowQty(variant_node, variant_data);
-          }, 200);
-        });
-        res.changes.added.forEach(variant_id => {
-          $(`.variant_list_full`).insertAdjacentHTML("beforeend", basket_row_html);
-          var variant_node = $(`.variant_list_full > div:last-child`);
-          var variant_data = basket_data.basket.find(e => {
-            return e.variant_id == variant_id
-          });
-
-          if (!res.options.instant) {
-            variant_node.classList.add("hidden");
-            variant_node.classList.add("animate_hidden");
-          }
-
-          setVariantRowQty(variant_node, variant_data);
-          variant_node.find(".product_image").setValue(variant_data.zdjecie);
-          variant_node.find(".product_price").setContent(variant_data.real_price);
-          variant_node.find(".product_total_price").setContent(variant_data.total_price);
-          variant_node.find(".product_link_name").setContent(variant_data.title + " " + variant_data.name);
-          variant_node.find(".product_link_name").setAttribute("href", variant_data.full_link);
-
-          variant_node.setAttribute("data-variant_id", variant_id);
-
-          lazyLoadImages(false);
-          setCustomHeights();
-
-          if (!res.options.instant) {
-            expand(variant_node, true);
-          }
-        });
-        res.changes.removed.forEach(variant_id => {
-          var variant_node = $(`.variant_list_full [data-variant_id="${variant_id}"]`);
-          expand(variant_node, false, {
-            callback: () => {
-              variant_node.remove();
-            }
-          });
-        });
-      }
-
-      lazyLoadImages(false);
-      setCustomHeights();
+      showBasketChanges(res, $(`.variant_list_full`), zakup_basket_row_template);
 
       // TODO: rebate as a part of basket ;)
       updateTotalCost();
     });
 
-    var basket_row_html = `
+    const zakup_basket_row_template = `
       <div class='expand_y'>
         <div class='product_row'>
           <div class='cl cl1'><img class='product_image' data-height='1w' data-type="src"></div>
-          <div class='cl cl2'><a class='link product_link_name'></a></div>
+          <div class='cl cl2'><a class='link product_link product_name'></a></div>
           <div class='pln cl cl3' style='font-weight:normal'><label>Cena:</label> <span class='product_price'></span> zł</div>
           <div class='cl cl4'>
             <div class='qty-control glue-children'>
               <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
                 <i class='custom-minus'></i>
               </button>
-              <span class='qty-label'>66</span>
-              <button $add_visibility class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
+              <span class='qty-label'></span>
+              <button class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
                 <i class='custom-plus'></i>
               </button>
             </div>
           </div>
-          <div class='pln cl cl5'><label>Suma:</label> <span class='product_total_price'></span> zł</div>
+          <div class='cl cl5'><label>Suma:</label> <span class='pln product_total_price'></span></div>
           <button class='cl cl6 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'></button>
         </div>
       </div>
@@ -1062,7 +616,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         <div style="margin-top: 30px;">
           <div style="margin-top: 13px;text-align: right;padding: 5px;" class="hideifempty mobileTextCenter">
             <span style="display:inline-block;font-size: 18px;padding: 0 3px;">Wartość koszyka:</span>
-            <span style="display:inline-block;font-size: 20px;" class="pln"><span class="total_basket_cost"></span> zł</span>
+            <span style="display:inline-block;font-size: 20px;" class="pln total_basket_cost"></span>
 
             <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Kurier: <span class="pln"><?= config('kurier_cena', 0) ?> zł</span>, Paczkomat: <span class="pln"><?= config('paczkomat_cena', 0) ?> zł</span>, Odbiór osobisty: <span class="pln">0 zł</span></p>
 

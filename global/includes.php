@@ -68,6 +68,10 @@
       instant: true
     });
   };
+
+  /*domload(() => {
+    _setBasketData(window.basket_data);
+  })*/
 </script>
 
 <!-- styles / scripts to footer? -->
@@ -83,8 +87,8 @@
   <link href="/builds/admin.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
   <script src="/builds/admin.js?v=<?= JS_RELEASE ?>"></script>
 
-  <script src="/builds/modules.js?v=<?= MODULES_RELEASE ?>" defer></script>
-  <script src="/builds/module_blocks.js?v=<?= MODULES_RELEASE ?>" defer></script>
+  <script src="/builds/app_modules.js?v=<?= MODULES_RELEASE ?>" defer></script>
+  <script src="/builds/app_module_blocks.js?v=<?= MODULES_RELEASE ?>" defer></script>
 
   <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
   <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">

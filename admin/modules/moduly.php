@@ -25,8 +25,8 @@
 
         var html = "";
 
-        for (let module_name in modules) {
-            var module = modules[module_name];
+        for (let module_name in app_modules) {
+            var module = app_modules[module_name];
             html += `
                 <div class="btn subtle" onclick="selectModule(this, '${module_name}')">${module.icon} ${module.description}</div>
             `;
@@ -67,7 +67,7 @@
                 module_name: module_name,
             },
             success: (res) => {
-                var module = modules[module_name];
+                var module = app_modules[module_name];
 
                 var output = "";
                 if (module.title) {

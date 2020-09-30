@@ -139,8 +139,8 @@ var cmsModalLoaded = () => {
 
 function loadSideModules() {
   var module_blocks_html = "";
-  for (module_block_name in module_blocks) {
-    var module_block = module_blocks[module_block_name];
+  for (module_block_name in app_module_blocks) {
+    var module_block = app_module_blocks[module_block_name];
     if (!module_block.icon)
       module_block.icon = '<i class="fas fa-puzzle-piece"></i>';
     module_blocks_html += `
@@ -158,7 +158,7 @@ function editModule(block) {
   cmsTarget.classList.add("during-module-edit");
 
   var module_block_name = block.getAttribute("data-module-block");
-  var module_block = module_blocks[module_block_name];
+  var module_block = app_module_blocks[module_block_name];
   var modal_module_block_name = `modal_module_block_${module_block_name}`;
   if (!$(`#${modal_module_block_name}`)) {
     if (module_block.editUrl) {
@@ -216,7 +216,7 @@ function saveModule(button) {
   removeClasses("during-module-edit");
   var module_block_name = cmsTarget.getAttribute("data-module-block");
   if (!module_block_name) return;
-  var module_block = module_blocks[module_block_name];
+  var module_block = app_module_blocks[module_block_name];
   if (!module_block) return;
 
   var form_data = getFormData(`#modal_module_block_${module_block_name}`);
@@ -326,7 +326,7 @@ function addBlock(content = "", container = null, placeAfter = true) {
 }
 
 function insertModule(module_name) {
-  var module = module_blocks[module_name];
+  var module = app_module_blocks[module_name];
   if (!module) return;
 
   awaitingScroll = true;
@@ -344,8 +344,8 @@ function insertModule(module_name) {
 
 var moduleListModalLoaded = () => {
   var moduleList = "";
-  for (module_block_name in module_blocks) {
-    var module_block = module_blocks[module_block_name];
+  for (module_block_name in app_module_blocks) {
+    var module_block = app_[module_block_name];
     if (!module_block.icon)
       module_block.icon = '<i class="fas fa-puzzle-piece"></i>';
     moduleList += `<div class="btn primary" onclick="insertModule('${module_block_name}')">${module_block.icon} ${module_block.description}</div>`;
@@ -790,7 +790,7 @@ function cmsUpdate() {
     var c = e.find(".cms-block-content");
     if (!c.innerHTML.trim()) {
       var module_block_name = e.getAttribute("data-module-block");
-      var module_block = module_blocks[module_block_name];
+      var module_block = app_module_blocks[module_block_name];
 
       let params = {};
       try {
