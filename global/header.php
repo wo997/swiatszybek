@@ -60,7 +60,9 @@
           </div>
         </div>
         <div class="nav_basket_container">
-          <div class='scroll-panel scroll-shadow scroll-padding nav_basket_content'></div>
+          <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper'>
+            <div class='header_basket_content'></div>
+          </div>
           <hr style='margin:0'>
           <div class='nav_basket_summary'>
             <div style='text-align:center;padding:5px;font-size:1.1em'>

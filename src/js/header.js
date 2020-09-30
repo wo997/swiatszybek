@@ -188,6 +188,11 @@ window.addEventListener("DOMContentLoaded", () => {
     </div>
   `);
 
+  var hc = $("header .header_basket_content");
+  if (hc) {
+    $("#basketMenu .scroll-panel").appendChild(hc);
+  }
+
   var sc = $("header .nav_basket_summary");
   if (sc) {
     $("#basketMenu .basket_menu_mobile_summary").appendChild(sc);
@@ -356,7 +361,7 @@ function topSearchProducts(force) {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  var ss = $("header .nav_basket_content");
+  var ss = $("header .header_basket_content_wrapper");
   if (!ss) {
     return;
   }
@@ -391,7 +396,11 @@ function goToSearchProducts() {
 
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
-  showBasketChanges(res, $(`.nav_basket_content`), header_basket_row_template);
+  showBasketChanges(
+    res,
+    $(`.header_basket_content`),
+    header_basket_row_template
+  );
 });
 
 const header_basket_row_template = `

@@ -58,15 +58,22 @@
 @media only screen and (max-width: 799px) {
   .variant_list_full .product_row {
     flex-direction: column;
+    position: relative;
   }
   .variant_list_full .cl1 {
     width: 90%;
   }
-  .variant_list_full .cl1 {
+  .variant_list_full .header {
     display: none;
   }
   .variant_list_full .cl1 img {
     width: min(240px, 100%);
+  }
+
+  .remove-product-btn {
+    position: absolute !important;
+    top: 0;
+    right: 0;
   }
 }
 

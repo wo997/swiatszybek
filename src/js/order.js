@@ -130,7 +130,7 @@ window.addEventListener("basket-change", (event) => {
   if (bm) {
     //setContentAndMaintainHeight(bm, res.basket_content_html);
   } else {
-    var bc = $(".nav_basket_content");
+    var bc = $(".header_basket_content");
     if (bc) {
       //setContentAndMaintainHeight(bc, res.basket_content_html);
     }
