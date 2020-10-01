@@ -61,6 +61,9 @@
         </div>
         <div class="nav_basket_container">
           <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper'>
+            <div class='case_basket_empty expand_y'>
+              <h3 style='text-align:center;margin:2em 0'>Koszyk jest pusty!</h3>
+            </div>
             <div class='header_basket_content'></div>
           </div>
           <hr style='margin:0'>

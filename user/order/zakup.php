@@ -139,19 +139,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       });
     });
 
-    function emptyBasket() {
-      $$("button, .hideifempty").forEach(e => {
-        e.style.opacity = "0.3";
-        e.style.pointerEvents = "none";
-      });
-    }
-    <?php if (empty($app["user"]["basket"]["variants"])) : ?>
-      window.addEventListener("DOMContentLoaded", function() {
-        emptyBasket();
-      });
-    <?php endif ?>
-
-
     function isFormValid() {
       return validateForm($("#menu" + currentMenu));
     }
@@ -499,21 +486,17 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
     window.addEventListener("basket-change", (event) => {
       var res = event.detail.res;
 
-      /*if (!res.basket_table_html) {
-        res.basket_table_html = `
-              <div style="text-align:center">
-              <h3>Koszyk jest pusty!</h3>
-              <a class="btn primary medium" href="/" style='width: 220px'>
-                Rozpocznij zakupy
-                <i class="fa fa-chevron-right"></i>
-              </a></div>`;
-
-        emptyBasket();
-      }*/
-
-      /*$$(".zamowienie").forEach((e) => {
-        setContent(e, res.basket_table_html);
-      });*/
+      if (res.basket.length === 0) {
+        $$("button, .hideifempty").forEach(e => {
+          e.style.opacity = "0.3";
+          e.style.pointerEvents = "none";
+        });
+      } else {
+        $$("button, .hideifempty").forEach(e => {
+          e.style.opacity = "";
+          e.style.pointerEvents = "";
+        });
+      }
 
       showBasketChanges(res, $(`.variant_list_full`), zakup_basket_row_template);
 
@@ -626,11 +609,13 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           <div class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
             <?php if (!$app["user"]["id"]) : ?>
               <div>
-                <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="max-width: 100%;width:270px;margin-top: 25px;">Zaloguj się <i class="fa fa-user"></i></button>
+                <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="min-width:250px;margin-top: 25px;">Zaloguj się <i class="fa fa-user"></i></button>
                 <br><br>
-                <strong>Co zyskasz?</strong>
-                <div>- Dostęp do historii zamówień</div>
-                <div>- Zapisanie danych kontaktowych</div>
+                <div class="hideifempty">
+                  <strong>Co zyskasz?</strong>
+                  <div>- Dostęp do historii zamówień</div>
+                  <div>- Zapisanie danych kontaktowych</div>
+                </div>
               </div>
               <div style='margin:12px;margin-top:34px' class="lub-span">lub</div>
             <?php else : ?>

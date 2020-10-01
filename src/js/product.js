@@ -140,19 +140,14 @@ window.addEventListener("basket-change", (event) => {
     product_basket_row_template
   );
 
-  var cbne = $(".case_basket_not_empty");
-
-  cbne.setContent(
-    `<h3 style='padding:25px 0 10px;margin:0'> Twoim koszyku 
-        ${basket_data.basket.length > 1 ? "znajdują" : "znajduje"} się
-      </h3>`
-  );
-
-  var options = {};
-  if (res.options.instant) {
-    options.duration = 0;
+  var wtwoimkoszyku = $(".wtwoimkoszyku");
+  if (wtwoimkoszyku) {
+    wtwoimkoszyku.setContent(
+      `<h3 style='padding:25px 0 10px;margin:0'> Twoim koszyku 
+          ${basket_data.basket.length > 1 ? "znajdują" : "znajduje"} się
+        </h3>`
+    );
   }
-  expand(cbne, basket_data.basket.length > 0, options);
 
   clickVariant(VARIANT_ID);
 });

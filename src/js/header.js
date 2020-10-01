@@ -188,14 +188,19 @@ window.addEventListener("DOMContentLoaded", () => {
     </div>
   `);
 
-  var hc = $("header .header_basket_content");
+  /*var hc = $("header .header_basket_content");
   if (hc) {
     $("#basketMenu .scroll-panel").appendChild(hc);
-  }
+  }*/
 
   var sc = $("header .nav_basket_summary");
   if (sc) {
     $("#basketMenu .basket_menu_mobile_summary").appendChild(sc);
+  }
+
+  var hc = $("header .header_basket_content_wrapper");
+  if (hc) {
+    $("#basketMenu .scroll-panel").appendChild(hc);
   }
 
   basketReady();

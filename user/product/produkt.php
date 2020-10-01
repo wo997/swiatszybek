@@ -241,9 +241,14 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
               <i class="fa fa-check" style="font-size: 14px;vertical-align: middle;"></i>
             </button>
 
-            <div id="juzMasz"></div>
-            <div class="expand_y hidden animate_hidden case_basket_not_empty"></div>
+            <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-product_id="<?= $product_id ?>"></div>
             <div class="product_basket_variants" data-product_id="<?= $product_id ?>"></div>
+            <div class="expand_y hidden animate_hidden case_basket_not_empty" data-product_id="<?= $product_id ?>">
+              <a class="btn primary medium fill" href="/zakup" style="margin-top: 20px">
+                Przejdź do koszyka
+                <i class="fa fa-chevron-right"></i>
+              </a>
+            </div>
 
             <div style="margin-top: 13px;display:none" id="caseZero">
               <div id="hideWhenNotificationAdded">
@@ -282,12 +287,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
       <?php if ($app["user"]["id"]) : ?>
         <?php
-        $stmt = $con->prepare("SELECT pseudonim FROM users WHERE user_id = ?");
-        $stmt->bind_param("s", $app["user"]["id"]);
-        $stmt->execute();
-        $stmt->bind_result($pseudonim);
-        mysqli_stmt_fetch($stmt);
-        $stmt->close();
+        $pseudonim = nonull("SELECT pseudonim FROM users WHERE user_id = " . intval($app["user"]["id"]), "");
         ?>
         <div id="formComment" data-form>
           <h4 style="font-size: 22px; margin: 70px 0 10px;">Podziel się swoją opinią</h4>
@@ -313,7 +313,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 
           <label>
             <div class="field-title">Pseudonim</div>
-            <input type="text" class="field pseudonim" value="<?= isset($pseudonim) ? $pseudonim : "" ?>">
+            <input type="text" class="field pseudonim" value="<?= $pseudonim ?>">
           </label>
 
           <label>

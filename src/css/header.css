@@ -263,10 +263,10 @@ header .basket_item_count,
   position: absolute;
   display: inline-block;
   left: -7px;
-  font-size: 12px;
+  font-size: 14px;
   width: 50px;
   text-align: center;
-  top: 13px;
+  top: 12px;
 }
 
 .nav-wrapper .menu-icon,
@@ -297,7 +297,7 @@ header .basket_item_count,
   right: 0;
 }
 
-.header_basket_content_wrapper {
+header .header_basket_content_wrapper {
   max-height: calc(90vh - 150px);
 }
 
@@ -309,17 +309,21 @@ header .basket_item_count,
   max-width: 80vw;
 }
 
-.header_basket_content_wrapper::-webkit-scrollbar {
+#basketMenu .scroll-panel.panel-padding {
+  padding: 0;
+}
+
+header .header_basket_content_wrapper::-webkit-scrollbar {
   width: 10px;
   background-color: #efefef;
   border-radius: 5px;
 }
-.header_basket_content_wrapper::-webkit-scrollbar-thumb {
+header .header_basket_content_wrapper::-webkit-scrollbar-thumb {
   background-color: #ddd;
   border-radius: 5px;
 }
 
-.header_basket_content_wrapper .product-block {
+header .header_basket_content_wrapper .product-block {
   width: 250px;
 }
 

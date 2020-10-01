@@ -27,6 +27,9 @@ function expandWithArrow(elem, source, open = null, options = {}) {
 }
 
 function expand(elem, show = null, options = {}) {
+  if (!elem) {
+    return;
+  }
   if (show === null) show = elem.classList.contains("hidden");
   if (show ^ elem.classList.contains("hidden")) return;
 
