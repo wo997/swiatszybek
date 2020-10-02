@@ -74,6 +74,59 @@ $page_width = "1500px";
         </div>
     </div>
 
+
+
+    <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+        <div class="right_side_menu shown">
+            <button class="toggle-sidemenu-btn btn subtle" onclick="toggleRightSideMenu()">
+                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-cog"></i>
+            </button>
+            <div class="field-title first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
+
+            <?php if ($page_data["published"] === 1) {
+                $clr = "var(--success-clr)";
+                $info_label = "<i class='fas fa-eye'></i> Widoczna";
+                $btn_label = 'Ukryj';
+                $btn_class = 'secondary';
+            } else {
+                $clr = "var(--error-clr)";
+                $info_label = "<i class='fas fa-eye-slash'></i> Ukryta!";
+                $btn_label = 'Upublicznij';
+                $btn_class = 'primary';
+            }
+            ?>
+
+            <div style="color:<?= $clr ?>;margin:10px 0 5px;font-weight:600;text-align:center">
+                <?= $info_label ?>
+            </div>
+            <button class="btn <?= $btn_class ?> fill" onclick="togglePagePublish()"><?= $btn_label ?></button>
+
+            <div style="height:10px"></div>
+
+            <div>
+                <a href="/admin/strona/<?= $page_data["cms_id"] ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
+            </div>
+        </div>
+
+        <script>
+            function togglePagePublish() {
+                xhr({
+                    url: "/admin/set_publish",
+                    params: {
+                        table: "cms",
+                        primary: "cms_id",
+                        primary_id: <?= $page_data["cms_id"] ?>,
+                        published: <?= 1  - $page_data["published"] ?>,
+                    },
+                    success: () => {
+                        window.location.reload();
+                    },
+                });
+            }
+        </script>
+    <?php endif ?>
+
     <?php include "global/footer.php"; ?>
 </body>
 

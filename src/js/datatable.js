@@ -897,14 +897,14 @@ var datatableRearrange = {};
 
 window.addEventListener("dragstart", (event) => {
   var target = $(event.target);
-  if (target.tagName != "TR") {
+  if (!target.hasAttribute("draggable")) {
+    event.preventDefault();
     return;
   }
   if (
-    !target.hasAttribute("draggable") ||
+    target.tagName != "TR" ||
     target.findParentByClassName("has_selected_rows")
   ) {
-    event.preventDefault();
     return;
   }
 

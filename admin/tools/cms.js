@@ -345,7 +345,7 @@ function insertModule(module_name) {
 var moduleListModalLoaded = () => {
   var moduleList = "";
   for (module_block_name in app_module_blocks) {
-    var module_block = app_[module_block_name];
+    var module_block = app_module_blocks[module_block_name];
     if (!module_block.icon)
       module_block.icon = '<i class="fas fa-puzzle-piece"></i>';
     moduleList += `<div class="btn primary" onclick="insertModule('${module_block_name}')">${module_block.icon} ${module_block.description}</div>`;
@@ -508,6 +508,7 @@ function editCMS(t, params = {}) {
   });
 
   removeClasses("during-module-edit");
+  cmsWrapper.classList.remove("show_wireframe");
 
   cmsHistory = [];
   cmsHistoryPush();
@@ -1515,11 +1516,16 @@ document.addEventListener(
     event.target = cmsTarget;
     try {
       //if ((!event.target || !event.target.hasAttribute("draggable")) || !cmsSource) {
-      if (!$(event.target).findParentById("actual_cms_wrapper")) {
+
+      if (!event.target.hasAttribute("draggable")) {
+        event.preventDefault();
         return;
       }
-      if (!event.target || !event.target.hasAttribute("draggable")) {
-        event.preventDefault();
+
+      if (
+        !event.target ||
+        !$(event.target).findParentById("actual_cms_wrapper")
+      ) {
         return;
       }
     } catch (e) {}
@@ -1527,17 +1533,20 @@ document.addEventListener(
     draggedNode = event.target;
 
     draggedNode.style.opacity = 0.5;
+
+    cmsWrapper.classList.add("show_wireframe");
   },
   false
 );
 
 document.addEventListener(
   "dragend",
-  function (event) {
+  () => {
     if (draggedNode) {
       draggedNode.style.opacity = "";
     }
     draggedNode = null;
+    cmsWrapper.classList.remove("show_wireframe");
   },
   false
 );

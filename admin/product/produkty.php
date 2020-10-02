@@ -52,41 +52,12 @@
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <button class="btn important" onclick="addNew(this)">
+        <button class="btn important" onclick="window.location='/admin/produkt'">
           Produkt <i class="fas fa-plus-circle"></i>
         </button>
       `
     });
   });
-
-  function addNew(btn) {
-    setFormData({
-      title: ""
-    }, "#newProduct");
-
-    showModal("newProduct", {
-      source: btn
-    });
-  }
-
-  function saveNewProduct() {
-    var f = $("#newProduct");
-
-    if (!validateForm(f)) {
-      return;
-    }
-
-    var params = getFormData(f);
-
-    xhr({
-      url: "/admin/create_product",
-      params: params,
-      success: (res) => {
-        // window.location.reload();
-        mytable.search();
-      }
-    });
-  }
 </script>
 
 
@@ -95,19 +66,5 @@
 <h1>Produkty</h1>
 
 <div class="mytable"></div>
-
-<div id="newProduct" data-modal data-form>
-  <div class="modal-body">
-    <label>
-      <span>Nazwa produktu</span>
-      <input type="text" name="title" id="title" data-validate class="field">
-    </label>
-    <div class="flexbar slim single-line">
-      <button class="btn primary fill space-right" onclick="saveNewProduct(); hideParentModal(this)">Dodaj <i class="fa fa-check"></i></button>
-      <button class="btn secondary fill" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-    </div>
-  </div>
-</div>
-
 
 <?php include "admin/default_page.php"; ?>

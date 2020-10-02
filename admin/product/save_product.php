@@ -11,17 +11,19 @@ if (isset($_POST["remove"])) {
         $_POST["product_id"]
     ]);
 } else {
-    $product_id = isset($_POST["product_id"]) ? $_POST["product_id"] : "-1";
-    if ($product_id == "-1") {
-        query("INSERT INTO products () VALUES ()");
-        $product_id = getLastInsertedId();
-    }
+    $product_id = getEntityId("products", $_POST["product_id"]);
 
-    query("UPDATE products SET title = ?, link = ?, seo_title = ?, seo_description = ?,
-        description = ?, gallery = ?, published = ? WHERE product_id = " . intval($product_id), [
-        $_POST["title"], $_POST["link"], $_POST["seo_title"], $_POST["seo_description"],
-        $_POST["description"], $_POST["gallery"], $_POST["published"]
+    $product_data = filterArrayKeys($_POST, [
+        "title",
+        "link",
+        "seo_title",
+        "seo_description",
+        "description",
+        "gallery",
+        "published",
     ]);
+
+    updateEntity($product_data, "products", "product_id", $product_id);
 
     // categories
     query("DELETE FROM link_product_category WHERE product_id = ?", [$product_id]);
@@ -88,4 +90,4 @@ if (isset($_POST["remove"])) {
 
 triggerEvent("sitemap_change");
 
-reload();
+redirect("/admin/produkt/$product_id");

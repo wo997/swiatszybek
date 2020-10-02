@@ -18,7 +18,9 @@ $image_minified_formats = [
 // also global.js
 function getUploadedFileName($file_path)
 {
-    return substr($file_path, strlen(UPLOADS_PLAIN_PATH));
+    // TODO: optimize images on backend as well, by path
+    $start = strlen(UPLOADS_PLAIN_PATH);
+    return substr($file_path, $start, strrpos($file_path, ".") - $start);
 }
 
 function minifyImage($file_path)

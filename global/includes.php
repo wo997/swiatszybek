@@ -1,3 +1,9 @@
+<?php
+if (!isset($page_data["seo_image"])) {
+  $page_data["seo_image"] = "/img/padmate_logo.png";
+}
+?>
+
 <script>
   const RELEASE = <?= RELEASE ?>; // general asset version
   const JS_RELEASE = <?= JS_RELEASE ?>;
@@ -78,7 +84,7 @@
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
 <link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
-<?php if (/*$app["user"]["priveleges"]["backend_access"]*/strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
+<?php if (strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
 
   <script>
     const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;
@@ -101,22 +107,29 @@
   <script src="/src/quill-2.0.js?v=<?= RELEASE ?>"></script>
 <?php endif ?>
 
+<?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+
+  <link href="/builds/admin_everywhere.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+  <script src="/builds/admin_everywhere.js?v=<?= JS_RELEASE ?>"></script>
+
+<?php endif ?>
+
+
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 <link rel="shortcut icon" href="/img/favicon.png" />
 
-<?php if ($url != "produkt" && isset($page_data["seo_description"])) : ?>
-  <?php if ($url != "produkt" && isset($page_data["seo_description"])) : ?>
-    <meta name="description" content="<?= $page_data["seo_description"] ?>">
-    <meta property="og:description" content="<?= $page_data["seo_description"] ?>" />
-    <meta name="twitter:description" content="<?= $page_data["seo_description"] ?>" />
-    <title><?= $page_data["seo_title"] ?></title>
-    <meta property="og:title" content="<?= $page_data["seo_title"] ?>" />
-    <meta name="twitter:title" content="<?= $page_data["seo_title"] ?>" />
-    <meta name="image" content="/img/padmate_logo.png" />
-    <meta property="og:image" content="/img/padmate_logo.png">
-    <meta property="og:image:type" content="image/png">
-  <?php endif ?>
+<?php if (isset($page_data["seo_description"])) : ?>
+  <meta name="description" content="<?= $page_data["seo_description"] ?>">
+  <meta property="og:description" content="<?= $page_data["seo_description"] ?>" />
+  <meta name="twitter:description" content="<?= $page_data["seo_description"] ?>" />
+  <title><?= $page_data["seo_title"] ?></title>
+  <meta property="og:title" content="<?= $page_data["seo_title"] ?>" />
+  <meta name="twitter:title" content="<?= $page_data["seo_title"] ?>" />
+  <meta name="image" content="<?= $page_data["seo_image"] ?>">
+  <meta property="og:image" content="<?= $page_data["seo_image"] ?>">
+  <meta property="og:image:type" content="image/png">
   <meta property="og:site_name" content="<?= config('main_email_sender') ?>" />
   <meta name="twitter:card" content="summary" />
   <meta property="og:locale" content="pl_PL" />

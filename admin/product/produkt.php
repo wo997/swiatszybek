@@ -4,19 +4,17 @@ $parts = explode("/", $url);
 if (isset($parts[2]))
   $product_id = intval($parts[2]);
 else {
-  run();
+  $product_id = -1;
 }
 
 $kopia = false;
 if (isset($parts[3]) && $parts[3] == 'kopia') {
-  //$kopia = true;
+  $kopia = true;
 }
 
 $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
 
 $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
-
-//$attribute_values = fetchValue("SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM link_product_attribute_value WHERE product_id = $product_id");
 
 include_once "admin/product/attributes_service.php";
 
@@ -108,7 +106,7 @@ $product_data["variants"] = json_encode($variants);
     });
   }
 
-  window.addEventListener("DOMContentLoaded", function() {
+  domload(() => {
 
     registerComboSelects();
 
@@ -121,11 +119,6 @@ $product_data["variants"] = json_encode($variants);
         categories: [<?= $categories ?>]
       }, "#productForm");
     });
-
-    <?php if ($kopia) : ?>
-      $(`[name="title"]`).value += " (kopia)";
-      $(`[name="product_id"]`).value = "-1";
-    <?php endif ?>
 
     registerTextCounters();
 
@@ -173,7 +166,6 @@ $product_data["variants"] = json_encode($variants);
         src: ""
       },
       title: "Galeria zdjęć produktu",
-      //empty: `<div style="color: rgb(255, 170, 0);font-weight: bold;display: inline-block;">Wstaw min. 1 zdjęcie produktu</div>`
     });
 
     // will go deprecated soon
@@ -305,6 +297,11 @@ $product_data["variants"] = json_encode($variants);
     data.variants = JSON.stringify(variants_data);
 
     setFormData(data, "#productForm");
+
+    <?php if ($kopia) : ?>
+      $(`[name="title"]`).value += " (kopia)";
+      $(`[name="product_id"]`).value = "-1";
+    <?php endif ?>
   });
 
   window.addEventListener("load", function() {
@@ -412,12 +409,12 @@ $product_data["variants"] = json_encode($variants);
   </div>
   <div>
     <?php if ($kopia) : ?>
-      <a href="/admin/produkt/<?= $product_id ?>" class="btn secondary">Anuluj <i class="fa fa-times"></i></a>
+      <a href="/admin/produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
     <?php else : ?>
-      <!--<a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>-->
-      <a href="/produkt/<?= $product_id . "/" . getLink($product_data["title"]) ?>" class="btn secondary">Pokaż bez zapisywania <i class="fas fa-external-link-alt"></i></a>
+      <a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
+      <a href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></a>
     <?php endif ?>
-    <button onclick="showPreview()" class="btn secondary">Podgląd <i class="fas fa-external-link-alt"></i></button>
+    <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
     <button onclick="saveProductForm()" class="btn primary" onclick="">Zapisz <i class="fas fa-save"></i></button>
   </div>
 </div>

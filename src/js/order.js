@@ -137,9 +137,10 @@ window.addEventListener("basket-change", (event) => {
   };
 
   if (
-    res.changes.added.length > 0 ||
-    res.changes.quantity.length > 0 ||
-    res.changes.removed.length > 0
+    (res.changes.added.length > 0 ||
+      res.changes.quantity.length > 0 ||
+      res.changes.removed.length > 0) &&
+    !res.options.instant
   ) {
     $$(".basket_item_count, .total_basket_cost").forEach((e) => {
       animate(e, 400, ANIMATIONS.blink);
@@ -220,6 +221,9 @@ function setVariantRowQty(variant_node, variant_data) {
 }
 
 function showBasketChanges(res, basket_node, basket_row_template) {
+  if (!basket_node) {
+    return;
+  }
   basket_node = $(basket_node);
 
   var product_id = basket_node.getAttribute("data-product_id");

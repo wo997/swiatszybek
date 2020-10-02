@@ -487,12 +487,12 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       var res = event.detail.res;
 
       if (res.basket.length === 0) {
-        $$("button, .hideifempty").forEach(e => {
+        $$("#zakupForm button, .hideifempty").forEach(e => {
           e.style.opacity = "0.3";
           e.style.pointerEvents = "none";
         });
       } else {
-        $$("button, .hideifempty").forEach(e => {
+        $$("#zakupForm button, .hideifempty").forEach(e => {
           e.style.opacity = "";
           e.style.pointerEvents = "";
         });

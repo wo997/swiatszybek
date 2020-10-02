@@ -98,20 +98,14 @@
   transition: all 0.4s, background-color 0.2s, box-shadow 0.3s, width 0.2s;
 }
 
-#actual_cms_wrapper .cms-container:hover .cms-block:not(:hover) {
+#actual_cms_wrapper .cms-container:hover .cms-block:not(:hover),
+#actual_cms_wrapper.show_wireframe .cms-block:not(:hover) {
   border: 1px solid #fffa;
   box-shadow: 0px 0px 0px 1px #000a;
 }
 
 #actual_cms_wrapper .activeBlock:not(.side-module) .cms-block-content {
   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 1);
-}
-
-#actual_cms_wrapper .cms-block {
-  /*background-color: #fff;*/
-  /*border: 20px solid #ddd;
-    border-top-color: #eee;
-    border-bottom-color: #ccc;*/
 }
 
 #actual_cms_wrapper .cms-block,
