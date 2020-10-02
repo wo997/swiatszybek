@@ -12,7 +12,19 @@ if (isset($parts[3]) && $parts[3] == 'kopia') {
   $kopia = true;
 }
 
-$product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
+if ($product_id === -1) {
+  $product_data = [
+    "title" => "",
+    "link" => "",
+    "seo_title" => "",
+    "seo_description" => "",
+    "description" => "",
+    "gallery" => "[]",
+    "published" => "0",
+  ];
+} else {
+  $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
+}
 
 $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
 
@@ -32,6 +44,17 @@ foreach ($variants as $key => $variant) {
 }
 
 $product_data["variants"] = json_encode($variants);
+
+if ($product_id === -1) {
+  $product_form_header = "Nowy produkt";
+} else {
+  if ($kopia) {
+    $product_form_header = "Kopia";
+  } else {
+    $product_form_header = "Edycja";
+  }
+  $product_form_header .= " produktu " . $product_data["title"];
+}
 
 ?>
 
@@ -400,12 +423,7 @@ $product_data["variants"] = json_encode($variants);
 
 <div class="custom-toolbar">
   <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-    <?php if ($kopia) : ?>
-      Kopiowanie
-    <?php else : ?>
-      Edycja
-    <?php endif ?>
-    <?= $product_data["title"] ?>
+    <?= $product_form_header ?>
   </div>
   <div>
     <?php if ($kopia) : ?>
