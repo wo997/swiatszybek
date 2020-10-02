@@ -10,12 +10,6 @@ body {
   height: 100%;
 }
 
-.menu_item {
-  display: block;
-  padding: 4px 8px;
-  font-size: 15px;
-}
-
 .home {
   display: block;
   text-align: center;
@@ -33,10 +27,10 @@ body {
   flex-grow: 0;
   flex-shrink: 0;
   width: 220px;
-  padding: 10px;
-  border: 1px solid #ccc;
+  padding: 10px 0;
+  border-right: 1px solid #ccc;
   box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.19);
-  background: #eee;
+  background: #ddd;
   color: #333;
 }
 
@@ -73,7 +67,9 @@ h1 {
   margin: 40px 0 20px;
   font-size: 24px;
 }
-
+.main-wrapper {
+  display: flex;
+}
 @media only screen and (max-width: 799px) {
   .navbar_admin {
     width: 100%;
@@ -81,4 +77,50 @@ h1 {
   .content {
     height: auto;
   }
+  .main-wrapper {
+    flex-direction: column;
+  }
+}
+
+.sub_menu {
+  padding-left: 1em;
+}
+
+.navbar_admin .menu_item a {
+  display: block;
+  width: 100%;
+  padding: 4px 9px;
+}
+.navbar_admin .menu_item a:hover {
+  text-decoration: underline;
+}
+.navbar_admin .menu_item {
+  display: block;
+  margin: 1px 0;
+  display: block;
+  font-size: 15px;
+  cursor: default;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  transition: all 0.1s;
+}
+
+.navbar_admin .menu_item .expand_arrow {
+  align-self: center;
+  width: 32px;
+  height: 32px;
+}
+.navbar_admin .menu_item .expand_arrow:hover {
+  background: #fff5;
+}
+
+.navbar_admin .menu_item.current-route {
+  background: var(--primary-clr);
+  color: white;
+}
+
+.navbar_admin .menu_item:hover {
+  background: var(--primary-clr);
+  color: white;
 }

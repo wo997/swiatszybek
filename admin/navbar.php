@@ -1,5 +1,5 @@
 <?php
-
+/*
 if (!function_exists('isCurrent')) {
   function isCurrent($some_url)
   {
@@ -54,4 +54,30 @@ foreach ($admin_navigations_tree as $page) {
   } else {
     echo renderPageItem($page);
   }
+}
+*/
+
+
+if (!function_exists('isCurrent')) {
+  function renderPageItem($page)
+  {
+    $arrow_btn = "";
+
+    if (isset($page["sub"])) {
+      $arrow_btn = "<div class='btn transparent expand_arrow' onclick='expandWithArrow(this.parent().next(),$(this))'><i class='fas fa-chevron-right'></i></div>";
+    }
+
+    echo "<div class='menu_item'><a href='/{$page['url']}'>{$page['title']} " . renderNotification($page['notification_count']) . "</a>  $arrow_btn</div>";
+    if (isset($page["sub"])) {
+      echo "<div class='sub_menu expand_y hidden animate_hidden'>";
+      foreach ($page["sub"] as $sub_page) {
+        renderPageItem($sub_page);
+      }
+      echo "</div>";
+    }
+  }
+}
+
+foreach ($admin_navigations_tree as $page) {
+  renderPageItem($page);
 }

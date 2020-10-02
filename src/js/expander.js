@@ -23,6 +23,31 @@ function mobileDrop(obj) {
 }
 
 function expandWithArrow(elem, source, open = null, options = {}) {
+  var open = open
+    ? source.classList.toggle("open", open)
+    : source.classList.toggle("open");
+  var keyframes = "";
+  if (open) {
+    keyframes = `
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(90deg);
+      }
+    `;
+  } else {
+    keyframes = `
+      0% {
+        transform: rotate(90deg);
+      }
+      100% {
+        transform: rotate(0deg);
+      }
+    `;
+  }
+  animate($(source).find(".fas"), nonull(options.duration, 200), keyframes);
+
   source.classList.toggle("open", expand(elem, open, options));
 }
 
@@ -37,6 +62,7 @@ function expand(elem, show = null, options = {}) {
   if (!animation_node) {
     elem.insertAdjacentHTML("afterbegin", "<div class='expander_space'></div>");
     animation_node = elem.find(".expander_space");
+    elem.insertAdjacentHTML("beforeend", "<div class='expander_space'></div>");
   }
 
   var duration =

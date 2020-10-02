@@ -44,9 +44,9 @@ function setProductListGridDimensions(node) {
   var slidesPerView = 1;
   if (w > 1200) {
     slidesPerView = 4;
-  } else if (w > 950) {
+  } else if (w > 850) {
     slidesPerView = 3;
-  } else if (w > 600) {
+  } else if (w > 500) {
     slidesPerView = 2;
   }
 

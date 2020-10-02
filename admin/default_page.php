@@ -14,7 +14,7 @@ endSection();
 
 <body id="admin">
   <div class="main-container">
-    <div class="main-wrapper desktopRow">
+    <div class="main-wrapper">
       <div class="navbar_admin">
         <a href="/" class="home">
           <img src="/img/logo.png">
@@ -25,7 +25,9 @@ endSection();
         <?php include "navbar.php" ?>
 
         <hr style="margin:0">
-        <a class="menu_item" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
+        <div class="menu_item" onclick="return logout()">
+          <a><i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się</a>
+        </div>
       </div>
       <div class="content">
         <?php if (isset($sections["header"])) echo $sections["header"]; ?>

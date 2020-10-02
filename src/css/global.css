@@ -1353,7 +1353,8 @@ ql-icon i span {
 .expand_y.animate_hidden {
   height: 0 !important;
   min-height: 0 !important;
-  padding: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
   pointer-events: none;
 }
 .expand_y.animating,
@@ -1364,6 +1365,9 @@ ql-icon i span {
 .hidden:not(.expand_y) {
   display: none !important;
 }
+.expander_space {
+  display: flex;
+}
 .expand_arrow {
   width: 1.4em;
   height: 1.4em;
@@ -1372,9 +1376,6 @@ ql-icon i span {
   justify-content: center;
   align-items: center;
   min-height: 0 !important;
-}
-.expand_arrow .fas {
-  transition: transform 0.2s;
 }
 .expand_arrow.open .fas {
   transform: rotate(90deg);
