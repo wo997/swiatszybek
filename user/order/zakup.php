@@ -501,7 +501,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         });
       }
 
-      showBasketChanges(res, $(`.variant_list_full`), zakup_basket_row_template);
+      showVariantChanges(res, $(`.variant_list_full`), zakup_basket_row_template, basket_data.basket);
 
       // TODO: rebate as a part of basket ;)
       updateTotalCost();
@@ -511,8 +511,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       <div class='expand_y'>
         <div class='product_row'>
           <div class='cl cl1'><img class='product_image' data-height='1w' data-type="src"></div>
-          <div class='cl cl2'><a class='link product_link product_name'></a></div>
-          <div class='pln cl cl3' style='font-weight:normal'><label>Cena:</label> <span class='product_price'></span> zł</div>
+          <div class='cl cl2'><a class='link product_link variant_full_name'></a></div>
+          <div class='pln cl cl3' style='font-weight:normal'><label>Cena:</label> <span class='variant_price'></span> zł</div>
           <div class='cl cl4'>
             <div class='qty-control glue-children'>
               <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
@@ -524,7 +524,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               </button>
             </div>
           </div>
-          <div class='cl cl5'><label>Suma:</label> <span class='pln product_total_price'></span></div>
+          <div class='cl cl5'><label>Suma:</label> <span class='pln variant_total_price'></span></div>
           <button class='cl cl6 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'></button>
         </div>
       </div>

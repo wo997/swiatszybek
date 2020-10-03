@@ -1,9 +1,12 @@
 <?php //route[produkt]
 
+global $PRODUCT_ID;
+
 $parts = explode("/", $url);
-if (isset($parts[1]))
+if (isset($parts[1])) {
   $product_id = intval($parts[1]);
-else {
+  $PRODUCT_ID = $product_id;
+} else {
   redirect("/");
 }
 

@@ -8,6 +8,7 @@ require_once 'vendor/autoload.php';
 
 // include helpers
 include_once "helpers/general.php";
+include_once "helpers/debug.php";
 
 include_once "helpers/date.php";
 include_once "helpers/string.php";
@@ -18,6 +19,7 @@ include_once "helpers/files.php";
 include_once "helpers/db/general.php";
 include_once "helpers/db/entity.php";
 include_once "helpers/db/migration.php";
+
 include_once "helpers/email.php";
 include_once "helpers/request.php";
 

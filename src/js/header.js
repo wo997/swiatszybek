@@ -401,36 +401,35 @@ function goToSearchProducts() {
 
 window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
-  showBasketChanges(
+  showVariantChanges(
     res,
     $(`.header_basket_content`),
-    header_basket_row_template
+    header_basket_variant_template,
+    basket_data.basket
   );
 });
 
 domload(() => {
-  setTimeout(() => {
-    showBasketChanges(
-      {
-        changes: {
-          added: last_viewed_products,
-          quantity: [],
-          removed: [],
-        },
-        options: {},
+  showProductChanges(
+    {
+      changes: {
+        added: last_viewed_products_ids,
+        removed: [],
       },
-      $(`.last_viewed_products`),
-      header_basket_row_template
-    );
-  }, 300);
+      options: { instant: true },
+    },
+    $(`.last_viewed_products`),
+    header_basket_product_template,
+    last_viewed_products
+  );
 });
 
-const header_basket_row_template = `
+const header_basket_variant_template = `
   <div class='expand_y'>
     <div class='product_row product-block'>
       <a class='product_link'>
-        <img class='product-image product_image' data-height='1w' data-type="src">
-        <h3 class='product-title'><span class='check-tooltip product_name'></span></h3>
+        <img class='product-image variant_image' data-height='1w' data-type="src">
+        <h3 class='product-title'><span class='check-tooltip variant_full_name'></span></h3>
       </a>
       <div style='text-align:center'>
         <div class='qty-control glue-children'>
@@ -442,9 +441,23 @@ const header_basket_row_template = `
             <i class='custom-plus'></i>
           </button>
         </div>
-        <span class='product-price pln product_total_price'></span>
+        <span class='product-price pln variant_total_price'></span>
       </div>
       <button class='cl cl6 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'></button>
+    </div>
+  </div>
+`;
+
+const header_basket_product_template = `
+  <div class='expand_y'>
+    <div class='product_row product-block'>
+      <a class='product_link'>
+        <img class='product-image product_image' data-height='1w' data-type="src">
+        <h3 class='product-title'><span class='check-tooltip product_name'></span></h3>
+      </a>
+      <div style='text-align:center'>
+        <span class='product-price pln product_price'></span>
+      </div>
     </div>
   </div>
 `;

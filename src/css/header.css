@@ -207,7 +207,6 @@ header .nav-wrapper {
 }
 
 header .basket-wrapper {
-  position: relative;
   max-width: 250px;
   /*min-width: 50px;*/
 }
@@ -221,7 +220,7 @@ header .basket-wrapper h2 {
   margin: 0;
 }
 
-header .basket-wrapper:hover .nav_basket_container {
+header .headerbtn:hover .headerbtn_hover_content {
   opacity: 1;
   pointer-events: auto;
 }
@@ -279,7 +278,7 @@ header .basket_item_count,
   top: 2px;
 }
 
-.nav_basket_container {
+.header_product_list {
   opacity: 0;
   pointer-events: none;
   position: absolute;
@@ -300,7 +299,7 @@ header .header_basket_content_wrapper {
   max-height: calc(90vh - 150px);
 }
 
-.nav_basket_container .product-image,
+.header_product_list .product-image,
 #basketMenu .product-image {
   width: 80%;
   margin: 10px 10% 5px;
@@ -312,21 +311,21 @@ header .header_basket_content_wrapper {
   padding: 0;
 }
 
-header .header_basket_content_wrapper::-webkit-scrollbar {
+header .smooth-scrollbar::-webkit-scrollbar {
   width: 10px;
   background-color: #efefef;
   border-radius: 5px;
 }
-header .header_basket_content_wrapper::-webkit-scrollbar-thumb {
+header .smooth-scrollbar::-webkit-scrollbar-thumb {
   background-color: #ddd;
   border-radius: 5px;
 }
 
-header .header_basket_content_wrapper .product-block {
+header .product-block {
   width: 250px;
 }
 
-.header_basket_content_wrapper .product-title span,
+header .product-title span,
 #basketMenu .product-title span {
   width: 100%;
   text-align: center;
@@ -344,7 +343,7 @@ header .header_basket_content_wrapper .product-block {
 }*/
 
 @media only screen and (min-width: 1300) {
-  .nav_basket_container {
+  .header_product_list {
     right: -30px;
   }
 }
@@ -463,15 +462,12 @@ header .main-search-wrapper input {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  position: relative;
 }
 
 header .heart-icon {
   width: 30px;
 }
-header .product-history-icon {
-  width: 34px;
-}
-
 @media only screen and (max-width: 360px) {
   .headerbtn {
     margin: -2px;
@@ -484,4 +480,14 @@ header .product-history-icon {
     margin: -4px;
     transform: scale(0.9);
   }
+}
+
+/* last viewed products start */
+
+header .last_viewed_products {
+  max-height: calc(90vh - 100px);
+}
+
+header .product-history-icon {
+  width: 34px;
 }

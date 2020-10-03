@@ -119,51 +119,27 @@ function validateBasket()
     }
 }
 
-function getVariantsFullData($variant_id_list)
-{
-    if (!$variant_id_list) {
-        return [];
-    }
-
-    $where = "variant_id IN (" . join(",", $variant_id_list) . ")";
-    $order = join(", ", array_map(function ($variant_id) {
-        return "variant_id = $variant_id";
-    }, $variant_id_list));
-
-    $variant_list = fetchArray("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, stock, gallery FROM products i INNER JOIN variant v USING (product_id) WHERE $where ORDER BY $order");
-
-    foreach ($variant_list as $variant_index => $variant) {
-        $variant["real_price"] = $variant["price"] - $variant["rabat"];
-        $variant["full_link"] = getProductLink($variant["product_id"], $variant["link"]);
-        $variant_list[$variant_index] = $variant;
-    }
-
-    return $variant_list;
-}
-
 function prepareBasketData()
 {
     global $app;
 
-    $user_basket = getBasketData();
+    $basket_data = getBasketData();
 
     $basket_variant_id_list = [];
-    foreach ($user_basket as $basket_item) {
+    foreach ($basket_data as $basket_item) {
         $basket_variant_id_list[] = intval($basket_item["variant_id"]);
     }
     $variant_list_full = getVariantsFullData($basket_variant_id_list);
 
     // add quantity into variant array
     foreach ($variant_list_full as $variant_key => $variant) {
-        $v_id = $variant["variant_id"];
-        $basket_variant_index = array_search($v_id, $basket_variant_id_list);
+        $basket_variant_index = array_search($variant["variant_id"], $basket_variant_id_list);
 
         // should find always
         if ($basket_variant_index !== false) {
-            $qty = $user_basket[$basket_variant_index]["quantity"];
-            $variant_list_full[$basket_variant_index]["quantity"] = $qty;
-            $variant_list_full[$basket_variant_index]["total_price"] = $variant["real_price"] * $qty;
-            break;
+            $qty = $basket_data[$basket_variant_index]["quantity"];
+            $variant_list_full[$variant_key]["quantity"] = $qty;
+            $variant_list_full[$variant_key]["total_price"] = $variant["real_price"] * $qty;
         }
     }
 

@@ -75,7 +75,8 @@ if (!isset($page_data["seo_image"])) {
     });
   };
 
-  const last_viewed_products = <?= nonull($_SESSION, "last_viewed_products", "[]") ?>;
+  const last_viewed_products_ids = <?= json_encode(getLastViewedProductsIds()) ?>;
+  const last_viewed_products = <?= json_encode(getLastViewedProducts()) ?>;
 </script>
 
 <!-- styles / scripts to footer? -->

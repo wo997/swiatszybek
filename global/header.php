@@ -56,7 +56,12 @@
       </div>
       <div class="last_viewed_products_wrapper headerbtn">
         <img class="product-history-icon" src="/src/img/product_history_icon.svg">
-        <div style='display:none' class="last_viewed_products"></div>
+        <div class="header_product_list headerbtn_hover_content">
+          <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Ostatnio przeglądane</h3>
+          <hr style="margin:0">
+          <div class='scroll-panel scroll-shadow scroll-padding last_viewed_products smooth-scrollbar'>
+          </div>
+        </div>
       </div>
       <div class="basket-wrapper headerbtn">
         <div class="basket-btn">
@@ -66,15 +71,15 @@
             <div class="basket_item_count"></div>
           </div>
         </div>
-        <div class="nav_basket_container">
-          <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper'>
-            <div class='case_basket_empty expand_y'>
-              <h3 style='text-align:center;margin:2em 0'>Koszyk jest pusty!</h3>
-            </div>
-            <div class='case_basket_not_empty'>
-              <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Koszyk</h3>
-              <hr style="margin:0">
-            </div>
+        <div class="nav_basket_container header_product_list headerbtn_hover_content">
+          <div class='case_basket_empty expand_y'>
+            <h3 style='text-align:center;margin:2em 0'>Koszyk jest pusty!</h3>
+          </div>
+          <div class='case_basket_not_empty'>
+            <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Koszyk</h3>
+            <hr style="margin:0">
+          </div>
+          <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper smooth-scrollbar'>
             <div class='header_basket_content'></div>
           </div>
           <hr style='margin:0'>

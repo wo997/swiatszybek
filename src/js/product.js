@@ -134,10 +134,11 @@ window.addEventListener("basket-change", (event) => {
   var res = event.detail.res;
   //youAlreadyHaveIt(res.variant_id);
 
-  showBasketChanges(
+  showVariantChanges(
     res,
     $(`.product_basket_variants`),
-    product_basket_row_template
+    product_basket_row_template,
+    basket_data.basket
   );
 
   var wtwoimkoszyku = $(".wtwoimkoszyku");
@@ -155,7 +156,7 @@ window.addEventListener("basket-change", (event) => {
 const product_basket_row_template = `
   <div class='expand_y'>
     <div class='product_row'>
-      <div class='cl cl1'><span class='product_variant_name clamp-lines clamp-2' data-tooltip></span></div>
+      <div class='cl cl1'><span class='variant_name clamp-lines clamp-2' data-tooltip></span></div>
       <div class='cl cl2'>
         <div class='qty-control glue-children'>
           <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
