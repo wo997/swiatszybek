@@ -28,7 +28,7 @@
         for (let module_name in app_modules) {
             var module = app_modules[module_name];
             html += `
-                <div class="btn subtle" onclick="selectModule(this, '${module_name}')">${module.icon} ${module.description}</div>
+                <div class="btn subtle" onclick="selectModule(this, '${module_name}')">${module.icon} ${module.title}</div>
             `;
         }
 
@@ -74,7 +74,7 @@
                     output += `<h2 class='header'>${module.title} ${module.version ? `v${module.version}` : ''}</h2>`;
                 }
                 if (module.description) {
-                    output += `<div class='header'>Opis modułu: ${module.title}</div>`;
+                    output += `<div class='header'>Opis modułu: ${module.description}</div>`;
                 }
                 if (module.version) {
                     output += `<div>${module.version}</div>`;
