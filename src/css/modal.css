@@ -230,8 +230,8 @@
   top: 0;
   right: 0;
   display: flex;
-  width: 54px;
-  height: 54px;
+  width: 53px;
+  height: 53px;
   justify-content: center;
   align-items: center;
   background: #fff;
@@ -253,6 +253,7 @@
   text-align: center;
   margin: 0;
   border-bottom: 1px solid #ddd;
+  font-weight: 600;
 }
 
 .modal-content .footer {

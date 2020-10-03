@@ -385,6 +385,10 @@ p {
   transform: translateX(-50%);
   width: 100%;
   transition: 0.2s 0.1s all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 41px;
 }
 
 .progress-item:not(.current) .progress-title {
@@ -396,8 +400,7 @@ p {
 }
 
 .progress-title span {
-  transform: translateY(2px);
-  display: inline-block;
+  margin-left: 4px;
 }
 
 @media only screen and (min-width: 800px) {

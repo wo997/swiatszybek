@@ -77,7 +77,7 @@ $page_width = "1500px";
 
 
     <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-        <div class="right_side_menu shown">
+        <div class="right_side_menu freeze_before_load">
             <button class="toggle-sidemenu-btn btn subtle" onclick="toggleRightSideMenu()">
                 <i class="fas fa-chevron-right"></i>
                 <i class="fas fa-cog"></i>
@@ -124,6 +124,12 @@ $page_width = "1500px";
                     },
                 });
             }
+
+            <?php if ($page_data["published"] == 0) : ?>
+                domload(() => {
+                    toggleRightSideMenu();
+                })
+            <?php endif ?>
         </script>
     <?php endif ?>
 

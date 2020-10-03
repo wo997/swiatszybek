@@ -108,9 +108,7 @@ $static = checkUrl($page_data["link"]);
 <div class="custom-toolbar">
     <span class="title">Edycja strony</span>
     <a class="btn primary" href="/admin/strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
-    <?php if ($page_data["published"]) : ?>
-        <a class="btn primary" href="/<?= $page_data["link"] ?>">Pokaż stronę <i class="fas fa-chevron-circle-right"></i></a>
-    <?php endif ?>
+    <a class="btn primary" href="/<?= $page_data["link"] ?>">Pokaż stronę <i class="fas fa-chevron-circle-right"></i></a>
     <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
     <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
 </div>

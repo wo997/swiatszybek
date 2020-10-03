@@ -64,7 +64,7 @@
   right: 0;
 }
 .remove-product-btn {
-  display: flex;
+  display: flex !important;
   width: 34px;
   height: 34px;
   justify-content: center;

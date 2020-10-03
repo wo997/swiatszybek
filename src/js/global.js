@@ -160,7 +160,7 @@ function useTool(name) {
   if (document.body) {
     document.body.appendChild(el);
   } else {
-    window.addEventListener("DOMContentLoaded", function () {
+    domload(() => {
       document.body.appendChild(el);
     });
   }
@@ -241,7 +241,7 @@ function getLink(phrase) {
     .replace(/-+/g, "-");
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
   $$(".mobile-hover").forEach((e) => {
     if (IS_MOBILE) {
       e.addEventListener("touchstart", () => {
@@ -287,7 +287,7 @@ function rgbStringToHex(rgbString) {
 function updateOnlineStatus() {
   $(".offline").classList.toggle("shown", !navigator.onLine);
 }
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
   window.addEventListener("offline", () => {
     updateOnlineStatus();
   });

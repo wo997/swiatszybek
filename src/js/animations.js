@@ -49,3 +49,9 @@ function animate(node, duration, keyframes, callback = null) {
     removeAnimation(animation_name);
   }, duration);
 }
+
+domload(() => {
+  setTimeout(() => {
+    removeClasses("freeze_before_load");
+  }, 200);
+});

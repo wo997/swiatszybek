@@ -30,7 +30,7 @@ body {
   padding: 10px 0;
   border-right: 1px solid #ccc;
   box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.19);
-  background: #ddd;
+  background: #ccc;
   color: #333;
 }
 
@@ -91,9 +91,6 @@ h1 {
   width: 100%;
   padding: 4px 9px;
 }
-.navbar_admin .menu_item a:hover {
-  text-decoration: underline;
-}
 .navbar_admin .menu_item {
   display: block;
   margin: 1px 0;
@@ -115,12 +112,12 @@ h1 {
   background: #fff5;
 }
 
-.navbar_admin .menu_item.current-route {
-  background: var(--primary-clr);
-  color: white;
+.navbar_admin .menu_item.current-route,
+.navbar_admin .menu_item:hover {
+  background: #eee;
 }
 
-.navbar_admin .menu_item:hover {
-  background: var(--primary-clr);
-  color: white;
+.navbar_admin .menu_item .fas {
+  width: 1.2em;
+  text-align: center;
 }

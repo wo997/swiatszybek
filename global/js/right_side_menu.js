@@ -5,6 +5,19 @@ domload(() => {
   if (rm && window.innerWidth < 1400) {
     rm.classList.remove("shown");
   }
+
+  setTimeout(() => {
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `
+      <style>
+        .right_side_menu {
+          transition: transform 0.4s;
+        }
+      </style>
+    `
+    );
+  }, 200);
 });
 
 function toggleRightSideMenu() {

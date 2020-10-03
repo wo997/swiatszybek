@@ -212,7 +212,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         }, 10);
       }, 200);
 
-      if (i == 3) {
+      if (i == 1) {
+        $(".variant_list_holder_1").appendChild($(".variant_list_full"));
+      } else if (i == 3) {
+        $(".variant_list_holder_2").appendChild($(".variant_list_full"));
+
         var daneKontaktoweInfo = "";
         if (BUYER_TYPE == 'p') {
           daneKontaktoweInfo = form.imie.value + " " + form.nazwisko.value;
@@ -545,7 +549,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       <div class="progress-item current" data-id="1">
         <span class="progress-count"><?= ++$progressBarCounter ?></span>
         <span class="progress-title">
-          <img src="/src/img/basket.png" style="width:22px">
+          <img src="/src/img/basket.png" style="width:22px;margin-top: -4px;">
           <span>Koszyk</span>
         </span>
       </div>
@@ -583,15 +587,20 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
         <!--<div class="zamowienie adjustable-list"></div>-->
 
-        <div class='variant_list_full'>
-          <div class='header' style='background: var(--primary-clr);color: white;'>
-            <div class="product_row">
-              <div class="cl1">Produkt</div>
-              <div class="cl2"></div>
-              <div class="cl3">Cena</div>
-              <div class="cl4">Ilość</div>
-              <div class="cl5">Suma</div>
-              <div class="cl6"></div>
+        <div class="variant_list_holder_1">
+          <div class='variant_list_full'>
+            <div class='case_basket_empty expand_y'>
+              <h3 style='text-align:center;margin:2em 0'>Koszyk jest pusty!</h3>
+            </div>
+            <div class='header case_basket_not_empty' style='background: var(--primary-clr);color: white;'>
+              <div class="product_row">
+                <div class="cl1">Produkt</div>
+                <div class="cl2"></div>
+                <div class="cl3">Cena</div>
+                <div class="cl4">Ilość</div>
+                <div class="cl5">Suma</div>
+                <div class="cl6"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -866,7 +875,9 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         <div style="width: 100%;margin: 0 auto;padding: 10px;">
           <h4>Produkty</h4>
 
-          <div class="zamowienie"></div>
+          <div class="variant_list_holder_2">
+
+          </div>
 
           <div class="mobileRow" style="justify-content:space-between;margin-top: 10px;">
             <label style="margin:10px 0">

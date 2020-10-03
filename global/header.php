@@ -13,17 +13,17 @@
     </div>
 
     <div class="nav-wrapper">
-      <div class="mobile-main-search-wrapper case-mobile">
-        <button class="btn transparent" onclick='showModal("mainSearch", {source:this});setTimeout(()=>{$(".main-search-wrapper label").click()},200)'>
+      <div class="mobile-main-search-wrapper case-mobile headerbtn">
+        <div onclick='showModal("mainSearch", {source:this});setTimeout(()=>{$(".main-search-wrapper label").click()},200)'>
           <img class="search-icon" src="/src/img/search_icon.svg">
-        </button>
+        </div>
       </div>
-      <div class="user-wrapper">
+      <div class="user-wrapper headerbtn">
         <?php if ($app["user"]["id"]) : ?>
-          <a href="/moje-konto" style="padding:8px 8px;margin-right: 5px;">
-            <div class="my-acc-text">
+          <a href="/moje-konto">
+            <!--<div class="my-acc-text">
               <span class="case-desktop">Moje konto</span>
-            </div>
+            </div>-->
             <img class="user-icon" src="/src/img/user_icon.svg">
           </a>
           <div class="user-menu">
@@ -35,7 +35,7 @@
               ?>
             </div>
             <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-              <a class="menu_item admin border-bottom border-top" href="/admin/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
+              <a class="admin border-bottom border-top menu_item" href="/admin/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
             <?php endif ?>
             <a class="menu_item" href="/moje-konto"> <i class="fas fa-box"></i> Moje zamówienia</a>
             <a class="menu_item" href="/moje-konto/dane-uzytkownika"> <i class="fas fa-address-book"></i> Dane użytkownika</a>
@@ -45,13 +45,16 @@
             <a class="menu_item border-top" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
           </div>
         <?php else : ?>
-          <a class="menu_item" style="padding:12px;cursor:pointer" onclick="showModal('loginForm',{source:this});">
+          <a onclick="showModal('loginForm',{source:this});">
             <span class="case-desktop">Zaloguj się </span>
             <img class="user-icon" src="/src/img/user_icon.svg">
           </a>
         <?php endif ?>
       </div>
-      <div class="basket-wrapper">
+      <div class=" headerbtn">
+        <img class="heart-icon" src="/src/img/heart_icon.svg">
+      </div>
+      <div class="basket-wrapper headerbtn">
         <div class="basket-btn">
           <!--<span class="case-desktop">Koszyk</span>-->
           <div class="basket-icon-wrapper">
@@ -63,6 +66,10 @@
           <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper'>
             <div class='case_basket_empty expand_y'>
               <h3 style='text-align:center;margin:2em 0'>Koszyk jest pusty!</h3>
+            </div>
+            <div class='case_basket_not_empty'>
+              <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Koszyk</h3>
+              <hr style="margin:0">
             </div>
             <div class='header_basket_content'></div>
           </div>
@@ -80,9 +87,9 @@
         </div>
       </div>
 
-      <button class='btn transparent case-mobile' onclick='showModal("mainMenu", {source:this})'>
+      <div class='case-mobile headerbtn' onclick='showModal("mainMenu", {source:this})'>
         <img class="menu-icon" src="/src/img/menu_icon.svg">
-      </button>
+      </div>
     </div>
   </div>
 

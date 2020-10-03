@@ -1757,3 +1757,8 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 .item-list tr:nth-child(odd) {
   background: #f3f3f3;
 }*/
+
+.freeze_before_load,
+.freeze_before_load * {
+  transition: 0s all !important;
+}

@@ -26,7 +26,7 @@ endSection();
 
         <hr style="margin:0">
         <div class="menu_item" onclick="return logout()">
-          <a><i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się</a>
+          <a><i class="fas fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się</a>
         </div>
       </div>
       <div class="content">
