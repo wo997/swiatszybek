@@ -228,16 +228,16 @@ header .basket-wrapper:hover .nav_basket_container {
 
 .basket-wrapper .basket-icon,
 #basketMenu .basket-icon {
-  width: 36px;
+  width: 34px;
   vertical-align: middle;
   margin-bottom: 2px;
 }
 
 .basket-wrapper .basket-icon {
-  transform: translateY(-1px);
+  /*transform: translateY(-1px);*/
 }
 #basketMenu .basket-icon {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 .nav-wrapper .user-icon,
@@ -262,7 +262,7 @@ header .basket_item_count,
   font-weight: bold;
   position: absolute;
   display: inline-block;
-  left: -7px;
+  left: -8px;
   font-size: 14px;
   width: 50px;
   text-align: center;
@@ -466,7 +466,10 @@ header .main-search-wrapper input {
 }
 
 header .heart-icon {
-  width: 28px;
+  width: 30px;
+}
+header .product-history-icon {
+  width: 34px;
 }
 
 @media only screen and (max-width: 360px) {

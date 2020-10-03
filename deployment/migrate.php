@@ -138,4 +138,9 @@ createTable("link_variant_attribute_option", [
   ["name" => "kolejnosc", "type" => "INT", "index" => "index"],
 ]);
 
+alterTable("users", [
+  ["name" => "basket", "type" => "TEXT"],
+  ["name" => "last_viewed_products", "type" => "TEXT"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";

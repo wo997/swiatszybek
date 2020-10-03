@@ -53,7 +53,7 @@ function enableBasketActions() {
   basketActionDelayed = false;
 }
 
-function addVariantToBasket(variant_id, diff, options = {}) {
+function addVariantToBasket(variant_id, quantity_diff, options = {}) {
   if (basketActionDelayed) {
     return;
   }
@@ -68,14 +68,15 @@ function addVariantToBasket(variant_id, diff, options = {}) {
     }
   }
 
-  if (diff > 0) url = "/basket/add/" + variant_id + "/" + diff;
-  else url = "/basket/remove/" + variant_id + "/" + -diff;
-
   basketActionDelayed = true;
   delay("enableBasketActions", 1000); // just in case the server crashes, should be less than 100ms
 
   xhr({
-    url: url,
+    url: "/basket_action",
+    params: {
+      quantity_diff,
+      variant_id,
+    },
     success: (res) => {
       _setBasketData(res, options);
       delay("enableBasketActions", 100);

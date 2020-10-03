@@ -51,8 +51,11 @@
           </a>
         <?php endif ?>
       </div>
-      <div class=" headerbtn">
-        <img class="heart-icon" src="/src/img/heart_icon.svg">
+      <div class="headerbtn">
+        <img class="heart-icon" src="/src/img/heart_icon.svg?a=2">
+      </div>
+      <div class="headerbtn">
+        <img class="product-history-icon" src="/src/img/product_history_icon.svg">
       </div>
       <div class="basket-wrapper headerbtn">
         <div class="basket-btn">
