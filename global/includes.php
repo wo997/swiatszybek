@@ -75,9 +75,7 @@ if (!isset($page_data["seo_image"])) {
     });
   };
 
-  /*domload(() => {
-    _setBasketData(window.basket_data);
-  })*/
+  const last_viewed_products = <?= nonull($_SESSION, "last_viewed_products", "[]") ?>;
 </script>
 
 <!-- styles / scripts to footer? -->

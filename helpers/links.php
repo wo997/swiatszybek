@@ -8,15 +8,6 @@ function getLink($phrase)
     return strtolower(preg_replace("/-+/", "-", preg_replace("/[^(a-zA-Z0-9-)]/", "", str_replace($pl, $en, $phrase))));
 }
 
-function getProductLink($product_id, $link)
-{
-    return SITE_URL . "/produkt/$product_id/" . getLink($link);
-}
-
-function getZamowienieLink($link, $relative = false)
-{
-    return ($relative ? "" : SITE_URL) . "/zamowienie/$link";
-}
 
 function getMenuLink($menu_item)
 {
@@ -34,17 +25,4 @@ function getMenuLink($menu_item)
         $url = getProductLink($menu_item["product_id"], $menu_item["product_link"]);
     }
     return ["title" => $title, "url" => $url];
-}
-
-function getTrackingLink($track, $dostawa, $dostawa_name)
-{
-    global $config;
-    if (!$track) return "";
-    $track = htmlspecialchars($track);
-    if ($dostawa == 'k') {
-        return $config['kurier_tracking'] . $track;
-    } else if ($dostawa == 'p') {
-        return $config['paczkomat_tracking'] . $track;
-    }
-    return "";
 }

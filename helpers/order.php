@@ -61,6 +61,11 @@ $zamowienia_status_groups = [
     ],
 ];
 
+function getBasketData()
+{
+    return json_decode($_SESSION["basket"], true);
+}
+
 function setBasketData($basket_json_or_array)
 {
     global $app;
@@ -94,7 +99,7 @@ function setBasketData($basket_json_or_array)
 function validateBasket()
 {
     try {
-        $basket = json_decode($_SESSION["basket"], true);
+        $basket = getBasketData();
 
         if ($basket === null) {
             throw new Exception('json parse error');
@@ -114,64 +119,64 @@ function validateBasket()
     }
 }
 
+function getVariantsFullData($variant_id_list)
+{
+    if (!$variant_id_list) {
+        return [];
+    }
+
+    $where = "variant_id IN (" . join(",", $variant_id_list) . ")";
+    $order = join(", ", array_map(function ($variant_id) {
+        return "variant_id = $variant_id";
+    }, $variant_id_list));
+
+    $variant_list = fetchArray("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, stock, gallery FROM products i INNER JOIN variant v USING (product_id) WHERE $where ORDER BY $order");
+
+    foreach ($variant_list as $variant_index => $variant) {
+        $variant["real_price"] = $variant["price"] - $variant["rabat"];
+        $variant["full_link"] = getProductLink($variant["product_id"], $variant["link"]);
+        $variant_list[$variant_index] = $variant;
+    }
+
+    return $variant_list;
+}
+
 function prepareBasketData()
 {
     global $app;
 
-    $user_basket = [];
+    $user_basket = getBasketData();
 
-    $basket = json_decode($_SESSION["basket"], true);
-
-    $variant_id_list = "";
-    foreach ($basket as $basket_item) {
-        $variant_id_list .= $basket_item["variant_id"] . ",";
+    $basket_variant_id_list = [];
+    foreach ($user_basket as $basket_item) {
+        $basket_variant_id_list[] = intval($basket_item["variant_id"]);
     }
+    $variant_list_full = getVariantsFullData($basket_variant_id_list);
 
-    $where = "1";
+    // add quantity into variant array
+    foreach ($variant_list_full as $variant_key => $variant) {
+        $v_id = $variant["variant_id"];
+        $basket_variant_index = array_search($v_id, $basket_variant_id_list);
 
-    if ($variant_id_list) {
-        $where .= " AND variant_id IN (" . substr($variant_id_list, 0, -1) . ")";
-    }
-
-    $unordered_variants = fetchArray("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, stock, gallery FROM products i INNER JOIN variant v USING (product_id) WHERE $where");
-
-    $variants = [];
-
-    foreach ($basket as $basket_item) { // merge variants with quantity into basket, simple right?
-        foreach ($unordered_variants as $unordered_variant) {
-            if ($unordered_variant["variant_id"] == $basket_item["variant_id"]) {
-                $unordered_variant["quantity"] = $basket_item["quantity"];
-                $variants[] = $unordered_variant;
-                break;
-            }
+        // should find always
+        if ($basket_variant_index !== false) {
+            $qty = $user_basket[$basket_variant_index]["quantity"];
+            $variant_list_full[$basket_variant_index]["quantity"] = $qty;
+            $variant_list_full[$basket_variant_index]["total_price"] = $variant["real_price"] * $qty;
+            break;
         }
     }
 
-    $totalBasketCost = 0;
-
+    $total_basket_cost = 0;
     $item_count = 0;
-
-    foreach ($variants as $variant_index => $variant) {
-        $variant["real_price"] = $variant["price"] - $variant["rabat"];
-
-        $total_price = 0;
-        for ($i = 0; $i < $variant["quantity"]; $i++) // u can add special offers here later
-        {
-            $item_count++;
-            $total_price += $variant["real_price"];
-        }
-
-        $variant["total_price"] = $total_price;
-
-        $variant["full_link"] = getProductLink($variant["product_id"], $variant["link"]);
-
-        $totalBasketCost += $total_price;
-
-        $variants[$variant_index] = $variant;
+    foreach ($variant_list_full as $variant) {
+        $item_count += $variant["quantity"];
+        $total_basket_cost += $variant["total_price"];
     }
 
-    $user_basket["variants"] = $variants;
-    $user_basket["total_basket_cost"] = $totalBasketCost;
+
+    $user_basket["variants"] = $variant_list_full;
+    $user_basket["total_basket_cost"] = $total_basket_cost;
     $user_basket["item_count"] = $item_count;
 
     $app["user"]["basket"] = $user_basket;
@@ -233,4 +238,24 @@ function getBasketDataAll()
     $response["item_count"] = $app["user"]["basket"]["item_count"];
 
     return $response;
+}
+
+
+function getTrackingLink($track, $dostawa, $dostawa_name)
+{
+    global $config;
+    if (!$track) return "";
+    $track = htmlspecialchars($track);
+    if ($dostawa == 'k') {
+        return $config['kurier_tracking'] . $track;
+    } else if ($dostawa == 'p') {
+        return $config['paczkomat_tracking'] . $track;
+    }
+    return "";
+}
+
+
+function getZamowienieLink($link, $relative = false)
+{
+    return ($relative ? "" : SITE_URL) . "/zamowienie/$link";
 }

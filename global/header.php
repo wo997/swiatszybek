@@ -54,8 +54,9 @@
       <div class="headerbtn">
         <img class="heart-icon" src="/src/img/heart_icon.svg?a=2">
       </div>
-      <div class="headerbtn">
+      <div class="last_viewed_products_wrapper headerbtn">
         <img class="product-history-icon" src="/src/img/product_history_icon.svg">
+        <div style='display:none' class="last_viewed_products"></div>
       </div>
       <div class="basket-wrapper headerbtn">
         <div class="basket-btn">

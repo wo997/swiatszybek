@@ -60,6 +60,8 @@ $page_data["seo_title"] = $product_data["seo_title"];
 $page_data["seo_image"] = "/uploads/sm" . getUploadedFileName($product_data["cache_thumbnail"]) . ".jpg";
 
 $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
+
+addLastViewedProduct($product_id);
 ?>
 
 <?php startSection("head"); ?>

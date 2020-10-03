@@ -408,6 +408,23 @@ window.addEventListener("basket-change", (event) => {
   );
 });
 
+domload(() => {
+  setTimeout(() => {
+    showBasketChanges(
+      {
+        changes: {
+          added: last_viewed_products,
+          quantity: [],
+          removed: [],
+        },
+        options: {},
+      },
+      $(`.last_viewed_products`),
+      header_basket_row_template
+    );
+  }, 300);
+});
+
 const header_basket_row_template = `
   <div class='expand_y'>
     <div class='product_row product-block'>
