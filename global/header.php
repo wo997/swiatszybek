@@ -57,8 +57,13 @@
       <div class="last_viewed_products_wrapper headerbtn">
         <img class="product-history-icon" src="/src/img/product_history_icon.svg">
         <div class="header_product_list headerbtn_hover_content">
-          <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Ostatnio przeglądane</h3>
-          <hr style="margin:0">
+          <div class='case_last_viewed_products_empty expand_y'>
+            <div style='text-align:center;margin:2em 0'>Brak ostatnio<br>przeglądanych produktów</div>
+          </div>
+          <div class='case_last_viewed_products_not_empty'>
+            <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Ostatnio przeglądane</h3>
+            <hr style="margin:0">
+          </div>
           <div class='scroll-panel scroll-shadow scroll-padding last_viewed_products smooth-scrollbar'>
           </div>
         </div>
@@ -73,7 +78,7 @@
         </div>
         <div class="nav_basket_container header_product_list headerbtn_hover_content">
           <div class='case_basket_empty expand_y'>
-            <h3 style='text-align:center;margin:2em 0'>Koszyk jest pusty!</h3>
+            <div style='text-align:center;margin:2em 0'>Koszyk jest pusty!</div>
           </div>
           <div class='case_basket_not_empty'>
             <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Koszyk</h3>

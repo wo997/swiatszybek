@@ -422,6 +422,28 @@ domload(() => {
     header_basket_product_template,
     last_viewed_products
   );
+
+  var toggle = (node, visible) => {
+    var empty = last_viewed_products.length === 0;
+
+    var show = !empty;
+    if (!visible) {
+      show = !show;
+    }
+
+    if (node.classList.contains("expand_y")) {
+      expand(node, show, { duration: 0 });
+    } else {
+      node.classList.toggle("hidden", !show);
+    }
+  };
+
+  $$(".case_last_viewed_products_not_empty").forEach((e) => {
+    toggle(e, true);
+  });
+  $$(".case_last_viewed_products_empty").forEach((e) => {
+    toggle(e, false);
+  });
 });
 
 const header_basket_variant_template = `
