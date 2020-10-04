@@ -213,6 +213,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return false;
     });
   }
+
   //menu
   registerModalContent(`
       <div id="mainMenu" data-expand>
@@ -228,9 +229,80 @@ window.addEventListener("DOMContentLoaded", () => {
 
   var mm = $("#mainMenu .scroll-panel");
   var nvg = $(".navigation");
+
+  nvg.insertAdjacentHTML(
+    "afterbegin",
+    `
+      <div>
+        <a onclick="showModal('lastViewedProducts',{source:this});return false;">
+          <img class="product-history-icon" src="/src/img/product_history_icon.svg"> Ostatnio przeglądane produkty
+        </a>
+      </div>
+      <div>
+        <a onclick="showModal('wishList',{source:this});return false;">
+          <img class="heart-icon" src="/src/img/heart_icon.svg"></img> Lista życzeń
+        </a>
+      </div>
+    `
+  );
+
   if (mm && nvg) {
     mm.appendChild(nvg);
   }
+
+  // last viewed products
+  registerModalContent(`
+      <div id="lastViewedProducts" data-expand="previous">
+        <div class="modal-body">
+            <button class="fas fa-times close-modal-btn"></button>
+            <h3 class="header">
+              <img class="product-history-icon" src="/src/img/product_history_icon.svg">
+              Ostatnio przeglądane  
+            </h3>
+            <div class="scroll-panel scroll-shadow panel-padding">
+              
+            </div>
+            <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
+        </div>
+    </div>
+  `);
+
+  var lvps = $("#lastViewedProducts .scroll-panel");
+  var lvp = $(".last_viewed_products");
+
+  if (lvps && lvp) {
+    lvps.appendChild(lvp);
+  }
+
+  // wishlist
+  registerModalContent(`
+      <div id="wishList" data-expand="previous">
+        <div class="modal-body">
+            <button class="fas fa-times close-modal-btn"></button>
+            <h3 class="header">
+              <img class="heart-icon" src="/src/img/heart_icon.svg"></img>
+              Lista życzeń  
+            </h3>
+            <div class="scroll-panel scroll-shadow panel-padding">
+              
+            </div>
+            <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
+        </div>
+    </div>
+  `);
+
+  // TODO: do this baby
+  /*var wls = $("#wishList .scroll-panel");
+  var wl = $(".wish_list");
+
+  if (wls && wl) {
+    wls.appendChild(wl);
+  }*/
+
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `<style>.headerbtn_hover_content {display:none!important}</style>`
+  );
 });
 
 // perform search

@@ -50,8 +50,11 @@ function showModal(name = null, params = {}) {
         shownow = true;
       }
       if (e.style.display != "none") {
-        if (e.getAttribute("data-expand") == "large") {
+        var expand = e.getAttribute("data-expand");
+        if (expand == "large") {
           total = 1;
+        } else if (expand == "previous") {
+          // same
         } else {
           total++;
         }
@@ -233,6 +236,8 @@ window.addEventListener("mousedown", (event) => {
   }
 
   if (form) {
-    hideModal(form.id);
+    // hmm, might work
+    hideAllModals();
+    //hideModal(form.id);
   }
 });

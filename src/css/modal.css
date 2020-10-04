@@ -249,11 +249,15 @@
 
 .modal-content .header {
   padding: calc(0.2em + min(1vw, 10px)) 0;
-  font-size: 24px;
+  font-size: 20px;
   text-align: center;
   margin: 0;
   border-bottom: 1px solid #ddd;
   font-weight: 600;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-content .footer {
