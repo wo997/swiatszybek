@@ -1,6 +1,6 @@
 <?php
 
-define("LAST_VIEWED_PRODUCTS_LENGTH_LIMIT", 10);
+define("LAST_VIEWED_PRODUCTS_LENGTH_LIMIT", 50);
 
 $attribute_data_types = [
     "textlist" => [
