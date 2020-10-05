@@ -1,5 +1,7 @@
 /* js[global] */
 
+const MOBILE_WIDTH = 800;
+
 window.addEventListener("resize", function () {
   resizeCallback();
 
@@ -28,7 +30,7 @@ function resizeCallback() {
   setCustomHeights();
 
   var responsiveType =
-    forceMobile || window.innerWidth < 800 ? "mobile" : "desktop";
+    forceMobile || window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
 
   $$(".cms-container").forEach((e) => {
     if (responsiveType == "desktop") {

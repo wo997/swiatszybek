@@ -102,14 +102,14 @@ function headerResizeCallback() {
 
   $(".header-height").style.marginBottom =
     $(".header-top").getBoundingClientRect().height +
-    (window.innerWidth >= 800
+    (window.innerWidth >= MOBILE_WIDTH
       ? $(".navigation").getBoundingClientRect().height
       : 0) +
     "px";
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  if (window.innerWidth >= 800) {
+  if (window.innerWidth >= MOBILE_WIDTH) {
     var btn = $("header .basket-wrapper .basket-btn");
     if (btn) {
       btn.addEventListener("click", () => {

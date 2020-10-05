@@ -1,7 +1,7 @@
 /* js[admin] */
 
 window.addEventListener("DOMContentLoaded", () => {
-  if (window.innerWidth < 800) {
+  if (window.innerWidth < MOBILE_WIDTH) {
     var nv = $(".navbar_admin");
     if (!nv) return;
     nv.classList.add("expand_y");
