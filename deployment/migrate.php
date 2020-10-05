@@ -143,4 +143,11 @@ alterTable("users", [
   ["name" => "last_viewed_products", "type" => "TEXT"],
 ]);
 
+addForeignKey("variant", "product_id", "products");
+// TODO: someone pls do it
+/*addForeignKey("variant", "product_id", "products");
+addForeignKey("variant", "product_id", "products");
+addForeignKey("variant", "product_id", "products");
+addForeignKey("variant", "product_id", "products");*/
+
 echo "<h3>✅ All migrations completed</h3>";

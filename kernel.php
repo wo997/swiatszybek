@@ -96,6 +96,8 @@ if (!$domain) {
 
 define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain);
 
+define("LOGO_PATH", SITE_URL . "/uploads/df/logo.jpg");
+
 $currency = "PLN"; // used by p24
 
 // use db

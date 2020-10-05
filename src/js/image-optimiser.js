@@ -16,7 +16,7 @@ function isNodeOnScreen(node, offset = -10) {
 var lazyLoadOffset = 700;
 
 function loadImage(img, animate = true) {
-  if (!img.filename) {
+  if (!img.file_name) {
     return;
   }
 
@@ -55,7 +55,7 @@ function loadImage(img, animate = true) {
       );
     }
 
-    var src = "/" + UPLOADS_PATH + target_size_name + "/" + img.filename;
+    var src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
 
     if (WEBP_SUPPORT) {
       src += ".webp";
@@ -77,11 +77,11 @@ function loadImage(img, animate = true) {
     if (img.awaitImageReplace) {
       img.setAttribute("awaiting-src", src);
       delete img.awaitImageReplace;
-      delete img.filename;
+      delete img.file_name;
     } else {
       img.setAttribute("src", src);
       img.removeAttribute("data-src");
-      delete img.filename;
+      delete img.file_name;
     }
 
     if (animate) {
@@ -107,6 +107,7 @@ function showImage(img) {
   }
 }
 
+// also files.php
 function getResponsiveImageData(src) {
   var last_dot_index = src.lastIndexOf(".");
   var path_wo_ext = src.substring(0, last_dot_index);
@@ -118,10 +119,10 @@ function getResponsiveImageData(src) {
 
   var dimensions = path_wo_ext.substring(last_floor_index + 1).split("x");
 
-  var filename = path_wo_ext.replace(/\/uploads\/.{0,10}\//, ``);
+  var file_name = path_wo_ext.replace(/\/uploads\/.{0,10}\//, ``);
 
   return {
-    filename: filename,
+    file_name: file_name,
     w: parseInt(dimensions[0]),
     h: parseInt(dimensions[1]),
   };
@@ -145,7 +146,7 @@ function setImageDimensions(img) {
 
   img.calculated_width = data.w;
   img.calculated_height = data.h;
-  img.filename = data.filename;
+  img.file_name = data.file_name;
 
   /*if (rect.height) {
     img.setAttribute("data-has-own-height", "");

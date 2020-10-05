@@ -99,6 +99,36 @@ function getFilenameWithoutExtension($file_path)
     return substr($file_name, 0, - (1 + strlen($file_extension)));
 }
 
+function getFileExtension($file_path)
+{
+    $path_info = pathinfo($file_path);
+    return $path_info["extension"];
+}
+
+// also image-optimiser.js
+function getResponsiveImageData($src)
+{
+    $last_dot_index = strrpos($src, ".");
+    $ext = substr($src, $last_dot_index + 1);
+    $path_wo_ext = substr($src, 0, $last_dot_index);
+
+    $last_floor_index = strrpos($path_wo_ext, "_");
+    if ($last_floor_index === false) {
+        return null;
+    }
+
+    $dimensions = explode("x", substr($path_wo_ext, $last_floor_index + 1));
+
+    $filename = preg_replace("/\/uploads\/.{0,10}\//", "", $path_wo_ext);
+
+    return [
+        "filename" => $filename,
+        "extension" => $ext,
+        "w" => intval($dimensions[0]),
+        "h" => intval($dimensions[1]),
+    ];
+}
+
 /**
  * Inserts image into DB
  *
@@ -108,8 +138,10 @@ function getFilenameWithoutExtension($file_path)
  * @param  mixed $counter
  * @return void
  */
-function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_image = true)
+function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
 {
+    $try_to_minify_image = nonull($options, "minify", true);
+
     $mime_type = mime_content_type($tmp_file_path);
     $file_type = mime2ext($mime_type);
     $asset_type = getAssetTypeFromMime($mime_type);
@@ -141,6 +173,7 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_im
 
     // check available file_path
     $file_path = $base_path . $name . $name_suffix . "." . $file_type;
+
     while (true) {
         if (fetchValue("SELECT 1 FROM uploads WHERE file_path = ?", [$file_path])) {
             if ($iterator < 10) {
@@ -157,9 +190,20 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $try_to_minify_im
     // save plain file
     copy($tmp_file_path, $file_path);
 
+    //try {
     query("INSERT INTO uploads(file_path, uploaded_file_name, asset_type) VALUES (?,?,?)", [
         $file_path, $uploaded_file_name, $asset_type
     ]);
+    /*} catch (Exception $e) {
+        if ($find_unique_name === false) {
+            // quiet, just a unique index crying, fine
+
+            // NOTE: currently the system works differently,
+            // the logo is uploaded anyway and a copy is created to the same path with minification applied ;)
+        } else {
+            die;
+        }
+    }*/
 
     if ($try_to_minify_image && $asset_type == "image") {
         minifyImage($file_path);

@@ -1,6 +1,6 @@
 <header>
   <div class="header-top">
-    <a href="/" class="logo-wrapper"><img src="/img/logo.png"></a>
+    <a href="/" class="logo-wrapper"><img src="<?= LOGO_PATH ?>"></a>
 
     <div class="main-search-wrapper case-desktop">
       <label for="main_search" class="glue-children">

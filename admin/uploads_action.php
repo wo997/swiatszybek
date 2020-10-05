@@ -1,11 +1,21 @@
 <?php //route[admin/uploads_action]
 
 if (IS_XHR && isset($_FILES['files'])) {
+    $type = nonull($_POST, "type", "files");
+
     for ($counter = 0; $counter < count($_FILES['files']['tmp_name']); $counter++) {
         $tmp_file_path = $_FILES['files']['tmp_name'][$counter];
         $uploaded_file_name = $_FILES['files']['name'][$counter];
-        $name = nonull($_POST, "name", date("Y-m-d_H:i:s"));
-        saveImage($tmp_file_path, $uploaded_file_name, $name);
+        $name = nonull($_POST, "name", date("Y-m-d-H-i-s"));
+
+        $file_data = saveImage($tmp_file_path, $uploaded_file_name, $name);
+
+        if ($type == "copy") {
+            $copy_path = UPLOADS_PLAIN_PATH . $name . "." . getFileExtension($file_data["file_path"]);
+            copy($tmp_file_path, $copy_path);
+            minifyImage($copy_path);
+            //file_put_contents(BUILD_INFO_PATH, $content);
+        }
     }
 }
 
@@ -22,7 +32,7 @@ if (isset($_POST['base64'])) {
         $tmp_file_path = UPLOADS_PATH . "tmp." . $file_type;
         file_put_contents($tmp_file_path, $image_base64);
 
-        $name = nonull($_POST, "name", date("Y-m-d_H:i:s"));
+        $name = nonull($_POST, "name", date("Y-m-d-H-i-s"));
         saveImage($tmp_file_path, $name, $name);
     }
 }

@@ -64,44 +64,46 @@ window.fileManager = {
       formData: formData,
       success(images) {
         try {
-          var out = "";
-          var counter = 0;
-          for (image of images) {
-            counter++;
+          if (Array.isArray(images)) {
+            var out = "";
+            var counter = 0;
+            for (image of images) {
+              counter++;
 
-            var replaceImg = $(`[upload_image="${counter}"]`);
-            if (replaceImg) {
-              replaceImg.src = "/" + image.file_path;
-              replaceImg.removeAttribute("upload_image");
+              var replaceImg = $(`[upload_image="${counter}"]`);
+              if (replaceImg) {
+                replaceImg.src = "/" + image.file_path;
+                replaceImg.removeAttribute("upload_image");
+              }
+
+              var display = "";
+
+              if (image.asset_type == "video") {
+                display = `<video src="/${image.file_path}" class="ql-video" controls="true" style='width:100%;height:250px;'></video>`;
+              } else {
+                display = `<img style='width:100%;object-fit:contain' data-height='1w' data-src='/${image.file_path}'>`;
+              }
+
+              out += `
+                  <div class='gallery-item'>
+                      ${display}
+                      <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz"><i class="fas fa-check"></i></div>
+                      <div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń"><i class="fas fa-times"></i></div>
+  
+                      <i class='fas fa-info-circle' data-tooltip='<b>Ścieżka:</b> ${image.file_path}<hr style="margin:2px 0"><b>Nazwa:</b> ${image.uploaded_file_name}'></i>
+                  </div>
+              `;
             }
+            $("#fileManager .gallery").setContent(out);
 
-            var display = "";
-
-            if (image.asset_type == "video") {
-              display = `<video src="/${image.file_path}" class="ql-video" controls="true" style='width:100%;height:250px;'></video>`;
-            } else {
-              display = `<img style='width:100%;object-fit:contain' data-height='1w' data-src='/${image.file_path}'>`;
-            }
-
-            out += `
-                <div class='gallery-item'>
-                    ${display}
-                    <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz"><i class="fas fa-check"></i></div>
-                    <div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń"><i class="fas fa-times"></i></div>
-
-                    <i class='fas fa-info-circle' data-tooltip='<b>Ścieżka:</b> ${image.file_path}<hr style="margin:2px 0"><b>Nazwa:</b> ${image.uploaded_file_name}'></i>
-                </div>
-            `;
-          }
-          $("#fileManager .gallery").setContent(out);
-
-          lazyLoadImages();
-
-          if (callback) {
-            callback();
+            lazyLoadImages();
           }
         } catch (e) {
-          //console.log(e);
+          console.log(e);
+        }
+
+        if (callback) {
+          callback();
         }
       },
     });
@@ -117,7 +119,7 @@ window.fileManager = {
       var formData = new FormData();
       formData.append("delete_path", src);
       fileManager.fileAction(formData, () => {
-        fileManager.search(src);
+        fileManager.search();
       });
     }
   },

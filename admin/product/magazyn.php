@@ -14,7 +14,7 @@
       name: tableName,
       url: "/admin/search_variant",
       lang: {
-        subject: "produktów",
+        subject: "wariantów",
       },
       width: 1100,
       primary: "variant_id",
