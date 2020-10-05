@@ -68,19 +68,22 @@ function setLastViewedProductsIds($last_viewed_products_json_or_array)
     }
 }
 
-// TODO: use array or number
-function addLastViewedProduct($product_id)
+function addLastViewedProduct($product_id_or_ids)
 {
     $last_viewed_products = getLastViewedProductsIds();
 
-    while (true) {
-        $last_viewed_product_index = array_search($product_id, $last_viewed_products);
-        if ($last_viewed_product_index === false) {
-            break;
+    $product_ids = is_array($product_id_or_ids) ? $product_id_or_ids : [$product_id_or_ids];
+
+    foreach ($product_ids as $product_id) {
+        while (true) {
+            $last_viewed_product_index = array_search($product_id, $last_viewed_products);
+            if ($last_viewed_product_index === false) {
+                break;
+            }
+            array_splice($last_viewed_products, $last_viewed_product_index, 1);
         }
-        array_splice($last_viewed_products, $last_viewed_product_index, 1);
+        array_unshift($last_viewed_products, $product_id);
     }
-    array_unshift($last_viewed_products, $product_id);
 
     // limit results
     if (count($last_viewed_products) > LAST_VIEWED_PRODUCTS_LENGTH_LIMIT) {

@@ -198,15 +198,18 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         wait = false;
 
         setTimeout(function() {
+          var params = {};
+          if (window.innerWidth >= 800) {
+            params.offset = -50;
+          }
+
           setCustomHeights();
           var view = $(`[data-view='${scroll}`);
+          if (!view) {
+            view = now.find(`*`);
+          }
           if (view) {
-            scrollToView(view);
-          } else {
-            var view = now.find(`*`);
-            if (view) {
-              scrollToView(view);
-            }
+            scrollToView(view, params);
           }
         }, 10);
       }, 200);
@@ -621,8 +624,9 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 <br><br>
                 <div class="hideifempty">
                   <strong>Co zyskasz?</strong>
-                  <div>- Dostęp do historii zamówień</div>
-                  <div>- Zapisanie danych kontaktowych</div>
+                  <div>- Historia zamówień</div>
+                  <div>- Zapisanie danych<br>kontaktowych oraz adresu</div>
+                  <div>- Zapisanie schowka oraz<br>statnio przeglądanych produktów</div>
                 </div>
               </div>
               <div style='margin:12px;margin-top:34px' class="lub-span">lub</div>

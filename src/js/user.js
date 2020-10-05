@@ -42,7 +42,7 @@ function onSignIn(googleUser) {
   form.submit();
 }
 
-// requires login_form included, basically everywhere, chill
+// requires loginForm included, basically everywhere, chill
 function login() {
   const loginForm = $(`#loginForm`);
 

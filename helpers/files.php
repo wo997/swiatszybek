@@ -15,14 +15,6 @@ $image_minified_formats = [
     "webp"
 ];
 
-// also global.js
-function getUploadedFileName($file_path)
-{
-    // TODO: optimize images on backend as well, by path
-    $start = strlen(UPLOADS_PLAIN_PATH);
-    return substr($file_path, $start, strrpos($file_path, ".") - $start);
-}
-
 function minifyImage($file_path)
 {
     global $image_default_dimensions;
@@ -82,6 +74,7 @@ function minifyImage($file_path)
         $white = imagecolorallocate($output,  255, 255, 255);
         imagefilledrectangle($output, 0, 0, $copy_width, $copy_height, $white);
         //imagecopyresized($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
+        // below gives way better quality
         imagecopyresampled($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
         $final_path = "$image_type_path/$file_name_wo_extension.jpg";
         imagejpeg($output, $final_path, 35);
@@ -90,6 +83,13 @@ function minifyImage($file_path)
     }
 }
 
+// also global.js
+function getUploadedFileName($file_path)
+{
+    // TODO: optimize images on backend as well, by path
+    $start = strlen(UPLOADS_PLAIN_PATH);
+    return substr($file_path, $start, strrpos($file_path, ".") - $start);
+}
 
 function getFilenameWithoutExtension($file_path)
 {

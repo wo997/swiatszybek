@@ -179,12 +179,6 @@ function validURL(str) {
   return !!pattern.test(str);
 }
 
-// also helpers/files.php
-function getUploadedFileName(file_path) {
-  // it doesn't work, file extension needs to be removed, look for getResponsiveImageData instead
-  return file_path.substr(UPLOADS_PLAIN_PATH.length);
-}
-
 // also kernel.php
 function getLink(phrase) {
   const pl = [

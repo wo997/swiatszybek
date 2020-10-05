@@ -107,6 +107,12 @@ function showImage(img) {
   }
 }
 
+// also helpers/files.php
+function getUploadedFileName(file_path) {
+  // it doesn't work, file extension needs to be removed, look for getResponsiveImageData instead
+  return file_path.substr(UPLOADS_PLAIN_PATH.length);
+}
+
 // also files.php
 function getResponsiveImageData(src) {
   var last_dot_index = src.lastIndexOf(".");

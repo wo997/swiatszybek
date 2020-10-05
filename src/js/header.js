@@ -240,7 +240,7 @@ window.addEventListener("DOMContentLoaded", () => {
       </div>
       <div>
         <a onclick="showModal('wishList',{source:this});return false;">
-          <img class="heart-icon" src="/src/img/heart_icon.svg"></img> Lista życzeń
+          <img class="heart-icon" src="/src/img/heart_icon.svg"></img> Schowek
         </a>
       </div>
     `
@@ -281,7 +281,7 @@ window.addEventListener("DOMContentLoaded", () => {
             <button class="fas fa-times close-modal-btn"></button>
             <h3 class="header">
               <img class="heart-icon" src="/src/img/heart_icon.svg"></img>
-              Lista życzeń  
+              Schowek  
             </h3>
             <div class="scroll-panel scroll-shadow panel-padding">
               
