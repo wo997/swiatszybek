@@ -92,4 +92,4 @@ if ($user_data) {
 
   $user_id = getLastInsertedId();
 }
-login_user($user_id, $email, $user_type, ["name" => $first_name . " " . $last_name]);
+loginUser($user_id, $email, $user_type, ["name" => $first_name . " " . $last_name]);

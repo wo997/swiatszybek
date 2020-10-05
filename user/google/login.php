@@ -38,4 +38,4 @@ if ($user_data) {
   $user_id = getLastInsertedId();
 }
 
-login_user($user_id, $google_email, $user_type, ['name' => $payload['name']]);
+loginUser($user_id, $google_email, $user_type, ['name' => $payload['name']]);

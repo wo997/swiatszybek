@@ -64,7 +64,7 @@ $page_data["seo_image"] = "/uploads/sm" . getUploadedFileName($product_data["cac
 
 $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 
-addLastViewedProduct($product_id);
+addLastViewedProducts([$product_id]);
 ?>
 
 <?php startSection("head"); ?>

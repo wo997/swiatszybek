@@ -25,7 +25,7 @@ function initUser()
     if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
         $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 'regular' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
         if ($user_data) {
-            login_user($user_data["user_id"], $user_data["email"], "regular", ["name" => $user_data["email"]], false);
+            loginUser($user_data["user_id"], $user_data["email"], "regular", ["name" => $user_data["email"]], false);
         }
     }
 
@@ -50,9 +50,9 @@ function adminRequired()
     }
 }
 
-function login_user($user_id, $email, $user_type, $data = [])
+function loginUser($user_id, $email, $user_type, $data = [])
 {
-    global $app, $privelege_list;
+    global $privelege_list;
 
     $_SESSION["just_logged_in"] = true;
 
@@ -71,11 +71,16 @@ function login_user($user_id, $email, $user_type, $data = [])
 
     $_SESSION["user"] = $user;
 
+    // bring basket back if empty only?
     $basket = $user_data["basket"];
-
-    if ($basket && strlen(nonull($_SESSION, "basket")) <= 3) {
+    // I think we should prompt the user in other case what he wanna do, correct?
+    if ($basket && count(getBasketData()) < 1) {
         setBasketData($basket);
     }
+
+    $last_viewed_products_safe_string = preg_replace("/[^0-9,]/", "", $user_data["last_viewed_products"]);
+    $last_viewed_products = explode(",", $last_viewed_products_safe_string);
+    addLastViewedProducts($last_viewed_products, false);
 
     if (isset($_SESSION["redirect_on_login"])) {
         $url = $_SESSION["redirect_on_login"];

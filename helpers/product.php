@@ -68,11 +68,9 @@ function setLastViewedProductsIds($last_viewed_products_json_or_array)
     }
 }
 
-function addLastViewedProduct($product_id_or_ids)
+function addLastViewedProducts($product_ids, $as_new = true)
 {
     $last_viewed_products = getLastViewedProductsIds();
-
-    $product_ids = is_array($product_id_or_ids) ? $product_id_or_ids : [$product_id_or_ids];
 
     foreach ($product_ids as $product_id) {
         while (true) {
@@ -82,7 +80,11 @@ function addLastViewedProduct($product_id_or_ids)
             }
             array_splice($last_viewed_products, $last_viewed_product_index, 1);
         }
-        array_unshift($last_viewed_products, $product_id);
+        if ($as_new) {
+            array_unshift($last_viewed_products, $product_id); // begin
+        } else {
+            $last_viewed_products[] = $product_id; // end
+        }
     }
 
     // limit results

@@ -40,4 +40,4 @@ if ($remember_me) {
   query("UPDATE users SET remember_me_token = ? WHERE user_id = " . intval($user_data["user_id"]), [$remember_me_token]);
 }
 
-login_user($user_data["user_id"], $user_data["email"], "regular", ["name" => $user_data["email"]]);
+loginUser($user_data["user_id"], $user_data["email"], "regular", ["name" => $user_data["email"]]);
