@@ -1,6 +1,6 @@
 <?php //route[admin/uploads_action]
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
+if (IS_XHR && isset($_FILES['files'])) {
     for ($counter = 0; $counter < count($_FILES['files']['tmp_name']); $counter++) {
         $tmp_file_path = $_FILES['files']['tmp_name'][$counter];
         $uploaded_file_name = $_FILES['files']['name'][$counter];
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['files'])) {
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_path'])) {
+if (IS_XHR && isset($_POST['delete_path'])) {
     deleteAssetByPath($_POST["delete_path"]);
     die;
 }

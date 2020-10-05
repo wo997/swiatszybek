@@ -91,7 +91,7 @@ if ($add_subtract_stock !== "") {
   }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (IS_XHR) {
   die;
 }
 
