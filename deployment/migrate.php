@@ -145,6 +145,8 @@ alterTable("users", [
 
 addForeignKey("variant", "product_id", "products");
 // TODO: someone pls do it
+// I recommend creating a general function that removes everything that is not connected, simple concept right? no errors, quick coffee, big dildo
+
 /*addForeignKey("variant", "product_id", "products");
 addForeignKey("variant", "product_id", "products");
 addForeignKey("variant", "product_id", "products");
