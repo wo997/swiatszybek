@@ -36,7 +36,7 @@ function initUser()
         if (isset($_COOKIE["basket"])) {
             $b = $_COOKIE["basket"];
         }
-        $_SESSION["basket"] = $b;
+        setBasketData($b);
     }
 }
 

@@ -87,7 +87,7 @@ function setBasketData($basket_json_or_array)
     $basket_json = json_encode($basket);
 
     $_SESSION["basket"] = $basket_json;
-    setcookie("basket", $basket_json, (time() + 31536000));
+    setcookie("basket", $basket_json, (time() + 31536000), "/");
 
     if ($app["user"]["id"]) {
         query("UPDATE users SET basket = ? WHERE user_id = ?", [

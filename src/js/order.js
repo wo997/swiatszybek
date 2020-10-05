@@ -254,6 +254,10 @@ function showVariantChanges(
         var variant_data = data_source.find((e) => {
           return e.variant_id == variant_id;
         });
+
+        if (!variant_data) {
+          return;
+        }
         setVariantRowQty(variant_node, variant_data);
       }, 200);
     });
@@ -261,6 +265,10 @@ function showVariantChanges(
       var variant_data = data_source.find((e) => {
         return e.variant_id == variant_id;
       });
+
+      if (!variant_data) {
+        return;
+      }
 
       if (product_id && product_id != variant_data.product_id) {
         return;
@@ -343,6 +351,9 @@ function showProductChanges(
       var product_data = data_source.find((e) => {
         return e.product_id == product_id;
       });
+      if (!product_data) {
+        return;
+      }
 
       basket_node.insertAdjacentHTML("beforeend", basket_row_template);
       product_node_children = basket_node.directChildren();

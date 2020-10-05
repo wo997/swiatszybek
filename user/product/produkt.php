@@ -72,8 +72,8 @@ addLastViewedProduct($product_id);
 include "global/includes_for_cms_page.php";
 ?>
 
-<script src="/builds/product.js?v=<?= JS_RELEASE ?>"></script>
-<link href="/builds/product.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+<script src="/builds/product_page.js?v=<?= JS_RELEASE ?>"></script>
+<link href="/builds/product_page.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
 <script>
   var variants = <?= json_encode($variants) ?>;

@@ -21,9 +21,14 @@ if ($product_id === -1) {
     "description" => "",
     "gallery" => "[]",
     "published" => "0",
+    "product_id" => "-1",
   ];
 } else {
   $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
+
+  if (!$product_data) {
+    redirect("/admin/produkt/");
+  }
 }
 
 $categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
@@ -305,7 +310,7 @@ if ($product_id === -1) {
         product_code: "",
         zdjecie: "",
         published: 0,
-        attributes: "[]",
+        attributes: "{\"selected\":[],\"values\":[]}",
       },
       title: "Warianty (min. 1)"
     });
@@ -332,14 +337,17 @@ if ($product_id === -1) {
   });
 
   function displayAttributesPreview(target, data) {
-    var attributes = JSON.parse(data);
     var output = "";
-    attributes.selected.forEach(attribute_id => {
-      output += attribute_values[+attribute_id] + "<br>";
-    })
-    attributes.values.forEach(attribute => {
-      output += attribute.value + "<br>";
-    });
+    try {
+      var attributes = JSON.parse(data);
+      attributes.selected.forEach(attribute_id => {
+        output += attribute_values[+attribute_id] + "<br>";
+      })
+      attributes.values.forEach(attribute => {
+        output += attribute.value + "<br>";
+      });
+    } catch {}
+
     target.setContent(output);
   }
 
@@ -413,7 +421,23 @@ if ($product_id === -1) {
   }
 
   function showPreview() {
-    window.preview.open("<?= getProductLink($product_id, $product_data["link"]) ?>", getFormData("#productForm"));
+    var form = $(`#productForm`);
+
+    if (!validateForm(form)) {
+      return;
+    }
+
+    var data = getFormData("#productForm");
+    data.cache_thumbnail = "";
+    try {
+      data.cache_thumbnail = JSON.parse(getFormData("#productForm").gallery)[0].values.src;
+    } catch {}
+    data.cache_rating_count = Math.floor(5 + 100 * Math.random());
+    data.cache_avg_rating = 5;
+    data.price_min = 0;
+    data.price_max = 10000000; // really doesnt matter what u set, it's used for seo later though
+
+    window.preview.open(getProductLink(data.product_id, data.link), data);
   }
 </script>
 

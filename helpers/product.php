@@ -32,7 +32,7 @@ $attribute_data_types = [
   ]*/
 ];
 
-
+// also product.js
 function getProductLink($product_id, $link)
 {
     return SITE_URL . "/produkt/$product_id/" . getLink($link);
