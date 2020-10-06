@@ -3,7 +3,7 @@
     <a href="/" class="logo-wrapper"><img src="<?= LOGO_PATH ?>"></a>
 
     <div class="main-search-wrapper case-desktop">
-      <label for="main_search" class="glue-children">
+      <label for="main_search" class="glue-children any-search-wrapper">
         <input type="text" id="main_search" class="field inline" placeholder="Czego szukasz?">
         <button class="btn primary" onclick="btnSearchProducts()">
           <img class="search-icon" src="/src/img/search_icon.svg">

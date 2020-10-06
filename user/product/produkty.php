@@ -112,14 +112,15 @@ function showCategory($category, $level = 0)
       .category-picker-row {
         display: flex;
         justify-content: space-between;
-        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
         align-items: center;
-        padding: 2px;
+        padding-left: 12px;
+        height: 2.55em;
       }
 
       .category-picker-row .expand_arrow {
         width: 2.8em;
-        height: 2.4em;
+        height: 100%;
       }
 
       .category_name {
@@ -301,6 +302,7 @@ function showCategory($category, $level = 0)
     .horizontal-scroll-wrapper .order_by_item>span {
       min-width: 38vw !important;
       text-align: center;
+      border-radius: 20px;
     }
 
     @media only screen and (min-width: 500px) {
@@ -370,7 +372,7 @@ function showCategory($category, $level = 0)
                 <div class="modal-body">
                     <button class="fas fa-times close-modal-btn"></button>
                     <h3 class="header">Kategorie</h3>
-                    <div class="scroll-panel scroll-shadow panel-padding">
+                    <div class="scroll-panel scroll-shadow">
 
                     </div>
                 </div>
@@ -425,9 +427,17 @@ function showCategory($category, $level = 0)
         container.appendChild(scroll_wrapper);
 
         registerScrollShadows();
-      } else {
+
         var products_search = $(".products_search");
         products_search.addEventListener("input", () => {
+          // give user a hint
+          setMobileSearchBtnOpacity($(".products_search"));
+        });
+      } else {
+        $(".products_search").parent().classList.remove("glue-children");
+        var products_search = $(".products_search");
+        products_search.addEventListener("input", () => {
+          // instant change
           products_search.setValue();
         });
       }
@@ -506,6 +516,12 @@ function showCategory($category, $level = 0)
         searchParams = newSearchParams;
       } else if (!forceSearch) {
         return;
+      }
+
+      setMobileSearchBtnOpacity($(".products_search"));
+
+      if (window.innerWidth < MOBILE_WIDTH) {
+        scrollToTopOfProductList();
       }
 
       xhr({
@@ -622,8 +638,8 @@ function showCategory($category, $level = 0)
     function scrollToTopOfProductList() {
       scrollToElement($(".hook_view"), {
         top: true,
-        offset: 300,
-        sag: 100,
+        offset: window.innerWidth < MOBILE_WIDTH ? 200 : 300,
+        sag: window.innerWidth < MOBILE_WIDTH ? 0 : 100,
         duration: 30
       });
     }
@@ -695,6 +711,10 @@ function showCategory($category, $level = 0)
       anySearchChange(instant);
     }
 
+    function setMobileSearchBtnOpacity(input) {
+      input.parent().find(".search-btn").style.opacity = input.getValue() !== searchParams.search ? 1 : 0;
+    }
+
     function anySearchChange(instant = false) {
       if (instant) {
         searchProducts();
@@ -735,9 +755,12 @@ function showCategory($category, $level = 0)
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <div class='float-icon mobile-margin-bottom'>
-        <input type="text" placeholder="Nazwa produktu..." class="field products_search" data-input-change onchange="productsSearchChange(this)">
+      <div class='float-icon mobile-margin-bottom any-search-wrapper glue-children'>
+        <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
         <i class="fas fa-search"></i>
+        <button class="btn primary case-mobile search-btn can-disappear">
+          <img class="search-icon" src="/src/img/search_icon.svg">
+        </button>
       </div>
 
       <div class="sorting-wrapper">
@@ -759,7 +782,7 @@ function showCategory($category, $level = 0)
         </label>
         <label class="order_by_item case_no_search">
           <input type="radio" name="order_by" value="random" class="random_option">
-          <span><i class="fas fa-dice-three"></i> Losuj</span>
+          <span><i class="fas fa-dice-three"></i> Losowo</span>
         </label>
         <label class="order_by_item case_search">
           <input type="radio" name="order_by" value="relevance" class="relevance_option">

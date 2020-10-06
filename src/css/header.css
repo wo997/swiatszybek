@@ -163,7 +163,7 @@ nav > div:hover > a:not(.current-route) > * {
 }
 
 #mainMenu .navigation a {
-  padding: 10px;
+  padding: 10px 12px;
   width: 100%;
   border-bottom: 1px solid #ccc;
 }
@@ -456,10 +456,18 @@ header .main-search-wrapper:not(.active) .search-results,
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-.main-search-wrapper .search-icon {
+.any-search-wrapper .search-icon {
   width: 16px;
   filter: invert();
   transform: translateY(2px);
+}
+
+.search-btn.can-disappear {
+  z-index: 10;
+  opacity: 1;
+  position: absolute;
+  right: 0;
+  height: 100%;
 }
 
 .mobile-main-search-wrapper .search-icon,
@@ -468,14 +476,29 @@ header .main-search-wrapper:not(.active) .search-results,
   transform: translateY(3px);
 }
 
-#mainSearch .search-icon {
+#mainSearch .header .search-icon {
   transform: translateY(1px);
 }
 
-header .main-search-wrapper input {
+.any-search-wrapper input {
   width: 100%;
   padding: 8px 12px;
+  /*padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.2s;*/
 }
+/*.any-search-wrapper input + button {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  transition: all 0.2s;
+}*/
+
+/*.any-search-wrapper.has_results input {
+  border-bottom-left-radius: 0;
+}
+.any-search-wrapper.has_results input + button {
+  border-bottom-right-radius: 0;
+}*/
 
 .main-search-wrapper {
   position: relative;

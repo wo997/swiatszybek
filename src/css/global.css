@@ -361,12 +361,12 @@ input[type="button"] {
 .glue-children {
   display: flex;
 }
-.glue-children > *:not(:first-child) {
+.glue-children > *:not(:first-child):not(.ignore-glue) {
   margin-left: -1px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.glue-children > *:not(:last-child) {
+.glue-children > *:not(:last-child):not(.ignore-glue) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }

@@ -136,6 +136,7 @@ window.addEventListener("DOMContentLoaded", () => {
   var sc = $("#mainSearch .scroll-panel");
   var sw = $("header .main-search-wrapper");
   if (sc && sw) {
+    sw.classList.remove("case-desktop"); // don't remove it from header.php pls
     sc.appendChild(sw);
   }
 
@@ -231,7 +232,7 @@ window.addEventListener("DOMContentLoaded", () => {
   var nvg = $(".navigation");
 
   nvg.insertAdjacentHTML(
-    "afterbegin",
+    "beforeend",
     `
       <div>
         <a onclick="showModal('lastViewedProducts',{source:this});return false;">
