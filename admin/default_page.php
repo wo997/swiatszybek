@@ -24,7 +24,7 @@ endSection();
 
         <?php include "navbar.php" ?>
 
-        <hr style="margin:0">
+        <hr>
         <div class="menu_item" onclick="return logout()">
           <a><i class="fas fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się</a>
         </div>

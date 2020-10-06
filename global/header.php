@@ -64,7 +64,7 @@
           </div>
           <div class='case_last_viewed_products_not_empty'>
             <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Ostatnio przeglądane</h3>
-            <hr style="margin:0">
+            <hr>
           </div>
           <div class='scroll-panel scroll-shadow scroll-padding last_viewed_products_wrapper smooth-scrollbar'>
             <div class="last_viewed_products"></div>
@@ -85,11 +85,11 @@
           </div>
           <div class='case_basket_not_empty expand_y'>
             <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Koszyk</h3>
-            <hr style="margin:0">
+            <hr>
             <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper smooth-scrollbar'>
               <div class='header_basket_content'></div>
             </div>
-            <hr style='margin:0'>
+            <hr>
             <div class='nav_basket_summary'>
               <div style='text-align:center;padding:5px;font-size:1.1em'>
                 Wartość koszyka:
