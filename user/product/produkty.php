@@ -309,6 +309,11 @@ function showCategory($category, $level = 0)
         text-align: center;
       }
     }
+
+    .filters_description {
+      text-align: center;
+      font-size: 1.2em;
+    }
   </style>
 
   <script>
@@ -515,7 +520,7 @@ function showCategory($category, $level = 0)
             var caseFilters = searchParams.attribute_value_ids.length > 0 || searchParams.search !== "" ?
               `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class='fas fa-times'></i> Wyczyść filtry</button>` : "Wyszukaj inną kategorię";
             res.content = `
-              <div style='font-size:22px;padding: 60px 10px;text-align:center;font-weight:bold'>
+              <div style='font-size:22px;padding: 60px 10px;text-align:center;font-weight:600'>
                 <span style='color: var(--error-clr);'><i class="fas fa-exclamation-circle"></i> Brak produktów!</span>
                 <div style='font-size:0.8em;margin:0.7em'>${caseFilters}</div>
               </div>
@@ -590,6 +595,26 @@ function showCategory($category, $level = 0)
               }
             );
           }
+
+          $$(".filters_description").forEach(e => {
+            animate(e, duration, ANIMATIONS.blink);
+            setTimeout(() => {
+              var out = [];
+              if (searchParams.search) {
+                out.push(`Wyszukaj: <span style='font-weight:600'>${searchParams.search}</span>`);
+              }
+              if (searchParams.price_min && searchParams.price_max) {
+                out.push(`Cena: <span class='pln'>${searchParams.price_min} - ${searchParams.price_max} zł</span>`);
+              } else if (searchParams.price_min) {
+                out.push(`Cena: <span class='pln'>od ${searchParams.price_min} zł</span>`);
+              } else if (searchParams.price_max) {
+                out.push(`Cena: <span class='pln'>do ${searchParams.price_max} zł</span>`);
+              }
+
+              out.push(`Sortuj: <span style='font-weight:600'>${$(`[value="${searchParams.order_by}"]`).next().textContent}</span>`);
+              e.innerHTML = out.join(", ");
+            }, duration / 2);
+          });
         }
       })
     }
@@ -847,7 +872,10 @@ function showCategory($category, $level = 0)
       </div>
     </div>
     <div class="product_list-wrapper">
-      <h1 class="h1" style="margin: 40px 0"><?= $show_category["title"] ?></h1>
+      <div style="margin: 35px 0">
+        <h1 class="h1" style="margin: 5px 0"><?= $show_category["title"] ?></h1>
+        <p class="filters_description"></p>
+      </div>
       <?= $show_category["description"] ?>
 
       <div class="hook_view"></div>

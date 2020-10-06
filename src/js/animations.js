@@ -12,6 +12,26 @@ const ANIMATIONS = {
       opacity: 1;
     }
   `,
+  replace: (zoom_factor = 0.25) => {
+    return `
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0;
+        transform: scale(${1 - zoom_factor});
+      }
+      51% {
+        opacity: 0;
+        transform: scale(${1 + zoom_factor});
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    `;
+  },
 };
 
 var wo997_animation_counter = 0;

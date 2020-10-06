@@ -83,7 +83,7 @@
           <div class='case_basket_empty expand_y'>
             <div style='text-align:center;margin:2em 0'>Twój koszyk jest pusty!</div>
           </div>
-          <div class='case_basket_not_empty'>
+          <div class='case_basket_not_empty expand_y'>
             <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Koszyk</h3>
             <hr style="margin:0">
             <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper smooth-scrollbar'>

@@ -144,7 +144,7 @@ window.addEventListener("basket-change", (event) => {
     !res.options.instant
   ) {
     $$(".basket_item_count, .total_basket_cost").forEach((e) => {
-      animate(e, 400, ANIMATIONS.blink);
+      animate(e, 400, ANIMATIONS.replace(0.2));
     });
 
     setTimeout(setSummary, 200);
@@ -244,10 +244,10 @@ function showVariantChanges(
       var qty = variant_node.find(".qty-label");
       var ptp = variant_node.find(".variant_total_price");
       if (qty) {
-        animate(qty, 400, ANIMATIONS.blink);
+        animate(qty, 400, ANIMATIONS.replace(0.4));
       }
       if (ptp) {
-        animate(ptp, 400, ANIMATIONS.blink);
+        animate(ptp, 400, ANIMATIONS.replace(0.25));
       }
 
       setTimeout(() => {

@@ -1762,3 +1762,9 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 .freeze_before_load * {
   transition: 0s all !important;
 }
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+}

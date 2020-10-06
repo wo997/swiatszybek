@@ -25,7 +25,7 @@
 .toggle-sidemenu-btn {
   position: absolute;
   top: 10px;
-  left: -30px;
+  left: -40px;
   width: 30px;
   height: 30px;
   border-radius: 7px;
@@ -53,6 +53,7 @@
   box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.35);
   top: 5px;
   height: 40px;
+  width: 40px;
 }
 
 .right_side_menu:not(.shown) .toggle-sidemenu-btn .fa-chevron-right {

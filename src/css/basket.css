@@ -81,3 +81,7 @@
   opacity: 1;
   color: #800;
 }
+
+.total_basket_cost {
+  display: inline-block;
+}

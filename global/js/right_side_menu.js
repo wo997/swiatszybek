@@ -25,5 +25,5 @@ function toggleRightSideMenu() {
 
   var btn = $(".right_side_menu .toggle-sidemenu-btn");
   btn.classList.toggle("subtle", shown);
-  btn.classList.toggle("important", !shown);
+  btn.classList.toggle("primary", !shown);
 }

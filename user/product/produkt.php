@@ -309,7 +309,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
 <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
   <div class="right_side_menu freeze_before_load">
-    <button class="toggle-sidemenu-btn btn subtle" onclick="toggleRightSideMenu()">
+    <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
       <i class="fas fa-chevron-right"></i>
       <i class="fas fa-cog"></i>
     </button>

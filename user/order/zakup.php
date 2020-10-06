@@ -585,7 +585,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           <h3 style="margin:20px;color:red;text-align:center">Niestety produkt został już wyprzedany!<br><span style="font-weight: normal;">Musisz zmienić zawartość koszyka</span></h3>
         <?php endif ?>
 
-        <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;">Twój koszyk</h3>
+        <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;font-weight:600;margin: 0;">Twój koszyk</h3>
 
         <!--<div class="zamowienie adjustable-list"></div>-->
 
@@ -610,7 +610,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         <div style="margin-top: 30px;">
           <div style="margin-top: 13px;text-align: right;padding: 5px;" class="hideifempty mobileTextCenter">
             <span style="display:inline-block;font-size: 18px;padding: 0 3px;">Wartość koszyka:</span>
-            <span style="display:inline-block;font-size: 20px;" class="pln total_basket_cost"></span>
+            <span style="font-size: 20px;" class="pln total_basket_cost"></span>
 
             <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Kurier: <span class="pln"><?= config('kurier_cena', 0) ?> zł</span>, Paczkomat: <span class="pln"><?= config('paczkomat_cena', 0) ?> zł</span>, Odbiór osobisty: <span class="pln">0 zł</span></p>
 
