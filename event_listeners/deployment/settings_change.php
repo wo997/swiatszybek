@@ -12,13 +12,20 @@ scanDirectories(
         global $_settings;
 
         if (strpos($path, ".json")) {
-            $name = $path;
-            $name = str_replace("settings/modules", "module", $name);
-            $name = str_replace("settings/", "", $name);
-            $name = str_replace(".json", "", $name);
-            $name = str_replace("/", "_", $name);
+            $first = true;
+            $_sub_settings = &$_settings;
+            foreach (explode("/", str_replace(".json", "", $path)) as $path_part) {
+                if ($first) {
+                    $first = false;
+                    continue;
+                }
+                if (!isset($_sub_settings[$path_part])) {
+                    $_sub_settings[$path_part] = [];
+                }
+                $_sub_settings = &$_sub_settings[$path_part];
+            }
 
-            $_settings[$name] = json_decode(file_get_contents($path), true);
+            $_sub_settings = json_decode(file_get_contents($path), true);
         }
     }
 );
