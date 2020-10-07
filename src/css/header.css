@@ -73,11 +73,11 @@ header .heart-icon,
 /* miscellaneous end */
 
 /* width start */
-header .logo-wrapper {
+.header .logo-wrapper {
   margin-left: max(50vw - 750px, 10px);
 }
 
-header .nav-wrapper {
+.header .nav-wrapper {
   margin-right: max(50vw - 750px, 10px);
 }
 
@@ -87,7 +87,7 @@ header .nav-wrapper {
 }
 /* width end */
 
-header {
+.header {
   position: fixed;
   min-width: calc(100vw - 20px);
   width: calc(100vw - var(--scrollbar-width));
@@ -108,8 +108,10 @@ header .header-top {
 
 header .logo-wrapper img {
   width: max(85px, min(10vw, 120px));
+  height: max(38.25px, min(4.5vw, 54px));
   display: block;
   margin: 10px;
+  object-fit: contain;
 }
 
 /* nav start */

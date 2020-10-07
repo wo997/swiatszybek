@@ -15,9 +15,9 @@ endSection();
 <body id="admin">
   <div class="main-container">
     <div class="main-wrapper">
-      <div class="navbar_admin">
-        <a href="/" class="home">
-          <img src="/img/logo.png">
+      <header class="navbar_admin">
+        <a href="/" class="home logo-wrapper">
+          <img data-src="<?= LOGO_PATH_LOCAL ?>">
           <br>
           Strona główna
         </a>
@@ -28,7 +28,7 @@ endSection();
         <div class="menu_item" onclick="return logout()">
           <a><i class="fas fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się</a>
         </div>
-      </div>
+      </header>
       <div class="content">
         <?php if (isset($sections["header"])) echo $sections["header"]; ?>
         <div class="scroll-panel scroll-shadow">

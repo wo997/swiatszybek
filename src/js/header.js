@@ -90,6 +90,8 @@ window.addEventListener("load", () => {
 
     window.scrollTop = scrollTop;
   });
+
+  headerResizeCallback();
 });
 
 window.addEventListener("resize", headerResizeCallback);

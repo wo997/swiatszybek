@@ -91,6 +91,16 @@ function secret($var, $default = "")
     return nonull($secrets, $var, $default);
 }
 
+$settings = json_decode(@file_get_contents(BUILDS_PATH . "settings.json"), true);
+if (!$settings) {
+    $settings = [];
+}
+function setting($path, $default = "")
+{
+    global $settings;
+    return nonull($settings, $path, $default);
+}
+
 $domain = config("domain");
 if (!$domain) {
     $domain = $_SERVER["HTTP_HOST"];
@@ -98,14 +108,16 @@ if (!$domain) {
 
 define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain);
 
-define("LOGO_PATH", SITE_URL . "/uploads/df/logo.jpg");
+define("LOGO_PATH", SITE_URL . "/uploads/df/logo.jpg?v=" . setting(["theme", "copied_images", "logo", "version"], ""));
+define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], LOGO_PATH));
 
 $currency = "PLN"; // used by p24
 
 // use db
+
+
 date_default_timezone_set("Europe/Warsaw");
 require_once "helpers/db/connect.php";
-
 
 // define app scope
 $app = [];

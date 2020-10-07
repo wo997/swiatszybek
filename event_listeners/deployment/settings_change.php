@@ -30,4 +30,10 @@ scanDirectories(
     }
 );
 
-file_put_contents(BUILDS_PATH . "settings.json", json_encode($_settings));
+$sp = BUILDS_PATH . "settings.json";
+$res = json_encode($_settings);
+
+if (file_get_contents($sp) !== $res) {
+    file_put_contents($sp, $res);
+    reload(true);
+}

@@ -125,7 +125,7 @@ function getResponsiveImageData(src) {
 
   var dimensions = path_wo_ext.substring(last_floor_index + 1).split("x");
 
-  var file_name = path_wo_ext.replace(/\/uploads\/.{0,10}\//, ``);
+  var file_name = path_wo_ext.replace(/(\/)?uploads\/.{0,10}\//, ``);
 
   return {
     file_name: file_name,

@@ -21,11 +21,11 @@ function getSettings($dir, $file, $json_paths)
         $settings = json_decode(file_get_contents($file_path), true);
         $out = [];
         foreach ($json_paths as $json_path) {
-            $settings_sub = $settings;
+            $settings_sub = &$settings;
             $found = true;
             foreach ($json_path as $json_path_part) {
                 if (isset($settings_sub[$json_path_part])) {
-                    $settings_sub = $settings_sub[$json_path_part];
+                    $settings_sub = &$settings_sub[$json_path_part];
                 } else {
                     $found = false;
                     break;
