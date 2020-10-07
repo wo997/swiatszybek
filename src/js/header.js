@@ -97,12 +97,12 @@ window.addEventListener("load", () => {
 window.addEventListener("resize", headerResizeCallback);
 
 function headerResizeCallback() {
-  var header = $("header");
+  var header_height = $(".header-height");
   if (!header) {
     return;
   }
 
-  $(".header-height").style.marginBottom =
+  header_height.style.marginBottom =
     $(".header-top").getBoundingClientRect().height +
     (window.innerWidth >= MOBILE_WIDTH
       ? $(".navigation").getBoundingClientRect().height

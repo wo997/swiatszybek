@@ -82,6 +82,7 @@ h1 {
 .sub_menu {
   padding-left: 1em;
   background: #00000008;
+  margin: -1px 0;
 }
 
 .navbar_admin .menu_item a {
