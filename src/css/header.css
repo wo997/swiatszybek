@@ -73,11 +73,11 @@ header .heart-icon,
 /* miscellaneous end */
 
 /* width start */
-.header .logo-wrapper {
+.page-header .logo-wrapper {
   margin-left: max(50vw - 750px, 10px);
 }
 
-.header .nav-wrapper {
+.page-header .nav-wrapper {
   margin-right: max(50vw - 750px, 10px);
 }
 
@@ -87,7 +87,7 @@ header .heart-icon,
 }
 /* width end */
 
-.header {
+.page-header {
   position: fixed;
   min-width: calc(100vw - 20px);
   width: calc(100vw - var(--scrollbar-width));

@@ -1,4 +1,4 @@
-<header class="header">
+<header class="page-header">
   <div class="header-top">
     <a href="/" class="logo-wrapper">
       <img data-src="<?= LOGO_PATH_LOCAL ?>">
