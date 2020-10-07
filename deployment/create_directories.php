@@ -11,6 +11,7 @@ $project_directories = [
 
     SETTINGS_PATH,
     MODULE_SETTINGS_PATH,
+    THEME_SETTINGS_PATH,
 ];
 
 foreach ($image_default_dimensions as $size_name => $area) {

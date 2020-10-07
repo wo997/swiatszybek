@@ -14,7 +14,22 @@ if (IS_XHR && isset($_FILES['files'])) {
             $copy_path = UPLOADS_PLAIN_PATH . $name . "." . getFileExtension($file_data["file_path"]);
             copy($tmp_file_path, $copy_path);
             minifyImage($copy_path);
-            //file_put_contents(BUILD_INFO_PATH, $content);
+
+            $image_version = getSetting("theme", "copied_images", [$name, "version"]);
+            if (!$image_version) {
+                $image_version = 1;
+            } else {
+                $image_version++;
+            }
+            saveSettings("theme", "copied_images", [
+                [
+                    "path" => [$name],
+                    "value" => [
+                        "version" => $image_version,
+                        "path" => $file_data["file_path"]
+                    ]
+                ]
+            ]);
         }
     }
 }

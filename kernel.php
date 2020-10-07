@@ -15,6 +15,7 @@ include_once "helpers/string.php";
 include_once "helpers/rating.php";
 include_once "helpers/array.php";
 include_once "helpers/files.php";
+include_once "helpers/settings.php";
 
 include_once "helpers/db/general.php";
 include_once "helpers/db/entity.php";
@@ -60,6 +61,7 @@ define("UPLOADS_VIDEOS_PATH", UPLOADS_PATH . "videos/");
 
 define("SETTINGS_PATH", "settings/");
 define("MODULE_SETTINGS_PATH", "settings/modules/");
+define("THEME_SETTINGS_PATH", "settings/theme/");
 
 define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
 
