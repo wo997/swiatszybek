@@ -111,6 +111,9 @@ define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "ht
 define("LOGO_PATH", SITE_URL . "/uploads/df/logo.jpg?v=" . setting(["theme", "copied_images", "logo", "version"], ""));
 define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], LOGO_PATH));
 
+define("FAVICON_PATH", SITE_URL . "/uploads/df/favicon.jpg?v=" . setting(["theme", "copied_images", "favicon", "version"], ""));
+define("FAVICON_PATH_LOCAL", setting(["theme", "copied_images", "favicon", "path"], FAVICON_PATH));
+
 $currency = "PLN"; // used by p24
 
 // use db

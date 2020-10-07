@@ -86,33 +86,6 @@
             },
         });
     }
-
-    domload(() => {
-        $("#uploadFile").addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            var input = $("#uploadFile [type=file]");
-            var files = input.files;
-            var formData = new FormData();
-
-            for (let i = 0; i < files.length; i++) {
-                let file = files[i];
-                formData.append("files[]", file);
-            }
-            input.value = "";
-
-            formData.append("type", "copy");
-            formData.append("name", "logo");
-
-            xhr({
-                url: "/admin/uploads_action",
-                formData: formData,
-                success(images) {
-                    console.log(images);
-                },
-            });
-        });
-    })
 </script>
 
 <?php startSection("content"); ?>
@@ -121,14 +94,5 @@
 
 <div class="module_list"></div>
 <div class="module_info"></div>
-
-<form id="uploadFile">
-    <label style="text-align:right;display: block;margin-top: 10px;">
-        test wgrywania zdjec - logo
-        <input type="file" name="files[]" onchange="$(this).next().click()" style="display:none">
-        <input type="submit" name="submit" style="display:none">
-        <div class="btn primary">Wybierz pliki <i class="fas fa-cloud-upload-alt"></i></div>
-    </label>
-</form>
 
 <?php include "admin/default_page.php"; ?>

@@ -1,7 +1,7 @@
 <header class="page-header">
   <div class="header-top">
     <a href="/" class="logo-wrapper">
-      <img data-src="<?= LOGO_PATH_LOCAL ?>">
+      <img class="logo logo-default" data-src="<?= LOGO_PATH_LOCAL ?>">
     </a>
 
     <div class="main-search-wrapper case-desktop">

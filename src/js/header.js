@@ -98,7 +98,7 @@ window.addEventListener("resize", headerResizeCallback);
 
 function headerResizeCallback() {
   var header_height = $(".header-height");
-  if (!header) {
+  if (!header_height) {
     return;
   }
 

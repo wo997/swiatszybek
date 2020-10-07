@@ -17,10 +17,15 @@ endSection();
     <div class="main-wrapper">
       <header class="navbar_admin">
         <a href="/" class="home logo-wrapper">
-          <img data-src="<?= LOGO_PATH_LOCAL ?>">
+          <img class="logo logo-default" data-src="<?= LOGO_PATH_LOCAL ?>">
           <br>
           Strona główna
         </a>
+
+        <div style="padding:0 10px 10px">
+          <div class="field-title first">Przeszukaj panel admina</div>
+          <input type="text" class="field" placeholder="W planach....">
+        </div>
 
         <?php include "navbar.php" ?>
 

@@ -30,6 +30,9 @@ if (IS_XHR && isset($_FILES['files'])) {
                     ]
                 ]
             ]);
+            json_response([
+                "path" => $file_data["file_path"]
+            ]);
         }
     }
 }
