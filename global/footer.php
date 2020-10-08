@@ -4,11 +4,21 @@
   <div class="modal-content"></div>
 </div>
 
-<footer style="line-height:1.5">
+<footer>
+  <?php
+  if (isset($preview_params)) {
+    $page_footer = $preview_params["page_footer"];
+  } else {
+    $page_footer = getSetting("theme", "layout", ["page_footer"], "");
+  }
+  echo getCMSPageHTML($page_footer);
+  ?>
+</footer>
+<!--<footer style="line-height:1.5">
   <div class="mobileRow" style="justify-content: space-evenly;">
     © Świat Szybek. Wszelkie prawa zastrzeżone. Polityka Prywatności.
   </div>
-</footer>
+</footer>-->
 <form action="/google/login" method="post" style="display:none" id="google-form">
   <input type="text" name="id_token">
 </form>

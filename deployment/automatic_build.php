@@ -126,12 +126,16 @@ PHP;
         file_put_contents(BUILD_INFO_PATH, $content);
     }
 
-    if ($phpChange || $modulesChange || $settingsChange) {
+    if ($phpChange || $modulesChange) {
         ob_start();
-        triggerEvent("build", ["modules" => $modulesChange, "settings" => $settingsChange]);
-        echo "okxosk";
+        triggerEvent("build", ["modules" => $modulesChange, "settings" => false]);
         ob_clean();
     }
+
+    if ($settingsChange) {
+        triggerEvent("settings_change");
+    }
+
 
     if ($anyChange) {
         triggerEvent("assets_change", ["css" => $cssChange, "js" => $jsChange]);

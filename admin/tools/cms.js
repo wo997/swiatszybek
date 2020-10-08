@@ -282,7 +282,7 @@ function addContainer(
     } else {
       cmsContainer.insertAdjacentHTML("afterbegin", getContainer(content));
     }
-  } else if (!cmsTarget || !cmsTarget.parent()) {
+  } else if (!cmsTarget || !cmsTarget.findParentByClassName("cms-wrapper")) {
     cmsContainer.insertAdjacentHTML(
       placeAfter ? "beforeend" : "afterbegin",
       getContainer(content)

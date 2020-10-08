@@ -1,10 +1,10 @@
-<?php //route[admin/ustawienia-glowne]
+<?php //route[admin/logo-ikony]
 
 ?>
 
 <?php startSection("head"); ?>
 
-<title>Ustawienia główne</title>
+<title>Logo / ikony</title>
 
 <style>
 
@@ -43,11 +43,7 @@
 
 <?php startSection("content"); ?>
 
-<h1>Ustawienia główne</h1>
-
-<div class="">
-
-</div>
+<h1>Logo / ikony</h1>
 
 <div class="field-title">Logo sklepu</div>
 <img class="logo logo-default" data-src="<?= LOGO_PATH_LOCAL ?>">

@@ -50,7 +50,9 @@
           },
           escape: false
         },
-        getPublishedDefinition(),
+        getPublishedDefinition({
+          field: "v.published"
+        }),
       ],
       controlsRight: `
             <div class='float-icon space-right'>

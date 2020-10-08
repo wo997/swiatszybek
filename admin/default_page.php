@@ -24,7 +24,7 @@ endSection();
 
         <div style="padding:0 10px 10px">
           <div class="field-title first">Przeszukaj panel admina</div>
-          <input type="text" class="field" placeholder="W planach....">
+          <input type="text" class="field" placeholder="W planach...">
         </div>
 
         <?php include "navbar.php" ?>

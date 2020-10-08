@@ -516,6 +516,17 @@ function findParentByAttribute(
   return null;
 }
 
+function findParentNode(elem, parent) {
+  elem = $(elem);
+  while (elem && elem != document) {
+    if (elem === parent) {
+      return true;
+    }
+    elem = elem.parent();
+  }
+  return false;
+}
+
 function findParentByTagName(elem, parentTagName) {
   elem = $(elem);
   parentTagName = parentTagName.toUpperCase();

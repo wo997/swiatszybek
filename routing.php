@@ -43,20 +43,20 @@ $admin_navigations_tree = [
   ],
   ["url" => "kody-rabatowe", "title" => '<i class="fas fa-tag"></i> Kody rabatowe', "quick_menu" => true],
   ["url" => "konfiguracja/dostawa", "title" => '<i class="fas fa-shipping-fast"></i> Dostawa', "base_url" => "konfiguracja"],
-  ["url" => "konfiguracja/firma", "title" => '<i class="fas fa-building"></i> Dane firmy', "base_url" => "konfiguracja"],
+  ["url" => "dane-firmy", "title" => '<i class="fas fa-building"></i> Dane firmy'],
   [
-    "url" => "strony", "title" => '<i class="fas fa-pencil-alt"></i> Zawartość stron',
+    "url" => "strony", "title" => '<i class="fas fa-pencil-alt"></i> Zawartość / Wygląd',
     "sub" => [
       ["url" => "strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
       ["url" => "menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
       //["url" => "slider", "title" => '<i class="fas fa-images"></i> Slider'],
       ["url" => "stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
+      ["url" => "logo-ikony", "title" => '<i class="far fa-star"></i> Logo / Ikony'],
 
     ]
   ],
   ["url" => "konfiguracja/serwer", "title" => '<i class="fas fa-cog"></i> Zaawansowane', "base_url" => "konfiguracja"],
   ["url" => "moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
-  ["url" => "ustawienia-glowne", "title" => '<i class="fas fa-cog"></i> Ustawienia główne'],
 ];
 
 function getNotificationCountForPage(&$page, $children_notification_count = 0)

@@ -8,17 +8,19 @@ $slides = json_decode(nonull($params, "cms_slides", ""), true);
 <div class='swiper-container slider_module swiper-all'>
   <div class='swiper-wrapper'>
     <?php
-    foreach ($slides as $slide) {
-      if (!$slide["values"]["published"]) {
-        continue;
-      }
+    if (is_array($slides)) {
+      foreach ($slides as $slide) {
+        if (!$slide["values"]["published"]) {
+          continue;
+        }
 
     ?>
-      <div class='swiper-slide'>
-        <div class='cms slide-desktop'><?= getCMSPageHTML($slide["values"]["content"]) ?></div>
-        <div class='cms slide-mobile'><?= getCMSPageHTML($slide["values"]["content"]) ?></div>
-      </div>
+        <div class='swiper-slide'>
+          <div class='cms slide-desktop'><?= getCMSPageHTML($slide["values"]["content"]) ?></div>
+          <div class='cms slide-mobile'><?= getCMSPageHTML($slide["values"]["content"]) ?></div>
+        </div>
     <?php
+      }
     }
     ?></div>
   <div class='swiper-button-prev swiper-nav'><i class='fas fa-chevron-left'></i></div>

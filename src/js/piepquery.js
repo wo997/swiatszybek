@@ -63,6 +63,10 @@ function $(node, parent = null) {
     );
   };
 
+  node.findParentNode = (parent) => {
+    return window.findParentNode(node, parent);
+  };
+
   node.findParentById = (id) => {
     return window.findParentById(node, id);
   };

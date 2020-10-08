@@ -73,66 +73,6 @@ if ($product_id === -1) {
   useTool("cms");
   useTool("preview");
 
-  var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id FROM attribute_values'), true) ?>;
-  var attribute_values = {};
-  attribute_values_array.forEach(attribute => {
-    attribute_values[attribute["value_id"]] = attribute["value"];
-  });
-
-  function comboSelectValuesChanged(combo) {
-    combo.findAll("select").forEach(select => {
-      for (option of select.options) {
-        var childSelect = combo.find(`select[data-parent_value_id="${option.value}"]`);
-        if (!childSelect) continue;
-        if (option.value == select.value) {
-          childSelect.classList.remove("hidden");
-        } else {
-          childSelect.classList.add("hidden");
-        }
-      }
-      select.classList.toggle("empty", select.value == "");
-    });
-  }
-
-  function registerComboSelects() {
-    $$(".combo-select-wrapper").forEach(combo => {
-
-      combo.findAll("select:not(.registered)").forEach(select => {
-        select.classList.add("registered");
-
-        select.addEventListener("change", () => {
-          var wrapper = findParentByClassName(select, "combo-select-wrapper");
-          comboSelectValuesChanged(wrapper);
-        });
-
-        var wrapper = findParentByClassName(select, "combo-select-wrapper");
-        comboSelectValuesChanged(wrapper);
-      });
-    });
-  }
-
-  function anythingValueChanged(anything) {
-    var checkbox = anything.find(`input[type="checkbox"]`);
-    var input = anything.find(`.field`);
-
-    input.classList.toggle("hidden", !checkbox.checked);
-  }
-
-  function registerAnythingValues() {
-    $$(".any-value-wrapper").forEach(anything => {
-      var checkbox = anything.find(`input[type="checkbox"]:not(.registered)`);
-      if (!checkbox) return;
-      checkbox.classList.add("registered");
-      checkbox.addEventListener("change", () => {
-        var wrapper = findParentByClassName(checkbox, "any-value-wrapper");
-        anythingValueChanged(wrapper);
-      });
-
-      var wrapper = findParentByClassName(checkbox, "any-value-wrapper");
-      anythingValueChanged(wrapper);
-
-    });
-  }
 
   domload(() => {
 
@@ -398,7 +338,7 @@ if ($product_id === -1) {
     }
   }
 
-  function saveProductForm() {
+  function saveProduct() {
     var form = $(`#productForm`);
 
     if (!validateForm(form)) {
@@ -427,10 +367,10 @@ if ($product_id === -1) {
       return;
     }
 
-    var data = getFormData("#productForm");
+    var data = getFormData(form);
     data.cache_thumbnail = "";
     try {
-      data.cache_thumbnail = JSON.parse(getFormData("#productForm").gallery)[0].values.src;
+      data.cache_thumbnail = JSON.parse(data.gallery)[0].values.src;
     } catch {}
     data.cache_rating_count = Math.floor(5 + 100 * Math.random());
     data.cache_avg_rating = 5;
@@ -457,7 +397,7 @@ if ($product_id === -1) {
       <a href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></a>
     <?php endif ?>
     <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
-    <button onclick="saveProductForm()" class="btn primary" onclick="">Zapisz <i class="fas fa-save"></i></button>
+    <button onclick="saveProduct()" class="btn primary">Zapisz <i class="fas fa-save"></i></button>
   </div>
 </div>
 

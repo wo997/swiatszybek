@@ -10,12 +10,8 @@ if (isset($parts[1])) {
   redirect("/");
 }
 
-if (isset($_POST["preview_params"])) {
-  $preview_params = json_decode($_POST["preview_params"], true);
-}
-
 $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
-if (isset($preview_params)) {
+if (isset($preview_params) && isset($preview_params["variants"])) {
   $product_data = array_merge($product_data, $preview_params);
 }
 
@@ -29,12 +25,12 @@ if ((!isset($parts[2]) || $parts[2] != $product_data["link"]) && $product_data["
 }
 
 $priceText = $product_data["price_min"];
-if (!empty($product_data["price_max0"]) && $product_data["price_min"] != $product_data["price_max0"])
-  $priceText .= " - " . $product_data["price_max0"];
+if (!empty($product_data["price_max"]) && $product_data["price_min"] != $product_data["price_max"])
+  $priceText .= " - " . $product_data["price_max"];
 
 $variants = fetchArray("SELECT * FROM variant WHERE product_id = $product_id AND published = 1 ORDER BY kolejnosc");
 
-if (isset($preview_params)) {
+if (isset($preview_params) && isset($preview_params["variants"])) {
   $variants = json_decode($preview_params["variants"], true);
 }
 

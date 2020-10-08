@@ -60,8 +60,9 @@ define("UPLOADS_PLAIN_PATH", UPLOADS_PATH . "-/");
 define("UPLOADS_VIDEOS_PATH", UPLOADS_PATH . "videos/");
 
 define("SETTINGS_PATH", "settings/");
-define("MODULE_SETTINGS_PATH", "settings/modules/");
-define("THEME_SETTINGS_PATH", "settings/theme/");
+define("MODULE_SETTINGS_PATH", SETTINGS_PATH . "modules/");
+define("THEME_SETTINGS_PATH", SETTINGS_PATH . "theme/");
+define("GENERAL_SETTINGS_PATH", SETTINGS_PATH . "general/");
 
 define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
 
@@ -108,10 +109,10 @@ if (!$domain) {
 
 define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain);
 
-define("LOGO_PATH", SITE_URL . "/uploads/df/logo.jpg?v=" . setting(["theme", "copied_images", "logo", "version"], ""));
+define("LOGO_PATH", SITE_URL . "/uploads/-/logo.jpg?v=" . setting(["theme", "copied_images", "logo", "version"], ""));
 define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], LOGO_PATH));
 
-define("FAVICON_PATH", SITE_URL . "/uploads/df/favicon.jpg?v=" . setting(["theme", "copied_images", "favicon", "version"], ""));
+define("FAVICON_PATH", SITE_URL . "/uploads/tn/favicon.jpg?v=" . setting(["theme", "copied_images", "favicon", "version"], ""));
 define("FAVICON_PATH_LOCAL", setting(["theme", "copied_images", "favicon", "path"], FAVICON_PATH));
 
 $currency = "PLN"; // used by p24
@@ -208,3 +209,8 @@ if (config("dev_mode", true)) {
 
 
 require_once 'helpers/facebook_register.php'; // should be a part of FB module instead
+
+// preview
+if (isset($_POST["preview_params"])) {
+    $preview_params = json_decode($_POST["preview_params"], true);
+}

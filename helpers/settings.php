@@ -1,12 +1,12 @@
 <?php
 
-function getSetting($dir, $file, $json_path)
+function getSetting($dir, $file, $json_path, $default = null)
 {
     $res = getSettings($dir, $file, [$json_path]);
     if ($res) {
         return $res[0];
     }
-    return null;
+    return $default;
 }
 
 function getSettings($dir, $file, $json_paths)
@@ -40,6 +40,12 @@ function getSettings($dir, $file, $json_paths)
         return null;
     }
 }
+
+function saveSetting($dir, $file, $json_path_and_value)
+{
+    saveSettings($dir, $file, [$json_path_and_value]);
+}
+
 function saveSettings($dir, $file, $json_paths_and_values)
 {
     $file_path = SETTINGS_PATH . $dir . "/" . $file . ".json";

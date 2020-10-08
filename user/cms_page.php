@@ -1,8 +1,6 @@
 <?php
 
-if (isset($_POST["preview_params"])) {
-    $preview_params = json_decode($_POST["preview_params"], true);
-
+if (isset($preview_params) && isset($preview_params["content"])) {
     $page_data["content"] = $preview_params["content"];
 }
 

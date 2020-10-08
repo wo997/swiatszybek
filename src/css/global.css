@@ -786,9 +786,9 @@ a {
   #basket h2 {
     padding: 0;
   }
-  footer > div > div {
+  /&footer > div > div {
     margin-top: 13px;
-  }
+  }*/
 }
 @media only screen and (max-width: 550px) {
   .items > div {
@@ -803,7 +803,7 @@ a {
 .mobileRow {
   display: flex;
 }
-footer {
+/*footer {
   background: #111;
   color: #ccc;
   padding: 25px;
@@ -813,7 +813,7 @@ footer {
 footer a {
   color: inherit;
   display: inline-block;
-}
+}*/
 .paddingable {
   width: 100%;
   padding: 10px;
@@ -1027,9 +1027,9 @@ input[type="checkbox"]:checked ~ .checkbox::after {
   color: #35f;
 }
 
-footer a:hover {
+/*footer a:hover {
   text-decoration: underline;
-}
+}*/
 
 /* deprecated */
 
