@@ -460,7 +460,7 @@
   }
 }*/
 
-.toggle-sidebar-btn {
+.btn.toggle-sidebar-btn {
   position: absolute;
   top: 10px;
   right: -30px;

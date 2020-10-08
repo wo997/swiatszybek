@@ -786,7 +786,7 @@ a {
   #basket h2 {
     padding: 0;
   }
-  /&footer > div > div {
+  /*footer > div > div {
     margin-top: 13px;
   }*/
 }
@@ -803,14 +803,14 @@ a {
 .mobileRow {
   display: flex;
 }
-/*footer {
-  background: #111;
+footer {
+  /*background: #111;
   color: #ccc;
   padding: 25px;
-  text-align: justify;
+  text-align: justify;*/
   margin-top: auto;
 }
-footer a {
+/*footer a {
   color: inherit;
   display: inline-block;
 }*/
