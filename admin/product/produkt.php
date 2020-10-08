@@ -73,9 +73,68 @@ if ($product_id === -1) {
   useTool("cms");
   useTool("preview");
 
+  var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id FROM attribute_values'), true) ?>;
+  var attribute_values = {};
+  attribute_values_array.forEach(attribute => {
+    attribute_values[attribute["value_id"]] = attribute["value"];
+  });
+
+  function comboSelectValuesChanged(combo) {
+    combo.findAll("select").forEach(select => {
+      for (option of select.options) {
+        var childSelect = combo.find(`select[data-parent_value_id="${option.value}"]`);
+        if (!childSelect) continue;
+        if (option.value == select.value) {
+          childSelect.classList.remove("hidden");
+        } else {
+          childSelect.classList.add("hidden");
+        }
+      }
+      select.classList.toggle("empty", select.value == "");
+    });
+  }
+
+  function registerComboSelects() {
+    $$(".combo-select-wrapper").forEach(combo => {
+
+      combo.findAll("select:not(.registered)").forEach(select => {
+        select.classList.add("registered");
+
+        select.addEventListener("change", () => {
+          var wrapper = findParentByClassName(select, "combo-select-wrapper");
+          comboSelectValuesChanged(wrapper);
+        });
+
+        var wrapper = findParentByClassName(select, "combo-select-wrapper");
+        comboSelectValuesChanged(wrapper);
+      });
+    });
+  }
+
+  function anythingValueChanged(anything) {
+    var checkbox = anything.find(`input[type="checkbox"]`);
+    var input = anything.find(`.field`);
+
+    input.classList.toggle("hidden", !checkbox.checked);
+  }
+
+  function registerAnythingValues() {
+    $$(".any-value-wrapper").forEach(anything => {
+      var checkbox = anything.find(`input[type="checkbox"]:not(.registered)`);
+      if (!checkbox) return;
+      checkbox.classList.add("registered");
+      checkbox.addEventListener("change", () => {
+        var wrapper = findParentByClassName(checkbox, "any-value-wrapper");
+        anythingValueChanged(wrapper);
+      });
+
+      var wrapper = findParentByClassName(checkbox, "any-value-wrapper");
+      anythingValueChanged(wrapper);
+
+    });
+  }
 
   domload(() => {
-
     registerComboSelects();
 
     registerAnythingValues();
