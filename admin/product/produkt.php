@@ -390,6 +390,7 @@ if ($product_id === -1) {
     <?= $product_form_header ?>
   </div>
   <div>
+    <a class="btn secondary" href="/admin/produkty">Wszystkie produkty <i class="fas fa-cubes"></i></a>
     <?php if ($kopia) : ?>
       <a href="/admin/produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
     <?php else : ?>
