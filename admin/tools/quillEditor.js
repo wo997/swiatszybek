@@ -175,33 +175,71 @@ window.quillEditor = {
     if (!source) return;
     quillEditor.source = source;
     quillEditor.callback = params.callback;
-    var w = $("#quillEditor .quill-editor-container");
-    removeClassesWithPrefix(w, "align-");
-    removeClassesWithPrefix(w, "block-padding-");
-    if (params.wrapper) {
-      quillEditor.wrapper = params.wrapper;
-      //w.style.backgroundImage = params.wrapper.style.backgroundImage;
+    var quill_editor_container = $("#quillEditor .quill-editor-container");
+    var quill_editor_wrapper = $("#quillEditor .quill-wrapper");
+    removeClassesWithPrefix(quill_editor_container, "align-");
+    removeClassesWithPrefix(quill_editor_container, "block-padding-");
+    removeClassesWithPrefix(quill_editor_wrapper, "align-");
+    removeClassesWithPrefix(quill_editor_wrapper, "block-padding-");
+
+    if (params.block) {
+      quillEditor.block = params.block;
+
       quillEditor.toggleQuillSize(true);
-      matchClassesWithPrefix(params.wrapper, "align-").forEach((u) => {
-        w.classList.add(u);
+      matchClassesWithPrefix(params.block, "align-").forEach((u) => {
+        quill_editor_container.classList.add(u);
       });
-      matchClassesWithPrefix(params.wrapper, "block-padding-").forEach((u) => {
-        w.classList.add(u);
+      matchClassesWithPrefix(params.block, "block-padding-").forEach((u) => {
+        quill_editor_container.classList.add(u);
       });
 
-      setNodeImageBackground(w, getNodeImageBackground(params.wrapper));
+      setNodeImageBackground(
+        quill_editor_container,
+        getNodeImageBackground(params.block)
+      );
 
-      var color = getNodeBackgroundColor(params.wrapper);
-      var opacity = getNodeBackgroundColorOpacity(params.wrapper);
+      var color = getNodeBackgroundColor(params.block);
+      var opacity = getNodeBackgroundColorOpacity(params.block);
       if (opacity > 0) {
-        setNodeBackgroundColor(w, color);
-        setNodeBackgroundColorOpacity(w, opacity);
+        setNodeBackgroundColor(quill_editor_container, color);
+        setNodeBackgroundColorOpacity(quill_editor_container, opacity);
       } else {
-        removeNodeColorBackground(w);
+        removeNodeColorBackground(quill_editor_container);
       }
     } else {
-      setNodeImageBackground(w);
+      setNodeImageBackground(quill_editor_container);
     }
+
+    if (params.container) {
+      quillEditor.block = params.container;
+
+      quillEditor.toggleQuillSize(true);
+      matchClassesWithPrefix(params.container, "align-").forEach((u) => {
+        quill_editor_wrapper.classList.add(u);
+      });
+      matchClassesWithPrefix(params.container, "block-padding-").forEach(
+        (u) => {
+          quill_editor_wrapper.classList.add(u);
+        }
+      );
+
+      setNodeImageBackground(
+        quill_editor_wrapper,
+        getNodeImageBackground(params.container)
+      );
+
+      var color = getNodeBackgroundColor(params.container);
+      var opacity = getNodeBackgroundColorOpacity(params.container);
+      if (opacity > 0) {
+        setNodeBackgroundColor(quill_editor_wrapper, color);
+        setNodeBackgroundColorOpacity(quill_editor_wrapper, opacity);
+      } else {
+        removeNodeColorBackground(quill_editor_wrapper);
+      }
+    } else {
+      setNodeImageBackground(quill_editor_wrapper);
+    }
+
     quillEditor.wasInTable = false;
     var qlContainer = $(".quill-editor-container .ql-editor");
     qlContainer.innerHTML = source.innerHTML;
@@ -248,8 +286,8 @@ window.quillEditor = {
     if (fromTarget === null) {
       fromTarget = e.style.width == "100%" || e.style.width == "";
     }
-    if (fromTarget && quillEditor.wrapper) {
-      e.style.width = quillEditor.wrapper.getBoundingClientRect().width + "px";
+    if (fromTarget && quillEditor.block) {
+      e.style.width = quillEditor.block.getBoundingClientRect().width + "px";
       $(
         "#quillEditor .toggle_size"
       ).innerHTML = `<i class="fas fa-expand"></i>`;
@@ -512,8 +550,8 @@ window.quillEditor = {
   },
 
   fixHeight: (repeat = 0) => {
-    var expectYmin = quillEditor.wrapper
-      ? quillEditor.wrapper.getBoundingClientRect().height
+    var expectYmin = quillEditor.block
+      ? quillEditor.block.getBoundingClientRect().height
       : 100000;
     var contentHeight = $("#quillEditor .ql-editor").getBoundingClientRect()
       .height;

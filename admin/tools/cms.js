@@ -243,7 +243,8 @@ function editBlock() {
   }
   var block_content = cmsTarget.find(".cms-block-content");
   quillEditor.open(block_content, {
-    wrapper: cmsTarget,
+    container: cmsTarget.findParentByClassName("cms-container"),
+    block: cmsTarget,
     callback: () => {
       postSaveCmsNode();
     },

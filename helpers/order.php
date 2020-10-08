@@ -63,7 +63,11 @@ $zamowienia_status_groups = [
 
 function getBasketData()
 {
-    return json_decode($_SESSION["basket"], true);
+    $basket_data = json_decode($_SESSION["basket"], true);
+    if (!$basket_data) {
+        return [];
+    }
+    return $basket_data;
 }
 
 function setBasketData($basket_json_or_array)
