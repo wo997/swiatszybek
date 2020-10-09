@@ -431,6 +431,10 @@ function setFormInitialState(form) {
 function setFormData(data, form, params = {}) {
   form = $(form);
 
+  if (!data) {
+    return;
+  }
+
   var find_by = nonull(params.find_by, "name");
 
   // just in case

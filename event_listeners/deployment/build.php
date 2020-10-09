@@ -15,3 +15,10 @@ if (nonull($args, "modules", true)) {
 if (nonull($args, "settings", true)) {
     triggerEvent("settings_change");
 }
+
+if (isset($_SERVER["HTTP_HOST"]) && !getSetting("general", "advanced", ["domain"])) {
+    saveSetting("general", "advanced", [
+        "path" => ["domain"],
+        "value" => $_SERVER["HTTP_HOST"]
+    ]);
+}

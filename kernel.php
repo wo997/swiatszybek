@@ -107,12 +107,9 @@ function setting($path, $default = "")
     return nonull($settings, $path, $default);
 }
 
-$domain = config("domain");
-if (!$domain) {
-    $domain = $_SERVER["HTTP_HOST"];
-}
-
-define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $domain);
+define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . getSetting("general", "advanced", ["domain"], ""));
+define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 0));
+define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 0));
 
 define("LOGO_PATH", SITE_URL . "/uploads/-/logo.jpg?v=" . setting(["theme", "copied_images", "logo", "version"], ""));
 define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], LOGO_PATH));
@@ -200,12 +197,12 @@ if (!IS_XHR) {
     }
 }
 
-if (config("dev_mode", true)) {
+if (DEV_MODE) {
     include "deployment/automatic_build.php";
 }
 
 // errors
-if (config("dev_mode", true)) {
+if (DEV_MODE) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
@@ -218,4 +215,9 @@ include_once 'helpers/facebook_register.php'; // should be a part of FB module i
 // preview
 if (isset($_POST["preview_params"])) {
     $preview_params = json_decode($_POST["preview_params"], true);
+}
+
+// ssl redirect
+if (getSetting("general", "advanced", ["ssl"]) == 1 && nonull($_SERVER, "HTTPS", "on") == 'off') {
+    redirect(str_replace_first("http://", "https://", SITE_URL, 1));
 }

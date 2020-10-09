@@ -60,7 +60,7 @@ $admin_navigations_tree = [
 
     ]
   ],
-  ["url" => "konfiguracja/serwer", "title" => '<i class="fas fa-cog"></i> Zaawansowane', "base_url" => "konfiguracja"],
+  ["url" => "zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
   ["url" => "moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
 ];
 
