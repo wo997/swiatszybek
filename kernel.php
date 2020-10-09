@@ -67,6 +67,7 @@ define("GENERAL_SETTINGS_PATH", SETTINGS_PATH . "general/");
 define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
 
 // default values - overriden by 'build_info'
+// TODO: not rly a todo, just remember about it ;)
 $previousModificationTimePHP = 0;
 $previousModificationTimeCSS = 0;
 $previousModificationTimeJS = 0;

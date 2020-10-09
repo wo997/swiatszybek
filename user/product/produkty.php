@@ -316,6 +316,50 @@ function showCategory($category, $level = 0)
       text-align: center;
       font-size: 1.2em;
     }
+
+    /* randomize animation start */
+
+    .randomize_btn {
+      width: 170px;
+      white-space: nowrap;
+    }
+
+    .randomize_btn .randomize_text {
+      width: 110px;
+      transition: 0.2s all;
+      display: inline-block;
+    }
+
+    .randomize_btn.randomize .randomize_text {
+      width: 0;
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    .randomize_btn .randomize_loader_wrapper {
+      display: inline-block;
+    }
+
+    .randomize_btn.randomize .randomize_loader_wrapper {
+      transform: scale(1.4);
+      transition: 0.2s transform;
+    }
+
+    .randomize_btn.randomize .randomize_loader {
+      animation: rotating 1s linear infinite;
+    }
+
+    @keyframes rotating {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* randomize animation end */
   </style>
 
   <script>
@@ -347,6 +391,19 @@ function showCategory($category, $level = 0)
         $(`.order_by_item input[value="sale"]`).checked = true;
       }
 
+      window.filtersInitialState = getFormData(".filters");
+
+      if (window.innerWidth < 800) {
+        goMobile();
+      } else {
+        goDesktop();
+      }
+
+      searchProducts({
+        scroll: false
+      });
+
+      // must go after inital search
       var products_search = localStorage.getItem("products_search");
       if (products_search) {
         localStorage.removeItem("products_search");
@@ -355,98 +412,95 @@ function showCategory($category, $level = 0)
         products_search = "";
       }
       $(".products_search").setValue(products_search);
-
       attributeSelectionChange(null, null);
-
-      searchProducts();
-
-      window.filtersInitialState = getFormData(".filters");
-
-      if (window.innerWidth < 800) {
-        $$(".search-wrapper .search-header").forEach(e => {
-          e.remove();
-        });
-
-        registerModalContent(`
-            <div id="searchCategory" data-expand>
-                <div class="modal-body">
-                    <button class="fas fa-times close-modal-btn"></button>
-                    <h3 class="header">Kategorie</h3>
-                    <div class="scroll-panel scroll-shadow">
-
-                    </div>
-                </div>
-            </div>
-        `);
-
-        registerModalContent(`
-            <div id="searchFilters" data-expand>
-                <div class="modal-body">
-                    <button class="fas fa-times close-modal-btn" onclick="restoreFilters();afterFiltersHidden();"></button>
-                    <h3 class="header">Filtry <span class="filter_count"></span></h3>
-                    <div class="scroll-panel scroll-shadow panel-padding">
-
-                    </div>
-                    <div class='footer' style='display:flex;padding:5px'>
-                      <button class="btn secondary fill" onclick="clearAllFilters()">
-                        Wyczyść filtry
-                        <i class="fas fa-times"></i>
-                      </button>
-                      <button class="btn primary fill" style='margin-left:5px' onclick="hideParentModal(this);afterFiltersHidden()">
-                        Pokaż wyniki
-                        <i class="fas fa-chevron-right"></i>
-                      </button>
-                    </div>
-                </div>
-            </div>
-        `);
-
-        $(`#searchCategory .modal-body .scroll-panel`).appendChild(
-          $('.search-wrapper .categories')
-        );
-
-        var filters = $('.search-wrapper .filters');
-
-        if (!filters.find("*")) {
-          $(`.search-filters-btn`).style.display = "none";
-        } else {
-          $(`#searchFilters .modal-body .scroll-panel`).appendChild(
-            filters
-          );
-        }
-
-        // sorting horizontal
-        var scroll_wrapper = $('.sorting-wrapper');
-        scroll_wrapper.classList.add("scroll-panel");
-        scroll_wrapper.classList.add("scroll-shadow");
-        scroll_wrapper.classList.add("horizontal");
-        scroll_wrapper.classList.add("light");
-
-        scroll_wrapper.insertAdjacentHTML("afterend", "<div class='horizontal-scroll-wrapper'></div>");
-        var container = scroll_wrapper.next();
-        container.appendChild(scroll_wrapper);
-
-        registerScrollShadows();
-
-        var products_search = $(".products_search");
-        products_search.addEventListener("input", () => {
-          // give user a hint
-          setMobileSearchBtnOpacity($(".products_search"));
-        });
-      } else {
-        $(".products_search").parent().classList.remove("glue-children");
-        var products_search = $(".products_search");
-        products_search.addEventListener("input", () => {
-          // instant change
-          products_search.setValue();
-        });
-      }
     });
 
-    var blockSearch = false;
+    var blockProductsSearch = false;
+
+    function goDesktop() {
+      $(".products_search").parent().classList.remove("glue-children");
+      var products_search = $(".products_search");
+      products_search.addEventListener("input", () => {
+        // instant change
+        products_search.setValue();
+      });
+    }
+
+    function goMobile() {
+      $$(".search-wrapper .search-header").forEach(e => {
+        e.remove();
+      });
+
+      registerModalContent(`
+          <div id="searchCategory" data-expand>
+              <div class="modal-body">
+                  <button class="fas fa-times close-modal-btn"></button>
+                  <h3 class="header">Kategorie</h3>
+                  <div class="scroll-panel scroll-shadow">
+
+                  </div>
+              </div>
+          </div>
+      `);
+
+      registerModalContent(`
+          <div id="searchFilters" data-expand>
+              <div class="modal-body">
+                  <button class="fas fa-times close-modal-btn" onclick="restoreFilters();afterFiltersHidden();"></button>
+                  <h3 class="header">Filtry <span class="filter_count"></span></h3>
+                  <div class="scroll-panel scroll-shadow panel-padding">
+
+                  </div>
+                  <div class='footer' style='display:flex;padding:5px'>
+                    <button class="btn secondary fill" onclick="clearAllFilters()">
+                      Wyczyść filtry
+                      <i class="fas fa-times"></i>
+                    </button>
+                    <button class="btn primary fill" style='margin-left:5px' onclick="hideParentModal(this);afterFiltersHidden()">
+                      Pokaż wyniki
+                      <i class="fas fa-chevron-right"></i>
+                    </button>
+                  </div>
+              </div>
+          </div>
+      `);
+
+      $(`#searchCategory .modal-body .scroll-panel`).appendChild(
+        $('.search-wrapper .categories')
+      );
+
+      var filters = $('.search-wrapper .filters');
+
+      if (!filters.find("*")) {
+        $(`.search-filters-btn`).style.display = "none";
+      } else {
+        $(`#searchFilters .modal-body .scroll-panel`).appendChild(
+          filters
+        );
+      }
+
+      // sorting horizontal
+      var scroll_wrapper = $('.sorting-wrapper');
+      scroll_wrapper.classList.add("scroll-panel");
+      scroll_wrapper.classList.add("scroll-shadow");
+      scroll_wrapper.classList.add("horizontal");
+      scroll_wrapper.classList.add("light");
+
+      scroll_wrapper.insertAdjacentHTML("afterend", "<div class='horizontal-scroll-wrapper'></div>");
+      var container = scroll_wrapper.next();
+      container.appendChild(scroll_wrapper);
+
+      registerScrollShadows();
+
+      var products_search = $(".products_search");
+      products_search.addEventListener("input", () => {
+        // give user a hint
+        setMobileSearchBtnOpacity($(".products_search"));
+      });
+    }
 
     function beforeFiltersShown() {
-      blockSearch = true;
+      blockProductsSearch = true;
       window.filtersStateBeforeOpen = getFormData(".filters");
     }
 
@@ -455,8 +509,10 @@ function showCategory($category, $level = 0)
     }
 
     function afterFiltersHidden() {
-      blockSearch = false;
+      blockProductsSearch = false;
       searchProducts();
+      // just in case filters are the same
+      scrollToTopOfProductList();
     }
 
     function clearAllFilters() {
@@ -472,8 +528,8 @@ function showCategory($category, $level = 0)
 
     var firstSearch = true;
 
-    function searchProducts(forceSearch = false) {
-      if (blockSearch) {
+    function searchProducts(options = {}) {
+      if (blockProductsSearch) {
         return;
       }
 
@@ -511,16 +567,16 @@ function showCategory($category, $level = 0)
         layout: "grid",
       };
 
+      setMobileSearchBtnOpacity($(".products_search"));
+
       if (JSON.stringify(newSearchParams) != JSON.stringify(searchParams)) {
         currPage = 0;
         searchParams = newSearchParams;
-      } else if (!forceSearch) {
+      } else if (!options.force_search) {
         return;
       }
 
-      setMobileSearchBtnOpacity($(".products_search"));
-
-      if (window.innerWidth < MOBILE_WIDTH) {
+      if (window.innerWidth < MOBILE_WIDTH && nonull(options.scroll, true)) {
         scrollToTopOfProductList();
       }
 
@@ -594,7 +650,7 @@ function showCategory($category, $level = 0)
           if ($(".order_by_item input[value='random']:checked")) {
             if (res.totalRows > 0) {
               paginationNode.setContent(`
-              <button class='btn primary medium' onclick='beforeSearchProducts()'>Losuj więcej <i class='fas fa-dice-three'></i></button>
+              <button class='btn primary medium randomize_btn' onclick='beforeSearchProducts()'><span class='randomize_text'>Losuj więcej</span> <span class='randomize_loader_wrapper'><i class='randomize_loader fas fa-dice-three'></i></span></button>
             `);
             } else {
               paginationNode.setContent(``);
@@ -607,7 +663,9 @@ function showCategory($category, $level = 0)
               (i) => {
                 currPage = i;
                 scrollToTopOfProductList();
-                searchProducts(true);
+                searchProducts({
+                  force_search: true
+                });
               }
             );
           }
@@ -636,17 +694,27 @@ function showCategory($category, $level = 0)
     }
 
     function scrollToTopOfProductList() {
-      scrollToElement($(".hook_view"), {
-        top: true,
-        offset: window.innerWidth < MOBILE_WIDTH ? 200 : 300,
-        sag: window.innerWidth < MOBILE_WIDTH ? 0 : 100,
-        duration: 30
-      });
+      setTimeout(() => {
+        scrollToElement($(".hook_view"), {
+          top: true,
+          offset: window.innerWidth < MOBILE_WIDTH ? 200 : 300,
+          sag: window.innerWidth < MOBILE_WIDTH ? 0 : 100,
+          duration: 30
+        });
+      }, 0);
     }
 
     function beforeSearchProducts() {
-      scrollToTopOfProductList();
-      searchProducts(true);
+      var randomize_btn = $(".randomize_btn");
+      if (randomize_btn) {
+        randomize_btn.classList.add("randomize");
+      }
+
+      setTimeout(() => {
+        searchProducts({
+          force_search: true
+        });
+      }, 500)
     }
 
     function attributeSelectionChange(checkbox, hasChildren) {
