@@ -51,7 +51,7 @@ $admin_navigations_tree = [
       ["url" => "menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
       //["url" => "slider", "title" => '<i class="fas fa-images"></i> Slider'],
       ["url" => "stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
-      ["url" => "logo-ikony", "title" => '<i class="far fa-star"></i> Logo / Ikony'],
+      ["url" => "logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
 
     ]
   ],

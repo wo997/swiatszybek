@@ -17,7 +17,7 @@ function useCSS($file)
 }
 function getCMSPageHTML($content)
 {
-  global $JS_files, $CSS_files, $app, $link_module_block_path;
+  global $JS_files, $CSS_files, $app, $link_module_block_php_path;
 
   $html = str_get_html($content);
 
@@ -91,7 +91,7 @@ function getCMSPageHTML($content)
       foreach ($blocks as $block) {
         if (
           isset($block->attr["data-module-block"])
-          && isset($link_module_block_path[$block->attr["data-module-block"]])
+          && isset($link_module_block_php_path[$block->attr["data-module-block"]])
           && $block->attr["data-module-block"] != "custom-html"
         ) {
           $block_html = "<div";
@@ -124,10 +124,10 @@ function getCMSPageHTML($content)
 
 function getModuleBlockData($module_block_name, $params)
 {
-  global $app, $link_module_block_path;
+  global $app, $link_module_block_php_path;
 
   ob_start();
-  $module_block_path = $link_module_block_path[$module_block_name];
+  $module_block_path = $link_module_block_php_path[$module_block_name];
   $module_block_dir = pathinfo($module_block_path)['dirname'];
   $data = include $module_block_path;
   return [

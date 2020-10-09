@@ -42,6 +42,7 @@
   width: 100%;
   max-width: 830px;
   background: white;
+  margin: 0 auto;
 }
 .contact-form b {
   color: #333;

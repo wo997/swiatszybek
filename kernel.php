@@ -142,9 +142,9 @@ if (!$link_event_paths) {
     $link_event_paths = [];
 }
 
-$link_module_block_path = @include BUILDS_PATH . "link_module_block_path.php";
-if (!$link_module_block_path) {
-    $link_module_block_path = [];
+$link_module_block_php_path = @include BUILDS_PATH . "link_module_block_php_path.php";
+if (!$link_module_block_php_path) {
+    $link_module_block_php_path = [];
 }
 
 $link_module_block_form_path = @include BUILDS_PATH . "link_module_block_form_path.php";
