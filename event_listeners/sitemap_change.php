@@ -44,4 +44,4 @@ $cmssXML
 </urlset>
 XML;
 
-file_put_contents(BUILDS_PATH . "sitemap.xml", $sitemap);
+saveFile(BUILDS_PATH . "sitemap.xml", $sitemap);

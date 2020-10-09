@@ -4,6 +4,11 @@ define("time", microtime(true));
 
 require_once 'kernel.php';
 
+$url = "";
+if (isset($_GET['url']))
+  $url = rtrim($_GET['url'], "/");
+
+
 if (config("ssl")) {
   if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -91,41 +96,44 @@ function setDefaultsForAdminPage(&$page)
   $page["base_url"] = "admin/" . $page["base_url"];
 }
 
-// set defaults for admin pages
-foreach ($admin_navigations_tree as &$admin_navigations_branch) {
-  if (isset($admin_navigations_branch['sub'])) {
-    foreach ($admin_navigations_branch['sub'] as &$sub_navigation) {
-      setDefaultsForAdminPage($sub_navigation);
+define("ADMIN_URL", strpos($url, "admin") === 0);
+if (ADMIN_URL) {
+  // set defaults for admin pages
+  foreach ($admin_navigations_tree as &$admin_navigations_branch) {
+    if (isset($admin_navigations_branch['sub'])) {
+      foreach ($admin_navigations_branch['sub'] as &$sub_navigation) {
+        setDefaultsForAdminPage($sub_navigation);
+      }
+      unset($sub_navigation);
     }
-    unset($sub_navigation);
+    setDefaultsForAdminPage($admin_navigations_branch);
   }
-  setDefaultsForAdminPage($admin_navigations_branch);
-}
 
-// set notification_count for each page at each level
-foreach ($admin_navigations_tree as &$admin_navigations_branch) {
-  $children_notification_count = 0;
-  if (isset($admin_navigations_branch['sub'])) {
-    foreach ($admin_navigations_branch['sub'] as &$sub_navigation) {
-      $sub_navigation['notification_count'] = getNotificationCountForPage($sub_navigation);
-      $children_notification_count += $sub_navigation['notification_count'];
+  // set notification_count for each page at each level
+  foreach ($admin_navigations_tree as &$admin_navigations_branch) {
+    $children_notification_count = 0;
+    if (isset($admin_navigations_branch['sub'])) {
+      foreach ($admin_navigations_branch['sub'] as &$sub_navigation) {
+        $sub_navigation['notification_count'] = getNotificationCountForPage($sub_navigation);
+        $children_notification_count += $sub_navigation['notification_count'];
+      }
+      unset($sub_navigation);
     }
-    unset($sub_navigation);
+    $admin_navigations_branch['notification_count'] = getNotificationCountForPage($admin_navigations_branch, $children_notification_count);
   }
-  $admin_navigations_branch['notification_count'] = getNotificationCountForPage($admin_navigations_branch, $children_notification_count);
-}
 
-$admin_navigations = []; // flatten admin page array
-foreach ($admin_navigations_tree as &$admin_navigations_branch) {
-  if (isset($admin_navigations_branch['sub'])) {
-    foreach ($admin_navigations_branch['sub'] as &$sub_navigation) {
-      $admin_navigations[] = $sub_navigation;
+  $admin_navigations = []; // flatten admin page array
+  foreach ($admin_navigations_tree as &$admin_navigations_branch) {
+    if (isset($admin_navigations_branch['sub'])) {
+      foreach ($admin_navigations_branch['sub'] as &$sub_navigation) {
+        $admin_navigations[] = $sub_navigation;
+      }
+      unset($sub_navigation);
     }
-    unset($sub_navigation);
+    $admin_navigations[] = $admin_navigations_branch;
   }
-  $admin_navigations[] = $admin_navigations_branch;
+  unset($admin_navigations_branch);
 }
-unset($admin_navigations_branch);
 
 $deployment_routes = [
   "deployment/build",
@@ -143,10 +151,6 @@ foreach ($deployment_routes as $route) {
 $routes[] = "admin/podglad_strony";
 
 $pageName = "";
-
-$url = "";
-if (isset($_GET['url']))
-  $url = rtrim($_GET['url'], "/");
 
 $found = false;
 
@@ -183,7 +187,7 @@ if ($pageName) {
     );
   }
 
-  if (strpos($url, "admin") === 0) {
+  if (ADMIN_URL) {
     adminRequired();
   }
 

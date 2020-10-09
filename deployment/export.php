@@ -8,7 +8,7 @@ $zip->open('piepsklep.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE);
 scanDirectories(
     [
         "include_paths" => [
-            "admin", "cron", "deployment", "event_listeners", "global", "helpers", "img", "migrations", "modules", "node_modules", "packages", "src", "user", "vendor",
+            "admin", "cron", "deployment", "event_listeners", "global", "helpers", "img", "migrations", "modules", "node_modules", "packages", "src", "user", "vendor", "theme",
             ".htaccess", "kernel.php", "routing.php", "ping.php", "robots.txt"
         ]
     ],

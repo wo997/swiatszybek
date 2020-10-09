@@ -452,7 +452,7 @@ function scanDirectories($options = [], $callback, $parent_dir = "", $level = 0)
 {
     foreach (scandir(APP_PATH . $parent_dir) as $file) {
         $path = $parent_dir . $file;
-        if (substr($file, 0, 1) == ".") {
+        if (str_replace(".", "", $file) == "") {
             continue;
         }
         if ($level === 0) {
@@ -490,4 +490,27 @@ function getAnnotation($type, $line)
         return $match[0];
     }
     return null;
+}
+
+function saveFile($dir, $contents)
+{
+    $parts = explode('/', $dir);
+    $file = array_pop($parts);
+    $dir = '';
+    foreach ($parts as $part) {
+        $dir .= $part . "/";
+        if (!is_dir(APP_PATH . $dir)) {
+            mkdir(APP_PATH . $dir);
+        }
+    }
+
+    file_put_contents(APP_PATH . $dir . $file, $contents);
+}
+
+function createDir($dir)
+{
+    if (file_exists($dir)) {
+        return;
+    }
+    mkdir($dir);
 }

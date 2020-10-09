@@ -43,28 +43,28 @@ foreach ($_module_path as $module_name => $path) {
     $out .= "'$module_name' => '$path',\n";
 }
 $out .= "];";
-file_put_contents(BUILDS_PATH . "link_module_path.php", $out);
+saveFile(BUILDS_PATH . "link_module_path.php", $out);
 
 $out = "<?php return [\n";
 foreach ($_module_block_php_path as $module_block_name => $path) {
     $out .= "'$module_block_name' => '$path',\n";
 }
 $out .= "];";
-file_put_contents(BUILDS_PATH . "link_module_block_php_path.php", $out);
+saveFile(BUILDS_PATH . "link_module_block_php_path.php", $out);
 
 $out = "<?php return [\n";
 foreach ($_module_block_form_path as $module_block_form_name => $path) {
     $out .= "'$module_block_form_name' => '$path',\n";
 }
 $out .= "];";
-file_put_contents(BUILDS_PATH . "link_module_block_form_path.php", $out);
+saveFile(BUILDS_PATH . "link_module_block_form_path.php", $out);
 
 $out = "<?php return [\n";
 foreach ($_module_form_path as $module_form_name => $path) {
     $out .= "'$module_form_name' => '$path',\n";
 }
 $out .= "];";
-file_put_contents(BUILDS_PATH . "link_module_form_path.php", $out);
+saveFile(BUILDS_PATH . "link_module_form_path.php", $out);
 
 $out = "var app_module_blocks = {};";
 foreach ($_module_block_js_path as $module_block_name => $path) {

@@ -4,7 +4,7 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
-require_once 'vendor/autoload.php';
+include_once 'vendor/autoload.php';
 
 // include helpers
 include_once "helpers/general.php";
@@ -70,14 +70,18 @@ define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
 $previousModificationTimePHP = 0;
 $previousModificationTimeCSS = 0;
 $previousModificationTimeJS = 0;
+$previousModificationTimeModules = 0;
+$previousModificationTimeSettings = 0;
 $versionPHP = 0;
 $versionCSS = 0;
 $versionJS = 0;
+$versionModules = 0;
+$versionSettings = 0;
 
 @include BUILD_INFO_PATH;
 
 // global variables
-@require_once "builds/config.php";
+@include_once "builds/config.php";
 function config($var, $default = "")
 {
     global $config;
@@ -85,7 +89,7 @@ function config($var, $default = "")
 }
 
 $secrets = [];
-@require_once "secrets.php";
+@include_once "secrets.php";
 function secret($var, $default = "")
 {
     global $secrets;
@@ -118,10 +122,8 @@ define("FAVICON_PATH_LOCAL", setting(["theme", "copied_images", "favicon", "path
 $currency = "PLN"; // used by p24
 
 // use db
-
-
 date_default_timezone_set("Europe/Warsaw");
-require_once "helpers/db/connect.php";
+include_once "helpers/db/connect.php";
 
 // define app scope
 $app = [];
@@ -132,6 +134,7 @@ if (!$link_route_path) {
     $link_route_path = [];
 }
 
+//debug($link_route_path);
 $link_module_path = @include BUILDS_PATH . "link_module_path.php";
 if (!$link_module_path) {
     $link_module_path = [];
@@ -195,6 +198,7 @@ if (!IS_XHR) {
         unset($_SESSION["just_logged_in"]);
     }
 }
+
 if (config("dev_mode", true)) {
     include "deployment/automatic_build.php";
 }
@@ -208,7 +212,7 @@ if (config("dev_mode", true)) {
 }
 
 
-require_once 'helpers/facebook_register.php'; // should be a part of FB module instead
+include_once 'helpers/facebook_register.php'; // should be a part of FB module instead
 
 // preview
 if (isset($_POST["preview_params"])) {

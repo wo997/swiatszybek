@@ -67,5 +67,5 @@ function saveSettings($dir, $file, $json_paths_and_values)
         $settings_sub = $json_path_and_value["value"];
     }
 
-    file_put_contents($file_path, json_encode($settings));
+    saveFile($file_path, json_encode($settings));
 }

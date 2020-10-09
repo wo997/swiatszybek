@@ -109,7 +109,7 @@ if (!IS_DEPLOYMENT_URL) {
         $versionSettings++;
     }
 
-    if ($anyChange) {
+    if ($anyChange || true) {
         $content = <<<PHP
 <?php
     \$previousModificationTimePHP = $modificationTimePHP;
@@ -123,7 +123,7 @@ if (!IS_DEPLOYMENT_URL) {
     \$versionModules = $versionModules;
     \$versionSettings = $versionSettings;
 PHP;
-        file_put_contents(BUILD_INFO_PATH, $content);
+        saveFile(BUILD_INFO_PATH, $content);
     }
 
     if ($phpChange || $modulesChange) {
@@ -135,7 +135,6 @@ PHP;
     if ($settingsChange) {
         triggerEvent("settings_change");
     }
-
 
     if ($anyChange) {
         triggerEvent("assets_change", ["css" => $cssChange, "js" => $jsChange]);

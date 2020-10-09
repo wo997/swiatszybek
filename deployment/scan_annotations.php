@@ -39,7 +39,7 @@ foreach ($_link_route_path as $url => $path) {
 }
 $out .= "];";
 
-file_put_contents(BUILDS_PATH . "link_route_path.php", $out);
+saveFile(BUILDS_PATH . "link_route_path.php", $out);
 
 $out = "<?php return [\n";
 foreach ($_link_event_paths as $event => $paths_strings) {
@@ -47,4 +47,4 @@ foreach ($_link_event_paths as $event => $paths_strings) {
 }
 $out .= "];";
 
-file_put_contents(BUILDS_PATH . "link_event_paths.php", $out);
+saveFile(BUILDS_PATH . "link_event_paths.php", $out);

@@ -54,4 +54,4 @@ function showMenu($category_id, $depth = 0)
     return $html;
 }
 
-file_put_contents(BUILDS_PATH . "topmenu.html", showMenu(0)); // resursive
+saveFile(BUILDS_PATH . "topmenu.html", showMenu(0)); // resursive

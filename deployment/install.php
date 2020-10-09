@@ -2,7 +2,7 @@
 
 // remove all annotations
 
-$delete_files = [];
+/*$delete_files = [];
 
 $delete_files = array_merge($delete_files, array_values($link_route_path));
 $delete_files = array_merge($delete_files, array_values($link_module_path));
@@ -35,7 +35,7 @@ foreach ($js_schema as $group) {
 
 foreach ($delete_files as $file_path) {
     unlink($file_path);
-}
+}*/
 
 // unzip project
 

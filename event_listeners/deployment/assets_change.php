@@ -55,7 +55,7 @@ foreach ($cssFileGroups as $group => $file_path) {
 }
 $out .= "];";
 
-file_put_contents(BUILDS_PATH . "css_schema.php", $out);
+saveFile(BUILDS_PATH . "css_schema.php", $out);
 
 $out = "<?php return [\n";
 foreach ($jsFileGroups as $group => $file_path) {
@@ -63,4 +63,4 @@ foreach ($jsFileGroups as $group => $file_path) {
 }
 $out .= "];";
 
-file_put_contents(BUILDS_PATH . "js_schema.php", $out);
+saveFile(BUILDS_PATH . "js_schema.php", $out);
