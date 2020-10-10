@@ -819,3 +819,12 @@ function loadScript(src, options = {}) {
   script.src = src;
   document.head.appendChild(script);
 }
+
+function loadStylesheet(href, options = {}) {
+  var link = document.createElement("link");
+  Object.entries(options).forEach(([key, value]) => {
+    link.setAttribute(key, value);
+  });
+  link.href = href;
+  document.head.appendChild(link);
+}

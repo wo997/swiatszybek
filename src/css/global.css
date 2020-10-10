@@ -1200,15 +1200,6 @@ input[type="checkbox"]:checked ~ .checkbox::after {
   width: auto;
 }
 
-.cms-block,
-.quill-editor-container,
-.cms-container,
-.cmsBlockBackgroundPreview {
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
 .background-image {
   object-fit: cover;
 }

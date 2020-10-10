@@ -67,7 +67,9 @@ window.addEventListener("products-swiper-created", (event) => {
 
 window.addEventListener("resize", (event) => {
   $$(".product_list_module.slider .swiper-container").forEach((e) => {
-    setProductListSwiperDimensions(e);
+    if (e.swiper) {
+      setProductListSwiperDimensions(e);
+    }
   });
   $$(".product_list_module.grid").forEach((e) => {
     setProductListGridDimensions(e);
