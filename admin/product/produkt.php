@@ -31,7 +31,7 @@ if ($product_id === -1) {
   }
 }
 
-$categories = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
+$categories_csv = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
 
 include_once "admin/product/attributes_service.php";
 
@@ -143,7 +143,7 @@ if ($product_id === -1) {
       skip: 2
     }, () => {
       setFormData({
-        categories: [<?= $categories ?>]
+        categories: [<?= $categories_csv ?>]
       }, "#productForm");
     });
 

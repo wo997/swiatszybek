@@ -326,11 +326,12 @@ function setValue(input, value = null, params = {}) {
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
   } else if (input.classList.contains("category-picker")) {
-    var v = [];
-    try {
-      var v = JSON.parse(value);
-    } catch {}
-    setCategoryPickerValuesString(input, v, params);
+    if (typeof value === "string") {
+      try {
+        value = JSON.parse(value);
+      } catch {}
+    }
+    setCategoryPickerValuesString(input, value, params);
   } else {
     var type = input.getAttribute("data-type");
     if (type == "html") {

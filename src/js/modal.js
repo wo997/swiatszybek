@@ -115,7 +115,8 @@ function hideAllModals() {
     hideModal(e.id);
   });
 
-  toggleBodyScroll(false);
+  // just in case?
+  toggleBodyScroll(true);
 }
 
 function hideModalTopMost() {

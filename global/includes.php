@@ -1,4 +1,5 @@
 <?php
+// TODO: no
 if (!isset($page_data["seo_image"])) {
   $page_data["seo_image"] = "/img/padmate_logo.png";
 }

@@ -14,8 +14,9 @@
 
     .module_info {
         /*flex-grow: 1;*/
-        background: #fafafa;
+        background: #fff;
         padding: 10px;
+        box-shadow: 0 2px 4px #0001;
     }
 </style>
 
