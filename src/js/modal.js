@@ -61,22 +61,22 @@ function showModal(name = null, params = {}) {
       }
 
       if (shownow) {
-        var node = e;
-        m.find(".modal-content").appendChild(node);
+        clearAllErrors(e);
+        m.find(".modal-content").appendChild(e);
         if (params.source) {
           var r = params.source.getBoundingClientRect();
           var p = $(".modal-content").getBoundingClientRect();
           var x = 1 * (r.left - p.left) + r.width / 2;
           var y = 1 * (r.top - p.top) + r.height / 2;
-          node.style.transformOrigin = `${x}px ${y}px`;
-        } else node.style.transformOrigin = ``;
-        node.style.transition = "0s";
-        node.style.transform = "scale(0.5)";
+          e.style.transformOrigin = `${x}px ${y}px`;
+        } else e.style.transformOrigin = ``;
+        e.style.transition = "0s";
+        e.style.transform = "scale(0.5)";
         e.style.opacity = 0;
         setTimeout(() => {
           e.style.opacity = 1;
-          node.style.transition = "";
-          node.style.transform = "";
+          e.style.transition = "";
+          e.style.transform = "";
         }, 0);
 
         var event = new CustomEvent("modal-show", {
@@ -149,8 +149,6 @@ function hideModal(name, isCancel = false) {
   if (name) {
     var modal = $(`#${name}`);
     if (modal) {
-      clearAllErrors(modal);
-
       modal.style.animation = "fadeOut 0.4s";
       visibleModalCount--;
       setTimeout(() => {

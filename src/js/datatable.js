@@ -365,11 +365,11 @@ function createDatatable(datatable) {
       datatable.search();
     };
     datatable.showEditCategory = (btn = null, row_id = null, isNew = false) => {
-      var form = datatable.tree_view.form;
+      var form_name = datatable.tree_view.form;
 
       var loadCategoryFormCallback = (data) => {
         datatable.tree_view.form_data = data;
-        datatable.tree_view.loadCategoryForm(form, data, isNew);
+        datatable.tree_view.loadCategoryForm(form_name, data, isNew);
 
         var params = {};
         if (!isNew) {
@@ -380,12 +380,10 @@ function createDatatable(datatable) {
           };
         }
 
-        setFormData({ parent_id: data.parent_id }, `#${form}`, params);
+        setFormData({ parent_id: data.parent_id }, `#${form_name}`, params);
 
         // setModalInitialState(form);
       };
-
-      showModal(form, { source: btn });
 
       if (isNew) {
         loadCategoryFormCallback({
@@ -409,9 +407,12 @@ function createDatatable(datatable) {
           params: formParams,
           success: (res) => {
             loadCategoryFormCallback(res.results[0]);
+            clearAllErrors(`#${form_name}`);
           },
         });
       }
+
+      showModal(form_name, { source: btn });
     };
     datatable.postSaveCategory = (params, remove) => {
       var parentChanged =

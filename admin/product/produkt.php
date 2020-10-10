@@ -159,7 +159,7 @@ if ($product_id === -1) {
       render: (data) => {
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
-              <img data-list-param="src" data-type="src" style="object-fit:contain;width:120px;height:120px;display: block;margin-right:10px;">
+              <img data-list-param="src" data-type="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
               <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;

@@ -604,8 +604,14 @@ function findScrollableParent(elem) {
   elem = $(elem);
 
   while (elem && elem != document.body) {
-    var overflowY = window.getComputedStyle(elem)["overflow-y"];
-    if (overflowY === "scroll" || overflowY === "auto") {
+    /*var overflowY = window.getComputedStyle(elem)["overflow-y"];
+    if (
+      (overflowY === "scroll" || overflowY === "auto") &&
+      !elem.hasAttribute("name")
+    ) {
+      return elem;
+    }*/
+    if (elem.classList.contains("scroll-panel")) {
       return elem;
     }
     elem = elem.parent();

@@ -215,7 +215,10 @@
 }
 .table-header-buttons {
   display: inline-block;
-  margin-bottom: -3px;
+  margin: -3px 0;
+}
+.table-header-buttons .btn {
+  min-height: unset;
 }
 .selected_rows .table-header-buttons {
   display: none;
