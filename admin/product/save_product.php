@@ -64,7 +64,7 @@ if (isset($_POST["remove"])) {
     $kolejnosc = 0;
     foreach (json_decode($_POST["variants"], true) as $variant) {
         $kolejnosc++;
-        $variant_id = getEntityId("variant", $variant["variant_id"]);
+        $variant_id = getEntityId("variant", $variant["variant_id"], ["data" => ["product_id" => $product_id]]);
         $variant_ids .= "$variant_id,";
 
         $data = filterArrayKeys($variant, ["name", "product_code", "zdjecie", "published", "price", "rabat"]);

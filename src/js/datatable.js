@@ -381,8 +381,6 @@ function createDatatable(datatable) {
         }
 
         setFormData({ parent_id: data.parent_id }, `#${form_name}`, params);
-
-        // setModalInitialState(form);
       };
 
       if (isNew) {
@@ -408,6 +406,7 @@ function createDatatable(datatable) {
           success: (res) => {
             loadCategoryFormCallback(res.results[0]);
             clearAllErrors(`#${form_name}`);
+            setModalInitialState(`#${form_name}`);
           },
         });
       }

@@ -13,10 +13,10 @@
 function updateEntity($data, $table, $primary, $id, $log = false)
 {
     $query = "UPDATE " . clean($table) . " SET ";
-    foreach ($data as $field => $value) {
-        $query .= clean($field) . " = ?, ";
+    foreach (array_keys($data) as $field) {
+        $query .= clean($field) . "=?,";
     }
-    $query = rtrim($query, ", ");
+    $query = rtrim($query, ",");
     $query .= " WHERE " . clean($primary) . "=" . intval($id);
     query($query, array_values($data));
 }
@@ -24,15 +24,25 @@ function updateEntity($data, $table, $primary, $id, $log = false)
 /**
  * **USE getEntityId INSTEAD**
  * - Creates entity and returns its id
- * - $table: string 
- * - ?$log: bool
- * - ?$primary: string
+ * - $table: string
  * - return: int
  *
  */
-function addEntity($table, $log = false, $primary = null)
+function addEntity($table, $options = [])
 {
-    query("INSERT INTO " . clean($table) . " () VALUES ()");
+    // TODO logging
+    // $log = false, $primary = null
+
+    $data = nonull($options, "data", []);
+
+    $keys_query = "";
+    foreach (array_keys($data) as $field) {
+        $keys_query .= clean($field) . ",";
+    }
+    $keys_query = rtrim($keys_query, ",");
+    $values_query = rtrim(str_repeat("?,", count($data)), ",");
+
+    query("INSERT INTO " . clean($table) . "($keys_query) VALUES($values_query)", array_values($data));
     $entity_id = getLastInsertedId();
     return $entity_id;
 }
@@ -41,15 +51,13 @@ function addEntity($table, $log = false, $primary = null)
  * Creates entity for id = -1 and returns id 
  * - $table: string 
  * - $id: int (-1 for new instances)
- * - ?$log: bool
- * - ?$primary: string
  * - return: int
  *
  */
-function getEntityId($table, $id, $log = false, $primary = null)
+function getEntityId($table, $id, $options = [])
 {
     if ($id == "-1") {
-        return addEntity($table);
+        return addEntity($table, $options);
     } else {
         return intval($id);
     }
