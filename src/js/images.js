@@ -47,9 +47,7 @@ function loadImage(img, animate = true) {
     var target_size_name = "df";
 
     if (image_dimension < natural_image_dimension) {
-      //var pixelDensityFactor = window.devicePixelRatio // too many pixels on mobile devices may slow them down
-      var pixelDensityFactor = window.devicePixelRatio * 0.5 + 0.5; // always keep the highest quality images
-      console.log(img.file_name);
+      var pixelDensityFactor = window.devicePixelRatio * 0.5 + 0.5; // compromise quality and speed
       Object.entries(image_default_dimensions).forEach(
         ([size_name, size_dimension]) => {
           if (size_name == "df") {
