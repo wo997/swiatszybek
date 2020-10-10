@@ -201,18 +201,20 @@ registerModalContent(
                 <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
             </div>
 
-            <div class="field-wrapper">
-              <div class="field-title">Wstaw link do zdjęcia zewnętrznego</div>
-              <div class="glue-children">
-                <input type="text" data-validate class="external_link field">
-                <button class="btn primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
+            <div class="scroll-panel panel-padding">
+              <div class="field-wrapper">
+                <div class="field-title">Wstaw link do zdjęcia zewnętrznego</div>
+                <div class="glue-children">
+                  <input type="text" data-validate class="external_link field">
+                  <button class="btn primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
+                </div>
               </div>
-            </div>
 
-            <div style="margin-top:8px">
-              <i class="fas fa-info-circle"></i> Wstawienie zdjęcia zewnętrznego wiąże się z:<br>
-              - możliwością jego utraty<br>
-              - brakiem optymalizacji
+              <div style="margin-top:8px">
+                <i class="fas fa-info-circle"></i> Wstawienie zdjęcia zewnętrznego wiąże się z:<br>
+                - możliwością jego utraty<br>
+                - brakiem optymalizacji
+              </div>
             </div>
         </div>
     </div>

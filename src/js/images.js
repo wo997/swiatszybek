@@ -15,6 +15,16 @@ function isNodeOnScreen(node, offset = -10) {
 
 var lazyLoadOffset = 700;
 
+function loadLazyNode(node, animate = true) {
+  if (!node.classList.contains("lazy")) {
+    return;
+  }
+  if (isNodeOnScreen(node, lazyLoadOffset)) {
+    node.classList.remove("lazy");
+    showImage(node);
+  }
+}
+
 function loadImage(img, animate = true) {
   if (!img.file_name) {
     return;
@@ -179,6 +189,15 @@ window.addEventListener("load", () => {
 
 function lazyLoadImages(animate = true) {
   setCustomHeights();
+
+  $$(".lazy").forEach((img) => {
+    var rect = img.getBoundingClientRect();
+
+    if (rect.top < window.innerHeight + lazyLoadOffset) {
+      loadLazyNode(img, animate);
+    }
+  });
+
   $$("img[data-src]:not(.lazy_image)").forEach((img) => {
     var rect = setImageDimensions(img);
 
@@ -201,6 +220,9 @@ document.addEventListener("mouseover", () => {
 });
 
 function scrollCallbackLazy() {
+  $$(".lazy").forEach((node) => {
+    loadLazyNode(node);
+  });
   $$("img[data-src]").forEach((img) => {
     loadImage(img);
   });

@@ -77,9 +77,9 @@ function minifyImage($file_path)
         // below gives way better quality
         imagecopyresampled($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
         $final_path = "$image_type_path/$file_name_wo_extension.jpg";
-        imagejpeg($output, $final_path, 35);
+        imagejpeg($output, $final_path, 80);
 
-        imagewebp($output, "$image_type_path/$file_name_wo_extension.webp", 20);
+        imagewebp($output, "$image_type_path/$file_name_wo_extension.webp", 80);
     }
 }
 

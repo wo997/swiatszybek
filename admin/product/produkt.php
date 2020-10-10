@@ -448,17 +448,15 @@ if ($product_id === -1) {
   <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
     <?= $product_form_header ?>
   </div>
-  <div>
-    <a class="btn secondary" href="/admin/produkty">Wszystkie produkty <i class="fas fa-cubes"></i></a>
-    <?php if ($kopia) : ?>
-      <a href="/admin/produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
-    <?php else : ?>
-      <a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
-      <a href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></a>
-    <?php endif ?>
-    <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
-    <button onclick="saveProduct()" class="btn primary">Zapisz <i class="fas fa-save"></i></button>
-  </div>
+  <a class="btn secondary" href="/admin/produkty">Wszystkie produkty <i class="fas fa-cubes"></i></a>
+  <?php if ($kopia) : ?>
+    <a href="/admin/produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
+  <?php else : ?>
+    <a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
+    <a href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></a>
+  <?php endif ?>
+  <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
+  <button onclick="saveProduct()" class="btn primary">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
 <?php startSection("content"); ?>

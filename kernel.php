@@ -170,7 +170,7 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
     die;
 }
 
-define("RELEASE", 2137);
+define("RELEASE", 2138);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);
 define("MODULES_RELEASE", $versionModules);

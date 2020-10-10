@@ -1,12 +1,13 @@
 <?php //module_block[contact_form]
 
+// TODO: main page should minify everything literally
 useJS("/$module_block_dir/scripts.js");
 useCSS("/$module_block_dir/styles.css");
 
 $company_data = getSetting("general", "company", [], "");
 
 ?>
-<div>
+<div class='lazy'>
     <div class='contact-info'>
         <div>
             <b><?= $company_data['company_name'] ?></b><br><br>
