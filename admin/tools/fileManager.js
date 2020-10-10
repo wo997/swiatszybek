@@ -161,18 +161,18 @@ registerModalContent(
     <div id="fileManager" data-expand="true">
         <div class="modal-body">
             <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
-                <span class="title">
-                  Menedżer plików
+            <span class="title" style="display: inline-flex;align-items: center;flex-wrap:wrap">
+            Menedżer plików
 
-                  <div class='float-icon inline' style='margin:0 4px'>
-                    <input class="field inline small" type="text" name="search" id="search" oninput="delay('search',500,fileManager)" placeholder="Wyszukaj...">
-                    <i class="fas fa-search" style='color:black'></i>
-                  </div>
+            <div class="float-icon inline" style="margin-left: 7px;display: inline-flex;align-self: stretch;">
+              <input class="field inline small" type="text" name="search" id="search" oninput="delay('search',500,fileManager)" placeholder="Wyszukaj..." style="align-self: stretch;">
+              <i class="fas fa-search" style="color:black"></i>
+            </div>
 
-                  <button class="btn primary" onclick="showModal('uploadFiles')">Prześlij nowe <i class="fas fa-plus"></i></button>
+            <button class="btn primary" onclick="showModal('uploadFiles')" style="margin-left: 4px;">Prześlij nowe <i class="fas fa-plus"></i></button>
 
-                  <button class="btn secondary use_external_image_btn" onclick="showModal('externalImage')">Użyj zdjęcia zewnętrznego <i class="fas fa-external-link-alt"></i></button>
-                </span>
+            <button class="btn secondary use_external_image_btn" onclick="showModal('externalImage')" style="margin-left: 4px;">Użyj zdjęcia zewnętrznego <i class="fas fa-external-link-alt"></i></button>
+          </span>
                 
                 <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
             </div>
