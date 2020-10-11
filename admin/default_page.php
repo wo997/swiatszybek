@@ -37,7 +37,7 @@ endSection();
       <div class="content">
         <?php if (isset($sections["header"])) echo $sections["header"]; ?>
         <div class="scroll-panel scroll-shadow">
-          <div class="panel-padding">
+          <div class="panel-padding actual-content">
             <?php if (isset($sections["content"])) echo $sections["content"]; ?>
           </div>
           <div class="footer">Piepsklep <?= date("Y") ?></div>

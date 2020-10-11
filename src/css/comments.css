@@ -1,22 +1,22 @@
 /* css[global] */
 
-.comment:nth-child(odd) {
-  background: #eee;
-}
-
-table .comment_header {
+.comments .comment_header {
   display: flex;
   align-items: center;
   margin-bottom: 12px;
 }
 
-table .pseudonim {
+.comments .pseudonim {
   font-size: 15px;
   font-weight: bold;
 }
 
-table .dodano {
-  margin-left: auto;
+.comments table .dodano {
+  margin-left: 10px;
   color: #666;
   font-size: 0.9em;
+}
+
+.comments .datatable {
+  box-shadow: none;
 }

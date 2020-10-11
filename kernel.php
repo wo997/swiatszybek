@@ -12,7 +12,7 @@ include_once "helpers/debug.php";
 
 include_once "helpers/date.php";
 include_once "helpers/string.php";
-include_once "helpers/rating.php";
+include_once "helpers/number.php";
 include_once "helpers/array.php";
 include_once "helpers/files.php";
 include_once "helpers/settings.php";
@@ -33,6 +33,7 @@ include_once "helpers/deployment.php";
 include_once "helpers/order.php";
 include_once "helpers/activity_log.php";
 include_once "helpers/product.php";
+include_once "helpers/rating.php";
 
 include_once "helpers/links.php";
 

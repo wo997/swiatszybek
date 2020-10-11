@@ -7,17 +7,9 @@
 <title>Moduły</title>
 
 <style>
-    .module_list {
-        /*width: 200px;
-        flex-shrink: 0;*/
-    }
+    .module_list {}
 
-    .module_info {
-        /*flex-grow: 1;*/
-        background: #fff;
-        padding: 10px;
-        box-shadow: 0 2px 4px #0001;
-    }
+    .module_info {}
 </style>
 
 <script>
@@ -94,6 +86,6 @@
 <h1>Moduły</h1>
 
 <div class="module_list"></div>
-<div class="module_info"></div>
+<div class="module_info panel"></div>
 
 <?php include "admin/default_page.php"; ?>

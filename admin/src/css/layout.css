@@ -122,3 +122,15 @@ h1 {
   width: 1.2em;
   text-align: center;
 }
+
+.panel {
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 2px 4px #0001;
+}
+
+/*.actual-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}*/

@@ -211,6 +211,8 @@
 
 <?php startSection("content"); ?>
 
+<h1>Kategorie produktów</h1>
+
 <div class="mytable"></div>
 
 <div id="editCategory" data-modal data-expand data-form>

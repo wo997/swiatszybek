@@ -5,7 +5,7 @@
 
 $options = "";
 foreach ($status_list as $status) {
-        $options .= "<option value='" . $status['id'] . "'>" . $status['title'] . "</option>";
+  $options .= "<option value='" . $status['id'] . "'>" . $status['title'] . "</option>";
 }
 ?>
 
@@ -46,7 +46,7 @@ foreach ($status_list as $status) {
         return `
           ${renderStatus(r.status_id)}
           <select data-value="${r.status_id}" onchange="changeStatus('${r.link}',this.value)">
-            <?=$options?>
+            <?= $options ?>
           </select>
         `;
       }
@@ -118,7 +118,7 @@ foreach ($status_list as $status) {
   }
 </script>
 
-<?php startSection("content");?>
+<?php startSection("content"); ?>
 
 <h1>Zamówienia</h1>
 
@@ -128,8 +128,8 @@ foreach ($status_list as $status) {
   Zmień status dla zaznaczonych zamówień
   <select onchange="bulkStatusUpdate(this.value);this.value=''">
     <option value="">- STATUS -</option>
-    <?=$options?>
+    <?= $options ?>
   </select>
 </div>
 
-<?php include "admin/default_page.php";?>
+<?php include "admin/default_page.php"; ?>
