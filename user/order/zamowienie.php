@@ -235,7 +235,8 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
     <?php if ($app["user"]["priveleges"]["backend_access"]) { ?>
       <div class="navbar_wrapper">
         <div class="navbar_admin">
-          <?php include "admin/navbar.php" ?>
+          <?php //include "admin/navbar.php" 
+          ?>
         </div>
       </div>
     <?php } else if ($app["user"]["id"]) { ?>

@@ -26,8 +26,10 @@ addZamowienieLog($zamowienie_data["zamowienie_id"], "Status", $oldStatusString, 
 
 // send mail
 
+$company_data = getSetting("general", "company", [], "");
+
 if ($status_id == 2) {
-  $mailTitle = "Przekazano do wysyłki zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . config('main_email_sender') . "";
+  $mailTitle = "Przekazano do wysyłki zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . $company_data['email_sender'] . "";
 
   $message = getEmailHeader($zamowienie_data);
   $message .= "Uprzejmie informujemy, że zamówienie <a href='" . getZamowienieLink($zamowienie_data["link"]) . "' style='font-weight:bold;color:" . primary_clr . ";'>#" . $zamowienie_data["zamowienie_id"] . "</a> zostało spakowane oraz przekazane kurierowi.";
@@ -37,28 +39,28 @@ if ($status_id == 2) {
   }
   $message .= getEmailFooter();
 } else if ($status_id == 3) {
-  $mailTitle = "Odebrano zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . config('main_email_sender') . "";
+  $mailTitle = "Odebrano zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . $company_data['email_sender'] . "";
 
   $message = getEmailHeader($zamowienie_data);
   $message .= "Uprzejmie informujemy, że odebrałaś/eś <a href='" . getZamowienieLink($zamowienie_data["link"]) . "' style='font-weight:bold;color:" . primary_clr . ";'>zamówienie #" . $zamowienie_data["zamowienie_id"] . "</a>.<br><br>";
   $message .= "Dziękujemy za zakupy i zapraszamy ponownie.";
   $message .= getEmailFooter();
 } else if ($status_id == 4) {
-  $mailTitle = "Anulowano zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . config('main_email_sender') . "";
+  $mailTitle = "Anulowano zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . $company_data['email_sender'] . "";
 
   $message = getEmailHeader($zamowienie_data);
   $message .= "Uprzejmie informujemy, że anulowaliśmy <a href='" . getZamowienieLink($zamowienie_data["link"]) . "' style='font-weight:bold;color:" . primary_clr . ";'>zamówienie #" . $zamowienie_data["zamowienie_id"] . "</a>.<br><br>";
   $message .= "Zapraszamy do dalszych zakupów";
   $message .= getEmailFooter();
 } else if ($status_id == 0) {
-  $mailTitle = "Zamówienie #" . $zamowienie_data["zamowienie_id"] . " oczekuje na opłatę - " . config('main_email_sender') . "";
+  $mailTitle = "Zamówienie #" . $zamowienie_data["zamowienie_id"] . " oczekuje na opłatę - " . $company_data['email_sender'] . "";
 
   $message = getEmailHeader($zamowienie_data);
   $message .= "Uprzejmie informujemy, że Twoje zamówienie o numerze #" . $zamowienie_data["zamowienie_id"] . " oczekuje na opłatę.<br>";
   $message .= "Zapłać teraz klikając w <a href='" . getZamowienieLink($zamowienie_data["link"]) . "' style='font-weight:bold;color:" . primary_clr . ";'>podany link</a>";
   $message .= getEmailFooter();
 } else if ($status_id == 5) { // $zamowienie_data["dostawa"] == 'o'
-  $mailTitle = "Zamówienie #" . $zamowienie_data["zamowienie_id"] . " oczekuje na odbiór - " . config('main_email_sender') . "";
+  $mailTitle = "Zamówienie #" . $zamowienie_data["zamowienie_id"] . " oczekuje na odbiór - " . $company_data['email_sender'] . "";
 
   $message = getEmailHeader($zamowienie_data);
   $message .= "Uprzejmie informujemy, że Twoje <a href='" . getZamowienieLink($zamowienie_data["link"]) . "' style='font-weight:bold;color:" . primary_clr . ";'>zamówienie #" . $zamowienie_data["zamowienie_id"] . "</a> oczekuje na odbiór <br>";
@@ -71,7 +73,7 @@ if ($status_id == 2) {
 
 if (isset($mailTitle)) {
   sendEmail($zamowienie_data["email"], $message, $mailTitle);
-  sendEmail(config('main_email'), $message, $mailTitle);
+  sendEmail($company_data['main_email'], $message, $mailTitle);
 }
 
 $add_subtract_stock = "";

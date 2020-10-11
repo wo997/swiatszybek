@@ -142,6 +142,7 @@ $deployment_routes = [
   "deployment/warmup_images",
   "deployment/export",
   "deployment/install",
+  "deployment/get_size",
 ];
 
 $routes = [];

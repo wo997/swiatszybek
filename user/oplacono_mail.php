@@ -1,6 +1,8 @@
 <?php
 
-$mailTitle = "Opłacono zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . config('main_email_sender') . "";
+$company_data = getCompanyData();
+
+$mailTitle = "Opłacono zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . $company_data["email_sender"] . "";
 
 $message = getEmailHeader($zamowienie_data);
 $message .= "Uprzejmie informujemy, że odnotowaliśmy wpłatę za zamówienie o numerze #" . $zamowienie_data["zamowienie_id"] . ".<br>";

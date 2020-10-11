@@ -10,21 +10,19 @@ $email_client_url_list = [
     "o2.pl" => "https://poczta.o2.pl/",
 ];
 
-// send emails
-$default_headers  = 'MIME-Version: 1.0' . "\r\n";
-$default_headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-$default_headers .= 'From: ' . config('main_email_sender') . ' <' . config('main_email') . "> \r\n" .
-    'Reply-To: ' . config('main_email') . "\r\n" .
-    'X-Mailer: PHP/' . phpversion();
-
 function sendEmail($recipient, $message, $title, $headers = null, $from = null)
 {
-    global $default_headers;
+    $company_data = getCompanyData();
+
     if ($headers === null) {
-        $headers = $default_headers;
+        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+        $headers .= 'From: ' . $company_data['email_sender'] . ' <' . $company_data['main_email'] . "> \r\n" .
+            'Reply-To: ' . $company_data['main_email'] . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
     }
     if ($from === null) {
-        $from = config('main_email');
+        $from = $company_data['main_email'];
     }
     $title = "=?UTF-8?B?" . base64_encode($title) . "?=";
     @mail($recipient, $title, $message, $headers, "-f " . $from);
@@ -44,5 +42,5 @@ function getEmailHeader($lang)
 
 function getEmailFooter()
 {
-    return "\n<br><br><i>Pozdrawiamy,</i><br><a href='" . SITE_URL . "'><img src='" . LOGO_PATH . "' style='width:200px'></a></p>";
+    return "\n<br><br><i>Pozdrawiamy,</i><br><a href='" . SITE_URL . "'><img src='" . LOGO_PATH_PUBLIC_SM . "' style='width:200px'></a></p>";
 }

@@ -175,6 +175,7 @@ function getResponsiveImageBySize($src, $image_dimension, $options = [])
         }
     }
 
+
     $src = "/" . UPLOADS_PATH . $target_size_name . "/" . $image_data["file_name"];
 
     if (nonull($options, "same-ext", false) && in_array($image_data["extension"], $same_ext_image_allowed_types)) {
@@ -184,7 +185,6 @@ function getResponsiveImageBySize($src, $image_dimension, $options = [])
     } else {
         $src .= ".jpg";
     }
-
     return $src;
 }
 

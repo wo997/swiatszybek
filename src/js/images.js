@@ -66,13 +66,11 @@ function loadImage(img, animate = true) {
 
     var src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
 
-    console.log(img);
     if (
       img.hasAttribute("data-same-ext") &&
       same_ext_image_allowed_types.indexOf(img.extension) !== -1
     ) {
       src += "." + img.extension;
-      console.log(img.extension);
     } else if (WEBP_SUPPORT) {
       src += ".webp";
     } else {

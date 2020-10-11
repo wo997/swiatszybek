@@ -111,9 +111,12 @@ define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "ht
 define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 0));
 define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 0));
 
-define("LOGO_PATH", SITE_URL . "/uploads/sm/logo.jpg?v=" . setting(["theme", "copied_images", "logo", "version"], ""));
-define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], LOGO_PATH));
+define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], ""));
 define("LOGO_PATH_LOCAL_SM", getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]));
+
+$logo_file_path = getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]);
+$logo_file_path .= "?v=" . setting(["theme", "copied_images", "logo", "version"], "");
+define("LOGO_PATH_PUBLIC_SM", $logo_file_path);
 
 define("FAVICON_PATH", SITE_URL . "/uploads/tn/favicon.jpg?v=" . setting(["theme", "copied_images", "favicon", "version"], ""));
 define("FAVICON_PATH_LOCAL", setting(["theme", "copied_images", "favicon", "path"], FAVICON_PATH));
@@ -221,4 +224,9 @@ if (isset($_POST["preview_params"])) {
 // ssl redirect
 if (getSetting("general", "advanced", ["ssl"]) == 1 && nonull($_SERVER, "HTTPS", "on") == 'off') {
     redirect(str_replace_first("http://", "https://", SITE_URL, 1));
+}
+
+function getCompanyData()
+{
+    return getSetting("general", "company", [], "");
 }
