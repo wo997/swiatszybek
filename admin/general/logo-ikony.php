@@ -46,7 +46,7 @@
 <h1>Logo / ikony</h1>
 
 <div class="field-title">Logo sklepu</div>
-<img class="logo logo-default" data-src="<?= LOGO_PATH_LOCAL ?>">
+<img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>">
 <form onsubmit="uploadImageWithCopy(event,'logo')">
     <label>
         <input type="file" onchange="$(this).next().click()" style="display:none">

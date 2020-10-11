@@ -139,6 +139,7 @@ $deployment_routes = [
   "deployment/build",
   "deployment/migrate",
   "deployment/warmup_cache",
+  "deployment/warmup_images",
   "deployment/export",
   "deployment/install",
 ];

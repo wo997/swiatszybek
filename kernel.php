@@ -111,8 +111,9 @@ define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "ht
 define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 0));
 define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 0));
 
-define("LOGO_PATH", SITE_URL . "/uploads/-/logo.jpg?v=" . setting(["theme", "copied_images", "logo", "version"], ""));
+define("LOGO_PATH", SITE_URL . "/uploads/sm/logo.jpg?v=" . setting(["theme", "copied_images", "logo", "version"], ""));
 define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], LOGO_PATH));
+define("LOGO_PATH_LOCAL_SM", getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]));
 
 define("FAVICON_PATH", SITE_URL . "/uploads/tn/favicon.jpg?v=" . setting(["theme", "copied_images", "favicon", "version"], ""));
 define("FAVICON_PATH_LOCAL", setting(["theme", "copied_images", "favicon", "path"], FAVICON_PATH));

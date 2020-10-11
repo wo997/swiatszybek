@@ -15,6 +15,7 @@ function isNodeOnScreen(node, offset = -10) {
 
 var lazyLoadOffset = 700;
 
+// also files.php
 function loadLazyNode(node, animate = true) {
   if (!node.classList.contains("lazy")) {
     return;
@@ -65,7 +66,14 @@ function loadImage(img, animate = true) {
 
     var src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
 
-    if (WEBP_SUPPORT) {
+    console.log(img);
+    if (
+      img.hasAttribute("data-same-ext") &&
+      same_ext_image_allowed_types.indexOf(img.extension) !== -1
+    ) {
+      src += "." + img.extension;
+      console.log(img.extension);
+    } else if (WEBP_SUPPORT) {
       src += ".webp";
     } else {
       src += ".jpg";
@@ -115,7 +123,7 @@ function showImage(img) {
   }
 }
 
-// also helpers/files.php
+// also files.php
 function getUploadedFileName(file_path) {
   // it doesn't work, file extension needs to be removed, look for getResponsiveImageData instead
   return file_path.substr(UPLOADS_PLAIN_PATH.length);
@@ -124,6 +132,7 @@ function getUploadedFileName(file_path) {
 // also files.php
 function getResponsiveImageData(src) {
   var last_dot_index = src.lastIndexOf(".");
+  var ext = src.substring(last_dot_index + 1);
   var path_wo_ext = src.substring(0, last_dot_index);
 
   var last_floor_index = path_wo_ext.lastIndexOf("_");
@@ -137,6 +146,7 @@ function getResponsiveImageData(src) {
 
   return {
     file_name: file_name,
+    extension: ext,
     w: parseInt(dimensions[0]),
     h: parseInt(dimensions[1]),
   };
@@ -161,6 +171,7 @@ function setImageDimensions(img) {
   img.calculated_width = data.w;
   img.calculated_height = data.h;
   img.file_name = data.file_name;
+  img.extension = data.extension;
 
   /*if (rect.height) {
     img.setAttribute("data-has-own-height", "");

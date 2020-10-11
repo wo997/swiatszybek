@@ -10,12 +10,17 @@ $image_default_dimensions = [
     "tn" => 100,
 ];
 
+$same_ext_image_allowed_types = [
+    "png", "bmp", "gif"
+];
+
+
 $image_minified_formats = [
     "jpg",
     "webp"
 ];
 
-function minifyImage($file_path)
+function processImage($file_path)
 {
     global $image_default_dimensions;
 
@@ -61,11 +66,7 @@ function minifyImage($file_path)
     $file_name_wo_extension = getFilenameWithoutExtension($file_path);
 
     foreach ($sizes as $size_name => $size) {
-        $image_type_path = UPLOADS_PATH . $size_name;
-
-        if (!is_dir($image_type_path)) {
-            mkdir($image_type_path);
-        }
+        $file_path_wo_extension = UPLOADS_PATH . $size_name . "/" . $file_name_wo_extension;
 
         $copy_width = $size[0];
         $copy_height = $size[1];
@@ -76,11 +77,30 @@ function minifyImage($file_path)
         //imagecopyresized($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
         // below gives way better quality
         imagecopyresampled($output, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
-        $final_path = "$image_type_path/$file_name_wo_extension.jpg";
-        imagejpeg($output, $final_path, 80);
 
-        imagewebp($output, "$image_type_path/$file_name_wo_extension.webp", 80);
+        imagejpeg($output, $file_path_wo_extension . ".jpg", 80);
+
+        imagewebp($output, $file_path_wo_extension . ".webp", 80);
+
+        imagedestroy($output);
+
+        $output_transparent = imagecreatetruecolor($copy_width, $copy_height);
+        imagealphablending($output_transparent, false);
+        imagesavealpha($output_transparent, true);
+        imagecopyresampled($output_transparent, $image, 0, 0, 0, 0, $copy_width, $copy_height, $width, $height);
+
+        if ($file_extension == 'png') {
+            imagepng($output_transparent, $file_path_wo_extension . ".png");
+        } else if ($file_extension == 'gif') {
+            imagegif($output_transparent, $file_path_wo_extension . ".gif");
+        } else if ($file_extension == 'bmp') {
+            imagebmp($output_transparent, $file_path_wo_extension . ".bmp");
+        }
+
+        imagedestroy($output_transparent);
     }
+
+    imagedestroy($image);
 }
 
 // also global.js
@@ -105,7 +125,7 @@ function getFileExtension($file_path)
     return $path_info["extension"];
 }
 
-// also image-optimiser.js
+// also images.js
 function getResponsiveImageData($src)
 {
     $last_dot_index = strrpos($src, ".");
@@ -119,15 +139,55 @@ function getResponsiveImageData($src)
 
     $dimensions = explode("x", substr($path_wo_ext, $last_floor_index + 1));
 
-    $filename = preg_replace("/\/uploads\/.{0,10}\//", "", $path_wo_ext);
+    $file_name = preg_replace("/(\/)?uploads\/.{0,10}\//", "", $path_wo_ext);
 
     return [
-        "filename" => $filename,
+        "file_name" => $file_name,
         "extension" => $ext,
         "w" => intval($dimensions[0]),
         "h" => intval($dimensions[1]),
     ];
 }
+
+// also images.js
+function getResponsiveImageBySize($src, $image_dimension, $options = [])
+{
+    global $image_default_dimensions, $same_ext_image_allowed_types;
+
+    $image_data = getResponsiveImageData($src);
+
+    $natural_image_dimension = max($image_data["w"], $image_data["h"]);
+    $target_size_name = "df";
+
+    if ($image_dimension < $natural_image_dimension) {
+        // TODO: maybe from cookie?
+        $pixelDensityFactor = 1;
+        foreach ($image_default_dimensions as $size_name => $size_dimension) {
+            if ($size_name == "df") {
+                continue;
+            }
+            if (
+                $image_dimension < $size_dimension / $pixelDensityFactor &&
+                $size_dimension < $natural_image_dimension
+            ) {
+                $target_size_name = $size_name;
+            }
+        }
+    }
+
+    $src = "/" . UPLOADS_PATH . $target_size_name . "/" . $image_data["file_name"];
+
+    if (nonull($options, "same-ext", false) && in_array($image_data["extension"], $same_ext_image_allowed_types)) {
+        $src .= "." . $image_data["extension"];
+    } else if (WEBP_SUPPORT) {
+        $src .= ".webp";
+    } else {
+        $src .= ".jpg";
+    }
+
+    return $src;
+}
+
 
 /**
  * Inserts image into DB
@@ -190,23 +250,12 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
     // save plain file
     copy($tmp_file_path, $file_path);
 
-    //try {
     query("INSERT INTO uploads(file_path, uploaded_file_name, asset_type) VALUES (?,?,?)", [
         $file_path, $uploaded_file_name, $asset_type
     ]);
-    /*} catch (Exception $e) {
-        if ($find_unique_name === false) {
-            // quiet, just a unique index crying, fine
-
-            // NOTE: currently the system works differently,
-            // the logo is uploaded anyway and a copy is created to the same path with minification applied ;)
-        } else {
-            die;
-        }
-    }*/
 
     if ($try_to_minify_image && $asset_type == "image") {
-        minifyImage($file_path);
+        processImage($file_path);
     }
 
     return [

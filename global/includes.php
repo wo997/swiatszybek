@@ -6,6 +6,8 @@ if (!isset($page_data["seo_image"])) {
 ?>
 
 <script>
+  // TODO: should go to cookie maybe window.devicePixelRatio
+
   const RELEASE = <?= RELEASE ?>; // general asset version
   const JS_RELEASE = <?= JS_RELEASE ?>;
   const CSS_RELEASE = <?= CSS_RELEASE ?>;
@@ -35,6 +37,7 @@ if (!isset($page_data["seo_image"])) {
   }
 
   const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
+  const same_ext_image_allowed_types = <?= json_encode($same_ext_image_allowed_types) ?>;
 
   <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
     const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;

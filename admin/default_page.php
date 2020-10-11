@@ -17,7 +17,7 @@ endSection();
     <div class="main-wrapper">
       <header class="navbar_admin">
         <a href="/" class="home logo-wrapper">
-          <img class="logo logo-default" data-src="<?= LOGO_PATH_LOCAL ?>">
+          <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>">
           <br>
           Strona główna
         </a>

@@ -26,7 +26,7 @@ function getCMSPageHTML($content)
   if ($html) {
     $images = $html->find("img");
     foreach ($images as $img) {
-      $img->setAttribute("data-src", WEBP_SUPPORT ? str_replace(".jpg", ".webp", $img->src) : $img->src);
+      $img->setAttribute("data-src", $img->src);
       $img->removeAttribute("src");
     }
 

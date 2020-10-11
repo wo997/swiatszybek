@@ -13,7 +13,7 @@ if (IS_XHR && isset($_FILES['files'])) {
         if ($type == "copy") {
             $copy_path = UPLOADS_PLAIN_PATH . $name . "." . getFileExtension($file_data["file_path"]);
             copy($tmp_file_path, $copy_path);
-            minifyImage($copy_path);
+            processImage($copy_path);
 
             $image_version = getSetting("theme", "copied_images", [$name, "version"]);
             if (!$image_version) {
