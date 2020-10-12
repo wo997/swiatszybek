@@ -20,6 +20,15 @@
           title: "Kod",
           width: "10%",
           field: "kod",
+          render: (r) => {
+            return `
+              <div class="link goto">
+                <a class="goto-label" href="/admin/kod_rabatowy/${r.kod_id}">${escapeHTML(r.kod)}</a>
+                <i class="fas fa-chevron-circle-right"></i>
+              </div>
+            `;
+          },
+          escape: false,
           searchable: "text",
         },
         {
@@ -53,14 +62,6 @@
           title: "Ilość",
           width: "10%",
           field: "ilosc",
-        },
-        {
-          title: "",
-          width: "100px",
-          render: (r) => {
-            return `<a class='btn primary' href='/admin/kod_rabatowy/${r.kod_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
-          },
-          escape: false
         },
       ],
       controlsRight: `

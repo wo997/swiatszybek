@@ -18,18 +18,35 @@
             },
             params: () => {},
             definition: [{
-                    title: "URL (link)",
-                    width: "20%",
-                    render: (r) => {
-                        return `${r.link ? r.link : "STRONA GŁÓWNA"}`
-                    },
-                },
-                {
                     title: "Tytuł",
                     width: "20%",
                     field: "title",
+                    render: (r) => {
+                        return `
+                            <div class="link goto">
+                                <a class="goto-label" href="/admin/strona/${r.cms_id}">${escapeHTML(r.title)}</a>
+                                <i class="fas fa-chevron-circle-right"></i>
+                            </div>
+                        `;
+                    },
+                    escape: false,
                     searchable: "text",
                 },
+                {
+                    title: "URL (link)",
+                    width: "20%",
+                    render: (r) => {
+                        return `
+                            <div class="link goto">
+                                <a class="goto-label" href="/${r.link}" target="_blank">${escapeHTML(r.link ? r.link : "STRONA GŁÓWNA")}</a>
+                                <i class="fas fa-external-link-alt"></i>
+                            </div>
+                        `;
+                    },
+                    escape: false,
+                    searchable: "text",
+                },
+                getPublishedDefinition(),
                 {
                     title: "Tytuł SEO",
                     width: "20%",
@@ -42,15 +59,6 @@
                     field: "seo_description",
                     searchable: "text",
                 },
-                getPublishedDefinition(),
-                {
-                    title: "",
-                    width: "195px",
-                    render: (r) => {
-                        return `<a class="btn primary" target="_blank" href="/${r.link}">Podgląd <i class="fas fa-eye"></i></a> <a class='btn primary' href='/admin/strona/${r.cms_id}'>Edytuj <i class="fas fa-chevron-circle-right"></i></a>`;
-                    },
-                    escape: false
-                }
             ],
             controlsRight: `
                 <div class='float-icon space-right'>

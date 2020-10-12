@@ -7,7 +7,13 @@
 <title>Logo / ikony</title>
 
 <style>
-
+    .favicon {
+        width: max(38.25px, min(4.5vw, 54px));
+        height: max(38.25px, min(4.5vw, 54px));
+        display: block;
+        margin: 10px 0;
+        object-fit: contain;
+    }
 </style>
 
 <script>
@@ -43,10 +49,10 @@
 
 <?php startSection("content"); ?>
 
-<h1>Logo / ikony</h1>
+<h1>Logo / Ikony</h1>
 
 <div class="field-title">Logo sklepu</div>
-<img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>">
+<img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" style='margin-left:0'>
 <form onsubmit="uploadImageWithCopy(event,'logo')">
     <label>
         <input type="file" onchange="$(this).next().click()" style="display:none">

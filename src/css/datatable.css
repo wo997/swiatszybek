@@ -267,10 +267,10 @@
 .datatable {
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
   position: relative;
-  padding: 10px 0;
+  margin: 10px 0;
 }
 
-.selected_rows th:first-child {
+.datatable .selected_rows th:first-child {
   filter: brightness(0.9);
 }
 

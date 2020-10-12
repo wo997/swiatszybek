@@ -23,8 +23,8 @@
           width: "50%",
           render: (r) => {
             return `
-              <div class="link goto" onclick="window.location='/admin/produkt/${r.product_id}'">
-                <div class="goto-label">${escapeHTML(r.title)}</div>
+              <div class="link goto">
+                <a class="goto-label" href="/admin/produkt/${r.product_id}">${escapeHTML(r.title)}</a>
                 <i class="fas fa-chevron-circle-right"></i>
               </div>
             `;

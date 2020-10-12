@@ -152,4 +152,6 @@ addForeignKey("variant", "product_id", "products");
 addForeignKey("variant", "product_id", "products");
 addForeignKey("variant", "product_id", "products");*/
 
+
+
 echo "<h3>✅ All migrations completed</h3>";

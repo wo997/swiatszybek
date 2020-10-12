@@ -1038,8 +1038,9 @@ window.addEventListener("dragover", (event) => {
 
 function getPublishedDefinition(options = {}) {
   return {
-    title: "Widoczność",
-    width: "135px",
+    title: "",
+    width: "70px",
+    className: "center",
     render: (r) => {
       return renderIsPublished(r);
     },

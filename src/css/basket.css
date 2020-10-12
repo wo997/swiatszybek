@@ -82,6 +82,7 @@
   color: #800;
 }
 
-.total_basket_cost {
+.total_basket_cost,
+.variant_total_price {
   display: inline-block;
 }

@@ -14,7 +14,7 @@ var zamowienia_table_definition = [
       } catch (e) {}
       products_info += "</table>";
 
-      return `<div class="link goto"><a href='/zamowienie/${
+      return `<div class="link goto"><a class="goto-label" href='/zamowienie/${
         r.link
       }' style="margin-right:7px">#${escapeHTML(
         r.zamowienie_id

@@ -9,7 +9,13 @@
 <style>
     .module_list {}
 
-    .module_info {}
+    .module_info {
+        margin-top: 3px;
+    }
+
+    .module_info h2.header {
+        margin-top: 0;
+    }
 </style>
 
 <script>

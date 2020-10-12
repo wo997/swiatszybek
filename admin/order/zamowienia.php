@@ -45,7 +45,7 @@ foreach ($status_list as $status) {
       statusDefinition.render = (r) => {
         return `
           ${renderStatus(r.status_id)}
-          <select data-value="${r.status_id}" onchange="changeStatus('${r.link}',this.value)">
+          <select data-value="${r.status_id}" onchange="changeZamowienieStatus('${r.link}',this.value, { can_undo: true })">
             <?= $options ?>
           </select>
         `;
@@ -82,7 +82,7 @@ foreach ($status_list as $status) {
     $(".bulkOptions").style.display = $("[data-link]:checked") ? "block" : "none";
   }
 
-  async function bulkStatusUpdate(value) {
+  async function bulkStatusUpdate(status_id) {
     var replaceList = [];
     $$("[data-link]:checked").forEach(e => {
       replaceList.push(e.getAttribute("data-link"));
@@ -94,7 +94,9 @@ foreach ($status_list as $status) {
     loader.show();
 
     for (i = 0; i < replaceList.length; i++) {
-      await changeStatus(replaceList[i], value, false);
+      await changeZamowienieStatus(replaceList[i], status_id, {
+        bulk: true
+      });
     }
 
     mytable.search(() => {
@@ -102,16 +104,47 @@ foreach ($status_list as $status) {
     });
   }
 
-  function changeStatus(zamowienie_link, value, search = true) {
+  function changeZamowienieStatus(zamowienie_link, new_status_id, options = {}) {
+    // TODO: maybe it should be a bulk request instead
     return new Promise(resolve => {
       xhr({
-        url: `/admin/zmien_status/${zamowienie_link}/${value}`,
-        success: () => {
-          if (search) {
+        url: `/admin/zmien_status/${zamowienie_link}/${new_status_id}`,
+        success: (res) => {
+          if (nonull(options.bulk, false)) {
+            resolve('resolved');
+          } else {
             mytable.search(() => {
+              if (nonull(options.can_undo, false)) {
+                var was_status_id = res.zamowienie_data.status_id;
+                new_status_id = res.new_status_id; // just in case someone else edited
+                zamowienie_link = res.zamowienie_data.link;
+                var zamowienie_id = res.zamowienie_data.zamowienie_id;
+
+                var was_status_title = nonull(status_list.find(e => e.id == was_status_id), {
+                  title: ""
+                }).title;
+                var now_status_title = nonull(status_list.find(e => e.id == new_status_id), {
+                  title: ""
+                }).title;
+
+                showNotification(`
+                <div style='text-align:center'>
+                  <div class='header'>Zmieniono statusu</div>
+                  Zamówienie #${zamowienie_id}
+                  <br>
+                  ${was_status_title} <i class="fas fa-angle-double-right"></i> ${now_status_title}
+                  <br>
+                  <span class='timer'></span>
+                  <button class='btn subtle' onclick="changeZamowienieStatus('${zamowienie_link}', ${was_status_id});dismissParentNotification(this);">Cofnij <i class="fas fa-undo-alt"></i></button>
+                </div>
+              `, {
+                  duration: 5000,
+                });
+              }
+
               resolve('resolved');
             });
-          } else resolve('resolved');
+          }
         }
       });
     });
