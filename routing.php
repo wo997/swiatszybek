@@ -47,14 +47,13 @@ $admin_navigations_tree = [
     ]
   ],
   ["url" => "kody-rabatowe", "title" => '<i class="fas fa-tag"></i> Kody rabatowe', "quick_menu" => true],
-  ["url" => "konfiguracja/dostawa", "title" => '<i class="fas fa-shipping-fast"></i> Dostawa', "base_url" => "konfiguracja"],
+  ["url" => "wysylki", "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki'],
   ["url" => "dane-firmy", "title" => '<i class="fas fa-building"></i> Dane firmy'],
   [
     "url" => "strony", "title" => '<i class="fas fa-pencil-alt"></i> Zawartość / Wygląd',
     "sub" => [
       ["url" => "strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
       ["url" => "menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
-      //["url" => "slider", "title" => '<i class="fas fa-images"></i> Slider'],
       ["url" => "stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
       ["url" => "logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
 
@@ -62,6 +61,8 @@ $admin_navigations_tree = [
   ],
   ["url" => "zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
   ["url" => "moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
+  ["url" => "powiadomienia", "title" => '<i class="fas fa-bell"></i> Powiadomienia'],
+
 ];
 
 function getNotificationCountForPage(&$page, $children_notification_count = 0)
