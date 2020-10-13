@@ -24,6 +24,8 @@ function showNotification(message, params = {}) {
     notification.style.maxWidth = "unset";
   }
 
+  notification.classList.toggle("one_line", nonull(params.one_line, false));
+
   notification.classList.remove("success");
   if (params.type == "success") {
     notification.classList.add("success");

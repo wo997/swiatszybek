@@ -28,7 +28,7 @@ foreach ($status_list as $status) {
     transform: translate(-50%, -50%);
     margin: 0;
     padding: 0.2em 0.5em;
-    width: calc(100% - 30px);
+    width: calc(100% - 22px);
   }
 </style>
 
@@ -58,7 +58,8 @@ foreach ($status_list as $status) {
       lang: {
         subject: "zamówień",
       },
-      bulk_edit: true,
+      primary: "zamowienie_id",
+      table: "zamowienia",
       width: 1400,
       definition: zamowienia_table_definition,
       controlsRight: `
@@ -67,8 +68,16 @@ foreach ($status_list as $status) {
           <i class="fas fa-search"></i>
         </div>
       `,
+      bulk_menu: `
+        <div style="text-align:center;">
+          Zmień status dla zaznaczonych zamówień (<span class='bulk_selection_count'></span>)
+          <select onchange="bulkStatusUpdate(this);">
+            <option value="">- STATUS -</option>
+            <?= $options ?>
+          </select>
+        </div>
+      `,
       onSearch: () => {
-        selectionChange();
         setTimeout(() => {
           $$("select[data-value]").forEach(e => {
             e.value = e.getAttribute("data-value");
@@ -78,23 +87,23 @@ foreach ($status_list as $status) {
     });
   });
 
-  function selectionChange() {
-    $(".bulkOptions").style.display = $("[data-link]:checked") ? "block" : "none";
-  }
+  async function bulkStatusUpdate(select) {
+    var status_id = select.value;
 
-  async function bulkStatusUpdate(status_id) {
-    var replaceList = [];
-    $$("[data-link]:checked").forEach(e => {
-      replaceList.push(e.getAttribute("data-link"));
-    });
-    if (replaceList.length == 0) return;
+    select.value = "";
 
-    if (!confirm("Czy chcesz zmienić wszystkie statusy?")) return;
+    var datatable = getParentDatatable(select);
+
+    var links = datatable.results.filter((value, index) => {
+      return datatable.bulk_selection.indexOf(index) !== -1
+    }).map(r => r.link)
+
+    if (!confirm(`Czy chcesz zmienić wszystkie statusy (${datatable.bulk_selection.length})?`)) return;
 
     loader.show();
 
-    for (i = 0; i < replaceList.length; i++) {
-      await changeZamowienieStatus(replaceList[i], status_id, {
+    for (let link of links) {
+      await changeZamowienieStatus(link, status_id, {
         bulk: true
       });
     }
@@ -129,7 +138,7 @@ foreach ($status_list as $status) {
 
                 showNotification(`
                 <div style='text-align:center'>
-                  <div class='header'>Zmieniono statusu</div>
+                  <div class='header'>Zmieniono status</div>
                   Zamówienie #${zamowienie_id}
                   <br>
                   ${was_status_title} <i class="fas fa-angle-double-right"></i> ${now_status_title}
@@ -156,13 +165,5 @@ foreach ($status_list as $status) {
 <h1>Zamówienia</h1>
 
 <div class="mytable"></div>
-
-<div class="bulkOptions" style="text-align:center;margin: 40px 0;display:none">
-  Zmień status dla zaznaczonych zamówień
-  <select onchange="bulkStatusUpdate(this.value);this.value=''">
-    <option value="">- STATUS -</option>
-    <?= $options ?>
-  </select>
-</div>
 
 <?php include "admin/default_page.php"; ?>

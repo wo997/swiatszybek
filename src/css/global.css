@@ -542,9 +542,6 @@ table input[type="number"] {
   text-align: center;
 }
 
-.oneline {
-  white-space: nowrap;
-}
 .text-wrap {
   white-space: normal;
 }

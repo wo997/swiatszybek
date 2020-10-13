@@ -3,7 +3,7 @@
 var zamowienia_table_definition = [
   {
     title: "Zamówienie",
-    width: "167px",
+    width: "172px",
     render: (r) => {
       var products_info = "<table>";
       try {

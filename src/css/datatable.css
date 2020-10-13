@@ -110,7 +110,6 @@
 .datatable td:not(.auto-width) {
   max-width: 400px;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -153,35 +152,17 @@
   border: 1px solid #bbb;
 }
 
-.datatable th {
-  position: relative;
-}
 .datatable th > span {
   min-height: 29px;
 }
-.datatable th:before {
-  position: absolute;
-  content: "";
-  width: calc(100% + 1px);
-  height: 1px;
-  background: #0006;
-  top: calc(100% + 0px);
-  left: -1px;
+
+.datatable thead th {
+  border-bottom: 1px solid #999;
 }
-.datatable th:after {
-  position: absolute;
-  content: "";
-  width: calc(100% + 1px);
-  height: 1px;
-  background: #0002;
-  top: calc(100% + 1px);
-  left: -1px;
+.datatable tbody tr:first-child td {
+  border-top: 1px solid #ccc;
 }
-.datatable th:first-child::before,
-.datatable th:first-child::after {
-  left: 0;
-  width: 100%;
-}
+
 .has_selected_rows .selected-results-count,
 .has_selected_rows .na-strone,
 .has_selected_rows [data-param="rowCount"] {

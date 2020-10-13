@@ -50,7 +50,9 @@ if (!isset($page_data["seo_image"])) {
 
   <?php if ($just_logged_in) : ?>
     domload(() => {
-      showNotification("Zalogowano pomyślnie");
+      showNotification("Zalogowano pomyślnie", {
+        one_line: true
+      });
     });
   <?php endif ?>
 

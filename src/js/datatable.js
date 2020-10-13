@@ -1,7 +1,7 @@
 /* js[global] */
 function createDatatable(datatable) {
   // REQUIRED name, definition | renderRow, url, primary, db_table
-  // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate, bulk_edit
+  // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate, bulk_menu
   // sortable (requires primary, db_table) IMPORTANT - not the same as column sortable
   // selectable: {data,output},
   // has_metadata: (boolean, enables outputting metadata from additional row inputs)
@@ -30,10 +30,12 @@ function createDatatable(datatable) {
   datatable.target.setAttribute("data-datatable-name", datatable.name);
 
   if (datatable.sortable) {
-    if (!datatable.primary)
+    if (!datatable.primary) {
       console.error(`missing primary key in ${datatable.name}`);
-    if (!datatable.db_table)
+    }
+    if (!datatable.db_table) {
       console.error(`missing db_table name in ${datatable.name}`);
+    }
     datatable.definition = [
       {
         title: "Kolejność",
@@ -59,10 +61,6 @@ function createDatatable(datatable) {
       },
       ...datatable.definition,
     ];
-
-    datatable.bulkEditChange = () => {
-      console.log(123);
-    };
 
     datatable.selection = [];
     datatable.singleselect = datatable.selectable.singleselect;
@@ -120,17 +118,20 @@ function createDatatable(datatable) {
     datatable.selection = [];
   }
 
-  if (datatable.bulk_edit) {
+  if (datatable.bulk_menu) {
+    if (!datatable.primary) {
+      console.error(`missing primary key in ${datatable.name}`);
+    }
     datatable.definition = [
       {
         title: `<label class="checkbox-wrapper">
-          <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable.name}.bulkEditSelectAll()">
+          <input type="checkbox" class="bulk_edit_checkbox bulk_edit_checkbox_all" onchange="${datatable.name}.bulkEditSelectAll()">
           <div class="checkbox standalone"></div>
         </label>`,
         width: "36px",
-        render: (r) => {
+        render: () => {
           return `<label class="checkbox-wrapper">
-            <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable.name}.bulkEditChange()">
+            <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable.name}.bulkEditSelectionChange()">
             <div class="checkbox standalone"></div>
           </label>`;
         },
@@ -139,8 +140,47 @@ function createDatatable(datatable) {
       ...datatable.definition,
     ];
 
-    datatable.bulkEditChange = () => {
-      console.log(123);
+    datatable.bulkEditSelectAll = () => {
+      var checked = datatable.target.find(".bulk_edit_checkbox_all").checked;
+      datatable.tableSearchElement
+        .findAll("tbody .bulk_edit_checkbox")
+        .forEach((e) => {
+          e.checked = checked;
+        });
+
+      datatable.bulkEditSelectionChange();
+    };
+
+    datatable.bulkEditSelectionChange = () => {
+      var bulk_selection = [];
+      var all_checked = true;
+      var any_checked = false;
+      datatable.tableSearchElement
+        .findAll("tbody .bulk_edit_checkbox")
+        .forEach((e) => {
+          if (e.checked) {
+            bulk_selection.push(
+              +e.parent().parent().parent().getAttribute("data-index")
+            );
+            any_checked = true;
+          } else {
+            all_checked = false;
+          }
+        });
+      datatable.bulk_selection = bulk_selection;
+
+      if (any_checked) {
+        var bulk_selection_count = datatable.target.find(
+          ".bulk_selection_count"
+        );
+        if (bulk_selection_count) {
+          bulk_selection_count.innerHTML = bulk_selection.length;
+        }
+      }
+
+      datatable.target.find(".bulk_edit_checkbox_all").checked = all_checked;
+
+      expand(datatable.bulkMenuElement, any_checked);
     };
   }
 
@@ -264,6 +304,10 @@ function createDatatable(datatable) {
 
   var below_table_html = `<div class="pagination pagination-bottom"></div>`;
 
+  if (datatable.bulk_menu) {
+    below_table_html += `<div class="bulk_menu expand_y animate_hidden hidden"><div style='margin-bottom:10px'>${datatable.bulk_menu}</div></div>`;
+  }
+
   if (datatable.selectable) {
     datatable.target.insertAdjacentHTML(
       "afterbegin",
@@ -317,6 +361,7 @@ function createDatatable(datatable) {
   datatable.tableBodyElement = datatable.tableSearchElement.find("tbody");
   datatable.totalRowsElement = datatable.target.find(".total-rows");
   datatable.paginationElement = datatable.target.find(".pagination");
+  datatable.bulkMenuElement = datatable.target.find(".bulk_menu");
   datatable.paginationBottomElement = datatable.target.find(
     ".pagination-bottom"
   );
@@ -703,8 +748,16 @@ function createDatatable(datatable) {
           datatable.registerMetadataFields();
         }
 
-        if (callback) callback(res); // custom
-        if (datatable.onSearch) datatable.onSearch(res); // default
+        if (callback) {
+          callback(res); // custom
+        }
+        if (datatable.onSearch) {
+          datatable.onSearch(res); // default
+        }
+
+        if (datatable.bulk_menu) {
+          datatable.bulkEditSelectionChange();
+        }
       },
     });
   };
@@ -858,6 +911,10 @@ function createDatatable(datatable) {
         e.value = index;
         e.setAttribute("data-value", index);
       });
+    }
+
+    if (datatable.bulk_menu) {
+      datatable.bulkEditSelectionChange();
     }
   };
   if (datatable.selectable && datatable.selectable.has_metadata) {
@@ -1088,7 +1145,7 @@ function setPublish(obj, published) {
   if (!rowElement) return;
   var primary_id = rowElement.getAttribute("data-primary");
   if (!primary_id) return;
-  //console.log(table.primary,table.db_table,primary_id);
+
   xhr({
     url: "/admin/set_publish",
     params: {

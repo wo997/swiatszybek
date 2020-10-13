@@ -52,12 +52,12 @@ if (empty($basket)) {
     $res .= "<tr>
         <td><img data-src='" . $item['zdjecie'] . "' style='max-width:130px;display:block;margin:auto'></td>
         <td><a class='linkable' href='" . nonull($links, $item['variant_id']) . "'>" . $item['title'] . "</a></td>
-        <td class='pln oneline' style='font-weight:normal'><label>Cena:</label> " . $item['real_price'] . " zł</td>
-        <td class='oneline'>" . $item['quantity'] . " szt.</td>
-        <td class='pln oneline basket-price'><label>Suma:</label> <span>" . $item['total_price'] . "</span> zł</td>";
+        <td class='pln' style='font-weight:normal'><label>Cena:</label> " . $item['real_price'] . " zł</td>
+        <td>" . $item['quantity'] . " szt.</td>
+        <td class='pln basket-price'><label>Suma:</label> <span>" . $item['total_price'] . "</span> zł</td>";
 
     if ($app["user"]["priveleges"]["backend_access"]) {
-      $res .= "<td class='pln oneline'><label>Cena&nbsp;nabycia:</label> <input class='nabyto' style='width:70px' type='text' onchange='setNabyto(" . $item['basket_item_id'] . ",this)' value='" . intval(nonull($item, 'purchase_price', "")) . "'> zł</td>";
+      $res .= "<td class='pln'><label>Cena&nbsp;nabycia:</label> <input class='nabyto' style='width:70px' type='text' onchange='setNabyto(" . $item['basket_item_id'] . ",this)' value='" . intval(nonull($item, 'purchase_price', "")) . "'> zł</td>";
     }
     $res .= "</tr>";
   }

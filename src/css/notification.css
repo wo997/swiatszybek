@@ -22,16 +22,17 @@
 .notification .fa-times {
   position: absolute;
   padding: 5px;
-  right: 0px;
-  top: 0px;
+  right: 3px;
+  top: 3px;
   cursor: pointer;
   color: #222;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   justify-content: center;
   align-items: center;
   font-size: 17px;
   display: flex;
+  border-radius: 6px;
 }
 .notification .fa-times:hover {
   background: #0001;
@@ -39,7 +40,15 @@
 
 .notification .header {
   border-bottom: 1px solid #ccc;
-  padding: 0px 26px 4px;
+  padding: 0px 26px 6px;
   text-transform: uppercase;
   margin-bottom: 3px;
+}
+
+.notification.one_line {
+  padding-right: 36px;
+}
+
+.notification.one_line .fa-times {
+  top: 4px;
 }
