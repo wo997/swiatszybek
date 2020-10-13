@@ -127,7 +127,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div id="mainSearch" data-expand>
           <div class="modal-body">
               <button class="fas fa-times close-modal-btn"></button>
-              <h3 class="header"><img class="search-icon" src="/src/img/search_icon.svg"> Wyszukiwarka</h3>
+              <h3 class="modal-header"><img class="search-icon" src="/src/img/search_icon.svg"> Wyszukiwarka</h3>
               <div class="scroll-panel scroll-shadow panel-padding">
                 
               </div>
@@ -149,7 +149,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div id="userMenu" data-expand>
           <div class="modal-body">
               <button class="fas fa-times close-modal-btn"></button>
-              <h3 class="header"><img class="user-icon" src="/src/img/user_icon.svg"> Moje konto</h3>
+              <h3 class="modal-header"><img class="user-icon" src="/src/img/user_icon.svg"> Moje konto</h3>
               <div class="scroll-panel scroll-shadow">
                 
               </div>
@@ -176,7 +176,7 @@ window.addEventListener("DOMContentLoaded", () => {
     <div id="basketMenu" data-expand>
         <div class="modal-body">
             <button class="fas fa-times close-modal-btn"></button>
-            <h3 class="header">
+            <h3 class="modal-header">
               <div class="basket-icon-wrapper">
                 <img class="basket-icon" src="/src/img/basket_icon.svg">
                 <div class="basket_item_count"></div>
@@ -222,7 +222,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div id="mainMenu" data-expand>
           <div class="modal-body">
               <button class="fas fa-times close-modal-btn"></button>
-              <h3 class="header"><img class="menu-icon" src="/src/img/menu_icon.svg"> Menu</h3>
+              <h3 class="modal-header"><img class="menu-icon" src="/src/img/menu_icon.svg"> Menu</h3>
               <div class="scroll-panel scroll-shadow">
                 
               </div>
@@ -258,7 +258,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div id="lastViewedProducts" data-expand="previous">
         <div class="modal-body">
             <button class="fas fa-times close-modal-btn"></button>
-            <h3 class="header">
+            <h3 class="modal-header">
               <img class="product-history-icon" src="/src/img/product_history_icon.svg">
               Ostatnio przeglądane  
             </h3>
@@ -282,7 +282,7 @@ window.addEventListener("DOMContentLoaded", () => {
       <div id="wishList" data-expand="previous">
         <div class="modal-body">
             <button class="fas fa-times close-modal-btn"></button>
-            <h3 class="header">
+            <h3 class="modal-header">
               <img class="heart-icon" src="/src/img/heart_icon.svg"></img>
               Schowek  
             </h3>

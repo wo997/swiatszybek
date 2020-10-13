@@ -247,7 +247,7 @@
   color: #800;
 }
 
-.modal-content .header {
+.modal-content .modal-header {
   padding: calc(0.2em + min(1vw, 10px)) 0;
   font-size: 20px;
   text-align: center;

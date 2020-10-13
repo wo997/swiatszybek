@@ -435,7 +435,7 @@ function showCategory($category, $level = 0)
           <div id="searchCategory" data-expand>
               <div class="modal-body">
                   <button class="fas fa-times close-modal-btn"></button>
-                  <h3 class="header">Kategorie</h3>
+                  <h3 class="modal-header">Kategorie</h3>
                   <div class="scroll-panel scroll-shadow">
 
                   </div>
@@ -447,7 +447,7 @@ function showCategory($category, $level = 0)
           <div id="searchFilters" data-expand>
               <div class="modal-body">
                   <button class="fas fa-times close-modal-btn" onclick="restoreFilters();afterFiltersHidden();"></button>
-                  <h3 class="header">Filtry <span class="filter_count"></span></h3>
+                  <h3 class="modal-header">Filtry <span class="filter_count"></span></h3>
                   <div class="scroll-panel scroll-shadow panel-padding">
 
                   </div>

@@ -19,6 +19,7 @@ function createDatatable(datatable) {
   datatable.request = null;
   datatable.results = [];
   datatable.filters = [];
+  datatable.fixed_filters = [];
   datatable.sort = null;
 
   if (!datatable.lang) datatable.lang = {};
@@ -537,7 +538,10 @@ function createDatatable(datatable) {
     var params = {
       filters: [],
     };
-    Object.assign(params.filters, datatable.filters);
+    Object.assign(params.filters, [
+      ...datatable.filters,
+      ...datatable.fixed_filters,
+    ]);
 
     if (createList) {
       if (datatable.selection) {

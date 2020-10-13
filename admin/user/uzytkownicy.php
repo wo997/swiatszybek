@@ -146,11 +146,11 @@
         setFormData(data, form);
 
         removeFilterByField(zamowieniatable, "user_id");
-        zamowieniatable.filters.push({
+        zamowieniatable.fixed_filters = [{
             field: "user_id",
             type: "=",
             value: $(`#editUser [name="user_id"]`).getValue(),
-        })
+        }];
         zamowieniatable.search();
 
         showModal(form.id, {
@@ -196,7 +196,7 @@
         <div class="scroll-panel scroll-shadow panel-padding">
             <div class="desktopRow spaceColumns">
                 <div>
-                    <h3 style="text-align: center;font-size: 18px;margin: 20px 0 10px;">Dane kontaktowe</h3>
+                    <h3 class="form-header">Dane kontaktowe</h3>
 
                     <div class="field-title">Imię</div>
                     <input type="text" class="field" name="imie" autocomplete="first-name" data-validate>
@@ -217,7 +217,7 @@
                     <input type="text" class="field" name="nip">
                 </div>
                 <div>
-                    <h3 style="text-align: center;font-size: 18px;margin: 20px 0 10px;">Adres</h3>
+                    <h3 class="form-header">Adres</h3>
 
                     <div class="field-title">Kraj</div>
                     <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
@@ -269,11 +269,7 @@
 
                     <div class="expand_y changePassword">
                         <div class="field-title first">Hasło (min. 8 znaków)</div>
-                        <div class="field-wrapper">
-                            <input type="password" name="password" class="field" data-validate="password">
-                            <i class="correct fa fa-check"></i>
-                            <i class="wrong fa fa-times"></i>
-                        </div>
+                        <input type="password" name="password" class="field" data-validate="password">
                     </div>
                 </div>
                 <div>

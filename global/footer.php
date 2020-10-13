@@ -37,7 +37,7 @@
   <div class="modal-body">
     <button class="fas fa-times close-modal-btn"></button>
 
-    <h3 class="header">
+    <h3 class="modal-header">
       <img class="user-icon" src="/src/img/user_icon.svg">
       Logowanie
     </h3>
@@ -122,7 +122,7 @@ if (isset($JS_files)) {
   <div class="modal-body">
     <button class="fas fa-times close-modal-btn"></button>
 
-    <h3 class="header">Dodano do koszyka</h3>
+    <h3 class="modal-header">Dodano do koszyka</h3>
 
     <div style="display:flex;padding: min(2vw,15px);align-items: center;" class="mobileRow">
       <img class="variant_image" data-height="1w" data-type="src">
