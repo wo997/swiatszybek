@@ -194,7 +194,7 @@ $message .= "</div>";
 $message .= '<p style="font-size: 16px;">Jeśli jeszcze nie opłaciłaś/eś Twojego zamówienia,<br>możesz to zrobić teraz korzystając <a href="' . $link_full . '" style="font-weight:bold;color:' . primary_clr . ';">z tego linku</a></p>';
 $message .= getEmailFooter();
 
-$mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . config('main_email_sender') . "";
+$mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . $app["company_data"]['email_sender'] . "";
 
 @sendEmail($_POST["email"], $message, $mailTitle);
 @sendEmail(config('main_email'), $message, $mailTitle);

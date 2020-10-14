@@ -20,7 +20,7 @@ function sendPaymentNotification($delayHours = 5)
         $message .= "Możesz tego dokonać teraz klikając w <a href='" . getZamowienieLink($z["link"]) . "' style='font-weight:bold;color:#37f;'>ten link</a>";
         $message .= getEmailFooter();
 
-        $mailTitle = "Przypomnienie o opłacie zamówienia #" . $z["zamowienie_id"] . " - " . config('main_email_sender');
+        $mailTitle = "Przypomnienie o opłacie zamówienia #" . $z["zamowienie_id"] . " - " . $app["company_data"]['email_sender'];
 
         if (!isset($TEST)) {
             sendEmail($z["email"], $message, $mailTitle);
@@ -78,7 +78,7 @@ function inviteToGiveComment($hour = 18, $daysAfterSent = 14)
             $message .= "<br>$res";
             $message .= getEmailFooter();
 
-            $mailTitle = "Podziękowanie za zamówienie nr #{$z['zamowienie_id']} - " . config('main_email_sender');
+            $mailTitle = "Podziękowanie za zamówienie nr #{$z['zamowienie_id']} - " . $app["company_data"]['email_sender'];
 
             if (!isset($TEST)) {
                 sendEmail($z['email'], $message, $mailTitle);

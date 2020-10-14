@@ -1,6 +1,6 @@
 <?php
 
-$company_data = getCompanyData();
+$company_data = $app["company_data"];
 
 $mailTitle = "Opłacono zamówienie #" . $zamowienie_data["zamowienie_id"] . " - " . $company_data["email_sender"] . "";
 

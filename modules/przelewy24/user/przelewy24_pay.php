@@ -6,9 +6,6 @@ if (!$zamowienie_link) {
   die;
 }
 
-require_once __DIR__ . "/przelewy24_service.php";
-
-$P24 = new Przelewy24(secret("p24_merchantId"), secret("p24_posId"), secret("p24_crc"), secret("p24_testMode"));
 //$RET = $P24->testConnection();
 /*if(isset($RET["error"]) && $RET["error"]==='0') {
   echo "przelewy24 connected";
@@ -22,6 +19,10 @@ query("UPDATE zamowienia SET session_id = ? WHERE link = ?", [$zamowienie_link .
 $zamowienie_data = fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
 
 if ($zamowienie_data["status_id"] === 0) {
+  require_once __DIR__ . "/../przelewy24_init.php";
+
+  $P24 = $app["przelewy24"];
+
   $link = getZamowienieLink($zamowienie_data["link"]);
 
   $P24->addValue("p24_session_id", $zamowienie_data["session_id"]);
@@ -31,7 +32,7 @@ if ($zamowienie_data["status_id"] === 0) {
   $P24->addValue("p24_amount", round($zamowienie_data["koszt"] * 100));
   $P24->addValue("p24_currency", $currency);
 
-  $P24->addValue("p24_description", config('main_email_sender') . " zamowienie #" . $zamowienie_data["zamowienie_id"]);
+  $P24->addValue("p24_description", $app["company_data"]['email_sender'] . " zamowienie #" . $zamowienie_data["zamowienie_id"]);
   /*$P24->addValue("p24_client", $zamowienie_data["imie"] . " " . $zamowienie_data["nazwisko"]);
   $P24->addValue("p24_address", "ul. " . $zamowienie_data["ulica"] . " " . $zamowienie_data["nr_domu"] . "/" . $zamowienie_data["nr_lokalu"]);
   $P24->addValue("p24_zip", $zamowienie_data["kod_pocztowy"]);
@@ -41,7 +42,7 @@ if ($zamowienie_data["status_id"] === 0) {
   $P24->addValue("p24_email", trim($zamowienie_data["email"]));
   $P24->addValue("p24_url_return", $link);
   $P24->addValue("p24_url_status_id", SITE_URL . "/przelewy24_confirm_payment");
-  $P24->addValue("p24_api_version", "3.2");
+  $P24->addValue("p24_api_version", P24_VERSION);
   $P24->addValue("p24_channel", "2");
 
   $RET = $P24->trnRegister(false);

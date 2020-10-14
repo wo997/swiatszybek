@@ -57,7 +57,7 @@ $user_data = fetchRow("SELECT user_id, authentication_token FROM users WHERE ema
 if ($user_data) {
   $message = "<h2>Kliknij w link poniżej, żeby zmienić swoje hasło</h2><br><a style='font-size:18px' href='" . SITE_URL . "/resetowanie-hasla/" . $user_data["user_id"] . "/" . $user_data["authentication_token"] . "'>Zmień hasło</a>";
 
-  $mailTitle = "Zmiana hasła konta " . config('main_email_sender') . " " . date("d-m-Y");
+  $mailTitle = "Zmiana hasła konta " . $app["company_data"]['email_sender'] . " " . date("d-m-Y");
 
   sendEmail($email, $message, $mailTitle);
 
@@ -115,7 +115,7 @@ if ($user_data) {
 // if ($user_data) {
 //   $message = "<h2>Kliknij w link poniżej, żeby zmienić swoje hasło</h2><br><a style='font-size:18px' href='" . SITE_URL . "/resetowanie-hasla/" . $user_data["user_id"] . "/" . $user_data["authentication_token"] . "'>Zmień hasło</a>";
 
-//   $mailTitle = "Zmiana hasła konta " . config('main_email_sender') . " " . date("d-m-Y");
+//   $mailTitle = "Zmiana hasła konta " . $app["company_data"]['email_sender'] . " " . date("d-m-Y");
 
 //   // sendEmail($email, $message, $mailTitle);
 

@@ -59,7 +59,7 @@ if ($app["user"]["type"] == 'regular') {
     ]);
 
     $message = "<p>Kliknij w link poniżej, żeby zatwierdzić zmianę emaila z " . $user_old_data["email"] . " na $email</p><br><a style='font-size:18px' href='" . SITE_URL . "/zmien_email/$user_id/" . $user_old_data["authentication_token"] . "'>Potwierdzam</a>";
-    $mailTitle = "Zmiana emaila konta " . config('main_email_sender') . " " . date("d-m-Y");
+    $mailTitle = "Zmiana emaila konta " . $app["company_data"]['email_sender'] . " " . date("d-m-Y");
 
     sendEmail($email, $message, $mailTitle);
     $response["message"] = quit("Wysłaliśmy link do zmiany maila na $email", 1);

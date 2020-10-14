@@ -227,7 +227,4 @@ if (getSetting("general", "advanced", ["ssl"]) == 1 && nonull($_SERVER, "HTTPS",
     redirect(str_replace_first("http://", "https://", SITE_URL, 1));
 }
 
-function getCompanyData()
-{
-    return getSetting("general", "company", [], "");
-}
+$app["company_data"] = getSetting("general", "company", [], "");

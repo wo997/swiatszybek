@@ -69,3 +69,7 @@ textarea + .input-elements .input-error-indicator {
 .checkbox-wrapper + .input-elements .input-error-indicator {
   display: none !important;
 }
+
+.form-space {
+  height: 0.6em;
+}

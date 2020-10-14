@@ -31,15 +31,15 @@ function quit($message, $type)
 
 if ($email) {
     if ($anuluj)
-        $message = "<h3 style='color:#a44'>Zrezygnowaleś z newslettera " . config('main_email_sender') . "</h3><br><a style='font-size:16px;' href='" . SITE_URL . "/potwierdz_newsletter/$token'>Zapisz się ponownie</a>";
+        $message = "<h3 style='color:#a44'>Zrezygnowaleś z newslettera " . $app["company_data"]['email_sender'] . "</h3><br><a style='font-size:16px;' href='" . SITE_URL . "/potwierdz_newsletter/$token'>Zapisz się ponownie</a>";
     else {
-        $message = "<h3>Zapisałeś się do newslettera " . config('main_email_sender') . "</h3><br><a style='font-size:14px;color:#666' href='" . SITE_URL . "/potwierdz_newsletter/$token/anuluj'>Zrezygnuj z NEWSLETTERA</a>";
+        $message = "<h3>Zapisałeś się do newslettera " . $app["company_data"]['email_sender'] . "</h3><br><a style='font-size:14px;color:#666' href='" . SITE_URL . "/potwierdz_newsletter/$token/anuluj'>Zrezygnuj z NEWSLETTERA</a>";
     }
 
     if ($anuluj)
-        $mailTitle = "Zrezygnowano z newslettera " . config('main_email_sender') . " " . date("d-m-Y");
+        $mailTitle = "Zrezygnowano z newslettera " . $app["company_data"]['email_sender'] . " " . date("d-m-Y");
     else
-        $mailTitle = "Zapisano się do newslettera " . config('main_email_sender') . " " . date("d-m-Y");
+        $mailTitle = "Zapisano się do newslettera " . $app["company_data"]['email_sender'] . " " . date("d-m-Y");
 
     sendEmail($email, $message, $mailTitle);
 

@@ -57,7 +57,7 @@ $message = "
   <h3>Kliknij w link poniżej, żeby aktywować swoje konto</h3>
   <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/aktywuj/" . $user_data["user_id"] . "/$authentication_token'>Aktywuj</a>
 ";
-$mailTitle = "Aktywacja konta " . config('main_email_sender') . " " . date("d-m-Y");
+$mailTitle = "Aktywacja konta " . $app["company_data"]['email_sender'] . " " . date("d-m-Y");
 @sendEmail($_POST["email"], $message, $mailTitle);
 
 $response_message = "Link do aktywacji konta został wysłany<br>na " . $_POST["email"];

@@ -89,7 +89,7 @@ include "global/includes_for_cms_page.php";
       "description": "<?= $product_data["seo_description"] ?>",
       "brand": {
         "@type": "Thing",
-        "name": "<?= config('main_email_sender') ?>"
+        "name": "<?= $app["company_data"]['email_sender'] ?>"
       },
       "aggregateRating": {
         "@type": "AggregateRating",
@@ -106,7 +106,7 @@ include "global/includes_for_cms_page.php";
         "availability": "<?= $stockSchema ?>",
         "seller": {
           "@type": "Organization",
-          "name": "<?= config('main_email_sender') ?>"
+          "name": "<?= $app["company_data"]['email_sender'] ?>"
         }
       }
     }

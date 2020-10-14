@@ -12,7 +12,9 @@ $email_client_url_list = [
 
 function sendEmail($recipient, $message, $title, $headers = null, $from = null)
 {
-    $company_data = getCompanyData();
+    global $app;
+
+    $company_data = $app["company_data"];
 
     if ($headers === null) {
         $headers  = 'MIME-Version: 1.0' . "\r\n";

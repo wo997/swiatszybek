@@ -50,7 +50,7 @@ function dailyReport()
         ";
     }
 
-    $messageTitle = "Raport dnia " . config('main_email_sender') . " " . $day;
+    $messageTitle = "Raport dnia " . $app["company_data"]['email_sender'] . " " . $day;
 
     sendEmail("wojtekwo997@gmail.com", $message, $messageTitle);
     sendEmail("marek.krygier@solectric.pl", $message, $messageTitle);

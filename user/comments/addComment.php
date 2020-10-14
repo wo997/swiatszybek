@@ -66,7 +66,7 @@ if ($can_user_get_comment_rebate) {
   $message .= "Możesz go wykorzystać w <a style='font-weight: bold;color: #37f;' href='" . SITE_URL . "'>naszym sklepie</a> lub przekazać znajomemu.";
   $message .= getEMailFooter();
 
-  $mailTitle = "Kod rabatowy za zamówienie #" . $can_user_get_comment_rebate["zamowienie_id"] . " - " . config('main_email_sender');
+  $mailTitle = "Kod rabatowy za zamówienie #" . $can_user_get_comment_rebate["zamowienie_id"] . " - " . $app["company_data"]['email_sender'];
 
   sendEmail("wojtekwo997@gmail.com", $message, $mailTitle);
   sendEmail($app["user"]["email"], $message, $mailTitle);

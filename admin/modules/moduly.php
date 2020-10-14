@@ -9,6 +9,10 @@
 <style>
     .module_list {}
 
+    .module_list .btn span {
+        margin-left: 0.2em;
+    }
+
     .module_info {
         margin-top: 3px;
     }
@@ -27,7 +31,7 @@
         for (let module_name in app_modules) {
             var module = app_modules[module_name];
             html += `
-                <div class="btn subtle" onclick="selectModule(this, '${module_name}')">${module.icon} ${module.title}</div>
+                <div class="btn subtle" onclick="selectModule(this, '${module_name}')">${module.icon} <span>${module.title}</span></div>
             `;
         }
 

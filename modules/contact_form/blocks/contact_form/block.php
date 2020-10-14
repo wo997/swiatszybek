@@ -4,7 +4,7 @@
 useJS("/$module_block_dir/scripts.js");
 useCSS("/$module_block_dir/styles.css");
 
-$company_data = getCompanyData();
+$company_data = $app["company_data"];
 
 ?>
 <div class='lazy'>

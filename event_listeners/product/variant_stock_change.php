@@ -12,7 +12,7 @@ $product_image = "<img style='max-width:300px' src='" . SITE_URL . "/md/" . $var
 
 if ($new_stock > 0) // $variant_data["stock"] == 0 && 
 {
-    $mailTitle = "Powiadomienie o dostępności " . $variant_data["title"] . " - " . config('main_email_sender');
+    $mailTitle = "Powiadomienie o dostępności " . $variant_data["title"] . " - " . $app["company_data"]['email_sender'];
 
     $message = "<p>Uprzejmie informujemy, że <b>" . $variant_data["title"] . " " . $variant_data["name"] . "</b> jest dostępny w naszym sklepie!</p>";
     $message .= "<a href='$product_link' style='color:#37f;font-weight:bold;font-size:16px'>Kup teraz</a><br><br>";

@@ -30,8 +30,8 @@ if (!$res) {
 
 // send mail no matter if exists to make sure he will receive it
 
-$message = "<h3>Kliknij w link poniżej, jeśli chcesz zapisać się do newslettera " . config('main_email_sender') . "</h3><br><a style='font-size:16px' href='" . SITE_URL . "/potwierdz_newsletter/$token'>Zapisz się do NEWSLETTERA</a>";
+$message = "<h3>Kliknij w link poniżej, jeśli chcesz zapisać się do newslettera " . $app["company_data"]['email_sender'] . "</h3><br><a style='font-size:16px' href='" . SITE_URL . "/potwierdz_newsletter/$token'>Zapisz się do NEWSLETTERA</a>";
 
-$mailTitle = "Zapisz się do newslettera " . config('main_email_sender') . " " . date("d-m-Y");
+$mailTitle = "Zapisz się do newslettera " . $app["company_data"]['email_sender'] . " " . date("d-m-Y");
 
 sendEmail($email, $message, $mailTitle);

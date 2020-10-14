@@ -5,11 +5,11 @@ define("time", microtime(true));
 require_once 'kernel.php';
 
 $url = "";
-if (isset($_GET['url']))
+if (isset($_GET['url'])) {
   $url = rtrim($_GET['url'], "/");
+}
 
-
-if (config("ssl")) {
+if (setting(["general", "advanced", "ssl"])) {
   if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
     $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     header('HTTP/1.1 301 Moved Permanently');

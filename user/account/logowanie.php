@@ -10,7 +10,7 @@ if ($app["user"]["id"]) {
 
 <head>
   <title>Logowanie</title>
-  <meta name="description" content="Zaloguj się do sklepu <?= config('main_email_sender') ?>">
+  <meta name="description" content="Zaloguj się do sklepu <?= $app["company_data"]['email_sender'] ?>">
 
   <?php include "global/includes.php"; ?>
   <style>

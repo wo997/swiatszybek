@@ -46,7 +46,7 @@ if ($app["user"]["id"]) {
 
 $name = getLink($a_title);
 
-$mailTitle = "$a_imie $a_nazwisko $a_email oczekuje na $a_title - " . config('main_email_sender');
+$mailTitle = "$a_imie $a_nazwisko $a_email oczekuje na $a_title - " . $app["company_data"]['email_sender'];
 
 $message = "<p>$a_imie $a_nazwisko $a_email oczekuje na $a_title $a_v_name</p>";
 $message .= "<a href='" . SITE_URL . "/produkt/$a_product_id/$name' style='color:#37f;font-weight:bold;font-size:16px'>Zobacz produkt</a><br><br>";
