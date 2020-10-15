@@ -772,7 +772,9 @@ function createDatatable(datatable) {
       datatable.nosearch === false ||
       datatable.selectable
     ) {
-      datatable.search();
+      datatable.search(() => {
+        datatable.ready = true;
+      });
     }
   };
 
@@ -793,7 +795,12 @@ function createDatatable(datatable) {
             if (row) {
               Object.entries(row_data).forEach(([key, value]) => {
                 var m = row.find(`[data-metadata="${key}"]`);
-                if (m) m.setValue(value);
+                if (m) {
+                  // let f.e simple-list component be created
+                  setTimeout(() => {
+                    m.setValue(value);
+                  }, 0);
+                }
               });
             }
           });
@@ -817,12 +824,13 @@ function createDatatable(datatable) {
   };
 
   datatable.removeRow = (data_id) => {
+    data_id = +data_id;
     const index = datatable.selection.indexOf(data_id);
-    if (index !== -1) {
-      datatable.selection.splice(index, 1);
-    } else {
+    if (index === -1) {
       return;
     }
+
+    datatable.selection.splice(index, 1);
 
     const index2 = datatable.selectionResults
       .map((e) => {
@@ -846,6 +854,7 @@ function createDatatable(datatable) {
     datatable.selectionChange();
   };
   datatable.addRow = (data_id) => {
+    data_id = +data_id;
     if (datatable.singleselect && datatable.selection.length > 0) {
       datatable.removeRow(datatable.selection[0]);
     }
@@ -919,6 +928,10 @@ function createDatatable(datatable) {
 
     if (datatable.bulk_menu) {
       datatable.bulkEditSelectionChange();
+    }
+
+    if (datatable.onSelectionChange) {
+      datatable.onSelectionChange(datatable.selection, datatable);
     }
   };
   if (datatable.selectable && datatable.selectable.has_metadata) {

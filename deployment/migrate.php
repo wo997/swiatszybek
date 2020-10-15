@@ -136,6 +136,7 @@ createTable("link_variant_attribute_option", [
   ["name" => "product_id", "type" => "INT", "index" => "index"],
   ["name" => "attribute_id", "type" => "INT", "index" => "index"],
   ["name" => "kolejnosc", "type" => "INT", "index" => "index"],
+  ["name" => "attribute_values", "type" => "TEXT", "previous_name" => "values"],
 ]);
 
 alterTable("users", [

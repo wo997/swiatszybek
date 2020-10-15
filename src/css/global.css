@@ -608,7 +608,7 @@ hr {
 }
 .rect {
   border-radius: 4px;
-  padding: 2px 7px;
+  padding: 3px 7px;
   color: white;
   display: inline-block;
   font-weight: normal;
@@ -1022,79 +1022,6 @@ input[type="checkbox"]:checked ~ .checkbox::after {
 .primary-link {
   font-weight: bold;
   color: #35f;
-}
-
-/*footer a:hover {
-  text-decoration: underline;
-}*/
-
-/* deprecated */
-
-.displayModal #slider {
-  transform: translateX(-50%) translateY(-50%);
-}
-
-#slider {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-70%) scale(0.9);
-  background-color: #f5f5f5;
-  max-width: 1000px;
-  padding: 7px;
-  border-radius: 4px;
-  width: calc(100vw - 50px);
-  -webkit-transition: transform 300ms cubic-bezier(0.29, 0, 0.41, 1);
-  -webkit-transition: transform 300ms cubic-bezier(0.29, 0, 0.41, 1.205);
-  -moz-transition: transform 300ms cubic-bezier(0.29, 0, 0.41, 1.205);
-  -o-transition: transform 300ms cubic-bezier(0.29, 0, 0.41, 1.205);
-  transition: transform 300ms cubic-bezier(0.29, 0, 0.41, 1.205);
-  -webkit-transition-timing-function: cubic-bezier(0.29, 0, 0.41, 1);
-  -webkit-transition-timing-function: cubic-bezier(0.29, 0, 0.41, 1.205);
-  -moz-transition-timing-function: cubic-bezier(0.29, 0, 0.41, 1.205);
-  -o-transition-timing-function: cubic-bezier(0.29, 0, 0.41, 1.205);
-  transition-timing-function: cubic-bezier(0.29, 0, 0.41, 1.205);
-}
-
-#gallery > div {
-  width: 25%;
-  display: block;
-  border: 2px solid transparent;
-  box-sizing: border-box;
-  position: relative;
-}
-
-#gallery > div > img {
-  width: 100%;
-  box-sizing: border-box;
-  display: block;
-}
-
-.shift #gallery > div:after {
-  content: "Usuń";
-  color: black;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #a005;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-  text-shadow: 0 0 1px black;
-  left: 0;
-  top: 0;
-}
-
-#gallery {
-  height: calc(100vh - 200px);
-  overflow-y: auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 13px 0;
 }
 
 .disable-scroll {
@@ -1620,7 +1547,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 .attribute-row .field {
   width: auto;
   display: inline-block;
-  margin: 0px 2px;
+  margin-left: 4px;
 }
 
 .combo-select-wrapper select[data-parent_value_id].hidden,
@@ -1759,4 +1686,8 @@ h3 {
 
 .lazy * {
   display: none;
+}
+
+img {
+  display: inline-block;
 }

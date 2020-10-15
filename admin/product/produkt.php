@@ -35,11 +35,12 @@ $categories_csv = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FRO
 
 include_once "admin/product/attributes_service.php";
 
-$displayAllAttributeOptions = displayAllAttributeOptions();
+$allAttributeOptions = getAllAttributeOptions();
+$allAttributeOptionsHTML = $allAttributeOptions["html"];
 
 $product_data["attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
-$product_data["variant_attribute_options"] = fetchColumn("SELECT attribute_id FROM link_variant_attribute_option WHERE product_id = $product_id ORDER BY kolejnosc ASC");
+$product_data["variant_attribute_options"] = fetchArray("SELECT attribute_id, attribute_values FROM link_variant_attribute_option WHERE product_id = $product_id ORDER BY kolejnosc ASC");
 
 $variants = fetchArray("SELECT * FROM variant WHERE product_id = $product_id ORDER BY kolejnosc ASC");
 
@@ -67,19 +68,51 @@ if ($product_id === -1) {
 <?php startSection("head"); ?>
 
 <style>
+  #variantForm .attribute-row.any_selected.attribute_used {
+    box-shadow: inset 0 0 0 2px var(--primary-clr);
+    border-width: 0;
+    position: relative;
+  }
 
+  .case_common,
+  .case_intersect {
+    display: none;
+  }
+
+  #variantForm .attribute-row.common:not(.any_selected) .case_common {
+    display: inline-block;
+  }
+
+  #variantForm .attribute-row.common.any_selected .case_intersect {
+    display: inline-block;
+  }
+
+  .attr_val_list .add_btn,
+  [name="variant_attributes"] .add_btn,
+  [name="variant_attributes"] .action_buttons .fa-times {
+    display: none !important;
+  }
 </style>
 <script>
   useTool("cms");
   useTool("preview");
 
-  var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id FROM attribute_values'), true) ?>;
+  var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id, attribute_id FROM attribute_values'), true) ?>;
   var attribute_values = {};
-  attribute_values_array.forEach(attribute => {
-    attribute_values[attribute["value_id"]] = attribute["value"];
+  attribute_values_array.forEach(value => {
+    attribute_values[value["value_id"]] = {
+      value: value["value"],
+      attribute_id: value["attribute_id"],
+    };
   });
 
-  function comboSelectValuesChanged(combo) {
+  var attributes_array = <?= json_encode(fetchArray('SELECT name, attribute_id FROM product_attributes'), true) ?>;
+  var attributes = {};
+  attributes_array.forEach(attribute => {
+    attributes[attribute["attribute_id"]] = attribute["name"];
+  });
+
+  function comboSelectValuesChanged(combo, options) {
     combo.findAll("select").forEach(select => {
       for (option of select.options) {
         var childSelect = combo.find(`select[data-parent_value_id="${option.value}"]`);
@@ -92,24 +125,44 @@ if ($product_id === -1) {
       }
       select.classList.toggle("empty", select.value == "");
     });
+
+    if (options.onChange) {
+      var attribute_id = +combo.getAttribute("data-attribute_id");
+
+      var any_selected = false;
+      combo.findAll("select").forEach(e => {
+        if (e.value !== "") {
+          any_selected = true;
+        }
+      });
+      combo.classList.toggle("any_selected", any_selected);
+
+      options.onChange(combo, attribute_id, any_selected);
+    }
   }
 
-  function registerComboSelects() {
-    $$(".combo-select-wrapper").forEach(combo => {
+  function registerComboSelect(combo, options = {}) {
+    combo.findAll("select:not(.registered)").forEach(select => {
+      select.classList.add("registered");
 
-      combo.findAll("select:not(.registered)").forEach(select => {
-        select.classList.add("registered");
-
-        select.addEventListener("change", () => {
-          var wrapper = findParentByClassName(select, "combo-select-wrapper");
-          comboSelectValuesChanged(wrapper);
-        });
-
+      var changeCallback = () => {
         var wrapper = findParentByClassName(select, "combo-select-wrapper");
-        comboSelectValuesChanged(wrapper);
-      });
+        comboSelectValuesChanged(wrapper, options);
+
+        if (select.value === "" && select.prev_value) {
+          var sub_select = wrapper.find(`[data-parent_value_id="${select.prev_value}"]`);
+          if (sub_select) {
+            sub_select.setValue("");
+          }
+        }
+        select.prev_value = select.value;
+      };
+      select.addEventListener("change", changeCallback);
+
+      changeCallback();
     });
   }
+
 
   function anythingValueChanged(anything) {
     var checkbox = anything.find(`input[type="checkbox"]`);
@@ -135,9 +188,13 @@ if ($product_id === -1) {
   }
 
   domload(() => {
-    registerComboSelects();
 
-    registerAnythingValues();
+    $$(`#variantForm [name="attributes"] .attribute-row`).forEach(e => {
+      e.insertAdjacentHTML("beforeend", `
+        <div class='case_common rect' style='background:#0001;color:#444'>Atrybut wspólny</div>
+        <div class='case_intersect rect' style='background:var(--error-clr)'>Atrybut wspólny <i class='fas fa-info-circle' data-tooltip='Atrybut wspólny zostanie usunięty po zapisaniu wariantu'></i></div>
+      `);
+    });
 
     loadCategoryPicker("product_categories", {
       skip: 2
@@ -173,7 +230,7 @@ if ($product_id === -1) {
 
             if (!row.find(".main-img")) {
               row.find(".select-image-wrapper").insertAdjacentHTML("beforeend",
-                `<span class="main-img" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;padding: 5px 9px;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
+                `<span class="main-img rect" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
               );
             }
           } else {
@@ -195,48 +252,43 @@ if ($product_id === -1) {
       title: "Galeria zdjęć produktu",
     });
 
-    // will go deprecated soon
-    createDatatable({
-      name: "atrybuty_wariantow",
-      url: "/admin/search_product_attributes",
-      lang: {
-        subject: "atrybutów",
+
+    createSimpleList({
+      name: "variant_attributes",
+      fields: {
+        attribute_id: {},
+        attribute_name: {},
+        attribute_values: {},
       },
-      primary: "attribute_id",
-      db_table: "product_attributes",
-      sortable: true,
-      selectable: {
-        output: "variant_attribute_options"
+      table: true,
+      header: `
+        <th>Atrybut</th>
+        <th>Wartości</th>
+        <th></th>
+      `,
+      render: (data) => {
+        return `
+            <td>
+              <input type='hidden' data-number data-list-param="attribute_id">
+              <div data-type='html' data-list-param="attribute_name">
+            </td>
+            <td>
+              <input type='hidden' data-list-param="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
+              <span></span>
+            </td>
+        `;
       },
-      definition: [{
-          title: "Nazwa atrybutu",
-          width: "25%",
-          render: (r) => {
-            return `${r.name}`;
-          },
-        },
-        {
-          title: "Typ danych",
-          width: "20%",
-          render: (r) => {
-            return `${attribute_data_types[r.data_type].description}`;
-          },
-        },
-        {
-          title: "Wartości",
-          width: "60%",
-          render: (r) => {
-            return `${nonull(r.attr_values).replace(/,/g,", ")}`;
-          },
-        },
-      ],
-      controlsRight: `
-          <div class='float-icon'>
-              <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
-              <i class="fas fa-search"></i>
-          </div>
-      `
+      default_row: {
+        attribute_id: "-1",
+        attribute_name: "",
+        attribute_values: "[]",
+      },
+      title: "Atrybuty wariantów (filtry wyszukiwania wariantu)",
+      onChange: () => {
+
+      }
     });
+
 
     createSimpleList({
       name: "variants",
@@ -254,8 +306,8 @@ if ($product_id === -1) {
       table: true,
       header: `
         <th>Nazwa</th>
-        <th>Cena (zł)</th>
         <th>Widoczny</th>
+        <th>Cena (zł)</th>
         <th>Rabat (zł)</th>
         <th>Kod produktu</th>
         <th>W magazynie (szt.)</th>
@@ -267,15 +319,15 @@ if ($product_id === -1) {
       render: (data) => {
         return `
             <td>
-              <input type='hidden' data-list-param="variant_id">
+              <input type='hidden' data-number data-list-param="variant_id">
               <input type='text' data-list-param="name" class="field inline">
-            </td>
-            <td>
-              <input type='number' data-list-param="price" class="field inline">
             </td>
             <td>
               <input type='hidden' data-list-param="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
               <span></span>
+            </td>
+            <td>
+              <input type='number' data-list-param="price" class="field inline">
             </td>
             <td>
             <input type='number' data-list-param="rabat" class="field inline">
@@ -294,7 +346,7 @@ if ($product_id === -1) {
               <input type='hidden' data-list-param="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
               <div data-tooltip class='clamp-lines clamp-4'></div>
             </td>
-            <td style="width:80px;">
+            <td style="width:90px;">
               <button class='btn primary' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
             </td>
         `;
@@ -311,8 +363,126 @@ if ($product_id === -1) {
         published: 0,
         attributes: "{\"selected\":[],\"values\":[]}",
       },
-      title: "Warianty (min. 1)"
+      title: "Warianty produktu (min. 1)",
+      onChange: () => {
+        var attribute_ids = {};
+        JSON.parse($(`[name="variants"]`).getValue()).forEach(e => {
+          try {
+            JSON.parse(e.attributes).selected.forEach(value_id => {
+              value_id = +value_id;
+              var attribute_id = +attribute_values[value_id].attribute_id;
+              if (!attribute_ids[attribute_id]) {
+                attribute_ids[attribute_id] = [];
+              }
+              if (attribute_ids[attribute_id].indexOf(value_id) === -1) {
+                attribute_ids[attribute_id].push(value_id);
+              }
+            });
+          } catch {}
+        });
+
+        current_attribute_ids = variant_attributes.values.map(e => e.attribute_id);
+
+        current_attribute_ids.forEach(current_attribute_id => {
+          if (Object.keys(attribute_ids).indexOf("" + current_attribute_id) === -1) {
+            var index = current_attribute_ids.indexOf(current_attribute_id);
+            variant_attributes.removeRow(variant_attributes.target.directChildren()[index]);
+          }
+        });
+        Object.keys(attribute_ids).forEach(attribute_id => {
+          if (current_attribute_ids.indexOf(+attribute_id) === -1) {
+            variant_attributes.insertRow({
+              attribute_id: attribute_id,
+              attribute_name: attributes[attribute_id],
+              attribute_values: "[]",
+            })
+          }
+        });
+      }
     });
+
+    /*createDatatable({
+      name: "atrybuty_wariantow",
+      url: "/admin/search_product_attributes",
+      lang: {
+        subject: "atrybutów",
+      },
+      primary: "attribute_id",
+      db_table: "product_attributes",
+      sortable: true,
+      selectable: {
+        output: "variant_attribute_options",
+        has_metadata: true,
+      },
+      definition: [{
+          title: "Nazwa atrybutu",
+          width: "25%",
+          render: (r) => {
+            return `${r.name}`;
+          },
+        },
+        {
+          title: "Wartości",
+          width: "75%",
+          className: "metadata-column",
+          render: (r, i, datatable) => {
+            return `
+              <div class='attr_val_list' data-metadata='attribute_values' name='attr_val_list_${r[datatable.primary]}' onchange='$(this).prev().setValue($(this).getValue())'></div>
+            `;
+          },
+          escape: false,
+        },
+      ],
+      controlsRight: `
+          <div class='float-icon'>
+              <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
+              <i class="fas fa-search"></i>
+          </div>
+      `,
+      onSelectionChange: (selection, datatable) => {
+        $$(`#variantForm [name="attributes"] .attribute-row`).forEach(e => {
+          e.classList.toggle("attribute_used", selection.indexOf(+e.getAttribute("data-attribute_id")) !== -1);
+        })
+
+        datatable.selectionBodyElement.findAll(`.attr_val_list:not(.simple-list)`).forEach(e => {
+          // TODO: when the page loads we should update the data inside - it could be changed but we have ids so don't worry
+          // the other case might be that u use whatever u have and let the user change the text, necessary? I doubt but they are weird as well
+          createSimpleList({
+            name: e.getAttribute("name"),
+            fields: {
+              value_id: {},
+              value: {}
+            },
+            render: (data) => {
+              return `
+                  <input type='hidden' data-list-param="value_id">
+                  <div data-type='html' data-list-param="value"></div>
+              `;
+            },
+            default_row: {
+              value_id: -1,
+              value: ""
+            },
+            title: ""
+          });
+        })
+
+
+
+        // TODO: in case something was selected but we want to remove it prompt the user, and if he approves remove every attribute, might be tricky
+      }
+    });*/
+
+    registerComboSelect($(`#productForm [name="attributes"]`), {
+      onChange: (combo, attribute_id, any_selected) => {
+        variant_combo = $(`#variantForm [data-attribute_id="${attribute_id}"]`);
+        variant_combo.classList.toggle("common", any_selected);
+      }
+    });
+
+    registerComboSelect($(`#variantForm [name="attributes"]`));
+
+    registerAnythingValues();
 
     var data = <?= json_encode($product_data) ?>;
 
@@ -340,7 +510,7 @@ if ($product_id === -1) {
     try {
       var attributes = JSON.parse(data);
       attributes.selected.forEach(attribute_id => {
-        output += attribute_values[+attribute_id] + "<br>";
+        output += attribute_values[+attribute_id].value + "<br>";
       })
       attributes.values.forEach(attribute => {
         output += attribute.value + "<br>";
@@ -503,16 +673,16 @@ if ($product_id === -1) {
     <div name="description" data-type="html" class="cms preview_html" style="max-height: 400px"></div>
   </div>
 
-  <div class="field-title">Atrybuty produktu (wspólne)</div>
-  <div name="attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
-
-  <div class="field-title">Atrybuty wariantów</div>
-  <div class="atrybuty_wariantow"></div>
-
-  <!--<div class="field-title">Warianty <span style="font-size: 0.7rem">(min. 1)</span></div>
-  <div class="variants2"></div>-->
+  <div class="field-title">Atrybuty produktu (wspólne dla wszystkich wariantów produktu)</div>
+  <div name="attributes" data-type="attribute_values"><?= $allAttributeOptionsHTML ?></div>
 
   <div name="variants" data-validate="|count:1+"></div>
+
+  <div name="variant_attributes"></div>
+
+  <!--<div class="field-title">Atrybuty wariantów</div>
+  <div class="atrybuty_wariantow"></div>-->
+
 
   <input type="hidden" name="product_id">
 
@@ -553,8 +723,8 @@ if ($product_id === -1) {
         <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
       </div>
 
-      <div class="field-title">Atrybuty wariantu (inne niż ogólne dla produktu)</div>
-      <div name="attributes" data-type="attribute_values"><?= $displayAllAttributeOptions ?></div>
+      <div class="field-title">Atrybuty wariantu (inne niż wspólne dla wszystkich wariantów produktu)</div>
+      <div name="attributes" data-type="attribute_values"><?= $allAttributeOptionsHTML ?></div>
 
       <div class="field-title">
         Zdjecie

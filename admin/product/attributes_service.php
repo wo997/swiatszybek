@@ -41,11 +41,12 @@ function printSelectValuesOfAttribute($values, $attribute, $value_id = null)
     return $html;
 }
 
-function displayAllAttributeOptions()
+function getAllAttributeOptions()
 {
     global $attribute_data_types;
 
     $res = "";
+    $all_values = [];
 
     $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes");
 
@@ -73,13 +74,17 @@ function displayAllAttributeOptions()
             }
         } else {
             $values = getAttributeValues($attribute["attribute_id"]);
+            $all_values[] = $values;
             $res .=  printSelectValuesOfAttribute($values, $attribute);
         }
 
         $res .=  "</div>";
     }
 
-    return $res;
+    return [
+        "html" => $res,
+        "values" => $all_values,
+    ];
 }
 
 function updateAttributesInDB($attributes, $link_selection_table, $link_values_table, $column_name, $object_id)

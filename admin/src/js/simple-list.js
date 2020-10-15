@@ -133,13 +133,16 @@ function createSimpleList(params = {}) {
     addValues(values);
   };
 
-  list.removeRow = (btn) => {
-    var row = $(btn).parent().parent();
+  list.removeRowFromBtn = (btn) => {
+    list.removeRow($(btn).parent().parent());
+  };
 
+  list.removeRow = (row) => {
     row.findAll("[data-list-param]").forEach((e) => {
       e.setValue("ZGFSDFG et5y745b7 6dfghfgh"); // remove validation issues - red border
     });
     row.remove();
+    list.valuesChanged();
   };
 
   list.insertRow = (values, listTarget = null, begin = false, user = false) => {
@@ -173,7 +176,7 @@ function createSimpleList(params = {}) {
         begin ? "afterbegin" : "beforeend",
         `<tr class='simple-list-row'>
             ${params.render()}
-            <td style='width:92px'>
+            <td class='action_buttons'>
               <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
                 list.name
               }.valuesChanged();"></i>
@@ -181,7 +184,7 @@ function createSimpleList(params = {}) {
                 list.name
               }.valuesChanged();"></i>
               <i class="btn secondary fas fa-times" 
-                onclick="${list.name}.removeRow(this);
+                onclick="${list.name}.removeRowFromBtn(this);
                 ${list.name}.valuesChanged();">
               </i>
             </td>
@@ -195,16 +198,18 @@ function createSimpleList(params = {}) {
                 ${params.render()}
                 <div style="width:5px;margin-left:auto"></div>
                 ${btnAddTop}
-                <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
-                  list.name
-                }.valuesChanged();"></i>
-                <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
-                  list.name
-                }.valuesChanged();"></i>
-                <i class="btn secondary fas fa-times" 
-                  onclick="${list.name}.removeRow(this);
-                  ${list.name}.valuesChanged();">
-                </i>
+                <div class='action_buttons'>
+                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
+                    list.name
+                  }.valuesChanged();"></i>
+                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
+                    list.name
+                  }.valuesChanged();"></i>
+                  <i class="btn secondary fas fa-times" 
+                    onclick="${list.name}.removeRowFromBtn(this);
+                    ${list.name}.valuesChanged();">
+                  </i>
+                </div>
             </div>
             <div class="sub-list">
                 ${btnTop}

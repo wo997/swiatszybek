@@ -1,7 +1,7 @@
 <?php //route[admin/save_product]
 
-$input = ["exceptions" => ["categories", "description", "gallery", "attributes", "variants"]];
-include "helpers/safe_post.php";
+//$input = ["exceptions" => ["categories", "description", "gallery", "attributes", "variants", "variant_attribute_options"]];
+//include "helpers/safe_post.php";
 
 if (isset($_POST["remove"])) {
     query("DELETE FROM variant WHERE product_id = ?", [
@@ -47,13 +47,15 @@ if (isset($_POST["remove"])) {
     query("DELETE FROM link_variant_attribute_option WHERE product_id = ?", [$product_id]);
     $insert = "";
     $kolejnosc = 0;
-    foreach (json_decode($_POST["variant_attribute_options"], true) as $attribute_id) {
+    foreach (json_decode($_POST["variant_attribute_options"], true) as $row) {
+        $attribute_id = $row["attribute_id"];
+        $attribute_values = $row["attribute_values"];
         $kolejnosc++;
-        $insert .= "($product_id," . intval($attribute_id) . ",$kolejnosc),";
+        $insert .= "($product_id," . intval($attribute_id) . "," . escapeSQL($attribute_values) . ",$kolejnosc),";
     }
     if ($insert) {
         $insert = substr($insert, 0, -1);
-        query("INSERT INTO link_variant_attribute_option (product_id, attribute_id, kolejnosc) VALUES $insert");
+        query("INSERT INTO link_variant_attribute_option (product_id, attribute_id, attribute_values, kolejnosc) VALUES $insert");
     }
 
     // variants

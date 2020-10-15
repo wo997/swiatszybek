@@ -164,12 +164,19 @@ div.list .simple-list-row {
 
 tr.simple-list-row td {
   border-bottom: 1px solid #aaa;
+  padding: 5px;
 }
 
 .simple-list.has_header {
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .simple-list.has_header .add_end {
   background: var(--primary-clr);
+}
+
+.simple-list .action_buttons {
+  width: 102px;
+  text-align: right;
 }

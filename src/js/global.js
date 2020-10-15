@@ -449,6 +449,9 @@ function getValue(input) {
       if (pointChild) {
         input = input.find(pointChild);
       }
+      if (input.hasAttribute("data-number")) {
+        return +input.innerHTML;
+      }
       return input.innerHTML;
     } else if (type == "attribute_values") {
       var attribute_selected_values = [];
@@ -491,6 +494,9 @@ function getValue(input) {
       }
       return input.value;
     } else {
+      if (input.hasAttribute("data-number")) {
+        return +input.value;
+      }
       return input.value;
     }
   }
