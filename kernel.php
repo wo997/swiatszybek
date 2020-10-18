@@ -115,8 +115,8 @@ function setting($path, $default = "")
 }
 
 define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . getSetting("general", "advanced", ["domain"], ""));
-define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 0));
-define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 0));
+define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 1));
+define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 1));
 
 define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], ""));
 define("LOGO_PATH_LOCAL_SM", getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]));
