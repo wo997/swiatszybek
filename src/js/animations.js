@@ -54,7 +54,6 @@ function removeAnimation(animation_name) {
 }
 
 function animate(node, duration, keyframes, callback = null) {
-  console.log(node, duration, keyframes);
   var animation_name = createAnimation(keyframes);
   if (node.animationTimeout) {
     window.clearTimeout(node.animationTimeout);

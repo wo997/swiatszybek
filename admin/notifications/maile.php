@@ -1,25 +1,27 @@
-<?php //route[{ADMIN}powiadomienia]
+<?php //route[{ADMIN}maile]
+
+$main_email = $app["company_data"]["main_email"];
 
 ?>
 
 <?php startSection("head"); ?>
 
-<title>Wysyłki</title>
+<title>Maile</title>
 
 <style>
 
 </style>
 
 <script>
-    /*domload(() => {
+    domload(() => {
         setFormData(
-            <?php echo json_encode(
-                getSetting("general", "company", [])
-            ); ?>, `#daneFirmyForm`);
-    });*/
+            <?= json_encode(
+                getSetting("general", "emails", [])
+            ); ?>, `#maileForm`);
+    });
 
     function savePowiadomienia() {
-        /*var form = $(`#daneFirmyForm`);
+        var form = $(`#maileForm`);
 
         if (!validateForm(form)) {
             return;
@@ -29,7 +31,7 @@
             company: getFormData(form),
         };
 
-        xhr({
+        /*xhr({
             url: STATIC_URLS["ADMIN"] + "save_dane_firmy",
             params: params,
             success: () => {
@@ -43,7 +45,7 @@
 
 <div class="custom-toolbar">
     <div class="title">
-        Wysyłki
+        Maile
     </div>
     <div>
         <button onclick="savePowiadomienia()" class="btn primary">Zapisz <i class="fas fa-save"></i></button>
@@ -52,18 +54,19 @@
 
 <?php startSection("content"); ?>
 
-<div id="daneFirmyForm" class="desktopRow spaceColumns" data-form>
+<div id="maileForm" class="desktopRow spaceColumns" data-form>
     <div>
-        <div class="form-header">Ogólne</div>
+        <div class="form-header">Zamówienia</div>
 
-        <div class="field-title">Email</div>
-        <input type="text" class="field" name="main_email" data-validate="email">
+        <div class="field-title">E-mail do zamówień (brak dla głównego)</div>
+        <input type="text" class="field" name="orders_email" data-validate="email|optional" placeholder="<?= $main_email ?>">
 
+        <div class="emails">
+        </div>
+
+        <div>
+
+        </div>
     </div>
 
-    <div>
-
-    </div>
-</div>
-
-<?php include "admin/default_page.php"; ?>
+    <?php include "admin/default_page.php"; ?>

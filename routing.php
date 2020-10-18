@@ -74,7 +74,7 @@ $admin_navigations_tree = [
   ],
   ["url" => "zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
   ["url" => "moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
-  ["url" => "powiadomienia", "title" => '<i class="fas fa-bell"></i> Powiadomienia'],
+  ["url" => "maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
 
 ];
 

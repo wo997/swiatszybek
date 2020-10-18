@@ -24,7 +24,7 @@ registerModalContent(
             <div class="mul7circ m7c11"></div>
             <div class="mul7circ m7c12"></div>
         </div>
-        <link href="${STATIC_URLS["ADMIN"]}tools/loader.css?v=${RELEASE}" rel="stylesheet">
+        <link href="/admin/tools/loader.css?v=${RELEASE}" rel="stylesheet">
     </div>
     `
 );

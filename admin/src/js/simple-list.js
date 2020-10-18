@@ -134,7 +134,13 @@ function createSimpleList(params = {}) {
   };
 
   list.removeRowFromBtn = (btn) => {
-    list.removeRow($(btn).parent().parent());
+    var tar = null;
+    if (list.params.table) {
+      tar = $(btn).parent().parent();
+    } else {
+      tar = $(btn).parent().parent().parent();
+    }
+    list.removeRow(tar);
   };
 
   list.removeRow = (row) => {
@@ -199,10 +205,10 @@ function createSimpleList(params = {}) {
                 <div style="width:5px;margin-left:auto"></div>
                 ${btnAddTop}
                 <div class='action_buttons'>
-                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
+                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());${
                     list.name
                   }.valuesChanged();"></i>
-                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
+                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());${
                     list.name
                   }.valuesChanged();"></i>
                   <i class="btn secondary fas fa-times" 

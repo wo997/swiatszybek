@@ -1487,7 +1487,7 @@ registerModalContent(
                 </div>
             </div>
         </div>
-        <link href="${STATIC_URLS["ADMIN"]}tools/quillEditor.css?v=${RELEASE}" rel="stylesheet">
+        <link href="/admin/tools/quillEditor.css?v=${RELEASE}" rel="stylesheet">
     </div>
     `,
   //<div class="btn primary slim" onclick="buttonGallery.open(quillEditor.active_elem)">Wybierz <i class="fas fa-paint-brush"></i></div>

@@ -44,7 +44,7 @@ if (isset($_POST["remove"])) {
     updateAttributesInDB($attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
     // attributes
-    query("DELETE FROM link_variant_attribute_option WHERE product_id = ?", [$product_id]);
+    /*query("DELETE FROM link_variant_attribute_option WHERE product_id = ?", [$product_id]);
     $insert = "";
     $kolejnosc = 0;
     foreach (json_decode($_POST["variant_attribute_options"], true) as $row) {
@@ -56,7 +56,7 @@ if (isset($_POST["remove"])) {
     if ($insert) {
         $insert = substr($insert, 0, -1);
         query("INSERT INTO link_variant_attribute_option (product_id, attribute_id, attribute_values, kolejnosc) VALUES $insert");
-    }
+    }*/
 
     // variants
     /*query("DELETE FROM link_variant_attribute_value WHERE variant_id = ?", [ // create foreign key?

@@ -13,7 +13,7 @@
 <script>
     domload(() => {
         setFormData(
-            <?php echo json_encode(
+            <?= json_encode(
                 getSetting("general", "company", [])
             ); ?>, `#daneFirmyForm`);
     });

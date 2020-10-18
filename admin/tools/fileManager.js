@@ -185,7 +185,7 @@ registerModalContent(
 
             </div>
         </div>
-        <link href="${STATIC_URLS["ADMIN"]}tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
+        <link href="/admin/tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
     </div>
     `
 );

@@ -65,7 +65,7 @@
 
   function dostawa(now, was, variant_id) {
     // TODO: ajax deprecated
-    ajax('${STATIC_URLS["ADMIN"]}change_variant_stock', {
+    ajax(`${STATIC_URLS["ADMIN"]}change_variant_stock`, {
       stock_difference: now - was,
       variant_id: variant_id
     }, (response) => {

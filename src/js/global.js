@@ -156,7 +156,7 @@ function useTool(name) {
   }
   toolList.push(name);
   var el = document.createElement("script");
-  el.src = STATIC_URLS["ADMIN"] + `tools/${name}.js?v=${RELEASE}`;
+  el.src = `/admin/tools/${name}.js?v=${RELEASE}`;
   if (document.body) {
     document.body.appendChild(el);
   } else {

@@ -245,6 +245,7 @@ if ($product_id === -1) {
       },
       onRowInserted: (row) => {
         row.find(".add_img_btn").dispatchEvent(new Event("click"));
+        setCustomHeights();
       },
       default_row: {
         src: ""
@@ -563,7 +564,7 @@ if ($product_id === -1) {
   function deleteProduct() {
     setFormInitialState(`#productForm`);
     if (confirm("Czy chcesz usunąć produkt?")) {
-      window.location = '${STATIC_URLS["ADMIN"]}delete_product/<?= $kopia ? '-1' : $product_id ?>';
+      window.location = `${STATIC_URLS["ADMIN"]}delete_product/<?= $kopia ? '-1' : $product_id ?>`;
     }
   }
 

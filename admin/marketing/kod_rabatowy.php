@@ -155,8 +155,7 @@ if (!json_decode($kod_data["product_list"])) {
             url: STATIC_URLS["ADMIN"] + "save_kod_rabatowy",
             params,
             success: (res) => {
-                window.location = "${STATIC_URLS["
-                ADMIN "]}kody-rabatowe";
+                window.location = `${STATIC_URLS["ADMIN"]}kody-rabatowe`;
             }
         });
     }
