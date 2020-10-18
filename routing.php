@@ -27,11 +27,11 @@ if (setting(["general", "advanced", "ssl"])) {
 
 $admin_navigations_tree = [
   [
-    "title" => '<i class="fas fa-clipboard-list"></i> Zamówienia', "quick_menu" => true,
+    "title" => '<i class="fas fa-shopping-bag"></i> Zamówienia', "quick_menu" => true,
     "sub" => [
       ["url" => "zamowienia", "title" => '<i class="fas fa-clipboard-list"></i> Lista zamówień'],
-      ["url" => "statusy", "title" => '<i class="fas fa-list-ol"></i> Statusy zamówień'],
-      ["url" => "statusy-wewnetrzne", "title" => '<i class="fas fa-list-ol"></i> Statusy wewnętrzne'],
+      ["url" => "statusy", "title" => '<i class="fas fa-hourglass-half"></i> Statusy zamówień'],
+      ["url" => "statusy-wewnetrzne", "title" => '<i class="fas fa-bookmark"></i> Statusy wewnętrzne'],
     ]
   ],
   [
