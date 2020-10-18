@@ -22,10 +22,11 @@ function mobileDrop(obj) {
   return false;
 }
 
-function expandWithArrow(elem, source, open = null, options = {}) {
+function expandMenu(elem, btn, open = null, options = {}) {
+  var expand_btn = btn.find(".expand_arrow");
   var open = open
-    ? source.classList.toggle("open", open)
-    : source.classList.toggle("open");
+    ? expand_btn.classList.toggle("open", open)
+    : expand_btn.classList.toggle("open");
   var keyframes = "";
   if (open) {
     keyframes = `
@@ -46,9 +47,20 @@ function expandWithArrow(elem, source, open = null, options = {}) {
       }
     `;
   }
-  animate($(source).find(".fas"), nonull(options.duration, 200), keyframes);
+  animate(expand_btn.find(".fas"), nonull(options.duration, 200), keyframes);
 
-  source.classList.toggle("open", expand(elem, open, options));
+  btn.classList.toggle("open", expand(elem, open, options));
+
+  if (options.single && open) {
+    btn
+      .parent()
+      .findAll(".menu_item:not(.current-route) .expand_arrow.open")
+      .forEach((e) => {
+        if (e != expand_btn) {
+          expandMenu(e.parent().next(), e.parent());
+        }
+      });
+  }
 }
 
 function expand(elem, show = null, options = {}) {

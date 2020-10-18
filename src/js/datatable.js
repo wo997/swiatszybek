@@ -1113,7 +1113,7 @@ window.addEventListener("dragover", (event) => {
 function getPublishedDefinition(options = {}) {
   return {
     title: "",
-    width: "70px",
+    width: "71px",
     className: "center",
     render: (r) => {
       return renderIsPublished(r);

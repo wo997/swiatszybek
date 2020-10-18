@@ -29,7 +29,7 @@ function showCategory($category, $level = 0)
   $paddingLeft = $level == 0 ? 0 : 20 * ($level - 1);
   echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' style='padding-left:" . ($paddingLeft) . "px' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
   if ($count && $level > 0) {
-    echo "<div class='btn expand_arrow' onclick='expandWithArrow(this.parent().next(),this)'><i class='fas fa-chevron-right'></i></div>";
+    echo "<div class='btn expand_arrow' onclick='expandMenu($(this).parent().next(),$(this).parent())'><i class='fas fa-chevron-right'></i></div>";
   }
   $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
   $styles = $level == 0 ? "style='padding-left:0'" : "";

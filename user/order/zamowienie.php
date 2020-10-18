@@ -464,7 +464,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
       </div>
     </div>
     <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-      <div class="btn secondary medium fill" onclick='expandWithArrow(this.next(),$(this).find(".expand_arrow"))'>
+      <div class="btn secondary medium fill" onclick='expandMenu(this.next(),$(this))'>
         <b>Pełna historia zamówienia</b>
         <div class='expand_arrow'><i class='fas fa-chevron-right'></i></div>
       </div>

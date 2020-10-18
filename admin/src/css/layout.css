@@ -72,12 +72,19 @@ h1 {
 @media only screen and (max-width: 799px) {
   .navbar_admin {
     width: 100%;
+    max-height: calc(100% - 37px);
   }
   .content {
     height: auto;
   }
   .main-wrapper {
     flex-direction: column;
+  }
+  .navbar_admin.hidden > .scroll-panel {
+    overflow: initial !important;
+  }
+  .navbar_admin > .scroll-panel {
+    padding-bottom: 100px;
   }
 }
 @media only screen and (min-width: 800px) {
@@ -89,10 +96,12 @@ h1 {
   }
 }
 
-.sub_menu {
-  padding-left: 1em;
-  background: #0000000b;
+.navbar_admin .sub_menu {
   margin: -1px 0;
+}
+
+.navbar_admin .sub_menu .menu_item {
+  padding-left: 1em;
 }
 
 .navbar_admin .menu_item a {
@@ -121,10 +130,37 @@ h1 {
   background: #fff5;
 }
 
+.menu_item.open + .sub_menu + .menu_item.open {
+  border-top: 1px solid #ccc;
+  margin-top: 0;
+}
+
 .navbar_admin .menu_item.current-route,
 .navbar_admin .menu_item:hover {
-  background: #00000019;
+  background: #cacaca;
   color: black;
+}
+.navbar_admin .sub_menu,
+.navbar_admin .menu_item.open {
+  background: #0000000f;
+  color: black;
+}
+
+.menu_item.open .red-notification {
+  opacity: 0;
+}
+
+.red-notification {
+  background: red;
+  color: white;
+  padding: 0 2px;
+  font-weight: normal;
+  min-width: 1.3em;
+  text-align: center;
+  display: inline-block;
+  line-height: 1.35;
+  opacity: 1;
+  transition: 0.2s opacity;
 }
 
 .navbar_admin .menu_item .fas {

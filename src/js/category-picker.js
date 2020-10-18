@@ -87,9 +87,9 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
   while (true) {
     var parent = parent.findParentByClassName(["expand_y", "categories"]);
     if (!parent) break;
-    var btn = parent.prev().find(".btn");
+    var btn = parent.prev();
     if (!btn) break;
-    expandWithArrow(btn.parent().next(), btn, true, {
+    expandMenu(btn.next(), btn, true, {
       duration: 0,
     });
     parent = parent.parent();

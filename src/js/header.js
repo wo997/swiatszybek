@@ -233,23 +233,22 @@ window.addEventListener("DOMContentLoaded", () => {
   var mm = $("#mainMenu .scroll-panel");
   var nvg = $(".navigation");
 
-  nvg.insertAdjacentHTML(
-    "beforeend",
-    `
-      <div>
-        <a onclick="showModal('lastViewedProducts',{source:this});return false;">
-          <img class="product-history-icon" src="/src/img/product_history_icon.svg"> Ostatnio przeglądane produkty
-        </a>
-      </div>
-      <div>
-        <a onclick="showModal('wishList',{source:this});return false;">
-          <img class="heart-icon" src="/src/img/heart_icon.svg"></img> Schowek
-        </a>
-      </div>
-    `
-  );
-
   if (mm && nvg) {
+    nvg.insertAdjacentHTML(
+      "beforeend",
+      `
+        <div>
+          <a onclick="showModal('lastViewedProducts',{source:this});return false;">
+            <img class="product-history-icon" src="/src/img/product_history_icon.svg"> Ostatnio przeglądane produkty
+          </a>
+        </div>
+        <div>
+          <a onclick="showModal('wishList',{source:this});return false;">
+            <img class="heart-icon" src="/src/img/heart_icon.svg"></img> Schowek
+          </a>
+        </div>
+      `
+    );
     mm.appendChild(nvg);
   }
 
