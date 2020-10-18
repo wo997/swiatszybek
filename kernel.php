@@ -66,7 +66,8 @@ define("THEME_SETTINGS_PATH", SETTINGS_PATH . "theme/");
 define("GENERAL_SETTINGS_PATH", SETTINGS_PATH . "general/");
 
 define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
-
+//in case e-mails are not configured (for debugging)
+define("DISPLAY_EMAIL", false);
 // default values - overriden by 'build_info'
 // TODO: not rly a todo, just remember about it ;)
 $previousModificationTimePHP = 0;

@@ -155,7 +155,9 @@ function getResponsiveImageBySize($src, $image_dimension, $options = [])
     global $image_default_dimensions, $same_ext_image_allowed_types;
 
     $image_data = getResponsiveImageData($src);
-
+    if (!$image_data) {
+        return null;
+    }
     $natural_image_dimension = max($image_data["w"], $image_data["h"]);
     $target_size_name = "df";
 

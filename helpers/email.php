@@ -14,6 +14,11 @@ function sendEmail($recipient, $message, $title, $headers = null, $from = null)
 {
     global $app;
 
+    if (DISPLAY_EMAIL) {
+
+        debug([$title, $message]);
+    }
+
     $company_data = $app["company_data"];
 
     if ($headers === null) {
