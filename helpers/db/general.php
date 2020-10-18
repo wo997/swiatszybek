@@ -10,9 +10,16 @@ function fetchArray($sql, $params = [], $give_response = true)
   global $con;
 
   try {
+    // TODO: apply table prefixes with sql string replace, might never happen but in emergency u can try
+    // way more effortless comparing to other solutions, we dont want a developer to die typing these.
+    // for example:
+    // 'FROM ' => 'FROM $prefix_'
+    // 'JOIN ' => 'JOIN $prefix_'
     $stmt = $con->prepare($sql);
     $paramCount = count($params);
-    if ($paramCount) $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
+    if ($paramCount) {
+      $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
+    }
 
     if (!$give_response) {
       $res = $stmt->execute();

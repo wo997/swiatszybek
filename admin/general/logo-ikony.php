@@ -1,4 +1,4 @@
-<?php //route[admin/logo-ikony]
+<?php //route[{ADMIN}logo-ikony]
 
 ?>
 
@@ -28,7 +28,7 @@
         formData.append("name", name);
 
         xhr({
-            url: "/admin/uploads_action",
+            url: STATIC_URLS["ADMIN"] + "uploads_action",
             formData: formData,
             success(res) {
                 if (name == "logo") {
@@ -52,7 +52,7 @@
 <h1>Logo / Ikony</h1>
 
 <div class="field-title">Logo sklepu</div>
-<img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" style='margin-left:0'>
+<img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext style='margin-left:0'>
 <form onsubmit="uploadImageWithCopy(event,'logo')">
     <label>
         <input type="file" onchange="$(this).next().click()" style="display:none">

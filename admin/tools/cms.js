@@ -195,7 +195,7 @@ function editModule(block) {
     setFormData(module_block.default_form_values, modal);
   }*/
   xhr({
-    url: "/admin/module_block_form",
+    url: STATIC_URLS["ADMIN"] + "module_block_form",
     type: "html",
     params: {
       module_block_name: module_block_name,
@@ -536,6 +536,7 @@ function editCMS(t, params = {}) {
   }, 450);
 }
 
+// additional start
 var backupStateOfCMS = null;
 function editCMSAdditional(t, params) {
   $("#cmsAdditional .stretch-vertical").empty();
@@ -578,6 +579,7 @@ window.addEventListener("modal-hide", (event) => {
 
   $("#cmsAdditional").removeAttribute("data-type");
 });
+// additional end
 
 function cmsPrepareOutput() {
   cmsWrapper.findAll("[draggable]").forEach((e) => {

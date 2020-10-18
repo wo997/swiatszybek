@@ -43,6 +43,10 @@ include_once "helpers/form.php";
 
 include "packages/simple_html_dom.php";
 
+define("STATIC_URLS", ["ADMIN" => "/piep_admin/"]);
+
+//var_Dump(get_defined_constants()["ADMIN_URL"]);
+
 // define WebP support also for XHR requests
 define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
 if (WEBP_SUPPORT) {
@@ -52,6 +56,7 @@ if (WEBP_SUPPORT) {
 //define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');
 define("IS_XHR", isset($_GET["xhr"]) || isset($_POST["xhr"]));
 
+define("IS_ADMIN_URL", strpos($url, ltrim(STATIC_URLS["ADMIN"], "/")) === 0);
 define("IS_DEPLOYMENT_URL", strpos(nonull($_GET, 'url', ""), "deployment") === 0);
 
 define("APP_PATH", str_replace("\\", "/", getcwd()) . "/");

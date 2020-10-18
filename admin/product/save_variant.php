@@ -1,4 +1,4 @@
-<?php //route[admin/save_variant]
+<?php //route[{ADMIN}save_variant]
 
 // deprecated
 

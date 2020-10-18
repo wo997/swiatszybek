@@ -1,4 +1,4 @@
-<?php //route[admin/save_product_attribute]
+<?php //route[{ADMIN}save_product_attribute]
 
 $attributes = json_decode($_POST["attribute_values_" . $_POST["data_type"]], true);
 

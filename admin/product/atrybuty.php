@@ -1,4 +1,4 @@
-<?php //route[admin/atrybuty] 
+<?php //route[{ADMIN}atrybuty] 
 ?>
 
 <?php startSection("head"); ?>
@@ -21,7 +21,7 @@
 
         createDatatable({
             name: "mytable",
-            url: "/admin/search_product_attributes",
+            url: STATIC_URLS["ADMIN"] + "search_product_attributes",
             lang: {
                 subject: "atrybutów",
             },
@@ -127,7 +127,7 @@
 
         createDatatable({
             name: "kategorie",
-            url: "/admin/search_product_categories",
+            url: STATIC_URLS["ADMIN"] + "search_product_categories",
             lang: {
                 subject: "kategorii",
             },
@@ -181,7 +181,7 @@
             data = table.results[row_id];
 
             xhr({
-                url: "/admin/search_product_attributes",
+                url: STATIC_URLS["ADMIN"] + "search_product_attributes",
                 params: {
                     attribute_id: data.attribute_id,
                     rowCount: 1,
@@ -216,7 +216,7 @@
             params["remove"] = true;
         }
         xhr({
-            url: "/admin/save_product_attribute",
+            url: STATIC_URLS["ADMIN"] + "save_product_attribute",
             params: params,
             success: (res) => {
                 mytable.search();
@@ -265,7 +265,7 @@
                     <div name="attribute_values_colorlist" class="slim"></div>
                 </div>
                 <div>
-                    <div class="field-title">Wyświetl filtry w kategoriach <a href="/admin/kategorie" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a></div>
+                    <div class="field-title">Wyświetl filtry w kategoriach <a href="<?= STATIC_URLS["ADMIN"] ?>kategorie" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a></div>
                     <div class="kategorie"></div>
                 </div>
             </div>

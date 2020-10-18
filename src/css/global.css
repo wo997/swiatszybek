@@ -231,17 +231,6 @@ textarea {
 
 /* buttons end */
 
-.red-notification {
-  background: red;
-  color: white;
-  padding: 0 2px;
-  font-weight: normal;
-  min-width: 1.3em;
-  text-align: center;
-  display: inline-block;
-  line-height: 1.35;
-}
-
 .grabbed {
   filter: contrast(0.5);
 }

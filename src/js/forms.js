@@ -72,19 +72,7 @@ function showFieldErrors(field, errors = [], options = {}) {
   };
 
   if (Array.isArray(errors) && errors.length > 0) {
-    // adding error boxes instead of icons with tooltip
-    // always for non-admin route and mobile
-    if (
-      window.IS_MOBILE ||
-      !window.location.pathname.includes("admin") ||
-      !field_title
-    ) {
-      toggleErrorIcons("wrong");
-      validationBox.find(".message").innerHTML = errors.join("<br>");
-      expand(validationBox, true, {
-        duration: 350,
-      });
-    } else {
+    if (field_title && field.classList.contains("simple-list")) {
       field_title.insertAdjacentHTML(
         "beforeend",
         `<i
@@ -93,6 +81,12 @@ function showFieldErrors(field, errors = [], options = {}) {
             data-tooltip="${errors.join("<br>")}">
           </i>`
       );
+    } else {
+      toggleErrorIcons("wrong");
+      validationBox.find(".message").innerHTML = errors.join("<br>");
+      expand(validationBox, true, {
+        duration: 350,
+      });
     }
 
     if (options.scroll) {
@@ -179,7 +173,17 @@ function fieldErrors(field) {
 
   var val = field.getValue();
 
+  var validator = field.getAttribute("data-validate");
+  var [validatorType, ...validatorParams] = validator.split("|");
+
+  var optional = validator.indexOf("|optional") !== -1;
+
   if (val === "") {
+    // if not empty - validate, clear af
+    if (optional) {
+      return [];
+    }
+
     // show just one field that requires filling, dont abuse our cute user
     if (window.fieldRequiringFilling && window.fieldRequiringFilling != field) {
       return null;
@@ -263,13 +267,13 @@ function fieldErrors(field) {
     }
   }
 
-  var validator = field.getAttribute("data-validate");
-  var [validatorType, ...validatorParams] = validator.split("|");
-
   var params = {};
   if (validatorParams !== undefined && validatorParams.length !== 0) {
     validatorParams.forEach((param) => {
       var parts = param.split(":");
+      if (parts.length == 0) {
+        parts[1] = null;
+      }
       params[parts[0]] = parts[1];
     });
 

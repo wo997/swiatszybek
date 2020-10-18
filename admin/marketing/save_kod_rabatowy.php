@@ -1,4 +1,4 @@
-<?php //route[admin/save_kod_rabatowy]
+<?php //route[{ADMIN}save_kod_rabatowy]
 
 $posts = ["kod_id", "kod", "kwota", "user_id_list", "product_list", "date_from", "date_to", "ilosc", "type"];
 

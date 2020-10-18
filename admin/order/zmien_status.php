@@ -1,4 +1,4 @@
-<?php //route[admin/zmien_status]
+<?php //route[{ADMIN}zmien_status]
 
 $urlParts = explode("/", $url);
 

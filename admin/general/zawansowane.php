@@ -1,4 +1,4 @@
-<?php //route[admin/zaawansowane]
+<?php //route[{ADMIN}zaawansowane]
 
 ?>
 
@@ -13,7 +13,7 @@
 <script>
     domload(() => {
         setFormData(
-            <?php echo json_encode(
+            <?= json_encode(
                 getSetting("general", "advanced", [])
             ); ?>, `#zaawansowaneForm`);
     });
@@ -30,7 +30,7 @@
         };
 
         xhr({
-            url: "/admin/save_zaawansowane",
+            url: STATIC_URLS["ADMIN"] + "save_zaawansowane",
             params: params,
             success: () => {
                 setFormInitialState(form);

@@ -1,4 +1,4 @@
-<?php //route[admin/zamowienia]
+<?php //route[{ADMIN}zamowienia]
 ?>
 
 <?php startSection("head");
@@ -54,7 +54,7 @@ foreach ($status_list as $status) {
 
     createDatatable({
       name: tableName,
-      url: "/admin/search_zamowienia",
+      url: STATIC_URLS["ADMIN"] + "search_zamowienia",
       lang: {
         subject: "zamówień",
       },
@@ -117,7 +117,7 @@ foreach ($status_list as $status) {
     // TODO: maybe it should be a bulk request instead
     return new Promise(resolve => {
       xhr({
-        url: `/admin/zmien_status/${zamowienie_link}/${new_status_id}`,
+        url: `${STATIC_URLS["ADMIN"]}zmien_status/${zamowienie_link}/${new_status_id}`,
         success: (res) => {
           if (nonull(options.bulk, false)) {
             resolve('resolved');

@@ -1,4 +1,4 @@
-<?php //route[admin/strona]
+<?php //route[{ADMIN}strona]
 
 $parts = explode("/", $url);
 if (isset($parts[2])) {
@@ -80,7 +80,7 @@ $static = checkUrl($page_data["link"]);
 
         setFormInitialState(form);
         if (cms_id == -1 && remove) {
-            window.location = "/admin/strony";
+            window.location = STATIC_URLS["ADMIN"] + "strony";
             return;
         }
 
@@ -94,7 +94,7 @@ $static = checkUrl($page_data["link"]);
         }
 
         xhr({
-            url: "/admin/save_cms",
+            url: STATIC_URLS["ADMIN"] + "save_cms",
             params: params,
             success: (res) => {
                 //showNotification(`<i class="fas fa-check"></i> Zapisano zmiany</b>`); // TODO XD
@@ -107,7 +107,7 @@ $static = checkUrl($page_data["link"]);
 
 <div class="custom-toolbar">
     <span class="title">Edycja strony</span>
-    <a class="btn secondary" href="/admin/strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
+    <a class="btn secondary" href="<?= STATIC_URLS["ADMIN"] ?>strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
     <a class="btn primary" href="/<?= $page_data["link"] ?>">Pokaż stronę <i class="fas fa-chevron-circle-right"></i></a>
     <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
     <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>

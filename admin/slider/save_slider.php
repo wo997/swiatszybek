@@ -1,4 +1,4 @@
-<?php //route[admin/save_slider]
+<?php //route[{ADMIN}save_slider]
 
 if (isset($_POST["remove"])) {
     query("DELETE FROM slides WHERE slide_id = ?", [

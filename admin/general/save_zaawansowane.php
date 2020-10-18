@@ -1,4 +1,4 @@
-<?php //route[admin/save_zaawansowane]
+<?php //route[{ADMIN}save_zaawansowane]
 
 saveSetting("general", "advanced", [
     "path" => [],

@@ -1,4 +1,4 @@
-<?php //route[admin/oczekujacy] 
+<?php //route[{ADMIN}oczekujacy] 
 ?>
 
 <?php startSection("head"); ?>
@@ -11,7 +11,7 @@
 
     createDatatable({
       name: tableName,
-      url: "/admin/search_oczekujacy",
+      url: STATIC_URLS["ADMIN"] + "search_oczekujacy",
       lang: {
         subject: "oczekujących",
       },
@@ -27,7 +27,7 @@
           title: "Produkt",
           width: "15%",
           render: (r) => {
-            return `<a class="link" href='/admin/produkt/${r.product_id}'>${escapeHTML(r.product)}</a>`;
+            return `<a class="link" href='${STATIC_URLS["ADMIN"]}produkt/${r.product_id}'>${escapeHTML(r.product)}</a>`;
           },
           nobreak: true,
           escape: false

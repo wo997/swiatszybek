@@ -1051,7 +1051,7 @@ function rearrange(input) {
   params["params"] = JSON.stringify(required);
 
   xhr({
-    url: "/admin/rearrange_table",
+    url: STATIC_URLS["ADMIN"] + "rearrange_table",
     params: params,
     success: () => {
       showNotification("Zapisano zmianę kolejności");
@@ -1113,7 +1113,7 @@ window.addEventListener("dragover", (event) => {
 function getPublishedDefinition(options = {}) {
   return {
     title: "",
-    width: "70px",
+    width: "71px",
     className: "center",
     render: (r) => {
       return renderIsPublished(r);
@@ -1164,7 +1164,7 @@ function setPublish(obj, published) {
   if (!primary_id) return;
 
   xhr({
-    url: "/admin/set_publish",
+    url: STATIC_URLS["ADMIN"] + "set_publish",
     params: {
       table: datatable.db_table,
       primary: datatable.primary,

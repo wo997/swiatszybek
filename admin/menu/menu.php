@@ -1,4 +1,4 @@
-<?php //route[admin/menu-glowne] 
+<?php //route[{ADMIN}menu-glowne] 
 ?>
 
 <?php startSection("head"); ?>
@@ -13,7 +13,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         createDatatable({
             name: "mytable",
-            url: "/admin/search_menu",
+            url: STATIC_URLS["ADMIN"] + "search_menu",
             primary: "category_id",
             db_table: "menu",
             sortable: true,
@@ -75,7 +75,7 @@
 
         createDatatable({
             name: "strony",
-            url: "/admin/search_strony",
+            url: STATIC_URLS["ADMIN"] + "search_strony",
             db_table: "cms",
             primary: "cms_id",
             lang: {
@@ -133,7 +133,7 @@
 
         createDatatable({
             name: "produkty",
-            url: "/admin/search_products",
+            url: STATIC_URLS["ADMIN"] + "search_products",
             lang: {
                 subject: "produktów",
             },
@@ -150,7 +150,7 @@
                     title: "Nazwa produktu",
                     width: "50%",
                     render: (r) => {
-                        return `<a class="btn secondary" target="_blank" href='/admin/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
+                        return `<a class="btn secondary" target="_blank" href='${STATIC_URLS["ADMIN"]}produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
                     },
                     escape: false
                 },
@@ -215,7 +215,7 @@
             params["remove"] = true;
         }
         xhr({
-            url: "/admin/save_menu",
+            url: STATIC_URLS["ADMIN"] + "save_menu",
             params: params,
             success: (res) => {
                 mytable.postSaveCategory(params, remove);

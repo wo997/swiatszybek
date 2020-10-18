@@ -1,3 +1,3 @@
-<?php //route[admin/phpinfo]
+<?php //route[{ADMIN}phpinfo]
 
 phpinfo();

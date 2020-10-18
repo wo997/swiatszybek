@@ -1,4 +1,4 @@
-<?php //route[admin/statystyki] 
+<?php //route[{ADMIN}statystyki] 
 ?>
 
 <?php startSection("head"); ?>
@@ -153,7 +153,7 @@
 
         // TODO: XHR
         orderRequest = new XMLHttpRequest();
-        orderRequest.open("POST", "/admin/search_statystyki", true);
+        orderRequest.open("POST", STATIC_URLS["ADMIN"] + "search_statystyki", true);
         orderRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         orderRequest.onreadystatechange = function() {
             if (orderRequest.readyState == 4) {

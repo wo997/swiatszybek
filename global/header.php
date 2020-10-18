@@ -1,7 +1,7 @@
 <header class="page-header">
   <div class="header-top">
     <a href="/" class="logo-wrapper">
-      <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>">
+      <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
     </a>
 
     <div class="main-search-wrapper case-desktop">
@@ -37,7 +37,7 @@
               ?>
             </div>
             <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-              <a class="admin border-bottom border-top menu_item" href="/admin/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
+              <a class="admin border-bottom border-top menu_item" href="<?= STATIC_URLS["ADMIN"] ?>zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
             <?php endif ?>
             <a class="menu_item" href="/moje-konto"> <i class="fas fa-box"></i> Moje zamówienia</a>
             <a class="menu_item" href="/moje-konto/dane-uzytkownika"> <i class="fas fa-address-book"></i> Dane użytkownika</a>

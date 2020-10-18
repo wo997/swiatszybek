@@ -1,4 +1,4 @@
-<?php //route[admin/produkt]
+<?php //route[{ADMIN}produkt]
 
 $parts = explode("/", $url);
 if (isset($parts[2]))
@@ -27,7 +27,7 @@ if ($product_id === -1) {
   $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
 
   if (!$product_data) {
-    redirect("/admin/produkt/");
+    redirect(STATIC_URLS["ADMIN"] . "produkt/");
   }
 }
 
@@ -126,16 +126,16 @@ if ($product_id === -1) {
       select.classList.toggle("empty", select.value == "");
     });
 
+    var any_selected = false;
+    combo.findAll("select").forEach(e => {
+      if (e.value !== "") {
+        any_selected = true;
+      }
+    });
+    combo.classList.toggle("any_selected", any_selected);
+
     if (options.onChange) {
       var attribute_id = +combo.getAttribute("data-attribute_id");
-
-      var any_selected = false;
-      combo.findAll("select").forEach(e => {
-        if (e.value !== "") {
-          any_selected = true;
-        }
-      });
-      combo.classList.toggle("any_selected", any_selected);
 
       options.onChange(combo, attribute_id, any_selected);
     }
@@ -245,6 +245,7 @@ if ($product_id === -1) {
       },
       onRowInserted: (row) => {
         row.find(".add_img_btn").dispatchEvent(new Event("click"));
+        setCustomHeights();
       },
       default_row: {
         src: ""
@@ -403,7 +404,7 @@ if ($product_id === -1) {
 
     /*createDatatable({
       name: "atrybuty_wariantow",
-      url: "/admin/search_product_attributes",
+      url: STATIC_URLS["ADMIN"] + "search_product_attributes",
       lang: {
         subject: "atrybutów",
       },
@@ -563,7 +564,7 @@ if ($product_id === -1) {
   function deleteProduct() {
     setFormInitialState(`#productForm`);
     if (confirm("Czy chcesz usunąć produkt?")) {
-      window.location = '/admin/delete_product/<?= $kopia ? '-1' : $product_id ?>';
+      window.location = `${STATIC_URLS["ADMIN"]}delete_product/<?= $kopia ? '-1' : $product_id ?>`;
     }
   }
 
@@ -577,7 +578,7 @@ if ($product_id === -1) {
     var params = getFormData(form);
 
     xhr({
-      url: "/admin/save_product",
+      url: STATIC_URLS["ADMIN"] + "save_product",
       params: params,
       success: () => {
         setFormInitialState(form);
@@ -618,11 +619,11 @@ if ($product_id === -1) {
   <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
     <?= $product_form_header ?>
   </div>
-  <a class="btn secondary" href="/admin/produkty">Wszystkie produkty <i class="fas fa-cubes"></i></a>
+  <a class="btn secondary" href="<?= STATIC_URLS["ADMIN"] ?>produkty">Wszystkie produkty <i class="fas fa-cubes"></i></a>
   <?php if ($kopia) : ?>
-    <a href="/admin/produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
+    <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
   <?php else : ?>
-    <a href="/admin/produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
+    <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
     <a href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></a>
   <?php endif ?>
   <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
