@@ -69,6 +69,10 @@ function setCategoryPickerValuesString(element, values, params = {}) {
 }
 
 function expandCategoriesAbove(node, alsoCurrent = true) {
+  if (!node) {
+    return;
+  }
+
   node = $(node);
   if (alsoCurrent) {
     var parent = node.findParentByClassName([
@@ -86,10 +90,18 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
   parent = node;
   while (true) {
     var parent = parent.findParentByClassName(["expand_y", "categories"]);
-    if (!parent) break;
+    if (!parent) {
+      return;
+    }
     var btn = parent.prev();
-    if (!btn) break;
-    expandMenu(btn.next(), btn, true, {
+    if (!btn) {
+      return;
+    }
+    var submenu = btn.next();
+    if (!submenu) {
+      return;
+    }
+    expandMenu(submenu, btn, true, {
       duration: 0,
     });
     parent = parent.parent();

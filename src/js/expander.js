@@ -24,6 +24,10 @@ function mobileDrop(obj) {
 
 function expandMenu(elem, btn, open = null, options = {}) {
   var expand_btn = btn.find(".expand_arrow");
+  if (!expand_btn || !btn.next().classList.contains("expand_y")) {
+    return;
+  }
+
   var open = open
     ? expand_btn.classList.toggle("open", open)
     : expand_btn.classList.toggle("open");
