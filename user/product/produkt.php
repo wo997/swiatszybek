@@ -235,7 +235,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
     <h3 style="margin:30px 0 30px;font-size:22px"><i class="fas fa-comments"></i> Komentarze</h3>
 
-    <div class="comments">
+    <div class="comments table-without-headers">
       <?php
       $comments = fetchArray("SELECT dodano, pseudonim, tresc, user_id, comment_id, rating, accepted FROM comments WHERE product_id = " . $product_data["product_id"] . " AND accepted = 1");
 
@@ -332,14 +332,14 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
     <div style="height:10px"></div>
 
     <div>
-      <a href="/admin/produkt/<?= $product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
+      <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
     </div>
   </div>
 
   <script>
     function toggleProductPublish() {
       xhr({
-        url: "/admin/set_publish",
+        url: STATIC_URLS["ADMIN"] + "set_publish",
         params: {
           table: "products",
           primary: "product_id",

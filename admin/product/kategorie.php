@@ -1,4 +1,4 @@
-<?php //route[admin/kategorie] 
+<?php //route[{ADMIN}kategorie] 
 ?>
 
 <?php startSection("head"); ?>
@@ -15,7 +15,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         createDatatable({
             name: "mytable",
-            url: "/admin/search_product_categories",
+            url: STATIC_URLS["ADMIN"] + "search_product_categories",
             lang: {
                 subject: "kategorii",
                 main_category: ">"
@@ -90,7 +90,7 @@
 
         createDatatable({
             name: "atrybuty",
-            url: "/admin/search_product_attributes",
+            url: STATIC_URLS["ADMIN"] + "search_product_attributes",
             lang: {
                 subject: "atrybutów",
             },
@@ -186,7 +186,7 @@
             params["remove"] = true;
         }
         xhr({
-            url: "/admin/save_product_category",
+            url: STATIC_URLS["ADMIN"] + "save_product_category",
             params: params,
             success: (res) => {
                 mytable.postSaveCategory(params, remove);
@@ -248,7 +248,7 @@
                 <div class="field-title">Kategoria nadrzędna</div>
                 <div class="category-picker" name="parent_id" data-source="product_categories" data-single></div>
 
-                <div class="field-title">Wyświetlane filtry (atrybuty) <a href="/admin/atrybuty" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a> </div>
+                <div class="field-title">Wyświetlane filtry (atrybuty) <a href="<?= STATIC_URLS["ADMIN"] ?>atrybuty" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a> </div>
                 <div class="atrybuty"></div>
 
                 <div class="field-title">Opis górny <button class="btn primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>

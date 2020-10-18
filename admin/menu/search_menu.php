@@ -1,4 +1,4 @@
-<?php //route[admin/search_menu]
+<?php //route[{ADMIN}search_menu]
 
 if (isset($_POST["parent_id"])) {
     orderTableBeforeListing("menu", "category_id", ["parent_id" => intval($_POST["parent_id"])]);

@@ -18,7 +18,7 @@ endSection();
       <header class="navbar_admin">
         <div class="scroll-panel scroll-shadow">
           <a href="/" class="home logo-wrapper">
-            <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>">
+            <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
             <br>
             Strona główna
           </a>

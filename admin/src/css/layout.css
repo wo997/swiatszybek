@@ -148,3 +148,7 @@ h1 {
 /*.content > .scroll-panel {
   background: #fafafa;
 }*/
+
+.navbar_admin > .scroll-panel {
+  height: 100%;
+}

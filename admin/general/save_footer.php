@@ -1,4 +1,4 @@
-<?php //route[admin/save_footer]
+<?php //route[{ADMIN}save_footer]
 
 saveSetting("theme", "layout", [
     "path" => ["page_footer"],

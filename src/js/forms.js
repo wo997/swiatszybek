@@ -76,7 +76,7 @@ function showFieldErrors(field, errors = [], options = {}) {
     // always for non-admin route and mobile
     if (
       window.IS_MOBILE ||
-      !window.location.pathname.includes("admin") ||
+      !window.location.pathname.includes(STATIC_URLS["ADMIN"]) ||
       !field_title
     ) {
       toggleErrorIcons("wrong");

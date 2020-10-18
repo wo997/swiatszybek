@@ -7,7 +7,8 @@ window.loader = {
   },
 };
 
-registerModalContent(`
+registerModalContent(
+  `
     <div id="loader">
         <div class="mul7 blank">
             <div class="mul7circ m7c1"></div>
@@ -23,6 +24,7 @@ registerModalContent(`
             <div class="mul7circ m7c11"></div>
             <div class="mul7circ m7c12"></div>
         </div>
-        <link href="/admin/tools/loader.css?v=${RELEASE}" rel="stylesheet">
+        <link href="${STATIC_URLS["ADMIN"]}tools/loader.css?v=${RELEASE}" rel="stylesheet">
     </div>
-    `);
+    `
+);

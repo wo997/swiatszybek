@@ -103,14 +103,14 @@ $page_width = "1500px";
             <div style="height:10px"></div>
 
             <div>
-                <a href="/admin/strona/<?= $page_data["cms_id"] ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
+                <a href="<?= STATIC_URLS["ADMIN"] ?>strona/<?= $page_data["cms_id"] ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
             </div>
         </div>
 
         <script>
             function togglePagePublish() {
                 xhr({
-                    url: "/admin/set_publish",
+                    url: STATIC_URLS["ADMIN"] + "set_publish",
                     params: {
                         table: "cms",
                         primary: "cms_id",

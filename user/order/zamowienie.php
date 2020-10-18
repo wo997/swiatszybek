@@ -139,7 +139,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
       function setNabyto(basket_item_id, input) {
         input.value = eval(input.value);
         xhr({
-          url: "/admin/set_basket_variant_purchase_price",
+          url: STATIC_URLS["ADMIN"] + "set_basket_variant_purchase_price",
           params: {
             basket_item_id,
             purchase_price: input.value
@@ -166,7 +166,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         updateZysk();
         createDatatable({
           name: "historytable",
-          url: "/admin/search_activity_log",
+          url: STATIC_URLS["ADMIN"] + "search_activity_log",
           lang: {
             subject: "wyników",
           },
@@ -219,7 +219,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
       const params = getFormData(form);
 
       xhr({
-        url: "/admin/edit_zamowienie",
+        url: STATIC_URLS["ADMIN"] + "edit_zamowienie",
         params,
         success: (res) => {
           window.location.reload();
@@ -281,7 +281,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
           if ($status["id"] == 2 && !$tracking_link)
             $current .=  " onclick='return confirm(\"Nie podałeś nr śledzenia paczki, kontynuować pomimo tego?\");' ";
 
-          echo "<a class='status_btn' $current href='/admin/zmien_status/" . $zamowienie_link . "/" . $status["id"] . "'>$c. $status_text</a>";
+          echo "<a class='status_btn' $current href='" . STATIC_URLS["ADMIN"] . "zmien_status/" . $zamowienie_link . "/" . $status["id"] . "'>$c. $status_text</a>";
         }
 
         if (!empty($zamowienie_data["user_id"])) {
@@ -298,7 +298,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
               . $user["firma"]
               . " "
               . $user["email"]
-              . "</a> <a tyle='button' class='btn primary' href='/admin/uzytkownicy/" . $zamowienie_data["user_id"] . "'>Zamówienia (" . $user["count"] . ")</a></div>";
+              . "</a> <a tyle='button' class='btn primary' href='" . STATIC_URLS["ADMIN"] . "uzytkownicy/" . $zamowienie_data["user_id"] . "'>Zamówienia (" . $user["count"] . ")</a></div>";
           }
         }
       }

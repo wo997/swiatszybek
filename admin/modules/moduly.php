@@ -1,4 +1,4 @@
-<?php //route[admin/moduly]
+<?php //route[{ADMIN}moduly]
 
 ?>
 
@@ -47,7 +47,7 @@
 
     function saveModuleSettings() {
         xhr({
-            url: "/admin/save_module_settings",
+            url: STATIC_URLS["ADMIN"] + "save_module_settings",
             params: getModuleFormData(),
             success: (res) => {
 
@@ -65,7 +65,7 @@
         var form = $(".module_info");
 
         xhr({
-            url: "/admin/module_form",
+            url: STATIC_URLS["ADMIN"] + "module_form",
             params: {
                 module_name: module_name,
             },

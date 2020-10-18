@@ -1,4 +1,4 @@
-<?php //route[admin/search_slider]  
+<?php //route[{ADMIN}search_slider]  
 
 echo paginateData([
     "select" => "slide_id, kolejnosc, content_desktop, content_mobile, published",

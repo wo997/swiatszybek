@@ -35,7 +35,7 @@ registerModalContent(
         <form class="preview_form" method="post" target="preview_iframe">
             <input type="text" name="preview_params">
         </form>
-        <link href="/admin/tools/preview.css?v=${RELEASE}" rel="stylesheet">
+        <link href=${STATIC_URLS["ADMIN"]}tools/preview.css?v=${RELEASE}" rel="stylesheet">
     </div>
     `
 );

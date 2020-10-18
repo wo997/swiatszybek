@@ -1,4 +1,4 @@
-<?php //route[admin/rearrange_table]
+<?php //route[{ADMIN}rearrange_table]
 
 if (!tableExists($_POST["table"])) die;
 

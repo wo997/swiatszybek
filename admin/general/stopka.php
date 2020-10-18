@@ -1,4 +1,4 @@
-<?php //route[admin/stopka]
+<?php //route[{ADMIN}stopka]
 
 ?>
 
@@ -40,7 +40,7 @@
         var params = getFormData(form);
 
         xhr({
-            url: "/admin/save_footer",
+            url: STATIC_URLS["ADMIN"] + "save_footer",
             params: params,
             success: () => {
                 setFormInitialState(form);

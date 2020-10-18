@@ -1,4 +1,4 @@
-<?php //route[admin/magazyn] 
+<?php //route[{ADMIN}magazyn] 
 ?>
 
 <?php startSection("head"); ?>
@@ -12,7 +12,7 @@
     var tableName = "mytable";
     createDatatable({
       name: tableName,
-      url: "/admin/search_variant",
+      url: STATIC_URLS["ADMIN"] + "search_variant",
       lang: {
         subject: "wariantów",
       },
@@ -30,7 +30,7 @@
           width: "70%",
           field: "title",
           render: (r) => {
-            return `<a class="link" href='/admin/produkt/${r.product_id}'>${escapeHTML(r.title)}</a>`;
+            return `<a class="link" href='${STATIC_URLS["ADMIN"]}produkt/${r.product_id}'>${escapeHTML(r.title)}</a>`;
           },
           escape: false,
           searchable: "text",
@@ -64,7 +64,8 @@
   });
 
   function dostawa(now, was, variant_id) {
-    ajax('/admin/change_variant_stock', {
+    // TODO: ajax deprecated
+    ajax('${STATIC_URLS["ADMIN"]}change_variant_stock', {
       stock_difference: now - was,
       variant_id: variant_id
     }, (response) => {

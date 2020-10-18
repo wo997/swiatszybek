@@ -1,4 +1,4 @@
-<?php //route[admin/dane-firmy]
+<?php //route[{ADMIN}dane-firmy]
 
 ?>
 
@@ -30,7 +30,7 @@
         };
 
         xhr({
-            url: "/admin/save_dane_firmy",
+            url: STATIC_URLS["ADMIN"] + "save_dane_firmy",
             params: params,
             success: () => {
                 setFormInitialState(form);

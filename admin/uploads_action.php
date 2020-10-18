@@ -1,4 +1,4 @@
-<?php //route[admin/uploads_action]
+<?php //route[{ADMIN}uploads_action]
 
 if (IS_XHR && isset($_FILES['files'])) {
     $type = nonull($_POST, "type", "files");

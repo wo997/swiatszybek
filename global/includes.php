@@ -83,13 +83,15 @@ if (!isset($page_data["seo_image"])) {
 
   const last_viewed_products_ids = <?= json_encode(getLastViewedProductsIds()) ?>;
   const last_viewed_products = <?= json_encode(getLastViewedProducts()) ?>;
+
+  const STATIC_URLS = <?= json_encode(STATIC_URLS) ?>;
 </script>
 
 <!-- styles / scripts to footer? -->
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
 <link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
-<?php if (strpos($url, "admin") === 0 || strpos($url, "zamowienie") === 0) : ?>
+<?php if (IS_ADMIN_URL || strpos($url, "zamowienie") === 0) : ?>
 
   <script>
     const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;

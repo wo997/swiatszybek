@@ -1,4 +1,4 @@
-<?php //route[admin/get_variant_attributes]
+<?php //route[{ADMIN}get_variant_attributes]
 
 include_once "admin/product/attributes_service.php";
 

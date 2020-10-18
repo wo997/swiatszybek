@@ -1,4 +1,4 @@
-<?php //route[admin/send_newsletter]
+<?php //route[{ADMIN}send_newsletter]
 
 
 
@@ -29,5 +29,4 @@ if (isset($mailTitle) && $mailTitle) {
     $stmt->close();
 }
 
-header("Location: /admin/newsletter?wyslano=tak");
-die;
+reload(STATIC_URLS["ADMIN"] . "newsletter?wyslano=tak");

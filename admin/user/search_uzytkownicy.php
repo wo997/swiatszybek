@@ -1,4 +1,4 @@
-<?php //route[admin/search_uzytkownicy]  
+<?php //route[{ADMIN}search_uzytkownicy]  
 
 $where = "u.authenticated = 1";
 

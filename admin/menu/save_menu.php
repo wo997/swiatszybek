@@ -1,4 +1,4 @@
-<?php //route[admin/save_menu]
+<?php //route[{ADMIN}save_menu]
 
 if (isset($_POST["remove"])) {
     query("DELETE FROM menu WHERE category_id = ?", [

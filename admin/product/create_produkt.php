@@ -1,6 +1,7 @@
-<?php //route[admin/create_product]
+<?php //route[{ADMIN}create_product]
 
+// TODO: abandon
 query("INSERT INTO products (title) VALUES (?)", [$_POST["title"]]);
 $id = getLastInsertedId();
 
-json_response(["redirect" => "/admin/produkt/$id"]);
+redirect(STATIC_URLS["ADMIN"] . "produkt/$id");

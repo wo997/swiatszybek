@@ -1,4 +1,4 @@
-<?php //route[admin/save_product_category]
+<?php //route[{ADMIN}save_product_category]
 
 if (isset($_POST["remove"])) {
     query("DELETE FROM product_categories WHERE category_id = ?", [

@@ -1,4 +1,4 @@
-<?php //route[admin/produkty] 
+<?php //route[{ADMIN}produkty] 
 ?>
 
 <?php startSection("head"); ?>
@@ -10,7 +10,7 @@
     var tableName = "mytable";
     createDatatable({
       name: tableName,
-      url: "/admin/search_products",
+      url: STATIC_URLS["ADMIN"] + "search_products",
       db_table: "products",
       primary: "product_id",
       lang: {
@@ -24,7 +24,7 @@
           render: (r) => {
             return `
               <div class="link goto">
-                <a class="goto-label" href="/admin/produkt/${r.product_id}">${escapeHTML(r.title)}</a>
+                <a class="goto-label" href="${STATIC_URLS["ADMIN"]}produkt/${r.product_id}">${escapeHTML(r.title)}</a>
                 <i class="fas fa-chevron-circle-right"></i>
               </div>
             `;
@@ -52,7 +52,7 @@
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <button class="btn important" onclick="window.location='/admin/produkt'">
+        <button class="btn important" onclick="window.location='${STATIC_URLS["ADMIN"]}produkt'">
           Produkt <i class="fas fa-plus-circle"></i>
         </button>
       `

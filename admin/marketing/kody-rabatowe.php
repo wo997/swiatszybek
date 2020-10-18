@@ -1,4 +1,4 @@
-<?php //route[admin/kody-rabatowe] 
+<?php //route[{ADMIN}kody-rabatowe] 
 ?>
 
 <?php startSection("head"); ?>
@@ -10,7 +10,7 @@
     var tableName = "mytable";
     createDatatable({
       name: tableName,
-      url: "/admin/search_kody_rabatowe",
+      url: STATIC_URLS["ADMIN"] + "search_kody_rabatowe",
       lang: {
         subject: "produktów",
       },
@@ -23,7 +23,7 @@
           render: (r) => {
             return `
               <div class="link goto">
-                <a class="goto-label" href="/admin/kod_rabatowy/${r.kod_id}">${escapeHTML(r.kod)}</a>
+                <a class="goto-label" href="${STATIC_URLS["ADMIN"]}kod_rabatowy/${r.kod_id}">${escapeHTML(r.kod)}</a>
                 <i class="fas fa-chevron-circle-right"></i>
               </div>
             `;
@@ -69,7 +69,7 @@
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <a class="btn important" href="/admin/kod_rabatowy"><span>Kod </span> <i class="fa fa-plus"></i></a>
+        <a class="btn important" href="${STATIC_URLS["ADMIN"]}kod_rabatowy"><span>Kod </span> <i class="fa fa-plus"></i></a>
       `
     });
   });

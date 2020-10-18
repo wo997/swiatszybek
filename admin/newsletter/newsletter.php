@@ -1,4 +1,4 @@
-<?php //route[admin/newsletter] 
+<?php //route[{ADMIN}newsletter] 
 ?>
 
 <?php startSection("head"); ?>
@@ -9,7 +9,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         createDatatable({
             name: "mytable",
-            url: "/admin/search_newsletter",
+            url: STATIC_URLS["ADMIN"] + "search_newsletter",
             width: 800,
             params: () => {
                 return {
@@ -36,7 +36,7 @@
                         <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
-                    <a class="btn important" href="/admin/napisz_newsletter">Wyślij <i class="fa fa-envelope"></i></a>
+                    <a class="btn important" href="${STATIC_URLS["ADMIN"]}napisz_newsletter">Wyślij <i class="fa fa-envelope"></i></a>
                 `
         });
     });

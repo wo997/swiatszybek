@@ -45,8 +45,7 @@ function adminRequired()
     global $app;
     if (!$app["user"]["priveleges"]["backend_access"]) {
         $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
-        header("Location: /logowanie");
-        die;
+        redirect("/logowanie");
     }
 }
 

@@ -1,4 +1,4 @@
-<?php //route[admin/module_form]
+<?php //route[{ADMIN}module_form]
 
 if (isset($_POST["module_name"])) {
     $module_name = $_POST["module_name"];

@@ -60,7 +60,7 @@ window.fileManager = {
   },
   fileAction: (formData, callback = null) => {
     xhr({
-      url: "/admin/uploads_action",
+      url: STATIC_URLS["ADMIN"] + "uploads_action",
       formData: formData,
       success(images) {
         try {
@@ -185,7 +185,7 @@ registerModalContent(
 
             </div>
         </div>
-        <link href="/admin/tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
+        <link href="${STATIC_URLS["ADMIN"]}tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
     </div>
     `
 );

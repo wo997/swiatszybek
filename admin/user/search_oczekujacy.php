@@ -1,4 +1,4 @@
-<?php //route[admin/search_oczekujacy]
+<?php //route[{ADMIN}search_oczekujacy]
 
 $where = "1";
 

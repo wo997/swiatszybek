@@ -1,4 +1,4 @@
-<?php //route[admin/search_activity_log]  
+<?php //route[{ADMIN}search_activity_log]  
 
 $where = "1";
 

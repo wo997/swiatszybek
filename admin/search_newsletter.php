@@ -1,4 +1,4 @@
-<?php //route[admin/search_newsletter]  
+<?php //route[{ADMIN}search_newsletter]  
 
 echo paginateData([
   "select" => "email, DATE_FORMAT(invitation_sent, '%d-%m-%Y %H:%i') as requested",

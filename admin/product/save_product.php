@@ -1,4 +1,4 @@
-<?php //route[admin/save_product]
+<?php //route[{ADMIN}save_product]
 
 //$input = ["exceptions" => ["categories", "description", "gallery", "attributes", "variants", "variant_attribute_options"]];
 //include "helpers/safe_post.php";
@@ -92,4 +92,4 @@ if (isset($_POST["remove"])) {
 
 triggerEvent("sitemap_change");
 
-redirect("/admin/produkt/$product_id");
+redirect(STATIC_URLS["ADMIN"] . "produkt/$product_id");

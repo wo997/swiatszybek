@@ -1,4 +1,4 @@
-<?php //route[admin/uzytkownicy]
+<?php //route[{ADMIN}uzytkownicy]
 
 ?>
 
@@ -11,7 +11,7 @@
         var tableName = "mytable";
         createDatatable({
             name: tableName,
-            url: "/admin/search_uzytkownicy",
+            url: STATIC_URLS["ADMIN"] + "search_uzytkownicy",
             lang: {
                 subject: "użytkowników",
             },
@@ -116,7 +116,7 @@
         var tableName = "zamowieniatable";
         createDatatable({
             name: tableName,
-            url: "/admin/search_zamowienia",
+            url: STATIC_URLS["ADMIN"] + "search_zamowienia",
             lang: {
                 subject: "zamówień",
             },
