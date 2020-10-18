@@ -3,8 +3,8 @@
 require_once 'vendor/facebook/graph-sdk/src/Facebook/autoload.php';
 
 $fb_client = new Facebook\Facebook([
-    'app_id' => secret('facebook_app_id'),
-    'app_secret' => secret('facebook_app_secret'),
+    'app_id' => "xxx", //secret('facebook_app_id'),
+    'app_secret' => "zzz", //secret('facebook_app_secret'),
     'default_graph_version' => 'v2.5',
 ]);
 

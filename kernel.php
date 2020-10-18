@@ -71,7 +71,8 @@ define("THEME_SETTINGS_PATH", SETTINGS_PATH . "theme/");
 define("GENERAL_SETTINGS_PATH", SETTINGS_PATH . "general/");
 
 define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
-
+//in case e-mails are not configured (for debugging)
+define("DISPLAY_EMAIL", false);
 // default values - overriden by 'build_info'
 // TODO: not rly a todo, just remember about it ;)
 $previousModificationTimePHP = 0;
@@ -114,8 +115,8 @@ function setting($path, $default = "")
 }
 
 define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . getSetting("general", "advanced", ["domain"], ""));
-define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 0));
-define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 0));
+define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 1));
+define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 1));
 
 define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], ""));
 define("LOGO_PATH_LOCAL_SM", getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]));

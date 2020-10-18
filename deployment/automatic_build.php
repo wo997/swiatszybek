@@ -109,7 +109,7 @@ if (!IS_DEPLOYMENT_URL) {
         $versionSettings++;
     }
 
-    if ($anyChange || true) {
+    if ($anyChange) {
         $content = <<<PHP
 <?php
     \$previousModificationTimePHP = $modificationTimePHP;
@@ -123,6 +123,7 @@ if (!IS_DEPLOYMENT_URL) {
     \$versionModules = $versionModules;
     \$versionSettings = $versionSettings;
 PHP;
+
         saveFile(BUILD_INFO_PATH, $content);
     }
 
