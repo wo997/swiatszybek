@@ -473,6 +473,9 @@ function setFormData(data, form, params = {}) {
 }
 
 function getFormData(form, params = {}) {
+  if (!form) {
+    return;
+  }
   form = $(form);
   var data = {};
 
