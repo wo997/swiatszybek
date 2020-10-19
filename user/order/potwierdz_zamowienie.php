@@ -9,6 +9,8 @@ if (isset($_POST["impersonate"]) && $_POST["impersonate"] == 1) {
   $user_id = $app["user"]["id"];
   $user_type = $app["user"]["type"];
 }
+$user_id = intval($user_id);
+
 
 include "helpers/safe_post.php";
 
@@ -128,16 +130,18 @@ $link_relative = getZamowienieLink($link, true);
 $link_full = getZamowienieLink($link);
 
 // update user data
+// cmon it sucks bad, u better store all data and not remove the previous set
 
+/*
 if (!$impersonate) {
   if ($_POST["dostawa"] == 'k' && $_POST["miejscowosc"] != "") {
-    query("UPDATE users SET kraj = ?, miejscowosc = ?, kod_pocztowy = ?, ulica = ?, nr_domu = ? WHERE user_id = ? LIMIT 1", [
-      $_POST["kraj"], $_POST["miejscowosc"], $_POST["kod_pocztowy"], $_POST["ulica"], $_POST["nr_domu"], $user_id
+    query("UPDATE users SET kraj = ?, miejscowosc = ?, kod_pocztowy = ?, ulica = ?, nr_domu = ? WHERE user_id = $user_id LIMIT 1", [
+      $_POST["kraj"], $_POST["miejscowosc"], $_POST["kod_pocztowy"], $_POST["ulica"], $_POST["nr_domu"]
     ]);
   }
 
   if ($user_type != 'regular') {
-    query("UPDATE users SET email = ? WHERE user_id = ? LIMIT 1", [
+    query("UPDATE users SET email = ? WHERE user_id = $user_id LIMIT 1", [
       $_POST["email"], $user_id
     ]);
   }
@@ -152,6 +156,7 @@ if (!$impersonate) {
     ]);
   }
 }
+*/
 
 // send mail
 $adresWho = $_POST["imie_dostawa"] . " " . $_POST["nazwisko_dostawa"];
