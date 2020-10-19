@@ -2,6 +2,7 @@
 function createDatatable(datatable) {
   // REQUIRED name, definition | renderRow, url, primary, db_table
   // OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate, bulk_menu
+  // filters / fixed_filters
   // sortable (requires primary, db_table) IMPORTANT - not the same as column sortable
   // selectable: {data,output},
   // has_metadata: (boolean, enables outputting metadata from additional row inputs)
@@ -553,7 +554,7 @@ function createDatatable(datatable) {
       }
     } else {
       if (datatable.params) {
-        Object.assign(params, datatable.params);
+        Object.assign(params, datatable.params());
       }
       if (datatable.requiredParam) {
         var x = datatable.requiredParam();
@@ -1054,7 +1055,10 @@ function rearrange(input) {
     url: STATIC_URLS["ADMIN"] + "rearrange_table",
     params: params,
     success: () => {
-      showNotification("Zapisano zmianę kolejności");
+      showNotification("Zapisano zmianę kolejności", {
+        one_line: true,
+        type: "success",
+      });
       datatable.search();
     },
   });
@@ -1175,7 +1179,11 @@ function setPublish(obj, published) {
       showNotification(
         `<i class="fas fa-check"></i> Pomyślnie ustawiono element jako <b>${
           published ? "publiczny" : "ukryty"
-        }</b>`
+        }</b>`,
+        {
+          one_line: true,
+          type: "success",
+        }
       );
       if (obj.findParentByClassName("selected_rows")) {
         datatable.createList();

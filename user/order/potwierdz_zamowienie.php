@@ -61,9 +61,11 @@ if ($_POST["dostawa"] == 'p') {
 if ($kod_rabatowy_type == "static") {
   $koszt = $app["user"]["basket"]["total_basket_cost"] - $kod_rabatowy_wartosc;
 } else {
-  $koszt = round($app["user"]["basket"]["total_basket_cost"] * (1 - 0.01 * $kod_rabatowy_wartosc));
+  $koszt = roundPrice($app["user"]["basket"]["total_basket_cost"] * (1 - 0.01 * $kod_rabatowy_wartosc));
 }
 $koszt += $koszt_dostawy;
+
+$koszt = roundPrice($koszt);
 
 $session_id = $link_hash . session_id();
 

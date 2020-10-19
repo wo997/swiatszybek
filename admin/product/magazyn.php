@@ -70,7 +70,10 @@
       variant_id: variant_id
     }, (response) => {
       mytable.search();
-      showNotification(`Pomyślnie zmieniono stan magazynowy na <b>${now} szt.</b>`);
+      showNotification(`Pomyślnie zmieniono stan magazynowy na <b>${now} szt.</b>`, {
+        one_line: true,
+        type: "success",
+      });
     }, null);
   }
 </script>

@@ -154,7 +154,7 @@ function prepareBasketData()
         if ($basket_variant_index !== false) {
             $qty = $basket_data[$basket_variant_index]["quantity"];
             $variant_list_full[$variant_key]["quantity"] = $qty;
-            $variant_list_full[$variant_key]["total_price"] = price($variant["real_price"] * $qty);
+            $variant_list_full[$variant_key]["total_price"] = roundPrice($variant["real_price"] * $qty);
         }
     }
 
@@ -167,7 +167,7 @@ function prepareBasketData()
 
 
     $user_basket["variants"] = $variant_list_full;
-    $user_basket["total_basket_cost"] = price($total_basket_cost);
+    $user_basket["total_basket_cost"] = roundPrice($total_basket_cost);
     $user_basket["item_count"] = $item_count;
 
     $app["user"]["basket"] = $user_basket;

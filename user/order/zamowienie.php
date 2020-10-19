@@ -145,7 +145,10 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
             purchase_price: input.value
           },
           success() {
-            showNotification(`Zapisano koszt nabycia</b>`);
+            showNotification(`Zapisano koszt nabycia</b>`, {
+              one_line: true,
+              type: "success",
+            });
             updateZysk();
           }
         });

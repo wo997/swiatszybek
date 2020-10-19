@@ -145,6 +145,13 @@ alterTable("users", [
 ]);
 
 addForeignKey("variant", "product_id", "products");
+
+alterTable("basket_content", [
+  ["name" => "real_price", "type" => "DECIMAL(10,2)"],
+  ["name" => "total_price", "type" => "DECIMAL(10,2)"],
+  ["name" => "purchase_price", "previous_name" => "purchased_for", "type" => "DECIMAL(10,2)"]
+]);
+
 // TODO: someone pls do it
 // I recommend creating a general function that removes everything that is not connected, simple concept right? no errors, quick coffee, big dildo
 

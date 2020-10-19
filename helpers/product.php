@@ -102,13 +102,13 @@ function getLastViewedProducts()
 
 function getProductsFullData($product_id_list)
 {
-    if (!$product_id_list) {
-        return [];
-    }
-
     $product_id_list_string = join(",", $product_id_list);
     $where = "product_id IN ($product_id_list_string)";
     $order = "FIELD(product_id,$product_id_list_string)";
+
+    if (!$product_id_list_string) {
+        return [];
+    }
 
     $product_list = fetchArray("SELECT product_id, title, link, cache_thumbnail, price_min, price_max FROM products WHERE $where ORDER BY $order");
 
