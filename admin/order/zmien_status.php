@@ -72,8 +72,10 @@ if ($new_status_id == 2) {
 }
 
 if (isset($mailTitle)) {
-  //sendEmail($zamowienie_data["email"], $message, $mailTitle);
-  //sendEmail($company_data['main_email'], $message, $mailTitle);
+  /*@sendEmail($zamowienie_data["email"], $message, $mailTitle);
+  foreach (getOrderEmailList() as $email) {
+    @sendEmail($email, $message, $mailTitle);
+  }*/
 }
 
 /*$add_subtract_stock = "";
