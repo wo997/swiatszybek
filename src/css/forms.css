@@ -40,16 +40,16 @@
 }
 
 .field.required {
-  border-color: red !important;
-  box-shadow: 0px 0px 3px 0px rgba(255, 0, 0, 1) inset;
+  border-color: var(--error-clr) !important;
+  box-shadow: 0px 0px 3px 0px var(--error-clr) inset;
 }
 
 .simple-list[data-count="0"].required > .add_btn.add_begin {
-  background: #d33;
+  background: var(--error-clr);
 }
 
 img.required {
-  box-shadow: 0px 0px 0px 2px rgba(255, 0, 0, 1);
+  box-shadow: 0px 0px 0px 2px var(--error-clr);
 }
 
 textarea + .input-elements .input-error-indicator {
@@ -72,4 +72,9 @@ textarea + .input-elements .input-error-indicator {
 
 .form-space {
   height: 0.6em;
+}
+
+.warn-outline-active {
+  border-color: var(--error-clr);
+  box-shadow: 0 0 0 1px var(--error-clr) inset !important;
 }

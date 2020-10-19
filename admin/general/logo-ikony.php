@@ -62,7 +62,7 @@
 </form>
 
 <div class="field-title">Ikonka sklepu (favicon)</div>
-<img class="favicon" data-src="<?= FAVICON_PATH_LOCAL ?>">
+<img class="favicon" data-src="<?= FAVICON_PATH_LOCAL_TN ?>">
 <form onsubmit="uploadImageWithCopy(event,'favicon')">
     <label>
         <input type="file" onchange="$(this).next().click()" style="display:none">

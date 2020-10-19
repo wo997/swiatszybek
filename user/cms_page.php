@@ -74,7 +74,7 @@ $page_width = "1500px";
 
 
 
-    <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+    <?php if ($app["user"]["priveleges"]["backend_access"] && !isset($preview_params)) : ?>
         <div class="right_side_menu freeze_before_load">
             <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
                 <i class="fas fa-chevron-right"></i>

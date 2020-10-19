@@ -7,6 +7,9 @@ function $(node, parent = null) {
   if (!parent) {
     parent = document.body;
   }
+  if (!parent) {
+    return null;
+  }
 
   // query selector or html node
   node = typeof node == "string" ? parent.querySelector(node) : node;

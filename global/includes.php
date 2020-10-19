@@ -125,7 +125,7 @@ if (!isset($page_data["seo_image"])) {
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
-<link rel="shortcut icon" href="<?= FAVICON_PATH ?>" />
+<link rel="shortcut icon" href="<?= FAVICON_PATH_LOCAL_TN ?>" />
 
 <?php if (isset($page_data["seo_description"])) : ?>
   <meta name="description" content="<?= $page_data["seo_description"] ?>">

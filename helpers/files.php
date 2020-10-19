@@ -149,10 +149,12 @@ function getResponsiveImageData($src)
     ];
 }
 
-// also images.js
 function getResponsiveImageBySize($src, $image_dimension, $options = [])
 {
     global $image_default_dimensions, $same_ext_image_allowed_types;
+
+    // floating point numbers suck
+    $image_dimension -= 1;
 
     $image_data = getResponsiveImageData($src);
     if (!$image_data) {

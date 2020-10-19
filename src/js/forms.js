@@ -33,79 +33,88 @@ function showFieldErrors(field, errors = [], options = {}) {
       field_title = field_wrapper.find(".field-title");
     }
   }
-  // just desktop admin
-  if (field_title) {
-    var warning = field_title.find(".fa-exclamation-triangle");
-    if (warning) {
-      warning.remove();
+
+  var wrong = Array.isArray(errors) && errors.length > 0;
+
+  if (field.classList.contains("warn-triangle")) {
+    if (field_title) {
+      var warning = field_title.find(".fa-exclamation-triangle");
+      if (warning) {
+        warning.remove();
+      }
+
+      if (wrong) {
+        field_title.insertAdjacentHTML(
+          "beforeend",
+          `<i
+              class="fas fa-exclamation-triangle"
+              style="color: red;transform: scale(1.25);margin-left:4px"
+              data-tooltip="${errors.join("<br>")}">
+            </i>`
+        );
+      }
     }
-  }
+  } else if (field.classList.contains("warn-outline")) {
+    field.classList.toggle("warn-outline-active", wrong);
+  } else {
+    var wrapper = field;
+    if (field.type == "checkbox") {
+      wrapper = wrapper.parent();
+    }
 
-  var wrapper = field;
-  if (field.type == "checkbox") {
-    wrapper = wrapper.parent();
-  }
-
-  const inputElements = wrapper.next();
-  const validationBox = inputElements.find(".validation-error-box");
-  const correctIndicator = inputElements.find(
-    ".input-error-indicator .correct"
-  );
-  if (!correctIndicator && field.hasAttribute("data-validate")) {
-    console.error(
-      "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded"
+    const inputElements = wrapper.next();
+    const validationBox = inputElements.find(".validation-error-box");
+    const correctIndicator = inputElements.find(
+      ".input-error-indicator .correct"
     );
-    return;
-  }
-  const wrongIndicator = inputElements.find(".input-error-indicator .wrong");
-  const toggleErrorIcons = (type) => {
-    if (type == "correct") {
-      wrongIndicator.classList.remove("visible");
-      correctIndicator.classList.add("visible");
-    } else if (type == "wrong") {
-      correctIndicator.classList.remove("visible");
-      wrongIndicator.classList.add("visible");
-    } else {
-      correctIndicator.classList.remove("visible");
-      wrongIndicator.classList.remove("visible");
-    }
-  };
-
-  if (Array.isArray(errors) && errors.length > 0) {
-    if (field_title && field.classList.contains("simple-list")) {
-      field_title.insertAdjacentHTML(
-        "beforeend",
-        `<i
-            class="fas fa-exclamation-triangle"
-            style="color: red;transform: scale(1.25);margin-left:4px"
-            data-tooltip="${errors.join("<br>")}">
-          </i>`
+    if (!correctIndicator && field.hasAttribute("data-validate")) {
+      console.error(
+        "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded"
       );
-    } else {
+      return;
+    }
+    const wrongIndicator = inputElements.find(".input-error-indicator .wrong");
+    const toggleErrorIcons = (type) => {
+      if (type == "correct") {
+        wrongIndicator.classList.remove("visible");
+        correctIndicator.classList.add("visible");
+      } else if (type == "wrong") {
+        correctIndicator.classList.remove("visible");
+        wrongIndicator.classList.add("visible");
+      } else {
+        correctIndicator.classList.remove("visible");
+        wrongIndicator.classList.remove("visible");
+      }
+    };
+
+    if (wrong) {
       toggleErrorIcons("wrong");
       validationBox.find(".message").innerHTML = errors.join("<br>");
       expand(validationBox, true, {
         duration: 350,
       });
+    } else {
+      if (errors === "blank") {
+        toggleErrorIcons("blank");
+        expand(validationBox, false, {
+          duration: 350,
+        });
+      } else {
+        toggleErrorIcons("correct");
+        expand(validationBox, false, {
+          duration: 350,
+        });
+      }
     }
+  }
 
+  if (wrong) {
     if (options.scroll) {
       scrollToInvalid(field);
     }
   } else {
     if (window.fieldRequiringFilling == field) {
       window.fieldRequiringFilling = null;
-    }
-    if (errors === "blank") {
-      toggleErrorIcons("blank");
-      expand(validationBox, false, {
-        duration: 350,
-      });
-    } else {
-      toggleErrorIcons("correct");
-      expand(validationBox, false, {
-        duration: 350,
-      });
     }
   }
 }
@@ -143,8 +152,15 @@ function getSizeValidationErrors(valLen, condition, message) {
     if (valLen < minLen) {
       lengthInfo = `min. ${minLen}`;
     }
+  } else if (condition.indexOf("-") > 0) {
+    var maxLen = condition.replace("-", "");
+    if (valLen > maxLen) {
+      lengthInfo = `max. ${maxLen}`;
+    }
   } else if (/\d-\d/.test(condition)) {
     var [from, to] = condition.split("-");
+    from = parseInt(from);
+    to = parseInt(to);
     if (valLen < from || valLen > to) {
       lengthInfo = `${from}-${to}`;
     }
@@ -621,9 +637,13 @@ function registerForm(form = null) {
       obj = obj.parent();
     }
 
-    obj.insertAdjacentHTML(
-      "afterend",
-      `
+    if (
+      !field.classList.contains("warn-triangle") &&
+      !field.classList.contains("warn-outline")
+    ) {
+      obj.insertAdjacentHTML(
+        "afterend",
+        `
         <div class="input-elements">
           <div class="input-error-indicator">
             <i class="correct fa fa-check"></i>
@@ -634,7 +654,8 @@ function registerForm(form = null) {
           </div>
         </div>
       `
-    );
+      );
+    }
 
     if (field.hasAttribute("data-input-change")) {
       field.addEventListener("input", () => {

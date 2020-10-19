@@ -11,6 +11,7 @@ function createSimpleList(params = {}) {
 
   list.wrapper = $(`[name="${params.name}"]`);
   list.wrapper.classList.add("simple-list");
+  list.wrapper.classList.add("warn-triangle");
 
   list.wrapper.setAttribute("data-list-name", list.name);
 
@@ -183,13 +184,13 @@ function createSimpleList(params = {}) {
         `<tr class='simple-list-row'>
             ${params.render()}
             <td class='action_buttons'>
-              <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
+              <i class="btn secondary fas fa-arrow-up swap-row-btn" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
                 list.name
               }.valuesChanged();"></i>
-              <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
+              <i class="btn secondary fas fa-arrow-down swap-row-btn" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
                 list.name
               }.valuesChanged();"></i>
-              <i class="btn secondary fas fa-times" 
+              <i class="btn secondary fas fa-times remove-row-btn" 
                 onclick="${list.name}.removeRowFromBtn(this);
                 ${list.name}.valuesChanged();">
               </i>
@@ -205,13 +206,13 @@ function createSimpleList(params = {}) {
                 <div style="width:5px;margin-left:auto"></div>
                 ${btnAddTop}
                 <div class='action_buttons'>
-                  <i class="btn secondary fas fa-arrow-up" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());${
+                  <i class="btn secondary fas fa-arrow-up swap-row-btn" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());${
                     list.name
                   }.valuesChanged();"></i>
-                  <i class="btn secondary fas fa-arrow-down" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());${
+                  <i class="btn secondary fas fa-arrow-down swap-row-btn" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());${
                     list.name
                   }.valuesChanged();"></i>
-                  <i class="btn secondary fas fa-times" 
+                  <i class="btn secondary fas fa-times remove-row-btn" 
                     onclick="${list.name}.removeRowFromBtn(this);
                     ${list.name}.valuesChanged();">
                   </i>

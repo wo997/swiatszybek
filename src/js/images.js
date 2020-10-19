@@ -41,7 +41,8 @@ function loadImage(img, animate = true) {
       return;
     }
 
-    var image_dimension = Math.max(r.width, r.height);
+    // floating point numbers suck
+    var image_dimension = Math.max(r.width, r.height) - 1;
 
     var natural_image_dimension = Math.max(w, h);
     //console.log(natural_image_dimension, image_dimension, w, h);

@@ -197,7 +197,10 @@ $message .= getEmailFooter();
 $mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . $app["company_data"]['email_sender'] . "";
 
 @sendEmail($_POST["email"], $message, $mailTitle);
-@sendEmail(config('main_email'), $message, $mailTitle);
+
+foreach (getOrderEmailList() as $email) {
+  @sendEmail($email, $message, $mailTitle);
+}
 
 /*if ($_POST["forma_zaplaty"] == '24') {
   require 'user/przelewy24/przelewy24_register_payment.php';

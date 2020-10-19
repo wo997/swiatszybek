@@ -6,6 +6,9 @@ if (!isset($_SESSION)) {
 
 include_once 'vendor/autoload.php';
 
+// define app scope
+$app = [];
+
 // include helpers
 include_once "helpers/general.php";
 include_once "helpers/debug.php";
@@ -118,24 +121,23 @@ define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "ht
 define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 1));
 define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 1));
 
-define("LOGO_PATH_LOCAL", setting(["theme", "copied_images", "logo", "path"], ""));
+define("LOGO_PATH_LOCAL", "/" . setting(["theme", "copied_images", "logo", "path"], ""));
 define("LOGO_PATH_LOCAL_SM", getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]));
 
 $logo_file_path = getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]);
 $logo_file_path .= "?v=" . setting(["theme", "copied_images", "logo", "version"], "");
-define("LOGO_PATH_PUBLIC_SM", $logo_file_path);
+define("LOGO_PATH_PUBLIC_SM", SITE_URL . $logo_file_path);
 
-define("FAVICON_PATH", SITE_URL . "/uploads/tn/favicon.jpg?v=" . setting(["theme", "copied_images", "favicon", "version"], ""));
-define("FAVICON_PATH_LOCAL", setting(["theme", "copied_images", "favicon", "path"], FAVICON_PATH));
+define("FAVICON_PATH_LOCAL", "/" . setting(["theme", "copied_images", "favicon", "path"], ""));
+$favicon_file_path = getResponsiveImageBySize(FAVICON_PATH_LOCAL, $image_default_dimensions["tn"], ["same-ext" => true]);
+$favicon_file_path .= "?v=" . setting(["theme", "copied_images", "favicon", "version"], "");
+define("FAVICON_PATH_LOCAL_TN", SITE_URL . $favicon_file_path);
 
 $currency = "PLN"; // used by p24
 
 // use db
 date_default_timezone_set("Europe/Warsaw");
 include_once "helpers/db/connect.php";
-
-// define app scope
-$app = [];
 
 // use builds
 $link_route_path = @include BUILDS_PATH . "link_route_path.php";

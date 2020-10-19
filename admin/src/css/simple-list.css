@@ -25,16 +25,14 @@ div.list .simple-list-row {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  min-height: unset;
 }
 
-.simple-list-row > .fa-times,
-.simple-list-row > td > .fa-times {
+.simple-list-row .remove-row-btn {
   color: #c22 !important;
   border-color: #c22 !important;
-  margin-left: 5px;
 }
-.simple-list-row > .fa-times:hover,
-.simple-list-row > td > .fa-times:hover {
+.simple-list-row .remove-row-btn:hover {
   background: #c22 !important;
   color: #fff !important;
 }
@@ -177,6 +175,14 @@ tr.simple-list-row td {
 }
 
 .simple-list .action_buttons {
-  width: 102px;
   text-align: right;
+  flex-shrink: 0;
+}
+
+.simple-list table .action_buttons {
+  white-space: nowrap;
+}
+
+.simple-list.no-order .action_buttons .swap-row-btn {
+  display: none !important;
 }
