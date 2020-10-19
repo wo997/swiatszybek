@@ -3,7 +3,7 @@
 $user_id = $url_params[1];
 $authentication_token = $url_params[2];
 
-query("UPDATE users SET authenticated = '1', stworzono = NOW() WHERE user_id = ? AND authentication_token = ?", [
+query("UPDATE users SET authenticated = 1, stworzono = NOW() WHERE user_id = ? AND authentication_token = ?", [
   $user_id, $authentication_token
 ]);
 

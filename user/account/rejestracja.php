@@ -1,10 +1,5 @@
 <?php //route[rejestracja]
 
-function a($name)
-{
-  if (isset($_POST[$name]))
-    return "value='{$_POST[$name]}'";
-}
 ?>
 
 <!DOCTYPE html>
@@ -87,7 +82,7 @@ function a($name)
             }
             errors.push(m);
           } else if (res == "unauthenticated") {
-            errors.push("<span style='color: black'>Konto istnieje <b style='color:var(--success-clr)' onclick='register(false)'>WYŚLIJ LINK AKTYWACYJNY</b></span>");
+            errors.push("<span style='color: black'>Konto istnieje <b style='color:var(--success-clr);display: inline-block;' class='link' onclick='register(false)'>WYŚLIJ LINK AKTYWACYJNY</b></span>");
           } else if (res == "invalid") {
             errors.push("Wpisz poprawny adres email");
           }
@@ -102,7 +97,9 @@ function a($name)
     function register(validate = true) {
       const registerForm = $(`#registerForm`);
 
-      if (validate && !validateForm(registerForm)) {
+      if (validate && !validateForm(registerForm, {
+          except_backend: true
+        })) {
         return;
       }
 
@@ -130,11 +127,11 @@ function a($name)
     <h1 class="h1">Rejestracja</h1>
     <div class="paddingable" id="registerForm" data-form style="min-height: 400px;">
       <div class="main-container">
-        <div class="menu mobileRow" style="max-width: 700px">
+        <div class="menu mobileRow" style="max-width: 800px">
           <div style="width: 50%;">
-            <div style="width:100%;margin:auto;max-width:300px">
+            <div style="width:100%;margin:auto;max-width:350px">
               <span class="field-title">E-mail</span>
-              <input type="text" name="email" <?= a("email") ?> autocomplete="email" data-validate="email|custom:validateUserEmailExists|delay:300" class="field">
+              <input type="text" name="email" autocomplete="email" data-validate="backend|custom:validateUserEmailExists|delay:300" class="field">
 
               <div class="field-title">Hasło (min. 8 znaków)</div>
               <input type="password" name="password" class="field" data-validate="password" autocomplete="new-password">
@@ -144,16 +141,16 @@ function a($name)
             </div>
           </div>
           <div style="width: 50%;">
-            <div style="width:100%;margin:auto;max-width:300px">
+            <div style="width:100%;margin:auto;max-width:350px">
               <span class="field-title">Imię</span>
-              <input type="text" name="imie" <?= a("imie") ?> autocomplete="first-name" data-validate class="field">
+              <input type="text" name="imie" autocomplete="first-name" data-validate class="field">
 
               <span class="field-title">Nazwisko</span>
-              <input type="text" name="nazwisko" <?= a("nazwisko") ?> autocomplete="family-name" data-validate class="field">
+              <input type="text" name="nazwisko" autocomplete="family-name" data-validate class="field">
 
 
               <span class="field-title">Nr telefonu</span>
-              <input type="text" name="telefon" <?= a("telefon") ?> autocomplete="tel" data-validate="tel" class="field">
+              <input type="text" name="telefon" autocomplete="tel" data-validate="tel" class="field">
 
               <button data-submit onclick="register()" class="btn primary medium fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
                 Zarejestruj się

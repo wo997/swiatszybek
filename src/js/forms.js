@@ -132,9 +132,18 @@ function validateForm(form, params = {}) {
         found = true;
         break;
       }
-      if (found) continue;
+      if (found) {
+        continue;
+      }
     }
     if (field.findParentByClassName("hidden")) continue;
+
+    if (
+      params.except_backend &&
+      field.getAttribute("data-validate").indexOf("backend") === 0
+    ) {
+      continue;
+    }
 
     var errors = formFieldOnChange(field, { scroll: true });
     if (Array.isArray(errors) && errors.length > 0) {

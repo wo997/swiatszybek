@@ -57,3 +57,14 @@
 .message-footer > .btn:not(:last-child) {
   margin-right: 10px;
 }
+
+.message-header {
+  margin: -11px -10px;
+  margin-bottom: 0;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+.modal-message {
+  border-radius: inherit;
+}

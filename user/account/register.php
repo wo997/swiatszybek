@@ -33,6 +33,7 @@ if ($user_data) {
     ]);
     json_response("Użytkownik " . $_POST["email"] . " już istnieje");
   }*/
+  $authentication_token = $user_data["authentication_token"];
 } else {
   query("INSERT INTO users (
     user_type,imie,nazwisko,
@@ -58,6 +59,8 @@ $message = "
   <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/aktywuj/" . $user_data["user_id"] . "/$authentication_token'>Aktywuj</a>
 ";
 $mailTitle = "Aktywacja konta " . $app["company_data"]['email_sender'] . " " . date("d-m-Y");
+$message .= getEmailFooter();
+
 @sendEmail($_POST["email"], $message, $mailTitle);
 
 $response_message = "Link do aktywacji konta został wysłany<br>na " . $_POST["email"];
