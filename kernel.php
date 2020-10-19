@@ -46,6 +46,8 @@ include_once "helpers/form.php";
 
 include "packages/simple_html_dom.php";
 
+include_once "helpers/email_notifications.php";
+
 define("STATIC_URLS", ["ADMIN" => "/piep_admin/"]);
 
 //var_Dump(get_defined_constants()["ADMIN_URL"]);

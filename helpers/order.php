@@ -61,17 +61,6 @@ $zamowienia_status_groups = [
     ],
 ];
 
-function getOrderEmailList()
-{
-    $general_emails = getSetting("general", "emails", []);
-    $order_emails = nonull($general_emails, "order_emails", "[]");
-    $order_email_list = [];
-    foreach (json_decode($order_emails, true) as $row) {
-        $order_email_list[] = $row["values"]["email"];
-    }
-    return $order_email_list;
-}
-
 function getBasketData()
 {
     $basket_data = json_decode($_SESSION["basket"], true);

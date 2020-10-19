@@ -1,5 +1,7 @@
 <?php
 
+// TODO: register cron jobs by annotations
+
 if (!isset($CRON)) die;
 
 include_once "kernel.php";
@@ -8,6 +10,8 @@ query("UPDATE products SET cache_sales = cache_sales * 0.95"); // bestsellers
 
 function dailyReport()
 {
+    global $app;
+
     $day = date("Y-m-d", time() - 3600 * 5);
 
     $where = "DATE(oplacono) = '$day' AND status_id NOT IN (4)";
@@ -50,11 +54,11 @@ function dailyReport()
         ";
     }
 
-    $messageTitle = "Raport dnia " . $app["company_data"]['email_sender'] . " " . $day;
+    $mailTitle = "Raport dnia " . $app["company_data"]['email_sender'] . " " . $day;
 
-    sendEmail("wojtekwo997@gmail.com", $message, $messageTitle);
-    sendEmail("marek.krygier@solectric.pl", $message, $messageTitle);
-    sendEmail("info@solectric.pl", $message, $messageTitle);
+    foreach (getDailyReportEmailList() as $email) {
+        @sendEmail($email, $message, $mailTitle);
+    }
 }
 
 dailyReport();

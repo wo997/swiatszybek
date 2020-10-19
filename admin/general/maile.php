@@ -13,7 +13,6 @@
     const company_data = <?= json_encode($app["company_data"]) ?>;
     const main_email = nonull(company_data["main_email"], "").trim();
 
-    //w.piepka@lsit.pl
     domload(() => {
         createSimpleList({
             name: "order_emails",
@@ -31,6 +30,33 @@
             title: `E-mail(e) do zamówień`,
             onChange: (values, list) => {
                 var add_main_email_btn = $(".add_main_to_orders");
+                if (add_main_email_btn) {
+                    var has_main_email = !!values.find(e => e.values.email.trim() == main_email);
+                    add_main_email_btn.classList.toggle("hidden", has_main_email || !main_email);
+                }
+
+                setTimeout(() => {
+                    registerForm($(`#maileForm`));
+                });
+            }
+        });
+
+        createSimpleList({
+            name: "daily_report_emails",
+            fields: {
+                email: {}
+            },
+            render: (data) => {
+                return `
+                    <input type='text' class='field warn-outline' style='flex-grow:1' data-list-param="email" data-validate="email">
+                `;
+            },
+            default_row: {
+                email: ""
+            },
+            title: `E-mail(e) do raportów dziennych (sprzedaży)`,
+            onChange: (values, list) => {
+                var add_main_email_btn = $(".add_main_to_daily_report");
                 if (add_main_email_btn) {
                     var has_main_email = !!values.find(e => e.values.email.trim() == main_email);
                     add_main_email_btn.classList.toggle("hidden", has_main_email || !main_email);
@@ -94,7 +120,15 @@
 
         <div class="form-space"></div>
 
-        <button class='add_main_to_orders btn important fill' onclick='order_emails.insertRow({email:"<?= $app["company_data"]["main_email"] ?>"})'>
+        <button class='add_main_to_orders btn secondary fill' onclick='order_emails.insertRow({email:"<?= $app["company_data"]["main_email"] ?>"})'>
+            Dodaj <?= $app["company_data"]["main_email"] ?>
+        </button>
+
+        <div name="daily_report_emails" class="slim no-order" data-validate="|count:3-"></div>
+
+        <div class="form-space"></div>
+
+        <button class='add_main_to_daily_report btn secondary fill' onclick='daily_report_emails.insertRow({email:"<?= $app["company_data"]["main_email"] ?>"})'>
             Dodaj <?= $app["company_data"]["main_email"] ?>
         </button>
 
