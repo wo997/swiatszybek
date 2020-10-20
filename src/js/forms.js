@@ -477,9 +477,12 @@ function setFormData(data, form, params = {}) {
     jscolor.installByClassName();
   }
 
+  //console.log("DATA", form, JSON.stringify(data));
+  var counter = 666;
   Object.entries(data).forEach(([name, value]) => {
     var selector = `[${find_by}="${name}"]`;
     var e = form.find(selector);
+    //console.log(counter++, name, e, value, JSON.stringify(data));
     if (!e) {
       return;
     }
@@ -488,6 +491,10 @@ function setFormData(data, form, params = {}) {
       value_params = params.data[name];
     }
 
+    //console.trace();
+
+    //console.log(value);
+    //console.log(e);
     e.setValue(value, value_params);
   });
 

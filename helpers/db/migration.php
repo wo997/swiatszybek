@@ -179,7 +179,7 @@ function dropIndexByName($table, $key_name)
 
 /**
  * Create table in DB with specified columns allowing to modify the table if necessary
- * parameter details in function alterTable($table, $columns)
+ * parameter details in function manageTableColumns($table, $columns)
  * @param  string $table
  * @param array<array> $columns
  * @return void
@@ -206,7 +206,7 @@ function createTable($table, $columns)
         echo "➕ Table '$table' created<br>";
     }
 
-    alterTable($table, $columns); // do your job ;)
+    manageTableColumns($table, $columns); // do your job ;)
     return;
 }
 
@@ -225,7 +225,7 @@ function createTable($table, $columns)
  * @param array<array> $columns
  * @return void
  */
-function alterTable($table, $columns)
+function manageTableColumns($table, $columns)
 {
     foreach ($columns as $column) {
         $column["null"] = nonull($column, "null", false);

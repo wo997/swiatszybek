@@ -196,8 +196,10 @@ tr.simple-list-row td {
 }
 
 .simple-list .list > .simple-list-row-wrapper:first-child .btn-up,
-.simple-list .list > .simple-list-row-wrapper:last-child .btn-down {
+.simple-list .list > .simple-list-row-wrapper:last-child .btn-down,
+.simple-list table > tbody > tr:first-child > td > .btn-up,
+.simple-list table > tbody > tr:last-child > td > .btn-down {
   pointer-events: none;
-  opacity: 0.3;
+  opacity: 0.5;
   color: white;
 }

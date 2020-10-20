@@ -294,7 +294,9 @@ function setValue(input, value = null, params = {}) {
   input = $(input);
 
   if (value === null) {
-    input.dispatchEvent(new Event("change"));
+    if (!params.quiet) {
+      input.dispatchEvent(new Event("change"));
+    }
     return;
   }
 
@@ -339,7 +341,7 @@ function setValue(input, value = null, params = {}) {
       if (pointChild) {
         input = input.find(pointChild);
       }
-      input.innerHTML = value;
+      input.setContent(value);
     } else if (type == "attribute_values") {
       if (typeof value === "string") {
         try {

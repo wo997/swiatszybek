@@ -21,6 +21,7 @@ if (isset($_POST["remove"])) {
         "description",
         "gallery",
         "published",
+        "variant_attributes_layout"
     ]);
 
     updateEntity($product_data, "products", "product_id", $product_id);

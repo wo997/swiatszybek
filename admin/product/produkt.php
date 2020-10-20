@@ -22,6 +22,7 @@ if ($product_id === -1) {
     "gallery" => "[]",
     "published" => "0",
     "product_id" => "-1",
+    "variant_attributes_layout" => "[]",
   ];
 } else {
   $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
@@ -203,12 +204,13 @@ if ($product_id === -1) {
 
   domload(() => {
 
-    $$(`#variantForm [name="attributes"] .attribute-row`).forEach(e => {
+    // TODO: attribute intersection validation
+    /*$$(`#variantForm [name="attributes"] .attribute-row`).forEach(e => {
       e.insertAdjacentHTML("beforeend", `
         <div class='case_common rect' style='background:#0001;color:#444'>Atrybut wspólny</div>
         <div class='case_intersect rect' style='background:var(--error-clr)'>Atrybut wspólny <i class='fas fa-info-circle' data-tooltip='Atrybut wspólny zostanie usunięty po zapisaniu wariantu'></i></div>
       `);
-    });
+    });*/
 
     loadCategoryPicker("product_categories", {
       skip: 2
@@ -271,7 +273,7 @@ if ($product_id === -1) {
 
 
     createSimpleList({
-      name: "variant_attributes",
+      name: "variant_attributes_layout",
       fields: {
         attribute_id: {},
         attribute_name: {},
@@ -320,8 +322,25 @@ if ($product_id === -1) {
             value_id: "-1",
             attribute_values: "[]",
           },
+          onChange: (values, list) => {
+            list.target.directChildren().forEach(row => {
+              var value_id = row.find(`[data-list-param="value_id"]`).getValue();
+              row.find(`[data-list-param="value"]`).setValue(nonull(attribute_values[value_id], {
+                whole_value: ""
+              }).whole_value, {
+                quiet: true
+              });
+            })
+          }
         });
-
+      },
+      onChange: (values, list) => {
+        list.target.directChildren().forEach(row => {
+          var attribute_id = row.find(`[data-list-param="attribute_id"]`).getValue();
+          row.find(`[data-list-param="attribute_name"]`).setValue(nonull(attributes[attribute_id], ""), {
+            quiet: true
+          });
+        })
       }
     });
 
@@ -401,6 +420,10 @@ if ($product_id === -1) {
       },
       title: "Warianty produktu (min. 1)",
       onChange: () => {
+        if (!window.productFormReady) {
+          return;
+        }
+
         // add attribues and values to the ordering list below variants so the use can organize the layout
         var attributes_and_values = {};
         variants.values.forEach(e => {
@@ -451,22 +474,22 @@ if ($product_id === -1) {
         //console.log(attributes_and_values);
 
         // remove
-        variant_attributes.values.map(e => e.attribute_id).forEach(current_attribute_id => {
+        variant_attributes_layout.values.map(e => e.attribute_id).forEach(current_attribute_id => {
           if (Object.keys(attributes_and_values).indexOf("" + current_attribute_id) == -1) {
-            var index = variant_attributes.values.map(e => e.attribute_id).indexOf(current_attribute_id);
-            //console.log(index);
+
+            var index = variant_attributes_layout.values.map(e => e.attribute_id).indexOf(current_attribute_id);
             if (index !== -1) {
-              variant_attributes.removeRow(variant_attributes.target.directChildren()[index]);
+              variant_attributes_layout.removeRow(variant_attributes_layout.target.directChildren()[index]);
             }
           }
         });
 
         // add
         Object.keys(attributes_and_values).forEach(attribute_id => {
-          if (variant_attributes.values.map(e => e.attribute_id).indexOf(+attribute_id) == -1) {
-            variant_attributes.insertRow({
+          if (variant_attributes_layout.values.map(e => e.attribute_id).indexOf(+attribute_id) == -1) {
+            variant_attributes_layout.insertRow({
               attribute_id: attribute_id,
-              attribute_name: attributes[attribute_id],
+              attribute_name: "", //attributes[attribute_id],// will be replaced on any change
               attribute_values: "[]",
             })
           }
@@ -493,7 +516,7 @@ if ($product_id === -1) {
             if (list.values.map(e => e.values.value_id).indexOf(value_id) == -1) {
               list.insertRow({
                 value_id: value_id,
-                value: attribute_values[value_id].whole_value,
+                value: "", //attribute_values[value_id].whole_value,// will be replaced on any change
               })
             }
           });
@@ -598,12 +621,21 @@ if ($product_id === -1) {
     });
     data.variants = JSON.stringify(variants_data);
 
+    $(`[name="variant_attributes_layout"]`).setValue(data.variant_attributes_layout);
+    delete data.variant_attributes_layout;
+
     setFormData(data, "#productForm");
 
+    // TODO: form initial state? 
     <?php if ($kopia) : ?>
       $(`[name="title"]`).value += " (kopia)";
       $(`[name="product_id"]`).value = "-1";
     <?php endif ?>
+
+    window.productFormReady = true;
+
+    // init just in case
+    variants.params.onChange(variants);
   });
 
   window.addEventListener("load", function() {
@@ -783,7 +815,7 @@ if ($product_id === -1) {
 
   <div name="variants" data-validate="|count:1+"></div>
 
-  <div name="variant_attributes" class="no-remove no-add"></div>
+  <div name="variant_attributes_layout" class="no-remove no-add"></div>
 
   <!--<div class="field-title">Atrybuty wariantów</div>
   <div class="atrybuty_wariantow"></div>-->

@@ -6,13 +6,13 @@ echo "<br><h3>Running all migrations:</h3>";
 
 dropColumns("slides", ["img", "tekst", "link"]);
 
-alterTable("slides", [
+manageTableColumns("slides", [
   ["name" => "published", "type" => "TINYINT(1)"]
 ]);
 
 // migration from 27.07.2020
 
-alterTable("basket_content", [
+manageTableColumns("basket_content", [
   ["name" => "title", "type" => "VARCHAR(255)"],
   ["name" => "zdjecie", "type" => "VARCHAR(255)"],
   ["name" => "purchase_price", "previous_name" => "purchased_for", "type" => "DECIMAL(10,2)"]
@@ -20,18 +20,18 @@ alterTable("basket_content", [
 
 dropColumns("slides", ["content"]);
 
-alterTable("slides", [
+manageTableColumns("slides", [
   ["name" => "content_desktop", "type" => "TEXT"],
   ["name" => "content_mobile", "type" => "TEXT"]
 ]);
 
 // migration from 28.07.2020
 
-alterTable("zamowienia", [
+manageTableColumns("zamowienia", [
   ["name" => "cache_basket", "previous_name" => "basket", "type" => "MEDIUMTEXT"]
 ]);
 
-alterTable("kody_rabatowe", [
+manageTableColumns("kody_rabatowe", [
   ["name" => "product_list", "previous_name" => "product_list_metadata", "type" => "TEXT"]
 ]);
 
@@ -39,27 +39,27 @@ dropColumns("kody_rabatowe", ["product_id_list"]);
 
 // migration from 31.07.2020
 
-alterTable("cms", [
+manageTableColumns("cms", [
   ["name" => "metadata", "type" => "TEXT"]
 ]);
 
-alterTable("users", [
+manageTableColumns("users", [
   ["name" => "remember_me_token", "type" => "TINYTEXT"]
 ]);
 
 // migration from 02.08.2020
 
-alterTable("products", [
+manageTableColumns("products", [
   ["name" => "gallery", "previous_name" => "image_desktop", "type" => "TEXT"],
 ]);
 
 // migration from 04.08.2020
 
-alterTable("products", [
+manageTableColumns("products", [
   ["name" => "cache_thumbnail", "type" => "TINYTEXT"]
 ]);
 
-alterTable("cms", [
+manageTableColumns("cms", [
   ["name" => "seo_description", "previous_name" => "meta_description", "type" => "TINYTEXT"],
   ["name" => "title", "previous_name" => "seo_title", "type" => "TINYTEXT"],
   ["name" => "seo_title", "type" => "TINYTEXT"]
@@ -84,18 +84,18 @@ addIndex("link_product_attribute_value", "value_id", "index");
 addIndex("link_variant_attribute_value", "variant_id", "index");
 addIndex("link_variant_attribute_value", "value_id", "index");
 
-alterTable("attribute_values", [
+manageTableColumns("attribute_values", [
   ["name" => "additional_data", "type" => "TINYTEXT"],
 ]);
 
-alterTable("users", [
+manageTableColumns("users", [
   ["name" => "user_type", "type" => "VARCHAR(64)"],
   ["name" => "privelege_id", "previous_name" => "permissions", "type" => "TINYINT"],
 ]);
 
 addIndex("users", "user_type", "index");
 
-alterTable("link_category_attribute", [
+manageTableColumns("link_category_attribute", [
   ["name" => "main_filter", "type" => "TINYINT(1)"],
 ]);
 
@@ -115,7 +115,7 @@ addIndex("uploads", "file_path", "unique");
 
 dropTable("images");
 
-alterTable("zamowienia", [
+manageTableColumns("zamowienia", [
   ["name" => "status_id", "previous_name" => "status", "type" => "INT"],
 ]);
 
@@ -124,7 +124,7 @@ addForeignKey("link_variant_attribute_value", "variant_id", "variant");
 
 //renameTable("variant", "variants");
 
-alterTable("activity_log", [
+manageTableColumns("activity_log", [
   ["name" => "log", "type" => "TINYTEXT"],
   ["name" => "current_state", "type" => "VARCHAR(255)"],
   ["name" => "previous_state", "type" => "VARCHAR(255)"],
@@ -139,14 +139,14 @@ createTable("link_variant_attribute_option", [
   ["name" => "attribute_values", "type" => "TEXT", "previous_name" => "values"],
 ]);
 
-alterTable("users", [
+manageTableColumns("users", [
   ["name" => "basket", "type" => "TEXT"],
   ["name" => "last_viewed_products", "type" => "TEXT"],
 ]);
 
 addForeignKey("variant", "product_id", "products");
 
-alterTable("basket_content", [
+manageTableColumns("basket_content", [
   ["name" => "real_price", "type" => "DECIMAL(10,2)"],
   ["name" => "total_price", "type" => "DECIMAL(10,2)"],
   ["name" => "purchase_price", "previous_name" => "purchased_for", "type" => "DECIMAL(10,2)"]
@@ -160,6 +160,8 @@ addForeignKey("variant", "product_id", "products");
 addForeignKey("variant", "product_id", "products");
 addForeignKey("variant", "product_id", "products");*/
 
-
+manageTableColumns("products", [
+  ["name" => "variant_attributes_layout", "type" => "MEDIUMTEXT"],
+]);
 
 echo "<h3>✅ All migrations completed</h3>";

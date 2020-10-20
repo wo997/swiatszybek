@@ -264,6 +264,12 @@ function createSimpleList(params = {}) {
         listTarget.findAll("tr").forEach((row_node) => {
           var row = {};
           row_node.findAll("[data-list-param]").forEach((e) => {
+            var parent_row_node = e.findParentByClassName("simple-list-row");
+
+            if (row_node != parent_row_node) {
+              return;
+            }
+
             var param = e.getAttribute("data-list-param");
             row[param] = getValue(e);
           });
@@ -271,24 +277,29 @@ function createSimpleList(params = {}) {
         });
       } else {
         listTarget.directChildren().forEach((simpleListRowWrapper) => {
-          var row = {
+          var row_data = {
             values: {},
           };
           $(simpleListRowWrapper)
             .find(".simple-list-row")
             .findAll("[data-list-param]")
             .forEach((e) => {
+              var parent_row_node = e.findParentByClassName("simple-list-row");
+
+              if (simpleListRowWrapper != parent_row_node.parent()) {
+                return;
+              }
               var param = e.getAttribute("data-list-param");
-              row.values[param] = getValue(e);
+              row_data.values[param] = getValue(e);
             });
           if (level < list.recursive) {
-            row.children = getDirectRows(
+            row_data.children = getDirectRows(
               $(simpleListRowWrapper).find(".sub-list > .list"),
               level + 1
             );
           }
 
-          rows.push(row);
+          rows.push(row_data);
         });
       }
 
