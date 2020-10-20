@@ -243,7 +243,7 @@ function createSimpleList(params = {}) {
     }
 
     // do it after any sub components were created
-    setFormData(values, addedNode, { find_by: "name" });
+    setFormData(values, addedNode);
 
     if (list.params.afterRowInserted) {
       list.params.afterRowInserted(addedNode, values, {
