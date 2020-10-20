@@ -115,7 +115,7 @@ $static = checkUrl($page_data["link"]);
 
 <?php startSection("content"); ?>
 
-<div id="cmsForm" data-form data-warn-before-leave>
+<div id="cmsForm" data-form data-warn-before-leave class="form-field-spacing">
     <input type='hidden' name='cms_id' value='<?= $page_data["cms_id"] ?>'>
 
     <div <?= $static ? "style='display:none'" : "" ?>>
