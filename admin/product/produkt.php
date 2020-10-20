@@ -774,7 +774,7 @@ if ($product_id === -1) {
 
 <?php startSection("content"); ?>
 
-<div id="productForm" data-form data-warn-before-leave>
+<div id="productForm" data-form data-warn-before-leave class="form-field-spacing">
   <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">
     <div class="checkbox"></div>
   </label>

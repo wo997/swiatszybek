@@ -301,6 +301,9 @@ input[type="button"] {
 .field-title:not(.first) {
   margin-top: 0.8em;
 }
+.form-field-spacing .field-title:not(.first) {
+  margin-top: 1.5em;
+}
 .field-title {
   margin-bottom: 0.2em;
   user-select: none;
