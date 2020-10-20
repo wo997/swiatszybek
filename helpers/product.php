@@ -45,7 +45,7 @@ function getLastViewedProductsIds()
     if (($last_viewed_product_id_index = array_search($PRODUCT_ID, $last_viewed_product_ids)) !== false) {
         array_splice($last_viewed_product_ids, $last_viewed_product_id_index, 1);
     }
-    return $last_viewed_product_ids;
+    return array_filter($last_viewed_product_ids);
 }
 
 function setLastViewedProductsIds($last_viewed_products_json_or_array)
@@ -53,10 +53,14 @@ function setLastViewedProductsIds($last_viewed_products_json_or_array)
     global $app;
 
     if (is_array($last_viewed_products_json_or_array)) {
-        $last_viewed_products_json = json_encode($last_viewed_products_json_or_array);
+        $last_viewed_products = $last_viewed_products_json_or_array;
     } else {
-        $last_viewed_products_json = $last_viewed_products_json_or_array;
+        $last_viewed_products = json_decode($last_viewed_products_json_or_array);
     }
+
+    $last_viewed_products = array_filter($last_viewed_products);
+
+    $last_viewed_products_json = json_encode($last_viewed_products);
 
     $_SESSION["last_viewed_products"] = $last_viewed_products_json;
     setcookie("last_viewed_products", $last_viewed_products_json, (time() + 31536000));
@@ -102,7 +106,7 @@ function getLastViewedProducts()
 
 function getProductsFullData($product_id_list)
 {
-    $product_id_list_string = join(",", $product_id_list);
+    $product_id_list_string = join(",", array_filter($product_id_list));
     $where = "product_id IN ($product_id_list_string)";
     $order = "FIELD(product_id,$product_id_list_string)";
 
