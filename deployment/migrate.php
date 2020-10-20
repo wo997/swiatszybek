@@ -164,4 +164,8 @@ manageTableColumns("products", [
   ["name" => "variant_attributes_layout", "type" => "MEDIUMTEXT"],
 ]);
 
+manageTableColumns("variant", [
+  ["name" => "vat_id", "previous_name" => "vat", "type" => "INT", "index" => "index"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";

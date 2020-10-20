@@ -39,12 +39,12 @@ if (isset($_POST["remove"])) {
 
     triggerEvent("product_gallery_change", ["product_id" => intval($product_id)]);
 
+    // attributes
     include_once "admin/product/attributes_service.php";
     $attributes = json_decode($_POST["attributes"], true);
-
     updateAttributesInDB($attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
-    // attributes
+    // TODO: test if attribues work for products and if so remove the code below
     /*query("DELETE FROM link_variant_attribute_option WHERE product_id = ?", [$product_id]);
     $insert = "";
     $kolejnosc = 0;

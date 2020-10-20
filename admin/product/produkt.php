@@ -354,6 +354,7 @@ if ($product_id === -1) {
           allow_empty: true
         },
         price: {},
+        vat: {},
         rabat: {},
         stock: {},
         zdjecie: {},
@@ -363,6 +364,7 @@ if ($product_id === -1) {
         <th>Nazwa</th>
         <th>Widoczny</th>
         <th>Cena (zł)</th>
+        <th>VAT (%)</th>
         <th>Rabat (zł)</th>
         <th>Kod produktu</th>
         <th>W magazynie (szt.)</th>
@@ -385,7 +387,10 @@ if ($product_id === -1) {
               <input type='number' data-list-param="price" class="field inline">
             </td>
             <td>
-            <input type='number' data-list-param="rabat" class="field inline">
+              <input type='number' data-list-param="vat" class="field inline">
+            </td>
+            <td>
+              <input type='number' data-list-param="rabat" class="field inline">
             </td>
             <td>
               <input type='text' data-list-param="product_code" class="field inline">
@@ -410,6 +415,7 @@ if ($product_id === -1) {
         variant_id: -1,
         name: "",
         price: 0,
+        vat: 0,
         rabat: 0,
         stock: 0,
         was_stock: 0,
