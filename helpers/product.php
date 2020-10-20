@@ -106,7 +106,7 @@ function getLastViewedProducts()
 
 function getProductsFullData($product_id_list)
 {
-    $product_id_list_string = join(",", array_filter($product_id_list));
+    $product_id_list_string = clean(join(",", array_filter($product_id_list)));
     $where = "product_id IN ($product_id_list_string)";
     $order = "FIELD(product_id,$product_id_list_string)";
 
@@ -130,7 +130,7 @@ function getVariantsFullData($variant_id_list)
         return [];
     }
 
-    $variant_id_list_string = join(",", $variant_id_list);
+    $variant_id_list_string = clean(join(",", $variant_id_list));
     $where = "variant_id IN ($variant_id_list_string)";
     $order = "FIELD(variant_id,$variant_id_list_string)";
 
