@@ -74,10 +74,6 @@ function createSimpleList(params = {}) {
       begin,
       user
     );
-
-    if (user && params.onRowInserted) {
-      params.onRowInserted(row);
-    }
   };
 
   list.target = params.table
@@ -146,7 +142,7 @@ function createSimpleList(params = {}) {
 
   list.removeRow = (row) => {
     row.findAll("[data-list-param]").forEach((e) => {
-      e.setValue("ZGFSDFG et5y745b7 6dfghfgh"); // remove validation issues - red border
+      e.setValue("IGNOREVALIDATIONISSUES"); // remove validation issues - red border
     });
     row.remove();
     list.valuesChanged();
@@ -184,10 +180,10 @@ function createSimpleList(params = {}) {
         `<tr class='simple-list-row'>
             ${params.render()}
             <td class='action_buttons'>
-              <i class="btn secondary fas fa-arrow-up swap-row-btn" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
+              <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
                 list.name
               }.valuesChanged();"></i>
-              <i class="btn secondary fas fa-arrow-down swap-row-btn" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
+              <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
                 list.name
               }.valuesChanged();"></i>
               <i class="btn secondary fas fa-times remove-row-btn" 
@@ -206,10 +202,10 @@ function createSimpleList(params = {}) {
                 <div style="width:5px;margin-left:auto"></div>
                 ${btnAddTop}
                 <div class='action_buttons'>
-                  <i class="btn secondary fas fa-arrow-up swap-row-btn" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());${
+                  <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());${
                     list.name
                   }.valuesChanged();"></i>
-                  <i class="btn secondary fas fa-arrow-down swap-row-btn" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());${
+                  <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());${
                     list.name
                   }.valuesChanged();"></i>
                   <i class="btn secondary fas fa-times remove-row-btn" 
@@ -242,7 +238,21 @@ function createSimpleList(params = {}) {
     var n = begin ? 0 : listTarget.children.length - 1;
     var addedNode = $(listTarget.children[n]);
 
+    if (list.params.beforeRowInserted) {
+      list.params.beforeRowInserted(addedNode, values, {
+        user: user,
+      });
+    }
+
+    // do it after any sub components were created
     setFormData(values, addedNode, { find_by: "data-list-param" });
+
+    if (list.params.afterRowInserted) {
+      list.params.afterRowInserted(addedNode, values, {
+        user: user,
+      });
+    }
+
     return addedNode;
   };
 

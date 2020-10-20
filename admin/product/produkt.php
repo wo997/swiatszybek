@@ -86,24 +86,38 @@ if ($product_id === -1) {
   #variantForm .attribute-row.common.any_selected .case_intersect {
     display: inline-block;
   }
-
-  .attr_val_list .add_btn,
-  [name="variant_attributes"] .add_btn,
-  [name="variant_attributes"] .action_buttons .fa-times {
-    display: none !important;
-  }
 </style>
 <script>
   useTool("cms");
   useTool("preview");
 
-  var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id, attribute_id FROM attribute_values'), true) ?>;
+  var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id, attribute_id, parent_value_id FROM attribute_values'), true) ?>;
   var attribute_values = {};
   attribute_values_array.forEach(value => {
     attribute_values[value["value_id"]] = {
       value: value["value"],
-      attribute_id: value["attribute_id"],
+      attribute_id: +value["attribute_id"],
+      parent_value_id: +value["parent_value_id"],
     };
+  });
+
+  Object.entries(attribute_values).forEach(([value_id, value]) => {
+    var whole_value = value.value;
+    var curr_level_value = value;
+    while (true) {
+      var parent_value_id = +curr_level_value.parent_value_id;
+      if (parent_value_id <= 0) {
+        break;
+      }
+      parent_value = attribute_values[parent_value_id];
+      if (!parent_value) {
+        break;
+      }
+      whole_value = parent_value.value + " " + whole_value;
+
+      curr_level_value = parent_value;
+    }
+    value.whole_value = whole_value;
   });
 
   var attributes_array = <?= json_encode(fetchArray('SELECT name, attribute_id FROM product_attributes'), true) ?>;
@@ -243,9 +257,11 @@ if ($product_id === -1) {
         })
         lazyLoadImages();
       },
-      onRowInserted: (row) => {
-        row.find(".add_img_btn").dispatchEvent(new Event("click"));
-        setCustomHeights();
+      beforeRowInserted: (row, values, options) => {
+        if (options.user) {
+          row.find(".add_img_btn").dispatchEvent(new Event("click"));
+          setCustomHeights();
+        }
       },
       default_row: {
         src: ""
@@ -269,14 +285,13 @@ if ($product_id === -1) {
       `,
       render: (data) => {
         return `
-            <td>
-              <input type='hidden' data-number data-list-param="attribute_id">
-              <div data-type='html' data-list-param="attribute_name">
-            </td>
-            <td>
-              <input type='hidden' data-list-param="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
-              <span></span>
-            </td>
+          <td>
+            <input type='hidden' data-number data-list-param="attribute_id">
+            <div data-type='html' data-list-param="attribute_name">
+          </td>
+          <td>  
+            <div data-list-param="attribute_values" class="slim"></div>
+          </td>
         `;
       },
       default_row: {
@@ -285,7 +300,27 @@ if ($product_id === -1) {
         attribute_values: "[]",
       },
       title: "Atrybuty wariantów (filtry wyszukiwania wariantu)",
-      onChange: () => {
+      beforeRowInserted: (row, values) => {
+        list = row.find(`[data-list-param="attribute_values"]`);
+        var list_name = `attribute_values_${values.attribute_id}`;
+        list.setAttribute("name", list_name);
+        createSimpleList({
+          name: list_name,
+          fields: {
+            value_id: {},
+            value: {},
+          },
+          render: (data) => {
+            return `
+              <input type='hidden' data-number data-list-param="value_id">
+              <div data-type='html' data-list-param="value"></div>
+            `;
+          },
+          default_row: {
+            value_id: "-1",
+            attribute_values: "[]",
+          },
+        });
 
       }
     });
@@ -343,7 +378,7 @@ if ($product_id === -1) {
             <td>
               <img data-list-param="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
             </td>
-            <td>
+            <td style='min-width:200px'>
               <input type='hidden' data-list-param="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
               <div data-tooltip class='clamp-lines clamp-4'></div>
             </td>
@@ -366,32 +401,69 @@ if ($product_id === -1) {
       },
       title: "Warianty produktu (min. 1)",
       onChange: () => {
-        var attribute_ids = {};
-        JSON.parse($(`[name="variants"]`).getValue()).forEach(e => {
+        // add attribues and values to the ordering list below variants so the use can organize the layout
+        var attributes_and_values = {};
+        variants.values.forEach(e => {
           try {
+            var value_ids = [];
+            var last_value_ids = [];
+            //console.log(e.attributes, e);
             JSON.parse(e.attributes).selected.forEach(value_id => {
-              value_id = +value_id;
-              var attribute_id = +attribute_values[value_id].attribute_id;
-              if (!attribute_ids[attribute_id]) {
-                attribute_ids[attribute_id] = [];
-              }
-              if (attribute_ids[attribute_id].indexOf(value_id) === -1) {
-                attribute_ids[attribute_id].push(value_id);
+              value_ids.push(+value_id);
+              last_value_ids.push(+value_id);
+            });
+
+            //console.log(value_ids);
+
+            // remove repeating parents, we dont need them to specify a variant
+            value_ids.forEach(value_id => {
+              //console.log("start", value_id);
+              while (true) {
+                value_id = attribute_values[value_id].parent_value_id;
+                if (!value_id) {
+                  break;
+                }
+                //console.log("X", value_id);
+                var index = last_value_ids.indexOf(value_id);
+                if (index != -1) {
+                  last_value_ids.splice(index, 1);
+                }
               }
             });
-          } catch {}
-        });
 
-        current_attribute_ids = variant_attributes.values.map(e => e.attribute_id);
-
-        current_attribute_ids.forEach(current_attribute_id => {
-          if (Object.keys(attribute_ids).indexOf("" + current_attribute_id) === -1) {
-            var index = current_attribute_ids.indexOf(current_attribute_id);
-            variant_attributes.removeRow(variant_attributes.target.directChildren()[index]);
+            last_value_ids.forEach(value_id => {
+              var attribute_id = +attribute_values[value_id].attribute_id;
+              if (!attributes_and_values[attribute_id]) {
+                attributes_and_values[attribute_id] = [];
+              }
+              if (attributes_and_values[attribute_id].indexOf(value_id) === -1) {
+                attributes_and_values[attribute_id].push(value_id);
+              }
+            });
+          } catch (err) {
+            if (e.attributes != "") {
+              console.log(err);
+            }
           }
         });
-        Object.keys(attribute_ids).forEach(attribute_id => {
-          if (current_attribute_ids.indexOf(+attribute_id) === -1) {
+
+        // attribute simple list
+        //console.log(attributes_and_values);
+
+        // remove
+        variant_attributes.values.map(e => e.attribute_id).forEach(current_attribute_id => {
+          if (Object.keys(attributes_and_values).indexOf("" + current_attribute_id) == -1) {
+            var index = variant_attributes.values.map(e => e.attribute_id).indexOf(current_attribute_id);
+            //console.log(index);
+            if (index !== -1) {
+              variant_attributes.removeRow(variant_attributes.target.directChildren()[index]);
+            }
+          }
+        });
+
+        // add
+        Object.keys(attributes_and_values).forEach(attribute_id => {
+          if (variant_attributes.values.map(e => e.attribute_id).indexOf(+attribute_id) == -1) {
             variant_attributes.insertRow({
               attribute_id: attribute_id,
               attribute_name: attributes[attribute_id],
@@ -399,6 +471,38 @@ if ($product_id === -1) {
             })
           }
         });
+
+        // attribute value simple list
+        Object.entries(attributes_and_values).forEach(([attribute_id, values]) => {
+          var list_name = `attribute_values_${attribute_id}`;
+          var list = window[list_name];
+
+          // remove
+          //console.log(list.values.map(e => e.values.value_id), values);
+          list.values.map(e => e.values.value_id).forEach(current_value_id => {
+            if (values.indexOf(current_value_id) == -1) {
+              var index = list.values.map(e => e.values.value_id).indexOf(current_value_id);
+              if (index !== -1) {
+                list.removeRow(list.target.directChildren()[index]);
+              }
+            }
+          });
+
+          // add
+          values.forEach(value_id => {
+            if (list.values.map(e => e.values.value_id).indexOf(value_id) == -1) {
+              list.insertRow({
+                value_id: value_id,
+                value: attribute_values[value_id].whole_value,
+              })
+            }
+          });
+        });
+      },
+      afterRowInserted: (row, values, options) => {
+        if (options.user) {
+          editVariant(row);
+        }
       }
     });
 
@@ -491,7 +595,7 @@ if ($product_id === -1) {
     JSON.parse(data.variants).forEach(e => {
       e.was_stock = e.stock;
       variants_data.push(e);
-    })
+    });
     data.variants = JSON.stringify(variants_data);
 
     setFormData(data, "#productForm");
@@ -532,7 +636,7 @@ if ($product_id === -1) {
 
   var variantRow = null;
 
-  function editVariant(row, btn) {
+  function editVariant(row, btn = null) {
     variantRow = $(row);
 
     const form = $(`#variantForm`);
@@ -679,7 +783,7 @@ if ($product_id === -1) {
 
   <div name="variants" data-validate="|count:1+"></div>
 
-  <div name="variant_attributes"></div>
+  <div name="variant_attributes" class="no-remove no-add"></div>
 
   <!--<div class="field-title">Atrybuty wariantów</div>
   <div class="atrybuty_wariantow"></div>-->

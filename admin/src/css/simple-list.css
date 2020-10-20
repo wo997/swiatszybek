@@ -186,3 +186,18 @@ tr.simple-list-row td {
 .simple-list.no-order .action_buttons .swap-row-btn {
   display: none !important;
 }
+
+.simple-list.no-remove .action_buttons .remove-row-btn {
+  display: none !important;
+}
+
+.simple-list.no-add .add_btn {
+  display: none !important;
+}
+
+.simple-list .list > .simple-list-row-wrapper:first-child .btn-up,
+.simple-list .list > .simple-list-row-wrapper:last-child .btn-down {
+  pointer-events: none;
+  opacity: 0.3;
+  color: white;
+}

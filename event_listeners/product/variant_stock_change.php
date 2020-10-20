@@ -2,6 +2,10 @@
 
 $variant_data = fetchRow("SELECT stock, title, link, product_id, image, name FROM variant INNER JOIN products USING(product_id) WHERE variant_id = " . intval($args["variant_id"]));
 
+if (!$variant_data) {
+    return;
+}
+
 $new_stock = $variant_data["stock"] + intval($args["stock_difference"]);
 if ($new_stock < 0) $new_stock = 0;
 
