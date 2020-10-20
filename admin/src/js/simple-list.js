@@ -141,7 +141,7 @@ function createSimpleList(params = {}) {
   };
 
   list.removeRow = (row) => {
-    row.findAll("[data-list-param]").forEach((e) => {
+    row.findAll("[name]").forEach((e) => {
       e.setValue("IGNOREVALIDATIONISSUES"); // remove validation issues - red border
     });
     row.remove();
@@ -225,15 +225,13 @@ function createSimpleList(params = {}) {
 
     list.valuesChanged();
 
-    list.target
-      .findAll("[data-list-param]:not(.param-registered)")
-      .forEach((e) => {
-        e.classList.add("param-registered");
+    list.target.findAll("[name]:not(.param-registered)").forEach((e) => {
+      e.classList.add("param-registered");
 
-        e.addEventListener("change", () => {
-          list.valuesChanged();
-        });
+      e.addEventListener("change", () => {
+        list.valuesChanged();
       });
+    });
 
     var n = begin ? 0 : listTarget.children.length - 1;
     var addedNode = $(listTarget.children[n]);
@@ -245,7 +243,7 @@ function createSimpleList(params = {}) {
     }
 
     // do it after any sub components were created
-    setFormData(values, addedNode, { find_by: "data-list-param" });
+    setFormData(values, addedNode, { find_by: "name" });
 
     if (list.params.afterRowInserted) {
       list.params.afterRowInserted(addedNode, values, {
@@ -263,14 +261,15 @@ function createSimpleList(params = {}) {
       if (params.table) {
         listTarget.findAll("tr").forEach((row_node) => {
           var row = {};
-          row_node.findAll("[data-list-param]").forEach((e) => {
-            var parent_row_node = e.findParentByClassName("simple-list-row");
-
-            if (row_node != parent_row_node) {
+          row_node.findAll("[name]").forEach((e) => {
+            var parent_named_node = e.findParentByAttribute("name", {
+              skip: 1,
+            });
+            // there is no other component allowed when we read the data, we use its value instead
+            if (parent_named_node != list.wrapper) {
               return;
             }
-
-            var param = e.getAttribute("data-list-param");
+            var param = e.getAttribute("name");
             row[param] = getValue(e);
           });
           rows.push(row);
@@ -282,14 +281,14 @@ function createSimpleList(params = {}) {
           };
           $(simpleListRowWrapper)
             .find(".simple-list-row")
-            .findAll("[data-list-param]")
+            .findAll("[name]")
             .forEach((e) => {
               var parent_row_node = e.findParentByClassName("simple-list-row");
 
               if (simpleListRowWrapper != parent_row_node.parent()) {
                 return;
               }
-              var param = e.getAttribute("data-list-param");
+              var param = e.getAttribute("name");
               row_data.values[param] = getValue(e);
             });
           if (level < list.recursive) {

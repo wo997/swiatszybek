@@ -504,43 +504,16 @@ function getValue(input) {
   }
 }
 
-function findParentByAttribute(
-  elem,
-  parentAttribute,
-  parentAttributeValue = null
-) {
+function findParent(elem, callback, options = {}) {
   elem = $(elem);
-  while (elem && elem != document) {
-    if (parentAttributeValue) {
-      if (elem.getAttribute(parentAttribute) == parentAttributeValue) {
-        return elem;
-      }
-    } else {
-      if (elem.hasAttribute(parentAttribute)) {
-        return elem;
-      }
-    }
-    elem = elem.parent();
+  if (!options) {
+    options = {};
   }
-  return null;
-}
-
-function findParentNode(elem, parent) {
-  elem = $(elem);
+  options.skip = nonull(options.skip, 0);
   while (elem && elem != document) {
-    if (elem === parent) {
-      return true;
-    }
-    elem = elem.parent();
-  }
-  return false;
-}
-
-function findParentByTagName(elem, parentTagName) {
-  elem = $(elem);
-  parentTagName = parentTagName.toUpperCase();
-  while (elem && elem != document) {
-    if (elem.tagName == parentTagName) {
+    if (options.skip > 0) {
+      options.skip--;
+    } else if (callback(elem)) {
       return elem;
     }
     elem = elem.parent();
@@ -548,96 +521,136 @@ function findParentByTagName(elem, parentTagName) {
   return null;
 }
 
-function findParentById(elem, id) {
-  elem = $(elem);
-  while (elem && elem != document) {
-    if (elem.id == id) {
-      return elem;
-    }
-    elem = elem.parent();
-  }
-  return null;
-}
+function findParentByAttribute(elem, parentAttribute, options = {}) {
+  const parentAttributes = Array.isArray(parentAttribute)
+    ? parentAttribute
+    : [parentAttribute];
 
-function findParentByClassName(elem, parentClassNames, stopAtClassName = null) {
-  elem = $(elem);
-  while (elem && elem != document) {
-    if (stopAtClassName && elem.classList.contains(stopAtClassName)) {
-      return null;
-    }
-    if (Array.isArray(parentClassNames)) {
-      for (c of parentClassNames) {
-        if (elem.classList && elem.classList.contains(c)) {
-          return elem;
+  return findParent(
+    elem,
+    (some_parent) => {
+      for (let parentAttribute of parentAttributes) {
+        if (some_parent.hasAttribute(parentAttribute)) {
+          return true;
         }
       }
-    } else {
-      if (elem.classList && elem.classList.contains(parentClassNames)) {
-        return elem;
+    },
+    options
+  );
+}
+
+function findParentNode(elem, parent, options = {}) {
+  return findParent(
+    elem,
+    (some_parent) => {
+      if (some_parent === parent) {
+        return true;
       }
-    }
-
-    elem = elem.parent();
-  }
-  return null;
+    },
+    options
+  );
 }
-function findParentByStyle(elem, style, value) {
-  elem = $(elem);
-  while (elem && elem != document) {
-    if (elem.style[style] == value) {
-      return elem;
-    }
-    elem = elem.parent();
-  }
-  return null;
-}
-function findParentByComputedStyle(elem, style, value, invert = false) {
-  elem = $(elem);
 
-  while (elem && elem != document) {
-    var computedStyle = window.getComputedStyle(elem)[style];
-    if (invert) {
-      if (computedStyle != value) {
-        return elem;
+function findParentByTagName(elem, parentTagName, options = {}) {
+  return findParent(
+    elem,
+    (some_parent) => {
+      if (some_parent.tagName == parentTagName) {
+        return true;
       }
-    } else {
-      if (computedStyle == value) {
-        return elem;
+    },
+    options
+  );
+}
+
+function findParentById(elem, id, options = {}) {
+  return findParent(
+    elem,
+    (some_parent) => {
+      if (some_parent.id == id) {
+        return true;
       }
+    },
+    options
+  );
+}
+
+function findParentByClassName(elem, parentClassName, options = {}) {
+  const parentClassNames = Array.isArray(parentClassName)
+    ? parentClassName
+    : [parentClassName];
+
+  return findParent(
+    elem,
+    (some_parent) => {
+      for (parentClassName of parentClassNames) {
+        if (
+          some_parent.classList &&
+          some_parent.classList.contains(parentClassName)
+        ) {
+          return true;
+        }
+      }
+    },
+    options
+  );
+}
+
+// never used, check as u use
+function findParentByStyle(elem, style, value, options = {}) {
+  return findParent(
+    elem,
+    (some_parent) => {
+      if (some_parent.style[style] == value) {
+        return true;
+      }
+    },
+    options
+  );
+}
+// never used, check as u use
+function findParentByComputedStyle(elem, style, value, options = {}) {
+  return findParent(
+    elem,
+    (some_parent) => {
+      var computedStyle = window.getComputedStyle(some_parent)[style];
+      if (invert) {
+        if (computedStyle != value) {
+          return true;
+        }
+      } else {
+        if (computedStyle == value) {
+          return true;
+        }
+      }
+    },
+    options
+  );
+}
+function findScrollableParent(elem, options = {}) {
+  var parent = findParent((some_parent) => {
+    if (some_parent.classList.contains("scroll-panel")) {
+      return elem;
     }
     elem = elem.parent();
-  }
-  return null;
-}
-function findScrollableParent(elem) {
+  }, options);
   elem = $(elem);
 
-  while (elem && elem != document.body) {
-    /*var overflowY = window.getComputedStyle(elem)["overflow-y"];
-    if (
-      (overflowY === "scroll" || overflowY === "auto") &&
-      !elem.hasAttribute("name")
-    ) {
-      return elem;
-    }*/
-    if (elem.classList.contains("scroll-panel")) {
-      return elem;
-    }
-    elem = elem.parent();
-  }
-  return window;
+  return nonull(parent, window);
 }
-function findNonStaticParent(elem) {
-  elem = $(elem);
+function findNonStaticParent(elem, options = {}) {
+  var parent = findParent(
+    elem,
+    (some_parent) => {
+      var position = window.getComputedStyle(some_parent)["position"];
+      if (position !== "static") {
+        return true;
+      }
+    },
+    options
+  );
 
-  while (elem && elem != document.body) {
-    var position = window.getComputedStyle(elem)["position"];
-    if (position !== "static") {
-      return elem;
-    }
-    elem = elem.parent();
-  }
-  return document.body;
+  return nonull(parent, document.body);
 }
 function isInNode(elem, parent) {
   elem = $(elem);

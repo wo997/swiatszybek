@@ -133,7 +133,8 @@ define("LOGO_PATH_PUBLIC_SM", SITE_URL . $logo_file_path);
 define("FAVICON_PATH_LOCAL", "/" . setting(["theme", "copied_images", "favicon", "path"], ""));
 $favicon_file_path = getResponsiveImageBySize(FAVICON_PATH_LOCAL, $image_default_dimensions["tn"], ["same-ext" => true]);
 $favicon_file_path .= "?v=" . setting(["theme", "copied_images", "favicon", "version"], "");
-define("FAVICON_PATH_LOCAL_TN", SITE_URL . $favicon_file_path);
+define("FAVICON_PATH_LOCAL_TN", $favicon_file_path);
+define("FAVICON_PUBLIC_LOCAL_TN", SITE_URL . $favicon_file_path);
 
 $currency = "PLN"; // used by p24
 

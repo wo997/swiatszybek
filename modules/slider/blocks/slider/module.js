@@ -13,10 +13,10 @@ MODULE_BLOCK = {
       render: () => {
         return `
               <div style="flex-grow: 1;">
-                    <span class="field-title">Tytuł <input type='text' class='field inline' data-list-param="title"></span>
+                    <span class="field-title">Tytuł <input type='text' class='field inline' name="title"></span>
                     <label class="field-title checkbox-wrapper">
                       Czy publiczny?
-                      <input type="checkbox" data-list-param="published">
+                      <input type="checkbox" name="published">
                       <div class="checkbox"></div>
                     </label>
                     <span class="field-title">
@@ -25,7 +25,7 @@ MODULE_BLOCK = {
                         Edytuj <i class="far fa-edit"></i>
                       </button>
                     </span>
-                    <div class="cms preview_html" data-list-param="content" data-type="html" style="max-width: 400px;max-height: 200px;"></div>
+                    <div class="cms preview_html" name="content" data-type="html" style="max-width: 400px;max-height: 200px;"></div>
               </div>
           `;
       },

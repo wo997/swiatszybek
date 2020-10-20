@@ -232,7 +232,7 @@ if ($product_id === -1) {
       render: (data) => {
         return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
-              <img data-list-param="src" data-type="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
+              <img name="src" data-type="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
               <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
@@ -288,11 +288,11 @@ if ($product_id === -1) {
       render: (data) => {
         return `
           <td>
-            <input type='hidden' data-number data-list-param="attribute_id">
-            <div data-type='html' data-list-param="attribute_name">
+            <input type='hidden' data-number name="attribute_id">
+            <div data-type='html' name="attribute_name">
           </td>
           <td>  
-            <div data-list-param="attribute_values" class="slim"></div>
+            <div name="attribute_values" class="slim"></div>
           </td>
         `;
       },
@@ -303,7 +303,7 @@ if ($product_id === -1) {
       },
       title: "Atrybuty wariantów (filtry wyszukiwania wariantu)",
       beforeRowInserted: (row, values) => {
-        list = row.find(`[data-list-param="attribute_values"]`);
+        list = row.find(`[name="attribute_values"]`);
         var list_name = `attribute_values_${values.attribute_id}`;
         list.setAttribute("name", list_name);
         createSimpleList({
@@ -314,8 +314,8 @@ if ($product_id === -1) {
           },
           render: (data) => {
             return `
-              <input type='hidden' data-number data-list-param="value_id">
-              <div data-type='html' data-list-param="value"></div>
+              <input type='hidden' data-number name="value_id">
+              <div data-type='html' name="value"></div>
             `;
           },
           default_row: {
@@ -324,8 +324,8 @@ if ($product_id === -1) {
           },
           onChange: (values, list) => {
             list.target.directChildren().forEach(row => {
-              var value_id = row.find(`[data-list-param="value_id"]`).getValue();
-              row.find(`[data-list-param="value"]`).setValue(nonull(attribute_values[value_id], {
+              var value_id = row.find(`[name="value_id"]`).getValue();
+              row.find(`[name="value"]`).setValue(nonull(attribute_values[value_id], {
                 whole_value: ""
               }).whole_value, {
                 quiet: true
@@ -336,8 +336,8 @@ if ($product_id === -1) {
       },
       onChange: (values, list) => {
         list.target.directChildren().forEach(row => {
-          var attribute_id = row.find(`[data-list-param="attribute_id"]`).getValue();
-          row.find(`[data-list-param="attribute_name"]`).setValue(nonull(attributes[attribute_id], ""), {
+          var attribute_id = row.find(`[name="attribute_id"]`).getValue();
+          row.find(`[name="attribute_name"]`).setValue(nonull(attributes[attribute_id], ""), {
             quiet: true
           });
         })
@@ -376,34 +376,34 @@ if ($product_id === -1) {
       render: (data) => {
         return `
             <td>
-              <input type='hidden' data-number data-list-param="variant_id">
-              <input type='text' data-list-param="name" class="field inline">
+              <input type='hidden' data-number name="variant_id">
+              <input type='text' name="name" class="field inline">
             </td>
             <td>
-              <input type='hidden' data-list-param="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
+              <input type='hidden' name="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
               <span></span>
             </td>
             <td>
-              <input type='number' data-list-param="price" class="field inline">
+              <input type='number' name="price" class="field inline">
             </td>
             <td>
-              <input type='number' data-list-param="vat" class="field inline">
+              <input type='number' name="vat" class="field inline">
             </td>
             <td>
-              <input type='number' data-list-param="rabat" class="field inline">
+              <input type='number' name="rabat" class="field inline">
             </td>
             <td>
-              <input type='text' data-list-param="product_code" class="field inline">
+              <input type='text' name="product_code" class="field inline">
             </td>
             <td>
-              <input type='number' data-list-param="stock" class="field inline">
-              <input type='hidden' data-list-param="was_stock">
+              <input type='number' name="stock" class="field inline">
+              <input type='hidden' name="was_stock">
             </td>
             <td>
-              <img data-list-param="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
+              <img name="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
             </td>
             <td style='min-width:200px'>
-              <input type='hidden' data-list-param="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
+              <input type='hidden' name="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
               <div data-tooltip class='clamp-lines clamp-4'></div>
             </td>
             <td style="width:90px;">
@@ -589,8 +589,8 @@ if ($product_id === -1) {
             },
             render: (data) => {
               return `
-                  <input type='hidden' data-list-param="value_id">
-                  <div data-type='html' data-list-param="value"></div>
+                  <input type='hidden' name="value_id">
+                  <div data-type='html' name="value"></div>
               `;
             },
             default_row: {
@@ -679,7 +679,7 @@ if ($product_id === -1) {
 
     const form = $(`#variantForm`);
     var data = getFormData(row, {
-      find_by: "data-list-param"
+      find_by: "name"
     });
 
     setFormData(data, form);
@@ -697,7 +697,7 @@ if ($product_id === -1) {
     var data = $(`#variantForm`).getFormData();
 
     setFormData(data, variantRow, {
-      find_by: "data-list-param"
+      find_by: "name"
     });
 
     lazyLoadImages();

@@ -236,9 +236,7 @@ function fieldErrors(field) {
               return listRow.classList.contains("simple-list-row-wrapper");
             })
             .forEach((listRowWrapper) => {
-              var rowField = listRowWrapper.find(
-                `[data-list-param="${fieldName}"]`
-              );
+              var rowField = listRowWrapper.find(`[name="${fieldName}"]`);
 
               var fieldValue = rowField.getValue();
 
@@ -518,6 +516,13 @@ function getFormData(form, params = {}) {
     .findAll(`[${find_by}]`)
     .forEach((e) => {
       if (excludeHidden && e.findParentByClassName("hidden")) {
+        return;
+      }
+      var parent_named_node = e.findParentByAttribute("name", {
+        skip: 1,
+      });
+      // there is no other component allowed when we read the data, we use its value instead
+      if (parent_named_node && parent_named_node.findParentNode(form)) {
         return;
       }
       data[e.getAttribute(find_by)] = getValue(e);

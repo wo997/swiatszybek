@@ -21,7 +21,7 @@
             },
             render: (data) => {
                 return `
-                    <input type='text' class='field warn-outline' style='flex-grow:1' data-list-param="email" data-validate="email">
+                    <input type='text' class='field warn-outline' style='flex-grow:1' name="email" data-validate="email">
                 `;
             },
             default_row: {
@@ -48,7 +48,7 @@
             },
             render: (data) => {
                 return `
-                    <input type='text' class='field warn-outline' style='flex-grow:1' data-list-param="email" data-validate="email">
+                    <input type='text' class='field warn-outline' style='flex-grow:1' name="email" data-validate="email">
                 `;
             },
             default_row: {

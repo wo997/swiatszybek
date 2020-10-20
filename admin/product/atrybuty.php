@@ -84,8 +84,8 @@
             },
             render: (data) => {
                 return `
-                    <input type='hidden' data-list-param="value_id">
-                    <input type='text' class='field' style='flex-grow:1' data-list-param="value">
+                    <input type='hidden' name="value_id">
+                    <input type='text' class='field' style='flex-grow:1' name="value">
                 `;
             },
             default_row: {
@@ -108,9 +108,9 @@
             },
             render: (data) => {
                 return `
-                    <input type='hidden' data-list-param="value_id">
-                    <input type='text' class='field inline jscolor' data-list-param="color">
-                    <input type='text' class='field' style='flex-grow:1' data-list-param="value">
+                    <input type='hidden' name="value_id">
+                    <input type='text' class='field inline jscolor' name="color">
+                    <input type='text' class='field' style='flex-grow:1' name="value">
                 `;
             },
             default_row: {

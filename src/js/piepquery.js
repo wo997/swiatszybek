@@ -58,48 +58,40 @@ function $(node, parent = null) {
     );
   };
 
-  node.findParentByTagName = (parentAttribute, parentAttributeValue = null) => {
-    return window.findParentByTagName(
-      node,
-      parentAttribute,
-      parentAttributeValue
-    );
+  node.findParentByTagName = (parentTagName, options) => {
+    return window.findParentByTagName(node, parentTagName, options);
   };
 
-  node.findParentNode = (parent) => {
-    return window.findParentNode(node, parent);
+  node.findParentNode = (parent, options) => {
+    return window.findParentNode(node, parent, options);
   };
 
-  node.findParentById = (id) => {
-    return window.findParentById(node, id);
+  node.findParentById = (id, options) => {
+    return window.findParentById(node, id, options);
   };
 
-  node.findParentByStyle = (style, value) => {
-    return window.findParentByStyle(node, style, value);
+  node.findParentByStyle = (style, value, options) => {
+    return window.findParentByStyle(node, style, value, options);
   };
 
-  node.findParentByComputedStyle = (style, value) => {
-    return window.findParentByComputedStyle(node, style, value);
+  node.findParentByComputedStyle = (style, value, options) => {
+    return window.findParentByComputedStyle(node, style, value, options);
   };
 
-  node.findScrollableParent = () => {
-    return window.findScrollableParent(node);
+  node.findScrollableParent = (options) => {
+    return window.findScrollableParent(node, options);
   };
 
-  node.findNonStaticParent = () => {
-    return window.findNonStaticParent(node);
+  node.findNonStaticParent = (options) => {
+    return window.findNonStaticParent(node, options);
   };
 
-  node.findParentByClassName = (parentClassNames, stopAtClassName = null) => {
-    return window.findParentByClassName(
-      node,
-      parentClassNames,
-      stopAtClassName
-    );
+  node.findParentByClassName = (parentClassNames, options) => {
+    return window.findParentByClassName(node, parentClassNames, options);
   };
 
-  node.isInNode = (parent) => {
-    return window.isInNode(node, parent);
+  node.isInNode = (parent, options) => {
+    return window.isInNode(node, parent, options);
   };
 
   node.isEmpty = () => {
