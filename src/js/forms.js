@@ -75,15 +75,17 @@ function showFieldErrors(field, errors = [], options = {}) {
     }
     const wrongIndicator = inputElements.find(".input-error-indicator .wrong");
     const toggleErrorIcons = (type) => {
-      if (type == "correct") {
-        wrongIndicator.classList.remove("visible");
-        correctIndicator.classList.add("visible");
-      } else if (type == "wrong") {
-        correctIndicator.classList.remove("visible");
-        wrongIndicator.classList.add("visible");
-      } else {
-        correctIndicator.classList.remove("visible");
-        wrongIndicator.classList.remove("visible");
+      if (correctIndicator && wrongIndicator) {
+        if (type == "correct") {
+          wrongIndicator.classList.remove("visible");
+          correctIndicator.classList.add("visible");
+        } else if (type == "wrong") {
+          correctIndicator.classList.remove("visible");
+          wrongIndicator.classList.add("visible");
+        } else {
+          correctIndicator.classList.remove("visible");
+          wrongIndicator.classList.remove("visible");
+        }
       }
     };
 
@@ -196,10 +198,13 @@ function fieldErrors(field) {
     }
   };
 
-  var val = field.getValue();
-
   var validator = field.getAttribute("data-validate");
+  if (!validator) {
+    return [];
+  }
   var [validatorType, ...validatorParams] = validator.split("|");
+
+  var val = field.getValue();
 
   var optional = validator.indexOf("|optional") !== -1;
 
@@ -627,10 +632,12 @@ window.addEventListener("DOMContentLoaded", () => {
 function registerForm(form = null) {
   if (form === null) {
     inputs = $(document.body).findAll(
-      "[data-form] [data-validate]:not([data-change-registered])"
+      //"[data-form] [data-validate]:not([data-change-registered])"
+      "[data-form] .field:not([data-change-registered])"
     );
   } else {
-    inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
+    //inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
+    inputs = $(form).findAll(".field:not([data-change-registered])");
 
     form.addEventListener("keydown", (e) => {
       setTimeout(() => {
@@ -662,8 +669,11 @@ function registerForm(form = null) {
       !field.classList.contains("warn-triangle") &&
       !field.classList.contains("warn-outline")
     ) {
-      obj.insertAdjacentHTML(
-        "afterend",
+      obj.insertAdjacentHTML("afterend", `<div class="field-wrapper"></div>`);
+      var field_wrapper = obj.next();
+      field_wrapper.appendChild(obj);
+      field_wrapper.insertAdjacentHTML(
+        "beforeend",
         `
         <div class="input-elements">
           <div class="input-error-indicator">
@@ -678,7 +688,10 @@ function registerForm(form = null) {
       );
     }
 
-    if (field.hasAttribute("data-input-change")) {
+    if (
+      field.hasAttribute("data-validate") &&
+      field.hasAttribute("data-input-change")
+    ) {
       field.addEventListener("input", () => {
         var ddc = field.getAttribute("data-input-change");
         if (ddc) {

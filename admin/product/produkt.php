@@ -220,8 +220,6 @@ if ($product_id === -1) {
       }, "#productForm");
     });
 
-    registerTextCounters();
-
     createSimpleList({
       name: "gallery",
       fields: {
@@ -644,7 +642,11 @@ if ($product_id === -1) {
     variants.params.onChange(variants);
   });
 
-  window.addEventListener("load", function() {
+  windowload(() => {
+    // inject text counter after the form is registered in a right place,
+    // could also run then the form is registered on an event listener
+    registerTextCounters();
+
     fileManager.setDefaultName($('[name="title"]').value);
   });
 
@@ -728,8 +730,8 @@ if ($product_id === -1) {
     });
   }
 
-  function rewriteURL() {
-    $(`[name="link"]`).setValue(getLink($(`[name="title"]`).value));
+  function rewriteURL(target) {
+    target.setValue(getLink($(`[name="title"]`).value));
   }
 
   function showPreview() {
@@ -782,18 +784,23 @@ if ($product_id === -1) {
     <div style="flex-grow:1; padding-right: 15px">
       <div style="max-width: 600px">
         <div class="field-title">Nazwa produktu</div>
-        <input type="text" name="title" class="field" data-validate>
+        <input type="text" name="title" class="field" data-validate onchange="$(`#variantForm .product-title-copy`).setValue(this.value)">
 
-        <div class="field-wrapper">
-          <div class="field-title">Link strony</div>
-          <div class="glue-children">
-            <input type="text" name="link" data-validate autocomplete="off" class="field">
-            <button class="btn primary" onclick="rewriteURL()" style="flex-shrink:0">Uzupełnij na podstawie tytułu</button>
-          </div>
+        <div class="field-title">Link strony</div>
+        <div class="glue-children">
+          <input type="text" name="link" data-validate autocomplete="off" class="field">
+          <button class="btn primary" onclick="rewriteURL($(this).prev().find(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: 35px;">
+            <i class="fas fa-pen"></i>
+          </button>
         </div>
 
         <div class="field-title">Tytuł (SEO)</div>
-        <input type="text" name="seo_title" class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
+        <div class="glue-children">
+          <input type="text" name="seo_title" class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
+          <button class="btn primary" onclick="rewriteURL($(this).prev().find(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: 35px;">
+            <i class="fas fa-pen"></i>
+          </button>
+        </div>
       </div>
 
       <div class="field-title">Opis (SEO)</div>
@@ -845,8 +852,12 @@ if ($product_id === -1) {
     </div>
     <div class="scroll-panel scroll-shadow panel-padding">
 
-      <div class="field-title">Nazwa wariantu</div>
-      <input type="text" name="name" class="field">
+      <div class="field-title">Nazwa wariantu <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></div>
+
+      <div class="glue-children">
+        <div class="product-title-copy field-description" data-type="html"></div>
+        <input type="text" name="name" class="field">
+      </div>
 
       <div class="field-title">Cena</div>
       <input type="number" name="price" class="field">

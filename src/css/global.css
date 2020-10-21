@@ -332,12 +332,14 @@ input[type="button"] {
 .glue-children {
   display: flex;
 }
-.glue-children > *:not(:first-child):not(.ignore-glue) {
+.glue-children > *:not(:first-child):not(.ignore-glue),
+.glue-children > .field-wrapper:not(:first-child):not(.ignore-glue) .field {
   margin-left: -1px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.glue-children > *:not(:last-child):not(.ignore-glue) {
+.glue-children > *:not(:last-child):not(.ignore-glue),
+.glue-children > .field-wrapper:not(:last-child):not(.ignore-glue) .field {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }

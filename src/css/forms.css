@@ -37,6 +37,7 @@
 
 .field-wrapper {
   position: relative;
+  flex-grow: 1;
 }
 
 .field.required {
@@ -77,4 +78,15 @@ textarea + .input-elements .input-error-indicator {
 .warn-outline-active {
   border-color: var(--error-clr);
   box-shadow: 0 0 0 1px var(--error-clr) inset !important;
+}
+
+.field-description {
+  flex-shrink: 0;
+  max-width: 50%;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  padding: 0 7px;
+  border: 1px solid #ccc;
+  color: #555;
 }

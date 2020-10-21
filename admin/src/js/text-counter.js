@@ -12,7 +12,7 @@ function registerTextCounters() {
         e.next().style.color = "#fa0";
         e.next().style.fontWeight = "bold";
       } else {
-        e.next().style.color = "";
+        e.next().style.color = "#555";
         e.next().style.fontWeight = "";
       }
     });
@@ -22,7 +22,7 @@ function registerTextCounters() {
     e.insertAdjacentHTML(
       "afterend",
       `
-            <div style="color:#555">
+            <div class='text-counter'>
               <span></span><span> / ${e.getAttribute(
                 "data-show-count"
               )} znaków ${nonull(

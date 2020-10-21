@@ -628,12 +628,16 @@ function findParentByComputedStyle(elem, style, value, options = {}) {
   );
 }
 function findScrollableParent(elem, options = {}) {
-  var parent = findParent((some_parent) => {
-    if (some_parent.classList.contains("scroll-panel")) {
-      return elem;
-    }
-    elem = elem.parent();
-  }, options);
+  var parent = findParent(
+    elem,
+    (some_parent) => {
+      if (some_parent.classList.contains("scroll-panel")) {
+        return elem;
+      }
+      elem = elem.parent();
+    },
+    options
+  );
   elem = $(elem);
 
   return nonull(parent, window);
