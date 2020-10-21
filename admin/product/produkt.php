@@ -797,7 +797,7 @@ if ($product_id === -1) {
         <div class="field-title">Tytuł (SEO)</div>
         <div class="glue-children">
           <input type="text" name="seo_title" class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
-          <button class="btn primary" onclick="rewriteURL($(this).prev().find(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: 35px;">
+          <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this).prev().find(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: 35px;">
             <i class="fas fa-pen"></i>
           </button>
         </div>

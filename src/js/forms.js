@@ -770,3 +770,7 @@ function loadFormFromLocalStorage() {
     }
   });
 }
+
+function rewrite(source, target) {
+  target.setValue(source.getValue());
+}
