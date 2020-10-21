@@ -25,8 +25,8 @@ if ($new_stock > 0) // $variant_data["stock"] == 0 &&
 
     $emails = fetchColumn("SELECT n.email FROM notifications n WHERE sent = 0 AND variant_id = " . intval($args["variant_id"]));
     foreach ($emails as $email) {
-        sendEmail($email, $message, $mailTitle);
-        sendEmail("wojtekwo997@gmail.com", $message . $email, $mailTitle);
+        //sendEmail($email, $message, $mailTitle);
+        //sendEmail("wojtekwo997@gmail.com", $message . $email, $mailTitle);
     }
 
     query("UPDATE notifications SET sent = 1 WHERE variant_id = " . intval($args["variant_id"]));
@@ -38,6 +38,7 @@ if ($variant_data["stock"] > 0 && $new_stock == 0) {
     $message .= "<a href='$product_link' style='color:#37f;font-weight:bold;font-size:16px'>Pokaż produkt</a><br><br>";
     $message .= $product_image;
 
-    sendEmail(config('main_email'), $message, $mailTitle);
-    sendEmail("wojtekwo997@gmail.com", $message, $mailTitle);
+    //sendEmail(config('main_email'), $message, $mailTitle);
+    //sendEmail("wojtekwo997@gmail.com", $message, $mailTitle);
+    //TODO: lista powiadomien o zmianie stanu magazynowego
 }
