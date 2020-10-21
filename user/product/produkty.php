@@ -434,7 +434,7 @@ function showCategory($category, $level = 0)
       registerModalContent(`
           <div id="searchCategory" data-expand>
               <div class="modal-body">
-                  <button class="fas fa-times close-modal-btn"></button>
+                  <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
                   <h3 class="modal-header">Kategorie</h3>
                   <div class="scroll-panel scroll-shadow">
 
@@ -446,7 +446,7 @@ function showCategory($category, $level = 0)
       registerModalContent(`
           <div id="searchFilters" data-expand>
               <div class="modal-body">
-                  <button class="fas fa-times close-modal-btn" onclick="restoreFilters();afterFiltersHidden();"></button>
+                  <button class="close-modal-btn" onclick="restoreFilters();afterFiltersHidden();"><img src="/src/img/cross.svg"></button>
                   <h3 class="modal-header">Filtry <span class="filter_count"></span></h3>
                   <div class="scroll-panel scroll-shadow panel-padding">
 

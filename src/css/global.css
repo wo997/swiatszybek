@@ -235,27 +235,6 @@ textarea {
   filter: contrast(0.5);
 }
 
-/* tooltip start */
-
-.tooltip {
-  position: fixed;
-  pointer-events: none;
-  background: white;
-  padding: 3px 4px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.23);
-  z-index: 20000000;
-  max-width: 40vw;
-  border: 1px solid #aaa;
-}
-
-.fa-info-circle[data-tooltip] {
-  opacity: 0.75;
-}
-
-/* tooltip end */
-
 button,
 input[type="button"] {
   background: #eee;
@@ -1257,11 +1236,13 @@ ql-icon i span {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#000000', GradientType=1 );
 }
 
+.expand_y {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
 .expand_y.animate_hidden {
   height: 0 !important;
   min-height: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
   pointer-events: none;
 }
 .expand_y.animating,
@@ -1284,8 +1265,11 @@ ql-icon i span {
   align-items: center;
   min-height: 0 !important;
 }
+.expand_arrow:not(.open) .fas {
+  transform: translate(0.5px, 0.5px) rotate(0deg);
+}
 .expand_arrow.open .fas {
-  transform: rotate(90deg);
+  transform: translate(-1px, 0) rotate(90deg);
 }
 
 .category-picker {
@@ -1305,7 +1289,7 @@ ql-icon i span {
   vertical-align: middle;
 }
 .category-picker-column {
-  padding: 2px 0px 2px 20px;
+  padding-left: 20px;
   width: 100%;
   overflow: hidden;
 }

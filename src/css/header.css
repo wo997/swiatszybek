@@ -472,13 +472,12 @@ header .main-search-wrapper:not(.active) .search-results,
   height: 100%;
 }
 
-.mobile-main-search-wrapper .search-icon,
-#mainSearch .search-icon {
+.mobile-main-search-wrapper .search-icon {
   width: 23px;
   transform: translateY(3px);
 }
-
-#mainSearch .header .search-icon {
+#mainSearch .search-icon {
+  width: 23px;
   transform: translateY(1px);
 }
 

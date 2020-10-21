@@ -7,11 +7,6 @@
   transform: scale(0);
 }
 
-.swiper-all .fa-chevron-right,
-.swiper-all .fa-chevron-left {
-  transform: scale(0.8, 1);
-}
-
 .swiper-all .swiper-pagination.swiper-pagination-bullets {
   margin-top: -25px;
 }
@@ -40,7 +35,16 @@
   justify-content: center;
 }
 
-.swiper-all .swiper-nav i {
-  font-size: 30px;
-  color: white;
+.swiper-all .swiper-nav img {
+  width: 16px;
+  filter: invert();
+  position: relative;
+  top: 1px;
+}
+
+.swiper-all .swiper-button-prev img {
+  transform: scale(-0.8, 1);
+}
+.swiper-all .swiper-button-next img {
+  transform: scale(0.8, 1);
 }

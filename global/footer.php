@@ -35,7 +35,7 @@
 
 <div id="loginForm" data-form data-modal data-dismissable>
   <div class="modal-body">
-    <button class="fas fa-times close-modal-btn"></button>
+    <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
 
     <h3 class="modal-header">
       <img class="user-icon" src="/src/img/user_icon.svg">
@@ -108,7 +108,9 @@ if (isset($JS_files)) {
 
 ?>
 
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+<?php if (IS_ADMIN_URL || $app["user"]["priveleges"]["backend_access"]) : ?>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+<?php endif ?>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 <script src="/src/swiper.min.js"></script>
@@ -120,7 +122,7 @@ if (isset($JS_files)) {
 
 <div id="variantAdded" data-form data-modal data-dismissable>
   <div class="modal-body">
-    <button class="fas fa-times close-modal-btn"></button>
+    <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
 
     <h3 class="modal-header">Dodano do koszyka</h3>
 

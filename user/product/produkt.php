@@ -128,8 +128,8 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
           <div class="swiper-wrapper">
             <?= $galleryhtml ?>
           </div>
-          <div class="swiper-nav swiper-button-next"><img src="/img/chevron.svg"></div>
-          <div class="swiper-nav swiper-button-prev"><img src="/img/chevron.svg"></div>
+          <div class="swiper-nav swiper-button-next"><img src="/src/img/chevron.svg"></div>
+          <div class="swiper-nav swiper-button-prev"><img src="/src/img/chevron.svg"></div>
         </div>
         <div class="swiper-container gallery-thumbs">
           <div class="swiper-wrapper">

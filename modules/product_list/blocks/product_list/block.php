@@ -158,8 +158,8 @@ if ($is_basic) {
         <div class='swiper-container'>
           <div class='swiper-wrapper'>$res</div>
         </div>
-        <div class='swiper-button-prev swiper-nav'><i class='fas fa-chevron-left'></i></div>
-        <div class='swiper-button-next swiper-nav'><i class='fas fa-chevron-right'></i></div>
+        <div class='swiper-button-prev swiper-nav'><img src='/src/img/chevron.svg'></div>
+        <div class='swiper-button-next swiper-nav'><img src='/src/img/chevron.svg'></div>
       </div>
     ";
     } else {

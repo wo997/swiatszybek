@@ -126,7 +126,7 @@ window.addEventListener("DOMContentLoaded", () => {
   registerModalContent(`
       <div id="mainSearch" data-expand>
           <div class="modal-body">
-              <button class="fas fa-times close-modal-btn"></button>
+              <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="search-icon" src="/src/img/search_icon.svg"> Wyszukiwarka</h3>
               <div class="scroll-panel scroll-shadow panel-padding">
                 
@@ -148,7 +148,7 @@ window.addEventListener("DOMContentLoaded", () => {
     registerModalContent(`
       <div id="userMenu" data-expand>
           <div class="modal-body">
-              <button class="fas fa-times close-modal-btn"></button>
+              <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="user-icon" src="/src/img/user_icon.svg"> Moje konto</h3>
               <div class="scroll-panel scroll-shadow">
                 
@@ -175,7 +175,7 @@ window.addEventListener("DOMContentLoaded", () => {
   registerModalContent(`
     <div id="basketMenu" data-expand>
         <div class="modal-body">
-            <button class="fas fa-times close-modal-btn"></button>
+            <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
             <h3 class="modal-header">
               <div class="basket-icon-wrapper">
                 <img class="basket-icon" src="/src/img/basket_icon.svg">
@@ -221,7 +221,7 @@ window.addEventListener("DOMContentLoaded", () => {
   registerModalContent(`
       <div id="mainMenu" data-expand>
           <div class="modal-body">
-              <button class="fas fa-times close-modal-btn"></button>
+              <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="menu-icon" src="/src/img/menu_icon.svg"> Menu</h3>
               <div class="scroll-panel scroll-shadow">
                 
@@ -256,7 +256,7 @@ window.addEventListener("DOMContentLoaded", () => {
   registerModalContent(`
       <div id="lastViewedProducts" data-expand="previous">
         <div class="modal-body">
-            <button class="fas fa-times close-modal-btn"></button>
+            <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
             <h3 class="modal-header">
               <img class="product-history-icon" src="/src/img/product_history_icon.svg">
               Ostatnio przeglądane  
@@ -280,7 +280,7 @@ window.addEventListener("DOMContentLoaded", () => {
   registerModalContent(`
       <div id="wishList" data-expand="previous">
         <div class="modal-body">
-            <button class="fas fa-times close-modal-btn"></button>
+            <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
             <h3 class="modal-header">
               <img class="heart-icon" src="/src/img/heart_icon.svg"></img>
               Schowek  

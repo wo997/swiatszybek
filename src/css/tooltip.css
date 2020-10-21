@@ -1,0 +1,18 @@
+/* css[global] */
+
+.tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: white;
+  padding: 3px 4px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.23);
+  z-index: 20000000;
+  max-width: 40vw;
+  border: 1px solid #ddd;
+}
+
+.fa-info-circle[data-tooltip] {
+  opacity: 0.75;
+}
