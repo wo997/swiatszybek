@@ -129,13 +129,13 @@ window.addEventListener("DOMContentLoaded", () => {
               <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="search-icon" src="/src/img/search_icon.svg"> Wyszukiwarka</h3>
               <div class="scroll-panel scroll-shadow panel-padding">
-                
+                <div></div>
               </div>
           </div>
       </div>
   `);
 
-  var sc = $("#mainSearch .scroll-panel");
+  var sc = $("#mainSearch .scroll-panel > div");
   var sw = $("header .main-search-wrapper");
   if (sc && sw) {
     sw.classList.remove("case-desktop"); // don't remove it from header.php pls
@@ -151,13 +151,13 @@ window.addEventListener("DOMContentLoaded", () => {
               <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="user-icon" src="/src/img/user_icon.svg"> Moje konto</h3>
               <div class="scroll-panel scroll-shadow">
-                
+                <div></div>
               </div>
           </div>
       </div>
     `);
 
-    $("#userMenu .scroll-panel").appendChild(um);
+    $("#userMenu .scroll-panel > div").appendChild(um);
   }
 
   $("#loginForm").setAttribute("data-expand", "");
@@ -184,7 +184,7 @@ window.addEventListener("DOMContentLoaded", () => {
               Koszyk  
             </h3>
             <div class="scroll-panel scroll-shadow panel-padding">
-              
+              <div></div>
             </div>
             <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
         </div>
@@ -203,7 +203,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   var hc = $("header .header_basket_content_wrapper");
   if (hc) {
-    $("#basketMenu .scroll-panel").appendChild(hc);
+    $("#basketMenu .scroll-panel > div").appendChild(hc);
   }
 
   basketReady();
@@ -224,13 +224,13 @@ window.addEventListener("DOMContentLoaded", () => {
               <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="menu-icon" src="/src/img/menu_icon.svg"> Menu</h3>
               <div class="scroll-panel scroll-shadow">
-                
+                <div></div>
               </div>
           </div>
       </div>
   `);
 
-  var mm = $("#mainMenu .scroll-panel");
+  var mm = $("#mainMenu .scroll-panel > div");
   var nvg = $(".navigation");
 
   if (mm && nvg) {
@@ -262,14 +262,14 @@ window.addEventListener("DOMContentLoaded", () => {
               Ostatnio przeglądane  
             </h3>
             <div class="scroll-panel scroll-shadow panel-padding">
-              
+              <div></div>
             </div>
             <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
         </div>
     </div>
   `);
 
-  var lvps = $("#lastViewedProducts .scroll-panel");
+  var lvps = $("#lastViewedProducts .scroll-panel > div");
   var lvp = $(".last_viewed_products");
 
   if (lvps && lvp) {
@@ -286,7 +286,7 @@ window.addEventListener("DOMContentLoaded", () => {
               Schowek  
             </h3>
             <div class="scroll-panel scroll-shadow panel-padding">
-              
+              <div></div>
             </div>
             <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
         </div>
@@ -294,7 +294,7 @@ window.addEventListener("DOMContentLoaded", () => {
   `);
 
   // TODO: do this baby
-  /*var wls = $("#wishList .scroll-panel");
+  /*var wls = $("#wishList .scroll-panel > div");
   var wl = $(".wish_list");
 
   if (wls && wl) {

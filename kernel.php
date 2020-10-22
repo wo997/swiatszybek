@@ -48,8 +48,6 @@ include "packages/simple_html_dom.php";
 
 include_once "helpers/email_notifications.php";
 
-define("STATIC_URLS", ["ADMIN" => "/piep_admin/"]);
-
 //var_Dump(get_defined_constants()["ADMIN_URL"]);
 
 // define WebP support also for XHR requests
@@ -60,9 +58,6 @@ if (WEBP_SUPPORT) {
 
 //define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');
 define("IS_XHR", isset($_GET["xhr"]) || isset($_POST["xhr"]));
-
-define("IS_ADMIN_URL", strpos($url, ltrim(STATIC_URLS["ADMIN"], "/")) === 0);
-define("IS_DEPLOYMENT_URL", strpos(nonull($_GET, 'url', ""), "deployment") === 0);
 
 define("APP_PATH", str_replace("\\", "/", getcwd()) . "/");
 define("BUILDS_PATH", "builds/");

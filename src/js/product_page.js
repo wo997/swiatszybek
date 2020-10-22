@@ -169,7 +169,9 @@ const product_basket_row_template = `
         </div>
       </div>
       <div class='cl cl3'><span class='pln variant_total_price'></span></div>
-      <button class='cl cl4 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'></button>
+      <button class='cl cl4 remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'>
+        <img class='cross-icon' src="/src/img/cross.svg">
+      </button>
     </div>
   </div>
 `;

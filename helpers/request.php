@@ -47,3 +47,8 @@ function reload($ask = false)
         die;
     }
 }
+
+function urlParam($index, $default = "")
+{
+    return nonull(URL_PARAMS, $index, $default);
+}

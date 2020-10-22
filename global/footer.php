@@ -108,7 +108,7 @@ if (isset($JS_files)) {
 
 ?>
 
-<?php if (IS_ADMIN_URL || $app["user"]["priveleges"]["backend_access"]) : ?>
+<?php if (IS_ADMIN_PAGE || !IS_MAIN_PAGE || $app["user"]["priveleges"]["backend_access"]) : ?>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 <?php endif ?>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">

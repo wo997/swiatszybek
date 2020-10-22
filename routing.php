@@ -2,10 +2,14 @@
 
 define("time", microtime(true));
 
-$url = "";
-if (isset($_GET['url'])) {
-  $url = rtrim($_GET['url'], "/");
-}
+define("URL", rtrim(isset($_GET['url']) ? $_GET['url'] : "", "/"));
+
+define("URL_PARAMS", explode("/", URL));
+
+define("STATIC_URLS", ["ADMIN" => "/admin/"]);
+define("IS_MAIN_PAGE", URL == "/");
+define("IS_ADMIN_PAGE", strpos(URL, ltrim(STATIC_URLS["ADMIN"], "/")) === 0);
+define("IS_DEPLOYMENT_URL", strpos(URL, "deployment") === 0);
 
 require_once 'kernel.php';
 
@@ -101,7 +105,7 @@ function renderNotification($notification_count)
   return "";
 }
 
-if (IS_ADMIN_URL) {
+if (IS_ADMIN_PAGE) {
   // set notification_count for each page at each level
   foreach ($admin_navigations_tree as $key => $admin_navigations_branch) {
     $children_notification_count = 0;
@@ -154,9 +158,7 @@ $pageName = "";
 
 $found = false;
 
-$pageName = checkUrl($url);
-
-$url_params = explode("/", $url);
+$pageName = checkUrl(URL);
 
 function checkUrl($url)
 {
@@ -180,14 +182,15 @@ function checkUrl($url)
 }
 
 if ($pageName) {
-  if (strpos($url, "deployment") !== 0) {
+  // hardcoded page example - will be removed in the future
+  if (strpos(URL, "deployment") !== 0) {
     $page_data = fetchRow(
       "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
-      [explode("/", $url)[0] . "%"]
+      [explode("/", URL)[0] . "%"]
     );
   }
 
-  if (IS_ADMIN_URL) {
+  if (IS_ADMIN_PAGE) {
     adminRequired();
   }
 
@@ -196,7 +199,7 @@ if ($pageName) {
 } else {
 
   $canSee = $app["user"]["priveleges"]["backend_access"] ? "1" : "published = 1";
-  $page_data = fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [$url]);
+  $page_data = fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [URL]);
 
   if (isset($_POST["content"])) {
     $page_data["content"] = $_POST["content"];
@@ -207,7 +210,7 @@ if ($pageName) {
     die;
   }
 }
-if ($url == "") {
+if (URL == "") {
   $page_data["content"] = "Pusta strona";
   include "user/cms_page.php";
   die;

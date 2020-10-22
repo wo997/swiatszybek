@@ -88,7 +88,7 @@ if ($email_client_url) {
 
 $response_footer .= "
     <button class='btn subtle medium' onclick='hideParentModal(this)'>
-        Zamknij <i class='fas fa-times'></i>
+        Zamknij <img class='cross-icon' src='/src/img/cross.svg'>
     </button>
 ";
 

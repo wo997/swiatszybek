@@ -1,11 +1,6 @@
 <?php //route[{ADMIN}produkt]
 
-$parts = explode("/", $url);
-if (isset($parts[2]))
-  $product_id = intval($parts[2]);
-else {
-  $product_id = -1;
-}
+$product_id = urlParam(2, -1);
 
 $kopia = false;
 if (isset($parts[3]) && $parts[3] == 'kopia') {

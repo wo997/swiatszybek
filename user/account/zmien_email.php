@@ -9,8 +9,8 @@ function quit($message, $type)
   redirect("/moje-konto/dane-uzytkownika");
 }
 
-$user_id = $url_params[1];
-$authentication_token = $url_params[2];
+$user_id = urlParam(1);
+$authentication_token = urlParam(2);
 
 $email_request = fetchValue("SELECT email_request FROM users WHERE user_id = ? AND authentication_token = ? AND email_request IS NOT NULL", [
   $user_id, $authentication_token

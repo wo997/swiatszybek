@@ -124,22 +124,24 @@
             <button class="btn primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="scroll-panel scroll-shadow panel-padding">
-            <div class="field-title">Widoczność</div>
-            <select name="published" class="field">
-                <option value="1">Publiczny</option>
-                <option value="0">Ukryty</option>
-            </select>
+            <div>
+                <div class="field-title">Widoczność</div>
+                <select name="published" class="field">
+                    <option value="1">Publiczny</option>
+                    <option value="0">Ukryty</option>
+                </select>
 
-            <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
-            <div class="cms preview_html" name="content_desktop" data-type="html"></div>
+                <h3>Zawartość slidera w wersji desktopowej <i class="fas fa-desktop"></i> <button onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+                <div class="cms preview_html" name="content_desktop" data-type="html"></div>
 
-            <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
-            <div class="cms preview_html" name="content_mobile" data-type="html"></div>
+                <h3>Zawartość slidera w wersji mobilnej <i class="fas fa-mobile-alt"></i> <button onclick="editCMS(this.parent().next())" class="btn primary">Edytuj <i class="far fa-edit"></i></button></h3>
+                <div class="cms preview_html" name="content_mobile" data-type="html"></div>
 
-            <input type="hidden" name="slide_id">
+                <input type="hidden" name="slide_id">
 
-            <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
-                <button class="btn red" onclick="saveSlide(true);hideParentModal(this)">Usuń slajd <i class="fa fa-trash"></i></button>
+                <div style="margin-top:auto;align-self: flex-end; padding-top:30px">
+                    <button class="btn red" onclick="saveSlide(true);hideParentModal(this)">Usuń slajd <i class="fa fa-trash"></i></button>
+                </div>
             </div>
         </div>
     </div>

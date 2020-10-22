@@ -1,6 +1,6 @@
 <?php //route[przelewy24_pay]
 
-$zamowienie_link = nonull($url_params, 1);
+$zamowienie_link = urlParam(1);
 if (!$zamowienie_link) {
   header("Location: " . $zamowienie_data["link"]); // fail
   die;
@@ -53,10 +53,9 @@ if ($zamowienie_data["status_id"] === 0) {
     $url = "https://" . (secret("p24_testMode") ? "sandbox" : "secure") . ".przelewy24.pl/trnRequest/" . $przelewy24_token;
 
     $_SESSION["p24_back_url"] = $link;
-    header("Location: $url");
-    die;
+    redirect($url);
   } else {
-    header("Location: " . $zamowienie_data["link"]); // fail
-    die;
+    // fail
+    redirect($zamowienie_data["link"]);
   }
 }

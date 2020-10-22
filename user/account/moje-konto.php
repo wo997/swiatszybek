@@ -5,17 +5,15 @@ if (!$app["user"]["id"]) {
   die;
 }
 
-$parts = explode("/", $url);
-
 $user_id = $app["user"]["id"];
 
 //$user_data = fetchRow("SELECT user_id, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, nip, authentication_token FROM `users` WHERE user_id = ".intval($user_id));
 $user_data = fetchRow("SELECT * FROM users WHERE user_id = " . intval($user_id));
 
 $menu = "zamowienia";
-if (strpos($url, "dane-uzytkownika") !== false)
+if (strpos(URL, "dane-uzytkownika") !== false)
   $menu = "uzytkownik";
-if (strpos($url, "resetowanie-hasla") !== false)
+if (strpos(URL, "resetowanie-hasla") !== false)
   $menu = "haslo";
 
 ?>

@@ -1,11 +1,8 @@
 <?php //route[zamowienie]
 
-$parts = explode("/", $url);
-if (isset($parts[1]) && strlen($parts[1]) > 5)
-  $zamowienie_link = $parts[1];
-else {
-  header("location: /");
-  die;
+$zamowienie_link = urlParam(1);
+if (!$zamowienie_link) {
+  redirect("/");
 }
 
 $zamowienie_data = fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);

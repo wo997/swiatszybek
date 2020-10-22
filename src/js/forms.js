@@ -13,10 +13,12 @@ function showFieldErrors(field, errors = [], options = {}) {
 
   field = $(field);
 
+  var wrong = Array.isArray(errors) && errors.length > 0;
+
   // rare
   var error_target = field.getAttribute("data-error-target");
   if (error_target) {
-    $(error_target).classList.toggle("field-error-visible", errors.length > 0);
+    $(error_target).classList.toggle("field-error-visible", wrong);
   }
 
   // look inside or above
@@ -33,8 +35,6 @@ function showFieldErrors(field, errors = [], options = {}) {
       field_title = field_wrapper.find(".field-title");
     }
   }
-
-  var wrong = Array.isArray(errors) && errors.length > 0;
 
   if (field.classList.contains("warn-triangle")) {
     if (field_title) {
@@ -198,10 +198,11 @@ function fieldErrors(field) {
     }
   };
 
-  var validator = field.getAttribute("data-validate");
-  if (!validator) {
+  if (!field.hasAttribute("data-validate")) {
     return [];
   }
+
+  var validator = field.getAttribute("data-validate");
   var [validatorType, ...validatorParams] = validator.split("|");
 
   var val = field.getValue();
@@ -566,7 +567,11 @@ function addMessageBox(elem, message, params = {}) {
   };
 
   var dismiss_btn = params.dismissable
-    ? `<i class="fas fa-times btn" onclick="toggleMessageBox($(this).parent().parent().parent(), false)"></i>`
+    ? `
+      <button class="btn transparent" onclick="toggleMessageBox($(this).parent().parent().parent(), false)">
+        <img class='cross-icon' src='/src/img/cross.svg'>
+      </button>
+    `
     : "";
 
   elem.setContent(`
@@ -667,7 +672,8 @@ function registerForm(form = null) {
 
     if (
       !field.classList.contains("warn-triangle") &&
-      !field.classList.contains("warn-outline")
+      !field.classList.contains("warn-outline") &&
+      field.hasAttribute("data-validate")
     ) {
       obj.insertAdjacentHTML("afterend", `<div class="field-wrapper"></div>`);
       var field_wrapper = obj.next();
@@ -677,8 +683,8 @@ function registerForm(form = null) {
         `
         <div class="input-elements">
           <div class="input-error-indicator">
-            <i class="correct fa fa-check"></i>
-            <i class="wrong fa fa-times"></i>
+            <img class='correct check-icon' src='/src/img/check-green-thick.svg'>
+            <img class='wrong cross-icon' src='/src/img/cross-red-thick.svg'>
           </div>
           <div class="validation-error-box expand_y hidden animate_hidden">
            <div class="message"></div>

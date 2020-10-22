@@ -2,9 +2,9 @@
 
 global $PRODUCT_ID;
 
-$parts = explode("/", $url);
-if (isset($parts[1])) {
-  $product_id = intval($parts[1]);
+$product_id = urlParam(1);
+if ($product_id) {
+  $product_id = intval($product_id);
   $PRODUCT_ID = $product_id;
 } else {
   redirect("/");
@@ -82,7 +82,7 @@ include "global/includes_for_cms_page.php";
       "@context": "https://schema.org/",
       "@type": "Product",
       "name": "<?= htmlspecialchars($product_data["title"]) ?>",
-      "url": "<?= SITE_URL . "/" . $url ?>",
+      "url": "<?= SITE_URL . "/" . URL ?>",
       "image": [
         "<?= $product_data["cache_thumbnail"] ?>"
       ],

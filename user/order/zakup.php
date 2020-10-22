@@ -48,10 +48,9 @@ if ($app["user"]["id"]) {
   }
 }
 
-$parts = explode("/", $url);
+$zamowienie_link = urlParam(1);
 $impersonate = 0;
-if (isset($parts[1]) && strlen($parts[1]) > 5) {
-  $zamowienie_link = $parts[1];
+if (strlen($zamowienie_link) > 5) {
   // $zamowienie_data = fetchRow("SELECT zamowienie_id, user_id, user_type, basket, koszt, zlozono, oplacono, nip, status, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, dostawa, uwagi, koszt_dostawy, session_id, rabat, kod_pocztowy_z, miejscowosc_z, kraj_z, ulica_z, nr_domu_z, nr_lokalu_z,  imie_d, nazwisko_d, firma_d, buyer_type FROM zamowienia LEFT JOIN users USING (user_id) WHERE link = ?", $zamowienie_link);
   $zamowienie_data = fetchRow("SELECT *, z.cache_basket, z.imie, z.nazwisko, z.email, z.telefon, z.nip, z.kraj, z.miejscowosc, z.ulica, z.kod_pocztowy, z.nr_domu, z.nr_lokalu FROM zamowienia z LEFT JOIN users USING (user_id) WHERE link = ?", [$zamowienie_link]);
 
@@ -620,7 +619,10 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
           <div class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
             <?php if (!$app["user"]["id"]) : ?>
               <div>
-                <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="min-width:250px;margin-top: 25px;">Zaloguj się <i class="fa fa-user"></i></button>
+                <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="min-width:250px;margin-top: 25px;">
+                  Zaloguj się
+                  <img class="user-icon icon-white" src="/src/img/user_icon.svg" style="width: 1.2em;vertical-align: sub;">
+                </button>
                 <br><br>
                 <div class="hideifempty">
                   <strong>Co zyskasz?</strong>
@@ -752,7 +754,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
               <div id="caseKurier" class="expand_y hidden animate_hidden">
                 <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;" data-view="adres">Adres dostawy</h3>
 
-                <button class="btn primary" type="button" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button>
+                <button class="btn primary" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button>
                 <!--<label class="checkbox-wrapper">
                   <input type="checkbox" name="same_address">
                   <div class="checkbox"></div>
@@ -833,11 +835,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
 
       <div style="padding: 10px;display: flex;justify-content: space-between;max-width: 1170px;margin: 0 auto;width: 100%;">
-        <button class="btn secondary medium desktopSpaceRight btn secondary" type="button" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
+        <button class="btn secondary medium desktopSpaceRight btn secondary" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>
-        <button class="btn primary medium" type="button" onclick="showMenu(3,'podsumowanie')" style="margin-top: 30px; display:inline-block;width:220px">
+        <button class="btn primary medium" onclick="showMenu(3,'podsumowanie')" style="margin-top: 30px; display:inline-block;width:220px">
           Dalej
           <i class="fa fa-chevron-right"></i>
         </button>
@@ -850,20 +852,20 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
         <div style="width:100%;max-width: 300px; margin: 0 auto;padding: 10px;" class="noMaxWidthMobile">
 
-          <h4>Dane kontaktowe <button type="button" class="btn subtle" onclick="showMenu(2,'kontakt')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Dane kontaktowe <button class="btn subtle" onclick="showMenu(2,'kontakt')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="daneKontaktoweInfo"></p>
 
-          <h4>Rodzaj dostawy <button type="button" class="btn subtle" onclick="showMenu(2,'dostawa')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Rodzaj dostawy <button class="btn subtle" onclick="showMenu(2,'dostawa')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="dostawaRodzaj"></p>
 
-          <h4>Adres dostawy <button type="button" class="btn subtle" onclick="showMenu(2,'adres')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+          <h4>Adres dostawy <button class="btn subtle" onclick="showMenu(2,'adres')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
 
           <p id="adresInfo"></p>
 
           <h4>Forma zapłaty
-            <!--<button type="button" class="btn primary" onclick="showMenu(3)">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button>-->
+            <!--<button class="btn primary" onclick="showMenu(3)">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button>-->
           </h4>
 
           <p id="zaplataInfo"></p>
@@ -889,7 +891,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                   <span>Kod rabatowy</span>
                   <div style="display:flex">
                     <input type="text" id="kod_rabatowy" class="field">
-                    <button type="button" style="margin-left:-1px;width: auto;font-size: 15px;" class="btn primary medium" onclick="aktywujKodRabatowy('add')">Aktywuj</button>
+                    <button style="margin-left:-1px;width: auto;font-size: 15px;" class="btn primary medium" onclick="aktywujKodRabatowy('add')">Aktywuj</button>
                   </div>
                   <div id="kod_rabatowy_reason" style="color: red;font-size: 13px;"></div>
                 </div>
@@ -903,7 +905,9 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             <div style="margin-top: 13px;text-align: right;padding: 5px;" class="mobileTextCenter">
               <span style="display:block;font-size: 15px;">Koszt dostawy: <span class="pln" id="koszt_dostawy_label"></span></span>
               <span style="font-size: 15px;display:none;color: var(--primary-clr);font-weight: bold;" id="kod_rabatowy_wrapper">
-                <button type="button" onclick="aktywujKodRabatowy('remove')" style="cursor:pointer;font-weight: bold;margin-right: 5px;font-size: 11px;line-height: 0;width: 18px;height: 18px;border: none;background: #eee;color: #777;vertical-align: text-top;padding: 0;"><i class="fa fa-times"></i></button>
+                <button onclick="aktywujKodRabatowy('remove')" style="cursor:pointer;font-weight: bold;margin-right: 5px;font-size: 11px;line-height: 0;width: 18px;height: 18px;border: none;background: #eee;color: #777;vertical-align: text-top;padding: 0;">
+                  <img class='cross-icon' src='/src/img/cross.svg'>
+                </button>
                 KOD RABATOWY <span class="pln" id="kod_rabatowy_label"></span></span>
               <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia:</span>
               <b style="display:inline-block;font-size: 20px;"><span id="final-cost" style="display:inline-block;" class="pln"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</b>
@@ -950,7 +954,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
       </div>
 
       <div style="padding: 10px">
-        <button class="btn secondary medium pullHigherDesktop" type="button" onclick="showMenu(2,'kontakt')" style="display:inline-block;width:170px">
+        <button class="btn secondary medium pullHigherDesktop" onclick="showMenu(2,'kontakt')" style="display:inline-block;width:170px">
           <i class="fa fa-chevron-left"></i>
           Cofnij
         </button>

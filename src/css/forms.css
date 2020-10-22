@@ -11,8 +11,7 @@
   position: absolute;
   pointer-events: none;
   right: 0.7em;
-  top: -2em;
-  width: 15px;
+  top: -1.7em;
   text-align: center;
   opacity: 0;
   transition: 0.2s all;
@@ -24,11 +23,14 @@
   transform: scale(1);
 }
 .input-elements .input-error-indicator .correct {
+  margin-right: -0.1em;
+}
+/*.input-elements .input-error-indicator .correct {
   color: var(--success-clr);
 }
 .input-elements .input-error-indicator .wrong {
   color: var(--error-clr);
-}
+}*/
 .input-elements .validation-error-box {
   color: var(--error-clr);
   padding-top: 0.2em;

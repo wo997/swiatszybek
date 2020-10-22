@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}kod_rabatowy]
 
-$parts = explode("/", $url);
-if (isset($parts[2])) {
+$kod_id = urlParam(2);
+if ($kod_id) {
     $kod_id = intval($parts[2]);
 
     $kod_data = fetchRow("SELECT * FROM kody_rabatowe WHERE kod_id = $kod_id");

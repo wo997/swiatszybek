@@ -1,7 +1,7 @@
 <?php //route[aktywuj]
 
-$user_id = $url_params[1];
-$authentication_token = $url_params[2];
+$user_id = urlParam(1);
+$authentication_token = urlParam(2);
 
 query("UPDATE users SET authenticated = 1, stworzono = NOW() WHERE user_id = ? AND authentication_token = ?", [
   $user_id, $authentication_token
@@ -15,7 +15,7 @@ if ($user_data["authenticated"] == "1") {
       Zaloguj się <i class='fas fa-user'></i>
     </button>
     <button class='btn subtle medium' onclick='hideParentModal(this)'>
-      Zamknij <i class='fas fa-times'></i>
+      Zamknij <img class='cross-icon' src='/src/img/cross.svg'>
     </button>
   ";
   $response_body = MESSAGE_HEADER_SUCCESS

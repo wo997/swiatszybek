@@ -243,11 +243,13 @@
 }
 
 .close-modal-btn img {
-  width: 16px;
+  width: 15px;
+  pointer-events: none;
 }
 
 .close-modal-btn:hover {
-  opacity: 0.5;
+  opacity: 1;
+  background: #0001;
 }
 
 .modal-content .modal-header {

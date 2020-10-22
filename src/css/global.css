@@ -1621,6 +1621,9 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 .flex-children-width * {
   min-width: 0;
 }
+.flex-children-width .field-wrapper {
+  display: flex;
+}
 
 .flex-column {
   display: flex;

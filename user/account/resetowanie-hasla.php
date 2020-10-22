@@ -1,16 +1,12 @@
 <?php //route[resetowanie-hasla]
 
-$parts = explode("/", $url);
+$user_id = urlParam(1);
+$authentication_token = urlParam(2);
 
-$authenticated = count($parts) > 2;
-if ($authenticated) {
-  $user_id = $parts[1];
-  $authentication_token = $parts[2];
-
+if ($authentication_token) {
   $email = fetchValue("SELECT email FROM users WHERE user_id = ? AND authentication_token = ?", [$user_id, $authentication_token]);
   if (!$email) {
-    header("Location: /resetowanie-hasla");
-    die;
+    redirect("Location: /resetowanie-hasla");
   }
 }
 
@@ -33,7 +29,7 @@ if ($authenticated) {
 <body class="default-form">
   <?php include "global/header.php"; ?>
   <form data-form onsubmit="return validateForm(this)" action="/reset_password" method="post" class="paddingable" style="margin:auto;padding-bottom:50px;max-width:350px">
-    <?php if ($authenticated) : ?>
+    <?php if ($authentication_token) : ?>
       <h1 class="h1" style="text-align:center">Resetowanie hasła<br><span style="font-size:16px"><i class="fa fa-user"></i> <?= $email ?></span></h1>
     <?php else : ?>
       <h1 class="h1" style="text-align:center">Resetowanie hasła</h1>

@@ -3,9 +3,9 @@
 $show_category = null;
 $category_link = "";
 
-$parts = explode("/", $url);
-if (isset($parts[1]) && strlen($parts[1]) > 1) {
-  $category_link = trim($parts[1], "/");
+$category_link = urlParam(1);
+if ($category_link) {
+  $category_link = trim($category_link, "/");
   $show_category = fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
 }
 
@@ -437,7 +437,7 @@ function showCategory($category, $level = 0)
                   <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
                   <h3 class="modal-header">Kategorie</h3>
                   <div class="scroll-panel scroll-shadow">
-
+                    <div></div>
                   </div>
               </div>
           </div>
@@ -446,17 +446,17 @@ function showCategory($category, $level = 0)
       registerModalContent(`
           <div id="searchFilters" data-expand>
               <div class="modal-body">
-                  <button class="close-modal-btn" onclick="restoreFilters();afterFiltersHidden();"><img src="/src/img/cross.svg"></button>
+                  <button class="close-modal-btn" onclick="restoreFilters();"><img src="/src/img/cross.svg"></button>
                   <h3 class="modal-header">Filtry <span class="filter_count"></span></h3>
                   <div class="scroll-panel scroll-shadow panel-padding">
-
+                    <div></div>
                   </div>
                   <div class='footer' style='display:flex;padding:5px'>
                     <button class="btn secondary fill" onclick="clearAllFilters()">
                       Wyczyść filtry
-                      <i class="fas fa-times"></i>
+                      <img class='cross-icon' src='/src/img/cross.svg'>
                     </button>
-                    <button class="btn primary fill" style='margin-left:5px' onclick="hideParentModal(this);afterFiltersHidden()">
+                    <button class="btn primary fill" style='margin-left:5px' onclick="hideParentModal(this);afterFiltersSelected()">
                       Pokaż wyniki
                       <i class="fas fa-chevron-right"></i>
                     </button>
@@ -465,7 +465,7 @@ function showCategory($category, $level = 0)
           </div>
       `);
 
-      $(`#searchCategory .modal-body .scroll-panel`).appendChild(
+      $(`#searchCategory .modal-body .scroll-panel > div`).appendChild(
         $('.search-wrapper .categories')
       );
 
@@ -474,7 +474,7 @@ function showCategory($category, $level = 0)
       if (!filters.find("*")) {
         $(`.search-filters-btn`).style.display = "none";
       } else {
-        $(`#searchFilters .modal-body .scroll-panel`).appendChild(
+        $(`#searchFilters .modal-body .scroll-panel > div`).appendChild(
           filters
         );
       }
@@ -508,7 +508,7 @@ function showCategory($category, $level = 0)
       setFormData(window.filtersStateBeforeOpen, ".filters");
     }
 
-    function afterFiltersHidden() {
+    function afterFiltersSelected() {
       blockProductsSearch = false;
       searchProducts();
       // just in case filters are the same
@@ -590,7 +590,7 @@ function showCategory($category, $level = 0)
         success: (res) => {
           if (res.totalRows == 0) {
             var caseFilters = searchParams.attribute_value_ids.length > 0 || searchParams.search !== "" ?
-              `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class='fas fa-times'></i> Wyczyść filtry</button>` : "Wyszukaj inną kategorię";
+              `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><img class='cross-icon' src='/src/img/cross.svg'> Wyczyść filtry</button>` : "Wyszukaj inną kategorię";
             res.content = `
               <div style='font-size:22px;padding: 60px 10px;text-align:center;font-weight:600'>
                 <span style='color: var(--error-clr);'><i class="fas fa-exclamation-circle"></i> Brak produktów!</span>
@@ -820,7 +820,7 @@ function showCategory($category, $level = 0)
         <i class="fas fa-search"></i>
         Szukaj
         <button class='btn subtle case_search' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-position='right' style='margin:-10px 0'>
-          <i class="fas fa-times"></i>
+          <img class='cross-icon' src='/src/img/cross.svg'>
         </button>
       </div>
       <div class='float-icon mobile-margin-bottom any-search-wrapper glue-children'>
@@ -864,7 +864,7 @@ function showCategory($category, $level = 0)
           Filtry
           <span class='filter_count'></span>
           <button class='btn subtle case_any_filters' onclick='clearAllFilters()' data-tooltip='Wyczyść filtry' data-position='right' style='margin:-10px 0'>
-            <i class='fas fa-times'></i>
+            <img class="cross-icon" src="/src/img/cross.svg">
           </button>
         </div>
 

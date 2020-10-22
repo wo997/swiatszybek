@@ -59,13 +59,10 @@ $page_width = "1500px";
     <div class="page_wrapper">
         <div style="padding:<?= $page_padding ?> 0;margin:0 auto;box-sizing:border-box;width: 100%;flex-grow: 1;" class="cms">
             <?php
-            if (isset($_POST["message"]))
+            // abandoned kinda
+            if (isset($_POST["message"])) {
                 echo "<div style='margin:30px auto'>" . $_POST["message"] . "</div>";
-
-            // if ($url == "") {
-            //     if (!isset($_SESSION["redirect"]) && isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "/login") === false && strpos($_SERVER["HTTP_REFERER"], "/logowanie") === false)
-            //         $_SESSION["redirect"] = $_SERVER["HTTP_REFERER"]; //"/moje-konto/zamowienia";
-            // }
+            }
             ?>
 
             <?= $page_content ?>

@@ -17,22 +17,24 @@ endSection();
     <div class="main-wrapper">
       <header class="navbar_admin">
         <div class="scroll-panel scroll-shadow">
-          <a href="/" class="home logo-wrapper">
-            <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
-            <br>
-            Strona główna
-          </a>
+          <div>
+            <a href="/" class="home logo-wrapper">
+              <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
+              <br>
+              Strona główna
+            </a>
 
-          <div style="padding:0 10px 10px">
-            <div class="field-title first">Wyszukaj w panelu admina</div>
-            <input type="text" class="field" placeholder="W planach...">
-          </div>
+            <div style="padding:0 10px 10px">
+              <div class="field-title first">Wyszukaj w panelu admina</div>
+              <input type="text" class="field" placeholder="W planach...">
+            </div>
 
-          <?php include "navbar.php" ?>
+            <?php include "navbar.php" ?>
 
-          <hr>
-          <div class="menu_item" onclick="return logout()">
-            <a><i class="fas fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się</a>
+            <hr>
+            <div class="menu_item" onclick="return logout()">
+              <a><i class="fas fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się</a>
+            </div>
           </div>
         </div>
       </header>

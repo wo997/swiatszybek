@@ -1,10 +1,7 @@
 <?php //route[potwierdz_newsletter]
 
-$parts = explode("/", $url);
-
-$token = $parts[1];
-
-$anuluj = isset($parts[2]);
+$token = urlParam(1);
+$anuluj = urlParam(2);
 
 $accepted = $anuluj ? "0" : "1";
 

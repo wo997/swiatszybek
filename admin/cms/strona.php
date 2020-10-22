@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}strona]
 
-$parts = explode("/", $url);
-if (isset($parts[2])) {
+$cms_id = urlParam(2);
+if ($cms_id) {
     $cms_id = intval($parts[2]);
     $page_data = fetchRow("SELECT * FROM cms WHERE cms_id = " . intval($cms_id));
 } else {
