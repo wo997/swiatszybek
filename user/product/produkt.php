@@ -19,9 +19,9 @@ if (!$product_data) {
   redirect("/");
 }
 
-if ((!isset($parts[2]) || $parts[2] != $product_data["link"]) && $product_data["link"]) {
-  header("Location: " . getProductLink($product_data["product_id"], $product_data["link"]));
-  die;
+$link = urlParam(2);
+if ($link != $product_data["link"] && $product_data["link"]) {
+  redirect(getProductLink($product_data["product_id"], $product_data["link"]));
 }
 
 $priceText = $product_data["price_min"];

@@ -63,17 +63,22 @@ function showFieldErrors(field, errors = [], options = {}) {
     }
 
     const inputElements = wrapper.next();
-    const validationBox = inputElements.find(".validation-error-box");
-    const correctIndicator = inputElements.find(
-      ".input-error-indicator .correct"
-    );
+    const validationBox = inputElements
+      ? inputElements.find(".validation-error-box")
+      : null;
+    const correctIndicator = inputElements
+      ? inputElements.find(".input-error-indicator .correct")
+      : null;
     if (!correctIndicator && field.hasAttribute("data-validate")) {
       console.error(
+        field,
         "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded"
       );
       return;
     }
-    const wrongIndicator = inputElements.find(".input-error-indicator .wrong");
+    const wrongIndicator = inputElements
+      ? inputElements.find(".input-error-indicator .wrong")
+      : null;
     const toggleErrorIcons = (type) => {
       if (correctIndicator && wrongIndicator) {
         if (type == "correct") {
@@ -638,11 +643,15 @@ function registerForm(form = null) {
   if (form === null) {
     inputs = $(document.body).findAll(
       //"[data-form] [data-validate]:not([data-change-registered])"
-      "[data-form] .field:not([data-change-registered])"
+      `[data-form] .field:not([data-change-registered]),
+     [data-form] [data-validate]:not([data-change-registered])`
     );
   } else {
     //inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
-    inputs = $(form).findAll(".field:not([data-change-registered])");
+    inputs = $(form).findAll(
+      `.field:not([data-change-registered]),
+      [data-validate]:not([data-change-registered])`
+    );
 
     form.addEventListener("keydown", (e) => {
       setTimeout(() => {

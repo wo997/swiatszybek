@@ -1,17 +1,14 @@
 <?php //route[produkty]
 
 $show_category = null;
-$category_link = "";
 
 $category_link = urlParam(1);
 if ($category_link) {
-  $category_link = trim($category_link, "/");
   $show_category = fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
 }
 
 if (!$show_category) {
-  header("Location: /produkty/wszystkie");
-  die;
+  redirect("/produkty/wszystkie");
 }
 
 function showCategory($category, $level = 0)
