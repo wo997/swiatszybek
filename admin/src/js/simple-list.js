@@ -15,14 +15,8 @@ function createSimpleList(params = {}) {
 
   list.wrapper.setAttribute("data-list-name", list.name);
 
-  var className = "";
-
   if (!params.title) {
     params.title = "";
-  }
-
-  if (params.title) {
-    className = "field-title";
   }
 
   var btnTop = "";
@@ -43,18 +37,22 @@ function createSimpleList(params = {}) {
   list.wrapper.insertAdjacentHTML(
     "afterbegin",
     `
-        <div class="${className}">
-            <span>${params.title} ${btnTopTitle}</span>
+      <div class="${params.title ? "field-title" : ""}">
+        <span>${params.title} ${btnTopTitle}</span>
+      </div>
+      <div style='display:flex'>
+        <div class='scroll-panel scroll-shadow horizontal'>
+          <div style="flex-grow: 1;">
+            ${btnTop}
+            ${
+              params.table
+                ? `<table class="list"><thead><tr>${nonull(
+                    params.header
+                  )}</tr></thead><tbody></tbody></table>`
+                : `<div class="list"></div>`
+            }
+          </div>
         </div>
-        ${btnTop}
-        ${
-          params.table
-            ? `<table class="list"><thead><tr>${nonull(
-                params.header
-              )}</tr></thead><tbody></tbody></table>`
-            : `<div class="list"></div>`
-        }
-        
       </div>
       <div class="list-empty" style="display:none">${nonull(
         params.empty,

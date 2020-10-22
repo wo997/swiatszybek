@@ -57,6 +57,7 @@
   /*background-image: repeating-linear-gradient(-45deg, #ddd 0px 10px, #eee 10px 20px);*/
   background: #fafafa;
   padding: 10px 5px;
+  height: 100%;
 }
 
 .moduleList > .btn {

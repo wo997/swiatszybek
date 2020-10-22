@@ -791,6 +791,10 @@ function loadFormFromLocalStorage() {
   });
 }
 
-function rewrite(source, target) {
-  target.setValue(source.getValue());
+function rewrite(source, target, options = {}) {
+  var val = source.getValue();
+  if (options.link) {
+    val = getLink(val);
+  }
+  target.setValue(val);
 }

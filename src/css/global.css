@@ -12,6 +12,7 @@ body {
 }
 :root {
   --scrollbar-width: 0px;
+  --field-height: 35px;
 }
 body {
   min-width: calc(100vw - 20px);
@@ -165,7 +166,7 @@ textarea {
 .btn.primary,
 .btn.important,
 .btn.red {
-  box-shadow: inset 0px -1px 2px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px -1px 2px 0px rgba(0, 0, 0, 0.3);
 }
 
 .btn.subtle,
@@ -585,14 +586,13 @@ hr {
   color: white;
   display: inline-block;
   font-weight: normal;
-  margin: 0 4px;
   font-size: 14px;
   text-align: center;
-
   box-shadow: none;
 }
-.status_rect {
-  width: 179px;
+.rect.light-gray {
+  background: #f7f7f7;
+  color: #666;
 }
 
 input[type="text"]:not(.field) {
@@ -1645,4 +1645,9 @@ h3 {
 
 img {
   display: inline-block;
+}
+
+.auto-scroll-x {
+  overflow-x: auto;
+  overflow-y: hidden;
 }

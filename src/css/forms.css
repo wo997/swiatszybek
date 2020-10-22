@@ -91,4 +91,5 @@ textarea + .input-elements .input-error-indicator {
   padding: 0 7px;
   border: 1px solid #ccc;
   color: #555;
+  border-radius: 4px;
 }

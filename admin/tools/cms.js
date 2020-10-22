@@ -1340,6 +1340,7 @@ function cmsContainerHeaderAnimation() {
   if (CMSContainerHeader.target) {
     var parentRect = CMSContainerHeader.options
       .parent()
+      .parent()
       .getBoundingClientRect();
     var optionsRect = CMSContainerHeader.options.getBoundingClientRect();
     var blockRect = CMSContainerHeader.target.getBoundingClientRect();
@@ -1466,7 +1467,10 @@ cmsBlockHeaderAnimation();
 
 function cmsBlockHeaderAnimation() {
   if (CMSBlockHeader.target) {
-    var parentRect = CMSBlockHeader.options.parent().getBoundingClientRect();
+    var parentRect = CMSBlockHeader.options
+      .parent()
+      .parent()
+      .getBoundingClientRect();
     var optionsRect = CMSBlockHeader.options.getBoundingClientRect();
     var actionsRect = CMSBlockHeader.actions.getBoundingClientRect();
     var blockRect = CMSBlockHeader.target.getBoundingClientRect();
@@ -1800,78 +1804,82 @@ registerModalContent(
                   <div class="modules"></div>
                 </div>
 
-                <div class="cms-wrapper">
-                    <div style="position:absolute;display:none;z-index:1000" onclick="addContainer('',placeContainerAfter,true)" class="action_block insert_container_btn" data-tooltip="Wstaw kontener" data-position="center"> <i class="fas fa-plus-square"></i> </div>
-                    <div class="cms" data-type="html"></div>
+                <div>
+                  <div class="scroll-panel scroll-shadow cms-wrapper">
+                    <div class="">
+                        <div style="position:absolute;display:none;z-index:1000" onclick="addContainer('',placeContainerAfter,true)" class="action_block insert_container_btn" data-tooltip="Wstaw kontener" data-position="center"> <i class="fas fa-plus-square"></i> </div>
+                        <div class="cms" data-type="html"></div>
 
-                    <div class="cms-container-options cms-toolbar-shadow">
+                        <div class="cms-container-options cms-toolbar-shadow">
 
-                        <div class="btn" onclick="editContainerSettings()" data-tooltip="Wymiary / Rozmieszczenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
+                            <div class="btn" onclick="editContainerSettings()" data-tooltip="Wymiary / Rozmieszczenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
 
-                        <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło kontenera - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
+                            <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło kontenera - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
 
-                        <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie kontenera"> <i class="fas fa-border-style"></i> </div>
+                            <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie kontenera"> <i class="fas fa-border-style"></i> </div>
 
-                        <div class="showhover">
-                            <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać kontener i go upuścić"> <i class="fas fa-sort"></i> </div>
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wyżej"> <i class="fas fa-arrow-up"></i> </div>
-                                <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń niżej"> <i class="fas fa-arrow-down"></i> </div>
+                            <div class="showhover">
+                                <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać kontener i go upuścić"> <i class="fas fa-sort"></i> </div>
+                                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                    <div class="btn" onclick="moveBlock(-1)" data-tooltip="Przesuń wyżej"> <i class="fas fa-arrow-up"></i> </div>
+                                    <div class="btn" onclick="moveBlock(1)" data-tooltip="Przesuń niżej"> <i class="fas fa-arrow-down"></i> </div>
+                                </div>
                             </div>
+
+                            <div class="btn" onclick="copyContainer()" data-tooltip="Skopiuj kontener do schowka"> <i class="fas fa-clipboard"></i> </div>
+                            
+                            <div class="btn" onclick="duplicateContainer()" data-tooltip="Duplikuj kontener"> <i class="fas fa-clone"></i> </div>
+
+                            <div class="btn" onclick="window.pasteType='block';showModal('pasteBlock')" data-tooltip="Wklej skopiowany blok"><i class="fas fa-paste"></i></div>
+
+                            <div class="btn delete_block_btn" onclick="deleteContainer()" data-tooltip="Usuń kontener"> <i class="fas fa-times"></i> </div>
                         </div>
 
-                        <div class="btn" onclick="copyContainer()" data-tooltip="Skopiuj kontener do schowka"> <i class="fas fa-clipboard"></i> </div>
-                        
-                        <div class="btn" onclick="duplicateContainer()" data-tooltip="Duplikuj kontener"> <i class="fas fa-clone"></i> </div>
-
-                        <div class="btn" onclick="window.pasteType='block';showModal('pasteBlock')" data-tooltip="Wklej skopiowany blok"><i class="fas fa-paste"></i></div>
-
-                        <div class="btn delete_block_btn" onclick="deleteContainer()" data-tooltip="Usuń kontener"> <i class="fas fa-times"></i> </div>
-                    </div>
-
-                    <div class="cms-block-actions">
-                        <div onclick="addBlock('',null,false)" data-tooltip="Wstaw blok" class="action_block add_before_btn"> <i class="fas fa-plus-square"></i> </div>
-                        <div onclick="addBlock('',null,true)" data-tooltip="Wstaw blok" class="action_block add_after_btn"> <i class="fas fa-plus-square"></i> </div>
-                    </div>
-
-                    <div class="cms-block-options cms-toolbar-shadow">
-
-                        <div class="btn" onclick="editBlock()" data-tooltip="Edytuj zawartość"> <i class="fas fa-edit"></i> </div>
-
-                        <div class="btn" onclick="editBlockSettings()" data-tooltip="Wymiary / Ułożenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
-                        
-                        <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło bloku - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
-
-                        <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie bloku"> <i class="fas fa-border-style"></i> </div>
-
-                        <div class="btn" onclick="editBlockAnimation()" data-tooltip="Animacje"> <i class="fas fa-step-forward"></i> </div>
-
-                        <div class="showhover">
-                            <div class="btn" data-tooltip="Szerokość"> <i class="fas fa-arrows-alt-h"></i> </div>
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div class="btn" onclick="blockWidth('100%')" data-tooltip="100% szerokości strony"> 100% </div>
-                                <div class="btn" onclick="blockWidth('50%')" data-tooltip="50% szerokości strony"> 1/2 </div>
-                                <div class="btn" onclick="blockWidth('33.333%')" data-tooltip="33.3% szerokości strony"> 1/3 </div>
-                                <div class="btn" onclick="editBlockSettings()" data-tooltip="Więcej"><i class="fas fa-ellipsis-h"></i></div>
-
-                            </div>
+                        <div class="cms-block-actions">
+                            <div onclick="addBlock('',null,false)" data-tooltip="Wstaw blok" class="action_block add_before_btn"> <i class="fas fa-plus-square"></i> </div>
+                            <div onclick="addBlock('',null,true)" data-tooltip="Wstaw blok" class="action_block add_after_btn"> <i class="fas fa-plus-square"></i> </div>
                         </div>
 
-                        <div class="showhover">
-                            <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać blok i go upuścić"> <i class="fas fa-sort" style="transform:rotate(90deg)"></i> </div>
-                            <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
-                                <div class="btn" onclick="moveBlock(-1,true)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-left"></i> </div>
-                                <div class="btn" onclick="moveBlock(1,true)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-right"></i> </div>
+                        <div class="cms-block-options cms-toolbar-shadow">
+
+                            <div class="btn" onclick="editBlock()" data-tooltip="Edytuj zawartość"> <i class="fas fa-edit"></i> </div>
+
+                            <div class="btn" onclick="editBlockSettings()" data-tooltip="Wymiary / Ułożenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
+                            
+                            <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło bloku - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
+
+                            <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie bloku"> <i class="fas fa-border-style"></i> </div>
+
+                            <div class="btn" onclick="editBlockAnimation()" data-tooltip="Animacje"> <i class="fas fa-step-forward"></i> </div>
+
+                            <div class="showhover">
+                                <div class="btn" data-tooltip="Szerokość"> <i class="fas fa-arrows-alt-h"></i> </div>
+                                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                    <div class="btn" onclick="blockWidth('100%')" data-tooltip="100% szerokości strony"> 100% </div>
+                                    <div class="btn" onclick="blockWidth('50%')" data-tooltip="50% szerokości strony"> 1/2 </div>
+                                    <div class="btn" onclick="blockWidth('33.333%')" data-tooltip="33.3% szerokości strony"> 1/3 </div>
+                                    <div class="btn" onclick="editBlockSettings()" data-tooltip="Więcej"><i class="fas fa-ellipsis-h"></i></div>
+
+                                </div>
                             </div>
+
+                            <div class="showhover">
+                                <div class="btn" data-tooltip="Zmiana kolejności. Możesz też złapać blok i go upuścić"> <i class="fas fa-sort" style="transform:rotate(90deg)"></i> </div>
+                                <div class="menucontent cms-toolbar-shadow" style="display:flex;flex-direction:column;align-items:stretch">
+                                    <div class="btn" onclick="moveBlock(-1,true)" data-tooltip="Przesuń wstecz"> <i class="fas fa-arrow-left"></i> </div>
+                                    <div class="btn" onclick="moveBlock(1,true)" data-tooltip="Przesuń dalej"> <i class="fas fa-arrow-right"></i> </div>
+                                </div>
+                            </div>
+
+                            <div class="btn" onclick="duplicateBlock()" data-tooltip="Duplikuj blok"> <i class="fas fa-clone"></i> </div>
+
+                            <div class="btn" onclick="copyBlock()" data-tooltip="Skopiuj blok do schowka"> <i class="fas fa-clipboard"></i> </div>
+
+                            <div class="btn" class="delete_block_btn" onclick="deleteBlock()" data-tooltip="Usuń blok"> <i class="fas fa-times"></i> </div>
                         </div>
 
-                        <div class="btn" onclick="duplicateBlock()" data-tooltip="Duplikuj blok"> <i class="fas fa-clone"></i> </div>
-
-                        <div class="btn" onclick="copyBlock()" data-tooltip="Skopiuj blok do schowka"> <i class="fas fa-clipboard"></i> </div>
-
-                        <div class="btn" class="delete_block_btn" onclick="deleteBlock()" data-tooltip="Usuń blok"> <i class="fas fa-times"></i> </div>
                     </div>
-
+                  </div>
                 </div>
             </div>
           </div>

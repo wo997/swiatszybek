@@ -1,5 +1,7 @@
 /* js[global] */
 
+// scroll-shadow doc
+// horizontal requires the parent to be a row flexbox
 function registerScrollShadows() {
   $$(".scroll-shadow:not(.registered)").forEach((e) => {
     const offset = 25.0;
@@ -72,6 +74,7 @@ function registerScrollShadows() {
     }
 
     e.addEventListener("scroll", panelScrollCallback);
+    window.addEventListener("resize", panelScrollCallback);
     panelScrollCallback();
   });
 }

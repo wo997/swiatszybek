@@ -38,16 +38,14 @@ $static = checkUrl($page_data["link"]);
     useTool("preview");
     const cms_id = <?= $cms_id ?>;
 
-    window.addEventListener("DOMContentLoaded", function() {
+    domload(() => {
         setFormData(<?= json_encode($page_data) ?>, "#cmsForm");
 
         resizeCallback();
-
-        registerTextCounters();
     });
 
-    window.addEventListener("DOMContentLoaded", function() {
-        $(`[name='seo_description']`).setValue();
+    windowload(() => {
+        registerTextCounters();
     });
 
     function showPreview() {
@@ -120,25 +118,36 @@ $static = checkUrl($page_data["link"]);
 
     <div <?= $static ? "style='display:none'" : "" ?>>
         <br>
-        <label class="checkbox-wrapper">Czy strona jest publiczna? <input type="checkbox" name="published" <?php if ($page_data["published"] == 1) echo "checked"; ?>>
+        <label class="checkbox-wrapper">
+            Czy strona jest publiczna?
+            <input type="checkbox" name="published">
             <div class="checkbox"></div>
         </label>
     </div>
 
-    <div class="field-title">Nazwa strony</div>
-    <input type="text" name="title" class="field" value="<?= $page_data["title"] ?>" style='width:100%;max-width:500px'>
+    <div style="max-width: 600px">
+        <div class="field-title">Nazwa strony</div>
+        <input type="text" name="title" class="field" value="<?= $page_data["title"] ?>" style='width:100%;max-width:500px'>
 
-    <div class="field-title">Tytuł (SEO)</div>
-    <input type='text' name='seo_title' value='<?= $page_data["seo_title"] ?>' data-show-count="60" data-count-description="(zalecane 50-58)" style='width:100%;max-width:500px' class="field">
+        <div class="field-title">Link strony (URL)</div>
+        <div class="glue-children">
+            <input type='text' name='link' data-validate class="field">
+            <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this).prev().find(`.field`), {link:true})" data-tooltip="Uzupełnij na podstawie nazwy strony" style="height: var(--field-height);">
+                <i class="fas fa-pen"></i>
+            </button>
+        </div>
 
-    <div class="field-title">Link strony (URL)</div>
-    <div style="display:flex;flex-wrap: wrap;">
-        <input type='text' name='link' value='<?= $page_data["link"] ?>' style='width:100%;max-width:500px' class="field">
-        <button class="btn primary" onclick="rewriteURL()">Uzupełnij na podstawie tytułu</button>
+        <div class="field-title">Tytuł (SEO)</div>
+        <div class="glue-children">
+            <input type='text' name='seo_title' class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
+            <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this).prev().find(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy strony" style="height: var(--field-height);">
+                <i class="fas fa-pen"></i>
+            </button>
+        </div>
+
+        <div class="field-title">Opis (SEO)</div>
+        <textarea class="seo_description field" name='seo_description' data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
     </div>
-
-    <div class="field-title">Opis (SEO)</div>
-    <textarea class="seo_description field" name='seo_description' data-show-count="158" data-count-description="(zalecane 130-155)"><?= $page_data["seo_description"] ?></textarea>
 
     <div <?php if ($static) echo "style='display:none'" ?>>
 

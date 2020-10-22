@@ -30,3 +30,7 @@ body,
 .btn {
   padding: 0.23em 0.6em;
 }
+
+.status_rect {
+  width: 179px;
+}
