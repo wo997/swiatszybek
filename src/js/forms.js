@@ -681,15 +681,15 @@ function registerForm(form = null) {
 
     if (
       !field.classList.contains("warn-triangle") &&
-      !field.classList.contains("warn-outline") &&
-      field.hasAttribute("data-validate")
+      !field.classList.contains("warn-outline")
     ) {
       obj.insertAdjacentHTML("afterend", `<div class="field-wrapper"></div>`);
       var field_wrapper = obj.next();
       field_wrapper.appendChild(obj);
-      field_wrapper.insertAdjacentHTML(
-        "beforeend",
-        `
+      if (field.hasAttribute("data-validate")) {
+        field_wrapper.insertAdjacentHTML(
+          "beforeend",
+          `
         <div class="input-elements">
           <div class="input-error-indicator">
             <img class='correct check-icon' src='/src/img/check-green-thick.svg'>
@@ -700,7 +700,8 @@ function registerForm(form = null) {
           </div>
         </div>
       `
-      );
+        );
+      }
     }
 
     if (
