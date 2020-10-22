@@ -7,7 +7,7 @@ define("URL", rtrim(isset($_GET['url']) ? $_GET['url'] : "", "/"));
 define("URL_PARAMS", explode("/", URL));
 
 define("STATIC_URLS", ["ADMIN" => "/admin/"]);
-define("IS_MAIN_PAGE", URL == "/");
+define("IS_MAIN_PAGE", URL === "");
 define("IS_ADMIN_PAGE", strpos(URL, ltrim(STATIC_URLS["ADMIN"], "/")) === 0);
 define("IS_DEPLOYMENT_URL", strpos(URL, "deployment") === 0);
 
