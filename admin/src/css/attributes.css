@@ -11,7 +11,7 @@
 }
 
 .attribute-row {
-  padding: 4px 10px;
+  padding: 4px 7px;
   border: 1px solid #ccc;
 }
 
@@ -29,16 +29,16 @@
 .combo-select-wrapper .fa-times-circle {
   opacity: 1;
   color: var(--success-clr);
-  margin-left: 5px;
+  margin-right: 5px;
   transition: 0.2s all;
 }
 .combo-select-wrapper .fa-check-circle {
   color: var(--success-clr);
-  margin-right: -5px;
   width: 0;
 }
 .combo-select-wrapper .fa-times-circle {
-  color: var(--error-clr);
+  color: #aaa;
+  margin-left: -5px;
 }
 
 .combo-select-wrapper:not(.any_selected) .fa-check-circle,

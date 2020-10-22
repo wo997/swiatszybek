@@ -256,14 +256,15 @@ domload(() => {
   });
 });
 
-document.addEventListener("touchstart", (event) => {
+// TODO: check if abandoned completely
+/*document.addEventListener("touchstart", (event) => {
   var e = $(".hovered");
   var toggle = $(".hovered .dropdown-header");
   if (e && (!isInNode(event.target, e) || isInNode(event.target, toggle))) {
     //if (e && !isInNode(event.target, e)) {
     e.classList.remove("hovered");
   }
-});
+});*/
 
 function rgbStringToHex(rgbString) {
   if (rgbString.substr(0, 3) != "rgb") return rgbString;

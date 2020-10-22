@@ -19,6 +19,10 @@ function createSimpleList(params = {}) {
     params.title = "";
   }
 
+  if (list.recursive) {
+    list.wrapper.classList.add("recursive");
+  }
+
   var btnTop = "";
   var btnTopTitle = "";
   if (params.header) {
@@ -51,6 +55,10 @@ function createSimpleList(params = {}) {
                   )}</tr></thead><tbody></tbody></table>`
                 : `<div class="list"></div>`
             }
+            <div class="btn primary add_btn add_end main_add_btn" onclick="${
+              list.name
+            }.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -60,10 +68,6 @@ function createSimpleList(params = {}) {
       )}</div>
     `
   );
-
-  /*<div class="btn primary add_btn add_end" onclick="${
-    list.name
-  }.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>*/
 
   list.insertRowFromBtn = (btn, begin = true, user = true) => {
     var row = list.insertRow(
@@ -285,6 +289,7 @@ function createSimpleList(params = {}) {
             .forEach((e) => {
               var parent_row_node = e.findParentByClassName("simple-list-row");
 
+              // only direct named children communicate with subform
               if (simpleListRowWrapper != parent_row_node.parent()) {
                 return;
               }

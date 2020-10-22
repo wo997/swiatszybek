@@ -87,17 +87,17 @@ div.list .simple-list-row {
   margin-bottom: 5px;
 }
 
-.simple-list > .add_btn {
+.simple-list.recursive .scroll-panel > div > .add_btn {
   background: #5c5;
 }
-.simple-list
+.simple-list.recursive
   .list[data-depth="1"]
   > .simple-list-row-wrapper
   > .sub-list
   > .add_btn {
   background: #6bb;
 }
-.simple-list
+.simple-list.recursive
   .list[data-depth="2"]
   > .simple-list-row-wrapper
   > .sub-list
@@ -105,15 +105,15 @@ div.list .simple-list-row {
   background: #66b;
 }
 
-.simple-list .list[data-depth="1"] {
+.simple-list.recursive .list[data-depth="1"] {
   background: #dfd;
 }
 
-.simple-list .list[data-depth="2"] {
+.simple-list.recursive .list[data-depth="2"] {
   background: #dff;
 }
 
-.simple-list .list[data-depth="3"] {
+.simple-list.recursive .list[data-depth="3"] {
   background: #ddf;
 }
 
@@ -164,9 +164,29 @@ tr.simple-list-row td {
   border-bottom: 1px solid #aaa;
   padding: 5px;
 }
+@media only screen and (min-width: 1200px) {
+  .simple-list:not(.slim) td:first-child,
+  .simple-list:not(.slim) th:first-child {
+    padding-left: 10px;
+  }
+  .simple-list:not(.slim) td:last-child,
+  .simple-list:not(.slim) th:last-child {
+    padding-right: 10px;
+  }
+}
+tr.simple-list-row td:first-child {
+  border-left: 1px solid #aaa;
+}
+tr.simple-list-row td:last-child {
+  border-right: 1px solid #aaa;
+}
 
 .simple-list.has_header .add_end {
   background: var(--primary-clr);
+}
+
+.simple-list.has_header .add_end.main_add_btn {
+  display: none;
 }
 
 .simple-list .action_buttons {

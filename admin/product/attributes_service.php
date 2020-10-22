@@ -31,7 +31,8 @@ function printSelectValuesOfAttribute($values, $attribute, $value_id = null)
     $html = "<select class='field no-wrap inline' $attr data-attribute-value name='$field_name'>";
     $html .= "<option value=''>―</option>";
     foreach ($values as $value_data) {
-        $html .= "<option value='" . $value_data["values"]["value_id"] . "'>" . $value_data["values"]["value"] . "</option>";
+
+        $html .= "<option value='" . $value_data["values"]["value_id"] . "'>" . $value_data["values"]["value"] . ($value_data["children"] ? " ❯" : "") . "</option>";
     }
     $html .= "</select> ";
     foreach ($values as $value_data) {
@@ -54,7 +55,7 @@ function getAllAttributeOptions()
         $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
         $res .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . " attribute-row' data-attribute_id='" . $attribute["attribute_id"] . "'>";
-        $res .= "<span class='field-title first'>" . $attribute["name"] . "<i class='fas fa-check-circle'></i><i class='fas fa-times-circle' data-tooltip='Nie dotyczy'></i></span>";
+        $res .= "<span class='field-title first'><i class='fas fa-check-circle'></i><i class='fas fa-times-circle' data-tooltip='Nie dotyczy'></i>" . $attribute["name"] . "</span>";
 
         if ($any) {
             $res .=  '

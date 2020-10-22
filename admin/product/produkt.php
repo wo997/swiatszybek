@@ -82,6 +82,10 @@ if ($product_id === -1) {
   #variantForm .attribute-row.common.any_selected .case_intersect {
     display: inline-block;
   }
+
+  #productForm [name="variant_attributes_layout"] .scroll-panel>div {
+    flex-grow: 0.2 !important;
+  }
 </style>
 <script>
   useTool("cms");
@@ -109,7 +113,7 @@ if ($product_id === -1) {
       if (!parent_value) {
         break;
       }
-      whole_value = parent_value.value + " " + whole_value;
+      whole_value = parent_value.value + " ❯ " + whole_value;
 
       curr_level_value = parent_value;
     }
@@ -294,7 +298,8 @@ if ($product_id === -1) {
         attribute_name: "",
         attribute_values: "[]",
       },
-      title: "Atrybuty wariantów (filtry wyszukiwania wariantu)",
+      title: "Ułożenie filtrów wyboru produktu",
+      empty: `<div class='rect light-gray'>Brak</div>`,
       beforeRowInserted: (row, values) => {
         list = row.find(`[name="attribute_values"]`);
         var list_name = `attribute_values_${values.attribute_id}`;
@@ -794,10 +799,10 @@ if ($product_id === -1) {
             <i class="fas fa-pen"></i>
           </button>
         </div>
-      </div>
 
-      <div class="field-title">Opis (SEO)</div>
-      <textarea class="seo_description field" name="seo_description" data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
+        <div class="field-title">Opis (SEO)</div>
+        <textarea class="seo_description field" name="seo_description" data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
+      </div>
     </div>
   </div>
 

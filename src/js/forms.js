@@ -532,7 +532,7 @@ function getFormData(form, params = {}) {
       var parent_named_node = e.findParentByAttribute("name", {
         skip: 1,
       });
-      // there is no other component allowed when we read the data, we use its value instead
+      // only direct named children communicate with subform
       if (parent_named_node && parent_named_node.findParentNode(form)) {
         return;
       }

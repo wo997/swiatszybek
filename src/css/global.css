@@ -591,8 +591,9 @@ hr {
   box-shadow: none;
 }
 .rect.light-gray {
-  background: #f7f7f7;
-  color: #666;
+  background: #f5f5f5;
+  color: #555;
+  border: 1px solid #ddd;
 }
 
 input[type="text"]:not(.field) {
