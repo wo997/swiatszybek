@@ -1521,32 +1521,6 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   top: 70px;
 }
 
-/* attributes start */
-.attribute-row .field {
-  width: auto;
-  display: inline-block;
-  margin-left: 4px;
-}
-
-.combo-select-wrapper select[data-parent_value_id].hidden,
-.any-value-wrapper .field.hidden {
-  display: none !important;
-}
-
-.attribute-row {
-  padding: 4px 10px;
-  border: 1px solid #ccc;
-}
-
-.attribute-row + .attribute-row {
-  border-top: none;
-}
-
-.combo-select-wrapper select.empty:not(:focus) {
-  color: #aaa;
-}
-/* attributes end */
-
 .color-circle {
   width: 1.2em;
   height: 1.2em;

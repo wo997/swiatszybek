@@ -681,11 +681,15 @@ function registerForm(form = null) {
 
     if (
       !field.classList.contains("warn-triangle") &&
-      !field.classList.contains("warn-outline")
+      !field.classList.contains("warn-outline") &&
+      !field.classList.contains("no-wrap")
     ) {
       obj.insertAdjacentHTML("afterend", `<div class="field-wrapper"></div>`);
       var field_wrapper = obj.next();
       field_wrapper.appendChild(obj);
+      if (field.classList.contains("inline")) {
+        field_wrapper.classList.add("inline");
+      }
       if (field.hasAttribute("data-validate")) {
         field_wrapper.insertAdjacentHTML(
           "beforeend",

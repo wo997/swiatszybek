@@ -29,14 +29,14 @@ function createSimpleList(params = {}) {
   var btnTopTitle = "";
   if (params.header) {
     btnTopTitle = `
-      <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">
+      <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,false)">
         Dodaj <i class="fas fa-plus"></i>
       </div>
     `;
     list.wrapper.classList.add("has_header");
   } else {
     btnTop = `
-      <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
+      <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>
       `;
   }
 
@@ -54,9 +54,7 @@ function createSimpleList(params = {}) {
               )}</tr></thead><tbody></tbody></table>`
             : `<div class="list"></div>`
         }
-        <div class="btn primary add_btn add_end" onclick="${
-          list.name
-        }.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>
+        
       </div>
       <div class="list-empty" style="display:none">${nonull(
         params.empty,
@@ -64,6 +62,10 @@ function createSimpleList(params = {}) {
       )}</div>
     `
   );
+
+  /*<div class="btn primary add_btn add_end" onclick="${
+    list.name
+  }.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>*/
 
   list.insertRowFromBtn = (btn, begin = true, user = true) => {
     var row = list.insertRow(
@@ -237,7 +239,7 @@ function createSimpleList(params = {}) {
     var addedNode = $(listTarget.children[n]);
 
     if (list.params.beforeRowInserted) {
-      list.params.beforeRowInserted(addedNode, values, {
+      list.params.beforeRowInserted(addedNode, values, list, {
         user: user,
       });
     }
@@ -246,7 +248,7 @@ function createSimpleList(params = {}) {
     setFormData(values, addedNode);
 
     if (list.params.afterRowInserted) {
-      list.params.afterRowInserted(addedNode, values, {
+      list.params.afterRowInserted(addedNode, values, list, {
         user: user,
       });
     }

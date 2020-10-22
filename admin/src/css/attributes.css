@@ -1,0 +1,49 @@
+/* css[admin] */
+
+.attribute-row .field {
+  margin-right: 6px;
+  margin-bottom: 3px;
+}
+
+.combo-select-wrapper select[data-parent_value_id].hidden,
+.any-value-wrapper .field.hidden {
+  display: none !important;
+}
+
+.attribute-row {
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+}
+
+.attribute-row + .attribute-row {
+  border-top: none;
+}
+
+.combo-select-wrapper select.empty:not(:focus) {
+  color: #aaa;
+  background-color: #eee;
+  opacity: 0.7;
+}
+
+.combo-select-wrapper .fa-check-circle,
+.combo-select-wrapper .fa-times-circle {
+  opacity: 1;
+  color: var(--success-clr);
+  margin-left: 5px;
+  transition: 0.2s all;
+}
+.combo-select-wrapper .fa-check-circle {
+  color: var(--success-clr);
+  margin-right: -5px;
+  width: 0;
+}
+.combo-select-wrapper .fa-times-circle {
+  color: var(--error-clr);
+}
+
+.combo-select-wrapper:not(.any_selected) .fa-check-circle,
+.combo-select-wrapper.any_selected .fa-times-circle {
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}

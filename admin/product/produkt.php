@@ -252,7 +252,7 @@ if ($product_id === -1) {
         })
         lazyLoadImages();
       },
-      beforeRowInserted: (row, values, options) => {
+      beforeRowInserted: (row, values, list, options) => {
         if (options.user) {
           row.find(".add_img_btn").dispatchEvent(new Event("click"));
           setCustomHeights();
@@ -400,7 +400,7 @@ if ($product_id === -1) {
               <div data-tooltip class='clamp-lines clamp-4'></div>
             </td>
             <td style="width:90px;">
-              <button class='btn primary' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
+              <button class='btn primary edit-btn' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
             </td>
         `;
       },
@@ -521,9 +521,9 @@ if ($product_id === -1) {
           });
         });
       },
-      afterRowInserted: (row, values, options) => {
+      afterRowInserted: (row, values, list, options) => {
         if (options.user) {
-          editVariant(row);
+          editVariant(row, list.wrapper.find(".field-title .add_btn"));
         }
       }
     });
@@ -846,52 +846,53 @@ if ($product_id === -1) {
       <button class="btn primary" onclick="saveVariant();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
     </div>
     <div class="scroll-panel scroll-shadow panel-padding">
+      <div>
+        <div class="field-title">Nazwa wariantu <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></div>
 
-      <div class="field-title">Nazwa wariantu <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></div>
+        <div class="glue-children">
+          <div class="product-title-copy field-description" data-type="html"></div>
+          <input type="text" name="name" class="field">
+        </div>
 
-      <div class="glue-children">
-        <div class="product-title-copy field-description" data-type="html"></div>
-        <input type="text" name="name" class="field">
-      </div>
+        <div class="field-title">Cena</div>
+        <input type="number" name="price" class="field">
 
-      <div class="field-title">Cena</div>
-      <input type="number" name="price" class="field">
+        <div class="field-title">Rabat</div>
+        <input type="number" name="rabat" class="field">
 
-      <div class="field-title">Rabat</div>
-      <input type="number" name="rabat" class="field">
+        <div class="field-title">Ilość</div>
+        <input type="number" name="stock" class="field">
 
-      <div class="field-title">Ilość</div>
-      <input type="number" name="stock" class="field">
+        <div class="field-title">Kod produktu</div>
+        <input type="text" name="product_code" class="field">
 
-      <div class="field-title">Kod produktu</div>
-      <input type="text" name="product_code" class="field">
+        <div style="display:none">
+          <div class="field-title">Kolor</div>
+          <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
+          <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
+        </div>
 
-      <div style="display:none">
-        <div class="field-title">Kolor</div>
-        <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
-        <div class="btn primary" onclick="this.prev().value='';this.prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
-      </div>
+        <div class="field-title">Atrybuty wariantu (inne niż wspólne dla wszystkich wariantów produktu)</div>
+        <div name="attributes" data-type="attribute_values"><?= $allAttributeOptionsHTML ?></div>
 
-      <div class="field-title">Atrybuty wariantu (inne niż wspólne dla wszystkich wariantów produktu)</div>
-      <div name="attributes" data-type="attribute_values"><?= $allAttributeOptionsHTML ?></div>
+        <div class="field-title">
+          Zdjecie
+          <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types: ["image"]})'>Wybierz</button>
+          <img name="zdjecie" data-type="src" />
+        </div>
 
-      <div class="field-title">
-        Zdjecie
-        <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types: ["image"]})'>Wybierz</button>
-        <img name="zdjecie" data-type="src" />
-      </div>
+        <div class="field-title">Widoczność</div>
+        <select name="published" class="field">
+          <option value="1">Publiczny</option>
+          <option value="0">Ukryty</option>
+        </select>
 
-      <div class="field-title">Widoczność</div>
-      <select name="published" class="field">
-        <option value="1">Publiczny</option>
-        <option value="0">Ukryty</option>
-      </select>
-
-      <input type="hidden" name="was_stock">
-      <input type="hidden" name="product_id">
-      <input type="hidden" name="variant_id">
-      <div style="display: flex; justify-content: flex-end; margin-top: 20px">
-        <button class=" btn red" onclick="saveVariant(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
+        <input type="hidden" name="was_stock">
+        <input type="hidden" name="product_id">
+        <input type="hidden" name="variant_id">
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px">
+          <button class=" btn red" onclick="saveVariant(true);hideParentModal(this)">Usuń wariant <i class="fa fa-trash"></i></button>
+        </div>
       </div>
     </div>
   </div>
