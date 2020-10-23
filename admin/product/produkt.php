@@ -298,7 +298,7 @@ if ($product_id === -1) {
         attribute_name: "",
         attribute_values: "[]",
       },
-      title: "Ułożenie filtrów wyboru produktu",
+      title: "Ułożenie filtrów wyboru produktu (można dać zdjęcie, preview whatever)",
       empty: `<div class='rect light-gray'>Brak</div>`,
       beforeRowInserted: (row, values) => {
         list = row.find(`[name="attribute_values"]`);

@@ -97,6 +97,8 @@
 
 <?php startSection("content"); ?>
 
+<h1>Komentarze</h1>
+
 <div class="mytable"></div>
 
 <?php include "admin/default_page.php"; ?>
