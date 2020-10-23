@@ -14,6 +14,14 @@
         margin: 10px 0;
         object-fit: contain;
     }
+
+    .share_img {
+        width: 200px;
+        height: 200px;
+        display: block;
+        margin: 10px 0;
+        object-fit: contain;
+    }
 </style>
 
 <script>
@@ -31,17 +39,10 @@
             url: STATIC_URLS["ADMIN"] + "uploads_action",
             formData: formData,
             success(res) {
-                if (name == "logo") {
-                    $$(".logo").forEach((e) => {
-                        e.setAttribute("data-src", res.path);
-                        lazyLoadImages();
-                    });
-                } else if (name == "favicon") {
-                    $$(".favicon").forEach((e) => {
-                        e.setAttribute("data-src", res.path);
-                        lazyLoadImages();
-                    });
-                }
+                $$(`.${name}`).forEach((e) => {
+                    e.setAttribute("data-src", res.path);
+                    lazyLoadImages();
+                });
             },
         });
     }
@@ -55,8 +56,8 @@
 <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext style='margin-left:0'>
 <form onsubmit="uploadImageWithCopy(event,'logo')">
     <label>
-        <input type="file" onchange="$(this).next().click()" style="display:none">
-        <input type="submit" name="submit" style="display:none">
+        <input type="file" onchange="$(this).next().click()">
+        <input type="submit" name="submit">
         <div class="btn primary">Wybierz plik <i class="fas fa-cloud-upload-alt"></i></div>
     </label>
 </form>
@@ -65,8 +66,18 @@
 <img class="favicon" data-src="<?= FAVICON_PATH_LOCAL_TN ?>">
 <form onsubmit="uploadImageWithCopy(event,'favicon')">
     <label>
-        <input type="file" onchange="$(this).next().click()" style="display:none">
-        <input type="submit" name="submit" style="display:none">
+        <input type="file" onchange="$(this).next().click()">
+        <input type="submit" name="submit">
+        <div class="btn primary">Wybierz plik <i class="fas fa-cloud-upload-alt"></i></div>
+    </label>
+</form>
+
+<div class="field-title">Domyślne zdjęcie udostępniania</div>
+<img class="share_img" data-src="<?= SHARE_IMG_PATH_LOCAL_SM ?>">
+<form onsubmit="uploadImageWithCopy(event,'share_img')">
+    <label>
+        <input type="file" onchange="$(this).next().click()">
+        <input type="submit" name="submit">
         <div class="btn primary">Wybierz plik <i class="fas fa-cloud-upload-alt"></i></div>
     </label>
 </form>

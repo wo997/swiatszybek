@@ -239,3 +239,23 @@ function getZamowienieLink($link, $relative = false)
 {
     return ($relative ? "" : SITE_URL) . "/zamowienie/$link";
 }
+
+function canUserGetCommentRebate($product_id)
+{
+    global $app;
+
+    $can_user_get_comment_rebate = false;
+
+    if ($app["user"]["id"]) {
+        $can_user_get_comment_rebate = fetchRow("
+            SELECT * FROM basket_content INNER JOIN zamowienia USING (zamowienie_id)
+            WHERE user_id = " . $app["user"]["id"] . "
+            AND status_id IN (2,3)
+            AND product_id = " . intval($product_id) . "
+            AND rebate_generated = 0
+            GROUP BY product_id
+            LIMIT 1
+        ");
+    }
+    return $can_user_get_comment_rebate;
+}

@@ -1,7 +1,7 @@
 <?php
 // TODO: no
-if (!isset($page_data["seo_image"])) {
-  $page_data["seo_image"] = "/img/padmate_logo.png";
+if (!nonull($page_data, "seo_image", "")) {
+  $page_data["seo_image"] = SHARE_IMG_PATH_PUBLIC_SM;
 }
 ?>
 
@@ -48,7 +48,7 @@ if (!isset($page_data["seo_image"])) {
 
   const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 
-  <?php if ($just_logged_in) : ?>
+  <?php if (JUST_LOGGED_IN) : ?>
     domload(() => {
       showNotification("Zalogowano pomyślnie", {
         one_line: true,

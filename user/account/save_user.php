@@ -78,7 +78,7 @@ if (isset($_POST["imie"])) {
             $response_footer = "";
 
             $email_domain = nonull(explode("@", $email), 1);
-            $email_client_url = nonull($email_client_url_list, $email_domain);
+            $email_client_url = nonull(EMAIL_CLIENT_URLS, $email_domain);
 
             if ($email_client_url) {
                 $response_footer .= "

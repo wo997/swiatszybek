@@ -1,15 +1,12 @@
 <?php
 
-if (!isset($_SESSION)) {
-    session_start();
-}
+include "scripts/start_session.php";
 
 include_once 'vendor/autoload.php';
 
-// define app scope
-$app = [];
+include "scripts/init_app.php";
 
-// include helpers
+// include helpers start
 include_once "helpers/general.php";
 include_once "helpers/debug.php";
 
@@ -44,50 +41,20 @@ include_once "helpers/layout/cms.php";
 include_once "helpers/layout/templates.php";
 include_once "helpers/form.php";
 
+include_once "helpers/email_notifications.php";
+// include helpers end
+
+// required by CMS
 include "packages/simple_html_dom.php";
 
-include_once "helpers/email_notifications.php";
-
+// TODO: nice to remember about this function and probably many more like this one
 //var_Dump(get_defined_constants()["ADMIN_URL"]);
 
-// define WebP support also for XHR requests
-define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
-if (WEBP_SUPPORT) {
-    $_SESSION["HAS_WEBP_SUPPORT"] = true;
-}
+include "scripts/define_paths.php";
 
-//define("IS_XHR", isset($_GET["xhr"]) || $_SERVER['REQUEST_METHOD'] === 'POST');
-define("IS_XHR", isset($_GET["xhr"]) || isset($_POST["xhr"]));
+include "scripts/use_builds.php";
 
-define("APP_PATH", str_replace("\\", "/", getcwd()) . "/");
-define("BUILDS_PATH", "builds/");
-define("UPLOADS_PATH", "uploads/");
-define("UPLOADS_PLAIN_PATH", UPLOADS_PATH . "-/");
-define("UPLOADS_VIDEOS_PATH", UPLOADS_PATH . "videos/");
-
-define("SETTINGS_PATH", "settings/");
-define("MODULE_SETTINGS_PATH", SETTINGS_PATH . "modules/");
-define("THEME_SETTINGS_PATH", SETTINGS_PATH . "theme/");
-define("GENERAL_SETTINGS_PATH", SETTINGS_PATH . "general/");
-
-define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
-//in case e-mails are not configured (for debugging)
-define("DISPLAY_EMAIL", false);
-// default values - overriden by 'build_info'
-// TODO: not rly a todo, just remember about it ;)
-$previousModificationTimePHP = 0;
-$previousModificationTimeCSS = 0;
-$previousModificationTimeJS = 0;
-$previousModificationTimeModules = 0;
-$previousModificationTimeSettings = 0;
-$versionPHP = 0;
-$versionCSS = 0;
-$versionJS = 0;
-$versionModules = 0;
-$versionSettings = 0;
-
-@include BUILD_INFO_PATH;
-
+// TODO: abanbon and replace with settigs
 // global variables
 @include_once "builds/config.php";
 function config($var, $default = "")
@@ -96,6 +63,7 @@ function config($var, $default = "")
     return nonull($config, $var, $default);
 }
 
+// TODO: should we even have them here? db connection vars can come from a single file
 $secrets = [];
 @include_once "secrets.php";
 function secret($var, $default = "")
@@ -108,129 +76,39 @@ $settings = json_decode(@file_get_contents(BUILDS_PATH . "settings.json"), true)
 if (!$settings) {
     $settings = [];
 }
-function setting($path, $default = "")
-{
-    global $settings;
-    return nonull($settings, $path, $default);
-}
 
-define("SITE_URL", (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . getSetting("general", "advanced", ["domain"], ""));
-define("DEV_MODE", getSetting("general", "advanced", ["dev_mode"], 1));
-define("DEBUG_MODE", getSetting("general", "advanced", ["debug_mode"], 1));
+include "scripts/server_settings.php";
 
-define("LOGO_PATH_LOCAL", "/" . setting(["theme", "copied_images", "logo", "path"], ""));
-define("LOGO_PATH_LOCAL_SM", getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]));
-
-$logo_file_path = getResponsiveImageBySize(LOGO_PATH_LOCAL, $image_default_dimensions["sm"], ["same-ext" => true]);
-$logo_file_path .= "?v=" . setting(["theme", "copied_images", "logo", "version"], "");
-define("LOGO_PATH_PUBLIC_SM", SITE_URL . $logo_file_path);
-
-define("FAVICON_PATH_LOCAL", "/" . setting(["theme", "copied_images", "favicon", "path"], ""));
-$favicon_file_path = getResponsiveImageBySize(FAVICON_PATH_LOCAL, $image_default_dimensions["tn"], ["same-ext" => true]);
-$favicon_file_path .= "?v=" . setting(["theme", "copied_images", "favicon", "version"], "");
-define("FAVICON_PATH_LOCAL_TN", $favicon_file_path);
-define("FAVICON_PUBLIC_LOCAL_TN", SITE_URL . $favicon_file_path);
-
+// TODO: define or setting
 $currency = "PLN"; // used by p24
 
-// use db
-date_default_timezone_set("Europe/Warsaw");
-include_once "helpers/db/connect.php";
+include "scripts/db_connect.php";
+include "scripts/errors.php";
 
-// use builds
-$link_route_path = @include BUILDS_PATH . "link_route_path.php";
-if (!$link_route_path) {
-    $link_route_path = [];
-}
+include "scripts/requests.php";
+include "scripts/images.php";
+include "scripts/previews.php";
 
-//debug($link_route_path);
-$link_module_path = @include BUILDS_PATH . "link_module_path.php";
-if (!$link_module_path) {
-    $link_module_path = [];
-}
+include "scripts/init_user.php";
 
-$link_event_paths = @include BUILDS_PATH . "link_event_paths.php";
-if (!$link_event_paths) {
-    $link_event_paths = [];
-}
-
-$link_module_block_php_path = @include BUILDS_PATH . "link_module_block_php_path.php";
-if (!$link_module_block_php_path) {
-    $link_module_block_php_path = [];
-}
-
-$link_module_block_form_path = @include BUILDS_PATH . "link_module_block_form_path.php";
-if (!$link_module_block_form_path) {
-    $link_module_block_form_path = [];
-}
-
-$link_module_form_path = @include BUILDS_PATH . "link_module_form_path.php";
-if (!$link_module_form_path) {
-    $link_module_form_path = [];
-}
-
-initUser();
-
-validateBasket();
-validateStock();
-prepareBasketData();
-
-// todo remove or tigger an event here
+// TODO: more to a module / can trigger an event here
 if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) {
     header("Location: /oplacono");
     die;
 }
 
-define("RELEASE", 2139);
-define("CSS_RELEASE", $versionCSS);
-define("JS_RELEASE", $versionJS);
-define("MODULES_RELEASE", $versionModules);
-
 // theme
 include "theme/variables.php";
-
-// requests
-$just_logged_in = false;
-
-if (!IS_XHR) {
-    if (isset($_SESSION["redirect"])) {
-        $redirect = $_SESSION["redirect"];
-        unset($_SESSION["redirect"]);
-        if ($_SERVER["REQUEST_URI"] != $redirect) {
-            header("Location: $redirect");
-            die;
-        }
-    }
-
-    if (isset($_SESSION["just_logged_in"])) {
-        $just_logged_in = true;
-        unset($_SESSION["just_logged_in"]);
-    }
-}
 
 if (DEV_MODE) {
     include "deployment/automatic_build.php";
 }
 
-// errors
-if (DEV_MODE) {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-}
 
+// TODO: move to the FB module instead
+include_once 'helpers/facebook_register.php';
 
-include_once 'helpers/facebook_register.php'; // should be a part of FB module instead
+include "scripts/preload_data.php";
 
-// preview
-if (isset($_POST["preview_params"])) {
-    $preview_params = json_decode($_POST["preview_params"], true);
-}
-
-// ssl redirect
-if (getSetting("general", "advanced", ["ssl"]) == 1 && nonull($_SERVER, "HTTPS", "on") == 'off') {
-    redirect(str_replace_first("http://", "https://", SITE_URL, 1));
-}
-
-$app["company_data"] = getSetting("general", "company", [], "");
+// in case e-mails are not configured (for debugging), kinda weird it's not a part of settings, it's more like a dev mode in reality, there is a need to define it on the code level
+define("DISPLAY_EMAIL", false);

@@ -27,28 +27,15 @@ query(
 
 triggerEvent("product_rating_change", ["product_id" => $product_id]);
 
-$input = ["product_id" => $product_id];
-include 'helpers/order/can_user_get_comment_rebate.php';
+$can_user_get_comment_rebate = canUserGetCommentRebate($product_id);
 
 if ($can_user_get_comment_rebate) {
-
-  function generateRandomString($length = 10)
-  {
-    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-      $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-    return $randomString;
-  }
-
-  $kod_rabatowy_example = generateRandomString(6);
+  $kod_rabatowy_example = randomString(6);
   $top = 0;
   while ($top < 3) {
     $top++;
     if (!fetchValue("SELECT 1 FROM kody_rabatowe WHERE kod = ? LIMIT 1", [$kod_rabatowy_example])) break;
-    $kod_rabatowy_example .= generateRandomString(1);
+    $kod_rabatowy_example .= randomString(2);
   }
   $kwota = 25;
   $ilosc = 1;

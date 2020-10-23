@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Use this function to fetch all data quickly from preloaded JSON
+ * $path: array
+ */
+function setting($path, $default = "")
+{
+    global $settings;
+    return nonull($settings, $path, $default);
+}
+
 function getSetting($dir, $file, $json_path, $default = null)
 {
     $res = getSettings($dir, $file, [$json_path]);

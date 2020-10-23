@@ -95,7 +95,7 @@ function getPasswordHash($val)
     return password_hash($val, PASSWORD_BCRYPT, ['cost' => 12]);
 }
 
-function generateAuthenticationToken($length = 10)
+function generateAuthenticationToken($length = 14)
 {
     return bin2hex(random_bytes($length));
 }

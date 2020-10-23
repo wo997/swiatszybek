@@ -35,7 +35,7 @@ if (!$user_data["authenticated"]) {
 $remember_me = nonull($_POST, "remember_me", 0);
 
 if ($remember_me) {
-  $remember_me_token = $user_data["user_id"] . "-" . generateAuthenticationToken(14);
+  $remember_me_token = $user_data["user_id"] . "-" . generateAuthenticationToken();
   setcookie("remember_me_token", $remember_me_token, time() + 3600 * 24 * 30);
   query("UPDATE users SET remember_me_token = ? WHERE user_id = " . intval($user_data["user_id"]), [$remember_me_token]);
 }

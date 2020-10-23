@@ -252,8 +252,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
       <div id="formComment" data-form>
         <h4 style="font-size: 22px; margin: 70px 0 10px;">Podziel się swoją opinią</h4>
         <?php
-        $input = ["product_id" => $product_id];
-        include 'helpers/order/can_user_get_comment_rebate.php';
+        $can_user_get_comment_rebate = canUserGetCommentRebate($product_id);
 
         if ($can_user_get_comment_rebate) {
           echo '<h4 class="rebate-info">W nagrodę otrzymasz kod rabatowy o wartości 25 zł <i class="fas fa-comments-dollar" style="font-size: 26px;margin: -8px 0;"></i></h4>';

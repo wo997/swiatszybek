@@ -1652,3 +1652,8 @@ img {
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+label > input[type="file"],
+label > input[type="file"] + input[type="submit"] {
+  display: none;
+}
