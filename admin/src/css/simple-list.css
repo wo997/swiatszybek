@@ -161,7 +161,7 @@ div.list .simple-list-row {
 }
 
 tr.simple-list-row td {
-  border-bottom: 1px solid #aaa;
+  border-bottom: 1px solid #ccc;
   padding: 5px;
 }
 @media only screen and (min-width: 1200px) {
@@ -175,10 +175,10 @@ tr.simple-list-row td {
   }
 }
 tr.simple-list-row td:first-child {
-  border-left: 1px solid #aaa;
+  border-left: 1px solid #ccc;
 }
 tr.simple-list-row td:last-child {
-  border-right: 1px solid #aaa;
+  border-right: 1px solid #ccc;
 }
 
 .simple-list.has_header .add_end {
