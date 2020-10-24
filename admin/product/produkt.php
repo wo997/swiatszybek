@@ -323,11 +323,13 @@ if ($product_id === -1) {
           onChange: (values, list) => {
             list.target.directChildren().forEach(row => {
               var value_id = row.find(`[name="value_id"]`).getValue();
-              row.find(`[name="value"]`).setValue(nonull(attribute_values[value_id], {
+              val = nonull(attribute_values[value_id], {
                 whole_value: ""
-              }).whole_value, {
-                quiet: true
-              });
+              }).whole_value
+              var value_name_field = row.find(`[name="value"]`);
+              if (value_name_field.getValue() != val) {
+                value_name_field.setValue(val);
+              }
             })
           }
         });

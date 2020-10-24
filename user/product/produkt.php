@@ -74,6 +74,41 @@ include "global/includes_for_cms_page.php";
 <script>
   var variants = <?= json_encode($variants) ?>;
   const PRODUCT_ID = <?= $product_data["product_id"] ?>;
+
+  var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id, attribute_id, parent_value_id FROM attribute_values'), true) ?>;
+  var attribute_values = {};
+  attribute_values_array.forEach(value => {
+    attribute_values[value["value_id"]] = {
+      value: value["value"],
+      attribute_id: +value["attribute_id"],
+      parent_value_id: +value["parent_value_id"],
+    };
+  });
+
+  Object.entries(attribute_values).forEach(([value_id, value]) => {
+    var whole_value = value.value;
+    var curr_level_value = value;
+    while (true) {
+      var parent_value_id = +curr_level_value.parent_value_id;
+      if (parent_value_id <= 0) {
+        break;
+      }
+      parent_value = attribute_values[parent_value_id];
+      if (!parent_value) {
+        break;
+      }
+      whole_value = parent_value.value + " ❯ " + whole_value;
+
+      curr_level_value = parent_value;
+    }
+    value.whole_value = whole_value;
+  });
+
+  var attributes_array = <?= json_encode(fetchArray('SELECT name, attribute_id FROM product_attributes'), true) ?>;
+  var attributes = {};
+  attributes_array.forEach(attribute => {
+    attributes[attribute["attribute_id"]] = attribute["name"];
+  });
 </script>
 
 <?php if ($product_data["cache_rating_count"] > 0) : ?>
@@ -145,6 +180,29 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
         <h1 class="h1"><?= $product_data["title"] ?></h1>
 
         <div>
+
+          <?php
+          $variant_attributes_layout = json_decode($product_data["variant_attributes_layout"], true);
+
+          foreach ($variant_attributes_layout as $attribute) {
+          ?>
+            <span class="field-title"><?= $attribute["attribute_name"] ?></span>
+            <radio-input name="attribute_<?= $attribute["attribute_id"] ?>" class="blocks" style='margin-bottom:20px;'>
+              <?php
+              foreach (json_decode($attribute["attribute_values_" . $attribute["attribute_id"]], true) as $value) {
+              ?>
+                <radio-option value="<?= $value["values"]["value_id"] ?>">
+                  <?= $value["values"]["value"] ?>
+                </radio-option>
+
+              <?php
+              }
+              ?>
+            </radio-input>
+          <?php
+          }
+
+          ?>
 
           <div class="variants">
             <?php

@@ -5,7 +5,7 @@
 <input type="number" name="product_list_count" class="field" />
 
 <span class="field-title">Sortuj wg</span>
-<radio-input name="order_by">
+<radio-input name="order_by" class="default">
   <radio-option value="new" data-default> Najnowsze </radio-option>
   <radio-option value="sale"> Bestsellery </radio-option>
   <radio-option value="cheap"> Najtańsze </radio-option>
@@ -13,7 +13,7 @@
 </radio-input>
 
 <span class="field-title">Układ</span>
-<radio-input name="layout">
+<radio-input name="layout" class="default">
   <radio-option value="grid"> Lista / Siatka </radio-option>
   <radio-option value="slider" data-default> Slider </radio-option>
 </radio-input>
