@@ -1804,9 +1804,9 @@ registerModalContent(
                   <div class="modules"></div>
                 </div>
 
-                <div>
+                <div style="width:100%">
                   <div class="scroll-panel scroll-shadow cms-wrapper">
-                    <div class="">
+                    <div>
                         <div style="position:absolute;display:none;z-index:1000" onclick="addContainer('',placeContainerAfter,true)" class="action_block insert_container_btn" data-tooltip="Wstaw kontener" data-position="center"> <i class="fas fa-plus-square"></i> </div>
                         <div class="cms" data-type="html"></div>
 

@@ -344,3 +344,82 @@ function createSimpleList(params = {}) {
   //set data-count etc.
   list.valuesChanged();
 }
+
+function validateSimpleList(field) {
+  var errors = [];
+  var valid = true;
+
+  var list = window[field.getAttribute("data-list-name")];
+  Object.entries(list.fields).forEach(([fieldName, fieldParams]) => {
+    if (fieldParams.unique) {
+      console.log(fieldName, fieldParams);
+      field.findAll(".list").forEach((listNode) => {
+        var rowValueInputs = {};
+        var rowsParent = variants.params.table
+          ? listNode.find("tbody")
+          : listNode;
+        rowsParent
+          .directChildren()
+          .filter((listRow) => {
+            return listRow.classList.contains(
+              variants.params.table
+                ? "simple-list-row"
+                : "simple-list-row-wrapper"
+            );
+          })
+          .forEach((listRowWrapper) => {
+            var rowField = listRowWrapper.find(`[name="${fieldName}"]`);
+
+            var fieldValue = rowField.getValue();
+
+            if (!(fieldValue === "" && fieldParams.allow_empty)) {
+              if (!rowValueInputs[fieldValue]) {
+                rowValueInputs[fieldValue] = [];
+              }
+              rowValueInputs[fieldValue].push(rowField);
+            }
+          });
+
+        Object.entries(rowValueInputs).forEach(([fieldValue, inputs]) => {
+          if (inputs.length < 2) return;
+
+          valid = false;
+          inputs.forEach((list_field) => {
+            var listFieldcheckRemoveRequired = () => {
+              inputs.forEach((list_field) => {
+                if (list_field.classList.contains("required")) {
+                  list_field.classList.remove("required");
+                  list_field.removeEventListener(
+                    "input",
+                    listFieldcheckRemoveRequired
+                  );
+                  list_field.removeEventListener(
+                    "change",
+                    listFieldcheckRemoveRequired
+                  );
+                }
+              });
+            };
+
+            if (!list_field.classList.contains("required")) {
+              list_field.classList.add("required");
+              list_field.addEventListener(
+                "input",
+                listFieldcheckRemoveRequired
+              );
+              list_field.addEventListener(
+                "change",
+                listFieldcheckRemoveRequired
+              );
+            }
+          });
+        });
+      });
+    }
+  });
+  if (!valid) {
+    errors.push("Wartości nie mogą się powtarzać");
+  }
+
+  return errors;
+}
