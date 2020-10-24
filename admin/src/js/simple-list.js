@@ -352,19 +352,14 @@ function validateSimpleList(field) {
   var list = window[field.getAttribute("data-list-name")];
   Object.entries(list.fields).forEach(([fieldName, fieldParams]) => {
     if (fieldParams.unique) {
-      console.log(fieldName, fieldParams);
       field.findAll(".list").forEach((listNode) => {
         var rowValueInputs = {};
-        var rowsParent = variants.params.table
-          ? listNode.find("tbody")
-          : listNode;
+        var rowsParent = list.params.table ? listNode.find("tbody") : listNode;
         rowsParent
           .directChildren()
           .filter((listRow) => {
             return listRow.classList.contains(
-              variants.params.table
-                ? "simple-list-row"
-                : "simple-list-row-wrapper"
+              list.params.table ? "simple-list-row" : "simple-list-row-wrapper"
             );
           })
           .forEach((listRowWrapper) => {
