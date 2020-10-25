@@ -314,8 +314,7 @@ function setValue(input, value = null, params = {}) {
     }
     input.datepicker.setDate(value);
   } else if (input.classList.contains("simple-list")) {
-    list = window[input.getAttribute("data-list-name")];
-    list.setValuesFromString(value);
+    input.list.setValuesFromString(value);
   } else if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[
@@ -413,8 +412,7 @@ function setValue(input, value = null, params = {}) {
 
 function getValue(input) {
   if (input.classList.contains("simple-list")) {
-    list = window[input.getAttribute("data-list-name")];
-    return JSON.stringify(list.values);
+    return JSON.stringify(input.list.values);
   }
   if (input.tagName == "RADIO-INPUT") {
     var value = "";
@@ -838,20 +836,32 @@ function preventLongPressMenu(node) {
   };
 }
 
-function loadScript(src, options = {}) {
-  var script = document.createElement("script");
-  Object.entries(options).forEach(([key, value]) => {
-    script.setAttribute(key, value);
-  });
-  script.src = src;
-  document.head.appendChild(script);
+function getSelectDisplayValue(select) {
+  return select.options[select.selectedIndex].text;
 }
 
-function loadStylesheet(href, options = {}) {
-  var link = document.createElement("link");
-  Object.entries(options).forEach(([key, value]) => {
-    link.setAttribute(key, value);
-  });
-  link.href = href;
-  document.head.appendChild(link);
+function isEquivalent(a, b) {
+  // Create arrays of property names
+  var aProps = Object.getOwnPropertyNames(a);
+  var bProps = Object.getOwnPropertyNames(b);
+
+  // If number of properties is different,
+  // objects are not equivalent
+  if (aProps.length != bProps.length) {
+    return false;
+  }
+
+  for (var i = 0; i < aProps.length; i++) {
+    var propName = aProps[i];
+
+    // If values of same property are not equal,
+    // objects are not equivalent
+    if (a[propName] !== b[propName]) {
+      return false;
+    }
+  }
+
+  // If we made it this far, objects
+  // are considered equivalent
+  return true;
 }

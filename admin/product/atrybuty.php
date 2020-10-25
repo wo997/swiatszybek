@@ -55,7 +55,7 @@
                 },
                 {
                     title: "",
-                    width: "95px",
+                    width: "97px",
                     render: (r, i, t) => {
                         return `
                             <div class="btn secondary" onclick="editAttribute(this,${i},${t.name})">Edytuj <i class="fa fa-cog"></i></div>

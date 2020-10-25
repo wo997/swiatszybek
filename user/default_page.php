@@ -12,7 +12,7 @@ endSection();
     <?php if (isset($sections["head"])) echo $sections["head"]; ?>
 </head>
 
-<body id="admin">
+<body>
     <div class="main-container">
         <?php include "global/header.php"; ?>
         <div class="main-container">

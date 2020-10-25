@@ -162,6 +162,7 @@ addForeignKey("variant", "product_id", "products");*/
 
 manageTableColumns("products", [
   ["name" => "variant_attributes_layout", "type" => "MEDIUMTEXT"],
+  ["name" => "variant_filters", "type" => "MEDIUMTEXT"],
 ]);
 
 manageTableColumns("variant", [

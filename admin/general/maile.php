@@ -14,10 +14,12 @@
     const main_email = nonull(company_data["main_email"], "").trim();
 
     domload(() => {
-        createSimpleList({
+        window.order_emails_list_id = createSimpleList({
             name: "order_emails",
             fields: {
-                email: {}
+                email: {
+                    unique: true
+                }
             },
             render: (data) => {
                 return `
@@ -41,10 +43,12 @@
             }
         });
 
-        createSimpleList({
+        window.daily_report_emails_list_id = createSimpleList({
             name: "daily_report_emails",
             fields: {
-                email: {}
+                email: {
+                    unique: true
+                }
             },
             render: (data) => {
                 return `
@@ -120,7 +124,7 @@
 
         <div class="form-space"></div>
 
-        <button class='add_main_to_orders btn secondary fill' onclick='order_emails.insertRow({email:"<?= $app["company_data"]["main_email"] ?>"})'>
+        <button class='add_main_to_orders btn secondary fill' onclick='simple_lists[order_emails_list_id].insertRow({email:"<?= $app["company_data"]["main_email"] ?>"})'>
             Dodaj <?= $app["company_data"]["main_email"] ?>
         </button>
 
@@ -128,7 +132,7 @@
 
         <div class="form-space"></div>
 
-        <button class='add_main_to_daily_report btn secondary fill' onclick='daily_report_emails.insertRow({email:"<?= $app["company_data"]["main_email"] ?>"})'>
+        <button class='add_main_to_daily_report btn secondary fill' onclick='simple_lists[daily_report_emails_list_id].insertRow({email:"<?= $app["company_data"]["main_email"] ?>"})'>
             Dodaj <?= $app["company_data"]["main_email"] ?>
         </button>
 
