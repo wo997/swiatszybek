@@ -243,21 +243,7 @@ function createSimpleList(params = {}) {
 
     list.valuesChanged();
 
-    list.target.findAll("[name]:not(.param-registered)").forEach((e) => {
-      var parent_named_node = e.findParentByAttribute("name", {
-        skip: 1,
-      });
-      // only direct named children communicate with subform
-      if (parent_named_node && parent_named_node.findParentNode(list.target)) {
-        return;
-      }
-
-      e.classList.add("param-registered");
-
-      e.addEventListener("change", () => {
-        list.valuesChanged();
-      });
-    });
+    list.registerFields(list.target);
 
     var n = begin ? 0 : listTarget.children.length - 1;
     var addedNode = $(listTarget.children[n]);
@@ -271,6 +257,8 @@ function createSimpleList(params = {}) {
     // do it after any sub components were created
     setFormData(values, addedNode);
 
+    list.registerFields(list.target);
+
     if (list.params.afterRowInserted) {
       list.params.afterRowInserted(addedNode, values, list, {
         user: user,
@@ -278,6 +266,25 @@ function createSimpleList(params = {}) {
     }
 
     return addedNode;
+  };
+
+  list.registerFields = (listTarget) => {
+    listTarget.findAll("[name]:not(.param-registered)").forEach((e) => {
+      var parent_named_node = e.findParentByAttribute("name", {
+        skip: 1,
+      });
+      // only direct named children communicate with subform
+      if (parent_named_node && parent_named_node.findParentNode(listTarget)) {
+        return;
+      }
+
+      e.classList.add("param-registered");
+
+      e.addEventListener("change", () => {
+        list.registerFields(listTarget);
+        list.valuesChanged();
+      });
+    });
   };
 
   list.valuesChanged = () => {

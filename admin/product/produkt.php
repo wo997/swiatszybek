@@ -95,12 +95,12 @@ if ($product_id === -1) {
     margin-left: 20px;
   }
 
-  #productForm [name="variant_filters"] .combo-select-wrapper {
+  #productForm [name="variant_filters"] .attribute-row {
     border: none;
     padding: 0;
   }
 
-  #productForm [name="variant_filters"] .combo-select-wrapper>.field-title {
+  #productForm [name="variant_filters"] .attribute-row>.field-title {
     display: none;
   }
 </style>
@@ -178,25 +178,28 @@ if ($product_id === -1) {
 
       options.onChange(combo, attribute_id, any_selected);
     }
+
+    var attribute_values = combo.findParentByAttribute("data-type", "attribute_values");
+    attribute_values.dispatchEvent(new Event("change"));
   }
 
-  function createComboSelect(combo, options = {}) {
+  function createAttributeSelect(combo, options = {}) {
     if (!combo.isEmpty()) {
       return;
     }
     attribute_options_html = "";
 
-    Object.entries(attribute_options_htmls).forEach(([attribute_id, html]) => {
-      if (!options.attribute_ids || options.attribute_ids.indexOf(+attribute_id) !== -1) {
-        attribute_options_html += html;
+    attribute_options_htmls.forEach(data => {
+      if (!options.attribute_ids || options.attribute_ids.indexOf(+data.attribute_id) !== -1) {
+        attribute_options_html += data.html;
       }
     });
 
     combo.insertAdjacentHTML("afterbegin", attribute_options_html);
-    combo.findAll("select:not(.registered)").forEach(select => {
-      select.classList.add("registered");
+    combo.findAll("select:not(.combo-attribute-registered)").forEach(select => {
+      select.classList.add("combo-attribute-registered");
 
-      var changeCallback = () => {
+      const changeCallback = () => {
         var wrapper = findParentByClassName(select, "combo-select-wrapper");
         comboSelectValuesChanged(wrapper, options);
 
@@ -223,29 +226,42 @@ if ($product_id === -1) {
         select.classList.add("warn-outline");
       });
     }
+
+    registerAnythingValues();
   }
 
 
-  function anythingValueChanged(anything) {
-    var checkbox = anything.find(`input[type="checkbox"]`);
-    var input = anything.find(`.field`);
+  function anythingValueChanged(anything_wrapper) {
+    var checkbox = anything_wrapper.find(`input[type="checkbox"]`);
+    var input = anything_wrapper.find(`.field`);
 
-    input.classList.toggle("hidden", !checkbox.checked);
+    var any_selected = checkbox.checked;
+    input.classList.toggle("hidden", !any_selected);
+
+    anything_wrapper.classList.toggle("any_selected", any_selected);
+
+    var attribute_values = anything_wrapper.findParentByAttribute("data-type", "attribute_values");
+    attribute_values.dispatchEvent(new Event("change"));
   }
 
   function registerAnythingValues() {
-    $$(".any-value-wrapper").forEach(anything => {
-      var checkbox = anything.find(`input[type="checkbox"]:not(.registered)`);
+    $$(".any-value-wrapper").forEach(anything_wrapper => {
+      var checkbox = anything_wrapper.find(`input[type="checkbox"]:not(.active-registered)`);
       if (!checkbox) return;
-      checkbox.classList.add("registered");
-      checkbox.addEventListener("change", () => {
-        var wrapper = findParentByClassName(checkbox, "any-value-wrapper");
-        anythingValueChanged(wrapper);
-      });
+      checkbox.classList.add("active-registered");
+      const changeCallback = () => {
+        anythingValueChanged(anything_wrapper);
+      };
+      checkbox.addEventListener("change", changeCallback);
 
-      var wrapper = findParentByClassName(checkbox, "any-value-wrapper");
-      anythingValueChanged(wrapper);
+      var field = anything_wrapper.find(`.field`);
+      if (field) {
+        field.addEventListener("change", changeCallback);
+      } else {
+        console.error(anything_wrapper, "Missing .field");
+      }
 
+      changeCallback();
     });
   }
 
@@ -662,9 +678,9 @@ if ($product_id === -1) {
       }
     });*/
 
-    //createComboSelect($(`#variantForm [name="attributes"]`));
+    //createAttributeSelect($(`#variantForm [name="attributes"]`));
 
-    createComboSelect($(`#productForm [name="attributes"]`), {
+    createAttributeSelect($(`#productForm [name="attributes"]`), {
       onChange: (combo, attribute_id, any_selected) => {
         variant_combo = $(`#variantForm [data-attribute_id="${attribute_id}"]`);
         if (variant_combo) {
@@ -672,8 +688,6 @@ if ($product_id === -1) {
         }
       }
     });
-
-
 
     registerAnythingValues();
 
@@ -768,7 +782,7 @@ if ($product_id === -1) {
             select_value_wrapper.classList.toggle("hidden", attribute_id == -1);
           }
 
-          createComboSelect(selected_attribute_values, {
+          createAttributeSelect(selected_attribute_values, {
             attribute_ids: [+attribute_id],
             onChange: (combo, attribute_id, any_selected) => {
 

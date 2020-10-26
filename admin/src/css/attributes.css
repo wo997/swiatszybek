@@ -25,25 +25,29 @@
   opacity: 0.7;
 }
 
-.combo-select-wrapper .fa-check-circle,
-.combo-select-wrapper .fa-times-circle {
+.attribute-row .fa-check-circle,
+.attribute-row .fa-times-circle {
   opacity: 1;
   color: var(--success-clr);
   margin-right: 5px;
   transition: 0.2s all;
 }
-.combo-select-wrapper .fa-check-circle {
+.attribute-row .fa-check-circle {
   color: var(--success-clr);
   width: 0;
 }
-.combo-select-wrapper .fa-times-circle {
+.attribute-row .fa-times-circle {
   color: #aaa;
   margin-left: -5px;
 }
 
-.combo-select-wrapper:not(.any_selected) .fa-check-circle,
-.combo-select-wrapper.any_selected .fa-times-circle {
+.attribute-row:not(.any_selected) .fa-check-circle,
+.attribute-row.any_selected .fa-times-circle {
   opacity: 0;
   transform: scale(0);
   pointer-events: none;
+}
+
+.any-value-wrapper .checkbox {
+  transform: translateY(-2px);
 }
