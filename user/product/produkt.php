@@ -181,7 +181,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
         <div>
 
-          <h3 class="h2">W TRAKCIE ROZWOJU</h3>
+          <h3 class="h1" style='color:var(--error-clr)'>W TRAKCIE ROZWOJU</h3>
 
           <?php
           $variant_attributes_layout = json_decode($product_data["variant_attributes_layout"], true);

@@ -306,7 +306,10 @@ if ($product_id === -1) {
     });
 
     createVariantFiltersSimpleList($(`[name="variant_filters"]`), {
-      title: "Pola wyboru wariantów"
+      title: "Pola wyboru wariantów",
+      onChange: (data, list) => {
+        choiceListChanged(list.target);
+      }
     });
 
     createSimpleList({
@@ -693,40 +696,53 @@ if ($product_id === -1) {
     select = $(select);
     var sub_filter = select.findParentByClassName(`sub_filter`);
     var filter_name = sub_filter.find(`[name="filter_name"]`);
-    filter_name.setValue(getSelectDisplayValue(select));
+    filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
   }
 
-  function choiceListChanged(sub_filter) {
-    sub_filter = $(sub_filter);
-    var select = sub_filter.find(`[name="attribute_id"]`);
-    var filter_options_list = sub_filter.find(`[name="filter_options"] .list`);
-    if (!sub_filter || !select || !filter_options_list) {
-      return;
-    }
-    filter_options_list.directChildren().forEach(e => {
-      selected_attribute_values = e.find(`[name='selected_attribute_values']`);
-
-      const attribute_id = select.value;
-
-      if (selected_attribute_values.find(`[data-attribute_id="${attribute_id}"]`)) {
-        // nothing to create
+  function choiceListChanged(filter_list) {
+    $$(`[name="variant_filters"]`).forEach(variant_filters_list_wrapper => {
+      var list = variant_filters_list_wrapper.find(`.list`);
+      if (!list) {
         return;
       }
+      list.directChildren().forEach(attribute_row_wrapper => {
 
-      selected_attribute_values.setContent("");
-
-      select_value_wrapper = e.find(`.select_value_wrapper`);
-      if (select_value_wrapper) {
-        select_value_wrapper.classList.toggle("hidden", select.value == -1);
-      }
-
-      createComboSelect(selected_attribute_values, {
-        attribute_ids: [+select.value],
-        onChange: (combo, attribute_id, any_selected) => {
-
+        var select = attribute_row_wrapper.find(`[name="attribute_id"]`);
+        if (!select) {
+          return;
         }
-      });
-    })
+
+        const attribute_id = select.value;
+
+        var list = attribute_row_wrapper.find(`[name="filter_options"] .list`);
+        if (!list) {
+          return;
+        }
+
+        list.directChildren().forEach(value_list_wrapper => {
+          var selected_attribute_values = value_list_wrapper.find(`[name='selected_attribute_values']`);
+
+          if (selected_attribute_values.find(`[data-attribute_id="${attribute_id}"]`)) {
+            // nothing to create
+            return;
+          }
+
+          selected_attribute_values.setContent("");
+
+          select_value_wrapper = value_list_wrapper.find(`.select_value_wrapper`);
+          if (select_value_wrapper) {
+            select_value_wrapper.classList.toggle("hidden", attribute_id == -1);
+          }
+
+          createComboSelect(selected_attribute_values, {
+            attribute_ids: [+attribute_id],
+            onChange: (combo, attribute_id, any_selected) => {
+
+            }
+          });
+        });
+      })
+    });
   }
 
   function createVariantFiltersSimpleList(node, options = {}) {
@@ -763,9 +779,7 @@ if ($product_id === -1) {
       beforeRowInserted: (row, values) => {
         createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
       },
-      onChange: (data, list) => {
-        choiceListChanged(list.target);
-      }
+      onChange: options.onChange
     });
   }
 
@@ -983,6 +997,8 @@ if ($product_id === -1) {
   <div name="attributes" data-type="attribute_values"></div>
 
   <div name="variant_filters"></div>
+
+  <h3 class="h1" style='color:var(--error-clr)'>WSZYSTKO PONIŻEJ TO CHUJ</h3>
 
   <div name="variants" data-validate="|count:1+"></div>
 

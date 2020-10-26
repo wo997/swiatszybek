@@ -174,8 +174,20 @@
             attribute_id: -1,
             name: "",
             data_type: Object.keys(attribute_data_types)[0],
-            attr_values: ""
+            attr_values: "",
+            categories: [],
         };
+
+        Object.keys(attribute_data_types).filter(data_type => {
+            return data_type.indexOf("list") != -1
+        }).forEach(data_type => {
+            simple_lists.filter(simple_list => {
+                return simple_list.params.name == `attribute_values_${data_type}`
+            }).forEach(simple_list => {
+                simple_list.setValues([]);
+                console.log(simple_list);
+            })
+        })
 
         if (row_id !== null) {
             data = table.results[row_id];
@@ -192,12 +204,6 @@
                     // setModalInitialState(formId);
                 }
             });
-        } else {
-            var list = window[`attribute_values_${data.data_type}`];
-
-            if (list) {
-                list.setValues([]);
-            };
         }
 
         setFormData(data, form);
