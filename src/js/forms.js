@@ -72,7 +72,7 @@ function showFieldErrors(field, errors = [], options = {}) {
     if (!correctIndicator && field.hasAttribute("data-validate")) {
       console.error(
         field,
-        "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded"
+        "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded. You can also change the error display type by adding warn-outline class to the field"
       );
       return;
     }
@@ -301,7 +301,7 @@ function fieldErrors(field) {
     }
 
     if (isList) {
-      var list = window[field.getAttribute("data-list-name")];
+      var list = field.list;
 
       if (params["count"]) {
         var errors = getSizeValidationErrors(
@@ -433,6 +433,15 @@ function setFormData(data, form, params = {}) {
     if (!e) {
       return;
     }
+
+    var parent_named_node = e.findParentByAttribute("name", {
+      skip: 1,
+    });
+    // only direct named children communicate with subform
+    if (parent_named_node && parent_named_node.findParentNode(form)) {
+      return;
+    }
+
     var value_params = {};
     if (params.data && params.data[name]) {
       value_params = params.data[name];
@@ -449,6 +458,8 @@ function setFormData(data, form, params = {}) {
     setFormInitialState(form);
   }
   resizeCallback();
+
+  form.setAttribute("data-loaded", true);
 }
 
 function getFormData(form, params = {}) {
@@ -578,6 +589,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function registerForm(form = null) {
+  form = $(form);
   if (form === null) {
     inputs = $(document.body).findAll(
       //"[data-form] [data-validate]:not([data-change-registered])"
@@ -586,7 +598,7 @@ function registerForm(form = null) {
     );
   } else {
     //inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
-    inputs = $(form).findAll(
+    inputs = form.findAll(
       `.field:not([data-change-registered]),
       [data-validate]:not([data-change-registered])`
     );
@@ -622,12 +634,18 @@ function registerForm(form = null) {
       !field.classList.contains("warn-outline") &&
       !field.classList.contains("no-wrap")
     ) {
+      // TODO: what if the user defined the field wrapper already? should be left as it is
       obj.insertAdjacentHTML("afterend", `<div class="field-wrapper"></div>`);
       var field_wrapper = obj.next();
       field_wrapper.appendChild(obj);
       if (field.classList.contains("inline")) {
         field_wrapper.classList.add("inline");
       }
+      var dwc = field.getAttribute("data-wrapper-class");
+      if (dwc) {
+        field_wrapper.classList.add(...dwc.split(" "));
+      }
+
       if (field.hasAttribute("data-validate")) {
         field_wrapper.insertAdjacentHTML(
           "beforeend",

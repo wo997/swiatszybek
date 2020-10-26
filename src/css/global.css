@@ -1657,3 +1657,7 @@ label > input[type="file"],
 label > input[type="file"] + input[type="submit"] {
   display: none;
 }
+
+.text-bottom {
+  vertical-align: bottom;
+}

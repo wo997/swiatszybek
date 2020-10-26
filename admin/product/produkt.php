@@ -32,7 +32,7 @@ $categories_csv = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FRO
 include_once "admin/product/attributes_service.php";
 
 $allAttributeOptions = getAllAttributeOptions();
-$allAttributeOptionsHTML = $allAttributeOptions["html"];
+$allAttributeOptionsHTMLArray = $allAttributeOptions["html_array"];
 
 $product_data["attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
@@ -86,10 +86,29 @@ if ($product_id === -1) {
   #productForm [name="variant_attributes_layout"] .scroll-panel>div {
     flex-grow: 0.2 !important;
   }
+
+  .sub_filter {
+    flex-grow: 1;
+  }
+
+  .sub_filter_indent {
+    margin-left: 20px;
+  }
+
+  #productForm [name="variant_filters"] .combo-select-wrapper {
+    border: none;
+    padding: 0;
+  }
+
+  #productForm [name="variant_filters"] .combo-select-wrapper>.field-title {
+    display: none;
+  }
 </style>
 <script>
   useTool("cms");
   useTool("preview");
+
+  var attribute_options_htmls = <?= json_encode($allAttributeOptionsHTMLArray) ?>;
 
   var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id, attribute_id, parent_value_id FROM attribute_values'), true) ?>;
   var attribute_values = {};
@@ -126,7 +145,13 @@ if ($product_id === -1) {
     attributes[attribute["attribute_id"]] = attribute["name"];
   });
 
-  function comboSelectValuesChanged(combo, options) {
+  var attribute_select_options = "";
+
+  attributes_array.forEach(attribute => {
+    attribute_select_options += `<option value="${attribute["attribute_id"]}">${attribute["name"]}</option>`;
+  });
+
+  function comboSelectValuesChanged(combo, options = {}) {
     combo.findAll("select").forEach(select => {
       for (option of select.options) {
         var childSelect = combo.find(`select[data-parent_value_id="${option.value}"]`);
@@ -155,7 +180,19 @@ if ($product_id === -1) {
     }
   }
 
-  function registerComboSelect(combo, options = {}) {
+  function createComboSelect(combo, options = {}) {
+    if (!combo.isEmpty()) {
+      return;
+    }
+    attribute_options_html = "";
+
+    Object.entries(attribute_options_htmls).forEach(([attribute_id, html]) => {
+      if (!options.attribute_ids || options.attribute_ids.indexOf(+attribute_id) !== -1) {
+        attribute_options_html += html;
+      }
+    });
+
+    combo.insertAdjacentHTML("afterbegin", attribute_options_html);
     combo.findAll("select:not(.registered)").forEach(select => {
       select.classList.add("registered");
 
@@ -175,6 +212,17 @@ if ($product_id === -1) {
 
       changeCallback();
     });
+
+    if (options.required) {
+      combo.findAll(".combo-select-wrapper").forEach(e => {
+        var select = e.find("select");
+        if (!select) {
+          return;
+        }
+        select.setAttribute("data-validate", "");
+        select.classList.add("warn-outline");
+      });
+    }
   }
 
 
@@ -256,7 +304,7 @@ if ($product_id === -1) {
         })
         lazyLoadImages();
       },
-      beforeRowInserted: (row, values, list, options) => {
+      afterRowInserted: (row, values, list, options) => {
         if (options.user) {
           row.find(".add_img_btn").dispatchEvent(new Event("click"));
           setCustomHeights();
@@ -268,6 +316,12 @@ if ($product_id === -1) {
       title: "Galeria zdjęć produktu",
     });
 
+    createVariantFiltersSimpleList($(`[name="variant_filters"]`), {
+      title: "Pola wyboru wariantów",
+      onChange: (data, list) => {
+        choiceListChanged(list.target);
+      }
+    });
 
     createSimpleList({
       name: "variant_attributes_layout",
@@ -301,11 +355,11 @@ if ($product_id === -1) {
       title: "Ułożenie filtrów wyboru produktu (można dać zdjęcie, preview whatever)",
       empty: `<div class='rect light-gray'>Brak</div>`,
       beforeRowInserted: (row, values) => {
-        list = row.find(`[name="attribute_values"]`);
-        var list_name = `attribute_values_${values.attribute_id}`;
-        list.setAttribute("name", list_name);
+        var list_name = `attribute_values`;
+        list = row.find(`[name="list_name"]`);
         createSimpleList({
           name: list_name,
+          wrapper: list,
           fields: {
             value_id: {},
             value: {},
@@ -432,7 +486,7 @@ if ($product_id === -1) {
         }
 
         // add attribues and values to the ordering list below variants so the use can organize the layout
-        var attributes_and_values = {};
+        /*var attributes_and_values = {};
         variants.values.forEach(e => {
           try {
             var value_ids = [];
@@ -527,7 +581,7 @@ if ($product_id === -1) {
               })
             }
           });
-        });
+        });*/
       },
       afterRowInserted: (row, values, list, options) => {
         if (options.user) {
@@ -608,14 +662,18 @@ if ($product_id === -1) {
       }
     });*/
 
-    registerComboSelect($(`#productForm [name="attributes"]`), {
+    //createComboSelect($(`#variantForm [name="attributes"]`));
+
+    createComboSelect($(`#productForm [name="attributes"]`), {
       onChange: (combo, attribute_id, any_selected) => {
         variant_combo = $(`#variantForm [data-attribute_id="${attribute_id}"]`);
-        variant_combo.classList.toggle("common", any_selected);
+        if (variant_combo) {
+          variant_combo.classList.toggle("common", any_selected);
+        }
       }
     });
 
-    registerComboSelect($(`#variantForm [name="attributes"]`));
+
 
     registerAnythingValues();
 
@@ -642,8 +700,155 @@ if ($product_id === -1) {
     window.productFormReady = true;
 
     // init just in case
-    variants.params.onChange(variants);
+    //variants.params.onChange(variants);
   });
+
+  function choiceAttributeChanged(select) {
+    if (!$('#productForm').getAttribute("data-loaded")) {
+      return;
+    }
+
+    select = $(select);
+    var sub_filter = select.findParentByClassName(`sub_filter`);
+    var filter_name = sub_filter.find(`[name="filter_name"]`);
+    filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
+  }
+
+  function choiceValuesChanged(values_combo) {
+    if (!$('#productForm').getAttribute("data-loaded")) {
+      return;
+    }
+
+    values_combo = $(values_combo);
+    var whole_value = "";
+    values_combo.findAll("select").forEach(e => {
+      if (e.value && !e.classList.contains("hidden")) {
+        whole_value += attribute_values[e.value].value + " ";
+      }
+    });
+    whole_value = whole_value.trim();
+
+    var sub_filter = values_combo.findParentByClassName(`sub_filter`);
+    var value_field = sub_filter.find(`[name="value"]`);
+    value_field.setValue(whole_value);
+  }
+
+  function choiceListChanged(filter_list) {
+    $$(`[name="variant_filters"]`).forEach(variant_filters_list_wrapper => {
+      var list = variant_filters_list_wrapper.find(`.list`);
+      if (!list) {
+        return;
+      }
+      list.directChildren().forEach(attribute_row_wrapper => {
+
+        var select = attribute_row_wrapper.find(`[name="attribute_id"]`);
+        if (!select) {
+          return;
+        }
+
+        const attribute_id = select.value;
+
+        var list = attribute_row_wrapper.find(`[name="filter_options"] .list`);
+        if (!list) {
+          return;
+        }
+
+        list.directChildren().forEach(value_list_wrapper => {
+          var selected_attribute_values = value_list_wrapper.find(`[name='selected_attribute_values']`);
+
+          if (selected_attribute_values.find(`[data-attribute_id="${attribute_id}"]`)) {
+            // nothing to create
+            return;
+          }
+
+          selected_attribute_values.setContent("");
+
+          select_value_wrapper = value_list_wrapper.find(`.select_value_wrapper`);
+          if (select_value_wrapper) {
+            select_value_wrapper.classList.toggle("hidden", attribute_id == -1);
+          }
+
+          createComboSelect(selected_attribute_values, {
+            attribute_ids: [+attribute_id],
+            onChange: (combo, attribute_id, any_selected) => {
+
+            },
+            required: true
+          });
+        });
+      })
+    });
+  }
+
+  function createVariantFiltersSimpleList(node, options = {}) {
+    createSimpleList({
+      wrapper: node,
+      fields: {
+        filter_name: {
+          unique: true
+        },
+        attribute_id: {},
+      },
+      render: (data) => {
+        return `
+          <div class='sub_filter'>
+            <div style='margin-right:6px' class="inline">
+              Atrybut
+              <i class="fas fa-info-circle" data-tooltip='1. W przypadku wyboru niestandardowego pozostaw puste i uzupełnij samą nazwę pola wyboru<br>2. Powiąż z atrybutem by umożliwić wyszukanie produktu'></i>
+              <select class="field inline no-wrap" name="attribute_id" onchange="choiceAttributeChanged(this)">
+                <option value='-1'>Brak</option>
+                ${attribute_select_options}
+              </select>
+            </div>
+            Nazwa pola wyboru:
+            <input type="text" class="field inline no-wrap" name="filter_name">
+            <div name="filter_options" class='sub_filter_indent'></div>
+          </div>
+        `;
+      },
+      default_row: {
+        filter_name: "",
+        attribute_id: -1,
+      },
+      title: nonull(options.title, "Dodatkowe pola wyboru"),
+      beforeRowInserted: (row, values) => {
+        createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
+      },
+      onChange: options.onChange
+    });
+  }
+
+  function createFilterOptionsSimpleList(node) {
+    createSimpleList({
+      wrapper: node,
+      fields: {
+        value: {},
+      },
+      render: (data) => {
+        return `
+          <div class='sub_filter'>
+            <div style='margin-right:6px' class="inline select_value_wrapper">
+              Wartość:
+              <div class='inline' name='selected_attribute_values' data-type="attribute_values" onchange="choiceValuesChanged(this)"></div>
+            </div>
+            Nazwa opcji: 
+            <input type='text' name="value" class="field inline no-wrap">
+            <div name="variant_filters" class='sub_filter_indent'></div>
+          </div>
+        `;
+      },
+      title: "Opcje",
+      default_row: {
+        value: "",
+      },
+      beforeRowInserted: (row, values) => {
+        createVariantFiltersSimpleList(row.find(`[name="variant_filters"]`));
+      },
+      onChange: (values, list) => {
+
+      }
+    });
+  }
 
   windowload(() => {
     // inject text counter after the form is registered in a right place,
@@ -824,7 +1029,11 @@ if ($product_id === -1) {
   </div>
 
   <div class="field-title">Atrybuty produktu (wspólne dla wszystkich wariantów produktu)</div>
-  <div name="attributes" data-type="attribute_values"><?= $allAttributeOptionsHTML ?></div>
+  <div name="attributes" data-type="attribute_values"></div>
+
+  <div name="variant_filters"></div>
+
+  <h3 class="h1" style='color:var(--error-clr)'>WSZYSTKO PONIŻEJ TO CHUJ</h3>
 
   <div name="variants" data-validate="|count:1+"></div>
 
@@ -878,7 +1087,7 @@ if ($product_id === -1) {
         </div>
 
         <div class="field-title">Atrybuty wariantu (inne niż wspólne dla wszystkich wariantów produktu)</div>
-        <div name="attributes" data-type="attribute_values"><?= $allAttributeOptionsHTML ?></div>
+        <div name="attributes" data-type="attribute_values"></div>
 
         <div class="field-title">
           Zdjecie

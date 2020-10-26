@@ -16,16 +16,38 @@ div.list .simple-list-row {
   margin: -1px;
   padding-right: 10px;
   display: flex;
-  align-items: center;
+  /*align-items: center;*/
 }
 
-.simple-list-row .btn.fas {
+.simple-list-row .btn.fas,
+.simple-list-row .add_btn_top {
   height: 25px;
-  width: 25px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   min-height: unset;
+}
+
+.simple-list-row .btn.fas {
+  width: 25px;
+}
+.simple-list .field {
+  padding: 0.25em 0.55em;
+}
+.simple-list-row .add_btn_top > *:not(:first-child) {
+  margin-left: 3px;
+}
+
+.simple-list .list {
+  border-radius: 4px;
+}
+.simple-list .list > :first-child {
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+.simple-list .list > :last-child {
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 
 .simple-list-row .remove-row-btn {
@@ -62,32 +84,28 @@ div.list .simple-list-row {
   border-right: none;
 }
 
-.simple-list.slim .field {
-  padding: 1px 5px;
-}
-
-.simple-list .add_btn {
-  border: none;
-  width: 100%;
-}
-
 .simple-list .add_begin {
+  margin-left: 6px;
+  /*width: 100%;*/
+}
+
+/*.simple-list .add_begin {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 .simple-list .add_end {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-}
+}*/
 
-.simple-list .list .add_begin {
+/*.simple-list .list .add_begin {
   margin-top: 10px;
 }
 .simple-list .list .add_end {
   margin-bottom: 5px;
-}
+}*/
 
-.simple-list.recursive .scroll-panel > div > .add_btn {
+/*.simple-list.recursive .scroll-panel > div > .add_btn {
   background: #5c5;
 }
 .simple-list.recursive
@@ -115,27 +133,45 @@ div.list .simple-list-row {
 
 .simple-list.recursive .list[data-depth="3"] {
   background: #ddf;
-}
+}*/
 
 /* if empty */
-.simple-list[data-count="0"] > div > div > div > .add_btn.add_begin {
+/*.simple-list[data-count="0"] > div > div > div > .add_btn.add_begin {
   border-radius: 4px;
 }
 .simple-list[data-count="0"] > div > div > div > .add_btn.add_end,
 .simple-list[data-count="0"] table {
   display: none;
 }
-.simple-list .list:empty + .add_btn.add_end {
+.simple-list .list .list:empty + .add_btn.add_end {
   display: none;
-}
+}*/
 
-/* slim paddings */
+/* slim styling start */
 .simple-list.slim .simple-list-row {
   padding-right: 5px;
 }
 .simple-list.slim .simple-list-row-wrapper {
   padding: 5px 0 5px 5px;
 }
+.simple-list.slim .field {
+  padding: 1px 5px;
+}
+.simple-list.slim .btn:not(.add_btn) {
+  padding: 1px 5px;
+  min-height: 1em;
+}
+@media only screen and (min-width: 1200px) {
+  .simple-list:not(.slim) td:first-child,
+  .simple-list:not(.slim) th:first-child {
+    padding-left: 10px;
+  }
+  .simple-list:not(.slim) td:last-child,
+  .simple-list:not(.slim) th:last-child {
+    padding-right: 10px;
+  }
+}
+/* slim styling end */
 
 .simple-list[data-count="0"].required > div > div > div > .add_btn.add_begin {
   background: #d33;
@@ -154,25 +190,9 @@ div.list .simple-list-row {
   text-align: left;
 }
 
-.simple-list.has_header .add_begin {
-  width: 90px;
-  border-radius: 4px;
-  margin-left: 3px;
-}
-
 tr.simple-list-row td {
   border-bottom: 1px solid #ccc;
   padding: 5px;
-}
-@media only screen and (min-width: 1200px) {
-  .simple-list:not(.slim) td:first-child,
-  .simple-list:not(.slim) th:first-child {
-    padding-left: 10px;
-  }
-  .simple-list:not(.slim) td:last-child,
-  .simple-list:not(.slim) th:last-child {
-    padding-right: 10px;
-  }
 }
 tr.simple-list-row td:first-child {
   border-left: 1px solid #ccc;
@@ -210,8 +230,18 @@ tr.simple-list-row td:last-child {
   display: none !important;
 }
 
-.simple-list .list > .simple-list-row-wrapper:first-child .btn-up,
-.simple-list .list > .simple-list-row-wrapper:last-child .btn-down,
+.simple-list
+  .list
+  > .simple-list-row-wrapper:first-child
+  > .simple-list-row
+  > .action_buttons
+  > .btn-up,
+.simple-list
+  .list
+  > .simple-list-row-wrapper:last-child
+  > .simple-list-row
+  > .action_buttons
+  > .btn-down,
 .simple-list table > tbody > tr:first-child > td > .btn-up,
 .simple-list table > tbody > tr:last-child > td > .btn-down {
   filter: contrast(0.3);

@@ -46,7 +46,7 @@ function getAllAttributeOptions()
 {
     global $attribute_data_types;
 
-    $res = "";
+    $attribute_htmls = [];
     $all_values = [];
 
     $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes");
@@ -54,36 +54,38 @@ function getAllAttributeOptions()
     foreach ($attributes as $attribute) {
         $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-        $res .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . " attribute-row' data-attribute_id='" . $attribute["attribute_id"] . "'>";
-        $res .= "<span class='field-title first'><i class='fas fa-check-circle'></i><i class='fas fa-times-circle' data-tooltip='Nie dotyczy'></i>" . $attribute["name"] . "</span>";
+        $html = "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . " attribute-row' data-attribute_id='" . $attribute["attribute_id"] . "'>";
+        $html .= "<span class='field-title first'><i class='fas fa-check-circle'></i><i class='fas fa-times-circle' data-tooltip='Nie dotyczy'></i>" . $attribute["name"] . "</span>";
 
         if ($any) {
-            $res .=  '
+            $html .=  '
               <label>
                 <input type="checkbox" class="has_attribute">
                 <div class="checkbox"></div>
               </label>
             ';
             if (strpos($attribute["data_type"], "color") !== false) {
-                $res .=  '<input type="text" class="jscolor field attribute_value" style="display: inline-block;width:65px">';
+                $html .=  '<input type="text" class="jscolor field attribute_value" style="display: inline-block;width:65px">';
             } else if (strpos($attribute["data_type"], "number") !== false) {
-                $res .=  '<input type="number" class="field attribute_value">';
+                $html .=  '<input type="number" class="field attribute_value">';
             } else if (strpos($attribute["data_type"], "date") !== false) {
-                $res .=  '<input type="text" class="field default_datepicker inline attribute_value">';
+                $html .=  '<input type="text" class="field default_datepicker inline attribute_value">';
             } else {
-                $res .=  '<input type="text" class="field attribute_value">';
+                $html .=  '<input type="text" class="field attribute_value">';
             }
         } else {
             $values = getAttributeValues($attribute["attribute_id"]);
             $all_values[] = $values;
-            $res .=  printSelectValuesOfAttribute($values, $attribute);
+            $html .=  printSelectValuesOfAttribute($values, $attribute);
         }
 
-        $res .=  "</div>";
+        $html .=  "</div>";
+
+        $attribute_htmls[$attribute["attribute_id"]] = $html;
     }
 
     return [
-        "html" => $res,
+        "html_array" => $attribute_htmls,
         "values" => $all_values,
     ];
 }

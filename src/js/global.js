@@ -179,11 +179,14 @@ function validURL(str) {
   return !!pattern.test(str);
 }
 
-// also kernel.php
-function getLink(phrase) {
+// TODO: prototypes make the code cleaner?
+String.prototype.replacePolishLetters = function () {
+  return replacePolishLetters(this);
+};
+
+// also links.php
+function replacePolishLetters(string) {
   const pl = [
-    ",",
-    " ",
     "ę",
     "Ę",
     "ó",
@@ -204,8 +207,6 @@ function getLink(phrase) {
     "Ń",
   ];
   const en = [
-    "-",
-    "-",
     "e",
     "E",
     "o",
@@ -225,11 +226,19 @@ function getLink(phrase) {
     "n",
     "N",
   ];
-  var le = pl.length;
-  for (let i = 0; i < le; i++) {
-    phrase = phrase.replace(new RegExp(`${pl[i]}`, "g"), en[i]);
+
+  var len = pl.length;
+  for (let i = 0; i < len; i++) {
+    string = string.replace(new RegExp(`${pl[i]}`, "g"), en[i]);
   }
-  return phrase
+  return string;
+}
+
+// also links.php
+function getLink(string) {
+  return string
+    .replacePolishLetters()
+    .replace(/[, ]+/g, "-")
     .toLowerCase()
     .replace(/[^(a-zA-Z0-9-)]/g, "")
     .replace(/-+/g, "-");
@@ -314,8 +323,7 @@ function setValue(input, value = null, params = {}) {
     }
     input.datepicker.setDate(value);
   } else if (input.classList.contains("simple-list")) {
-    list = window[input.getAttribute("data-list-name")];
-    list.setValuesFromString(value);
+    input.list.setValuesFromString(value);
   } else if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[
@@ -413,8 +421,7 @@ function setValue(input, value = null, params = {}) {
 
 function getValue(input) {
   if (input.classList.contains("simple-list")) {
-    list = window[input.getAttribute("data-list-name")];
-    return JSON.stringify(list.values);
+    return JSON.stringify(input.list.values);
   }
   if (input.tagName == "RADIO-INPUT") {
     var value = "";
@@ -632,7 +639,10 @@ function findScrollableParent(elem, options = {}) {
   var parent = findParent(
     elem,
     (some_parent) => {
-      if (some_parent.classList.contains("scroll-panel")) {
+      if (
+        some_parent.classList.contains("scroll-panel") &&
+        !some_parent.classList.contains("horizontal")
+      ) {
         return elem;
       }
       elem = elem.parent();
@@ -838,20 +848,32 @@ function preventLongPressMenu(node) {
   };
 }
 
-function loadScript(src, options = {}) {
-  var script = document.createElement("script");
-  Object.entries(options).forEach(([key, value]) => {
-    script.setAttribute(key, value);
-  });
-  script.src = src;
-  document.head.appendChild(script);
+function getSelectDisplayValue(select) {
+  return select.options[select.selectedIndex].text;
 }
 
-function loadStylesheet(href, options = {}) {
-  var link = document.createElement("link");
-  Object.entries(options).forEach(([key, value]) => {
-    link.setAttribute(key, value);
-  });
-  link.href = href;
-  document.head.appendChild(link);
+function isEquivalent(a, b) {
+  // Create arrays of property names
+  var aProps = Object.getOwnPropertyNames(a);
+  var bProps = Object.getOwnPropertyNames(b);
+
+  // If number of properties is different,
+  // objects are not equivalent
+  if (aProps.length != bProps.length) {
+    return false;
+  }
+
+  for (var i = 0; i < aProps.length; i++) {
+    var propName = aProps[i];
+
+    // If values of same property are not equal,
+    // objects are not equivalent
+    if (a[propName] !== b[propName]) {
+      return false;
+    }
+  }
+
+  // If we made it this far, objects
+  // are considered equivalent
+  return true;
 }

@@ -1,19 +1,23 @@
 /* js[admin] */
+
+var simple_lists = [];
 function createSimpleList(params = {}) {
   var list = {};
 
-  window[params.name] = list;
+  //window[params.name] = list;
+  const simple_list_id = simple_lists.length;
+  simple_lists.push(list);
 
-  list.name = params.name;
+  //list.name = params.name;
+  //list.form_name = nonull(params.form_name, params.name);
   list.fields = params.fields;
   list.params = params;
   list.recursive = nonull(params.recursive, 0);
 
-  list.wrapper = $(`[name="${params.name}"]`);
+  list.wrapper = nonull(params.wrapper, $(`[name="${params.name}"]`));
+  list.wrapper.list = list;
   list.wrapper.classList.add("simple-list");
   list.wrapper.classList.add("warn-triangle");
-
-  list.wrapper.setAttribute("data-list-name", list.name);
 
   if (!params.title) {
     params.title = "";
@@ -23,31 +27,41 @@ function createSimpleList(params = {}) {
     list.wrapper.classList.add("recursive");
   }
 
-  var btnTop = "";
+  /*var btnTop = "";*/
   var btnTopTitle = "";
+
+  btnTopTitle = `
+    <div class="btn primary add_btn add_begin" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,true)">
+      Dodaj <i class="fas fa-chevron-up"></i>
+    </div>
+    <div class="btn primary add_btn add_end" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">
+      Dodaj <i class="fas fa-chevron-down"></i>
+    </div>
+  `;
   if (params.header) {
-    btnTopTitle = `
-      <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,false)">
-        Dodaj <i class="fas fa-plus"></i>
-      </div>
-    `;
     list.wrapper.classList.add("has_header");
-  } else {
+  } /*else {
     btnTop = `
-      <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>
+      <div class="btn primary add_btn add_begin" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,true)">
+        Dodaj <i class="fas fa-chevron-up"></i>
+      </div>
+      <div class="btn primary add_btn add_begin" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">
+        Dodaj <i class="fas fa-chevron-down"></i>
+      </div>
       `;
-  }
+  }*/
+
+  //${btnTop}
 
   list.wrapper.insertAdjacentHTML(
     "afterbegin",
     `
       <div class="${params.title ? "field-title" : ""}">
-        <span>${params.title} ${btnTopTitle}</span>
+        <span>${params.title}</span> ${btnTopTitle}
       </div>
       <div style='display:flex'>
         <div class='scroll-panel scroll-shadow horizontal'>
           <div style="flex-grow: 1;">
-            ${btnTop}
             ${
               params.table
                 ? `<table class="list"><thead><tr>${nonull(
@@ -55,9 +69,6 @@ function createSimpleList(params = {}) {
                   )}</tr></thead><tbody></tbody></table>`
                 : `<div class="list"></div>`
             }
-            <div class="btn primary add_btn add_end main_add_btn" onclick="${
-              list.name
-            }.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i>
             </div>
           </div>
         </div>
@@ -69,15 +80,22 @@ function createSimpleList(params = {}) {
     `
   );
 
+  //<div class="btn primary add_btn add_end main_add_btn" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i>
+
   list.insertRowFromBtn = (btn, begin = true, user = true) => {
     var row = list.insertRow(
       params.default_row,
-      params.table
-        ? btn.parent().find(".list tbody")
-        : btn.parent().find(".list"),
+      btn.parent().next().find(".list"),
       begin,
       user
     );
+  };
+
+  list.insertRowFromTopBtn = (btn, begin = true, user = true) => {
+    var add_btn = btn.parent().next().find(".add_btn");
+    if (add_btn) {
+      list.insertRowFromBtn(add_btn, begin, user);
+    }
   };
 
   list.target = params.table
@@ -164,18 +182,22 @@ function createSimpleList(params = {}) {
     var btnAddTop = "";
 
     if (depth < list.recursive) {
-      btnAddTop = `<div class="btn secondary add_btn_top" style="margin-right:5px;white-space:nowrap" onclick="${list.name}.insertRowFromBtn($(this).parent().next(),true)" data-tooltip="Powiąż wartości (poziom niżej)">
-            <i class="fas fa-plus"></i>
-            <i class="fas fa-list-ul add_btn_top"></i>
-          </div>`;
+      btnAddTop = `<div class="btn primary add_btn_top" style="margin-right:5px;white-space:nowrap" onclick="simple_lists[${simple_list_id}].insertRowFromTopBtn(this,true)" data-tooltip="Dodaj wartości podrzędne">
+        <i class="fas fa-plus"></i>
+        <i class="fas fa-list-ul add_btn_top"></i>
+      </div>`;
 
       btnTop = `
-        <div class="btn primary add_btn add_begin" onclick="${list.name}.insertRowFromBtn(this,true)">Dodaj <i class="fas fa-plus"></i></div>
-        `;
-
-      btnBottom = `
-          <div class="btn primary add_btn add_end" onclick="${list.name}.insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i></div>
-        `;
+        <div class='field-title'>
+          Wartości podrzędne
+          <div class="btn primary add_btn add_begin" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,true)">
+            Dodaj <i class="fas fa-chevron-up"></i>
+          </div>
+          <div class="btn primary add_btn add_end" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">
+            Dodaj <i class="fas fa-chevron-down"></i>
+          </div>
+        </div>
+      `;
     }
 
     if (params.table) {
@@ -184,15 +206,11 @@ function createSimpleList(params = {}) {
         `<tr class='simple-list-row'>
             ${params.render()}
             <td class='action_buttons'>
-              <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());${
-                list.name
-              }.valuesChanged();"></i>
-              <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());${
-                list.name
-              }.valuesChanged();"></i>
+              <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());simple_lists[${simple_list_id}].valuesChanged();"></i>
+              <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());simple_lists[${simple_list_id}].valuesChanged();"></i>
               <i class="btn secondary fas fa-times remove-row-btn" 
-                onclick="${list.name}.removeRowFromBtn(this);
-                ${list.name}.valuesChanged();">
+                onclick="simple_lists[${simple_list_id}].removeRowFromBtn(this);
+                simple_lists[${simple_list_id}].valuesChanged();">
               </i>
             </td>
         </tr>`
@@ -206,15 +224,11 @@ function createSimpleList(params = {}) {
                 <div style="width:5px;margin-left:auto"></div>
                 ${btnAddTop}
                 <div class='action_buttons'>
-                  <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());${
-                    list.name
-                  }.valuesChanged();"></i>
-                  <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());${
-                    list.name
-                  }.valuesChanged();"></i>
+                  <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());simple_lists[${simple_list_id}].valuesChanged();"></i>
+                  <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());simple_lists[${simple_list_id}].valuesChanged();"></i>
                   <i class="btn secondary fas fa-times remove-row-btn" 
-                    onclick="${list.name}.removeRowFromBtn(this);
-                    ${list.name}.valuesChanged();">
+                    onclick="simple_lists[${simple_list_id}].removeRowFromBtn(this);
+                    simple_lists[${simple_list_id}].valuesChanged();">
                   </i>
                 </div>
             </div>
@@ -230,6 +244,14 @@ function createSimpleList(params = {}) {
     list.valuesChanged();
 
     list.target.findAll("[name]:not(.param-registered)").forEach((e) => {
+      var parent_named_node = e.findParentByAttribute("name", {
+        skip: 1,
+      });
+      // only direct named children communicate with subform
+      if (parent_named_node && parent_named_node.findParentNode(list.target)) {
+        return;
+      }
+
       e.classList.add("param-registered");
 
       e.addEventListener("change", () => {
@@ -316,22 +338,33 @@ function createSimpleList(params = {}) {
 
     //list.outputNode.value = JSON.stringify(list.values);
 
-    list.target.findAll(".simple-list-row-wrapper").forEach((listRow) => {
-      var empty = !listRow.find(".sub-list").find(".simple-list-row-wrapper");
+    if (list.recursive) {
+      list.target.findAll(".simple-list-row-wrapper").forEach((listRow) => {
+        var parent_sl_node = listRow.findParentByClassName("simple-list");
 
-      var add_btn_top = listRow.find(".add_btn_top");
-      if (add_btn_top) {
-        add_btn_top.style.display = empty ? "" : "none";
-      }
-      var add_begin = listRow.find(".add_begin");
-      if (add_begin) {
-        add_begin.style.display = empty ? "none" : "";
-      }
-    });
+        // only direct named children communicate with subform
+        if (list.wrapper != parent_sl_node) {
+          return;
+        }
+
+        var empty = !listRow.find(".sub-list").find(".simple-list-row-wrapper");
+
+        var add_btn_top = listRow.find(".add_btn_top");
+        if (add_btn_top) {
+          add_btn_top.style.display = empty ? "" : "none";
+        }
+        var sublist = listRow.find(".sub-list");
+        if (sublist) {
+          sublist.style.display = empty ? "none" : "";
+        }
+      });
+    }
 
     list.wrapper.dispatchEvent(new Event("change"));
-    if (params.onChange) {
+    if (params.onChange && !list.during_change) {
+      list.during_change = true;
       params.onChange(list.values, list);
+      delete list.during_change;
     }
 
     list.wrapper.setAttribute("data-count", list.values.length);
@@ -343,13 +376,15 @@ function createSimpleList(params = {}) {
 
   //set data-count etc.
   list.valuesChanged();
+
+  return simple_list_id;
 }
 
 function validateSimpleList(field) {
   var errors = [];
   var valid = true;
 
-  var list = window[field.getAttribute("data-list-name")];
+  var list = field.list;
   Object.entries(list.fields).forEach(([fieldName, fieldParams]) => {
     if (fieldParams.unique) {
       field.findAll(".list").forEach((listNode) => {
@@ -380,7 +415,7 @@ function validateSimpleList(field) {
 
           valid = false;
           inputs.forEach((list_field) => {
-            var listFieldcheckRemoveRequired = () => {
+            /*var listFieldcheckRemoveinsertRowFromBtn  = () => {
               inputs.forEach((list_field) => {
                 if (list_field.classList.contains("required")) {
                   list_field.classList.remove("required");
@@ -394,7 +429,7 @@ function validateSimpleList(field) {
                   );
                 }
               });
-            };
+            };*/
 
             if (!list_field.classList.contains("required")) {
               list_field.classList.add("required");
