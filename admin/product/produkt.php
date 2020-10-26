@@ -212,6 +212,17 @@ if ($product_id === -1) {
 
       changeCallback();
     });
+
+    if (options.required) {
+      combo.findAll(".combo-select-wrapper").forEach(e => {
+        var select = e.find("select");
+        if (!select) {
+          return;
+        }
+        select.setAttribute("data-validate", "");
+        select.classList.add("warn-outline");
+      });
+    }
   }
 
 
@@ -693,10 +704,33 @@ if ($product_id === -1) {
   });
 
   function choiceAttributeChanged(select) {
+    if (!$('#productForm').getAttribute("data-loaded")) {
+      return;
+    }
+
     select = $(select);
     var sub_filter = select.findParentByClassName(`sub_filter`);
     var filter_name = sub_filter.find(`[name="filter_name"]`);
     filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
+  }
+
+  function choiceValuesChanged(values_combo) {
+    if (!$('#productForm').getAttribute("data-loaded")) {
+      return;
+    }
+
+    values_combo = $(values_combo);
+    var whole_value = "";
+    values_combo.findAll("select").forEach(e => {
+      if (e.value && !e.classList.contains("hidden")) {
+        whole_value += attribute_values[e.value].value + " ";
+      }
+    });
+    whole_value = whole_value.trim();
+
+    var sub_filter = values_combo.findParentByClassName(`sub_filter`);
+    var value_field = sub_filter.find(`[name="value"]`);
+    value_field.setValue(whole_value);
   }
 
   function choiceListChanged(filter_list) {
@@ -738,7 +772,8 @@ if ($product_id === -1) {
             attribute_ids: [+attribute_id],
             onChange: (combo, attribute_id, any_selected) => {
 
-            }
+            },
+            required: true
           });
         });
       })
@@ -794,7 +829,7 @@ if ($product_id === -1) {
           <div class='sub_filter'>
             <div style='margin-right:6px' class="inline select_value_wrapper">
               Wartość:
-              <div class='inline' name='selected_attribute_values' data-type="attribute_values"></div>
+              <div class='inline' name='selected_attribute_values' data-type="attribute_values" onchange="choiceValuesChanged(this)"></div>
             </div>
             Nazwa opcji: 
             <input type='text' name="value" class="field inline no-wrap">

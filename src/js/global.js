@@ -630,7 +630,10 @@ function findScrollableParent(elem, options = {}) {
   var parent = findParent(
     elem,
     (some_parent) => {
-      if (some_parent.classList.contains("scroll-panel")) {
+      if (
+        some_parent.classList.contains("scroll-panel") &&
+        !some_parent.classList.contains("horizontal")
+      ) {
         return elem;
       }
       elem = elem.parent();

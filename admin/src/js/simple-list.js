@@ -244,6 +244,14 @@ function createSimpleList(params = {}) {
     list.valuesChanged();
 
     list.target.findAll("[name]:not(.param-registered)").forEach((e) => {
+      var parent_named_node = e.findParentByAttribute("name", {
+        skip: 1,
+      });
+      // only direct named children communicate with subform
+      if (parent_named_node && parent_named_node.findParentNode(list.target)) {
+        return;
+      }
+
       e.classList.add("param-registered");
 
       e.addEventListener("change", () => {

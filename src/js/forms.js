@@ -72,7 +72,7 @@ function showFieldErrors(field, errors = [], options = {}) {
     if (!correctIndicator && field.hasAttribute("data-validate")) {
       console.error(
         field,
-        "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded"
+        "To validate the form you need to be register it with registerForm(form) or add data-form attribute before content is loaded. You can also change the error display type by adding warn-outline class to the field"
       );
       return;
     }
@@ -458,6 +458,8 @@ function setFormData(data, form, params = {}) {
     setFormInitialState(form);
   }
   resizeCallback();
+
+  form.setAttribute("data-loaded", true);
 }
 
 function getFormData(form, params = {}) {
@@ -587,6 +589,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function registerForm(form = null) {
+  form = $(form);
   if (form === null) {
     inputs = $(document.body).findAll(
       //"[data-form] [data-validate]:not([data-change-registered])"
@@ -595,7 +598,7 @@ function registerForm(form = null) {
     );
   } else {
     //inputs = $(form).findAll("[data-validate]:not([data-change-registered])");
-    inputs = $(form).findAll(
+    inputs = form.findAll(
       `.field:not([data-change-registered]),
       [data-validate]:not([data-change-registered])`
     );
