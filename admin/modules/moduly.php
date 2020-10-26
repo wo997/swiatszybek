@@ -98,4 +98,4 @@
 <div class="module_list"></div>
 <div class="module_info panel"></div>
 
-<?php include "admin/default_page.php"; ?>
+<?php include "admin/page_template.php"; ?>

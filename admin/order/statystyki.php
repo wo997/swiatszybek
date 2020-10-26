@@ -270,4 +270,4 @@
     <table class="variants datatable" style="margin: 0 auto;max-width:1300px"></table>
 </div>
 
-<?php include "admin/default_page.php"; ?>
+<?php include "admin/page_template.php"; ?>
