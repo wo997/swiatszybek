@@ -139,11 +139,11 @@ div.list .simple-list-row {
 /*.simple-list[data-count="0"] > div > div > div > .add_btn.add_begin {
   border-radius: 4px;
 }
-.simple-list[data-count="0"] > div > div > div > .add_btn.add_end,
+.simple-list[data-count="0"] > div > div > div > .add_btn.add_end,*/
 .simple-list[data-count="0"] table {
   display: none;
 }
-.simple-list .list .list:empty + .add_btn.add_end {
+/*.simple-list .list .list:empty + .add_btn.add_end {
   display: none;
 }*/
 

@@ -174,6 +174,9 @@ function createSimpleList(params = {}) {
     if (listTarget === null) {
       listTarget = list.target;
     }
+    if (list.params.table) {
+      listTarget = listTarget.find("tbody");
+    }
 
     var depth = parseInt(listTarget.getAttribute("data-depth"));
 
@@ -343,8 +346,6 @@ function createSimpleList(params = {}) {
 
     list.values = getDirectRows(list.target, 1);
 
-    //list.outputNode.value = JSON.stringify(list.values);
-
     if (list.recursive) {
       list.target.findAll(".simple-list-row-wrapper").forEach((listRow) => {
         var parent_sl_node = listRow.findParentByClassName("simple-list");
@@ -367,21 +368,21 @@ function createSimpleList(params = {}) {
       });
     }
 
+    list.wrapper.setAttribute("data-count", list.values.length);
+
     list.wrapper.dispatchEvent(new Event("change"));
     if (params.onChange && !list.during_change) {
       list.during_change = true;
       params.onChange(list.values, list);
       delete list.during_change;
     }
-
-    list.wrapper.setAttribute("data-count", list.values.length);
   };
 
   if (params.output) {
     $(params.output).setAttribute("data-type", "simple-list");
   }
 
-  //set data-count etc.
+  // set data-count etc.
   list.valuesChanged();
 
   return simple_list_id;
