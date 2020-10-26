@@ -821,7 +821,7 @@ if ($product_id === -1) {
                 ${attribute_select_options}
               </select>
             </div>
-            Nazwa pola wyboru:
+            Tytuł pola wyboru:
             <input type="text" class="field inline no-wrap" name="filter_name">
             <div name="filter_options" class='sub_filter_indent'></div>
           </div>
