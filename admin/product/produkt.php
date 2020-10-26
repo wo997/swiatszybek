@@ -227,6 +227,12 @@ if ($product_id === -1) {
       });
     }
 
+    if (options.use_all) {
+      combo.findAll(".has_attribute").forEach(e => {
+        e.setValue(1);
+      });
+    }
+
     registerAnythingValues();
   }
 
@@ -787,7 +793,8 @@ if ($product_id === -1) {
             onChange: (combo, attribute_id, any_selected) => {
 
             },
-            required: true
+            required: true,
+            use_all: true,
           });
         });
       })
