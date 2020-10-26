@@ -146,4 +146,4 @@
         </div>
     </div>
 </div>
-<?php include "admin/default_page.php"; ?>
+<?php include "admin/page_template.php"; ?>

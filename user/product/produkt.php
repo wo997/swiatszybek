@@ -419,4 +419,4 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
   </script>
 <?php endif ?>
 
-<?php include "user/default_page.php"; ?>
+<?php include "user/page_template.php"; ?>

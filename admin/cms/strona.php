@@ -162,4 +162,4 @@ $static = checkUrl($page_data["link"]);
     </div>
 </div>
 
-<?php include "admin/default_page.php"; ?>
+<?php include "admin/page_template.php"; ?>

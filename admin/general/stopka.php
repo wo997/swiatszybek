@@ -86,4 +86,4 @@
     <div name="page_footer" data-type="html" class="cms preview_html"></div>
 </div>
 
-<?php include "admin/default_page.php"; ?>
+<?php include "admin/page_template.php"; ?>
