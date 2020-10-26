@@ -179,11 +179,14 @@ function validURL(str) {
   return !!pattern.test(str);
 }
 
-// also kernel.php
-function getLink(phrase) {
+// TODO: prototypes make the code cleaner?
+String.prototype.replacePolishLetters = function () {
+  return replacePolishLetters(this);
+};
+
+// also links.php
+function replacePolishLetters(string) {
   const pl = [
-    ",",
-    " ",
     "ę",
     "Ę",
     "ó",
@@ -204,8 +207,6 @@ function getLink(phrase) {
     "Ń",
   ];
   const en = [
-    "-",
-    "-",
     "e",
     "E",
     "o",
@@ -225,11 +226,19 @@ function getLink(phrase) {
     "n",
     "N",
   ];
-  var le = pl.length;
-  for (let i = 0; i < le; i++) {
-    phrase = phrase.replace(new RegExp(`${pl[i]}`, "g"), en[i]);
+
+  var len = pl.length;
+  for (let i = 0; i < len; i++) {
+    string = string.replace(new RegExp(`${pl[i]}`, "g"), en[i]);
   }
-  return phrase
+  return string;
+}
+
+// also links.php
+function getLink(string) {
+  return string
+    .replacePolishLetters()
+    .replace(/[, ]+/g, "-")
     .toLowerCase()
     .replace(/[^(a-zA-Z0-9-)]/g, "")
     .replace(/-+/g, "-");

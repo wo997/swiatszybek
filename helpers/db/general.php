@@ -71,6 +71,8 @@ function getLastInsertedId()
  */
 function clean($x)
 {
+  // TODO: try this for xml escaping maybe?
+  //$str = htmlentities($str,ENT_QUOTES,'UTF-8');
   return preg_replace("/[^a-zA-Z0-9_ ,.]/", "", $x);
 }
 
