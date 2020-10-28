@@ -91,6 +91,10 @@ if ($product_id === -1) {
     flex-grow: 1;
   }
 
+  .options_wrapper {
+    margin-bottom: -5px;
+  }
+
   .sub_filter_indent {
     margin-left: 20px;
   }
@@ -102,6 +106,95 @@ if ($product_id === -1) {
 
   #productForm [name="variant_filters"] .attribute-row>.field-title {
     display: none;
+  }
+
+  #productForm [name="variant_filters"]>.list {
+    background: #eee;
+    border-radius: 4px;
+  }
+
+  #productForm [name="filter_options"]>.list {
+    background: #fff;
+    border-radius: 4px;
+  }
+
+  #productForm [name="variant_filters"] .simple-list-row-wrapper {
+    background-color: inherit;
+  }
+
+  #productForm .simple-list .action_buttons {
+    align-self: flex-start;
+  }
+
+  .mycircle {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    border-radius: 50%;
+    border: 0.24em solid #333;
+    transform: translateY(2px);
+  }
+
+  #productForm [name="variant_filters"] .fa-th-large {
+    font-size: 1.1em;
+    color: #333;
+  }
+
+  .fancy-label {
+    display: inline-block;
+    background: #00000008;
+    border: 1px solid #0002;
+    border-top-width: 0;
+    border-left-width: 0;
+    margin-left: -5px;
+    margin-top: -5px;
+    padding: 7px 9px 7px 9px;
+    margin-right: 5px;
+    border-top-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+
+  [name="filter_options"] {
+    counter-reset: options;
+  }
+
+  [name="variant_filters"] {
+    counter-reset: filter;
+    margin-bottom: 5px;
+  }
+
+  .sub_filter_indent {
+    margin-right: -88px;
+  }
+
+  .sub_filter_indent[name="variant_filters"][data-count="0"] {
+    display: none;
+  }
+
+  .label-options::before {
+    counter-increment: options;
+    content: counter(options)".";
+    font-weight: 600;
+  }
+
+  /*.label-filters::before {
+    counter-increment: filter;
+    content: counter(filter)".";
+    font-weight: 600;
+  }*/
+
+  .sub_filter_indent[name="variant_filters"]>.field-title {
+    margin: 5px 0px 2px !important;
+  }
+
+  .options_wrapper:not([data-option-count="0"])>.add_additional_filters {
+    display: none;
+  }
+
+  .options_wrapper[data-option-count="0"]>.fancy-label {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 4px;
+    border-bottom-width: 0;
   }
 </style>
 <script>
@@ -339,7 +432,7 @@ if ($product_id === -1) {
     });
 
     createVariantFiltersSimpleList($(`[name="variant_filters"]`), {
-      title: "Pola wyboru wariantów",
+      title: "Pola wyboru wariantu produktu",
       onChange: (data, list) => {
         choiceListChanged(list.target);
       }
@@ -812,8 +905,12 @@ if ($product_id === -1) {
       },
       render: (data) => {
         return `
-          <div class='sub_filter'>
+          <div class='sub_filter filter_wrapper'>
             <div style='margin-right:6px' class="inline">
+              <div class='fancy-label label-filters'>
+                <i class="fas fa-th-large"></i>
+                <span class="semi-bold">Pole wyboru</span>
+              </div>
               Atrybut
               <i class="fas fa-info-circle" data-tooltip='1. W przypadku wyboru niestandardowego pozostaw puste i uzupełnij samą nazwę pola wyboru<br>2. Powiąż z atrybutem by umożliwić wyszukanie produktu'></i>
               <select class="field inline no-wrap" name="attribute_id" onchange="choiceAttributeChanged(this)">
@@ -821,7 +918,7 @@ if ($product_id === -1) {
                 ${attribute_select_options}
               </select>
             </div>
-            Tytuł pola wyboru:
+            Tytuł:
             <input type="text" class="field inline no-wrap" name="filter_name">
             <div name="filter_options" class='sub_filter_indent'></div>
           </div>
@@ -831,11 +928,19 @@ if ($product_id === -1) {
         filter_name: "",
         attribute_id: -1,
       },
-      title: nonull(options.title, "Dodatkowe pola wyboru"),
+      title: nonull(options.title, "Pola wyboru"),
       beforeRowInserted: (row, values) => {
         createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
       },
-      onChange: options.onChange
+      onChange: (data, list) => {
+        var options_wrapper = node.findParentByClassName("options_wrapper");
+        if (options_wrapper) {
+          options_wrapper.setAttribute("data-option-count", data.length);
+        }
+        if (options.onChange) {
+          options.onChange(data, list);
+        }
+      }
     });
   }
 
@@ -847,13 +952,17 @@ if ($product_id === -1) {
       },
       render: (data) => {
         return `
-          <div class='sub_filter'>
+          <div class='sub_filter options_wrapper'>
+            <div class='fancy-label label-options'>
+              <span class="semi-bold">Opcja</span>
+            </div>
             <div style='margin-right:6px' class="inline select_value_wrapper">
               Wartość:
               <div class='inline' name='selected_attribute_values' data-type="attribute_values" onchange="choiceValuesChanged(this)"></div>
             </div>
-            Nazwa opcji: 
+            Nazwa: 
             <input type='text' name="value" class="field inline no-wrap">
+            <button class='btn secondary semi-bold add_additional_filters' onclick='this.next().find(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
             <div name="variant_filters" class='sub_filter_indent'></div>
           </div>
         `;
@@ -1052,7 +1161,7 @@ if ($product_id === -1) {
   <div class="field-title">Atrybuty produktu (wspólne dla wszystkich wariantów produktu)</div>
   <div name="attributes" data-type="attribute_values"></div>
 
-  <div name="variant_filters"></div>
+  <div name="variant_filters" class="slim"></div>
 
   <h3 class="h1" style='color:var(--error-clr)'>WSZYSTKO PONIŻEJ TO CHUJ</h3>
 

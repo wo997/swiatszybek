@@ -725,7 +725,7 @@ function togglePasswordFieldType(btn, input, make_visible = null) {
 }
 
 // load saved fields from local storage
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
   $$("[data-store]").forEach((e) => {
     e.addEventListener("change", () => {
       var name = e.getAttribute("data-store");

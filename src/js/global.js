@@ -311,8 +311,8 @@ function setValue(input, value = null, params = {}) {
   }
 
   if (input.tagName == "RADIO-INPUT") {
-    var radio = input.find(`radio-option[value="${value}"]`);
-    if (radio) {
+    var option_exists = input.find(`radio-option[value="${value}"]`);
+    if (!!option_exists) {
       input.findAll(`radio-option`).forEach((e) => {
         e.classList.toggle("selected", e.getAttribute("value") == value);
       });
@@ -591,12 +591,24 @@ function findParentByClassName(elem, parentClassName, options = {}) {
   return findParent(
     elem,
     (some_parent) => {
-      for (parentClassName of parentClassNames) {
-        if (
-          some_parent.classList &&
-          some_parent.classList.contains(parentClassName)
-        ) {
+      if (!some_parent.classList) {
+        return false;
+      }
+      if (options.require_all) {
+        var all = true;
+        for (parentClassName of parentClassNames) {
+          if (!some_parent.classList.contains(parentClassName)) {
+            all = false;
+          }
+        }
+        if (all) {
           return true;
+        }
+      } else {
+        for (parentClassName of parentClassNames) {
+          if (some_parent.classList.contains(parentClassName)) {
+            return true;
+          }
         }
       }
     },

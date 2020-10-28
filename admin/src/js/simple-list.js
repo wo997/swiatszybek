@@ -32,10 +32,10 @@ function createSimpleList(params = {}) {
 
   btnTopTitle = `
     <div class="btn primary add_btn add_begin" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,true)">
-      Dodaj <i class="fas fa-chevron-up"></i>
+    <i class="fas fa-plus-circle"></i> <i class="fas fa-arrow-up"></i>
     </div>
     <div class="btn primary add_btn add_end" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">
-      Dodaj <i class="fas fa-chevron-down"></i>
+    <i class="fas fa-plus-circle"></i> <i class="fas fa-arrow-down"></i>
     </div>
   `;
   if (params.header) {
@@ -53,42 +53,62 @@ function createSimpleList(params = {}) {
 
   //${btnTop}
 
-  list.wrapper.insertAdjacentHTML(
-    "afterbegin",
-    `
-      <div class="${params.title ? "field-title" : ""}">
-        <span>${params.title}</span> ${btnTopTitle}
-      </div>
-      <div style='display:flex'>
+  var list_html = `
+    <div class="${params.title ? "field-title" : ""}">
+      <span>${params.title}</span> ${btnTopTitle}
+    </div>
+    ${
+      params.table
+        ? `<table class="list"><thead><tr>${nonull(
+            params.header
+          )}</tr></thead><tbody></tbody></table>`
+        : `<div class="list"></div>`
+    }
+    <div class="list-empty" style="display:none">${nonull(
+      params.empty,
+      ""
+    )}</div>
+  `;
+
+  list.wrapper.insertAdjacentHTML("afterbegin", list_html);
+
+  if (
+    !list.wrapper.findParentByClassName(
+      ["scroll-panel", "scroll-shadow", "horizontal"],
+      { require_all: true }
+    )
+  ) {
+    list.wrapper.insertAdjacentHTML(
+      "afterend",
+      `
+      <div class='simple-list-scroll-wrapper'>
         <div class='scroll-panel scroll-shadow horizontal'>
-          <div style="flex-grow: 1;">
-            ${
-              params.table
-                ? `<table class="list"><thead><tr>${nonull(
-                    params.header
-                  )}</tr></thead><tbody></tbody></table>`
-                : `<div class="list"></div>`
-            }
-            </div>
+          <div class='simple-list-scroll-content'>
+            
           </div>
         </div>
       </div>
-      <div class="list-empty" style="display:none">${nonull(
-        params.empty,
-        ""
-      )}</div>
     `
-  );
+    );
+    list.wrapper
+      .next()
+      .find(".simple-list-scroll-content")
+      .appendChild(list.wrapper);
+  }
 
   //<div class="btn primary add_btn add_end main_add_btn" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i>
 
   list.insertRowFromBtn = (btn, begin = true, user = true) => {
     var row = list.insertRow(
       params.default_row,
-      btn.parent().next().find(".list"),
+      btn.parent().next(),
       begin,
       user
     );
+
+    if (user) {
+      scrollToView(row);
+    }
   };
 
   list.insertRowFromTopBtn = (btn, begin = true, user = true) => {
@@ -174,7 +194,7 @@ function createSimpleList(params = {}) {
     if (listTarget === null) {
       listTarget = list.target;
     }
-    if (list.params.table) {
+    if (list.params.table && listTarget.tagName != "TBODY") {
       listTarget = listTarget.find("tbody");
     }
 
@@ -194,10 +214,10 @@ function createSimpleList(params = {}) {
         <div class='field-title'>
           Wartości podrzędne
           <div class="btn primary add_btn add_begin" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,true)">
-            Dodaj <i class="fas fa-chevron-up"></i>
+          <i class="fas fa-plus"></i> <i class="fas fa-arrow-up"></i>
           </div>
           <div class="btn primary add_btn add_end" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">
-            Dodaj <i class="fas fa-chevron-down"></i>
+          <i class="fas fa-plus"></i> <i class="fas fa-arrow-down"></i>
           </div>
         </div>
       `;

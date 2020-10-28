@@ -1661,3 +1661,11 @@ label > input[type="file"] + input[type="submit"] {
 .text-bottom {
   vertical-align: bottom;
 }
+
+.semi-bold {
+  font-weight: 600;
+}
+
+.bold {
+  font-weight: 900;
+}

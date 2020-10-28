@@ -253,3 +253,15 @@ tr.simple-list-row td:last-child {
 .simple-list > .field-title {
   margin-bottom: 0.4em;
 }
+
+.simple-list-scroll-wrapper {
+  display: flex;
+}
+
+.simple-list-scroll-content {
+  flex-grow: 1;
+}
+
+.simple-list-scroll-wrapper .shadow-node {
+  margin-top: 56px;
+}
