@@ -29,7 +29,6 @@
             default_row: {
                 email: ""
             },
-            title: `E-mail(e) do zamówień`,
             onChange: (values, list) => {
                 var add_main_email_btn = $(".add_main_to_orders");
                 if (add_main_email_btn) {
@@ -58,7 +57,6 @@
             default_row: {
                 email: ""
             },
-            title: `E-mail(e) do raportów dziennych (sprzedaży)`,
             onChange: (values, list) => {
                 var add_main_email_btn = $(".add_main_to_daily_report");
                 if (add_main_email_btn) {
@@ -120,6 +118,10 @@
         <!--<div class="field-title">E-maile dla nowych / zmiany statusów zamówień</div>
         <input type="text" class="field" name="orders_email" data-validate="email|optional" placeholder="<?= $main_email ?>">-->
 
+        <span class='field-title'>
+            E-mail(e) do zamówień
+            <span class='add_buttons'></span>
+        </span>
         <div name="order_emails" class="slim no-order" data-validate="|count:3-"></div>
 
         <div class="form-space"></div>
@@ -128,6 +130,10 @@
             Dodaj <?= $app["company_data"]["main_email"] ?>
         </button>
 
+        <span class='field-title'>
+            E-mail(e) do raportów dziennych (sprzedaży)
+            <span class='add_buttons'></span>
+        </span>
         <div name="daily_report_emails" class="slim no-order" data-validate="|count:3-"></div>
 
         <div class="form-space"></div>

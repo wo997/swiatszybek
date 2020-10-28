@@ -1,5 +1,9 @@
 /* css[global] */
 
+:root {
+  --radio-input-margin: 6px;
+}
+
 radio-input.default radio-option {
   padding: 2px 5px;
   display: block;
@@ -44,8 +48,8 @@ radio-input.default radio-option.selected {
 radio-input.blocks {
   display: flex;
   flex-wrap: wrap;
-  margin-right: -6px;
-  margin-bottom: -6px;
+  margin-right: calc(var(--radio-input-margin) * -1);
+  margin-bottom: calc(var(--radio-input-margin) * -1);
 }
 radio-input.blocks radio-option {
   padding: 10px;
@@ -55,9 +59,9 @@ radio-input.blocks radio-option {
   text-align: center;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
-  margin-right: 6px;
-  margin-bottom: 6px;
+  /*flex-grow: 1;*/
+  margin-right: var(--radio-input-margin);
+  margin-bottom: var(--radio-input-margin);
   font-weight: inherit !important;
   transition: all 0.2s;
   border-radius: 4px;

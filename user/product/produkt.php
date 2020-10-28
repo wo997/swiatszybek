@@ -193,7 +193,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
               <?php
               foreach (json_decode($filter["filter_options"], true) as $option_key => $option) {
               ?>
-                <radio-option value="<?= $option_key ?>">
+                <radio-option value="<?= $option_key ?>" class="<?= nonull($filter, "style", "") ?>">
                   <?= $option["value"] ?>
                 </radio-option>
               <?php

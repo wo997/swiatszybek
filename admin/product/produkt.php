@@ -95,7 +95,7 @@ if ($product_id === -1) {
     margin-bottom: -5px;
   }
 
-  .sub_filter_indent {
+  .indent {
     margin-left: 20px;
   }
 
@@ -163,11 +163,11 @@ if ($product_id === -1) {
     margin-bottom: 5px;
   }
 
-  .sub_filter_indent {
+  .indent {
     margin-right: -88px;
   }
 
-  .sub_filter_indent[name="variant_filters"][data-count="0"] {
+  .indent>[name="variant_filters"][data-count="0"] {
     display: none;
   }
 
@@ -183,7 +183,7 @@ if ($product_id === -1) {
     font-weight: 600;
   }*/
 
-  .sub_filter_indent[name="variant_filters"]>.field-title {
+  .indent>[name="variant_filters"]>.field-title {
     margin: 5px 0px 2px !important;
   }
 
@@ -920,7 +920,24 @@ if ($product_id === -1) {
             </div>
             Tytuł:
             <input type="text" class="field inline no-wrap" name="filter_name">
-            <div name="filter_options" class='sub_filter_indent'></div>
+            <div class='indent'>
+              <div>
+                <span class='field-title inline'>
+                  Opcje
+                  <span class='add_buttons'></span>
+                </span>
+                <span style='margin-left:10px'>
+                  Szerokość opcji:
+                  <select name="style" class="field inline">
+                    <option value="col1">100%</option>
+                    <option value="col2">1/2</option>
+                    <option value="col3">1/3</option>
+                    <option value="col4">1/4</option>
+                  </select>
+                </span>
+              </div>
+              <div name="filter_options"></div>
+            </div>
           </div>
         `;
       },
@@ -928,7 +945,6 @@ if ($product_id === -1) {
         filter_name: "",
         attribute_id: -1,
       },
-      title: nonull(options.title, "Pola wyboru"),
       beforeRowInserted: (row, values) => {
         createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
       },
@@ -963,11 +979,17 @@ if ($product_id === -1) {
             Nazwa: 
             <input type='text' name="value" class="field inline no-wrap">
             <button class='btn secondary semi-bold add_additional_filters' onclick='this.next().find(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
-            <div name="variant_filters" class='sub_filter_indent'></div>
+
+            <div class='indent'>
+              <div class='field-title'>
+                Pola wyboru
+                <span class='add_buttons'></span>
+              </div>
+              <div name="variant_filters"></div>
+            </div>
           </div>
         `;
       },
-      title: "Opcje",
       default_row: {
         value: "",
       },
@@ -1143,7 +1165,10 @@ if ($product_id === -1) {
     </div>
   </div>
 
-
+  <div class='field-title'>
+    Galeria zdjęć
+    <span class='add_buttons'></span>
+  </div>
   <div name="gallery" data-validate="|count:1+" style="max-width:600px"></div>
 
   <div class="field-title">Kategorie</div>
@@ -1161,10 +1186,18 @@ if ($product_id === -1) {
   <div class="field-title">Atrybuty produktu (wspólne dla wszystkich wariantów produktu)</div>
   <div name="attributes" data-type="attribute_values"></div>
 
+  <div class='field-title'>
+    Pola wyboru wariantów produktów
+    <span class='add_buttons'></span>
+  </div>
   <div name="variant_filters" class="slim"></div>
 
   <h3 class="h1" style='color:var(--error-clr)'>WSZYSTKO PONIŻEJ TO CHUJ</h3>
 
+  <span class='field-title'>
+    Warianty
+    <span class='add_buttons'></span>
+  </span>
   <div name="variants" data-validate="|count:1+"></div>
 
   <div name="variant_attributes_layout" class="no-remove no-add"></div>

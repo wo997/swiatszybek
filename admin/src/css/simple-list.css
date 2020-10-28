@@ -261,7 +261,3 @@ tr.simple-list-row td:last-child {
 .simple-list-scroll-content {
   flex-grow: 1;
 }
-
-.simple-list-scroll-wrapper .shadow-node {
-  margin-top: 56px;
-}

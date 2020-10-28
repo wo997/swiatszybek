@@ -43,7 +43,6 @@ MODULE_BLOCK = {
           </div>
         `,
       },
-      title: "Banery",
       onChange: () => {
         MODULE_BLOCK.form
           .find(`[name="desktop-slider-height"]`)

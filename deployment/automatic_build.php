@@ -10,8 +10,7 @@ $modificationTimeSettings = 0;
 
 scanDirectories(
     [
-        "include_paths" => $deployable_paths,
-        "exclude_paths" => ["modules"],
+        "exclude_paths" => ["vendor", "uploads", "modules", "settings", "builds"],
     ],
     function ($path) {
         global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS;

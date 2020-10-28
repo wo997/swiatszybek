@@ -92,8 +92,7 @@
                 value_id: -1,
                 value: ""
             },
-            recursive: 3,
-            title: "Wszystkie wartości"
+            recursive: 3
         });
 
         createSimpleList({
@@ -121,8 +120,7 @@
             onChange: () => {
                 jscolor.installByClassName();
             },
-            recursive: 3,
-            title: "Wszystkie kolory"
+            recursive: 3
         });
 
         createDatatable({
@@ -236,10 +234,10 @@
             if (params.field) {
                 return;
             }
-            var node = $(`[name="attribute_values_${type}"]`);
+            var node = $(`.attribute_values_${type}_wrapper`);
             if (node) {
-                node.classList.toggle("hidden", data_type != type)
-            };
+                node.classList.toggle("hidden", data_type != type);
+            }
         });
     }
 </script>
@@ -266,8 +264,21 @@
                     <div class="field-title">Typ danych</div>
                     <select name="data_type" class="field" onchange="toggleValues()"></select>
 
-                    <div name="attribute_values_textlist" class="slim"></div>
-                    <div name="attribute_values_colorlist" class="slim"></div>
+                    <div class="attribute_values_textlist_wrapper">
+                        <span class='field-title'>
+                            Wszystkie wartości
+                            <span class='add_buttons'></span>
+                        </span>
+                        <div name="attribute_values_textlist" class="slim"></div>
+                    </div>
+
+                    <div class="attribute_values_colorlist_wrapper">
+                        <span class='field-title'>
+                            Wszystkie kolory
+                            <span class='add_buttons'></span>
+                        </span>
+                        <div name="attribute_values_colorlist" class="slim"></div>
+                    </div>
                 </div>
                 <div>
                     <div class="field-title">Wyświetl filtry w kategoriach <a href="<?= STATIC_URLS["ADMIN"] ?>kategorie" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a></div>

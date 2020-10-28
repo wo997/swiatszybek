@@ -36,10 +36,10 @@ p {
 }
 
 .inline {
-  display: inline-block;
+  display: inline-block !important;
 }
 .block {
-  display: block;
+  display: block !important;
 }
 .checkbox-wrapper.block {
   display: block;
@@ -1003,143 +1003,13 @@ input[type="checkbox"]:checked ~ .checkbox::after {
   position: fixed;
 }
 
-/* cms start */
-
 .preview_html {
   border: 1px solid #ccc;
   overflow-y: auto;
   min-height: 20px;
+  border-radius: 4px;
 }
 
-.cms {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
-}
-
-.attention {
-  box-shadow: inset 0px 0px 20px 0px rgb(255, 253, 113) !important;
-}
-
-.background-color,
-.background-image {
-  position: absolute;
-  width: 100% !important;
-  height: 100% !important;
-  background: transparent;
-  pointer-events: none;
-  left: 0;
-  top: 0;
-}
-
-.cms-container {
-  display: flex;
-  position: relative;
-  width: 100%;
-  background: white;
-}
-.cms-container-content {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  /*overflow: hidden;*/
-}
-
-.cms-block {
-  display: flex;
-  position: relative;
-  max-width: 100%;
-  width: 100%;
-  /*overflow: hidden;*/
-}
-.cms-block-content {
-  position: relative;
-}
-
-.align-vertical-top,
-.align-vertical-none {
-  align-items: flex-start;
-}
-.align-vertical-center {
-  align-items: center;
-}
-.align-vertical-bottom {
-  align-items: flex-end;
-}
-
-/*.cms-block > * {
-  min-height: 100% !important;
-}*/
-.align-vertical-top > *,
-.align-vertical-center > *,
-.align-vertical-bottom > * {
-  min-height: 100px !important;
-}
-
-.align-horizontal-left {
-  justify-content: flex-start;
-}
-.align-horizontal-center {
-  justify-content: center;
-}
-.align-horizontal-right {
-  justify-content: flex-end;
-}
-
-.cms-block > * {
-  width: 100%;
-}
-.align-horizontal-left > *,
-.align-horizontal-center > *,
-.align-horizontal-right > * {
-  width: auto;
-}
-
-.background-image {
-  object-fit: cover;
-}
-
-.block-padding-none > *,
-.block-padding-none .ql-editor {
-  padding: 0;
-}
-.block-padding-small > *,
-.block-padding-small .ql-editor {
-  /*padding: 3%; 12px default */
-}
-.block-padding-medium > *,
-.block-padding-medium .ql-editor {
-  padding: 3%;
-}
-.block-padding-large > *,
-.block-padding-large .ql-editor {
-  padding: 6%;
-}
-
-.background-image {
-  z-index: 1;
-}
-.background-color {
-  z-index: 2;
-}
-.cms-block-content,
-.cms-container-content,
-.ql-editor {
-  z-index: 3;
-}
-
-/* cms end */
-
-/*.tooltip-wrapper {
-  position: relative;
-}*/
-/*tooltip-icons
-.tooltip-wrapper:not(:hover) .tooltip-content {
-  display: none;
-}*/
 .tooltip-wrapper:not(.active) .tooltip-content {
   display: none;
 }
@@ -1273,66 +1143,6 @@ ql-icon i span {
 }
 .expand_arrow.open .fas {
   transform: translate(-1px, 0) rotate(90deg);
-}
-
-.category-picker {
-  background: #fcfcfc;
-  padding: 5px 10px;
-
-  box-shadow: inset 0px 1px 5px 0px rgba(0, 0, 0, 0.17);
-  border: 1px solid #bbb;
-}
-.category-picker label {
-  margin: 2px;
-  display: inline-block;
-  cursor: pointer;
-}
-.category-picker-row > *,
-.category-picker-row > * > * {
-  vertical-align: middle;
-}
-.category-picker-column {
-  padding-left: 20px;
-  width: 100%;
-  overflow: hidden;
-}
-
-.category-picker-column,
-.category-picker-row {
-  position: relative;
-}
-/*.category-picker-column:before {
-  position: absolute;
-  left: 10px;
-  top: bottom;
-  height: calc(100% - 16px);
-  width: 1px;
-  background: #bbb;
-  content: "";
-}*/
-.category-picker-row:before {
-  position: absolute;
-  left: -10px;
-  bottom: 50%;
-  height: 1px;
-  width: 6px;
-  background: #bbb;
-  content: "";
-}
-
-.category-picker-row:after {
-  position: absolute;
-  left: -10px;
-  bottom: 50%;
-  height: 1000px;
-  width: 1px;
-  background: #bbb;
-  content: "";
-}
-
-.category-picker > div > .category-picker-row:before,
-.category-picker > div > .category-picker-row:after {
-  display: none;
 }
 
 .breadcrumb {
@@ -1660,6 +1470,10 @@ label > input[type="file"] + input[type="submit"] {
 
 .text-bottom {
   vertical-align: bottom;
+}
+
+.light {
+  font-weight: unset;
 }
 
 .semi-bold {

@@ -131,7 +131,7 @@ $static = checkUrl($page_data["link"]);
 
         <div class="field-title">Link strony (URL)</div>
         <div class="glue-children">
-            <input type='text' name='link' data-validate class="field">
+            <input type='text' name='link' data-validate="|optional" class="field">
             <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this).prev().find(`.field`), {link:true})" data-tooltip="Uzupełnij na podstawie nazwy strony" style="height: var(--field-height);">
                 <i class="fas fa-pen"></i>
             </button>

@@ -28,14 +28,14 @@ function createSimpleList(params = {}) {
   }
 
   /*var btnTop = "";*/
-  var btnTopTitle = "";
+  var add_btns = "";
 
-  btnTopTitle = `
+  add_btns = `
     <div class="btn primary add_btn add_begin" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,true)">
-    <i class="fas fa-plus-circle"></i> <i class="fas fa-arrow-up"></i>
+      <i class="fas fa-plus-circle"></i> <i class="fas fa-arrow-up"></i>
     </div>
     <div class="btn primary add_btn add_end" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">
-    <i class="fas fa-plus-circle"></i> <i class="fas fa-arrow-down"></i>
+      <i class="fas fa-plus-circle"></i> <i class="fas fa-arrow-down"></i>
     </div>
   `;
   if (params.header) {
@@ -53,10 +53,24 @@ function createSimpleList(params = {}) {
 
   //${btnTop}
 
+  if (params.injectAddButtons) {
+    params.injectAddButtons(add_btns);
+  } else {
+    var success = false;
+    var prev = list.wrapper.prev();
+    if (prev) {
+      var add_buttons = prev.find(".add_buttons");
+      if (add_buttons) {
+        add_buttons.setContent(add_btns);
+        success = true;
+      }
+    }
+    if (!success) {
+      list.wrapper.insertAdjacentHTML("afterbegin", add_btns);
+    }
+  }
+
   var list_html = `
-    <div class="${params.title ? "field-title" : ""}">
-      <span>${params.title}</span> ${btnTopTitle}
-    </div>
     ${
       params.table
         ? `<table class="list"><thead><tr>${nonull(
@@ -70,7 +84,7 @@ function createSimpleList(params = {}) {
     )}</div>
   `;
 
-  list.wrapper.insertAdjacentHTML("afterbegin", list_html);
+  list.wrapper.insertAdjacentHTML("beforeend", list_html);
 
   if (
     !list.wrapper.findParentByClassName(
@@ -399,10 +413,6 @@ function createSimpleList(params = {}) {
       delete list.during_change;
     }
   };
-
-  if (params.output) {
-    $(params.output).setAttribute("data-type", "simple-list");
-  }
 
   // set data-count etc.
   list.valuesChanged();

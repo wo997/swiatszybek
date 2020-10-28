@@ -10,7 +10,7 @@ echo "<br><h3>Scanning annotations:</h3>";
 scanDirectories(
     [
         "get_first_line" => true,
-        "exclude_paths" => ["vendor", "uploads"],
+        "exclude_paths" => ["vendor", "uploads", "builds"],
     ],
     function ($path, $first_line) {
         global $_link_route_path, $_link_event_paths;

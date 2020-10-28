@@ -13,4 +13,9 @@
   </c-options>
 </c-select>
 
+<span class='field-title inline'>
+  Slajdy
+  <span class='add_buttons'></span>
+</span>
+
 <div name="cms_slides"></div>
