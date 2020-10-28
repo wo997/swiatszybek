@@ -42,11 +42,7 @@ if (isset($_POST["remove"])) {
                 $value_id = getLastInsertedId();
             }
 
-            // additional_data, ⚠️ the array will be missing the rest of data
-            unset($value_data["value_id"]);
-            unset($value_data["value"]);
-            unset($value_data["_children"]);
-            $additional_data = $value_data ? json_encode($value_data) : "";
+            $additional_data = $value_data ? json_encode(getArrayWithoutKeys($value_data, ["value_id", "value", "_children"])) : "";
 
             $kolejnosc++;
             query("UPDATE attribute_values SET value = ?, attribute_id = ?, kolejnosc = ?, parent_value_id = ?, additional_data = ? WHERE value_id = " . $value_id, [
@@ -55,8 +51,8 @@ if (isset($_POST["remove"])) {
 
             $value_ids .= $value_id . ",";
 
-            if (isset($attribute["_children"])) {
-                saveAttributeValuesRows($attribute["_children"], $depth++, $value_id);
+            if (isset($value_data["_children"])) {
+                saveAttributeValuesRows($value_data["_children"], $depth++, $value_id);
             }
         }
     }

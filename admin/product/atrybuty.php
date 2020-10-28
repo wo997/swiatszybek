@@ -185,7 +185,6 @@
                 return simple_list.params.name == `attribute_values_${data_type}`
             }).forEach(simple_list => {
                 simple_list.setValues([]);
-                console.log(simple_list);
             })
         })
 

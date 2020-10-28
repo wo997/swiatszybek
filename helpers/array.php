@@ -27,6 +27,14 @@ function filterArrayKeys($array, $keys)
     return $res;
 }
 
+function getArrayWithoutKeys($array, $keys)
+{
+    foreach ($keys as $key) {
+        unset($array[$key]);
+    }
+    return $array;
+}
+
 // also array.js 
 function getRowById($array, $id, $id_name = "id")
 {

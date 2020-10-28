@@ -184,19 +184,18 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
           <h3 class="h1" style='color:var(--error-clr)'>W TRAKCIE ROZWOJU</h3>
 
           <?php
-          $variant_attributes_layout = json_decode($product_data["variant_attributes_layout"], true);
+          $variant_filters = json_decode($product_data["variant_filters"], true);
 
-          foreach ($variant_attributes_layout as $attribute) {
+          foreach ($variant_filters as $filter_key => $filter) {
           ?>
-            <span class="field-title"><?= $attribute["attribute_name"] ?></span>
-            <radio-input name="attribute_<?= $attribute["attribute_id"] ?>" class="blocks" style='margin-bottom:20px;'>
+            <span class="field-title"><?= $filter["filter_name"] ?></span>
+            <radio-input name="filter_<?= $filter_id ?>" class="blocks" style='margin-bottom:20px;'>
               <?php
-              foreach (json_decode($attribute["attribute_values_" . $attribute["attribute_id"]], true) as $value) {
+              foreach (json_decode($filter["filter_options"], true) as $option_key => $option) {
               ?>
-                <radio-option value="<?= $value["value_id"] ?>">
-                  <?= $value["value"] ?>
+                <radio-option value="<?= $option_key ?>">
+                  <?= $option["value"] ?>
                 </radio-option>
-
               <?php
               }
               ?>
