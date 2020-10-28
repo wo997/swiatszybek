@@ -185,7 +185,7 @@ function currentlyFocusedProduct(node) {
       }
       animateProduct.target = x;
       animateProduct.image = x;
-      animateProduct.frames = JSON.parse(g).map((e) => e.values.src);
+      animateProduct.frames = JSON.parse(g).map((e) => e.src);
 
       animateProduct.defaultImage = animateProduct.image.src;
       animateProduct.frameId = 0;

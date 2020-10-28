@@ -34,8 +34,7 @@ if (isset($_POST["remove"])) {
 
         $kolejnosc = 0;
 
-        foreach ($attributes as $attribute) {
-            $value_data = $attribute["values"];
+        foreach ($attributes as $value_data) {
             $value_id = intval($value_data["value_id"]);
             $value_value = $value_data["value"];
             if ($value_id == "-1") {
@@ -46,6 +45,7 @@ if (isset($_POST["remove"])) {
             // additional_data, ⚠️ the array will be missing the rest of data
             unset($value_data["value_id"]);
             unset($value_data["value"]);
+            unset($value_data["_children"]);
             $additional_data = $value_data ? json_encode($value_data) : "";
 
             $kolejnosc++;
@@ -55,8 +55,8 @@ if (isset($_POST["remove"])) {
 
             $value_ids .= $value_id . ",";
 
-            if (isset($attribute["children"])) {
-                saveAttributeValuesRows($attribute["children"], $depth++, $value_id);
+            if (isset($attribute["_children"])) {
+                saveAttributeValuesRows($attribute["_children"], $depth++, $value_id);
             }
         }
     }
@@ -80,12 +80,5 @@ if (isset($_POST["remove"])) {
     $insert = substr($insert, 0, -1);
     query("INSERT INTO link_category_attribute (category_id, attribute_id, main_filter) VALUES $insert");
 }
-
-
-/*
-
-"[{"values":{"value_id":"14","value":"Samsung"},"children":[{"values":{"value_id":"-1","value":"dsfgdsfg"},"children":[{"values":{"value_id":"-1","value":"sd"},"children":[]}]}]},{"values":{"value_id":"26","value":"Apple"},"children":[{"values":{"value_id":"-1","value":"aaaa"},"children":[]},{"values":{"value_id":"-1","value":"aa"},"children":[]}]}]"
-
-*/
 
 die;

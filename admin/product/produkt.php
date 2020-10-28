@@ -1079,7 +1079,7 @@ if ($product_id === -1) {
     var data = getFormData(form);
     data.cache_thumbnail = "";
     try {
-      data.cache_thumbnail = JSON.parse(data.gallery)[0].values.src;
+      data.cache_thumbnail = JSON.parse(data.gallery)[0].src;
     } catch {}
     data.cache_rating_count = Math.floor(5 + 100 * Math.random());
     data.cache_avg_rating = 5;

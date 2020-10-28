@@ -50,8 +50,8 @@ if (!$gallery) {
 $galleryhtml = "";
 $gallerythumbshtml = "";
 foreach ($gallery as $pic) {
-  $galleryhtml .= "<div class='swiper-slide'><img style='max-width:100%' data-src='" . $pic["values"]["src"] . "' data-height='1w' class='swiper-slide product-image'></div>";
-  $gallerythumbshtml .= "<img style='max-width:100%' data-src='" . $pic["values"]["src"] . "' data-height='1w' class='swiper-slide product-image'>";
+  $galleryhtml .= "<div class='swiper-slide'><img style='max-width:100%' data-src='" . $pic["src"] . "' data-height='1w' class='swiper-slide product-image'></div>";
+  $gallerythumbshtml .= "<img style='max-width:100%' data-src='" . $pic["src"] . "' data-height='1w' class='swiper-slide product-image'>";
 }
 
 $page_data["seo_description"] = $product_data["seo_description"];
@@ -193,8 +193,8 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
               <?php
               foreach (json_decode($attribute["attribute_values_" . $attribute["attribute_id"]], true) as $value) {
               ?>
-                <radio-option value="<?= $value["values"]["value_id"] ?>">
-                  <?= $value["values"]["value"] ?>
+                <radio-option value="<?= $value["value_id"] ?>">
+                  <?= $value["value"] ?>
                 </radio-option>
 
               <?php

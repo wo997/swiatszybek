@@ -33,7 +33,7 @@
             onChange: (values, list) => {
                 var add_main_email_btn = $(".add_main_to_orders");
                 if (add_main_email_btn) {
-                    var has_main_email = !!values.find(e => e.values.email.trim() == main_email);
+                    var has_main_email = !!values.find(e => e.email.trim() == main_email);
                     add_main_email_btn.classList.toggle("hidden", has_main_email || !main_email);
                 }
 
@@ -62,7 +62,7 @@
             onChange: (values, list) => {
                 var add_main_email_btn = $(".add_main_to_daily_report");
                 if (add_main_email_btn) {
-                    var has_main_email = !!values.find(e => e.values.email.trim() == main_email);
+                    var has_main_email = !!values.find(e => e.email.trim() == main_email);
                     add_main_email_btn.classList.toggle("hidden", has_main_email || !main_email);
                 }
 

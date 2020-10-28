@@ -171,26 +171,26 @@ function showCategory($category, $level = 0)
 
           $html = "<div class='$classes' $attr>";
           foreach ($values as $value_data) {
-            if ($value_data["values"]["value"] === "") {
+            if ($value_data["value"] === "") {
               continue;
             }
             $html .= "<div class='attributes-list-wrapper'>";
             $html .= "<label class='attribute-label'>";
-            $html .= "<input type='checkbox' name='chk_" . $value_data["values"]["value_id"] . "' value='" . $value_data["values"]["value_id"] . "'";
+            $html .= "<input type='checkbox' name='chk_" . $value_data["value_id"] . "' value='" . $value_data["value_id"] . "'";
             $html .= " onchange='attributeSelectionChange(this,";
-            $html .= nonull($value_data, "children", []) ? "true" : "false";
+            $html .= nonull($value_data, "_children", []) ? "true" : "false";
             $html .= ")'";
             $html .= ">";
             $html .= "<div class='checkbox'></div> ";
-            $html .= $value_data["values"]["value"];
+            $html .= $value_data["value"];
 
-            if (isset($value_data["values"]["color"])) {
-              $html .= "<div class='color-circle' style='background-color:" . $value_data["values"]["color"] . "'></div>";
+            if (isset($value_dat["color"])) {
+              $html .= "<div class='color-circle' style='background-color:" . $value_data["color"] . "'></div>";
             }
 
             $html .= "</label>";
 
-            $html .= printUserSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
+            $html .= printUserSelectValuesOfAttribute($value_data["_children"], $attribute, $value_data["value_id"]);
 
             $html .= "</div>";
           }

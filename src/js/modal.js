@@ -161,11 +161,7 @@ function hideModal(name, isCancel = false) {
 
     // cleanup validators
     modal.findAll("[data-validate]").forEach((e) => {
-      if (e.classList.contains("required")) {
-        e.removeEventListener("input", checkRemoveRequired);
-        e.removeEventListener("change", checkRemoveRequired);
-        e.classList.remove("required");
-      }
+      e.classList.remove("required");
     });
 
     modal.findAll(".fa-exclamation-triangle").forEach((e) => {

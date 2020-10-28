@@ -13,10 +13,9 @@ function getAttributeValues($attribute_id, $parent_value_id = 0)
             $sub_attribute = array_merge($sub_attribute, $additional_data);
         }
 
-        $values[] = [
-            "values" => $sub_attribute,
-            "children" => getAttributeValues($attribute_id, $sub_attribute["value_id"])
-        ];
+        $sub_attribute["_children"] = getAttributeValues($attribute_id, $sub_attribute["value_id"]);
+
+        $values[] = $sub_attribute;
     }
     return $values;
 }
@@ -32,11 +31,11 @@ function printSelectValuesOfAttribute($values, $attribute, $value_id = null)
     $html .= "<option value=''>―</option>";
     foreach ($values as $value_data) {
 
-        $html .= "<option value='" . $value_data["values"]["value_id"] . "'>" . $value_data["values"]["value"] . ($value_data["children"] ? " ❯" : "") . "</option>";
+        $html .= "<option value='" . $value_data["value_id"] . "'>" . $value_data["value"] . ($value_data["_children"] ? " ❯" : "") . "</option>";
     }
     $html .= "</select> ";
     foreach ($values as $value_data) {
-        $html .= printSelectValuesOfAttribute($value_data["children"], $attribute, $value_data["values"]["value_id"]);
+        $html .= printSelectValuesOfAttribute($value_data["_children"], $attribute, $value_data["value_id"]);
     }
 
     return $html;

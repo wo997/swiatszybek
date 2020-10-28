@@ -10,14 +10,14 @@ $slides = json_decode(nonull($params, "cms_slides", ""), true);
     <?php
     if (is_array($slides)) {
       foreach ($slides as $slide) {
-        if (!$slide["values"]["published"]) {
+        if (!$slide["published"]) {
           continue;
         }
 
     ?>
         <div class='swiper-slide'>
-          <div class='cms slide-desktop'><?= getCMSPageHTML($slide["values"]["content"]) ?></div>
-          <div class='cms slide-mobile'><?= getCMSPageHTML($slide["values"]["content"]) ?></div>
+          <div class='cms slide-desktop'><?= getCMSPageHTML($slide["content"]) ?></div>
+          <div class='cms slide-mobile'><?= getCMSPageHTML($slide["content"]) ?></div>
         </div>
     <?php
       }

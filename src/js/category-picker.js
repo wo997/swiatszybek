@@ -162,7 +162,7 @@ function loadCategoryPicker(
     type: "text",
     success: (c) => {
       $$(`.category-picker[data-source="${source}"]`).forEach((e) => {
-        [...e.children].forEach((e) => {
+        e.directChildren().forEach((e) => {
           removeNode(e);
         });
         e.insertAdjacentHTML("afterbegin", c);

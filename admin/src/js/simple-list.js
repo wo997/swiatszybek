@@ -160,11 +160,18 @@ function createSimpleList(params = {}) {
         }
       } else {
         for (var value_data of values) {
+          // TODO: remove once u get rid of everything, .values and .children shouldnt be there anymore
           var parent_value_list = list
-            .insertRow(value_data.values, listTarget)
+            .insertRow(
+              value_data.values ? value_data.values : value_data,
+              listTarget
+            )
             .find(".list");
-          if (value_data.children) {
-            addValues(value_data.children, parent_value_list);
+          if (value_data.children || value_data._children) {
+            addValues(
+              value_data._children ? value_data._children : value_data.children,
+              parent_value_list
+            );
           }
         }
       }
@@ -183,9 +190,6 @@ function createSimpleList(params = {}) {
   };
 
   list.removeRow = (row) => {
-    row.findAll("[name]").forEach((e) => {
-      e.setValue("IGNOREVALIDATIONISSUES"); // remove validation issues - red border
-    });
     row.remove();
     list.valuesChanged();
   };
@@ -332,9 +336,7 @@ function createSimpleList(params = {}) {
         });
       } else {
         listTarget.directChildren().forEach((simpleListRowWrapper) => {
-          var row_data = {
-            values: {},
-          };
+          var row_data = {};
           $(simpleListRowWrapper)
             .find(".simple-list-row")
             .findAll("[name]")
@@ -346,10 +348,10 @@ function createSimpleList(params = {}) {
                 return;
               }
               var param = e.getAttribute("name");
-              row_data.values[param] = getValue(e);
+              row_data[param] = getValue(e);
             });
           if (level < list.recursive) {
-            row_data.children = getDirectRows(
+            row_data._children = getDirectRows(
               $(simpleListRowWrapper).find(".sub-list > .list"),
               level + 1
             );
@@ -413,6 +415,11 @@ function validateSimpleList(field) {
   var valid = true;
 
   var list = field.list;
+
+  list.wrapper.findAll(".required").forEach((e) => {
+    e.classList.remove("required");
+  });
+
   Object.entries(list.fields).forEach(([fieldName, fieldParams]) => {
     if (fieldParams.unique) {
       field.findAll(".list").forEach((listNode) => {
@@ -458,18 +465,7 @@ function validateSimpleList(field) {
                 }
               });
             };*/
-
-            if (!list_field.classList.contains("required")) {
-              list_field.classList.add("required");
-              list_field.addEventListener(
-                "input",
-                listFieldcheckRemoveRequired
-              );
-              list_field.addEventListener(
-                "change",
-                listFieldcheckRemoveRequired
-              );
-            }
+            list_field.classList.add("required");
           });
         });
       });
