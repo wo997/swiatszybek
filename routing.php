@@ -73,7 +73,7 @@ $admin_navigations_tree = [
       ["url" => "menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
       ["url" => "stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
       ["url" => "logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
-
+      ["url" => "szablon", "title" => '<i class="fas fa-paint-brush"></i> Szablon'],
     ]
   ],
   ["url" => "zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],

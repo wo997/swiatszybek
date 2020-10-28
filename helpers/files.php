@@ -562,6 +562,7 @@ function saveFile($dir, $contents)
 
 function createDir($dir)
 {
+    // TODO: maybe should be is_dir
     if (file_exists($dir)) {
         return;
     }

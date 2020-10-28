@@ -66,15 +66,47 @@ function saveSettings($dir, $file, $json_paths_and_values)
         $settings = [];
     }
 
-    foreach ($json_paths_and_values as $json_path_and_value) {
-        $settings_sub = &$settings;
-        foreach ($json_path_and_value["path"] as $json_path_part) {
-            if (!isset($settings_sub[$json_path_part])) {
-                $settings_sub[$json_path_part] = [];
+
+    while (true) {
+        $is_flat = true;
+
+        foreach ($json_paths_and_values as $key => $json_path_and_value) {
+            $path = $json_path_and_value["path"];
+            $value = $json_path_and_value["value"];
+
+            if (is_array($value)) {
+                $is_flat = false;
+
+                foreach ($value as $s_key => $s_value) {
+                    $another_path = $path;
+                    $another_path[] = $s_key;
+                    $json_paths_and_values[] = [
+                        "path" => $another_path,
+                        "value" =>  $s_value,
+                    ];
+                }
+
+                unset($json_paths_and_values[$key]);
             }
-            $settings_sub = &$settings_sub[$json_path_part];
         }
-        $settings_sub = $json_path_and_value["value"];
+
+        if ($is_flat) {
+            break;
+        }
+    }
+
+    foreach ($json_paths_and_values as $json_path_and_value) {
+        $path = $json_path_and_value["path"];
+        $value = $json_path_and_value["value"];
+
+        $settings_sub = &$settings;
+        foreach ($path as $path_part) {
+            if (!is_array($settings_sub) || !isset($settings_sub[$path_part])) {
+                $settings_sub[$path_part] = [];
+            }
+            $settings_sub = &$settings_sub[$path_part];
+        }
+        $settings_sub = $value;
     }
 
     saveFile($file_path, json_encode($settings));

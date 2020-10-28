@@ -46,5 +46,5 @@ scanDirectories(
 
 
 
-$minifierCSS->minify('/builds/global.css');
-$minifierJS->minify('/builds/global.js');
+$minifierCSS->minify(BUILDS_PATH . 'global.css');
+$minifierJS->minify(BUILDS_PATH . 'global.js');

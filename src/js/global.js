@@ -1,5 +1,13 @@
 /* js[global] */
 
+function domload(callback) {
+  document.addEventListener("DOMContentLoaded", callback);
+}
+
+function windowload(callback) {
+  window.addEventListener("load", callback);
+}
+
 var IS_MOBILE = "ontouchstart" in document.documentElement;
 
 function xhr(data) {
@@ -145,24 +153,6 @@ function moveCursorToEnd(el) {
     var range = el.createTextRange();
     range.collapse(false);
     range.select();
-  }
-}
-
-var toolList = [];
-function useTool(name) {
-  if (toolList.indexOf(name) !== -1) {
-    console.warn(`module ${name} registered already`);
-    return;
-  }
-  toolList.push(name);
-  var el = document.createElement("script");
-  el.src = `/admin/tools/${name}.js?v=${RELEASE}`;
-  if (document.body) {
-    document.body.appendChild(el);
-  } else {
-    domload(() => {
-      document.body.appendChild(el);
-    });
   }
 }
 
@@ -333,7 +323,7 @@ function setValue(input, value = null, params = {}) {
     value = rgbStringToHex(value);
     var hex = value.replace("#", "");
     input.value = hex;
-    input.style.background = hex ? "#" + hex : "";
+    input.jscolor.importColor();
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
   } else if (input.classList.contains("category-picker")) {

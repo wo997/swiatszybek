@@ -5,6 +5,9 @@ if (!nonull($page_data, "seo_image", "")) {
 }
 ?>
 
+<script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
+<link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+
 <script>
   // TODO: should go to cookie maybe window.devicePixelRatio
 
@@ -27,14 +30,6 @@ if (!nonull($page_data, "seo_image", "")) {
 
   const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
   const UPLOADS_PLAIN_PATH = "<?= UPLOADS_PLAIN_PATH ?>";
-
-  function domload(callback) {
-    document.addEventListener("DOMContentLoaded", callback);
-  }
-
-  function windowload(callback) {
-    window.addEventListener("load", callback);
-  }
 
   const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
   const same_ext_image_allowed_types = <?= json_encode($same_ext_image_allowed_types) ?>;
@@ -87,10 +82,6 @@ if (!nonull($page_data, "seo_image", "")) {
 
   const STATIC_URLS = <?= json_encode(STATIC_URLS) ?>;
 </script>
-
-<!-- styles / scripts to footer? -->
-<script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
-<link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
 <?php if (IS_ADMIN_PAGE || strpos(URL, "zamowienie") === 0) : ?>
 
@@ -147,12 +138,12 @@ if (!nonull($page_data, "seo_image", "")) {
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
 
 <style>
-  :root {
+  /*:root {
     --primary-clr: <?= primary_clr ?>;
     --buynow-clr: <?= buynow_clr ?>;
     --subtle-font-clr: <?= subtle_font_clr ?>;
     --subtle-background-clr: <?= subtle_background_clr ?>;
-  }
+  }*/
 
   <?php if ($app["user"]["id"]) : ?>.hide_case_logged_in {
     display: none;

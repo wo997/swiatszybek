@@ -56,7 +56,7 @@ include "scripts/use_builds.php";
 
 // TODO: abanbon and replace with settigs
 // global variables
-@include_once "builds/config.php";
+@include_once BUILDS_PATH . "config.php";
 function config($var, $default = "")
 {
     global $config;

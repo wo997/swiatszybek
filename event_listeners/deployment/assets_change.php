@@ -38,13 +38,13 @@ scanDirectories(
 if ($modifyCSS) {
     foreach ($cssFileGroups as $cssGroup => $files) {
         $minifier = new Minify\CSS(...$files);
-        $minifier->minify("builds/$cssGroup.css");
+        $minifier->minify(BUILDS_PATH . "$cssGroup.css");
     }
 }
 if ($modifyJS) {
     foreach ($jsFileGroups as $jsGroup => $files) {
         $minifier = new Minify\JS(...$files);
-        $minifier->minify("builds/$jsGroup.js");
+        $minifier->minify(BUILDS_PATH . "$jsGroup.js");
     }
 }
 

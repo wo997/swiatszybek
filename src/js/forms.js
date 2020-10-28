@@ -427,6 +427,11 @@ function setFormData(data, form, params = {}) {
   //console.log("DATA", form, JSON.stringify(data));
   var counter = 666;
   Object.entries(data).forEach(([name, value]) => {
+    if (typeof value === "object") {
+      var form_scope = form.find(`[data-form="${name}"]`);
+      return setFormData(value, form_scope);
+    }
+
     var selector = `[${find_by}="${name}"]`;
     var e = form.find(selector);
     //console.log(counter++, name, e, value, JSON.stringify(data));
@@ -472,6 +477,7 @@ function getFormData(form, params = {}) {
   var find_by = nonull(params.find_by, "name");
 
   var excludeHidden = form.hasAttribute("data-exclude-hidden");
+
   $(form)
     .findAll(`[${find_by}]`)
     .forEach((e) => {
@@ -485,8 +491,33 @@ function getFormData(form, params = {}) {
       if (parent_named_node && parent_named_node.findParentNode(form)) {
         return;
       }
-      data[e.getAttribute(find_by)] = getValue(e);
+
+      var field_name = e.getAttribute(find_by);
+      var field_value = getValue(e);
+
+      var parent_sub_form = e;
+
+      while (
+        parent_sub_form &&
+        parent_sub_form.findParentNode(form, { skip: 1 })
+      ) {
+        var p = parent_sub_form.findParentByAttribute("data-form", {
+          skip: 1,
+        });
+        if (p != form) {
+          parent_sub_form = p;
+        } else {
+          break;
+        }
+      }
+      if (parent_sub_form && parent_sub_form != e) {
+        field_name = parent_sub_form.getAttribute("data-form");
+        field_value = getFormData(parent_sub_form);
+      }
+
+      data[field_name] = field_value;
     });
+
   return data;
 }
 

@@ -48,4 +48,14 @@ if ($zip->open('piepsklep.zip') === TRUE) {
     echo 'failed';
 }
 
+// default values?
+
+/*
+use single savesettings for that shit, on any update as well, tricky man
+define("primary_clr", '#b39647');
+define("buynow_clr", '#d22');
+define("subtle_font_clr", '#333');
+define("subtle_background_clr", '#fafafa');
+*/
+
 include "deployment/warmup_cache.php";

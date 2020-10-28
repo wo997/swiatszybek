@@ -17,7 +17,7 @@
     domload(() => {
         setFormData(
             <?= json_encode([
-                "page_footer" => getSetting("theme", "layout", ["page_footer"])
+                "page_footer" => getSetting("theme", "general", ["page_footer"])
             ]); ?>, `#footerForm`);
     });
 

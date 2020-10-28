@@ -1,5 +1,23 @@
 /* js[admin] */
 
+var toolList = [];
+function useTool(name) {
+  if (toolList.indexOf(name) !== -1) {
+    console.warn(`module ${name} registered already`);
+    return;
+  }
+  toolList.push(name);
+  var el = document.createElement("script");
+  el.src = `/admin/tools/${name}.js?v=${RELEASE}`;
+  if (document.body) {
+    document.body.appendChild(el);
+  } else {
+    domload(() => {
+      document.body.appendChild(el);
+    });
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   if (window.innerWidth < MOBILE_WIDTH) {
     var nv = $(".navbar_admin");
