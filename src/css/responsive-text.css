@@ -3,6 +3,7 @@
 input,
 select {
   font-size: 1em;
+  width: 185px; /* default width man */
 }
 
 /* buttons */

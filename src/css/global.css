@@ -308,6 +308,9 @@ input[type="button"] {
   background-color: #fbfbfb;
   box-shadow: inset 0px 1px 5px -2px rgba(0, 0, 0, 0.2);
 }
+.field.white {
+  background: white;
+}
 .field.small {
   padding: 1px 5px;
 }
@@ -1388,7 +1391,6 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .jscolor.field {
   border: none !important;
-
   box-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.18);
 }
 
@@ -1483,4 +1485,8 @@ label > input[type="file"] + input[type="submit"] {
 
 .bold {
   font-weight: 900;
+}
+
+.underline {
+  text-decoration: underline;
 }

@@ -164,7 +164,8 @@
         if (!validateForm(form)) {
             return;
         }
-        const params = getFormData(form);
+        var params = getFormData(form);
+        params.admin = true;
         xhr({
             url: "/save_user",
             params,

@@ -25,8 +25,8 @@ domload(() => {
       var nodeRect = e.getBoundingClientRect();
       var tooltipRect = t.getBoundingClientRect();
 
-      var offsetX = 7;
-      var offsetY = 4;
+      var offsetX = 3;
+      var offsetY = 2;
       var left = nodeRect.left + offsetX + nodeRect.width;
       var top = nodeRect.top + offsetY + nodeRect.height;
 

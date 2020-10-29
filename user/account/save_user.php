@@ -20,7 +20,10 @@ $password = nonull($_POST, "password");
 
 // in case the password was filled
 if ($password && validatePassword($password)) {
-    updateEntity(["password_hash" => getPasswordHash($password), "authentication_token" => generateAuthenticationToken()], "users", "user_id", $user_id);
+    updateEntity([
+        "password_hash" => getPasswordHash($password),
+        "authentication_token" => generateAuthenticationToken()
+    ], "users", "user_id", $user_id);
 
     $response_footer = MESSAGE_OK_BUTTON;
 
@@ -51,6 +54,7 @@ if (isset($_POST["imie"])) {
         "nr_domu",
         "nip",
         "nr_lokalu",
+        "privelege_id"
     ]);
     updateEntity($data, "users", "user_id", $user_id);
 
@@ -124,6 +128,10 @@ if (isset($_POST["imie"])) {
             . "</div>"
             . $response_footer;
     }
+}
+
+if (isset($_POST["admin"])) {
+    die;
 }
 
 if ($response) {

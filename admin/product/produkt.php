@@ -97,6 +97,7 @@ if ($product_id === -1) {
 
   .indent {
     margin-left: 20px;
+    margin-right: -88px;
   }
 
   #productForm [name="variant_filters"] .attribute-row {
@@ -163,14 +164,6 @@ if ($product_id === -1) {
     margin-bottom: 5px;
   }
 
-  .indent {
-    margin-right: -88px;
-  }
-
-  .indent>[name="variant_filters"][data-count="0"] {
-    display: none;
-  }
-
   .label-options::before {
     counter-increment: options;
     content: counter(options)".";
@@ -188,6 +181,10 @@ if ($product_id === -1) {
   }
 
   .options_wrapper:not([data-option-count="0"])>.add_additional_filters {
+    display: none;
+  }
+
+  .options_wrapper[data-option-count="0"]>.indent {
     display: none;
   }
 
@@ -816,6 +813,36 @@ if ($product_id === -1) {
     //variants.params.onChange(variants);
   });
 
+  function choiceNameChanged(input) {
+    input = $(input);
+    var sub_filter = input.findParentByClassName(`sub_filter`);
+
+    var add_buttons = sub_filter.find(`.add_buttons`);
+
+    if (add_buttons) {
+      var add_begin = add_buttons.find(".add_begin");
+      if (add_begin) {
+        add_begin.setAttribute("data-tooltip", `Dodaj opcję do pola wyboru <span class='semi-bold'>${input.value.toLowerCase()}</span> na początku`);
+        add_buttons.find(".add_end").setAttribute("data-tooltip", `Dodaj opcję do pola wyboru <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`);
+      }
+    }
+  }
+
+  function optionNameChanged(input) {
+    input = $(input);
+    var sub_filter = input.findParentByClassName(`sub_filter`);
+
+    var add_buttons = sub_filter.find(`.add_buttons`);
+
+    if (add_buttons) {
+      var add_begin = add_buttons.find(".add_begin");
+      if (add_begin) {
+        add_begin.setAttribute("data-tooltip", `Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na początku`);
+        add_buttons.find(".add_end").setAttribute("data-tooltip", `Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`);
+      }
+    }
+  }
+
   function choiceAttributeChanged(select) {
     if (!$('#productForm').getAttribute("data-loaded")) {
       return;
@@ -889,6 +916,8 @@ if ($product_id === -1) {
             required: true,
             use_all: true,
           });
+
+          registerDatepickers();
         });
       })
     });
@@ -909,26 +938,23 @@ if ($product_id === -1) {
             <div style='margin-right:6px' class="inline">
               <div class='fancy-label label-filters'>
                 <i class="fas fa-th-large"></i>
-                <span class="semi-bold">Pole wyboru</span>
+                <input type="text" class="field inline no-wrap semi-bold white" name="filter_name" placeholder="Nazwa pola wyboru" data-tooltip="Wpisz nazwę pola wyboru<br>Np.: <span class='semi-bold'>kolor</span>" data-position="center" onchange="choiceNameChanged(this)">
               </div>
               Atrybut
-              <i class="fas fa-info-circle" data-tooltip='1. W przypadku wyboru niestandardowego pozostaw puste i uzupełnij samą nazwę pola wyboru<br>2. Powiąż z atrybutem by umożliwić wyszukanie produktu'></i>
               <select class="field inline no-wrap" name="attribute_id" onchange="choiceAttributeChanged(this)">
-                <option value='-1'>Brak</option>
                 ${attribute_select_options}
+                <option value='-1'>Inny ✎</option>
               </select>
             </div>
-            Tytuł:
-            <input type="text" class="field inline no-wrap" name="filter_name">
             <div class='indent'>
               <div>
                 <span class='field-title inline'>
-                  Opcje
+                  Lista opcji
                   <span class='add_buttons'></span>
                 </span>
                 <span style='margin-left:10px'>
-                  Szerokość opcji:
-                  <select name="style" class="field inline">
+                  <i class="fas fa-arrows-alt-h"></i>
+                  <select name="style" class="field inline" data-tooltip='Szerokość "kafelek" opcji widocznych dla klienta'>
                     <option value="col1">100%</option>
                     <option value="col2">1/2</option>
                     <option value="col3">1/3</option>
@@ -970,18 +996,16 @@ if ($product_id === -1) {
         return `
           <div class='sub_filter options_wrapper'>
             <div class='fancy-label label-options'>
-              <span class="semi-bold">Opcja</span>
+              <input type='text' name="value" class="field inline no-wrap semi-bold white" placeholder="Nazwa wariantu / Cecha" onchange="optionNameChanged(this)">
             </div>
             <div style='margin-right:6px' class="inline select_value_wrapper">
               Wartość:
               <div class='inline' name='selected_attribute_values' data-type="attribute_values" onchange="choiceValuesChanged(this)"></div>
             </div>
-            Nazwa: 
-            <input type='text' name="value" class="field inline no-wrap">
             <button class='btn secondary semi-bold add_additional_filters' onclick='this.next().find(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
 
             <div class='indent'>
-              <div class='field-title'>
+              <div class='field-title variant_filters_title'>
                 Pola wyboru
                 <span class='add_buttons'></span>
               </div>
@@ -1125,7 +1149,7 @@ if ($product_id === -1) {
     <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
   <?php else : ?>
     <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
-    <a href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></a>
+    <button data-href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></button>
   <?php endif ?>
   <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>
   <button onclick="saveProduct()" class="btn primary">Zapisz <i class="fas fa-save"></i></button>
@@ -1187,7 +1211,7 @@ if ($product_id === -1) {
   <div name="attributes" data-type="attribute_values"></div>
 
   <div class='field-title'>
-    Pola wyboru wariantów produktów
+    Oferta / Pola wyboru wariantów produktów
     <span class='add_buttons'></span>
   </div>
   <div name="variant_filters" class="slim"></div>

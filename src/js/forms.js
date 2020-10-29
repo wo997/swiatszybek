@@ -428,8 +428,11 @@ function setFormData(data, form, params = {}) {
   var counter = 666;
   Object.entries(data).forEach(([name, value]) => {
     if (typeof value === "object") {
-      var form_scope = form.find(`[data-form="${name}"]`);
-      return setFormData(value, form_scope);
+      var sub_form = form.find(`[data-form="${name}"]`);
+      if (sub_form) {
+        // not always found, thats tricky
+        return setFormData(value, sub_form);
+      }
     }
 
     var selector = `[${find_by}="${name}"]`;
