@@ -193,6 +193,20 @@ if ($product_id === -1) {
     border-bottom-left-radius: 4px;
     border-bottom-width: 0;
   }
+
+  [name="variant_filters"]>.list>.simple-list-row-wrapper:not(:last-child) {
+    margin-bottom: 10px;
+    box-shadow: 0 15px 0 0 white;
+  }
+
+  [name="filter_options"] [name="variant_filters"]>.list>.simple-list-row-wrapper:not(:last-child) {
+    margin-bottom: 5px;
+  }
+
+  [name="variant_filters"]>.list>.simple-list-row-wrapper {
+    border-bottom: 1px solid #aaa;
+    border-radius: 4px;
+  }
 </style>
 <script>
   useTool("cms");
@@ -488,13 +502,24 @@ if ($product_id === -1) {
           },
           onChange: (values, list) => {
             list.target.directChildren().forEach(row => {
-              var value_id = row.find(`[name="value_id"]`).getValue();
-              val = nonull(attribute_values[value_id], {
-                whole_value: ""
-              }).whole_value
-              var value_name_field = row.find(`[name="value"]`);
-              if (value_name_field.getValue() != val) {
-                value_name_field.setValue(val);
+              var value_id_node = row.find(`[name="value_id"]`);
+              var attribute_value_node = row.find(`[name="attribute_value"]`);
+
+              var val = "";
+              if (attribute_value_node) {
+                val = attribute_value_node.getValue();
+              } else {
+                var attr_val = attribute_values[value_id_node.getValue()];
+                if (attr_val) {
+                  val = attr_val.whole_value;
+                }
+              }
+
+              if (val) {
+                var value_name_field = row.find(`[name="value"]`);
+                if (value_name_field.getValue() != val) {
+                  value_name_field.setValue(val);
+                }
               }
             })
           }
@@ -861,16 +886,25 @@ if ($product_id === -1) {
 
     values_combo = $(values_combo);
     var whole_value = "";
-    values_combo.findAll("select").forEach(e => {
-      if (e.value && !e.classList.contains("hidden")) {
-        whole_value += attribute_values[e.value].value + " ";
-      }
-    });
+
+    var attribute_value_node = values_combo.find(`.attribute_value`);
+    if (attribute_value_node) {
+      whole_value = attribute_value_node.getValue();
+    } else {
+      values_combo.findAll("select").forEach(e => {
+        if (e.value && !e.classList.contains("hidden")) {
+          whole_value += attribute_values[e.value].value + " ";
+        }
+      });
+    }
     whole_value = whole_value.trim();
 
-    var sub_filter = values_combo.findParentByClassName(`sub_filter`);
-    var value_field = sub_filter.find(`[name="value"]`);
-    value_field.setValue(whole_value);
+    if (whole_value) {
+
+      var sub_filter = values_combo.findParentByClassName(`sub_filter`);
+      var value_field = sub_filter.find(`[name="value"]`);
+      value_field.setValue(whole_value);
+    }
   }
 
   function choiceListChanged(filter_list) {
@@ -941,9 +975,9 @@ if ($product_id === -1) {
                 <input type="text" class="field inline no-wrap semi-bold white" name="filter_name" placeholder="Nazwa pola wyboru" data-tooltip="Wpisz nazwę pola wyboru<br>Np.: <span class='semi-bold'>kolor</span>" data-position="center" onchange="choiceNameChanged(this)">
               </div>
               Atrybut
-              <select class="field inline no-wrap" name="attribute_id" onchange="choiceAttributeChanged(this)">
+              <select class="field inline no-wrap" name="attribute_id" onchange="choiceAttributeChanged(this)" data-tooltip="W tym miejscu możesz:<br>1. Wybrać atrybut z listy wcześniej przygotowanej w zakładce Produkty/Atrybuty<br>2. Wybrać pole niestandardowe (gdy cecha opisuje tylko dany produkt)">
                 ${attribute_select_options}
-                <option value='-1'>Inny ✎</option>
+                <option value='-1'>⋆ Pole niestandardowe ⋆</option>
               </select>
             </div>
             <div class='indent'>
@@ -1234,7 +1268,7 @@ if ($product_id === -1) {
     Oferta / Pola wyboru wariantów produktów
     <span class='add_buttons'></span>
   </div>
-  <div name="variant_filters" class="slim"></div>
+  <div name="variant_filters" class="slim root"></div>
 
   <h3 class="h1" style='color:var(--error-clr)'>WSZYSTKO PONIŻEJ TO CHUJ</h3>
 

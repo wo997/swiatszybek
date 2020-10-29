@@ -1490,3 +1490,7 @@ label > input[type="file"] + input[type="submit"] {
 .underline {
   text-decoration: underline;
 }
+
+input:placeholder-shown {
+  font-weight: unset;
+}
