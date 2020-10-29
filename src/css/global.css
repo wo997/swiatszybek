@@ -1133,8 +1133,8 @@ ql-icon i span {
   display: flex;
 }
 .expand_arrow {
-  width: 1.4em;
-  height: 1.4em;
+  width: 1.5em;
+  height: 1.5em;
   padding: 0;
   display: inline-flex;
   justify-content: center;

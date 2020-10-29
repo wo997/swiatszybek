@@ -1,10 +1,15 @@
 /* js[global] */
-var lastTooltip = null;
 domload(() => {
-  window.addEventListener("mousemove", function (event) {
-    var t = $(".tooltip");
-    if (!t) return;
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `<div class="wo997tooltip" style="display:none"></div>`
+  );
+  window.tooltip = {
+    target: $(".wo997tooltip"),
+  };
 
+  window.addEventListener("mousemove", function (event) {
+    var t = window.tooltip.target;
     var e = findParentByAttribute(event.target, "data-tooltip");
     if (e) {
       var tooltipText = e.getAttribute("data-tooltip");
@@ -17,7 +22,7 @@ domload(() => {
         }
       }
 
-      if (lastTooltip != e) {
+      if (window.tooltip.lastTooltipNode != e) {
         t.style.display = "block";
         t.innerHTML = tooltipText;
       }
@@ -60,11 +65,12 @@ domload(() => {
       t.style.top = top + "px";
     } else t.style.display = "none";
 
-    lastTooltip = e;
+    window.tooltip.lastTooltipNode = e;
   });
-  window.addEventListener("click", function (ev) {
-    var t = $(".tooltip");
-    if (t) t.style.display = "none";
+  window.addEventListener("mousewheel", () => {
+    var t = window.tooltip.target;
+    t.style.display = "none";
+    window.tooltip.lastTooltipNode = null;
   });
 
   window.addEventListener("resize", tooltipResizeCallback);

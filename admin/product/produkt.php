@@ -176,8 +176,8 @@ if ($product_id === -1) {
     font-weight: 600;
   }*/
 
-  .indent>[name="variant_filters"]>.field-title {
-    margin: 5px 0px 2px !important;
+  .indent_field_title {
+    margin: 10px 0px 4px !important;
   }
 
   .options_wrapper:not([data-option-count="0"])>.add_additional_filters {
@@ -948,8 +948,12 @@ if ($product_id === -1) {
             </div>
             <div class='indent'>
               <div>
-                <span class='field-title inline'>
+
+                <button class='btn transparent expand_arrow open' onclick='expandMenu($(this).parent().next(),$(this).parent())'><i class='fas fa-chevron-right'></i></button>
+
+                <span class='field-title inline indent_field_title'>
                   Lista opcji
+                  <span class='option_count'></span>
                   <span class='add_buttons'></span>
                 </span>
                 <span style='margin-left:10px'>
@@ -962,7 +966,7 @@ if ($product_id === -1) {
                   </select>
                 </span>
               </div>
-              <div name="filter_options"></div>
+              <div name="filter_options" class="expand_y"></div>
             </div>
           </div>
         `;
@@ -1005,7 +1009,7 @@ if ($product_id === -1) {
             <button class='btn secondary semi-bold add_additional_filters' onclick='this.next().find(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
 
             <div class='indent'>
-              <div class='field-title variant_filters_title'>
+              <div class='field-title indent_field_title'>
                 Pola wyboru
                 <span class='add_buttons'></span>
               </div>
@@ -1020,10 +1024,26 @@ if ($product_id === -1) {
       beforeRowInserted: (row, values) => {
         createVariantFiltersSimpleList(row.find(`[name="variant_filters"]`));
       },
-      onChange: (values, list) => {
-
+      onChange: (data, list) => {
+        var filter_wrapper = node.findParentByClassName("filter_wrapper");
+        if (filter_wrapper) {
+          filter_wrapper.find(".option_count").setContent(`(${data.length})`);
+        }
       }
     });
+
+    var filter_wrapper = node.findParentByClassName("filter_wrapper");
+    var add_buttons = filter_wrapper.find(".add_buttons");
+    if (add_buttons) {
+      var expandList = () => {
+        expand_arrow = filter_wrapper.find(".expand_arrow");
+        if (!expand_arrow.classList.contains("open")) {
+          expand_arrow.click();
+        }
+      }
+      add_buttons.find(".add_begin").addEventListener("click", expandList);
+      add_buttons.find(".add_end").addEventListener("click", expandList);
+    }
   }
 
   windowload(() => {

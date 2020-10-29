@@ -1,5 +1,3 @@
-<div class="tooltip" style="display:none"></div>
-
 <div id="modal-wrapper">
   <div class="modal-content"></div>
 </div>
