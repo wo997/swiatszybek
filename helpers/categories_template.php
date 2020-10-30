@@ -1,5 +1,5 @@
 <?php //route[helpers/categories_template]
-$raw = $_SERVER["REQUEST_METHOD"] == "POST";
+$raw = IS_XHR;
 
 if (!$raw) {
     echo "<template class='categories-template'>";
