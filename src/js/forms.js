@@ -21,12 +21,26 @@ function showFieldErrors(field, errors = [], options = {}) {
     $(error_target).classList.toggle("field-error-visible", wrong);
   }
 
-  // look inside or above
-  var field_title = field.find(".field-title");
-  if (!field_title) {
-    var previousNode = field.prev();
-    if (previousNode && previousNode.classList.contains("field-title")) {
+  // look above or inside
+  var field_title = null;
+  var previousNode = field.prev();
+  if (!field_title && previousNode) {
+    if (
+      previousNode.classList.contains("field-title") ||
+      previousNode.classList.contains("above-simple-list")
+    ) {
       field_title = previousNode;
+    } else {
+      var maybe = previousNode.find(".field-title");
+      if (maybe) {
+        field_title = maybe;
+      }
+    }
+  }
+  if (!field_title) {
+    var inside = field.find(".field-title");
+    if (inside) {
+      field_title = inside;
     }
   }
   if (!field_title) {
@@ -424,8 +438,6 @@ function setFormData(data, form, params = {}) {
     jscolor.installByClassName();
   }
 
-  //console.log("DATA", form, JSON.stringify(data));
-  var counter = 666;
   Object.entries(data).forEach(([name, value]) => {
     if (typeof value === "object") {
       var sub_form = form.find(`[data-form="${name}"]`);
@@ -437,7 +449,6 @@ function setFormData(data, form, params = {}) {
 
     var selector = `[${find_by}="${name}"]`;
     var e = form.find(selector);
-    //console.log(counter++, name, e, value, JSON.stringify(data));
     if (!e) {
       return;
     }
@@ -455,10 +466,6 @@ function setFormData(data, form, params = {}) {
       value_params = params.data[name];
     }
 
-    //console.trace();
-
-    //console.log(value);
-    //console.log(e);
     e.setValue(value, value_params);
   });
 

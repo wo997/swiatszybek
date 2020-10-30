@@ -169,4 +169,8 @@ manageTableColumns("variant", [
   ["name" => "vat_id", "previous_name" => "vat", "type" => "INT", "index" => "index"],
 ]);
 
+manageTableColumns("product_attributes", [
+  ["name" => "single_product_id", "previous_name" => "product_id", "type" => "INT", "null" => true, "index" => "index"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";

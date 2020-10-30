@@ -115,7 +115,7 @@ function createSimpleList(params = {}) {
   list.insertRowFromBtn = (btn, begin = true, user = true) => {
     var row = list.insertRow(
       params.default_row,
-      btn.parent().next(),
+      btn.findParentByClassName("above-simple-list").next().find(".list"),
       begin,
       user
     );
@@ -205,7 +205,7 @@ function createSimpleList(params = {}) {
 
   list.removeRow = (row) => {
     row.remove();
-    list.valuesChanged();
+    list.valuesChanged(row);
   };
 
   list.insertRow = (values, listTarget = null, begin = false, user = false) => {
@@ -219,7 +219,6 @@ function createSimpleList(params = {}) {
     var depth = parseInt(listTarget.getAttribute("data-depth"));
 
     var btnTop = "";
-    var btnBottom = "";
     var btnAddTop = "";
 
     if (depth < list.recursive) {
@@ -250,8 +249,7 @@ function createSimpleList(params = {}) {
               <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());simple_lists[${simple_list_id}].valuesChanged();"></i>
               <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());simple_lists[${simple_list_id}].valuesChanged();"></i>
               <i class="btn secondary fas fa-times remove-row-btn" 
-                onclick="simple_lists[${simple_list_id}].removeRowFromBtn(this);
-                simple_lists[${simple_list_id}].valuesChanged();">
+                onclick="simple_lists[${simple_list_id}].removeRowFromBtn(this);">
               </i>
             </td>
         </tr>`
@@ -268,26 +266,22 @@ function createSimpleList(params = {}) {
                   <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());simple_lists[${simple_list_id}].valuesChanged();"></i>
                   <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());simple_lists[${simple_list_id}].valuesChanged();"></i>
                   <i class="btn secondary fas fa-times remove-row-btn" 
-                    onclick="simple_lists[${simple_list_id}].removeRowFromBtn(this);
-                    simple_lists[${simple_list_id}].valuesChanged();">
+                    onclick="simple_lists[${simple_list_id}].removeRowFromBtn(this);">
                   </i>
                 </div>
             </div>
             <div class="sub-list">
                 ${btnTop}
                 <div class="list" data-depth="${1 + depth}"></div>
-                ${btnBottom}
             </div>
         </div>`
       );
     }
 
-    list.valuesChanged();
-
-    list.registerFields(list.target);
-
     var n = begin ? 0 : listTarget.children.length - 1;
     var addedNode = $(listTarget.children[n]);
+
+    //list.valuesChanged(addedNode);
 
     if (list.params.beforeRowInserted) {
       list.params.beforeRowInserted(addedNode, values, list, {
@@ -295,9 +289,12 @@ function createSimpleList(params = {}) {
       });
     }
 
-    // do it after any sub components were created
+    // do it after any sub components were created in beforeRowInserted callback :)
+    list.setting_data = true;
     setFormData(values, addedNode);
+    delete list.setting_data;
 
+    list.valuesChanged(addedNode);
     list.registerFields(list.target);
 
     if (list.params.afterRowInserted) {
@@ -323,12 +320,18 @@ function createSimpleList(params = {}) {
 
       e.addEventListener("change", () => {
         list.registerFields(listTarget);
-        list.valuesChanged();
+        list.valuesChanged(
+          e.findParentByClassName(
+            list.table ? "simple-list-row" : "simple-list-row-wrapper"
+          )
+        );
       });
     });
+
+    registerForm();
   };
 
-  list.valuesChanged = () => {
+  list.valuesChanged = (changeListTarget = null) => {
     var getDirectRows = (listTarget, level) => {
       var rows = [];
 
@@ -406,15 +409,13 @@ function createSimpleList(params = {}) {
 
     list.wrapper.setAttribute("data-count", list.values.length);
 
-    list.wrapper.dispatchEvent(new Event("change"));
-    if (params.onChange && !list.during_change) {
-      list.during_change = true;
-      params.onChange(list.values, list);
-      delete list.during_change;
+    list.wrapper.setValue();
+    if (params.onChange && !list.during_change && !list.setting_data) {
+      params.onChange(list.values, list, changeListTarget);
     }
   };
 
-  // set data-count etc.
+  // set initial state / data-count etc.
   list.valuesChanged();
 
   return simple_list_id;
@@ -460,21 +461,6 @@ function validateSimpleList(field) {
 
           valid = false;
           inputs.forEach((list_field) => {
-            /*var listFieldcheckRemoveinsertRowFromBtn  = () => {
-              inputs.forEach((list_field) => {
-                if (list_field.classList.contains("required")) {
-                  list_field.classList.remove("required");
-                  list_field.removeEventListener(
-                    "input",
-                    listFieldcheckRemoveRequired
-                  );
-                  list_field.removeEventListener(
-                    "change",
-                    listFieldcheckRemoveRequired
-                  );
-                }
-              });
-            };*/
             list_field.classList.add("required");
           });
         });

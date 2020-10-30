@@ -44,7 +44,7 @@ $admin_navigations_tree = [
       ["url" => "produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
       ["url" => "magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
       ["url" => "kategorie", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
-      ["url" => "atrybuty", "title" => '<i class="fas fa-check-square"></i> Atrybuty'],
+      ["url" => "cechy", "title" => '<i class="fas fa-star"></i> Cechy'],
     ]
   ],
   [

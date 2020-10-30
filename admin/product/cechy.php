@@ -1,9 +1,9 @@
-<?php //route[{ADMIN}atrybuty] 
+<?php //route[{ADMIN}cechy] 
 ?>
 
 <?php startSection("head"); ?>
 
-<title>Atrybuty produktów</title>
+<title>Cechy produktów</title>
 
 <style>
 </style>
@@ -23,13 +23,13 @@
             name: "mytable",
             url: STATIC_URLS["ADMIN"] + "search_product_attributes",
             lang: {
-                subject: "atrybutów",
+                subject: "cech",
             },
             primary: "attribute_id",
             db_table: "product_attributes",
             sortable: true,
             definition: [{
-                    title: "Nazwa atrybutu",
+                    title: "Nazwa cechy",
                     width: "20%",
                     render: (r) => {
                         return `${r.name}`;
@@ -69,7 +69,7 @@
                         <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
-                    <div class="btn important" onclick="editAttribute(this)"><span>Atrybut</span> <i class="fa fa-plus"></i></div>
+                    <div class="btn important" onclick="editAttribute(this)"><span>Cecha</span> <i class="fa fa-plus"></i></div>
                 `
         });
 
@@ -244,21 +244,21 @@
 
 <?php startSection("content"); ?>
 
-<h1>Atrybuty produktów</h1>
+<h1>Cechy produktów</h1>
 
 <div class="mytable"></div>
 
 <div id="editAttribute" data-modal data-expand data-exclude-hidden data-form>
     <div class="modal-body">
         <div class="custom-toolbar">
-            <span class="title">Edycja atrybutu</span>
+            <span class="title">Edycja cechy</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
             <button class="btn primary" onclick="saveAttribute();">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="scroll-panel scroll-shadow panel-padding">
             <div class="desktopRow spaceColumns">
                 <div>
-                    <div class="field-title">Nazwa atrybutu</div>
+                    <div class="field-title">Nazwa cechy</div>
                     <input type="text" name="name" data-validate autocomplete="off" class="field">
 
                     <div class="field-title">Typ danych</div>
@@ -288,7 +288,7 @@
 
             <br>
             <div style="margin-top:auto; align-self: flex-end; padding-top:30px; margin-bottom:10px">
-                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć ten atrybut?')) saveAttribute(true);">Usuń <i class="fa fa-times"></i></button>
+                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć tę cechę?')) saveAttribute(true);">Usuń <i class="fa fa-times"></i></button>
             </div>
 
             <input type="hidden" name="attribute_id">

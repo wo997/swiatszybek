@@ -21,7 +21,7 @@ if (isset($_POST["remove"])) {
         "description",
         "gallery",
         "published",
-        "variant_attributes_layout",
+        //"variant_attributes_layout",
         "variant_filters"
     ]);
 
