@@ -62,18 +62,16 @@ if (isset($product_data["remove"])) {
     /*query("DELETE FROM link_variant_attribute_value WHERE variant_id = ?", [ // create foreign key?
         $product_data["variant_id"]
     ]);*/
-    $variant_ids = "";
-    $kolejnosc = 0;
 
+    $kolejnosc = 0;
+    $present_variant_ids = [];
     foreach ($product_data["variants"] as $variant_data) {
-        $kolejnosc++;
         $variant_id = getEntityId("variant", $variant_data["variant_id"], ["data" => ["product_id" => $product_id]]);
-        $variant_ids .= "$variant_id,";
+        $present_variant_ids[] = $variant_id;
 
         $variant_entity_data = filterArrayKeys($variant_data, ["name", "product_code", "zdjecie", "published", "price", "rabat"]);
-        $variant_entity_data["product_id"] = $product_id;
+        $kolejnosc++;
         $variant_entity_data["kolejnosc"] = $kolejnosc;
-
         updateEntity($variant_entity_data, "variant", "variant_id", $variant_id);
 
         triggerEvent("variant_stock_change", ["variant_id" => $variant_id, "stock_difference" => intval($variant_data["stock"]) - intval($variant_data["was_stock"])]);
@@ -85,11 +83,11 @@ if (isset($product_data["remove"])) {
         //updateAttributesInDB($attributes, "link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant_id);
     }
 
-    if (!$variant_ids) {
-        $variant_ids = "-1,";
+    $where = "product_id = $product_id";
+    if (count($present_variant_ids) > 0) {
+        $where .= " AND variant_id NOT IN (" . join(",", $present_variant_ids) . ")";
     }
-    $variant_ids = substr($variant_ids, 0, -1);
-    query("DELETE FROM variant WHERE product_id = $product_id AND variant_id NOT IN ($variant_ids)");
+    query("DELETE FROM variant WHERE $where");
 }
 
 triggerEvent("sitemap_change");
