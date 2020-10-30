@@ -261,3 +261,8 @@ tr.simple-list-row td:last-child {
 .simple-list-scroll-content {
   flex-grow: 1;
 }
+
+.above-simple-list .add_buttons {
+  margin-bottom: 4px;
+  display: inline-block;
+}

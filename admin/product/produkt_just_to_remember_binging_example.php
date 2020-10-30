@@ -917,7 +917,7 @@ if ($product_id === -1) {
                 filter_name: "",
                 attribute_id: -1,
             },
-            beforeRowInserted: (row, values) => {
+            onRowInserted: (row, values) => {
                 createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
             },
             onChange: (data, list) => {
@@ -963,7 +963,7 @@ if ($product_id === -1) {
             default_row: {
                 value: "",
             },
-            beforeRowInserted: (row, values) => {
+            onRowInserted: (row, values) => {
                 createVariantFiltersSimpleList(row.find(`[name="variant_filters"]`));
             },
             onChange: (data, list) => {

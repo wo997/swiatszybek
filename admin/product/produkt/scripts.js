@@ -239,7 +239,7 @@ domload(() => {
       });
       lazyLoadImages();
     },
-    afterRowInserted: (row, values, list, options) => {
+    onNewRowDataSet: (row, values, list, options) => {
       if (options.user) {
         row.find(".add_img_btn").dispatchEvent(new Event("click"));
         setCustomHeights();
@@ -344,7 +344,7 @@ domload(() => {
         return;
       }
     },
-    afterRowInserted: (row, values, list, options) => {
+    onNewRowDataSet: (row, values, list, options) => {
       if (options.user) {
         editVariant(row, list.wrapper.find(".field-title .add_btn"));
       }
@@ -426,21 +426,13 @@ function optionNameChanged(input) {
 }
 
 function choiceAttributeChanged(select) {
-  /*if (!$("#productForm").getAttribute("data-loaded")) {
-    return;
-  }*/
-
-  select = $(select);
+  /*select = $(select);
   var sub_filter = select.findParentByClassName(`sub_filter`);
   var filter_name = sub_filter.find(`[name="filter_name"]`);
-  filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
+  filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));*/
 }
 
 function choiceValuesChanged(values_combo) {
-  /*if (!$("#productForm").getAttribute("data-loaded")) {
-    return;
-  }*/
-
   values_combo = $(values_combo);
   var whole_value = "";
 
@@ -569,11 +561,11 @@ function createVariantFiltersSimpleList(node, options = {}) {
       filter_name: "",
       attribute_id: -1,
     },
-    beforeRowInserted: (row, values) => {
+    onRowInserted: (row, values) => {
       createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
 
+      // must be set first cause it's used to generate attribute pickers
       row.find(`[name="attribute_id"]`).setValue(values.attribute_id);
-      choiceListChanged(row);
     },
 
     onChange: (data, list, row) => {
@@ -623,7 +615,7 @@ function createFilterOptionsSimpleList(node) {
     default_row: {
       value: "",
     },
-    beforeRowInserted: (row, values) => {
+    onRowInserted: (row, values) => {
       choiceListChanged(row.findParentByClassName("filter_wrapper").parent());
       createVariantFiltersSimpleList(row.find(`[name="variant_filters"]`));
     },

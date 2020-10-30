@@ -283,13 +283,13 @@ function createSimpleList(params = {}) {
 
     //list.valuesChanged(addedNode);
 
-    if (list.params.beforeRowInserted) {
-      list.params.beforeRowInserted(addedNode, values, list, {
+    if (list.params.onRowInserted) {
+      list.params.onRowInserted(addedNode, values, list, {
         user: user,
       });
     }
 
-    // do it after any sub components were created in beforeRowInserted callback :)
+    // do it after any sub components were created in onRowInserted callback :)
     list.setting_data = true;
     setFormData(values, addedNode);
     delete list.setting_data;
@@ -297,8 +297,8 @@ function createSimpleList(params = {}) {
     list.valuesChanged(addedNode);
     list.registerFields(list.target);
 
-    if (list.params.afterRowInserted) {
-      list.params.afterRowInserted(addedNode, values, list, {
+    if (list.params.onNewRowDataSet) {
+      list.params.onNewRowDataSet(addedNode, values, list, {
         user: user,
       });
     }
