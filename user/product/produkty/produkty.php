@@ -137,14 +137,14 @@ function showCategory($category, $level = 0)
           <div class="flex-column" style="margin-right:15px;">
             Min.
             <div class='float-icon mobile-margin-bottom flex'>
-              <input type="number" class="field inline price_min_search" name="price_min_search" style="padding-right: 24px;" oninput="filterChange()" onchange="filterChange(true);">
+              <input type="number" class="field inline price_min_search no-wrap" name="price_min_search" style="padding-right: 24px;" oninput="filterChange()" onchange="filterChange(true);">
               <i>zł</i>
             </div>
           </div>
           <div class="flex-column">
             Max.
             <div class='float-icon mobile-margin-bottom flex'>
-              <input type="number" class="field inline price_max_search" name="price_max_search" style="padding-right: 24px;" oninput="filterChange()" onchange="filterChange(true);">
+              <input type="number" class="field inline price_max_search no-wrap" name="price_max_search" style="padding-right: 24px;" oninput="filterChange()" onchange="filterChange(true);">
               <i>zł</i>
             </div>
           </div>
