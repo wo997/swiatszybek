@@ -254,7 +254,15 @@ domload(() => {
   createVariantFiltersSimpleList($(`[name="variant_filters"]`), {
     title: "Pola wyboru wariantu produktu",
     onChange: (data, list, row) => {
-      //choiceListChanged(list.target);
+      var variant_by_attribues = [];
+      console.log(data);
+      data.forEach((variant_filter) => {
+        variant_filter.filter_options.forEach((filter_option) => {
+          variant_by_attribues.push(filter_option.value_id);
+          console.log(filter_option);
+        });
+      });
+      console.log(variant_by_attribues);
     },
   });
 
@@ -335,7 +343,7 @@ domload(() => {
       product_code: "",
       zdjecie: "",
       published: 0,
-      attributes: '{"selected":[],"values":[]}',
+      attributes: { selected: [], values: [] },
     },
     title: "Warianty produktu",
     empty: `<div class='rect light-gray'>Dodaj min. 1 wariant</div>`,
@@ -365,11 +373,11 @@ domload(() => {
   registerAnythingValues();
 
   var variants_data = [];
-  JSON.parse(product_data.variants).forEach((e) => {
+  product_data.variants.forEach((e) => {
     e.was_stock = e.stock;
     variants_data.push(e);
   });
-  product_data.variants = JSON.stringify(variants_data);
+  product_data.variants = variants_data;
 
   setFormData(product_data, "#productForm");
 
@@ -456,15 +464,6 @@ function choiceValuesChanged(values_combo) {
 }
 
 function choiceListChanged(attribute_row_wrapper) {
-  //$$(`[name="variant_filters"]`).forEach((variant_filters_list_wrapper) => {
-
-  /*console.log(variant_filters_list_wrapper);
-  var list = variant_filters_list_wrapper.find(`.list`);
-  if (!list) {
-    return;
-  }
-  list.directChildren().forEach((attribute_row_wrapper) => {*/
-
   var select = attribute_row_wrapper.find(`[name="attribute_id"]`);
   if (!select) {
     return;
@@ -505,8 +504,6 @@ function choiceListChanged(attribute_row_wrapper) {
 
     registerDatepickers();
   });
-  //});
-  //});
 }
 
 function createVariantFiltersSimpleList(node, options = {}) {
@@ -718,7 +715,9 @@ function saveProduct() {
     return;
   }
 
-  var params = getFormData(form);
+  var params = {
+    product_data: getFormData(form),
+  };
 
   xhr({
     url: STATIC_URLS["ADMIN"] + "save_product",

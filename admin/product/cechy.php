@@ -182,7 +182,7 @@
             simple_lists.filter(simple_list => {
                 return simple_list.params.name == `attribute_values_${data_type}`
             }).forEach(simple_list => {
-                simple_list.setValues([]);
+                simple_list.setListValues([]);
             })
         })
 

@@ -1,9 +1,19 @@
 /* js[global] */
 
-function setCategoryPickerValuesString(element, values, params = {}) {
+function setCategoryPickerValue(element, value, params = {}) {
+  if (typeof value === "string") {
+    try {
+      value = JSON.parse(value);
+      setCategoryPickerValue(element, value, params);
+    } catch (e) {}
+    return;
+  }
+
   element = $(element);
 
-  element.setAttribute("value", values);
+  element.category_picker = {
+    value: value,
+  };
 
   element.findAll(".expand_y").forEach((e) => {
     e.classList.add("hidden");
@@ -15,7 +25,7 @@ function setCategoryPickerValuesString(element, values, params = {}) {
 
   var singleselect = element.hasAttribute("data-single");
   if (!singleselect) {
-    values = values.map((e) => e.toString());
+    value = value.map((e) => e.toString());
   }
   var example = null;
   element.findAll("[data-category_id]").forEach((e) => {
@@ -25,11 +35,11 @@ function setCategoryPickerValuesString(element, values, params = {}) {
 
     var check = false;
     if (singleselect) {
-      if (values != null && values != undefined) {
-        check = values.toString() == e.getAttribute("data-category_id");
+      if (value != null && value != undefined) {
+        check = value.toString() == e.getAttribute("data-category_id");
       }
     } else {
-      check = values.indexOf(e.getAttribute("data-category_id")) !== -1;
+      check = value.indexOf(e.getAttribute("data-category_id")) !== -1;
     }
     e.checked = check;
     if (check) {
@@ -137,9 +147,9 @@ function categoryChanged(el) {
         checked.push(parseInt(e.getAttribute("data-category_id")));
       }
     });
-    value = JSON.stringify(checked);
+    value = checked;
   }
-  element.setAttribute("value", value);
+  element.category_picker.value = value;
 
   if (el.checked) {
     var expandWhenClosed = el

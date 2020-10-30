@@ -148,17 +148,15 @@ function createSimpleList(params = {}) {
     list.valuesChanged();
   };
 
-  list.setValuesFromString = (valuesString) => {
-    var values;
-    try {
-      values = JSON.parse(valuesString);
-    } catch (e) {
-      values = [];
+  list.setListValues = (values) => {
+    if (typeof values === "string") {
+      try {
+        values = JSON.parse(values);
+        list.setListValues(values);
+      } catch (e) {}
+      return;
     }
-    list.setValues(values);
-  };
 
-  list.setValues = (values) => {
     list.clear();
 
     var addValues = (values, listTarget = null) => {

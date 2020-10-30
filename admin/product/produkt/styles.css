@@ -19,10 +19,6 @@
   display: inline-block;
 }
 
-#productForm [name="variant_attributes_layout"] .scroll-panel > div {
-  flex-grow: 0.2 !important;
-}
-
 .sub_filter {
   flex-grow: 1;
 }

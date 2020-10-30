@@ -1,36 +1,35 @@
 <?php //route[{ADMIN}save_product]
 
-//$input = ["exceptions" => ["categories", "description", "gallery", "attributes", "variants", "variant_attribute_options"]];
-//include "helpers/safe_post.php";
+$product_data = json_decode($_POST["product_data"], true);
 
-if (isset($_POST["remove"])) {
+if (isset($product_data["remove"])) {
     query("DELETE FROM variant WHERE product_id = ?", [
-        $_POST["product_id"]
+        $product_data["product_id"]
     ]);
     query("DELETE FROM link_variant_attribute_value INNER JOIN variant USING (variant_id) WHERE product_id = ?", [
-        $_POST["product_id"]
+        $product_data["product_id"]
     ]);
 } else {
-    $product_id = getEntityId("products", $_POST["product_id"]);
+    $product_id = getEntityId("products", $product_data["product_id"]);
 
-    $product_data = filterArrayKeys($_POST, [
+    $product_entity_data = filterArrayKeys($product_data, [
         "title",
         "link",
         "seo_title",
         "seo_description",
         "description",
-        "gallery",
         "published",
-        //"variant_attributes_layout",
-        "variant_filters"
     ]);
 
-    updateEntity($product_data, "products", "product_id", $product_id);
+    $product_entity_data["gallery"] = json_encode($product_data["gallery"]);
+    $product_entity_data["variant_filters"] = json_encode($product_data["variant_filters"]);
+
+    updateEntity($product_entity_data, "products", "product_id", $product_id);
 
     // categories
     query("DELETE FROM link_product_category WHERE product_id = ?", [$product_id]);
     $insert = "";
-    foreach (json_decode($_POST["categories"], true) as $category_id) {
+    foreach ($product_data["categories"] as $category_id) {
         $insert .= "($product_id," . intval($category_id) . "),";
     }
     if ($insert) {
@@ -42,14 +41,13 @@ if (isset($_POST["remove"])) {
 
     // attributes
     include_once "admin/product/attributes_service.php";
-    $attributes = json_decode($_POST["attributes"], true);
-    updateAttributesInDB($attributes, "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
+    updateAttributesInDB($product_data["attributes"], "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
     // TODO: test if attribues work for products and if so remove the code below
     /*query("DELETE FROM link_variant_attribute_option WHERE product_id = ?", [$product_id]);
     $insert = "";
     $kolejnosc = 0;
-    foreach (json_decode($_POST["variant_attribute_options"], true) as $row) {
+    foreach ($product_data["variant_attribute_options"] as $row) {
         $attribute_id = $row["attribute_id"];
         $attribute_values = $row["attribute_values"];
         $kolejnosc++;
@@ -62,27 +60,29 @@ if (isset($_POST["remove"])) {
 
     // variants
     /*query("DELETE FROM link_variant_attribute_value WHERE variant_id = ?", [ // create foreign key?
-        $_POST["variant_id"]
+        $product_data["variant_id"]
     ]);*/
     $variant_ids = "";
     $kolejnosc = 0;
-    foreach (json_decode($_POST["variants"], true) as $variant) {
+
+    foreach ($product_data["variants"] as $variant_data) {
         $kolejnosc++;
-        $variant_id = getEntityId("variant", $variant["variant_id"], ["data" => ["product_id" => $product_id]]);
+        $variant_id = getEntityId("variant", $variant_data["variant_id"], ["data" => ["product_id" => $product_id]]);
         $variant_ids .= "$variant_id,";
 
-        $data = filterArrayKeys($variant, ["name", "product_code", "zdjecie", "published", "price", "rabat"]);
-        $data["product_id"] = $product_id;
-        $data["kolejnosc"] = $kolejnosc;
+        $variant_entity_data = filterArrayKeys($variant_data, ["name", "product_code", "zdjecie", "published", "price", "rabat"]);
+        $variant_entity_data["product_id"] = $product_id;
+        $variant_entity_data["kolejnosc"] = $kolejnosc;
 
-        updateEntity($data, "variant", "variant_id", $variant_id);
+        updateEntity($variant_entity_data, "variant", "variant_id", $variant_id);
 
-        triggerEvent("variant_stock_change", ["variant_id" => $variant_id, "stock_difference" => intval($variant["stock"]) - intval($variant["was_stock"])]);
+        triggerEvent("variant_stock_change", ["variant_id" => $variant_id, "stock_difference" => intval($variant_data["stock"]) - intval($variant_data["was_stock"])]);
 
         triggerEvent("variant_price_change", ["product_id" => $product_id]);
 
-        $attributes = json_decode($variant["attributes"], true);
-        updateAttributesInDB($attributes, "link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant_id);
+        // TODO: bring it back?
+        //$attributes = $variant["attributes"];
+        //updateAttributesInDB($attributes, "link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant_id);
     }
 
     if (!$variant_ids) {

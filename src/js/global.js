@@ -313,7 +313,7 @@ function setValue(input, value = null, params = {}) {
     }
     input.datepicker.setDate(value);
   } else if (input.classList.contains("simple-list")) {
-    input.list.setValuesFromString(value);
+    input.list.setListValues(value);
   } else if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[
@@ -327,12 +327,7 @@ function setValue(input, value = null, params = {}) {
   } else if (input.getAttribute("type") == "checkbox") {
     input.checked = value ? true : false;
   } else if (input.classList.contains("category-picker")) {
-    if (typeof value === "string") {
-      try {
-        value = JSON.parse(value);
-      } catch {}
-    }
-    setCategoryPickerValuesString(input, value, params);
+    setCategoryPickerValue(input, value, params);
   } else {
     var type = input.getAttribute("data-type");
     if (type == "html") {
@@ -342,48 +337,7 @@ function setValue(input, value = null, params = {}) {
       }
       input.setContent(value);
     } else if (type == "attribute_values") {
-      if (typeof value === "string") {
-        try {
-          value = JSON.parse(value);
-        } catch {
-          value = "";
-        }
-      }
-      input.findAll(".combo-select-wrapper").forEach((combo) => {
-        combo.findAll("select").forEach((select) => {
-          var option = value.selected
-            ? [...select.options].find((o) => {
-                return value.selected.indexOf(parseInt(o.value)) !== -1;
-              })
-            : null;
-          if (option) {
-            select.setValue(option.value);
-          } else {
-            select.setValue("");
-          }
-        });
-      });
-
-      input.findAll(".any-value-wrapper").forEach((any) => {
-        any.find(`.has_attribute`).setValue(false);
-      });
-
-      if (value.values) {
-        value.values.forEach((attribute) => {
-          var attribute_row = input.find(
-            `[data-attribute_id="${attribute.attribute_id}"]`
-          );
-
-          if (attribute_row) {
-            var has_attribute_node = attribute_row.find(`.has_attribute`);
-            var attribute_value_node = attribute_row.find(`.attribute_value`);
-            if (has_attribute_node && attribute_value_node) {
-              has_attribute_node.setValue(1);
-              attribute_value_node.setValue(attribute.value);
-            }
-          }
-        });
-      }
+      setAttributePickerValues(input, value);
     } else if (type == "src") {
       if (getResponsiveImageData(value)) {
         input.setAttribute("data-real-src", value);
@@ -411,7 +365,8 @@ function setValue(input, value = null, params = {}) {
 
 function getValue(input) {
   if (input.classList.contains("simple-list")) {
-    return JSON.stringify(input.list.values);
+    //return JSON.stringify(input.list.values);
+    return input.list.values;
   }
   if (input.tagName == "RADIO-INPUT") {
     var value = "";
@@ -441,7 +396,9 @@ function getValue(input) {
     return input.checked ? 1 : 0;
   }
   if (input.classList.contains("category-picker")) {
-    return input.getAttribute("value");
+    return input.category_picker && input.category_picker.value
+      ? input.category_picker.value
+      : [];
   } else {
     var type = input.getAttribute("data-type");
     if (type == "html") {
@@ -472,10 +429,10 @@ function getValue(input) {
           });
         }
       });
-      return JSON.stringify({
+      return {
         selected: attribute_selected_values,
         values: attribute_values,
-      });
+      };
     } else if (type == "src") {
       var real_src = input.getAttribute(`data-real-src`);
       if (real_src) {
