@@ -262,7 +262,7 @@ tr.simple-list-row td:last-child {
   flex-grow: 1;
 }
 
-.above-simple-list .add_buttons {
+.above-simple-list .btn {
   margin-bottom: 4px;
   display: inline-block;
 }

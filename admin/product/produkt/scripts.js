@@ -253,17 +253,7 @@ domload(() => {
 
   createVariantFiltersSimpleList($(`[name="variant_filters"]`), {
     title: "Pola wyboru wariantu produktu",
-    onChange: (data, list, row) => {
-      var variant_by_attribues = [];
-      console.log(data);
-      data.forEach((variant_filter) => {
-        variant_filter.filter_options.forEach((filter_option) => {
-          variant_by_attribues.push(filter_option.value_id);
-          console.log(filter_option);
-        });
-      });
-      console.log(variant_by_attribues);
-    },
+    onChange: (data, list, row) => {},
   });
 
   createSimpleList({
@@ -387,6 +377,62 @@ domload(() => {
   //variants.params.onChange(variants);
 });
 
+function fillVariantsFromFilters() {
+  var variant_filters = $(`[name="variant_filters"]`).list.values;
+
+  var unique_variants = getVariantFiltersUniqueOptions(variant_filters);
+
+  var pretty_unique_variants = unique_variants.map((selected_attributes) => {
+    return {
+      selected: selected_attributes.reduce((map, obj) => {
+        return [...map, ...obj.selected];
+      }, []),
+      values: selected_attributes.reduce((map, obj) => {
+        obj.values.forEach((value) => {
+          map[value.attribute_id] = value.value;
+        });
+        return map;
+      }, {}),
+    };
+  });
+
+  console.log(pretty_unique_variants);
+}
+
+function getVariantFiltersUniqueOptions(variant_filters) {
+  var all_unique_variants = [];
+
+  variant_filters.forEach((variant_filter) => {
+    if (all_unique_variants.length == 0) {
+      all_unique_variants.push([]);
+    }
+
+    var new_unique_variants = [];
+
+    variant_filter.filter_options.forEach((filter_option) => {
+      var option_unique_variants = getVariantFiltersUniqueOptions(
+        filter_option.variant_filters
+      );
+
+      if (option_unique_variants.length == 0) {
+        option_unique_variants.push([]);
+      }
+
+      option_unique_variants.forEach((option_selected_attribute_values) => {
+        all_unique_variants.forEach((all_selected_attribute_values) => {
+          new_unique_variants.push([
+            ...option_selected_attribute_values,
+            ...all_selected_attribute_values,
+            filter_option.selected_attribute_values,
+          ]);
+        });
+      });
+    });
+    all_unique_variants = new_unique_variants;
+  });
+  return all_unique_variants;
+}
+
 function choiceNameChanged(input) {
   input = $(input);
   var sub_filter = input.findParentByClassName(`sub_filter`);
@@ -434,10 +480,10 @@ function optionNameChanged(input) {
 }
 
 function choiceAttributeChanged(select) {
-  /*select = $(select);
+  select = $(select);
   var sub_filter = select.findParentByClassName(`sub_filter`);
   var filter_name = sub_filter.find(`[name="filter_name"]`);
-  filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));*/
+  filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
 }
 
 function choiceValuesChanged(values_combo) {
@@ -469,7 +515,7 @@ function choiceListChanged(attribute_row_wrapper) {
     return;
   }
 
-  const attribute_id = select.value;
+  const attribute_id = +select.value;
 
   var list = attribute_row_wrapper.find(`[name="filter_options"] .list`);
   if (!list) {

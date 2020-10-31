@@ -162,11 +162,13 @@ if ($kopia) {
   </div>
   <div name="variant_filters" class="slim root"></div>
 
-  <h3 class="h1" style='color:var(--error-clr)'>WSZYSTKO PONIŻEJ TO CHUJ</h3>
-
   <span class='field-title above-simple-list'>
     Warianty
-    <span class='add_buttons'></span>
+    <span class='add_buttons' style='display:none'></span>
+    <button class="btn important" onclick="fillVariantsFromFilters()">
+      Uzupełnij na podstawie oferty
+      <i class="fas fa-plus"></i>
+    </button>
   </span>
   <div name="variants"></div>
 

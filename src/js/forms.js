@@ -705,11 +705,9 @@ function registerForm(form = null) {
       }
     }
 
-    if (
-      field.hasAttribute("data-validate") &&
-      field.hasAttribute("data-input-change")
-    ) {
+    if (field.hasAttribute("data-input-change")) {
       field.addEventListener("input", () => {
+        console.log(field);
         var ddc = field.getAttribute("data-input-change");
         if (ddc) {
           setTimeout(() => {

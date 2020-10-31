@@ -411,28 +411,7 @@ function getValue(input) {
       }
       return input.innerHTML;
     } else if (type == "attribute_values") {
-      var attribute_selected_values = [];
-      input.findAll("[data-attribute-value]").forEach((select) => {
-        if (select.value) {
-          attribute_selected_values.push(parseInt(select.value));
-        }
-      });
-      var attribute_values = [];
-      input.findAll(".any-value-wrapper").forEach((attribute_row) => {
-        var attr_id = attribute_row.getAttribute("data-attribute_id");
-        var attr_val_node = attribute_row.find(".attribute_value:not(.hidden)");
-
-        if (attr_val_node) {
-          attribute_values.push({
-            attribute_id: attr_id,
-            value: attr_val_node.getValue(),
-          });
-        }
-      });
-      return {
-        selected: attribute_selected_values,
-        values: attribute_values,
-      };
+      return getAttibutePickerValues(input);
     } else if (type == "src") {
       var real_src = input.getAttribute(`data-real-src`);
       if (real_src) {
