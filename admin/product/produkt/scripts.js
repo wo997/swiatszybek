@@ -385,7 +385,8 @@ function fillVariantsFromFilters() {
   var pretty_unique_variants = unique_variants.map((selected_attributes) => {
     return {
       selected: selected_attributes.reduce((map, obj) => {
-        return [...map, ...obj.selected];
+        map.push(...obj.selected);
+        return map;
       }, []),
       values: selected_attributes.reduce((map, obj) => {
         obj.values.forEach((value) => {
