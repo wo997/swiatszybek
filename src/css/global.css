@@ -1288,7 +1288,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   }
 }
 
-@keyframes fadeOut {
+@keyframes hide {
   /* finish at 50% to prevent weird behaviour */
   0% {
     opacity: 1;
@@ -1301,7 +1301,7 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
   }
 }
 
-@keyframes fadeIn {
+@keyframes show {
   0% {
     opacity: 0;
   }

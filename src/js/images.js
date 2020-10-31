@@ -112,7 +112,7 @@ function loadImage(img, animate = true) {
 
 function showImage(img) {
   if (isNodeOnScreen(img)) {
-    img.style.animation = "fadeIn 0.45s";
+    img.style.animation = "show 0.45s";
     img.style.opacity = 1;
     img.classList.remove("lazy_image");
     setTimeout(() => {
@@ -157,7 +157,7 @@ function setImageDimensions(img) {
   var rect = img.getBoundingClientRect();
 
   if (!data) {
-    img.style.animation = "fadeIn 0.45s";
+    img.style.animation = "show 0.45s";
     img.setAttribute("src", src);
     img.removeAttribute("data-src");
     return rect;

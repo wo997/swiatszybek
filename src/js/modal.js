@@ -150,7 +150,7 @@ function hideModal(name, isCancel = false) {
   if (name) {
     var modal = $(`#${name}`);
     if (modal) {
-      modal.style.animation = "fadeOut 0.4s";
+      modal.style.animation = "hide 0.4s";
       visibleModalCount--;
       setTimeout(() => {
         modal.style.display = "none";
@@ -185,7 +185,7 @@ function hideModal(name, isCancel = false) {
     m.classList.add("displayModal");
   } else {
     toggleBodyScroll(true);
-    m.style.animation = "fadeOut 0.4s";
+    m.style.animation = "hide 0.4s";
     setTimeout(() => {
       m.classList.remove("displayModal");
       m.style.animation = "";

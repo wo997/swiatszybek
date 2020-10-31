@@ -1,5 +1,6 @@
 /* js[global] */
 
+/* in general u wanna use the animator for variable animations, not the static ones ;) */
 const ANIMATIONS = {
   blink: `
     0% {
@@ -12,6 +13,7 @@ const ANIMATIONS = {
       opacity: 1;
     }
   `,
+  /* for some of them you better dont use the animator but the animate property instead like $.style.animation = "hide 0.4s";*/
   show: `
     0% {
       opacity: 0;
