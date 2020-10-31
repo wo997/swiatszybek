@@ -330,6 +330,7 @@ domload(() => {
           <div class='glue-children'>
             <input type='number' name="stock" class="field inline no-wrap"><span class='field-description'>szt.</span>
           </div>
+          <input type='hidden' name="was_stock">
         </td>
         <td style="width:90px;">
           <button class='btn primary edit-btn' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
@@ -354,7 +355,6 @@ domload(() => {
     onChange: () => {},
     onNewRowDataSet: (row, values, list, options) => {
       if (options.user) {
-        console.log(values);
         editVariant(row, list.wrapper.find(".field-title .add_btn"));
       }
     },
@@ -761,8 +761,6 @@ function editVariant(row, btn = null) {
   variantRow = $(row);
 
   var data = getFormData(row);
-
-  console.log(row, data, "ddddd");
 
   var form = $(`#variantForm`);
   setFormData(data, form);
