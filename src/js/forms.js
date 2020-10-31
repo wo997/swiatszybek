@@ -506,11 +506,14 @@ function getFormData(form, params = {}) {
       var field_value = getValue(e);
 
       var parent_sub_form = e;
+      var inside = true;
 
-      while (
-        parent_sub_form &&
-        parent_sub_form.findParentNode(form, { skip: 1 })
-      ) {
+      while (parent_sub_form) {
+        if (!parent_sub_form.findParentNode(form, { skip: 1 })) {
+          inside = false;
+          break;
+        }
+
         var p = parent_sub_form.findParentByAttribute("data-form", {
           skip: 1,
         });
@@ -520,9 +523,10 @@ function getFormData(form, params = {}) {
           break;
         }
       }
-      if (parent_sub_form && parent_sub_form != e) {
+      if (inside && parent_sub_form && parent_sub_form != e) {
         field_name = parent_sub_form.getAttribute("data-form");
         field_value = getFormData(parent_sub_form);
+        console.log(parent_sub_form);
       }
 
       data[field_name] = field_value;

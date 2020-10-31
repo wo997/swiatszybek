@@ -1,5 +1,35 @@
 <?php
 
+$attribute_data_types = [
+    "textlist" => [
+        "description" => "Tekst (lista)",
+    ],
+    "numberlist" => [
+        "description" => "Liczba (lista)",
+    ],
+    "colorlist" => [
+        "description" => "Kolor (lista)"
+    ],
+    "numberany" => [
+        "description" => "Liczba (dowolna)",
+        "field" => "numerical_value"
+    ],
+    "dateany" => [
+        "description" => "Data (dowolna)",
+        "field" => "date_value"
+    ],
+    "textany" => [
+        "description" => "Tekst (dowolny)",
+        "field" => "text_value"
+    ],
+    /*"integer" => [
+    "description" => "Liczba całkowita",
+  ],
+  "decimal" => [  
+    "description" => "Liczba zmiennoprzecinkowa",
+  ]*/
+];
+
 function getAttributeValues($attribute_id, $parent_value_id = 0)
 {
     $values = [];

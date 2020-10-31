@@ -34,3 +34,7 @@ body,
 .status_rect {
   width: 179px;
 }
+
+table img {
+  display: block;
+}

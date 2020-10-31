@@ -40,31 +40,12 @@ if (isset($product_data["remove"])) {
     triggerEvent("product_gallery_change", ["product_id" => intval($product_id)]);
 
     // attributes
-    include_once "admin/product/attributes_service.php";
     updateAttributesInDB($product_data["attributes"], "link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
-    // TODO: test if attribues work for products and if so remove the code below
-    /*query("DELETE FROM link_variant_attribute_option WHERE product_id = ?", [$product_id]);
-    $insert = "";
-    $kolejnosc = 0;
-    foreach ($product_data["variant_attribute_options"] as $row) {
-        $attribute_id = $row["attribute_id"];
-        $attribute_values = $row["attribute_values"];
-        $kolejnosc++;
-        $insert .= "($product_id," . intval($attribute_id) . "," . escapeSQL($attribute_values) . ",$kolejnosc),";
-    }
-    if ($insert) {
-        $insert = substr($insert, 0, -1);
-        query("INSERT INTO link_variant_attribute_option (product_id, attribute_id, attribute_values, kolejnosc) VALUES $insert");
-    }*/
-
     // variants
-    /*query("DELETE FROM link_variant_attribute_value WHERE variant_id = ?", [ // create foreign key?
-        $product_data["variant_id"]
-    ]);*/
-
     $kolejnosc = 0;
     $present_variant_ids = [];
+
     foreach ($product_data["variants"] as $variant_data) {
         $variant_id = getEntityId("variant", $variant_data["variant_id"], ["data" => ["product_id" => $product_id]]);
         $present_variant_ids[] = $variant_id;
@@ -78,9 +59,7 @@ if (isset($product_data["remove"])) {
 
         triggerEvent("variant_price_change", ["product_id" => $product_id]);
 
-        // TODO: bring it back?
-        //$attributes = $variant["attributes"];
-        //updateAttributesInDB($attributes, "link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant_id);
+        updateAttributesInDB(json_decode($variant_data["attributes"], true), "link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant_id);
     }
 
     $where = "product_id = $product_id";

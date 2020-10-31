@@ -152,8 +152,6 @@ function showCategory($category, $level = 0)
 
 
         <?php
-        include_once "admin/product/attributes_service.php";
-
         function printUserSelectValuesOfAttribute($values, $attribute, $value_id = null)
         {
           if (!isset($values[0])) {

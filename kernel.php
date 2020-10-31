@@ -32,8 +32,11 @@ include_once "helpers/deployment.php";
 
 include_once "helpers/order.php";
 include_once "helpers/activity_log.php";
-include_once "helpers/product.php";
 include_once "helpers/rating.php";
+
+include_once "helpers/product/product.php";
+include_once "helpers/product/attributes.php";
+include_once "helpers/product/last_viewed_products.php";
 
 include_once "helpers/links.php";
 

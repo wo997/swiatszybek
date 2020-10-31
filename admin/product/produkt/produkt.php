@@ -28,8 +28,6 @@ if ($product_id === -1) {
 
 $categories_csv = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
 
-include_once "admin/product/attributes_service.php";
-
 $allAttributeOptions = getAllAttributeOptions();
 $allAttributeOptionsHTMLArray = $allAttributeOptions["html_array"];
 
@@ -40,7 +38,7 @@ $product_data["variant_attribute_options"] = fetchArray("SELECT attribute_id, at
 $variants = fetchArray("SELECT * FROM variant WHERE product_id = $product_id ORDER BY kolejnosc ASC");
 
 foreach ($variants as $key => $variant) {
-  $variant["attributes"] = getAttributesFromDB("link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant["variant_id"]);
+  $variant["attributes"] = json_encode(getAttributesFromDB("link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant["variant_id"]));
   $variants[$key] = $variant;
 }
 

@@ -272,55 +272,55 @@ domload(() => {
     },
     table: true,
     header: `
-        <th>Nazwa</th>
-        <th>Widoczny</th>
-        <th>Cena (zł)</th>
-        <th>VAT (%)</th>
-        <th>Rabat (zł)</th>
-        <th>Kod produktu</th>
-        <th>W magazynie (szt.)</th>
-        <th>Zdjęcie</th>
-        <th>Cechy</th>
-        <th></th>
-        <th></th>
-      `,
+      <th>Nazwa</th>
+      <th>Cechy</th>
+      <th>Widoczny</th>
+      <th>Cena (zł)</th>
+      <th>VAT (%)</th>
+      <th>Rabat (zł)</th>
+      <th>Kod produktu</th>
+      <th>W magazynie (szt.)</th>
+      <th>Zdjęcie</th>
+      <th></th>
+      <th></th>
+    `,
     render: (data) => {
       return `
-            <td>
-              <input type='hidden' data-number name="variant_id">
-              <input type='text' name="name" class="field inline">
-            </td>
-            <td>
-              <input type='hidden' name="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
-              <span></span>
-            </td>
-            <td>
-              <input type='number' name="price" class="field inline">
-            </td>
-            <td>
-              <input type='number' name="vat" class="field inline">
-            </td>
-            <td>
-              <input type='number' name="rabat" class="field inline">
-            </td>
-            <td>
-              <input type='text' name="product_code" class="field inline">
-            </td>
-            <td>
-              <input type='number' name="stock" class="field inline">
-              <input type='hidden' name="was_stock">
-            </td>
-            <td>
-              <img name="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
-            </td>
-            <td style='min-width:200px'>
-              <input type='hidden' name="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
-              <div data-tooltip class='clamp-lines clamp-4'></div>
-            </td>
-            <td style="width:90px;">
-              <button class='btn primary edit-btn' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
-            </td>
-        `;
+        <td>
+          <input type='hidden' data-number name="variant_id">
+          <input type='text' name="name" class="field inline">
+        </td>
+        <td>
+          <input type='hidden' name="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
+          <div data-tooltip class='clamp-lines clamp-4'></div>
+        </td>
+        <td>
+          <input type='hidden' name="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
+          <span></span>
+        </td>
+        <td>
+          <input type='number' name="price" class="field inline">
+        </td>
+        <td>
+          <input type='number' name="vat" class="field inline">
+        </td>
+        <td>
+          <input type='number' name="rabat" class="field inline">
+        </td>
+        <td>
+          <input type='text' name="product_code" class="field inline">
+        </td>
+        <td>
+          <input type='number' name="stock" class="field inline">
+          <input type='hidden' name="was_stock">
+        </td>
+        <td>
+          <img name="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
+        </td>
+        <td style="width:90px;">
+          <button class='btn primary edit-btn' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
+        </td>
+      `;
     },
     default_row: {
       variant_id: -1,
@@ -333,23 +333,20 @@ domload(() => {
       product_code: "",
       zdjecie: "",
       published: 0,
-      attributes: { selected: [], values: [] },
+      attributes: '{"selected:"[],"values:"[]"}',
     },
     title: "Warianty produktu",
     empty: `<div class='rect light-gray'>Dodaj min. 1 wariant</div>`,
-    onChange: () => {
-      if (!window.productFormReady) {
-        return;
-      }
-    },
+    onChange: () => {},
     onNewRowDataSet: (row, values, list, options) => {
       if (options.user) {
+        console.log(values);
         editVariant(row, list.wrapper.find(".field-title .add_btn"));
       }
     },
   });
 
-  //createAttributeSelect($(`#variantForm [name="attributes"]`));
+  createAttributeSelect($(`#variantForm [name="attributes"]`));
 
   createAttributeSelect($(`#productForm [name="attributes"]`), {
     onChange: (combo, attribute_id, any_selected) => {
@@ -370,11 +367,6 @@ domload(() => {
   product_data.variants = variants_data;
 
   setFormData(product_data, "#productForm");
-
-  window.productFormReady = true;
-
-  // init just in case
-  //variants.params.onChange(variants);
 });
 
 function fillVariantsFromFilters() {
@@ -389,15 +381,39 @@ function fillVariantsFromFilters() {
         return map;
       }, []),
       values: selected_attributes.reduce((map, obj) => {
-        obj.values.forEach((value) => {
-          map[value.attribute_id] = value.value;
-        });
+        map.push(...obj.values);
         return map;
-      }, {}),
+      }, []),
     };
   });
 
-  console.log(pretty_unique_variants);
+  var variant_list = $(`[name="variants"]`).list;
+
+  pretty_unique_variants.forEach((unique_variant_attributes) => {
+    var exists = false;
+
+    var exists = variant_list.values.reduce((map, variant) => {
+      if (map) {
+        return true;
+      }
+      var va = JSON.parse(variant.attributes);
+      return (
+        isEquivalent(unique_variant_attributes.selected, va.selected) &&
+        isEquivalent(unique_variant_attributes.values, va.values)
+      );
+    }, false);
+
+    if (!exists) {
+      variant_data = variant_list.params.default_row;
+      // just in case u go away from json baby :*
+      /*Object.assign(
+        variant_data.attributes,
+        unique_variant_attributes
+      );*/
+      variant_data.attributes = JSON.stringify(unique_variant_attributes);
+      variant_list.insertRow(variant_data);
+    }
+  });
 }
 
 function getVariantFiltersUniqueOptions(variant_filters) {
@@ -722,11 +738,11 @@ var variantRow = null;
 function editVariant(row, btn = null) {
   variantRow = $(row);
 
-  const form = $(`#variantForm`);
-  var data = getFormData(row, {
-    find_by: "name",
-  });
+  var data = getFormData(row);
 
+  console.log(row, data, "ddddd");
+
+  var form = $(`#variantForm`);
   setFormData(data, form);
 
   showModal(form.id, {
@@ -740,6 +756,7 @@ function saveVariant(remove = false) {
   }
 
   var data = $(`#variantForm`).getFormData();
+  data.attributes = JSON.stringify(data.attributes);
 
   setFormData(data, variantRow, {
     find_by: "name",

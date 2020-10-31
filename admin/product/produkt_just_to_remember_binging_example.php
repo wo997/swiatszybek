@@ -28,8 +28,6 @@ if ($product_id === -1) {
 
 $categories_csv = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
 
-include_once "admin/product/attributes_service.php";
-
 $allAttributeOptions = getAllAttributeOptions();
 $allAttributeOptionsHTMLArray = $allAttributeOptions["html_array"];
 
