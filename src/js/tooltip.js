@@ -6,6 +6,19 @@ domload(() => {
   );
   window.tooltip = {
     target: $(".wo997tooltip"),
+    dismiss: () => {
+      var t = window.tooltip.target;
+      t.style.display = "none";
+      window.tooltip.lastTooltipNode = null;
+    },
+    resizeCallback: () => {
+      $$(".check-tooltip").forEach((e) => {
+        e.classList.toggle(
+          "require-tooltip",
+          e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight
+        );
+      });
+    },
   };
 
   window.addEventListener("mousemove", function (event) {
@@ -68,19 +81,14 @@ domload(() => {
     window.tooltip.lastTooltipNode = e;
   });
   window.addEventListener("mousewheel", () => {
-    var t = window.tooltip.target;
-    t.style.display = "none";
-    window.tooltip.lastTooltipNode = null;
+    window.tooltip.dismiss();
+  });
+  window.addEventListener("click", (event) => {
+    if (!event.target.findParentNode(window.tooltip.lastTooltipNode)) {
+      window.tooltip.dismiss();
+    }
   });
 
-  window.addEventListener("resize", tooltipResizeCallback);
-  tooltipResizeCallback();
+  window.addEventListener("resize", window.tooltip.resizeCallback);
+  window.tooltip.resizeCallback();
 });
-function tooltipResizeCallback() {
-  $$(".check-tooltip").forEach((e) => {
-    e.classList.toggle(
-      "require-tooltip",
-      e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight
-    );
-  });
-}

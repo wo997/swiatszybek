@@ -1131,19 +1131,18 @@ function getPublishedDefinition(options = {}) {
   };
 }
 
-function renderIsPublished(row) {
+function renderIsPublished(data) {
   var label = "";
   var color = "";
-  if (row.published == 1) {
+  if (data.published == 1) {
     label = `<i class="fas fa-eye"></i>`;
     color = "#2a2";
   } else {
     label = `<i class="fas fa-eye-slash"></i>`;
     color = "#a22";
   }
-  return `<div class='rect btn' style='color:${color}; border: 1px solid ${color}; text-align: center; width: 45px' onclick='setPublish(this,${
-    1 - row.published
-  })'>${label}</div>`;
+  return `<div class='rect btn' style='color:${color}; border: 1px solid ${color}; text-align: center; width: 45px'
+    onclick='setPublish(this,${1 - data.published})'>${label}</div>`;
 }
 
 function setPublish(obj, published) {

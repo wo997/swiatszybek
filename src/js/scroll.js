@@ -76,6 +76,11 @@ function smoothScroll(diff, params = {}) {
     (4 * diff * (duration / 2 - Math.abs(duration / 2 - t))) /
       (duration * duration)
   );
+
+  if (t == 0 && window.tooltip && Math.abs(diff) > 5) {
+    window.tooltip.dismiss();
+  }
+
   if (t < duration) {
     requestAnimationFrame(() => {
       params.t = t + 1;

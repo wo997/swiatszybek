@@ -266,21 +266,23 @@ domload(() => {
       },
       price: {},
       vat: {},
+      gross_price: {},
       rabat: {},
       stock: {},
       zdjecie: {},
     },
     table: true,
     header: `
-      <th>Nazwa</th>
+      <th>Nazwa <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></th>
       <th>Cechy</th>
-      <th>Widoczny</th>
-      <th>Cena (zł)</th>
-      <th>VAT (%)</th>
-      <th>Rabat (zł)</th>
-      <th>Kod produktu</th>
-      <th>W magazynie (szt.)</th>
+      <th>Aktywny</th>
       <th>Zdjęcie</th>
+      <th>Cena Netto</th>
+      <th>VAT</th>
+      <th>Cena Brutto</th>
+      <th>Rabat</th>
+      <th>Kod produktu</th>
+      <th>W magazynie</th>
       <th></th>
       <th></th>
     `,
@@ -288,7 +290,7 @@ domload(() => {
       return `
         <td>
           <input type='hidden' data-number name="variant_id">
-          <input type='text' name="name" class="field inline">
+          <textarea name="name" class="field inline" style="height: 3.75em;"></textarea>
         </td>
         <td>
           <input type='hidden' name="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
@@ -299,23 +301,35 @@ domload(() => {
           <span></span>
         </td>
         <td>
-          <input type='number' name="price" class="field inline">
-        </td>
-        <td>
-          <input type='number' name="vat" class="field inline">
-        </td>
-        <td>
-          <input type='number' name="rabat" class="field inline">
-        </td>
-        <td>
-          <input type='text' name="product_code" class="field inline">
-        </td>
-        <td>
-          <input type='number' name="stock" class="field inline">
-          <input type='hidden' name="was_stock">
-        </td>
-        <td>
           <img name="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
+        </td>
+        <td>
+          <div class='glue-children'>
+            <input type='number' name="price" class="field inline no-wrap"><span class='field-description'>zł</span>
+          </div>
+        </td>
+        <td>
+          <div class='glue-children'>
+            <input type='number' name="vat" class="field inline no-wrap"><span class='field-description'>%</span>
+          </div>
+        </td>
+        <td>
+          <div class='glue-children'>
+            <input type='number' name="gross_price" class="field inline no-wrap"><span class='field-description'>zł</span>
+          </div>
+        </td>
+        <td>
+          <div class='glue-children'>
+            <input type='number' name="rabat" class="field inline no-wrap"><span class='field-description'>zł</span>
+          </div>
+        </td>
+        <td>
+          <input type='text' name="product_code" class="field inline" style="width: 150px;">
+        </td>
+        <td>
+          <div class='glue-children'>
+            <input type='number' name="stock" class="field inline no-wrap"><span class='field-description'>szt.</span>
+          </div>
         </td>
         <td style="width:90px;">
           <button class='btn primary edit-btn' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
@@ -493,6 +507,14 @@ function optionNameChanged(input) {
           `Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`
         );
     }
+  }
+
+  add_additional_filters = sub_filter.find(".add_additional_filters");
+  if (add_additional_filters) {
+    add_additional_filters.setAttribute(
+      "data-tooltip",
+      `Zastosuj jeśli dodatkowe opcje mają tyczyć się tylko wariantu ${input.value.toLowerCase()}`
+    );
   }
 }
 

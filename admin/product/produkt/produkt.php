@@ -161,14 +161,14 @@ if ($kopia) {
   <div name="variant_filters" class="slim root"></div>
 
   <span class='field-title above-simple-list'>
-    Warianty
+    Wszystkie warianty
     <span class='add_buttons' style='display:none'></span>
     <button class="btn important" onclick="fillVariantsFromFilters()">
       Uzupełnij na podstawie oferty
       <i class="fas fa-plus"></i>
     </button>
   </span>
-  <div name="variants"></div>
+  <div name="variants" class="no-remove"></div>
 
   <input type="hidden" name="product_id">
 

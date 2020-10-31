@@ -338,7 +338,6 @@ input[type="button"] {
 }
 .glue-children > *:not(:first-child):not(.ignore-glue),
 .glue-children > .field-wrapper:not(:first-child):not(.ignore-glue) .field {
-  margin-left: -1px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -515,7 +514,7 @@ input[type="radio"]:not([value=""]):checked {
 }
 
 table input[type="number"] {
-  width: 100px;
+  width: 80px;
   text-align: center;
 }
 

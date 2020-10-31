@@ -12,7 +12,3 @@
   max-width: 40vw;
   border: 1px solid #ccc;
 }
-
-.fa-info-circle[data-tooltip] {
-  opacity: 0.75;
-}
