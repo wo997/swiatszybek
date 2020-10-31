@@ -38,6 +38,7 @@ domload(() => {
       if (window.tooltip.lastTooltipNode != e) {
         t.style.display = "block";
         t.innerHTML = tooltipText;
+        animate(t, 150, ANIMATIONS.show);
       }
 
       var nodeRect = e.getBoundingClientRect();

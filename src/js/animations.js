@@ -12,6 +12,22 @@ const ANIMATIONS = {
       opacity: 1;
     }
   `,
+  show: `
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  `,
+  hide: `
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  `,
   replace: (zoom_factor = 0.25) => {
     return `
       0% {

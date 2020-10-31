@@ -273,7 +273,7 @@ domload(() => {
     },
     table: true,
     header: `
-      <th>Nazwa <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></th>
+      <th>Nazwa <i class="fas fa-info-circle" data-tooltip="Nazwa wariantu wyświetlana w koszyku, np.:<br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></th>
       <th>Cechy</th>
       <th>Aktywny</th>
       <th>Zdjęcie</th>
