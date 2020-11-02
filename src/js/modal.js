@@ -140,7 +140,7 @@ function hideParentModal(obj = null, isCancel = false) {
 
 function hideModal(name, isCancel = false) {
   if (isCancel) {
-    if (!checkFormCloseWarning(name)) {
+    if (!checkFormCloseWarning(`#${name}`)) {
       return false;
     }
   }

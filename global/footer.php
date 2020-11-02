@@ -31,6 +31,7 @@
   </div>
 <?php endif ?>
 
+<!-- TODO: inject with js -->
 <div id="loginForm" data-form data-modal data-dismissable>
   <div class="modal-body">
     <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>

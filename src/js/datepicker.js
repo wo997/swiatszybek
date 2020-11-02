@@ -1,5 +1,7 @@
 /* js[global] */
 
+window.addEventListener("register-form-components", registerDatepickers);
+
 function getDatepickerDefaultOptions(e) {
   var options = {
     todayHighlight: true,

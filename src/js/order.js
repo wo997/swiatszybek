@@ -331,7 +331,7 @@ function showVariantChanges(
   setTimeout(() => {
     lazyLoadImages();
     setCustomHeights();
-    tooltipResizeCallback();
+    window.tooltip.resizeCallback();
   });
 }
 
@@ -410,6 +410,6 @@ function showProductChanges(
   setTimeout(() => {
     lazyLoadImages();
     setCustomHeights();
-    tooltipResizeCallback();
+    window.tooltip.resizeCallback();
   });
 }

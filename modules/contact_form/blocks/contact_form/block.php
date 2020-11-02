@@ -13,7 +13,7 @@ $company_data = $app["company_data"];
         <div class="missing-module-block-label">
             Blok formularza kontaktowego niedostepny!
             <br>
-            Uzupełnij dane w panelu administratora.
+            Uzupełnij dane firmy w panelu administratora.
         </div>
     <?php endif; ?>
 <?php else : ?>

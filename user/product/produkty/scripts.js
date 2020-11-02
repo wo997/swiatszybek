@@ -295,7 +295,7 @@ function searchProducts(options = {}) {
           searchingProducts = false;
           productListNode.setContent(productListSwapNode.innerHTML);
           productListSwapContentNode.empty();
-          tooltipResizeCallback();
+          window.tooltip.resizeCallback();
           productListLoaded();
         }
       );

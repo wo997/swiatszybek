@@ -107,7 +107,8 @@ function createAttributeSelect(combo, options = {}) {
           sub_select.setValue("");
         }
       }
-      select.prev_value = select.value;
+      //console.log(select.prev_value);
+      //select.prev_value = select.value;
     };
     select.addEventListener("change", changeCallback);
 
@@ -188,12 +189,14 @@ domload(() => {
       skip: 2,
     },
     () => {
+      var form = "#productForm";
       setFormData(
         {
           categories: product_categories,
         },
-        "#productForm"
+        form
       );
+      setFormInitialState(form);
     }
   );
 
@@ -587,7 +590,7 @@ function choiceListChanged(attribute_row_wrapper) {
       use_all: true,
     });
 
-    registerDatepickers();
+    //registerDatepickers();
   });
 }
 

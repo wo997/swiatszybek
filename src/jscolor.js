@@ -12,6 +12,10 @@
  * See usage examples at http://jscolor.com/examples/
  */
 
+window.addEventListener("register-form-components", () => {
+  jscolor.installByClassName();
+});
+
 if (!window.jscolor) {
   window.jscolor = (function () {
     var jsc = {

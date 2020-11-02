@@ -37,7 +37,7 @@
                 }
 
                 setTimeout(() => {
-                    registerForm($(`#maileForm`));
+                    registerForms();
                 });
             }
         });
@@ -65,7 +65,7 @@
                 }
 
                 setTimeout(() => {
-                    registerForm($(`#maileForm`));
+                    registerForms();
                 });
             }
 

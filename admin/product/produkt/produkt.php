@@ -88,6 +88,8 @@ if ($kopia) {
   <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
     <?= $product_form_header ?>
   </div>
+  <div class="history-buttons product-history-buttons"></div>
+
   <a class="btn secondary" href="<?= STATIC_URLS["ADMIN"] ?>produkty">Wszystkie produkty <i class="fas fa-cubes"></i></a>
   <?php if ($kopia) : ?>
     <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
@@ -101,7 +103,7 @@ if ($kopia) {
 
 <?php startSection("content"); ?>
 
-<div id="productForm" data-form data-warn-before-leave class="form-field-spacing">
+<div id="productForm" data-form data-warn-before-leave class="form-field-spacing" data-history="30" data-history-buttons=".product-history-buttons">
   <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">
     <div class="checkbox"></div>
   </label>
@@ -109,6 +111,7 @@ if ($kopia) {
     <div style="flex-grow:1; padding-right: 15px">
       <div style="max-width: 600px">
         <div class="field-title">Nazwa produktu</div>
+
         <input type="text" name="title" class="field" data-validate onchange="$(`#variantForm .product-title-copy`).setValue(this.value)">
 
         <div class="field-title">Link strony</div>

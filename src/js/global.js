@@ -8,8 +8,6 @@ function windowload(callback) {
   window.addEventListener("load", callback);
 }
 
-var IS_MOBILE = "ontouchstart" in document.documentElement;
-
 function xhr(data) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", data.url, true);
@@ -293,7 +291,7 @@ domload(() => {
 function setValue(input, value = null, params = {}) {
   input = $(input);
 
-  if (value === null) {
+  if (value === null || isEquivalent(input.getValue(), value)) {
     if (!params.quiet) {
       input.dispatchEvent(new Event("change"));
     }
@@ -791,6 +789,9 @@ function getSelectDisplayValue(select) {
 }
 
 function isEquivalent(a, b) {
+  if (!a || !b) {
+    return a === b;
+  }
   // Create arrays of property names
   var aProps = Object.getOwnPropertyNames(a);
   var bProps = Object.getOwnPropertyNames(b);

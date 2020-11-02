@@ -6,3 +6,7 @@ function getRowById(array, id, id_name = "id") {
     return e[id_name] == id;
   });
 }
+
+Array.prototype.last = function () {
+  return this[this.length - 1];
+};

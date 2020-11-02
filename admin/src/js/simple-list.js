@@ -326,7 +326,7 @@ function createSimpleList(params = {}) {
       });
     });
 
-    registerForm();
+    registerForms();
   };
 
   list.valuesChanged = (changeListTarget = null) => {

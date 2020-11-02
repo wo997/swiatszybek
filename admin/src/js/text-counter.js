@@ -3,7 +3,7 @@
 function registerTextCounters() {
   $$("[data-show-count]:not(.registered)").forEach((e) => {
     e.classList.add("registered");
-    e.addEventListener("change", () => {
+    const changeCallback = () => {
       e.next().find("span").innerHTML = e.value.length;
       if (e.value.length > e.getAttribute("data-show-count")) {
         e.next().style.color = "#f00";
@@ -15,10 +15,9 @@ function registerTextCounters() {
         e.next().style.color = "#555";
         e.next().style.fontWeight = "";
       }
-    });
-    e.addEventListener("input", () => {
-      e.dispatchEvent(new Event("change"));
-    });
+    };
+    e.addEventListener("change", changeCallback);
+    e.addEventListener("input", changeCallback);
     e.insertAdjacentHTML(
       "afterend",
       `
@@ -31,6 +30,6 @@ function registerTextCounters() {
             </div>
         `
     );
-    e.dispatchEvent(new Event("change"));
+    changeCallback();
   });
 }

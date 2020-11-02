@@ -1,3 +1,5 @@
+window.addEventListener("register-form-components", registerRangeSliders);
+
 function registerRangeSliders() {
   const allRanges = document.querySelectorAll("input[type=range]:not(.range)");
   allRanges.forEach((range) => {

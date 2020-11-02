@@ -61,7 +61,7 @@ function cmsHistoryRedo() {
   cmsUpdate();
 }
 
-document.onkeydown = (e) => {
+document.addEventListener("keydown", (ev) => {
   if (!isModalActive("cms") && !isModalActive("cmsAdditional")) return;
 
   var evtobj = window.event ? event : e;
@@ -73,7 +73,7 @@ document.onkeydown = (e) => {
       cmsHistoryRedo();
     }
   }
-};
+});
 // cms history end
 
 function pasteBlock(input) {
@@ -2431,8 +2431,7 @@ registerModalContent(
     </div>
 `,
   () => {
-    registerRangeSliders();
-    jscolor.installByClassName();
+    registerForms();
   }
 );
 

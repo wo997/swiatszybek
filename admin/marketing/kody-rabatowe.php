@@ -50,7 +50,6 @@
           width: "10%",
           field: "date_from",
           searchable: "date",
-
         },
         {
           title: "Do",
@@ -61,7 +60,7 @@
         {
           title: "Ilość",
           width: "10%",
-          field: "ilosc",
+          field: "ilosc"
         },
       ],
       controlsRight: `
