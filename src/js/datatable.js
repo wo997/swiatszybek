@@ -453,7 +453,7 @@ function createDatatable(datatable) {
           success: (res) => {
             loadCategoryFormCallback(res.results[0]);
             clearAllErrors(`#${form_name}`);
-            setModalInitialState(`#${form_name}`);
+            setFormInitialState(`#${form_name}`);
           },
         });
       }

@@ -57,6 +57,8 @@ endSection();
             <?php if (isset($sections["content"])) echo $sections["content"]; ?>
           </div>
           <div class="footer">Piepsklep <?= date("Y") ?></div>
+          <?php if (isset($sections["ziemniak"])) echo $sections["ziemniak"]; ?>
+
         </div>
       </div>
     </div>

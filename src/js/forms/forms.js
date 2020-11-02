@@ -20,7 +20,7 @@ window.addEventListener("beforeunload", function (e) {
 
 function checkFormCloseWarning(form) {
   const wasState = form.initial_state;
-  const nowState = form.history.last();
+  const nowState = form.history ? form.history.last() : getFormData(form);
 
   if (isEquivalent(wasState, nowState)) {
     return confirm(

@@ -198,7 +198,7 @@
                 },
                 success: (res) => {
                     setFormData(res.results[0], form);
-                    // setModalInitialState(formId);
+                    setFormInitialState(form);
                 }
             });
         }
