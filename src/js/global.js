@@ -305,6 +305,8 @@ function setValue(input, value = null, params = {}) {
         e.classList.toggle("selected", e.getAttribute("value") == value);
       });
     }
+  } else if (input.tagName == "CHECKBOX") {
+    input.classList.toggle("checked", !!value);
   } else if (input.datepicker) {
     if (value && value.substr(0, 4).match(/\d{4}/)) {
       value = reverseDateString(value, "-");
@@ -376,6 +378,8 @@ function getValue(input) {
       value = selected.getAttribute("value");
     }
     return value;
+  } else if (input.tagName == "CHECKBOX") {
+    return input.classList.contains("checked") ? 1 : 0;
   } else if (input.datepicker) {
     var value = input.value;
     if (value && value.substr(6, 4).match(/\d{4}/)) {

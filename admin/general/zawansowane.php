@@ -49,23 +49,14 @@
 <?php startSection("content"); ?>
 
 <div id="zaawansowaneForm">
-    <label class="checkbox-wrapper field-title block">
-        Certyfikat SSL
-        <input type="checkbox" name="ssl">
-        <div class="checkbox"></div>
-    </label>
+    <span class="field-title">Certyfikat SSL</span>
+    <checkbox name="ssl"></checkbox>
 
-    <label class="checkbox-wrapper field-title block">
-        Tryb developmentu
-        <input type="checkbox" name="dev_mode">
-        <div class="checkbox"></div>
-    </label>
+    <span class="field-title">Tryb developmentu</span>
+    <checkbox name="dev_mode"></checkbox>
 
-    <label class="checkbox-wrapper field-title block">
-        Tryb debugowania
-        <input type="checkbox" name="debug_mode">
-        <div class="checkbox"></div>
-    </label>
+    <span class="field-title">Tryb debugowania</span>
+    <checkbox name="debug_mode"></checkbox>
 
     <span class="field-title">Domena witryny</span>
     <input type="text" class="field" name="domain">
