@@ -2,8 +2,6 @@
 
 $kod_id = urlParam(2);
 if ($kod_id) {
-    $kod_id = intval($parts[2]);
-
     $kod_data = fetchRow("SELECT * FROM kody_rabatowe WHERE kod_id = $kod_id");
 } else {
     $kod_data = [
@@ -175,7 +173,7 @@ if (!json_decode($kod_data["product_list"])) {
                 <input class="field" type="text" name="kod">
                 <div class="field-title">Kwota</div>
                 <div class="glue-children">
-                    <input type="text" name="kwota" class="field" style="flex-grow:1">
+                    <input type="text" name="kwota" class="field" data-wrapper-style="flex-grow:1">
                     <select name="type" class="field inline">
                         <option value='static'>zł</option>
                         <option value='percent'>%</option>

@@ -927,19 +927,19 @@ input:read-only {
 }
 
 /* used in f.e. tables */
-.goto {
+.text-plus-icon {
   white-space: nowrap;
   display: flex;
   align-items: center;
   padding-top: 5px;
   padding-bottom: 5px;
 }
-.goto-label {
+.text-plus-icon *:not(i) {
   display: inline-block;
-  max-width: calc(100% - 16px);
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 3px;
+  flex-shrink: 1;
 }
 
 input[type="checkbox"] {

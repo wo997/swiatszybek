@@ -165,7 +165,7 @@
 .has_selected_rows .selected-results-count,
 .has_selected_rows .na-strone,
 .has_selected_rows [data-param="rowCount"] {
-  display: none;
+  display: none !important;
 }
 
 .datatable td .fa-minus-circle,

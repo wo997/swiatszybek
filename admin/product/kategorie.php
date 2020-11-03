@@ -34,7 +34,12 @@
                     title: "Kategoria",
                     width: "10%",
                     render: (r, i, t) => {
-                        return `<div class="link goto" onclick="${t.name}.showEditCategory(this,${i})"><div class="goto-label">${r.title}</div><i class="fa fa-cog"></i></div>`;
+                        return `
+                            <div class="link text-plus-icon" onclick="${t.name}.showEditCategory(this,${i})">
+                                <span>${r.title}</span>
+                                <i class="fa fa-cog"></i>
+                            </div>
+                        `;
                     },
                     escape: false
                 },
@@ -42,7 +47,12 @@
                     title: "Podkategorie",
                     width: "13%",
                     render: (r, i, t) => {
-                        return `<div class="link goto" onclick="${t.name}.openCategory(${i})"><div class="goto-label">${nonull(r.subcategories,"Brak")}</div><i class="fas fa-chevron-circle-right"></i></div>`;
+                        return `
+                            <div class="link text-plus-icon" onclick="${t.name}.openCategory(${i})">
+                                <span>${nonull(r.subcategories,"Brak")}</span>
+                                <i class="fas fa-chevron-circle-right"></i>
+                            </div>
+                        `;
                     },
                     escape: false
                 },

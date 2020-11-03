@@ -10,7 +10,6 @@ checkbox {
   height: var(--checkbox-height);
   border: 1px solid #ccc;
   border-radius: var(--checkbox-height);
-  background: #e5e5e5 !important;
   position: relative;
   overflow: hidden;
   border: none;
@@ -21,12 +20,14 @@ checkbox::before {
   content: "";
   width: var(--checkbox-width);
   height: var(--checkbox-height);
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
+  box-shadow: inset 0px 0px 2px 0px #ccc;
   display: block;
   position: absolute;
   left: 0;
   top: 0;
   border-radius: var(--checkbox-height);
+  background: #0001;
 }
 
 checkbox .circle {
@@ -37,8 +38,16 @@ checkbox .circle {
   position: absolute;
   left: 0;
   top: 0;
-  box-shadow: inset 0 0 2px 0 #0008;
+  box-shadow: inset 0 0 3px 0 #0007;
   transition: 0.2s all;
+}
+
+checkbox:hover .circle {
+  filter: brightness(1.02);
+}
+
+checkbox.checked:hover .circle {
+  filter: brightness(1.13);
 }
 
 checkbox .circle::before {

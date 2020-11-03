@@ -23,10 +23,10 @@
                     field: "title",
                     render: (r) => {
                         return `
-                            <div class="link goto">
-                                <a class="goto-label" href="` + STATIC_URLS["ADMIN"] + `strona/${r.cms_id}">${escapeHTML(r.title)}</a>
+                            <a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}strona/${r.cms_id}">
+                                <span>${escapeHTML(r.title)}</span>
                                 <i class="fas fa-chevron-circle-right"></i>
-                            </div>
+                            </a>
                         `;
                     },
                     escape: false,
@@ -37,10 +37,10 @@
                     width: "20%",
                     render: (r) => {
                         return `
-                            <div class="link goto">
-                                <a class="goto-label" href="/${r.link}" target="_blank">${escapeHTML(r.link ? r.link : "STRONA GŁÓWNA")}</a>
+                            <a class="link text-plus-icon" href="/${r.link}" target="_blank">
+                                <span>${escapeHTML(r.link ? r.link : "STRONA GŁÓWNA")}</span>
                                 <i class="fas fa-external-link-alt"></i>
-                            </div>
+                            </a>
                         `;
                     },
                     escape: false,

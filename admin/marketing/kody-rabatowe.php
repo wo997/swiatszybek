@@ -22,10 +22,10 @@
           field: "kod",
           render: (r) => {
             return `
-              <div class="link goto">
-                <a class="goto-label" href="${STATIC_URLS["ADMIN"]}kod_rabatowy/${r.kod_id}">${escapeHTML(r.kod)}</a>
+              <a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}kod_rabatowy/${r.kod_id}">
+                <span>${escapeHTML(r.kod)}</span>
                 <i class="fas fa-chevron-circle-right"></i>
-              </div>
+              </a>
             `;
           },
           escape: false,

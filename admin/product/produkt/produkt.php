@@ -136,7 +136,7 @@ if ($kopia) {
     </div>
   </div>
 
-  <div class='field-title above-simple-list'>
+  <div class='field-title'>
     Galeria zdjęć
     <span class='add_buttons'></span>
   </div>
@@ -157,13 +157,13 @@ if ($kopia) {
   <div class="field-title">Cechy produktu (wspólne dla wszystkich wariantów produktu)</div>
   <div name="attributes" data-type="attribute_values"></div>
 
-  <div class='field-title above-simple-list'>
+  <div class='field-title'>
     Oferta / Pola wyboru wariantów produktów
     <span class='add_buttons'></span>
   </div>
   <div name="variant_filters" class="slim root"></div>
 
-  <span class='field-title above-simple-list'>
+  <span class='field-title'>
     Wszystkie warianty
     <span class='add_buttons' style='display:none'></span>
     <button class="btn important" onclick="fillVariantsFromFilters()">
@@ -171,7 +171,10 @@ if ($kopia) {
       <i class="fas fa-plus"></i>
     </button>
   </span>
-  <div name="variants" class="no-remove"></div>
+  <div name="variants" class="no-remove">
+
+
+  </div>
 
   <input type="hidden" name="product_id">
 

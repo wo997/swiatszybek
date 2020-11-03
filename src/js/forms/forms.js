@@ -235,6 +235,11 @@ function registerForms(form = null) {
         field_wrapper.classList.add(...dwc.split(" "));
       }
 
+      var dws = field.getAttribute("data-wrapper-style");
+      if (dws) {
+        field_wrapper.style.cssText = dws;
+      }
+
       if (field.hasAttribute("data-validate")) {
         field_wrapper.insertAdjacentHTML(
           "beforeend",

@@ -39,6 +39,9 @@
 
 .field-wrapper {
   position: relative;
+}
+
+.field-wrapper:not(.inline) {
   flex-grow: 1;
 }
 

@@ -618,11 +618,9 @@ function createVariantFiltersSimpleList(node, options = {}) {
               </select>
             </div>
             <div class='indent'>
-              <div class='above-simple-list'>
-
+              <div>
                 <button class='btn transparent expand_arrow open' onclick='expandMenu($(this).parent().next(),$(this).parent())'><i class='fas fa-chevron-right'></i></button>
-
-                <span class='field-title inline indent_field_title above-simple-list'>
+                <span class='field-title inline indent_field_title'>
                   Lista opcji
                   <span class='option_count'></span>
                   <span class='add_buttons'></span>
@@ -688,7 +686,7 @@ function createFilterOptionsSimpleList(node) {
             <button class='btn secondary semi-bold add_additional_filters' onclick='this.next().find(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
 
             <div class='indent'>
-              <div class='field-title indent_field_title above-simple-list'>
+              <div class='field-title indent_field_title'>
                 Pola wyboru
                 <span class='add_buttons'></span>
               </div>

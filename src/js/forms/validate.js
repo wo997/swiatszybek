@@ -24,6 +24,7 @@ function showFieldErrors(field, errors = [], options = {}) {
       previousNode.classList.contains("above-simple-list")
     ) {
       field_title = previousNode;
+      previousNode.classList.add("above-simple-list");
     } else {
       var maybe = previousNode.find(".field-title");
       if (maybe) {

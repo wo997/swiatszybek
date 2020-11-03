@@ -16,7 +16,7 @@ function registerCheckboxes() {
         `
     );
 
-    c.addEventListener("click", (e) => {
+    c.addEventListener(IS_MOBILE ? "touchstart" : "mousedown", (e) => {
       c.classList.toggle("checked");
     });
   });

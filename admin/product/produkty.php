@@ -23,10 +23,10 @@
           width: "50%",
           render: (r) => {
             return `
-              <div class="link goto">
-                <a class="goto-label" href="${STATIC_URLS["ADMIN"]}produkt/${r.product_id}">${escapeHTML(r.title)}</a>
+              <a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}produkt/${r.product_id}">
+                <span>${escapeHTML(r.title)}</span>
                 <i class="fas fa-chevron-circle-right"></i>
-              </div>
+              </a>
             `;
           },
           escape: false,
