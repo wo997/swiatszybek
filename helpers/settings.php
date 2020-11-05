@@ -100,8 +100,13 @@ function saveSettings($dir, $file, $json_paths_and_values)
         $value = $json_path_and_value["value"];
 
         $settings_sub = &$settings;
+
         foreach ($path as $path_part) {
-            if (!is_array($settings_sub) || !isset($settings_sub[$path_part])) {
+            // we probably lose reference
+            if (!is_array($settings_sub)) {
+                $settings_sub = [];
+            }
+            if (!isset($settings_sub[$path_part])) {
                 $settings_sub[$path_part] = [];
             }
             $settings_sub = &$settings_sub[$path_part];

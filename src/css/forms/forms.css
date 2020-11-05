@@ -45,11 +45,6 @@
   flex-grow: 1;
 }
 
-.field.required {
-  border-color: var(--error-clr) !important;
-  box-shadow: 0px 0px 3px 0px var(--error-clr) inset;
-}
-
 .simple-list[data-count="0"].required > .add_btn.add_begin {
   background: var(--error-clr);
 }
@@ -80,7 +75,8 @@ textarea + .input-elements .input-error-indicator {
   height: 0.6em;
 }
 
-.warn-outline-active {
+.warn-outline-active,
+.simple-list-field-error {
   border-color: var(--error-clr);
   box-shadow: 0 0 0 1px var(--error-clr) inset !important;
 }

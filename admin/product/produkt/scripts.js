@@ -674,7 +674,7 @@ function createFilterOptionsSimpleList(node) {
       value: {},
     },
     render: (data) => {
-      return `
+      return /*html*/ `
           <div class='sub_filter options_wrapper'>
             <div class='fancy-label label-options'>
               <input type='text' name="value" class="field inline no-wrap semi-bold white" placeholder="Nazwa wariantu / Cecha" onchange="optionNameChanged(this)">

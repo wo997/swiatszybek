@@ -58,6 +58,7 @@ function createSimpleList(params = {}) {
   } else {
     var success = false;
     var prev = list.wrapper.prev();
+    prev.classList.add("above-simple-list");
     if (prev) {
       var add_buttons = prev.find(".add_buttons");
       if (add_buttons) {
@@ -292,8 +293,8 @@ function createSimpleList(params = {}) {
     setFormData(values, addedNode);
     delete list.setting_data;
 
-    list.valuesChanged(addedNode);
     list.registerFields(list.target);
+    list.valuesChanged(addedNode);
 
     if (list.params.onNewRowDataSet) {
       list.params.onNewRowDataSet(addedNode, values, list, {
@@ -304,7 +305,11 @@ function createSimpleList(params = {}) {
     return addedNode;
   };
 
-  list.registerFields = (listTarget) => {
+  list.registerFields = (listTarget = null) => {
+    if (listTarget === null) {
+      listTarget = list.target;
+    }
+
     listTarget.findAll("[name]:not(.param-registered)").forEach((e) => {
       var parent_named_node = e.findParentByAttribute("name", {
         skip: 1,
@@ -425,8 +430,8 @@ function validateSimpleList(field) {
 
   var list = field.list;
 
-  list.wrapper.findAll(".required").forEach((e) => {
-    e.classList.remove("required");
+  list.wrapper.findAll(".simple-list-field-error").forEach((e) => {
+    e.classList.remove("simple-list-field-error");
   });
 
   Object.entries(list.fields).forEach(([fieldName, fieldParams]) => {
@@ -459,7 +464,7 @@ function validateSimpleList(field) {
 
           valid = false;
           inputs.forEach((list_field) => {
-            list_field.classList.add("required");
+            list_field.classList.add("simple-list-field-error");
           });
         });
       });

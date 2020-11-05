@@ -34,19 +34,23 @@ function xhr(data) {
       data.success(data.type == "json" ? res_json : res);
     }
 
+    let reloading = false;
+
     if (res_json) {
       if (res_json.redirect) {
         window.location = res_json.redirect;
       }
       if (res_json.reload) {
+        reloading = true;
         window.location.reload();
       }
     }
 
     if (
+      !reloading &&
       reload_required &&
       IS_ADMIN &&
-      confirm("Wymagane jest odświeżenie strony, czy checesz kontynuować?")
+      confirm("Wymagane jest odświeżenie strony, czy chcesz kontynuować?")
     ) {
       window.location.reload();
     }
@@ -365,7 +369,9 @@ function setValue(input, value = null, params = {}) {
 
 function getValue(input) {
   if (input.classList.contains("simple-list")) {
-    //return JSON.stringify(input.list.values);
+    if (input.list.params.data_type == "json") {
+      return JSON.stringify(input.list.values);
+    }
     return input.list.values;
   }
   if (input.tagName == "RADIO-INPUT") {

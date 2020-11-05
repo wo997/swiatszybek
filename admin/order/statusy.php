@@ -19,8 +19,4 @@
 
 tutaj jest moj content
 
-<?php startSection("ziemniak"); ?>
-
-to jest moj ziemniaczek
-
 <?php include "admin/page_template.php"; ?>

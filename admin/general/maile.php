@@ -16,6 +16,7 @@
     domload(() => {
         window.order_emails_list_id = createSimpleList({
             name: "order_emails",
+            data_type: "json",
             fields: {
                 email: {
                     unique: true
@@ -44,13 +45,14 @@
 
         window.daily_report_emails_list_id = createSimpleList({
             name: "daily_report_emails",
+            data_type: "json",
             fields: {
                 email: {
                     unique: true
                 }
             },
             render: (data) => {
-                return `
+                return /*html*/ `
                     <input type='text' class='field warn-outline' style='flex-grow:1' name="email" data-validate="email">
                 `;
             },
@@ -64,6 +66,7 @@
                     add_main_email_btn.classList.toggle("hidden", has_main_email || !main_email);
                 }
 
+                // TODO: might not be neeeded
                 setTimeout(() => {
                     registerForms();
                 });
