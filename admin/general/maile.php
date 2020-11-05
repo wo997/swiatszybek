@@ -23,7 +23,7 @@
                 }
             },
             render: (data) => {
-                return `
+                return /*html*/ `
                     <input type='text' class='field warn-outline' style='flex-grow:1' name="email" data-validate="email">
                 `;
             },

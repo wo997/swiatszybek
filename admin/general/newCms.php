@@ -14,7 +14,7 @@
     useTool("newCms");
 
     function editFooter() {
-        window._newCMS.edit($('[name="page_footer"]'), {
+        window._newCms.edit($('[name="page_footer"]'), {
             preview: {
                 url: "/",
                 content_name: "page_footer",
@@ -34,7 +34,82 @@
 <div id="xxx">
     <div onclick="editFooter()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
 
-    <div name="page_footer" data-type="html" class="cms preview_html"></div>
+    <div name="page_footer" data-type="html" class="cms preview_html">
+
+
+
+
+
+
+
+
+
+
+        <button class="btn newCms_add_block_btn subtle">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div class="newCms_block newCms_quill_editor">
+            <div class="newCms_block_content"></div>
+        </div>
+        <button class="btn newCms_add_block_btn subtle">
+            <i class="fas fa-plus"></i>
+        </button>
+
+
+        <div class="newCms_block newCms_container">
+
+
+            <button class="btn newCms_add_block_btn subtle">
+                <i class="fas fa-plus"></i>
+            </button>
+            <div class="newCms_block newCms_container">
+
+
+                <button class="btn newCms_add_block_btn subtle">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <div class="newCms_block newCms_container">
+                    <button class="btn newCms_add_block_btn subtle">
+                        <i class="fas fa-plus"></i>
+                    </button>
+
+                    <div class="newCms_block_content"></div>
+                </div>
+                <button class="btn newCms_add_block_btn subtle">
+                    <i class="fas fa-plus"></i>
+                </button>
+
+
+                <div class="newCms_block newCms_quill_editor">
+                    <div class="newCms_block_content"></div>
+                </div>
+                <button class="btn newCms_add_block_btn subtle">
+                    <i class="fas fa-plus"></i>
+                </button>
+
+                <div class="newCms_block_content"></div>
+            </div>
+            <button class="btn newCms_add_block_btn subtle">
+                <i class="fas fa-plus"></i>
+            </button>
+
+            <div class="newCms_block_content"></div>
+        </div>
+        <button class="btn newCms_add_block_btn subtle">
+            <i class="fas fa-plus"></i>
+        </button>
+
+
+
+
+
+
+
+
+
+
+
+    </div>
 
 </div>
 

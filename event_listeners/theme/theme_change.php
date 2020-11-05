@@ -1,7 +1,5 @@
 <?php //event[theme_change]
 
-use MatthiasMullie\Minify;
-
 $colors_css = "/* css[global] */";
 
 $colors_css .= ":root {";

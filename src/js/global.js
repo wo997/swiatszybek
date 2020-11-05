@@ -452,7 +452,14 @@ function findParent(elem, callback, options = {}) {
     options = {};
   }
   options.skip = nonull(options.skip, 0);
+  options.counter = nonull(options.counter, 100);
   while (elem && elem != document) {
+    if (options.counter > 0) {
+      options.counter--;
+    } else {
+      return null;
+    }
+
     if (options.skip > 0) {
       options.skip--;
     } else if (callback(elem)) {

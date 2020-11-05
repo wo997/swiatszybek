@@ -273,9 +273,6 @@ function registerForms(form = null) {
   });
 
   for (const form of unique_forms) {
-    let history_length = +form.getAttribute("data-history");
-    form.history_count = history_length ? history_length : 20;
-
     registerFormHistory(form);
   }
 }
@@ -286,7 +283,9 @@ function formFieldOnChangeEvent(event) {
 
   const parent_form = field.parent_form;
   if (parent_form && parent_form.history && !parent_form.setting_data) {
-    pushFormHistory(parent_form);
+    if (!field.hasAttribute("data-ignore-history")) {
+      pushFormHistory(parent_form);
+    }
   }
   field.prev_value = field.getValue();
 }

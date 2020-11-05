@@ -17,18 +17,17 @@ function registerModalContent(html, callback) {
     });
   }
 
-  try {
-    var div = document.createElement("DIV");
-    div.insertAdjacentHTML("afterbegin", html);
-    var modal = div.children[0];
-    if ($("#" + modal.id)) throw "modal defined already";
-    modal.setAttribute("data-modal", "true");
-    registerModal(modal);
-    if (callback) {
-      callback(modal);
-    }
-  } catch (e) {
-    console.warn(e);
+  var div = document.createElement("DIV");
+  div.insertAdjacentHTML("afterbegin", html);
+  var modal = $(div.children[0]);
+  if ($("#" + modal.id)) {
+    console.error("modal defined already");
+    return;
+  }
+  modal.setAttribute("data-modal", "true");
+  registerModal(modal);
+  if (callback) {
+    callback(modal);
   }
 }
 
