@@ -57,7 +57,7 @@ $page_width = "1500px";
     <?php include "global/header.php"; ?>
 
     <div class="page_wrapper">
-        <div style="padding:<?= $page_padding ?> 0;margin:0 auto;box-sizing:border-box;width: 100%;flex-grow: 1;" class="cms">
+        <div data-cms-src="content" style="padding:<?= $page_padding ?> 0;margin:0 auto;box-sizing:border-box;width: 100%;flex-grow: 1;" class="cms">
             <?php
             // abandoned kinda
             if (isset($_POST["message"])) {

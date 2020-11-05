@@ -39,6 +39,9 @@ if (!nonull($page_data, "seo_image", "")) {
     const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
     const privelege_list = <?= json_encode($privelege_list) ?>;
 
+    <?php if (isset($preview_params) && isset($preview_params["js_visible"])) : ?>
+      const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
+    <?php endif ?>
   <?php endif ?>
 
   const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>

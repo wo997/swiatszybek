@@ -13,7 +13,16 @@ function showCmsPreview() {
 
   cmsPrepareOutput();
 
+  cmsContainer.getBoundingClientRect().height;
+
   var params = nonull(cmsPreview.data, {});
+
+  const dist_info = getCenterCmsBlockInfo(cmsContainer);
+
+  params.js_visible = {
+    dist_info: dist_info,
+    content_name: cmsPreview.content_name,
+  };
   params[cmsPreview.content_name] = cmsContainer.innerHTML;
 
   window.preview.open(cmsPreview.url, params);
@@ -2384,7 +2393,7 @@ registerModalContent(
 );
 
 registerModalContent(
-  `
+  /*html*/ `
     <div id="cmsBlockBackground">
         <div style="width:100%;max-width:650px">
             <div class="custom-toolbar">

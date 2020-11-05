@@ -20,6 +20,7 @@ function loadLazyNode(node, animate = true) {
   if (!node.classList.contains("lazy")) {
     return;
   }
+
   if (isNodeOnScreen(node, lazyLoadOffset)) {
     node.classList.remove("lazy");
     showImage(node);

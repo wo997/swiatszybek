@@ -208,7 +208,7 @@ domload(() => {
       },
     },
     render: (data) => {
-      return `
+      return /*html*/ `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
               <img name="src" data-type="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
               <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
@@ -227,7 +227,7 @@ domload(() => {
               .find(".select-image-wrapper")
               .insertAdjacentHTML(
                 "beforeend",
-                `<span class="main-img rect" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
+                /*html*/ `<span class="main-img rect" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
               );
           }
         } else {
@@ -275,7 +275,7 @@ domload(() => {
       zdjecie: {},
     },
     table: true,
-    header: `
+    header: /*html*/ `
       <th>Nazwa <i class="fas fa-info-circle" data-tooltip="Nazwa wariantu wyświetlana w koszyku, np.:<br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></th>
       <th>Cechy</th>
       <th>Aktywny</th>
@@ -290,7 +290,7 @@ domload(() => {
       <th></th>
     `,
     render: (data) => {
-      return `
+      return /*html*/ `
         <td>
           <input type='hidden' data-number name="variant_id">
           <textarea name="name" class="field inline" style="height: 3.75em;"></textarea>
@@ -604,7 +604,7 @@ function createVariantFiltersSimpleList(node, options = {}) {
       attribute_id: {},
     },
     render: (data) => {
-      return `
+      return /*html*/ `
           <div class='sub_filter filter_wrapper'>
             <div style='margin-right:6px' class="inline">
               <div class='fancy-label label-filters'>

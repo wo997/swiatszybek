@@ -24,7 +24,9 @@ function registerModalContent(html, callback) {
     if ($("#" + modal.id)) throw "modal defined already";
     modal.setAttribute("data-modal", "true");
     registerModal(modal);
-    if (callback) callback();
+    if (callback) {
+      callback(modal);
+    }
   } catch (e) {
     console.warn(e);
   }

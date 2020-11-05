@@ -9,6 +9,7 @@ function registerFormHistory(form) {
   }
 
   const dhb = form.getAttribute("data-history-buttons");
+
   const btns = dhb ? $(dhb) : form.find(".history-buttons");
 
   if (btns && !btns.find(".undo")) {

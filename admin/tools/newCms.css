@@ -1,0 +1,19 @@
+.newCms-block {
+  border: 6px solid #ccc;
+  border-top-width: 29px;
+  margin: 10px 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.1);
+}
+
+.newCmsContent,
+.newCms-main_container {
+  width: 100%;
+  height: 100%;
+}
+
+/*.addBlockBtn {
+    display: none;
+    position: absolute;
+    width
+}*/
