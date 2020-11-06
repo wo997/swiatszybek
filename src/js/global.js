@@ -504,7 +504,10 @@ function findParentByTagName(elem, parentTagName, options = {}) {
   return findParent(
     elem,
     (some_parent) => {
-      if (some_parent.tagName.toLowerCase() == parentTagName.toLowerCase()) {
+      if (
+        some_parent.tagName &&
+        some_parent.tagName.toLowerCase() == parentTagName.toLowerCase()
+      ) {
         return true;
       }
     },

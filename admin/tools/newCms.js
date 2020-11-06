@@ -249,3 +249,26 @@ registerModalContent(
     window._newCms = new newCms(modal);
   }
 );
+
+/* TODO: temporary */
+function setNodeImageBackground(node, src = "") {
+  if (src === "") {
+    var bi = node.directChildren().find((e) => {
+      return e.classList.contains("background-image");
+    });
+    if (bi) {
+      bi.remove();
+    }
+    return;
+  }
+  addMissingDirectChildren(
+    node,
+    (c) => c.classList.contains("background-image"),
+    `<img class="background-image">`,
+    "afterbegin"
+  );
+  var bi = node.find(".background-image");
+  if (bi) {
+    bi.setAttribute("src", src);
+  }
+}
