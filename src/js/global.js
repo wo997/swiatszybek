@@ -227,7 +227,7 @@ function replacePolishLetters(string) {
 }
 
 // also links.php
-function getLink(string) {
+function escapeUrl(string) {
   return string
     .replacePolishLetters()
     .replace(/[, ]+/g, "-")

@@ -331,7 +331,7 @@ function togglePasswordFieldType(btn, input, make_visible = null) {
 function rewrite(source, target, options = {}) {
   var val = source.getValue();
   if (options.link) {
-    val = getLink(val);
+    val = escapeUrl(val);
   }
   target.setValue(val);
 }

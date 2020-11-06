@@ -16,7 +16,7 @@ if ($isRemove) {
         "content",
     ]);
 
-    $data["link"] = getLink($_POST["link"]);
+    $data["link"] = escapeUrl($_POST["link"]);
     $data["published"] = (isset($_POST["published"]) || $main_page) ? 1 : 0;
 
     updateEntity($data, "cms", "cms_id", $cms_id);

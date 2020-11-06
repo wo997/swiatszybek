@@ -209,11 +209,13 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
     $mime_type = mime_content_type($tmp_file_path);
     $file_type = mime2ext($mime_type);
     $asset_type = getAssetTypeFromMime($mime_type);
+    
+    $user_id = $app["user"]["id"];
 
     if (!$name) $name = rand(1000, 9999);
 
     // escape
-    $name = getLink($name);
+    $name = escapeUrl($name);
 
     $name_suffix = "";
 
@@ -223,6 +225,7 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
         $width = $info[0];
         $height = $info[1];
 
+        // TODO: throw errors
         /*if ($width * $height > 500971520) {
             return false;
         }*/
@@ -248,14 +251,16 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
                 $iterator += rand(10, 100);
             }
             $file_path = $base_path . $name . "-" . $iterator . $name_suffix . "." . $file_type;
-        } else break;
+        } else {
+            break;
+        }
     }
-
+    
     // save plain file
     copy($tmp_file_path, $file_path);
 
-    query("INSERT INTO uploads(file_path, uploaded_file_name, asset_type) VALUES (?,?,?)", [
-        $file_path, $uploaded_file_name, $asset_type
+    query("INSERT INTO uploads(file_path, uploaded_file_name, asset_type, user_id) VALUES (?,?,?,?)", [
+        $file_path, $uploaded_file_name, $asset_type, $user_id
     ]);
 
     if ($try_to_minify_image && $asset_type == "image") {

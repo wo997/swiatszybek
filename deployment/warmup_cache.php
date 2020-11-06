@@ -14,3 +14,4 @@ triggerEvent("sitemap_change");
 triggerEvent("config_change");
 
 triggerEvent("assets_change");
+https://www.youtube.com/watch?time_continue=2961&v=hdI2bqOjy3c&feature=emb_title

@@ -366,7 +366,7 @@ function addForeignKey($table_1, $field_1, $table_2, $field_2 = null)
     if (getForeignKey($table_1, $field_1, $table_2, $field_2)) {
         return;
     }
-
+    // TODO: on delete set null etc.
     $sql = <<<SQL
         ALTER TABLE $table_1
         ADD FOREIGN KEY ($field_1)
