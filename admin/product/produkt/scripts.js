@@ -73,7 +73,9 @@ function comboSelectValuesChanged(combo, options = {}) {
     "data-type",
     "attribute_values"
   );
-  attribute_values.dispatchEvent(new Event("change"));
+  if (attribute_values) {
+    attribute_values.dispatchEvent(new Event("change"));
+  }
 }
 
 function createAttributeSelect(combo, options = {}) {
@@ -148,7 +150,9 @@ function anythingValueChanged(anything_wrapper) {
     "data-type",
     "attribute_values"
   );
-  attribute_values.dispatchEvent(new Event("change"));
+  if (attribute_values) {
+    attribute_values.dispatchEvent(new Event("change"));
+  }
 }
 
 function registerAnythingValues() {

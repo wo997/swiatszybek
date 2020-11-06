@@ -1,60 +1,85 @@
 .newCms_block {
   padding: 10px;
-  background: #04b1;
-}
-
-.newCmsContent {
-  width: 100%;
-  height: 100%;
-}
-
-.addBlockBtn {
-  position: absolute;
-}
-
-.addBlockBtn:not(.active) {
-  display: none;
 }
 
 .newCms_add_block_btn {
   text-align: center;
-  padding: 3px;
-  border-radius: 4px;
+  padding: 1px;
+  border-radius: 13px;
   display: block;
-}
-
-.newCms_container {
-  display: flex;
-}
-
-.newCms_container .newCms_add_block_btn {
-  width: 100%;
   align-self: flex-start;
   opacity: 0.2;
   transition: 0.5s opacity, 0.5s height, 0.5s min-height, 0.15s all;
   min-height: unset;
-  height: 30px;
+  height: 26px;
+  border: 2px dashed #0008;
+  background: #eee8;
+  margin: 5px 0;
+  color: #000d;
+  width: 100%;
+  max-width: 300px;
+  align-self: center;
 }
 
-.newCms_container {
+.newCms_add_block_btn:hover {
+  opacity: 1 !important;
+  background: #ccc8;
+  color: var(--important-clr);
+  border-color: var(--important-clr);
+}
+
+.newCms_add_block_btn i {
+  transition: 0.2s transform;
+}
+
+.newCms_add_block_btn:hover i {
+  transform: scale(1.3);
+}
+
+.newCms_container_content {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.newCms_container_content {
   flex-flow: column;
+}
+
+.newCms_container_header {
+  display: block;
+  background: #ddd;
+  border-bottom: 1px solid #0006;
+  margin: 0 -5px;
+  transition: 0.5s opacity, 0.5s height, 0.5s min-height, 0.15s all;
+  padding: 0 0 3px;
+}
+
+.editBlockRect {
+  position: absolute;
+  transition: 0.2s opacity;
+  background: #0001;
+}
+.editBlockRect:not(.active) {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* edit mode */
 
 .newCms_edit_mode .newCms_block {
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #999;
   min-height: 50px;
 }
 
-.newCms_edit_mode .newCms_container:hover > .newCms_add_block_btn {
-  opacity: 1;
-}
+/*.newCms_edit_mode .newCms_container:hover > .newCms_add_block_btn {
+  opacity: 0.7;
+}*/
 
 .newCms_edit_mode .newCms_container {
-  display: flex;
-  padding: 10px;
+  padding: 0 5px;
+  border: 4px solid #ddd;
+  box-shadow: 0 0 0 1px #0006, inset 0 0 0 1px #0006;
 }
 
 /* no edit mode */
@@ -65,4 +90,14 @@
   pointer-events: none;
   opacity: 0;
   padding: 0;
+  margin: 0;
+}
+
+.newCms:not(.newCms_edit_mode) .newCms_container_header {
+  height: 0px;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  padding: 0;
+  margin: 0;
 }

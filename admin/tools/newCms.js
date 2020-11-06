@@ -5,7 +5,8 @@ class newCms {
   constructor(container) {
     this.container = $(container);
     this.contentNode = this.container.find(`.newCmsContent`);
-    this.addBlockBtn = this.container.find(`.addBlockBtn`);
+
+    this.editBlockRectNode = this.container.find(`.editBlockRect`);
 
     this.initAddBlockModal();
 
@@ -17,10 +18,23 @@ class newCms {
     );
   }
 
+  getCleanOutput(html) {
+    var playground = $(document.createElement("DIV"));
+    // TODO: is it even necessary?
+    //document.body.appendChild(playground);
+    playground.insertAdjacentHTML("afterbegin", html);
+
+    playground.findAll(".newCms_add_block_btn").forEach((e) => {
+      e.remove();
+    });
+
+    return playground.innerHTML;
+  }
+
   initAddBlockModal() {
     registerModalContent(
       /*html*/ `
-      <div id="newCmsBlocks">
+      <div id="newCmsBlocks" data-dismissable>
           <div class="modal-body">
               <div class="custom-toolbar">
                   <span class="title">
@@ -58,7 +72,7 @@ class newCms {
 
     setFormData(
       {
-        content: this.targetNode.innerHTML,
+        content: this.getCleanOutput(this.targetNode.innerHTML),
       },
       this.container
     );
@@ -84,43 +98,38 @@ class newCms {
 
   mouseMove(event) {
     /*const mx = event.clientX;
-    const my = event.clientY;
+    const my = event.clientY;*/
     const target = $(event.target);
 
-    let flow = "column";
-    let insert_within = this.contentNode;
     let hovered_block = target.findParentByClassName("newCms_block");
-    if (hovered_block) {
-      //hovered_block = hovered_block.find("newCms_block-content");
-      const container_flow = hovered_block.getAttribute("data-desktop-flow");
-      insert_within = container_flow.findParentByClassName("newCms_container");
+    if (
+      hovered_block &&
+      !hovered_block.classList.contains("newCms_container")
+    ) {
+      let hovered_block_rect = hovered_block.getBoundingClientRect();
+
+      this.editBlockRectNode.style.top = hovered_block_rect.top + "px";
+      this.editBlockRectNode.style.left = hovered_block_rect.left + "px";
+      this.editBlockRectNode.classList.toggle("active", true);
+    } else {
+      this.editBlockRectNode.classList.toggle("active", false);
     }
-
-    let insert_within_rect = insert_within.getBoundingClientRect();
-
-    this.addBlockBtn.style.top = insert_within_rect.top;
-    this.addBlockBtn.style.left = insert_within_rect.left;
-    this.addBlockBtn.classList.toggle("active", true);
-
-    console.log(this.addBlockBtn, hovered_block, insert_within);*/
   }
 
   mouseDown(event) {
-    const newCms_add_block_btn = event.target.findParentByClassName(
+    const newCms_add_block_btn = $(event.target).findParentByClassName(
       "newCms_add_block_btn"
     );
-    console.log(newCms_add_block_btn);
     if (newCms_add_block_btn) {
       this.insertBlockModal(newCms_add_block_btn);
     }
 
-    const newCms_quill_editor = event.target.findParentByClassName(
+    /*const newCms_quill_editor = $(event.target).findParentByClassName(
       "newCms_quill_editor"
     );
-    console.log(newCms_quill_editor);
     if (newCms_quill_editor) {
       quillEditor.open(newCms_quill_editor);
-    }
+    }*/
   }
 
   contentChange() {
@@ -134,8 +143,17 @@ class newCms {
 
   insertMissingContainerHeaders() {
     this.contentNode.findAll(".newCms_container").forEach((c) => {
-      // TODO insert container headers, these might require a wrapper
-      console.log(c);
+      if (!c.find(".newCms_container_header")) {
+        c.insertAdjacentHTML(
+          "afterbegin",
+          /*html*/ `
+          <div class="newCms_container_header">
+            <button class="btn subtle">Usuń mnie kurwa cipo</button>
+            <button class="btn subtle">chuj</button>
+          </div>
+        `
+        );
+      }
     });
   }
 
@@ -154,7 +172,8 @@ class newCms {
       if (has_any_block) {
         return;
       }
-      this.insertAddBlockButton(c, "afterbegin");
+      const container_content = nonull(c.find(".newCms_container_content"), c);
+      this.insertAddBlockButton(container_content, "afterbegin");
     });
 
     // before and after blocks
@@ -172,7 +191,7 @@ class newCms {
     target.insertAdjacentHTML(
       position,
       /*html*/ `
-        <button class="btn newCms_add_block_btn subtle">
+        <button class="btn newCms_add_block_btn">
           <i class="fas fa-plus"></i>
         </button>
       `
@@ -180,7 +199,7 @@ class newCms {
   }
 
   insertBlockModal(button) {
-    showModal("newCmsBlocks");
+    showModal("newCmsBlocks", { source: button });
     this.insert_block_button = button;
   }
 
@@ -192,7 +211,7 @@ class newCms {
       position,
       /*html*/ `
         <div class="newCms_block newCms_${type}${className}">
-            <div class="newCms_block_content">${content}</div>
+            <div class="newCms_block_content newCms_${type}_content">${content}</div>
         </div>
       `
     );
@@ -226,7 +245,7 @@ registerModalContent(
             </div>
 
             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
-                <div class="modules-sidebar shown">
+                <div class="modules-sidebar shown" style="display:none !important">
                   <button class="toggle-sidebar-btn btn subtle" onclick="toggleModuleSidebar()" data-tooltip="Ukryj moduły"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
                   <span class="field-title modules-sidebar-title" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
                    Moduły 
@@ -236,9 +255,12 @@ registerModalContent(
                 </div>
 
                 <div style="width:100%">
-                  <div class="scroll-panel scroll-shadow" style="height: 100%;">
-                    <div class="addBlockBtn">+</div>
-                    <div class="newCmsContent newCms_container" data-type="html" name="content"></div>
+                  <div class="scroll-panel scroll-shadow" style="padding:10px">
+                    <div class="editBlockRect">
+                      <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
+                  </div>
                 </div>
             </div>
         </div>

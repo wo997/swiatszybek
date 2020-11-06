@@ -277,7 +277,9 @@ if ($product_id === -1) {
         }
 
         var attribute_values = combo.findParentByAttribute("data-type", "attribute_values");
-        attribute_values.dispatchEvent(new Event("change"));
+        if (attribute_values) {
+            attribute_values.dispatchEvent(new Event("change"));
+        }
     }
 
     function createAttributeSelect(combo, options = {}) {
@@ -344,7 +346,9 @@ if ($product_id === -1) {
         anything_wrapper.classList.toggle("any_selected", any_selected);
 
         var attribute_values = anything_wrapper.findParentByAttribute("data-type", "attribute_values");
-        attribute_values.dispatchEvent(new Event("change"));
+        if (attribute_values) {
+            attribute_values.dispatchEvent(new Event("change"));
+        }
     }
 
     function registerAnythingValues() {

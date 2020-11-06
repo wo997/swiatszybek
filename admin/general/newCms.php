@@ -15,6 +15,7 @@
 
     function editFooter() {
         window._newCms.edit($('[name="page_footer"]'), {
+            source: this,
             preview: {
                 url: "/",
                 content_name: "page_footer",
@@ -43,61 +44,99 @@
 
 
 
-
-
-        <button class="btn newCms_add_block_btn subtle">
+        <button class="btn newCms_add_block_btn">
             <i class="fas fa-plus"></i>
         </button>
-        <div class="newCms_block newCms_quill_editor">
-            <div class="newCms_block_content"></div>
-        </div>
-        <button class="btn newCms_add_block_btn subtle">
-            <i class="fas fa-plus"></i>
-        </button>
-
-
         <div class="newCms_block newCms_container">
+            <div class="newCms_container_header">
+                <button class="btn subtle">Usuń mnie kurwa cipo</button>
+                <button class="btn subtle">chuj</button>
+            </div>
+
+            <div class="newCms_block_content newCms_container_content">
 
 
-            <button class="btn newCms_add_block_btn subtle">
-                <i class="fas fa-plus"></i>
-            </button>
-            <div class="newCms_block newCms_container">
-
-
-                <button class="btn newCms_add_block_btn subtle">
+                <button class="btn newCms_add_block_btn">
                     <i class="fas fa-plus"></i>
                 </button>
                 <div class="newCms_block newCms_container">
-                    <button class="btn newCms_add_block_btn subtle">
-                        <i class="fas fa-plus"></i>
-                    </button>
+                    <div class="newCms_container_header">
+                        <button class="btn subtle">Usuń mnie kurwa cipo</button>
+                        <button class="btn subtle">chuj</button>
+                    </div>
 
-                    <div class="newCms_block_content"></div>
+                    <div class="newCms_block_content newCms_container_content">
+
+
+                        <button class="btn newCms_add_block_btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="newCms_block newCms_container">
+                            <div class="newCms_container_header">
+                                <button class="btn subtle">Usuń mnie kurwa cipo</button>
+                                <button class="btn subtle">chuj</button>
+                            </div>
+
+                            <div class="newCms_block_content newCms_container_content">
+
+
+                                <button class="btn newCms_add_block_btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <div class="newCms_block newCms_quill_editor">
+                                    <div class="newCms_block_content newCms_quill_editor_content"></div>
+                                </div>
+                                <button class="btn newCms_add_block_btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+
+
+                                <div class="newCms_block newCms_quill_editor">
+                                    <div class="newCms_block_content newCms_quill_editor_content"></div>
+                                </div>
+                                <button class="btn newCms_add_block_btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="btn newCms_add_block_btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+
+
+                        <div class="newCms_block newCms_quill_editor">
+                            <div class="newCms_block_content newCms_quill_editor_content"></div>
+                        </div>
+                        <button class="btn newCms_add_block_btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
-                <button class="btn newCms_add_block_btn subtle">
+                <button class="btn newCms_add_block_btn">
                     <i class="fas fa-plus"></i>
                 </button>
-
-
-                <div class="newCms_block newCms_quill_editor">
-                    <div class="newCms_block_content"></div>
-                </div>
-                <button class="btn newCms_add_block_btn subtle">
-                    <i class="fas fa-plus"></i>
-                </button>
-
-                <div class="newCms_block_content"></div>
             </div>
-            <button class="btn newCms_add_block_btn subtle">
-                <i class="fas fa-plus"></i>
-            </button>
-
-            <div class="newCms_block_content"></div>
         </div>
-        <button class="btn newCms_add_block_btn subtle">
+        <button class="btn newCms_add_block_btn">
             <i class="fas fa-plus"></i>
         </button>
+
+
+        <div class="newCms_block newCms_quill_editor">
+            <div class="newCms_block_content newCms_quill_editor_content"></div>
+        </div>
+        <button class="btn newCms_add_block_btn">
+            <i class="fas fa-plus"></i>
+        </button>
+
+
+
+
+
+
+
+
+
 
 
 

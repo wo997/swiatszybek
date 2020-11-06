@@ -232,8 +232,9 @@ window.addEventListener("mousedown", (event) => {
   }
 
   if (form) {
+    //hideModalTopMost();
     // hmm, might work
-    hideAllModals();
-    //hideModal(form.id);
+    //hideAllModals();
+    hideModal(form.id);
   }
 });

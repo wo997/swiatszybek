@@ -1,5 +1,9 @@
 /* css[global] */
 
+:root {
+  --modal-max-width: 1500px;
+}
+
 #modal,
 #modal-wrapper {
   position: fixed;
@@ -43,7 +47,7 @@
   height: 100%;
   width: 100%;
   position: relative;
-  max-width: 1500px;
+  max-width: var(--modal-max-width);
   margin: auto;
 }
 
@@ -71,10 +75,11 @@
   transition: 0.4s all;
 }
 
-@media only screen and (min-width: 1700px) {
-  .hugeModalDesktop {
-    margin: 0 -100px;
-    width: calc(100% + 200px);
+/* cannot use css vars in that context ;'( */
+@media only screen and (min-width: 1500px) {
+  [data-expand="large"] {
+    margin: 0 calc(var(--modal-max-width) * 0.5 - 50vw);
+    width: 100vw;
   }
 }
 
