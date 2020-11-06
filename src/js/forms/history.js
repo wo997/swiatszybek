@@ -8,6 +8,9 @@ function registerFormHistory(form) {
     return;
   }
 
+  let history_length = +form.getAttribute("data-history");
+  form.history_count = history_length ? history_length : 20;
+
   const dhb = form.getAttribute("data-history-buttons");
 
   const btns = dhb ? $(dhb) : form.find(".history-buttons");
@@ -16,7 +19,7 @@ function registerFormHistory(form) {
     form.history_buttons = btns;
     btns.insertAdjacentHTML(
       "afterbegin",
-      `
+      /*html*/ `
         <button class="btn primary undo" data-tooltip="Cofnij (Ctrl + Z)"> <i class="fas fa-undo-alt"></i> </button>
         <button class="btn primary redo" data-tooltip="Ponów (Ctrl + Y)"> <i class="fas fa-redo-alt"></i> </button>
       `
