@@ -55,7 +55,7 @@ $static = checkUrl($page_data["link"]);
     }
 
     function rewriteURL() {
-        $(`[name="link"]`).setValue(getLink($(`[name="title"]`).value));
+        $(`[name="link"]`).setValue(escapeUrl($(`[name="title"]`).value));
 
     }
 

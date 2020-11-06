@@ -215,7 +215,7 @@
     });
 
     function rewriteURL() {
-        $(`[name="link"]`).setValue(getLink($(`[name="title"]`).value));
+        $(`[name="link"]`).setValue(escapeUrl($(`[name="title"]`).value));
     }
 </script>
 

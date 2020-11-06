@@ -44,7 +44,7 @@ if ($app["user"]["id"]) {
     $a_email = $email;
 }
 
-$name = getLink($a_title);
+$name = escapeUrl($a_title);
 
 $mailTitle = "$a_imie $a_nazwisko $a_email oczekuje na $a_title - " . $app["company_data"]['email_sender'];
 

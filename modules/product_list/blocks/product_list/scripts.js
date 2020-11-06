@@ -167,8 +167,12 @@ function mobileFocusProductFrame() {
 }*/
 
 function currentlyFocusedProduct(node) {
-  var x = node.classList.contains("product-image") ? node : null;
-  if (animateProduct.target != x) {
+  var possibly_product_image = null;
+
+  if (node && node.classList && node.classList.contains("product-image")) {
+    possibly_product_image = node;
+  }
+  if (animateProduct.target != possibly_product_image) {
     if (animateProduct.target) {
       animateProduct.image.src = animateProduct.defaultImage;
       animateProduct.image.removeAttribute("data-src");
@@ -178,19 +182,19 @@ function currentlyFocusedProduct(node) {
 
       window.clearTimeout(animateProduct.timeout);
     }
-    if (x) {
-      var g = x.getAttribute("data-gallery");
+    if (possibly_product_image) {
+      var g = possibly_product_image.getAttribute("data-gallery");
       if (!g) {
         return;
       }
-      animateProduct.target = x;
-      animateProduct.image = x;
+      animateProduct.target = possibly_product_image;
+      animateProduct.image = possibly_product_image;
       animateProduct.frames = JSON.parse(g).map((e) => e.src);
 
       animateProduct.defaultImage = animateProduct.image.src;
       animateProduct.frameId = 0;
       if (animateProduct.frames.length > 1) {
-        nextProductImageSlide(x);
+        nextProductImageSlide(possibly_product_image);
       }
     }
   }

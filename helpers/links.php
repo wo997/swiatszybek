@@ -9,7 +9,7 @@ function replacePolishLetters($string)
 }
 
 // also global.js
-function getLink($string)
+function escapeUrl($string)
 {
     return strtolower(
         preg_replace("/-+/", "-", preg_replace("/[^(a-zA-Z0-9-)]/", "", str_replace(
