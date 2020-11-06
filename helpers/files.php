@@ -209,7 +209,8 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
     $mime_type = mime_content_type($tmp_file_path);
     $file_type = mime2ext($mime_type);
     $asset_type = getAssetTypeFromMime($mime_type);
-    
+
+    global $app;
     $user_id = $app["user"]["id"];
 
     if (!$name) $name = rand(1000, 9999);
