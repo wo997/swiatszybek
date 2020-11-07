@@ -82,6 +82,10 @@
   display: none;
 }
 
+.newCmsContent .quill_editor {
+  min-height: 30px;
+}
+
 .newCmsContent .during_inline_edit {
   border: none !important;
   box-shadow: 0 2px 4px #0003;

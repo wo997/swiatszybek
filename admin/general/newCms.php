@@ -13,12 +13,35 @@
 <script>
     useTool("newCms");
 
-    function editFooter() {
-        window._newCms.edit($('[name="page_footer"]'), {
+    domload(() => {
+        setFormData(
+            <?= json_encode(
+                getSetting("general", "random", [])
+            ); ?>, `#newCmsForm`);
+    });
+
+    function editNewCms() {
+        window.newCms.edit($('[name="random_content"]'), {
             source: this,
             preview: {
                 url: "/",
-                content_name: "page_footer",
+                content_name: "random_content",
+            }
+        });
+    }
+
+    function saveNewCms() {
+        var form = $(`#newCmsForm`);
+
+        var params = {
+            random: getFormData(form),
+        };
+
+        xhr({
+            url: STATIC_URLS["ADMIN"] + "save_new_cms",
+            params: params,
+            success: () => {
+                setFormInitialState(form);
             }
         });
     }
@@ -28,14 +51,16 @@
 
 <div class="custom-toolbar">
     <span class="title">Nowy CMS</span>
+    <button class="btn primary" onclick="saveNewCms()">Zapisz <i class="fa fa-save"></i></button>
+
 </div>
 
 <?php startSection("content"); ?>
 
-<div id="xxx">
-    <div onclick="editFooter()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
+<div id="newCmsForm">
+    <div onclick="editNewCms()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
 
-    <div name="page_footer" data-type="html" class="newCms_container_content preview_html">
+    <div name="random_content" data-type="html" class="newCms_container_content preview_html">
 
 
 
