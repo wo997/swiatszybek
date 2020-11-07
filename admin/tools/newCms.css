@@ -1,4 +1,4 @@
-.newCms_block_content.not(.newCms_block_container) {
+.newCms_block_content:not(.newCms_container_content) {
   padding: 10px;
 }
 
@@ -52,6 +52,13 @@
   transition: 0.5s opacity, 0.5s height, 0.5s min-height, 0.15s all;
   padding: 1px 1px 3px;
   box-shadow: 0 3px 0 -2px #0005;
+}
+
+.newCms_container_header .fa-border-all {
+  margin: -3px 2px;
+  font-size: 20px;
+  display: inline-block;
+  transform: translateY(2px);
 }
 
 .edit_block_node {
@@ -112,7 +119,7 @@
 .newCms_edit_mode .newCms_block {
   border-radius: 4px;
   border: 1px solid #999;
-  min-height: 50px;
+  min-height: 45px;
 }
 
 /*.newCms_edit_mode .newCms_container:hover > .newCms_add_block_btn {

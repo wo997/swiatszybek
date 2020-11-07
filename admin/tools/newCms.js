@@ -290,6 +290,7 @@ class NewCms {
     this.initEditBlockRect();
     this.initAddBlockModal();
     this.initQuillEditor();
+    this.initListenChange();
 
     setFormData(
       {
@@ -303,6 +304,16 @@ class NewCms {
     });
     this.container.addEventListener("mousedown", (event) => {
       this.mouseDown(event);
+    });
+  }
+
+  initListenChange() {
+    this.contentNode.addEventListener("change", () => {
+      if (this.content_change_triggered) {
+        this.contentChange({
+          trigger_change: false,
+        });
+      }
     });
   }
 
@@ -420,8 +431,8 @@ class NewCms {
     }
   }
 
-  contentChange() {
-    //this.contentNode.findAll(".newCms_block")
+  contentChange(options = {}) {
+    this.content_change_triggered = true;
 
     this.insertMissingAddBlockButtons();
     this.insertMissingContainerHeaders();
@@ -430,7 +441,10 @@ class NewCms {
     this.removeUnnecessaryAddBlockButtons();
     this.removeUnnecessaryContainerHeaders();
 
-    this.contentNode.setValue();
+    if (nonull(options.trigger_change, true) === true) {
+      this.contentNode.setValue();
+    }
+    this.content_change_triggered = false;
   }
 
   insertMissingQlClasses() {
