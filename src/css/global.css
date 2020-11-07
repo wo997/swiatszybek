@@ -159,7 +159,7 @@ textarea {
   text-align: center;
   cursor: pointer;
   border: none;
-  transition: 0.1s all;
+  transition: 0.15s all;
   user-select: none;
 }
 
@@ -176,6 +176,9 @@ textarea {
 
 .btn.transparent {
   background: none;
+}
+.btn.transparent:hover {
+  background: #0001;
 }
 
 .btn.primary {
@@ -956,7 +959,7 @@ input[type="checkbox"]:checked ~ .checkbox {
   width: 20px;
   display: inline-block;
   border-radius: 6px;
-  transition: 0.1s;
+  transition: 0.1s all;
   border: 1px solid #aaa;
   vertical-align: middle;
   transform: translateY(-1px);

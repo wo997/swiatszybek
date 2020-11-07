@@ -47,21 +47,27 @@
 
 .newCms_container_header {
   display: block;
-  background: #ddd;
-  border-bottom: 1px solid #0006;
-  margin: 0 -5px;
+  background: #ccc;
+  border-bottom: 1px solid #0003;
+  margin: -1px -5px 0;
   transition: 0.5s opacity, 0.5s height, 0.5s min-height, 0.15s all;
-  padding: 0 0 3px;
+  padding: 1px 0 3px;
 }
 
 .editBlockRect {
   position: absolute;
   transition: 0.2s opacity;
-  background: #0001;
+  background: #ddd5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .editBlockRect:not(.active) {
   opacity: 0;
   pointer-events: none;
+}
+.editBlockRect .remove_btn:hover {
+  color: var(--error-clr);
 }
 
 /* edit mode */
@@ -78,8 +84,8 @@
 
 .newCms_edit_mode .newCms_container {
   padding: 0 5px;
-  border: 4px solid #ddd;
-  box-shadow: 0 0 0 1px #0006, inset 0 0 0 1px #0006;
+  border: 4px solid #ccc;
+  box-shadow: 0 1px 2px 1px #0006, inset 0 0 0 1px #0004;
 }
 
 /* no edit mode */

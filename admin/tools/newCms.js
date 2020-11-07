@@ -6,7 +6,11 @@ class newCms {
     this.container = $(container);
     this.contentNode = this.container.find(`.newCmsContent`);
 
-    this.editBlockRectNode = this.container.find(`.editBlockRect`);
+    this.edit_block_data = {
+      target_block: null,
+      last_target_block: null,
+      node: this.container.find(`.editBlockRect`),
+    };
 
     this.initAddBlockModal();
 
@@ -16,6 +20,21 @@ class newCms {
       },
       container
     );
+
+    this.container.addEventListener("mousemove", (event) => {
+      this.mouseMove(event);
+    });
+    this.container.addEventListener("mousedown", (event) => {
+      this.mouseDown(event);
+    });
+  }
+
+  initEditBlock() {
+    this.edit_block_data = {
+      target_block: null,
+      last_target_block: null,
+      node: this.container.find(`.editBlockRect`),
+    };
   }
 
   getCleanOutput(html) {
@@ -70,6 +89,8 @@ class newCms {
     this.targetNode = $(targetNode);
     this.options = options;
 
+    this.initEditBlock();
+
     setFormData(
       {
         content: this.getCleanOutput(this.targetNode.innerHTML),
@@ -81,13 +102,6 @@ class newCms {
     setFormInitialState(this.container);
 
     showModal("newCms", { source: this.targetNode });
-
-    this.container.addEventListener("mousemove", (event) => {
-      this.mouseMove(event);
-    });
-    this.container.addEventListener("mousedown", (event) => {
-      this.mouseDown(event);
-    });
   }
 
   save() {
@@ -101,19 +115,66 @@ class newCms {
     const my = event.clientY;*/
     const target = $(event.target);
 
-    let hovered_block = target.findParentByClassName("newCms_block");
+    const hovered_block = target
+      ? target.findParentByClassName("newCms_block")
+      : null;
+
+    const edit_block_node = this.edit_block_data.node;
+
+    // let the user do the job ;)
+    if (target && target.findParentByClassName("editBlockRect")) {
+      return;
+    }
+
+    let edit_block_active = false;
     if (
       hovered_block &&
-      !hovered_block.classList.contains("newCms_container")
+      !hovered_block.classList.contains("newCms_container") &&
+      this.edit_block_data.target_block !== target
     ) {
-      let hovered_block_rect = hovered_block.getBoundingClientRect();
+      // everything below happens just once when the rect is shown
 
-      this.editBlockRectNode.style.top = hovered_block_rect.top + "px";
-      this.editBlockRectNode.style.left = hovered_block_rect.left + "px";
-      this.editBlockRectNode.classList.toggle("active", true);
-    } else {
-      this.editBlockRectNode.classList.toggle("active", false);
+      edit_block_active = true;
+
+      let edit_block_html = /*html*/ `
+        <button class="btn transparent">
+          <i class="fas fa-pencil-alt"></i>
+        </button>
+      `;
+      edit_block_html += /*html*/ `
+        <button class="btn transparent remove_btn">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      edit_block_node.setContent(edit_block_html);
+
+      const remove_btn = edit_block_node.find(".remove_btn");
+      if (remove_btn) {
+        remove_btn.addEventListener("click", () => {
+          this.removeBlock(hovered_block);
+          this.mouseMove({ target: null });
+        });
+      }
+
+      const hovered_block_rect = hovered_block.getBoundingClientRect();
+
+      const scrollable_parent = hovered_block.findScrollableParent();
+      const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+
+      // could we set it once? along with icons and so on
+      edit_block_node.style.left =
+        hovered_block_rect.left - scrollable_parent_rect.left + "px";
+      edit_block_node.style.top =
+        hovered_block_rect.top - scrollable_parent_rect.top + "px";
+      edit_block_node.style.width = hovered_block_rect.width + "px";
+      edit_block_node.style.height = hovered_block_rect.height + "px";
+
+      // won't be lost when we the focus is lost
+      this.edit_block_data.last_target_block = target;
     }
+
+    edit_block_node.classList.toggle("active", edit_block_active);
+    this.edit_block_data.target_block = target;
   }
 
   mouseDown(event) {
@@ -137,6 +198,9 @@ class newCms {
 
     this.insertMissingAddBlockButtons();
     this.insertMissingContainerHeaders();
+
+    this.removeUnnecessaryAddBlockButtons();
+    this.removeUnnecessaryContainerHeaders();
 
     this.contentNode.setValue();
   }
@@ -162,29 +226,52 @@ class newCms {
     [
       this.contentNode,
       ...this.contentNode.findAll(".newCms_container"),
-    ].forEach((c) => {
+    ].forEach((con) => {
       // can be anything inside ;)
-      var has_add_block_btn = !!c.find(".newCms_add_block_btn");
+      var has_add_block_btn = !!con.find(".newCms_add_block_btn");
       if (has_add_block_btn) {
         return;
       }
-      var has_any_block = !!c.find(".newCms_block");
+      var has_any_block = !!con.find(".newCms_block");
       if (has_any_block) {
         return;
       }
-      const container_content = nonull(c.find(".newCms_container_content"), c);
+      const container_content = nonull(
+        con.find(".newCms_container_content"),
+        con
+      );
       this.insertAddBlockButton(container_content, "afterbegin");
     });
 
     // before and after blocks
-    this.contentNode.findAll(".newCms_block").forEach((c) => {
-      if (!c.next() || !c.next().classList.contains("newCms_add_block_btn")) {
-        this.insertAddBlockButton(c, "afterend");
+    this.contentNode.findAll(".newCms_block").forEach((con) => {
+      if (
+        !con.next() ||
+        !con.next().classList.contains("newCms_add_block_btn")
+      ) {
+        this.insertAddBlockButton(con, "afterend");
       }
-      if (!c.prev() || !c.prev().classList.contains("newCms_add_block_btn")) {
-        this.insertAddBlockButton(c, "beforebegin");
+      if (
+        !con.prev() ||
+        !con.prev().classList.contains("newCms_add_block_btn")
+      ) {
+        this.insertAddBlockButton(con, "beforebegin");
       }
     });
+  }
+
+  removeUnnecessaryAddBlockButtons() {
+    // two add blocks next to each other? get outta here
+    this.contentNode.findAll(".newCms_add_block_btn").forEach((btn) => {
+      const prev = btn.prev();
+      if (prev && prev.classList.contains("newCms_add_block_btn")) {
+        btn.remove();
+      }
+    });
+  }
+
+  removeUnnecessaryContainerHeaders() {
+    //
   }
 
   insertAddBlockButton(target, position) {
@@ -216,6 +303,11 @@ class newCms {
       `
     );
 
+    this.contentChange();
+  }
+
+  removeBlock(block) {
+    block.remove();
     this.contentChange();
   }
 }
@@ -255,10 +347,8 @@ registerModalContent(
                 </div>
 
                 <div style="width:100%">
-                  <div class="scroll-panel scroll-shadow" style="padding:10px">
-                    <div class="editBlockRect">
-                      <i class="fas fa-pencil-alt"></i>
-                    </div>
+                  <div class="scroll-panel scroll-shadow" style="padding:10px;height: 100%;">
+                    <div class="editBlockRect"></div>
                     <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
                   </div>
                 </div>
@@ -272,7 +362,7 @@ registerModalContent(
   }
 );
 
-/* TODO: temporary */
+/* TODO: temporary, u can get rid of the quill editor modal :) */
 function setNodeImageBackground(node, src = "") {
   if (src === "") {
     var bi = node.directChildren().find((e) => {
