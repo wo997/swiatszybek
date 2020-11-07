@@ -79,7 +79,7 @@ $admin_navigations_tree = [
   ["url" => "zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
   ["url" => "moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
   ["url" => "maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
-
+  ["url" => "new-cms", "title" => '<i class="fas fa-heart"></i> Nowy CMS'],
 ];
 
 function getNotificationCountForPage($page, $children_notification_count = 0)

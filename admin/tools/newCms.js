@@ -115,6 +115,10 @@ class InlineQuillEditor {
     });
 
     this.content_node = this.node.find(".ql-editor");
+
+    this.newCms.container.addEventListener("mousedown", (event) => {
+      this.mouseDown(event);
+    });
   }
 
   appendInlineQuillEditor(block) {
@@ -138,7 +142,7 @@ class InlineQuillEditor {
 
     this.newCms.inline_edited_block = null;
 
-    const ql_html = this.inline_quill_editor.content_node.innerHTML;
+    const ql_html = this.content_node.innerHTML;
     newCms_block_content.setContent(ql_html);
 
     this.newCms.content_scroll_panel.appendChild(this.wrapper);
@@ -149,6 +153,19 @@ class InlineQuillEditor {
     block.classList.remove("during_inline_edit");
 
     this.newCms.contentChange();
+  }
+
+  mouseDown(event) {
+    const target = $(event.target);
+
+    const newCms_block = target.findParentByClassName("newCms_block");
+
+    if (
+      this.newCms.inline_edited_block &&
+      this.newCms.inline_edited_block != newCms_block
+    ) {
+      this.saveInlineQuillEditor(this.newCms.inline_edited_block);
+    }
   }
 }
 
@@ -198,12 +215,12 @@ class EditBlockRect {
 
         // define block buttons html
         let edit_block_html = /*html*/ `
-        <button class="btn transparent edit_block_btn">
+        <button class="btn edit_block_btn">
           <i class="fas fa-pencil-alt"></i>
         </button>
       `;
         edit_block_html += /*html*/ `
-        <button class="btn transparent remove_btn">
+        <button class="btn remove_btn">
           <i class="fas fa-times"></i>
         </button>
       `;
@@ -401,17 +418,6 @@ class NewCms {
     if (newCms_add_block_btn) {
       this.insertBlockModal(newCms_add_block_btn);
     }
-
-    /*if (!in_edit_block) {
-      const newCms_block = target.findParentByClassName("newCms_block");
-
-      if (
-        this.currently_editing_quill_block &&
-        this.currently_editing_quill_block != newCms_block
-      ) {
-        this.saveInlineQuillEditor(this.currently_editing_quill_block);
-      }
-    }*/
   }
 
   contentChange() {
