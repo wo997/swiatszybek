@@ -57,7 +57,10 @@ function setFormDataToLastHistory(form) {
   form = $(form);
   setFormData(
     form.history[form.history.length - 1 - form.history_step_back],
-    form
+    form,
+    {
+      history: true,
+    }
   );
   formHistoryChange(form);
 }

@@ -1,4 +1,4 @@
-.newCms_block {
+.newCms_block_content.not(.newCms_block_container) {
   padding: 10px;
 }
 
@@ -8,7 +8,7 @@
   border-radius: 13px;
   display: block;
   align-self: flex-start;
-  opacity: 0.2;
+  opacity: 0.3;
   transition: 0.5s opacity, 0.5s height, 0.5s min-height, 0.15s all;
   min-height: unset;
   height: 26px;
@@ -48,13 +48,13 @@
 .newCms_container_header {
   display: block;
   background: #ccc;
-  border-bottom: 1px solid #0003;
-  margin: -1px -5px 0;
+  margin: -1px -6px 0;
   transition: 0.5s opacity, 0.5s height, 0.5s min-height, 0.15s all;
-  padding: 1px 0 3px;
+  padding: 1px 1px 3px;
+  box-shadow: 0 3px 0 -2px #0005;
 }
 
-.editBlockRect {
+.edit_block_node {
   position: absolute;
   transition: 0.2s opacity;
   background: #ddd5;
@@ -62,12 +62,32 @@
   align-items: center;
   justify-content: center;
 }
-.editBlockRect:not(.active) {
+.edit_block_node:not(.active) {
   opacity: 0;
   pointer-events: none;
 }
-.editBlockRect .remove_btn:hover {
+.edit_block_node .remove_btn:hover {
   color: var(--error-clr);
+}
+
+.edit_block_node .edit_block_btn:hover {
+  color: var(--important-clr);
+}
+
+.quill_editor.ql-container {
+  height: auto;
+}
+
+.quill_editor_wrapper:not(.visible) {
+  display: none;
+}
+
+.newCmsContent .during_inline_edit {
+  border: none !important;
+  box-shadow: 0 2px 4px #0003;
+}
+.newCmsContent .during_inline_edit .newCms_block_content {
+  display: none;
 }
 
 /* edit mode */

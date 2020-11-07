@@ -35,7 +35,7 @@
 <div id="xxx">
     <div onclick="editFooter()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
 
-    <div name="page_footer" data-type="html" class="cms preview_html">
+    <div name="page_footer" data-type="html" class="newCms_container_content preview_html">
 
 
 

@@ -57,7 +57,7 @@ function setFormData(data, form, params = {}) {
       var sub_form = form.find(`[data-form="${name}"]`);
       if (sub_form) {
         // not always found, thats tricky
-        return setFormData(value, sub_form);
+        return setFormData(value, sub_form, params);
       }
     }
 
@@ -78,6 +78,10 @@ function setFormData(data, form, params = {}) {
     var value_params = {};
     if (params.data && params.data[name]) {
       value_params = params.data[name];
+    }
+
+    if (params.history && e.hasAttribute("data-ignore-history")) {
+      return;
     }
 
     e.setValue(value, value_params);
