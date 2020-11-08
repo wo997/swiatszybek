@@ -226,7 +226,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
           <h3 style='font-weight:normal;margin-bottom: 0;    font-size: 22px;'>
             <span>Cena: </span><span id="priceText" class="pln"><?= $priceText ?></span> <span class="pln">zł</span> <span id="wasPrice" class='slash'></span> <span id="kolejnyTaniej"></span>
 
-            <div style="display:inline-block;cursor:pointer" data-tooltip="Przejdź do komentarzy" data-position="center" onclick='scrollToView($(".comments"),{margin:0.5,duration:70})'>
+            <div style="display:inline-block;cursor:pointer" data-tooltip="Przejdź do komentarzy" data-position="center" onclick='scrollIntoView($(".comments"),{margin:0.5,duration:70})'>
               <?= ratingBlock($product_data["cache_avg_rating"]); ?>
 
               <span style="font-size:15px;">

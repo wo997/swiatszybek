@@ -162,7 +162,7 @@ function scrollToInvalid(field) {
     return;
   }
   scrollingToInvalid = true;
-  scrollToView(field, {
+  scrollIntoView(field, {
     callback: () => {
       scrollingToInvalid = false;
       field.focus();

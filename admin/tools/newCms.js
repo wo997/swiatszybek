@@ -116,9 +116,12 @@ class InlineQuillEditor {
 
     this.content_node = this.node.find(".ql-editor");
 
-    this.newCms.container.addEventListener("mousedown", (event) => {
-      this.mouseDown(event);
-    });
+    this.newCms.container.addEventListener(
+      IS_MOBILE ? "click" : "mousedown",
+      (event) => {
+        this.mouseDown(event);
+      }
+    );
   }
 
   appendInlineQuillEditor(block) {
@@ -186,6 +189,10 @@ class EditBlockRect {
     this.node.classList.toggle("active", false);
   }
 
+  hideButtons() {
+    this.node.setContent();
+  }
+
   mouseMove(event) {
     const target = $(event.target);
 
@@ -198,89 +205,121 @@ class EditBlockRect {
       return;
     }
 
-    let edit_block_active = false;
-    if (
-      hovered_block &&
-      !hovered_block.classList.contains("newCms_container")
-    ) {
-      this.target_block = hovered_block;
+    let show_edit_rect = true;
+    let is_block_ok = true;
+    if (!hovered_block) {
+      show_edit_rect = false;
+    }
 
-      if (
-        this.target_block !== target &&
-        this.newCms.inline_edited_block !== this.target_block
-      ) {
-        // everything below happens just once when the rect is shown
+    if (hovered_block) {
+      if (hovered_block.classList.contains("newCms_container")) {
+        // ignore containers for that rect
+        is_block_ok = false;
+        show_edit_rect = false;
+      }
 
-        edit_block_active = true;
+      if (this.target_block === hovered_block) {
+        show_edit_rect = false;
+      }
 
-        // define block buttons html
-        let edit_block_html = /*html*/ `
-        <button class="btn edit_block_btn">
-          <i class="fas fa-pencil-alt"></i>
-        </button>
-      `;
-        edit_block_html += /*html*/ `
-        <button class="btn remove_btn">
-          <i class="fas fa-times"></i>
-        </button>
-      `;
-        this.node.setContent(edit_block_html);
-
-        // add block actions
-        const edit_block_btn = this.node.find(".edit_block_btn");
-        if (
-          edit_block_btn &&
-          this.target_block.classList.contains("newCms_quill_editor")
-        ) {
-          edit_block_btn.addEventListener("click", () => {
-            this.newCms.inline_quill_editor.appendInlineQuillEditor(
-              this.newCms.edit_block.target_block
-            );
-          });
-        }
-
-        const remove_btn = this.node.find(".remove_btn");
-        if (remove_btn) {
-          remove_btn.addEventListener("click", () => {
-            this.newCms.removeBlock(this.target_block);
-            this.hide();
-          });
-        }
-
-        const target_block_rect = this.target_block.getBoundingClientRect();
-
-        const scrollable_parent = this.target_block.findScrollableParent();
-        const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
-
-        // could we set it once? along with icons and so on
-        this.node.style.left =
-          target_block_rect.left -
-          scrollable_parent_rect.left +
-          scrollable_parent.scrollLeft +
-          "px";
-
-        this.node.style.top =
-          target_block_rect.top -
-          scrollable_parent_rect.top +
-          scrollable_parent.scrollTop +
-          "px";
-
-        this.node.style.width = target_block_rect.width + "px";
-        this.node.style.height = target_block_rect.height + "px";
-
-        // won't be lost when we the focus is lost, NEVER USED SO FAR
-        this.last_target_block = this.target_block;
+      if (this.newCms.inline_edited_block === hovered_block) {
+        show_edit_rect = false;
       }
     }
 
-    this.node.classList.toggle("active", edit_block_active);
+    if (is_block_ok) {
+      this.target_block = hovered_block;
+    } else {
+      this.target_block = null;
+    }
+
+    if (show_edit_rect) {
+      // everything below happens just once when the rect is shown
+
+      // won't be lost when we the focus is lost, NEVER USED SO FAR
+      this.last_target_block = hovered_block;
+
+      // define block buttons html
+      let edit_block_html = "";
+
+      edit_block_html += /*html*/ `
+          <button class="btn edit_block_btn">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+        `;
+      edit_block_html += /*html*/ `
+          <button class="btn relocate_btn">
+            <i class="fas fa-arrows-alt"></i>
+          </button>
+        `;
+      edit_block_html += /*html*/ `
+          <button class="btn remove_btn">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+      this.node.setContent(edit_block_html);
+
+      // add block actions
+      const edit_block_btn = this.node.find(".edit_block_btn");
+      if (
+        edit_block_btn &&
+        this.target_block.classList.contains("newCms_quill_editor")
+      ) {
+        edit_block_btn.addEventListener("click", () => {
+          this.newCms.inline_quill_editor.appendInlineQuillEditor(
+            this.newCms.edit_block.target_block
+          );
+        });
+      }
+
+      const relocate_btn = this.node.find(".relocate_btn");
+      if (relocate_btn) {
+        relocate_btn.addEventListener(
+          IS_MOBILE ? "touchstart" : "mousedown",
+          () => {
+            this.newCms.grabBlock(this.target_block);
+          }
+        );
+      }
+
+      const remove_btn = this.node.find(".remove_btn");
+      if (remove_btn) {
+        remove_btn.addEventListener("click", () => {
+          this.newCms.removeBlock(this.target_block);
+          this.hide();
+        });
+      }
+
+      const target_block_rect = this.target_block.getBoundingClientRect();
+
+      const scrollable_parent = this.target_block.findScrollableParent();
+      const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+
+      // could we set it once? along with icons and so on
+      this.node.style.left =
+        target_block_rect.left -
+        scrollable_parent_rect.left +
+        scrollable_parent.scrollLeft +
+        "px";
+
+      this.node.style.top =
+        target_block_rect.top -
+        scrollable_parent_rect.top +
+        scrollable_parent.scrollTop +
+        "px";
+
+      this.node.style.width = target_block_rect.width + "px";
+      this.node.style.height = target_block_rect.height + "px";
+    }
+
+    this.node.classList.toggle("active", show_edit_rect);
   }
 }
 
 class NewCms {
   constructor(container) {
     this.container = $(container);
-    this.contentNode = this.container.find(`.newCmsContent`);
+    this.content_node = this.container.find(`.newCmsContent`);
     this.content_scroll_panel = this.container.find(
       `.newCmsContent_scroll_panel`
     );
@@ -292,6 +331,12 @@ class NewCms {
     this.initQuillEditor();
     this.initListenChange();
 
+    this.mouse_x = 0;
+    this.mouse_y = 0;
+    this.mouse_dx = 0;
+    this.mouse_dy = 0;
+    this.scroll_top = 0;
+
     setFormData(
       {
         edit_mode: 1,
@@ -299,16 +344,33 @@ class NewCms {
       container
     );
 
-    this.container.addEventListener("mousemove", (event) => {
-      this.mouseMove(event);
-    });
-    this.container.addEventListener("mousedown", (event) => {
-      this.mouseDown(event);
+    this.container.addEventListener(
+      IS_MOBILE ? "touchstart" : "mousemove",
+      (event) => {
+        this.mouseMove(event);
+      }
+    );
+    this.container.addEventListener(
+      IS_MOBILE ? "click" : "mousedown",
+      (event) => {
+        this.mouseDown(event);
+      }
+    );
+
+    this.container.addEventListener(
+      IS_MOBILE ? "touchend" : "mouseup",
+      (event) => {
+        this.mouseUp(event);
+      }
+    );
+
+    this.content_scroll_panel.addEventListener("scroll", (event) => {
+      this.scroll(event);
     });
   }
 
   initListenChange() {
-    this.contentNode.addEventListener("change", () => {
+    this.content_node.addEventListener("change", () => {
       if (this.content_change_triggered) {
         this.contentChange({
           trigger_change: false,
@@ -401,7 +463,10 @@ class NewCms {
 
     setFormInitialState(this.container);
 
-    showModal("newCms", { source: this.targetNode });
+    showModal("newCms", {
+      source: this.targetNode,
+      lock_during_animation: true,
+    });
   }
 
   save() {
@@ -412,9 +477,18 @@ class NewCms {
   }
 
   mouseMove(event) {
-    /*const mx = event.clientX;
-    const my = event.clientY;*/
-    const target = $(event.target);
+    const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
+    const mouse_x = event.clientX - content_scroll_panel_rect.left;
+    const mouse_y = event.clientY - content_scroll_panel_rect.top;
+    this.mouse_dx = mouse_x - this.mouse_x;
+    this.mouse_dy = mouse_y - this.mouse_y;
+    this.mouse_x = mouse_x;
+    this.mouse_y = mouse_y;
+
+    if (this.grabbed_block) {
+      this.grabbedBlockPositionChange();
+      return;
+    }
 
     this.edit_block.mouseMove(event);
   }
@@ -431,6 +505,36 @@ class NewCms {
     }
   }
 
+  mouseUp(event) {
+    if (this.grabbed_block) {
+      this.releaseBlock($(event.target));
+    }
+  }
+
+  scroll(event) {
+    this.scroll_top = this.content_scroll_panel.scrollTop;
+    if (this.grabbed_block) {
+      this.grabbedBlockPositionChange();
+      return;
+    }
+  }
+
+  grabbedBlockPositionChange() {
+    const dx = this.mouse_x - this.grabbed_mouse_x;
+    const dy =
+      this.mouse_y -
+      this.grabbed_mouse_y +
+      this.scroll_top -
+      this.grabbed_scroll_top;
+
+    this.grabbed_block.style.transform = `
+    translate(
+      ${dx.toPrecision(5)}px,
+      ${dy.toPrecision(5)}px
+    )
+  `;
+  }
+
   contentChange(options = {}) {
     this.content_change_triggered = true;
 
@@ -442,23 +546,23 @@ class NewCms {
     this.removeUnnecessaryContainerHeaders();
 
     if (nonull(options.trigger_change, true) === true) {
-      this.contentNode.setValue();
+      this.content_node.setValue();
     }
     this.content_change_triggered = false;
   }
 
   insertMissingQlClasses() {
-    this.contentNode.findAll(".newCms_quill_editor").forEach((newCms_block) => {
-      const newCms_block_content = newCms_block.find(".newCms_block_content");
-      if (!newCms_block_content.classList.contains("ql-editor")) {
+    this.content_node
+      .findAll(".newCms_quill_editor")
+      .forEach((newCms_block) => {
+        const newCms_block_content = newCms_block.find(".newCms_block_content");
         newCms_block_content.classList.add("ql-editor");
         newCms_block_content.parent().classList.add("ql-snow");
-      }
-    });
+      });
   }
 
   insertMissingContainerHeaders() {
-    this.contentNode.findAll(".newCms_container").forEach((c) => {
+    this.content_node.findAll(".newCms_container").forEach((c) => {
       if (!c.find(".newCms_container_header")) {
         c.insertAdjacentHTML(
           "afterbegin",
@@ -477,8 +581,8 @@ class NewCms {
   insertMissingAddBlockButtons() {
     // consider empty containers
     [
-      this.contentNode,
-      ...this.contentNode.findAll(".newCms_container"),
+      this.content_node,
+      ...this.content_node.findAll(".newCms_container"),
     ].forEach((con) => {
       // can be anything inside ;)
       var has_add_block_btn = !!con.find(".newCms_add_block_btn");
@@ -497,7 +601,7 @@ class NewCms {
     });
 
     // before and after blocks
-    this.contentNode.findAll(".newCms_block").forEach((con) => {
+    this.content_node.findAll(".newCms_block").forEach((con) => {
       if (
         !con.next() ||
         !con.next().classList.contains("newCms_add_block_btn")
@@ -515,7 +619,7 @@ class NewCms {
 
   removeUnnecessaryAddBlockButtons() {
     // two add blocks next to each other? get outta here
-    this.contentNode.findAll(".newCms_add_block_btn").forEach((btn) => {
+    this.content_node.findAll(".newCms_add_block_btn").forEach((btn) => {
       const prev = btn.prev();
       if (prev && prev.classList.contains("newCms_add_block_btn")) {
         btn.remove();
@@ -569,6 +673,76 @@ class NewCms {
     block.remove();
     this.contentChange();
   }
+
+  grabBlock(block) {
+    this.grabbed_block = block;
+    this.grabbed_block.classList.add("grabbed");
+    this.grabbed_mouse_x = this.mouse_x;
+    this.grabbed_mouse_y = this.mouse_y;
+    this.grabbed_scroll_top = this.scroll_top;
+
+    this.content_node.classList.add("grabbed_block");
+
+    this.edit_block.hideButtons();
+
+    this.grabAnimation();
+  }
+
+  releaseBlock(target_node) {
+    const grabbed_block_ref = this.grabbed_block;
+    const newCms_add_block_btn = target_node.findParentByClassName(
+      "newCms_add_block_btn"
+    );
+    if (newCms_add_block_btn) {
+      newCms_add_block_btn
+        .parent()
+        .insertBefore(this.grabbed_block, newCms_add_block_btn);
+    }
+
+    this.grabbed_block.style.transform = "";
+    this.grabbed_block.classList.remove("grabbed");
+
+    this.grabbed_block = null;
+
+    this.content_node.classList.remove("grabbed_block");
+
+    this.contentChange();
+
+    removeUserSelection();
+
+    setTimeout(() => {
+      scrollIntoView(grabbed_block_ref, { margin: 0.05 });
+    }, 200);
+  }
+
+  grabAnimation() {
+    let speed_y = 0;
+
+    const scroll_offset = 50;
+    if (this.mouse_y < scroll_offset) {
+      speed_y = this.mouse_y - scroll_offset;
+      if (speed_y < -scroll_offset) {
+        speed_y = -scroll_offset;
+      }
+    }
+
+    if (this.content_scroll_panel.clientHeight - this.mouse_y < scroll_offset) {
+      speed_y =
+        scroll_offset - this.content_scroll_panel.clientHeight + this.mouse_y;
+
+      if (speed_y > scroll_offset) {
+        speed_y = scroll_offset;
+      }
+    }
+
+    this.content_scroll_panel.scrollBy(0, speed_y * 0.2);
+
+    if (this.grabbed_block) {
+      requestAnimationFrame(() => {
+        this.grabAnimation();
+      });
+    }
+  }
 }
 
 function toggleNewCmsEditMode(edit_mode_input) {
@@ -605,7 +779,7 @@ registerModalContent(
                   <div class="modules"></div>
                 </div>
 
-                <div style="width:100%">
+                <div style="width:100%;overflow:hidden">
                   <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel" style="padding:10px;height: 100%;">
                     <div class="edit_block_node"></div>
                     <div class="quill_editor_wrapper">

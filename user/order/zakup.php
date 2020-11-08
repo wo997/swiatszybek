@@ -208,7 +208,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             view = now.find(`*`);
           }
           if (view) {
-            scrollToView(view, params);
+            scrollIntoView(view, params);
           }
         }, 10);
       }, 200);

@@ -91,7 +91,7 @@ function smoothScroll(diff, params = {}) {
   }
 }
 
-function scrollToView(elem, params = {}) {
+function scrollIntoView(elem, params = {}) {
   elem = $(elem);
   var duration = nonull(params.duration, 40);
   var offset = nonull(params.offset, 0);

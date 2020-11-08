@@ -47,7 +47,9 @@ function showModal(name = null, params = {}) {
       var shownow = false;
       if (e.id == name && e.style.display == "none") {
         e.style.display = "";
-        e.style.pointerEvents = "";
+        if (!params.lock_during_animation) {
+          e.style.pointerEvents = "";
+        }
         shownow = true;
       }
       if (e.style.display != "none") {
@@ -86,6 +88,10 @@ function showModal(name = null, params = {}) {
           },
         });
         window.dispatchEvent(event);
+
+        setTimeout(() => {
+          e.style.pointerEvents = "";
+        }, parseInt(getComputedStyle(document.documentElement).getPropertyValue("--modal-transition-duration")));
       }
     });
     var modal = $(`#${name}`);

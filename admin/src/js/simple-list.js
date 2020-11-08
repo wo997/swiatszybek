@@ -122,7 +122,7 @@ function createSimpleList(params = {}) {
     );
 
     if (user) {
-      scrollToView(row);
+      scrollIntoView(row);
     }
   };
 
