@@ -180,8 +180,8 @@ class EditBlockRect {
   }
 
   init() {
-    this.target_block = null;
-    this.last_target_block = null;
+    this.target = null;
+    this.last_target = null;
   }
 
   hide() {
@@ -200,9 +200,25 @@ class EditBlockRect {
   mouseMove(event) {
     const target = $(event.target);
 
-    const hovered_block = target
-      ? target.findParentByClassName("newCms_block")
+    let hovered_block_content = null;
+    let hovered_block = null;
+
+    let hovered_container_header = target
+      ? target.findParentByClassName("newCms_container_header")
       : null;
+
+    if (hovered_container_header) {
+      hovered_block_content = hovered_container_header;
+      hovered_block = hovered_block_content.findParentByClassName(
+        "newCms_block"
+      );
+    } else if (target) {
+      let x = target.findParentByClassName("newCms_block");
+      if (x && !x.classList.contains("newCms_container")) {
+        hovered_block_content = x;
+        hovered_block = x;
+      }
+    }
 
     // let the user do the job ;)
     if (target && target.findParentByClassName("edit_block_node")) {
@@ -210,19 +226,12 @@ class EditBlockRect {
     }
 
     let show_edit_rect = true;
-    let is_block_ok = true;
-    if (!hovered_block) {
+    if (!hovered_block_content) {
       show_edit_rect = false;
     }
 
-    if (hovered_block) {
-      if (hovered_block.classList.contains("newCms_container")) {
-        // ignore containers for that rect
-        is_block_ok = false;
-        show_edit_rect = false;
-      }
-
-      if (this.target_block === hovered_block) {
+    if (hovered_block_content) {
+      if (this.target === hovered_block) {
         show_edit_rect = false;
       }
 
@@ -231,17 +240,20 @@ class EditBlockRect {
       }
     }
 
-    if (is_block_ok) {
-      this.target_block = hovered_block;
-    } else {
-      this.target_block = null;
-    }
+    this.target = hovered_block;
+    this.target_content = hovered_block_content;
+
+    $$(".edit_options_visible").forEach((e) => {
+      e.classList.remove("edit_options_visible");
+    });
 
     if (show_edit_rect) {
       // everything below happens just once when the rect is shown
 
       // won't be lost when we the focus is lost, NEVER USED SO FAR
-      this.last_target_block = hovered_block;
+      this.last_target = hovered_block;
+
+      this.target.classList.add("edit_options_visible");
 
       // define block buttons html
       let edit_block_html = "";
@@ -267,11 +279,11 @@ class EditBlockRect {
       const edit_block_btn = this.node.find(".edit_block_btn");
       if (
         edit_block_btn &&
-        this.target_block.classList.contains("newCms_quill_editor")
+        this.target.classList.contains("newCms_quill_editor")
       ) {
         edit_block_btn.addEventListener("click", () => {
           this.newCms.inline_quill_editor.appendInlineQuillEditor(
-            this.newCms.edit_block.target_block
+            this.newCms.edit_block.target
           );
         });
       }
@@ -281,7 +293,7 @@ class EditBlockRect {
         relocate_btn.addEventListener(
           IS_MOBILE ? "touchstart" : "mousedown",
           () => {
-            this.newCms.grabBlock(this.target_block);
+            this.newCms.grabBlock(this.target);
           }
         );
       }
@@ -289,31 +301,31 @@ class EditBlockRect {
       const remove_btn = this.node.find(".remove_btn");
       if (remove_btn) {
         remove_btn.addEventListener("click", () => {
-          this.newCms.removeBlock(this.target_block);
+          this.newCms.removeBlock(this.target);
           this.hide();
         });
       }
 
-      const target_block_rect = this.target_block.getBoundingClientRect();
+      const target_content_rect = this.target_content.getBoundingClientRect();
 
-      const scrollable_parent = this.target_block.findScrollableParent();
+      const scrollable_parent = this.target.findScrollableParent();
       const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
 
       // could we set it once? along with icons and so on
       this.node.style.left =
-        target_block_rect.left -
+        target_content_rect.left -
         scrollable_parent_rect.left +
         scrollable_parent.scrollLeft +
         "px";
 
       this.node.style.top =
-        target_block_rect.top -
+        target_content_rect.top -
         scrollable_parent_rect.top +
         scrollable_parent.scrollTop +
         "px";
 
-      this.node.style.width = target_block_rect.width + "px";
-      this.node.style.height = target_block_rect.height + "px";
+      this.node.style.width = target_content_rect.width + "px";
+      this.node.style.height = target_content_rect.height + "px";
     }
 
     this.node.classList.toggle("active", show_edit_rect);
@@ -389,7 +401,7 @@ class NewCms {
     //document.body.appendChild(playground);
     playground.insertAdjacentHTML("afterbegin", html);
 
-    playground.findAll(".newCms_add_block_btn").forEach((e) => {
+    playground.findAll(".newCms_add_block_wrapper").forEach((e) => {
       e.remove();
     });
 
@@ -500,12 +512,12 @@ class NewCms {
   mouseDown(event) {
     const target = $(event.target);
 
-    // todo remove
+    // TODO: remove
     const newCms_add_block_btn = target.findParentByClassName(
       "newCms_add_block_btn"
     );
     if (newCms_add_block_btn) {
-      this.insertBlockModal(newCms_add_block_btn);
+      this.insertBlockModal(newCms_add_block_btn.parent());
     }
   }
 
@@ -566,17 +578,15 @@ class NewCms {
   }
 
   insertMissingContainerHeaders() {
-    this.content_node.findAll(".newCms_container").forEach((c) => {
-      if (!c.find(".newCms_container_header")) {
-        c.insertAdjacentHTML(
+    this.content_node.findAll(".newCms_container").forEach((container) => {
+      if (!container.find(".newCms_container_header")) {
+        container.insertAdjacentHTML(
           "afterbegin",
           /*html*/ `
-          <div class="newCms_container_header">
-            <i class="fas fa-border-all"></i>
-            <button class="btn subtle">A</button>
-            <button class="btn subtle">B</button>
-          </div>
-        `
+            <div class="newCms_container_header">
+              <i class="fas fa-border-all"></i>
+            </div>
+          `
         );
       }
     });
@@ -589,7 +599,7 @@ class NewCms {
       ...this.content_node.findAll(".newCms_container"),
     ].forEach((con) => {
       // can be anything inside ;)
-      var has_add_block_btn = !!con.find(".newCms_add_block_btn");
+      var has_add_block_btn = !!con.find(".newCms_add_block_wrapper");
       if (has_add_block_btn) {
         return;
       }
@@ -608,13 +618,13 @@ class NewCms {
     this.content_node.findAll(".newCms_block").forEach((con) => {
       if (
         !con.next() ||
-        !con.next().classList.contains("newCms_add_block_btn")
+        !con.next().classList.contains("newCms_add_block_wrapper")
       ) {
         this.insertAddBlockButton(con, "afterend");
       }
       if (
         !con.prev() ||
-        !con.prev().classList.contains("newCms_add_block_btn")
+        !con.prev().classList.contains("newCms_add_block_wrapper")
       ) {
         this.insertAddBlockButton(con, "beforebegin");
       }
@@ -623,9 +633,9 @@ class NewCms {
 
   removeUnnecessaryAddBlockButtons() {
     // two add blocks next to each other? get outta here
-    this.content_node.findAll(".newCms_add_block_btn").forEach((btn) => {
+    this.content_node.findAll(".newCms_add_block_wrapper").forEach((btn) => {
       const prev = btn.prev();
-      if (prev && prev.classList.contains("newCms_add_block_btn")) {
+      if (prev && prev.classList.contains("newCms_add_block_wrapper")) {
         btn.remove();
       }
     });
@@ -640,9 +650,11 @@ class NewCms {
     target.insertAdjacentHTML(
       position,
       /*html*/ `
-        <button class="btn newCms_add_block_btn">
-          <i class="fas fa-plus"></i>
-        </button>
+        <div class="newCms_add_block_wrapper">
+          <button class="btn newCms_add_block_btn">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
       `
     );
   }
@@ -694,13 +706,13 @@ class NewCms {
 
   releaseBlock(target_node) {
     const grabbed_block_ref = this.grabbed_block;
-    const newCms_add_block_btn = target_node.findParentByClassName(
-      "newCms_add_block_btn"
+    const newCms_add_block_wrapper = target_node.findParentByClassName(
+      "newCms_add_block_wrapper"
     );
-    if (newCms_add_block_btn) {
-      newCms_add_block_btn
+    if (newCms_add_block_wrapper) {
+      newCms_add_block_wrapper
         .parent()
-        .insertBefore(this.grabbed_block, newCms_add_block_btn);
+        .insertBefore(this.grabbed_block, newCms_add_block_wrapper);
     }
 
     this.grabbed_block.style.transform = "";
@@ -716,9 +728,9 @@ class NewCms {
 
     this.edit_block.showButtons();
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       scrollIntoView(grabbed_block_ref, { margin: 0.05 });
-    }, 200);
+    }, 200);*/
   }
 
   grabAnimation() {
@@ -741,7 +753,7 @@ class NewCms {
       }
     }
 
-    this.content_scroll_panel.scrollBy(0, speed_y * 0.2);
+    this.content_scroll_panel.scrollBy(0, speed_y * 0.4);
 
     if (this.grabbed_block) {
       requestAnimationFrame(() => {
