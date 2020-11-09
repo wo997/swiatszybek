@@ -11,7 +11,8 @@
   display: block;
   align-self: flex-start;
   opacity: 0.3;
-  transition: 0.5s opacity, 0.5s box-shadow, 0.5s background-color;
+  transition: 0.5s opacity, 0.5s box-shadow, 0.5s background-color,
+    0.5s transform;
   min-height: unset;
   height: 26px;
   border: 1px solid #0008;
@@ -20,6 +21,7 @@
   color: #000d;
   width: 100%;
   max-width: 300px;
+  max-height: 300px;
   align-self: center;
 }
 
@@ -138,18 +140,28 @@
   z-index: 1000;
 }
 
-.newCmsContent.grabbed_block * {
-  cursor: grabbing !important;
+.newCmsContent_scroll_panel.grabbed_block * {
+  cursor: not-allowed !important;
   user-select: none;
 }
-.newCmsContent.grabbed_block .newCms_add_block_btn,
-.newCmsContent.grabbed_block .newCms_add_block_btn * {
+.newCmsContent_scroll_panel.grabbed_block .newCms_add_block_btn,
+.newCmsContent_scroll_panel.grabbed_block .newCms_add_block_btn * {
   cursor: pointer !important;
 }
 
-.newCmsContent.grabbed_block .newCms_add_block_btn {
+.newCmsContent_scroll_panel.grabbed_block .newCms_add_block_btn {
   box-shadow: 0 1px 3px 0 #0004;
   opacity: 0.6;
+  transform: scaleX(1.05);
+}
+
+.newCmsContent_scroll_panel.grabbed_block .newCms_container_header,
+.newCmsContent_scroll_panel.grabbed_block .newCms_block:not(.newCms_container) {
+  opacity: 0.4;
+}
+
+.newCmsContent_scroll_panel.grabbed_block .newCms_container {
+  border-color: #ccc7 !important;
 }
 
 /* grab end */

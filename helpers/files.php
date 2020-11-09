@@ -256,7 +256,7 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
             break;
         }
     }
-    
+
     // save plain file
     copy($tmp_file_path, $file_path);
 

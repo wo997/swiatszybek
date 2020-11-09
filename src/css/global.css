@@ -1496,3 +1496,7 @@ label > input[type="file"] + input[type="submit"] {
 input:placeholder-shown {
   font-weight: unset;
 }
+
+.hide_contents * {
+  display: none !important;
+}

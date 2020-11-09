@@ -190,7 +190,11 @@ class EditBlockRect {
   }
 
   hideButtons() {
-    this.node.setContent();
+    this.node.classList.add("hide_contents");
+  }
+
+  showButtons() {
+    this.node.classList.remove("hide_contents");
   }
 
   mouseMove(event) {
@@ -681,7 +685,7 @@ class NewCms {
     this.grabbed_mouse_y = this.mouse_y;
     this.grabbed_scroll_top = this.scroll_top;
 
-    this.content_node.classList.add("grabbed_block");
+    this.content_scroll_panel.classList.add("grabbed_block");
 
     this.edit_block.hideButtons();
 
@@ -704,11 +708,13 @@ class NewCms {
 
     this.grabbed_block = null;
 
-    this.content_node.classList.remove("grabbed_block");
+    this.content_scroll_panel.classList.remove("grabbed_block");
 
     this.contentChange();
 
     removeUserSelection();
+
+    this.edit_block.showButtons();
 
     setTimeout(() => {
       scrollIntoView(grabbed_block_ref, { margin: 0.05 });
