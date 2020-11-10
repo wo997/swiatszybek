@@ -86,6 +86,9 @@
 
         <div class="field-title">Nr ulicy</div>
         <input type="text" class="field" name="street_number">
+
+        <div class="field-title">Adres fanpage</div>
+        <input type="text" class="field" name="fb_fanpage_url" data-validate="url">
     </div>
 </div>
 
