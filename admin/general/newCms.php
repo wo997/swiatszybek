@@ -62,31 +62,6 @@
 
     <div name="random_content" data-type="html" class="newCms_container_content preview_html">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
 
 </div>
