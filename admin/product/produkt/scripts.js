@@ -812,6 +812,7 @@ function saveProduct() {
     url: STATIC_URLS["ADMIN"] + "save_product",
     params: params,
     success: () => {
+      // TODO: reload why?
       setFormInitialState(form);
     },
   });

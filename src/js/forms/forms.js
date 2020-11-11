@@ -13,7 +13,7 @@ window.addEventListener("beforeunload", function (e) {
   const wasState = form.initial_state;
   const nowState = form.history.last();
 
-  if (isEquivalent(wasState, nowState)) {
+  if (!isEquivalent(wasState, nowState)) {
     e.returnValue = "Czy na pewno chcesz opuścić stronę?";
   }
 });
@@ -22,7 +22,7 @@ function checkFormCloseWarning(form) {
   const wasState = form.initial_state;
   const nowState = form.history ? form.history.last() : getFormData(form);
 
-  if (isEquivalent(wasState, nowState)) {
+  if (!isEquivalent(wasState, nowState)) {
     return confirm(
       "Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
     );

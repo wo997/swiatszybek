@@ -10,6 +10,7 @@
   min-width: 0;
   min-height: 0;
   background-color: transparent;
+  box-shadow: 0 0 0 1px #0002;
 }
 
 /* newCms_add_block_btn start */

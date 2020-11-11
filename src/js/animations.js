@@ -71,7 +71,7 @@ function removeAnimation(animation_name) {
   $(`#${animation_name}`).remove();
 }
 
-function animate(node, duration, keyframes, callback = null) {
+function animate(node, keyframes, duration, callback = null) {
   var animation_name = createAnimation(keyframes);
   if (node.animationTimeout) {
     window.clearTimeout(node.animationTimeout);

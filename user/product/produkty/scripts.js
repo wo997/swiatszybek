@@ -267,29 +267,29 @@ function searchProducts(options = {}) {
 
       animate(
         productListAnimationNode,
-        duration,
         `
-              0% {
-                height: ${Math.round(was_h)}px;
-              }
-              100% {
-                height: ${Math.round(h)}px;
-              }
-            `
+          0% {
+            height: ${Math.round(was_h)}px;
+          }
+          100% {
+            height: ${Math.round(h)}px;
+          }
+        `,
+        duration
       );
 
       productListSwapBackgroundNode.style.visibility = "";
       animate(
         productListSwapNode,
-        duration,
         `
-              0% {
-                opacity: 0;
-              }
-              100% {
-                opacity: 1;
-              }
-            `,
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        `,
+        duration,
         () => {
           productListSwapBackgroundNode.style.visibility = "hidden";
           searchingProducts = false;
@@ -319,7 +319,7 @@ function searchProducts(options = {}) {
       }
 
       $$(".filters_description").forEach((e) => {
-        animate(e, duration, ANIMATIONS.blink);
+        animate(e, ANIMATIONS.blink, duration);
         setTimeout(() => {
           var out = [];
           if (searchParams.search) {
