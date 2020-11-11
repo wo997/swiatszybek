@@ -306,26 +306,14 @@ class EditBlockRect {
         });
       }
 
-      const target_content_rect = this.target_content.getBoundingClientRect();
-
-      const scrollable_parent = this.target.findScrollableParent();
-      const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+      const position = positionAgainstScrollableParent(this.target_content);
 
       // could we set it once? along with icons and so on
-      this.node.style.left =
-        target_content_rect.left -
-        scrollable_parent_rect.left +
-        scrollable_parent.scrollLeft +
-        "px";
+      this.node.style.left = position.left + "px";
+      this.node.style.top = position.top + "px";
 
-      this.node.style.top =
-        target_content_rect.top -
-        scrollable_parent_rect.top +
-        scrollable_parent.scrollTop +
-        "px";
-
-      this.node.style.width = target_content_rect.width + "px";
-      this.node.style.height = target_content_rect.height + "px";
+      this.node.style.width = position.node_rect.width + "px";
+      this.node.style.height = position.node_rect.height + "px";
     }
 
     this.node.classList.toggle("active", show_edit_rect);
@@ -339,6 +327,7 @@ class NewCms {
     this.content_scroll_panel = this.container.find(
       `.newCmsContent_scroll_panel`
     );
+    this.floating_controls_node = this.container.find(`.floating_controls`);
 
     this.inline_edited_block = null;
 
@@ -396,18 +385,11 @@ class NewCms {
   }
 
   getCleanOutput(html) {
+    // TODO: use as a formatter? so the history doesnt have those classes inside and so on, tricky but might be worth it :*
     var playground = $(document.createElement("DIV"));
     // TODO: is it even necessary?
     //document.body.appendChild(playground);
     playground.insertAdjacentHTML("afterbegin", html);
-
-    playground.findAll(".newCms_add_block_wrapper").forEach((e) => {
-      e.remove();
-    });
-
-    playground.findAll(".newCms_container_header").forEach((e) => {
-      e.remove();
-    });
 
     return playground.innerHTML;
   }
@@ -479,20 +461,44 @@ class NewCms {
 
     setFormInitialState(this.container);
 
+    this.lockInput();
+
     showModal("newCms", {
       source: this.targetNode,
       lock_during_animation: true,
+      callback: () => {
+        this.contentChange();
+        this.unlockInput();
+      },
     });
   }
 
   save() {
-    // remove all unnecessary nodes and so on, keep it as a single function, copy all nodes and remove what u want
     this.targetNode.setValue(
       this.getCleanOutput(getFormData(this.container).content)
     );
   }
 
+  lockInput(delay) {
+    this.container.classList.add("locked_input");
+
+    if (this.lock_timeout) {
+      clearTimeout(this.lock_timeout);
+    }
+
+    if (delay) {
+      this.lock_timeout = setTimeout(() => {
+        this.unlockInput();
+      }, delay);
+    }
+  }
+
+  unlockInput() {
+    this.container.classList.remove("locked_input");
+  }
+
   mouseMove(event) {
+    //positionAgainstScrollableParent() such a pitty I cant use it cause mouse aint a node
     const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
     const mouse_x = event.clientX - content_scroll_panel_rect.left;
     const mouse_y = event.clientY - content_scroll_panel_rect.top;
@@ -553,18 +559,21 @@ class NewCms {
 
   contentChange(options = {}) {
     this.content_change_triggered = true;
-
-    this.insertMissingAddBlockButtons();
-    this.insertMissingContainerHeaders();
     this.insertMissingQlClasses();
+    this.addFloatingControls();
 
-    this.removeUnnecessaryAddBlockButtons();
-    this.removeUnnecessaryContainerHeaders();
+    this.removeUnnecessaryClasses();
 
     if (nonull(options.trigger_change, true) === true) {
       this.content_node.setValue();
     }
     this.content_change_triggered = false;
+  }
+
+  removeUnnecessaryClasses() {
+    this.container.findAll(".block_hinted").forEach((e) => {
+      e.classList.remove("block_hinted");
+    });
   }
 
   insertMissingQlClasses() {
@@ -575,75 +584,6 @@ class NewCms {
         newCms_block_content.classList.add("ql-editor");
         newCms_block_content.parent().classList.add("ql-snow");
       });
-  }
-
-  insertMissingContainerHeaders() {
-    this.content_node.findAll(".newCms_container").forEach((container) => {
-      if (!container.find(".newCms_container_header")) {
-        container.insertAdjacentHTML(
-          "afterbegin",
-          /*html*/ `
-            <div class="newCms_container_header">
-              <i class="fas fa-border-all"></i>
-            </div>
-          `
-        );
-      }
-    });
-  }
-
-  insertMissingAddBlockButtons() {
-    // consider empty containers
-    [
-      this.content_node,
-      ...this.content_node.findAll(".newCms_container"),
-    ].forEach((con) => {
-      // can be anything inside ;)
-      var has_add_block_btn = !!con.find(".newCms_add_block_wrapper");
-      if (has_add_block_btn) {
-        return;
-      }
-      var has_any_block = !!con.find(".newCms_block");
-      if (has_any_block) {
-        return;
-      }
-      const container_content = nonull(
-        con.find(".newCms_container_content"),
-        con
-      );
-      this.insertAddBlockButton(container_content, "afterbegin");
-    });
-
-    // before and after blocks
-    this.content_node.findAll(".newCms_block").forEach((con) => {
-      if (
-        !con.next() ||
-        !con.next().classList.contains("newCms_add_block_wrapper")
-      ) {
-        this.insertAddBlockButton(con, "afterend");
-      }
-      if (
-        !con.prev() ||
-        !con.prev().classList.contains("newCms_add_block_wrapper")
-      ) {
-        this.insertAddBlockButton(con, "beforebegin");
-      }
-    });
-  }
-
-  removeUnnecessaryAddBlockButtons() {
-    // two add blocks next to each other? get outta here
-    this.content_node.findAll(".newCms_add_block_wrapper").forEach((btn) => {
-      const prev = btn.prev();
-      if (prev && prev.classList.contains("newCms_add_block_wrapper")) {
-        btn.remove();
-      }
-    });
-  }
-
-  removeUnnecessaryContainerHeaders() {
-    // TODO: todo
-    // newCms_container_header
   }
 
   insertAddBlockButton(target, position) {
@@ -765,6 +705,98 @@ class NewCms {
       });
     }
   }
+
+  addFloatingControls() {
+    let blocks_data = [];
+    this.container.findAll(".newCms_block").forEach((block) => {
+      const block_rect = positionAgainstScrollableParent(block);
+
+      let parent_count = 0;
+      let parent = block;
+      while (parent != this.content_node) {
+        parent_count++;
+        parent = parent.parent();
+      }
+
+      const index = block_rect.top + parent_count;
+      blocks_data.push({
+        index: index,
+        block: block,
+        rect: block_rect,
+      });
+    });
+    const sorted_blocks_data = blocks_data.sort((a, b) => {
+      return Math.sign(a.index - b.index);
+    });
+
+    const floating_control_width = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--floating_control_width"
+      )
+    );
+    const floating_control_height = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--floating_control_height"
+      )
+    );
+
+    const sorted_blocks_data_length = sorted_blocks_data.length;
+    let upper_bound = 0;
+
+    this.floating_controls_node.empty();
+
+    for (let i = 0; i < sorted_blocks_data_length; i++) {
+      const block_data = sorted_blocks_data[i];
+
+      let left = block_data.rect.left;
+      let top = block_data.rect.top;
+
+      let moving_right = true;
+      while (moving_right) {
+        moving_right = false;
+        for (let u = i - 1; u >= upper_bound; u--) {
+          const prev_block_data = sorted_blocks_data[u];
+
+          const prev_y2 = prev_block_data.rect.top + floating_control_height;
+
+          if (top >= prev_y2) {
+            // just optimize
+            upper_bound = u + 1;
+            break;
+          }
+
+          if (
+            prev_block_data.rect.left < left + floating_control_width &&
+            prev_block_data.rect.left + floating_control_width > left
+          ) {
+            left = prev_block_data.rect.left + floating_control_width;
+            moving_right = true;
+          }
+        }
+      }
+
+      block_data.rect.left = left;
+      block_data.rect.top = top;
+
+      const floating_control = document.createElement("DIV");
+      floating_control.classList.add("floating_control");
+      floating_control.style.left = left + "px";
+      floating_control.style.top = top + "px";
+      floating_control.innerHTML = `<i class="fas fa-columns"></i>`;
+
+      floating_control.addEventListener("mouseenter", () => {
+        this.removeUnnecessaryClasses();
+        console.log(block_data.block);
+        block_data.block.classList.add("block_hinted");
+      });
+
+      floating_control.addEventListener("mouseleave", () => {
+        block_data.block.classList.remove("block_hinted");
+      });
+
+      this.floating_controls_node.appendChild(floating_control);
+    }
+  }
 }
 
 // TODO: move to animator?
@@ -805,12 +837,6 @@ function zoomNode(node, direction, options = {}) {
   });
 }
 
-function toggleNewCmsEditMode(edit_mode_input) {
-  edit_mode_input
-    .findParentByAttribute("data-form")
-    .classList.toggle("newCms_edit_mode", edit_mode_input.getValue());
-}
-
 registerModalContent(
   /*html*/ `
     <div id="newCms" class="newCms" data-expand="large" data-form data-history>
@@ -820,7 +846,6 @@ registerModalContent(
                     Edycja zawartości    
                 </span>
 
-                Tryb edycji <checkbox name="edit_mode" data-ignore-history class="no-wrap" onchange="toggleNewCmsEditMode(this)"></checkbox>
                 <div class="history-buttons"></div>
                 <button class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></button>
                 <button class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </button>
@@ -840,12 +865,15 @@ registerModalContent(
                 </div>
 
                 <div style="width:100%;overflow:hidden">
-                  <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel" style="padding:10px;height: 100%;">
-                    <div class="edit_block_node"></div>
-                    <div class="quill_editor_wrapper">
-                      <div class="quill_editor"></div>
+                  <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel">
+                    <div style="position:relative;height: 100%;">
+                      <div class="edit_block_node"></div>
+                      <div class="floating_controls"></div>
+                      <div class="quill_editor_wrapper">
+                        <div class="quill_editor"></div>
+                      </div>
+                      <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
                     </div>
-                    <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
                   </div>
                 </div>
             </div>

@@ -857,3 +857,21 @@ function removeUserSelection() {
     document.selection.empty();
   }
 }
+
+function positionAgainstScrollableParent(node) {
+  const node_rect = node.getBoundingClientRect();
+
+  const scrollable_parent = node.findScrollableParent();
+  const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+
+  return {
+    node_rect: node_rect,
+    scrollable_parent_rect: scrollable_parent_rect,
+    left:
+      node_rect.left -
+      scrollable_parent_rect.left +
+      scrollable_parent.scrollLeft,
+    top:
+      node_rect.top - scrollable_parent_rect.top + scrollable_parent.scrollTop,
+  };
+}
