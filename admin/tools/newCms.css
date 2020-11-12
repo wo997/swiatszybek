@@ -1,12 +1,11 @@
 :root {
-  --select_control_width: 30px;
-  --select_control_height: 30px;
-  --rearrange_control_width: 20px;
-  --rearrange_control_height: 20px;
+  --select_control_width: 26px;
+  --select_control_height: 26px;
+  --rearrange_control_width: 26px;
+  --rearrange_control_height: 26px;
 }
 
 .newCmsContent {
-  overflow: hidden;
   height: 100%;
   user-select: none;
 }
@@ -16,8 +15,8 @@
 }
 
 .newCms_block {
-  min-width: 0;
-  min-height: 0;
+  min-width: 40px;
+  min-height: 40px;
   background-color: #fff0;
   box-shadow: 0 0 0 1px #0002;
   position: relative;
@@ -126,7 +125,7 @@
   flex-flow: column;
 }
 
-.newCms_container.container_column > .newCms_container_content {
+.newCms_container.container_row > .newCms_container_content {
   flex-flow: row;
 }
 

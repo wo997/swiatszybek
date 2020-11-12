@@ -42,13 +42,18 @@ class FloatingRearrangeControls {
     if (this.rearranged_block != hovered_block) {
       this.rearranged_block = hovered_block;
 
-      this.removeSelection();
+      this.removeRearrangement();
 
       const rearranged_block = this.rearranged_block;
 
       if (rearranged_block) {
         rearranged_block.classList.add("rearrange_active");
-        rearranged_block.rearrange_control.classList.add("rearrange_active");
+        rearranged_block.rearrange_control.before.classList.add(
+          "rearrange_active"
+        );
+        rearranged_block.rearrange_control.after.classList.add(
+          "rearrange_active"
+        );
       }
     }
   }
@@ -60,28 +65,6 @@ class FloatingRearrangeControls {
   }
 
   addFloatingRearrangeControls() {
-    let blocks_data = [];
-    this.newCms.container.findAll(".newCms_block").forEach((block) => {
-      const block_rect = positionAgainstScrollableParent(block);
-
-      let parent_count = 0;
-      let parent = block;
-      while (parent != this.content_node) {
-        parent_count++;
-        parent = parent.parent();
-      }
-
-      const index = block_rect.top + parent_count;
-      blocks_data.push({
-        index: index,
-        block: block,
-        rect: block_rect,
-      });
-    });
-    const sorted_blocks_data = blocks_data.sort((a, b) => {
-      return Math.sign(a.index - b.index);
-    });
-
     const rearrange_control_width = parseInt(
       getComputedStyle(document.documentElement).getPropertyValue(
         "--rearrange_control_width"
@@ -93,63 +76,141 @@ class FloatingRearrangeControls {
       )
     );
 
-    const sorted_blocks_data_length = sorted_blocks_data.length;
-    let upper_bound = 0;
+    const addControls = (position) => {
+      let blocks_data = [];
+      this.newCms.container.findAll(".newCms_block").forEach((block) => {
+        if (block.findParentByClassName("select_active")) {
+          // we don't wanna rearrange to it's own child or itself, no incest or masturbation allowed here!
+          return;
+        }
 
-    this.node.empty();
+        const parent_container = block.findParentByClassName(
+          "newCms_container"
+        );
 
-    for (let i = 0; i < sorted_blocks_data_length; i++) {
-      const block_data = sorted_blocks_data[i];
-      const block = block_data.block;
+        const is_parent_row = parent_container
+          ? parent_container.classList.contains("container_row")
+          : false;
 
-      let left = block_data.rect.left;
-      let top = block_data.rect.top;
+        const block_rect_data = positionAgainstScrollableParent(block);
 
-      let moving_right = true;
-      while (moving_right) {
-        moving_right = false;
-        for (let u = i - 1; u >= upper_bound; u--) {
-          const prev_block_data = sorted_blocks_data[u];
+        let parent_count = 0;
+        let parent = block;
+        while (parent != this.content_node) {
+          parent_count++;
+          parent = parent.parent();
+        }
 
-          const prev_y2 = prev_block_data.rect.top + rearrange_control_height;
+        if (is_parent_row) {
+          block_rect_data.relative_pos.left -= rearrange_control_width * 0.5;
+          block_rect_data.relative_pos.top +=
+            (block_rect_data.node_rect.height - rearrange_control_height) * 0.5;
 
-          if (top >= prev_y2) {
-            // optimize purpose
-            upper_bound = u + 1;
-            break;
+          if (position === "after") {
+            block_rect_data.relative_pos.left +=
+              block_rect_data.node_rect.width;
           }
+        } else {
+          block_rect_data.relative_pos.left +=
+            (block_rect_data.node_rect.width - rearrange_control_width) * 0.5;
+          block_rect_data.relative_pos.top -= rearrange_control_width * 0.5;
 
-          if (
-            prev_block_data.rect.left < left + rearrange_control_width &&
-            prev_block_data.rect.left + rearrange_control_width > left
-          ) {
-            left = prev_block_data.rect.left + rearrange_control_width;
-            moving_right = true;
+          if (position === "after") {
+            block_rect_data.relative_pos.top +=
+              block_rect_data.node_rect.height;
           }
         }
+
+        const index = block_rect_data.relative_pos.top + parent_count;
+        blocks_data.push({
+          index: index,
+          block: block,
+          rect_data: block_rect_data,
+          is_parent_row: is_parent_row,
+        });
+      });
+      const sorted_blocks_data = blocks_data.sort((a, b) => {
+        return Math.sign(a.index - b.index);
+      });
+
+      const sorted_blocks_data_length = sorted_blocks_data.length;
+      let upper_bound = 0;
+
+      for (let i = 0; i < sorted_blocks_data_length; i++) {
+        const block_data = sorted_blocks_data[i];
+        const block = block_data.block;
+
+        let left = block_data.rect_data.relative_pos.left;
+        let top = block_data.rect_data.relative_pos.top;
+
+        let moving = true;
+        while (moving) {
+          moving = false;
+          for (let u = i - 1; u >= upper_bound; u--) {
+            const prev_block_data = sorted_blocks_data[u];
+
+            const prev_y2 =
+              prev_block_data.rect_data.relative_pos.top +
+              rearrange_control_height;
+
+            if (top >= prev_y2) {
+              // optimize purpose
+              upper_bound = u + 1;
+              break;
+            }
+
+            if (
+              prev_block_data.rect_data.relative_pos.left <
+                left + rearrange_control_width &&
+              prev_block_data.rect_data.relative_pos.left +
+                rearrange_control_width >
+                left
+            ) {
+              if (position === "after") {
+                // go left
+                left =
+                  prev_block_data.rect_data.relative_pos.left -
+                  rearrange_control_width;
+              } else {
+                // go right
+                left =
+                  prev_block_data.rect_data.relative_pos.left +
+                  rearrange_control_width;
+              }
+              moving = true;
+            }
+          }
+        }
+
+        block_data.rect_data.relative_pos.left = left;
+        block_data.rect_data.relative_pos.top = top;
+
+        const rearrange_control = document.createElement("DIV");
+        rearrange_control.classList.add("rearrange_control");
+        rearrange_control.style.left = left + "px";
+        rearrange_control.style.top = top + "px";
+
+        let rearrange_control_html = "";
+        if (block_data.is_parent_row) {
+          rearrange_control_html = `<i class="fas fa-grip-lines-vertical"></i>`;
+        } else {
+          rearrange_control_html = `<i class="fas fa-grip-lines"></i>`;
+        }
+        rearrange_control.innerHTML = rearrange_control_html;
+
+        if (!block.rearrange_control) {
+          block.rearrange_control = {};
+        }
+        block.rearrange_control[position] = rearrange_control;
+        rearrange_control.rearrange_block = block;
+
+        this.node.appendChild(rearrange_control);
       }
+    };
 
-      block_data.rect.left = left;
-      block_data.rect.top = top;
-
-      const rearrange_control = document.createElement("DIV");
-      rearrange_control.classList.add("rearrange_control");
-      rearrange_control.style.left = left + "px";
-      rearrange_control.style.top = top + "px";
-
-      let rearrange_control_html = "";
-      if (block.classList.contains("newCms_container")) {
-        rearrange_control_html = `<i class="fas fa-columns"></i>`;
-      } else {
-        rearrange_control_html = `<i class="far fa-square"></i>`;
-      }
-      rearrange_control.innerHTML = rearrange_control_html;
-
-      block.rearrange_control = rearrange_control;
-      rearrange_control.rearrange_block = block;
-
-      this.node.appendChild(rearrange_control);
-    }
+    this.node.empty();
+    addControls("before");
+    addControls("after");
   }
 }
 
@@ -214,7 +275,7 @@ class FloatingSelectControls {
   addFloatingSelectControls() {
     let blocks_data = [];
     this.newCms.container.findAll(".newCms_block").forEach((block) => {
-      const block_rect = positionAgainstScrollableParent(block);
+      const block_rect_data = positionAgainstScrollableParent(block);
 
       let parent_count = 0;
       let parent = block;
@@ -223,11 +284,11 @@ class FloatingSelectControls {
         parent = parent.parent();
       }
 
-      const index = block_rect.top + parent_count;
+      const index = block_rect_data.relative_pos.top + parent_count;
       blocks_data.push({
         index: index,
         block: block,
-        rect: block_rect,
+        rect_data: block_rect_data,
       });
     });
     const sorted_blocks_data = blocks_data.sort((a, b) => {
@@ -254,16 +315,17 @@ class FloatingSelectControls {
       const block_data = sorted_blocks_data[i];
       const block = block_data.block;
 
-      let left = block_data.rect.left;
-      let top = block_data.rect.top;
+      let left = block_data.rect_data.relative_pos.left;
+      let top = block_data.rect_data.relative_pos.top;
 
-      let moving_right = true;
-      while (moving_right) {
-        moving_right = false;
+      let moving = true;
+      while (moving) {
+        moving = false;
         for (let u = i - 1; u >= upper_bound; u--) {
           const prev_block_data = sorted_blocks_data[u];
 
-          const prev_y2 = prev_block_data.rect.top + select_control_height;
+          const prev_y2 =
+            prev_block_data.rect_data.relative_pos.top + select_control_height;
 
           if (top >= prev_y2) {
             // optimize purpose
@@ -272,17 +334,21 @@ class FloatingSelectControls {
           }
 
           if (
-            prev_block_data.rect.left < left + select_control_width &&
-            prev_block_data.rect.left + select_control_width > left
+            prev_block_data.rect_data.relative_pos.left <
+              left + select_control_width &&
+            prev_block_data.rect_data.relative_pos.left + select_control_width >
+              left
           ) {
-            left = prev_block_data.rect.left + select_control_width;
-            moving_right = true;
+            left =
+              prev_block_data.rect_data.relative_pos.left +
+              select_control_width;
+            moving = true;
           }
         }
       }
 
-      block_data.rect.left = left;
-      block_data.rect.top = top;
+      block_data.rect_data.relative_pos.left = left;
+      block_data.rect_data.relative_pos.top = top;
 
       const select_control = document.createElement("DIV");
       select_control.classList.add("select_control");
@@ -825,6 +891,7 @@ class NewCms {
 
     if (this.grabbed_block) {
       this.grabbedBlockPositionChange();
+      this.rearrange_controls.mouseMove(event);
       return;
     }
 
@@ -989,6 +1056,8 @@ class NewCms {
 
     removeUserSelection();
 
+    this.rearrange_controls.removeRearrangement();
+
     this.edit_block.showButtons();
 
     /*setTimeout(() => {
@@ -1091,9 +1160,9 @@ registerModalContent(
                   <div class="modules"></div>
                 </div>
 
-                <div style="width:100%;overflow:hidden">
+                <div style="width:100%;overflow:hidden;">
                   <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel">
-                    <div style="position:relative;height: 100%;">
+                    <div style="position:relative;height: 100%;padding:15px">
                       <div class="edit_block_node"></div>
                       <div class="select_controls"></div>
                       <div class="rearrange_controls"></div>

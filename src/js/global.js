@@ -865,13 +865,17 @@ function positionAgainstScrollableParent(node) {
   const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
 
   return {
+    relative_pos: {
+      left:
+        node_rect.left -
+        scrollable_parent_rect.left +
+        scrollable_parent.scrollLeft,
+      top:
+        node_rect.top -
+        scrollable_parent_rect.top +
+        scrollable_parent.scrollTop,
+    },
     node_rect: node_rect,
     scrollable_parent_rect: scrollable_parent_rect,
-    left:
-      node_rect.left -
-      scrollable_parent_rect.left +
-      scrollable_parent.scrollLeft,
-    top:
-      node_rect.top - scrollable_parent_rect.top + scrollable_parent.scrollTop,
   };
 }

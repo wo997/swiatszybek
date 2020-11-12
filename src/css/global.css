@@ -773,7 +773,7 @@ a {
 }
 .pln {
   /*font-family: "Nanum Gothic", sans-serif !important;*/
-  font-weight: 600;
+  /*font-weight: 600;*/
   word-spacing: -0.1em;
 }
 .mobileRow {
