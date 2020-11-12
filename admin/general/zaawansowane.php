@@ -61,7 +61,8 @@
     <span class="field-title">Domena witryny</span>
     <input type="text" class="field" name="domain">
 
-    <image-input name="jajko"></image-input>
+    <!-- TODO: get it to work 
+    <image-input name="jajko"></image-input>-->
 </div>
 
 <?php include "admin/page_template.php"; ?>

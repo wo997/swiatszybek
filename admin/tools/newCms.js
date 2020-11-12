@@ -1,6 +1,310 @@
 // dependencies
 useTool("quillEditor");
 
+class FloatingRearrangeControls {
+  constructor(newCms) {
+    this.newCms = newCms;
+    this.node = newCms.container.find(`.rearrange_controls`);
+    this.init();
+  }
+
+  init() {
+    this.rearranged_block = null;
+    this.removeRearrangement();
+    this.node.classList.remove("visible");
+  }
+
+  removeRearrangement() {
+    this.newCms.container.findAll(".rearrange_active").forEach((e) => {
+      e.classList.remove("rearrange_active");
+    });
+  }
+
+  mouseMove(event) {
+    const target = $(event.target);
+
+    let hovered_block = null;
+
+    const hovered_float_control = target
+      ? target.findParentByClassName("rearrange_control")
+      : null;
+
+    if (hovered_float_control) {
+      hovered_block = hovered_float_control.rearrange_block;
+    }
+
+    if (!hovered_block) {
+      hovered_block = target
+        ? target.findParentByClassName("newCms_block")
+        : null;
+    }
+
+    if (this.rearranged_block != hovered_block) {
+      this.rearranged_block = hovered_block;
+
+      this.removeSelection();
+
+      const rearranged_block = this.rearranged_block;
+
+      if (rearranged_block) {
+        rearranged_block.classList.add("rearrange_active");
+        rearranged_block.rearrange_control.classList.add("rearrange_active");
+      }
+    }
+  }
+
+  mouseDown(event) {
+    if (this.rearranged_block && this.newCms.grabbed_block) {
+      this.newCms.releaseBlock();
+    }
+  }
+
+  addFloatingRearrangeControls() {
+    let blocks_data = [];
+    this.newCms.container.findAll(".newCms_block").forEach((block) => {
+      const block_rect = positionAgainstScrollableParent(block);
+
+      let parent_count = 0;
+      let parent = block;
+      while (parent != this.content_node) {
+        parent_count++;
+        parent = parent.parent();
+      }
+
+      const index = block_rect.top + parent_count;
+      blocks_data.push({
+        index: index,
+        block: block,
+        rect: block_rect,
+      });
+    });
+    const sorted_blocks_data = blocks_data.sort((a, b) => {
+      return Math.sign(a.index - b.index);
+    });
+
+    const rearrange_control_width = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--rearrange_control_width"
+      )
+    );
+    const rearrange_control_height = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--rearrange_control_height"
+      )
+    );
+
+    const sorted_blocks_data_length = sorted_blocks_data.length;
+    let upper_bound = 0;
+
+    this.node.empty();
+
+    for (let i = 0; i < sorted_blocks_data_length; i++) {
+      const block_data = sorted_blocks_data[i];
+      const block = block_data.block;
+
+      let left = block_data.rect.left;
+      let top = block_data.rect.top;
+
+      let moving_right = true;
+      while (moving_right) {
+        moving_right = false;
+        for (let u = i - 1; u >= upper_bound; u--) {
+          const prev_block_data = sorted_blocks_data[u];
+
+          const prev_y2 = prev_block_data.rect.top + rearrange_control_height;
+
+          if (top >= prev_y2) {
+            // optimize purpose
+            upper_bound = u + 1;
+            break;
+          }
+
+          if (
+            prev_block_data.rect.left < left + rearrange_control_width &&
+            prev_block_data.rect.left + rearrange_control_width > left
+          ) {
+            left = prev_block_data.rect.left + rearrange_control_width;
+            moving_right = true;
+          }
+        }
+      }
+
+      block_data.rect.left = left;
+      block_data.rect.top = top;
+
+      const rearrange_control = document.createElement("DIV");
+      rearrange_control.classList.add("rearrange_control");
+      rearrange_control.style.left = left + "px";
+      rearrange_control.style.top = top + "px";
+
+      let rearrange_control_html = "";
+      if (block.classList.contains("newCms_container")) {
+        rearrange_control_html = `<i class="fas fa-columns"></i>`;
+      } else {
+        rearrange_control_html = `<i class="far fa-square"></i>`;
+      }
+      rearrange_control.innerHTML = rearrange_control_html;
+
+      block.rearrange_control = rearrange_control;
+      rearrange_control.rearrange_block = block;
+
+      this.node.appendChild(rearrange_control);
+    }
+  }
+}
+
+class FloatingSelectControls {
+  constructor(newCms) {
+    this.newCms = newCms;
+    this.node = newCms.container.find(`.select_controls`);
+    this.init();
+  }
+
+  init() {
+    this.selected_block = null;
+    this.removeSelection();
+    this.node.classList.add("visible");
+  }
+
+  removeSelection() {
+    this.newCms.container.findAll(".select_active").forEach((e) => {
+      e.classList.remove("select_active");
+    });
+  }
+
+  mouseMove(event) {
+    const target = $(event.target);
+
+    let hovered_block = null;
+
+    const hovered_float_control = target
+      ? target.findParentByClassName("select_control")
+      : null;
+
+    if (hovered_float_control) {
+      hovered_block = hovered_float_control.select_block;
+    }
+
+    if (!hovered_block) {
+      hovered_block = target
+        ? target.findParentByClassName("newCms_block")
+        : null;
+    }
+
+    if (this.selected_block != hovered_block) {
+      this.selected_block = hovered_block;
+
+      this.removeSelection();
+
+      const selected_block = this.selected_block;
+
+      if (selected_block) {
+        selected_block.classList.add("select_active");
+        selected_block.select_control.classList.add("select_active");
+      }
+    }
+  }
+
+  mouseDown(event) {
+    if (this.selected_block && !this.newCms.grabbed_block) {
+      this.newCms.grabBlock(this.selected_block);
+    }
+  }
+
+  addFloatingSelectControls() {
+    let blocks_data = [];
+    this.newCms.container.findAll(".newCms_block").forEach((block) => {
+      const block_rect = positionAgainstScrollableParent(block);
+
+      let parent_count = 0;
+      let parent = block;
+      while (parent != this.content_node) {
+        parent_count++;
+        parent = parent.parent();
+      }
+
+      const index = block_rect.top + parent_count;
+      blocks_data.push({
+        index: index,
+        block: block,
+        rect: block_rect,
+      });
+    });
+    const sorted_blocks_data = blocks_data.sort((a, b) => {
+      return Math.sign(a.index - b.index);
+    });
+
+    const select_control_width = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--select_control_width"
+      )
+    );
+    const select_control_height = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--select_control_height"
+      )
+    );
+
+    const sorted_blocks_data_length = sorted_blocks_data.length;
+    let upper_bound = 0;
+
+    this.node.empty();
+
+    for (let i = 0; i < sorted_blocks_data_length; i++) {
+      const block_data = sorted_blocks_data[i];
+      const block = block_data.block;
+
+      let left = block_data.rect.left;
+      let top = block_data.rect.top;
+
+      let moving_right = true;
+      while (moving_right) {
+        moving_right = false;
+        for (let u = i - 1; u >= upper_bound; u--) {
+          const prev_block_data = sorted_blocks_data[u];
+
+          const prev_y2 = prev_block_data.rect.top + select_control_height;
+
+          if (top >= prev_y2) {
+            // optimize purpose
+            upper_bound = u + 1;
+            break;
+          }
+
+          if (
+            prev_block_data.rect.left < left + select_control_width &&
+            prev_block_data.rect.left + select_control_width > left
+          ) {
+            left = prev_block_data.rect.left + select_control_width;
+            moving_right = true;
+          }
+        }
+      }
+
+      block_data.rect.left = left;
+      block_data.rect.top = top;
+
+      const select_control = document.createElement("DIV");
+      select_control.classList.add("select_control");
+      select_control.style.left = left + "px";
+      select_control.style.top = top + "px";
+
+      let select_control_html = "";
+      if (block.classList.contains("newCms_container")) {
+        select_control_html = `<i class="fas fa-columns"></i>`;
+      } else {
+        select_control_html = `<i class="far fa-square"></i>`;
+      }
+      select_control.innerHTML = select_control_html;
+
+      block.select_control = select_control;
+      select_control.select_block = block;
+
+      this.node.appendChild(select_control);
+    }
+  }
+}
+
 class InlineQuillEditor {
   color_list = [
     "rgb(255, 85, 118)",
@@ -198,6 +502,7 @@ class EditBlockRect {
   }
 
   mouseMove(event) {
+    return;
     const target = $(event.target);
 
     let hovered_block_content = null;
@@ -327,13 +632,14 @@ class NewCms {
     this.content_scroll_panel = this.container.find(
       `.newCmsContent_scroll_panel`
     );
-    this.floating_controls_node = this.container.find(`.floating_controls`);
 
     this.inline_edited_block = null;
 
     this.initEditBlockRect();
     this.initAddBlockModal();
     this.initQuillEditor();
+    this.initFloatingSelectControls();
+    this.initFloatingRearrangeControls();
     this.initListenChange();
 
     this.mouse_x = 0;
@@ -410,6 +716,14 @@ class NewCms {
     );
   }
 
+  initFloatingSelectControls() {
+    this.select_controls = new FloatingSelectControls(this);
+  }
+
+  initFloatingRearrangeControls() {
+    this.rearrange_controls = new FloatingRearrangeControls(this);
+  }
+
   initAddBlockModal() {
     registerModalContent(
       /*html*/ `
@@ -450,6 +764,8 @@ class NewCms {
     this.options = options;
 
     this.edit_block.init();
+    this.rearrange_controls.init();
+    this.select_controls.init();
 
     setFormData(
       {
@@ -513,18 +829,20 @@ class NewCms {
     }
 
     this.edit_block.mouseMove(event);
+    this.select_controls.mouseMove(event);
   }
 
   mouseDown(event) {
-    const target = $(event.target);
+    this.select_controls.mouseDown(event);
+    //const target = $(event.target);
 
     // TODO: remove
-    const newCms_add_block_btn = target.findParentByClassName(
+    /*const newCms_add_block_btn = target.findParentByClassName(
       "newCms_add_block_btn"
     );
     if (newCms_add_block_btn) {
       this.insertBlockModal(newCms_add_block_btn.parent());
-    }
+    }*/
   }
 
   mouseUp(event) {
@@ -560,20 +878,13 @@ class NewCms {
   contentChange(options = {}) {
     this.content_change_triggered = true;
     this.insertMissingQlClasses();
-    this.addFloatingControls();
 
-    this.removeUnnecessaryClasses();
+    this.select_controls.addFloatingSelectControls();
 
     if (nonull(options.trigger_change, true) === true) {
       this.content_node.setValue();
     }
     this.content_change_triggered = false;
-  }
-
-  removeUnnecessaryClasses() {
-    this.container.findAll(".block_hinted").forEach((e) => {
-      e.classList.remove("block_hinted");
-    });
   }
 
   insertMissingQlClasses() {
@@ -643,6 +954,11 @@ class NewCms {
 
     this.content_scroll_panel.classList.add("grabbed_block");
 
+    this.rearrange_controls.node.classList.add("visible");
+    this.select_controls.node.classList.remove("visible");
+
+    this.rearrange_controls.addFloatingRearrangeControls();
+
     this.edit_block.hideButtons();
 
     this.grabAnimation();
@@ -665,6 +981,9 @@ class NewCms {
     this.grabbed_block = null;
 
     this.content_scroll_panel.classList.remove("grabbed_block");
+
+    this.rearrange_controls.node.classList.remove("visible");
+    this.select_controls.node.classList.add("visible");
 
     this.contentChange();
 
@@ -703,98 +1022,6 @@ class NewCms {
       requestAnimationFrame(() => {
         this.grabAnimation();
       });
-    }
-  }
-
-  addFloatingControls() {
-    let blocks_data = [];
-    this.container.findAll(".newCms_block").forEach((block) => {
-      const block_rect = positionAgainstScrollableParent(block);
-
-      let parent_count = 0;
-      let parent = block;
-      while (parent != this.content_node) {
-        parent_count++;
-        parent = parent.parent();
-      }
-
-      const index = block_rect.top + parent_count;
-      blocks_data.push({
-        index: index,
-        block: block,
-        rect: block_rect,
-      });
-    });
-    const sorted_blocks_data = blocks_data.sort((a, b) => {
-      return Math.sign(a.index - b.index);
-    });
-
-    const floating_control_width = parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--floating_control_width"
-      )
-    );
-    const floating_control_height = parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--floating_control_height"
-      )
-    );
-
-    const sorted_blocks_data_length = sorted_blocks_data.length;
-    let upper_bound = 0;
-
-    this.floating_controls_node.empty();
-
-    for (let i = 0; i < sorted_blocks_data_length; i++) {
-      const block_data = sorted_blocks_data[i];
-
-      let left = block_data.rect.left;
-      let top = block_data.rect.top;
-
-      let moving_right = true;
-      while (moving_right) {
-        moving_right = false;
-        for (let u = i - 1; u >= upper_bound; u--) {
-          const prev_block_data = sorted_blocks_data[u];
-
-          const prev_y2 = prev_block_data.rect.top + floating_control_height;
-
-          if (top >= prev_y2) {
-            // just optimize
-            upper_bound = u + 1;
-            break;
-          }
-
-          if (
-            prev_block_data.rect.left < left + floating_control_width &&
-            prev_block_data.rect.left + floating_control_width > left
-          ) {
-            left = prev_block_data.rect.left + floating_control_width;
-            moving_right = true;
-          }
-        }
-      }
-
-      block_data.rect.left = left;
-      block_data.rect.top = top;
-
-      const floating_control = document.createElement("DIV");
-      floating_control.classList.add("floating_control");
-      floating_control.style.left = left + "px";
-      floating_control.style.top = top + "px";
-      floating_control.innerHTML = `<i class="fas fa-columns"></i>`;
-
-      floating_control.addEventListener("mouseenter", () => {
-        this.removeUnnecessaryClasses();
-        console.log(block_data.block);
-        block_data.block.classList.add("block_hinted");
-      });
-
-      floating_control.addEventListener("mouseleave", () => {
-        block_data.block.classList.remove("block_hinted");
-      });
-
-      this.floating_controls_node.appendChild(floating_control);
     }
   }
 }
@@ -868,7 +1095,8 @@ registerModalContent(
                   <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel">
                     <div style="position:relative;height: 100%;">
                       <div class="edit_block_node"></div>
-                      <div class="floating_controls"></div>
+                      <div class="select_controls"></div>
+                      <div class="rearrange_controls"></div>
                       <div class="quill_editor_wrapper">
                         <div class="quill_editor"></div>
                       </div>
