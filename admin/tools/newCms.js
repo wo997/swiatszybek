@@ -1042,6 +1042,7 @@ class NewCms {
 
   unlockInput() {
     this.container.classList.remove("locked_input");
+    this.select_controls.addFloatingSelectControls();
   }
 
   mouseMove(event) {
@@ -1198,20 +1199,7 @@ class NewCms {
   }
 
   releaseBlock(target_node) {
-    //const grabbed_block_ref = this.grabbed_block;
-
-    if (this.rearrange_controls.rearranged_block) {
-      let before_node = this.rearrange_controls.rearranged_block;
-      if (this.rearrange_controls.rearranged_position == "after") {
-        before_node = before_node.next();
-      }
-
-      this.rearrange_controls.rearranged_block
-        .parent()
-        .insertBefore(this.grabbed_block, before_node);
-
-      zoomNode(this.grabbed_block, "in", { duration: 300 });
-    }
+    const grabbed_block_ref = this.grabbed_block;
 
     this.grabbed_block.style.transform = "";
     this.grabbed_block.classList.remove("grabbed");
@@ -1221,15 +1209,41 @@ class NewCms {
     this.container.classList.remove("grabbed_block");
 
     this.rearrange_controls.node.classList.remove("visible");
-    this.select_controls.node.classList.add("visible");
+
+    //this.edit_block.showButtons();
+
+    if (this.rearrange_controls.rearranged_block) {
+      let before_node = this.rearrange_controls.rearranged_block;
+      if (this.rearrange_controls.rearranged_position == "after") {
+        before_node = before_node.next();
+      }
+
+      const duration = 300;
+
+      const replace_node = grabbed_block_ref.cloneNode(true);
+
+      this.rearrange_controls.rearranged_block
+        .parent()
+        .insertBefore(replace_node, before_node);
+
+      zoomNode(replace_node, "in", { duration: duration });
+      zoomNode(grabbed_block_ref, "out", {
+        duration: duration,
+        callback: () => {
+          grabbed_block_ref.remove();
+          this.select_controls.node.classList.add("visible");
+          this.contentChange();
+        },
+      });
+
+      this.lockInput(duration);
+    }
 
     this.contentChange();
 
     removeUserSelection();
 
     this.rearrange_controls.removeRearrangement();
-
-    this.edit_block.showButtons();
 
     /*setTimeout(() => {
       scrollIntoView(grabbed_block_ref, { margin: 0.05 });
@@ -1296,7 +1310,7 @@ function zoomNode(node, direction, options = {}) {
     keyframes = `0% {${step_out}opacity: 0;} 100% {${step_in}opacity: 1;}`;
   }
 
-  animate(node, keyframes, nonull(options.duration, 100), () => {
+  animate(node, keyframes, nonull(options.duration, 200), () => {
     if (options.callback) {
       options.callback();
     }
