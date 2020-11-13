@@ -5,7 +5,7 @@ class FloatingRearrangeControls {
   constructor(newCms) {
     this.newCms = newCms;
     this.node = newCms.container.find(`.rearrange_controls`);
-    this.rearrange_insert_rect = newCms.container.find(
+    this.rearrange_insert_rect_node = newCms.container.find(
       `.rearrange_insert_rect`
     );
     this.rearrange_grabbed_rect_node = newCms.container.find(
@@ -19,7 +19,7 @@ class FloatingRearrangeControls {
     this.rearranged_position = "";
     this.removeRearrangement();
     this.node.classList.remove("visible");
-    this.rearrange_insert_rect.classList.remove("visible");
+    this.rearrange_insert_rect_node.classList.remove("visible");
     this.rearrange_grabbed_rect_node.classList.remove("visible");
   }
 
@@ -148,20 +148,30 @@ class FloatingRearrangeControls {
           y -= min_size * 0.5;
         }
 
-        this.rearrange_insert_rect.style.left = x + "px";
-        this.rearrange_insert_rect.style.top = y + "px";
-        this.rearrange_insert_rect.style.width = width + "px";
-        this.rearrange_insert_rect.style.height = height + "px";
+        if (rearranged_control_node.classList.contains("insert_end")) {
+          if (is_parent_row) {
+            x += min_size * (is_before ? 0.5 : -0.5);
+          } else {
+            y += min_size * (is_before ? 0.5 : -0.5);
+          }
+        }
+        /*classList.push("insert_between");
+        classList.push("insert_end");
+        classList.push("insert_empty");*/
+
+        this.rearrange_insert_rect_node.style.left = x + "px";
+        this.rearrange_insert_rect_node.style.top = y + "px";
+        this.rearrange_insert_rect_node.style.width = width + "px";
+        this.rearrange_insert_rect_node.style.height = height + "px";
       }
       rearranged_control_node.classList.add("rearrange_active");
-      //rearranged_block.classList.add("rearrange_active");
 
       if (parent_container) {
         parent_container.classList.add("rearrange_active");
       }
     }
 
-    this.rearrange_insert_rect.classList.toggle(
+    this.rearrange_insert_rect_node.classList.toggle(
       "visible",
       !!rearranged_control_node
     );
@@ -360,7 +370,6 @@ class FloatingRearrangeControls {
       block_data.rect_data.relative_pos.top = top;
 
       const rearrange_control = document.createElement("DIV");
-      rearrange_control.classList.add("rearrange_control");
       rearrange_control.style.left = left + "px";
       rearrange_control.style.top = top + "px";
 
@@ -374,18 +383,26 @@ class FloatingRearrangeControls {
         rotation += 90;
       }
 
+      let classList = [];
       if (has_next && has_prev) {
         rearrange_control_html = `<img style='width:1em' src="/src/img/arrows_insert_between.svg">`;
-      } else if (has_prev) {
+        classList.push("insert_between");
+      } else if (has_prev || has_next) {
         rearrange_control_html = `<img style='width:1em' src="/src/img/arrows_insert_after.svg">`;
-      } else if (has_next) {
-        rearrange_control_html = `<img style='width:1em' src="/src/img/arrows_insert_after.svg">`;
-        rotation += 180;
+        if (has_next) {
+          rotation += 180;
+        }
+        classList.push("insert_end");
       } else {
         rearrange_control_html = `<img style='width:0.7em' src="/src/img/insert_plus.svg">`;
+        classList.push("insert_empty");
       }
 
       rearrange_control.innerHTML = rearrange_control_html;
+
+      classList.push("rearrange_control");
+
+      rearrange_control.classList.add(...classList);
 
       rearrange_control.style.transform = `rotate(${rotation}deg)`;
 
@@ -971,12 +988,14 @@ class NewCms {
       this.scroll_top -
       this.grabbed_scroll_top;
 
-    this.grabbed_block.style.transform = `
-    translate(
-      ${dx.toPrecision(5)}px,
-      ${dy.toPrecision(5)}px
-    )
-  `;
+    const grabbed_block = this.grabbed_block;
+
+    grabbed_block.style.transform = `
+      translate(
+        ${dx.toPrecision(5)}px,
+        ${dy.toPrecision(5)}px
+      )
+    `;
   }
 
   contentChange(options = {}) {
