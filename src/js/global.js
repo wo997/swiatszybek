@@ -859,6 +859,7 @@ function removeUserSelection() {
 }
 
 function positionAgainstScrollableParent(node) {
+  node = $(node);
   const node_rect = node.getBoundingClientRect();
 
   const scrollable_parent = node.findScrollableParent();

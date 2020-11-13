@@ -467,7 +467,11 @@ class FloatingSelectControls {
   }
 
   mouseDown(event) {
-    if (this.selected_block && !this.newCms.grabbed_block) {
+    if (
+      event.buttons === 1 &&
+      this.selected_block &&
+      !this.newCms.grabbed_block
+    ) {
       this.newCms.grabBlock(this.selected_block);
     }
   }
@@ -570,6 +574,8 @@ class FloatingSelectControls {
 
       this.node.appendChild(select_control);
     }
+
+    this.node.classList.add("visible");
   }
 }
 
@@ -1070,7 +1076,7 @@ class NewCms {
   }
 
   grabBlock(block) {
-    this.grabbed_block = block;
+    this.grabbed_block = $(block);
     this.grabbed_block.classList.add("grabbed");
     this.grabbed_mouse_x = this.mouse_x;
     this.grabbed_mouse_y = this.mouse_y;
@@ -1089,7 +1095,7 @@ class NewCms {
   }
 
   releaseBlock() {
-    const grabbed_block_ref = this.grabbed_block;
+    const grabbed_block = this.grabbed_block;
 
     this.grabbed_block.style.transform = "";
     this.grabbed_block.classList.remove("grabbed");
@@ -1121,21 +1127,99 @@ class NewCms {
         before_node = before_node.next();
       }
 
-      const duration = 300;
+      const duration = 350;
 
-      const replace_node = grabbed_block_ref.cloneNode(true);
+      this.content_node.findAll(".newCms_block").forEach((block) => {
+        const block_rect = block.getBoundingClientRect();
+        block.last_rect = block_rect;
+      });
 
       this.rearrange_controls.rearranged_block
         .parent()
-        .insertBefore(replace_node, before_node);
+        .insertBefore(grabbed_block, before_node);
 
-      zoomNode(replace_node, "in", { duration: duration });
-      zoomNode(grabbed_block_ref, "out", {
-        duration: duration,
-        callback: () => {
-          grabbed_block_ref.remove();
-          end();
-        },
+      this.content_node.findAll(".newCms_block").forEach((block) => {
+        const block_rect = block.getBoundingClientRect();
+        block.new_rect = block_rect;
+
+        block.animation_data = { x: 0, y: 0 };
+      });
+
+      this.content_node.findAll(".newCms_block").forEach((block) => {
+        const dx = block.last_rect.left - block.new_rect.left;
+        const dy = block.last_rect.top - block.new_rect.top;
+
+        block.animation_data.x += dx;
+        block.animation_data.y += dy;
+
+        block
+          .find(".newCms_block_content")
+          .directChildren()
+          .forEach((sub_block) => {
+            if (sub_block.animation_data) {
+              //sub_block.animation_data.x -= dx;
+              //sub_block.animation_data.y -= dy;
+            }
+          });
+      });
+
+      this.content_node.findAll(".newCms_block").forEach((block) => {
+        const dx = block.animation_data.x;
+        const dy = block.animation_data.y;
+
+        const styles = {};
+        Object.assign(styles, window.getComputedStyle(block));
+
+        /*let mx = 0; //block.new_rect.width - block.last_rect.width;
+        let my = 0; //block.new_rect.height - block.last_rect.height;*/
+
+        let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
+        let my = 0.5 * (block.new_rect.height - block.last_rect.height);
+
+        /*let parent_container = block.findParentByClassName("newCms_container", {
+          skip: 1,
+        });
+
+        if (!parent_container) {
+          parent_container = this.content_node;
+        }
+
+        const is_parent_row = parent_container
+          ? parent_container.classList.contains("container_row")
+          : false;
+
+        if (is_parent_row) {
+          mx = block.new_rect.width - block.last_rect.width;
+        }*/
+
+        block.style.flexGrow = 0;
+        animate(
+          block,
+          `
+              0% {
+                transform: translate(
+                  ${dx}px,
+                  ${dy}px
+                );
+                width: ${block.last_rect.width}px;
+                height: ${block.last_rect.height}px;
+                margin: ${my}px ${mx}px;
+              }
+              100% {
+                transform: translate(
+                  0px,
+                  0px
+                );
+                width: ${block.new_rect.width}px;
+                height: ${block.new_rect.height}px;
+                margin: 0px 0px;
+              }
+            `,
+          duration,
+          () => {
+            block.style.flexGrow = styles.flexGrow;
+          }
+        );
       });
 
       this.lockInput(duration);
