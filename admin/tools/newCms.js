@@ -1098,15 +1098,16 @@ class NewCms {
     const grabbed_block = this.grabbed_block;
 
     this.grabbed_block.style.transform = "";
-    this.grabbed_block.classList.remove("grabbed");
+    grabbed_block.classList.remove("grabbed");
+    this.container.classList.remove("grabbed_block");
 
     this.grabbed_block = null;
-
-    this.container.classList.remove("grabbed_block");
 
     const end = () => {
       // not needed cause we set it to user-select none bro
       removeUserSelection();
+      grabbed_block.classList.remove("grabbed");
+      this.container.classList.remove("grabbed_block");
 
       this.rearrange_controls.removeRearrangement();
       this.select_controls.node.classList.add("visible");
@@ -1157,8 +1158,8 @@ class NewCms {
           .directChildren()
           .forEach((sub_block) => {
             if (sub_block.animation_data) {
-              //sub_block.animation_data.x -= dx;
-              //sub_block.animation_data.y -= dy;
+              sub_block.animation_data.x -= dx;
+              sub_block.animation_data.y -= dy;
             }
           });
       });
@@ -1218,6 +1219,10 @@ class NewCms {
           duration,
           () => {
             block.style.flexGrow = styles.flexGrow;
+
+            setTimeout(() => {
+              end();
+            }, 50);
           }
         );
       });
