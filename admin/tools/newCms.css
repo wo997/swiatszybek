@@ -136,6 +136,17 @@
   visibility: hidden;
 }
 
+.rearrange_grabbed_rect {
+  position: absolute;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%230000004F' stroke-width='4' stroke-dasharray='5%2c 9' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  background-color: #8881;
+  z-index: 50;
+}
+
+.rearrange_grabbed_rect:not(.visible) {
+  visibility: hidden;
+}
+
 /* block rearrangement end */
 
 /* newCms_container_content start */
