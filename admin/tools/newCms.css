@@ -20,8 +20,11 @@
   background-color: #fff0;
   box-shadow: 0 0 0 1px #0002;
   position: relative;
-  position: relative;
   transition: box-shadow 0.2s, background-color 0.2s, opacity 0.2s;
+  cursor: pointer;
+}
+.newCms_block_content:not(.newCms_container_content) {
+  pointer-events: none;
 }
 
 /* block selection start */
