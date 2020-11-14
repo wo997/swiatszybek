@@ -1171,13 +1171,13 @@ class NewCms {
         const styles = {};
         Object.assign(styles, window.getComputedStyle(block));
 
-        /*let mx = 0; //block.new_rect.width - block.last_rect.width;
-        let my = 0; //block.new_rect.height - block.last_rect.height;*/
+        /*let mx = block.new_rect.width - block.last_rect.width;
+        let my = block.new_rect.height - block.last_rect.height;*/
 
-        let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
-        let my = 0.5 * (block.new_rect.height - block.last_rect.height);
+        let mx = 0; //0.5 * (block.new_rect.width - block.last_rect.width);
+        let my = 0; //0.5 * (block.new_rect.height - block.last_rect.height);
 
-        /*let parent_container = block.findParentByClassName("newCms_container", {
+        let parent_container = block.findParentByClassName("newCms_container", {
           skip: 1,
         });
 
@@ -1190,10 +1190,12 @@ class NewCms {
           : false;
 
         if (is_parent_row) {
-          mx = block.new_rect.width - block.last_rect.width;
-        }*/
+          //mx = block.new_rect.width - block.last_rect.width;
+          mx = 0.5 * (block.new_rect.width - block.last_rect.width);
+        }
 
         block.style.flexGrow = 0;
+
         animate(
           block,
           `

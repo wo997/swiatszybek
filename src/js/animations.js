@@ -77,15 +77,19 @@ function animate(node, keyframes, duration, callback = null) {
     window.clearTimeout(node.animationTimeout);
   }
   node.style.animation = `${animation_name} ${duration}ms forwards`;
-  node.animationTimeout = setTimeout(() => {
-    if (node.style.animation == animation_name) {
-      node.style.animation = "";
-    }
-    if (callback) {
-      callback();
-    }
-    removeAnimation(animation_name);
-  }, duration);
+
+  // crazy, start the second timeout once you finish the frame ;)
+  setTimeout(() => {
+    node.animationTimeout = setTimeout(() => {
+      if (node.style.animation == animation_name) {
+        node.style.animation = "";
+      }
+      if (callback) {
+        callback();
+      }
+      removeAnimation(animation_name);
+    }, duration);
+  });
 }
 
 domload(() => {
