@@ -37,6 +37,10 @@ class FloatingRearrangeControls {
   mouseMove(event) {
     const target = $(event.target);
 
+    if (!target.findParentNode(this.newCms.content_scroll_panel)) {
+      return;
+    }
+
     let rearranged_block = null;
 
     if (!target.findParentNode(this.rearrange_grabbed_rect_node)) {
@@ -190,17 +194,19 @@ class FloatingRearrangeControls {
 
   addFloatingRearrangeControls(block) {
     // just a rect u grab from
-    const block_rect_data = positionAgainstScrollableParent(block);
-    const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
-    rearrange_grabbed_rect_node.style.left =
-      block_rect_data.relative_pos.left + "px";
-    rearrange_grabbed_rect_node.style.top =
-      block_rect_data.relative_pos.top + "px";
-    rearrange_grabbed_rect_node.style.width =
-      block_rect_data.node_rect.width + "px";
-    rearrange_grabbed_rect_node.style.height =
-      block_rect_data.node_rect.height + "px";
-    rearrange_grabbed_rect_node.classList.add("visible");
+    if (block) {
+      const block_rect_data = positionAgainstScrollableParent(block);
+      const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
+      rearrange_grabbed_rect_node.style.left =
+        block_rect_data.relative_pos.left + "px";
+      rearrange_grabbed_rect_node.style.top =
+        block_rect_data.relative_pos.top + "px";
+      rearrange_grabbed_rect_node.style.width =
+        block_rect_data.node_rect.width + "px";
+      rearrange_grabbed_rect_node.style.height =
+        block_rect_data.node_rect.height + "px";
+      rearrange_grabbed_rect_node.classList.add("visible");
+    }
 
     // them floating controls
     const rearrange_control_width =
@@ -218,7 +224,7 @@ class FloatingRearrangeControls {
 
     let blocks_data = [];
     const addControls = (position) => {
-      this.newCms.container.findAll(".newCms_block").forEach((block) => {
+      this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
         if (block.findParentByClassName("select_active")) {
           // we don't wanna rearrange to it's own child or itself, no incest or masturbation allowed here!
           return;
@@ -305,7 +311,7 @@ class FloatingRearrangeControls {
 
     this.node.empty();
 
-    this.newCms.container.findAll(".newCms_block").forEach((block) => {
+    this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
       block.rearrange_control_before = null;
       block.rearrange_control_after = null;
     });
@@ -436,6 +442,10 @@ class FloatingSelectControls {
   mouseMove(event) {
     const target = $(event.target);
 
+    if (!target.findParentNode(this.newCms.content_scroll_panel)) {
+      return;
+    }
+
     let hovered_block = null;
 
     const select_control = target
@@ -478,7 +488,7 @@ class FloatingSelectControls {
 
   addFloatingSelectControls() {
     let blocks_data = [];
-    this.newCms.container.findAll(".newCms_block").forEach((block) => {
+    this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
       const block_rect_data = positionAgainstScrollableParent(block);
 
       let parent_count = 0;
@@ -761,7 +771,6 @@ class NewCms {
     this.inline_edited_block = null;
 
     //this.initEditBlockRect();
-    this.initAddBlockModal();
     this.initQuillEditor();
     this.initFloatingSelectControls();
     this.initFloatingRearrangeControls();
@@ -849,41 +858,6 @@ class NewCms {
     this.rearrange_controls = new FloatingRearrangeControls(this);
   }
 
-  initAddBlockModal() {
-    registerModalContent(
-      /*html*/ `
-      <div id="newCmsBlocks" data-dismissable>
-          <div class="modal-body">
-              <div class="custom-toolbar">
-                  <span class="title">
-                      Wstaw blok CMS'owy
-                  </span>
-                  <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-              </div>
-
-              <div class="scroll-panel scroll-shadow panel-padding">
-                <div class="btn subtle" data-block="quill_editor">Blok tesktowy</div>
-                <div class="btn subtle" data-block="container">kontener</div>
-              </div>
-          </div>
-          <link href="/admin/tools/newCms.css?v=${CSS_RELEASE}" rel="stylesheet">
-      </div>
-    `,
-      (modal) => {
-        modal.findAll("[data-block]").forEach((e) => {
-          e.onclick = () => {
-            this.insertBlock(
-              this.insert_block_button,
-              "beforebegin",
-              e.getAttribute("data-block")
-            );
-            hideModal(modal.id);
-          };
-        });
-      }
-    );
-  }
-
   edit(targetNode, options) {
     this.targetNode = $(targetNode);
     this.options = options;
@@ -961,15 +935,17 @@ class NewCms {
 
   mouseDown(event) {
     this.select_controls.mouseDown(event);
-    //const target = $(event.target);
 
-    // TODO: remove
-    /*const newCms_add_block_btn = target.findParentByClassName(
-      "newCms_add_block_btn"
+    const newCms_side_block = $(event.target).findParentByClassName(
+      "newCms_side_block"
     );
-    if (newCms_add_block_btn) {
-      this.insertBlockModal(newCms_add_block_btn.parent());
-    }*/
+    if (newCms_side_block) {
+      const block_type = newCms_side_block.getAttribute("data-block");
+
+      const node = createNodeByHtml(this.getBlockHtml(block_type));
+      this.container.find(".block_list").appendChild(node);
+      this.grabBlock(node);
+    }
   }
 
   mouseUp(event) {
@@ -995,6 +971,8 @@ class NewCms {
       this.grabbed_scroll_top;
 
     const grabbed_block = this.grabbed_block;
+
+    grabbed_block.animation_data = { x: dx, y: dy };
 
     grabbed_block.style.transform = `
       translate(
@@ -1044,7 +1022,7 @@ class NewCms {
     this.insert_block_button = button;
   }
 
-  insertBlock(target, position, type, options) {
+  getBlockHtml(type, options = {}) {
     let content = "";
     let class_name = "";
     let class_name_content = "";
@@ -1053,14 +1031,15 @@ class NewCms {
       class_name_content = "ql-editor";
     }
 
-    target.insertAdjacentHTML(
-      position,
-      /*html*/ `
-        <div class="newCms_block newCms_${type} ${class_name}">
-            <div class="newCms_block_content newCms_${type}_content ${class_name_content}">${content}</div>
-        </div>
-      `
-    );
+    return /*html*/ `
+      <div class="newCms_block newCms_${type} ${class_name}">
+          <div class="newCms_block_content newCms_${type}_content ${class_name_content}">${content}</div>
+      </div>
+    `;
+  }
+
+  insertBlock(target, position, type, options = {}) {
+    target.insertAdjacentHTML(position, getBlockHtml(type, options));
 
     this.contentChange();
   }
@@ -1143,10 +1122,15 @@ class NewCms {
         const block_rect = block.getBoundingClientRect();
         block.new_rect = block_rect;
 
-        block.animation_data = { x: 0, y: 0 };
+        if (!block.animation_data) {
+          block.animation_data = { x: 0, y: 0 };
+        }
       });
 
       this.content_node.findAll(".newCms_block").forEach((block) => {
+        if (!block.last_rect) {
+          return;
+        }
         const dx = block.last_rect.left - block.new_rect.left;
         const dy = block.last_rect.top - block.new_rect.top;
 
@@ -1165,34 +1149,20 @@ class NewCms {
       });
 
       this.content_node.findAll(".newCms_block").forEach((block) => {
-        const dx = block.animation_data.x;
-        const dy = block.animation_data.y;
+        if (!block.last_rect) {
+          return;
+        }
 
         const styles = {};
         Object.assign(styles, window.getComputedStyle(block));
 
-        /*let mx = block.new_rect.width - block.last_rect.width;
-        let my = block.new_rect.height - block.last_rect.height;*/
+        let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
+        let my = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-        let mx = 0; //0.5 * (block.new_rect.width - block.last_rect.width);
-        let my = 0; //0.5 * (block.new_rect.height - block.last_rect.height);
+        const dx = block.animation_data.x - mx;
+        const dy = block.animation_data.y - my;
 
-        let parent_container = block.findParentByClassName("newCms_container", {
-          skip: 1,
-        });
-
-        if (!parent_container) {
-          parent_container = this.content_node;
-        }
-
-        const is_parent_row = parent_container
-          ? parent_container.classList.contains("container_row")
-          : false;
-
-        if (is_parent_row) {
-          //mx = block.new_rect.width - block.last_rect.width;
-          mx = 0.5 * (block.new_rect.width - block.last_rect.width);
-        }
+        delete block.animation_data;
 
         block.style.flexGrow = 0;
 
@@ -1320,19 +1290,29 @@ registerModalContent(
             </div>
 
             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
-                <div class="modules-sidebar shown" style="display:none !important">
-                  <button class="toggle-sidebar-btn btn subtle" onclick="toggleModuleSidebar()" data-tooltip="Ukryj moduły"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
-                  <span class="field-title modules-sidebar-title" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
-                   Moduły 
-                   <i class="fas fa-info-circle" data-tooltip="Przeciągnij w prawo i upuść"></i>
+                <div class="sidebar shown">
+                  <button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
+                  <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
+                    Bloki 
+                    <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
                   </span>
-                  <div class="modules"></div>
+                  <div class="block_list">
+                    <div class="newCms_side_block" data-block="quill_editor">
+                      <img src="/src/img/capital-letter.svg" class="default-icon">
+                      <span>Edytor tekstowy</span>
+                    </div>
+                    <div class="newCms_side_block" data-block="container">
+                      <i class="fas fa-columns"></i>
+                      <span>Kontener</span>
+                    </div>
+                    
+                  </div>
                 </div>
 
-                <div style="width:100%;overflow:hidden;">
+                <div style="width:100%;">
                   <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel">
                     <div style="position:relative;height: 100%;padding:15px">
-                      <!--<div class="edit_block_node"></div>-->
+                    <!--<div class="edit_block_node"></div>-->
                       <div class="select_controls"></div>
                       <div class="rearrange_controls"></div>
                       <div class="rearrange_insert_rect"></div>

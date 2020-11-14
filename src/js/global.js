@@ -862,7 +862,10 @@ function positionAgainstScrollableParent(node) {
   node = $(node);
   const node_rect = node.getBoundingClientRect();
 
-  const scrollable_parent = node.findScrollableParent();
+  let scrollable_parent = node.findScrollableParent();
+  if (scrollable_parent === window) {
+    scrollable_parent = document.body;
+  }
   const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
 
   return {
@@ -879,4 +882,15 @@ function positionAgainstScrollableParent(node) {
     node_rect: node_rect,
     scrollable_parent_rect: scrollable_parent_rect,
   };
+}
+
+function createNodeByHtml(html) {
+  const random_class_name = "sddsfgsdfgsdfgcvcvc";
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `<div class="${random_class_name}" style="display:none">${html}</div>`
+  );
+  const node = $(`.${random_class_name} *`);
+  node.remove();
+  return node;
 }

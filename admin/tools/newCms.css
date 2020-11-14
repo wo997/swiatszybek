@@ -326,3 +326,51 @@
 .locked_input {
   pointer-events: none;
 }
+
+/* side start */
+
+.newCms .sidebar {
+  width: 200px;
+  box-shadow: 0px 0px 9px 3px #0003;
+  padding: 15px 10px;
+  background: #eee;
+  flex-shrink: 0;
+}
+
+.newCms_side_block {
+  padding: 7px;
+  border: 1px solid #aaa;
+  background: #fafafa;
+  border-radius: 4px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 46px;
+  margin-bottom: 4px;
+  cursor: grab;
+}
+
+.newCms_side_block:hover {
+  box-shadow: 0 1px 3px 0 var(--primary-clr);
+  filter: brightness(1.15);
+}
+
+.newCms_side_block span {
+  margin-left: 7px;
+  line-height: 1.3;
+}
+
+.newCms_side_block .default-icon {
+  width: 1.8em;
+}
+
+.newCms_side_block i {
+  font-size: 1.8em;
+}
+
+.newCms_side_block .default-icon,
+.newCms_side_block i {
+  filter: contrast(0) sepia(1) contrast(50) hue-rotate(171deg) brightness(0.54);
+}
+
+/* side end */
