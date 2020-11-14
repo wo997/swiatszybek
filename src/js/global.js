@@ -894,3 +894,16 @@ function createNodeByHtml(html) {
   node.remove();
   return node;
 }
+
+function isNodeOnScreen(node, offset = -10) {
+  var r = node.getBoundingClientRect();
+  if (
+    r.y > window.innerHeight + offset ||
+    r.y + r.height < -offset ||
+    r.x > window.innerWidth + offset ||
+    r.x + r.width < -offset
+  ) {
+    return false;
+  }
+  return r;
+}

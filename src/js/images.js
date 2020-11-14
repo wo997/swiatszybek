@@ -1,18 +1,5 @@
 /* js[global] */
 
-function isNodeOnScreen(node, offset = -10) {
-  var r = node.getBoundingClientRect();
-  if (
-    r.y > window.innerHeight + offset ||
-    r.y + r.height < -offset ||
-    r.x > window.innerWidth + offset ||
-    r.x + r.width < -offset
-  ) {
-    return false;
-  }
-  return true;
-}
-
 var lazyLoadOffset = 700;
 
 // also files.php

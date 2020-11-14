@@ -70,6 +70,11 @@
   z-index: 100000;
 }
 
+.newCmsContent_scroll_panel:not(:hover) .select_controls {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* block selection end */
 
 /* block rearrangement start */
@@ -125,7 +130,8 @@
 .rearrange_insert_rect:not(.visible),
 .newCms:not(.grabbed_block) .rearrange_insert_rect,
 .newCms:not(.rearrange_possible) .rearrange_insert_rect {
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .rearrange_grabbed_rect {
@@ -136,7 +142,8 @@
 }
 
 .rearrange_grabbed_rect:not(.visible) {
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .newCms_block.grabbed {
@@ -206,17 +213,18 @@
 
 /* newCms_container_content start */
 .newCms_container_content {
-  display: flex;
+  /*display: flex;*/
   flex-shrink: 0;
   position: relative;
 }
 
 .newCms_container_content {
-  flex-flow: column;
+  /*flex-flow: column;*/
 }
 
 .newCms_container.container_row > .newCms_container_content {
-  flex-flow: row;
+  display: flex;
+  flex-flow: row wrap;
 }
 
 /* newCms_container_content end */
@@ -370,7 +378,7 @@
 
 .newCms_side_block .default-icon,
 .newCms_side_block i {
-  filter: contrast(0) sepia(1) contrast(50) hue-rotate(171deg) brightness(0.54);
+  filter: contrast(0) sepia(1) hue-rotate(171deg) brightness(0.75) contrast(5);
 }
 
 /* side end */

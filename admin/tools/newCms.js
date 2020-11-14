@@ -37,10 +37,6 @@ class FloatingRearrangeControls {
   mouseMove(event) {
     const target = $(event.target);
 
-    if (!target.findParentNode(this.newCms.content_scroll_panel)) {
-      return;
-    }
-
     let rearranged_block = null;
 
     if (!target.findParentNode(this.rearrange_grabbed_rect_node)) {
@@ -443,10 +439,6 @@ class FloatingSelectControls {
 
   mouseMove(event) {
     const target = $(event.target);
-
-    if (!target.findParentNode(this.newCms.content_scroll_panel)) {
-      return;
-    }
 
     let hovered_block = null;
 
@@ -1063,9 +1055,12 @@ class NewCms {
     this.grabbed_mouse_y = this.mouse_y;
     this.grabbed_scroll_top = this.scroll_top;
 
+    block.last_rect = block.getBoundingClientRect();
+
     this.container.classList.add("grabbed_block");
     setTimeout(() => {
       // make sure it's here always when gabbing
+      // TODO: might not be sufficient!!!
       this.container.classList.add("grabbed_block");
     }, 200);
 
@@ -1088,7 +1083,13 @@ class NewCms {
 
     this.grabbed_block = null;
 
+    let end_just_once = true;
     const end = () => {
+      if (!end_just_once) {
+        return;
+      }
+      end_just_once = false;
+
       // not needed cause we set it to user-select none bro
       removeUserSelection();
 
@@ -1118,27 +1119,30 @@ class NewCms {
       const duration = 350;
 
       this.content_node.findAll(".newCms_block").forEach((block) => {
-        const block_rect = block.getBoundingClientRect();
-        block.last_rect = block_rect;
+        const node_on_screen_rect = isNodeOnScreen(block, 0);
+        if (node_on_screen_rect) {
+          block.last_rect = node_on_screen_rect;
+        }
       });
 
       this.rearrange_controls.rearranged_block
         .parent()
         .insertBefore(grabbed_block, before_node);
 
-      this.content_node.findAll(".newCms_block").forEach((block) => {
-        const block_rect = block.getBoundingClientRect();
-        block.new_rect = block_rect;
+      const all_animatable_blocks = this.content_node
+        .findAll(".newCms_block")
+        .filter((block) => {
+          const node_on_screen_rect = isNodeOnScreen(block, 0);
+          if (block.last_rect && node_on_screen_rect) {
+            block.new_rect = node_on_screen_rect;
+            block.animation_data = { x: 0, y: 0 };
+            return true;
+          } else {
+            return false;
+          }
+        });
 
-        if (!block.animation_data) {
-          block.animation_data = { x: 0, y: 0 };
-        }
-      });
-
-      this.content_node.findAll(".newCms_block").forEach((block) => {
-        if (!block.last_rect) {
-          return;
-        }
+      all_animatable_blocks.forEach((block) => {
         const dx = block.last_rect.left - block.new_rect.left;
         const dy = block.last_rect.top - block.new_rect.top;
 
@@ -1156,13 +1160,12 @@ class NewCms {
           });
       });
 
-      this.content_node.findAll(".newCms_block").forEach((block) => {
-        if (!block.last_rect) {
-          return;
-        }
+      all_animatable_blocks.forEach((block) => {
+        //const styles = window.getComputedStyle(block);
 
-        const styles = {};
-        Object.assign(styles, window.getComputedStyle(block));
+        // TODO: every property such like flexGrow etc needs to be available in a quickly accessible place
+        // maybe put them straight to styles?
+        // we should remove it when cleaning the cms output anyway ;)
 
         let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
         let my = 0.5 * (block.new_rect.height - block.last_rect.height);
@@ -1172,6 +1175,7 @@ class NewCms {
 
         delete block.animation_data;
 
+        const fg = block.style.flexGrow;
         block.style.flexGrow = 0;
 
         animate(
@@ -1198,7 +1202,7 @@ class NewCms {
             `,
           duration,
           () => {
-            block.style.flexGrow = styles.flexGrow;
+            block.style.flexGrow = fg;
 
             setTimeout(() => {
               end();
@@ -1319,7 +1323,7 @@ registerModalContent(
 
                 <div style="width:100%;">
                   <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel">
-                    <div style="position:relative;height: 100%;padding:15px">
+                    <div style="position:relative">
                     <!--<div class="edit_block_node"></div>-->
                       <div class="select_controls"></div>
                       <div class="rearrange_controls"></div>
@@ -1328,7 +1332,9 @@ registerModalContent(
                       <div class="quill_editor_wrapper">
                         <div class="quill_editor"></div>
                       </div>
-                      <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
+                      <div style="padding:15px;overflow:hidden">
+                        <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
