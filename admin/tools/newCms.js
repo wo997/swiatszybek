@@ -236,9 +236,11 @@ class FloatingRearrangeControls {
         );
 
         if (
-          position === "after" &&
           this.newCms.grabbed_block &&
-          block.next() == this.newCms.grabbed_block
+          ((position === "after" &&
+            block.next() == this.newCms.grabbed_block) ||
+            (position === "before" &&
+              block.prev() == this.newCms.grabbed_block))
         ) {
           return;
         }
