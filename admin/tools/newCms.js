@@ -1062,6 +1062,10 @@ class NewCms {
     this.grabbed_scroll_top = this.scroll_top;
 
     this.container.classList.add("grabbed_block");
+    setTimeout(() => {
+      // make sure it's here always when gabbing
+      this.container.classList.add("grabbed_block");
+    }, 200);
 
     this.rearrange_controls.node.classList.add("visible");
     this.select_controls.node.classList.remove("visible");
@@ -1085,11 +1089,13 @@ class NewCms {
     const end = () => {
       // not needed cause we set it to user-select none bro
       removeUserSelection();
+
       grabbed_block.classList.remove("grabbed");
       this.container.classList.remove("grabbed_block");
 
       this.rearrange_controls.removeRearrangement();
-      this.select_controls.node.classList.add("visible");
+
+      this.select_controls.removeSelection();
 
       this.contentChange();
     };
