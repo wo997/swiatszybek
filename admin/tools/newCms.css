@@ -13,12 +13,16 @@
 .newCms_block {
   min-width: 40px;
   min-height: 40px;
-  background-color: #fff0;
-  box-shadow: 0 0 0 1px #0002;
   position: relative;
   transition: box-shadow 0.2s, background-color 0.2s, opacity 0.2s;
   cursor: pointer;
 }
+
+.content_scroll_panel:hover .newCms_block,
+.newCms.grabbed_block .newCms_block {
+  box-shadow: 0 0 0 1px #0002;
+}
+
 .newCms_block:not([data-block="container"]) > .newCms_block_content {
   pointer-events: none;
   padding: 10px;
@@ -27,14 +31,14 @@
 /* block selection start */
 
 .newCms_block.select_active {
-  box-shadow: 0px 0px 0px 1.5px var(--primary-clr),
-    inset 0px 0px 0px 1.5px var(--primary-clr);
+  box-shadow: 0px 0px 0px 2px var(--primary-clr),
+    inset 0px 0px 0px 2px var(--primary-clr);
 
   /*background: #0001;*/
 }
 
 .newCms_block[data-block="container"].select_active {
-  box-shadow: 0px 0px 0px 1.5px #bbb, inset 0px 0px 0px 1.5px #bbb;
+  box-shadow: 0px 0px 0px 2px #bbb, inset 0px 0px 0px 2px #bbb;
 }
 
 .newCms_block.select_active:not(.grabbed) .newCms_block {
@@ -192,7 +196,7 @@
 }
 
 .newCms.grabbed_block .newCms_block[data-block="container"] {
-  box-shadow: 0px 0px 0px 1.5px #bbb, inset 0px 0px 0px 1.5px #bbb;
+  box-shadow: 0px 0px 0px 2px #bbb, inset 0px 0px 0px 2px #bbb;
 }
 
 .newCms.grabbed_block .newCms_block:not([data-block="container"]) {
