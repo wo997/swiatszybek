@@ -15,7 +15,7 @@ $versionSettings = 0;
 
 @include BUILD_INFO_PATH;
 
-define("RELEASE", 2142);
+define("RELEASE", 2144);
 define("CSS_RELEASE", $versionCSS);
 define("JS_RELEASE", $versionJS);
 define("MODULES_RELEASE", $versionModules);

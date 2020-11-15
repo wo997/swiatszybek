@@ -1071,7 +1071,7 @@ window.addEventListener("dragover", (event) => {
 
   var nonstatic_parent = tr.findNonStaticParent();
 
-  /*var scroll_parent = tr.findScrollableParent();
+  /*var scroll_parent = tr.findScrollParent();
   if (scroll_parent === window) {
     scroll_parent = document.body;
   }*/

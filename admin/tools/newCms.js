@@ -9,21 +9,24 @@ class FloatingRearrangeControls {
       `.rearrange_insert_rect`
     );
     this.rearrange_grabbed_rect_node = newCms.container.find(
-      `.rearrange_grabbed_rect`
+      `.content_rearrange_grabbed_rect`
     );
     this.init();
   }
 
   init() {
-    this.rearranged_block = null;
-    this.rearranged_position = "";
-    this.removeRearrangement();
     this.node.classList.remove("visible");
     this.rearrange_insert_rect_node.classList.remove("visible");
     this.rearrange_grabbed_rect_node.classList.remove("visible");
+
+    this.removeRearrangement();
   }
 
   removeRearrangement(options = {}) {
+    this.rearrange_block = null;
+    this.rearrange_position = "";
+    this.rearrange_control_node = null;
+
     this.newCms.container.findAll(".rearrange_active").forEach((e) => {
       if (options.except && options.except.indexOf(e) !== -1) {
         return;
@@ -37,7 +40,7 @@ class FloatingRearrangeControls {
   mouseMove(event) {
     const target = $(event.target);
 
-    let rearranged_block = null;
+    let rearrange_block = null;
 
     if (!target.findParentNode(this.rearrange_grabbed_rect_node)) {
       const rearrange_control = target
@@ -45,26 +48,26 @@ class FloatingRearrangeControls {
         : null;
 
       if (rearrange_control) {
-        rearranged_block = rearrange_control.rearrange_block;
+        rearrange_block = rearrange_control.rearrange_block;
       }
 
-      if (!rearranged_block) {
-        rearranged_block = target
+      if (!rearrange_block) {
+        rearrange_block = target
           ? target.findParentByClassName("newCms_block")
           : null;
       }
     }
 
-    let rearranged_position = "before";
+    let rearrange_position = "before";
 
-    let rearranged_control_node = null;
+    let rearrange_control_node = null;
     let parent_container = null;
     let is_parent_row = false;
     let is_before = true;
     let rearrange_block_rect = null;
 
-    if (rearranged_block) {
-      parent_container = rearranged_block.findParentByClassName(
+    if (rearrange_block) {
+      parent_container = rearrange_block.findParentByClassName(
         "newCms_container",
         { skip: 1 }
       );
@@ -77,7 +80,7 @@ class FloatingRearrangeControls {
         ? parent_container.classList.contains("container_row")
         : false;
 
-      rearrange_block_rect = rearranged_block.getBoundingClientRect();
+      rearrange_block_rect = rearrange_block.getBoundingClientRect();
       if (is_parent_row) {
         is_before =
           event.clientX <
@@ -88,57 +91,57 @@ class FloatingRearrangeControls {
           rearrange_block_rect.top + rearrange_block_rect.height * 0.5;
       }
 
-      rearranged_position = is_before ? "before" : "after";
+      rearrange_position = is_before ? "before" : "after";
 
-      if (this.rearranged_position == "before") {
-        if (rearranged_block.rearrange_control_before) {
-          rearranged_control_node = rearranged_block.rearrange_control_before;
+      if (this.rearrange_position == "before") {
+        if (rearrange_block.rearrange_control_before) {
+          rearrange_control_node = rearrange_block.rearrange_control_before;
         } else {
-          var prev_block = rearranged_block.prev();
+          var prev_block = rearrange_block.prev();
 
           if (prev_block && prev_block.rearrange_control_after) {
-            rearranged_control_node = prev_block.rearrange_control_after;
+            rearrange_control_node = prev_block.rearrange_control_after;
           }
         }
-      } else if (rearranged_block.rearrange_control_after) {
-        rearranged_control_node = rearranged_block.rearrange_control_after;
+      } else if (rearrange_block.rearrange_control_after) {
+        rearrange_control_node = rearrange_block.rearrange_control_after;
       }
     }
 
+    this.removeRearrangement({ except: [rearrange_control_node] });
+
     if (
-      this.rearranged_block != rearranged_block ||
-      this.rearranged_position != rearranged_position
+      this.rearrange_block != rearrange_block ||
+      this.rearrange_position != rearrange_position
     ) {
-      this.rearranged_block = rearranged_block;
-      this.rearranged_position = rearranged_position;
-      this.rearranged_control_node = rearranged_control_node;
+      this.rearrange_block = rearrange_block;
+      this.rearrange_position = rearrange_position;
+      this.rearrange_control_node = rearrange_control_node;
     }
 
-    this.removeRearrangement({ except: [rearranged_control_node] });
-
-    if (rearranged_control_node) {
-      if (!rearranged_control_node.classList.contains("rearrange_active")) {
+    if (rearrange_control_node) {
+      if (!rearrange_control_node.classList.contains("rearrange_active")) {
         const min_size = 20;
 
         let width = min_size;
         let height = min_size;
 
-        const rearranged_block_rect_data = positionAgainstScrollableParent(
-          rearranged_block
+        const rearrange_block_rect_data = nodePositionAgainstScrollableParent(
+          rearrange_block
         );
         if (is_parent_row) {
-          height = rearranged_block_rect_data.node_rect.height;
+          height = rearrange_block_rect_data.node_rect.height;
         } else {
-          width = rearranged_block_rect_data.node_rect.width;
+          width = rearrange_block_rect_data.node_rect.width;
         }
 
-        let x = rearranged_block_rect_data.relative_pos.left;
-        let y = rearranged_block_rect_data.relative_pos.top;
+        let x = rearrange_block_rect_data.relative_pos.left;
+        let y = rearrange_block_rect_data.relative_pos.top;
         if (!is_before) {
           if (is_parent_row) {
-            x += rearranged_block_rect_data.node_rect.width;
+            x += rearrange_block_rect_data.node_rect.width;
           } else {
-            y += rearranged_block_rect_data.node_rect.height;
+            y += rearrange_block_rect_data.node_rect.height;
           }
         }
 
@@ -148,7 +151,7 @@ class FloatingRearrangeControls {
           y -= min_size * 0.5;
         }
 
-        if (rearranged_control_node.classList.contains("insert_end")) {
+        if (rearrange_control_node.classList.contains("insert_end")) {
           if (is_parent_row) {
             x += min_size * (is_before ? 0.5 : -0.5);
           } else {
@@ -164,7 +167,7 @@ class FloatingRearrangeControls {
         this.rearrange_insert_rect_node.style.width = width + "px";
         this.rearrange_insert_rect_node.style.height = height + "px";
       }
-      rearranged_control_node.classList.add("rearrange_active");
+      rearrange_control_node.classList.add("rearrange_active");
 
       if (parent_container) {
         parent_container.classList.add("rearrange_active");
@@ -173,25 +176,27 @@ class FloatingRearrangeControls {
 
     this.rearrange_insert_rect_node.classList.toggle(
       "visible",
-      !!rearranged_control_node
+      !!rearrange_control_node
     );
 
     this.newCms.container.classList.toggle(
       "rearrange_possible",
-      !!rearranged_control_node
+      !!rearrange_control_node
     );
   }
 
-  mouseDown(event) {
-    if (this.rearranged_block && this.newCms.grabbed_block) {
+  /*mouseDown(event) {
+    if (this.rearrange_block && this.newCms.grabbed_block) {
       this.newCms.releaseBlock();
     }
-  }
+  }*/
 
   addFloatingRearrangeControls(block) {
+    this.removeRearrangement();
+
     // just a rect u grab from
     if (block) {
-      const block_rect_data = positionAgainstScrollableParent(block);
+      const block_rect_data = nodePositionAgainstScrollableParent(block);
       const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
       rearrange_grabbed_rect_node.style.left =
         block_rect_data.relative_pos.left + "px";
@@ -245,7 +250,7 @@ class FloatingRearrangeControls {
           ? parent_container.classList.contains("container_row")
           : false;
 
-        const block_rect_data = positionAgainstScrollableParent(block);
+        const block_rect_data = nodePositionAgainstScrollableParent(block);
 
         const prev_node = block.prev();
 
@@ -422,13 +427,13 @@ class FloatingSelectControls {
   constructor(newCms) {
     this.newCms = newCms;
     this.node = newCms.container.find(`.select_controls`);
-    this.init();
+    this.removeSelection();
   }
 
   init() {
     this.selected_block = null;
-    this.removeSelection();
     this.node.classList.add("visible");
+    this.removeSelection();
   }
 
   removeSelection() {
@@ -457,9 +462,9 @@ class FloatingSelectControls {
     }
 
     if (this.selected_block != hovered_block) {
-      this.selected_block = hovered_block;
-
       this.removeSelection();
+
+      this.selected_block = hovered_block;
 
       const selected_block = this.selected_block;
 
@@ -468,6 +473,11 @@ class FloatingSelectControls {
         selected_block.select_control.classList.add("select_active");
       }
     }
+
+    this.newCms.container.classList.toggle(
+      "anything_selected",
+      this.selected_block
+    );
   }
 
   mouseDown(event) {
@@ -476,14 +486,18 @@ class FloatingSelectControls {
       this.selected_block &&
       !this.newCms.grabbed_block
     ) {
-      this.newCms.grabBlock(this.selected_block);
+      this.newCms.grabBlock(this.selected_block, {
+        source: "content",
+      });
     }
   }
 
   addFloatingSelectControls() {
+    this.removeSelection();
+
     let blocks_data = [];
     this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
-      const block_rect_data = positionAgainstScrollableParent(block);
+      const block_rect_data = nodePositionAgainstScrollableParent(block);
 
       let parent_count = 0;
       let parent = block;
@@ -568,8 +582,10 @@ class FloatingSelectControls {
       let select_control_html = "";
       if (block.classList.contains("newCms_container")) {
         select_control_html = `<i class="fas fa-columns"></i>`;
+        select_control.classList.add("control_container");
       } else {
-        select_control_html = `<i class="far fa-square"></i>`;
+        select_control_html = `<i class="fas fa-square"></i>`;
+        select_control.classList.add("control_block");
       }
       select_control.innerHTML = select_control_html;
 
@@ -629,7 +645,7 @@ class InlineQuillEditor {
     "#000000",
   ];
 
-  constructor(newCms, node, wrapper, newCmsContent_scroll_panel) {
+  constructor(newCms, node, wrapper, content_scroll_panel) {
     this.node = node;
     this.wrapper = wrapper;
     this.newCms = newCms;
@@ -641,7 +657,7 @@ class InlineQuillEditor {
     }
 
     this.quill_editor = new Quill(node, {
-      scrollingContainer: newCmsContent_scroll_panel,
+      scrollingContainer: content_scroll_panel,
       theme: "snow",
       modules: {
         syntax: true,
@@ -758,9 +774,11 @@ class NewCms {
   constructor(container) {
     this.container = $(container);
     this.content_node = this.container.find(`.newCmsContent`);
-    this.content_scroll_panel = this.container.find(
-      `.newCmsContent_scroll_panel`
+    this.content_scroll_panel = this.container.find(`.content_scroll_panel`);
+    this.content_scroll_content = this.container.find(
+      `.content_scroll_content`
     );
+    this.sidebar = this.container.find(`.sidebar`);
 
     this.inline_edited_block = null;
 
@@ -840,7 +858,7 @@ class NewCms {
       this,
       this.container.find(".quill_editor"),
       this.container.find(".quill_editor_wrapper"),
-      this.container.find(".newCmsContent_scroll_panel")
+      this.container.find(".content_scroll_panel")
     );
   }
 
@@ -857,8 +875,8 @@ class NewCms {
     this.options = options;
 
     //this.edit_block.init();
-    this.rearrange_controls.init();
-    this.select_controls.init();
+    this.rearrange_controls.removeRearrangement();
+    this.select_controls.removeSelection();
 
     setFormData(
       {
@@ -908,7 +926,7 @@ class NewCms {
   }
 
   mouseMove(event) {
-    //positionAgainstScrollableParent() such a pitty I cant use it cause mouse aint a node
+    //nodePositionAgainstScrollableParent() such a pitty I cant use it cause mouse aint a node
     const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
     const mouse_x = event.clientX - content_scroll_panel_rect.left;
     const mouse_y = event.clientY - content_scroll_panel_rect.top;
@@ -930,26 +948,22 @@ class NewCms {
   mouseDown(event) {
     this.select_controls.mouseDown(event);
 
-    const newCms_side_block = $(event.target).findParentByClassName(
-      "newCms_side_block"
-    );
-    if (newCms_side_block) {
-      const block_type = newCms_side_block.getAttribute("data-block");
-
-      const node = createNodeByHtml(this.getBlockHtml(block_type));
-      this.container.find(".block_list").appendChild(node);
-      this.grabBlock(node);
+    const side_block = $(event.target).findParentByClassName("side_block");
+    if (side_block) {
+      this.grabBlock(side_block, {
+        source: "side",
+      });
     }
   }
 
   mouseUp(event) {
     if (this.grabbed_block) {
-      this.releaseBlock($(event.target));
+      this.releaseBlock();
     }
   }
 
   scroll(event) {
-    this.scroll_top = this.content_scroll_panel.scrollTop;
+    //this.scroll_top = this.content_scroll_panel.scrollTop;
     if (this.grabbed_block) {
       this.grabbedBlockPositionChange();
       return;
@@ -961,7 +975,7 @@ class NewCms {
     const dy =
       this.mouse_y -
       this.grabbed_mouse_y +
-      this.scroll_top -
+      nonull(this.source_grabbed_node_scroll_parent.scrollTop, 0) -
       this.grabbed_scroll_top;
 
     const grabbed_block = this.grabbed_block;
@@ -1048,34 +1062,89 @@ class NewCms {
     });
   }
 
-  grabBlock(block) {
+  grabBlock(block, options = {}) {
+    if (this.grabbed_block) {
+      return;
+    }
+
+    const block_rect = block.getBoundingClientRect();
+    block.last_rect = block_rect;
+
+    this.source_grabbed_node =
+      options.source == "side" ? this.sidebar : this.content_scroll_content;
+
+    this.source_grabbed_node_scroll_parent = this.source_grabbed_node.findScrollParent();
+
+    this.source_grabbed_node.appendChild(
+      newCms.rearrange_controls.rearrange_grabbed_rect_node
+    );
+
     this.grabbed_block = $(block);
     this.grabbed_block.classList.add("grabbed");
     this.grabbed_mouse_x = this.mouse_x;
     this.grabbed_mouse_y = this.mouse_y;
-    this.grabbed_scroll_top = this.scroll_top;
-
-    block.last_rect = block.getBoundingClientRect();
+    this.grabbed_scroll_top = nonull(
+      this.source_grabbed_node_scroll_parent.scrollTop,
+      0
+    );
 
     this.container.classList.add("grabbed_block");
-    setTimeout(() => {
-      // make sure it's here always when gabbing
-      // TODO: might not be sufficient!!!
-      this.container.classList.add("grabbed_block");
-    }, 200);
 
     this.rearrange_controls.node.classList.add("visible");
     this.select_controls.node.classList.remove("visible");
 
     this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
 
-    //this.edit_block.hideButtons();
+    //this.edit_block.hideButtons()
 
     this.grabAnimation();
   }
 
   releaseBlock() {
-    const grabbed_block = this.grabbed_block;
+    let grabbed_block = this.grabbed_block;
+
+    const block_type = grabbed_block.getAttribute("data-block");
+
+    let delay_grabbed_rect_node_fadeout = 0;
+
+    if (block_type) {
+      const side_block = grabbed_block;
+
+      const side_block_rect = side_block.getBoundingClientRect();
+
+      const t1 = 100;
+      const t2 = 250;
+      animate(
+        side_block,
+        `
+          0% {opacity: 1}
+          100% {opacity: 0}
+        `,
+        t1,
+        () => {
+          side_block.classList.remove("grabbed");
+          side_block.style.transform = "";
+          animate(
+            side_block,
+            `
+              0% {opacity: 0; transform: scale(0)}
+              100% {opacity: 1; transform: scale(1)}
+            `,
+            t2
+          );
+        }
+      );
+      delay_grabbed_rect_node_fadeout = t1 + t2;
+
+      // replace
+      grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
+      this.grabbed_block = grabbed_block;
+      this.content_node.appendChild(grabbed_block);
+
+      grabbed_block.classList.add("select_active");
+      grabbed_block.animation_data = { x: 0, y: 0 };
+      grabbed_block.last_rect = side_block_rect;
+    }
 
     this.grabbed_block.style.transform = "";
     grabbed_block.classList.remove("grabbed");
@@ -1093,26 +1162,25 @@ class NewCms {
       // not needed cause we set it to user-select none bro
       removeUserSelection();
 
-      grabbed_block.classList.remove("grabbed");
-      this.container.classList.remove("grabbed_block");
-
       this.rearrange_controls.removeRearrangement();
-
       this.select_controls.removeSelection();
 
       this.contentChange();
     };
 
     this.rearrange_controls.node.classList.remove("visible");
-    this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove(
-      "visible"
-    );
+
+    setTimeout(() => {
+      this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove(
+        "visible"
+      );
+    }, delay_grabbed_rect_node_fadeout);
 
     //this.edit_block.showButtons();
 
-    if (this.rearrange_controls.rearranged_block) {
-      let before_node = this.rearrange_controls.rearranged_block;
-      if (this.rearrange_controls.rearranged_position == "after") {
+    if (this.rearrange_controls.rearrange_block) {
+      let before_node = this.rearrange_controls.rearrange_block;
+      if (this.rearrange_controls.rearrange_position == "after") {
         before_node = before_node.next();
       }
 
@@ -1125,7 +1193,7 @@ class NewCms {
         }
       });
 
-      this.rearrange_controls.rearranged_block
+      this.rearrange_controls.rearrange_block
         .parent()
         .insertBefore(grabbed_block, before_node);
 
@@ -1135,7 +1203,9 @@ class NewCms {
           const node_on_screen_rect = isNodeOnScreen(block, 0);
           if (block.last_rect && node_on_screen_rect) {
             block.new_rect = node_on_screen_rect;
-            block.animation_data = { x: 0, y: 0 };
+            if (!block.animation_data) {
+              block.animation_data = { x: 0, y: 0 };
+            }
             return true;
           } else {
             return false;
@@ -1309,11 +1379,12 @@ registerModalContent(
                     <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
                   </span>
                   <div class="block_list">
-                    <div class="newCms_side_block" data-block="quill_editor">
+                    <div class="side_rearrange_grabbed_rect"></div>
+                    <div class="side_block" data-block="quill_editor">
                       <img src="/src/img/capital-letter.svg" class="default-icon">
                       <span>Edytor tekstowy</span>
                     </div>
-                    <div class="newCms_side_block" data-block="container">
+                    <div class="side_block" data-block="container">
                       <i class="fas fa-columns"></i>
                       <span>Kontener</span>
                     </div>
@@ -1322,13 +1393,13 @@ registerModalContent(
                 </div>
 
                 <div style="width:100%;">
-                  <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel">
-                    <div style="position:relative">
+                  <div class="scroll-panel scroll-shadow content_scroll_panel">
+                    <div style="position:relative" class="content_scroll_content">
                     <!--<div class="edit_block_node"></div>-->
                       <div class="select_controls"></div>
                       <div class="rearrange_controls"></div>
                       <div class="rearrange_insert_rect"></div>
-                      <div class="rearrange_grabbed_rect"></div>
+                      <div class="rearrange_grabbed_rect content_rearrange_grabbed_rect"></div>
                       <div class="quill_editor_wrapper">
                         <div class="quill_editor"></div>
                       </div>

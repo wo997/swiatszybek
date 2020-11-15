@@ -591,7 +591,7 @@ function findParentByComputedStyle(elem, style, value, options = {}) {
     options
   );
 }
-function findScrollableParent(elem, options = {}) {
+function findScrollParent(elem, options = {}) {
   var parent = findParent(
     elem,
     (some_parent) => {
@@ -607,7 +607,7 @@ function findScrollableParent(elem, options = {}) {
   );
   elem = $(elem);
 
-  return nonull(parent, window);
+  return nonull(parent, nonull(options.default, window));
 }
 function findNonStaticParent(elem, options = {}) {
   var parent = findParent(
@@ -858,14 +858,11 @@ function removeUserSelection() {
   }
 }
 
-function positionAgainstScrollableParent(node) {
+function nodePositionAgainstScrollableParent(node) {
   node = $(node);
   const node_rect = node.getBoundingClientRect();
 
-  let scrollable_parent = node.findScrollableParent();
-  if (scrollable_parent === window) {
-    scrollable_parent = document.body;
-  }
+  let scrollable_parent = node.findScrollParent({ default: document.body });
   const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
 
   return {
@@ -881,6 +878,15 @@ function positionAgainstScrollableParent(node) {
     },
     node_rect: node_rect,
     scrollable_parent_rect: scrollable_parent_rect,
+  };
+}
+
+function positionAgainstScrollableParent(x, y, scrollable_parent) {
+  const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+
+  return {
+    x: x - scrollable_parent_rect.left + scrollable_parent.scrollLeft,
+    y: y - scrollable_parent_rect.top + scrollable_parent.scrollTop,
   };
 }
 

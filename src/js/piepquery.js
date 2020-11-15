@@ -78,8 +78,8 @@ function $(node, parent = null) {
     return window.findParentByComputedStyle(node, style, value, options);
   };
 
-  node.findScrollableParent = (options) => {
-    return window.findScrollableParent(node, options);
+  node.findScrollParent = (options) => {
+    return window.findScrollParent(node, options);
   };
 
   node.findNonStaticParent = (options) => {

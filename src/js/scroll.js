@@ -117,7 +117,7 @@ function scrollIntoView(elem, params = {}) {
     diff = bottom - bottomMin;
   }
 
-  var scroll_parent = findScrollableParent(elem);
+  var scroll_parent = findScrollParent(elem);
 
   /*if (scroll_parent !== window) {
     diff -= scroll_parent.scrollTop;
