@@ -42,8 +42,7 @@
                         `;
                     },
                     escape: false,
-                    searchable: "text",
-                    sortable: true,
+
                 },
                 {
                     title: "Podkategorie",
@@ -57,8 +56,7 @@
                         `;
                     },
                     escape: false,
-                    searchable: "text",
-                    sortable: true,
+
                 },
                 getPublishedDefinition(),
                 {
