@@ -66,24 +66,22 @@ class FloatingRearrangeControls {
     let rearrange_block_rect = null;
 
     if (rearrange_block) {
-      if (rearrange_control_node) {
-        if (rearrange_control_node.classList.contains("insert_inside")) {
-          parent_container = rearrange_block;
-          rearrange_position = "inside";
-        } else {
-          parent_container = rearrange_block.findParentByAttribute(
-            { "data-block": "container" },
-            { skip: 1 }
-          );
+      if (
+        rearrange_control_node &&
+        rearrange_control_node.classList.contains("insert_inside")
+      ) {
+        parent_container = rearrange_block;
+        rearrange_position = "inside";
+      } else {
+        parent_container = rearrange_block.findParentByAttribute(
+          { "data-block": "container" },
+          { skip: 1 }
+        );
 
-          if (!parent_container) {
-            parent_container = this.newCms.content_node;
-          }
+        if (!parent_container) {
+          parent_container = this.newCms.content_node;
         }
-      }
 
-      if (!rearrange_position) {
-        // before / after
         is_parent_row = parent_container
           ? parent_container.classList.contains("container_row")
           : false;
