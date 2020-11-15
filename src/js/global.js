@@ -470,8 +470,9 @@ function findParent(elem, callback, options = {}) {
   return null;
 }
 
+//"xxx", ["aaa","bbb","ccc"], [{"aaa":1},"zzz"]
 function findParentByAttribute(elem, parentAttribute, options = {}) {
-  const parentAttributes = Array.isArray(parentAttribute)
+  const parentAttributes = isArray(parentAttribute)
     ? parentAttribute
     : [parentAttribute];
 
@@ -479,7 +480,11 @@ function findParentByAttribute(elem, parentAttribute, options = {}) {
     elem,
     (some_parent) => {
       for (let parentAttribute of parentAttributes) {
-        if (some_parent.hasAttribute(parentAttribute)) {
+        if (isObject(parentAttribute)) {
+          return !!Object.entries(parentAttribute).find(([key, value]) => {
+            return some_parent.getAttribute(key) == value;
+          });
+        } else if (some_parent.hasAttribute(parentAttribute)) {
           return true;
         }
       }
@@ -806,6 +811,14 @@ function preventLongPressMenu(node) {
 
 function getSelectDisplayValue(select) {
   return select.options[select.selectedIndex].text;
+}
+
+function isObject(input) {
+  return input && !Array.isArray(input) && typeof input === "object";
+}
+
+function isArray(input) {
+  return input && Array.isArray(input) && typeof input === "object";
 }
 
 function isEquivalent(a, b) {
