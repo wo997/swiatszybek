@@ -101,12 +101,11 @@ class FloatingRearrangeControls {
               : "after";
         }
 
-        if (this.rearrange_position == "inside") {
+        if (rearrange_position == "inside") {
           rearrange_position = "inside";
           rearrange_control_node = rearrange_block.rearrange_control_inside;
         } else {
-          rearrange_control_node = null;
-          if (this.rearrange_position == "before") {
+          if (rearrange_position == "before") {
             if (rearrange_block.rearrange_control_before) {
               rearrange_control_node = rearrange_block.rearrange_control_before;
             } else {
@@ -117,7 +116,7 @@ class FloatingRearrangeControls {
               }
             }
           } else if (
-            this.rearrange_position == "after" &&
+            rearrange_position == "after" &&
             rearrange_block.rearrange_control_after
           ) {
             rearrange_control_node = rearrange_block.rearrange_control_after;
@@ -127,6 +126,10 @@ class FloatingRearrangeControls {
     }
 
     this.removeRearrangement({ except: [rearrange_control_node] });
+
+    if (!rearrange_control_node) {
+      rearrange_block = null;
+    }
 
     this.rearrange_block = rearrange_block;
     this.rearrange_position = rearrange_position;

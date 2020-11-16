@@ -106,12 +106,15 @@
 
 .rearrange_controls {
   transition: opacity 0.2s;
+  position: relative;
+  z-index: 500;
 }
 .rearrange_controls:not(.visible) {
   opacity: 0;
 }
 
-.newCms.grabbed_block .content_scroll_content > *:not(.rearrange_controls) {
+.newCms.grabbed_block .newCmsContent,
+.newCms.grabbed_block .select_controls {
   filter: contrast(0.8);
   opacity: 0.7;
 }
