@@ -50,9 +50,12 @@
   transition: opacity 0.2s;
   position: relative;
 }
-.select_controls:not(.visible) {
+
+/* idk rly */
+/*.select_controls:not(.blocks_visible)
+  .select_control:not([data-block="container"]):not(.select_active) {
   opacity: 0;
-}
+}*/
 
 .select_control {
   position: absolute;
@@ -77,15 +80,22 @@
   color: var(--primary-clr);
 }
 
-.select_control.select_active {
+.select_control.select_active,
+.select_control.rearrange_active {
   opacity: 1;
+}
+
+.newCms:not(.grabbed_block) .select_control.select_active {
+  box-shadow: 0 1px 1px 0 #0005;
 }
 
 /*.newCms.anything_selected .select_control:not(.select_active) {
   opacity: 0.2;
 }*/
 
-.content_scroll_panel:not(:hover) .select_controls {
+.newCms:not(.anything_selected):not(.grabbed_block)
+  .content_scroll_panel:not(:hover)
+  .select_controls {
   opacity: 0;
   pointer-events: none;
 }
@@ -101,6 +111,11 @@
   opacity: 0;
 }
 
+.newCms.grabbed_block .content_scroll_content > *:not(.rearrange_controls) {
+  filter: contrast(0.8);
+  opacity: 0.7;
+}
+
 .rearrange_control {
   position: absolute;
   width: var(--rearrange_control_width);
@@ -109,7 +124,7 @@
   border: 1px solid #0008;
   color: #222;
   z-index: 500;
-  opacity: 0.55;
+  /*opacity: 0.55;*/
   border-radius: 4px;
   transition: 0.2s all;
   font-size: 1.15em;
@@ -117,12 +132,12 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  box-shadow: 0 1px 1px 0 #0005;
 }
 
 .rearrange_control.rearrange_active {
   opacity: 1;
   background: var(--primary-clr);
-  transform: scale(1.1);
 }
 
 .rearrange_control img {
@@ -134,7 +149,7 @@
 }
 .rearrange_insert_rect {
   position: absolute;
-  pointer-events: none;
+  pointer-events: none !important;
   background-image: repeating-linear-gradient(
     -45deg,
     #fff3 0px 10px,
@@ -145,7 +160,6 @@
 .newCms:not(.grabbed_block) .rearrange_insert_rect,
 .newCms:not(.rearrange_possible) .rearrange_insert_rect {
   opacity: 0;
-  pointer-events: none;
 }
 
 .rearrange_grabbed_rect {
@@ -279,6 +293,7 @@
   color: var(--error-clr);
 }
 
+/* not used */
 .newCms_block[data-block="container"].edit_options_visible
   > .newCms_block_content:before {
   content: "";

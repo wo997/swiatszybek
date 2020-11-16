@@ -34,7 +34,7 @@ class FloatingRearrangeControls {
       e.classList.remove("rearrange_active");
     });
 
-    this.newCms.content_node.classList.remove("rearrange_possible");
+    this.newCms.container.classList.remove("rearrange_possible");
   }
 
   mouseMove(event) {
@@ -105,6 +105,7 @@ class FloatingRearrangeControls {
           rearrange_position = "inside";
           rearrange_control_node = rearrange_block.rearrange_control_inside;
         } else {
+          rearrange_control_node = null;
           if (this.rearrange_position == "before") {
             if (rearrange_block.rearrange_control_before) {
               rearrange_control_node = rearrange_block.rearrange_control_before;
@@ -115,7 +116,10 @@ class FloatingRearrangeControls {
                 rearrange_control_node = prev_block.rearrange_control_after;
               }
             }
-          } else if (rearrange_block.rearrange_control_after) {
+          } else if (
+            this.rearrange_position == "after" &&
+            rearrange_block.rearrange_control_after
+          ) {
             rearrange_control_node = rearrange_block.rearrange_control_after;
           }
         }
@@ -124,14 +128,19 @@ class FloatingRearrangeControls {
 
     this.removeRearrangement({ except: [rearrange_control_node] });
 
-    if (
-      this.rearrange_block != rearrange_block ||
-      this.rearrange_position != rearrange_position
-    ) {
-      this.rearrange_block = rearrange_block;
-      this.rearrange_position = rearrange_position;
-      this.rearrange_control_node = rearrange_control_node;
-    }
+    this.rearrange_block = rearrange_block;
+    this.rearrange_position = rearrange_position;
+    this.rearrange_control_node = rearrange_control_node;
+
+    this.rearrange_insert_rect_node.classList.toggle(
+      "visible",
+      !!rearrange_control_node
+    );
+
+    this.newCms.container.classList.toggle(
+      "rearrange_possible",
+      !!rearrange_control_node
+    );
 
     if (rearrange_control_node) {
       if (!rearrange_control_node.classList.contains("rearrange_active")) {
@@ -198,18 +207,11 @@ class FloatingRearrangeControls {
 
       if (parent_container) {
         parent_container.classList.add("rearrange_active");
+        if (parent_container.select_control) {
+          parent_container.select_control.classList.add("rearrange_active");
+        }
       }
     }
-
-    this.rearrange_insert_rect_node.classList.toggle(
-      "visible",
-      !!rearrange_control_node
-    );
-
-    this.newCms.container.classList.toggle(
-      "rearrange_possible",
-      !!rearrange_control_node
-    );
   }
 
   /*mouseDown(event) {
@@ -237,18 +239,16 @@ class FloatingRearrangeControls {
     }
 
     // them floating controls
-    const rearrange_control_width =
-      parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--rearrange_control_width"
-        )
-      ) - 1;
-    const rearrange_control_height =
-      parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--rearrange_control_height"
-        )
-      ) - 1;
+    const rearrange_control_width = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--rearrange_control_width"
+      )
+    );
+    const rearrange_control_height = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--rearrange_control_height"
+      )
+    );
 
     let blocks_data = [];
     const addControls = (position) => {
@@ -376,6 +376,11 @@ class FloatingRearrangeControls {
     let upper_bound = 0;
 
     for (let i = 0; i < sorted_blocks_data_length; i++) {
+      delete block.rearrange_control_before;
+      delete block.rearrange_control_after;
+    }
+
+    for (let i = 0; i < sorted_blocks_data_length; i++) {
       const block_data = sorted_blocks_data[i];
       const block = block_data.block;
 
@@ -462,7 +467,7 @@ class FloatingRearrangeControls {
 
       rearrange_control.innerHTML = rearrange_control_html;
 
-      rearrange_control.style.transform = `rotate(${rotation}deg)`;
+      $(rearrange_control).find("*").style.transform = `rotate(${rotation}deg)`;
 
       block[`rearrange_control_${block_data.position}`] = rearrange_control;
       rearrange_control.rearrange_block = block;
@@ -564,18 +569,16 @@ class FloatingSelectControls {
       return Math.sign(a.index - b.index);
     });
 
-    const select_control_width =
-      parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--select_control_width"
-        )
-      ) - 1;
-    const select_control_height =
-      parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--select_control_height"
-        )
-      ) - 1;
+    const select_control_width = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--select_control_width"
+      )
+    );
+    const select_control_height = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue(
+        "--select_control_height"
+      )
+    );
 
     const sorted_blocks_data_length = sorted_blocks_data.length;
     let upper_bound = 0;
@@ -637,6 +640,9 @@ class FloatingSelectControls {
       //select_control.innerHTML = select_control_html;
       //select_control.innerHTML = ;
 
+      select_control.block = block;
+      block.select_control = select_control;
+
       const block_type = block.getAttribute("data-block");
 
       select_control.setAttribute("data-block", block_type);
@@ -653,7 +659,7 @@ class FloatingSelectControls {
       this.node.appendChild(select_control);
     }
 
-    this.node.classList.add("visible");
+    this.node.classList.add("blocks_visible");
   }
 }
 
@@ -1148,7 +1154,7 @@ class NewCms {
     this.container.classList.add("grabbed_block");
 
     this.rearrange_controls.node.classList.add("visible");
-    this.select_controls.node.classList.remove("visible");
+    this.select_controls.node.classList.remove("blocks_visible");
 
     this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
 
