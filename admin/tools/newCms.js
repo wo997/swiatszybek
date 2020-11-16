@@ -1,6 +1,113 @@
 // dependencies
 useTool("quillEditor");
 
+class EditBlockRect {
+  constructor(edit_block_node, newCms) {
+    this.node = edit_block_node;
+    this.newCms = newCms;
+    this.init();
+  }
+
+  init() {
+    this.target = null;
+    this.node.classList.toggle("visible", false);
+  }
+
+  mouseMove() {
+    const target = this.newCms.mouse_target;
+
+    if (this.target) {
+      if (!target.findParentByClassName("edit_block_node")) {
+        this.init();
+      }
+    }
+  }
+
+  showControlsToBlock(block) {
+    this.target = block;
+
+    // define block buttons html
+    let edit_block_html = "";
+
+    edit_block_html += /*html*/ `
+          <button class="btn edit_block_btn">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+        `;
+    edit_block_html += /*html*/ `
+          <button class="btn relocate_btn">
+            <i class="fas fa-arrows-alt"></i>
+          </button>
+        `;
+    edit_block_html += /*html*/ `
+          <button class="btn remove_btn">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+    this.node.setContent(edit_block_html);
+
+    // add block actions
+    const edit_block_btn = this.node.find(".edit_block_btn");
+    if (edit_block_btn && block.classList.contains("newCms_quill_editor")) {
+      edit_block_btn.addEventListener("click", () => {
+        this.newCms.inline_quill_editor.appendInlineQuillEditor(
+          this.newCms.edit_block.target
+        );
+        this.init();
+      });
+    }
+
+    const relocate_btn = this.node.find(".relocate_btn");
+    if (relocate_btn) {
+      relocate_btn.addEventListener(
+        IS_MOBILE ? "touchstart" : "mousedown",
+        () => {
+          this.newCms.grabBlock(block);
+          this.init();
+        }
+      );
+    }
+
+    const remove_btn = this.node.find(".remove_btn");
+    if (remove_btn) {
+      remove_btn.addEventListener("click", () => {
+        this.newCms.removeBlock(block);
+        this.init();
+      });
+    }
+
+    const node_rect = this.node.getBoundingClientRect();
+
+    let left = this.newCms.mouse_x;
+    let top =
+      this.newCms.mouse_y +
+      this.newCms.content_scroll_panel.scrollTop -
+      node_rect.height * 0.35;
+
+    const node_width = node_rect.width;
+    const node_height = node_rect.height;
+    const side_offset = node_width * 0.5 + 5;
+    const vertical_offset = node_height * 0.5 + 5;
+
+    left = Math.max(left, side_offset);
+    left = Math.min(
+      left,
+      this.newCms.content_scroll_content.clientWidth - side_offset
+    );
+
+    top = Math.max(top, vertical_offset);
+    top = Math.min(
+      top,
+      this.newCms.content_scroll_content.clientHeight - vertical_offset
+    );
+
+    this.node.style.left = left + "px";
+    this.node.style.top = top + "px";
+
+    this.node.classList.toggle("visible", true);
+  }
+}
+
 class FloatingRearrangeControls {
   constructor(newCms) {
     this.newCms = newCms;
@@ -37,13 +144,13 @@ class FloatingRearrangeControls {
     this.newCms.container.classList.remove("rearrange_possible");
   }
 
-  mouseMove(event) {
-    const target = $(event.target);
+  mouseMove() {
+    const target = this.newCms.mouse_target;
 
     let rearrange_block = null;
     let rearrange_control_node = null;
 
-    if (!target.findParentNode(this.rearrange_grabbed_rect_node)) {
+    if (!target || !target.findParentNode(this.rearrange_grabbed_rect_node)) {
       rearrange_control_node = target
         ? target.findParentByClassName("rearrange_control")
         : null;
@@ -499,8 +606,8 @@ class FloatingSelectControls {
     });
   }
 
-  mouseMove(event) {
-    const target = $(event.target);
+  mouseMove() {
+    const target = this.newCms.mouse_target;
 
     let hovered_block = null;
 
@@ -518,7 +625,11 @@ class FloatingSelectControls {
         : null;
     }
 
-    if (this.selected_block != hovered_block) {
+    if (
+      this.selected_block != hovered_block ||
+      (this.selected_block &&
+        !this.selected_block.select_control.classList.contains("select_active"))
+    ) {
       this.removeSelection();
 
       this.selected_block = hovered_block;
@@ -537,13 +648,14 @@ class FloatingSelectControls {
     );
   }
 
-  mouseDown(event) {
+  mouseDown() {
     if (
-      event.buttons === 1 &&
+      this.newCms.mouse_left_btn &&
       this.selected_block &&
       !this.newCms.grabbed_block
     ) {
-      this.newCms.grabBlock(this.selected_block);
+      this.newCms.edit_block.showControlsToBlock(this.selected_block);
+      //this.newCms.grabBlock(this.selected_block);
     }
   }
 
@@ -784,7 +896,8 @@ class InlineQuillEditor {
     this.newCms.container.addEventListener(
       IS_MOBILE ? "click" : "mousedown",
       (event) => {
-        this.mouseDown(event);
+        this.newCms.updateMouseCoords(event);
+        this.mouseDown();
       }
     );
   }
@@ -800,8 +913,6 @@ class InlineQuillEditor {
     block.appendChild(this.wrapper);
     this.wrapper.classList.add("visible");
 
-    //this.newCms.edit_block.hide();
-
     block.classList.add("during_inline_edit");
   }
 
@@ -816,17 +927,17 @@ class InlineQuillEditor {
     this.newCms.content_scroll_panel.appendChild(this.wrapper);
     this.wrapper.classList.remove("visible");
 
-    //this.newCms.edit_block.hide();
-
     block.classList.remove("during_inline_edit");
 
     this.newCms.contentChange();
   }
 
-  mouseDown(event) {
-    const target = $(event.target);
+  mouseDown() {
+    const target = this.newCms.mouse_target;
 
-    const newCms_block = target.findParentByClassName("newCms_block");
+    const newCms_block = target
+      ? target.findParentByClassName("newCms_block")
+      : null;
 
     if (
       this.newCms.inline_edited_block &&
@@ -849,7 +960,7 @@ class NewCms {
 
     this.inline_edited_block = null;
 
-    //this.initEditBlockRect();
+    this.initEditBlockRect();
     this.initQuillEditor();
     this.initFloatingSelectControls();
     this.initFloatingRearrangeControls();
@@ -857,9 +968,12 @@ class NewCms {
 
     this.mouse_x = 0;
     this.mouse_y = 0;
+    this.client_mouse_x = 0;
+    this.client_mouse_y = 0;
     this.mouse_dx = 0;
     this.mouse_dy = 0;
-    this.scroll_top = 0;
+    this.mouse_target = null;
+    //this.scroll_top = 0;
 
     setFormData(
       {
@@ -871,25 +985,29 @@ class NewCms {
     this.container.addEventListener(
       IS_MOBILE ? "touchstart" : "mousemove",
       (event) => {
-        this.mouseMove(event);
+        this.updateMouseCoords(event);
+        this.mouseMove();
       }
     );
+
     this.container.addEventListener(
       IS_MOBILE ? "click" : "mousedown",
       (event) => {
-        this.mouseDown(event);
+        this.updateMouseCoords(event);
+        this.mouseDown();
       }
     );
 
     this.container.addEventListener(
       IS_MOBILE ? "touchend" : "mouseup",
       (event) => {
-        this.mouseUp(event);
+        this.updateMouseCoords(event);
+        this.mouseUp();
       }
     );
 
-    this.content_scroll_panel.addEventListener("scroll", (event) => {
-      this.scroll(event);
+    this.content_scroll_panel.addEventListener("scroll", () => {
+      this.scroll();
     });
   }
 
@@ -913,12 +1031,12 @@ class NewCms {
     return playground.innerHTML;
   }
 
-  /*initEditBlockRect() {
+  initEditBlockRect() {
     this.edit_block = new EditBlockRect(
       this.container.find(`.edit_block_node`),
       this
     );
-  }*/
+  }
 
   initQuillEditor() {
     this.inline_quill_editor = new InlineQuillEditor(
@@ -941,7 +1059,7 @@ class NewCms {
     this.targetNode = $(targetNode);
     this.options = options;
 
-    //this.edit_block.init();
+    this.edit_block.init();
     this.rearrange_controls.removeRearrangement();
     this.select_controls.removeSelection();
 
@@ -992,42 +1110,64 @@ class NewCms {
     this.select_controls.addFloatingSelectControls();
   }
 
-  mouseMove(event) {
-    //nodePositionAgainstScrollableParent() such a pitty I cant use it cause mouse aint a node
+  updateMouseTarget() {
+    this.mouse_target = $(
+      document.elementFromPoint(this.client_mouse_x, this.client_mouse_y)
+    );
+  }
+
+  updateMouseCoords(event) {
     const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
     const mouse_x = event.clientX - content_scroll_panel_rect.left;
     const mouse_y = event.clientY - content_scroll_panel_rect.top;
+    this.client_mouse_x = event.clientX;
+    this.client_mouse_y = event.clientY;
     this.mouse_dx = mouse_x - this.mouse_x;
     this.mouse_dy = mouse_y - this.mouse_y;
     this.mouse_x = mouse_x;
     this.mouse_y = mouse_y;
-
-    if (this.grabbed_block) {
-      this.grabbedBlockPositionChange();
-      this.rearrange_controls.mouseMove(event);
-      return;
-    }
-
-    //this.edit_block.mouseMove(event);
-    this.select_controls.mouseMove(event);
+    this.mouse_left_btn = event.buttons === 1;
+    this.mouse_target = $(event.target);
   }
 
-  mouseDown(event) {
-    this.select_controls.mouseDown(event);
+  mouseMove() {
+    if (this.grabbed_block) {
+      this.grabbedBlockPositionChange();
+      this.rearrange_controls.mouseMove();
+      return;
+    } else if (this.edit_block.target) {
+      this.edit_block.mouseMove();
+    } else {
+      this.select_controls.mouseMove();
+    }
+  }
 
-    const side_block = $(event.target).findParentByClassName("side_block");
+  mouseDown() {
+    if (this.edit_block.target) {
+    } else {
+      this.select_controls.mouseDown();
+    }
+
+    const target = this.mouse_target;
+
+    const side_block = target
+      ? target.findParentByClassName("side_block")
+      : null;
     if (side_block) {
       this.grabBlock(side_block);
     }
   }
 
-  mouseUp(event) {
+  mouseUp() {
     if (this.grabbed_block) {
       this.releaseBlock();
     }
   }
 
-  scroll(event) {
+  scroll() {
+    this.updateMouseTarget();
+    this.mouseMove();
+
     //this.scroll_top = this.content_scroll_panel.scrollTop;
     if (this.grabbed_block) {
       this.grabbedBlockPositionChange();
@@ -1118,10 +1258,15 @@ class NewCms {
   }
 
   removeBlock(block) {
+    if (!block) {
+      return;
+    }
+    const duration = 300;
+    this.lockInput(duration);
     zoomNode(block, "out", {
-      duration: 500,
+      duration: duration,
       callback: () => {
-        node.remove();
+        block.remove();
         this.contentChange();
       },
     });
@@ -1160,8 +1305,6 @@ class NewCms {
     this.select_controls.node.classList.remove("blocks_visible");
 
     this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
-
-    //this.edit_block.hideButtons()
 
     this.grabAnimation();
   }
@@ -1233,6 +1376,11 @@ class NewCms {
       this.rearrange_controls.removeRearrangement();
       this.select_controls.removeSelection();
 
+      setTimeout(() => {
+        this.updateMouseTarget();
+        this.mouseMove();
+      }, 100);
+
       this.contentChange();
     };
 
@@ -1243,8 +1391,6 @@ class NewCms {
         "visible"
       );
     }, delay_grabbed_rect_node_fadeout);
-
-    //this.edit_block.showButtons();
 
     if (this.rearrange_controls.rearrange_block) {
       const duration = 350;
@@ -1448,7 +1594,7 @@ registerModalContent(
 
             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
                 <div class="sidebar shown">
-                  <button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
+                  <!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
                   <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
                     Bloki 
                     <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
@@ -1470,7 +1616,7 @@ registerModalContent(
                 <div style="width:100%;">
                   <div class="scroll-panel scroll-shadow content_scroll_panel">
                     <div style="position:relative" class="content_scroll_content">
-                    <!--<div class="edit_block_node"></div>-->
+                      <div class="edit_block_node"></div>
                       <div class="select_controls"></div>
                       <div class="rearrange_controls"></div>
                       <div class="rearrange_insert_rect"></div>
