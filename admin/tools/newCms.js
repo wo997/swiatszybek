@@ -1132,7 +1132,6 @@ class NewCms {
 
   mouseMove() {
     if (this.grabbed_block) {
-      this.grabbedBlockPositionChange();
       this.rearrange_controls.mouseMove();
       return;
     } else if (this.edit_block.target) {
@@ -1169,30 +1168,10 @@ class NewCms {
     this.mouseMove();
 
     //this.scroll_top = this.content_scroll_panel.scrollTop;
-    if (this.grabbed_block) {
+    /*if (this.grabbed_block) {
       this.grabbedBlockPositionChange();
       return;
-    }
-  }
-
-  grabbedBlockPositionChange() {
-    const dx = this.mouse_x - this.grabbed_mouse_x;
-    const dy =
-      this.mouse_y -
-      this.grabbed_mouse_y +
-      nonull(this.source_grabbed_node_scroll_parent.scrollTop, 0) -
-      this.grabbed_scroll_top;
-
-    const grabbed_block = this.grabbed_block;
-
-    grabbed_block.animation_data = { x: dx, y: dy };
-
-    grabbed_block.style.transform = `
-      translate(
-        ${dx.toPrecision(5)}px,
-        ${dy.toPrecision(5)}px
-      )
-    `;
+    }*/
   }
 
   contentChange(options = {}) {
@@ -1279,6 +1258,7 @@ class NewCms {
 
     const block_rect = block.getBoundingClientRect();
     block.last_rect = block_rect;
+    block.last_relative_rect_data = nodePositionAgainstScrollableParent(block);
 
     this.source_grabbed_node = block.classList.contains("side_block")
       ? this.sidebar
@@ -1509,6 +1489,11 @@ class NewCms {
   }
 
   grabAnimation() {
+    if (!this.grabbed_block) {
+      return;
+    }
+
+    // cute scroll
     let speed_y = 0;
 
     const scroll_offset = 50;
@@ -1530,11 +1515,44 @@ class NewCms {
 
     this.content_scroll_panel.scrollBy(0, speed_y * 0.4);
 
-    if (this.grabbed_block) {
-      requestAnimationFrame(() => {
-        this.grabAnimation();
-      });
-    }
+    // move the block itself
+    const grabbed_block = this.grabbed_block;
+
+    // pull closer to the cursor
+    grabbed_block.last_relative_rect_data,
+      this.grabbed_mouse_x,
+      this.grabbed_mouse_y;
+
+    const acc = 0.15;
+    const gb_rect = grabbed_block.last_relative_rect_data;
+    this.grabbed_mouse_x =
+      this.grabbed_mouse_x * (1 - acc) +
+      (gb_rect.relative_pos.left + gb_rect.node_rect.width * 0.5) * acc;
+    this.grabbed_mouse_y =
+      this.grabbed_mouse_y * (1 - acc) +
+      (gb_rect.relative_pos.top + gb_rect.node_rect.height * 0.5) * acc;
+
+    // display actual position using transform
+    const dx = this.mouse_x - this.grabbed_mouse_x;
+    const dy =
+      this.mouse_y -
+      this.grabbed_mouse_y +
+      nonull(this.source_grabbed_node_scroll_parent.scrollTop, 0) -
+      this.grabbed_scroll_top;
+
+    grabbed_block.animation_data = { x: dx, y: dy };
+
+    grabbed_block.style.transform = `
+      translate(
+        ${dx.toPrecision(5)}px,
+        ${dy.toPrecision(5)}px
+      )
+    `;
+
+    // repeat
+    requestAnimationFrame(() => {
+      this.grabAnimation();
+    });
   }
 }
 
