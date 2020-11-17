@@ -185,7 +185,11 @@
   z-index: 1000;
 }
 
-.newCms.grabbed_block:not(.rearrange_possible) .content_scroll_panel * {
+.newCms.grabbed_block .sidebar {
+  pointer-events: none;
+}
+
+.newCms.grabbed_block * {
   cursor: not-allowed !important;
 }
 

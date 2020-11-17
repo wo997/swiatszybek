@@ -1336,15 +1336,10 @@ class NewCms {
       // not needed cause we set it to user-select none bro
       removeUserSelection();
 
-      this.rearrange_controls.removeRearrangement();
-      this.select_controls.removeSelection();
-
-      setTimeout(() => {
-        this.updateMouseTarget();
-        this.mouseMove();
-      }, 100);
-
       this.contentChange();
+
+      this.updateMouseTarget();
+      this.mouseMove();
     };
 
     this.rearrange_controls.node.classList.remove("visible");
