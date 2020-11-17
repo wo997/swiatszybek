@@ -6,31 +6,63 @@ class EditBlock {
     this.node = edit_block_node;
     this.newCms = newCms;
     this.init();
+
+    this.newCms.container.addEventListener("side_menu_change", (event) => {
+      const is_edit_block_menu = event.detail.side_menu_name == "edit_block";
+
+      if (!is_edit_block_menu) {
+        this.init();
+      }
+    });
   }
 
   init() {
-    this.target = null;
+    this.select_node = null;
+    this.edit_node = null;
+
+    this.hideContextMenu();
+
+    this.newCms.container.findAll(".edit_active").forEach((e) => {
+      e.classList.remove("edit_active");
+    });
+  }
+
+  hideContextMenu() {
     this.node.classList.toggle("visible", false);
   }
 
   mouseMove() {
     const target = this.newCms.mouse_target;
 
-    if (this.target) {
+    if (this.select_node) {
       if (!target.findParentByClassName("edit_block_node")) {
-        this.init();
+        this.hideContextMenu();
       }
     }
   }
 
   editBlock(block) {
-    this.target = block;
+    this.edit_node = block;
 
+    // TODO: event listeners for each block type? extending?
+    // we might need to use blocks "blocks" as something that comes with modules?
+    // u know these weird scripts that include and combined give a nice juicy forms etc?
+    // thats what I'm talking about
+    const block_type = block.getAttribute("data-block");
+    if (block_type == "quill_editor") {
+      this.newCms.quill_editor.setEditorContent(
+        block.find(".newCms_block_content").innerHTML
+      );
+    }
+
+    block.classList.add("edit_active");
     this.newCms.showSideMenu("edit_block");
+
+    // this.newCms.container.classList.remove("anything_selected");
   }
 
   showControlsToBlock(block) {
-    this.target = block;
+    this.select_node = block;
 
     // define block buttons html
     let edit_block_html = "";
@@ -56,8 +88,8 @@ class EditBlock {
     const edit_block_btn = this.node.find(".edit_block_btn");
     if (edit_block_btn) {
       edit_block_btn.addEventListener("click", () => {
-        this.editBlock(block);
         this.init();
+        this.editBlock(block);
       });
     }
 
@@ -66,8 +98,8 @@ class EditBlock {
       relocate_btn.addEventListener(
         IS_MOBILE ? "touchstart" : "mousedown",
         () => {
+          this.hideContextMenu();
           this.newCms.grabBlock(block);
-          this.init();
         }
       );
     }
@@ -75,8 +107,8 @@ class EditBlock {
     const remove_btn = this.node.find(".remove_btn");
     if (remove_btn) {
       remove_btn.addEventListener("click", () => {
+        this.hideContextMenu();
         this.newCms.removeBlock(block);
-        this.init();
       });
     }
 
@@ -328,12 +360,6 @@ class FloatingRearrangeControls {
       }
     }
   }
-
-  /*mouseDown(event) {
-    if (this.rearrange_block && this.newCms.grabbed_block) {
-      this.newCms.releaseBlock();
-    }
-  }*/
 
   addFloatingRearrangeControls(block) {
     this.removeRearrangement();
@@ -839,7 +865,7 @@ class QuillEditor {
       Size.whitelist.push(Math.round(Math.pow(1.25, i - 2) * 100) / 100 + "em");
     }
 
-    this.quill_editor = new Quill(node, {
+    this.editor = new Quill(node, {
       theme: "snow",
       modules: {
         syntax: true,
@@ -894,60 +920,70 @@ class QuillEditor {
       },
     });
 
-    this.content_node = this.node.find(".ql-editor");
+    this.ql_node = this.node.find(".ql-editor");
 
     this.newCms.container.addEventListener(
       IS_MOBILE ? "click" : "mousedown",
       (event) => {
         this.newCms.updateMouseCoords(event);
-        this.mouseDown();
       }
     );
+
+    this.any_changes = false;
+    this.change_from_cms = false;
+
+    this.editor.on("text-change", (delta, oldDelta, source) => {
+      if (this.newCms.edit_block.edit_node) {
+        const block_type = this.newCms.edit_block.edit_node.getAttribute(
+          "data-block"
+        );
+        if (block_type == "quill_editor") {
+          this.newCms.edit_block.edit_node
+            .find(".newCms_block_content")
+            .setContent(this.ql_node.innerHTML);
+
+          if (!this.change_from_cms) {
+            this.any_changes = true;
+          }
+        }
+      }
+    });
+
+    this.newCms.container.addEventListener(
+      IS_MOBILE ? "touchstart" : "mousemove",
+      (event) => {
+        this.newCms.updateMouseCoords(event);
+        if (!this.newCms.mouse_target.findParentNode(this.newCms.sidebar)) {
+          this.saveChanges();
+        }
+      }
+    );
+
+    this.newCms.container.addEventListener("click", (event) => {
+      this.newCms.updateMouseCoords(event);
+      if (!this.newCms.mouse_target.findParentNode(this.node)) {
+        this.saveChanges();
+      }
+    });
   }
 
-  appendQuillEditor(block) {
-    const newCms_block_content = block.find(".newCms_block_content");
-
-    this.newCms.inline_edited_block = block;
-
-    const block_html = newCms_block_content.innerHTML;
-    this.content_node.setContent(block_html);
-
-    block.appendChild(this.wrapper);
-    this.wrapper.classList.add("visible");
-
-    block.classList.add("during_inline_edit");
-  }
-
-  saveQuillEditor(block) {
-    const newCms_block_content = block.find(".newCms_block_content");
-
-    this.newCms.inline_edited_block = null;
-
-    const ql_html = this.content_node.innerHTML;
-    newCms_block_content.setContent(ql_html);
-
-    this.newCms.content_scroll_panel.appendChild(this.wrapper);
-    this.wrapper.classList.remove("visible");
-
-    block.classList.remove("during_inline_edit");
-
-    this.newCms.contentChange();
-  }
-
-  mouseDown() {
-    const target = this.newCms.mouse_target;
-
-    const newCms_block = target
-      ? target.findParentByClassName("newCms_block")
-      : null;
-
-    if (
-      this.newCms.inline_edited_block &&
-      this.newCms.inline_edited_block != newCms_block
-    ) {
-      this.saveQuillEditor(this.newCms.inline_edited_block);
+  saveChanges() {
+    if (!this.any_changes) {
+      return;
     }
+    this.any_changes = false;
+    this.newCms.contentChange();
+    console.log("SAVE");
+  }
+
+  setEditorContent(html) {
+    this.any_changes = false;
+    this.change_from_cms = true;
+    this.ql_node.setContent(html);
+    setTimeout(() => {
+      // 0 is also "fine", sorry for that workaround
+      this.change_from_cms = false;
+    }, 200);
   }
 }
 
@@ -1040,7 +1076,7 @@ class NewCms {
   }
 
   initQuillEditor() {
-    this.inline_quill_editor = new QuillEditor(
+    this.quill_editor = new QuillEditor(
       this,
       this.container.find(".quill_editor")
     );
@@ -1059,8 +1095,8 @@ class NewCms {
     this.options = options;
 
     this.edit_block.init();
-    this.rearrange_controls.removeRearrangement();
-    this.select_controls.removeSelection();
+    this.rearrange_controls.init();
+    this.select_controls.init();
 
     setFormData(
       {
@@ -1078,8 +1114,10 @@ class NewCms {
       source: this.targetNode,
       lock_during_animation: true,
       callback: () => {
-        this.contentChange();
-        this.unlockInput();
+        setTimeout(() => {
+          this.contentChange();
+          this.unlockInput();
+        }, 100);
       },
     });
   }
@@ -1131,18 +1169,20 @@ class NewCms {
     if (this.grabbed_block) {
       this.rearrange_controls.mouseMove();
       return;
-    } else if (this.edit_block.target) {
-      this.edit_block.mouseMove();
-    } else {
-      this.select_controls.mouseMove();
     }
+
+    if (this.edit_block.select_node) {
+      this.edit_block.mouseMove();
+    }
+
+    this.select_controls.mouseMove();
   }
 
   mouseDown() {
-    if (this.edit_block.target) {
+    /*if (this.edit_block.target) {
     } else {
-      this.select_controls.mouseDown();
-    }
+    }*/
+    this.select_controls.mouseDown();
 
     const target = this.mouse_target;
 
@@ -1538,6 +1578,14 @@ class NewCms {
       const side_menu_name = side_menu.getAttribute("data-side_menu");
       expand(side_menu, side_menu_name == target_side_menu_name);
     });
+
+    this.container.dispatchEvent(
+      new CustomEvent("side_menu_change", {
+        detail: {
+          side_menu_name: target_side_menu_name,
+        },
+      })
+    );
   }
 }
 

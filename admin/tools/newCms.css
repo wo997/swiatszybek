@@ -260,7 +260,7 @@
 
 /* newCms_container_content end */
 
-/* edit_block_node start */
+/* edit_block start */
 .edit_block_node {
   position: absolute;
   transition: 0.2s opacity;
@@ -299,6 +299,12 @@
 .edit_block_node .btn:hover {
   box-shadow: 0 1px 4px 0 #0004;
 }
+
+.newCms_block.edit_active {
+  box-shadow: 0px 0px 0px 2px var(--primary-clr),
+    inset 0px 0px 0px 2px var(--primary-clr) !important;
+}
+
 /* edit_block_node end */
 
 .edit_block_node .btn:not(.remove_btn):hover {
