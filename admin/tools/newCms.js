@@ -1,7 +1,7 @@
 // dependencies
 useTool("quillEditor");
 
-class EditBlockRect {
+class EditBlock {
   constructor(edit_block_node, newCms) {
     this.node = edit_block_node;
     this.newCms = newCms;
@@ -21,6 +21,12 @@ class EditBlockRect {
         this.init();
       }
     }
+  }
+
+  editBlock(block) {
+    this.target = block;
+
+    this.newCms.showSideMenu("edit_block");
   }
 
   showControlsToBlock(block) {
@@ -48,11 +54,9 @@ class EditBlockRect {
 
     // add block actions
     const edit_block_btn = this.node.find(".edit_block_btn");
-    if (edit_block_btn && block.classList.contains("newCms_quill_editor")) {
+    if (edit_block_btn) {
       edit_block_btn.addEventListener("click", () => {
-        this.newCms.inline_quill_editor.appendInlineQuillEditor(
-          this.newCms.edit_block.target
-        );
+        this.editBlock(block);
         this.init();
       });
     }
@@ -78,11 +82,12 @@ class EditBlockRect {
 
     const node_rect = this.node.getBoundingClientRect();
 
-    let left = this.newCms.mouse_x;
+    let left = this.newCms.mouse_x - this.newCms.content_scroll_panel_rect.left;
     let top =
-      this.newCms.mouse_y +
+      this.newCms.mouse_y -
+      this.newCms.content_scroll_panel_rect.top +
       this.newCms.content_scroll_panel.scrollTop -
-      node_rect.height * 0.35;
+      node_rect.height * 0.3;
 
     const node_width = node_rect.width;
     const node_height = node_rect.height;
@@ -778,7 +783,7 @@ class FloatingSelectControls {
   }
 }
 
-class InlineQuillEditor {
+class QuillEditor {
   color_list = [
     "rgb(255, 85, 118)",
     "rgb(255,43,0)",
@@ -824,9 +829,8 @@ class InlineQuillEditor {
     "#000000",
   ];
 
-  constructor(newCms, node, wrapper, content_scroll_panel) {
+  constructor(newCms, node) {
     this.node = node;
-    this.wrapper = wrapper;
     this.newCms = newCms;
 
     var Size = Quill.import("attributors/style/size");
@@ -836,7 +840,6 @@ class InlineQuillEditor {
     }
 
     this.quill_editor = new Quill(node, {
-      scrollingContainer: content_scroll_panel,
       theme: "snow",
       modules: {
         syntax: true,
@@ -902,7 +905,7 @@ class InlineQuillEditor {
     );
   }
 
-  appendInlineQuillEditor(block) {
+  appendQuillEditor(block) {
     const newCms_block_content = block.find(".newCms_block_content");
 
     this.newCms.inline_edited_block = block;
@@ -916,7 +919,7 @@ class InlineQuillEditor {
     block.classList.add("during_inline_edit");
   }
 
-  saveInlineQuillEditor(block) {
+  saveQuillEditor(block) {
     const newCms_block_content = block.find(".newCms_block_content");
 
     this.newCms.inline_edited_block = null;
@@ -943,7 +946,7 @@ class InlineQuillEditor {
       this.newCms.inline_edited_block &&
       this.newCms.inline_edited_block != newCms_block
     ) {
-      this.saveInlineQuillEditor(this.newCms.inline_edited_block);
+      this.saveQuillEditor(this.newCms.inline_edited_block);
     }
   }
 }
@@ -960,7 +963,7 @@ class NewCms {
 
     this.inline_edited_block = null;
 
-    this.initEditBlockRect();
+    this.initEditBlock();
     this.initQuillEditor();
     this.initFloatingSelectControls();
     this.initFloatingRearrangeControls();
@@ -968,8 +971,6 @@ class NewCms {
 
     this.mouse_x = 0;
     this.mouse_y = 0;
-    this.client_mouse_x = 0;
-    this.client_mouse_y = 0;
     this.mouse_dx = 0;
     this.mouse_dy = 0;
     this.mouse_target = null;
@@ -1031,19 +1032,17 @@ class NewCms {
     return playground.innerHTML;
   }
 
-  initEditBlockRect() {
-    this.edit_block = new EditBlockRect(
+  initEditBlock() {
+    this.edit_block = new EditBlock(
       this.container.find(`.edit_block_node`),
       this
     );
   }
 
   initQuillEditor() {
-    this.inline_quill_editor = new InlineQuillEditor(
+    this.inline_quill_editor = new QuillEditor(
       this,
-      this.container.find(".quill_editor"),
-      this.container.find(".quill_editor_wrapper"),
-      this.container.find(".content_scroll_panel")
+      this.container.find(".quill_editor")
     );
   }
 
@@ -1112,16 +1111,14 @@ class NewCms {
 
   updateMouseTarget() {
     this.mouse_target = $(
-      document.elementFromPoint(this.client_mouse_x, this.client_mouse_y)
+      document.elementFromPoint(this.mouse_x, this.mouse_y)
     );
   }
 
   updateMouseCoords(event) {
-    const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
-    const mouse_x = event.clientX - content_scroll_panel_rect.left;
-    const mouse_y = event.clientY - content_scroll_panel_rect.top;
-    this.client_mouse_x = event.clientX;
-    this.client_mouse_y = event.clientY;
+    this.content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
+    const mouse_x = event.clientX;
+    const mouse_y = event.clientY;
     this.mouse_dx = mouse_x - this.mouse_x;
     this.mouse_dy = mouse_y - this.mouse_y;
     this.mouse_x = mouse_x;
@@ -1155,6 +1152,11 @@ class NewCms {
     if (side_block) {
       this.grabBlock(side_block);
     }
+
+    const show_side_menu = target.findParentByAttribute("data-show_side_menu");
+    if (show_side_menu) {
+      this.showSideMenu(show_side_menu.getAttribute("data-show_side_menu"));
+    }
   }
 
   mouseUp() {
@@ -1187,6 +1189,7 @@ class NewCms {
   }
 
   insertMissingQlClasses() {
+    // should we use it on the whole container instead?
     this.content_node
       .findAll(".newCms_quill_editor")
       .forEach((newCms_block) => {
@@ -1194,24 +1197,6 @@ class NewCms {
         newCms_block_content.classList.add("ql-editor");
         newCms_block_content.parent().classList.add("ql-snow");
       });
-  }
-
-  insertAddBlockButton(target, position) {
-    target.insertAdjacentHTML(
-      position,
-      /*html*/ `
-        <div class="newCms_add_block_wrapper">
-          <button class="btn newCms_add_block_btn">
-            <i class="fas fa-plus"></i>
-          </button>
-        </div>
-      `
-    );
-  }
-
-  insertBlockModal(button) {
-    showModal("newCmsBlocks", { source: button });
-    this.insert_block_button = button;
   }
 
   getBlockHtml(type, options = {}) {
@@ -1258,13 +1243,14 @@ class NewCms {
 
     const block_rect = block.getBoundingClientRect();
     block.last_rect = block_rect;
-    block.last_relative_rect_data = nodePositionAgainstScrollableParent(block);
 
     this.source_grabbed_node = block.classList.contains("side_block")
       ? this.sidebar
       : this.content_scroll_content;
 
-    this.source_grabbed_node_scroll_parent = this.source_grabbed_node.findScrollParent();
+    this.grabbed_node_scroll_parent = this.source_grabbed_node.findScrollParent(
+      { default: document.body }
+    );
 
     this.source_grabbed_node.appendChild(
       newCms.rearrange_controls.rearrange_grabbed_rect_node
@@ -1274,10 +1260,7 @@ class NewCms {
     this.grabbed_block.classList.add("grabbed");
     this.grabbed_mouse_x = this.mouse_x;
     this.grabbed_mouse_y = this.mouse_y;
-    this.grabbed_scroll_top = nonull(
-      this.source_grabbed_node_scroll_parent.scrollTop,
-      0
-    );
+    this.grabbed_scroll_top = this.grabbed_node_scroll_parent.scrollTop;
 
     this.container.classList.add("grabbed_block");
 
@@ -1516,42 +1499,49 @@ class NewCms {
     this.content_scroll_panel.scrollBy(0, speed_y * 0.4);
 
     // move the block itself
-    const grabbed_block = this.grabbed_block;
+    {
+      const grabbed_block = this.grabbed_block;
 
-    // pull closer to the cursor
-    grabbed_block.last_relative_rect_data,
-      this.grabbed_mouse_x,
-      this.grabbed_mouse_y;
+      // pull closer to the cursor
+      const acc = 0.15;
 
-    const acc = 0.15;
-    const gb_rect = grabbed_block.last_relative_rect_data;
-    this.grabbed_mouse_x =
-      this.grabbed_mouse_x * (1 - acc) +
-      (gb_rect.relative_pos.left + gb_rect.node_rect.width * 0.5) * acc;
-    this.grabbed_mouse_y =
-      this.grabbed_mouse_y * (1 - acc) +
-      (gb_rect.relative_pos.top + gb_rect.node_rect.height * 0.5) * acc;
+      const gb_rect = grabbed_block.last_rect;
+      this.grabbed_mouse_x =
+        this.grabbed_mouse_x * (1 - acc) +
+        (gb_rect.left + gb_rect.width * 0.5) * acc;
 
-    // display actual position using transform
-    const dx = this.mouse_x - this.grabbed_mouse_x;
-    const dy =
-      this.mouse_y -
-      this.grabbed_mouse_y +
-      nonull(this.source_grabbed_node_scroll_parent.scrollTop, 0) -
-      this.grabbed_scroll_top;
+      this.grabbed_mouse_y =
+        this.grabbed_mouse_y * (1 - acc) +
+        (gb_rect.top + gb_rect.height * 0.5) * acc;
 
-    grabbed_block.animation_data = { x: dx, y: dy };
+      // display actual position using transform
+      const dx = this.mouse_x - this.grabbed_mouse_x;
+      const dy =
+        this.mouse_y -
+        this.grabbed_mouse_y +
+        this.grabbed_node_scroll_parent.scrollTop -
+        this.grabbed_scroll_top;
 
-    grabbed_block.style.transform = `
-      translate(
-        ${dx.toPrecision(5)}px,
-        ${dy.toPrecision(5)}px
-      )
-    `;
+      grabbed_block.animation_data = { x: dx, y: dy };
+
+      grabbed_block.style.transform = `
+        translate(
+          ${dx.toPrecision(5)}px,
+          ${dy.toPrecision(5)}px
+        )
+      `;
+    }
 
     // repeat
     requestAnimationFrame(() => {
       this.grabAnimation();
+    });
+  }
+
+  showSideMenu(target_side_menu_name) {
+    this.sidebar.findAll("[data-side_menu]").forEach((side_menu) => {
+      const side_menu_name = side_menu.getAttribute("data-side_menu");
+      expand(side_menu, side_menu_name == target_side_menu_name);
     });
   }
 }
@@ -1612,23 +1602,44 @@ registerModalContent(
 
             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
                 <div class="sidebar shown">
-                  <!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
-                  <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
-                    Bloki 
-                    <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
-                  </span>
-                  <div class="block_list">
-                    <div class="side_rearrange_grabbed_rect"></div>
-                    <div class="side_block" data-block="quill_editor">
-                      <i class="fas fa-align-center"></i>
-                      <span>Edytor tekstowy</span>
+                  <div class="expand_y" data-side_menu="add_block">
+                    <!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
+                    <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
+                      Bloki 
+                      <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
+                    </span>
+                    <div class="block_list">
+                      <div class="side_rearrange_grabbed_rect"></div>
+                      <div class="side_block" data-block="quill_editor">
+                        <i class="fas fa-align-center"></i>
+                        <span>Edytor tekstowy</span>
+                      </div>
+                      <div class="side_block" data-block="container">
+                        <i class="fas fa-columns"></i>
+                        <span>Kontener</span>
+                      </div>
+                      <div class="side_block" data-block="image">
+                        <i class="far fa-image"></i>
+                        <span>Zdjęcie</span>
+                      </div>
+                      <div class="side_block" data-block="video">
+                        <i class="fas fa-film"></i>
+                        <span>Film</span>
+                      </div>
+                      
                     </div>
-                    <div class="side_block" data-block="container">
-                      <i class="fas fa-columns"></i>
-                      <span>Kontener</span>
-                    </div>
-                    
                   </div>
+
+                  <div class="side_menu expand_y animate_hidden hidden" data-side_menu="edit_block">
+                    <span class="field-title first">
+                      <button class="btn transparent" data-show_side_menu="add_block">
+                        <i class="fas fa-chevron-left"></i>
+                      </button>
+                      Edycja bloku / kontenera...
+                    </span>
+                    <div class="quill_editor"></div>
+                  </div>
+
                 </div>
 
                 <div style="width:100%;">
@@ -1639,9 +1650,6 @@ registerModalContent(
                       <div class="rearrange_controls"></div>
                       <div class="rearrange_insert_rect"></div>
                       <div class="rearrange_grabbed_rect content_rearrange_grabbed_rect"></div>
-                      <div class="quill_editor_wrapper">
-                        <div class="quill_editor"></div>
-                      </div>
                       <div style="padding:15px;overflow:hidden">
                         <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
                       </div>
