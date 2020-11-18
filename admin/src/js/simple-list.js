@@ -158,9 +158,7 @@ function createSimpleList(params = {}) {
       return;
     }
 
-    list.clear();
-
-    var addValues = (values, listTarget = null) => {
+    const addValues = (values, listTarget = null) => {
       if (listTarget === null) {
         listTarget = list.target;
       }
@@ -189,7 +187,11 @@ function createSimpleList(params = {}) {
         }
       }
     };
+
+    list.setting_values = true;
+    list.clear();
     addValues(values);
+    delete list.setting_values;
   };
 
   list.removeRowFromBtn = (btn) => {
@@ -290,7 +292,7 @@ function createSimpleList(params = {}) {
 
     // do it after any sub components were created in onRowInserted callback :)
     list.setting_data = true;
-    setFormData(values, addedNode);
+    setFormData(values, addedNode, { quiet: true });
     delete list.setting_data;
 
     list.registerFields(list.target);
@@ -412,7 +414,9 @@ function createSimpleList(params = {}) {
 
     list.wrapper.setAttribute("data-count", list.values.length);
 
-    list.wrapper.setValue();
+    if (!list.setting_values) {
+      list.wrapper.dispatchChange();
+    }
     if (params.onChange && !list.during_change && !list.setting_data) {
       params.onChange(list.values, list, changeListTarget);
     }
@@ -420,6 +424,21 @@ function createSimpleList(params = {}) {
 
   // set initial state / data-count etc.
   list.valuesChanged();
+
+  // form compatibility
+  list.wrapper.setValue = (value, options) => {
+    list.setListValues(value);
+
+    if (!options.quiet) {
+      list.wrapper.dispatchChange();
+    }
+  };
+  list.wrapper.getValue = () => {
+    if (list.params.data_type == "json") {
+      return JSON.stringify(list.values);
+    }
+    return input.list.values;
+  };
 
   return simple_list_id;
 }

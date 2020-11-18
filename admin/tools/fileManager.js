@@ -39,8 +39,9 @@ window.fileManager = {
       $(fileManager.target).setValue(src);
       lazyLoadImages(true);
     }
+
     if (fileManager.callback) {
-      fileManager.callback(src);
+      fileManager.callback({ src: src, target: fileManager.target });
     }
 
     hideModal("fileManager");

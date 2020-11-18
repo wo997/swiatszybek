@@ -297,7 +297,7 @@ function setValue(input, value = null, params = {}) {
 
   if (value === null || isEquivalent(input.getValue(), value)) {
     if (!params.quiet) {
-      input.dispatchEvent(new Event("change"));
+      input.dispatchChange();
     }
     return;
   }
@@ -316,8 +316,6 @@ function setValue(input, value = null, params = {}) {
       value = reverseDateString(value, "-");
     }
     input.datepicker.setDate(value);
-  } else if (input.classList.contains("simple-list")) {
-    input.list.setListValues(value);
   } else if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[
@@ -357,23 +355,25 @@ function setValue(input, value = null, params = {}) {
       if ([...input.options].find((e) => e.value == value)) {
         input.value = value;
       }
-    } else {
+    } else if (input.tagName == "INPUT") {
       // for text fields
       input.value = value;
+    } else {
+      return;
     }
   }
   if (!params.quiet) {
-    input.dispatchEvent(new Event("change"));
+    input.dispatchChange();
   }
 }
 
+function dispatchChange(node) {
+  node.dispatchEvent(new Event("change"));
+}
+
 function getValue(input) {
-  if (input.classList.contains("simple-list")) {
-    if (input.list.params.data_type == "json") {
-      return JSON.stringify(input.list.values);
-    }
-    return input.list.values;
-  }
+  // TODO: move these motherfuckers to them components instead
+  // funny how some might not have registering process so we can leave some in here ;)
   if (input.tagName == "RADIO-INPUT") {
     var value = "";
     var selected = input.find(".selected");
@@ -437,7 +437,16 @@ function getValue(input) {
         return reverseDateString(input.value, "-");
       }
       return input.value;
+    } else if (input.tagName == "INPUT") {
+      if (input.hasAttribute("data-number")) {
+        return +input.value;
+      }
+      return input.value;
     } else {
+      return "";
+    }
+
+    {
       if (input.hasAttribute("data-number")) {
         return +input.value;
       }

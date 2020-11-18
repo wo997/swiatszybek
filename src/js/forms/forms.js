@@ -80,6 +80,10 @@ function setFormData(data, form, params = {}) {
       value_params = params.data[name];
     }
 
+    if (params.quiet) {
+      value_params.quiet = params.quiet;
+    }
+
     if (params.history && e.hasAttribute("data-ignore-history")) {
       return;
     }
@@ -113,7 +117,7 @@ function getFormData(form, params = {}) {
   $(form)
     .findAll(`[${find_by}]`)
     .forEach((e) => {
-      if (excludeHidden && e.findParentByClassName("hidden")) {
+      if (excludeHidden && e.findParentByClassName(["hidden", "form-hidden"])) {
         return;
       }
       var parent_named_node = e.findParentByAttribute("name", {
@@ -125,7 +129,7 @@ function getFormData(form, params = {}) {
       }
 
       var field_name = e.getAttribute(find_by);
-      var field_value = getValue(e);
+      var field_value = e.getValue();
 
       var parent_sub_form = e;
       var inside = true;

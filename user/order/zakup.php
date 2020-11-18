@@ -391,7 +391,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         expandOneDostawa("kurier");
 
         $$(`[name*="_kurier"]`).forEach(e => {
-          e.dispatchEvent(new Event("change"));
+          e.dispatchChange();
         });
       } else if (id == 'osobiscie-option') {
         setFormData({

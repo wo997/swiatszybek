@@ -1,4 +1,5 @@
 // dependencies
+useTool("fileManager");
 useTool("quillEditor");
 
 class EditBlock {
@@ -12,6 +13,23 @@ class EditBlock {
 
       if (!is_edit_block_menu) {
         this.init();
+      }
+    });
+
+    const newCms_image = this.newCms.sidebar.find(`[name="newCms_image"]`);
+    newCms_image.addEventListener("change", () => {
+      if (this.newCms.edit_block.edit_node) {
+        const block_type = this.newCms.edit_block.edit_node.getAttribute(
+          "data-block"
+        );
+        if (block_type == "image") {
+          this.newCms.edit_block.edit_node
+            .find(".newCms_block_content")
+            .setAttribute("src", newCms_image.getValue());
+
+          lazyLoadImages();
+          this.newCms.contentChange();
+        }
       }
     });
   }
@@ -229,7 +247,9 @@ class FloatingRearrangeControls {
         is_parent_row = parent_container
           ? parent_container.classList.contains("container_row")
           : false;
+      }
 
+      if (!rearrange_control_node) {
         rearrange_block_rect = rearrange_block.getBoundingClientRect();
         if (is_parent_row) {
           rearrange_position =
@@ -394,15 +414,10 @@ class FloatingRearrangeControls {
     let blocks_data = [];
     const addControls = (position) => {
       this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
-        if (block.findParentByClassName("select_active")) {
-          // we don't wanna rearrange to it's own child or itself, no incest or masturbation allowed here!
+        if (block == this.newCms.grabbed_block) {
+          // don't touch itself
           return;
         }
-
-        const parent_container = block.findParentByAttribute(
-          { "data-block": "container" },
-          { skip: 1 }
-        );
 
         if (
           this.newCms.grabbed_block &&
@@ -411,8 +426,14 @@ class FloatingRearrangeControls {
             (position === "before" &&
               block.prev() == this.newCms.grabbed_block))
         ) {
+          // no siblings
           return;
         }
+
+        const parent_container = block.findParentByAttribute(
+          { "data-block": "container" },
+          { skip: 1 }
+        );
 
         const is_parent_row = parent_container
           ? parent_container.classList.contains("container_row")
@@ -774,17 +795,6 @@ class FloatingSelectControls {
       select_control.classList.add("select_control");
       select_control.style.left = left + "px";
       select_control.style.top = top + "px";
-
-      //let select_control_html = "";
-      /*if (block.classList.contains("newCms_container")) {
-        //select_control_html = `<i class="fas fa-columns"></i>`;
-        select_control.classList.add("control_container");
-      } else {
-        //select_control_html = `<i class="fas fa-square"></i>`;
-        select_control.classList.add("control_block");
-      }*/
-      //select_control.innerHTML = select_control_html;
-      //select_control.innerHTML = ;
 
       select_control.block = block;
       block.select_control = select_control;
@@ -1240,17 +1250,20 @@ class NewCms {
   }
 
   getBlockHtml(type, options = {}) {
-    let content = "";
+    //let content = "";
     let class_name = "";
-    let class_name_content = "";
+
+    let content_html = "";
 
     if (type === "quill_editor") {
-      class_name_content = "ql-editor";
+      content_html = `<div class="newCms_block_content ql-editor"></div>`;
+    } else {
+      content_html = `<img class="newCms_block_content">`;
     }
 
     return /*html*/ `
       <div class="newCms_block ${class_name}" data-block="${type}">
-          <div class="newCms_block_content ${class_name_content}">${content}</div>
+        ${content_html}
       </div>
     `;
   }
@@ -1266,12 +1279,13 @@ class NewCms {
       return;
     }
     const duration = 300;
-    this.lockInput(duration);
+    this.lockInput();
     zoomNode(block, "out", {
       duration: duration,
       callback: () => {
         block.remove();
         this.contentChange();
+        this.unlockInput();
       },
     });
   }
@@ -1628,7 +1642,7 @@ function zoomNode(node, direction, options = {}) {
 
 registerModalContent(
   /*html*/ `
-    <div id="newCms" class="newCms" data-expand="large" data-form data-history>
+    <div id="newCms" class="newCms" data-expand="large" data-form data-history data-exclude-hidden>
         <div class="modal-body">
             <div class="custom-toolbar">
                 <span class="title">
@@ -1644,7 +1658,7 @@ registerModalContent(
             </div>
 
             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
-                <div class="sidebar shown">
+                <div class="sidebar shown form-hidden">
                   <div class="expand_y" data-side_menu="add_block">
                     <!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
                     <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
@@ -1681,6 +1695,8 @@ registerModalContent(
                       Edycja bloku / kontenera...
                     </span>
                     <div class="quill_editor"></div>
+
+                    <image-input name="newCms_image"></image-input>
                   </div>
 
                 </div>

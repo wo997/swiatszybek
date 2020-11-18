@@ -20,12 +20,20 @@ function $(node, parent = null) {
   node.findAll = (query) => {
     return $$(query, node);
   };
-  node.setValue = (value, quiet = false) => {
-    setValue(node, value, quiet);
+  if (!node.setValue) {
+    node.setValue = (value, quiet = false) => {
+      setValue(node, value, quiet);
+    };
+  }
+  if (!node.getValue) {
+    node.getValue = () => {
+      return getValue(node);
+    };
+  }
+  node.dispatchChange = () => {
+    return dispatchChange(node);
   };
-  node.getValue = () => {
-    return getValue(node);
-  };
+
   node.next = () => {
     // TODO parameter includeTextNodes
     return $(node.nextElementSibling);
