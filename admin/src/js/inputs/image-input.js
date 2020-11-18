@@ -2,10 +2,6 @@
 
 window.addEventListener("register-form-components", registerImageInputs);
 
-function imageInputValueChange(data) {
-  console.log(data);
-}
-
 function registerImageInputs() {
   $$("image-input:not(.image-input-registered)").forEach((input) => {
     input.classList.add("image-input-registered");
@@ -18,17 +14,61 @@ function registerImageInputs() {
     input.insertAdjacentHTML(
       "afterbegin",
       /*html*/ `
-        <img data-type="src" />
-        <button class="btn primary" onclick='fileManager.open(this.prev(),{asset_types:["image"], size: "sm", callback: imageInputValueChange})'></button>
+        <div class="image-input-img-wrapper">
+          <img data-type="src" />
+          <i class="fas fa-image"></i>
+        </div>
+        <button class="btn primary"></button>
       `
     );
 
     const img = input.find("img");
+    const button = input.find("button");
+    const wrapper = input.find(".image-input-img-wrapper");
+
+    const options_json = input.getAttribute("data-options");
+    if (options_json) {
+      try {
+        const options = JSON.parse(options_json);
+
+        if (options.width) {
+          wrapper.style.width = options.width;
+        }
+
+        // it could be a function
+        if (options.height) {
+          if (options.height.indexOf("w") !== -1) {
+            wrapper.setAttribute("data-height", options.height);
+          } else {
+            wrapper.style.height = options.height;
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     img.addEventListener("change", () => {
-      input.find("button").setContent(img.getValue() ? "Zmień" : "Wybierz");
+      const selected = !!img.getValue();
+      const btn = input.find("button");
+      btn.setContent(selected ? "Zmień" : "Wybierz");
+      btn.classList.toggle("primary", !selected);
+      btn.classList.toggle("secondary", selected);
       if (!input.setting_value) {
         input.dispatchChange();
       }
+      input.classList.toggle("selected", selected);
+    });
+
+    wrapper.addEventListener("click", () => {
+      button.click();
+    });
+
+    button.addEventListener("click", () => {
+      fileManager.open(img, {
+        asset_types: ["image"],
+        size: "sm",
+      });
     });
 
     input.getValue = () => {

@@ -437,7 +437,7 @@ function getValue(input) {
         return reverseDateString(input.value, "-");
       }
       return input.value;
-    } else if (input.tagName == "INPUT") {
+    } else if (input.tagName == "INPUT" || input.tagName == "SELECT") {
       if (input.hasAttribute("data-number")) {
         return +input.value;
       }
@@ -468,12 +468,15 @@ function findParent(elem, callback, options = {}) {
     } else {
       return null;
     }
-
     if (options.skip > 0) {
       options.skip--;
     } else if (callback(elem)) {
       return elem;
     }
+    if (options.inside == elem) {
+      return;
+    }
+
     elem = elem.parent();
   }
   return null;

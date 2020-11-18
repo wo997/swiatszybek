@@ -72,6 +72,12 @@ class EditBlock {
         block.find(".newCms_block_content").innerHTML
       );
     }
+    if (block_type == "image") {
+      const newCms_image = this.newCms.sidebar.find(`[name="newCms_image"]`);
+      newCms_image.setValue(
+        block.find(".newCms_block_content").getAttribute("src")
+      );
+    }
 
     block.classList.add("edit_active");
     this.newCms.showSideMenu("edit_block");
@@ -1696,7 +1702,8 @@ registerModalContent(
                     </span>
                     <div class="quill_editor"></div>
 
-                    <image-input name="newCms_image"></image-input>
+                    <span class="field-title">Zdjęcie</span>
+                    <image-input name="newCms_image" data-options='{"width":"100%","height":"1w"}'></image-input>
                   </div>
 
                 </div>

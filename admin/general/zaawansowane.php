@@ -60,6 +60,7 @@
 
     <span class="field-title">Domena witryny</span>
     <input type="text" class="field" name="domain">
+
 </div>
 
 <?php include "admin/page_template.php"; ?>

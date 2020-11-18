@@ -563,11 +563,12 @@ function createDatatable(datatable) {
         }
       }
       $$(`.${datatable.name} [data-param]`).forEach((e) => {
-        if (e.findParentByClassName("hidden", "datatable-wrapper")) {
+        if (e.findParentByClassName("hidden", { inside: datatable.target })) {
           return;
         }
         params[e.getAttribute("data-param")] = e.getValue();
       });
+
       if (datatable.selectable) {
         params.filters.push({
           type: "!=",

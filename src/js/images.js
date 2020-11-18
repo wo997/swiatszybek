@@ -74,7 +74,7 @@ function loadImage(img, animate = true) {
           !img.hasAttribute("data-has-own-height")*/
       ) {
         img.style.height = "";
-        window.dispatchEvent("lazy_image_loaded");
+        window.dispatchEvent(new Event("lazy_image_loaded"));
       }
     });
 

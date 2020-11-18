@@ -437,7 +437,7 @@ function createSimpleList(params = {}) {
     if (list.params.data_type == "json") {
       return JSON.stringify(list.values);
     }
-    return input.list.values;
+    return list.values;
   };
 
   return simple_list_id;
