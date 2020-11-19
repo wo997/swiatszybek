@@ -989,7 +989,6 @@ class QuillEditor {
     }
     this.any_changes = false;
     this.newCms.contentChange();
-    console.log("SAVE");
   }
 
   setEditorContent(html) {
@@ -1083,8 +1082,6 @@ class NewCms {
     var playground = $(document.createElement("DIV"));
     // TODO: is it even necessary?
     //document.body.appendChild(playground);
-
-    html = removeAnimationsFromHtml(html);
 
     playground.insertAdjacentHTML("afterbegin", html);
 

@@ -53,7 +53,7 @@ const ANIMATIONS = {
 };
 
 var wo997_animation_counter = 0;
-function createAnimation(keyframes) {
+function createAnimation(keyframes, duration) {
   wo997_animation_counter++;
   var animation_name = `wo997_animation_${wo997_animation_counter}`;
   document.body.insertAdjacentHTML(
@@ -62,7 +62,11 @@ function createAnimation(keyframes) {
     @keyframes ${animation_name} {
         ${keyframes}
     }
-    </style>`
+    .${animation_name} {
+      animation: ${animation_name} ${duration}ms ease forwards;
+    }
+    </style>
+    `
   );
   return animation_name;
 }
@@ -72,29 +76,26 @@ function removeAnimation(animation_name) {
 }
 
 function animate(node, keyframes, duration, callback = null) {
-  var animation_name = createAnimation(keyframes);
+  var animation_name = createAnimation(keyframes, duration);
   if (node.animationTimeout) {
     window.clearTimeout(node.animationTimeout);
   }
 
-  node.style.animation = `${animation_name} ${duration}ms forwards`;
+  $$(`.${animation_name}`).forEach((e) => {
+    e.classList.remove(animation_name);
+  });
+  node.classList.add(animation_name);
 
   // crazy, start the second timeout once you finish the frame ;)
   setTimeout(() => {
     node.animationTimeout = setTimeout(() => {
-      if (node.style.animationName == animation_name) {
-        node.style.animation = "";
-      }
+      node.classList.remove(animation_name);
       if (callback) {
         callback();
       }
       removeAnimation(animation_name);
     }, duration);
   });
-}
-
-function removeAnimationsFromHtml(html) {
-  return html.replace(/animation.*wo997_animation_\d*;/g, "");
 }
 
 domload(() => {
