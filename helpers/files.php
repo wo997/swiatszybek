@@ -80,7 +80,12 @@ function processImage($file_path)
 
         imagejpeg($output, $file_path_wo_extension . ".jpg", 80);
 
-        imagewebp($output, $file_path_wo_extension . ".webp", 80);
+        try{
+            imagewebp($output, $file_path_wo_extension . ".webp", 80);
+        }
+        catch(Error $e){
+            //TODO: IMAGICK gdy php nie ma GD 
+        }
 
         imagedestroy($output);
 
