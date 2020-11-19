@@ -349,14 +349,46 @@
   pointer-events: none;
 }
 
-/* side start */
+/* sidebar start */
 
 .newCms .sidebar {
   width: 300px;
-  box-shadow: 0px 0px 9px 3px #0003;
-  padding: 15px 10px;
+  border-right: 1px solid #ccc;
+  box-shadow: 0 0 12px -4px rgba(0, 0, 0, 0.39);
   background: #eee;
   flex-shrink: 0;
+}
+
+.newCms .sidebar .scroll-panel {
+  height: 100%;
+}
+
+.newCms .sidebar_content_wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.newCms .sidebar_content_wrapper.transiting {
+  overflow: hidden;
+}
+
+[data-side_menu] {
+  padding: 15px 10px;
+}
+
+[data-side_menu]:not(.active):not(.appears):not(.disappears) {
+  opacity: 0;
+}
+
+[data-side_menu]:not(.active) {
+  top: -10000px;
+  pointer-events: none;
+  position: absolute;
+}
+
+[data-side_menu].disappears,
+[data-side_menu].appears {
+  top: 0;
 }
 
 .block_list {

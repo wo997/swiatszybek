@@ -1012,6 +1012,10 @@ class NewCms {
       `.content_scroll_content`
     );
     this.sidebar = this.container.find(`.sidebar`);
+    this.sidebar_scroll_wrapper = this.sidebar.find(`.scroll-panel`);
+    this.sidebar_content_wrapper = this.sidebar_scroll_wrapper.find(
+      `.sidebar_content_wrapper`
+    );
 
     this.inline_edited_block = null;
 
@@ -1079,6 +1083,9 @@ class NewCms {
     var playground = $(document.createElement("DIV"));
     // TODO: is it even necessary?
     //document.body.appendChild(playground);
+
+    html = removeAnimationsFromHtml(html);
+
     playground.insertAdjacentHTML("afterbegin", html);
 
     return playground.innerHTML;
@@ -1594,10 +1601,86 @@ class NewCms {
   }
 
   showSideMenu(target_side_menu_name) {
-    this.sidebar.findAll("[data-side_menu]").forEach((side_menu) => {
-      const side_menu_name = side_menu.getAttribute("data-side_menu");
-      expand(side_menu, side_menu_name == target_side_menu_name);
-    });
+    const current_menu = this.sidebar.find(`[data-side_menu].active`);
+    const target_menu = this.sidebar.find(
+      `[data-side_menu="${target_side_menu_name}"]`
+    );
+
+    if (target_menu == current_menu) {
+      return;
+    }
+
+    const duration = 300;
+
+    const current_menu_height = current_menu.offsetHeight;
+    const target_menu_height = target_menu.offsetHeight;
+    const sidebar_scroll_wrapper = this.sidebar_scroll_wrapper;
+    const sidebar_content_wrapper = this.sidebar_content_wrapper;
+    const sidebar_scroll_wrapper_width = sidebar_scroll_wrapper.offsetWidth;
+    const min_height = sidebar_scroll_wrapper.offsetHeight;
+
+    current_menu.style.top = -sidebar_scroll_wrapper.scrollTop + "px";
+
+    target_menu.classList.add("appears");
+    current_menu.classList.add("disappears");
+    sidebar_content_wrapper.classList.add("transiting");
+
+    animate(
+      target_menu,
+      `
+        0% {
+          transform: translate(${sidebar_scroll_wrapper_width}px,0px);
+          opacity: 0;
+        }
+        100% {
+          transform: translate(0px,0px);
+          opacity: 1;
+        }
+      `,
+      duration,
+      () => {
+        target_menu.classList.add("active");
+        target_menu.classList.remove("appears");
+
+        current_menu.classList.remove("disappears");
+        current_menu.classList.remove("active");
+        current_menu.style.top = "";
+
+        sidebar_content_wrapper.classList.remove("transiting");
+        sidebar_content_wrapper.insertBefore(
+          target_menu,
+          sidebar_content_wrapper.firstChild
+        );
+      }
+    );
+
+    animate(
+      current_menu,
+      `
+        0% {
+          transform: translate(0px,0px);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-${sidebar_scroll_wrapper_width}px,0px);
+          opacity: 0;
+        }
+      `,
+      duration
+    );
+
+    animate(
+      sidebar_content_wrapper,
+      `
+        0% {
+          height: ${Math.max(current_menu_height, min_height)}px
+        }
+        100% {
+          height: ${Math.max(target_menu_height, min_height)}px
+        }
+      `,
+      duration
+    );
 
     this.container.dispatchEvent(
       new CustomEvent("side_menu_change", {
@@ -1664,48 +1747,51 @@ registerModalContent(
             </div>
 
             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
-                <div class="sidebar shown form-hidden">
-                  <div class="expand_y" data-side_menu="add_block">
-                    <!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
-                    <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
-                      Bloki 
-                      <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
-                    </span>
-                    <div class="block_list">
-                      <div class="side_rearrange_grabbed_rect"></div>
-                      <div class="side_block" data-block="quill_editor">
-                        <i class="fas fa-align-center"></i>
-                        <span>Edytor tekstowy</span>
+                <div class="sidebar form-hidden">
+                  <div class="scroll-panel scroll-shadow hide_scrollbar">
+                    <div class="sidebar_content_wrapper">
+                      <div data-side_menu="add_block" class="active">
+                        <!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
+                        <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
+                          Bloki 
+                          <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
+                        </span>
+                        <div class="block_list">
+                          <div class="side_rearrange_grabbed_rect"></div>
+                          <div class="side_block" data-block="quill_editor">
+                            <i class="fas fa-align-center"></i>
+                            <span>Edytor tekstowy</span>
+                          </div>
+                          <div class="side_block" data-block="container">
+                            <i class="fas fa-columns"></i>
+                            <span>Kontener</span>
+                          </div>
+                          <div class="side_block" data-block="image">
+                            <i class="far fa-image"></i>
+                            <span>Zdjęcie</span>
+                          </div>
+                          <div class="side_block" data-block="video">
+                            <i class="fas fa-film"></i>
+                            <span>Film</span>
+                          </div>
+                          
+                        </div>
                       </div>
-                      <div class="side_block" data-block="container">
-                        <i class="fas fa-columns"></i>
-                        <span>Kontener</span>
+
+                      <div data-side_menu="edit_block">
+                        <span class="field-title first">
+                          <button class="btn transparent" data-show_side_menu="add_block">
+                            <i class="fas fa-chevron-left"></i>
+                          </button>
+                          Edycja bloku / kontenera...
+                        </span>
+                        <div class="quill_editor"></div>
+
+                        <span class="field-title">Zdjęcie</span>
+                        <image-input name="newCms_image" data-options='{"width":"100%","height":"1w"}'></image-input>
                       </div>
-                      <div class="side_block" data-block="image">
-                        <i class="far fa-image"></i>
-                        <span>Zdjęcie</span>
-                      </div>
-                      <div class="side_block" data-block="video">
-                        <i class="fas fa-film"></i>
-                        <span>Film</span>
-                      </div>
-                      
                     </div>
                   </div>
-
-                  <div class="side_menu expand_y animate_hidden hidden" data-side_menu="edit_block">
-                    <span class="field-title first">
-                      <button class="btn transparent" data-show_side_menu="add_block">
-                        <i class="fas fa-chevron-left"></i>
-                      </button>
-                      Edycja bloku / kontenera...
-                    </span>
-                    <div class="quill_editor"></div>
-
-                    <span class="field-title">Zdjęcie</span>
-                    <image-input name="newCms_image" data-options='{"width":"100%","height":"1w"}'></image-input>
-                  </div>
-
                 </div>
 
                 <div style="width:100%;">

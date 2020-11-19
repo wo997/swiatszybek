@@ -76,12 +76,13 @@ function animate(node, keyframes, duration, callback = null) {
   if (node.animationTimeout) {
     window.clearTimeout(node.animationTimeout);
   }
+
   node.style.animation = `${animation_name} ${duration}ms forwards`;
 
   // crazy, start the second timeout once you finish the frame ;)
   setTimeout(() => {
     node.animationTimeout = setTimeout(() => {
-      if (node.style.animation == animation_name) {
+      if (node.style.animationName == animation_name) {
         node.style.animation = "";
       }
       if (callback) {
@@ -90,6 +91,10 @@ function animate(node, keyframes, duration, callback = null) {
       removeAnimation(animation_name);
     }, duration);
   });
+}
+
+function removeAnimationsFromHtml(html) {
+  return html.replace(/animation.*wo997_animation_\d*;/g, "");
 }
 
 domload(() => {
