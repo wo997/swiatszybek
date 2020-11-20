@@ -2,7 +2,7 @@
 
 useCSS("/$module_block_dir/styles.css");
 
-$slides = json_decode(nonull($params, "cms_slides", ""), true);
+$slides = nonull($params, "cms_slides", []);
 
 ?>
 <div class='swiper-container slider_module swiper-all'>

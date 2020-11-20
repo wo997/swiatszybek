@@ -84,14 +84,19 @@ window.fileManager = {
               } else {
                 display = `<img style='width:100%;object-fit:contain' data-height='1w' data-src='/${image.file_path}'>`;
               }
-
-              out += `
+              const image_metadata_html = /* html */ `
+                <b>Ścieżka:</b> ${image.file_path}
+                <hr style="margin:2px 0">
+                <b>Nazwa:</b> ${image.uploaded_file_name} 
+                <hr style="margin:2px 0">
+                <b>Autor:</b> ${nonull(image.email,"-")}
+              `;
+              out += /* html */ `
                   <div class='gallery-item'>
                       ${display}
                       <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz"><i class="fas fa-check"></i></div>
                       <div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń"><i class="fas fa-times"></i></div>
-  
-                      <i class='fas fa-info-circle' data-tooltip='<b>Ścieżka:</b> ${image.file_path}<hr style="margin:2px 0"><b>Nazwa:</b> ${image.uploaded_file_name}'></i>
+                      <i class='fas fa-info-circle' data-tooltip='${image_metadata_html}'></i>
                   </div>
               `;
             }

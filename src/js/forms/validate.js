@@ -326,7 +326,7 @@ function fieldErrors(field) {
       }
     }
   }
-
+  // if you want to add another validator do it down below ;)
   if (validatorType == "tel") {
     if (!/[\d\+\- ]{6,}/.test(val)) {
       newError("Wpisz poprawny numer telefonu");
@@ -359,6 +359,10 @@ function fieldErrors(field) {
     }
   } else if (validatorType == "backend") {
     return null;
+  } else if (validatorType == "url") {
+    if (!validURL(val)) {
+      newError("Wpisz poprawny adres url");
+    }
   }
 
   return field_errors;
