@@ -32,20 +32,32 @@ class EditBlock {
 				}
 			}
 		});
+
+		this.newCms.container.addEventListener("clean_up_output", () => {
+			this.cleanUpContent(this.newCms.clean_output_node);
+		});
 	}
 
 	init() {
-		this.select_node = null;
 		this.edit_node = null;
 
 		this.hideContextMenu();
 
-		this.newCms.container.findAll(".edit_active").forEach((e) => {
+		this.cleanUpContent();
+	}
+
+	cleanUpContent(node = null) {
+		if (node === null) {
+			node = this.newCms.container;
+		}
+
+		node.findAll(".edit_active").forEach((e) => {
 			e.classList.remove("edit_active");
 		});
 	}
 
 	hideContextMenu() {
+		this.select_node = null;
 		this.node.classList.toggle("visible", false);
 	}
 
@@ -1117,6 +1129,8 @@ class NewCms {
 
 		this.rearrange_node = this.container.find(`.rearrange_node`);
 
+		this.clean_output_node = this.container.find(`.clean_output`);
+
 		this.initEditBlock();
 		this.initQuillEditor();
 		this.initFloatingSelectControls();
@@ -1168,23 +1182,24 @@ class NewCms {
 
 	initListenChange() {
 		this.content_node.addEventListener("change", () => {
-			if (this.content_change_triggered) {
-				this.contentChange({
-					trigger_change: false,
-				});
-			}
+			const trigger_change = !this.content_change_triggered;
+			console.log(123123123123, trigger_change);
+			this.contentChange({
+				trigger_change: trigger_change,
+			});
+
+			// just in case?
+			this.mouse_target = null;
+			this.mouseMove();
 		});
 	}
 
 	getCleanOutput(html) {
-		// TODO: use as a formatter? so the history doesnt have those classes inside and so on, tricky but might be worth it :*
-		var playground = $(document.createElement("DIV"));
-		// TODO: is it even necessary?
-		//document.body.appendChild(playground);
+		this.clean_output_node.setContent(html);
 
-		playground.insertAdjacentHTML("afterbegin", html);
+		this.container.dispatchEvent(new Event("clean_up_output"));
 
-		return playground.innerHTML;
+		return this.clean_output_node.innerHTML;
 	}
 
 	initEditBlock() {
@@ -1346,7 +1361,7 @@ class NewCms {
 		this.select_controls.addFloatingSelectControls();
 
 		if (nonull(options.trigger_change, true) === true) {
-			this.content_node.setValue();
+			this.content_node.dispatchChange();
 		}
 		this.content_change_triggered = false;
 	}
@@ -1928,6 +1943,7 @@ registerModalContent(
                 </div>
             </div>  
           <div class="rearrange_node"></div>
+          <div class="clean_output" style="display:none !important"></div>
         </div>
         <link href="/admin/tools/newCms.css?v=${CSS_RELEASE}" rel="stylesheet">
     </div>
