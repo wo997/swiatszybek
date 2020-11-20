@@ -297,7 +297,7 @@ function setValue(input, value = null, params = {}) {
 
   if (value === null || isEquivalent(input.getValue(), value)) {
     if (!params.quiet) {
-      input.dispatchEvent(new Event("change"));
+      input.dispatchChange();
     }
     return;
   }
@@ -316,8 +316,6 @@ function setValue(input, value = null, params = {}) {
       value = reverseDateString(value, "-");
     }
     input.datepicker.setDate(value);
-  } else if (input.classList.contains("simple-list")) {
-    input.list.setListValues(value);
   } else if (input.classList.contains("table-selection-value")) {
     var datatable = input.findParentByClassName("datatable-wrapper");
     window[
@@ -357,23 +355,25 @@ function setValue(input, value = null, params = {}) {
       if ([...input.options].find((e) => e.value == value)) {
         input.value = value;
       }
-    } else {
+    } else if (input.tagName == "INPUT") {
       // for text fields
       input.value = value;
+    } else {
+      return;
     }
   }
   if (!params.quiet) {
-    input.dispatchEvent(new Event("change"));
+    input.dispatchChange();
   }
 }
 
+function dispatchChange(node) {
+  node.dispatchEvent(new Event("change"));
+}
+
 function getValue(input) {
-  if (input.classList.contains("simple-list")) {
-    if (input.list.params.data_type == "json") {
-      return JSON.stringify(input.list.values);
-    }
-    return input.list.values;
-  }
+  // TODO: move these motherfuckers to them components instead
+  // funny how some might not have registering process so we can leave some in here ;)
   if (input.tagName == "RADIO-INPUT") {
     var value = "";
     var selected = input.find(".selected");
@@ -437,7 +437,16 @@ function getValue(input) {
         return reverseDateString(input.value, "-");
       }
       return input.value;
+    } else if (input.tagName == "INPUT" || input.tagName == "SELECT") {
+      if (input.hasAttribute("data-number")) {
+        return +input.value;
+      }
+      return input.value;
     } else {
+      return "";
+    }
+
+    {
       if (input.hasAttribute("data-number")) {
         return +input.value;
       }
@@ -459,19 +468,23 @@ function findParent(elem, callback, options = {}) {
     } else {
       return null;
     }
-
     if (options.skip > 0) {
       options.skip--;
     } else if (callback(elem)) {
       return elem;
     }
+    if (options.inside == elem) {
+      return;
+    }
+
     elem = elem.parent();
   }
   return null;
 }
 
+//"xxx", ["aaa","bbb","ccc"], [{"aaa":1},"zzz"]
 function findParentByAttribute(elem, parentAttribute, options = {}) {
-  const parentAttributes = Array.isArray(parentAttribute)
+  const parentAttributes = isArray(parentAttribute)
     ? parentAttribute
     : [parentAttribute];
 
@@ -479,7 +492,11 @@ function findParentByAttribute(elem, parentAttribute, options = {}) {
     elem,
     (some_parent) => {
       for (let parentAttribute of parentAttributes) {
-        if (some_parent.hasAttribute(parentAttribute)) {
+        if (isObject(parentAttribute)) {
+          return !!Object.entries(parentAttribute).find(([key, value]) => {
+            return some_parent.getAttribute(key) == value;
+          });
+        } else if (some_parent.hasAttribute(parentAttribute)) {
           return true;
         }
       }
@@ -591,7 +608,7 @@ function findParentByComputedStyle(elem, style, value, options = {}) {
     options
   );
 }
-function findScrollableParent(elem, options = {}) {
+function findScrollParent(elem, options = {}) {
   var parent = findParent(
     elem,
     (some_parent) => {
@@ -607,7 +624,7 @@ function findScrollableParent(elem, options = {}) {
   );
   elem = $(elem);
 
-  return nonull(parent, window);
+  return nonull(parent, nonull(options.default, window));
 }
 function findNonStaticParent(elem, options = {}) {
   var parent = findParent(
@@ -808,6 +825,14 @@ function getSelectDisplayValue(select) {
   return select.options[select.selectedIndex].text;
 }
 
+function isObject(input) {
+  return input && !Array.isArray(input) && typeof input === "object";
+}
+
+function isArray(input) {
+  return input && Array.isArray(input) && typeof input === "object";
+}
+
 function isEquivalent(a, b) {
   if (!a || !b) {
     return a === b;
@@ -856,4 +881,61 @@ function removeUserSelection() {
     // IE?
     document.selection.empty();
   }
+}
+
+function nodePositionAgainstScrollableParent(node) {
+  node = $(node);
+  const node_rect = node.getBoundingClientRect();
+
+  const scrollable_parent = node.findScrollParent({ default: document.body });
+  const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+
+  return {
+    relative_pos: {
+      left:
+        node_rect.left -
+        scrollable_parent_rect.left +
+        scrollable_parent.scrollLeft,
+      top:
+        node_rect.top -
+        scrollable_parent_rect.top +
+        scrollable_parent.scrollTop,
+    },
+    node_rect: node_rect,
+    scrollable_parent: scrollable_parent,
+    scrollable_parent_rect: scrollable_parent_rect,
+  };
+}
+
+function positionAgainstScrollableParent(x, y, scrollable_parent) {
+  const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+
+  return {
+    x: x - scrollable_parent_rect.left + scrollable_parent.scrollLeft,
+    y: y - scrollable_parent_rect.top + scrollable_parent.scrollTop,
+  };
+}
+
+function createNodeByHtml(html) {
+  const random_class_name = "sddsfgsdfgsdfgcvcvc";
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `<div class="${random_class_name}" style="display:none">${html}</div>`
+  );
+  const node = $(`.${random_class_name} *`);
+  node.remove();
+  return node;
+}
+
+function isNodeOnScreen(node, offset = -10) {
+  var r = node.getBoundingClientRect();
+  if (
+    r.y > window.innerHeight + offset ||
+    r.y + r.height < -offset ||
+    r.x > window.innerWidth + offset ||
+    r.x + r.width < -offset
+  ) {
+    return false;
+  }
+  return r;
 }

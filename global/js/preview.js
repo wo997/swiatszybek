@@ -39,7 +39,7 @@ domload(() => {
 
         var diff = dist_to_center - preview_params.dist_info.dist_to_center;
 
-        const scroll_parent = findScrollableParent(cms_wrapper);
+        const scroll_parent = findScrollParent(cms_wrapper);
         scroll_parent.scrollBy(0, diff);
         smoothScroll();
       }

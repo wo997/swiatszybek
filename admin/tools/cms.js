@@ -1735,7 +1735,9 @@ var awaitingScroll = false;
 
 // drag end
 
-function setNodeBackgroundImagePreview(src = "") {
+function setNodeBackgroundImagePreview(data = {}) {
+  src = nonull(data.src, "");
+
   if (src.length > 0 && src.charAt(0) !== "/") {
     src = "/uploads/df/" + src;
   }

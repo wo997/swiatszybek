@@ -1,4 +1,5 @@
 .vscode/
+.idea/
 uploads/
 vendor/
 filmy/
@@ -14,5 +15,6 @@ sitemap.xml
 topmenu.html
 builds/
 preduild/
+.prebuilds/
 
 piepsklep.zip

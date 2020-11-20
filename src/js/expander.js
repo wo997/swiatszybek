@@ -51,7 +51,7 @@ function expandMenu(elem, btn, open = null, options = {}) {
       }
     `;
   }
-  animate(expand_btn.find(".fas"), nonull(options.duration, 200), keyframes);
+  animate(expand_btn.find(".fas"), keyframes, nonull(options.duration, 200));
 
   btn.classList.toggle("open", expand(elem, open, options));
 
@@ -74,7 +74,9 @@ function expand(elem, show = null, options = {}) {
   if (show === null) show = elem.classList.contains("hidden");
   if (show ^ elem.classList.contains("hidden")) return;
 
-  var animation_node = elem.find(".expander_space");
+  var animation_node = elem.directChildren().find((e) => {
+    e.classList.contains("expander_space");
+  });
   if (!animation_node) {
     elem.insertAdjacentHTML("afterbegin", "<div class='expander_space'></div>");
     animation_node = elem.find(".expander_space");
@@ -103,20 +105,19 @@ function expand(elem, show = null, options = {}) {
 
   animate(
     animation_node,
-    duration,
     `
-    0% {
-      margin-top: ${m1};
-    }
-    100% {
-      margin-top: ${m2};
-    }
-  `
+      0% {
+        margin-top: ${m1};
+      }
+      100% {
+        margin-top: ${m2};
+      }
+    `,
+    duration
   );
 
   animate(
     elem,
-    duration,
     `
       0% {
         height: ${h1};
@@ -127,6 +128,7 @@ function expand(elem, show = null, options = {}) {
         opacity: ${o2};
       }
     `,
+    duration,
     () => {
       elem.style.height = show ? "" : "0px";
 

@@ -281,11 +281,15 @@ input[type="button"] {
 }
 
 /* new form start */
-.field-title:not(.first) {
-  margin-top: 0.8em;
+:root {
+  --form-field-space: 0.8em;
+  --form-field-background: #fbfbfb;
 }
-.form-field-spacing .field-title:not(.first) {
-  margin-top: 1.5em;
+.field-title:not(.first) {
+  margin-top: var(--form-field-space);
+}
+.form-field-spacing {
+  --form-field-space: 0.8em;
 }
 .field-title {
   margin-bottom: 0.2em;
@@ -308,7 +312,7 @@ input[type="button"] {
   padding: 0.42em 0.8em;
 }
 .field {
-  background-color: #fbfbfb;
+  background-color: var(--form-field-background);
   box-shadow: inset 0px 1px 5px -2px rgba(0, 0, 0, 0.2);
 }
 .field.white {
@@ -773,7 +777,7 @@ a {
 }
 .pln {
   /*font-family: "Nanum Gothic", sans-serif !important;*/
-  font-weight: 600;
+  /*font-weight: 600;*/
   word-spacing: -0.1em;
 }
 .mobileRow {
@@ -1499,4 +1503,12 @@ input:placeholder-shown {
 
 .hide_contents * {
   display: none !important;
+}
+
+.hide_scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide_scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
