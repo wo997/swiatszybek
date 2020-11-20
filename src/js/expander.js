@@ -74,7 +74,9 @@ function expand(elem, show = null, options = {}) {
   if (show === null) show = elem.classList.contains("hidden");
   if (show ^ elem.classList.contains("hidden")) return;
 
-  var animation_node = elem.find(".expander_space");
+  var animation_node = elem.directChildren().find((e) => {
+    e.classList.contains("expander_space");
+  });
   if (!animation_node) {
     elem.insertAdjacentHTML("afterbegin", "<div class='expander_space'></div>");
     animation_node = elem.find(".expander_space");
