@@ -1,63 +1,63 @@
 .contact-info a {
-  transition: 0.2s;
+	transition: 0.2s;
 }
 .contact-info a:hover {
-  color: var(--primary-clr);
+	color: var(--primary-clr);
 }
 
 .contact-info {
-  max-width: calc(1000px - 2 * 8px);
-  margin: 0 auto 0;
-  padding: 10px;
-  width: 100%;
-  justify-content: center;
-  box-sizing: border-box;
-  line-height: 1.6;
-  font-size: 15px;
+	max-width: calc(1000px - 2 * 8px);
+	margin: 0 auto 0;
+	padding: 10px;
+	width: 100%;
+	justify-content: center;
+	box-sizing: border-box;
+	line-height: 1.6;
+	font-size: 15px;
 }
 .contact-info div {
-  margin: 40px 0;
+	margin: 40px 0;
 }
 @media only screen and (min-width: 751px) {
-  .contact-info {
-    display: flex;
-  }
-  .contact-info div {
-    width: 50%;
-    padding: 0 10px;
-  }
-  .contact-info div:first-child {
-    width: 350px;
-  }
+	.contact-info {
+		display: flex;
+	}
+	.contact-info div {
+		width: 50%;
+		padding: 0 10px;
+	}
+	.contact-info div:first-child {
+		width: 350px;
+	}
 }
 @media only screen and (max-width: 750px) {
-  .contact-info div:first-child {
-    margin-top: 0;
-  }
+	.contact-info div:first-child {
+		margin-top: 0;
+	}
 }
 .contact-form {
-  transition: 0.5s;
-  max-height: 800px;
-  overflow: hidden;
-  width: 100%;
-  max-width: 830px;
-  background: white;
-  margin: 0 auto;
+	transition: 0.5s;
+	max-height: 800px;
+	overflow: hidden;
+	width: 100%;
+	max-width: 830px;
+	background: white;
+	margin: 0 auto;
 }
 .contact-form b {
-  color: #333;
+	color: #333;
 }
 
 .contact-form label {
-  position: relative;
-  display: block;
-  margin: 8px;
-  flex-grow: 1;
+	position: relative;
+	display: block;
+	margin: 8px;
+	flex-grow: 1;
 }
 
 .contact-form textarea {
-  resize: vertical;
-  min-height: 100px;
-  max-height: 300px;
-  height: 150px;
+	resize: vertical;
+	min-height: 100px;
+	max-height: 300px;
+	height: 150px;
 }

@@ -1,22 +1,22 @@
 window.preview = {
-  open: (url, params) => {
-    $(`#preview .preview_form`).setAttribute("action", url);
-    $(`#preview .preview_form [name="preview_params"]`).setValue(
-      JSON.stringify(params)
-    );
-    showModal("preview");
-    $("#preview .preview_form").submit();
-  },
-  setSize: (width = "", height = "") => {
-    var e = $(`[name="preview_iframe"]`);
-    e.style.width = width;
-    e.style.height = height;
-    $(".preview_form").submit();
-  },
+	open: (url, params) => {
+		$(`#preview .preview_form`).setAttribute("action", url);
+		$(`#preview .preview_form [name="preview_params"]`).setValue(
+			JSON.stringify(params)
+		);
+		showModal("preview");
+		$("#preview .preview_form").submit();
+	},
+	setSize: (width = "", height = "") => {
+		var e = $(`[name="preview_iframe"]`);
+		e.style.width = width;
+		e.style.height = height;
+		$(".preview_form").submit();
+	},
 };
 
 registerModalContent(
-  `
+	`
     <div id="preview" data-modal data-expand="large">
         <div class="modal-body">
             <div class="custom-toolbar">

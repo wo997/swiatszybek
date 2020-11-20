@@ -1,14 +1,14 @@
 window.loader = {
-  show: () => {
-    showModal("loader");
-  },
-  hide: () => {
-    hideModal("loader");
-  },
+	show: () => {
+		showModal("loader");
+	},
+	hide: () => {
+		hideModal("loader");
+	},
 };
 
 registerModalContent(
-  `
+	`
     <div id="loader">
         <div class="mul7 blank">
             <div class="mul7circ m7c1"></div>

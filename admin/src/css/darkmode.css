@@ -2,13 +2,13 @@
 
 /* TODO if you are bored enough */
 .dark .datatable thead {
-  filter: invert(1) hue-rotate(180deg) brightness(4) contrast(0.6);
+	filter: invert(1) hue-rotate(180deg) brightness(4) contrast(0.6);
 }
 
 .dark .main-container {
-  filter: invert(1) hue-rotate(180deg) contrast(0.8) brightness(1.2);
+	filter: invert(1) hue-rotate(180deg) contrast(0.8) brightness(1.2);
 }
 
 .dark img {
-  filter: brightness(0.83333) contrast(1.25) hue-rotate(180deg) invert(1);
+	filter: brightness(0.83333) contrast(1.25) hue-rotate(180deg) invert(1);
 }

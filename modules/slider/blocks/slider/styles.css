@@ -1,37 +1,37 @@
 .slider_module.swiper-container:not(:hover) .swiper-nav {
-  opacity: 0;
+	opacity: 0;
 }
 
 .slider_module .swiper-slide {
-  flex-grow: 1;
-  height: unset;
-  display: flex;
-  align-items: stretch;
+	flex-grow: 1;
+	height: unset;
+	display: flex;
+	align-items: stretch;
 }
 
 .slider_module .swiper-nav i {
-  opacity: 0.7;
-  text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.4), 0px 1px 2px rgba(0, 0, 0, 0.4);
+	opacity: 0.7;
+	text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.4), 0px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 .slider_module
-  .swiper-pagination-bullet:not(.swiper-pagination-bullet-active):hover {
-  background-color: white;
-  opacity: 1;
+	.swiper-pagination-bullet:not(.swiper-pagination-bullet-active):hover {
+	background-color: white;
+	opacity: 1;
 }
 
 .slider_module .swiper-nav:hover i {
-  opacity: 1;
+	opacity: 1;
 }
 
 .slider_module .swiper-pagination-bullet-active {
-  background-color: white;
-  opacity: 0.6;
+	background-color: white;
+	opacity: 0.6;
 }
 
 .slider_module .swiper-button-prev:active i {
-  margin-right: 5px;
+	margin-right: 5px;
 }
 .slider_module .swiper-button-next:active i {
-  margin-right: -5px;
+	margin-right: -5px;
 }
