@@ -16,8 +16,8 @@ class EditBlock {
 			}
 		});
 
-		const newCms_image = this.newCms.sidebar.find(`[name="newCms_image"]`);
-		newCms_image.addEventListener("change", () => {
+		const image = this.newCms.sidebar.find(`[name="image"]`);
+		image.addEventListener("change", () => {
 			if (this.newCms.edit_block.edit_node) {
 				const block_type = this.newCms.edit_block.edit_node.getAttribute(
 					"data-block"
@@ -25,9 +25,28 @@ class EditBlock {
 				if (block_type == "image") {
 					this.newCms.edit_block.edit_node
 						.find(".newCms_block_content")
-						.setAttribute("src", newCms_image.getValue());
+						.setAttribute("src", image.getValue());
 
 					lazyLoadImages();
+					this.newCms.contentChange();
+				}
+			}
+		});
+
+		const container_flow = this.newCms.sidebar.find(`[name="container_flow"]`);
+		container_flow.addEventListener("change", () => {
+			if (this.newCms.edit_block.edit_node) {
+				const block_type = this.newCms.edit_block.edit_node.getAttribute(
+					"data-block"
+				);
+				if (block_type == "container") {
+					this.newCms.edit_block.edit_node
+						.find(".newCms_block_content")
+						.classList.toggle(
+							"container_row",
+							container_flow.getValue() == "container_row"
+						);
+
 					this.newCms.contentChange();
 				}
 			}
@@ -85,9 +104,19 @@ class EditBlock {
 			);
 		}
 		if (block_type == "image") {
-			const newCms_image = this.newCms.sidebar.find(`[name="newCms_image"]`);
-			newCms_image.setValue(
-				block.find(".newCms_block_content").getAttribute("src")
+			const image = this.newCms.sidebar.find(`[name="image"]`);
+			image.setValue(block.find(".newCms_block_content").getAttribute("src"));
+		}
+		if (block_type == "container") {
+			const container_flow = this.newCms.sidebar.find(
+				`[name="container_flow"]`
+			);
+			container_flow.setValue(
+				this.newCms.edit_block.edit_node
+					.find(".newCms_block_content")
+					.classList.contains("container_row")
+					? "container_row"
+					: ""
 			);
 		}
 
@@ -1183,14 +1212,9 @@ class NewCms {
 	initListenChange() {
 		this.content_node.addEventListener("change", () => {
 			const trigger_change = !this.content_change_triggered;
-			console.log(123123123123, trigger_change);
 			this.contentChange({
 				trigger_change: trigger_change,
 			});
-
-			// just in case?
-			this.mouse_target = null;
-			this.mouseMove();
 		});
 	}
 
@@ -1918,10 +1942,18 @@ registerModalContent(
                           </button>
                           Edycja bloku / kontenera...
                         </span>
+
+                        <span class="field-title">Tekst</span>
                         <div class="quill_editor"></div>
 
                         <span class="field-title">Zdjęcie</span>
-                        <image-input name="newCms_image" data-options='{"width":"100%","height":"1w"}'></image-input>
+                        <image-input name="image" data-options='{"width":"100%","height":"1w"}'></image-input>
+
+                        <span class="field-title">Ułożenie zawartości</span>
+                        <radio-input name="container_flow" class="default">
+                            <radio-option value="" data-default> <i class="fas fa-ellipsis-v align-icon"></i> Pionowo </radio-option>
+                            <radio-option value="container_row"> <i class="fas fa-ellipsis-h align-icon"></i> Poziomo </radio-option>
+                        </radio-input>
                       </div>
                     </div>
                   </div>
