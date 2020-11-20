@@ -5,6 +5,10 @@ if (!nonull($page_data, "seo_image", "")) {
 }
 ?>
 
+<script>
+    const fb_login_btn = "<?= htmlspecialchars($fb_login_btn) ?>";
+</script>
+
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
 <link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
