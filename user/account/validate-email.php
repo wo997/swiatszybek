@@ -2,6 +2,7 @@
 
 $response = [];
 
+// TODO: grab just 1? for eff purp ofc
 $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 'regular' AND email = ?", [$_POST["email"]]);
 
 if ($user_data) {

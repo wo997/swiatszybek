@@ -58,13 +58,13 @@ function createAnimation(keyframes, duration) {
   var animation_name = `wo997_animation_${wo997_animation_counter}`;
   document.body.insertAdjacentHTML(
     "beforeend",
-    `<style id="${animation_name}">
-    @keyframes ${animation_name} {
-        ${keyframes}
-    }
-    .${animation_name} {
-      animation: ${animation_name} ${duration}ms ease forwards;
-    }
+    /*html*/ `<style id="${animation_name}">
+      @keyframes ${animation_name} {
+          ${keyframes}
+      }
+      .${animation_name} {
+        animation: ${animation_name} ${duration}ms ease forwards !important;
+      }
     </style>
     `
   );

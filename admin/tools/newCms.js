@@ -177,7 +177,7 @@ class FloatingRearrangeControls {
       `.rearrange_insert_rect`
     );
     this.rearrange_grabbed_rect_node = newCms.container.find(
-      `.content_rearrange_grabbed_rect`
+      `.rearrange_grabbed_rect`
     );
     this.init();
   }
@@ -255,7 +255,9 @@ class FloatingRearrangeControls {
           : false;
       }
 
-      if (!rearrange_control_node) {
+      if (rearrange_control_node) {
+        rearrange_position = rearrange_control_node.position;
+      } else {
         rearrange_block_rect = rearrange_block.getBoundingClientRect();
         if (is_parent_row) {
           rearrange_position =
@@ -279,7 +281,7 @@ class FloatingRearrangeControls {
             if (rearrange_block.rearrange_control_before) {
               rearrange_control_node = rearrange_block.rearrange_control_before;
             } else {
-              var prev_block = rearrange_block.prev();
+              const prev_block = rearrange_block.prev();
 
               if (prev_block && prev_block.rearrange_control_after) {
                 rearrange_control_node = prev_block.rearrange_control_after;
@@ -394,6 +396,11 @@ class FloatingRearrangeControls {
     if (block) {
       const block_rect_data = nodePositionAgainstScrollableParent(block);
       const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
+
+      block_rect_data.scrollable_parent.appendChild(
+        rearrange_grabbed_rect_node
+      );
+
       rearrange_grabbed_rect_node.style.left =
         block_rect_data.relative_pos.left + "px";
       rearrange_grabbed_rect_node.style.top =
@@ -639,6 +646,7 @@ class FloatingRearrangeControls {
 
       block[`rearrange_control_${block_data.position}`] = rearrange_control;
       rearrange_control.rearrange_block = block;
+      rearrange_control.position = block_data.position;
 
       this.node.appendChild(rearrange_control);
     }
@@ -821,7 +829,7 @@ class FloatingSelectControls {
       this.node.appendChild(select_control);
     }
 
-    this.node.classList.add("blocks_visible");
+    //this.node.classList.add("blocks_visible");
   }
 }
 
@@ -1016,7 +1024,7 @@ class NewCms {
       `.sidebar_content_wrapper`
     );
 
-    this.inline_edited_block = null;
+    this.rearrange_node = this.container.find(`.rearrange_node`);
 
     this.initEditBlock();
     this.initQuillEditor();
@@ -1149,6 +1157,10 @@ class NewCms {
   }
 
   lockInput(delay) {
+    if (delay <= 1) {
+      return;
+    }
+
     this.container.classList.add("locked_input");
 
     if (this.lock_timeout) {
@@ -1329,10 +1341,22 @@ class NewCms {
     this.container.classList.add("grabbed_block");
 
     this.rearrange_controls.node.classList.add("visible");
-    this.select_controls.node.classList.remove("blocks_visible");
+    //this.select_controls.node.classList.remove("blocks_visible");
+
+    // show the grabbed clone
+    const rearrange_node = this.rearrange_node;
+    rearrange_node.setContent(this.grabbed_block.outerHTML);
+    const block_inside = rearrange_node.find("*");
+    const grabbed_block_rect = this.grabbed_block.getBoundingClientRect();
+    rearrange_node.style.left = grabbed_block_rect.left + "px";
+    rearrange_node.style.top = grabbed_block_rect.top + "px";
+    block_inside.style.width = grabbed_block_rect.width + "px";
+    block_inside.style.height = grabbed_block_rect.height + "px";
+    rearrange_node.classList.add("visible");
 
     this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
 
+    this.grab_animation_speed = 0;
     this.grabAnimation();
   }
 
@@ -1386,6 +1410,7 @@ class NewCms {
 
     this.grabbed_block.style.transform = "";
     grabbed_block.classList.remove("grabbed");
+    this.rearrange_node.classList.remove("visible");
     this.container.classList.remove("grabbed_block");
 
     this.grabbed_block = null;
@@ -1408,89 +1433,93 @@ class NewCms {
 
     this.rearrange_controls.node.classList.remove("visible");
 
+    this.lockInput(delay_grabbed_rect_node_fadeout);
     setTimeout(() => {
       this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove(
         "visible"
       );
     }, delay_grabbed_rect_node_fadeout);
 
-    if (this.rearrange_controls.rearrange_block) {
-      const duration = 350;
+    if (!this.rearrange_controls.rearrange_block) {
+      return end();
+    }
 
-      this.content_node.findAll(".newCms_block").forEach((block) => {
-        const node_on_screen_rect = isNodeOnScreen(block, 0);
-        if (node_on_screen_rect && !block.last_rect) {
-          block.last_rect = node_on_screen_rect;
-        }
-      });
+    const duration = 350;
 
-      if (this.rearrange_controls.rearrange_position == "inside") {
-        this.rearrange_controls.rearrange_block
-          .find(".newCms_block_content")
-          .appendChild(grabbed_block);
-      } else {
-        let before_node = this.rearrange_controls.rearrange_block;
-        if (this.rearrange_controls.rearrange_position == "after") {
-          before_node = before_node.next();
-        }
+    this.content_node.findAll(".newCms_block").forEach((block) => {
+      const node_on_screen_rect = isNodeOnScreen(block, 0);
+      if (node_on_screen_rect && !block.last_rect) {
+        block.last_rect = node_on_screen_rect;
+      }
+    });
 
-        this.rearrange_controls.rearrange_block
-          .parent()
-          .insertBefore(grabbed_block, before_node);
+    if (this.rearrange_controls.rearrange_position == "inside") {
+      this.rearrange_controls.rearrange_block
+        .find(".newCms_block_content")
+        .appendChild(grabbed_block);
+    } else {
+      let before_node = this.rearrange_controls.rearrange_block;
+      if (this.rearrange_controls.rearrange_position == "after") {
+        before_node = before_node.next();
       }
 
-      const all_animatable_blocks = this.content_node
-        .findAll(".newCms_block")
-        .filter((block) => {
-          const node_on_screen_rect = isNodeOnScreen(block, 0);
-          if (block.last_rect && node_on_screen_rect) {
-            block.new_rect = node_on_screen_rect;
-            if (!block.animation_data) {
-              block.animation_data = { x: 0, y: 0 };
-            }
-            return true;
-          } else {
-            return false;
+      this.rearrange_controls.rearrange_block
+        .parent()
+        .insertBefore(grabbed_block, before_node);
+    }
+
+    const all_animatable_blocks = this.content_node
+      .findAll(".newCms_block")
+      .filter((block) => {
+        const node_on_screen_rect = isNodeOnScreen(block, 0);
+        if (block.last_rect && node_on_screen_rect) {
+          block.new_rect = node_on_screen_rect;
+          if (!block.animation_data) {
+            block.animation_data = { x: 0, y: 0 };
           }
-        });
-
-      all_animatable_blocks.forEach((block) => {
-        const dx = block.last_rect.left - block.new_rect.left;
-        const dy = block.last_rect.top - block.new_rect.top;
-
-        block.animation_data.x += dx;
-        block.animation_data.y += dy;
-
-        block
-          .find(".newCms_block_content")
-          .directChildren()
-          .forEach((sub_block) => {
-            if (sub_block.animation_data) {
-              sub_block.animation_data.x -= dx;
-              sub_block.animation_data.y -= dy;
-            }
-          });
+          return true;
+        } else {
+          return false;
+        }
       });
 
-      all_animatable_blocks.forEach((block) => {
-        //const styles = window.getComputedStyle(block);
+    all_animatable_blocks.forEach((block) => {
+      const dx = block.last_rect.left - block.new_rect.left;
+      const dy = block.last_rect.top - block.new_rect.top;
 
-        // TODO: every property such like flexGrow etc needs to be available in a quickly accessible place
-        // maybe put them straight to styles?
-        // we should remove it when cleaning the cms output anyway ;)
+      block.animation_data.x += dx;
+      block.animation_data.y += dy;
 
-        let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
-        let my = 0.5 * (block.new_rect.height - block.last_rect.height);
+      block
+        .find(".newCms_block_content")
+        .directChildren()
+        .forEach((sub_block) => {
+          if (sub_block.animation_data) {
+            sub_block.animation_data.x -= dx;
+            sub_block.animation_data.y -= dy;
+          }
+        });
+    });
 
-        const dx = block.animation_data.x - mx;
-        const dy = block.animation_data.y - my;
+    all_animatable_blocks.forEach((block) => {
+      //const styles = window.getComputedStyle(block);
 
-        const fg = block.style.flexGrow;
-        block.style.flexGrow = 0;
+      // TODO: every property such like flexGrow etc needs to be available in a quickly accessible place
+      // maybe put them straight to styles?
+      // we should remove it when cleaning the cms output anyway ;)
 
-        animate(
-          block,
-          `
+      let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
+      let my = 0.5 * (block.new_rect.height - block.last_rect.height);
+
+      const dx = block.animation_data.x - mx;
+      const dy = block.animation_data.y - my;
+
+      const fg = block.style.flexGrow;
+      block.style.flexGrow = 0;
+
+      animate(
+        block,
+        `
               0% {
                 transform: translate(
                   ${dx}px,
@@ -1510,24 +1539,21 @@ class NewCms {
                 margin: 0px 0px;
               }
             `,
-          duration,
-          () => {
-            block.style.flexGrow = fg;
+        duration,
+        () => {
+          block.style.flexGrow = fg;
 
-            setTimeout(() => {
-              end();
-            }, 50);
-          }
-        );
+          setTimeout(() => {
+            end();
+          }, 50);
+        }
+      );
 
-        delete block.animation_data;
-        delete block.last_rect;
-      });
+      delete block.animation_data;
+      delete block.last_rect;
+    });
 
-      this.lockInput(duration);
-    } else {
-      end();
-    }
+    this.lockInput(duration);
   }
 
   grabAnimation() {
@@ -1536,19 +1562,20 @@ class NewCms {
     }
 
     // cute scroll
+    const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
+
     let speed_y = 0;
 
     const scroll_offset = 50;
-    if (this.mouse_y < scroll_offset) {
-      speed_y = this.mouse_y - scroll_offset;
+    if (this.mouse_y < content_scroll_panel_rect.top + scroll_offset) {
+      speed_y = this.mouse_y - scroll_offset - content_scroll_panel_rect.top;
       if (speed_y < -scroll_offset) {
         speed_y = -scroll_offset;
       }
     }
 
-    if (this.content_scroll_panel.clientHeight - this.mouse_y < scroll_offset) {
-      speed_y =
-        scroll_offset - this.content_scroll_panel.clientHeight + this.mouse_y;
+    if (content_scroll_panel_rect.height - this.mouse_y < scroll_offset) {
+      speed_y = scroll_offset - content_scroll_panel_rect.height + this.mouse_y;
 
       if (speed_y > scroll_offset) {
         speed_y = scroll_offset;
@@ -1562,7 +1589,8 @@ class NewCms {
       const grabbed_block = this.grabbed_block;
 
       // pull closer to the cursor
-      const acc = 0.15;
+      this.grab_animation_speed = this.grab_animation_speed * 0.9 + 0.035;
+      const acc = this.grab_animation_speed;
 
       const gb_rect = grabbed_block.last_rect;
       this.grabbed_mouse_x =
@@ -1574,19 +1602,21 @@ class NewCms {
         (gb_rect.top + gb_rect.height * 0.5) * acc;
 
       // display actual position using transform
-      const dx = this.mouse_x - this.grabbed_mouse_x;
+      const base_dx = this.mouse_x - this.grabbed_mouse_x;
+      const base_dy = this.mouse_y - this.grabbed_mouse_y;
+
+      const dx = base_dx;
       const dy =
-        this.mouse_y -
-        this.grabbed_mouse_y +
+        base_dy +
         this.grabbed_node_scroll_parent.scrollTop -
         this.grabbed_scroll_top;
 
       grabbed_block.animation_data = { x: dx, y: dy };
 
-      grabbed_block.style.transform = `
+      this.rearrange_node.style.transform = `
         translate(
-          ${dx.toPrecision(5)}px,
-          ${dy.toPrecision(5)}px
+          ${base_dx.toPrecision(5)}px,
+          ${base_dy.toPrecision(5)}px
         )
       `;
     }
@@ -1754,7 +1784,6 @@ registerModalContent(
                           <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
                         </span>
                         <div class="block_list">
-                          <div class="side_rearrange_grabbed_rect"></div>
                           <div class="side_block" data-block="quill_editor">
                             <i class="fas fa-align-center"></i>
                             <span>Edytor tekstowy</span>
@@ -1798,14 +1827,15 @@ registerModalContent(
                       <div class="select_controls"></div>
                       <div class="rearrange_controls"></div>
                       <div class="rearrange_insert_rect"></div>
-                      <div class="rearrange_grabbed_rect content_rearrange_grabbed_rect"></div>
+                      <div class="rearrange_grabbed_rect"></div>
                       <div style="padding:15px;overflow:hidden">
                         <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
                       </div>
                     </div>
                   </div>
                 </div>
-            </div>
+            </div>  
+          <div class="rearrange_node"></div>
         </div>
         <link href="/admin/tools/newCms.css?v=${CSS_RELEASE}" rel="stylesheet">
     </div>

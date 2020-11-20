@@ -184,6 +184,11 @@
   z-index: 1000;
 }
 
+.newCms .sidebar .grabbed,
+.newCms .content_scroll_panel .grabbed {
+  opacity: 0;
+}
+
 .newCms.grabbed_block .sidebar {
   pointer-events: none;
 }
@@ -444,4 +449,14 @@
 
 .sidebar .quill_editor {
   background: #fff;
+}
+
+.rearrange_node {
+  position: absolute;
+  pointer-events: none;
+  z-index: 9000;
+}
+
+.rearrange_node:not(.visible) {
+  display: none;
 }
