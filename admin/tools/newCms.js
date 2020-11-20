@@ -1261,7 +1261,7 @@ class NewCms {
   }
 
   insertMissingQlClasses() {
-    // should we use it on the whole container instead?
+    // TODO: should we use it on the whole container instead?
     this.content_node
       .findAll(".newCms_quill_editor")
       .forEach((newCms_block) => {
@@ -1399,11 +1399,12 @@ class NewCms {
       delay_grabbed_rect_node_fadeout = t1 + t2;
 
       // replace
+      const animation_data = grabbed_block.animation_data;
       grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
       this.grabbed_block = grabbed_block;
       this.content_node.appendChild(grabbed_block);
 
-      grabbed_block.animation_data = { x: 0, y: 0 };
+      grabbed_block.animation_data = animation_data;
       grabbed_block.last_rect = side_block_rect;
       grabbed_block.classList.add("select_active");
     }
