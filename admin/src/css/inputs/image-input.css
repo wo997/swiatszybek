@@ -1,0 +1,42 @@
+/* css[admin] */
+
+image-input img {
+  object-fit: contain;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+image-input button {
+  margin-top: 6px;
+}
+
+.image-input-img-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.image-input-img-wrapper:hover {
+  filter: brightness(0.95);
+}
+
+.image-input-img-wrapper i {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: var(--form-field-background);
+  color: #0006;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8em;
+  transition: 0.2s all;
+}
+
+image-input.selected .image-input-img-wrapper i {
+  opacity: 0;
+}

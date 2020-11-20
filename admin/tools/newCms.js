@@ -1,784 +1,1862 @@
 // dependencies
+useTool("fileManager");
 useTool("quillEditor");
 
-class InlineQuillEditor {
-  color_list = [
-    "rgb(255, 85, 118)",
-    "rgb(255,43,0)",
-    "#FFD700",
-    "var(--primary-clr)", // TODO: primary color comes from admin, not front, weird glitch, might wanna abandon or let the use prepare color list for his needs in other theme tab
-    "#3f00b5",
-    "rgb(160,65,112)",
-    "rgb(65,160,113)",
-    "#e60000",
-    "#ff9900",
-    "#ffff00",
-    "#008a00",
-    "#0066cc",
-    "#9933ff",
-    "#ffffff",
-    "#facccc",
-    "#ffebcc",
-    "#ffffcc",
-    "#cce8cc",
-    "#cce0f5",
-    "#ebd6ff",
-    "#bbbbbb",
-    "#f06666",
-    "#ffc266",
-    "#ffff66",
-    "#66b966",
-    "#66a3e0",
-    "#c285ff",
-    "#888888",
-    "#a10000",
-    "#b26b00",
-    "#b2b200",
-    "#006100",
-    "#0047b2",
-    "#6b24b2",
-    "#444444",
-    "#5c0000",
-    "#663d00",
-    "#666600",
-    "#003700",
-    "#002966",
-    "#3d1466",
-    "#000000",
-  ];
+class EditBlock {
+	constructor(edit_block_node, newCms) {
+		this.node = edit_block_node;
+		this.newCms = newCms;
+		this.init();
 
-  constructor(newCms, node, wrapper, newCmsContent_scroll_panel) {
-    this.node = node;
-    this.wrapper = wrapper;
-    this.newCms = newCms;
+		this.newCms.container.addEventListener("side_menu_change", (event) => {
+			const is_edit_block_menu = event.detail.side_menu_name == "edit_block";
 
-    var Size = Quill.import("attributors/style/size");
-    Size.whitelist = [];
-    for (let i = 0; i < 10; i++) {
-      Size.whitelist.push(Math.round(Math.pow(1.25, i - 2) * 100) / 100 + "em");
-    }
+			if (!is_edit_block_menu) {
+				this.init();
+			}
+		});
 
-    this.quill_editor = new Quill(node, {
-      scrollingContainer: newCmsContent_scroll_panel,
-      theme: "snow",
-      modules: {
-        syntax: true,
-        toolbar: [
-          [
-            {
-              size: Size.whitelist,
-            },
-          ],
-          ["bold", "italic", "underline", "strike"],
-          [
-            {
-              color: this.color_list,
-            },
-            {
-              background: this.color_list,
-            },
-          ],
-          [
-            {
-              list: "ordered",
-            },
-            {
-              list: "bullet",
-            },
-            {
-              indent: "-1",
-            },
-            {
-              indent: "+1",
-            },
-          ],
-          [
-            {
-              header: "1",
-            },
-            {
-              header: "2",
-            },
-            {
-              header: "3",
-            },
-          ],
-          [
-            {
-              align: [],
-            },
-          ],
-          ["clean"],
-        ],
-        table: false,
-      },
-    });
+		const newCms_image = this.newCms.sidebar.find(`[name="newCms_image"]`);
+		newCms_image.addEventListener("change", () => {
+			if (this.newCms.edit_block.edit_node) {
+				const block_type = this.newCms.edit_block.edit_node.getAttribute(
+					"data-block"
+				);
+				if (block_type == "image") {
+					this.newCms.edit_block.edit_node
+						.find(".newCms_block_content")
+						.setAttribute("src", newCms_image.getValue());
 
-    this.content_node = this.node.find(".ql-editor");
+					lazyLoadImages();
+					this.newCms.contentChange();
+				}
+			}
+		});
+	}
 
-    this.newCms.container.addEventListener(
-      IS_MOBILE ? "click" : "mousedown",
-      (event) => {
-        this.mouseDown(event);
-      }
-    );
-  }
+	init() {
+		this.select_node = null;
+		this.edit_node = null;
 
-  appendInlineQuillEditor(block) {
-    const newCms_block_content = block.find(".newCms_block_content");
+		this.hideContextMenu();
 
-    this.newCms.inline_edited_block = block;
+		this.newCms.container.findAll(".edit_active").forEach((e) => {
+			e.classList.remove("edit_active");
+		});
+	}
 
-    const block_html = newCms_block_content.innerHTML;
-    this.content_node.setContent(block_html);
+	hideContextMenu() {
+		this.node.classList.toggle("visible", false);
+	}
 
-    block.appendChild(this.wrapper);
-    this.wrapper.classList.add("visible");
+	mouseMove() {
+		const target = this.newCms.mouse_target;
 
-    this.newCms.edit_block.hide();
+		if (this.select_node) {
+			if (!target.findParentByClassName("edit_block_node")) {
+				this.hideContextMenu();
+			}
+		}
+	}
 
-    block.classList.add("during_inline_edit");
-  }
+	editBlock(block) {
+		this.edit_node = block;
 
-  saveInlineQuillEditor(block) {
-    const newCms_block_content = block.find(".newCms_block_content");
+		// TODO: event listeners for each block type? extending?
+		// we might need to use blocks "blocks" as something that comes with modules?
+		// u know these weird scripts that include and combined give a nice juicy forms etc?
+		// thats what I'm talking about
+		const block_type = block.getAttribute("data-block");
+		if (block_type == "quill_editor") {
+			this.newCms.quill_editor.setEditorContent(
+				block.find(".newCms_block_content").innerHTML
+			);
+		}
+		if (block_type == "image") {
+			const newCms_image = this.newCms.sidebar.find(`[name="newCms_image"]`);
+			newCms_image.setValue(
+				block.find(".newCms_block_content").getAttribute("src")
+			);
+		}
 
-    this.newCms.inline_edited_block = null;
+		block.classList.add("edit_active");
+		this.newCms.showSideMenu("edit_block");
 
-    const ql_html = this.content_node.innerHTML;
-    newCms_block_content.setContent(ql_html);
+		// this.newCms.container.classList.remove("anything_selected");
+	}
 
-    this.newCms.content_scroll_panel.appendChild(this.wrapper);
-    this.wrapper.classList.remove("visible");
+	showControlsToBlock(block) {
+		this.select_node = block;
 
-    this.newCms.edit_block.hide();
+		// define block buttons html
+		let edit_block_html = "";
 
-    block.classList.remove("during_inline_edit");
+		let buttons = "";
 
-    this.newCms.contentChange();
-  }
+		const radius = 40;
+		const inner_radius = 16;
 
-  mouseDown(event) {
-    const target = $(event.target);
+		const norad = Math.PI / 180;
 
-    const newCms_block = target.findParentByClassName("newCms_block");
+		const x0 = radius;
+		const y0 = radius;
 
-    if (
-      this.newCms.inline_edited_block &&
-      this.newCms.inline_edited_block != newCms_block
-    ) {
-      this.saveInlineQuillEditor(this.newCms.inline_edited_block);
-    }
-  }
+		const btn_set = [
+			{
+				color: "#58D",
+				icon: `<i class="fas fa-pencil-alt" style="transform:translateX(1px)"></i>`,
+				className: "edit_btn",
+			},
+			{
+				color: "#a7a7a7",
+				icon: `<i class="fas fa-arrows-alt"></i>`,
+				className: "relocate_btn",
+			},
+			{
+				color: "#f55",
+				icon: `<i class="fas fa-times"></i>`,
+				className: "remove_btn",
+			},
+		];
+
+		const btn_count = btn_set.length;
+
+		const icon_size = 20;
+
+		const space_ratio = 1.5;
+		const inner_space_ratio = (space_ratio * radius) / inner_radius;
+
+		for (let i = 0; i < btn_count; i++) {
+			const point = (a, r) => {
+				return {
+					x: x0 - Math.sin(a * norad) * r,
+					y: y0 - Math.cos(a * norad) * r,
+				};
+			};
+			const a1 = (i * 360) / btn_count;
+			const a2 = ((i + 1) * 360) / btn_count;
+
+			const p1 = point(a1 + space_ratio, radius);
+			const p2 = point(a2 - space_ratio, radius);
+			const p3 = point(a2 - inner_space_ratio, inner_radius);
+			const p4 = point(a1 + inner_space_ratio, inner_radius);
+
+			const p5 = point((a1 + a2) * 0.5, (radius + inner_radius) * 0.485);
+
+			const btn_data = btn_set[i];
+
+			buttons += /*html*/ `
+                <path class="context-btn" fill="#fff" d="
+                    M${p1.x},${p1.y}
+                    A${radius},${radius} 1 0,0 ${p2.x},${p2.y}
+                    L${p3.x},${p3.y}
+                    A${inner_radius},${inner_radius} 1 0,1 ${p4.x},${p4.y}
+                    L${p1.x},${p1.y}
+                    z
+                "></path>
+                <path class="context-btn 
+                ${btn_data.className}"
+                fill="${btn_data.color}" d="
+                    M${p1.x},${p1.y}
+                    A${radius},${radius} 1 0,0 ${p2.x},${p2.y}
+                    L${p3.x},${p3.y}
+                    A${inner_radius},${inner_radius} 1 0,1 ${p4.x},${p4.y}
+                    L${p1.x},${p1.y}
+                    z
+                "></path>
+                <foreignObject x="${p5.x - icon_size * 0.5}" y="${
+				p5.y - icon_size * 0.5
+			}" width="${icon_size}" height="${icon_size}" pointer-events="none">
+                    <div class="context-icon" >
+                        ${btn_data.icon}
+                    </div>
+                </foreignObject>
+            `;
+		}
+		edit_block_html = /*html*/ `
+            <svg viewBox="-1 -1 ${radius * 2 + 2} ${radius * 2 + 2}"
+                width="${radius * 2 + 2}"
+                height="${radius * 2 + 2}"
+                xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <circle cx="${x0}" cy="${y0}" r="${inner_radius}" fill="#ccc5" class="dismiss_btn" />
+                ${buttons}
+            </svg>    
+        `;
+
+		this.node.setContent(edit_block_html);
+
+		// add block actions
+		const edit_block_btn = this.node.find(".edit_btn");
+		if (edit_block_btn) {
+			edit_block_btn.addEventListener("click", () => {
+				this.init();
+				this.editBlock(block);
+			});
+		}
+
+		const relocate_btn = this.node.find(".relocate_btn");
+		if (relocate_btn) {
+			relocate_btn.addEventListener(
+				IS_MOBILE ? "touchstart" : "mousedown",
+				() => {
+					this.hideContextMenu();
+					this.newCms.grabBlock(block);
+				}
+			);
+		}
+
+		const remove_btn = this.node.find(".remove_btn");
+		if (remove_btn) {
+			remove_btn.addEventListener("click", () => {
+				this.hideContextMenu();
+				this.newCms.removeBlock(block);
+			});
+		}
+
+		const dismiss_btn = this.node.find(".dismiss_btn");
+		if (dismiss_btn) {
+			dismiss_btn.addEventListener("click", () => {
+				this.hideContextMenu();
+			});
+		}
+
+		const node_rect = this.node.getBoundingClientRect();
+
+		let left = this.newCms.mouse_x - this.newCms.content_scroll_panel_rect.left;
+		let top =
+			this.newCms.mouse_y -
+			this.newCms.content_scroll_panel_rect.top +
+			this.newCms.content_scroll_panel.scrollTop;
+
+		const node_width = node_rect.width;
+		const node_height = node_rect.height;
+		const side_offset = node_width * 0.5 + 5;
+		const vertical_offset = node_height * 0.5 + 5;
+
+		left = Math.max(left, side_offset);
+		left = Math.min(
+			left,
+			this.newCms.content_scroll_content.clientWidth - side_offset
+		);
+
+		top = Math.max(top, vertical_offset);
+		top = Math.min(
+			top,
+			this.newCms.content_scroll_content.clientHeight - vertical_offset
+		);
+
+		this.node.style.left = left + "px";
+		this.node.style.top = top + "px";
+
+		this.node.classList.toggle("visible", true);
+	}
 }
 
-class EditBlockRect {
-  constructor(edit_block_node, newCms) {
-    this.node = edit_block_node;
-    this.newCms = newCms;
-    this.init();
-  }
+class FloatingRearrangeControls {
+	constructor(newCms) {
+		this.newCms = newCms;
+		this.node = newCms.container.find(`.rearrange_controls`);
+		this.rearrange_insert_rect_node = newCms.container.find(
+			`.rearrange_insert_rect`
+		);
+		this.rearrange_grabbed_rect_node = newCms.container.find(
+			`.rearrange_grabbed_rect`
+		);
+		this.init();
+	}
 
-  init() {
-    this.target = null;
-    this.last_target = null;
-  }
+	init() {
+		this.node.classList.remove("visible");
+		this.rearrange_insert_rect_node.classList.remove("visible");
+		this.rearrange_grabbed_rect_node.classList.remove("visible");
 
-  hide() {
-    this.init();
-    this.node.classList.toggle("active", false);
-  }
+		this.removeRearrangement();
+	}
 
-  hideButtons() {
-    this.node.classList.add("hide_contents");
-  }
+	removeRearrangement(options = {}) {
+		this.rearrange_block = null;
+		this.rearrange_position = "";
+		this.rearrange_control_node = null;
 
-  showButtons() {
-    this.node.classList.remove("hide_contents");
-  }
+		this.newCms.container.findAll(".rearrange_active").forEach((e) => {
+			if (options.except && options.except.indexOf(e) !== -1) {
+				return;
+			}
+			e.classList.remove("rearrange_active");
+		});
 
-  mouseMove(event) {
-    const target = $(event.target);
+		this.newCms.container.classList.remove("rearrange_possible");
+	}
 
-    let hovered_block_content = null;
-    let hovered_block = null;
+	mouseMove() {
+		const target = this.newCms.mouse_target;
 
-    let hovered_container_header = target
-      ? target.findParentByClassName("newCms_container_header")
-      : null;
+		let rearrange_block = null;
+		let rearrange_control_node = null;
 
-    if (hovered_container_header) {
-      hovered_block_content = hovered_container_header;
-      hovered_block = hovered_block_content.findParentByClassName(
-        "newCms_block"
-      );
-    } else if (target) {
-      let x = target.findParentByClassName("newCms_block");
-      if (x && !x.classList.contains("newCms_container")) {
-        hovered_block_content = x;
-        hovered_block = x;
-      }
-    }
+		if (
+			!target ||
+			!target.findParentNode(this.rearrange_grabbed_rect_node, {
+				inside: this.newCms.content_scroll_content,
+			})
+		) {
+			rearrange_control_node = target
+				? target.findParentByClassName("rearrange_control")
+				: null;
 
-    // let the user do the job ;)
-    if (target && target.findParentByClassName("edit_block_node")) {
-      return;
-    }
+			if (rearrange_control_node) {
+				rearrange_block = rearrange_control_node.rearrange_block;
+			}
 
-    let show_edit_rect = true;
-    if (!hovered_block_content) {
-      show_edit_rect = false;
-    }
+			if (!rearrange_block) {
+				rearrange_block = target
+					? target.findParentByClassName("newCms_block")
+					: null;
+			}
+		}
 
-    if (hovered_block_content) {
-      if (this.target === hovered_block) {
-        show_edit_rect = false;
-      }
+		let rearrange_position = "";
 
-      if (this.newCms.inline_edited_block === hovered_block) {
-        show_edit_rect = false;
-      }
-    }
+		let parent_container = null;
+		let is_parent_row = false;
+		let rearrange_block_rect = null;
 
-    this.target = hovered_block;
-    this.target_content = hovered_block_content;
+		if (rearrange_block) {
+			if (
+				rearrange_control_node &&
+				rearrange_control_node.classList.contains("insert_inside")
+			) {
+				parent_container = rearrange_block;
+				rearrange_position = "inside";
+			} else {
+				parent_container = rearrange_block.findParentByAttribute(
+					{ "data-block": "container" },
+					{ skip: 1 }
+				);
 
-    $$(".edit_options_visible").forEach((e) => {
-      e.classList.remove("edit_options_visible");
-    });
+				if (!parent_container) {
+					parent_container = this.newCms.content_node;
+				}
 
-    if (show_edit_rect) {
-      // everything below happens just once when the rect is shown
+				is_parent_row = parent_container
+					? parent_container.classList.contains("container_row")
+					: false;
+			}
 
-      // won't be lost when we the focus is lost, NEVER USED SO FAR
-      this.last_target = hovered_block;
+			if (rearrange_control_node) {
+				rearrange_position = rearrange_control_node.position;
+			} else {
+				rearrange_block_rect = rearrange_block.getBoundingClientRect();
+				if (is_parent_row) {
+					rearrange_position =
+						event.clientX <
+						rearrange_block_rect.left + rearrange_block_rect.width * 0.5
+							? "before"
+							: "after";
+				} else {
+					rearrange_position =
+						event.clientY <
+						rearrange_block_rect.top + rearrange_block_rect.height * 0.5
+							? "before"
+							: "after";
+				}
 
-      this.target.classList.add("edit_options_visible");
+				if (rearrange_position == "inside") {
+					rearrange_position = "inside";
+					rearrange_control_node = rearrange_block.rearrange_control_inside;
+				} else {
+					if (rearrange_position == "before") {
+						if (rearrange_block.rearrange_control_before) {
+							rearrange_control_node = rearrange_block.rearrange_control_before;
+						} else {
+							const prev_block = rearrange_block.prev();
 
-      // define block buttons html
-      let edit_block_html = "";
+							if (prev_block && prev_block.rearrange_control_after) {
+								rearrange_control_node = prev_block.rearrange_control_after;
+							}
+						}
+					} else if (
+						rearrange_position == "after" &&
+						rearrange_block.rearrange_control_after
+					) {
+						rearrange_control_node = rearrange_block.rearrange_control_after;
+					}
+				}
+			}
+		}
 
-      edit_block_html += /*html*/ `
-          <button class="btn edit_block_btn">
-            <i class="fas fa-pencil-alt"></i>
-          </button>
-        `;
-      edit_block_html += /*html*/ `
-          <button class="btn relocate_btn">
-            <i class="fas fa-arrows-alt"></i>
-          </button>
-        `;
-      edit_block_html += /*html*/ `
-          <button class="btn remove_btn">
-            <i class="fas fa-times"></i>
-          </button>
-        `;
-      this.node.setContent(edit_block_html);
+		// this is slow
+		if (this.rearrange_control_node != rearrange_control_node) {
+			this.removeRearrangement({ except: [rearrange_control_node] });
+		}
 
-      // add block actions
-      const edit_block_btn = this.node.find(".edit_block_btn");
-      if (
-        edit_block_btn &&
-        this.target.classList.contains("newCms_quill_editor")
-      ) {
-        edit_block_btn.addEventListener("click", () => {
-          this.newCms.inline_quill_editor.appendInlineQuillEditor(
-            this.newCms.edit_block.target
-          );
-        });
-      }
+		if (!rearrange_control_node) {
+			rearrange_block = null;
+		}
 
-      const relocate_btn = this.node.find(".relocate_btn");
-      if (relocate_btn) {
-        relocate_btn.addEventListener(
-          IS_MOBILE ? "touchstart" : "mousedown",
-          () => {
-            this.newCms.grabBlock(this.target);
-          }
-        );
-      }
+		this.rearrange_block = rearrange_block;
+		this.rearrange_position = rearrange_position;
+		this.rearrange_control_node = rearrange_control_node;
 
-      const remove_btn = this.node.find(".remove_btn");
-      if (remove_btn) {
-        remove_btn.addEventListener("click", () => {
-          this.newCms.removeBlock(this.target);
-          this.hide();
-        });
-      }
+		this.rearrange_insert_rect_node.classList.toggle(
+			"visible",
+			!!rearrange_control_node
+		);
 
-      const target_content_rect = this.target_content.getBoundingClientRect();
+		this.newCms.container.classList.toggle(
+			"rearrange_possible",
+			!!rearrange_control_node
+		);
 
-      const scrollable_parent = this.target.findScrollableParent();
-      const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+		if (rearrange_control_node) {
+			if (!rearrange_control_node.classList.contains("rearrange_active")) {
+				const min_size = 20;
 
-      // could we set it once? along with icons and so on
-      this.node.style.left =
-        target_content_rect.left -
-        scrollable_parent_rect.left +
-        scrollable_parent.scrollLeft +
-        "px";
+				let width = min_size;
+				let height = min_size;
 
-      this.node.style.top =
-        target_content_rect.top -
-        scrollable_parent_rect.top +
-        scrollable_parent.scrollTop +
-        "px";
+				const rearrange_block_rect_data = nodePositionAgainstScrollableParent(
+					rearrange_block
+				);
 
-      this.node.style.width = target_content_rect.width + "px";
-      this.node.style.height = target_content_rect.height + "px";
-    }
+				let x = rearrange_block_rect_data.relative_pos.left;
+				let y = rearrange_block_rect_data.relative_pos.top;
 
-    this.node.classList.toggle("active", show_edit_rect);
-  }
+				if (rearrange_position == "inside") {
+					height = rearrange_block_rect_data.node_rect.height;
+					width = rearrange_block_rect_data.node_rect.width;
+
+					if (height > 30) {
+						height -= 20;
+						y += 10;
+					}
+					if (width > 30) {
+						width -= 20;
+						x += 10;
+					}
+				} else {
+					if (is_parent_row) {
+						height = rearrange_block_rect_data.node_rect.height;
+					} else {
+						width = rearrange_block_rect_data.node_rect.width;
+					}
+
+					if (rearrange_position != "before") {
+						if (is_parent_row) {
+							x += rearrange_block_rect_data.node_rect.width;
+						} else {
+							y += rearrange_block_rect_data.node_rect.height;
+						}
+					}
+
+					if (is_parent_row) {
+						x -= min_size * 0.5;
+					} else {
+						y -= min_size * 0.5;
+					}
+
+					if (rearrange_control_node.classList.contains("insert_end")) {
+						if (is_parent_row) {
+							x += min_size * (rearrange_position == "before" ? 0.5 : -0.5);
+						} else {
+							y += min_size * (rearrange_position == "before" ? 0.5 : -0.5);
+						}
+					}
+				}
+
+				this.rearrange_insert_rect_node.style.left = x + "px";
+				this.rearrange_insert_rect_node.style.top = y + "px";
+				this.rearrange_insert_rect_node.style.width = width + "px";
+				this.rearrange_insert_rect_node.style.height = height + "px";
+			}
+			rearrange_control_node.classList.add("rearrange_active");
+
+			if (parent_container) {
+				parent_container.classList.add("rearrange_active");
+				if (parent_container.select_control) {
+					parent_container.select_control.classList.add("rearrange_active");
+				}
+			}
+		}
+	}
+
+	addFloatingRearrangeControls(block) {
+		this.removeRearrangement();
+
+		// just a rect u grab from
+		if (block) {
+			const block_rect_data = nodePositionAgainstScrollableParent(block);
+			const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
+
+			block_rect_data.scrollable_parent.appendChild(
+				rearrange_grabbed_rect_node
+			);
+
+			rearrange_grabbed_rect_node.style.left =
+				block_rect_data.relative_pos.left + "px";
+			rearrange_grabbed_rect_node.style.top =
+				block_rect_data.relative_pos.top + "px";
+			rearrange_grabbed_rect_node.style.width =
+				block_rect_data.node_rect.width + "px";
+			rearrange_grabbed_rect_node.style.height =
+				block_rect_data.node_rect.height + "px";
+			rearrange_grabbed_rect_node.classList.add("visible");
+		}
+
+		// them floating controls
+		const rearrange_control_width = parseInt(
+			getComputedStyle(document.documentElement).getPropertyValue(
+				"--rearrange_control_width"
+			)
+		);
+		const rearrange_control_height = parseInt(
+			getComputedStyle(document.documentElement).getPropertyValue(
+				"--rearrange_control_height"
+			)
+		);
+
+		let blocks_data = [];
+		const addControls = (position) => {
+			this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
+				if (block == this.newCms.grabbed_block) {
+					// don't touch itself
+					return;
+				}
+
+				if (
+					this.newCms.grabbed_block &&
+					((position === "after" &&
+						block.next() == this.newCms.grabbed_block) ||
+						(position === "before" &&
+							block.prev() == this.newCms.grabbed_block))
+				) {
+					// no siblings
+					return;
+				}
+
+				const parent_container = block.findParentByAttribute(
+					{ "data-block": "container" },
+					{ skip: 1 }
+				);
+
+				const is_parent_row = parent_container
+					? parent_container.classList.contains("container_row")
+					: false;
+
+				const block_rect_data = nodePositionAgainstScrollableParent(block);
+
+				const prev_node = block.prev();
+
+				if (
+					position === "before" &&
+					prev_node &&
+					prev_node.classList.contains("newCms_block")
+				) {
+					// no kissing ugh
+					if (is_parent_row) {
+						if (
+							prev_node.getBoundingClientRect().left <=
+							block_rect_data.node_rect.left
+						) {
+							// row wrap case not spotted, skip :)
+							return;
+						}
+					} else {
+						// no need to put stuff on top
+						return;
+					}
+				}
+
+				if (
+					position == "inside" &&
+					(block.find(".newCms_block") ||
+						block.getAttribute("data-block") != "container")
+				) {
+					// has a kid? no need to add that little icon to add more bro
+					return;
+				}
+
+				let parent_count = 0;
+				let parent = block;
+				while (parent != this.content_node) {
+					parent_count++;
+					parent = parent.parent();
+				}
+
+				if (position == "inside") {
+					block_rect_data.relative_pos.left +=
+						(block_rect_data.node_rect.width - rearrange_control_width) * 0.5;
+					block_rect_data.relative_pos.top +=
+						(block_rect_data.node_rect.height - rearrange_control_height) * 0.5;
+				} else {
+					if (is_parent_row) {
+						block_rect_data.relative_pos.left -= rearrange_control_width * 0.5;
+						block_rect_data.relative_pos.top +=
+							(block_rect_data.node_rect.height - rearrange_control_height) *
+							0.5;
+
+						if (position === "after") {
+							block_rect_data.relative_pos.left +=
+								block_rect_data.node_rect.width;
+						}
+					} else {
+						block_rect_data.relative_pos.left +=
+							(block_rect_data.node_rect.width - rearrange_control_width) * 0.5;
+						block_rect_data.relative_pos.top -= rearrange_control_width * 0.5;
+
+						if (position === "after") {
+							block_rect_data.relative_pos.top +=
+								block_rect_data.node_rect.height;
+						}
+					}
+				}
+
+				const index = block_rect_data.relative_pos.top + parent_count;
+				blocks_data.push({
+					index: index,
+					block: block,
+					rect_data: block_rect_data,
+					is_parent_row: is_parent_row,
+					position: position,
+				});
+			});
+		};
+
+		this.node.empty();
+
+		this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
+			block.rearrange_control_before = null;
+			block.rearrange_control_after = null;
+			block.rearrange_control_inside = null;
+		});
+
+		addControls("inside");
+		addControls("before");
+		addControls("after");
+
+		const sorted_blocks_data = blocks_data.sort((a, b) => {
+			return Math.sign(a.index - b.index);
+		});
+
+		const sorted_blocks_data_length = sorted_blocks_data.length;
+		let upper_bound = 0;
+
+		for (let i = 0; i < sorted_blocks_data_length; i++) {
+			delete block.rearrange_control_before;
+			delete block.rearrange_control_after;
+		}
+
+		for (let i = 0; i < sorted_blocks_data_length; i++) {
+			const block_data = sorted_blocks_data[i];
+			const block = block_data.block;
+
+			let left = block_data.rect_data.relative_pos.left;
+			let top = block_data.rect_data.relative_pos.top;
+
+			let moving = true;
+			while (moving) {
+				moving = false;
+				for (let u = i - 1; u >= upper_bound; u--) {
+					const prev_block_data = sorted_blocks_data[u];
+
+					const prev_y2 =
+						prev_block_data.rect_data.relative_pos.top +
+						rearrange_control_height;
+
+					if (top >= prev_y2) {
+						// optimization
+						upper_bound = u + 1;
+						break;
+					}
+
+					if (
+						prev_block_data.rect_data.relative_pos.left <
+							left + rearrange_control_width &&
+						prev_block_data.rect_data.relative_pos.left +
+							rearrange_control_width >
+							left
+					) {
+						if (block_data.position === "after") {
+							// go left
+							left =
+								prev_block_data.rect_data.relative_pos.left -
+								rearrange_control_width;
+						} else if (
+							block_data.position === "before" ||
+							block_data.position === "inside"
+						) {
+							// go right
+							left =
+								prev_block_data.rect_data.relative_pos.left +
+								rearrange_control_width;
+						}
+						moving = true;
+					}
+				}
+			}
+
+			block_data.rect_data.relative_pos.left = left;
+			block_data.rect_data.relative_pos.top = top;
+
+			const rearrange_control = document.createElement("DIV");
+			rearrange_control.classList.add("rearrange_control");
+			rearrange_control.style.left = left + "px";
+			rearrange_control.style.top = top + "px";
+
+			let rearrange_control_html = "";
+
+			let rotation = 0;
+
+			if (block_data.position == "inside") {
+				rearrange_control_html = `<img style='width:0.7em' src="/src/img/insert_plus.svg">`;
+				rearrange_control.classList.add("insert_inside");
+			} else {
+				if (block_data.is_parent_row) {
+					rotation += 90;
+				}
+
+				const has_prev = block_data.position == "after" ? true : !!block.prev();
+				const has_next =
+					block_data.position == "before" ? true : !!block.next();
+
+				if (has_next && has_prev) {
+					rearrange_control_html = `<img style='width:1em' src="/src/img/arrows_insert_between.svg">`;
+					rearrange_control.classList.add("insert_between");
+				} else if (has_prev || has_next) {
+					rearrange_control_html = `<img style='width:1em' src="/src/img/arrows_insert_after.svg">`;
+					if (has_next) {
+						rotation += 180;
+					}
+					rearrange_control.classList.add("insert_end");
+				}
+			}
+
+			rearrange_control.innerHTML = rearrange_control_html;
+
+			$(rearrange_control).find("*").style.transform = `rotate(${rotation}deg)`;
+
+			block[`rearrange_control_${block_data.position}`] = rearrange_control;
+			rearrange_control.rearrange_block = block;
+			rearrange_control.position = block_data.position;
+
+			this.node.appendChild(rearrange_control);
+		}
+	}
+}
+
+class FloatingSelectControls {
+	constructor(newCms) {
+		this.newCms = newCms;
+		this.node = newCms.container.find(`.select_controls`);
+		this.removeSelection();
+	}
+
+	init() {
+		this.selected_block = null;
+		this.node.classList.add("visible");
+		this.removeSelection();
+	}
+
+	removeSelection() {
+		this.newCms.container.findAll(".select_active").forEach((e) => {
+			e.classList.remove("select_active");
+		});
+	}
+
+	mouseMove() {
+		const target = this.newCms.mouse_target;
+
+		let hovered_block = null;
+
+		const select_control = target
+			? target.findParentByClassName("select_control")
+			: null;
+
+		if (select_control) {
+			hovered_block = select_control.select_block;
+		}
+
+		if (!hovered_block) {
+			hovered_block = target
+				? target.findParentByClassName("newCms_block")
+				: null;
+		}
+
+		if (
+			this.selected_block != hovered_block ||
+			(this.selected_block &&
+				!this.selected_block.select_control.classList.contains("select_active"))
+		) {
+			this.removeSelection();
+
+			this.selected_block = hovered_block;
+
+			const selected_block = this.selected_block;
+
+			if (selected_block) {
+				selected_block.classList.add("select_active");
+				selected_block.select_control.classList.add("select_active");
+			}
+		}
+
+		this.newCms.container.classList.toggle(
+			"anything_selected",
+			this.selected_block
+		);
+	}
+
+	mouseDown() {
+		if (
+			this.newCms.mouse_left_btn &&
+			this.selected_block &&
+			!this.newCms.grabbed_block
+		) {
+			this.newCms.edit_block.showControlsToBlock(this.selected_block);
+			//this.newCms.grabBlock(this.selected_block);
+		}
+	}
+
+	addFloatingSelectControls() {
+		this.removeSelection();
+
+		let blocks_data = [];
+		this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
+			const block_rect_data = nodePositionAgainstScrollableParent(block);
+
+			let parent_count = 0;
+			let parent = block;
+			while (parent != this.content_node) {
+				parent_count++;
+				parent = parent.parent();
+			}
+
+			const index = block_rect_data.relative_pos.top + parent_count;
+			blocks_data.push({
+				index: index,
+				block: block,
+				rect_data: block_rect_data,
+			});
+		});
+		const sorted_blocks_data = blocks_data.sort((a, b) => {
+			return Math.sign(a.index - b.index);
+		});
+
+		const select_control_width = parseInt(
+			getComputedStyle(document.documentElement).getPropertyValue(
+				"--select_control_width"
+			)
+		);
+		const select_control_height = parseInt(
+			getComputedStyle(document.documentElement).getPropertyValue(
+				"--select_control_height"
+			)
+		);
+
+		const sorted_blocks_data_length = sorted_blocks_data.length;
+		let upper_bound = 0;
+
+		this.node.empty();
+
+		for (let i = 0; i < sorted_blocks_data_length; i++) {
+			const block_data = sorted_blocks_data[i];
+			const block = block_data.block;
+
+			let left = block_data.rect_data.relative_pos.left;
+			let top = block_data.rect_data.relative_pos.top;
+
+			let moving = true;
+			while (moving) {
+				moving = false;
+				for (let u = i - 1; u >= upper_bound; u--) {
+					const prev_block_data = sorted_blocks_data[u];
+
+					const prev_y2 =
+						prev_block_data.rect_data.relative_pos.top + select_control_height;
+
+					if (top >= prev_y2) {
+						// optimization
+						upper_bound = u + 1;
+						break;
+					}
+
+					if (
+						prev_block_data.rect_data.relative_pos.left <
+							left + select_control_width &&
+						prev_block_data.rect_data.relative_pos.left + select_control_width >
+							left
+					) {
+						left =
+							prev_block_data.rect_data.relative_pos.left +
+							select_control_width;
+						moving = true;
+					}
+				}
+			}
+
+			block_data.rect_data.relative_pos.left = left;
+			block_data.rect_data.relative_pos.top = top;
+
+			const select_control = document.createElement("DIV");
+			select_control.classList.add("select_control");
+			select_control.style.left = left + "px";
+			select_control.style.top = top + "px";
+
+			select_control.block = block;
+			block.select_control = select_control;
+
+			const block_type = block.getAttribute("data-block");
+
+			select_control.setAttribute("data-block", block_type);
+
+			const icon = $(`.side_block[data-block="${block_type}"] i`);
+
+			select_control.innerHTML = icon
+				? icon.outerHTML
+				: `<i class="fas fa-square"></i>`;
+
+			block.select_control = select_control;
+			select_control.select_block = block;
+
+			this.node.appendChild(select_control);
+		}
+
+		//this.node.classList.add("blocks_visible");
+	}
+}
+
+class QuillEditor {
+	color_list = [
+		"rgb(255, 85, 118)",
+		"rgb(255,43,0)",
+		"#FFD700",
+		"var(--primary-clr)", // TODO: primary color comes from admin, not front, weird glitch, might wanna abandon or let the use prepare color list for his needs in other theme tab
+		"#3f00b5",
+		"rgb(160,65,112)",
+		"rgb(65,160,113)",
+		"#e60000",
+		"#ff9900",
+		"#ffff00",
+		"#008a00",
+		"#0066cc",
+		"#9933ff",
+		"#ffffff",
+		"#facccc",
+		"#ffebcc",
+		"#ffffcc",
+		"#cce8cc",
+		"#cce0f5",
+		"#ebd6ff",
+		"#bbbbbb",
+		"#f06666",
+		"#ffc266",
+		"#ffff66",
+		"#66b966",
+		"#66a3e0",
+		"#c285ff",
+		"#888888",
+		"#a10000",
+		"#b26b00",
+		"#b2b200",
+		"#006100",
+		"#0047b2",
+		"#6b24b2",
+		"#444444",
+		"#5c0000",
+		"#663d00",
+		"#666600",
+		"#003700",
+		"#002966",
+		"#3d1466",
+		"#000000",
+	];
+
+	constructor(newCms, node) {
+		this.node = node;
+		this.newCms = newCms;
+
+		var Size = Quill.import("attributors/style/size");
+		Size.whitelist = [];
+		for (let i = 0; i < 10; i++) {
+			Size.whitelist.push(Math.round(Math.pow(1.25, i - 2) * 100) / 100 + "em");
+		}
+
+		this.editor = new Quill(node, {
+			theme: "snow",
+			modules: {
+				syntax: true,
+				toolbar: [
+					[
+						{
+							size: Size.whitelist,
+						},
+					],
+					["bold", "italic", "underline", "strike"],
+					[
+						{
+							color: this.color_list,
+						},
+						{
+							background: this.color_list,
+						},
+					],
+					[
+						{
+							list: "ordered",
+						},
+						{
+							list: "bullet",
+						},
+						{
+							indent: "-1",
+						},
+						{
+							indent: "+1",
+						},
+					],
+					[
+						{
+							header: "1",
+						},
+						{
+							header: "2",
+						},
+						{
+							header: "3",
+						},
+					],
+					[
+						{
+							align: [],
+						},
+					],
+					["clean"],
+				],
+				table: false,
+			},
+		});
+
+		this.ql_node = this.node.find(".ql-editor");
+
+		this.newCms.container.addEventListener(
+			IS_MOBILE ? "click" : "mousedown",
+			(event) => {
+				this.newCms.updateMouseCoords(event);
+			}
+		);
+
+		this.any_changes = false;
+		this.change_from_cms = false;
+
+		this.editor.on("text-change", (delta, oldDelta, source) => {
+			if (this.newCms.edit_block.edit_node) {
+				const block_type = this.newCms.edit_block.edit_node.getAttribute(
+					"data-block"
+				);
+				if (block_type == "quill_editor") {
+					this.newCms.edit_block.edit_node
+						.find(".newCms_block_content")
+						.setContent(this.ql_node.innerHTML);
+
+					if (!this.change_from_cms) {
+						this.any_changes = true;
+					}
+				}
+			}
+		});
+
+		this.newCms.container.addEventListener(
+			IS_MOBILE ? "touchstart" : "mousemove",
+			(event) => {
+				this.newCms.updateMouseCoords(event);
+				if (!this.newCms.mouse_target.findParentNode(this.newCms.sidebar)) {
+					this.saveChanges();
+				}
+			}
+		);
+
+		this.newCms.container.addEventListener("click", (event) => {
+			this.newCms.updateMouseCoords(event);
+			if (!this.newCms.mouse_target.findParentNode(this.node)) {
+				this.saveChanges();
+			}
+		});
+	}
+
+	saveChanges() {
+		if (!this.any_changes) {
+			return;
+		}
+		this.any_changes = false;
+		this.newCms.contentChange();
+	}
+
+	setEditorContent(html) {
+		this.any_changes = false;
+		this.change_from_cms = true;
+		this.ql_node.setContent(html);
+		setTimeout(() => {
+			// 0 is also "fine", sorry for that workaround
+			this.change_from_cms = false;
+		}, 200);
+	}
 }
 
 class NewCms {
-  constructor(container) {
-    this.container = $(container);
-    this.content_node = this.container.find(`.newCmsContent`);
-    this.content_scroll_panel = this.container.find(
-      `.newCmsContent_scroll_panel`
-    );
+	constructor(container) {
+		this.container = $(container);
+		this.content_node = this.container.find(`.newCmsContent`);
+		this.content_scroll_panel = this.container.find(`.content_scroll_panel`);
+		this.content_scroll_content = this.container.find(
+			`.content_scroll_content`
+		);
+		this.sidebar = this.container.find(`.sidebar`);
+		this.sidebar_scroll_wrapper = this.sidebar.find(`.scroll-panel`);
+		this.sidebar_content_wrapper = this.sidebar_scroll_wrapper.find(
+			`.sidebar_content_wrapper`
+		);
 
-    this.inline_edited_block = null;
+		this.rearrange_node = this.container.find(`.rearrange_node`);
 
-    this.initEditBlockRect();
-    this.initAddBlockModal();
-    this.initQuillEditor();
-    this.initListenChange();
+		this.initEditBlock();
+		this.initQuillEditor();
+		this.initFloatingSelectControls();
+		this.initFloatingRearrangeControls();
+		this.initListenChange();
 
-    this.mouse_x = 0;
-    this.mouse_y = 0;
-    this.mouse_dx = 0;
-    this.mouse_dy = 0;
-    this.scroll_top = 0;
+		this.mouse_x = 0;
+		this.mouse_y = 0;
+		this.mouse_dx = 0;
+		this.mouse_dy = 0;
+		this.mouse_target = null;
+		//this.scroll_top = 0;
 
-    setFormData(
-      {
-        edit_mode: 1,
-      },
-      container
-    );
+		setFormData(
+			{
+				edit_mode: 1,
+			},
+			container
+		);
 
-    this.container.addEventListener(
-      IS_MOBILE ? "touchstart" : "mousemove",
-      (event) => {
-        this.mouseMove(event);
-      }
-    );
-    this.container.addEventListener(
-      IS_MOBILE ? "click" : "mousedown",
-      (event) => {
-        this.mouseDown(event);
-      }
-    );
+		this.container.addEventListener(
+			IS_MOBILE ? "touchstart" : "mousemove",
+			(event) => {
+				this.updateMouseCoords(event);
+				this.mouseMove();
+			}
+		);
 
-    this.container.addEventListener(
-      IS_MOBILE ? "touchend" : "mouseup",
-      (event) => {
-        this.mouseUp(event);
-      }
-    );
+		this.container.addEventListener(
+			IS_MOBILE ? "click" : "mousedown",
+			(event) => {
+				this.updateMouseCoords(event);
+				this.mouseDown();
+			}
+		);
 
-    this.content_scroll_panel.addEventListener("scroll", (event) => {
-      this.scroll(event);
-    });
-  }
+		this.container.addEventListener(
+			IS_MOBILE ? "touchend" : "mouseup",
+			(event) => {
+				this.updateMouseCoords(event);
+				this.mouseUp();
+			}
+		);
 
-  initListenChange() {
-    this.content_node.addEventListener("change", () => {
-      if (this.content_change_triggered) {
-        this.contentChange({
-          trigger_change: false,
-        });
-      }
-    });
-  }
+		this.content_scroll_panel.addEventListener("scroll", () => {
+			this.scroll();
+		});
+	}
 
-  getCleanOutput(html) {
-    var playground = $(document.createElement("DIV"));
-    // TODO: is it even necessary?
-    //document.body.appendChild(playground);
-    playground.insertAdjacentHTML("afterbegin", html);
+	initListenChange() {
+		this.content_node.addEventListener("change", () => {
+			if (this.content_change_triggered) {
+				this.contentChange({
+					trigger_change: false,
+				});
+			}
+		});
+	}
 
-    playground.findAll(".newCms_add_block_wrapper").forEach((e) => {
-      e.remove();
-    });
+	getCleanOutput(html) {
+		// TODO: use as a formatter? so the history doesnt have those classes inside and so on, tricky but might be worth it :*
+		var playground = $(document.createElement("DIV"));
+		// TODO: is it even necessary?
+		//document.body.appendChild(playground);
 
-    playground.findAll(".newCms_container_header").forEach((e) => {
-      e.remove();
-    });
+		playground.insertAdjacentHTML("afterbegin", html);
 
-    return playground.innerHTML;
-  }
+		return playground.innerHTML;
+	}
 
-  initEditBlockRect() {
-    this.edit_block = new EditBlockRect(
-      this.container.find(`.edit_block_node`),
-      this
-    );
-  }
+	initEditBlock() {
+		this.edit_block = new EditBlock(
+			this.container.find(`.edit_block_node`),
+			this
+		);
+	}
 
-  initQuillEditor() {
-    this.inline_quill_editor = new InlineQuillEditor(
-      this,
-      this.container.find(".quill_editor"),
-      this.container.find(".quill_editor_wrapper"),
-      this.container.find(".newCmsContent_scroll_panel")
-    );
-  }
+	initQuillEditor() {
+		this.quill_editor = new QuillEditor(
+			this,
+			this.container.find(".quill_editor")
+		);
+	}
 
-  initAddBlockModal() {
-    registerModalContent(
-      /*html*/ `
-      <div id="newCmsBlocks" data-dismissable>
-          <div class="modal-body">
-              <div class="custom-toolbar">
-                  <span class="title">
-                      Wstaw blok CMS'owy
-                  </span>
-                  <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-              </div>
+	initFloatingSelectControls() {
+		this.select_controls = new FloatingSelectControls(this);
+	}
 
-              <div class="scroll-panel scroll-shadow panel-padding">
-                <div class="btn subtle" data-block="quill_editor">Blok tesktowy</div>
-                <div class="btn subtle" data-block="container">kontener</div>
-              </div>
-          </div>
-          <link href="/admin/tools/newCms.css?v=${CSS_RELEASE}" rel="stylesheet">
+	initFloatingRearrangeControls() {
+		this.rearrange_controls = new FloatingRearrangeControls(this);
+	}
+
+	edit(targetNode, options) {
+		this.targetNode = $(targetNode);
+		this.options = options;
+
+		this.edit_block.init();
+		this.rearrange_controls.init();
+		this.select_controls.init();
+
+		setFormData(
+			{
+				content: this.getCleanOutput(this.targetNode.innerHTML),
+			},
+			this.container
+		);
+		this.contentChange();
+
+		setFormInitialState(this.container);
+
+		this.lockInput();
+
+		showModal("newCms", {
+			source: this.targetNode,
+			lock_during_animation: true,
+			callback: () => {
+				setTimeout(() => {
+					this.contentChange();
+					this.unlockInput();
+				}, 100);
+			},
+		});
+	}
+
+	save() {
+		this.targetNode.setValue(
+			this.getCleanOutput(getFormData(this.container).content)
+		);
+	}
+
+	lockInput(delay) {
+		if (delay <= 1) {
+			return;
+		}
+
+		this.container.classList.add("locked_input");
+
+		if (this.lock_timeout) {
+			clearTimeout(this.lock_timeout);
+		}
+
+		if (delay) {
+			this.lock_timeout = setTimeout(() => {
+				this.unlockInput();
+			}, delay);
+		}
+	}
+
+	unlockInput() {
+		this.container.classList.remove("locked_input");
+		this.select_controls.addFloatingSelectControls();
+	}
+
+	updateMouseTarget() {
+		this.mouse_target = $(
+			document.elementFromPoint(this.mouse_x, this.mouse_y)
+		);
+	}
+
+	updateMouseCoords(event) {
+		this.content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
+		const mouse_x = event.clientX;
+		const mouse_y = event.clientY;
+		this.mouse_dx = mouse_x - this.mouse_x;
+		this.mouse_dy = mouse_y - this.mouse_y;
+		this.mouse_x = mouse_x;
+		this.mouse_y = mouse_y;
+		this.mouse_left_btn = event.buttons === 1;
+		this.mouse_target = $(event.target);
+	}
+
+	mouseMove() {
+		if (this.grabbed_block) {
+			this.rearrange_controls.mouseMove();
+			return;
+		}
+
+		if (this.edit_block.select_node) {
+			this.edit_block.mouseMove();
+		}
+
+		this.select_controls.mouseMove();
+	}
+
+	mouseDown() {
+		/*if (this.edit_block.target) {
+    } else {
+    }*/
+		this.select_controls.mouseDown();
+
+		const target = this.mouse_target;
+
+		const side_block = target
+			? target.findParentByClassName("side_block")
+			: null;
+		if (side_block) {
+			this.grabBlock(side_block);
+		}
+
+		const show_side_menu = target.findParentByAttribute("data-show_side_menu");
+		if (show_side_menu) {
+			this.showSideMenu(show_side_menu.getAttribute("data-show_side_menu"));
+		}
+	}
+
+	mouseUp() {
+		if (this.grabbed_block) {
+			this.releaseBlock();
+		}
+	}
+
+	scroll() {
+		this.updateMouseTarget();
+		this.mouseMove();
+
+		//this.scroll_top = this.content_scroll_panel.scrollTop;
+		/*if (this.grabbed_block) {
+      this.grabbedBlockPositionChange();
+      return;
+    }*/
+	}
+
+	contentChange(options = {}) {
+		this.content_change_triggered = true;
+		this.insertMissingQlClasses();
+
+		this.select_controls.addFloatingSelectControls();
+
+		if (nonull(options.trigger_change, true) === true) {
+			this.content_node.setValue();
+		}
+		this.content_change_triggered = false;
+	}
+
+	insertMissingQlClasses() {
+		// TODO: should we use it on the whole container instead?
+		this.content_node
+			.findAll(".newCms_quill_editor")
+			.forEach((newCms_block) => {
+				const newCms_block_content = newCms_block.find(".newCms_block_content");
+				newCms_block_content.classList.add("ql-editor");
+				newCms_block_content.parent().classList.add("ql-snow");
+			});
+	}
+
+	getBlockHtml(type, options = {}) {
+		//let content = "";
+		let class_name = "";
+
+		let content_html = "";
+
+		if (type === "quill_editor") {
+			content_html = `<div class="newCms_block_content ql-editor"></div>`;
+		} else {
+			content_html = `<img class="newCms_block_content">`;
+		}
+
+		return /*html*/ `
+      <div class="newCms_block ${class_name}" data-block="${type}">
+        ${content_html}
       </div>
-    `,
-      (modal) => {
-        modal.findAll("[data-block]").forEach((e) => {
-          e.onclick = () => {
-            this.insertBlock(
-              this.insert_block_button,
-              "beforebegin",
-              e.getAttribute("data-block")
-            );
-            hideModal(modal.id);
-          };
-        });
-      }
-    );
-  }
+    `;
+	}
 
-  edit(targetNode, options) {
-    this.targetNode = $(targetNode);
-    this.options = options;
+	insertBlock(target, position, type, options = {}) {
+		target.insertAdjacentHTML(position, getBlockHtml(type, options));
 
-    this.edit_block.init();
+		this.contentChange();
+	}
 
-    setFormData(
-      {
-        content: this.getCleanOutput(this.targetNode.innerHTML),
-      },
-      this.container
-    );
-    this.contentChange();
+	removeBlock(block) {
+		if (!block) {
+			return;
+		}
+		const duration = 300;
+		this.lockInput();
+		zoomNode(block, "out", {
+			duration: duration,
+			callback: () => {
+				block.remove();
+				this.contentChange();
+				this.unlockInput();
+			},
+		});
+	}
 
-    setFormInitialState(this.container);
+	grabBlock(block) {
+		if (this.grabbed_block) {
+			return;
+		}
 
-    showModal("newCms", {
-      source: this.targetNode,
-      lock_during_animation: true,
-    });
-  }
+		const block_rect = block.getBoundingClientRect();
+		block.last_rect = block_rect;
 
-  save() {
-    // remove all unnecessary nodes and so on, keep it as a single function, copy all nodes and remove what u want
-    this.targetNode.setValue(
-      this.getCleanOutput(getFormData(this.container).content)
-    );
-  }
+		this.source_grabbed_node = block.classList.contains("side_block")
+			? this.sidebar
+			: this.content_scroll_content;
 
-  mouseMove(event) {
-    const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
-    const mouse_x = event.clientX - content_scroll_panel_rect.left;
-    const mouse_y = event.clientY - content_scroll_panel_rect.top;
-    this.mouse_dx = mouse_x - this.mouse_x;
-    this.mouse_dy = mouse_y - this.mouse_y;
-    this.mouse_x = mouse_x;
-    this.mouse_y = mouse_y;
+		this.grabbed_node_scroll_parent = this.source_grabbed_node.findScrollParent(
+			{ default: document.body }
+		);
 
-    if (this.grabbed_block) {
-      this.grabbedBlockPositionChange();
-      return;
-    }
+		this.source_grabbed_node.appendChild(
+			newCms.rearrange_controls.rearrange_grabbed_rect_node
+		);
 
-    this.edit_block.mouseMove(event);
-  }
+		this.grabbed_block = $(block);
+		this.grabbed_block.classList.add("grabbed");
+		this.grabbed_mouse_x = this.mouse_x;
+		this.grabbed_mouse_y = this.mouse_y;
+		this.grabbed_scroll_top = this.grabbed_node_scroll_parent.scrollTop;
 
-  mouseDown(event) {
-    const target = $(event.target);
+		this.container.classList.add("grabbed_block");
 
-    // TODO: remove
-    const newCms_add_block_btn = target.findParentByClassName(
-      "newCms_add_block_btn"
-    );
-    if (newCms_add_block_btn) {
-      this.insertBlockModal(newCms_add_block_btn.parent());
-    }
-  }
+		this.rearrange_controls.node.classList.add("visible");
+		//this.select_controls.node.classList.remove("blocks_visible");
 
-  mouseUp(event) {
-    if (this.grabbed_block) {
-      this.releaseBlock($(event.target));
-    }
-  }
+		// show the grabbed clone
+		const rearrange_node = this.rearrange_node;
+		rearrange_node.setContent(this.grabbed_block.outerHTML);
+		const block_inside = rearrange_node.find("*");
+		const grabbed_block_rect = this.grabbed_block.getBoundingClientRect();
+		rearrange_node.style.left = grabbed_block_rect.left + "px";
+		rearrange_node.style.top = grabbed_block_rect.top + "px";
+		block_inside.style.width = grabbed_block_rect.width + "px";
+		block_inside.style.height = grabbed_block_rect.height + "px";
+		rearrange_node.classList.add("visible");
 
-  scroll(event) {
-    this.scroll_top = this.content_scroll_panel.scrollTop;
-    if (this.grabbed_block) {
-      this.grabbedBlockPositionChange();
-      return;
-    }
-  }
+		this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
 
-  grabbedBlockPositionChange() {
-    const dx = this.mouse_x - this.grabbed_mouse_x;
-    const dy =
-      this.mouse_y -
-      this.grabbed_mouse_y +
-      this.scroll_top -
-      this.grabbed_scroll_top;
+		this.grab_animation_speed = 0;
+		this.grabAnimation();
+	}
 
-    this.grabbed_block.style.transform = `
-    translate(
-      ${dx.toPrecision(5)}px,
-      ${dy.toPrecision(5)}px
-    )
-  `;
-  }
+	releaseBlock() {
+		let grabbed_block = this.grabbed_block;
+		if (!grabbed_block) {
+			return;
+		}
 
-  contentChange(options = {}) {
-    this.content_change_triggered = true;
+		const block_type = grabbed_block.getAttribute("data-block");
 
-    this.insertMissingAddBlockButtons();
-    this.insertMissingContainerHeaders();
-    this.insertMissingQlClasses();
+		let delay_grabbed_rect_node_fadeout = 0;
 
-    this.removeUnnecessaryAddBlockButtons();
-    this.removeUnnecessaryContainerHeaders();
+		if (block_type && grabbed_block.classList.contains("side_block")) {
+			const side_block = grabbed_block;
+			const side_block_rect = side_block.getBoundingClientRect();
 
-    if (nonull(options.trigger_change, true) === true) {
-      this.content_node.setValue();
-    }
-    this.content_change_triggered = false;
-  }
+			const t1 = 100;
+			const t2 = 250;
+			animate(
+				side_block,
+				`
+          0% {opacity: 1}
+          100% {opacity: 0}
+        `,
+				t1,
+				() => {
+					side_block.classList.remove("grabbed");
+					side_block.style.transform = "";
+					animate(
+						side_block,
+						`
+              0% {opacity: 0; transform: scale(0.65)}
+              100% {opacity: 1; transform: scale(1)}
+            `,
+						t2
+					);
+				}
+			);
+			delay_grabbed_rect_node_fadeout = t1 + t2;
 
-  insertMissingQlClasses() {
-    this.content_node
-      .findAll(".newCms_quill_editor")
-      .forEach((newCms_block) => {
-        const newCms_block_content = newCms_block.find(".newCms_block_content");
-        newCms_block_content.classList.add("ql-editor");
-        newCms_block_content.parent().classList.add("ql-snow");
-      });
-  }
+			// replace
+			const animation_data = grabbed_block.animation_data;
+			grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
+			this.grabbed_block = grabbed_block;
+			this.content_node.appendChild(grabbed_block);
 
-  insertMissingContainerHeaders() {
-    this.content_node.findAll(".newCms_container").forEach((container) => {
-      if (!container.find(".newCms_container_header")) {
-        container.insertAdjacentHTML(
-          "afterbegin",
-          /*html*/ `
-            <div class="newCms_container_header">
-              <i class="fas fa-border-all"></i>
-            </div>
-          `
-        );
-      }
-    });
-  }
+			grabbed_block.animation_data = animation_data;
+			grabbed_block.last_rect = side_block_rect;
+			grabbed_block.classList.add("select_active");
+		}
 
-  insertMissingAddBlockButtons() {
-    // consider empty containers
-    [
-      this.content_node,
-      ...this.content_node.findAll(".newCms_container"),
-    ].forEach((con) => {
-      // can be anything inside ;)
-      var has_add_block_btn = !!con.find(".newCms_add_block_wrapper");
-      if (has_add_block_btn) {
-        return;
-      }
-      var has_any_block = !!con.find(".newCms_block");
-      if (has_any_block) {
-        return;
-      }
-      const container_content = nonull(
-        con.find(".newCms_container_content"),
-        con
-      );
-      this.insertAddBlockButton(container_content, "afterbegin");
-    });
+		this.grabbed_block.style.transform = "";
+		grabbed_block.classList.remove("grabbed");
+		this.rearrange_node.classList.remove("visible");
+		this.container.classList.remove("grabbed_block");
 
-    // before and after blocks
-    this.content_node.findAll(".newCms_block").forEach((con) => {
-      if (
-        !con.next() ||
-        !con.next().classList.contains("newCms_add_block_wrapper")
-      ) {
-        this.insertAddBlockButton(con, "afterend");
-      }
-      if (
-        !con.prev() ||
-        !con.prev().classList.contains("newCms_add_block_wrapper")
-      ) {
-        this.insertAddBlockButton(con, "beforebegin");
-      }
-    });
-  }
+		this.grabbed_block = null;
 
-  removeUnnecessaryAddBlockButtons() {
-    // two add blocks next to each other? get outta here
-    this.content_node.findAll(".newCms_add_block_wrapper").forEach((btn) => {
-      const prev = btn.prev();
-      if (prev && prev.classList.contains("newCms_add_block_wrapper")) {
-        btn.remove();
-      }
-    });
-  }
+		let end_just_once = true;
+		const end = () => {
+			if (!end_just_once) {
+				return;
+			}
+			end_just_once = false;
 
-  removeUnnecessaryContainerHeaders() {
-    // TODO: todo
-    // newCms_container_header
-  }
+			// not needed cause we set it to user-select none bro
+			removeUserSelection();
 
-  insertAddBlockButton(target, position) {
-    target.insertAdjacentHTML(
-      position,
-      /*html*/ `
-        <div class="newCms_add_block_wrapper">
-          <button class="btn newCms_add_block_btn">
-            <i class="fas fa-plus"></i>
-          </button>
-        </div>
-      `
-    );
-  }
+			this.contentChange();
 
-  insertBlockModal(button) {
-    showModal("newCmsBlocks", { source: button });
-    this.insert_block_button = button;
-  }
+			this.updateMouseTarget();
+			this.mouseMove();
+		};
 
-  insertBlock(target, position, type, options) {
-    let content = "";
-    let class_name = "";
-    let class_name_content = "";
+		this.rearrange_controls.node.classList.remove("visible");
 
-    if (type === "quill_editor") {
-      class_name_content = "ql-editor";
-    }
+		this.lockInput(delay_grabbed_rect_node_fadeout);
+		setTimeout(() => {
+			this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove(
+				"visible"
+			);
+		}, delay_grabbed_rect_node_fadeout);
 
-    target.insertAdjacentHTML(
-      position,
-      /*html*/ `
-        <div class="newCms_block newCms_${type} ${class_name}">
-            <div class="newCms_block_content newCms_${type}_content ${class_name_content}">${content}</div>
-        </div>
-      `
-    );
+		if (!this.rearrange_controls.rearrange_block) {
+			return end();
+		}
 
-    this.contentChange();
-  }
+		const duration = 350;
 
-  removeBlock(block) {
-    block.remove();
-    this.contentChange();
-  }
+		this.content_node.findAll(".newCms_block").forEach((block) => {
+			const node_on_screen_rect = isNodeOnScreen(block, 0);
+			if (node_on_screen_rect && !block.last_rect) {
+				block.last_rect = node_on_screen_rect;
+			}
+		});
 
-  grabBlock(block) {
-    this.grabbed_block = block;
-    this.grabbed_block.classList.add("grabbed");
-    this.grabbed_mouse_x = this.mouse_x;
-    this.grabbed_mouse_y = this.mouse_y;
-    this.grabbed_scroll_top = this.scroll_top;
+		if (this.rearrange_controls.rearrange_position == "inside") {
+			this.rearrange_controls.rearrange_block
+				.find(".newCms_block_content")
+				.appendChild(grabbed_block);
+		} else {
+			let before_node = this.rearrange_controls.rearrange_block;
+			if (this.rearrange_controls.rearrange_position == "after") {
+				before_node = before_node.next();
+			}
 
-    this.content_scroll_panel.classList.add("grabbed_block");
+			this.rearrange_controls.rearrange_block
+				.parent()
+				.insertBefore(grabbed_block, before_node);
+		}
 
-    this.edit_block.hideButtons();
+		const all_animatable_blocks = this.content_node
+			.findAll(".newCms_block")
+			.filter((block) => {
+				const node_on_screen_rect = isNodeOnScreen(block, 0);
+				if (block.last_rect && node_on_screen_rect) {
+					block.new_rect = node_on_screen_rect;
+					if (!block.animation_data) {
+						block.animation_data = { x: 0, y: 0 };
+					}
+					return true;
+				} else {
+					return false;
+				}
+			});
 
-    this.grabAnimation();
-  }
+		all_animatable_blocks.forEach((block) => {
+			const dx = block.last_rect.left - block.new_rect.left;
+			const dy = block.last_rect.top - block.new_rect.top;
 
-  releaseBlock(target_node) {
-    const grabbed_block_ref = this.grabbed_block;
-    const newCms_add_block_wrapper = target_node.findParentByClassName(
-      "newCms_add_block_wrapper"
-    );
-    if (newCms_add_block_wrapper) {
-      newCms_add_block_wrapper
-        .parent()
-        .insertBefore(this.grabbed_block, newCms_add_block_wrapper);
-    }
+			block.animation_data.x += dx;
+			block.animation_data.y += dy;
 
-    this.grabbed_block.style.transform = "";
-    this.grabbed_block.classList.remove("grabbed");
+			block
+				.find(".newCms_block_content")
+				.directChildren()
+				.forEach((sub_block) => {
+					if (sub_block.animation_data) {
+						sub_block.animation_data.x -= dx;
+						sub_block.animation_data.y -= dy;
+					}
+				});
+		});
 
-    this.grabbed_block = null;
+		all_animatable_blocks.forEach((block) => {
+			//const styles = window.getComputedStyle(block);
 
-    this.content_scroll_panel.classList.remove("grabbed_block");
+			// TODO: every property such like flexGrow etc needs to be available in a quickly accessible place
+			// maybe put them straight to styles?
+			// we should remove it when cleaning the cms output anyway ;)
 
-    this.contentChange();
+			let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
+			let my = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-    removeUserSelection();
+			const dx = block.animation_data.x - mx;
+			const dy = block.animation_data.y - my;
 
-    this.edit_block.showButtons();
+			const fg = block.style.flexGrow;
+			block.style.flexGrow = 0;
 
-    /*setTimeout(() => {
-      scrollIntoView(grabbed_block_ref, { margin: 0.05 });
-    }, 200);*/
-  }
+			animate(
+				block,
+				`
+              0% {
+                transform: translate(
+                  ${dx}px,
+                  ${dy}px
+                );
+                width: ${block.last_rect.width}px;
+                height: ${block.last_rect.height}px;
+                margin: ${my}px ${mx}px;
+              }
+              100% {
+                transform: translate(
+                  0px,
+                  0px
+                );
+                width: ${block.new_rect.width}px;
+                height: ${block.new_rect.height}px;
+                margin: 0px 0px;
+              }
+            `,
+				duration,
+				() => {
+					block.style.flexGrow = fg;
 
-  grabAnimation() {
-    let speed_y = 0;
+					setTimeout(() => {
+						end();
+					}, 50);
+				}
+			);
 
-    const scroll_offset = 50;
-    if (this.mouse_y < scroll_offset) {
-      speed_y = this.mouse_y - scroll_offset;
-      if (speed_y < -scroll_offset) {
-        speed_y = -scroll_offset;
-      }
-    }
+			delete block.animation_data;
+			delete block.last_rect;
+		});
 
-    if (this.content_scroll_panel.clientHeight - this.mouse_y < scroll_offset) {
-      speed_y =
-        scroll_offset - this.content_scroll_panel.clientHeight + this.mouse_y;
+		this.lockInput(duration);
+	}
 
-      if (speed_y > scroll_offset) {
-        speed_y = scroll_offset;
-      }
-    }
+	grabAnimation() {
+		if (!this.grabbed_block) {
+			return;
+		}
 
-    this.content_scroll_panel.scrollBy(0, speed_y * 0.4);
+		// cute scroll
+		const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
 
-    if (this.grabbed_block) {
-      requestAnimationFrame(() => {
-        this.grabAnimation();
-      });
-    }
-  }
+		let speed_y = 0;
+
+		const scroll_offset = 50;
+		if (this.mouse_y < content_scroll_panel_rect.top + scroll_offset) {
+			speed_y = this.mouse_y - scroll_offset - content_scroll_panel_rect.top;
+			if (speed_y < -scroll_offset) {
+				speed_y = -scroll_offset;
+			}
+		}
+
+		if (content_scroll_panel_rect.height - this.mouse_y < scroll_offset) {
+			speed_y = scroll_offset - content_scroll_panel_rect.height + this.mouse_y;
+
+			if (speed_y > scroll_offset) {
+				speed_y = scroll_offset;
+			}
+		}
+
+		this.content_scroll_panel.scrollBy(0, speed_y * 0.4);
+
+		// move the block itself
+		{
+			const grabbed_block = this.grabbed_block;
+
+			// pull closer to the cursor
+			this.grab_animation_speed = this.grab_animation_speed * 0.9 + 0.035;
+			const acc = this.grab_animation_speed;
+
+			const gb_rect = grabbed_block.last_rect;
+			this.grabbed_mouse_x =
+				this.grabbed_mouse_x * (1 - acc) +
+				(gb_rect.left + gb_rect.width * 0.5) * acc;
+
+			this.grabbed_mouse_y =
+				this.grabbed_mouse_y * (1 - acc) +
+				(gb_rect.top + gb_rect.height * 0.5) * acc;
+
+			// display actual position using transform
+			const base_dx = this.mouse_x - this.grabbed_mouse_x;
+			const base_dy = this.mouse_y - this.grabbed_mouse_y;
+
+			const dx = base_dx;
+			const dy =
+				base_dy +
+				this.grabbed_node_scroll_parent.scrollTop -
+				this.grabbed_scroll_top;
+
+			grabbed_block.animation_data = { x: dx, y: dy };
+
+			this.rearrange_node.style.transform = `
+        translate(
+          ${base_dx.toPrecision(5)}px,
+          ${base_dy.toPrecision(5)}px
+        )
+      `;
+		}
+
+		// repeat
+		requestAnimationFrame(() => {
+			this.grabAnimation();
+		});
+	}
+
+	showSideMenu(target_side_menu_name) {
+		const current_menu = this.sidebar.find(`[data-side_menu].active`);
+		const target_menu = this.sidebar.find(
+			`[data-side_menu="${target_side_menu_name}"]`
+		);
+
+		if (target_menu == current_menu) {
+			return;
+		}
+
+		const duration = 300;
+
+		const current_menu_height = current_menu.offsetHeight;
+		const target_menu_height = target_menu.offsetHeight;
+		const sidebar_scroll_wrapper = this.sidebar_scroll_wrapper;
+		const sidebar_content_wrapper = this.sidebar_content_wrapper;
+		const sidebar_scroll_wrapper_width = sidebar_scroll_wrapper.offsetWidth;
+		const min_height = sidebar_scroll_wrapper.offsetHeight;
+
+		current_menu.style.top = -sidebar_scroll_wrapper.scrollTop + "px";
+
+		target_menu.classList.add("appears");
+		current_menu.classList.add("disappears");
+		sidebar_content_wrapper.classList.add("transiting");
+
+		animate(
+			target_menu,
+			`
+        0% {
+          transform: translate(${sidebar_scroll_wrapper_width}px,0px);
+          opacity: 0;
+        }
+        100% {
+          transform: translate(0px,0px);
+          opacity: 1;
+        }
+      `,
+			duration,
+			() => {
+				target_menu.classList.add("active");
+				target_menu.classList.remove("appears");
+
+				current_menu.classList.remove("disappears");
+				current_menu.classList.remove("active");
+				current_menu.style.top = "";
+
+				sidebar_content_wrapper.classList.remove("transiting");
+				sidebar_content_wrapper.insertBefore(
+					target_menu,
+					sidebar_content_wrapper.firstChild
+				);
+			}
+		);
+
+		animate(
+			current_menu,
+			`
+        0% {
+          transform: translate(0px,0px);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-${sidebar_scroll_wrapper_width}px,0px);
+          opacity: 0;
+        }
+      `,
+			duration
+		);
+
+		animate(
+			sidebar_content_wrapper,
+			`
+        0% {
+          height: ${Math.max(current_menu_height, min_height)}px
+        }
+        100% {
+          height: ${Math.max(target_menu_height, min_height)}px
+        }
+      `,
+			duration
+		);
+
+		this.container.dispatchEvent(
+			new CustomEvent("side_menu_change", {
+				detail: {
+					side_menu_name: target_side_menu_name,
+				},
+			})
+		);
+	}
 }
 
-function toggleNewCmsEditMode(edit_mode_input) {
-  edit_mode_input
-    .findParentByAttribute("data-form")
-    .classList.toggle("newCms_edit_mode", edit_mode_input.getValue());
+// TODO: move to animator?
+function zoomNode(node, direction, options = {}) {
+	const styles = window.getComputedStyle(node);
+
+	const w = parseInt(styles.width);
+	const h = parseInt(styles.height);
+
+	const mr_l = parseInt(styles.marginLeft);
+	const mr_r = parseInt(styles.marginRight);
+
+	const mr_t = parseInt(styles.marginTop);
+	const mr_b = parseInt(styles.marginBottom);
+
+	const step_in = `
+    transform: scale(1,1);
+    margin: ${mr_t}px ${mr_r}px ${mr_b}px ${mr_l}px;
+   `;
+	const step_out = `
+    transform: scale(0,0);
+    margin: ${-h * 0.5}px ${-w * 0.5}px;
+  `;
+
+	let keyframes = "";
+
+	if (direction == "out") {
+		keyframes = `0% {${step_in}opacity: 1;} 100% {${step_out}opacity: 0;}`;
+	} else {
+		keyframes = `0% {${step_out}opacity: 0;} 100% {${step_in}opacity: 1;}`;
+	}
+
+	animate(node, keyframes, nonull(options.duration, 200), () => {
+		if (options.callback) {
+			options.callback();
+		}
+	});
 }
 
 registerModalContent(
-  /*html*/ `
-    <div id="newCms" class="newCms" data-expand="large" data-form data-history>
+	/*html*/ `
+    <div id="newCms" class="newCms" data-expand="large" data-form data-history data-exclude-hidden>
         <div class="modal-body">
             <div class="custom-toolbar">
                 <span class="title">
                     Edycja zawartości    
                 </span>
 
-                Tryb edycji <checkbox name="edit_mode" data-ignore-history class="no-wrap" onchange="toggleNewCmsEditMode(this)"></checkbox>
                 <div class="history-buttons"></div>
                 <button class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></button>
                 <button class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </button>
@@ -788,30 +1866,73 @@ registerModalContent(
             </div>
 
             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
-                <div class="modules-sidebar shown" style="display:none !important">
-                  <button class="toggle-sidebar-btn btn subtle" onclick="toggleModuleSidebar()" data-tooltip="Ukryj moduły"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
-                  <span class="field-title modules-sidebar-title" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
-                   Moduły 
-                   <i class="fas fa-info-circle" data-tooltip="Przeciągnij w prawo i upuść"></i>
-                  </span>
-                  <div class="modules"></div>
-                </div>
+                <div class="sidebar form-hidden">
+                  <div class="scroll-panel scroll-shadow hide_scrollbar">
+                    <div class="sidebar_content_wrapper">
+                      <div data-side_menu="add_block" class="active">
+                        <!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
+                        <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
+                          Bloki 
+                          <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
+                        </span>
+                        <div class="block_list">
+                          <div class="side_block" data-block="quill_editor">
+                            <i class="fas fa-align-center"></i>
+                            <span>Edytor tekstowy</span>
+                          </div>
+                          <div class="side_block" data-block="container">
+                            <i class="fas fa-columns"></i>
+                            <span>Kontener</span>
+                          </div>
+                          <div class="side_block" data-block="image">
+                            <i class="far fa-image"></i>
+                            <span>Zdjęcie</span>
+                          </div>
+                          <div class="side_block" data-block="video">
+                            <i class="fas fa-film"></i>
+                            <span>Film</span>
+                          </div>
+                          
+                        </div>
+                      </div>
 
-                <div style="width:100%;overflow:hidden">
-                  <div class="scroll-panel scroll-shadow newCmsContent_scroll_panel" style="padding:10px;height: 100%;">
-                    <div class="edit_block_node"></div>
-                    <div class="quill_editor_wrapper">
-                      <div class="quill_editor"></div>
+                      <div data-side_menu="edit_block">
+                        <span class="field-title first">
+                          <button class="btn transparent" data-show_side_menu="add_block">
+                            <i class="fas fa-chevron-left"></i>
+                          </button>
+                          Edycja bloku / kontenera...
+                        </span>
+                        <div class="quill_editor"></div>
+
+                        <span class="field-title">Zdjęcie</span>
+                        <image-input name="newCms_image" data-options='{"width":"100%","height":"1w"}'></image-input>
+                      </div>
                     </div>
-                    <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
                   </div>
                 </div>
-            </div>
+
+                <div style="width:100%;">
+                  <div class="scroll-panel scroll-shadow content_scroll_panel">
+                    <div style="position:relative" class="content_scroll_content">
+                      <div class="edit_block_node"></div>
+                      <div class="select_controls"></div>
+                      <div class="rearrange_controls"></div>
+                      <div class="rearrange_insert_rect"></div>
+                      <div class="rearrange_grabbed_rect"></div>
+                      <div style="padding:25px;overflow:hidden">
+                        <div class="newCmsContent newCms_container_content" data-type="html" name="content"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>  
+          <div class="rearrange_node"></div>
         </div>
         <link href="/admin/tools/newCms.css?v=${CSS_RELEASE}" rel="stylesheet">
     </div>
   `,
-  (modal) => {
-    window.newCms = new NewCms(modal);
-  }
+	(modal) => {
+		window.newCms = new NewCms(modal);
+	}
 );

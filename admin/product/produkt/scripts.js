@@ -74,7 +74,7 @@ function comboSelectValuesChanged(combo, options = {}) {
     "attribute_values"
   );
   if (attribute_values) {
-    attribute_values.dispatchEvent(new Event("change"));
+    attribute_values.dispatchChange();
   }
 }
 
@@ -151,7 +151,7 @@ function anythingValueChanged(anything_wrapper) {
     "attribute_values"
   );
   if (attribute_values) {
-    attribute_values.dispatchEvent(new Event("change"));
+    attribute_values.dispatchChange();
   }
 }
 
@@ -812,6 +812,7 @@ function saveProduct() {
     url: STATIC_URLS["ADMIN"] + "save_product",
     params: params,
     success: () => {
+      // TODO: reload why?
       setFormInitialState(form);
     },
   });

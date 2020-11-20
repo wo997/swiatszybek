@@ -35,26 +35,28 @@
                     width: "10%",
                     render: (r, i, t) => {
                         return `
-                            <div class="link text-plus-icon" onclick="${t.name}.showEditCategory(this,${i})">
+                            <div class="link text-plus-icon" onclick="${t.name}.showEditCategory(this,${i})" data-tooltip="Sortuj malejąco / rosnąco">
                                 <span>${r.title}</span>
                                 <i class="fa fa-cog"></i>
                             </div>
                         `;
                     },
-                    escape: false
+                    escape: false,
+
                 },
                 {
                     title: "Podkategorie",
                     width: "13%",
                     render: (r, i, t) => {
                         return `
-                            <div class="link text-plus-icon" onclick="${t.name}.openCategory(${i})">
+                            <div class="link text-plus-icon" onclick="${t.name}.openCategory(${i})" >
                                 <span>${nonull(r.subcategories,"Brak")}</span>
                                 <i class="fas fa-chevron-circle-right"></i>
                             </div>
                         `;
                     },
-                    escape: false
+                    escape: false,
+
                 },
                 getPublishedDefinition(),
                 {

@@ -91,6 +91,11 @@ function showModal(name = null, params = {}) {
 
         setTimeout(() => {
           e.style.pointerEvents = "";
+          setTimeout(() => {
+            if (params.callback) {
+              params.callback();
+            }
+          }, 50);
         }, parseInt(getComputedStyle(document.documentElement).getPropertyValue("--modal-transition-duration")));
       }
     });

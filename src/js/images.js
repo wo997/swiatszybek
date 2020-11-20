@@ -1,18 +1,5 @@
 /* js[global] */
 
-function isNodeOnScreen(node, offset = -10) {
-  var r = node.getBoundingClientRect();
-  if (
-    r.y > window.innerHeight + offset ||
-    r.y + r.height < -offset ||
-    r.x > window.innerWidth + offset ||
-    r.x + r.width < -offset
-  ) {
-    return false;
-  }
-  return true;
-}
-
 var lazyLoadOffset = 700;
 
 // also files.php
@@ -79,16 +66,17 @@ function loadImage(img, animate = true) {
       src += ".jpg";
     }
 
-    if (
-      !img.hasAttribute(
-        "data-height"
-      ) /*&&
-      !img.hasAttribute("data-has-own-height")*/
-    ) {
-      img.addEventListener("load", () => {
+    img.addEventListener("load", () => {
+      if (
+        !img.hasAttribute(
+          "data-height"
+        ) /*&&
+          !img.hasAttribute("data-has-own-height")*/
+      ) {
         img.style.height = "";
-      });
-    }
+        window.dispatchEvent(new Event("lazy_image_loaded"));
+      }
+    });
 
     if (img.awaitImageReplace) {
       img.setAttribute("awaiting-src", src);
@@ -96,6 +84,7 @@ function loadImage(img, animate = true) {
       delete img.file_name;
     } else {
       img.setAttribute("src", src);
+      // TODO: broooo dont remove it, also get rid of data-real-src
       img.removeAttribute("data-src");
       delete img.file_name;
     }

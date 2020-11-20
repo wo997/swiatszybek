@@ -46,7 +46,7 @@ MODULE_BLOCK = {
       onChange: () => {
         MODULE_BLOCK.form
           .find(`[name="desktop-slider-height"]`)
-          .dispatchEvent(new Event("change"));
+          .dispatchChange();
         resizeCallback();
       },
     });

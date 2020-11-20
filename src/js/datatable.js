@@ -563,11 +563,12 @@ function createDatatable(datatable) {
         }
       }
       $$(`.${datatable.name} [data-param]`).forEach((e) => {
-        if (e.findParentByClassName("hidden", "datatable-wrapper")) {
+        if (e.findParentByClassName("hidden", { inside: datatable.target })) {
           return;
         }
         params[e.getAttribute("data-param")] = e.getValue();
       });
+
       if (datatable.selectable) {
         params.filters.push({
           type: "!=",
@@ -1071,7 +1072,7 @@ window.addEventListener("dragover", (event) => {
 
   var nonstatic_parent = tr.findNonStaticParent();
 
-  /*var scroll_parent = tr.findScrollableParent();
+  /*var scroll_parent = tr.findScrollParent();
   if (scroll_parent === window) {
     scroll_parent = document.body;
   }*/

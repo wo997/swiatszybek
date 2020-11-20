@@ -74,12 +74,12 @@ $admin_navigations_tree = [
       ["url" => "stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
       ["url" => "logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
       ["url" => "szablon", "title" => '<i class="fas fa-paint-brush"></i> Szablon'],
+      ["url" => "new-cms", "title" => '<i class="fas fa-heart"></i> Nowy CMS'],
     ]
   ],
   ["url" => "zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
   ["url" => "moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
   ["url" => "maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
-  ["url" => "new-cms", "title" => '<i class="fas fa-heart"></i> Nowy CMS'],
 ];
 
 function getNotificationCountForPage($page, $children_notification_count = 0)

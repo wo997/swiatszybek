@@ -11,7 +11,7 @@ function getDatepickerDefaultOptions(e) {
     language: "pl",
     autohide: true,
   };
-  var scroll_parent = e.findScrollableParent();
+  var scroll_parent = e.findScrollParent();
   if (scroll_parent != window) {
     options.container = scroll_parent;
   }
