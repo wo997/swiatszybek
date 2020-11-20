@@ -1,5 +1,4 @@
 <?php
-
 include "scripts/start_session.php";
 
 include_once 'vendor/autoload.php';

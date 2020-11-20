@@ -1,14 +1,30 @@
 /* css[admin] */
 
+
 /* TODO if you are bored enough */
+
 .dark .datatable thead {
-  filter: invert(1) hue-rotate(180deg) brightness(4) contrast(0.6);
+    filter: invert(1) hue-rotate(180deg) brightness(4) contrast(0.6);
+}
+
+.main-container {
+    -webkit-transition: background-color 500ms linear;
+    -ms-transition: background-color 500ms linear;
+    transition: background-color 500ms linear;
 }
 
 .dark .main-container {
-  filter: invert(1) hue-rotate(180deg) contrast(0.8) brightness(1.2);
+    filter: invert(1) hue-rotate(180deg) contrast(0.8) brightness(1.2);
+    background: #efefef;
+    /* background: #121212; */
 }
 
-.dark img {
-  filter: brightness(0.83333) contrast(1.25) hue-rotate(180deg) invert(1);
+.dark .custom-toolbar {
+    background: cornflowerblue;
+    color: black;
+}
+
+.dark .footer {
+    background: #e5e5e5;
+    color: black;
 }
