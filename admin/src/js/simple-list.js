@@ -352,7 +352,7 @@ function createSimpleList(params = {}) {
 							return;
 						}
 						var param = e.getAttribute("name");
-						row[param] = getValue(e);
+						row[param] = e.getValue();
 					});
 					rows.push(row);
 				});
@@ -370,7 +370,7 @@ function createSimpleList(params = {}) {
 								return;
 							}
 							var param = e.getAttribute("name");
-							row_data[param] = getValue(e);
+							row_data[param] = e.getValue();
 						});
 					if (level < list.recursive) {
 						row_data._children = getDirectRows(

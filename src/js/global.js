@@ -303,12 +303,7 @@ function setValue(input, value = null, params = {}) {
 	}
 
 	if (input.tagName == "RADIO-INPUT") {
-		var option_exists = input.find(`radio-option[value="${value}"]`);
-		if (!!option_exists) {
-			input.findAll(`radio-option`).forEach((e) => {
-				e.classList.toggle("selected", e.getAttribute("value") == value);
-			});
-		}
+		setRadioInputValue(input, value, params);
 	} else if (input.tagName == "CHECKBOX") {
 		input.classList.toggle("checked", !!value);
 	} else if (input.datepicker) {
@@ -371,15 +366,7 @@ function getValue(input) {
 	// TODO: move these motherfuckers to them components instead
 	// funny how some might not have registering process so we can leave some in here ;)
 	if (input.tagName == "RADIO-INPUT") {
-		var value = "";
-		var selected = input.find(".selected");
-		if (!selected) {
-			selected = input.find("[data-default]");
-		}
-		if (selected) {
-			value = selected.getAttribute("value");
-		}
-		return value;
+		return getRadioInputValue(input);
 	} else if (input.tagName == "CHECKBOX") {
 		return input.classList.contains("checked") ? 1 : 0;
 	} else if (input.datepicker) {
