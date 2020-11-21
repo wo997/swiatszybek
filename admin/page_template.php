@@ -12,20 +12,7 @@ endSection();
     <?php if (isset($sections["head"])) echo $sections["head"]; ?>
 </head>
 
-<<<<<<< HEAD
-<body id="admin" class=" <?= ADMIN_THEME? 'dark' : '' ?>">
-  <div class="main-container">
-    <div class="main-wrapper">
-      <header class="navbar_admin">
-        <div class="scroll-panel scroll-shadow">
-          <div>
-            <a href="/" class="home logo-wrapper">
-              <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
-              <br>
-              Strona główna
-            </a>
-=======
-<body id="admin">
+<body id="admin" class=" <?= ADMIN_THEME ?>">
     <div class="main-container">
         <div class="main-wrapper">
             <header class="navbar_admin">
@@ -36,7 +23,6 @@ endSection();
                             <br>
                             Strona główna
                         </a>
->>>>>>> db4973bb8634168e14213b358c6a6b7fae7ce56e
 
                         <div style="padding:0 10px 10px">
                             <div class="field-title first">Wyszukaj w panelu admina</div>
