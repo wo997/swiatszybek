@@ -3,8 +3,8 @@
 $posts = ["password", "email", "telefon", "imie", "nazwisko"];
 
 foreach ($posts as $p) {
-  if (!isset($_POST[$p]))
-    die;
+    if (!isset($_POST[$p]))
+        die;
 }
 
 $response = [];
@@ -27,15 +27,15 @@ $password_hash = getPasswordHash($_POST["password"]);
 $authentication_token = generateAuthenticationToken();
 
 if ($user_data) {
-  /*if ($user_data["authenticated"] == "0") {
+    /*if ($user_data["authenticated"] == "0") {
     query("UPDATE users SET imie = ?, nazwisko = ?, telefon = ?, password_hash = ?, authentication_token = ? WHERE user_id = " . intval($user_data["user_id"]), [
       $_POST["imie"], $_POST["nazwisko"], $_POST["telefon"], $password_hash, $authentication_token
     ]);
     json_response("Użytkownik " . $_POST["email"] . " już istnieje");
   }*/
-  $authentication_token = $user_data["authentication_token"];
+    $authentication_token = $user_data["authentication_token"];
 } else {
-  query("INSERT INTO users (
+    query("INSERT INTO users (
     user_type,imie,nazwisko,
     email,telefon,
     password_hash,authenticated,
@@ -45,12 +45,12 @@ if ($user_data) {
       ?,?,
       ?,?,
       ?,?,NOW())", [
-    $user_type, $_POST["imie"], $_POST["nazwisko"],
-    $_POST["email"], $_POST["telefon"],
-    $password_hash, "0",
-    $authentication_token, $_SESSION["basket"]
-  ]);
-  $user_data["user_id"] = getLastInsertedId();
+        $user_type, $_POST["imie"], $_POST["nazwisko"],
+        $_POST["email"], $_POST["telefon"],
+        $password_hash, "0",
+        $authentication_token, $_SESSION["basket"]
+    ]);
+    $user_data["user_id"] = getLastInsertedId();
 }
 
 // send mail no matter if exists to make sure he will receive it
@@ -71,13 +71,13 @@ $email_client_url = nonull(EMAIL_CLIENT_URLS, $email_domain);
 $response_footer = "";
 
 if ($email_client_url) {
-  $response_footer .= "
+    $response_footer .= "
         <a class='btn success medium' target='_blank' rel='noopener noreferrer' href='$email_client_url'>
             Przejdź do poczty <i class='fas fa-envelope-open'></i>
         </a>
     ";
 } else {
-  $response_footer .= "
+    $response_footer .= "
         <span style='color: #444;
         font-weight: 600;'>
             Nieznany adres pocztowy 
@@ -96,10 +96,10 @@ $response_footer = "<div class='message-footer'>$response_footer</div>";
 
 
 $response["message"] =
-  MESSAGE_HEADER_SUCCESS
-  . "<div class='default-message-text'>"
-  . $response_message
-  . "</div>"
-  . $response_footer;
+    MESSAGE_HEADER_SUCCESS
+    . "<div class='default-message-text'>"
+    . $response_message
+    . "</div>"
+    . $response_footer;
 
 json_response($response);

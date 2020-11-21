@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $CRON = true;
 $TEST = true;
@@ -12,5 +12,3 @@ $TEST = true;
 
 require 'cron/cron-hourly.php';
 //require 'sales.php';
-
-?> 

@@ -8,7 +8,7 @@ $now = date("Y-m-d");
 
 $products = fetchArray("SELECT i.product_id, title, link FROM products i WHERE i.published = 1");
 foreach ($products as $product) {
-  $productsXML .= "<url>
+    $productsXML .= "<url>
         <loc>" . getProductLink($product["product_id"], $product["link"]) . "</loc>
         <lastmod>$now</lastmod>
         <priority>0.80</priority>
@@ -18,9 +18,9 @@ foreach ($products as $product) {
 $cmssXML = "";
 $cmss = fetchArray("SELECT link FROM cms WHERE published = 1");
 foreach ($cmss as $cms) {
-  $prio = 1 - 0.2 * (1 + substr_count($cms["link"], "/"));
-  if ($cms["link"] == "") $prio = 1;
-  $cmssXML .= "<url>
+    $prio = 1 - 0.2 * (1 + substr_count($cms["link"], "/"));
+    if ($cms["link"] == "") $prio = 1;
+    $cmssXML .= "<url>
         <loc>$site_url/" . $cms["link"] . "</loc>
         <lastmod>$now</lastmod>
         <priority>$prio</priority>

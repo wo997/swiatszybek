@@ -3,8 +3,8 @@
 // Get $id_token via HTTPS POST.
 
 if (!isset($_POST['id_token']) || strlen($_POST['id_token']) < 10) {
-  header("Location: /");
-  die;
+    header("Location: /");
+    die;
 }
 
 // if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
@@ -17,8 +17,8 @@ $client = new Google_Client(['client_id' => secret('google_client_id')]);  // Sp
 $payload = $client->verifyIdToken($id_token);
 
 if (!$payload) {
-  header("Location: /");
-  die;
+    header("Location: /");
+    die;
 }
 
 $user_type = 'google';
@@ -28,14 +28,14 @@ $google_email = $payload['email'];
 $user_data = fetchRow("SELECT user_id, email, imie FROM users WHERE user_type = '$user_type' AND authentication_token = ?", [$authentication_token]);
 
 if ($user_data) {
-  $user_id = $user_data["user_id"];
+    $user_id = $user_data["user_id"];
 } else // new user
 {
-  query("INSERT INTO users (user_type,email,authenticated,authentication_token,kraj,stworzono) VALUES (?,?,?,?,?,NOW())", [
-    $user_type, $google_email, "1", $authentication_token, "Polska"
-  ]);
+    query("INSERT INTO users (user_type,email,authenticated,authentication_token,kraj,stworzono) VALUES (?,?,?,?,?,NOW())", [
+        $user_type, $google_email, "1", $authentication_token, "Polska"
+    ]);
 
-  $user_id = getLastInsertedId();
+    $user_id = getLastInsertedId();
 }
 
 loginUser($user_id, $google_email, $user_type, ['name' => $payload['name']]);
