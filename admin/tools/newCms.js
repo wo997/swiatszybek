@@ -25,7 +25,7 @@ class EditBlock {
 				if (block_type == "image") {
 					this.newCms.edit_block.edit_node
 						.find(".newCms_block_content")
-						.setAttribute("src", image.getValue());
+						.setValue(image.getValue());
 
 					lazyLoadImages();
 					this.newCms.contentChange();
@@ -105,7 +105,8 @@ class EditBlock {
 		}
 		if (block_type == "image") {
 			const image = this.newCms.sidebar.find(`[name="image"]`);
-			image.setValue(block.find(".newCms_block_content").getAttribute("src"));
+			image.setValue(block.find(".newCms_block_content").getValue());
+			lazyLoadImages();
 		}
 		if (block_type == "container") {
 			const container_flow = this.newCms.sidebar.find(
@@ -1410,7 +1411,7 @@ class NewCms {
 		if (type === "quill_editor") {
 			content_html = `<div class="newCms_block_content ql-editor"></div>`;
 		} else {
-			content_html = `<img class="newCms_block_content">`;
+			content_html = `<img class="newCms_block_content wo997_img">`;
 		}
 
 		return /*html*/ `

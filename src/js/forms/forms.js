@@ -38,7 +38,6 @@ function setFormInitialState(form) {
 	registerFormHistory(form);
 }
 
-// form can be piepquery or selector
 function setFormData(data, form, params = {}) {
 	form = $(form);
 

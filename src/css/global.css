@@ -300,12 +300,14 @@ input[type="button"] {
 .field-title [data-type] {
 	margin-top: 4px;
 }
+/*
+TODO: use image pickers everywhere instead
 .field-title [data-type="src"] {
 	max-width: 100%;
 	max-height: 200px;
 	max-width: 200px;
 	display: block;
-}
+}*/
 
 .flexbar:not(.slim) .btn,
 .field {

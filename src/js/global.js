@@ -340,17 +340,13 @@ function setValue(input, value = null, params = {}) {
 			input.setContent(value);
 		} else if (type == "attribute_values") {
 			setAttributePickerValues(input, value);
-		} else if (type == "src") {
-			if (getResponsiveImageData(value)) {
-				input.setAttribute("data-real-src", value);
+		} else if (input.tagName == "IMG") {
+			if (input.classList.contains("wo997_img")) {
 				input.setAttribute("data-src", value);
+				input.classList.remove("wo997_img_loaded");
 			} else {
 				input.setAttribute("src", value);
 			}
-			/*var prefix = input.getAttribute(`data-src-prefix`);
-      if (!prefix) prefix = ""; // "/uploads/df/";
-      if (value) value = prefix + value;
-      input.setAttribute("src", value);*/
 		} else if (input.tagName == "SELECT") {
 			if ([...input.options].find((e) => e.value == value)) {
 				input.value = value;
@@ -420,17 +416,11 @@ function getValue(input) {
 			return input.innerHTML;
 		} else if (type == "attribute_values") {
 			return getAttibutePickerValues(input);
-		} else if (type == "src") {
-			var real_src = input.getAttribute(`data-real-src`);
-			if (real_src) {
-				return real_src;
+		} else if (input.tagName == "IMG") {
+			if (input.classList.contains("wo997_img")) {
+				return input.getAttribute(`data-src`);
 			}
-
-			//var prefix = input.getAttribute(`data-src-prefix`);
-			//if (!prefix) prefix = ""; // "/uploads/df/";
-			var src = input.getAttribute("src");
-			//if (src && src.length > prefix.length) src = src.substr(prefix.length);
-			return src;
+			return input.getAttribute(`src`);
 		} else if (type == "date") {
 			var format = input.getAttribute(`data-format`);
 			if (format == "dmy") {

@@ -2,284 +2,284 @@
 
 var attribute_values = {};
 attribute_values_array.forEach((value) => {
-  attribute_values[value["value_id"]] = {
-    value: value["value"],
-    attribute_id: +value["attribute_id"],
-    parent_value_id: +value["parent_value_id"],
-  };
+	attribute_values[value["value_id"]] = {
+		value: value["value"],
+		attribute_id: +value["attribute_id"],
+		parent_value_id: +value["parent_value_id"],
+	};
 });
 
 Object.entries(attribute_values).forEach(([value_id, value]) => {
-  var whole_value = value.value;
-  var curr_level_value = value;
-  while (true) {
-    var parent_value_id = +curr_level_value.parent_value_id;
-    if (parent_value_id <= 0) {
-      break;
-    }
-    parent_value = attribute_values[parent_value_id];
-    if (!parent_value) {
-      break;
-    }
-    whole_value = parent_value.value + " ❯ " + whole_value;
+	var whole_value = value.value;
+	var curr_level_value = value;
+	while (true) {
+		var parent_value_id = +curr_level_value.parent_value_id;
+		if (parent_value_id <= 0) {
+			break;
+		}
+		parent_value = attribute_values[parent_value_id];
+		if (!parent_value) {
+			break;
+		}
+		whole_value = parent_value.value + " ❯ " + whole_value;
 
-    curr_level_value = parent_value;
-  }
-  value.whole_value = whole_value;
+		curr_level_value = parent_value;
+	}
+	value.whole_value = whole_value;
 });
 
 var attributes = {};
 attributes_array.forEach((attribute) => {
-  attributes[attribute["attribute_id"]] = attribute["name"];
+	attributes[attribute["attribute_id"]] = attribute["name"];
 });
 
 var attribute_select_options = "";
 
 attributes_array.forEach((attribute) => {
-  attribute_select_options += `<option value="${attribute["attribute_id"]}">${attribute["name"]}</option>`;
+	attribute_select_options += `<option value="${attribute["attribute_id"]}">${attribute["name"]}</option>`;
 });
 
 function comboSelectValuesChanged(combo, options = {}) {
-  combo.findAll("select").forEach((select) => {
-    for (option of select.options) {
-      var childSelect = combo.find(
-        `select[data-parent_value_id="${option.value}"]`
-      );
-      if (!childSelect) continue;
-      if (option.value == select.value) {
-        childSelect.classList.remove("hidden");
-      } else {
-        childSelect.classList.add("hidden");
-      }
-    }
-    select.classList.toggle("empty", select.value == "");
-  });
+	combo.findAll("select").forEach((select) => {
+		for (option of select.options) {
+			var childSelect = combo.find(
+				`select[data-parent_value_id="${option.value}"]`
+			);
+			if (!childSelect) continue;
+			if (option.value == select.value) {
+				childSelect.classList.remove("hidden");
+			} else {
+				childSelect.classList.add("hidden");
+			}
+		}
+		select.classList.toggle("empty", select.value == "");
+	});
 
-  var any_selected = false;
-  combo.findAll("select").forEach((e) => {
-    if (e.value !== "") {
-      any_selected = true;
-    }
-  });
-  combo.classList.toggle("any_selected", any_selected);
+	var any_selected = false;
+	combo.findAll("select").forEach((e) => {
+		if (e.value !== "") {
+			any_selected = true;
+		}
+	});
+	combo.classList.toggle("any_selected", any_selected);
 
-  if (options.onChange) {
-    var attribute_id = +combo.getAttribute("data-attribute_id");
+	if (options.onChange) {
+		var attribute_id = +combo.getAttribute("data-attribute_id");
 
-    options.onChange(combo, attribute_id, any_selected);
-  }
+		options.onChange(combo, attribute_id, any_selected);
+	}
 
-  var attribute_values = combo.findParentByAttribute(
-    "data-type",
-    "attribute_values"
-  );
-  if (attribute_values) {
-    attribute_values.dispatchChange();
-  }
+	var attribute_values = combo.findParentByAttribute(
+		"data-type",
+		"attribute_values"
+	);
+	if (attribute_values) {
+		attribute_values.dispatchChange();
+	}
 }
 
 function createAttributeSelect(combo, options = {}) {
-  if (!combo.isEmpty()) {
-    return;
-  }
-  attribute_options_html = "";
+	if (!combo.isEmpty()) {
+		return;
+	}
+	attribute_options_html = "";
 
-  attribute_options_htmls.forEach((data) => {
-    if (
-      !options.attribute_ids ||
-      options.attribute_ids.indexOf(+data.attribute_id) !== -1
-    ) {
-      attribute_options_html += data.html;
-    }
-  });
+	attribute_options_htmls.forEach((data) => {
+		if (
+			!options.attribute_ids ||
+			options.attribute_ids.indexOf(+data.attribute_id) !== -1
+		) {
+			attribute_options_html += data.html;
+		}
+	});
 
-  combo.insertAdjacentHTML("afterbegin", attribute_options_html);
-  combo.findAll("select:not(.combo-attribute-registered)").forEach((select) => {
-    select.classList.add("combo-attribute-registered");
+	combo.insertAdjacentHTML("afterbegin", attribute_options_html);
+	combo.findAll("select:not(.combo-attribute-registered)").forEach((select) => {
+		select.classList.add("combo-attribute-registered");
 
-    const changeCallback = () => {
-      var wrapper = findParentByClassName(select, "combo-select-wrapper");
-      comboSelectValuesChanged(wrapper, options);
+		const changeCallback = () => {
+			var wrapper = findParentByClassName(select, "combo-select-wrapper");
+			comboSelectValuesChanged(wrapper, options);
 
-      if (select.value === "" && select.prev_value) {
-        var sub_select = wrapper.find(
-          `[data-parent_value_id="${select.prev_value}"]`
-        );
-        if (sub_select) {
-          sub_select.setValue("");
-        }
-      }
-      //console.log(select.prev_value);
-      //select.prev_value = select.value;
-    };
-    select.addEventListener("change", changeCallback);
+			if (select.value === "" && select.prev_value) {
+				var sub_select = wrapper.find(
+					`[data-parent_value_id="${select.prev_value}"]`
+				);
+				if (sub_select) {
+					sub_select.setValue("");
+				}
+			}
+			//console.log(select.prev_value);
+			//select.prev_value = select.value;
+		};
+		select.addEventListener("change", changeCallback);
 
-    changeCallback();
-  });
+		changeCallback();
+	});
 
-  if (options.required) {
-    combo.findAll(".combo-select-wrapper").forEach((e) => {
-      var select = e.find("select");
-      if (!select) {
-        return;
-      }
-      select.setAttribute("data-validate", "");
-      select.classList.add("warn-outline");
-    });
-  }
+	if (options.required) {
+		combo.findAll(".combo-select-wrapper").forEach((e) => {
+			var select = e.find("select");
+			if (!select) {
+				return;
+			}
+			select.setAttribute("data-validate", "");
+			select.classList.add("warn-outline");
+		});
+	}
 
-  if (options.use_all) {
-    combo.findAll(".has_attribute").forEach((e) => {
-      e.setValue(1);
-    });
-  }
+	if (options.use_all) {
+		combo.findAll(".has_attribute").forEach((e) => {
+			e.setValue(1);
+		});
+	}
 
-  registerAnythingValues();
+	registerAnythingValues();
 }
 
 function anythingValueChanged(anything_wrapper) {
-  var checkbox = anything_wrapper.find(`input[type="checkbox"]`);
-  var input = anything_wrapper.find(`.field`);
+	var checkbox = anything_wrapper.find(`input[type="checkbox"]`);
+	var input = anything_wrapper.find(`.field`);
 
-  var any_selected = checkbox.checked;
-  input.classList.toggle("hidden", !any_selected);
+	var any_selected = checkbox.checked;
+	input.classList.toggle("hidden", !any_selected);
 
-  anything_wrapper.classList.toggle("any_selected", any_selected);
+	anything_wrapper.classList.toggle("any_selected", any_selected);
 
-  var attribute_values = anything_wrapper.findParentByAttribute(
-    "data-type",
-    "attribute_values"
-  );
-  if (attribute_values) {
-    attribute_values.dispatchChange();
-  }
+	var attribute_values = anything_wrapper.findParentByAttribute(
+		"data-type",
+		"attribute_values"
+	);
+	if (attribute_values) {
+		attribute_values.dispatchChange();
+	}
 }
 
 function registerAnythingValues() {
-  $$(".any-value-wrapper").forEach((anything_wrapper) => {
-    var checkbox = anything_wrapper.find(
-      `input[type="checkbox"]:not(.active-registered)`
-    );
-    if (!checkbox) return;
-    checkbox.classList.add("active-registered");
-    const changeCallback = () => {
-      anythingValueChanged(anything_wrapper);
-    };
-    checkbox.addEventListener("change", changeCallback);
+	$$(".any-value-wrapper").forEach((anything_wrapper) => {
+		var checkbox = anything_wrapper.find(
+			`input[type="checkbox"]:not(.active-registered)`
+		);
+		if (!checkbox) return;
+		checkbox.classList.add("active-registered");
+		const changeCallback = () => {
+			anythingValueChanged(anything_wrapper);
+		};
+		checkbox.addEventListener("change", changeCallback);
 
-    var field = anything_wrapper.find(`.field`);
-    if (field) {
-      field.addEventListener("change", changeCallback);
-    } else {
-      console.error(anything_wrapper, "Missing .field");
-    }
+		var field = anything_wrapper.find(`.field`);
+		if (field) {
+			field.addEventListener("change", changeCallback);
+		} else {
+			console.error(anything_wrapper, "Missing .field");
+		}
 
-    changeCallback();
-  });
+		changeCallback();
+	});
 }
 
 domload(() => {
-  // TODO: attribute intersection validation
-  /*$$(`#variantForm [name="attributes"] .attribute-row`).forEach(e => {
+	// TODO: attribute intersection validation
+	/*$$(`#variantForm [name="attributes"] .attribute-row`).forEach(e => {
       e.insertAdjacentHTML("beforeend", `
         <div class='case_common rect' style='background:#0001;color:#444'>Cechy wspólny</div>
         <div class='case_intersect rect' style='background:var(--error-clr)'>Cechy wspólny <i class='fas fa-info-circle' data-tooltip='Cechy wspólny zostanie usunięty po zapisaniu wariantu'></i></div>
       `);
     });*/
 
-  loadCategoryPicker(
-    "product_categories",
-    {
-      skip: 2,
-    },
-    () => {
-      var form = "#productForm";
-      setFormData(
-        {
-          categories: product_categories,
-        },
-        form
-      );
-      setFormInitialState(form);
-    }
-  );
+	loadCategoryPicker(
+		"product_categories",
+		{
+			skip: 2,
+		},
+		() => {
+			var form = "#productForm";
+			setFormData(
+				{
+					categories: product_categories,
+				},
+				form
+			);
+			setFormInitialState(form);
+		}
+	);
 
-  createSimpleList({
-    name: "gallery",
-    fields: {
-      src: {
-        unique: true,
-      },
-    },
-    render: (data) => {
-      return /*html*/ `
+	createSimpleList({
+		name: "gallery",
+		fields: {
+			src: {
+				unique: true,
+			},
+		},
+		render: (data) => {
+			return /*html*/ `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
-              <img name="src" data-type="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
+              <img name="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
               <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
-    },
-    onChange: (values, list) => {
-      var rowIndex = -1;
-      list.wrapper.findAll(".simple-list-row-wrapper").forEach((row) => {
-        rowIndex++;
-        if (rowIndex === 0) {
-          row.style.backgroundColor = "#eee";
+		},
+		onChange: (values, list) => {
+			var rowIndex = -1;
+			list.wrapper.findAll(".simple-list-row-wrapper").forEach((row) => {
+				rowIndex++;
+				if (rowIndex === 0) {
+					row.style.backgroundColor = "#eee";
 
-          if (!row.find(".main-img")) {
-            row
-              .find(".select-image-wrapper")
-              .insertAdjacentHTML(
-                "beforeend",
-                /*html*/ `<span class="main-img rect" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
-              );
-          }
-        } else {
-          row.style.backgroundColor = "";
-          removeNode(row.find(".main-img"));
-        }
+					if (!row.find(".main-img")) {
+						row
+							.find(".select-image-wrapper")
+							.insertAdjacentHTML(
+								"beforeend",
+								/*html*/ `<span class="main-img rect" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
+							);
+					}
+				} else {
+					row.style.backgroundColor = "";
+					removeNode(row.find(".main-img"));
+				}
 
-        var img = row.find("img");
-        row
-          .find(".add_img_btn span")
-          .setContent(img.getValue() ? "Zmień" : "Wybierz");
-      });
-      lazyLoadImages();
-    },
-    onNewRowDataSet: (row, values, list, options) => {
-      if (options.user) {
-        row.find(".add_img_btn").dispatchEvent(new Event("click"));
-        setCustomHeights();
-      }
-    },
-    default_row: {
-      src: "",
-    },
-    title: "Galeria zdjęć produktu",
-  });
+				var img = row.find("img");
+				row
+					.find(".add_img_btn span")
+					.setContent(img.getValue() ? "Zmień" : "Wybierz");
+			});
+			lazyLoadImages();
+		},
+		onNewRowDataSet: (row, values, list, options) => {
+			if (options.user) {
+				row.find(".add_img_btn").dispatchEvent(new Event("click"));
+				setCustomHeights();
+			}
+		},
+		default_row: {
+			src: "",
+		},
+		title: "Galeria zdjęć produktu",
+	});
 
-  createVariantFiltersSimpleList($(`[name="variant_filters"]`), {
-    title: "Pola wyboru wariantu produktu",
-    onChange: (data, list, row) => {},
-  });
+	createVariantFiltersSimpleList($(`[name="variant_filters"]`), {
+		title: "Pola wyboru wariantu produktu",
+		onChange: (data, list, row) => {},
+	});
 
-  createSimpleList({
-    name: "variants",
-    fields: {
-      variant_id: {},
-      name: {
-        unique: true,
-        allow_empty: true,
-      },
-      price: {},
-      vat: {},
-      gross_price: {},
-      rabat: {},
-      stock: {},
-      zdjecie: {},
-    },
-    table: true,
-    header: /*html*/ `
+	createSimpleList({
+		name: "variants",
+		fields: {
+			variant_id: {},
+			name: {
+				unique: true,
+				allow_empty: true,
+			},
+			price: {},
+			vat: {},
+			gross_price: {},
+			rabat: {},
+			stock: {},
+			zdjecie: {},
+		},
+		table: true,
+		header: /*html*/ `
       <th>Nazwa <i class="fas fa-info-circle" data-tooltip="Nazwa wariantu wyświetlana w koszyku, np.:<br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></th>
       <th>Cechy</th>
       <th>Aktywny</th>
@@ -293,8 +293,8 @@ domload(() => {
       <th></th>
       <th></th>
     `,
-    render: (data) => {
-      return /*html*/ `
+		render: (data) => {
+			return /*html*/ `
         <td>
           <input type='hidden' data-number name="variant_id">
           <textarea name="name" class="field inline" style="height: 3.75em;"></textarea>
@@ -308,7 +308,7 @@ domload(() => {
           <span></span>
         </td>
         <td>
-          <img name="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
+          <img name="zdjecie" style="width:80px;height:80px;object-fit:contain"/>
         </td>
         <td>
           <div class='glue-children'>
@@ -343,272 +343,272 @@ domload(() => {
           <button class='btn primary edit-btn' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
         </td>
       `;
-    },
-    default_row: {
-      variant_id: -1,
-      name: "",
-      price: 0,
-      vat: 0,
-      rabat: 0,
-      stock: 0,
-      was_stock: 0,
-      product_code: "",
-      zdjecie: "",
-      published: 0,
-      attributes: '{"selected:"[],"values:"[]"}',
-    },
-    title: "Warianty produktu",
-    empty: `<div class='rect light-gray'>Dodaj min. 1 wariant</div>`,
-    onChange: () => {},
-    onNewRowDataSet: (row, values, list, options) => {
-      if (options.user) {
-        editVariant(row, list.wrapper.find(".field-title .add_btn"));
-      }
-    },
-  });
+		},
+		default_row: {
+			variant_id: -1,
+			name: "",
+			price: 0,
+			vat: 0,
+			rabat: 0,
+			stock: 0,
+			was_stock: 0,
+			product_code: "",
+			zdjecie: "",
+			published: 0,
+			attributes: '{"selected:"[],"values:"[]"}',
+		},
+		title: "Warianty produktu",
+		empty: `<div class='rect light-gray'>Dodaj min. 1 wariant</div>`,
+		onChange: () => {},
+		onNewRowDataSet: (row, values, list, options) => {
+			if (options.user) {
+				editVariant(row, list.wrapper.find(".field-title .add_btn"));
+			}
+		},
+	});
 
-  createAttributeSelect($(`#variantForm [name="attributes"]`));
+	createAttributeSelect($(`#variantForm [name="attributes"]`));
 
-  createAttributeSelect($(`#productForm [name="attributes"]`), {
-    onChange: (combo, attribute_id, any_selected) => {
-      variant_combo = $(`#variantForm [data-attribute_id="${attribute_id}"]`);
-      if (variant_combo) {
-        variant_combo.classList.toggle("common", any_selected);
-      }
-    },
-  });
+	createAttributeSelect($(`#productForm [name="attributes"]`), {
+		onChange: (combo, attribute_id, any_selected) => {
+			variant_combo = $(`#variantForm [data-attribute_id="${attribute_id}"]`);
+			if (variant_combo) {
+				variant_combo.classList.toggle("common", any_selected);
+			}
+		},
+	});
 
-  registerAnythingValues();
+	registerAnythingValues();
 
-  var variants_data = [];
-  product_data.variants.forEach((e) => {
-    e.was_stock = e.stock;
-    variants_data.push(e);
-  });
-  product_data.variants = variants_data;
+	var variants_data = [];
+	product_data.variants.forEach((e) => {
+		e.was_stock = e.stock;
+		variants_data.push(e);
+	});
+	product_data.variants = variants_data;
 
-  setFormData(product_data, "#productForm");
+	setFormData(product_data, "#productForm");
 });
 
 function fillVariantsFromFilters() {
-  var variant_filters = $(`[name="variant_filters"]`).list.values;
+	var variant_filters = $(`[name="variant_filters"]`).list.values;
 
-  var unique_variants = getVariantFiltersUniqueOptions(variant_filters);
+	var unique_variants = getVariantFiltersUniqueOptions(variant_filters);
 
-  var pretty_unique_variants = unique_variants.map((selected_attributes) => {
-    return {
-      selected: selected_attributes.reduce((map, obj) => {
-        map.push(...obj.selected);
-        return map;
-      }, []),
-      values: selected_attributes.reduce((map, obj) => {
-        map.push(...obj.values);
-        return map;
-      }, []),
-    };
-  });
+	var pretty_unique_variants = unique_variants.map((selected_attributes) => {
+		return {
+			selected: selected_attributes.reduce((map, obj) => {
+				map.push(...obj.selected);
+				return map;
+			}, []),
+			values: selected_attributes.reduce((map, obj) => {
+				map.push(...obj.values);
+				return map;
+			}, []),
+		};
+	});
 
-  var variant_list = $(`[name="variants"]`).list;
+	var variant_list = $(`[name="variants"]`).list;
 
-  pretty_unique_variants.forEach((unique_variant_attributes) => {
-    var exists = false;
+	pretty_unique_variants.forEach((unique_variant_attributes) => {
+		var exists = false;
 
-    var exists = variant_list.values.reduce((map, variant) => {
-      if (map) {
-        return true;
-      }
-      var va = JSON.parse(variant.attributes);
-      return (
-        isEquivalent(unique_variant_attributes.selected, va.selected) &&
-        isEquivalent(unique_variant_attributes.values, va.values)
-      );
-    }, false);
+		var exists = variant_list.values.reduce((map, variant) => {
+			if (map) {
+				return true;
+			}
+			var va = JSON.parse(variant.attributes);
+			return (
+				isEquivalent(unique_variant_attributes.selected, va.selected) &&
+				isEquivalent(unique_variant_attributes.values, va.values)
+			);
+		}, false);
 
-    if (!exists) {
-      variant_data = variant_list.params.default_row;
-      // just in case u go away from json baby :*
-      /*Object.assign(
+		if (!exists) {
+			variant_data = variant_list.params.default_row;
+			// just in case u go away from json baby :*
+			/*Object.assign(
         variant_data.attributes,
         unique_variant_attributes
       );*/
-      variant_data.attributes = JSON.stringify(unique_variant_attributes);
-      variant_list.insertRow(variant_data);
-    }
-  });
+			variant_data.attributes = JSON.stringify(unique_variant_attributes);
+			variant_list.insertRow(variant_data);
+		}
+	});
 }
 
 function getVariantFiltersUniqueOptions(variant_filters) {
-  var all_unique_variants = [];
+	var all_unique_variants = [];
 
-  variant_filters.forEach((variant_filter) => {
-    if (all_unique_variants.length == 0) {
-      all_unique_variants.push([]);
-    }
+	variant_filters.forEach((variant_filter) => {
+		if (all_unique_variants.length == 0) {
+			all_unique_variants.push([]);
+		}
 
-    var new_unique_variants = [];
+		var new_unique_variants = [];
 
-    variant_filter.filter_options.forEach((filter_option) => {
-      var option_unique_variants = getVariantFiltersUniqueOptions(
-        filter_option.variant_filters
-      );
+		variant_filter.filter_options.forEach((filter_option) => {
+			var option_unique_variants = getVariantFiltersUniqueOptions(
+				filter_option.variant_filters
+			);
 
-      if (option_unique_variants.length == 0) {
-        option_unique_variants.push([]);
-      }
+			if (option_unique_variants.length == 0) {
+				option_unique_variants.push([]);
+			}
 
-      option_unique_variants.forEach((option_selected_attribute_values) => {
-        all_unique_variants.forEach((all_selected_attribute_values) => {
-          new_unique_variants.push([
-            ...option_selected_attribute_values,
-            ...all_selected_attribute_values,
-            filter_option.selected_attribute_values,
-          ]);
-        });
-      });
-    });
-    all_unique_variants = new_unique_variants;
-  });
-  return all_unique_variants;
+			option_unique_variants.forEach((option_selected_attribute_values) => {
+				all_unique_variants.forEach((all_selected_attribute_values) => {
+					new_unique_variants.push([
+						...option_selected_attribute_values,
+						...all_selected_attribute_values,
+						filter_option.selected_attribute_values,
+					]);
+				});
+			});
+		});
+		all_unique_variants = new_unique_variants;
+	});
+	return all_unique_variants;
 }
 
 function choiceNameChanged(input) {
-  input = $(input);
-  var sub_filter = input.findParentByClassName(`sub_filter`);
+	input = $(input);
+	var sub_filter = input.findParentByClassName(`sub_filter`);
 
-  var add_buttons = sub_filter.find(`.add_buttons`);
+	var add_buttons = sub_filter.find(`.add_buttons`);
 
-  if (add_buttons) {
-    var add_begin = add_buttons.find(".add_begin");
-    if (add_begin) {
-      add_begin.setAttribute(
-        "data-tooltip",
-        `Dodaj opcję do pola wyboru <span class='semi-bold'>${input.value.toLowerCase()}</span> na początku`
-      );
-      add_buttons
-        .find(".add_end")
-        .setAttribute(
-          "data-tooltip",
-          `Dodaj opcję do pola wyboru <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`
-        );
-    }
-  }
+	if (add_buttons) {
+		var add_begin = add_buttons.find(".add_begin");
+		if (add_begin) {
+			add_begin.setAttribute(
+				"data-tooltip",
+				`Dodaj opcję do pola wyboru <span class='semi-bold'>${input.value.toLowerCase()}</span> na początku`
+			);
+			add_buttons
+				.find(".add_end")
+				.setAttribute(
+					"data-tooltip",
+					`Dodaj opcję do pola wyboru <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`
+				);
+		}
+	}
 }
 
 function optionNameChanged(input) {
-  input = $(input);
-  var sub_filter = input.findParentByClassName(`sub_filter`);
+	input = $(input);
+	var sub_filter = input.findParentByClassName(`sub_filter`);
 
-  var add_buttons = sub_filter.find(`.add_buttons`);
+	var add_buttons = sub_filter.find(`.add_buttons`);
 
-  if (add_buttons) {
-    var add_begin = add_buttons.find(".add_begin");
-    if (add_begin) {
-      add_begin.setAttribute(
-        "data-tooltip",
-        `Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na początku`
-      );
-      add_buttons
-        .find(".add_end")
-        .setAttribute(
-          "data-tooltip",
-          `Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`
-        );
-    }
-  }
+	if (add_buttons) {
+		var add_begin = add_buttons.find(".add_begin");
+		if (add_begin) {
+			add_begin.setAttribute(
+				"data-tooltip",
+				`Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na początku`
+			);
+			add_buttons
+				.find(".add_end")
+				.setAttribute(
+					"data-tooltip",
+					`Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`
+				);
+		}
+	}
 
-  add_additional_filters = sub_filter.find(".add_additional_filters");
-  if (add_additional_filters) {
-    add_additional_filters.setAttribute(
-      "data-tooltip",
-      `Zastosuj jeśli dodatkowe opcje mają tyczyć się tylko wariantu ${input.value.toLowerCase()}`
-    );
-  }
+	add_additional_filters = sub_filter.find(".add_additional_filters");
+	if (add_additional_filters) {
+		add_additional_filters.setAttribute(
+			"data-tooltip",
+			`Zastosuj jeśli dodatkowe opcje mają tyczyć się tylko wariantu ${input.value.toLowerCase()}`
+		);
+	}
 }
 
 function choiceAttributeChanged(select) {
-  select = $(select);
-  var sub_filter = select.findParentByClassName(`sub_filter`);
-  var filter_name = sub_filter.find(`[name="filter_name"]`);
-  filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
+	select = $(select);
+	var sub_filter = select.findParentByClassName(`sub_filter`);
+	var filter_name = sub_filter.find(`[name="filter_name"]`);
+	filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
 }
 
 function choiceValuesChanged(values_combo) {
-  values_combo = $(values_combo);
-  var whole_value = "";
+	values_combo = $(values_combo);
+	var whole_value = "";
 
-  var attribute_value_node = values_combo.find(`.attribute_value`);
-  if (attribute_value_node) {
-    whole_value = attribute_value_node.getValue();
-  } else {
-    values_combo.findAll("select").forEach((e) => {
-      if (e.value && !e.classList.contains("hidden")) {
-        whole_value += attribute_values[e.value].value + " ";
-      }
-    });
-  }
-  whole_value = whole_value.trim();
+	var attribute_value_node = values_combo.find(`.attribute_value`);
+	if (attribute_value_node) {
+		whole_value = attribute_value_node.getValue();
+	} else {
+		values_combo.findAll("select").forEach((e) => {
+			if (e.value && !e.classList.contains("hidden")) {
+				whole_value += attribute_values[e.value].value + " ";
+			}
+		});
+	}
+	whole_value = whole_value.trim();
 
-  if (whole_value) {
-    var sub_filter = values_combo.findParentByClassName(`sub_filter`);
-    var value_field = sub_filter.find(`[name="value"]`);
-    value_field.setValue(whole_value);
-  }
+	if (whole_value) {
+		var sub_filter = values_combo.findParentByClassName(`sub_filter`);
+		var value_field = sub_filter.find(`[name="value"]`);
+		value_field.setValue(whole_value);
+	}
 }
 
 function choiceListChanged(attribute_row_wrapper) {
-  var select = attribute_row_wrapper.find(`[name="attribute_id"]`);
-  if (!select) {
-    return;
-  }
+	var select = attribute_row_wrapper.find(`[name="attribute_id"]`);
+	if (!select) {
+		return;
+	}
 
-  const attribute_id = +select.value;
+	const attribute_id = +select.value;
 
-  var list = attribute_row_wrapper.find(`[name="filter_options"] .list`);
-  if (!list) {
-    return;
-  }
+	var list = attribute_row_wrapper.find(`[name="filter_options"] .list`);
+	if (!list) {
+		return;
+	}
 
-  list.directChildren().forEach((value_list_wrapper) => {
-    var selected_attribute_values = value_list_wrapper.find(
-      `[name='selected_attribute_values']`
-    );
+	list.directChildren().forEach((value_list_wrapper) => {
+		var selected_attribute_values = value_list_wrapper.find(
+			`[name='selected_attribute_values']`
+		);
 
-    if (
-      selected_attribute_values.find(`[data-attribute_id="${attribute_id}"]`)
-    ) {
-      // nothing to create
-      return;
-    }
+		if (
+			selected_attribute_values.find(`[data-attribute_id="${attribute_id}"]`)
+		) {
+			// nothing to create
+			return;
+		}
 
-    selected_attribute_values.setContent("");
+		selected_attribute_values.setContent("");
 
-    select_value_wrapper = value_list_wrapper.find(`.select_value_wrapper`);
-    if (select_value_wrapper) {
-      select_value_wrapper.classList.toggle("hidden", attribute_id == -1);
-    }
+		select_value_wrapper = value_list_wrapper.find(`.select_value_wrapper`);
+		if (select_value_wrapper) {
+			select_value_wrapper.classList.toggle("hidden", attribute_id == -1);
+		}
 
-    createAttributeSelect(selected_attribute_values, {
-      attribute_ids: [+attribute_id],
-      onChange: (combo, attribute_id, any_selected) => {},
-      required: true,
-      use_all: true,
-    });
+		createAttributeSelect(selected_attribute_values, {
+			attribute_ids: [+attribute_id],
+			onChange: (combo, attribute_id, any_selected) => {},
+			required: true,
+			use_all: true,
+		});
 
-    //registerDatepickers();
-  });
+		//registerDatepickers();
+	});
 }
 
 function createVariantFiltersSimpleList(node, options = {}) {
-  createSimpleList({
-    wrapper: node,
-    fields: {
-      filter_name: {
-        unique: true,
-      },
-      attribute_id: {},
-    },
-    render: (data) => {
-      return /*html*/ `
+	createSimpleList({
+		wrapper: node,
+		fields: {
+			filter_name: {
+				unique: true,
+			},
+			attribute_id: {},
+		},
+		render: (data) => {
+			return /*html*/ `
           <div class='sub_filter filter_wrapper'>
             <div style='margin-right:6px' class="inline">
               <div class='fancy-label label-filters'>
@@ -643,42 +643,42 @@ function createVariantFiltersSimpleList(node, options = {}) {
             </div>
           </div>
         `;
-    },
-    default_row: {
-      filter_name: "",
-      attribute_id: -1,
-    },
-    onRowInserted: (row, values) => {
-      createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
+		},
+		default_row: {
+			filter_name: "",
+			attribute_id: -1,
+		},
+		onRowInserted: (row, values) => {
+			createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
 
-      // must be set first cause it's used to generate attribute pickers
-      row.find(`[name="attribute_id"]`).setValue(values.attribute_id);
-    },
+			// must be set first cause it's used to generate attribute pickers
+			row.find(`[name="attribute_id"]`).setValue(values.attribute_id);
+		},
 
-    onChange: (data, list, row) => {
-      var options_wrapper = node.findParentByClassName("options_wrapper");
-      if (options_wrapper) {
-        options_wrapper.setAttribute("data-option-count", data.length);
-      }
-      if (options.onChange) {
-        options.onChange(data, list);
-      }
+		onChange: (data, list, row) => {
+			var options_wrapper = node.findParentByClassName("options_wrapper");
+			if (options_wrapper) {
+				options_wrapper.setAttribute("data-option-count", data.length);
+			}
+			if (options.onChange) {
+				options.onChange(data, list);
+			}
 
-      if (row) {
-        choiceListChanged(row);
-      }
-    },
-  });
+			if (row) {
+				choiceListChanged(row);
+			}
+		},
+	});
 }
 
 function createFilterOptionsSimpleList(node) {
-  createSimpleList({
-    wrapper: node,
-    fields: {
-      value: {},
-    },
-    render: (data) => {
-      return /*html*/ `
+	createSimpleList({
+		wrapper: node,
+		fields: {
+			value: {},
+		},
+		render: (data) => {
+			return /*html*/ `
           <div class='sub_filter options_wrapper'>
             <div class='fancy-label label-options'>
               <input type='text' name="value" class="field inline no-wrap semi-bold white" placeholder="Nazwa wariantu / Cecha" onchange="optionNameChanged(this)">
@@ -698,142 +698,142 @@ function createFilterOptionsSimpleList(node) {
             </div>
           </div>
         `;
-    },
-    default_row: {
-      value: "",
-    },
-    onRowInserted: (row, values) => {
-      choiceListChanged(row.findParentByClassName("filter_wrapper").parent());
-      createVariantFiltersSimpleList(row.find(`[name="variant_filters"]`));
-    },
-    onChange: (data, list, row) => {
-      var filter_wrapper = node.findParentByClassName("filter_wrapper");
-      if (filter_wrapper) {
-        filter_wrapper.find(".option_count").setContent(`(${data.length})`);
-      }
-    },
-  });
+		},
+		default_row: {
+			value: "",
+		},
+		onRowInserted: (row, values) => {
+			choiceListChanged(row.findParentByClassName("filter_wrapper").parent());
+			createVariantFiltersSimpleList(row.find(`[name="variant_filters"]`));
+		},
+		onChange: (data, list, row) => {
+			var filter_wrapper = node.findParentByClassName("filter_wrapper");
+			if (filter_wrapper) {
+				filter_wrapper.find(".option_count").setContent(`(${data.length})`);
+			}
+		},
+	});
 
-  var filter_wrapper = node.findParentByClassName("filter_wrapper");
-  var add_buttons = filter_wrapper.find(".add_buttons");
-  if (add_buttons) {
-    var expandList = () => {
-      expand_arrow = filter_wrapper.find(".expand_arrow");
-      if (!expand_arrow.classList.contains("open")) {
-        expand_arrow.click();
-      }
-    };
-    add_buttons.find(".add_begin").addEventListener("click", expandList);
-    add_buttons.find(".add_end").addEventListener("click", expandList);
-  }
+	var filter_wrapper = node.findParentByClassName("filter_wrapper");
+	var add_buttons = filter_wrapper.find(".add_buttons");
+	if (add_buttons) {
+		var expandList = () => {
+			expand_arrow = filter_wrapper.find(".expand_arrow");
+			if (!expand_arrow.classList.contains("open")) {
+				expand_arrow.click();
+			}
+		};
+		add_buttons.find(".add_begin").addEventListener("click", expandList);
+		add_buttons.find(".add_end").addEventListener("click", expandList);
+	}
 }
 
 windowload(() => {
-  // inject text counter after the form is registered in a right place,
-  // could also run then the form is registered on an event listener
-  registerTextCounters();
+	// inject text counter after the form is registered in a right place,
+	// could also run then the form is registered on an event listener
+	registerTextCounters();
 
-  fileManager.setDefaultName($('[name="title"]').value);
+	fileManager.setDefaultName($('[name="title"]').value);
 });
 
 function displayAttributesPreview(target, data) {
-  var output = "";
-  try {
-    var attributes = JSON.parse(data);
-    attributes.selected.forEach((attribute_id) => {
-      output += attribute_values[+attribute_id].value + "<br>";
-    });
-    attributes.values.forEach((attribute) => {
-      output += attribute.value + "<br>";
-    });
-  } catch {}
+	var output = "";
+	try {
+		var attributes = JSON.parse(data);
+		attributes.selected.forEach((attribute_id) => {
+			output += attribute_values[+attribute_id].value + "<br>";
+		});
+		attributes.values.forEach((attribute) => {
+			output += attribute.value + "<br>";
+		});
+	} catch {}
 
-  target.setContent(output);
+	target.setContent(output);
 }
 
 function copyMainImage(node) {
-  node.setAttribute("src", $("#img-main").getAttribute("src"));
+	node.setAttribute("src", $("#img-main").getAttribute("src"));
 }
 
 function editPage() {
-  fileManager.setDefaultName($('[name="title"]').value);
-  editCMS($('[name="description"]'));
+	fileManager.setDefaultName($('[name="title"]').value);
+	editCMS($('[name="description"]'));
 }
 
 var variantRow = null;
 
 function editVariant(row, btn = null) {
-  variantRow = $(row);
+	variantRow = $(row);
 
-  var data = getFormData(row);
+	var data = getFormData(row);
 
-  var form = $(`#variantForm`);
-  setFormData(data, form);
+	var form = $(`#variantForm`);
+	setFormData(data, form);
 
-  showModal(form.id, {
-    source: btn,
-  });
+	showModal(form.id, {
+		source: btn,
+	});
 }
 
 function saveVariant(remove = false) {
-  if (remove) {
-    variantRow.remove();
-  }
+	if (remove) {
+		variantRow.remove();
+	}
 
-  var data = $(`#variantForm`).getFormData();
-  data.attributes = JSON.stringify(data.attributes);
+	var data = $(`#variantForm`).getFormData();
+	data.attributes = JSON.stringify(data.attributes);
 
-  setFormData(data, variantRow, {
-    find_by: "name",
-  });
+	setFormData(data, variantRow, {
+		find_by: "name",
+	});
 
-  lazyLoadImages();
+	lazyLoadImages();
 }
 
 function deleteProduct() {
-  setFormInitialState(`#productForm`);
-  if (confirm("Czy chcesz usunąć produkt?")) {
-    window.location = `${STATIC_URLS["ADMIN"]}delete_product/${product_id}`;
-  }
+	setFormInitialState(`#productForm`);
+	if (confirm("Czy chcesz usunąć produkt?")) {
+		window.location = `${STATIC_URLS["ADMIN"]}delete_product/${product_id}`;
+	}
 }
 
 function saveProduct() {
-  var form = $(`#productForm`);
+	var form = $(`#productForm`);
 
-  if (!validateForm(form)) {
-    return;
-  }
+	if (!validateForm(form)) {
+		return;
+	}
 
-  var params = {
-    product_data: getFormData(form),
-  };
+	var params = {
+		product_data: getFormData(form),
+	};
 
-  xhr({
-    url: STATIC_URLS["ADMIN"] + "save_product",
-    params: params,
-    success: () => {
-      // TODO: reload why?
-      setFormInitialState(form);
-    },
-  });
+	xhr({
+		url: STATIC_URLS["ADMIN"] + "save_product",
+		params: params,
+		success: () => {
+			// TODO: reload why?
+			setFormInitialState(form);
+		},
+	});
 }
 
 function showPreview() {
-  var form = $(`#productForm`);
+	var form = $(`#productForm`);
 
-  if (!validateForm(form)) {
-    return;
-  }
+	if (!validateForm(form)) {
+		return;
+	}
 
-  var data = getFormData(form);
-  data.cache_thumbnail = "";
-  try {
-    data.cache_thumbnail = JSON.parse(data.gallery)[0].src;
-  } catch {}
-  data.cache_rating_count = Math.floor(5 + 100 * Math.random());
-  data.cache_avg_rating = 5;
-  data.price_min = 0;
-  data.price_max = 10000000; // really doesnt matter what u set, it's used for seo later though
+	var data = getFormData(form);
+	data.cache_thumbnail = "";
+	try {
+		data.cache_thumbnail = JSON.parse(data.gallery)[0].src;
+	} catch {}
+	data.cache_rating_count = Math.floor(5 + 100 * Math.random());
+	data.cache_avg_rating = 5;
+	data.price_min = 0;
+	data.price_max = 10000000; // really doesnt matter what u set, it's used for seo later though
 
-  window.preview.open(getProductLink(data.product_id, data.link), data);
+	window.preview.open(getProductLink(data.product_id, data.link), data);
 }

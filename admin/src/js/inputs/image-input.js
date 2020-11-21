@@ -14,12 +14,12 @@ function registerImageInputs() {
 		input.insertAdjacentHTML(
 			"afterbegin",
 			/*html*/ `
-        <div class="image-input-img-wrapper">
-          <img data-type="src" />
-          <i class="fas fa-image"></i>
-        </div>
-        <button class="btn primary"></button>
-      `
+                <div class="image-input-img-wrapper">
+                <img class="wo997_img"/>
+                <i class="fas fa-image"></i>
+                </div>
+                <button class="btn primary"></button>
+            `
 		);
 
 		const img = input.find("img");

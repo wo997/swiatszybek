@@ -74,24 +74,25 @@ function loadImage(img, animate = true) {
           !img.hasAttribute("data-has-own-height")*/
 			) {
 				img.style.height = "";
-				window.dispatchEvent(new Event("lazy_image_loaded"));
+				//window.dispatchEvent(new Event("wo997_img_loaded"));
 			}
 		});
 
-		if (img.awaitImageReplace) {
-			img.setAttribute("awaiting-src", src);
-			delete img.awaitImageReplace;
+		if (img.await_img_replace) {
+			preloadImage(src);
+			img.setAttribute("data-next-src", src);
+			delete img.await_img_replace;
 			delete img.file_name;
 		} else {
 			img.setAttribute("src", src);
-			// TODO: broooo dont remove it, also get rid of data-real-src
-			img.removeAttribute("data-src");
+			img.classList.add("wo997_img_waiting");
 			delete img.file_name;
 		}
 
 		if (animate) {
 			img.style.opacity = 0;
-			img.classList.add("lazy_image");
+			img.classList.remove("wo997_img_waiting");
+			img.classList.add("wo997_img_waiting");
 
 			setTimeout(() => {
 				showImage(img);
@@ -104,7 +105,8 @@ function showImage(img) {
 	if (isNodeOnScreen(img)) {
 		img.style.animation = "show 0.45s";
 		img.style.opacity = 1;
-		img.classList.remove("lazy_image");
+		img.classList.remove("wo997_img_waiting");
+		img.classList.add("wo997_img_loaded");
 		setTimeout(() => {
 			img.style.opacity = "";
 			img.style.animation = "";
@@ -120,6 +122,9 @@ function getUploadedFileName(file_path) {
 
 // also files.php
 function getResponsiveImageData(src) {
+	if (!src) {
+		return null;
+	}
 	var last_dot_index = src.lastIndexOf(".");
 	var ext = src.substring(last_dot_index + 1);
 	var path_wo_ext = src.substring(0, last_dot_index);
@@ -196,13 +201,15 @@ function lazyLoadImages(animate = true) {
 		}
 	});
 
-	$$("img[data-src]:not(.lazy_image)").forEach((img) => {
-		var rect = setImageDimensions(img);
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_loaded)").forEach(
+		(img) => {
+			var rect = setImageDimensions(img);
 
-		if (rect.top < window.innerHeight + lazyLoadOffset) {
-			loadImage(img, animate);
+			if (rect.top < window.innerHeight + lazyLoadOffset) {
+				loadImage(img, animate);
+			}
 		}
-	});
+	);
 
 	setTimeout(() => {
 		setCustomHeights();
@@ -221,23 +228,24 @@ function scrollCallbackLazy() {
 	$$(".lazy").forEach((node) => {
 		loadLazyNode(node);
 	});
-	$$("img[data-src]").forEach((img) => {
-		loadImage(img);
-	});
-	$$(".lazy_image").forEach((img) => {
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_loaded)").forEach(
+		(img) => {
+			loadImage(img);
+		}
+	);
+	$$(".wo997_img_waiting").forEach((img) => {
 		showImage(img);
 	});
 }
 
-var waitingForImageLoad = false;
 function preloadImage(url) {
-	waitingForImageLoad = true;
-	var img = new Image();
+	const img = new Image();
 	img.src = url;
-	img.onload = () => {
-		waitingForImageLoad = false;
-	};
-	setTimeout(() => {
-		waitingForImageLoad = false;
-	}, 1500);
 }
+
+// TODO: hey! this is temporary so the current content won't fail, pls consider remiving it once the new page builder is done
+domload(() => {
+	$$("[data-src]").forEach((e) => {
+		e.classList.add("wo997_img");
+	});
+});

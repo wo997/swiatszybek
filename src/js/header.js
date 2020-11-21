@@ -524,7 +524,7 @@ const header_basket_variant_template = `
   <div class='expand_y'>
     <div class='product_row product-block'>
       <a class='product_link'>
-        <img class='product-image variant_image' data-height='1w' data-type="src">
+        <img class='product-image variant_image' data-height='1w'>
         <h3 class='product-title'><span class='check-tooltip variant_full_name'></span></h3>
       </a>
       <div style='text-align:center'>
@@ -550,7 +550,7 @@ const header_basket_product_template = `
   <div class='expand_y'>
     <div class='product_row product-block'>
       <a class='product_link'>
-        <img class='product-image product_image' data-height='1w' data-type="src">
+        <img class='product-image product_image' data-height='1w'>
         <h3 class='product-title'><span class='check-tooltip product_name'></span></h3>
       </a>
       <div style='text-align:center'>

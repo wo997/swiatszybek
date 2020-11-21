@@ -70,7 +70,7 @@
                     title: "Ikonka",
                     width: "60px",
                     render: (r) => {
-                        return `<img data-src="${r.icon}" style="max-width: 100%;max-height: 32px;display: block;">`;
+                        return `<img data-src="${r.icon}" class="wo997_img" style="max-width: 100%;max-height: 32px;display: block;">`;
                     },
                     escape: false
                 },
@@ -254,7 +254,7 @@
                 <div class="field-title">
                     Ikonka
                     <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types:["image"], size: "sm"})'>Wybierz</button>
-                    <img name="icon" data-type="src" style="max-width:100px;max-height:100px" />
+                    <img name="icon" style="max-width:100px;max-height:100px" />
                 </div>
 
                 <div class="field-title">Kategoria nadrzędna</div>

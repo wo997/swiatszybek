@@ -8,7 +8,7 @@
         transition: opacity 0.2s;
     }
 
-    .cms img[data-src] {
+    .cms .wo997_img {
         display: inline-block;
     }
 </style>
