@@ -1,40 +1,40 @@
 /* css[admin] */
 
 .btn.important {
-  background: var(--important-clr);
-  color: white;
-  font-weight: 600;
+	background: var(--important-clr);
+	color: white;
+	font-weight: 600;
 }
 .btn.primary {
-  background: var(--primary-clr);
-  color: white;
+	background: var(--primary-clr);
+	color: white;
 }
 .btn.secondary {
-  background: white;
-  color: var(--primary-clr);
+	background: white;
+	color: var(--primary-clr);
 }
 .btn.red {
-  background: var(--red-clr);
-  color: white;
+	background: var(--red-clr);
+	color: white;
 }
 .btn.subtle {
-  background: var(--subtle-background-clr);
-  color: var(--subtle-font-clr);
+	background: var(--subtle-background-clr);
+	color: var(--subtle-font-clr);
 }
 
 body,
 .btn {
-  font-size: 14px;
+	font-size: 14px;
 }
 
 .btn {
-  padding: 0.23em 0.6em;
+	padding: 0.23em 0.6em;
 }
 
 .status_rect {
-  width: 179px;
+	width: 179px;
 }
 
 table img {
-  display: block;
+	display: block;
 }

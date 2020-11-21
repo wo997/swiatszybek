@@ -1,7 +1,7 @@
 <?php
 // TODO: no
 if (!nonull($page_data, "seo_image", "")) {
-  $page_data["seo_image"] = SHARE_IMG_PATH_PUBLIC_SM;
+    $page_data["seo_image"] = SHARE_IMG_PATH_PUBLIC_SM;
 }
 ?>
 
@@ -13,110 +13,110 @@ if (!nonull($page_data, "seo_image", "")) {
 <link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
 <script>
-  // TODO: should go to cookie maybe window.devicePixelRatio
+    // TODO: should go to cookie maybe window.devicePixelRatio
 
-  const RELEASE = <?= RELEASE ?>; // general asset version
-  const JS_RELEASE = <?= JS_RELEASE ?>;
-  const CSS_RELEASE = <?= CSS_RELEASE ?>;
-  const MODULES_RELEASE = <?= MODULES_RELEASE ?>;
+    const RELEASE = <?= RELEASE ?>; // general asset version
+    const JS_RELEASE = <?= JS_RELEASE ?>;
+    const CSS_RELEASE = <?= CSS_RELEASE ?>;
+    const MODULES_RELEASE = <?= MODULES_RELEASE ?>;
 
-  const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
-  const USER_ID = <?= nonull($app["user"], "id", 0) ?>;
-  const IS_ADMIN = <?= $app["user"]["priveleges"]["backend_access"] ? "true" : "false" ?>;
-  const USER_TYPE = "<?= $app["user"]["type"] ?>";
+    const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
+    const USER_ID = <?= nonull($app["user"], "id", 0) ?>;
+    const IS_ADMIN = <?= $app["user"]["priveleges"]["backend_access"] ? "true" : "false" ?>;
+    const USER_TYPE = "<?= $app["user"]["type"] ?>";
 
-  <?php $sizes = ["lg" => null, "sm" => 800]; ?>
+    <?php $sizes = ["lg" => null, "sm" => 800]; ?>
 
-  const status_list = <?= json_encode($status_list) ?>;
-  const screenSizes = <?= json_encode($sizes) ?>
+    const status_list = <?= json_encode($status_list) ?>;
+    const screenSizes = <?= json_encode($sizes) ?>
 
-  const WEBP_SUPPORT = <?= WEBP_SUPPORT ?>;
+    const WEBP_SUPPORT = <?= WEBP_SUPPORT ?>;
 
-  const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
-  const UPLOADS_PLAIN_PATH = "<?= UPLOADS_PLAIN_PATH ?>";
+    const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
+    const UPLOADS_PLAIN_PATH = "<?= UPLOADS_PLAIN_PATH ?>";
 
-  const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
-  const same_ext_image_allowed_types = <?= json_encode($same_ext_image_allowed_types) ?>;
+    const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
+    const same_ext_image_allowed_types = <?= json_encode($same_ext_image_allowed_types) ?>;
 
-  <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
-    const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
-    const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
-    const privelege_list = <?= json_encode($privelege_list) ?>;
+    <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+        const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
+        const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
+        const privelege_list = <?= json_encode($privelege_list) ?>;
 
-    <?php if (isset($preview_params) && isset($preview_params["js_visible"])) : ?>
-      const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
+        <?php if (isset($preview_params) && isset($preview_params["js_visible"])) : ?>
+            const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
+        <?php endif ?>
     <?php endif ?>
-  <?php endif ?>
 
-  const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
+    const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 
-  <?php if (JUST_LOGGED_IN) : ?>
-    domload(() => {
-      showNotification("Zalogowano pomyślnie", {
-        one_line: true,
-        type: "success",
-      });
+    <?php if (JUST_LOGGED_IN) : ?>
+        domload(() => {
+            showNotification("Zalogowano pomyślnie", {
+                one_line: true,
+                type: "success",
+            });
+        });
+    <?php endif ?>
+
+    <?php if (isset($_SESSION["message_modal"])) : ?>
+        window.addEventListener("load", () => {
+            showMessageModal(`<?= $_SESSION["message_modal"] ?>`);
+            <?php unset($_SESSION["message_modal"]); ?>
+        });
+    <?php endif ?>
+
+    window.addEventListener("modal-show", (event) => {
+        var node = event.detail.node;
+
+        if (!node || node.id != "loginForm") {
+            return;
+        }
+        loadScript("https://apis.google.com/js/platform.js");
+        loadScript("https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=<?= secret('facebook_app_id') ?>&autoLogAppEvents=1", {
+            crossorigin: "anonymous"
+        });
     });
-  <?php endif ?>
 
-  <?php if (isset($_SESSION["message_modal"])) : ?>
-    window.addEventListener("load", () => {
-      showMessageModal(`<?= $_SESSION["message_modal"] ?>`);
-      <?php unset($_SESSION["message_modal"]); ?>
-    });
-  <?php endif ?>
+    function basketReady() {
+        _setBasketData(<?= json_encode(getBasketDataAll()) ?>, {
+            instant: true
+        });
+    };
 
-  window.addEventListener("modal-show", (event) => {
-    var node = event.detail.node;
+    const last_viewed_products_ids = <?= json_encode(getLastViewedProductsIds()) ?>;
+    const last_viewed_products = <?= json_encode(getLastViewedProducts()) ?>;
 
-    if (!node || node.id != "loginForm") {
-      return;
-    }
-    loadScript("https://apis.google.com/js/platform.js");
-    loadScript("https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=<?= secret('facebook_app_id') ?>&autoLogAppEvents=1", {
-      crossorigin: "anonymous"
-    });
-  });
-
-  function basketReady() {
-    _setBasketData(<?= json_encode(getBasketDataAll()) ?>, {
-      instant: true
-    });
-  };
-
-  const last_viewed_products_ids = <?= json_encode(getLastViewedProductsIds()) ?>;
-  const last_viewed_products = <?= json_encode(getLastViewedProducts()) ?>;
-
-  const STATIC_URLS = <?= json_encode(STATIC_URLS) ?>;
+    const STATIC_URLS = <?= json_encode(STATIC_URLS) ?>;
 </script>
 
 <?php if (IS_ADMIN_PAGE || strpos(URL, "zamowienie") === 0) : ?>
 
-  <script>
-    const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;
-  </script>
+    <script>
+        const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;
+    </script>
 
-  <link href="/builds/admin.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-  <script src="/builds/admin.js?v=<?= JS_RELEASE ?>"></script>
+    <link href="/builds/admin.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+    <script src="/builds/admin.js?v=<?= JS_RELEASE ?>"></script>
 
-  <script src="/builds/app_modules.js?v=<?= MODULES_RELEASE ?>" defer></script>
-  <script src="/builds/app_module_blocks.js?v=<?= MODULES_RELEASE ?>" defer></script>
+    <script src="/builds/app_modules.js?v=<?= MODULES_RELEASE ?>" defer></script>
+    <script src="/builds/app_module_blocks.js?v=<?= MODULES_RELEASE ?>" defer></script>
 
-  <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
-  <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">
-  <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= RELEASE ?>"></script>
+    <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
+    <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">
+    <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= RELEASE ?>"></script>
 
-  <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
-  <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>
+    <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
+    <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>
 
-  <script src="/src/highlight.min.js?v=<?= RELEASE ?>"></script>
-  <script src="/src/quill-2.0.js?v=<?= RELEASE ?>"></script>
+    <script src="/src/highlight.min.js?v=<?= RELEASE ?>"></script>
+    <script src="/src/quill-2.0.js?v=<?= RELEASE ?>"></script>
 <?php endif ?>
 
 <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
 
-  <link href="/builds/admin_everywhere.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-  <script src="/builds/admin_everywhere.js?v=<?= JS_RELEASE ?>"></script>
+    <link href="/builds/admin_everywhere.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+    <script src="/builds/admin_everywhere.js?v=<?= JS_RELEASE ?>"></script>
 
 <?php endif ?>
 
@@ -127,34 +127,34 @@ if (!nonull($page_data, "seo_image", "")) {
 <link rel="shortcut icon" href="<?= FAVICON_PATH_LOCAL_TN ?>" />
 
 <?php if (isset($page_data["seo_description"])) : ?>
-  <meta name="description" content="<?= $page_data["seo_description"] ?>">
-  <meta property="og:description" content="<?= $page_data["seo_description"] ?>" />
-  <meta name="twitter:description" content="<?= $page_data["seo_description"] ?>" />
-  <title><?= $page_data["seo_title"] ?></title>
-  <meta property="og:title" content="<?= $page_data["seo_title"] ?>" />
-  <meta name="twitter:title" content="<?= $page_data["seo_title"] ?>" />
-  <meta name="image" content="<?= $page_data["seo_image"] ?>">
-  <meta property="og:image" content="<?= $page_data["seo_image"] ?>">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:site_name" content="<?= $app["company_data"]['email_sender'] ?>" />
-  <meta name="twitter:card" content="summary" />
-  <meta property="og:locale" content="pl_PL" />
-  <meta property="og:type" content="website" />
+    <meta name="description" content="<?= $page_data["seo_description"] ?>">
+    <meta property="og:description" content="<?= $page_data["seo_description"] ?>" />
+    <meta name="twitter:description" content="<?= $page_data["seo_description"] ?>" />
+    <title><?= $page_data["seo_title"] ?></title>
+    <meta property="og:title" content="<?= $page_data["seo_title"] ?>" />
+    <meta name="twitter:title" content="<?= $page_data["seo_title"] ?>" />
+    <meta name="image" content="<?= $page_data["seo_image"] ?>">
+    <meta property="og:image" content="<?= $page_data["seo_image"] ?>">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:site_name" content="<?= $app["company_data"]['email_sender'] ?>" />
+    <meta name="twitter:card" content="summary" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:type" content="website" />
 <?php endif ?>
 
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
 
 <style>
-  /*:root {
+    /*:root {
     --primary-clr: <?= primary_clr ?>;
     --buynow-clr: <?= buynow_clr ?>;
     --subtle-font-clr: <?= subtle_font_clr ?>;
     --subtle-background-clr: <?= subtle_background_clr ?>;
   }*/
 
-  <?php if ($app["user"]["id"]) : ?>.hide_case_logged_in {
-    display: none;
-  }
+    <?php if ($app["user"]["id"]) : ?>.hide_case_logged_in {
+        display: none;
+    }
 
-  <?php endif ?>
+    <?php endif ?>
 </style>

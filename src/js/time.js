@@ -1,5 +1,5 @@
 /* js[global] */
 
 function getCurrentTime() {
-  return new Date().getTime();
+	return new Date().getTime();
 }

@@ -63,7 +63,7 @@
 </form>
 
 <div class="field-title">Ikonka sklepu (favicon)</div>
-<img class="favicon" data-src="<?= FAVICON_PATH_LOCAL_TN ?>">
+<img class="favicon wo997_img" data-src="<?= FAVICON_PATH_LOCAL_TN ?>">
 <form onsubmit="uploadImageWithCopy(event,'favicon')">
     <label>
         <input type="file" onchange="$(this).next().click()">
@@ -73,7 +73,7 @@
 </form>
 
 <div class="field-title">Domyślne zdjęcie udostępniania</div>
-<img class="share_img" data-src="<?= SHARE_IMG_PATH_LOCAL_SM ?>">
+<img class="share_img wo997_img" data-src="<?= SHARE_IMG_PATH_LOCAL_SM ?>">
 <form onsubmit="uploadImageWithCopy(event,'share_img')">
     <label>
         <input type="file" onchange="$(this).next().click()">

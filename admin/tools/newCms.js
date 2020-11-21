@@ -16,8 +16,8 @@ class EditBlock {
 			}
 		});
 
-		const newCms_image = this.newCms.sidebar.find(`[name="newCms_image"]`);
-		newCms_image.addEventListener("change", () => {
+		const image = this.newCms.sidebar.find(`[name="image"]`);
+		image.addEventListener("change", () => {
 			if (this.newCms.edit_block.edit_node) {
 				const block_type = this.newCms.edit_block.edit_node.getAttribute(
 					"data-block"
@@ -25,27 +25,58 @@ class EditBlock {
 				if (block_type == "image") {
 					this.newCms.edit_block.edit_node
 						.find(".newCms_block_content")
-						.setAttribute("src", newCms_image.getValue());
+						.setValue(image.getValue());
 
 					lazyLoadImages();
 					this.newCms.contentChange();
 				}
 			}
 		});
+
+		const container_flow = this.newCms.sidebar.find(`[name="container_flow"]`);
+		container_flow.addEventListener("change", () => {
+			if (this.newCms.edit_block.edit_node) {
+				const block_type = this.newCms.edit_block.edit_node.getAttribute(
+					"data-block"
+				);
+				if (block_type == "container") {
+					this.newCms.edit_block.edit_node
+						.find(".newCms_block_content")
+						.classList.toggle(
+							"container_row",
+							container_flow.getValue() == "container_row"
+						);
+
+					this.newCms.contentChange();
+				}
+			}
+		});
+
+		this.newCms.container.addEventListener("clean_up_output", () => {
+			this.cleanUpContent(this.newCms.clean_output_node);
+		});
 	}
 
 	init() {
-		this.select_node = null;
 		this.edit_node = null;
 
 		this.hideContextMenu();
 
-		this.newCms.container.findAll(".edit_active").forEach((e) => {
+		this.cleanUpContent();
+	}
+
+	cleanUpContent(node = null) {
+		if (node === null) {
+			node = this.newCms.container;
+		}
+
+		node.findAll(".edit_active").forEach((e) => {
 			e.classList.remove("edit_active");
 		});
 	}
 
 	hideContextMenu() {
+		this.select_node = null;
 		this.node.classList.toggle("visible", false);
 	}
 
@@ -73,9 +104,20 @@ class EditBlock {
 			);
 		}
 		if (block_type == "image") {
-			const newCms_image = this.newCms.sidebar.find(`[name="newCms_image"]`);
-			newCms_image.setValue(
-				block.find(".newCms_block_content").getAttribute("src")
+			const image = this.newCms.sidebar.find(`[name="image"]`);
+			image.setValue(block.find(".newCms_block_content").getValue());
+			lazyLoadImages();
+		}
+		if (block_type == "container") {
+			const container_flow = this.newCms.sidebar.find(
+				`[name="container_flow"]`
+			);
+			container_flow.setValue(
+				this.newCms.edit_block.edit_node
+					.find(".newCms_block_content")
+					.classList.contains("container_row")
+					? "container_row"
+					: ""
 			);
 		}
 
@@ -1117,6 +1159,8 @@ class NewCms {
 
 		this.rearrange_node = this.container.find(`.rearrange_node`);
 
+		this.clean_output_node = this.container.find(`.clean_output`);
+
 		this.initEditBlock();
 		this.initQuillEditor();
 		this.initFloatingSelectControls();
@@ -1168,23 +1212,19 @@ class NewCms {
 
 	initListenChange() {
 		this.content_node.addEventListener("change", () => {
-			if (this.content_change_triggered) {
-				this.contentChange({
-					trigger_change: false,
-				});
-			}
+			const trigger_change = !this.content_change_triggered;
+			this.contentChange({
+				trigger_change: trigger_change,
+			});
 		});
 	}
 
 	getCleanOutput(html) {
-		// TODO: use as a formatter? so the history doesnt have those classes inside and so on, tricky but might be worth it :*
-		var playground = $(document.createElement("DIV"));
-		// TODO: is it even necessary?
-		//document.body.appendChild(playground);
+		this.clean_output_node.setContent(html);
 
-		playground.insertAdjacentHTML("afterbegin", html);
+		this.container.dispatchEvent(new Event("clean_up_output"));
 
-		return playground.innerHTML;
+		return this.clean_output_node.innerHTML;
 	}
 
 	initEditBlock() {
@@ -1346,7 +1386,7 @@ class NewCms {
 		this.select_controls.addFloatingSelectControls();
 
 		if (nonull(options.trigger_change, true) === true) {
-			this.content_node.setValue();
+			this.content_node.dispatchChange();
 		}
 		this.content_change_triggered = false;
 	}
@@ -1371,7 +1411,7 @@ class NewCms {
 		if (type === "quill_editor") {
 			content_html = `<div class="newCms_block_content ql-editor"></div>`;
 		} else {
-			content_html = `<img class="newCms_block_content">`;
+			content_html = `<img class="newCms_block_content wo997_img">`;
 		}
 
 		return /*html*/ `
@@ -1903,10 +1943,18 @@ registerModalContent(
                           </button>
                           Edycja bloku / kontenera...
                         </span>
+
+                        <span class="field-title">Tekst</span>
                         <div class="quill_editor"></div>
 
                         <span class="field-title">Zdjęcie</span>
-                        <image-input name="newCms_image" data-options='{"width":"100%","height":"1w"}'></image-input>
+                        <image-input name="image" data-options='{"width":"100%","height":"1w"}'></image-input>
+
+                        <span class="field-title">Ułożenie zawartości</span>
+                        <radio-input name="container_flow" class="default">
+                            <radio-option value="" data-default> <i class="fas fa-ellipsis-v align-icon"></i> Pionowo </radio-option>
+                            <radio-option value="container_row"> <i class="fas fa-ellipsis-h align-icon"></i> Poziomo </radio-option>
+                        </radio-input>
                       </div>
                     </div>
                   </div>
@@ -1928,6 +1976,7 @@ registerModalContent(
                 </div>
             </div>  
           <div class="rearrange_node"></div>
+          <div class="clean_output" style="display:none !important"></div>
         </div>
         <link href="/admin/tools/newCms.css?v=${CSS_RELEASE}" rel="stylesheet">
     </div>

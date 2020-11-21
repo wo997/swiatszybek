@@ -257,7 +257,7 @@
 	/*flex-flow: column;*/
 }
 
-.newCms_block[data-block="container"].container_row > .newCms_block_content {
+.newCms_block_content.container_row {
 	display: flex;
 	flex-flow: row wrap;
 }

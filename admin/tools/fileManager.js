@@ -1,169 +1,169 @@
 window.fileManager = {
-  target: null,
-  callback: null,
-  defaultName: "",
-  asset_types: [],
-  size: null,
-  open: (target = null, params = {}) => {
-    fileManager.target = target;
-    fileManager.callback = params.callback;
-    fileManager.size = params.size;
-    fileManager.optimise = params.optimise ? true : false;
+	target: null,
+	callback: null,
+	defaultName: "",
+	asset_types: [],
+	size: null,
+	open: (target = null, params = {}) => {
+		fileManager.target = target;
+		fileManager.callback = params.callback;
+		fileManager.size = params.size;
+		fileManager.optimise = params.optimise ? true : false;
 
-    fileManager.setName(null, true);
+		fileManager.setName(null, true);
 
-    if (!params.asset_types) {
-      params.asset_types = ["image", "video"];
-    }
-    fileManager.asset_types = params.asset_types;
+		if (!params.asset_types) {
+			params.asset_types = ["image", "video"];
+		}
+		fileManager.asset_types = params.asset_types;
 
-    var can_use_external_image_btn = false;
-    if (params.asset_types.length === 1 && params.asset_types[0] === "image") {
-      can_use_external_image_btn = true;
-    }
-    $(".use_external_image_btn").style.display = can_use_external_image_btn
-      ? ""
-      : "none";
+		var can_use_external_image_btn = false;
+		if (params.asset_types.length === 1 && params.asset_types[0] === "image") {
+			can_use_external_image_btn = true;
+		}
+		$(".use_external_image_btn").style.display = can_use_external_image_btn
+			? ""
+			: "none";
 
-    showModal("fileManager", { source: nonull(params.source, target) });
+		showModal("fileManager", { source: nonull(params.source, target) });
 
-    fileManager.search();
-  },
-  choose: (src) => {
-    if (fileManager.size) {
-      //src
-      src = "/" + UPLOADS_PATH + fileManager.size + getUploadedFileName(src);
-    }
+		fileManager.search();
+	},
+	choose: (src) => {
+		if (fileManager.size) {
+			//src
+			src = "/" + UPLOADS_PATH + fileManager.size + getUploadedFileName(src);
+		}
 
-    if (fileManager.target) {
-      $(fileManager.target).setValue(src);
-      lazyLoadImages(true);
-    }
+		if (fileManager.target) {
+			$(fileManager.target).setValue(src);
+			lazyLoadImages(true);
+		}
 
-    if (fileManager.callback) {
-      fileManager.callback({ src: src, target: fileManager.target });
-    }
+		if (fileManager.callback) {
+			fileManager.callback({ src: src, target: fileManager.target });
+		}
 
-    hideModal("fileManager");
-  },
-  setDefaultName: (name, replaceEmptyOnly = true) => {
-    fileManager.defaultName = name;
-    fileManager.setName(fileManager.defaultName, replaceEmptyOnly);
-  },
-  setName: (name = null, replaceEmptyOnly = false) => {
-    if (name === null) {
-      name = fileManager.defaultName;
-    }
-    var nameElement = $("#uploadFiles .name");
-    if (!replaceEmptyOnly || nameElement.value == "") {
-      nameElement.value = name;
-    }
-  },
-  fileAction: (formData, callback = null) => {
-    xhr({
-      url: STATIC_URLS["ADMIN"] + "uploads_action",
-      formData: formData,
-      success(images) {
-        try {
-          if (Array.isArray(images)) {
-            var out = "";
-            var counter = 0;
-            for (image of images) {
-              counter++;
+		hideModal("fileManager");
+	},
+	setDefaultName: (name, replaceEmptyOnly = true) => {
+		fileManager.defaultName = name;
+		fileManager.setName(fileManager.defaultName, replaceEmptyOnly);
+	},
+	setName: (name = null, replaceEmptyOnly = false) => {
+		if (name === null) {
+			name = fileManager.defaultName;
+		}
+		var nameElement = $("#uploadFiles .name");
+		if (!replaceEmptyOnly || nameElement.value == "") {
+			nameElement.value = name;
+		}
+	},
+	fileAction: (formData, callback = null) => {
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "uploads_action",
+			formData: formData,
+			success(images) {
+				try {
+					if (Array.isArray(images)) {
+						var out = "";
+						var counter = 0;
+						for (image of images) {
+							counter++;
 
-              var replaceImg = $(`[upload_image="${counter}"]`);
-              if (replaceImg) {
-                replaceImg.src = "/" + image.file_path;
-                replaceImg.removeAttribute("upload_image");
-              }
+							var replaceImg = $(`[upload_image="${counter}"]`);
+							if (replaceImg) {
+								replaceImg.src = "/" + image.file_path;
+								replaceImg.removeAttribute("upload_image");
+							}
 
-              var display = "";
+							var display = "";
 
-              if (image.asset_type == "video") {
-                display = `<video src="/${image.file_path}" class="ql-video" controls="true" style='width:100%;height:250px;'></video>`;
-              } else {
-                display = `<img style='width:100%;object-fit:contain' data-height='1w' data-src='/${image.file_path}'>`;
-              }
-              const image_metadata_html = /* html */ `
-                <b>Ścieżka:</b> ${image.file_path}
-                <hr style="margin:2px 0">
-                <b>Nazwa:</b> ${image.uploaded_file_name} 
-                <hr style="margin:2px 0">
-                <b>Autor:</b> ${nonull(image.email,"-")}
-              `;
-              out += /* html */ `
-                  <div class='gallery-item'>
-                      ${display}
-                      <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz"><i class="fas fa-check"></i></div>
-                      <div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń"><i class="fas fa-times"></i></div>
-                      <i class='fas fa-info-circle' data-tooltip='${image_metadata_html}'></i>
-                  </div>
-              `;
-            }
-            $("#fileManager .gallery").setContent(out);
+							if (image.asset_type == "video") {
+								display = `<video src="/${image.file_path}" class="ql-video" controls="true" style='width:100%;height:250px;'></video>`;
+							} else {
+								display = `<img style='width:100%;object-fit:contain' data-height='1w' class='wo997_img' data-src='/${image.file_path}'>`;
+							}
+							const image_metadata_html = /* html */ `
+                                <b>Ścieżka:</b> ${image.file_path}
+                                <hr style="margin:2px 0">
+                                <b>Nazwa:</b> ${image.uploaded_file_name} 
+                                <hr style="margin:2px 0">
+                                <b>Autor:</b> ${nonull(image.email, "-")}
+                            `;
+							out += /* html */ `
+                                <div class='gallery-item'>
+                                    ${display}
+                                    <div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz"><i class="fas fa-check"></i></div>
+                                    <div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń"><i class="fas fa-times"></i></div>
+                                    <i class='fas fa-info-circle' data-tooltip='${image_metadata_html}'></i>
+                                </div>
+                            `;
+						}
+						$("#fileManager .gallery").setContent(out);
 
-            lazyLoadImages();
-          }
-        } catch (e) {
-          console.log(e);
-        }
+						lazyLoadImages();
+					}
+				} catch (e) {
+					console.log(e);
+				}
 
-        if (callback) {
-          callback();
-        }
-      },
-    });
-  },
-  search: () => {
-    var formData = new FormData();
-    formData.append("search", $("#search").value);
-    formData.append("asset_types", fileManager.asset_types.join(","));
-    fileManager.fileAction(formData);
-  },
-  delete: (src) => {
-    if (confirm("Czy aby na pewno chcesz usunąć ten plik?")) {
-      var formData = new FormData();
-      formData.append("delete_path", src);
-      fileManager.fileAction(formData, () => {
-        fileManager.search();
-      });
-    }
-  },
-  loaded: () => {
-    $("#uploadFiles form").addEventListener("submit", (e) => {
-      e.preventDefault();
+				if (callback) {
+					callback();
+				}
+			},
+		});
+	},
+	search: () => {
+		var formData = new FormData();
+		formData.append("search", $("#search").value);
+		formData.append("asset_types", fileManager.asset_types.join(","));
+		fileManager.fileAction(formData);
+	},
+	delete: (src) => {
+		if (confirm("Czy aby na pewno chcesz usunąć ten plik?")) {
+			var formData = new FormData();
+			formData.append("delete_path", src);
+			fileManager.fileAction(formData, () => {
+				fileManager.search();
+			});
+		}
+	},
+	loaded: () => {
+		$("#uploadFiles form").addEventListener("submit", (e) => {
+			e.preventDefault();
 
-      var input = $("#uploadFiles [type=file]");
-      var files = input.files;
-      var formData = new FormData();
+			var input = $("#uploadFiles [type=file]");
+			var files = input.files;
+			var formData = new FormData();
 
-      for (let i = 0; i < files.length; i++) {
-        let file = files[i];
+			for (let i = 0; i < files.length; i++) {
+				let file = files[i];
 
-        formData.append("files[]", file);
-      }
-      input.value = "";
+				formData.append("files[]", file);
+			}
+			input.value = "";
 
-      formData.append("name", $("#uploadFiles .name").value);
-      formData.append("search", $("#search").value);
+			formData.append("name", $("#uploadFiles .name").value);
+			formData.append("search", $("#search").value);
 
-      fileManager.fileAction(formData);
+			fileManager.fileAction(formData);
 
-      hideModal("uploadFiles");
-    });
-  },
-  addExternalImage: (btn) => {
-    if (!validateForm("#externalImage")) {
-      return;
-    }
-    hideParentModal(btn);
+			hideModal("uploadFiles");
+		});
+	},
+	addExternalImage: (btn) => {
+		if (!validateForm("#externalImage")) {
+			return;
+		}
+		hideParentModal(btn);
 
-    fileManager.choose($("#externalImage .external_link").getValue());
-  },
+		fileManager.choose($("#externalImage .external_link").getValue());
+	},
 };
 
 registerModalContent(
-  `
+	`
     <div id="fileManager" data-expand="true">
         <div class="modal-body">
             <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
@@ -197,7 +197,7 @@ registerModalContent(
 );
 
 registerModalContent(
-  `
+	`
     <div id="externalImage">
         <div class="modal-body">
             <div class="custom-toolbar">
@@ -228,7 +228,7 @@ registerModalContent(
 );
 
 registerModalContent(
-  `
+	`
     <div id="uploadFiles">
         <div class="modal-body">
             <div class="custom-toolbar">
@@ -250,7 +250,7 @@ registerModalContent(
         </div>
     </div>
     `,
-  () => {
-    fileManager.loaded();
-  }
+	() => {
+		fileManager.loaded();
+	}
 );

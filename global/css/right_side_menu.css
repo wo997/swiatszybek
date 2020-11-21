@@ -1,65 +1,65 @@
 /* css[admin_everywhere] */
 
 .right_side_menu {
-  position: fixed;
-  right: 0;
-  top: 40%;
-  background: #fafafa;
-  display: block;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-right: none;
-  border-bottom-left-radius: 4px;
-  border-top-left-radius: 4px;
-  box-shadow: 0 2px 5px #0003;
-  z-index: 100;
-  transform: translate(0, 0);
-  transition: transform 0.4s;
-  min-width: 150px;
+	position: fixed;
+	right: 0;
+	top: 40%;
+	background: #fafafa;
+	display: block;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-right: none;
+	border-bottom-left-radius: 4px;
+	border-top-left-radius: 4px;
+	box-shadow: 0 2px 5px #0003;
+	z-index: 100;
+	transform: translate(0, 0);
+	transition: transform 0.4s;
+	min-width: 150px;
 }
 
 .right_side_menu:not(.shown) {
-  transform: translate(calc(100% + 2px), 0);
+	transform: translate(calc(100% + 2px), 0);
 }
 
 .toggle-sidemenu-btn {
-  position: absolute;
-  top: 10px;
-  left: -40px;
-  width: 30px;
-  height: 30px;
-  border-radius: 7px;
-  transition: all 0.4s, color 0s;
+	position: absolute;
+	top: 10px;
+	left: -40px;
+	width: 30px;
+	height: 30px;
+	border-radius: 7px;
+	transition: all 0.4s, color 0s;
 }
 
 .right_side_menu .toggle-sidemenu-btn .fas {
-  position: absolute;
-  transition: all 0.2s;
-  left: 50%;
-  top: 50%;
-  opacity: 1;
-  transform: translate(-50%, -50%);
+	position: absolute;
+	transition: all 0.2s;
+	left: 50%;
+	top: 50%;
+	opacity: 1;
+	transform: translate(-50%, -50%);
 }
 
 .right_side_menu.shown .toggle-sidemenu-btn {
-  left: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+	left: 0;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
 .right_side_menu:not(.shown) .toggle-sidemenu-btn {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.35);
-  top: 5px;
-  height: 40px;
-  width: 40px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.35);
+	top: 5px;
+	height: 40px;
+	width: 40px;
 }
 
 .right_side_menu:not(.shown) .toggle-sidemenu-btn .fa-chevron-right {
-  opacity: 0;
+	opacity: 0;
 }
 
 .right_side_menu.shown .toggle-sidemenu-btn .fa-cog {
-  opacity: 0;
+	opacity: 0;
 }

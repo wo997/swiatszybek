@@ -400,7 +400,7 @@ if ($product_id === -1) {
             render: (data) => {
                 return `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
-              <img name="src" data-type="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
+              <img name="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
               <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
@@ -501,7 +501,7 @@ if ($product_id === -1) {
               <input type='hidden' name="was_stock">
             </td>
             <td>
-              <img name="zdjecie" data-type="src" style="width:80px;height:80px;object-fit:contain"/>
+              <img name="zdjecie" style="width:80px;height:80px;object-fit:contain"/>
             </td>
             <td style='min-width:200px'>
               <input type='hidden' name="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
@@ -1243,7 +1243,7 @@ if ($product_id === -1) {
                 <div class="field-title">
                     Zdjecie
                     <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types: ["image"]})'>Wybierz</button>
-                    <img name="zdjecie" data-type="src" />
+                    <img name="zdjecie" />
                 </div>
 
                 <div class="field-title">Widoczność</div>

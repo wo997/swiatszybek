@@ -1,17 +1,17 @@
 /* module_block[slider] */
 MODULE_BLOCK = {
-  title: "Slider",
-  icon: '<i class="far fa-images"></i>',
-  formOpen: (params, form) => {
-    createSimpleList({
-      name: "cms_slides",
-      fields: {
-        title: {},
-        published: {},
-        slide: {},
-      },
-      render: () => {
-        return `
+	title: "Slider",
+	icon: '<i class="far fa-images"></i>',
+	formOpen: (params, form) => {
+		createSimpleList({
+			name: "cms_slides",
+			fields: {
+				title: {},
+				published: {},
+				slide: {},
+			},
+			render: () => {
+				return `
               <div style="flex-grow: 1;">
                     <span class="field-title">Tytuł <input type='text' class='field inline' name="title"></span>
                     <label class="field-title checkbox-wrapper">
@@ -28,11 +28,11 @@ MODULE_BLOCK = {
                     <div class="cms preview_html" name="content" data-type="html" style="max-width: 400px;max-height: 200px;"></div>
               </div>
           `;
-      },
-      default_row: {
-        title: "",
-        published: 1,
-        content: `
+			},
+			default_row: {
+				title: "",
+				published: 1,
+				content: `
           <div class="cms-container">
             <div class="background-color" style="background-color: rgb(20, 0, 205); opacity: 0.25;"></div>
             <div class="cms-container-content">
@@ -42,48 +42,48 @@ MODULE_BLOCK = {
             </div>
           </div>
         `,
-      },
-      onChange: () => {
-        MODULE_BLOCK.form
-          .find(`[name="desktop-slider-height"]`)
-          .dispatchChange();
-        resizeCallback();
-      },
-    });
+			},
+			onChange: () => {
+				MODULE_BLOCK.form
+					.find(`[name="desktop-slider-height"]`)
+					.dispatchChange();
+				resizeCallback();
+			},
+		});
 
-    setTimeout(() => {
-      resizeCallback();
-    }, 450);
-  },
-  formClose: (form_data) => {
-    return form_data;
-  },
-  render: (params) => {
-    return `xxx`;
-  },
-  editSlide: (node) => {
-    editCMSAdditional(node, {
-      onChange: (cms_container) => {
-        MODULE_BLOCK.setAllCSS(cms_container);
-      },
-      delete_block_with_parent: false,
-      type: "slide",
-    });
+		setTimeout(() => {
+			resizeCallback();
+		}, 450);
+	},
+	formClose: (form_data) => {
+		return form_data;
+	},
+	render: (params) => {
+		return `xxx`;
+	},
+	editSlide: (node) => {
+		editCMSAdditional(node, {
+			onChange: (cms_container) => {
+				MODULE_BLOCK.setAllCSS(cms_container);
+			},
+			delete_block_with_parent: false,
+			type: "slide",
+		});
 
-    setTimeout(() => {
-      resizeCallback();
-    }, 450);
-  },
-  sliderHeightChanged: (input) => {
-    MODULE_BLOCK.setAllCSS(MODULE_BLOCK.form);
-    //name="desktop-slider-height"
-  },
-  setAllCSS: (parent) => {
-    var h = MODULE_BLOCK.form.find(`[name="desktop-slider-height"]`).getValue();
-    parent.findAll(".cms-container").forEach((e) => {
-      //console.log(e);
-      e.setAttribute("data-desktop-min-height", h);
-    });
-    resizeCallback();
-  },
+		setTimeout(() => {
+			resizeCallback();
+		}, 450);
+	},
+	sliderHeightChanged: (input) => {
+		MODULE_BLOCK.setAllCSS(MODULE_BLOCK.form);
+		//name="desktop-slider-height"
+	},
+	setAllCSS: (parent) => {
+		var h = MODULE_BLOCK.form.find(`[name="desktop-slider-height"]`).getValue();
+		parent.findAll(".cms-container").forEach((e) => {
+			//console.log(e);
+			e.setAttribute("data-desktop-min-height", h);
+		});
+		resizeCallback();
+	},
 };

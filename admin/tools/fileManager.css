@@ -1,22 +1,22 @@
 #fileManager .gallery {
-  flex-shrink: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-wrap: wrap;
+	flex-shrink: 1;
+	overflow-y: auto;
+	display: flex;
+	flex-wrap: wrap;
 }
 @media only screen and (max-width: 800px) {
-  #fileManager .gallery > div {
-    width: 100%;
-  }
+	#fileManager .gallery > div {
+		width: 100%;
+	}
 }
 #fileManager .gallery-item {
-  text-align: center;
-  width: 25%;
-  display: block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  position: relative;
-  padding: 6px;
+	text-align: center;
+	width: 25%;
+	display: block;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	position: relative;
+	padding: 6px;
 }
 
 /*#fileManager .gallery-item:not(:hover) .btn {
@@ -24,11 +24,11 @@
 }*/
 
 #fileManager .gallery-item .fa-info-circle {
-  position: absolute;
-  right: 5px;
-  top: 5px;
+	position: absolute;
+	right: 5px;
+	top: 5px;
 }
 
 #fileManager .gallery-item .btn {
-  min-width: 37px;
+	min-width: 37px;
 }
