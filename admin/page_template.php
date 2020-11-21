@@ -12,7 +12,7 @@ endSection();
     <?php if (isset($sections["head"])) echo $sections["head"]; ?>
 </head>
 
-<body id="admin" class=" <?= ADMIN_THEME ?>">
+<body id="admin" class=" <?= ADMIN_THEME? 'dark' : '' ?>">
     <div class="main-container">
         <div class="main-wrapper">
             <header class="navbar_admin">
