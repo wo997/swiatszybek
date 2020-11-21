@@ -405,7 +405,7 @@ function getValue(input) {
 			return getAttibutePickerValues(input);
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
-				return input.getAttribute(`data-src`);
+				return nonull(input.getAttribute(`data-src`), "");
 			}
 			return input.getAttribute(`src`);
 		} else if (type == "date") {
