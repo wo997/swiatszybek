@@ -1161,11 +1161,15 @@ class NewCms {
 
 		this.clean_output_node = this.container.find(`.clean_output`);
 
+		this.sidebar_scroll_wrapper = this.sidebar.find(`.scroll-panel`);
+
 		this.initEditBlock();
 		this.initQuillEditor();
 		this.initFloatingSelectControls();
 		this.initFloatingRearrangeControls();
 		this.initListenChange();
+
+		this.initMargins();
 
 		this.mouse_x = 0;
 		this.mouse_y = 0;
@@ -1208,6 +1212,67 @@ class NewCms {
 		this.content_scroll_panel.addEventListener("scroll", () => {
 			this.scroll();
 		});
+	}
+
+	initMargins() {
+		const margin = this.sidebar.find(`.margin`);
+		this.insertMarginControl(margin, "margin", {});
+
+		margin.findAll("c-select").forEach((e) => {
+			const input = e.find("input");
+			const dir = input.getAttribute("data-dir");
+
+			input.addEventListener("change", () => {
+				this.edit_block.edit_node.style[
+					`margin${dir.capitalize()}`
+				] = input.getValue();
+
+				this.contentChange();
+			});
+		});
+	}
+
+	insertMarginControl(node, name) {
+		const options = /*html*/ `
+            <c-option>0</c-option>
+            <c-option>12px</c-option>
+            <c-option>24px</c-option>
+            <c-option>36px</c-option>
+            <c-option>2%</c-option>
+            <c-option>4%</c-option>
+            <c-option>6%</c-option>
+        `;
+
+		const getInput = (dir) => {
+			return /*html*/ `
+                <c-select style="width:100px">
+                    <input type="text" class="field"
+                        name="${name + dir}" data-dir=${dir}>
+                    <c-arrow></c-arrow>
+                    <c-options>
+                        ${options}
+                    </c-options>
+                </c-select>
+            `;
+		};
+
+		node.insertAdjacentHTML(
+			"afterbegin",
+			/*html*/ `
+            <div style="max-width:400px">
+                <div style="display:flex;justify-content:center">
+                    ${getInput("top")}
+                </div>
+                <div style="display:flex;justify-content: space-around;padding: 20px 0;">
+                    ${getInput("left")}
+                    ${getInput("right")}
+                </div>
+                <div style="display:flex;justify-content:center">
+                    ${getInput("bottom")}
+                </div>
+            </div>
+            `
+		);
 	}
 
 	initListenChange() {
@@ -1640,11 +1705,21 @@ class NewCms {
 			// maybe put them straight to styles?
 			// we should remove it when cleaning the cms output anyway ;)
 
-			let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
-			let my = 0.5 * (block.new_rect.height - block.last_rect.height);
+			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
+			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-			const dx = block.animation_data.x - mx;
-			const dy = block.animation_data.y - my;
+			const mt = evalCss(block.style.marginTop, block);
+			const mr = evalCss(block.style.marginRight, block);
+			const mb = evalCss(block.style.marginBottom, block);
+			const ml = evalCss(block.style.marginLeft, block);
+
+			const mt0 = mt + half_dh;
+			const mr0 = mr + half_dw;
+			const mb0 = mb + half_dh;
+			const ml0 = ml + half_dw;
+
+			const dx = block.animation_data.x - half_dw;
+			const dy = block.animation_data.y - half_dh;
 
 			const fg = block.style.flexGrow;
 			block.style.flexGrow = 0;
@@ -1659,7 +1734,7 @@ class NewCms {
                 );
                 width: ${block.last_rect.width}px;
                 height: ${block.last_rect.height}px;
-                margin: ${my}px ${mx}px;
+                margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
               }
               100% {
                 transform: translate(
@@ -1668,7 +1743,7 @@ class NewCms {
                 );
                 width: ${block.new_rect.width}px;
                 height: ${block.new_rect.height}px;
-                margin: 0px 0px;
+                margin: ${mt}px ${mr}px ${mb}px ${ml}px;
               }
             `,
 				duration,
@@ -1955,6 +2030,9 @@ registerModalContent(
                             <radio-option value="" data-default> <i class="fas fa-ellipsis-v align-icon"></i> Pionowo </radio-option>
                             <radio-option value="container_row"> <i class="fas fa-ellipsis-h align-icon"></i> Poziomo </radio-option>
                         </radio-input>
+                        
+                        <span class="field-title">Marginesy</span>
+                        <div class="margin"></div>
                       </div>
                     </div>
                   </div>

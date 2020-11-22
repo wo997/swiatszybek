@@ -171,11 +171,6 @@ function validURL(str) {
 	return !!pattern.test(str);
 }
 
-// TODO: prototypes make the code cleaner?
-String.prototype.replacePolishLetters = function () {
-	return replacePolishLetters(this);
-};
-
 // also links.php
 function replacePolishLetters(string) {
 	const pl = [
@@ -224,6 +219,11 @@ function replacePolishLetters(string) {
 		string = string.replace(new RegExp(`${pl[i]}`, "g"), en[i]);
 	}
 	return string;
+}
+
+function capitalize(str) {
+	const first = str.charAt(0);
+	return str.replace(first, first.toUpperCase());
 }
 
 // also links.php
