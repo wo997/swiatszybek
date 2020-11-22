@@ -1633,6 +1633,46 @@ class NewCms {
 
 		this.grabbed_block = null;
 
+		this.rearrange_controls.node.classList.remove("visible");
+
+		setTimeout(() => {
+			this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove(
+				"visible"
+			);
+		}, delay_grabbed_rect_node_fadeout);
+
+		this.beforeContentAnimation();
+
+		// some action
+		if (this.rearrange_controls.rearrange_block) {
+			if (this.rearrange_controls.rearrange_position == "inside") {
+				this.rearrange_controls.rearrange_block
+					.find(".newCms_block_content")
+					.appendChild(grabbed_block);
+			} else {
+				let before_node = this.rearrange_controls.rearrange_block;
+				if (this.rearrange_controls.rearrange_position == "after") {
+					before_node = before_node.next();
+				}
+
+				this.rearrange_controls.rearrange_block
+					.parent()
+					.insertBefore(grabbed_block, before_node);
+			}
+		}
+
+		this.animateContent(350);
+	}
+
+	beforeContentAnimation() {
+		this.content_node.findAll(".newCms_block").forEach((block) => {
+			if (!block.last_rect) {
+				block.last_rect = block.getBoundingClientRect();
+			}
+		});
+	}
+
+	animateContent(duration) {
 		let end_just_once = true;
 		const end = () => {
 			if (!end_just_once) {
@@ -1648,42 +1688,6 @@ class NewCms {
 			this.updateMouseTarget();
 			this.mouseMove();
 		};
-
-		this.rearrange_controls.node.classList.remove("visible");
-
-		this.lockInput(delay_grabbed_rect_node_fadeout);
-		setTimeout(() => {
-			this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove(
-				"visible"
-			);
-		}, delay_grabbed_rect_node_fadeout);
-
-		if (!this.rearrange_controls.rearrange_block) {
-			return end();
-		}
-
-		const duration = 350;
-
-		this.content_node.findAll(".newCms_block").forEach((block) => {
-			if (!block.last_rect) {
-				block.last_rect = block.getBoundingClientRect();
-			}
-		});
-
-		if (this.rearrange_controls.rearrange_position == "inside") {
-			this.rearrange_controls.rearrange_block
-				.find(".newCms_block_content")
-				.appendChild(grabbed_block);
-		} else {
-			let before_node = this.rearrange_controls.rearrange_block;
-			if (this.rearrange_controls.rearrange_position == "after") {
-				before_node = before_node.next();
-			}
-
-			this.rearrange_controls.rearrange_block
-				.parent()
-				.insertBefore(grabbed_block, before_node);
-		}
 
 		const all_animatable_blocks = this.content_node
 			.findAll(".newCms_block")
