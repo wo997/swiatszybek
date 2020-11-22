@@ -85,12 +85,13 @@ if ($kopia) {
 <?php startSection("header"); ?>
 
 <div class="custom-toolbar">
+    <a class="btn transparent" href="<?= STATIC_URLS["ADMIN"] ?>produkty"><i class="fas fa-chevron-left"></i></a>
+
     <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
         <?= $product_form_header ?>
     </div>
     <div class="history-buttons product-history-buttons"></div>
 
-    <a class="btn secondary" href="<?= STATIC_URLS["ADMIN"] ?>produkty">Wszystkie produkty <i class="fas fa-cubes"></i></a>
     <?php if ($kopia) : ?>
         <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
     <?php else : ?>
