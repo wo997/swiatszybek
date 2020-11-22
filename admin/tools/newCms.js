@@ -596,11 +596,19 @@ class FloatingRearrangeControls {
 				) {
 					// no kissing ugh
 					if (is_parent_row) {
+						const prev_node_rect = prev_node.getBoundingClientRect();
+						const node_rect = block_rect_data.node_rect;
 						if (
-							prev_node.getBoundingClientRect().left <=
-							block_rect_data.node_rect.left
+							Math.abs(node_rect.left - prev_node_rect.right) <
+								rearrange_control_width &&
+							Math.abs(
+								node_rect.top +
+									node_rect.height * 0.5 -
+									prev_node_rect.top -
+									prev_node_rect.height * 0.5
+							) < rearrange_control_height
 						) {
-							// row wrap case not spotted, skip :)
+							// rows kissing
 							return;
 						}
 					} else {
@@ -1575,9 +1583,9 @@ class NewCms {
 			animate(
 				side_block,
 				`
-          0% {opacity: 1}
-          100% {opacity: 0}
-        `,
+                    0% {opacity: 1}
+                    100% {opacity: 0}
+                `,
 				t1,
 				() => {
 					side_block.classList.remove("grabbed");
@@ -1585,9 +1593,9 @@ class NewCms {
 					animate(
 						side_block,
 						`
-              0% {opacity: 0; transform: scale(0.65)}
-              100% {opacity: 1; transform: scale(1)}
-            `,
+                            0% {opacity: 0; transform: scale(0.65)}
+                            100% {opacity: 1; transform: scale(1)}
+                        `,
 						t2
 					);
 				}
@@ -1644,9 +1652,8 @@ class NewCms {
 		const duration = 350;
 
 		this.content_node.findAll(".newCms_block").forEach((block) => {
-			const node_on_screen_rect = isNodeOnScreen(block, 0);
-			if (node_on_screen_rect && !block.last_rect) {
-				block.last_rect = node_on_screen_rect;
+			if (!block.last_rect) {
+				block.last_rect = block.getBoundingClientRect();
 			}
 		});
 
@@ -1668,9 +1675,8 @@ class NewCms {
 		const all_animatable_blocks = this.content_node
 			.findAll(".newCms_block")
 			.filter((block) => {
-				const node_on_screen_rect = isNodeOnScreen(block, 0);
-				if (block.last_rect && node_on_screen_rect) {
-					block.new_rect = node_on_screen_rect;
+				if (block.last_rect) {
+					block.new_rect = block.getBoundingClientRect();
 					if (!block.animation_data) {
 						block.animation_data = { x: 0, y: 0 };
 					}
@@ -1727,25 +1733,25 @@ class NewCms {
 			animate(
 				block,
 				`
-              0% {
-                transform: translate(
-                  ${dx}px,
-                  ${dy}px
-                );
-                width: ${block.last_rect.width}px;
-                height: ${block.last_rect.height}px;
-                margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
-              }
-              100% {
-                transform: translate(
-                  0px,
-                  0px
-                );
-                width: ${block.new_rect.width}px;
-                height: ${block.new_rect.height}px;
-                margin: ${mt}px ${mr}px ${mb}px ${ml}px;
-              }
-            `,
+                    0% {
+                        transform: translate(
+                            ${dx}px,
+                            ${dy}px
+                        );
+                        width: ${block.last_rect.width}px;
+                        height: ${block.last_rect.height}px;
+                        margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
+                    }
+                    100% {
+                        transform: translate(
+                            0px,
+                            0px
+                        );
+                        width: ${block.new_rect.width}px;
+                        height: ${block.new_rect.height}px;
+                        margin: ${mt}px ${mr}px ${mb}px ${ml}px;
+                    }
+                `,
 				duration,
 				() => {
 					block.style.flexGrow = fg;
@@ -1813,10 +1819,9 @@ class NewCms {
 			const base_dy = this.mouse_y - this.grabbed_mouse_y;
 
 			const dx = base_dx;
-			const dy =
-				base_dy +
+			const dy = base_dy; /* +
 				this.grabbed_node_scroll_parent.scrollTop -
-				this.grabbed_scroll_top;
+				this.grabbed_scroll_top;*/
 
 			grabbed_block.animation_data = { x: dx, y: dy };
 
