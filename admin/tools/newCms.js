@@ -121,6 +121,16 @@ class EditBlock {
 			);
 		}
 
+		// for all blocks types
+		const margin = this.newCms.sidebar.find(`.margin`);
+
+		margin.findAll("c-select").forEach((e) => {
+			const input = e.find("input");
+			const dir = input.getAttribute("data-dir");
+
+			input.setValue(this.edit_node.style[`margin${dir.capitalize()}`]);
+		});
+
 		block.classList.add("edit_active");
 		this.newCms.showSideMenu("edit_block");
 
@@ -1289,6 +1299,9 @@ class NewCms {
 			this.contentChange({
 				trigger_change: trigger_change,
 			});
+
+			// TODO: based on what node has class edit_active or not you can show the edit block menu, crazy right?
+			// html driven db <3
 		});
 	}
 
