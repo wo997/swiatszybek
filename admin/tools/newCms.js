@@ -1429,16 +1429,15 @@ class NewCms {
 
 		if (this.edit_block.select_node) {
 			this.edit_block.mouseMove();
+		} else {
+			this.select_controls.mouseMove();
 		}
-
-		this.select_controls.mouseMove();
 	}
 
 	mouseDown() {
-		/*if (this.edit_block.target) {
-    } else {
-    }*/
-		this.select_controls.mouseDown();
+		if (!this.edit_block.select_node) {
+			this.select_controls.mouseDown();
+		}
 
 		const target = this.mouse_target;
 
