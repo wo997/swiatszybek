@@ -131,3 +131,19 @@ function setCustomHeightsQuickly(time = 30) {
 		setCustomHeightsQuickly(time - 1);
 	});
 }
+
+function evalCss(val, node = null, params = {}) {
+	// TODO: go for computed style only if it's set to auto?
+	if (!val || !val.trim()) {
+		return 0;
+	}
+	const percent = nonull(node.parent(), document.body).clientWidth * 0.01;
+	const vw = document.body.offsetWidth * 0.01;
+	const vh = document.body.offsetHeight * 0.01;
+	val = val.replace(/%/g, "*" + percent);
+	val = val.replace(/vw/g, "*" + vw);
+	val = val.replace(/vh/g, "*" + vh);
+	val = val.replace(/px/g, "");
+
+	return eval(val);
+}

@@ -24,6 +24,11 @@
     color: black;
 }
 
+.dark img:not(.logo) {
+    filter: invert(1) hue-rotate(180deg) contrast(1.2) brightness(0.8);
+    background: #efefef;
+}
+
 .dark .footer {
     background: #e5e5e5;
     color: black;

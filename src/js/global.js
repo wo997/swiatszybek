@@ -171,11 +171,6 @@ function validURL(str) {
 	return !!pattern.test(str);
 }
 
-// TODO: prototypes make the code cleaner?
-String.prototype.replacePolishLetters = function () {
-	return replacePolishLetters(this);
-};
-
 // also links.php
 function replacePolishLetters(string) {
 	const pl = [
@@ -224,6 +219,11 @@ function replacePolishLetters(string) {
 		string = string.replace(new RegExp(`${pl[i]}`, "g"), en[i]);
 	}
 	return string;
+}
+
+function capitalize(str) {
+	const first = str.charAt(0);
+	return str.replace(first, first.toUpperCase());
 }
 
 // also links.php
@@ -303,12 +303,7 @@ function setValue(input, value = null, params = {}) {
 	}
 
 	if (input.tagName == "RADIO-INPUT") {
-		var option_exists = input.find(`radio-option[value="${value}"]`);
-		if (!!option_exists) {
-			input.findAll(`radio-option`).forEach((e) => {
-				e.classList.toggle("selected", e.getAttribute("value") == value);
-			});
-		}
+		setRadioInputValue(input, value, params);
 	} else if (input.tagName == "CHECKBOX") {
 		input.classList.toggle("checked", !!value);
 	} else if (input.datepicker) {
@@ -371,15 +366,7 @@ function getValue(input) {
 	// TODO: move these motherfuckers to them components instead
 	// funny how some might not have registering process so we can leave some in here ;)
 	if (input.tagName == "RADIO-INPUT") {
-		var value = "";
-		var selected = input.find(".selected");
-		if (!selected) {
-			selected = input.find("[data-default]");
-		}
-		if (selected) {
-			value = selected.getAttribute("value");
-		}
-		return value;
+		return getRadioInputValue(input);
 	} else if (input.tagName == "CHECKBOX") {
 		return input.classList.contains("checked") ? 1 : 0;
 	} else if (input.datepicker) {
@@ -418,7 +405,7 @@ function getValue(input) {
 			return getAttibutePickerValues(input);
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
-				return input.getAttribute(`data-src`);
+				return nonull(input.getAttribute(`data-src`), "");
 			}
 			return input.getAttribute(`src`);
 		} else if (type == "date") {
@@ -928,4 +915,17 @@ function isNodeOnScreen(node, offset = -10) {
 		return false;
 	}
 	return r;
+}
+
+function isUrlOurs(url) {
+	if (url.indexOf("/") === 0) {
+		return true;
+	} else {
+		try {
+			const url_obj = new URL(url);
+			return url_obj.hostname === window.location.hostname;
+		} catch {
+			return false;
+		}
+	}
 }

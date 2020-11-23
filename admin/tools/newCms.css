@@ -95,7 +95,8 @@
 
 .newCms:not(.anything_selected):not(.grabbed_block)
 	.content_scroll_panel:not(:hover)
-	.select_controls {
+	.select_controls,
+.select_controls:not(.visible) {
 	opacity: 0;
 	pointer-events: none;
 }
@@ -111,6 +112,7 @@
 }
 .rearrange_controls:not(.visible) {
 	opacity: 0;
+	pointer-events: none;
 }
 
 .rearrange_control {
@@ -257,8 +259,12 @@
 	/*flex-flow: column;*/
 }
 
-.newCms_block_content.container_row {
+/* block inside of a block caused the margins to collapse, the solution down below is simple, make it flex! ;) */
+.newCms_block_content {
 	display: flex;
+}
+
+.newCms_block_content.container_row {
 	flex-flow: row wrap;
 }
 
@@ -278,8 +284,7 @@
 }
 
 .newCms_block.edit_active {
-	box-shadow: 0px 0px 0px 2px var(--primary-clr),
-		inset 0px 0px 0px 2px var(--primary-clr) !important;
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%230000004F' stroke-width='4' stroke-dasharray='5%2c 9' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
 }
 
 .edit_block_node svg {
@@ -355,6 +360,7 @@
 
 .content_scroll_panel {
 	height: 100%;
+	overflow-y: scroll;
 }
 
 .locked_input {

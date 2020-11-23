@@ -121,6 +121,16 @@ class EditBlock {
 			);
 		}
 
+		// for all blocks types
+		const margin = this.newCms.sidebar.find(`.margin`);
+
+		margin.findAll("c-select").forEach((e) => {
+			const input = e.find("input");
+			const dir = input.getAttribute("data-dir");
+
+			input.setValue(this.edit_node.style[`margin${dir.capitalize()}`]);
+		});
+
 		block.classList.add("edit_active");
 		this.newCms.showSideMenu("edit_block");
 
@@ -316,7 +326,7 @@ class FloatingRearrangeControls {
 	}
 
 	removeRearrangement(options = {}) {
-		this.rearrange_block = null;
+		this.rearrange_near_block = null;
 		this.rearrange_position = "";
 		this.rearrange_control_node = null;
 
@@ -333,7 +343,7 @@ class FloatingRearrangeControls {
 	mouseMove() {
 		const target = this.newCms.mouse_target;
 
-		let rearrange_block = null;
+		let rearrange_near_block = null;
 		let rearrange_control_node = null;
 
 		if (
@@ -347,11 +357,11 @@ class FloatingRearrangeControls {
 				: null;
 
 			if (rearrange_control_node) {
-				rearrange_block = rearrange_control_node.rearrange_block;
+				rearrange_near_block = rearrange_control_node.rearrange_near_block;
 			}
 
-			if (!rearrange_block) {
-				rearrange_block = target
+			if (!rearrange_near_block) {
+				rearrange_near_block = target
 					? target.findParentByClassName("newCms_block")
 					: null;
 			}
@@ -361,17 +371,17 @@ class FloatingRearrangeControls {
 
 		let parent_container = null;
 		let is_parent_row = false;
-		let rearrange_block_rect = null;
+		let rearrange_near_block_rect = null;
 
-		if (rearrange_block) {
+		if (rearrange_near_block) {
 			if (
 				rearrange_control_node &&
 				rearrange_control_node.classList.contains("insert_inside")
 			) {
-				parent_container = rearrange_block;
+				parent_container = rearrange_near_block;
 				rearrange_position = "inside";
 			} else {
-				parent_container = rearrange_block.findParentByAttribute(
+				parent_container = rearrange_near_block.findParentByAttribute(
 					{ "data-block": "container" },
 					{ skip: 1 }
 				);
@@ -388,30 +398,34 @@ class FloatingRearrangeControls {
 			if (rearrange_control_node) {
 				rearrange_position = rearrange_control_node.position;
 			} else {
-				rearrange_block_rect = rearrange_block.getBoundingClientRect();
+				rearrange_near_block_rect = rearrange_near_block.getBoundingClientRect();
 				if (is_parent_row) {
 					rearrange_position =
 						event.clientX <
-						rearrange_block_rect.left + rearrange_block_rect.width * 0.5
+						rearrange_near_block_rect.left +
+							rearrange_near_block_rect.width * 0.5
 							? "before"
 							: "after";
 				} else {
 					rearrange_position =
 						event.clientY <
-						rearrange_block_rect.top + rearrange_block_rect.height * 0.5
+						rearrange_near_block_rect.top +
+							rearrange_near_block_rect.height * 0.5
 							? "before"
 							: "after";
 				}
 
 				if (rearrange_position == "inside") {
 					rearrange_position = "inside";
-					rearrange_control_node = rearrange_block.rearrange_control_inside;
+					rearrange_control_node =
+						rearrange_near_block.rearrange_control_inside;
 				} else {
 					if (rearrange_position == "before") {
-						if (rearrange_block.rearrange_control_before) {
-							rearrange_control_node = rearrange_block.rearrange_control_before;
+						if (rearrange_near_block.rearrange_control_before) {
+							rearrange_control_node =
+								rearrange_near_block.rearrange_control_before;
 						} else {
-							const prev_block = rearrange_block.prev();
+							const prev_block = rearrange_near_block.prev();
 
 							if (prev_block && prev_block.rearrange_control_after) {
 								rearrange_control_node = prev_block.rearrange_control_after;
@@ -419,9 +433,10 @@ class FloatingRearrangeControls {
 						}
 					} else if (
 						rearrange_position == "after" &&
-						rearrange_block.rearrange_control_after
+						rearrange_near_block.rearrange_control_after
 					) {
-						rearrange_control_node = rearrange_block.rearrange_control_after;
+						rearrange_control_node =
+							rearrange_near_block.rearrange_control_after;
 					}
 				}
 			}
@@ -433,10 +448,10 @@ class FloatingRearrangeControls {
 		}
 
 		if (!rearrange_control_node) {
-			rearrange_block = null;
+			rearrange_near_block = null;
 		}
 
-		this.rearrange_block = rearrange_block;
+		this.rearrange_near_block = rearrange_near_block;
 		this.rearrange_position = rearrange_position;
 		this.rearrange_control_node = rearrange_control_node;
 
@@ -457,16 +472,16 @@ class FloatingRearrangeControls {
 				let width = min_size;
 				let height = min_size;
 
-				const rearrange_block_rect_data = nodePositionAgainstScrollableParent(
-					rearrange_block
+				const rearrange_near_block_rect_data = nodePositionAgainstScrollableParent(
+					rearrange_near_block
 				);
 
-				let x = rearrange_block_rect_data.relative_pos.left;
-				let y = rearrange_block_rect_data.relative_pos.top;
+				let x = rearrange_near_block_rect_data.relative_pos.left;
+				let y = rearrange_near_block_rect_data.relative_pos.top;
 
 				if (rearrange_position == "inside") {
-					height = rearrange_block_rect_data.node_rect.height;
-					width = rearrange_block_rect_data.node_rect.width;
+					height = rearrange_near_block_rect_data.node_rect.height;
+					width = rearrange_near_block_rect_data.node_rect.width;
 
 					if (height > 30) {
 						height -= 20;
@@ -478,16 +493,16 @@ class FloatingRearrangeControls {
 					}
 				} else {
 					if (is_parent_row) {
-						height = rearrange_block_rect_data.node_rect.height;
+						height = rearrange_near_block_rect_data.node_rect.height;
 					} else {
-						width = rearrange_block_rect_data.node_rect.width;
+						width = rearrange_near_block_rect_data.node_rect.width;
 					}
 
 					if (rearrange_position != "before") {
 						if (is_parent_row) {
-							x += rearrange_block_rect_data.node_rect.width;
+							x += rearrange_near_block_rect_data.node_rect.width;
 						} else {
-							y += rearrange_block_rect_data.node_rect.height;
+							y += rearrange_near_block_rect_data.node_rect.height;
 						}
 					}
 
@@ -596,11 +611,19 @@ class FloatingRearrangeControls {
 				) {
 					// no kissing ugh
 					if (is_parent_row) {
+						const prev_node_rect = prev_node.getBoundingClientRect();
+						const node_rect = block_rect_data.node_rect;
 						if (
-							prev_node.getBoundingClientRect().left <=
-							block_rect_data.node_rect.left
+							Math.abs(node_rect.left - prev_node_rect.right) <
+								rearrange_control_width &&
+							Math.abs(
+								node_rect.top +
+									node_rect.height * 0.5 -
+									prev_node_rect.top -
+									prev_node_rect.height * 0.5
+							) < rearrange_control_height
 						) {
-							// row wrap case not spotted, skip :)
+							// rows kissing
 							return;
 						}
 					} else {
@@ -778,7 +801,7 @@ class FloatingRearrangeControls {
 			$(rearrange_control).find("*").style.transform = `rotate(${rotation}deg)`;
 
 			block[`rearrange_control_${block_data.position}`] = rearrange_control;
-			rearrange_control.rearrange_block = block;
+			rearrange_control.rearrange_near_block = block;
 			rearrange_control.position = block_data.position;
 
 			this.node.appendChild(rearrange_control);
@@ -1161,11 +1184,15 @@ class NewCms {
 
 		this.clean_output_node = this.container.find(`.clean_output`);
 
+		this.sidebar_scroll_wrapper = this.sidebar.find(`.scroll-panel`);
+
 		this.initEditBlock();
 		this.initQuillEditor();
 		this.initFloatingSelectControls();
 		this.initFloatingRearrangeControls();
 		this.initListenChange();
+
+		this.initMargins();
 
 		this.mouse_x = 0;
 		this.mouse_y = 0;
@@ -1210,12 +1237,76 @@ class NewCms {
 		});
 	}
 
+	initMargins() {
+		const margin = this.sidebar.find(`.margin`);
+		this.insertMarginControl(margin, "margin", {});
+
+		margin.findAll("c-select").forEach((e) => {
+			const input = e.find("input");
+			const dir = input.getAttribute("data-dir");
+
+			input.addEventListener("change", () => {
+				this.edit_block.edit_node.style[
+					`margin${dir.capitalize()}`
+				] = input.getValue();
+
+				this.contentChange();
+			});
+		});
+	}
+
+	insertMarginControl(node, name) {
+		const options = /*html*/ `
+            <c-option>0</c-option>
+            <c-option>12px</c-option>
+            <c-option>24px</c-option>
+            <c-option>36px</c-option>
+            <c-option>2%</c-option>
+            <c-option>4%</c-option>
+            <c-option>6%</c-option>
+        `;
+
+		const getInput = (dir) => {
+			return /*html*/ `
+                <c-select style="width:100px">
+                    <input type="text" class="field"
+                        name="${name + dir}" data-dir=${dir}>
+                    <c-arrow></c-arrow>
+                    <c-options>
+                        ${options}
+                    </c-options>
+                </c-select>
+            `;
+		};
+
+		node.insertAdjacentHTML(
+			"afterbegin",
+			/*html*/ `
+            <div style="max-width:400px">
+                <div style="display:flex;justify-content:center">
+                    ${getInput("top")}
+                </div>
+                <div style="display:flex;justify-content: space-around;padding: 20px 0;">
+                    ${getInput("left")}
+                    ${getInput("right")}
+                </div>
+                <div style="display:flex;justify-content:center">
+                    ${getInput("bottom")}
+                </div>
+            </div>
+            `
+		);
+	}
+
 	initListenChange() {
 		this.content_node.addEventListener("change", () => {
 			const trigger_change = !this.content_change_triggered;
 			this.contentChange({
 				trigger_change: trigger_change,
 			});
+
+			// TODO: based on what node has class edit_active or not you can show the edit block menu, crazy right?
+			// html driven db <3
 		});
 	}
 
@@ -1294,6 +1385,8 @@ class NewCms {
 
 		this.container.classList.add("locked_input");
 
+		this.select_controls.node.classList.remove("visible");
+
 		if (this.lock_timeout) {
 			clearTimeout(this.lock_timeout);
 		}
@@ -1307,7 +1400,13 @@ class NewCms {
 
 	unlockInput() {
 		this.container.classList.remove("locked_input");
-		this.select_controls.addFloatingSelectControls();
+		setTimeout(() => {
+			this.select_controls.addFloatingSelectControls();
+			this.select_controls.node.classList.add("visible");
+		}, 50);
+
+		this.updateMouseTarget();
+		this.mouseMove();
 	}
 
 	updateMouseTarget() {
@@ -1336,16 +1435,15 @@ class NewCms {
 
 		if (this.edit_block.select_node) {
 			this.edit_block.mouseMove();
+		} else {
+			this.select_controls.mouseMove();
 		}
-
-		this.select_controls.mouseMove();
 	}
 
 	mouseDown() {
-		/*if (this.edit_block.target) {
-    } else {
-    }*/
-		this.select_controls.mouseDown();
+		if (!this.edit_block.select_node) {
+			this.select_controls.mouseDown();
+		}
 
 		const target = this.mouse_target;
 
@@ -1410,8 +1508,13 @@ class NewCms {
 
 		if (type === "quill_editor") {
 			content_html = `<div class="newCms_block_content ql-editor"></div>`;
-		} else {
+		} else if (type === "image") {
 			content_html = `<img class="newCms_block_content wo997_img">`;
+		} else if (type === "video") {
+			// TODO: just do it
+			content_html = `<div class="newCms_block_content"></div>`;
+		} else if (type === "container") {
+			content_html = `<div class="newCms_block_content"></div>`;
 		}
 
 		return /*html*/ `
@@ -1431,7 +1534,7 @@ class NewCms {
 		if (!block) {
 			return;
 		}
-		const duration = 300;
+		/*const duration = 300;
 		this.lockInput();
 		zoomNode(block, "out", {
 			duration: duration,
@@ -1439,6 +1542,21 @@ class NewCms {
 				block.remove();
 				this.contentChange();
 				this.unlockInput();
+			},
+        });*/
+
+		this.beforeContentAnimation();
+
+		block.classList.add("cramped");
+
+		const all_animatable_blocks = this.afterContentAnimation();
+
+		block.classList.remove("cramped");
+		block.classList.add("animation_cramp");
+
+		this.animateContent(all_animatable_blocks, 350, {
+			callback: () => {
+				block.remove();
 			},
 		});
 	}
@@ -1501,111 +1619,108 @@ class NewCms {
 
 		let delay_grabbed_rect_node_fadeout = 0;
 
-		if (block_type && grabbed_block.classList.contains("side_block")) {
+		let delay_rearrange_node_fadeout = 0;
+
+		const is_side_block =
+			block_type && grabbed_block.classList.contains("side_block");
+
+		if (is_side_block) {
 			const side_block = grabbed_block;
 			const side_block_rect = side_block.getBoundingClientRect();
 
-			const t1 = 100;
-			const t2 = 250;
-			animate(
-				side_block,
-				`
-          0% {opacity: 1}
-          100% {opacity: 0}
-        `,
-				t1,
-				() => {
-					side_block.classList.remove("grabbed");
-					side_block.style.transform = "";
-					animate(
-						side_block,
-						`
-              0% {opacity: 0; transform: scale(0.65)}
-              100% {opacity: 1; transform: scale(1)}
-            `,
-						t2
-					);
-				}
-			);
-			delay_grabbed_rect_node_fadeout = t1 + t2;
-
 			// replace
 			const animation_data = grabbed_block.animation_data;
-			grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
-			this.grabbed_block = grabbed_block;
-			this.content_node.appendChild(grabbed_block);
 
-			grabbed_block.animation_data = animation_data;
-			grabbed_block.last_rect = side_block_rect;
-			grabbed_block.classList.add("select_active");
+			if (this.rearrange_controls.rearrange_near_block) {
+				delay_grabbed_rect_node_fadeout = 250;
+				side_block.classList.remove("grabbed");
+				side_block.style.transform = "";
+				animate(
+					side_block,
+					`
+                        0% {opacity: 0; transform: scale(0.65)}
+                        100% {opacity: 1; transform: scale(1)}
+                    `,
+					delay_grabbed_rect_node_fadeout
+				);
+
+				grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
+				this.grabbed_block = grabbed_block;
+				this.content_node.appendChild(grabbed_block);
+				grabbed_block.animation_data = animation_data;
+				grabbed_block.classList.add("select_active");
+				grabbed_block.last_rect = side_block_rect;
+			}
+
+			// copy fade out
+			delay_rearrange_node_fadeout = 150;
+			animate(
+				this.rearrange_node,
+				`
+                    0% {opacity: 1; transform: ${this.rearrange_node.style.transform} scale(1)}
+                    100% {opacity: 0; transform: ${this.rearrange_node.style.transform} scale(0.65)}
+                `,
+				delay_rearrange_node_fadeout
+			);
 		}
 
 		this.grabbed_block.style.transform = "";
 		grabbed_block.classList.remove("grabbed");
-		this.rearrange_node.classList.remove("visible");
+		setTimeout(() => {
+			this.rearrange_node.classList.remove("visible");
+		}, delay_rearrange_node_fadeout);
+
 		this.container.classList.remove("grabbed_block");
 
 		this.grabbed_block = null;
 
-		let end_just_once = true;
-		const end = () => {
-			if (!end_just_once) {
-				return;
-			}
-			end_just_once = false;
-
-			// not needed cause we set it to user-select none bro
-			removeUserSelection();
-
-			this.contentChange();
-
-			this.updateMouseTarget();
-			this.mouseMove();
-		};
-
 		this.rearrange_controls.node.classList.remove("visible");
 
-		this.lockInput(delay_grabbed_rect_node_fadeout);
 		setTimeout(() => {
 			this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove(
 				"visible"
 			);
 		}, delay_grabbed_rect_node_fadeout);
 
-		if (!this.rearrange_controls.rearrange_block) {
-			return end();
+		this.beforeContentAnimation();
+
+		// some action
+		if (this.rearrange_controls.rearrange_near_block) {
+			if (this.rearrange_controls.rearrange_position == "inside") {
+				this.rearrange_controls.rearrange_near_block
+					.find(".newCms_block_content")
+					.appendChild(grabbed_block);
+			} else {
+				let before_node = this.rearrange_controls.rearrange_near_block;
+				if (this.rearrange_controls.rearrange_position == "after") {
+					before_node = before_node.next();
+				}
+
+				this.rearrange_controls.rearrange_near_block
+					.parent()
+					.insertBefore(grabbed_block, before_node);
+			}
 		}
 
-		const duration = 350;
+		const all_animatable_blocks = this.afterContentAnimation();
 
+		this.animateContent(all_animatable_blocks, 350);
+	}
+
+	beforeContentAnimation() {
 		this.content_node.findAll(".newCms_block").forEach((block) => {
-			const node_on_screen_rect = isNodeOnScreen(block, 0);
-			if (node_on_screen_rect && !block.last_rect) {
-				block.last_rect = node_on_screen_rect;
+			if (!block.last_rect) {
+				block.last_rect = block.getBoundingClientRect();
 			}
 		});
+	}
 
-		if (this.rearrange_controls.rearrange_position == "inside") {
-			this.rearrange_controls.rearrange_block
-				.find(".newCms_block_content")
-				.appendChild(grabbed_block);
-		} else {
-			let before_node = this.rearrange_controls.rearrange_block;
-			if (this.rearrange_controls.rearrange_position == "after") {
-				before_node = before_node.next();
-			}
-
-			this.rearrange_controls.rearrange_block
-				.parent()
-				.insertBefore(grabbed_block, before_node);
-		}
-
+	afterContentAnimation() {
 		const all_animatable_blocks = this.content_node
 			.findAll(".newCms_block")
 			.filter((block) => {
-				const node_on_screen_rect = isNodeOnScreen(block, 0);
-				if (block.last_rect && node_on_screen_rect) {
-					block.new_rect = node_on_screen_rect;
+				if (block.last_rect) {
+					block.new_rect = block.getBoundingClientRect();
 					if (!block.animation_data) {
 						block.animation_data = { x: 0, y: 0 };
 					}
@@ -1633,6 +1748,24 @@ class NewCms {
 				});
 		});
 
+		return all_animatable_blocks;
+	}
+
+	animateContent(all_animatable_blocks, duration, options = {}) {
+		const finishAnimation = () => {
+			// not needed cause we set it to user-select none bro
+			removeUserSelection();
+
+			this.contentChange();
+
+			this.updateMouseTarget();
+			this.mouseMove();
+
+			if (options.callback) {
+				options.callback();
+			}
+		};
+
 		all_animatable_blocks.forEach((block) => {
 			//const styles = window.getComputedStyle(block);
 
@@ -1640,50 +1773,80 @@ class NewCms {
 			// maybe put them straight to styles?
 			// we should remove it when cleaning the cms output anyway ;)
 
-			let mx = 0.5 * (block.new_rect.width - block.last_rect.width);
-			let my = 0.5 * (block.new_rect.height - block.last_rect.height);
+			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
+			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-			const dx = block.animation_data.x - mx;
-			const dy = block.animation_data.y - my;
+			const mt = evalCss(block.style.marginTop, block);
+			const mr = evalCss(block.style.marginRight, block);
+			const mb = evalCss(block.style.marginBottom, block);
+			const ml = evalCss(block.style.marginLeft, block);
+
+			const mt0 = mt + half_dh;
+			const mr0 = mr + half_dw;
+			const mb0 = mb + half_dh;
+			const ml0 = ml + half_dw;
+
+			const dx = block.animation_data.x - half_dw;
+			const dy = block.animation_data.y - half_dh;
 
 			const fg = block.style.flexGrow;
 			block.style.flexGrow = 0;
 
-			animate(
-				block,
-				`
-              0% {
-                transform: translate(
-                  ${dx}px,
-                  ${dy}px
-                );
-                width: ${block.last_rect.width}px;
-                height: ${block.last_rect.height}px;
-                margin: ${my}px ${mx}px;
-              }
-              100% {
-                transform: translate(
-                  0px,
-                  0px
-                );
-                width: ${block.new_rect.width}px;
-                height: ${block.new_rect.height}px;
-                margin: 0px 0px;
-              }
-            `,
-				duration,
-				() => {
-					block.style.flexGrow = fg;
+			const animation_cramp = block.classList.contains("animation_cramp")
+				? "scale(0)"
+				: "";
 
-					setTimeout(() => {
-						end();
-					}, 50);
-				}
-			);
+			let keyframes = "";
+
+			if (animation_cramp) {
+				const neg_half_w = -block.last_rect.width * 0.5;
+				const new_half_h = -block.last_rect.height * 0.5;
+
+				keyframes = `
+                    0% {
+                        transform: translate(${dx}px, ${dy}px) scale(1);
+                        margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
+                        width: ${block.last_rect.width}px;
+                        height: ${block.last_rect.height}px;
+                    }
+                    90% {
+                        transform: translate(0px, 0px) scale(0);
+                        margin: ${new_half_h}px ${neg_half_w}px;
+                        width: ${block.last_rect.width}px;
+                        height: ${block.last_rect.height}px;
+                    }
+                `;
+			} else {
+				keyframes = `
+                    0% {
+                        transform: translate(${dx}px, ${dy}px);
+                        width: ${block.last_rect.width}px;
+                        height: ${block.last_rect.height}px;
+                        margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
+                    }
+                    90% {
+                        transform: translate(0px, 0px);
+                        width: ${block.new_rect.width}px;
+                        height: ${block.new_rect.height}px;
+                        margin: ${mt}px ${mr}px ${mb}px ${ml}px;
+                    }
+                `;
+			}
+
+			// I am sorry for that workaround, but as we go to 90% the animation
+			// freezes so we can be sure nothing will jump like crazy for a single frame,
+			// the proper solution - css transition "forwards" didn't seem to work
+			animate(block, keyframes, duration / 0.9, () => {
+				block.style.flexGrow = fg;
+			});
 
 			delete block.animation_data;
 			delete block.last_rect;
 		});
+
+		setTimeout(() => {
+			finishAnimation();
+		}, duration);
 
 		this.lockInput(duration);
 	}
@@ -1738,19 +1901,18 @@ class NewCms {
 			const base_dy = this.mouse_y - this.grabbed_mouse_y;
 
 			const dx = base_dx;
-			const dy =
-				base_dy +
+			const dy = base_dy; /* +
 				this.grabbed_node_scroll_parent.scrollTop -
-				this.grabbed_scroll_top;
+				this.grabbed_scroll_top;*/
 
 			grabbed_block.animation_data = { x: dx, y: dy };
 
 			this.rearrange_node.style.transform = `
-        translate(
-          ${base_dx.toPrecision(5)}px,
-          ${base_dy.toPrecision(5)}px
-        )
-      `;
+                translate(
+                    ${base_dx.toPrecision(5)}px,
+                    ${base_dy.toPrecision(5)}px
+                )
+            `;
 		}
 
 		// repeat
@@ -1787,15 +1949,15 @@ class NewCms {
 		animate(
 			target_menu,
 			`
-        0% {
-          transform: translate(${sidebar_scroll_wrapper_width}px,0px);
-          opacity: 0;
-        }
-        100% {
-          transform: translate(0px,0px);
-          opacity: 1;
-        }
-      `,
+                0% {
+                    transform: translate(${sidebar_scroll_wrapper_width}px,0px);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translate(0px,0px);
+                    opacity: 1;
+                }
+            `,
 			duration,
 			() => {
 				target_menu.classList.add("active");
@@ -1865,13 +2027,13 @@ function zoomNode(node, direction, options = {}) {
 	const mr_b = parseInt(styles.marginBottom);
 
 	const step_in = `
-    transform: scale(1,1);
-    margin: ${mr_t}px ${mr_r}px ${mr_b}px ${mr_l}px;
-   `;
+        transform: scale(1,1);
+        margin: ${mr_t}px ${mr_r}px ${mr_b}px ${mr_l}px;
+    `;
 	const step_out = `
-    transform: scale(0,0);
-    margin: ${-h * 0.5}px ${-w * 0.5}px;
-  `;
+        transform: scale(0,0);
+        margin: ${-h * 0.5}px ${-w * 0.5}px;
+    `;
 
 	let keyframes = "";
 
@@ -1955,6 +2117,9 @@ registerModalContent(
                             <radio-option value="" data-default> <i class="fas fa-ellipsis-v align-icon"></i> Pionowo </radio-option>
                             <radio-option value="container_row"> <i class="fas fa-ellipsis-h align-icon"></i> Poziomo </radio-option>
                         </radio-input>
+                        
+                        <span class="field-title">Marginesy</span>
+                        <div class="margin"></div>
                       </div>
                     </div>
                   </div>

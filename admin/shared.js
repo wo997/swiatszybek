@@ -3,30 +3,34 @@
 window.addEventListener("DOMContentLoaded", () => {
 	if (window.innerWidth < MOBILE_WIDTH) {
 		var nv = $(".navbar_admin");
-		if (!nv) return;
+		if (!nv) {
+			return;
+		}
 		nv.classList.add("expand_y");
 		nv.classList.add("hidden");
 		nv.classList.add("animate_hidden");
 		nv.insertAdjacentHTML(
 			"beforebegin",
-			`
-        <div class="btn subtle fill medium" onclick='expandMenu(this.next(),this)'>
-            <b>Menu</b> <div class='expand_arrow'><i class='fas fa-chevron-right'></i></div>
-        </div>
-        `
+			/*html*/ `
+                <div class="btn subtle fill medium" onclick='expandMenu(this.next(),this)'>
+                    <b>Menu</b> <div class='expand_arrow'><i class='fas fa-chevron-right'></i></div>
+                </div>
+            `
 		);
 	}
 });
 
 window.addEventListener("DOMContentLoaded", () => {
-	var shortest_hit = null;
-	var shortest_length = 100000;
+	let exact = null;
+	let shortest_hit = null;
+	let shortest_length = 100000;
 	$$(".navbar_admin .menu_item").forEach((e) => {
 		var a = e.find("a");
 		if (!a) {
 			return;
 		}
 		href = a.getAttribute("href");
+
 		if (
 			location.pathname.indexOf(href) === 0 ||
 			location.href.indexOf(href) === 0
@@ -36,7 +40,15 @@ window.addEventListener("DOMContentLoaded", () => {
 				shortest_length = href.length;
 			}
 		}
+
+		if (href && href.substr(0, location.pathname.length) == location.pathname) {
+			exact = e;
+		}
 	});
+
+	if (exact) {
+		shortest_hit = exact;
+	}
 
 	if (shortest_hit) {
 		shortest_hit.classList.add("current-route");
