@@ -112,6 +112,7 @@
 }
 .rearrange_controls:not(.visible) {
 	opacity: 0;
+	pointer-events: none;
 }
 
 .rearrange_control {
