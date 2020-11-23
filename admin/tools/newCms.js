@@ -1399,6 +1399,8 @@ class NewCms {
 	unlockInput() {
 		this.container.classList.remove("locked_input");
 		this.select_controls.addFloatingSelectControls();
+		this.updateMouseTarget();
+		this.mouseMove();
 	}
 
 	updateMouseTarget() {
@@ -1501,8 +1503,13 @@ class NewCms {
 
 		if (type === "quill_editor") {
 			content_html = `<div class="newCms_block_content ql-editor"></div>`;
-		} else {
+		} else if (type === "image") {
 			content_html = `<img class="newCms_block_content wo997_img">`;
+		} else if (type === "video") {
+			// TODO: just do it
+			content_html = `<div class="newCms_block_content"></div>`;
+		} else if (type === "container") {
+			content_html = `<div class="newCms_block_content"></div>`;
 		}
 
 		return /*html*/ `
