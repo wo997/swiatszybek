@@ -262,6 +262,7 @@
 /* block inside of a block caused the margins to collapse, the solution down below is simple, make it flex! ;) */
 .newCms_block_content {
 	display: flex;
+	flex-flow: column;
 }
 
 .newCms_block_content.container_row {

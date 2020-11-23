@@ -4,8 +4,9 @@ useTool("quillEditor");
 
 class EditBlock {
 	constructor(edit_block_node, newCms) {
-		this.node = edit_block_node;
+		/** @type {NewCms} */
 		this.newCms = newCms;
+		this.node = edit_block_node;
 		this.init();
 
 		this.newCms.container.addEventListener("side_menu_change", (event) => {
@@ -306,6 +307,7 @@ class EditBlock {
 
 class FloatingRearrangeControls {
 	constructor(newCms) {
+		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = newCms.container.find(`.rearrange_controls`);
 		this.rearrange_insert_rect_node = newCms.container.find(
@@ -811,6 +813,7 @@ class FloatingRearrangeControls {
 
 class FloatingSelectControls {
 	constructor(newCms) {
+		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = newCms.container.find(`.select_controls`);
 		this.removeSelection();
@@ -1035,9 +1038,10 @@ class QuillEditor {
 		"#000000",
 	];
 
-	constructor(newCms, node) {
-		this.node = node;
+	constructor(node, newCms) {
+		/** @type {NewCms} */
 		this.newCms = newCms;
+		this.node = node;
 
 		var Size = Quill.import("attributors/style/size");
 		Size.whitelist = [];
@@ -1327,8 +1331,8 @@ class NewCms {
 
 	initQuillEditor() {
 		this.quill_editor = new QuillEditor(
-			this,
-			this.container.find(".quill_editor")
+			this.container.find(".quill_editor"),
+			this
 		);
 	}
 
