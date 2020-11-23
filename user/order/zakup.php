@@ -122,7 +122,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
             $$(".progress-item[data-id]").forEach(e => {
                 e.addEventListener("click", () => {
-                    showMenu(e.getAttribute("data-id"));
+                    showMenu(e.getAttribute("data-id"), 'kontakt');
                 });
             });
 
@@ -135,13 +135,30 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     }
                 });
             });
+
+            $$(`[name*="_kurier"]`).forEach(e => {
+                e.addEventListener("change", () => {
+                    var name = e.getAttribute("name").replace("_kurier", "_dostawa");
+                    var input = form.find(`input[name="${name}"]`);
+                    if (input) {
+                        setValue(input, e.value);
+                    }
+                });
+            });
+
+            $(`[name="other_address"]`).addEventListener("change", (e) => {
+                expand($(`#shipping_details`), e.target.checked);
+                if(e.target.checked){
+                    clearAddress();
+                }
+            });
         });
 
         function isFormValid() {
             return validateForm($("#menu" + currentMenu));
         }
 
-        function copyAdres() {
+        function copyAddress() {
             setValue(form.imie_kurier, form.imie.value);
             setValue(form.nazwisko_kurier, form.nazwisko.value);
             setValue(form.firma_kurier, form.firma.value);
@@ -152,6 +169,19 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             setValue(form.ulica_kurier, form.ulica.value);
             setValue(form.nr_domu_kurier, form.nr_domu.value);
             setValue(form.nr_lokalu_kurier, form.nr_lokalu.value);
+        }
+
+        function clearAddress() {
+            setValue(form.imie_kurier, '');
+            setValue(form.nazwisko_kurier, '');
+            setValue(form.firma_kurier, '');
+
+            setValue(form.kraj_kurier, '');
+            setValue(form.kod_pocztowy_kurier,  '');
+            setValue(form.miejscowosc_kurier,  '');
+            setValue(form.ulica_kurier, '');
+            setValue(form.nr_domu_kurier, '');
+            setValue(form.nr_lokalu_kurier, '');
         }
 
         var currentMenu = 1;
@@ -171,6 +201,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
 
             if (wait || currentMenu == i) return;
+            
+            if(i == 3 && !$('[name="other_address"]').checked){
+                console.log('copy');
+                copyAddress();
+            }
 
             if (i > currentMenu && isFormValid() == false) return;
 
@@ -186,14 +221,27 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             wait = true;
             var was = $("#menu" + wasMenu);
             var now = $("#menu" + i);
-            was.classList.remove("showNow");
+            
+            //TODO: Nie wiem dlaczego selector na klasę ani po przecinku nie działa $('#menu1, #menu2, #menu3') - łapie tylko jeden
+            $('#menu1').classList.remove("showNow");
+            $('#menu1').classList.remove("step-" + wasMenu);
+            $('#menu1').classList.add("step-" + i);
+            $('#menu2').classList.remove("showNow");
+            $('#menu2').classList.remove("step-" + wasMenu);
+            $('#menu2').classList.add("step-" + i);
+            $('#menu3').classList.remove("showNow");
+            $('#menu3').classList.remove("step-" + wasMenu);
+            $('#menu3').classList.add("step-" + i);
+
             $("#menu" + i).style.display = "flex";
-            now.style.position = "fixed";
             now.style.height = "";
+            now.style.display = "flex";
+            if(i < wasMenu) {
+                was.style.opacity = 0;
+            }
             setTimeout(function() {
-                was.style.display = "none";
                 now.classList.add("showNow");
-                now.style.position = "";
+                now.style.opacity = 1;
                 wait = false;
 
                 setTimeout(function() {
@@ -210,10 +258,17 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     if (view) {
                         scrollIntoView(view, params);
                     }
+                    
                 }, 10);
+
+                setTimeout(function(){
+                    if(i < wasMenu) {
+                        was.style.display = "none";
+                    }
+                },500)
             }, 200);
 
-            if (i == 1) {
+            if (i == 1 || wasMenu == 3) {
                 $(".variant_list_holder_1").appendChild($(".variant_list_full"));
             } else if (i == 3) {
                 $(".variant_list_holder_2").appendChild($(".variant_list_full"));
@@ -545,6 +600,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         <div id="easypack-map"></div>
     </div>
 
+    <!-- TODO: STEPS -->
     <div class="progress-bar-wrapper hideifempty">
         <div class="progress-bar">
             <div class="progress-item current" data-id="1">
@@ -575,10 +631,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         </div>
     </div>
 
+    <!-- TODO: NOWY FLOW -->
     <div class="main-container" id="zakupForm" style="margin-bottom: 50px;width: 100%;" data-form>
 
-        <div id="menu1" class="menu showNow" style="max-width: 1000px;">
-            <div style="margin: auto;width:100%;padding: 20px 10px;">
+        <div id="menu1" class="menu showNow step-1" style="max-width: 1000px;">
+            <div class="menu-holder">
 
                 <?php if (isset($_GET['produkt'])) : ?>
                     <h3 style="margin:20px;color:red;text-align:center">Niestety produkt został już wyprzedany!<br><span style="font-weight: normal;">Musisz zmienić zawartość koszyka</span></h3>
@@ -616,7 +673,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                         <p style='font-weight:normal;margin:0;font-size: 1.1em'>Czas realizacji: <span class="pln">24h</span></p>
                     </div>
 
-                    <div class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
+                    <div id="menu1_cart" class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
                         <?php if (!$app["user"]["id"]) : ?>
                             <div>
                                 <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="min-width:250px;margin-top: 25px;">
@@ -652,7 +709,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             </div>
         </div>
 
-        <div id="menu2" class="menu" style="max-width: 1200px; display:none">
+        <div id="menu2" class="menu step-1" style="max-width: 1200px; display:none; opacity: 0;">
+            <div class="menu-holder">
             <div class="mobileRow">
                 <div style="width:100%;padding: 20px 10px;">
                     <div style="max-width: 550px;margin: 0 auto;">
@@ -754,46 +812,47 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                             <div id="caseKurier" class="expand_y hidden animate_hidden">
                                 <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;" data-view="adres">Adres dostawy</h3>
 
-                                <button class="btn primary" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button>
-                                <!--<label class="checkbox-wrapper">
-                  <input type="checkbox" name="same_address">
-                  <div class="checkbox"></div>
-                  Użyj tego samego adresu 
-                </label>--->
+                                <!-- <button class="btn primary" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button> -->
+                                <label class="checkbox-wrapper">
+                                    <input type="checkbox" name="other_address">
+                                    <div class="checkbox"></div>
+                                    Adres dostawy inny podany
+                                </label>
 
+                                <div id="shipping_details" class="expand_y hidden animate_hidden">
+                                    <div class="field-title">Imię</div>
+                                    <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-store>
 
-                                <div class="field-title">Imię</div>
-                                <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-store>
+                                    <div class="field-title">Nazwisko</div>
+                                    <input type="text" class="field" name="nazwisko_kurier" autocomplete="family-name" data-validate data-store>
 
-                                <div class="field-title">Nazwisko</div>
-                                <input type="text" class="field" name="nazwisko_kurier" autocomplete="family-name" data-validate data-store>
+                                    <div class="field-title">Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></div>
+                                    <input type="text" class="field" name="firma_kurier" autocomplete="organization" data-store>
 
-                                <div class="field-title">Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></div>
-                                <input type="text" class="field" name="firma_kurier" autocomplete="organization" data-store>
+                                    <div class="field-title">Kraj</div>
+                                    <input type="text" class="field" name="kraj_kurier" data-validate data-store>
 
-                                <div class="field-title">Kraj</div>
-                                <input type="text" class="field" name="kraj_kurier" data-validate data-store>
+                                    <div class="miejscowosc-picker-wrapper">
+                                        <div class="field-title">Kod pocztowy</div>
+                                        <input type="text" class="field" name="kod_pocztowy_kurier" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-store>
 
-                                <div class="miejscowosc-picker-wrapper">
-                                    <div class="field-title">Kod pocztowy</div>
-                                    <input type="text" class="field" name="kod_pocztowy_kurier" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-store>
-
-                                    <div class="field-title">Miejscowość</div>
-                                    <input class="field miejscowosc-picker-target" type="text" name="miejscowosc_kurier" autocomplete="address-level2" placeholder=" " data-validate data-store>
-                                    <div class="miejscowosc-picker-list"></div>
-                                </div>
-
-                                <div class="field-title">Ulica</div>
-                                <input type="text" class="field" autocomplete="address-line1" name="ulica_kurier" data-validate data-store>
-
-                                <div class="desktopRow spaceColumns">
-                                    <div>
-                                        <div class="field-title">Nr domu</div>
-                                        <input type="text" class="field" autocomplete="address-line2" name="nr_domu_kurier" data-validate data-store>
+                                        <div class="field-title">Miejscowość</div>
+                                        <input class="field miejscowosc-picker-target" type="text" name="miejscowosc_kurier" autocomplete="address-level2" placeholder=" " data-validate data-store>
+                                        <div class="miejscowosc-picker-list"></div>
                                     </div>
-                                    <div>
-                                        <div class="field-title">Nr lokalu</div>
-                                        <input type="text" class="field" autocomplete="address-line3" name="nr_lokalu_kurier" data-store>
+
+                                    <div class="field-title">Ulica</div>
+                                    <input type="text" class="field" autocomplete="address-line1" name="ulica_kurier" data-validate data-store>
+
+                                    <div class="desktopRow spaceColumns">
+                                        <div>
+                                            <div class="field-title">Nr domu</div>
+                                            <input type="text" class="field" autocomplete="address-line2" name="nr_domu_kurier" data-validate data-store>
+                                        </div>
+                                        <div>
+                                            <div class="field-title">Nr lokalu</div>
+                                            <input type="text" class="field" autocomplete="address-line3" name="nr_lokalu_kurier" data-store>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -802,13 +861,13 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3261.2636336885503!2d20.905582677315724!3d52.23998412001319!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecb16c2ce5633%3A0x4cf6063af810a380!2sSolectric%20GmbH%20Polska!5e0!3m2!1spl!2spl!4v1581018622179!5m2!1spl!2spl" width="600" height="450" frameborder="0" style="border:0;width: 100%;" allowfullscreen=""></iframe>
                             </div>
 
-                            <div style="display:none">
+                            <div style="">
                                 <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;">Forma zapłaty</h3>
 
                                 <div class="mobileRow" style="justify-content: space-evenly;">
                                     <label id="forma_24">
                                         <input type="radio" name="forma_zaplaty_radio" value='24' checked id="p24">
-                                        <img style="width: 100px;vertical-align: middle;" src="/img/p24.png">
+                                        <img style="width: 80px;vertical-align: middle;" src="/img/p24.png">
                                     </label>
                                     <label id="forma_po">
                                         <input type="radio" name="forma_zaplaty_radio" value='po'>
@@ -844,9 +903,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     <i class="fa fa-chevron-right"></i>
                 </button>
             </div>
+            </div>
         </div>
 
-        <div id="menu3" class="menu mobileRow podsumowanie" style="max-width: 1100px; display:none;padding:20px 0">
+        <div id="menu3" class="menu mobileRow podsumowanie" style="max-width: 1100px; display:none;padding:20px 0; opacity: 0;">
+            <div class="menu-holder">
             <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="podsumowanie">Podsumowanie</h3>
             <div class="mobileRow">
 
@@ -959,7 +1020,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     Cofnij
                 </button>
             </div>
-
+            </div>
         </div>
 
     </div>

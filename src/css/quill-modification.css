@@ -1,340 +1,378 @@
 /* css[global] */
 
 .ql-snow .ql-picker.ql-size {
-  width: 70px !important;
+    width: 70px !important;
 }
+
 .ql-snow .ql-picker.ql-size .ql-picker-item::before {
-  content: "Abc" !important;
+    content: "Abc" !important;
 }
+
 .ql-snow .ql-picker.ql-size .ql-picker-label::before {
-  font-family: "Font Awesome 5 Free";
-  content: "\f338" !important;
-  font-weight: 900;
+    font-family: "Font Awesome 5 Free";
+    content: "\f338" !important;
+    font-weight: 900;
 }
+
 .ql-snow .ql-picker.ql-size .ql-picker-label::after {
-  content: " Abc";
-  font-weight: 600;
-  font-family: "Open sans";
+    content: " Abc";
+    font-weight: 600;
+    font-family: "'Poppins'";
 }
 
 .ql-shadow.ql-active:before {
-  border: 2px solid #06c !important;
-  margin: -2px;
-  border-radius: 5px;
+    border: 2px solid #06c !important;
+    margin: -2px;
+    border-radius: 5px;
 }
+
 .ql-active:not(.ql-shadow) {
-  box-shadow: inset 0px 0px 2px 1px rgba(0, 102, 204, 1);
-  border-radius: 5px;
+    box-shadow: inset 0px 0px 2px 1px rgba(0, 102, 204, 1);
+    border-radius: 5px;
 }
+
 .ql-header {
-  padding-top: 0px !important;
-  height: 22px !important;
-  margin-top: 3px;
+    padding-top: 0px !important;
+    height: 22px !important;
+    margin-top: 3px;
 }
 
 break-line {
-  width: 100%;
-  display: block;
-  height: 0;
+    width: 100%;
+    display: block;
+    height: 0;
 }
+
 .break-grow:before {
-  content: "|";
-  visibility: hidden;
+    content: "|";
+    visibility: hidden;
 }
+
 .break-grow {
-  height: auto;
+    height: auto;
 }
 
 .ql-editor a:not(.przycisk) {
-  color: #06c;
+    color: #06c;
 }
 
 .ql-editor a {
-  position: relative;
+    position: relative;
 }
+
 .ql-snow .ql-editor a:before {
-  font-family: "Font Awesome 5 Free";
-  content: "\f0c1";
-  position: absolute;
-  display: block;
-  top: 0;
-  left: 0;
-  transform: translateY(-45%);
-  color: #ffff;
-  text-shadow: 0 1px 1px black, -1px 0 1px black, 1px 0 1px black;
-  font-size: 10px;
-  font-weight: bold;
+    font-family: "Font Awesome 5 Free";
+    content: "\f0c1";
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    transform: translateY(-45%);
+    color: #ffff;
+    text-shadow: 0 1px 1px black, -1px 0 1px black, 1px 0 1px black;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 .ql-picker-item[data-value="#ffffff"] {
-  border: 1px solid #ccc !important;
+    border: 1px solid #ccc !important;
 }
+
 .ql-icon img {
-  height: 1em;
+    height: 1em;
 }
+
 .fas.fa-quote-left:before {
-  transform: scale(0.5);
-  transform-origin: 50% 20%;
-  display: inline-block;
+    transform: scale(0.5);
+    transform-origin: 50% 20%;
+    display: inline-block;
 }
+
 .fas.fa-quote-right:before {
-  transform: scale(0.5);
-  transform-origin: 50% 20%;
-  display: inline-block;
+    transform: scale(0.5);
+    transform-origin: 50% 20%;
+    display: inline-block;
 }
 
 .ql-shadow:before {
-  content: "A";
-  display: block;
-  color: white;
-  text-shadow: 2px 2px 2px black;
-  font-weight: bold;
-  background: #ccc;
-  padding: 0 4px;
+    content: "A";
+    display: block;
+    color: white;
+    text-shadow: 2px 2px 2px black;
+    font-weight: bold;
+    background: #ccc;
+    padding: 0 4px;
 }
+
 .ql-shadow,
 .ql-przycisk {
-  width: auto !important;
+    width: auto !important;
 }
+
 .ql-przycisk:before {
-  content: "przycisk";
-  display: block;
-  color: black;
+    content: "przycisk";
+    display: block;
+    color: black;
 }
 
 .shadow {
-  text-shadow: 0 0.05em 0.1em black;
+    text-shadow: 0 0.05em 0.1em black;
 }
+
 .przycisk {
-  background: #c22;
-  color: white;
-  padding: 6px 20px;
-  text-align: center;
-  border-radius: 4px;
-  cursor: pointer;
-  display: inline-block;
+    background: #c22;
+    color: white;
+    padding: 6px 20px;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
 }
+
 .przycisk:hover {
-  background: #d33;
+    background: #d33;
 }
 
 .ql-video {
-  width: 1000px;
+    width: 1000px;
 }
 
-.ql-spanblock + div {
-  visibility: hidden;
+.ql-spanblock+div {
+    visibility: hidden;
 }
-.ql-spanblock.ql-active + div {
-  visibility: visible;
+
+.ql-spanblock.ql-active+div {
+    visibility: visible;
 }
 
 span.qlbt-operation-menu-text {
-  font-size: 12px;
+    font-size: 12px;
 }
+
 .qlbt-col-tool.changed {
-  overflow: visible !important;
+    overflow: visible !important;
 }
+
 .qlbt-col-tool {
-  height: auto !important;
+    height: auto !important;
 }
 
 .qlbt-col-tool button {
-  height: 24px;
-  position: relative;
-  top: 18px;
+    height: 24px;
+    position: relative;
+    top: 18px;
 }
 
 .qlbt-col-tool.changed {
-  height: 0 !important;
+    height: 0 !important;
 }
 
 .qlbt-operation-menu .qlbt-operation-menu-item {
-  padding: 3px 8px !important;
+    padding: 3px 8px !important;
 }
 
 .qlbt-operation-menu-subtitle {
-  font-size: 12px !important;
-  padding-bottom: 0 !important;
-  color: #555 !important;
+    font-size: 12px !important;
+    padding-bottom: 0 !important;
+    color: #555 !important;
 }
 
 .ql-editor {
-  overflow-x: hidden;
+    overflow-x: hidden;
 }
 
 .ql-editor table.table-padding td {
-  padding: 5%;
-  background-size: cover;
-  background-position: center;
+    padding: 5%;
+    background-size: cover;
+    background-position: center;
 }
+
 .ql-editor .cell-padding {
-  padding: 5%;
+    padding: 5%;
 }
+
 .ql-editor .cell-padding-2 {
-  padding: 3%;
+    padding: 3%;
 }
+
 .ql-editor .cell-padding-4 {
-  padding: 6%;
+    padding: 6%;
 }
+
 @media only screen and (max-width: 550px) {
-  .ql-editor table.table-padding td {
-    padding: 5% 2%;
-  }
-  .ql-editor .cell-padding {
-    padding: 5% 2%;
-  }
-  .ql-editor .cell-padding-2 {
-    padding: 3% 1%;
-  }
-  .ql-editor .cell-padding-4 {
-    padding: 6% 2%;
-  }
+    .ql-editor table.table-padding td {
+        padding: 5% 2%;
+    }
+    .ql-editor .cell-padding {
+        padding: 5% 2%;
+    }
+    .ql-editor .cell-padding-2 {
+        padding: 3% 1%;
+    }
+    .ql-editor .cell-padding-4 {
+        padding: 6% 2%;
+    }
 }
 
 .ql-editor table.table-gray td {
-  background: #fafafa;
+    background: #fafafa;
 }
 
 .capitalize {
-  text-transform: uppercase;
+    text-transform: uppercase;
 }
+
 .icon-label {
-  display: flex !important;
-  align-items: center;
-  max-width: 370px;
-  margin: 0 auto !important;
-  word-break: break-word;
-  text-align: left !important;
-  min-height: 20px;
+    display: flex !important;
+    align-items: center;
+    max-width: 370px;
+    margin: 0 auto !important;
+    word-break: break-word;
+    text-align: left !important;
+    min-height: 20px;
 }
+
 .my-icon img {
-  width: 30px;
+    width: 30px;
 }
 
 .ql-editor img {
-  vertical-align: middle;
-  max-width: 100%;
+    vertical-align: middle;
+    max-width: 100%;
 }
 
 .ql-toolbar.ql-snow {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
 }
 
 button.ql-header {
-  transform: scale(1, 1.1);
-  transform-origin: bottom;
+    transform: scale(1, 1.1);
+    transform-origin: bottom;
 }
+
 button.ql-header svg {
-  display: none;
+    display: none;
 }
+
 button.ql-header:nth-child(1):before,
 button.ql-header:nth-child(2):before,
 button.ql-header:nth-child(3):before {
-  font-weight: bold;
-  content: "H";
+    font-weight: bold;
+    content: "H";
 }
+
 button.ql-header:nth-child(1):after {
-  content: "1";
-  font-weight: bold;
-  font-size: 0.8em;
+    content: "1";
+    font-weight: bold;
+    font-size: 0.8em;
 }
+
 button.ql-header:nth-child(2):after {
-  content: "2";
-  font-weight: bold;
-  font-size: 0.8em;
+    content: "2";
+    font-weight: bold;
+    font-size: 0.8em;
 }
+
 button.ql-header:nth-child(3):after {
-  content: "3";
-  font-weight: bold;
-  font-size: 0.8em;
+    content: "3";
+    font-weight: bold;
+    font-size: 0.8em;
 }
 
 .icon-label img {
-  margin: 0 7px;
+    margin: 0 7px;
 }
 
 .ql-editor .ql-size-small {
-  font-size: 0.85em !important;
+    font-size: 0.85em !important;
 }
+
 .ql-editor .ql-size-large {
-  font-size: 1.3em !important;
+    font-size: 1.3em !important;
 }
+
 .ql-editor .ql-size-huge {
-  font-size: 1.7em !important;
+    font-size: 1.7em !important;
 }
 
 .ql-editor table td {
-  border: none;
-  padding: 4px 8px;
-  background-size: cover;
-  background-position: center;
+    border: none;
+    padding: 4px 8px;
+    background-size: cover;
+    background-position: center;
 }
+
 .ql-editor ol li:before {
-  content: "";
+    content: "";
 }
+
 .quill-wrapper .mobileRow {
-  border: 1px solid #eee;
-  padding: 5px;
+    border: 1px solid #eee;
+    padding: 5px;
 }
 
 .quill-wrapper .mobileRow div {
-  border: 1px solid #eee;
-  padding: 5px;
-  flex-grow: 0.5;
+    border: 1px solid #eee;
+    padding: 5px;
+    flex-grow: 0.5;
 }
 
 .ql-editor table td {
-  border: 1px solid #aaa;
+    border: 1px solid #aaa;
 }
+
 .ql-editor table.table-responsive {
-  border: none;
+    border: none;
 }
+
 .ql-editor table.table-responsive td {
-  border: none;
+    border: none;
 }
+
 .ql-editor table.table-responsive tr:first-child {
-  background: inherit;
+    background: inherit;
 }
+
 .quill-wrapper .ql-editor table.table-responsive td {
-  border: 1px solid #eee;
+    border: 1px solid #eee;
 }
+
 table.quill-better-table {
-  width: calc(100% - 1px) !important;
-  overflow: hidden;
+    width: calc(100% - 1px) !important;
+    overflow: hidden;
 }
 
 @media only screen and (max-width: 850px) {
-  .table-responsive tr,
-  .table-responsive td {
-    display: block;
-  }
-
-  .table-responsive-2 tr {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .table-responsive-2 td {
-    width: 50%;
-    box-sizing: border-box;
-    margin: 0 !important;
-  }
+    .table-responsive tr,
+    .table-responsive td {
+        display: block;
+    }
+    .table-responsive-2 tr {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .table-responsive-2 td {
+        width: 50%;
+        box-sizing: border-box;
+        margin: 0 !important;
+    }
 }
 
 .opis {
-  display: inline-block;
-  max-width: 50%;
-  vertical-align: middle;
-  text-align: left;
-  word-break: break-word;
+    display: inline-block;
+    max-width: 50%;
+    vertical-align: middle;
+    text-align: left;
+    word-break: break-word;
 }
+
 .icon img {
-  width: 30px;
+    width: 30px;
 }
 
 .icon {
-  display: inline-block;
+    display: inline-block;
 }
