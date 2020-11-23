@@ -916,3 +916,16 @@ function isNodeOnScreen(node, offset = -10) {
 	}
 	return r;
 }
+
+function isUrlOurs(url) {
+	if (url.indexOf("/") === 0) {
+		return true;
+	} else {
+		try {
+			const url_obj = new URL(url);
+			return url_obj.hostname === window.location.hostname;
+		} catch {
+			return false;
+		}
+	}
+}

@@ -122,6 +122,8 @@ function getUploadedFileName(file_path) {
 
 // also files.php
 function getResponsiveImageData(src) {
+	// TODO: if the src is foreign we should not optimize the image
+	// isUrlOurs(src)
 	if (!src) {
 		return null;
 	}
