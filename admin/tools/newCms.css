@@ -95,7 +95,8 @@
 
 .newCms:not(.anything_selected):not(.grabbed_block)
 	.content_scroll_panel:not(:hover)
-	.select_controls {
+	.select_controls,
+.select_controls:not(.visible) {
 	opacity: 0;
 	pointer-events: none;
 }
@@ -257,8 +258,12 @@
 	/*flex-flow: column;*/
 }
 
-.newCms_block_content.container_row {
+/* block inside of a block caused the margins to collapse, the solution down below is simple, make it flex! ;) */
+.newCms_block_content {
 	display: flex;
+}
+
+.newCms_block_content.container_row {
 	flex-flow: row wrap;
 }
 
@@ -354,6 +359,7 @@
 
 .content_scroll_panel {
 	height: 100%;
+	overflow-y: scroll;
 }
 
 .locked_input {

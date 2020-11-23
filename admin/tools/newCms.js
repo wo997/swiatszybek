@@ -1385,6 +1385,8 @@ class NewCms {
 
 		this.container.classList.add("locked_input");
 
+		this.select_controls.node.classList.remove("visible");
+
 		if (this.lock_timeout) {
 			clearTimeout(this.lock_timeout);
 		}
@@ -1398,7 +1400,11 @@ class NewCms {
 
 	unlockInput() {
 		this.container.classList.remove("locked_input");
-		this.select_controls.addFloatingSelectControls();
+		setTimeout(() => {
+			this.select_controls.addFloatingSelectControls();
+			this.select_controls.node.classList.add("visible");
+		}, 50);
+
 		this.updateMouseTarget();
 		this.mouseMove();
 	}
@@ -1528,7 +1534,7 @@ class NewCms {
 		if (!block) {
 			return;
 		}
-		const duration = 300;
+		/*const duration = 300;
 		this.lockInput();
 		zoomNode(block, "out", {
 			duration: duration,
@@ -1536,6 +1542,21 @@ class NewCms {
 				block.remove();
 				this.contentChange();
 				this.unlockInput();
+			},
+        });*/
+
+		this.beforeContentAnimation();
+
+		block.classList.add("cramped");
+
+		const all_animatable_blocks = this.afterContentAnimation();
+
+		block.classList.remove("cramped");
+		block.classList.add("animation_cramp");
+
+		this.animateContent(all_animatable_blocks, 350, {
+			callback: () => {
+				block.remove();
 			},
 		});
 	}
@@ -1681,7 +1702,9 @@ class NewCms {
 			}
 		}
 
-		this.animateContent(350);
+		const all_animatable_blocks = this.afterContentAnimation();
+
+		this.animateContent(all_animatable_blocks, 350);
 	}
 
 	beforeContentAnimation() {
@@ -1692,23 +1715,7 @@ class NewCms {
 		});
 	}
 
-	animateContent(duration) {
-		let end_just_once = true;
-		const end = () => {
-			if (!end_just_once) {
-				return;
-			}
-			end_just_once = false;
-
-			// not needed cause we set it to user-select none bro
-			removeUserSelection();
-
-			this.contentChange();
-
-			this.updateMouseTarget();
-			this.mouseMove();
-		};
-
+	afterContentAnimation() {
 		const all_animatable_blocks = this.content_node
 			.findAll(".newCms_block")
 			.filter((block) => {
@@ -1741,6 +1748,24 @@ class NewCms {
 				});
 		});
 
+		return all_animatable_blocks;
+	}
+
+	animateContent(all_animatable_blocks, duration, options = {}) {
+		const finishAnimation = () => {
+			// not needed cause we set it to user-select none bro
+			removeUserSelection();
+
+			this.contentChange();
+
+			this.updateMouseTarget();
+			this.mouseMove();
+
+			if (options.callback) {
+				options.callback();
+			}
+		};
+
 		all_animatable_blocks.forEach((block) => {
 			//const styles = window.getComputedStyle(block);
 
@@ -1767,41 +1792,61 @@ class NewCms {
 			const fg = block.style.flexGrow;
 			block.style.flexGrow = 0;
 
-			animate(
-				block,
-				`
+			const animation_cramp = block.classList.contains("animation_cramp")
+				? "scale(0)"
+				: "";
+
+			let keyframes = "";
+
+			if (animation_cramp) {
+				const neg_half_w = -block.last_rect.width * 0.5;
+				const new_half_h = -block.last_rect.height * 0.5;
+
+				keyframes = `
                     0% {
-                        transform: translate(
-                            ${dx}px,
-                            ${dy}px
-                        );
+                        transform: translate(${dx}px, ${dy}px) scale(1);
+                        margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
+                        width: ${block.last_rect.width}px;
+                        height: ${block.last_rect.height}px;
+                    }
+                    90% {
+                        transform: translate(0px, 0px) scale(0);
+                        margin: ${new_half_h}px ${neg_half_w}px;
+                        width: ${block.last_rect.width}px;
+                        height: ${block.last_rect.height}px;
+                    }
+                `;
+			} else {
+				keyframes = `
+                    0% {
+                        transform: translate(${dx}px, ${dy}px);
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                         margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
                     }
-                    100% {
-                        transform: translate(
-                            0px,
-                            0px
-                        );
+                    90% {
+                        transform: translate(0px, 0px);
                         width: ${block.new_rect.width}px;
                         height: ${block.new_rect.height}px;
                         margin: ${mt}px ${mr}px ${mb}px ${ml}px;
                     }
-                `,
-				duration,
-				() => {
-					block.style.flexGrow = fg;
+                `;
+			}
 
-					setTimeout(() => {
-						end();
-					}, 50);
-				}
-			);
+			// I am sorry for that workaround, but as we go to 90% the animation
+			// freezes so we can be sure nothing will jump like crazy for a single frame,
+			// the proper solution - css transition "forwards" didn't seem to work
+			animate(block, keyframes, duration / 0.9, () => {
+				block.style.flexGrow = fg;
+			});
 
 			delete block.animation_data;
 			delete block.last_rect;
 		});
+
+		setTimeout(() => {
+			finishAnimation();
+		}, duration);
 
 		this.lockInput(duration);
 	}
@@ -1904,15 +1949,15 @@ class NewCms {
 		animate(
 			target_menu,
 			`
-        0% {
-          transform: translate(${sidebar_scroll_wrapper_width}px,0px);
-          opacity: 0;
-        }
-        100% {
-          transform: translate(0px,0px);
-          opacity: 1;
-        }
-      `,
+                0% {
+                    transform: translate(${sidebar_scroll_wrapper_width}px,0px);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translate(0px,0px);
+                    opacity: 1;
+                }
+            `,
 			duration,
 			() => {
 				target_menu.classList.add("active");
