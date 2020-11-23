@@ -326,7 +326,7 @@ class FloatingRearrangeControls {
 	}
 
 	removeRearrangement(options = {}) {
-		this.rearrange_block = null;
+		this.rearrange_near_block = null;
 		this.rearrange_position = "";
 		this.rearrange_control_node = null;
 
@@ -343,7 +343,7 @@ class FloatingRearrangeControls {
 	mouseMove() {
 		const target = this.newCms.mouse_target;
 
-		let rearrange_block = null;
+		let rearrange_near_block = null;
 		let rearrange_control_node = null;
 
 		if (
@@ -357,11 +357,11 @@ class FloatingRearrangeControls {
 				: null;
 
 			if (rearrange_control_node) {
-				rearrange_block = rearrange_control_node.rearrange_block;
+				rearrange_near_block = rearrange_control_node.rearrange_near_block;
 			}
 
-			if (!rearrange_block) {
-				rearrange_block = target
+			if (!rearrange_near_block) {
+				rearrange_near_block = target
 					? target.findParentByClassName("newCms_block")
 					: null;
 			}
@@ -371,17 +371,17 @@ class FloatingRearrangeControls {
 
 		let parent_container = null;
 		let is_parent_row = false;
-		let rearrange_block_rect = null;
+		let rearrange_near_block_rect = null;
 
-		if (rearrange_block) {
+		if (rearrange_near_block) {
 			if (
 				rearrange_control_node &&
 				rearrange_control_node.classList.contains("insert_inside")
 			) {
-				parent_container = rearrange_block;
+				parent_container = rearrange_near_block;
 				rearrange_position = "inside";
 			} else {
-				parent_container = rearrange_block.findParentByAttribute(
+				parent_container = rearrange_near_block.findParentByAttribute(
 					{ "data-block": "container" },
 					{ skip: 1 }
 				);
@@ -398,30 +398,34 @@ class FloatingRearrangeControls {
 			if (rearrange_control_node) {
 				rearrange_position = rearrange_control_node.position;
 			} else {
-				rearrange_block_rect = rearrange_block.getBoundingClientRect();
+				rearrange_near_block_rect = rearrange_near_block.getBoundingClientRect();
 				if (is_parent_row) {
 					rearrange_position =
 						event.clientX <
-						rearrange_block_rect.left + rearrange_block_rect.width * 0.5
+						rearrange_near_block_rect.left +
+							rearrange_near_block_rect.width * 0.5
 							? "before"
 							: "after";
 				} else {
 					rearrange_position =
 						event.clientY <
-						rearrange_block_rect.top + rearrange_block_rect.height * 0.5
+						rearrange_near_block_rect.top +
+							rearrange_near_block_rect.height * 0.5
 							? "before"
 							: "after";
 				}
 
 				if (rearrange_position == "inside") {
 					rearrange_position = "inside";
-					rearrange_control_node = rearrange_block.rearrange_control_inside;
+					rearrange_control_node =
+						rearrange_near_block.rearrange_control_inside;
 				} else {
 					if (rearrange_position == "before") {
-						if (rearrange_block.rearrange_control_before) {
-							rearrange_control_node = rearrange_block.rearrange_control_before;
+						if (rearrange_near_block.rearrange_control_before) {
+							rearrange_control_node =
+								rearrange_near_block.rearrange_control_before;
 						} else {
-							const prev_block = rearrange_block.prev();
+							const prev_block = rearrange_near_block.prev();
 
 							if (prev_block && prev_block.rearrange_control_after) {
 								rearrange_control_node = prev_block.rearrange_control_after;
@@ -429,9 +433,10 @@ class FloatingRearrangeControls {
 						}
 					} else if (
 						rearrange_position == "after" &&
-						rearrange_block.rearrange_control_after
+						rearrange_near_block.rearrange_control_after
 					) {
-						rearrange_control_node = rearrange_block.rearrange_control_after;
+						rearrange_control_node =
+							rearrange_near_block.rearrange_control_after;
 					}
 				}
 			}
@@ -443,10 +448,10 @@ class FloatingRearrangeControls {
 		}
 
 		if (!rearrange_control_node) {
-			rearrange_block = null;
+			rearrange_near_block = null;
 		}
 
-		this.rearrange_block = rearrange_block;
+		this.rearrange_near_block = rearrange_near_block;
 		this.rearrange_position = rearrange_position;
 		this.rearrange_control_node = rearrange_control_node;
 
@@ -467,16 +472,16 @@ class FloatingRearrangeControls {
 				let width = min_size;
 				let height = min_size;
 
-				const rearrange_block_rect_data = nodePositionAgainstScrollableParent(
-					rearrange_block
+				const rearrange_near_block_rect_data = nodePositionAgainstScrollableParent(
+					rearrange_near_block
 				);
 
-				let x = rearrange_block_rect_data.relative_pos.left;
-				let y = rearrange_block_rect_data.relative_pos.top;
+				let x = rearrange_near_block_rect_data.relative_pos.left;
+				let y = rearrange_near_block_rect_data.relative_pos.top;
 
 				if (rearrange_position == "inside") {
-					height = rearrange_block_rect_data.node_rect.height;
-					width = rearrange_block_rect_data.node_rect.width;
+					height = rearrange_near_block_rect_data.node_rect.height;
+					width = rearrange_near_block_rect_data.node_rect.width;
 
 					if (height > 30) {
 						height -= 20;
@@ -488,16 +493,16 @@ class FloatingRearrangeControls {
 					}
 				} else {
 					if (is_parent_row) {
-						height = rearrange_block_rect_data.node_rect.height;
+						height = rearrange_near_block_rect_data.node_rect.height;
 					} else {
-						width = rearrange_block_rect_data.node_rect.width;
+						width = rearrange_near_block_rect_data.node_rect.width;
 					}
 
 					if (rearrange_position != "before") {
 						if (is_parent_row) {
-							x += rearrange_block_rect_data.node_rect.width;
+							x += rearrange_near_block_rect_data.node_rect.width;
 						} else {
-							y += rearrange_block_rect_data.node_rect.height;
+							y += rearrange_near_block_rect_data.node_rect.height;
 						}
 					}
 
@@ -796,7 +801,7 @@ class FloatingRearrangeControls {
 			$(rearrange_control).find("*").style.transform = `rotate(${rotation}deg)`;
 
 			block[`rearrange_control_${block_data.position}`] = rearrange_control;
-			rearrange_control.rearrange_block = block;
+			rearrange_control.rearrange_near_block = block;
 			rearrange_control.position = block_data.position;
 
 			this.node.appendChild(rearrange_control);
@@ -1587,48 +1592,57 @@ class NewCms {
 
 		let delay_grabbed_rect_node_fadeout = 0;
 
-		if (block_type && grabbed_block.classList.contains("side_block")) {
+		let delay_rearrange_node_fadeout = 0;
+
+		const is_side_block =
+			block_type && grabbed_block.classList.contains("side_block");
+
+		if (is_side_block) {
 			const side_block = grabbed_block;
 			const side_block_rect = side_block.getBoundingClientRect();
 
-			const t1 = 100;
-			const t2 = 250;
-			animate(
-				side_block,
-				`
-                    0% {opacity: 1}
-                    100% {opacity: 0}
-                `,
-				t1,
-				() => {
-					side_block.classList.remove("grabbed");
-					side_block.style.transform = "";
-					animate(
-						side_block,
-						`
-                            0% {opacity: 0; transform: scale(0.65)}
-                            100% {opacity: 1; transform: scale(1)}
-                        `,
-						t2
-					);
-				}
-			);
-			delay_grabbed_rect_node_fadeout = t1 + t2;
-
 			// replace
 			const animation_data = grabbed_block.animation_data;
-			grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
-			this.grabbed_block = grabbed_block;
-			this.content_node.appendChild(grabbed_block);
 
-			grabbed_block.animation_data = animation_data;
-			grabbed_block.last_rect = side_block_rect;
-			grabbed_block.classList.add("select_active");
+			if (this.rearrange_controls.rearrange_near_block) {
+				delay_grabbed_rect_node_fadeout = 250;
+				side_block.classList.remove("grabbed");
+				side_block.style.transform = "";
+				animate(
+					side_block,
+					`
+                        0% {opacity: 0; transform: scale(0.65)}
+                        100% {opacity: 1; transform: scale(1)}
+                    `,
+					delay_grabbed_rect_node_fadeout
+				);
+
+				grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
+				this.grabbed_block = grabbed_block;
+				this.content_node.appendChild(grabbed_block);
+				grabbed_block.animation_data = animation_data;
+				grabbed_block.classList.add("select_active");
+				grabbed_block.last_rect = side_block_rect;
+			}
+
+			// copy fade out
+			delay_rearrange_node_fadeout = 150;
+			animate(
+				this.rearrange_node,
+				`
+                    0% {opacity: 1; transform: ${this.rearrange_node.style.transform} scale(1)}
+                    100% {opacity: 0; transform: ${this.rearrange_node.style.transform} scale(0.65)}
+                `,
+				delay_rearrange_node_fadeout
+			);
 		}
 
 		this.grabbed_block.style.transform = "";
 		grabbed_block.classList.remove("grabbed");
-		this.rearrange_node.classList.remove("visible");
+		setTimeout(() => {
+			this.rearrange_node.classList.remove("visible");
+		}, delay_rearrange_node_fadeout);
+
 		this.container.classList.remove("grabbed_block");
 
 		this.grabbed_block = null;
@@ -1644,18 +1658,18 @@ class NewCms {
 		this.beforeContentAnimation();
 
 		// some action
-		if (this.rearrange_controls.rearrange_block) {
+		if (this.rearrange_controls.rearrange_near_block) {
 			if (this.rearrange_controls.rearrange_position == "inside") {
-				this.rearrange_controls.rearrange_block
+				this.rearrange_controls.rearrange_near_block
 					.find(".newCms_block_content")
 					.appendChild(grabbed_block);
 			} else {
-				let before_node = this.rearrange_controls.rearrange_block;
+				let before_node = this.rearrange_controls.rearrange_near_block;
 				if (this.rearrange_controls.rearrange_position == "after") {
 					before_node = before_node.next();
 				}
 
-				this.rearrange_controls.rearrange_block
+				this.rearrange_controls.rearrange_near_block
 					.parent()
 					.insertBefore(grabbed_block, before_node);
 			}
@@ -1843,11 +1857,11 @@ class NewCms {
 			grabbed_block.animation_data = { x: dx, y: dy };
 
 			this.rearrange_node.style.transform = `
-        translate(
-          ${base_dx.toPrecision(5)}px,
-          ${base_dy.toPrecision(5)}px
-        )
-      `;
+                translate(
+                    ${base_dx.toPrecision(5)}px,
+                    ${base_dy.toPrecision(5)}px
+                )
+            `;
 		}
 
 		// repeat
@@ -1962,13 +1976,13 @@ function zoomNode(node, direction, options = {}) {
 	const mr_b = parseInt(styles.marginBottom);
 
 	const step_in = `
-    transform: scale(1,1);
-    margin: ${mr_t}px ${mr_r}px ${mr_b}px ${mr_l}px;
-   `;
+        transform: scale(1,1);
+        margin: ${mr_t}px ${mr_r}px ${mr_b}px ${mr_l}px;
+    `;
 	const step_out = `
-    transform: scale(0,0);
-    margin: ${-h * 0.5}px ${-w * 0.5}px;
-  `;
+        transform: scale(0,0);
+        margin: ${-h * 0.5}px ${-w * 0.5}px;
+    `;
 
 	let keyframes = "";
 
