@@ -79,7 +79,7 @@ query(
     kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu,
     kraj_dostawa, miejscowosc_dostawa, kod_pocztowy_dostawa, ulica_dostawa, nr_domu_dostawa, nr_lokalu_dostawa,
     uwagi, koszt_dostawy, buyer_type, session_id, forma_zaplaty, 
-    rabat_wartosc, rabat_type, rabat_kod
+    rabat_wartosc, rabat_type, rabat_kod, cache_basket, track, notes, rebate_generated
   )
 
   VALUES (
@@ -89,7 +89,7 @@ query(
     ?,?,?,?,?,?,
     ?,?,?,?,?,?,
     ?,?,?,?,?,
-    ?,?,?
+    ?,?,?,?,?,?,?
   )",
     [
         $user_id, $link_hash, $koszt, date("Y-m-d H:i:s"), 0,
@@ -98,7 +98,7 @@ query(
         $_POST["kraj"], $_POST["miejscowosc"], $_POST["kod_pocztowy"], $_POST["ulica"], $_POST["nr_domu"], $_POST["nr_lokalu"],
         $_POST["kraj_dostawa"], $_POST["miejscowosc_dostawa"], $_POST["kod_pocztowy_dostawa"], $_POST["ulica_dostawa"], $_POST["nr_domu_dostawa"], $_POST["nr_lokalu_dostawa"],
         $_POST["uwagi"], $koszt_dostawy, $_POST["buyer_type"], $session_id, $_POST["forma_zaplaty"],
-        $kod_rabatowy_wartosc, $kod_rabatowy_type, $kod_rabatowy
+        $kod_rabatowy_wartosc, $kod_rabatowy_type, $kod_rabatowy, $_SESSION["basket"], $_POST["track"], $_POST["notes"], $_POST["rebate_generated"]
     ]
 );
 

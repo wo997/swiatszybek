@@ -219,11 +219,29 @@ p {
     display: flex !important;
 }
 
-#menu1.step-3,
+#menu1.step-1 .cl2 {
+    min-width: 300px;
+}
+
+#menu1.step-2 .cl2,
+#menu1.step-3 .cl2 {
+    min-width: unset;
+}
+
+#menu1.step-3 {
+    transition: 1s all;
+    opacity: 0!important;
+    right: 0%;
+    width: 600px;
+    transform: translateY(40%) translateX(-50%)!important;
+}
+
 #menu2.step-1,
 #menu2.step-3 {
+    transition: 0.7s all;
     opacity: 0 !important;
-    display: none !important;
+    transform: translateY(10%) translateX(-60%) !important;
+    /* display: none !important; */
 }
 
 @media only screen and (min-width: 750px) {
@@ -258,6 +276,14 @@ p {
     #menu2.step-1,
     #menu2.step-3 {
         left: 50%;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    #menu1.step-3,
+    #menu2.step-1,
+    #menu2.step-3 {
+        display: none !important;
     }
 }
 

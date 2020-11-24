@@ -2,6 +2,11 @@
 
 $progressBarCounter = 0;
 
+// TODO: FIX DEFAULT VALUES - przy insercie do bazy
+// TODO: Walidacja na regulamin
+// TODO: Poprawki animacji
+// TODO: Zmiana pozycji przycisków - menu 2 - pod koszykiem
+// ....
 $zamowienie_data = [
     "imie" => "",
     "nazwisko" => "",
@@ -31,7 +36,11 @@ $zamowienie_data = [
     "buyer_type" => 'p',
     "dostawa" => "k",
 
+    "cache_basket" => "",
+    "track" => "",
+    "notes" => "",
     "uwagi" => "",
+    "rebate_generated" => false
 ];
 
 if ($app["user"]["id"]) {
@@ -146,7 +155,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 });
             });
 
-            $(`[name="other_address"]`).addEventListener("change", (e) => {
+            $(`[name="other_address"]`).addEventListener("click", (e) => {
                 expand($(`#shipping_details`), e.target.checked);
                 if(e.target.checked){
                     clearAddress();
@@ -222,16 +231,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             var was = $("#menu" + wasMenu);
             var now = $("#menu" + i);
             
-            //TODO: Nie wiem dlaczego selector na klasę ani po przecinku nie działa $('#menu1, #menu2, #menu3') - łapie tylko jeden
-            $('#menu1').classList.remove("showNow");
-            $('#menu1').classList.remove("step-" + wasMenu);
-            $('#menu1').classList.add("step-" + i);
-            $('#menu2').classList.remove("showNow");
-            $('#menu2').classList.remove("step-" + wasMenu);
-            $('#menu2').classList.add("step-" + i);
-            $('#menu3').classList.remove("showNow");
-            $('#menu3').classList.remove("step-" + wasMenu);
-            $('#menu3').classList.add("step-" + i);
+            $$(".menu").forEach(menu => {
+                menu.classList.remove("showNow");
+                menu.classList.remove("step-" + wasMenu);
+                menu.classList.add("step-" + i);
+            });
 
             $("#menu" + i).style.display = "flex";
             now.style.height = "";
@@ -271,7 +275,9 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             if (i == 1 || wasMenu == 3) {
                 $(".variant_list_holder_1").appendChild($(".variant_list_full"));
             } else if (i == 3) {
-                $(".variant_list_holder_2").appendChild($(".variant_list_full"));
+                setTimeout(function() {
+                    $(".variant_list_holder_2").appendChild($(".variant_list_full"));
+                }, 300);
 
                 var daneKontaktoweInfo = "";
                 if (BUYER_TYPE == 'p') {
@@ -886,6 +892,10 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                                 <input type="text" name="ulica_dostawa" data-store>
                                 <input type="text" name="nr_domu_dostawa" data-store>
                                 <input type="text" name="nr_lokalu_dostawa" data-store>
+                                <input type="text" name="notes" data-store>
+                                <input type="text" name="track" data-store>
+                                <input type="text" name="cache_basket" data-store>
+                                <input type="checkbox" name="rebate_generated" data-store>
                             </div>
                         </div>
                     </div>
@@ -988,7 +998,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     </div>
 
                     <h4 style="margin-top: 40px">Twoje uwagi dotyczące zamówienia</h4>
-                    <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($uwagi) ?></textarea>
+                    <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($zamowienie_data["uwagi"]) ?></textarea>
 
                     <label class="checkbox-wrapper field-title">
                         <input type="checkbox" data-validate="checkbox|value:1">
