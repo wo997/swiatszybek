@@ -333,7 +333,7 @@ class FloatingRearrangeControls {
 		this.rearrange_control_node = null;
 
 		this.newCms.container.findAll(".rearrange_active").forEach((e) => {
-			if (options.except && options.except.indexOf(e) !== -1) {
+			if (options.except && options.except.includes(e)) {
 				return;
 			}
 			e.classList.remove("rearrange_active");
@@ -720,6 +720,22 @@ class FloatingRearrangeControls {
 			let left = block_data.rect_data.relative_pos.left;
 			let top = block_data.rect_data.relative_pos.top;
 
+			left = Math.max(left, 5);
+			left = Math.min(
+				left,
+				this.newCms.content_scroll_content.clientWidth -
+					rearrange_control_width -
+					5
+			);
+
+			top = Math.max(top, 5);
+			top = Math.min(
+				top,
+				this.newCms.content_scroll_content.clientHeight -
+					rearrange_control_height -
+					5
+			);
+
 			let moving = true;
 			while (moving) {
 				moving = false;
@@ -931,6 +947,22 @@ class FloatingSelectControls {
 
 			let left = block_data.rect_data.relative_pos.left;
 			let top = block_data.rect_data.relative_pos.top;
+
+			left = Math.max(left, 5);
+			left = Math.min(
+				left,
+				this.newCms.content_scroll_content.clientWidth -
+					select_control_width -
+					5
+			);
+
+			top = Math.max(top, 5);
+			top = Math.min(
+				top,
+				this.newCms.content_scroll_content.clientHeight -
+					select_control_height -
+					5
+			);
 
 			let moving = true;
 			while (moving) {

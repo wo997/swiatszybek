@@ -200,6 +200,7 @@ function registerForms(form = null) {
 		});
 	}
 
+	// TODO: consider mutation observer, isn't it obvious?
 	window.dispatchEvent(new Event("register-form-components"));
 
 	var unique_forms = [];

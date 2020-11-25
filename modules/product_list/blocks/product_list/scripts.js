@@ -112,16 +112,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
 let animated_product_img = null;
 
-window.addEventListener("mousemove", function (event) {
-	currentlyFocusedProduct(event.target);
-});
-
-window.addEventListener("touchstart", function (event) {
-	currentlyFocusedProduct(event.target);
-});
-
-window.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	preventProductImagesLongPress();
+
+	window.addEventListener(IS_MOBILE ? "touchstart" : "mousemove", (event) => {
+		currentlyFocusedProduct(event.target);
+	});
 });
 
 function preventProductImagesLongPress() {
