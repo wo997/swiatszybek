@@ -2,7 +2,7 @@
 
 var toolList = [];
 function useTool(name) {
-	if (toolList.indexOf(name) !== -1) {
+	if (toolList.includes(name)) {
 		return;
 	}
 	toolList.push(name);
