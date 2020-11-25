@@ -227,7 +227,7 @@ document.addEventListener("mouseover", () => {
 });
 
 function scrollCallbackLazy() {
-	$$(".lazy").forEach((node) => {
+	$$(".lazy:not(.wo997_img_waiting)").forEach((node) => {
 		loadLazyNode(node);
 	});
 	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_loaded)").forEach(
