@@ -7,7 +7,18 @@
 <title>Nowy CMS</title>
 
 <style>
+    .grid {
+        display: grid;
+        border: 1px solid gray;
+        grid-gap: 5px;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        margin: 50px 0;
+    }
 
+    .grid>div {
+        border: 1px solid blue;
+    }
 </style>
 
 <script>
@@ -58,6 +69,13 @@
 <?php startSection("content"); ?>
 
 <div id="newCmsForm">
+    <div class="grid">
+        <div class="a">A<br>A<br>A<br>A</div>
+        <div class="b">B</div>
+        <div class="c">C</div>
+        <div class="d">D</div>
+    </div>
+
     <div onclick="editNewCms()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
 
     <div name="random_content" data-type="html" class="newCms_container_content preview_html">

@@ -338,7 +338,7 @@ function setValue(input, value = null, params = {}) {
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
 				input.setAttribute("data-src", value);
-				input.classList.remove("wo997_img_loaded");
+				input.classList.remove("wo997_img_shown");
 			} else {
 				input.setAttribute("src", value);
 			}

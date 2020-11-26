@@ -6,7 +6,7 @@ function registerImageInputs() {
 	$$("image-input:not(.image-input-registered)").forEach((input) => {
 		input.classList.add("image-input-registered");
 
-		// TODO crazy, we use names so far hmm
+		// TODO: crazy, we use names so far hmm
 		input.classList.add("form-input");
 
 		useTool("fileManager");

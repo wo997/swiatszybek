@@ -183,7 +183,7 @@ function currentlyFocusedProduct(node) {
 
 				setTimeout(() => {
 					prev_img.setAttribute("data-src", default_src);
-					prev_img.classList.remove("wo997_img_loaded");
+					prev_img.classList.remove("wo997_img_shown");
 					prev_img.style.opacity = "1";
 					lazyLoadImages();
 				}, duration);
@@ -243,7 +243,7 @@ function nextProductImageSlide(img, first = false) {
 			return;
 		}
 
-		img.classList.remove("wo997_img_loaded");
+		img.classList.remove("wo997_img_shown");
 		img.setAttribute("data-src", img_src);
 		img.await_img_replace = true;
 		lazyLoadImages(false);

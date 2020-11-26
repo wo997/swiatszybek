@@ -10,11 +10,11 @@ function loadLazyNode(node, animate = true) {
 
 	if (isNodeOnScreen(node, lazyLoadOffset)) {
 		node.classList.remove("lazy");
-		showImage(node);
+		animateVisibility(node);
 	}
 }
 
-function loadImage(img, animate = true) {
+function loadImage(img) {
 	if (!img.file_name) {
 		return;
 	}
@@ -74,7 +74,7 @@ function loadImage(img, animate = true) {
           !img.hasAttribute("data-has-own-height")*/
 			) {
 				img.style.height = "";
-				//window.dispatchEvent(new Event("wo997_img_loaded"));
+				//window.dispatchEvent(new Event("wo997_img_shown"));
 			}
 		});
 
@@ -89,29 +89,29 @@ function loadImage(img, animate = true) {
 			delete img.file_name;
 		}
 
-		if (animate) {
-			img.style.opacity = 0;
-			img.classList.remove("wo997_img_waiting");
-			img.classList.add("wo997_img_waiting");
-
-			setTimeout(() => {
-				showImage(img);
-			}, 0);
-		}
+		setTimeout(() => {
+			showWaitingImage(img);
+		}, 0);
 	}
 }
 
-function showImage(img) {
-	if (isNodeOnScreen(img)) {
-		img.style.animation = "show 0.45s";
-		img.style.opacity = 1;
-		img.classList.remove("wo997_img_waiting");
-		img.classList.add("wo997_img_loaded");
-		setTimeout(() => {
-			img.style.opacity = "";
-			img.style.animation = "";
-		}, 450);
+function showWaitingImage(img) {
+	if (img.classList.contains("wo997_img_waiting") && isNodeOnScreen(img)) {
+		animateVisibility(
+			img,
+			img.classList.contains("wo997_img_freeze") ? 0 : 400
+		);
 	}
+}
+
+function animateVisibility(img, duration) {
+	img.style.animation = `show ${duration}ms`;
+	img.classList.remove("wo997_img_waiting");
+	img.classList.add("wo997_img_shown");
+	setTimeout(() => {
+		img.style.opacity = "";
+		img.style.animation = "";
+	}, duration);
 }
 
 // also files.php
@@ -182,8 +182,15 @@ function setImageDimensions(img) {
 	return rect;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	// to help with flexbox
+// TODO: hey! this is temporary so the current content won't fail, pls consider remiving it once the new page builder is done
+domload(() => {
+	$$("[data-src]").forEach((e) => {
+		e.classList.add("wo997_img");
+	});
+});
+
+domload(() => {
+	// to help with flexbox etc.
 	setTimeout(() => {
 		lazyLoadImages();
 	});
@@ -203,7 +210,7 @@ function lazyLoadImages(animate = true) {
 		}
 	});
 
-	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_loaded)").forEach(
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach(
 		(img) => {
 			var rect = setImageDimensions(img);
 
@@ -230,13 +237,13 @@ function scrollCallbackLazy() {
 	$$(".lazy:not(.wo997_img_waiting)").forEach((node) => {
 		loadLazyNode(node);
 	});
-	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_loaded)").forEach(
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach(
 		(img) => {
 			loadImage(img);
 		}
 	);
 	$$(".wo997_img_waiting").forEach((img) => {
-		showImage(img);
+		showWaitingImage(img);
 	});
 }
 
@@ -244,10 +251,3 @@ function preloadImage(url) {
 	const img = new Image();
 	img.src = url;
 }
-
-// TODO: hey! this is temporary so the current content won't fail, pls consider remiving it once the new page builder is done
-domload(() => {
-	$$("[data-src]").forEach((e) => {
-		e.classList.add("wo997_img");
-	});
-});
