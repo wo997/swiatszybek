@@ -432,6 +432,7 @@ function getValue(input) {
 	}
 }
 
+// TODO: #128557 use HTMLElement.matches(QuerySelector) instead of raw code, it's pointless and interestingly less flexible
 function findParent(elem, callback, options = {}) {
 	elem = $(elem);
 	if (!options) {
