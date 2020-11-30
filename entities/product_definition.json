@@ -1,0 +1,20 @@
+{
+    "properties": {
+        "title": {
+            "type": "text"
+        },
+        "category_ids": {
+            "type": "category_ids"
+        },
+        "price_min": {
+            "type": "number"
+        },
+        "jajko": {
+            "type": "number"
+        }
+    },
+    "methods": [
+        "helper1",
+        "helper2sds"
+    ]
+}

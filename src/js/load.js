@@ -6,7 +6,8 @@ function loadScript(src, options = {}) {
 		script.setAttribute(key, value);
 	});
 	script.src = src;
-	document.head.appendChild(script);
+
+	loadFileAsNode(script);
 }
 
 function loadStylesheet(href, options = {}) {
@@ -15,5 +16,16 @@ function loadStylesheet(href, options = {}) {
 		link.setAttribute(key, value);
 	});
 	link.href = href;
-	document.head.appendChild(link);
+
+	loadFileAsNode(link);
+}
+
+function loadFileAsNode(node) {
+	if (document.body) {
+		document.body.appendChild(node);
+	} else {
+		domload(() => {
+			document.body.appendChild(node);
+		});
+	}
 }

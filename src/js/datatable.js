@@ -44,7 +44,7 @@ function createDatatable(datatable) {
 				width: "85px",
 				className: "kolejnosc-column",
 				render: (r, i) => {
-					return `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" data-value="${r.kolejnosc}" onchange="rearrange(this)">`;
+					return /*html*/ `<i class="fas fa-arrows-alt-v" style="cursor:grab"></i> <input type="number" class="kolejnosc" value="${r.kolejnosc}" data-value="${r.kolejnosc}" onchange="rearrange(this)">`;
 				},
 				escape: false,
 			},
@@ -55,7 +55,7 @@ function createDatatable(datatable) {
 	if (datatable.selectable) {
 		datatable.definition = [
 			{
-				title: `<span class='selected-results-count'>0</span>`,
+				title: /*html*/ `<span class='selected-results-count'>0</span>`,
 				width: "36px",
 				render: (r) => {
 					return ``;
@@ -126,16 +126,16 @@ function createDatatable(datatable) {
 		}
 		datatable.definition = [
 			{
-				title: `<label class="checkbox-wrapper">
-          <input type="checkbox" class="bulk_edit_checkbox bulk_edit_checkbox_all" onchange="${datatable.name}.bulkEditSelectAll()">
-          <div class="checkbox standalone"></div>
-        </label>`,
+				title: /*html*/ `<label class="checkbox-wrapper">
+                    <input type="checkbox" class="bulk_edit_checkbox bulk_edit_checkbox_all" onchange="${datatable.name}.bulkEditSelectAll()">
+                    <div class="checkbox standalone"></div>
+                </label>`,
 				width: "36px",
 				render: () => {
-					return `<label class="checkbox-wrapper">
-            <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable.name}.bulkEditSelectionChange()">
-            <div class="checkbox standalone"></div>
-          </label>`;
+					return /*html*/ `<label class="checkbox-wrapper">
+                        <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable.name}.bulkEditSelectionChange()">
+                        <div class="checkbox standalone"></div>
+                    </label>`;
 				},
 				escape: false,
 			},
@@ -197,13 +197,13 @@ function createDatatable(datatable) {
 		datatable.breadcrumb = [
 			{
 				title:
-					`<i class="fas fa-home" style="margin-right: 4px;"></i>` +
+					/*html*/ `<i class="fas fa-home" style="margin-right: 4px;"></i>` +
 					datatable.lang.main_category,
 				category_id: -1,
 			},
 		];
 
-		breadcrumb_html = `
+		breadcrumb_html = /*html*/ `
         <div class="breadcrumb"></div>
         <div class="btn important" onclick="${datatable.name}.showEditCategory(this,null,true)">Dodaj <i class="fa fa-plus"></i></div>
       `;
@@ -212,13 +212,13 @@ function createDatatable(datatable) {
 	var above_table_html = "";
 
 	if (datatable.controls) {
-		above_table_html += `<div class="flexbar">${datatable.controls}</div><div class="flexbar"></div>`;
+		above_table_html += /*html*/ `<div class="flexbar">${datatable.controls}</div><div class="flexbar"></div>`;
 	}
 	if (breadcrumb_html) {
-		above_table_html += `<div>${breadcrumb_html}</div>`;
+		above_table_html += /*html*/ `<div>${breadcrumb_html}</div>`;
 	}
 
-	above_table_html += `<div class="flexbar" style="align-items: baseline;">
+	above_table_html += /*html*/ `<div class="flexbar" style="align-items: baseline;">
         <div class="flexbar auto-width-desktop" style="margin:0;align-items: baseline;">
           <span class="total-rows"></span>
           <span class="space-right">&nbsp;${datatable.lang.subject}</span>
@@ -270,21 +270,21 @@ function createDatatable(datatable) {
 			var additional_html = "";
 			if (header.sortable) {
 				var sortBy = header.sortable === true ? header.field : header.sortable;
-				additional_html += ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')" data-tooltip="Sortuj malejąco / rosnąco"></i>&nbsp;`;
+				additional_html += /*html*/ ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')" data-tooltip="Sortuj malejąco / rosnąco"></i>&nbsp;`;
 			}
 			if (header.searchable) {
-				additional_html += `<i class="btn primary fas fa-search datatable-search-btn" data-field="${header.field}" onclick="datatableFilter(this,'${def_id}')" data-tooltip="Filtruj wyniki"></i>`;
+				additional_html += /*html*/ `<i class="btn primary fas fa-search datatable-search-btn" data-field="${header.field}" onclick="datatableFilter(this,'${def_id}')" data-tooltip="Filtruj wyniki"></i>`;
 			}
 
 			var style = "";
-			if (header.width) style += `style='width:${header.width}'`;
-			if (header.className) style += `class='${header.className}'`;
+			if (header.width) style += /*html*/ `style='width:${header.width}'`;
+			if (header.className) style += /*html*/ `class='${header.className}'`;
 
 			if (additional_html) {
-				additional_html = `<span class='table-header-buttons'>${additional_html}</span>`;
+				additional_html = /*html*/ `<span class='table-header-buttons'>${additional_html}</span>`;
 			}
 
-			headersHTML += `<th ${style}><span>${header.title} </span>${additional_html}</th>`;
+			headersHTML += /*html*/ `<th ${style}><span>${header.title} </span>${additional_html}</th>`;
 			columnStyles.push(style);
 		}
 		headersHTML += "</tr>";
@@ -293,7 +293,7 @@ function createDatatable(datatable) {
 	datatable.headersHTML = headersHTML;
 	datatable.columnStyles = columnStyles;
 
-	var table_html = `
+	var table_html = /*html*/ `
     <div class="table-wrapper">
       <div class="table-scroll-width">
         <table class='datatable'>
@@ -304,16 +304,16 @@ function createDatatable(datatable) {
     </div>
     `;
 
-	var below_table_html = `<div class="pagination pagination-bottom"></div>`;
+	var below_table_html = /*html*/ `<div class="pagination pagination-bottom"></div>`;
 
 	if (datatable.bulk_menu) {
-		below_table_html += `<div class="bulk_menu expand_y animate_hidden hidden"><div style='margin-bottom:10px'>${datatable.bulk_menu}</div></div>`;
+		below_table_html += /*html*/ `<div class="bulk_menu expand_y animate_hidden hidden"><div style='margin-bottom:10px'>${datatable.bulk_menu}</div></div>`;
 	}
 
 	if (datatable.selectable) {
 		datatable.target.insertAdjacentHTML(
 			"afterbegin",
-			`
+			/*html*/ `
           <div class="selected_rows">${table_html}</div>
           <div class="showBtn expand_y">
             <div class="btn secondary fill" onclick="${
@@ -342,19 +342,19 @@ function createDatatable(datatable) {
 			.find(".selected_rows .datatable")
 			.insertAdjacentHTML(
 				"afterend",
-				`<div class="no-results">Brak powiązanych ${datatable.lang.subject}</div>`
+				/*html*/ `<div class="no-results">Brak powiązanych ${datatable.lang.subject}</div>`
 			);
 	} else {
 		datatable.target.insertAdjacentHTML(
 			"afterbegin",
-			`<div class="table-search-wrapper">${above_table_html}${table_html}${below_table_html}</div>`
+			/*html*/ `<div class="table-search-wrapper">${above_table_html}${table_html}${below_table_html}</div>`
 		);
 	}
 	datatable.target
 		.find(".table-search-wrapper .datatable")
 		.insertAdjacentHTML(
 			"afterend",
-			`<div class="no-results">Brak ${datatable.lang.subject}</div>`
+			/*html*/ `<div class="no-results">Brak ${datatable.lang.subject}</div>`
 		);
 
 	datatable.searchElement = datatable.target.find(".search-wrapper");
@@ -524,15 +524,15 @@ function createDatatable(datatable) {
 			var index = -1;
 			for (let category of datatable.breadcrumb) {
 				index++;
-				if (index > 0) out += ` <i class="fas fa-chevron-right"></i> `;
-				out += `<div class="${
+				if (index > 0) out += /*html*/ ` <i class="fas fa-chevron-right"></i> `;
+				out += /*html*/ `<div class="${
 					index < datatable.breadcrumb.length - 1 ? "btn subtle" : "current"
 				}" onclick="${datatable.name}.backToCategory(${
 					category.category_id
 				})">${category.title}</div>`;
 			}
 			if (datatable.breadcrumb.length > 1)
-				out += ` <div class="btn subtle" onclick="${datatable.name}.showEditCategory(this,null)" style="margin-left:6px"><i class="fa fa-cog"></i></div>`;
+				out += /*html*/ ` <div class="btn subtle" onclick="${datatable.name}.showEditCategory(this,null)" style="margin-left:6px"><i class="fa fa-cog"></i></div>`;
 			datatable.breadcrumbElement.innerHTML = out;
 		}
 
@@ -661,22 +661,22 @@ function createDatatable(datatable) {
 					var row = res.results[i];
 					var attr = "";
 					if (canOrder) attr = "draggable='true'";
-					output += `<tr data-index='${i}' ${attr} ${
+					output += /*html*/ `<tr data-index='${i}' ${attr} ${
 						datatable.primary ? `data-primary=${row[datatable.primary]}` : ""
 					}>`;
 
 					if (datatable.renderRow) {
 						var cell = datatable.renderRow(row, i);
-						output += `<td>${cell}</td>`;
+						output += /*html*/ `<td>${cell}</td>`;
 					} else {
 						for (x = 0; x < datatable.definition.length; x++) {
 							if (datatable.selectable && x === 0) {
 								if (createList) {
-									output += `<td style="width:33px;text-align:center"> <i class="fas fa-minus-circle" onclick="${
+									output += /*html*/ `<td style="width:33px;text-align:center"> <i class="fas fa-minus-circle" onclick="${
 										datatable.name
 									}.removeRow(${row[datatable.primary]})"></i> </td>`;
 								} else {
-									output += `<td style="width:33px;text-align:center"> <i class="fas fa-plus-circle" onclick="${
+									output += /*html*/ `<td style="width:33px;text-align:center"> <i class="fas fa-plus-circle" onclick="${
 										datatable.name
 									}.addRow(${row[datatable.primary]})"></i> </td>`;
 								}
@@ -1136,13 +1136,13 @@ function renderIsPublished(data) {
 	var label = "";
 	var color = "";
 	if (data.published == 1) {
-		label = `<i class="fas fa-eye"></i>`;
+		label = /*html*/ `<i class="fas fa-eye"></i>`;
 		color = "#2a2";
 	} else {
-		label = `<i class="fas fa-eye-slash"></i>`;
+		label = /*html*/ `<i class="fas fa-eye-slash"></i>`;
 		color = "#a22";
 	}
-	return `<div class='rect btn' style='color:${color}; border: 1px solid ${color}; text-align: center; width: 45px'
+	return /*html*/ `<div class='rect btn' style='color:${color}; border: 1px solid ${color}; text-align: center; width: 45px'
     onclick='setPublish(this,${1 - data.published})'>${label}</div>`;
 }
 
@@ -1177,7 +1177,7 @@ function setPublish(obj, published) {
 		},
 		success: () => {
 			showNotification(
-				`<i class="fas fa-check"></i> Pomyślnie ustawiono element jako <b>${
+				/*html*/ `<i class="fas fa-check"></i> Pomyślnie ustawiono element jako <b>${
 					published ? "publiczny" : "ukryty"
 				}</b>`,
 				{
@@ -1276,7 +1276,7 @@ function datatableFilter(btn, column_id) {
 
 	if (filters == "text") {
 		menu_header = `Wpisz frazę`;
-		menu_body += `<input type="text" class="field margin_bottom">
+		menu_body += /*html*/ `<input type="text" class="field margin_bottom">
       <label class='checkbox-wrapper block margin_bottom' text-align:center;color:#555'>
         <input type='checkbox' name='exact'><div class='checkbox'></div> Dopasuj całą frazę
       </label>
@@ -1285,7 +1285,7 @@ function datatableFilter(btn, column_id) {
 		if (!IS_MOBILE) {
 			menu_header = `Wybierz datę`;
 		}
-		menu_body += `
+		menu_body += /*html*/ `
       <span class="field-title first">Typ wyszukiwania</span>
       <select class="field date_type" onchange="dateTypeChanged(this)">
         <option value='='>Dokładna data</option>
@@ -1316,16 +1316,16 @@ function datatableFilter(btn, column_id) {
 			var label = col_def.select_labels ? col_def.select_labels[i] : val;
 			var select_single = col_def.select_single ? "true" : "false";
 
-			menu_body += `<label class='checkbox-wrapper block'>
-        <input type='checkbox' value='${val}' onchange='filterCheckboxChanged(this,${select_single})'><div class='checkbox'></div> ${label}
-      </label>`;
+			menu_body += /*html*/ `<label class='checkbox-wrapper block'>
+                <input type='checkbox' value='${val}' onchange='filterCheckboxChanged(this,${select_single})'><div class='checkbox'></div> ${label}
+            </label>`;
 		}
 	}
 
-	var menu_footer = `<div class='filter_menu_footer'>
-    <button class="btn primary fill" style='margin-right:5px' onclick='setFilters(${datatable.name},${column_id})'>Szukaj <i class="fas fa-check"></i></button>
-    <button class="btn secondary fill" onclick='removeFilters(${datatable.name},${column_id})'>Wyczyść <i class="fas fa-times"></i></button>
-  </div>`;
+	var menu_footer = /*html*/ `<div class='filter_menu_footer'>
+        <button class="btn primary fill" style='margin-right:5px' onclick='setFilters(${datatable.name},${column_id})'>Szukaj <i class="fas fa-check"></i></button>
+        <button class="btn secondary fill" onclick='removeFilters(${datatable.name},${column_id})'>Wyczyść <i class="fas fa-times"></i></button>
+    </div>`;
 
 	if (col_def.renderSearch) {
 		menu_body = col_def.renderSearch(menu_body);
@@ -1334,14 +1334,14 @@ function datatableFilter(btn, column_id) {
 	if (IS_MOBILE) {
 		setModalTitle("#filter_menu", "Filtruj " + col_def.title.toLowerCase());
 		filter_menu.setContent(
-			`<span class="field-title">${menu_header}</span>${menu_body}${menu_footer}`
+			/*html*/ `<span class="field-title">${menu_header}</span>${menu_body}${menu_footer}`
 		);
 		showModal("filter_menu", {
 			source: btn,
 		});
 	} else {
 		if (menu_header) {
-			menu_html = `<span class='field-title header first'>${menu_header}</span>${menu_body}${menu_footer}`;
+			menu_html = /*html*/ `<span class='field-title header first'>${menu_header}</span>${menu_body}${menu_footer}`;
 		}
 		filter_menu.setContent(menu_html);
 		filter_menu.style.display = "block";
@@ -1444,23 +1444,23 @@ function dateTypeChanged(select) {
 
 window.addEventListener("DOMContentLoaded", () => {
 	if (IS_MOBILE) {
-		registerModalContent(`
-        <div id="filter_menu">
-            <div class="modal-body">
-                <div class="custom-toolbar">
-                    <span class="title"></span>
-                    <div class="btn secondary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></div>
+		registerModalContent(/*html*/ `
+            <div id="filter_menu">
+                <div class="modal-body">
+                    <div class="custom-toolbar">
+                        <span class="title"></span>
+                        <div class="btn secondary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></div>
+                    </div>
+                    <div class="menu_body"></div>
                 </div>
-                <div class="menu_body"></div>
             </div>
-        </div>
-    `);
+        `);
 
 		window.filter_menu = $("#filter_menu .menu_body");
 	} else {
 		document.body.insertAdjacentHTML(
 			"beforeend",
-			"<div class='filter_menu'></div>"
+			/*html*/ `<div class='filter_menu'></div>`
 		);
 
 		window.filter_menu = $(".filter_menu");

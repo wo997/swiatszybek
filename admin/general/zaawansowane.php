@@ -1,5 +1,72 @@
 <?php //route[{ADMIN}zaawansowane]
 
+class Product
+{
+    public $product_id;
+    public $title;
+
+    public function get_product_id()
+    {
+        return $this->product_id;
+    }
+    public function set_product_id($product_id)
+    {
+        $this->product_id = $product_id;
+    }
+    public function get_link()
+    {
+        // this should be editable via event listeners maybe? as we make midifications;
+        return getProductLink($this->product_id, $this->title);
+    }
+}
+
+function getEntityActualOne($table_name, $id, $options = [])
+{
+    $table_name = clean($table_name);
+    $id = intval($id);
+
+    $class = ucfirst($table_name);
+    $entity = new $class();
+
+    if ($table_name == "product") {
+        $table_name = "products";
+    }
+
+    $select = nonull($options, "select", "*");
+
+    $data = fetchRow("select $select from $table_name WHERE product_id = $id");
+
+    var_dump($data);
+    loadEntityFields($entity, $data);
+
+    return $entity;
+}
+
+function loadEntityFields($entity, $data)
+{
+    $class = get_class($entity);
+    $vars = array_keys(get_class_vars($class));
+    $methods = get_class_methods($class);
+
+    foreach ($data as $field_name => $field_value) {
+        $method_name = "set_" . ($field_name);
+        if (array_search($method_name, $methods)) {
+            $entity->{$method_name}($field_value);
+        } else if (array_search($field_name, $vars)) {
+            $entity->{$field_name} = $field_value;
+        }
+    }
+}
+
+/**
+ * @var {Product}
+ */
+$product = getEntityActualOne("product", 29, [
+    "select" => "product_id, title, cache_sales"
+]);
+
+var_dump($product, $product->get_link());
+
 ?>
 
 <?php startSection("head"); ?>
