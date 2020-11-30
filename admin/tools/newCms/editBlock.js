@@ -245,13 +245,10 @@ export default class EditBlock {
 
 		const relocate_btn = this.node.find(".relocate_btn");
 		if (relocate_btn) {
-			relocate_btn.addEventListener(
-				IS_MOBILE ? "touchstart" : "mousedown",
-				() => {
-					this.hideContextMenu();
-					this.newCms.grabBlock(block);
-				}
-			);
+			relocate_btn.addEventListener("click", () => {
+				this.hideContextMenu();
+				this.newCms.grabBlock(block);
+			});
 		}
 
 		const remove_btn = this.node.find(".remove_btn");
@@ -268,6 +265,11 @@ export default class EditBlock {
 				this.hideContextMenu();
 			});
 		}
+
+		this.node.addEventListener("click", (event) => {
+			// self explanatory ;)
+			event.stopPropagation();
+		});
 
 		const node_rect = this.node.getBoundingClientRect();
 

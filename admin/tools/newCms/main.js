@@ -59,21 +59,26 @@ class NewCms {
 			}
 		);
 
-		this.container.addEventListener(
+		/*this.container.addEventListener(
 			IS_MOBILE ? "click" : "mousedown",
 			(event) => {
 				this.updateMouseCoords(event);
 				this.mouseDown();
 			}
-		);
+        );*/
 
-		this.container.addEventListener(
+		this.container.addEventListener("click", (event) => {
+			this.updateMouseCoords(event);
+			this.mouseClick();
+		});
+
+		/*this.container.addEventListener(
 			IS_MOBILE ? "touchend" : "mouseup",
 			(event) => {
 				this.updateMouseCoords(event);
 				this.mouseUp();
 			}
-		);
+		);*/
 
 		this.content_scroll_panel.addEventListener("scroll", () => {
 			this.scroll();
@@ -282,10 +287,15 @@ class NewCms {
 			this.select_controls.mouseMove();
 		}
 	}
+	//mouseDown() {
+	mouseClick() {
+		if (this.grabbed_block) {
+			this.releaseBlock();
+			return;
+		}
 
-	mouseDown() {
 		if (!this.edit_block.select_node) {
-			this.select_controls.mouseDown();
+			this.select_controls.mouseClick();
 		}
 
 		const target = this.mouse_target;
@@ -303,11 +313,11 @@ class NewCms {
 		}
 	}
 
-	mouseUp() {
+	/*mouseUp() {
 		if (this.grabbed_block) {
 			this.releaseBlock();
 		}
-	}
+	}*/
 
 	scroll() {
 		this.updateMouseTarget();
@@ -613,11 +623,7 @@ class NewCms {
 				});
 		});
 
-		return all_animatable_blocks;
-	}
-
-	animateContent(all_animatable_blocks, duration, options = {}) {
-		//duration = duration * 5000;
+		// copy overlay to hide layout update
 		this.content_node_copy.setContent(this.content_node.innerHTML);
 		this.content_node_copy.findAll("*").forEach((e) => {
 			// itd why rly sry
@@ -629,6 +635,10 @@ class NewCms {
 		this.content_node_copy.style.width = content_node_rect.width + "px";
 		this.content_node_copy.style.height = content_node_rect.height + "px";
 
+		return all_animatable_blocks;
+	}
+
+	animateContent(all_animatable_blocks, duration, options = {}) {
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
 			setTimeout(() => {
@@ -1037,7 +1047,8 @@ registerModalContent(
                       <div class="rearrange_insert_rect"></div>
                       <div class="rearrange_grabbed_rect"></div>
                       <div style="padding:var(--content-padding);overflow:hidden;position:relative">
-                        <div class="newCmsContent" data-type="html" name="content"></div>
+                        <!-- newCms_block_content class is temporary, it prevents margin collapsing, later u wanna for for sections etc-->
+                        <div class="newCmsContent newCms_block_content" data-type="html" name="content"></div>
                       </div>
                     </div>
                   </div>
@@ -1046,7 +1057,7 @@ registerModalContent(
           <div class="rearrange_node"></div>
           <div class="clean_output" style="display:none !important"></div>
           <div style="position:absolute;width:100%;height:100%;left:0;top:0;overflow:hidden;pointer-events:none">
-            <div class="newCmsContent_copy"></div>
+            <div class="newCmsContent_copy newCms_block_content"></div>
           </div>
         </div>
         <link href="/admin/tools/newCms/main.css?v=${CSS_RELEASE}" rel="stylesheet">

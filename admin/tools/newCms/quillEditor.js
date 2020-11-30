@@ -115,6 +115,7 @@ export default class QuillEditor {
 		this.newCms.container.addEventListener(
 			IS_MOBILE ? "click" : "mousedown",
 			(event) => {
+				// idk why we have this but it wont hurt
 				this.newCms.updateMouseCoords(event);
 			}
 		);

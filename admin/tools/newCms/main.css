@@ -263,11 +263,20 @@
 	/*flex-flow: column;*/
 }
 
-/* block inside of a block caused the margins to collapse, the solution down below is simple, make it flex! ;) */
+/* block inside of a block caused the margins to collapse, the solution down below is simple, make it flex! ;)
+    DUUUUUUUUDE, it just fucked up everything again :/ we need them to flex but we are back to the same shit
+
+*/
 .newCms_block_content {
 	display: flex;
 	flex-flow: column;
 	flex-grow: 1;
+}
+
+.newCms_block::before,
+.newCms_block::after {
+	content: " ";
+	display: table;
 }
 
 .newCms_block_content.container_row {
@@ -489,4 +498,8 @@
 
 .newCmsContent_copy:not(.visible) {
 	opacity: 0;
+}
+
+.newCmsContent_copy .cramped {
+	display: none !important;
 }

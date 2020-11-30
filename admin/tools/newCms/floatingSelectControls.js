@@ -59,13 +59,9 @@ export default class FloatingSelectControls {
 			this.selected_block
 		);
 	}
-
-	mouseDown() {
-		if (
-			this.newCms.mouse_left_btn &&
-			this.selected_block &&
-			!this.newCms.grabbed_block
-		) {
+	//mouseDown() {
+	mouseClick() {
+		if (this.selected_block && !this.newCms.grabbed_block) {
 			this.newCms.edit_block.showControlsToBlock(this.selected_block);
 			//this.newCms.grabBlock(this.selected_block);
 		}
