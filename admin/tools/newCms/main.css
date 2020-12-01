@@ -265,7 +265,7 @@
 
 /* block inside of a block caused the margins to collapse, the solution down below is simple, make it flex! ;)
     DUUUUUUUUDE, it just fucked up everything again :/ we need them to flex but we are back to the same shit
-
+    putting flex again does seem to fix it maybe idk
 */
 .newCms_block_content {
 	display: flex;
@@ -273,11 +273,11 @@
 	flex-grow: 1;
 }
 
-.newCms_block::before,
+/*.newCms_block::before,
 .newCms_block::after {
 	content: " ";
 	display: table;
-}
+}*/
 
 .newCms_block_content.container_row {
 	flex-flow: row wrap;
@@ -318,9 +318,9 @@
 	stroke-width: 1px;
 }
 
-.edit_block_node .relocate_btn {
+/*.edit_block_node .relocate_btn {
 	cursor: grab;
-}
+}*/
 
 .edit_block_node .context-icon {
 	display: flex;
@@ -342,9 +342,9 @@
 	color: var(--primary-clr);
 }
 
-.relocate_btn {
+/*.relocate_btn {
 	cursor: grab;
-}
+}*/
 
 /* quill_editor end */
 
@@ -441,7 +441,7 @@
 	height: 46px;
 	margin: 0 4px 4px 0;
 	width: calc(50% - 4px);
-	cursor: grab;
+	/*cursor: grab;*/
 	transition: box-shadow 0.2s;
 }
 
@@ -503,3 +503,35 @@
 .newCmsContent_copy .cramped {
 	display: none !important;
 }
+
+/* grid start */
+
+[data-block="grid"] > .newCms_block_content {
+	display: grid;
+	border: 1px solid gray;
+	/*grid-gap: 5px;*/
+	grid-template-columns: 2fr 1fr 3fr;
+	grid-template-rows: 1fr 2fr;
+	min-width: 200px;
+	min-height: 200px;
+}
+
+:root {
+	--grid_wireframe_line_size: 2px;
+}
+
+.grid_wireframe_line {
+	background: #bbb;
+	width: var(--grid_wireframe_line_size);
+	height: var(--grid_wireframe_line_size);
+	position: absolute;
+}
+
+/*gr.grid_rearrange_control {
+	background: #bbb;
+	width: var(--grid_wireframe_line_size);
+	height: var(--grid_wireframe_line_size);
+	position: absolute;
+}*/
+
+/* grid end */

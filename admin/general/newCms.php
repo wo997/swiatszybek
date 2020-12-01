@@ -7,17 +7,7 @@
 <title>Nowy CMS</title>
 
 <style>
-    [data-block="grid"]>.newCms_block_content {
-        display: grid;
-        border: 1px solid gray;
-        /*grid-gap: 5px;*/
-        grid-template-columns: 2fr 1fr;
-        grid-template-rows: 1fr 1fr;
-    }
 
-    [data-block="grid"]>.newCms_block_content>div {
-        border: 1px solid blue;
-    }
 </style>
 
 <script>
