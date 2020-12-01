@@ -232,117 +232,11 @@ export default class FloatingRearrangeControls {
 		}
 	}
 
-	addGridControls() {
-		/*const any_grid = this.newCms.content_node.find(`[data-block="grid"]`);
-		if (!any_grid) {
-			return;
-		}
-		const scrollable_parent = any_grid.findScrollParent({
-			default: document.body,
-		});
-		const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
-
-		const off_x = scrollable_parent_rect.left + scrollable_parent.scrollLeft;
-		const off_y = scrollable_parent_rect.top + scrollable_parent.scrollTop;
-
-		const grid_wireframe_line_size = parseInt(
-			getComputedStyle(document.documentElement).getPropertyValue(
-				"--grid_wireframe_line_size"
-			)
-		);
-
-		this.newCms.content_node.findAll(`.newCms_block[data-block="grid"]`).forEach((grid) => {
-			// TODO: retrieve from grid props
-			const columns = 3;
-			const rows = 2;
-
-			const block_content = grid.find(".newCms_block_content");
-
-			const grid_rect = grid.getBoundingClientRect();
-
-			let x_coords = [];
-			for (let column = 1; column < columns + 1; column++) {
-				//grid_wireframe_line_size
-				const grid_wireframe = document.createElement("DIV");
-
-				grid_wireframe.style.gridColumn = `${column}/${column + 1}`;
-				grid_wireframe.style.gridRow = `${1}/${rows + 1}`;
-
-				block_content.appendChild(grid_wireframe);
-
-				const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
-
-				if (column === 1) {
-					x_coords.push(grid_wireframe_rect.left - grid_rect.left);
-				}
-				x_coords.push(
-					grid_wireframe_rect.left + grid_wireframe_rect.width - grid_rect.left
-				);
-
-				if (column === 1) {
-					grid_wireframe.remove();
-					continue;
-				}
-
-				// change the parent
-				grid_wireframe.style.left =
-					grid_wireframe_rect.left - grid_wireframe_line_size - off_x + "px";
-				grid_wireframe.style.top = grid_wireframe_rect.top - off_y + "px";
-
-				grid_wireframe.style.height = grid_wireframe_rect.height + "px";
-
-				grid_wireframe.classList.add("grid_wireframe_line");
-				this.node.appendChild(grid_wireframe);
-			}
-
-			let y_coords = [];
-			for (let row = 1; row < rows + 1; row++) {
-				//grid_wireframe_line_size
-				const grid_wireframe = document.createElement("DIV");
-
-				grid_wireframe.style.gridColumn = `${1}/${columns + 1}`;
-				grid_wireframe.style.gridRow = `${row}/${row + 1}`;
-
-				block_content.appendChild(grid_wireframe);
-
-				const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
-
-				if (row === 1) {
-					y_coords.push(grid_wireframe_rect.top - grid_rect.top);
-				}
-				y_coords.push(
-					grid_wireframe_rect.top + grid_wireframe_rect.height - grid_rect.top
-				);
-
-				if (row === 1) {
-					grid_wireframe.remove();
-					continue;
-				}
-
-				// change the parent
-				grid_wireframe.style.left = grid_wireframe_rect.left - off_x + "px";
-				grid_wireframe.style.top =
-					grid_wireframe_rect.top - grid_wireframe_line_size - off_y + "px";
-
-				grid_wireframe.style.width = grid_wireframe_rect.width + "px";
-
-				grid_wireframe.classList.add("grid_wireframe_line");
-				this.node.appendChild(grid_wireframe);
-			}
-
-			grid.grid_data = {
-				x_coords,
-				y_coords,
-			};
-		});*/
-	}
-
 	addFloatingRearrangeControls(block) {
 		this.removeRearrangement();
 
 		this.node.empty();
 
-		this.addGridControls();
 		this.addContainerControls(block);
 	}
 
@@ -488,7 +382,11 @@ export default class FloatingRearrangeControls {
 					}
 				}
 
-				const index = block_rect_data.relative_pos.top + parent_count;
+				const index =
+					block_rect_data.relative_pos.top +
+					parent_count -
+					(position == "inside" ? 100 : 0); // prefer insides
+
 				blocks_data.push({
 					index: index,
 					block: block,
@@ -509,7 +407,7 @@ export default class FloatingRearrangeControls {
 		this.newCms.content_node
 			.findAll(`.newCms_block[data-block="grid"]`)
 			.forEach((block) => {
-				if (!block.grid_data) {
+				if (!block.grid_data || block == this.newCms.grabbed_block) {
 					return;
 				}
 
@@ -561,9 +459,10 @@ export default class FloatingRearrangeControls {
 						block_rect_data_copy.relative_pos.left += left;
 						block_rect_data_copy.relative_pos.top += top;
 
-						const index = block_rect_data_copy.relative_pos.top;
+						const index = block_rect_data_copy.relative_pos.top - 100; // these are important
 						blocks_data.push({
 							index: index,
+							top: top,
 							block: block,
 							rect_data: block_rect_data_copy,
 							is_parent_row: is_parent_row,
@@ -582,7 +481,7 @@ export default class FloatingRearrangeControls {
 		});
 
 		const sorted_blocks_data_length = sorted_blocks_data.length;
-		let upper_bound = 0;
+		//let upper_bound = 0;
 
 		for (let i = 0; i < sorted_blocks_data_length; i++) {
 			delete block.rearrange_control_before;
@@ -615,10 +514,11 @@ export default class FloatingRearrangeControls {
 			let moving = true;
 			while (moving) {
 				moving = false;
-				for (let u = i - 1; u >= upper_bound; u--) {
+				//for (let u = i - 1; u >= 0; u--) {
+				for (let u = 0; u < i; u++) {
 					const prev_block_data = sorted_blocks_data[u];
 
-					const prev_y2 =
+					/*const prev_y2 =
 						prev_block_data.rect_data.relative_pos.top +
 						rearrange_control_height;
 
@@ -626,9 +526,14 @@ export default class FloatingRearrangeControls {
 						// optimization
 						upper_bound = u + 1;
 						break;
-					}
+                    }*/
 
 					if (
+						prev_block_data.rect_data.relative_pos.top <
+							top + rearrange_control_height &&
+						prev_block_data.rect_data.relative_pos.top +
+							rearrange_control_height >
+							top &&
 						prev_block_data.rect_data.relative_pos.left <
 							left + rearrange_control_width &&
 						prev_block_data.rect_data.relative_pos.left +
