@@ -233,7 +233,7 @@ export default class FloatingRearrangeControls {
 	}
 
 	addGridControls() {
-		const any_grid = this.newCms.content_node.find(`[data-block="grid"]`);
+		/*const any_grid = this.newCms.content_node.find(`[data-block="grid"]`);
 		if (!any_grid) {
 			return;
 		}
@@ -251,7 +251,7 @@ export default class FloatingRearrangeControls {
 			)
 		);
 
-		this.newCms.content_node.findAll(`[data-block="grid"]`).forEach((grid) => {
+		this.newCms.content_node.findAll(`.newCms_block[data-block="grid"]`).forEach((grid) => {
 			// TODO: retrieve from grid props
 			const columns = 3;
 			const rows = 2;
@@ -334,7 +334,7 @@ export default class FloatingRearrangeControls {
 				x_coords,
 				y_coords,
 			};
-		});
+		});*/
 	}
 
 	addFloatingRearrangeControls(block) {

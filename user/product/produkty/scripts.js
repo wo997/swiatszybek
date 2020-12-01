@@ -306,7 +306,7 @@ function searchProducts(options = {}) {
               <button class='btn primary medium randomize_btn' onclick='beforeSearchProducts()'><span class='randomize_text'>Losuj więcej</span> <span class='randomize_loader_wrapper'><i class='randomize_loader fas fa-dice-three'></i></span></button>
             `);
 				} else {
-					paginationNode.setContent(``);
+					paginationNode.empty();
 				}
 			} else {
 				renderPagination(paginationNode, currPage, res.pageCount, (i) => {

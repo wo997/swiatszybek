@@ -100,6 +100,9 @@
 .newCms:not(.anything_selected):not(.grabbed_block)
 	.content_scroll_panel:not(:hover)
 	.select_controls,
+.newCms:not(.anything_selected):not(.grabbed_block)
+	.content_scroll_panel:not(:hover)
+	.grid_wireframe_line:before,
 .select_controls:not(.visible) {
 	opacity: 0;
 	pointer-events: none;
@@ -348,7 +351,8 @@
 
 /* quill_editor end */
 
-.quill_editor.ql-container {
+/* deprecated */
+/*.quill_editor.ql-container {
 	height: auto;
 }
 
@@ -358,7 +362,7 @@
 
 .newCmsContent .quill_editor {
 	min-height: 30px;
-}
+}*/
 /* quill_editor end */
 
 .newCmsContent {
@@ -506,9 +510,8 @@
 
 /* grid start */
 
-[data-block="grid"] > .newCms_block_content {
+.newCms_block[data-block="grid"] > .newCms_block_content {
 	display: grid;
-	border: 1px solid gray;
 	/*grid-gap: 5px;*/
 	grid-template-columns: 2fr 1fr 3fr;
 	grid-template-rows: 1fr 2fr;
@@ -516,15 +519,20 @@
 	min-height: 200px;
 }
 
-:root {
-	--grid_wireframe_line_size: 2px;
+.newCms_block[data-block="grid"] > .newCms_block_content > * {
+	/*min-width: 60px; just height lol */
+	min-height: 60px;
 }
 
+/*:root {
+	--grid_wireframe_line_size: 2px;
+}*/
+
 .grid_wireframe_line {
-	background: #bbb;
+	/*background: #bbb;
 	width: var(--grid_wireframe_line_size);
 	height: var(--grid_wireframe_line_size);
-	position: absolute;
+	position: absolute;*/
 }
 
 /*gr.grid_rearrange_control {
@@ -533,5 +541,28 @@
 	height: var(--grid_wireframe_line_size);
 	position: absolute;
 }*/
+
+.grid_wireframe_line {
+	position: relative;
+}
+.grid_wireframe_line:before,
+.grid_wireframe_line:before {
+	content: "";
+	position: absolute;
+	background: #0002;
+	transition: opacity 0.2s;
+}
+.grid_wireframe_line_left:before {
+	left: -1px;
+	top: 0;
+	width: 2px;
+	height: 100%;
+}
+.grid_wireframe_line_top:before {
+	left: 0;
+	top: -1px;
+	width: 100%;
+	height: 2px;
+}
 
 /* grid end */

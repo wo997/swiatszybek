@@ -35,6 +35,8 @@ class NewCms {
 		this.initFloatingRearrangeControls();
 		this.initListenChange();
 
+		this.initGrids();
+
 		this.initMargins();
 
 		this.mouse_x = 0;
@@ -82,6 +84,12 @@ class NewCms {
 
 		this.content_scroll_panel.addEventListener("scroll", () => {
 			this.scroll();
+		});
+	}
+
+	initGrids() {
+		this.container.addEventListener("clean_up_output", () => {
+			this.cleanupGrids(this.clean_output_node);
 		});
 	}
 
@@ -333,6 +341,7 @@ class NewCms {
 	contentChange(options = {}) {
 		this.content_change_triggered = true;
 		this.insertMissingQlClasses();
+		this.manageGrids();
 
 		// temporary
 		this.content_node.findAll("img").forEach((e) => {
@@ -349,10 +358,109 @@ class NewCms {
 		this.content_change_triggered = false;
 	}
 
-	insertMissingQlClasses() {
-		// TODO: should we use it on the whole container instead?
+	cleanupGrids(node = null) {
+		if (node === null) {
+			node = this.content_node;
+		}
+
+		node.findAll(`.grid_wireframe_line`).forEach((e) => {
+			e.remove();
+		});
+	}
+
+	manageGrids() {
+		this.cleanupGrids();
+
+		const any_grid = this.content_node.find(`[data-block="grid"]`);
+		if (!any_grid) {
+			return;
+		}
+		const scrollable_parent = any_grid.findScrollParent({
+			default: document.body,
+		});
+		const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
+
+		const off_x = scrollable_parent_rect.left + scrollable_parent.scrollLeft;
+		const off_y = scrollable_parent_rect.top + scrollable_parent.scrollTop;
+
+		const grid_wireframe_line_size = parseInt(
+			getComputedStyle(document.documentElement).getPropertyValue(
+				"--grid_wireframe_line_size"
+			)
+		);
+
 		this.content_node
-			.findAll(".newCms_quill_editor")
+			.findAll(`.newCms_block[data-block="grid"]`)
+			.forEach((grid) => {
+				// TODO: retrieve from grid props
+				const columns = 3;
+				const rows = 2;
+
+				const block_content = grid.find(".newCms_block_content");
+
+				const grid_rect = grid.getBoundingClientRect();
+
+				let x_coords = [];
+				for (let column = 1; column < columns + 1; column++) {
+					//grid_wireframe_line_size
+					const grid_wireframe = document.createElement("DIV");
+
+					grid_wireframe.style.gridArea = `${1}/${column}/${rows + 1}/${
+						column + 1
+					}`;
+
+					block_content.appendChild(grid_wireframe);
+
+					const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
+
+					if (column === 1) {
+						x_coords.push(grid_wireframe_rect.left - grid_rect.left);
+					} else {
+						grid_wireframe.classList.add("grid_wireframe_line_left");
+						grid_wireframe.classList.add("grid_wireframe_line");
+					}
+					x_coords.push(
+						grid_wireframe_rect.left +
+							grid_wireframe_rect.width -
+							grid_rect.left
+					);
+				}
+
+				let y_coords = [];
+				for (let row = 1; row < rows + 1; row++) {
+					//grid_wireframe_line_size
+					const grid_wireframe = document.createElement("DIV");
+
+					grid_wireframe.style.gridArea = `${row}/${1}/${row + 1}/${
+						columns + 1
+					}`;
+
+					block_content.appendChild(grid_wireframe);
+
+					const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
+
+					if (row === 1) {
+						y_coords.push(grid_wireframe_rect.top - grid_rect.top);
+					} else {
+						grid_wireframe.classList.add("grid_wireframe_line_top");
+						grid_wireframe.classList.add("grid_wireframe_line");
+					}
+					y_coords.push(
+						grid_wireframe_rect.top + grid_wireframe_rect.height - grid_rect.top
+					);
+				}
+
+				grid.grid_data = {
+					x_coords,
+					y_coords,
+				};
+			});
+	}
+
+	insertMissingQlClasses() {
+		// TODO: should we use it on the whole container instead? probably no XD
+		this.content_node
+			.findAll(`.newCms_block[data-block="quill_editor"]`)
 			.forEach((newCms_block) => {
 				const newCms_block_content = newCms_block.find(".newCms_block_content");
 				newCms_block_content.classList.add("ql-editor");
@@ -379,12 +487,7 @@ class NewCms {
 			content_html = /*html*/ `<div class="newCms_block_content container"></div>`;
 		} else if (type === "grid") {
 			class_list.push("container");
-			content_html = /*html*/ `<div class="newCms_block_content">
-                <div class="a">A<br>A<br>A<br>A</div>
-                <div class="b">B</div>
-                <div class="c">C</div>
-                <div class="d">D</div>
-            </div>`;
+			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
 		}
 
 		return /*html*/ `
