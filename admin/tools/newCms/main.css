@@ -140,18 +140,23 @@
 	box-shadow: 0 1px 1px 0 #0005;
 }
 
+.rearrange_control.grid_control {
+	border-radius: 50%;
+}
+
 .rearrange_control.rearrange_active {
 	opacity: 1;
 	background: var(--primary-clr);
 }
 
-.rearrange_control img {
+.rearrange_control > * {
 	transition: 0.2s all;
 }
 
-.rearrange_control.rearrange_active img {
+.rearrange_control.rearrange_active > * {
 	filter: invert();
 }
+
 .rearrange_insert_rect {
 	position: absolute;
 	pointer-events: none !important;

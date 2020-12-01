@@ -110,29 +110,22 @@ export default class FloatingRearrangeControls {
 							: "after";
 				}
 
-				if (rearrange_position == "inside") {
-					rearrange_position = "inside";
-					rearrange_control_node =
-						rearrange_near_block.rearrange_control_inside;
-				} else {
-					if (rearrange_position == "before") {
-						if (rearrange_near_block.rearrange_control_before) {
-							rearrange_control_node =
-								rearrange_near_block.rearrange_control_before;
-						} else {
-							const prev_block = rearrange_near_block.prev();
-
-							if (prev_block && prev_block.rearrange_control_after) {
-								rearrange_control_node = prev_block.rearrange_control_after;
-							}
-						}
-					} else if (
-						rearrange_position == "after" &&
-						rearrange_near_block.rearrange_control_after
-					) {
+				if (rearrange_position == "before") {
+					if (rearrange_near_block.rearrange_control_before) {
 						rearrange_control_node =
-							rearrange_near_block.rearrange_control_after;
+							rearrange_near_block.rearrange_control_before;
+					} else {
+						const prev_block = rearrange_near_block.prev();
+
+						if (prev_block && prev_block.rearrange_control_after) {
+							rearrange_control_node = prev_block.rearrange_control_after;
+						}
 					}
+				} else if (
+					rearrange_position == "after" &&
+					rearrange_near_block.rearrange_control_after
+				) {
+					rearrange_control_node = rearrange_near_block.rearrange_control_after;
 				}
 			}
 		}
@@ -237,10 +230,10 @@ export default class FloatingRearrangeControls {
 
 		this.node.empty();
 
-		this.addContainerControls(block);
+		this.addBlockControls(block);
 	}
 
-	addContainerControls(block) {
+	addBlockControls(block) {
 		// just a rect u grab from
 		if (block) {
 			const block_rect_data = nodePositionAgainstScrollableParent(block);
@@ -282,11 +275,6 @@ export default class FloatingRearrangeControls {
 				}
 
 				const block_type = block.getAttribute("data-block");
-
-				if (block_type == "grid") {
-					// grids are grids and grids break
-					return;
-				}
 
 				if (
 					this.newCms.grabbed_block &&
@@ -424,8 +412,6 @@ export default class FloatingRearrangeControls {
 				const x_coords = block.grid_data.x_coords;
 				const y_coords = block.grid_data.y_coords;
 
-				const position = "inside"; // TODO: grid or something
-
 				for (let xi = 0; xi < x_coords.length; xi++) {
 					for (let yi = 0; yi < y_coords.length; yi++) {
 						let left = x_coords[xi];
@@ -466,7 +452,7 @@ export default class FloatingRearrangeControls {
 							block: block,
 							rect_data: block_rect_data_copy,
 							is_parent_row: is_parent_row,
-							position: position,
+							position: "grid",
 						});
 					}
 				}
@@ -571,7 +557,11 @@ export default class FloatingRearrangeControls {
 
 			let rotation = 0;
 
-			if (block_data.position == "inside") {
+			if (block_data.position == "grid") {
+				rearrange_control.classList.add("grid_control");
+				rearrange_control_html = `<div style='width:6px;height:6px;border-radius:50%;background:black'></div>`;
+				rearrange_control.classList.add("insert_inside");
+			} else if (block_data.position == "inside") {
 				rearrange_control_html = `<img style='width:0.7em' src="/src/img/insert_plus.svg">`;
 				rearrange_control.classList.add("insert_inside");
 			} else {
@@ -599,7 +589,9 @@ export default class FloatingRearrangeControls {
 
 			$(rearrange_control).find("*").style.transform = `rotate(${rotation}deg)`;
 
-			block[`rearrange_control_${block_data.position}`] = rearrange_control;
+			if (block_data.position == "before" || block_data.position == "after") {
+				block[`rearrange_control_${block_data.position}`] = rearrange_control;
+			}
 			rearrange_control.rearrange_near_block = block;
 			rearrange_control.position = block_data.position;
 
