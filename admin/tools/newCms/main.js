@@ -580,6 +580,26 @@ class NewCms {
 			return;
 		}
 
+		// if it's in a grid u wanna go for 2 steps
+		let rearrange_grid_first_node_ref = null;
+		let rearrange_grid_second_node_ref = null;
+		if (
+			this.rearrange_controls.rearrange_near_block &&
+			this.rearrange_controls.rearrange_position == "grid"
+		) {
+			if (!this.rearrange_grid_first_node) {
+				this.rearrange_grid_first_node = this.rearrange_controls.rearrange_control_node;
+				// TODO: highlight available positions or hide others ;)
+				// EVEN BETTER stretch the grabbed container and hook it in the first place, cooooooooool
+				return;
+			} else {
+				rearrange_grid_first_node_ref = this.rearrange_grid_first_node;
+				rearrange_grid_second_node_ref = this.rearrange_controls
+					.rearrange_control_node;
+				this.rearrange_grid_first_node = null;
+			}
+		}
+
 		const block_type = grabbed_block.getAttribute("data-block");
 
 		let delay_grabbed_rect_node_fadeout = 0;
@@ -655,6 +675,16 @@ class NewCms {
 				this.rearrange_controls.rearrange_near_block
 					.find(".newCms_block_content")
 					.appendChild(grabbed_block);
+			}
+			if (this.rearrange_controls.rearrange_position == "grid") {
+				this.rearrange_controls.rearrange_near_block
+					.find(".newCms_block_content")
+					.appendChild(grabbed_block);
+
+				const fst = rearrange_grid_first_node_ref.grid_position;
+				const scd = rearrange_grid_second_node_ref.grid_position;
+
+				grabbed_block.style.gridArea = `${fst.row}/${fst.column}/${scd.row}/${scd.column}`;
 			} else {
 				let before_node = this.rearrange_controls.rearrange_near_block;
 				if (this.rearrange_controls.rearrange_position == "after") {

@@ -538,6 +538,7 @@
 
 .grid_wireframe_line {
 	position: relative;
+	pointer-events: none;
 }
 .grid_wireframe_line:before,
 .grid_wireframe_line:after {

@@ -460,6 +460,8 @@ export default class FloatingRearrangeControls {
 							rect_data: block_rect_data_copy,
 							is_parent_row: is_parent_row,
 							position: "grid",
+							xi: xi,
+							yi: yi,
 						});
 					}
 				}
@@ -507,30 +509,21 @@ export default class FloatingRearrangeControls {
 			let moving = true;
 			while (moving) {
 				moving = false;
-				//for (let u = i - 1; u >= 0; u--) {
 				for (let u = 0; u < i; u++) {
 					const prev_block_data = sorted_blocks_data[u];
 
-					/*const prev_y2 =
-						prev_block_data.rect_data.relative_pos.top +
-						rearrange_control_height;
-
-					if (top >= prev_y2) {
-						// optimization
-						upper_bound = u + 1;
-						break;
-                    }*/
-
 					if (
 						prev_block_data.rect_data.relative_pos.top <
-							top + rearrange_control_height &&
+							top + rearrange_control_height - 1 &&
 						prev_block_data.rect_data.relative_pos.top +
-							rearrange_control_height >
+							rearrange_control_height -
+							1 >
 							top &&
 						prev_block_data.rect_data.relative_pos.left <
-							left + rearrange_control_width &&
+							left + rearrange_control_width - 1 &&
 						prev_block_data.rect_data.relative_pos.left +
-							rearrange_control_width >
+							rearrange_control_width -
+							1 >
 							left
 					) {
 						if (block_data.position === "after") {
@@ -539,8 +532,7 @@ export default class FloatingRearrangeControls {
 								prev_block_data.rect_data.relative_pos.left -
 								rearrange_control_width;
 						} else if (
-							block_data.position === "before" ||
-							block_data.position === "inside"
+							["before", "inside", "grid"].includes(block_data.position)
 						) {
 							// go right
 							left =
@@ -568,6 +560,10 @@ export default class FloatingRearrangeControls {
 				rearrange_control.classList.add("grid_control");
 				rearrange_control_html = `<div style='width:6px;height:6px;border-radius:50%;background:black'></div>`;
 				rearrange_control.classList.add("insert_inside");
+				rearrange_control.grid_position = {
+					column: block_data.xi + 1,
+					row: block_data.yi + 1,
+				};
 			} else if (block_data.position == "inside") {
 				rearrange_control_html = `<img style='width:0.7em' src="/src/img/insert_plus.svg">`;
 				rearrange_control.classList.add("insert_inside");
