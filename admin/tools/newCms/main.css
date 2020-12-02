@@ -100,9 +100,12 @@
 .newCms:not(.anything_selected):not(.grabbed_block)
 	.content_scroll_panel:not(:hover)
 	.select_controls,
-.newCms:not(.anything_selected):not(.grabbed_block)
+.newCms:not(.grabbed_block)
 	.content_scroll_panel:not(:hover)
 	.grid_wireframe_line:before,
+.newCms:not(.grabbed_block)
+	.content_scroll_panel:not(:hover)
+	.grid_wireframe_line:after,
 .select_controls:not(.visible) {
 	opacity: 0;
 	pointer-events: none;
@@ -513,6 +516,10 @@
 	display: none !important;
 }
 
+.newCmsContent_copy .grid_wireframe_line:before {
+	opacity: 0 !important;
+}
+
 /* grid start */
 
 .newCms_block[data-block="grid"] > .newCms_block_content {
@@ -529,29 +536,11 @@
 	min-height: 60px;
 }
 
-/*:root {
-	--grid_wireframe_line_size: 2px;
-}*/
-
-.grid_wireframe_line {
-	/*background: #bbb;
-	width: var(--grid_wireframe_line_size);
-	height: var(--grid_wireframe_line_size);
-	position: absolute;*/
-}
-
-/*gr.grid_rearrange_control {
-	background: #bbb;
-	width: var(--grid_wireframe_line_size);
-	height: var(--grid_wireframe_line_size);
-	position: absolute;
-}*/
-
 .grid_wireframe_line {
 	position: relative;
 }
 .grid_wireframe_line:before,
-.grid_wireframe_line:before {
+.grid_wireframe_line:after {
 	content: "";
 	position: absolute;
 	background: #0002;
@@ -566,6 +555,18 @@
 .grid_wireframe_line_top:before {
 	left: 0;
 	top: -1px;
+	width: 100%;
+	height: 2px;
+}
+.grid_wireframe_line_right:after {
+	right: -1px;
+	top: 0;
+	width: 2px;
+	height: 100%;
+}
+.grid_wireframe_line_bottom:after {
+	left: 0;
+	bottom: -1px;
 	width: 100%;
 	height: 2px;
 }

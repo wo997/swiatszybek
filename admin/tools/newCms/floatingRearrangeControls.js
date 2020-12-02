@@ -92,6 +92,13 @@ export default class FloatingRearrangeControls {
 
 			if (rearrange_control_node) {
 				rearrange_position = rearrange_control_node.position;
+			} else if (rearrange_near_block.classList.contains("container")) {
+				if (rearrange_near_block.getAttribute("data-block") === "container") {
+					rearrange_position = "inside";
+					rearrange_control_node =
+						rearrange_near_block.rearrange_control_inside;
+					parent_container = rearrange_near_block;
+				}
 			} else {
 				rearrange_near_block_rect = rearrange_near_block.getBoundingClientRect();
 				if (is_parent_row) {
@@ -179,7 +186,7 @@ export default class FloatingRearrangeControls {
 						width -= 20;
 						x += 10;
 					}
-				} else {
+				} else if (["before", "after"].includes(rearrange_position)) {
 					if (is_parent_row) {
 						height = rearrange_near_block_rect_data.node_rect.height;
 					} else {
@@ -589,9 +596,7 @@ export default class FloatingRearrangeControls {
 
 			$(rearrange_control).find("*").style.transform = `rotate(${rotation}deg)`;
 
-			if (block_data.position == "before" || block_data.position == "after") {
-				block[`rearrange_control_${block_data.position}`] = rearrange_control;
-			}
+			block[`rearrange_control_${block_data.position}`] = rearrange_control;
 			rearrange_control.rearrange_near_block = block;
 			rearrange_control.position = block_data.position;
 

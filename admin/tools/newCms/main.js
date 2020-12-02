@@ -371,7 +371,7 @@ class NewCms {
 	manageGrids() {
 		this.cleanupGrids();
 
-		const any_grid = this.content_node.find(`[data-block="grid"]`);
+		const any_grid = this.content_node.find(`.newCms_block[data-block="grid"]`);
 		if (!any_grid) {
 			return;
 		}
@@ -382,12 +382,6 @@ class NewCms {
 
 		const off_x = scrollable_parent_rect.left + scrollable_parent.scrollLeft;
 		const off_y = scrollable_parent_rect.top + scrollable_parent.scrollTop;
-
-		const grid_wireframe_line_size = parseInt(
-			getComputedStyle(document.documentElement).getPropertyValue(
-				"--grid_wireframe_line_size"
-			)
-		);
 
 		this.content_node
 			.findAll(`.newCms_block[data-block="grid"]`)
@@ -402,7 +396,6 @@ class NewCms {
 
 				let x_coords = [];
 				for (let column = 1; column < columns + 1; column++) {
-					//grid_wireframe_line_size
 					const grid_wireframe = document.createElement("DIV");
 
 					grid_wireframe.style.gridArea = `${1}/${column}/${rows + 1}/${
@@ -414,11 +407,11 @@ class NewCms {
 					const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
 
 					if (column === 1) {
-						x_coords.push(grid_wireframe_rect.left - grid_rect.left);
-					} else {
 						grid_wireframe.classList.add("grid_wireframe_line_left");
-						grid_wireframe.classList.add("grid_wireframe_line");
+						x_coords.push(grid_wireframe_rect.left - grid_rect.left);
 					}
+					grid_wireframe.classList.add("grid_wireframe_line");
+					grid_wireframe.classList.add("grid_wireframe_line_right");
 					x_coords.push(
 						grid_wireframe_rect.left +
 							grid_wireframe_rect.width -
@@ -428,7 +421,6 @@ class NewCms {
 
 				let y_coords = [];
 				for (let row = 1; row < rows + 1; row++) {
-					//grid_wireframe_line_size
 					const grid_wireframe = document.createElement("DIV");
 
 					grid_wireframe.style.gridArea = `${row}/${1}/${row + 1}/${
@@ -440,11 +432,11 @@ class NewCms {
 					const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
 
 					if (row === 1) {
-						y_coords.push(grid_wireframe_rect.top - grid_rect.top);
-					} else {
 						grid_wireframe.classList.add("grid_wireframe_line_top");
-						grid_wireframe.classList.add("grid_wireframe_line");
+						y_coords.push(grid_wireframe_rect.top - grid_rect.top);
 					}
+					grid_wireframe.classList.add("grid_wireframe_line");
+					grid_wireframe.classList.add("grid_wireframe_line_bottom");
 					y_coords.push(
 						grid_wireframe_rect.top + grid_wireframe_rect.height - grid_rect.top
 					);
