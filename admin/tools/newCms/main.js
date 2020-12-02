@@ -560,12 +560,14 @@ class NewCms {
 		// show the grabbed clone
 		const rearrange_node = this.rearrange_node;
 		rearrange_node.setContent(this.grabbed_block.outerHTML);
-		const block_inside = rearrange_node.find("*");
+		this.rearrange_node_block_inside = rearrange_node.find("*");
 		const grabbed_block_rect = this.grabbed_block.getBoundingClientRect();
 		rearrange_node.style.left = grabbed_block_rect.left + "px";
 		rearrange_node.style.top = grabbed_block_rect.top + "px";
-		block_inside.style.width = grabbed_block_rect.width + "px";
-		block_inside.style.height = grabbed_block_rect.height + "px";
+		this.rearrange_node_block_inside.style.width =
+			grabbed_block_rect.width + "px";
+		this.rearrange_node_block_inside.style.height =
+			grabbed_block_rect.height + "px";
 		rearrange_node.classList.add("visible");
 
 		this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
@@ -589,15 +591,33 @@ class NewCms {
 		) {
 			if (!this.rearrange_grid_first_node) {
 				this.rearrange_grid_first_node = this.rearrange_controls.rearrange_control_node;
-				// TODO: highlight available positions or hide others ;)
-				// EVEN BETTER stretch the grabbed container and hook it in the first place, cooooooooool
+				this.grab_animation_speed = 0;
 				return;
 			} else {
+				if (
+					this.rearrange_grid_first_node ===
+					this.rearrange_controls.rearrange_control_node
+				) {
+					this.rearrange_grid_first_node = null;
+					this.grab_animation_speed = 0;
+					return;
+				}
 				rearrange_grid_first_node_ref = this.rearrange_grid_first_node;
 				rearrange_grid_second_node_ref = this.rearrange_controls
 					.rearrange_control_node;
 				this.rearrange_grid_first_node = null;
+
+				grabbed_block.last_rect.width = grabbed_block.animation_data.w;
+				grabbed_block.last_rect.height = grabbed_block.animation_data.h;
+				/*grabbed_block.style.width = grabbed_block.animation_data.w + "px";
+				grabbed_block.style.height = grabbed_block.animation_data.h + "px";*/
 			}
+		}
+
+		if (this.rearrange_grid_first_node) {
+			this.rearrange_grid_first_node = null;
+			this.grab_animation_speed = 0;
+			return;
 		}
 
 		const block_type = grabbed_block.getAttribute("data-block");
@@ -734,16 +754,16 @@ class NewCms {
 			const dx = block.last_rect.left - block.new_rect.left;
 			const dy = block.last_rect.top - block.new_rect.top;
 
-			block.animation_data.x += dx;
-			block.animation_data.y += dy;
+			block.animation_data.dx += dx;
+			block.animation_data.dy += dy;
 
 			block
 				.find(".newCms_block_content")
 				.directChildren()
 				.forEach((sub_block) => {
 					if (sub_block.animation_data) {
-						sub_block.animation_data.x -= dx;
-						sub_block.animation_data.y -= dy;
+						sub_block.animation_data.dx -= dx;
+						sub_block.animation_data.dy -= dy;
 					}
 				});
 		});
@@ -804,8 +824,8 @@ class NewCms {
 			const mb0 = mb + half_dh;
 			const ml0 = ml + half_dw;
 
-			const dx = block.animation_data.x - half_dw;
-			const dy = block.animation_data.y - half_dh;
+			const dx = block.animation_data.dx - half_dw;
+			const dy = block.animation_data.dy - half_dh;
 
 			const parent_rect = block.parent().new_rect;
 
@@ -917,34 +937,89 @@ class NewCms {
 		{
 			const grabbed_block = this.grabbed_block;
 
-			// pull closer to the cursor
-			this.grab_animation_speed = this.grab_animation_speed * 0.9 + 0.035;
+			if (this.grab_animation_speed < 1) {
+				this.grab_animation_speed += 0.03;
+			} else {
+				this.grab_animation_speed = 1;
+			}
 			const acc = this.grab_animation_speed;
 
+			let target_dx = 0;
+			let target_dy = 0;
+
 			const gb_rect = grabbed_block.last_rect;
-			this.grabbed_mouse_x =
-				this.grabbed_mouse_x * (1 - acc) +
-				(gb_rect.left + gb_rect.width * 0.5) * acc;
+			const base_w = gb_rect.width;
+			const base_h = gb_rect.height;
+			let target_w = base_w;
+			let target_h = base_h;
 
-			this.grabbed_mouse_y =
-				this.grabbed_mouse_y * (1 - acc) +
-				(gb_rect.top + gb_rect.height * 0.5) * acc;
+			if (!grabbed_block.animation_data) {
+				grabbed_block.animation_data = { dx: 0, dy: 0, w: base_w, h: base_h };
+			}
 
-			// display actual position using transform
-			const base_dx = this.mouse_x - this.grabbed_mouse_x;
-			const base_dy = this.mouse_y - this.grabbed_mouse_y;
+			const grabbed_block_rect = grabbed_block.getBoundingClientRect(); // cant reuse cause we change dimensions
 
-			const dx = base_dx;
-			const dy = base_dy; /* +
-				this.grabbed_node_scroll_parent.scrollTop -
-				this.grabbed_scroll_top;*/
+			if (this.rearrange_grid_first_node) {
+				// hanging laundry
+				const rearrange_grid_first_node_rect = this.rearrange_grid_first_node.getBoundingClientRect();
+				const rearrange_grid_first_node_scroll_parent = this.rearrange_grid_first_node.findScrollParent();
+				const rearrange_grid_first_node_scroll_parent_rect = rearrange_grid_first_node_scroll_parent.getBoundingClientRect();
 
-			grabbed_block.animation_data = { x: dx, y: dy };
+				//rearrange_grid_first_node_scroll_parent_rect
+
+				target_dx =
+					rearrange_grid_first_node_rect.left +
+					rearrange_grid_first_node_rect.width * 0.5 -
+					grabbed_block_rect.left;
+				target_dy =
+					rearrange_grid_first_node_rect.top +
+					rearrange_grid_first_node_rect.height * 0.5 -
+					grabbed_block_rect.top;
+
+				target_w =
+					this.mouse_x -
+					rearrange_grid_first_node_rect.left -
+					rearrange_grid_first_node_rect.width * 0.5;
+				target_h =
+					this.mouse_y -
+					rearrange_grid_first_node_rect.top -
+					rearrange_grid_first_node_rect.height * 0.5;
+
+				if (!this.grabbed_block.classList.contains("side_block")) {
+					const sx = rearrange_grid_first_node_scroll_parent.scrollLeft;
+					const sy =
+						rearrange_grid_first_node_scroll_parent.scrollTop -
+						this.grabbed_scroll_top;
+					target_dx -= sx;
+					target_dy -= sy;
+				}
+			} else {
+				// pull center to the cursor
+				target_dx =
+					this.mouse_x - (gb_rect.left + grabbed_block_rect.width * 0.5);
+				target_dy =
+					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
+			}
+
+			grabbed_block.animation_data.dx =
+				grabbed_block.animation_data.dx * (1 - acc) + target_dx * acc;
+			grabbed_block.animation_data.dy =
+				grabbed_block.animation_data.dy * (1 - acc) + target_dy * acc;
+
+			grabbed_block.animation_data.w =
+				grabbed_block.animation_data.w * (1 - acc) + target_w * acc;
+			grabbed_block.animation_data.h =
+				grabbed_block.animation_data.h * (1 - acc) + target_h * acc;
+
+			this.rearrange_node_block_inside.style.width =
+				grabbed_block.animation_data.w + "px";
+			this.rearrange_node_block_inside.style.height =
+				grabbed_block.animation_data.h + "px";
 
 			this.rearrange_node.style.transform = `
                 translate(
-                    ${base_dx.toPrecision(5)}px,
-                    ${base_dy.toPrecision(5)}px
+                    ${grabbed_block.animation_data.dx.toPrecision(5)}px,
+                    ${grabbed_block.animation_data.dy.toPrecision(5)}px
                 )
             `;
 		}
