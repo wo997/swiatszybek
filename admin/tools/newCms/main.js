@@ -609,8 +609,6 @@ class NewCms {
 
 				grabbed_block.last_rect.width = grabbed_block.animation_data.w;
 				grabbed_block.last_rect.height = grabbed_block.animation_data.h;
-				/*grabbed_block.style.width = grabbed_block.animation_data.w + "px";
-				grabbed_block.style.height = grabbed_block.animation_data.h + "px";*/
 			}
 		}
 
@@ -704,7 +702,12 @@ class NewCms {
 				const fst = rearrange_grid_first_node_ref.grid_position;
 				const scd = rearrange_grid_second_node_ref.grid_position;
 
-				grabbed_block.style.gridArea = `${fst.row}/${fst.column}/${scd.row}/${scd.column}`;
+				const r1 = Math.min(fst.row, scd.row);
+				const r2 = Math.max(fst.row, scd.row);
+				const c1 = Math.min(fst.column, scd.column);
+				const c2 = Math.max(fst.column, scd.column);
+
+				grabbed_block.style.gridArea = `${r1}/${c1}/${r2}/${c2}`;
 			} else {
 				let before_node = this.rearrange_controls.rearrange_near_block;
 				if (this.rearrange_controls.rearrange_position == "after") {
@@ -965,8 +968,6 @@ class NewCms {
 				const rearrange_grid_first_node_scroll_parent = this.rearrange_grid_first_node.findScrollParent();
 				const rearrange_grid_first_node_scroll_parent_rect = rearrange_grid_first_node_scroll_parent.getBoundingClientRect();
 
-				//rearrange_grid_first_node_scroll_parent_rect
-
 				target_dx =
 					rearrange_grid_first_node_rect.left +
 					rearrange_grid_first_node_rect.width * 0.5 -
@@ -984,6 +985,24 @@ class NewCms {
 					this.mouse_y -
 					rearrange_grid_first_node_rect.top -
 					rearrange_grid_first_node_rect.height * 0.5;
+
+				const min_w = 150;
+				if (target_w < -min_w) {
+					target_dx += target_w;
+					target_w = -target_w;
+				} else if (target_w < min_w) {
+					target_dx += (target_w - min_w) * 0.5;
+					target_w = min_w;
+				}
+
+				const min_h = 150;
+				if (target_h < -min_h) {
+					target_dy += target_h;
+					target_h = -target_h;
+				} else if (target_h < min_h) {
+					target_dy += (target_h - min_h) * 0.5;
+					target_h = min_h;
+				}
 
 				if (!this.grabbed_block.classList.contains("side_block")) {
 					const sx = rearrange_grid_first_node_scroll_parent.scrollLeft;
