@@ -99,7 +99,7 @@ export default class FloatingRearrangeControls {
 						rearrange_near_block.rearrange_control_inside;
 					parent_container = rearrange_near_block;
 				}
-			} else {
+			} else if (!this.newCms.rearrange_grid_first_node) {
 				rearrange_near_block_rect = rearrange_near_block.getBoundingClientRect();
 				if (is_parent_row) {
 					rearrange_position =

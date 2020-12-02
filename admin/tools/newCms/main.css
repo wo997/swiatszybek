@@ -456,8 +456,11 @@
 	flex-flow: wrap;
 }
 
+:root {
+	--side_block_side_padding: 7px;
+}
 .side_block {
-	padding: 7px;
+	padding: 7px var(--side_block_side_padding);
 	border: 1px solid #aaa;
 	background: #fafafa;
 	border-radius: 4px;

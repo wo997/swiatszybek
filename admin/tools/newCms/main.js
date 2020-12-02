@@ -729,8 +729,7 @@ class NewCms {
 				this.rearrange_controls.rearrange_near_block
 					.find(".newCms_block_content")
 					.appendChild(grabbed_block);
-			}
-			if (this.rearrange_controls.rearrange_position == "grid") {
+			} else if (this.rearrange_controls.rearrange_position == "grid") {
 				this.rearrange_controls.rearrange_near_block
 					.find(".newCms_block_content")
 					.appendChild(grabbed_block);
@@ -998,6 +997,8 @@ class NewCms {
 
 			const grabbed_block_rect = grabbed_block.getBoundingClientRect(); // cant reuse cause we change dimensions
 
+			const is_side_block = this.grabbed_block.classList.contains("side_block");
+
 			if (this.rearrange_grid_first_node) {
 				// hanging laundry
 				const rearrange_grid_first_node_actual_position = this
@@ -1034,7 +1035,7 @@ class NewCms {
 					target_h = min_h;
 				}
 
-				if (!this.grabbed_block.classList.contains("side_block")) {
+				if (!is_side_block) {
 					const sx = rearrange_grid_first_node_scroll_parent.scrollLeft;
 					const sy =
 						rearrange_grid_first_node_scroll_parent.scrollTop -
@@ -1060,10 +1061,22 @@ class NewCms {
 			grabbed_block.animation_data.h =
 				grabbed_block.animation_data.h * (1 - acc) + target_h * acc;
 
-			this.rearrange_node_block_inside.style.width =
-				grabbed_block.animation_data.w + "px";
-			this.rearrange_node_block_inside.style.height =
-				grabbed_block.animation_data.h + "px";
+			let set_w = grabbed_block.animation_data.w;
+			let set_h = grabbed_block.animation_data.h;
+
+			const side_block_side_padding = parseInt(
+				getComputedStyle(document.documentElement).getPropertyValue(
+					"--side_block_side_padding"
+				)
+			);
+
+			if (is_side_block) {
+				this.rearrange_node_block_inside.style.padding =
+					"0 " + ((set_w - base_w) * 0.5 + side_block_side_padding) + "px";
+			}
+
+			this.rearrange_node_block_inside.style.width = set_w + "px";
+			this.rearrange_node_block_inside.style.height = set_h + "px";
 
 			this.rearrange_node.style.transform = `
                 translate(
