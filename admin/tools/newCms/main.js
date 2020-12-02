@@ -573,7 +573,25 @@ class NewCms {
 		this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
 
 		this.grab_animation_speed = 0;
+		delete this.grabbed_block.animation_data;
 		this.grabAnimation();
+	}
+
+	unselectFirstGridNode() {
+		this.rearrange_grid_first_node = null;
+		this.grab_animation_speed = 0;
+
+		newCms.content_scroll_content
+			.findAll(".rearrange_control.unavailable")
+			.forEach((control) => {
+				control.classList.remove("unavailable");
+			});
+
+		newCms.content_scroll_content
+			.findAll(".rearrange_control.first_grid_node")
+			.forEach((control) => {
+				control.classList.remove("first_grid_node");
+			});
 	}
 
 	releaseBlock() {
@@ -592,20 +610,36 @@ class NewCms {
 			if (!this.rearrange_grid_first_node) {
 				this.rearrange_grid_first_node = this.rearrange_controls.rearrange_control_node;
 				this.grab_animation_speed = 0;
+
+				const fst = newCms.rearrange_grid_first_node;
+				fst.classList.add("first_grid_node");
+
+				newCms.content_scroll_content
+					.findAll(".rearrange_control:not(.first_grid_node)")
+					.forEach((control) => {
+						control.classList.toggle(
+							"unavailable",
+							control.position !== "grid" ||
+								control.rearrange_near_block !== fst.rearrange_near_block ||
+								control.grid_position.column === fst.grid_position.column ||
+								control.grid_position.row === fst.grid_position.row
+						);
+					});
+
 				return;
 			} else {
 				if (
 					this.rearrange_grid_first_node ===
 					this.rearrange_controls.rearrange_control_node
 				) {
-					this.rearrange_grid_first_node = null;
-					this.grab_animation_speed = 0;
+					this.unselectFirstGridNode();
 					return;
 				}
 				rearrange_grid_first_node_ref = this.rearrange_grid_first_node;
 				rearrange_grid_second_node_ref = this.rearrange_controls
 					.rearrange_control_node;
-				this.rearrange_grid_first_node = null;
+
+				this.unselectFirstGridNode();
 
 				grabbed_block.last_rect.width = grabbed_block.animation_data.w;
 				grabbed_block.last_rect.height = grabbed_block.animation_data.h;
@@ -613,8 +647,7 @@ class NewCms {
 		}
 
 		if (this.rearrange_grid_first_node) {
-			this.rearrange_grid_first_node = null;
-			this.grab_animation_speed = 0;
+			this.unselectFirstGridNode();
 			return;
 		}
 
@@ -653,6 +686,9 @@ class NewCms {
 				grabbed_block.animation_data = animation_data;
 				grabbed_block.classList.add("select_active");
 				grabbed_block.last_rect = side_block_rect;
+
+				grabbed_block.last_rect.width = grabbed_block.animation_data.w;
+				grabbed_block.last_rect.height = grabbed_block.animation_data.h;
 			}
 
 			// copy fade out
@@ -964,27 +1000,21 @@ class NewCms {
 
 			if (this.rearrange_grid_first_node) {
 				// hanging laundry
-				const rearrange_grid_first_node_rect = this.rearrange_grid_first_node.getBoundingClientRect();
+				const rearrange_grid_first_node_actual_position = this
+					.rearrange_grid_first_node.actual_position;
 				const rearrange_grid_first_node_scroll_parent = this.rearrange_grid_first_node.findScrollParent();
 				const rearrange_grid_first_node_scroll_parent_rect = rearrange_grid_first_node_scroll_parent.getBoundingClientRect();
 
 				target_dx =
-					rearrange_grid_first_node_rect.left +
-					rearrange_grid_first_node_rect.width * 0.5 -
+					rearrange_grid_first_node_actual_position.left -
 					grabbed_block_rect.left;
 				target_dy =
-					rearrange_grid_first_node_rect.top +
-					rearrange_grid_first_node_rect.height * 0.5 -
+					rearrange_grid_first_node_actual_position.top -
 					grabbed_block_rect.top;
 
 				target_w =
-					this.mouse_x -
-					rearrange_grid_first_node_rect.left -
-					rearrange_grid_first_node_rect.width * 0.5;
-				target_h =
-					this.mouse_y -
-					rearrange_grid_first_node_rect.top -
-					rearrange_grid_first_node_rect.height * 0.5;
+					this.mouse_x - rearrange_grid_first_node_actual_position.left;
+				target_h = this.mouse_y - rearrange_grid_first_node_actual_position.top;
 
 				const min_w = 150;
 				if (target_w < -min_w) {

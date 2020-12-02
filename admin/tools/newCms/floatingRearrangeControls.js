@@ -424,6 +424,11 @@ export default class FloatingRearrangeControls {
 						let left = x_coords[xi];
 						let top = y_coords[yi];
 
+						const actual_position = {
+							left: block_rect_data.node_rect.left + left,
+							top: block_rect_data.node_rect.top + top,
+						};
+
 						if (xi === x_coords.length - 1) {
 							left -= rearrange_control_width;
 						} else if (xi !== 0) {
@@ -462,6 +467,7 @@ export default class FloatingRearrangeControls {
 							position: "grid",
 							xi: xi,
 							yi: yi,
+							actual_position: actual_position,
 						});
 					}
 				}
@@ -564,6 +570,7 @@ export default class FloatingRearrangeControls {
 					column: block_data.xi + 1,
 					row: block_data.yi + 1,
 				};
+				rearrange_control.actual_position = block_data.actual_position;
 			} else if (block_data.position == "inside") {
 				rearrange_control_html = `<img style='width:0.7em' src="/src/img/insert_plus.svg">`;
 				rearrange_control.classList.add("insert_inside");
