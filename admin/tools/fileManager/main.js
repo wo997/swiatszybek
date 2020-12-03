@@ -68,7 +68,7 @@ window.fileManager = {
 					if (Array.isArray(images)) {
 						var out = "";
 						var counter = 0;
-						for (image of images) {
+						for (const image of images) {
 							counter++;
 
 							var replaceImg = $(`[upload_image="${counter}"]`);

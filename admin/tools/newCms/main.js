@@ -4,8 +4,8 @@ import FloatingSelectControls from "./floatingSelectControls.js";
 import QuillEditor from "./quillEditor.js";
 
 // dependencies
-//useTool("fileManager"); // TODO: get it to work, should be a module
-//useTool("quillEditor");
+useTool("fileManager");
+//useTool("quillEditor"); // TODO: get it to work, should be a module, well, fuck it xd
 
 class NewCms {
 	constructor(container) {

@@ -118,11 +118,14 @@ export default class FloatingRearrangeControls {
 								control.actual_position.left -
 								this.newCms.content_scroll_panel.scrollLeft -
 								this.newCms.mouse_x;
+
 							const dy =
 								control.actual_position.top -
 								this.newCms.content_scroll_panel.scrollTop -
-								this.newCms.mouse_y;
+								this.newCms.mouse_y +
+								this.newCms.grabbed_scroll_top;
 							const sq_distance = dx * dx + dy * dy;
+
 							if (sq_distance < smallest_sq_distance) {
 								smallest_sq_distance = sq_distance;
 								smallest_sq_distance_control = control;
