@@ -22,7 +22,9 @@ function filterArrayKeys($array, $keys)
 {
     $res = [];
     foreach ($keys as $key) {
-        $res[$key] = $array[$key];
+        if(isset($array[$key])){
+            $res[$key] = $array[$key];
+        }
     }
     return $res;
 }

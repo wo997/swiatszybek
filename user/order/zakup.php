@@ -4,6 +4,7 @@ $progressBarCounter = 0;
 
 // TODO: FIX DEFAULT VALUES - przy insercie do bazy
 // TODO: Walidacja na regulamin
+// TODO: Walidacja na NIP i ZIP (wyliczanie poprawnego?)
 // TODO: Poprawki animacji
 // TODO: Zmiana pozycji przycisków - menu 2 - pod koszykiem
 // ....
@@ -161,6 +162,12 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     clearAddress();
                 }
             });
+
+            $(`[name="want_invoice"]`).addEventListener("click", (e) => {
+                expand($(`.nip`), e.target.checked);
+                expand($(`.company`), e.target.checked);
+                setBuyerFromInput(e.target.checked);
+            });
         });
 
         function isFormValid() {
@@ -221,32 +228,34 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             var wasMenu = currentMenu;
             currentMenu = i;
 
-            removeClasses("current", ".progress-item");
-            var progressItem = $(`.progress-item[data-id="${currentMenu}"]`);
-            if (progressItem) {
-                progressItem.classList.add("current");
-            }
-
             wait = true;
             var was = $("#menu" + wasMenu);
+            var wasBox = $("#menu" + wasMenu + '-steps');
+            var wasTitle = $("#menu" + wasMenu + '-steps-title');
             var now = $("#menu" + i);
+            var nowBox = $("#menu" + i + '-steps');
+            var nowTitle = $("#menu" + i + '-steps-title');
             
             $$(".menu").forEach(menu => {
                 menu.classList.remove("showNow");
-                menu.classList.remove("step-" + wasMenu);
-                menu.classList.add("step-" + i);
             });
 
-            $("#menu" + i).style.display = "flex";
-            now.style.height = "";
+            $(".stepHolder").classList.remove('step-' + wasMenu);
+            $(".stepHolder").classList.add('step-' + i);
             now.style.display = "flex";
-            if(i < wasMenu) {
-                was.style.opacity = 0;
-            }
+            now.style.height = "";
+            was.classList.remove('menu-scroll');
+            nowBox.classList.add("showNow");
+            wasBox.classList.remove("showNow");
+            nowTitle.classList.add("showNow");
+            wasTitle.classList.remove("showNow");
+            
+            expand($(`.stepContent`), false, {duration: 500});
             setTimeout(function() {
                 now.classList.add("showNow");
-                now.style.opacity = 1;
                 wait = false;
+                nowTitle.style.display = "block";
+                wasTitle.style.display = "none";
 
                 setTimeout(function() {
                     var params = {};
@@ -266,19 +275,27 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 }, 10);
 
                 setTimeout(function(){
-                    if(i < wasMenu) {
-                        was.style.display = "none";
-                    }
-                },500)
+                    was.style.display = "none";
+                    nowBox.style.display = "block";
+                    wasBox.style.display = "none";
+                    if(i == 2)now.classList.add('menu-scroll');
+                    expand($(`.stepContent`), true, {duration: 1000});
+                },500);
             }, 200);
 
-            if (i == 1 || wasMenu == 3) {
-                $(".variant_list_holder_1").appendChild($(".variant_list_full"));
-            } else if (i == 3) {
+            if (i == 1) {
+                setTimeout(function() {
+                    $(".variant_list_holder_1").appendChild($(".variant_list_full"));
+                }, 300);
+            } else if (i == 2) {
                 setTimeout(function() {
                     $(".variant_list_holder_2").appendChild($(".variant_list_full"));
-                }, 300);
-
+                }, 600);
+                setTimeout(function(){
+                    now.classList.add('menu-scroll');
+                },5000)
+            }
+            else if (i == 3) {
                 var daneKontaktoweInfo = "";
                 if (BUYER_TYPE == 'p') {
                     daneKontaktoweInfo = form.imie.value + " " + form.nazwisko.value;
@@ -396,21 +413,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     $("#comp").checked = true;
                 }
             }
-            setBuyer(false);
-        }
-
-        function setBuyer(user = true) {
-            BUYER_TYPE = $("#priv").checked ? "p" : "f";
-            if (user) {
-                setValue($(`[name="buyer_type"]`), BUYER_TYPE);
-            }
-            $("#casePerson").classList.toggle("expanded", BUYER_TYPE == 'f');
-            $$(".caseFirma").forEach((e) => {
-                e.classList.toggle("expanded", BUYER_TYPE == 'f');
-            });
-
-            expand($("#casePerson"), BUYER_TYPE == 'p');
-            expand($(".caseFirma"), BUYER_TYPE == 'f');
         }
 
         function hidePaczkomatPicker() {
@@ -479,6 +481,24 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             if (user) {
                 setValue($("#dostawaInput"), dostawaInput);
             }
+
+            if ($("#dostawaRodzaj").innerHTML == "Paczkomat") {
+                $("#adresInfo").innerHTML = $("#paczkomatAdres").innerHTML;
+
+                DELIVERY_COST = <?= config('paczkomat_cena', 0) ?>;
+            } else if ($("#dostawaRodzaj").innerHTML == "Kurier") {
+                /*form.kraj_dostawa.value = form.kraj.value;
+                form.miejscowosc_dostawa.value = form.miejscowosc.value;
+                form.kod_pocztowy_dostawa.value = form.kod_pocztowy.value;
+                form.ulica_dostawa.value = form.ulica.value;
+                form.nr_domu_dostawa.value = form.nr_domu.value;
+                form.nr_lokalu_dostawa.value = form.nr_lokalu.value;*/
+
+                DELIVERY_COST = <?= config('kurier_cena', 0) ?>;
+            } else {
+                DELIVERY_COST = 0;
+            }
+            $("#koszt_dostawy_label").innerHTML = DELIVERY_COST + " zł";
         }
 
         function aktywujKodRabatowy(action) {
@@ -514,14 +534,14 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 RABAT_TYPE = "static";
             }
 
-            if (rabat == 0) {
-                $("#kod_rabatowy_wrapper").style.display = "none";
-                $("#rabat_hide").style.display = "block";
+            if (RABAT == 0) {
+                expand($(`#kod_rabatowy_wrapper`), false);
+                expand($(`#rabat_hide`), true);
             } else {
                 $("#kod_rabatowy").style.borderColor = "";
-                $("#kod_rabatowy_wrapper").style.display = "block";
                 $("#kod_rabatowy_label").innerHTML = "-" + RABAT + (RABAT_TYPE == "static" ? "zł" : "%");
-                $("#rabat_hide").style.display = "none";
+                expand($(`#kod_rabatowy_wrapper`), true);
+                expand($(`#rabat_hide`), false);
             }
 
             updateTotalCost();
@@ -606,433 +626,433 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         <div id="easypack-map"></div>
     </div>
 
-    <!-- TODO: STEPS -->
-    <div class="progress-bar-wrapper hideifempty">
-        <div class="progress-bar">
-            <div class="progress-item current" data-id="1">
-                <span class="progress-count"><?= ++$progressBarCounter ?></span>
-                <span class="progress-title">
-                    <img src="/src/img/basket.png" style="width:22px;margin-top: -4px;">
-                    <span>Koszyk</span>
-                </span>
-            </div>
+    <div class="main-container mobileRow" id="zakupForm" style="margin: 50px 0;width: 100%;" data-form>
+        
+        <div style="margin: 0 auto;" class="content-holder">
+            <div id="menu1" class="menu showNow step-1" style="max-width: 800px;">
+                <div class="menu-holder">
 
-            <div class="progress-item" data-id="2">
-                <span class="progress-count"><?= ++$progressBarCounter ?></span>
-                <span class="progress-title">
-                    <img src="/img/courier.png" style="width:36px">
-                    <span>
-                        Dane do wysyłki
-                    </span>
-                </span>
-            </div>
+                    <?php if (isset($_GET['produkt'])) : ?>
+                        <h3 style="margin:20px;color:red;text-align:center">Niestety produkt został już wyprzedany!<br><span style="font-weight: normal;">Musisz zmienić zawartość koszyka</span></h3>
+                    <?php endif ?>
 
-            <div class="progress-item" data-id="3">
-                <span class="progress-count"><?= ++$progressBarCounter ?></span>
-                <span class="progress-title">
-                    <i class="far fa-check-square" style="font-size: 24px"></i>
-                    <span> Podsumowanie</span>
-                </span>
-            </div>
-        </div>
-    </div>
+                    <!--<div class="zamowienie adjustable-list"></div>-->
 
-    <!-- TODO: NOWY FLOW -->
-    <div class="main-container" id="zakupForm" style="margin-bottom: 50px;width: 100%;" data-form>
-
-        <div id="menu1" class="menu showNow step-1" style="max-width: 1000px;">
-            <div class="menu-holder">
-
-                <?php if (isset($_GET['produkt'])) : ?>
-                    <h3 style="margin:20px;color:red;text-align:center">Niestety produkt został już wyprzedany!<br><span style="font-weight: normal;">Musisz zmienić zawartość koszyka</span></h3>
-                <?php endif ?>
-
-                <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;font-weight:600;margin: 0;">Twój koszyk</h3>
-
-                <!--<div class="zamowienie adjustable-list"></div>-->
-
-                <div class="variant_list_holder_1">
-                    <div class='variant_list_full'>
-                        <div class='case_basket_empty expand_y'>
-                            <h3 style='text-align:center;margin:2em 0'>Koszyk jest pusty!</h3>
-                        </div>
-                        <div class='header case_basket_not_empty' style='background: var(--primary-clr);color: white;'>
-                            <div class="product_row">
-                                <div class="cl1">Produkt</div>
-                                <div class="cl2"></div>
-                                <div class="cl3">Cena</div>
-                                <div class="cl4">Ilość</div>
-                                <div class="cl5">Suma</div>
-                                <div class="cl6"></div>
+                    <div class="variant_list_holder_1">
+                        <div class='variant_list_full'>
+                            <div class='case_basket_empty expand_y'>
+                                <h3 style='text-align:center;margin:2em 0'>Koszyk jest pusty!</h3>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 30px;">
-                    <div style="margin-top: 13px;text-align: right;padding: 5px;" class="hideifempty mobileTextCenter">
-                        <span style="display:inline-block;font-size: 18px;padding: 0 3px;">Wartość koszyka:</span>
-                        <span style="font-size: 20px;" class="pln total_basket_cost"></span>
-
-                        <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Kurier: <span class="pln"><?= config('kurier_cena', 0) ?> zł</span>, Paczkomat: <span class="pln"><?= config('paczkomat_cena', 0) ?> zł</span>, Odbiór osobisty: <span class="pln">0 zł</span></p>
-
-                        <p style='font-weight:normal;margin:0;font-size: 1.1em'>Czas realizacji: <span class="pln">24h</span></p>
-                    </div>
-
-                    <div id="menu1_cart" class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
-                        <?php if (!$app["user"]["id"]) : ?>
-                            <div>
-                                <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="min-width:250px;margin-top: 25px;">
-                                    Zaloguj się
-                                    <img class="user-icon icon-white" src="/src/img/user_icon.svg" style="width: 1.2em;vertical-align: sub;">
-                                </button>
-                                <br><br>
-                                <div class="hideifempty">
-                                    <strong>Co zyskasz?</strong>
-                                    <div>- Historia zamówień</div>
-                                    <div>- Zapisanie danych<br>kontaktowych oraz adresu</div>
-                                    <div>- Zapisanie schowka oraz<br>statnio przeglądanych produktów</div>
+                            <div class='header case_basket_not_empty'>
+                                <div class="product_row">
+                                    <div class="cl1">Produkt</div>
+                                    <div class="cl2"></div>
+                                    <div class="cl3">Cena</div>
+                                    <div class="cl4">Ilość</div>
+                                    <div class="cl5">Suma</div>
+                                    <div class="cl6"></div>
                                 </div>
                             </div>
-                            <div style='margin:12px;margin-top:34px' class="lub-span">lub</div>
-                        <?php else : ?>
-                            <div style="flex-grow:1"></div>
-                        <?php endif ?>
-                        <div>
-                            <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> medium" onclick="showMenu(2, 'kontakt')" style="margin-top: 25px;min-width:250px">
-                                <?php
-                                if ($app["user"]["id"]) {
-                                    echo "Złóż zamówienie";
-                                } else {
-                                    echo "Kontynuuj bez rejestracji";
-                                }
-                                ?>
-                                <i class="fa fa-chevron-right"></i>
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div id="menu2" class="menu step-1" style="max-width: 900px; display:none;">
+                <div class="menu-holder">
+                    <h3 style="font-size: 26px;padding: 0 10px;margin: 0;" data-view="kontakt">Dane kontaktowe</h3>
 
-        <div id="menu2" class="menu step-1" style="max-width: 1200px; display:none; opacity: 0;">
-            <div class="menu-holder">
-            <div class="mobileRow">
-                <div style="width:100%;padding: 20px 10px;">
-                    <div style="max-width: 550px;margin: 0 auto;">
-                        <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="kontakt">Dane kontaktowe</h3>
+                    <label class="checkbox-wrapper" style="padding: 10px 10px 0px;">
+                        <input type="checkbox" name="want_invoice">
+                        <div class="checkbox"></div>
+                        Chcę otrzymać fakturę
+                    </label>
 
-                        <div style="display:flex;justify-content:space-evenly;padding:10px">
-                            <input name="buyer_type" type="hidden" onchange="setBuyerFromInput(this.value)" data-store="buyer_type">
-                            <label>
-                                <input type="radio" id="priv" name="buyer" value="p" onchange="setBuyer()">
-                                Osoba prywatna
-                            </label>
-                            <label>
-                                <input type="radio" id="comp" name="buyer" value="f" onclick="setBuyer()">
-                                Firma
-                            </label>
-                        </div>
+                    <div class="mobileRow">
+                        <div style="width:100%;padding: 10px 10px 20px;">
+                            <div style="max-width: 550px;margin: 0 auto;" class="expand_y company hidden animate_hidden">
+                                <div class="field-title">Nazwa firmy</div>
+                                <input type="text" class="field" name="firma" autocomplete="organization" data-validate data-store>
+                            </div>
+                            <div style="max-width: 550px;margin: 0 auto;">
+                                <div class="field-title">Imię</div>
+                                <input type="text" class="field" name="imie" autocomplete="first-name" data-validate data-store>
+                            </div>
 
-                        <div id="casePerson" class="expand_y">
-                            <div class="field-title">Imię</div>
-                            <input type="text" class="field" name="imie" autocomplete="first-name" data-validate data-store>
-
-                            <div class="field-title">Nazwisko</div>
-                            <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate data-store>
-                        </div>
-
-                        <div class="expand_y caseFirma hidden animate_hidden">
-                            <div class="field-title">Nazwa firmy</div>
-                            <input type="text" class="field" name="firma" autocomplete="organization" data-validate data-store>
-
-                            <div class="field-title">NIP</div>
-                            <input type="text" class="field" name="nip" data-validate="nip" data-store>
-                        </div>
-
-                        <div class="field-title">Adres e-mail</div>
-                        <input type="text" class="field" name="email" autocomplete="email" data-validate="email" data-store>
-
-                        <div class="field-title">Nr telefonu</div>
-                        <input type="text" class="field" name="telefon" autocomplete="tel" data-validate data-store>
-
-                        <div class="field-title">Kraj</div>
-                        <input type="text" class="field" name="kraj" data-validate data-store>
-
-                        <div class="miejscowosc-picker-wrapper">
-                            <div class="field-title">Kod pocztowy</div>
-                            <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-store>
-
-                            <div class="field-title">Miejscowość</div>
-                            <input class="field miejscowosc-picker-target" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate data-store>
-                            <div class="miejscowosc-picker-list"></div>
-                        </div>
-
-                        <div class="field-title">Ulica</div>
-                        <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate data-store>
-
-                        <div class="desktopRow spaceColumns">
-                            <div>
+                            <div style="max-width: 550px;margin: 0 auto;">
+                                <div class="field-title">Adres e-mail</div>
+                                <input type="text" class="field" name="email" autocomplete="email" data-validate="email" data-store>
+                            </div>
+                            <div style="max-width: 550px;margin: 0 auto;">
+                                <div class="miejscowosc-picker-wrapper">
+                                    <div class="field-title">Miejscowość</div>
+                                    <input class="field miejscowosc-picker-target" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate data-store>
+                                    <div class="miejscowosc-picker-list"></div>
+                                </div>
+                            </div>
+                            <div style="max-width: 550px;margin: 0 auto;">
+                                <div class="field-title">Kraj</div>
+                                <input type="text" class="field" name="kraj" data-validate data-store>
+                            </div>
+                            <div style="max-width: 550px;margin: 0 auto;">
                                 <div class="field-title">Nr domu</div>
                                 <input type="text" class="field" name="nr_domu" autocomplete="address-line2" data-validate data-store>
                             </div>
-                            <div>
+                        </div>
+                        <div style="width:100%;padding: 10px 10px 20px;">
+                            <div style="max-width: 550px;margin: 0 auto;" class="expand_y nip hidden animate_hidden">
+                                <div class="field-title">NIP</div>
+                                <input type="text" class="field" name="nip" data-validate="nip" data-store>
+                            </div>
+                            <div style="max-width: 550px;margin: 0 auto;">
+                                <div class="field-title">Nazwisko</div>
+                                <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate data-store>
+                            </div>
+                            <div style="max-width: 550px;margin: 0 auto;">
+                                <div class="field-title">Nr telefonu</div>
+                                <input type="text" class="field" name="telefon" autocomplete="tel" data-validate data-store>
+                            </div>
+                            <div style="max-width: 550px;margin: 0 auto;">
+                                <div class="field-title">Kod pocztowy</div>
+                                <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-store>
+                            </div>
+                            <div style="max-width: 550px;margin: 0 auto;">
+                                <div class="field-title">Ulica</div>
+                                <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate data-store>
+                            </div>
+                            
+                            <div style="max-width: 550px;margin: 0 auto;">
                                 <div class="field-title">Nr lokalu</div>
                                 <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3" data-store>
                             </div>
                         </div>
                     </div>
+
+                    <h3 style="font-size: 26px;padding: 10px;margin: 0;" data-view="kontakt">Dostawa</h3>
+                    <div style="display: flex;">
+                        <div class="dostawa" id="kurier-option" onclick="selectDostawa(this.id)">
+                            <img src="/img/courier.png" style="width:25px"> <span>Kurier</span> <span class="pln" style="margin-left:10px;font-size: 1.1em;">+<?= config('kurier_cena', 0) ?> zł</span>
+                        </div>
+
+                        <div class="dostawa" id="paczkomat-option" onclick="showPaczkomatPicker()">
+                            <img src="/img/inpost_logo.png" style="width:25px"> <span>Paczkomat</span> <span class="pln" style="margin-left:10px;font-size: 1.1em;">+<?= config('paczkomat_cena', 0) ?> zł</span>
+                        </div>
+
+                        <div class="dostawa" id="osobiscie-option" onclick="selectDostawa(this.id)">
+                            <i class="fa fa-user" style="font-size: 13px;margin: 4px;"></i> <span>Odbiór osobisty</span> <span class="pln" style="margin-left:10px;font-size: 1.1em;">0 zł</span>
+                            <input name="oddzial_id" value="0" type="hidden" data-store>
+                        </div>
+                    </div>
+
+                    <input id="dostawaInput" name="dostawa" type="hidden" onchange="selectDostawaFromInput(this.value)" data-store />
+                    <input name="paczkomat" type="hidden" data-store="paczkomat">
+
+                    <div style="min-height: 120px;padding: 0 10px">
+                        <div id="casePaczkomat" class="expand_y hidden animate_hidden" style="display: flex;flex-direction:column;justify-content:center;min-height: 100px;">
+                            <h3 style="font-size: 20px;" data-view="adres">Dostawa do paczkomatu</h3>
+                            <div style="display:flex;font-size:14px;line-height:1.3;">
+                                <!-- TODO: Zastąpić paczuchę -->
+                                <img src='/src/img/inpost_bot.svg' style="width: 70px; height: 70px; margin-right: 10px;">
+                                <div id="paczkomatAdres">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="caseKurier" class="expand_y hidden animate_hidden">
+                            <h3 style="font-size: 20px;" data-view="adres">Adres dostawy</h3>
+
+                            <!-- <button class="btn primary" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button> -->
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" name="other_address">
+                                <div class="checkbox"></div>
+                                Adres dostawy inny podany
+                            </label>
+
+                            <div id="shipping_details" class="expand_y hidden animate_hidden">
+                                <div class="field-title">Imię</div>
+                                <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-store>
+
+                                <div class="field-title">Nazwisko</div>
+                                <input type="text" class="field" name="nazwisko_kurier" autocomplete="family-name" data-validate data-store>
+
+                                <div class="field-title">Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></div>
+                                <input type="text" class="field" name="firma_kurier" autocomplete="organization" data-store>
+
+                                <div class="field-title">Kraj</div>
+                                <input type="text" class="field" name="kraj_kurier" data-validate data-store>
+
+                                <div class="miejscowosc-picker-wrapper">
+                                    <div class="field-title">Kod pocztowy</div>
+                                    <input type="text" class="field" name="kod_pocztowy_kurier" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-store>
+
+                                    <div class="field-title">Miejscowość</div>
+                                    <input class="field miejscowosc-picker-target" type="text" name="miejscowosc_kurier" autocomplete="address-level2" placeholder=" " data-validate data-store>
+                                    <div class="miejscowosc-picker-list"></div>
+                                </div>
+
+                                <div class="field-title">Ulica</div>
+                                <input type="text" class="field" autocomplete="address-line1" name="ulica_kurier" data-validate data-store>
+
+                                <div class="desktopRow spaceColumns">
+                                    <div>
+                                        <div class="field-title">Nr domu</div>
+                                        <input type="text" class="field" autocomplete="address-line2" name="nr_domu_kurier" data-validate data-store>
+                                    </div>
+                                    <div>
+                                        <div class="field-title">Nr lokalu</div>
+                                        <input type="text" class="field" autocomplete="address-line3" name="nr_lokalu_kurier" data-store>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="caseOsobiscie" class="expand_y hidden animate_hidden" style="min-height: 100px;margin-top:30px">
+                            <h3 style="font-size: 20px;" data-view="adres">Odbierz osobiście</h3>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3261.2636336885503!2d20.905582677315724!3d52.23998412001319!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecb16c2ce5633%3A0x4cf6063af810a380!2sSolectric%20GmbH%20Polska!5e0!3m2!1spl!2spl!4v1581018622179!5m2!1spl!2spl" width="600" height="450" frameborder="0" style="border:0;width: 100%;" allowfullscreen=""></iframe>
+                        </div>
+
+                        <div style="display:none">
+                            <input type="text" name="imie_dostawa" data-store>
+                            <input type="text" name="nazwisko_dostawa" data-store>
+                            <input type="text" name="firma_dostawa" data-store>
+                            <input type="text" name="kraj_dostawa" data-store>
+                            <input type="text" name="kod_pocztowy_dostawa" data-store>
+                            <input type="text" name="miejscowosc_dostawa" data-store>
+                            <input type="text" name="ulica_dostawa" data-store>
+                            <input type="text" name="nr_domu_dostawa" data-store>
+                            <input type="text" name="nr_lokalu_dostawa" data-store>
+                            <input type="text" name="notes" data-store>
+                            <input type="text" name="track" data-store>
+                            <input type="text" name="cache_basket" data-store>
+                            <input type="checkbox" name="rebate_generated" data-store>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="menu3" class="menu mobileRow podsumowanie" style="max-width: 800px; display:none;">
+                <div class="menu-holder">
+                <div class="mobileRow">
+
+                    <div style="width:100%;max-width: 300px; margin: 0 auto;" class="noMaxWidthMobile">
+
+                        <h4>Dane kontaktowe <button class="btn subtle" onclick="showMenu(2,'kontakt')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+
+                        <p id="daneKontaktoweInfo"></p>
+
+                        <h4>Rodzaj dostawy <button class="btn subtle" onclick="showMenu(2,'dostawa')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+
+                        <p id="dostawaRodzaj"></p>
+
+                        <h4>Adres dostawy <button class="btn subtle" onclick="showMenu(2,'adres')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
+
+                        <p id="adresInfo"></p>
+
+                        <h4>Forma zapłaty
+                            <button class="btn primary" onclick="showMenu(3)">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button>
+                        </h4>
+
+                        <p id="zaplataInfo"></p>
+
+                        <!--<input id="adresInfoInput" name="adresInfo" type="hidden">-->
+
+                        <input name="forma_zaplaty" type="hidden" data-store="forma_zaplaty">
+                        <input name="impersonate" type="hidden" value="<?= $impersonate ?>">
+
+
+                    </div>
+                    <div style="width: 100%;margin: 0 auto;">
+
+                        <div id="estimatedDelivery" style="display:none">
+                            <h4>Przewidywany termin dostarczenia przesyłki</h4>
+                            <p class="label"><?php
+                                                if (date("H") < 13) {
+                                                    $date = date("Y-m-d", time() + 3600 * 24);
+                                                } else {
+                                                    $date = date("Y-m-d", time() + 3600 * 24 * 2);
+                                                }
+                                                echo niceDate($date);
+                                                ?></p>
+                        </div>
+
+                        <h4 style="margin-top: 40px">Twoje uwagi dotyczące zamówienia</h4>
+                        <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($zamowienie_data["uwagi"]) ?></textarea>
+
+                        
+                    </div>
+
+                </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin: 0 auto;" class="steps-holder">
+            <div class="stepHolder" style="padding: 10px 20px;">
+                <h3 id="menu1-steps-title" style="font-size: 26px;font-weight:600;margin: 0;">Podsumowanie koszyka</h3>
+                <h3 id="menu2-steps-title" style="font-size: 26px;font-weight:600;margin: 0;display:none;">Zamówienie</h3>
+                <h3 id="menu3-steps-title" style="font-size: 26px;font-weight:600;margin: 0;display:none;">Podsumowanie</h3>
+                <div class="variant_list_holder_2"></div>
+
+                <!-- WARTOŚĆ KOSZYKA -->
+                <div style="margin-top: 13px;" class="hideifempty">
+                    <div class="display:inline-block;">
+                        <span style="font-size: 18px;">Wartość koszyka:</span>
+                        <span style="font-size: 20px;float:right;" class="pln total_basket_cost"></span>
+                    </div>
+                    <hr>
                 </div>
 
-                <div style="width:100%;padding: 20px 10px;">
-                    <div style="max-width: 550px;margin: 0 auto;">
-                        <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="dostawa">Rodzaj dostawy</h3>
+                <!-- RABAT - KOD -->
+                <label style="margin:10px 0">
+                    <?php if ($app["user"]["id"]) : ?>
+                        <div id="rabat_hide" class="expand_y">
+                            <span>Mam kod rabatowy</span>
+                            <div style="display:flex">
+                                <input type="text" id="kod_rabatowy" class="field">
+                                <button style="margin-left:-1px;width: auto;font-size: 15px;" class="btn primary medium" onclick="aktywujKodRabatowy('add')">Aktywuj</button>
+                            </div>
+                            <div id="kod_rabatowy_reason" style="color: red;font-size: 13px;"></div>
+                        </div>
+                    <?php else : ?>
+                        <div class="">
+                            <b>Kod rabatowy</b><br>tylko dla zalogowanych użytkowników
+                        </div>
+                    <?php endif ?>
+                </label>
 
-                        <input id="dostawaInput" name="dostawa" type="hidden" onchange="selectDostawaFromInput(this.value)" data-store />
-                        <input name="paczkomat" type="hidden" data-store="paczkomat">
+                <!-- RABAT -->
+                <div style="color: var(--primary-clr);" class="hideifempty expand_y hidden animate_hidden" id="kod_rabatowy_wrapper">
+                    <div class="display:inline-block;">
+                        <span style="font-size: 18px;">Rabat:</span>
+                        <span style="font-size: 20px;float:right;">
+                            <button onclick="aktywujKodRabatowy('remove')" style="cursor:pointer;font-weight: bold;margin-right: 5px;font-size: 11px;line-height: 0;width: 18px;height: 18px;border: none;background: #eee;color: #777;vertical-align: text-top;padding: 0;">
+                                <img class='cross-icon' src='/src/img/cross.svg'>
+                            </button>
+                            <span class="pln" id="kod_rabatowy_label"></span>
+                        </span>
+                    </div>
+                </div>
 
+                <hr>
+
+                <!-- TODO: Zamiast osobnych menu włączać pojedyncze elementy -->
+                <div class="stepContent expand_y">
+                    <div id="menu1-steps" class="stepBox showNow">
                         <div>
-                            <div class="dostawa" id="kurier-option" onclick="selectDostawa(this.id)">
-                                <img src="/img/courier.png" style="width:40px"> <span>Kurier</span> <span class="pln" style="margin-left:10px;font-size: 1.1em;">+<?= config('kurier_cena', 0) ?> zł</span>
-                            </div>
-
-                            <div class="dostawa" id="paczkomat-option" onclick="showPaczkomatPicker()">
-                                <img src="/img/inpost_logo.png" style="width:60px"> <span>Paczkomat</span> <span class="pln" style="margin-left:10px;font-size: 1.1em;">+<?= config('paczkomat_cena', 0) ?> zł</span>
-                            </div>
-
-                            <div class="dostawa" id="osobiscie-option" onclick="selectDostawa(this.id)">
-                                <i class="fa fa-user" style="font-size: 26px;margin: 4px;"></i> <span>Odbiór osobisty</span> <span class="pln" style="margin-left:10px;font-size: 1.1em;">0 zł</span>
-                                <input name="oddzial_id" value="0" type="hidden" data-store>
-                            </div>
-                        </div>
-
-                        <div style="min-height: 120px;">
-                            <div id="casePaczkomat" class="expand_y hidden animate_hidden" style="margin:10px 0;display: flex;flex-direction:column;justify-content:center;min-height: 100px;">
-                                <div style="display:flex;justify-content:center;font-size:18px;line-height:1.3;">
-                                    <div id="paczkomatAdres">
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="caseKurier" class="expand_y hidden animate_hidden">
-                                <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;" data-view="adres">Adres dostawy</h3>
-
-                                <!-- <button class="btn primary" onclick="copyAdres()" style="width:auto;margin:0 auto 10px;display:block"><i class="fa fa-copy"></i> Przepisz moje dane</button> -->
-                                <label class="checkbox-wrapper">
-                                    <input type="checkbox" name="other_address">
-                                    <div class="checkbox"></div>
-                                    Adres dostawy inny podany
-                                </label>
-
-                                <div id="shipping_details" class="expand_y hidden animate_hidden">
-                                    <div class="field-title">Imię</div>
-                                    <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-store>
-
-                                    <div class="field-title">Nazwisko</div>
-                                    <input type="text" class="field" name="nazwisko_kurier" autocomplete="family-name" data-validate data-store>
-
-                                    <div class="field-title">Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></div>
-                                    <input type="text" class="field" name="firma_kurier" autocomplete="organization" data-store>
-
-                                    <div class="field-title">Kraj</div>
-                                    <input type="text" class="field" name="kraj_kurier" data-validate data-store>
-
-                                    <div class="miejscowosc-picker-wrapper">
-                                        <div class="field-title">Kod pocztowy</div>
-                                        <input type="text" class="field" name="kod_pocztowy_kurier" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate data-store>
-
-                                        <div class="field-title">Miejscowość</div>
-                                        <input class="field miejscowosc-picker-target" type="text" name="miejscowosc_kurier" autocomplete="address-level2" placeholder=" " data-validate data-store>
-                                        <div class="miejscowosc-picker-list"></div>
-                                    </div>
-
-                                    <div class="field-title">Ulica</div>
-                                    <input type="text" class="field" autocomplete="address-line1" name="ulica_kurier" data-validate data-store>
-
-                                    <div class="desktopRow spaceColumns">
-                                        <div>
-                                            <div class="field-title">Nr domu</div>
-                                            <input type="text" class="field" autocomplete="address-line2" name="nr_domu_kurier" data-validate data-store>
-                                        </div>
-                                        <div>
-                                            <div class="field-title">Nr lokalu</div>
-                                            <input type="text" class="field" autocomplete="address-line3" name="nr_lokalu_kurier" data-store>
+                            <div id="menu1_cart" class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
+                                <?php if (!$app["user"]["id"]) : ?>
+                                    <div>
+                                        <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="min-width:250px;margin-top: 25px;">
+                                            Zaloguj się
+                                            <img class="user-icon icon-white" src="/src/img/user_icon.svg" style="width: 1.2em;vertical-align: sub;">
+                                        </button>
+                                        <br><br>
+                                        <div class="hideifempty">
+                                            <strong>Co zyskasz?</strong>
+                                            <div>- Historia zamówień</div>
+                                            <div>- Zapisanie danych<br>kontaktowych oraz adresu</div>
+                                            <div>- Zapisanie schowka oraz<br>statnio przeglądanych produktów</div>
                                         </div>
                                     </div>
+                                    <div style='margin:12px;margin-top:34px' class="lub-span">lub</div>
+                                <?php else : ?>
+                                    <div style="flex-grow:1"></div>
+                                <?php endif ?>
+                                <div class="steps-buttons">
+                                    <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> medium" onclick="showMenu(2, 'kontakt')" style="margin-top: 25px;min-width:250px">
+                                        <?php
+                                        if ($app["user"]["id"]) {
+                                            echo "Przejdź do dostawy";
+                                        } else {
+                                            echo "Kontynuuj bez rejestracji";
+                                        }
+                                        ?>
+                                        <i class="fa fa-chevron-right"></i>
+                                    </button>
                                 </div>
-                            </div>
-
-                            <div id="caseOsobiscie" class="expand_y hidden animate_hidden" style="min-height: 100px;margin-top:30px">
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3261.2636336885503!2d20.905582677315724!3d52.23998412001319!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecb16c2ce5633%3A0x4cf6063af810a380!2sSolectric%20GmbH%20Polska!5e0!3m2!1spl!2spl!4v1581018622179!5m2!1spl!2spl" width="600" height="450" frameborder="0" style="border:0;width: 100%;" allowfullscreen=""></iframe>
-                            </div>
-
-                            <div style="">
-                                <h3 style="text-align: center;font-size: 26px;margin: 15px 0 15px;">Forma zapłaty</h3>
-
-                                <div class="mobileRow" style="justify-content: space-evenly;">
-                                    <label id="forma_24">
-                                        <input type="radio" name="forma_zaplaty_radio" value='24' checked id="p24">
-                                        <img style="width: 80px;vertical-align: middle;" src="/img/p24.png">
-                                    </label>
-                                    <label id="forma_po">
-                                        <input type="radio" name="forma_zaplaty_radio" value='po'>
-                                        Za pobraniem <i style="font-size: 22px;color: #555;" class="fas fa-hand-holding-usd"></i>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div style="display:none">
-                                <input type="text" name="imie_dostawa" data-store>
-                                <input type="text" name="nazwisko_dostawa" data-store>
-                                <input type="text" name="firma_dostawa" data-store>
-                                <input type="text" name="kraj_dostawa" data-store>
-                                <input type="text" name="kod_pocztowy_dostawa" data-store>
-                                <input type="text" name="miejscowosc_dostawa" data-store>
-                                <input type="text" name="ulica_dostawa" data-store>
-                                <input type="text" name="nr_domu_dostawa" data-store>
-                                <input type="text" name="nr_lokalu_dostawa" data-store>
-                                <input type="text" name="notes" data-store>
-                                <input type="text" name="track" data-store>
-                                <input type="text" name="cache_basket" data-store>
-                                <input type="checkbox" name="rebate_generated" data-store>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-
-            <div style="padding: 10px;display: flex;justify-content: space-between;max-width: 1170px;margin: 0 auto;width: 100%;">
-                <button class="btn secondary medium desktopSpaceRight btn secondary" onclick="showMenu(1)" style="margin-top: 30px; display:inline-block;width:220px">
-                    <i class="fa fa-chevron-left"></i>
-                    Cofnij
-                </button>
-                <button class="btn primary medium" onclick="showMenu(3,'podsumowanie')" style="margin-top: 30px; display:inline-block;width:220px">
-                    Dalej
-                    <i class="fa fa-chevron-right"></i>
-                </button>
-            </div>
-            </div>
-        </div>
-
-        <div id="menu3" class="menu mobileRow podsumowanie" style="max-width: 1100px; display:none;padding:20px 0; opacity: 0;">
-            <div class="menu-holder">
-            <h3 style="text-align: center;font-size: 26px;padding: 40px 0 20px;;margin: 0;" data-view="podsumowanie">Podsumowanie</h3>
-            <div class="mobileRow">
-
-                <div style="width:100%;max-width: 300px; margin: 0 auto;padding: 10px;" class="noMaxWidthMobile">
-
-                    <h4>Dane kontaktowe <button class="btn subtle" onclick="showMenu(2,'kontakt')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
-
-                    <p id="daneKontaktoweInfo"></p>
-
-                    <h4>Rodzaj dostawy <button class="btn subtle" onclick="showMenu(2,'dostawa')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
-
-                    <p id="dostawaRodzaj"></p>
-
-                    <h4>Adres dostawy <button class="btn subtle" onclick="showMenu(2,'adres')">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button></h4>
-
-                    <p id="adresInfo"></p>
-
-                    <h4>Forma zapłaty
-                        <!--<button class="btn primary" onclick="showMenu(3)">Edytuj <i class="fa fa-cog" style="margin-left: 3px;"></i></button>-->
-                    </h4>
-
-                    <p id="zaplataInfo"></p>
-
-                    <!--<input id="adresInfoInput" name="adresInfo" type="hidden">-->
-
-                    <input name="forma_zaplaty" type="hidden" data-store="forma_zaplaty">
-                    <input name="impersonate" type="hidden" value="<?= $impersonate ?>">
-
-
-                </div>
-                <div style="width: 100%;margin: 0 auto;padding: 10px;">
-                    <h4>Produkty</h4>
-
-                    <div class="variant_list_holder_2">
-
-                    </div>
-
-                    <div class="mobileRow" style="justify-content:space-between;margin-top: 10px;">
-                        <label style="margin:10px 0">
-                            <?php if ($app["user"]["id"]) : ?>
-                                <div id="rabat_hide">
-                                    <span>Kod rabatowy</span>
-                                    <div style="display:flex">
-                                        <input type="text" id="kod_rabatowy" class="field">
-                                        <button style="margin-left:-1px;width: auto;font-size: 15px;" class="btn primary medium" onclick="aktywujKodRabatowy('add')">Aktywuj</button>
-                                    </div>
-                                    <div id="kod_rabatowy_reason" style="color: red;font-size: 13px;"></div>
-                                </div>
-                            <?php else : ?>
-                                <div class="mobileTextCenter">
-                                    <b>Kod rabatowy</b><br>tylko dla zalogowanych użytkowników
-                                </div>
-                            <?php endif ?>
-                        </label>
-
-                        <div style="margin-top: 13px;text-align: right;padding: 5px;" class="mobileTextCenter">
-                            <span style="display:block;font-size: 15px;">Koszt dostawy: <span class="pln" id="koszt_dostawy_label"></span></span>
-                            <span style="font-size: 15px;display:none;color: var(--primary-clr);font-weight: bold;" id="kod_rabatowy_wrapper">
-                                <button onclick="aktywujKodRabatowy('remove')" style="cursor:pointer;font-weight: bold;margin-right: 5px;font-size: 11px;line-height: 0;width: 18px;height: 18px;border: none;background: #eee;color: #777;vertical-align: text-top;padding: 0;">
-                                    <img class='cross-icon' src='/src/img/cross.svg'>
+                    <div id="menu2-steps" class="stepBox" style="display:none;">
+                        <div>
+                            <div>
+                                <span style="font-size: 18px;">Dostawa:</span>
+                                <span style="font-size: 20px;float:right;">
+                                    <span class="pln" id="koszt_dostawy_label">20 zł</span>
+                                </span>
+                            </div>
+                            <hr>
+                            <div class="hideifempty" style="margin: 0 0 20px;">
+                                <!-- TODO: Zrobić to inaczej - jak będzie więcej to będzie dupa -->
+                                <h3 style="font-size: 20px;font-weight:600;margin:13px 0;">Płatność</h3>
+                                <radio-input name="forma_zaplaty_radio" class="default">
+                                    <radio-option value="p24" data-default>
+                                        Zapłać online <i style="font-size: 18px;color: #555;" class="fas fa-credit-card"></i>
+                                        <!-- <img style="padding:4px;width: 70px;vertical-align: middle;" src="/img/p24.png"> -->
+                                    </radio-option>
+                                    <radio-option value="po">
+                                        Za pobraniem <i style="font-size: 18px;color: #555;" class="fas fa-hand-holding-usd"></i>
+                                    </radio-option>
+                                </radio-input>
+                            </div>
+                            <div class="steps-buttons">
+                                <button class="btn secondary medium desktopSpaceRight btn secondary" onclick="showMenu(1)" style="display:inline-block;width:220px">
+                                    <i class="fa fa-chevron-left"></i>
+                                    Wróć
                                 </button>
-                                KOD RABATOWY <span class="pln" id="kod_rabatowy_label"></span></span>
-                            <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia:</span>
-                            <b style="display:inline-block;font-size: 20px;"><span id="final-cost" style="display:inline-block;" class="pln"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</b>
+                                <button class="btn primary medium" onclick="showMenu(3,'podsumowanie')" style="display:inline-block;width:220px">
+                                    Podsumowanie
+                                    <i class="fa fa-chevron-right"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
+                    <div id="menu3-steps" class="stepBox" style="display:none;">
+                        <div>
+                            <div style="margin-top: 13px;" class="hideifempty ">
+                                <div>
+                                    <span style="font-size: 18px;">Dostawa:</span>
+                                    <span style="font-size: 20px;float:right;">
+                                        <span class="pln" id="koszt_dostawy_label">20 zł</span>
+                                    </span>
+                                </div>
+                                <hr>
+                                <div>
+                                    <!-- TODO: plus koszt dostawy -->
+                                    <span style="font-size: 18px;">Całkowity koszt zamówienia:</span>
+                                    <span style="font-size: 20px;float:right;" id="final-cost" class="pln"></span>
+                                </div>
+                                <hr>
+                                <div>
+                                    <!-- TODO: Wybrana metoda płatności -->
+                                    <span style="font-size: 18px;">Metoda płatności:</span>
+                                    <span style="font-size: 20px;float:right;" class="pln">
+                                        <img style="width: 80px;vertical-align: middle;" src="/img/p24.png">
+                                    </span>
+                                </div>
+                            </div>
 
-                    <div id="estimatedDelivery" style="display:none">
-                        <h4>Przewidywany termin dostarczenia przesyłki</h4>
-                        <p class="label"><?php
-                                            if (date("H") < 13) {
-                                                $date = date("Y-m-d", time() + 3600 * 24);
-                                            } else {
-                                                $date = date("Y-m-d", time() + 3600 * 24 * 2);
-                                            }
-                                            echo niceDate($date);
-                                            ?></p>
-                    </div>
+                            <!-- TODO: Inne rzeczy -->
+                            <label class="checkbox-wrapper field-title" style="margin: 16px 0;">
+                                <input type="checkbox" data-validate="checkbox|value:1">
+                                <div class="checkbox"></div>
+                                Akceptuję
+                                <a href="/regulamin" target="_blank" style="font-weight: bold;color: var(--primary-clr);text-decoration: underline;">REGULAMIN</a>
+                            </label>
 
-                    <h4 style="margin-top: 40px">Twoje uwagi dotyczące zamówienia</h4>
-                    <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($zamowienie_data["uwagi"]) ?></textarea>
-
-                    <label class="checkbox-wrapper field-title">
-                        <input type="checkbox" data-validate="checkbox|value:1">
-                        <div class="checkbox"></div>
-                        Akceptuję
-                        <a href="/regulamin" target="_blank" style="font-weight: bold;color: var(--primary-clr);text-decoration: underline;">REGULAMIN</a>
-                    </label>
-
-
-                    <div class="mobileRow" style="align-items:flex-start">
-                        <p style="font-size: 15px;">Zostaniesz przeniesiony do strony płatności <img src="/img/p24.png" style="width: 100px;vertical-align: bottom;transform: translateY(4px);"></p>
-                        <!--<div id="hideOnSuccess">
-                <div id="casegpay" style="display:none;margin-bottom: 5px;">Zapłać za pomocą <img src="/img/gpay.png" style="display: inline-block;width: 40px;vertical-align: bottom;margin-left: 2px;">:</div>
-                <div id="payment-request-button"></div>
-              </div>-->
-
-                        <button onclick="confirmOrder()" class="btn primary medium full-width-mobile" style="margin-top: 10px;width: 260px;margin-left:auto">
-                            <span id="submit_text">ZAMAWIAM I PŁACĘ</span>
-                            <i class="fa fa-chevron-right"></i>
-                        </button>
+                            <div class="steps-buttons">
+                                <button class="btn secondary medium desktopSpaceRight btn secondary" onclick="showMenu(2,'kontakt')" style="display:inline-block;width:170px">
+                                    <i class="fa fa-chevron-left"></i>
+                                    Cofnij
+                                </button>
+                                <button onclick="confirmOrder()" class="btn primary medium" style="width: 260px;margin-left:auto">
+                                    <span id="submit_text">ZAMAWIAM I PŁACĘ</span>
+                                    <i class="fa fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-            </div>
-
-            <div style="padding: 10px">
-                <button class="btn secondary medium pullHigherDesktop" onclick="showMenu(2,'kontakt')" style="display:inline-block;width:170px">
-                    <i class="fa fa-chevron-left"></i>
-                    Cofnij
-                </button>
-            </div>
             </div>
         </div>
-
     </div>
     <?php include "global/footer.php"; ?>
 </body>

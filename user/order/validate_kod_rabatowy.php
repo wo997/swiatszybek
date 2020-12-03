@@ -8,7 +8,7 @@ $action = $_POST["action"];
 if ($action == "remove") {
     unset($_SESSION["kod"]);
     unset($_SESSION["rabat"]);
-    die;
+    die('{"error":"Kod rabatowy został usunięty!"}');
 }
 
 $kod_data = fetchRow("SELECT kwota, user_id_list, product_list, ilosc, date_from, date_to, type FROM kody_rabatowe WHERE kod = ? ORDER BY kod_id DESC LIMIT 1", [$kod]);
@@ -33,24 +33,31 @@ if ($kod_data) {
 
     // products start
     $error = "";
-    foreach (json_decode($kod_data["product_list"], true) as $required_product_id => $required_product) {
-        $basket_product_quantity = 0;
-        foreach ($app["user"]["basket"]["variants"] as $variant) {
-            if ($required_product_id == $variant['product_id']) {
-                $basket_product_quantity += $variant["quantity"];
-            }
-        }
 
-        $required_quantity = isset($required_product["qty"]) ? $required_product["qty"] : 1;
+    if(isset($kod_data["product_list"])){
+        $requiredProducts = json_decode($kod_data["product_list"], true);
 
-        if ($basket_product_quantity < $required_quantity) {
-            $i_product = fetchRow("SELECT title, link FROM products WHERE product_id = " . intval($required_product_id));
-            $product_link = "<a href='" . getProductLink($required_product_id, $i_product["link"]) . "'>" . $i_product["title"] . "</a>";
-            if ($required_quantity == 1) {
-                $error .= "<br>- $product_link";
-            } else {
-                $missing = $required_quantity - $basket_product_quantity;
-                $error .= "<br>- <b>$missing szt.</b> $product_link";
+        if(count($requiredProducts) > 0){
+            foreach ($requiredProducts as $required_product_id => $required_product) {
+                $basket_product_quantity = 0;
+                foreach ($app["user"]["basket"]["variants"] as $variant) {
+                    if ($required_product_id == $variant['product_id']) {
+                        $basket_product_quantity += $variant["quantity"];
+                    }
+                }
+
+                $required_quantity = isset($required_product["qty"]) ? $required_product["qty"] : 1;
+
+                if ($basket_product_quantity < $required_quantity) {
+                    $i_product = fetchRow("SELECT title, link FROM products WHERE product_id = " . intval($required_product_id));
+                    $product_link = "<a href='" . getProductLink($required_product_id, $i_product["link"]) . "'>" . $i_product["title"] . "</a>";
+                    if ($required_quantity == 1) {
+                        $error .= "<br>- $product_link";
+                    } else {
+                        $missing = $required_quantity - $basket_product_quantity;
+                        $error .= "<br>- <b>$missing szt.</b> $product_link";
+                    }
+                }
             }
         }
     }
