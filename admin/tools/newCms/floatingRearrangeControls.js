@@ -93,11 +93,46 @@ export default class FloatingRearrangeControls {
 			if (rearrange_control_node) {
 				rearrange_position = rearrange_control_node.position;
 			} else if (rearrange_near_block.classList.contains("container")) {
-				if (rearrange_near_block.getAttribute("data-block") === "container") {
+				const near_block_type = rearrange_near_block.getAttribute("data-block");
+				if (near_block_type === "container") {
 					rearrange_position = "inside";
 					rearrange_control_node =
 						rearrange_near_block.rearrange_control_inside;
 					parent_container = rearrange_near_block;
+				} else if (near_block_type === "grid") {
+					let smallest_sq_distance = 10000; // magnetic 100px
+					let smallest_sq_distance_control = null;
+					newCms.content_scroll_content
+						.findAll(
+							".rearrange_control:not(.unavailable):not(.first_grid_node)"
+						)
+						.forEach((control) => {
+							if (
+								control.position !== "grid" ||
+								control.rearrange_near_block !== rearrange_near_block
+							) {
+								return;
+							}
+
+							const dx =
+								control.actual_position.left -
+								this.newCms.content_scroll_panel.scrollLeft -
+								this.newCms.mouse_x;
+							const dy =
+								control.actual_position.top -
+								this.newCms.content_scroll_panel.scrollTop -
+								this.newCms.mouse_y;
+							const sq_distance = dx * dx + dy * dy;
+							if (sq_distance < smallest_sq_distance) {
+								smallest_sq_distance = sq_distance;
+								smallest_sq_distance_control = control;
+							}
+						});
+
+					if (smallest_sq_distance_control) {
+						rearrange_control_node = smallest_sq_distance_control;
+						rearrange_position = "grid";
+					}
 				}
 			} else if (!this.newCms.rearrange_grid_first_node) {
 				rearrange_near_block_rect = rearrange_near_block.getBoundingClientRect();

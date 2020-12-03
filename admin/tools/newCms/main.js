@@ -627,6 +627,9 @@ class NewCms {
 						);
 					});
 
+				this.updateMouseTarget();
+				this.mouseMove();
+
 				return;
 			} else {
 				if (
