@@ -48,7 +48,7 @@ export default class FloatingSelectControls {
 
 			const selected_block = this.selected_block;
 
-			if (selected_block) {
+			if (selected_block && selected_block.select_control) {
 				selected_block.classList.add("select_active");
 				selected_block.select_control.classList.add("select_active");
 			}

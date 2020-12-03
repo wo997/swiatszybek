@@ -298,6 +298,14 @@ export default class FloatingRearrangeControls {
 					skip: 1,
 				});
 
+				if (
+					parent_container &&
+					parent_container.getAttribute("data-block") === "grid"
+				) {
+					// no befores and afters in a grid, just laundry
+					return;
+				}
+
 				const is_parent_row = parent_container
 					? parent_container.classList.contains("container_row")
 					: false;

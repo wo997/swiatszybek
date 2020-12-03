@@ -538,9 +538,9 @@ class NewCms {
 			? this.sidebar
 			: this.content_scroll_content;
 
-		this.grabbed_node_scroll_parent = this.source_grabbed_node.findScrollParent(
+		/*this.grabbed_node_scroll_parent = this.source_grabbed_node.findScrollParent(
 			{ default: document.body }
-		);
+		);*/
 
 		this.source_grabbed_node.appendChild(
 			newCms.rearrange_controls.rearrange_grabbed_rect_node
@@ -550,7 +550,8 @@ class NewCms {
 		this.grabbed_block.classList.add("grabbed");
 		this.grabbed_mouse_x = this.mouse_x;
 		this.grabbed_mouse_y = this.mouse_y;
-		this.grabbed_scroll_top = this.grabbed_node_scroll_parent.scrollTop;
+		//this.grabbed_scroll_top = this.grabbed_node_scroll_parent.scrollTop;
+		this.grabbed_scroll_top = this.content_scroll_panel.scrollTop;
 
 		this.container.classList.add("grabbed_block");
 
@@ -812,11 +813,22 @@ class NewCms {
 			// itd why rly sry
 			e.style.animation = "";
 		});
+
+		const content_padding = parseInt(
+			getComputedStyle(document.documentElement).getPropertyValue(
+				"--content_padding"
+			)
+		);
+
 		const content_node_rect = this.content_node.getBoundingClientRect();
-		this.content_node_copy.style.left = content_node_rect.left + "px";
-		this.content_node_copy.style.top = content_node_rect.top + "px";
-		this.content_node_copy.style.width = content_node_rect.width + "px";
-		this.content_node_copy.style.height = content_node_rect.height + "px";
+		this.content_node_copy.style.left =
+			content_node_rect.left - content_padding + "px";
+		this.content_node_copy.style.top =
+			content_node_rect.top - content_padding + "px";
+		this.content_node_copy.style.width =
+			content_node_rect.width + 2 * content_padding + "px";
+		this.content_node_copy.style.height =
+			content_node_rect.height + 2 * content_padding + "px";
 
 		return all_animatable_blocks;
 	}
@@ -827,19 +839,19 @@ class NewCms {
 			setTimeout(() => {
 				// browser needs time to render it again
 				this.content_node_copy.classList.remove("visible");
+
+				this.contentChange();
+
+				// not needed cause we set it to user-select none bro
+				//removeUserSelection();
+
+				this.updateMouseTarget();
+				this.mouseMove();
+
+				if (options.callback) {
+					options.callback();
+				}
 			}, 100);
-
-			// not needed cause we set it to user-select none bro
-			removeUserSelection();
-
-			this.contentChange();
-
-			this.updateMouseTarget();
-			this.mouseMove();
-
-			if (options.callback) {
-				options.callback();
-			}
 		};
 
 		all_animatable_blocks.forEach((block) => {
@@ -1017,7 +1029,18 @@ class NewCms {
 					this.mouse_x - rearrange_grid_first_node_actual_position.left;
 				target_h = this.mouse_y - rearrange_grid_first_node_actual_position.top;
 
-				const min_w = 150;
+				const scr_dx = this.content_scroll_panel.scrollLeft;
+				const scr_dy =
+					this.content_scroll_panel.scrollTop - this.grabbed_scroll_top;
+
+				const scr_pos_factor = is_side_block ? -1 : -2;
+
+				target_w += scr_dx;
+				target_h += scr_dy;
+				target_dx += scr_pos_factor * scr_dx;
+				target_dy += scr_pos_factor * scr_dy;
+
+				const min_w = is_side_block ? 140 : Math.max(50, Math.min(base_w, 150));
 				if (target_w < -min_w) {
 					target_dx += target_w;
 					target_w = -target_w;
@@ -1026,22 +1049,13 @@ class NewCms {
 					target_w = min_w;
 				}
 
-				const min_h = 150;
+				const min_h = is_side_block ? 50 : Math.max(50, Math.min(base_h, 150));
 				if (target_h < -min_h) {
 					target_dy += target_h;
 					target_h = -target_h;
 				} else if (target_h < min_h) {
 					target_dy += (target_h - min_h) * 0.5;
 					target_h = min_h;
-				}
-
-				if (!is_side_block) {
-					const sx = rearrange_grid_first_node_scroll_parent.scrollLeft;
-					const sy =
-						rearrange_grid_first_node_scroll_parent.scrollTop -
-						this.grabbed_scroll_top;
-					target_dx -= sx;
-					target_dy -= sy;
 				}
 			} else {
 				// pull center to the cursor
@@ -1308,7 +1322,7 @@ registerModalContent(
                       <div class="rearrange_controls"></div>
                       <div class="rearrange_insert_rect"></div>
                       <div class="rearrange_grabbed_rect"></div>
-                      <div style="padding:var(--content-padding);overflow:hidden;position:relative">
+                      <div style="padding:var(--content_padding);overflow:hidden;position:relative">
                         <!-- newCms_block_content class is temporary, it prevents margin collapsing, later u wanna for for sections etc-->
                         <div class="newCmsContent newCms_block_content" data-type="html" name="content"></div>
                       </div>
