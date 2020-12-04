@@ -1,0 +1,7 @@
+{
+    "properties": {
+        "additional_property_from_module": {
+            "type": "string"
+        }
+    }
+}

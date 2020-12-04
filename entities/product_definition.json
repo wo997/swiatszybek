@@ -1,10 +1,11 @@
 {
     "properties": {
         "title": {
-            "type": "text"
+            "type": "string",
+            "description": "This is used to idk what but it's cool to have any descr man or gurl whatevea"
         },
         "category_ids": {
-            "type": "category_ids"
+            "type": "string"
         },
         "price_min": {
             "type": "number"
