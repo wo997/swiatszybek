@@ -156,7 +156,6 @@
 }
 
 .rearrange_control.first_grid_node {
-	opacity: 0.4;
 	pointer-events: none;
 }
 
@@ -164,7 +163,8 @@
 	border-radius: 50%;
 }
 
-.rearrange_control.rearrange_active {
+.rearrange_control.rearrange_active,
+.rearrange_control.first_grid_node {
 	opacity: 1;
 	background: var(--primary-clr);
 }
@@ -173,7 +173,8 @@
 	transition: 0.2s all;
 }
 
-.rearrange_control.rearrange_active > * {
+.rearrange_control.rearrange_active > *,
+.rearrange_control.first_grid_node > * {
 	filter: invert();
 }
 
