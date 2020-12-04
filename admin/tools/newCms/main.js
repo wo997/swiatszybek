@@ -85,6 +85,16 @@ export default class NewCms {
 		this.content_scroll_panel.addEventListener("scroll", () => {
 			this.scroll();
 		});
+
+		window.addEventListener("resize", () => {
+			if (this.grabbed_block) {
+				this.rearrange_controls.addFloatingRearrangeControls(
+					this.grabbed_block
+				);
+			} else {
+				this.select_controls.addFloatingSelectControls();
+			}
+		});
 	}
 
 	initGrids() {
@@ -779,7 +789,7 @@ export default class NewCms {
 				if (block.last_rect) {
 					block.new_rect = block.getBoundingClientRect();
 					if (!block.animation_data) {
-						block.animation_data = { x: 0, y: 0 };
+						block.animation_data = { dx: 0, dy: 0 };
 					}
 					if (block.classList.contains("container")) {
 						const newCms_block_content = block.find(".newCms_block_content");
