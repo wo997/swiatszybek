@@ -40,7 +40,10 @@ export default class FloatingSelectControls {
 		if (
 			this.selected_block != hovered_block ||
 			(this.selected_block &&
-				!this.selected_block.select_control.classList.contains("select_active"))
+				(!this.selected_block.select_control ||
+					!this.selected_block.select_control.classList.contains(
+						"select_active"
+					)))
 		) {
 			this.removeSelection();
 

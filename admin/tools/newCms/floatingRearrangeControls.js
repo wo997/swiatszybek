@@ -1,3 +1,5 @@
+import NewCms from "./main.js";
+
 export default class FloatingRearrangeControls {
 	constructor(newCms) {
 		/** @type {NewCms} */

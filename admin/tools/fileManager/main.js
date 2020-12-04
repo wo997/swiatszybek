@@ -162,95 +162,97 @@ window.fileManager = {
 	},
 };
 
-registerModalContent(
-	`
-    <div id="fileManager" data-expand="true">
-        <div class="modal-body">
-            <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
-              <span class="title" style="display: inline-flex;align-items: center;flex-wrap:wrap">
-                Menedżer plików
+window.initFileManager = () => {
+	registerModalContent(
+		`
+        <div id="fileManager" data-expand="true">
+            <div class="modal-body">
+                <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
+                <span class="title" style="display: inline-flex;align-items: center;flex-wrap:wrap">
+                    Menedżer plików
 
-                <div class="float-icon inline" style="margin-left: 7px;display: inline-flex;align-self: stretch;">
-                  <input class="field inline small" type="text" name="search" id="search" oninput="delay('search',500,fileManager)" placeholder="Wyszukaj..." style="align-self: stretch;">
-                  <i class="fas fa-search" style="color:black"></i>
+                    <div class="float-icon inline" style="margin-left: 7px;display: inline-flex;align-self: stretch;">
+                    <input class="field inline small" type="text" name="search" id="search" oninput="delay('search',500,fileManager)" placeholder="Wyszukaj..." style="align-self: stretch;">
+                    <i class="fas fa-search" style="color:black"></i>
+                    </div>
+
+                    <button class="btn primary" onclick="showModal('uploadFiles')" style="margin-left: 4px;">Prześlij nowe <i class="fas fa-plus"></i></button>
+
+                    <button class="btn secondary use_external_image_btn" onclick="showModal('externalImage')" style="margin-left: 4px;">Użyj zdjęcia zewnętrznego <i class="fas fa-external-link-alt"></i></button>
+                </span>
+                    
+                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
                 </div>
 
-                <button class="btn primary" onclick="showModal('uploadFiles')" style="margin-left: 4px;">Prześlij nowe <i class="fas fa-plus"></i></button>
+                <div class="scroll-panel scroll-shadow panel-padding">
 
-                <button class="btn secondary use_external_image_btn" onclick="showModal('externalImage')" style="margin-left: 4px;">Użyj zdjęcia zewnętrznego <i class="fas fa-external-link-alt"></i></button>
-              </span>
-                  
-              <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
-            </div>
+                <div class="gallery">
 
-            <div class="scroll-panel scroll-shadow panel-padding">
-
-              <div class="gallery">
-
-              </div>
-
-            </div>
-        </div>
-        <link href="/admin/tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
-    </div>
-    `
-);
-
-registerModalContent(
-	`
-    <div id="externalImage">
-        <div class="modal-body">
-            <div class="custom-toolbar">
-                <span class="title">
-                  Wybór zdjęcia zewnętrznego
-                </span>
-                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
-            </div>
-
-            <div class="scroll-panel panel-padding">
-              <div class="field-wrapper">
-                <div class="field-title">Wstaw link do zdjęcia zewnętrznego</div>
-                <div class="glue-children">
-                  <input type="text" data-validate class="external_link field">
-                  <button class="btn primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
                 </div>
-              </div>
 
-              <div style="margin-top:8px">
-                <i class="fas fa-info-circle"></i> Wstawienie zdjęcia zewnętrznego wiąże się z:<br>
-                - możliwością jego utraty<br>
-                - brakiem optymalizacji
-              </div>
+                </div>
             </div>
+            <link href="/admin/tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
         </div>
-    </div>
     `
-);
+	);
 
-registerModalContent(
-	`
-    <div id="uploadFiles">
-        <div class="modal-body">
-            <div class="custom-toolbar">
-                <span class="title">
-                  Przesyłanie plików
-                </span>
-                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+	registerModalContent(
+		`
+        <div id="externalImage">
+            <div class="modal-body">
+                <div class="custom-toolbar">
+                    <span class="title">
+                    Wybór zdjęcia zewnętrznego
+                    </span>
+                    <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+                </div>
+
+                <div class="scroll-panel panel-padding">
+                <div class="field-wrapper">
+                    <div class="field-title">Wstaw link do zdjęcia zewnętrznego</div>
+                    <div class="glue-children">
+                    <input type="text" data-validate class="external_link field">
+                    <button class="btn primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
+                    </div>
+                </div>
+
+                <div style="margin-top:8px">
+                    <i class="fas fa-info-circle"></i> Wstawienie zdjęcia zewnętrznego wiąże się z:<br>
+                    - możliwością jego utraty<br>
+                    - brakiem optymalizacji
+                </div>
+                </div>
             </div>
-
-            <form class="panel-padding">
-              <div class="field-title">Nazwa zdjęcia</div>
-              <input type="text" class="name field">
-              <label style="text-align:right;display: block;margin-top: 10px;">
-                  <input type="file" name="files[]" multiple onchange="$(this).next().click()" style="display:none">
-                  <input type="submit" name="submit" style="display:none">
-                  <div class="btn primary">Wybierz pliki <i class="fas fa-cloud-upload-alt"></i></div>
-              </label>
-            </form>
         </div>
-    </div>
-    `,
-	() => {
-		fileManager.loaded();
-	}
-);
+    `
+	);
+
+	registerModalContent(
+		`
+        <div id="uploadFiles">
+            <div class="modal-body">
+                <div class="custom-toolbar">
+                    <span class="title">
+                    Przesyłanie plików
+                    </span>
+                    <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+                </div>
+
+                <form class="panel-padding">
+                <div class="field-title">Nazwa zdjęcia</div>
+                <input type="text" class="name field">
+                <label style="text-align:right;display: block;margin-top: 10px;">
+                    <input type="file" name="files[]" multiple onchange="$(this).next().click()" style="display:none">
+                    <input type="submit" name="submit" style="display:none">
+                    <div class="btn primary">Wybierz pliki <i class="fas fa-cloud-upload-alt"></i></div>
+                </label>
+                </form>
+            </div>
+        </div>
+        `,
+		() => {
+			fileManager.loaded();
+		}
+	);
+};

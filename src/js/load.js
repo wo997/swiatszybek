@@ -1,31 +1,37 @@
 /* js[global] */
 
-function loadScript(src, options = {}) {
+function loadScript(src, attributes = {}, options = {}) {
 	var script = document.createElement("script");
-	Object.entries(options).forEach(([key, value]) => {
+	Object.entries(attributes).forEach(([key, value]) => {
 		script.setAttribute(key, value);
 	});
 	script.src = src;
 
-	loadFileAsNode(script);
+	loadFileAsNode(script, options);
 }
 
-function loadStylesheet(href, options = {}) {
+function loadStylesheet(href, attributes = {}, options = {}) {
 	var link = document.createElement("link");
-	Object.entries(options).forEach(([key, value]) => {
+	Object.entries(attributes).forEach(([key, value]) => {
 		link.setAttribute(key, value);
 	});
 	link.href = href;
 
-	loadFileAsNode(link);
+	loadFileAsNode(link, options);
 }
 
-function loadFileAsNode(node) {
+function loadFileAsNode(node, options = {}) {
 	if (document.body) {
 		document.body.appendChild(node);
 	} else {
 		domload(() => {
 			document.body.appendChild(node);
+		});
+	}
+
+	if (options.callback) {
+		node.addEventListener("load", () => {
+			options.callback();
 		});
 	}
 }
