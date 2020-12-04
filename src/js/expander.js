@@ -71,11 +71,15 @@ function expand(elem, show = null, options = {}) {
 	if (!elem) {
 		return;
 	}
-	if (show === null) show = elem.classList.contains("hidden");
-	if (show ^ elem.classList.contains("hidden")) return;
+	if (show === null) {
+		show = elem.classList.contains("hidden");
+	}
+	if (show ^ elem.classList.contains("hidden")) {
+		return;
+	}
 
-	var animation_node = elem.directChildren().find((e) => {
-		e.classList.contains("expander_space");
+	let animation_node = elem.directChildren().find((e) => {
+		return e.classList.contains("expander_space");
 	});
 	if (!animation_node) {
 		elem.insertAdjacentHTML("afterbegin", "<div class='expander_space'></div>");
@@ -83,15 +87,18 @@ function expand(elem, show = null, options = {}) {
 		elem.insertAdjacentHTML("beforeend", "<div class='expander_space'></div>");
 	}
 
-	var duration =
+	finishNodeAnimation(elem);
+	finishNodeAnimation(animation_node);
+
+	let duration =
 		options.duration || options.duration === 0 ? options.duration : 250;
-	var h = elem.scrollHeight;
+	let h = elem.scrollHeight;
 
-	var h1 = (!show ? h : 0) + "px";
-	var h2 = (show ? h : 0) + "px";
+	let h1 = (!show ? h : 0) + "px";
+	let h2 = (show ? h : 0) + "px";
 
-	var o1 = !show ? 1 : 0;
-	var o2 = show ? 1 : 0;
+	let o1 = !show ? 1 : 0;
+	let o2 = show ? 1 : 0;
 
 	elem.classList.toggle("hidden", !show);
 	elem.classList.add("animating");
@@ -100,8 +107,8 @@ function expand(elem, show = null, options = {}) {
 		elem.classList.remove("animate_hidden");
 	}
 
-	var m1 = (show ? -25 : 0) + "px";
-	var m2 = (!show ? -25 : 0) + "px";
+	let m1 = (show ? -25 : 0) + "px";
+	let m2 = (!show ? -25 : 0) + "px";
 
 	animate(
 		animation_node,

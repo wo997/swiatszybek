@@ -1138,7 +1138,7 @@ ql-icon i span {
 	display: none !important;
 }
 .expander_space {
-	display: flex;
+	display: table; /* prevent margin collapsing, a flex container is even better tho */
 }
 .expand_arrow {
 	width: 1.5em;
