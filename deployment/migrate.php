@@ -15,7 +15,7 @@ manageTableColumns("slides", [
 manageTableColumns("basket_content", [
     ["name" => "title", "type" => "VARCHAR(255)"],
     ["name" => "zdjecie", "type" => "VARCHAR(255)"],
-    ["name" => "purchase_price", "previous_name" => "purchased_for", "type" => "DECIMAL(10,2)"]
+    ["name" => "purchase_price", "previous_name" => "purchased_for", "type" => "DECIMAL(10,2)", "null" => true],
 ]);
 
 dropColumns("slides", ["content"]);
@@ -175,6 +175,14 @@ manageTableColumns("product_attributes", [
 
 manageTableColumns("uploads", [
     ["name" => "user_id", "type" => "INT", "null" => true, "index" => "index"],
+]);
+
+manageTableColumns("zamowienia", [
+    ["name" => "zlozono", "type" => "DATE", "default" => 'NOW()'],
+    ["name" => "koszt", "type" => "INT", "default" => 0],
+    ["name" => "status_id", "type" => "INT", "default" => 0],
+    ["name" => "link", "type" => "TEXT", "null" => true],
+    ["name" => "cache_basket", "type" => "TEXT", "null" => true],
 ]);
 
 echo "<h3>✅ All migrations completed</h3>";

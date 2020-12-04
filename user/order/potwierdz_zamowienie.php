@@ -70,46 +70,38 @@ $koszt = roundPrice($koszt);
 $session_id = $link_hash . session_id();
 
 $paczkomat = $_POST["dostawa"] == 'p' ? nonull($_POST, "paczkomat", NULL) : NULL;
+$forma_zaplaty = $_POST["forma_zaplaty"] == 'p24'? '24' : 'po';
 
-query(
-    "INSERT INTO zamowienia (
-    user_id, link, koszt, zlozono, status_id,
-    imie, nazwisko, email, telefon, firma, nip,
-    dostawa, paczkomat, oddzial_id,
-    kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu,
-    kraj_dostawa, miejscowosc_dostawa, kod_pocztowy_dostawa, ulica_dostawa, nr_domu_dostawa, nr_lokalu_dostawa,
-    uwagi, koszt_dostawy, buyer_type, session_id, forma_zaplaty, 
-    rabat_wartosc, rabat_type, rabat_kod, cache_basket, track, notes, rebate_generated
-  )
+$data = filterArrayKeys($_POST, [
+  "user_id", "link", "koszt",  "zlozono",  "status_id",
+  "imie",  "nazwisko",  "email",  "telefon",  "firma",  "nip", 
+  "dostawa",  "paczkomat",  "oddzial_id", 
+  "kraj",  "miejscowosc",  "kod_pocztowy",  "ulica",  "nr_domu",  "nr_lokalu", 
+  "kraj_dostawa",  "miejscowosc_dostawa",  "kod_pocztowy_dostawa",  "ulica_dostawa",  "nr_domu_dostawa",  "nr_lokalu_dostawa", 
+  "uwagi",  "koszt_dostawy",  "buyer_type",  "session_id",  "forma_zaplaty",
+  "cache_basket",  "track",  "notes",  "rebate_generated", "link"
+]);
+$data['koszt'] = $koszt;
+$data['koszt_dostawy'] = $koszt_dostawy;
+$data['rabat_wartosc'] = $kod_rabatowy_wartosc;
+$data['rabat_type'] = $kod_rabatowy_type;
+$data['rabat_kod'] = $kod_rabatowy;
+$data['forma_zaplaty'] = $forma_zaplaty;
 
-  VALUES (
-    ?,CONCAT((SELECT * FROM (SELECT IF(ISNULL(MAX(zamowienie_id)),1,MAX(zamowienie_id)+1) FROM zamowienia) as x),'-',?),?,?,?,?,
-    ?,?,?,?,?,
-    ?,?,?,
-    ?,?,?,?,?,?,
-    ?,?,?,?,?,?,
-    ?,?,?,?,?,
-    ?,?,?,?,?,?,?
-  )",
-    [
-        $user_id, $link_hash, $koszt, date("Y-m-d H:i:s"), 0,
-        $_POST["imie"], $_POST["nazwisko"], $_POST["email"], $_POST["telefon"], $_POST["firma"], $_POST["nip"],
-        $_POST["dostawa"], $paczkomat, $oddzial_id,
-        $_POST["kraj"], $_POST["miejscowosc"], $_POST["kod_pocztowy"], $_POST["ulica"], $_POST["nr_domu"], $_POST["nr_lokalu"],
-        $_POST["kraj_dostawa"], $_POST["miejscowosc_dostawa"], $_POST["kod_pocztowy_dostawa"], $_POST["ulica_dostawa"], $_POST["nr_domu_dostawa"], $_POST["nr_lokalu_dostawa"],
-        $_POST["uwagi"], $koszt_dostawy, $_POST["buyer_type"], $session_id, $_POST["forma_zaplaty"],
-        $kod_rabatowy_wartosc, $kod_rabatowy_type, $kod_rabatowy, $_SESSION["basket"], $_POST["track"], $_POST["notes"], $_POST["rebate_generated"]
-    ]
-);
+$zamowienie_id = getEntityId("zamowienia", -1, ['data' => $data]);
 
-$zamowienie_id = getLastInsertedId();
+$link = $zamowienie_id . "-" . $link_hash;
+$data['link'] = $link;
+
+updateEntity($data, "zamowienia", "zamowienie_id", $zamowienie_id);
 
 // cannot use order/print_basket_nice because in email no css stylesheets are allowed, would we want to merge it?
 $res = "<table style='border-spacing: 0;'><tr style='background: " . primary_clr . ";color: white;'><td style='padding:4px'>Ilość</td><td style='padding:4px'>Produkt</td><td style='padding:4px'>Cena</td></tr>";
 
 foreach ($app["user"]["basket"]["variants"] as $v) {
-    query("INSERT INTO basket_content (zamowienie_id, variant_id, product_id, real_price, quantity, total_price, title, zdjecie) VALUES (?,?,?,?,?,?,?,?)", [
-        $zamowienie_id, $v["variant_id"], $v["product_id"], $v["real_price"], $v["quantity"], $v["total_price"], $v["title"] . " " . $v["name"], $v["zdjecie"]
+    // TODO: PURCHASE PRICE?
+    query("INSERT INTO basket_content (zamowienie_id, variant_id, product_id, real_price, quantity, total_price, title, zdjecie, purchase_price) VALUES (?,?,?,?,?,?,?,?,?)", [
+        $zamowienie_id, $v["variant_id"], $v["product_id"], $v["real_price"], $v["quantity"], $v["total_price"], $v["title"] . " " . $v["name"], $v["zdjecie"], $v["purchase_price"]?? 0
     ]);
 
     query("UPDATE products SET cache_sales = cache_sales + ? WHERE product_id = ?", [$v["quantity"], $v["variant_id"]]);
@@ -121,8 +113,6 @@ foreach ($app["user"]["basket"]["variants"] as $v) {
 $res .= "</table>";
 
 triggerEvent("order_basket_change", ["zamowienie_id" => $zamowienie_id]);
-
-$link = $zamowienie_id . "-" . $link_hash;
 
 setBasketData([]);
 

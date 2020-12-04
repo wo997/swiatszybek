@@ -41,6 +41,7 @@ $zamowienie_data = [
     "track" => "",
     "notes" => "",
     "uwagi" => "",
+    "link" => "",
     "rebate_generated" => false
 ];
 
@@ -244,7 +245,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             $(".stepHolder").classList.add('step-' + i);
             now.style.display = "flex";
             now.style.height = "";
-            was.classList.remove('menu-scroll');
             nowBox.classList.add("showNow");
             wasBox.classList.remove("showNow");
             nowTitle.classList.add("showNow");
@@ -278,7 +278,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     was.style.display = "none";
                     nowBox.style.display = "block";
                     wasBox.style.display = "none";
-                    if(i == 2)now.classList.add('menu-scroll');
                     expand($(`.stepContent`), true, {duration: 1000});
                 },500);
             }, 200);
@@ -291,9 +290,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 setTimeout(function() {
                     $(".variant_list_holder_2").appendChild($(".variant_list_full"));
                 }, 600);
-                setTimeout(function(){
-                    now.classList.add('menu-scroll');
-                },5000)
             }
             else if (i == 3) {
                 var daneKontaktoweInfo = "";
@@ -302,6 +298,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 } else {
                     daneKontaktoweInfo = form.firma.value + "<br>NIP:&nbsp;" + form.nip.value;
                 }
+                setValue(form.buyer_type, BUYER_TYPE);
+
                 daneKontaktoweInfo += "<br>" + form.telefon.value + "<br>" + form.email.value;
 
                 daneKontaktoweInfo += '<div style="height: 7px;"></div>' + form.kod_pocztowy.value + " " + form.miejscowosc.value + ", " + form.kraj.value + "<br>" + form.ulica.value + " " + form.nr_domu.value + (form.nr_lokalu.value ? "/" : "") + form.nr_lokalu.value;
@@ -338,16 +336,22 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
                 $("#adresInfo").innerHTML = adresInfo;
 
-                var forma_zaplaty = "po";
-                if ($("#p24").checked) {
-                    forma_zaplaty = "24";
+                var forma_zaplaty = $(`[name="forma_zaplaty_radio"]`).getValue();
+                form.forma_zaplaty.value = forma_zaplaty;
+                var formaInfo = "";
+                if(forma_zaplaty == "p24"){
+                    $('#pay_po').style.display = 'none';
+                    $('#pay_p24').style.display = 'block';
+                    formaInfo = "Przelewy24";
+                }
+                else{
+                    $('#pay_p24').style.display = 'none';
+                    $('#pay_po').style.display = 'block';
+                    formaInfo = "Za pobraniem";
                 }
 
-                form.forma_zaplaty.value = forma_zaplaty;
-
                 $("#submit_text").innerHTML = forma_zaplaty == "po" ? "POTWIERDZAM ZAMÓWIENIE" : "ZAMAWIAM I PŁACĘ";
-
-                $("#zaplataInfo").innerHTML = $("#forma_" + forma_zaplaty).innerHTML.replace(/<input.*>/, "");
+                $("#zaplataInfo").innerHTML = formaInfo;
 
                 $("#koszt_dostawy_label").innerHTML = DELIVERY_COST + " zł";
 
@@ -407,11 +411,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
         function setBuyerFromInput(value) {
             if (value) {
-                if (value == "p") {
-                    $("#priv").checked = true;
-                } else {
-                    $("#comp").checked = true;
-                }
+                BUYER_TYPE = 'p';
+                $("#priv").checked = true;
+            } else {
+                BUYER_TYPE = 'f';
+                $("#comp").checked = true;
             }
         }
 
@@ -630,7 +634,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         
         <div style="margin: 0 auto;" class="content-holder">
             <div id="menu1" class="menu showNow step-1" style="max-width: 800px;">
-                <div class="menu-holder">
+                <div class="menu-holder scroll-panel scroll-shadow hide_scrollbar">
 
                     <?php if (isset($_GET['produkt'])) : ?>
                         <h3 style="margin:20px;color:red;text-align:center">Niestety produkt został już wyprzedany!<br><span style="font-weight: normal;">Musisz zmienić zawartość koszyka</span></h3>
@@ -658,7 +662,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 </div>
             </div>
             <div id="menu2" class="menu step-1" style="max-width: 900px; display:none;">
-                <div class="menu-holder">
+                <div class="menu-holder scroll-panel scroll-shadow hide_scrollbar">
                     <h3 style="font-size: 26px;padding: 0 10px;margin: 0;" data-view="kontakt">Dane kontaktowe</h3>
 
                     <label class="checkbox-wrapper" style="padding: 10px 10px 0px;">
@@ -856,9 +860,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                         <!--<input id="adresInfoInput" name="adresInfo" type="hidden">-->
 
                         <input name="forma_zaplaty" type="hidden" data-store="forma_zaplaty">
+                        <input name="buyer_type" type="hidden" data-store="buyer_type">
                         <input name="impersonate" type="hidden" value="<?= $impersonate ?>">
-
-
                     </div>
                     <div style="width: 100%;margin: 0 auto;">
 
@@ -873,13 +876,15 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                                                 echo niceDate($date);
                                                 ?></p>
                         </div>
-
-                        <h4 style="margin-top: 40px">Twoje uwagi dotyczące zamówienia</h4>
-                        <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($zamowienie_data["uwagi"]) ?></textarea>
-
-                        
+                        <h4>Twoje uwagi dotyczące zamówienia</h4>
+                        <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px">
+TODO: Usunąć powtarzające się dane z boku
+Rabat w modalu
+Walidacja regulaminu!!
+Poprawki wersji mobilnej
+<?= htmlspecialchars($zamowienie_data["uwagi"]) ?>
+                        </textarea>
                     </div>
-
                 </div>
                 </div>
             </div>
@@ -889,7 +894,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 <h3 id="menu1-steps-title" style="font-size: 26px;font-weight:600;margin: 0;">Podsumowanie koszyka</h3>
                 <h3 id="menu2-steps-title" style="font-size: 26px;font-weight:600;margin: 0;display:none;">Zamówienie</h3>
                 <h3 id="menu3-steps-title" style="font-size: 26px;font-weight:600;margin: 0;display:none;">Podsumowanie</h3>
-                <div class="variant_list_holder_2"></div>
+                <div class="variant_list_holder_2 scroll-panel scroll-shadow hide_scrollbar"></div>
 
                 <!-- WARTOŚĆ KOSZYKA -->
                 <div style="margin-top: 13px;" class="hideifempty">
@@ -984,9 +989,10 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                                 <!-- TODO: Zrobić to inaczej - jak będzie więcej to będzie dupa -->
                                 <h3 style="font-size: 20px;font-weight:600;margin:13px 0;">Płatność</h3>
                                 <radio-input name="forma_zaplaty_radio" class="default">
-                                    <radio-option value="p24" data-default>
-                                        Zapłać online <i style="font-size: 18px;color: #555;" class="fas fa-credit-card"></i>
-                                        <!-- <img style="padding:4px;width: 70px;vertical-align: middle;" src="/img/p24.png"> -->
+                                    <radio-option value="p24" data-default class="selected">
+                                        Zapłać online 
+                                        <!-- <i style="font-size: 18px;color: #555;" class="fas fa-credit-card"></i> -->
+                                        <img style="padding:4px;width: 70px;vertical-align: middle;" src="/img/p24.png">
                                     </radio-option>
                                     <radio-option value="po">
                                         Za pobraniem <i style="font-size: 18px;color: #555;" class="fas fa-hand-holding-usd"></i>
@@ -1025,7 +1031,8 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                                     <!-- TODO: Wybrana metoda płatności -->
                                     <span style="font-size: 18px;">Metoda płatności:</span>
                                     <span style="font-size: 20px;float:right;" class="pln">
-                                        <img style="width: 80px;vertical-align: middle;" src="/img/p24.png">
+                                        <img id="pay_p24" style="display:none; width: 80px;vertical-align: middle;" src="/img/p24.png"/>
+                                        <span id="pay_po" style="display:none;">Za pobraniem</span>
                                     </span>
                                 </div>
                             </div>
