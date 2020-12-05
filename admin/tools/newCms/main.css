@@ -210,7 +210,8 @@
 	background: #aaa3;
 }
 
-.newCms_block.grabbed > .newCms_block_content {
+.newCms_block.grabbed,
+.rearrange_node > .newCms_block {
 	overflow: hidden;
 }
 
