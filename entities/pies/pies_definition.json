@@ -1,0 +1,14 @@
+{
+    "_comment": "TODO: migrations based on a definition that a dev can customize anyway? seems simple af, we gotta specify types as they are in db tho",
+    "properties": {
+        "pies_id": {
+            "type": "number"
+        },
+        "food": {
+            "type": "number"
+        },
+        "ate_at": {
+            "type": "datetime"
+        }
+    }
+}

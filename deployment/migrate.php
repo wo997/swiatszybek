@@ -177,4 +177,10 @@ manageTableColumns("uploads", [
     ["name" => "user_id", "type" => "INT", "null" => true, "index" => "index"],
 ]);
 
+createTable("pies", [
+    ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "food", "type" => "INT"],
+    ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";

@@ -1,5 +1,11 @@
 <?php //route[{ADMIN}zaawansowane]
 
+// TODO: entity definition / props highlighting would be dope
+updateEnt("pies", 1, ["food" => "69"]);
+//updateEnt("pies", 1, ["food" => "-5"]); // should produce an error
+
+die;
+
 class Product
 {
     public $product_id;
