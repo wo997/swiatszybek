@@ -1,3 +1,5 @@
+/* js[tool_fileManager] */
+
 window.fileManager = {
 	target: null,
 	callback: null,
@@ -162,7 +164,7 @@ window.fileManager = {
 	},
 };
 
-window.initFileManager = () => {
+window.init_tool_fileManager = () => {
 	registerModalContent(
 		`
         <div id="fileManager" data-expand="true">

@@ -12,6 +12,16 @@ function useTool(name) {
 	toolList.push(name);
 
 	loadScript(
+		`/builds/tool_${name}.js?v=${JS_RELEASE}`,
+		{},
+		{
+			callback: () => {
+				window[`init_tool_${name}`]();
+			},
+		}
+	);
+
+	/*loadScript(
 		`/admin/tools/${name}/main.js?v=${RELEASE}`,
 		{
 			type: "module",
@@ -21,5 +31,5 @@ function useTool(name) {
 				window[`init${name.capitalize()}`]();
 			},
 		}
-	);
+	);*/
 }

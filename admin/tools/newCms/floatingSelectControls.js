@@ -1,4 +1,6 @@
-export default class FloatingSelectControls {
+/* js[tool_newCms] */
+
+class FloatingSelectControls {
 	constructor(newCms) {
 		/** @type {NewCms} */
 		this.newCms = newCms;

@@ -1,4 +1,6 @@
-export default class QuillEditor {
+/* js[tool_newCms] */
+
+class QuillEditor {
 	color_list = [
 		"rgb(255, 85, 118)",
 		"rgb(255,43,0)",

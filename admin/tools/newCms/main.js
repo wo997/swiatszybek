@@ -1,13 +1,10 @@
-import EditBlock from "./editBlock.js";
-import FloatingRearrangeControls from "./floatingRearrangeControls.js";
-import FloatingSelectControls from "./floatingSelectControls.js";
-import QuillEditor from "./quillEditor.js";
+/* js[tool_newCms] */
 
 // dependencies
 useTool("fileManager");
 //useTool("quillEditor"); // TODO: get it to work, should be a module, well, fuck it xd
 
-export default class NewCms {
+class NewCms {
 	constructor(container) {
 		this.container = $(container);
 		this.content_node = this.container.find(`.newCmsContent`);
@@ -1248,7 +1245,7 @@ function zoomNode(node, direction, options = {}) {
 	});
 }
 
-window.initNewCms = () => {
+window.init_tool_newCms = () => {
 	registerModalContent(
 		/*html*/ `
         <div id="newCms" class="newCms" data-expand="large" data-form data-history data-exclude-hidden>

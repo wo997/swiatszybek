@@ -1,4 +1,6 @@
-export default class EditBlock {
+/* js[tool_newCms] */
+
+class EditBlock {
 	constructor(edit_block_node, newCms) {
 		/** @type {NewCms} */
 		this.newCms = newCms;
@@ -29,6 +31,8 @@ export default class EditBlock {
 				}
 			}
 		});
+
+		this.newCms.content_scroll_panel;
 
 		const container_flow = this.newCms.sidebar.find(`[name="container_flow"]`);
 		container_flow.addEventListener("change", () => {
