@@ -5,21 +5,42 @@ var toolList = [];
 /**
  * @param {string} name
  */
-function useTool(name) {
+async function useTool(name) {
 	if (toolList.includes(name)) {
 		return;
 	}
 	toolList.push(name);
 
-	loadScript(
+	const a = await loadScript(
 		`/builds/tool_${name}.js?v=${JS_RELEASE}`,
 		{},
 		{
 			callback: () => {
-				window[`init_tool_${name}`]();
+				const func = window[`init_tool_js_${name}`];
+				if (func) {
+					func();
+				}
 			},
 		}
 	);
+	const b = await loadStylesheet(
+		`/builds/tool_${name}.css?v=${JS_RELEASE}`,
+		{},
+		{
+			callback: () => {
+				const func = window[`init_tool_css_${name}`];
+				if (func) {
+					func();
+				}
+			},
+		}
+	);
+	const func = window[`init_tool_fully_${name}`];
+	if (func) {
+		func();
+	}
+	// cute
+	//console.log(a, `/builds/tool_${name}.js?v=${JS_RELEASE}`, b);
 
 	/*loadScript(
 		`/admin/tools/${name}/main.js?v=${RELEASE}`,

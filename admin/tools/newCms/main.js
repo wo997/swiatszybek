@@ -94,6 +94,10 @@ class NewCms {
 		});
 	}
 
+	stylesLoaded() {
+		this.container.dispatchEvent(new Event("styles_loaded"));
+	}
+
 	initGrids() {
 		this.container.addEventListener("clean_up_output", () => {
 			this.cleanupGrids(this.clean_output_node);
@@ -1245,7 +1249,7 @@ function zoomNode(node, direction, options = {}) {
 	});
 }
 
-window.init_tool_newCms = () => {
+window.init_tool_js_newCms = () => {
 	registerModalContent(
 		/*html*/ `
         <div id="newCms" class="newCms" data-expand="large" data-form data-history data-exclude-hidden>
@@ -1347,10 +1351,13 @@ window.init_tool_newCms = () => {
                 <div class="newCmsContent_copy newCms_block_content"></div>
             </div>
             </div>
-            <link href="/admin/tools/newCms/main.css?v=${CSS_RELEASE}" rel="stylesheet">
         </div>`,
 		(modal) => {
 			window.newCms = new NewCms(modal);
 		}
 	);
+};
+
+window.init_tool_fully_newCms = () => {
+	newCms.stylesLoaded();
 };

@@ -11,9 +11,8 @@
 </style>
 
 <script>
-    useTool("newCms");
-
     domload(() => {
+        useTool("newCms");
         setFormData(
             <?= json_encode(
                 getSetting("general", "random", [])

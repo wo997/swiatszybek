@@ -1,3 +1,5 @@
+/* css[tool_fileManager] */
+
 #fileManager .gallery {
 	flex-shrink: 1;
 	overflow-y: auto;

@@ -164,7 +164,7 @@ window.fileManager = {
 	},
 };
 
-window.init_tool_fileManager = () => {
+window.init_tool_js_fileManager = () => {
 	registerModalContent(
 		`
         <div id="fileManager" data-expand="true">
@@ -194,7 +194,6 @@ window.init_tool_fileManager = () => {
 
                 </div>
             </div>
-            <link href="/admin/tools/fileManager.css?v=${RELEASE}" rel="stylesheet">
         </div>
     `
 	);

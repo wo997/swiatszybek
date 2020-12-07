@@ -7,7 +7,7 @@ function loadScript(src, attributes = {}, options = {}) {
 	});
 	script.src = src;
 
-	loadFileAsNode(script, options);
+	return loadFileAsNode(script, options);
 }
 
 function loadStylesheet(href, attributes = {}, options = {}) {
@@ -16,22 +16,32 @@ function loadStylesheet(href, attributes = {}, options = {}) {
 		link.setAttribute(key, value);
 	});
 	link.href = href;
+	link.rel = "stylesheet";
 
-	loadFileAsNode(link, options);
+	return loadFileAsNode(link, options);
 }
 
 function loadFileAsNode(node, options = {}) {
-	if (document.body) {
-		document.body.appendChild(node);
-	} else {
-		domload(() => {
-			document.body.appendChild(node);
-		});
-	}
+	return new Promise((resolve) => {
+		if (!document.body) {
+			domload(() => {
+				loadFileAsNode(node, options);
+			});
+			return;
+		}
 
-	if (options.callback) {
-		node.addEventListener("load", () => {
-			options.callback();
-		});
-	}
+		document.body.appendChild(node);
+
+		if (options.callback) {
+			node.addEventListener("load", () => {
+				options.callback();
+				resolve("loaded");
+			});
+			node.addEventListener("error", () => {
+				resolve("error");
+			});
+		} else {
+			resolve();
+		}
+	});
 }
