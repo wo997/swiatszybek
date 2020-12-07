@@ -1,0 +1,10 @@
+{
+    "properties": {
+        "target": {
+            "type": "node"
+        },
+        "lang": {
+            "type": "array"
+        }
+    }
+}

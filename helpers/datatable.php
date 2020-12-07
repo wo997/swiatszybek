@@ -107,7 +107,7 @@ function getRelevanceQuery($fields, $words)
     return $query;
 }
 
-function paginateData($data = null)
+function paginateData($pagination_params__a = [])
 {
     /*
     required POSTS:
@@ -141,11 +141,11 @@ function paginateData($data = null)
 
     $bottomIndex = $pageIndex * $rowCount;
 
-    $select = nonull($data, "select");
+    $select = nonull($pagination_params__a, "select");
 
-    $from = nonull($data, "from");
+    $from = nonull($pagination_params__a, "from");
 
-    $where = nonull($data, "where");
+    $where = nonull($pagination_params__a, "where");
 
     if (trim($where) == "") {
         $where = "1";
@@ -159,9 +159,9 @@ function paginateData($data = null)
         }
     }
 
-    $main_search_value = nonull($data, "search", nonull($_POST, 'search'));
-    $main_search_fields = nonull($data, "main_search_fields", []);
-    $search_type = nonull($data, "search_type", "regular");
+    $main_search_value = nonull($pagination_params__a, "search", nonull($_POST, 'search'));
+    $main_search_fields = nonull($pagination_params__a, "main_search_fields", []);
+    $search_type = nonull($pagination_params__a, "search_type", "regular");
 
     $search_query = getSearchQuery([
         "main_search_value" => $main_search_value,
@@ -177,9 +177,9 @@ function paginateData($data = null)
         }
     }
 
-    $group = isset($data["group"]) ? ("GROUP BY " . $data["group"]) : "";
+    $group = isset($pagination_params__a["group"]) ? ("GROUP BY " . $pagination_params__a["group"]) : "";
 
-    $order = nonull($data, "order");
+    $order = nonull($pagination_params__a, "order");
 
     $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
 
@@ -229,8 +229,8 @@ function paginateData($data = null)
         $index++;
         $result["kolejnosc"] = $pageIndex * $rowCount + $index;
 
-        if (isset($data["renderers"])) {
-            foreach ($data["renderers"] as $field => $renderer) {
+        if (isset($pagination_params__a["renderers"])) {
+            foreach ($pagination_params__a["renderers"] as $field => $renderer) {
                 $result[$field] = $renderer($result);
             }
         }
@@ -241,7 +241,7 @@ function paginateData($data = null)
 
     $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
 
-    return isset($data["raw"]) ? $responseArray : json_encode($responseArray);
+    return isset($pagination_params__a["raw"]) ? $responseArray : json_encode($responseArray);
 }
 
 /**

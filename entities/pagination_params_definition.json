@@ -1,0 +1,12 @@
+{
+    "properties": {
+        "select": {
+            "type": "string",
+            "description": "F.e: * or product_id, price"
+        },
+        "where": {
+            "type": "string",
+            "description": "F.e: product_id = 5 or leave empty"
+        }
+    }
+}

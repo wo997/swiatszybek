@@ -16,4 +16,4 @@ query("UPDATE products SET cache_avg_rating = ?, cache_rating_count = ? WHERE pr
 ]);
 
 // return true or false
-$product[]
+//$product[]
