@@ -7,6 +7,10 @@
         "where": {
             "type": "string",
             "description": "F.e: product_id = 5 or leave empty"
+        },
+        "product__a": {
+            "type": "product",
+            "description": "Just testing"
         }
     }
 }

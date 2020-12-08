@@ -2,6 +2,10 @@
     "properties": {
         "additional_property_from_module": {
             "type": "string"
+        },
+        "maro": {
+            "type": "boolean",
+            "description": "describes whether the user is an idiot and forgets to change the base price and yet publishes the product"
         }
     }
 }

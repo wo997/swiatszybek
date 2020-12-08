@@ -422,13 +422,6 @@ function getValue(input) {
 		} else {
 			return "";
 		}
-
-		{
-			if (input.hasAttribute("data-number")) {
-				return +input.value;
-			}
-			return input.value;
-		}
 	}
 }
 

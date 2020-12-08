@@ -426,7 +426,7 @@ function createSimpleList(params = {}) {
 	list.valuesChanged();
 
 	// form compatibility
-	list.wrapper.setValue = (value, options) => {
+	list.wrapper.setValue = (value, options = {}) => {
 		list.setListValues(value);
 
 		if (!options.quiet) {

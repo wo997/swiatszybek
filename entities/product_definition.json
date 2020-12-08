@@ -12,6 +12,9 @@
         },
         "jajko": {
             "type": "number"
+        },
+        "pies__x": {
+            "type": "pies"
         }
     },
     "methods": [
