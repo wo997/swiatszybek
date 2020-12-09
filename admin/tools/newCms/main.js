@@ -848,10 +848,13 @@ class NewCms {
 	}
 
 	animateContent(all_animatable_blocks, duration, options = {}) {
+		this.container.classList.add("animating_rearrangement");
+
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
 			setTimeout(() => {
 				// browser needs time to render it again
+				this.container.classList.remove("animating_rearrangement");
 				this.content_node_copy.classList.remove("visible");
 
 				this.contentChange();

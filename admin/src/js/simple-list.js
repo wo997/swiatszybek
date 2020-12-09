@@ -114,9 +114,14 @@ function createSimpleList(params = {}) {
 	//<div class="btn primary add_btn add_end main_add_btn" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i>
 
 	list.insertRowFromBtn = (btn, begin = true, user = true) => {
+		const slr = btn.findParentByClassName("sub-list");
+		console.log(btn, slr);
+
 		var row = list.insertRow(
 			params.default_row,
-			btn.findParentByClassName("above-simple-list").next().find(".list"),
+			slr
+				? slr.find(".list")
+				: btn.findParentByClassName("above-simple-list").next().find(".list"),
 			begin,
 			user
 		);

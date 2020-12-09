@@ -24,7 +24,7 @@ async function useTool(name) {
 		}
 	);
 	const b = await loadStylesheet(
-		`/builds/tool_${name}.css?v=${JS_RELEASE}`,
+		`/builds/tool_${name}.css?v=${CSS_RELEASE}`,
 		{},
 		{
 			callback: () => {

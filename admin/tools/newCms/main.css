@@ -25,7 +25,8 @@
 }
 
 .content_scroll_panel:hover .newCms_block:before,
-.newCms.grabbed_block .newCms_block:before {
+.newCms.grabbed_block .newCms_block:before,
+.newCms.animating_rearrangement .newCms_block:before {
 	content: "";
 	position: absolute;
 	left: -1px;
@@ -109,10 +110,10 @@
 .newCms:not(.anything_selected):not(.grabbed_block)
 	.content_scroll_panel:not(:hover)
 	.select_controls,
-.newCms:not(.grabbed_block)
+.newCms:not(.grabbed_block):not(.animating_rearrangement)
 	.content_scroll_panel:not(:hover)
 	.grid_wireframe_line:before,
-.newCms:not(.grabbed_block)
+.newCms:not(.grabbed_block):not(.animating_rearrangement)
 	.content_scroll_panel:not(:hover)
 	.grid_wireframe_line:after,
 .select_controls:not(.visible) {
@@ -552,10 +553,10 @@
 	display: none !important;
 }
 
-.newCmsContent_copy .grid_wireframe_line:before,
+/*.newCmsContent_copy .grid_wireframe_line:before,
 .newCmsContent_copy .grid_wireframe_line:after {
 	opacity: 0 !important;
-}
+}*/
 
 /* grid start */
 
