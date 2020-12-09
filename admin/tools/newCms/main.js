@@ -92,6 +92,12 @@ class NewCms {
 				this.select_controls.addFloatingSelectControls();
 			}
 		});
+
+		this.container.addEventListener("clean_up_output", () => {
+			this.clean_output_node.findAll(".to_remove").forEach((e) => {
+				e.remove();
+			});
+		});
 	}
 
 	stylesLoaded() {
@@ -367,6 +373,9 @@ class NewCms {
 			this.content_node.dispatchChange();
 		}
 		this.content_change_triggered = false;
+		this.content_node.findAll(".to_remove").forEach((e) => {
+			e.remove();
+		});
 	}
 
 	cleanupGrids(node = null) {
@@ -527,12 +536,14 @@ class NewCms {
 
 		const all_animatable_blocks = this.afterContentAnimation();
 
-		block.classList.remove("cramped");
 		block.classList.add("animation_cramp");
 
 		this.animateContent(all_animatable_blocks, 350, {
-			callback: () => {
-				block.remove();
+			beforeAnimationEndCallback() {
+				block.classList.remove("animation_cramp");
+			},
+			callback() {
+				block.classList.add("to_remove");
 			},
 		});
 	}
@@ -853,6 +864,10 @@ class NewCms {
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
 			setTimeout(() => {
+				if (options.beforeAnimationEndCallback) {
+					options.beforeAnimationEndCallback();
+				}
+
 				// browser needs time to render it again
 				this.container.classList.remove("animating_rearrangement");
 				this.content_node_copy.classList.remove("visible");
@@ -865,6 +880,7 @@ class NewCms {
 				this.updateMouseTarget();
 				this.mouseMove();
 
+				// not used so far
 				if (options.callback) {
 					options.callback();
 				}
@@ -911,26 +927,26 @@ class NewCms {
 			const fg = block.style.flexGrow;
 			block.style.flexGrow = "0";
 
-			const animation_cramp = block.classList.contains("animation_cramp")
-				? "scale(0)"
-				: "";
+			const animation_cramp = block.classList.contains("animation_cramp");
 
 			let keyframes = "";
 
 			if (animation_cramp) {
-				const neg_half_w = -block.last_rect.width * 0.5;
-				const new_half_h = -block.last_rect.height * 0.5;
+				const half_w = block.last_rect.width * 0.5;
+				const half_h = block.last_rect.height * 0.5;
 
 				keyframes = `
                     0% {
+                        transform-origin: center;
                         transform: translate(${dx}px, ${dy}px) scale(1);
                         margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                     }
                     100% {
-                        transform: translate(0px, 0px) scale(0);
-                        margin: ${new_half_h}px ${neg_half_w}px;
+                        transform-origin: center;
+                        transform: translate(${dx}px, ${dy}px) scale(0);
+                        margin: -${half_h}px -${half_w}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                     }

@@ -77,6 +77,10 @@ class FloatingSelectControls {
 
 		let blocks_data = [];
 		this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
+			if (block.classList.contains("cramped")) {
+				return;
+			}
+
 			const block_rect_data = nodePositionAgainstScrollableParent(block);
 
 			let parent_count = 0;

@@ -1520,7 +1520,7 @@ input:placeholder-shown {
 	width: 1em;
 }
 
-.cramped {
+.cramped:not(.animation_cramp) {
 	width: 0 !important;
 	height: 0 !important;
 	margin: 0 !important;
@@ -1528,4 +1528,6 @@ input:placeholder-shown {
 	border-width: 0 !important;
 	min-width: 0 !important;
 	min-height: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
 }
