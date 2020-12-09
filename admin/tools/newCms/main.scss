@@ -107,18 +107,22 @@
   opacity: 0.2;
 }*/
 
-.newCms:not(.anything_selected):not(.grabbed_block)
+.newCms:not(.grabbed_block):not(.anything_selected)
 	.content_scroll_panel:not(:hover)
 	.select_controls,
-.newCms:not(.grabbed_block):not(.animating_rearrangement)
-	.content_scroll_panel:not(:hover)
-	.grid_wireframe_line:before,
-.newCms:not(.grabbed_block):not(.animating_rearrangement)
-	.content_scroll_panel:not(:hover)
-	.grid_wireframe_line:after,
 .select_controls:not(.visible) {
 	opacity: 0;
 	pointer-events: none;
+}
+
+.newCms:not(.grabbed_block):not(.animating_rearrangement)
+	.content_scroll_panel:not(:hover)
+	.grid_wireframe_line {
+	&:before,
+	&:after {
+		opacity: 0;
+		pointer-events: none;
+	}
 }
 
 /* block selection end */
@@ -166,10 +170,12 @@
 	border-radius: 50%;
 }
 
-.rearrange_control.rearrange_active,
-.rearrange_control.first_grid_node {
-	opacity: 1;
-	background: var(--primary-clr);
+.rearrange_control {
+	&.rearrange_active,
+	&.first_grid_node {
+		opacity: 1;
+		background: var(--primary-clr);
+	}
 }
 
 .rearrange_control > * {
@@ -178,7 +184,7 @@
 
 .rearrange_control.rearrange_active > *,
 .rearrange_control.first_grid_node > * {
-	filter: invert();
+	filter: invert(1);
 }
 
 .rearrange_insert_rect {
@@ -191,9 +197,11 @@
 	);
 }
 .rearrange_insert_rect:not(.visible),
-.newCms:not(.grabbed_block) .rearrange_insert_rect,
-.newCms:not(.rearrange_possible) .rearrange_insert_rect {
-	opacity: 0;
+.newCms {
+	&:not(.grabbed_block) .rearrange_insert_rect,
+	&:not(.rearrange_possible) .rearrange_insert_rect {
+		opacity: 0;
+	}
 }
 
 .rearrange_grabbed_rect {
@@ -254,42 +262,43 @@
 	border-color: #ccc7 !important;
 }
 
-.newCms.grabbed_block .newCms_block.container {
-	box-shadow: 0px 0px 0px 2px #bbb, inset 0px 0px 0px 2px #bbb;
-}
+.newCms.grabbed_block {
+	.newCms_block.container {
+		box-shadow: 0px 0px 0px 2px #bbb, inset 0px 0px 0px 2px #bbb;
+	}
 
-.newCms.grabbed_block .newCms_block:not(.container),
-.newCms.grabbed_block .select_controls {
-	filter: contrast(0.9);
-	opacity: 0.65;
-}
+	.newCms_block:not(.container),
+	.select_controls {
+		filter: contrast(0.9);
+		opacity: 0.65;
+	}
 
-.newCms.grabbed_block .newCms_block.rearrange_active:before,
-.newCms.grabbed_block .newCmsContent.rearrange_active:before {
-	content: "";
-	transition: 0.2s box-shadow;
-}
+	.newCms_block.rearrange_active:before,
+	.newCmsContent.rearrange_active:before {
+		content: "";
+		transition: 0.2s box-shadow;
+	}
 
-.newCms.grabbed_block .newCms_block.rearrange_active:before,
-.newCms.grabbed_block .newCmsContent.rearrange_active:before {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
-	z-index: 400;
-	box-shadow: 0 0 0 2px var(--primary-clr), inset 0 0 0 2px var(--primary-clr);
-	pointer-events: none;
-}
+	.newCms_block.rearrange_active:before,
+	.newCmsContent.rearrange_active:before {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		z-index: 400;
+		box-shadow: 0 0 0 2px var(--primary-clr), inset 0 0 0 2px var(--primary-clr);
+		pointer-events: none;
+	}
 
-.newCms.grabbed_block .newCms_block.rearrange_active,
-.newCms.grabbed_block .newCmsContent.rearrange_active {
-	box-shadow: 0 0 0 2px var(--primary-clr), inset 0 0 0 2px var(--primary-clr);
-	/*background: #0001;*/
-}
-
-.newCms.grabbed_block .newCms_block[data-block="grid"] > .newCms_block_content {
-	pointer-events: none;
+	.newCms_block.rearrange_active,
+	.newCmsContent.rearrange_active {
+		box-shadow: 0 0 0 2px var(--primary-clr), inset 0 0 0 2px var(--primary-clr);
+		/*background: #0001;*/
+	}
+	.newCms_block[data-block="grid"] > .newCms_block_content {
+		pointer-events: none;
+	}
 }
 
 /* block rearrangement end */
@@ -306,7 +315,7 @@
 }
 
 /* block inside of a block caused the margins to collapse, the solution down below is simple, make it flex! ;)
-    DUUUUUUUUDE, it just fucked up everything again :/ we need them to flex but we are back to the same shit
+    it is just fucked up everything again :/ we need them to flex but we are back to the same shit
     putting flex again does seem to fix it maybe idk
 */
 .newCms_block_content {
@@ -374,9 +383,11 @@
 	stroke-width: 0;
 }
 
-.edit_block_node .context-btn:hover,
-.edit_block_node .context-btn:hover + foreignObject {
-	opacity: 0.8;
+.edit_block_node .context-btn:hover {
+	&,
+	foreignObject {
+		opacity: 0.8;
+	}
 }
 
 /* edit_block_node end */
@@ -578,16 +589,18 @@
 	position: relative;
 	pointer-events: none;
 }
-.grid_wireframe_line:before,
-.grid_wireframe_line:after {
-	content: "";
-	position: absolute;
-	background-image: repeating-linear-gradient(
-		-45deg,
-		#0003 0px 6px,
-		#0000 6px 12px
-	);
-	transition: opacity 0.2s;
+.grid_wireframe_line {
+	&:before,
+	&:after {
+		content: "";
+		position: absolute;
+		background-image: repeating-linear-gradient(
+			-45deg,
+			#0003 0px 6px,
+			#0000 6px 12px
+		);
+		transition: opacity 0.2s;
+	}
 }
 .grid_wireframe_line_left:before {
 	left: -1px;

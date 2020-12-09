@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}search_strony]
+<?php //route[{ADMIN}test2]
 
 class A
 {

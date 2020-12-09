@@ -460,7 +460,7 @@ header .main-search-wrapper:not(.active) .search-results,
 }
 .any-search-wrapper .search-icon {
   width: 16px;
-  filter: invert();
+  filter: invert(1);
   transform: translateY(2px);
 }
 

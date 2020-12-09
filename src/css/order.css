@@ -123,7 +123,7 @@
 }
 
 .selectedDostawa img {
-  filter: invert() hue-rotate(180deg) brightness(3.5);
+  filter: invert(1) hue-rotate(180deg) brightness(3.5);
 }
 
 #total {

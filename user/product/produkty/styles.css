@@ -202,7 +202,7 @@
 }
 
 .sorting-wrapper .order_by_item input:checked + span img {
-	filter: invert();
+	filter: invert(1);
 }
 
 .order_by_item input:not(:checked) + span .fas,

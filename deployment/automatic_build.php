@@ -18,7 +18,7 @@ scanDirectories(
         $mtime = filemtime($path);
         if (strpos($path, ".php")) {
             $modificationTimePHP += $mtime;
-        } else if (strpos($path, ".css")) {
+        } else if (strpos($path, ".css") || strpos($path, ".scss")) {
             $modificationTimeCSS += $mtime;
         } else if (strpos($path, ".js")) {
             $modificationTimeJS += $mtime;
@@ -48,7 +48,7 @@ scanDirectories(
             // else is important, no need to upgrade
         } else if (strpos($path, ".php")) {
             $modificationTimePHP += $mtime;
-        } else if (strpos($path, ".css")) {
+        } else if (strpos($path, ".css") || strpos($path, ".scss")) {
             $modificationTimeCSS += $mtime;
         } else if (strpos($path, ".js")) {
             $modificationTimeJS += $mtime;

@@ -11,6 +11,7 @@ if (!$modifyJS && !$modifyCSS) {
 }
 
 use MatthiasMullie\Minify;
+use ScssPhp\ScssPhp\Compiler;
 
 $cssFileGroups = [];
 $jsFileGroups = [];
@@ -23,7 +24,7 @@ scanDirectories(
     function ($path, $first_line, $parent_dir) {
         global $cssFileGroups, $jsFileGroups, $modifyCSS, $modifyJS;
 
-        if (strpos($path, ".css") !== false) {
+        if (strpos($path, ".css") !== false || strpos($path, ".scss") !== false) {
             if ($modifyCSS && $css_group = getAnnotation("css", $first_line)) {
                 $cssFileGroups[$css_group][] = $path;
             }
@@ -37,7 +38,13 @@ scanDirectories(
 
 if ($modifyCSS) {
     foreach ($cssFileGroups as $cssGroup => $files) {
-        $minifier = new Minify\CSS(...$files);
+        $scss = new Compiler();
+
+        $css_full = "";
+        foreach ($files as $file) {
+            $css_full .= " " . file_get_contents($file);
+        }
+        $minifier = new Minify\CSS($scss->compile($css_full));
         $minifier->minify(BUILDS_PATH . "$cssGroup.css");
     }
 }

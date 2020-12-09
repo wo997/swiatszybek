@@ -1,5 +1,7 @@
 <?php
 
+ini_set('max_execution_time', '1000');
+
 include "scripts/start_session.php";
 
 include_once 'vendor/autoload.php';
