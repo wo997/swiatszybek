@@ -31,6 +31,7 @@ class NewCms {
 		this.initFloatingSelectControls();
 		this.initFloatingRearrangeControls();
 		this.initListenChange();
+		this.initStyling();
 
 		this.initGrids();
 
@@ -108,6 +109,10 @@ class NewCms {
 		this.container.addEventListener("clean_up_output", () => {
 			this.cleanupGrids(this.clean_output_node);
 		});
+	}
+
+	initStyling() {
+		this.styling = new NewCmsStyling(this);
 	}
 
 	initMargins() {
@@ -228,6 +233,8 @@ class NewCms {
 			this.container
 		);
 		this.contentChange();
+
+		this.styling.init();
 
 		setFormInitialState(this.container);
 
@@ -779,6 +786,8 @@ class NewCms {
 					.parent()
 					.insertBefore(grabbed_block, before_node);
 			}
+
+			this.styling.registerMissingBlocks();
 		}
 
 		const all_animatable_blocks = this.afterContentAnimation();
