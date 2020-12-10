@@ -353,7 +353,11 @@ class FloatingRearrangeControls {
 			rearrange_grabbed_rect_node.style.height =
 				block_rect_data.node_rect.height + "px";
 			rearrange_grabbed_rect_node.classList.add("visible");
+		} else {
+			return;
 		}
+
+		const block_type = block.getAttribute("data-block");
 
 		// them floating controls
 		let blocks_data = [];
@@ -363,8 +367,6 @@ class FloatingRearrangeControls {
 					// don't touch itself or parent
 					return;
 				}
-
-				const block_type = block.getAttribute("data-block");
 
 				if (
 					this.newCms.grabbed_block &&
@@ -499,10 +501,14 @@ class FloatingRearrangeControls {
 		this.newCms.content_node
 			.findAll(`.newCms_block[data-block="grid"]`)
 			.forEach((block) => {
-				if (!block.grid_data || block == this.newCms.grabbed_block) {
+				if (
+					!block.grid_data ||
+					block.findParentNode(this.newCms.grabbed_block) ||
+					block_type == "grid"
+				) {
+					// don't touch itself or parent
 					return;
 				}
-
 				const parent_container = block.findParentByClassName("container", {
 					skip: 1,
 				});
