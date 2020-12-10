@@ -359,8 +359,8 @@ class FloatingRearrangeControls {
 		let blocks_data = [];
 		const addControls = (position) => {
 			this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
-				if (block == this.newCms.grabbed_block) {
-					// don't touch itself
+				if (block.findParentNode(this.newCms.grabbed_block)) {
+					// don't touch itself or parent
 					return;
 				}
 
