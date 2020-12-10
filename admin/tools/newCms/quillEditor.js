@@ -160,6 +160,7 @@ class QuillEditor {
 		});
 	}
 
+	// TODO: it should be a "property" of sidebar to delay the saving I think
 	saveChanges() {
 		if (!this.any_changes) {
 			return;

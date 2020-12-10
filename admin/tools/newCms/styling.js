@@ -1,28 +1,38 @@
 /* js[tool_newCms] */
 
+class blockData {
+	id;
+	node;
+	own_styles;
+}
+
 class NewCmsStyling {
-	constructor(newCms) {
+	constructor(newCms, node) {
 		/** @type {NewCms} */
 		this.newCms = newCms;
+		this.node = node;
 		this.init();
 	}
 
 	init() {
+		/**
+		 * @type {blockData[]}
+		 */
 		this.blocks = [];
 
 		this.setAllRegisteredBlocks();
 		this.registerMissingBlocks();
+		this.generateCSS();
 	}
 
 	setAllRegisteredBlocks() {
-		this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
-			const match_block_id = block.className.match(/block_\d+/);
+		this.newCms.content_node.findAll(".newCms_block").forEach((node) => {
+			const block_id = this.getBlockId(node);
 
-			if (!match_block_id) {
+			if (!block_id) {
 				return;
 			}
 
-			const block_id = match_block_id[0];
 			this.blocks.push({
 				id: block_id,
 				block: block,
@@ -31,10 +41,8 @@ class NewCmsStyling {
 	}
 
 	registerMissingBlocks() {
-		this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
-			const match_block_id = block.className.match(/block_\d+/);
-
-			if (match_block_id) {
+		this.newCms.content_node.findAll(".newCms_block").forEach((node) => {
+			if (this.getBlockId(node)) {
 				return;
 			}
 
@@ -45,12 +53,45 @@ class NewCmsStyling {
 					},
 					{ id: 0 }
 				).id + 1;
-			block.classList.add(`block_${block_id}`);
+			node.classList.add(this.getBlockClassName(block_id));
 
+			// TODO: fetch styles from... somewhere, like a node with big json in html
 			this.blocks.push({
 				id: block_id,
-				block: block,
+				node: node,
 			});
 		});
+	}
+
+	getBlockId(node) {
+		const match_block_id = node.className.match(/block_\d+/);
+
+		if (!match_block_id) {
+			return null;
+		}
+
+		return parseInt(match_block_id[0].substring(6));
+	}
+
+	getBlockClassName(block_id) {
+		return `block_${block_id}`;
+	}
+
+	generateCSS() {
+		let css_full = "";
+		for (const block of this.blocks) {
+			console.log(block);
+
+			let own_styles = block.own_styles;
+			if (!own_styles) {
+				continue;
+			}
+			const block_class_name = this.getBlockClassName(block.id);
+			own_styles = own_styles.replace(/&/g, `.${block_class_name}`);
+
+			css_full += own_styles;
+		}
+		//console.log(css_full);
+		this.node.innerHTML = css_full;
 	}
 }

@@ -12,6 +12,7 @@ class NewCms {
 		this.content_scroll_content = this.container.find(
 			`.content_scroll_content`
 		);
+		// sidebar should have it's own class
 		this.sidebar = this.container.find(`.sidebar`);
 		this.sidebar_scroll_wrapper = this.sidebar.find(`.scroll-panel`);
 		this.sidebar_content_wrapper = this.sidebar_scroll_wrapper.find(
@@ -112,7 +113,7 @@ class NewCms {
 	}
 
 	initStyling() {
-		this.styling = new NewCmsStyling(this);
+		this.styling = new NewCmsStyling(this, this.container.find(".styles_node"));
 	}
 
 	initMargins() {
@@ -1338,6 +1339,9 @@ window.init_tool_js_newCms = () => {
                             Edycja bloku / kontenera...
                             </span>
 
+                            <span class="field-title">Dodatkowy CSS <i class="fas fa-info-circle" data-tooltip="Wpisz & jako selektor tego bloku."></i></span>
+                            <textarea name="custom_css" class="field" style="height:200px;overflow-y:auto"></textarea>
+
                             <span class="field-title">Tekst</span>
                             <div class="quill_editor"></div>
 
@@ -1374,6 +1378,8 @@ window.init_tool_js_newCms = () => {
                     </div>
                 </div>  
             <div class="rearrange_node"></div>
+            <!-- maybe it should be a part of the contents, who knows, we can do it both ways -->
+            <style class="styles_node"></style>
             <div class="clean_output" style="display:none !important"></div>
             <div style="position:absolute;width:100%;height:100%;left:0;top:0;overflow:hidden;pointer-events:none">
                 <div class="newCmsContent_copy newCms_block_content"></div>

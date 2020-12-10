@@ -346,7 +346,7 @@ function setValue(input, value = null, params = {}) {
 			if ([...input.options].find((e) => e.value == value)) {
 				input.value = value;
 			}
-		} else if (input.tagName == "INPUT") {
+		} else if (["INPUT", "TEXTAREA"].includes(input.tagName)) {
 			// for text fields
 			input.value = value;
 		} else {
@@ -414,7 +414,7 @@ function getValue(input) {
 				return reverseDateString(input.value, "-");
 			}
 			return input.value;
-		} else if (input.tagName == "INPUT" || input.tagName == "SELECT") {
+		} else if (["INPUT", "SELECT", "TEXTAREA"].includes(input.tagName)) {
 			if (input.hasAttribute("data-number")) {
 				return +input.value;
 			}
