@@ -56,7 +56,6 @@ include "packages/simple_html_dom.php";
 //var_Dump(get_defined_constants()["ADMIN_URL"]);
 
 include "scripts/define_paths.php";
-
 include "scripts/use_builds.php";
 
 // TODO: abanbon and replace with settigs

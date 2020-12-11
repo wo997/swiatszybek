@@ -2,23 +2,23 @@
 
 // default values - overriden by 'build_info'
 // TODO: not rly a todo, just remember about it ;)
-$previousModificationTimePHP = 0;
-$previousModificationTimeCSS = 0;
-$previousModificationTimeJS = 0;
-$previousModificationTimeModules = 0;
-$previousModificationTimeSettings = 0;
-$versionPHP = 0;
-$versionCSS = 0;
-$versionJS = 0;
-$versionModules = 0;
-$versionSettings = 0;
+$prev_mod_time_php = 0;
+$prev_mod_time_css = 0;
+$prev_mod_time_js = 0;
+$prev_mod_time_modules = 0;
+$prev_mod_time_settings = 0;
+$version_php = 0;
+$version_css = 0;
+$version_js = 0;
+$version_modules = 0;
+$version_settings = 0;
 
 @include BUILD_INFO_PATH;
 
 define("RELEASE", 2148);
-define("CSS_RELEASE", $versionCSS);
-define("JS_RELEASE", $versionJS);
-define("MODULES_RELEASE", $versionModules);
+define("CSS_RELEASE", $version_css);
+define("JS_RELEASE", $version_js);
+define("MODULES_RELEASE", $version_modules);
 
 $link_route_path = @include BUILDS_PATH . "link_route_path.php";
 if (!$link_route_path) {

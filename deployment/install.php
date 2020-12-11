@@ -23,6 +23,8 @@ foreach ($css_schema as $group) {
     }
 }
 
+// it has changed the structure ;)
+
 $js_schema = @include BUILDS_PATH . "js_schema.php";
 if (!$js_schema) {
     $js_schema = [];

@@ -14,16 +14,10 @@ class NewCms {
 		);
 		// sidebar should have it's own class
 		this.sidebar = this.container.find(`.sidebar`);
-		this.sidebar_scroll_wrapper = this.sidebar.find(`.scroll-panel`);
-		this.sidebar_content_wrapper = this.sidebar_scroll_wrapper.find(
-			`.sidebar_content_wrapper`
-		);
 
 		this.rearrange_node = this.container.find(`.rearrange_node`);
 
 		this.clean_output_node = this.container.find(`.clean_output`);
-
-		this.sidebar_scroll_wrapper = this.sidebar.find(`.scroll-panel`);
 
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 
@@ -1174,24 +1168,16 @@ class NewCms {
 
 		const duration = 300;
 
-		const current_menu_height = current_menu.offsetHeight;
-		const target_menu_height = target_menu.offsetHeight;
-		const sidebar_scroll_wrapper = this.sidebar_scroll_wrapper;
-		const sidebar_content_wrapper = this.sidebar_content_wrapper;
-		const sidebar_scroll_wrapper_width = sidebar_scroll_wrapper.offsetWidth;
-		const min_height = sidebar_scroll_wrapper.offsetHeight;
-
-		current_menu.style.top = -sidebar_scroll_wrapper.scrollTop + "px";
+		const sidebar_width = this.sidebar.offsetWidth;
 
 		target_menu.classList.add("appears");
 		current_menu.classList.add("disappears");
-		sidebar_content_wrapper.classList.add("transiting");
 
 		animate(
 			target_menu,
 			`
                 0% {
-                    transform: translate(${sidebar_scroll_wrapper_width}px,0px);
+                    transform: translate(${sidebar_width}px,0px);
                     opacity: 0;
                 }
                 100% {
@@ -1208,11 +1194,7 @@ class NewCms {
 				current_menu.classList.remove("active");
 				current_menu.style.top = "";
 
-				sidebar_content_wrapper.classList.remove("transiting");
-				sidebar_content_wrapper.insertBefore(
-					target_menu,
-					sidebar_content_wrapper.firstChild
-				);
+				this.sidebar.insertBefore(target_menu, this.sidebar.firstChild);
 			}
 		);
 
@@ -1224,21 +1206,8 @@ class NewCms {
                     opacity: 1;
                 }
                 100% {
-                    transform: translate(-${sidebar_scroll_wrapper_width}px,0px);
+                    transform: translate(-${sidebar_width}px,0px);
                     opacity: 0;
-                }
-            `,
-			duration
-		);
-
-		animate(
-			sidebar_content_wrapper,
-			`
-                0% {
-                    height: ${Math.max(current_menu_height, min_height)}px
-                }
-                100% {
-                    height: ${Math.max(target_menu_height, min_height)}px
                 }
             `,
 			duration
@@ -1293,112 +1262,8 @@ function zoomNode(node, direction, options = {}) {
 
 window.init_tool_js_newCms = () => {
 	registerModalContent(
-		/*html*/ `
-        <div id="newCms" class="newCms" data-expand="large" data-form data-history data-exclude-hidden>
-            <div class="modal-body">
-                <div class="custom-toolbar">
-                    <span class="title">
-                        Edycja zawartości    
-                    </span>
-
-                    <div class="history-buttons"></div>
-                    <button class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></button>
-                    <button class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </button>
-                    <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
-                    <button onclick="showCmsPreview()" class="btn primary preview_btn">Podgląd <i class="fas fa-eye"></i></button>
-                    <button class="btn primary" onclick="newCms.save();hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
-                </div>
-
-                <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
-                    <div class="sidebar form-hidden">
-                    <div class="scroll-panel scroll-shadow hide_scrollbar">
-                        <div class="sidebar_content_wrapper">
-                        <div data-side_menu="add_block" class="active">
-                            <!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
-                            <span class="field-title first" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
-                            Bloki 
-                            <i class="fas fa-info-circle" data-tooltip="Przeciągnij na dokument i upuść"></i>
-                            </span>
-                            <div class="block_list">
-                            <div class="side_block" data-block="quill_editor">
-                                <i class="fas fa-align-center"></i>
-                                <span>Edytor tekstowy</span>
-                            </div>
-                            <div class="side_block" data-block="container">
-                                <i class="fas fa-columns"></i>
-                                <span>Kontener</span>
-                            </div>
-                            <div class="side_block" data-block="image">
-                                <i class="far fa-image"></i>
-                                <span>Zdjęcie</span>
-                            </div>
-                            <div class="side_block" data-block="video">
-                                <i class="fas fa-film"></i>
-                                <span>Film</span>
-                            </div>
-                            <div class="side_block" data-block="grid">
-                                <i class="fas fa-border-all"></i>
-                                <span>Siatka</span>
-                            </div>
-                            
-                            </div>
-                        </div>
-
-                        <div data-side_menu="edit_block">
-                            <span class="field-title first">
-                            <button class="btn transparent" data-show_side_menu="add_block">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            Edycja bloku / kontenera...
-                            </span>
-
-                            <span class="field-title">Dodatkowy CSS <i class="fas fa-info-circle" data-tooltip="Wpisz <b>&</b> jako selektor edytowanego bloku."></i></span>
-                            <textarea name="custom_css" class="field" style="height:200px;overflow-y:auto"></textarea>
-
-                            <span class="field-title">Tekst</span>
-                            <div class="quill_editor"></div>
-
-                            <span class="field-title">Zdjęcie</span>
-                            <image-input name="image" data-options='{"width":"100%","height":"1w"}'></image-input>
-
-                            <span class="field-title">Ułożenie zawartości</span>
-                            <radio-input name="container_flow" class="default">
-                                <radio-option value="" data-default> <i class="fas fa-ellipsis-v align-icon"></i> Pionowo </radio-option>
-                                <radio-option value="container_row"> <i class="fas fa-ellipsis-h align-icon"></i> Poziomo </radio-option>
-                            </radio-input>
-                            
-                            <span class="field-title">Marginesy</span>
-                            <div class="margin"></div>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-
-                    <div style="width:100%;">
-                    <div class="scroll-panel scroll-shadow content_scroll_panel">
-                        <div style="position:relative" class="content_scroll_content">
-                        <div class="edit_block_node"></div>
-                        <div class="select_controls"></div>
-                        <div class="rearrange_controls"></div>
-                        <div class="rearrange_insert_rect"></div>
-                        <div class="rearrange_grabbed_rect"></div>
-                        <div style="padding:var(--content_padding);overflow:hidden;position:relative">
-                            <!-- newCms_block_content class is temporary, it prevents margin collapsing, later u wanna for for sections etc-->
-                            <div class="newCmsContent newCms_block_content" data-type="html" name="content"></div>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>  
-            <div class="rearrange_node"></div>
-            <!-- maybe it should be a part of the contents, who knows, we can do it both ways -->
-            <style class="styles_node"></style>
-            <div class="clean_output" style="display:none !important"></div>
-            <div style="position:absolute;width:100%;height:100%;left:0;top:0;overflow:hidden;pointer-events:none">
-                <div class="newCmsContent_copy newCms_block_content"></div>
-            </div>
-            </div>
-        </div>`,
+		// TODO: syntax highlighting + open src in piep extension
+		`@include(admin/tools/newCms/main.html)`,
 		(modal) => {
 			window.newCms = new NewCms(modal);
 		}
