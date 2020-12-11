@@ -5,11 +5,39 @@ class NewCmsSidebar {
 		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = node;
+
+		this.init();
+
+		this.newCms.container.addEventListener("edit", (event) => {
+			this.init();
+		});
 	}
 
-	init() {}
+	init() {
+		this.opened_menus = [];
+		this.showSideMenu("add_block");
+	}
 
 	showSideMenu(target_side_menu_name) {
+		if (!target_side_menu_name) {
+			return;
+		}
+
+		let is_new = false;
+
+		const target_side_menu_pos = this.opened_menus.indexOf(
+			target_side_menu_name
+		);
+		if (target_side_menu_pos !== -1) {
+			if (target_side_menu_pos != this.opened_menus.length - 1) {
+				this.opened_menus.splice(target_side_menu_pos + 1);
+			}
+		} else {
+			this.opened_menus.push(target_side_menu_name);
+			is_new = true;
+		}
+		target_side_menu_name = this.opened_menus.last();
+
 		const current_menu = this.node.find(`[data-side_menu].active`);
 		const target_menu = this.node.find(
 			`[data-side_menu="${target_side_menu_name}"]`
@@ -24,13 +52,16 @@ class NewCmsSidebar {
 		const sidebar_width = this.node.offsetWidth;
 
 		target_menu.classList.add("appears");
-		current_menu.classList.add("disappears");
+		if (current_menu) {
+			current_menu.classList.add("disappears");
+		}
 
+		const target_offset_x = is_new ? sidebar_width : -sidebar_width;
 		animate(
 			target_menu,
 			`
                 0% {
-                    transform: translate(${sidebar_width}px,0px);
+                    transform: translate(${target_offset_x}px,0px);
                     opacity: 0;
                 }
                 100% {
@@ -43,28 +74,32 @@ class NewCmsSidebar {
 				target_menu.classList.add("active");
 				target_menu.classList.remove("appears");
 
-				current_menu.classList.remove("disappears");
-				current_menu.classList.remove("active");
-				current_menu.style.top = "";
-
 				this.node.insertBefore(target_menu, this.node.firstChild);
 			}
 		);
 
-		animate(
-			current_menu,
-			`
-                0% {
-                    transform: translate(0px,0px);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translate(-${sidebar_width}px,0px);
-                    opacity: 0;
-                }
-            `,
-			duration
-		);
+		if (current_menu) {
+			const current_offset_x = is_new ? -sidebar_width : sidebar_width;
+			animate(
+				current_menu,
+				`
+                    0% {
+                        transform: translate(0px,0px);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translate(${current_offset_x}px,0px);
+                        opacity: 0;
+                    }
+                `,
+				duration,
+				() => {
+					current_menu.classList.remove("disappears");
+					current_menu.classList.remove("active");
+					current_menu.style.top = "";
+				}
+			);
+		}
 
 		this.node.dispatchEvent(
 			new CustomEvent("side_menu_change", {
@@ -75,12 +110,21 @@ class NewCmsSidebar {
 		);
 	}
 
+	showPreviousSideMenu() {
+		if (this.opened_menus.length >= 2) {
+			const last_menu_name = this.opened_menus[this.opened_menus.length - 2];
+			this.showSideMenu(last_menu_name);
+		}
+	}
+
 	mouseClick() {
 		const target = this.newCms.mouse_target;
 
 		const show_side_menu = target.findParentByAttribute("data-show_side_menu");
 		if (show_side_menu) {
 			this.showSideMenu(show_side_menu.getAttribute("data-show_side_menu"));
+		} else if (target.findParentByAttribute("data-previous_side_menu")) {
+			this.showPreviousSideMenu();
 		}
 	}
 }

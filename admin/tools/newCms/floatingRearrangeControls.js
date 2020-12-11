@@ -25,6 +25,10 @@ class NewCmsRearrangeControls {
 				)
 			);
 		});
+
+		this.newCms.container.addEventListener("edit", (event) => {
+			this.init();
+		});
 	}
 
 	init() {

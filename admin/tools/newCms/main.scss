@@ -481,6 +481,7 @@
 			&.disappears,
 			&.appears {
 				top: 0;
+				pointer-events: none;
 			}
 			& .block_list {
 				margin: 0 -4px -4px 0;

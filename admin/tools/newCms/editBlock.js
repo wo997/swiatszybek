@@ -66,6 +66,10 @@ class NewCmsEditBlock {
 		this.newCms.container.addEventListener("clean_up_output", () => {
 			this.cleanUpContent(this.newCms.clean_output_node);
 		});
+
+		this.newCms.container.addEventListener("edit", (event) => {
+			this.init();
+		});
 	}
 
 	init() {

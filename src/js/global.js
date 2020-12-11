@@ -741,10 +741,17 @@ function removeClasses(className, selector = null) {
 }
 
 function removeClassesWithPrefix(node, prefix) {
-	node.className = node.className.replace(
-		new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"),
-		""
-	);
+	let cn = node.className;
+	const matches = cn.match(new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"), "");
+	if (!matches) {
+		return null;
+	}
+	matches.forEach((match) => {
+		cn = cn.replace(match, "");
+	});
+	node.className = cn;
+
+	return matches;
 }
 
 function matchClassesWithPrefix(node, prefix) {

@@ -34,6 +34,10 @@ class NewCmsStyling {
 		this.newCms = newCms;
 		this.node = node;
 		this.init();
+
+		this.newCms.container.addEventListener("edit", (event) => {
+			this.init();
+		});
 	}
 
 	init() {

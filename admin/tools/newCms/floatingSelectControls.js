@@ -5,7 +5,11 @@ class NewCmsSelectControls {
 		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = newCms.container.find(`.select_controls`);
-		this.removeSelection();
+		this.init();
+
+		this.newCms.container.addEventListener("edit", (event) => {
+			this.init();
+		});
 	}
 
 	init() {

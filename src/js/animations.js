@@ -80,19 +80,20 @@ function removeAnimation(animation_name) {
 
 function finishNodeAnimation(node) {
 	delete node.wo997_animation_timeout;
-	const animation_name = node.wo997_animation_name;
-	if (!animation_name) {
-		return;
+	const matches = removeClassesWithPrefix(node, "wo997_animation_");
+	if (!matches) {
+		return null;
 	}
-	node.classList.remove(animation_name);
-	delete node.wo997_animation_name;
 
 	const callback = node.wo997_animation_callback;
 	if (callback) {
 		callback();
 		delete node.wo997_animation_callback;
 	}
-	removeAnimation(animation_name);
+
+	matches.forEach((match) => {
+		removeAnimation(match);
+	});
 }
 
 function animate(node, keyframes, duration, callback = null) {
@@ -108,7 +109,6 @@ function animate(node, keyframes, duration, callback = null) {
 	});
 
 	node.classList.add(animation_name);
-	node.wo997_animation_name = animation_name;
 	if (callback) {
 		node.wo997_animation_callback = callback;
 	}

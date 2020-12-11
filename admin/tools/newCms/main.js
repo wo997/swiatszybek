@@ -225,10 +225,6 @@ class NewCms {
 		this.targetNode = $(targetNode);
 		this.options = options;
 
-		this.edit_block.init();
-		this.rearrange_controls.init();
-		this.select_controls.init();
-
 		setFormData(
 			{
 				content: this.getCleanOutput(this.targetNode.innerHTML),
@@ -237,7 +233,7 @@ class NewCms {
 		);
 		this.contentChange();
 
-		this.styling.init();
+		this.container.dispatchEvent(new Event("edit"));
 
 		setFormInitialState(this.container);
 
