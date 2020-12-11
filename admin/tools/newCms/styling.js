@@ -45,6 +45,42 @@ class NewCmsStyling {
 		this.setAllRegisteredBlocks();
 		this.registerMissingBlocks();
 		this.generateCSS();
+		this.initHistory();
+	}
+
+	initHistory() {
+		this.newCms.container.addEventListener("getting_form_data", (event) => {
+			let export_styles = [];
+			for (const block_data of this.blocks) {
+				const export_block_data = {
+					id: block_data.id,
+					styles: JSON.stringify(block_data.styles),
+				};
+				export_styles.push(export_block_data);
+			}
+			event.detail.data.styles = export_styles;
+		});
+
+		this.newCms.container.addEventListener("setting_form_data", (event) => {
+			if (!isArray(event.detail.data.styles)) {
+				return;
+			}
+			this.blocks = [];
+			for (const import_block_data of event.detail.data.styles) {
+				const block_id = import_block_data.id;
+				const node = $(`.${this.getBlockClassName(block_id)}`);
+
+				if (node) {
+					const block_data = {
+						id: block_id,
+						styles: JSON.parse(import_block_data.styles),
+						node: node,
+					};
+					this.blocks.push(block_data);
+				}
+			}
+			this.generateCSS();
+		});
 	}
 
 	setAllRegisteredBlocks() {

@@ -43,6 +43,14 @@ function setFormData(data, form, params = {}) {
 
 	form.setting_data = true;
 
+	form.dispatchEvent(
+		new CustomEvent("setting_form_data", {
+			detail: {
+				data,
+			},
+		})
+	);
+
 	if (!data) {
 		return;
 	}
@@ -155,6 +163,14 @@ function getFormData(form, params = {}) {
 
 			data[field_name] = field_value;
 		});
+
+	form.dispatchEvent(
+		new CustomEvent("getting_form_data", {
+			detail: {
+				data,
+			},
+		})
+	);
 
 	return data;
 }

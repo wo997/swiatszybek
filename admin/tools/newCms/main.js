@@ -33,9 +33,7 @@ class NewCms {
 		this.initFloatingRearrangeControls();
 		this.initListenChange();
 		this.initStyling();
-
 		this.initGrids();
-
 		this.initMargins();
 
 		this.mouse_x = 0;

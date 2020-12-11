@@ -945,6 +945,10 @@ function deepMerge(...sources) {
 	return acc;
 }
 
+function cloneObject(obj) {
+	return deepMerge({}, obj);
+}
+
 function kebabToSnakeCase(string) {
 	return string.replace(/-([a-z])/gi, function (s, group1) {
 		return group1.toUpperCase();
