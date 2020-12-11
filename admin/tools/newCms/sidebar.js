@@ -15,10 +15,10 @@ class NewCmsSidebar {
 
 	init() {
 		this.opened_menus = [];
-		this.showSideMenu("add_block");
+		this.showSideMenu("add_block", { quiet: true });
 	}
 
-	showSideMenu(target_side_menu_name) {
+	showSideMenu(target_side_menu_name, options = {}) {
 		if (!target_side_menu_name) {
 			return;
 		}
@@ -47,7 +47,7 @@ class NewCmsSidebar {
 			return;
 		}
 
-		const duration = 300;
+		const duration = nonull(options.duration, 300);
 
 		const sidebar_width = this.node.offsetWidth;
 
@@ -108,6 +108,11 @@ class NewCmsSidebar {
 				},
 			})
 		);
+
+		// make selection history visible
+		if (!options.quiet) {
+			this.newCms.contentChange();
+		}
 	}
 
 	showPreviousSideMenu() {

@@ -160,7 +160,12 @@ class NewCmsEditBlock {
 		});
 
 		block.classList.add("edit_active");
-		this.newCms.sidebar.showSideMenu("edit_block");
+
+		const sidebar_options = cloneObject(set_val_options);
+		if (options.quiet) {
+			sidebar_options.duration = 0;
+		}
+		this.newCms.sidebar.showSideMenu("edit_block", sidebar_options);
 
 		// it actually says that there is a block we are currently editing by .edit_active, nicely done
 		if (!options.quiet) {

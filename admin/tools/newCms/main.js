@@ -182,7 +182,10 @@ class NewCms {
 					quiet: true,
 				});
 			} else {
-				this.sidebar.showSideMenu("add_block");
+				this.sidebar.showSideMenu("add_block", {
+					quiet: true,
+					duration: 0,
+				});
 			}
 		});
 	}
