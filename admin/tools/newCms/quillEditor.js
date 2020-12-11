@@ -113,6 +113,7 @@ class QuillEditor {
 		});
 
 		this.ql_node = this.node.find(".ql-editor");
+		this.ql_node.classList.add("field");
 
 		this.newCms.container.addEventListener(
 			IS_MOBILE ? "click" : "mousedown",
@@ -174,8 +175,8 @@ class QuillEditor {
 		this.change_from_cms = true;
 		this.ql_node.setContent(html);
 		setTimeout(() => {
-			// 0 is also "fine", sorry for that workaround
+			// sry!
 			this.change_from_cms = false;
-		}, 200);
+		}, 0);
 	}
 }

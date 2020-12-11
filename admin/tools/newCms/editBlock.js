@@ -101,13 +101,19 @@ class EditBlock {
 		}
 	}
 
-	editBlock(block) {
+	editBlock(block, options = {}) {
 		this.edit_node = block;
 
 		// TODO: event listeners for each block type? extending?
 		// we might need to use blocks "blocks" as something that comes with modules?
 		// u know these weird scripts that include and combined give a nice juicy forms etc?
 		// thats what I'm talking about
+
+		const set_val_options = {};
+		if (options.quiet) {
+			set_val_options.quiet = options.quiet;
+		}
+
 		const block_type = block.getAttribute("data-block");
 		if (block_type == "quill_editor") {
 			this.newCms.quill_editor.setEditorContent(
@@ -116,7 +122,10 @@ class EditBlock {
 		}
 		if (block_type == "image") {
 			const image = this.newCms.sidebar.find(`[name="image"]`);
-			image.setValue(block.find(".newCms_block_content").getValue());
+			image.setValue(
+				block.find(".newCms_block_content").getValue(),
+				set_val_options
+			);
 			lazyLoadImages();
 		}
 		if (block_type == "container") {
@@ -128,7 +137,8 @@ class EditBlock {
 					.find(".newCms_block_content")
 					.classList.contains("container_row")
 					? "container_row"
-					: ""
+					: "",
+				set_val_options
 			);
 		}
 
@@ -139,11 +149,19 @@ class EditBlock {
 			const input = e.find("input");
 			const dir = input.getAttribute("data-dir");
 
-			input.setValue(this.edit_node.style[`margin${dir.capitalize()}`]);
+			input.setValue(
+				this.edit_node.style[`margin${dir.capitalize()}`],
+				set_val_options
+			);
 		});
 
 		block.classList.add("edit_active");
 		this.newCms.showSideMenu("edit_block");
+
+		// it actually says that there is a block we are currently editing by .edit_active, nicely done
+		if (!options.quiet) {
+			this.newCms.contentChange();
+		}
 
 		// this.newCms.container.classList.remove("anything_selected");
 	}

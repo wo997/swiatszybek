@@ -44,7 +44,7 @@ function setFormData(data, form, params = {}) {
 	form.setting_data = true;
 
 	form.dispatchEvent(
-		new CustomEvent("setting_form_data", {
+		new CustomEvent("before_set_form_data", {
 			detail: {
 				data,
 			},
@@ -107,6 +107,14 @@ function setFormData(data, form, params = {}) {
 	resizeCallback();
 	lazyLoadImages(false);
 
+	form.dispatchEvent(
+		new CustomEvent("after_set_form_data", {
+			detail: {
+				data,
+			},
+		})
+	);
+
 	form.setAttribute("data-loaded", true);
 }
 
@@ -165,7 +173,7 @@ function getFormData(form, params = {}) {
 		});
 
 	form.dispatchEvent(
-		new CustomEvent("getting_form_data", {
+		new CustomEvent("after_get_form_data", {
 			detail: {
 				data,
 			},

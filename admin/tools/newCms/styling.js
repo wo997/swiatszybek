@@ -49,7 +49,7 @@ class NewCmsStyling {
 	}
 
 	initHistory() {
-		this.newCms.container.addEventListener("getting_form_data", (event) => {
+		this.newCms.container.addEventListener("after_get_form_data", (event) => {
 			let export_styles = [];
 			for (const block_data of this.blocks) {
 				const export_block_data = {
@@ -61,7 +61,7 @@ class NewCmsStyling {
 			event.detail.data.styles = export_styles;
 		});
 
-		this.newCms.container.addEventListener("setting_form_data", (event) => {
+		this.newCms.container.addEventListener("before_set_form_data", (event) => {
 			if (!isArray(event.detail.data.styles)) {
 				return;
 			}

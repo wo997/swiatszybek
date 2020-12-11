@@ -31,7 +31,7 @@ class NewCms {
 		this.initQuillEditor();
 		this.initFloatingSelectControls();
 		this.initFloatingRearrangeControls();
-		this.initListenChange();
+		this.initHistory();
 		this.initStyling();
 		this.initGrids();
 		this.initMargins();
@@ -178,16 +178,20 @@ class NewCms {
             `
 		);
 	}
-
-	initListenChange() {
-		this.content_node.addEventListener("change", () => {
-			const trigger_change = !this.content_change_triggered;
+	initHistory() {
+		this.container.addEventListener("after_set_form_data", (event) => {
 			this.contentChange({
-				trigger_change: trigger_change,
+				quiet: true,
 			});
 
-			// TODO: based on what node has class edit_active or not you can show the edit block menu, crazy right?
-			// html driven db <3
+			const edit_block = this.content_node.find(".edit_active");
+			if (edit_block) {
+				this.edit_block.editBlock(edit_block, {
+					quiet: true,
+				});
+			} else {
+				this.showSideMenu("add_block");
+			}
 		});
 	}
 
@@ -366,7 +370,6 @@ class NewCms {
 	}
 
 	contentChange(options = {}) {
-		this.content_change_triggered = true;
 		this.insertMissingQlClasses();
 		this.manageGrids();
 
@@ -379,10 +382,9 @@ class NewCms {
 
 		this.select_controls.addFloatingSelectControls();
 
-		if (nonull(options.trigger_change, true) === true) {
+		if (!options.quiet) {
 			this.content_node.dispatchChange();
 		}
-		this.content_change_triggered = false;
 		this.content_node.findAll(".to_remove").forEach((e) => {
 			e.remove();
 		});
@@ -587,6 +589,7 @@ class NewCms {
 
 		this.container.classList.add("grabbed_block");
 
+		this.select_controls.removeSelection();
 		this.rearrange_controls.node.classList.add("visible");
 		//this.select_controls.node.classList.remove("blocks_visible");
 
@@ -1216,28 +1219,28 @@ class NewCms {
 		animate(
 			current_menu,
 			`
-        0% {
-          transform: translate(0px,0px);
-          opacity: 1;
-        }
-        100% {
-          transform: translate(-${sidebar_scroll_wrapper_width}px,0px);
-          opacity: 0;
-        }
-      `,
+                0% {
+                    transform: translate(0px,0px);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(-${sidebar_scroll_wrapper_width}px,0px);
+                    opacity: 0;
+                }
+            `,
 			duration
 		);
 
 		animate(
 			sidebar_content_wrapper,
 			`
-        0% {
-          height: ${Math.max(current_menu_height, min_height)}px
-        }
-        100% {
-          height: ${Math.max(target_menu_height, min_height)}px
-        }
-      `,
+                0% {
+                    height: ${Math.max(current_menu_height, min_height)}px
+                }
+                100% {
+                    height: ${Math.max(target_menu_height, min_height)}px
+                }
+            `,
 			duration
 		);
 
