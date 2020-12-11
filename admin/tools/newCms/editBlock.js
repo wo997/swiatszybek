@@ -56,14 +56,9 @@ class EditBlock {
 		const custom_css = this.newCms.sidebar.find(`[name="custom_css"]`);
 
 		const changeCallback = () => {
-			let css_value = custom_css.getValue();
-			const block_id = this.newCms.styling.getBlockId(this.edit_node);
-			//console.log(block_id);
-			const styling_block = this.newCms.styling.blocks.find((e) => {
-				return e.id == block_id;
+			this.newCms.styling.setNodeStyles(this.edit_node, custom_css.getValue(), {
+				type: "custom",
 			});
-			styling_block.own_styles = css_value;
-			this.newCms.styling.generateCSS();
 		};
 		custom_css.addEventListener("change", changeCallback);
 		custom_css.addEventListener("input", changeCallback);

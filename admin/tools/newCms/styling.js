@@ -1,9 +1,31 @@
 /* js[tool_newCms] */
 
+class Styles {
+	desktop;
+	tablet;
+	mobile;
+	custom;
+}
+
 class blockData {
 	id;
 	node;
-	own_styles;
+	/**
+	 * @type {Styles}
+	 */
+	styles;
+}
+
+function getDefaultBlock() {
+	return {
+		id: 0,
+		node: null,
+		styles: {
+			desktop: {},
+			tablet: {},
+			mobile: {},
+		},
+	};
 }
 
 class NewCmsStyling {
@@ -33,10 +55,11 @@ class NewCmsStyling {
 				return;
 			}
 
-			this.blocks.push({
-				id: block_id,
-				block: block,
-			});
+			// TODO: fetch styles from... somewhere, like a node with big json in html
+			const block_data = getDefaultBlock();
+			block_data.id = block_id;
+			block_data.node = node;
+			this.blocks.push(block_data);
 		});
 	}
 
@@ -55,11 +78,10 @@ class NewCmsStyling {
 				).id + 1;
 			node.classList.add(this.getBlockClassName(block_id));
 
-			// TODO: fetch styles from... somewhere, like a node with big json in html
-			this.blocks.push({
-				id: block_id,
-				node: node,
-			});
+			const block_data = getDefaultBlock();
+			block_data.id = block_id;
+			block_data.node = node;
+			this.blocks.push(block_data);
 		});
 	}
 
@@ -79,19 +101,64 @@ class NewCmsStyling {
 
 	generateCSS() {
 		let css_full = "";
-		for (const block of this.blocks) {
-			console.log(block);
+		for (const block_data of this.blocks) {
+			//console.log(block);
 
-			let own_styles = block.own_styles;
-			if (!own_styles) {
-				continue;
+			const block_class_name = this.getBlockClassName(block_data.id);
+			const block_selector = `.${block_class_name}`;
+
+			let custom = block_data.styles.custom;
+			if (custom) {
+				custom = custom.replace(/&/g, block_selector);
+
+				css_full += custom;
 			}
-			const block_class_name = this.getBlockClassName(block.id);
-			own_styles = own_styles.replace(/&/g, `.${block_class_name}`);
 
-			css_full += own_styles;
+			let desktop = block_data.styles.desktop;
+			if (desktop) {
+				let styles = "";
+				Object.entries(desktop).forEach(([prop_css, val]) => {
+					// these are needed by the page builder to work properly during animations
+					// TODO: consider limiting the list to margins, flex-grow etc. (layout related)
+					const prop_js = kebabToSnakeCase(prop_css);
+					if (prop_js.includes("margin")) {
+						block_data.node.style[prop_js] = val;
+					}
+					styles += `${prop_css}:${val};`;
+				});
+				if (styles) {
+					const block_styles = `${block_selector}{${styles}}`;
+					css_full += block_styles;
+					//console.log(block_styles);
+				}
+			}
 		}
 		//console.log(css_full);
 		this.node.innerHTML = css_full;
+
+		// we might need to push all the styles to each node inline, so that is efficient to pick them up, margin, flex props etc gotta be here
+		// cleaning up obviosly will remove these,
+		// woah
+	}
+
+	// params like responsiveness etc
+	setNodeStyles(node, styles, params) {
+		const block_id = this.getBlockId(node);
+		/**
+		 * @type {blockData}
+		 */
+		const block_data = this.blocks.find((e) => e.id == block_id);
+		//console.log(block_data, node, block_id);
+
+		if (params.type == "custom") {
+			block_data.styles.custom = styles;
+		} else {
+			// TODO: temporary!
+			Object.assign(block_data.styles.desktop, styles);
+		}
+
+		if (nonull(params.generate_css, true)) {
+			this.generateCSS();
+		}
 	}
 }

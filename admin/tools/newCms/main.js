@@ -125,9 +125,13 @@ class NewCms {
 			const dir = input.getAttribute("data-dir");
 
 			input.addEventListener("change", () => {
-				this.edit_block.edit_node.style[
-					`margin${dir.capitalize()}`
-				] = input.getValue();
+				let styles = {};
+				//styles[`margin${dir.capitalize()}`] = input.getValue();
+				styles[`margin-${dir}`] = input.getValue();
+
+				this.styling.setNodeStyles(this.edit_block.edit_node, styles, {
+					type: "desktop",
+				});
 
 				this.contentChange();
 			});
@@ -1108,6 +1112,14 @@ class NewCms {
 					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
 			}
 
+			// these produce unwanted offset on drop
+			const mt = evalCss(grabbed_block.style.marginTop, grabbed_block);
+			//const mr = evalCss(block.style.marginRight, block);
+			//const mb = evalCss(block.style.marginBottom, block);
+			const ml = evalCss(grabbed_block.style.marginLeft, grabbed_block);
+			target_dx += mt;
+			target_dy += ml;
+
 			grabbed_block.animation_data.dx =
 				grabbed_block.animation_data.dx * (1 - acc) + target_dx * acc;
 			grabbed_block.animation_data.dy =
@@ -1137,8 +1149,8 @@ class NewCms {
 
 			this.rearrange_node.style.transform = `
                 translate(
-                    ${grabbed_block.animation_data.dx.toPrecision(5)}px,
-                    ${grabbed_block.animation_data.dy.toPrecision(5)}px
+                    ${(grabbed_block.animation_data.dx - ml).toPrecision(5)}px,
+                    ${(grabbed_block.animation_data.dy - mt).toPrecision(5)}px
                 )
             `;
 		}
@@ -1339,7 +1351,7 @@ window.init_tool_js_newCms = () => {
                             Edycja bloku / kontenera...
                             </span>
 
-                            <span class="field-title">Dodatkowy CSS <i class="fas fa-info-circle" data-tooltip="Wpisz & jako selektor tego bloku."></i></span>
+                            <span class="field-title">Dodatkowy CSS <i class="fas fa-info-circle" data-tooltip="Wpisz <b>&</b> jako selektor edytowanego bloku."></i></span>
                             <textarea name="custom_css" class="field" style="height:200px;overflow-y:auto"></textarea>
 
                             <span class="field-title">Tekst</span>

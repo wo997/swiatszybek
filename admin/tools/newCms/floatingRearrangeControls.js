@@ -334,10 +334,12 @@ class FloatingRearrangeControls {
 		this.addBlockControls(block);
 	}
 
-	addBlockControls(block) {
+	addBlockControls(grabbed_block) {
 		// just a rect u grab from
-		if (block) {
-			const block_rect_data = nodePositionAgainstScrollableParent(block);
+		if (grabbed_block) {
+			const block_rect_data = nodePositionAgainstScrollableParent(
+				grabbed_block
+			);
 			const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
 
 			block_rect_data.scrollable_parent.appendChild(
@@ -357,7 +359,7 @@ class FloatingRearrangeControls {
 			return;
 		}
 
-		const block_type = block.getAttribute("data-block");
+		const grabbed_block_type = grabbed_block.getAttribute("data-block");
 
 		// them floating controls
 		let blocks_data = [];
@@ -396,6 +398,7 @@ class FloatingRearrangeControls {
 					: false;
 
 				const block_rect_data = nodePositionAgainstScrollableParent(block);
+				const block_type = block.getAttribute("data-block");
 
 				const prev_node = block.prev();
 
@@ -434,6 +437,10 @@ class FloatingRearrangeControls {
 					// has a kid? no need to add that little icon to add more bro
 					return;
 				}
+
+				/*if (position == "inside") {
+                    console
+                }*/
 
 				let parent_count = 0;
 				let parent = block;
@@ -504,9 +511,9 @@ class FloatingRearrangeControls {
 				if (
 					!block.grid_data ||
 					block.findParentNode(this.newCms.grabbed_block) ||
-					block_type == "grid"
+					grabbed_block_type == "grid"
 				) {
-					// don't touch itself or parent
+					// don't touch itself or parent or place in another grid
 					return;
 				}
 				const parent_container = block.findParentByClassName("container", {
@@ -588,8 +595,8 @@ class FloatingRearrangeControls {
 		//let upper_bound = 0;
 
 		for (let i = 0; i < sorted_blocks_data_length; i++) {
-			delete block.rearrange_control_before;
-			delete block.rearrange_control_after;
+			delete grabbed_block.rearrange_control_before;
+			delete grabbed_block.rearrange_control_after;
 		}
 
 		for (let i = 0; i < sorted_blocks_data_length; i++) {
