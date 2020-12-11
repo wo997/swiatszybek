@@ -12,15 +12,13 @@ class NewCms {
 		this.content_scroll_content = this.container.find(
 			`.content_scroll_content`
 		);
-		// sidebar should have it's own class
-		this.sidebar = this.container.find(`.sidebar`);
-
 		this.rearrange_node = this.container.find(`.rearrange_node`);
 
 		this.clean_output_node = this.container.find(`.clean_output`);
 
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 
+		this.initSidebar();
 		this.initEditBlock();
 		this.initQuillEditor();
 		this.initFloatingSelectControls();
@@ -109,7 +107,7 @@ class NewCms {
 	}
 
 	initMargins() {
-		const margin = this.sidebar.find(`.margin`);
+		const margin = this.sidebar.node.find(`.margin`);
 		this.insertMarginControl(margin, "margin", {});
 
 		margin.findAll("c-select").forEach((e) => {
@@ -184,7 +182,7 @@ class NewCms {
 					quiet: true,
 				});
 			} else {
-				this.showSideMenu("add_block");
+				this.sidebar.showSideMenu("add_block");
 			}
 		});
 	}
@@ -197,26 +195,30 @@ class NewCms {
 		return this.clean_output_node.innerHTML;
 	}
 
+	initSidebar() {
+		this.sidebar = new NewCmsSidebar(this, this.container.find(`.sidebar`));
+	}
+
 	initEditBlock() {
-		this.edit_block = new EditBlock(
-			this.container.find(`.edit_block_node`),
-			this
+		this.edit_block = new NewCmsEditBlock(
+			this,
+			this.container.find(`.edit_block_node`)
 		);
 	}
 
 	initQuillEditor() {
-		this.quill_editor = new QuillEditor(
-			this.container.find(".quill_editor"),
-			this
+		this.quill_editor = new NewCmsQuillEditor(
+			this,
+			this.container.find(".quill_editor")
 		);
 	}
 
 	initFloatingSelectControls() {
-		this.select_controls = new FloatingSelectControls(this);
+		this.select_controls = new NewCmsSelectControls(this);
 	}
 
 	initFloatingRearrangeControls() {
-		this.rearrange_controls = new FloatingRearrangeControls(this);
+		this.rearrange_controls = new NewCmsRearrangeControls(this);
 	}
 
 	edit(targetNode, options) {
@@ -340,10 +342,7 @@ class NewCms {
 			this.grabBlock(side_block);
 		}
 
-		const show_side_menu = target.findParentByAttribute("data-show_side_menu");
-		if (show_side_menu) {
-			this.showSideMenu(show_side_menu.getAttribute("data-show_side_menu"));
-		}
+		this.sidebar.mouseClick();
 	}
 
 	/*mouseUp() {
@@ -563,7 +562,7 @@ class NewCms {
 		block.last_rect = block_rect;
 
 		this.source_grabbed_node = block.classList.contains("side_block")
-			? this.sidebar
+			? this.sidebar.node
 			: this.content_scroll_content;
 
 		/*this.grabbed_node_scroll_parent = this.source_grabbed_node.findScrollParent(
@@ -1154,72 +1153,6 @@ class NewCms {
 		requestAnimationFrame(() => {
 			this.grabAnimation();
 		});
-	}
-
-	showSideMenu(target_side_menu_name) {
-		const current_menu = this.sidebar.find(`[data-side_menu].active`);
-		const target_menu = this.sidebar.find(
-			`[data-side_menu="${target_side_menu_name}"]`
-		);
-
-		if (target_menu == current_menu) {
-			return;
-		}
-
-		const duration = 300;
-
-		const sidebar_width = this.sidebar.offsetWidth;
-
-		target_menu.classList.add("appears");
-		current_menu.classList.add("disappears");
-
-		animate(
-			target_menu,
-			`
-                0% {
-                    transform: translate(${sidebar_width}px,0px);
-                    opacity: 0;
-                }
-                100% {
-                    transform: translate(0px,0px);
-                    opacity: 1;
-                }
-            `,
-			duration,
-			() => {
-				target_menu.classList.add("active");
-				target_menu.classList.remove("appears");
-
-				current_menu.classList.remove("disappears");
-				current_menu.classList.remove("active");
-				current_menu.style.top = "";
-
-				this.sidebar.insertBefore(target_menu, this.sidebar.firstChild);
-			}
-		);
-
-		animate(
-			current_menu,
-			`
-                0% {
-                    transform: translate(0px,0px);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translate(-${sidebar_width}px,0px);
-                    opacity: 0;
-                }
-            `,
-			duration
-		);
-
-		this.container.dispatchEvent(
-			new CustomEvent("side_menu_change", {
-				detail: {
-					side_menu_name: target_side_menu_name,
-				},
-			})
-		);
 	}
 }
 

@@ -1,13 +1,13 @@
 /* js[tool_newCms] */
 
-class EditBlock {
-	constructor(edit_block_node, newCms) {
+class NewCmsEditBlock {
+	constructor(newCms, edit_block_node) {
 		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = edit_block_node;
 		this.init();
 
-		this.newCms.container.addEventListener("side_menu_change", (event) => {
+		this.newCms.sidebar.node.addEventListener("side_menu_change", (event) => {
 			const is_edit_block_menu = event.detail.side_menu_name == "edit_block";
 
 			if (!is_edit_block_menu) {
@@ -15,7 +15,7 @@ class EditBlock {
 			}
 		});
 
-		const image = this.newCms.sidebar.find(`[name="image"]`);
+		const image = this.newCms.sidebar.node.find(`[name="image"]`);
 		image.addEventListener("change", () => {
 			if (this.newCms.edit_block.edit_node) {
 				const block_type = this.newCms.edit_block.edit_node.getAttribute(
@@ -32,9 +32,9 @@ class EditBlock {
 			}
 		});
 
-		this.newCms.content_scroll_panel;
-
-		const container_flow = this.newCms.sidebar.find(`[name="container_flow"]`);
+		const container_flow = this.newCms.sidebar.node.find(
+			`[name="container_flow"]`
+		);
 		container_flow.addEventListener("change", () => {
 			if (this.newCms.edit_block.edit_node) {
 				const block_type = this.newCms.edit_block.edit_node.getAttribute(
@@ -53,7 +53,7 @@ class EditBlock {
 			}
 		});
 
-		const custom_css = this.newCms.sidebar.find(`[name="custom_css"]`);
+		const custom_css = this.newCms.sidebar.node.find(`[name="custom_css"]`);
 
 		const changeCallback = () => {
 			this.newCms.styling.setNodeStyles(this.edit_node, custom_css.getValue(), {
@@ -121,7 +121,7 @@ class EditBlock {
 			);
 		}
 		if (block_type == "image") {
-			const image = this.newCms.sidebar.find(`[name="image"]`);
+			const image = this.newCms.sidebar.node.find(`[name="image"]`);
 			image.setValue(
 				block.find(".newCms_block_content").getValue(),
 				set_val_options
@@ -129,7 +129,7 @@ class EditBlock {
 			lazyLoadImages();
 		}
 		if (block_type == "container") {
-			const container_flow = this.newCms.sidebar.find(
+			const container_flow = this.newCms.sidebar.node.find(
 				`[name="container_flow"]`
 			);
 			container_flow.setValue(
@@ -143,7 +143,7 @@ class EditBlock {
 		}
 
 		// for all blocks types
-		const margin = this.newCms.sidebar.find(`.margin`);
+		const margin = this.newCms.sidebar.node.find(`.margin`);
 
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
@@ -156,7 +156,7 @@ class EditBlock {
 		});
 
 		block.classList.add("edit_active");
-		this.newCms.showSideMenu("edit_block");
+		this.newCms.sidebar.showSideMenu("edit_block");
 
 		// it actually says that there is a block we are currently editing by .edit_active, nicely done
 		if (!options.quiet) {

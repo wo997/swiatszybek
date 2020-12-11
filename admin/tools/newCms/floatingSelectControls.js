@@ -1,6 +1,6 @@
 /* js[tool_newCms] */
 
-class FloatingSelectControls {
+class NewCmsSelectControls {
 	constructor(newCms) {
 		/** @type {NewCms} */
 		this.newCms = newCms;

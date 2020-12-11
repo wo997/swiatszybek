@@ -1,6 +1,6 @@
 /* js[tool_newCms] */
 
-class FloatingRearrangeControls {
+class NewCmsRearrangeControls {
 	constructor(newCms) {
 		/** @type {NewCms} */
 		this.newCms = newCms;

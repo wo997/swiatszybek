@@ -1,6 +1,6 @@
 /* js[tool_newCms] */
 
-class QuillEditor {
+class NewCmsQuillEditor {
 	color_list = [
 		"rgb(255, 85, 118)",
 		"rgb(255,43,0)",
@@ -46,7 +46,7 @@ class QuillEditor {
 		"#000000",
 	];
 
-	constructor(node, newCms) {
+	constructor(newCms, node) {
 		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = node;
