@@ -100,7 +100,7 @@ function showModal(name = null, params = {}) {
 			}
 		});
 		var modal = $(`#${name}`);
-		if (modal.hasAttribute("data-expand")) {
+		if (modal && modal.hasAttribute("data-expand")) {
 			var q = $(`#${name} > div`);
 			if (q) {
 				if (modal.getAttribute("data-expand") == "large") total = 0; //total--;

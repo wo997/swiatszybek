@@ -921,14 +921,17 @@ class NewCms {
 
 			const kisses_right_border = parent_rect
 				? Math.abs(
-						block.last_rect.left +
-							block.last_rect.width +
+						block.new_rect.left +
+							block.new_rect.width +
 							mr -
 							(parent_rect.left + parent_rect.width)
 				  ) < 5
 				: false;
 
 			// give flexbox some space baby
+			if (block.classList.contains("block_14")) {
+				console.log(block, kisses_right_border);
+			}
 			const subtract_mr = kisses_right_border ? 2 : 0;
 
 			const fg = block.style.flexGrow;
