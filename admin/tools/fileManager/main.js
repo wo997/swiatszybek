@@ -164,9 +164,8 @@ window.fileManager = {
 };
 
 window.init_tool_js_fileManager = () => {
-	registerModalContent(
-		`
-        <div id="fileManager" data-expand="true">
+	registerModalContent(/*html*/ `
+        <div id="fileManager" data-expand="true" class="fileManager">
             <div class="modal-body">
                 <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
                 <span class="title" style="display: inline-flex;align-items: center;flex-wrap:wrap">
@@ -194,11 +193,9 @@ window.init_tool_js_fileManager = () => {
                 </div>
             </div>
         </div>
-    `
-	);
+    `);
 
-	registerModalContent(
-		`
+	registerModalContent(/*html*/ `
         <div id="externalImage">
             <div class="modal-body">
                 <div class="custom-toolbar">
@@ -225,8 +222,7 @@ window.init_tool_js_fileManager = () => {
                 </div>
             </div>
         </div>
-    `
-	);
+    `);
 
 	registerModalContent(
 		`

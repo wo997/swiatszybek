@@ -9,9 +9,13 @@
 	--content_padding: 25px;
 }
 
-.newCms {
+.newCms .content_wrapper {
 	height: 100%;
 	user-select: none;
+	transition: opacity 0.2s;
+}
+.newCms:not(.ready) .content_wrapper {
+	opacity: 0;
 }
 
 .newCms_block {
@@ -447,6 +451,7 @@
 			flex-shrink: 0;
 			position: relative;
 			overflow: hidden;
+			z-index: 10;
 		}
 		.scroll-panel {
 			height: 100%;
@@ -663,8 +668,9 @@
 
 .responsive_types {
 	& {
-		background: #888;
-		border-radius: 10px;
+		background: #555;
+		border-radius: 4px;
+		border: 1px solid #555;
 	}
 	[data-responsive_type] {
 		& {

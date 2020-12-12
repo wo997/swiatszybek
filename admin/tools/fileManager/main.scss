@@ -1,17 +1,17 @@
 /* css[tool_fileManager] */
 
-#fileManager .gallery {
+.fileManager .gallery {
 	flex-shrink: 1;
 	overflow-y: auto;
 	display: flex;
 	flex-wrap: wrap;
 }
 @media only screen and (max-width: 800px) {
-	#fileManager .gallery > div {
+	.fileManager .gallery > div {
 		width: 100%;
 	}
 }
-#fileManager .gallery-item {
+.fileManager .gallery-item {
 	text-align: center;
 	width: 25%;
 	display: block;
@@ -21,16 +21,16 @@
 	padding: 6px;
 }
 
-/*#fileManager .gallery-item:not(:hover) .btn {
+/*.fileManager .gallery-item:not(:hover) .btn {
   visibility: hidden;
 }*/
 
-#fileManager .gallery-item .fa-info-circle {
+.fileManager .gallery-item .fa-info-circle {
 	position: absolute;
 	right: 5px;
 	top: 5px;
 }
 
-#fileManager .gallery-item .btn {
+.fileManager .gallery-item .btn {
 	min-width: 37px;
 }

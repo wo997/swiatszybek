@@ -248,9 +248,12 @@ class NewCms {
 
 		this.lockInput();
 
+		this.container.classList.remove("ready");
+
 		showModal("newCms", {
 			source: this.targetNode,
 			callback: () => {
+				this.container.classList.add("ready");
 				setTimeout(() => {
 					this.contentChange();
 					this.unlockInput();

@@ -32,7 +32,7 @@ function registerModalContent(html, callback) {
 }
 
 function registerModal(e) {
-	$("#modal-wrapper .modal-content").appendChild(e);
+	$("#modal-wrapper .modal_container").appendChild(e);
 }
 
 function showModal(name = null, params = {}) {
@@ -41,7 +41,7 @@ function showModal(name = null, params = {}) {
 	modal_wrapper.classList.toggle("visible", visible);
 	if (visible) {
 		var total = 0;
-		modal_wrapper.findAll(".modal-content > *").forEach((modal) => {
+		modal_wrapper.findAll(".modal_container > *").forEach((modal) => {
 			var shownow = false;
 			if (modal.id == name && !modal.classList.contains("visible")) {
 				shownow = true;
@@ -59,21 +59,59 @@ function showModal(name = null, params = {}) {
 
 			if (shownow) {
 				clearAllErrors(modal);
-				modal_wrapper.find(".modal-content").appendChild(modal);
+				const modal_container = modal_wrapper.find(".modal_container");
+				modal_container.appendChild(modal);
 				let origin = "center";
 				if (params.source) {
 					var r = params.source.getBoundingClientRect();
-					var p = $(".modal-content").getBoundingClientRect();
+					var p = modal_container.getBoundingClientRect();
 					var x = 1 * (r.left - p.left) + r.width / 2;
 					var y = 1 * (r.top - p.top) + r.height / 2;
 					origin = `${x}px ${y}px`;
 				}
-				modal.style.transformOrigin = origin;
-				modal.classList.add("visible");
+
 				modal.style.pointerEvents = "none";
+				modal.classList.add("visible");
+
+				// why a copy? it's required to get bounding client rect to work properly on modal open
+				modal_container.insertAdjacentHTML("beforeend", modal.outerHTML);
+				const modal_copy = $(modal_container.lastElementChild);
+				const modal_copy_content = modal_copy.find("*");
+				const modal_content = modal.find("*");
+				modal_copy.style.transformOrigin = origin;
+				modal_copy.id = "";
+
+				// observe changes and apply them to the copied modal
+				const observer = new MutationObserver(() => {
+					modal_copy_content.style.width = modal_content.offsetWidth + "px";
+					modal_copy_content.style.height = modal_content.offsetHeight + "px";
+
+					if (window.modalOBserverTimeout) {
+						clearTimeout(window.modalOBserverTimeout);
+					}
+					window.modalOBserverTimeout = setTimeout(() => {
+						window.modalOBserverTimeout = null;
+						//console.log(123);
+						modal_copy_content.setContent(modal_content.innerHTML);
+						//modal_copy_content.innerHTML = modal_content.innerHTML;
+						modal_copy_content.findAll(".lazy").forEach((e) => {
+							e.classList.remove("lazy");
+						});
+						modal_copy_content.findAll("[data-height]").forEach((e) => {
+							e.removeAttribute("data-height");
+						});
+					}, 0);
+				});
+				observer.observe(modal, {
+					attributes: true,
+					childList: true,
+					subtree: true,
+				});
+
+				modal.style.opacity = "0.001";
 
 				animate(
-					modal,
+					modal_copy_content,
 					`
                         0% {
                             transform: scale(0.5);
@@ -86,19 +124,27 @@ function showModal(name = null, params = {}) {
                     `,
 					300,
 					() => {
+						modal.style.pointerEvents = "";
+						modal.style.opacity = "";
+						modal_copy.classList.remove("visible");
+
+						setTimeout(() => {
+							observer.disconnect();
+							modal_copy.remove();
+						}, 100);
+
 						if (params.callback) {
-							modal.style.pointerEvents = "";
 							params.callback();
 						}
 					}
 				);
-
-				var event = new CustomEvent("modal-show", {
-					detail: {
-						node: modal,
-					},
-				});
-				window.dispatchEvent(event);
+				window.dispatchEvent(
+					new CustomEvent("modal-show", {
+						detail: {
+							node: modal,
+						},
+					})
+				);
 			}
 		});
 		var modal = $(`#${name}`);
@@ -125,7 +171,7 @@ function showModal(name = null, params = {}) {
 }
 
 function hideAllModals() {
-	$$("#modal-wrapper .modal-content > *").forEach((e) => {
+	$$("#modal-wrapper .modal_container > *").forEach((e) => {
 		hideModal(e.id);
 	});
 
@@ -134,7 +180,7 @@ function hideAllModals() {
 }
 
 function hideModalTopMost() {
-	var o = $$("#modal-wrapper .modal-content > *");
+	var o = $$("#modal-wrapper .modal_container > *");
 	for (i = o.length - 1; i >= 0; i--) {
 		var modal = o[i];
 		if (modal.classList.contains("visible")) {
@@ -175,6 +221,7 @@ function hideModal(name, isCancel = false) {
 		}
 
 		// cleanup validators
+		// TODO: we already clean them up on modal show hmmmm, remove?
 		modal.findAll("[data-validate]").forEach((e) => {
 			e.classList.remove("required");
 		});
@@ -192,7 +239,7 @@ function hideModal(name, isCancel = false) {
 		);
 	}
 
-	modal_wrapper.findAll(".modal-content > *").forEach((modal) => {
+	modal_wrapper.findAll(".modal_container > *").forEach((modal) => {
 		if (modal.classList.contains("visible")) visible_modal_count++;
 	});
 
