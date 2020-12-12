@@ -103,8 +103,7 @@ window.fileManager = {
                             `;
 						}
 						$("#fileManager .gallery").setContent(out);
-
-						lazyLoadImages();
+						lazyLoadImages(false);
 					}
 				} catch (e) {
 					console.log(e);

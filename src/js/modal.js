@@ -75,7 +75,7 @@ function showModal(name = null, params = {}) {
 				modal.style.transformOrigin = origin;
 				modal.classList.add("visible");
 
-				animate(
+				/*animate(
 					modal,
 					`
                         0% {
@@ -95,7 +95,10 @@ function showModal(name = null, params = {}) {
 							}
 						}, 0);
 					}
-				);
+				);*/
+				if (params.callback) {
+					params.callback();
+				}
 
 				var event = new CustomEvent("modal-show", {
 					detail: {
@@ -122,7 +125,7 @@ function showModal(name = null, params = {}) {
 
 	toggleBodyScroll(!visible);
 
-	setCustomHeightsQuickly(30);
+	//setCustomHeightsQuickly(30);
 	lazyLoadImages();
 
 	return visible;

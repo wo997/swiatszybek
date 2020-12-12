@@ -246,10 +246,6 @@ class NewCms {
 		);
 		this.contentChange();
 
-		this.container.dispatchEvent(new Event("edit"));
-
-		setFormInitialState(this.container);
-
 		this.lockInput();
 
 		showModal("newCms", {
@@ -263,6 +259,10 @@ class NewCms {
 				}, 100);
 			},
 		});
+
+		this.container.dispatchEvent(new Event("edit"));
+
+		setFormInitialState(this.container);
 	}
 
 	save() {
