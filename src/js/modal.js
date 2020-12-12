@@ -91,6 +91,7 @@ function showModal(name = null, params = {}) {
 
 				setTimeout(() => {
 					e.style.pointerEvents = "";
+					e.classList.add("freeze");
 					setTimeout(() => {
 						if (params.callback) {
 							params.callback();
@@ -162,6 +163,7 @@ function hideModal(name, isCancel = false) {
 	if (name) {
 		var modal = $(`#${name}`);
 		if (modal) {
+			modal.classList.remove("freeze");
 			modal.style.animation = "hide 0.4s";
 			visibleModalCount--;
 			setTimeout(() => {

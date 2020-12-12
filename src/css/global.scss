@@ -1451,7 +1451,8 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 }*/
 
 .freeze_before_load,
-.freeze_before_load * {
+.freeze_before_load *,
+.freeze {
 	transition: 0s all !important;
 }
 

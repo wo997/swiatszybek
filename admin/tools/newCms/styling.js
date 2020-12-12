@@ -33,14 +33,57 @@ class NewCmsStyling {
 		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = node;
+		this.content_wrapper = this.newCms.container.find(".content_wrapper");
+		this.content_responsive_wrapper = this.newCms.container.find(
+			".content_responsive_wrapper"
+		);
+
+		this.responsive_types = {
+			desktop: {
+				width: null,
+				height: null,
+			},
+			tablet: {
+				width: 1024,
+				height: 768,
+			},
+			mobile: {
+				width: 360,
+				height: 640,
+			},
+		};
+
 		this.init();
 
 		this.newCms.container.addEventListener("edit", (event) => {
 			this.init();
+			this.setResponsiveContainerSize({
+				unlock: true,
+			});
+		});
+		this.newCms.container.addEventListener("ready", (event) => {
+			this.init();
+		});
+
+		window.addEventListener("resize", () => {
+			this.setResponsiveContainerSize();
 		});
 	}
 
-	init() {
+	mouseClick() {
+		const target = this.newCms.mouse_target;
+
+		const responsive_type = target.findParentByAttribute(
+			"data-responsive_type"
+		);
+		if (responsive_type) {
+			this.setResponsiveType(
+				responsive_type.getAttribute("data-responsive_type")
+			);
+		}
+	}
+
+	init(options = {}) {
 		/**
 		 * @type {blockData[]}
 		 */
@@ -50,6 +93,71 @@ class NewCmsStyling {
 		this.registerMissingBlocks();
 		this.generateCSS();
 		this.initHistory();
+
+		let opts = {};
+		if (options.unlock) {
+			opts.unlock = true;
+		}
+		this.setResponsiveType("desktop", opts);
+	}
+
+	setResponsiveType(type, options = {}) {
+		this.responsive_type = this.responsive_types[type];
+		if (!type) {
+			console.error("Wrong responsive type");
+			return;
+		}
+
+		this.newCms.content_scroll_panel.classList.toggle(
+			"hide_scrollbar",
+			!!this.responsive_type.width
+		);
+
+		let opts = {};
+		if (options.unlock) {
+			opts.unlock = true;
+		} else {
+			opts.duration = 200;
+		}
+		this.setResponsiveContainerSize(opts);
+	}
+
+	setResponsiveContainerSize(options = {}) {
+		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
+		const content_responsive_wrapper_rect = this.content_responsive_wrapper.getBoundingClientRect();
+
+		this.width = Math.min(
+			nonull(this.responsive_type.width, 100000),
+			content_wrapper_rect.width
+		);
+		this.height = Math.min(
+			nonull(this.responsive_type.height, 100000),
+			content_wrapper_rect.height
+		);
+
+		animate(
+			this.content_responsive_wrapper,
+			`
+                0% {
+                    width: ${content_responsive_wrapper_rect.width}px;
+                    height: ${content_responsive_wrapper_rect.height}px;
+                }
+                100% {
+                    width: ${this.width}px;
+                    height: ${this.height}px;
+                }
+            `,
+			nonull(options.duration, 0),
+			() => {
+				this.content_responsive_wrapper.style.width = this.width + "px";
+				this.content_responsive_wrapper.style.height = this.height + "px";
+			}
+		);
+
+		//this.content_responsive_wrapper.style.width = height;
+
+		//border-radius: 10px;
+		//border: 25px solid #444;
 	}
 
 	initHistory() {

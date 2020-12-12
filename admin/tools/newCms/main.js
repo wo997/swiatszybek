@@ -259,6 +259,7 @@ class NewCms {
 				setTimeout(() => {
 					this.contentChange();
 					this.unlockInput();
+					this.container.dispatchEvent(new Event("ready"));
 				}, 100);
 			},
 		});
@@ -352,6 +353,7 @@ class NewCms {
 		}
 
 		this.sidebar.mouseClick();
+		this.styling.mouseClick();
 	}
 
 	/*mouseUp() {
