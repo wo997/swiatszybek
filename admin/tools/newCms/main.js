@@ -250,7 +250,6 @@ class NewCms {
 
 		showModal("newCms", {
 			source: this.targetNode,
-			lock_during_animation: true,
 			callback: () => {
 				setTimeout(() => {
 					this.contentChange();

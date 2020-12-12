@@ -44,10 +44,6 @@ function showModal(name = null, params = {}) {
 		modal_wrapper.findAll(".modal-content > *").forEach((modal) => {
 			var shownow = false;
 			if (modal.id == name && !modal.classList.contains("visible")) {
-				modal.style.display = "";
-				if (!params.lock_during_animation) {
-					modal.style.pointerEvents = "";
-				}
 				shownow = true;
 			}
 			if (modal.classList.contains("visible")) {
@@ -74,8 +70,9 @@ function showModal(name = null, params = {}) {
 				}
 				modal.style.transformOrigin = origin;
 				modal.classList.add("visible");
+				modal.style.pointerEvents = "none";
 
-				/*animate(
+				animate(
 					modal,
 					`
                         0% {
@@ -89,16 +86,12 @@ function showModal(name = null, params = {}) {
                     `,
 					300,
 					() => {
-						setTimeout(() => {
-							if (params.callback) {
-								params.callback();
-							}
-						}, 0);
+						if (params.callback) {
+							modal.style.pointerEvents = "";
+							params.callback();
+						}
 					}
-				);*/
-				if (params.callback) {
-					params.callback();
-				}
+				);
 
 				var event = new CustomEvent("modal-show", {
 					detail: {
