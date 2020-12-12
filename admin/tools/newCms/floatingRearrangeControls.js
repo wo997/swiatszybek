@@ -11,6 +11,9 @@ class NewCmsRearrangeControls {
 		this.rearrange_grabbed_rect_node = newCms.container.find(
 			`.rearrange_grabbed_rect`
 		);
+		this.rearrange_target_rect_node = newCms.container.find(
+			`.rearrange_target_rect`
+		);
 		this.init();
 
 		this.newCms.container.addEventListener("styles_loaded", () => {
@@ -44,14 +47,15 @@ class NewCmsRearrangeControls {
 		this.rearrange_position = "";
 		this.rearrange_control_node = null;
 
-		this.newCms.container.findAll(".rearrange_active").forEach((e) => {
+		this.newCms.container.findAll(".rearrange_possible").forEach((e) => {
 			if (options.except && options.except.includes(e)) {
 				return;
 			}
-			e.classList.remove("rearrange_active");
+			e.classList.remove("rearrange_possible");
 		});
 
 		this.newCms.container.classList.remove("rearrange_possible");
+		this.rearrange_target_rect_node.classList.remove("visible");
 	}
 
 	mouseMove() {
@@ -259,7 +263,7 @@ class NewCmsRearrangeControls {
 		);
 
 		if (rearrange_control_node) {
-			if (!rearrange_control_node.classList.contains("rearrange_active")) {
+			if (!rearrange_control_node.classList.contains("rearrange_possible")) {
 				const min_size = 20;
 
 				let width = min_size;
@@ -319,12 +323,24 @@ class NewCmsRearrangeControls {
 				this.rearrange_insert_rect_node.style.width = width + "px";
 				this.rearrange_insert_rect_node.style.height = height + "px";
 			}
-			rearrange_control_node.classList.add("rearrange_active");
+			rearrange_control_node.classList.add("rearrange_possible");
 
 			if (parent_container) {
-				parent_container.classList.add("rearrange_active");
+				this.rearrange_target_rect_node.classList.add("visible");
+				const rect_data = nodePositionAgainstScrollableParent(parent_container);
+				const border_width = 4;
+				this.rearrange_target_rect_node.style.left =
+					rect_data.relative_pos.left - border_width * 0.5 + "px";
+				this.rearrange_target_rect_node.style.top =
+					rect_data.relative_pos.top - border_width * 0.5 + "px";
+				this.rearrange_target_rect_node.style.width =
+					rect_data.node_rect.width + border_width + "px";
+				this.rearrange_target_rect_node.style.height =
+					rect_data.node_rect.height + border_width + "px";
+
+				//parent_container.classList.add("rearrange_possible");
 				if (parent_container.select_control) {
-					parent_container.select_control.classList.add("rearrange_active");
+					parent_container.select_control.classList.add("rearrange_possible");
 				}
 			}
 		}

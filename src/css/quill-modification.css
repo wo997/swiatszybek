@@ -1,5 +1,5 @@
 /* css[global] */
-
+/* TODO: remove this, useless css :P */
 .ql-snow .ql-picker.ql-size {
 	width: 70px !important;
 }
@@ -214,10 +214,7 @@ span.qlbt-operation-menu-text {
 }
 
 .ql-toolbar.ql-snow {
-	position: sticky;
-	top: 0;
-	z-index: 100;
-	background: white;
+	background: #fff5;
 }
 
 button.ql-header {

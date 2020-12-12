@@ -788,6 +788,8 @@ class NewCms {
 			this.styling.registerMissingBlocks();
 		}
 
+		this.rearrange_controls.removeRearrangement();
+
 		const all_animatable_blocks = this.afterContentAnimation();
 
 		this.animateContent(all_animatable_blocks, 350);
@@ -929,9 +931,6 @@ class NewCms {
 				: false;
 
 			// give flexbox some space baby
-			if (block.classList.contains("block_14")) {
-				console.log(block, kisses_right_border);
-			}
 			const subtract_mr = kisses_right_border ? 2 : 0;
 
 			const fg = block.style.flexGrow;

@@ -4,7 +4,8 @@ class NewCmsSelectControls {
 	constructor(newCms) {
 		/** @type {NewCms} */
 		this.newCms = newCms;
-		this.node = newCms.container.find(`.select_controls`);
+		this.node = this.newCms.container.find(`.select_controls`);
+		this.selection_node = this.newCms.container.find(`.selection_node`);
 		this.init();
 
 		this.newCms.container.addEventListener("edit", (event) => {
@@ -22,6 +23,8 @@ class NewCmsSelectControls {
 		this.newCms.container.findAll(".select_active").forEach((e) => {
 			e.classList.remove("select_active");
 		});
+
+		this.selection_node.classList.remove("visible");
 	}
 
 	mouseMove() {
@@ -58,8 +61,20 @@ class NewCmsSelectControls {
 			const selected_block = this.selected_block;
 
 			if (selected_block && selected_block.select_control) {
-				selected_block.classList.add("select_active");
+				//selected_block.classList.add("select_active");
 				selected_block.select_control.classList.add("select_active");
+
+				this.selection_node.classList.add("visible");
+				const rect_data = nodePositionAgainstScrollableParent(selected_block);
+				const border_width = 4;
+				this.selection_node.style.left =
+					rect_data.relative_pos.left - border_width * 0.5 + "px";
+				this.selection_node.style.top =
+					rect_data.relative_pos.top - border_width * 0.5 + "px";
+				this.selection_node.style.width =
+					rect_data.node_rect.width + border_width + "px";
+				this.selection_node.style.height =
+					rect_data.node_rect.height + border_width + "px";
 			}
 		}
 
