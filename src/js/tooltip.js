@@ -24,7 +24,7 @@ domload(() => {
 	window.addEventListener("mousemove", function (event) {
 		var t = window.tooltip.target;
 		var e = findParentByAttribute(event.target, "data-tooltip");
-		if (e) {
+		if (e && !e.hasAttribute("disabled")) {
 			var tooltipText = e.getAttribute("data-tooltip");
 
 			if (tooltipText === "") {
