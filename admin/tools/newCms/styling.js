@@ -103,10 +103,17 @@ class NewCmsStyling {
 
 	setResponsiveType(type, options = {}) {
 		this.responsive_type = this.responsive_types[type];
-		if (!type) {
+
+		if (!this.responsive_type) {
 			console.error("Wrong responsive type");
 			return;
 		}
+
+		this.newCms.container.findAll(`[data-responsive_type]`).forEach((e) => {
+			const curr = e.getAttribute("data-responsive_type") == type;
+			e.classList.toggle("important", curr);
+			e.classList.toggle("primary", !curr);
+		});
 
 		this.newCms.content_scroll_panel.classList.toggle(
 			"hide_scrollbar",
@@ -126,12 +133,20 @@ class NewCmsStyling {
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
 		const content_responsive_wrapper_rect = this.content_responsive_wrapper.getBoundingClientRect();
 
+		let bw = this.responsive_type.width
+			? this.responsive_type.width * 0.02 + 10
+			: 0;
+		const prev_style_border = nonull(this.style_border, "none");
+		const prev_style_border_radius = nonull(this.style_border_radius, "0px");
+		this.style_border = `${bw}px solid #444`;
+		this.style_border_radius = bw * 0.5 + "px";
+
 		this.width = Math.min(
-			nonull(this.responsive_type.width, 100000),
+			nonull(this.responsive_type.width, 100000) + 2 * bw,
 			content_wrapper_rect.width
 		);
 		this.height = Math.min(
-			nonull(this.responsive_type.height, 100000),
+			nonull(this.responsive_type.height, 100000) + 2 * bw,
 			content_wrapper_rect.height
 		);
 
@@ -141,23 +156,24 @@ class NewCmsStyling {
                 0% {
                     width: ${content_responsive_wrapper_rect.width}px;
                     height: ${content_responsive_wrapper_rect.height}px;
+                    border: ${prev_style_border};
+                    border-radius: ${prev_style_border_radius};
                 }
                 100% {
                     width: ${this.width}px;
                     height: ${this.height}px;
+                    border: ${this.style_border};
+                    border-radius: ${this.style_border_radius};
                 }
             `,
 			nonull(options.duration, 0),
 			() => {
 				this.content_responsive_wrapper.style.width = this.width + "px";
 				this.content_responsive_wrapper.style.height = this.height + "px";
+				this.content_responsive_wrapper.style.border = this.style_border;
+				this.content_responsive_wrapper.style.borderRadius = this.style_border_radius;
 			}
 		);
-
-		//this.content_responsive_wrapper.style.width = height;
-
-		//border-radius: 10px;
-		//border: 25px solid #444;
 	}
 
 	initHistory() {

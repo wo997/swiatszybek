@@ -343,17 +343,23 @@ TODO: use image pickers everywhere instead
 }
 
 .glue-children {
-	display: flex;
-}
-.glue-children > *:not(:first-child):not(.ignore-glue),
-.glue-children > .field-wrapper:not(:first-child):not(.ignore-glue) .field {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-}
-.glue-children > *:not(:last-child):not(.ignore-glue),
-.glue-children > .field-wrapper:not(:last-child):not(.ignore-glue) .field {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
+	& {
+		display: flex;
+	}
+	:not(:first-child):not(.ignore-glue) {
+		*&,
+		.field-wrapper& .field {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+	}
+	:not(:last-child):not(.ignore-glue) {
+		*&,
+		.field-wrapper& .field {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
 }
 
 .form-header {
