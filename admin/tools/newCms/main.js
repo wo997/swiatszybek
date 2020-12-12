@@ -104,6 +104,16 @@ class NewCms {
 
 	initStyling() {
 		this.styling = new NewCmsStyling(this, this.container.find(".styles_node"));
+
+		const width = this.sidebar.node.find(`[name="width"]`);
+
+		const changeCallback = () => {
+			this.styling.setNodeStyles({
+				width: width.getValue(),
+			});
+		};
+		width.addEventListener("change", changeCallback);
+		width.addEventListener("input", changeCallback);
 	}
 
 	initMargins() {
@@ -119,7 +129,7 @@ class NewCms {
 				//styles[`margin${dir.capitalize()}`] = input.getValue();
 				styles[`margin-${dir}`] = input.getValue();
 
-				this.styling.setNodeStyles(this.edit_block.edit_node, styles, {
+				this.styling.setNodeStyles(styles, null, {
 					type: "desktop",
 				});
 

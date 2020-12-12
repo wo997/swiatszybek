@@ -2105,7 +2105,7 @@ function getMarginControl(prefix = "margin", target = "", defaults = {}) {
 	for (var direction of ["top", "left", "right", "bottom"]) {
 		defaults[direction] = defaults.all ? defaults.all : "";
 	}
-	return `
+	return /*html*/ `
     <div style="max-width:400px">
         <div style="display:flex;justify-content:center">
             <c-select style="width:100px">

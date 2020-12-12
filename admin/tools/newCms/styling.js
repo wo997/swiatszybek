@@ -182,7 +182,10 @@ class NewCmsStyling {
 	}
 
 	// params like responsiveness etc
-	setNodeStyles(node, styles, params) {
+	setNodeStyles(styles, node = null, params = {}) {
+		if (node === null) {
+			node = this.newCms.edit_block.edit_node;
+		}
 		const block_id = this.getBlockId(node);
 		/**
 		 * @type {blockData}

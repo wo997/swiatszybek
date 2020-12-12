@@ -56,7 +56,7 @@ class NewCmsEditBlock {
 		const custom_css = this.newCms.sidebar.node.find(`[name="custom_css"]`);
 
 		const changeCallback = () => {
-			this.newCms.styling.setNodeStyles(this.edit_node, custom_css.getValue(), {
+			this.newCms.styling.setNodeStyles(custom_css.getValue(), null, {
 				type: "custom",
 			});
 		};
