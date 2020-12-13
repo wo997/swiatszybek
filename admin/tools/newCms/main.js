@@ -895,7 +895,7 @@ class NewCms {
 				if (options.callback) {
 					options.callback();
 				}
-			}, 10000);
+			}, 100);
 		};
 
 		all_animatable_blocks.forEach((block) => {
