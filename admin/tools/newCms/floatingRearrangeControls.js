@@ -101,7 +101,7 @@ class NewCmsRearrangeControls {
 						}
 
 						if (
-							sq_distance < second_smallest_sq_distance &&
+							sq_distance <= second_smallest_sq_distance &&
 							smallest_sq_distance < sq_distance
 						) {
 							second_smallest_sq_distance = sq_distance;

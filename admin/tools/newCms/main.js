@@ -4,6 +4,12 @@
 useTool("fileManager");
 //useTool("quillEditor"); // TODO: get it to work, should be a module, well, fuck it xd
 
+class AnimationData {
+	dx;
+	dy;
+	w;
+	h;
+}
 class NewCms {
 	constructor(container) {
 		this.container = $(container);
@@ -690,8 +696,12 @@ class NewCms {
 
 				this.unselectFirstGridNode();
 
-				grabbed_block.last_rect.width = grabbed_block.animation_data.w;
-				grabbed_block.last_rect.height = grabbed_block.animation_data.h;
+				/**
+				 * @type {AnimationData}
+				 */
+				const gbad = grabbed_block.animation_data;
+				grabbed_block.last_rect.width = gbad.w;
+				grabbed_block.last_rect.height = gbad.h;
 			}
 		}
 
@@ -714,6 +724,9 @@ class NewCms {
 			const side_block_rect = side_block.getBoundingClientRect();
 
 			// replace
+			/**
+			 * @type {AnimationData}
+			 */
 			const animation_data = grabbed_block.animation_data;
 
 			if (this.rearrange_controls.rearrange_near_block) {
@@ -828,7 +841,11 @@ class NewCms {
 				if (block.last_rect) {
 					block.new_rect = block.getBoundingClientRect();
 					if (!block.animation_data) {
-						block.animation_data = { dx: 0, dy: 0 };
+						/**
+						 * @type {AnimationData}
+						 */
+						const block_animation_data = { dx: 0, dy: 0 };
+						block.animation_data = block_animation_data;
 					}
 					if (block.classList.contains("container")) {
 						const newCms_block_content = block.find(".newCms_block_content");
@@ -845,8 +862,12 @@ class NewCms {
 			const dx = block.last_rect.left - block.new_rect.left;
 			const dy = block.last_rect.top - block.new_rect.top;
 
-			block.animation_data.dx += dx;
-			block.animation_data.dy += dy;
+			/**
+			 * @type {AnimationData}
+			 */
+			const block_animation_data = block.animation_data;
+			block_animation_data.dx += dx;
+			block_animation_data.dy += dy;
 
 			block
 				.find(".newCms_block_content")
@@ -918,8 +939,12 @@ class NewCms {
 			const mb0 = mb + half_dh;
 			const ml0 = ml + half_dw;
 
-			const dx = block.animation_data.dx - half_dw;
-			const dy = block.animation_data.dy - half_dh;
+			/**
+			 * @type {AnimationData}
+			 */
+			const block_animation_data = block.animation_data;
+			const dx = block_animation_data.dx - half_dw;
+			const dy = block_animation_data.dy - half_dh;
 
 			const parent_rect = block.parent().new_rect;
 
@@ -1126,18 +1151,19 @@ class NewCms {
 			target_dx += mt;
 			target_dy += ml;
 
-			grabbed_block.animation_data.dx =
-				grabbed_block.animation_data.dx * (1 - acc) + target_dx * acc;
-			grabbed_block.animation_data.dy =
-				grabbed_block.animation_data.dy * (1 - acc) + target_dy * acc;
+			/**
+			 * @type {AnimationData}
+			 */
+			const gbad = grabbed_block.animation_data;
 
-			grabbed_block.animation_data.w =
-				grabbed_block.animation_data.w * (1 - acc) + target_w * acc;
-			grabbed_block.animation_data.h =
-				grabbed_block.animation_data.h * (1 - acc) + target_h * acc;
+			gbad.dx = gbad.dx * (1 - acc) + target_dx * acc;
+			gbad.dy = gbad.dy * (1 - acc) + target_dy * acc;
 
-			let set_w = grabbed_block.animation_data.w;
-			let set_h = grabbed_block.animation_data.h;
+			gbad.w = gbad.w * (1 - acc) + target_w * acc;
+			gbad.h = gbad.h * (1 - acc) + target_h * acc;
+
+			let set_w = gbad.w;
+			let set_h = gbad.h;
 
 			const side_block_side_padding = parseInt(
 				getComputedStyle(document.documentElement).getPropertyValue(
@@ -1155,8 +1181,8 @@ class NewCms {
 
 			this.rearrange_node.style.transform = `
                 translate(
-                    ${(grabbed_block.animation_data.dx - ml).toPrecision(5)}px,
-                    ${(grabbed_block.animation_data.dy - mt).toPrecision(5)}px
+                    ${(gbad.dx - ml).toPrecision(5)}px,
+                    ${(gbad.dy - mt).toPrecision(5)}px
                 )
             `;
 		}
