@@ -1,7 +1,8 @@
 /* css[admin] */
 
-body {
+body#admin {
 	height: 100%;
+	overflow: hidden;
 }
 
 .main-container {

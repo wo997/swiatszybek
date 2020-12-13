@@ -35,7 +35,7 @@
 			</div>
 
 			<div class="history-buttons"></div>
-			<button
+			<!--<button
 				class="btn primary"
 				onclick="window.pasteType='container';showModal('pasteBlock')"
 				data-tooltip="Wklej skopiowany kontener / blok"
@@ -48,7 +48,7 @@
 				data-tooltip="Skopiuj całą zawartość do schowka"
 			>
 				<i class="fas fa-clipboard"></i>
-			</button>
+			</button>-->
 			<button class="btn secondary" onclick="hideParentModal(this)">
 				Anuluj <i class="fa fa-times"></i>
 			</button>
@@ -162,8 +162,10 @@
 
 			<div class="content_wrapper">
 				<div class="content_responsive_wrapper">
-					<div class="scroll-panel scroll-shadow content_scroll_panel">
-						<div style="position: relative" class="content_scroll_content">
+					<div
+						class="scroll-panel scroll-shadow content_scroll_panel hide_scrollbar"
+					>
+						<div class="content_scroll_content">
 							<div class="edit_block_node"></div>
 							<div class="select_controls"></div>
 							<div class="rearrange_controls"></div>
@@ -171,20 +173,13 @@
 							<div class="rearrange_grabbed_rect"></div>
 							<div class="rearrange_target_rect"></div>
 							<div class="selection_node"></div>
+							<!-- newCms_block_content class is temporary, it prevents margin collapsing, later u wanna for for sections etc-->
 							<div
-								style="
-									padding: var(--content_padding);
-									overflow: hidden;
-									position: relative;
-								"
-							>
-								<!-- newCms_block_content class is temporary, it prevents margin collapsing, later u wanna for for sections etc-->
-								<div
-									class="newCmsContent newCms_block_content"
-									data-type="html"
-									name="content"
-								></div>
-							</div>
+								class="newCmsContent newCms_block_content"
+								data-type="html"
+								name="content"
+							></div>
+							<div class="newCmsContent_copy newCms_block_content"></div>
 						</div>
 					</div>
 				</div>
@@ -204,9 +199,7 @@
 					overflow: hidden;
 					pointer-events: none;
 				"
-			>
-				<div class="newCmsContent_copy newCms_block_content"></div>
-			</div>
+			></div>
 		</div>
 	</div>
 </div>

@@ -1,5 +1,10 @@
 /* js[tool_newCms] */
 
+class ResponsiveType {
+	name;
+	width;
+	height;
+}
 class Styles {
 	desktop;
 	tablet;
@@ -38,20 +43,27 @@ class NewCmsStyling {
 			".content_responsive_wrapper"
 		);
 
-		this.responsive_types = {
-			desktop: {
+		// THESE MUST BE IN THE DESCENDING ORDER
+		/**
+		 * @type {ResponsiveType[]}
+		 */
+		this.responsive_types = [
+			{
+				name: "desktop",
 				width: null,
 				height: null,
 			},
-			tablet: {
+			{
+				name: "tablet",
 				width: 1024,
 				height: 768,
 			},
-			mobile: {
+			{
+				name: "mobile",
 				width: 360,
 				height: 640,
 			},
-		};
+		];
 
 		this.init();
 
@@ -101,8 +113,10 @@ class NewCmsStyling {
 		this.setResponsiveType("desktop", opts);
 	}
 
-	setResponsiveType(type, options = {}) {
-		this.responsive_type = this.responsive_types[type];
+	setResponsiveType(type_name, options = {}) {
+		this.responsive_type = this.responsive_types.find(
+			(e) => e.name == type_name
+		);
 
 		if (!this.responsive_type) {
 			console.error("Wrong responsive type");
@@ -110,15 +124,15 @@ class NewCmsStyling {
 		}
 
 		this.newCms.container.findAll(`[data-responsive_type]`).forEach((e) => {
-			const curr = e.getAttribute("data-responsive_type") == type;
+			const curr = e.getAttribute("data-responsive_type") == type_name;
 			e.classList.toggle("important", curr);
 			e.classList.toggle("primary", !curr);
 		});
 
-		this.newCms.content_scroll_panel.classList.toggle(
-			"hide_scrollbar",
+		/*this.newCms.content_scroll_panel.classList.toggle(
+        "hide_scrollbar",
 			!!this.responsive_type.width
-		);
+		);*/
 
 		let opts = {};
 		if (options.unlock) {
@@ -150,6 +164,7 @@ class NewCmsStyling {
 			content_wrapper_rect.height
 		);
 
+		const duration = nonull(options.duration, 0);
 		animate(
 			this.content_responsive_wrapper,
 			`
@@ -166,14 +181,20 @@ class NewCmsStyling {
                     border-radius: ${this.style_border_radius};
                 }
             `,
-			nonull(options.duration, 0),
+			duration,
 			() => {
 				this.content_responsive_wrapper.style.width = this.width + "px";
 				this.content_responsive_wrapper.style.height = this.height + "px";
 				this.content_responsive_wrapper.style.border = this.style_border;
 				this.content_responsive_wrapper.style.borderRadius = this.style_border_radius;
+
+				window.dispatchEvent(new Event("resize"));
 			}
 		);
+
+		setTimeout(() => {
+			this.generateCSS();
+		}, duration * 0.5);
 	}
 
 	initHistory() {
@@ -278,22 +299,32 @@ class NewCmsStyling {
 				css_full += custom;
 			}
 
-			let desktop = block_data.styles.desktop;
-			if (desktop) {
-				let styles = "";
-				Object.entries(desktop).forEach(([prop_css, val]) => {
-					// these are needed by the page builder to work properly during animations
-					// TODO: consider limiting the list to margins, flex-grow etc. (layout related)
-					const prop_js = kebabToSnakeCase(prop_css);
-					if (prop_js.includes("margin")) {
-						block_data.node.style[prop_js] = val;
-					}
-					styles += `${prop_css}:${val};`;
-				});
+			const getSomeStyles = (type) => {
+				let styles = block_data.styles[type];
 				if (styles) {
-					const block_styles = `${block_selector}{${styles}}`;
-					css_full += block_styles;
-					//console.log(block_styles);
+					let css = "";
+					Object.entries(styles).forEach(([prop_css, val]) => {
+						// these are needed by the page builder to work properly during animations
+						// TODO: consider limiting the list to margins, flex-grow etc. (layout related)
+						const prop_js = kebabToSnakeCase(prop_css);
+						if (prop_js.includes("margin")) {
+							block_data.node.style[prop_js] = val;
+						}
+						css += `${prop_css}:${val};`;
+					});
+					if (css) {
+						const block_styles = `${block_selector}{${css}}`;
+						return block_styles;
+					}
+				}
+				return "";
+			};
+
+			for (const type of this.responsive_types) {
+				css_full += getSomeStyles(type.name);
+
+				if (this.responsive_type.name == type.name) {
+					break;
 				}
 			}
 		}
@@ -320,8 +351,8 @@ class NewCmsStyling {
 		if (params.type == "custom") {
 			block_data.styles.custom = styles;
 		} else {
-			// TODO: temporary!
-			Object.assign(block_data.styles.desktop, styles);
+			const type = nonull(params.type, this.responsive_type.name);
+			Object.assign(block_data.styles[type], styles);
 		}
 
 		if (nonull(params.generate_css, true)) {

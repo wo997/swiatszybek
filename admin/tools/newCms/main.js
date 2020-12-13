@@ -857,26 +857,10 @@ class NewCms {
 
 		// copy overlay to hide layout update
 		this.content_node_copy.setContent(this.content_node.innerHTML);
-		this.content_node_copy.findAll("*").forEach((e) => {
+		/*this.content_node_copy.findAll("*").forEach((e) => {
 			// itd why rly sry
 			e.style.animation = "";
-		});
-
-		const content_padding = parseInt(
-			getComputedStyle(document.documentElement).getPropertyValue(
-				"--content_padding"
-			)
-		);
-
-		const content_node_rect = this.content_node.getBoundingClientRect();
-		this.content_node_copy.style.left =
-			content_node_rect.left - content_padding + "px";
-		this.content_node_copy.style.top =
-			content_node_rect.top - content_padding + "px";
-		this.content_node_copy.style.width =
-			content_node_rect.width + 2 * content_padding + "px";
-		this.content_node_copy.style.height =
-			content_node_rect.height + 2 * content_padding + "px";
+		});*/
 
 		return all_animatable_blocks;
 	}
@@ -907,7 +891,7 @@ class NewCms {
 				if (options.callback) {
 					options.callback();
 				}
-			}, 100);
+			}, 10000);
 		};
 
 		all_animatable_blocks.forEach((block) => {

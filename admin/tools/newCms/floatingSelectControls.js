@@ -143,20 +143,20 @@ class NewCmsSelectControls {
 			let left = block_data.rect_data.relative_pos.left;
 			let top = block_data.rect_data.relative_pos.top;
 
-			left = Math.max(left, 5);
+			left = Math.max(left, 0);
 			left = Math.min(
 				left,
 				this.newCms.content_scroll_content.clientWidth -
 					select_control_width -
-					5
+					0
 			);
 
-			top = Math.max(top, 5);
+			top = Math.max(top, 0);
 			top = Math.min(
 				top,
 				this.newCms.content_scroll_content.clientHeight -
 					select_control_height -
-					5
+					0
 			);
 
 			let moving = true;
