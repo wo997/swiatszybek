@@ -146,7 +146,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	var um = $("header .user-menu");
 	if (um) {
 		registerModalContent(`
-      <div id="userMenu" data-expand>
+      <div id="userMenu" data-expand class="userMenu">
           <div class="modal-body">
               <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="user-icon" src="/src/img/user_icon.svg"> Moje konto</h3>
