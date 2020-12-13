@@ -78,6 +78,7 @@ class NewCmsRearrangeControls {
 
 			if (!rearrange_control_node) {
 				let smallest_sq_distance = 10000; // magnetic 100px
+				let second_smallest_sq_distance = 20000; // used to apply death zone :P
 				let smallest_sq_distance_control = null;
 				this.newCms.content_scroll_content
 					.findAll(".rearrange_control:not(.unavailable):not(.first_grid_node)")
@@ -106,14 +107,24 @@ class NewCmsRearrangeControls {
 						const sq_distance = dx * dx + dy * dy;
 
 						if (sq_distance < smallest_sq_distance) {
+							if (smallest_sq_distance < second_smallest_sq_distance) {
+								second_smallest_sq_distance = smallest_sq_distance;
+							}
+
 							smallest_sq_distance = sq_distance;
 							smallest_sq_distance_control = control;
 						}
 					});
 
 				if (smallest_sq_distance_control) {
-					rearrange_control_node = smallest_sq_distance_control;
-					rearrange_position = rearrange_control_node.position;
+					if (
+						Math.sqrt(second_smallest_sq_distance) -
+							Math.sqrt(smallest_sq_distance) >
+						20
+					) {
+						rearrange_control_node = smallest_sq_distance_control;
+						rearrange_position = rearrange_control_node.position;
+					}
 				}
 			}
 
@@ -163,79 +174,7 @@ class NewCmsRearrangeControls {
 					rearrange_control_node =
 						rearrange_near_block.rearrange_control_inside;
 					parent_container = rearrange_near_block;
-				} else if (near_block_type === "grid") {
-					/*let smallest_sq_distance = 10000; // magnetic 100px
-					let smallest_sq_distance_control = null;
-					newCms.content_scroll_content
-						.findAll(
-							".rearrange_control:not(.unavailable):not(.first_grid_node)"
-						)
-						.forEach((control) => {
-							if (
-								control.position !== "grid" ||
-								control.rearrange_near_block !== rearrange_near_block
-							) {
-								return;
-							}
-
-							const dx =
-								control.actual_position.left -
-								this.newCms.content_scroll_panel.scrollLeft -
-								this.newCms.mouse_x;
-
-							const dy =
-								control.actual_position.top -
-								this.newCms.content_scroll_panel.scrollTop -
-								this.newCms.mouse_y +
-								this.newCms.grabbed_scroll_top;
-							const sq_distance = dx * dx + dy * dy;
-
-							if (sq_distance < smallest_sq_distance) {
-								smallest_sq_distance = sq_distance;
-								smallest_sq_distance_control = control;
-							}
-						});
-
-					if (smallest_sq_distance_control) {
-						rearrange_control_node = smallest_sq_distance_control;
-						rearrange_position = "grid";
-					}*/
 				}
-			} else if (!this.newCms.rearrange_grid_first_node) {
-				/*rearrange_near_block_rect = rearrange_near_block.getBoundingClientRect();
-				if (is_parent_row) {
-					rearrange_position =
-						event.clientX <
-						rearrange_near_block_rect.left +
-							rearrange_near_block_rect.width * 0.5
-							? "before"
-							: "after";
-				} else {
-					rearrange_position =
-						event.clientY <
-						rearrange_near_block_rect.top +
-							rearrange_near_block_rect.height * 0.5
-							? "before"
-							: "after";
-				}
-
-				if (rearrange_position == "before") {
-					if (rearrange_near_block.rearrange_control_before) {
-						rearrange_control_node =
-							rearrange_near_block.rearrange_control_before;
-					} else {
-						const prev_block = rearrange_near_block.prev();
-
-						if (prev_block && prev_block.rearrange_control_after) {
-							rearrange_control_node = prev_block.rearrange_control_after;
-						}
-					}
-				} else if (
-					rearrange_position == "after" &&
-					rearrange_near_block.rearrange_control_after
-				) {
-					rearrange_control_node = rearrange_near_block.rearrange_control_after;
-				}*/
 			}
 		}
 
