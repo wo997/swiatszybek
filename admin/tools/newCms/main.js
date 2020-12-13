@@ -76,13 +76,7 @@ class NewCms {
 		});
 
 		window.addEventListener("resize", () => {
-			if (this.grabbed_block) {
-				this.rearrange_controls.addFloatingRearrangeControls(
-					this.grabbed_block
-				);
-			} else {
-				this.select_controls.addFloatingSelectControls();
-			}
+			this.onResize();
 		});
 
 		this.container.addEventListener("clean_up_output", () => {
@@ -90,6 +84,16 @@ class NewCms {
 				e.remove();
 			});
 		});
+	}
+
+	onResize() {
+		if (this.grabbed_block) {
+			this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
+		} else {
+			this.select_controls.addFloatingSelectControls();
+		}
+		this.styling.setResponsiveContainerSize();
+		this.manageGrids();
 	}
 
 	stylesLoaded() {
@@ -1013,8 +1017,17 @@ class NewCms {
 			}
 		}
 
-		if (content_scroll_panel_rect.height - this.mouse_y < scroll_offset) {
-			speed_y = scroll_offset - content_scroll_panel_rect.height + this.mouse_y;
+		if (
+			content_scroll_panel_rect.top +
+				content_scroll_panel_rect.height -
+				this.mouse_y <
+			scroll_offset
+		) {
+			speed_y =
+				scroll_offset -
+				content_scroll_panel_rect.top -
+				content_scroll_panel_rect.height +
+				this.mouse_y;
 
 			if (speed_y > scroll_offset) {
 				speed_y = scroll_offset;

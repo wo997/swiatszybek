@@ -76,10 +76,6 @@ class NewCmsStyling {
 		this.newCms.container.addEventListener("ready", (event) => {
 			this.init();
 		});
-
-		window.addEventListener("resize", () => {
-			this.setResponsiveContainerSize();
-		});
 	}
 
 	mouseClick() {
@@ -188,7 +184,7 @@ class NewCmsStyling {
 				this.content_responsive_wrapper.style.border = this.style_border;
 				this.content_responsive_wrapper.style.borderRadius = this.style_border_radius;
 
-				window.dispatchEvent(new Event("resize"));
+				this.newCms.onResize();
 			}
 		);
 
