@@ -61,14 +61,6 @@ function showModal(name = null, params = {}) {
 				clearAllErrors(modal);
 				const modal_container = modal_wrapper.find(".modal_container");
 				modal_container.appendChild(modal);
-				let origin = "center";
-				if (params.source) {
-					var r = params.source.getBoundingClientRect();
-					var p = modal_container.getBoundingClientRect();
-					var x = 1 * (r.left - p.left) + r.width / 2;
-					var y = 1 * (r.top - p.top) + r.height / 2;
-					origin = `${x}px ${y}px`;
-				}
 
 				modal.style.pointerEvents = "none";
 				modal.classList.add("visible");
@@ -78,8 +70,30 @@ function showModal(name = null, params = {}) {
 				const modal_copy = $(modal_container.lastElementChild);
 				const modal_copy_content = modal_copy.find("*");
 				const modal_content = modal.find("*");
-				modal_copy.style.transformOrigin = origin;
 				modal_copy.id = "";
+
+				let dx = 0;
+				let dy = 0;
+				if (params.source) {
+					/*var r = params.source.getBoundingClientRect();
+					var p = modal_copy_content.getBoundingClientRect();
+					console.log(r, p);
+					dx = 1 * (r.left - p.left) + r.width / 2;
+					dy = 1 * (r.top - p.top) + r.height / 2;*/
+					//origin = `${dx}px ${dy}px`;
+					const src_rect = params.source.getBoundingClientRect();
+					const modal_rect = modal_copy_content.getBoundingClientRect();
+					dx =
+						src_rect.left -
+						modal_rect.left +
+						(src_rect.width - modal_rect.width) * 0.5;
+					dy =
+						src_rect.top -
+						modal_rect.top +
+						(src_rect.height - modal_rect.height) * 0.5;
+				}
+				//modal_copy.style.transformOrigin = origin;
+				//return;
 
 				// observe changes and apply them to the copied modal
 				const observer = new MutationObserver(() => {
@@ -110,19 +124,34 @@ function showModal(name = null, params = {}) {
 
 				modal.style.opacity = "0.001";
 
+				const duration = 300;
+				animate(
+					modal_copy,
+					`
+                        0% {
+                            opacity: 0;
+                        }
+                        100% {
+                            opacity: 1;
+                        }
+                    `,
+					duration
+				);
+
 				animate(
 					modal_copy_content,
 					`
                         0% {
-                            transform: scale(0.5);
-                            opacity: 0;
+                            transform: translate(
+                                ${dx * 0.5}px,
+                                ${dy * 0.5}px)
+                            scale(0.5);
                         }
                         100% {
-                            transform: scale(1);
-                            opacity: 1;
+                            transform: translate(0px,0px) scale(1);
                         }
                     `,
-					300,
+					duration,
 					() => {
 						modal.style.pointerEvents = "";
 						modal.style.opacity = "";

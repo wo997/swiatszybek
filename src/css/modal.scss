@@ -8,7 +8,7 @@
 	position: fixed;
 	width: 100vw;
 	height: calc(var(--vh, 1vh) * 100);
-	background-color: rgba(0, 0, 0, 0.4);
+	/*background-color: rgba(0, 0, 0, 0.4);*/
 	top: 0;
 	left: 0;
 	z-index: 1500;
@@ -52,7 +52,7 @@
 .modal_container > *:before {
 	width: 100vw;
 	height: 100vh;
-	background: #0003;
+	background: #0004;
 	content: "";
 	position: absolute;
 	z-index: -1;

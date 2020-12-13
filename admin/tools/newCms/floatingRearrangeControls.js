@@ -83,7 +83,7 @@ class NewCmsRearrangeControls {
 				this.newCms.content_scroll_content
 					.findAll(".rearrange_control:not(.unavailable):not(.first_grid_node)")
 					.forEach((control) => {
-						// that might be set somewhere else, for example when we drag any block
+						/*// that might be set somewhere else, for example when we drag any block
 						if (!control.actual_position) {
 							const rect = control.getBoundingClientRect();
 
@@ -102,7 +102,23 @@ class NewCmsRearrangeControls {
 							control.actual_position.top -
 							this.newCms.content_scroll_panel.scrollTop -
 							this.newCms.mouse_y +
-							this.newCms.grabbed_scroll_top;
+                            this.newCms.grabbed_scroll_top;*/
+
+						const rect = control.getBoundingClientRect();
+
+						const left = rect.left + this.rearrange_control_width * 0.5;
+						const top = rect.top + this.rearrange_control_height * 0.5;
+
+						const dx =
+							left -
+							//this.newCms.content_scroll_panel.scrollLeft -
+							this.newCms.mouse_x;
+
+						const dy =
+							top -
+							//this.newCms.content_scroll_panel.scrollTop -
+							this.newCms.mouse_y; // +
+						//this.newCms.grabbed_scroll_top;
 
 						const sq_distance = dx * dx + dy * dy;
 
@@ -126,6 +142,8 @@ class NewCmsRearrangeControls {
 						rearrange_position = rearrange_control_node.position;
 					}
 				}
+
+				//console.log(smallest_sq_distance);
 			}
 
 			if (rearrange_control_node) {
