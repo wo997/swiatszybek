@@ -78,88 +78,63 @@ class NewCmsRearrangeControls {
 
 			if (!rearrange_control_node) {
 				let smallest_sq_distance = 10000; // magnetic 100px
-				let second_smallest_sq_distance = 20000; // used to apply death zone :P
+				let second_smallest_sq_distance = 10000; // used to apply death zone :P
 				let smallest_sq_distance_control = null;
+				let last_sq_distance = 10000;
 				this.newCms.content_scroll_content
 					.findAll(".rearrange_control:not(.unavailable):not(.first_grid_node)")
 					.forEach((control) => {
-						/*// that might be set somewhere else, for example when we drag any block
-						if (!control.actual_position) {
-							const rect = control.getBoundingClientRect();
-
-							control.actual_position = {
-								left: rect.left + this.rearrange_control_width * 0.5,
-								top: rect.top + this.rearrange_control_height * 0.5,
-							};
-						}
-
-						const dx =
-							control.actual_position.left -
-							this.newCms.content_scroll_panel.scrollLeft -
-							this.newCms.mouse_x;
-
-						const dy =
-							control.actual_position.top -
-							this.newCms.content_scroll_panel.scrollTop -
-							this.newCms.mouse_y +
-                            this.newCms.grabbed_scroll_top;*/
-
 						const rect = control.getBoundingClientRect();
 
 						const left = rect.left + this.rearrange_control_width * 0.5;
 						const top = rect.top + this.rearrange_control_height * 0.5;
 
-						const dx =
-							left -
-							//this.newCms.content_scroll_panel.scrollLeft -
-							this.newCms.mouse_x;
+						const dx = left - this.newCms.mouse_x;
 
-						const dy =
-							top -
-							//this.newCms.content_scroll_panel.scrollTop -
-							this.newCms.mouse_y; // +
-						//this.newCms.grabbed_scroll_top;
+						const dy = top - this.newCms.mouse_y;
 
 						const sq_distance = dx * dx + dy * dy;
 
 						if (sq_distance < smallest_sq_distance) {
-							if (smallest_sq_distance < second_smallest_sq_distance) {
-								second_smallest_sq_distance = smallest_sq_distance;
-							}
-
 							smallest_sq_distance = sq_distance;
 							smallest_sq_distance_control = control;
 						}
+
+						if (
+							sq_distance < second_smallest_sq_distance &&
+							smallest_sq_distance < sq_distance
+						) {
+							second_smallest_sq_distance = sq_distance;
+						}
+
+						last_sq_distance = sq_distance;
 					});
 
 				if (smallest_sq_distance_control) {
 					if (
 						Math.sqrt(second_smallest_sq_distance) -
 							Math.sqrt(smallest_sq_distance) >
-						20
+						12
 					) {
 						rearrange_control_node = smallest_sq_distance_control;
 						rearrange_position = rearrange_control_node.position;
 					}
 				}
-
-				//console.log(smallest_sq_distance);
 			}
 
 			if (rearrange_control_node) {
 				rearrange_near_block = rearrange_control_node.rearrange_near_block;
 			}
 
-			if (!rearrange_near_block) {
+			/*if (!rearrange_near_block) {
 				rearrange_near_block = target
 					? target.findParentByClassName("newCms_block")
 					: null;
-			}
+			}*/
 		}
 
 		let parent_container = null;
 		let is_parent_row = false;
-		let rearrange_near_block_rect = null;
 
 		if (rearrange_near_block) {
 			if (
