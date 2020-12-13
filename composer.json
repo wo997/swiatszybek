@@ -5,6 +5,7 @@
         "google/apiclient": "^2.4",
         "facebook/graph-sdk": "^5.7",
         "phpoffice/phpspreadsheet": "^1.11",
-        "verot/class.upload.php": "^2.0"
+        "verot/class.upload.php": "^2.0",
+        "scssphp/scssphp": "1.3"
     }
 }

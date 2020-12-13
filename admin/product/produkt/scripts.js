@@ -580,7 +580,7 @@ function choiceListChanged(attribute_row_wrapper) {
 			return;
 		}
 
-		selected_attribute_values.setContent("");
+		selected_attribute_values.empty();
 
 		select_value_wrapper = value_list_wrapper.find(`.select_value_wrapper`);
 		if (select_value_wrapper) {

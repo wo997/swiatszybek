@@ -1,4 +1,7 @@
 <?php
+
+ini_set('max_execution_time', '1000');
+
 include "scripts/start_session.php";
 
 include_once 'vendor/autoload.php';
@@ -53,7 +56,6 @@ include "packages/simple_html_dom.php";
 //var_Dump(get_defined_constants()["ADMIN_URL"]);
 
 include "scripts/define_paths.php";
-
 include "scripts/use_builds.php";
 
 // TODO: abanbon and replace with settigs

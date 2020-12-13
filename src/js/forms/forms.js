@@ -43,6 +43,14 @@ function setFormData(data, form, params = {}) {
 
 	form.setting_data = true;
 
+	form.dispatchEvent(
+		new CustomEvent("before_set_form_data", {
+			detail: {
+				data,
+			},
+		})
+	);
+
 	if (!data) {
 		return;
 	}
@@ -98,6 +106,14 @@ function setFormData(data, form, params = {}) {
 
 	resizeCallback();
 	lazyLoadImages(false);
+
+	form.dispatchEvent(
+		new CustomEvent("after_set_form_data", {
+			detail: {
+				data,
+			},
+		})
+	);
 
 	form.setAttribute("data-loaded", true);
 }
@@ -156,6 +172,14 @@ function getFormData(form, params = {}) {
 			data[field_name] = field_value;
 		});
 
+	form.dispatchEvent(
+		new CustomEvent("after_get_form_data", {
+			detail: {
+				data,
+			},
+		})
+	);
+
 	return data;
 }
 
@@ -200,6 +224,7 @@ function registerForms(form = null) {
 		});
 	}
 
+	// TODO: consider mutation observer, isn't it obvious?
 	window.dispatchEvent(new Event("register-form-components"));
 
 	var unique_forms = [];

@@ -1,5 +1,5 @@
 <div id="modal-wrapper">
-    <div class="modal-content"></div>
+    <div class="modal_container"></div>
 </div>
 
 <footer>

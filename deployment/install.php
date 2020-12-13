@@ -1,6 +1,6 @@
 <?php
 
-// remove all annotations
+// remove all annotations, it would work really well man
 
 /*$delete_files = [];
 
@@ -23,6 +23,8 @@ foreach ($css_schema as $group) {
     }
 }
 
+// it has changed the structure ;)
+
 $js_schema = @include BUILDS_PATH . "js_schema.php";
 if (!$js_schema) {
     $js_schema = [];
@@ -38,10 +40,9 @@ foreach ($delete_files as $file_path) {
 }*/
 
 // unzip project
-
 $zip = new ZipArchive;
 if ($zip->open('piepsklep.zip') === TRUE) {
-    $zip->extractTo('/');
+    $zip->extractTo('./');
     $zip->close();
     echo 'ok';
 } else {
@@ -51,11 +52,7 @@ if ($zip->open('piepsklep.zip') === TRUE) {
 // default values?
 
 /*
-use single savesettings for that shit, on any update as well, tricky man
-define("primary_clr", '#b39647');
-define("buynow_clr", '#d22');
-define("subtle_font_clr", '#333');
-define("subtle_background_clr", '#fafafa');
+settingator would be nice to use here, for undefined vars etc
 */
 
 include "deployment/warmup_cache.php";

@@ -11,9 +11,8 @@
 </style>
 
 <script>
-    useTool("newCms");
-
     domload(() => {
+        useTool("newCms");
         setFormData(
             <?= json_encode(
                 getSetting("general", "random", [])
@@ -58,6 +57,7 @@
 <?php startSection("content"); ?>
 
 <div id="newCmsForm">
+
     <div onclick="editNewCms()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
 
     <div name="random_content" data-type="html" class="newCms_container_content preview_html">

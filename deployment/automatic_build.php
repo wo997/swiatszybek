@@ -2,26 +2,33 @@
 
 $base_path = str_replace("\\", "/", getcwd()) . "/";
 
-$modificationTimePHP = 0;
-$modificationTimeCSS = 0;
-$modificationTimeJS = 0;
-$modificationTimeModules = 0;
-$modificationTimeSettings = 0;
+$mod_time_php = 0;
+$mod_time_css = 0;
+$mod_time_js = 0;
+$mod_time_modules = 0;
+$mod_time_settings = 0;
+
+$js_schema = @include BUILDS_PATH . "js_schema.php";
+if (!$js_schema) {
+    $js_schema = [];
+}
+// TODO: maybe those should act more like event listeners, but later
+$js_dependencies = nonull($js_schema, "dependencies", []);
 
 scanDirectories(
     [
         "exclude_paths" => ["vendor", "uploads", "modules", "settings", "builds"],
     ],
     function ($path) {
-        global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS;
+        global $mod_time_php, $mod_time_css, $mod_time_js, $js_dependencies;
 
         $mtime = filemtime($path);
         if (strpos($path, ".php")) {
-            $modificationTimePHP += $mtime;
-        } else if (strpos($path, ".css")) {
-            $modificationTimeCSS += $mtime;
-        } else if (strpos($path, ".js")) {
-            $modificationTimeJS += $mtime;
+            $mod_time_php += $mtime;
+        } else if (strpos($path, ".css") || strpos($path, ".scss")) {
+            $mod_time_css += $mtime;
+        } else if (strpos($path, ".js") || in_array($path, $js_dependencies)) {
+            $mod_time_js += $mtime;
         }
     }
 );
@@ -32,7 +39,7 @@ scanDirectories(
         "include_paths" => ["modules"],
     ],
     function ($path, $first_line) {
-        global $modificationTimePHP, $modificationTimeCSS, $modificationTimeJS, $modificationTimeModules;
+        global $mod_time_php, $mod_time_css, $mod_time_js, $mod_time_modules;
 
         $mtime = filemtime($path);
 
@@ -44,14 +51,14 @@ scanDirectories(
             || getAnnotation("module_block_form", $first_line)
             || getAnnotationPHP("module_form", $first_line)
         ) {
-            $modificationTimeModules += $mtime;
+            $mod_time_modules += $mtime;
             // else is important, no need to upgrade
         } else if (strpos($path, ".php")) {
-            $modificationTimePHP += $mtime;
-        } else if (strpos($path, ".css")) {
-            $modificationTimeCSS += $mtime;
+            $mod_time_php += $mtime;
+        } else if (strpos($path, ".css") || strpos($path, ".scss")) {
+            $mod_time_css += $mtime;
         } else if (strpos($path, ".js")) {
-            $modificationTimeJS += $mtime;
+            $mod_time_js += $mtime;
         }
     }
 );
@@ -62,82 +69,82 @@ scanDirectories(
         "include_paths" => ["settings"],
     ],
     function ($path, $first_line) {
-        global $modificationTimeSettings;
+        global $mod_time_settings;
 
         $mtime = filemtime($path);
 
-        $modificationTimeSettings += $mtime;
+        $mod_time_settings += $mtime;
     }
 );
 
-$anyChange = false;
-$phpChange = false;
-$cssChange = false;
-$jsChange = false;
-$modulesChange = false;
-$settingsChange = false;
+$any_changed = false;
+$php_changed = false;
+$css_changed = false;
+$js_changed = false;
+$modules_changed = false;
+$settings_changed = false;
 // only when url is different than deployment so we can debug the app
 if (!IS_DEPLOYMENT_URL) {
-    if ($previousModificationTimePHP != $modificationTimePHP) {
-        $anyChange = true;
-        $phpChange = true;
-        $versionPHP++;
+    if ($prev_mod_time_php != $mod_time_php) {
+        $any_changed = true;
+        $php_changed = true;
+        $version_php++;
     }
 
-    if ($previousModificationTimeCSS != $modificationTimeCSS) {
-        $anyChange = true;
-        $cssChange = true;
-        $versionCSS++;
+    if ($prev_mod_time_css != $mod_time_css) {
+        $any_changed = true;
+        $css_changed = true;
+        $version_css++;
     }
 
-    if ($previousModificationTimeJS != $modificationTimeJS) {
-        $anyChange = true;
-        $jsChange = true;
-        $versionJS++;
+    if ($prev_mod_time_js != $mod_time_js) {
+        $any_changed = true;
+        $js_changed = true;
+        $version_js++;
     }
 
-    if ($previousModificationTimeModules != $modificationTimeModules) {
-        $anyChange = true;
-        $modulesChange = true;
-        $versionModules++;
+    if ($prev_mod_time_modules != $mod_time_modules) {
+        $any_changed = true;
+        $modules_changed = true;
+        $version_modules++;
     }
 
-    $settingsChange = false;
-    if ($previousModificationTimeSettings != $modificationTimeSettings) {
-        $settingsChange = true;
-        $versionSettings++;
+    $settings_changed = false;
+    if ($prev_mod_time_settings != $mod_time_settings) {
+        $settings_changed = true;
+        $version_settings++;
     }
 
-    if ($anyChange) {
+    if ($any_changed) {
         $content = <<<PHP
 <?php
-    \$previousModificationTimePHP = $modificationTimePHP;
-    \$previousModificationTimeCSS = $modificationTimeCSS;
-    \$previousModificationTimeJS = $modificationTimeJS;
-    \$previousModificationTimeModules = $modificationTimeModules;
-    \$previousModificationTimeSettings = $modificationTimeSettings;
-    \$versionPHP = $versionPHP;
-    \$versionCSS = $versionCSS;
-    \$versionJS = $versionJS;
-    \$versionModules = $versionModules;
-    \$versionSettings = $versionSettings;
+    \$prev_mod_time_php = $mod_time_php;
+    \$prev_mod_time_css = $mod_time_css;
+    \$prev_mod_time_js = $mod_time_js;
+    \$prev_mod_time_modules = $mod_time_modules;
+    \$prev_mod_time_settings = $mod_time_settings;
+    \$version_php = $version_php;
+    \$version_css = $version_css;
+    \$version_js = $version_js;
+    \$version_modules = $version_modules;
+    \$version_settings = $version_settings;
 PHP;
 
         saveFile(BUILD_INFO_PATH, $content);
     }
 
-    if ($phpChange || $modulesChange) {
+    if ($php_changed || $modules_changed) {
         ob_start();
-        triggerEvent("build", ["modules" => $modulesChange, "settings" => false]);
+        triggerEvent("build", ["modules" => $modules_changed, "settings" => false]);
         ob_clean();
     }
 
-    if ($settingsChange) {
+    if ($settings_changed) {
         triggerEvent("settings_change");
     }
 
-    if ($anyChange) {
-        triggerEvent("assets_change", ["css" => $cssChange, "js" => $jsChange]);
+    if ($any_changed) {
+        triggerEvent("assets_change", ["css" => $css_changed, "js" => $js_changed]);
         reload(true);
     }
 }

@@ -17,7 +17,7 @@ if (!function_exists('renderPageItem')) {
         }
 
         echo "<div class='menu_item freeze_before_load $hidden'>
-            <a href='" . STATIC_URLS["ADMIN"] . $page['url'] . "'>" . nonull($page, 'title', '') . " " . renderNotification($page['notification_count']) . "</a>
+            <a href='" . STATIC_URLS["ADMIN"] . $page['url'] . "'>" . $title . " " . renderNotification($page['notification_count']) . "</a>
             $arrow_btn
         </div>";
 

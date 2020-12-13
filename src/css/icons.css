@@ -17,7 +17,7 @@
 }
 
 .icon-white {
-  filter: invert();
+  filter: invert(1);
 }
 
 .icon-flip {

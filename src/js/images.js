@@ -17,114 +17,114 @@ var lazyLoadOffset = 700;
 
 // also files.php
 function loadLazyNode(node, animate = true) {
-    if (!node.classList.contains("lazy")) {
-        return;
-    }
+	if (!node.classList.contains("lazy")) {
+		return;
+	}
 
-    if (isNodeOnScreen(node, lazyLoadOffset)) {
-        node.classList.remove("lazy");
-        showImage(node);
-    }
+	if (isNodeOnScreen(node, lazyLoadOffset)) {
+		node.classList.remove("lazy");
+		animateVisibility(node);
+	}
 }
 
-function loadImage(img, animate = true) {
-    if (!img.file_name) {
-        return;
-    }
+function loadImage(img) {
+	if (!img.file_name) {
+		return;
+	}
 
-    if (isNodeOnScreen(img, lazyLoadOffset)) {
-        var w = img.calculated_width;
-        var h = img.calculated_height;
+	if (isNodeOnScreen(img, lazyLoadOffset)) {
+		var w = img.calculated_width;
+		var h = img.calculated_height;
 
-        var r = img.getBoundingClientRect();
+		var r = img.getBoundingClientRect();
 
-        if (!r.width) {
-            return;
-        }
+		if (!r.width) {
+			return;
+		}
 
-        // floating point numbers suck
-        var image_dimension = Math.max(r.width, r.height) - 1;
+		// floating point numbers suck
+		var image_dimension = Math.max(r.width, r.height) - 1;
 
-        var natural_image_dimension = Math.max(w, h);
-        //console.log(natural_image_dimension, image_dimension, w, h);
-        var target_size_name = "df";
+		var natural_image_dimension = Math.max(w, h);
+		//console.log(natural_image_dimension, image_dimension, w, h);
+		var target_size_name = "df";
 
-        if (image_dimension < natural_image_dimension) {
-            var pixelDensityFactor = window.devicePixelRatio * 0.5 + 0.5; // compromise quality and speed
-            Object.entries(image_default_dimensions).forEach(
-                ([size_name, size_dimension]) => {
-                    if (size_name == "df") {
-                        return;
-                    }
-                    if (
-                        image_dimension < size_dimension / pixelDensityFactor &&
-                        size_dimension < natural_image_dimension
-                    ) {
-                        target_size_name = size_name;
-                    }
-                }
-            );
-        }
+		if (image_dimension < natural_image_dimension) {
+			var pixelDensityFactor = window.devicePixelRatio * 0.5 + 0.5; // compromise quality and speed
+			Object.entries(image_default_dimensions).forEach(
+				([size_name, size_dimension]) => {
+					if (size_name == "df") {
+						return;
+					}
+					if (
+						image_dimension < size_dimension / pixelDensityFactor &&
+						size_dimension < natural_image_dimension
+					) {
+						target_size_name = size_name;
+					}
+				}
+			);
+		}
 
-        var src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
+		var src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
 
-        if (
-            img.hasAttribute("data-same-ext") &&
-            same_ext_image_allowed_types.indexOf(img.extension) !== -1
-        ) {
-            src += "." + img.extension;
-        } else if (WEBP_SUPPORT) {
-            src += ".webp";
-        } else {
-            src += ".jpg";
-        }
+		if (
+			img.hasAttribute("data-same-ext") &&
+			same_ext_image_allowed_types.indexOf(img.extension) !== -1
+		) {
+			src += "." + img.extension;
+		} else if (WEBP_SUPPORT) {
+			src += ".webp";
+		} else {
+			src += ".jpg";
+		}
 
-        img.addEventListener("load", () => {
-            if (!img.hasAttribute(
-                    "data-height"
-                )
-                /*&&
-                         !img.hasAttribute("data-has-own-height")*/
-            ) {
-                img.style.height = "";
-                //window.dispatchEvent(new Event("wo997_img_loaded"));
-            }
-        });
+		img.addEventListener("load", () => {
+			if (
+				!img.hasAttribute(
+					"data-height"
+				) /*&&
+          !img.hasAttribute("data-has-own-height")*/
+			) {
+				img.style.height = "";
+				//window.dispatchEvent(new Event("wo997_img_shown"));
+			}
+		});
 
-        if (img.await_img_replace) {
-            preloadImage(src);
-            img.setAttribute("data-next-src", src);
-            delete img.await_img_replace;
-            delete img.file_name;
-        } else {
-            img.setAttribute("src", src);
-            img.classList.add("wo997_img_waiting");
-            delete img.file_name;
-        }
+		if (img.await_img_replace) {
+			preloadImage(src);
+			img.setAttribute("data-next-src", src);
+			delete img.await_img_replace;
+			delete img.file_name;
+		} else {
+			img.setAttribute("src", src);
+			img.classList.add("wo997_img_waiting");
+			delete img.file_name;
+		}
 
-        if (animate) {
-            img.style.opacity = 0;
-            img.classList.remove("wo997_img_waiting");
-            img.classList.add("wo997_img_waiting");
-
-            setTimeout(() => {
-                showImage(img);
-            }, 0);
-        }
-    }
+		setTimeout(() => {
+			showWaitingImage(img);
+		}, 0);
+	}
 }
 
-function showImage(img) {
-    if (isNodeOnScreen(img)) {
-        img.style.animation = "show 0.45s";
-        img.style.opacity = 1;
-        img.classList.remove("wo997_img_waiting");
-        img.classList.add("wo997_img_loaded");
-        setTimeout(() => {
-            img.style.opacity = "";
-            img.style.animation = "";
-        }, 450);
-    }
+function showWaitingImage(img) {
+	if (img.classList.contains("wo997_img_waiting") && isNodeOnScreen(img)) {
+		animateVisibility(
+			img,
+			img.classList.contains("wo997_img_freeze") ? 0 : 400
+		);
+	}
+}
+
+function animateVisibility(img, duration) {
+	img.style.animation = `show ${duration}ms`;
+	img.classList.remove("wo997_img_waiting");
+	img.classList.add("wo997_img_shown");
+	setTimeout(() => {
+		img.style.opacity = "";
+		img.style.animation = "";
+	}, duration);
 }
 
 // also files.php
@@ -195,11 +195,18 @@ function setImageDimensions(img) {
     return rect;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    // to help with flexbox
-    setTimeout(() => {
-        lazyLoadImages();
-    });
+// TODO: hey! this is temporary so the current content won't fail, pls consider remiving it once the new page builder is done
+domload(() => {
+	$$("[data-src]").forEach((e) => {
+		e.classList.add("wo997_img");
+	});
+});
+
+domload(() => {
+	// to help with flexbox etc.
+	setTimeout(() => {
+		lazyLoadImages();
+	});
 });
 window.addEventListener("load", () => {
     lazyLoadImages();
@@ -216,9 +223,9 @@ function lazyLoadImages(animate = true) {
         }
     });
 
-    $$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_loaded)").forEach(
-        (img) => {
-            var rect = setImageDimensions(img);
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach(
+		(img) => {
+			var rect = setImageDimensions(img);
 
             if (rect.top < window.innerHeight + lazyLoadOffset) {
                 loadImage(img, animate);
@@ -240,27 +247,20 @@ document.addEventListener("mouseover", () => {
 });
 
 function scrollCallbackLazy() {
-    $$(".lazy").forEach((node) => {
-        loadLazyNode(node);
-    });
-    $$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_loaded)").forEach(
-        (img) => {
-            loadImage(img);
-        }
-    );
-    $$(".wo997_img_waiting").forEach((img) => {
-        showImage(img);
-    });
+	$$(".lazy:not(.wo997_img_waiting)").forEach((node) => {
+		loadLazyNode(node);
+	});
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach(
+		(img) => {
+			loadImage(img);
+		}
+	);
+	$$(".wo997_img_waiting").forEach((img) => {
+		showWaitingImage(img);
+	});
 }
 
 function preloadImage(url) {
     const img = new Image();
     img.src = url;
 }
-
-// TODO: hey! this is temporary so the current content won't fail, pls consider remiving it once the new page builder is done
-domload(() => {
-    $$("[data-src]").forEach((e) => {
-        e.classList.add("wo997_img");
-    });
-});

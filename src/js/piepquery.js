@@ -14,6 +14,9 @@ function $(node, parent = null) {
 	// query selector or html node
 	node = typeof node == "string" ? parent.querySelector(node) : node;
 	if (!node) return null;
+
+	// TODO: should we return nulls? I would make an empty object on which u can still use methods defined below so "chaining" is allowed
+
 	node.find = (query) => {
 		return $(query, node);
 	};

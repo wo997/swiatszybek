@@ -72,28 +72,51 @@ function createAnimation(keyframes, duration) {
 }
 
 function removeAnimation(animation_name) {
-	$(`#${animation_name}`).remove();
+	const style_node = $(`#${animation_name}`);
+	if (style_node) {
+		style_node.remove();
+	}
+}
+
+function finishNodeAnimation(node) {
+	delete node.wo997_animation_timeout;
+	const matches = removeClassesWithPrefix(node, "wo997_animation_");
+	if (!matches) {
+		return null;
+	}
+
+	const callback = node.wo997_animation_callback;
+	if (callback) {
+		callback();
+		delete node.wo997_animation_callback;
+	}
+
+	matches.forEach((match) => {
+		removeAnimation(match);
+	});
 }
 
 function animate(node, keyframes, duration, callback = null) {
 	var animation_name = createAnimation(keyframes, duration);
-	if (node.animationTimeout) {
-		window.clearTimeout(node.animationTimeout);
+	if (node.wo997_animation_timeout) {
+		finishNodeAnimation(node);
+		window.clearTimeout(node.wo997_animation_timeout);
 	}
 
+	// cleanup previous animations
 	$$(`.${animation_name}`).forEach((e) => {
 		e.classList.remove(animation_name);
 	});
+
 	node.classList.add(animation_name);
+	if (callback) {
+		node.wo997_animation_callback = callback;
+	}
 
 	// crazy, start the second timeout once you finish the frame ;)
 	setTimeout(() => {
-		node.animationTimeout = setTimeout(() => {
-			node.classList.remove(animation_name);
-			if (callback) {
-				callback();
-			}
-			removeAnimation(animation_name);
+		node.wo997_animation_timeout = setTimeout(() => {
+			finishNodeAnimation(node);
 		}, duration);
 	});
 }

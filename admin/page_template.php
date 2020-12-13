@@ -43,13 +43,13 @@ endSection();
                 if (isset($sections["header"])) {
                     echo $sections["header"];
                 } else {
-                    echo "
-            <style>
-              .content > .scroll-panel {
-                background: #fafafa;
-              }
-            </style>
-          ";
+                ?>
+                    <style>
+                        .content>.scroll-panel {
+                            background: #fafafa;
+                        }
+                    </style>
+                <?php
                 }
                 ?>
                 <div class="scroll-panel scroll-shadow">

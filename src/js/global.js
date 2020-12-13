@@ -338,7 +338,7 @@ function setValue(input, value = null, params = {}) {
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
 				input.setAttribute("data-src", value);
-				input.classList.remove("wo997_img_loaded");
+				input.classList.remove("wo997_img_shown");
 			} else {
 				input.setAttribute("src", value);
 			}
@@ -346,7 +346,7 @@ function setValue(input, value = null, params = {}) {
 			if ([...input.options].find((e) => e.value == value)) {
 				input.value = value;
 			}
-		} else if (input.tagName == "INPUT") {
+		} else if (["INPUT", "TEXTAREA"].includes(input.tagName)) {
 			// for text fields
 			input.value = value;
 		} else {
@@ -414,7 +414,7 @@ function getValue(input) {
 				return reverseDateString(input.value, "-");
 			}
 			return input.value;
-		} else if (input.tagName == "INPUT" || input.tagName == "SELECT") {
+		} else if (["INPUT", "SELECT", "TEXTAREA"].includes(input.tagName)) {
 			if (input.hasAttribute("data-number")) {
 				return +input.value;
 			}
@@ -422,16 +422,10 @@ function getValue(input) {
 		} else {
 			return "";
 		}
-
-		{
-			if (input.hasAttribute("data-number")) {
-				return +input.value;
-			}
-			return input.value;
-		}
 	}
 }
 
+// TODO: #128557 use HTMLElement.matches(QuerySelector) instead of raw code, it's pointless and interestingly less flexible
 function findParent(elem, callback, options = {}) {
 	elem = $(elem);
 	if (!options) {
@@ -747,10 +741,17 @@ function removeClasses(className, selector = null) {
 }
 
 function removeClassesWithPrefix(node, prefix) {
-	node.className = node.className.replace(
-		new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"),
-		""
-	);
+	let cn = node.className;
+	const matches = cn.match(new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"), "");
+	if (!matches) {
+		return null;
+	}
+	matches.forEach((match) => {
+		cn = cn.replace(match, "");
+	});
+	node.className = cn;
+
+	return matches;
 }
 
 function matchClassesWithPrefix(node, prefix) {
@@ -928,4 +929,35 @@ function isUrlOurs(url) {
 			return false;
 		}
 	}
+}
+
+// Object.assign works only on the first level
+function deepMerge(...sources) {
+	let acc = {};
+	for (const source of sources) {
+		if (source instanceof Array) {
+			if (!(acc instanceof Array)) {
+				acc = [];
+			}
+			acc = [...acc, ...source];
+		} else if (source instanceof Object) {
+			for (let [key, value] of Object.entries(source)) {
+				if (value instanceof Object && key in acc) {
+					value = deepMerge(acc[key], value);
+				}
+				acc = { ...acc, [key]: value };
+			}
+		}
+	}
+	return acc;
+}
+
+function cloneObject(obj) {
+	return deepMerge({}, obj);
+}
+
+function kebabToSnakeCase(string) {
+	return string.replace(/-([a-z])/gi, function (s, group1) {
+		return group1.toUpperCase();
+	});
 }

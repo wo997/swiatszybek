@@ -10,5 +10,5 @@ echo paginateData([
             global $dostawy;
             return nonull($dostawy, $row["dostawa"], "");
         }
-    ]
+    ],
 ]);

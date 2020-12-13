@@ -7,8 +7,8 @@ function triggerEvent($event_name, $args = [])
     foreach (nonull($link_event_paths, $event_name, []) as $path) {
         // args passed in
         $res = include $path;
-        if (is_array($res)) {
-            $output = array_merge($output, $res);
+        if ($res) {
+            $output[] = $res;
         }
     }
     return $output;

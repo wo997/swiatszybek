@@ -79,7 +79,7 @@
 }
 
 /* grid */
-.grid {
+.product_list_module.grid {
 	display: flex;
 	flex-wrap: wrap;
 }
