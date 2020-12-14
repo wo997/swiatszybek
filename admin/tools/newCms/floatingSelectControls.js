@@ -1,8 +1,10 @@
 /* js[tool_newCms] */
 
 class NewCmsSelectControls {
+	/**
+	 * @param {NewCms} newCms
+	 */
 	constructor(newCms) {
-		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = this.newCms.container.find(`.select_controls`);
 		this.selection_node = this.newCms.container.find(`.selection_node`);

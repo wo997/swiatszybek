@@ -35,8 +35,10 @@ function getDefaultBlock() {
 }
 
 class NewCmsStyling {
+	/**
+	 * @param {NewCms} newCms
+	 */
 	constructor(newCms, node) {
-		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = node;
 		this.content_wrapper = this.newCms.container.find(".content_wrapper");

@@ -1,58 +1,5 @@
 /* js[global] */
 
-// TODO: do it? BUT I would exclude this classes by piep compiler, keep the weight small
-// other than that comments are excluded anyway AND dev tools will tell you in the runtime what methods can be applied, cool
-class PiepNode extends HTMLElement {
-	/** @returns {PiepNode} */
-	find(query) {}
-	/** @returns {PiepNode[]} */
-	findAll(query) {}
-	/** @returns {PiepNode[]} */
-	directChildren() {}
-	setValue(value, quiet) {}
-	getValue() {}
-	/** @returns {PiepNode} */
-
-	findParentByClassName(parentClassNames, options = {}) {}
-	/** @returns {PiepNode} */
-	findScrollParent(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentByAttribute(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentByComputedStyle(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentById(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentNode(options = {}) {}
-	/** @returns {PiepNode} */
-	findNonStaticParent(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentByTagName() {}
-
-	/** @returns {PiepNode} */
-	dispatchChange() {}
-	/** @returns {PiepNode} */
-	parent() {}
-	/** @returns {PiepNode} */
-	next() {}
-	/** @returns {PiepNode} */
-	prev() {}
-	/** @returns {boolean} */
-	isEmpty() {}
-
-	empty() {}
-
-	setContent(html = "") {}
-
-	setFormData(data, params = {}) {}
-
-	getFormData() {}
-
-	validateForm(params = {}) {}
-
-	validateField() {}
-}
-
 /**
  * PIEPQUERY
  *

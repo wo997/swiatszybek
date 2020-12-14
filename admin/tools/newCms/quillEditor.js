@@ -46,8 +46,10 @@ class NewCmsQuillEditor {
 		"#000000",
 	];
 
+	/**
+	 * @param {NewCms} newCms
+	 */
 	constructor(newCms, node) {
-		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = node;
 

@@ -1,8 +1,11 @@
 /* js[tool_newCms] */
 
 class NewCmsEditBlock {
+	/**
+	 * @param {NewCms} newCms
+	 * @param {PiepNode} edit_block_node
+	 */
 	constructor(newCms, edit_block_node) {
-		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = edit_block_node;
 		this.init();

@@ -1,8 +1,10 @@
 /* js[tool_newCms] */
 
 class NewCmsSidebar {
+	/**
+	 * @param {NewCms} newCms
+	 */
 	constructor(newCms, node) {
-		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = node;
 

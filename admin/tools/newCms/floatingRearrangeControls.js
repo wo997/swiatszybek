@@ -1,8 +1,10 @@
 /* js[tool_newCms] */
 
 class NewCmsRearrangeControls {
+	/**
+	 * @param {NewCms} newCms
+	 */
 	constructor(newCms) {
-		/** @type {NewCms} */
 		this.newCms = newCms;
 		this.node = newCms.container.find(`.rearrange_controls`);
 		this.rearrange_insert_rect_node = newCms.container.find(
