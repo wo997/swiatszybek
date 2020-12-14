@@ -307,6 +307,14 @@ class NewCmsEditBlock {
 				copied_block.style.height = b_rect.height + "px";
 				copied_block.last_rect = copied_block.getBoundingClientRect();
 
+				const block_id = this.newCms.styling.getBlockId(copied_block);
+				const block_class_name = this.newCms.styling.getBlockClassName(
+					block_id
+				);
+				if (block_class_name) {
+					copied_block.classList.remove(block_class_name);
+				}
+
 				/**
 				 * @type {AnimationData}
 				 */

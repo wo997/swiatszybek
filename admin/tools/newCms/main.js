@@ -13,15 +13,31 @@ class AnimationData {
 class NewCms {
 	constructor(container) {
 		this.container = $(container);
+		/**
+		 * @type {PiepNode}
+		 */
 		this.content_node = this.container.find(`.newCmsContent`);
+		/**
+		 * @type {PiepNode}
+		 */
 		this.content_scroll_panel = this.container.find(`.content_scroll_panel`);
+		/**
+		 * @type {PiepNode}
+		 */
 		this.content_scroll_content = this.container.find(
 			`.content_scroll_content`
 		);
+		/**
+		 * @type {PiepNode}
+		 */
 		this.rearrange_node = this.container.find(`.rearrange_node`);
-
+		/**
+		 * @type {PiepNode}
+		 */
 		this.clean_output_node = this.container.find(`.clean_output`);
-
+		/**
+		 * @type {PiepNode}
+		 */
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 
 		this.initSidebar();
@@ -1090,13 +1106,9 @@ class NewCms {
 			let target_w = base_w;
 			let target_h = base_h;
 
-			console.log("pre", grabbed_block.last_rect, grabbed_block.animation_data);
-
 			if (!grabbed_block.animation_data) {
 				grabbed_block.animation_data = { dx: 0, dy: 0, w: base_w, h: base_h };
 			}
-
-			console.log(grabbed_block.animation_data);
 
 			const grabbed_block_rect = grabbed_block.getBoundingClientRect(); // cant reuse cause we change dimensions
 

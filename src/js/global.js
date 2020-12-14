@@ -85,6 +85,11 @@ function ajax(url, data, good, wrong) {
 	xhr.send(formData);
 }
 
+/**
+ *
+ * @param {*} value
+ * @param {*} defaultValue
+ */
 function nonull(value, defaultValue = "") {
 	if (value === null || value === undefined) return defaultValue;
 	return value;

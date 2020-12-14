@@ -21,6 +21,9 @@ class blockData {
 	styles;
 }
 
+/**
+ * @returns {blockData}
+ */
 function getDefaultBlock() {
 	return {
 		id: 0,
@@ -29,6 +32,8 @@ function getDefaultBlock() {
 			desktop: {},
 			tablet: {},
 			mobile: {},
+			custom: "",
+			// TODO, custom inline or custom SCSS - 2 fields cause why not :P
 		},
 	};
 }

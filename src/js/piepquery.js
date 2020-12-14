@@ -1,8 +1,16 @@
 /* js[global] */
 
-// TODO: do it?
-/*class PiepObj extends HTMLElement {
-    find();
+// TODO: do it? BUT I would exclude this classes by piep compiler, keep the weight small
+// other than that comments are excluded anyway AND dev tools will tell you in the runtime what methods can be applied, cool
+class PiepNode extends HTMLElement {
+	/**
+	 * @returns {PiepNode}
+	 */
+	find(query) {}
+	/**
+	 * @returns {PiepNode[]}
+	 */
+	findAll(query) {}
 }
 
 /**
@@ -10,7 +18,7 @@
  *
  * @param {*} node
  * @param {*} parent
- * @returns {PiepObj}
+ * @returns {PiepNode}
  */
 function $(node, parent = null) {
 	if (!node) return null;
