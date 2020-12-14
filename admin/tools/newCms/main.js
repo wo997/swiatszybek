@@ -35,6 +35,8 @@ class AnimationData {
 	dy;
 	w;
 	h;
+	margin_left;
+	margin_top;
 }
 // exclude end
 
@@ -1195,8 +1197,8 @@ class NewCms {
 			//const mr = evalCss(block.style.marginRight, block);
 			//const mb = evalCss(block.style.marginBottom, block);
 			const ml = evalCss(grabbed_block.style.marginLeft, grabbed_block);
-			target_dx += mt;
-			target_dy += ml;
+			//target_dx += ml;
+			//target_dy += mt;
 
 			/** @type {AnimationData} */
 			const gbad = grabbed_block.animation_data;
