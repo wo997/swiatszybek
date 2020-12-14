@@ -1,5 +1,17 @@
 /* js[global] */
 
+// TODO: do it?
+/*class PiepObj extends HTMLElement {
+    find();
+}
+
+/**
+ * PIEPQUERY
+ *
+ * @param {*} node
+ * @param {*} parent
+ * @returns {PiepObj}
+ */
 function $(node, parent = null) {
 	if (!node) return null;
 	if (node.find) return node; // already initialized
@@ -69,49 +81,50 @@ function $(node, parent = null) {
 		);
 	};
 
-	node.findParentByTagName = (parentTagName, options) => {
+	node.findParentByTagName = (parentTagName, options = {}) => {
 		return window.findParentByTagName(node, parentTagName, options);
 	};
 
-	node.findParentNode = (parent, options) => {
+	node.findParentNode = (parent, options = {}) => {
 		return window.findParentNode(node, parent, options);
 	};
 
-	node.findParentById = (id, options) => {
+	node.findParentById = (id, options = {}) => {
 		return window.findParentById(node, id, options);
 	};
 
-	node.findParentByStyle = (style, value, options) => {
+	node.findParentByStyle = (style, value, options = {}) => {
 		return window.findParentByStyle(node, style, value, options);
 	};
 
-	node.findParentByComputedStyle = (style, value, options) => {
+	node.findParentByComputedStyle = (style, value, options = {}) => {
 		return window.findParentByComputedStyle(node, style, value, options);
 	};
 
-	node.findScrollParent = (options) => {
+	node.findScrollParent = (options = {}) => {
 		return window.findScrollParent(node, options);
 	};
 
-	node.findNonStaticParent = (options) => {
+	node.findNonStaticParent = (options = {}) => {
 		return window.findNonStaticParent(node, options);
 	};
 
-	node.findParentByClassName = (parentClassNames, options) => {
+	node.findParentByClassName = (parentClassNames, options = {}) => {
 		return window.findParentByClassName(node, parentClassNames, options);
 	};
 
-	node.isInNode = (parent, options) => {
-		return window.isInNode(node, parent, options);
+	node.isInNode = (parent) => {
+		return window.isInNode(node, parent);
 	};
 
 	node.isEmpty = () => {
 		return isEmpty(node);
 	};
 
-	node.remove = () => {
+	// lol, it's natively supported!
+	/*node.remove = () => {
 		return window.removeNode(node);
-	};
+	};*/
 
 	node.empty = () => {
 		return window.removeContent(node);

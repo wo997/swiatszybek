@@ -537,11 +537,11 @@ class NewCms {
     `;
 	}
 
-	insertBlock(target, position, type, options = {}) {
-		target.insertAdjacentHTML(position, getBlockHtml(type, options));
+	/*insertBlock(target, position, type, options = {}) {
+		target.insertAdjacentHTML(position, this.getBlockHtml(type, options));
 
 		this.contentChange();
-	}
+	}*/
 
 	removeBlock(block) {
 		if (!block) {
@@ -576,13 +576,15 @@ class NewCms {
 		});
 	}
 
-	grabBlock(block) {
+	grabBlock(block, options = {}) {
 		if (this.grabbed_block) {
 			return;
 		}
 
 		const block_rect = block.getBoundingClientRect();
-		block.last_rect = block_rect;
+		if (!options.copy) {
+			block.last_rect = block_rect;
+		}
 
 		this.source_grabbed_node = block.classList.contains("side_block")
 			? this.sidebar.node
@@ -593,7 +595,7 @@ class NewCms {
 		);*/
 
 		this.source_grabbed_node.appendChild(
-			newCms.rearrange_controls.rearrange_grabbed_rect_node
+			this.rearrange_controls.rearrange_grabbed_rect_node
 		);
 
 		this.grabbed_block = $(block);
@@ -625,7 +627,9 @@ class NewCms {
 		this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
 
 		this.grab_animation_speed = 0;
-		delete this.grabbed_block.animation_data;
+		if (!options.copy) {
+			delete this.grabbed_block.animation_data;
+		}
 		this.grabAnimation();
 	}
 
@@ -633,13 +637,13 @@ class NewCms {
 		this.rearrange_grid_first_node = null;
 		this.grab_animation_speed = 0;
 
-		newCms.content_scroll_content
+		this.content_scroll_content
 			.findAll(".rearrange_control.unavailable")
 			.forEach((control) => {
 				control.classList.remove("unavailable");
 			});
 
-		newCms.content_scroll_content
+		this.content_scroll_content
 			.findAll(".rearrange_control.first_grid_node")
 			.forEach((control) => {
 				control.classList.remove("first_grid_node");
@@ -648,9 +652,14 @@ class NewCms {
 
 	releaseBlock() {
 		let grabbed_block = this.grabbed_block;
+
 		if (!grabbed_block) {
 			return;
 		}
+
+		// a copy has these values fixed
+		grabbed_block.style.width = "";
+		grabbed_block.style.height = "";
 
 		// if it's in a grid u wanna go for 2 steps
 		let rearrange_grid_first_node_ref = null;
@@ -663,10 +672,10 @@ class NewCms {
 				this.rearrange_grid_first_node = this.rearrange_controls.rearrange_control_node;
 				this.grab_animation_speed = 0;
 
-				const fst = newCms.rearrange_grid_first_node;
+				const fst = this.rearrange_grid_first_node;
 				fst.classList.add("first_grid_node");
 
-				newCms.content_scroll_content
+				this.content_scroll_content
 					.findAll(".rearrange_control:not(.first_grid_node)")
 					.forEach((control) => {
 						control.classList.toggle(
@@ -1081,9 +1090,13 @@ class NewCms {
 			let target_w = base_w;
 			let target_h = base_h;
 
+			console.log("pre", grabbed_block.last_rect, grabbed_block.animation_data);
+
 			if (!grabbed_block.animation_data) {
 				grabbed_block.animation_data = { dx: 0, dy: 0, w: base_w, h: base_h };
 			}
+
+			console.log(grabbed_block.animation_data);
 
 			const grabbed_block_rect = grabbed_block.getBoundingClientRect(); // cant reuse cause we change dimensions
 

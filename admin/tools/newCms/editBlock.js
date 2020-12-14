@@ -203,6 +203,11 @@ class NewCmsEditBlock {
 				className: "relocate_btn",
 			},
 			{
+				color: "#a7a7a7",
+				icon: `<i class="fas fa-copy"></i>`,
+				className: "copy_btn",
+			},
+			{
 				color: "#f55",
 				icon: `<i class="fas fa-times"></i>`,
 				className: "remove_btn",
@@ -289,6 +294,32 @@ class NewCmsEditBlock {
 			relocate_btn.addEventListener("click", () => {
 				this.hideContextMenu();
 				this.newCms.grabBlock(block);
+			});
+		}
+
+		const copy_btn = this.node.find(".copy_btn");
+		if (copy_btn) {
+			copy_btn.addEventListener("click", () => {
+				const copied_block = createNodeByHtml(block.outerHTML);
+				const b_rect = block.getBoundingClientRect();
+				this.newCms.content_node.appendChild(copied_block);
+				copied_block.style.width = b_rect.width + "px";
+				copied_block.style.height = b_rect.height + "px";
+				copied_block.last_rect = copied_block.getBoundingClientRect();
+
+				/**
+				 * @type {AnimationData}
+				 */
+				const cbad = {
+					dx: b_rect.left - copied_block.last_rect.left,
+					dy: b_rect.top - copied_block.last_rect.top,
+					w: b_rect.width,
+					h: b_rect.height,
+				};
+				copied_block.animation_data = cbad;
+
+				this.newCms.grabBlock(copied_block, { copy: true });
+				this.hideContextMenu();
 			});
 		}
 

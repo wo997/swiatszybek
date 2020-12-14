@@ -1,3 +1,8 @@
 {
-	"exclude": ["vendor/**", "builds/**", "admin/**"]
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es6",
+		"checkJs": true
+	},
+	"exclude": ["vendor/**", "builds/**"]
 }
