@@ -1,5 +1,27 @@
 /* js[tool_newCms] */
 
+// exclude start
+class ActualPosition {
+	left;
+	top;
+}
+
+class GridPosition {
+	column;
+	row;
+}
+class RearrangeControl extends PiepNode {
+	/** @type {string} */
+	position;
+	/** @type {PiepNode} */
+	rearrange_near_block;
+	/** @type {GridPosition} */
+	grid_position;
+	/** @type {ActualPosition} */
+	actual_position;
+}
+// exclude end
+
 class NewCmsRearrangeControls {
 	/**
 	 * @param {NewCms} newCms
@@ -398,7 +420,7 @@ class NewCmsRearrangeControls {
 
 				let parent_count = 0;
 				let parent = block;
-				while (parent != this.content_node) {
+				while (parent != this.newCms.content_node) {
 					parent_count++;
 					parent = parent.parent();
 				}
@@ -452,7 +474,10 @@ class NewCmsRearrangeControls {
 			});
 		};
 
-		this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
+		this.newCms.content_node.findAll(".newCms_block").forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
 			block.rearrange_control_before = null;
 			block.rearrange_control_after = null;
 			block.rearrange_control_inside = null;
@@ -461,7 +486,10 @@ class NewCmsRearrangeControls {
 		// grids first ;)
 		this.newCms.content_node
 			.findAll(`.newCms_block[data-block="grid"]`)
-			.forEach((block) => {
+			.forEach((b) => {
+				/** @type {NewCmsGrid} */
+				// @ts-ignore
+				const block = b;
 				if (
 					!block.grid_data ||
 					block.findParentNode(this.newCms.grabbed_block) ||
@@ -506,15 +534,13 @@ class NewCmsRearrangeControls {
 						}
 
 						// TODO: xy, yi should be stored in blocks_data, ezy
-						let block_rect_data_copy = {
-							node_rect: {},
-							relative_pos: {},
-							scrollable_parent: {},
-							scrollable_parent_rect: {},
-						};
-
-						block_rect_data_copy = deepMerge(
-							block_rect_data_copy,
+						let block_rect_data_copy = deepMerge(
+							{
+								node_rect: {},
+								relative_pos: {},
+								scrollable_parent: {},
+								scrollable_parent_rect: {},
+							},
 							block_rect_data
 						);
 
@@ -617,6 +643,8 @@ class NewCmsRearrangeControls {
 			block_data.rect_data.relative_pos.left = left;
 			block_data.rect_data.relative_pos.top = top;
 
+			/** @type {RearrangeControl} */
+			// @ts-ignore
 			const rearrange_control = document.createElement("DIV");
 			rearrange_control.classList.add("rearrange_control");
 			rearrange_control.style.left = left + "px";

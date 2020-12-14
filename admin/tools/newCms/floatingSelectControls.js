@@ -1,5 +1,13 @@
 /* js[tool_newCms] */
 
+// exclude start
+class SelectControl extends PiepNode {
+	/** @type {PiepNode} */
+	block;
+	/** @type {PiepNode} */
+	select_block;
+}
+// exclude end
 class NewCmsSelectControls {
 	/**
 	 * @param {NewCms} newCms
@@ -34,6 +42,8 @@ class NewCmsSelectControls {
 
 		let hovered_block = null;
 
+		/** @type {SelectControl} */
+		// @ts-ignore
 		const select_control = target
 			? target.findParentByClassName("select_control")
 			: null;
@@ -106,7 +116,7 @@ class NewCmsSelectControls {
 
 			let parent_count = 0;
 			let parent = block;
-			while (parent != this.content_node) {
+			while (parent != this.newCms.content_node) {
 				parent_count++;
 				parent = parent.parent();
 			}
@@ -193,6 +203,8 @@ class NewCmsSelectControls {
 			block_data.rect_data.relative_pos.left = left;
 			block_data.rect_data.relative_pos.top = top;
 
+			/** @type {SelectControl} */
+			// @ts-ignore
 			const select_control = document.createElement("DIV");
 			select_control.classList.add("select_control");
 			select_control.style.left = left + "px";

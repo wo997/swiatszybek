@@ -2,7 +2,12 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "es6",
-		"checkJs": true
+		"checkJs": true,
+		"paths": {
+			"@/*": ["./*"]
+		}
 	},
-	"exclude": ["vendor/**", "builds/**"]
+	"typeAcquisition": { "exclude": ["jquery"] },
+	"include": ["**"],
+	"exclude": ["vedor/**", "builds/**"]
 }

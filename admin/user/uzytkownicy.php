@@ -128,6 +128,7 @@
 
     function editUser(src = null, data = null) {
         const form = $("#editUser");
+
         if (data === null) {
             data = {
                 email: "",

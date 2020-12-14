@@ -232,6 +232,10 @@ function capitalize(str) {
 }
 
 // also links.php
+/**
+ *
+ * @param {string} string
+ */
 function escapeUrl(string) {
 	return string
 		.replacePolishLetters()

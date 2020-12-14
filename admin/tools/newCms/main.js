@@ -4,6 +4,7 @@
 useTool("fileManager");
 //useTool("quillEditor"); // TODO: get it to work, should be a module, well, fuck it xd
 
+// exclude start
 class NewCmsBlock extends PiepNode {
 	/** @type {AnimationData} */
 	animation_data;
@@ -11,13 +12,32 @@ class NewCmsBlock extends PiepNode {
 	last_rect;
 	/** @type {ClientRect} */
 	new_rect;
+	/** @type {PiepNode} */
+	rearrange_control_before;
+	/** @type {PiepNode} */
+	rearrange_control_after;
+	/** @type {PiepNode} */
+	rearrange_control_inside;
 }
+
+class NewCmsGrid extends NewCmsBlock {
+	/** @type {GridData} */
+	grid_data;
+}
+
+class GridData {
+	x_coords;
+	y_coords;
+}
+
 class AnimationData {
 	dx;
 	dy;
 	w;
 	h;
 }
+// exclude end
+
 class NewCms {
 	constructor(container) {
 		this.container = $(container);
@@ -440,7 +460,11 @@ class NewCms {
 
 		this.content_node
 			.findAll(`.newCms_block[data-block="grid"]`)
-			.forEach((grid) => {
+			.forEach((g) => {
+				/** @type {NewCmsGrid} */
+				// @ts-ignore
+				const grid = g;
+
 				// TODO: retrieve from grid props
 				const columns = 3;
 				const rows = 2;
@@ -684,7 +708,10 @@ class NewCms {
 
 				this.content_scroll_content
 					.findAll(".rearrange_control:not(.first_grid_node)")
-					.forEach((control) => {
+					.forEach((c) => {
+						/** @type {RearrangeControl} */
+						// @ts-ignore
+						const control = c;
 						control.classList.toggle(
 							"unavailable",
 							control.position !== "grid" ||
@@ -839,7 +866,10 @@ class NewCms {
 	}
 
 	beforeContentAnimation() {
-		this.content_node.findAll(".newCms_block").forEach((block) => {
+		this.content_node.findAll(".newCms_block").forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
 			if (!block.last_rect) {
 				block.last_rect = block.getBoundingClientRect();
 			}
@@ -860,11 +890,11 @@ class NewCms {
 						const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
 						block.animation_data = block_animation_data;
 					}
-					if (block.classList.contains("container")) {
+					/*if (block.classList.contains("container")) {
 						const newCms_block_content = block.find(".newCms_block_content");
 						// TODO: idk what that thing is used for
 						newCms_block_content.new_rect = newCms_block_content.getBoundingClientRect();
-					}
+					}*/
 
 					return true;
 				} else {

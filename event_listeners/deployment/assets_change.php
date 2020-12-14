@@ -57,6 +57,25 @@ if ($modifyJS) {
         $js_full = "";
         foreach ($files as $file) {
             $js_content = file_get_contents($file);
+            $js_content_arr = explode(PHP_EOL, $js_content);
+
+            $exclude_start_line = null;
+
+            foreach ($js_content_arr as $line_id => $js_content_line) {
+                if (preg_match("/\/\/.*exclude start/", $js_content_line, $matches, PREG_OFFSET_CAPTURE)) {
+                    $exclude_start_line = $line_id;
+                } else if ($exclude_start_line !== null) {
+                    if (preg_match("/\/\/.*exclude end/", $js_content_line, $matches, PREG_OFFSET_CAPTURE)) {
+                        for ($i = $exclude_start_line; $i <= $line_id; $i++) {
+                            unset($js_content_arr[$i]);
+                        }
+                        $exclude_start_line = null;
+                    }
+                }
+            }
+
+            $js_content = implode(PHP_EOL, $js_content_arr);
+
             if (preg_match("/(?<=\@include\()[^\)]*(?=\))/", $js_content, $matches)) {
                 foreach ($matches as $file_to_include) {
                     $js_dependencies[] = $file_to_include;
@@ -65,6 +84,7 @@ if ($modifyJS) {
                     }
                 }
             }
+
             $js_full .= $js_content;
         }
 
