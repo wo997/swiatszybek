@@ -514,7 +514,7 @@ function editCMS(t, params = {}) {
 	// trigger cache warmup
 	cmsContainer.findAll(".cms-block[data-module-block]").forEach((e) => {
 		var c = e.find(".module-content");
-		if (c) removeNode(c);
+		if (c) c.remove();
 	});
 
 	removeClasses("during-module-edit");

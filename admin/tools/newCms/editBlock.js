@@ -300,6 +300,8 @@ class NewCmsEditBlock {
 		const copy_btn = this.node.find(".copy_btn");
 		if (copy_btn) {
 			copy_btn.addEventListener("click", () => {
+				/** @type {NewCmsBlock} */
+				// @ts-ignore
 				const copied_block = createNodeByHtml(block.outerHTML);
 				const b_rect = block.getBoundingClientRect();
 				this.newCms.content_node.appendChild(copied_block);
@@ -315,9 +317,7 @@ class NewCmsEditBlock {
 					copied_block.classList.remove(block_class_name);
 				}
 
-				/**
-				 * @type {AnimationData}
-				 */
+				/** @type {AnimationData} */
 				const cbad = {
 					dx: b_rect.left - copied_block.last_rect.left,
 					dy: b_rect.top - copied_block.last_rect.top,

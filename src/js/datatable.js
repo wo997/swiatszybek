@@ -1025,7 +1025,7 @@ window.addEventListener("dragend", () => {
 	}
 	removeClasses("grabbed");
 	$$(".tableRearrange").forEach((e) => {
-		removeNode(e);
+		e.remove();
 	});
 	datatableRearrange.element = null;
 });

@@ -236,7 +236,7 @@ domload(() => {
 					}
 				} else {
 					row.style.backgroundColor = "";
-					removeNode(row.find(".main-img"));
+					row.find(".main-img").remove();
 				}
 
 				var img = row.find("img");

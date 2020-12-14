@@ -262,16 +262,6 @@ domload(() => {
 	});
 });
 
-// TODO: check if abandoned completely
-/*document.addEventListener("touchstart", (event) => {
-  var e = $(".hovered");
-  var toggle = $(".hovered .dropdown-header");
-  if (e && (!isInNode(event.target, e) || isInNode(event.target, toggle))) {
-    //if (e && !isInNode(event.target, e)) {
-    e.classList.remove("hovered");
-  }
-});*/
-
 function rgbStringToHex(rgbString) {
 	if (rgbString.substr(0, 3) != "rgb") return rgbString;
 	return rgbString.replace(/rgb\((.+?)\)/gi, (_, rgb) => {
@@ -615,24 +605,6 @@ function findNonStaticParent(elem, options = {}) {
 	);
 
 	return nonull(parent, document.body);
-}
-function isInNode(elem, parent) {
-	elem = $(elem);
-	while (elem && elem != document) {
-		if (elem == parent) {
-			return true;
-		}
-		elem = elem.parent();
-	}
-	return false;
-}
-
-function removeNode(n) {
-	n = $(n);
-	if (!n) {
-		return;
-	}
-	if (n.parent()) n.parent().removeChild(n);
 }
 
 function removeContent(node) {

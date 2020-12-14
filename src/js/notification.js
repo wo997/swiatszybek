@@ -74,6 +74,6 @@ function dismissParentNotification(n) {
 	n.style.opacity = 0;
 	n.style.pointerEvents = "none";
 	setTimeout(() => {
-		removeNode(n);
+		n.remove();
 	}, 200);
 }

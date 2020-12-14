@@ -48,7 +48,7 @@ if (window.innerWidth >= 1200) {
 	var floatCategoryHovered = null;
 	document.addEventListener("mousemove", (event) => {
 		if (!dropdownButtonHovered) return;
-		if (isInNode(event.target, dropdownButtonHovered)) return;
+		if ($(event.target).findParentNode(dropdownButtonHovered)) return;
 		hideFloatingCategory();
 	});
 }

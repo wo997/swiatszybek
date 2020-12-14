@@ -173,7 +173,7 @@ function loadCategoryPicker(
 		success: (c) => {
 			$$(`.category-picker[data-source="${source}"]`).forEach((e) => {
 				e.directChildren().forEach((e) => {
-					removeNode(e);
+					e.remove();
 				});
 				e.insertAdjacentHTML("afterbegin", c);
 

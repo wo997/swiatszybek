@@ -1,64 +1,64 @@
 window.addEventListener("register-form-components", registerRangeSliders);
 
 function registerRangeSliders() {
-  const allRanges = document.querySelectorAll("input[type=range]:not(.range)");
-  allRanges.forEach((range) => {
-    var background = range.getAttribute("data-background");
-    var cl = range.getAttribute("data-class");
+	const allRanges = document.querySelectorAll("input[type=range]:not(.range)");
+	allRanges.forEach((range) => {
+		var background = range.getAttribute("data-background");
+		var cl = range.getAttribute("data-class");
 
-    range.insertAdjacentHTML(
-      "afterend",
-      `
+		range.insertAdjacentHTML(
+			"afterend",
+			`
       <div class="range-wrap">
         <div class="range-rect"></div>
         ${range.outerHTML}
         <output class="bubble"></output>
       </div>
     `
-    );
+		);
 
-    const wrap = range.nextElementSibling;
+		const wrap = range.nextElementSibling;
 
-    removeNode(range);
+		range.remove();
 
-    range = wrap.querySelector("input[type=range]");
-    range.classList.add("range");
+		range = wrap.querySelector("input[type=range]");
+		range.classList.add("range");
 
-    if (cl) {
-      range.classList.add(cl);
-      wrap.classList.add(cl + "-wrapper");
-    }
+		if (cl) {
+			range.classList.add(cl);
+			wrap.classList.add(cl + "-wrapper");
+		}
 
-    const rect = wrap.querySelector(".range-rect");
-    if (background) rect.style.background = background;
+		const rect = wrap.querySelector(".range-rect");
+		if (background) rect.style.background = background;
 
-    const bubble = wrap.querySelector(".bubble");
+		const bubble = wrap.querySelector(".bubble");
 
-    range.addEventListener("input", () => {
-      setBubble(range, bubble);
-    });
-    range.addEventListener("change", () => {
-      setBubble(range, bubble);
-    });
+		range.addEventListener("input", () => {
+			setBubble(range, bubble);
+		});
+		range.addEventListener("change", () => {
+			setBubble(range, bubble);
+		});
 
-    setBubble(range, bubble);
-  });
+		setBubble(range, bubble);
+	});
 
-  function setBubble(range, bubble) {
-    const val = range.value;
+	function setBubble(range, bubble) {
+		const val = range.value;
 
-    const min = range.min || 0;
-    const max = range.max || 100;
+		const min = range.min || 0;
+		const max = range.max || 100;
 
-    const part = (val - min) / (max - min);
-    bubble.textContent = val;
+		const part = (val - min) / (max - min);
+		bubble.textContent = val;
 
-    bubble.style.left = `${part * 100}%`;
-    bubble.style.transform = `translate(-${part * 100}%,-50%)`;
-  }
+		bubble.style.left = `${part * 100}%`;
+		bubble.style.transform = `translate(-${part * 100}%,-50%)`;
+	}
 }
 
 function setRangeSliderValue(slider, value) {
-  slider.value = value;
-  slider.dispatchChange();
+	slider.value = value;
+	slider.dispatchChange();
 }

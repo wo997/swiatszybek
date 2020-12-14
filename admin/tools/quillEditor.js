@@ -255,7 +255,7 @@ window.quillEditor = {
 	},
 	save: () => {
 		var cursor = $("#quillEditor .ql-cursor");
-		if (cursor) removeNode(cursor);
+		if (cursor) cursor.remove();
 
 		var target = quillEditor.source;
 		var content = $("#quillEditor .ql-editor").innerHTML;
@@ -1083,7 +1083,7 @@ window.quillEditor = {
 				for (var n of m.addedNodes) {
 					if (quillEditor.wasInTable && n.tagName == "P") {
 						if (!findParentByTagName(n, "TD") && n.parent()) {
-							removeNode(n);
+							n.remove();
 						}
 					}
 					if (n.tagName == "A" && !n.href) {

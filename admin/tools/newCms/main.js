@@ -4,6 +4,14 @@
 useTool("fileManager");
 //useTool("quillEditor"); // TODO: get it to work, should be a module, well, fuck it xd
 
+class NewCmsBlock extends PiepNode {
+	/** @type {AnimationData} */
+	animation_data;
+	/** @type {ClientRect} */
+	last_rect;
+	/** @type {ClientRect} */
+	new_rect;
+}
 class AnimationData {
 	dx;
 	dy;
@@ -13,31 +21,13 @@ class AnimationData {
 class NewCms {
 	constructor(container) {
 		this.container = $(container);
-		/**
-		 * @type {PiepNode}
-		 */
 		this.content_node = this.container.find(`.newCmsContent`);
-		/**
-		 * @type {PiepNode}
-		 */
 		this.content_scroll_panel = this.container.find(`.content_scroll_panel`);
-		/**
-		 * @type {PiepNode}
-		 */
 		this.content_scroll_content = this.container.find(
 			`.content_scroll_content`
 		);
-		/**
-		 * @type {PiepNode}
-		 */
 		this.rearrange_node = this.container.find(`.rearrange_node`);
-		/**
-		 * @type {PiepNode}
-		 */
 		this.clean_output_node = this.container.find(`.clean_output`);
-		/**
-		 * @type {PiepNode}
-		 */
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 
 		this.initSidebar();
@@ -144,6 +134,7 @@ class NewCms {
 
 	initMargins() {
 		const margin = this.sidebar.node.find(`.margin`);
+		// @ts-ignore
 		this.insertMarginControl(margin, "margin", {});
 
 		margin.findAll("c-select").forEach((e) => {
@@ -721,9 +712,7 @@ class NewCms {
 
 				this.unselectFirstGridNode();
 
-				/**
-				 * @type {AnimationData}
-				 */
+				/** @type {AnimationData} */
 				const gbad = grabbed_block.animation_data;
 				grabbed_block.last_rect.width = gbad.w;
 				grabbed_block.last_rect.height = gbad.h;
@@ -749,9 +738,7 @@ class NewCms {
 			const side_block_rect = side_block.getBoundingClientRect();
 
 			// replace
-			/**
-			 * @type {AnimationData}
-			 */
+			/** @type {AnimationData} */
 			const animation_data = grabbed_block.animation_data;
 
 			if (this.rearrange_controls.rearrange_near_block) {
@@ -862,18 +849,20 @@ class NewCms {
 	afterContentAnimation() {
 		const all_animatable_blocks = this.content_node
 			.findAll(".newCms_block")
-			.filter((block) => {
+			.filter((b) => {
+				/** @type {NewCmsBlock} */
+				// @ts-ignore
+				const block = b;
 				if (block.last_rect) {
 					block.new_rect = block.getBoundingClientRect();
 					if (!block.animation_data) {
-						/**
-						 * @type {AnimationData}
-						 */
-						const block_animation_data = { dx: 0, dy: 0 };
+						/** @type {AnimationData} */
+						const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
 						block.animation_data = block_animation_data;
 					}
 					if (block.classList.contains("container")) {
 						const newCms_block_content = block.find(".newCms_block_content");
+						// TODO: idk what that thing is used for
 						newCms_block_content.new_rect = newCms_block_content.getBoundingClientRect();
 					}
 
@@ -883,13 +872,15 @@ class NewCms {
 				}
 			});
 
-		all_animatable_blocks.forEach((block) => {
+		all_animatable_blocks.forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
+
 			const dx = block.last_rect.left - block.new_rect.left;
 			const dy = block.last_rect.top - block.new_rect.top;
 
-			/**
-			 * @type {AnimationData}
-			 */
+			/** @type {AnimationData} */
 			const block_animation_data = block.animation_data;
 			block_animation_data.dx += dx;
 			block_animation_data.dy += dy;
@@ -897,7 +888,10 @@ class NewCms {
 			block
 				.find(".newCms_block_content")
 				.directChildren()
-				.forEach((sub_block) => {
+				.forEach((s) => {
+					/** @type {NewCmsBlock} */
+					// @ts-ignore
+					const sub_block = s;
 					if (sub_block.animation_data) {
 						sub_block.animation_data.dx -= dx;
 						sub_block.animation_data.dy -= dy;
@@ -964,9 +958,7 @@ class NewCms {
 			const mb0 = mb + half_dh;
 			const ml0 = ml + half_dw;
 
-			/**
-			 * @type {AnimationData}
-			 */
+			/** @type {AnimationData} */
 			const block_animation_data = block.animation_data;
 			const dx = block_animation_data.dx - half_dw;
 			const dy = block_animation_data.dy - half_dh;
@@ -1176,9 +1168,7 @@ class NewCms {
 			target_dx += mt;
 			target_dy += ml;
 
-			/**
-			 * @type {AnimationData}
-			 */
+			/** @type {AnimationData} */
 			const gbad = grabbed_block.animation_data;
 
 			gbad.dx = gbad.dx * (1 - acc) + target_dx * acc;
@@ -1256,6 +1246,7 @@ function zoomNode(node, direction, options = {}) {
 	});
 }
 
+// TODO: HEY why not even listeners?
 window.init_tool_js_newCms = () => {
 	registerModalContent(
 		// TODO: syntax highlighting + open src in piep extension

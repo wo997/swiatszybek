@@ -15,15 +15,11 @@ class Styles {
 class blockData {
 	id;
 	node;
-	/**
-	 * @type {Styles}
-	 */
+	/** @type {Styles} */
 	styles;
 }
 
-/**
- * @returns {blockData}
- */
+/** @returns {blockData} */
 function getDefaultBlock() {
 	return {
 		id: 0,
@@ -49,9 +45,7 @@ class NewCmsStyling {
 		);
 
 		// THESE MUST BE IN THE DESCENDING ORDER
-		/**
-		 * @type {ResponsiveType[]}
-		 */
+		/** @type {ResponsiveType[]} */
 		this.responsive_types = [
 			{
 				name: "desktop",
@@ -97,9 +91,7 @@ class NewCmsStyling {
 	}
 
 	init(options = {}) {
-		/**
-		 * @type {blockData[]}
-		 */
+		/** @type {blockData[]} */
 		this.blocks = [];
 
 		this.setAllRegisteredBlocks();
@@ -343,9 +335,7 @@ class NewCmsStyling {
 			node = this.newCms.edit_block.edit_node;
 		}
 		const block_id = this.getBlockId(node);
-		/**
-		 * @type {blockData}
-		 */
+		/** @type {blockData} */
 		const block_data = this.blocks.find((e) => e.id == block_id);
 		//console.log(block_data, node, block_id);
 
