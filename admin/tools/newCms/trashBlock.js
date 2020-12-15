@@ -19,7 +19,7 @@ class NewCmsTrashBlock {
 
 	init() {
 		this.position_x = 100;
-		this.position_y = window.innerHeight + 100;
+		this.position_y = window.innerHeight + 40;
 	}
 
 	animate() {
