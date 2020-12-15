@@ -148,7 +148,7 @@ class NewCmsStyling {
 		const prev_style_border = nonull(this.style_border, "none");
 		const prev_style_border_radius = nonull(this.style_border_radius, "0px");
 		this.style_border = `${bw}px solid #444`;
-		this.style_border_radius = bw * 0.5 + "px";
+		this.style_border_radius = bw * 0.8 + "px";
 
 		this.width = Math.min(
 			nonull(this.responsive_type.width, 100000) + 2 * bw,

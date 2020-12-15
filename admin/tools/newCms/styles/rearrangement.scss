@@ -153,3 +153,12 @@
 .rearrange_node:not(.visible) {
 	display: none;
 }
+
+.newCms.animating_rearrangement {
+	& .content_responsive_wrapper {
+		&::before,
+		& > .shadow-node {
+			z-index: 20000;
+		}
+	}
+}

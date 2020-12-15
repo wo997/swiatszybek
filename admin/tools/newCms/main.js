@@ -633,6 +633,8 @@ class NewCms {
 			},
         });*/
 
+		this.select_controls.removeSelection();
+
 		this.beforeContentAnimation();
 
 		block.classList.add("cramped");
@@ -996,6 +998,8 @@ class NewCms {
 			e.style.animation = "";
 		});*/
 
+		this.scroll();
+
 		return all_animatable_blocks;
 	}
 
@@ -1017,6 +1021,8 @@ class NewCms {
 
 				// not needed cause we set it to user-select none bro
 				//removeUserSelection();
+
+				this.scroll();
 
 				this.updateMouseTarget();
 				this.mouseMove();
