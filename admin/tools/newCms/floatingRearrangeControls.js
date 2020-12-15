@@ -343,138 +343,142 @@ class NewCmsRearrangeControls {
 		// them floating controls
 		let blocks_data = [];
 		const addControls = (position) => {
-			this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
-				if (block.findParentNode(this.newCms.grabbed_block)) {
-					// don't touch itself or parent
-					return;
-				}
-
-				if (
-					this.newCms.grabbed_block &&
-					((position === "after" &&
-						block.next() == this.newCms.grabbed_block) ||
-						(position === "before" &&
-							block.prev() == this.newCms.grabbed_block))
-				) {
-					// no siblings
-					return;
-				}
-
-				const parent_container = block.findParentByClassName("container", {
-					skip: 1,
-				});
-
-				if (
-					parent_container &&
-					parent_container.getAttribute("data-block") === "grid"
-				) {
-					// no befores and afters in a grid, just laundry
-					return;
-				}
-
-				const is_parent_row = parent_container
-					? parent_container.classList.contains("container_row")
-					: false;
-
-				const block_rect_data = nodePositionAgainstScrollableParent(block);
-				const block_type = block.getAttribute("data-block");
-
-				const prev_node = block.prev();
-
-				if (
-					position === "before" &&
-					prev_node &&
-					prev_node.classList.contains("newCms_block")
-				) {
-					// no kissing ugh
-					if (is_parent_row) {
-						const prev_node_rect = prev_node.getBoundingClientRect();
-						const node_rect = block_rect_data.node_rect;
-						if (
-							Math.abs(node_rect.left - prev_node_rect.right) <
-								this.rearrange_control_width &&
-							Math.abs(
-								node_rect.top +
-									node_rect.height * 0.5 -
-									prev_node_rect.top -
-									prev_node_rect.height * 0.5
-							) < this.rearrange_control_height
-						) {
-							// rows kissing
-							return;
-						}
-					} else {
-						// no need to put stuff on top
+			this.newCms.content_node
+				.findAll(".newCms_block:not(.cramped)")
+				.forEach((block) => {
+					if (block.findParentNode(this.newCms.grabbed_block)) {
+						// don't touch itself or parent
 						return;
 					}
-				}
 
-				if (
-					position == "inside" &&
-					(block.find(".newCms_block") || block_type != "container")
-				) {
-					// has a kid? no need to add that little icon to add more bro
-					return;
-				}
+					if (
+						this.newCms.grabbed_block &&
+						((position === "after" &&
+							block.next() == this.newCms.grabbed_block) ||
+							(position === "before" &&
+								block.prev() == this.newCms.grabbed_block))
+					) {
+						// no siblings
+						return;
+					}
 
-				/*if (position == "inside") {
+					const parent_container = block.findParentByClassName("container", {
+						skip: 1,
+					});
+
+					if (
+						parent_container &&
+						parent_container.getAttribute("data-block") === "grid"
+					) {
+						// no befores and afters in a grid, just laundry
+						return;
+					}
+
+					const is_parent_row = parent_container
+						? parent_container.classList.contains("container_row")
+						: false;
+
+					const block_rect_data = nodePositionAgainstScrollableParent(block);
+					const block_type = block.getAttribute("data-block");
+
+					const prev_node = block.prev();
+
+					if (
+						position === "before" &&
+						prev_node &&
+						prev_node.classList.contains("newCms_block")
+					) {
+						// no kissing ugh
+						if (is_parent_row) {
+							const prev_node_rect = prev_node.getBoundingClientRect();
+							const node_rect = block_rect_data.node_rect;
+							if (
+								Math.abs(node_rect.left - prev_node_rect.right) <
+									this.rearrange_control_width &&
+								Math.abs(
+									node_rect.top +
+										node_rect.height * 0.5 -
+										prev_node_rect.top -
+										prev_node_rect.height * 0.5
+								) < this.rearrange_control_height
+							) {
+								// rows kissing
+								return;
+							}
+						} else {
+							// no need to put stuff on top
+							return;
+						}
+					}
+
+					if (
+						position == "inside" &&
+						(block.find(".newCms_block") || block_type != "container")
+					) {
+						// has a kid? no need to add that little icon to add more bro
+						return;
+					}
+
+					/*if (position == "inside") {
                     console
                 }*/
 
-				let parent_count = 0;
-				let parent = block;
-				while (parent != this.newCms.content_node) {
-					parent_count++;
-					parent = parent.parent();
-				}
+					let parent_count = 0;
+					let parent = block;
+					while (parent != this.newCms.content_node) {
+						parent_count++;
+						parent = parent.parent();
+					}
 
-				if (position == "inside") {
-					block_rect_data.relative_pos.left +=
-						(block_rect_data.node_rect.width - this.rearrange_control_width) *
-						0.5;
-					block_rect_data.relative_pos.top +=
-						(block_rect_data.node_rect.height - this.rearrange_control_height) *
-						0.5;
-				} else {
-					if (is_parent_row) {
-						block_rect_data.relative_pos.left -=
-							this.rearrange_control_width * 0.5;
+					if (position == "inside") {
+						block_rect_data.relative_pos.left +=
+							(block_rect_data.node_rect.width - this.rearrange_control_width) *
+							0.5;
 						block_rect_data.relative_pos.top +=
 							(block_rect_data.node_rect.height -
 								this.rearrange_control_height) *
 							0.5;
-
-						if (position === "after") {
-							block_rect_data.relative_pos.left +=
-								block_rect_data.node_rect.width;
-						}
 					} else {
-						block_rect_data.relative_pos.left +=
-							(block_rect_data.node_rect.width - this.rearrange_control_width) *
-							0.5;
-						block_rect_data.relative_pos.top -=
-							this.rearrange_control_width * 0.5;
-
-						if (position === "after") {
+						if (is_parent_row) {
+							block_rect_data.relative_pos.left -=
+								this.rearrange_control_width * 0.5;
 							block_rect_data.relative_pos.top +=
-								block_rect_data.node_rect.height;
+								(block_rect_data.node_rect.height -
+									this.rearrange_control_height) *
+								0.5;
+
+							if (position === "after") {
+								block_rect_data.relative_pos.left +=
+									block_rect_data.node_rect.width;
+							}
+						} else {
+							block_rect_data.relative_pos.left +=
+								(block_rect_data.node_rect.width -
+									this.rearrange_control_width) *
+								0.5;
+							block_rect_data.relative_pos.top -=
+								this.rearrange_control_width * 0.5;
+
+							if (position === "after") {
+								block_rect_data.relative_pos.top +=
+									block_rect_data.node_rect.height;
+							}
 						}
 					}
-				}
 
-				const index =
-					block_rect_data.relative_pos.top +
-					parent_count -
-					(position == "inside" ? 100 : 0); // prefer insides
+					const index =
+						block_rect_data.relative_pos.top +
+						parent_count -
+						(position == "inside" ? 100 : 0); // prefer insides
 
-				blocks_data.push({
-					index: index,
-					block: block,
-					rect_data: block_rect_data,
-					is_parent_row: is_parent_row,
-					position: position,
+					blocks_data.push({
+						index: index,
+						block: block,
+						rect_data: block_rect_data,
+						is_parent_row: is_parent_row,
+						position: position,
+					});
 				});
-			});
 		};
 
 		this.newCms.content_node.findAll(".newCms_block").forEach((b) => {
@@ -488,7 +492,7 @@ class NewCmsRearrangeControls {
 
 		// grids first ;)
 		this.newCms.content_node
-			.findAll(`.newCms_block[data-block="grid"]`)
+			.findAll(`.newCms_block[data-block="grid"]:not(.cramped)`)
 			.forEach((b) => {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore

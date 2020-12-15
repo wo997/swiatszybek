@@ -370,13 +370,13 @@ class NewCmsEditBlock {
 		left = Math.max(left, side_offset);
 		left = Math.min(
 			left,
-			this.newCms.content_scroll_content.clientWidth - side_offset
+			this.newCms.content_scroll_panel.clientWidth - side_offset
 		);
 
 		top = Math.max(top, vertical_offset);
 		top = Math.min(
 			top,
-			this.newCms.content_scroll_content.clientHeight - vertical_offset
+			this.newCms.content_scroll_panel.clientHeight - vertical_offset
 		);
 
 		this.node.style.left = left + "px";

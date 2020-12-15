@@ -622,18 +622,6 @@ class NewCms {
 		if (!block) {
 			return;
 		}
-		/*const duration = 300;
-		this.lockInput();
-		zoomNode(block, "out", {
-			duration: duration,
-			callback: () => {
-				block.remove();
-				this.contentChange();
-				this.unlockInput();
-			},
-        });*/
-
-		this.select_controls.removeSelection();
 
 		this.beforeContentAnimation();
 
@@ -1004,6 +992,10 @@ class NewCms {
 	}
 
 	animateContent(all_animatable_blocks, duration, options = {}) {
+		this.lockInput(duration);
+
+		this.select_controls.removeSelection();
+
 		this.container.classList.add("animating_rearrangement");
 
 		const finishAnimation = () => {
@@ -1133,8 +1125,6 @@ class NewCms {
 		setTimeout(() => {
 			finishAnimation();
 		}, duration);
-
-		this.lockInput(duration);
 	}
 
 	grabAnimation() {
@@ -1319,43 +1309,6 @@ class NewCms {
 			this.grabAnimation();
 		});
 	}
-}
-
-// TODO: move to animator?
-function zoomNode(node, direction, options = {}) {
-	const styles = window.getComputedStyle(node);
-
-	const w = parseInt(styles.width);
-	const h = parseInt(styles.height);
-
-	const mr_l = parseInt(styles.marginLeft);
-	const mr_r = parseInt(styles.marginRight);
-
-	const mr_t = parseInt(styles.marginTop);
-	const mr_b = parseInt(styles.marginBottom);
-
-	const step_in = `
-        transform: scale(1,1);
-        margin: ${mr_t}px ${mr_r}px ${mr_b}px ${mr_l}px;
-    `;
-	const step_out = `
-        transform: scale(0,0);
-        margin: ${-h * 0.5}px ${-w * 0.5}px;
-    `;
-
-	let keyframes = "";
-
-	if (direction == "out") {
-		keyframes = `0% {${step_in}opacity: 1;} 100% {${step_out}opacity: 0;}`;
-	} else {
-		keyframes = `0% {${step_out}opacity: 0;} 100% {${step_in}opacity: 1;}`;
-	}
-
-	animate(node, keyframes, nonull(options.duration, 200), () => {
-		if (options.callback) {
-			options.callback();
-		}
-	});
 }
 
 // TODO: HEY why not even listeners?

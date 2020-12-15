@@ -126,3 +126,43 @@ domload(() => {
 		removeClasses("freeze_before_load");
 	}, 200);
 });
+
+/*
+
+function zoomNode(node, direction, options = {}) {
+	const styles = window.getComputedStyle(node);
+
+	const w = parseInt(styles.width);
+	const h = parseInt(styles.height);
+
+	const mr_l = parseInt(styles.marginLeft);
+	const mr_r = parseInt(styles.marginRight);
+
+	const mr_t = parseInt(styles.marginTop);
+	const mr_b = parseInt(styles.marginBottom);
+
+	const step_in = `
+        transform: scale(1,1);
+        margin: ${mr_t}px ${mr_r}px ${mr_b}px ${mr_l}px;
+    `;
+	const step_out = `
+        transform: scale(0,0);
+        margin: ${-h * 0.5}px ${-w * 0.5}px;
+    `;
+
+	let keyframes = "";
+
+	if (direction == "out") {
+		keyframes = `0% {${step_in}opacity: 1;} 100% {${step_out}opacity: 0;}`;
+	} else {
+		keyframes = `0% {${step_out}opacity: 0;} 100% {${step_in}opacity: 1;}`;
+	}
+
+	animate(node, keyframes, nonull(options.duration, 200), () => {
+		if (options.callback) {
+			options.callback();
+		}
+	});
+}
+
+*/
