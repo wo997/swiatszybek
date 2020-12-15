@@ -1,5 +1,9 @@
 /* css[tool_newCms] */
 
+:root {
+	--content-border-radius: 0;
+}
+
 .newCms .content_wrapper {
 	height: 100%;
 	user-select: none;
@@ -68,7 +72,8 @@
 	box-shadow: inset 0 0 0 5px #ddd;
 	position: relative;
 }
-.content_responsive_wrapper::before {
+.content_responsive_wrapper::before,
+.content_responsive_wrapper::after {
 	content: "";
 	position: absolute;
 	left: 0;
@@ -77,8 +82,16 @@
 	height: 100%;
 	z-index: 200;
 	pointer-events: none;
-	border: 5px solid #444;
-	box-shadow: 0 0 0 1px #444, inset 0 0 0 1px #444;
+	box-shadow: 0 0 0 7px #444, inset 0 0 0 6px #444;
+	border-radius: var(--content-border-radius);
+}
+.content_responsive_wrapper::after {
+	content: "";
+	position: absolute;
+	left: -2px;
+	top: -2px;
+	width: calc(100% + 4px);
+	height: calc(100% + 4px);
 }
 
 .content_scroll_content {
