@@ -23,9 +23,7 @@ class RearrangeControl extends PiepNode {
 // exclude end
 
 class NewCmsRearrangeControls {
-	/**
-	 * @param {NewCms} newCms
-	 */
+	/** @param {NewCms} newCms */
 	constructor(newCms) {
 		this.newCms = newCms;
 		this.node = newCms.container.find(`.rearrange_controls`);
@@ -100,7 +98,10 @@ class NewCmsRearrangeControls {
 				? target.findParentByClassName("rearrange_control")
 				: null;
 
-			if (!rearrange_control_node) {
+			if (
+				!rearrange_control_node &&
+				target.findParentNode(this.newCms.content_node)
+			) {
 				let smallest_sq_distance = 10000; // magnetic 100px
 				let second_smallest_sq_distance = 10000; // used to apply death zone :P
 				let smallest_sq_distance_control = null;
@@ -313,24 +314,26 @@ class NewCmsRearrangeControls {
 	addBlockControls(grabbed_block) {
 		// just a rect u grab from
 		if (grabbed_block) {
-			const block_rect_data = nodePositionAgainstScrollableParent(
-				grabbed_block
-			);
-			const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
+			if (!this.newCms.grab_options.copy) {
+				const block_rect_data = nodePositionAgainstScrollableParent(
+					grabbed_block
+				);
+				const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
 
-			block_rect_data.scrollable_parent.appendChild(
-				rearrange_grabbed_rect_node
-			);
+				block_rect_data.scrollable_parent.appendChild(
+					rearrange_grabbed_rect_node
+				);
 
-			rearrange_grabbed_rect_node.style.left =
-				block_rect_data.relative_pos.left + "px";
-			rearrange_grabbed_rect_node.style.top =
-				block_rect_data.relative_pos.top + "px";
-			rearrange_grabbed_rect_node.style.width =
-				block_rect_data.node_rect.width + "px";
-			rearrange_grabbed_rect_node.style.height =
-				block_rect_data.node_rect.height + "px";
-			rearrange_grabbed_rect_node.classList.add("visible");
+				rearrange_grabbed_rect_node.style.left =
+					block_rect_data.relative_pos.left + "px";
+				rearrange_grabbed_rect_node.style.top =
+					block_rect_data.relative_pos.top + "px";
+				rearrange_grabbed_rect_node.style.width =
+					block_rect_data.node_rect.width + "px";
+				rearrange_grabbed_rect_node.style.height =
+					block_rect_data.node_rect.height + "px";
+				rearrange_grabbed_rect_node.classList.add("visible");
+			}
 		} else {
 			return;
 		}

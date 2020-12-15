@@ -307,7 +307,7 @@ class NewCmsEditBlock {
 				// @ts-ignore
 				const copied_block = createNodeByHtml(block.outerHTML);
 				const b_rect = block.getBoundingClientRect();
-				this.newCms.content_node.appendChild(copied_block);
+				this.newCms.sidebar.node.appendChild(copied_block);
 				copied_block.style.width = b_rect.width + "px";
 				copied_block.style.height = b_rect.height + "px";
 				copied_block.last_rect = copied_block.getBoundingClientRect();

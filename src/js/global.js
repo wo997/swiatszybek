@@ -875,6 +875,9 @@ function positionAgainstScrollableParent(x, y, scrollable_parent) {
 	};
 }
 
+/**
+ * @returns {PiepNode}
+ */
 function createNodeByHtml(html) {
 	const random_class_name = "sddsfgsdfgsdfgcvcvc";
 	document.body.insertAdjacentHTML(

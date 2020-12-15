@@ -9,9 +9,7 @@ class SelectControl extends PiepNode {
 }
 // exclude end
 class NewCmsSelectControls {
-	/**
-	 * @param {NewCms} newCms
-	 */
+	/** @param {NewCms} newCms */
 	constructor(newCms) {
 		this.newCms = newCms;
 		this.node = this.newCms.container.find(`.select_controls`);

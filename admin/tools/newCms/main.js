@@ -53,6 +53,7 @@ class NewCms {
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 
 		this.initSidebar();
+		this.initTrashBlock();
 		this.initEditBlock();
 		this.initQuillEditor();
 		this.initFloatingSelectControls();
@@ -67,7 +68,9 @@ class NewCms {
 		this.mouse_dx = 0;
 		this.mouse_dy = 0;
 		this.mouse_target = null;
-		//this.scroll_top = 0;
+
+		/** @type {PiepNode} */
+		this.grabbed_block = null;
 
 		setFormData(
 			{
@@ -154,6 +157,12 @@ class NewCms {
 		width.addEventListener("input", changeCallback);
 	}
 
+	initTrashBlock() {
+		this.trash_block = new NewCmsTrashBlock(
+			this,
+			this.container.find(".trash_block")
+		);
+	}
 	initMargins() {
 		const margin = this.sidebar.node.find(`.margin`);
 		// @ts-ignore
@@ -613,6 +622,7 @@ class NewCms {
 		if (this.grabbed_block) {
 			return;
 		}
+		this.grab_options = options;
 
 		const block_rect = block.getBoundingClientRect();
 		if (!options.copy) {
@@ -826,7 +836,6 @@ class NewCms {
 
 		this.beforeContentAnimation();
 
-		// some action
 		if (this.rearrange_controls.rearrange_near_block) {
 			if (this.rearrange_controls.rearrange_position == "inside") {
 				this.rearrange_controls.rearrange_near_block
@@ -858,6 +867,19 @@ class NewCms {
 			}
 
 			this.styling.registerMissingBlocks();
+
+			if (this.grab_options.copy) {
+				grabbed_block.style.display = "";
+			}
+		} else {
+			if (this.grab_options.copy) {
+				grabbed_block.remove();
+			}
+		}
+
+		if (this.mouse_target.findParentNode(this.trash_block.node)) {
+			this.removeBlock(grabbed_block);
+			return;
 		}
 
 		this.rearrange_controls.removeRearrangement();
@@ -1074,7 +1096,9 @@ class NewCms {
 	}
 
 	grabAnimation() {
-		if (!this.grabbed_block) {
+		const grabbed_block = this.grabbed_block;
+
+		if (!grabbed_block) {
 			return;
 		}
 
@@ -1112,8 +1136,6 @@ class NewCms {
 
 		// move the block itself
 		{
-			const grabbed_block = this.grabbed_block;
-
 			if (this.grab_animation_speed < 1) {
 				this.grab_animation_speed += 0.03;
 			} else {
@@ -1125,6 +1147,9 @@ class NewCms {
 			let target_dy = 0;
 
 			const gb_rect = grabbed_block.last_rect;
+			if (!gb_rect) {
+				return;
+			}
 			const base_w = gb_rect.width;
 			const base_h = gb_rect.height;
 			let target_w = base_w;

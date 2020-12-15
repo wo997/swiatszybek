@@ -251,8 +251,7 @@
 
 .newCms_block.grabbed,
 .side_block.grabbed {
-	filter: contrast(0.7);
-	opacity: 0.6;
+	opacity: 0.4 !important;
 	box-shadow: 0 4px 12px -1px #0008;
 	pointer-events: none !important;
 	position: relative;
