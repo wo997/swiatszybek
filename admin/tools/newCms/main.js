@@ -57,6 +57,7 @@ class NewCms {
 		this.mouse_dx = 0;
 		this.mouse_dy = 0;
 		this.mouse_target = null;
+		this.last_content_scroll_top = 0;
 
 		this.grab_options = {};
 
@@ -110,6 +111,23 @@ class NewCms {
                 }
             );*/
 
+		this.content_scroll_panel.addEventListener(
+			"wheel",
+			(event) => {
+				const dy_bottom = this.getBottomScrollOffset();
+
+				if (event && event.deltaY !== null) {
+					if (dy_bottom - event.deltaY < 0 && event.deltaY >= 0) {
+						event.preventDefault();
+					}
+				}
+			},
+			{
+				// allow preventDefault()
+				passive: false,
+			}
+		);
+
 		this.content_scroll_panel.addEventListener("scroll", () => {
 			this.scroll();
 		});
@@ -123,6 +141,16 @@ class NewCms {
 				e.remove();
 			});
 		});
+	}
+
+	getBottomScrollOffset() {
+		const inner_rect = this.content_node.getBoundingClientRect();
+		const wrap_rect = this.content_scroll_panel.getBoundingClientRect();
+
+		return (
+			inner_rect.height -
+			(newCms.content_scroll_panel.scrollTop + wrap_rect.height)
+		);
 	}
 
 	onResize() {
@@ -355,9 +383,12 @@ class NewCms {
 	}
 
 	updateMouseTarget() {
-		this.mouse_target = $(
-			document.elementFromPoint(this.mouse_x, this.mouse_y)
-		);
+		// TODO: should we care?
+		if (!IS_MOBILE) {
+			this.mouse_target = $(
+				document.elementFromPoint(this.mouse_x, this.mouse_y)
+			);
+		}
 	}
 
 	updateMouseCoords(event) {
@@ -418,11 +449,11 @@ class NewCms {
 		this.updateMouseTarget();
 		this.mouseMove();
 
-		//this.scroll_top = this.content_scroll_panel.scrollTop;
-		/*if (this.grabbed_block) {
-      this.grabbedBlockPositionChange();
-      return;
-    }*/
+		const dy_bottom = this.getBottomScrollOffset();
+
+		if (dy_bottom < 0) {
+			this.content_scroll_panel.scrollBy(0, dy_bottom);
+		}
 	}
 
 	contentChange(options = {}) {
