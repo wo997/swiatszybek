@@ -357,10 +357,7 @@ class NewCmsEditBlock {
 		const node_rect = this.node.getBoundingClientRect();
 
 		let left = this.newCms.mouse_x - this.newCms.content_scroll_panel_rect.left;
-		let top =
-			this.newCms.mouse_y -
-			this.newCms.content_scroll_panel_rect.top +
-			this.newCms.content_scroll_panel.scrollTop;
+		let top = this.newCms.mouse_y - this.newCms.content_scroll_panel_rect.top;
 
 		const node_width = node_rect.width;
 		const node_height = node_rect.height;
@@ -380,7 +377,8 @@ class NewCmsEditBlock {
 		);
 
 		this.node.style.left = left + "px";
-		this.node.style.top = top + "px";
+		this.node.style.top =
+			top + this.newCms.content_scroll_panel.scrollTop + "px";
 
 		this.node.classList.toggle("visible", true);
 	}
