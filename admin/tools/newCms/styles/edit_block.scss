@@ -1,0 +1,59 @@
+/* css[tool_newCms] */
+
+.edit_block_node {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	z-index: 9000;
+	transition: 0.2s opacity;
+}
+
+.edit_block_node:not(.visible) {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.newCms_block.edit_active {
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%230000004F' stroke-width='4' stroke-dasharray='5%2c 9' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+}
+
+.edit_block_node svg {
+	filter: drop-shadow(0px 1px 3px #000a);
+	transition: 0.2s all;
+	transform: scale(1);
+}
+
+.edit_block_node:not(.visible) svg {
+	transform: scale(0.7);
+}
+
+.edit_block_node .context-btn {
+	cursor: pointer;
+	stroke: #0003;
+	stroke-width: 1px;
+}
+
+/*.edit_block_node .relocate_btn {
+	cursor: grab;
+}*/
+
+.edit_block_node .context-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	stroke-width: 0;
+}
+
+.edit_block_node .context-btn:hover {
+	&,
+	foreignObject {
+		opacity: 0.8;
+	}
+}
+
+/* edit_block_node end */
+
+.edit_block_node .btn:not(.remove_btn):hover {
+	color: var(--primary-clr);
+}

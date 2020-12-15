@@ -1,0 +1,36 @@
+/* css[tool_newCms] */
+
+.newCms_block {
+	min-width: 40px;
+	min-height: 40px;
+	position: relative;
+	transition: opacity 0.2s;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+}
+
+.newCms_block:before {
+	& {
+		content: "";
+		position: absolute;
+		left: -1px;
+		top: -1px;
+		width: calc(100% + 2px);
+		height: calc(100% + 2px);
+		border: 2px solid #0005;
+		pointer-events: none;
+		transition: 0.2s opacity;
+		opacity: 0;
+	}
+	.content_scroll_panel:hover &,
+	.newCms.grabbed_block &,
+	.newCms.animating_rearrangement & {
+		opacity: 1;
+	}
+}
+
+.newCms_block:not(.container) > .newCms_block_content {
+	pointer-events: none;
+	padding: 10px;
+}

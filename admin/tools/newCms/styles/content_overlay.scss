@@ -1,0 +1,21 @@
+/* css[tool_newCms] */
+
+.newCmsContent_copy {
+	position: absolute;
+	left: 6px;
+	top: 6px;
+	width: calc(100% - 12px);
+	height: calc(100% - 12px);
+	pointer-events: none;
+	background: white;
+	opacity: 1;
+	z-index: 1000;
+}
+
+.newCmsContent_copy:not(.visible) {
+	opacity: 0;
+}
+
+.newCmsContent_copy .cramped {
+	display: none !important;
+}

@@ -143,7 +143,7 @@ class NewCmsStyling {
 		const content_responsive_wrapper_rect = this.content_responsive_wrapper.getBoundingClientRect();
 
 		let bw = this.responsive_type.width
-			? this.responsive_type.width * 0.02 + 10
+			? this.responsive_type.width * 0.02 + 5
 			: 0;
 		const prev_style_border = nonull(this.style_border, "none");
 		const prev_style_border_radius = nonull(this.style_border_radius, "0px");

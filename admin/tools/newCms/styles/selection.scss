@@ -1,0 +1,61 @@
+/* css[tool_newCms] */
+
+:root {
+	--select_control_width: 26px;
+	--select_control_height: 26px;
+}
+
+.select_controls {
+	transition: opacity 0.2s;
+	position: relative;
+	z-index: 210;
+}
+
+.select_control {
+	position: absolute;
+	width: var(--select_control_width);
+	height: var(--select_control_height);
+	background: #ccc;
+	border: 1px solid #000c;
+	color: #222;
+	opacity: 0.45;
+	border-radius: 4px;
+	transition: 0.2s all;
+	font-size: 1.15em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.select_control:not(.container) {
+	background: #fafafa;
+	color: var(--primary-clr);
+}
+
+.select_control.select_active,
+.select_control.rearrange_possible {
+	opacity: 1;
+}
+
+.newCms:not(.grabbed_block) .select_control.select_active {
+	box-shadow: 0 1px 1px 0 #0005;
+}
+
+.newCms:not(.grabbed_block):not(.anything_selected)
+	.content_scroll_panel:not(:hover)
+	.select_controls,
+.select_controls:not(.visible) {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.newCms:not(.grabbed_block):not(.animating_rearrangement)
+	.content_scroll_panel:not(:hover)
+	.grid_wireframe_line {
+	&:before,
+	&:after {
+		opacity: 0;
+		pointer-events: none;
+	}
+}
