@@ -703,6 +703,8 @@ class NewCms {
 		this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
 
 		this.grab_animation_speed = 0;
+		this.scroll_speed_y = 0;
+
 		if (!options.copy) {
 			delete this.grabbed_block.animation_data;
 		}
@@ -1140,16 +1142,16 @@ class NewCms {
 		if (this.mouse_target.findParentNode(this.content_scroll_panel)) {
 			const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
 
-			let speed_y = 0;
+			let target_speed_y = 0;
 
 			const scroll_offset = 50;
 
 			const upper_dy =
 				this.mouse_y - content_scroll_panel_rect.top - scroll_offset;
 			if (upper_dy < 0) {
-				speed_y = upper_dy;
-				if (speed_y < -scroll_offset) {
-					speed_y = -scroll_offset;
+				target_speed_y = upper_dy;
+				if (target_speed_y < -scroll_offset) {
+					target_speed_y = -scroll_offset;
 				}
 			}
 
@@ -1159,14 +1161,26 @@ class NewCms {
 				content_scroll_panel_rect.height +
 				this.mouse_y;
 			if (bottom_dy > 0) {
-				speed_y = bottom_dy;
+				target_speed_y = bottom_dy;
 
-				if (speed_y > scroll_offset) {
-					speed_y = scroll_offset;
+				if (target_speed_y > scroll_offset) {
+					target_speed_y = scroll_offset;
 				}
 			}
+			target_speed_y *= 0.4;
 
-			this.content_scroll_panel.scrollBy(0, speed_y * 0.4);
+			const const_acc = 0.5;
+			if (this.scroll_speed_y + const_acc < target_speed_y) {
+				this.scroll_speed_y += const_acc;
+			} else if (this.scroll_speed_y - const_acc > target_speed_y) {
+				this.scroll_speed_y -= const_acc;
+			}
+
+			if (Math.abs(this.scroll_speed_y) > const_acc * 1.1) {
+				this.content_scroll_panel.scrollBy(0, this.scroll_speed_y);
+			}
+		} else {
+			this.scroll_speed_y = 0;
 		}
 
 		// move the block itself
