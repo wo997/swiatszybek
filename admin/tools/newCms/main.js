@@ -1134,11 +1134,12 @@ class NewCms {
 			return;
 		}
 
+		let target_speed_y = 0;
+		const const_acc = 0.5;
+
 		// cute scroll
 		if (this.mouse_target.findParentNode(this.content_scroll_panel)) {
 			const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
-
-			let target_speed_y = 0;
 
 			const scroll_offset = 50;
 
@@ -1164,19 +1165,16 @@ class NewCms {
 				}
 			}
 			target_speed_y *= 0.4;
+		}
 
-			const const_acc = 0.5;
-			if (this.scroll_speed_y + const_acc < target_speed_y) {
-				this.scroll_speed_y += const_acc;
-			} else if (this.scroll_speed_y - const_acc > target_speed_y) {
-				this.scroll_speed_y -= const_acc;
-			}
+		if (this.scroll_speed_y + const_acc < target_speed_y) {
+			this.scroll_speed_y += const_acc;
+		} else if (this.scroll_speed_y - const_acc > target_speed_y) {
+			this.scroll_speed_y -= const_acc;
+		}
 
-			if (Math.abs(this.scroll_speed_y) > const_acc * 1.1) {
-				this.content_scroll_panel.scrollBy(0, this.scroll_speed_y);
-			}
-		} else {
-			this.scroll_speed_y = 0;
+		if (Math.abs(this.scroll_speed_y) > const_acc * 1.1) {
+			this.content_scroll_panel.scrollBy(0, this.scroll_speed_y);
 		}
 
 		// move the block itself
