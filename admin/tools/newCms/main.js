@@ -90,13 +90,9 @@ class NewCms {
 			}
 		);
 
-		/*this.container.addEventListener(
-                IS_MOBILE ? "click" : "mousedown",
-                (event) => {
-                    this.updateMouseCoords(event);
-                    this.mouseDown();
-                }
-            );*/
+		this.container.addEventListener("mousedown", (event) => {
+			this.mouse_left_btn = event.buttons === 1;
+		});
 
 		this.container.addEventListener("click", (event) => {
 			this.updateMouseCoords(event);
@@ -110,6 +106,16 @@ class NewCms {
                     this.mouseUp();
                 }
             );*/
+
+		this.container.addEventListener("contextmenu", (event) => {
+			this.mouse_left_btn = false;
+			if (this.grabbed_block) {
+				this.rearrange_controls.removeRearrangement();
+				this.releaseBlock();
+				event.preventDefault();
+				return false;
+			}
+		});
 
 		this.content_scroll_panel.addEventListener(
 			"wheel",
@@ -399,7 +405,6 @@ class NewCms {
 		this.mouse_dy = mouse_y - this.mouse_y;
 		this.mouse_x = mouse_x;
 		this.mouse_y = mouse_y;
-		this.mouse_left_btn = event.buttons === 1;
 		this.mouse_target = $(event.target);
 	}
 
@@ -415,8 +420,12 @@ class NewCms {
 			this.select_controls.mouseMove();
 		}
 	}
-	//mouseDown() {
+
 	mouseClick() {
+		if (!this.mouse_left_btn) {
+			return;
+		}
+
 		if (this.grabbed_block) {
 			this.releaseBlock();
 			return;
@@ -438,12 +447,6 @@ class NewCms {
 		this.sidebar.mouseClick();
 		this.styling.mouseClick();
 	}
-
-	/*mouseUp() {
-		if (this.grabbed_block) {
-			this.releaseBlock();
-		}
-	}*/
 
 	scroll() {
 		this.updateMouseTarget();
