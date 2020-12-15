@@ -45,6 +45,10 @@ class NewCmsTrashBlock {
 		} else {
 			target_y = window.innerHeight + 100;
 		}
+		this.node.classList.toggle(
+			"visible",
+			!(!this.newCms.grabbed_block && this.newCms.grab_options.remove)
+		);
 
 		const speed = 0.2;
 		this.position_x = this.position_x * (1 - speed) + target_x * speed;

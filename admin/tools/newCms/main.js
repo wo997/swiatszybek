@@ -52,6 +52,17 @@ class NewCms {
 		this.clean_output_node = this.container.find(`.clean_output`);
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 
+		this.mouse_x = 0;
+		this.mouse_y = 0;
+		this.mouse_dx = 0;
+		this.mouse_dy = 0;
+		this.mouse_target = null;
+
+		this.grab_options = {};
+
+		/** @type {PiepNode} */
+		this.grabbed_block = null;
+
 		this.initSidebar();
 		this.initTrashBlock();
 		this.initEditBlock();
@@ -62,15 +73,6 @@ class NewCms {
 		this.initStyling();
 		this.initGrids();
 		this.initMargins();
-
-		this.mouse_x = 0;
-		this.mouse_y = 0;
-		this.mouse_dx = 0;
-		this.mouse_dy = 0;
-		this.mouse_target = null;
-
-		/** @type {PiepNode} */
-		this.grabbed_block = null;
 
 		setFormData(
 			{
@@ -878,6 +880,7 @@ class NewCms {
 		}
 
 		if (this.mouse_target.findParentNode(this.trash_block.node)) {
+			this.grab_options.remove = true;
 			this.removeBlock(grabbed_block);
 			return;
 		}
@@ -1103,36 +1106,37 @@ class NewCms {
 		}
 
 		// cute scroll
-		const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
+		if (this.mouse_target.findParentNode(this.content_scroll_panel)) {
+			const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
 
-		let speed_y = 0;
+			let speed_y = 0;
 
-		const scroll_offset = 50;
-		if (this.mouse_y < content_scroll_panel_rect.top + scroll_offset) {
-			speed_y = this.mouse_y - scroll_offset - content_scroll_panel_rect.top;
-			if (speed_y < -scroll_offset) {
-				speed_y = -scroll_offset;
+			const scroll_offset = 50;
+
+			const upper_dy =
+				this.mouse_y - content_scroll_panel_rect.top - scroll_offset;
+			if (upper_dy < 0) {
+				speed_y = upper_dy;
+				if (speed_y < -scroll_offset) {
+					speed_y = -scroll_offset;
+				}
 			}
-		}
 
-		if (
-			content_scroll_panel_rect.top +
-				content_scroll_panel_rect.height -
-				this.mouse_y <
-			scroll_offset
-		) {
-			speed_y =
+			const bottom_dy =
 				scroll_offset -
 				content_scroll_panel_rect.top -
 				content_scroll_panel_rect.height +
 				this.mouse_y;
+			if (bottom_dy > 0) {
+				speed_y = bottom_dy;
 
-			if (speed_y > scroll_offset) {
-				speed_y = scroll_offset;
+				if (speed_y > scroll_offset) {
+					speed_y = scroll_offset;
+				}
 			}
-		}
 
-		this.content_scroll_panel.scrollBy(0, speed_y * 0.4);
+			this.content_scroll_panel.scrollBy(0, speed_y * 0.4);
+		}
 
 		// move the block itself
 		{
