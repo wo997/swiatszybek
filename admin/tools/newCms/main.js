@@ -1065,8 +1065,11 @@ class NewCms {
 
 			const kisses_right_border = parent_rect
 				? Math.abs(
-						block.new_rect.width + mr - (parent_rect.left + parent_rect.width)
-				  ) < 5
+						block.new_rect.left +
+							block.new_rect.width +
+							mr -
+							(parent_rect.left + parent_rect.width)
+				  ) < 15
 				: false;
 
 			// give flexbox some space baby
