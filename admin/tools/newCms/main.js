@@ -18,6 +18,10 @@ class NewCmsBlock extends PiepNode {
 	rearrange_control_after;
 	/** @type {PiepNode} */
 	rearrange_control_inside;
+	/** @type {NewCmsBlock} */
+	getNextBlock() {}
+	/** @type {NewCmsBlock} */
+	getPrevBlock() {}
 }
 
 class NewCmsGrid extends NewCmsBlock {
@@ -598,7 +602,7 @@ class NewCms {
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
 		} else if (type === "container") {
 			class_list.push("container");
-			content_html = /*html*/ `<div class="newCms_block_content container"></div>`;
+			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
 		} else if (type === "grid") {
 			class_list.push("container");
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;

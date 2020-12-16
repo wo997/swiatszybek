@@ -411,11 +411,22 @@ class NewCmsStyling {
 	}
 
 	setBlocksFlexOrder() {
+		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
+			/** @type {NewCmsBlock} */
+			const block = b;
+
+			// set to default - can be changed below
+			block.getPrevBlock = block.prev;
+			block.getNextBlock = block.next;
+		});
+
 		this.newCms.content_node
 			.findAll(`.newCms_block[data-block="container"] > .newCms_block_content`)
 			.forEach((container) => {
 				let child_count = -1;
-				container.directChildren().forEach((block) => {
+				container.directChildren().forEach((b) => {
+					/** @type {NewCmsBlock} */
+					const block = b;
 					child_count++;
 
 					let flex_order = null;
@@ -434,6 +445,27 @@ class NewCmsStyling {
 
 					if (flex_order !== null) {
 						block.dataset.flex_order = flex_order;
+
+						block.getPrevBlock = () => {
+							return block
+								.parent()
+								.directChildren()
+								.find(
+									(child) =>
+										child.dataset.flex_order ==
+										parseInt(block.dataset.flex_order) - 1
+								);
+						};
+						block.getNextBlock = () => {
+							return block
+								.parent()
+								.directChildren()
+								.find(
+									(child) =>
+										child.dataset.flex_order ==
+										parseInt(block.dataset.flex_order) + 1
+								);
+						};
 					} else {
 						delete block.dataset.flex_order;
 					}

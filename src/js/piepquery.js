@@ -6,7 +6,7 @@ class PiepNode extends HTMLElement {
 	find(query) {}
 	/** @returns {PiepNode[]} */
 	findAll(query) {}
-	/** @returns {PiiepNode[]} */
+	/** @returns {PiepNode[]} */
 	directChildren() {}
 	setValue(value, quiet) {}
 	getValue() {}

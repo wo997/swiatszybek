@@ -375,7 +375,9 @@ class NewCmsRearrangeControls {
 		const addControls = (position) => {
 			this.newCms.content_node
 				.findAll(rearrangable_blocks_query_selector)
-				.forEach((block) => {
+				.forEach((b) => {
+					/** @type {NewCmsBlock} */
+					const block = b;
 					if (block.findParentNode(this.newCms.grabbed_block)) {
 						// don't touch itself or parent
 						return;
@@ -384,9 +386,9 @@ class NewCmsRearrangeControls {
 					if (
 						this.newCms.grabbed_block &&
 						((position === "after" &&
-							block.next() == this.newCms.grabbed_block) ||
+							block.getNextBlock() == this.newCms.grabbed_block) ||
 							(position === "before" &&
-								block.prev() == this.newCms.grabbed_block))
+								block.getPrevBlock() == this.newCms.grabbed_block))
 					) {
 						// no siblings
 						return;
@@ -407,8 +409,7 @@ class NewCmsRearrangeControls {
 
 					const block_rect_data = nodePositionAgainstScrollableParent(block);
 					const block_type = block.dataset.block;
-
-					const prev_node = block.prev();
+					const prev_node = block.getPrevBlock();
 
 					if (
 						position === "before" &&
@@ -445,10 +446,6 @@ class NewCmsRearrangeControls {
 						// has a kid? no need to add that little icon to add more bro
 						return;
 					}
-
-					/*if (position == "inside") {
-                    console
-                }*/
 
 					let parent_count = 0;
 					let parent = block;
@@ -617,6 +614,8 @@ class NewCmsRearrangeControls {
 
 		for (let i = 0; i < sorted_blocks_data_length; i++) {
 			const block_data = sorted_blocks_data[i];
+
+			/** @type {NewCmsBlock} */
 			const block = block_data.block;
 
 			let left = block_data.rect_data.relative_pos.left;
@@ -707,9 +706,10 @@ class NewCmsRearrangeControls {
 					rotation += 90;
 				}
 
-				const has_prev = block_data.position == "after" ? true : !!block.prev();
+				const has_prev =
+					block_data.position == "after" ? true : !!block.getPrevBlock();
 				const has_next =
-					block_data.position == "before" ? true : !!block.next();
+					block_data.position == "before" ? true : !!block.getNextBlock();
 
 				if (has_next && has_prev) {
 					rearrange_control_html = `<img style='width:1em' src="/src/img/arrows_insert_between.svg">`;
