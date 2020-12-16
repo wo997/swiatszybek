@@ -1,9 +1,35 @@
 /* css[tool_newCms] */
 
+:root {
+	--sidebar_width: 360px;
+	--sidebar_collapsed_width: 30px;
+}
+
 .newCms {
-	.sidebar {
+	.toggle_sidebar_when_collapsed {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: var(--sidebar_collapsed_width);
+		height: 100%;
+	}
+
+	&.sidebar_collapsed {
+		& .sidebar {
+			& {
+				margin-right: calc(
+					var(--sidebar_collapsed_width) - var(--sidebar_width)
+				);
+				transform: translateX(calc(0px - var(--sidebar_width)));
+			}
+		}
+		/*.toggle_sidebar_when_collapsed {
+			transform: translateX(500px);
+		}*/
+	}
+	& .sidebar {
 		& {
-			width: 360px;
+			width: var(--sidebar_width);
 			border-right: 1px solid #ccc;
 			box-shadow: 0 0 12px -4px rgba(0, 0, 0, 0.39);
 			background: #eee;
@@ -11,7 +37,9 @@
 			position: relative;
 			overflow: hidden;
 			z-index: 10;
+			transition: transform 0.3s;
 		}
+
 		.scroll-panel {
 			height: 100%;
 		}

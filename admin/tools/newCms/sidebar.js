@@ -11,11 +11,58 @@ class NewCmsSidebar {
 		this.newCms.container.addEventListener("edit", (event) => {
 			this.init();
 		});
+
+		this.newCms.container.addEventListener("styles_loaded", () => {
+			this.sidebar_width = parseInt(
+				getComputedStyle(document.documentElement).getPropertyValue(
+					"--sidebar_width"
+				)
+			);
+			this.sidebar_collapsed_width = parseInt(
+				getComputedStyle(document.documentElement).getPropertyValue(
+					"--sidebar_collapsed_width"
+				)
+			);
+			this.sidebar_animation_offset =
+				this.sidebar_width - this.sidebar_collapsed_width;
+		});
 	}
 
 	init() {
 		this.opened_menus = [];
+		this.collapsed = false;
 		this.showSideMenu("add_block", { quiet: true });
+	}
+
+	toggleSidebar(collapsed = null) {
+		//const collapsed =
+		if (collapsed !== null) {
+			this.collapsed = this.newCms.container.classList.toggle(
+				"sidebar_collapsed",
+				collapsed
+			);
+		} else {
+			this.collapsed = this.newCms.container.classList.toggle(
+				"sidebar_collapsed"
+			);
+		}
+
+		this.newCms.styling.content_wrapper.animate(
+			`
+            0% {
+                transform: translate(
+                    ${this.sidebar_width * (this.collapsed ? 0.5 : -0.5)}px,0px)
+            }
+            100% {
+                transform: translate(0px,0px)
+            }
+        `,
+			300
+		);
+
+		setTimeout(() => {
+			this.newCms.styling.setResponsiveContainerSize({ duration: 300 });
+		}, 0);
 	}
 
 	showSideMenu(target_side_menu_name, options = {}) {
@@ -109,6 +156,10 @@ class NewCmsSidebar {
 			})
 		);
 
+		if (this.collapsed) {
+			this.toggleSidebar();
+		}
+
 		// make selection history visible
 		if (!options.quiet) {
 			this.newCms.contentChange();
@@ -128,8 +179,10 @@ class NewCmsSidebar {
 		const show_side_menu = target.findParentByAttribute("data-show_side_menu");
 		if (show_side_menu) {
 			this.showSideMenu(show_side_menu.getAttribute("data-show_side_menu"));
-		} else if (target.findParentByAttribute("data-previous_side_menu")) {
+		} else if (target.findParentByClassName("previous_side_menu")) {
 			this.showPreviousSideMenu();
+		} else if (target.findParentByClassName("toggle_sidebar")) {
+			this.toggleSidebar();
 		}
 	}
 }

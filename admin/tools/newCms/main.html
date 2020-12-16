@@ -65,13 +65,23 @@
 
 		<div
 			class="mobileRow"
-			style="flex-shrink: 1; flex-grow: 1; overflow: hidden"
+			style="flex-shrink: 1; flex-grow: 1; overflow: hidden; position: relative"
 		>
+			<button
+				class="btn subtle toggle_sidebar toggle_sidebar_when_collapsed"
+				data-tooltip="Rozwiń menu wyboru bloków"
+				data-position="right"
+				data-tooltip-hide
+			>
+				<i class="fas fa-th-large"></i>
+			</button>
 			<div class="sidebar form-hidden">
 				<div data-side_menu="add_block">
-					<!--<button class="toggle-sidebar-btn btn subtle" onclick="toggleSidebar(this.parent())" data-tooltip="Ukryj bloki"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>-->
 					<div class="side_menu_header">
 						<span class="field-title">
+							<button class="btn transparent toggle_sidebar">
+								<i class="fas fa-chevron-left"></i>
+							</button>
 							Wstaw blok
 							<i
 								class="fas fa-info-circle"
@@ -110,7 +120,7 @@
 				<div data-side_menu="edit_block">
 					<div class="side_menu_header">
 						<span class="field-title">
-							<button class="btn transparent" data-previous_side_menu>
+							<button class="btn transparent previous_side_menu">
 								<i class="fas fa-chevron-left"></i>
 							</button>
 							Edycja bloku / kontenera...
@@ -200,10 +210,10 @@
 					pointer-events: none;
 				"
 			></div>
+		</div>
 
-			<div class="trash_block">
-				<i class="fas fa-trash"></i>
-			</div>
+		<div class="trash_block">
+			<i class="fas fa-trash"></i>
 		</div>
 	</div>
 </div>

@@ -18,7 +18,7 @@ class NewCmsTrashBlock {
 	}
 
 	init() {
-		this.position_x = 100;
+		this.position_x = 300;
 		this.position_y = window.innerHeight + 40;
 	}
 
@@ -38,7 +38,6 @@ class NewCmsTrashBlock {
 
 				const vx = dx / len;
 				const vy = dy / len;
-
 				target_x -= vx * power;
 				target_y -= vy * power;
 			}
@@ -55,6 +54,7 @@ class NewCmsTrashBlock {
 		this.position_y = this.position_y * (1 - speed) + target_y * speed;
 
 		this.node.style.transform = `translate(calc(${this.position_x}px - 50%), calc(${this.position_y}px - 50%))`;
+		this.newCms.updateMouseTarget();
 
 		requestAnimationFrame(() => {
 			this.animate();

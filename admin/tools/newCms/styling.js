@@ -72,6 +72,7 @@ class NewCmsStyling {
 			this.init();
 			this.setResponsiveContainerSize({
 				unlock: true,
+				duration: 0,
 			});
 		});
 		this.newCms.container.addEventListener("ready", (event) => {
@@ -167,7 +168,7 @@ class NewCmsStyling {
 			content_wrapper_rect.height
 		);
 
-		const duration = nonull(options.duration, 0);
+		const duration = nonull(options.duration, 200);
 		animate(
 			this.content_responsive_wrapper,
 			`

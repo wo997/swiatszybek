@@ -87,6 +87,10 @@ domload(() => {
 	window.addEventListener("click", (event) => {
 		if (!event.target.findParentNode(window.tooltip.lastTooltipNode)) {
 			window.tooltip.dismiss();
+		} else {
+			if (window.tooltip.lastTooltipNode.hasAttribute("data-tooltip-hide")) {
+				window.tooltip.dismiss();
+			}
 		}
 	});
 

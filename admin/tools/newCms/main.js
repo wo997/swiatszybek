@@ -56,6 +56,7 @@ class NewCms {
 		this.mouse_y = 0;
 		this.mouse_dx = 0;
 		this.mouse_dy = 0;
+		/** @type {PiepNode} */
 		this.mouse_target = null;
 		this.last_content_scroll_top = 0;
 
@@ -701,6 +702,12 @@ class NewCms {
 		if (!options.copy) {
 			delete this.grabbed_block.animation_data;
 		}
+
+		if (this.sidebar.collapsed) {
+			this.sidebar.toggleSidebar();
+			this.grabbed_mouse_x -= this.sidebar.sidebar_animation_offset;
+		}
+
 		this.grabAnimation();
 	}
 
