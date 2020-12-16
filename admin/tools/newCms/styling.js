@@ -319,8 +319,9 @@ class NewCmsStyling {
 					Object.entries(styles).forEach(([prop_css, val]) => {
 						// these are needed by the page builder to work properly during animations
 						// TODO: consider limiting the list to margins, flex-grow etc. (layout related)
-						const prop_js = kebabToSnakeCase(prop_css);
-						if (prop_js.includes("margin")) {
+						// TODO: the list goes on baby
+						if (prop_css.includes("margin") || prop_css == "grid-area") {
+							const prop_js = kebabToSnakeCase(prop_css);
 							block_data.node.style[prop_js] = val;
 						}
 						css += `${prop_css}:${val};`;

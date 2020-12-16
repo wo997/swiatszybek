@@ -893,7 +893,12 @@ class NewCms {
 				const c1 = Math.min(fst.column, scd.column);
 				const c2 = Math.max(fst.column, scd.column);
 
-				grabbed_block.style.gridArea = `${r1}/${c1}/${r2}/${c2}`;
+				this.styling.setNodeStyles(
+					{
+						"grid-area": `${r1}/${c1}/${r2}/${c2}`,
+					},
+					grabbed_block
+				);
 			} else {
 				let before_node = this.rearrange_controls.rearrange_near_block;
 				if (this.rearrange_controls.rearrange_position == "after") {
