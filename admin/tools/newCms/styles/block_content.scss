@@ -10,6 +10,10 @@
 	/*flex-flow: column;*/
 }
 
+.newCms_block.container_row > .newCms_block_content {
+	flex-flow: row wrap;
+}
+
 /* block inside of a block caused the margins to collapse, the solution down below is simple, make it flex! ;)
     it is just fucked up everything again :/ we need them to flex but we are back to the same shit
     putting flex again does seem to fix it maybe idk
@@ -26,7 +30,3 @@
 	content: " ";
 	display: table;
 }*/
-
-.newCms_block_content.container_row {
-	flex-flow: row wrap;
-}

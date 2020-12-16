@@ -44,12 +44,10 @@ class NewCmsEditBlock {
 					"data-block"
 				);
 				if (block_type == "container") {
-					this.newCms.edit_block.edit_node
-						.find(".newCms_block_content")
-						.classList.toggle(
-							"container_row",
-							container_flow.getValue() == "container_row"
-						);
+					this.newCms.edit_block.edit_node.classList.toggle(
+						"container_row",
+						container_flow.getValue() == "container_row"
+					);
 
 					this.newCms.contentChange();
 				}
@@ -145,9 +143,7 @@ class NewCmsEditBlock {
 				`[name="container_flow"]`
 			);
 			container_flow.setValue(
-				this.newCms.edit_block.edit_node
-					.find(".newCms_block_content")
-					.classList.contains("container_row")
+				this.newCms.edit_block.edit_node.classList.contains("container_row")
 					? "container_row"
 					: "",
 				set_val_options

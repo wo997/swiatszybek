@@ -66,7 +66,7 @@ class NewCms {
 
 		this.grab_options = {};
 
-		/** @type {PiepNode} */
+		/** @type {NewCmsBlock} */
 		this.grabbed_block = null;
 
 		this.initStyling();
@@ -894,9 +894,10 @@ class NewCms {
 				);
 			} else {
 				if (this.styling.allow_free_rearrangement) {
+					/** @type {NewCmsBlock} */
 					let before_node = this.rearrange_controls.rearrange_near_block;
 					if (this.rearrange_controls.rearrange_position == "after") {
-						before_node = before_node.next();
+						before_node = before_node.getNextBlock();
 					}
 
 					this.rearrange_controls.rearrange_near_block
