@@ -289,7 +289,7 @@ function searchProducts(options = {}) {
                 `,
 				duration,
 				{
-					callback() {
+					callback: () => {
 						productListSwapBackgroundNode.style.visibility = "hidden";
 						searchingProducts = false;
 						productListNode.setContent(productListSwapNode.innerHTML);

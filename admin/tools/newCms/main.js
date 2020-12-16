@@ -666,7 +666,7 @@ class NewCms {
 			beforeAnimationEndCallback() {
 				block.classList.remove("animation_cramp");
 			},
-			callback() {
+			callback: () => {
 				block.classList.add("to_remove");
 			},
 		});

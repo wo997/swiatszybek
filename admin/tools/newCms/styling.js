@@ -1,5 +1,6 @@
 /* js[tool_newCms] */
 
+// exclude start
 class ResponsiveType {
 	name;
 	width;
@@ -18,6 +19,7 @@ class blockData {
 	/** @type {Styles} */
 	styles;
 }
+// exclude end
 
 /** @returns {blockData} */
 function getDefaultBlock() {
@@ -35,6 +37,9 @@ function getDefaultBlock() {
 }
 
 class NewCmsStyling {
+	/** @type {ResponsiveType} */
+	responsive_type;
+
 	/**
 	 * @param {NewCms} newCms
 	 */
@@ -73,7 +78,6 @@ class NewCmsStyling {
 		this.newCms.container.addEventListener("edit", (event) => {
 			this.init();
 			this.setResponsiveContainerSize({
-				unlock: true,
 				duration: 0,
 			});
 		});
@@ -105,13 +109,16 @@ class NewCmsStyling {
 		this.initHistory();
 
 		let opts = {};
-		if (options.unlock) {
-			opts.unlock = true;
+		if (options.duration) {
+			opts.duration = options.duration;
 		}
 		this.setResponsiveType(this.biggest_responsive_type_name, opts);
 	}
 
 	setResponsiveType(type_name, options = {}) {
+		if (this.responsive_type && this.responsive_type.name == type_name) {
+			return;
+		}
 		this.responsive_type = this.responsive_types.find(
 			(e) => e.name == type_name
 		);
@@ -136,14 +143,14 @@ class NewCmsStyling {
 		);*/
 
 		let opts = {};
-		if (options.unlock) {
-			opts.unlock = true;
-		} else {
-			opts.duration = 200;
+		if (options.duration) {
+			opts.duration = options.duration;
 		}
 		this.setResponsiveContainerSize(opts);
 
-		this.newCms.contentChange();
+		if (!options.quiet) {
+			this.newCms.contentChange();
+		}
 	}
 
 	setResponsiveContainerSize(options = {}) {
@@ -168,7 +175,6 @@ class NewCmsStyling {
 
 		const duration = nonull(options.duration, 0);
 		const width_diff = nonull(options.width_diff, 0);
-		console.log(duration);
 
 		this.width = Math.min(
 			nonull(this.responsive_type.width, 100000) + 2 * bw,
@@ -198,7 +204,7 @@ class NewCmsStyling {
             `,
 			duration,
 			{
-				callback() {
+				callback: () => {
 					this.content_responsive_wrapper.style.width = target_width + "px";
 					this.content_responsive_wrapper.style.height = this.height + "px";
 					this.content_responsive_wrapper.style.border = this.style_border;
@@ -206,6 +212,7 @@ class NewCmsStyling {
 
 					this.newCms.onResize({ source: "styling" });
 				},
+				early_callback: false,
 			}
 		);
 
@@ -230,7 +237,10 @@ class NewCmsStyling {
 
 		this.newCms.container.addEventListener("before_set_form_data", (event) => {
 			if (event.detail.data.responsive_type_name) {
-				this.setResponsiveType(event.detail.data.responsive_type_name);
+				this.setResponsiveType(event.detail.data.responsive_type_name, {
+					quiet: true,
+					duration: 0,
+				});
 			}
 			if (isArray(event.detail.data.styles)) {
 				this.blocks = [];

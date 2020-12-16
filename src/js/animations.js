@@ -78,28 +78,47 @@ function removeAnimation(animation_name) {
 	}
 }
 
-function finishNodeAnimation(node) {
+function finishNodeAnimation(node, is_early = false) {
 	delete node.wo997_animation_timeout;
 	const matches = removeClassesWithPrefix(node, "wo997_animation_");
 	if (!matches) {
 		return null;
 	}
 
-	const callback = node.wo997_animation_callback;
-	if (callback) {
-		callback();
-		delete node.wo997_animation_callback;
+	if (!is_early || node.wo997_animation_early_callback) {
+		const callback = node.wo997_animation_callback;
+		if (callback) {
+			callback();
+		}
 	}
+	delete node.wo997_animation_early_callback;
+	delete node.wo997_animation_callback;
 
 	matches.forEach((match) => {
 		removeAnimation(match);
 	});
 }
 
+// exclude start
+class AnimationOptions {
+	/** @type {number} */
+	duration;
+	/** @type {boolean} */
+	early_callback;
+}
+// exclude end
+
+/**
+ * @param {PiepNode} node
+ * @param {string} keyframes
+ * @param {number} duration
+ * @param {AnimationOptions} options
+ */
+
 function animate(node, keyframes, duration, options = {}) {
 	var animation_name = createAnimation(keyframes, duration);
 	if (node.wo997_animation_timeout) {
-		finishNodeAnimation(node);
+		finishNodeAnimation(node, true);
 		window.clearTimeout(node.wo997_animation_timeout);
 	}
 
@@ -112,6 +131,7 @@ function animate(node, keyframes, duration, options = {}) {
 	if (options.callback) {
 		node.wo997_animation_callback = options.callback;
 	}
+	node.wo997_animation_early_callback = nonull(options.early_callback, true);
 
 	// crazy, start the second timeout once you finish the frame ;)
 	setTimeout(() => {

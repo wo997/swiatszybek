@@ -151,7 +151,7 @@ function showModal(name = null, params = {}) {
                     `,
 					duration,
 					{
-						callback() {
+						callback: () => {
 							modal.style.pointerEvents = "";
 							modal.style.opacity = "";
 							modal_copy.classList.remove("visible");

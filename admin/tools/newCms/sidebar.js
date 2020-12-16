@@ -107,7 +107,7 @@ class NewCmsSidebar {
             `,
 			duration,
 			{
-				callback() {
+				callback: () => {
 					target_menu.classList.add("active");
 					target_menu.classList.remove("appears");
 
@@ -131,7 +131,7 @@ class NewCmsSidebar {
                 `,
 				duration,
 				{
-					callback() {
+					callback: () => {
 						current_menu.classList.remove("disappears");
 						current_menu.classList.remove("active");
 						current_menu.style.top = "";

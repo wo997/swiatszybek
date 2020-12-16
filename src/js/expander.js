@@ -135,7 +135,7 @@ function expand(elem, show = null, options = {}) {
         `,
 		duration,
 		{
-			callback() {
+			callback: () => {
 				elem.style.height = show ? "" : "0px";
 
 				if (!show) {

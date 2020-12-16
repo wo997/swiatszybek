@@ -51,8 +51,15 @@ class PiepNode extends HTMLElement {
 
 	validateField() {}
 
+	/**
+	 *
+	 * @param {string} keyframes
+	 * @param {number} duration
+	 * @param {AnimationOptions} options
+	 */
 	animate(keyframes, duration, options = {}) {}
 }
+
 // exclude end
 
 /**
