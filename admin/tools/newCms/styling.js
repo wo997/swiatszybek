@@ -108,7 +108,7 @@ class NewCmsStyling {
 		if (options.unlock) {
 			opts.unlock = true;
 		}
-		this.setResponsiveType("desktop", opts);
+		this.setResponsiveType(this.biggest_responsive_type_name, opts);
 	}
 
 	setResponsiveType(type_name, options = {}) {
@@ -120,6 +120,9 @@ class NewCmsStyling {
 			console.error("Wrong responsive type");
 			return;
 		}
+
+		this.allow_free_rearrangement =
+			this.responsive_type.name == this.biggest_responsive_type_name;
 
 		this.newCms.container.findAll(`[data-responsive_type]`).forEach((e) => {
 			const curr = e.getAttribute("data-responsive_type") == type_name;

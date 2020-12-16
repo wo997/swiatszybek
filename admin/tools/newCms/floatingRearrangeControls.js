@@ -309,10 +309,7 @@ class NewCmsRearrangeControls {
 		this.node.empty();
 
 		const options = {};
-		if (
-			this.newCms.styling.responsive_type.name !=
-			this.newCms.styling.biggest_responsive_type_name
-		) {
+		if (!this.newCms.styling.allow_free_rearrangement) {
 			options.same_parent = true;
 		}
 
