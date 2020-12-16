@@ -308,10 +308,23 @@ class NewCmsRearrangeControls {
 
 		this.node.empty();
 
-		this.addBlockControls(block);
+		const options = {};
+		if (
+			this.newCms.styling.responsive_type.name !=
+			this.newCms.styling.biggest_responsive_type_name
+		) {
+			options.same_parent = true;
+		}
+
+		this.addBlockControls(block, options);
 	}
 
-	addBlockControls(grabbed_block) {
+	/**
+	 *
+	 * @param {PiepNode} grabbed_block
+	 * @param {*} options
+	 */
+	addBlockControls(grabbed_block, options = {}) {
 		// just a rect u grab from
 		if (grabbed_block) {
 			if (!this.newCms.grab_options.copy) {
@@ -340,11 +353,34 @@ class NewCmsRearrangeControls {
 
 		const grabbed_block_type = grabbed_block.getAttribute("data-block");
 
+		let rearrangable_blocks_query_selector = ".newCms_block:not(.cramped)";
+		let rearrangable_blocks_query_selector_for_grids = rearrangable_blocks_query_selector;
+
+		if (options.same_parent) {
+			// TODO: add a column container as a root, I think it's necessary
+			const parent_container = grabbed_block.parent().parent();
+			const block_id = this.newCms.styling.getBlockId(parent_container);
+			console.log(parent_container, block_id);
+			if (block_id) {
+				const class_name =
+					"." + this.newCms.styling.getBlockClassName(block_id);
+				rearrangable_blocks_query_selector =
+					class_name + " " + rearrangable_blocks_query_selector;
+
+				rearrangable_blocks_query_selector_for_grids =
+					class_name + rearrangable_blocks_query_selector_for_grids;
+
+				console.log(rearrangable_blocks_query_selector);
+			} else {
+				//rearrangable_blocks_query_selector +=
+			}
+		}
+
 		// them floating controls
 		let blocks_data = [];
 		const addControls = (position) => {
 			this.newCms.content_node
-				.findAll(".newCms_block:not(.cramped)")
+				.findAll(rearrangable_blocks_query_selector)
 				.forEach((block) => {
 					if (block.findParentNode(this.newCms.grabbed_block)) {
 						// don't touch itself or parent
@@ -492,7 +528,9 @@ class NewCmsRearrangeControls {
 
 		// grids first ;)
 		this.newCms.content_node
-			.findAll(`.newCms_block[data-block="grid"]:not(.cramped)`)
+			.findAll(
+				rearrangable_blocks_query_selector_for_grids + `[data-block="grid"]`
+			)
 			.forEach((b) => {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore

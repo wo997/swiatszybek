@@ -66,6 +66,8 @@ class NewCmsStyling {
 			},
 		];
 
+		this.biggest_responsive_type_name = this.responsive_types[0].name;
+
 		this.init();
 
 		this.newCms.container.addEventListener("edit", (event) => {
@@ -83,12 +85,12 @@ class NewCmsStyling {
 	mouseClick() {
 		const target = this.newCms.mouse_target;
 
-		const responsive_type = target.findParentByAttribute(
+		const responsive_type_name = target.findParentByAttribute(
 			"data-responsive_type"
 		);
-		if (responsive_type) {
+		if (responsive_type_name) {
 			this.setResponsiveType(
-				responsive_type.getAttribute("data-responsive_type")
+				responsive_type_name.getAttribute("data-responsive_type")
 			);
 		}
 	}
