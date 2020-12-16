@@ -89,7 +89,9 @@ class NewCmsStyling {
 			"data-responsive_type"
 		);
 		if (responsive_type_name) {
-			this.setResponsiveType(responsive_type_name.dataset.responsive_type);
+			this.setResponsiveType(responsive_type_name.dataset.responsive_type, {
+				duration: 200,
+			});
 		}
 	}
 
@@ -166,6 +168,7 @@ class NewCmsStyling {
 
 		const duration = nonull(options.duration, 0);
 		const width_diff = nonull(options.width_diff, 0);
+		console.log(duration);
 
 		this.width = Math.min(
 			nonull(this.responsive_type.width, 100000) + 2 * bw,
@@ -178,8 +181,7 @@ class NewCmsStyling {
 		);
 
 		const target_width = this.width;
-		animate(
-			this.content_responsive_wrapper,
+		this.content_responsive_wrapper.animate(
 			`
                 0% {
                     width: ${content_responsive_wrapper_rect.width}px;
@@ -195,13 +197,15 @@ class NewCmsStyling {
                 }
             `,
 			duration,
-			() => {
-				this.content_responsive_wrapper.style.width = target_width + "px";
-				this.content_responsive_wrapper.style.height = this.height + "px";
-				this.content_responsive_wrapper.style.border = this.style_border;
-				this.content_responsive_wrapper.style.borderRadius = this.style_border_radius;
+			{
+				callback() {
+					this.content_responsive_wrapper.style.width = target_width + "px";
+					this.content_responsive_wrapper.style.height = this.height + "px";
+					this.content_responsive_wrapper.style.border = this.style_border;
+					this.content_responsive_wrapper.style.borderRadius = this.style_border_radius;
 
-				this.newCms.onResize({ source: "styling" });
+					this.newCms.onResize({ source: "styling" });
+				},
 			}
 		);
 
@@ -221,24 +225,27 @@ class NewCmsStyling {
 				export_styles.push(export_block_data);
 			}
 			event.detail.data.styles = export_styles;
+			event.detail.data.responsive_type_name = this.responsive_type.name;
 		});
 
 		this.newCms.container.addEventListener("before_set_form_data", (event) => {
-			if (!isArray(event.detail.data.styles)) {
-				return;
+			if (event.detail.data.responsive_type_name) {
+				this.setResponsiveType(event.detail.data.responsive_type_name);
 			}
-			this.blocks = [];
-			for (const import_block_data of event.detail.data.styles) {
-				const block_id = import_block_data.id;
-				const node = $(`.${this.getBlockClassName(block_id)}`);
+			if (isArray(event.detail.data.styles)) {
+				this.blocks = [];
+				for (const import_block_data of event.detail.data.styles) {
+					const block_id = import_block_data.id;
+					const node = $(`.${this.getBlockClassName(block_id)}`);
 
-				if (node) {
-					const block_data = {
-						id: block_id,
-						styles: JSON.parse(import_block_data.styles),
-						node: node,
-					};
-					this.blocks.push(block_data);
+					if (node) {
+						const block_data = {
+							id: block_id,
+							styles: JSON.parse(import_block_data.styles),
+							node: node,
+						};
+						this.blocks.push(block_data);
+					}
 				}
 			}
 			this.generateCSS();

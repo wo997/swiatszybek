@@ -51,7 +51,7 @@ function expandMenu(elem, btn, open = null, options = {}) {
       }
     `;
 	}
-	animate(expand_btn.find(".fas"), keyframes, nonull(options.duration, 200));
+	expand_btn.find(".fas").animate(keyframes, nonull(options.duration, 200));
 
 	btn.classList.toggle("open", expand(elem, open, options));
 
@@ -110,43 +110,43 @@ function expand(elem, show = null, options = {}) {
 	let m1 = (show ? -25 : 0) + "px";
 	let m2 = (!show ? -25 : 0) + "px";
 
-	animate(
-		animation_node,
+	animation_node.animate(
 		`
-      0% {
-        margin-top: ${m1};
-      }
-      100% {
-        margin-top: ${m2};
-      }
-    `,
+            0% {
+                margin-top: ${m1};
+            }
+            100% {
+                margin-top: ${m2};
+            }
+        `,
 		duration
 	);
 
-	animate(
-		elem,
+	elem.animate(
 		`
-      0% {
-        height: ${h1};
-        opacity: ${o1};
-      }
-      100% {
-        height: ${h2};
-        opacity: ${o2};
-      }
-    `,
+            0% {
+                height: ${h1};
+                opacity: ${o1};
+            }
+            100% {
+                height: ${h2};
+                opacity: ${o2};
+            }
+        `,
 		duration,
-		() => {
-			elem.style.height = show ? "" : "0px";
+		{
+			callback() {
+				elem.style.height = show ? "" : "0px";
 
-			if (!show) {
-				elem.classList.add("animate_hidden");
-			}
-			elem.classList.remove("animating");
+				if (!show) {
+					elem.classList.add("animate_hidden");
+				}
+				elem.classList.remove("animating");
 
-			if (options.callback) {
-				options.callback();
-			}
+				if (options.callback) {
+					options.callback();
+				}
+			},
 		}
 	);
 

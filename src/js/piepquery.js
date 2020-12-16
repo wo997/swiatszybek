@@ -51,7 +51,7 @@ class PiepNode extends HTMLElement {
 
 	validateField() {}
 
-	animate(keyframes, duration, callback = null) {}
+	animate(keyframes, duration, options = {}) {}
 }
 // exclude end
 
@@ -188,8 +188,8 @@ function $(node, parent = null) {
 		return validateField(node);
 	};
 
-	node.animate = (keyframes, duration, callback = null) => {
-		return animate(node, keyframes, duration, callback);
+	node.animate = (keyframes, duration, options = {}) => {
+		return animate(node, keyframes, duration, options);
 	};
 
 	return node;

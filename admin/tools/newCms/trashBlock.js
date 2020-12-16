@@ -14,7 +14,7 @@ class NewCmsTrashBlock {
 			this.init();
 		});
 
-		this.animate();
+		this.animateTrash();
 	}
 
 	init() {
@@ -22,7 +22,7 @@ class NewCmsTrashBlock {
 		this.position_y = window.innerHeight + 40;
 	}
 
-	animate() {
+	animateTrash() {
 		let target_x = 300;
 		let target_y = 300;
 		if (this.newCms.grabbed_block) {
@@ -57,7 +57,7 @@ class NewCmsTrashBlock {
 		this.newCms.updateMouseTarget();
 
 		requestAnimationFrame(() => {
-			this.animate();
+			this.animateTrash();
 		});
 	}
 }

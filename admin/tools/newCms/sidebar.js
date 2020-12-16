@@ -94,8 +94,7 @@ class NewCmsSidebar {
 		}
 
 		const target_offset_x = is_new ? sidebar_width : -sidebar_width;
-		animate(
-			target_menu,
+		target_menu.animate(
 			`
                 0% {
                     transform: translate(${target_offset_x}px,0px);
@@ -107,18 +106,19 @@ class NewCmsSidebar {
                 }
             `,
 			duration,
-			() => {
-				target_menu.classList.add("active");
-				target_menu.classList.remove("appears");
+			{
+				callback() {
+					target_menu.classList.add("active");
+					target_menu.classList.remove("appears");
 
-				this.node.insertBefore(target_menu, this.node.firstChild);
+					this.node.insertBefore(target_menu, this.node.firstChild);
+				},
 			}
 		);
 
 		if (current_menu) {
 			const current_offset_x = is_new ? -sidebar_width : sidebar_width;
-			animate(
-				current_menu,
+			current_menu.animate(
 				`
                     0% {
                         transform: translate(0px,0px);
@@ -130,10 +130,12 @@ class NewCmsSidebar {
                     }
                 `,
 				duration,
-				() => {
-					current_menu.classList.remove("disappears");
-					current_menu.classList.remove("active");
-					current_menu.style.top = "";
+				{
+					callback() {
+						current_menu.classList.remove("disappears");
+						current_menu.classList.remove("active");
+						current_menu.style.top = "";
+					},
 				}
 			);
 		}

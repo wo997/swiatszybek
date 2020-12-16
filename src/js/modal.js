@@ -125,8 +125,7 @@ function showModal(name = null, params = {}) {
 				modal.style.opacity = "0.001";
 
 				const duration = 300;
-				animate(
-					modal_copy,
+				modal_copy.animate(
 					`
                         0% {
                             opacity: 0;
@@ -138,8 +137,7 @@ function showModal(name = null, params = {}) {
 					duration
 				);
 
-				animate(
-					modal_copy_content,
+				modal_copy_content.animate(
 					`
                         0% {
                             transform: translate(
@@ -152,19 +150,21 @@ function showModal(name = null, params = {}) {
                         }
                     `,
 					duration,
-					() => {
-						modal.style.pointerEvents = "";
-						modal.style.opacity = "";
-						modal_copy.classList.remove("visible");
+					{
+						callback() {
+							modal.style.pointerEvents = "";
+							modal.style.opacity = "";
+							modal_copy.classList.remove("visible");
 
-						setTimeout(() => {
-							observer.disconnect();
-							modal_copy.remove();
-						}, 100);
+							setTimeout(() => {
+								observer.disconnect();
+								modal_copy.remove();
+							}, 100);
 
-						if (params.callback) {
-							params.callback();
-						}
+							if (params.callback) {
+								params.callback();
+							}
+						},
 					}
 				);
 				window.dispatchEvent(

@@ -846,8 +846,7 @@ class NewCms {
 				delay_grabbed_rect_node_fadeout = 250;
 				side_block.classList.remove("grabbed");
 				side_block.style.transform = "";
-				animate(
-					side_block,
+				side_block.animate(
 					`
                         0% {opacity: 0; transform: scale(0.65)}
                         100% {opacity: 1; transform: scale(1)}
@@ -868,8 +867,7 @@ class NewCms {
 
 			// copy fade out
 			delay_rearrange_node_fadeout = 150;
-			animate(
-				this.rearrange_node,
+			this.rearrange_node.animate(
 				`
                     0% {opacity: 1; transform: ${this.rearrange_node.style.transform} scale(1)}
                     100% {opacity: 0; transform: ${this.rearrange_node.style.transform} scale(0.65)}
@@ -1163,7 +1161,7 @@ class NewCms {
 			// I am sorry for that workaround, but as we go to 90% the animation
 			// freezes so we can be sure nothing will jump like crazy for a single frame,
 			// the proper solution - css transition "forwards" didn't seem to work
-			animate(block, keyframes, duration, () => {
+			block.animate(keyframes, duration, () => {
 				block.style.flexGrow = fg;
 			});
 

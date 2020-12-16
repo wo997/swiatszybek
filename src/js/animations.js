@@ -96,7 +96,7 @@ function finishNodeAnimation(node) {
 	});
 }
 
-function animate(node, keyframes, duration, callback = null) {
+function animate(node, keyframes, duration, options = {}) {
 	var animation_name = createAnimation(keyframes, duration);
 	if (node.wo997_animation_timeout) {
 		finishNodeAnimation(node);
@@ -109,8 +109,8 @@ function animate(node, keyframes, duration, callback = null) {
 	});
 
 	node.classList.add(animation_name);
-	if (callback) {
-		node.wo997_animation_callback = callback;
+	if (options.callback) {
+		node.wo997_animation_callback = options.callback;
 	}
 
 	// crazy, start the second timeout once you finish the frame ;)
