@@ -5,6 +5,9 @@
 }
 
 .newCms {
+	& {
+		background: #ccc;
+	}
 	.custom-toolbar {
 		z-index: 15000;
 	}

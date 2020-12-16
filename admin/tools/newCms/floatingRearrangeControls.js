@@ -360,7 +360,6 @@ class NewCmsRearrangeControls {
 			// TODO: add a column container as a root, I think it's necessary
 			const parent_container = grabbed_block.parent().parent();
 			const block_id = this.newCms.styling.getBlockId(parent_container);
-			console.log(parent_container, block_id);
 			if (block_id) {
 				const class_name =
 					"." + this.newCms.styling.getBlockClassName(block_id);
@@ -369,8 +368,6 @@ class NewCmsRearrangeControls {
 
 				rearrangable_blocks_query_selector_for_grids =
 					class_name + rearrangable_blocks_query_selector_for_grids;
-
-				console.log(rearrangable_blocks_query_selector);
 			} else {
 				//rearrangable_blocks_query_selector +=
 			}

@@ -35,7 +35,9 @@ class NewCmsSidebar {
 	}
 
 	toggleSidebar(collapsed = null) {
-		//const collapsed =
+		const duration = 300;
+		this.newCms.lockInput(duration + 100);
+
 		if (collapsed !== null) {
 			this.collapsed = this.newCms.container.classList.toggle(
 				"sidebar_collapsed",
@@ -47,22 +49,10 @@ class NewCmsSidebar {
 			);
 		}
 
-		this.newCms.styling.content_wrapper.animate(
-			`
-            0% {
-                transform: translate(
-                    ${this.sidebar_width * (this.collapsed ? 0.5 : -0.5)}px,0px)
-            }
-            100% {
-                transform: translate(0px,0px)
-            }
-        `,
-			300
-		);
-
-		setTimeout(() => {
-			this.newCms.styling.setResponsiveContainerSize({ duration: 300 });
-		}, 0);
+		this.newCms.styling.setResponsiveContainerSize({
+			duration: duration,
+			width_diff: this.sidebar_animation_offset * (this.collapsed ? 1 : -1),
+		});
 	}
 
 	showSideMenu(target_side_menu_name, options = {}) {

@@ -171,6 +171,8 @@ class NewCmsStyling {
 		);
 
 		const duration = nonull(options.duration, 200);
+		const width_diff = nonull(options.width_diff, 0);
+		const target_width = this.width + width_diff;
 		animate(
 			this.content_responsive_wrapper,
 			`
@@ -181,7 +183,7 @@ class NewCmsStyling {
                     border-radius: ${prev_style_border_radius};
                 }
                 100% {
-                    width: ${this.width}px;
+                    width: ${target_width}px;
                     height: ${this.height}px;
                     border: ${this.style_border};
                     border-radius: ${this.style_border_radius};
@@ -189,7 +191,7 @@ class NewCmsStyling {
             `,
 			duration,
 			() => {
-				this.content_responsive_wrapper.style.width = this.width + "px";
+				this.content_responsive_wrapper.style.width = target_width + "px";
 				this.content_responsive_wrapper.style.height = this.height + "px";
 				this.content_responsive_wrapper.style.border = this.style_border;
 				this.content_responsive_wrapper.style.borderRadius = this.style_border_radius;

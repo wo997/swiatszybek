@@ -4,11 +4,6 @@
 	--content-border-radius: 0;
 }
 
-.newCms .content_wrapper {
-	height: 100%;
-	user-select: none;
-	transition: opacity 0.2s;
-}
 .newCms:not(.ready) .content_wrapper {
 	opacity: 0;
 }
@@ -41,7 +36,9 @@
 		flex-grow: 1;
 		flex-shrink: 1;
 		overflow: hidden;
-		background: #ccc;
+		height: 100%;
+		user-select: none;
+		transition: opacity 0.2s;
 	}
 
 	.content_responsive_wrapper {

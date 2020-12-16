@@ -17,10 +17,8 @@
 	&.sidebar_collapsed {
 		& .sidebar {
 			& {
-				margin-right: calc(
-					var(--sidebar_collapsed_width) - var(--sidebar_width)
-				);
-				transform: translateX(calc(0px - var(--sidebar_width)));
+				margin-left: calc(-1 * var(--sidebar_width));
+				margin-right: var(--sidebar_collapsed_width);
 			}
 		}
 		/*.toggle_sidebar_when_collapsed {
@@ -37,7 +35,8 @@
 			position: relative;
 			overflow: hidden;
 			z-index: 10;
-			transition: transform 0.3s;
+			margin: 0;
+			transition: margin 0.3s;
 		}
 
 		.scroll-panel {
