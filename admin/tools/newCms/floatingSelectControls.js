@@ -211,9 +211,9 @@ class NewCmsSelectControls {
 			select_control.block = block;
 			block.select_control = select_control;
 
-			const block_type = block.getAttribute("data-block");
+			const block_type = block.dataset.block;
 
-			select_control.setAttribute("data-block", block_type);
+			select_control.dataset.block = block_type;
 
 			const icon = $(`.side_block[data-block="${block_type}"] i`);
 

@@ -108,6 +108,11 @@ class NewCmsEditBlock {
 		}
 	}
 
+	/**
+	 *
+	 * @param {NewCmsBlock} block
+	 * @param {*} options
+	 */
 	editBlock(block, options = {}) {
 		this.edit_node = block;
 
@@ -121,7 +126,7 @@ class NewCmsEditBlock {
 			set_val_options.quiet = options.quiet;
 		}
 
-		const block_type = block.getAttribute("data-block");
+		const block_type = block.dataset.block;
 		if (block_type == "quill_editor") {
 			this.newCms.quill_editor.setEditorContent(
 				block.find(".newCms_block_content").innerHTML
@@ -154,7 +159,7 @@ class NewCmsEditBlock {
 
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
-			const dir = input.getAttribute("data-dir");
+			const dir = input.dataset.dir;
 
 			input.setValue(
 				this.edit_node.style[`margin${dir.capitalize()}`],

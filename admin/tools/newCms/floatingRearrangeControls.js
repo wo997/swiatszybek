@@ -186,7 +186,7 @@ class NewCmsRearrangeControls {
 			if (rearrange_control_node) {
 				rearrange_position = rearrange_control_node.position;
 			} else if (rearrange_near_block.classList.contains("container")) {
-				const near_block_type = rearrange_near_block.getAttribute("data-block");
+				const near_block_type = rearrange_near_block.dataset.block;
 				if (near_block_type === "container") {
 					rearrange_position = "inside";
 					rearrange_control_node =
@@ -348,7 +348,7 @@ class NewCmsRearrangeControls {
 			return;
 		}
 
-		const grabbed_block_type = grabbed_block.getAttribute("data-block");
+		const grabbed_block_type = grabbed_block.dataset.block;
 
 		let rearrangable_blocks_query_selector = ".newCms_block:not(.cramped)";
 		let rearrangable_blocks_query_selector_for_grids = rearrangable_blocks_query_selector;
@@ -396,10 +396,7 @@ class NewCmsRearrangeControls {
 						skip: 1,
 					});
 
-					if (
-						parent_container &&
-						parent_container.getAttribute("data-block") === "grid"
-					) {
+					if (parent_container && parent_container.dataset.block === "grid") {
 						// no befores and afters in a grid, just laundry
 						return;
 					}
@@ -409,7 +406,7 @@ class NewCmsRearrangeControls {
 						: false;
 
 					const block_rect_data = nodePositionAgainstScrollableParent(block);
-					const block_type = block.getAttribute("data-block");
+					const block_type = block.dataset.block;
 
 					const prev_node = block.prev();
 

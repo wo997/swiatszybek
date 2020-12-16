@@ -89,9 +89,7 @@ class NewCmsStyling {
 			"data-responsive_type"
 		);
 		if (responsive_type_name) {
-			this.setResponsiveType(
-				responsive_type_name.getAttribute("data-responsive_type")
-			);
+			this.setResponsiveType(responsive_type_name.dataset.responsive_type);
 		}
 	}
 
@@ -125,7 +123,7 @@ class NewCmsStyling {
 			this.responsive_type.name == this.biggest_responsive_type_name;
 
 		this.newCms.container.findAll(`[data-responsive_type]`).forEach((e) => {
-			const curr = e.getAttribute("data-responsive_type") == type_name;
+			const curr = e.dataset.responsive_type == type_name;
 			e.classList.toggle("important", curr);
 			e.classList.toggle("primary", !curr);
 		});

@@ -211,7 +211,7 @@ class NewCms {
 
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
-			const dir = input.getAttribute("data-dir");
+			const dir = input.dataset.dir;
 
 			input.addEventListener("change", () => {
 				let styles = {};
@@ -802,7 +802,7 @@ class NewCms {
 			return;
 		}
 
-		const block_type = grabbed_block.getAttribute("data-block");
+		const block_type = grabbed_block.dataset.block;
 
 		let delay_grabbed_rect_node_fadeout = 0;
 
