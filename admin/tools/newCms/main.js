@@ -160,14 +160,18 @@ class NewCms {
 		);
 	}
 
-	onResize() {
+	onResize(options = {}) {
+		this.manageGrids();
+
 		if (this.grabbed_block) {
 			this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
 		} else {
 			this.select_controls.addFloatingSelectControls();
 		}
-		this.styling.setResponsiveContainerSize();
-		this.manageGrids();
+
+		if (options.source != "styling") {
+			this.styling.setResponsiveContainerSize();
+		}
 	}
 
 	stylesLoaded() {
@@ -705,7 +709,7 @@ class NewCms {
 
 		if (this.sidebar.collapsed) {
 			this.sidebar.toggleSidebar();
-			this.grabbed_mouse_x -= this.sidebar.sidebar_animation_offset;
+			this.grabbed_mouse_x += this.sidebar.sidebar_animation_offset;
 		}
 
 		this.grabAnimation();
@@ -950,11 +954,11 @@ class NewCms {
 						const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
 						block.animation_data = block_animation_data;
 					}
-					/*if (block.classList.contains("container")) {
+					if (block.classList.contains("container")) {
 						const newCms_block_content = block.find(".newCms_block_content");
-						// TODO: idk what that thing is used for
+						// it's used for flex items to tell when they kiss the edge, don't move it away!
 						newCms_block_content.new_rect = newCms_block_content.getBoundingClientRect();
-					}*/
+					}
 
 					return true;
 				} else {
@@ -991,10 +995,6 @@ class NewCms {
 
 		// copy overlay to hide layout update
 		this.content_node_copy.setContent(this.content_node.innerHTML);
-		/*this.content_node_copy.findAll("*").forEach((e) => {
-			// itd why rly sry
-			e.style.animation = "";
-		});*/
 
 		this.scroll();
 
@@ -1065,10 +1065,7 @@ class NewCms {
 
 			const kisses_right_border = parent_rect
 				? Math.abs(
-						block.new_rect.left +
-							block.new_rect.width +
-							mr -
-							(parent_rect.left + parent_rect.width)
+						block.new_rect.width + mr - (parent_rect.left + parent_rect.width)
 				  ) < 5
 				: false;
 

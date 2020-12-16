@@ -161,18 +161,20 @@ class NewCmsStyling {
 			inner_br + "px"
 		);
 
+		const duration = nonull(options.duration, 0);
+		const width_diff = nonull(options.width_diff, 0);
+
 		this.width = Math.min(
 			nonull(this.responsive_type.width, 100000) + 2 * bw,
-			content_wrapper_rect.width
+			content_wrapper_rect.width + width_diff
 		);
+
 		this.height = Math.min(
 			nonull(this.responsive_type.height, 100000) + 2 * bw,
 			content_wrapper_rect.height
 		);
 
-		const duration = nonull(options.duration, 200);
-		const width_diff = nonull(options.width_diff, 0);
-		const target_width = this.width + width_diff;
+		const target_width = this.width;
 		animate(
 			this.content_responsive_wrapper,
 			`
@@ -196,7 +198,7 @@ class NewCmsStyling {
 				this.content_responsive_wrapper.style.border = this.style_border;
 				this.content_responsive_wrapper.style.borderRadius = this.style_border_radius;
 
-				this.newCms.onResize();
+				this.newCms.onResize({ source: "styling" });
 			}
 		);
 

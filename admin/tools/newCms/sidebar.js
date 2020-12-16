@@ -36,7 +36,7 @@ class NewCmsSidebar {
 
 	toggleSidebar(collapsed = null) {
 		const duration = 300;
-		this.newCms.lockInput(duration + 100);
+		this.newCms.lockInput(duration);
 
 		if (collapsed !== null) {
 			this.collapsed = this.newCms.container.classList.toggle(
