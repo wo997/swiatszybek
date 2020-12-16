@@ -467,6 +467,7 @@ class NewCms {
 	contentChange(options = {}) {
 		this.insertMissingQlClasses();
 		this.manageGrids();
+		this.manageFlexContainers();
 
 		// temporary
 		this.content_node.findAll("img").forEach((e) => {
@@ -495,6 +496,28 @@ class NewCms {
 		});
 	}
 
+	manageFlexContainers() {
+		this.content_node
+			.findAll(
+				`.newCms_block[data-block="container"] > .newCms_block_content > *`
+			)
+			.forEach((block) => {
+				let flex_order = null;
+				if (!this.styling.allow_free_rearrangement) {
+					const styles = this.styling.getCurrentNodeStyles(block);
+					//console.log(block, styles);
+					if (styles.order) {
+						flex_order = styles.order;
+					}
+				}
+
+				if (flex_order !== null) {
+					block.dataset.flex_order = flex_order;
+				} else {
+					delete block.dataset.flex_order;
+				}
+			});
+	}
 	manageGrids() {
 		this.cleanupGrids();
 
@@ -911,12 +934,13 @@ class NewCms {
 						.insertBefore(grabbed_block, before_node);
 				} else {
 					// TODO: get the actual index hmm
-					this.styling.setNodeStyles(
+					// You should populate indexes every time u switch the responsive type imo
+					/*this.styling.setNodeStyles(
 						{
 							order: -2,
 						},
 						grabbed_block
-					);
+					);*/
 				}
 			}
 

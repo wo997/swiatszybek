@@ -140,6 +140,8 @@ class NewCmsStyling {
 			opts.duration = 200;
 		}
 		this.setResponsiveContainerSize(opts);
+
+		this.newCms.contentChange();
 	}
 
 	setResponsiveContainerSize(options = {}) {
@@ -368,5 +370,16 @@ class NewCmsStyling {
 		if (nonull(params.generate_css, true)) {
 			this.generateCSS();
 		}
+	}
+
+	getCurrentNodeStyles(node = null) {
+		if (node === null) {
+			node = this.newCms.edit_block.edit_node;
+		}
+		const block_id = this.getBlockId(node);
+		/** @type {blockData} */
+		const block_data = this.blocks.find((e) => e.id == block_id);
+
+		return block_data.styles[this.responsive_type.name];
 	}
 }
