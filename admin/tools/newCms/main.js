@@ -65,6 +65,7 @@ class NewCms {
 		/** @type {PiepNode} */
 		this.grabbed_block = null;
 
+		this.initStyling();
 		this.initSidebar();
 		this.initTrashBlock();
 		this.initEditBlock();
@@ -72,7 +73,6 @@ class NewCms {
 		this.initFloatingSelectControls();
 		this.initFloatingRearrangeControls();
 		this.initHistory();
-		this.initStyling();
 		this.initGrids();
 		this.initMargins();
 
@@ -186,16 +186,6 @@ class NewCms {
 
 	initStyling() {
 		this.styling = new NewCmsStyling(this, this.container.find(".styles_node"));
-
-		const width = this.sidebar.node.find(`[name="width"]`);
-
-		const changeCallback = () => {
-			this.styling.setNodeStyles({
-				width: width.getValue(),
-			});
-		};
-		width.addEventListener("change", changeCallback);
-		width.addEventListener("input", changeCallback);
 	}
 
 	initTrashBlock() {
@@ -467,7 +457,7 @@ class NewCms {
 	contentChange(options = {}) {
 		this.insertMissingQlClasses();
 		this.manageGrids();
-		this.manageFlexContainers();
+		this.styling.setBlocksFlexOrder();
 
 		// temporary
 		this.content_node.findAll("img").forEach((e) => {
@@ -496,28 +486,6 @@ class NewCms {
 		});
 	}
 
-	manageFlexContainers() {
-		this.content_node
-			.findAll(
-				`.newCms_block[data-block="container"] > .newCms_block_content > *`
-			)
-			.forEach((block) => {
-				let flex_order = null;
-				if (!this.styling.allow_free_rearrangement) {
-					const styles = this.styling.getCurrentNodeStyles(block);
-					//console.log(block, styles);
-					if (styles.order) {
-						flex_order = styles.order;
-					}
-				}
-
-				if (flex_order !== null) {
-					block.dataset.flex_order = flex_order;
-				} else {
-					delete block.dataset.flex_order;
-				}
-			});
-	}
 	manageGrids() {
 		this.cleanupGrids();
 
@@ -933,12 +901,12 @@ class NewCms {
 				} else {
 					// TODO: get the actual index hmm
 					// You should populate indexes every time u switch the responsive type imo
-					/*this.styling.setNodeStyles(
+					this.styling.setNodeStyles(
 						{
 							order: -2,
 						},
 						grabbed_block
-					);*/
+					);
 				}
 			}
 

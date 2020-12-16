@@ -6,7 +6,7 @@ class ResponsiveType {
 	width;
 	height;
 }
-class Styles {
+class BlockStyles {
 	desktop;
 	tablet;
 	mobile;
@@ -16,7 +16,7 @@ class Styles {
 class blockData {
 	id;
 	node;
-	/** @type {Styles} */
+	/** @type {BlockStyles} */
 	styles;
 }
 // exclude end
@@ -73,7 +73,7 @@ class NewCmsStyling {
 
 		this.biggest_responsive_type_name = this.responsive_types[0].name;
 
-		this.init();
+		this.init({ quiet: true });
 
 		this.newCms.container.addEventListener("edit", (event) => {
 			this.init();
@@ -111,6 +111,9 @@ class NewCmsStyling {
 		let opts = {};
 		if (options.duration) {
 			opts.duration = options.duration;
+		}
+		if (options.quiet) {
+			opts.quiet = options.quiet;
 		}
 		this.setResponsiveType(this.biggest_responsive_type_name, opts);
 	}
@@ -367,7 +370,20 @@ class NewCmsStyling {
 		// woah
 	}
 
-	// params like responsiveness etc
+	/**
+	 * @param {blockData} block_data
+	 */
+	setNodeStylesFromBlockData(styles, block_data, params = {}) {
+		if (params.type == "custom") {
+			block_data.styles.custom = styles;
+		} else {
+			const type = nonull(params.type, this.responsive_type.name);
+			Object.assign(block_data.styles[type], styles);
+		}
+		if (nonull(params.generate_css, true)) {
+			this.generateCSS();
+		}
+	}
 	setNodeStyles(styles, node = null, params = {}) {
 		if (node === null) {
 			node = this.newCms.edit_block.edit_node;
@@ -377,19 +393,10 @@ class NewCmsStyling {
 		const block_data = this.blocks.find((e) => e.id == block_id);
 		//console.log(block_data, node, block_id);
 
-		if (params.type == "custom") {
-			block_data.styles.custom = styles;
-		} else {
-			const type = nonull(params.type, this.responsive_type.name);
-			Object.assign(block_data.styles[type], styles);
-		}
-
-		if (nonull(params.generate_css, true)) {
-			this.generateCSS();
-		}
+		this.setNodeStylesFromBlockData(styles, block_data, params);
 	}
 
-	getCurrentNodeStyles(node = null) {
+	getNodeStyles(node = null) {
 		if (node === null) {
 			node = this.newCms.edit_block.edit_node;
 		}
@@ -397,6 +404,40 @@ class NewCmsStyling {
 		/** @type {blockData} */
 		const block_data = this.blocks.find((e) => e.id == block_id);
 
-		return block_data.styles[this.responsive_type.name];
+		return block_data.styles;
+	}
+	getCurrentNodeStyles(node = null) {
+		return this.getNodeStyles(node)[this.responsive_type.name];
+	}
+
+	setBlocksFlexOrder() {
+		this.newCms.content_node
+			.findAll(`.newCms_block[data-block="container"] > .newCms_block_content`)
+			.forEach((container) => {
+				let child_count = -1;
+				container.directChildren().forEach((block) => {
+					child_count++;
+
+					let flex_order = null;
+					if (!this.allow_free_rearrangement) {
+						/** @type {BlockStyles} */
+						const block_styles = this.getNodeStyles(block);
+
+						flex_order = child_count;
+						this.responsive_types.forEach((responsive_type) => {
+							const order = block_styles[responsive_type.name].order;
+							if (order) {
+								flex_order = order;
+							}
+						});
+					}
+
+					if (flex_order !== null) {
+						block.dataset.flex_order = flex_order;
+					} else {
+						delete block.dataset.flex_order;
+					}
+				});
+			});
 	}
 }

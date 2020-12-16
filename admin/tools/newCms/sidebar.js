@@ -32,6 +32,16 @@ class NewCmsSidebar {
 		this.opened_menus = [];
 		this.collapsed = false;
 		this.showSideMenu("add_block", { quiet: true });
+
+		const width = this.node.find(`[name="width"]`);
+
+		const changeCallback = () => {
+			this.newCms.styling.setNodeStyles({
+				width: width.getValue(),
+			});
+		};
+		width.addEventListener("change", changeCallback);
+		width.addEventListener("input", changeCallback);
 	}
 
 	toggleSidebar(collapsed = null) {
