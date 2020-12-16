@@ -900,14 +900,24 @@ class NewCms {
 					grabbed_block
 				);
 			} else {
-				let before_node = this.rearrange_controls.rearrange_near_block;
-				if (this.rearrange_controls.rearrange_position == "after") {
-					before_node = before_node.next();
-				}
+				if (this.styling.allow_free_rearrangement) {
+					let before_node = this.rearrange_controls.rearrange_near_block;
+					if (this.rearrange_controls.rearrange_position == "after") {
+						before_node = before_node.next();
+					}
 
-				this.rearrange_controls.rearrange_near_block
-					.parent()
-					.insertBefore(grabbed_block, before_node);
+					this.rearrange_controls.rearrange_near_block
+						.parent()
+						.insertBefore(grabbed_block, before_node);
+				} else {
+					// TODO: get the actual index hmm
+					this.styling.setNodeStyles(
+						{
+							order: -2,
+						},
+						grabbed_block
+					);
+				}
 			}
 
 			this.styling.registerMissingBlocks();

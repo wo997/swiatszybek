@@ -153,7 +153,7 @@ class NewCmsStyling {
 			: 0;
 		const br = this.responsive_type.width ? 30 : 0;
 		const inner_br = this.responsive_type.width
-			? 8 + 100 / (this.responsive_type.width * 0.02 + 5)
+			? 8 + 140 / (this.responsive_type.width * 0.02 + 5)
 			: 0;
 		const prev_style_border = nonull(this.style_border, "none");
 		const prev_style_border_radius = nonull(this.style_border_radius, "0px");
