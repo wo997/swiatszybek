@@ -20,6 +20,7 @@ class PiepNotification extends PiepNode {
  *
  * @param {string} message
  * @param {PiepNotificationParams} params
+ * @returns {PiepNode}
  */
 function showNotification(message, params = {}) {
 	$$(".notification").forEach((e) => {
@@ -61,7 +62,7 @@ function showNotification(message, params = {}) {
 		notification.style.opacity = "";
 	});
 
-	var duration = nonull(params.duration, 2000);
+	const duration = nonull(params.duration, 2000);
 
 	// @ts-ignore
 	notification.addDismissTimeout = () => {
@@ -75,20 +76,10 @@ function showNotification(message, params = {}) {
 	if (countdown) {
 		createCountdown(countdown, {
 			size: 26,
-			duration: 5000,
+			duration: duration,
 			thickness: 3,
 			color: "white",
 		});
-
-		const intervalCallback = () => {
-			countdown
-				.find(".countdown_number")
-				.setContent(notification.countdown_time);
-			notification.countdown_time -= 1;
-		};
-		notification.countdown_time = Math.round(duration / 1000);
-		notification.countdown_interval = setInterval(intervalCallback, 1000);
-		intervalCallback();
 	} else {
 		notification.addEventListener("mouseenter", () => {
 			clearTimeout(notification.countdown_timeout);
@@ -97,6 +88,8 @@ function showNotification(message, params = {}) {
 			notification.addDismissTimeout();
 		});
 	}
+
+	return notification;
 }
 
 function dismissParentNotification(n) {

@@ -509,28 +509,28 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             updateTotalCost();
         });
 
-        const zakup_basket_row_template = `
-      <div class='expand_y'>
-        <div class='product_row'>
-          <div class='cl cl1'><img class='variant_image' data-height='1w'></div>
-          <div class='cl cl2'><a class='link product_link variant_full_name'></a></div>
-          <div class='pln cl cl3' style='font-weight:normal'><label>Cena:</label> <span class='variant_price'></span> zł</div>
-          <div class='cl cl4'>
-            <div class='qty-control glue-children'>
-              <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
-                <i class='custom-minus'></i>
-              </button>
-              <span class='qty-label'></span>
-              <button class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
-                <i class='custom-plus'></i>
-              </button>
+        const zakup_basket_row_template = /*html*/ `
+            <div class='expand_y'>
+                <div class='product_row'>
+                    <div class='cl cl1'><img class='variant_image' data-height='1w'></div>
+                    <div class='cl cl2'><a class='link product_link variant_full_name'></a></div>
+                    <div class='pln cl cl3' style='font-weight:normal'><label>Cena:</label> <span class='variant_price'></span> zł</div>
+                    <div class='cl cl4'>
+                        <div class='qty-control glue-children'>
+                        <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1,{cancellable:true})'>
+                            <i class='custom-minus'></i>
+                        </button>
+                        <span class='qty-label'></span>
+                        <button class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
+                            <i class='custom-plus'></i>
+                        </button>
+                        </div>
+                    </div>
+                    <div class='cl cl5'><label>Suma:</label> <span class='pln variant_total_price'></span></div>
+                    <button class='cl cl6 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000,{cancellable:true});return false;'></button>
+                </div>
             </div>
-          </div>
-          <div class='cl cl5'><label>Suma:</label> <span class='pln variant_total_price'></span></div>
-          <button class='cl cl6 fas fa-times remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'></button>
-        </div>
-      </div>
-    `;
+        `;
     </script>
 </head>
 

@@ -1,22 +1,18 @@
 /* js[global] */
 
-// exclude start
-
-class CountdownOptions {
-	size;
-	duration;
-	thickness;
-	color;
-}
-
-// exclude end
+/**
+ * @typedef {Object} CountdownOptions
+ * @property {number} duration
+ * @property {number} [size]
+ * @property {number} [thickness]
+ * @property {string} [color]
+ */
 
 /**
  * @param {PiepNode} node
  * @param {CountdownOptions} options
  */
-// @ts-ignore
-function createCountdown(node, options = {}) {
+function createCountdown(node, options) {
 	const size = nonull(options.size, 40);
 	const thickness = nonull(options.thickness, 4);
 	const actual_radius = size * 0.5 - thickness * 0.5;
@@ -40,4 +36,18 @@ function createCountdown(node, options = {}) {
             </svg>
         </div>
     `);
+
+	const countdown_number = node.find(".countdown_number");
+
+	let countdown_time = Math.round(options.duration / 1000);
+
+	const intervalCallback = () => {
+		countdown_number.setContent(countdown_time);
+		countdown_time -= 1;
+		if (countdown_time <= 0) {
+			clearInterval(interval);
+		}
+	};
+	const interval = setInterval(intervalCallback, 1000);
+	intervalCallback();
 }

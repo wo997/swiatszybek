@@ -68,8 +68,18 @@ function addVariantToBasket(variant_id, quantity_diff, options = {}) {
 		}
 	}
 
+	variant_id = parseInt(variant_id);
+	const variant = basket_data.basket.find((e) => {
+		return e.variant_id === variant_id;
+	});
+	if (variant && quantity_diff < -variant.quantity) {
+		quantity_diff = -variant.quantity;
+	}
+
 	basketActionDelayed = true;
 	delay("enableBasketActions", 1000); // just in case the server crashes, should be less than 100ms
+
+	const basket_data_ref = cloneObject(window.basket_data);
 
 	xhr({
 		url: "/basket_action",
@@ -80,6 +90,38 @@ function addVariantToBasket(variant_id, quantity_diff, options = {}) {
 		success: (res) => {
 			_setBasketData(res, options);
 			delay("enableBasketActions", 100);
+
+			if (options.cancellable) {
+				const variant = basket_data_ref.basket.find((e) => {
+					return e.variant_id === variant_id;
+				});
+
+				if (variant && variant.quantity + quantity_diff <= 0) {
+					const notification = showNotification(
+						/*html*/ `
+                        <div style='text-align:center;line-height:1.8'>
+                            <div class='header'>Usunięto produkt</div>
+                            <div style="padding:10px">
+                                ${variant.title} ${variant.name}
+                            </div>
+                            <button class='btn primary semi-bold cancel_btn'>
+                                Przywróć
+                                <span class='countdown'></span>
+                            </button>
+                        </div>
+                    `,
+						{
+							duration: 8000,
+						}
+					);
+
+					const cancel_btn = notification.find(".cancel_btn");
+					cancel_btn.addEventListener("click", () => {
+						addVariantToBasket(variant_id, -quantity_diff, options);
+						dismissParentNotification(cancel_btn);
+					});
+				}
+			}
 		},
 	});
 }

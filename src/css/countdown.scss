@@ -27,7 +27,7 @@
 .countdown svg circle {
 	stroke-dasharray: var(--countdown_length);
 	stroke-dashoffset: 0px;
-	stroke-linecap: round;
+	stroke-linecap: butt;
 	stroke-width: var(--countdown_thickness);
 	stroke: var(--countdown_color);
 	fill: none;

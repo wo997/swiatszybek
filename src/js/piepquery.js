@@ -2,6 +2,9 @@
 
 // exclude start
 class PiepNode extends HTMLElement {
+	addDismissTimeout() {
+		throw new Error("Method not implemented.");
+	}
 	/** @returns {PiepNode} */
 	find(query) {}
 	/** @returns {PiepNode[]} */
@@ -40,7 +43,7 @@ class PiepNode extends HTMLElement {
 	isEmpty() {}
 
 	empty() {}
-
+	/** @param {string|number} html */
 	setContent(html = "") {}
 
 	setFormData(data, params = {}) {}

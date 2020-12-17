@@ -121,7 +121,7 @@ if (isset($JS_files)) {
 
 <div class="pretend-scrollbar"></div>
 
-<div id="variantAdded" data-form data-modal data-dismissable>
+<div id="variantAdded" class="variantAdded" data-form data-modal data-dismissable>
     <div class="modal-body">
         <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
 
