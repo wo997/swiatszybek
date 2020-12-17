@@ -101,8 +101,7 @@ function finishNodeAnimation(node, is_early = false) {
 
 // exclude start
 class AnimationOptions {
-	/** @type {number} */
-	duration;
+	callback() {}
 	/** @type {boolean} */
 	early_callback;
 }

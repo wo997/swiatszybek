@@ -49,8 +49,6 @@ class PiepNode extends HTMLElement {
 
 	validateForm(params = {}) {}
 
-	validateField() {}
-
 	/**
 	 *
 	 * @param {string} keyframes
@@ -191,11 +189,8 @@ function $(node, parent = null) {
 		return validateForm(node, params);
 	};
 
-	node.validateField = () => {
-		return validateField(node);
-	};
-
 	node.animate = (keyframes, duration, options = {}) => {
+		// @ts-ignore
 		return animate(node, keyframes, duration, options);
 	};
 

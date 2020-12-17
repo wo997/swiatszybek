@@ -18,9 +18,9 @@ class NewCmsBlock extends PiepNode {
 	rearrange_control_after;
 	/** @type {PiepNode} */
 	rearrange_control_inside;
-	/** @type {NewCmsBlock} */
+	/** @returns {NewCmsBlock} */
 	getNextBlock() {}
-	/** @type {NewCmsBlock} */
+	/** @returns {NewCmsBlock} */
 	getPrevBlock() {}
 }
 
@@ -160,7 +160,7 @@ class NewCms {
 
 		return (
 			inner_rect.height -
-			(newCms.content_scroll_panel.scrollTop + wrap_rect.height)
+			(this.content_scroll_panel.scrollTop + wrap_rect.height)
 		);
 	}
 
@@ -269,6 +269,8 @@ class NewCms {
 				quiet: true,
 			});
 
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
 			const edit_block = this.content_node.find(".edit_active");
 			if (edit_block) {
 				this.edit_block.editBlock(edit_block, {
@@ -436,6 +438,8 @@ class NewCms {
 
 		const target = this.mouse_target;
 
+		/** @type {NewCmsBlock} */
+		// @ts-ignore
 		const side_block = target
 			? target.findParentByClassName("side_block")
 			: null;
@@ -644,6 +648,11 @@ class NewCms {
 		});
 	}
 
+	/**
+	 *
+	 * @param {NewCmsBlock} block
+	 * @param {*} options
+	 */
 	grabBlock(block, options = {}) {
 		if (this.grabbed_block) {
 			return;
@@ -667,7 +676,7 @@ class NewCms {
 			this.rearrange_controls.rearrange_grabbed_rect_node
 		);
 
-		this.grabbed_block = $(block);
+		this.grabbed_block = block;
 		this.grabbed_block.classList.add("grabbed");
 		this.grabbed_mouse_x = this.mouse_x;
 		this.grabbed_mouse_y = this.mouse_y;
@@ -787,8 +796,13 @@ class NewCms {
 
 				/** @type {AnimationData} */
 				const gbad = grabbed_block.animation_data;
-				grabbed_block.last_rect.width = gbad.w;
-				grabbed_block.last_rect.height = gbad.h;
+				// @ts-ignore
+				grabbed_block.last_rect = {
+					width: gbad.w,
+					height: gbad.h,
+					left: grabbed_block.last_rect.left,
+					top: grabbed_block.last_rect.top,
+				};
 			}
 		}
 
@@ -826,6 +840,7 @@ class NewCms {
 					delay_grabbed_rect_node_fadeout
 				);
 
+				// @ts-ignore
 				grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
 				this.grabbed_block = grabbed_block;
 				this.content_node.appendChild(grabbed_block);
@@ -833,8 +848,14 @@ class NewCms {
 				grabbed_block.classList.add("select_active");
 				grabbed_block.last_rect = side_block_rect;
 
-				grabbed_block.last_rect.width = grabbed_block.animation_data.w;
-				grabbed_block.last_rect.height = grabbed_block.animation_data.h;
+				const gbad = grabbed_block.animation_data;
+				// @ts-ignore
+				grabbed_block.last_rect = {
+					width: gbad.w,
+					height: gbad.h,
+					left: grabbed_block.last_rect.left,
+					top: grabbed_block.last_rect.top,
+				};
 			}
 
 			// copy fade out
@@ -893,22 +914,30 @@ class NewCms {
 					grabbed_block
 				);
 			} else {
-				if (this.styling.allow_free_rearrangement) {
-					/** @type {NewCmsBlock} */
-					let before_node = this.rearrange_controls.rearrange_near_block;
-					if (this.rearrange_controls.rearrange_position == "after") {
-						before_node = before_node.getNextBlock();
-					}
+				/** @type {NewCmsBlock} */
+				let before_node = this.rearrange_controls.rearrange_near_block;
+				if (this.rearrange_controls.rearrange_position == "after") {
+					before_node = before_node.getNextBlock();
+				}
 
+				if (this.styling.allow_free_rearrangement) {
 					this.rearrange_controls.rearrange_near_block
 						.parent()
 						.insertBefore(grabbed_block, before_node);
 				} else {
-					// TODO: get the actual index hmm
-					// You should populate indexes every time u switch the responsive type imo
+					//const parent_children = grabbed_block.parent().directChildren();
+
+					//const current_flex_order = grabbed_block.dataset.flex_order;
+					let target_flex_order = before_node
+						? parseInt(before_node.dataset.flex_order) - 1
+						: 1000000;
+
+					// this will expand nicely :P
+					target_flex_order += 0.5;
+
 					this.styling.setNodeStyles(
 						{
-							order: -2,
+							order: target_flex_order,
 						},
 						grabbed_block
 					);
@@ -961,10 +990,13 @@ class NewCms {
 					block.new_rect = block.getBoundingClientRect();
 					if (!block.animation_data) {
 						/** @type {AnimationData} */
+						// @ts-ignore
 						const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
 						block.animation_data = block_animation_data;
 					}
 					if (block.classList.contains("container")) {
+						/** @type {NewCmsBlock} */
+						// @ts-ignore
 						const newCms_block_content = block.find(".newCms_block_content");
 						// it's used for flex items to tell when they kiss the edge, don't move it away!
 						newCms_block_content.new_rect = newCms_block_content.getBoundingClientRect();
@@ -1219,6 +1251,7 @@ class NewCms {
 			let target_h = base_h;
 
 			if (!grabbed_block.animation_data) {
+				// @ts-ignore
 				grabbed_block.animation_data = { dx: 0, dy: 0, w: base_w, h: base_h };
 			}
 
@@ -1330,16 +1363,20 @@ class NewCms {
 }
 
 // TODO: HEY why not even listeners?
+// @ts-ignore
 window.init_tool_js_newCms = () => {
 	registerModalContent(
 		// TODO: syntax highlighting + open src in piep extension
 		`@include(admin/tools/newCms/main.html)`,
 		(modal) => {
+			// @ts-ignore
 			window.newCms = new NewCms(modal);
 		}
 	);
 };
 
+// @ts-ignore
 window.init_tool_fully_newCms = () => {
+	// @ts-ignore
 	newCms.stylesLoaded();
 };

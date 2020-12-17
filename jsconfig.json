@@ -1,13 +1,12 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es6",
+		"target": "es2017",
 		"checkJs": true,
 		"paths": {
 			"@/*": ["./*"]
 		}
 	},
 	"typeAcquisition": { "exclude": ["jquery"] },
-	"include": ["**"],
 	"exclude": ["vedor/**", "builds/**"]
 }

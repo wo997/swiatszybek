@@ -711,8 +711,6 @@ class NewCmsRearrangeControls {
 				const has_next =
 					block_data.position == "before" ? true : !!block.getNextBlock();
 
-				console.log(block, has_prev, has_next);
-
 				if (has_next && has_prev) {
 					rearrange_control_html = `<img style='width:1em' src="/src/img/arrows_insert_between.svg">`;
 					rearrange_control.classList.add("insert_between");

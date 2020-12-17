@@ -354,10 +354,10 @@ class NewCmsStyling {
 				return "";
 			};
 
-			for (const type of this.responsive_types) {
-				css_full += getSomeStyles(type.name);
+			for (const responsive_type of this.responsive_types) {
+				css_full += getSomeStyles(responsive_type.name);
 
-				if (this.responsive_type.name == type.name) {
+				if (this.responsive_type.name == responsive_type.name) {
 					break;
 				}
 			}
@@ -413,63 +413,115 @@ class NewCmsStyling {
 	setBlocksFlexOrder() {
 		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
 			/** @type {NewCmsBlock} */
+			// @ts-ignore
 			const block = b;
 
 			// set to default - can be changed below
+			// @ts-ignore
 			block.getPrevBlock = block.prev;
+			// @ts-ignore
 			block.getNextBlock = block.next;
 		});
 
 		this.newCms.content_node
 			.findAll(`.newCms_block[data-block="container"] > .newCms_block_content`)
 			.forEach((container) => {
-				let child_count = -1;
-				container.directChildren().forEach((b) => {
-					/** @type {NewCmsBlock} */
-					const block = b;
-					child_count++;
+				let container_blocks = container.directChildren();
 
-					let flex_order = null;
-					if (!this.allow_free_rearrangement) {
+				if (this.allow_free_rearrangement) {
+					// remove data-flex_order for free rearrangement blocks, they will have the position set explicitly in DOM
+					container_blocks.forEach((b) => {
+						/** @type {NewCmsBlock} */
+						// @ts-ignore
+						const block = b;
+						delete block.dataset.flex_order;
+					});
+				} else {
+					container_blocks = container_blocks.sort(
+						(a, b) =>
+							parseInt(nonull(a.dataset.flex_order, 1000000)) -
+							parseInt(nonull(b.dataset.flex_order, 1000000))
+					);
+
+					// set style flex order for squished / rearranged elements in current view
+					let child_count = -1;
+					container_blocks.forEach((b) => {
+						/** @type {NewCmsBlock} */
+						// @ts-ignore
+						const block = b;
+						child_count++;
+
 						/** @type {BlockStyles} */
 						const block_styles = this.getNodeStyles(block);
+						block_styles[this.responsive_type.name].order = child_count;
+					});
 
-						flex_order = child_count;
-						this.responsive_types.forEach((responsive_type) => {
-							const order = block_styles[responsive_type.name].order;
-							if (order) {
-								flex_order = order;
+					// set data-flex_order
+					child_count = -1;
+					container_blocks.forEach((b) => {
+						/** @type {NewCmsBlock} */
+						// @ts-ignore
+						const block = b;
+						child_count++;
+
+						let flex_order = null;
+						if (!this.allow_free_rearrangement) {
+							/** @type {BlockStyles} */
+							const block_styles = this.getNodeStyles(block);
+
+							flex_order = child_count;
+
+							for (const responsive_type of this.responsive_types) {
+								const order = block_styles[responsive_type.name].order;
+								if (order) {
+									flex_order = order;
+								}
+
+								if (this.responsive_type.name == responsive_type.name) {
+									break;
+								}
 							}
-						});
-					}
+						}
 
-					if (flex_order !== null) {
 						block.dataset.flex_order = flex_order;
+						block.style.padding = "30px";
+						block.find(".newCms_block_content").innerHTML =
+							block.dataset.flex_order;
+					});
 
+					// assign prev next blocks
+					container_blocks.forEach((b) => {
+						/** @type {NewCmsBlock} */
+						// @ts-ignore
+						const block = b;
 						block.getPrevBlock = () => {
-							return block
+							/** @type {NewCmsBlock} */
+							// @ts-ignore
+							const b = block
 								.parent()
 								.directChildren()
 								.find(
 									(child) =>
-										child.dataset.flex_order ==
+										parseInt(child.dataset.flex_order) ==
 										parseInt(block.dataset.flex_order) - 1
 								);
+							return b;
 						};
 						block.getNextBlock = () => {
-							return block
+							/** @type {NewCmsBlock} */
+							// @ts-ignore
+							const b = block
 								.parent()
 								.directChildren()
 								.find(
 									(child) =>
-										child.dataset.flex_order ==
+										parseInt(child.dataset.flex_order) ==
 										parseInt(block.dataset.flex_order) + 1
 								);
+							return b;
 						};
-					} else {
-						delete block.dataset.flex_order;
-					}
-				});
+					});
+				}
 			});
 	}
 }
