@@ -1,13 +1,13 @@
 /* js[global] */
 
-// exclude start
-class PiepNotification extends PiepNode {
-	countdown_timeout;
-	countdown_time;
-	countdown_interval;
-}
-// exclude end
-
+/**
+ * @typedef {Object} PiepNotificationData
+ * @property {number} [countdown_timeout]
+ * @property {number} [countdown_time]
+ * @property {number} [countdown_interval]
+ *
+ * @typedef {PiepNotificationData & PiepNode} PiepNotification
+ */
 /**
  * @typedef {Object} PiepNotificationParams
  * @property {boolean} [one_line]
@@ -20,9 +20,10 @@ class PiepNotification extends PiepNode {
  *
  * @param {string} message
  * @param {PiepNotificationParams} params
- * @returns {PiepNode}
+ * @returns {PiepNotification}
  */
 function showNotification(message, params = {}) {
+	//params.findAll(query)
 	$$(".notification").forEach((e) => {
 		e.style.opacity = 0;
 		e.style.top = "-10px";
