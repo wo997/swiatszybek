@@ -493,7 +493,7 @@ class NewCmsStyling {
 					this.setDataFlexOrder(container_blocks);
 
 					container_blocks = container_blocks.sort((a, b) => {
-						console.log(a.dataset.flex_order, b.dataset.flex_order);
+						//console.log(a.dataset.flex_order, b.dataset.flex_order);
 						return (
 							parseFloat(nonull(a.dataset.flex_order, 1000000)) -
 							parseFloat(nonull(b.dataset.flex_order, 1000000))
@@ -517,7 +517,7 @@ class NewCmsStyling {
 
 						/** @type {BlockStyles} */
 						const block_styles = this.getNodeStyles(block);
-						console.log(block, child_count);
+						//console.log(block, child_count);
 
 						block_styles[this.responsive_type.name].order = child_count;
 					});
