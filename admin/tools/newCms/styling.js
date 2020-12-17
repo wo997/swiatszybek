@@ -92,6 +92,7 @@ class NewCmsStyling {
 		const responsive_type_name = target.findParentByAttribute(
 			"data-responsive_type"
 		);
+
 		if (responsive_type_name) {
 			this.setResponsiveType(responsive_type_name.dataset.responsive_type, {
 				duration: 200,
@@ -131,14 +132,21 @@ class NewCmsStyling {
 			return;
 		}
 
+		$(`[data-side_menu="add_block"]`).classList.toggle(
+			"disabled",
+			this.biggest_responsive_type_name != type_name
+		);
+
 		this.allow_free_rearrangement =
 			this.responsive_type.name == this.biggest_responsive_type_name;
 
-		this.newCms.container.findAll(`[data-responsive_type]`).forEach((e) => {
-			const curr = e.dataset.responsive_type == type_name;
-			e.classList.toggle("important", curr);
-			e.classList.toggle("primary", !curr);
-		});
+		this.newCms.container
+			.findAll(`.custom-toolbar [data-responsive_type]`)
+			.forEach((e) => {
+				const curr = e.dataset.responsive_type == type_name;
+				e.classList.toggle("important", curr);
+				e.classList.toggle("primary", !curr);
+			});
 
 		/*this.newCms.content_scroll_panel.classList.toggle(
         "hide_scrollbar",
@@ -397,7 +405,16 @@ class NewCmsStyling {
 		const block_id = this.getBlockId(node);
 		/** @type {blockData} */
 		const block_data = this.blocks.find((e) => e.id == block_id);
-		//console.log(block_data, node, block_id);
+
+		if (!block_data) {
+			if (params.last_try) {
+				return;
+			}
+			this.registerMissingBlocks();
+			params.last_try = true;
+			this.setNodeStyles(styles, node, params);
+			return;
+		}
 
 		this.setNodeStylesFromBlockData(styles, block_data, params);
 	}

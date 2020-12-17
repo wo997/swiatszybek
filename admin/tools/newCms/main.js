@@ -920,11 +920,13 @@ class NewCms {
 					before_node = before_node.getNextBlock();
 				}
 
-				if (this.styling.allow_free_rearrangement) {
+				if (this.styling.allow_free_rearrangement || is_side_block) {
 					this.rearrange_controls.rearrange_near_block
 						.parent()
 						.insertBefore(grabbed_block, before_node);
-				} else {
+				}
+
+				if (!this.styling.allow_free_rearrangement) {
 					//const parent_children = grabbed_block.parent().directChildren();
 
 					//const current_flex_order = parseInt(grabbed_block.dataset.flex_order);
