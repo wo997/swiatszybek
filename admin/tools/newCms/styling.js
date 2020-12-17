@@ -459,9 +459,6 @@ class NewCmsStyling {
 			}
 
 			block.dataset.flex_order = flex_order + "";
-			block.style.padding = "30px";
-			/*block.find(".newCms_block_content").innerHTML +=
-				" " + block.dataset.flex_order;*/
 		});
 	}
 
