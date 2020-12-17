@@ -234,19 +234,25 @@ class NewCmsStyling {
 				};
 				export_styles.push(export_block_data);
 			}
+			// @ts-ignore
 			event.detail.data.styles = export_styles;
+			// @ts-ignore
 			event.detail.data.responsive_type_name = this.responsive_type.name;
 		});
 
 		this.newCms.container.addEventListener("before_set_form_data", (event) => {
+			// @ts-ignore
 			if (event.detail.data.responsive_type_name) {
+				// @ts-ignore
 				this.setResponsiveType(event.detail.data.responsive_type_name, {
 					quiet: true,
 					duration: 0,
 				});
 			}
+			// @ts-ignore
 			if (isArray(event.detail.data.styles)) {
 				this.blocks = [];
+				// @ts-ignore
 				for (const import_block_data of event.detail.data.styles) {
 					const block_id = import_block_data.id;
 					const node = $(`.${this.getBlockClassName(block_id)}`);
@@ -410,6 +416,38 @@ class NewCmsStyling {
 		return this.getNodeStyles(node)[this.responsive_type.name];
 	}
 
+	/**
+	 * @param {NewCmsBlock[]} container_blocks
+	 */
+	setDataFlexOrder(container_blocks) {
+		// set data-flex_order
+		let child_count = 0;
+		container_blocks.forEach((block) => {
+			child_count++;
+
+			/** @type {BlockStyles} */
+			const block_styles = this.getNodeStyles(block);
+
+			let flex_order = child_count;
+
+			for (const responsive_type of this.responsive_types) {
+				const order = block_styles[responsive_type.name].order;
+				if (order) {
+					flex_order = order;
+				}
+
+				if (this.responsive_type.name == responsive_type.name) {
+					break;
+				}
+			}
+
+			block.dataset.flex_order = flex_order + "";
+			block.style.padding = "30px";
+			/*block.find(".newCms_block_content").innerHTML +=
+				" " + block.dataset.flex_order;*/
+		});
+	}
+
 	setBlocksFlexOrder() {
 		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
 			/** @type {NewCmsBlock} */
@@ -437,14 +475,26 @@ class NewCmsStyling {
 						delete block.dataset.flex_order;
 					});
 				} else {
-					container_blocks = container_blocks.sort(
-						(a, b) =>
-							parseInt(nonull(a.dataset.flex_order, 1000000)) -
-							parseInt(nonull(b.dataset.flex_order, 1000000))
-					);
+					// @ts-ignore
+					this.setDataFlexOrder(container_blocks);
+
+					container_blocks = container_blocks.sort((a, b) => {
+						console.log(a.dataset.flex_order, b.dataset.flex_order);
+						return (
+							parseFloat(nonull(a.dataset.flex_order, 1000000)) -
+							parseFloat(nonull(b.dataset.flex_order, 1000000))
+						);
+					});
+
+					/*console.log(
+						container_blocks,
+						container_blocks.map((e) => {
+							return $("." + this.getBlockClassName(e.id));
+						})
+					);*/
 
 					// set style flex order for squished / rearranged elements in current view
-					let child_count = -1;
+					let child_count = 0;
 					container_blocks.forEach((b) => {
 						/** @type {NewCmsBlock} */
 						// @ts-ignore
@@ -453,41 +503,13 @@ class NewCmsStyling {
 
 						/** @type {BlockStyles} */
 						const block_styles = this.getNodeStyles(block);
+						console.log(block, child_count);
+
 						block_styles[this.responsive_type.name].order = child_count;
 					});
 
-					// set data-flex_order
-					child_count = -1;
-					container_blocks.forEach((b) => {
-						/** @type {NewCmsBlock} */
-						// @ts-ignore
-						const block = b;
-						child_count++;
-
-						let flex_order = null;
-						if (!this.allow_free_rearrangement) {
-							/** @type {BlockStyles} */
-							const block_styles = this.getNodeStyles(block);
-
-							flex_order = child_count;
-
-							for (const responsive_type of this.responsive_types) {
-								const order = block_styles[responsive_type.name].order;
-								if (order) {
-									flex_order = order;
-								}
-
-								if (this.responsive_type.name == responsive_type.name) {
-									break;
-								}
-							}
-						}
-
-						block.dataset.flex_order = flex_order;
-						block.style.padding = "30px";
-						block.find(".newCms_block_content").innerHTML =
-							block.dataset.flex_order;
-					});
+					// @ts-ignore
+					this.setDataFlexOrder(container_blocks);
 
 					// assign prev next blocks
 					container_blocks.forEach((b) => {
@@ -523,5 +545,7 @@ class NewCmsStyling {
 					});
 				}
 			});
+
+		this.generateCSS();
 	}
 }

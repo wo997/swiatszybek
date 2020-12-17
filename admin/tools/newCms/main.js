@@ -927,13 +927,11 @@ class NewCms {
 				} else {
 					//const parent_children = grabbed_block.parent().directChildren();
 
-					//const current_flex_order = grabbed_block.dataset.flex_order;
+					//const current_flex_order = parseInt(grabbed_block.dataset.flex_order);
+					// 0.5 will go through them... u know - blocks
 					let target_flex_order = before_node
-						? parseInt(before_node.dataset.flex_order) - 1
+						? parseInt(before_node.dataset.flex_order) - 0.5
 						: 1000000;
-
-					// this will expand nicely :P
-					target_flex_order += 0.5;
 
 					this.styling.setNodeStyles(
 						{
@@ -942,6 +940,8 @@ class NewCms {
 						grabbed_block
 					);
 				}
+
+				this.styling.setBlocksFlexOrder();
 			}
 
 			this.styling.registerMissingBlocks();
