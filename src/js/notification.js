@@ -5,7 +5,7 @@ function showNotification(message, params = {}) {
 		e.style.opacity = 0;
 		e.style.top = "-10px";
 	});
-	var notification = $(document.createElement("DIV"));
+	const notification = $(document.createElement("DIV"));
 	notification.className = "notification";
 	notification.insertAdjacentHTML(
 		"beforeend",
@@ -31,7 +31,7 @@ function showNotification(message, params = {}) {
 		notification.classList.add("success");
 	}
 
-	document.body.insertAdjacentElement("beforeend", notification);
+	document.body.append(notification);
 	setTimeout(() => {
 		notification.style.top = "";
 		notification.style.opacity = "";
@@ -39,26 +39,35 @@ function showNotification(message, params = {}) {
 
 	var duration = nonull(params.duration, 2000);
 
+	// @ts-ignore
 	notification.addDismissTimeout = () => {
-		notification.timeout = setTimeout(() => {
+		notification.countdown_timeout = setTimeout(() => {
 			dismissParentNotification(notification);
 		}, duration);
 	};
 	notification.addDismissTimeout();
 
-	var timer = notification.find(".timer");
-	if (timer) {
-		timer.innerHTML = `<i class="fas fa-hourglass-half"></i> <span class='just-time'></span>`;
-		var intervalCallback = () => {
-			timer.find(".just-time").innerHTML = `${notification.time}s`;
-			notification.time -= 1;
+	const countdown = notification.find(".countdown");
+	if (countdown) {
+		createCountdown(countdown, {
+			size: 26,
+			duration: 5000,
+			thickness: 3,
+			color: "white",
+		});
+
+		const intervalCallback = () => {
+			countdown
+				.find(".countdown_number")
+				.setContent(notification.countdown_time);
+			notification.countdown_time -= 1;
 		};
-		notification.time = duration / 1000;
-		notification.interval = setInterval(intervalCallback, 1000);
+		notification.countdown_time = Math.round(duration / 1000);
+		notification.countdown_interval = setInterval(intervalCallback, 1000);
 		intervalCallback();
 	} else {
 		notification.addEventListener("mouseenter", () => {
-			clearTimeout(notification.timeout);
+			clearTimeout(notification.countdown_timeout);
 		});
 		notification.addEventListener("mouseleave", () => {
 			notification.addDismissTimeout();

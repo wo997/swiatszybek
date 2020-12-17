@@ -136,17 +136,19 @@ foreach ($status_list as $status) {
                                     title: ""
                                 }).title;
 
-                                showNotification(`
-                <div style='text-align:center'>
-                  <div class='header'>Zmieniono status</div>
-                  Zamówienie #${zamowienie_id}
-                  <br>
-                  ${was_status_title} <i class="fas fa-angle-double-right"></i> ${now_status_title}
-                  <br>
-                  <span class='timer'></span>
-                  <button class='btn subtle' onclick="changeZamowienieStatus('${zamowienie_link}', ${was_status_id});dismissParentNotification(this);">Cofnij <i class="fas fa-undo-alt"></i></button>
-                </div>
-              `, {
+                                showNotification( /*html*/ `
+                                        <div style='text-align:center;line-height:1.8'>
+                                            <div class='header'>Zmieniono status</div>
+                                            Zamówienie #${zamowienie_id}
+                                            <br>
+                                            ${was_status_title} <i class="fas fa-angle-double-right"></i> ${now_status_title}
+                                            <br>
+                                            <button class='btn primary semi-bold' onclick="changeZamowienieStatus('${zamowienie_link}', ${was_status_id});dismissParentNotification(this);">
+                                                Cofnij
+                                                <span class='countdown'></span>
+                                            </button>
+                                        </div>
+                                    `, {
                                     duration: 5000,
                                 });
                             }

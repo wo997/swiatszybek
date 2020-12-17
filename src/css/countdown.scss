@@ -1,0 +1,45 @@
+/* css[global] */
+
+.countdown {
+	position: relative;
+	height: var(--countdown_size);
+	width: var(--countdown_size);
+	text-align: center;
+	display: inline-block;
+	margin: 1px;
+}
+
+.countdown_number {
+	color: var(--countdown_color);
+	display: inline-block;
+	line-height: var(--countdown_size);
+}
+
+.countdown svg {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: var(--countdown_size);
+	height: var(--countdown_size);
+	transform: rotate(-90deg);
+}
+
+.countdown svg circle {
+	stroke-dasharray: var(--countdown_length);
+	stroke-dashoffset: 0px;
+	stroke-linecap: round;
+	stroke-width: var(--countdown_thickness);
+	stroke: var(--countdown_color);
+	fill: none;
+	animation: countdown var(--countdown_duration) linear forwards;
+}
+
+@keyframes countdown {
+	from {
+		stroke-dashoffset: 0px;
+	}
+
+	to {
+		stroke-dashoffset: var(--countdown_length);
+	}
+}
