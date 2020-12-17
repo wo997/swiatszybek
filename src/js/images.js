@@ -14,7 +14,7 @@ function loadLazyNode(node, animate = true) {
 	}
 }
 
-function loadImage(img) {
+function loadImage(img, animate) {
 	if (!img.file_name) {
 		return;
 	}
@@ -90,16 +90,16 @@ function loadImage(img) {
 		}
 
 		setTimeout(() => {
-			showWaitingImage(img);
+			showWaitingImage(img, animate ? 400 : 0);
 		}, 0);
 	}
 }
 
-function showWaitingImage(img) {
+function showWaitingImage(img, duration) {
 	if (img.classList.contains("wo997_img_waiting") && isNodeOnScreen(img)) {
 		animateVisibility(
 			img,
-			img.classList.contains("wo997_img_freeze") ? 0 : 400
+			img.classList.contains("wo997_img_freeze") ? 0 : duration
 		);
 	}
 }
@@ -243,7 +243,7 @@ function scrollCallbackLazy() {
 		}
 	);
 	$$(".wo997_img_waiting").forEach((img) => {
-		showWaitingImage(img);
+		showWaitingImage(img, 400);
 	});
 }
 
