@@ -1,18 +1,42 @@
 /* js[global] */
 
+// exclude start
+class PiepNotification extends PiepNode {
+	countdown_timeout;
+	countdown_time;
+	countdown_interval;
+}
+// exclude end
+
+/**
+ * @typedef {Object} PiepNotificationParams
+ * @property {boolean} [one_line]
+ * @property {string} [width]
+ * @property {string} [type]
+ * @property {number} [duration]
+ */
+
+/**
+ *
+ * @param {string} message
+ * @param {PiepNotificationParams} params
+ */
 function showNotification(message, params = {}) {
 	$$(".notification").forEach((e) => {
 		e.style.opacity = 0;
 		e.style.top = "-10px";
 	});
+
+	/** @type {PiepNotification} */
+	// @ts-ignore
 	const notification = $(document.createElement("DIV"));
 	notification.className = "notification";
 	notification.insertAdjacentHTML(
 		"beforeend",
-		`
-      <i class="fas fa-times" onclick="dismissParentNotification(this)"></i>
-      ${message}
-    `
+		/*html*/ `
+            <i class="fas fa-times" onclick="dismissParentNotification(this)"></i>
+            ${message}
+        `
 	);
 	notification.style.top = "-20px";
 	notification.style.opacity = "0";
