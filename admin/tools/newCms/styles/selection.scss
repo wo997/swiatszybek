@@ -33,14 +33,20 @@
 	color: var(--primary-clr);
 }
 
-.select_control.select_active,
-.select_control.rearrange_possible {
-	opacity: 1;
+.select_control {
+	&.select_active,
+	&.rearrange_possible {
+		opacity: 1;
+	}
+	&.select_active {
+		border-color: var(--primary-clr);
+		box-shadow: 0 0 0 2px var(--primary-clr);
+	}
 }
 
-.newCms:not(.grabbed_block) .select_control.select_active {
+/*.newCms:not(.grabbed_block) .select_control.select_active {
 	box-shadow: 0 1px 1px 0 #0005;
-}
+}*/
 
 .newCms:not(.grabbed_block):not(.anything_selected)
 	.content_scroll_panel:not(:hover)

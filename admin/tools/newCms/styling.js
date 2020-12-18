@@ -1,27 +1,28 @@
 /* js[tool_newCms] */
 
-// exclude start
-class ResponsiveType {
-	name;
-	width;
-	height;
-}
-class BlockStyles {
-	desktop;
-	tablet;
-	mobile;
-	custom;
-}
+/**
+ * @typedef {{
+ * name
+ * width
+ * height}} ResponsiveType
+ */
 
-class blockData {
-	id;
-	node;
-	/** @type {BlockStyles} */
-	styles;
-}
-// exclude end
+/**
+ * @typedef {{
+ * desktop
+ * tablet;
+ * mobile
+ * custom}} BlockStyles
+ */
 
-/** @returns {blockData} */
+/**
+ * @typedef {{
+ * id: number
+ * node: PiepNode
+ * styles: BlockStyles}} StylingBlockData
+ */
+
+/** @returns {StylingBlockData} */
 function getDefaultBlock() {
 	return {
 		id: 0,
@@ -101,7 +102,7 @@ class NewCmsStyling {
 	}
 
 	init(options = {}) {
-		/** @type {blockData[]} */
+		/** @type {StylingBlockData[]} */
 		this.blocks = [];
 
 		this.setAllRegisteredBlocks();
@@ -385,7 +386,7 @@ class NewCmsStyling {
 	}
 
 	/**
-	 * @param {blockData} block_data
+	 * @param {StylingBlockData} block_data
 	 */
 	setNodeStylesFromBlockData(styles, block_data, params = {}) {
 		if (params.type == "custom") {
@@ -403,7 +404,7 @@ class NewCmsStyling {
 			node = this.newCms.edit_block.edit_node;
 		}
 		const block_id = this.getBlockId(node);
-		/** @type {blockData} */
+		/** @type {StylingBlockData} */
 		const block_data = this.blocks.find((e) => e.id == block_id);
 
 		if (!block_data) {
@@ -424,7 +425,7 @@ class NewCmsStyling {
 			node = this.newCms.edit_block.edit_node;
 		}
 		const block_id = this.getBlockId(node);
-		/** @type {blockData} */
+		/** @type {StylingBlockData} */
 		const block_data = this.blocks.find((e) => e.id == block_id);
 
 		return block_data.styles;

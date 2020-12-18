@@ -1,67 +1,42 @@
 /* js[global] */
 
-// exclude start
-class PiepNode extends HTMLElement {
-	addDismissTimeout() {
-		throw new Error("Method not implemented.");
-	}
-	/** @returns {PiepNode} */
-	find(query) {}
-	/** @returns {PiepNode[]} */
-	findAll(query) {}
-	/** @returns {PiepNode[]} */
-	directChildren() {}
-	setValue(value, quiet) {}
-	getValue() {}
-	/** @returns {PiepNode} */
+/**
+ * @typedef {{
+ * find(query: string): PiepNode //my comment baby
+ * findAll(query: string): PiepNode[]
+ * directChildren(): PiepNode[]
+ * setValue(value: any, quiet?: boolean): void
+ * getValue(): void
+ * dispatchChange(): void
+ * parent(): PiepNode
+ * prev(): PiepNode
+ * next(): PiepNode
+ * findParentByClassName(parentClassNames, options?): PiepNode
+ * findScrollParent(options?): PiepNode
+ * findParentByAttribute(options?): PiepNode
+ * findParentByComputedStyle(options?): PiepNode
+ * findParentById(options?): PiepNode
+ * findParentNode(parent, options?): PiepNode
+ * findNonStaticParent(options?): PiepNode
+ * findParentByTagName(): PiepNode
+ 
+ * isEmpty(): boolean
+ * empty(): void
+ * setContent(html: string|number): void
+ * animate(keyframes: string, duration: number, options?: AnimationOptions): void
+ * dataset;
+ * } & HTMLElement} PiepNode
+ */
 
-	findParentByClassName(parentClassNames, options = {}) {}
-	/** @returns {PiepNode} */
-	findScrollParent(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentByAttribute(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentByComputedStyle(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentById(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentNode(parent, options = {}) {}
-	/** @returns {PiepNode} */
-	findNonStaticParent(options = {}) {}
-	/** @returns {PiepNode} */
-	findParentByTagName() {}
+// // exclude start
+// /*class PiepNode extends HTMLElement {
 
-	/** @returns {PiepNode} */
-	dispatchChange() {}
-	/** @returns {PiepNode} */
-	parent() {}
-	/** @returns {PiepNode} */
-	next() {}
-	/** @returns {PiepNode} */
-	prev() {}
-	/** @returns {boolean} */
-	isEmpty() {}
+// 	setFormData(data, params = {}) {}
 
-	empty() {}
-	/** @param {string|number} html */
-	setContent(html = "") {}
+// 	getFormData() {}
 
-	setFormData(data, params = {}) {}
-
-	getFormData() {}
-
-	validateForm(params = {}) {}
-
-	/**
-	 *
-	 * @param {string} keyframes
-	 * @param {number} duration
-	 * @param {AnimationOptions} options
-	 */
-	animate(keyframes, duration, options = {}) {}
-}
-
-// exclude end
+// 	validateForm(params = {}) {}
+// }*/
 
 /**
  * @param {*} node
@@ -85,6 +60,9 @@ function $(node, parent = null) {
 
 	// TODO: should we return nulls? I would make an empty object on which u can still use methods defined below so "chaining" is allowed
 
+	/** pies
+	 * @param query
+	 */
 	node.find = (query) => {
 		return $(query, node);
 	};

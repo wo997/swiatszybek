@@ -99,18 +99,26 @@ function finishNodeAnimation(node, is_early = false) {
 	});
 }
 
-// exclude start
-class AnimationOptions {
-	callback() {}
-	/** @type {boolean} */
-	early_callback;
-}
-// exclude end
+/**
+ * @typedef {{
+ * callback?(): void
+ * early_callback?: boolean
+ * }} AnimationOptions
+ */
 
 /**
- * @param {PiepNode} node
- * @param {string} keyframes
- * @param {number} duration
+ * @typedef {Object} AnimationNodeParams
+ * @property {number} [wo997_animation_timeout]
+ * @property {function} [wo997_animation_callback]
+ * @property {boolean} [wo997_animation_early_callback]
+ *
+ * @typedef {AnimationNodeParams & PiepNode} AnimationNode
+ * */
+
+/**
+ * @param {AnimationNode} node
+ * @param {string} keyframes f.e "0% {opacity:0} 100% {opacity:1}"
+ * @param {number} duration miliseconds
  * @param {AnimationOptions} options
  */
 

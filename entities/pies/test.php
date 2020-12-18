@@ -56,6 +56,12 @@ function b($b)
     $pagination_params__a = ["select" => 2];
 }
 
+/**
+ * c
+ *
+ * @param my_data_type $b
+ * @return void
+ */
 function c($b)
 {
     $pies__x = 123;

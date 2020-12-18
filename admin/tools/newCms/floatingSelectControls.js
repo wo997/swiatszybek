@@ -1,13 +1,11 @@
 /* js[tool_newCms] */
 
-// exclude start
-class SelectControl extends PiepNode {
-	/** @type {PiepNode} */
-	block;
-	/** @type {PiepNode} */
-	select_block;
-}
-// exclude end
+/**
+ * @typedef {{
+ * block: PiepNode
+ * select_block: PiepNode} & PiepNode} SelectControl
+ */
+
 class NewCmsSelectControls {
 	/** @param {NewCms} newCms */
 	constructor(newCms) {

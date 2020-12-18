@@ -4,45 +4,40 @@
 useTool("fileManager");
 //useTool("quillEditor"); // TODO: get it to work, should be a module, well, fuck it xd
 
-// exclude start
-class NewCmsBlock extends PiepNode {
-	/** @type {AnimationData} */
-	animation_data;
-	/** @type {ClientRect} */
-	last_rect;
-	/** @type {ClientRect} */
-	new_rect;
-	/** @type {PiepNode} */
-	rearrange_control_before;
-	/** @type {PiepNode} */
-	rearrange_control_after;
-	/** @type {PiepNode} */
-	rearrange_control_inside;
-	/** @returns {NewCmsBlock} */
-	getNextBlock() {}
-	/** @returns {NewCmsBlock} */
-	getPrevBlock() {}
-}
+/**
+ * @typedef {{
+ * animation_data: AnimationData
+ * last_rect: ClientRect
+ * new_rect: ClientRect
+ * rearrange_control_before: RearrangeControl
+ * rearrange_control_after: RearrangeControl
+ * rearrange_control_inside: RearrangeControl
+ * getNextBlock(): NewCmsBlock
+ * getPrevBlock(): NewCmsBlock
+ * select_control: PiepNode
+ * } & PiepNode} NewCmsBlock
+ */
 
-class NewCmsGrid extends NewCmsBlock {
-	/** @type {GridData} */
-	grid_data;
-}
+/**
+ * @typedef {{
+ * x_coords
+ * y_coords}} GridData
+ */
 
-class GridData {
-	x_coords;
-	y_coords;
-}
+/**
+ * @typedef {{
+ * grid_data} & NewCmsBlock} NewCmsGrid
+ */
 
-class AnimationData {
-	dx;
-	dy;
-	w;
-	h;
-	margin_left;
-	margin_top;
-}
-// exclude end
+/**
+ * @typedef {{
+ * dx
+ * dy
+ * w
+ * h
+ * margin_left
+ * margin_top}} AnimationData
+ */
 
 class NewCms {
 	constructor(container) {

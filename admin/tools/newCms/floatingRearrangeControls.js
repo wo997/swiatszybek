@@ -1,26 +1,24 @@
 /* js[tool_newCms] */
 
-// exclude start
-class ActualPosition {
-	left;
-	top;
-}
+/**
+ * @typedef {{
+ * left
+ * top}} ActualPosition
+ */
 
-class GridPosition {
-	column;
-	row;
-}
-class RearrangeControl extends PiepNode {
-	/** @type {string} */
-	position;
-	/** @type {PiepNode} */
-	rearrange_near_block;
-	/** @type {GridPosition} */
-	grid_position;
-	/** @type {ActualPosition} */
-	actual_position;
-}
-// exclude end
+/**
+ * @typedef {{
+ * column
+ * row}} GridPosition
+ */
+
+/**
+ * @typedef {{
+ * position: string
+ * rearrange_near_block: NewCmsBlock
+ * grid_position: GridPosition
+ * actual_position: ActualPosition} & PiepNode} RearrangeControl
+ */
 
 class NewCmsRearrangeControls {
 	/** @param {NewCms} newCms */
@@ -83,7 +81,9 @@ class NewCmsRearrangeControls {
 	mouseMove() {
 		const target = this.newCms.mouse_target;
 
+		/** @type {NewCmsBlock} */
 		let rearrange_near_block = null;
+		/** @type {RearrangeControl} */
 		let rearrange_control_node = null;
 
 		let rearrange_position = "";
@@ -94,6 +94,7 @@ class NewCmsRearrangeControls {
 				inside: this.newCms.content_scroll_content,
 			})
 		) {
+			// @ts-ignore
 			rearrange_control_node = target
 				? target.findParentByClassName("rearrange_control")
 				: null;
@@ -104,6 +105,7 @@ class NewCmsRearrangeControls {
 			) {
 				let smallest_sq_distance = 10000; // magnetic 100px
 				let second_smallest_sq_distance = 10000; // used to apply death zone :P
+				/** @type {RearrangeControl} */
 				let smallest_sq_distance_control = null;
 				let last_sq_distance = 10000;
 				this.newCms.content_scroll_content
@@ -122,6 +124,7 @@ class NewCmsRearrangeControls {
 
 						if (sq_distance < smallest_sq_distance) {
 							smallest_sq_distance = sq_distance;
+							// @ts-ignore
 							smallest_sq_distance_control = control;
 						}
 
@@ -158,6 +161,8 @@ class NewCmsRearrangeControls {
 			}*/
 		}
 
+		/** @type {NewCmsBlock} */
+		// @ts-ignore
 		let parent_container = null;
 		let is_parent_row = false;
 
@@ -169,12 +174,14 @@ class NewCmsRearrangeControls {
 				parent_container = rearrange_near_block;
 				rearrange_position = "inside";
 			} else {
+				// @ts-ignore
 				parent_container = rearrange_near_block.findParentByClassName(
 					"container",
 					{ skip: 1 }
 				);
 
 				if (!parent_container) {
+					// @ts-ignore
 					parent_container = this.newCms.content_node;
 				}
 
@@ -191,6 +198,9 @@ class NewCmsRearrangeControls {
 					rearrange_position = "inside";
 					rearrange_control_node =
 						rearrange_near_block.rearrange_control_inside;
+
+					/** @type {NewCmsBlock} */
+					// @ts-ignore
 					parent_container = rearrange_near_block;
 				}
 			}
@@ -318,7 +328,7 @@ class NewCmsRearrangeControls {
 
 	/**
 	 *
-	 * @param {PiepNode} grabbed_block
+	 * @param {NewCmsBlock} grabbed_block
 	 * @param {*} options
 	 */
 	addBlockControls(grabbed_block, options = {}) {
@@ -354,7 +364,8 @@ class NewCmsRearrangeControls {
 		let rearrangable_blocks_query_selector_for_grids = rearrangable_blocks_query_selector;
 
 		if (options.same_parent) {
-			// TODO: add a column container as a root, I think it's necessary
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
 			const parent_container = grabbed_block.parent().parent();
 			const block_id = this.newCms.styling.getBlockId(parent_container);
 			if (block_id) {
@@ -377,6 +388,7 @@ class NewCmsRearrangeControls {
 				.findAll(rearrangable_blocks_query_selector)
 				.forEach((b) => {
 					/** @type {NewCmsBlock} */
+					// @ts-ignore
 					const block = b;
 					if (block.findParentNode(this.newCms.grabbed_block)) {
 						// don't touch itself or parent
@@ -448,6 +460,7 @@ class NewCmsRearrangeControls {
 					}
 
 					let parent_count = 0;
+					/** @type {PiepNode} */
 					let parent = block;
 					while (parent != this.newCms.content_node) {
 						parent_count++;
