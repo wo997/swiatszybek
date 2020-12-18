@@ -60,7 +60,7 @@
 
     <div onclick="editNewCms()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
 
-    <div name="random_content" data-type="html" class="newCms_container_content preview_html">
+    <div name="random_content" data-type="html" class="newCms_container_content preview_html" style="max-height:500px">
 
     </div>
 

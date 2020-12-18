@@ -183,4 +183,14 @@ createTable("pies", [
     ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
 ]);
 
+createTable("page", [
+    ["name" => "page_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "url", "type" => "TINYTEXT"], // I think we should index that field ezy
+    ["name" => "seo_title", "type" => "TINYTEXT"],
+    ["name" => "seo_description", "type" => "TINYTEXT"],
+    ["name" => "html_content", "type" => "MEDIUMTEXT"],
+    ["name" => "settings_json", "type" => "MEDIUMTEXT"],
+    ["name" => "published", "type" => "TINYINT(1)"],
+]);
+
 echo "<h3>✅ All migrations completed</h3>";

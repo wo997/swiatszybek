@@ -1022,7 +1022,7 @@ input[type="checkbox"]:checked ~ .checkbox::after {
 
 .preview_html {
 	border: 1px solid #ccc;
-	overflow-y: auto;
+	overflow: hidden auto;
 	min-height: 20px;
 	border-radius: 4px;
 }
