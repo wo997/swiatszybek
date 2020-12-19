@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Szablon</title>
 
@@ -67,7 +67,7 @@
     </div>
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="themeForm" data-form>
     <div data-form="colors">

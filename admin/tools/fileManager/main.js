@@ -163,8 +163,12 @@ window.fileManager = {
 	},
 };
 
-window.init_tool_js_fileManager = () => {
-	registerModalContent(/*html*/ `
+window.addEventListener("tool_loaded", (event) => {
+	if (event.detail.name != "fileManager") {
+		return;
+	}
+	if (event.detail.info == "js") {
+		registerModalContent(/*html*/ `
         <div id="fileManager" data-expand="true" class="fileManager">
             <div class="modal-body">
                 <div class="custom-toolbar" style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/">
@@ -195,7 +199,7 @@ window.init_tool_js_fileManager = () => {
         </div>
     `);
 
-	registerModalContent(/*html*/ `
+		registerModalContent(/*html*/ `
         <div id="externalImage">
             <div class="modal-body">
                 <div class="custom-toolbar">
@@ -224,8 +228,8 @@ window.init_tool_js_fileManager = () => {
         </div>
     `);
 
-	registerModalContent(
-		`
+		registerModalContent(
+			/*html*/ `
         <div id="uploadFiles">
             <div class="modal-body">
                 <div class="custom-toolbar">
@@ -247,8 +251,11 @@ window.init_tool_js_fileManager = () => {
             </div>
         </div>
         `,
-		() => {
-			fileManager.loaded();
-		}
-	);
-};
+			() => {}
+		);
+	}
+	if (event.detail.info == "all") {
+		// @ts-ignore
+		window.fileManager.loaded();
+	}
+});

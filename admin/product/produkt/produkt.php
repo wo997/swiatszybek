@@ -63,7 +63,7 @@ if ($kopia) {
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <script>
     useTool("cms");
@@ -102,7 +102,7 @@ if ($kopia) {
     <button onclick="saveProduct()" class="btn primary">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="productForm" data-form data-warn-before-leave class="form-field-spacing" data-history="30" data-history-buttons=".product-history-buttons">
     <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">

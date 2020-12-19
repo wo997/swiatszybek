@@ -27,7 +27,7 @@ if (!json_decode($kod_data["product_list"])) {
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <style>
     table {
@@ -162,7 +162,7 @@ if (!json_decode($kod_data["product_list"])) {
 <title>Kod rabatowy</title>
 
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="kodForm" data-form data-warn-before-leave>
     <div style="max-width:1200px;margin:20px auto">

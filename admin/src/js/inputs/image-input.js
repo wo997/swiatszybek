@@ -9,7 +9,7 @@ function registerImageInputs() {
 		// TODO: crazy, we use names so far hmm
 		input.classList.add("form-input");
 
-		useTool("fileManager");
+		//useTool("fileManager");
 
 		input.insertAdjacentHTML(
 			"afterbegin",

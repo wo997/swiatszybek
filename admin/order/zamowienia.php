@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}zamowienia]
 ?>
 
-<?php startSection("head");
+<?php startSection("head_content");
 
 $options = "";
 foreach ($status_list as $status) {
@@ -162,7 +162,7 @@ foreach ($status_list as $status) {
     }
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Zamówienia</h1>
 

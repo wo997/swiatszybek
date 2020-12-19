@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}slider] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 
 <title>Slider</title>
@@ -112,7 +112,7 @@
     }
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div class="mytable"></div>
 

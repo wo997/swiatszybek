@@ -75,7 +75,7 @@ var_dump($product, $product->get_link());
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Zaawansowane</title>
 
@@ -119,7 +119,7 @@ var_dump($product, $product->get_link());
     <button class="btn primary" onclick="saveZawansowane()">Zapisz <i class="fa fa-save"></i></button>
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="zaawansowaneForm">
     <span class="field-title">Certyfikat SSL</span>

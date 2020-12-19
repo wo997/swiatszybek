@@ -15,7 +15,7 @@ $variables = [
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Konfig</title>
 
@@ -23,7 +23,7 @@ $variables = [
 
 </style>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 
 <?php

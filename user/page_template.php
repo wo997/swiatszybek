@@ -4,22 +4,16 @@ endSection();
 
 ?>
 
-<!DOCTYPE html>
-<html lang="pl">
-
-<head>
-    <?php include "global/includes.php"; ?>
-    <?php if (isset($sections["head"])) echo $sections["head"]; ?>
-</head>
+<?php startSection("body"); ?>
 
 <body>
     <div class="main-container">
         <?php include "global/header.php"; ?>
         <div class="main-container">
-            <?php if (isset($sections["content"])) echo $sections["content"]; ?>
+            <?= nonull($sections, "body_content", ""); ?>
         </div>
         <?php include "global/footer.php"; ?>
     </div>
 </body>
 
-</html>
+<?php include "global/blank_page_template.php"; ?>

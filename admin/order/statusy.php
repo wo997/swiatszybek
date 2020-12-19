@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}statusy]
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Statusy</title>
 
@@ -13,7 +13,7 @@
 
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Statusy</h1>
 

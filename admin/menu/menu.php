@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}menu-glowne] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Menu</title>
 
@@ -234,7 +234,7 @@
     });
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Menu główne</h1>
 

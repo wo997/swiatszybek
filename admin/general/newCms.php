@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Nowy CMS</title>
 
@@ -11,12 +11,25 @@
 </style>
 
 <script>
+    useTool("newCms");
+
+    window.addEventListener("tool_loaded", (event) => {
+        console.log(event.detail);
+        if (event.detail.name == "newCms" && event.detail.info == "all") {
+            setFormData(
+                <?= json_encode(
+                    getSetting("general", "random", [])
+                ); ?>, `#newCmsForm`);
+
+            editNewCms();
+        }
+    });
+
     domload(() => {
-        useTool("newCms");
-        setFormData(
+        /*setFormData(
             <?= json_encode(
                 getSetting("general", "random", [])
-            ); ?>, `#newCmsForm`);
+            ); ?>, `#newCmsForm`);*/
     });
 
     function editNewCms() {
@@ -46,7 +59,8 @@
     }
 </script>
 
-<?php startSection("header"); ?>
+<?php startSection("header");
+?>
 
 <div class="custom-toolbar">
     <span class="title">Nowy CMS</span>
@@ -54,7 +68,10 @@
 
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
+
+<?php //include "admin/tools/newCms/main.html" 
+?>
 
 <div id="newCmsForm">
 

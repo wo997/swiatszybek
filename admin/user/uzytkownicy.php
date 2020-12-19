@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Użytkownicy</title>
 
@@ -182,7 +182,7 @@
     }
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Użytkownicy</h1>
 

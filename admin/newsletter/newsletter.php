@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}newsletter] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Newsletter</title>
 
@@ -42,7 +42,7 @@
     });
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <?php
 if (isset($_GET["wyslano"])) {

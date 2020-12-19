@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}komentarze] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Komentarze</title>
 
@@ -95,7 +95,7 @@
     }
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Komentarze</h1>
 

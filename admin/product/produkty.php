@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}produkty] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Produkty</title>
 
@@ -61,7 +61,7 @@
 </script>
 
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Produkty</h1>
 

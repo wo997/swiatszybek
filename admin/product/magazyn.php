@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}magazyn] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Magazyn</title>
 
@@ -78,7 +78,7 @@
     }
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Stan magazynu</h1>
 

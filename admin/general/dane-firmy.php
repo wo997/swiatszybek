@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Dane firmy</title>
 
@@ -50,7 +50,7 @@
     </div>
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="daneFirmyForm" class="desktopRow spaceColumns" data-form>
     <div>

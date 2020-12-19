@@ -1358,22 +1358,24 @@ class NewCms {
 		});
 	}
 }
+window.addEventListener("tool_loaded", (event) => {
+	if (event.detail.name != "newCms") {
+		return;
+	}
 
-// TODO: HEY why not even listeners?
-// @ts-ignore
-window.init_tool_js_newCms = () => {
-	registerModalContent(
-		// TODO: syntax highlighting + open src in piep extension
-		`@include(admin/tools/newCms/main.html)`,
-		(modal) => {
-			// @ts-ignore
-			window.newCms = new NewCms(modal);
-		}
-	);
-};
-
-// @ts-ignore
-window.init_tool_fully_newCms = () => {
-	// @ts-ignore
-	newCms.stylesLoaded();
-};
+	if (event.detail.info == "js") {
+		// @ts-ignore
+		registerModalContent(
+			// TODO: syntax highlighting + open src in piep extension
+			`@include(admin/tools/newCms/main.html)`,
+			(modal) => {
+				// @ts-ignore
+				window.newCms = new NewCms(modal);
+			}
+		);
+	}
+	if (event.detail.info == "all") {
+		// @ts-ignore
+		window.newCms.stylesLoaded();
+	}
+});

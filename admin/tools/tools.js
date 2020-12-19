@@ -5,52 +5,57 @@ var toolList = [];
 /**
  * @param {string} name
  */
-async function useTool(name) {
+async function useTool(name, callback = {}) {
 	if (toolList.includes(name)) {
 		return;
 	}
 	toolList.push(name);
 
-	const a = await loadScript(
-		`/builds/tool_${name}.js?v=${JS_RELEASE}`,
-		{},
-		{
-			callback: () => {
-				const func = window[`init_tool_js_${name}`];
-				if (func) {
-					func();
-				}
-			},
-		}
-	);
-	const b = await loadStylesheet(
-		`/builds/tool_${name}.css?v=${CSS_RELEASE}`,
-		{},
-		{
-			callback: () => {
-				const func = window[`init_tool_css_${name}`];
-				if (func) {
-					func();
-				}
-			},
-		}
-	);
-	const func = window[`init_tool_fully_${name}`];
-	if (func) {
-		func();
-	}
-	// cute
-	//console.log(a, `/builds/tool_${name}.js?v=${JS_RELEASE}`, b);
+	console.log("awaiting " + name);
 
-	/*loadScript(
-		`/admin/tools/${name}/main.js?v=${RELEASE}`,
-		{
-			type: "module",
-		},
-		{
-			callback: () => {
-				window[`init${name.capitalize()}`]();
-			},
-		}
-	);*/
+	// @ts-ignore
+	Promise.allSettled([
+		loadScript(
+			`/builds/tool_${name}.js?v=${JS_RELEASE}`,
+			{},
+			{
+				callback: () => {
+					window.dispatchEvent(
+						new CustomEvent("tool_loaded", {
+							detail: {
+								name: name,
+								info: "js",
+							},
+						})
+					);
+				},
+			}
+		),
+		loadStylesheet(
+			`/builds/tool_${name}.css?v=${CSS_RELEASE}`,
+			{},
+			{
+				callback: () => {
+					window.dispatchEvent(
+						new CustomEvent("tool_loaded", {
+							detail: {
+								name: name,
+								info: "css",
+							},
+						})
+					);
+				},
+			}
+		),
+	]).then((results) => {
+		console.log(name, "alllll");
+		window.dispatchEvent(
+			new CustomEvent("tool_loaded", {
+				detail: {
+					name: name,
+					info: "all",
+				},
+			})
+		);
+	});
 }

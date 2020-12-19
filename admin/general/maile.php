@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}maile]
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Maile</title>
 
@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="maileForm" class="desktopRow spaceColumns" data-form>
     <div>

@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}oczekujacy] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Oczekujący</title>
 
@@ -65,7 +65,7 @@
     });
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Oczekujący na produkty</h1>
 

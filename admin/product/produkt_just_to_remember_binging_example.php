@@ -58,7 +58,7 @@ if ($product_id === -1) {
 ?>
 
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <style>
     #variantForm .attribute-row.any_selected.attribute_used {
@@ -1119,7 +1119,7 @@ if ($product_id === -1) {
     <button onclick="saveProduct()" class="btn primary">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="productForm" data-form data-warn-before-leave class="form-field-spacing">
     <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">

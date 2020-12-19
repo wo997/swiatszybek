@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Stopka</title>
 
@@ -76,7 +76,7 @@
     </div>
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="footerForm">
     <div class="field-title">

@@ -63,7 +63,7 @@ $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://sche
 addLastViewedProducts([$product_id]);
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 <?php
 include "global/includes_for_cms_page.php";
 ?>
@@ -148,7 +148,7 @@ include "global/includes_for_cms_page.php";
     </script>
 <?php endif ?>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <?php
 if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] || $preview_params) :

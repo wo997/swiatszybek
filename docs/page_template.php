@@ -9,7 +9,7 @@ endSection();
 
 <head>
     <?php include "global/includes.php"; ?>
-    <?php if (isset($sections["head"])) echo $sections["head"]; ?>
+    <?php if (isset($sections["head_content"])) echo $sections["head_content"]; ?>
 </head>
 
 <body id="admin">
@@ -18,7 +18,7 @@ endSection();
             <header class="navbar_admin">
                 <div class="scroll-panel scroll-shadow">
                     <div>
-                        <!-- pasek boczny -->
+                        <!-- pasek boczny <- co to za debil pisał XD -->
                     </div>
                 </div>
             </header>

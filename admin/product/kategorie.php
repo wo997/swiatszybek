@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}kategorie] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Kategorie produktów</title>
 
@@ -221,7 +221,7 @@
     }
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Kategorie produktów</h1>
 

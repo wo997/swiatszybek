@@ -9,7 +9,7 @@ endSection();
 
 <head>
     <?php include "global/includes.php"; ?>
-    <?php if (isset($sections["head"])) echo $sections["head"]; ?>
+    <?php if (isset($sections["head_content"])) echo $sections["head_content"]; ?>
 </head>
 
 <body id="admin">
@@ -39,10 +39,9 @@ endSection();
                 </div>
             </header>
             <div class="content">
+                <?= nonull($sections, "header", ""); ?>
                 <?php
-                if (isset($sections["header"])) {
-                    echo $sections["header"];
-                } else {
+                if (!isset($sections["header"])) {
                 ?>
                     <style>
                         .content>.scroll-panel {
@@ -54,7 +53,7 @@ endSection();
                 ?>
                 <div class="scroll-panel scroll-shadow">
                     <div class="panel-padding actual-content">
-                        <?php if (isset($sections["content"])) echo $sections["content"]; ?>
+                        <?= nonull($sections, "body_content", ""); ?>
                     </div>
                     <div class="footer">Piepsklep <?= date("Y") ?></div>
                 </div>

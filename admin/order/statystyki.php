@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}statystyki] 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>Statystyki</title>
 <script src="/src/chart.min.js?v=1"></script>
@@ -248,7 +248,7 @@
     }
 </script>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <h1>Statystyki</h1>
 

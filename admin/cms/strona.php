@@ -25,7 +25,7 @@ $static = checkUrl($page_data["link"]);
 
 ?>
 
-<?php startSection("head"); ?>
+<?php startSection("head_content"); ?>
 
 <title>CMS</title>
 
@@ -111,7 +111,7 @@ $static = checkUrl($page_data["link"]);
     <button class="btn primary" onclick="save()">Zapisz <i class="fa fa-save"></i></button>
 </div>
 
-<?php startSection("content"); ?>
+<?php startSection("body_content"); ?>
 
 <div id="cmsForm" data-form data-warn-before-leave class="form-field-spacing">
     <input type='hidden' name='cms_id' value='<?= $page_data["cms_id"] ?>'>
