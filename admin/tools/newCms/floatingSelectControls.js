@@ -225,6 +225,6 @@ class NewCmsSelectControls {
 			this.node.appendChild(select_control);
 		}
 
-		//this.node.classList.add("blocks_visible");
+		this.node.classList.remove("non_clickable");
 	}
 }

@@ -65,7 +65,7 @@
                     <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>        
-                <button class="btn important" onclick='window.location="${STATIC_URLS["ADMIN"]}new-cms"'>Strona <i class="fa fa-plus"></i></button>
+                <button class="btn important" onclick='window.location="${STATIC_URLS["ADMIN"]}nowy-cms"'>Strona <i class="fa fa-plus"></i></button>
             `
         });
     });

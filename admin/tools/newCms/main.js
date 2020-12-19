@@ -147,6 +147,10 @@ class NewCms {
 				e.remove();
 			});
 		});
+
+		this.container
+			.find(".return_btn")
+			.setAttribute("href", `${STATIC_URLS["ADMIN"]}nowe-strony`);
 	}
 
 	getBottomScrollOffset() {
@@ -682,7 +686,7 @@ class NewCms {
 
 		this.select_controls.removeSelection();
 		this.rearrange_controls.node.classList.add("visible");
-		//this.select_controls.node.classList.remove("blocks_visible");
+		this.select_controls.node.classList.add("non_clickable");
 
 		// show the grabbed clone
 		const rearrange_node = this.rearrange_node;
@@ -737,6 +741,8 @@ class NewCms {
 		if (!grabbed_block) {
 			return;
 		}
+
+		const do_trash = this.mouse_target.findParentNode(this.trash_block.node);
 
 		// a copy has these values fixed
 		grabbed_block.style.width = "";
@@ -801,7 +807,7 @@ class NewCms {
 			}
 		}
 
-		if (this.rearrange_grid_first_node) {
+		if (!do_trash && this.rearrange_grid_first_node) {
 			this.unselectFirstGridNode();
 			return;
 		}
@@ -952,7 +958,7 @@ class NewCms {
 			}
 		}
 
-		if (this.mouse_target.findParentNode(this.trash_block.node)) {
+		if (do_trash) {
 			this.grab_options.remove = true;
 			this.removeBlock(grabbed_block);
 			return;

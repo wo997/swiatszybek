@@ -1,4 +1,25 @@
-<?php //route[{ADMIN}new-cms]
+<?php //route[{ADMIN}nowy-cms]
+
+$page_id = urlParam(2);
+if ($page_id) {
+    $page_id = intval($page_id);
+    $page_data = fetchRow("SELECT * FROM page WHERE page_id = $page_id");
+} else {
+    $page_id = -1;
+    $page_data = null;
+}
+
+if (!$page_data) {
+    $page_data = [
+        "page_id" => "-1",
+        "url" => "",
+        "seo_title" => "",
+        "seo_description" => "",
+        "html_content" => "",
+        "settings_json" => "",
+        "published" => "0"
+    ];
+}
 
 ?>
 

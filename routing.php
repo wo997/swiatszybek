@@ -77,7 +77,7 @@ $admin_navigations_tree = [
             ["url" => "logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
             ["url" => "szablon", "title" => '<i class="fas fa-paint-brush"></i> Szablon'],
             ["url" => "nowe-strony", "title" => '<i class="fas fa-heart"></i> Nowe Strony'],
-            ["url" => "new-cms"],
+            ["url" => "nowy-cms"],
         ]
     ],
     ["url" => "zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
