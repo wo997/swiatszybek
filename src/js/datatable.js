@@ -1,5 +1,24 @@
 /* js[global] */
-function createDatatable(datatable__a) {
+
+// TODO: add the rest of params to doc
+/**
+ *
+ * @param {{
+ * name: string,
+ * lang?: Object
+ * url: string
+ * definition: {
+ * title: string
+ * width?: string
+ * className?: "kolejnosc-column"
+ * render?: (row: Array, index: number) => {}
+ * escape?: boolean
+ * }
+ * params?: () => {}
+ * renderRow?: () => {}
+ * }} datatable
+ */
+function createDatatable(datatable) {
 	// REQUIRED name, definition | renderRow, url, primary, db_table
 	// OPTIONAL controls OR controlsRight, width, nosearch, rowCount (10,20,50), onSearch, onCreate, bulk_menu
 	// filters / fixed_filters
@@ -13,32 +32,32 @@ function createDatatable(datatable__a) {
 	// sortable
 	// searchable
 	// ?renderSearch
-	window[datatable__a.name] = datatable__a;
-	datatable__a.awaitId = null;
-	datatable__a.currPage = 1;
-	datatable__a.pageCount = 0;
-	datatable__a.request = null;
-	datatable__a.results = [];
-	datatable__a.filters = [];
-	datatable__a.fixed_filters = [];
-	datatable__a.sort = null;
+	window[datatable.name] = datatable;
+	datatable.awaitId = null;
+	datatable.currPage = 1;
+	datatable.pageCount = 0;
+	datatable.request = null;
+	datatable.results = [];
+	datatable.filters = [];
+	datatable.fixed_filters = [];
+	datatable.sort = null;
 
-	if (!datatable__a.lang) datatable__a.lang = {};
-	datatable__a.lang.subject = nonull(datatable__a.lang.subject, "wyników");
+	if (!datatable.lang) datatable.lang = {};
+	datatable.lang.subject = nonull(datatable.lang.subject, "wyników");
 
-	datatable__a.target = $("." + datatable__a.name);
+	datatable.target = $("." + datatable.name);
 
-	datatable__a.target.classList.add("datatable-wrapper");
-	datatable__a.target.setAttribute("data-datatable-name", datatable__a.name);
+	datatable.target.classList.add("datatable-wrapper");
+	datatable.target.setAttribute("data-datatable-name", datatable.name);
 
-	if (datatable__a.sortable) {
-		if (!datatable__a.primary) {
-			console.error(`missing primary key in ${datatable__a.name}`);
+	if (datatable.sortable) {
+		if (!datatable.primary) {
+			console.error(`missing primary key in ${datatable.name}`);
 		}
-		if (!datatable__a.db_table) {
-			console.error(`missing db_table name in ${datatable__a.name}`);
+		if (!datatable.db_table) {
+			console.error(`missing db_table name in ${datatable.name}`);
 		}
-		datatable__a.definition = [
+		datatable.definition = [
 			{
 				title: "Kolejność",
 				width: "85px",
@@ -48,12 +67,12 @@ function createDatatable(datatable__a) {
 				},
 				escape: false,
 			},
-			...datatable__a.definition,
+			...datatable.definition,
 		];
 	}
 
-	if (datatable__a.selectable) {
-		datatable__a.definition = [
+	if (datatable.selectable) {
+		datatable.definition = [
 			{
 				title: /*html*/ `<span class='selected-results-count'>0</span>`,
 				width: "36px",
@@ -61,33 +80,33 @@ function createDatatable(datatable__a) {
 					return ``;
 				},
 			},
-			...datatable__a.definition,
+			...datatable.definition,
 		];
 
-		datatable__a.selection = [];
-		datatable__a.singleselect = datatable__a.selectable.singleselect;
-		if (datatable__a.selectable.has_metadata) {
-			datatable__a.metadata = [];
+		datatable.selection = [];
+		datatable.singleselect = datatable.selectable.singleselect;
+		if (datatable.selectable.has_metadata) {
+			datatable.metadata = [];
 		}
 
-		datatable__a.setSelectedValuesFromString = (v) => {
+		datatable.setSelectedValuesFromString = (v) => {
 			// Works also with json to make it easier to use
 			var values = typeof v == "string" ? JSON.parse(v) : v;
 			var selection = [];
 
 			// If someone didn't provide array
-			if (datatable__a.singleselect) {
+			if (datatable.singleselect) {
 				if (!Array.isArray(values)) {
 					values = [values];
 				}
 			}
 
-			if (datatable__a.selectable.has_metadata) {
-				datatable__a.metadata = values;
+			if (datatable.selectable.has_metadata) {
+				datatable.metadata = values;
 
 				try {
 					values.forEach((row) => {
-						selection.push(parseInt(row[datatable__a.primary]));
+						selection.push(parseInt(row[datatable.primary]));
 					});
 				} catch (e) {
 					console.log(e);
@@ -102,62 +121,62 @@ function createDatatable(datatable__a) {
 					}
 				} catch (e) {}
 			}
-			datatable__a.selection = selection;
+			datatable.selection = selection;
 
-			datatable__a.selectionValueElement.value = JSON.stringify(values);
+			datatable.selectionValueElement.value = JSON.stringify(values);
 
-			datatable__a.createList();
+			datatable.createList();
 		};
-		datatable__a.getSelectedValuesString = () => {
-			return JSON.stringify(datatable__a.selection);
+		datatable.getSelectedValuesString = () => {
+			return JSON.stringify(datatable.selection);
 		};
-		datatable__a.getSelectedValuesAllString = () => {
+		datatable.getSelectedValuesAllString = () => {
 			// for metadata
-			return JSON.stringify(datatable__a.metadata);
+			return JSON.stringify(datatable.metadata);
 		};
 	}
-	if (!datatable__a.selection) {
-		datatable__a.selection = [];
+	if (!datatable.selection) {
+		datatable.selection = [];
 	}
 
-	if (datatable__a.bulk_menu) {
-		if (!datatable__a.primary) {
-			console.error(`missing primary key in ${datatable__a.name}`);
+	if (datatable.bulk_menu) {
+		if (!datatable.primary) {
+			console.error(`missing primary key in ${datatable.name}`);
 		}
-		datatable__a.definition = [
+		datatable.definition = [
 			{
 				title: /*html*/ `<label class="checkbox-wrapper">
-                    <input type="checkbox" class="bulk_edit_checkbox bulk_edit_checkbox_all" onchange="${datatable__a.name}.bulkEditSelectAll()">
+                    <input type="checkbox" class="bulk_edit_checkbox bulk_edit_checkbox_all" onchange="${datatable.name}.bulkEditSelectAll()">
                     <div class="checkbox standalone"></div>
                 </label>`,
 				width: "36px",
 				render: () => {
 					return /*html*/ `<label class="checkbox-wrapper">
-                        <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable__a.name}.bulkEditSelectionChange()">
+                        <input type="checkbox" class="bulk_edit_checkbox" onchange="${datatable.name}.bulkEditSelectionChange()">
                         <div class="checkbox standalone"></div>
                     </label>`;
 				},
 				escape: false,
 			},
-			...datatable__a.definition,
+			...datatable.definition,
 		];
 
-		datatable__a.bulkEditSelectAll = () => {
-			var checked = datatable__a.target.find(".bulk_edit_checkbox_all").checked;
-			datatable__a.tableSearchElement
+		datatable.bulkEditSelectAll = () => {
+			var checked = datatable.target.find(".bulk_edit_checkbox_all").checked;
+			datatable.tableSearchElement
 				.findAll("tbody .bulk_edit_checkbox")
 				.forEach((e) => {
 					e.checked = checked;
 				});
 
-			datatable__a.bulkEditSelectionChange();
+			datatable.bulkEditSelectionChange();
 		};
 
-		datatable__a.bulkEditSelectionChange = () => {
+		datatable.bulkEditSelectionChange = () => {
 			var bulk_selection = [];
 			var all_checked = true;
 			var any_checked = false;
-			datatable__a.tableSearchElement
+			datatable.tableSearchElement
 				.findAll("tbody .bulk_edit_checkbox")
 				.forEach((e) => {
 					if (e.checked) {
@@ -169,10 +188,10 @@ function createDatatable(datatable__a) {
 						all_checked = false;
 					}
 				});
-			datatable__a.bulk_selection = bulk_selection;
+			datatable.bulk_selection = bulk_selection;
 
 			if (any_checked) {
-				var bulk_selection_count = datatable__a.target.find(
+				var bulk_selection_count = datatable.target.find(
 					".bulk_selection_count"
 				);
 				if (bulk_selection_count) {
@@ -180,39 +199,39 @@ function createDatatable(datatable__a) {
 				}
 			}
 
-			datatable__a.target.find(".bulk_edit_checkbox_all").checked = all_checked;
+			datatable.target.find(".bulk_edit_checkbox_all").checked = all_checked;
 
-			expand(datatable__a.bulkMenuElement, any_checked);
+			expand(datatable.bulkMenuElement, any_checked);
 		};
 	}
 
 	var breadcrumb_html = "";
 
-	if (datatable__a.tree_view) {
-		datatable__a.lang.main_category = nonull(
-			datatable__a.lang.main_category,
+	if (datatable.tree_view) {
+		datatable.lang.main_category = nonull(
+			datatable.lang.main_category,
 			"Kategoria główna"
 		);
 
-		datatable__a.breadcrumb = [
+		datatable.breadcrumb = [
 			{
 				title:
 					/*html*/ `<i class="fas fa-home" style="margin-right: 4px;"></i>` +
-					datatable__a.lang.main_category,
+					datatable.lang.main_category,
 				category_id: -1,
 			},
 		];
 
 		breadcrumb_html = /*html*/ `
         <div class="breadcrumb"></div>
-        <div class="btn important" onclick="${datatable__a.name}.showEditCategory(this,null,true)">Dodaj <i class="fa fa-plus"></i></div>
+        <div class="btn important" onclick="${datatable.name}.showEditCategory(this,null,true)">Dodaj <i class="fa fa-plus"></i></div>
       `;
 	}
 
 	var above_table_html = "";
 
-	if (datatable__a.controls) {
-		above_table_html += /*html*/ `<div class="flexbar">${datatable__a.controls}</div><div class="flexbar"></div>`;
+	if (datatable.controls) {
+		above_table_html += /*html*/ `<div class="flexbar">${datatable.controls}</div><div class="flexbar"></div>`;
 	}
 	if (breadcrumb_html) {
 		above_table_html += /*html*/ `<div>${breadcrumb_html}</div>`;
@@ -221,18 +240,18 @@ function createDatatable(datatable__a) {
 	above_table_html += /*html*/ `<div class="flexbar" style="align-items: baseline;">
         <div class="flexbar auto-width-desktop" style="margin:0;align-items: baseline;">
           <span class="total-rows"></span>
-          <span class="space-right">&nbsp;${datatable__a.lang.subject}</span>
+          <span class="space-right">&nbsp;${datatable.lang.subject}</span>
           <select data-param="rowCount" class="field inline">
               <option value='10' ${
-								datatable__a.rowCount == 10 ? "selected" : ""
+								datatable.rowCount == 10 ? "selected" : ""
 							}>10</option>
               <option value='20' ${
-								!datatable__a.rowCount || datatable__a.rowCount == 20
+								!datatable.rowCount || datatable.rowCount == 20
 									? "selected"
 									: ""
 							}>20</option>
               <option value='50' ${
-								datatable__a.rowCount == 50 ? "selected" : ""
+								datatable.rowCount == 50 ? "selected" : ""
 							}>50</option>
           </select>
           <span class="big space-right no-space-mobile na-strone">&nbsp;&nbsp;na stronę</span>
@@ -240,32 +259,32 @@ function createDatatable(datatable__a) {
         </div>
         <div style='flex-grow:1'></div>
         <div class="btn subtle space-right clear-filters-btn hidden" data-tooltip="Wyczyść wszystkie filtry" onclick="${
-					datatable__a.name
+					datatable.name
 				}.clearFilters()">
           <img src="/src/img/clear-filters.png" style="width: 25px;margin: -7px;">
         </div>
-        ${nonull(datatable__a.controlsRight)}
+        ${nonull(datatable.controlsRight)}
       </div>`;
 
 	var headersHTML = "<tr>";
 	var columnStyles = [];
 
-	if (datatable__a.definition) {
+	if (datatable.definition) {
 		var sumWidthPercentages = 0;
-		for (def of datatable__a.definition) {
+		for (def of datatable.definition) {
 			if (def.width && def.width.indexOf("%") != -1) {
 				sumWidthPercentages += parseFloat(def.width);
 			}
 		}
 		var scalePercentages = 100 / sumWidthPercentages;
-		for (def of datatable__a.definition) {
+		for (def of datatable.definition) {
 			if (def.width && def.width.indexOf("%") != -1) {
 				def.width = Math.round(parseFloat(def.width) * scalePercentages) + "%";
 			}
 		}
 
 		var def_id = -1;
-		for (header of datatable__a.definition) {
+		for (header of datatable.definition) {
 			def_id++;
 			var additional_html = "";
 			if (header.sortable) {
@@ -290,14 +309,14 @@ function createDatatable(datatable__a) {
 		headersHTML += "</tr>";
 	}
 
-	datatable__a.headersHTML = headersHTML;
-	datatable__a.columnStyles = columnStyles;
+	datatable.headersHTML = headersHTML;
+	datatable.columnStyles = columnStyles;
 
 	var table_html = /*html*/ `
     <div class="table-wrapper">
       <div class="table-scroll-width">
         <table class='datatable'>
-          <thead>${datatable__a.headersHTML}</thead>
+          <thead>${datatable.headersHTML}</thead>
           <tbody></tbody>
         </table>
       </div>
@@ -306,31 +325,31 @@ function createDatatable(datatable__a) {
 
 	var below_table_html = /*html*/ `<div class="pagination pagination-bottom"></div>`;
 
-	if (datatable__a.bulk_menu) {
-		below_table_html += /*html*/ `<div class="bulk_menu expand_y animate_hidden hidden"><div style='margin-bottom:10px'>${datatable__a.bulk_menu}</div></div>`;
+	if (datatable.bulk_menu) {
+		below_table_html += /*html*/ `<div class="bulk_menu expand_y animate_hidden hidden"><div style='margin-bottom:10px'>${datatable.bulk_menu}</div></div>`;
 	}
 
-	if (datatable__a.selectable) {
-		datatable__a.target.insertAdjacentHTML(
+	if (datatable.selectable) {
+		datatable.target.insertAdjacentHTML(
 			"afterbegin",
 			/*html*/ `
           <div class="selected_rows">${table_html}</div>
           <div class="showBtn expand_y">
             <div class="btn secondary fill" onclick="${
-							datatable__a.name
+							datatable.name
 						}.toggleSearchVisibility(true)">Wyszukaj <i class="fas fa-plus"></i> </div>
           </div>
           <input type="hidden" class="table-selection-value" name="${
-						datatable__a.selectable.output
-							? datatable__a.selectable.output
-							: datatable__a.primary
-					}" ${datatable__a.selectable.validate ? `data-validate` : ""}>
+						datatable.selectable.output
+							? datatable.selectable.output
+							: datatable.primary
+					}" ${datatable.selectable.validate ? `data-validate` : ""}>
           <div class="has_selected_rows table-search-wrapper ${
-						datatable__a.selectable ? `expand_y hidden animate_hidden` : ""
+						datatable.selectable ? `expand_y hidden animate_hidden` : ""
 					}">
             <div class="table-search-container">
               <div class="btn secondary fill hideBtn" onclick="${
-								datatable__a.name
+								datatable.name
 							}.toggleSearchVisibility(false)">Ukryj wyszukiwarkę <i class="fas fa-minus"></i> </div>
               ${above_table_html}${table_html}${below_table_html}
             </div>
@@ -338,94 +357,85 @@ function createDatatable(datatable__a) {
         `
 		);
 
-		datatable__a.target
+		datatable.target
 			.find(".selected_rows .datatable")
 			.insertAdjacentHTML(
 				"afterend",
-				/*html*/ `<div class="no-results">Brak powiązanych ${datatable__a.lang.subject}</div>`
+				/*html*/ `<div class="no-results">Brak powiązanych ${datatable.lang.subject}</div>`
 			);
 	} else {
-		datatable__a.target.insertAdjacentHTML(
+		datatable.target.insertAdjacentHTML(
 			"afterbegin",
 			/*html*/ `<div class="table-search-wrapper">${above_table_html}${table_html}${below_table_html}</div>`
 		);
 	}
-	datatable__a.target
+	datatable.target
 		.find(".table-search-wrapper .datatable")
 		.insertAdjacentHTML(
 			"afterend",
-			/*html*/ `<div class="no-results">Brak ${datatable__a.lang.subject}</div>`
+			/*html*/ `<div class="no-results">Brak ${datatable.lang.subject}</div>`
 		);
 
-	datatable__a.searchElement = datatable__a.target.find(".search-wrapper");
-	datatable__a.tableSearchElement = datatable__a.target.find(
-		".table-search-wrapper"
-	);
-	datatable__a.tableSelectionElement = datatable__a.target.find(
-		".selected_rows"
-	);
-	datatable__a.tableBodyElement = datatable__a.tableSearchElement.find("tbody");
-	datatable__a.totalRowsElement = datatable__a.target.find(".total-rows");
-	datatable__a.paginationElement = datatable__a.target.find(".pagination");
-	datatable__a.bulkMenuElement = datatable__a.target.find(".bulk_menu");
-	datatable__a.paginationBottomElement = datatable__a.target.find(
+	datatable.searchElement = datatable.target.find(".search-wrapper");
+	datatable.tableSearchElement = datatable.target.find(".table-search-wrapper");
+	datatable.tableSelectionElement = datatable.target.find(".selected_rows");
+	datatable.tableBodyElement = datatable.tableSearchElement.find("tbody");
+	datatable.totalRowsElement = datatable.target.find(".total-rows");
+	datatable.paginationElement = datatable.target.find(".pagination");
+	datatable.bulkMenuElement = datatable.target.find(".bulk_menu");
+	datatable.paginationBottomElement = datatable.target.find(
 		".pagination-bottom"
 	);
-	datatable__a.selectionBodyElement = datatable__a.tableSelectionElement
-		? datatable__a.tableSelectionElement.find("tbody")
+	datatable.selectionBodyElement = datatable.tableSelectionElement
+		? datatable.tableSelectionElement.find("tbody")
 		: null;
-	datatable__a.selectionValueElement = datatable__a.target.find(
+	datatable.selectionValueElement = datatable.target.find(
 		".table-selection-value"
 	);
 
-	if (datatable__a.onCreate) datatable__a.onCreate();
+	if (datatable.onCreate) datatable.onCreate();
 
-	if (datatable__a.tree_view) {
-		datatable__a.breadcrumbElement = datatable__a.target.find(".breadcrumb");
+	if (datatable.tree_view) {
+		datatable.breadcrumbElement = datatable.target.find(".breadcrumb");
 
-		datatable__a.getParentId = () => {
-			if (datatable__a.breadcrumb.length == 0) return -1;
-			return datatable__a.breadcrumb[datatable__a.breadcrumb.length - 1]
-				.category_id;
+		datatable.getParentId = () => {
+			if (datatable.breadcrumb.length == 0) return -1;
+			return datatable.breadcrumb[datatable.breadcrumb.length - 1].category_id;
 		};
-		datatable__a.backToCategory = (category_id = 0) => {
+		datatable.backToCategory = (category_id = 0) => {
 			var steps = null;
-			for (i = 0; i < datatable__a.breadcrumb.length; i++) {
-				if (datatable__a.breadcrumb[i].category_id == category_id) {
-					steps = datatable__a.breadcrumb.length - 1 - i;
+			for (i = 0; i < datatable.breadcrumb.length; i++) {
+				if (datatable.breadcrumb[i].category_id == category_id) {
+					steps = datatable.breadcrumb.length - 1 - i;
 					break;
 				}
 			}
-			datatable__a.categoryStepBack(steps);
+			datatable.categoryStepBack(steps);
 		};
-		datatable__a.categoryStepBack = (steps) => {
+		datatable.categoryStepBack = (steps) => {
 			if (steps > 0) {
 				for (i = 0; i < steps; i++) {
-					if (datatable__a.breadcrumb.length > 0) {
-						datatable__a.breadcrumb.pop();
+					if (datatable.breadcrumb.length > 0) {
+						datatable.breadcrumb.pop();
 					}
 				}
-				datatable__a.search();
+				datatable.search();
 			}
 		};
-		datatable__a.openCategory = (row_id) => {
-			var row = datatable__a.results[row_id];
-			datatable__a.breadcrumb.push({
+		datatable.openCategory = (row_id) => {
+			var row = datatable.results[row_id];
+			datatable.breadcrumb.push({
 				title: row.title,
 				category_id: row.category_id,
 			});
-			datatable__a.search();
+			datatable.search();
 		};
-		datatable__a.showEditCategory = (
-			btn = null,
-			row_id = null,
-			isNew = false
-		) => {
-			var form_name = datatable__a.tree_view.form;
+		datatable.showEditCategory = (btn = null, row_id = null, isNew = false) => {
+			var form_name = datatable.tree_view.form;
 
 			var loadCategoryFormCallback = (data) => {
-				datatable__a.tree_view.form_data = data;
-				datatable__a.tree_view.loadCategoryForm(form_name, data, isNew);
+				datatable.tree_view.form_data = data;
+				datatable.tree_view.loadCategoryForm(form_name, data, isNew);
 
 				var params = {};
 				if (!isNew) {
@@ -441,23 +451,23 @@ function createDatatable(datatable__a) {
 
 			if (isNew) {
 				loadCategoryFormCallback({
-					parent_id: datatable__a.getParentId(),
+					parent_id: datatable.getParentId(),
 					category_id: -1,
 				});
 			} else {
 				var category_id = 0;
 				if (row_id === null) {
-					category_id = datatable__a.getParentId();
+					category_id = datatable.getParentId();
 				} else {
-					var row = datatable__a.results[row_id];
+					var row = datatable.results[row_id];
 					category_id = row.category_id;
 				}
 
-				var formParams = nonull(datatable__a.tree_view.formParams, {});
+				var formParams = nonull(datatable.tree_view.formParams, {});
 				formParams.category_id = category_id;
 
 				xhr({
-					url: datatable__a.url,
+					url: datatable.url,
 					params: formParams,
 					success: (res) => {
 						loadCategoryFormCallback(res.results[0]);
@@ -469,39 +479,39 @@ function createDatatable(datatable__a) {
 
 			showModal(form_name, { source: btn });
 		};
-		datatable__a.postSaveCategory = (params, remove) => {
+		datatable.postSaveCategory = (params, remove) => {
 			var parentChanged =
-				datatable__a.tree_view.form_data.parent_id != params.parent_id;
-			var isCurrent = datatable__a.getParentId() == params.category_id;
+				datatable.tree_view.form_data.parent_id != params.parent_id;
+			var isCurrent = datatable.getParentId() == params.category_id;
 			if ((remove || parentChanged) && isCurrent) {
-				datatable__a.categoryStepBack(1);
+				datatable.categoryStepBack(1);
 			} else {
 				if (isCurrent) {
-					datatable__a.breadcrumb[datatable__a.breadcrumb.length - 1].title =
+					datatable.breadcrumb[datatable.breadcrumb.length - 1].title =
 						params.title;
 				}
-				datatable__a.search();
+				datatable.search();
 			}
 		};
 	}
 
-	if (datatable__a.width) {
-		datatable__a.target.style.maxWidth = datatable__a.width + "px";
-		datatable__a.target.style.marginLeft = "auto";
-		datatable__a.target.style.marginRight = "auto";
+	if (datatable.width) {
+		datatable.target.style.maxWidth = datatable.width + "px";
+		datatable.target.style.marginLeft = "auto";
+		datatable.target.style.marginRight = "auto";
 	}
 
-	datatable__a.awaitSearch = function () {
-		clearTimeout(datatable__a.awaitId);
-		datatable__a.awaitId = setTimeout(function () {
-			datatable__a.search();
+	datatable.awaitSearch = function () {
+		clearTimeout(datatable.awaitId);
+		datatable.awaitId = setTimeout(function () {
+			datatable.search();
 		}, 400);
 	};
 
-	$$(`.${datatable__a.name} [data-param]`).forEach((e) => {
+	$$(`.${datatable.name} [data-param]`).forEach((e) => {
 		const onParamsChange = () => {
-			if (e.tagName == "INPUT") datatable__a.awaitSearch();
-			else datatable__a.search();
+			if (e.tagName == "INPUT") datatable.awaitSearch();
+			else datatable.search();
 			filterOrSortChanged();
 		};
 		e.addEventListener("input", function () {
@@ -512,104 +522,99 @@ function createDatatable(datatable__a) {
 		});
 	});
 
-	datatable__a.clearFilters = () => {
-		datatable__a.filters = [];
-		clearTableSorting(datatable__a);
-		var se = datatable__a.target.find(`[data-param="search"]`);
+	datatable.clearFilters = () => {
+		datatable.filters = [];
+		clearTableSorting(datatable);
+		var se = datatable.target.find(`[data-param="search"]`);
 		if (se) {
 			se.setValue("");
 		}
-		datatable__a.search();
+		datatable.search();
 	};
 
-	datatable__a.search = (callback = null, createList = false) => {
-		clearTimeout(datatable__a.awaitId);
+	datatable.search = (callback = null, createList = false) => {
+		clearTimeout(datatable.awaitId);
 
-		if (datatable__a.request) datatable__a.request.abort();
+		if (datatable.request) datatable.request.abort();
 
-		if (datatable__a.tree_view) {
+		if (datatable.tree_view) {
 			// breadcrumb update
 			var out = "";
 			var index = -1;
-			for (let category of datatable__a.breadcrumb) {
+			for (let category of datatable.breadcrumb) {
 				index++;
 				if (index > 0) out += /*html*/ ` <i class="fas fa-chevron-right"></i> `;
 				out += /*html*/ `<div class="${
-					index < datatable__a.breadcrumb.length - 1 ? "btn subtle" : "current"
-				}" onclick="${datatable__a.name}.backToCategory(${
+					index < datatable.breadcrumb.length - 1 ? "btn subtle" : "current"
+				}" onclick="${datatable.name}.backToCategory(${
 					category.category_id
 				})">${category.title}</div>`;
 			}
-			if (datatable__a.breadcrumb.length > 1)
-				out += /*html*/ ` <div class="btn subtle" onclick="${datatable__a.name}.showEditCategory(this,null)" style="margin-left:6px"><i class="fa fa-cog"></i></div>`;
-			datatable__a.breadcrumbElement.innerHTML = out;
+			if (datatable.breadcrumb.length > 1)
+				out += /*html*/ ` <div class="btn subtle" onclick="${datatable.name}.showEditCategory(this,null)" style="margin-left:6px"><i class="fa fa-cog"></i></div>`;
+			datatable.breadcrumbElement.innerHTML = out;
 		}
 
 		var params = {
 			filters: [],
 		};
 		Object.assign(params.filters, [
-			...datatable__a.filters,
-			...datatable__a.fixed_filters,
+			...datatable.filters,
+			...datatable.fixed_filters,
 		]);
 
 		if (createList) {
-			if (datatable__a.selection) {
+			if (datatable.selection) {
 				params.filters.push({
 					type: "=",
-					value: datatable__a.selection,
-					field: datatable__a.primary,
+					value: datatable.selection,
+					field: datatable.primary,
 				});
 			}
 		} else {
-			if (datatable__a.params) {
-				Object.assign(params, datatable__a.params());
+			if (datatable.params) {
+				Object.assign(params, datatable.params());
 			}
-			if (datatable__a.requiredParam) {
-				var x = datatable__a.requiredParam();
+			if (datatable.requiredParam) {
+				var x = datatable.requiredParam();
 				if (x || x === 0) {
-					params[requiredFilterTables[datatable__a.db_table]] = x;
+					params[requiredFilterTables[datatable.db_table]] = x;
 				}
 			}
-			$$(`.${datatable__a.name} [data-param]`).forEach((e) => {
-				if (
-					e.findParentByClassName("hidden", { inside: datatable__a.target })
-				) {
+			$$(`.${datatable.name} [data-param]`).forEach((e) => {
+				if (e.findParentByClassName("hidden", { inside: datatable.target })) {
 					return;
 				}
 				params[e.getAttribute("data-param")] = e.getValue();
 			});
 
-			if (datatable__a.selectable) {
+			if (datatable.selectable) {
 				params.filters.push({
 					type: "!=",
-					value: datatable__a.selection,
-					field: datatable__a.primary,
+					value: datatable.selection,
+					field: datatable.primary,
 				});
 			}
-			if (datatable__a.tree_view) {
-				params.parent_id = datatable__a.getParentId();
+			if (datatable.tree_view) {
+				params.parent_id = datatable.getParentId();
 			}
 		}
 
-		if (datatable__a.sort) {
-			params.sort = datatable__a.sort;
+		if (datatable.sort) {
+			params.sort = datatable.sort;
 		} else {
 			delete params.sort;
 		}
 
 		var paramsJson = JSON.stringify(params);
-		if (
-			datatable__a.lastParamsJson &&
-			datatable__a.lastParamsJson != paramsJson
-		) {
-			datatable__a.currPage = 1;
+		if (datatable.lastParamsJson && datatable.lastParamsJson != paramsJson) {
+			datatable.currPage = 1;
 		}
-		datatable__a.lastParamsJson = paramsJson;
+		datatable.lastParamsJson = paramsJson;
 
-		var canOrder = datatable__a.sortable;
+		var canOrder = datatable.sortable;
 		if (canOrder) {
-			var needsRequired = requiredFilterTables[datatable__a.db_table];
+			var needsRequired = requiredFilterTables[datatable.db_table];
 			var hasRequired = false;
 			Object.entries(params).forEach(([key, value]) => {
 				if (value && key != "rowCount") {
@@ -625,26 +630,26 @@ function createDatatable(datatable__a) {
 				canOrder = true;
 			}
 
-			if (datatable__a.filters.length > 0 || datatable__a.sort) {
+			if (datatable.filters.length > 0 || datatable.sort) {
 				canOrder = false;
 			}
 
-			datatable__a.target.classList.toggle("noOrder", !canOrder);
+			datatable.target.classList.toggle("noOrder", !canOrder);
 		}
 
-		datatable__a.request = xhr({
-			url: datatable__a.url,
+		datatable.request = xhr({
+			url: datatable.url,
 			params: {
 				...params,
-				pageNumber: datatable__a.currPage,
+				pageNumber: datatable.currPage,
 			},
 			success: (res) => {
 				if (createList) {
-					if (datatable__a.sortable) {
+					if (datatable.sortable) {
 						var r = [];
-						for (let sel of datatable__a.selection) {
+						for (let sel of datatable.selection) {
 							var row = res.results.find((e) => {
-								return e[datatable__a.primary] == sel;
+								return e[datatable.primary] == sel;
 							});
 							if (row) {
 								r.push(row);
@@ -657,13 +662,13 @@ function createDatatable(datatable__a) {
             });*/
 					}
 
-					datatable__a.selectionResults = res.results;
+					datatable.selectionResults = res.results;
 				} else {
-					datatable__a.pageCount = res.pageCount;
-					datatable__a.results = res.results;
+					datatable.pageCount = res.pageCount;
+					datatable.results = res.results;
 				}
 
-				var e = datatable__a.tableSearchElement.find(".no-results");
+				var e = datatable.tableSearchElement.find(".no-results");
 				if (e) {
 					e.style.display = res.results.length !== 0 ? "none" : "";
 				}
@@ -676,33 +681,31 @@ function createDatatable(datatable__a) {
 					var attr = "";
 					if (canOrder) attr = "draggable='true'";
 					output += /*html*/ `<tr data-index='${i}' ${attr} ${
-						datatable__a.primary
-							? `data-primary=${row[datatable__a.primary]}`
-							: ""
+						datatable.primary ? `data-primary=${row[datatable.primary]}` : ""
 					}>`;
 
-					if (datatable__a.renderRow) {
-						var cell = datatable__a.renderRow(row, i);
+					if (datatable.renderRow) {
+						var cell = datatable.renderRow(row, i);
 						output += /*html*/ `<td>${cell}</td>`;
 					} else {
-						for (x = 0; x < datatable__a.definition.length; x++) {
-							if (datatable__a.selectable && x === 0) {
+						for (x = 0; x < datatable.definition.length; x++) {
+							if (datatable.selectable && x === 0) {
 								if (createList) {
 									output += /*html*/ `<td style="width:33px;text-align:center"> <i class="fas fa-minus-circle" onclick="${
-										datatable__a.name
-									}.removeRow(${row[datatable__a.primary]})"></i> </td>`;
+										datatable.name
+									}.removeRow(${row[datatable.primary]})"></i> </td>`;
 								} else {
 									output += /*html*/ `<td style="width:33px;text-align:center"> <i class="fas fa-plus-circle" onclick="${
-										datatable__a.name
-									}.addRow(${row[datatable__a.primary]})"></i> </td>`;
+										datatable.name
+									}.addRow(${row[datatable.primary]})"></i> </td>`;
 								}
 								continue;
 							}
 
-							var definition = datatable__a.definition[x];
+							var definition = datatable.definition[x];
 							var cell_html = "";
 							if (definition.render) {
-								cell_html = nonull(definition.render(row, i, datatable__a));
+								cell_html = nonull(definition.render(row, i, datatable));
 							} else if (definition.field) {
 								cell_html = row[definition.field];
 							}
@@ -712,103 +715,103 @@ function createDatatable(datatable__a) {
 							) {
 								cell_html = escapeHTML(cell_html);
 							}
-							output += `<td ${datatable__a.columnStyles[x]}>${cell_html}</td>`;
+							output += `<td ${datatable.columnStyles[x]}>${cell_html}</td>`;
 						}
 					}
 					output += "</tr>";
 				}
 
 				if (createList) {
-					datatable__a.selectionBodyElement.setContent(output);
+					datatable.selectionBodyElement.setContent(output);
 				} else {
-					datatable__a.totalRowsElement.setContent(res.totalRows);
-					datatable__a.tableBodyElement.setContent(output);
+					datatable.totalRowsElement.setContent(res.totalRows);
+					datatable.tableBodyElement.setContent(output);
 
-					datatable__a.paginationElement.style.display =
+					datatable.paginationElement.style.display =
 						window.innerWidth > 1000 ? "" : "none";
 
 					renderPagination(
-						datatable__a.paginationElement,
-						datatable__a.currPage,
-						datatable__a.pageCount,
+						datatable.paginationElement,
+						datatable.currPage,
+						datatable.pageCount,
 						(i) => {
-							datatable__a.currPage = i;
-							datatable__a.search();
+							datatable.currPage = i;
+							datatable.search();
 						},
 						{ allow_my_page: true }
 					);
 
-					if (datatable__a.paginationBottomElement) {
-						datatable__a.paginationBottomElement.style.display =
+					if (datatable.paginationBottomElement) {
+						datatable.paginationBottomElement.style.display =
 							window.innerWidth <= 1000 ||
-							datatable__a.tableBodyElement.getBoundingClientRect().height >
+							datatable.tableBodyElement.getBoundingClientRect().height >
 								window.innerHeight - 100
 								? ""
 								: "none";
 
 						renderPagination(
-							datatable__a.paginationBottomElement,
-							datatable__a.currPage,
-							datatable__a.pageCount,
+							datatable.paginationBottomElement,
+							datatable.currPage,
+							datatable.pageCount,
 							(i) => {
-								datatable__a.currPage = i;
-								datatable__a.search();
+								datatable.currPage = i;
+								datatable.search();
 							},
 							{ allow_my_page: true }
 						);
 					}
 				}
 
-				datatable__a.target.findAll("td, td *").forEach((e) => {
+				datatable.target.findAll("td, td *").forEach((e) => {
 					if (e.offsetWidth < e.scrollWidth) {
 						var info = e.textContent.replace(/, /g, "<br>").trim();
 						e.setAttribute("data-tooltip", info);
 					}
 				});
 
-				if (datatable__a.selectable && datatable__a.selectable.has_metadata) {
-					datatable__a.registerMetadataFields();
+				if (datatable.selectable && datatable.selectable.has_metadata) {
+					datatable.registerMetadataFields();
 				}
 
 				if (callback) {
 					callback(res); // custom
 				}
-				if (datatable__a.onSearch) {
-					datatable__a.onSearch(res); // default
+				if (datatable.onSearch) {
+					datatable.onSearch(res); // default
 				}
 
-				if (datatable__a.bulk_menu) {
-					datatable__a.bulkEditSelectionChange();
+				if (datatable.bulk_menu) {
+					datatable.bulkEditSelectionChange();
 				}
 			},
 		});
 	};
 
-	datatable__a.initialSearch = () => {
+	datatable.initialSearch = () => {
 		if (
-			!datatable__a.hasOwnProperty("nosearch") ||
-			datatable__a.nosearch === false ||
-			datatable__a.selectable
+			!datatable.hasOwnProperty("nosearch") ||
+			datatable.nosearch === false ||
+			datatable.selectable
 		) {
-			datatable__a.search(() => {
-				datatable__a.ready = true;
+			datatable.search(() => {
+				datatable.ready = true;
 			});
 		}
 	};
 
-	datatable__a.createList = (firstLoad) => {
-		if (firstLoad && datatable__a.nosearch === true) {
+	datatable.createList = (firstLoad) => {
+		if (firstLoad && datatable.nosearch === true) {
 			return;
 		}
 
-		datatable__a.search(() => {
-			datatable__a.initialSearch();
+		datatable.search(() => {
+			datatable.initialSearch();
 
-			if (datatable__a.selectable && datatable__a.selectable.has_metadata) {
+			if (datatable.selectable && datatable.selectable.has_metadata) {
 				try {
-					datatable__a.metadata.forEach((row_data) => {
-						var row = datatable__a.selectionBodyElement.find(
-							`[data-primary="${row_data[datatable__a.primary]}"]`
+					datatable.metadata.forEach((row_data) => {
+						var row = datatable.selectionBodyElement.find(
+							`[data-primary="${row_data[datatable.primary]}"]`
 						);
 						if (row) {
 							Object.entries(row_data).forEach(([key, value]) => {
@@ -827,149 +830,141 @@ function createDatatable(datatable__a) {
 				}
 			}
 
-			datatable__a.selectionChange(false);
+			datatable.selectionChange(false);
 		}, true);
 	};
-	if (datatable__a.selectable) {
-		datatable__a.createList(true);
+	if (datatable.selectable) {
+		datatable.createList(true);
 	} else {
-		datatable__a.initialSearch();
+		datatable.initialSearch();
 	}
 
-	datatable__a.toggleSearchVisibility = (visible) => {
-		expand($(`.${datatable__a.name} .showBtn`), !visible);
-		expand($(`.${datatable__a.name} .table-search-wrapper`), visible);
+	datatable.toggleSearchVisibility = (visible) => {
+		expand($(`.${datatable.name} .showBtn`), !visible);
+		expand($(`.${datatable.name} .table-search-wrapper`), visible);
 	};
 
-	datatable__a.removeRow = (data_id) => {
+	datatable.removeRow = (data_id) => {
 		data_id = +data_id;
-		const index = datatable__a.selection.indexOf(data_id);
+		const index = datatable.selection.indexOf(data_id);
 		if (index === -1) {
 			return;
 		}
 
-		datatable__a.selection.splice(index, 1);
+		datatable.selection.splice(index, 1);
 
-		const index2 = datatable__a.selectionResults
+		const index2 = datatable.selectionResults
 			.map((e) => {
-				return e[datatable__a.primary];
+				return e[datatable.primary];
 			})
 			.indexOf(data_id);
 
-		datatable__a.results.push(datatable__a.selectionResults[index2]);
+		datatable.results.push(datatable.selectionResults[index2]);
 
 		if (index2 !== -1) {
-			datatable__a.selectionResults.splice(index2, 1);
+			datatable.selectionResults.splice(index2, 1);
 		}
 
-		datatable__a.selection.push(data_id);
-		var x = datatable__a.target.find(`[data-primary='${data_id}']`);
-		datatable__a.tableBodyElement.appendChild(x);
+		datatable.selection.push(data_id);
+		var x = datatable.target.find(`[data-primary='${data_id}']`);
+		datatable.tableBodyElement.appendChild(x);
 		var d = x.find(".fa-minus-circle");
 		d.outerHTML = d.outerHTML
 			.replace("minus", "plus")
 			.replace("removeRow", "addRow");
-		datatable__a.selectionChange();
+		datatable.selectionChange();
 	};
-	datatable__a.addRow = (data_id) => {
+	datatable.addRow = (data_id) => {
 		data_id = +data_id;
-		if (datatable__a.singleselect && datatable__a.selection.length > 0) {
-			datatable__a.removeRow(datatable__a.selection[0]);
+		if (datatable.singleselect && datatable.selection.length > 0) {
+			datatable.removeRow(datatable.selection[0]);
 		}
-		if (
-			datatable__a.singleselect ||
-			datatable__a.selection.indexOf(data_id) === -1
-		) {
-			datatable__a.selectionResults.push(
-				datatable__a.results.find((e) => {
-					return e[datatable__a.primary] == data_id;
+		if (datatable.singleselect || datatable.selection.indexOf(data_id) === -1) {
+			datatable.selectionResults.push(
+				datatable.results.find((e) => {
+					return e[datatable.primary] == data_id;
 				})
 			);
-			datatable__a.selection.push(data_id);
-			var x = datatable__a.target.find(`[data-primary='${data_id}']`);
-			datatable__a.selectionBodyElement.appendChild(x);
+			datatable.selection.push(data_id);
+			var x = datatable.target.find(`[data-primary='${data_id}']`);
+			datatable.selectionBodyElement.appendChild(x);
 			var d = x.find(".fa-plus-circle");
 			d.outerHTML = d.outerHTML
 				.replace("plus", "minus")
 				.replace("addRow", "removeRow");
-			datatable__a.selectionChange();
+			datatable.selectionChange();
 		}
 	};
-	datatable__a.selectionChange = (doSearch = true) => {
-		if (datatable__a.selectable.has_metadata) {
-			datatable__a.registerMetadataFields();
+	datatable.selectionChange = (doSearch = true) => {
+		if (datatable.selectable.has_metadata) {
+			datatable.registerMetadataFields();
 		}
 
-		var e = datatable__a.tableSelectionElement.find(".no-results");
+		var e = datatable.tableSelectionElement.find(".no-results");
 		if (e) {
-			e.style.display =
-				datatable__a.selectionResults.length !== 0 ? "none" : "";
+			e.style.display = datatable.selectionResults.length !== 0 ? "none" : "";
 		}
 
-		if (datatable__a.selectable.has_metadata) {
+		if (datatable.selectable.has_metadata) {
 			var metadata = [];
-			datatable__a.selectionBodyElement
+			datatable.selectionBodyElement
 				.findAll("tr[data-primary]")
 				.forEach((e) => {
 					var row = {};
-					row[datatable__a.primary] = parseInt(e.getAttribute("data-primary"));
+					row[datatable.primary] = parseInt(e.getAttribute("data-primary"));
 					e.findAll("[data-metadata]").forEach((m) => {
 						row[m.getAttribute("data-metadata")] = m.getValue();
 					});
 					metadata.push(row);
 				});
-			datatable__a.metadata = metadata;
+			datatable.metadata = metadata;
 		}
 
 		var selection = [];
-		datatable__a.selectionBodyElement.findAll("[data-primary]").forEach((e) => {
+		datatable.selectionBodyElement.findAll("[data-primary]").forEach((e) => {
 			selection.push(parseInt(e.getAttribute("data-primary")));
 		});
 
-		datatable__a.selection = selection;
+		datatable.selection = selection;
 
-		datatable__a.selectionValueElement.value = datatable__a.selectable
-			.has_metadata
-			? datatable__a.getSelectedValuesAllString()
-			: datatable__a.getSelectedValuesString();
+		datatable.selectionValueElement.value = datatable.selectable.has_metadata
+			? datatable.getSelectedValuesAllString()
+			: datatable.getSelectedValuesString();
 
 		if (doSearch) {
-			datatable__a.search();
+			datatable.search();
 		}
 
-		datatable__a.tableSelectionElement.find(
-			".selected-results-count"
-		).innerHTML = datatable__a.selection.length;
+		datatable.tableSelectionElement.find(".selected-results-count").innerHTML =
+			datatable.selection.length;
 
-		if (datatable__a.sortable) {
+		if (datatable.sortable) {
 			var index = 0;
-			datatable__a.selectionBodyElement.findAll(".kolejnosc").forEach((e) => {
+			datatable.selectionBodyElement.findAll(".kolejnosc").forEach((e) => {
 				index++;
 				e.value = index;
 				e.setAttribute("data-value", index);
 			});
 		}
 
-		if (datatable__a.bulk_menu) {
-			datatable__a.bulkEditSelectionChange();
+		if (datatable.bulk_menu) {
+			datatable.bulkEditSelectionChange();
 		}
 
-		if (datatable__a.onSelectionChange) {
-			datatable__a.onSelectionChange(datatable__a.selection, datatable__a);
+		if (datatable.onSelectionChange) {
+			datatable.onSelectionChange(datatable.selection, datatable);
 		}
 	};
-	if (datatable__a.selectable && datatable__a.selectable.has_metadata) {
-		datatable__a.registerMetadataFields = () => {
-			datatable__a.selectionBodyElement
-				.findAll("[data-metadata]")
-				.forEach((m) => {
-					m.oninput = () => {
-						datatable__a.selectionChange(false);
-					};
-					m.onchange = () => {
-						datatable__a.selectionChange(false);
-					};
-				});
+	if (datatable.selectable && datatable.selectable.has_metadata) {
+		datatable.registerMetadataFields = () => {
+			datatable.selectionBodyElement.findAll("[data-metadata]").forEach((m) => {
+				m.oninput = () => {
+					datatable.selectionChange(false);
+				};
+				m.onchange = () => {
+					datatable.selectionChange(false);
+				};
+			});
 		};
 	}
 

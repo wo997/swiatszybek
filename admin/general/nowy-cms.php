@@ -35,22 +35,14 @@ if (!$page_data) {
     useTool("newCms");
 
     window.addEventListener("tool_loaded", (event) => {
-        console.log(event.detail);
         if (event.detail.name == "newCms" && event.detail.info == "all") {
             setFormData(
                 <?= json_encode(
                     getSetting("general", "random", [])
-                ); ?>, `#newCmsForm`);
+                ); ?>, `#newCms`);
 
             editNewCms();
         }
-    });
-
-    domload(() => {
-        /*setFormData(
-            <?= json_encode(
-                getSetting("general", "random", [])
-            ); ?>, `#newCmsForm`);*/
     });
 
     function editNewCms() {
@@ -67,7 +59,8 @@ if (!$page_data) {
         var form = $(`#newCmsForm`);
 
         var params = {
-            random: getFormData(form),
+            //random: getFormData(form),
+            random: JSON.stringify(getFormData($("#newCms")))
         };
 
         xhr({

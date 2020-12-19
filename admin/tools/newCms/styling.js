@@ -9,10 +9,16 @@
 
 /**
  * @typedef {{
- * desktop
- * tablet;
- * mobile
- * custom}} BlockStyles
+ * outside: Object
+ * inside: Object}} BlockStyleTargets
+ */
+
+/**
+ * @typedef {{
+ * desktop: BlockStyleTargets
+ * tablet: BlockStyleTargets
+ * mobile: BlockStyleTargets
+ * custom: string}} BlockStyles
  */
 
 /**
@@ -22,15 +28,28 @@
  * styles: BlockStyles}} StylingBlockData
  */
 
+/** @typedef {"inside" | "outside"} BlockStyleTargetsEnum */
+
+/** @typedef {"desktop" | "tablet"| "mobile" | "custom"} ResponsiveTypesEnum */
+
 /** @returns {StylingBlockData} */
 function getDefaultBlock() {
 	return {
 		id: 0,
 		node: null,
 		styles: {
-			desktop: {},
-			tablet: {},
-			mobile: {},
+			desktop: {
+				outside: {},
+				inside: {},
+			},
+			tablet: {
+				outside: {},
+				inside: {},
+			},
+			mobile: {
+				outside: {},
+				inside: {},
+			},
 			custom: "",
 			// TODO, custom inline or custom SCSS - 2 fields cause why not :P
 		},
@@ -339,6 +358,7 @@ class NewCmsStyling {
 
 			const block_class_name = this.getBlockClassName(block_data.id);
 			const block_selector = `.${block_class_name}`;
+			const block_selector_inside = `.${block_class_name}>.newCms_block_content`;
 
 			let custom = block_data.styles.custom;
 			if (custom) {
@@ -347,22 +367,34 @@ class NewCmsStyling {
 				css_full += custom;
 			}
 
-			const getSomeStyles = (type) => {
-				let styles = block_data.styles[type];
+			/**
+			 * @param {ResponsiveTypesEnum} type
+			 * @param {BlockStyleTargetsEnum} target
+			 */
+			const getSomeStyles = (type, target) => {
+				let styles = block_data.styles[type][target];
 				if (styles) {
 					let css = "";
 					Object.entries(styles).forEach(([prop_css, val]) => {
 						// these are needed by the page builder to work properly during animations
 						// TODO: consider limiting the list to margins, flex-grow etc. (layout related)
 						// TODO: the list goes on baby
-						if (prop_css.includes("margin") || prop_css == "grid-area") {
+						if (prop_css.includes("margin") || prop_css.includes("grid")) {
 							const prop_js = kebabToSnakeCase(prop_css);
-							block_data.node.style[prop_js] = val;
+
+							const tb =
+								target == "outside"
+									? block_data.node
+									: block_data.node.find(".newCms_block_content");
+							tb.style[prop_js] = val;
 						}
 						css += `${prop_css}:${val};`;
 					});
 					if (css) {
-						const block_styles = `${block_selector}{${css}}`;
+						const block_styles =
+							target == "outside"
+								? `${block_selector}{${css}}`
+								: `${block_selector_inside}{${css}}`;
 						return block_styles;
 					}
 				}
@@ -370,7 +402,8 @@ class NewCmsStyling {
 			};
 
 			for (const responsive_type of this.responsive_types) {
-				css_full += getSomeStyles(responsive_type.name);
+				css_full += getSomeStyles(responsive_type.name, "outside");
+				css_full += getSomeStyles(responsive_type.name, "inside");
 
 				if (this.responsive_type.name == responsive_type.name) {
 					break;
@@ -386,21 +419,38 @@ class NewCmsStyling {
 	}
 
 	/**
+	 * @param {Object} styles
 	 * @param {StylingBlockData} block_data
+	 * @param {{
+	 * target?: BlockStyleTargetsEnum
+	 * generate_css?: boolean
+	 * type?: ResponsiveTypesEnum
+	 * }} params
 	 */
-	setNodeStylesFromBlockData(styles, block_data, params = {}) {
+	setBlockStylesFromBlockData(styles, block_data, params = {}) {
 		if (params.type == "custom") {
 			block_data.styles.custom = styles;
 		} else {
+			const target = nonull(params.target, "outside");
 			const type = nonull(params.type, this.responsive_type.name);
-			Object.assign(block_data.styles[type], styles);
+			Object.assign(block_data.styles[type][target], styles);
 		}
 		if (nonull(params.generate_css, true)) {
-			this.generateCSS();
+			this.newCms.contentChange();
+			//this.generateCSS();
 		}
 	}
-	setNodeStyles(styles, node = null, params = {}) {
-		if (node === null) {
+
+	/**
+	 * @param {Object} styles
+	 * @param {PiepNode} node
+	 * @param {{
+	 * target?: BlockStyleTargetsEnum
+	 * last_try?: boolean
+	 * }} params
+	 */
+	setBlockStyles(styles, node = null, params = {}) {
+		if (!node) {
 			node = this.newCms.edit_block.edit_node;
 		}
 		const block_id = this.getBlockId(node);
@@ -413,11 +463,11 @@ class NewCmsStyling {
 			}
 			this.registerMissingBlocks();
 			params.last_try = true;
-			this.setNodeStyles(styles, node, params);
+			this.setBlockStyles(styles, node, params);
 			return;
 		}
 
-		this.setNodeStylesFromBlockData(styles, block_data, params);
+		this.setBlockStylesFromBlockData(styles, block_data, params);
 	}
 
 	getNodeStyles(node = null) {

@@ -1,6 +1,6 @@
 <?php //route[{ADMIN}save_new_cms]
 
-$page_id = getEntityId("page", $_POST["page_id"]);
+/*$page_id = getEntityId("page", $_POST["page_id"]);
 
 // form scopes would have been so much better in that case :)
 $data = filterArrayKeys($_POST, [
@@ -18,4 +18,8 @@ redirect(STATIC_URLS["ADMIN"] . "strona/" . $page_id);
 
 triggerEvent("sitemap_change");
 
-reload();
+reload();*/
+
+saveSetting("general", "random", [
+    "random" => $_POST["random"]
+]);

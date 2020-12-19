@@ -11,8 +11,6 @@ async function useTool(name, callback = {}) {
 	}
 	toolList.push(name);
 
-	console.log("awaiting " + name);
-
 	// @ts-ignore
 	Promise.allSettled([
 		loadScript(
@@ -48,7 +46,6 @@ async function useTool(name, callback = {}) {
 			}
 		),
 	]).then((results) => {
-		console.log(name, "alllll");
 		window.dispatchEvent(
 			new CustomEvent("tool_loaded", {
 				detail: {

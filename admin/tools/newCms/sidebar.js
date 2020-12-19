@@ -26,22 +26,44 @@ class NewCmsSidebar {
 			this.sidebar_animation_offset =
 				this.sidebar_width - this.sidebar_collapsed_width;
 		});
+
+		const width = this.node.find(`[name="width"]`);
+
+		const changeCallback = () => {
+			this.newCms.styling.setBlockStyles({
+				width: width.getValue(),
+			});
+		};
+		width.addEventListener("change", changeCallback);
+		width.addEventListener("input", changeCallback);
+
+		const grid_columns = this.node.find(`[name="grid_columns"]`);
+
+		const changeCallback2 = () => {
+			this.newCms.styling.setBlockStyles(
+				{
+					"grid-template-columns": grid_columns.getValue(),
+				},
+				null,
+				{
+					target: "inside",
+				}
+			);
+		};
+		grid_columns.addEventListener("change", changeCallback2);
+		grid_columns.addEventListener("input", changeCallback2);
+
+		/*<span class="field-title">Kolumny siatki</span>
+							<input type="text" class="field inline" name="grid_columns" />
+
+							<span class="field-title">wiersze siatki</span>
+							<input type="text" class="field inline" name="grid_rows" />*/
 	}
 
 	init() {
 		this.opened_menus = [];
 		this.collapsed = false;
 		this.showSideMenu("add_block", { quiet: true });
-
-		const width = this.node.find(`[name="width"]`);
-
-		const changeCallback = () => {
-			this.newCms.styling.setNodeStyles({
-				width: width.getValue(),
-			});
-		};
-		width.addEventListener("change", changeCallback);
-		width.addEventListener("input", changeCallback);
 	}
 
 	toggleSidebar(collapsed = null) {

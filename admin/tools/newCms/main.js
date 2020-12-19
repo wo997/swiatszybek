@@ -211,7 +211,7 @@ class NewCms {
 				//styles[`margin${dir.capitalize()}`] = input.getValue();
 				styles[`margin-${dir}`] = input.getValue();
 
-				this.styling.setNodeStyles(styles, null, {
+				this.styling.setBlockStyles(styles, null, {
 					type: "desktop",
 				});
 
@@ -908,7 +908,7 @@ class NewCms {
 				const c1 = Math.min(fst.column, scd.column);
 				const c2 = Math.max(fst.column, scd.column);
 
-				this.styling.setNodeStyles(
+				this.styling.setBlockStyles(
 					{
 						"grid-area": `${r1}/${c1}/${r2}/${c2}`,
 					},
@@ -936,7 +936,7 @@ class NewCms {
 						? parseInt(before_node.dataset.flex_order) - 0.5
 						: 1000000;
 
-					this.styling.setNodeStyles(
+					this.styling.setBlockStyles(
 						{
 							order: target_flex_order,
 						},
