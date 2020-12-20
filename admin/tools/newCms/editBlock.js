@@ -169,9 +169,8 @@ class NewCmsEditBlock {
 			? block_styles.inside["grid-template-columns"]
 			: null;
 
-		console.log("gtc", gtc, block);
 		if (gtc) {
-			//grid_template_columns.setValue(gtc, false);
+			grid_template_columns.setValue(gtc, false);
 		}
 
 		block.classList.add("edit_active");

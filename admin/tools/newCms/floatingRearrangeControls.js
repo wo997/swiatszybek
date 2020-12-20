@@ -301,14 +301,23 @@ class NewCmsRearrangeControls {
 				this.rearrange_target_rect_node.classList.add("visible");
 				const rect_data = nodePositionAgainstScrollableParent(parent_container);
 				const border_width = 4;
-				this.rearrange_target_rect_node.style.left =
-					rect_data.relative_pos.left - border_width * 0.5 + "px";
-				this.rearrange_target_rect_node.style.top =
-					rect_data.relative_pos.top - border_width * 0.5 + "px";
-				this.rearrange_target_rect_node.style.width =
-					rect_data.node_rect.width + border_width + "px";
-				this.rearrange_target_rect_node.style.height =
-					rect_data.node_rect.height + border_width + "px";
+
+				let left = rect_data.relative_pos.left - border_width * 0.5;
+				let top = rect_data.relative_pos.top - border_width * 0.5;
+				let width = rect_data.node_rect.width + border_width;
+				let height = rect_data.node_rect.height + border_width;
+
+				if (parent_container === this.newCms.content_node) {
+					left += 6;
+					top += 6;
+					width -= 12;
+					height -= 12;
+				}
+
+				this.rearrange_target_rect_node.style.left = left + "px";
+				this.rearrange_target_rect_node.style.top = top + "px";
+				this.rearrange_target_rect_node.style.width = width + "px";
+				this.rearrange_target_rect_node.style.height = height + "px";
 
 				//parent_container.classList.add("rearrange_possible");
 				if (parent_container.select_control) {
