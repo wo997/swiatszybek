@@ -147,6 +147,11 @@ class NewCms {
 			this.clean_output_node.findAll(".to_remove").forEach((e) => {
 				e.remove();
 			});
+
+			// TODO: be careful with that
+			this.clean_output_node.findAll(".newCms_block").forEach((e) => {
+				e.removeAttribute("style");
+			});
 		});
 
 		this.container
@@ -1158,9 +1163,7 @@ class NewCms {
 			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
 			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-			const block_styles =
-				block.styling_data[this.styling.responsive_type.name];
-			console.log(block_styles, block_styles.outside["margin-top"]);
+			const block_styles = this.styling.getNodeCurrentStyles(block);
 			const mt = evalCss(block_styles.outside["margin-top"], block);
 			const mr = evalCss(block_styles.outside["margin-right"], block);
 			const mb = evalCss(block_styles.outside["margin-bottom"], block);
@@ -1190,8 +1193,10 @@ class NewCms {
 			// give flexbox some space baby
 			const subtract_mr = kisses_right_border ? 2 : 0;
 
-			const fg = block.style.flexGrow;
-			block.style.flexGrow = "0";
+			const fg = block_styles.outside["flex-grow"];
+			if (fg) {
+				block.style.flexGrow = "0";
+			}
 
 			const animation_cramp = block.classList.contains("animation_cramp");
 
@@ -1239,8 +1244,12 @@ class NewCms {
 			// I am sorry for that workaround, but as we go to 90% the animation
 			// freezes so we can be sure nothing will jump like crazy for a single frame,
 			// the proper solution - css transition "forwards" didn't seem to work
-			block.animate(keyframes, duration, () => {
-				block.style.flexGrow = fg;
+			block.animate(keyframes, duration, {
+				callback: () => {
+					if (fg) {
+						block.style.flexGrow = fg;
+					}
+				},
 			});
 
 			delete block.animation_data;
@@ -1386,13 +1395,11 @@ class NewCms {
 					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
 			}
 
-			// these produce unwanted offset on drop
-			const mt = evalCss(grabbed_block.style.marginTop, grabbed_block);
-			//const mr = evalCss(block.style.marginRight, block);
-			//const mb = evalCss(block.style.marginBottom, block);
-			const ml = evalCss(grabbed_block.style.marginLeft, grabbed_block);
-			//target_dx += ml;
-			//target_dy += mt;
+			const block_styles = this.styling.getNodeCurrentStyles(grabbed_block);
+			const mt = evalCss(block_styles.outside["margin-top"], grabbed_block);
+			//const mr = evalCss(block_styles.outside["margin-right"], block);
+			//const mb = evalCss(block_styles.outside["margin-bottom"], block);
+			const ml = evalCss(block_styles.outside["margin-left"], grabbed_block);
 
 			/** @type {AnimationData} */
 			const gbad = grabbed_block.animation_data;

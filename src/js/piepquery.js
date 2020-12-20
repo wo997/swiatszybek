@@ -19,7 +19,6 @@
  * findParentNode(parent, options?): PiepNode
  * findNonStaticParent(options?): PiepNode
  * findParentByTagName(): PiepNode
- 
  * isEmpty(): boolean
  * empty(): void
  * setContent(html: string|number): void
