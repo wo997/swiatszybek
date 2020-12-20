@@ -882,7 +882,7 @@ if ($product_id === -1) {
             <div style='margin-right:6px' class="inline">
               <div class='fancy-label label-filters'>
                 <i class="fas fa-th-large"></i>
-                <input type="text" class="field inline no-wrap semi-bold white" name="filter_name" placeholder="Nazwa pola wyboru" data-tooltip="Wpisz nazwę pola wyboru<br>Np.: <span class='semi-bold'>kolor</span>" data-position="center" onchange="choiceNameChanged(this)">
+                <input type="text" class="field inline no-wrap semi-bold white" name="filter_name" placeholder="Nazwa pola wyboru" data-tooltip="Wpisz nazwę pola wyboru<br>Np.: <span class='semi-bold'>kolor</span>" data-tooltip-position="center" onchange="choiceNameChanged(this)">
               </div>
               Atrybut
               <select class="field inline no-wrap" name="attribute_id" onchange="choiceAttributeChanged(this)" data-tooltip="W tym miejscu możesz:<br>1. Wybrać atrybut z listy wcześniej przygotowanej w zakładce Produkty/Atrybuty<br>2. Wybrać pole niestandardowe (gdy cecha opisuje tylko dany produkt)">

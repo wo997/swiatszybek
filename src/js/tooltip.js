@@ -49,11 +49,14 @@ domload(() => {
 			var left = nodeRect.left + offsetX + nodeRect.width;
 			var top = nodeRect.top + offsetY + nodeRect.height;
 
-			var nodeRectPosition = e.getAttribute("data-position");
+			var nodeRectPosition = e.getAttribute("data-tooltip-position");
 			if (nodeRectPosition == "center") {
 				left -= nodeRect.width / 2 + tooltipRect.width / 2 + offsetX;
 			} else if (nodeRectPosition == "right") {
 				top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
+			} else if (nodeRectPosition == "left") {
+				top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
+				left -= nodeRect.width + tooltipRect.width + offsetX * 2;
 			}
 
 			var maxLeft = window.innerWidth - 30 - tooltipRect.width;
@@ -84,14 +87,16 @@ domload(() => {
 	window.addEventListener("mousewheel", () => {
 		window.tooltip.dismiss();
 	});
-	window.addEventListener("click", (event) => {
-		if (!event.target.findParentNode(window.tooltip.lastTooltipNode)) {
+	window.addEventListener("mousedown", (event) => {
+		// click could be prevented lol
+		window.tooltip.dismiss();
+		/*if (!event.target.findParentNode(window.tooltip.lastTooltipNode)) {
 			window.tooltip.dismiss();
 		} else {
 			if (window.tooltip.lastTooltipNode.hasAttribute("data-tooltip-hide")) {
 				window.tooltip.dismiss();
 			}
-		}
+		}*/
 	});
 
 	window.addEventListener("resize", window.tooltip.resizeCallback);

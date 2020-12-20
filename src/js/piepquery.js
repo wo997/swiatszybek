@@ -6,7 +6,7 @@
  * findAll(query: string): PiepNode[]
  * directChildren(): PiepNode[]
  * setValue(value: any, quiet?: boolean): void
- * getValue(): void
+ * getValue(): any
  * dispatchChange(): void
  * parent(): PiepNode
  * prev(): PiepNode

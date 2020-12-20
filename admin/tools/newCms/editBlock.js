@@ -209,29 +209,41 @@ class NewCmsEditBlock {
 		const x0 = radius;
 		const y0 = radius;
 
-		let btn_set = [
-			{
-				color: "#58D",
-				icon: `<i class="fas fa-pencil-alt" style="transform:translateX(1px)"></i>`,
-				className: "edit_btn",
-			},
-			{
-				color: "#a7a7a7",
-				icon: `<i class="fas fa-arrows-alt"></i>`,
-				className: "relocate_btn",
-			},
-			{
-				color: "#a7a7a7",
-				icon: `<i class="fas fa-copy"></i>`,
-				className: "copy_btn",
-			},
-		];
+		let btn_set = [];
+
+		btn_set.push({
+			color: "#58D",
+			icon: `<i class="fas fa-pencil-alt" style="margin-top: 1px;"></i>`,
+			className: "edit_btn",
+			tooltip: "Edytuj blok",
+		});
+		if (block.dataset.block == "grid") {
+			btn_set.push({
+				color: "#b5b",
+				icon: `<i class="fas fa-grip-lines-vertical"></i><div style="background:black;width:1em;height:2px;margin-top:-1px"></div>`,
+				className: "grid_btn",
+				tooltip: "Wiersze / kolumny",
+			});
+		}
+		btn_set.push({
+			color: "#a7a7a7",
+			icon: `<i class="fas fa-arrows-alt"></i>`,
+			className: "relocate_btn",
+			tooltip: "Przemieść",
+		});
+		btn_set.push({
+			color: "#a7a7a7",
+			icon: `<i class="fas fa-copy"></i>`,
+			className: "copy_btn",
+			tooltip: "Kopiuj blok",
+		});
 
 		//if (!block.parent().classList.contains("newCmsContent")) {
 		btn_set.push({
 			color: "#f55",
 			icon: `<i class="fas fa-times"></i>`,
 			className: "remove_btn",
+			tooltip: "Usuń blok",
 		});
 		//}
 
@@ -242,13 +254,18 @@ class NewCmsEditBlock {
 		const space_ratio = 1.5;
 		const inner_space_ratio = (space_ratio * radius) / inner_radius;
 
-		for (let i = 0; i < btn_count; i++) {
-			const point = (a, r) => {
-				return {
-					x: x0 - Math.sin(a * norad) * r,
-					y: y0 - Math.cos(a * norad) * r,
-				};
+		const point = (a, r) => {
+			return {
+				x: x0 - Math.sin(a * norad) * r,
+				y: y0 - Math.cos(a * norad) * r,
 			};
+		};
+
+		const on_left_left = point(90, 0.5 * radius);
+		const on_right_right = point(270, 0.5 * radius);
+		const on_top_top = point(0, 0.5 * radius);
+
+		for (let i = 0; i < btn_count; i++) {
 			const a1 = (i * 360) / btn_count;
 			const a2 = ((i + 1) * 360) / btn_count;
 
@@ -261,6 +278,25 @@ class NewCmsEditBlock {
 
 			const btn_data = btn_set[i];
 
+			let tooltip = "";
+			if (btn_data.tooltip) {
+				let pos = "center";
+				let mid_x = (p1.x + p2.x) * 0.5;
+				let mid_y = (p1.y + p2.y) * 0.5;
+				if (mid_x < on_left_left.x) {
+					pos = "left";
+				} else if (mid_x > on_right_right.x) {
+					pos = "right";
+				} else if (mid_y < on_top_top.y) {
+					if (mid_x < (on_left_left.x + on_right_right.x) * 0.5) {
+						pos = "left";
+					} else {
+						pos = "right";
+					}
+				}
+				tooltip = `data-tooltip="${btn_data.tooltip}" data-tooltip-position="${pos}"`;
+			}
+
 			buttons += /*html*/ `
                 <path class="context-btn" fill="#fff" d="
                     M${p1.x},${p1.y}
@@ -272,6 +308,7 @@ class NewCmsEditBlock {
                 "></path>
                 <path class="context-btn 
                 ${btn_data.className}"
+                ${tooltip}
                 fill="${btn_data.color}" d="
                     M${p1.x},${p1.y}
                     A${radius},${radius} 1 0,0 ${p2.x},${p2.y}
@@ -283,7 +320,7 @@ class NewCmsEditBlock {
                 <foreignObject x="${p5.x - icon_size * 0.5}" y="${
 				p5.y - icon_size * 0.5
 			}" width="${icon_size}" height="${icon_size}" pointer-events="none">
-                    <div class="context-icon" >
+                    <div class="context-icon">
                         ${btn_data.icon}
                     </div>
                 </foreignObject>
@@ -367,6 +404,17 @@ class NewCmsEditBlock {
 		if (dismiss_btn) {
 			dismiss_btn.addEventListener("click", () => {
 				this.hideContextMenu();
+			});
+		}
+
+		const grid_btn = this.node.find(".grid_btn");
+		if (grid_btn) {
+			grid_btn.addEventListener("click", () => {
+				this.hideContextMenu();
+				/*this.newCms.removeBlock(block);
+				if (this.newCms.sidebar.getCurrentMenu() === "edit_block") {
+					this.newCms.sidebar.showPreviousSideMenu();
+				}*/
 			});
 		}
 
