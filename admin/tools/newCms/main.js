@@ -343,14 +343,16 @@ class NewCms {
 				setTimeout(() => {
 					this.contentChange();
 					this.unlockInput();
-					this.container.dispatchEvent(new Event("ready"));
 
-					setFormInitialState(this.container);
+					// who the hell needs that? not me
+					//this.container.dispatchEvent(new Event("ready"));
 				}, 100);
 			},
 		});
 
 		this.container.dispatchEvent(new Event("edit"));
+
+		setFormInitialState(this.container);
 	}
 
 	save() {

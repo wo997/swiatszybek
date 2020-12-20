@@ -77,9 +77,9 @@ class NewCmsStyling {
 				duration: 0,
 			});
 		});
-		this.newCms.container.addEventListener("ready", (event) => {
+		/*this.newCms.container.addEventListener("ready", (event) => {
 			this.init();
-		});
+		});*/
 	}
 
 	/** @returns {StylingBlockData} */
@@ -430,7 +430,8 @@ class NewCmsStyling {
 						// these are needed by the page builder to work properly during animations
 						// TODO: consider limiting the list to margins, flex-grow etc. (layout related)
 						// TODO: the list goes on baby
-						if (
+						// FINALLY: the styles are assigned to the NewCmsBlock.styling_data
+						/*if (
 							prop_css.includes("margin") ||
 							prop_css.includes("grid") ||
 							prop_css === "flex-flow"
@@ -442,7 +443,7 @@ class NewCmsStyling {
 									? block_data.node
 									: block_data.node.find(".newCms_block_content");
 							tb.style[prop_js] = val;
-						}
+						}*/
 						css += `${prop_css}:${val};`;
 					});
 					if (css) {
