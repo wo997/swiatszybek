@@ -102,8 +102,10 @@ class NewCmsSelectControls {
 	addFloatingSelectControls() {
 		this.removeSelection();
 
+		const blocks = this.newCms.content_node.findAll(".newCms_block");
+
 		let blocks_data = [];
-		this.newCms.content_node.findAll(".newCms_block").forEach((block) => {
+		blocks.forEach((block) => {
 			if (block.classList.contains("cramped")) {
 				return;
 			}

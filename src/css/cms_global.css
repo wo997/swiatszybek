@@ -1,62 +1,62 @@
 /* css[global] */
 
 .cms {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: center;
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	justify-content: center;
 }
 
 .attention {
-  box-shadow: inset 0px 0px 20px 0px rgb(255, 253, 113) !important;
+	box-shadow: inset 0px 0px 20px 0px rgb(255, 253, 113) !important;
 }
 
 .background-color,
 .background-image {
-  position: absolute;
-  width: 100% !important;
-  height: 100% !important;
-  background: transparent;
-  pointer-events: none;
-  left: 0;
-  top: 0;
+	position: absolute;
+	width: 100% !important;
+	height: 100% !important;
+	background: transparent;
+	pointer-events: none;
+	left: 0;
+	top: 0;
 }
 
 .cms-container {
-  display: flex;
-  position: relative;
-  width: 100%;
-  background: white;
+	display: flex;
+	position: relative;
+	width: 100%;
+	background: white;
 }
 .cms-container-content {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  /*overflow: hidden;*/
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	/*overflow: hidden;*/
 }
 
 .cms-block {
-  display: flex;
-  position: relative;
-  max-width: 100%;
-  width: 100%;
-  /*overflow: hidden;*/
+	display: flex;
+	position: relative;
+	max-width: 100%;
+	width: 100%;
+	/*overflow: hidden;*/
 }
 .cms-block-content {
-  position: relative;
+	position: relative;
 }
 
 .align-vertical-top,
 .align-vertical-none {
-  align-items: flex-start;
+	align-items: flex-start;
 }
 .align-vertical-center {
-  align-items: center;
+	align-items: center;
 }
 .align-vertical-bottom {
-  align-items: flex-end;
+	align-items: flex-end;
 }
 
 /*.cms-block > * {
@@ -65,57 +65,57 @@
 .align-vertical-top > *,
 .align-vertical-center > *,
 .align-vertical-bottom > * {
-  min-height: 100px !important;
+	min-height: 100px !important;
 }
 
 .align-horizontal-left {
-  justify-content: flex-start;
+	justify-content: flex-start;
 }
 .align-horizontal-center {
-  justify-content: center;
+	justify-content: center;
 }
 .align-horizontal-right {
-  justify-content: flex-end;
+	justify-content: flex-end;
 }
 
 .cms-block > * {
-  width: 100%;
+	width: 100%;
 }
 .align-horizontal-left > *,
 .align-horizontal-center > *,
 .align-horizontal-right > * {
-  width: auto;
+	width: auto;
 }
 
 .background-image {
-  object-fit: cover;
+	object-fit: cover;
 }
 
 .block-padding-none > *,
 .block-padding-none .ql-editor {
-  padding: 0;
+	padding: 0;
 }
 .block-padding-small > *,
 .block-padding-small .ql-editor {
-  /*padding: 3%; 12px default */
+	/*padding: 3%; 12px default */
 }
 .block-padding-medium > *,
 .block-padding-medium .ql-editor {
-  padding: 3%;
+	padding: 3%;
 }
 .block-padding-large > *,
 .block-padding-large .ql-editor {
-  padding: 6%;
+	padding: 6%;
 }
 
 .background-image {
-  z-index: 1;
+	z-index: 1;
 }
 .background-color {
-  z-index: 2;
+	z-index: 2;
 }
 .cms-block-content,
 .cms-container-content,
 .ql-editor {
-  z-index: 3;
+	z-index: 3;
 }

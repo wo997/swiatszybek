@@ -187,7 +187,11 @@
 							<input type="text" class="field inline" name="width" />
 
 							<span class="field-title">Kolumny siatki</span>
-							<input type="text" class="field inline" name="grid_columns" />
+							<input
+								type="text"
+								class="field inline"
+								name="grid_template_columns"
+							/>
 
 							<span class="field-title">wiersze siatki</span>
 							<input type="text" class="field inline" name="grid_rows" />
@@ -209,13 +213,8 @@
 							<div class="rearrange_grabbed_rect"></div>
 							<div class="rearrange_target_rect"></div>
 							<div class="selection_node"></div>
-							<!-- newCms_block_content class is temporary, it prevents margin collapsing, later u wanna for for sections etc-->
-							<div
-								class="newCmsContent newCms_block_content"
-								data-type="html"
-								name="content"
-							></div>
-							<div class="newCmsContent_copy newCms_block_content"></div>
+							<div class="newCmsContent" data-type="html" name="content"></div>
+							<div class="newCmsContent_copy"></div>
 						</div>
 					</div>
 				</div>

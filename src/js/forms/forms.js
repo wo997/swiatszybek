@@ -39,6 +39,11 @@ function setFormInitialState(form) {
 }
 
 function setFormData(data, form, params = {}) {
+	if (!data) {
+		console.error("No form data found");
+		return;
+	}
+
 	form = $(form);
 
 	form.setting_data = true;

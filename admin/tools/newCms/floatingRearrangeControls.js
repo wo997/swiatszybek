@@ -76,6 +76,11 @@ class NewCmsRearrangeControls {
 
 		this.newCms.container.classList.remove("rearrange_possible");
 		this.rearrange_target_rect_node.classList.remove("visible");
+
+		const add_block_hint = this.newCms.content_node.find(".add_block_hint");
+		if (add_block_hint) {
+			add_block_hint.classList.remove("invisible");
+		}
 	}
 
 	mouseMove() {
@@ -612,6 +617,23 @@ class NewCmsRearrangeControls {
 		addControls("inside");
 		addControls("before");
 		addControls("after");
+
+		/*if (blocks_data.length === 0) {
+			const add_block_hint = this.newCms.content_node.find(".add_block_hint");
+			if (add_block_hint) {
+				add_block_hint.classList.add("invisible");
+			}
+
+			blocks_data.push({
+				index: 0,
+				block: this.newCms.content_node,
+				rect_data: nodePositionAgainstScrollableParent(
+					this.newCms.content_node
+				),
+				is_parent_row: false,
+				position: "inside",
+			});
+		}*/
 
 		const sorted_blocks_data = blocks_data.sort((a, b) => {
 			return Math.sign(a.index - b.index);

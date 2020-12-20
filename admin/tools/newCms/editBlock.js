@@ -27,7 +27,7 @@ class NewCmsEditBlock {
 				if (block_type == "image") {
 					this.newCms.edit_block.edit_node
 						.find(".newCms_block_content")
-						.setValue(image.getValue());
+						.setValue(image.getValue(), false);
 
 					lazyLoadImages();
 					this.newCms.contentChange();
@@ -119,10 +119,11 @@ class NewCmsEditBlock {
 		// u know these weird scripts that include and combined give a nice juicy forms etc?
 		// thats what I'm talking about
 
-		const set_val_options = {};
-		if (options.quiet) {
+		const block_styles = this.newCms.styling.getNodeCurrentStyles();
+
+		/*if (options.quiet) {
 			set_val_options.quiet = options.quiet;
-		}
+		}*/
 
 		const block_type = block.dataset.block;
 		if (block_type == "quill_editor") {
@@ -132,10 +133,7 @@ class NewCmsEditBlock {
 		}
 		if (block_type == "image") {
 			const image = this.newCms.sidebar.node.find(`[name="image"]`);
-			image.setValue(
-				block.find(".newCms_block_content").getValue(),
-				set_val_options
-			);
+			image.setValue(block.find(".newCms_block_content").getValue(), false);
 			lazyLoadImages();
 		}
 		if (block_type == "container") {
@@ -146,26 +144,39 @@ class NewCmsEditBlock {
 				this.newCms.edit_block.edit_node.classList.contains("container_row")
 					? "container_row"
 					: "",
-				set_val_options
+				false
 			);
 		}
 
 		// for all blocks types
 		const margin = this.newCms.sidebar.node.find(`.margin`);
 
+		// TODO: kuuuuuuuuurwa
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
 			const dir = input.dataset.dir;
 
-			input.setValue(
-				this.edit_node.style[`margin${dir.capitalize()}`],
-				set_val_options
-			);
+			//input.setValue(this.edit_node.style[`margin${dir.capitalize()}`], false);
 		});
+
+		const grid_template_columns = this.newCms.sidebar.node.find(
+			`[name="grid_template_columns"]`
+		);
+
+		console.log(block_styles);
+
+		const gtc = block_styles
+			? block_styles.inside["grid-template-columns"]
+			: null;
+
+		console.log("gtc", gtc, block);
+		if (gtc) {
+			//grid_template_columns.setValue(gtc, false);
+		}
 
 		block.classList.add("edit_active");
 
-		const sidebar_options = cloneObject(set_val_options);
+		const sidebar_options = cloneObject(options);
 		if (options.quiet) {
 			sidebar_options.duration = 0;
 		}
@@ -179,6 +190,10 @@ class NewCmsEditBlock {
 		// this.newCms.container.classList.remove("anything_selected");
 	}
 
+	/**
+	 *
+	 * @param {NewCmsBlock} block
+	 */
 	showControlsToBlock(block) {
 		this.select_node = block;
 
@@ -195,7 +210,7 @@ class NewCmsEditBlock {
 		const x0 = radius;
 		const y0 = radius;
 
-		const btn_set = [
+		let btn_set = [
 			{
 				color: "#58D",
 				icon: `<i class="fas fa-pencil-alt" style="transform:translateX(1px)"></i>`,
@@ -211,12 +226,15 @@ class NewCmsEditBlock {
 				icon: `<i class="fas fa-copy"></i>`,
 				className: "copy_btn",
 			},
-			{
+		];
+
+		if (!block.parent().classList.contains("newCmsContent")) {
+			btn_set.push({
 				color: "#f55",
 				icon: `<i class="fas fa-times"></i>`,
 				className: "remove_btn",
-			},
-		];
+			});
+		}
 
 		const btn_count = btn_set.length;
 
@@ -306,7 +324,7 @@ class NewCmsEditBlock {
 			copy_btn.addEventListener("click", () => {
 				/** @type {NewCmsBlock} */
 				// @ts-ignore
-				const copied_block = createNodeByHtml(block.outerHTML);
+				const copied_block = createNodeFromHtml(block.outerHTML);
 				const b_rect = block.getBoundingClientRect();
 				this.newCms.sidebar.node.appendChild(copied_block);
 				copied_block.style.width = b_rect.width + "px";

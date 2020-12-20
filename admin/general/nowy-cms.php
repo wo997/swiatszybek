@@ -36,10 +36,12 @@ if (!$page_data) {
 
     window.addEventListener("tool_loaded", (event) => {
         if (event.detail.name == "newCms" && event.detail.info == "all") {
+            let data = JSON.parse(<?= json_encode(
+                                        getSetting("general", "random", [])
+                                    ); ?>);
+
             setFormData(
-                <?= json_encode(
-                    getSetting("general", "random", [])
-                ); ?>, `#newCms`);
+                data, `#newCms`);
 
             editNewCms();
         }
@@ -58,9 +60,15 @@ if (!$page_data) {
     function saveNewCms() {
         var form = $(`#newCmsForm`);
 
+        const data = getFormData($("#newCms"));
+        const less_data = {
+            content: data.content,
+            styles: data.styles,
+        };
+
         var params = {
             //random: getFormData(form),
-            random: JSON.stringify(getFormData($("#newCms")))
+            random: JSON.stringify(less_data)
         };
 
         xhr({

@@ -272,9 +272,7 @@ class NewCms {
 			// @ts-ignore
 			const edit_block = this.content_node.find(".edit_active");
 			if (edit_block) {
-				this.edit_block.editBlock(edit_block, {
-					quiet: true,
-				});
+				this.edit_block.editBlock(edit_block);
 			} else {
 				this.sidebar.showSideMenu("add_block", {
 					quiet: true,
@@ -322,12 +320,12 @@ class NewCms {
 		this.targetNode = $(targetNode);
 		this.options = options;
 
-		setFormData(
+		/*setFormData(
 			{
 				content: this.getCleanOutput(this.targetNode.innerHTML),
 			},
 			this.container
-		);
+		);*/
 		this.contentChange();
 
 		this.lockInput();
@@ -461,12 +459,45 @@ class NewCms {
 		}
 	}
 
+	caseEmptyHint() {
+		const has_any_block = !!this.content_node.find(".newCms_block");
+
+		if (!has_any_block) {
+			this.content_node.insertAdjacentHTML(
+				"afterbegin",
+				this.getBlockHtml("container")
+			);
+		}
+
+		/*
+        const add_block_hint = this.content_node.find(".add_block_hint");
+        if (!has_any_block && !add_block_hint) {
+			this.content_node.insertAdjacentHTML(
+				"afterbegin",
+				`
+                    <div class="add_block_hint">
+                        <i class="fas fa-info-circle"></i>
+                        Wybierz blok, który chcesz
+                        <br>
+                        dodać z menu po lewej stronie
+                    </div>
+                `
+            );
+		}*/
+
+		/*if (has_any_block && add_block_hint) {
+			add_block_hint.remove();
+		}*/
+	}
+
 	contentChange(options = {}) {
 		this.insertMissingQlClasses();
 		this.manageGrids();
 		this.styling.setBlocksFlexOrder();
 
-		// temporary
+		this.caseEmptyHint();
+
+		// TODO: temporary
 		this.content_node.findAll("img").forEach((e) => {
 			if (!e.style.width) {
 				e.style.width = e.getBoundingClientRect().width + "px";
@@ -842,7 +873,7 @@ class NewCms {
 				);
 
 				// @ts-ignore
-				grabbed_block = createNodeByHtml(this.getBlockHtml(block_type));
+				grabbed_block = createNodeFromHtml(this.getBlockHtml(block_type));
 				this.grabbed_block = grabbed_block;
 				this.content_node.appendChild(grabbed_block);
 				grabbed_block.animation_data = animation_data;

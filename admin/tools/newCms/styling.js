@@ -32,30 +32,6 @@
 
 /** @typedef {"desktop" | "tablet"| "mobile" | "custom"} ResponsiveTypesEnum */
 
-/** @returns {StylingBlockData} */
-function getDefaultBlock() {
-	return {
-		id: 0,
-		node: null,
-		styles: {
-			desktop: {
-				outside: {},
-				inside: {},
-			},
-			tablet: {
-				outside: {},
-				inside: {},
-			},
-			mobile: {
-				outside: {},
-				inside: {},
-			},
-			custom: "",
-			// TODO, custom inline or custom SCSS - 2 fields cause why not :P
-		},
-	};
-}
-
 class NewCmsStyling {
 	/** @type {ResponsiveType} */
 	responsive_type;
@@ -104,6 +80,29 @@ class NewCmsStyling {
 		this.newCms.container.addEventListener("ready", (event) => {
 			this.init();
 		});
+	}
+
+	/** @returns {StylingBlockData} */
+	getDefaultBlock() {
+		return {
+			id: 0,
+			node: null,
+			styles: {
+				desktop: {
+					outside: {},
+					inside: {},
+				},
+				tablet: {
+					outside: {},
+					inside: {},
+				},
+				mobile: {
+					outside: {},
+					inside: {},
+				},
+				custom: "",
+			},
+		};
 	}
 
 	mouseClick() {
@@ -258,17 +257,19 @@ class NewCmsStyling {
 			for (const block_data of this.blocks) {
 				const export_block_data = {
 					id: block_data.id,
-					styles: JSON.stringify(block_data.styles),
+					styles: block_data.styles,
 				};
 				export_styles.push(export_block_data);
 			}
 			// @ts-ignore
-			event.detail.data.styles = export_styles;
+			event.detail.data.styles = JSON.stringify(export_styles);
 			// @ts-ignore
 			event.detail.data.responsive_type_name = this.responsive_type.name;
 		});
 
-		this.newCms.container.addEventListener("before_set_form_data", (event) => {
+		this.newCms.container.addEventListener("after_set_form_data", (event) => {
+			this.registerMissingBlocks();
+
 			// @ts-ignore
 			if (event.detail.data.responsive_type_name) {
 				// @ts-ignore
@@ -277,24 +278,32 @@ class NewCmsStyling {
 					duration: 0,
 				});
 			}
-			// @ts-ignore
-			if (isArray(event.detail.data.styles)) {
+
+			try {
+				// @ts-ignore
+				const styles = JSON.parse(event.detail.data.styles);
+
 				this.blocks = [];
 				// @ts-ignore
-				for (const import_block_data of event.detail.data.styles) {
+				for (const import_block_data of styles) {
 					const block_id = import_block_data.id;
-					const node = $(`.${this.getBlockClassName(block_id)}`);
+					const node = this.newCms.content_node.find(
+						`.${this.getBlockClassName(block_id)}`
+					);
+
+					//console.log(node, `.${this.getBlockClassName(block_id)}`);
 
 					if (node) {
+						/** @type {StylingBlockData} */
 						const block_data = {
 							id: block_id,
-							styles: JSON.parse(import_block_data.styles),
+							styles: import_block_data.styles,
 							node: node,
 						};
 						this.blocks.push(block_data);
 					}
 				}
-			}
+			} catch (e) {}
 			this.generateCSS();
 		});
 	}
@@ -308,7 +317,7 @@ class NewCmsStyling {
 			}
 
 			// TODO: fetch styles from... somewhere, like a node with big json in html
-			const block_data = getDefaultBlock();
+			const block_data = this.getDefaultBlock();
 			block_data.id = block_id;
 			block_data.node = node;
 			this.blocks.push(block_data);
@@ -330,7 +339,7 @@ class NewCmsStyling {
 				).id + 1;
 			node.classList.add(this.getBlockClassName(block_id));
 
-			const block_data = getDefaultBlock();
+			const block_data = this.getDefaultBlock();
 			block_data.id = block_id;
 			block_data.node = node;
 			this.blocks.push(block_data);
@@ -445,43 +454,57 @@ class NewCmsStyling {
 	 * @param {Object} styles
 	 * @param {PiepNode} node
 	 * @param {{
+	 * type?: ResponsiveTypesEnum
 	 * target?: BlockStyleTargetsEnum
-	 * last_try?: boolean
 	 * }} params
 	 */
 	setBlockStyles(styles, node = null, params = {}) {
 		if (!node) {
 			node = this.newCms.edit_block.edit_node;
 		}
+		//console.log(styles, node, params);
+
+		this.registerMissingBlocks();
 		const block_id = this.getBlockId(node);
 		/** @type {StylingBlockData} */
 		const block_data = this.blocks.find((e) => e.id == block_id);
 
 		if (!block_data) {
-			if (params.last_try) {
-				return;
-			}
-			this.registerMissingBlocks();
-			params.last_try = true;
-			this.setBlockStyles(styles, node, params);
+			console.error("No block found");
 			return;
 		}
 
 		this.setBlockStylesFromBlockData(styles, block_data, params);
 	}
 
-	getNodeStyles(node = null) {
+	getBlockStyles(node = null) {
 		if (node === null) {
 			node = this.newCms.edit_block.edit_node;
+		}
+		if (!node) {
+			console.error("No block selected");
+			return;
 		}
 		const block_id = this.getBlockId(node);
 		/** @type {StylingBlockData} */
 		const block_data = this.blocks.find((e) => e.id == block_id);
-
+		if (!block_data) {
+			console.error("No block found");
+			return;
+		}
 		return block_data.styles;
 	}
-	getCurrentNodeStyles(node = null) {
-		return this.getNodeStyles(node)[this.responsive_type.name];
+
+	/** @returns {BlockStyleTargets} */
+	getNodeCurrentStyles(node = null) {
+		if (node === null) {
+			node = this.newCms.edit_block.edit_node;
+		}
+		const node_styles = this.getBlockStyles(node);
+		if (!node_styles) {
+			return null;
+		}
+		return node_styles[this.responsive_type.name];
 	}
 
 	/**
@@ -494,7 +517,7 @@ class NewCmsStyling {
 			child_count++;
 
 			/** @type {BlockStyles} */
-			const block_styles = this.getNodeStyles(block);
+			const block_styles = this.getBlockStyles(block);
 
 			let flex_order = child_count;
 
@@ -567,7 +590,7 @@ class NewCmsStyling {
 						child_count++;
 
 						/** @type {BlockStyles} */
-						const block_styles = this.getNodeStyles(block);
+						const block_styles = this.getBlockStyles(block);
 						//console.log(block, child_count);
 
 						block_styles[this.responsive_type.name].order = child_count;

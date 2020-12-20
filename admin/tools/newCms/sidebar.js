@@ -1,7 +1,10 @@
 /* js[tool_newCms] */
 
 class NewCmsSidebar {
-	/** @param {NewCms} newCms */
+	/**
+	 * @param {NewCms} newCms
+	 * @param {PiepNode} node
+	 */
 	constructor(newCms, node) {
 		this.newCms = newCms;
 		this.node = node;
@@ -37,12 +40,15 @@ class NewCmsSidebar {
 		width.addEventListener("change", changeCallback);
 		width.addEventListener("input", changeCallback);
 
-		const grid_columns = this.node.find(`[name="grid_columns"]`);
+		const grid_template_columns = this.node.find(
+			`[name="grid_template_columns"]`
+		);
 
 		const changeCallback2 = () => {
+			console.log(grid_template_columns.getValue());
 			this.newCms.styling.setBlockStyles(
 				{
-					"grid-template-columns": grid_columns.getValue(),
+					"grid-template-columns": grid_template_columns.getValue(),
 				},
 				null,
 				{
@@ -50,14 +56,8 @@ class NewCmsSidebar {
 				}
 			);
 		};
-		grid_columns.addEventListener("change", changeCallback2);
-		grid_columns.addEventListener("input", changeCallback2);
-
-		/*<span class="field-title">Kolumny siatki</span>
-							<input type="text" class="field inline" name="grid_columns" />
-
-							<span class="field-title">wiersze siatki</span>
-							<input type="text" class="field inline" name="grid_rows" />*/
+		grid_template_columns.addEventListener("change", changeCallback2);
+		grid_template_columns.addEventListener("input", changeCallback2);
 	}
 
 	init() {

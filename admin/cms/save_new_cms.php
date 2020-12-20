@@ -21,5 +21,8 @@ triggerEvent("sitemap_change");
 reload();*/
 
 saveSetting("general", "random", [
-    "random" => $_POST["random"]
+    "path" => [],
+    "value" => $_POST["random"]
 ]);
+
+reload();

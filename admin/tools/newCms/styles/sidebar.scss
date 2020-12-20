@@ -136,6 +136,7 @@
 		width: calc(50% - 4px);
 		cursor: pointer;
 		transition: box-shadow 0.2s;
+		user-select: none;
 	}
 	&:not(.grabbed):hover {
 		box-shadow: 0 1px 3px 0 var(--primary-clr);
