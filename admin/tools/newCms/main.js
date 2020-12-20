@@ -273,7 +273,10 @@ class NewCms {
 			// @ts-ignore
 			const edit_block = this.content_node.find(".edit_active");
 			if (edit_block) {
-				this.edit_block.editBlock(edit_block);
+				this.edit_block.editBlock(edit_block, {
+					duration: 0,
+					quiet: true,
+				});
 			} else {
 				this.sidebar.showSideMenu("add_block", {
 					quiet: true,
