@@ -15,7 +15,7 @@ useTool("fileManager");
  * getNextBlock(): NewCmsBlock
  * getPrevBlock(): NewCmsBlock
  * select_control: PiepNode
- * styling_data: object
+ * styling_data: BlockStyles
  * } & PiepNode} NewCmsBlock
  */
 
@@ -1104,6 +1104,12 @@ class NewCms {
 		return all_animatable_blocks;
 	}
 
+	/**
+	 *
+	 * @param {NewCmsBlock[]} all_animatable_blocks
+	 * @param {number} duration
+	 * @param {*} options
+	 */
 	animateContent(all_animatable_blocks, duration, options = {}) {
 		this.lockInput(duration);
 
@@ -1149,10 +1155,13 @@ class NewCms {
 			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
 			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-			const mt = evalCss(block.style.marginTop, block);
-			const mr = evalCss(block.style.marginRight, block);
-			const mb = evalCss(block.style.marginBottom, block);
-			const ml = evalCss(block.style.marginLeft, block);
+			const block_styles =
+				block.styling_data[this.styling.responsive_type.name];
+			console.log(block_styles, block_styles.outside["margin-top"]);
+			const mt = evalCss(block_styles.outside["margin-top"], block);
+			const mr = evalCss(block_styles.outside["margin-right"], block);
+			const mb = evalCss(block_styles.outside["margin-bottom"], block);
+			const ml = evalCss(block_styles.outside["margin-left"], block);
 
 			const mt0 = mt + half_dh;
 			const mr0 = mr + half_dw;

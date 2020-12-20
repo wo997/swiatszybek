@@ -120,9 +120,9 @@ class NewCmsStyling {
 	}
 
 	init(options = {}) {
-		/** @type {StylingBlockData[]} */
 		if (!isArray(this.blocks)) {
 			// TODO: this would get overriden cause we edit the document once again and it just decided to get rid of that, not cool bro!
+			/** @type {StylingBlockData[]} */
 			this.blocks = [];
 		}
 
@@ -359,6 +359,14 @@ class NewCmsStyling {
 	 * @param {StylingBlockData} block_data
 	 */
 	addBlockData(block_data) {
+		if (
+			this.blocks.find((e) => {
+				return e.id == block_data.id;
+			})
+		) {
+			return;
+		}
+
 		block_data.node.styling_data = block_data.styles;
 		this.blocks.push(block_data);
 	}
@@ -546,16 +554,15 @@ class NewCmsStyling {
 		return block_data.styles;
 	}
 
-	/** @returns {BlockStyleTargets} */
+	/**
+	 * @param {NewCmsBlock} node
+	 * @returns {BlockStyleTargets}
+	 *  */
 	getNodeCurrentStyles(node = null) {
 		if (node === null) {
 			node = this.newCms.edit_block.edit_node;
 		}
-		const node_styles = this.getBlockStyles(node);
-		if (!node_styles) {
-			return null;
-		}
-		return node_styles[this.responsive_type.name];
+		return node.styling_data[this.responsive_type.name];
 	}
 
 	/**
@@ -568,7 +575,8 @@ class NewCmsStyling {
 			child_count++;
 
 			/** @type {BlockStyles} */
-			const block_styles = this.getBlockStyles(block);
+
+			const block_styles = block.styling_data;
 
 			let flex_order = child_count;
 
@@ -640,11 +648,7 @@ class NewCmsStyling {
 						const block = b;
 						child_count++;
 
-						/** @type {BlockStyles} */
-						const block_styles = this.getBlockStyles(block);
-						//console.log(block, child_count);
-
-						block_styles[this.responsive_type.name].order = child_count;
+						block.styling_data[this.responsive_type.name].order = child_count;
 					});
 
 					// @ts-ignore
