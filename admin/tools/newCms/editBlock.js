@@ -220,7 +220,9 @@ class NewCmsEditBlock {
 		if (block.dataset.block == "grid") {
 			btn_set.push({
 				color: "#b5b",
-				icon: `<i class="fas fa-grip-lines-vertical"></i><div style="background:black;width:1em;height:2px;margin-top:-1px"></div>`,
+				icon: /*html*/ `
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="-21 -21 682.667 682.667" width="1em"><rect width="676.881" height="86.78" x="-18" y="48.904" rx="6.68" ry="6.429" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18" y="325.585" rx="6.68" ry="6.429" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18" y="507.446" rx="6.68" ry="6.429" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18.215" y="-134.96" rx="6.68" ry="6.429" transform="rotate(90)" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18.215" y="-418.28" rx="6.68" ry="6.429" transform="rotate(90)" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18.215" y="-597.681" rx="6.68" ry="6.429" transform="rotate(90)" paint-order="markers fill stroke"/></svg>
+                `,
 				className: "grid_btn",
 				tooltip: "Wiersze / kolumny",
 			});
