@@ -730,7 +730,7 @@ function removeClassesWithPrefix(node, prefix) {
 	matches.forEach((match) => {
 		cn = cn.replace(match, "");
 	});
-	node.className = cn;
+	node.className = cn.trim();
 
 	return matches;
 }

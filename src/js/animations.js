@@ -78,9 +78,17 @@ function removeAnimation(animation_name) {
 	}
 }
 
+/**
+ *
+ * @param {PiepNode} node
+ */
+function cleanNodeFromAnimations(node) {
+	return removeClassesWithPrefix(node, "wo997_animation_");
+}
+
 function finishNodeAnimation(node, is_early = false) {
 	delete node.wo997_animation_timeout;
-	const matches = removeClassesWithPrefix(node, "wo997_animation_");
+	const matches = cleanNodeFromAnimations(node);
 	if (!matches) {
 		return null;
 	}

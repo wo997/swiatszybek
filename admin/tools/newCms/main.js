@@ -15,6 +15,7 @@ useTool("fileManager");
  * getNextBlock(): NewCmsBlock
  * getPrevBlock(): NewCmsBlock
  * select_control: PiepNode
+ * styling_data: object
  * } & PiepNode} NewCmsBlock
  */
 
@@ -343,13 +344,13 @@ class NewCms {
 					this.contentChange();
 					this.unlockInput();
 					this.container.dispatchEvent(new Event("ready"));
+
+					setFormInitialState(this.container);
 				}, 100);
 			},
 		});
 
 		this.container.dispatchEvent(new Event("edit"));
-
-		setFormInitialState(this.container);
 	}
 
 	save() {
@@ -498,19 +499,29 @@ class NewCms {
 		}*/
 	}
 
+	// TODO: do we really need it? hmmm, maybe
+	giveImagesNaturalWidth() {
+		this.content_node.findAll("img.newCms_block_content").forEach((e) => {
+			if (!e.style.width) {
+				const img_data = getResponsiveImageData(e.dataset.src);
+				let w = 0;
+				if (img_data) {
+					w = img_data.w;
+				} else {
+					w = e.getBoundingClientRect().width;
+				}
+				e.style.width = w + "px";
+			}
+		});
+	}
+
 	contentChange(options = {}) {
 		this.insertMissingQlClasses();
 		this.manageGrids();
 		this.styling.setBlocksFlexOrder();
 
 		this.caseEmptyHint();
-
-		// TODO: temporary
-		this.content_node.findAll("img").forEach((e) => {
-			if (!e.style.width) {
-				e.style.width = e.getBoundingClientRect().width + "px";
-			}
-		});
+		this.giveImagesNaturalWidth();
 
 		this.select_controls.addFloatingSelectControls();
 

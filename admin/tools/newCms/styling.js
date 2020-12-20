@@ -24,7 +24,7 @@
 /**
  * @typedef {{
  * id: number
- * node: PiepNode
+ * node: NewCmsBlock
  * styles: BlockStyles}} StylingBlockData
  */
 
@@ -268,10 +268,24 @@ class NewCmsStyling {
 			event.detail.data.styles = JSON.stringify(export_styles);
 			// @ts-ignore
 			event.detail.data.responsive_type_name = this.responsive_type.name;
+
+			this.newCms.clean_output_node.setContent(
+				this.newCms.content_node.innerHTML
+			);
+			this.newCms.clean_output_node.findAll(".newCms_block").forEach((e) => {
+				//console.log(e.className);
+				cleanNodeFromAnimations(e);
+				//console.log(e.className);
+			});
+
+			// @ts-ignore
+			event.detail.data.content = this.newCms.clean_output_node.innerHTML;
 		});
 
 		this.newCms.container.addEventListener("after_set_form_data", (event) => {
 			this.registerMissingBlocks();
+
+			console.log();
 
 			// @ts-ignore
 			if (event.detail.data.responsive_type_name) {
@@ -286,10 +300,19 @@ class NewCmsStyling {
 				// @ts-ignore
 				const styles = JSON.parse(event.detail.data.styles);
 
+				// const was_clear = !this.blocks.find((b) => {
+				// 	/** @type {StylingBlockData} */
+				// 	const block_data = b;
+				// 	return block_data.node;
+				// });
+
 				this.blocks = [];
 				// @ts-ignore
 				for (const import_block_data of styles) {
 					const block_id = import_block_data.id;
+
+					/** @type {NewCmsBlock} */
+					// @ts-ignore
 					const node = this.newCms.content_node.find(
 						`.${this.getBlockClassName(block_id)}`
 					);
@@ -303,7 +326,7 @@ class NewCmsStyling {
 							styles: import_block_data.styles,
 							node: node,
 						};
-						this.blocks.push(block_data);
+						this.addBlockData(block_data);
 					}
 				}
 			} catch (e) {}
@@ -312,7 +335,11 @@ class NewCmsStyling {
 	}
 
 	setAllRegisteredBlocks() {
-		this.newCms.content_node.findAll(".newCms_block").forEach((node) => {
+		this.newCms.content_node.findAll(".newCms_block").forEach((n) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const node = n;
+
 			const block_id = this.getBlockId(node);
 
 			if (!block_id) {
@@ -323,12 +350,24 @@ class NewCmsStyling {
 			const block_data = this.getDefaultBlock();
 			block_data.id = block_id;
 			block_data.node = node;
-			this.blocks.push(block_data);
+			this.addBlockData(block_data);
 		});
 	}
 
+	/**
+	 *
+	 * @param {StylingBlockData} block_data
+	 */
+	addBlockData(block_data) {
+		block_data.node.styling_data = block_data.styles;
+		this.blocks.push(block_data);
+	}
+
 	registerMissingBlocks() {
-		this.newCms.content_node.findAll(".newCms_block").forEach((node) => {
+		this.newCms.content_node.findAll(".newCms_block").forEach((n) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const node = n;
 			if (this.getBlockId(node)) {
 				return;
 			}
@@ -345,7 +384,7 @@ class NewCmsStyling {
 			const block_data = this.getDefaultBlock();
 			block_data.id = block_id;
 			block_data.node = node;
-			this.blocks.push(block_data);
+			this.addBlockData(block_data);
 		});
 	}
 
