@@ -102,14 +102,12 @@ class NewCmsSelectControls {
 	addFloatingSelectControls() {
 		this.removeSelection();
 
-		const blocks = this.newCms.content_node.findAll(".newCms_block");
+		const blocks = this.newCms.content_node.findAll(
+			".newCms_block:not(.cramped):not(.parent_cramped)"
+		);
 
 		let blocks_data = [];
 		blocks.forEach((block) => {
-			if (block.classList.contains("cramped")) {
-				return;
-			}
-
 			const block_rect_data = nodePositionAgainstScrollableParent(block);
 
 			let parent_count = 0;

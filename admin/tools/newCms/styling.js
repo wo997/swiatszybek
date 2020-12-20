@@ -121,7 +121,10 @@ class NewCmsStyling {
 
 	init(options = {}) {
 		/** @type {StylingBlockData[]} */
-		this.blocks = [];
+		if (!isArray(this.blocks)) {
+			// TODO: this would get overriden cause we edit the document once again and it just decided to get rid of that, not cool bro!
+			this.blocks = [];
+		}
 
 		this.setAllRegisteredBlocks();
 		this.registerMissingBlocks();

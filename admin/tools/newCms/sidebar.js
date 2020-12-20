@@ -87,6 +87,14 @@ class NewCmsSidebar {
 		});
 	}
 
+	getCurrentMenu() {
+		return this.getCurrentMenuNode().getAttribute("data-side_menu");
+	}
+
+	getCurrentMenuNode() {
+		return this.node.find(`[data-side_menu].active`);
+	}
+
 	showSideMenu(target_side_menu_name, options = {}) {
 		if (!target_side_menu_name) {
 			return;
@@ -107,7 +115,7 @@ class NewCmsSidebar {
 		}
 		target_side_menu_name = this.opened_menus.last();
 
-		const current_menu = this.node.find(`[data-side_menu].active`);
+		const current_menu = this.getCurrentMenuNode();
 		const target_menu = this.node.find(
 			`[data-side_menu="${target_side_menu_name}"]`
 		);

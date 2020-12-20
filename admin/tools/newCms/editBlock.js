@@ -228,13 +228,13 @@ class NewCmsEditBlock {
 			},
 		];
 
-		if (!block.parent().classList.contains("newCmsContent")) {
-			btn_set.push({
-				color: "#f55",
-				icon: `<i class="fas fa-times"></i>`,
-				className: "remove_btn",
-			});
-		}
+		//if (!block.parent().classList.contains("newCmsContent")) {
+		btn_set.push({
+			color: "#f55",
+			icon: `<i class="fas fa-times"></i>`,
+			className: "remove_btn",
+		});
+		//}
 
 		const btn_count = btn_set.length;
 
@@ -358,6 +358,9 @@ class NewCmsEditBlock {
 			remove_btn.addEventListener("click", () => {
 				this.hideContextMenu();
 				this.newCms.removeBlock(block);
+				if (this.newCms.sidebar.getCurrentMenu() === "edit_block") {
+					this.newCms.sidebar.showPreviousSideMenu();
+				}
 			});
 		}
 

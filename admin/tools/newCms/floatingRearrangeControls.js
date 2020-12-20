@@ -365,7 +365,8 @@ class NewCmsRearrangeControls {
 
 		const grabbed_block_type = grabbed_block.dataset.block;
 
-		let rearrangable_blocks_query_selector = ".newCms_block:not(.cramped)";
+		let rearrangable_blocks_query_selector =
+			".newCms_block:not(.cramped):not(.parent_cramped)";
 		let rearrangable_blocks_query_selector_for_grids = rearrangable_blocks_query_selector;
 
 		if (options.same_parent) {

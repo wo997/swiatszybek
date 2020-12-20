@@ -460,13 +460,16 @@ class NewCms {
 	}
 
 	caseEmptyHint() {
-		const has_any_block = !!this.content_node.find(".newCms_block");
+		const has_any_block = !!this.content_node.find(
+			".newCms_block:not(.cramped):not(.parent_cramped)"
+		);
 
 		if (!has_any_block) {
 			this.content_node.insertAdjacentHTML(
 				"afterbegin",
 				this.getBlockHtml("container")
 			);
+			this.contentChange();
 		}
 
 		/*
@@ -655,6 +658,9 @@ class NewCms {
 		this.contentChange();
 	}*/
 
+	/**
+	 * @param {NewCmsBlock} block
+	 */
 	removeBlock(block) {
 		if (!block) {
 			return;
@@ -663,6 +669,9 @@ class NewCms {
 		this.beforeContentAnimation();
 
 		block.classList.add("cramped");
+		block.findAll(".newCms_block").forEach((e) => {
+			e.classList.add("parent_cramped");
+		});
 
 		const all_animatable_blocks = this.afterContentAnimation();
 
