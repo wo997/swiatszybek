@@ -60,9 +60,14 @@ if (!$page_data) {
     function saveNewCms() {
         var form = $(`#newCmsForm`);
 
-        const data = getFormData($("#newCms"));
+        /*const data = getFormData($("#newCms"));
         const less_data = {
             content: data.content,
+            styles: data.styles,
+        };*/
+        const data = getFormData($("#newCms"));
+        const less_data = {
+            content: newCms.getCleanOutput(),
             styles: data.styles,
         };
 

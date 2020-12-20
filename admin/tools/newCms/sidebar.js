@@ -106,7 +106,7 @@ class NewCmsSidebar {
 	init() {
 		this.opened_menus = [];
 		this.collapsed = false;
-		this.showSideMenu("add_block", { quiet: true });
+		this.showSideMenu("add_block", { quiet: true, duration: 0 });
 	}
 
 	toggleSidebar(collapsed = null) {

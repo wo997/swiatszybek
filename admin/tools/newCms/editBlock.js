@@ -95,12 +95,8 @@ class NewCmsEditBlock {
 			const container_flow = this.newCms.sidebar.node.find(
 				`[name="container_flow"]`
 			);
-			container_flow.setValue(
-				this.newCms.edit_block.edit_node.classList.contains("container_row")
-					? "container_row"
-					: "",
-				false
-			);
+
+			container_flow.setValue(block_styles.inside["flex-flow"], false);
 		}
 
 		// for all blocks types

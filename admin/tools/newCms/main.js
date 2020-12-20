@@ -282,7 +282,10 @@ class NewCms {
 		});
 	}
 
-	getCleanOutput(html) {
+	getCleanOutput(html = null) {
+		if (!html) {
+			html = this.content_node.innerHTML;
+		}
 		this.clean_output_node.setContent(html);
 
 		this.container.dispatchEvent(new Event("clean_up_output"));
@@ -350,8 +353,10 @@ class NewCms {
 	}
 
 	save() {
+		// TODO: it should go straight to backend at this point
 		this.targetNode.setValue(
-			this.getCleanOutput(getFormData(this.container).content)
+			//getFormData(this.container).content
+			this.getCleanOutput()
 		);
 	}
 
