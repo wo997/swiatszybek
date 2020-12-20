@@ -1,74 +1,75 @@
 /* css[global] */
 
 :root {
-  --radio-input-margin: 6px;
+	--radio-input-margin: 6px;
 }
 
 radio-input.default radio-option {
-  padding: 2px 5px;
-  display: block;
-  border: 1px solid #bbb;
-  margin-bottom: -1px;
+	padding: 2px 5px;
+	display: block;
+	border: 1px solid #bbb;
+	margin-bottom: -1px;
+	user-select: none;
 }
 
 radio-input.default radio-option:first-child {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
 }
 radio-input.default radio-option:last-child {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
 radio-option.inline {
-  display: inline-block;
+	display: inline-block;
 }
 
 radio-input.default radio-option:before {
-  font-weight: 900;
-  font-family: "Font Awesome 5 Free";
-  content: "\f058";
-  margin: -2px 1px;
-  color: var(--primary-clr);
+	font-weight: 900;
+	font-family: "Font Awesome 5 Free";
+	content: "\f058";
+	margin: -2px 1px;
+	color: var(--primary-clr);
 }
 radio-input.default radio-option:not(.selected):before {
-  color: transparent;
+	color: transparent;
 }
 radio-input radio-option:not(.selected) {
-  cursor: pointer;
-  color: #444;
+	cursor: pointer;
+	color: #444;
 }
 
 radio-input.default radio-option.selected {
-  background: #0001;
-  font-weight: 600;
+	background: #0001;
+	font-weight: 600;
 }
 
 /* blocks start */
 radio-input.blocks {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: calc(var(--radio-input-margin) * -1);
-  margin-bottom: calc(var(--radio-input-margin) * -1);
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: calc(var(--radio-input-margin) * -1);
+	margin-bottom: calc(var(--radio-input-margin) * -1);
 }
 radio-input.blocks radio-option {
-  padding: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  min-height: 80px;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  /*flex-grow: 1;*/
-  margin-right: var(--radio-input-margin);
-  margin-bottom: var(--radio-input-margin);
-  font-weight: inherit !important;
-  transition: all 0.2s;
-  border-radius: 4px;
-  border: 1px solid #bbb;
+	padding: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	min-height: 80px;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	/*flex-grow: 1;*/
+	margin-right: var(--radio-input-margin);
+	margin-bottom: var(--radio-input-margin);
+	font-weight: inherit !important;
+	transition: all 0.2s;
+	border-radius: 4px;
+	border: 1px solid #bbb;
 }
 radio-input.blocks radio-option.selected {
-  border-color: var(--primary-clr);
-  box-shadow: 0 0 0 1px var(--primary-clr), inset 0 0 0 1px var(--primary-clr);
+	border-color: var(--primary-clr);
+	box-shadow: 0 0 0 1px var(--primary-clr), inset 0 0 0 1px var(--primary-clr);
 }
 /* blocks end */

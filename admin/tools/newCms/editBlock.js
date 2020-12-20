@@ -11,58 +11,13 @@ class NewCmsEditBlock {
 		this.init();
 
 		this.newCms.sidebar.node.addEventListener("side_menu_change", (event) => {
+			// @ts-ignore
 			const is_edit_block_menu = event.detail.side_menu_name == "edit_block";
 
 			if (!is_edit_block_menu) {
 				this.init();
 			}
 		});
-
-		const image = this.newCms.sidebar.node.find(`[name="image"]`);
-		image.addEventListener("change", () => {
-			if (this.newCms.edit_block.edit_node) {
-				const block_type = this.newCms.edit_block.edit_node.getAttribute(
-					"data-block"
-				);
-				if (block_type == "image") {
-					this.newCms.edit_block.edit_node
-						.find(".newCms_block_content")
-						.setValue(image.getValue(), false);
-
-					lazyLoadImages();
-					this.newCms.contentChange();
-				}
-			}
-		});
-
-		const container_flow = this.newCms.sidebar.node.find(
-			`[name="container_flow"]`
-		);
-		container_flow.addEventListener("change", () => {
-			if (this.newCms.edit_block.edit_node) {
-				const block_type = this.newCms.edit_block.edit_node.getAttribute(
-					"data-block"
-				);
-				if (block_type == "container") {
-					this.newCms.edit_block.edit_node.classList.toggle(
-						"container_row",
-						container_flow.getValue() == "container_row"
-					);
-
-					this.newCms.contentChange();
-				}
-			}
-		});
-
-		const custom_css = this.newCms.sidebar.node.find(`[name="custom_css"]`);
-
-		const changeCallback = () => {
-			this.newCms.styling.setBlockStyles(custom_css.getValue(), null, {
-				type: "custom",
-			});
-		};
-		custom_css.addEventListener("change", changeCallback);
-		custom_css.addEventListener("input", changeCallback);
 
 		this.newCms.container.addEventListener("clean_up_output", () => {
 			this.cleanUpContent(this.newCms.clean_output_node);

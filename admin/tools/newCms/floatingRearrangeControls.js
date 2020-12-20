@@ -83,6 +83,17 @@ class NewCmsRearrangeControls {
 		}
 	}
 
+	/** @param {NewCmsBlock} block */
+	isBlockRow(block) {
+		if (block) {
+			const cont = block.find(".newCms_block_content");
+			if (cont) {
+				return cont.style.flexFlow.includes("row");
+			}
+		}
+		return false;
+	}
+
 	mouseMove() {
 		const target = this.newCms.mouse_target;
 
@@ -190,9 +201,9 @@ class NewCmsRearrangeControls {
 					parent_container = this.newCms.content_node;
 				}
 
-				is_parent_row = parent_container
-					? parent_container.classList.contains("container_row")
-					: false;
+				is_parent_row = this.isBlockRow(parent_container);
+				//? parent_container.classList.contains("container_row")
+				//: false;
 			}
 
 			if (rearrange_control_node) {
@@ -430,9 +441,10 @@ class NewCmsRearrangeControls {
 						return;
 					}
 
-					const is_parent_row = parent_container
-						? parent_container.classList.contains("container_row")
-						: false;
+					// @ts-ignore
+					let is_parent_row = this.isBlockRow(parent_container);
+					//? parent_container.classList.contains("container_row")
+					//: false;
 
 					const block_rect_data = nodePositionAgainstScrollableParent(block);
 					const block_type = block.dataset.block;
@@ -563,9 +575,10 @@ class NewCmsRearrangeControls {
 					skip: 1,
 				});
 
-				const is_parent_row = parent_container
-					? parent_container.classList.contains("container_row")
-					: false;
+				// @ts-ignore
+				const is_parent_row = this.isBlockRow(parent_container);
+				//? parent_container.classList.contains("container_row")
+				//: false;
 
 				const block_rect_data = nodePositionAgainstScrollableParent(block);
 

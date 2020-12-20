@@ -5,6 +5,7 @@
 	data-form
 	data-history
 	data-exclude-hidden
+	data-warn-before-leave
 >
 	<div class="modal-body">
 		<div class="custom-toolbar">
@@ -171,11 +172,17 @@
 
 							<span class="field-title">Ułożenie zawartości</span>
 							<radio-input name="container_flow" class="default">
-								<radio-option value="" data-default>
-									<i class="fas fa-ellipsis-v align-icon"></i> Pionowo
+								<radio-option value="row">
+									<img src="/src/img/flex_row.svg" /> Wiersz
 								</radio-option>
-								<radio-option value="container_row">
-									<i class="fas fa-ellipsis-h align-icon"></i> Poziomo
+								<radio-option value="column">
+									<img src="/src/img/flex_column.svg" /> Kolumna
+								</radio-option>
+								<radio-option value="row wrap">
+									<img src="/src/img/flex_row_wrap.svg" /> Wiersz
+								</radio-option>
+								<radio-option value="column wrap">
+									<img src="/src/img/flex_column_wrap.svg" />Odradzam
 								</radio-option>
 							</radio-input>
 

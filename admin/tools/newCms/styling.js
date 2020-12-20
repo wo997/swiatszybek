@@ -391,7 +391,11 @@ class NewCmsStyling {
 						// these are needed by the page builder to work properly during animations
 						// TODO: consider limiting the list to margins, flex-grow etc. (layout related)
 						// TODO: the list goes on baby
-						if (prop_css.includes("margin") || prop_css.includes("grid")) {
+						if (
+							prop_css.includes("margin") ||
+							prop_css.includes("grid") ||
+							prop_css === "flex-flow"
+						) {
 							const prop_js = kebabToSnakeCase(prop_css);
 
 							const tb =
@@ -464,6 +468,10 @@ class NewCmsStyling {
 	setBlockStyles(styles, node = null, params = {}) {
 		if (!node) {
 			node = this.newCms.edit_block.edit_node;
+		}
+		if (!node) {
+			console.error("No block selected");
+			return;
 		}
 		//console.log(styles, node, params);
 

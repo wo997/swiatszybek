@@ -1405,10 +1405,12 @@ class NewCms {
 	}
 }
 window.addEventListener("tool_loaded", (event) => {
+	// @ts-ignore
 	if (event.detail.name != "newCms") {
 		return;
 	}
 
+	// @ts-ignore
 	if (event.detail.info == "js") {
 		// @ts-ignore
 		registerModalContent(
@@ -1420,6 +1422,7 @@ window.addEventListener("tool_loaded", (event) => {
 			}
 		);
 	}
+	// @ts-ignore
 	if (event.detail.info == "all") {
 		// @ts-ignore
 		window.newCms.stylesLoaded();

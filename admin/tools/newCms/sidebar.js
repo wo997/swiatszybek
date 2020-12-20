@@ -58,6 +58,49 @@ class NewCmsSidebar {
 		};
 		grid_template_columns.addEventListener("change", changeCallback2);
 		grid_template_columns.addEventListener("input", changeCallback2);
+
+		const image = this.node.find(`[name="image"]`);
+		image.addEventListener("change", () => {
+			if (this.newCms.edit_block.edit_node) {
+				const block_type = this.newCms.edit_block.edit_node.getAttribute(
+					"data-block"
+				);
+				if (block_type == "image") {
+					this.newCms.edit_block.edit_node
+						.find(".newCms_block_content")
+						.setValue(image.getValue(), false);
+
+					lazyLoadImages();
+					this.newCms.contentChange();
+				}
+			}
+		});
+
+		const container_flow = this.node.find(`[name="container_flow"]`);
+		container_flow.addEventListener("change", () => {
+			const block_type = this.newCms.edit_block.edit_node.dataset.block;
+			if (block_type == "container") {
+				this.newCms.styling.setBlockStyles(
+					{
+						"flex-flow": container_flow.getValue(),
+					},
+					null,
+					{
+						target: "inside",
+					}
+				);
+			}
+		});
+
+		const custom_css = this.node.find(`[name="custom_css"]`);
+
+		const changeCallback5 = () => {
+			this.newCms.styling.setBlockStyles(custom_css.getValue(), null, {
+				type: "custom",
+			});
+		};
+		custom_css.addEventListener("change", changeCallback5);
+		custom_css.addEventListener("input", changeCallback5);
 	}
 
 	init() {
