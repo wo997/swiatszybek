@@ -188,6 +188,7 @@ class NewCmsStyling {
 
 		if (!options.quiet) {
 			this.newCms.contentChange();
+			this.newCms.sidebar.setSidebarEditBlockData();
 		}
 	}
 

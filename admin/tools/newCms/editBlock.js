@@ -69,63 +69,6 @@ class NewCmsEditBlock {
 	editBlock(block, options = {}) {
 		this.edit_node = block;
 
-		const block_styles = this.newCms.styling.getBlockCurrentStyles();
-
-		/*if (options.quiet) {
-			set_val_options.quiet = options.quiet;
-		}*/
-
-		const block_type = block.dataset.block;
-		if (block_type == "quill_editor") {
-			this.newCms.quill_editor.setEditorContent(
-				block.find(".newCms_block_content").innerHTML
-			);
-		}
-		if (block_type == "image") {
-			const image = this.newCms.sidebar.node.find(`[name="image"]`);
-			image.setValue(block.find(".newCms_block_content").getValue(), {
-				quiet: true,
-			});
-			lazyLoadImages();
-		}
-		if (block_type == "container") {
-			const container_flow = this.newCms.sidebar.node.find(
-				`[name="container_flow"]`
-			);
-
-			container_flow.setValue(block_styles.inside["flex-flow"], {
-				quiet: true,
-			});
-		}
-
-		// for all blocks types
-		const margin = this.newCms.sidebar.node.find(`.margin`);
-
-		// TODO: each "style comppnent" should be added externally maybe with index to sort it nicely
-		// anyway the goal is to keep them separate, have event for when the block is edited and when each of those field changes
-		// which is pretty straightforward, seems like a clean solution baby, why am I talkin to myself wtf :* :* :*
-		margin.findAll("c-select").forEach((e) => {
-			const input = e.find("input");
-			const dir = input.dataset.dir;
-			input.setValue(nonull(block_styles.outside[`margin-${dir}`], ""), {
-				quiet: true,
-			});
-		});
-
-		const grid_template_columns = this.newCms.sidebar.node.find(
-			`[name="grid_template_columns"]`
-		);
-
-		//console.log(block_styles);
-
-		const gtc = block_styles
-			? block_styles.inside["grid-template-columns"]
-			: null;
-
-		if (gtc) {
-			grid_template_columns.setValue(gtc, { quiet: true });
-		}
-
 		block.classList.add("edit_active");
 
 		const sidebar_options = cloneObject(options);
@@ -140,6 +83,8 @@ class NewCmsEditBlock {
 		}
 
 		// this.newCms.container.classList.remove("anything_selected");
+
+		this.newCms.sidebar.setSidebarEditBlockData();
 	}
 
 	/**
