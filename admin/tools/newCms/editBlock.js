@@ -74,7 +74,7 @@ class NewCmsEditBlock {
 		// u know these weird scripts that include and combined give a nice juicy forms etc?
 		// thats what I'm talking about
 
-		const block_styles = this.newCms.styling.getNodeCurrentStyles();
+		const block_styles = this.newCms.styling.getBlockCurrentStyles();
 
 		/*if (options.quiet) {
 			set_val_options.quiet = options.quiet;

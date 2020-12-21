@@ -575,8 +575,18 @@ class NewCms {
 				const grid = g;
 
 				// TODO: retrieve from grid props
-				const columns = 3;
-				const rows = 2;
+				const styles = this.styling.getBlockCurrentStyles(grid);
+
+				if (!styles.inside["grid-template-columns"]) {
+					styles.inside["grid-template-columns"] = "1fr 1fr";
+				}
+				if (!styles.inside["grid-template-rows"]) {
+					styles.inside["grid-template-rows"] = "1fr 1fr";
+				}
+				const columns =
+					nonull(styles.inside["grid-template-columns"], "").strCount(" +") + 1;
+				const rows =
+					nonull(styles.inside["grid-template-rows"], "").strCount(" +") + 1;
 
 				const block_content = grid.find(".newCms_block_content");
 
@@ -673,6 +683,7 @@ class NewCms {
 			class_list.push("container");
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
 			styles.desktop.inside["grid-template-columns"] = "1fr 1fr";
+			styles.desktop.inside["grid-template-rows"] = "1fr 2fr 1fr 1fr";
 		}
 
 		/** @type {NewCmsBlock} */
@@ -1173,7 +1184,7 @@ class NewCms {
 			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
 			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-			const block_styles = this.styling.getNodeCurrentStyles(block);
+			const block_styles = this.styling.getBlockCurrentStyles(block);
 			const mt = evalCss(block_styles.outside["margin-top"], block);
 			const mr = evalCss(block_styles.outside["margin-right"], block);
 			const mb = evalCss(block_styles.outside["margin-bottom"], block);
@@ -1405,7 +1416,7 @@ class NewCms {
 					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
 			}
 
-			const block_styles = this.styling.getNodeCurrentStyles(grabbed_block);
+			const block_styles = this.styling.getBlockCurrentStyles(grabbed_block);
 			const mt = evalCss(block_styles.outside["margin-top"], grabbed_block);
 			//const mr = evalCss(block_styles.outside["margin-right"], block);
 			//const mb = evalCss(block_styles.outside["margin-bottom"], block);

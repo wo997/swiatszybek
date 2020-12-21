@@ -568,7 +568,7 @@ class NewCmsStyling {
 	 * @param {NewCmsBlock} node
 	 * @returns {BlockStyleTargets}
 	 *  */
-	getNodeCurrentStyles(node = null) {
+	getBlockCurrentStyles(node = null) {
 		if (node === null) {
 			node = this.newCms.edit_block.edit_node;
 		}
@@ -658,7 +658,7 @@ class NewCmsStyling {
 						const block = b;
 						child_count++;
 
-						this.getNodeCurrentStyles(block).outside.order = child_count;
+						this.getBlockCurrentStyles(block).outside.order = child_count;
 					});
 
 					// @ts-ignore
