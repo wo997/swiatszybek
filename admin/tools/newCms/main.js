@@ -719,6 +719,8 @@ class NewCms {
 			e.classList.add("parent_cramped");
 		});
 
+		/** @type {NewCmsBlock[]} */
+		// @ts-ignore
 		const all_animatable_blocks = this.afterContentAnimation();
 
 		block.classList.add("animation_cramp");
@@ -1052,6 +1054,8 @@ class NewCms {
 
 		this.rearrange_controls.removeRearrangement();
 
+		/** @type {NewCmsBlock[]} */
+		// @ts-ignore
 		const all_animatable_blocks = this.afterContentAnimation();
 
 		this.animateContent(all_animatable_blocks, 350);
@@ -1193,6 +1197,7 @@ class NewCms {
 			const dx = block_animation_data.dx - half_dw;
 			const dy = block_animation_data.dy - half_dh;
 
+			// @ts-ignore
 			const parent_rect = block.parent().new_rect;
 
 			const kisses_right_border = parent_rect

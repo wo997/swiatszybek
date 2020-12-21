@@ -53,12 +53,14 @@ class NewCmsQuillEditor {
 		this.newCms = newCms;
 		this.node = node;
 
+		// @ts-ignore
 		var Size = Quill.import("attributors/style/size");
 		Size.whitelist = [];
 		for (let i = 0; i < 10; i++) {
 			Size.whitelist.push(Math.round(Math.pow(1.25, i - 2) * 100) / 100 + "em");
 		}
 
+		// @ts-ignore
 		this.editor = new Quill(node, {
 			theme: "snow",
 			modules: {

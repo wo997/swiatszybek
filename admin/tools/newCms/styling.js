@@ -483,10 +483,6 @@ class NewCmsStyling {
 		}
 		//console.log(css_full);
 		this.node.innerHTML = css_full;
-
-		// we might need to push all the styles to each node inline, so that is efficient to pick them up, margin, flex props etc gotta be here
-		// cleaning up obviosly will remove these,
-		// woah
 	}
 
 	/**
@@ -498,7 +494,7 @@ class NewCmsStyling {
 	 * type?: ResponsiveTypesEnum
 	 * }} params
 	 */
-	setBlockStylesFromBlockData(styles, block_styles, params = {}) {
+	setBlockStylesFromBlockStylingData(styles, block_styles, params = {}) {
 		if (!block_styles) {
 			console.error("Block misses styles");
 			return;
@@ -546,7 +542,7 @@ class NewCmsStyling {
 
 		this.registerMissingBlocks();
 
-		this.setBlockStylesFromBlockData(styles, node.styling_data, params);
+		this.setBlockStylesFromBlockStylingData(styles, node.styling_data, params);
 	}
 
 	getBlockStyles(node = null) {

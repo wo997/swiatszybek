@@ -68,7 +68,7 @@ class NewCmsSidebar {
 				if (block_type == "image") {
 					this.newCms.edit_block.edit_node
 						.find(".newCms_block_content")
-						.setValue(image.getValue(), false);
+						.setValue(image.getValue(), { quiet: true });
 
 					lazyLoadImages();
 					this.newCms.contentChange();
@@ -118,10 +118,6 @@ class NewCmsSidebar {
 
 		const block_styles = this.newCms.styling.getBlockCurrentStyles(block);
 
-		/*if (options.quiet) {
-			set_val_options.quiet = options.quiet;
-		}*/
-
 		const block_type = block.dataset.block;
 		if (block_type == "quill_editor") {
 			this.newCms.quill_editor.setEditorContent(
@@ -158,8 +154,6 @@ class NewCmsSidebar {
 				quiet: true,
 			});
 		});
-
-		///// HEY DUDE, IT AINT RESPONSIVE, THE STYLES GO TO ALL GROUPS FOR SOME REASON, NOT JUST ONE
 
 		const grid_template_columns = this.newCms.sidebar.node.find(
 			`[name="grid_template_columns"]`
@@ -223,6 +217,8 @@ class NewCmsSidebar {
 			this.opened_menus.push(target_side_menu_name);
 			is_new = true;
 		}
+
+		// @ts-ignore
 		target_side_menu_name = this.opened_menus.last();
 
 		const current_menu = this.getCurrentMenuNode();
