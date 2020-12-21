@@ -494,7 +494,7 @@ class NewCmsStyling {
 	 * type?: ResponsiveTypesEnum
 	 * }} params
 	 */
-	setBlockStylesFromBlockStylingData(styles, block_styles, params = {}) {
+	setBlockStylesFromStylingData(styles, block_styles, params = {}) {
 		if (!block_styles) {
 			console.error("Block misses styles");
 			return;
@@ -538,11 +538,10 @@ class NewCmsStyling {
 			console.error("No block selected");
 			return;
 		}
-		//console.log(styles, node, params);
 
 		this.registerMissingBlocks();
 
-		this.setBlockStylesFromBlockStylingData(styles, node.styling_data, params);
+		this.setBlockStylesFromStylingData(styles, node.styling_data, params);
 	}
 
 	getBlockStyles(node = null) {

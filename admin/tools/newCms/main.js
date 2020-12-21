@@ -217,9 +217,7 @@ class NewCms {
 				//styles[`margin${dir.capitalize()}`] = input.getValue();
 				styles[`margin-${dir}`] = input.getValue();
 
-				this.styling.setBlockStyles(styles, null, {
-					type: "desktop",
-				});
+				this.styling.setBlockStyles(styles);
 
 				this.contentChange();
 			});
