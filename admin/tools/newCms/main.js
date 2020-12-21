@@ -1179,7 +1179,7 @@ class NewCms {
 			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
 			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-			const block_styles = this.styling.getBlockCurrentStyles(block);
+			const block_styles = this.styling.getBlockComputedStyles(block);
 			const mt = evalCss(block_styles.outside["margin-top"], block);
 			const mr = evalCss(block_styles.outside["margin-right"], block);
 			const mb = evalCss(block_styles.outside["margin-bottom"], block);
@@ -1412,7 +1412,7 @@ class NewCms {
 					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
 			}
 
-			const block_styles = this.styling.getBlockCurrentStyles(grabbed_block);
+			const block_styles = this.styling.getBlockComputedStyles(grabbed_block);
 			const mt = evalCss(block_styles.outside["margin-top"], grabbed_block);
 			//const mr = evalCss(block_styles.outside["margin-right"], block);
 			//const mb = evalCss(block_styles.outside["margin-bottom"], block);

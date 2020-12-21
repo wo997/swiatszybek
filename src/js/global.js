@@ -930,7 +930,7 @@ function deepMerge(...sources) {
 			if (!(acc instanceof Array)) {
 				acc = [];
 			}
-			acc = [...acc, ...source];
+			acc.push(...source);
 		} else if (source instanceof Object) {
 			for (let [key, value] of Object.entries(source)) {
 				if (value instanceof Object && key in acc) {

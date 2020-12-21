@@ -477,6 +477,7 @@ class NewCmsStyling {
 				css_full += getSomeStyles(responsive_type.name, "inside");
 
 				if (this.responsive_type.name == responsive_type.name) {
+					// TODO: consider getBlockComputedStyles
 					break;
 				}
 			}
@@ -574,6 +575,34 @@ class NewCmsStyling {
 	}
 
 	/**
+	 * Desktop first merge result
+	 *
+	 * @param {NewCmsBlock} node
+	 * @returns {BlockStyleTargets}
+	 *  */
+	getBlockComputedStyles(node = null) {
+		if (node === null) {
+			node = this.newCms.edit_block.edit_node;
+		}
+
+		let computed_styles = {};
+
+		for (const responsive_type of this.responsive_types) {
+			computed_styles = deepMerge(
+				computed_styles,
+				node.styling_data[responsive_type.name]
+			);
+
+			if (this.responsive_type.name == responsive_type.name) {
+				break;
+			}
+		}
+
+		// @ts-ignore
+		return computed_styles;
+	}
+
+	/**
 	 * @param {NewCmsBlock[]} container_blocks
 	 */
 	setDataFlexOrder(container_blocks) {
@@ -595,6 +624,7 @@ class NewCmsStyling {
 				}
 
 				if (this.responsive_type.name == responsive_type.name) {
+					// TODO: consider getBlockComputedStyles
 					break;
 				}
 			}
