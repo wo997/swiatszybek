@@ -87,21 +87,26 @@ class NewCmsStyling {
 		return {
 			id: 0,
 			node: null,
-			styles: {
-				desktop: {
-					outside: {},
-					inside: {},
-				},
-				tablet: {
-					outside: {},
-					inside: {},
-				},
-				mobile: {
-					outside: {},
-					inside: {},
-				},
-				custom: "",
+			styles: this.getDefaultBlockStyles(),
+		};
+	}
+
+	/** @returns {BlockStyles} */
+	getDefaultBlockStyles() {
+		return {
+			desktop: {
+				outside: {},
+				inside: {},
 			},
+			tablet: {
+				outside: {},
+				inside: {},
+			},
+			mobile: {
+				outside: {},
+				inside: {},
+			},
+			custom: "",
 		};
 	}
 
@@ -648,7 +653,7 @@ class NewCmsStyling {
 						const block = b;
 						child_count++;
 
-						block.styling_data[this.responsive_type.name].order = child_count;
+						this.getNodeCurrentStyles(block).outside.order = child_count;
 					});
 
 					// @ts-ignore

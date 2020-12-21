@@ -457,6 +457,7 @@ class NewCms {
 			? target.findParentByClassName("side_block")
 			: null;
 		if (side_block) {
+			side_block.styling_data = this.styling.getDefaultBlockStyles();
 			this.grabBlock(side_block);
 		}
 

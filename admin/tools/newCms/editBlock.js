@@ -102,12 +102,13 @@ class NewCmsEditBlock {
 		// for all blocks types
 		const margin = this.newCms.sidebar.node.find(`.margin`);
 
-		// TODO: kuuuuuuuuurwa
+		// TODO: each "style comppnent" should be added externally maybe with index to sort it nicely
+		// anyway the goal is to keep them separate, have event for when the block is edited and when each of those field changes
+		// which is pretty straightforward, seems like a clean solution baby, why am I talkin to myself wtf :* :* :*
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
 			const dir = input.dataset.dir;
-
-			//input.setValue(this.edit_node.style[`margin${dir.capitalize()}`], false);
+			input.setValue(nonull(block_styles.outside[`margin-${dir}`], ""), false);
 		});
 
 		const grid_template_columns = this.newCms.sidebar.node.find(

@@ -2,9 +2,6 @@
 
 .newCms_block[data-block="grid"] > .newCms_block_content {
 	display: grid;
-	/*grid-gap: 5px;*/
-	grid-template-columns: 2fr 1fr 3fr;
-	grid-template-rows: 1fr 2fr;
 	min-width: 200px;
 	min-height: 200px;
 }
