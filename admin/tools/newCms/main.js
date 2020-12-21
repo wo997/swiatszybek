@@ -482,10 +482,8 @@ class NewCms {
 		);
 
 		if (!has_any_block) {
-			this.content_node.insertAdjacentHTML(
-				"afterbegin",
-				this.getBlockHtml("container")
-			);
+			const new_block = this.createBlock("container");
+			this.content_node.append(new_block);
 			this.contentChange();
 		}
 
@@ -650,9 +648,12 @@ class NewCms {
 			});
 	}
 
-	getBlockHtml(type, options = {}) {
+	createBlock(type, options = {}) {
 		//let content = "";
 		let class_list = [];
+
+		/** @type {BlockStyles} */
+		let styles = this.styling.getDefaultBlockStyles();
 
 		let content_html = "";
 
@@ -667,16 +668,24 @@ class NewCms {
 		} else if (type === "container") {
 			class_list.push("container");
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
+			// row or column by default I guess :*
 		} else if (type === "grid") {
 			class_list.push("container");
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
+			styles.desktop.inside["grid-template-columns"] = "1fr 1fr";
 		}
 
-		return /*html*/ `
-      <div class="newCms_block ${class_list.join(" ")}" data-block="${type}">
-        ${content_html}
-      </div>
-    `;
+		/** @type {NewCmsBlock} */
+		// @ts-ignore
+		const new_block = createNodeFromHtml(/*html*/ `
+            <div class="newCms_block${class_list.map(
+							(e) => " " + e
+						)}" data-block="${type}">
+                ${content_html}
+            </div>
+        `);
+		new_block.styling_data = styles;
+		return new_block;
 	}
 
 	/*insertBlock(target, position, type, options = {}) {
@@ -909,7 +918,7 @@ class NewCms {
 				);
 
 				// @ts-ignore
-				grabbed_block = createNodeFromHtml(this.getBlockHtml(block_type));
+				grabbed_block = this.createBlock(block_type);
 				this.grabbed_block = grabbed_block;
 				this.content_node.appendChild(grabbed_block);
 				grabbed_block.animation_data = animation_data;

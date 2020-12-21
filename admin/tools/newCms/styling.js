@@ -397,6 +397,11 @@ class NewCmsStyling {
 			const block_data = this.getDefaultBlock();
 			block_data.id = block_id;
 			block_data.node = node;
+
+			if (node.styling_data) {
+				block_data.styles = node.styling_data;
+			}
+
 			this.addBlockData(block_data);
 		});
 	}
