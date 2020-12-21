@@ -5,8 +5,8 @@
  * find(query: string): PiepNode //my comment baby
  * findAll(query: string): PiepNode[]
  * directChildren(): PiepNode[]
- * setValue(value: any, options: {
- *  quiet?:boolean
+ * setValue(value: any, options?: {
+ *  quiet?: boolean
  * }): void
  * getValue(): any
  * dispatchChange(): void

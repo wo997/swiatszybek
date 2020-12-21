@@ -163,7 +163,7 @@ class NewCmsQuillEditor {
 		});
 	}
 
-	// TODO: it should be a "property" of sidebar to delay the saving I think
+	// TODO: it should be a "property" of sidebar to delay the saving I think, so we can use it in more places
 	saveChanges() {
 		if (!this.any_changes) {
 			return;

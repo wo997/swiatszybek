@@ -574,7 +574,6 @@ class NewCms {
 				// @ts-ignore
 				const grid = g;
 
-				// TODO: retrieve from grid props
 				const styles = this.styling.getBlockCurrentStyles(grid);
 
 				if (!styles.inside["grid-template-columns"]) {
@@ -667,7 +666,7 @@ class NewCms {
 
 		let content_html = "";
 
-		// TODO: event listeners
+		// TODO: event listeners, any ype of modularity
 		if (type === "quill_editor") {
 			content_html = /*html*/ `<div class="newCms_block_content ql-editor"></div>`;
 		} else if (type === "image") {
@@ -1175,12 +1174,6 @@ class NewCms {
 		};
 
 		all_animatable_blocks.forEach((block) => {
-			//const styles = window.getComputedStyle(block);
-
-			// TODO: every property such like flexGrow etc needs to be available in a quickly accessible place
-			// maybe put them straight to styles?
-			// we should remove it when cleaning the cms output anyway ;)
-
 			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
 			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 

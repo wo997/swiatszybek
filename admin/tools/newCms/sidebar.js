@@ -148,7 +148,7 @@ class NewCmsSidebar {
 		// for all blocks types
 		const margin = this.newCms.sidebar.node.find(`.margin`);
 
-		// TODO: each "style comppnent" should be added externally maybe with index to sort it nicely
+		// TODO: each "style component" should be added externally maybe with index to sort it nicely
 		// anyway the goal is to keep them separate, have event for when the block is edited and when each of those field changes
 		// which is pretty straightforward, seems like a clean solution baby, why am I talkin to myself wtf :* :* :*
 		margin.findAll("c-select").forEach((e) => {

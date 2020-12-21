@@ -352,7 +352,6 @@ class NewCmsStyling {
 				return;
 			}
 
-			// TODO: fetch styles from... somewhere, like a node with big json in html
 			const block_data = this.getDefaultBlock();
 			block_data.id = block_id;
 			block_data.node = node;
@@ -446,9 +445,6 @@ class NewCmsStyling {
 				if (styles) {
 					let css = "";
 					Object.entries(styles).forEach(([prop_css, val]) => {
-						// these are needed by the page builder to work properly during animations
-						// TODO: consider limiting the list to margins, flex-grow etc. (layout related)
-						// TODO: the list goes on baby
 						// FINALLY: the styles are assigned to the NewCmsBlock.styling_data
 						/*if (
 							prop_css.includes("margin") ||
