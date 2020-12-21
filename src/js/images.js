@@ -89,9 +89,7 @@ function loadImage(img, animate) {
 			delete img.file_name;
 		}
 
-		setTimeout(() => {
-			showWaitingImage(img, animate ? 400 : 0);
-		}, 0);
+		showWaitingImage(img, animate ? 400 : 0);
 	}
 }
 
@@ -242,9 +240,11 @@ function scrollCallbackLazy() {
 			loadImage(img);
 		}
 	);
-	$$(".wo997_img_waiting").forEach((img) => {
-		showWaitingImage(img, 400);
-	});
+	setTimeout(() => {
+		$$(".wo997_img_waiting").forEach((img) => {
+			showWaitingImage(img, 400);
+		});
+	}, 100);
 }
 
 function preloadImage(url) {

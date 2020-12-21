@@ -179,6 +179,12 @@ function $(node, parent = null) {
 	return node;
 }
 
+/**
+ *
+ * @param {*} querySelectorAll
+ * @param {*} parent
+ * @returns {PiepNode[]}
+ */
 function $$(querySelectorAll, parent = null) {
 	if (parent === null) {
 		parent = document;

@@ -16,8 +16,8 @@ function showCategory($category, $level = 0)
     global $category_link;
     $category_id = intval($category["category_id"]);
     $subcategories = fetchArray("SELECT category_id, title, link, (
-      SELECT COUNT(1) FROM link_product_category link INNER JOIN products USING(product_id) WHERE link.category_id = pc.category_id AND published
-    ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND published ORDER BY kolejnosc");
+      SELECT COUNT(1) FROM link_product_category link INNER JOIN products pr USING(product_id) WHERE link.category_id = pc.category_id AND pr.published
+    ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND pc.published ORDER BY kolejnosc");
     $count = count($subcategories);
 
     //if ($level > 0) {

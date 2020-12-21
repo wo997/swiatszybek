@@ -121,17 +121,6 @@ function fixHeightsAutomatically() {
 }
 fixHeightsAutomatically();
 
-/* when modal is showed it has transform scale, so it causes that issue */
-function setCustomHeightsQuickly(time = 30) {
-	if (time < 0) {
-		return;
-	}
-	setCustomHeights();
-	requestAnimationFrame(() => {
-		setCustomHeightsQuickly(time - 1);
-	});
-}
-
 function evalCss(val, node = null, params = {}) {
 	// TODO: go for computed style only if it's set to auto?
 	if (!val || !val.trim()) {

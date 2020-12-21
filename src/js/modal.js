@@ -193,9 +193,6 @@ function showModal(name = null, params = {}) {
 
 	toggleBodyScroll(!visible);
 
-	//setCustomHeightsQuickly(30);
-	lazyLoadImages();
-
 	return visible;
 }
 

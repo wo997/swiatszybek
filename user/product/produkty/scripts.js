@@ -220,7 +220,7 @@ function searchProducts(options = {}) {
 		return;
 	}
 
-	if (window.innerWidth < MOBILE_WIDTH && nonull(options.scroll, true)) {
+	if (/*window.innerWidth < MOBILE_WIDTH && */ nonull(options.scroll, true)) {
 		scrollToTopOfProductList();
 	}
 
@@ -262,7 +262,6 @@ function searchProducts(options = {}) {
 				productListSwapContentNode.find(".product_list_module.grid")
 			);
 			lazyLoadImages(false);
-			setCustomHeights();
 			var h = productListSwapContentNode.getBoundingClientRect().height;
 
 			productListAnimationNode.animate(
