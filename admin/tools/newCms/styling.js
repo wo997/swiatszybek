@@ -513,7 +513,12 @@ class NewCmsStyling {
 			const target = nonull(params.target, "outside");
 			const type = nonull(params.type, this.responsive_type.name);
 			Object.entries(styles).forEach(([prop, val]) => {
-				block_styles[type][target][prop] = escapeCSS(prop, val);
+				const val_clean = escapeCSS(prop, val);
+				if (val_clean) {
+					block_styles[type][target][prop] = val_clean;
+				} else {
+					delete block_styles[type][target][prop];
+				}
 			});
 			//console.log(styles);
 			//Object.assign(block_styles[type][target], styles);

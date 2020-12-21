@@ -69,11 +69,6 @@ class NewCmsEditBlock {
 	editBlock(block, options = {}) {
 		this.edit_node = block;
 
-		// TODO: event listeners for each block type? extending?
-		// we might need to use blocks "blocks" as something that comes with modules?
-		// u know these weird scripts that include and combined give a nice juicy forms etc?
-		// thats what I'm talking about
-
 		const block_styles = this.newCms.styling.getBlockCurrentStyles();
 
 		/*if (options.quiet) {
@@ -88,7 +83,9 @@ class NewCmsEditBlock {
 		}
 		if (block_type == "image") {
 			const image = this.newCms.sidebar.node.find(`[name="image"]`);
-			image.setValue(block.find(".newCms_block_content").getValue(), false);
+			image.setValue(block.find(".newCms_block_content").getValue(), {
+				quiet: true,
+			});
 			lazyLoadImages();
 		}
 		if (block_type == "container") {
@@ -96,7 +93,9 @@ class NewCmsEditBlock {
 				`[name="container_flow"]`
 			);
 
-			container_flow.setValue(block_styles.inside["flex-flow"], false);
+			container_flow.setValue(block_styles.inside["flex-flow"], {
+				quiet: true,
+			});
 		}
 
 		// for all blocks types
@@ -108,21 +107,23 @@ class NewCmsEditBlock {
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
 			const dir = input.dataset.dir;
-			input.setValue(nonull(block_styles.outside[`margin-${dir}`], ""), false);
+			input.setValue(nonull(block_styles.outside[`margin-${dir}`], ""), {
+				quiet: true,
+			});
 		});
 
 		const grid_template_columns = this.newCms.sidebar.node.find(
 			`[name="grid_template_columns"]`
 		);
 
-		console.log(block_styles);
+		//console.log(block_styles);
 
 		const gtc = block_styles
 			? block_styles.inside["grid-template-columns"]
 			: null;
 
 		if (gtc) {
-			grid_template_columns.setValue(gtc, false);
+			grid_template_columns.setValue(gtc, { quiet: true });
 		}
 
 		block.classList.add("edit_active");

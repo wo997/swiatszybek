@@ -45,7 +45,7 @@ class NewCmsSidebar {
 		);
 
 		const changeCallback2 = () => {
-			console.log(grid_template_columns.getValue());
+			//console.log(grid_template_columns.getValue());
 			this.newCms.styling.setBlockStyles(
 				{
 					"grid-template-columns": grid_template_columns.getValue(),
