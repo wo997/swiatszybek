@@ -494,20 +494,29 @@ class NewCmsStyling {
 
 	/**
 	 * @param {Object} styles
-	 * @param {StylingBlockData} block_data
+	 * @param {BlockStyles} block_styles
 	 * @param {{
 	 * target?: BlockStyleTargetsEnum
 	 * generate_css?: boolean
 	 * type?: ResponsiveTypesEnum
 	 * }} params
 	 */
-	setBlockStylesFromBlockData(styles, block_data, params = {}) {
+	setBlockStylesFromBlockData(styles, block_styles, params = {}) {
+		if (!block_styles) {
+			console.error("Block misses styles");
+			return;
+		}
+
 		if (params.type == "custom") {
-			block_data.styles.custom = styles;
+			block_styles.custom = styles;
 		} else {
 			const target = nonull(params.target, "outside");
 			const type = nonull(params.type, this.responsive_type.name);
-			Object.assign(block_data.styles[type][target], styles);
+			Object.entries(styles).forEach(([prop, val]) => {
+				block_styles[type][target][prop] = escapeCSS(prop, val);
+			});
+			//console.log(styles);
+			//Object.assign(block_styles[type][target], styles);
 		}
 		if (nonull(params.generate_css, true)) {
 			this.newCms.contentChange();
@@ -517,7 +526,7 @@ class NewCmsStyling {
 
 	/**
 	 * @param {Object} styles
-	 * @param {PiepNode} node
+	 * @param {NewCmsBlock} node
 	 * @param {{
 	 * type?: ResponsiveTypesEnum
 	 * target?: BlockStyleTargetsEnum
@@ -534,16 +543,8 @@ class NewCmsStyling {
 		//console.log(styles, node, params);
 
 		this.registerMissingBlocks();
-		const block_id = this.getBlockId(node);
-		/** @type {StylingBlockData} */
-		const block_data = this.blocks.find((e) => e.id == block_id);
 
-		if (!block_data) {
-			console.error("No block found");
-			return;
-		}
-
-		this.setBlockStylesFromBlockData(styles, block_data, params);
+		this.setBlockStylesFromBlockData(styles, node.styling_data, params);
 	}
 
 	getBlockStyles(node = null) {

@@ -146,6 +146,13 @@ function escapeHTML(unsafeText) {
 	return div.innerHTML;
 }
 
+function escapeCSS(prop, val) {
+	const prop_css = kebabToSnakeCase(prop);
+	let div = document.createElement("div");
+	div.style[prop_css] = val;
+	return div.style[prop_css];
+}
+
 function decodeHtmlEntities(html) {
 	var txt = document.createElement("textarea");
 	txt.innerHTML = html;
