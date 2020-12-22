@@ -84,11 +84,14 @@ class NewCmsRearrangeControls {
 	}
 
 	/** @param {NewCmsBlock} block */
-	isBlockRow(block) {
+	isContainerHorizontal(block) {
 		if (block) {
-			const cont = block.find(".newCms_block_content");
-			if (cont) {
-				return cont.style.flexFlow.includes("row");
+			const block_styles = this.newCms.styling.getBlockComputedStyles(block);
+			if (!isObjectEmpty(block_styles)) {
+				const ff = block_styles.inside["flex-flow"];
+				if (ff) {
+					return ff.includes("row");
+				}
 			}
 		}
 		return false;
@@ -181,7 +184,7 @@ class NewCmsRearrangeControls {
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
 		let parent_container = null;
-		let is_parent_row = false;
+		let is_container_horizontal = false;
 
 		if (rearrange_near_block) {
 			if (
@@ -202,9 +205,7 @@ class NewCmsRearrangeControls {
 					parent_container = this.newCms.content_node;
 				}
 
-				is_parent_row = this.isBlockRow(parent_container);
-				//? parent_container.classList.contains("container_row")
-				//: false;
+				is_container_horizontal = this.isContainerHorizontal(parent_container);
 			}
 
 			if (rearrange_control_node) {
@@ -273,28 +274,28 @@ class NewCmsRearrangeControls {
 						x += 10;
 					}
 				} else if (["before", "after"].includes(rearrange_position)) {
-					if (is_parent_row) {
+					if (is_container_horizontal) {
 						height = rearrange_near_block_rect_data.node_rect.height;
 					} else {
 						width = rearrange_near_block_rect_data.node_rect.width;
 					}
 
 					if (rearrange_position != "before") {
-						if (is_parent_row) {
+						if (is_container_horizontal) {
 							x += rearrange_near_block_rect_data.node_rect.width;
 						} else {
 							y += rearrange_near_block_rect_data.node_rect.height;
 						}
 					}
 
-					if (is_parent_row) {
+					if (is_container_horizontal) {
 						x -= min_size * 0.5;
 					} else {
 						y -= min_size * 0.5;
 					}
 
 					if (rearrange_control_node.classList.contains("insert_end")) {
-						if (is_parent_row) {
+						if (is_container_horizontal) {
 							x += min_size * (rearrange_position == "before" ? 0.5 : -0.5);
 						} else {
 							y += min_size * (rearrange_position == "before" ? 0.5 : -0.5);
@@ -443,9 +444,9 @@ class NewCmsRearrangeControls {
 					}
 
 					// @ts-ignore
-					let is_parent_row = this.isBlockRow(parent_container);
-					//? parent_container.classList.contains("container_row")
-					//: false;
+					let is_container_horizontal = this.isContainerHorizontal(
+						parent_container
+					);
 
 					const block_rect_data = nodePositionAgainstScrollableParent(block);
 					const block_type = block.dataset.block;
@@ -457,7 +458,7 @@ class NewCmsRearrangeControls {
 						prev_node.classList.contains("newCms_block")
 					) {
 						// no kissing ugh
-						if (is_parent_row) {
+						if (is_container_horizontal) {
 							const prev_node_rect = prev_node.getBoundingClientRect();
 							const node_rect = block_rect_data.node_rect;
 							if (
@@ -504,7 +505,7 @@ class NewCmsRearrangeControls {
 								this.rearrange_control_height) *
 							0.5;
 					} else {
-						if (is_parent_row) {
+						if (is_container_horizontal) {
 							block_rect_data.relative_pos.left -=
 								this.rearrange_control_width * 0.5;
 							block_rect_data.relative_pos.top +=
@@ -540,7 +541,7 @@ class NewCmsRearrangeControls {
 						index: index,
 						block: block,
 						rect_data: block_rect_data,
-						is_parent_row: is_parent_row,
+						is_container_horizontal: is_container_horizontal,
 						position: position,
 					});
 				});
@@ -577,9 +578,9 @@ class NewCmsRearrangeControls {
 				});
 
 				// @ts-ignore
-				const is_parent_row = this.isBlockRow(parent_container);
-				//? parent_container.classList.contains("container_row")
-				//: false;
+				const is_container_horizontal = this.isContainerHorizontal(
+					parent_container
+				);
 
 				const block_rect_data = nodePositionAgainstScrollableParent(block);
 
@@ -628,7 +629,7 @@ class NewCmsRearrangeControls {
 							top: top,
 							block: block,
 							rect_data: block_rect_data_copy,
-							is_parent_row: is_parent_row,
+							is_container_horizontal: is_container_horizontal,
 							position: "grid",
 							xi: xi,
 							yi: yi,
@@ -654,7 +655,7 @@ class NewCmsRearrangeControls {
 				rect_data: nodePositionAgainstScrollableParent(
 					this.newCms.content_node
 				),
-				is_parent_row: false,
+				is_container_horizontal: false,
 				position: "inside",
 			});
 		}*/
@@ -761,7 +762,7 @@ class NewCmsRearrangeControls {
 				rearrange_control_html = `<img style='width:0.7em' src="/src/img/insert_plus.svg">`;
 				rearrange_control.classList.add("insert_inside");
 			} else {
-				if (block_data.is_parent_row) {
+				if (block_data.is_container_horizontal) {
 					rotation += 90;
 				}
 

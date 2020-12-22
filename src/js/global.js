@@ -948,6 +948,10 @@ function cloneObject(obj, src = null) {
 	return obj_b;
 }
 
+function isObjectEmpty(obj) {
+	return !obj || Object.keys(obj).length === 0;
+}
+
 function kebabToSnakeCase(string) {
 	return string.replace(/-([a-z])/gi, function (s, group1) {
 		return group1.toUpperCase();

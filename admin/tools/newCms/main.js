@@ -42,6 +42,7 @@ useTool("fileManager");
  * @typedef {{
  * copy?: boolean,
  * copied_from?: NewCmsBlock
+ * remove?: boolean
  * }} NewCmsGrabOptions
  */
 
@@ -652,6 +653,13 @@ class NewCms {
 			});
 	}
 
+	/**
+	 *
+	 * @param {*} type
+	 * @param {{
+	 * from?: PiepNode
+	 * }} options
+	 */
 	createBlock(type, options = {}) {
 		//let content = "";
 		let class_list = [];
@@ -675,7 +683,16 @@ class NewCms {
 		} else if (type === "container") {
 			class_list.push("container");
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
-			// row or column by default I guess :*
+
+			let container_horizontal = false;
+			if (options.from) {
+				container_horizontal = options.from.classList.contains(
+					"container_horizontal"
+				);
+			}
+			styles.desktop.inside = {
+				"flex-flow": container_horizontal ? "row" : "column",
+			};
 		} else if (type === "grid") {
 			class_list.push("container");
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
@@ -940,7 +957,9 @@ class NewCms {
 				);
 
 				// @ts-ignore
-				grabbed_block = this.createBlock(block_type);
+				grabbed_block = this.createBlock(block_type, {
+					from: grabbed_block,
+				});
 				this.grabbed_block = grabbed_block;
 				this.content_node.appendChild(grabbed_block);
 

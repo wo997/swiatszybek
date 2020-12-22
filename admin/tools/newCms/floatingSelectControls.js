@@ -201,7 +201,7 @@ class NewCmsSelectControls {
 
 			/** @type {SelectControl} */
 			// @ts-ignore
-			const select_control = document.createElement("DIV");
+			const select_control = $(document.createElement("DIV"));
 			select_control.classList.add("select_control");
 			select_control.style.left = left + "px";
 			select_control.style.top = top + "px";
@@ -215,9 +215,9 @@ class NewCmsSelectControls {
 
 			const icon = $(`.side_block[data-block="${block_type}"] i`);
 
-			select_control.innerHTML = icon
-				? icon.outerHTML
-				: `<i class="fas fa-square"></i>`;
+			select_control.setContent(
+				icon ? icon.outerHTML : `<i class="fas fa-square"></i>`
+			);
 
 			block.select_control = select_control;
 			select_control.select_block = block;

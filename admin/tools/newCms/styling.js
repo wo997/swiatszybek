@@ -588,14 +588,16 @@ class NewCmsStyling {
 
 		let computed_styles = {};
 
-		for (const responsive_type of this.responsive_types) {
-			computed_styles = deepAssign(
-				computed_styles,
-				node.styling_data[responsive_type.name]
-			);
+		if (node.styling_data) {
+			for (const responsive_type of this.responsive_types) {
+				const sd = node.styling_data[responsive_type.name];
+				if (sd) {
+					computed_styles = deepAssign(computed_styles, sd);
+				}
 
-			if (this.responsive_type.name == responsive_type.name) {
-				break;
+				if (this.responsive_type.name == responsive_type.name) {
+					break;
+				}
 			}
 		}
 
