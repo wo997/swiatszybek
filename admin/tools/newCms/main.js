@@ -652,7 +652,7 @@ class NewCms {
 			content_html = /*html*/ `<div class="newCms_block_content ql-editor"></div>`;
 		} else if (type === "image") {
 			styles.desktop.outside = {
-				"justift-content": "center",
+				"justify-content": "center",
 			};
 			content_html = /*html*/ `<img class="newCms_block_content wo997_img">`;
 		} else if (type === "video") {
@@ -1304,6 +1304,8 @@ class NewCms {
 				}
 			}
 			target_speed_y *= 0.4;
+		} else {
+			this.scroll_speed_y *= 0.9;
 		}
 
 		if (this.scroll_speed_y + const_acc < target_speed_y) {

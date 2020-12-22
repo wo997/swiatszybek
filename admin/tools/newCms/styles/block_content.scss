@@ -2,7 +2,7 @@
 
 .newCms_block.container > .newCms_block_content {
 	/*display: flex;*/
-	flex-shrink: 0;
+	/*flex-shrink: 0;*/
 	position: relative;
 }
 
@@ -22,7 +22,7 @@
 	display: flex;
 	flex-flow: column;
 	flex-grow: 1;
-	flex-shrink: 0;
+	flex-shrink: 1;
 }
 
 /*.newCms_block::before,

@@ -70,7 +70,9 @@ class NewCmsSidebar {
 						.find(".newCms_block_content")
 						.setValue(image.getValue(), { quiet: true });
 
-					lazyLoadImages();
+					setTimeout(() => {
+						lazyLoadImages();
+					});
 
 					/** @type {NewCmsBlock} */
 					// @ts-ignore
@@ -100,6 +102,22 @@ class NewCmsSidebar {
 					this.newCms.contentChange();
 				}
 			}
+		});
+
+		const justify_content = this.node.find(`[name="justify_content"]`);
+		justify_content.addEventListener("change", () => {
+			//const block_type = this.newCms.edit_block.edit_node.dataset.block;
+			//if (block_type == "container") {
+			this.newCms.styling.setBlockStyles(
+				{
+					"justify-content": justify_content.getValue(),
+				},
+				null,
+				{
+					target: "outside",
+				}
+			);
+			//}
 		});
 
 		const container_flow = this.node.find(`[name="container_flow"]`);
