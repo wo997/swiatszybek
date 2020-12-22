@@ -135,8 +135,22 @@ class NewCms {
 				const dy_bottom = this.getBottomScrollOffset();
 
 				if (event && event.deltaY !== null) {
-					if (dy_bottom - event.deltaY < 0 && event.deltaY >= 0) {
-						event.preventDefault();
+					console.log(dy_bottom, event.deltaY, event.deltaY);
+					if (event.deltaY >= 0) {
+						if (dy_bottom - event.deltaY < 0) {
+							const scr = (t) => {
+								if (t > 3) {
+									// go 4 times
+									return;
+								}
+								this.content_scroll_panel.scrollBy(0, dy_bottom * 0.25);
+								setTimeout(() => {
+									scr(t + 1);
+								}, 1000 / 60);
+							};
+							scr(0);
+							event.preventDefault();
+						}
 					}
 				}
 			},
