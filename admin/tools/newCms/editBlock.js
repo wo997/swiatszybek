@@ -264,21 +264,11 @@ class NewCmsEditBlock {
 				const b_rect = block.getBoundingClientRect();
 				this.newCms.sidebar.node.appendChild(copied_block);
 
-				/** @type {BlockStyles} */
 				// @ts-ignore
-				const styling_data = cloneObject(block.styling_data);
-				copied_block.styling_data = styling_data;
+				copied_block.styling_data = block.styling_data;
 				copied_block.style.width = b_rect.width + "px";
 				copied_block.style.height = b_rect.height + "px";
 				copied_block.last_rect = copied_block.getBoundingClientRect();
-
-				const block_id = this.newCms.styling.getBlockId(copied_block);
-				const block_class_name = this.newCms.styling.getBlockClassName(
-					block_id
-				);
-				if (block_class_name) {
-					copied_block.classList.remove(block_class_name);
-				}
 
 				/** @type {AnimationData} */
 				const cbad = {
@@ -289,7 +279,7 @@ class NewCmsEditBlock {
 				};
 				copied_block.animation_data = cbad;
 
-				this.newCms.grabBlock(copied_block, { copy: true });
+				this.newCms.grabBlock(copied_block, { copy: true, copied_from: block });
 				this.hideContextMenu();
 			});
 		}

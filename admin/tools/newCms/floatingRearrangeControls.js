@@ -117,6 +117,7 @@ class NewCmsRearrangeControls {
 
 			if (
 				!rearrange_control_node &&
+				target &&
 				target.findParentNode(this.newCms.content_node)
 			) {
 				let smallest_sq_distance = 10000; // magnetic 100px
@@ -608,7 +609,7 @@ class NewCmsRearrangeControls {
 						}
 
 						// TODO: xy, yi should be stored in blocks_data, ezy
-						let block_rect_data_copy = deepMerge(
+						let block_rect_data_copy = deepAssign(
 							{
 								node_rect: {},
 								relative_pos: {},

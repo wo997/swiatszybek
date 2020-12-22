@@ -922,29 +922,30 @@ function isUrlOurs(url) {
 	}
 }
 
-// Object.assign works only on the first level
-function deepMerge(...sources) {
-	let acc = {};
-	for (const source of sources) {
-		if (source instanceof Array) {
-			if (!(acc instanceof Array)) {
-				acc = [];
-			}
-			acc.push(...source);
-		} else if (source instanceof Object) {
-			for (let [key, value] of Object.entries(source)) {
-				if (value instanceof Object && key in acc) {
-					value = deepMerge(acc[key], value);
-				}
-				acc = { ...acc, [key]: value };
-			}
-		}
-	}
-	return acc;
+// Object.assign works only on the first level, those motherfuckers below are light af
+function deepAssign(target, src) {
+	return cloneObject(src, target);
 }
 
-function cloneObject(obj) {
-	return deepMerge({}, obj);
+/**
+ * Don't use the src ;)
+ *
+ * @param {*} obj
+ * @param {*} src
+ */
+function cloneObject(obj, src = null) {
+	if (!obj || obj instanceof HTMLElement) {
+		return obj;
+	}
+
+	let v;
+	let obj_b = nonull(src, Array.isArray(obj) ? [] : {});
+	for (const k in obj) {
+		v = obj[k];
+		obj_b[k] = typeof v === "object" ? cloneObject(v) : v;
+	}
+
+	return obj_b;
 }
 
 function kebabToSnakeCase(string) {

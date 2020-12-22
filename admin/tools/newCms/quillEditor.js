@@ -151,7 +151,10 @@ class NewCmsQuillEditor {
 			IS_MOBILE ? "touchstart" : "mousemove",
 			(event) => {
 				this.newCms.updateMouseCoords(event);
-				if (!this.newCms.mouse_target.findParentNode(this.newCms.sidebar)) {
+				if (
+					!this.newCms.mouse_target ||
+					!this.newCms.mouse_target.findParentNode(this.newCms.sidebar)
+				) {
 					this.saveChanges();
 				}
 			}
@@ -159,7 +162,10 @@ class NewCmsQuillEditor {
 
 		this.newCms.container.addEventListener("click", (event) => {
 			this.newCms.updateMouseCoords(event);
-			if (!this.newCms.mouse_target.findParentNode(this.node)) {
+			if (
+				!this.newCms.mouse_target ||
+				!this.newCms.mouse_target.findParentNode(this.node)
+			) {
 				this.saveChanges();
 			}
 		});

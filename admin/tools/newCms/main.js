@@ -35,9 +35,14 @@ useTool("fileManager");
  * dx
  * dy
  * w
- * h
- * margin_left
- * margin_top}} AnimationData
+ * h}} AnimationData
+ */
+
+/**
+ * @typedef {{
+ * copy?: boolean,
+ * copied_from?: NewCmsBlock
+ * }} NewCmsGrabOptions
  */
 
 class NewCms {
@@ -60,6 +65,7 @@ class NewCms {
 		this.mouse_target = null;
 		this.last_content_scroll_top = 0;
 
+		/** @type {NewCmsGrabOptions} */
 		this.grab_options = {};
 
 		/** @type {NewCmsBlock} */
@@ -90,6 +96,10 @@ class NewCms {
 				this.mouseMove();
 			}
 		);
+
+		this.container.addEventListener("mouseleave", (event) => {
+			this.updateMouseCoords(event);
+		});
 
 		this.container.addEventListener("mousedown", (event) => {
 			this.mouse_left_btn = event.buttons === 1;
@@ -732,7 +742,7 @@ class NewCms {
 	/**
 	 *
 	 * @param {NewCmsBlock} block
-	 * @param {*} options
+	 * @param {NewCmsGrabOptions} options
 	 */
 	grabBlock(block, options = {}) {
 		if (this.grabbed_block) {
@@ -828,7 +838,9 @@ class NewCms {
 			return;
 		}
 
-		const do_trash = this.mouse_target.findParentNode(this.trash_block.node);
+		const do_trash =
+			this.mouse_target &&
+			this.mouse_target.findParentNode(this.trash_block.node);
 
 		// a copy has these values fixed
 		grabbed_block.style.width = "";
@@ -982,6 +994,19 @@ class NewCms {
 		this.beforeContentAnimation();
 
 		if (this.rearrange_controls.rearrange_near_block) {
+			if (this.grab_options.copy) {
+				grabbed_block.style.display = "";
+
+				// @ts-ignore
+				grabbed_block.styling_data = cloneObject(grabbed_block.styling_data);
+
+				const block_id = this.styling.getBlockId(grabbed_block);
+				const block_class_name = this.styling.getBlockClassName(block_id);
+				if (block_class_name) {
+					grabbed_block.classList.remove(block_class_name);
+				}
+			}
+
 			if (this.rearrange_controls.rearrange_position == "inside") {
 				this.rearrange_controls.rearrange_near_block
 					.find(".newCms_block_content")
@@ -1038,10 +1063,8 @@ class NewCms {
 				this.styling.setBlocksFlexOrder();
 			}
 
-			this.styling.registerMissingBlocks();
-
 			if (this.grab_options.copy) {
-				grabbed_block.style.display = "";
+				this.styling.registerMissingBlocks();
 			}
 		} else {
 			if (this.grab_options.copy) {
@@ -1294,7 +1317,10 @@ class NewCms {
 		const const_acc = 0.5;
 
 		// cute scroll
-		if (this.mouse_target.findParentNode(this.content_scroll_panel)) {
+		if (
+			this.mouse_target &&
+			this.mouse_target.findParentNode(this.content_scroll_panel)
+		) {
 			const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
 
 			const scroll_offset = 50;

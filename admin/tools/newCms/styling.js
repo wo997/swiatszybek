@@ -589,7 +589,7 @@ class NewCmsStyling {
 		let computed_styles = {};
 
 		for (const responsive_type of this.responsive_types) {
-			computed_styles = deepMerge(
+			computed_styles = deepAssign(
 				computed_styles,
 				node.styling_data[responsive_type.name]
 			);
