@@ -299,9 +299,6 @@ class NewCmsEditBlock {
 			remove_btn.addEventListener("click", () => {
 				this.hideContextMenu();
 				this.newCms.removeBlock(block);
-				if (this.newCms.sidebar.getCurrentMenu() === "edit_block") {
-					this.newCms.sidebar.showPreviousSideMenu();
-				}
 			});
 		}
 

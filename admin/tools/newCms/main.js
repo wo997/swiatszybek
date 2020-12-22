@@ -719,6 +719,10 @@ class NewCms {
 				block.classList.add("to_remove");
 			},
 		});
+
+		if (this.sidebar.getCurrentMenu() === "edit_block") {
+			this.sidebar.showPreviousSideMenu();
+		}
 	}
 
 	/**
@@ -730,6 +734,15 @@ class NewCms {
 		if (this.grabbed_block) {
 			return;
 		}
+
+		if (this.sidebar.collapsed) {
+			this.sidebar.toggleSidebar();
+			// 300 is hardcoded
+			return setTimeout(() => {
+				this.grabBlock(block, options);
+			}, 300);
+		}
+
 		this.grab_options = options;
 
 		const block_rect = block.getBoundingClientRect();
@@ -782,11 +795,6 @@ class NewCms {
 
 		if (!options.copy) {
 			delete this.grabbed_block.animation_data;
-		}
-
-		if (this.sidebar.collapsed) {
-			this.sidebar.toggleSidebar();
-			this.grabbed_mouse_x += this.sidebar.sidebar_animation_offset;
 		}
 
 		this.grabAnimation();
