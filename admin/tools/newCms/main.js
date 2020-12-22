@@ -506,9 +506,13 @@ class NewCms {
 		}*/
 	}
 
-	contentChange(options = {}) {
+	contentChangeManageContent() {
 		this.insertMissingQlClasses();
 		this.manageGrids();
+	}
+
+	contentChange(options = {}) {
+		this.contentChangeManageContent();
 		this.styling.setBlocksFlexOrder();
 
 		this.caseEmptyHint();
@@ -667,7 +671,7 @@ class NewCms {
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
 			styles.desktop.inside = {
 				"grid-template-columns": "1fr 1fr",
-				"grid-template-rows": "1fr 2fr 1fr 1fr",
+				"grid-template-rows": "1fr 1fr",
 			};
 		}
 
@@ -927,6 +931,11 @@ class NewCms {
 				grabbed_block = this.createBlock(block_type);
 				this.grabbed_block = grabbed_block;
 				this.content_node.appendChild(grabbed_block);
+
+				this.contentChangeManageContent();
+				this.styling.registerMissingBlocks();
+				this.styling.generateCSS();
+
 				grabbed_block.animation_data = animation_data;
 				grabbed_block.classList.add("select_active");
 				grabbed_block.last_rect = side_block_rect;
