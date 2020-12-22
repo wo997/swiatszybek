@@ -529,6 +529,7 @@ class NewCmsStyling {
 	 * @param {{
 	 * type?: ResponsiveTypesEnum
 	 * target?: BlockStyleTargetsEnum
+	 * generate_css?: boolean
 	 * }} params
 	 */
 	setBlockStyles(styles, node = null, params = {}) {

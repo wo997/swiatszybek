@@ -13,8 +13,9 @@
 	}
 
 	/* TODO: some styles like this one should be global */
+	/* TODO: you should probably also include videos and more */
 	& img.newCms_block_content {
 		max-width: 100%;
-		align-self: center;
+		flex-grow: 0;
 	}
 }

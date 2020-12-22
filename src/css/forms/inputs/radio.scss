@@ -1,0 +1,128 @@
+/* css[global] */
+
+:root {
+	--radio-input-margin: 6px;
+}
+
+radio-input radio-option:not(.selected) {
+	cursor: pointer;
+	color: #444;
+}
+
+radio-input.default {
+	& radio-option {
+		padding: 2px 5px;
+		display: block;
+		border: 1px solid #bbb;
+		margin-bottom: -1px;
+		user-select: none;
+	}
+
+	& radio-option:first-child {
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+	}
+	& radio-option:last-child {
+		border-bottom-left-radius: 4px;
+		border-bottom-right-radius: 4px;
+	}
+
+	& radio-option:before {
+		font-weight: 900;
+		font-family: "Font Awesome 5 Free";
+		content: "\f058";
+		margin: -2px 1px;
+		color: var(--primary-clr);
+	}
+	& radio-option:not(.selected):before {
+		color: transparent;
+	}
+	& radio-option.selected {
+		background: #0001;
+		font-weight: 600;
+	}
+}
+
+/* blocks start */
+radio-input.blocks {
+	& {
+		display: flex;
+		flex-wrap: wrap;
+		margin-right: calc(var(--radio-input-margin) * -1);
+		margin-bottom: calc(var(--radio-input-margin) * -1);
+	}
+	& radio-option {
+		padding: 10px;
+		display: flex;
+		flex-wrap: wrap;
+		min-height: 80px;
+		text-align: center;
+		align-items: center;
+		justify-content: center;
+		/*flex-grow: 1;*/
+		margin-right: var(--radio-input-margin);
+		margin-bottom: var(--radio-input-margin);
+		font-weight: inherit !important;
+		transition: all 0.2s;
+		border-radius: 4px;
+		border: 1px solid #bbb;
+	}
+	& radio-option.selected {
+		border-color: var(--primary-clr);
+		box-shadow: 0 0 0 1px var(--primary-clr), inset 0 0 0 1px var(--primary-clr);
+	}
+}
+
+radio-input.blocks {
+	& {
+		display: flex;
+		flex-flow: row wrap;
+	}
+}
+
+radio-input {
+	&.columns_2,
+	&.columns_3 {
+		& {
+			display: flex;
+			flex-flow: row wrap;
+			margin-right: 1px;
+			--option-padding: 0;
+		}
+		& radio-option {
+			border-radius: 0 !important;
+			margin-right: -1px;
+			width: 50%;
+			padding: var(--option-padding);
+		}
+	}
+
+	&.columns_2 radio-option {
+		width: 50%;
+	}
+	&.columns_3 radio-option {
+		width: 33.33333%;
+	}
+}
+/*--column-count: 2
+& radio-input[name="container_flow"] {
+    & radio-option {
+        & {
+            border-radius: 0 !important;
+            padding: 5px !important;
+            margin-right: -1px;
+            width: 50%;
+        }
+        & img {
+            width: 50px;
+            height: 50px;
+            object-fit: fill;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+    }
+    & {
+        display: flex;
+        flex-flow: row wrap;
+    }
+}*/

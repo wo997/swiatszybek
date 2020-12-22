@@ -119,12 +119,12 @@
 
 		& radio-input[name="container_flow"] {
 			& radio-option {
-				& {
+				/*& {
 					border-radius: 0 !important;
 					padding: 5px !important;
 					margin-right: -1px;
 					width: 50%;
-				}
+				}*/
 				& img {
 					width: 50px;
 					height: 50px;
@@ -133,10 +133,10 @@
 					margin-right: 5px;
 				}
 			}
-			& {
+			/*& {
 				display: flex;
 				flex-flow: row wrap;
-			}
+			}*/
 		}
 	}
 }

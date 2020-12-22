@@ -71,6 +71,32 @@ class NewCmsSidebar {
 						.setValue(image.getValue(), { quiet: true });
 
 					lazyLoadImages();
+
+					/** @type {NewCmsBlock} */
+					// @ts-ignore
+					const block_content = this.newCms.edit_block.edit_node.find(
+						".newCms_block_content"
+					);
+					const img_data = getResponsiveImageData(block_content.dataset.src);
+					let w = 0;
+					if (img_data) {
+						w = img_data.w;
+					} else {
+						w = block_content.getBoundingClientRect().width;
+					}
+
+					this.newCms.styling.setBlockStyles(
+						{
+							width: w + "px",
+						},
+						null,
+						{
+							type: "desktop",
+							target: "inside",
+							generate_css: false,
+						}
+					);
+
 					this.newCms.contentChange();
 				}
 			}

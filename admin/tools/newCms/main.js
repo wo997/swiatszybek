@@ -506,29 +506,12 @@ class NewCms {
 		}*/
 	}
 
-	// TODO: do we really need it? hmmm, maybe
-	giveImagesNaturalWidth() {
-		this.content_node.findAll("img.newCms_block_content").forEach((e) => {
-			if (!e.style.width) {
-				const img_data = getResponsiveImageData(e.dataset.src);
-				let w = 0;
-				if (img_data) {
-					w = img_data.w;
-				} else {
-					w = e.getBoundingClientRect().width;
-				}
-				e.style.width = w + "px";
-			}
-		});
-	}
-
 	contentChange(options = {}) {
 		this.insertMissingQlClasses();
 		this.manageGrids();
 		this.styling.setBlocksFlexOrder();
 
 		this.caseEmptyHint();
-		this.giveImagesNaturalWidth();
 
 		this.select_controls.addFloatingSelectControls();
 
@@ -668,6 +651,9 @@ class NewCms {
 		if (type === "quill_editor") {
 			content_html = /*html*/ `<div class="newCms_block_content ql-editor"></div>`;
 		} else if (type === "image") {
+			styles.desktop.outside = {
+				"justift-content": "center",
+			};
 			content_html = /*html*/ `<img class="newCms_block_content wo997_img">`;
 		} else if (type === "video") {
 			// TODO: just do it
@@ -679,8 +665,10 @@ class NewCms {
 		} else if (type === "grid") {
 			class_list.push("container");
 			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
-			styles.desktop.inside["grid-template-columns"] = "1fr 1fr";
-			styles.desktop.inside["grid-template-rows"] = "1fr 2fr 1fr 1fr";
+			styles.desktop.inside = {
+				"grid-template-columns": "1fr 1fr",
+				"grid-template-rows": "1fr 2fr 1fr 1fr",
+			};
 		}
 
 		/** @type {NewCmsBlock} */
