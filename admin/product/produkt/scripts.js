@@ -729,10 +729,6 @@ function createFilterOptionsSimpleList(node) {
 }
 
 windowload(() => {
-	// inject text counter after the form is registered in a right place,
-	// could also run then the form is registered on an event listener
-	registerTextCounters();
-
 	fileManager.setDefaultName($('[name="title"]').value);
 });
 

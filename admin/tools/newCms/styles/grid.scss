@@ -35,6 +35,7 @@
 .grid_wireframe_line {
 	position: relative;
 	pointer-events: none;
+	z-index: 110;
 }
 .grid_wireframe_line {
 	&:before,

@@ -44,10 +44,6 @@ $static = checkUrl($page_data["link"]);
         resizeCallback();
     });
 
-    windowload(() => {
-        registerTextCounters();
-    });
-
     function showPreview() {
         window.preview.open("/<?= nonull($page_data, "link") ?>", {
             content: $(`[name="content"]`).getValue(),

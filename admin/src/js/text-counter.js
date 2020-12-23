@@ -1,5 +1,11 @@
 /* js[admin] */
 
+window.addEventListener("register-form-components", () => {
+	setTimeout(() => {
+		registerTextCounters();
+	}, 0);
+});
+
 function registerTextCounters() {
 	$$("[data-show-count]:not(.registered)").forEach((e) => {
 		e.classList.add("registered");

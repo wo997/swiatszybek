@@ -15,7 +15,7 @@
  * next(): PiepNode
  * findParentByClassName(parentClassNames, options?): PiepNode
  * findScrollParent(options?): PiepNode
- * findParentByAttribute(options?): PiepNode
+ * findParentByAttribute(name,options?): PiepNode
  * findParentByComputedStyle(options?): PiepNode
  * findParentById(options?): PiepNode
  * findParentNode(parent, options?): PiepNode
