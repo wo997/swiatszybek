@@ -121,7 +121,7 @@ class NewCmsSelectControls {
                             L ${x4},${y4}
                             Z
                         "
-                        fill="#ff07"
+                        fill="#fa07"
                         stroke="#0003"
                         stroke-width="2"
                         />
