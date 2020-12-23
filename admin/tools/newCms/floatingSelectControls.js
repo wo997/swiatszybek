@@ -20,6 +20,7 @@ class NewCmsSelectControls {
 	}
 
 	init() {
+		/** @type {NewCmsBlock} */
 		this.selected_block = null;
 		this.node.classList.add("visible");
 		this.removeSelection();
@@ -31,6 +32,7 @@ class NewCmsSelectControls {
 		});
 
 		this.selection_node.classList.remove("visible");
+		this.newCms.svg.empty();
 	}
 
 	mouseMove() {
@@ -64,6 +66,7 @@ class NewCmsSelectControls {
 		) {
 			this.removeSelection();
 
+			// @ts-ignore
 			this.selected_block = hovered_block;
 
 			const selected_block = this.selected_block;
@@ -75,20 +78,114 @@ class NewCmsSelectControls {
 				this.selection_node.classList.add("visible");
 				const rect_data = nodePositionAgainstScrollableParent(selected_block);
 				const border_width = 4;
-				this.selection_node.style.left =
-					rect_data.relative_pos.left - border_width * 0.5 + "px";
-				this.selection_node.style.top =
-					rect_data.relative_pos.top - border_width * 0.5 + "px";
-				this.selection_node.style.width =
-					rect_data.node_rect.width + border_width + "px";
-				this.selection_node.style.height =
-					rect_data.node_rect.height + border_width + "px";
+				const width = rect_data.node_rect.width;
+				const height = rect_data.node_rect.height;
+				const left = rect_data.relative_pos.left;
+				const top = rect_data.relative_pos.top;
+				const right = left + width;
+				const bottom = top + height;
+				this.selection_node.style.left = left - border_width * 0.5 + "px";
+				this.selection_node.style.top = top - border_width * 0.5 + "px";
+				this.selection_node.style.width = width + border_width + "px";
+				this.selection_node.style.height = height + border_width + "px";
+
+				const block_styles = this.newCms.styling.getBlockComputedStyles(
+					this.selected_block
+				);
+				const mt = evalCss(
+					block_styles.outside["margin-top"],
+					this.selection_node
+				);
+				const mr = evalCss(
+					block_styles.outside["margin-right"],
+					this.selection_node
+				);
+				const mb = evalCss(
+					block_styles.outside["margin-bottom"],
+					this.selection_node
+				);
+				const ml = evalCss(
+					block_styles.outside["margin-left"],
+					this.selection_node
+				);
+				//console.log(mt, mr, mb, ml);
+
+				let paths = "";
+
+				const addQuadrangle = (x1, y1, x2, y2, x3, y3, x4, y4) => {
+					return /*html*/ `<path
+                        d="
+                            M ${x1},${y1}
+                            L ${x2},${y2}
+                            L ${x3},${y3}
+                            L ${x4},${y4}
+                            Z
+                        "
+                        fill="#ff07"
+                        stroke="#0003"
+                        stroke-width="2"
+                        />
+                        `;
+					//stroke-dasharray="10 5"
+				};
+
+				// left
+				paths += addQuadrangle(
+					left,
+					top,
+					left,
+					bottom,
+					left - ml,
+					bottom + mb,
+					left - ml,
+					top - mt
+				);
+
+				// right
+				paths += addQuadrangle(
+					right,
+					top,
+					right,
+					bottom,
+					right + mr,
+					bottom + mb,
+					right + mr,
+					top - mt
+				);
+
+				// top
+				paths += addQuadrangle(
+					left,
+					top,
+					right,
+					top,
+					right + mr,
+					top - mt,
+					left - ml,
+					top - mt
+				);
+
+				// bottom
+				paths += addQuadrangle(
+					left,
+					bottom,
+					right,
+					bottom,
+					right + mr,
+					bottom + mb,
+					left - ml,
+					bottom + mb
+				);
+
+				this.newCms.svg.setContent(/*html*/ `
+                    ${paths}
+                `);
 			}
 		}
 
 		this.newCms.container.classList.toggle(
 			"anything_selected",
-			this.selected_block
+			!!this.selected_block
 		);
 	}
 	//mouseDown() {

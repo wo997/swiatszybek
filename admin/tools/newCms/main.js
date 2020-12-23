@@ -57,6 +57,7 @@ class NewCms {
 		this.rearrange_node = this.container.find(`.rearrange_node`);
 		this.clean_output_node = this.container.find(`.clean_output`);
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
+		this.svg = this.container.find(`.svg`);
 
 		this.mouse_x = 0;
 		this.mouse_y = 0;
@@ -135,7 +136,6 @@ class NewCms {
 				const dy_bottom = this.getBottomScrollOffset();
 
 				if (event && event.deltaY !== null) {
-					console.log(dy_bottom, event.deltaY, event.deltaY);
 					if (event.deltaY >= 0) {
 						if (dy_bottom - event.deltaY < 0) {
 							const scr = (t) => {
