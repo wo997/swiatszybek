@@ -73,6 +73,8 @@ class NewCmsSelectControls {
 
 			if (selected_block && selected_block.select_control) {
 				//selected_block.classList.add("select_active");
+				selected_block.classList.add("select_active");
+
 				selected_block.select_control.classList.add("select_active");
 
 				this.selection_node.classList.add("visible");
@@ -112,7 +114,25 @@ class NewCmsSelectControls {
 
 				let paths = "";
 
-				const addQuadrangle = (x1, y1, x2, y2, x3, y3, x4, y4) => {
+				const addQuadrangle = (
+					x1,
+					y1,
+					x2,
+					y2,
+					x3,
+					y3,
+					x4,
+					y4,
+					invert,
+					type
+				) => {
+					let clr;
+					if (type == "margin") {
+						clr = invert > 0 ? "fa05" : "c005";
+					} else {
+						clr = "0c05";
+					}
+
 					return /*html*/ `<path
                         d="
                             M ${x1},${y1}
@@ -121,7 +141,7 @@ class NewCmsSelectControls {
                             L ${x4},${y4}
                             Z
                         "
-                        fill="#fa07"
+                        fill="#${clr}"
                         stroke="#0003"
                         stroke-width="2"
                         />
@@ -138,7 +158,9 @@ class NewCmsSelectControls {
 					left - ml,
 					bottom + mb,
 					left - ml,
-					top - mt
+					top - mt,
+					ml,
+					"margin"
 				);
 
 				// right
@@ -150,7 +172,9 @@ class NewCmsSelectControls {
 					right + mr,
 					bottom + mb,
 					right + mr,
-					top - mt
+					top - mt,
+					mr,
+					"margin"
 				);
 
 				// top
@@ -162,7 +186,9 @@ class NewCmsSelectControls {
 					right + mr,
 					top - mt,
 					left - ml,
-					top - mt
+					top - mt,
+					mt,
+					"margin"
 				);
 
 				// bottom
@@ -174,7 +200,9 @@ class NewCmsSelectControls {
 					right + mr,
 					bottom + mb,
 					left - ml,
-					bottom + mb
+					bottom + mb,
+					mb,
+					"margin"
 				);
 
 				this.newCms.svg.setContent(/*html*/ `

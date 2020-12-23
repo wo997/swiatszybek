@@ -685,7 +685,7 @@ class NewCms {
 
 		// TODO: event listeners, any ype of modularity
 		if (type === "quill_editor") {
-			content_html = /*html*/ `<div class="newCms_block_content ql-editor"></div>`;
+			content_html = /*html*/ `<div class="newCms_block_content ql-editor"><p class="ql-align-center">Paragraf</p></div>`;
 		} else if (type === "image") {
 			styles.desktop.outside = {
 				"justify-content": "center",

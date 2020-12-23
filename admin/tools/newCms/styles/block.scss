@@ -7,8 +7,12 @@
 	transition: opacity 0.2s;
 	cursor: pointer;
 	display: flex;
+	z-index: 1;
 }
 
+.newCms_block:hover {
+	z-index: 100;
+}
 .newCms_block:before {
 	& {
 		content: "";
@@ -36,4 +40,9 @@
 .newCms_block:not(.container) > .newCms_block_content {
 	pointer-events: none;
 	padding: 10px;
+}
+
+.newCms_block,
+.newCms_block_content {
+	background-color: inherit;
 }

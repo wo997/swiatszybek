@@ -332,7 +332,7 @@ class NewCmsRearrangeControls {
 				this.rearrange_target_rect_node.style.width = width + "px";
 				this.rearrange_target_rect_node.style.height = height + "px";
 
-				//parent_container.classList.add("rearrange_possible");
+				parent_container.classList.add("rearrange_possible");
 				if (parent_container.select_control) {
 					parent_container.select_control.classList.add("rearrange_possible");
 				}

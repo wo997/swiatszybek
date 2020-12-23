@@ -132,6 +132,9 @@
 
 .newCmsContent,
 .newCmsContent_copy {
+	& {
+		background: #fff;
+	}
 	& > .newCms_block.container {
 		min-height: 100px;
 	}

@@ -1,14 +1,35 @@
 /* css[tool_newCms] */
 
-.newCms_block[data-block="grid"] > .newCms_block_content {
-	display: grid;
-	min-width: 200px;
-	min-height: 200px;
-}
-
-.newCms_block[data-block="grid"] > .newCms_block_content > * {
-	/*min-width: 60px; just height lol */
-	min-height: 60px;
+.newCms_block[data-block="grid"] {
+	& > .newCms_block_content {
+		& {
+			display: grid;
+			min-width: 200px;
+			min-height: 200px;
+		}
+		& > * {
+			/*min-width: 60px; just height lol */
+			min-height: 60px;
+		}
+	}
+	&:hover,
+	&.rearrange_possible {
+		& > .newCms_block_content::before {
+			& {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				background-color: inherit;
+				filter: brightness(0.9);
+			}
+			.newCms.grabbed_block & {
+				filter: brightness(0.85);
+			}
+		}
+	}
 }
 
 .grid_wireframe_line {
