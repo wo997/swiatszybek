@@ -37,9 +37,16 @@
 	}
 }
 
+.newCms_block:not(.container) {
+	padding: 10px;
+}
+
 .newCms_block:not(.container) > .newCms_block_content {
 	pointer-events: none;
-	padding: 10px;
+}
+
+.newCms_block_content.ql-editor {
+	padding: 0;
 }
 
 .newCms_block,

@@ -27,7 +27,8 @@ useTool("fileManager");
 
 /**
  * @typedef {{
- * grid_data} & NewCmsBlock} NewCmsGrid
+ * grid_data: GridData
+ * prev_grid_data?: GridData} & NewCmsBlock} NewCmsGrid
  */
 
 /**
@@ -263,9 +264,7 @@ class NewCms {
 				let styles = {};
 				styles[`padding-${dir}`] = input.getValue();
 
-				this.styling.setBlockStyles(styles, null, {
-					target: "inside",
-				});
+				this.styling.setBlockStyles(styles);
 
 				this.contentChange();
 			});
@@ -1153,10 +1152,21 @@ class NewCms {
 			if (!block.last_rect) {
 				block.last_rect = block.getBoundingClientRect();
 			}
+
+			if (b.dataset.block == "grid") {
+				/** @type {NewCmsGrid} */
+				// @ts-ignore
+				const grid = b;
+				if (!grid.prev_grid_data) {
+					grid.prev_grid_data = grid.grid_data;
+				}
+			}
 		});
 	}
 
 	afterContentAnimation() {
+		this.manageGrids();
+
 		const all_animatable_blocks = this.content_node
 			.findAll(".newCms_block")
 			.filter((b) => {
@@ -1171,7 +1181,7 @@ class NewCms {
 						const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
 						block.animation_data = block_animation_data;
 					}
-					if (block.classList.contains("container")) {
+					if (block.dataset.block === "container") {
 						/** @type {NewCmsBlock} */
 						// @ts-ignore
 						const newCms_block_content = block.find(".newCms_block_content");
@@ -1198,6 +1208,14 @@ class NewCms {
 			block_animation_data.dx += dx;
 			block_animation_data.dy += dy;
 
+			/** @type {NewCmsGrid} */
+			let grid = null;
+
+			if (block.dataset.block == "grid") {
+				// @ts-ignore
+				grid = block;
+			}
+
 			block
 				.find(".newCms_block_content")
 				.directChildren()
@@ -1208,6 +1226,35 @@ class NewCms {
 					if (sub_block.animation_data) {
 						sub_block.animation_data.dx -= dx;
 						sub_block.animation_data.dy -= dy;
+
+						if (grid) {
+							const styling_data = this.styling.getBlockComputedStyles(
+								sub_block
+							);
+
+							const grid_area = styling_data.outside["grid-area"];
+							if (grid_area) {
+								const grid_area_parts = grid_area.replace(/ /g, "").split("/");
+								if (grid_area_parts.length === 4) {
+									// ${r1}/${c1}/${r2}/${c2}
+									const r1 = grid_area_parts[0];
+									const c1 = grid_area_parts[1];
+									const r1_ind = r1 - 1;
+									const c1_ind = c1 - 1;
+
+									const grid_cell_corner_dx =
+										grid.grid_data.x_coords[c1_ind] -
+										grid.prev_grid_data.x_coords[c1_ind];
+
+									const grid_cell_corner_dy =
+										grid.grid_data.y_coords[r1_ind] -
+										grid.prev_grid_data.y_coords[r1_ind];
+
+									sub_block.animation_data.dx += grid_cell_corner_dx;
+									sub_block.animation_data.dy += grid_cell_corner_dy;
+								}
+							}
+						}
 					}
 				});
 		});
@@ -1290,7 +1337,7 @@ class NewCms {
 							block.new_rect.width +
 							mr -
 							(parent_rect.left + parent_rect.width)
-				  ) < 15
+				  ) < 10 // 10 seems to be a legit, ok too big number
 				: false;
 
 			// give flexbox some space baby
@@ -1357,6 +1404,13 @@ class NewCms {
 
 			delete block.animation_data;
 			delete block.last_rect;
+
+			if (block.dataset.block == "grid") {
+				/** @type {NewCmsGrid} */
+				// @ts-ignore
+				const grid = block;
+				delete grid.prev_grid_data;
+			}
 		});
 
 		setTimeout(() => {
@@ -1478,7 +1532,7 @@ class NewCms {
 				target_dx += scr_pos_factor * scr_dx;
 				target_dy += scr_pos_factor * scr_dy;
 
-				const min_w = is_side_block ? 140 : Math.max(50, Math.min(base_w, 150));
+				const min_w = is_side_block ? 140 : Math.max(50, base_w);
 				if (target_w < -min_w) {
 					target_dx += target_w;
 					target_w = -target_w;
@@ -1487,7 +1541,7 @@ class NewCms {
 					target_w = min_w;
 				}
 
-				const min_h = is_side_block ? 50 : Math.max(50, Math.min(base_h, 150));
+				const min_h = is_side_block ? 50 : Math.max(50, base_h);
 				if (target_h < -min_h) {
 					target_dy += target_h;
 					target_h = -target_h;
@@ -1535,6 +1589,7 @@ class NewCms {
 			this.rearrange_node_block_inside.style.width = set_w + "px";
 			this.rearrange_node_block_inside.style.height = set_h + "px";
 
+			// THERE WE GO
 			this.rearrange_node.style.transform = `
                 translate(
                     ${(gbad.dx - ml).toPrecision(5)}px,
