@@ -142,10 +142,11 @@ class NewCmsSelectControls {
                             Z
                         "
                         fill="#${clr}"
-                        stroke="#0003"
-                        stroke-width="2"
                         />
                         `;
+
+					//stroke="#0003"
+					//stroke-width="2"
 					//stroke-dasharray="10 5"
 				};
 
