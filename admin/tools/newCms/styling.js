@@ -7,6 +7,8 @@
  * height}} ResponsiveType
  */
 
+// consider using CSSStyleDeclaration, but! it's for camel not kebab case
+
 /**
  * @typedef {{
  * outside: Object

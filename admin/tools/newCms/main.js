@@ -571,6 +571,7 @@ class NewCms {
 			this.content_node.dispatchChange();
 		}
 		this.content_node.findAll(".to_remove").forEach((e) => {
+			console.log("removing", e);
 			e.remove();
 		});
 	}
@@ -1250,6 +1251,16 @@ class NewCms {
 										grid.grid_data.y_coords[r1_ind] -
 										grid.prev_grid_data.y_coords[r1_ind];
 
+									/*if (sub_block.classList.contains("block_11")) {
+										console.log(
+											r1_ind,
+											grid.grid_data.y_coords[r1_ind],
+											grid.prev_grid_data.y_coords[r1_ind],
+											grid_cell_corner_dy,
+											grid.grid_data
+										);
+									}*/
+
 									sub_block.animation_data.dx += grid_cell_corner_dx;
 									sub_block.animation_data.dy += grid_cell_corner_dy;
 								}
@@ -1301,7 +1312,6 @@ class NewCms {
 				this.updateMouseTarget();
 				this.mouseMove();
 
-				// not used so far
 				if (options.callback) {
 					options.callback();
 				}
@@ -1343,10 +1353,8 @@ class NewCms {
 			// give flexbox some space baby
 			const subtract_mr = kisses_right_border ? 2 : 0;
 
-			const fg = block_styles.outside["flex-grow"];
-			if (fg) {
-				block.style.flexGrow = "0";
-			}
+			block.style.flexGrow = "0";
+			block.style.flexShrink = "0";
 
 			const animation_cramp = block.classList.contains("animation_cramp");
 
@@ -1389,16 +1397,21 @@ class NewCms {
                                 ${mr - subtract_mr}px ${mb}px ${ml}px;
                     }
                 `;
+
+				// instantaneous animation, nice to have ;)
+				/*block.style.transform = `translate(${dx}px, ${dy}px)`;
+				block.style.width = `${block.last_rect.width}px`;
+				block.style.height = `${block.last_rect.height}px`;
+				block.style.margin = `${mt0}px 
+                ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;*/
+
+				//if (block.classList.contains("block_27")) {}
 			}
 
-			// I am sorry for that workaround, but as we go to 90% the animation
-			// freezes so we can be sure nothing will jump like crazy for a single frame,
-			// the proper solution - css transition "forwards" didn't seem to work
 			block.animate(keyframes, duration, {
 				callback: () => {
-					if (fg) {
-						block.style.flexGrow = fg;
-					}
+					block.style.flexGrow = "";
+					block.style.flexShrink = "";
 				},
 			});
 
