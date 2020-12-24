@@ -236,7 +236,10 @@ domload(() => {
 					}
 				} else {
 					row.style.backgroundColor = "";
-					row.find(".main-img").remove();
+					const mn = row.find(".main-img");
+					if (mn) {
+						mn.remove();
+					}
 				}
 
 				var img = row.find("img");

@@ -445,27 +445,14 @@ class NewCmsStyling {
 				if (styles) {
 					let css = "";
 					Object.entries(styles).forEach(([prop_css, val]) => {
-						// FINALLY: the styles are assigned to the NewCmsBlock.styling_data
-						/*if (
-							prop_css.includes("margin") ||
-							prop_css.includes("grid") ||
-							prop_css === "flex-flow"
-						) {
-							const prop_js = kebabToSnakeCase(prop_css);
-
-							const tb =
-								target == "outside"
-									? block_data.node
-									: block_data.node.find(".newCms_block_content");
-							tb.style[prop_js] = val;
-						}*/
 						css += `${prop_css}:${val};`;
 					});
 					if (css) {
 						const block_styles =
-							target == "outside"
+							`#admin ` +
+							(target == "outside"
 								? `${block_selector}{${css}}`
-								: `${block_selector_inside}{${css}}`;
+								: `${block_selector_inside}{${css}}`);
 						return block_styles;
 					}
 				}

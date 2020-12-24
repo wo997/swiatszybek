@@ -105,9 +105,9 @@ if ($kopia) {
 <?php startSection("body_content"); ?>
 
 <div id="productForm" data-form data-warn-before-leave class="form-field-spacing" data-history="30" data-history-buttons=".product-history-buttons">
-    <label class="field-title" style="user-select:none;display:inline-block">Czy publiczny? <input type="checkbox" name="published">
-        <div class="checkbox"></div>
-    </label>
+    <div class="field-title">Czy publiczny?</div>
+    <checkbox name="published"></checkbox>
+
     <div style="display: flex" class="mobileRow">
         <div style="flex-grow:1; padding-right: 15px">
             <div style="max-width: 600px">

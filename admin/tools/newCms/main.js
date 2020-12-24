@@ -83,6 +83,7 @@ class NewCms {
 		this.initHistory();
 		this.initGrids();
 		this.initMargins();
+		this.initPaddings();
 
 		setFormData(
 			{
@@ -229,6 +230,7 @@ class NewCms {
 		);
 	}
 	initMargins() {
+		// definitelly should be a part of the sidebar!
 		const margin = this.sidebar.node.find(`.margin`);
 		// @ts-ignore
 		this.insertMarginControl(margin, "margin", {});
@@ -239,10 +241,31 @@ class NewCms {
 
 			input.addEventListener("change", () => {
 				let styles = {};
-				//styles[`margin${dir.capitalize()}`] = input.getValue();
 				styles[`margin-${dir}`] = input.getValue();
 
 				this.styling.setBlockStyles(styles);
+
+				this.contentChange();
+			});
+		});
+	}
+
+	initPaddings() {
+		const padding = this.sidebar.node.find(`.padding`);
+		// @ts-ignore
+		this.insertMarginControl(padding, "padding", {});
+
+		padding.findAll("c-select").forEach((e) => {
+			const input = e.find("input");
+			const dir = input.dataset.dir;
+
+			input.addEventListener("change", () => {
+				let styles = {};
+				styles[`padding-${dir}`] = input.getValue();
+
+				this.styling.setBlockStyles(styles, null, {
+					target: "inside",
+				});
 
 				this.contentChange();
 			});
@@ -532,6 +555,7 @@ class NewCms {
 	}
 
 	contentChangeManageContent() {
+		this.styling.registerMissingBlocks();
 		this.insertMissingQlClasses();
 		this.manageGrids();
 	}
@@ -1045,6 +1069,7 @@ class NewCms {
 					.find(".newCms_block_content")
 					.appendChild(grabbed_block);
 			} else if (this.rearrange_controls.rearrange_position == "grid") {
+				// TODO: maybe you don't wanna append the child that is already in its parent cause it affects the index :*
 				this.rearrange_controls.rearrange_near_block
 					.find(".newCms_block_content")
 					.appendChild(grabbed_block);
