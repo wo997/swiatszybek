@@ -10,8 +10,11 @@
 	z-index: 1;
 }
 
-.newCms_block:hover {
-	z-index: 100;
+.newCms_block {
+	&:hover,
+	&.select_active {
+		z-index: 100;
+	}
 }
 .newCms_block:before {
 	& {
