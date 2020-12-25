@@ -8,6 +8,7 @@
 	cursor: pointer;
 	display: flex;
 	z-index: 1;
+	background-color: inherit;
 }
 
 .newCms_block {
@@ -48,11 +49,10 @@
 	pointer-events: none;
 }
 
-.newCms_block_content.ql-editor {
-	padding: 0;
+.newCms_block.container > .newCms_block_content {
+	background-color: inherit;
 }
 
-.newCms_block,
-.newCms_block_content {
-	background-color: inherit;
+.newCms_block_content.ql-editor {
+	padding: 0;
 }

@@ -23,10 +23,10 @@
 				width: 100%;
 				height: 100%;
 				background-color: inherit;
-				filter: brightness(0.93);
+				filter: contrast(0.9);
 			}
 			.newCms.grabbed_block & {
-				filter: brightness(0.85);
+				filter: contrast(0.8);
 			}
 		}
 	}
