@@ -133,11 +133,10 @@
 		box-shadow: 0px 0px 0px 2px #bbb, inset 0px 0px 0px 2px #bbb;
 	}
 
-	.newCms_block:not(.container),
+	/*.newCms_block:not(.container),
 	.select_controls {
-		filter: contrast(0.9);
-		opacity: 0.65;
-	}
+		filter: contrast(0.9) brightness(1.1);
+	}*/
 
 	.newCms_block[data-block="grid"] > .newCms_block_content {
 		pointer-events: none;
