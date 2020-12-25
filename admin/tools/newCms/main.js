@@ -1409,7 +1409,9 @@ class NewCms {
 				block.style.margin = `${mt0}px 
                     ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;*/
 
-				//if (block.classList.contains("block_27")) {}
+				/*if (block.classList.contains("block_7")) {
+					console.log(block, keyframes);
+				}*/
 				//if (block.classList.contains("block_11")) {}
 			}
 
