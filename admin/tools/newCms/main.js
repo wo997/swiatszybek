@@ -1265,8 +1265,11 @@ class NewCms {
 										);
 									}*/
 
+									// IT WAS A GOOD GUESS BUT NOTHING MORE, U HAVE TO FIND OUT WHAT IT'S POSITION IS REALLY SET TO
 									sub_block.animation_data.dx += grid_cell_corner_dx;
 									sub_block.animation_data.dy += grid_cell_corner_dy;
+									//sub_block.animation_data.dx = 0;
+									//sub_block.animation_data.dy = 0;
 								}
 							}
 						}
@@ -1404,9 +1407,42 @@ class NewCms {
 				block.style.width = `${block.last_rect.width}px`;
 				block.style.height = `${block.last_rect.height}px`;
 				block.style.margin = `${mt0}px 
-                ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;*/
+                    ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;*/
 
 				//if (block.classList.contains("block_27")) {}
+				//if (block.classList.contains("block_11")) {}
+			}
+
+			const is_grid = block.dataset.block == "grid";
+
+			if (is_grid) {
+				const block_content = block.find(".newCms_block_content");
+
+				const gtr = this.styling.getBlockComputedStyles(block)["inside"][
+					"grid-template-rows"
+				];
+				const gtc = this.styling.getBlockComputedStyles(block)["inside"][
+					"grid-template-columns"
+				];
+
+				if (gtr) {
+					block_content.style.gridTemplateRows = gtr.replace(
+						/\w+/g,
+						"minmax(0, $&)"
+					);
+					setTimeout(() => {
+						block_content.style.gridTemplateRows = "";
+					}, duration);
+				}
+				if (gtc) {
+					block_content.style.gridTemplateColumns = gtc.replace(
+						/\w+/g,
+						"minmax(0, $&)"
+					);
+					setTimeout(() => {
+						block_content.style.gridTemplateColumns = "";
+					}, duration);
+				}
 			}
 
 			block.animate(keyframes, duration);
@@ -1414,7 +1450,7 @@ class NewCms {
 			delete block.animation_data;
 			delete block.last_rect;
 
-			if (block.dataset.block == "grid") {
+			if (is_grid) {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
 				const grid = block;
