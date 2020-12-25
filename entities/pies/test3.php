@@ -1,7 +1,9 @@
 <?php //route[pies]
 
 // the number 1 will act like cat type, rly silly but stick to it pls
-$a = 1;
+
+/** @type {Cat} */
+$a = fetchRow("");
 
 $a["age"]["value"] = "1"; // = "hehe";
 
@@ -12,6 +14,7 @@ $a["age"]["value"];
 if ($a > 0) {
     $b++;
 }*/
+
 
 $pies = [
     "sum" => function ($a, $b) {

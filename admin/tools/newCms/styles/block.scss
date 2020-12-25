@@ -29,6 +29,7 @@
 		pointer-events: none;
 		transition: 0.2s opacity;
 		opacity: 0;
+		z-index: 300;
 	}
 	.edit_active& {
 		border-width: 0;

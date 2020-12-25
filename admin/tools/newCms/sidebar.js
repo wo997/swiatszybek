@@ -95,11 +95,9 @@ class NewCmsSidebar {
 						{
 							type: "desktop",
 							target: "inside",
-							generate_css: false,
+							action: "css_and_change",
 						}
 					);
-
-					this.newCms.contentChange();
 				}
 			}
 		});

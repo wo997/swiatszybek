@@ -570,8 +570,9 @@ class NewCms {
 		if (!options.quiet) {
 			this.content_node.dispatchChange();
 		}
+
+		// maybe we could animate it back as well, optional feature
 		this.content_node.findAll(".to_remove").forEach((e) => {
-			console.log("removing", e);
 			e.remove();
 		});
 	}
@@ -1086,7 +1087,10 @@ class NewCms {
 					{
 						"grid-area": `${r1}/${c1}/${r2}/${c2}`,
 					},
-					grabbed_block
+					grabbed_block,
+					{
+						action: "just_css",
+					}
 				);
 			} else {
 				/** @type {NewCmsBlock} */
@@ -1353,9 +1357,6 @@ class NewCms {
 			// give flexbox some space baby
 			const subtract_mr = kisses_right_border ? 2 : 0;
 
-			block.style.flexGrow = "0";
-			block.style.flexShrink = "0";
-
 			const animation_cramp = block.classList.contains("animation_cramp");
 
 			let keyframes = "";
@@ -1408,12 +1409,7 @@ class NewCms {
 				//if (block.classList.contains("block_27")) {}
 			}
 
-			block.animate(keyframes, duration, {
-				callback: () => {
-					block.style.flexGrow = "";
-					block.style.flexShrink = "";
-				},
-			});
+			block.animate(keyframes, duration);
 
 			delete block.animation_data;
 			delete block.last_rect;

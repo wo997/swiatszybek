@@ -34,6 +34,14 @@
 
 /** @typedef {"desktop" | "tablet"| "mobile" | "custom"} ResponsiveTypesEnum */
 
+/**
+ * @typedef {{
+ * target?: BlockStyleTargetsEnum
+ * action?: ("css_and_change" | "just_css" | "nothing")
+ * type?: ResponsiveTypesEnum
+ * }} SetStylesOptions
+ */
+
 class NewCmsStyling {
 	/** @type {ResponsiveType} */
 	responsive_type;
@@ -478,11 +486,7 @@ class NewCmsStyling {
 	/**
 	 * @param {Object} styles
 	 * @param {BlockStyles} block_styles
-	 * @param {{
-	 * target?: BlockStyleTargetsEnum
-	 * generate_css?: boolean
-	 * type?: ResponsiveTypesEnum
-	 * }} params
+	 * @param {SetStylesOptions} params
 	 */
 	setBlockStylesFromStylingData(styles, block_styles, params = {}) {
 		if (!block_styles) {
@@ -506,20 +510,20 @@ class NewCmsStyling {
 			//console.log(styles);
 			//Object.assign(block_styles[type][target], styles);
 		}
-		if (nonull(params.generate_css, true)) {
+
+		const action = nonull(params.action, "just_css");
+
+		if (action === "css_and_change") {
 			this.newCms.contentChange();
-			//this.generateCSS();
+		} else if (action === "just_css") {
+			this.generateCSS();
 		}
 	}
 
 	/**
 	 * @param {Object} styles
 	 * @param {NewCmsBlock} node
-	 * @param {{
-	 * type?: ResponsiveTypesEnum
-	 * target?: BlockStyleTargetsEnum
-	 * generate_css?: boolean
-	 * }} params
+	 * @param {SetStylesOptions} params
 	 */
 	setBlockStyles(styles, node = null, params = {}) {
 		if (!node) {
