@@ -614,6 +614,7 @@ class NewCms {
 
 				const styles = this.styling.getBlockCurrentStyles(grid);
 
+				// THAT LOOKS WEIRD HMMM BUT MAYBE WE SHOULD LEAVE IT
 				if (!styles.inside["grid-template-columns"]) {
 					styles.inside["grid-template-columns"] = "1fr 1fr";
 				}

@@ -37,7 +37,7 @@
 /**
  * @typedef {{
  * target?: BlockStyleTargetsEnum
- * action?: ("css_and_change" | "just_css" | "nothing")
+ * action?: ("css_and_change" | "just_css" | "none")
  * type?: ResponsiveTypesEnum
  * }} SetStylesOptions
  */
@@ -737,7 +737,6 @@ class NewCmsStyling {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
 				const grid = g;
-				console.log("GRID", grid);
 
 				let grid_children = grid
 					.find(".newCms_block_content")
@@ -779,6 +778,53 @@ class NewCmsStyling {
 					actual_index++;
 					block.grid_layout_index = actual_index;
 				});
+			});
+	}
+
+	alignGridBlocksVertically() {
+		this.newCms.content_node
+			.findAll(`.newCms_block[data-block="grid"]`)
+			.forEach((g) => {
+				/** @type {NewCmsGrid} */
+				// @ts-ignore
+				const grid = g;
+
+				const grid_children = grid
+					.find(".newCms_block_content")
+					.directChildren()
+					.filter((b) => {
+						return b.classList.contains("newCms_block");
+					});
+
+				grid_children.forEach((b) => {
+					/** @type {NewCmsBlock} */
+					// @ts-ignore
+					const block = b;
+
+					this.setBlockStyles(
+						{
+							"grid-area": `${block.grid_layout_index} / 1 / ${
+								block.grid_layout_index + 1
+							} / 2`,
+						},
+						block,
+						{
+							action: "none",
+						}
+					);
+				});
+
+				this.setBlockStyles(
+					{
+						"grid-template-columns": "1fr",
+						"grid-template-rows": "auto ".repeat(grid_children.length).trim(),
+					},
+					grid,
+					{
+						target: "inside",
+						action: "css_and_change",
+					}
+				);
 			});
 	}
 }
