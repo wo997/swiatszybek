@@ -89,15 +89,6 @@
 	pointer-events: none;
 }
 
-.newCms_block.grabbed {
-	background: #aaa3;
-}
-
-.newCms_block.grabbed,
-.rearrange_node > .newCms_block {
-	/*overflow: hidden;*/
-}
-
 .newCms_block.grabbed,
 .side_block.grabbed {
 	opacity: 0.4 !important;
@@ -147,6 +138,10 @@
 	position: absolute;
 	pointer-events: none;
 	z-index: 9000;
+}
+
+.rearranged_node_animated {
+	z-index: 200;
 }
 
 .rearrange_node:not(.visible) {

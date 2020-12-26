@@ -1036,6 +1036,7 @@ class NewCms {
 
 		this.grabbed_block.style.transform = "";
 		grabbed_block.classList.remove("grabbed");
+		grabbed_block.classList.add("rearranged_node_animated");
 		setTimeout(() => {
 			this.rearrange_node.classList.remove("visible");
 		}, delay_rearrange_node_fadeout);
@@ -1149,7 +1150,11 @@ class NewCms {
 		// @ts-ignore
 		const all_animatable_blocks = this.afterContentAnimation();
 
-		this.animateContent(all_animatable_blocks, 350);
+		this.animateContent(all_animatable_blocks, 350, {
+			callback: () => {
+				grabbed_block.classList.remove("rearranged_node_animated");
+			},
+		});
 	}
 
 	beforeContentAnimation() {
