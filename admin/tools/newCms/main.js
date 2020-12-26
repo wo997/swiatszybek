@@ -16,6 +16,7 @@ useTool("fileManager");
  * getPrevBlock(): NewCmsBlock
  * select_control: PiepNode
  * styling_data: BlockStyles
+ * grid_layout_index?: number
  * } & PiepNode} NewCmsBlock
  */
 
@@ -567,6 +568,8 @@ class NewCms {
 
 		this.select_controls.addFloatingSelectControls();
 
+		this.styling.assignGridLayoutIndices();
+
 		if (!options.quiet) {
 			this.content_node.dispatchChange();
 		}
@@ -1003,7 +1006,6 @@ class NewCms {
 				this.content_node.appendChild(grabbed_block);
 
 				this.contentChangeManageContent();
-				this.styling.registerMissingBlocks();
 				this.styling.generateCSS();
 
 				grabbed_block.animation_data = animation_data;

@@ -725,4 +725,60 @@ class NewCmsStyling {
 
 		this.generateCSS();
 	}
+
+	assignGridLayoutIndices() {
+		if (this.responsive_type.name !== this.biggest_responsive_type_name) {
+			return;
+		}
+
+		this.newCms.content_node
+			.findAll(`.newCms_block[data-block="grid"]`)
+			.forEach((g) => {
+				/** @type {NewCmsGrid} */
+				// @ts-ignore
+				const grid = g;
+				console.log("GRID", grid);
+
+				let grid_children = grid
+					.find(".newCms_block_content")
+					.directChildren()
+					.filter((b) => {
+						if (!b.classList.contains("newCms_block")) {
+							return false;
+						}
+
+						/** @type {NewCmsBlock} */
+						// @ts-ignore
+						const block = b;
+
+						const rect = block.getBoundingClientRect();
+
+						// it's something we could run anytime we modify desktop view so we could use it later, good approx, interesting
+						block.grid_layout_index =
+							rect.top +
+							rect.height * 0.5 +
+							(0.05 * ((rect.left + rect.width * 0.5) * 1000)) /
+								this.newCms.content_node.clientWidth;
+
+						return true;
+					});
+
+				grid_children = grid_children.sort((block_a, block_b) => {
+					return Math.sign(
+						// @ts-ignore
+						block_a.grid_layout_index - block_b.grid_layout_index
+					);
+				});
+
+				let actual_index = 0;
+				grid_children.forEach((b) => {
+					/** @type {NewCmsBlock} */
+					// @ts-ignore
+					const block = b;
+
+					actual_index++;
+					block.grid_layout_index = actual_index;
+				});
+			});
+	}
 }
