@@ -203,6 +203,11 @@ class NewCmsStyling {
 	}
 
 	setResponsiveContainerSize(options = {}) {
+		const duration = nonull(options.duration, 0);
+		const width_diff = nonull(options.width_diff, 0);
+
+		this.newCms.lockInput(duration);
+
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
 		const content_responsive_wrapper_rect = this.content_responsive_wrapper.getBoundingClientRect();
 
@@ -221,9 +226,6 @@ class NewCmsStyling {
 			"--content-border-radius",
 			inner_br + "px"
 		);
-
-		const duration = nonull(options.duration, 0);
-		const width_diff = nonull(options.width_diff, 0);
 
 		this.width = Math.min(
 			nonull(this.responsive_type.width, 100000) + 2 * bw,
@@ -289,9 +291,7 @@ class NewCmsStyling {
 				this.newCms.content_node.innerHTML
 			);
 			this.newCms.clean_output_node.findAll(".newCms_block").forEach((e) => {
-				//console.log(e.className);
 				cleanNodeFromAnimations(e);
-				//console.log(e.className);
 			});
 
 			// @ts-ignore
@@ -300,8 +300,6 @@ class NewCmsStyling {
 
 		this.newCms.container.addEventListener("after_set_form_data", (event) => {
 			this.registerMissingBlocks();
-
-			console.log();
 
 			// @ts-ignore
 			if (event.detail.data.responsive_type_name) {
@@ -332,8 +330,6 @@ class NewCmsStyling {
 					const node = this.newCms.content_node.find(
 						`.${this.getBlockClassName(block_id)}`
 					);
-
-					//console.log(node, `.${this.getBlockClassName(block_id)}`);
 
 					if (node) {
 						/** @type {StylingBlockData} */
@@ -433,8 +429,6 @@ class NewCmsStyling {
 	generateCSS() {
 		let css_full = "";
 		for (const block_data of this.blocks) {
-			//console.log(block);
-
 			const block_class_name = this.getBlockClassName(block_data.id);
 			const block_selector = `.${block_class_name}`;
 			const block_selector_inside = `.${block_class_name}>.newCms_block_content`;
@@ -479,7 +473,7 @@ class NewCmsStyling {
 				}
 			}
 		}
-		//console.log(css_full);
+
 		this.node.innerHTML = css_full;
 	}
 
@@ -509,7 +503,6 @@ class NewCmsStyling {
 				}
 				delete block_styles[type][target][prop];
 			});
-			//console.log(styles);
 		}
 
 		const action = nonull(params.action, "just_css");
@@ -608,33 +601,15 @@ class NewCmsStyling {
 		let child_count = 0;
 		container_blocks.forEach((block) => {
 			child_count++;
-
-			/** @type {BlockStyles} */
-
-			const block_styles = block.styling_data;
-
-			let flex_order = child_count;
-
-			for (const responsive_type of this.responsive_types) {
-				const order = block_styles[responsive_type.name].order;
-				if (order) {
-					flex_order = order;
-				}
-
-				if (this.responsive_type.name == responsive_type.name) {
-					// TODO: consider getBlockComputedStyles
-					break;
-				}
-			}
-
-			block.dataset.flex_order = flex_order;
+			const had_flex_order = this.getBlockComputedStyles(block).outside.order;
+			block.dataset.flex_order = nonull(had_flex_order, child_count);
 		});
 	}
 
 	/**
 	 * it moves the blocks
 	 */
-	setBlocksFlexOrder() {
+	setBlocksFlexOrder(rearrangement = false) {
 		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
@@ -664,11 +639,12 @@ class NewCmsStyling {
 						delete block.dataset.flex_order;
 					});
 				} else {
-					// @ts-ignore
-					// SHUSH
-					this.setDataFlexOrder(container_blocks, true);
-
-					console.log(container_blocks);
+					if (!rearrangement) {
+						// we have set the NewCmsBlock dataset.flex_order in order to rearrange nodes
+						// so don't remove that information until you are 100% sure you wanna do this
+						// @ts-ignore
+						this.setDataFlexOrder(container_blocks, rearrangement);
+					}
 
 					container_blocks = container_blocks.sort((a, b) => {
 						return (
@@ -685,7 +661,15 @@ class NewCmsStyling {
 						const block = b;
 						child_count++;
 
-						this.getBlockCurrentStyles(block).outside.order = child_count;
+						this.setBlockStyles(
+							{
+								order: child_count,
+							},
+							block,
+							{
+								action: "none",
+							}
+						);
 					});
 
 					// @ts-ignore

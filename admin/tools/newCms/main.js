@@ -1137,7 +1137,6 @@ class NewCms {
 						: 1000000;
 
 					grabbed_block.dataset.flex_order = target_flex_order;
-					this.styling.setBlocksFlexOrder();
 					/*this.styling.setBlockStyles(
 						{
 							order: target_flex_order,
@@ -1146,7 +1145,7 @@ class NewCms {
 					);*/
 				}
 
-				this.styling.setBlocksFlexOrder();
+				this.styling.setBlocksFlexOrder(true);
 			}
 
 			if (this.grab_options.copy) {
