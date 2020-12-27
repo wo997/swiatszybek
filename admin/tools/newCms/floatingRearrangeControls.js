@@ -6,6 +6,8 @@
  * top}} ActualPosition
  */
 
+/** @typedef {"grid" | "inside" | "before" | "after" | ""} RearrangePositionEnum */
+
 /**
  * @typedef {{
  * column
@@ -14,7 +16,7 @@
 
 /**
  * @typedef {{
- * position: string
+ * position: RearrangePositionEnum
  * rearrange_near_block: NewCmsBlock
  * grid_position: GridPosition
  * actual_position: ActualPosition} & PiepNode} RearrangeControl
@@ -35,6 +37,9 @@ class NewCmsRearrangeControls {
 			`.rearrange_target_rect`
 		);
 		this.init();
+
+		/** @type {RearrangePositionEnum} */
+		this.rearrange_position = "";
 
 		this.newCms.container.addEventListener("styles_loaded", () => {
 			this.rearrange_control_width = parseInt(
@@ -105,6 +110,7 @@ class NewCmsRearrangeControls {
 		/** @type {RearrangeControl} */
 		let rearrange_control_node = null;
 
+		/** @type {RearrangePositionEnum} */
 		let rearrange_position = "";
 
 		if (
@@ -443,8 +449,8 @@ class NewCmsRearrangeControls {
 						return;
 					}
 
-					// @ts-ignore
 					let is_container_horizontal = this.isContainerHorizontal(
+						// @ts-ignore
 						parent_container
 					);
 
@@ -577,8 +583,8 @@ class NewCmsRearrangeControls {
 					skip: 1,
 				});
 
-				// @ts-ignore
 				const is_container_horizontal = this.isContainerHorizontal(
+					// @ts-ignore
 					parent_container
 				);
 

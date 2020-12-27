@@ -37,7 +37,9 @@ useTool("fileManager");
  * dx
  * dy
  * w
- * h}} AnimationData
+ * h
+ * mouse_x?
+ * mouse_y?}} AnimationData
  */
 
 /**
@@ -979,6 +981,8 @@ class NewCms {
 		const is_side_block =
 			block_type && grabbed_block.classList.contains("side_block");
 
+		const gbad = grabbed_block.animation_data;
+
 		if (is_side_block) {
 			const side_block = grabbed_block;
 			const side_block_rect = side_block.getBoundingClientRect();
@@ -1013,13 +1017,15 @@ class NewCms {
 				grabbed_block.classList.add("select_active");
 				grabbed_block.last_rect = side_block_rect;
 
-				const gbad = grabbed_block.animation_data;
+				let left = grabbed_block.last_rect.left;
+				let top = grabbed_block.last_rect.top;
+
 				// @ts-ignore
 				grabbed_block.last_rect = {
 					width: gbad.w,
 					height: gbad.h,
-					left: grabbed_block.last_rect.left,
-					top: grabbed_block.last_rect.top,
+					left,
+					top,
 				};
 			}
 
@@ -1034,7 +1040,7 @@ class NewCms {
 			);
 		}
 
-		this.grabbed_block.style.transform = "";
+		grabbed_block.style.transform = "";
 		grabbed_block.classList.remove("grabbed");
 		grabbed_block.classList.add("rearranged_node_animated");
 		setTimeout(() => {
@@ -1067,6 +1073,18 @@ class NewCms {
 				if (block_class_name) {
 					grabbed_block.classList.remove(block_class_name);
 				}
+			}
+
+			if (this.rearrange_controls.rearrange_position != "grid") {
+				this.styling.setBlockStyles(
+					{
+						"grid-area": undefined,
+					},
+					grabbed_block,
+					{
+						action: "none",
+					}
+				);
 			}
 
 			if (this.rearrange_controls.rearrange_position == "inside") {
@@ -1131,6 +1149,29 @@ class NewCms {
 
 			if (this.grab_options.copy) {
 				this.styling.registerMissingBlocks();
+			}
+
+			if (gbad.mouse_x && gbad.mouse_y) {
+				const rect = grabbed_block.getBoundingClientRect();
+
+				/*grabbed_block.animation_data.dx =
+					rect.left + rect.width * 0.5 - gbad.mouse_x;
+				grabbed_block.animation_data.dy =
+					rect.top + rect.height * 0.5 - gbad.mouse_y;
+
+				//grabbed_block.last_rect = rect;
+				// @ts-ignore
+				grabbed_block.last_rect = {
+					left: rect.left + (rect.width - grabbed_block.last_rect.width) * 0.5,
+					top: rect.top + (rect.height - grabbed_block.last_rect.height) * 0.5,
+					width: grabbed_block.last_rect.width,
+					height: grabbed_block.last_rect.height,
+				};
+
+				console.log("FUUUUUUUUUUUU");
+
+				delete gbad.mouse_x;
+				delete gbad.mouse_y;*/
 			}
 		} else {
 			if (this.grab_options.copy) {
@@ -1220,6 +1261,9 @@ class NewCms {
 			const block_animation_data = block.animation_data;
 			block_animation_data.dx += dx;
 			block_animation_data.dy += dy;
+			/*if (block.classList.contains("block_31")) {
+				console.log(dx, dy);
+			}*/
 
 			/** @type {NewCmsGrid} */
 			let grid = null;
@@ -1271,11 +1315,11 @@ class NewCms {
 											grid_cell_corner_dy,
 											grid.grid_data
 										);
-									}*/
+                                    }*/
 
-									// IT WAS A GOOD GUESS BUT NOTHING MORE, U HAVE TO FIND OUT WHAT IT'S POSITION IS REALLY SET TO
-									sub_block.animation_data.dx += grid_cell_corner_dx;
-									sub_block.animation_data.dy += grid_cell_corner_dy;
+									//console.log(grid_cell_corner_dx, grid_cell_corner_dy);
+									//sub_block.animation_data.dx += grid_cell_corner_dx;
+									//sub_block.animation_data.dy += grid_cell_corner_dy;
 									//sub_block.animation_data.dx = 0;
 									//sub_block.animation_data.dy = 0;
 								}
@@ -1415,10 +1459,10 @@ class NewCms {
 				block.style.width = `${block.last_rect.width}px`;
 				block.style.height = `${block.last_rect.height}px`;
 				block.style.margin = `${mt0}px 
-                    ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;*/
+                    ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;
 
-				/*if (block.classList.contains("block_7")) {
-					console.log(block, keyframes);
+				if (block.classList.contains("block_31")) {
+					console.log(block, block_animation_data);
 				}*/
 				//if (block.classList.contains("block_11")) {}
 			}
@@ -1558,6 +1602,8 @@ class NewCms {
 
 			const is_side_block = this.grabbed_block.classList.contains("side_block");
 
+			const gbad = grabbed_block.animation_data;
+
 			if (this.rearrange_grid_first_node) {
 				// hanging laundry
 				const rearrange_grid_first_node_actual_position = this
@@ -1604,6 +1650,9 @@ class NewCms {
 					target_dy += (target_h - min_h) * 0.5;
 					target_h = min_h;
 				}
+
+				//delete gbad.mouse_x;
+				//delete gbad.mouse_y;
 			} else {
 				// pull center to the cursor
 				target_dx =
@@ -1612,14 +1661,14 @@ class NewCms {
 					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
 			}
 
+			gbad.mouse_x = this.mouse_x;
+			gbad.mouse_y = this.mouse_y;
+
 			const block_styles = this.styling.getBlockComputedStyles(grabbed_block);
 			const mt = evalCss(block_styles.outside["margin-top"], grabbed_block);
 			//const mr = evalCss(block_styles.outside["margin-right"], block);
 			//const mb = evalCss(block_styles.outside["margin-bottom"], block);
 			const ml = evalCss(block_styles.outside["margin-left"], grabbed_block);
-
-			/** @type {AnimationData} */
-			const gbad = grabbed_block.animation_data;
 
 			gbad.dx = gbad.dx * (1 - acc) + target_dx * acc;
 			gbad.dy = gbad.dy * (1 - acc) + target_dy * acc;
@@ -1651,6 +1700,8 @@ class NewCms {
                     ${(gbad.dy - mt).toPrecision(5)}px
                 )
             `;
+
+			//console.log(gbad.dx - ml, gbad.dy - mt);
 		}
 
 		// repeat
