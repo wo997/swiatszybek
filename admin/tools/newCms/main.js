@@ -1136,12 +1136,14 @@ class NewCms {
 						? parseInt(before_node.dataset.flex_order) - 0.5
 						: 1000000;
 
-					this.styling.setBlockStyles(
+					grabbed_block.dataset.flex_order = target_flex_order;
+					this.styling.setBlocksFlexOrder();
+					/*this.styling.setBlockStyles(
 						{
 							order: target_flex_order,
 						},
 						grabbed_block
-					);
+					);*/
 				}
 
 				this.styling.setBlocksFlexOrder();

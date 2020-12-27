@@ -7,18 +7,34 @@ $a["age"]["value"] = "1";
 
 $a["name"] = "pieseł";
 
+$a["name"] = 69;
+
+/*$number = 123;
+
 if ($a["name"]) {
     $a["name"] = "xxx";
 }
 
-var_dump(["age" => "pies", "age" => 123]);
+var_dump([
+    "age" => [
+        "value" => 444
+    ],
+    "age" => 123,
+    "age" => [
+        "value" => 123
+    ],
+    "age" => [
+        "value" => 455
+    ],
+    "name" => "hey"
+]);*/
 
-function heyca($x, $y)
-{
-    /** @type {Cat} */
-    $x = 666;
-    $x["age"]["value"] = 5;
-}
+// function heyca($x, $y)
+// {
+//     /** @type {Cat} */
+//     $x = 666;
+//     $x["age"]["value"] = 5;
+// }
  
 //var_dump(["name"]);
 

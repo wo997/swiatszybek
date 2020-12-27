@@ -400,13 +400,18 @@ class NewCmsRearrangeControls {
 		if (options.same_parent) {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
+			if (grabbed_block.parent() == this.newCms.content_node) {
+				// hey query should break for that guy or don't even show up or give an alert lol, alert yeah
+			}
 			const parent_container = grabbed_block.parent().parent();
 			const block_id = this.newCms.styling.getBlockId(parent_container);
 			if (block_id) {
 				const class_name =
 					"." + this.newCms.styling.getBlockClassName(block_id);
 				rearrangable_blocks_query_selector =
-					class_name + " " + rearrangable_blocks_query_selector;
+					class_name +
+					">.newCms_block_content>" +
+					rearrangable_blocks_query_selector;
 
 				rearrangable_blocks_query_selector_for_grids =
 					class_name + rearrangable_blocks_query_selector_for_grids;
@@ -645,7 +650,9 @@ class NewCmsRearrangeControls {
 				}
 			});
 
-		addControls("inside");
+		if (!options.same_parent) {
+			addControls("inside");
+		}
 		addControls("before");
 		addControls("after");
 

@@ -510,7 +510,6 @@ class NewCmsStyling {
 				delete block_styles[type][target][prop];
 			});
 			//console.log(styles);
-			//Object.assign(block_styles[type][target], styles);
 		}
 
 		const action = nonull(params.action, "just_css");
@@ -602,6 +601,7 @@ class NewCmsStyling {
 
 	/**
 	 * @param {NewCmsBlock[]} container_blocks
+	 * it sets metadata about blocks to use later
 	 */
 	setDataFlexOrder(container_blocks) {
 		// set data-flex_order
@@ -627,10 +627,13 @@ class NewCmsStyling {
 				}
 			}
 
-			block.dataset.flex_order = flex_order + "";
+			block.dataset.flex_order = flex_order;
 		});
 	}
 
+	/**
+	 * it moves the blocks
+	 */
 	setBlocksFlexOrder() {
 		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
 			/** @type {NewCmsBlock} */
@@ -644,8 +647,11 @@ class NewCmsStyling {
 			block.getNextBlock = block.next;
 		});
 
-		this.newCms.content_node
-			.findAll(`.newCms_block[data-block="container"] > .newCms_block_content`)
+		// not content_node (.newCmsContent) to include it as well
+		this.newCms.content_scroll_content
+			.findAll(
+				`.newCmsContent .newCms_block[data-block="container"] > .newCms_block_content, .newCmsContent`
+			)
 			.forEach((container) => {
 				let container_blocks = container.directChildren();
 
@@ -659,22 +665,17 @@ class NewCmsStyling {
 					});
 				} else {
 					// @ts-ignore
-					this.setDataFlexOrder(container_blocks);
+					// SHUSH
+					this.setDataFlexOrder(container_blocks, true);
+
+					console.log(container_blocks);
 
 					container_blocks = container_blocks.sort((a, b) => {
-						//console.log(a.dataset.flex_order, b.dataset.flex_order);
 						return (
 							parseFloat(nonull(a.dataset.flex_order, 1000000)) -
 							parseFloat(nonull(b.dataset.flex_order, 1000000))
 						);
 					});
-
-					/*console.log(
-						container_blocks,
-						container_blocks.map((e) => {
-							return $("." + this.getBlockClassName(e.id));
-						})
-					);*/
 
 					// set style flex order for squished / rearranged elements in current view
 					let child_count = 0;
