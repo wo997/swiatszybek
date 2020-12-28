@@ -30,7 +30,7 @@
 	max-width: 200px;
 	display: inline-block;
 	padding: 2px;
-	padding-left: calc(var(--level_count) * 10px);
+	padding-left: calc(var(--level_count) * 15px);
 }
 
 .search-wrapper {
@@ -110,9 +110,9 @@
 }
 
 @media only screen and (min-width: 800px) {
-	/*.category_name {
-		padding-left: 0 !important;
-	}*/
+	.category_name {
+		padding-left: calc(var(--level_count) * 10px);
+	}
 
 	.category-picker-row .expand_arrow {
 		transform: translateY(1px);
