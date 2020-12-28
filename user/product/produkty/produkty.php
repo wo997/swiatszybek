@@ -23,8 +23,7 @@ function showCategory($category, $level = 0)
     //if ($level > 0) {
     $current = $category_link == $category["link"] ? "current" : "";
     $displayCount = isset($category["product_count"]) ? "<span>(" . $category["product_count"] . ")</span>" : "";
-    $paddingLeft = $level == 0 ? 0 : 20 * ($level - 1);
-    echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' style='padding-left:" . ($paddingLeft) . "px' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
+    echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
     if ($count && $level > 0) {
         echo "<div class='btn expand_arrow' onclick='expandMenu($(this).parent().next(),$(this).parent())'><i class='fas fa-chevron-right'></i></div>";
     }

@@ -14,10 +14,23 @@
 	padding: 20px;
 }
 
-.category_name {
+.categories {
+	--level_count_temp: 0;
+}
+
+.categories .category-picker-column {
+	--level_count: var(--level_count_temp);
+}
+
+.categories .category-picker-column > * {
+	--level_count_temp: calc(var(--level_count) + 1);
+}
+
+.category-picker-row .category_name {
 	max-width: 200px;
 	display: inline-block;
 	padding: 2px;
+	padding-left: calc(var(--level_count) * 10px);
 }
 
 .search-wrapper {
@@ -97,9 +110,9 @@
 }
 
 @media only screen and (min-width: 800px) {
-	.category_name {
+	/*.category_name {
 		padding-left: 0 !important;
-	}
+	}*/
 
 	.category-picker-row .expand_arrow {
 		transform: translateY(1px);
