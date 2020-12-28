@@ -2,10 +2,8 @@
 
 .newCmsContent_copy {
 	position: absolute;
-	left: 6px;
-	top: 6px;
-	width: calc(100% - 12px);
-	height: calc(100% - 12px);
+	left: 0;
+	top: 0;
 	pointer-events: none;
 	opacity: 1;
 	z-index: 1000;

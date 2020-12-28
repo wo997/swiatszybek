@@ -1319,8 +1319,8 @@ class NewCms {
                                     }*/
 
 									//console.log(grid_cell_corner_dx, grid_cell_corner_dy);
-									//sub_block.animation_data.dx += grid_cell_corner_dx;
-									//sub_block.animation_data.dy += grid_cell_corner_dy;
+									sub_block.animation_data.dx += grid_cell_corner_dx;
+									sub_block.animation_data.dy += grid_cell_corner_dy;
 									//sub_block.animation_data.dx = 0;
 									//sub_block.animation_data.dy = 0;
 								}
@@ -1383,10 +1383,13 @@ class NewCms {
 			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
 			const block_styles = this.styling.getBlockComputedStyles(block);
-			const mt = evalCss(block_styles.outside["margin-top"], block);
-			const mr = evalCss(block_styles.outside["margin-right"], block);
-			const mb = evalCss(block_styles.outside["margin-bottom"], block);
-			const ml = evalCss(block_styles.outside["margin-left"], block);
+
+			const styling = this.styling;
+
+			const mt = styling.evalCss(block_styles.outside["margin-top"], block);
+			const mr = styling.evalCss(block_styles.outside["margin-right"], block);
+			const mb = styling.evalCss(block_styles.outside["margin-bottom"], block);
+			const ml = styling.evalCss(block_styles.outside["margin-left"], block);
 
 			const mt0 = mt + half_dh;
 			const mr0 = mr + half_dw;
@@ -1666,10 +1669,17 @@ class NewCms {
 			gbad.mouse_y = this.mouse_y;
 
 			const block_styles = this.styling.getBlockComputedStyles(grabbed_block);
-			const mt = evalCss(block_styles.outside["margin-top"], grabbed_block);
-			//const mr = evalCss(block_styles.outside["margin-right"], block);
-			//const mb = evalCss(block_styles.outside["margin-bottom"], block);
-			const ml = evalCss(block_styles.outside["margin-left"], grabbed_block);
+			const styling = this.styling;
+			const mt = styling.evalCss(
+				block_styles.outside["margin-top"],
+				grabbed_block
+			);
+			//const mr = styling.evalCss(block_styles.outside["margin-right"], block);
+			//const mb = styling.evalCss(block_styles.outside["margin-bottom"], block);
+			const ml = styling.evalCss(
+				block_styles.outside["margin-left"],
+				grabbed_block
+			);
 
 			gbad.dx = gbad.dx * (1 - acc) + target_dx * acc;
 			gbad.dy = gbad.dy * (1 - acc) + target_dy * acc;

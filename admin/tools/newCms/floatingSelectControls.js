@@ -69,16 +69,18 @@ class NewCmsSelectControls {
 			// @ts-ignore
 			this.selected_block = hovered_block;
 
-			const selected_block = this.selected_block;
+			const sb = this.selected_block;
 
-			if (selected_block && selected_block.select_control) {
+			if (sb && sb.select_control) {
 				//selected_block.classList.add("select_active");
-				selected_block.classList.add("select_active");
+				sb.classList.add("select_active");
 
-				selected_block.select_control.classList.add("select_active");
+				sb.select_control.classList.add("select_active");
 
-				this.selection_node.classList.add("visible");
-				const rect_data = nodePositionAgainstScrollableParent(selected_block);
+				const sn = this.selection_node;
+
+				sn.classList.add("visible");
+				const rect_data = nodePositionAgainstScrollableParent(sb);
 				const border_width = 4;
 				const width = rect_data.node_rect.width;
 				const height = rect_data.node_rect.height;
@@ -86,46 +88,37 @@ class NewCmsSelectControls {
 				const top = rect_data.relative_pos.top;
 				const right = left + width;
 				const bottom = top + height;
-				this.selection_node.style.left = left - border_width * 0.5 + "px";
-				this.selection_node.style.top = top - border_width * 0.5 + "px";
-				this.selection_node.style.width = width + border_width + "px";
-				this.selection_node.style.height = height + border_width + "px";
+				sn.style.left = left - border_width * 0.5 + "px";
+				sn.style.top = top - border_width * 0.5 + "px";
+				sn.style.width = width + border_width + "px";
+				sn.style.height = height + border_width + "px";
 
-				const block_styles = this.newCms.styling.getBlockComputedStyles(
-					this.selected_block
-				);
-				const mt = evalCss(
-					block_styles.outside["margin-top"],
-					this.selection_node
-				);
-				const mr = evalCss(
-					block_styles.outside["margin-right"],
-					this.selection_node
-				);
-				const mb = evalCss(
-					block_styles.outside["margin-bottom"],
-					this.selection_node
-				);
-				const ml = evalCss(
-					block_styles.outside["margin-left"],
-					this.selection_node
-				);
-				//console.log(mt, mr, mb, ml);
+				const block_styles = this.newCms.styling.getBlockComputedStyles(sb);
+
+				const styling = this.newCms.styling;
+
+				const mt = styling.evalCss(block_styles.outside["margin-top"], sb);
+				const mr = styling.evalCss(block_styles.outside["margin-right"], sb);
+				const mb = styling.evalCss(block_styles.outside["margin-bottom"], sb);
+				const ml = styling.evalCss(block_styles.outside["margin-left"], sb);
+
+				const pt = styling.evalCss(block_styles.outside["padding-top"], sb);
+				const pr = styling.evalCss(block_styles.outside["padding-right"], sb);
+				const pb = styling.evalCss(block_styles.outside["padding-bottom"], sb);
+				const pl = styling.evalCss(block_styles.outside["padding-left"], sb);
 
 				let paths = "";
 
-				const addQuadrangle = (
-					x1,
-					y1,
-					x2,
-					y2,
-					x3,
-					y3,
-					x4,
-					y4,
-					invert,
-					type
-				) => {
+				/**
+				 *
+				 * @param {{x,y}} a
+				 * @param {{x,y}} b
+				 * @param {{x,y}} c
+				 * @param {{x,y}} d
+				 * @param {number} invert
+				 * @param {"margin" | "padding"} type
+				 */
+				const addQuadrangle = (a, b, c, d, invert, type) => {
 					let clr;
 					if (type == "margin") {
 						clr = invert > 0 ? "fa05" : "c005";
@@ -135,73 +128,93 @@ class NewCmsSelectControls {
 
 					return /*html*/ `<path
                         d="
-                            M ${x1},${y1}
-                            L ${x2},${y2}
-                            L ${x3},${y3}
-                            L ${x4},${y4}
+                            M ${a.x},${a.y}
+                            L ${b.x},${b.y}
+                            L ${c.x},${c.y}
+                            L ${d.x},${d.y}
                             Z
                         "
                         fill="#${clr}"
                         />
                         `;
-
-					//stroke="#0003"
-					//stroke-width="2"
-					//stroke-dasharray="10 5"
 				};
 
 				// left
 				paths += addQuadrangle(
-					left,
-					top,
-					left,
-					bottom,
-					left - ml,
-					bottom + mb,
-					left - ml,
-					top - mt,
+					{ x: left, y: top },
+					{ x: left, y: bottom },
+					{ x: left + pl, y: bottom - pb },
+					{ x: left + pl, y: top + pt },
+					ml,
+					"padding"
+				);
+
+				// right
+				paths += addQuadrangle(
+					{ x: right, y: top },
+					{ x: right, y: bottom },
+					{ x: right - pr, y: bottom - pb },
+					{ x: right - pr, y: top + pt },
+					mr,
+					"padding"
+				);
+
+				// top
+				paths += addQuadrangle(
+					{ x: left, y: top },
+					{ x: right, y: top },
+					{ x: right - pr, y: top + pt },
+					{ x: left + pl, y: top + pt },
+					mt,
+					"padding"
+				);
+
+				// bottom
+				paths += addQuadrangle(
+					{ x: left, y: bottom },
+					{ x: right, y: bottom },
+					{ x: right - pr, y: bottom - pb },
+					{ x: left + pl, y: bottom - pb },
+					mb,
+					"padding"
+				);
+
+				// left
+				paths += addQuadrangle(
+					{ x: left, y: top },
+					{ x: left, y: bottom },
+					{ x: left - ml, y: bottom + mb },
+					{ x: left - ml, y: top - mt },
 					ml,
 					"margin"
 				);
 
 				// right
 				paths += addQuadrangle(
-					right,
-					top,
-					right,
-					bottom,
-					right + mr,
-					bottom + mb,
-					right + mr,
-					top - mt,
+					{ x: right, y: top },
+					{ x: right, y: bottom },
+					{ x: right + mr, y: bottom + mb },
+					{ x: right + mr, y: top - mt },
 					mr,
 					"margin"
 				);
 
 				// top
 				paths += addQuadrangle(
-					left,
-					top,
-					right,
-					top,
-					right + mr,
-					top - mt,
-					left - ml,
-					top - mt,
+					{ x: left, y: top },
+					{ x: right, y: top },
+					{ x: right + mr, y: top - mt },
+					{ x: left - ml, y: top - mt },
 					mt,
 					"margin"
 				);
 
 				// bottom
 				paths += addQuadrangle(
-					left,
-					bottom,
-					right,
-					bottom,
-					right + mr,
-					bottom + mb,
-					left - ml,
-					bottom + mb,
+					{ x: left, y: bottom },
+					{ x: right, y: bottom },
+					{ x: right + mr, y: bottom + mb },
+					{ x: left - ml, y: bottom + mb },
 					mb,
 					"margin"
 				);

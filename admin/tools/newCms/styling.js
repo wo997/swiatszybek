@@ -814,4 +814,58 @@ class NewCmsStyling {
 				);
 			});
 	}
+
+	/**
+	 *
+	 * @param {*} val
+	 * @param {NewCmsBlock} block
+	 * @param {*} params
+	 */
+	evalCss(val, block, params = {}) {
+		// TODO: single method to get computed margins and paddings of the block hmmm
+		if (!val || !val.trim()) {
+			return 0;
+		}
+
+		/** @type {NewCmsBlock} */
+		// @ts-ignore
+		const parent_container = block.parent().parent();
+		let percent = parent_container.clientWidth * 0.01;
+
+		if (parent_container.dataset.block == "grid") {
+			/** @type {NewCmsGrid} */
+			// @ts-ignore
+			const grid = parent_container;
+			//console.log("grid", grid.grid_data);
+
+			const styling_data = this.getBlockComputedStyles(block);
+
+			const grid_area = styling_data.outside["grid-area"];
+			if (grid_area) {
+				const grid_area_parts = grid_area.replace(/ /g, "").split("/");
+				if (grid_area_parts.length === 4) {
+					// ${r1}/${c1}/${r2}/${c2}
+					const r1 = grid_area_parts[0];
+					const c1 = grid_area_parts[1];
+
+					const column_width =
+						grid.grid_data.x_coords[c1] - grid.grid_data.x_coords[c1 - 1];
+
+					const row_height =
+						grid.grid_data.y_coords[r1] - grid.grid_data.y_coords[r1 - 1];
+
+					percent = column_width * 0.01;
+				}
+			}
+		}
+
+		const vw = document.body.offsetWidth * 0.01;
+		const vh = document.body.offsetHeight * 0.01;
+		val = val.replace(/%/g, "*" + percent);
+		val = val.replace(/vw/g, "*" + vw);
+		val = val.replace(/vh/g, "*" + vh);
+		val = val.replace(/px/g, "");
+
+		return eval(val);
+	}
 }

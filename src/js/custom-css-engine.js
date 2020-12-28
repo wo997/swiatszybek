@@ -121,6 +121,13 @@ function fixHeightsAutomatically() {
 }
 fixHeightsAutomatically();
 
+/**
+ * Can be used in base cases
+ *
+ * @param {*} val
+ * @param {PiepNode} node
+ * @param {*} params
+ */
 function evalCss(val, node = null, params = {}) {
 	// TODO: go for computed style only if it's set to auto?
 	if (!val || !val.trim()) {
@@ -128,6 +135,7 @@ function evalCss(val, node = null, params = {}) {
 	}
 	const percent =
 		nonull(node && node.parent(), document.body).clientWidth * 0.01;
+
 	const vw = document.body.offsetWidth * 0.01;
 	const vh = document.body.offsetHeight * 0.01;
 	val = val.replace(/%/g, "*" + percent);
