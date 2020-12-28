@@ -182,7 +182,7 @@ function showCategory($category, $level = 0)
                         $html .= "<div class='checkbox'></div> ";
                         $html .= $value_data["value"];
 
-                        if (isset($value_dat["color"])) {
+                        if (isset($value_data["color"])) {
                             $html .= "<div class='color-circle' style='background-color:" . $value_data["color"] . "'></div>";
                         }
 

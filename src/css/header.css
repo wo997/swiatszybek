@@ -164,7 +164,7 @@ nav > div:hover > a:not(.current-route) > * {
 	text-decoration: underline;
 }
 
-#mainMenu .navigation a {
+.mainMenu .navigation a {
 	padding: 10px 12px;
 	width: 100%;
 	border-bottom: 1px solid #ccc;
@@ -287,7 +287,7 @@ header .headerbtn:hover .headerbtn_hover_content {
 }
 
 .basket-wrapper .basket-icon,
-#basketMenu .basket-icon {
+.basketMenu .basket-icon {
 	width: 34px;
 }
 
@@ -295,7 +295,7 @@ header .headerbtn:hover .headerbtn_hover_content {
 	margin-bottom: 2px;
 	vertical-align: middle;
 }
-#basketMenu .basket-icon-wrapper {
+.basketMenu .basket-icon-wrapper {
 	margin-top: 4px;
 }
 
@@ -317,7 +317,7 @@ header .headerbtn:hover .headerbtn_hover_content {
 }
 
 header .basket_item_count,
-#basketMenu .basket_item_count {
+.basketMenu .basket_item_count {
 	font-weight: bold;
 	position: absolute;
 	display: inline-block;
@@ -329,11 +329,11 @@ header .basket_item_count,
 }
 
 .nav-wrapper .menu-icon,
-#mainMenu .menu-icon {
+.mainMenu .menu-icon {
 	width: 21px;
 	transform: scaleY(1.4);
 }
-#mainMenu .menu-icon {
+.mainMenu .menu-icon {
 	margin-top: 1px;
 }
 
@@ -359,14 +359,14 @@ header .header_basket_content_wrapper {
 }
 
 .header_product_list .product-image,
-#basketMenu .product-image {
+.basketMenu .product-image {
 	width: 80%;
 	margin: 10px 10% 5px;
 	object-fit: contain;
 	max-width: 80vw;
 }
 
-#basketMenu .scroll-panel.panel-padding {
+.basketMenu .scroll-panel.panel-padding {
 	padding: 0;
 }
 
@@ -385,7 +385,7 @@ header .product-block {
 }
 
 header .product-title span,
-#basketMenu .product-title span {
+.basketMenu .product-title span {
 	width: 100%;
 	text-align: center;
 }
@@ -395,7 +395,7 @@ header .product-title span,
 }
 
 /*@media only screen and (max-width: 799px) {
-  #basketMenu .product-title span {
+  .basketMenu .product-title span {
     width: 100%;
     text-align: center;
   }
@@ -476,7 +476,7 @@ header .main-search-wrapper:not(.active) .search-results,
 	width: 23px;
 	transform: translateY(3px);
 }
-#mainSearch .search-icon {
+.mainSearch .search-icon {
 	width: 23px;
 	transform: translateY(1px);
 }
@@ -504,16 +504,16 @@ header .main-search-wrapper:not(.active) .search-results,
 .main-search-wrapper {
 	position: relative;
 }
-#mainSearch .main-search-wrapper {
+.mainSearch .main-search-wrapper {
 	display: flex;
 }
-#mainSearch .main-search-wrapper label {
+.mainSearch .main-search-wrapper label {
 	flex-grow: 1;
 }
-#mainSearch .main-search-wrapper label input {
+.mainSearch .main-search-wrapper label input {
 	width: 100%;
 }
-#mainSearch .result {
+.mainSearch .result {
 	padding: 6px 9px;
 }
 

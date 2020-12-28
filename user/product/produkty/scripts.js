@@ -86,7 +86,7 @@ function goMobile() {
           <div id="searchFilters" data-expand>
               <div class="modal-body">
                   <button class="close-modal-btn" onclick="restoreFilters();"><img src="/src/img/cross.svg"></button>
-                  <h3 class="modal-header">Filtry <span class="filter_count"></span></h3>
+                  <h3 class="modal-header"><div>Filtry <span class="filter_count"></span></div></h3>
                   <div class="scroll-panel scroll-shadow panel-padding">
                     <div></div>
                   </div>
@@ -97,7 +97,7 @@ function goMobile() {
                     </button>
                     <button class="btn primary fill" style='margin-left:5px' onclick="hideParentModal(this);afterFiltersSelected()">
                       Pokaż wyniki
-                      <i class="fas fa-chevron-right"></i>
+                    <i class="fas fa-chevron-right"></i>
                     </button>
                   </div>
               </div>
@@ -220,7 +220,7 @@ function searchProducts(options = {}) {
 		return;
 	}
 
-	if (/*window.innerWidth < MOBILE_WIDTH && */ nonull(options.scroll, true)) {
+	if (window.innerWidth < MOBILE_WIDTH && nonull(options.scroll, true)) {
 		scrollToTopOfProductList();
 	}
 

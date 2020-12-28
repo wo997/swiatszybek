@@ -124,7 +124,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	//search
 	registerModalContent(`
-      <div id="mainSearch" data-expand>
+      <div id="mainSearch" class="mainSearch" data-expand>
           <div class="modal-body">
               <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="search-icon" src="/src/img/search_icon.svg"> Wyszukiwarka</h3>
@@ -173,7 +173,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	//basket
 	registerModalContent(`
-    <div id="basketMenu" data-expand>
+    <div id="basketMenu" class="basketMenu" data-expand>
         <div class="modal-body">
             <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
             <h3 class="modal-header">
@@ -219,7 +219,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	//menu
 	registerModalContent(`
-      <div id="mainMenu" data-expand>
+      <div id="mainMenu" class="mainMenu" data-expand>
           <div class="modal-body">
               <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
               <h3 class="modal-header"><img class="menu-icon" src="/src/img/menu_icon.svg"> Menu</h3>
