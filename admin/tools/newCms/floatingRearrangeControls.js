@@ -400,30 +400,42 @@ class NewCmsRearrangeControls {
 		if (options.same_parent) {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
-			if (grabbed_block.parent() == this.newCms.content_node) {
-				// hey query should break for that guy or don't even show up or give an alert lol, alert yeah
-			}
-			const parent_container = grabbed_block.parent().parent();
-			const block_id = this.newCms.styling.getBlockId(parent_container);
-			if (block_id) {
-				const class_name =
-					"." + this.newCms.styling.getBlockClassName(block_id);
-				rearrangable_blocks_query_selector =
-					class_name +
-					">.newCms_block_content>" +
-					rearrangable_blocks_query_selector;
+			const in_root = grabbed_block.parent() == this.newCms.content_node;
 
-				rearrangable_blocks_query_selector_for_grids =
-					class_name + rearrangable_blocks_query_selector_for_grids;
+			if (in_root) {
+				rearrangable_blocks_query_selector =
+					".newCmsContent>" + rearrangable_blocks_query_selector;
+				rearrangable_blocks_query_selector_for_grids = ""; // no way u would find a grid as a root ;)
 			} else {
-				//rearrangable_blocks_query_selector +=
+				const parent_container = grabbed_block.parent().parent();
+				const block_id = this.newCms.styling.getBlockId(parent_container);
+				if (block_id) {
+					const class_name =
+						"." + this.newCms.styling.getBlockClassName(block_id);
+					rearrangable_blocks_query_selector =
+						".newCmsContent " +
+						class_name +
+						">.newCms_block_content>" +
+						rearrangable_blocks_query_selector;
+
+					rearrangable_blocks_query_selector_for_grids =
+						".newCmsContent " +
+						class_name +
+						rearrangable_blocks_query_selector_for_grids;
+				}
 			}
+		} else {
+			rearrangable_blocks_query_selector =
+				".newCmsContent " + rearrangable_blocks_query_selector;
+			rearrangable_blocks_query_selector_for_grids =
+				".newCmsContent " + rearrangable_blocks_query_selector_for_grids;
 		}
 
 		// them floating controls
 		let blocks_data = [];
 		const addControls = (position) => {
-			this.newCms.content_node
+			// not content_node (.newCmsContent) to include it as well
+			this.newCms.content_scroll_content
 				.findAll(rearrangable_blocks_query_selector)
 				.forEach((b) => {
 					/** @type {NewCmsBlock} */
