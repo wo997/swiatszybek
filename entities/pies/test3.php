@@ -9,10 +9,13 @@ $a["name"] = "pieseł";
 
 $a["name"] = 69;
 
-/*$number = 123;
+$counter = 0;
+while ($a["name"] < $a["age"]["value"]) {
+    $number = 123;
 
-if ($a["name"]) {
-    $a["name"] = "xxx";
+    if ($a["name"]) {
+        $a["name"] = "xxx";
+    }
 }
 
 var_dump([
@@ -26,8 +29,9 @@ var_dump([
     "age" => [
         "value" => 455
     ],
-    "name" => "hey"
-]);*/
+    "name" => "hey",
+    "age" => ["value"]
+]);
 
 // function heyca($x, $y)
 // {
