@@ -871,6 +871,9 @@ class NewCmsStyling {
 		val = val.replace(/vh/g, "*" + vh);
 		val = val.replace(/px/g, "");
 
+		if (val.includes("auto")) {
+			return undefined;
+		}
 		return eval(val);
 	}
 
@@ -885,6 +888,52 @@ class NewCmsStyling {
 			delete block.singleton_inner_auto_x;
 			delete block.singleton_inner_auto_y;
 			delete block.singleton_inner_percent;
+			delete block.singleton_last_in_row;
 		});
+	}
+
+	/**
+	 * @param {NewCmsBlock} block
+	 */
+	getBlockLastInRow(block) {
+		let last_in_row = block.singleton_last_in_row;
+		if (last_in_row === undefined) {
+			const block_styles = this.getBlockComputedStyles(block);
+			const mr = this.evalCss(block_styles.outside["margin-right"], block);
+			if (!block.new_rect) {
+				block.new_rect = block.getBoundingClientRect();
+			}
+			const right_kiss =
+				block.new_rect.left + block.new_rect.width + nonull(mr, 0);
+
+			const next = block.getNextBlock();
+			if (next) {
+				const next_styles = this.getBlockComputedStyles(block);
+				const next_ml = this.evalCss(next_styles.outside["margin-left"], next);
+				if (!next.new_rect) {
+					next.new_rect = next.getBoundingClientRect();
+				}
+				const next_left_kiss = next.new_rect.left - nonull(next_ml, 0);
+
+				last_in_row = next_left_kiss < right_kiss - 2;
+			} else {
+				last_in_row = true;
+			}
+
+			block.singleton_last_in_row = last_in_row;
+		}
+
+		return last_in_row;
+	}
+
+	/**
+	 * @param {NewCmsBlock} block
+	 */
+	getBlockFirstInRow(block) {
+		const prev = block.getPrevBlock();
+		if (!prev) {
+			return true;
+		}
+		return this.getBlockLastInRow(prev);
 	}
 }

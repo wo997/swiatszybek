@@ -20,6 +20,7 @@ useTool("fileManager");
  * singleton_inner_auto_x?: number
  * singleton_inner_auto_y?: number
  * singleton_inner_percent?: number
+ * singleton_last_in_row?: boolean
  * } & PiepNode} NewCmsBlock
  */
 
@@ -1240,13 +1241,6 @@ class NewCms {
 						const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
 						block.animation_data = block_animation_data;
 					}
-					if (block.dataset.block === "container") {
-						/** @type {NewCmsBlock} */
-						// @ts-ignore
-						const newCms_block_content = block.find(".newCms_block_content");
-						// it's used for flex items to tell when they kiss the edge, don't move it away!
-						newCms_block_content.new_rect = newCms_block_content.getBoundingClientRect();
-					}
 
 					return true;
 				} else {
@@ -1405,20 +1399,7 @@ class NewCms {
 			const dx = block_animation_data.dx - half_dw;
 			const dy = block_animation_data.dy - half_dh;
 
-			// @ts-ignore
-			const parent_rect = block.parent().new_rect;
-
-			const kisses_right_border = parent_rect
-				? Math.abs(
-						block.new_rect.left +
-							block.new_rect.width +
-							mr -
-							(parent_rect.left + parent_rect.width)
-				  ) < 10 // 10 seems to be a legit, ok too big number
-				: false;
-
-			// give flexbox some space baby
-			const subtract_mr = kisses_right_border ? 2 : 0;
+			const subtract_mr = this.styling.getBlockLastInRow(block) ? 2 : 0;
 
 			const animation_cramp = block.classList.contains("animation_cramp");
 
