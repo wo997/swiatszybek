@@ -1199,7 +1199,7 @@ class NewCms {
 		// @ts-ignore
 		const all_animatable_blocks = this.afterContentAnimation();
 
-		this.animateContent(all_animatable_blocks, 1000, {
+		this.animateContent(all_animatable_blocks, 350, {
 			callback: () => {
 				grabbed_block.classList.remove("rearranged_node_animated");
 			},
@@ -1333,6 +1333,8 @@ class NewCms {
 
 		this.scroll();
 
+		this.styling.recalculateLayout();
+
 		return all_animatable_blocks;
 	}
 
@@ -1343,7 +1345,8 @@ class NewCms {
 	 * @param {*} options
 	 */
 	animateContent(all_animatable_blocks, duration, options = {}) {
-		this.lockInput(duration);
+		const animation_swap_time = 100;
+		this.lockInput(duration + animation_swap_time);
 
 		this.select_controls.removeSelection();
 
@@ -1373,10 +1376,8 @@ class NewCms {
 				if (options.callback) {
 					options.callback();
 				}
-			}, 100);
+			}, animation_swap_time);
 		};
-
-		this.styling.recalculateLayout();
 
 		all_animatable_blocks.forEach((block) => {
 			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
@@ -1388,13 +1389,6 @@ class NewCms {
 			const mr = computed_styles.outside.mr;
 			const mb = computed_styles.outside.mb;
 			const ml = computed_styles.outside.ml;
-			if (
-				Math.abs(
-					mr - parseFloat(window.getComputedStyle(block)["marginRight"])
-				) > 5
-			) {
-				console.log(block, block.computed_styles, mt, mr, mb, ml);
-			}
 
 			const mt0 = mt + half_dh;
 			const mr0 = mr + half_dw;

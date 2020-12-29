@@ -818,7 +818,7 @@ class NewCmsStyling {
 
 	/** @param {NewCmsBlock} block */
 	isContainerHorizontal(block) {
-		if (block) {
+		if (block && block !== this.newCms.content_node) {
 			const ff = block.computed_styles.inside["flex-flow"];
 			if (ff) {
 				return ff.includes("row");
@@ -971,9 +971,9 @@ class NewCmsStyling {
 				temp_block = temp_block.getNextBlock();
 			}
 
-			if (block.classList.contains("block_25")) {
-				//console.log(find_max_wide, count_autos, full_width);
-			}
+			/*if (block.classList.contains("block_25")) {
+            }*/
+
 			if (
 				(params.direction == "horizontal" && !is_container_horizontal) ||
 				(params.direction == "vertical" && is_container_horizontal)
@@ -1055,6 +1055,7 @@ class NewCmsStyling {
 			const block = b;
 
 			delete block.singleton_last_in_row;
+			//console.log(block, block.getBoundingClientRect());
 			block.new_rect = block.getBoundingClientRect();
 		});
 
@@ -1140,6 +1141,8 @@ class NewCmsStyling {
 				const next_left_kiss = next.new_rect.left - nonull(next_ml, 0);
 
 				last_in_row = next_left_kiss < right_kiss - 2;
+
+				//console.log(block, block.new_rect);
 			} else {
 				last_in_row = true;
 			}
