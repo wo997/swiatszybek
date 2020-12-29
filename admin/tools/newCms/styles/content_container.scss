@@ -117,7 +117,6 @@
 .newCmsContent {
 	& {
 		position: relative;
-		padding: 6px;
 		min-height: 100%;
 	}
 	& .during_inline_edit {
@@ -137,7 +136,7 @@
 		background: #fff;
 		display: flex;
 		flex-direction: column;
-		padding: 6px;
+		margin: 6px;
 	}
 	& > .newCms_block.container {
 		min-height: 100px;

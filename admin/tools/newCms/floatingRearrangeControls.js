@@ -314,13 +314,6 @@ class NewCmsRearrangeControls {
 				let width = rect_data.node_rect.width + border_width;
 				let height = rect_data.node_rect.height + border_width;
 
-				if (parent_container === this.newCms.content_node) {
-					left += 6;
-					top += 6;
-					width -= 12;
-					height -= 12;
-				}
-
 				this.rearrange_target_rect_node.style.left = left + "px";
 				this.rearrange_target_rect_node.style.top = top + "px";
 				this.rearrange_target_rect_node.style.width = width + "px";

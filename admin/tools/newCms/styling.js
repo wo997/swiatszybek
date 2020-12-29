@@ -88,8 +88,8 @@ class NewCmsStyling {
 			});
 		});
 		/*this.newCms.container.addEventListener("ready", (event) => {
-			this.init();
-		});*/
+               this.init();
+           });*/
 	}
 
 	/** @returns {StylingBlockData} */
@@ -186,9 +186,9 @@ class NewCmsStyling {
 			});
 
 		/*this.newCms.content_scroll_panel.classList.toggle(
-        "hide_scrollbar",
-			!!this.responsive_type.width
-		);*/
+           "hide_scrollbar",
+               !!this.responsive_type.width
+           );*/
 
 		let opts = {};
 		if (options.duration) {
@@ -240,19 +240,19 @@ class NewCmsStyling {
 		const target_width = this.width;
 		this.content_responsive_wrapper.animate(
 			`
-                0% {
-                    width: ${content_responsive_wrapper_rect.width}px;
-                    height: ${content_responsive_wrapper_rect.height}px;
-                    border: ${prev_style_border};
-                    border-radius: ${prev_style_border_radius};
-                }
-                100% {
-                    width: ${target_width}px;
-                    height: ${this.height}px;
-                    border: ${this.style_border};
-                    border-radius: ${this.style_border_radius};
-                }
-            `,
+                   0% {
+                       width: ${content_responsive_wrapper_rect.width}px;
+                       height: ${content_responsive_wrapper_rect.height}px;
+                       border: ${prev_style_border};
+                       border-radius: ${prev_style_border_radius};
+                   }
+                   100% {
+                       width: ${target_width}px;
+                       height: ${this.height}px;
+                       border: ${this.style_border};
+                       border-radius: ${this.style_border_radius};
+                   }
+               `,
 			duration,
 			{
 				callback: () => {
@@ -511,6 +511,7 @@ class NewCmsStyling {
 		if (action === "css_and_change") {
 			this.newCms.contentChange();
 		} else if (action === "just_css") {
+			this.newCms.contentChangeManageContent();
 			this.generateCSS();
 		}
 	}
@@ -843,9 +844,14 @@ class NewCmsStyling {
 			return 0;
 		}
 
+		const just_parent = block.parent();
+
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
-		const parent_container = block.parent().parent();
+		const parent_container =
+			just_parent == this.newCms.content_node
+				? just_parent
+				: just_parent.parent();
 
 		// TODO: auto for grids is just different I think, but maybe we don't really need this, find out later, animations? meh, it works anyway PROBABLY
 		const auto = val === "auto";
@@ -983,8 +989,8 @@ class NewCmsStyling {
 			}
 
 			/*if (parent_container.classList.contains("block_32")) {
-				console.log(pa);
-			}*/
+                   console.log(pa);
+               }*/
 
 			if (
 				(params.direction == "horizontal" && !is_container_horizontal) ||

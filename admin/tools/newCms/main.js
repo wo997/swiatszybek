@@ -570,14 +570,14 @@ class NewCms {
 		this.styling.assignGridLayoutIndices();
 
 		this.insertMissingQlClasses();
+
+		this.select_controls.addFloatingSelectControls();
 	}
 
 	contentChange(options = {}) {
 		this.contentChangeManageContent();
 
 		this.caseEmptyHint();
-
-		this.select_controls.addFloatingSelectControls();
 
 		if (!options.quiet) {
 			this.content_node.dispatchChange();
@@ -1408,7 +1408,7 @@ class NewCms {
 			) {
 				console.log(block);
 			}*/
-			const subtract_mr = this.styling.getBlockLastInRow(block) ? 2 : 0;
+			const subtract_mr = this.styling.getBlockLastInRow(block) ? 0 : 0;
 
 			const animation_cramp = block.classList.contains("animation_cramp");
 
