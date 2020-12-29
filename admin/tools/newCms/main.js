@@ -1201,7 +1201,9 @@ class NewCms {
 
 		this.animateContent(all_animatable_blocks, 350, {
 			callback: () => {
-				grabbed_block.classList.remove("rearranged_node_animated");
+				this.content_node.findAll(".rearranged_node_animated").forEach((e) => {
+					e.classList.remove("rearranged_node_animated");
+				});
 			},
 		});
 	}

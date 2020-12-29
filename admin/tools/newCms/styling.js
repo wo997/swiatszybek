@@ -818,7 +818,7 @@ class NewCmsStyling {
 
 	/** @param {NewCmsBlock} block */
 	isContainerHorizontal(block) {
-		if (block && block !== this.newCms.content_node) {
+		if (block && block.computed_styles) {
 			const ff = block.computed_styles.inside["flex-flow"];
 			if (ff) {
 				return ff.includes("row");
@@ -858,12 +858,16 @@ class NewCmsStyling {
 				parent_container
 			);
 
-			let find_max_wide = 0;
+			// HEY! remember that flex wrap containers wont have the ability to set the height so that operation is way simpler
+			let find_max_wide =
+				is_container_horizontal &&
+				!parent_container.computed_styles.inside["flex-flow"].includes("wrap")
+					? parent_container.clientHeight
+					: 0;
 			let count_autos = 0;
 			let full_width = 0;
 
 			let me_wide = undefined;
-			let me_width = undefined;
 
 			/**
 			 *
@@ -939,7 +943,6 @@ class NewCmsStyling {
 
 				if (same) {
 					me_wide = wide;
-					me_width = width;
 				}
 			};
 
