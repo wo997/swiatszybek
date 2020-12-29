@@ -1047,16 +1047,29 @@ class NewCmsStyling {
 			delete block.singleton_inner_auto_x;
 			delete block.singleton_inner_auto_y;
 			delete block.singleton_inner_percent;
-			delete block.singleton_last_in_row;
-			delete block.new_rect;
 		});
 
-		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
+		all_blocks.forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
+
+			delete block.singleton_last_in_row;
+			block.new_rect = block.getBoundingClientRect();
+		});
+
+		all_blocks.forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
 			const block = b;
 
 			block.computed_styles = this.getBlockComputedStyles(block);
+		});
+
+		all_blocks.forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
 
 			const block_styles = block.computed_styles;
 
@@ -1108,9 +1121,7 @@ class NewCmsStyling {
 					auto: 0,
 				}
 			);
-			if (!block.new_rect) {
-				block.new_rect = block.getBoundingClientRect();
-			}
+
 			const right_kiss =
 				block.new_rect.left + block.new_rect.width + nonull(mr, 0);
 

@@ -1376,18 +1376,25 @@ class NewCms {
 			}, 100);
 		};
 
+		this.styling.recalculateLayout();
+
 		all_animatable_blocks.forEach((block) => {
 			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
 			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
 			const computed_styles = block.computed_styles;
 
-			const styling = this.styling;
-
 			const mt = computed_styles.outside.mt;
 			const mr = computed_styles.outside.mr;
 			const mb = computed_styles.outside.mb;
 			const ml = computed_styles.outside.ml;
+			if (
+				Math.abs(
+					mr - parseFloat(window.getComputedStyle(block)["marginRight"])
+				) > 5
+			) {
+				console.log(block, block.computed_styles, mt, mr, mb, ml);
+			}
 
 			const mt0 = mt + half_dh;
 			const mr0 = mr + half_dw;
