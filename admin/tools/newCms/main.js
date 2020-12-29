@@ -17,6 +17,9 @@ useTool("fileManager");
  * select_control: PiepNode
  * styling_data: BlockStyles
  * grid_layout_index?: number
+ * singleton_inner_auto_x?: number
+ * singleton_inner_auto_y?: number
+ * singleton_inner_percent?: number
  * } & PiepNode} NewCmsBlock
  */
 
@@ -557,6 +560,7 @@ class NewCms {
 	}
 
 	contentChangeManageContent() {
+		this.styling.clearSingletons();
 		this.styling.registerMissingBlocks();
 		this.insertMissingQlClasses();
 		this.manageGrids();

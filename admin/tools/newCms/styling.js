@@ -830,33 +830,38 @@ class NewCmsStyling {
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
 		const parent_container = block.parent().parent();
-		let percent = parent_container.clientWidth * 0.01;
+		let percent = parent_container.singleton_inner_percent;
 
-		if (parent_container.dataset.block == "grid") {
-			/** @type {NewCmsGrid} */
-			// @ts-ignore
-			const grid = parent_container;
-			//console.log("grid", grid.grid_data);
+		if (!percent) {
+			percent = parent_container.clientWidth * 0.01;
+			if (parent_container.dataset.block == "grid") {
+				/** @type {NewCmsGrid} */
+				// @ts-ignore
+				const grid = parent_container;
+				//console.log("grid", grid.grid_data);
 
-			const styling_data = this.getBlockComputedStyles(block);
+				const styling_data = this.getBlockComputedStyles(block);
 
-			const grid_area = styling_data.outside["grid-area"];
-			if (grid_area) {
-				const grid_area_parts = grid_area.replace(/ /g, "").split("/");
-				if (grid_area_parts.length === 4) {
-					// ${r1}/${c1}/${r2}/${c2}
-					const r1 = grid_area_parts[0];
-					const c1 = grid_area_parts[1];
+				const grid_area = styling_data.outside["grid-area"];
+				if (grid_area) {
+					const grid_area_parts = grid_area.replace(/ /g, "").split("/");
+					if (grid_area_parts.length === 4) {
+						// ${r1}/${c1}/${r2}/${c2}
+						const r1 = grid_area_parts[0];
+						const c1 = grid_area_parts[1];
 
-					const column_width =
-						grid.grid_data.x_coords[c1] - grid.grid_data.x_coords[c1 - 1];
+						const column_width =
+							grid.grid_data.x_coords[c1] - grid.grid_data.x_coords[c1 - 1];
 
-					const row_height =
-						grid.grid_data.y_coords[r1] - grid.grid_data.y_coords[r1 - 1];
+						const row_height =
+							grid.grid_data.y_coords[r1] - grid.grid_data.y_coords[r1 - 1];
 
-					percent = column_width * 0.01;
+						percent = column_width * 0.01;
+					}
 				}
 			}
+
+			parent_container.singleton_inner_percent = percent;
 		}
 
 		const vw = document.body.offsetWidth * 0.01;
@@ -867,5 +872,19 @@ class NewCmsStyling {
 		val = val.replace(/px/g, "");
 
 		return eval(val);
+	}
+
+	clearSingletons() {
+		[
+			this.newCms.content_scroll_content,
+			...this.newCms.content_node.findAll(`.newCms_block`),
+		].forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
+			delete block.singleton_inner_auto_x;
+			delete block.singleton_inner_auto_y;
+			delete block.singleton_inner_percent;
+		});
 	}
 }
