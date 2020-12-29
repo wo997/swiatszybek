@@ -88,20 +88,6 @@ class NewCmsRearrangeControls {
 		}
 	}
 
-	/** @param {NewCmsBlock} block */
-	isContainerHorizontal(block) {
-		if (block) {
-			const block_styles = this.newCms.styling.getBlockComputedStyles(block);
-			if (!isObjectEmpty(block_styles)) {
-				const ff = block_styles.inside["flex-flow"];
-				if (ff) {
-					return ff.includes("row");
-				}
-			}
-		}
-		return false;
-	}
-
 	mouseMove() {
 		const target = this.newCms.mouse_target;
 
@@ -211,7 +197,9 @@ class NewCmsRearrangeControls {
 					parent_container = this.newCms.content_node;
 				}
 
-				is_container_horizontal = this.isContainerHorizontal(parent_container);
+				is_container_horizontal = this.newCms.styling.isContainerHorizontal(
+					parent_container
+				);
 			}
 
 			if (rearrange_control_node) {
@@ -466,7 +454,7 @@ class NewCmsRearrangeControls {
 						return;
 					}
 
-					let is_container_horizontal = this.isContainerHorizontal(
+					let is_container_horizontal = this.newCms.styling.isContainerHorizontal(
 						// @ts-ignore
 						parent_container
 					);
@@ -600,7 +588,7 @@ class NewCmsRearrangeControls {
 					skip: 1,
 				});
 
-				const is_container_horizontal = this.isContainerHorizontal(
+				const is_container_horizontal = this.newCms.styling.isContainerHorizontal(
 					// @ts-ignore
 					parent_container
 				);

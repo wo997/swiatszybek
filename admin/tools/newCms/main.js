@@ -21,6 +21,7 @@ useTool("fileManager");
  * singleton_inner_auto_y?: number
  * singleton_inner_percent?: number
  * singleton_last_in_row?: boolean
+ * computed_styles?: BlockStyleTargets
  * } & PiepNode} NewCmsBlock
  */
 
@@ -215,6 +216,7 @@ class NewCms {
 		if (options.source != "styling") {
 			this.styling.setResponsiveContainerSize();
 		}
+		this.styling.recalculateLayout();
 	}
 
 	stylesLoaded() {
@@ -561,21 +563,21 @@ class NewCms {
 	}
 
 	contentChangeManageContent() {
-		this.styling.clearSingletons();
 		this.styling.registerMissingBlocks();
-		this.insertMissingQlClasses();
+		this.styling.setBlocksFlexOrder();
 		this.manageGrids();
+		this.styling.recalculateLayout();
+		this.styling.assignGridLayoutIndices();
+
+		this.insertMissingQlClasses();
 	}
 
 	contentChange(options = {}) {
 		this.contentChangeManageContent();
-		this.styling.setBlocksFlexOrder();
 
 		this.caseEmptyHint();
 
 		this.select_controls.addFloatingSelectControls();
-
-		this.styling.assignGridLayoutIndices();
 
 		if (!options.quiet) {
 			this.content_node.dispatchChange();
@@ -1197,7 +1199,7 @@ class NewCms {
 		// @ts-ignore
 		const all_animatable_blocks = this.afterContentAnimation();
 
-		this.animateContent(all_animatable_blocks, 350, {
+		this.animateContent(all_animatable_blocks, 1000, {
 			callback: () => {
 				grabbed_block.classList.remove("rearranged_node_animated");
 			},
@@ -1284,11 +1286,9 @@ class NewCms {
 						sub_block.animation_data.dy -= dy;
 
 						if (grid) {
-							const styling_data = this.styling.getBlockComputedStyles(
-								sub_block
-							);
+							const computed_styles = sub_block.computed_styles;
 
-							const grid_area = styling_data.outside["grid-area"];
+							const grid_area = computed_styles.outside["grid-area"];
 							if (grid_area) {
 								const grid_area_parts = grid_area.replace(/ /g, "").split("/");
 								if (grid_area_parts.length === 4) {
@@ -1380,14 +1380,14 @@ class NewCms {
 			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
 			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
 
-			const block_styles = this.styling.getBlockComputedStyles(block);
+			const computed_styles = block.computed_styles;
 
 			const styling = this.styling;
 
-			const mt = styling.evalCss(block_styles.outside["margin-top"], block);
-			const mr = styling.evalCss(block_styles.outside["margin-right"], block);
-			const mb = styling.evalCss(block_styles.outside["margin-bottom"], block);
-			const ml = styling.evalCss(block_styles.outside["margin-left"], block);
+			const mt = computed_styles.outside.mt;
+			const mr = computed_styles.outside.mr;
+			const mb = computed_styles.outside.mb;
+			const ml = computed_styles.outside.ml;
 
 			const mt0 = mt + half_dh;
 			const mr0 = mr + half_dw;
@@ -1399,6 +1399,12 @@ class NewCms {
 			const dx = block_animation_data.dx - half_dw;
 			const dy = block_animation_data.dy - half_dh;
 
+			/*if (
+				this.styling.getBlockLastInRow(block) &&
+				block.findParentByClassName("block_17", { skip: 1 })
+			) {
+				console.log(block);
+			}*/
 			const subtract_mr = this.styling.getBlockLastInRow(block) ? 2 : 0;
 
 			const animation_cramp = block.classList.contains("animation_cramp");
@@ -1448,9 +1454,9 @@ class NewCms {
 				block.style.width = `${block.last_rect.width}px`;
 				block.style.height = `${block.last_rect.height}px`;
 				block.style.margin = `${mt0}px 
-                    ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;
+                    ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;*/
 
-				if (block.classList.contains("block_31")) {
+				/*if (block.classList.contains("block_31")) {
 					console.log(block, block_animation_data);
 				}*/
 				//if (block.classList.contains("block_11")) {}
@@ -1461,12 +1467,8 @@ class NewCms {
 			if (is_grid) {
 				const block_content = block.find(".newCms_block_content");
 
-				const gtr = this.styling.getBlockComputedStyles(block)["inside"][
-					"grid-template-rows"
-				];
-				const gtc = this.styling.getBlockComputedStyles(block)["inside"][
-					"grid-template-columns"
-				];
+				const gtr = block.computed_styles["inside"]["grid-template-rows"];
+				const gtc = block.computed_styles["inside"]["grid-template-columns"];
 
 				if (gtr) {
 					block_content.style.gridTemplateRows = gtr.replace(
@@ -1653,18 +1655,15 @@ class NewCms {
 			gbad.mouse_x = this.mouse_x;
 			gbad.mouse_y = this.mouse_y;
 
-			const block_styles = this.styling.getBlockComputedStyles(grabbed_block);
-			const styling = this.styling;
-			const mt = styling.evalCss(
-				block_styles.outside["margin-top"],
-				grabbed_block
-			);
-			//const mr = styling.evalCss(block_styles.outside["margin-right"], block);
-			//const mb = styling.evalCss(block_styles.outside["margin-bottom"], block);
-			const ml = styling.evalCss(
-				block_styles.outside["margin-left"],
-				grabbed_block
-			);
+			const block_styles = grabbed_block.computed_styles;
+			const mt =
+				block_styles.outside["margin-top"] === "auto"
+					? 0
+					: block_styles.outside.mt;
+			const ml =
+				block_styles.outside["margin-left"] === "auto"
+					? 0
+					: block_styles.outside.ml;
 
 			gbad.dx = gbad.dx * (1 - acc) + target_dx * acc;
 			gbad.dy = gbad.dy * (1 - acc) + target_dy * acc;
@@ -1689,15 +1688,12 @@ class NewCms {
 			this.rearrange_node_block_inside.style.width = set_w + "px";
 			this.rearrange_node_block_inside.style.height = set_h + "px";
 
-			// THERE WE GO
 			this.rearrange_node.style.transform = `
                 translate(
                     ${(gbad.dx - ml).toPrecision(5)}px,
                     ${(gbad.dy - mt).toPrecision(5)}px
                 )
             `;
-
-			//console.log(gbad.dx - ml, gbad.dy - mt);
 		}
 
 		// repeat

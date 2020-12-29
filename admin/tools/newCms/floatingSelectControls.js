@@ -93,19 +93,39 @@ class NewCmsSelectControls {
 				sn.style.width = width + border_width + "px";
 				sn.style.height = height + border_width + "px";
 
-				const block_styles = this.newCms.styling.getBlockComputedStyles(sb);
+				const computed_styles = sb.computed_styles;
 
 				const styling = this.newCms.styling;
 
-				const mt = styling.evalCss(block_styles.outside["margin-top"], sb);
-				const mr = styling.evalCss(block_styles.outside["margin-right"], sb);
-				const mb = styling.evalCss(block_styles.outside["margin-bottom"], sb);
-				const ml = styling.evalCss(block_styles.outside["margin-left"], sb);
+				const mt = computed_styles.outside.mt;
+				const mr = computed_styles.outside.mr;
+				const mb = computed_styles.outside.mb;
+				const ml = computed_styles.outside.ml;
 
-				const pt = styling.evalCss(block_styles.outside["padding-top"], sb);
-				const pr = styling.evalCss(block_styles.outside["padding-right"], sb);
-				const pb = styling.evalCss(block_styles.outside["padding-bottom"], sb);
-				const pl = styling.evalCss(block_styles.outside["padding-left"], sb);
+				const pt = styling.evalCss(computed_styles.outside["padding-top"], sb, {
+					direction: "vertical",
+				});
+				const pr = styling.evalCss(
+					computed_styles.outside["padding-right"],
+					sb,
+					{
+						direction: "horizontal",
+					}
+				);
+				const pb = styling.evalCss(
+					computed_styles.outside["padding-bottom"],
+					sb,
+					{
+						direction: "vertical",
+					}
+				);
+				const pl = styling.evalCss(
+					computed_styles.outside["padding-left"],
+					sb,
+					{
+						direction: "horizontal",
+					}
+				);
 
 				let paths = "";
 

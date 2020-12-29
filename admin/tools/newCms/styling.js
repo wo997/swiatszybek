@@ -342,6 +342,8 @@ class NewCmsStyling {
 					}
 				}
 			} catch (e) {}
+
+			this.newCms.contentChangeManageContent();
 			this.generateCSS();
 		});
 	}
@@ -468,7 +470,6 @@ class NewCmsStyling {
 				css_full += getSomeStyles(responsive_type.name, "inside");
 
 				if (this.responsive_type.name == responsive_type.name) {
-					// TODO: consider getBlockComputedStyles
 					break;
 				}
 			}
@@ -601,7 +602,7 @@ class NewCmsStyling {
 		let child_count = 0;
 		container_blocks.forEach((block) => {
 			child_count++;
-			const had_flex_order = this.getBlockComputedStyles(block).outside.order;
+			const had_flex_order = block.computed_styles.outside.order;
 			block.dataset.flex_order = nonull(had_flex_order, child_count);
 		});
 	}
@@ -815,11 +816,26 @@ class NewCmsStyling {
 			});
 	}
 
+	/** @param {NewCmsBlock} block */
+	isContainerHorizontal(block) {
+		if (block) {
+			const ff = block.computed_styles.inside["flex-flow"];
+			if (ff) {
+				return ff.includes("row");
+			}
+		}
+		return false;
+	}
+
 	/**
 	 *
 	 * @param {*} val
 	 * @param {NewCmsBlock} block
-	 * @param {*} params
+	 * @param {{
+	 * auto?: any
+	 * direction?: ("horizontal" | "vertical")
+	 * opposite?: any
+	 * }} params
 	 */
 	evalCss(val, block, params = {}) {
 		// TODO: single method to get computed margins and paddings of the block hmmm
@@ -830,6 +846,152 @@ class NewCmsStyling {
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
 		const parent_container = block.parent().parent();
+
+		// TODO: auto for grids is just different I think, but maybe we don't really need this, find out later, animations? meh, it works anyway PROBABLY
+		const auto = val === "auto";
+		if (auto) {
+			if (params.auto !== undefined) {
+				return params.auto;
+			}
+
+			const is_container_horizontal = this.isContainerHorizontal(
+				parent_container
+			);
+
+			let find_max_wide = 0;
+			let count_autos = 0;
+			let full_width = 0;
+
+			let me_wide = undefined;
+			let me_width = undefined;
+
+			/**
+			 *
+			 * @param {NewCmsBlock} some_block_in_row
+			 * @param {boolean} same
+			 */
+			const setLimits = (some_block_in_row, same) => {
+				if (me_wide !== undefined && same) {
+					// we have been there
+					return;
+				}
+
+				const some_block_styles = some_block_in_row.computed_styles;
+
+				const mt = this.evalCss(
+					some_block_styles.outside["margin-top"],
+					block,
+					{
+						auto: null,
+					}
+				);
+				const mr = this.evalCss(
+					some_block_styles.outside["margin-right"],
+					block,
+					{
+						auto: null,
+					}
+				);
+				const mb = this.evalCss(
+					some_block_styles.outside["margin-bottom"],
+					block,
+					{
+						auto: null,
+					}
+				);
+				const ml = this.evalCss(
+					some_block_styles.outside["margin-left"],
+					block,
+					{
+						auto: null,
+					}
+				);
+
+				const d1 =
+					some_block_in_row.clientWidth + nonull(ml, 0) + nonull(mr, 0);
+				const d2 =
+					some_block_in_row.clientHeight + nonull(mt, 0) + nonull(mb, 0);
+
+				if (is_container_horizontal) {
+					if (ml === null) {
+						count_autos++;
+					}
+					if (mr === null) {
+						count_autos++;
+					}
+				} else {
+					if (mt === null) {
+						count_autos++;
+					}
+					if (mb === null) {
+						count_autos++;
+					}
+				}
+
+				const width = is_container_horizontal ? d1 : d2;
+				full_width += width;
+
+				const wide = is_container_horizontal ? d2 : d1;
+
+				if (wide > find_max_wide) {
+					find_max_wide = wide;
+				}
+
+				if (same) {
+					me_wide = wide;
+					me_width = width;
+				}
+			};
+
+			let temp_block = block;
+			while (true) {
+				if (!temp_block) {
+					break;
+				}
+
+				setLimits(temp_block, temp_block === block);
+
+				if (this.getBlockFirstInRow(temp_block)) {
+					break;
+				}
+				temp_block = temp_block.getPrevBlock();
+			}
+			temp_block = block;
+			while (true) {
+				if (!temp_block) {
+					break;
+				}
+
+				setLimits(temp_block, temp_block === block);
+
+				// TODO: vertical doesn't even need it right? idk
+				if (this.getBlockLastInRow(temp_block)) {
+					break;
+				}
+				temp_block = temp_block.getNextBlock();
+			}
+
+			if (block.classList.contains("block_25")) {
+				//console.log(find_max_wide, count_autos, full_width);
+			}
+			if (
+				(params.direction == "horizontal" && !is_container_horizontal) ||
+				(params.direction == "vertical" && is_container_horizontal)
+			) {
+				const divide = params.opposite === "auto" ? 2 : 1;
+				// @ts-ignore
+				return (find_max_wide - me_wide) / divide;
+			} else {
+				return (
+					((is_container_horizontal
+						? parent_container.clientWidth
+						: parent_container.clientHeight) -
+						full_width) /
+					count_autos
+				);
+			}
+		}
+
 		let percent = parent_container.singleton_inner_percent;
 
 		if (!percent) {
@@ -840,9 +1002,7 @@ class NewCmsStyling {
 				const grid = parent_container;
 				//console.log("grid", grid.grid_data);
 
-				const styling_data = this.getBlockComputedStyles(block);
-
-				const grid_area = styling_data.outside["grid-area"];
+				const grid_area = block.computed_styles.outside["grid-area"];
 				if (grid_area) {
 					const grid_area_parts = grid_area.replace(/ /g, "").split("/");
 					if (grid_area_parts.length === 4) {
@@ -877,11 +1037,10 @@ class NewCmsStyling {
 		return eval(val);
 	}
 
-	clearSingletons() {
-		[
-			this.newCms.content_scroll_content,
-			...this.newCms.content_node.findAll(`.newCms_block`),
-		].forEach((b) => {
+	recalculateLayout() {
+		const all_blocks = this.newCms.content_node.findAll(`.newCms_block`);
+
+		[this.newCms.content_scroll_content, ...all_blocks].forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
 			const block = b;
@@ -889,6 +1048,50 @@ class NewCmsStyling {
 			delete block.singleton_inner_auto_y;
 			delete block.singleton_inner_percent;
 			delete block.singleton_last_in_row;
+			delete block.new_rect;
+		});
+
+		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
+
+			block.computed_styles = this.getBlockComputedStyles(block);
+
+			const block_styles = block.computed_styles;
+
+			block_styles.outside.mt = this.evalCss(
+				block_styles.outside["margin-top"],
+				block,
+				{
+					direction: "vertical",
+					opposite: block_styles.outside["margin-bottom"],
+				}
+			);
+			block_styles.outside.mr = this.evalCss(
+				block_styles.outside["margin-right"],
+				block,
+				{
+					direction: "horizontal",
+					opposite: block_styles.outside["margin-left"],
+				}
+			);
+			block_styles.outside.mb = this.evalCss(
+				block_styles.outside["margin-bottom"],
+				block,
+				{
+					direction: "vertical",
+					opposite: block_styles.outside["margin-top"],
+				}
+			);
+			block_styles.outside.ml = this.evalCss(
+				block_styles.outside["margin-left"],
+				block,
+				{
+					direction: "horizontal",
+					opposite: block_styles.outside["margin-right"],
+				}
+			);
 		});
 	}
 
@@ -898,8 +1101,13 @@ class NewCmsStyling {
 	getBlockLastInRow(block) {
 		let last_in_row = block.singleton_last_in_row;
 		if (last_in_row === undefined) {
-			const block_styles = this.getBlockComputedStyles(block);
-			const mr = this.evalCss(block_styles.outside["margin-right"], block);
+			const mr = this.evalCss(
+				block.computed_styles.outside["margin-right"],
+				block,
+				{
+					auto: 0,
+				}
+			);
 			if (!block.new_rect) {
 				block.new_rect = block.getBoundingClientRect();
 			}
@@ -908,8 +1116,13 @@ class NewCmsStyling {
 
 			const next = block.getNextBlock();
 			if (next) {
-				const next_styles = this.getBlockComputedStyles(block);
-				const next_ml = this.evalCss(next_styles.outside["margin-left"], next);
+				const next_ml = this.evalCss(
+					block.computed_styles.outside["margin-left"],
+					next,
+					{
+						auto: 0,
+					}
+				);
 				if (!next.new_rect) {
 					next.new_rect = next.getBoundingClientRect();
 				}
