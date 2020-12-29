@@ -859,11 +859,19 @@ class NewCmsStyling {
 			);
 
 			// HEY! remember that flex wrap containers wont have the ability to set the height so that operation is way simpler
-			let find_max_wide =
+			const is_wrap =
 				is_container_horizontal &&
-				!parent_container.computed_styles.inside["flex-flow"].includes("wrap")
-					? parent_container.clientHeight
-					: 0;
+				parent_container.computed_styles.inside["flex-flow"].includes("wrap");
+
+			let find_max_wide = 0;
+			if (is_container_horizontal) {
+				if (!is_wrap) {
+					find_max_wide = parent_container.clientHeight;
+				}
+			} else {
+				find_max_wide = parent_container.clientWidth;
+			}
+
 			let count_autos = 0;
 			let full_width = 0;
 
@@ -954,7 +962,7 @@ class NewCmsStyling {
 
 				setLimits(temp_block, temp_block === block);
 
-				if (this.getBlockFirstInRow(temp_block)) {
+				if (is_wrap && this.getBlockFirstInRow(temp_block)) {
 					break;
 				}
 				temp_block = temp_block.getPrevBlock();
@@ -968,14 +976,15 @@ class NewCmsStyling {
 				setLimits(temp_block, temp_block === block);
 
 				// TODO: vertical doesn't even need it right? idk
-				if (this.getBlockLastInRow(temp_block)) {
+				if (is_wrap && this.getBlockLastInRow(temp_block)) {
 					break;
 				}
 				temp_block = temp_block.getNextBlock();
 			}
 
-			/*if (block.classList.contains("block_25")) {
-            }*/
+			/*if (parent_container.classList.contains("block_32")) {
+				console.log(pa);
+			}*/
 
 			if (
 				(params.direction == "horizontal" && !is_container_horizontal) ||
