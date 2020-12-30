@@ -18,6 +18,8 @@ while ($a["name"] < $a["age"]["value"]) {
     }
 }
 
+echo $a["name"];
+
 var_dump([
     "age" => [
         "value" => 444
@@ -33,12 +35,25 @@ var_dump([
     "age" => ["value"]
 ]);
 
-// function heyca($x, $y)
-// {
-//     /** @type {Cat} */
-//     $x = 666;
-//     $x["age"]["value"] = 5;
-// }
+function heyca($x, $y)
+{
+    /** @type {Cat} */
+    $x = 666;
+    $x["age"]["value"] = 5;
+}
+
+class TestClass
+{
+    /** @param {Cat} $cat */
+    public function pies($cat)
+    {
+        echo $cat[""];
+
+        /** @type {Cat} */
+        $x = 666;
+        $x["age"]["value"] = 5;
+    }
+}
  
 //var_dump(["name"]);
 

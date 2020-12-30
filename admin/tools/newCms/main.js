@@ -1157,6 +1157,7 @@ class NewCms {
 
 			if (this.grab_options.copy) {
 				this.styling.registerMissingBlocks();
+				this.styling.generateCSS();
 			}
 
 			if (gbad.mouse_x && gbad.mouse_y) {
@@ -1659,14 +1660,14 @@ class NewCms {
 			gbad.mouse_y = this.mouse_y;
 
 			const block_styles = grabbed_block.computed_styles;
-			const mt =
-				block_styles.outside["margin-top"] === "auto"
-					? 0
-					: block_styles.outside.mt;
-			const ml =
-				block_styles.outside["margin-left"] === "auto"
-					? 0
-					: block_styles.outside.ml;
+			let mt = 0;
+			if (block_styles && block_styles.outside["margin-top"] !== "auto") {
+				mt = block_styles.outside.mt;
+			}
+			let ml = 0;
+			if (block_styles && block_styles.outside["margin-left"] !== "auto") {
+				mt = block_styles.outside.ml;
+			}
 
 			gbad.dx = gbad.dx * (1 - acc) + target_dx * acc;
 			gbad.dy = gbad.dy * (1 - acc) + target_dy * acc;
