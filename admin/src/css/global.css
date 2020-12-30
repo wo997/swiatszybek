@@ -38,3 +38,8 @@ body,
 table img {
 	display: block;
 }
+
+.force_wrap {
+	display: block;
+	flex-basis: 100%;
+}

@@ -82,6 +82,8 @@ class NewCms {
 		/** @type {NewCmsBlock} */
 		this.grabbed_block = null;
 
+		this.query_for_visible_blocks = `.newCms_block:not(.cramped):not(.parent_cramped)`;
+
 		this.initStyling();
 		this.initSidebar();
 		this.initTrashBlock();
@@ -184,9 +186,11 @@ class NewCms {
 			});
 
 			// TODO: be careful with that
-			this.clean_output_node.findAll(".newCms_block").forEach((e) => {
-				e.removeAttribute("style");
-			});
+			this.clean_output_node
+				.findAll(this.query_for_visible_blocks)
+				.forEach((e) => {
+					e.removeAttribute("style");
+				});
 		});
 
 		this.container
@@ -408,6 +412,7 @@ class NewCms {
 
 					// who the hell needs that? not me
 					//this.container.dispatchEvent(new Event("ready"));
+					//this.onResize();
 				}, 100);
 			},
 		});
@@ -615,7 +620,7 @@ class NewCms {
 		const off_y = scrollable_parent_rect.top + scrollable_parent.scrollTop;
 
 		this.content_node
-			.findAll(`.newCms_block[data-block="grid"]`)
+			.findAll(this.query_for_visible_blocks + `[data-block="grid"]`)
 			.forEach((g) => {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
@@ -697,7 +702,7 @@ class NewCms {
 	insertMissingQlClasses() {
 		// TODO: should we use it on the whole container instead? probably no XD
 		this.content_node
-			.findAll(`.newCms_block[data-block="quill_editor"]`)
+			.findAll(this.query_for_visible_blocks + `[data-block="quill_editor"]`)
 			.forEach((newCms_block) => {
 				const newCms_block_content = newCms_block.find(".newCms_block_content");
 				newCms_block_content.classList.add("ql-editor");
@@ -794,7 +799,7 @@ class NewCms {
 
 		block.classList.add("animation_cramp");
 
-		this.animateContent(all_animatable_blocks, 350, {
+		this.animateContent(all_animatable_blocks, 10000, {
 			beforeAnimationEndCallback() {
 				block.classList.remove("animation_cramp");
 			},
@@ -1135,52 +1140,14 @@ class NewCms {
 				}
 
 				if (!this.styling.allow_free_rearrangement) {
-					//const parent_children = grabbed_block.parent().directChildren();
-
-					//const current_flex_order = parseInt(grabbed_block.dataset.flex_order);
-					// 0.5 will go through them... u know - blocks
 					let target_flex_order = before_node
 						? parseInt(before_node.dataset.flex_order) - 0.5
 						: 1000000;
 
 					grabbed_block.dataset.flex_order = target_flex_order;
-					/*this.styling.setBlockStyles(
-						{
-							order: target_flex_order,
-						},
-						grabbed_block
-					);*/
 				}
 
 				this.styling.setBlocksFlexOrder(true);
-			}
-
-			if (this.grab_options.copy) {
-				this.styling.registerMissingBlocks();
-				this.styling.generateCSS();
-			}
-
-			if (gbad.mouse_x && gbad.mouse_y) {
-				const rect = grabbed_block.getBoundingClientRect();
-
-				/*grabbed_block.animation_data.dx =
-					rect.left + rect.width * 0.5 - gbad.mouse_x;
-				grabbed_block.animation_data.dy =
-					rect.top + rect.height * 0.5 - gbad.mouse_y;
-
-				//grabbed_block.last_rect = rect;
-				// @ts-ignore
-				grabbed_block.last_rect = {
-					left: rect.left + (rect.width - grabbed_block.last_rect.width) * 0.5,
-					top: rect.top + (rect.height - grabbed_block.last_rect.height) * 0.5,
-					width: grabbed_block.last_rect.width,
-					height: grabbed_block.last_rect.height,
-				};
-
-				console.log("FUUUUUUUUUUUU");
-
-				delete gbad.mouse_x;
-				delete gbad.mouse_y;*/
 			}
 		} else {
 			if (this.grab_options.copy) {
@@ -1196,6 +1163,9 @@ class NewCms {
 
 		this.rearrange_controls.removeRearrangement();
 
+		this.contentChangeManageContent();
+		this.styling.generateCSS();
+
 		/** @type {NewCmsBlock[]} */
 		// @ts-ignore
 		const all_animatable_blocks = this.afterContentAnimation();
@@ -1210,7 +1180,7 @@ class NewCms {
 	}
 
 	beforeContentAnimation() {
-		this.content_node.findAll(".newCms_block").forEach((b) => {
+		this.content_node.findAll(this.query_for_visible_blocks).forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
 			const block = b;
@@ -1238,20 +1208,21 @@ class NewCms {
 				/** @type {NewCmsBlock} */
 				// @ts-ignore
 				const block = b;
-				if (block.last_rect) {
-					block.new_rect = block.getBoundingClientRect();
-					if (!block.animation_data) {
-						/** @type {AnimationData} */
-						// @ts-ignore
-						const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
-						block.animation_data = block_animation_data;
-					}
-
-					return true;
-				} else {
-					return false;
-				}
+				return !!block.last_rect;
 			});
+
+		all_animatable_blocks.forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
+			block.new_rect = block.getBoundingClientRect();
+			if (!block.animation_data) {
+				/** @type {AnimationData} */
+				// @ts-ignore
+				const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
+				block.animation_data = block_animation_data;
+			}
+		});
 
 		all_animatable_blocks.forEach((b) => {
 			/** @type {NewCmsBlock} */
@@ -1338,6 +1309,22 @@ class NewCms {
 
 		this.styling.recalculateLayout();
 
+		// all_animatable_blocks.forEach((b) => {
+		// 	/** @type {NewCmsBlock} */
+		// 	// @ts-ignore
+		// 	const block = b;
+
+		// 	const kisses_right = this.styling.getBlockKissesRowEnd(block);
+
+		// 	if (kisses_right) {
+		// 		block.insertAdjacentHTML(
+		// 			"afterend",
+		// 			/*html*/ `<div class="force_wrap"></div>`
+		// 		);
+		// 		console.log("WHAAAT", block, this.content_node.find(".force_wrap"));
+		// 	}
+		// });
+
 		return all_animatable_blocks;
 	}
 
@@ -1365,6 +1352,10 @@ class NewCms {
 				// browser needs time to render it again
 				this.container.classList.remove("animating_rearrangement");
 				this.content_node_copy.classList.remove("visible");
+
+				this.content_node.findAll(".force_wrap").forEach((e) => {
+					e.remove();
+				});
 
 				this.contentChange();
 
@@ -1408,8 +1399,18 @@ class NewCms {
 				block.findParentByClassName("block_17", { skip: 1 })
 			) {
 				console.log(block);
-			}*/
-			const subtract_mr = this.styling.getBlockLastInRow(block) ? 0 : 0;
+            }*/
+			//const start_margin_bigger = block.prev
+			const kisses_right = this.styling.getBlockKissesRowEnd(block);
+			const subtract_mr = kisses_right ? 200 : 0;
+
+			// if (kisses_right) {
+			// 	block.insertAdjacentHTML(
+			// 		"afterend",
+			// 		/*html*/ `<div class="force_wrap"></div>`
+			// 	);
+			// 	console.log(block, this.content_node.find(".force_wrap"));
+			// }
 
 			const animation_cramp = block.classList.contains("animation_cramp");
 
@@ -1704,6 +1705,18 @@ class NewCms {
 		requestAnimationFrame(() => {
 			this.grabAnimation();
 		});
+	}
+
+	/** @param {NewCmsBlock} block */
+	getBlockParent(block) {
+		const just_parent = block.parent();
+
+		/** @type {NewCmsBlock} */
+		// @ts-ignore
+		if (just_parent == this.content_node) {
+			return just_parent;
+		}
+		return just_parent.parent();
 	}
 }
 window.addEventListener("tool_loaded", (event) => {

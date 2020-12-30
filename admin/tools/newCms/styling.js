@@ -290,9 +290,11 @@ class NewCmsStyling {
 			this.newCms.clean_output_node.setContent(
 				this.newCms.content_node.innerHTML
 			);
-			this.newCms.clean_output_node.findAll(".newCms_block").forEach((e) => {
-				cleanNodeFromAnimations(e);
-			});
+			this.newCms.clean_output_node
+				.findAll(this.newCms.query_for_visible_blocks)
+				.forEach((e) => {
+					cleanNodeFromAnimations(e);
+				});
 
 			// @ts-ignore
 			event.detail.data.content = this.newCms.clean_output_node.innerHTML;
@@ -349,22 +351,24 @@ class NewCmsStyling {
 	}
 
 	setAllRegisteredBlocks() {
-		this.newCms.content_node.findAll(".newCms_block").forEach((n) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const node = n;
+		this.newCms.content_node
+			.findAll(this.newCms.query_for_visible_blocks)
+			.forEach((n) => {
+				/** @type {NewCmsBlock} */
+				// @ts-ignore
+				const node = n;
 
-			const block_id = this.getBlockId(node);
+				const block_id = this.getBlockId(node);
 
-			if (!block_id) {
-				return;
-			}
+				if (!block_id) {
+					return;
+				}
 
-			const block_data = this.getDefaultBlock();
-			block_data.id = block_id;
-			block_data.node = node;
-			this.addBlockData(block_data);
-		});
+				const block_data = this.getDefaultBlock();
+				block_data.id = block_id;
+				block_data.node = node;
+				this.addBlockData(block_data);
+			});
 	}
 
 	/**
@@ -619,9 +623,13 @@ class NewCmsStyling {
 
 			// set to default - can be changed below
 			// @ts-ignore
-			block.getPrevBlock = block.prev;
+			block.getPrevBlock = () => {
+				this.getStaticPrevBlock(block);
+			};
 			// @ts-ignore
-			block.getNextBlock = block.next;
+			block.getNextBlock = () => {
+				this.getStaticNextBlock(block);
+			};
 		});
 
 		// not content_node (.newCmsContent) to include it as well
@@ -772,7 +780,7 @@ class NewCmsStyling {
 
 	alignGridBlocksVertically() {
 		this.newCms.content_node
-			.findAll(`.newCms_block[data-block="grid"]`)
+			.findAll(this.newCms.query_for_visible_blocks + `[data-block="grid"]`)
 			.forEach((g) => {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
@@ -844,14 +852,9 @@ class NewCmsStyling {
 			return 0;
 		}
 
-		const just_parent = block.parent();
-
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
-		const parent_container =
-			just_parent == this.newCms.content_node
-				? just_parent
-				: just_parent.parent();
+		const parent_container = this.newCms.getBlockParent(block);
 
 		// TODO: auto for grids is just different I think, but maybe we don't really need this, find out later, animations? meh, it works anyway PROBABLY
 		const auto = val === "auto";
@@ -928,6 +931,13 @@ class NewCmsStyling {
 					return;
 				}
 
+				/*if (block.classList.contains("block_23")) {
+					console.log(temp_block);
+				}*/
+				/*if (some_block_in_row.classList.contains("cramped")) {
+					return;
+				}*/
+
 				const some_block_styles = some_block_in_row.computed_styles;
 
 				const mt = this.evalCss(
@@ -983,6 +993,10 @@ class NewCmsStyling {
 				const width = is_container_horizontal ? d1 : d2;
 				full_width += width;
 
+				/*if (temp_block.findParentByClassName("block_17")) {
+					console.log(temp_block, width);
+                }*/
+
 				const wide = is_container_horizontal ? d2 : d1;
 
 				if (wide > find_max_wide) {
@@ -994,6 +1008,8 @@ class NewCmsStyling {
 				}
 			};
 
+			console.log("CIIIPA");
+
 			let temp_block = block;
 			while (true) {
 				if (!temp_block) {
@@ -1003,6 +1019,9 @@ class NewCmsStyling {
 				setLimits(temp_block, temp_block === block);
 
 				if (is_wrap && this.getBlockFirstInRow(temp_block)) {
+					if (block.classList.contains("block_23")) {
+						console.log("first", temp_block);
+					}
 					break;
 				}
 				temp_block = temp_block.getPrevBlock();
@@ -1015,16 +1034,22 @@ class NewCmsStyling {
 
 				setLimits(temp_block, temp_block === block);
 
-				// TODO: vertical doesn't even need it right? idk
 				if (is_wrap && this.getBlockLastInRow(temp_block)) {
+					if (block.classList.contains("block_23")) {
+						console.log("last", temp_block);
+					}
 					break;
 				}
 				temp_block = temp_block.getNextBlock();
 			}
 
-			/*if (parent_container.classList.contains("block_32")) {
-                   console.log(pa);
-               }*/
+			/*if (block.classList.contains("block_23")) {
+				console.log(full_width, count_autos, parent_container.clientWidth);
+			}*/
+
+			/*if (block.classList.contains("block_23")) {
+                console.log(temp_block, width);
+            }*/
 
 			if (
 				(params.direction == "horizontal" && !is_container_horizontal) ||
@@ -1091,7 +1116,9 @@ class NewCmsStyling {
 	}
 
 	recalculateLayout() {
-		const all_blocks = this.newCms.content_node.findAll(`.newCms_block`);
+		const all_blocks = this.newCms.content_node.findAll(
+			this.newCms.query_for_visible_blocks
+		);
 
 		[this.newCms.content_scroll_content, ...all_blocks].forEach((b) => {
 			/** @type {NewCmsBlock} */
@@ -1165,9 +1192,35 @@ class NewCmsStyling {
 	/**
 	 * @param {NewCmsBlock} block
 	 */
+	getBlockKissesRowEnd(block) {
+		const mr = this.evalCss(
+			block.computed_styles.outside["margin-right"],
+			block
+		);
+
+		const right_kiss =
+			block.new_rect.left + block.new_rect.width + nonull(mr, 0);
+
+		const container_content_rect = block.parent().getBoundingClientRect();
+
+		// 2 cause of low accuracy
+		return (
+			right_kiss >
+			container_content_rect.left + container_content_rect.width - 2
+		);
+	}
+
+	/**
+	 * @param {NewCmsBlock} block
+	 */
 	getBlockLastInRow(block) {
 		let last_in_row = block.singleton_last_in_row;
 		if (last_in_row === undefined) {
+			if (!block.computed_styles) {
+				//console.error("TAKE A LOOK AT IT BRO, skip or ", block);
+				// ok, it's the block we remove :*
+				return false;
+			}
 			const mr = this.evalCss(
 				block.computed_styles.outside["margin-right"],
 				block,
@@ -1215,5 +1268,47 @@ class NewCmsStyling {
 			return true;
 		}
 		return this.getBlockLastInRow(prev);
+	}
+
+	/**
+	 *
+	 * @param {NewCmsBlock} block
+	 */
+	getStaticPrevBlock(block) {
+		// @ts-ignore
+		block.getPrevBlock = () => {
+			const prev = block.prev();
+			if (!prev) {
+				return null;
+			}
+			if (
+				prev.classList.contains("newCms_block") &&
+				!prev.classList.contains("cramped")
+			) {
+				return prev;
+			}
+			return prev.prev();
+		};
+	}
+
+	/**
+	 *
+	 * @param {NewCmsBlock} block
+	 */
+	getStaticNextBlock(block) {
+		// @ts-ignore
+		block.getNextBlock = () => {
+			const next = block.next();
+			if (!next) {
+				return null;
+			}
+			if (
+				next.classList.contains("newCms_block") &&
+				!next.classList.contains("cramped")
+			) {
+				return next;
+			}
+			return next.next();
+		};
 	}
 }
