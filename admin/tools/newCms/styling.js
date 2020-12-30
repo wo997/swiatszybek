@@ -870,16 +870,19 @@ class NewCmsStyling {
 					const grid_area_parts = grid_area.replace(/ /g, "").split("/");
 					if (grid_area_parts.length === 4) {
 						// ${r1}/${c1}/${r2}/${c2}
-						const r1 = grid_area_parts[0];
-						const c1 = grid_area_parts[1];
+						const r1 = grid_area_parts[0] - 1;
+						const c1 = grid_area_parts[1] - 1;
+						const r2 = grid_area_parts[2] - 1;
+						const c2 = grid_area_parts[3] - 1;
 
 						const column_width =
-							grid.grid_data.x_coords[c1] - grid.grid_data.x_coords[c1 - 1];
+							grid.grid_data.x_coords[c2] - grid.grid_data.x_coords[c1];
 
 						const row_height =
-							grid.grid_data.y_coords[r1] - grid.grid_data.y_coords[r1 - 1];
+							grid.grid_data.y_coords[r2] - grid.grid_data.y_coords[r1];
 
 						const divide = params.opposite === "auto" ? 2 : 1;
+
 						return (
 							(params.direction == "horizontal"
 								? column_width - block.clientWidth
@@ -1055,14 +1058,16 @@ class NewCmsStyling {
 					const grid_area_parts = grid_area.replace(/ /g, "").split("/");
 					if (grid_area_parts.length === 4) {
 						// ${r1}/${c1}/${r2}/${c2}
-						const r1 = grid_area_parts[0];
-						const c1 = grid_area_parts[1];
+						//const r1 = grid_area_parts[0]-1;
+						const c1 = grid_area_parts[1] - 1;
+						//const r2 = grid_area_parts[2]-1;
+						const c2 = grid_area_parts[3] - 1;
 
 						const column_width =
-							grid.grid_data.x_coords[c1] - grid.grid_data.x_coords[c1 - 1];
+							grid.grid_data.x_coords[c2] - grid.grid_data.x_coords[c1];
 
-						const row_height =
-							grid.grid_data.y_coords[r1] - grid.grid_data.y_coords[r1 - 1];
+						/*const row_height =
+							grid.grid_data.y_coords[r2] - grid.grid_data.y_coords[r1];*/
 
 						percent = column_width * 0.01;
 					}
