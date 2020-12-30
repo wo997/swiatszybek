@@ -860,6 +860,37 @@ class NewCmsStyling {
 				return params.auto;
 			}
 
+			if (parent_container.dataset.block === "grid") {
+				/** @type {NewCmsGrid} */
+				// @ts-ignore
+				const grid = parent_container;
+
+				const grid_area = block.computed_styles.outside["grid-area"];
+				if (grid_area) {
+					const grid_area_parts = grid_area.replace(/ /g, "").split("/");
+					if (grid_area_parts.length === 4) {
+						// ${r1}/${c1}/${r2}/${c2}
+						const r1 = grid_area_parts[0];
+						const c1 = grid_area_parts[1];
+
+						const column_width =
+							grid.grid_data.x_coords[c1] - grid.grid_data.x_coords[c1 - 1];
+
+						const row_height =
+							grid.grid_data.y_coords[r1] - grid.grid_data.y_coords[r1 - 1];
+
+						const divide = params.opposite === "auto" ? 2 : 1;
+						return (
+							(params.direction == "horizontal"
+								? column_width - block.clientWidth
+								: row_height - block.clientHeight) / divide
+						);
+					}
+				}
+
+				return 0;
+			}
+
 			const is_container_horizontal = this.isContainerHorizontal(
 				parent_container
 			);
@@ -1018,7 +1049,6 @@ class NewCmsStyling {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
 				const grid = parent_container;
-				//console.log("grid", grid.grid_data);
 
 				const grid_area = block.computed_styles.outside["grid-area"];
 				if (grid_area) {
