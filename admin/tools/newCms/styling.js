@@ -874,6 +874,7 @@ class NewCmsStyling {
 	 * auto?: any
 	 * direction?: ("horizontal" | "vertical")
 	 * opposite?: any
+	 * opposite_name?: string
 	 * }} params
 	 */
 	evalCss(val, block, params = {}) {
@@ -916,10 +917,16 @@ class NewCmsStyling {
 
 						const divide = params.opposite === "auto" ? 2 : 1;
 
+						const opp_mar = this.evalCss(
+							block.computed_styles.outside[params.opposite_name],
+							block,
+							{ auto: 0 }
+						);
+
 						return (
 							(params.direction == "horizontal"
-								? column_width - block.clientWidth
-								: row_height - block.clientHeight) / divide
+								? column_width - block.clientWidth - opp_mar
+								: row_height - block.clientHeight - opp_mar) / divide
 						);
 					}
 				}
@@ -1180,6 +1187,7 @@ class NewCmsStyling {
 				{
 					direction: "vertical",
 					opposite: block_styles.outside["margin-bottom"],
+					opposite_name: "margin-bottom",
 				}
 			);
 			block_styles.outside.mr = this.evalCss(
@@ -1188,6 +1196,7 @@ class NewCmsStyling {
 				{
 					direction: "horizontal",
 					opposite: block_styles.outside["margin-left"],
+					opposite_name: "margin-left",
 				}
 			);
 			block_styles.outside.mb = this.evalCss(
@@ -1196,6 +1205,7 @@ class NewCmsStyling {
 				{
 					direction: "vertical",
 					opposite: block_styles.outside["margin-top"],
+					opposite_name: "margin-top",
 				}
 			);
 			block_styles.outside.ml = this.evalCss(
@@ -1204,6 +1214,7 @@ class NewCmsStyling {
 				{
 					direction: "horizontal",
 					opposite: block_styles.outside["margin-right"],
+					opposite_name: "margin-right",
 				}
 			);
 		});
