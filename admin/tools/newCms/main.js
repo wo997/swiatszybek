@@ -34,7 +34,7 @@ useTool("fileManager");
 /**
  * @typedef {{
  * grid_data: GridData
- * prev_grid_data?: GridData} & NewCmsBlock} NewCmsGrid
+ * } & NewCmsBlock} NewCmsGrid
  */
 
 /**
@@ -611,13 +611,6 @@ class NewCms {
 		if (!any_grid) {
 			return;
 		}
-		const scrollable_parent = any_grid.findScrollParent({
-			default: document.body,
-		});
-		const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
-
-		const off_x = scrollable_parent_rect.left + scrollable_parent.scrollLeft;
-		const off_y = scrollable_parent_rect.top + scrollable_parent.scrollTop;
 
 		this.content_node
 			.findAll(this.query_for_visible_blocks + `[data-block="grid"]`)
@@ -799,7 +792,7 @@ class NewCms {
 
 		block.classList.add("animation_cramp");
 
-		this.animateContent(all_animatable_blocks, 350, {
+		this.animateContent(all_animatable_blocks, 450, {
 			beforeAnimationEndCallback() {
 				block.classList.remove("animation_cramp");
 			},
@@ -1170,7 +1163,7 @@ class NewCms {
 		// @ts-ignore
 		const all_animatable_blocks = this.afterContentAnimation();
 
-		this.animateContent(all_animatable_blocks, 350, {
+		this.animateContent(all_animatable_blocks, 450, {
 			callback: () => {
 				this.content_node.findAll(".rearranged_node_animated").forEach((e) => {
 					e.classList.remove("rearranged_node_animated");
@@ -1180,23 +1173,12 @@ class NewCms {
 	}
 
 	beforeContentAnimation() {
-		this.removeForceWrap();
-
 		this.content_node.findAll(this.query_for_visible_blocks).forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
 			const block = b;
 			if (!block.last_rect) {
 				block.last_rect = block.getBoundingClientRect();
-			}
-
-			if (b.dataset.block == "grid") {
-				/** @type {NewCmsGrid} */
-				// @ts-ignore
-				const grid = b;
-				if (!grid.prev_grid_data) {
-					grid.prev_grid_data = grid.grid_data;
-				}
 			}
 		});
 	}
@@ -1226,83 +1208,10 @@ class NewCms {
 			}
 		});
 
-		all_animatable_blocks.forEach((b) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const block = b;
-
-			const dx = block.last_rect.left - block.new_rect.left;
-			const dy = block.last_rect.top - block.new_rect.top;
-
-			/** @type {AnimationData} */
-			const block_animation_data = block.animation_data;
-			block_animation_data.dx += dx;
-			block_animation_data.dy += dy;
-			/*if (block.classList.contains("block_31")) {
-				console.log(dx, dy);
-			}*/
-
-			/** @type {NewCmsGrid} */
-			let grid = null;
-
-			if (block.dataset.block == "grid") {
-				// @ts-ignore
-				grid = block;
-			}
-
-			block
-				.find(".newCms_block_content")
-				.directChildren()
-				.forEach((s) => {
-					/** @type {NewCmsBlock} */
-					// @ts-ignore
-					const sub_block = s;
-					if (sub_block.animation_data) {
-						sub_block.animation_data.dx -= dx;
-						sub_block.animation_data.dy -= dy;
-
-						if (grid) {
-							const computed_styles = sub_block.computed_styles;
-
-							const grid_area = computed_styles.outside["grid-area"];
-							if (grid_area) {
-								const grid_area_parts = grid_area.replace(/ /g, "").split("/");
-								if (grid_area_parts.length === 4) {
-									// ${r1}/${c1}/${r2}/${c2}
-									const r1 = grid_area_parts[0];
-									const c1 = grid_area_parts[1];
-									const r1_ind = r1 - 1;
-									const c1_ind = c1 - 1;
-
-									const grid_cell_corner_dx =
-										grid.grid_data.x_coords[c1_ind] -
-										grid.prev_grid_data.x_coords[c1_ind];
-
-									const grid_cell_corner_dy =
-										grid.grid_data.y_coords[r1_ind] -
-										grid.prev_grid_data.y_coords[r1_ind];
-
-									/*if (sub_block.classList.contains("block_11")) {
-										console.log(
-											r1_ind,
-											grid.grid_data.y_coords[r1_ind],
-											grid.prev_grid_data.y_coords[r1_ind],
-											grid_cell_corner_dy,
-											grid.grid_data
-										);
-                                    }*/
-
-									//console.log(grid_cell_corner_dx, grid_cell_corner_dy);
-									sub_block.animation_data.dx += grid_cell_corner_dx;
-									sub_block.animation_data.dy += grid_cell_corner_dy;
-									//sub_block.animation_data.dx = 0;
-									//sub_block.animation_data.dy = 0;
-								}
-							}
-						}
-					}
-				});
-		});
+		// @ts-ignore
+		this.content_node.new_rect = this.content_node.getBoundingClientRect();
+		// @ts-ignore
+		this.content_node.last_rect = this.content_node.new_rect;
 
 		// copy overlay to hide layout update
 		this.content_node_copy.setContent(this.content_node.innerHTML);
@@ -1311,28 +1220,7 @@ class NewCms {
 
 		this.styling.recalculateLayout();
 
-		all_animatable_blocks.forEach((b) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const block = b;
-
-			const kisses_right = this.styling.getBlockKissesRowEnd(block);
-
-			if (kisses_right) {
-				block.insertAdjacentHTML(
-					"afterend",
-					/*html*/ `<div class="force_wrap"></div>`
-				);
-			}
-		});
-
 		return all_animatable_blocks;
-	}
-
-	removeForceWrap() {
-		this.content_node.findAll(".force_wrap").forEach((e) => {
-			e.remove();
-		});
 	}
 
 	/**
@@ -1342,7 +1230,7 @@ class NewCms {
 	 * @param {*} options
 	 */
 	animateContent(all_animatable_blocks, duration, options = {}) {
-		const animation_swap_time = 100;
+		const animation_swap_time = 0;
 		this.lockInput(duration + animation_swap_time);
 
 		this.select_controls.removeSelection();
@@ -1352,8 +1240,6 @@ class NewCms {
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
 			setTimeout(() => {
-				this.removeForceWrap();
-
 				if (options.beforeAnimationEndCallback) {
 					options.beforeAnimationEndCallback();
 				}
@@ -1381,144 +1267,83 @@ class NewCms {
 		};
 
 		all_animatable_blocks.forEach((block) => {
-			const half_dw = 0.5 * (block.new_rect.width - block.last_rect.width);
-			const half_dh = 0.5 * (block.new_rect.height - block.last_rect.height);
-
-			const computed_styles = block.computed_styles;
-
-			const mt = computed_styles.outside.mt;
-			const mr = computed_styles.outside.mr;
-			const mb = computed_styles.outside.mb;
-			const ml = computed_styles.outside.ml;
-
-			const mt0 = mt + half_dh;
-			const mr0 = mr + half_dw;
-			const mb0 = mb + half_dh;
-			const ml0 = ml + half_dw;
-
 			/** @type {AnimationData} */
 			const block_animation_data = block.animation_data;
-			const dx = block_animation_data.dx - half_dw;
-			const dy = block_animation_data.dy - half_dh;
+			const dx = block_animation_data.dx;
+			const dy = block_animation_data.dy;
 
-			/*if (
-				this.styling.getBlockLastInRow(block) &&
-				block.findParentByClassName("block_17", { skip: 1 })
-			) {
-				console.log(block);
-            }*/
-			//const start_margin_bigger = block.prev
-			const kisses_right = this.styling.getBlockKissesRowEnd(block);
-			const subtract_mr = kisses_right ? 500 : 0;
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const parent = this.getBlockParent(block);
+			let left_0 = 0,
+				top_0 = 0,
+				left_1 = 0,
+				top_1 = 0;
 
-			// if (kisses_right) {
-			// 	block.insertAdjacentHTML(
-			// 		"afterend",
-			// 		/*html*/ `<div class="force_wrap"></div>`
-			// 	);
-			// 	console.log(block, this.content_node.find(".force_wrap"));
-			// }
+			if (parent.new_rect && parent.last_rect) {
+				left_0 = parent.last_rect.left;
+				top_0 = parent.last_rect.top;
+				left_1 = parent.new_rect.left;
+				top_1 = parent.new_rect.top;
+			}
 
-			const animation_cramp = block.classList.contains("animation_cramp");
+			const margin_data = this.getBlockAbsoluteMarginOffset(
+				block.computed_styles
+			);
+
+			left_0 += margin_data.left;
+			top_0 += margin_data.top;
+			left_1 += margin_data.left;
+			top_1 += margin_data.top;
 
 			let keyframes = "";
 
-			if (animation_cramp) {
-				const half_w = block.last_rect.width * 0.5;
-				const half_h = block.last_rect.height * 0.5;
-
-				//const is_grid = block.parent().parent().dataset.block == "grid";
-
+			if (block.classList.contains("animation_cramp")) {
 				keyframes = `
                     0% {
-                        transform-origin: center;
-                        transform: translate(${dx}px, ${dy}px) scale(1);
-                        margin: -${half_h}px -${half_w}px;
+                        position: absolute;
+                        left: ${block.last_rect.left + dx - left_0}px;
+                        top: ${block.last_rect.top + dy - top_0}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
+                        transform: scale(1);
+                        opacity: 1;
                     }
                     100% {
-                        transform-origin: center;
-                        transform: translate(${dx}px, ${dy}px) scale(0);
-                        margin: -${half_h}px -${half_w}px;
+                        position: absolute;
+                        left: ${block.last_rect.left + dx - left_0}px;
+                        top: ${block.last_rect.top + dy - top_0}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
+                        transform: scale(0);
+                        opacity: 0;
                     }
                 `;
 			} else {
 				keyframes = `
                     0% {
-                        transform: translate(${dx}px, ${dy}px);
+                        position: absolute;
+                        left: ${block.last_rect.left + dx - left_0}px;
+                        top: ${block.last_rect.top + dy - top_0}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
-                        margin: ${mt0}px 
-                                ${mr0 - subtract_mr}px
-                                ${mb0}px
-                                ${ml0}px;
                     }
                     100% {
-                        transform: translate(0px, 0px);
+                        position: absolute;
+                        left: ${block.new_rect.left - left_1}px;
+                        top: ${block.new_rect.top - top_1}px;
                         width: ${block.new_rect.width}px;
                         height: ${block.new_rect.height}px;
-                        margin: ${mt}px
-                                ${mr - subtract_mr}px
-                                ${mb}px
-                                ${ml}px;
+                        margin: 0 !important;
                     }
                 `;
-
-				// instantaneous animation, nice to have ;)
-				/*block.style.transform = `translate(${dx}px, ${dy}px)`;
-				block.style.width = `${block.last_rect.width}px`;
-				block.style.height = `${block.last_rect.height}px`;
-				block.style.margin = `${mt0}px 
-                    ${mr0 - subtract_mr}px ${mb0}px ${ml0}px`;*/
-
-				/*if (block.classList.contains("block_31")) {
-					console.log(block, block_animation_data);
-				}*/
-				//if (block.classList.contains("block_11")) {}
-			}
-
-			const is_grid = block.dataset.block == "grid";
-
-			if (is_grid) {
-				const block_content = block.find(".newCms_block_content");
-
-				const gtr = block.computed_styles["inside"]["grid-template-rows"];
-				const gtc = block.computed_styles["inside"]["grid-template-columns"];
-
-				if (gtr) {
-					block_content.style.gridTemplateRows = gtr.replace(
-						/\w+/g,
-						"minmax(0, $&)"
-					);
-					setTimeout(() => {
-						block_content.style.gridTemplateRows = "";
-					}, duration);
-				}
-				if (gtc) {
-					block_content.style.gridTemplateColumns = gtc.replace(
-						/\w+/g,
-						"minmax(0, $&)"
-					);
-					setTimeout(() => {
-						block_content.style.gridTemplateColumns = "";
-					}, duration);
-				}
 			}
 
 			block.animate(keyframes, duration);
-
+		});
+		all_animatable_blocks.forEach((block) => {
 			delete block.animation_data;
 			delete block.last_rect;
-
-			if (is_grid) {
-				/** @type {NewCmsGrid} */
-				// @ts-ignore
-				const grid = block;
-				delete grid.prev_grid_data;
-			}
 		});
 
 		setTimeout(() => {
@@ -1659,9 +1484,6 @@ class NewCms {
 					target_dy += (target_h - min_h) * 0.5;
 					target_h = min_h;
 				}
-
-				//delete gbad.mouse_x;
-				//delete gbad.mouse_y;
 			} else {
 				// pull center to the cursor
 				target_dx =
@@ -1670,18 +1492,9 @@ class NewCms {
 					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
 			}
 
-			gbad.mouse_x = this.mouse_x;
-			gbad.mouse_y = this.mouse_y;
-
-			const block_styles = grabbed_block.computed_styles;
-			let mt = 0;
-			if (block_styles && block_styles.outside["margin-top"] !== "auto") {
-				mt = block_styles.outside.mt;
-			}
-			let ml = 0;
-			if (block_styles && block_styles.outside["margin-left"] !== "auto") {
-				mt = block_styles.outside.ml;
-			}
+			const margin_data = this.getBlockAbsoluteMarginOffset(
+				grabbed_block.computed_styles
+			);
 
 			gbad.dx = gbad.dx * (1 - acc) + target_dx * acc;
 			gbad.dy = gbad.dy * (1 - acc) + target_dy * acc;
@@ -1708,8 +1521,8 @@ class NewCms {
 
 			this.rearrange_node.style.transform = `
                 translate(
-                    ${(gbad.dx - ml).toPrecision(5)}px,
-                    ${(gbad.dy - mt).toPrecision(5)}px
+                    ${(gbad.dx - margin_data.left).toPrecision(5)}px,
+                    ${(gbad.dy - margin_data.top).toPrecision(5)}px
                 )
             `;
 		}
@@ -1718,6 +1531,19 @@ class NewCms {
 		requestAnimationFrame(() => {
 			this.grabAnimation();
 		});
+	}
+
+	/** @param {BlockStyleTargets} block_styles */
+	getBlockAbsoluteMarginOffset(block_styles) {
+		let mt = 0;
+		if (block_styles && block_styles.outside["margin-top"] !== "auto") {
+			mt = block_styles.outside.mt;
+		}
+		let ml = 0;
+		if (block_styles && block_styles.outside["margin-left"] !== "auto") {
+			ml = block_styles.outside.ml;
+		}
+		return { left: ml, top: mt };
 	}
 
 	/** @param {NewCmsBlock} block */
