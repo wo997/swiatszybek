@@ -624,11 +624,41 @@ class NewCmsStyling {
 			// set to default - can be changed below
 			// @ts-ignore
 			block.getPrevBlock = () => {
-				this.getStaticPrevBlock(block);
+				let temp = block;
+				while (true) {
+					// @ts-ignore
+					temp = temp.prev();
+					if (!temp) {
+						break;
+					}
+					if (
+						temp.classList.contains("newCms_block") &&
+						!temp.classList.contains("cramped")
+					) {
+						return temp;
+					}
+				}
+
+				return null;
 			};
 			// @ts-ignore
 			block.getNextBlock = () => {
-				this.getStaticNextBlock(block);
+				let temp = block;
+				while (true) {
+					// @ts-ignore
+					temp = temp.next();
+					if (!temp) {
+						break;
+					}
+					if (
+						temp.classList.contains("newCms_block") &&
+						!temp.classList.contains("cramped")
+					) {
+						return temp;
+					}
+				}
+
+				return null;
 			};
 		});
 
@@ -931,14 +961,12 @@ class NewCmsStyling {
 					return;
 				}
 
-				/*if (block.classList.contains("block_23")) {
-					console.log(temp_block);
-				}*/
-				/*if (some_block_in_row.classList.contains("cramped")) {
-					return;
-				}*/
-
 				const some_block_styles = some_block_in_row.computed_styles;
+				if (!some_block_styles) {
+					// hope it never fires :*
+					console.log("POTENTIAL ERROR some_block_in_row", some_block_in_row);
+					return;
+				}
 
 				const mt = this.evalCss(
 					some_block_styles.outside["margin-top"],
@@ -1008,8 +1036,6 @@ class NewCmsStyling {
 				}
 			};
 
-			console.log("CIIIPA");
-
 			let temp_block = block;
 			while (true) {
 				if (!temp_block) {
@@ -1019,9 +1045,6 @@ class NewCmsStyling {
 				setLimits(temp_block, temp_block === block);
 
 				if (is_wrap && this.getBlockFirstInRow(temp_block)) {
-					if (block.classList.contains("block_23")) {
-						console.log("first", temp_block);
-					}
 					break;
 				}
 				temp_block = temp_block.getPrevBlock();
@@ -1035,9 +1058,6 @@ class NewCmsStyling {
 				setLimits(temp_block, temp_block === block);
 
 				if (is_wrap && this.getBlockLastInRow(temp_block)) {
-					if (block.classList.contains("block_23")) {
-						console.log("last", temp_block);
-					}
 					break;
 				}
 				temp_block = temp_block.getNextBlock();
@@ -1268,47 +1288,5 @@ class NewCmsStyling {
 			return true;
 		}
 		return this.getBlockLastInRow(prev);
-	}
-
-	/**
-	 *
-	 * @param {NewCmsBlock} block
-	 */
-	getStaticPrevBlock(block) {
-		// @ts-ignore
-		block.getPrevBlock = () => {
-			const prev = block.prev();
-			if (!prev) {
-				return null;
-			}
-			if (
-				prev.classList.contains("newCms_block") &&
-				!prev.classList.contains("cramped")
-			) {
-				return prev;
-			}
-			return prev.prev();
-		};
-	}
-
-	/**
-	 *
-	 * @param {NewCmsBlock} block
-	 */
-	getStaticNextBlock(block) {
-		// @ts-ignore
-		block.getNextBlock = () => {
-			const next = block.next();
-			if (!next) {
-				return null;
-			}
-			if (
-				next.classList.contains("newCms_block") &&
-				!next.classList.contains("cramped")
-			) {
-				return next;
-			}
-			return next.next();
-		};
 	}
 }

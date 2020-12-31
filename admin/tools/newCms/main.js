@@ -799,7 +799,7 @@ class NewCms {
 
 		block.classList.add("animation_cramp");
 
-		this.animateContent(all_animatable_blocks, 10000, {
+		this.animateContent(all_animatable_blocks, 350, {
 			beforeAnimationEndCallback() {
 				block.classList.remove("animation_cramp");
 			},
@@ -1180,6 +1180,8 @@ class NewCms {
 	}
 
 	beforeContentAnimation() {
+		this.removeForceWrap();
+
 		this.content_node.findAll(this.query_for_visible_blocks).forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
@@ -1309,23 +1311,28 @@ class NewCms {
 
 		this.styling.recalculateLayout();
 
-		// all_animatable_blocks.forEach((b) => {
-		// 	/** @type {NewCmsBlock} */
-		// 	// @ts-ignore
-		// 	const block = b;
+		all_animatable_blocks.forEach((b) => {
+			/** @type {NewCmsBlock} */
+			// @ts-ignore
+			const block = b;
 
-		// 	const kisses_right = this.styling.getBlockKissesRowEnd(block);
+			const kisses_right = this.styling.getBlockKissesRowEnd(block);
 
-		// 	if (kisses_right) {
-		// 		block.insertAdjacentHTML(
-		// 			"afterend",
-		// 			/*html*/ `<div class="force_wrap"></div>`
-		// 		);
-		// 		console.log("WHAAAT", block, this.content_node.find(".force_wrap"));
-		// 	}
-		// });
+			if (kisses_right) {
+				block.insertAdjacentHTML(
+					"afterend",
+					/*html*/ `<div class="force_wrap"></div>`
+				);
+			}
+		});
 
 		return all_animatable_blocks;
+	}
+
+	removeForceWrap() {
+		this.content_node.findAll(".force_wrap").forEach((e) => {
+			e.remove();
+		});
 	}
 
 	/**
@@ -1345,6 +1352,8 @@ class NewCms {
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
 			setTimeout(() => {
+				this.removeForceWrap();
+
 				if (options.beforeAnimationEndCallback) {
 					options.beforeAnimationEndCallback();
 				}
@@ -1352,10 +1361,6 @@ class NewCms {
 				// browser needs time to render it again
 				this.container.classList.remove("animating_rearrangement");
 				this.content_node_copy.classList.remove("visible");
-
-				this.content_node.findAll(".force_wrap").forEach((e) => {
-					e.remove();
-				});
 
 				this.contentChange();
 
@@ -1402,7 +1407,7 @@ class NewCms {
             }*/
 			//const start_margin_bigger = block.prev
 			const kisses_right = this.styling.getBlockKissesRowEnd(block);
-			const subtract_mr = kisses_right ? 200 : 0;
+			const subtract_mr = kisses_right ? 500 : 0;
 
 			// if (kisses_right) {
 			// 	block.insertAdjacentHTML(
@@ -1420,11 +1425,13 @@ class NewCms {
 				const half_w = block.last_rect.width * 0.5;
 				const half_h = block.last_rect.height * 0.5;
 
+				//const is_grid = block.parent().parent().dataset.block == "grid";
+
 				keyframes = `
                     0% {
                         transform-origin: center;
                         transform: translate(${dx}px, ${dy}px) scale(1);
-                        margin: ${mt0}px ${mr0}px ${mb0}px ${ml0}px;
+                        margin: -${half_h}px -${half_w}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                     }
@@ -1443,14 +1450,18 @@ class NewCms {
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                         margin: ${mt0}px 
-                                ${mr0 - subtract_mr}px ${mb0}px ${ml0}px;
+                                ${mr0 - subtract_mr}px
+                                ${mb0}px
+                                ${ml0}px;
                     }
                     100% {
                         transform: translate(0px, 0px);
                         width: ${block.new_rect.width}px;
                         height: ${block.new_rect.height}px;
                         margin: ${mt}px
-                                ${mr - subtract_mr}px ${mb}px ${ml}px;
+                                ${mr - subtract_mr}px
+                                ${mb}px
+                                ${ml}px;
                     }
                 `;
 
