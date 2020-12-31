@@ -784,7 +784,7 @@ class NewCmsStyling {
 							rect.top +
 							rect.height * 0.5 +
 							(0.05 * ((rect.left + rect.width * 0.5) * 1000)) /
-								this.newCms.content_node.clientWidth;
+								this.newCms.content_node.offsetWidth;
 
 						return true;
 					});
@@ -925,8 +925,8 @@ class NewCmsStyling {
 
 						return (
 							(params.direction == "horizontal"
-								? column_width - block.clientWidth - opp_mar
-								: row_height - block.clientHeight - opp_mar) / divide
+								? column_width - block.offsetWidth - opp_mar
+								: row_height - block.offsetHeight - opp_mar) / divide
 						);
 					}
 				}
@@ -946,10 +946,10 @@ class NewCmsStyling {
 			let find_max_wide = 0;
 			if (is_container_horizontal) {
 				if (!is_wrap) {
-					find_max_wide = parent_container.clientHeight;
+					find_max_wide = parent_container.offsetHeight;
 				}
 			} else {
-				find_max_wide = parent_container.clientWidth;
+				find_max_wide = parent_container.offsetWidth;
 			}
 
 			let count_autos = 0;
@@ -1005,9 +1005,9 @@ class NewCmsStyling {
 				);
 
 				const d1 =
-					some_block_in_row.clientWidth + nonull(ml, 0) + nonull(mr, 0);
+					some_block_in_row.offsetWidth + nonull(ml, 0) + nonull(mr, 0);
 				const d2 =
-					some_block_in_row.clientHeight + nonull(mt, 0) + nonull(mb, 0);
+					some_block_in_row.offsetHeight + nonull(mt, 0) + nonull(mb, 0);
 
 				if (is_container_horizontal) {
 					if (ml === null) {
@@ -1071,7 +1071,7 @@ class NewCmsStyling {
 			}
 
 			/*if (block.classList.contains("block_23")) {
-				console.log(full_width, count_autos, parent_container.clientWidth);
+				console.log(full_width, count_autos, parent_container.offsetWidth);
 			}*/
 
 			/*if (block.classList.contains("block_23")) {
@@ -1088,8 +1088,8 @@ class NewCmsStyling {
 			} else {
 				return (
 					((is_container_horizontal
-						? parent_container.clientWidth
-						: parent_container.clientHeight) -
+						? parent_container.offsetWidth
+						: parent_container.offsetHeight) -
 						full_width) /
 					count_autos
 				);
@@ -1099,7 +1099,7 @@ class NewCmsStyling {
 		let percent = parent_container.singleton_inner_percent;
 
 		if (!percent) {
-			percent = parent_container.clientWidth * 0.01;
+			percent = parent_container.offsetWidth * 0.01;
 			if (parent_container.dataset.block == "grid") {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
@@ -1151,8 +1151,13 @@ class NewCmsStyling {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
 			const block = b;
+
+			// TODO: use these to optimize auto margins? also rename it, to maybe full_width, max_row_h, that's really tricky dude, idk how to do this
+			// u could assign it to any block inside, so it shares that information
+			// that actually makes sense I think
 			delete block.singleton_inner_auto_x;
 			delete block.singleton_inner_auto_y;
+			// already used
 			delete block.singleton_inner_percent;
 		});
 

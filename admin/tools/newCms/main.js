@@ -1372,6 +1372,8 @@ class NewCms {
 				this.updateMouseTarget();
 				this.mouseMove();
 
+				this.select_controls.addFloatingSelectControls();
+
 				if (options.callback) {
 					options.callback();
 				}
