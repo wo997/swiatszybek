@@ -1,5 +1,12 @@
 <?php //route[pies]
 
+/**
+ * @typedef GridData {
+ * x_coords: number some description
+ * y_coords: number yet another description
+ * }
+ */
+
 /** @type {Cat} */
 $a = fetchRow("SELECT * FROM cat");
 
@@ -37,6 +44,13 @@ var_dump([
 
 function heyca($x, $y)
 {
+    /**
+     * @typedef GridData {
+     * x_coords: number some description
+     * y_coords: number yet another description
+     * }
+     */
+
     /** @type {Cat} */
     $x = 666;
     $x["age"]["value"] = 5;
