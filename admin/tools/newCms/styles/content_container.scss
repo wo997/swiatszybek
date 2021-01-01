@@ -117,7 +117,6 @@
 .newCmsContent {
 	& {
 		position: relative;
-		min-height: 100%;
 	}
 	& .during_inline_edit {
 		& {
@@ -140,5 +139,16 @@
 	}
 	& > .newCms_block.container {
 		min-height: 100px;
+	}
+}
+
+.newCms:not(.animating_rearrangement) {
+	& .expand_space {
+		& {
+			min-height: 10000px;
+		}
+		&:not(.visible) {
+			display: none;
+		}
 	}
 }

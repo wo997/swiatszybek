@@ -5,16 +5,18 @@
 	left: 0;
 	top: 0;
 	width: calc(100% - 12px);
-	/*height: don't touch */
 	pointer-events: none;
 	opacity: 1;
 	z-index: 1000;
 }
 
 .newCmsContent_copy:not(.visible) {
-	opacity: 0;
+	display: none;
 }
 
-.newCmsContent_copy .cramped {
-	display: none !important;
+.newCmsContent_copy {
+	& .animation_cramp {
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
 }

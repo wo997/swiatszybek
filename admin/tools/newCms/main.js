@@ -67,6 +67,7 @@ class NewCms {
 		this.clean_output_node = this.container.find(`.clean_output`);
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 		this.svg = this.container.find(`.svg`);
+		this.expand_space = this.container.find(`.expand_space`);
 
 		this.mouse_x = 0;
 		this.mouse_y = 0;
@@ -221,6 +222,9 @@ class NewCms {
 			this.styling.setResponsiveContainerSize();
 		}
 		this.styling.recalculateLayout();
+
+		this.content_node.style.minHeight =
+			this.content_scroll_panel.clientHeight - 12 + "px";
 	}
 
 	stylesLoaded() {
@@ -528,10 +532,12 @@ class NewCms {
 		this.updateMouseTarget();
 		this.mouseMove();
 
-		const dy_bottom = this.getBottomScrollOffset();
+		if (!this.container.classList.contains("animating_rearrangement")) {
+			const dy_bottom = this.getBottomScrollOffset();
 
-		if (dy_bottom < 0) {
-			this.content_scroll_panel.scrollBy(0, dy_bottom);
+			if (dy_bottom < 0) {
+				this.content_scroll_panel.scrollBy(0, dy_bottom);
+			}
 		}
 	}
 
@@ -1182,8 +1188,14 @@ class NewCms {
 			}
 		});
 
+		const rct = this.content_node.getBoundingClientRect();
 		// @ts-ignore
-		this.content_node.last_rect = this.content_node.getBoundingClientRect();
+		this.content_node.last_rect = rct;
+		//this.content_node.style.height = rct.height + "px";
+		this.bottom_animation_scroll_top = this.content_scroll_panel.scrollTop;
+		//this.before_animation_bottom_scroll_offset = this.getBottomScrollOffset();
+
+		this.expand_space.classList.add("visible");
 	}
 
 	afterContentAnimation() {
@@ -1211,8 +1223,16 @@ class NewCms {
 			}
 		});
 
+		const rct = this.content_node.getBoundingClientRect();
 		// @ts-ignore
-		this.content_node.new_rect = this.content_node.getBoundingClientRect();
+		this.content_node.new_rect = rct;
+		//this.content_node.style.height =
+		// @ts-ignore
+		//Math.max(rct.height, this.content_node.last_rect.height) + "px";
+		/*console.log(
+			this.bottom_animation_scroll_top,
+			this.content_scroll_panel.scrollTop
+		);*/
 		// copy overlay to hide layout update
 		this.content_node_copy.setContent(this.content_node.innerHTML);
 		this.scroll();
@@ -1239,16 +1259,6 @@ class NewCms {
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
 		const cntnd = this.content_node;
-		/*cntnd.animate(
-			`
-            0% {height: ${cntnd.last_rect.height}px}
-            100% {height: ${cntnd.new_rect.height}px}
-        `,
-			duration
-		);*/
-
-		cntnd.style.height =
-			Math.max(cntnd.new_rect.height, cntnd.last_rect.height) + 1000 + "px";
 
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
@@ -1273,13 +1283,51 @@ class NewCms {
 				this.updateMouseTarget();
 				this.mouseMove();
 
-				cntnd.style.height = "";
-
 				if (options.callback) {
 					options.callback();
 				}
+
+				this.expand_space.classList.remove("visible");
 			}, animation_swap_time);
 		};
+
+		// TODO: not that simple dude
+		const scroll_change =
+			cntnd.new_rect.height -
+			cntnd.last_rect.height -
+			cntnd.new_rect.top +
+			cntnd.last_rect.top;
+
+		this.content_node_copy.style.transform = `translateY(${
+			this.bottom_animation_scroll_top - this.content_scroll_panel.scrollTop
+		}px)`;
+
+		this.content_scroll_panel.scrollTop = this.bottom_animation_scroll_top;
+
+		/*console.log(
+			this.before_animation_bottom_scroll_offset - this.getBottomScrollOffset()
+		);*/
+		//console.log(this.content_node_copy, this.content_node_copy.style.transform);
+		//console.log();
+		//this.bottom_animation_scroll_top - this.content_scroll_panel.scrollTop;
+
+		// @ts-ignore
+		/*const cntnd = this.content_node;
+		cntnd.animate(
+			`
+                0% {height: ${cntnd.last_rect.height}px}
+                100% {height: ${cntnd.new_rect.height}px}
+            `,
+			duration,
+			{
+				callback: () => {
+					cntnd.style.height = "";
+					this.scroll();
+				},
+			}
+		);*/
+
+		//console.log(scroll_change, cntnd.last_rect.height, cntnd.new_rect.height);
 
 		all_animatable_blocks.forEach((block) => {
 			/** @type {AnimationData} */
@@ -1302,14 +1350,9 @@ class NewCms {
 				top_1 = parent.new_rect.top;
 			}
 
-			/*const margin_data = this.getBlockAbsoluteMarginOffset(
-				block.computed_styles
-			);
-
-			left_0 += margin_data.left;
-			top_0 += margin_data.top;
-			left_1 += margin_data.left;
-			top_1 += margin_data.top;*/
+			/*if (parent === this.content_node) {
+				top_1 += scroll_change;
+			}*/
 
 			// especially useful for grids
 			const cso = block.computed_styles.outside;
