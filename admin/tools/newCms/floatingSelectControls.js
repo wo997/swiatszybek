@@ -95,37 +95,15 @@ class NewCmsSelectControls {
 
 				const computed_styles = sb.computed_styles;
 
-				const styling = this.newCms.styling;
-
 				const mt = computed_styles.outside.mt;
 				const mr = computed_styles.outside.mr;
 				const mb = computed_styles.outside.mb;
 				const ml = computed_styles.outside.ml;
 
-				const pt = styling.evalCss(computed_styles.outside["padding-top"], sb, {
-					direction: "vertical",
-				});
-				const pr = styling.evalCss(
-					computed_styles.outside["padding-right"],
-					sb,
-					{
-						direction: "horizontal",
-					}
-				);
-				const pb = styling.evalCss(
-					computed_styles.outside["padding-bottom"],
-					sb,
-					{
-						direction: "vertical",
-					}
-				);
-				const pl = styling.evalCss(
-					computed_styles.outside["padding-left"],
-					sb,
-					{
-						direction: "horizontal",
-					}
-				);
+				const pt = computed_styles.outside.pt;
+				const pr = computed_styles.outside.pr;
+				const pb = computed_styles.outside.pb;
+				const pl = computed_styles.outside.pl;
 
 				let paths = "";
 

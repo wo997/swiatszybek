@@ -1181,6 +1181,9 @@ class NewCms {
 				block.last_rect = block.getBoundingClientRect();
 			}
 		});
+
+		// @ts-ignore
+		this.content_node.last_rect = this.content_node.getBoundingClientRect();
 	}
 
 	afterContentAnimation() {
@@ -1210,12 +1213,8 @@ class NewCms {
 
 		// @ts-ignore
 		this.content_node.new_rect = this.content_node.getBoundingClientRect();
-		// @ts-ignore
-		this.content_node.last_rect = this.content_node.new_rect;
-
 		// copy overlay to hide layout update
 		this.content_node_copy.setContent(this.content_node.innerHTML);
-
 		this.scroll();
 
 		this.styling.recalculateLayout();
@@ -1230,12 +1229,26 @@ class NewCms {
 	 * @param {*} options
 	 */
 	animateContent(all_animatable_blocks, duration, options = {}) {
-		const animation_swap_time = 0;
+		const animation_swap_time = 100;
 		this.lockInput(duration + animation_swap_time);
 
 		this.select_controls.removeSelection();
 
 		this.container.classList.add("animating_rearrangement");
+
+		/** @type {NewCmsBlock} */
+		// @ts-ignore
+		const cntnd = this.content_node;
+		/*cntnd.animate(
+			`
+            0% {height: ${cntnd.last_rect.height}px}
+            100% {height: ${cntnd.new_rect.height}px}
+        `,
+			duration
+		);*/
+
+		cntnd.style.height =
+			Math.max(cntnd.new_rect.height, cntnd.last_rect.height) + 1000 + "px";
 
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
@@ -1255,10 +1268,12 @@ class NewCms {
 
 				this.scroll();
 
+				this.styling.recalculateLayout();
+
 				this.updateMouseTarget();
 				this.mouseMove();
 
-				this.select_controls.addFloatingSelectControls();
+				cntnd.style.height = "";
 
 				if (options.callback) {
 					options.callback();
@@ -1287,21 +1302,39 @@ class NewCms {
 				top_1 = parent.new_rect.top;
 			}
 
-			const margin_data = this.getBlockAbsoluteMarginOffset(
+			/*const margin_data = this.getBlockAbsoluteMarginOffset(
 				block.computed_styles
 			);
 
 			left_0 += margin_data.left;
 			top_0 += margin_data.top;
 			left_1 += margin_data.left;
-			top_1 += margin_data.top;
+			top_1 += margin_data.top;*/
+
+			// especially useful for grids
+			const cso = block.computed_styles.outside;
+			let padding = `${cso.pt}px ${cso.pr}px ${cso.pb}px ${cso.pl}px`;
+			let margin = `${cso.mt}px ${cso.mr}px ${cso.mb}px ${cso.ml}px`;
+
+			left_0 += cso.ml;
+			top_0 += cso.mt;
+			left_1 += cso.ml;
+			top_1 += cso.mt;
 
 			let keyframes = "";
+
+			//margin: 0 !important;
+			const common_keyframes = `
+                padding: ${padding};
+                margin: ${margin};
+                grid-area: unset;
+                position: absolute;
+            `;
 
 			if (block.classList.contains("animation_cramp")) {
 				keyframes = `
                     0% {
-                        position: absolute;
+                        ${common_keyframes}
                         left: ${block.last_rect.left + dx - left_0}px;
                         top: ${block.last_rect.top + dy - top_0}px;
                         width: ${block.last_rect.width}px;
@@ -1310,7 +1343,7 @@ class NewCms {
                         opacity: 1;
                     }
                     100% {
-                        position: absolute;
+                        ${common_keyframes}
                         left: ${block.last_rect.left + dx - left_0}px;
                         top: ${block.last_rect.top + dy - top_0}px;
                         width: ${block.last_rect.width}px;
@@ -1322,25 +1355,25 @@ class NewCms {
 			} else {
 				keyframes = `
                     0% {
-                        position: absolute;
+                        ${common_keyframes}
                         left: ${block.last_rect.left + dx - left_0}px;
                         top: ${block.last_rect.top + dy - top_0}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                     }
                     100% {
-                        position: absolute;
+                        ${common_keyframes}
                         left: ${block.new_rect.left - left_1}px;
                         top: ${block.new_rect.top - top_1}px;
                         width: ${block.new_rect.width}px;
                         height: ${block.new_rect.height}px;
-                        margin: 0 !important;
                     }
                 `;
 			}
 
 			block.animate(keyframes, duration);
 		});
+
 		all_animatable_blocks.forEach((block) => {
 			delete block.animation_data;
 			delete block.last_rect;
@@ -1492,9 +1525,9 @@ class NewCms {
 					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
 			}
 
-			const margin_data = this.getBlockAbsoluteMarginOffset(
+			/*const margin_data = this.getBlockAbsoluteMarginOffset(
 				grabbed_block.computed_styles
-			);
+			);*/
 
 			gbad.dx = gbad.dx * (1 - acc) + target_dx * acc;
 			gbad.dy = gbad.dy * (1 - acc) + target_dy * acc;
@@ -1521,8 +1554,8 @@ class NewCms {
 
 			this.rearrange_node.style.transform = `
                 translate(
-                    ${(gbad.dx - margin_data.left).toPrecision(5)}px,
-                    ${(gbad.dy - margin_data.top).toPrecision(5)}px
+                    ${gbad.dx.toPrecision(5)}px,
+                    ${gbad.dy.toPrecision(5)}px
                 )
             `;
 		}
@@ -1533,18 +1566,18 @@ class NewCms {
 		});
 	}
 
-	/** @param {BlockStyleTargets} block_styles */
-	getBlockAbsoluteMarginOffset(block_styles) {
-		let mt = 0;
-		if (block_styles && block_styles.outside["margin-top"] !== "auto") {
-			mt = block_styles.outside.mt;
-		}
-		let ml = 0;
-		if (block_styles && block_styles.outside["margin-left"] !== "auto") {
-			ml = block_styles.outside.ml;
-		}
-		return { left: ml, top: mt };
-	}
+	// /** @param {BlockStyleTargets} block_styles */
+	// getBlockAbsoluteMarginOffset(block_styles) {
+	// 	let mt = 0;
+	// 	if (block_styles && block_styles.outside["margin-top"] !== "auto") {
+	// 		mt = block_styles.outside.mt;
+	// 	}
+	// 	let ml = 0;
+	// 	if (block_styles && block_styles.outside["margin-left"] !== "auto") {
+	// 		ml = block_styles.outside.ml;
+	// 	}
+	// 	return { left: ml, top: mt };
+	// }
 
 	/** @param {NewCmsBlock} block */
 	getBlockParent(block) {

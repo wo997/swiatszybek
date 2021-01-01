@@ -875,10 +875,16 @@ class NewCmsStyling {
 	 * direction?: ("horizontal" | "vertical")
 	 * opposite?: any
 	 * opposite_name?: string
+	 * default?: string
 	 * }} params
 	 */
 	evalCss(val, block, params = {}) {
 		// TODO: single method to get computed margins and paddings of the block hmmm
+
+		if ((!val || !val.trim()) && params.default) {
+			val = params.default;
+		}
+
 		if (!val || !val.trim()) {
 			return 0;
 		}
@@ -1220,6 +1226,43 @@ class NewCmsStyling {
 					direction: "horizontal",
 					opposite: block_styles.outside["margin-right"],
 					opposite_name: "margin-right",
+				}
+			);
+
+			const default_padding = block.classList.contains("container")
+				? "0"
+				: "10px";
+
+			block_styles.outside.pt = this.evalCss(
+				block_styles.outside["padding-top"],
+				block,
+				{
+					direction: "vertical",
+					default: default_padding,
+				}
+			);
+			block_styles.outside.pr = this.evalCss(
+				block_styles.outside["padding-right"],
+				block,
+				{
+					direction: "horizontal",
+					default: default_padding,
+				}
+			);
+			block_styles.outside.pb = this.evalCss(
+				block_styles.outside["padding-bottom"],
+				block,
+				{
+					direction: "vertical",
+					default: default_padding,
+				}
+			);
+			block_styles.outside.pl = this.evalCss(
+				block_styles.outside["padding-left"],
+				block,
+				{
+					direction: "horizontal",
+					default: default_padding,
 				}
 			);
 		});

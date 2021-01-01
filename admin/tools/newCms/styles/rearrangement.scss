@@ -140,6 +140,10 @@
 	z-index: 9000;
 }
 
+.rearrange_node > * {
+	margin: 0 !important;
+}
+
 .rearranged_node_animated {
 	z-index: 1000;
 }
