@@ -607,7 +607,8 @@ class NewCmsStyling {
 		let child_count = 0;
 		container_blocks.forEach((block) => {
 			child_count++;
-			const had_flex_order = block.computed_styles.outside.order;
+			const had_flex_order =
+				block.styling_data[this.responsive_type.name].outside.order;
 			block.dataset.flex_order = nonull(had_flex_order, child_count);
 		});
 	}
