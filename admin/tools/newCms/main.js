@@ -1033,6 +1033,7 @@ class NewCms {
 
 				// @ts-ignore
 				grabbed_block.styling_data = cloneObject(grabbed_block.styling_data);
+				// TODO: clone children styles as well, look for classes block_n
 
 				const block_id = this.styling.getBlockId(grabbed_block);
 				const block_class_name = this.styling.getBlockClassName(block_id);

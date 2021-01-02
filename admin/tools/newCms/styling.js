@@ -1268,26 +1268,26 @@ class NewCmsStyling {
 		});
 	}
 
-	/**
-	 * @param {NewCmsBlock} block
-	 */
-	getBlockKissesRowEnd(block) {
-		const mr = this.evalCss(
-			block.computed_styles.outside["margin-right"],
-			block
-		);
+	// /**
+	//  * @param {NewCmsBlock} block
+	//  */
+	// getBlockKissesRowEnd(block) {
+	// 	const mr = this.evalCss(
+	// 		block.computed_styles.outside["margin-right"],
+	// 		block
+	// 	);
 
-		const right_kiss =
-			block.new_rect.left + block.new_rect.width + nonull(mr, 0);
+	// 	const right_kiss =
+	// 		block.new_rect.left + block.new_rect.width + nonull(mr, 0);
 
-		const container_content_rect = block.parent().getBoundingClientRect();
+	// 	const container_content_rect = block.parent().getBoundingClientRect();
 
-		// 2 cause of low accuracy
-		return (
-			right_kiss >
-			container_content_rect.left + container_content_rect.width - 2
-		);
-	}
+	// 	// 2 cause of low accuracy
+	// 	return (
+	// 		right_kiss >
+	// 		container_content_rect.left + container_content_rect.width - 2
+	// 	);
+	// }
 
 	/**
 	 * @param {NewCmsBlock} block
@@ -1313,19 +1313,23 @@ class NewCmsStyling {
 
 			const next = block.getNextBlock();
 			if (next) {
+				if (!next.new_rect) {
+					next.new_rect = next.getBoundingClientRect();
+				}
 				const next_ml = this.evalCss(
-					block.computed_styles.outside["margin-left"],
+					next.computed_styles.outside["margin-left"],
 					next,
 					{
 						auto: 0,
 					}
 				);
-				if (!next.new_rect) {
-					next.new_rect = next.getBoundingClientRect();
-				}
 				const next_left_kiss = next.new_rect.left - nonull(next_ml, 0);
 
 				last_in_row = next_left_kiss < right_kiss - 2;
+
+				if (next.classList.contains("block_10")) {
+					console.log(next_left_kiss, right_kiss, next.new_rect.left, next_ml);
+				}
 
 				//console.log(block, block.new_rect);
 			} else {
