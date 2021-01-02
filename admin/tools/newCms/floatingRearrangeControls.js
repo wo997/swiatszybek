@@ -154,7 +154,7 @@ class NewCmsRearrangeControls {
 					if (
 						Math.sqrt(second_smallest_sq_distance) -
 							Math.sqrt(smallest_sq_distance) >
-						12
+						11
 					) {
 						rearrange_control_node = smallest_sq_distance_control;
 						rearrange_position = rearrange_control_node.position;

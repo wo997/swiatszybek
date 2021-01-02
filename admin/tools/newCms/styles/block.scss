@@ -1,59 +1,56 @@
 /* css[tool_newCms] */
 
 .newCms_block {
-	min-width: 56px;
-	min-height: 56px;
-	position: relative;
-	transition: opacity 0.2s;
-	cursor: pointer;
-	display: flex;
-	z-index: 1;
-	background-color: inherit;
-}
-
-.newCms_block {
+	& {
+		min-width: 56px;
+		min-height: 56px;
+		position: relative;
+		transition: opacity 0.2s;
+		cursor: pointer;
+		display: flex;
+		z-index: 1;
+		background-color: inherit;
+	}
 	&:hover,
 	&.select_active {
 		z-index: 100;
 	}
-}
-.newCms_block:before {
-	& {
-		content: "";
-		position: absolute;
-		left: -1px;
-		top: -1px;
-		width: calc(100% + 2px);
-		height: calc(100% + 2px);
-		border: 2px solid #0005;
-		pointer-events: none;
-		transition: 0.2s opacity;
-		opacity: 0;
-		z-index: 300;
+	&.to_remove {
+		display: none;
 	}
-	.edit_active& {
-		border-width: 0;
+	&:before {
+		& {
+			content: "";
+			position: absolute;
+			left: -1px;
+			top: -1px;
+			width: calc(100% + 2px);
+			height: calc(100% + 2px);
+			border: 2px solid #0005;
+			pointer-events: none;
+			transition: 0.2s opacity;
+			opacity: 0;
+			z-index: 300;
+		}
+		.edit_active& {
+			border-width: 0;
+		}
+		.edit_active&,
+		.content_scroll_panel:hover &,
+		.newCms.grabbed_block &,
+		.newCms.animating_rearrangement & {
+			opacity: 1;
+		}
 	}
-	.edit_active&,
-	.content_scroll_panel:hover &,
-	.newCms.grabbed_block &,
-	.newCms.animating_rearrangement & {
-		opacity: 1;
+	&:not(.container) {
+		& {
+			padding: 10px;
+		}
+		& > .newCms_block_content {
+			pointer-events: none;
+		}
 	}
-}
-
-.newCms_block:not(.container) {
-	padding: 10px;
-}
-
-.newCms_block:not(.container) > .newCms_block_content {
-	pointer-events: none;
-}
-
-.newCms_block.container > .newCms_block_content {
-	background-color: inherit;
-}
-
-.newCms_block_content.ql-editor {
-	padding: 0;
+	.container > .newCms_block_content {
+		background-color: inherit;
+	}
 }

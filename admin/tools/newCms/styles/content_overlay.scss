@@ -15,8 +15,9 @@
 }
 
 .newCmsContent_copy {
-	& .animation_cramp {
+	& .cramped {
 		opacity: 0 !important;
 		pointer-events: none !important;
+		transform: translateY(-1000px);
 	}
 }

@@ -63,7 +63,7 @@ function createAnimation(keyframes, duration) {
           ${keyframes}
       }
       .${animation_name} {
-        animation: ${animation_name} ${duration}ms ease forwards !important;
+        animation: ${animation_name} ${duration}ms cubic-bezier(.46,0,.56,1) forwards !important;
       }
     </style>
     `

@@ -49,6 +49,9 @@ class NewCmsEditBlock {
 	hideContextMenu() {
 		this.select_node = null;
 		this.node.classList.toggle("visible", false);
+		setTimeout(() => {
+			this.node.style.top = "-1000px";
+		}, 200);
 	}
 
 	mouseMove() {

@@ -7,8 +7,12 @@
  * }
  */
 
+echo "x";
+
+$u = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
+
 /** @type {Cat} */
-$a = fetchRow("SELECT * FROM cat");
+$a = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
 
 $a["age"]["value"] = "1";
 

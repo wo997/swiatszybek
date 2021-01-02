@@ -67,7 +67,7 @@ class NewCms {
 		this.clean_output_node = this.container.find(`.clean_output`);
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 		this.svg = this.container.find(`.svg`);
-		this.expand_space = this.container.find(`.expand_space`);
+		//this.overlay_node = this.container.find(`.overlay`);
 
 		this.mouse_x = 0;
 		this.mouse_y = 0;
@@ -143,36 +143,6 @@ class NewCms {
 			}
 		});
 
-		this.content_scroll_panel.addEventListener(
-			"wheel",
-			(event) => {
-				const dy_bottom = this.getBottomScrollOffset();
-
-				if (event && event.deltaY !== null) {
-					if (event.deltaY >= 0) {
-						if (dy_bottom - event.deltaY < 0) {
-							const scr = (t) => {
-								if (t > 3) {
-									// go 4 times
-									return;
-								}
-								this.content_scroll_panel.scrollBy(0, dy_bottom * 0.25);
-								setTimeout(() => {
-									scr(t + 1);
-								}, 1000 / 60);
-							};
-							scr(0);
-							event.preventDefault();
-						}
-					}
-				}
-			},
-			{
-				// allow preventDefault()
-				passive: false,
-			}
-		);
-
 		this.content_scroll_panel.addEventListener("scroll", () => {
 			this.scroll();
 		});
@@ -199,16 +169,6 @@ class NewCms {
 			.setAttribute("href", `${STATIC_URLS["ADMIN"]}nowe-strony`);
 	}
 
-	getBottomScrollOffset() {
-		const inner_rect = this.content_node.getBoundingClientRect();
-		const wrap_rect = this.content_scroll_panel.getBoundingClientRect();
-
-		return (
-			inner_rect.height -
-			(this.content_scroll_panel.scrollTop + wrap_rect.height)
-		);
-	}
-
 	onResize(options = {}) {
 		this.manageGrids();
 
@@ -223,8 +183,9 @@ class NewCms {
 		}
 		this.styling.recalculateLayout();
 
-		this.content_node.style.minHeight =
-			this.content_scroll_panel.clientHeight - 12 + "px";
+		const min_h = this.content_scroll_panel.clientHeight - 12 + "px";
+		this.content_node.style.minHeight = min_h;
+		this.content_node_copy.style.minHeight = min_h;
 	}
 
 	stylesLoaded() {
@@ -447,6 +408,8 @@ class NewCms {
 			clearTimeout(this.lock_timeout);
 		}
 
+		this.select_controls.removeSelection();
+
 		if (delay) {
 			this.lock_timeout = setTimeout(() => {
 				this.unlockInput();
@@ -531,14 +494,6 @@ class NewCms {
 	scroll() {
 		this.updateMouseTarget();
 		this.mouseMove();
-
-		if (!this.container.classList.contains("animating_rearrangement")) {
-			const dy_bottom = this.getBottomScrollOffset();
-
-			if (dy_bottom < 0) {
-				this.content_scroll_panel.scrollBy(0, dy_bottom);
-			}
-		}
 	}
 
 	caseEmptyHint() {
@@ -1191,11 +1146,7 @@ class NewCms {
 		const rct = this.content_node.getBoundingClientRect();
 		// @ts-ignore
 		this.content_node.last_rect = rct;
-		//this.content_node.style.height = rct.height + "px";
-		this.bottom_animation_scroll_top = this.content_scroll_panel.scrollTop;
-		//this.before_animation_bottom_scroll_offset = this.getBottomScrollOffset();
-
-		this.expand_space.classList.add("visible");
+		this.before_animation_scroll_top = this.content_scroll_panel.scrollTop;
 	}
 
 	afterContentAnimation() {
@@ -1230,7 +1181,7 @@ class NewCms {
 		// @ts-ignore
 		//Math.max(rct.height, this.content_node.last_rect.height) + "px";
 		/*console.log(
-			this.bottom_animation_scroll_top,
+			this.before_animation_scroll_top,
 			this.content_scroll_panel.scrollTop
 		);*/
 		// copy overlay to hide layout update
@@ -1238,6 +1189,8 @@ class NewCms {
 		this.scroll();
 
 		this.styling.recalculateLayout();
+
+		this.after_animation_scroll_top = this.content_scroll_panel.scrollTop;
 
 		return all_animatable_blocks;
 	}
@@ -1256,12 +1209,9 @@ class NewCms {
 
 		this.container.classList.add("animating_rearrangement");
 
-		/** @type {NewCmsBlock} */
-		// @ts-ignore
-		const cntnd = this.content_node;
-
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
+
 			setTimeout(() => {
 				if (options.beforeAnimationEndCallback) {
 					options.beforeAnimationEndCallback();
@@ -1269,7 +1219,6 @@ class NewCms {
 
 				// browser needs time to render it again
 				this.container.classList.remove("animating_rearrangement");
-				this.content_node_copy.classList.remove("visible");
 
 				this.contentChange();
 
@@ -1287,47 +1236,11 @@ class NewCms {
 					options.callback();
 				}
 
-				this.expand_space.classList.remove("visible");
+				this.content_node_copy.classList.remove("visible");
+
+				this.content_node_copy.empty();
 			}, animation_swap_time);
 		};
-
-		// TODO: not that simple dude
-		const scroll_change =
-			cntnd.new_rect.height -
-			cntnd.last_rect.height -
-			cntnd.new_rect.top +
-			cntnd.last_rect.top;
-
-		this.content_node_copy.style.transform = `translateY(${
-			this.bottom_animation_scroll_top - this.content_scroll_panel.scrollTop
-		}px)`;
-
-		this.content_scroll_panel.scrollTop = this.bottom_animation_scroll_top;
-
-		/*console.log(
-			this.before_animation_bottom_scroll_offset - this.getBottomScrollOffset()
-		);*/
-		//console.log(this.content_node_copy, this.content_node_copy.style.transform);
-		//console.log();
-		//this.bottom_animation_scroll_top - this.content_scroll_panel.scrollTop;
-
-		// @ts-ignore
-		/*const cntnd = this.content_node;
-		cntnd.animate(
-			`
-                0% {height: ${cntnd.last_rect.height}px}
-                100% {height: ${cntnd.new_rect.height}px}
-            `,
-			duration,
-			{
-				callback: () => {
-					cntnd.style.height = "";
-					this.scroll();
-				},
-			}
-		);*/
-
-		//console.log(scroll_change, cntnd.last_rect.height, cntnd.new_rect.height);
 
 		all_animatable_blocks.forEach((block) => {
 			/** @type {AnimationData} */
@@ -1349,10 +1262,6 @@ class NewCms {
 				left_1 = parent.new_rect.left;
 				top_1 = parent.new_rect.top;
 			}
-
-			/*if (parent === this.content_node) {
-				top_1 += scroll_change;
-			}*/
 
 			// especially useful for grids
 			const cso = block.computed_styles.outside;
@@ -1388,7 +1297,13 @@ class NewCms {
                     100% {
                         ${common_keyframes}
                         left: ${block.last_rect.left + dx - left_0}px;
-                        top: ${block.last_rect.top + dy - top_0}px;
+                        top: ${
+													block.last_rect.top +
+													dy -
+													top_0 -
+													block.last_rect.height * 0.5 -
+													cso.mt
+												}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                         transform: scale(0);
@@ -1608,19 +1523,6 @@ class NewCms {
 			this.grabAnimation();
 		});
 	}
-
-	// /** @param {BlockStyleTargets} block_styles */
-	// getBlockAbsoluteMarginOffset(block_styles) {
-	// 	let mt = 0;
-	// 	if (block_styles && block_styles.outside["margin-top"] !== "auto") {
-	// 		mt = block_styles.outside.mt;
-	// 	}
-	// 	let ml = 0;
-	// 	if (block_styles && block_styles.outside["margin-left"] !== "auto") {
-	// 		ml = block_styles.outside.ml;
-	// 	}
-	// 	return { left: ml, top: mt };
-	// }
 
 	/** @param {NewCmsBlock} block */
 	getBlockParent(block) {
