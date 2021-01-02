@@ -616,7 +616,7 @@ class NewCmsStyling {
 	/**
 	 * it moves the blocks
 	 */
-	setBlocksFlexOrder(rearrangement = false) {
+	setBlocksFlexOrder(parent = null) {
 		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
@@ -664,94 +664,98 @@ class NewCmsStyling {
 		});
 
 		// not content_node (.newCmsContent) to include it as well
-		this.newCms.content_scroll_content
-			.findAll(
-				`.newCmsContent .newCms_block[data-block="container"] > .newCms_block_content, .newCmsContent`
-			)
-			.forEach((container) => {
-				let container_blocks = container.directChildren();
+		(parent
+			? parent.findAll(".newCms_block_content")
+			: this.newCms.content_scroll_content.findAll(
+					`.newCmsContent .newCms_block[data-block="container"] > .newCms_block_content, .newCmsContent`
+			  )
+		).forEach((container) => {
+			let container_blocks = container.directChildren();
 
-				if (this.allow_free_rearrangement) {
-					// remove data-flex_order for free rearrangement blocks, they will have the position set explicitly in DOM
-					container_blocks.forEach((b) => {
-						/** @type {NewCmsBlock} */
-						// @ts-ignore
-						const block = b;
-						delete block.dataset.flex_order;
-					});
-				} else {
-					if (!rearrangement) {
-						// we have set the NewCmsBlock dataset.flex_order in order to rearrange nodes
-						// so don't remove that information until you are 100% sure you wanna do this
-						// @ts-ignore
-						this.setDataFlexOrder(container_blocks, rearrangement);
-					}
-
-					container_blocks = container_blocks.sort((a, b) => {
-						return (
-							parseFloat(nonull(a.dataset.flex_order, 1000000)) -
-							parseFloat(nonull(b.dataset.flex_order, 1000000))
-						);
-					});
-
-					// set style flex order for squished / rearranged elements in current view
-					let child_count = 0;
-					container_blocks.forEach((b) => {
-						/** @type {NewCmsBlock} */
-						// @ts-ignore
-						const block = b;
-						child_count++;
-
-						this.setBlockStyles(
-							{
-								order: child_count,
-							},
-							block,
-							{
-								action: "none",
-							}
-						);
-					});
-
+			if (this.allow_free_rearrangement) {
+				// remove data-flex_order for free rearrangement blocks, they will have the position set explicitly in DOM
+				container_blocks.forEach((b) => {
+					/** @type {NewCmsBlock} */
 					// @ts-ignore
-					this.setDataFlexOrder(container_blocks);
+					const block = b;
+					delete block.dataset.flex_order;
+				});
+			} else {
+				if (!parent) {
+					// we have set the NewCmsBlock dataset.flex_order in order to rearrange nodes
+					// so don't remove that information until you are 100% sure you wanna do this
+					// @ts-ignore
+					this.setDataFlexOrder(container_blocks, rearrangement);
+				}
 
-					// assign prev next blocks
-					container_blocks.forEach((b) => {
+				container_blocks = container_blocks.sort((a, b) => {
+					return (
+						parseFloat(nonull(a.dataset.flex_order, 1000000)) -
+						parseFloat(nonull(b.dataset.flex_order, 1000000))
+					);
+				});
+
+				// set style flex order for squished / rearranged elements in current view
+				let child_count = 0;
+				container_blocks.forEach((b) => {
+					/** @type {NewCmsBlock} */
+					// @ts-ignore
+					const block = b;
+					child_count++;
+
+					this.setBlockStyles(
+						{
+							order: child_count,
+						},
+						block,
+						{
+							action: "none",
+						}
+					);
+				});
+
+				// @ts-ignore
+				this.setDataFlexOrder(container_blocks);
+
+				// assign prev next blocks
+				container_blocks.forEach((b) => {
+					/** @type {NewCmsBlock} */
+					// @ts-ignore
+					const block = b;
+					block.getPrevBlock = () => {
 						/** @type {NewCmsBlock} */
 						// @ts-ignore
-						const block = b;
-						block.getPrevBlock = () => {
-							/** @type {NewCmsBlock} */
-							// @ts-ignore
-							const b = block
-								.parent()
-								.directChildren()
-								.find(
-									(child) =>
-										parseInt(child.dataset.flex_order) ==
-										parseInt(block.dataset.flex_order) - 1
-								);
-							return b;
-						};
-						block.getNextBlock = () => {
-							/** @type {NewCmsBlock} */
-							// @ts-ignore
-							const b = block
-								.parent()
-								.directChildren()
-								.find(
-									(child) =>
-										parseInt(child.dataset.flex_order) ==
-										parseInt(block.dataset.flex_order) + 1
-								);
-							return b;
-						};
-					});
-				}
-			});
+						const b = block
+							.parent()
+							.directChildren()
+							.find(
+								(child) =>
+									parseInt(child.dataset.flex_order) ==
+									parseInt(block.dataset.flex_order) - 1
+							);
+						return b;
+					};
+					block.getNextBlock = () => {
+						/** @type {NewCmsBlock} */
+						// @ts-ignore
+						const b = block
+							.parent()
+							.directChildren()
+							.find(
+								(child) =>
+									parseInt(child.dataset.flex_order) ==
+									parseInt(block.dataset.flex_order) + 1
+							);
+						return b;
+					};
+				});
+			}
+		});
 
-		this.generateCSS();
+		// optimisation purpose
+		if (!parent) {
+			this.generateCSS();
+		}
 	}
 
 	assignGridLayoutIndices() {
@@ -950,149 +954,158 @@ class NewCmsStyling {
 				parent_container
 			);
 
-			// HEY! remember that flex wrap containers wont have the ability to set the height so that operation is way simpler
-			const is_wrap =
-				is_container_horizontal &&
-				parent_container.computed_styles.inside["flex-flow"].includes("wrap");
+			let autos_count = 0;
+			let content_length = 0;
+			let content_width = 0;
+			let margin_width = undefined;
 
-			let find_max_wide = 0;
-			if (is_container_horizontal) {
-				if (!is_wrap) {
-					find_max_wide = parent_container.offsetHeight;
-				}
-			} else {
-				find_max_wide = parent_container.offsetWidth;
-			}
+			/** @type {NewCmsBlock[]}*/
+			let blocks_in_row = [];
 
-			let count_autos = 0;
-			let full_width = 0;
-
-			let me_wide = undefined;
-
-			/**
-			 *
-			 * @param {NewCmsBlock} some_block_in_row
-			 * @param {boolean} same
-			 */
-			const setLimits = (some_block_in_row, same) => {
-				if (me_wide !== undefined && same) {
-					// we have been there
-					return;
-				}
-
-				const some_block_styles = some_block_in_row.computed_styles;
-				if (!some_block_styles) {
-					// hope it never fires :*
-					console.log("POTENTIAL ERROR some_block_in_row", some_block_in_row);
-					return;
-				}
-
-				const mt = this.evalCss(
-					some_block_styles.outside["margin-top"],
-					block,
-					{
-						auto: null,
-						direction: "vertical",
-					}
-				);
-				const mr = this.evalCss(
-					some_block_styles.outside["margin-right"],
-					block,
-					{
-						auto: null,
-						direction: "horizontal",
-					}
-				);
-				const mb = this.evalCss(
-					some_block_styles.outside["margin-bottom"],
-					block,
-					{
-						auto: null,
-						direction: "vertical",
-					}
-				);
-				const ml = this.evalCss(
-					some_block_styles.outside["margin-left"],
-					block,
-					{
-						auto: null,
-						direction: "horizontal",
-					}
-				);
-
-				const d1 =
-					some_block_in_row.offsetWidth + nonull(ml, 0) + nonull(mr, 0);
-				const d2 =
-					some_block_in_row.offsetHeight + nonull(mt, 0) + nonull(mb, 0);
+			if (!block.singleton_siblings_autos_count) {
+				// HEY! remember that flex wrap containers wont have the ability to set the height so that operation is way simpler
+				const is_wrap =
+					is_container_horizontal &&
+					parent_container.computed_styles.inside["flex-flow"].includes("wrap");
 
 				if (is_container_horizontal) {
-					if (ml === null) {
-						count_autos++;
-					}
-					if (mr === null) {
-						count_autos++;
+					if (!is_wrap) {
+						content_width = parent_container.offsetHeight;
 					}
 				} else {
-					if (mt === null) {
-						count_autos++;
-					}
-					if (mb === null) {
-						count_autos++;
-					}
+					content_width = parent_container.offsetWidth;
 				}
 
-				const width = is_container_horizontal ? d1 : d2;
-				full_width += width;
+				/**
+				 *
+				 * @param {NewCmsBlock} some_block_in_row
+				 */
+				const setLimits = (some_block_in_row) => {
+					if (blocks_in_row.includes(temp_block)) {
+						return;
+					}
 
-				/*if (temp_block.findParentByClassName("block_17")) {
-					console.log(temp_block, width);
+					blocks_in_row.push(some_block_in_row);
+
+					const some_block_styles = some_block_in_row.computed_styles;
+					if (!some_block_styles) {
+						// hope it never fires :*
+						console.log("POTENTIAL ERROR some_block_in_row", some_block_in_row);
+						return;
+					}
+
+					const mt = this.evalCss(
+						some_block_styles.outside["margin-top"],
+						block,
+						{
+							auto: null,
+							direction: "vertical",
+						}
+					);
+					const mr = this.evalCss(
+						some_block_styles.outside["margin-right"],
+						block,
+						{
+							auto: null,
+							direction: "horizontal",
+						}
+					);
+					const mb = this.evalCss(
+						some_block_styles.outside["margin-bottom"],
+						block,
+						{
+							auto: null,
+							direction: "vertical",
+						}
+					);
+					const ml = this.evalCss(
+						some_block_styles.outside["margin-left"],
+						block,
+						{
+							auto: null,
+							direction: "horizontal",
+						}
+					);
+
+					const d1 =
+						some_block_in_row.offsetWidth + nonull(ml, 0) + nonull(mr, 0);
+					const d2 =
+						some_block_in_row.offsetHeight + nonull(mt, 0) + nonull(mb, 0);
+
+					if (is_container_horizontal) {
+						if (ml === null) {
+							autos_count++;
+						}
+						if (mr === null) {
+							autos_count++;
+						}
+					} else {
+						if (mt === null) {
+							autos_count++;
+						}
+						if (mb === null) {
+							autos_count++;
+						}
+					}
+
+					const temp_length = is_container_horizontal ? d1 : d2;
+					content_length += temp_length;
+
+					/*if (temp_block.findParentByClassName("block_17")) {
+                        console.log(temp_block, width);
+                    }*/
+
+					const temp_margin_width = is_container_horizontal ? d2 : d1;
+
+					if (temp_margin_width > content_width) {
+						content_width = temp_margin_width;
+					}
+
+					temp_block.singleton_margin_width = temp_margin_width;
+				};
+
+				let temp_block = block;
+				while (true) {
+					if (!temp_block) {
+						break;
+					}
+
+					setLimits(temp_block);
+
+					if (is_wrap && this.getBlockFirstInRow(temp_block)) {
+						break;
+					}
+					temp_block = temp_block.getPrevBlock();
+				}
+				temp_block = block;
+				while (true) {
+					if (!temp_block) {
+						break;
+					}
+
+					setLimits(temp_block);
+
+					if (is_wrap && this.getBlockLastInRow(temp_block)) {
+						break;
+					}
+					temp_block = temp_block.getNextBlock();
+				}
+
+				/*if (block.classList.contains("block_23")) {
+                    console.log(full_width, count_autos, parent_container.offsetWidth);
                 }*/
 
-				const wide = is_container_horizontal ? d2 : d1;
-
-				if (wide > find_max_wide) {
-					find_max_wide = wide;
-				}
-
-				if (same) {
-					me_wide = wide;
-				}
-			};
-
-			let temp_block = block;
-			while (true) {
-				if (!temp_block) {
-					break;
-				}
-
-				setLimits(temp_block, temp_block === block);
-
-				if (is_wrap && this.getBlockFirstInRow(temp_block)) {
-					break;
-				}
-				temp_block = temp_block.getPrevBlock();
+				blocks_in_row.forEach((some_block_in_row) => {
+					// these valyes repeat meanwhile margin_width is assigned above
+					some_block_in_row.singleton_siblings_length = content_length;
+					some_block_in_row.singleton_siblings_width = content_width;
+					some_block_in_row.singleton_siblings_autos_count = autos_count;
+				});
+			} else {
+				content_length = block.singleton_siblings_length;
+				content_width = block.singleton_siblings_width;
+				autos_count = block.singleton_siblings_autos_count;
 			}
-			temp_block = block;
-			while (true) {
-				if (!temp_block) {
-					break;
-				}
-
-				setLimits(temp_block, temp_block === block);
-
-				if (is_wrap && this.getBlockLastInRow(temp_block)) {
-					break;
-				}
-				temp_block = temp_block.getNextBlock();
-			}
-
-			/*if (block.classList.contains("block_23")) {
-				console.log(full_width, count_autos, parent_container.offsetWidth);
-			}*/
-
-			/*if (block.classList.contains("block_23")) {
-                console.log(temp_block, width);
-            }*/
 
 			if (
 				(params.direction == "horizontal" && !is_container_horizontal) ||
@@ -1100,14 +1113,14 @@ class NewCmsStyling {
 			) {
 				const divide = params.opposite === "auto" ? 2 : 1;
 				// @ts-ignore
-				return (find_max_wide - me_wide) / divide;
+				return (content_width - block.singleton_margin_width) / divide;
 			} else {
 				return (
 					((is_container_horizontal
 						? parent_container.offsetWidth
 						: parent_container.offsetHeight) -
-						full_width) /
-					count_autos
+						content_length) /
+					autos_count
 				);
 			}
 		}
@@ -1168,12 +1181,10 @@ class NewCmsStyling {
 			// @ts-ignore
 			const block = b;
 
-			// TODO: use these to optimize auto margins? also rename it, to maybe full_width, max_row_h, that's really tricky dude, idk how to do this
-			// u could assign it to any block inside, so it shares that information
-			// that actually makes sense I think
-			delete block.singleton_inner_auto_x;
-			delete block.singleton_inner_auto_y;
-			// already used
+			delete block.singleton_siblings_autos_count;
+			delete block.singleton_siblings_length;
+			delete block.singleton_siblings_width;
+			delete block.singleton_margin_width;
 			delete block.singleton_inner_percent;
 		});
 
@@ -1323,9 +1334,6 @@ class NewCmsStyling {
 
 			const next = block.getNextBlock();
 			if (next) {
-				if (!next.new_rect) {
-					next.new_rect = next.getBoundingClientRect();
-				}
 				const next_ml = this.evalCss(
 					next.computed_styles.outside["margin-left"],
 					next,

@@ -852,6 +852,19 @@ function removeUserSelection() {
 	}
 }
 
+/**
+ *
+ * @param {*} node
+ * @returns {{
+ * relative_pos: {
+ * left: number
+ * top: number
+ * }
+ * node_rect: ClientRect
+ * scrollable_parent: PiepNode
+ * scrollable_parent_rect: ClientRect
+ * }}
+ */
 function nodePositionAgainstScrollableParent(node) {
 	node = $(node);
 	const node_rect = node.getBoundingClientRect();

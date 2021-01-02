@@ -230,7 +230,11 @@ class NewCmsSelectControls {
 	}
 	//mouseDown() {
 	mouseClick() {
-		if (this.selected_block && !this.newCms.grabbed_block) {
+		if (
+			this.selected_block &&
+			this.selected_block != this.newCms.edit_block.select_node &&
+			!this.newCms.grabbed_block
+		) {
 			this.newCms.edit_block.showControlsToBlock(this.selected_block);
 			//this.newCms.grabBlock(this.selected_block);
 		}

@@ -54,15 +54,7 @@ class NewCmsEditBlock {
 		}, 200);
 	}
 
-	mouseMove() {
-		const target = this.newCms.mouse_target;
-
-		if (this.select_node) {
-			if (!target.findParentByClassName("edit_block_node")) {
-				this.hideContextMenu();
-			}
-		}
-	}
+	mouseMove() {}
 
 	/**
 	 *
@@ -97,26 +89,13 @@ class NewCmsEditBlock {
 	showControlsToBlock(block) {
 		this.select_node = block;
 
-		// define block buttons html
-		let edit_block_html = "";
-
-		let buttons = "";
-
-		const radius = 40;
-		const inner_radius = 16;
-
-		const norad = Math.PI / 180;
-
-		const x0 = radius;
-		const y0 = radius;
-
 		let btn_set = [];
 
 		btn_set.push({
 			color: "#58D",
 			icon: `<i class="fas fa-pencil-alt" style="margin-top: 1px;"></i>`,
 			className: "edit_btn",
-			tooltip: "Edytuj blok",
+			tooltip: "Edytuj",
 		});
 		if (block.dataset.block == "grid") {
 			btn_set.push({
@@ -129,6 +108,12 @@ class NewCmsEditBlock {
 			});
 		}
 		btn_set.push({
+			color: "#58D",
+			icon: `<i class="fas fa-expand-alt" style="margin-top: 1px;"></i>`,
+			className: "size_btn",
+			tooltip: "Wymiary",
+		});
+		btn_set.push({
 			color: "#a7a7a7",
 			icon: `<i class="fas fa-arrows-alt"></i>`,
 			className: "relocate_btn",
@@ -138,106 +123,32 @@ class NewCmsEditBlock {
 			color: "#a7a7a7",
 			icon: `<i class="fas fa-copy"></i>`,
 			className: "copy_btn",
-			tooltip: "Kopiuj blok",
+			tooltip: "Kopiuj",
 		});
 
 		//if (!block.parent().classList.contains("newCmsContent")) {
 		btn_set.push({
 			color: "#f55",
-			icon: `<i class="fas fa-times"></i>`,
+			icon: `<i class="fas fa-trash"></i>`,
 			className: "remove_btn",
-			tooltip: "Usuń blok",
+			tooltip: "Usuń",
 		});
-		//}
 
-		const btn_count = btn_set.length;
+		btn_set.push({
+			color: "#f55",
+			icon: `<i class="fas fa-times"></i>`,
+			className: "dismiss_btn",
+			tooltip: "Zamknij",
+		});
 
-		const icon_size = 20;
-
-		const space_ratio = 1.5;
-		const inner_space_ratio = (space_ratio * radius) / inner_radius;
-
-		const point = (a, r) => {
-			return {
-				x: x0 - Math.sin(a * norad) * r,
-				y: y0 - Math.cos(a * norad) * r,
-			};
-		};
-
-		const on_left_left = point(90, 0.5 * radius);
-		const on_right_right = point(270, 0.5 * radius);
-		const on_top_top = point(0, 0.5 * radius);
-
-		for (let i = 0; i < btn_count; i++) {
-			const a1 = (i * 360) / btn_count;
-			const a2 = ((i + 1) * 360) / btn_count;
-
-			const p1 = point(a1 + space_ratio, radius);
-			const p2 = point(a2 - space_ratio, radius);
-			const p3 = point(a2 - inner_space_ratio, inner_radius);
-			const p4 = point(a1 + inner_space_ratio, inner_radius);
-
-			const p5 = point((a1 + a2) * 0.5, (radius + inner_radius) * 0.485);
-
-			const btn_data = btn_set[i];
-
-			let tooltip = "";
-			if (btn_data.tooltip) {
-				let pos = "center";
-				let mid_x = (p1.x + p2.x) * 0.5;
-				let mid_y = (p1.y + p2.y) * 0.5;
-				if (mid_x < on_left_left.x) {
-					pos = "left";
-				} else if (mid_x > on_right_right.x) {
-					pos = "right";
-				} else if (mid_y < on_top_top.y) {
-					if (mid_x < (on_left_left.x + on_right_right.x) * 0.5) {
-						pos = "left";
-					} else {
-						pos = "right";
-					}
-				}
-				tooltip = `data-tooltip="${btn_data.tooltip}" data-tooltip-position="${pos}"`;
+		let edit_block_html = `<div class="glue-children inline">`;
+		for (const btn of btn_set) {
+			if (["dismiss_btn", "remove_btn"].includes(btn.className)) {
+				edit_block_html += `</div> <div class="glue-children inline">`;
 			}
-
-			buttons += /*html*/ `
-                <path class="context-btn" fill="#fff" d="
-                    M${p1.x},${p1.y}
-                    A${radius},${radius} 1 0,0 ${p2.x},${p2.y}
-                    L${p3.x},${p3.y}
-                    A${inner_radius},${inner_radius} 1 0,1 ${p4.x},${p4.y}
-                    L${p1.x},${p1.y}
-                    z
-                "></path>
-                <path class="context-btn 
-                ${btn_data.className}"
-                ${tooltip}
-                fill="${btn_data.color}" d="
-                    M${p1.x},${p1.y}
-                    A${radius},${radius} 1 0,0 ${p2.x},${p2.y}
-                    L${p3.x},${p3.y}
-                    A${inner_radius},${inner_radius} 1 0,1 ${p4.x},${p4.y}
-                    L${p1.x},${p1.y}
-                    z
-                "></path>
-                <foreignObject x="${p5.x - icon_size * 0.5}" y="${
-				p5.y - icon_size * 0.5
-			}" width="${icon_size}" height="${icon_size}" pointer-events="none">
-                    <div class="context-icon">
-                        ${btn_data.icon}
-                    </div>
-                </foreignObject>
-            `;
+			edit_block_html += /*html*/ `<button class="btn subtle ${btn.className}" data-tooltip="${btn.tooltip}" data-tooltip-position="bottom">${btn.icon}</button>`;
 		}
-		edit_block_html = /*html*/ `
-            <svg viewBox="-1 -1 ${radius * 2 + 2} ${radius * 2 + 2}"
-                width="${radius * 2 + 2}"
-                height="${radius * 2 + 2}"
-                xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <circle cx="${x0}" cy="${y0}" r="${inner_radius}" fill="#ccc5" class="dismiss_btn" />
-                ${buttons}
-            </svg>    
-        `;
+		edit_block_html += `</div>`;
 
 		this.node.setContent(edit_block_html);
 
@@ -318,26 +229,43 @@ class NewCmsEditBlock {
 			event.stopPropagation();
 		});
 
+		const off = 5;
+
 		const node_rect = this.node.getBoundingClientRect();
 
-		let left = this.newCms.mouse_x - this.newCms.content_scroll_panel_rect.left;
-		let top = this.newCms.mouse_y - this.newCms.content_scroll_panel_rect.top;
+		/*let left = this.newCms.mouse_x - this.newCms.content_scroll_panel_rect.left;
+        let top = this.newCms.mouse_y - this.newCms.content_scroll_panel_rect.top;*/
 
 		const node_width = node_rect.width;
 		const node_height = node_rect.height;
-		const side_offset = node_width * 0.5 + 5;
-		const vertical_offset = node_height * 0.5 + 5;
 
-		left = Math.max(left, side_offset);
+		const block_pos_data = nodePositionAgainstScrollableParent(
+			this.select_node
+		);
+		const block_relative_pos = block_pos_data.relative_pos;
+
+		let left =
+			block_relative_pos.left - this.newCms.content_scroll_panel.scrollLeft;
+
+		let top =
+			block_relative_pos.top -
+			this.newCms.content_scroll_panel.scrollTop -
+			node_height;
+
+		//if (node_width > block_pos_data.node_rect.width) {
+		left -= 0.5 * (node_width - block_pos_data.node_rect.width);
+		//}
+
+		left = Math.max(left, off);
 		left = Math.min(
 			left,
-			this.newCms.content_scroll_panel.clientWidth - side_offset
+			this.newCms.content_scroll_panel.clientWidth - node_width - off
 		);
 
-		top = Math.max(top, vertical_offset);
+		top = Math.max(top, off);
 		top = Math.min(
 			top,
-			this.newCms.content_scroll_panel.clientHeight - vertical_offset
+			this.newCms.content_scroll_panel.clientHeight - node_height - off
 		);
 
 		this.node.style.left = left + "px";

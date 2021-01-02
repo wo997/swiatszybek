@@ -17,8 +17,10 @@ useTool("fileManager");
  * select_control: PiepNode
  * styling_data: BlockStyles
  * grid_layout_index?: number
- * singleton_inner_auto_x?: number
- * singleton_inner_auto_y?: number
+ * singleton_siblings_length?: number
+ * singleton_siblings_width?: number
+ * singleton_siblings_autos_count?: number
+ * singleton_margin_width?: number
  * singleton_inner_percent?: number
  * singleton_last_in_row?: boolean
  * computed_styles?: BlockStyleTargets
@@ -454,11 +456,7 @@ class NewCms {
 			return;
 		}
 
-		if (this.edit_block.select_node) {
-			this.edit_block.mouseMove();
-		} else {
-			this.select_controls.mouseMove();
-		}
+		this.select_controls.mouseMove();
 	}
 
 	mouseClick() {
@@ -471,9 +469,7 @@ class NewCms {
 			return;
 		}
 
-		if (!this.edit_block.select_node) {
-			this.select_controls.mouseClick();
-		}
+		this.select_controls.mouseClick();
 
 		const target = this.mouse_target;
 
@@ -977,7 +973,6 @@ class NewCms {
 				this.content_node.appendChild(grabbed_block);
 
 				this.contentChangeManageContent();
-				this.styling.generateCSS();
 
 				grabbed_block.animation_data = animation_data;
 				grabbed_block.classList.add("select_active");
@@ -1088,7 +1083,7 @@ class NewCms {
 					},
 					grabbed_block,
 					{
-						action: "just_css",
+						action: "none",
 					}
 				);
 			} else {
@@ -1112,7 +1107,7 @@ class NewCms {
 					grabbed_block.dataset.flex_order = target_flex_order;
 				}
 
-				this.styling.setBlocksFlexOrder(true);
+				this.styling.setBlocksFlexOrder(this.getBlockParent(grabbed_block));
 			}
 		} else {
 			if (this.grab_options.copy) {
@@ -1126,10 +1121,9 @@ class NewCms {
 			return;
 		}
 
-		this.rearrange_controls.removeRearrangement();
+		this.rearrange_controls.removeRearrangement({ empty: true });
 
 		this.contentChangeManageContent();
-		this.styling.generateCSS();
 
 		/** @type {NewCmsBlock[]} */
 		// @ts-ignore

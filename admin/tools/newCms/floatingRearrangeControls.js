@@ -67,6 +67,13 @@ class NewCmsRearrangeControls {
 		this.removeRearrangement();
 	}
 
+	/**
+	 *
+	 * @param {{
+	 * except?: PiepNode[]
+	 * empty?: boolean
+	 * }} options
+	 */
 	removeRearrangement(options = {}) {
 		this.rearrange_near_block = null;
 		this.rearrange_position = "";
@@ -85,6 +92,10 @@ class NewCmsRearrangeControls {
 		const add_block_hint = this.newCms.content_node.find(".add_block_hint");
 		if (add_block_hint) {
 			add_block_hint.classList.remove("invisible");
+		}
+
+		if (options.empty) {
+			this.node.empty();
 		}
 	}
 
