@@ -1,10 +1,10 @@
 <?php //route[{ADMIN}zaawansowane]
 
 // TODO: entity definition / props highlighting would be dope
-updateEnt("pies", 1, ["food" => "69"]);
-//updateEnt("pies", 1, ["food" => "-5"]); // should produce an error
+//updateEnt("pies", 1, ["food" => "69"]);
+//updateEnt("pies", 1, ["food" => "-5"]); // should give an error
 
-die;
+//die;
 
 class Product
 {
@@ -42,8 +42,8 @@ function getEntityActualOne($table_name, $id, $options = [])
 
     $data = fetchRow("select $select from $table_name WHERE product_id = $id");
 
-    var_dump($data);
-    loadEntityFields($entity, $data);
+    //var_dump($data);
+    //loadEntityFields($entity, $data);
 
     return $entity;
 }
@@ -71,7 +71,7 @@ $product = getEntityActualOne("product", 29, [
     "select" => "product_id, title, cache_sales"
 ]);
 
-var_dump($product, $product->get_link());
+//var_dump($product, $product->get_link());
 
 ?>
 
