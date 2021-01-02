@@ -1031,15 +1031,25 @@ class NewCms {
 			if (this.grab_options.copy) {
 				grabbed_block.style.display = "";
 
-				// @ts-ignore
-				grabbed_block.styling_data = cloneObject(grabbed_block.styling_data);
-				// TODO: clone children styles as well, look for classes block_n
+				// copy styles
+				[grabbed_block, ...grabbed_block.findAll("newCms_block")].forEach(
+					(gr_block) => {
+						const block_id = this.styling.getBlockId(gr_block);
+						const block_class_name = this.styling.getBlockClassName(block_id);
+						if (!block_class_name) {
+							return;
+						}
 
-				const block_id = this.styling.getBlockId(grabbed_block);
-				const block_class_name = this.styling.getBlockClassName(block_id);
-				if (block_class_name) {
-					grabbed_block.classList.remove(block_class_name);
-				}
+						gr_block.classList.remove(block_class_name);
+
+						const copy_styles_from = this.content_node.find(
+							`.${block_class_name}`
+						);
+
+						// @ts-ignore
+						gr_block.styling_data = cloneObject(copy_styles_from.styling_data);
+					}
+				);
 			}
 
 			if (this.rearrange_controls.rearrange_position != "grid") {
@@ -1228,8 +1238,6 @@ class NewCms {
 
 				this.scroll();
 
-				this.styling.recalculateLayout();
-
 				this.updateMouseTarget();
 				this.mouseMove();
 
@@ -1238,7 +1246,6 @@ class NewCms {
 				}
 
 				this.content_node_copy.classList.remove("visible");
-
 				this.content_node_copy.empty();
 			}, animation_swap_time);
 		};

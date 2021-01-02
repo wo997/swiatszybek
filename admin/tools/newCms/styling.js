@@ -879,8 +879,6 @@ class NewCmsStyling {
 	 * }} params
 	 */
 	evalCss(val, block, params = {}) {
-		// TODO: single method to get computed margins and paddings of the block hmmm
-
 		if ((!val || !val.trim()) && params.default) {
 			val = params.default;
 		}
@@ -893,9 +891,16 @@ class NewCmsStyling {
 		// @ts-ignore
 		const parent_container = this.newCms.getBlockParent(block);
 
-		// TODO: auto for grids is just different I think, but maybe we don't really need this, find out later, animations? meh, it works anyway PROBABLY
 		const auto = val === "auto";
 		if (auto) {
+			if (
+				parent_container === this.newCms.content_node &&
+				params.direction == "vertical"
+			) {
+				// TODO: no margin auto vertically in the root by default
+				return 0;
+			}
+
 			if (params.auto !== undefined) {
 				return params.auto;
 			}
@@ -986,6 +991,7 @@ class NewCmsStyling {
 					block,
 					{
 						auto: null,
+						direction: "vertical",
 					}
 				);
 				const mr = this.evalCss(
@@ -993,6 +999,7 @@ class NewCmsStyling {
 					block,
 					{
 						auto: null,
+						direction: "horizontal",
 					}
 				);
 				const mb = this.evalCss(
@@ -1000,6 +1007,7 @@ class NewCmsStyling {
 					block,
 					{
 						auto: null,
+						direction: "vertical",
 					}
 				);
 				const ml = this.evalCss(
@@ -1007,6 +1015,7 @@ class NewCmsStyling {
 					block,
 					{
 						auto: null,
+						direction: "horizontal",
 					}
 				);
 
@@ -1326,12 +1335,6 @@ class NewCmsStyling {
 				const next_left_kiss = next.new_rect.left - nonull(next_ml, 0);
 
 				last_in_row = next_left_kiss < right_kiss - 2;
-
-				if (next.classList.contains("block_10")) {
-					console.log(next_left_kiss, right_kiss, next.new_rect.left, next_ml);
-				}
-
-				//console.log(block, block.new_rect);
 			} else {
 				last_in_row = true;
 			}
