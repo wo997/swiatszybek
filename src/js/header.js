@@ -96,6 +96,7 @@ window.addEventListener("load", () => {
 
 window.addEventListener("resize", headerResizeCallback);
 
+// won't work untill u rework mechanics
 function headerResizeCallback() {
 	var header_height = $(".header-height");
 	if (!header_height) {

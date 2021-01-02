@@ -1,6 +1,17 @@
 /* js[global] */
 
-var lazyLoadOffset = 700;
+/**
+ * @typedef {{
+ * calculated_width: number
+ * calculated_height: number
+ * last_dimension: number
+ * file_name: string
+ * extension: string
+ * await_img_replace?: boolean
+ * } & HTMLElement} ResponsiveImage
+ */
+
+const lazyLoadOffset = 700;
 
 // also files.php
 function loadLazyNode(node, animate = true) {
@@ -14,37 +25,55 @@ function loadLazyNode(node, animate = true) {
 	}
 }
 
-function loadImage(img, animate) {
+/**
+ *
+ * @param {ResponsiveImage} img
+ */
+function getImageDimenstions(img, rect = null) {
+	if (!rect) {
+		rect = img.getBoundingClientRect();
+	}
+
+	if (!rect.width) {
+		return null;
+	}
+
+	return Math.max(rect.width, rect.height);
+}
+
+/**
+ *
+ * @param {ResponsiveImage} img
+ * @param {boolean} animate
+ */
+function loadImage(img, animate = true) {
 	if (!img.file_name) {
 		return;
 	}
 
 	if (isNodeOnScreen(img, lazyLoadOffset)) {
-		var w = img.calculated_width;
-		var h = img.calculated_height;
+		const w = img.calculated_width;
+		const h = img.calculated_height;
 
-		var r = img.getBoundingClientRect();
+		const image_dimension = getImageDimenstions(img);
+		img.last_dimension = image_dimension;
 
-		if (!r.width) {
+		if (!image_dimension) {
 			return;
 		}
 
-		// floating point numbers suck
-		var image_dimension = Math.max(r.width, r.height) - 1;
+		const natural_image_dimension = Math.max(w, h);
+		let target_size_name = "df";
 
-		var natural_image_dimension = Math.max(w, h);
-		//console.log(natural_image_dimension, image_dimension, w, h);
-		var target_size_name = "df";
-
-		if (image_dimension < natural_image_dimension) {
-			var pixelDensityFactor = window.devicePixelRatio * 0.5 + 0.5; // compromise quality and speed
+		if (image_dimension < natural_image_dimension + 1) {
+			const pixelDensityFactor = window.devicePixelRatio * 0.5 + 0.5; // compromise quality and speed
 			Object.entries(image_default_dimensions).forEach(
 				([size_name, size_dimension]) => {
 					if (size_name == "df") {
 						return;
 					}
 					if (
-						image_dimension < size_dimension / pixelDensityFactor &&
+						image_dimension < size_dimension / pixelDensityFactor + 1 &&
 						size_dimension < natural_image_dimension
 					) {
 						target_size_name = size_name;
@@ -53,7 +82,7 @@ function loadImage(img, animate) {
 			);
 		}
 
-		var src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
+		let src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
 
 		if (
 			img.hasAttribute("data-same-ext") &&
@@ -67,14 +96,8 @@ function loadImage(img, animate) {
 		}
 
 		img.addEventListener("load", () => {
-			if (
-				!img.hasAttribute(
-					"data-height"
-				) /*&&
-          !img.hasAttribute("data-has-own-height")*/
-			) {
+			if (!img.hasAttribute("data-height")) {
 				img.style.height = "";
-				//window.dispatchEvent(new Event("wo997_img_shown"));
 			}
 		});
 
@@ -82,11 +105,9 @@ function loadImage(img, animate) {
 			preloadImage(src);
 			img.setAttribute("data-next-src", src);
 			delete img.await_img_replace;
-			delete img.file_name;
 		} else {
 			img.setAttribute("src", src);
 			img.classList.add("wo997_img_waiting");
-			delete img.file_name;
 		}
 
 		showWaitingImage(img, animate ? 400 : 0);
@@ -125,18 +146,18 @@ function getResponsiveImageData(src) {
 	if (!src) {
 		return null;
 	}
-	var last_dot_index = src.lastIndexOf(".");
-	var ext = src.substring(last_dot_index + 1);
-	var path_wo_ext = src.substring(0, last_dot_index);
+	const last_dot_index = src.lastIndexOf(".");
+	const ext = src.substring(last_dot_index + 1);
+	const path_wo_ext = src.substring(0, last_dot_index);
 
-	var last_floor_index = path_wo_ext.lastIndexOf("_");
+	const last_floor_index = path_wo_ext.lastIndexOf("_");
 	if (last_floor_index === -1) {
 		return null;
 	}
 
-	var dimensions = path_wo_ext.substring(last_floor_index + 1).split("x");
+	const dimensions = path_wo_ext.substring(last_floor_index + 1).split("x");
 
-	var file_name = path_wo_ext.replace(/(\/)?uploads\/.{0,10}\//, ``);
+	const file_name = path_wo_ext.replace(/(\/)?uploads\/.{0,10}\//, ``);
 
 	return {
 		file_name: file_name,
@@ -146,10 +167,13 @@ function getResponsiveImageData(src) {
 	};
 }
 
+/**
+ * @param {ResponsiveImage} img
+ */
 function setImageDimensions(img) {
-	var src = img.getAttribute("data-src");
-	var data = getResponsiveImageData(src);
-	var rect = img.getBoundingClientRect();
+	const src = img.getAttribute("data-src");
+	const data = getResponsiveImageData(src);
+	let rect = img.getBoundingClientRect();
 
 	if (!data) {
 		img.style.animation = "show 0.45s";
@@ -167,20 +191,15 @@ function setImageDimensions(img) {
 	img.file_name = data.file_name;
 	img.extension = data.extension;
 
-	/*if (rect.height) {
-    img.setAttribute("data-has-own-height", "");
-    console.log(rect.height);
-  } else {*/
-	var real_height = Math.round((rect.width * data.h) / data.w);
+	const real_height = Math.round((rect.width * data.h) / data.w);
 	if (!img.style.height) {
 		img.style.height = `${real_height}px`;
 	}
-	/*}*/
 
 	return rect;
 }
 
-// TODO: hey! this is temporary so the current content won't fail, pls consider remiving it once the new page builder is done
+// TODO: hey! this is temporary so the current content won't fail, pls consider removing it once the new page builder is done
 domload(() => {
 	$$("[data-src]").forEach((e) => {
 		e.classList.add("wo997_img");
@@ -201,22 +220,23 @@ function lazyLoadImages(animate = true) {
 	setCustomHeights();
 
 	$$(".lazy").forEach((img) => {
-		var rect = img.getBoundingClientRect();
+		const rect = img.getBoundingClientRect();
 
 		if (rect.top < window.innerHeight + lazyLoadOffset) {
 			loadLazyNode(img, animate);
 		}
 	});
 
-	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach(
-		(img) => {
-			var rect = setImageDimensions(img);
+	// @ts-ignore
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((
+		/** @type {ResponsiveImage} */ img
+	) => {
+		const rect = setImageDimensions(img);
 
-			if (rect.top < window.innerHeight + lazyLoadOffset) {
-				loadImage(img, animate);
-			}
+		if (rect.top < window.innerHeight + lazyLoadOffset) {
+			loadImage(img, animate);
 		}
-	);
+	});
 
 	setTimeout(() => {
 		setCustomHeights();
@@ -231,12 +251,27 @@ document.addEventListener("mouseover", () => {
 	delay("scrollCallbackLazy", 100);
 });
 
+// some images might be small at the beginning and wanna grow later
+setInterval(() => {
+	// @ts-ignore
+	$$(".wo997_img_shown").forEach((/** @type {ResponsiveImage} */ img) => {
+		const rect = isNodeOnScreen(img);
+		const dimensions = getImageDimenstions(img, rect);
+		// it's ok to show an image that's tiny with high res
+		if (dimensions > img.last_dimension + 25) {
+			img.last_dimension = dimensions;
+			loadImage(img, false);
+		}
+	});
+}, 300);
+
 function scrollCallbackLazy() {
 	$$(".lazy:not(.wo997_img_waiting)").forEach((node) => {
 		loadLazyNode(node);
 	});
 	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach(
-		(img) => {
+		// @ts-ignore
+		(/** @type {ResponsiveImage} */ img) => {
 			loadImage(img);
 		}
 	);
@@ -250,4 +285,15 @@ function scrollCallbackLazy() {
 function preloadImage(url) {
 	const img = new Image();
 	img.src = url;
+
+	return new Promise((resolve) => {
+		img.addEventListener("load", () => {
+			resolve("success");
+		});
+
+		// expect to load in less than 5s
+		setTimeout(() => {
+			resolve("error");
+		}, 5 * 1000);
+	});
 }

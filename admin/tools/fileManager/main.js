@@ -9,6 +9,8 @@ window.fileManager = {
 	open: (target = null, params = {}) => {
 		fileManager.target = target;
 		fileManager.callback = params.callback;
+
+		// not worth using
 		fileManager.size = params.size;
 		fileManager.optimise = params.optimise ? true : false;
 
@@ -34,6 +36,7 @@ window.fileManager = {
 	choose: (src) => {
 		if (fileManager.size) {
 			//src
+			console.log(src, fileManager.size);
 			src = "/" + UPLOADS_PATH + fileManager.size + getUploadedFileName(src);
 		}
 
@@ -67,7 +70,7 @@ window.fileManager = {
 			formData: formData,
 			success(images) {
 				try {
-					if (Array.isArray(images)) {
+					if (isArray(images)) {
 						var out = "";
 						var counter = 0;
 						for (const image of images) {

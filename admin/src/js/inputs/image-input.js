@@ -7,7 +7,7 @@ function registerImageInputs() {
 		input.classList.add("image-input-registered");
 
 		// TODO: crazy, we use names so far hmm
-		input.classList.add("form-input");
+		// input.classList.add("form-input");
 
 		//useTool("fileManager");
 
@@ -67,7 +67,6 @@ function registerImageInputs() {
 		button.addEventListener("click", () => {
 			fileManager.open(img, {
 				asset_types: ["image"],
-				size: "sm",
 			});
 		});
 

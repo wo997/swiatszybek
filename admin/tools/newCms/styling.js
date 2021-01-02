@@ -353,11 +353,7 @@ class NewCmsStyling {
 	setAllRegisteredBlocks() {
 		this.newCms.content_node
 			.findAll(this.newCms.query_for_visible_blocks)
-			.forEach((n) => {
-				/** @type {NewCmsBlock} */
-				// @ts-ignore
-				const node = n;
-
+			.forEach((/** @type {NewCmsBlock} */ node) => {
 				const block_id = this.getBlockId(node);
 
 				if (!block_id) {
@@ -389,10 +385,9 @@ class NewCmsStyling {
 	}
 
 	registerMissingBlocks() {
-		this.newCms.content_node.findAll(".newCms_block").forEach((n) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const node = n;
+		this.newCms.content_node.findAll(".newCms_block").forEach((
+			/** @type {NewCmsBlock} */ node
+		) => {
 			if (this.getBlockId(node)) {
 				return;
 			}
@@ -1198,19 +1193,11 @@ class NewCmsStyling {
 			block.new_rect = block.getBoundingClientRect();
 		});
 
-		all_blocks.forEach((b) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const block = b;
-
+		all_blocks.forEach((/** @type {NewCmsBlock} */ block) => {
 			block.computed_styles = this.getBlockComputedStyles(block);
 		});
 
-		all_blocks.forEach((b) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const block = b;
-
+		all_blocks.forEach((/** @type {NewCmsBlock} */ block) => {
 			const block_styles = block.computed_styles;
 
 			block_styles.outside.mt = this.evalCss(

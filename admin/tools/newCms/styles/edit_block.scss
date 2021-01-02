@@ -15,7 +15,7 @@
 		border-color: var(--primary-clr);
 		color: white;
 	}
-	& .btn.remove_btn:hover {
+	& .remove_btn:hover {
 		background: var(--red-clr);
 		border-color: var(--red-clr);
 	}
@@ -23,8 +23,7 @@
 		box-shadow: 0 2px 3px -1px #0004;
 		border: 1px solid #ccc;
 		margin-left: -1px;
-	}
-	.space_btn {
-		margin-left: 10px;
+		width: 32px;
+		height: 32px;
 	}
 }

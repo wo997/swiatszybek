@@ -141,10 +141,10 @@ class NewCmsEditBlock {
 			tooltip: "Zamknij",
 		});
 
-		let edit_block_html = `<div class="glue-children inline">`;
+		let edit_block_html = `<div class="glue-children inline-flex">`;
 		for (const btn of btn_set) {
 			if (["dismiss_btn", "remove_btn"].includes(btn.className)) {
-				edit_block_html += `</div> <div class="glue-children inline">`;
+				edit_block_html += `</div> <div class="glue-children inline-flex">`;
 			}
 			edit_block_html += /*html*/ `<button class="btn subtle ${btn.className}" data-tooltip="${btn.tooltip}" data-tooltip-position="bottom">${btn.icon}</button>`;
 		}

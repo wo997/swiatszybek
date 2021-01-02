@@ -226,6 +226,16 @@ function currentlyFocusedProduct(node) {
 	}
 }
 
+/**
+ *
+ * @param {{
+ * animation_frame_id: number
+ * animation_frames: Array
+ * sub_animation_timeout: number
+ * animation_timeout: number
+ * } & ResponsiveImage} img
+ * @param {*} first
+ */
 function nextProductImageSlide(img, first = false) {
 	const nextImg = () => {
 		if (animated_product_img != img) {
