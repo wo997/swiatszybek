@@ -1158,7 +1158,7 @@ class NewCms {
 				/** @type {NewCmsBlock} */
 				// @ts-ignore
 				const block = b;
-				return !!block.last_rect;
+				return !!block.last_rect && !block.classList.contains("parent_cramped");
 			});
 
 		all_animatable_blocks.forEach((b) => {
