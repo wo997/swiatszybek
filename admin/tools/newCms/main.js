@@ -1032,7 +1032,7 @@ class NewCms {
 				grabbed_block.style.display = "";
 
 				// copy styles
-				[grabbed_block, ...grabbed_block.findAll("newCms_block")].forEach(
+				[grabbed_block, ...grabbed_block.findAll(".newCms_block")].forEach(
 					(gr_block) => {
 						const block_id = this.styling.getBlockId(gr_block);
 						const block_class_name = this.styling.getBlockClassName(block_id);
