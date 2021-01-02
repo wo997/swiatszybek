@@ -1223,6 +1223,10 @@ class NewCms {
 		const finishAnimation = () => {
 			this.content_node_copy.classList.add("visible");
 
+			this.content_node.findAll(".hidden_during_rearrangement").forEach((e) => {
+				e.classList.remove("hidden_during_rearrangement");
+			});
+
 			setTimeout(() => {
 				if (options.beforeAnimationEndCallback) {
 					options.beforeAnimationEndCallback();
@@ -1251,6 +1255,18 @@ class NewCms {
 		};
 
 		all_animatable_blocks.forEach((block) => {
+			const lr = block.last_rect;
+			const nr = block.new_rect;
+			if (
+				(lr.top < window.innerHeight && lr.top + lr.height > 0) ||
+				(nr.top < window.innerHeight && nr.top + nr.height > 0)
+			) {
+				// visible - animate
+			} else {
+				block.classList.add("hidden_during_rearrangement");
+				return;
+			}
+
 			/** @type {AnimationData} */
 			const block_animation_data = block.animation_data;
 			const dx = block_animation_data.dx;

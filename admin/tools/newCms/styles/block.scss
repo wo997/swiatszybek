@@ -50,7 +50,10 @@
 			pointer-events: none;
 		}
 	}
-	.container > .newCms_block_content {
+	&.container > .newCms_block_content {
 		background-color: inherit;
+	}
+	&.hidden_during_rearrangement {
+		display: none;
 	}
 }

@@ -9,7 +9,13 @@
 
 echo "x";
 
-$u = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
+//$u = fetchArray("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
+
+/** @type {Cat[]} */
+$cats = [];
+foreach ($cats as $cat) {
+    echo $cat["name"];
+}
 
 /** @type {Cat} */
 $a = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
