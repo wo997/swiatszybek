@@ -484,7 +484,7 @@ class NewCmsStyling {
 	 */
 	setBlockStylesFromStylingData(styles, block_styles, params = {}) {
 		if (!block_styles) {
-			console.error("Block misses styles");
+			console.error("Block missing styles");
 			return;
 		}
 
@@ -530,6 +530,11 @@ class NewCmsStyling {
 		}
 
 		this.registerMissingBlocks();
+
+		if (!node.styling_data) {
+			console.error(node, "Block missing styles");
+			return;
+		}
 
 		this.setBlockStylesFromStylingData(styles, node.styling_data, params);
 	}
@@ -612,6 +617,11 @@ class NewCmsStyling {
 	 * it moves the blocks
 	 */
 	setBlocksFlexOrder(parent = null) {
+		if (parent && parent.dataset.block !== "container") {
+			// just in case
+			return false;
+		}
+
 		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
@@ -659,12 +669,13 @@ class NewCmsStyling {
 		});
 
 		// not content_node (.newCmsContent) to include it as well
-		(parent
-			? parent.findAll(".newCms_block_content")
+		const containers = parent
+			? [parent.find(".newCms_block_content")]
 			: this.newCms.content_scroll_content.findAll(
 					`.newCmsContent .newCms_block[data-block="container"] > .newCms_block_content, .newCmsContent`
-			  )
-		).forEach((container) => {
+			  );
+
+		containers.forEach((container) => {
 			let container_blocks = container.directChildren();
 
 			if (this.allow_free_rearrangement) {
@@ -680,7 +691,7 @@ class NewCmsStyling {
 					// we have set the NewCmsBlock dataset.flex_order in order to rearrange nodes
 					// so don't remove that information until you are 100% sure you wanna do this
 					// @ts-ignore
-					this.setDataFlexOrder(container_blocks, rearrangement);
+					this.setDataFlexOrder(container_blocks);
 				}
 
 				container_blocks = container_blocks.sort((a, b) => {

@@ -7,14 +7,29 @@
  * }
  */
 
+/**
+ * @typedef Cat {
+ * age: CatAge this is the age of a cat
+ * name: string is the name of a cat
+ * }
+ */
+
+/**
+ * @typedef CatAge {
+ * value: number actual age value
+ * }
+ */
+
 echo "x";
 
-//$u = fetchArray("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
+$u = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
+//$u["js"]
 
 /** @type {Cat[]} */
 $cats = [];
 foreach ($cats as $cat) {
     echo $cat["name"];
+    $cat["age"]["value"];
 }
 
 /** @type {Cat} */
@@ -56,8 +71,7 @@ function heyca($x, $y)
 {
     /**
      * @typedef GridData {
-     * x_coords: number some description
-     * y_coords: number yet another description
+     * some_prop: string
      * }
      */
 
