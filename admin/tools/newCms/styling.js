@@ -1172,9 +1172,12 @@ class NewCmsStyling {
 		val = val.replace(/px/g, "");
 
 		if (val.includes("auto")) {
-			return undefined;
+			// probably never
+			console.error("Wrong css value");
+			return 0;
 		}
-		return eval(val);
+
+		return eval(escapeNumericalExpression(val));
 	}
 
 	recalculateLayout() {
@@ -1236,6 +1239,7 @@ class NewCmsStyling {
 					direction: "vertical",
 					opposite: block_styles.outside["margin-top"],
 					opposite_name: "margin-top",
+					cipka: true,
 				}
 			);
 			block_styles.outside.ml = this.evalCss(

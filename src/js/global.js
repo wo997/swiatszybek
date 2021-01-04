@@ -153,6 +153,10 @@ function escapeCSS(prop, val) {
 	return div.style[prop_css];
 }
 
+function escapeNumericalExpression(str) {
+	return str.replace(/[^\d,.\*\-\+\/\(\)]*/g, "");
+}
+
 function decodeHtmlEntities(html) {
 	var txt = document.createElement("textarea");
 	txt.innerHTML = html;

@@ -32,6 +32,8 @@ foreach ($cats as $cat) {
     $cat["age"]["value"];
 }
 
+$cats[0]["name"] = "sdsad";
+
 /** @type {Cat} */
 $a = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
 
@@ -89,7 +91,7 @@ class TestClass
 
         /** @type {Cat} */
         $x = 666;
-        $x["age"]["value"] = 5;
+        /** @type {Cat} */ $x["age"]["value"] = 5;
     }
 }
  

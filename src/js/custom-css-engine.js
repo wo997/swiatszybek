@@ -143,5 +143,5 @@ function evalCss(val, node = null, params = {}) {
 	val = val.replace(/vh/g, "*" + vh);
 	val = val.replace(/px/g, "");
 
-	return eval(val);
+	return eval(escapeNumericalExpression(val));
 }

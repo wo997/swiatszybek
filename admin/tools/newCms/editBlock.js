@@ -107,12 +107,12 @@ class NewCmsEditBlock {
 				tooltip: "Wiersze / kolumny",
 			});
 		}
-		btn_set.push({
+		/*btn_set.push({
 			color: "#58D",
 			icon: `<i class="fas fa-expand-alt" style="margin-top: 1px;"></i>`,
 			className: "size_btn",
 			tooltip: "Wymiary",
-		});
+		});*/
 		btn_set.push({
 			color: "#a7a7a7",
 			icon: `<i class="fas fa-arrows-alt"></i>`,
