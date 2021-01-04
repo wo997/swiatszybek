@@ -57,6 +57,14 @@ useTool("fileManager");
  * }} NewCmsGrabOptions
  */
 
+/**
+ * @typedef {{
+ * beforeAnimationEndCallback?()
+ * callback?()
+ * try_counter?: number
+ * }} AnimateContentOptions
+ */
+
 class NewCms {
 	constructor(container) {
 		this.container = $(container);
@@ -176,9 +184,8 @@ class NewCms {
 
 		if (this.grabbed_block) {
 			this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
-		} else {
-			this.select_controls.addFloatingSelectControls();
 		}
+		this.select_controls.addFloatingSelectControls();
 
 		if (options.source != "styling") {
 			this.styling.setResponsiveContainerSize();
@@ -420,6 +427,10 @@ class NewCms {
 	}
 
 	unlockInput() {
+		if (this.lock_timeout) {
+			clearTimeout(this.lock_timeout);
+		}
+
 		this.container.classList.remove("locked_input");
 		setTimeout(() => {
 			this.select_controls.addFloatingSelectControls();
@@ -750,7 +761,7 @@ class NewCms {
 		block.classList.add("animation_cramp");
 
 		this.animateContent(all_animatable_blocks, 450, {
-			beforeAnimationEndCallback() {
+			beforeAnimationEndCallback: () => {
 				block.classList.remove("animation_cramp");
 			},
 			callback: () => {
@@ -1204,49 +1215,17 @@ class NewCms {
 	 *
 	 * @param {NewCmsBlock[]} all_animatable_blocks
 	 * @param {number} duration
-	 * @param {*} options
+	 * @param {AnimateContentOptions} options
 	 */
 	animateContent(all_animatable_blocks, duration, options = {}) {
-		const animation_swap_time = 100;
-		this.lockInput(duration + animation_swap_time);
+		this.lockInput();
 
 		this.select_controls.removeSelection();
 
 		this.container.classList.add("animating_rearrangement");
 
-		const finishAnimation = () => {
-			this.content_node_copy.classList.add("visible");
-
-			this.content_node.findAll(".hidden_during_rearrangement").forEach((e) => {
-				e.classList.remove("hidden_during_rearrangement");
-			});
-
-			setTimeout(() => {
-				if (options.beforeAnimationEndCallback) {
-					options.beforeAnimationEndCallback();
-				}
-
-				// browser needs time to render it again
-				this.container.classList.remove("animating_rearrangement");
-
-				this.contentChange();
-
-				// not needed cause we set it to user-select none bro
-				//removeUserSelection();
-
-				this.scroll();
-
-				this.updateMouseTarget();
-				this.mouseMove();
-
-				if (options.callback) {
-					options.callback();
-				}
-
-				this.content_node_copy.classList.remove("visible");
-				this.content_node_copy.empty();
-			}, animation_swap_time);
-		};
+		let highest_travel_length = -1;
+		let highest_travel_block = null;
 
 		all_animatable_blocks.forEach((block) => {
 			const lr = block.last_rect;
@@ -1286,10 +1265,18 @@ class NewCms {
 			let padding = `${cso.pt}px ${cso.pr}px ${cso.pb}px ${cso.pl}px`;
 			let margin = `${cso.mt}px ${cso.mr}px ${cso.mb}px ${cso.ml}px`;
 
-			left_0 += cso.ml;
-			top_0 += cso.mt;
+			left_0 += cso.ml - dx;
+			top_0 += cso.mt - dy;
 			left_1 += cso.ml;
 			top_1 += cso.mt;
+
+			const tx = left_1 - left_0;
+			const ty = top_1 - top_0;
+			let travel = tx * tx + ty * ty;
+			if (travel > highest_travel_length) {
+				highest_travel_length = travel;
+				highest_travel_block = block;
+			}
 
 			let keyframes = "";
 
@@ -1305,8 +1292,8 @@ class NewCms {
 				keyframes = `
                     0% {
                         ${common_keyframes}
-                        left: ${block.last_rect.left + dx - left_0}px;
-                        top: ${block.last_rect.top + dy - top_0}px;
+                        left: ${block.last_rect.left - left_0}px;
+                        top: ${block.last_rect.top - top_0}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                         transform: scale(1);
@@ -1314,10 +1301,9 @@ class NewCms {
                     }
                     100% {
                         ${common_keyframes}
-                        left: ${block.last_rect.left + dx - left_0}px;
+                        left: ${block.last_rect.left - left_0}px;
                         top: ${
 													block.last_rect.top +
-													dy -
 													top_0 -
 													block.last_rect.height * 0.5 -
 													cso.mt
@@ -1332,8 +1318,8 @@ class NewCms {
 				keyframes = `
                     0% {
                         ${common_keyframes}
-                        left: ${block.last_rect.left + dx - left_0}px;
-                        top: ${block.last_rect.top + dy - top_0}px;
+                        left: ${block.last_rect.left - left_0}px;
+                        top: ${block.last_rect.top - top_0}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                     }
@@ -1356,8 +1342,65 @@ class NewCms {
 		});
 
 		setTimeout(() => {
-			finishAnimation();
+			this.finishAnimation({ ...options, highest_travel_block });
 		}, duration);
+	}
+
+	/**
+	 *
+	 * @param {{
+	 * highest_travel_block?: NewCmsBlock
+	 * } & AnimateContentOptions } options
+	 */
+	finishAnimation(options = {}) {
+		this.content_node_copy.classList.add("visible");
+
+		this.content_node.findAll(".hidden_during_rearrangement").forEach((e) => {
+			e.classList.remove("hidden_during_rearrangement");
+		});
+
+		const b = options.highest_travel_block;
+		if (b) {
+			const tx = b.new_rect.left - b.clientLeft;
+			const ty = b.new_rect.top - b.clientTop;
+			const tt = tx * tx + ty * ty;
+
+			if (tt > 5) {
+				options.try_counter = nonull(options.try_counter, 0) + 1;
+				if (options.try_counter < 4) {
+					setTimeout(() => {
+						this.finishAnimation();
+					}, 100);
+					return;
+				}
+			}
+		}
+
+		if (options.beforeAnimationEndCallback) {
+			options.beforeAnimationEndCallback();
+		}
+
+		// browser needs time to render it again
+		this.container.classList.remove("animating_rearrangement");
+
+		this.contentChange();
+
+		// not needed cause we set it to user-select none bro
+		//removeUserSelection();
+
+		this.scroll();
+
+		this.updateMouseTarget();
+		this.mouseMove();
+
+		if (options.callback) {
+			options.callback();
+		}
+
+		this.content_node_copy.classList.remove("visible");
+		this.content_node_copy.empty();
+
+		this.unlockInput();
 	}
 
 	grabAnimation() {
