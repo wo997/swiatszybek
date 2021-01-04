@@ -1140,13 +1140,7 @@ class NewCms {
 		// @ts-ignore
 		const all_animatable_blocks = this.afterContentAnimation();
 
-		this.animateContent(all_animatable_blocks, 450, {
-			callback: () => {
-				this.content_node.findAll(".rearranged_node_animated").forEach((e) => {
-					e.classList.remove("rearranged_node_animated");
-				});
-			},
-		});
+		this.animateContent(all_animatable_blocks, 450);
 	}
 
 	beforeContentAnimation() {
@@ -1357,6 +1351,10 @@ class NewCms {
 
 		this.content_node.findAll(".hidden_during_rearrangement").forEach((e) => {
 			e.classList.remove("hidden_during_rearrangement");
+		});
+
+		this.content_node.findAll(".rearranged_node_animated").forEach((e) => {
+			e.classList.remove("rearranged_node_animated");
 		});
 
 		const b = options.highest_travel_block;
