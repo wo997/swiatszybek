@@ -40,9 +40,7 @@
             formData: formData,
             success(res) {
                 $$(`.${name}`).forEach((e) => {
-                    e.setAttribute("data-src", res.path);
-                    // TODO: a single function to replace wo997_img data-src
-                    lazyLoadImages();
+                    switchImage(e, res.path);
                 });
             },
         });

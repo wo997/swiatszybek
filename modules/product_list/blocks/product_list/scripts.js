@@ -16,6 +16,10 @@ function setProductListSwiperDimensions(node) {
 	var swiper = node.swiper;
 	swiper.params.slidesPerView = slidesPerView;
 	swiper.update();
+
+	setTimeout(() => {
+		lazyLoadImages();
+	}, 3000);
 }
 
 var productListCounter = 0;
@@ -181,9 +185,7 @@ function currentlyFocusedProduct(node) {
 				prev_img.animate(`0%{opacity:1}100%{opacity:0}`, duration);
 
 				setTimeout(() => {
-					prev_img.setAttribute("data-src", default_src);
-					prev_img.classList.remove("wo997_img_shown");
-					lazyLoadImages();
+					switchImage(prev_img, default_src);
 				}, duration);
 			} else {
 				prev_img.style.opacity = "1";
@@ -247,11 +249,8 @@ function nextProductImageSlide(img, first = false) {
 		const img_src = img.animation_frames[img.animation_frame_id];
 
 		if (img_src) {
-			// just preload
 			img.await_img_replace = true;
-			img.classList.remove("wo997_img_shown");
-			img.setAttribute("data-src", img_src);
-			lazyLoadImages();
+			switchImage(img, img_src);
 		}
 	};
 
@@ -270,9 +269,7 @@ function nextProductImageSlide(img, first = false) {
 
 		const next_src = img.getAttribute("data-next_src");
 		if (next_src) {
-			img.classList.remove("wo997_img_shown");
-			img.setAttribute("data-src", next_src);
-			lazyLoadImages();
+			switchImage(img, next_src);
 		}
 	}, duration);
 

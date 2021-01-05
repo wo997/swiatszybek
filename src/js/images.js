@@ -170,6 +170,15 @@ function getResponsiveImageData(src) {
 /**
  * @param {ResponsiveImage} img
  */
+function switchImage(img, src, animate = true) {
+	img.setAttribute("data-src", src);
+	setImageDimensions(img);
+	loadImage(img, animate);
+}
+
+/**
+ * @param {ResponsiveImage} img
+ */
 function setImageDimensions(img) {
 	const src = img.getAttribute("data-src");
 	const data = getResponsiveImageData(src);
@@ -217,6 +226,7 @@ window.addEventListener("load", () => {
 });
 
 function lazyLoadImages(animate = true) {
+	scrollCallbackLazy();
 	setCustomHeights();
 
 	$$(".lazy").forEach((img) => {
@@ -244,15 +254,17 @@ function lazyLoadImages(animate = true) {
 }
 
 document.addEventListener("scroll", scrollCallbackLazy);
+/*document.addEventListener("scroll", scrollCallbackLazy);
 document.addEventListener("click", scrollCallbackLazy);
 document.addEventListener("touchmove", scrollCallbackLazy);
 document.addEventListener("drag", scrollCallbackLazy);
 document.addEventListener("mouseover", () => {
 	delay("scrollCallbackLazy", 100);
-});
+});*/
 
 // some images might be small at the beginning and wanna grow later
 setInterval(() => {
+	scrollCallbackLazy();
 	// @ts-ignore
 	$$(".wo997_img_shown").forEach((/** @type {ResponsiveImage} */ img) => {
 		const rect = isNodeOnScreen(img);

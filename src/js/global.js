@@ -347,8 +347,7 @@ function setValue(input, value = null, params = {}) {
 			setAttributePickerValues(input, value);
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
-				input.setAttribute("data-src", value);
-				input.classList.remove("wo997_img_shown");
+				switchImage(input, value);
 			} else {
 				input.setAttribute("src", value);
 			}
