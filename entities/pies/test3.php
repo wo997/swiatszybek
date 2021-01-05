@@ -23,7 +23,7 @@
 echo "x";
 
 $u = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
-//$u["js"]
+$u[""];
 
 /** @type {Cat[]} */
 $cats = [];
@@ -69,29 +69,37 @@ var_dump([
     "age" => ["value"]
 ]);
 
+//var_dump(["age" => ["value" => 5]]);
+
+
+/**
+ * heyca
+ *
+ * @param  GridData $x
+ * @param  string $y
+ * @return void
+ */
 function heyca($x, $y)
 {
-    /**
-     * @typedef GridData {
-     * some_prop: string
-     * }
-     */
+    $x[""];
 
     /** @type {Cat} */
-    $x = 666;
-    $x["age"]["value"] = 5;
+    $x["a"];
+    $x["a"][""];
 }
 
 class TestClass
 {
-    /** @param {Cat} $cat */
+    /**
+     * heyca
+     *
+     * @param  Cat $cat
+     * @param  string $y
+     * @return void
+     */
     public function pies($cat)
     {
-        echo $cat[""];
-
-        /** @type {Cat} */
-        $x = 666;
-        /** @type {Cat} */ $x["age"]["value"] = 5;
+        $cat["age"]["value"] = 5;
     }
 }
  

@@ -107,7 +107,24 @@ function getRelevanceQuery($fields, $words)
     return $query;
 }
 
-function paginateData($pagination_params__a = [])
+/**
+ * @typedef PaginationParams {
+ * select: string
+ * from: string
+ * where?: string
+ * filters?: string
+ * order?: string
+ * main_search_fields?: array
+ * }
+ */
+
+/**
+ * paginateData
+ *
+ * @param  PaginationParams $params
+ * @return void
+ */
+function paginateData($params = [])
 {
     /*
     required POSTS:
@@ -141,11 +158,11 @@ function paginateData($pagination_params__a = [])
 
     $bottomIndex = $pageIndex * $rowCount;
 
-    $select = nonull($pagination_params__a, "select");
+    $select = $params["select"];
 
-    $from = nonull($pagination_params__a, "from");
+    $from = $params["from"];
 
-    $where = nonull($pagination_params__a, "where");
+    $where = nonull($params, "where");
 
     if (trim($where) == "") {
         $where = "1";
@@ -159,9 +176,9 @@ function paginateData($pagination_params__a = [])
         }
     }
 
-    $main_search_value = nonull($pagination_params__a, "search", nonull($_POST, 'search'));
-    $main_search_fields = nonull($pagination_params__a, "main_search_fields", []);
-    $search_type = nonull($pagination_params__a, "search_type", "regular");
+    $main_search_value = nonull($params, "search", nonull($_POST, 'search'));
+    $main_search_fields = nonull($params, "main_search_fields", []);
+    $search_type = nonull($params, "search_type", "regular");
 
     $search_query = getSearchQuery([
         "main_search_value" => $main_search_value,
@@ -177,9 +194,9 @@ function paginateData($pagination_params__a = [])
         }
     }
 
-    $group = isset($pagination_params__a["group"]) ? ("GROUP BY " . $pagination_params__a["group"]) : "";
+    $group = isset($params["group"]) ? ("GROUP BY " . $params["group"]) : "";
 
-    $order = nonull($pagination_params__a, "order");
+    $order = nonull($params, "order");
 
     $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
 
@@ -229,8 +246,8 @@ function paginateData($pagination_params__a = [])
         $index++;
         $result["kolejnosc"] = $pageIndex * $rowCount + $index;
 
-        if (isset($pagination_params__a["renderers"])) {
-            foreach ($pagination_params__a["renderers"] as $field => $renderer) {
+        if (isset($params["renderers"])) {
+            foreach ($params["renderers"] as $field => $renderer) {
                 $result[$field] = $renderer($result);
             }
         }
@@ -241,7 +258,7 @@ function paginateData($pagination_params__a = [])
 
     $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
 
-    return isset($pagination_params__a["raw"]) ? $responseArray : json_encode($responseArray);
+    return isset($params["raw"]) ? $responseArray : json_encode($responseArray);
 }
 
 /**

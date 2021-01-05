@@ -8,7 +8,7 @@
  * file_name: string
  * extension: string
  * await_img_replace?: boolean
- * } & HTMLElement} ResponsiveImage
+ * } & PiepNode} ResponsiveImage
  */
 
 const lazyLoadOffset = 700;
@@ -95,22 +95,22 @@ function loadImage(img, animate = true) {
 			src += ".jpg";
 		}
 
-		img.addEventListener("load", () => {
-			if (!img.hasAttribute("data-height")) {
-				img.style.height = "";
-			}
-		});
-
 		if (img.await_img_replace) {
 			preloadImage(src);
-			img.setAttribute("data-next-src", src);
+			img.setAttribute("data-next_src", src);
 			delete img.await_img_replace;
 		} else {
+			img.addEventListener("load", () => {
+				if (!img.hasAttribute("data-height")) {
+					img.style.height = "";
+				}
+			});
+
 			img.setAttribute("src", src);
 			img.classList.add("wo997_img_waiting");
-		}
 
-		showWaitingImage(img, animate ? 400 : 0);
+			showWaitingImage(img, animate ? 400 : 0);
+		}
 	}
 }
 

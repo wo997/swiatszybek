@@ -178,13 +178,11 @@ function currentlyFocusedProduct(node) {
 			if (prev_img.getAttribute("data-src") != default_src) {
 				const duration = 150;
 
-				prev_img.style.transition = `opacity ${duration}ms`;
-				prev_img.style.opacity = "0";
+				prev_img.animate(`0%{opacity:1}100%{opacity:0}`, duration);
 
 				setTimeout(() => {
 					prev_img.setAttribute("data-src", default_src);
 					prev_img.classList.remove("wo997_img_shown");
-					prev_img.style.opacity = "1";
 					lazyLoadImages();
 				}, duration);
 			} else {
@@ -248,15 +246,13 @@ function nextProductImageSlide(img, first = false) {
 		}
 		const img_src = img.animation_frames[img.animation_frame_id];
 
-		if (!img_src) {
-			// sorry bro it's fucked up
-			return;
+		if (img_src) {
+			// just preload
+			img.await_img_replace = true;
+			img.classList.remove("wo997_img_shown");
+			img.setAttribute("data-src", img_src);
+			lazyLoadImages();
 		}
-
-		img.classList.remove("wo997_img_shown");
-		img.setAttribute("data-src", img_src);
-		img.await_img_replace = true;
-		lazyLoadImages(false);
 	};
 
 	if (first) {
@@ -265,20 +261,19 @@ function nextProductImageSlide(img, first = false) {
 
 	const duration = 150;
 
-	img.style.transition = `opacity ${duration}ms`;
-	img.style.opacity = "0";
+	img.animate(`0%{opacity:1}100%{opacity:0}`, duration);
 
 	setTimeout(() => {
 		if (animated_product_img != img) {
 			return;
 		}
 
-		const next_src = img.getAttribute("data-next-src");
+		const next_src = img.getAttribute("data-next_src");
 		if (next_src) {
-			img.setAttribute("src", next_src);
+			img.classList.remove("wo997_img_shown");
+			img.setAttribute("data-src", next_src);
+			lazyLoadImages();
 		}
-
-		img.style.opacity = "1";
 	}, duration);
 
 	img.sub_animation_timeout = setTimeout(() => {

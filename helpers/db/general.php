@@ -1,10 +1,19 @@
 <?php
 
+/**
+ * @param string $sql !SQL_query
+ * @param array $params
+ */
 function query($sql, $params = []) // returns nothing; update delete insert purpose 
 {
     return fetchArray($sql, $params, false);
 }
 
+/**
+ * @param string $sql !SQL_query
+ * @param array $params
+ * @return array $sql !SQL_selected[]
+ */
 function fetchArray($sql, $params = [], $give_response = true)
 {
     global $con;
@@ -35,27 +44,39 @@ function fetchArray($sql, $params = [], $give_response = true)
     return $res;
 }
 
-
+/**
+ * @param string $sql !SQL_query
+ * @param array $params
+ * @return array $sql !SQL_selected
+ */
 function fetchRow($sql, $params = [])
 {
     $res = fetchArray($sql, $params);
     return isset($res[0]) ? $res[0] : [];
 }
 
+/**
+ * @param string $sql !SQL_query
+ * @param array $params
+ * @return mixed
+ */
 function fetchValue($sql, $params = [])
 {
     $res = fetchRow($sql, $params);
     return isset(array_keys($res)[0]) ? $res[array_keys($res)[0]] : null;
 }
 
+/**
+ * @param string $sql !SQL_select
+ * @param array $params
+ * @return array
+ */
 function fetchColumn($sql, $params = [])
 {
     $res = fetchArray($sql, $params);
     if (!isset($res[0]) || !isset(array_keys($res[0])[0])) return [];
     return array_column($res, array_keys($res[0])[0]);
 }
-
-
 
 function getLastInsertedId()
 {
