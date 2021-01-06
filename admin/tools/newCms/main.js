@@ -8,7 +8,7 @@ useTool("fileManager");
  * @typedef {{
  * animation_data: AnimationData
  * last_rect: ClientRect
- * new_rect: ClientRect
+ * client_rect: ClientRect
  * rearrange_control_before: RearrangeControl
  * rearrange_control_after: RearrangeControl
  * rearrange_control_inside: RearrangeControl
@@ -17,12 +17,12 @@ useTool("fileManager");
  * select_control: PiepNode
  * styling_data: BlockStyles
  * grid_layout_index?: number
- * singleton_siblings_length?: number
- * singleton_siblings_width?: number
- * singleton_siblings_autos_count?: number
- * singleton_margin_width?: number
- * singleton_inner_percent?: number
- * singleton_last_in_row?: boolean
+ * siblings_length?: number
+ * siblings_width?: number
+ * siblings_autos_count?: number
+ * margin_width?: number
+ * inner_percent?: number
+ * last_in_row?: boolean
  * computed_styles?: BlockStyleTargets
  * } & PiepNode} NewCmsBlock
  */
@@ -65,9 +65,26 @@ useTool("fileManager");
  * }} AnimateContentOptions
  */
 
+/**
+ * @typedef {{
+ * last_rect?: ClientRect
+ * client_rect?: ClientRect
+ * inner_percent?: number
+ * } & PiepNode} NewCmsContentNode
+ */
+
+/**
+ * @typedef {{
+ * last_rect?: ClientRect
+ * client_rect?: ClientRect
+ * } & PiepNode} NewCmsBlockContent
+ */
+
 class NewCms {
 	constructor(container) {
 		this.container = $(container);
+
+		/** @type {NewCmsContentNode} */
 		this.content_node = this.container.find(`.newCmsContent`);
 		this.content_scroll_panel = this.container.find(`.content_scroll_panel`);
 		this.content_scroll_content = this.container.find(
@@ -180,6 +197,8 @@ class NewCms {
 	}
 
 	onResize(options = {}) {
+		this.styling.resetLayout();
+
 		this.manageGrids();
 
 		if (this.grabbed_block) {
@@ -220,7 +239,7 @@ class NewCms {
 	initMargins() {
 		// definitelly should be a part of the sidebar!
 		const margin = this.sidebar.node.find(`.margin`);
-		// @ts-ignore
+
 		this.insertMarginControl(margin, "margin", {});
 
 		margin.findAll("c-select").forEach((e) => {
@@ -240,8 +259,8 @@ class NewCms {
 
 	initPaddings() {
 		const padding = this.sidebar.node.find(`.padding`);
-		// @ts-ignore
-		this.insertMarginControl(padding, "padding", {});
+
+		this.insertMarginControl(padding, "padding");
 
 		padding.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
@@ -536,6 +555,8 @@ class NewCms {
 	}
 
 	contentChangeManageContent() {
+		this.styling.resetLayout();
+
 		this.styling.registerMissingBlocks();
 		this.styling.setBlocksFlexOrder();
 		this.manageGrids();
@@ -582,11 +603,7 @@ class NewCms {
 
 		this.content_node
 			.findAll(this.query_for_visible_blocks + `[data-block="grid"]`)
-			.forEach((g) => {
-				/** @type {NewCmsGrid} */
-				// @ts-ignore
-				const grid = g;
-
+			.forEach((/** @type {NewCmsGrid} */ grid) => {
 				const styles = this.styling.getBlockCurrentStyles(grid);
 
 				// THAT LOOKS WEIRD HMMM BUT MAYBE WE SHOULD LEAVE IT
@@ -897,10 +914,7 @@ class NewCms {
 
 				this.content_scroll_content
 					.findAll(".rearrange_control:not(.first_grid_node)")
-					.forEach((c) => {
-						/** @type {RearrangeControl} */
-						// @ts-ignore
-						const control = c;
+					.forEach((/** @type {RearrangeControl} */ control) => {
 						control.classList.toggle(
 							"unavailable",
 							control.position !== "grid" ||
@@ -976,7 +990,6 @@ class NewCms {
 					delay_grabbed_rect_node_fadeout
 				);
 
-				// @ts-ignore
 				grabbed_block = this.createBlock(block_type, {
 					from: grabbed_block,
 				});
@@ -1143,19 +1156,20 @@ class NewCms {
 		this.animateContent(all_animatable_blocks, 450);
 	}
 
+	getAllNodesWithRects() {
+		return [
+			this.content_node,
+			...this.content_node.findAll(".newCms_block"),
+			...this.content_node.findAll(".newCms_block_content"),
+		];
+	}
+
 	beforeContentAnimation() {
-		this.content_node.findAll(this.query_for_visible_blocks).forEach((b) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const block = b;
-			if (!block.last_rect) {
-				block.last_rect = block.getBoundingClientRect();
-			}
+		this.getAllNodesWithRects().forEach((e) => {
+			// @ts-ignore for code simplicity
+			e.last_rect = e.getBoundingClientRect();
 		});
 
-		const rct = this.content_node.getBoundingClientRect();
-		// @ts-ignore
-		this.content_node.last_rect = rct;
 		this.before_animation_scroll_top = this.content_scroll_panel.scrollTop;
 	}
 
@@ -1164,36 +1178,18 @@ class NewCms {
 
 		const all_animatable_blocks = this.content_node
 			.findAll(".newCms_block")
-			.filter((b) => {
-				/** @type {NewCmsBlock} */
-				// @ts-ignore
-				const block = b;
+			.filter((/** @type {NewCmsBlock} */ block) => {
 				return !!block.last_rect && !block.classList.contains("parent_cramped");
 			});
 
-		all_animatable_blocks.forEach((b) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const block = b;
-			block.new_rect = block.getBoundingClientRect();
+		all_animatable_blocks.forEach((/** @type {NewCmsBlock} */ block) => {
 			if (!block.animation_data) {
-				/** @type {AnimationData} */
-				// @ts-ignore
+				// animation data is different for the block we grabbed - it's basically the node offset
 				const block_animation_data = { dx: 0, dy: 0, w: 0, h: 0 };
 				block.animation_data = block_animation_data;
 			}
 		});
 
-		const rct = this.content_node.getBoundingClientRect();
-		// @ts-ignore
-		this.content_node.new_rect = rct;
-		//this.content_node.style.height =
-		// @ts-ignore
-		//Math.max(rct.height, this.content_node.last_rect.height) + "px";
-		/*console.log(
-			this.before_animation_scroll_top,
-			this.content_scroll_panel.scrollTop
-		);*/
 		// copy overlay to hide layout update
 		this.content_node_copy.setContent(this.content_node.innerHTML);
 		this.scroll();
@@ -1223,7 +1219,7 @@ class NewCms {
 
 		all_animatable_blocks.forEach((block) => {
 			const lr = block.last_rect;
-			const nr = block.new_rect;
+			const nr = block.client_rect;
 			if (
 				(lr.top < window.innerHeight && lr.top + lr.height > 0) ||
 				(nr.top < window.innerHeight && nr.top + nr.height > 0)
@@ -1247,11 +1243,11 @@ class NewCms {
 				left_1 = 0,
 				top_1 = 0;
 
-			if (parent.new_rect && parent.last_rect) {
+			if (parent.client_rect && parent.last_rect) {
 				left_0 = parent.last_rect.left;
 				top_0 = parent.last_rect.top;
-				left_1 = parent.new_rect.left;
-				top_1 = parent.new_rect.top;
+				left_1 = parent.client_rect.left;
+				top_1 = parent.client_rect.top;
 			}
 
 			if (parent.computed_styles) {
@@ -1327,10 +1323,10 @@ class NewCms {
                     }
                     100% {
                         ${common_keyframes}
-                        left: ${block.new_rect.left - left_1}px;
-                        top: ${block.new_rect.top - top_1}px;
-                        width: ${block.new_rect.width}px;
-                        height: ${block.new_rect.height}px;
+                        left: ${block.client_rect.left - left_1}px;
+                        top: ${block.client_rect.top - top_1}px;
+                        width: ${block.client_rect.width}px;
+                        height: ${block.client_rect.height}px;
                     }
                 `;
 			}
@@ -1367,8 +1363,8 @@ class NewCms {
 
 		const b = options.highest_travel_block;
 		if (b) {
-			const tx = b.new_rect.left - b.clientLeft;
-			const ty = b.new_rect.top - b.clientTop;
+			const tx = b.client_rect.left - b.clientLeft;
+			const ty = b.client_rect.top - b.clientTop;
 			const tt = tx * tx + ty * ty;
 
 			if (tt > 5) {

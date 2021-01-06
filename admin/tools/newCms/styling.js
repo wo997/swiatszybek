@@ -958,7 +958,7 @@ class NewCmsStyling {
 			/** @type {NewCmsBlock[]}*/
 			let blocks_in_row = [];
 
-			if (!block.singleton_siblings_autos_count) {
+			if (!block.siblings_autos_count) {
 				// HEY! remember that flex wrap containers wont have the ability to set the height so that operation is way simpler
 				// consider adding it tho
 				const is_wrap =
@@ -1058,7 +1058,7 @@ class NewCmsStyling {
 						content_width = temp_margin_width;
 					}
 
-					temp_block.singleton_margin_width = temp_margin_width;
+					temp_block.margin_width = temp_margin_width;
 				};
 
 				let temp_block = block;
@@ -1094,14 +1094,14 @@ class NewCmsStyling {
 
 				blocks_in_row.forEach((some_block_in_row) => {
 					// these valyes repeat meanwhile margin_width is assigned above
-					some_block_in_row.singleton_siblings_length = content_length;
-					some_block_in_row.singleton_siblings_width = content_width;
-					some_block_in_row.singleton_siblings_autos_count = autos_count;
+					some_block_in_row.siblings_length = content_length;
+					some_block_in_row.siblings_width = content_width;
+					some_block_in_row.siblings_autos_count = autos_count;
 				});
 			} else {
-				content_length = block.singleton_siblings_length;
-				content_width = block.singleton_siblings_width;
-				autos_count = block.singleton_siblings_autos_count;
+				content_length = block.siblings_length;
+				content_width = block.siblings_width;
+				autos_count = block.siblings_autos_count;
 			}
 
 			if (
@@ -1110,7 +1110,7 @@ class NewCmsStyling {
 			) {
 				const divide = params.opposite === "auto" ? 2 : 1;
 				// @ts-ignore
-				return (content_width - block.singleton_margin_width) / divide;
+				return (content_width - block.margin_width) / divide;
 			} else {
 				// that solution would work perfectly, but since we can use .newCms_block_content (with no paddings) we will go for that
 				//const parent_outside_styles = parent_container.computed_styles.outside;
@@ -1125,7 +1125,7 @@ class NewCmsStyling {
 			}
 		}
 
-		let percent = parent_container.singleton_inner_percent;
+		let percent = parent_container.inner_percent;
 
 		if (!percent) {
 			percent = parent_container.offsetWidth * 0.01;
@@ -1155,7 +1155,7 @@ class NewCmsStyling {
 				}
 			}
 
-			parent_container.singleton_inner_percent = percent;
+			parent_container.inner_percent = percent;
 		}
 
 		const vw = document.body.offsetWidth * 0.01;
@@ -1174,32 +1174,34 @@ class NewCmsStyling {
 		return eval(escapeNumericalExpression(val));
 	}
 
-	recalculateLayout() {
+	resetLayout() {
+		this.newCms.getAllNodesWithRects().forEach((e) => {
+			// @ts-ignore for code simplicity
+			e.client_rect = e.getBoundingClientRect();
+		});
+
 		const all_blocks = this.newCms.content_node.findAll(
 			this.newCms.query_for_visible_blocks
 		);
 
-		[this.newCms.content_node, ...all_blocks].forEach((b) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const block = b;
-
-			delete block.singleton_siblings_autos_count;
-			delete block.singleton_siblings_length;
-			delete block.singleton_siblings_width;
-			delete block.singleton_margin_width;
-			delete block.singleton_inner_percent;
+		[this.newCms.content_node, ...all_blocks].forEach((
+			/** @type {NewCmsBlock} */ block
+		) => {
+			delete block.siblings_autos_count;
+			delete block.siblings_length;
+			delete block.siblings_width;
+			delete block.margin_width;
+			delete block.inner_percent;
+			delete block.last_in_row;
 		});
 
-		all_blocks.forEach((b) => {
-			/** @type {NewCmsBlock} */
-			// @ts-ignore
-			const block = b;
+		delete this.newCms.content_node.inner_percent;
+	}
 
-			delete block.singleton_last_in_row;
-			//console.log(block, block.getBoundingClientRect());
-			block.new_rect = block.getBoundingClientRect();
-		});
+	recalculateLayout() {
+		const all_blocks = this.newCms.content_node.findAll(
+			this.newCms.query_for_visible_blocks
+		);
 
 		all_blocks.forEach((/** @type {NewCmsBlock} */ block) => {
 			block.computed_styles = this.getBlockComputedStyles(block);
@@ -1233,7 +1235,6 @@ class NewCmsStyling {
 					direction: "vertical",
 					opposite: block_styles.outside["margin-top"],
 					opposite_name: "margin-top",
-					cipka: true,
 				}
 			);
 			block_styles.outside.ml = this.evalCss(
@@ -1295,7 +1296,7 @@ class NewCmsStyling {
 	// 	);
 
 	// 	const right_kiss =
-	// 		block.new_rect.left + block.new_rect.width + nonull(mr, 0);
+	// 		block.client_rect.left + block.client_rect.width + nonull(mr, 0);
 
 	// 	const container_content_rect = block.parent().getBoundingClientRect();
 
@@ -1310,7 +1311,7 @@ class NewCmsStyling {
 	 * @param {NewCmsBlock} block
 	 */
 	getBlockLastInRow(block) {
-		let last_in_row = block.singleton_last_in_row;
+		let last_in_row = block.last_in_row;
 		if (last_in_row === undefined) {
 			if (!block.computed_styles) {
 				//console.error("TAKE A LOOK AT IT BRO, skip or ", block);
@@ -1326,7 +1327,7 @@ class NewCmsStyling {
 			);
 
 			const right_kiss =
-				block.new_rect.left + block.new_rect.width + nonull(mr, 0);
+				block.client_rect.left + block.client_rect.width + nonull(mr, 0);
 
 			const next = block.getNextBlock();
 			if (next) {
@@ -1337,14 +1338,14 @@ class NewCmsStyling {
 						auto: 0,
 					}
 				);
-				const next_left_kiss = next.new_rect.left - nonull(next_ml, 0);
+				const next_left_kiss = next.client_rect.left - nonull(next_ml, 0);
 
 				last_in_row = next_left_kiss < right_kiss - 2;
 			} else {
 				last_in_row = true;
 			}
 
-			block.singleton_last_in_row = last_in_row;
+			block.last_in_row = last_in_row;
 		}
 
 		return last_in_row;
