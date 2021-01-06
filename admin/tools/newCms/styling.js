@@ -48,6 +48,7 @@ class NewCmsStyling {
 
 	/**
 	 * @param {NewCms} newCms
+	 * @param {PiepNode} node
 	 */
 	constructor(newCms, node) {
 		this.newCms = newCms;
@@ -335,7 +336,6 @@ class NewCmsStyling {
 			} catch (e) {}
 
 			this.newCms.contentChangeManageContent();
-			this.generateCSS();
 		});
 	}
 
@@ -463,7 +463,7 @@ class NewCmsStyling {
 			}
 		}
 
-		this.node.innerHTML = css_full;
+		this.node.setContent(css_full);
 	}
 
 	/**
@@ -500,7 +500,6 @@ class NewCmsStyling {
 			this.newCms.contentChange();
 		} else if (action === "just_css") {
 			this.newCms.contentChangeManageContent();
-			this.generateCSS();
 		}
 	}
 
@@ -1175,10 +1174,7 @@ class NewCmsStyling {
 	}
 
 	resetLayout() {
-		this.newCms.getAllNodesWithRects().forEach((e) => {
-			// @ts-ignore for code simplicity
-			e.client_rect = e.getBoundingClientRect();
-		});
+		this.assignRects();
 
 		const all_blocks = this.newCms.content_node.findAll(
 			this.newCms.query_for_visible_blocks
@@ -1196,6 +1192,12 @@ class NewCmsStyling {
 		});
 
 		delete this.newCms.content_node.inner_percent;
+	}
+
+	assignRects() {
+		this.newCms.getAllNodesWithRects().forEach((e) => {
+			e.client_rect = e.getBoundingClientRect();
+		});
 	}
 
 	recalculateLayout() {

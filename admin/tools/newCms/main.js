@@ -7,8 +7,6 @@ useTool("fileManager");
 /**
  * @typedef {{
  * animation_data: AnimationData
- * last_rect: ClientRect
- * client_rect: ClientRect
  * rearrange_control_before: RearrangeControl
  * rearrange_control_after: RearrangeControl
  * rearrange_control_inside: RearrangeControl
@@ -24,7 +22,7 @@ useTool("fileManager");
  * inner_percent?: number
  * last_in_row?: boolean
  * computed_styles?: BlockStyleTargets
- * } & PiepNode} NewCmsBlock
+ * } & HasRects} NewCmsBlock
  */
 
 /**
@@ -67,17 +65,20 @@ useTool("fileManager");
 
 /**
  * @typedef {{
- * last_rect?: ClientRect
- * client_rect?: ClientRect
  * inner_percent?: number
- * } & PiepNode} NewCmsContentNode
+ * } & HasRects} NewCmsContentNode
  */
 
 /**
  * @typedef {{
- * last_rect?: ClientRect
+ * } & HasRects} NewCmsBlockContent
+ */
+
+/**
+ * @typedef {{
  * client_rect?: ClientRect
- * } & PiepNode} NewCmsBlockContent
+ * last_rect?: ClientRect
+ * } & PiepNode} HasRects
  */
 
 class NewCms {
@@ -1156,6 +1157,9 @@ class NewCms {
 		this.animateContent(all_animatable_blocks, 450);
 	}
 
+	/**
+	 * @returns {HasRects[]}
+	 */
 	getAllNodesWithRects() {
 		return [
 			this.content_node,
@@ -1166,7 +1170,6 @@ class NewCms {
 
 	beforeContentAnimation() {
 		this.getAllNodesWithRects().forEach((e) => {
-			// @ts-ignore for code simplicity
 			e.last_rect = e.getBoundingClientRect();
 		});
 
@@ -1174,6 +1177,7 @@ class NewCms {
 	}
 
 	afterContentAnimation() {
+		this.styling.resetLayout();
 		this.manageGrids();
 
 		const all_animatable_blocks = this.content_node
@@ -1235,27 +1239,21 @@ class NewCms {
 			const dx = block_animation_data.dx;
 			const dy = block_animation_data.dy;
 
-			/** @type {NewCmsBlock} */
+			///** @type {NewCmsBlock} */
 			// @ts-ignore
-			const parent = this.getBlockParent(block);
+			//const parent = this.getBlockParent(block);
 			let left_0 = 0,
 				top_0 = 0,
 				left_1 = 0,
 				top_1 = 0;
 
-			if (parent.client_rect && parent.last_rect) {
-				left_0 = parent.last_rect.left;
-				top_0 = parent.last_rect.top;
-				left_1 = parent.client_rect.left;
-				top_1 = parent.client_rect.top;
-			}
-
-			if (parent.computed_styles) {
-				const parent_outside_styles = parent.computed_styles.outside;
-				left_0 += parent_outside_styles.pl;
-				top_0 += parent_outside_styles.pt;
-				left_1 += parent_outside_styles.pl;
-				top_1 += parent_outside_styles.pt;
+			/** @type {HasRects} */
+			const real_parent = block.parent();
+			if (real_parent && real_parent.client_rect && real_parent.last_rect) {
+				left_0 = real_parent.last_rect.left;
+				top_0 = real_parent.last_rect.top;
+				left_1 = real_parent.client_rect.left;
+				top_1 = real_parent.client_rect.top;
 			}
 
 			// especially useful for grids
