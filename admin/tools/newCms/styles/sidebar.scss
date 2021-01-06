@@ -160,11 +160,11 @@
 		transition: box-shadow 0.2s;
 		user-select: none;
 	}
-	&:not(.grabbed):hover {
+	&:not(.is_grabbed):hover {
 		box-shadow: 0 1px 3px 0 var(--primary-clr);
 		filter: brightness(1.15);
 	}
-	&.grabbed {
+	&.is_grabbed {
 		filter: none !important;
 	}
 	span {

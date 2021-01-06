@@ -95,7 +95,9 @@ class NewCms {
 		this.clean_output_node = this.container.find(`.clean_output`);
 		this.content_node_copy = this.container.find(`.newCmsContent_copy`);
 		this.svg = this.container.find(`.svg`);
-		//this.overlay_node = this.container.find(`.overlay`);
+		this.copied_block_container = this.container.find(
+			`.copied_block_container`
+		);
 
 		this.mouse_x = 0;
 		this.mouse_y = 0;
@@ -180,9 +182,7 @@ class NewCms {
 		});
 
 		this.container.addEventListener("clean_up_output", () => {
-			this.clean_output_node.findAll(".to_remove").forEach((e) => {
-				e.remove();
-			});
+			this.removeRemovedNodes(this.clean_output_node);
 
 			// TODO: be careful with that
 			this.clean_output_node
@@ -194,6 +194,7 @@ class NewCms {
 
 		this.container
 			.find(".return_btn")
+			// @ts-ignore
 			.setAttribute("href", `${STATIC_URLS["ADMIN"]}nowe-strony`);
 	}
 
@@ -241,7 +242,7 @@ class NewCms {
 		// definitelly should be a part of the sidebar!
 		const margin = this.sidebar.node.find(`.margin`);
 
-		this.insertMarginControl(margin, "margin", {});
+		this.insertMarginControl(margin, "margin");
 
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
@@ -521,6 +522,8 @@ class NewCms {
 	scroll() {
 		this.updateMouseTarget();
 		this.mouseMove();
+
+		this.styling.assignRects();
 	}
 
 	caseEmptyHint() {
@@ -579,6 +582,13 @@ class NewCms {
 		}
 
 		// maybe we could animate it back as well, optional feature
+		this.removeRemovedNodes();
+	}
+
+	removeRemovedNodes(node = null) {
+		if (node === null) {
+			node = this.content_node;
+		}
 		this.content_node.findAll(".to_remove").forEach((e) => {
 			e.remove();
 		});
@@ -812,9 +822,8 @@ class NewCms {
 
 		this.grab_options = options;
 
-		const block_rect = block.getBoundingClientRect();
 		if (!options.copy) {
-			block.last_rect = block_rect;
+			block.last_rect = block.client_rect;
 		}
 
 		this.source_grabbed_node = block.classList.contains("side_block")
@@ -830,7 +839,7 @@ class NewCms {
 		);
 
 		this.grabbed_block = block;
-		this.grabbed_block.classList.add("grabbed");
+		this.grabbed_block.classList.add("is_grabbed");
 		this.grabbed_mouse_x = this.mouse_x;
 		this.grabbed_mouse_y = this.mouse_y;
 		//this.grabbed_scroll_top = this.grabbed_node_scroll_parent.scrollTop;
@@ -895,10 +904,6 @@ class NewCms {
 			this.mouse_target &&
 			this.mouse_target.findParentNode(this.trash_block.node);
 
-		// a copy has these values fixed
-		grabbed_block.style.width = "";
-		grabbed_block.style.height = "";
-
 		// if it's in a grid u wanna go for 2 steps
 		let rearrange_grid_first_node_ref = null;
 		let rearrange_grid_second_node_ref = null;
@@ -960,6 +965,12 @@ class NewCms {
 			return;
 		}
 
+		// actual releasing below!
+
+		// a copy has these values fixed
+		grabbed_block.style.width = "";
+		grabbed_block.style.height = "";
+
 		const block_type = grabbed_block.dataset.block;
 
 		let delay_grabbed_rect_node_fadeout = 0;
@@ -981,7 +992,7 @@ class NewCms {
 
 			if (this.rearrange_controls.rearrange_near_block) {
 				delay_grabbed_rect_node_fadeout = 250;
-				side_block.classList.remove("grabbed");
+				side_block.classList.remove("is_grabbed");
 				side_block.style.transform = "";
 				side_block.animate(
 					`
@@ -1027,7 +1038,7 @@ class NewCms {
 		}
 
 		grabbed_block.style.transform = "";
-		grabbed_block.classList.remove("grabbed");
+		grabbed_block.classList.remove("is_grabbed");
 		grabbed_block.classList.add("rearranged_node_animated");
 		setTimeout(() => {
 			this.rearrange_node.classList.remove("visible");
@@ -1369,7 +1380,7 @@ class NewCms {
 				options.try_counter = nonull(options.try_counter, 0) + 1;
 				if (options.try_counter < 4) {
 					setTimeout(() => {
-						this.finishAnimation();
+						this.finishAnimation(options);
 					}, 100);
 					return;
 				}
@@ -1491,11 +1502,10 @@ class NewCms {
 			const gbad = grabbed_block.animation_data;
 
 			if (this.rearrange_grid_first_node) {
-				// hanging laundry
+				//this.grab_options.copied_from.computed_styles
+				// basically hanging laundry
 				const rearrange_grid_first_node_actual_position = this
 					.rearrange_grid_first_node.actual_position;
-				const rearrange_grid_first_node_scroll_parent = this.rearrange_grid_first_node.findScrollParent();
-				const rearrange_grid_first_node_scroll_parent_rect = rearrange_grid_first_node_scroll_parent.getBoundingClientRect();
 
 				target_dx =
 					rearrange_grid_first_node_actual_position.left -
@@ -1508,7 +1518,7 @@ class NewCms {
 					this.mouse_x - rearrange_grid_first_node_actual_position.left;
 				target_h = this.mouse_y - rearrange_grid_first_node_actual_position.top;
 
-				const scr_dx = this.content_scroll_panel.scrollLeft;
+				const scr_dx = 0; // this.content_scroll_panel.scrollLeft;
 				const scr_dy =
 					this.content_scroll_panel.scrollTop - this.grabbed_scroll_top;
 

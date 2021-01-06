@@ -175,8 +175,9 @@ class NewCmsEditBlock {
 				/** @type {NewCmsBlock} */
 				// @ts-ignore
 				const copied_block = createNodeFromHtml(block.outerHTML);
-				const b_rect = block.getBoundingClientRect();
-				this.newCms.sidebar.node.appendChild(copied_block);
+				const b_rect = block.client_rect;
+				copied_block.style.opacity = "0";
+				this.newCms.copied_block_container.appendChild(copied_block);
 
 				// @ts-ignore
 				copied_block.styling_data = block.styling_data;
@@ -194,6 +195,7 @@ class NewCmsEditBlock {
 				copied_block.animation_data = cbad;
 
 				this.newCms.grabBlock(copied_block, { copy: true, copied_from: block });
+				copied_block.style.opacity = "";
 				this.hideContextMenu();
 			});
 		}
