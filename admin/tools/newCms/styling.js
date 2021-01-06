@@ -888,12 +888,14 @@ class NewCmsStyling {
 
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
-		const parent_container = this.newCms.getBlockParent(block);
+		const container = this.newCms.getBlockParent(block);
+
+		const container_content = block.parent();
 
 		const auto = val === "auto";
 		if (auto) {
 			if (
-				parent_container === this.newCms.content_node &&
+				container === this.newCms.content_node &&
 				params.direction == "vertical"
 			) {
 				// TODO: no margin auto vertically in the root by default
@@ -904,10 +906,10 @@ class NewCmsStyling {
 				return params.auto;
 			}
 
-			if (parent_container.dataset.block === "grid") {
+			if (container.dataset.block === "grid") {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
-				const grid = parent_container;
+				const grid = container;
 
 				const grid_area = block.computed_styles.outside["grid-area"];
 				if (grid_area) {
@@ -944,11 +946,7 @@ class NewCmsStyling {
 				return 0;
 			}
 
-			const is_container_horizontal = this.isContainerHorizontal(
-				parent_container
-			);
-
-			const container_content = parent_container.find(".newCms_block_content");
+			const is_container_horizontal = this.isContainerHorizontal(container);
 
 			let autos_count = 0;
 			let content_length = 0;
@@ -962,7 +960,7 @@ class NewCmsStyling {
 				// consider adding it tho
 				const is_wrap =
 					is_container_horizontal &&
-					parent_container.computed_styles.inside["flex-flow"].includes("wrap");
+					container.computed_styles.inside["flex-flow"].includes("wrap");
 
 				if (is_container_horizontal) {
 					if (!is_wrap) {
@@ -1124,14 +1122,14 @@ class NewCmsStyling {
 			}
 		}
 
-		let percent = parent_container.inner_percent;
+		let percent = container.inner_percent;
 
 		if (!percent) {
-			percent = parent_container.offsetWidth * 0.01;
-			if (parent_container.dataset.block == "grid") {
+			percent = container_content.offsetWidth * 0.01;
+			if (container.dataset.block == "grid") {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
-				const grid = parent_container;
+				const grid = container;
 
 				const grid_area = block.computed_styles.outside["grid-area"];
 				if (grid_area) {
@@ -1154,7 +1152,7 @@ class NewCmsStyling {
 				}
 			}
 
-			parent_container.inner_percent = percent;
+			container.inner_percent = percent;
 		}
 
 		const vw = document.body.offsetWidth * 0.01;
