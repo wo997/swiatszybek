@@ -113,7 +113,7 @@ function getRelevanceQuery($fields, $words)
  * from: string
  * where?: string
  * filters?: string
- * order?: string
+ * order?: string dhfghdfghfgh
  * main_search_fields?: array
  * }
  */

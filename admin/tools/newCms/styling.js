@@ -185,11 +185,6 @@ class NewCmsStyling {
 				e.classList.toggle("primary", !curr);
 			});
 
-		/*this.newCms.content_scroll_panel.classList.toggle(
-           "hide_scrollbar",
-               !!this.responsive_type.width
-           );*/
-
 		let opts = {};
 		if (options.duration) {
 			opts.duration = options.duration;
@@ -315,12 +310,6 @@ class NewCmsStyling {
 			try {
 				// @ts-ignore
 				const styles = JSON.parse(event.detail.data.styles);
-
-				// const was_clear = !this.blocks.find((b) => {
-				// 	/** @type {StylingBlockData} */
-				// 	const block_data = b;
-				// 	return block_data.node;
-				// });
 
 				this.blocks = [];
 				// @ts-ignore
@@ -960,26 +949,28 @@ class NewCmsStyling {
 				parent_container
 			);
 
+			const container_content = parent_container.find(".newCms_block_content");
+
 			let autos_count = 0;
 			let content_length = 0;
 			let content_width = 0;
-			let margin_width = undefined;
 
 			/** @type {NewCmsBlock[]}*/
 			let blocks_in_row = [];
 
 			if (!block.singleton_siblings_autos_count) {
 				// HEY! remember that flex wrap containers wont have the ability to set the height so that operation is way simpler
+				// consider adding it tho
 				const is_wrap =
 					is_container_horizontal &&
 					parent_container.computed_styles.inside["flex-flow"].includes("wrap");
 
 				if (is_container_horizontal) {
 					if (!is_wrap) {
-						content_width = parent_container.offsetHeight;
+						content_width = container_content.offsetHeight;
 					}
 				} else {
-					content_width = parent_container.offsetWidth;
+					content_width = container_content.offsetWidth;
 				}
 
 				/**
@@ -1121,10 +1112,13 @@ class NewCmsStyling {
 				// @ts-ignore
 				return (content_width - block.singleton_margin_width) / divide;
 			} else {
+				// that solution would work perfectly, but since we can use .newCms_block_content (with no paddings) we will go for that
+				//const parent_outside_styles = parent_container.computed_styles.outside;
+				//const parent_content_h = parent_outside_styles.pt + parent_outside_styles.pb;
 				return (
 					((is_container_horizontal
-						? parent_container.offsetWidth
-						: parent_container.offsetHeight) -
+						? container_content.offsetWidth
+						: container_content.offsetHeight) -
 						content_length) /
 					autos_count
 				);
@@ -1185,7 +1179,7 @@ class NewCmsStyling {
 			this.newCms.query_for_visible_blocks
 		);
 
-		[this.newCms.content_scroll_content, ...all_blocks].forEach((b) => {
+		[this.newCms.content_node, ...all_blocks].forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
 			const block = b;

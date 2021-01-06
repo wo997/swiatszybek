@@ -1254,6 +1254,14 @@ class NewCms {
 				top_1 = parent.new_rect.top;
 			}
 
+			if (parent.computed_styles) {
+				const parent_outside_styles = parent.computed_styles.outside;
+				left_0 += parent_outside_styles.pl;
+				top_0 += parent_outside_styles.pt;
+				left_1 += parent_outside_styles.pl;
+				top_1 += parent_outside_styles.pt;
+			}
+
 			// especially useful for grids
 			const cso = block.computed_styles.outside;
 			let padding = `${cso.pt}px ${cso.pr}px ${cso.pb}px ${cso.pl}px`;

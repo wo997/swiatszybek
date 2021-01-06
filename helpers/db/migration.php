@@ -1,6 +1,18 @@
 <?php
 
 /**
+ * @typedef DBTableColumn {
+ * name: string column name
+ * type: string
+ * index?: (primary|index|unique)
+ * increment?: boolean use with primary key
+ * null?: boolean
+ * default?: string
+ * previous_name?: string use if you want to replace an old column in DB
+ * }
+ */
+
+/**
  * checks whether table exists in db
  *
  * @param  string $name
@@ -181,7 +193,7 @@ function dropIndexByName($table, $key_name)
  * Create table in DB with specified columns allowing to modify the table if necessary
  * parameter details in function manageTableColumns($table, $columns)
  * @param  string $table
- * @param array<array> $columns
+ * @param DBTableColumn[] $columns
  * @return void
  */
 function createTable($table, $columns)
