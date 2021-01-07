@@ -14,9 +14,23 @@ use MatthiasMullie\Minify;
 use ScssPhp\ScssPhp\Compiler;
 
 $css_file_groups = [];
-//$css_dependencies = []; // not used yet
+$css_dependencies = [];
 $js_file_groups = [];
 $js_dependencies = [];
+
+function appendGroup(&$file_groups, $group, $path, $parent_dir)
+{
+    if ($group === "view") {
+        $view_path = $parent_dir . "view.php";
+        if (file_exists($view_path)) {
+            $first_line = nonull(file($view_path), 0, "");
+            if ($url = getAnnotationRoute($first_line)) {
+                $group = BUILD_VIEWS_PATH_PARTIAL . $url;
+            }
+        }
+    }
+    $file_groups[$group][] = $path;
+}
 
 scanDirectories(
     [
@@ -28,11 +42,11 @@ scanDirectories(
 
         if (strpos($path, ".css") !== false || strpos($path, ".scss") !== false) {
             if ($modifyCSS && $css_group = getAnnotation("css", $first_line)) {
-                $css_file_groups[$css_group][] = $path;
+                appendGroup($css_file_groups, $css_group, $path, $parent_dir);
             }
         } else if (strpos($path, ".js") !== false) {
             if ($modifyJS && $js_group = getAnnotation("js", $first_line)) {
-                $js_file_groups[$js_group][] = $path;
+                appendGroup($js_file_groups, $js_group, $path, $parent_dir);
             }
         }
     }
@@ -47,7 +61,7 @@ if ($modifyCSS) {
             $css_full .= " " . file_get_contents($file);
         }
         $minifier = new Minify\CSS($scss->compile($css_full));
-        $minifier->minify(BUILDS_PATH . "$cssGroup.css");
+        saveFile(BUILDS_PATH . "$cssGroup.css", $minifier->minify());
     }
 }
 if ($modifyJS) {
@@ -89,31 +103,43 @@ if ($modifyJS) {
         }
 
         $minifier = new Minify\JS($js_full);
-        $minifier->minify(BUILDS_PATH . "$jsGroup.js");
+        saveFile(BUILDS_PATH . "$jsGroup.js", $minifier->minify());
     }
 }
 
 
-$out = "<?php return [\n";
-foreach ($css_file_groups as $group => $file_path) {
-    $out .= " \"$group\" => [\n  \"" . implode("\",\n  \"", $file_path) . "\"\n ],\n";
+if ($modifyCSS) {
+    $out = "<?php return [\n";
+    $out .= "\"files_groups\" => [\n";
+    foreach ($css_file_groups as $group => $file_path) {
+        $out .= " \"$group\" => [\n  \"" . implode("\",\n  \"", $file_path) . "\"\n ],\n";
+    }
+    $out .= "],\n";
+
+    if ($css_dependencies) {
+        $out .= "\"dependencies\" => [\n \"";
+        $out .= implode("\",\n \"", $css_dependencies);
+        $out .= "\"\n]\n";
+    }
+    $out .= "];";
+
+    saveFile(BUILDS_PATH . "css_schema.php", $out);
 }
-$out .= "];";
 
-saveFile(BUILDS_PATH . "css_schema.php", $out);
+if ($modifyJS) {
+    $out = "<?php return [\n";
+    $out .= "\"files_groups\" => [\n";
+    foreach ($js_file_groups as $group => $file_path) {
+        $out .= " \"$group\" => [\n  \"" . implode("\",\n  \"", $file_path) . "\"\n ],\n";
+    }
+    $out .= "],\n";
 
-$out = "<?php return [\n";
-$out .= "\"files_groups\" => [\n";
-foreach ($js_file_groups as $group => $file_path) {
-    $out .= " \"$group\" => [\n  \"" . implode("\",\n  \"", $file_path) . "\"\n ],\n";
+    if ($js_dependencies) {
+        $out .= "\"dependencies\" => [\n \"";
+        $out .= implode("\",\n \"", $js_dependencies);
+        $out .= "\"\n]\n";
+    }
+    $out .= "];";
+
+    saveFile(BUILDS_PATH . "js_schema.php", $out);
 }
-$out .= "],\n";
-
-if ($js_dependencies) {
-    $out .= "\"dependencies\" => [\n \"";
-    $out .= implode("\",\n \"", $js_dependencies);
-    $out .= "\"\n]\n";
-}
-$out .= "];";
-
-saveFile(BUILDS_PATH . "js_schema.php", $out);

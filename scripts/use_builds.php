@@ -49,3 +49,17 @@ $link_module_form_path = @include BUILDS_PATH . "link_module_form_path.php";
 if (!$link_module_form_path) {
     $link_module_form_path = [];
 }
+
+
+$css_schema = @include BUILDS_PATH . "css_schema.php";
+if (!$css_schema) {
+    $css_schema = [];
+}
+
+$js_schema = @include BUILDS_PATH . "js_schema.php";
+if (!$js_schema) {
+    $js_schema = [];
+}
+
+// TODO: maybe those should act more like event listeners, but later
+$js_dependencies = nonull($js_schema, "dependencies", []);

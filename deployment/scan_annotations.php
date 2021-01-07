@@ -20,17 +20,8 @@ scanDirectories(
             return;
         }
 
-        if ($url = getAnnotationPHP("route", $first_line)) {
-            if (preg_match("/\{.*\}/", $url, $matches)) {
-                $static_url_width_curly_braces = $matches[0];
-                $static_url = substr($static_url_width_curly_braces, 1, -1);
-                //var_dump($static_url);
-                //die;
-                if (isset(STATIC_URLS[$static_url])) {
-                    $url = str_replace($static_url_width_curly_braces, ltrim(STATIC_URLS[$static_url], "/"), $url);
-                }
-            }
 
+        if ($url = getAnnotationRoute($first_line)) {
             if (isset($_link_route_path[$url])) {
                 /*// remove old route if existed on server, might cause data loss, pls dont do that
                 if (filemtime($_link_route_path[$url]) < filemtime($path)) {

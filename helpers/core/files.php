@@ -500,13 +500,43 @@ function getAssetTypeFromMime($mime)
     return null;
 }
 
-
 /**
- * - $options [exclude_paths, include_paths, get_first_line]<br>
- * - $callback - function($path, ?$first_line)
- * - ?$parent_dir
+ * @typedef assetSchema {
+ * files_groups?: array
+ * dependencies?: array
+ * }
  */
 
+/**
+ * @return assetSchema
+ */
+function getJsSchema()
+{
+    global $js_schema;
+    return $js_schema;
+}
+
+/**
+ * @return assetSchema
+ */
+function getCssSchema()
+{
+    global $css_schema;
+    return $css_schema;
+}
+
+
+/**
+ * @typedef scanDirectoriesOptions {
+ * get_first_line?: boolean
+ * exclude_paths?: array
+ * include_paths?: array
+ * }
+ */
+
+/**
+ * @param scanDirectoriesOptions $options
+ */
 function scanDirectories($options = [], $callback, $parent_dir = "", $level = 0)
 {
     foreach (scandir(APP_PATH . $parent_dir) as $file) {
@@ -543,6 +573,30 @@ function getAnnotationPHP($type, $line)
     }
 }
 
+function getAnnotationRoute($line)
+{
+    $type = "route";
+
+    $url = "";
+    if (preg_match("/<\?php \/\/$type\[.*\]/", $line, $match)) {
+        $url = substr($match[0], strlen("<?php //" . $type . "["), -1);
+    } else {
+        return $url;
+    }
+
+    if (preg_match("/\{.*\}/", $url, $matches)) {
+        $static_url_width_curly_braces = $matches[0];
+        $static_url = substr($static_url_width_curly_braces, 1, -1);
+        //var_dump($static_url);
+        //die;
+        if (isset(STATIC_URLS[$static_url])) {
+            $url = str_replace($static_url_width_curly_braces, ltrim(STATIC_URLS[$static_url], "/"), $url);
+        }
+    }
+
+    return $url;
+}
+
 function getAnnotation($type, $line)
 {
     if (preg_match("/(?<=$type\[).*(?=\])/", $line, $match)) {
@@ -568,6 +622,7 @@ function saveFile($dir, $contents)
 
 function createDir($dir)
 {
+    // TODO: unline the function on top it doesnt not work for recursive elements, do we even need it?
     // TODO: maybe should be is_dir
     if (file_exists($dir)) {
         return;

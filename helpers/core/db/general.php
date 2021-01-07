@@ -13,7 +13,7 @@ function query($sql, $params = []) // returns nothing; update delete insert purp
 /**
  * @param string $sql !SQL_query
  * @param array $params
- * @return array $sql !SQL_selected[]
+ * @return array !SQL_selected[]
  */
 function fetchArray($sql, $params = [], $give_response = true)
 {

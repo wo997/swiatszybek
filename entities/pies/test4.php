@@ -30,3 +30,6 @@ createTable("product_attribute_values", [
     ["name" => "text_value", "type" => "TEXT", "null" => true],
     ["name" => "date_value", "type" => "DATE", "null" => true],
 ]);
+
+$a = fetchArray("select pies from dog", []);
+$a[""]["pies"];

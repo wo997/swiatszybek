@@ -13,10 +13,6 @@ foreach ($link_event_paths as $file_paths) {
     }
 }
 
-$css_schema = @include BUILDS_PATH . "css_schema.php";
-if (!$css_schema) {
-    $css_schema = [];
-}
 foreach ($css_schema as $group) {
     foreach ($group as $file_path) {
         $delete_files[] = $file_path;
@@ -25,10 +21,6 @@ foreach ($css_schema as $group) {
 
 // it has changed the structure ;)
 
-$js_schema = @include BUILDS_PATH . "js_schema.php";
-if (!$js_schema) {
-    $js_schema = [];
-}
 foreach ($js_schema as $group) {
     foreach ($group as $file_path) {
         $delete_files[] = $file_path;

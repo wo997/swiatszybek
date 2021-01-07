@@ -8,23 +8,21 @@ $mod_time_js = 0;
 $mod_time_modules = 0;
 $mod_time_settings = 0;
 
-$js_schema = @include BUILDS_PATH . "js_schema.php";
-if (!$js_schema) {
-    $js_schema = [];
-}
-// TODO: maybe those should act more like event listeners, but later
-$js_dependencies = nonull($js_schema, "dependencies", []);
-
 scanDirectories(
     [
         "exclude_paths" => ["vendor", "uploads", "modules", "settings", "builds"],
+        "get_first_line" => true,
     ],
-    function ($path) {
+    function ($path, $first_line) {
         global $mod_time_php, $mod_time_css, $mod_time_js, $js_dependencies;
 
         $mtime = filemtime($path);
         if (strpos($path, ".php")) {
             $mod_time_php += $mtime;
+            if (getAnnotationRoute($first_line)) {
+                $mod_time_css += $mtime;
+                $mod_time_js += $mtime;
+            }
         } else if (strpos($path, ".css") || strpos($path, ".scss")) {
             $mod_time_css += $mtime;
         } else if (strpos($path, ".js") || in_array($path, $js_dependencies)) {

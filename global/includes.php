@@ -3,10 +3,30 @@
 if (!nonull($page_data, "seo_image", "")) {
     $page_data["seo_image"] = SHARE_IMG_PATH_PUBLIC_SM;
 }
+
+if (defined("ROUTE")) {
+    $js_schema = getJsSchema();
+    $groups = nonull($js_schema, "files_groups", []);
+    $has_js = isset($groups[BUILD_VIEWS_PATH_PARTIAL . ROUTE]);
+
+    $css_schema = getCssSchema();
+    $groups = nonull($css_schema, "files_groups", []);
+    $has_css = isset($groups[BUILD_VIEWS_PATH_PARTIAL . ROUTE]);
+} else {
+    $has_css = false;
+    $has_js = false;
+}
 ?>
 
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
 <link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+
+<?php if ($has_js) { ?>
+    <script src="/<?= BUILD_VIEWS_PATH . ROUTE . ".js" ?>?v=<?= JS_RELEASE ?>"></script>
+<?php } ?>
+<?php if ($has_css) { ?>
+    <link href="/<?= BUILD_VIEWS_PATH . ROUTE . ".css" ?>?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+<?php } ?>
 
 <script>
     // TODO: should go to cookie maybe window.devicePixelRatio

@@ -1,0 +1,5 @@
+/* css[view] */
+
+.main-container::before {
+	content: "this stylesheet was added to a view externally 2";
+}

@@ -3,17 +3,26 @@
 // TODO: add the rest of params to doc
 /**
  *
+ * @typedef {{
+ * field?: string,
+ * title: string
+ * width?: string
+ * className?: string
+ * render?: (row: any, index: number) => {}
+ * escape?: boolean,
+ * searchable?: string,
+ * sortable?: boolean,
+ * }} datatableColumnDefinition
+ */
+
+// TODO: add the rest of params to doc
+/**
+ *
  * @param {{
  * name: string,
  * lang?: Object
  * url: string
- * definition: {
- * title: string
- * width?: string
- * className?: "kolejnosc-column"
- * render?: (row: Array, index: number) => {}
- * escape?: boolean
- * }
+ * definition: datatableColumnDefinition[]
  * params?: () => {}
  * renderRow?: () => {}
  * }} datatable
@@ -1134,6 +1143,10 @@ window.addEventListener("dragover", (event) => {
 
 // published start
 
+// TODO: add the rest of params to doc
+/**
+ * @returns {datatableColumnDefinition}
+ */
 function getPublishedDefinition(options = {}) {
 	return {
 		title: "",

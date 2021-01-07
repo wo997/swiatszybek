@@ -61,10 +61,10 @@ function saveSettings($dir, $file, $json_paths_and_values)
 
     if (file_exists($file_path)) {
         $settings = json_decode(file_get_contents($file_path), true);
-    } else {
+    }
+    if (!$settings) {
         $settings = [];
     }
-
 
     while (true) {
         $is_flat = true;
@@ -112,6 +112,5 @@ function saveSettings($dir, $file, $json_paths_and_values)
         }
         $settings_sub = $value;
     }
-
     saveFile($file_path, json_encode($settings));
 }

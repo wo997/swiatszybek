@@ -176,6 +176,7 @@ function checkUrl($url)
     foreach ($link_route_path as $route => $file) // new routing
     {
         if (strpos($url . "/", $route . "/") === 0 || $url == $route) {
+            define("ROUTE", $route);
             return $file;
         }
     }

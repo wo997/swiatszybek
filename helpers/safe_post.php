@@ -1,6 +1,7 @@
-<?php //helper[global]
+<?php //
 
-if (!isset($input["exceptions"])) {
+//
+/*if (!isset($input["exceptions"])) {
     $input["exceptions"] = [];
 }
 
@@ -11,4 +12,4 @@ foreach ($_POST as $var_name => $var_value) {
     }
     $res["$var_name"] = isset($input["exceptions"][$var_name]);
     $_POST[$var_name] = htmlspecialchars($var_value);
-}
+}*/
