@@ -1,4 +1,4 @@
-<?php
+<?php //helper[global]
 
 if (!isset($input["exceptions"])) {
     $input["exceptions"] = [];

@@ -1,9 +1,10 @@
 <?php
 
-global $_link_route_path, $_link_event_paths;
+global $_link_route_path, $_link_event_paths, $_link_helpers_paths;
 
 $_link_route_path = [];
 $_link_event_paths = [];
+$_link_helpers_paths = [];
 
 echo "<br><h3>Scanning annotations:</h3>";
 
@@ -13,7 +14,7 @@ scanDirectories(
         "exclude_paths" => ["vendor", "uploads", "builds"],
     ],
     function ($path, $first_line) {
-        global $_link_route_path, $_link_event_paths;
+        global $_link_route_path, $_link_event_paths, $_link_helpers_paths;
 
         if (!strpos($path, ".php")) {
             return;
@@ -46,6 +47,8 @@ scanDirectories(
             }
         } else if ($event = getAnnotationPHP("event", $first_line)) {
             $_link_event_paths[$event][] = "  '$path'";
+        } else if ($helper = getAnnotationPHP("helper", $first_line)) {
+            $_link_helpers_paths[$helper][] = $path;
         }
     }
 );
@@ -68,3 +71,15 @@ foreach ($_link_event_paths as $event => $paths_strings) {
 $out .= "];";
 
 saveFile(BUILDS_PATH . "link_event_paths.php", $out);
+
+$out = "<?php\n";
+foreach ($_link_helpers_paths as $event => $paths_strings) {
+    foreach ($paths_strings as $path) {
+        $out .= "include_once \"$path\";\n";
+    }
+}
+
+saveFile(BUILDS_PATH . "include_helpers.php", $out);
+
+// that's nasty, will work as u build it
+@include BUILDS_PATH . "include_helpers.php";

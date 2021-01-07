@@ -43,6 +43,7 @@ function reload($ask = false)
             json_response(["reload" => true]);
         }
     } else {
+        ob_clean();
         header("Refresh:0");
         die;
     }

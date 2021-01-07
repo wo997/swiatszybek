@@ -1,5 +1,7 @@
 <?php //route[pies]
 
+namespace abc;
+
 /**
  * @typedef GridData {
  * x_coords: number some description

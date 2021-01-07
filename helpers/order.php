@@ -1,4 +1,6 @@
-<?php
+<?php //helper[global]
+
+//var_dump(123);
 
 $dostawy = ["paczkomat" => "Paczkomat", "kurier" => "Kurier", "osobisty" => "Odbiór osobisty"];
 

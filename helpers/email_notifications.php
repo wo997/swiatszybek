@@ -1,4 +1,4 @@
-<?php
+<?php //helper[global]
 
 function getOrderEmailList()
 {

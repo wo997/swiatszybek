@@ -2,7 +2,7 @@
 
 class A
 {
-    function a()
+    function b()
     {
         /** @type {number} */
         $var = 5;

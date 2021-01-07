@@ -1,5 +1,6 @@
 <?php
 
+
 define("LAST_VIEWED_PRODUCTS_LENGTH_LIMIT", 50);
 
 function getLastViewedProductsIds()

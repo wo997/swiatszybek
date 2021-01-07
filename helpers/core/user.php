@@ -1,6 +1,6 @@
 <?php
 
-$visitor_priveleges = ["backend_access" => false];
+define("visitor_priveleges", ["backend_access" => false]);
 $privelege_list = [
     ["id" => 0, "name" => "Klient", "backend_access" => false],
     ["id" => 1, "name" => "Admin", "backend_access" => true],
@@ -9,14 +9,14 @@ $privelege_list = [
 
 function initUser()
 {
-    global $app, $visitor_priveleges;
+    global $app;
 
     if (isset($_SESSION["user"])) {
         $app["user"] = $_SESSION["user"];
     } else {
         $app["user"] = [
             "id" => null,
-            "privelege_id" => $visitor_priveleges,
+            "privelege_id" => visitor_priveleges,
             "type" => "",
             "email" => ""
         ];
@@ -29,7 +29,7 @@ function initUser()
         }
     }
 
-    $app["user"]["priveleges"] = array_merge($visitor_priveleges, $app["user"]["privelege_id"]);
+    $app["user"]["priveleges"] = array_merge(visitor_priveleges, $app["user"]["privelege_id"]);
 
     if (empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["basket"]) {
         $b = "[]";

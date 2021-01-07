@@ -20,9 +20,10 @@ function endSection()
     $current_section_name = null;
 }
 
-/*function renderTemplate($template_name) {
-  global $con, $admin_navigations;
-  if ($template_name == "admin_page") {
-    include "admin/default_page.php";
-  }
-}*/
+function renderTemplate($template_name)
+{
+    global $con, $admin_navigations;
+    if ($template_name == "admin_page") {
+        include "admin/default_page.php";
+    }
+}

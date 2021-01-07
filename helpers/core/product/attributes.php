@@ -1,5 +1,6 @@
 <?php
 
+
 $attribute_data_types = [
     "textlist" => [
         "description" => "Tekst (lista)",

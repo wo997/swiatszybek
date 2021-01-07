@@ -1,11 +1,9 @@
 <?php
 
-$m_pol = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"];
+define("m_pol", ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"]);
 
 function dateDifference($time)
 {
-    global $m_pol;
-
     $date_time = strtotime($time);
 
     $diff = time() - $date_time;
@@ -23,19 +21,17 @@ function dateDifference($time)
         else if ($m == 2 || $m == 3 || $m == 4) return $m . " godziny temu";
         else return $m . " godzin temu";
     } else {
-        return date("d", $date_time) . " " . $m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
+        return date("d", $date_time) . " " . m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
     }
 }
 
 function niceDate($time = null)
 {
-    global $m_pol;
-
     if (!$time) $time = date("Y-m-d");
 
     $date_time = strtotime($time);
 
-    return date("d", $date_time) . " " . $m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
+    return date("d", $date_time) . " " . m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
 }
 
 function changeDate($date_string, $offset)

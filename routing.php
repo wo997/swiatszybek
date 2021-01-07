@@ -29,6 +29,12 @@ if (setting(["general", "advanced", "ssl"])) {
     }
 }
 
+function getAdminNavitationTree()
+{
+    global $admin_navigations_tree;
+    return $admin_navigations_tree;
+}
+
 $admin_navigations_tree = [
     [
         "title" => '<i class="fas fa-shopping-bag"></i> Zamówienia', "quick_menu" => true,

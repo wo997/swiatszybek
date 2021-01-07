@@ -1,6 +1,5 @@
 <?php
 
-
 // also product.js
 function getProductLink($product_id, $link)
 {

@@ -208,6 +208,7 @@ domload(() => {
 
 function registerForms(form = null) {
 	form = $(form);
+	let inputs = [];
 	if (form === null) {
 		inputs = $(document.body).findAll(
 			//"[data-form] [data-validate]:not(.change-registered)"
@@ -218,6 +219,8 @@ function registerForms(form = null) {
 		inputs = form.findAll(`[name]:not(.change-registered)`);
 
 		form.addEventListener("keydown", (e) => {
+			// IT DOES NOT WORK, it's because we register all forms at once every time, these need to be changed
+			// btw u might wanna change registered to abbrev like reg
 			setTimeout(() => {
 				if (e.key === "Enter") {
 					var submit = $(form).find("[data-submit]");

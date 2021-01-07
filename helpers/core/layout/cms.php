@@ -1,4 +1,5 @@
 <?php
+
 $JS_files = [];
 $CSS_files = [];
 function useJS($file)

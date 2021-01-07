@@ -6,8 +6,7 @@
  */
 function setting($path, $default = "")
 {
-    global $settings;
-    return nonull($settings, $path, $default);
+    return nonull(SETTINGS, $path, $default);
 }
 
 function getSetting($dir, $file, $json_path, $default = null)

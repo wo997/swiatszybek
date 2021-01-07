@@ -1,4 +1,5 @@
 <?php //route[helpers/categories_template]
+// TODO: rework
 $raw = IS_XHR;
 
 if (!$raw) {
