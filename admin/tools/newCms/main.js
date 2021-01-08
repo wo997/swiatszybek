@@ -988,21 +988,27 @@ class NewCms {
 			const side_block = grabbed_block;
 			const side_block_rect = side_block.getBoundingClientRect();
 
-			// replace
-			/** @type {AnimationData} */
-			const animation_data = grabbed_block.animation_data;
+			delay_grabbed_rect_node_fadeout = 250;
+			side_block.classList.remove("is_grabbed");
+			side_block.style.transform = "";
+			side_block.animate(
+				`
+                    0% {opacity: 0; transform: scale(0.65)}
+                    100% {opacity: 1; transform: scale(1)}
+                `,
+				delay_grabbed_rect_node_fadeout
+			);
+
+			this.rearrange_controls.rearrange_grabbed_rect_node.animate(
+				`
+                    0% {opacity: 1;}
+                    100% {opacity: 0;}
+                `,
+				delay_grabbed_rect_node_fadeout
+			);
 
 			if (this.rearrange_controls.rearrange_near_block) {
-				delay_grabbed_rect_node_fadeout = 250;
-				side_block.classList.remove("is_grabbed");
-				side_block.style.transform = "";
-				side_block.animate(
-					`
-                        0% {opacity: 0; transform: scale(0.65)}
-                        100% {opacity: 1; transform: scale(1)}
-                    `,
-					delay_grabbed_rect_node_fadeout
-				);
+				const animation_data_ref = grabbed_block.animation_data;
 
 				// REPLACE NODES
 				grabbed_block = this.createBlock(block_type, {
@@ -1013,7 +1019,7 @@ class NewCms {
 
 				this.contentChangeManageContent();
 
-				grabbed_block.animation_data = animation_data;
+				grabbed_block.animation_data = animation_data_ref;
 				grabbed_block.classList.add("select_active");
 				grabbed_block.last_rect = side_block_rect;
 
@@ -1027,7 +1033,7 @@ class NewCms {
 			}
 
 			// copy fade out
-			delay_rearrange_node_fadeout = 150;
+			delay_rearrange_node_fadeout = 250;
 			this.rearrange_node.animate(
 				`
                     0% {opacity: 1; transform: ${this.rearrange_node.style.transform} scale(1)}
