@@ -50,11 +50,34 @@ function getSettings($dir, $file, $json_paths)
     }
 }
 
+/**
+ * @typedef JsonPathAndValue {
+ * path: array
+ * value: any
+ * }
+ */
+
+/**
+ * saveSetting
+ *
+ * @param  mixed $dir
+ * @param  mixed $file
+ * @param  JsonPathAndValue $json_paths_and_values
+ * @return void
+ */
 function saveSetting($dir, $file, $json_path_and_value)
 {
     saveSettings($dir, $file, [$json_path_and_value]);
 }
 
+/**
+ * saveSettings
+ *
+ * @param  mixed $dir
+ * @param  mixed $file
+ * @param  JsonPathAndValue[] $json_paths_and_values
+ * @return void
+ */
 function saveSettings($dir, $file, $json_paths_and_values)
 {
     $file_path = SETTINGS_PATH . $dir . "/" . $file . ".json";
