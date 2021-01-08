@@ -512,6 +512,8 @@ class NewCms {
 			: null;
 		if (side_block) {
 			side_block.styling_data = this.styling.getDefaultBlockStyles();
+			side_block.client_rect = side_block.getBoundingClientRect();
+
 			this.grabBlock(side_block);
 		}
 
@@ -1002,6 +1004,7 @@ class NewCms {
 					delay_grabbed_rect_node_fadeout
 				);
 
+				// REPLACE NODES
 				grabbed_block = this.createBlock(block_type, {
 					from: grabbed_block,
 				});
@@ -1014,15 +1017,12 @@ class NewCms {
 				grabbed_block.classList.add("select_active");
 				grabbed_block.last_rect = side_block_rect;
 
-				let left = grabbed_block.last_rect.left;
-				let top = grabbed_block.last_rect.top;
-
 				// @ts-ignore
 				grabbed_block.last_rect = {
 					width: gbad.w,
 					height: gbad.h,
-					left,
-					top,
+					left: grabbed_block.last_rect.left,
+					top: grabbed_block.last_rect.top,
 				};
 			}
 
@@ -1152,8 +1152,10 @@ class NewCms {
 		}
 
 		if (do_trash) {
-			this.grab_options.remove = true;
-			this.removeBlock(grabbed_block);
+			if (!is_side_block) {
+				this.grab_options.remove = true;
+				this.removeBlock(grabbed_block);
+			}
 			return;
 		}
 
@@ -1181,7 +1183,9 @@ class NewCms {
 
 	beforeContentAnimation() {
 		this.getAllNodesWithRects().forEach((e) => {
-			e.last_rect = e.getBoundingClientRect();
+			if (!e.last_rect) {
+				e.last_rect = e.client_rect;
+			}
 		});
 
 		this.before_animation_scroll_top = this.content_scroll_panel.scrollTop;
@@ -1235,6 +1239,7 @@ class NewCms {
 		all_animatable_blocks.forEach((block) => {
 			const lr = block.last_rect;
 			const nr = block.client_rect;
+
 			if (
 				(lr.top < window.innerHeight && lr.top + lr.height > 0) ||
 				(nr.top < window.innerHeight && nr.top + nr.height > 0)
@@ -1345,7 +1350,10 @@ class NewCms {
 
 		all_animatable_blocks.forEach((block) => {
 			delete block.animation_data;
-			delete block.last_rect;
+		});
+
+		this.getAllNodesWithRects().forEach((e) => {
+			delete e.last_rect;
 		});
 
 		setTimeout(() => {
@@ -1483,6 +1491,9 @@ class NewCms {
 
 			const gb_rect = grabbed_block.last_rect;
 			if (!gb_rect) {
+				console.error(
+					"hey, we need to add the last rect before we start movign the node"
+				);
 				return;
 			}
 			const base_w = gb_rect.width;
