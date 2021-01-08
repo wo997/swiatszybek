@@ -46,12 +46,15 @@ function getImageDimenstions(img, rect = null) {
  * @param {ResponsiveImage} img
  * @param {boolean} animate
  */
-function loadImage(img, animate = true) {
+function loadImage(img, animate = true, offset = null) {
 	if (!img.file_name) {
 		return;
 	}
+	if (offset === null) {
+		offset = lazyLoadOffset;
+	}
 
-	if (isNodeOnScreen(img, lazyLoadOffset)) {
+	if (isNodeOnScreen(img, offset)) {
 		const w = img.calculated_width;
 		const h = img.calculated_height;
 
@@ -82,6 +85,7 @@ function loadImage(img, animate = true) {
 			);
 		}
 
+		// TODO: we should generate that and pull to the dev env, it's enough to have a separate file with type defs, really simple stuff
 		let src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
 
 		if (
@@ -101,9 +105,19 @@ function loadImage(img, animate = true) {
 			delete img.await_img_replace;
 		} else {
 			img.addEventListener("load", () => {
+				// TODO: global event saying that layout could have changed?
+				// well, not rly but idk, maybe recalculating layout on page builder would be a good idea tho
 				if (!img.hasAttribute("data-height")) {
 					img.style.height = "";
 				}
+
+				window.dispatchEvent(
+					new CustomEvent("wo997_img_loaded", {
+						detail: {
+							img,
+						},
+					})
+				);
 			});
 
 			img.setAttribute("src", src);
@@ -128,7 +142,6 @@ function animateVisibility(img, duration) {
 	img.classList.remove("wo997_img_waiting");
 	img.classList.add("wo997_img_shown");
 	setTimeout(() => {
-		img.style.opacity = "";
 		img.style.animation = "";
 	}, duration);
 }
@@ -171,7 +184,7 @@ function getResponsiveImageData(src) {
  * @param {ResponsiveImage} img
  */
 function switchImage(img, src, animate = true) {
-	img.setAttribute("data-src", src);
+	img.dataset.src = src;
 	setImageDimensions(img);
 	loadImage(img, animate);
 }
@@ -180,14 +193,22 @@ function switchImage(img, src, animate = true) {
  * @param {ResponsiveImage} img
  */
 function setImageDimensions(img) {
-	const src = img.getAttribute("data-src");
+	const src = img.dataset.src;
 	const data = getResponsiveImageData(src);
 	let rect = img.getBoundingClientRect();
 
 	if (!data) {
 		img.style.animation = "show 0.45s";
+
+		const duration = 450;
+		img.style.animation = `show ${duration}ms`;
+		setTimeout(() => {
+			img.style.animation = "";
+		}, duration);
+
 		img.setAttribute("src", src);
-		img.removeAttribute("data-src");
+		//img.removeAttribute("data-src"); /// TODO: think about it, we prabably don't wanna do this
+
 		return rect;
 	}
 	if (!rect.width && !isHidden(img)) {

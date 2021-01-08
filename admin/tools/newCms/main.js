@@ -126,6 +126,7 @@ class NewCms {
 		this.initGrids();
 		this.initMargins();
 		this.initPaddings();
+		this.initImages();
 
 		setFormData(
 			{
@@ -185,17 +186,29 @@ class NewCms {
 			this.removeRemovedNodes(this.clean_output_node);
 
 			// TODO: be careful with that
-			this.clean_output_node
-				.findAll(this.query_for_visible_blocks)
-				.forEach((e) => {
-					e.removeAttribute("style");
-				});
+			this.clean_output_node.findAll("*").forEach((e) => {
+				e.removeAttribute("style");
+			});
+
+			this.cleanImages(this.clean_output_node);
 		});
 
 		this.container
 			.find(".return_btn")
 			// @ts-ignore
 			.setAttribute("href", `${STATIC_URLS["ADMIN"]}nowe-strony`);
+	}
+
+	cleanImages(node = null) {
+		if (node === null) {
+			node = this.content_node;
+		}
+		node.findAll(".wo997_img").forEach((img) => {
+			// why? these will be set on page load
+			img.removeAttribute("src");
+			img.classList.remove("wo997_img_waiting");
+			img.classList.remove("wo997_img_shown");
+		});
 	}
 
 	onResize(options = {}) {
@@ -225,6 +238,42 @@ class NewCms {
 	initGrids() {
 		this.container.addEventListener("clean_up_output", () => {
 			this.cleanupGrids(this.clean_output_node);
+		});
+	}
+
+	preloadImages() {
+		this.preloading_images = true;
+
+		$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach(
+			// @ts-ignore
+			(/** @type {ResponsiveImage} */ img) => {
+				loadImage(img, false, 100000000);
+			}
+		);
+
+		// after 5000ms wait for any other changes, and recalculate the layout when necessary
+		setTimeout(() => {
+			this.preloading_images = false;
+		}, 5000);
+	}
+
+	initImages() {
+		window.addEventListener("wo997_img_loaded", (event) => {
+			//@ts-ignore
+			const detail = event.detail;
+			if (!detail || !detail.img) {
+				return;
+			}
+
+			if (this.preloading_images || this.locked_input) {
+				return;
+			}
+
+			/** @type {PiepNode} */
+			const img = detail.img;
+			if (img.findParentNode(this.content_node)) {
+				this.contentChangeManageContent();
+			}
 		});
 	}
 
@@ -341,6 +390,10 @@ class NewCms {
 					duration: 0,
 				});
 			}
+
+			this.cleanImages();
+			this.preloadImages();
+			lazyLoadImages(false);
 		});
 	}
 
@@ -408,6 +461,8 @@ class NewCms {
 					// who the hell needs that? not me
 					//this.container.dispatchEvent(new Event("ready"));
 					//this.onResize();
+
+					this.preloadImages();
 				}, 100);
 			},
 		});
@@ -430,11 +485,13 @@ class NewCms {
 			return;
 		}
 
+		this.locked_input = true;
 		this.container.classList.add("locked_input");
 
 		this.select_controls.node.classList.remove("visible");
 
 		if (this.lock_timeout) {
+			this.lock_timeout = null;
 			clearTimeout(this.lock_timeout);
 		}
 
@@ -449,9 +506,11 @@ class NewCms {
 
 	unlockInput() {
 		if (this.lock_timeout) {
+			this.lock_timeout = null;
 			clearTimeout(this.lock_timeout);
 		}
 
+		this.locked_input = false;
 		this.container.classList.remove("locked_input");
 		setTimeout(() => {
 			this.select_controls.addFloatingSelectControls();

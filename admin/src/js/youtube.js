@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[admin] */
 
 function getIdFromYoutubeUrl(url) {
 	var res = url.match(

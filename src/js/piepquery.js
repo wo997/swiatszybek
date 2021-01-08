@@ -26,6 +26,7 @@
  * setContent(html: string|number): void
  * animate(keyframes: string, duration: number, options?: AnimationOptions): void
  * dataset;
+ * setting_value?: boolean
  * } & HTMLElement} PiepNode
  */
 

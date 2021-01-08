@@ -11,8 +11,10 @@ function scaleVideos() {
 }
 
 function stopAllVideos() {
+	/** @type {HTMLVideoElement[]} */
+	// @ts-ignore
 	var videos = $$("video");
-	for (video of videos) {
+	for (const video of videos) {
 		video.pause();
 	}
 }
