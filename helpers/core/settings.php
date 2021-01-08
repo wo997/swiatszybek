@@ -62,7 +62,7 @@ function getSettings($dir, $file, $json_paths)
  *
  * @param  mixed $dir
  * @param  mixed $file
- * @param  JsonPathAndValue $json_paths_and_values
+ * @param  JsonPathAndValue $json_path_and_value
  * @return void
  */
 function saveSetting($dir, $file, $json_path_and_value)
