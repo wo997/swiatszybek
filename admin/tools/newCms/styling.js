@@ -875,6 +875,7 @@ class NewCmsStyling {
 	 * opposite?: any
 	 * opposite_name?: string
 	 * default?: string
+	 * min?: number
 	 * }} params
 	 */
 	evalCss(val, block, params = {}) {
@@ -1168,7 +1169,13 @@ class NewCmsStyling {
 			return 0;
 		}
 
-		return eval(escapeNumericalExpression(val));
+		val = eval(escapeNumericalExpression(val));
+
+		if (params.min !== undefined) {
+			val = Math.max(params.min, val);
+		}
+
+		return val;
 	}
 
 	resetLayout() {
@@ -1257,6 +1264,7 @@ class NewCmsStyling {
 				{
 					direction: "vertical",
 					default: default_padding,
+					min: 0,
 				}
 			);
 			block_styles.outside.pr = this.evalCss(
@@ -1265,6 +1273,7 @@ class NewCmsStyling {
 				{
 					direction: "horizontal",
 					default: default_padding,
+					min: 0,
 				}
 			);
 			block_styles.outside.pb = this.evalCss(
@@ -1273,6 +1282,7 @@ class NewCmsStyling {
 				{
 					direction: "vertical",
 					default: default_padding,
+					min: 0,
 				}
 			);
 			block_styles.outside.pl = this.evalCss(
@@ -1281,6 +1291,7 @@ class NewCmsStyling {
 				{
 					direction: "horizontal",
 					default: default_padding,
+					min: 0,
 				}
 			);
 		});
