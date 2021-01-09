@@ -433,7 +433,7 @@ function topSearchProducts(force) {
 		},
 		success: (res) => {
 			if (!res.content) {
-				res.content = `<div class='result no-results' style='pointer-events:none'><i class="fas fa-ban"></i> Brak wyników</div>`;
+				res.content = /*html*/ `<div class='result no-results' style='pointer-events:none'><i class="fas fa-ban"></i> Brak wyników</div>`;
 			}
 			callback(res.content);
 		},
@@ -521,7 +521,7 @@ domload(() => {
 	});
 });
 
-const header_basket_variant_template = `
+const header_basket_variant_template = /*html*/ `
   <div class='expand_y'>
     <div class='product_row product-block'>
       <a class='product_link'>
@@ -547,7 +547,7 @@ const header_basket_variant_template = `
   </div>
 `;
 
-const header_basket_product_template = `
+const header_basket_product_template = /*html*/ `
   <div class='expand_y'>
     <div class='product_row product-block'>
       <a class='product_link'>

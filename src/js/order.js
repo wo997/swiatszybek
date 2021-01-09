@@ -317,7 +317,7 @@ function showVariantChanges(
 			}
 
 			basket_node.insertAdjacentHTML("beforeend", basket_row_template);
-			variant_node_children = basket_node.directChildren();
+			const variant_node_children = basket_node.directChildren();
 			var variant_node =
 				variant_node_children[variant_node_children.length - 1];
 
