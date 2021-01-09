@@ -82,7 +82,7 @@ function pushFormHistory(form) {
 		form.history_step_back = 0;
 
 		const data = getFormData(form);
-		if (!isEquivalent(data, form.history.last())) {
+		if (!isEquivalent(data, getLast(form.history))) {
 			form.history.push(data);
 		}
 

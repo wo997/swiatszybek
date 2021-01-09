@@ -21,7 +21,7 @@ domload(() => {
  * @typedef {{
  * _data: ListRowComponentData
  * _prev_data: ListRowComponentData
- * _setData(data?: ListRowComponentData, options?: *)
+ * _setData(data?: ListRowComponentData)
  * _getData()
  * _idkNode: PiepNode
  * } & BaseComponent} ListRowComponent
@@ -29,7 +29,7 @@ domload(() => {
 
 /**
  * @param {ListRowComponent} node
- * @param {PiepNode} parent
+ * @param {ListComponent} parent
  * @param {ListRowComponentData} data
  */
 function createListRowCompontent(node, parent, data = undefined) {
@@ -38,21 +38,30 @@ function createListRowCompontent(node, parent, data = undefined) {
 	}
 
 	node.setContent(/*html*/ `
-        <input type="text" class="field" data-bind="email">
+        <input type="text" class="field inline" data-bind="email">
+        rewrite inputs
+        <input type="text" class="field inline" data-bind="email">
+
+        <button class="delete btn red">Delete</button>
+
         <div class="idk"></div>
     `);
 
-	node._setData = (data = undefined, options = {}) => {
-		setComponentData(node, data, options, () => {
+	node._setData = (data = undefined) => {
+		setComponentData(node, data, () => {
 			node._idkNode.setContent(JSON.stringify(node._data));
 		});
 	};
 
 	node._idkNode = node.find(".idk");
 
-	extendBaseComponent(node, parent);
+	const delete_btn = node.find(".delete");
+	delete_btn.addEventListener("click", () => {
+		// we can also modify the data, but that is waaay simpler
+		parent._removeRow(node);
+	});
 
-	node._setData(data);
+	extendBaseComponent(node, parent, data);
 }
 
 /**
@@ -63,9 +72,10 @@ function createListRowCompontent(node, parent, data = undefined) {
  * @typedef {{
  * _data: Array
  * _prev_data: Array
- * _setData(data?: Array, options?: *)
+ * _setData(data?: Array)
  * _getData()
  * _nextRowId: number
+ * _removeRow(child: AnyComponent)
  * } & BaseComponent} ListComponent
  */
 
@@ -87,22 +97,34 @@ function createListCompontent(
 
 	node._nextRowId = -1;
 
-	node._setData = (data = undefined, options = {}) => {
+	node._setData = (data = undefined) => {
 		const assignRowIds = () => {
+			let any_change = false;
 			if (node._data) {
+				let child_index = -1;
 				node._data.forEach((e) => {
+					child_index++;
 					if (e.row_id === undefined) {
 						node._nextRowId++;
 						e.row_id = node._nextRowId;
-						if (e._setData) {
-							e._setData();
+
+						const my_list_row_wrapper = node.directChildren()[child_index];
+						/** @type {AnyComponent} */
+						// @ts-ignore
+						const my_list_row = my_list_row_wrapper.find(".my_list_row");
+
+						if (my_list_row._setData) {
+							my_list_row._setData();
 						}
+						any_change = true;
 					}
 				});
 			}
+
+			return any_change;
 		};
 
-		setComponentData(node, data, options, () => {
+		setComponentData(node, data, () => {
 			/*console.log(
                 "before",
                 JSON.stringify(node._prev_data),
@@ -127,36 +149,61 @@ function createListCompontent(
 
 				/** @type {ListRow} */
 				// @ts-ignore
-				const my_list_row = createNodeFromHtml(/*html*/ `
-                <div class="my_list_row"></div>
-            `);
+				const my_list_row_wrapper = createNodeFromHtml(/*html*/ `
+                    <div class="my_list_row_wrapper expand_y">
+                        <div class="my_list_row"></div>
+                    </div>
+                `);
 
-				node.appendChild(my_list_row);
+				node.appendChild(my_list_row_wrapper);
 
-				createRowCallback(my_list_row, parent, row_data);
+				const my_list_row = my_list_row_wrapper.find(".my_list_row");
+
+				createRowCallback(my_list_row, node, row_data);
 			});
 
-			assignRowIds();
+			const any_change = assignRowIds();
+
+			/*if (any_change && node._setData) {
+				setTimeout(() => {
+					//node._setData();
+				}, 500);
+			}*/
 
 			let child_index = -1;
 			node
 				.directChildren()
-				.filter((/** @type {ListRow} */ node) => {
+				.filter((/** @type {ListRow} */ child) => {
+					if (child.classList.contains("removing")) {
+						return;
+					}
 					child_index++;
 					return diff.removed.includes(child_index);
 				})
-				.forEach((/** @type {ListRow} */ node) => {
-					node.remove();
+				.forEach((/** @type {ListRow} */ child) => {
+					// animation that shows framework capabilites, totally optional
+					const duration = 250;
+					expand(child, false, { duration });
+					child.classList.add("removing"); // .removing -> style.pointerEvents = "none";
+					setTimeout(() => {
+						child.remove();
+					}, duration);
 				});
 		});
+	};
+
+	node._removeRow = (child) => {
+		const remove_index = node._data.findIndex((d) => {
+			return d.row_id === child._data.row_id;
+		});
+		node._data.splice(remove_index, 1);
+		node._setData();
 	};
 
 	// basically empty when created
 	//node.setContent();
 
-	extendBaseComponent(node, parent);
-
-	node._setData(data);
+	extendBaseComponent(node, parent, data);
 }
 
 /**
@@ -170,12 +217,13 @@ function createListCompontent(
  * @typedef {{
  * _data: FirstComponentData
  * _prev_data: FirstComponentData
- * _setData(data?: FirstComponentData, options?: *)
+ * _setData(data?: FirstComponentData)
  * _getData()
  * _crazy: PiepNode
  * _my_list: ListComponent
  * _saved_data: FirstComponentData
  * _load_btn: PiepNode
+ * _save_btn: PiepNode
  * _list_count: PiepNode
  * _expand_y: PiepNode
  * } & BaseComponent} FirstComponent
@@ -225,12 +273,11 @@ function createFirstCompontent(node, parent, data = undefined) {
         </div>
     `);
 
-	node._setData = (data = undefined, options = {}) => {
-		setComponentData(node, data, options, () => {
+	node._setData = (data = undefined) => {
+		setComponentData(node, data, () => {
 			node._crazy.setContent(`
-                This string was generated by the compontent ${JSON.stringify(
-									node._data
-								)}
+                This string was generated by the compontent
+                ${JSON.stringify(node._data)}
             `);
 
 			expand(node._expand_y, node._data.state === 1);
@@ -238,8 +285,7 @@ function createFirstCompontent(node, parent, data = undefined) {
 			const equivalent = isEquivalent(node._data, node._saved_data);
 			const disable = !node._saved_data || equivalent;
 			toggleDisabled(node._load_btn, disable);
-			//node._load_btn.classList.toggle("disabled", equivalent);
-			//console.log(equivalent);
+			toggleDisabled(node._save_btn, equivalent);
 
 			node._list_count.setContent(`(${node._data.list_data.length})`);
 		});
@@ -277,9 +323,9 @@ function createFirstCompontent(node, parent, data = undefined) {
 
 	node._expand_y = node.find(".expand_y");
 
-	extendBaseComponent(node, parent);
+	node._save_btn = node.find(".save");
 
-	node._setData(data);
+	extendBaseComponent(node, parent, data);
 }
 
 /**
@@ -290,17 +336,18 @@ function createFirstCompontent(node, parent, data = undefined) {
  *
  * @typedef {{
  * _data: any
- * _setData(data?: any, options?: *)
+ * _setData(data?: any)
  * _getData()
  * _prev_data: any
- * } & BaseComponent} BaseComponentEmpty
+ * } & BaseComponent} AnyComponent
  */
 
 /**
- * @param {BaseComponentEmpty} node
+ * @param {AnyComponent} node
  * @param {PiepNode} parent
+ * @param {*} data
  * */
-function extendBaseComponent(node, parent) {
+function extendBaseComponent(node, parent, data) {
 	node.classList.add("component");
 
 	/*if (!!parent && !parent.classList.contains("component")) {
@@ -317,7 +364,8 @@ function extendBaseComponent(node, parent) {
 	registerForms();
 
 	node._bindNodes = node.findAll(`[data-bind]`);
-	node._bindNodes.forEach((sub_node) => {
+	node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
+		// TODO: I feel like a wrong node is listening, cmon dude
 		sub_node.addEventListener("change", () => {
 			const name = sub_node.dataset.bind;
 			if (name === undefined) {
@@ -331,13 +379,22 @@ function extendBaseComponent(node, parent) {
 				sub_node_data = sub_node.getValue();
 			}
 
+			/*console.log(
+				"onChange",
+				name,
+				JSON.stringify(node._prev_data),
+				"=>",
+				JSON.stringify(sub_node_data),
+				node
+			);*/
+
 			if (sub_node_data !== undefined) {
 				if (node._setData) {
-					node._data[name] = sub_node_data;
-					node._setData(undefined); //, { quiet: true });
+					if (node._data[name] !== undefined) node._data[name] = sub_node_data;
+					node._setData();
 				} else if (node.setValue) {
-					node._data[name] = sub_node_data;
-					node.setValue(undefined); //, { quiet: true });
+					// probably never happens
+					node.setValue(sub_node_data); //, { quiet: true });
 				}
 			}
 		});
@@ -349,24 +406,32 @@ function extendBaseComponent(node, parent) {
 	node._getData = () => {
 		return node._data;
 	};
+
+	node._setData(data);
 }
 
 /**
- * @param {BaseComponentEmpty} node
+ * @typedef {{
+ * exclude_list: PiepNode[]
+ * }} SetComponentDataOptions
+ */
+
+/**
+ * @param {AnyComponent} node
  * @param {*} data
- * @param {*} options
  * @param {CallableFunction} callback
  */
-function setComponentData(
-	node,
-	data = undefined,
-	options = {},
-	callback = null
-) {
+function setComponentData(node, data = undefined, callback = null) {
 	if (data === undefined) {
 		data = node._data;
 	} else {
-		node._data = cloneObject(data);
+		if (node._data && isEquivalent(data, node._prev_data)) {
+			console.log("equivalent data in", node, data, node._prev_data);
+			// stop the changeEvent propagation
+			return;
+		}
+
+		node._data = data; // cloneObject(data);
 	}
 
 	node._bindNodes.forEach((e) => {
@@ -385,7 +450,9 @@ function setComponentData(
 		// temporary, decide on what u wanna stick to, value or data
 		if (e._setData) {
 			//e._setData(cloneObject(value));
-			e._setData(value, { quiet: true });
+			//console.log("from here", node, e);
+			//console.trace();
+			e._setData(value);
 		}
 	});
 
@@ -395,9 +462,12 @@ function setComponentData(
 
 	node._prev_data = cloneObject(node._data);
 
-	if (!options.quiet) {
-		node.dispatchChange();
-	}
+	//console.log("dispatchChange", node, options.quiet);
+	/*if (options.propagate_direction == "up") {
+		
+    }*/
+	//console.log("dispatchChange", node);
+	node.dispatchChange();
 }
 
 /**

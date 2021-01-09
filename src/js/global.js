@@ -371,6 +371,10 @@ function dispatchChange(node) {
 	node.dispatchEvent(new Event("change"));
 }
 
+function xor(a, b) {
+	return (a || b) && !(a && b);
+}
+
 function getValue(input) {
 	// TODO: move these motherfuckers to them components instead
 	// funny how some might not have registering process so we can leave some in here ;)
