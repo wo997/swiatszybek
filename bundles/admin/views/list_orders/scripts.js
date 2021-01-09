@@ -64,6 +64,8 @@ function createListRowCompontent(node, parent, data = undefined) {
 	extendBaseComponent(node, parent, data);
 }
 
+// list component will be reusable
+
 /**
  * @typedef {{
  * _data: any
@@ -125,24 +127,7 @@ function createListCompontent(
 		};
 
 		setComponentData(node, data, () => {
-			/*console.log(
-                "before",
-                JSON.stringify(node._prev_data),
-                JSON.stringify(node._data)
-            );*/
-
-			/*console.log(
-                "after",
-                JSON.stringify(node._prev_data),
-                JSON.stringify(node._data)
-            );*/
-
-			//assignRowIds();
-
-			//console.log(data);
 			const diff = diffArrays(node._prev_data, node._data, (e) => e.row_id);
-
-			//console.log(diff);
 
 			diff.added.forEach((data_id) => {
 				const row_data = node._data[data_id];
@@ -163,12 +148,6 @@ function createListCompontent(
 			});
 
 			const any_change = assignRowIds();
-
-			/*if (any_change && node._setData) {
-				setTimeout(() => {
-					//node._setData();
-				}, 500);
-			}*/
 
 			let child_index = -1;
 			node
@@ -259,11 +238,11 @@ function createFirstCompontent(node, parent, data = undefined) {
             <span data-bind="id" data-type="html"></span>
             <br>
 
-            <h3>Some state </h3>
+            <h3>Some state (changes list visibility) </h3>
             <checkbox data-bind="state"></checkbox>
             <br>
 
-            <h3>Fancy stuff</h3>
+            <h3>Display form json</h3>
             <div class="crazy"></div>
 
             <h3>We can even have a list! <span class="list_count"></span> <button class="add btn primary">Add a new row!</button></h3>
@@ -282,6 +261,7 @@ function createFirstCompontent(node, parent, data = undefined) {
 
 			expand(node._expand_y, node._data.state === 1);
 
+			// sadly it's not as simple as that, the reference needs to propagate. doable, right?
 			const equivalent = isEquivalent(node._data, node._saved_data);
 			const disable = !node._saved_data || equivalent;
 			toggleDisabled(node._load_btn, disable);
@@ -327,6 +307,8 @@ function createFirstCompontent(node, parent, data = undefined) {
 
 	extendBaseComponent(node, parent, data);
 }
+
+// things below will be just a library, reusable
 
 /**
  * @typedef {{
