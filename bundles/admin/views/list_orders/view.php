@@ -18,7 +18,6 @@
 <?php startSection("body_content"); ?>
 
 
-<div class="my_list_controls">controls</div>
-<div class="my_list">My list</div>
+<div class="my_component"></div>
 
 <?php include "admin/page_template.php"; ?>
