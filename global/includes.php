@@ -21,13 +21,6 @@ if (defined("ROUTE")) {
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
 <link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
-<?php if ($has_js) { ?>
-    <script src="/<?= BUILD_VIEWS_PATH . ROUTE . ".js" ?>?v=<?= JS_RELEASE ?>"></script>
-<?php } ?>
-<?php if ($has_css) { ?>
-    <link href="/<?= BUILD_VIEWS_PATH . ROUTE . ".css" ?>?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-<?php } ?>
-
 <script>
     // TODO: should go to cookie maybe window.devicePixelRatio
 
@@ -174,3 +167,10 @@ if (defined("ROUTE")) {
 
     <?php endif ?>
 </style>
+
+<?php if ($has_js) { ?>
+    <script src="/<?= BUILD_VIEWS_PATH . ROUTE . ".js" ?>?v=<?= JS_RELEASE ?>"></script>
+<?php } ?>
+<?php if ($has_css) { ?>
+    <link href="/<?= BUILD_VIEWS_PATH . ROUTE . ".css" ?>?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+<?php } ?>
