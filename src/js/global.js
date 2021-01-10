@@ -305,7 +305,11 @@ domload(() => {
 function setValue(input, value = null, params = {}) {
 	input = $(input);
 
-	if (value === null || isEquivalent(input.getValue(), value)) {
+	if (
+		value === null ||
+		value === undefined ||
+		isEquivalent(input.getValue(), value)
+	) {
 		if (!params.quiet) {
 			input.dispatchChange();
 		}

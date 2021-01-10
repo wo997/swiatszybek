@@ -9,7 +9,11 @@ domload(() => {
 		id: 5,
 		name: "asdsad",
 		state: 1,
-		list_data: [{ email: "wojtekwo997@gmail.com" }, { email: "peniz" }],
+		list_data: [
+			{ email: "wojtekwo997@gmail.com" },
+			{ email: "pies@pies.pies" },
+			{ email: "111" },
+		],
 	});
 });
 
@@ -68,10 +72,6 @@ function createListRowCompontent(node, parent, data = undefined) {
 
 /**
  * @typedef {{
- * _data: any
- * } & PiepNode} ListRow
-
- * @typedef {{
  * _data: Array
  * _prev_data: Array
  * _setData(data?: Array)
@@ -99,84 +99,119 @@ function createListCompontent(
 
 	node._nextRowId = -1;
 
-	node._setData = (data = undefined) => {
-		const assignRowIds = () => {
-			let any_change = false;
-			if (node._data) {
-				let child_index = -1;
-				node._data.forEach((e) => {
-					child_index++;
-					if (e.row_id === undefined) {
-						node._nextRowId++;
-						e.row_id = node._nextRowId;
+	const getRows = () => {
+		return node.directChildren(":not(.removing)");
+	};
 
-						const my_list_row_wrapper = node.directChildren()[child_index];
+	node._referenceParent = () => {
+		if (!node._parent_component || !node._parent_component._data) {
+			return;
+		}
+
+		const our_data_in_parent = node._parent_component._data[node.dataset.bind];
+		if (our_data_in_parent !== undefined) {
+			node.directChildren(":not(.removing)").forEach((child) => {
+				/** @type {AnyComponent} */
+				// @ts-ignore
+				const sub_component = child.find(".my_list_row");
+
+				const sub_data = our_data_in_parent.find((e) => {
+					return e._row_id === sub_component._data._row_id;
+				});
+				if (sub_data !== undefined) {
+					sub_component._data = sub_data;
+				}
+			});
+		}
+	};
+
+	const assignRowIds = () => {
+		if (node._data) {
+			let child_index = -1;
+			node._data.forEach((e) => {
+				child_index++;
+				if (e._row_id === undefined) {
+					node._nextRowId++;
+					e._row_id = node._nextRowId;
+
+					const child = getRows()[child_index];
+					if (child !== undefined) {
 						/** @type {AnyComponent} */
 						// @ts-ignore
-						const my_list_row = my_list_row_wrapper.find(".my_list_row");
+						const my_list_row = child.find(".my_list_row");
 
 						if (my_list_row._setData) {
 							my_list_row._setData();
 						}
-						any_change = true;
 					}
-				});
-			}
+				}
+			});
+		}
+	};
 
-			return any_change;
-		};
+	node._getComponentsToPassEvent = () => {
+		/** @type {AnyComponent[]} */
+		// @ts-ignore
+		const res = getRows().map((child) => {
+			return child.find(".my_list_row");
+		});
+		return res;
+	};
 
+	node._setData = (data = undefined) => {
 		setComponentData(node, data, () => {
-			const diff = diffArrays(node._prev_data, node._data, (e) => e.row_id);
+			const diff = diffArrays(node._prev_data, node._data, (e) => e._row_id);
+			//console.log(diff);
+
+			const animation_duration = 250;
+
+			let child_index = -1;
+			const remember_nodes_to_remove = getRows().filter(() => {
+				child_index++;
+				return diff.removed.includes(child_index);
+			});
 
 			diff.added.forEach((data_id) => {
 				const row_data = node._data[data_id];
 
-				/** @type {ListRow} */
+				/** @type {AnyComponent} */
 				// @ts-ignore
-				const my_list_row_wrapper = createNodeFromHtml(/*html*/ `
-                    <div class="my_list_row_wrapper expand_y">
+				const child = createNodeFromHtml(/*html*/ `
+                    <div class="my_list_row_wrapper expand_y hidden animate_hidden">
                         <div class="my_list_row"></div>
                     </div>
                 `);
 
-				node.appendChild(my_list_row_wrapper);
+				// TODO: find the actual place where you want to put it
+				node.insertBefore(child, node.children[row_data._row_id]); // undefined _row_id? that's ok
 
-				const my_list_row = my_list_row_wrapper.find(".my_list_row");
+				const the_row = child.find(".my_list_row");
 
-				createRowCallback(my_list_row, node, row_data);
+				createRowCallback(the_row, node, row_data);
+
+				expand(child, true, { duration: animation_duration });
 			});
 
-			const any_change = assignRowIds();
+			assignRowIds();
 
-			let child_index = -1;
-			node
-				.directChildren()
-				.filter((/** @type {ListRow} */ child) => {
-					if (child.classList.contains("removing")) {
-						return;
-					}
-					child_index++;
-					return diff.removed.includes(child_index);
-				})
-				.forEach((/** @type {ListRow} */ child) => {
-					// animation that shows framework capabilites, totally optional
-					const duration = 250;
-					expand(child, false, { duration });
-					child.classList.add("removing"); // .removing -> style.pointerEvents = "none";
-					setTimeout(() => {
-						child.remove();
-					}, duration);
-				});
+			remember_nodes_to_remove.forEach((child) => {
+				expand(child, false, { duration: animation_duration });
+				child.classList.add("removing"); // .removing -> style.pointerEvents = "none";
+				setTimeout(() => {
+					child.remove();
+				}, animation_duration);
+			});
 		});
 	};
 
 	node._removeRow = (child) => {
 		const remove_index = node._data.findIndex((d) => {
-			return d.row_id === child._data.row_id;
+			return d._row_id === child._data._row_id;
 		});
-		node._data.splice(remove_index, 1);
-		node._setData();
+		if (remove_index !== -1) {
+			node._data.splice(remove_index, 1);
+			node._setData();
+		}
 	};
 
 	// basically empty when created
@@ -242,13 +277,13 @@ function createFirstCompontent(node, parent, data = undefined) {
             <checkbox data-bind="state"></checkbox>
             <br>
 
-            <h3>Display form json</h3>
-            <div class="crazy"></div>
-
             <h3>We can even have a list! <span class="list_count"></span> <button class="add btn primary">Add a new row!</button></h3>
             <div class="expand_y">
                 <div class="my_list" data-bind="list_data"></div>
             </div>
+
+            <h3>Display form json</h3>
+            <div class="crazy"></div>
         </div>
     `);
 
@@ -256,7 +291,7 @@ function createFirstCompontent(node, parent, data = undefined) {
 		setComponentData(node, data, () => {
 			node._crazy.setContent(`
                 This string was generated by the compontent
-                ${JSON.stringify(node._data)}
+                ${JSON.stringify(node._data, null, 3)}
             `);
 
 			expand(node._expand_y, node._data.state === 1);
@@ -274,7 +309,7 @@ function createFirstCompontent(node, parent, data = undefined) {
 	/** @type {ListComponent} */
 	// @ts-ignore
 	const my_list = node.find(".my_list");
-	createListCompontent(my_list, node, createListRowCompontent);
+	createListCompontent(my_list, node, createListRowCompontent, data.list_data);
 	node._my_list = my_list;
 
 	node._crazy = node.find(".crazy");
@@ -313,7 +348,9 @@ function createFirstCompontent(node, parent, data = undefined) {
 /**
  * @typedef {{
  * _bindNodes: PiepNode[]
- * _parent: any
+ * _parent_component: any
+ * _referenceParent: CallableFunction
+ * _getComponentsToPassEvent?(): AnyComponent[]
  * } & PiepNode} BaseComponent
  *
  * @typedef {{
@@ -332,6 +369,8 @@ function createFirstCompontent(node, parent, data = undefined) {
 function extendBaseComponent(node, parent, data) {
 	node.classList.add("component");
 
+	//console.log(node, data);
+
 	/*if (!!parent && !parent.classList.contains("component")) {
 		console.error("Parent is not a component!", parent.outerHTML);
 		console.trace();
@@ -340,7 +379,7 @@ function extendBaseComponent(node, parent, data) {
 		console.error("Parent is not a node!", parent);
 		console.trace();
 	}
-	node._parent = parent;
+	node._parent_component = parent;
 
 	// kinda weird but it creates the checkbox subcomponent
 	registerForms();
@@ -389,6 +428,20 @@ function extendBaseComponent(node, parent, data) {
 		return node._data;
 	};
 
+	if (node._referenceParent === undefined) {
+		// only arrays are... arrays ;)
+		node._referenceParent = () => {
+			if (!node._parent_component) {
+				return;
+			}
+			const our_data_in_parent =
+				node._parent_component._data[node.dataset.bind];
+			if (our_data_in_parent !== undefined) {
+				node._data = our_data_in_parent;
+			}
+		};
+	}
+
 	node._setData(data);
 }
 
@@ -404,20 +457,35 @@ function extendBaseComponent(node, parent, data) {
  * @param {CallableFunction} callback
  */
 function setComponentData(node, data = undefined, callback = null) {
+	//console.log(node, data, node._prev_data);
 	if (data === undefined) {
 		data = node._data;
 	} else {
-		if (node._data && isEquivalent(data, node._prev_data)) {
-			console.log("equivalent data in", node, data, node._prev_data);
+		node._data = data;
+		//node._data = cloneObject(data); // weak reference
+
+		/*if (node._data && isEquivalent(data, node._prev_data)) {
+			//console.log("equivalent data in", node, data, node._prev_data);
 			// stop the changeEvent propagation
 			return;
-		}
-
-		node._data = data; // cloneObject(data);
+		}*/
 	}
 
-	node._bindNodes.forEach((e) => {
-		const name = e.dataset.bind;
+	const passEvent = (child, value = undefined) => {
+		if (child.setValue) {
+			child.setValue(value, { quiet: true });
+		}
+		// temporary, decide on what u wanna stick to, value or data
+
+		/** @type {AnyComponent} */
+		// @ts-ignore
+		const comp = child;
+		if (comp._setData) {
+			comp._setData(value);
+		}
+	};
+	node._bindNodes.forEach((child) => {
+		const name = child.dataset.bind;
 		if (name === undefined) {
 			return;
 		}
@@ -426,30 +494,32 @@ function setComponentData(node, data = undefined, callback = null) {
 			return;
 		}
 
-		if (e.setValue) {
-			e.setValue(value, { quiet: true });
-		}
-		// temporary, decide on what u wanna stick to, value or data
-		if (e._setData) {
-			//e._setData(cloneObject(value));
-			//console.log("from here", node, e);
-			//console.trace();
-			e._setData(value);
-		}
+		passEvent(child, value);
 	});
+
+	if (node._getComponentsToPassEvent) {
+		node._getComponentsToPassEvent().forEach((child) => {
+			passEvent(child);
+		});
+	}
 
 	if (callback) {
 		callback();
 	}
 
+	const data_changed = !isEquivalent(node._data, node._prev_data);
 	node._prev_data = cloneObject(node._data);
+	// node._data === undefined || !isEquivalent(node._data, node._prev_data);
 
 	//console.log("dispatchChange", node, options.quiet);
 	/*if (options.propagate_direction == "up") {
 		
     }*/
 	//console.log("dispatchChange", node);
-	node.dispatchChange();
+	if (data_changed) {
+		node._referenceParent();
+		node.dispatchChange();
+	}
 }
 
 /**
