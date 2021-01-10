@@ -1,0 +1,144 @@
+/* css[view] */
+
+#variantForm .attribute-row.any_selected.attribute_used {
+  box-shadow: inset 0 0 0 2px var(--primary-clr);
+  border-width: 0;
+  position: relative;
+}
+
+.case_common,
+.case_intersect {
+  display: none;
+}
+
+#variantForm .attribute-row.common:not(.any_selected) .case_common {
+  display: inline-block;
+}
+
+#variantForm .attribute-row.common.any_selected .case_intersect {
+  display: inline-block;
+}
+
+.sub_filter {
+  flex-grow: 1;
+}
+
+.options_wrapper {
+  margin-bottom: -5px;
+}
+
+.indent {
+  margin-left: 20px;
+  margin-right: -88px;
+}
+
+#productForm [name="variant_filters"] .attribute-row {
+  border: none;
+  padding: 0;
+}
+
+#productForm [name="variant_filters"] .attribute-row > .field-title {
+  display: none;
+}
+
+#productForm [name="variant_filters"] > .list {
+  background: #eee;
+  border-radius: 4px;
+}
+
+#productForm [name="filter_options"] > .list {
+  background: #fff;
+  border-radius: 4px;
+}
+
+#productForm [name="variant_filters"] .simple-list-row-wrapper {
+  background-color: inherit;
+}
+
+#productForm .simple-list .action_buttons {
+  align-self: flex-start;
+}
+
+.mycircle {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  border-radius: 50%;
+  border: 0.24em solid #333;
+  transform: translateY(2px);
+}
+
+#productForm [name="variant_filters"] .fa-th-large {
+  font-size: 1.1em;
+  color: #333;
+}
+
+.fancy-label {
+  display: inline-block;
+  background: #00000008;
+  border: 1px solid #0002;
+  border-top-width: 0;
+  border-left-width: 0;
+  margin-left: -5px;
+  margin-top: -5px;
+  padding: 7px 9px 7px 9px;
+  margin-right: 5px;
+  border-top-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+[name="filter_options"] {
+  counter-reset: options;
+}
+
+[name="variant_filters"] {
+  counter-reset: filter;
+  margin-bottom: 5px;
+}
+
+.label-options::before {
+  counter-increment: options;
+  content: counter(options) ".";
+  font-weight: 600;
+}
+
+/*.label-filters::before {
+    counter-increment: filter;
+    content: counter(filter)".";
+    font-weight: 600;
+  }*/
+
+.indent_field_title {
+  margin: 10px 0px 4px !important;
+}
+
+.options_wrapper:not([data-option-count="0"]) > .add_additional_filters {
+  display: none;
+}
+
+.options_wrapper[data-option-count="0"] > .indent {
+  display: none;
+}
+
+.options_wrapper[data-option-count="0"] > .fancy-label {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 4px;
+  border-bottom-width: 0;
+}
+
+[name="variant_filters"] > .list > .simple-list-row-wrapper:not(:last-child) {
+  margin-bottom: 10px;
+  box-shadow: 0 15px 0 0 white;
+}
+
+[name="filter_options"]
+  [name="variant_filters"]
+  > .list
+  > .simple-list-row-wrapper:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+[name="variant_filters"] > .list > .simple-list-row-wrapper {
+  border-bottom: 1px solid #aaa;
+  border-radius: 4px;
+}
