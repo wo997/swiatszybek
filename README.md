@@ -1,6 +1,12 @@
 # swiatszybek
 
-Instalacja aplikacji:
+Local environment configuration:
+https://piep.bit.ai/docs/view/UifbMg9cXMw29jkU
+
+Framework support for VS Code
+https://marketplace.visualstudio.com/items?itemName=LSIT.lsit
+
+Instalacja aplikacji (na serwerze klienta):
 
 Prześlij pliki protokołem FTP na serwer:
 

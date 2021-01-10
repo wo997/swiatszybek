@@ -1,5 +1,16 @@
 /* css[view] */
 
-.main-container::before {
-	content: "this stylesheet was added to a view externally";
+.my_component {
+	border: 1px solid #ccc;
+	padding: 10px;
+}
+
+.my_list {
+	border: 1px solid #ccc;
+	padding: 10px;
+}
+
+.my_list_row {
+	border: 1px solid #ccc;
+	padding: 10px;
 }

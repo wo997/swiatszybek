@@ -261,7 +261,7 @@ class NewCmsSidebar {
 		}
 
 		// @ts-ignore
-		target_side_menu_name = this.opened_menus.last();
+		target_side_menu_name = getLast(this.opened_menus);
 
 		const current_menu = this.getCurrentMenuNode();
 		const target_menu = this.node.find(

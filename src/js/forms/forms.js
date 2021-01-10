@@ -11,7 +11,7 @@ window.addEventListener("beforeunload", function (e) {
 	}
 
 	const wasState = form.initial_state;
-	const nowState = form.history.last();
+	const nowState = getLast(form.history);
 
 	if (!isEquivalent(wasState, nowState)) {
 		e.returnValue = "Czy na pewno chcesz opuścić stronę?";
@@ -20,7 +20,7 @@ window.addEventListener("beforeunload", function (e) {
 
 function checkFormCloseWarning(form) {
 	const wasState = form.initial_state;
-	const nowState = form.history ? form.history.last() : getFormData(form);
+	const nowState = form.history ? getLast(form.history) : getFormData(form);
 
 	if (!isEquivalent(wasState, nowState)) {
 		return confirm(

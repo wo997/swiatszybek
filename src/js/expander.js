@@ -67,6 +67,15 @@ function expandMenu(elem, btn, open = null, options = {}) {
 	}
 }
 
+/**
+ *
+ * @param {PiepNode} elem
+ * @param {boolean | undefined | null} show
+ * @param {{
+ * duration?: number
+ * callback?: CallableFunction
+ * }} options
+ */
 function expand(elem, show = null, options = {}) {
 	if (!elem) {
 		return;
@@ -74,7 +83,7 @@ function expand(elem, show = null, options = {}) {
 	if (show === null) {
 		show = elem.classList.contains("hidden");
 	}
-	if (show ^ elem.classList.contains("hidden")) {
+	if (xor(show, elem.classList.contains("hidden"))) {
 		return;
 	}
 
