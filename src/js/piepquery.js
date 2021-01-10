@@ -4,7 +4,7 @@
  * @typedef {{
  * find(query: string): PiepNode //my comment baby
  * findAll(query: string): PiepNode[]
- * directChildren(): PiepNode[]
+ * directChildren(query?): PiepNode[]
  * setValue(value: any, options?: {
  *  quiet?: boolean
  * }): void
@@ -95,9 +95,12 @@ function $(node, parent = null) {
 	node.parent = () => {
 		return $(node.parentNode);
 	};
-	node.directChildren = () => {
+	node.directChildren = (query = undefined) => {
 		var res = [];
 		[...node.children].forEach((node) => {
+			if (query !== undefined && !node.matches(query)) {
+				return;
+			}
 			res.push($(node));
 		});
 		return res;

@@ -99,6 +99,10 @@ function createListCompontent(
 
 	node._nextRowId = -1;
 
+	const getRows = () => {
+		return node.directChildren(":not(.removing)");
+	};
+
 	node._referenceParent = () => {
 		if (!node._parent_component || !node._parent_component._data) {
 			return;
@@ -106,7 +110,7 @@ function createListCompontent(
 
 		const our_data_in_parent = node._parent_component._data[node.dataset.bind];
 		if (our_data_in_parent !== undefined) {
-			node.directChildren().forEach((child) => {
+			node.directChildren(":not(.removing)").forEach((child) => {
 				/** @type {AnyComponent} */
 				// @ts-ignore
 				const sub_component = child.find(".my_list_row");
@@ -130,7 +134,7 @@ function createListCompontent(
 					node._nextRowId++;
 					e._row_id = node._nextRowId;
 
-					const child = node.directChildren()[child_index];
+					const child = getRows()[child_index];
 					if (child !== undefined) {
 						/** @type {AnyComponent} */
 						// @ts-ignore
@@ -145,28 +149,29 @@ function createListCompontent(
 		}
 	};
 
+	node._getComponentsToPassEvent = () => {
+		/** @type {AnyComponent[]} */
+		// @ts-ignore
+		const res = getRows().map((child) => {
+			return child.find(".my_list_row");
+		});
+		return res;
+	};
+
 	node._setData = (data = undefined) => {
 		setComponentData(node, data, () => {
 			const diff = diffArrays(node._prev_data, node._data, (e) => e._row_id);
-			/*console.log(
-				diff,
-				node._prev_data ? node._prev_data.length : 0,
-				node._data.length
-			);*/
+			//console.log(diff);
 
 			const animation_duration = 250;
 
 			let child_index = -1;
-			const remember_nodes_to_remove = node.directChildren().filter((child) => {
-				if (child.classList.contains("removing")) {
-					return;
-				}
+			const remember_nodes_to_remove = getRows().filter(() => {
 				child_index++;
 				return diff.removed.includes(child_index);
 			});
 
 			diff.added.forEach((data_id) => {
-				console.log(diff.added);
 				const row_data = node._data[data_id];
 
 				/** @type {AnyComponent} */
@@ -190,7 +195,6 @@ function createListCompontent(
 			assignRowIds();
 
 			remember_nodes_to_remove.forEach((child) => {
-				// animation that shows framework capabilites, totally optional
 				expand(child, false, { duration: animation_duration });
 				child.classList.add("removing"); // .removing -> style.pointerEvents = "none";
 				setTimeout(() => {
@@ -346,6 +350,7 @@ function createFirstCompontent(node, parent, data = undefined) {
  * _bindNodes: PiepNode[]
  * _parent_component: any
  * _referenceParent: CallableFunction
+ * _getComponentsToPassEvent?(): AnyComponent[]
  * } & PiepNode} BaseComponent
  *
  * @typedef {{
@@ -466,8 +471,21 @@ function setComponentData(node, data = undefined, callback = null) {
 		}*/
 	}
 
-	node._bindNodes.forEach((e) => {
-		const name = e.dataset.bind;
+	const passEvent = (child, value = undefined) => {
+		if (child.setValue) {
+			child.setValue(value, { quiet: true });
+		}
+		// temporary, decide on what u wanna stick to, value or data
+
+		/** @type {AnyComponent} */
+		// @ts-ignore
+		const comp = child;
+		if (comp._setData) {
+			comp._setData(value);
+		}
+	};
+	node._bindNodes.forEach((child) => {
+		const name = child.dataset.bind;
 		if (name === undefined) {
 			return;
 		}
@@ -476,18 +494,14 @@ function setComponentData(node, data = undefined, callback = null) {
 			return;
 		}
 
-		if (e.setValue) {
-			e.setValue(value, { quiet: true });
-		}
-		// temporary, decide on what u wanna stick to, value or data
-
-		/** @type {AnyComponent} */
-		// @ts-ignore
-		const c = e;
-		if (c._setData) {
-			c._setData(value);
-		}
+		passEvent(child, value);
 	});
+
+	if (node._getComponentsToPassEvent) {
+		node._getComponentsToPassEvent().forEach((child) => {
+			passEvent(child);
+		});
+	}
 
 	if (callback) {
 		callback();
