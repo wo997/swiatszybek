@@ -131,11 +131,6 @@ h1 {
 	background: #fff5;
 }
 
-.menu_item.open + .sub_menu + .menu_item.open {
-	border-top: 1px solid #ccc;
-	margin-top: 0;
-}
-
 .navbar_admin .menu_item.current-route,
 .navbar_admin .menu_item:hover {
 	background: #cacaca;
@@ -188,4 +183,8 @@ h1 {
 
 .navbar_admin > .scroll-panel {
 	height: 100%;
+}
+
+.navbar_admin .scroll-panel > div > .menu_item {
+	margin-top: 10px;
 }
