@@ -35,22 +35,29 @@ let obj_2 = {
 	_subscribe_to_arr: [],
 };
 
-obj_1._subscribe_to_arr.push({
+addSubscriber(obj_1, {
 	what: obj_2,
 	how: (what, _data) => {
 		what._data = _data.a;
 	},
-	fields: ["a"],
 });
 
-obj_2._subscribe_to_arr.push({
+addSubscriber(obj_2, {
 	what: obj_1,
 	how: (what, _data) => {
 		what._data.a = _data;
 	},
 });
 
-setData(obj_1, undefined, { force_propagate: true });
+/**
+ *
+ * @param {ObjWithData} to
+ * @param {SubscribeTo} subscribe_to
+ */
+function addSubscriber(to, subscribe_to) {
+	to._subscribe_to_arr.push(subscribe_to);
+	setData(to, undefined, { force_propagate: true });
+}
 
 /**
  * @type {ObjWithData}
@@ -61,28 +68,24 @@ let obj_3 = {
 	_subscribe_to_arr: [],
 };
 
-obj_2._subscribe_to_arr.push({
+addSubscriber(obj_2, {
 	what: obj_3,
 	how: (what, _data) => {
 		what._data = _data.b;
 	},
-	fields: ["b"],
 });
 
-obj_3._subscribe_to_arr.push({
+addSubscriber(obj_3, {
 	what: obj_2,
 	how: (what, _data) => {
 		what._data.b = _data;
 	},
 });
 
-setData(obj_2, undefined, { force_propagate: true });
-
 /**
  * @typedef {{
  * how(what: ObjWithData, _data: any)
  * what: ObjWithData
- * fields?: string[]
  * }} SubscribeTo
  */
 
@@ -105,22 +108,15 @@ function setData(obj, _data = undefined, options = {}) {
 
 	const equal = isEquivalent(obj._prev_data, obj._data);
 
-	//console.log(options, obj._data, obj._prev_data);
-
-	/** @type {SubscribeTo[]} */
-	const subscribers = obj._subscribe_to_arr;
-	//console.log("SUB", subscribers, "of", obj, "equal", equal);
-
 	if (!equal) {
 		obj._prev_data = cloneObject(obj._data);
 	} else {
 		if (nonull(options.force_propagate, false) === false) {
-			// stop event propagation
 			return;
 		}
 	}
 
-	subscribers.forEach((subscribe) => {
+	obj._subscribe_to_arr.forEach((subscribe) => {
 		subscribe.how(subscribe.what, cloneObject(obj._data));
 		setData(subscribe.what, undefined);
 	});
