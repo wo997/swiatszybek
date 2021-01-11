@@ -47,9 +47,6 @@ function showCategory($category, $level = 0)
 <head>
     <?php include "global/includes.php"; ?>
 
-    <script src="/builds/user_produkty_page.js?v=<?= JS_RELEASE ?>"></script>
-    <link href="/builds/user_produkty_page.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-
     <script>
         const CATEGORY_ID = <?= $show_category["category_id"] ?>;
     </script>

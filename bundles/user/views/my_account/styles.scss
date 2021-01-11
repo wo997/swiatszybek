@@ -1,0 +1,45 @@
+/* css[view] */
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.nav > * {
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  margin: 5px;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+@media only screen and (max-width: 600px) {
+  .nav > * {
+    width: calc(100% - 10px) !important;
+  }
+}
+
+#accountForm .selected {
+  color: white;
+  background: var(--primary-clr);
+  border-color: var(--primary-clr);
+}
+
+.menu {
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+  width: 100%;
+  margin: auto;
+}
+
+.showNow {
+  opacity: 1;
+}
+
+.menu:not(.showNow) {
+  opacity: 0;
+}

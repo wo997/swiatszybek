@@ -1,0 +1,58 @@
+/* css[view] */
+
+#total {
+  display: inline-block;
+  padding: 10px;
+}
+
+.usun {
+  margin: auto;
+  display: block;
+  max-width: 70px;
+  font-size: 16px;
+  padding: 3px 0;
+}
+
+.items > div {
+  margin: 14px 0 !important;
+}
+
+table {
+  width: 100%;
+  font-size: 18px;
+  text-align: left;
+}
+
+td,
+th {
+  padding: 5px;
+}
+
+@media only screen and (max-width: 750px) {
+  #table > div {
+    flex-direction: column;
+  }
+
+  #table > div > div:nth-child(2) {
+    text-align: right;
+    margin-top: 8px;
+  }
+}
+
+.button {
+  width: 100%;
+}
+
+.menu {
+  overflow: hidden;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+  width: 100%;
+  margin: auto;
+}
+
+@media only screen and (max-width: 750px) {
+  .fullwidthmobile {
+    max-width: none !important;
+  }
+}

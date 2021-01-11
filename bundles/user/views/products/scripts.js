@@ -1,4 +1,4 @@
-/* js[user_produkty_page] */
+/* js[view] */
 
 var currPage = 1;
 var rowCount = 24;
