@@ -1,5 +1,143 @@
 /* js[view] */
 
+/**
+ * @typedef {{
+ * 	name: string,
+ * _data: any,
+ * _prev_data?: any,
+ * subscribers: SubscribeTo[],
+ * }} ObjWithData
+ */
+
+/**
+ * @type {ObjWithData}
+ */
+let obj_1 = {
+	name: "1",
+	_data: undefined,
+	subscribers: [],
+};
+
+setData(obj_1, {
+	a: {
+		b: {
+			c: 12,
+		},
+	},
+});
+
+/**
+ * @type {ObjWithData}
+ */
+let obj_2 = {
+	name: "2",
+	_data: undefined,
+	subscribers: [],
+};
+
+obj_1.subscribers.push({
+	what: obj_2,
+	how: (what, _data) => {
+		what._data = _data.a;
+	},
+	fields: ["a"],
+});
+
+obj_2.subscribers.push({
+	what: obj_1,
+	how: (what, _data) => {
+		what._data.a = _data;
+	},
+});
+
+setData(obj_1, undefined, { force_propagate: true });
+
+/**
+ * @type {ObjWithData}
+ */
+let obj_3 = {
+	name: "3",
+	_data: undefined,
+	subscribers: [],
+};
+
+obj_2.subscribers.push({
+	what: obj_3,
+	how: (what, _data) => {
+		what._data = _data.b;
+	},
+	fields: ["b"],
+});
+
+obj_3.subscribers.push({
+	what: obj_2,
+	how: (what, _data) => {
+		what._data.b = _data;
+	},
+});
+
+setData(obj_2, undefined, { force_propagate: true });
+
+/**
+ * @typedef {{
+ * how(what: ObjWithData, _data: any)
+ * what: ObjWithData
+ * fields?: string[]
+ * }} SubscribeTo
+ */
+
+/**
+ * @typedef {{
+ * force_propagate?: boolean
+ * }} SetDataOptions
+ */
+
+/**
+ *
+ * @param {ObjWithData} obj
+ * @param {*} _data
+ * @param {SetDataOptions} options
+ */
+function setData(obj, _data = undefined, options = {}) {
+	if (_data !== undefined) {
+		obj._data = _data;
+	}
+
+	const equal = isEquivalent(obj._prev_data, obj._data);
+
+	//console.log(options, obj._data, obj._prev_data);
+
+	/** @type {SubscribeTo[]} */
+	const subscribers = obj.subscribers;
+	//console.log("SUB", subscribers, "of", obj, "equal", equal);
+
+	if (!equal) {
+		obj._prev_data = cloneObject(obj._data);
+	} else {
+		if (nonull(options.force_propagate, false) === false) {
+			// stop event propagation
+			return;
+		}
+	}
+
+	subscribers.forEach((subscribe) => {
+		subscribe.how(subscribe.what, cloneObject(obj._data));
+		setData(subscribe.what, undefined);
+	});
+}
+
+//data.a;
+
+//console.log(JSON.stringify(obj_1, null, 3));
+//console.log(JSON.stringify(obj_2, null, 3));
+console.log(obj_1);
+console.log(obj_2);
+console.log(obj_3);
+
+console.log("");
+console.log("");
+console.log("");
+
 domload(() => {
 	/** @type {FirstComponent} */
 	// @ts-ignore
@@ -41,7 +179,10 @@ function createListRowCompontent(node, parent, data = undefined) {
 		data = { email: "" };
 	}
 
+	node._name = "list_row";
+
 	node.setContent(/*html*/ `
+        <span data-bind="_row_id" data-type="html"></span>
         <input type="text" class="field inline" data-bind="email">
         rewrite inputs
         <input type="text" class="field inline" data-bind="email">
@@ -77,13 +218,13 @@ function createListRowCompontent(node, parent, data = undefined) {
  * _setData(data?: Array)
  * _getData()
  * _nextRowId: number
- * _removeRow(child: AnyComponent)
+ * _removeRow(child: BaseComponent)
  * } & BaseComponent} ListComponent
  */
 
 /**
  * @param {ListComponent} node
- * @param {PiepNode} parent
+ * @param {BaseComponent} parent
  * @param {CallableFunction} createRowCallback
  * @param {Array} data
  */
@@ -97,31 +238,44 @@ function createListCompontent(
 		data = [];
 	}
 
+	node._name = "list";
+
 	node._nextRowId = -1;
 
 	const getRows = () => {
 		return node.directChildren(":not(.removing)");
 	};
 
-	node._referenceParent = () => {
-		if (!node._parent_component || !node._parent_component._data) {
+	//node._referenceParent = () => {
+	// if (!node._parent_component || !node._parent_component._data) {
+	// 	return;
+	// }
+
+	// const our_data_in_parent = node._parent_component._data[node.dataset.bind];
+	// if (our_data_in_parent !== undefined) {
+	// 	node.directChildren(":not(.removing)").forEach((child) => {
+	// 		/** @type {AnyComponent} */
+	// 		// @ts-ignore
+	// 		const sub_component = child.find(".my_list_row");
+
+	// 		//console.log({ sub_data, sub_component, node });
+	// 	});
+
+	// }
+
+	//};
+
+	node._referenceSelf = (/** @type {AnyComponent} */ child) => {
+		if (child._data._row_id === undefined) {
 			return;
 		}
-
-		const our_data_in_parent = node._parent_component._data[node.dataset.bind];
-		if (our_data_in_parent !== undefined) {
-			node.directChildren(":not(.removing)").forEach((child) => {
-				/** @type {AnyComponent} */
-				// @ts-ignore
-				const sub_component = child.find(".my_list_row");
-
-				const sub_data = our_data_in_parent.find((e) => {
-					return e._row_id === sub_component._data._row_id;
-				});
-				if (sub_data !== undefined) {
-					sub_component._data = sub_data;
-				}
-			});
+		const data = child._parent_component._data.find((e) => {
+			return e._row_id === child._data._row_id;
+		});
+		//console.log(child._parent_component._data, child._data._row_id, sub_data);
+		if (data !== undefined) {
+			child._data = data;
+			console.log("hahaha", child, data);
 		}
 	};
 
@@ -183,7 +337,7 @@ function createListCompontent(
                 `);
 
 				// TODO: find the actual place where you want to put it
-				node.insertBefore(child, node.children[row_data._row_id]); // undefined _row_id? that's ok
+				node.insertBefore(child, node.children[data_id]);
 
 				const the_row = child.find(".my_list_row");
 
@@ -193,7 +347,6 @@ function createListCompontent(
 			});
 
 			assignRowIds();
-
 			remember_nodes_to_remove.forEach((child) => {
 				expand(child, false, { duration: animation_duration });
 				child.classList.add("removing"); // .removing -> style.pointerEvents = "none";
@@ -201,12 +354,19 @@ function createListCompontent(
 					child.remove();
 				}, animation_duration);
 			});
+
+			[...diff.added, ...diff.moved.map((e) => e.to)].forEach((pos) => {
+				console.log(pos);
+			});
 		});
 	};
 
 	node._removeRow = (child) => {
+		/** @type {AnyComponent} */
+		// @ts-ignore
+		const comp = child;
 		const remove_index = node._data.findIndex((d) => {
-			return d._row_id === child._data._row_id;
+			return d._row_id === comp._data._row_id;
 		});
 		if (remove_index !== -1) {
 			node._data.splice(remove_index, 1);
@@ -252,6 +412,8 @@ function createFirstCompontent(node, parent, data = undefined) {
 	if (data === undefined) {
 		data = { id: -1, name: "", state: 0, list_data: [] };
 	}
+
+	node._name = "first";
 
 	node.setContent(/*html*/ `
         <div>
@@ -347,9 +509,11 @@ function createFirstCompontent(node, parent, data = undefined) {
 
 /**
  * @typedef {{
+ * _name: string
  * _bindNodes: PiepNode[]
  * _parent_component: any
  * _referenceParent: CallableFunction
+ * _referenceSelf: CallableFunction
  * _getComponentsToPassEvent?(): AnyComponent[]
  * } & PiepNode} BaseComponent
  *
@@ -358,21 +522,30 @@ function createFirstCompontent(node, parent, data = undefined) {
  * _setData(data?: any)
  * _getData()
  * _prev_data: any
+ * _data_ref: any
  * } & BaseComponent} AnyComponent
  */
 
 /**
- * @param {AnyComponent} node
- * @param {PiepNode} parent
+ * @param {BaseComponent} comp
+ * @param {BaseComponent} parent_comp
  * @param {*} data
  * */
-function extendBaseComponent(node, parent, data) {
+function extendBaseComponent(comp, parent_comp, data) {
+	/** @type {AnyComponent} */
+	// @ts-ignore
+	const node = comp;
+
+	/** @type {AnyComponent} */
+	// @ts-ignore
+	const parent = parent_comp;
+
 	node.classList.add("component");
 
 	//console.log(node, data);
 
 	/*if (!!parent && !parent.classList.contains("component")) {
-		console.error("Parent is not a component!", parent.outerHTML);
+		console.error("Parent is not a component!", parent.outerHTML); // was too early to call
 		console.trace();
     }*/
 	if (!!parent && !(parent instanceof HTMLElement)) {
@@ -429,15 +602,24 @@ function extendBaseComponent(node, parent, data) {
 	};
 
 	if (node._referenceParent === undefined) {
-		// only arrays are... arrays ;)
 		node._referenceParent = () => {
-			if (!node._parent_component) {
-				return;
-			}
-			const our_data_in_parent =
-				node._parent_component._data[node.dataset.bind];
-			if (our_data_in_parent !== undefined) {
-				node._data = our_data_in_parent;
+			if (node._parent_component && node._parent_component._referenceSelf) {
+				// only arrays are... arrays ;)
+				//console.log(parent._name);
+				/*if (parent._data === "list") {
+                    }*/
+				console.log("wow", node);
+				parent._referenceSelf(node);
+			} else {
+				if (!node._parent_component || !node._parent_component._data) {
+					return;
+				}
+				//console.log(node._parent_component, node._parent_component._data);
+				const our_data_in_parent =
+					node._parent_component._data[node.dataset.bind];
+				if (our_data_in_parent !== undefined) {
+					node._data = our_data_in_parent;
+				}
 			}
 		};
 	}
@@ -452,11 +634,44 @@ function extendBaseComponent(node, parent, data) {
  */
 
 /**
- * @param {AnyComponent} node
+ * @param {BaseComponent} comp
  * @param {*} data
  * @param {CallableFunction} callback
  */
-function setComponentData(node, data = undefined, callback = null) {
+function setComponentData(comp, data = undefined, callback = null) {
+	/** @type {AnyComponent} */
+	// @ts-ignore
+	const node = comp;
+
+	let grand_parent = node;
+	while (true) {
+		if (grand_parent._parent_component) {
+			grand_parent = grand_parent._parent_component;
+		} else {
+			break;
+		}
+	}
+	console.log("setComponentData", node, grand_parent);
+
+	node._bindNodes.forEach((child) => {
+		const name = child.dataset.bind;
+		if (name === undefined) {
+			return;
+		}
+		const value = data[name];
+		if (value === undefined) {
+			return;
+		}
+
+		passEvent(child, value);
+	});
+
+	if (node._getComponentsToPassEvent) {
+		node._getComponentsToPassEvent().forEach((child) => {
+			passEvent(child);
+		});
+	}
+
 	//console.log(node, data, node._prev_data);
 	if (data === undefined) {
 		data = node._data;
@@ -507,18 +722,19 @@ function setComponentData(node, data = undefined, callback = null) {
 		callback();
 	}
 
+	const ref_changed = node._data_ref !== node._data;
+	if (ref_changed) {
+		console.log("build ref", node);
+		node._referenceParent(); // when the whole data gets changed
+	}
+	node._data_ref = node._data;
+
 	const data_changed = !isEquivalent(node._data, node._prev_data);
 	node._prev_data = cloneObject(node._data);
-	// node._data === undefined || !isEquivalent(node._data, node._prev_data);
 
-	//console.log("dispatchChange", node, options.quiet);
-	/*if (options.propagate_direction == "up") {
-		
-    }*/
-	//console.log("dispatchChange", node);
 	if (data_changed) {
-		node._referenceParent();
-		node.dispatchChange();
+		//console.log("dispatchChange", node);
+		//node.dispatchChange();
 	}
 }
 
