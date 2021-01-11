@@ -77,8 +77,6 @@ if ($kopia) {
     var product_data = <?= json_encode($product_data) ?>;
 </script>
 
-<script src="/builds/admin_produkt_page.js?v=<?= JS_RELEASE ?>"></script>
-<link href="/builds/admin_produkt_page.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
 <title>Edycja produktu</title>
 

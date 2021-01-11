@@ -1,4 +1,4 @@
-/* js[admin_produkt_page] */
+/* js[view] */
 
 var attribute_values = {};
 attribute_values_array.forEach((value) => {
