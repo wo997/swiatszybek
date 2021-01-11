@@ -1,143 +1,22 @@
 /* js[view] */
 
-/**
- * @typedef {{
- * 	name: string,
- * _data: any,
- * _prev_data?: any,
- * _subscribe_to_arr: SubscribeTo[],
- * }} ObjWithData
- */
-
-/**
- * @type {ObjWithData}
- */
-let obj_1 = {
-	name: "1",
-	_data: undefined,
-	_subscribe_to_arr: [],
-};
-
-setData(obj_1, {
-	a: {
-		b: {
-			c: 12,
-		},
-	},
-});
-
-/**
- * @type {ObjWithData}
- */
-let obj_2 = {
-	name: "2",
-	_data: undefined,
-	_subscribe_to_arr: [],
-};
-
-addSubscriber(obj_1, {
-	what: obj_2,
-	how: (what, _data) => {
-		what._data = _data.a;
-	},
-});
-
-addSubscriber(obj_2, {
-	what: obj_1,
-	how: (what, _data) => {
-		what._data.a = _data;
-	},
-});
-
-/**
- *
- * @param {ObjWithData} to
- * @param {SubscribeTo} subscribe_to
- */
-function addSubscriber(to, subscribe_to) {
-	to._subscribe_to_arr.push(subscribe_to);
-	setData(to, undefined, { force_propagate: true });
-}
-
-/**
- * @type {ObjWithData}
- */
-let obj_3 = {
-	name: "3",
-	_data: undefined,
-	_subscribe_to_arr: [],
-};
-
-addSubscriber(obj_2, {
-	what: obj_3,
-	how: (what, _data) => {
-		what._data = _data.b;
-	},
-});
-
-addSubscriber(obj_3, {
-	what: obj_2,
-	how: (what, _data) => {
-		what._data.b = _data;
-	},
-});
-
-/**
- * @typedef {{
- * how(what: ObjWithData, _data: any)
- * what: ObjWithData
- * }} SubscribeTo
- */
-
-/**
- * @typedef {{
- * force_propagate?: boolean
- * }} SetDataOptions
- */
-
-/**
- *
- * @param {ObjWithData} obj
- * @param {*} _data
- * @param {SetDataOptions} options
- */
-function setData(obj, _data = undefined, options = {}) {
-	if (_data !== undefined) {
-		obj._data = _data;
-	}
-
-	const equal = isEquivalent(obj._prev_data, obj._data);
-
-	if (!equal) {
-		obj._prev_data = cloneObject(obj._data);
-	} else {
-		if (nonull(options.force_propagate, false) === false) {
-			return;
-		}
-	}
-
-	obj._subscribe_to_arr.forEach((subscribe) => {
-		subscribe.how(subscribe.what, cloneObject(obj._data));
-		setData(subscribe.what, undefined);
-	});
-}
-
-//data.a;
-
-//console.log(JSON.stringify(obj_1, null, 3));
-//console.log(JSON.stringify(obj_2, null, 3));
-console.log(obj_1);
-console.log(obj_2);
-console.log(obj_3);
-
-console.log("");
-console.log("");
-console.log("");
-
 domload(() => {
 	/** @type {FirstComponent} */
 	// @ts-ignore
 	const my_list_node = $(".my_component");
+
+	// createFirstCompontent(my_list_node, undefined);
+
+	// my_list_node._setData({
+	// 	id: 5,
+	// 	name: "asdsad",
+	// 	state: 1,
+	// 	list_data: [
+	// 		{ email: "wojtekwo997@gmail.com" },
+	// 		{ email: "pies@pies.pies" },
+	// 		{ email: "111" },
+	// 	],
+	// });
 
 	createFirstCompontent(my_list_node, undefined, {
 		id: 5,
@@ -189,8 +68,10 @@ function createListRowCompontent(node, parent, data = undefined) {
     `);
 
 	node._setData = (data = undefined) => {
-		setComponentData(node, data, () => {
-			node._idkNode.setContent(JSON.stringify(node._data));
+		setComponentData(node, data, {
+			callback: () => {
+				node._idkNode.setContent(JSON.stringify(node._data));
+			},
 		});
 	};
 
@@ -242,25 +123,6 @@ function createListCompontent(
 		return node.directChildren(":not(.removing)");
 	};
 
-	//node._referenceParent = () => {
-	// if (!node._parent_component || !node._parent_component._data) {
-	// 	return;
-	// }
-
-	// const our_data_in_parent = node._parent_component._data[node.dataset.bind];
-	// if (our_data_in_parent !== undefined) {
-	// 	node.directChildren(":not(.removing)").forEach((child) => {
-	// 		/** @type {AnyComponent} */
-	// 		// @ts-ignore
-	// 		const sub_component = child.find(".my_list_row");
-
-	// 		//console.log({ sub_data, sub_component, node });
-	// 	});
-
-	// }
-
-	//};
-
 	node._referenceSelf = (/** @type {AnyComponent} */ child) => {
 		if (child._data._row_id === undefined) {
 			return;
@@ -268,7 +130,6 @@ function createListCompontent(
 		const data = child._parent_component._data.find((e) => {
 			return e._row_id === child._data._row_id;
 		});
-		//console.log(child._parent_component._data, child._data._row_id, sub_data);
 		if (data !== undefined) {
 			child._data = data;
 			console.log("hahaha", child, data);
@@ -299,61 +160,58 @@ function createListCompontent(
 		}
 	};
 
-	node._getComponentsToPassEvent = () => {
-		/** @type {AnyComponent[]} */
-		// @ts-ignore
-		const res = getRows().map((child) => {
-			return child.find(".my_list_row");
-		});
-		return res;
-	};
-
 	node._setData = (data = undefined) => {
-		setComponentData(node, data, () => {
-			const diff = diffArrays(node._prev_data, node._data, (e) => e._row_id);
-			//console.log(diff);
+		setComponentData(node, data, {
+			callback: () => {
+				const diff = diffArrays(node._prev_data, node._data, (e) => e._row_id);
+				/*console.log(
+					diff,
+					JSON.stringify(node._prev_data, undefined, 3),
+					JSON.stringify(node._data, undefined, 3)
+				);*/
 
-			const animation_duration = 250;
+				const animation_duration = 250;
 
-			let child_index = -1;
-			const remember_nodes_to_remove = getRows().filter(() => {
-				child_index++;
-				return diff.removed.includes(child_index);
-			});
+				let child_index = -1;
+				const remember_nodes_to_remove = getRows().filter(() => {
+					child_index++;
+					return diff.removed.includes(child_index);
+				});
 
-			diff.added.forEach((data_id) => {
-				const row_data = node._data[data_id];
+				diff.added.forEach((data_id) => {
+					const row_data = node._data[data_id];
 
-				/** @type {AnyComponent} */
-				// @ts-ignore
-				const child = createNodeFromHtml(/*html*/ `
-                    <div class="my_list_row_wrapper expand_y hidden animate_hidden">
-                        <div class="my_list_row"></div>
-                    </div>
+					/** @type {AnyComponent} */
+					// @ts-ignore
+					const child = createNodeFromHtml(/*html*/ `
+                <div class="my_list_row_wrapper expand_y hidden animate_hidden">
+                <div class="my_list_row"></div>
+                </div>
                 `);
 
-				// TODO: find the actual place where you want to put it
-				node.insertBefore(child, node.children[data_id]);
+					// TODO: find the actual place where you want to put it
+					node.insertBefore(child, node.children[data_id]);
 
-				const the_row = child.find(".my_list_row");
+					const the_row = child.find(".my_list_row");
 
-				createRowCallback(the_row, node, row_data);
+					createRowCallback(the_row, node, row_data);
 
-				expand(child, true, { duration: animation_duration });
-			});
+					expand(child, true, { duration: animation_duration });
+				});
 
-			assignRowIds();
-			remember_nodes_to_remove.forEach((child) => {
-				expand(child, false, { duration: animation_duration });
-				child.classList.add("removing"); // .removing -> style.pointerEvents = "none";
-				setTimeout(() => {
-					child.remove();
-				}, animation_duration);
-			});
+				assignRowIds();
+				remember_nodes_to_remove.forEach((child) => {
+					expand(child, false, { duration: animation_duration });
+					child.classList.add("removing"); // .removing -> style.pointerEvents = "none";
+					setTimeout(() => {
+						child.remove();
+					}, animation_duration);
+				});
 
-			[...diff.added, ...diff.moved.map((e) => e.to)].forEach((pos) => {
-				console.log(pos);
-			});
+				// [...diff.added, ...diff.moved.map((e) => e.to)].forEach((pos) => {
+				// 	console.log(pos);
+				// });
+			},
 		});
 	};
 
@@ -446,21 +304,22 @@ function createFirstCompontent(node, parent, data = undefined) {
     `);
 
 	node._setData = (data = undefined) => {
-		setComponentData(node, data, () => {
-			node._crazy.setContent(`
+		setComponentData(node, data, {
+			callback: () => {
+				node._crazy.setContent(`
                 This string was generated by the compontent
                 ${JSON.stringify(node._data, null, 3)}
-            `);
+                `);
 
-			expand(node._expand_y, node._data.state === 1);
+				expand(node._expand_y, node._data.state === 1);
 
-			// sadly it's not as simple as that, the reference needs to propagate. doable, right?
-			const equivalent = isEquivalent(node._data, node._saved_data);
-			const disable = !node._saved_data || equivalent;
-			toggleDisabled(node._load_btn, disable);
-			toggleDisabled(node._save_btn, equivalent);
+				const equivalent = isEquivalent(node._data, node._saved_data);
+				const disable = !node._saved_data || equivalent;
+				toggleDisabled(node._load_btn, disable);
+				toggleDisabled(node._save_btn, equivalent);
 
-			node._list_count.setContent(`(${node._data.list_data.length})`);
+				node._list_count.setContent(`(${node._data.list_data.length})`);
+			},
 		});
 	};
 
@@ -505,14 +364,23 @@ function createFirstCompontent(node, parent, data = undefined) {
 
 /**
  * @typedef {{
+ * fetch(target: AnyComponent, _data: any)
+ * target: AnyComponent
+ * }} SubscribeToData
+ */
+
+/**
+ * @typedef {{
  * _name: string
  * _bindNodes: PiepNode[]
  * _parent_component: any
  * _referenceParent: CallableFunction
  * _referenceSelf: CallableFunction
- * _getComponentsToPassEvent?(): AnyComponent[]
+ * _addSubscriber(subscribe: SubscribeToData)
+ * _subscribers: SubscribeToData[]
  * } & PiepNode} BaseComponent
  *
+ * I'm not a fan of it but regular inheritance doesn't seem to work as expected os we assign common props in here
  * @typedef {{
  * _data: any
  * _setData(data?: any)
@@ -521,6 +389,37 @@ function createFirstCompontent(node, parent, data = undefined) {
  * _data_ref: any
  * } & BaseComponent} AnyComponent
  */
+
+// /**
+//  * @param {AnyComponent} comp_a
+//  * @param {AnyComponent} comp_b
+//  * @param {{(AnyComponent): any}} ref_a
+//  * @param {{(AnyComponent): any}} ref_b
+//  */
+// function bindData(comp_a, comp_b, ref_a, ref_b) {
+// 	comp_a._subscribers.push({
+// 		target: comp_b,
+// 		fetch: () => {
+// 			let data_a = ref_a(comp_a);
+// 			let data_b = ref_b(comp_b);
+// 			data_a = data_b;
+// 		},
+// 	});
+// 	comp_b._subscribers.push({
+// 		target: comp_a,
+// 		fetch: () => {
+// 			let data_b = ref_b(comp_b);
+// 			let data_a = ref_a(comp_a);
+// 			data_b = data_a;
+// 		},
+// 	});
+// 	//comp_a._setData(undefined, { force_propagate: true })
+// 	//comp_b._setData(undefined, { force_propagate: true })
+
+// 	// we actaully dont wanna _setData, only propagation is required
+// 	propagateComponentData(comp_a);
+// 	propagateComponentData(comp_b);
+// }
 
 /**
  * @param {BaseComponent} comp
@@ -538,6 +437,9 @@ function extendBaseComponent(comp, parent_comp, data) {
 
 	node.classList.add("component");
 
+	// kinda weird but it creates the checkbox subcomponent
+	registerForms();
+
 	//console.log(node, data);
 
 	/*if (!!parent && !parent.classList.contains("component")) {
@@ -550,181 +452,138 @@ function extendBaseComponent(comp, parent_comp, data) {
 	}
 	node._parent_component = parent;
 
-	// kinda weird but it creates the checkbox subcomponent
-	registerForms();
+	node._subscribers = [];
 
+	/*node._addSubscriber = (subscribe) => {
+		node._subscribers.push(subscribe);
+		//node._setData(undefined, { force_propagate: true });
+		setComponentData(node, undefined, { force_propagate: true });
+	};*/
+
+	// should we care about them? probably no since we have subscribers
 	node._bindNodes = node.findAll(`[data-bind]`);
+
 	node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
-		// TODO: I feel like a wrong node is listening, cmon dude
-		sub_node.addEventListener("change", () => {
-			const name = sub_node.dataset.bind;
-			if (name === undefined) {
-				return;
-			}
+		const bind_var = sub_node.dataset.bind;
 
-			let sub_node_data = undefined;
-			if (sub_node._getData) {
-				sub_node_data = sub_node._getData();
-			} else if (sub_node.getValue) {
-				sub_node_data = sub_node.getValue();
-			}
+		if (sub_node._data) {
+			node._subscribers.push({
+				target: sub_node,
+				fetch: (target, _data) => {
+					target._data = _data[bind_var];
+				},
+			});
+			sub_node._subscribers.push({
+				target: node,
+				fetch: (target, _data) => {
+					target._data[bind_var] = _data;
+				},
+			});
+		} else if (sub_node.getValue) {
+			sub_node.addEventListener("change", () => {
+				let sub_node_data = sub_node.getValue();
 
-			/*console.log(
-				"onChange",
-				name,
-				JSON.stringify(node._prev_data),
-				"=>",
-				JSON.stringify(sub_node_data),
-				node
-			);*/
+				if (sub_node_data !== undefined) {
+					if (node._data[bind_var] !== undefined)
+						node._data[bind_var] = sub_node_data;
 
-			if (sub_node_data !== undefined) {
-				if (node._setData) {
-					if (node._data[name] !== undefined) node._data[name] = sub_node_data;
 					node._setData();
-				} else if (node.setValue) {
-					// probably never happens
-					node.setValue(sub_node_data); //, { quiet: true });
 				}
-			}
-		});
-		sub_node.addEventListener("input", () => {
-			sub_node.dispatchChange();
-		});
+			});
+			sub_node.addEventListener("input", () => {
+				sub_node.dispatchChange();
+			});
+		}
 	});
 
 	node._getData = () => {
 		return node._data;
 	};
 
-	if (node._referenceParent === undefined) {
-		node._referenceParent = () => {
-			if (node._parent_component && node._parent_component._referenceSelf) {
-				// only arrays are... arrays ;)
-				//console.log(parent._name);
-				/*if (parent._data === "list") {
-                    }*/
-				console.log("wow", node);
-				parent._referenceSelf(node);
-			} else {
-				if (!node._parent_component || !node._parent_component._data) {
-					return;
-				}
-				//console.log(node._parent_component, node._parent_component._data);
-				const our_data_in_parent =
-					node._parent_component._data[node.dataset.bind];
-				if (our_data_in_parent !== undefined) {
-					node._data = our_data_in_parent;
-				}
-			}
-		};
-	}
+	// if (node._referenceParent === undefined) {
+	// 	node._referenceParent = () => {
+	// 		if (node._parent_component && node._parent_component._referenceSelf) {
+	// 			// only arrays are... arrays ;)
+	// 			//console.log(parent._name);
+	// 			/*if (parent._data === "list") {
+	//                 }*/
+	// 			console.log("wow", node);
+	// 			parent._referenceSelf(node);
+	// 		} else {
+	// 			if (!node._parent_component || !node._parent_component._data) {
+	// 				return;
+	// 			}
+	// 			//console.log(node._parent_component, node._parent_component._data);
+	// 			const our_data_in_parent =
+	// 				node._parent_component._data[node.dataset.bind];
+	// 			if (our_data_in_parent !== undefined) {
+	// 				node._data = our_data_in_parent;
+	// 			}
+	// 		}
+	// 	};
+	// }
 
 	node._setData(data);
+
+	setTimeout(() => {
+		propagateComponentData(node);
+	});
 }
 
 /**
- * @param {BaseComponent} comp
- * @param {*} data
- * @param {CallableFunction} callback
+ * @typedef {{
+ * callback?: CallableFunction
+ * }} SetComponentDataOptions
  */
-function setComponentData(comp, data = undefined, callback = null) {
+
+/**
+ * @param {BaseComponent} comp
+ * @param {*} _data
+ * @param {SetComponentDataOptions} options
+ */
+function setComponentData(comp, _data = undefined, options = {}) {
 	/** @type {AnyComponent} */
 	// @ts-ignore
 	const node = comp;
 
-	let grand_parent = node;
-	while (true) {
-		if (grand_parent._parent_component) {
-			grand_parent = grand_parent._parent_component;
-		} else {
-			break;
-		}
-	}
-	console.log("setComponentData", node, grand_parent);
-
-	node._bindNodes.forEach((child) => {
-		const name = child.dataset.bind;
-		if (name === undefined) {
-			return;
-		}
-		const value = data[name];
-		if (value === undefined) {
-			return;
-		}
-
-		passEvent(child, value);
-	});
-
-	if (node._getComponentsToPassEvent) {
-		node._getComponentsToPassEvent().forEach((child) => {
-			passEvent(child);
-		});
+	if (_data !== undefined) {
+		node._data = _data;
 	}
 
-	//console.log(node, data, node._prev_data);
-	if (data === undefined) {
-		data = node._data;
-	} else {
-		node._data = data;
-		//node._data = cloneObject(data); // weak reference
+	const equal = isEquivalent(node._prev_data, node._data);
 
-		/*if (node._data && isEquivalent(data, node._prev_data)) {
-			//console.log("equivalent data in", node, data, node._prev_data);
-			// stop the changeEvent propagation
-			return;
-		}*/
+	if (equal) {
+		return;
 	}
 
-	const passEvent = (child, value = undefined) => {
-		if (child.setValue) {
-			child.setValue(value, { quiet: true });
-		}
-		// temporary, decide on what u wanna stick to, value or data
-
-		/** @type {AnyComponent} */
-		// @ts-ignore
-		const comp = child;
-		if (comp._setData) {
-			comp._setData(value);
-		}
-	};
-	node._bindNodes.forEach((child) => {
-		const name = child.dataset.bind;
-		if (name === undefined) {
-			return;
-		}
-		const value = data[name];
-		if (value === undefined) {
-			return;
-		}
-
-		passEvent(child, value);
-	});
-
-	if (node._getComponentsToPassEvent) {
-		node._getComponentsToPassEvent().forEach((child) => {
-			passEvent(child);
-		});
+	if (options.callback) {
+		options.callback();
 	}
 
-	if (callback) {
-		callback();
-	}
-
-	const ref_changed = node._data_ref !== node._data;
-	if (ref_changed) {
-		console.log("build ref", node);
-		node._referenceParent(); // when the whole data gets changed
-	}
-	node._data_ref = node._data;
-
-	const data_changed = !isEquivalent(node._data, node._prev_data);
 	node._prev_data = cloneObject(node._data);
 
-	if (data_changed) {
-		//console.log("dispatchChange", node);
-		//node.dispatchChange();
+	propagateComponentData(node);
+}
+
+/**
+ * @param {AnyComponent} node
+ */
+function propagateComponentData(node) {
+	if (node._subscribers) {
+		node._subscribers.forEach((subscribe) => {
+			subscribe.fetch(subscribe.target, cloneObject(node._data));
+			subscribe.target._setData();
+		});
+	}
+
+	if (node._bindNodes) {
+		node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
+			const bind_var = sub_node.dataset.bind;
+
+			if (sub_node.setValue) {
+				sub_node.setValue(node._data[bind_var], { quiet: true });
+			}
+		});
 	}
 }
 
