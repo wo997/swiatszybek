@@ -5,7 +5,7 @@
  * 	name: string,
  * _data: any,
  * _prev_data?: any,
- * subscribers: SubscribeTo[],
+ * _subscribe_to_arr: SubscribeTo[],
  * }} ObjWithData
  */
 
@@ -15,7 +15,7 @@
 let obj_1 = {
 	name: "1",
 	_data: undefined,
-	subscribers: [],
+	_subscribe_to_arr: [],
 };
 
 setData(obj_1, {
@@ -32,10 +32,10 @@ setData(obj_1, {
 let obj_2 = {
 	name: "2",
 	_data: undefined,
-	subscribers: [],
+	_subscribe_to_arr: [],
 };
 
-obj_1.subscribers.push({
+obj_1._subscribe_to_arr.push({
 	what: obj_2,
 	how: (what, _data) => {
 		what._data = _data.a;
@@ -43,7 +43,7 @@ obj_1.subscribers.push({
 	fields: ["a"],
 });
 
-obj_2.subscribers.push({
+obj_2._subscribe_to_arr.push({
 	what: obj_1,
 	how: (what, _data) => {
 		what._data.a = _data;
@@ -58,10 +58,10 @@ setData(obj_1, undefined, { force_propagate: true });
 let obj_3 = {
 	name: "3",
 	_data: undefined,
-	subscribers: [],
+	_subscribe_to_arr: [],
 };
 
-obj_2.subscribers.push({
+obj_2._subscribe_to_arr.push({
 	what: obj_3,
 	how: (what, _data) => {
 		what._data = _data.b;
@@ -69,7 +69,7 @@ obj_2.subscribers.push({
 	fields: ["b"],
 });
 
-obj_3.subscribers.push({
+obj_3._subscribe_to_arr.push({
 	what: obj_2,
 	how: (what, _data) => {
 		what._data.b = _data;
@@ -108,7 +108,7 @@ function setData(obj, _data = undefined, options = {}) {
 	//console.log(options, obj._data, obj._prev_data);
 
 	/** @type {SubscribeTo[]} */
-	const subscribers = obj.subscribers;
+	const subscribers = obj._subscribe_to_arr;
 	//console.log("SUB", subscribers, "of", obj, "equal", equal);
 
 	if (!equal) {
@@ -626,12 +626,6 @@ function extendBaseComponent(comp, parent_comp, data) {
 
 	node._setData(data);
 }
-
-/**
- * @typedef {{
- * exclude_list: PiepNode[]
- * }} SetComponentDataOptions
- */
 
 /**
  * @param {BaseComponent} comp
