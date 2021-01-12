@@ -604,6 +604,8 @@ function setComponentData(comp, _data = undefined, options = {}) {
 	}
 
 	if (options.render) {
+		// it should be ezy to send what the changes are, the array handles it by itself which is weird, cause maybe it should be there?
+		// array diff works fine, what about another helper methods though? object diff, idk
 		options.render();
 	}
 
@@ -653,18 +655,14 @@ function propagateComponentData(comp) {
  * @typedef {{
  * from: number,
  * to: number,
- * }} movedKey
- */
-
-/**
+ * }} AnyChange
+ *
  * @typedef {{
  * added: Array,
- * moved: movedKey[],
+ * moved: AnyChange[],
  * removed: Array,
  * }} diffArrayResult
- */
-
-/**
+ *
  * @callback compareKeyCallback
  * @param {any} e
  * @returns {Array}
@@ -719,6 +717,57 @@ function diffArrays(arr_1, arr_2, getKey) {
 
 		if (index_1 === -1) {
 			diff.added.push(index_2);
+		}
+	}
+
+	return diff;
+}
+
+/**
+ * @typedef {{
+ * added: string[],
+ * changed: string[],
+ * removed: string[],
+ * }} diffObjectResult
+ */
+
+/**
+ *
+ * @param {Object} obj_1
+ * @param {Object} obj_2
+ * @returns {diffObjectResult}
+ */
+function diffObjects(obj_1, obj_2) {
+	if (!isObject(obj_1)) {
+		obj_1 = {};
+	}
+	if (!isObject(obj_2)) {
+		obj_2 = {};
+	}
+
+	/** @type {diffObjectResult} */
+	let diff = {
+		added: [],
+		changed: [],
+		removed: [],
+	};
+
+	for (const key_1 in obj_1) {
+		const val_1 = obj_1[key_1];
+		const val_2 = obj_2[key_1];
+
+		if (val_2 === undefined) {
+			diff.removed.push(key_1);
+		} else if (val_1 !== val_2) {
+			diff.changed.push(key_1);
+		}
+	}
+
+	for (const key_2 in obj_2) {
+		const val_1 = obj_1[key_2];
+
+		if (val_1 === undefined) {
+			diff.added.push(key_2);
 		}
 	}
 

@@ -805,10 +805,16 @@ function getSelectDisplayValue(select) {
 	return select.options[select.selectedIndex].text;
 }
 
+/**
+ * **Object** that is **not an array**
+ */
 function isObject(input) {
 	return input && !Array.isArray(input) && typeof input === "object";
 }
 
+/**
+ * Pure **arrays**
+ */
 function isArray(input) {
 	return input && Array.isArray(input) && typeof input === "object";
 }
