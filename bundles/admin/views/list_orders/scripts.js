@@ -62,12 +62,12 @@ function createListRowCompontent(node, parent, _data = undefined) {
 		node._name = "list_row";
 
 		node.setContent(/*html*/ `
-            <span data-bind="_row_id" data-type="html"></span>
+            <span data-bind="row_index" data-type="html"></span>.
             <input type="text" class="field inline" data-bind="email">
             rewrite inputs
             <input type="text" class="field inline" data-bind="email">
     
-            <button class="delete btn red">Delete</button>
+            <button class="delete btn red">Delete (<span data-bind="row_index" data-type="html"></span>)</button>
     
             <div class="idk"></div>
         `);
@@ -258,12 +258,19 @@ function createListCompontent(
 							child.remove();
 						}, animation_duration);
 					});
-
-					// [...diff.added, ...diff.moved.map((e) => e.to)].forEach((pos) => {
-					// 	console.log(pos);
-					// });
 				},
 			});
+
+			/*[...diff.added, ...diff.moved.map((e) => e.to)].forEach((pos) => {
+                node._data[pos].row_index = pos + 1;
+            });*/
+
+			for (let i = 0; i < node._data.length; i++) {
+				node._data[i].row_index = i + 1;
+			}
+
+			// not sure if that's a clean solution
+			propagateComponentData(node);
 		};
 
 		node._removeRow = (child) => {
@@ -364,7 +371,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
                 <div class="my_list_copy" data-bind="list_data"></div>
             </div>
 
-            <h3>Example of a list row standalone, dumb but we can do it</h3>
+            <h3>Example of standalone list row, dumb but we can do it</h3>
             <div class="list_row" data-bind="list_row"></div>
 
             <h3>Display form json</h3>
