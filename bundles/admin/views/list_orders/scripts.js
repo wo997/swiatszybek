@@ -5,6 +5,8 @@ domload(() => {
 	// @ts-ignore
 	const my_list_node = $(".my_component");
 
+	// todo? prevent setting data on creation but do it when all components are ready
+	// there was an issue with the list, it need to be set once
 	createFirstCompontent(my_list_node, undefined, {
 		id: 5,
 		name: "asdsad",
@@ -126,7 +128,8 @@ function createListCompontent(
 	createComponent(node, parent, _data, () => {
 		node._name = "list";
 
-		node._nextRowId = -1;
+		// why negative? it won't overlap with for example entity ids
+		node._nextRowId = -1000;
 
 		node._getRows = () => {
 			/** @type {AnyComponent[]} */
@@ -142,49 +145,16 @@ function createListCompontent(
 				return e._row_id === source._data._row_id;
 			});
 			if (receiver_sub_data_index !== -1) {
-				// console.log(
-				// 	"_fetchDataFromChild",
-				// 	receiver_sub_data_index,
-				// 	"=",
-				// 	cloneObject(source._data)
-				// );
 				receiver._data[receiver_sub_data_index] = cloneObject(source._data);
-				// console.log(
-				// 	"now",
-				// 	receiver,
-				// 	"has",
-				// 	JSON.stringify(receiver._data, undefined, 3)
-				// );
-				// console.log(receiver, receiver._data);
 			}
 		};
 
 		node._sendDataToChild = (source, receiver) => {
-			// console.log(
-			// 	"_sendDataToChild ARR",
-			// 	receiver,
-			// 	source,
-			// 	source._data,
-			// 	receiver._data._row_id
-			// );
 			let source_sub_data_index = source._data.findIndex((e) => {
 				return e._row_id === receiver._data._row_id;
 			});
 			if (source_sub_data_index !== -1) {
-				// console.log(
-				// 	"_sendDataToChild",
-				// 	receiver._data,
-				// 	"=",
-				// 	cloneObject(receiver._data[source_sub_data_index])
-				// );
 				receiver._data = cloneObject(source._data[source_sub_data_index]);
-				// console.log(
-				// 	"now",
-				// 	receiver,
-				// 	"has",
-				// 	JSON.stringify(receiver._data, undefined, 3)
-				// );
-				// console.log(receiver, receiver._data);
 			}
 		};
 
@@ -193,20 +163,12 @@ function createListCompontent(
 				node._data = cloneObject(_data);
 			}
 
-			let any_new = false;
-			node._data.forEach((row_data) => {
+			node._data.forEach((row_data, index) => {
 				if (row_data._row_id === undefined) {
-					// why negative? you can combine ids of -1 (empty) with positive integers
-					// and still have a 1 to 1 relation for each data item in separate components that communicate with subscriber flow protocol
-					// it's because the key can be anything, by default it's set to some consecutive (in that case) negative numbers
 					row_data._row_id = node._nextRowId--;
-					any_new = true;
 				}
+				row_data.row_index = index + 1;
 			});
-
-			if (any_new) {
-				_data = cloneObject(node._data);
-			}
 
 			setComponentData(node, _data, {
 				...options,
@@ -260,17 +222,6 @@ function createListCompontent(
 					});
 				},
 			});
-
-			/*[...diff.added, ...diff.moved.map((e) => e.to)].forEach((pos) => {
-                node._data[pos].row_index = pos + 1;
-            });*/
-
-			for (let i = 0; i < node._data.length; i++) {
-				node._data[i].row_index = i + 1;
-			}
-
-			// not sure if that's a clean solution
-			propagateComponentData(node);
 		};
 
 		node._removeRow = (child) => {
@@ -338,46 +289,46 @@ function createFirstCompontent(node, parent, _data = undefined) {
 		node._name = "first";
 
 		node.setContent(/*html*/ `
-        <div>
-            <h3>
-                Save state of the component
-                <button class="save btn primary">Save</button>
-                <button class="load btn primary">Load</button>
-            </h3>
+            <div>
+                <h3>
+                    Save state of the component
+                    <button class="save btn primary">Save</button>
+                    <button class="load btn primary">Load</button>
+                </h3>
 
-            <h3>Type the name: </h3>
-            <input type="text" class="field" data-bind="name"/></span>
-            <br>
+                <h3>Type the name: </h3>
+                <input type="text" class="field" data-bind="name"/></span>
+                <br>
 
-            <h3>And here it is!: </h3>
-            <span data-bind="name" data-type="html"></span>
-            <br>
+                <h3>And here it is!: </h3>
+                <span data-bind="name" data-type="html"></span>
+                <br>
 
-            <h3>Oh, and the id: </h3>
-            <span data-bind="id" data-type="html"></span>
-            <br>
+                <h3>Oh, and the id: </h3>
+                <span data-bind="id" data-type="html"></span>
+                <br>
 
-            <h3>Some state (changes list visibility) </h3>
-            <checkbox data-bind="state"></checkbox>
-            <br>
+                <h3>Some state (changes list visibility) </h3>
+                <checkbox data-bind="state"></checkbox>
+                <br>
 
-            <h3>We can even have a list! <span class="list_count"></span> <button class="add btn primary">Add a new row!</button></h3>
-            <div class="expand_y expand_y_1">
-                <div class="my_list" data-bind="list_data"></div>
+                <h3>We can even have a list! <span class="list_count"></span> <button class="add btn primary">Add a new row!</button></h3>
+                <div class="expand_y expand_y_1">
+                    <div class="my_list" data-bind="list_data"></div>
+                </div>
+
+                <h3>List copied looool</h3>
+                <div style="display:flex">
+                    <div class="my_list_copy" data-bind="list_data"></div>
+                </div>
+
+                <h3>Example of standalone list row, dumb but we can do it</h3>
+                <div class="list_row" data-bind="list_row"></div>
+
+                <h3>Display form json</h3>
+                <div class="crazy"></div>
             </div>
-
-            <h3>List copied looool</h3>
-            <div style="display:flex">
-                <div class="my_list_copy" data-bind="list_data"></div>
-            </div>
-
-            <h3>Example of standalone list row, dumb but we can do it</h3>
-            <div class="list_row" data-bind="list_row"></div>
-
-            <h3>Display form json</h3>
-            <div class="crazy"></div>
-        </div>
-    `);
+        `);
 
 		node._setData = (data = undefined, options = {}) => {
 			setComponentData(node, data, {
@@ -562,16 +513,6 @@ function createComponent(comp, parent_comp, _data, createCallback) {
 		const bind_var = sub_node.dataset.bind;
 		sub_node._bind_var = bind_var;
 
-		/*if (sub_node._data) {
-			node._subscribers.push({
-				receiver: sub_node,
-				fetch: node._sendDataToChild,
-			});
-			sub_node._subscribers.push({
-				receiver: node,
-				fetch: node._fetchDataFromChild,
-			});
-        } else*/
 		if (sub_node.getValue() !== undefined) {
 			sub_node.addEventListener("change", () => {
 				let sub_node_data = sub_node.getValue();
@@ -579,16 +520,6 @@ function createComponent(comp, parent_comp, _data, createCallback) {
 				if (sub_node_data !== undefined) {
 					if (node._data[bind_var] !== undefined) {
 						node._data[bind_var] = sub_node_data;
-
-						/*console.log(
-							"data from baby",
-							sub_node,
-							node,
-							node._data[bind_var],
-							bind_var,
-							"data[[[[" + sub_node_data + "]]]]"
-						);*/
-
 						node._setData();
 					}
 				}
@@ -602,7 +533,6 @@ function createComponent(comp, parent_comp, _data, createCallback) {
 	node._setData(_data);
 
 	if (_parent) {
-		//console.log(_parent, _parent._sendDataToChild, _parent._fetchDataFromChild);
 		_parent._subscribers.push({
 			receiver: node,
 			fetch: _parent._sendDataToChild,
