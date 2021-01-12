@@ -14,8 +14,6 @@ domload(() => {
 			{ email: "pies@pies.pies" },
 			{ email: "111" },
 			{ email: "4th" },
-			{ email: "5th" },
-			{ email: "6th" },
 		],
 		list_row: { email: "xxx" },
 	});
@@ -139,7 +137,7 @@ function createListCompontent(
 
 		// these functions need to be specified here because the child might not know who we are :*
 		node._fetchDataFromChild = (source, receiver) => {
-			console.log("_fetchDataFromChild ARR", receiver, source);
+			//console.log("_fetchDataFromChild ARR", receiver, source);
 			let receiver_sub_data_index = receiver._data.findIndex((e) => {
 				return e._row_id === source._data._row_id;
 			});
@@ -304,10 +302,11 @@ function createListCompontent(
  *  _nodes: {
  *      crazy: PiepNode
  *      my_list: ListComponent
+ *      my_list_copy: ListComponent
  *      load_btn: PiepNode
  *      save_btn: PiepNode
  *      list_count: PiepNode
- *      expand_y: PiepNode
+ *      expand_y_1: PiepNode
  *  }
  * } & BaseComponent} FirstComponent
  */
@@ -356,11 +355,16 @@ function createFirstCompontent(node, parent, _data = undefined) {
             <br>
 
             <h3>We can even have a list! <span class="list_count"></span> <button class="add btn primary">Add a new row!</button></h3>
-            <div class="expand_y">
+            <div class="expand_y expand_y_1">
                 <div class="my_list" data-bind="list_data"></div>
             </div>
 
-            <h3>Ezy example of a list row</h3>
+            <h3>List copied looool</h3>
+            <div style="display:flex">
+                <div class="my_list_copy" data-bind="list_data"></div>
+            </div>
+
+            <h3>Example of a list row standalone, dumb but we can do it</h3>
             <div class="list_row" data-bind="list_row"></div>
 
             <h3>Display form json</h3>
@@ -377,7 +381,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
                         ${JSON.stringify(node._data, null, 3)}
                     `);
 
-					expand(node._nodes.expand_y, node._data.state === 1);
+					expand(node._nodes.expand_y_1, node._data.state === 1);
 
 					const equivalent = isEquivalent(node._data, node._saved_data);
 					const disable = !node._saved_data || equivalent;
@@ -393,6 +397,15 @@ function createFirstCompontent(node, parent, _data = undefined) {
 		// @ts-ignore
 		node._nodes.my_list = node.find(".my_list");
 		createListCompontent(node._nodes.my_list, node, createListRowCompontent);
+
+		/** @type {ListComponent} */
+		// @ts-ignore
+		node._nodes.my_list_copy = node.find(".my_list_copy");
+		createListCompontent(
+			node._nodes.my_list_copy,
+			node,
+			createListRowCompontent
+		);
 
 		/** @type {ListRowComponent} */
 		// @ts-ignore
@@ -422,7 +435,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
 
 		node._nodes.list_count = node.find(".list_count");
 
-		node._nodes.expand_y = node.find(".expand_y");
+		node._nodes.expand_y_1 = node.find(".expand_y_1");
 	});
 }
 
