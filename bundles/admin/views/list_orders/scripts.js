@@ -7,6 +7,7 @@ domload(() => {
 
 	// todo? prevent setting data on creation but do it when all components are ready
 	// there was an issue with the list, it need to be set once
+	// that's weird but animations suck a little bit as we set data to nothing in that case, they should be instant anyway
 	createFirstCompontent(my_list_node, undefined, {
 		id: 5,
 		name: "asdsad",
@@ -49,6 +50,7 @@ domload(() => {
  * _nodes: {
  *  idk: PiepNode
  *  delete_btn: PiepNode
+ *  row_index: PiepNode
  * }
  * } & BaseComponent} ListRowComponent
  */
@@ -66,7 +68,7 @@ function createListRowCompontent(node, parent, _data = undefined) {
 	createComponent(node, parent, _data, {
 		create_template: () => {
 			node.setContent(/*html*/ `
-                <span data-bind="row_index" data-type="html"></span>.
+                <span data-node="row_index"></span>.
                 <input type="text" class="field inline" data-bind="email">
                 rewrite inputs
                 <input type="text" class="field inline" data-bind="email">
@@ -77,11 +79,18 @@ function createListRowCompontent(node, parent, _data = undefined) {
             `);
 		},
 		initialize: () => {
+			node.classList.add("my_list_row");
 			node._setData = (data = undefined, options = {}) => {
 				setComponentData(node, data, {
 					...options,
 					callback: () => {
 						node._nodes.idk.setContent(JSON.stringify(node._data));
+						if (node._data.row_index !== undefined) {
+							// hmm, type hinting doesnt seem to work here cause we expect the parent to be present
+							node._nodes.row_index.setContent(
+								"-".repeat(node._data.row_index) + node._data.row_index
+							);
+						}
 					},
 				});
 			};
@@ -130,6 +139,8 @@ function createListCompontent(
 		initialize: () => {
 			// why negative? it won't overlap with for example entity ids
 			node._nextRowId = -1000;
+
+			node.classList.add("my_list");
 
 			node._getRows = () => {
 				/** @type {AnyComponent[]} */
