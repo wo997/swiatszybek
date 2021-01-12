@@ -87,11 +87,11 @@ addSubscriber(obj_3, {
  * }} SubscribeTo
  */
 
-/**
- * @typedef {{
- * force_propagate?: boolean
- * }} SetDataOptions
- */
+// /**
+//  * @typedef {{
+//  * force_propagate?: boolean
+//  * }} SetDataOptions
+//  */
 
 /**
  *
