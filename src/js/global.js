@@ -437,7 +437,7 @@ function getValue(input) {
 			}
 			return input.value;
 		} else {
-			return "";
+			return undefined;
 		}
 	}
 }
