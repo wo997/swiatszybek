@@ -42,6 +42,7 @@ domload(() => {
 /**
  * @typedef {{
  * email: string
+ * list_length?: number
  * } & ListComponentRowData} ListRowComponentData
  *
  * @typedef {{
@@ -52,6 +53,8 @@ domload(() => {
  * _nodes: {
  *  idk: PiepNode
  *  delete_btn: PiepNode
+ *  down_btn: PiepNode
+ *  up_btn: PiepNode
  *  row_index: PiepNode
  * }
  * } & BaseComponent} ListRowComponent
@@ -75,12 +78,29 @@ function createListRowCompontent(node, parent, _data = undefined) {
                 rewrite inputs
                 <input type="text" class="field inline" data-bind="email">
         
-                <button data-node="delete_btn" class="btn red">Delete (<span data-bind="row_index" data-type="html"></span>)</button>
+                <button data-node="down_btn" class="btn subtle"><i class="fas fa-chevron-down"></i></button>
+                <button data-node="up_btn" class="btn subtle"><i class="fas fa-chevron-up"></i></button>
+                <button data-node="delete_btn" class="btn red"><i class="fas fa-trash"></i></button>
         
                 <div data-node="idk"></div>
             `);
 		},
 		initialize: () => {
+			/** @type {ListComponent} */
+			// @ts-ignore
+			const parent = node._parent_component;
+			if (parent && parent._data && isArray(parent._data)) {
+				parent._subscribers.push({
+					fetch: (
+						/** @type {ListComponent} */ source,
+						/** @type {ListRowComponent} */ receiver
+					) => {
+						receiver._data.list_length = source._data.length;
+					},
+					receiver: node,
+				});
+			}
+
 			node.classList.add("my_list_row");
 			node._setData = (data = undefined, options = {}) => {
 				setComponentData(node, data, {
@@ -88,9 +108,18 @@ function createListRowCompontent(node, parent, _data = undefined) {
 					render: () => {
 						node._nodes.idk.setContent(JSON.stringify(node._data));
 						if (node._data.row_index !== undefined) {
-							// hmm, type hinting doesnt seem to work here cause we expect the parent to be present
 							node._nodes.row_index.setContent(
 								"-".repeat(node._data.row_index) + node._data.row_index
+							);
+						}
+
+						const list_length = node._data.list_length;
+
+						if (!isNaN(list_length)) {
+							toggleDisabled(node._nodes.up_btn, node._data.row_index === 0);
+							toggleDisabled(
+								node._nodes.down_btn,
+								node._data.row_index === node._data.list_length - 1
 							);
 						}
 					},
@@ -98,9 +127,20 @@ function createListRowCompontent(node, parent, _data = undefined) {
 			};
 
 			node._nodes.delete_btn.addEventListener("click", () => {
-				// we can also modify the data, but that is waaay simpler
 				if (parent._removeRow) {
-					parent._removeRow(node);
+					parent._removeRow(node._data.row_index);
+				}
+			});
+
+			node._nodes.up_btn.addEventListener("click", () => {
+				if (parent._moveRow) {
+					parent._moveRow(node._data.row_index, node._data.row_index - 1);
+				}
+			});
+
+			node._nodes.down_btn.addEventListener("click", () => {
+				if (parent._moveRow) {
+					parent._moveRow(node._data.row_index, node._data.row_index + 1);
 				}
 			});
 		},
@@ -112,7 +152,8 @@ function createListRowCompontent(node, parent, _data = undefined) {
 /**
  * @typedef {{
  * row_index?: number
- * }} ListComponentRowData
+ * row_id?: number
+ * }} ListComponentRowData row_index is a part of set of consecutive numbers, meanwhile row_id is a number that uniquely defines a row even when it chagnes the order etc.
  */
 
 /**
@@ -122,7 +163,8 @@ function createListRowCompontent(node, parent, _data = undefined) {
  * _setData(data?: Array, options?: SetComponentDataOptions)
  * _getData()
  * _nextRowId: number
- * _removeRow(child: BaseComponent)
+ * _removeRow(row_index: number)
+ * _moveRow(from: number, to: number)
  * _getRows(): AnyComponent[]
  * } & BaseComponent} ListComponent
  */
@@ -160,7 +202,7 @@ function createListCompontent(
 			// these functions need to be specified here because the child might not know who we are :*
 			node._fetchDataFromChild = (source, receiver) => {
 				let receiver_sub_data_index = receiver._data.findIndex((e) => {
-					return e._row_id === source._data._row_id;
+					return e.row_id === source._data.row_id;
 				});
 				if (receiver_sub_data_index !== -1) {
 					receiver._data[receiver_sub_data_index] = cloneObject(source._data);
@@ -169,7 +211,7 @@ function createListCompontent(
 
 			node._sendDataToChild = (source, receiver) => {
 				let source_sub_data_index = source._data.findIndex((e) => {
-					return e._row_id === receiver._data._row_id;
+					return e.row_id === receiver._data.row_id;
 				});
 				if (source_sub_data_index !== -1) {
 					receiver._data = cloneObject(source._data[source_sub_data_index]);
@@ -182,10 +224,10 @@ function createListCompontent(
 				}
 
 				_data.forEach((row_data, index) => {
-					if (row_data._row_id === undefined) {
-						row_data._row_id = node._nextRowId--;
+					if (row_data.row_id === undefined) {
+						row_data.row_id = node._nextRowId--;
 					}
-					row_data.row_index = index + 1;
+					row_data.row_index = index;
 				});
 
 				setComponentData(node, _data, {
@@ -194,9 +236,9 @@ function createListCompontent(
 						const diff = diffArrays(
 							node._prev_data,
 							node._data,
-							(e) => e._row_id
+							(e) => e.row_id
 						);
-						//console.log(diff);
+						console.log(diff);
 						// console.log(
 						// 	"render",
 						// 	diff,
@@ -211,59 +253,75 @@ function createListCompontent(
 
 						const animation_duration = 250;
 
-						let child_index = -1;
-						const remember_nodes_to_remove = node._getRows().filter(() => {
-							child_index++;
-							return diff.removed.includes(child_index);
-						});
+						const rows_before = node._getRows();
 
-						diff.added.forEach((data_id) => {
-							const row_data = node._data[data_id];
+						let removed_before_current = 0;
 
-							/** @type {AnyComponent} */
-							// @ts-ignore
-							const child = createNodeFromHtml(/*html*/ `
-                                <div class="my_list_row_wrapper expand_y hidden animate_hidden">
-                                    <div class="my_list_row"></div>
-                                </div>
-                            `);
+						diff
+							.sort((a, b) =>
+								Math.sign(nonull(a.to, a.from) - nonull(b.to, b.from))
+							)
+							.forEach((diff_info) => {
+								let child =
+									diff_info.from !== -1
+										? rows_before[diff_info.from]
+										: undefined;
 
-							// TODO: find the actual place where you want to put it
-							node.insertBefore(child, node.children[data_id]);
+								if (child && diff_info.to === -1) {
+									expand(child, false, { duration: animation_duration });
+									child.classList.add("removing");
+									setTimeout(() => {
+										child.remove();
+									}, animation_duration);
 
-							const the_row = child.find(".my_list_row");
+									removed_before_current++;
+									return;
+								}
 
-							createRowCallback(the_row, node, row_data, {});
+								const row_data = node._data[diff_info.to];
 
-							expand(child, true, { duration: animation_duration });
-						});
+								const add = !child;
+								if (add) {
+									/** @type {AnyComponent} */
+									// @ts-ignore
+									child = createNodeFromHtml(/*html*/ `
+                                        <div class="my_list_row_wrapper expand_y hidden animate_hidden">
+                                            <div class="my_list_row"></div>
+                                        </div>
+                                    `);
+								} else {
+									child = rows_before[diff_info.from];
+								}
 
-						remember_nodes_to_remove.forEach((child) => {
-							expand(child, false, { duration: animation_duration });
-							child.classList.add("removing");
-							setTimeout(() => {
-								child.remove();
-							}, animation_duration);
-						});
+								node.insertBefore(
+									child,
+									node.children[diff_info.to + removed_before_current]
+								);
 
-						diff.moved.forEach(({ from, to }) => {
-							//console.log(from, to);
-						});
+								if (add) {
+									const the_row = child.find(".my_list_row");
+									createRowCallback(the_row, node, row_data, {});
+									expand(child, true, { duration: animation_duration });
+								}
+							});
 					},
 				});
 			};
 
-			node._removeRow = (child) => {
-				/** @type {AnyComponent} */
-				// @ts-ignore
-				const comp = child;
+			node._removeRow = (row_index) => {
 				const remove_index = node._data.findIndex((d) => {
-					return d._row_id === comp._data._row_id;
+					return d.row_index === row_index;
 				});
 				if (remove_index !== -1) {
 					node._data.splice(remove_index, 1);
 					node._setData();
 				}
+			};
+
+			node._moveRow = (from, to) => {
+				const temp = node._data.splice(from, 1);
+				node._data.splice(to, 0, ...temp);
+				node._setData();
 			};
 
 			// basically empty when created
@@ -423,7 +481,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
 
 /**
  * @typedef {{
- * fetch(source: AnyComponent, receiver: AnyComponent)
+ * fetch(source: BaseComponent, receiver: BaseComponent)
  * receiver: AnyComponent
  * }} SubscribeToData
  */
@@ -431,7 +489,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
 /**
  * @typedef {{
  * _bindNodes: PiepNode[]
- * _parent_component: any
+ * _parent_component?: AnyComponent
  * _referenceParent: CallableFunction
  * _sendDataToChild(source: AnyComponent, receiver: AnyComponent)
  * _fetchDataFromChild(source: AnyComponent, receiver: AnyComponent)
@@ -450,7 +508,6 @@ function createFirstCompontent(node, parent, _data = undefined) {
  * _setData(data?: any, options?: SetComponentDataOptions)
  * _getData()
  * _prev_data: any
- * _data_ref: any
  * _nodes: any
  * } & BaseComponent} AnyComponent
  *
@@ -547,6 +604,7 @@ function createComponent(comp, parent_comp, _data, options) {
 		sub_node._bind_var = bind_var;
 
 		if (sub_node.getValue() !== undefined) {
+			// a weird way to tell if something should actually have a set or get value, I think that piepquery should be responsible for that
 			sub_node.addEventListener("change", () => {
 				let sub_node_data = sub_node.getValue();
 
@@ -655,13 +713,7 @@ function propagateComponentData(comp) {
  * @typedef {{
  * from: number,
  * to: number,
- * }} AnyChange
- *
- * @typedef {{
- * added: Array,
- * moved: AnyChange[],
- * removed: Array,
- * }} diffArrayResult
+ * }} IndexChange
  *
  * @callback compareKeyCallback
  * @param {any} e
@@ -673,7 +725,7 @@ function propagateComponentData(comp) {
  * @param {Array} arr_1
  * @param {Array} arr_2
  * @param {compareKeyCallback} getKey
- * @returns {diffArrayResult}
+ * @returns {IndexChange[]}
  */
 function diffArrays(arr_1, arr_2, getKey) {
 	if (!isArray(arr_1)) {
@@ -683,12 +735,8 @@ function diffArrays(arr_1, arr_2, getKey) {
 		arr_2 = [];
 	}
 
-	/** @type {diffArrayResult} */
-	let diff = {
-		added: [],
-		moved: [],
-		removed: [],
-	};
+	/** @type {IndexChange[]} */
+	let diff = [];
 
 	const keys_1 = arr_1.map(getKey);
 	const keys_2 = arr_2.map(getKey);
@@ -698,14 +746,9 @@ function diffArrays(arr_1, arr_2, getKey) {
 		index_1++;
 
 		const index_2 = keys_2.indexOf(key_1);
-
-		if (index_2 === -1) {
-			diff.removed.push(index_1);
-		} else if (index_1 !== index_2) {
-			diff.moved.push({
-				from: index_1,
-				to: index_2,
-			});
+		if (index_1 !== index_2) {
+			// move or delete
+			diff.push({ from: index_1, to: index_2 });
 		}
 	}
 
@@ -716,7 +759,8 @@ function diffArrays(arr_1, arr_2, getKey) {
 		const index_1 = keys_1.indexOf(key_2);
 
 		if (index_1 === -1) {
-			diff.added.push(index_2);
+			// add
+			diff.push({ from: index_1, to: index_2 });
 		}
 	}
 
