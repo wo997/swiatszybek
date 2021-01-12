@@ -46,7 +46,10 @@ domload(() => {
  * _prev_data: ListRowComponentData
  * _setData(data?: ListRowComponentData, options?: SetComponentDataOptions)
  * _getData()
- * _idkNode: PiepNode
+ * _nodes: {
+ *  idk: PiepNode
+ *  delete_btn: PiepNode
+ * }
  * } & BaseComponent} ListRowComponent
  */
 
@@ -60,38 +63,36 @@ function createListRowCompontent(node, parent, _data = undefined) {
 		_data = { email: "" };
 	}
 
-	createComponent(node, parent, _data, () => {
-		node._name = "list_row";
+	createComponent(node, parent, _data, {
+		create_template: () => {
+			node.setContent(/*html*/ `
+                <span data-bind="row_index" data-type="html"></span>.
+                <input type="text" class="field inline" data-bind="email">
+                rewrite inputs
+                <input type="text" class="field inline" data-bind="email">
+        
+                <button data-node="delete_btn" class="btn red">Delete (<span data-bind="row_index" data-type="html"></span>)</button>
+        
+                <div data-node="idk"></div>
+            `);
+		},
+		initialize: () => {
+			node._setData = (data = undefined, options = {}) => {
+				setComponentData(node, data, {
+					...options,
+					callback: () => {
+						node._nodes.idk.setContent(JSON.stringify(node._data));
+					},
+				});
+			};
 
-		node.setContent(/*html*/ `
-            <span data-bind="row_index" data-type="html"></span>.
-            <input type="text" class="field inline" data-bind="email">
-            rewrite inputs
-            <input type="text" class="field inline" data-bind="email">
-    
-            <button class="delete btn red">Delete (<span data-bind="row_index" data-type="html"></span>)</button>
-    
-            <div class="idk"></div>
-        `);
-
-		node._setData = (data = undefined, options = {}) => {
-			setComponentData(node, data, {
-				...options,
-				callback: () => {
-					node._idkNode.setContent(JSON.stringify(node._data));
-				},
+			node._nodes.delete_btn.addEventListener("click", () => {
+				// we can also modify the data, but that is waaay simpler
+				if (parent._removeRow) {
+					parent._removeRow(node);
+				}
 			});
-		};
-
-		node._idkNode = node.find(".idk");
-
-		const delete_btn = node.find(".delete");
-		delete_btn.addEventListener("click", () => {
-			// we can also modify the data, but that is waaay simpler
-			if (parent._removeRow) {
-				parent._removeRow(node);
-			}
-		});
+		},
 	});
 }
 
@@ -125,120 +126,120 @@ function createListCompontent(
 		_data = [];
 	}
 
-	createComponent(node, parent, _data, () => {
-		node._name = "list";
+	createComponent(node, parent, _data, {
+		initialize: () => {
+			// why negative? it won't overlap with for example entity ids
+			node._nextRowId = -1000;
 
-		// why negative? it won't overlap with for example entity ids
-		node._nextRowId = -1000;
+			node._getRows = () => {
+				/** @type {AnyComponent[]} */
+				// @ts-ignore
+				const res = node.directChildren(":not(.removing)");
+				return res;
+			};
 
-		node._getRows = () => {
-			/** @type {AnyComponent[]} */
-			// @ts-ignore
-			const res = node.directChildren(":not(.removing)");
-			return res;
-		};
-
-		// these functions need to be specified here because the child might not know who we are :*
-		node._fetchDataFromChild = (source, receiver) => {
-			//console.log("_fetchDataFromChild ARR", receiver, source);
-			let receiver_sub_data_index = receiver._data.findIndex((e) => {
-				return e._row_id === source._data._row_id;
-			});
-			if (receiver_sub_data_index !== -1) {
-				receiver._data[receiver_sub_data_index] = cloneObject(source._data);
-			}
-		};
-
-		node._sendDataToChild = (source, receiver) => {
-			let source_sub_data_index = source._data.findIndex((e) => {
-				return e._row_id === receiver._data._row_id;
-			});
-			if (source_sub_data_index !== -1) {
-				receiver._data = cloneObject(source._data[source_sub_data_index]);
-			}
-		};
-
-		node._setData = (_data = undefined, options = {}) => {
-			if (_data !== undefined) {
-				node._data = cloneObject(_data);
-			}
-
-			node._data.forEach((row_data, index) => {
-				if (row_data._row_id === undefined) {
-					row_data._row_id = node._nextRowId--;
+			// these functions need to be specified here because the child might not know who we are :*
+			node._fetchDataFromChild = (source, receiver) => {
+				//console.log("_fetchDataFromChild ARR", receiver, source);
+				let receiver_sub_data_index = receiver._data.findIndex((e) => {
+					return e._row_id === source._data._row_id;
+				});
+				if (receiver_sub_data_index !== -1) {
+					receiver._data[receiver_sub_data_index] = cloneObject(source._data);
 				}
-				row_data.row_index = index + 1;
-			});
+			};
 
-			setComponentData(node, _data, {
-				...options,
-				callback: () => {
-					const diff = diffArrays(
-						node._prev_data,
-						node._data,
-						(e) => e._row_id
-					);
-					// console.log(
-					// 	diff,
-					// 	JSON.stringify(node._prev_data, undefined, 3),
-					// 	JSON.stringify(node._data, undefined, 3)
-					// );
+			node._sendDataToChild = (source, receiver) => {
+				let source_sub_data_index = source._data.findIndex((e) => {
+					return e._row_id === receiver._data._row_id;
+				});
+				if (source_sub_data_index !== -1) {
+					receiver._data = cloneObject(source._data[source_sub_data_index]);
+				}
+			};
 
-					const animation_duration = 250;
+			node._setData = (_data = undefined, options = {}) => {
+				if (_data !== undefined) {
+					node._data = cloneObject(_data);
+				}
 
-					let child_index = -1;
-					const remember_nodes_to_remove = node._getRows().filter(() => {
-						child_index++;
-						return diff.removed.includes(child_index);
-					});
+				node._data.forEach((row_data, index) => {
+					if (row_data._row_id === undefined) {
+						row_data._row_id = node._nextRowId--;
+					}
+					row_data.row_index = index + 1;
+				});
 
-					diff.added.forEach((data_id) => {
-						const row_data = node._data[data_id];
+				setComponentData(node, _data, {
+					...options,
+					callback: () => {
+						const diff = diffArrays(
+							node._prev_data,
+							node._data,
+							(e) => e._row_id
+						);
+						// console.log(
+						// 	diff,
+						// 	JSON.stringify(node._prev_data, undefined, 3),
+						// 	JSON.stringify(node._data, undefined, 3)
+						// );
 
-						/** @type {AnyComponent} */
-						// @ts-ignore
-						const child = createNodeFromHtml(/*html*/ `
-                            <div class="my_list_row_wrapper expand_y hidden animate_hidden">
-                                <div class="my_list_row"></div>
-                            </div>
-                        `);
+						const animation_duration = 250;
 
-						// TODO: find the actual place where you want to put it
-						node.insertBefore(child, node.children[data_id]);
+						let child_index = -1;
+						const remember_nodes_to_remove = node._getRows().filter(() => {
+							child_index++;
+							return diff.removed.includes(child_index);
+						});
 
-						const the_row = child.find(".my_list_row");
+						diff.added.forEach((data_id) => {
+							const row_data = node._data[data_id];
 
-						createRowCallback(the_row, node, row_data, {});
+							/** @type {AnyComponent} */
+							// @ts-ignore
+							const child = createNodeFromHtml(/*html*/ `
+                                <div class="my_list_row_wrapper expand_y hidden animate_hidden">
+                                    <div class="my_list_row"></div>
+                                </div>
+                            `);
 
-						expand(child, true, { duration: animation_duration });
-					});
+							// TODO: find the actual place where you want to put it
+							node.insertBefore(child, node.children[data_id]);
 
-					remember_nodes_to_remove.forEach((child) => {
-						expand(child, false, { duration: animation_duration });
-						child.classList.add("removing");
-						setTimeout(() => {
-							child.remove();
-						}, animation_duration);
-					});
-				},
-			});
-		};
+							const the_row = child.find(".my_list_row");
 
-		node._removeRow = (child) => {
-			/** @type {AnyComponent} */
-			// @ts-ignore
-			const comp = child;
-			const remove_index = node._data.findIndex((d) => {
-				return d._row_id === comp._data._row_id;
-			});
-			if (remove_index !== -1) {
-				node._data.splice(remove_index, 1);
-				node._setData();
-			}
-		};
+							createRowCallback(the_row, node, row_data, {});
 
-		// basically empty when created
-		//node.setContent();
+							expand(child, true, { duration: animation_duration });
+						});
+
+						remember_nodes_to_remove.forEach((child) => {
+							expand(child, false, { duration: animation_duration });
+							child.classList.add("removing");
+							setTimeout(() => {
+								child.remove();
+							}, animation_duration);
+						});
+					},
+				});
+			};
+
+			node._removeRow = (child) => {
+				/** @type {AnyComponent} */
+				// @ts-ignore
+				const comp = child;
+				const remove_index = node._data.findIndex((d) => {
+					return d._row_id === comp._data._row_id;
+				});
+				if (remove_index !== -1) {
+					node._data.splice(remove_index, 1);
+					node._setData();
+				}
+			};
+
+			// basically empty when created
+			//node.setContent();
+		},
 	});
 }
 
@@ -263,8 +264,10 @@ function createListCompontent(
  *      my_list_copy: ListComponent
  *      load_btn: PiepNode
  *      save_btn: PiepNode
+ *      add_btn: PiepNode
  *      list_count: PiepNode
  *      expand_y_1: PiepNode
+ *      list_row: ListRowComponent
  *  }
  * } & BaseComponent} FirstComponent
  */
@@ -285,115 +288,105 @@ function createFirstCompontent(node, parent, _data = undefined) {
 		};
 	}
 
-	createComponent(node, parent, _data, () => {
-		node._name = "first";
+	createComponent(node, parent, _data, {
+		create_template: () => {
+			node.setContent(/*html*/ `
+                <div>
+                    <h3>
+                        Save state of the component
+                        <button data-node="save_btn" class="btn primary">Save</button>
+                        <button data-node="load_btn" class="btn primary">Load</button>
+                    </h3>
 
-		node.setContent(/*html*/ `
-            <div>
-                <h3>
-                    Save state of the component
-                    <button class="save btn primary">Save</button>
-                    <button class="load btn primary">Load</button>
-                </h3>
+                    <h3>Type the name: </h3>
+                    <input type="text" class="field" data-bind="name"/></span>
+                    <br>
 
-                <h3>Type the name: </h3>
-                <input type="text" class="field" data-bind="name"/></span>
-                <br>
+                    <h3>And here it is!: </h3>
+                    <span data-bind="name" data-type="html"></span>
+                    <br>
 
-                <h3>And here it is!: </h3>
-                <span data-bind="name" data-type="html"></span>
-                <br>
+                    <h3>Oh, and the id: </h3>
+                    <span data-bind="id" data-type="html"></span>
+                    <br>
 
-                <h3>Oh, and the id: </h3>
-                <span data-bind="id" data-type="html"></span>
-                <br>
+                    <h3>Some state (changes list visibility) </h3>
+                    <checkbox data-bind="state"></checkbox>
+                    <br>
 
-                <h3>Some state (changes list visibility) </h3>
-                <checkbox data-bind="state"></checkbox>
-                <br>
+                    <h3>
+                        We can even have a list!
+                        <span data-node="list_count"></span>
+                        <button data-node="add_btn" class="btn primary">Add a new row!</button>
+                    </h3>
+                    <div data-node="expand_y_1" class="expand_y">
+                        <div data-node="my_list" data-bind="list_data"></div>
+                    </div>
 
-                <h3>We can even have a list! <span class="list_count"></span> <button class="add btn primary">Add a new row!</button></h3>
-                <div class="expand_y expand_y_1">
-                    <div class="my_list" data-bind="list_data"></div>
+                    <h3>List copied looool</h3>
+                    <div style="display:flex">
+                        <div data-node="my_list_copy" data-bind="list_data"></div>
+                    </div>
+
+                    <h3>Example of standalone list row, dumb but we can do it</h3>
+                    <div data-node="list_row" data-bind="list_row"></div>
+
+                    <h3>Display form json</h3>
+                    <div data-node="crazy"></div>
                 </div>
-
-                <h3>List copied looool</h3>
-                <div style="display:flex">
-                    <div class="my_list_copy" data-bind="list_data"></div>
-                </div>
-
-                <h3>Example of standalone list row, dumb but we can do it</h3>
-                <div class="list_row" data-bind="list_row"></div>
-
-                <h3>Display form json</h3>
-                <div class="crazy"></div>
-            </div>
-        `);
-
-		node._setData = (data = undefined, options = {}) => {
-			setComponentData(node, data, {
-				...options,
-				callback: () => {
-					node._nodes.crazy.setContent(`
+            `);
+		},
+		initialize: () => {
+			node._setData = (data = undefined, options = {}) => {
+				setComponentData(node, data, {
+					...options,
+					callback: () => {
+						node._nodes.crazy.setContent(`
                         This string was generated by the compontent
                         ${JSON.stringify(node._data, null, 3)}
                     `);
 
-					expand(node._nodes.expand_y_1, node._data.state === 1);
+						expand(node._nodes.expand_y_1, node._data.state === 1);
 
-					const equivalent = isEquivalent(node._data, node._saved_data);
-					const disable = !node._saved_data || equivalent;
-					toggleDisabled(node._nodes.load_btn, disable);
-					toggleDisabled(node._nodes.save_btn, equivalent);
+						const equivalent = isEquivalent(node._data, node._saved_data);
+						const disable = !node._saved_data || equivalent;
+						toggleDisabled(node._nodes.load_btn, disable);
+						toggleDisabled(node._nodes.save_btn, equivalent);
 
-					node._nodes.list_count.setContent(`(${node._data.list_data.length})`);
-				},
-			});
-		};
+						node._nodes.list_count.setContent(
+							`(${node._data.list_data.length})`
+						);
+					},
+				});
+			};
 
-		/** @type {ListComponent} */
-		// @ts-ignore
-		node._nodes.my_list = node.find(".my_list");
-		createListCompontent(node._nodes.my_list, node, createListRowCompontent);
+			createListCompontent(node._nodes.my_list, node, createListRowCompontent);
 
-		/** @type {ListComponent} */
-		// @ts-ignore
-		node._nodes.my_list_copy = node.find(".my_list_copy");
-		createListCompontent(
-			node._nodes.my_list_copy,
-			node,
-			createListRowCompontent
-		);
-
-		/** @type {ListRowComponent} */
-		// @ts-ignore
-		const list_row = node.find(".list_row");
-		createListRowCompontent(list_row, node);
-
-		node._nodes.crazy = node.find(".crazy");
-
-		node.find(".add").addEventListener("click", () => {
-			node._nodes.my_list._data.push(
-				/** @type {ListRowComponentData} */ { email: "- default email -" }
+			createListCompontent(
+				node._nodes.my_list_copy,
+				node,
+				createListRowCompontent
 			);
-			node._nodes.my_list._setData();
-		});
 
-		node._nodes.save_btn = node.find(".save");
-		node._nodes.save_btn.addEventListener("click", () => {
-			node._saved_data = cloneObject(node._data);
-			node._setData(undefined, { force_render: true });
-		});
+			createListRowCompontent(node._nodes.list_row, node);
 
-		node._nodes.load_btn = node.find(".load");
-		node._nodes.load_btn.addEventListener("click", () => {
-			node._data = cloneObject(node._saved_data);
-			node._setData();
-		});
+			node._nodes.add_btn.addEventListener("click", () => {
+				node._nodes.my_list._data.push(
+					/** @type {ListRowComponentData} */ { email: "- default email -" }
+				);
+				node._nodes.my_list._setData();
+			});
 
-		node._nodes.list_count = node.find(".list_count");
+			node._nodes.save_btn.addEventListener("click", () => {
+				node._saved_data = cloneObject(node._data);
+				node._setData(undefined, { force_render: true });
+			});
 
-		node._nodes.expand_y_1 = node.find(".expand_y_1");
+			node._nodes.load_btn.addEventListener("click", () => {
+				node._data = cloneObject(node._saved_data);
+				node._setData();
+			});
+		},
 	});
 }
 
@@ -408,7 +401,6 @@ function createFirstCompontent(node, parent, _data = undefined) {
 
 /**
  * @typedef {{
- * _name: string
  * _bindNodes: PiepNode[]
  * _parent_component: any
  * _referenceParent: CallableFunction
@@ -432,19 +424,23 @@ function createFirstCompontent(node, parent, _data = undefined) {
  * _data_ref: any
  * _nodes: any
  * } & BaseComponent} AnyComponent
+ *
+ * @typedef {{
+ * create_template?()
+ * initialize?()
+ * }} createComponentOptions
  */
 
 /**
  * @param {BaseComponent} comp
  * @param {*} parent_comp
  * @param {*} _data
- * @param {{(): any | undefined}} createCallback
+ * @param {createComponentOptions} options
  * */
-function createComponent(comp, parent_comp, _data, createCallback) {
+function createComponent(comp, parent_comp, _data, options) {
 	/** @type {AnyComponent} */
 	// @ts-ignore
 	const node = comp;
-	node._nodes = {};
 
 	/** @type {AnyComponent} */
 	// @ts-ignore
@@ -499,10 +495,18 @@ function createComponent(comp, parent_comp, _data, createCallback) {
 		};
 	}
 
-	const swap_data = createCallback();
-	// if (swap_data !== undefined) {
-	// 	_data = swap_data;
-	// }
+	if (options.create_template) {
+		options.create_template();
+	}
+
+	node._nodes = {};
+	node.findAll(`[data-node]`).forEach((n) => {
+		node._nodes[n.dataset.node] = n;
+	});
+
+	if (options.initialize) {
+		options.initialize();
+	}
 
 	// kinda weird but it creates the checkbox subcomponent
 	registerForms();
