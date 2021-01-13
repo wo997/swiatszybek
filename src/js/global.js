@@ -88,10 +88,10 @@ function ajax(url, data, good, wrong) {
 /**
  *
  * @param {*} value
- * @param {*} defaultValue
+ * @param {*} def
  */
-function nonull(value, defaultValue = "") {
-	if (value === null || value === undefined) return defaultValue;
+function nonull(value, def = "") {
+	if (value === null || value === undefined) return def;
 	return value;
 }
 
@@ -757,7 +757,7 @@ function removeClassesWithPrefix(node, prefix) {
 }
 
 function matchClassesWithPrefix(node, prefix) {
-	out = [];
+	const out = [];
 	node.classList.forEach((e) => {
 		if (e.indexOf(prefix) === 0) out.push(e);
 	});
@@ -864,7 +864,7 @@ function removeUserSelection() {
 			window.getSelection().removeAllRanges();
 		}
 	} else if (document.selection) {
-		// IE?
+		// IE? I think we should just get rid of that
 		document.selection.empty();
 	}
 }
@@ -990,3 +990,5 @@ function kebabToSnakeCase(string) {
 		return group1.toUpperCase();
 	});
 }
+
+const applyToArray = (func, array) => func.apply(Math, array);

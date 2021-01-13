@@ -4,14 +4,14 @@
 /**
  *
  * @typedef {{
- * field?: string,
+ * field?: string
  * title: string
  * width?: string
  * className?: string
  * render?: (row: any, index: number) => {}
- * escape?: boolean,
- * searchable?: string,
- * sortable?: boolean,
+ * escape?: boolean
+ * searchable?: string
+ * sortable?: boolean
  * }} datatableColumnDefinition
  */
 
@@ -25,6 +25,8 @@
  * definition: datatableColumnDefinition[]
  * params?: () => {}
  * renderRow?: () => {}
+ * controls?: string
+ * controlsRight?: string
  * }} datatable
  */
 function createDatatable(datatable) {
