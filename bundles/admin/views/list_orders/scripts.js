@@ -5,9 +5,8 @@ domload(() => {
 	// @ts-ignore
 	const my_list_node = $(".my_component");
 
-	// todo? prevent setting data on creation but do it when all components are ready
-	// there was an issue with the list, it need to be set once
-	// that's weird but animations suck a little bit as we set data to nothing in that case, they should be instant anyway
+	// todo? force setting data on the main component and prevent doing so for children?
+	// or prevent animations on creation, you might need it anyway
 	createFirstCompontent(my_list_node, undefined, {
 		id: 5,
 		name: "asdsad",
@@ -21,7 +20,6 @@ domload(() => {
 		list_row: { email: "xxx" },
 	});
 
-	// both work well
 	// createFirstCompontent(my_list_node, undefined);
 
 	// my_list_node._setData({
@@ -37,7 +35,7 @@ domload(() => {
 	// });
 });
 
-// bad naming of a component
+// probably bad naming of a component
 
 /**
  * @typedef {{
@@ -49,7 +47,6 @@ domload(() => {
  * _data: ListRowComponentData
  * _prev_data: ListRowComponentData
  * _setData(data?: ListRowComponentData, options?: SetComponentDataOptions)
- * _getData()
  * _nodes: {
  *  idk: PiepNode
  *  delete_btn: PiepNode
@@ -73,7 +70,7 @@ function createListRowCompontent(node, parent, _data = undefined) {
 	createComponent(node, parent, _data, {
 		create_template: () => {
 			node.setContent(/*html*/ `
-                <span data-node="row_index"></span>.
+                <span data-node="row_index"></span>
                 <input type="text" class="field inline" data-bind="email">
                 rewrite inputs
                 <input type="text" class="field inline" data-bind="email">
@@ -86,20 +83,22 @@ function createListRowCompontent(node, parent, _data = undefined) {
             `);
 		},
 		initialize: () => {
-			/** @type {ListComponent} */
-			// @ts-ignore
-			const parent = node._parent_component;
-			if (parent && parent._data && isArray(parent._data)) {
-				parent._subscribers.push({
-					fetch: (
-						/** @type {ListComponent} */ source,
-						/** @type {ListRowComponent} */ receiver
-					) => {
-						receiver._data.list_length = source._data.length;
-					},
-					receiver: node,
-				});
-			}
+			// a child can choose to subscribe to parents or any other components data, but in that case we use predefined relations in the list component
+
+			// /** @type {ListComponent} */
+			// // @ts-ignore
+			// const parent = node._parent_component;
+			// if (parent && parent._data && isArray(parent._data)) {
+			// 	parent._subscribers.push({
+			// 		fetch: (
+			// 			/** @type {ListComponent} */ source,
+			// 			/** @type {ListRowComponent} */ receiver
+			// 		) => {
+			// 			receiver._data.list_length = source._data.length;
+			// 		},
+			// 		receiver: node,
+			// 	});
+			// }
 
 			node.classList.add("my_list_row");
 			node._setData = (data = undefined, options = {}) => {
@@ -108,14 +107,16 @@ function createListRowCompontent(node, parent, _data = undefined) {
 					render: () => {
 						node._nodes.idk.setContent(JSON.stringify(node._data));
 						if (node._data.row_index !== undefined) {
+							// node._nodes.row_index.setContent("-".repeat(node._data.row_index) + node._data.row_index);
 							node._nodes.row_index.setContent(
-								"-".repeat(node._data.row_index) + node._data.row_index
+								node._data.row_index +
+									1 +
+									" / " +
+									nonull(node._data.list_length, 0)
 							);
 						}
 
-						const list_length = node._data.list_length;
-
-						if (!isNaN(list_length)) {
+						if (node._data.list_length !== undefined) {
 							toggleDisabled(node._nodes.up_btn, node._data.row_index === 0);
 							toggleDisabled(
 								node._nodes.down_btn,
@@ -161,7 +162,6 @@ function createListRowCompontent(node, parent, _data = undefined) {
  * _data: Array
  * _prev_data: Array
  * _setData(data?: Array, options?: SetComponentDataOptions)
- * _getData()
  * _nextRowId: number
  * _removeRow(row_index: number)
  * _moveRow(from: number, to: number)
@@ -188,7 +188,7 @@ function createListCompontent(
 	createComponent(node, parent, _data, {
 		initialize: () => {
 			// why negative? it won't overlap with for example entity ids
-			node._nextRowId = -1000;
+			//node._nextRowId = -1000;
 
 			node.classList.add("my_list");
 
@@ -223,11 +223,23 @@ function createListCompontent(
 					_data = node._data;
 				}
 
+				//node._nextRowId = 0;
+				let nextRowId = 0; // act like a singleton for efficiency
+
 				_data.forEach((row_data, index) => {
+					// pass data no matter who the child is - should be defined by options cause it's inefficient to set each row every time u do anything
 					if (row_data.row_id === undefined) {
-						row_data.row_id = node._nextRowId--;
+						if (nextRowId === 0) {
+							nextRowId = applyToArray(Math.min, [
+								..._data.map((e) => e.row_id).filter((e) => e),
+								-1000,
+							]); // that will be unique for sure
+						}
+						row_data.row_id = --nextRowId;
+						//row_data.row_id = node._nextRowId--;
 					}
 					row_data.row_index = index;
+					row_data.list_length = _data.length;
 				});
 
 				setComponentData(node, _data, {
@@ -238,36 +250,66 @@ function createListCompontent(
 							node._data,
 							(e) => e.row_id
 						);
-						console.log(diff);
-						// console.log(
-						// 	"render",
-						// 	diff,
-						// 	JSON.stringify(node._prev_data, undefined, 3),
-						// 	JSON.stringify(node._data, undefined, 3)
-						// );
-						// console.log(
-						// 	diff,
-						// 	node._prev_data ? node._prev_data.length : 0,
-						// 	node._data.length
-						// );
+
+						if (diff.length === 0) {
+							return;
+						}
+
+						const diff_with_target_index = diff.map((e) => ({
+							...e,
+							target_index: e.to !== -1 ? e.to : e.from,
+						}));
 
 						const animation_duration = 250;
 
 						const rows_before = node._getRows();
 
+						/** @type {ClientRect[]} */
+						const row_rects_before = [];
+						rows_before.forEach((e) => {
+							row_rects_before.push(e.getBoundingClientRect());
+						});
+
 						let removed_before_current = 0;
 
-						diff
-							.sort((a, b) =>
-								Math.sign(nonull(a.to, a.from) - nonull(b.to, b.from))
-							)
-							.forEach((diff_info) => {
-								let child =
-									diff_info.from !== -1
-										? rows_before[diff_info.from]
-										: undefined;
+						/*console.log(
+							diff,
+							node._prev_data ? node._prev_data.length : 0,
+							node._data.length
+                        );*/
+						///console.log(diff);
 
-								if (child && diff_info.to === -1) {
+						diff_with_target_index
+							.sort((a, b) => Math.sign(a.target_index - b.target_index))
+							.forEach((diff_info) => {
+								const remove = diff_info.to === -1;
+								const add = diff_info.from === -1;
+
+								let child = add ? undefined : rows_before[diff_info.from];
+
+								if (add) {
+									/** @type {AnyComponent} */
+									// @ts-ignore
+									child = createNodeFromHtml(/*html*/ `
+                                            <div class="my_list_row_wrapper expand_y hidden animate_hidden">
+                                            <div class="my_list_row"></div>
+                                            </div>
+                                        `);
+								}
+
+								const target_index_real =
+									diff_info.target_index + removed_before_current;
+
+								if (target_index_real !== diff_info.from) {
+									node.insertBefore(child, node.children[target_index_real]);
+								}
+
+								if (add) {
+									const row_data = node._data[diff_info.to];
+									const the_row = child.find(".my_list_row");
+									createRowCallback(the_row, node, row_data, {});
+									expand(child, true, { duration: animation_duration });
+								} else if (remove) {
 									expand(child, false, { duration: animation_duration });
 									child.classList.add("removing");
 									setTimeout(() => {
@@ -275,33 +317,22 @@ function createListCompontent(
 									}, animation_duration);
 
 									removed_before_current++;
-									return;
-								}
-
-								const row_data = node._data[diff_info.to];
-
-								const add = !child;
-								if (add) {
-									/** @type {AnyComponent} */
-									// @ts-ignore
-									child = createNodeFromHtml(/*html*/ `
-                                        <div class="my_list_row_wrapper expand_y hidden animate_hidden">
-                                            <div class="my_list_row"></div>
-                                        </div>
-                                    `);
 								} else {
-									child = rows_before[diff_info.from];
-								}
+									const rect_before = row_rects_before[diff_info.from];
+									const rect_after = child.getBoundingClientRect();
 
-								node.insertBefore(
-									child,
-									node.children[diff_info.to + removed_before_current]
-								);
+									const offset_0 = Math.round(rect_before.top - rect_after.top);
 
-								if (add) {
-									const the_row = child.find(".my_list_row");
-									createRowCallback(the_row, node, row_data, {});
-									expand(child, true, { duration: animation_duration });
+									if (Math.abs(offset_0) > 2) {
+										animate(
+											child,
+											`
+                                                0% {transform:translateY(${offset_0}px)}
+                                                100% {transform:translateY(0px)}
+                                            `,
+											animation_duration
+										);
+									}
 								}
 							});
 					},
@@ -410,7 +441,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
                         <div data-node="my_list" data-bind="list_data"></div>
                     </div>
 
-                    <h3>List copied looool (currently hidden)</h3>
+                    <h3>List copied for no reason</h3>
                     <div style="display:flex">
                         <div data-node="my_list_copy" data-bind="list_data"></div>
                     </div>
@@ -449,11 +480,11 @@ function createFirstCompontent(node, parent, _data = undefined) {
 
 			createListCompontent(node._nodes.my_list, node, createListRowCompontent);
 
-			/*createListCompontent(
+			createListCompontent(
 				node._nodes.my_list_copy,
 				node,
 				createListRowCompontent
-			);*/
+			);
 
 			createListRowCompontent(node._nodes.list_row, node);
 
@@ -506,7 +537,6 @@ function createFirstCompontent(node, parent, _data = undefined) {
  * @typedef {{
  * _data: any
  * _setData(data?: any, options?: SetComponentDataOptions)
- * _getData()
  * _prev_data: any
  * _nodes: any
  * } & BaseComponent} AnyComponent
@@ -542,30 +572,11 @@ function createComponent(comp, parent_comp, _data, options) {
 
 	node._subscribers = [];
 
-	node._getData = () => {
-		// kinda useless now but let's keep it
-		return node._data;
-	};
-
 	if (!node._fetchDataFromChild) {
 		node._fetchDataFromChild = (source, receiver) => {
 			const bind_var = source.dataset.bind;
 			if (bind_var) {
-				/*console.log(
-					"_fetchDataFromChild r:",
-					receiver,
-					"s:",
-					source,
-					"b:",
-					bind_var,
-					"d:",
-					receiver._data,
-					"new data:",
-					cloneObject(source._data)
-				);*/
 				receiver._data[bind_var] = cloneObject(source._data);
-				//console.log("HEYYYY", receiver, cloneObject(receiver._data));
-				//console.log(receiver, receiver._data, bind_var);
 			}
 		};
 	}
@@ -574,9 +585,7 @@ function createComponent(comp, parent_comp, _data, options) {
 		node._sendDataToChild = (source, receiver) => {
 			const bind_var = receiver.dataset.bind;
 			if (bind_var) {
-				//console.log("_sendDataToChild", receiver, source);
 				receiver._data = cloneObject(source._data[bind_var]);
-				//console.log(receiver, receiver._data, bind_var);
 			}
 		};
 	}
@@ -735,6 +744,8 @@ function diffArrays(arr_1, arr_2, getKey) {
 		arr_2 = [];
 	}
 
+	let any_change = false;
+
 	/** @type {IndexChange[]} */
 	let diff = [];
 
@@ -746,9 +757,9 @@ function diffArrays(arr_1, arr_2, getKey) {
 		index_1++;
 
 		const index_2 = keys_2.indexOf(key_1);
+		diff.push({ from: index_1, to: index_2 });
 		if (index_1 !== index_2) {
-			// move or delete
-			diff.push({ from: index_1, to: index_2 });
+			any_change = true;
 		}
 	}
 
@@ -761,10 +772,11 @@ function diffArrays(arr_1, arr_2, getKey) {
 		if (index_1 === -1) {
 			// add
 			diff.push({ from: index_1, to: index_2 });
+			any_change = true;
 		}
 	}
 
-	return diff;
+	return any_change ? diff : [];
 }
 
 /**
