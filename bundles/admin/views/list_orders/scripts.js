@@ -100,6 +100,23 @@ function createListRowCompontent(node, parent, _data = undefined) {
 			// 	});
 			// }
 
+			// /** @type {ListComponent} */
+			// // @ts-ignore
+			// const grand_parent = node._parent_component
+			// 	? node._parent_component._parent_component
+			// 	: null;
+			// if (grand_parent) {
+			// 	grand_parent._subscribers.push({
+			// 		fetch: (
+			// 			/** @type {FirstComponent} */ source,
+			// 			/** @type {ListRowComponent} */ receiver
+			// 		) => {
+			// 			receiver._data.name = source._data.name;
+			// 		},
+			// 		receiver: node,
+			// 	});
+			// }
+
 			node.classList.add("my_list_row");
 			node._setData = (data = undefined, options = {}) => {
 				setComponentData(node, data, {
@@ -518,7 +535,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
 
 /**
  * @typedef {{
- * fetch(source: AnyComponent, receiver: AnyComponent)
+ * fetch(source: BaseComponent, receiver: BaseComponent)
  * receiver: AnyComponent
  * }} SubscribeToData
  *
@@ -639,7 +656,10 @@ function createComponent(comp, parent_comp, _data, options) {
 	if (_parent) {
 		_parent._subscribers.push({
 			receiver: node,
-			fetch: (source, receiver) => {
+			fetch: (
+				/** @type {AnyComponent} */ source,
+				/** @type {AnyComponent} */ receiver
+			) => {
 				const { obj, key } = source._pointChildsData(node);
 				if (key !== undefined) {
 					receiver._data = obj[key];
@@ -648,7 +668,10 @@ function createComponent(comp, parent_comp, _data, options) {
 		});
 		node._subscribers.push({
 			receiver: _parent,
-			fetch: (source, receiver) => {
+			fetch: (
+				/** @type {AnyComponent} */ source,
+				/** @type {AnyComponent} */ receiver
+			) => {
 				const { obj, key } = receiver._pointChildsData(node);
 				if (key !== undefined) {
 					obj[key] = source._data;
