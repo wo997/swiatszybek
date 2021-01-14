@@ -455,6 +455,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
             `);
 		},
 		initialize: () => {
+			// TODO: make _setData a required parameter of create component, maybe you also want a defualts parameter for... defaults
 			node._setData = (data = undefined, options = {}) => {
 				setComponentData(node, data, {
 					...options,
