@@ -7,7 +7,7 @@ domload(() => {
 
 	// todo? force setting data on the main component and prevent doing so for children?
 	// or prevent animations on creation, you might need it anyway
-	createFirstCompontent(my_list_node, undefined, {
+	/*createFirstCompontent(my_list_node, undefined, {
 		id: 5,
 		name: "asdsad",
 		state: 1,
@@ -18,21 +18,21 @@ domload(() => {
 			{ email: "4th" },
 		],
 		list_row: { email: "xxx" },
+	});*/
+
+	createFirstCompontent(my_list_node, undefined);
+
+	my_list_node._setData({
+		id: 5,
+		name: "asdsad",
+		state: 1,
+		list_data: [
+			{ email: "wojtekwo997@gmail.com" },
+			{ email: "pies@pies.pies" },
+			{ email: "111" },
+		],
+		list_row: { email: "xxx" },
 	});
-
-	// createFirstCompontent(my_list_node, undefined);
-
-	// my_list_node._setData({
-	// 	id: 5,
-	// 	name: "asdsad",
-	// 	state: 1,
-	// 	list_data: [
-	// 		{ email: "wojtekwo997@gmail.com" },
-	// 		{ email: "pies@pies.pies" },
-	// 		{ email: "111" },
-	// 	],
-	// 	list_row: { email: "xxx" },
-	// });
 });
 
 // probably bad naming of a component
@@ -51,6 +51,7 @@ domload(() => {
  *  idk: PiepNode
  *  delete_btn: PiepNode
  *  down_btn: PiepNode
+ *  double_up_btn: PiepNode
  *  up_btn: PiepNode
  *  row_index: PiepNode
  * }
@@ -77,6 +78,7 @@ function createListRowCompontent(node, parent, _data = undefined) {
         
                 <button data-node="down_btn" class="btn subtle"><i class="fas fa-chevron-down"></i></button>
                 <button data-node="up_btn" class="btn subtle"><i class="fas fa-chevron-up"></i></button>
+                <button data-node="double_up_btn" class="btn subtle" data-tooltip="Na samą górę"><i class="fas fa-angle-double-up"></i></button>
                 <button data-node="delete_btn" class="btn red"><i class="fas fa-trash"></i></button>
         
                 <div data-node="idk"></div>
@@ -107,7 +109,6 @@ function createListRowCompontent(node, parent, _data = undefined) {
 					render: () => {
 						node._nodes.idk.setContent(JSON.stringify(node._data));
 						if (node._data.row_index !== undefined) {
-							// node._nodes.row_index.setContent("-".repeat(node._data.row_index) + node._data.row_index);
 							node._nodes.row_index.setContent(
 								node._data.row_index +
 									1 +
@@ -117,10 +118,14 @@ function createListRowCompontent(node, parent, _data = undefined) {
 						}
 
 						if (node._data.list_length !== undefined) {
-							toggleDisabled(node._nodes.up_btn, node._data.row_index === 0);
 							toggleDisabled(
 								node._nodes.down_btn,
-								node._data.row_index === node._data.list_length - 1
+								node._data.row_index >= node._data.list_length - 1
+							);
+							toggleDisabled(node._nodes.up_btn, node._data.row_index <= 0);
+							toggleDisabled(
+								node._nodes.double_up_btn,
+								node._data.row_index <= 0
 							);
 						}
 					},
@@ -142,6 +147,12 @@ function createListRowCompontent(node, parent, _data = undefined) {
 			node._nodes.down_btn.addEventListener("click", () => {
 				if (parent._moveRow) {
 					parent._moveRow(node._data.row_index, node._data.row_index + 1);
+				}
+			});
+
+			node._nodes.double_up_btn.addEventListener("click", () => {
+				if (parent._moveRow) {
+					parent._moveRow(node._data.row_index, 0);
 				}
 			});
 		},
@@ -199,23 +210,14 @@ function createListCompontent(
 				return res;
 			};
 
-			// these functions need to be specified here because the child might not know who we are :*
-			node._fetchDataFromChild = (source, receiver) => {
-				let receiver_sub_data_index = receiver._data.findIndex((e) => {
-					return e.row_id === source._data.row_id;
+			node._pointChildsData = (child) => {
+				let source_sub_data_index = node._data.findIndex((e) => {
+					return e.row_id === child._data.row_id;
 				});
-				if (receiver_sub_data_index !== -1) {
-					receiver._data[receiver_sub_data_index] = cloneObject(source._data);
-				}
-			};
-
-			node._sendDataToChild = (source, receiver) => {
-				let source_sub_data_index = source._data.findIndex((e) => {
-					return e.row_id === receiver._data.row_id;
-				});
-				if (source_sub_data_index !== -1) {
-					receiver._data = cloneObject(source._data[source_sub_data_index]);
-				}
+				return {
+					obj: node._data,
+					key: source_sub_data_index === -1 ? null : source_sub_data_index,
+				};
 			};
 
 			node._setData = (_data = undefined, options = {}) => {
@@ -314,6 +316,7 @@ function createListCompontent(
 									child.classList.add("removing");
 									setTimeout(() => {
 										child.remove();
+										//child.classList.remove("component");
 									}, animation_duration);
 
 									removed_before_current++;
@@ -350,6 +353,12 @@ function createListCompontent(
 			};
 
 			node._moveRow = (from, to) => {
+				const middle = (val) => {
+					return Math.max(Math.min(val, node._data.length - 1), 0);
+				};
+				from = middle(from);
+				to = middle(to);
+
 				const temp = node._data.splice(from, 1);
 				node._data.splice(to, 0, ...temp);
 				node._setData();
@@ -513,18 +522,20 @@ function createFirstCompontent(node, parent, _data = undefined) {
 
 /**
  * @typedef {{
- * fetch(source: BaseComponent, receiver: BaseComponent)
+ * fetch(source: AnyComponent, receiver: AnyComponent)
  * receiver: AnyComponent
  * }} SubscribeToData
- */
-
-/**
+ *
+ * @typedef {{
+ * obj: any
+ * key: any
+ * }} ObjectData
+ *
  * @typedef {{
  * _bindNodes: PiepNode[]
  * _parent_component?: AnyComponent
  * _referenceParent: CallableFunction
- * _sendDataToChild(source: AnyComponent, receiver: AnyComponent)
- * _fetchDataFromChild(source: AnyComponent, receiver: AnyComponent)
+ * _pointChildsData(child: AnyComponent): ObjectData
  * _addSubscriber(subscribe: SubscribeToData)
  * _subscribers: SubscribeToData[]
  * _bind_var?: string
@@ -563,7 +574,7 @@ function createComponent(comp, parent_comp, _data, options) {
 	// @ts-ignore
 	const _parent = parent_comp;
 
-	node.classList.add("component");
+	//node.classList.add("component");
 
 	if (!!_parent && !(_parent instanceof HTMLElement)) {
 		console.error("Parent is not a node!", _parent);
@@ -573,20 +584,14 @@ function createComponent(comp, parent_comp, _data, options) {
 
 	node._subscribers = [];
 
-	if (!node._fetchDataFromChild) {
-		node._fetchDataFromChild = (source, receiver) => {
-			const bind_var = source.dataset.bind;
+	if (!node._pointChildsData) {
+		node._pointChildsData = (child) => {
+			const bind_var = child.dataset.bind;
 			if (bind_var) {
-				receiver._data[bind_var] = cloneObject(source._data);
-			}
-		};
-	}
-
-	if (!node._sendDataToChild) {
-		node._sendDataToChild = (source, receiver) => {
-			const bind_var = receiver.dataset.bind;
-			if (bind_var) {
-				receiver._data = cloneObject(source._data[bind_var]);
+				return {
+					obj: node._data,
+					key: bind_var,
+				};
 			}
 		};
 	}
@@ -636,11 +641,21 @@ function createComponent(comp, parent_comp, _data, options) {
 	if (_parent) {
 		_parent._subscribers.push({
 			receiver: node,
-			fetch: _parent._sendDataToChild,
+			fetch: (source, receiver) => {
+				const { obj, key } = source._pointChildsData(node);
+				if (key !== undefined) {
+					receiver._data = obj[key];
+				}
+			},
 		});
 		node._subscribers.push({
 			receiver: _parent,
-			fetch: _parent._fetchDataFromChild,
+			fetch: (source, receiver) => {
+				const { obj, key } = receiver._pointChildsData(node);
+				if (key !== undefined) {
+					obj[key] = source._data;
+				}
+			},
 		});
 	}
 }
@@ -663,6 +678,11 @@ function setComponentData(comp, _data = undefined, options = {}) {
 
 	if (_data !== undefined) {
 		node._data = cloneObject(_data);
+	}
+
+	if (!node || node._data === undefined) {
+		// garbage collector again?
+		return;
 	}
 
 	const equal = isEquivalent(node._prev_data, node._data);
