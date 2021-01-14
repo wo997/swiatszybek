@@ -7,7 +7,7 @@ domload(() => {
 
 	// todo? force setting data on the main component and prevent doing so for children?
 	// or prevent animations on creation, you might need it anyway
-	/*createFirstCompontent(my_list_node, undefined, {
+	createFirstCompontent(my_list_node, undefined, {
 		id: 5,
 		name: "asdsad",
 		state: 1,
@@ -18,21 +18,21 @@ domload(() => {
 			{ email: "4th" },
 		],
 		list_row: { email: "xxx" },
-	});*/
-
-	createFirstCompontent(my_list_node, undefined);
-
-	my_list_node._setData({
-		id: 5,
-		name: "asdsad",
-		state: 1,
-		list_data: [
-			{ email: "wojtekwo997@gmail.com" },
-			{ email: "pies@pies.pies" },
-			{ email: "111" },
-		],
-		list_row: { email: "xxx" },
 	});
+
+	// createFirstCompontent(my_list_node, undefined);
+
+	// my_list_node._setData({
+	// 	id: 5,
+	// 	name: "asdsad",
+	// 	state: 1,
+	// 	list_data: [
+	// 		{ email: "wojtekwo997@gmail.com" },
+	// 		{ email: "pies@pies.pies" },
+	// 		{ email: "111" },
+	// 	],
+	// 	list_row: { email: "xxx" },
+	// });
 });
 
 // probably bad naming of a component
@@ -69,21 +69,19 @@ function createListRowCompontent(node, parent, _data = undefined) {
 	}
 
 	createComponent(node, parent, _data, {
-		create_template: () => {
-			node.setContent(/*html*/ `
-                <span data-node="row_index"></span>
-                <input type="text" class="field inline" data-bind="email">
-                rewrite inputs
-                <input type="text" class="field inline" data-bind="email">
-        
-                <button data-node="down_btn" class="btn subtle"><i class="fas fa-chevron-down"></i></button>
-                <button data-node="up_btn" class="btn subtle"><i class="fas fa-chevron-up"></i></button>
-                <button data-node="double_up_btn" class="btn subtle" data-tooltip="Na samą górę"><i class="fas fa-angle-double-up"></i></button>
-                <button data-node="delete_btn" class="btn red"><i class="fas fa-trash"></i></button>
-        
-                <div data-node="idk"></div>
-            `);
-		},
+		template: /*html*/ `
+            <span data-node="row_index"></span>
+            <input type="text" class="field inline" data-bind="email">
+            rewrite inputs
+            <input type="text" class="field inline" data-bind="email">
+    
+            <button data-node="down_btn" class="btn subtle"><i class="fas fa-chevron-down"></i></button>
+            <button data-node="up_btn" class="btn subtle"><i class="fas fa-chevron-up"></i></button>
+            <button data-node="double_up_btn" class="btn subtle" data-tooltip="Na samą górę"><i class="fas fa-angle-double-up"></i></button>
+            <button data-node="delete_btn" class="btn red"><i class="fas fa-trash"></i></button>
+    
+            <div data-node="idk"></div>
+        `,
 		initialize: () => {
 			// a child can choose to subscribe to parents or any other components data, but in that case we use predefined relations in the list component
 
@@ -416,53 +414,51 @@ function createFirstCompontent(node, parent, _data = undefined) {
 	}
 
 	createComponent(node, parent, _data, {
-		create_template: () => {
-			node.setContent(/*html*/ `
-                <div>
-                    <h3>
-                        Save state of the component
-                        <button data-node="save_btn" class="btn primary">Save</button>
-                        <button data-node="load_btn" class="btn primary">Load</button>
-                    </h3>
+		template: /*html*/ `
+            <div>
+                <h3>
+                    Save state of the component
+                    <button data-node="save_btn" class="btn primary">Save</button>
+                    <button data-node="load_btn" class="btn primary">Load</button>
+                </h3>
 
-                    <h3>Type the name: </h3>
-                    <input type="text" class="field" data-bind="name"/></span>
-                    <br>
+                <h3>Type the name: </h3>
+                <input type="text" class="field" data-bind="name"/></span>
+                <br>
 
-                    <h3>And here it is!: </h3>
-                    <span data-bind="name" data-type="html"></span>
-                    <br>
+                <h3>And here it is!: </h3>
+                <span data-bind="name" data-type="html"></span>
+                <br>
 
-                    <h3>Oh, and the id: </h3>
-                    <span data-bind="id" data-type="html"></span>
-                    <br>
+                <h3>Oh, and the id: </h3>
+                <span data-bind="id" data-type="html"></span>
+                <br>
 
-                    <h3>Some state (changes list visibility) </h3>
-                    <checkbox data-bind="state"></checkbox>
-                    <br>
+                <h3>Some state (changes list visibility) </h3>
+                <checkbox data-bind="state"></checkbox>
+                <br>
 
-                    <h3>
-                        We can even have a list!
-                        <span data-node="list_count"></span>
-                        <button data-node="add_btn" class="btn primary">Add a new row!</button>
-                    </h3>
-                    <div data-node="expand_y_1" class="expand_y">
-                        <div data-node="my_list" data-bind="list_data"></div>
-                    </div>
-
-                    <h3>List copied for no reason</h3>
-                    <div style="display:flex">
-                        <div data-node="my_list_copy" data-bind="list_data"></div>
-                    </div>
-
-                    <h3>Example of standalone list row, dumb but we can do it</h3>
-                    <div data-node="list_row" data-bind="list_row"></div>
-
-                    <h3>Display form json</h3>
-                    <div data-node="crazy"></div>
+                <h3>
+                    We can even have a list!
+                    <span data-node="list_count"></span>
+                    <button data-node="add_btn" class="btn primary">Add a new row!</button>
+                </h3>
+                <div data-node="expand_y_1" class="expand_y">
+                    <div data-node="my_list" data-bind="list_data"></div>
                 </div>
-            `);
-		},
+
+                <h3>List copied for no reason</h3>
+                <div style="display:flex">
+                    <div data-node="my_list_copy" data-bind="list_data"></div>
+                </div>
+
+                <h3>Example of standalone list row, dumb but we can do it</h3>
+                <div data-node="list_row" data-bind="list_row"></div>
+
+                <h3>Display form json</h3>
+                <div data-node="crazy"></div>
+            </div>
+        `,
 		initialize: () => {
 			// TODO: make _setData a required parameter of create component, maybe you also want a defualts parameter for... defaults
 			node._setData = (data = undefined, options = {}) => {
@@ -554,7 +550,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
  * } & BaseComponent} AnyComponent
  *
  * @typedef {{
- * create_template?()
+ * template?: string
  * initialize?()
  * }} createComponentOptions
  */
@@ -596,8 +592,8 @@ function createComponent(comp, parent_comp, _data, options) {
 		};
 	}
 
-	if (options.create_template) {
-		options.create_template();
+	if (options.template) {
+		node.setContent(options.template);
 	}
 
 	node._nodes = {};
@@ -636,7 +632,9 @@ function createComponent(comp, parent_comp, _data, options) {
 		}
 	});
 
-	node._setData(_data);
+	if (_data !== undefined) {
+		node._setData(_data);
+	}
 
 	if (_parent) {
 		_parent._subscribers.push({
@@ -800,53 +798,54 @@ function diffArrays(arr_1, arr_2, getKey) {
 	return any_change ? diff : [];
 }
 
-/**
- * @typedef {{
- * added: string[],
- * changed: string[],
- * removed: string[],
- * }} diffObjectResult
- */
+// not used
+// /**
+//  * @typedef {{
+//  * added: string[],
+//  * changed: string[],
+//  * removed: string[],
+//  * }} diffObjectResult
+//  */
 
-/**
- *
- * @param {Object} obj_1
- * @param {Object} obj_2
- * @returns {diffObjectResult}
- */
-function diffObjects(obj_1, obj_2) {
-	if (!isObject(obj_1)) {
-		obj_1 = {};
-	}
-	if (!isObject(obj_2)) {
-		obj_2 = {};
-	}
+// /**
+//  *
+//  * @param {Object} obj_1
+//  * @param {Object} obj_2
+//  * @returns {diffObjectResult}
+//  */
+// function diffObjects(obj_1, obj_2) {
+// 	if (!isObject(obj_1)) {
+// 		obj_1 = {};
+// 	}
+// 	if (!isObject(obj_2)) {
+// 		obj_2 = {};
+// 	}
 
-	/** @type {diffObjectResult} */
-	let diff = {
-		added: [],
-		changed: [],
-		removed: [],
-	};
+// 	/** @type {diffObjectResult} */
+// 	let diff = {
+// 		added: [],
+// 		changed: [],
+// 		removed: [],
+// 	};
 
-	for (const key_1 in obj_1) {
-		const val_1 = obj_1[key_1];
-		const val_2 = obj_2[key_1];
+// 	for (const key_1 in obj_1) {
+// 		const val_1 = obj_1[key_1];
+// 		const val_2 = obj_2[key_1];
 
-		if (val_2 === undefined) {
-			diff.removed.push(key_1);
-		} else if (val_1 !== val_2) {
-			diff.changed.push(key_1);
-		}
-	}
+// 		if (val_2 === undefined) {
+// 			diff.removed.push(key_1);
+// 		} else if (val_1 !== val_2) {
+// 			diff.changed.push(key_1);
+// 		}
+// 	}
 
-	for (const key_2 in obj_2) {
-		const val_1 = obj_1[key_2];
+// 	for (const key_2 in obj_2) {
+// 		const val_1 = obj_1[key_2];
 
-		if (val_1 === undefined) {
-			diff.added.push(key_2);
-		}
-	}
+// 		if (val_1 === undefined) {
+// 			diff.added.push(key_2);
+// 		}
+// 	}
 
-	return diff;
-}
+// 	return diff;
+// }
