@@ -12,12 +12,12 @@ domload(() => {
 		name: "asdsad",
 		state: 1,
 		list_data: [
-			{ email: "wojtekwo997@gmail.com" },
-			{ email: "pies@pies.pies" },
-			{ email: "111" },
-			{ email: "4th" },
+			{ email: "wojtekwo997@gmail.com", name: "name" },
+			{ email: "pies@pies.pies", name: "name" },
+			{ email: "111", name: "name" },
+			{ email: "4th", name: "name" },
 		],
-		list_row: { email: "xxx" },
+		list_row: { email: "xxx", name: "u" },
 	});
 
 	// createFirstCompontent(my_list_node, undefined);
@@ -41,6 +41,7 @@ domload(() => {
  * @typedef {{
  * email: string
  * list_length?: number
+ * name: string
  * } & ListComponentRowData} ListRowComponentData
  *
  * @typedef {{
@@ -65,7 +66,7 @@ domload(() => {
  */
 function createListRowCompontent(node, parent, _data = undefined) {
 	if (_data === undefined) {
-		_data = { email: "" };
+		_data = { email: "", name: "name" };
 	}
 
 	createComponent(node, parent, _data, {
@@ -100,6 +101,7 @@ function createListRowCompontent(node, parent, _data = undefined) {
 			// 	});
 			// }
 
+			// inefficient af, what if u bubble up info tho?
 			// /** @type {ListComponent} */
 			// // @ts-ignore
 			// const grand_parent = node._parent_component
@@ -199,19 +201,19 @@ function createListRowCompontent(node, parent, _data = undefined) {
  * @param {ListComponent} node
  * @param {*} parent
  * @param {CallableFunction} createRowCallback
- * @param {Array} _data
+ * @param {Array} data
  */
 function createListCompontent(
 	node,
 	parent,
 	createRowCallback,
-	_data = undefined
+	data = undefined
 ) {
-	if (_data === undefined) {
-		_data = [];
+	if (data === undefined) {
+		data = [];
 	}
 
-	createComponent(node, parent, _data, {
+	createComponent(node, parent, data, {
 		initialize: () => {
 			// why negative? it won't overlap with for example entity ids
 			//node._nextRowId = -1000;
@@ -235,20 +237,20 @@ function createListCompontent(
 				};
 			};
 
-			node._setData = (_data = undefined, options = {}) => {
-				if (_data === undefined) {
-					_data = node._data;
+			node._setData = (data = undefined, options = {}) => {
+				if (data === undefined) {
+					data = node._data;
 				}
 
 				//node._nextRowId = 0;
 				let nextRowId = 0; // act like a singleton for efficiency
 
-				_data.forEach((row_data, index) => {
+				data.forEach((row_data, index) => {
 					// pass data no matter who the child is - should be defined by options cause it's inefficient to set each row every time u do anything
 					if (row_data.row_id === undefined) {
 						if (nextRowId === 0) {
 							nextRowId = applyToArray(Math.min, [
-								..._data.map((e) => e.row_id).filter((e) => e),
+								...data.map((e) => e.row_id).filter((e) => e),
 								-1000,
 							]); // that will be unique for sure
 						}
@@ -256,10 +258,10 @@ function createListCompontent(
 						//row_data.row_id = node._nextRowId--;
 					}
 					row_data.row_index = index;
-					row_data.list_length = _data.length;
+					row_data.list_length = data.length;
 				});
 
-				setComponentData(node, _data, {
+				setComponentData(node, data, {
 					...options,
 					render: () => {
 						const diff = diffArrays(
@@ -417,20 +419,20 @@ function createListCompontent(
 /**
  * @param {FirstComponent} node
  * @param {*} parent
- * @param {FirstComponentData} _data
+ * @param {FirstComponentData} data
  */
-function createFirstCompontent(node, parent, _data = undefined) {
-	if (_data === undefined) {
-		_data = {
+function createFirstCompontent(node, parent, data = undefined) {
+	if (data === undefined) {
+		data = {
 			id: -1,
 			name: "",
 			state: 0,
 			list_data: [],
-			list_row: { email: "" },
+			list_row: { email: "", name: "name" },
 		};
 	}
 
-	createComponent(node, parent, _data, {
+	createComponent(node, parent, data, {
 		template: /*html*/ `
             <div>
                 <h3>
@@ -479,6 +481,17 @@ function createFirstCompontent(node, parent, _data = undefined) {
 		initialize: () => {
 			// TODO: make _setData a required parameter of create component, maybe you also want a defualts parameter for... defaults
 			node._setData = (data = undefined, options = {}) => {
+				if (data === undefined) {
+					data = node._data;
+				}
+
+				// a way to pass data deeper easily,
+				// luckily that works great and is kinda optimized unlike listening from a child,
+				// u always wanna go deeper intstead of asking parents for data
+				data.list_data.forEach((e) => {
+					e.name = data.name;
+				});
+
 				setComponentData(node, data, {
 					...options,
 					render: () => {
@@ -503,11 +516,11 @@ function createFirstCompontent(node, parent, _data = undefined) {
 
 			createListCompontent(node._nodes.my_list, node, createListRowCompontent);
 
-			createListCompontent(
+			/*createListCompontent(
 				node._nodes.my_list_copy,
 				node,
 				createListRowCompontent
-			);
+			);*/
 
 			createListRowCompontent(node._nodes.list_row, node);
 
@@ -536,7 +549,7 @@ function createFirstCompontent(node, parent, _data = undefined) {
 /**
  * @typedef {{
  * fetch(source: BaseComponent, receiver: BaseComponent)
- * receiver: AnyComponent
+ * receiver: BaseComponent
  * }} SubscribeToData
  *
  * @typedef {{
@@ -745,7 +758,10 @@ function propagateComponentData(comp) {
 				// remove subscriber reference - kinda lazy garbage collector
 				subscribers.splice(i, 1);
 			}
-			subscribe.receiver._setData();
+			/** @type {AnyComponent} */
+			// @ts-ignore
+			const receiver = subscribe.receiver;
+			receiver._setData();
 		}
 	}
 
