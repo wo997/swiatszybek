@@ -7,25 +7,15 @@
 
 /**
  * @typedef {{
- * find(query: string): PiepNode //my comment baby
- * findAll(query: string): PiepNode[]
- * directChildren(query?): PiepNode[]
  * setValue(value: any, options?: {
  *  quiet?: boolean
  * }): void
  * getValue(): any
- * dispatchChange(): void
- * parent(query?: PiepSelector | undefined, options?: findNodeOptions): PiepNode
- * prev(query?: PiepSelector | undefined, options?: findNodeOptions): PiepNode
- * next(query?: PiepSelector | undefined, options?: findNodeOptions): PiepNode
  * findScrollParent(options?): PiepNode
- * isdef(): boolean
- * def(): void
- * setContent(html: string|number): void
- * animate(keyframes: string, duration: number, options?: AnimationOptions): void
- * dataset;
+ * empty(): void
+ * setContent(html: string): void
+ * dataset: any;
  * setting_value?: boolean
- * ciiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiipa
  * _parent(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
  * _next(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
  * _prev(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
@@ -33,6 +23,8 @@
  * _children(selector: string): PiepNode[]
  * _direct_children(selector?: string): PiepNode[]
  * _is_empty()
+ * _animate(keyframes: string, duration: number, options?: AnimationOptions): void
+ * _dispatch_change(): void
  * } & HTMLElement} PiepNode
  */
 
@@ -86,12 +78,6 @@ function $(selector, parent = undefined) {
 		return node.hasChildNodes();
 	};
 
-	node.find = (query) => {
-		return $(query, node);
-	};
-	node.findAll = (query) => {
-		return $$(query, node);
-	};
 	if (!node.setValue) {
 		node.setValue = (value, options = {}) => {
 			setValue(node, value, options);
@@ -102,75 +88,12 @@ function $(selector, parent = undefined) {
 			return getValue(node);
 		};
 	}
-	node.dispatchChange = () => {
+	node._dispatch_change = () => {
 		return dispatchChange(node);
-	};
-
-	node.next = () => {
-		// TODO parameter includeTextNodes
-		return $(node.nextElementSibling);
-	};
-	node.prev = () => {
-		// TODO parameter includeTextNodes
-		return $(node.previousElementSibling);
-	};
-	node.parent = (
-		query = undefined,
-		/** @type {findNodeOptions} */ options = {}
-	) => {
-		return $(node.parentNode);
-	};
-	node.directChildren = (query = undefined) => {
-		var res = [];
-		[...node.children].forEach((node) => {
-			if (query !== undefined && !node.matches(query)) {
-				return;
-			}
-			res.push($(node));
-		});
-		return res;
-	};
-
-	node.findParentByAttribute = (
-		parentAttribute,
-		parentAttributeValue = null
-	) => {
-		return findParentByAttribute(node, parentAttribute, parentAttributeValue);
-	};
-
-	node.findParentByTagName = (parentTagName, options = {}) => {
-		return findParentByTagName(node, parentTagName, options);
-	};
-
-	node.findParentNode = (parent, options = {}) => {
-		return findParentNode(node, parent, options);
-	};
-
-	node.findParentById = (id, options = {}) => {
-		return findParentById(node, id, options);
-	};
-
-	node.findParentByStyle = (style, value, options = {}) => {
-		return findParentByStyle(node, style, value, options);
-	};
-
-	node.findParentByComputedStyle = (style, value, options = {}) => {
-		return findParentByComputedStyle(node, style, value, options);
 	};
 
 	node.findScrollParent = (options = {}) => {
 		return findScrollParent(node, options);
-	};
-
-	node.findNonStaticParent = (options = {}) => {
-		return findNonStaticParent(node, options);
-	};
-
-	node.findParentByClassName = (parentClassNames, options = {}) => {
-		return findParentByClassName(node, parentClassNames, options);
-	};
-	node.isEmpty = () => {
-		return isdef(node);
 	};
 
 	node.empty = () => {
@@ -181,7 +104,7 @@ function $(selector, parent = undefined) {
 		return setContent(node, html);
 	};
 
-	node.animate = (keyframes, duration, options = {}) => {
+	node._animate = (keyframes, duration, options = {}) => {
 		// @ts-ignore
 		return animate(node, keyframes, duration, options);
 	};

@@ -115,7 +115,7 @@ function addVariantToBasket(variant_id, quantity_diff, options = {}) {
 						}
 					);
 
-					const cancel_btn = notification.find(".cancel_btn");
+					const cancel_btn = notification._child(".cancel_btn");
 					cancel_btn.addEventListener("click", () => {
 						addVariantToBasket(variant_id, -quantity_diff, options);
 						dismissParentNotification(cancel_btn);
@@ -186,7 +186,7 @@ window.addEventListener("basket-change", (event) => {
 		!res.options.instant
 	) {
 		$$(".basket_item_count, .total_basket_cost").forEach((e) => {
-			e.animate(ANIMATIONS.replace(0.2), 400);
+			e._animate(ANIMATIONS.replace(0.2), 400);
 		});
 
 		setTimeout(setSummary, 200);
@@ -248,15 +248,15 @@ function renderStatus(status_id) {
 }
 
 function setVariantRowQty(variant_node, variant_data) {
-	var qty = variant_node.find(".qty-label");
+	var qty = variant_node._child(".qty-label");
 	if (qty) {
 		qty.setContent(variant_data.quantity);
 		variant_node
-			.find(".qty-btn.add")
+			._child(".qty-btn.add")
 			.toggleAttribute("disabled", variant_data.quantity >= variant_data.stock);
 	}
 
-	var ptc = variant_node.find(".variant_total_price");
+	var ptc = variant_node._child(".variant_total_price");
 	if (ptc) {
 		ptc.setContent(variant_data.total_price + " zł");
 	}
@@ -277,18 +277,18 @@ function showVariantChanges(
 
 	if (res.changes) {
 		res.changes.quantity.forEach((variant_id) => {
-			var variant_node = basket_node.find(`[data-variant_id="${variant_id}"]`);
+			var variant_node = basket_node._child(`[data-variant_id="${variant_id}"]`);
 			if (!variant_node) {
 				return;
 			}
 
-			var qty = variant_node.find(".qty-label");
-			var ptp = variant_node.find(".variant_total_price");
+			var qty = variant_node._child(".qty-label");
+			var ptp = variant_node._child(".variant_total_price");
 			if (qty) {
-				qty.animate(ANIMATIONS.replace(0.4), 400);
+				qty._animate(ANIMATIONS.replace(0.4), 400);
 			}
 			if (ptp) {
-				ptp.animate(ANIMATIONS.replace(0.25), 400);
+				ptp._animate(ANIMATIONS.replace(0.25), 400);
 			}
 
 			setTimeout(() => {
@@ -316,7 +316,7 @@ function showVariantChanges(
 			}
 
 			basket_node.insertAdjacentHTML("beforeend", basket_row_template);
-			const variant_node_children = basket_node.directChildren();
+			const variant_node_children = basket_node._direct_children();
 			var variant_node =
 				variant_node_children[variant_node_children.length - 1];
 
@@ -326,24 +326,24 @@ function showVariantChanges(
 			}
 
 			setVariantRowQty(variant_node, variant_data);
-			var pi = variant_node.find(".variant_image");
+			var pi = variant_node._child(".variant_image");
 			if (pi) {
 				pi.setValue(variant_data.zdjecie);
 			}
-			var pp = variant_node.find(".variant_price");
+			var pp = variant_node._child(".variant_price");
 			if (pp) {
 				pp.setContent(variant_data.real_price);
 			}
-			var pl = variant_node.find(".product_link");
+			var pl = variant_node._child(".product_link");
 			if (pl) {
 				pl.setAttribute("href", variant_data.full_link);
 			}
-			var pn = variant_node.find(".variant_full_name");
+			var pn = variant_node._child(".variant_full_name");
 			if (pn) {
 				pn.setContent(variant_data.title + " " + variant_data.name);
 			}
 
-			var pvn = variant_node.find(".variant_name");
+			var pvn = variant_node._child(".variant_name");
 			if (pvn) {
 				pvn.setContent(variant_data.name);
 			}
@@ -358,7 +358,7 @@ function showVariantChanges(
 			}
 		});
 		res.changes.removed.forEach((variant_id) => {
-			var variant_node = basket_node.find(`[data-variant_id="${variant_id}"]`);
+			var variant_node = basket_node._child(`[data-variant_id="${variant_id}"]`);
 			expand(variant_node, false, {
 				callback: () => {
 					variant_node.remove();
@@ -397,7 +397,7 @@ function showProductChanges(
 			}
 
 			basket_node.insertAdjacentHTML("beforeend", basket_row_template);
-			product_node_children = basket_node.directChildren();
+			product_node_children = basket_node._direct_children();
 			var product_node =
 				product_node_children[product_node_children.length - 1];
 
@@ -406,11 +406,11 @@ function showProductChanges(
 				product_node.classList.add("animate_hidden");
 			}
 
-			var pi = product_node.find(".product_image");
+			var pi = product_node._child(".product_image");
 			if (pi) {
 				pi.setValue(product_data.cache_thumbnail);
 			}
-			var pp = product_node.find(".product_price");
+			var pp = product_node._child(".product_price");
 			if (pp) {
 				var price = product_data.price_min;
 				if (product_data.price_max) {
@@ -418,11 +418,11 @@ function showProductChanges(
 				}
 				pp.setContent(price + " zł");
 			}
-			var pl = product_node.find(".product_link");
+			var pl = product_node._child(".product_link");
 			if (pl) {
 				pl.setAttribute("href", product_data.full_link);
 			}
-			var pn = product_node.find(".product_name");
+			var pn = product_node._child(".product_name");
 			if (pn) {
 				pn.setContent(product_data.title);
 			}
@@ -437,7 +437,7 @@ function showProductChanges(
 			}
 		});
 		res.changes.removed.forEach((product_id) => {
-			var product_node = basket_node.find(`[data-product_id="${product_id}"]`);
+			var product_node = basket_node._child(`[data-product_id="${product_id}"]`);
 			expand(product_node, false, {
 				callback: () => {
 					product_node.remove();

@@ -411,7 +411,7 @@ function createSimpleList(params = {}) {
 		list.wrapper.setAttribute("data-count", list.values.length);
 
 		if (!list.setting_values) {
-			list.wrapper.dispatchChange();
+			list.wrapper._dispatch_change();
 		}
 		if (params.onChange && !list.during_change && !list.setting_data) {
 			params.onChange(list.values, list, changeListTarget);
@@ -426,7 +426,7 @@ function createSimpleList(params = {}) {
 		list.setListValues(value);
 
 		if (!options.quiet) {
-			list.wrapper.dispatchChange();
+			list.wrapper._dispatch_change();
 		}
 	};
 	list.wrapper.getValue = () => {

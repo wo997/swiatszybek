@@ -43,7 +43,7 @@ function getMiejscowoscPickerTarget(obj) {
 		console.warn("miejscowosc picker wrapper missing");
 		return;
 	}
-	var target = wrapper.find(".miejscowosc-picker-target");
+	var target = wrapper._child(".miejscowosc-picker-target");
 	if (!target) {
 		console.warn("miejscowosc picker target missing");
 		return;
@@ -59,7 +59,7 @@ function getMiejscowoscPickerList(obj) {
 		console.warn("miejscowosc picker wrapper missing");
 		return;
 	}
-	var list = wrapper.find(".miejscowosc-picker-list");
+	var list = wrapper._child(".miejscowosc-picker-list");
 	if (!list) {
 		console.warn("miejscowosc picker list missing");
 		return;

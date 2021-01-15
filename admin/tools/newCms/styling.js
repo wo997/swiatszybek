@@ -234,7 +234,7 @@ class NewCmsStyling {
 		);
 
 		const target_width = this.width;
-		this.content_responsive_wrapper.animate(
+		this.content_responsive_wrapper._animate(
 			`
                    0% {
                        width: ${content_responsive_wrapper_rect.width}px;

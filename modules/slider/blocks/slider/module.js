@@ -21,7 +21,7 @@ MODULE_BLOCK = {
                     </label>
                     <span class="field-title">
                       Zawartość
-                      <button onclick="MODULE_BLOCK.editSlide($(this).parent().next())" class="btn primary" style="white-space: nowrap;">
+                      <button onclick="MODULE_BLOCK.editSlide($(this).parent()._next())" class="btn primary" style="white-space: nowrap;">
                         Edytuj <i class="far fa-edit"></i>
                       </button>
                     </span>
@@ -45,8 +45,8 @@ MODULE_BLOCK = {
 			},
 			onChange: () => {
 				MODULE_BLOCK.form
-					.find(`[name="desktop-slider-height"]`)
-					.dispatchChange();
+					._child(`[name="desktop-slider-height"]`)
+					._dispatch_change();
 				resizeCallback();
 			},
 		});
@@ -79,8 +79,8 @@ MODULE_BLOCK = {
 		//name="desktop-slider-height"
 	},
 	setAllCSS: (parent) => {
-		var h = MODULE_BLOCK.form.find(`[name="desktop-slider-height"]`).getValue();
-		parent.findAll(".cms-container").forEach((e) => {
+		var h = MODULE_BLOCK.form._child(`[name="desktop-slider-height"]`).getValue();
+		parent._children(".cms-container").forEach((e) => {
 			//console.log(e);
 			e.setAttribute("data-desktop-min-height", h);
 		});

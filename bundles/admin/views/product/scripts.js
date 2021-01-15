@@ -74,7 +74,7 @@ function comboSelectValuesChanged(combo, options = {}) {
 		"attribute_values"
 	);
 	if (attribute_values) {
-		attribute_values.dispatchChange();
+		attribute_values._dispatch_change();
 	}
 }
 
@@ -151,7 +151,7 @@ function anythingValueChanged(anything_wrapper) {
 		"attribute_values"
 	);
 	if (attribute_values) {
-		attribute_values.dispatchChange();
+		attribute_values._dispatch_change();
 	}
 }
 

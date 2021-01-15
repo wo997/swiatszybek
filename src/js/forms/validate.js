@@ -17,7 +17,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 
 	// look above or inside
 	var field_title = null;
-	var previousNode = field.prev();
+	var previousNode = field._prev();
 	if (!field_title && previousNode) {
 		if (
 			previousNode.classList.contains("field-title") ||
@@ -25,14 +25,14 @@ function showFieldErrors(field, errors = [], options = {}) {
 		) {
 			field_title = previousNode;
 		} else {
-			var maybe = previousNode.find(".field-title");
+			var maybe = previousNode._child(".field-title");
 			if (maybe) {
 				field_title = maybe;
 			}
 		}
 	}
 	if (!field_title) {
-		var inside = field.find(".field-title");
+		var inside = field._child(".field-title");
 		if (inside) {
 			field_title = inside;
 		}
@@ -40,13 +40,13 @@ function showFieldErrors(field, errors = [], options = {}) {
 	if (!field_title) {
 		const field_wrapper = field._parent(".field-wrapper");
 		if (field_wrapper) {
-			field_title = field_wrapper.find(".field-title");
+			field_title = field_wrapper._child(".field-title");
 		}
 	}
 
 	if (field.classList.contains("warn-triangle")) {
 		if (field_title) {
-			var warning = field_title.find(".fa-exclamation-triangle");
+			var warning = field_title._child(".fa-exclamation-triangle");
 			if (warning) {
 				warning.remove();
 			}
@@ -70,12 +70,12 @@ function showFieldErrors(field, errors = [], options = {}) {
 			wrapper = wrapper.parent();
 		}
 
-		const inputElements = wrapper.next();
+		const inputElements = wrapper._next();
 		const validationBox = inputElements
-			? inputElements.find(".validation-error-box")
+			? inputElements._child(".validation-error-box")
 			: null;
 		const correctIndicator = inputElements
-			? inputElements.find(".input-error-indicator .correct")
+			? inputElements._child(".input-error-indicator .correct")
 			: null;
 		if (!correctIndicator && field.hasAttribute("data-validate")) {
 			console.error(
@@ -85,7 +85,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 			return;
 		}
 		const wrongIndicator = inputElements
-			? inputElements.find(".input-error-indicator .wrong")
+			? inputElements._child(".input-error-indicator .wrong")
 			: null;
 		const toggleErrorIcons = (type) => {
 			if (correctIndicator && wrongIndicator) {
@@ -104,7 +104,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 
 		if (wrong) {
 			toggleErrorIcons("wrong");
-			validationBox.find(".message").innerHTML = errors.join("<br>");
+			validationBox._child(".message").innerHTML = errors.join("<br>");
 			expand(validationBox, true, {
 				duration: 350,
 			});
@@ -138,7 +138,7 @@ function validateForm(form, params = {}) {
 	// var elem = params.form ? $(params.form) : document;
 	form = $(form);
 
-	var fields = form.findAll("[data-validate]");
+	var fields = form._children("[data-validate]");
 	for (const field of fields) {
 		if (field._parent(".hidden")) continue;
 
@@ -359,7 +359,7 @@ function fieldErrors(field) {
 
 function clearAllErrors(node = null) {
 	var fields = node
-		? $(node).findAll(`[data-validate]`)
+		? $(node)._children(`[data-validate]`)
 		: $$(`[data-form] [data-validate]`);
 	fields.forEach((field) => {
 		var errors = fieldErrors(field);

@@ -4,7 +4,7 @@
 const half_screen_height = window.innerHeight * 0.5;
 
 function getCenterCmsBlockInfo(cms_container) {
-	const dist_info = cms_container.findAll(".cms-block").reduce(
+	const dist_info = cms_container._children(".cms-block").reduce(
 		(dist_info, block, block_index) => {
 			const block_rect = block.getBoundingClientRect();
 			const dist_to_center =
@@ -25,7 +25,7 @@ domload(() => {
 	setTimeout(() => {
 		if (typeof preview_params !== "undefined") {
 			const cms_wrapper = $(`[data-cms-src="${preview_params.content_name}"]`);
-			const cms_blocks = cms_wrapper.findAll(".cms-block").filter((block) => {
+			const cms_blocks = cms_wrapper._children(".cms-block").filter((block) => {
 				return !block.findParentByAttribute("data-module-block", { skip: 1 });
 			});
 			const block_index = preview_params.dist_info.block_index;

@@ -14,7 +14,7 @@ document.addEventListener("click", (e) => {
 
 		if (option) {
 			select
-				.find("input")
+				._child("input")
 				.setValue(def(option.getAttribute("data-value"), option.innerHTML));
 		}
 	} else {

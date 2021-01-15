@@ -41,7 +41,7 @@ function showModal(name = null, params = {}) {
 	modal_wrapper.classList.toggle("visible", visible);
 	if (visible) {
 		var total = 0;
-		modal_wrapper.findAll(".modal_container > *").forEach((modal) => {
+		modal_wrapper._children(".modal_container > *").forEach((modal) => {
 			var shownow = false;
 			if (modal.id == name && !modal.classList.contains("visible")) {
 				shownow = true;
@@ -59,7 +59,7 @@ function showModal(name = null, params = {}) {
 
 			if (shownow) {
 				clearAllErrors(modal);
-				const modal_container = modal_wrapper.find(".modal_container");
+				const modal_container = modal_wrapper._child(".modal_container");
 				modal_container.appendChild(modal);
 
 				modal.style.pointerEvents = "none";
@@ -68,8 +68,8 @@ function showModal(name = null, params = {}) {
 				// why a copy? it's required to get bounding client rect to work properly on modal open
 				modal_container.insertAdjacentHTML("beforeend", modal.outerHTML);
 				const modal_copy = $(modal_container.lastElementChild);
-				const modal_copy_content = modal_copy.find("*");
-				const modal_content = modal.find("*");
+				const modal_copy_content = modal_copy._child("*");
+				const modal_content = modal._child("*");
 				modal_copy.id = "";
 
 				let dx = 0;
@@ -108,10 +108,10 @@ function showModal(name = null, params = {}) {
 						//console.log(123);
 						modal_copy_content.setContent(modal_content.innerHTML);
 						//modal_copy_content.innerHTML = modal_content.innerHTML;
-						modal_copy_content.findAll(".lazy").forEach((e) => {
+						modal_copy_content._children(".lazy").forEach((e) => {
 							e.classList.remove("lazy");
 						});
-						modal_copy_content.findAll("[data-height]").forEach((e) => {
+						modal_copy_content._children("[data-height]").forEach((e) => {
 							e.removeAttribute("data-height");
 						});
 					}, 0);
@@ -125,7 +125,7 @@ function showModal(name = null, params = {}) {
 				modal.style.opacity = "0.001";
 
 				const duration = 300;
-				modal_copy.animate(
+				modal_copy._animate(
 					`
                         0% {
                             opacity: 0;
@@ -137,7 +137,7 @@ function showModal(name = null, params = {}) {
 					duration
 				);
 
-				modal_copy_content.animate(
+				modal_copy_content._animate(
 					`
                         0% {
                             transform: translate(
@@ -248,11 +248,11 @@ function hideModal(name, isCancel = false) {
 
 		// cleanup validators
 		// TODO: we already clean them up on modal show hmmmm, remove?
-		modal.findAll("[data-validate]").forEach((e) => {
+		modal._children("[data-validate]").forEach((e) => {
 			e.classList.remove("required");
 		});
 
-		modal.findAll(".fa-exclamation-triangle").forEach((e) => {
+		modal._children(".fa-exclamation-triangle").forEach((e) => {
 			e.remove();
 		});
 
@@ -265,7 +265,7 @@ function hideModal(name, isCancel = false) {
 		);
 	}
 
-	modal_wrapper.findAll(".modal_container > *").forEach((modal) => {
+	modal_wrapper._children(".modal_container > *").forEach((modal) => {
 		if (modal.classList.contains("visible")) visible_modal_count++;
 	});
 
@@ -292,7 +292,7 @@ function isModalActive(name) {
 		return false;
 	}
 	while (true) {
-		next = next.next();
+		next = next._next();
 		if (!next) {
 			break; // top most :)
 		}
@@ -306,7 +306,7 @@ function isModalActive(name) {
 }
 
 function setModalTitle(modal, title) {
-	$(modal).find(`.custom-toolbar .title`).innerHTML = title;
+	$(modal)._child(`.custom-toolbar .title`).innerHTML = title;
 }
 
 window.addEventListener("mousedown", (event) => {

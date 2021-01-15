@@ -3,7 +3,7 @@
 function addMessageBox(elem, message, params = {}) {
 	elem = $(elem);
 
-	var mb = elem.find(".message-box");
+	var mb = elem._child(".message-box");
 	if (mb) {
 		toggleMessageBox(elem, false, {
 			callback: () => {
@@ -70,7 +70,7 @@ function showMessageModal(message, options) {
 function toggleMessageBox(elem, show = null, options = {}) {
 	elem = $(elem);
 	var duration = options.instant ? 0 : 350;
-	expand(elem.find(".message-box"), show, {
+	expand(elem._child(".message-box"), show, {
 		duration: duration,
 	});
 	if (options.callback) {

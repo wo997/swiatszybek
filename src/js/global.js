@@ -291,7 +291,7 @@ function setValue(input, value = null, params = {}) {
 		isEquivalent(input.getValue(), value)
 	) {
 		if (!params.quiet) {
-			input.dispatchChange();
+			input._dispatch_change();
 		}
 		return;
 	}
@@ -347,7 +347,7 @@ function setValue(input, value = null, params = {}) {
 		}
 	}
 	if (!params.quiet) {
-		input.dispatchChange();
+		input._dispatch_change();
 	}
 }
 
@@ -543,7 +543,7 @@ function addMissingDirectChildren(
 	html,
 	position = "beforeend"
 ) {
-	if (!$(parent).directChildren().find(isMissingCallback)) {
+	if (!$(parent)._direct_children().find(isMissingCallback)) {
 		parent.insertAdjacentHTML(position, html);
 	}
 }
@@ -701,7 +701,7 @@ function removeSelection() {
 		const selection = window.getSelection();
 		if (selection.empty) {
 			// Chrome
-			selection.def();
+			selection.empty();
 		} else if (selection.removeAllRanges) {
 			// Firefox
 			selection.removeAllRanges();

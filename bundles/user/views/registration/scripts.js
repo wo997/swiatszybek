@@ -49,7 +49,7 @@ function register(validate = true) {
 		params: getFormData(registerForm),
 		success: (res) => {
 			if (res.message && res.error_field_name) {
-				markFieldWrong(registerForm.find(`[name="${res.error_field_name}"]`), [
+				markFieldWrong(registerForm._child(`[name="${res.error_field_name}"]`), [
 					res.message,
 				]);
 			} else if (res.message) {

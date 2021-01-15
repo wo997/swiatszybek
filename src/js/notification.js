@@ -73,7 +73,7 @@ function showNotification(message, params = {}) {
 	};
 	notification.addDismissTimeout();
 
-	const countdown = notification.find(".countdown");
+	const countdown = notification._child(".countdown");
 	if (countdown) {
 		createCountdown(countdown, {
 			size: 26,

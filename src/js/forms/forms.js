@@ -66,7 +66,7 @@ function setFormData(data, form, params = {}) {
 
 	Object.entries(data).forEach(([name, value]) => {
 		if (typeof value === "object") {
-			var sub_form = form.find(`[data-form="${name}"]`);
+			var sub_form = form._child(`[data-form="${name}"]`);
 			if (sub_form) {
 				// not always found, thats tricky
 				return setFormData(value, sub_form, params);
@@ -135,7 +135,7 @@ function getFormData(form, params = {}) {
 	var excludeHidden = form.hasAttribute("data-exclude-hidden");
 
 	$(form)
-		.findAll(`[${find_by}]`)
+		._children(`[${find_by}]`)
 		.forEach((e) => {
 			if (excludeHidden && e._parent(".hidden, .form-hidden")) {
 				return;
@@ -215,15 +215,15 @@ function registerForms(form = null) {
 			`[data-form] [name]:not(.change-registered)`
 		);
 	} else {
-		//inputs = $(form).findAll("[data-validate]:not(.change-registered)");
-		inputs = form.findAll(`[name]:not(.change-registered)`);
+		//inputs = $(form)._children("[data-validate]:not(.change-registered)");
+		inputs = form._children(`[name]:not(.change-registered)`);
 
 		form.addEventListener("keydown", (e) => {
 			// IT DOES NOT WORK, it's because we register all forms at once every time, these need to be changed
 			// btw u might wanna change registered to abbrev like reg
 			setTimeout(() => {
 				if (e.key === "Enter") {
-					var submit = $(form).find("[data-submit]");
+					var submit = $(form)._child("[data-submit]");
 					if (submit) {
 						submit.click();
 					}
@@ -265,7 +265,7 @@ function registerForms(form = null) {
 		) {
 			// TODO: what if the user defined the field wrapper already? should be left as it is
 			obj.insertAdjacentHTML("afterend", `<div class="field-wrapper"></div>`);
-			var field_wrapper = obj.next();
+			var field_wrapper = obj._next();
 			field_wrapper.appendChild(obj);
 			if (field.classList.contains("inline")) {
 				field_wrapper.classList.add("inline");

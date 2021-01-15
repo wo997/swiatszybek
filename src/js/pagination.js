@@ -41,7 +41,7 @@ function renderPagination(
 
 	paginationElement.setContent(output);
 	paginationElement
-		.findAll(".pagination_item:not(.current)")
+		._children(".pagination_item:not(.current)")
 		.forEach((elem) => {
 			var i = parseInt(elem.getAttribute("data-index"));
 			i = getSafePageIndex(i, pageCount);
@@ -49,7 +49,7 @@ function renderPagination(
 				callback(i);
 			});
 		});
-	paginationElement.findAll(".myPage").forEach((elem) => {
+	paginationElement._children(".myPage").forEach((elem) => {
 		elem.addEventListener("keypress", (event) => {
 			if (event.code == "Enter") {
 				var i = parseInt(elem.value);

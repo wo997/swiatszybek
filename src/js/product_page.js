@@ -282,8 +282,8 @@ function newComment() {
 		url: "/addComment",
 		params: {
 			product_id: PRODUCT_ID,
-			pseudonim: form.find(".pseudonim").value,
-			tresc: form.find(".tresc").value,
+			pseudonim: form._child(".pseudonim").value,
+			tresc: form._child(".tresc").value,
 			rating: RATING,
 		},
 		success: (res) => {

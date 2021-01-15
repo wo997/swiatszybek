@@ -4,7 +4,7 @@ if (window.innerWidth >= 1200) {
 	window.addEventListener("DOMContentLoaded", () => {
 		$$("nav > div").forEach((e) => {
 			e.addEventListener("mouseenter", () => {
-				var x = e.find(".float-category");
+				var x = e._child(".float-category");
 				if (!x || !x.textContent) return;
 				var rect = e.getBoundingClientRect();
 
@@ -337,7 +337,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	});
 	main_search_wrapper.addEventListener("mousemove", (event) => {
 		if (event.target.classList.contains("result")) {
-			main_search_wrapper.findAll(".selected").forEach((e) => {
+			main_search_wrapper._children(".selected").forEach((e) => {
 				e.classList.remove("selected");
 			});
 			event.target.classList.add("selected");
@@ -348,7 +348,7 @@ window.addEventListener("DOMContentLoaded", () => {
 		var down = event.key == "ArrowDown";
 		var up = event.key == "ArrowUp";
 
-		var selected = main_search_wrapper.find(".selected");
+		var selected = main_search_wrapper._child(".selected");
 		var select = null;
 
 		if (event.key == "Enter") {
@@ -372,25 +372,25 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		if (selected) {
 			if (down) {
-				select = selected.next();
+				select = selected._next();
 			} else if (up) {
-				select = selected.prev();
+				select = selected._prev();
 			}
 		}
 
 		if (!selected) {
 			if (down) {
 				if (!select) {
-					select = main_search_wrapper.find(".result");
+					select = main_search_wrapper._child(".result");
 				}
 			} else if (up) {
 				if (!select) {
-					select = main_search_wrapper.find(".result:last-child");
+					select = main_search_wrapper._child(".result:last-child");
 				}
 			}
 		}
 
-		main_search_wrapper.findAll(".selected").forEach((e) => {
+		main_search_wrapper._children(".selected").forEach((e) => {
 			e.classList.remove("selected");
 		});
 

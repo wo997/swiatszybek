@@ -15,11 +15,11 @@ function setCategoryPickerValue(element, value, params = {}) {
 		value: value,
 	};
 
-	element.findAll(".expand_y").forEach((e) => {
+	element._children(".expand_y").forEach((e) => {
 		e.classList.add("hidden");
 		e.style.height = "0";
 	});
-	element.findAll(".expand_arrow").forEach((e) => {
+	element._children(".expand_arrow").forEach((e) => {
 		e.classList.remove("open");
 	});
 
@@ -28,7 +28,7 @@ function setCategoryPickerValue(element, value, params = {}) {
 		value = value.map((e) => e.toString());
 	}
 	var example = null;
-	element.findAll("[data-category_id]").forEach((e) => {
+	element._children("[data-category_id]").forEach((e) => {
 		if (!example) example = e;
 
 		e.toggleAttribute("disabled", false);
@@ -52,7 +52,7 @@ function setCategoryPickerValue(element, value, params = {}) {
 
 	if (params.disable) {
 		params.disable.forEach((i) => {
-			var el = element.find(`[data-category_id="${i}"]`);
+			var el = element._child(`[data-category_id="${i}"]`);
 			if (el) {
 				el.toggleAttribute("disabled", true);
 				el.checked = false;
@@ -61,14 +61,14 @@ function setCategoryPickerValue(element, value, params = {}) {
 	}
 	if (params.disable_with_children) {
 		params.disable_with_children.forEach((i) => {
-			var el = element.find(`[data-category_id="${i}"]`);
+			var el = element._child(`[data-category_id="${i}"]`);
 			if (el) {
 				el.toggleAttribute("disabled", true);
 				el.checked = false;
 				el.parent()
 					.parent()
-					.next()
-					.findAll("[data-category_id]")
+					._next()
+					._children("[data-category_id]")
 					.forEach((xu) => {
 						xu.toggleAttribute("disabled", true);
 						xu.checked = false;
@@ -87,8 +87,8 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 	if (alsoCurrent) {
 		var parent = node._parent(".category-picker-row, .categories");
 		if (parent) {
-			var nodeExpander = parent.next();
-			if (nodeExpander && parent.find(".expand_arrow")) {
+			var nodeExpander = parent._next();
+			if (nodeExpander && parent._child(".expand_arrow")) {
 				return expandCategoriesAbove(nodeExpander, false);
 			}
 		}
@@ -100,11 +100,11 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 		if (!parent) {
 			return;
 		}
-		var btn = parent.prev();
+		var btn = parent._prev();
 		if (!btn) {
 			return;
 		}
-		var submenu = btn.next();
+		var submenu = btn._next();
 		if (!submenu) {
 			return;
 		}
@@ -121,17 +121,17 @@ function categoryChanged(el) {
 	var singleselect = element.hasAttribute("data-single");
 	if (singleselect) {
 		if (el.checked) {
-			element.findAll("[data-category_id]").forEach((e) => {
+			element._children("[data-category_id]").forEach((e) => {
 				if (e != el) e.checked = false;
 			});
-		} else if (!element.find("[data-category_id]:checked")) {
+		} else if (!element._child("[data-category_id]:checked")) {
 			el.checked = true;
 		}
 	}
 
 	var value = "";
 	if (singleselect) {
-		element.findAll("[data-category_id]").forEach((e) => {
+		element._children("[data-category_id]").forEach((e) => {
 			if (e.checked) {
 				value = parseInt(e.getAttribute("data-category_id"));
 				return;
@@ -139,7 +139,7 @@ function categoryChanged(el) {
 		});
 	} else {
 		checked = [];
-		element.findAll("[data-category_id]").forEach((e) => {
+		element._children("[data-category_id]").forEach((e) => {
 			if (e.checked) {
 				checked.push(parseInt(e.getAttribute("data-category_id")));
 			}
@@ -152,7 +152,7 @@ function categoryChanged(el) {
 		var expandWhenClosed = el
 			.parent()
 			.parent()
-			.find(".expand_arrow:not(.open)");
+			._child(".expand_arrow:not(.open)");
 		if (expandWhenClosed) {
 			expandWhenClosed.click();
 		}
@@ -169,24 +169,24 @@ function loadCategoryPicker(
 		type: "text",
 		success: (c) => {
 			$$(`.category-picker[data-source="${source}"]`).forEach((e) => {
-				e.directChildren().forEach((e) => {
+				e._direct_children().forEach((e) => {
 					e.remove();
 				});
 				e.insertAdjacentHTML("afterbegin", c);
 
 				if (options.skip) {
-					var kid = e.find(`.category-picker-column `.repeat(options.skip));
+					var kid = e._child(`.category-picker-column `.repeat(options.skip));
 					if (kid) {
 						e.innerHTML = kid.innerHTML;
 					}
 				} else {
-					var main = e.find(".category_name");
+					var main = e._child(".category_name");
 					if (main)
 						main.innerHTML = def(options.main_category, "Kategoria główna");
 
 					var parent_id = e.getAttribute("scope_parent_id");
 					if (parent_id && parent_id != 0) {
-						e.innerHTML = e.find(`[data-parent_id="${parent_id}"]`).outerHTML;
+						e.innerHTML = e._child(`[data-parent_id="${parent_id}"]`).outerHTML;
 					}
 				}
 			});

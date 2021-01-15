@@ -6,18 +6,18 @@ document.addEventListener("click", (e) => {
 	var option = target.findParentByTagName("radio-option");
 	if (option) {
 		var input = option.findParentByTagName("radio-input");
-		input.findAll("radio-option").forEach((e) => {
+		input._children("radio-option").forEach((e) => {
 			e.classList.toggle("selected", e === option);
 		});
-		input.dispatchChange();
+		input._dispatch_change();
 	}
 });
 
 function getRadioInputValue(input) {
 	var value = "";
-	var selected = input.find(".selected");
+	var selected = input._child(".selected");
 	if (!selected) {
-		selected = input.find("[data-default]");
+		selected = input._child("[data-default]");
 	}
 	if (selected) {
 		value = selected.getAttribute("value");
@@ -26,9 +26,9 @@ function getRadioInputValue(input) {
 }
 
 function setRadioInputValue(input, value, params = {}) {
-	var option_exists = input.find(`radio-option[value="${value}"]`);
+	var option_exists = input._child(`radio-option[value="${value}"]`);
 	if (!!option_exists) {
-		input.findAll(`radio-option`).forEach((e) => {
+		input._children(`radio-option`).forEach((e) => {
 			e.classList.toggle("selected", e.getAttribute("value") == value);
 		});
 	}

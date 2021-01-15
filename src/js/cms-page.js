@@ -9,7 +9,7 @@ function scrollCallback() {
 			var a = e.getAttribute("data-animation");
 			e.removeAttribute("data-animation");
 
-			e = e.find(".cms-block-content");
+			e = e._child(".cms-block-content");
 			if (a.indexOf("m_left") != -1) {
 				e.style.transform = "translate(100px,0)";
 			}
@@ -93,8 +93,8 @@ window.addEventListener("DOMContentLoaded", () => {
 		var swiper_all = e.parent();
 		var clprev = sliderName + "_prev_btn";
 		var clnext = sliderName + "_next_btn";
-		swiper_all.find(".swiper-button-prev").classList.add(clprev);
-		swiper_all.find(".swiper-button-next").classList.add(clnext);
+		swiper_all._child(".swiper-button-prev").classList.add(clprev);
+		swiper_all._child(".swiper-button-next").classList.add(clnext);
 
 		var swiper = new Swiper("." + sliderName, {
 			speed: 700,
@@ -124,7 +124,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	if (window.innerWidth < 768) {
 		$$("table").forEach((table) => {
-			var header = table.find("tr").findAll("td");
+			var header = table._child("tr")._children("td");
 			if (header.length <= 2) return;
 			//if (header[0].innerText.trim() != "") return;
 			var headers = [];
@@ -139,9 +139,9 @@ window.addEventListener("DOMContentLoaded", () => {
 				);
 			}
 			var out = "";
-			var rows = table.find("tr");
+			var rows = table._child("tr");
 			for (i = 1; i < rows.length; i++) {
-				var cells = rows[i].find("td");
+				var cells = rows[i]._child("td");
 				for (a = 0; a < cells.length; a++) {
 					out +=
 						"<div style='margin:8px 0; margin-right:5px'>" +

@@ -757,7 +757,7 @@ if (!window.jscolor) {
 					// Always dispatch changes after detaching outstanding mouse handlers,
 					// in case some user interaction will occur in user's onchange callback
 					// that would intrude with current mouse events
-					jsc.dispatchChange(thisObj);
+					jsc._dispatch_change(thisObj);
 				};
 			},
 

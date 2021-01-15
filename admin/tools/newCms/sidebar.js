@@ -282,7 +282,7 @@ class NewCmsSidebar {
 		}
 
 		const target_offset_x = is_new ? sidebar_width : -sidebar_width;
-		target_menu.animate(
+		target_menu._animate(
 			`
                 0% {
                     transform: translate(${target_offset_x}px,0px);
@@ -306,7 +306,7 @@ class NewCmsSidebar {
 
 		if (current_menu) {
 			const current_offset_x = is_new ? -sidebar_width : sidebar_width;
-			current_menu.animate(
+			current_menu._animate(
 				`
                     0% {
                         transform: translate(0px,0px);

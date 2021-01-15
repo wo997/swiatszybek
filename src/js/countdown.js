@@ -37,7 +37,7 @@ function createCountdown(node, options) {
         </div>
     `);
 
-	const countdown_number = node.find(".countdown_number");
+	const countdown_number = node._child(".countdown_number");
 
 	let countdown_time = Math.round(options.duration / 1000);
 

@@ -55,7 +55,7 @@ function registerImageInputs() {
 			btn.classList.toggle("primary", !selected);
 			btn.classList.toggle("secondary", selected);
 			if (!input.setting_value) {
-				input.dispatchChange();
+				input._dispatch_change();
 			}
 			input.classList.toggle("selected", selected);
 		});
@@ -80,7 +80,7 @@ function registerImageInputs() {
 			delete input.setting_value;
 
 			if (!options.quiet) {
-				input.dispatchChange();
+				input._dispatch_change();
 			}
 		};
 

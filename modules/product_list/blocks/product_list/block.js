@@ -5,7 +5,7 @@ MODULE_BLOCK = {
 	formOpen: (params, form) => {
 		loadCategoryPicker("product_categories", { skip: 2 }, () => {
 			form
-				.find(`[name="category_ids"]`)
+				._child(`[name="category_ids"]`)
 				.setValue(def(params["category_ids"], "[]"));
 		});
 	},

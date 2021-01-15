@@ -11,8 +11,8 @@ function mobileDrop(obj) {
 }
 
 function expandMenu(elem, btn, open = null, options = {}) {
-	var expand_btn = btn.find(".expand_arrow");
-	if (!expand_btn || !btn.next().classList.contains("expand_y")) {
+	var expand_btn = btn._child(".expand_arrow");
+	if (!expand_btn || !btn._next().classList.contains("expand_y")) {
 		return;
 	}
 
@@ -39,17 +39,17 @@ function expandMenu(elem, btn, open = null, options = {}) {
       }
     `;
 	}
-	expand_btn.find(".fas").animate(keyframes, def(options.duration, 200));
+	expand_btn._child(".fas")._animate(keyframes, def(options.duration, 200));
 
 	btn.classList.toggle("open", expand(elem, open, options));
 
 	if (options.single && open) {
 		btn
 			.parent()
-			.findAll(".menu_item:not(.current-route) .expand_arrow.open")
+			._children(".menu_item:not(.current-route) .expand_arrow.open")
 			.forEach((e) => {
 				if (e != expand_btn) {
-					expandMenu(e.parent().next(), e.parent());
+					expandMenu(e.parent()._next(), e.parent());
 				}
 			});
 	}
@@ -75,12 +75,12 @@ function expand(elem, show = null, options = {}) {
 		return;
 	}
 
-	let animation_node = elem.directChildren().find((e) => {
+	let animation_node = elem._direct_children().find((e) => {
 		return e.classList.contains("expander_space");
 	});
 	if (!animation_node) {
 		elem.insertAdjacentHTML("afterbegin", "<div class='expander_space'></div>");
-		animation_node = elem.find(".expander_space");
+		animation_node = elem._child(".expander_space");
 		elem.insertAdjacentHTML("beforeend", "<div class='expander_space'></div>");
 	}
 
@@ -107,7 +107,7 @@ function expand(elem, show = null, options = {}) {
 	let m1 = (show ? -25 : 0) + "px";
 	let m2 = (!show ? -25 : 0) + "px";
 
-	animation_node.animate(
+	animation_node._animate(
 		`
             0% {
                 margin-top: ${m1};
@@ -119,7 +119,7 @@ function expand(elem, show = null, options = {}) {
 		duration
 	);
 
-	elem.animate(
+	elem._animate(
 		`
             0% {
                 height: ${h1};
@@ -165,7 +165,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	});
 
 	$$(".expandClick").forEach((e) => {
-		e.find(".expandHeader").addEventListener("click", () => {
+		e._child(".expandHeader").addEventListener("click", () => {
 			e.classList.toggle("expanded");
 		});
 	});

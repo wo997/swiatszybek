@@ -348,8 +348,7 @@ function createListCompontent(
 									const offset_0 = Math.round(rect_before.top - rect_after.top);
 
 									if (Math.abs(offset_0) > 2) {
-										animate(
-											child,
+										child._animate(
 											`
                                                 0% {transform:translateY(${offset_0}px)}
                                                 100% {transform:translateY(0px)}
@@ -658,7 +657,7 @@ function createComponent(comp, parent_comp, _data, options) {
 				}
 			});
 			sub_node.addEventListener("input", () => {
-				sub_node.dispatchChange();
+				sub_node._dispatch_change();
 			});
 		}
 	});

@@ -56,7 +56,7 @@ function login() {
 		success: (res) => {
 			if (res.message && res.error_field_name) {
 				showFieldErrors(
-					loginForm.find(`[name="${res.error_field_name}"]`),
+					loginForm._child(`[name="${res.error_field_name}"]`),
 					[res.message],
 					{ scroll: true }
 				);

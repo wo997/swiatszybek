@@ -13,9 +13,9 @@ function registerFormHistory(form) {
 
 	const dhb = form.getAttribute("data-history-buttons");
 
-	const btns = dhb ? $(dhb) : form.find(".history-buttons");
+	const btns = dhb ? $(dhb) : form._child(".history-buttons");
 
-	if (btns && !btns.find(".undo")) {
+	if (btns && !btns._child(".undo")) {
 		form.history_buttons = btns;
 		btns.insertAdjacentHTML(
 			"afterbegin",
@@ -24,10 +24,10 @@ function registerFormHistory(form) {
         <button class="btn primary redo" data-tooltip="Ponów (Ctrl + Y)"> <i class="fas fa-redo-alt"></i> </button>
       `
 		);
-		btns.find(".btn.undo").addEventListener("click", () => {
+		btns._child(".btn.undo").addEventListener("click", () => {
 			formHistoryUndo(form);
 		});
-		btns.find(".btn.redo").addEventListener("click", () => {
+		btns._child(".btn.redo").addEventListener("click", () => {
 			formHistoryRedo(form);
 		});
 	}
@@ -113,13 +113,13 @@ document.addEventListener("keydown", (ev) => {
 function formHistoryChange(form) {
 	if (form.history_buttons) {
 		form.history_buttons
-			.find(".btn.undo")
+			._child(".btn.undo")
 			.toggleAttribute(
 				"disabled",
 				form.history_step_back >= form.history.length - 1
 			);
 		form.history_buttons
-			.find(".btn.redo")
+			._child(".btn.redo")
 			.toggleAttribute("disabled", form.history_step_back == 0);
 	}
 }

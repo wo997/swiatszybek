@@ -639,7 +639,7 @@ class NewCms {
 		this.caseEmptyHint();
 
 		if (!options.quiet) {
-			this.content_node.dispatchChange();
+			this.content_node._dispatch_change();
 		}
 
 		// maybe we could animate it back as well, optional feature
@@ -1050,7 +1050,7 @@ class NewCms {
 			delay_grabbed_rect_node_fadeout = 250;
 			side_block.classList.remove("is_grabbed");
 			side_block.style.transform = "";
-			side_block.animate(
+			side_block._animate(
 				`
                     0% {opacity: 0; transform: scale(0.65)}
                     100% {opacity: 1; transform: scale(1)}
@@ -1058,7 +1058,7 @@ class NewCms {
 				delay_grabbed_rect_node_fadeout
 			);
 
-			this.rearrange_controls.rearrange_grabbed_rect_node.animate(
+			this.rearrange_controls.rearrange_grabbed_rect_node._animate(
 				`
                     0% {opacity: 1;}
                     100% {opacity: 0;}
@@ -1093,7 +1093,7 @@ class NewCms {
 
 			// copy fade out
 			delay_rearrange_node_fadeout = 250;
-			this.rearrange_node.animate(
+			this.rearrange_node._animate(
 				`
                     0% {opacity: 1; transform: ${this.rearrange_node.style.transform} scale(1)}
                     100% {opacity: 0; transform: ${this.rearrange_node.style.transform} scale(0.65)}
@@ -1410,7 +1410,7 @@ class NewCms {
                 `;
 			}
 
-			block.animate(keyframes, duration);
+			block._animate(keyframes, duration);
 		});
 
 		all_animatable_blocks.forEach((block) => {

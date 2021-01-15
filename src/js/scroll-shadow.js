@@ -27,8 +27,8 @@ function registerScrollShadows() {
           `
 			);
 
-			var shadow_left = e.prev();
-			var shadow_right = e.next();
+			var shadow_left = e._prev();
+			var shadow_right = e._next();
 
 			var panelScrollCallback = () => {
 				var w = e.getBoundingClientRect().width;
@@ -57,8 +57,8 @@ function registerScrollShadows() {
           `
 			);
 
-			var shadow_top = e.prev();
-			var shadow_bottom = e.next();
+			var shadow_top = e._prev();
+			var shadow_bottom = e._next();
 
 			var panelScrollCallback = () => {
 				var h = e.getBoundingClientRect().height;

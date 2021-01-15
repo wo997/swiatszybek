@@ -60,5 +60,5 @@ function registerRangeSliders() {
 
 function setRangeSliderValue(slider, value) {
 	slider.value = value;
-	slider.dispatchChange();
+	slider._dispatch_change();
 }

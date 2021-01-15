@@ -110,7 +110,7 @@ function goMobile() {
 
 	var filters = $(".search-wrapper .filters");
 
-	if (!filters.find("*")) {
+	if (!filters._child("*")) {
 		$(`.search-filters-btn`).style.display = "none";
 	} else {
 		$(`#searchFilters .modal-body .scroll-panel > div`).appendChild(filters);
@@ -127,7 +127,7 @@ function goMobile() {
 		"afterend",
 		"<div class='horizontal-scroll-wrapper'></div>"
 	);
-	var container = scroll_wrapper.next();
+	var container = scroll_wrapper._next();
 	container.appendChild(scroll_wrapper);
 
 	registerScrollShadows();
@@ -185,12 +185,12 @@ function searchProducts(options = {}) {
 	var attribute_value_ids = [];
 	$$(".combo-select-wrapper[data-attribute_id]").forEach((list) => {
 		var attribute_value_sub_ids = [];
-		list.findAll(":checked").forEach((checkbox) => {
+		list._children(":checked").forEach((checkbox) => {
 			var subCheckboxes = checkbox
 				._parent(".attributes-list-wrapper")
-				.find(".attribute-list");
+				._child(".attribute-list");
 			var anySubChecked = subCheckboxes
-				? subCheckboxes.find(":checked")
+				? subCheckboxes._child(":checked")
 				: false;
 			if (!anySubChecked) {
 				attribute_value_sub_ids.push(checkbox.value);
@@ -259,12 +259,12 @@ function searchProducts(options = {}) {
 			var was_h = productListAnimationNode.getBoundingClientRect().height;
 			productListSwapContentNode.setContent(res.content);
 			setProductListGridDimensions(
-				productListSwapContentNode.find(".product_list_module.grid")
+				productListSwapContentNode._child(".product_list_module.grid")
 			);
 			lazyLoadImages(false);
 			var h = productListSwapContentNode.getBoundingClientRect().height;
 
-			productListAnimationNode.animate(
+			productListAnimationNode._animate(
 				`
                     0% {
                         height: ${Math.round(was_h)}px;
@@ -277,7 +277,7 @@ function searchProducts(options = {}) {
 			);
 
 			productListSwapBackgroundNode.style.visibility = "";
-			productListSwapNode.animate(
+			productListSwapNode._animate(
 				`
                     0% {
                         opacity: 0;
@@ -292,7 +292,7 @@ function searchProducts(options = {}) {
 						productListSwapBackgroundNode.style.visibility = "hidden";
 						searchingProducts = false;
 						productListNode.setContent(productListSwapNode.innerHTML);
-						productListSwapContentNode.def();
+						productListSwapContentNode.empty();
 						window.tooltip.resizeCallback();
 						productListLoaded();
 					},
@@ -305,7 +305,7 @@ function searchProducts(options = {}) {
               <button class='btn primary medium randomize_btn' onclick='beforeSearchProducts()'><span class='randomize_text'>Losuj więcej</span> <span class='randomize_loader_wrapper'><i class='randomize_loader fas fa-dice-three'></i></span></button>
             `);
 				} else {
-					paginationNode.def();
+					paginationNode.empty();
 				}
 			} else {
 				renderPagination(paginationNode, currPage, res.pageCount, (i) => {
@@ -318,7 +318,7 @@ function searchProducts(options = {}) {
 			}
 
 			$$(".filters_description").forEach((e) => {
-				e.animate(ANIMATIONS.blink, duration);
+				e._animate(ANIMATIONS.blink, duration);
 				setTimeout(() => {
 					var out = [];
 					if (searchParams.search) {
@@ -342,7 +342,7 @@ function searchProducts(options = {}) {
 
 					out.push(
 						`Sortuj: <span style='font-weight:600'>${
-							$(`[value="${searchParams.order_by}"]`).next().textContent
+							$(`[value="${searchParams.order_by}"]`)._next().textContent
 						}</span>`
 					);
 					e.innerHTML = out.join(", ");
@@ -378,9 +378,9 @@ function beforeSearchProducts() {
 
 function attributeSelectionChange(checkbox, hasChildren) {
 	if (checkbox && hasChildren) {
-		var list = checkbox.parent().next();
+		var list = checkbox.parent()._next();
 		if (!checkbox.checked) {
-			list.findAll(":checked").forEach((subCheckbox) => {
+			list._children(":checked").forEach((subCheckbox) => {
 				subCheckbox.setValue(0);
 			});
 		}
@@ -439,7 +439,7 @@ function productsSearchChange(input, instant = false) {
 }
 
 function setMobileSearchBtnOpacity(input) {
-	input.parent().find(".search-btn").style.opacity =
+	input.parent()._child(".search-btn").style.opacity =
 		input.getValue() !== searchParams.search ? 1 : 0;
 }
 

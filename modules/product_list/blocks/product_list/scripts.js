@@ -88,7 +88,7 @@ function productListLoaded() {
 	$$(".product_list_module .product-row").forEach((e) => {
 		// onclick='addVariantToBasket(${basket_item.variant_id},-1,{show_modal:true})'
 
-		if (!e.find(".product-actions")) {
+		if (!e._child(".product-actions")) {
 			e.insertAdjacentHTML(
 				"beforeend",
 				/*html*/ `<div class='product-actions'>
@@ -182,7 +182,7 @@ function currentlyFocusedProduct(node) {
 			if (prev_img.getAttribute("data-src") != default_src) {
 				const duration = 150;
 
-				prev_img.animate(`0%{opacity:1}100%{opacity:0}`, duration);
+				prev_img._animate(`0%{opacity:1}100%{opacity:0}`, duration);
 
 				setTimeout(() => {
 					switchImage(prev_img, default_src);
@@ -260,7 +260,7 @@ function nextProductImageSlide(img, first = false) {
 
 	const duration = 150;
 
-	img.animate(`0%{opacity:1}100%{opacity:0}`, duration);
+	img._animate(`0%{opacity:1}100%{opacity:0}`, duration);
 
 	setTimeout(() => {
 		if (animated_product_img != img) {
