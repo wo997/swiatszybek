@@ -329,7 +329,7 @@ function createListCompontent(
 
 								if (add) {
 									const row_data = node._data[diff_info.to];
-									const the_row = child.find(".my_list_row");
+									const the_row = child._child(".my_list_row");
 									createRowCallback(the_row, node, row_data, {});
 									expand(child, true, { duration: animation_duration });
 								} else if (remove) {
@@ -627,7 +627,7 @@ function createComponent(comp, parent_comp, _data, options) {
 	}
 
 	node._nodes = {};
-	node.findAll(`[data-node]`).forEach((n) => {
+	node._children(`[data-node]`).forEach((n) => {
 		node._nodes[n.dataset.node] = n;
 	});
 
@@ -638,7 +638,7 @@ function createComponent(comp, parent_comp, _data, options) {
 	// kinda weird but it creates the checkbox subcomponent
 	registerForms();
 
-	node._bindNodes = node.findAll(`[data-bind]`);
+	node._bindNodes = node._children(`[data-bind]`);
 
 	node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
 		const bind_var = sub_node.dataset.bind;
@@ -752,7 +752,7 @@ function propagateComponentData(comp) {
 	if (subscribers) {
 		for (let i = subscribers.length - 1; i >= 0; i--) {
 			const subscribe = subscribers[i];
-			if (document.body.contains(subscribe.receiver)) {
+			if (subscribe.receiver._in_body()) {
 				subscribe.fetch(node, subscribe.receiver);
 			} else {
 				// remove subscriber reference - kinda lazy garbage collector

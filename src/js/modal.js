@@ -1,7 +1,12 @@
 /* js[global] */
 
 window.addEventListener("DOMContentLoaded", function () {
-	registerModals();
+    registerModals();
+    
+	const modal_wrapper = $("#modal-wrapper");
+	modal_wrapper.("touchmove", (ev) => {
+		ev.preventDefault();
+	});
 });
 function registerModals() {
 	$$("[data-modal]").forEach((e) => {
