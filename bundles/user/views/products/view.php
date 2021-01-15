@@ -172,7 +172,7 @@ function showCategory($category, $level = 0)
                         $html .= "<label class='attribute-label'>";
                         $html .= "<input type='checkbox' name='chk_" . $value_data["value_id"] . "' value='" . $value_data["value_id"] . "'";
                         $html .= " onchange='attributeSelectionChange(this,";
-                        $html .= nonull($value_data, "_children", []) ? "true" : "false";
+                        $html .= def($value_data, "_children", []) ? "true" : "false";
                         $html .= ")'";
                         $html .= ">";
                         $html .= "<div class='checkbox'></div> ";

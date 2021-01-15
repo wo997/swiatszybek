@@ -130,7 +130,7 @@ function createListRowCompontent(node, parent, _data = undefined) {
 								node._data.row_index +
 									1 +
 									" / " +
-									nonull(node._data.list_length, 0)
+									def(node._data.list_length, 0)
 							);
 						}
 
@@ -722,7 +722,7 @@ function setComponentData(comp, _data = undefined, options = {}) {
 
 	const equal = isEquivalent(node._prev_data, node._data);
 
-	if (equal && nonull(options.force_render, false) === false) {
+	if (equal && def(options.force_render, false) === false) {
 		return;
 	}
 

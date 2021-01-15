@@ -39,7 +39,7 @@ function expandMenu(elem, btn, open = null, options = {}) {
       }
     `;
 	}
-	expand_btn.find(".fas").animate(keyframes, nonull(options.duration, 200));
+	expand_btn.find(".fas").animate(keyframes, def(options.duration, 200));
 
 	btn.classList.toggle("open", expand(elem, open, options));
 

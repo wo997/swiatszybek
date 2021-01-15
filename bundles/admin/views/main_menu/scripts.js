@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				title: "Podmenu",
 				width: "20%",
 				render: (r) => {
-					return `${nonull(
+					return `${def(
 						escapeHTML(r.subcategories),
 						`<i class="fas fa-ban"></i> Brak`
 					)}`;
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				title: "W magazynie",
 				width: "10%",
 				render: (r) => {
-					return `${nonull(r.amount, 0)} szt.`;
+					return `${def(r.amount, 0)} szt.`;
 				},
 			},
 		],

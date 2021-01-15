@@ -15,7 +15,7 @@ document.addEventListener("click", (e) => {
 		if (option) {
 			select
 				.find("input")
-				.setValue(nonull(option.getAttribute("data-value"), option.innerHTML));
+				.setValue(def(option.getAttribute("data-value"), option.innerHTML));
 		}
 	} else {
 		removeClasses("open", "c-select.open");

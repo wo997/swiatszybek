@@ -71,8 +71,8 @@ if (strlen($zamowienie_link) > 5) {
 
     unset($_SESSION["kod"]);
     $_SESSION["rabat"] = $zamowienie_data["rabat"];
-    $_SESSION["user_id_impersonate"] = nonull($zamowienie_data, "user_id", null);
-    $_SESSION["user_type_impersonate"] = nonull($zamowienie_data, "user_type", null);
+    $_SESSION["user_id_impersonate"] = def($zamowienie_data, "user_id", null);
+    $_SESSION["user_type_impersonate"] = def($zamowienie_data, "user_type", null);
     $impersonate = 1;
 } else {
 }

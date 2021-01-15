@@ -1,6 +1,11 @@
 /* js[global] */
 
 /**
+ * @typedef { PiepNode | string } PiepSelector
+ * query selectors and piep nodes
+ */
+
+/**
  * @typedef {{
  * find(query: string): PiepNode //my comment baby
  * findAll(query: string): PiepNode[]
@@ -14,33 +19,74 @@
  * prev(query?: PiepSelector | undefined, options?: findNodeOptions): PiepNode
  * next(query?: PiepSelector | undefined, options?: findNodeOptions): PiepNode
  * findScrollParent(options?): PiepNode
- * isEmpty(): boolean
- * empty(): void
+ * isdef(): boolean
+ * def(): void
  * setContent(html: string|number): void
  * animate(keyframes: string, duration: number, options?: AnimationOptions): void
  * dataset;
  * setting_value?: boolean
+ * ciiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiipa
+ * _parent(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
+ * _next(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
+ * _prev(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
+ * _child(selector: string): PiepNode | undefined
+ * _children(selector: string): PiepNode[]
+ * _direct_children(selector?: string): PiepNode[]
+ * _is_empty()
  * } & HTMLElement} PiepNode
  */
 
 /**
- * @param {*} node
+ * @param {PiepSelector} selector
  * @param {*} parent
  * @returns {PiepNode}
  */
-function $(node, parent = undefined) {
+function $(selector, parent = undefined) {
+	/** @type {PiepNode} */
+	// @ts-ignore
+	let node = selector;
 	if (!node) return undefined;
-	if (node.find) return node; // already initialized
+
+	if (node._child) {
+		// already initialized
+		return node;
+	}
 
 	if (parent === undefined) {
 		parent = document.body;
 	}
 
-	// query selector or html node
 	node = typeof node == "string" ? parent.querySelector(node) : node;
 	if (!node) {
 		return undefined;
 	}
+
+	node._parent = (selector = undefined, options = {}) => {
+		return findParent(node, selector, options);
+	};
+	node._child = (selector) => {
+		return $(selector, node);
+	};
+	node._children = (selector) => {
+		return $$(selector, node);
+	};
+	node._direct_children = (selector = undefined) => {
+		/** @type {PiepNode[]} */
+		// @ts-ignore
+		const nodes = [...node.children];
+		if (selector === undefined) {
+			nodes.forEach((e) => {
+				$(e); // initializes piep node
+			});
+			return nodes;
+		}
+		return nodes.filter((e) => {
+			$(e).matches(selector);
+		});
+	};
+	node._is_empty = () => {
+		return node.hasChildNodes();
+	};
 
 	node.find = (query) => {
 		return $(query, node);
@@ -49,8 +95,8 @@ function $(node, parent = undefined) {
 		return $$(query, node);
 	};
 	if (!node.setValue) {
-		node.setValue = (value, quiet = false) => {
-			setValue(node, value, quiet);
+		node.setValue = (value, options = {}) => {
+			setValue(node, value, options);
 		};
 	}
 	if (!node.getValue) {
@@ -74,9 +120,6 @@ function $(node, parent = undefined) {
 		query = undefined,
 		/** @type {findNodeOptions} */ options = {}
 	) => {
-		//query
-		findParent(elem, callback);
-		options.max;
 		return $(node.parentNode);
 	};
 	node.directChildren = (query = undefined) => {
@@ -129,7 +172,7 @@ function $(node, parent = undefined) {
 		return findParentByClassName(node, parentClassNames, options);
 	};
 	node.isEmpty = () => {
-		return isEmpty(node);
+		return isdef(node);
 	};
 
 	node.empty = () => {

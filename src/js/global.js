@@ -14,7 +14,7 @@ function xhr(data) {
 	xhr.setRequestHeader("enctype", "multipart/form-data");
 	xhr.onload = function () {
 		var res = xhr.responseText;
-		data.type = nonull(data.type, "json");
+		data.type = def(data.type, "json");
 		var res_json = null;
 
 		var match_reload_required = "[reload_required]";
@@ -90,7 +90,7 @@ function ajax(url, data, good, wrong) {
  * @param {*} value
  * @param {*} def
  */
-function nonull(value, def = "") {
+function def(value, def = "") {
 	if (value === null || value === undefined) return def;
 	return value;
 }
@@ -402,7 +402,7 @@ function getValue(input) {
 			return getAttibutePickerValues(input);
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
-				return nonull(input.getAttribute(`data-src`), "");
+				return def(input.getAttribute(`data-src`), "");
 			}
 			return input.getAttribute(`src`);
 		} else if (type == "date") {
@@ -423,11 +423,6 @@ function getValue(input) {
 }
 
 /**
- * @typedef { PiepNode|string } PiepSelector
- * query selectors and piep nodes
- */
-
-/**
  * @typedef {{
  * skip?: number,
  * max?: number,
@@ -439,18 +434,22 @@ function getValue(input) {
 /**
  * @param {PiepNode} node
  * @param {PiepSelector} selector
- * @param {{(elem: PiepNode)}} move
+ * @param {{(node: PiepNode)}} move
  * @param {findNodeOptions} options
+ * @returns {PiepNode}
  */
 function findNode(node, selector, move, options = {}) {
-	const def = nonull(options.default, undefined);
-	if (!node) {
+	const def = def(options.default, undefined);
+	if (!node || !move) {
 		return def;
 	}
+	if (!selector) {
+		return move(node);
+	}
 	node = $(node);
-	options.skip = nonull(options.skip, 1);
-	options.max = nonull(options.max, 100);
-	while (node && node != document.body) {
+	options.skip = def(options.skip, 1);
+	options.max = def(options.max, 100);
+	while (node) {
 		if (options.max > 0) {
 			options.max--;
 		} else {
@@ -472,8 +471,10 @@ function findNode(node, selector, move, options = {}) {
 		if (options.inside == node) {
 			return def;
 		}
-
-		node = node.parent();
+		if (node === document.body) {
+			return def;
+		}
+		node = move(node);
 	}
 	return def;
 }
@@ -484,7 +485,7 @@ function findNode(node, selector, move, options = {}) {
  * @param {findNodeOptions} options
  */
 function findParent(node, selector, options) {
-	findNode(node, selector, (elem) => elem.parent(), options);
+	return findNode(node, selector, (node) => node.parentNode, options);
 }
 
 /**
@@ -493,7 +494,7 @@ function findParent(node, selector, options) {
  * @param {findNodeOptions} options
  */
 function findNext(node, selector, options) {
-	findNode(node, selector, (elem) => elem.next(), options);
+	return findNode(node, selector, (node) => node.nextElementSibling, options);
 }
 
 /**
@@ -502,7 +503,12 @@ function findNext(node, selector, options) {
  * @param {findNodeOptions} options
  */
 function findPrev(node, selector, options) {
-	findNode(node, selector, (elem) => elem.prev(), options);
+	return findNode(
+		node,
+		selector,
+		(node) => node.previousElementSibling,
+		options
+	);
 }
 
 /**
@@ -529,10 +535,6 @@ function setContent(node, html = "") {
 	setTimeout(() => {
 		node.dispatchEvent(new Event("scroll"));
 	}, 200);
-}
-
-function isEmpty(node) {
-	return node.innerHTML.trim() === "";
 }
 
 function addMissingDirectChildren(
@@ -564,22 +566,22 @@ function swapNodes(a, b) {
 	bParent.replaceChild(a, bHolder);
 }
 
-function position(elem) {
+function position(node) {
 	var left = 0,
 		top = 0;
 
 	do {
-		left += elem.offsetLeft;
-		top += elem.offsetTop;
-	} while ((elem = elem.offsetParent));
+		left += node.offsetLeft;
+		top += node.offsetTop;
+	} while ((node = node.offsetParent));
 
 	return { left: left, top: top };
 }
 
 // probably another thing to die, nodePositionAgainstScrollableParent is better
-function positionWithOffset(elem, offsetX, offestY) {
-	var pos = position(elem);
-	var rect = elem.getBoundingClientRect();
+function positionWithOffset(node, offsetX, offestY) {
+	var pos = position(node);
+	var rect = node.getBoundingClientRect();
 	return {
 		left: pos.left + offsetX * rect.width,
 		top: pos.top + offestY * rect.height,
@@ -643,10 +645,6 @@ function isHidden(el) {
 }
 
 function preventLongPressMenu(node) {
-	if (node.prevent_long_press) {
-		return;
-	}
-	node.prevent_long_press = true;
 	node.oncontextmenu = function (event) {
 		event.preventDefault();
 		event.stopPropagation();
@@ -676,49 +674,38 @@ function isEquivalent(a, b) {
 	if (!a || !b) {
 		return a === b;
 	}
-	// Create arrays of property names
-	var aProps = Object.getOwnPropertyNames(a);
-	var bProps = Object.getOwnPropertyNames(b);
+	const aProps = Object.getOwnPropertyNames(a);
+	const bProps = Object.getOwnPropertyNames(b);
 
-	// If number of properties is different,
-	// objects are not equivalent
-	if (aProps.length != bProps.length) {
+	if (aProps.length !== bProps.length) {
 		return false;
 	}
 
-	for (var i = 0; i < aProps.length; i++) {
-		var propName = aProps[i];
-
-		// If values of same property are not equal,
-		// objects are not equivalent
-		if (typeof a[propName] === "object") {
-			if (!isEquivalent(a[propName], b[propName])) {
+	for (const prop of aProps) {
+		if (typeof a[prop] === "object") {
+			if (!isEquivalent(a[prop], b[prop])) {
 				return false;
 			}
 		} else {
-			if (a[propName] !== b[propName]) {
+			if (a[prop] !== b[prop]) {
 				return false;
 			}
 		}
 	}
 
-	// If we made it this far, objects
-	// are considered equivalent
 	return true;
 }
 
-function removeUserSelection() {
+function removeSelection() {
 	if (window.getSelection) {
-		if (window.getSelection().empty) {
+		const selection = window.getSelection();
+		if (selection.empty) {
 			// Chrome
-			window.getSelection().empty();
-		} else if (window.getSelection().removeAllRanges) {
+			selection.def();
+		} else if (selection.removeAllRanges) {
 			// Firefox
-			window.getSelection().removeAllRanges();
+			selection.removeAllRanges();
 		}
-	} else if (document.selection) {
-		// IE? I think we should just get rid of that
-		document.selection.empty();
 	}
 }
 
@@ -825,7 +812,7 @@ function cloneObject(obj, src = undefined) {
 	}
 
 	let v;
-	let obj_b = nonull(src, Array.isArray(obj) ? [] : {});
+	let obj_b = def(src, Array.isArray(obj) ? [] : {});
 	for (const k in obj) {
 		v = obj[k];
 		obj_b[k] = typeof v === "object" ? cloneObject(v, obj_b[k]) : v;
@@ -834,7 +821,7 @@ function cloneObject(obj, src = undefined) {
 	return obj_b;
 }
 
-function isObjectEmpty(obj) {
+function isObjectdef(obj) {
 	return !obj || Object.keys(obj).length === 0;
 }
 

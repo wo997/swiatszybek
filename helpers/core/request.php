@@ -51,5 +51,5 @@ function reload($ask = false)
 
 function urlParam($index, $default = "")
 {
-    return nonull(URL_PARAMS, $index, $default);
+    return def(URL_PARAMS, $index, $default);
 }

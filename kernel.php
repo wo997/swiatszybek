@@ -24,7 +24,7 @@ $secrets = [];
 function secret($var, $default = "")
 {
     global $secrets;
-    return nonull($secrets, $var, $default);
+    return def($secrets, $var, $default);
 }
 
 include "scripts/db_connect.php";
@@ -64,7 +64,7 @@ if (file_exists($path)) {
 function config($var, $default = "")
 {
     global $config;
-    return nonull($config, $var, $default);
+    return def($config, $var, $default);
 }
 
 $settings = json_decode(@file_get_contents(BUILDS_PATH . "settings.json"), true);

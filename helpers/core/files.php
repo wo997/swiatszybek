@@ -182,7 +182,7 @@ function getResponsiveImageBySize($src, $image_dimension, $options = [])
 
     $src = "/" . UPLOADS_PATH . $target_size_name . "/" . $image_data["file_name"];
 
-    if (nonull($options, "same-ext", false) && in_array($image_data["extension"], $same_ext_image_allowed_types)) {
+    if (def($options, "same-ext", false) && in_array($image_data["extension"], $same_ext_image_allowed_types)) {
         $src .= "." . $image_data["extension"];
     } else if (WEBP_SUPPORT) {
         $src .= ".webp";
@@ -204,7 +204,7 @@ function getResponsiveImageBySize($src, $image_dimension, $options = [])
  */
 function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
 {
-    $try_to_minify_image = nonull($options, "minify", true);
+    $try_to_minify_image = def($options, "minify", true);
 
     $mime_type = mime_content_type($tmp_file_path);
     $file_type = mime2ext($mime_type);
@@ -488,7 +488,7 @@ function mime2ext($mime)
         'text/x-scriptzsh'                                                          => 'zsh',
     ];
 
-    return nonull($mime_map, $mime, false);
+    return def($mime_map, $mime, false);
 }
 
 function getAssetTypeFromMime($mime)
@@ -557,7 +557,7 @@ function scanDirectories($options = [], $callback, $parent_dir = "", $level = 0)
             continue;
         }
         if (isset($options["get_first_line"])) {
-            $first_line = nonull(file($path), 0, "");
+            $first_line = def(file($path), 0, "");
         } else {
             $first_line = "";
         }

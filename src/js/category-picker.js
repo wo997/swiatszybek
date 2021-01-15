@@ -185,7 +185,7 @@ function loadCategoryPicker(
 				} else {
 					var main = e.find(".category_name");
 					if (main)
-						main.innerHTML = nonull(options.main_category, "Kategoria główna");
+						main.innerHTML = def(options.main_category, "Kategoria główna");
 
 					var parent_id = e.getAttribute("scope_parent_id");
 					if (parent_id && parent_id != 0) {

@@ -2,7 +2,7 @@
 
 $module_block_data = getModuleBlockData(
     "product_list",
-    json_decode(nonull($_POST, "product_filters", "{}"), true)
+    json_decode(def($_POST, "product_filters", "{}"), true)
 );
 
 json_response(

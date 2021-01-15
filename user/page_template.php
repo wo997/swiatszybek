@@ -10,7 +10,7 @@ endSection();
     <div class="main-container">
         <?php include "global/header.php"; ?>
         <div class="main-container">
-            <?= nonull($sections, "body_content", ""); ?>
+            <?= def($sections, "body_content", ""); ?>
         </div>
         <?php include "global/footer.php"; ?>
     </div>

@@ -32,7 +32,7 @@ class NewCmsSelectControls {
 		});
 
 		this.selection_node.classList.remove("visible");
-		this.newCms.svg.empty();
+		this.newCms.svg.def();
 	}
 
 	mouseMove() {
@@ -283,7 +283,7 @@ class NewCmsSelectControls {
 		const sorted_blocks_data_length = sorted_blocks_data.length;
 		let upper_bound = 0;
 
-		this.node.empty();
+		this.node.def();
 
 		for (let i = 0; i < sorted_blocks_data_length; i++) {
 			const block_data = sorted_blocks_data[i];

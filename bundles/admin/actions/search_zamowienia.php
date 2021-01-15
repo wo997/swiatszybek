@@ -8,7 +8,7 @@ echo paginateData([
     "renderers" => [
         "dostawa" => function ($row) {
             global $dostawy;
-            return nonull($dostawy, $row["dostawa"], "");
+            return def($dostawy, $row["dostawa"], "");
         }
     ],
 ]);

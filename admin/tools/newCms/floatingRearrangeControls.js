@@ -95,7 +95,7 @@ class NewCmsRearrangeControls {
 		}
 
 		if (options.empty) {
-			this.node.empty();
+			this.node.def();
 		}
 	}
 
@@ -341,7 +341,7 @@ class NewCmsRearrangeControls {
 	addFloatingRearrangeControls(block) {
 		this.removeRearrangement();
 
-		this.node.empty();
+		this.node.def();
 
 		const options = {};
 		if (!this.newCms.styling.allow_free_rearrangement) {

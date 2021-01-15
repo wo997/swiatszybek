@@ -60,7 +60,7 @@ function setFormData(data, form, params = {}) {
 		return;
 	}
 
-	var find_by = nonull(params.find_by, "name");
+	var find_by = def(params.find_by, "name");
 
 	registerForms();
 
@@ -130,7 +130,7 @@ function getFormData(form, params = {}) {
 	form = $(form);
 	var data = {};
 
-	var find_by = nonull(params.find_by, "name");
+	var find_by = def(params.find_by, "name");
 
 	var excludeHidden = form.hasAttribute("data-exclude-hidden");
 
@@ -356,7 +356,7 @@ function formFieldOnInput(field, options = {}) {
 }
 
 function togglePasswordFieldType(btn, input, make_visible = null) {
-	var make_visible = nonull(make_visible, btn.classList.contains("fa-eye"));
+	var make_visible = def(make_visible, btn.classList.contains("fa-eye"));
 	if (make_visible) {
 		btn.classList.replace("fa-eye", "fa-eye-slash");
 		btn.setAttribute("data-tooltip", "Ukryj hasło");

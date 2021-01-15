@@ -69,7 +69,7 @@ $koszt = roundPrice($koszt);
 
 $session_id = $link_hash . session_id();
 
-$paczkomat = $_POST["dostawa"] == 'p' ? nonull($_POST, "paczkomat", NULL) : NULL;
+$paczkomat = $_POST["dostawa"] == 'p' ? def($_POST, "paczkomat", NULL) : NULL;
 
 query(
     "INSERT INTO zamowienia (

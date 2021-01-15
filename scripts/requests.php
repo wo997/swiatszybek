@@ -24,7 +24,7 @@ if (!IS_XHR) {
 DEFINE("JUST_LOGGED_IN", $just_logged_in);
 
 // ssl redirect
-if (getSetting("general", "advanced", ["ssl"]) == 1 && nonull($_SERVER, "HTTPS", "on") == 'off') {
+if (getSetting("general", "advanced", ["ssl"]) == 1 && def($_SERVER, "HTTPS", "on") == 'off') {
     redirect(str_replace_first("http://", "https://", SITE_URL, 1));
 }
 // TODO: www detection should probably go in here

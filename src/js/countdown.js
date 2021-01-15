@@ -13,11 +13,11 @@
  * @param {CountdownOptions} options
  */
 function createCountdown(node, options) {
-	const size = nonull(options.size, 40);
-	const thickness = nonull(options.thickness, 4);
+	const size = def(options.size, 40);
+	const thickness = def(options.thickness, 4);
 	const actual_radius = size * 0.5 - thickness * 0.5;
 	const length = actual_radius * 2 * Math.PI;
-	const color = nonull(options.color, "black");
+	const color = def(options.color, "black");
 
 	node.setContent(/*html*/ `
         <div class="countdown" style="

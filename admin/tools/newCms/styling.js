@@ -199,8 +199,8 @@ class NewCmsStyling {
 	}
 
 	setResponsiveContainerSize(options = {}) {
-		const duration = nonull(options.duration, 0);
-		const width_diff = nonull(options.width_diff, 0);
+		const duration = def(options.duration, 0);
+		const width_diff = def(options.width_diff, 0);
 
 		this.newCms.lockInput(duration);
 
@@ -214,8 +214,8 @@ class NewCmsStyling {
 		const inner_br = this.responsive_type.width
 			? 8 + 140 / (this.responsive_type.width * 0.02 + 5)
 			: 0;
-		const prev_style_border = nonull(this.style_border, "none");
-		const prev_style_border_radius = nonull(this.style_border_radius, "0px");
+		const prev_style_border = def(this.style_border, "none");
+		const prev_style_border_radius = def(this.style_border_radius, "0px");
 		this.style_border = `${bw}px solid #444`;
 		this.style_border_radius = br + "px";
 		document.documentElement.style.setProperty(
@@ -224,12 +224,12 @@ class NewCmsStyling {
 		);
 
 		this.width = Math.min(
-			nonull(this.responsive_type.width, 100000) + 2 * bw,
+			def(this.responsive_type.width, 100000) + 2 * bw,
 			content_wrapper_rect.width + width_diff
 		);
 
 		this.height = Math.min(
-			nonull(this.responsive_type.height, 100000) + 2 * bw,
+			def(this.responsive_type.height, 100000) + 2 * bw,
 			content_wrapper_rect.height
 		);
 
@@ -480,8 +480,8 @@ class NewCmsStyling {
 		if (params.type == "custom") {
 			block_styles.custom = styles;
 		} else {
-			const target = nonull(params.target, "outside");
-			const type = nonull(params.type, this.responsive_type.name);
+			const target = def(params.target, "outside");
+			const type = def(params.type, this.responsive_type.name);
 			Object.entries(styles).forEach(([prop, val]) => {
 				if (val !== undefined) {
 					const val_clean = escapeCSS(prop, val);
@@ -494,7 +494,7 @@ class NewCmsStyling {
 			});
 		}
 
-		const action = nonull(params.action, "just_css");
+		const action = def(params.action, "just_css");
 
 		if (action === "css_and_change") {
 			this.newCms.contentChange();
@@ -597,7 +597,7 @@ class NewCmsStyling {
 			child_count++;
 			const had_flex_order =
 				block.styling_data[this.responsive_type.name].outside.order;
-			block.dataset.flex_order = nonull(had_flex_order, child_count);
+			block.dataset.flex_order = def(had_flex_order, child_count);
 		});
 	}
 
@@ -684,8 +684,8 @@ class NewCmsStyling {
 
 				container_blocks = container_blocks.sort((a, b) => {
 					return (
-						parseFloat(nonull(a.dataset.flex_order, 1000000)) -
-						parseFloat(nonull(b.dataset.flex_order, 1000000))
+						parseFloat(def(a.dataset.flex_order, 1000000)) -
+						parseFloat(def(b.dataset.flex_order, 1000000))
 					);
 				});
 
@@ -1022,10 +1022,8 @@ class NewCmsStyling {
 						}
 					);
 
-					const d1 =
-						some_block_in_row.offsetWidth + nonull(ml, 0) + nonull(mr, 0);
-					const d2 =
-						some_block_in_row.offsetHeight + nonull(mt, 0) + nonull(mb, 0);
+					const d1 = some_block_in_row.offsetWidth + def(ml, 0) + def(mr, 0);
+					const d2 = some_block_in_row.offsetHeight + def(mt, 0) + def(mb, 0);
 
 					if (is_container_horizontal) {
 						if (ml === null) {
@@ -1307,7 +1305,7 @@ class NewCmsStyling {
 	// 	);
 
 	// 	const right_kiss =
-	// 		block.client_rect.left + block.client_rect.width + nonull(mr, 0);
+	// 		block.client_rect.left + block.client_rect.width + def(mr, 0);
 
 	// 	const container_content_rect = block.parent().getBoundingClientRect();
 
@@ -1338,7 +1336,7 @@ class NewCmsStyling {
 			);
 
 			const right_kiss =
-				block.client_rect.left + block.client_rect.width + nonull(mr, 0);
+				block.client_rect.left + block.client_rect.width + def(mr, 0);
 
 			const next = block.getNextBlock();
 			if (next) {
@@ -1349,7 +1347,7 @@ class NewCmsStyling {
 						auto: 0,
 					}
 				);
-				const next_left_kiss = next.client_rect.left - nonull(next_ml, 0);
+				const next_left_kiss = next.client_rect.left - def(next_ml, 0);
 
 				last_in_row = next_left_kiss < right_kiss - 2;
 			} else {

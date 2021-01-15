@@ -32,7 +32,7 @@ if (!$user_data["authenticated"]) {
     json_response($response);
 }
 
-$remember_me = nonull($_POST, "remember_me", 0);
+$remember_me = def($_POST, "remember_me", 0);
 
 if ($remember_me) {
     $remember_me_token = $user_data["user_id"] . "-" . generateAuthenticationToken();

@@ -1,6 +1,6 @@
 <?php
 
-function nonull($arr, $key, $default = "")
+function def($arr, $key, $default = "")
 {
     if (is_array($key)) {
         $arr_sub = &$arr;

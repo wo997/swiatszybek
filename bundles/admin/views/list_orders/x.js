@@ -109,7 +109,7 @@ function setData(obj, _data = undefined, options = {}) {
 	if (!equal) {
 		obj._prev_data = cloneObject(obj._data);
 	} else {
-		if (nonull(options.force_propagate, false) === false) {
+		if (def(options.force_propagate, false) === false) {
 			return;
 		}
 	}

@@ -3,8 +3,8 @@
 
 global $css_file_groups, $js_file_groups, $modifyCSS, $modifyJS; // event is already a function
 
-$modifyCSS = nonull($args, "css", true);
-$modifyJS = nonull($args, "js", true);
+$modifyCSS = def($args, "css", true);
+$modifyJS = def($args, "js", true);
 
 if (!$modifyJS && !$modifyCSS) {
     return;
@@ -23,7 +23,7 @@ function appendGroup(&$file_groups, $group, $path, $parent_dir)
     if ($group === "view") {
         $view_path = $parent_dir . "view.php";
         if (file_exists($view_path)) {
-            $first_line = nonull(file($view_path), 0, "");
+            $first_line = def(file($view_path), 0, "");
             if ($url = getAnnotationRoute($first_line)) {
                 $group = BUILD_VIEWS_PATH_PARTIAL . $url;
             }

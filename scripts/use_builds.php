@@ -62,4 +62,4 @@ if (!$js_schema) {
 }
 
 // TODO: maybe those should act more like event listeners, but later
-$js_dependencies = nonull($js_schema, "dependencies", []);
+$js_dependencies = def($js_schema, "dependencies", []);

@@ -65,8 +65,8 @@ $message .= getEmailFooter();
 
 $response_message = "Link do aktywacji konta został wysłany<br>na " . $_POST["email"];
 
-$email_domain = nonull(explode("@", $_POST["email"]), 1);
-$email_client_url = nonull(EMAIL_CLIENT_URLS, $email_domain);
+$email_domain = def(explode("@", $_POST["email"]), 1);
+$email_client_url = def(EMAIL_CLIENT_URLS, $email_domain);
 
 $response_footer = "";
 

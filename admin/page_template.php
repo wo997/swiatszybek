@@ -39,7 +39,7 @@ endSection();
                 </div>
             </header>
             <div class="content">
-                <?= nonull($sections, "header", ""); ?>
+                <?= def($sections, "header", ""); ?>
                 <?php
                 if (!isset($sections["header"])) {
                 ?>
@@ -53,7 +53,7 @@ endSection();
                 ?>
                 <div class="scroll-panel scroll-shadow">
                     <div class="panel-padding actual-content">
-                        <?= nonull($sections, "body_content", ""); ?>
+                        <?= def($sections, "body_content", ""); ?>
                     </div>
                     <div class="footer">Piepsklep <?= date("Y") ?></div>
                 </div>

@@ -16,7 +16,7 @@ if (isset($_POST["user_id"])) {
     $user_id = $app["user"]["id"];
 }
 
-$password = nonull($_POST, "password");
+$password = def($_POST, "password");
 
 // in case the password was filled
 if ($password && validatePassword($password)) {
@@ -81,8 +81,8 @@ if (isset($_POST["imie"])) {
 
             $response_footer = "";
 
-            $email_domain = nonull(explode("@", $email), 1);
-            $email_client_url = nonull(EMAIL_CLIENT_URLS, $email_domain);
+            $email_domain = def(explode("@", $email), 1);
+            $email_client_url = def(EMAIL_CLIENT_URLS, $email_domain);
 
             if ($email_client_url) {
                 $response_footer .= "

@@ -79,7 +79,7 @@ function comboSelectValuesChanged(combo, options = {}) {
 }
 
 function createAttributeSelect(combo, options = {}) {
-	if (!combo.isEmpty()) {
+	if (!combo.isdef()) {
 		return;
 	}
 	attribute_options_html = "";
@@ -583,7 +583,7 @@ function choiceListChanged(attribute_row_wrapper) {
 			return;
 		}
 
-		selected_attribute_values.empty();
+		selected_attribute_values.def();
 
 		select_value_wrapper = value_list_wrapper.find(`.select_value_wrapper`);
 		if (select_value_wrapper) {

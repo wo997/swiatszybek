@@ -109,7 +109,7 @@ if (!json_decode($kod_data["product_list"])) {
                     title: "W magazynie",
                     width: "10%",
                     render: (r) => {
-                        return `${nonull(r.stock,0)} szt.`;
+                        return `${def(r.stock,0)} szt.`;
                     },
                     field: "stock",
                     sortable: true,

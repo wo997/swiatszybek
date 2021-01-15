@@ -1,16 +1,16 @@
 <?php
 // TODO: no
-if (!nonull($page_data, "seo_image", "")) {
+if (!def($page_data, "seo_image", "")) {
     $page_data["seo_image"] = SHARE_IMG_PATH_PUBLIC_SM;
 }
 
 if (defined("ROUTE")) {
     $js_schema = getJsSchema();
-    $groups = nonull($js_schema, "files_groups", []);
+    $groups = def($js_schema, "files_groups", []);
     $has_js = isset($groups[BUILD_VIEWS_PATH_PARTIAL . ROUTE]);
 
     $css_schema = getCssSchema();
-    $groups = nonull($css_schema, "files_groups", []);
+    $groups = def($css_schema, "files_groups", []);
     $has_css = isset($groups[BUILD_VIEWS_PATH_PARTIAL . ROUTE]);
 } else {
     $has_css = false;
@@ -30,7 +30,7 @@ if (defined("ROUTE")) {
     const MODULES_RELEASE = <?= MODULES_RELEASE ?>;
 
     const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
-    const USER_ID = <?= nonull($app["user"], "id", 0) ?>;
+    const USER_ID = <?= def($app["user"], "id", 0) ?>;
     const IS_ADMIN = <?= $app["user"]["priveleges"]["backend_access"] ? "true" : "false" ?>;
     const USER_TYPE = "<?= $app["user"]["type"] ?>";
 

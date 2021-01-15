@@ -10,13 +10,13 @@ $shared_where = "p.published = 1"; // AND v.published = 1";
 $where = $shared_where;
 $join = "";
 
-$product_list_count = nonull($params, "product_list_count", 8);
-$layout = nonull($params, "layout", "slider");
-$search = nonull($params, "search", "");
-$is_basic = nonull($params, "basic", "");
+$product_list_count = def($params, "product_list_count", 8);
+$layout = def($params, "layout", "slider");
+$search = def($params, "search", "");
+$is_basic = def($params, "basic", "");
 
-$price_min = trim(nonull($params, "price_min", ""));
-$price_max = trim(nonull($params, "price_max", ""));
+$price_min = trim(def($params, "price_min", ""));
+$price_max = trim(def($params, "price_max", ""));
 
 if (isset($params["category_ids"])) {
     if (is_array($params["category_ids"])) {
@@ -70,7 +70,7 @@ $join .= " INNER JOIN variant v USING(product_id)
 
 $order_by = ""; // new by default
 
-$order_by_name = nonull($params, "order_by", "new");
+$order_by_name = def($params, "order_by", "new");
 
 if ($order_by_name == "sale") {
     $order_by = "cache_sales DESC";

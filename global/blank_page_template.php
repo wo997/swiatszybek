@@ -9,9 +9,9 @@ endSection();
 
 <head>
     <?php include "global/includes.php"; ?>
-    <?= nonull($sections, "head_content", ""); ?>
+    <?= def($sections, "head_content", ""); ?>
 </head>
 
-<?= nonull($sections, "body", ""); ?>
+<?= def($sections, "body", ""); ?>
 
 </html>

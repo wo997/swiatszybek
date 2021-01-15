@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="link text-plus-icon" onclick="${
 															t.name
 														}.openCategory(${i})" >
-                                <span>${nonull(r.subcategories, "Brak")}</span>
+                                <span>${def(r.subcategories, "Brak")}</span>
                                 <i class="fas fa-chevron-circle-right"></i>
                             </div>
                         `;
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				title: "Wartości",
 				width: "60%",
 				render: (r) => {
-					return `${nonull(r.attr_values).replace(/,/g, ", ")}`;
+					return `${def(r.attr_values).replace(/,/g, ", ")}`;
 				},
 			},
 			{

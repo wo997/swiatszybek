@@ -15,7 +15,7 @@ function showCmsPreview() {
 
 	cmsContainer.getBoundingClientRect().height;
 
-	var params = nonull(cmsPreview.data, {});
+	var params = def(cmsPreview.data, {});
 
 	const dist_info = getCenterCmsBlockInfo(cmsContainer);
 
@@ -548,7 +548,7 @@ function editCMS(t, params = {}) {
 // additional start
 var backupStateOfCMS = null;
 function editCMSAdditional(t, params) {
-	$("#cmsAdditional .stretch-vertical").empty();
+	$("#cmsAdditional .stretch-vertical").def();
 	$("#cmsAdditional .stretch-vertical").appendChild(cmsWrapper);
 	$("#cms .stretch-vertical").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
 
@@ -573,7 +573,7 @@ window.addEventListener("modal-hide", (event) => {
 	if (event.detail.node.id != "cmsAdditional") {
 		return;
 	}
-	$("#cms .stretch-vertical").empty();
+	$("#cms .stretch-vertical").def();
 	$("#cms .stretch-vertical").appendChild(cmsWrapper);
 
 	$("#cmsAdditional .stretch-vertical").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
@@ -1021,15 +1021,15 @@ function editCMSBorder() {
 
 	setValue(
 		$(`#cmsBorder [data-attribute="border-width"]`),
-		nonull(styles["border-width"])
+		def(styles["border-width"])
 	);
 	setValue(
 		$(`#cmsBorder [data-attribute="border-color"]`),
-		nonull(styles["border-color"])
+		def(styles["border-color"])
 	);
 	setValue(
 		$(`#cmsBorder [data-attribute="border-radius"]`),
-		nonull(styles["border-radius"])
+		def(styles["border-radius"])
 	);
 
 	showModal("cmsBorder", {
@@ -1655,7 +1655,7 @@ document.addEventListener(
 
 						if (is_side_module) {
 							copiedNode.classList.remove("side-module");
-							copiedNode.find(".cms-block-content").empty();
+							copiedNode.find(".cms-block-content").def();
 						}
 						removeClasses("add_after");
 						removeClasses("add_before");
@@ -1737,7 +1737,7 @@ var awaitingScroll = false;
 // drag end
 
 function setNodeBackgroundImagePreview(data = {}) {
-	src = nonull(data.src, "");
+	src = def(data.src, "");
 
 	if (src.length > 0 && src.charAt(0) !== "/") {
 		src = "/uploads/df/" + src;

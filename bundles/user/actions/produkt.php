@@ -193,7 +193,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                             <?php
                             foreach (json_decode($filter["filter_options"], true) as $option_key => $option) {
                             ?>
-                                <radio-option value="<?= $option_key ?>" class="<?= nonull($filter, "style", "") ?>">
+                                <radio-option value="<?= $option_key ?>" class="<?= def($filter, "style", "") ?>">
                                     <?= $option["value"] ?>
                                 </radio-option>
                             <?php
@@ -306,7 +306,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
         <?php if ($app["user"]["id"]) : ?>
             <?php
-            $pseudonim = nonull("SELECT pseudonim FROM users WHERE user_id = " . intval($app["user"]["id"]), "");
+            $pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval($app["user"]["id"]), "");
             ?>
             <div id="formComment" data-form>
                 <h4 style="font-size: 22px; margin: 70px 0 10px;">Podziel się swoją opinią</h4>

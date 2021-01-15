@@ -146,7 +146,7 @@ function animate(node, keyframes, duration, options = {}) {
 	if (options.callback) {
 		node.wo997_animation_callback = options.callback;
 	}
-	node.wo997_animation_early_callback = nonull(options.early_callback, true);
+	node.wo997_animation_early_callback = def(options.early_callback, true);
 
 	// crazy, start the second timeout once you finish the frame ;)
 	setTimeout(() => {

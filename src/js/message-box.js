@@ -14,9 +14,9 @@ function addMessageBox(elem, message, params = {}) {
 		return;
 	}
 
-	const type = nonull(params.type, "info");
-	const show = nonull(params.show, true);
-	const inline = nonull(params.inline, false);
+	const type = def(params.type, "info");
+	const show = def(params.show, true);
+	const inline = def(params.inline, false);
 
 	const types = {
 		// default type

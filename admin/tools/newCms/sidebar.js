@@ -192,7 +192,7 @@ class NewCmsSidebar {
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
 			const dir = input.dataset.dir;
-			input.setValue(nonull(block_styles.outside[`margin-${dir}`], ""), {
+			input.setValue(def(block_styles.outside[`margin-${dir}`], ""), {
 				quiet: true,
 			});
 		});
@@ -272,7 +272,7 @@ class NewCmsSidebar {
 			return;
 		}
 
-		const duration = nonull(options.duration, 300);
+		const duration = def(options.duration, 300);
 
 		const sidebar_width = this.node.offsetWidth;
 

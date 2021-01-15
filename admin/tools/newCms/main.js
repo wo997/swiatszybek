@@ -686,9 +686,9 @@ class NewCms {
 					styles.inside["grid-template-rows"] = "1fr 1fr";
 				}
 				const columns =
-					nonull(styles.inside["grid-template-columns"], "").strCount(" +") + 1;
+					def(styles.inside["grid-template-columns"], "").strCount(" +") + 1;
 				const rows =
-					nonull(styles.inside["grid-template-rows"], "").strCount(" +") + 1;
+					def(styles.inside["grid-template-rows"], "").strCount(" +") + 1;
 
 				const block_content = grid.find(".newCms_block_content");
 
@@ -1450,7 +1450,7 @@ class NewCms {
 			const tt = tx * tx + ty * ty;
 
 			if (tt > 5) {
-				options.try_counter = nonull(options.try_counter, 0) + 1;
+				options.try_counter = def(options.try_counter, 0) + 1;
 				if (options.try_counter < 4) {
 					setTimeout(() => {
 						this.finishAnimation(options);
@@ -1470,7 +1470,7 @@ class NewCms {
 		this.contentChange();
 
 		// not needed cause we set it to user-select none bro
-		//removeUserSelection();
+		//removeSelection();
 
 		this.scroll();
 
@@ -1482,7 +1482,7 @@ class NewCms {
 		}
 
 		this.content_node_copy.classList.remove("visible");
-		this.content_node_copy.empty();
+		this.content_node_copy.def();
 
 		this.unlockInput();
 	}

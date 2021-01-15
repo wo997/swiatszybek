@@ -39,9 +39,9 @@ function getEmailHeader($lang)
 {
     $person = "";
     if ($lang["firma"]) {
-        $person = nonull($lang, "firma", "");
+        $person = def($lang, "firma", "");
     } else {
-        $person = nonull($lang, "imie", "") . " " . nonull($lang, "nazwisko", "");
+        $person = def($lang, "imie", "") . " " . def($lang, "nazwisko", "");
     }
 
     return "<p style='font-size: 16px;max-width:700px'>$person,<br><br>";

@@ -30,9 +30,7 @@ function registerTextCounters() {
             <div class='text-counter'>
               <span></span><span> / ${e.getAttribute(
 								"data-show-count"
-							)} znaków ${nonull(
-				e.getAttribute("data-count-description")
-			)}</span>
+							)} znaków ${def(e.getAttribute("data-count-description"))}</span>
             </div>
         `
 		);

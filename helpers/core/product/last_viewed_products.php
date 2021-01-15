@@ -6,7 +6,7 @@ define("LAST_VIEWED_PRODUCTS_LENGTH_LIMIT", 50);
 function getLastViewedProductsIds()
 {
     global $PRODUCT_ID;
-    $last_viewed_product_ids = json_decode(nonull($_SESSION, "last_viewed_products", "[]"), true);
+    $last_viewed_product_ids = json_decode(def($_SESSION, "last_viewed_products", "[]"), true);
     if (($last_viewed_product_id_index = array_search($PRODUCT_ID, $last_viewed_product_ids)) !== false) {
         array_splice($last_viewed_product_ids, $last_viewed_product_id_index, 1);
     }

@@ -1,12 +1,12 @@
 <?php //route[{ADMIN}uploads_action]
 
 if (IS_XHR && isset($_FILES['files'])) {
-    $type = nonull($_POST, "type", "files");
+    $type = def($_POST, "type", "files");
 
     for ($counter = 0; $counter < count($_FILES['files']['tmp_name']); $counter++) {
         $tmp_file_path = $_FILES['files']['tmp_name'][$counter];
         $uploaded_file_name = $_FILES['files']['name'][$counter];
-        $name = nonull($_POST, "name", date("Y-m-d-H-i-s"));
+        $name = def($_POST, "name", date("Y-m-d-H-i-s"));
 
         $file_data = saveImage($tmp_file_path, $uploaded_file_name, $name);
 
@@ -50,7 +50,7 @@ if (isset($_POST['base64'])) {
         $tmp_file_path = UPLOADS_PATH . "tmp." . $file_type;
         saveFile($tmp_file_path, $image_base64);
 
-        $name = nonull($_POST, "name", date("Y-m-d-H-i-s"));
+        $name = def($_POST, "name", date("Y-m-d-H-i-s"));
         saveImage($tmp_file_path, $name, $name);
     }
 }

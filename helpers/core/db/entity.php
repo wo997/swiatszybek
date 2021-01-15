@@ -34,7 +34,7 @@ function addEntity($table, $options = [])
     // TODO logging
     // $log = false, $primary = null
 
-    $data = nonull($options, "data", []);
+    $data = def($options, "data", []);
 
     $keys_query = "";
     foreach (array_keys($data) as $field) {
@@ -90,12 +90,12 @@ function updateEnt($entity_name, $entity_id, $data)
     $append_set_query_arr = [];
     $errors = [];
     foreach ($before_res as $res) {
-        $append_data = nonull($res, "append_data", []);
+        $append_data = def($res, "append_data", []);
         foreach ($append_data as $field => $value) {
             $data[$field] = $value;
         }
-        $append_set_query_arr = array_merge($append_set_query_arr, nonull($res, "append_set_query", []));
-        $errors = array_merge($errors, nonull($res, "errors", []));
+        $append_set_query_arr = array_merge($append_set_query_arr, def($res, "append_set_query", []));
+        $errors = array_merge($errors, def($res, "errors", []));
     }
 
     if (isset($errors[0])) {

@@ -683,9 +683,9 @@ window.quillEditor = {
 		class Button extends Embed {
 			static create(data) {
 				let node = super.create();
-				node.innerHTML = nonull(data.label);
-				node.className = nonull(data.class);
-				node.setAttribute("data-href", nonull(data.href));
+				node.innerHTML = def(data.label);
+				node.className = def(data.class);
+				node.setAttribute("data-href", def(data.href));
 				return node;
 			}
 

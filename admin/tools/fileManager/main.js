@@ -29,7 +29,7 @@ window.fileManager = {
 			? ""
 			: "none";
 
-		showModal("fileManager", { source: nonull(params.source, target) });
+		showModal("fileManager", { source: def(params.source, target) });
 
 		fileManager.search();
 	},
@@ -94,7 +94,7 @@ window.fileManager = {
                                 <hr style="margin:2px 0">
                                 <b>Nazwa:</b> ${image.uploaded_file_name} 
                                 <hr style="margin:2px 0">
-                                <b>Autor:</b> ${nonull(image.email, "-")}
+                                <b>Autor:</b> ${def(image.email, "-")}
                             `;
 							out += /* html */ `
                                 <div class='gallery-item'>

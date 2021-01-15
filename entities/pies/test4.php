@@ -119,7 +119,7 @@ function combineEntityData(&$data, $key, $new_data)
 // !!! event for managing pies:
 function pies_listen(&$data)
 {
-    //var_dump(nonull($data, "pies_paws", []));
+    //var_dump(def($data, "pies_paws", []));
     if ($data["food"] < 0) {
         return ["error" => "Cannot set food to a negative number"];
     }
@@ -127,7 +127,7 @@ function pies_listen(&$data)
     foreach (getPiesPaws($data) as $paw_data) {
         $paw_data["pies_id"] = $data["pies_id"];
         $response = manageEntity("pies_paw", $paw_data);
-        if ($error = nonull($response, "error")) {
+        if ($error = def($response, "error")) {
             return ["error" => $error];
         }
     }
@@ -156,7 +156,7 @@ function manageEntity($entity_name, &$data)
 
         if ($entity_name === "pies") {
             $response = pies_listen($data);
-            if ($error = nonull($response, "error")) {
+            if ($error = def($response, "error")) {
                 return ["error" => $error];
             }
         }

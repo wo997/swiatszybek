@@ -38,7 +38,7 @@ domload(() => {
 				title: "W magazynie",
 				width: "145px",
 				render: (r) => {
-					return `${nonull(r.stock, 0)} szt.`;
+					return `${def(r.stock, 0)} szt.`;
 				},
 				field: "stock",
 				sortable: true,

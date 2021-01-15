@@ -50,7 +50,7 @@ function showNotification(message, params = {}) {
 		notification.style.maxWidth = "unset";
 	}
 
-	notification.classList.toggle("one_line", nonull(params.one_line, false));
+	notification.classList.toggle("one_line", def(params.one_line, false));
 
 	notification.classList.remove("success");
 	if (params.type == "success") {
@@ -63,7 +63,7 @@ function showNotification(message, params = {}) {
 		notification.style.opacity = "";
 	});
 
-	const duration = nonull(params.duration, 2000);
+	const duration = def(params.duration, 2000);
 
 	// @ts-ignore
 	notification.addDismissTimeout = () => {

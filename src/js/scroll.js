@@ -30,17 +30,17 @@ function scrollToElement(elem, options = {}) {
 	if (!elem) return;
 	var rect = elem.getBoundingClientRect();
 	var diff =
-		(options.parent ? position(elem) : rect).top - nonull(options.offset, 0);
+		(options.parent ? position(elem) : rect).top - def(options.offset, 0);
 	if (options.parent) {
 		diff -= options.parent.scrollTop;
 	}
 	if (!options.top) {
 		diff += (rect.height - window.innerHeight) * 0.5;
 	}
-	var sag = nonull(options.sag, 100);
+	var sag = def(options.sag, 100);
 	if (Math.abs(diff) > sag) {
 		diff -= sag * Math.sign(diff);
-		scrollFromTo(options.parent, diff, nonull(options.duration, 50));
+		scrollFromTo(options.parent, diff, def(options.duration, 50));
 	}
 }
 function scrollFromTo(parent, diff, time, t = 0) {
@@ -66,10 +66,10 @@ function getWindowScroll() {
 }
 
 function smoothScroll(diff, params = {}) {
-	var duration = nonull(params.duration, 40);
-	var t = nonull(params.t, 0);
+	var duration = def(params.duration, 40);
+	var t = def(params.t, 0);
 
-	var scroll_parent = nonull(params.scroll_parent, window);
+	var scroll_parent = def(params.scroll_parent, window);
 
 	scroll_parent.scrollBy(
 		0,
@@ -93,9 +93,9 @@ function smoothScroll(diff, params = {}) {
 
 function scrollIntoView(elem, params = {}) {
 	elem = $(elem);
-	var duration = nonull(params.duration, 40);
-	var offset = nonull(params.offset, 0);
-	var margin = nonull(params.margin, 0.2);
+	var duration = def(params.duration, 40);
+	var offset = def(params.offset, 0);
+	var margin = def(params.margin, 0.2);
 
 	var r = elem.getBoundingClientRect();
 	if (r.left == 0) {

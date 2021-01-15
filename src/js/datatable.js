@@ -54,7 +54,7 @@ function createDatatable(datatable) {
 	datatable.sort = null;
 
 	if (!datatable.lang) datatable.lang = {};
-	datatable.lang.subject = nonull(datatable.lang.subject, "wyników");
+	datatable.lang.subject = def(datatable.lang.subject, "wyników");
 
 	datatable.target = $("." + datatable.name);
 
@@ -219,7 +219,7 @@ function createDatatable(datatable) {
 	var breadcrumb_html = "";
 
 	if (datatable.tree_view) {
-		datatable.lang.main_category = nonull(
+		datatable.lang.main_category = def(
 			datatable.lang.main_category,
 			"Kategoria główna"
 		);
@@ -274,7 +274,7 @@ function createDatatable(datatable) {
 				}.clearFilters()">
           <img src="/src/img/clear-filters.png" style="width: 25px;margin: -7px;">
         </div>
-        ${nonull(datatable.controlsRight)}
+        ${def(datatable.controlsRight)}
       </div>`;
 
 	var headersHTML = "<tr>";
@@ -474,7 +474,7 @@ function createDatatable(datatable) {
 					category_id = row.category_id;
 				}
 
-				var formParams = nonull(datatable.tree_view.formParams, {});
+				var formParams = def(datatable.tree_view.formParams, {});
 				formParams.category_id = category_id;
 
 				xhr({
@@ -716,7 +716,7 @@ function createDatatable(datatable) {
 							var definition = datatable.definition[x];
 							var cell_html = "";
 							if (definition.render) {
-								cell_html = nonull(definition.render(row, i, datatable));
+								cell_html = def(definition.render(row, i, datatable));
 							} else if (definition.field) {
 								cell_html = row[definition.field];
 							}
@@ -1159,7 +1159,7 @@ function getPublishedDefinition(options = {}) {
 			return renderIsPublished(r);
 		},
 		escape: false,
-		field: nonull(options.field, "published"),
+		field: def(options.field, "published"),
 		searchable: "select",
 		select_single: true,
 		select_values: [1, 0],
@@ -1404,7 +1404,7 @@ function datatableFilter(btn, column_id) {
 			clamp(
 				30,
 				btn_rect.top + btn_rect.height - nonstatic_rect.top + offset_y,
-				nonull(nonstatic_parent.scrollHeight, nonstatic_rect.height) -
+				def(nonstatic_parent.scrollHeight, nonstatic_rect.height) -
 					filter_rect.height -
 					30
 			) + "px";

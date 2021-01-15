@@ -3,7 +3,7 @@
 function getSearchQuery($data)
 {
     $main_search_fields = $data["main_search_fields"];
-    $search_type = nonull($data, "search_type", "regular");
+    $search_type = def($data, "search_type", "regular");
 
     if (!$main_search_fields) {
         return "";
@@ -162,13 +162,13 @@ function paginateData($params = [])
 
     $from = $params["from"];
 
-    $where = nonull($params, "where");
+    $where = def($params, "where");
 
     if (trim($where) == "") {
         $where = "1";
     }
 
-    $filters = nonull($_POST, "filters");
+    $filters = def($_POST, "filters");
     if ($filters) {
         $filters = json_decode($filters, true);
         foreach ($filters as $filter) {
@@ -176,9 +176,9 @@ function paginateData($params = [])
         }
     }
 
-    $main_search_value = nonull($params, "search", nonull($_POST, 'search'));
-    $main_search_fields = nonull($params, "main_search_fields", []);
-    $search_type = nonull($params, "search_type", "regular");
+    $main_search_value = def($params, "search", def($_POST, 'search'));
+    $main_search_fields = def($params, "main_search_fields", []);
+    $search_type = def($params, "search_type", "regular");
 
     $search_query = getSearchQuery([
         "main_search_value" => $main_search_value,
@@ -196,7 +196,7 @@ function paginateData($params = [])
 
     $group = isset($params["group"]) ? ("GROUP BY " . $params["group"]) : "";
 
-    $order = nonull($params, "order");
+    $order = def($params, "order");
 
     $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
 

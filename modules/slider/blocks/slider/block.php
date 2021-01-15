@@ -2,7 +2,7 @@
 
 useCSS("/$module_block_dir/styles.css");
 
-$slides = nonull($params, "cms_slides", []);
+$slides = def($params, "cms_slides", []);
 
 ?>
 <div class='swiper-container slider_module swiper-all'>
@@ -22,7 +22,8 @@ $slides = nonull($params, "cms_slides", []);
         <?php
             }
         }
-        ?></div>
+        ?>
+    </div>
     <div class='swiper-button-prev swiper-nav'><img src="/src/img/chevron.svg"></div>
     <div class='swiper-button-next swiper-nav'><img src="/src/img/chevron.svg"></div>
     <div class='swiper-pagination'></div>

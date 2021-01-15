@@ -202,7 +202,7 @@ function createTable($table, $columns)
         $sql = "CREATE TABLE $table (";
 
         foreach ($columns as $column) {
-            $column["null"] = nonull($column, "null", false);
+            $column["null"] = def($column, "null", false);
             $column["type"] = strtoupper($column["type"]);
 
             $definition = getColumnDefinition($column);
@@ -240,7 +240,7 @@ function createTable($table, $columns)
 function manageTableColumns($table, $columns)
 {
     foreach ($columns as $column) {
-        $column["null"] = nonull($column, "null", false);
+        $column["null"] = def($column, "null", false);
         $column["type"] = strtoupper($column["type"]);
 
         $columnExists = columnExists($table, $column["name"]);
@@ -264,7 +264,7 @@ function manageTableColumns($table, $columns)
             }
         }
 
-        $column["previous_name"] = nonull($column, "previous_name", $column["name"]);
+        $column["previous_name"] = def($column, "previous_name", $column["name"]);
 
         if (!$modify && !$columnExists) {
             $isNew = true;
@@ -275,7 +275,7 @@ function manageTableColumns($table, $columns)
                     continue;
                 }
 
-                if ($existing_column["Key"] === "PRI" xor in_array(nonull($column, "index"), ["primary", "unique"])) {
+                if ($existing_column["Key"] === "PRI" xor in_array(def($column, "index"), ["primary", "unique"])) {
                     $modify = true;
                     break;
                 }
@@ -338,7 +338,7 @@ function manageTableColumns($table, $columns)
 
     // do it after the table is created
     foreach ($columns as $column) {
-        if (nonull($column, "index") == "index") {
+        if (def($column, "index") == "index") {
             addIndex($table, $column["name"], "index");
         }
     }

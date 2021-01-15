@@ -5,7 +5,7 @@ if (isset($_POST["remove"])) {
         $_POST["slide_id"]
     ]);
 } else {
-    $slide_id = nonull($_POST, "slide_id", "-1");
+    $slide_id = def($_POST, "slide_id", "-1");
 
     if ($slide_id == "-1") {
         query("INSERT INTO slides () VALUES ()");

@@ -220,7 +220,7 @@ function searchProducts(options = {}) {
 		return;
 	}
 
-	if (window.innerWidth < MOBILE_WIDTH && nonull(options.scroll, true)) {
+	if (window.innerWidth < MOBILE_WIDTH && def(options.scroll, true)) {
 		scrollToTopOfProductList();
 	}
 
@@ -292,7 +292,7 @@ function searchProducts(options = {}) {
 						productListSwapBackgroundNode.style.visibility = "hidden";
 						searchingProducts = false;
 						productListNode.setContent(productListSwapNode.innerHTML);
-						productListSwapContentNode.empty();
+						productListSwapContentNode.def();
 						window.tooltip.resizeCallback();
 						productListLoaded();
 					},
@@ -305,7 +305,7 @@ function searchProducts(options = {}) {
               <button class='btn primary medium randomize_btn' onclick='beforeSearchProducts()'><span class='randomize_text'>Losuj więcej</span> <span class='randomize_loader_wrapper'><i class='randomize_loader fas fa-dice-three'></i></span></button>
             `);
 				} else {
-					paginationNode.empty();
+					paginationNode.def();
 				}
 			} else {
 				renderPagination(paginationNode, currPage, res.pageCount, (i) => {

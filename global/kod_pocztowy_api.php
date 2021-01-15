@@ -1,5 +1,5 @@
 <?php //route[kod_pocztowy_api]
-if (strlen(nonull($_POST, 'kod')) < 4) die;
+if (strlen(def($_POST, 'kod')) < 4) die;
 
 //echo file_get_contents("http://kodpocztowy.intami.pl/api/" . $_POST['kod']);
 

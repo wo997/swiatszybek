@@ -38,7 +38,7 @@ function getEntityActualOne($table_name, $id, $options = [])
         $table_name = "products";
     }
 
-    $select = nonull($options, "select", "*");
+    $select = def($options, "select", "*");
 
     $data = fetchRow("select $select from $table_name WHERE product_id = $id");
 

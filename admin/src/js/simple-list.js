@@ -9,12 +9,12 @@ function createSimpleList(params = {}) {
 	simple_lists.push(list);
 
 	//list.name = params.name;
-	//list.form_name = nonull(params.form_name, params.name);
+	//list.form_name = def(params.form_name, params.name);
 	list.fields = params.fields;
 	list.params = params;
-	list.recursive = nonull(params.recursive, 0);
+	list.recursive = def(params.recursive, 0);
 
-	list.wrapper = nonull(params.wrapper, $(`[name="${params.name}"]`));
+	list.wrapper = def(params.wrapper, $(`[name="${params.name}"]`));
 	list.wrapper.list = list;
 	list.wrapper.classList.add("simple-list");
 	list.wrapper.classList.add("warn-triangle");
@@ -74,15 +74,12 @@ function createSimpleList(params = {}) {
 	var list_html = `
     ${
 			params.table
-				? `<table class="list"><thead><tr>${nonull(
+				? `<table class="list"><thead><tr>${def(
 						params.header
 				  )}</tr></thead><tbody></tbody></table>`
 				: `<div class="list"></div>`
 		}
-    <div class="list-empty" style="display:none">${nonull(
-			params.empty,
-			""
-		)}</div>
+    <div class="list-empty" style="display:none">${def(params.empty, "")}</div>
   `;
 
 	list.wrapper.insertAdjacentHTML("beforeend", list_html);

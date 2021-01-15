@@ -1,7 +1,7 @@
 /* js[global] */
 
 function _setBasketData(res, options = {}) {
-	window.was_basket_data = nonull(window.basket_data, {
+	window.was_basket_data = def(window.basket_data, {
 		basket: [],
 	});
 	if (res.basket) {
@@ -242,7 +242,7 @@ function renderStatus(status_id) {
 	if (!status) {
 		return "";
 	}
-	return `<div class='rect status_rect' style='background:#${nonull(
+	return `<div class='rect status_rect' style='background:#${def(
 		status.color
 	)}'>${status.title}</div>`;
 }

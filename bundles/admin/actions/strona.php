@@ -45,7 +45,7 @@ $static = checkUrl($page_data["link"]);
     });
 
     function showPreview() {
-        window.preview.open("/<?= nonull($page_data, "link") ?>", {
+        window.preview.open("/<?= def($page_data, "link") ?>", {
             content: $(`[name="content"]`).getValue(),
         });
     }
@@ -63,7 +63,7 @@ $static = checkUrl($page_data["link"]);
         fileManager.setDefaultName(t);
         editCMS(`[name="content"]`, {
             preview: {
-                url: "/<?= nonull($page_data, "link") ?>",
+                url: "/<?= def($page_data, "link") ?>",
                 content_name: "content",
             }
         });
