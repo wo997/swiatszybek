@@ -8,7 +8,7 @@ function registerCheckboxes() {
 
 		c.insertAdjacentHTML(
 			"afterbegin",
-			`
+			/*html*/ `
             <div class='circle'>
                 <i class='fas fa-minus'></i>
                 <i class='fas fa-check'></i>

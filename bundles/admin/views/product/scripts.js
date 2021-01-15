@@ -779,7 +779,7 @@ function saveVariant(remove = false) {
 		variantRow.remove();
 	}
 
-	var data = $(`#variantForm`).getFormData();
+	var data = getFormData($(`#variantForm`));
 	data.attributes = JSON.stringify(data.attributes);
 
 	setFormData(data, variantRow, {

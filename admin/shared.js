@@ -69,3 +69,27 @@ window.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 });
+
+function moveCursorToEnd(el) {
+	el.focus();
+	if (typeof el.selectionStart == "number") {
+		el.selectionStart = el.selectionEnd = el.value.length;
+	} else if (typeof el.createTextRange != "undefined") {
+		var range = el.createTextRange();
+		range.collapse(false);
+		range.select();
+	}
+}
+
+function rgbStringToHex(rgbString) {
+	if (rgbString.substr(0, 3) != "rgb") return rgbString;
+	return rgbString.replace(/rgb\((.+?)\)/gi, (_, rgb) => {
+		return (
+			"#" +
+			rgb
+				.split(",")
+				.map((str) => parseInt(str, 10).toString(16).padStart(2, "0"))
+				.join("")
+		);
+	});
+}

@@ -1,17 +1,5 @@
 /* js[global] */
 
-window.addEventListener("load", function () {
-	if ("ontouchstart" in window) {
-		var expandable = document.getElementsByClassName("expandable");
-		for (i = 0; i < expandable.length; i++) {
-			expandable[i].insertAdjacentHTML(
-				"beforeend",
-				`<button type='button' class='drop-arrow' onclick='return mobileDrop(this);'></button>`
-			);
-		}
-	}
-});
-
 function mobileDrop(obj) {
 	obj = obj.parent().parent();
 	if (obj.className == "") {

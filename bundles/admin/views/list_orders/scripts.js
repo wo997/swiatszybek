@@ -135,13 +135,17 @@ function createListRowCompontent(node, parent, _data = undefined) {
 						}
 
 						if (node._data.list_length !== undefined) {
-							toggleDisabled(
-								node._nodes.down_btn,
+							node._nodes.down_btn.toggleAttribute(
+								"disabled",
 								node._data.row_index >= node._data.list_length - 1
 							);
-							toggleDisabled(node._nodes.up_btn, node._data.row_index <= 0);
-							toggleDisabled(
-								node._nodes.double_up_btn,
+
+							node._nodes.up_btn.toggleAttribute(
+								"disabled",
+								node._data.row_index <= 0
+							);
+							node._nodes.double_up_btn.toggleAttribute(
+								"disabled",
 								node._data.row_index <= 0
 							);
 						}
@@ -370,11 +374,8 @@ function createListCompontent(
 			};
 
 			node._moveRow = (from, to) => {
-				const middle = (val) => {
-					return Math.max(Math.min(val, node._data.length - 1), 0);
-				};
-				from = middle(from);
-				to = middle(to);
+				from = clamp(0, from, node._data.length - 1);
+				to = clamp(0, to, node._data.length - 1);
 
 				const temp = node._data.splice(from, 1);
 				node._data.splice(to, 0, ...temp);
@@ -504,8 +505,8 @@ function createFirstCompontent(node, parent, data = undefined) {
 
 						const equivalent = isEquivalent(node._data, node._saved_data);
 						const disable = !node._saved_data || equivalent;
-						toggleDisabled(node._nodes.load_btn, disable);
-						toggleDisabled(node._nodes.save_btn, equivalent);
+						node._nodes.load_btn.toggleAttribute("disabled", disable);
+						node._nodes.save_btn.toggleAttribute("disabled", equivalent);
 
 						node._nodes.list_count.setContent(
 							`(${node._data.list_data.length})`

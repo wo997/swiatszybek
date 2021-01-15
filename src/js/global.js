@@ -157,22 +157,14 @@ function escapeNumericalExpression(str) {
 	return str.replace(/[^\d,.\*\-\+\/\(\)]*/g, "");
 }
 
+/*
+never used
 function decodeHtmlEntities(html) {
 	var txt = document.createElement("textarea");
 	txt.innerHTML = html;
 	return txt.value;
 }
-
-function moveCursorToEnd(el) {
-	el.focus();
-	if (typeof el.selectionStart == "number") {
-		el.selectionStart = el.selectionEnd = el.value.length;
-	} else if (typeof el.createTextRange != "undefined") {
-		var range = el.createTextRange();
-		range.collapse(false);
-		range.select();
-	}
-}
+*/
 
 function validURL(str) {
 	var pattern = new RegExp(
@@ -256,6 +248,7 @@ function escapeUrl(string) {
 		.replace(/-+/g, "-");
 }
 
+/* never used
 domload(() => {
 	$$(".mobile-hover").forEach((e) => {
 		if (IS_MOBILE) {
@@ -275,20 +268,7 @@ domload(() => {
 			});
 		}
 	});
-});
-
-function rgbStringToHex(rgbString) {
-	if (rgbString.substr(0, 3) != "rgb") return rgbString;
-	return rgbString.replace(/rgb\((.+?)\)/gi, (_, rgb) => {
-		return (
-			"#" +
-			rgb
-				.split(",")
-				.map((str) => parseInt(str, 10).toString(16).padStart(2, "0"))
-				.join("")
-		);
-	});
-}
+});*/
 
 function updateOnlineStatus() {
 	$(".offline").classList.toggle("shown", !navigator.onLine);
@@ -442,194 +422,95 @@ function getValue(input) {
 	}
 }
 
-// TODO: #128557 use HTMLElement.matches(QuerySelector) instead of raw code, it's pointless and interestingly less flexible
-function findParent(elem, callback, options = {}) {
-	if (!elem) {
-		return null;
+/**
+ * @typedef { PiepNode|string } PiepSelector
+ * query selectors and piep nodes
+ */
+
+/**
+ * @typedef {{
+ * skip?: number,
+ * max?: number,
+ * inside?: PiepSelector
+ * default?: any
+ * }} findNodeOptions
+ */
+
+/**
+ * @param {PiepNode} node
+ * @param {PiepSelector} selector
+ * @param {{(elem: PiepNode)}} move
+ * @param {findNodeOptions} options
+ */
+function findNode(node, selector, move, options = {}) {
+	const def = nonull(options.default, undefined);
+	if (!node) {
+		return def;
 	}
-	elem = $(elem);
-	if (!options) {
-		options = {};
-	}
-	options.skip = nonull(options.skip, 0);
-	options.counter = nonull(options.counter, 100);
-	while (elem && elem != document) {
-		if (options.counter > 0) {
-			options.counter--;
+	node = $(node);
+	options.skip = nonull(options.skip, 1);
+	options.max = nonull(options.max, 100);
+	while (node && node != document.body) {
+		if (options.max > 0) {
+			options.max--;
 		} else {
-			return null;
+			return def;
 		}
 		if (options.skip > 0) {
 			options.skip--;
-		} else if (callback(elem)) {
-			return elem;
+		} else {
+			if (typeof selector === "string") {
+				if (node.matches(selector)) {
+					return node;
+				}
+			} else {
+				if (node == selector) {
+					return node;
+				}
+			}
 		}
-		if (options.inside == elem) {
-			return;
+		if (options.inside == node) {
+			return def;
 		}
 
-		elem = elem.parent();
+		node = node.parent();
 	}
-	return null;
+	return def;
 }
 
-//"xxx", ["aaa","bbb","ccc"], [{"aaa":1},"zzz"]
-function findParentByAttribute(elem, parentAttribute, options = {}) {
-	const parentAttributes = isArray(parentAttribute)
-		? parentAttribute
-		: [parentAttribute];
-
-	return findParent(
-		elem,
-		(some_parent) => {
-			for (let parentAttribute of parentAttributes) {
-				if (isObject(parentAttribute)) {
-					return !!Object.entries(parentAttribute).find(([key, value]) => {
-						return some_parent.getAttribute(key) == value;
-					});
-				} else if (some_parent.hasAttribute(parentAttribute)) {
-					return true;
-				}
-			}
-		},
-		options
-	);
+/**
+ * @param {PiepNode} node
+ * @param {PiepSelector} selector
+ * @param {findNodeOptions} options
+ */
+function findParent(node, selector, options) {
+	findNode(node, selector, (elem) => elem.parent(), options);
 }
 
-function findParentNode(elem, parent, options = {}) {
-	return findParent(
-		elem,
-		(some_parent) => {
-			if (some_parent === parent) {
-				return true;
-			}
-		},
-		options
-	);
+/**
+ * @param {PiepNode} node
+ * @param {PiepSelector} selector
+ * @param {findNodeOptions} options
+ */
+function findNext(node, selector, options) {
+	findNode(node, selector, (elem) => elem.next(), options);
 }
 
-function findParentByTagName(elem, parentTagName, options = {}) {
-	return findParent(
-		elem,
-		(some_parent) => {
-			if (
-				some_parent.tagName &&
-				some_parent.tagName.toLowerCase() == parentTagName.toLowerCase()
-			) {
-				return true;
-			}
-		},
-		options
-	);
+/**
+ * @param {PiepNode} node
+ * @param {PiepSelector} selector
+ * @param {findNodeOptions} options
+ */
+function findPrev(node, selector, options) {
+	findNode(node, selector, (elem) => elem.prev(), options);
 }
 
-function findParentById(elem, id, options = {}) {
-	return findParent(
-		elem,
-		(some_parent) => {
-			if (some_parent.id == id) {
-				return true;
-			}
-		},
-		options
-	);
-}
-
-function findParentByClassName(elem, parentClassName, options = {}) {
-	const parentClassNames = Array.isArray(parentClassName)
-		? parentClassName
-		: [parentClassName];
-
-	return findParent(
-		elem,
-		(some_parent) => {
-			if (!some_parent.classList) {
-				return false;
-			}
-			if (options.require_all) {
-				var all = true;
-				for (parentClassName of parentClassNames) {
-					if (!some_parent.classList.contains(parentClassName)) {
-						all = false;
-					}
-				}
-				if (all) {
-					return true;
-				}
-			} else {
-				for (parentClassName of parentClassNames) {
-					if (some_parent.classList.contains(parentClassName)) {
-						return true;
-					}
-				}
-			}
-		},
-		options
-	);
-}
-
-// never used, check as u use
-function findParentByStyle(elem, style, value, options = {}) {
-	return findParent(
-		elem,
-		(some_parent) => {
-			if (some_parent.style[style] == value) {
-				return true;
-			}
-		},
-		options
-	);
-}
-// never used, check as u use
-function findParentByComputedStyle(elem, style, value, options = {}) {
-	return findParent(
-		elem,
-		(some_parent) => {
-			var computedStyle = window.getComputedStyle(some_parent)[style];
-			if (invert) {
-				if (computedStyle != value) {
-					return true;
-				}
-			} else {
-				if (computedStyle == value) {
-					return true;
-				}
-			}
-		},
-		options
-	);
-}
-function findScrollParent(elem, options = {}) {
-	var parent = findParent(
-		elem,
-		(some_parent) => {
-			if (
-				some_parent.classList.contains("scroll-panel") &&
-				!some_parent.classList.contains("horizontal")
-			) {
-				return elem;
-			}
-			elem = elem.parent();
-		},
-		options
-	);
-	elem = $(elem);
-
-	return nonull(parent, nonull(options.default, window));
-}
-function findNonStaticParent(elem, options = {}) {
-	var parent = findParent(
-		elem,
-		(some_parent) => {
-			var position = window.getComputedStyle(some_parent)["position"];
-			if (position !== "static") {
-				return true;
-			}
-		},
-		options
-	);
-
-	return nonull(parent, document.body);
+/**
+ * @param {PiepNode} node
+ * @param {findNodeOptions} options
+ */
+function findScrollParent(node, options = {}) {
+	return findParent(node, `.scroll-panel:not(.horizontal)`, options);
 }
 
 function removeContent(node) {
@@ -650,18 +531,6 @@ function setContent(node, html = "") {
 	}, 200);
 }
 
-function setContentAndMaintainHeight(node, html = "") {
-	var st = node.scrollTop;
-	node.style.height = node.scrollHeight + "px";
-	setTimeout(() => {
-		node.setContent(html);
-		setTimeout(() => {
-			node.scrollTop = st;
-			node.style.height = "";
-		}, 0);
-	});
-}
-
 function isEmpty(node) {
 	return node.innerHTML.trim() === "";
 }
@@ -678,13 +547,15 @@ function addMissingDirectChildren(
 }
 
 function swapNodes(a, b) {
-	if (!a || !b) return;
+	if (!a || !b) {
+		return;
+	}
 
-	var aParent = a.parentNode;
-	var bParent = b.parentNode;
+	let aParent = a.parentNode;
+	let bParent = b.parentNode;
 
-	var aHolder = document.createElement("div");
-	var bHolder = document.createElement("div");
+	let aHolder = document.createElement("div");
+	let bHolder = document.createElement("div");
 
 	aParent.replaceChild(aHolder, a);
 	bParent.replaceChild(bHolder, b);
@@ -694,8 +565,6 @@ function swapNodes(a, b) {
 }
 
 function position(elem) {
-	//findParentByStyle(elem,"position","absolute");
-
 	var left = 0,
 		top = 0;
 
@@ -704,20 +573,10 @@ function position(elem) {
 		top += elem.offsetTop;
 	} while ((elem = elem.offsetParent));
 
-	//console.log()
-	/*{
-    console.log(elem.style.top);
-  }*/
-
 	return { left: left, top: top };
-
-	/*var doc = document.documentElement;
-  var window_left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-  var window_top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
-
-  return { left: left - window_left, top: top - window_top };*/
 }
 
+// probably another thing to die, nodePositionAgainstScrollableParent is better
 function positionWithOffset(elem, offsetX, offestY) {
 	var pos = position(elem);
 	var rect = elem.getBoundingClientRect();
@@ -746,7 +605,7 @@ function removeClassesWithPrefix(node, prefix) {
 	let cn = node.className;
 	const matches = cn.match(new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"), "");
 	if (!matches) {
-		return null;
+		return undefined;
 	}
 	matches.forEach((match) => {
 		cn = cn.replace(match, "");
@@ -773,12 +632,6 @@ function getNodeTextWidth(node) {
 	var range = document.createRange();
 	range.selectNode(textNode);
 	return range.getBoundingClientRect().width;
-}
-
-function toggleDisabled(elem, disabled) {
-	elem = $(elem);
-	if (disabled) elem.setAttribute("disabled", true);
-	else elem.removeAttribute("disabled");
 }
 
 function clamp(min, val, max) {
@@ -966,7 +819,7 @@ function deepAssign(target, src) {
  * @param {*} obj
  * @param {*} src
  */
-function cloneObject(obj, src = null) {
+function cloneObject(obj, src = undefined) {
 	if (!obj || obj instanceof HTMLElement) {
 		return obj;
 	}

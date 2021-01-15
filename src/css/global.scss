@@ -645,10 +645,7 @@ nav > div > a {
 	font-size: 14px;
 	transition: 0.3s;
 }
-.expandable::after {
-	left: 0.15em;
-}
-.expandable::after,
+
 .drop-arrow:after {
 	border-style: solid;
 	border-width: 0.1em 0.1em 0 0;

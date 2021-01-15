@@ -1100,6 +1100,7 @@ window.addEventListener("dragover", (event) => {
 	var tr = findParentByTagName(event.target, "TR");
 	if (!tr) return;
 
+	// todo abandon somehow, you don't need it yet, list component will do the job
 	var nonstatic_parent = tr.findNonStaticParent();
 
 	/*var scroll_parent = tr.findScrollParent();

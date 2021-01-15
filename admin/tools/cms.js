@@ -708,11 +708,12 @@ function migrateImageBackground(node) {
 function cmsUpdate() {
 	resizeCallback();
 
-	toggleDisabled(
-		cmsWrapper.find(".cms-undo"),
-		cmsHistoryStepBack >= cmsHistory.length - 1
-	);
-	toggleDisabled(cmsWrapper.find(".cms-redo"), cmsHistoryStepBack == 0);
+	cmsWrapper
+		.find(".cms-undo")
+		.toggleAttribute("disabled", cmsHistoryStepBack >= cmsHistory.length - 1);
+	cmsWrapper
+		.find(".cms-redo")
+		.toggleAttribute("disabled", cmsHistoryStepBack == 0);
 
 	$$("[data-module]").forEach((e) => {
 		e.setAttribute("data-module-block", e.getAttribute("data-module"));

@@ -31,7 +31,7 @@ function setCategoryPickerValue(element, value, params = {}) {
 	element.findAll("[data-category_id]").forEach((e) => {
 		if (!example) example = e;
 
-		toggleDisabled(e, false);
+		e.toggleAttribute("disabled", false);
 
 		var check = false;
 		if (singleselect) {
@@ -54,7 +54,7 @@ function setCategoryPickerValue(element, value, params = {}) {
 		params.disable.forEach((i) => {
 			var el = element.find(`[data-category_id="${i}"]`);
 			if (el) {
-				toggleDisabled(el, true);
+				el.toggleAttribute("disabled", true);
 				el.checked = false;
 			}
 		});
@@ -63,14 +63,14 @@ function setCategoryPickerValue(element, value, params = {}) {
 		params.disable_with_children.forEach((i) => {
 			var el = element.find(`[data-category_id="${i}"]`);
 			if (el) {
-				toggleDisabled(el, true);
+				el.toggleAttribute("disabled", true);
 				el.checked = false;
 				el.parent()
 					.parent()
 					.next()
 					.findAll("[data-category_id]")
 					.forEach((xu) => {
-						toggleDisabled(xu, true);
+						xu.toggleAttribute("disabled", true);
 						xu.checked = false;
 					});
 			}

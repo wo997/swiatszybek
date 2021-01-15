@@ -195,7 +195,7 @@ window.addEventListener("basket-change", (event) => {
 	}
 
 	$$(".gotobuy").forEach((e) => {
-		toggleDisabled(e, res.item_count === 0);
+		e.toggleAttribute("disabled", res.item_count === 0);
 	});
 
 	var options = {};
@@ -251,10 +251,9 @@ function setVariantRowQty(variant_node, variant_data) {
 	var qty = variant_node.find(".qty-label");
 	if (qty) {
 		qty.setContent(variant_data.quantity);
-		toggleDisabled(
-			variant_node.find(".qty-btn.add"),
-			variant_data.quantity >= variant_data.stock
-		);
+		variant_node
+			.find(".qty-btn.add")
+			.toggleAttribute("disabled", variant_data.quantity >= variant_data.stock);
 	}
 
 	var ptc = variant_node.find(".variant_total_price");

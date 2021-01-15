@@ -7,6 +7,7 @@ function getRowById(array, id, id_name = "id") {
 	});
 }
 
+// meh, ide doesn't love it
 /*Array.prototype.last = function () {
 	return this[this.length - 1];
 };*/

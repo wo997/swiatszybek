@@ -183,6 +183,12 @@ createTable("pies", [
     ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
 ]);
 
+createTable("pies_paw", [
+    ["name" => "pies_paw_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "pies_id", "type" => "INT", "index" => "index"],
+    ["name" => "name", "type" => "TINYTEXT"],
+]);
+
 createTable("page", [
     ["name" => "page_id", "type" => "INT", "index" => "primary", "increment" => true],
     ["name" => "url", "type" => "TINYTEXT"], // I think we should index that field ezy

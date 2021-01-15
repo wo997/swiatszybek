@@ -112,13 +112,14 @@ document.addEventListener("keydown", (ev) => {
 
 function formHistoryChange(form) {
 	if (form.history_buttons) {
-		toggleDisabled(
-			form.history_buttons.find(".btn.undo"),
-			form.history_step_back >= form.history.length - 1
-		);
-		toggleDisabled(
-			form.history_buttons.find(".btn.redo"),
-			form.history_step_back == 0
-		);
+		form.history_buttons
+			.find(".btn.undo")
+			.toggleAttribute(
+				"disabled",
+				form.history_step_back >= form.history.length - 1
+			);
+		form.history_buttons
+			.find(".btn.redo")
+			.toggleAttribute("disabled", form.history_step_back == 0);
 	}
 }
