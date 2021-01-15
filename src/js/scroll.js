@@ -99,7 +99,7 @@ function scrollIntoView(elem, params = {}) {
 
 	var r = elem.getBoundingClientRect();
 	if (r.left == 0) {
-		elem = elem.parent();
+		elem = elem._parent();
 		r = elem.getBoundingClientRect();
 	}
 

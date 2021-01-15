@@ -57,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
 var blockProductsSearch = false;
 
 function goDesktop() {
-	$(".products_search").parent().classList.remove("glue-children");
+	$(".products_search")._parent().classList.remove("glue-children");
 	var products_search = $(".products_search");
 	products_search.addEventListener("input", () => {
 		// instant change
@@ -378,7 +378,7 @@ function beforeSearchProducts() {
 
 function attributeSelectionChange(checkbox, hasChildren) {
 	if (checkbox && hasChildren) {
-		var list = checkbox.parent()._next();
+		var list = checkbox._parent()._next();
 		if (!checkbox.checked) {
 			list._children(":checked").forEach((subCheckbox) => {
 				subCheckbox.setValue(0);
@@ -439,7 +439,7 @@ function productsSearchChange(input, instant = false) {
 }
 
 function setMobileSearchBtnOpacity(input) {
-	input.parent()._child(".search-btn").style.opacity =
+	input._parent()._child(".search-btn").style.opacity =
 		input.getValue() !== searchParams.search ? 1 : 0;
 }
 

@@ -67,7 +67,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 	} else {
 		var wrapper = field;
 		if (field.type == "checkbox") {
-			wrapper = wrapper.parent();
+			wrapper = wrapper._parent();
 		}
 
 		const inputElements = wrapper._next();

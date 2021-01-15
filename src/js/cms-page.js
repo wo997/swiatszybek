@@ -90,7 +90,7 @@ window.addEventListener("DOMContentLoaded", () => {
 		var sliderName = "swiper_slider_" + sliderCount;
 		e.classList.add(sliderName);
 
-		var swiper_all = e.parent();
+		var swiper_all = e._parent();
 		var clprev = sliderName + "_prev_btn";
 		var clnext = sliderName + "_next_btn";
 		swiper_all._child(".swiper-button-prev").classList.add(clprev);

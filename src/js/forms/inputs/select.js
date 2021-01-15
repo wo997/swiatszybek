@@ -3,14 +3,14 @@
 document.addEventListener("click", (e) => {
 	var target = $(e.target);
 
-	var select = target.findParentByTagName("c-select");
+	var select = target._parent("c-select");
 	if (select) {
 		if (target.tagName == "C-ARROW") {
 			select.classList.toggle("open");
 		} else {
 			select.classList.remove("open");
 		}
-		var option = target.findParentByTagName("c-option");
+		var option = target._parent("c-option");
 
 		if (option) {
 			select

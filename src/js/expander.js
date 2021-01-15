@@ -1,7 +1,7 @@
 /* js[global] */
 
 function mobileDrop(obj) {
-	obj = obj.parent().parent();
+	obj = obj._parent()._parent();
 	if (obj.className == "") {
 		obj.className = "mobile-drop";
 	} else {
@@ -45,11 +45,11 @@ function expandMenu(elem, btn, open = null, options = {}) {
 
 	if (options.single && open) {
 		btn
-			.parent()
+			._parent()
 			._children(".menu_item:not(.current-route) .expand_arrow.open")
 			.forEach((e) => {
 				if (e != expand_btn) {
-					expandMenu(e.parent()._next(), e.parent());
+					expandMenu(e._parent()._next(), e._parent());
 				}
 			});
 	}

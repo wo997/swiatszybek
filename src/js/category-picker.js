@@ -65,8 +65,8 @@ function setCategoryPickerValue(element, value, params = {}) {
 			if (el) {
 				el.toggleAttribute("disabled", true);
 				el.checked = false;
-				el.parent()
-					.parent()
+				el._parent()
+					._parent()
 					._next()
 					._children("[data-category_id]")
 					.forEach((xu) => {
@@ -111,7 +111,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 		expandMenu(submenu, btn, true, {
 			duration: 0,
 		});
-		parent = parent.parent();
+		parent = parent._parent();
 	}
 }
 
@@ -150,8 +150,8 @@ function categoryChanged(el) {
 
 	if (el.checked) {
 		var expandWhenClosed = el
-			.parent()
-			.parent()
+			._parent()
+			._parent()
 			._child(".expand_arrow:not(.open)");
 		if (expandWhenClosed) {
 			expandWhenClosed.click();

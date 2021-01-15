@@ -194,7 +194,7 @@ function createDatatable(datatable) {
 				.forEach((e) => {
 					if (e.checked) {
 						bulk_selection.push(
-							+e.parent().parent().parent().getAttribute("data-index")
+							+e._parent()._parent()._parent().getAttribute("data-index")
 						);
 						any_checked = true;
 					} else {
@@ -391,7 +391,9 @@ function createDatatable(datatable) {
 		);
 
 	datatable.searchElement = datatable.target._child(".search-wrapper");
-	datatable.tableSearchElement = datatable.target._child(".table-search-wrapper");
+	datatable.tableSearchElement = datatable.target._child(
+		".table-search-wrapper"
+	);
 	datatable.tableSelectionElement = datatable.target._child(".selected_rows");
 	datatable.tableBodyElement = datatable.tableSearchElement._child("tbody");
 	datatable.totalRowsElement = datatable.target._child(".total-rows");
@@ -949,8 +951,9 @@ function createDatatable(datatable) {
 			datatable.search();
 		}
 
-		datatable.tableSelectionElement._child(".selected-results-count").innerHTML =
-			datatable.selection.length;
+		datatable.tableSelectionElement._child(
+			".selected-results-count"
+		).innerHTML = datatable.selection.length;
 
 		if (datatable.sortable) {
 			var index = 0;
@@ -971,28 +974,18 @@ function createDatatable(datatable) {
 	};
 	if (datatable.selectable && datatable.selectable.has_metadata) {
 		datatable.registerMetadataFields = () => {
-			datatable.selectionBodyElement._children("[data-metadata]").forEach((m) => {
-				m.oninput = () => {
-					datatable.selectionChange(false);
-				};
-				m.onchange = () => {
-					datatable.selectionChange(false);
-				};
-			});
+			datatable.selectionBodyElement
+				._children("[data-metadata]")
+				.forEach((m) => {
+					m.oninput = () => {
+						datatable.selectionChange(false);
+					};
+					m.onchange = () => {
+						datatable.selectionChange(false);
+					};
+				});
 		};
 	}
-
-	/*datatable.tableBodyElement.addEventListener("dblclick", function (e) {
-    var td = $(e.target).findParentByTagName("td");
-    if (!td) {
-      return;
-    }
-
-    //console.log(123, td);
-    var val = td.innerHTML;
-    td.setContent(`<input type="text" class="field">`);
-    td._child(`.field`).setValue(val);
-  });*/
 }
 
 function getSafePageIndex(i, pageCount) {
@@ -1010,10 +1003,7 @@ window.addEventListener("dragstart", (event) => {
 		event.preventDefault();
 		return;
 	}
-	if (
-		target.tagName != "TR" ||
-		target._parent(".has_selected_rows")
-	) {
+	if (target.tagName != "TR" || target._parent(".has_selected_rows")) {
 		return;
 	}
 
@@ -1054,8 +1044,8 @@ function rearrange(input) {
 			toIndex--;
 		}
 		var row2 = datatable.selectionBodyElement._children("tr")[toIndex];
-		var row1 = input.parent().parent();
-		row1.parent().insertBefore(row1, row2);
+		var row1 = input._parent()._parent();
+		row1._parent().insertBefore(row1, row2);
 
 		datatable.selectionChange();
 		return;
@@ -1065,7 +1055,7 @@ function rearrange(input) {
 
 	var table = datatable.db_table;
 	var primary = datatable.primary;
-	var itemId = input.findParentByTagName("TR").getAttribute("data-primary");
+	var itemId = input._parent("TR").getAttribute("data-primary");
 
 	var params = {
 		table: table,
@@ -1100,7 +1090,7 @@ function rearrange(input) {
 
 window.addEventListener("dragover", (event) => {
 	if (!event.target) return;
-	var tr = findParentByTagName(event.target, "TR");
+	var tr = $(event.target)._parent("tr");
 	if (!tr) return;
 
 	// todo abandon somehow, you don't need it yet, list component will do the job
@@ -1191,7 +1181,7 @@ function setPublish(obj, published) {
 	if (!tableElement && !listElement) return;
 
 	if (listElement) {
-		var input = obj.parent()._prev();
+		var input = obj._parent()._prev();
 		input.setValue(1 - input.getValue());
 		return;
 	}
@@ -1200,7 +1190,7 @@ function setPublish(obj, published) {
 	if (!tablename) return;
 	var datatable = window[tablename];
 	if (!datatable || !datatable.primary || !datatable.db_table) return;
-	var rowElement = findParentByTagName(obj, "TR");
+	var rowElement = $(obj)._parent("tr");
 	if (!rowElement) return;
 	var primary_id = rowElement.getAttribute("data-primary");
 	if (!primary_id) return;
@@ -1412,7 +1402,7 @@ function datatableFilter(btn, column_id) {
 					30
 			) + "px";
 
-		btn.findParentByTagName("th").classList.add("datatable-column-highlighted");
+		btn._parent("th").classList.add("datatable-column-highlighted");
 	}
 
 	registerDatepickers();

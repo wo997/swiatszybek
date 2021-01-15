@@ -32,7 +32,7 @@ function addMessageBox(elem, message, params = {}) {
 
 	var dismiss_btn = params.dismissable
 		? `
-          <button class="btn transparent" onclick="toggleMessageBox($(this).parent().parent().parent(), false)">
+          <button class="btn transparent" onclick="toggleMessageBox($(this)._parent()._parent()._parent(), false)">
             <img class='cross-icon' src='/src/img/cross.svg'>
           </button>
         `

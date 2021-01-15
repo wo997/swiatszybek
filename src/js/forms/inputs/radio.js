@@ -3,9 +3,9 @@
 document.addEventListener("click", (e) => {
 	var target = $(e.target);
 
-	var option = target.findParentByTagName("radio-option");
+	var option = target._parent("radio-option");
 	if (option) {
-		var input = option.findParentByTagName("radio-input");
+		var input = option._parent("radio-input");
 		input._children("radio-option").forEach((e) => {
 			e.classList.toggle("selected", e === option);
 		});

@@ -206,11 +206,11 @@ domload(() => {
 	registerForms();
 });
 
-function registerForms(form = null) {
+function registerForms(form = undefined) {
 	form = $(form);
 	let inputs = [];
-	if (form === null) {
-		inputs = $(document.body).findAll(
+	if (form === undefined) {
+		inputs = $(document.body)._children(
 			//"[data-form] [data-validate]:not(.change-registered)"
 			`[data-form] [name]:not(.change-registered)`
 		);
@@ -254,7 +254,7 @@ function registerForms(form = null) {
 
 		var obj = field;
 		if (field.type == "checkbox") {
-			obj = obj.parent();
+			obj = obj._parent();
 		}
 
 		if (

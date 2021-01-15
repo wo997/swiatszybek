@@ -18,7 +18,8 @@ function getCustomSize(node, val) {
 	if (val.charAt(val.length - 1) == "%") {
 		return (
 			Math.floor(
-				($(node).parent().getBoundingClientRect().width * parseInt(val)) / 100 -
+				($(node)._parent().getBoundingClientRect().width * parseInt(val)) /
+					100 -
 					0.5
 			) + "px"
 		);
@@ -133,7 +134,7 @@ function evalCss(val, node = null, params = {}) {
 	if (!val || !val.trim()) {
 		return 0;
 	}
-	const percent = def(node && node.parent(), document.body).clientWidth * 0.01;
+	const percent = def(node && node._parent(), document.body).clientWidth * 0.01;
 
 	const vw = document.body.offsetWidth * 0.01;
 	const vh = document.body.offsetHeight * 0.01;
