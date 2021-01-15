@@ -124,8 +124,8 @@ class NewCmsStyling {
 	mouseClick() {
 		const target = this.newCms.mouse_target;
 
-		const responsive_type_name = target.findParentByAttribute(
-			"data-responsive_type"
+		const responsive_type_name = target._parent(
+			"[data-responsive_type]"
 		);
 
 		if (responsive_type_name) {

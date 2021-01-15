@@ -60,7 +60,7 @@ function addVariantToBasket(variant_id, quantity_diff, options = {}) {
 
 	if (typeof variant_id === "object") {
 		variant_id = $(variant_id)
-			.findParentByAttribute("data-variant_id")
+			._parent("[data-variant_id]")
 			.getAttribute("data-variant_id");
 
 		if (!variant_id) {

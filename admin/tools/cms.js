@@ -845,7 +845,7 @@ function editContainerSettings() {
 		} else {
 			e.value = targets.getAttribute(`data-${attribute}`);
 
-			var group = findParentByAttribute(e, "data-select-group");
+			var group = e._parent("[data-select-group]");
 			if (group) {
 				var option = group.find(`[data-option="${e.value}"]`);
 				if (option) {
@@ -861,7 +861,7 @@ function editContainerSettings() {
 }
 
 function selectInGroup(option) {
-	var group = findParentByAttribute(option, "data-select-group");
+	var group = option._parent("[data-select-group]");
 
 	var input = group.find("input");
 	if (!input) return;

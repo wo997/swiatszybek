@@ -356,7 +356,7 @@ class NewCmsSidebar {
 	mouseClick() {
 		const target = this.newCms.mouse_target;
 
-		const show_side_menu = target.findParentByAttribute("data-show_side_menu");
+		const show_side_menu = target._parent("[data-show_side_menu]");
 		if (show_side_menu) {
 			this.showSideMenu(show_side_menu.getAttribute("data-show_side_menu"));
 		} else if (target._parent(".previous_side_menu")) {
