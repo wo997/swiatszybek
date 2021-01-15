@@ -84,12 +84,7 @@ function createSimpleList(params = {}) {
 
 	list.wrapper.insertAdjacentHTML("beforeend", list_html);
 
-	if (
-		!list.wrapper.findParentByClassName(
-			["scroll-panel", "scroll-shadow", "horizontal"],
-			{ require_all: true }
-		)
-	) {
+	if (!list.wrapper._parent(".scroll-panel.scroll-shadow.horizontal")) {
 		list.wrapper.insertAdjacentHTML(
 			"afterend",
 			`

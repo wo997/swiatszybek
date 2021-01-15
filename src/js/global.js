@@ -439,9 +439,9 @@ function getValue(input) {
  * @returns {PiepNode}
  */
 function findNode(node, selector, move, options = {}) {
-	const def = def(options.default, undefined);
+	const defa = def(options.default, undefined);
 	if (!node || !move) {
-		return def;
+		return defa;
 	}
 	if (!selector) {
 		return move(node);
@@ -453,7 +453,7 @@ function findNode(node, selector, move, options = {}) {
 		if (options.max > 0) {
 			options.max--;
 		} else {
-			return def;
+			return defa;
 		}
 		if (options.skip > 0) {
 			options.skip--;
@@ -469,14 +469,14 @@ function findNode(node, selector, move, options = {}) {
 			}
 		}
 		if (options.inside == node) {
-			return def;
+			return defa;
 		}
 		if (node === document.body) {
-			return def;
+			return defa;
 		}
 		node = move(node);
 	}
-	return def;
+	return defa;
 }
 
 /**

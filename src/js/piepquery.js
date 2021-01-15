@@ -80,9 +80,7 @@ function $(selector, parent = undefined) {
 			});
 			return nodes;
 		}
-		return nodes.filter((e) => {
-			$(e).matches(selector);
-		});
+		return nodes.filter((e) => $(e).matches(selector));
 	};
 	node._is_empty = () => {
 		return node.hasChildNodes();

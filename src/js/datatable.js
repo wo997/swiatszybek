@@ -27,6 +27,8 @@
  * renderRow?: () => {}
  * controls?: string
  * controlsRight?: string
+ * headersHTML: string
+ * columnStyles: any
  * }} datatable
  */
 function createDatatable(datatable) {
@@ -282,28 +284,29 @@ function createDatatable(datatable) {
 
 	if (datatable.definition) {
 		var sumWidthPercentages = 0;
-		for (def of datatable.definition) {
-			if (def.width && def.width.indexOf("%") != -1) {
-				sumWidthPercentages += parseFloat(def.width);
+		for (const column of datatable.definition) {
+			if (column.width && column.width.indexOf("%") != -1) {
+				sumWidthPercentages += parseFloat(column.width);
 			}
 		}
 		var scalePercentages = 100 / sumWidthPercentages;
-		for (def of datatable.definition) {
-			if (def.width && def.width.indexOf("%") != -1) {
-				def.width = Math.round(parseFloat(def.width) * scalePercentages) + "%";
+		for (const column of datatable.definition) {
+			if (column.width && column.width.indexOf("%") != -1) {
+				column.width =
+					Math.round(parseFloat(column.width) * scalePercentages) + "%";
 			}
 		}
 
-		var def_id = -1;
-		for (header of datatable.definition) {
-			def_id++;
+		var column_id = -1;
+		for (const header of datatable.definition) {
+			column_id++;
 			var additional_html = "";
 			if (header.sortable) {
 				var sortBy = header.sortable === true ? header.field : header.sortable;
 				additional_html += /*html*/ ` <i class="btn primary fas fa-sort datatable-sort-btn" onclick="datatableSort(this,'${sortBy}')" data-tooltip="Sortuj malejąco / rosnąco"></i>&nbsp;`;
 			}
 			if (header.searchable) {
-				additional_html += /*html*/ `<i class="btn primary fas fa-search datatable-search-btn" data-field="${header.field}" onclick="datatableFilter(this,'${def_id}')" data-tooltip="Filtruj wyniki"></i>`;
+				additional_html += /*html*/ `<i class="btn primary fas fa-search datatable-search-btn" data-field="${header.field}" onclick="datatableFilter(this,'${column_id}')" data-tooltip="Filtruj wyniki"></i>`;
 			}
 
 			var style = "";

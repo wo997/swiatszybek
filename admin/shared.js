@@ -22,6 +22,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("DOMContentLoaded", () => {
 	let exact = null;
+	/** @type {PiepNode} */
 	let shortest_hit = null;
 	let shortest_length = 100000;
 	$$(".navbar_admin .menu_item").forEach((e) => {
@@ -29,7 +30,7 @@ window.addEventListener("DOMContentLoaded", () => {
 		if (!a) {
 			return;
 		}
-		href = a.getAttribute("href");
+		const href = a.getAttribute("href");
 
 		if (
 			location.pathname.indexOf(href) === 0 ||
@@ -53,7 +54,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	if (shortest_hit) {
 		shortest_hit.classList.add("current-route");
 
-		var parent_sub_menu = shortest_hit.findParentByClassName("sub_menu");
+		var parent_sub_menu = shortest_hit._parent(".sub_menu");
 		if (parent_sub_menu) {
 			expandMenu(parent_sub_menu, parent_sub_menu.prev(), null, {
 				duration: 0,
