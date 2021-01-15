@@ -1,7 +1,7 @@
 /* js[global] */
 
 /**
- * @typedef { PiepNode | string } PiepSelector
+ * @typedef { PiepNode | string | EventTarget} PiepSelector
  * query selectors and piep nodes
  */
 

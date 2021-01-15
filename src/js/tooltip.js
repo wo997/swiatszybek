@@ -24,7 +24,6 @@ domload(() => {
 	window.addEventListener("mousemove", function (event) {
 		var t = window.tooltip.target;
 
-		// @ts-ignore
 		const target = $(event.target);
 		var e = target._parent("[data-tooltip]", { skip: 0 });
 		if (e && !e.hasAttribute("disabled")) {
