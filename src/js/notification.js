@@ -95,7 +95,7 @@ function showNotification(message, params = {}) {
 
 function dismissParentNotification(n) {
 	if (!n) return;
-	n = $(n).findParentByClassName("notification");
+	n = $(n)._parent(".notification");
 	if (!n) return;
 
 	n.style.opacity = 0;

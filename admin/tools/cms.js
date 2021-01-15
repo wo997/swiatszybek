@@ -252,7 +252,7 @@ function editBlock() {
 	}
 	var block_content = cmsTarget.find(".cms-block-content");
 	quillEditor.open(block_content, {
-		container: cmsTarget.findParentByClassName("cms-container"),
+		container: cmsTarget._parent(".cms-container"),
 		block: cmsTarget,
 		callback: () => {
 			postSaveCmsNode();
@@ -292,7 +292,7 @@ function addContainer(
 		} else {
 			cmsContainer.insertAdjacentHTML("afterbegin", getContainer(content));
 		}
-	} else if (!cmsTarget || !cmsTarget.findParentByClassName("cms-wrapper")) {
+	} else if (!cmsTarget || !cmsTarget._parent(".cms-wrapper")) {
 		cmsContainer.insertAdjacentHTML(
 			placeAfter ? "beforeend" : "afterbegin",
 			getContainer(content)
@@ -462,7 +462,7 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
 	if (!cmsTarget) return;
 	if (!cmsTarget.next() && !cmsTarget.prev()) {
 		if (cmsParams.delete_block_with_parent !== false) {
-			cmsTarget = findParentByClassName(cmsTarget, "cms-container");
+			cmsTarget = cmsTarget._parent(".cms-container");
 			deleteContainer(cmsTarget, false);
 			return;
 		}
@@ -1277,8 +1277,7 @@ var mouseMoveContainer = function (event) {
 
 	if (
 		secondY < firstY + 25 &&
-		!findParentByClassName(target, "cms-block-actions") &&
-		!findParentByClassName(target, "cms-block-options")
+		!target._parent(".cms-block-actions, .cms-block-options")
 	) {
 		cmsInsertContainerBtn.style.display = "flex";
 		var h = 20; //(secondY - firstY);

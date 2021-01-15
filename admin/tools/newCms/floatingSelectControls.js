@@ -43,7 +43,7 @@ class NewCmsSelectControls {
 		/** @type {SelectControl} */
 		// @ts-ignore
 		const select_control = target
-			? target.findParentByClassName("select_control")
+			? target._parent(".select_control")
 			: null;
 
 		if (select_control) {
@@ -52,7 +52,7 @@ class NewCmsSelectControls {
 
 		if (!hovered_block) {
 			hovered_block = target
-				? target.findParentByClassName("newCms_block")
+				? target._parent(".newCms_block")
 				: null;
 		}
 

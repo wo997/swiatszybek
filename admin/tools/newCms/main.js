@@ -567,7 +567,7 @@ class NewCms {
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
 		const side_block = target
-			? target.findParentByClassName("side_block")
+			? target._parent(".side_block")
 			: null;
 		if (side_block) {
 			side_block.styling_data = this.styling.getDefaultBlockStyles();

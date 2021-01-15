@@ -359,9 +359,9 @@ class NewCmsSidebar {
 		const show_side_menu = target.findParentByAttribute("data-show_side_menu");
 		if (show_side_menu) {
 			this.showSideMenu(show_side_menu.getAttribute("data-show_side_menu"));
-		} else if (target.findParentByClassName("previous_side_menu")) {
+		} else if (target._parent(".previous_side_menu")) {
 			this.showPreviousSideMenu();
-		} else if (target.findParentByClassName("toggle_sidebar")) {
+		} else if (target._parent(".toggle_sidebar")) {
 			this.toggleSidebar();
 		}
 	}

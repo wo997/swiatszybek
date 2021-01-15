@@ -2,8 +2,8 @@
 
 document.addEventListener("click", (event) => {
 	var t = $(event.target);
-	var option = t.findParentByClassName("tab-option");
-	var menu = t.findParentByClassName("tab-menu");
+	var option = t._parent(".tab-option");
+	var menu = t._parent(".tab-menu");
 	if (!option || !header) return;
 
 	var tab_id = option.getAttribute("data-tab_id");

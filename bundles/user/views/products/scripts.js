@@ -187,7 +187,7 @@ function searchProducts(options = {}) {
 		var attribute_value_sub_ids = [];
 		list.findAll(":checked").forEach((checkbox) => {
 			var subCheckboxes = checkbox
-				.findParentByClassName("attributes-list-wrapper")
+				._parent(".attributes-list-wrapper")
 				.find(".attribute-list");
 			var anySubChecked = subCheckboxes
 				? subCheckboxes.find(":checked")

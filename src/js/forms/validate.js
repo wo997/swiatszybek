@@ -38,7 +38,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 		}
 	}
 	if (!field_title) {
-		const field_wrapper = field.findParentByClassName("field-wrapper");
+		const field_wrapper = field._parent(".field-wrapper");
 		if (field_wrapper) {
 			field_title = field_wrapper.find(".field-title");
 		}
@@ -139,19 +139,8 @@ function validateForm(form, params = {}) {
 	form = $(form);
 
 	var fields = form.findAll("[data-validate]");
-	for (field of fields) {
-		if (params.hiddenClassList) {
-			// if any parent has a class like one of these ignore that field
-			var found = false;
-			if (field.findParentByClassName(params.hiddenClassList)) {
-				found = true;
-				break;
-			}
-			if (found) {
-				continue;
-			}
-		}
-		if (field.findParentByClassName("hidden")) continue;
+	for (const field of fields) {
+		if (field._parent(".hidden")) continue;
 
 		if (
 			params.except_backend &&

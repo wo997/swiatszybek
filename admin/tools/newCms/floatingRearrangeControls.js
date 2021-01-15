@@ -118,7 +118,7 @@ class NewCmsRearrangeControls {
 		) {
 			// @ts-ignore
 			rearrange_control_node = target
-				? target.findParentByClassName("rearrange_control")
+				? target._parent(".rearrange_control")
 				: null;
 
 			if (
@@ -176,12 +176,6 @@ class NewCmsRearrangeControls {
 			if (rearrange_control_node) {
 				rearrange_near_block = rearrange_control_node.rearrange_near_block;
 			}
-
-			/*if (!rearrange_near_block) {
-				rearrange_near_block = target
-					? target.findParentByClassName("newCms_block")
-					: null;
-			}*/
 		}
 
 		/** @type {NewCmsBlock} */
@@ -198,9 +192,8 @@ class NewCmsRearrangeControls {
 				rearrange_position = "inside";
 			} else {
 				// @ts-ignore
-				parent_container = rearrange_near_block.findParentByClassName(
-					"container",
-					{ skip: 1 }
+				parent_container = rearrange_near_block._parent(
+					".container"
 				);
 
 				if (!parent_container) {
@@ -449,10 +442,8 @@ class NewCmsRearrangeControls {
 						return;
 					}
 
-					const parent_container = block.findParentByClassName("container", {
-						skip: 1,
-					});
-
+					const parent_container = block._parent(".container");
+				
 					if (parent_container && parent_container.dataset.block === "grid") {
 						// no befores and afters in a grid, just laundry
 						return;
@@ -588,9 +579,7 @@ class NewCmsRearrangeControls {
 					// don't touch itself or parent or place in another grid
 					return;
 				}
-				const parent_container = block.findParentByClassName("container", {
-					skip: 1,
-				});
+				const parent_container = block._parent(".container");
 
 				const is_container_horizontal = this.newCms.styling.isContainerHorizontal(
 					// @ts-ignore

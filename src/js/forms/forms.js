@@ -137,7 +137,7 @@ function getFormData(form, params = {}) {
 	$(form)
 		.findAll(`[${find_by}]`)
 		.forEach((e) => {
-			if (excludeHidden && e.findParentByClassName(["hidden", "form-hidden"])) {
+			if (excludeHidden && e._parent(".hidden, .form-hidden")) {
 				return;
 			}
 			var parent_named_node = e.findParentByAttribute("name", {

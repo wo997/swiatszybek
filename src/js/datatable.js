@@ -596,7 +596,7 @@ function createDatatable(datatable) {
 				}
 			}
 			$$(`.${datatable.name} [data-param]`).forEach((e) => {
-				if (e.findParentByClassName("hidden", { inside: datatable.target })) {
+				if (e._parent(".hidden", { inside: datatable.target })) {
 					return;
 				}
 				params[e.getAttribute("data-param")] = e.getValue();
@@ -1012,7 +1012,7 @@ window.addEventListener("dragstart", (event) => {
 	}
 	if (
 		target.tagName != "TR" ||
-		target.findParentByClassName("has_selected_rows")
+		target._parent(".has_selected_rows")
 	) {
 		return;
 	}
@@ -1186,8 +1186,8 @@ function renderIsPublished(data) {
 
 function setPublish(obj, published) {
 	obj = $(obj);
-	var tableElement = obj.findParentByClassName("datatable-wrapper");
-	var listElement = obj.findParentByClassName("simple-list");
+	var tableElement = obj._parent(".datatable-wrapper");
+	var listElement = obj._parent(".simple-list");
 	if (!tableElement && !listElement) return;
 
 	if (listElement) {
@@ -1223,7 +1223,7 @@ function setPublish(obj, published) {
 					type: "success",
 				}
 			);
-			if (obj.findParentByClassName("selected_rows")) {
+			if (obj._parent(".selected_rows")) {
 				datatable.createList();
 			} else {
 				datatable.search();
@@ -1505,11 +1505,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		window.addEventListener("click", (e) => {
 			var hide = true;
-			var btn = $(e.target).findParentByClassName("datatable-search-btn");
+			var btn = $(e.target)._parent(".datatable-search-btn");
 			if (btn) {
 				hide = false;
 			} else {
-				if ($(e.target).findParentByClassName("filter_menu")) {
+				if ($(e.target)._parent(".filter_menu")) {
 					hide = false;
 				}
 			}
@@ -1661,7 +1661,7 @@ function filterOrSortChanged() {
 
 function getParentDatatable(node) {
 	node = $(node);
-	var tableNode = node.findParentByClassName("datatable-wrapper");
+	var tableNode = node._parent(".datatable-wrapper");
 	if (!tableNode) return null;
 	var tablename = tableNode.getAttribute("data-datatable-name");
 	if (!tablename) return null;

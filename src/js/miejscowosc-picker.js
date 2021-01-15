@@ -38,7 +38,7 @@ function kodPocztowyChange(src) {
 function getMiejscowoscPickerTarget(obj) {
 	if (!obj) return;
 	obj = $(obj);
-	var wrapper = obj.findParentByClassName("miejscowosc-picker-wrapper");
+	var wrapper = obj._parent(".miejscowosc-picker-wrapper");
 	if (!wrapper) {
 		console.warn("miejscowosc picker wrapper missing");
 		return;
@@ -54,7 +54,7 @@ function getMiejscowoscPickerTarget(obj) {
 function getMiejscowoscPickerList(obj) {
 	if (!obj) return;
 	obj = $(obj);
-	var wrapper = obj.findParentByClassName("miejscowosc-picker-wrapper");
+	var wrapper = obj._parent(".miejscowosc-picker-wrapper");
 	if (!wrapper) {
 		console.warn("miejscowosc picker wrapper missing");
 		return;

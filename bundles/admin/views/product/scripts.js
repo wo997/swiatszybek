@@ -98,7 +98,7 @@ function createAttributeSelect(combo, options = {}) {
 		select.classList.add("combo-attribute-registered");
 
 		const changeCallback = () => {
-			var wrapper = findParentByClassName(select, "combo-select-wrapper");
+			var wrapper = select._parent(".combo-select-wrapper");
 			comboSelectValuesChanged(wrapper, options);
 
 			if (select.value === "" && select.prev_value) {
@@ -476,7 +476,7 @@ function getVariantFiltersUniqueOptions(variant_filters) {
 
 function choiceNameChanged(input) {
 	input = $(input);
-	var sub_filter = input.findParentByClassName(`sub_filter`);
+	var sub_filter = input._parent(`.sub_filter`);
 
 	var add_buttons = sub_filter.find(`.add_buttons`);
 
@@ -499,7 +499,7 @@ function choiceNameChanged(input) {
 
 function optionNameChanged(input) {
 	input = $(input);
-	var sub_filter = input.findParentByClassName(`sub_filter`);
+	var sub_filter = input._parent(`.sub_filter`);
 
 	var add_buttons = sub_filter.find(`.add_buttons`);
 
@@ -530,7 +530,7 @@ function optionNameChanged(input) {
 
 function choiceAttributeChanged(select) {
 	select = $(select);
-	var sub_filter = select.findParentByClassName(`sub_filter`);
+	var sub_filter = select._parent(`.sub_filter`);
 	var filter_name = sub_filter.find(`[name="filter_name"]`);
 	filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
 }
@@ -552,7 +552,7 @@ function choiceValuesChanged(values_combo) {
 	whole_value = whole_value.trim();
 
 	if (whole_value) {
-		var sub_filter = values_combo.findParentByClassName(`sub_filter`);
+		var sub_filter = values_combo._parent(`.sub_filter`);
 		var value_field = sub_filter.find(`[name="value"]`);
 		value_field.setValue(whole_value);
 	}
@@ -659,7 +659,7 @@ function createVariantFiltersSimpleList(node, options = {}) {
 		},
 
 		onChange: (data, list, row) => {
-			var options_wrapper = node.findParentByClassName("options_wrapper");
+			var options_wrapper = node._parent(".options_wrapper");
 			if (options_wrapper) {
 				options_wrapper.setAttribute("data-option-count", data.length);
 			}
@@ -706,18 +706,18 @@ function createFilterOptionsSimpleList(node) {
 			value: "",
 		},
 		onRowInserted: (row, values) => {
-			choiceListChanged(row.findParentByClassName("filter_wrapper").parent());
+			choiceListChanged(row._parent(".filter_wrapper").parent());
 			createVariantFiltersSimpleList(row.find(`[name="variant_filters"]`));
 		},
 		onChange: (data, list, row) => {
-			var filter_wrapper = node.findParentByClassName("filter_wrapper");
+			var filter_wrapper = node._parent(".filter_wrapper");
 			if (filter_wrapper) {
 				filter_wrapper.find(".option_count").setContent(`(${data.length})`);
 			}
 		},
 	});
 
-	var filter_wrapper = node.findParentByClassName("filter_wrapper");
+	var filter_wrapper = node._parent(".filter_wrapper");
 	var add_buttons = filter_wrapper.find(".add_buttons");
 	if (add_buttons) {
 		var expandList = () => {

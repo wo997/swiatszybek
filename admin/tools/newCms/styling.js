@@ -1044,10 +1044,6 @@ class NewCmsStyling {
 					const temp_length = is_container_horizontal ? d1 : d2;
 					content_length += temp_length;
 
-					/*if (temp_block.findParentByClassName("block_17")) {
-                        console.log(temp_block, width);
-                    }*/
-
 					const temp_margin_width = is_container_horizontal ? d2 : d1;
 
 					if (temp_margin_width > content_width) {

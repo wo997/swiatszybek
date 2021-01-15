@@ -329,7 +329,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	document.addEventListener("mousedown", (event) => {
 		main_search_wrapper.classList.toggle(
 			"active",
-			$(event.target).findParentByClassName("main-search-wrapper")
+			$(event.target)._parent(".main-search-wrapper")
 		);
 	});
 	input.addEventListener("input", () => {

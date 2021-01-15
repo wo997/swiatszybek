@@ -306,7 +306,7 @@ function setValue(input, value = null, params = {}) {
 		}
 		input.datepicker.setDate(value);
 	} else if (input.classList.contains("table-selection-value")) {
-		var datatable = input.findParentByClassName("datatable-wrapper");
+		var datatable = input._parent(".datatable-wrapper");
 		window[
 			datatable.getAttribute("data-datatable-name")
 		].setSelectedValuesFromString(value);

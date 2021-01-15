@@ -85,10 +85,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 
 	node = $(node);
 	if (alsoCurrent) {
-		var parent = node.findParentByClassName([
-			"category-picker-row",
-			"categories",
-		]);
+		var parent = node._parent(".category-picker-row, .categories");
 		if (parent) {
 			var nodeExpander = parent.next();
 			if (nodeExpander && parent.find(".expand_arrow")) {
@@ -99,7 +96,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 
 	parent = node;
 	while (true) {
-		var parent = parent.findParentByClassName(["expand_y", "categories"]);
+		var parent = parent._parent(".expand_y, .categories");
 		if (!parent) {
 			return;
 		}
@@ -120,7 +117,7 @@ function expandCategoriesAbove(node, alsoCurrent = true) {
 
 function categoryChanged(el) {
 	el = $(el);
-	var element = el.findParentByClassName("category-picker");
+	var element = el._parent(".category-picker");
 	var singleselect = element.hasAttribute("data-single");
 	if (singleselect) {
 		if (el.checked) {

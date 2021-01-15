@@ -106,14 +106,13 @@ function createSimpleList(params = {}) {
 	//<div class="btn primary add_btn add_end main_add_btn" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i>
 
 	list.insertRowFromBtn = (btn, begin = true, user = true) => {
-		const slr = btn.findParentByClassName("sub-list");
-		console.log(btn, slr);
+		const slr = btn._parent(".sub-list");
 
 		var row = list.insertRow(
 			params.default_row,
 			slr
 				? slr.find(".list")
-				: btn.findParentByClassName("above-simple-list").next().find(".list"),
+				: btn._parent(".above-simple-list").next().find(".list"),
 			begin,
 			user
 		);
@@ -323,8 +322,8 @@ function createSimpleList(params = {}) {
 			e.addEventListener("change", () => {
 				list.registerFields(listTarget);
 				list.valuesChanged(
-					e.findParentByClassName(
-						list.table ? "simple-list-row" : "simple-list-row-wrapper"
+					e._parent(
+						list.table ? ".simple-list-row" : ".simple-list-row-wrapper"
 					)
 				);
 			});
@@ -360,7 +359,7 @@ function createSimpleList(params = {}) {
 						.find(".simple-list-row")
 						.findAll("[name]")
 						.forEach((e) => {
-							var parent_row_node = e.findParentByClassName("simple-list-row");
+							var parent_row_node = e._parent(".simple-list-row");
 
 							// only direct named children communicate with subform
 							if (simpleListRowWrapper != parent_row_node.parent()) {
@@ -389,7 +388,7 @@ function createSimpleList(params = {}) {
 
 		if (list.recursive) {
 			list.target.findAll(".simple-list-row-wrapper").forEach((listRow) => {
-				var parent_sl_node = listRow.findParentByClassName("simple-list");
+				var parent_sl_node = listRow._parent(".simple-list");
 
 				// only direct named children communicate with subform
 				if (list.wrapper != parent_sl_node) {
