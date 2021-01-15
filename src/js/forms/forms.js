@@ -79,9 +79,7 @@ function setFormData(data, form, params = {}) {
 			return;
 		}
 
-		var parent_named_node = e.findParentByAttribute("name", {
-			skip: 1,
-		});
+		var parent_named_node = e._parent("[name]");
 		// only direct named children communicate with subform
 		if (parent_named_node && parent_named_node.findParentNode(form)) {
 			return;
@@ -140,9 +138,7 @@ function getFormData(form, params = {}) {
 			if (excludeHidden && e._parent(".hidden, .form-hidden")) {
 				return;
 			}
-			var parent_named_node = e.findParentByAttribute("name", {
-				skip: 1,
-			});
+			var parent_named_node = e._parent("[name]");
 			// only direct named children communicate with subform
 			if (parent_named_node && parent_named_node.findParentNode(form)) {
 				return;
@@ -160,9 +156,7 @@ function getFormData(form, params = {}) {
 					break;
 				}
 
-				var p = parent_sub_form.findParentByAttribute("data-form", {
-					skip: 1,
-				});
+				var p = parent_sub_form._parent("[data-form]");
 				if (p != form) {
 					parent_sub_form = p;
 				} else {
@@ -237,7 +231,7 @@ function registerForms(form = undefined) {
 
 	var unique_forms = [];
 	inputs.forEach((field) => {
-		const parent_form = field.findParentByAttribute("data-form");
+		const parent_form = field._parent("[data-form]");
 
 		field.parent_form = parent_form;
 

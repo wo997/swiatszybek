@@ -223,7 +223,7 @@ function hideModalTopMost() {
 
 function hideParentModal(obj = null, isCancel = false) {
 	if (obj) {
-		var modal = findParentByAttribute(obj, "data-modal");
+		var modal = obj._parent("[data-modal]");
 		hideModal(modal ? modal.id : null, isCancel);
 	}
 	hideModal(null);
@@ -318,7 +318,7 @@ window.addEventListener("mousedown", (event) => {
 	var form = null;
 
 	if (event.target.classList.contains("close-modal-btn")) {
-		form = event.target.findParentByAttribute("data-modal");
+		form = event.target._parent("[data-modal]");
 	} else if (event.target.hasAttribute("data-dismissable")) {
 		form = event.target;
 	}

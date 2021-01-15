@@ -309,9 +309,7 @@ function createSimpleList(params = {}) {
 		}
 
 		listTarget.findAll("[name]:not(.param-registered)").forEach((e) => {
-			var parent_named_node = e.findParentByAttribute("name", {
-				skip: 1,
-			});
+			var parent_named_node = e._parent("[name]");
 			// only direct named children communicate with subform
 			if (parent_named_node && parent_named_node.findParentNode(listTarget)) {
 				return;
@@ -340,9 +338,7 @@ function createSimpleList(params = {}) {
 				listTarget.findAll("tr").forEach((row_node) => {
 					var row = {};
 					row_node.findAll("[name]").forEach((e) => {
-						var parent_named_node = e.findParentByAttribute("name", {
-							skip: 1,
-						});
+						var parent_named_node = e._parent("[name]");
 						// there is no other component allowed when we read the data, we use its value instead
 						if (parent_named_node != list.wrapper) {
 							return;

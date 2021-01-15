@@ -69,9 +69,9 @@ function comboSelectValuesChanged(combo, options = {}) {
 		options.onChange(combo, attribute_id, any_selected);
 	}
 
-	var attribute_values = combo.findParentByAttribute(
-		"data-type",
-		"attribute_values"
+	var attribute_values = combo._parent(
+		"[data-type]",
+		"[attribute_values]"
 	);
 	if (attribute_values) {
 		attribute_values._dispatch_change();
@@ -146,9 +146,9 @@ function anythingValueChanged(anything_wrapper) {
 
 	anything_wrapper.classList.toggle("any_selected", any_selected);
 
-	var attribute_values = anything_wrapper.findParentByAttribute(
-		"data-type",
-		"attribute_values"
+	var attribute_values = anything_wrapper._parent(
+		"[data-type]",
+		"[attribute_values]"
 	);
 	if (attribute_values) {
 		attribute_values._dispatch_change();

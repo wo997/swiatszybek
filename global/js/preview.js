@@ -26,7 +26,7 @@ domload(() => {
 		if (typeof preview_params !== "undefined") {
 			const cms_wrapper = $(`[data-cms-src="${preview_params.content_name}"]`);
 			const cms_blocks = cms_wrapper._children(".cms-block").filter((block) => {
-				return !block.findParentByAttribute("data-module-block", { skip: 1 });
+				return !block._parent("[data-module-block]");
 			});
 			const block_index = preview_params.dist_info.block_index;
 			const block_we_wanna_see = cms_blocks[block_index];
