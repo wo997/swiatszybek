@@ -107,7 +107,7 @@ function productListLoaded() {
 	});
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	$$(".product_list_module.grid").forEach((e) => {
 		setProductListGridDimensions(e);
 	});
@@ -133,7 +133,7 @@ function preventProductImagesLongPress() {
 
 /*
 
-window.addEventListener("DOMContentLoaded", function () {
+domload(function () {
   if (!IS_MOBILE) return;
   mobileFocusProductFrame();
 });

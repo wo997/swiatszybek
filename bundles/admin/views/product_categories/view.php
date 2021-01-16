@@ -37,7 +37,7 @@
 
                 <div class="field-title">
                     Ikonka
-                    <button class="btn primary" onclick='fileManager.open(this.next(),{asset_types:["image"], size: "sm"})'>Wybierz</button>
+                    <button class="btn primary" onclick='fileManager.open(this._next(),{asset_types:["image"], size: "sm"})'>Wybierz</button>
                     <img name="icon" style="max-width:100px;max-height:100px" />
                 </div>
 

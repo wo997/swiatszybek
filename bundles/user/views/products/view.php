@@ -25,7 +25,7 @@ function showCategory($category, $level = 0)
     $displayCount = isset($category["product_count"]) ? "<span>(" . $category["product_count"] . ")</span>" : "";
     echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
     if ($count && $level > 0) {
-        echo "<div class='btn expand_arrow' onclick='expandMenu($(this).parent().next(),$(this).parent())'><i class='fas fa-chevron-right'></i></div>";
+        echo "<div class='btn expand_arrow' onclick='expandMenu($(this)._parent()._next(),$(this)._parent())'><i class='fas fa-chevron-right'></i></div>";
     }
     $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
     $styles = $level == 0 ? "style='padding-left:0'" : "";

@@ -5,7 +5,7 @@ var galleryThumbs;
 
 var RATING = 0;
 
-window.addEventListener("DOMContentLoaded", function () {
+domload(function () {
 	if ($(".swiper-container") != null) {
 		galleryThumbs = new Swiper(".gallery-thumbs", {
 			centerInsufficientSlides: true,
@@ -223,7 +223,7 @@ function clickVariant(variant_id) {
 
 // komentarze start
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	createDatatable({
 		name: "comments",
 		lang: {

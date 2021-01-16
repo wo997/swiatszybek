@@ -69,10 +69,7 @@ function comboSelectValuesChanged(combo, options = {}) {
 		options.onChange(combo, attribute_id, any_selected);
 	}
 
-	var attribute_values = combo._parent(
-		"[data-type]",
-		"[attribute_values]"
-	);
+	var attribute_values = combo._parent("[data-type]", "[attribute_values]");
 	if (attribute_values) {
 		attribute_values._dispatch_change();
 	}
@@ -215,7 +212,7 @@ domload(() => {
 			return /*html*/ `
             <div class='select-image-wrapper' style="display: flex;align-items: center">
               <img name="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
-              <button class="btn primary add_img_btn" onclick="fileManager.open(this.prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
+              <button class="btn primary add_img_btn" onclick="fileManager.open(this._prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
             </div>
           `;
 		},
@@ -303,11 +300,11 @@ domload(() => {
           <textarea name="name" class="field inline" style="height: 3.75em;"></textarea>
         </td>
         <td>
-          <input type='hidden' name="attributes" onchange="displayAttributesPreview($(this).next(), this.value)">
+          <input type='hidden' name="attributes" onchange="displayAttributesPreview($(this)._next(), this.value)">
           <div data-tooltip class='clamp-lines clamp-4'></div>
         </td>
         <td>
-          <input type='hidden' name="published" onchange='$(this).next().setContent(renderIsPublished({published:this.getValue()}))'>
+          <input type='hidden' name="published" onchange='$(this)._next().setContent(renderIsPublished({published:this.getValue()}))'>
           <span></span>
         </td>
         <td>
@@ -343,7 +340,7 @@ domload(() => {
           <input type='hidden' name="was_stock">
         </td>
         <td style="width:90px;">
-          <button class='btn primary edit-btn' onclick='editVariant($(this).parent().parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
+          <button class='btn primary edit-btn' onclick='editVariant($(this)._parent()._parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
         </td>
       `;
 		},
@@ -626,7 +623,7 @@ function createVariantFiltersSimpleList(node, options = {}) {
             </div>
             <div class='indent'>
               <div>
-                <button class='btn transparent expand_arrow open' onclick='expandMenu($(this).parent().next(),$(this).parent())'><i class='fas fa-chevron-right'></i></button>
+                <button class='btn transparent expand_arrow open' onclick='expandMenu($(this)._parent()._next(),$(this)._parent())'><i class='fas fa-chevron-right'></i></button>
                 <span class='field-title inline indent_field_title'>
                   Lista opcji
                   <span class='option_count'></span>
@@ -690,7 +687,7 @@ function createFilterOptionsSimpleList(node) {
               Wartość:
               <div class='inline' name='selected_attribute_values' data-type="attribute_values" onchange="choiceValuesChanged(this)"></div>
             </div>
-            <button class='btn secondary semi-bold add_additional_filters' onclick='this.next().find(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
+            <button class='btn secondary semi-bold add_additional_filters' onclick='this._next().find(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
 
             <div class='indent'>
               <div class='field-title indent_field_title'>
@@ -706,7 +703,7 @@ function createFilterOptionsSimpleList(node) {
 			value: "",
 		},
 		onRowInserted: (row, values) => {
-			choiceListChanged(row._parent(".filter_wrapper").parent());
+			choiceListChanged(row._parent(".filter_wrapper")._parent());
 			createVariantFiltersSimpleList(row.find(`[name="variant_filters"]`));
 		},
 		onChange: (data, list, row) => {

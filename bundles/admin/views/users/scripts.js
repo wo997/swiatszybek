@@ -1,6 +1,6 @@
 /* js[view] */
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	var tableName = "mytable";
 	createDatatable({
 		name: tableName,
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	const definition = zamowienia_table_definition.filter(
 		(elem) => ["imie", "nazwisko", "firma"].indexOf(elem.field) === -1
 	);

@@ -81,7 +81,7 @@ function setFormData(data, form, params = {}) {
 
 		var parent_named_node = e._parent("[name]");
 		// only direct named children communicate with subform
-		if (parent_named_node && parent_named_node.findParentNode(form)) {
+		if (parent_named_node && parent_named_node._parent(form)) {
 			return;
 		}
 
@@ -140,7 +140,7 @@ function getFormData(form, params = {}) {
 			}
 			var parent_named_node = e._parent("[name]");
 			// only direct named children communicate with subform
-			if (parent_named_node && parent_named_node.findParentNode(form)) {
+			if (parent_named_node && parent_named_node._parent(form)) {
 				return;
 			}
 
@@ -151,7 +151,7 @@ function getFormData(form, params = {}) {
 			var inside = true;
 
 			while (parent_sub_form) {
-				if (!parent_sub_form.findParentNode(form, { skip: 1 })) {
+				if (!parent_sub_form._parent(form, { skip: 1 })) {
 					inside = false;
 					break;
 				}

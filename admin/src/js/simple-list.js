@@ -57,7 +57,7 @@ function createSimpleList(params = {}) {
 		params.injectAddButtons(add_btns);
 	} else {
 		var success = false;
-		var prev = list.wrapper.prev();
+		var prev = list.wrapper._prev();
 		prev.classList.add("above-simple-list");
 		if (prev) {
 			var add_buttons = prev.find(".add_buttons");
@@ -98,7 +98,7 @@ function createSimpleList(params = {}) {
     `
 		);
 		list.wrapper
-			.next()
+			._next()
 			.find(".simple-list-scroll-content")
 			.appendChild(list.wrapper);
 	}
@@ -112,7 +112,7 @@ function createSimpleList(params = {}) {
 			params.default_row,
 			slr
 				? slr.find(".list")
-				: btn._parent(".above-simple-list").next().find(".list"),
+				: btn._parent(".above-simple-list")._next().find(".list"),
 			begin,
 			user
 		);
@@ -123,7 +123,7 @@ function createSimpleList(params = {}) {
 	};
 
 	list.insertRowFromTopBtn = (btn, begin = true, user = true) => {
-		var add_btn = btn.parent().next().find(".add_btn");
+		var add_btn = btn._parent()._next().find(".add_btn");
 		if (add_btn) {
 			list.insertRowFromBtn(add_btn, begin, user);
 		}
@@ -193,9 +193,9 @@ function createSimpleList(params = {}) {
 	list.removeRowFromBtn = (btn) => {
 		var tar = null;
 		if (list.params.table) {
-			tar = $(btn).parent().parent();
+			tar = $(btn)._parent()._parent();
 		} else {
-			tar = $(btn).parent().parent().parent();
+			tar = $(btn)._parent()._parent()._parent();
 		}
 		list.removeRow(tar);
 	};
@@ -243,8 +243,8 @@ function createSimpleList(params = {}) {
 				`<tr class='simple-list-row'>
             ${params.render()}
             <td class='action_buttons'>
-              <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent(),this.parent().parent().prev());simple_lists[${simple_list_id}].valuesChanged();"></i>
-              <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent(),this.parent().parent().next());simple_lists[${simple_list_id}].valuesChanged();"></i>
+              <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this)._parent()._parent(),this._parent()._parent()._prev());simple_lists[${simple_list_id}].valuesChanged();"></i>
+              <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this)._parent()._parent(),this._parent()._parent()._next());simple_lists[${simple_list_id}].valuesChanged();"></i>
               <i class="btn secondary fas fa-times remove-row-btn" 
                 onclick="simple_lists[${simple_list_id}].removeRowFromBtn(this);">
               </i>
@@ -260,8 +260,8 @@ function createSimpleList(params = {}) {
                 <div style="width:5px;margin-left:auto"></div>
                 ${btnAddTop}
                 <div class='action_buttons'>
-                  <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().prev());simple_lists[${simple_list_id}].valuesChanged();"></i>
-                  <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this).parent().parent().parent(),this.parent().parent().parent().next());simple_lists[${simple_list_id}].valuesChanged();"></i>
+                  <i class="btn secondary fas fa-arrow-up swap-row-btn btn-up" onclick="swapNodes($(this)._parent()._parent()._parent(),this._parent()._parent()._parent()._prev());simple_lists[${simple_list_id}].valuesChanged();"></i>
+                  <i class="btn secondary fas fa-arrow-down swap-row-btn btn-down" onclick="swapNodes($(this)._parent()._parent()._parent(),this._parent()._parent()._parent()._next());simple_lists[${simple_list_id}].valuesChanged();"></i>
                   <i class="btn secondary fas fa-times remove-row-btn" 
                     onclick="simple_lists[${simple_list_id}].removeRowFromBtn(this);">
                   </i>
@@ -311,7 +311,7 @@ function createSimpleList(params = {}) {
 		listTarget.findAll("[name]:not(.param-registered)").forEach((e) => {
 			var parent_named_node = e._parent("[name]");
 			// only direct named children communicate with subform
-			if (parent_named_node && parent_named_node.findParentNode(listTarget)) {
+			if (parent_named_node && parent_named_node._parent(listTarget)) {
 				return;
 			}
 
@@ -358,7 +358,7 @@ function createSimpleList(params = {}) {
 							var parent_row_node = e._parent(".simple-list-row");
 
 							// only direct named children communicate with subform
-							if (simpleListRowWrapper != parent_row_node.parent()) {
+							if (simpleListRowWrapper != parent_row_node._parent()) {
 								return;
 							}
 							var param = e.getAttribute("name");

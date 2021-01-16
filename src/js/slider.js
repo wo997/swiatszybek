@@ -28,25 +28,7 @@ function animateSliders() {
 		const min_scroll = 0;
 		const max_scroll = slides_container.offsetWidth - slider.offsetWidth;
 
-		if (slider._grabbed_at_scroll) {
-			const target_velocity =
-				slider._last_scroll_grabbed - slider._scroll_grabbed;
-
-			$(".i").setContent(
-				slider._last_scroll_grabbed.toPrecision(5) +
-					" ---- " +
-					slider._scroll_grabbed.toPrecision(5)
-			);
-
-			const follow_rate = 0.5;
-			slider._velocity =
-				target_velocity * follow_rate + slider._velocity * (1 - follow_rate);
-			slider._last_scroll_grabbed = slider._scroll_grabbed;
-		} else {
-			slider._velocity *= 0.9;
-		}
-
-		slider._scroll += slider._velocity;
+		let follow_rate = 1;
 
 		const bounce_rate = 0.1;
 		const slow_rate = 0.5;
@@ -58,7 +40,22 @@ function animateSliders() {
 			slider._scroll =
 				slider._scroll * (1 - bounce_rate) + max_scroll * bounce_rate;
 			slider._velocity *= slow_rate;
+
+			follow_rate = 0.2;
 		}
+
+		if (slider._grabbed_at_scroll) {
+			const target_velocity =
+				slider._last_scroll_grabbed - slider._scroll_grabbed;
+
+			slider._velocity =
+				target_velocity * follow_rate + slider._velocity * (1 - follow_rate);
+			slider._last_scroll_grabbed = slider._scroll_grabbed;
+		} else {
+			slider._velocity *= 0.9;
+		}
+
+		slider._scroll += slider._velocity;
 
 		slides_container.style.transform = `translateX(${
 			Math.round(-slider._scroll * 10) * 0.1
@@ -67,6 +64,12 @@ function animateSliders() {
 
 	requestAnimationFrame(animateSliders);
 }
+
+window.addEventListener("resize", () => {
+	wo997_sliders.forEach((slider) => {
+		slider._resize();
+	});
+});
 
 /**
  * @typedef {{
@@ -77,6 +80,7 @@ function animateSliders() {
  * _scroll_grabbed: number
  * _last_scroll_grabbed: number
  * _release_slider()
+ * _resize()
  * } & PiepNode} PiepSlider
  */
 
@@ -97,6 +101,11 @@ function initSlider(node) {
 		slider._grabbed_at_scroll = undefined;
 		slider._scroll_grabbed = undefined;
 		slider._last_scroll_grabbed = undefined;
+	};
+
+	slider._resize = () => {
+		const width = evalCss(slider.dataset.slide_width, slider).toFixed(1);
+		slider.style.setProperty("--slide-width", `${width}px`);
 	};
 
 	/**
@@ -151,6 +160,7 @@ function initSlider(node) {
 	slider._scroll = 0;
 
 	slider._release_slider();
+	slider._resize();
 
 	wo997_sliders.push(slider);
 }

@@ -150,7 +150,7 @@ function expand(elem, show = null, options = {}) {
 	return show;
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	$$("nav a").forEach((a) => {
 		href = a.getAttribute("href");
 		if (href == "/") {

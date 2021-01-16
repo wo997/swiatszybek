@@ -2,7 +2,7 @@
 
 useTool("cms");
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	createDatatable({
 		name: "mytable",
 		url: STATIC_URLS["ADMIN"] + "search_product_categories",
@@ -203,7 +203,7 @@ function saveCategoryForm(remove = false) {
 	hideModal(mytable.tree_view.form);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	loadCategoryPicker("product_categories", {
 		skip: 0,
 	});

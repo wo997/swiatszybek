@@ -92,7 +92,7 @@ domload(() => {
 	window.addEventListener("mousedown", (event) => {
 		// click could be prevented lol
 		window.tooltip.dismiss();
-		/*if (!event.target.findParentNode(window.tooltip.lastTooltipNode)) {
+		/*if (!event.target._parent(window.tooltip.lastTooltipNode)) {
 			window.tooltip.dismiss();
 		} else {
 			if (window.tooltip.lastTooltipNode.hasAttribute("data-tooltip-hide")) {

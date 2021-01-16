@@ -316,8 +316,8 @@
 // 				placeAfter ? "beforeend" : "afterbegin",
 // 				getBlock(content)
 // 			);
-// 	} else if (cmsTarget && cmsTarget.parent()) {
-// 		/* if (!cmsTarget || !cmsTarget.parent()) {
+// 	} else if (cmsTarget && cmsTarget._parent()) {
+// 		/* if (!cmsTarget || !cmsTarget._parent()) {
 //         if (!container) {
 //             container = cmsTarget;
 //         }
@@ -460,7 +460,7 @@
 
 // function deleteBlock(nodeToDelete = null, pushHistory = true) {
 // 	if (!cmsTarget) return;
-// 	if (!cmsTarget.next() && !cmsTarget.prev()) {
+// 	if (!cmsTarget._next() && !cmsTarget._prev()) {
 // 		if (cmsParams.delete_block_with_parent !== false) {
 // 			cmsTarget = cmsTarget._parent(".cms-container");
 // 			deleteContainer(cmsTarget, false);
@@ -475,8 +475,8 @@
 // 	var h = rect.height;
 // 	var w = rect.width;
 
-// 	/*var prevRect = node.prev() ? node.prev().getBoundingClientRect() : null;
-//     var nextRect = node.next() ? node.next().getBoundingClientRect() : null;
+// 	/*var prevRect = node._prev() ? node._prev().getBoundingClientRect() : null;
+//     var nextRect = node._next() ? node._next().getBoundingClientRect() : null;
 //     var leftDistance = prevRect ? (rect.x - (prevRect.x+prevRect.width)) : 0;
 //     if (leftDistance < 0) leftDistance = 0;
 //     var rightDistance = nextRect ? (rect.x+rect.width - nextRect.x) : 0;
@@ -1140,13 +1140,13 @@
 // 				) {
 // 					node.classList.remove("activeBlock");
 // 					if (awaitingScroll) {
-// 						scrollToElement(node, { parent: cmsContainer.parent() });
+// 						scrollToElement(node, { parent: cmsContainer._parent() });
 // 						var rect = node.getBoundingClientRect();
 // 						var h = rect.height;
 // 						var w = rect.width;
 
-// 						/*var prevRect = node.prev() ? node.prev().getBoundingClientRect() : null;
-//                         var nextRect = node.next() ? node.next().getBoundingClientRect() : null;
+// 						/*var prevRect = node._prev() ? node._prev().getBoundingClientRect() : null;
+//                         var nextRect = node._next() ? node._next().getBoundingClientRect() : null;
 //                         var leftDistance = prevRect ? (rect.x - (prevRect.x+prevRect.width)) : 0;
 //                         if (leftDistance < 0) leftDistance = 0;
 //                         var rightDistance = nextRect ? (rect.x+rect.width - nextRect.x) : 0;
@@ -1183,7 +1183,7 @@
 // 				if (node.classList && node.classList.contains("cms-container")) {
 // 					node.classList.remove("activeContainer");
 // 					if (awaitingScroll) {
-// 						scrollToElement(node, cmsContainer.parent());
+// 						scrollToElement(node, cmsContainer._parent());
 // 						var rect = node.getBoundingClientRect();
 // 						var h = rect.height;
 // 						node.style.transition = "0s";
@@ -1348,8 +1348,8 @@
 // function cmsContainerHeaderAnimation() {
 // 	if (CMSContainerHeader.target) {
 // 		var parentRect = CMSContainerHeader.options
-// 			.parent()
-// 			.parent()
+// 			._parent()
+// 			._parent()
 // 			.getBoundingClientRect();
 // 		var optionsRect = CMSContainerHeader.options.getBoundingClientRect();
 // 		var blockRect = CMSContainerHeader.target.getBoundingClientRect();
@@ -1477,8 +1477,8 @@
 // function cmsBlockHeaderAnimation() {
 // 	if (CMSBlockHeader.target) {
 // 		var parentRect = CMSBlockHeader.options
-// 			.parent()
-// 			.parent()
+// 			._parent()
+// 			._parent()
 // 			.getBoundingClientRect();
 // 		var optionsRect = CMSBlockHeader.options.getBoundingClientRect();
 // 		var actionsRect = CMSBlockHeader.actions.getBoundingClientRect();
@@ -1622,13 +1622,13 @@
 // 			var placeNearNodeFinal = placeNearNode;
 
 // 			if (!isPlaceBefore) {
-// 				placeNearNodeFinal = placeNearNode.next();
+// 				placeNearNodeFinal = placeNearNode._next();
 // 			}
 
 // 			if (
 // 				draggedNode &&
 // 				draggedNode != placeNearNodeFinal &&
-// 				(draggedNode.next() != placeNearNodeFinal || !draggedNode.next())
+// 				(draggedNode._next() != placeNearNodeFinal || !draggedNode._next())
 // 			) {
 // 				awaitingScroll = true;
 
@@ -1647,7 +1647,7 @@
 // 					}
 // 				}
 
-// 				var insertInParent = placeNearNode.parent();
+// 				var insertInParent = placeNearNode._parent();
 // 				setTimeout(
 // 					() => {
 // 						insertInParent.insertBefore(copiedNode, placeNearNodeFinal);
@@ -1675,9 +1675,9 @@
 // 	var put_near = null;
 // 	var did_jump = false;
 // 	if (direction === 1) {
-// 		put_near = cmsTarget.next();
+// 		put_near = cmsTarget._next();
 // 		if (deep_scan && !put_near) {
-// 			var nextParent = cmsTarget.parent().parent().next();
+// 			var nextParent = cmsTarget._parent()._parent()._next();
 // 			if (nextParent) {
 // 				var nextParentChildren = nextParent
 // 					.find(".cms-container-content")
@@ -1689,9 +1689,9 @@
 // 			}
 // 		}
 // 	} else if (direction === -1) {
-// 		put_near = cmsTarget.prev();
+// 		put_near = cmsTarget._prev();
 // 		if (deep_scan && !put_near) {
-// 			var previousParent = cmsTarget.parent().parent().prev();
+// 			var previousParent = cmsTarget._parent()._parent()._prev();
 // 			if (previousParent) {
 // 				var previousParentChildren = previousParent
 // 					.find(".cms-container-content")
@@ -1713,16 +1713,16 @@
 // 	cmsDelayActions();
 
 // 	if (direction === 1) {
-// 		var parent = put_near.parent();
+// 		var parent = put_near._parent();
 // 		if (did_jump) {
 // 		} else {
-// 			put_near = put_near.next();
+// 			put_near = put_near._next();
 // 		}
 // 		parent.insertBefore(cmsTarget, put_near);
 // 	} else if (direction === -1) {
-// 		var parent = put_near.parent();
+// 		var parent = put_near._parent();
 // 		if (did_jump) {
-// 			put_near = put_near.next();
+// 			put_near = put_near._next();
 // 		} else {
 // 		}
 // 		parent.insertBefore(cmsTarget, put_near);
@@ -2194,7 +2194,7 @@
 //                 <div class="field-title">Kolor krawędzi</div>
 //                 <div class="glue-children">
 //                   <input class="jscolor field inline" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
-//                   <button class="btn primary" onclick="$(this).prev().setValue('')">Brak <i class="fa fa-times"></i></button>
+//                   <button class="btn primary" onclick="$(this)._prev().setValue('')">Brak <i class="fa fa-times"></i></button>
 //                 </div>
 
 //                 <div class="field-title">Zaokrąglenie krawędzi</div>
@@ -2423,7 +2423,7 @@
 
 //                 <div class="glue-children">
 //                   <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
-//                   <button class="btn primary" onclick="$(this).prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
+//                   <button class="btn primary" onclick="$(this)._prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
 //                 </div>
 
 //                 <div class="field-title">

@@ -246,7 +246,7 @@ window.addEventListener("tool_loaded", (event) => {
                 <div class="field-title">Nazwa zdjęcia</div>
                 <input type="text" class="name field">
                 <label style="text-align:right;display: block;margin-top: 10px;">
-                    <input type="file" name="files[]" multiple onchange="$(this).next().click()" style="display:none">
+                    <input type="file" name="files[]" multiple onchange="$(this)._next().click()" style="display:none">
                     <input type="submit" name="submit" style="display:none">
                     <div class="btn primary">Wybierz pliki <i class="fas fa-cloud-upload-alt"></i></div>
                 </label>

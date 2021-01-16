@@ -1,7 +1,7 @@
 /* js[global] */
 
 if (window.innerWidth >= 1200) {
-	window.addEventListener("DOMContentLoaded", () => {
+	domload(() => {
 		$$("nav > div").forEach((e) => {
 			e.addEventListener("mouseenter", () => {
 				var x = e._child(".float-category");
@@ -48,12 +48,12 @@ if (window.innerWidth >= 1200) {
 	var floatCategoryHovered = null;
 	document.addEventListener("mousemove", (event) => {
 		if (!dropdownButtonHovered) return;
-		if ($(event.target).findParentNode(dropdownButtonHovered)) return;
+		if ($(event.target)._parent(dropdownButtonHovered)) return;
 		hideFloatingCategory();
 	});
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	var top_nav = $(".navigation");
 	if (!top_nav) {
 		return;
@@ -111,7 +111,7 @@ function headerResizeCallback() {
 		"px";
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	if (window.innerWidth >= MOBILE_WIDTH) {
 		var btn = $("header .basket-wrapper .basket-btn");
 		if (btn) {
@@ -320,7 +320,7 @@ function btnSearchProducts() {
 	}
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	var input = $(".main-search-wrapper input");
 	if (!input) {
 		return;
@@ -440,7 +440,7 @@ function topSearchProducts(force) {
 	});
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	var ss = $("header .header_basket_content_wrapper");
 	if (!ss) {
 		return;

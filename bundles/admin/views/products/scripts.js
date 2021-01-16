@@ -1,6 +1,6 @@
 /* js[view] */
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	var tableName = "mytable";
 	createDatatable({
 		name: tableName,

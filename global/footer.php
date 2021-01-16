@@ -2,29 +2,19 @@
     <div class="modal_container"></div>
 </div>
 
-<div class="i"></div>
-
-<div class="wo997_slider slider_x" style="--slide-width:300px">
+<div class="wo997_slider slider_x" data-slide_width="calc(10% + 200px)">
     <div class="wo997_slides_container">
-        <div class="wo997_slide">
-            <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
-        </div>
-        <div class="wo997_slide">
-            <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
-        </div>
-        <div class="wo997_slide">
-            <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
-        </div>
-        <div class="wo997_slide">
-            <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
-        </div>
+        <?php for ($i = 0; $i < 10; $i++) { ?>
+            <div class="wo997_slide">
+                <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
+            </div>
+        <?php } ?>
     </div>
 </div>
 
 <style>
     .wo997_slider {
         overflow-x: hidden;
-        --slide-width: 500px;
     }
 
     .wo997_slides_container {
@@ -84,7 +74,7 @@
 
                 <div class="field-title">
                     <span>Hasło</span>
-                    <i class="fas fa-eye btn" onclick="togglePasswordFieldType(this,$(this).parent().next())" data-tooltip="Pokaż hasło" data-tooltip-position="right"></i>
+                    <i class="fas fa-eye btn" onclick="togglePasswordFieldType(this,$(this)._parent()._next())" data-tooltip="Pokaż hasło" data-tooltip-position="right"></i>
                 </div>
                 <input class="field" type="password" autocomplete="current-password" name="password" data-validate="backend|blank_on_change:true">
 

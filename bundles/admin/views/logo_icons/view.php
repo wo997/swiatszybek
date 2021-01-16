@@ -14,7 +14,7 @@
 <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext style='margin-left:0'>
 <form onsubmit="uploadImageWithCopy(event,'logo')">
     <label>
-        <input type="file" onchange="$(this).next().click()">
+        <input type="file" onchange="$(this)._next().click()">
         <input type="submit" name="submit">
         <div class="btn primary">Wybierz plik <i class="fas fa-cloud-upload-alt"></i></div>
     </label>
@@ -24,7 +24,7 @@
 <img class="favicon wo997_img" data-src="<?= FAVICON_PATH_LOCAL_TN ?>">
 <form onsubmit="uploadImageWithCopy(event,'favicon')">
     <label>
-        <input type="file" onchange="$(this).next().click()">
+        <input type="file" onchange="$(this)._next().click()">
         <input type="submit" name="submit">
         <div class="btn primary">Wybierz plik <i class="fas fa-cloud-upload-alt"></i></div>
     </label>
@@ -34,7 +34,7 @@
 <img class="share_img wo997_img" data-src="<?= SHARE_IMG_PATH_LOCAL_SM ?>">
 <form onsubmit="uploadImageWithCopy(event,'share_img')">
     <label>
-        <input type="file" onchange="$(this).next().click()">
+        <input type="file" onchange="$(this)._next().click()">
         <input type="submit" name="submit">
         <div class="btn primary">Wybierz plik <i class="fas fa-cloud-upload-alt"></i></div>
     </label>

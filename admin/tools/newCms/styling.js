@@ -124,9 +124,7 @@ class NewCmsStyling {
 	mouseClick() {
 		const target = this.newCms.mouse_target;
 
-		const responsive_type_name = target._parent(
-			"[data-responsive_type]"
-		);
+		const responsive_type_name = target._parent("[data-responsive_type]");
 
 		if (responsive_type_name) {
 			this.setResponsiveType(responsive_type_name.dataset.responsive_type, {
@@ -621,7 +619,7 @@ class NewCmsStyling {
 				let temp = block;
 				while (true) {
 					// @ts-ignore
-					temp = temp.prev();
+					temp = temp._prev();
 					if (!temp) {
 						break;
 					}
@@ -640,7 +638,7 @@ class NewCmsStyling {
 				let temp = block;
 				while (true) {
 					// @ts-ignore
-					temp = temp.next();
+					temp = temp._next();
 					if (!temp) {
 						break;
 					}
@@ -720,7 +718,7 @@ class NewCmsStyling {
 						/** @type {NewCmsBlock} */
 						// @ts-ignore
 						const b = block
-							.parent()
+							._parent()
 							.directChildren()
 							.find(
 								(child) =>
@@ -733,7 +731,7 @@ class NewCmsStyling {
 						/** @type {NewCmsBlock} */
 						// @ts-ignore
 						const b = block
-							.parent()
+							._parent()
 							.directChildren()
 							.find(
 								(child) =>
@@ -891,7 +889,7 @@ class NewCmsStyling {
 		// @ts-ignore
 		const container = this.newCms.getBlockParent(block);
 
-		const container_content = block.parent();
+		const container_content = block._parent();
 
 		const auto = val === "auto";
 		if (auto) {
@@ -1303,7 +1301,7 @@ class NewCmsStyling {
 	// 	const right_kiss =
 	// 		block.client_rect.left + block.client_rect.width + def(mr, 0);
 
-	// 	const container_content_rect = block.parent().getBoundingClientRect();
+	// 	const container_content_rect = block._parent().getBoundingClientRect();
 
 	// 	// 2 cause of low accuracy
 	// 	return (

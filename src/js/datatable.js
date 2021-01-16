@@ -1470,7 +1470,7 @@ function dateTypeChanged(select) {
 	filter_menu._child(".date_range_picker").classList.toggle("hidden", !isRange);
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	if (IS_MOBILE) {
 		registerModalContent(/*html*/ `
             <div id="filter_menu">

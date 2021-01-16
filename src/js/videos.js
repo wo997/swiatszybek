@@ -1,6 +1,6 @@
 /* js[global] */
 
-window.addEventListener("DOMContentLoaded", scaleVideos);
+domload(scaleVideos);
 window.addEventListener("resize", scaleVideos);
 function scaleVideos() {
 	$$("iframe.ql-video").forEach((e) => {

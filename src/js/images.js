@@ -247,29 +247,29 @@ window.addEventListener("load", () => {
 });
 
 function lazyLoadImages(animate = true) {
-	scrollCallbackLazy();
-	setCustomHeights();
-
-	$$(".lazy").forEach((img) => {
-		const rect = img.getBoundingClientRect();
-
-		if (rect.top < window.innerHeight + lazyLoadOffset) {
-			loadLazyNode(img, animate);
-		}
-	});
-
-	// @ts-ignore
-	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((
-		/** @type {ResponsiveImage} */ img
-	) => {
-		const rect = setImageDimensions(img);
-
-		if (rect.top < window.innerHeight + lazyLoadOffset) {
-			loadImage(img, animate);
-		}
-	});
-
 	setTimeout(() => {
+		scrollCallbackLazy();
+		setCustomHeights();
+
+		$$(".lazy").forEach((img) => {
+			const rect = img.getBoundingClientRect();
+
+			if (rect.top < window.innerHeight + lazyLoadOffset) {
+				loadLazyNode(img, animate);
+			}
+		});
+
+		// @ts-ignore
+		$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((
+			/** @type {ResponsiveImage} */ img
+		) => {
+			const rect = setImageDimensions(img);
+
+			if (rect.top < window.innerHeight + lazyLoadOffset) {
+				loadImage(img, animate);
+			}
+		});
+
 		setCustomHeights();
 	});
 }

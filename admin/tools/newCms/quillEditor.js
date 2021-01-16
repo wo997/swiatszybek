@@ -153,7 +153,7 @@ class NewCmsQuillEditor {
 				this.newCms.updateMouseCoords(event);
 				if (
 					!this.newCms.mouse_target ||
-					!this.newCms.mouse_target.findParentNode(this.newCms.sidebar)
+					!this.newCms.mouse_target._parent(this.newCms.sidebar)
 				) {
 					this.saveChanges();
 				}
@@ -164,7 +164,7 @@ class NewCmsQuillEditor {
 			this.newCms.updateMouseCoords(event);
 			if (
 				!this.newCms.mouse_target ||
-				!this.newCms.mouse_target.findParentNode(this.node)
+				!this.newCms.mouse_target._parent(this.node)
 			) {
 				this.saveChanges();
 			}

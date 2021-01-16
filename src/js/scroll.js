@@ -4,15 +4,8 @@
 function windowHeightResizeCallback() {
 	let vh = window.innerHeight * 0.01;
 	document.documentElement.style.setProperty("--vh", `${vh}px`);
-
-	if (document.body && !window.tempScrollTop) {
-		document.documentElement.style.setProperty(
-			"--scrollbar-width",
-			`${window.innerWidth - document.querySelector("html").clientWidth}px`
-		);
-	}
 }
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	const observer = new ResizeObserver(() => {
 		windowHeightResizeCallback();
 	});
@@ -119,34 +112,9 @@ function scrollIntoView(elem, params = {}) {
 
 	var scroll_parent = findScrollParent(elem);
 
-	/*if (scroll_parent !== window) {
-    diff -= scroll_parent.scrollTop;
-    console.log(diff);
-  }*/
-
 	smoothScroll(diff, {
 		duration: duration,
 		callback: params.callback,
 		scroll_parent: scroll_parent,
 	});
-}
-
-function scrollToBottom(node) {
-	node.scrollTop = node.scrollHeight;
-}
-
-function toggleBodyScroll(enable) {
-	if (!window.tempScrollTop) {
-		window.tempScrollTop = window.pageYOffset;
-	}
-	if (enable) {
-		document.body.classList.remove("disable-scroll");
-		document.body.style.top = `0px`;
-		window.scrollTo({ top: window.tempScrollTop });
-		window.tempScrollTop = null;
-		windowHeightResizeCallback();
-	} else {
-		document.body.classList.add("disable-scroll");
-		document.body.style.top = `-${window.tempScrollTop}px`;
-	}
 }
