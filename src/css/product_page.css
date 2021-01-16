@@ -82,6 +82,7 @@
 	margin: 0 2% 2% 0;
 	position: relative;
 	user-select: none;
+	-webkit-user-select: none;
 }
 
 .color label {
@@ -154,6 +155,7 @@
 	margin: 25px 0;
 	font-size: 18px;
 	user-select: none;
+	-webkit-user-select: none;
 	line-height: 1.2;
 }
 

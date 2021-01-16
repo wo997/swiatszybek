@@ -106,7 +106,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
             setFormData(<?= json_encode($zamowienie_data) ?>, window.form);
             loadFormFromLocalStorage();
-            clearAllErrors(".main-container");
+            clearAllErrors("body");
 
             if (RABAT > 0) hasKodRabatowy({
                 kwota: RABAT,

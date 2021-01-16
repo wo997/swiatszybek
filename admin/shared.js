@@ -18,6 +18,8 @@ domload(() => {
             `
 		);
 	}
+
+	$("body").classList.add("admin");
 });
 
 domload(() => {

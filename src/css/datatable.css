@@ -1,274 +1,276 @@
 /* css[global] */
 
 .margin_bottom {
-  margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 .filter_menu {
-  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.27);
-  padding: 5px;
-  border-radius: 4px;
-  background: #eee;
-  position: absolute;
-  border: 1px solid #ccc;
-  display: none;
-  min-width: 230px;
+	box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.27);
+	padding: 5px;
+	border-radius: 4px;
+	background: #eee;
+	position: absolute;
+	border: 1px solid #ccc;
+	display: none;
+	min-width: 230px;
 }
 #filter_menu .menu_body {
-  width: 250px;
+	width: 250px;
 }
 .filter_menu .checkbox-wrapper,
 #filter_menu .checkbox-wrapper {
-  margin: 5px 0;
+	margin: 5px 0;
 }
 .filter_menu_footer {
-  display: flex;
-  padding-top: 5px;
+	display: flex;
+	padding-top: 5px;
 }
 .filter_menu .footer .btn {
-  white-space: nowrap;
-  width: 50%;
+	white-space: nowrap;
+	width: 50%;
 }
 #admin .datatable-column-highlighted .datatable-search-btn {
-  background: #ccc !important;
-  pointer-events: none;
-  color: #444;
+	background: #ccc !important;
+	pointer-events: none;
+	color: #444;
 }
 .filter_menu .header {
-  text-align: center;
-  background: #ddd;
-  margin: -5px;
-  margin-bottom: 5px;
-  border-top-right-radius: inherit;
-  border-top-left-radius: inherit;
-  padding: 3px;
-  border-bottom: 1px solid #ccc;
+	text-align: center;
+	background: #ddd;
+	margin: -5px;
+	margin-bottom: 5px;
+	border-top-right-radius: inherit;
+	border-top-left-radius: inherit;
+	padding: 3px;
+	border-bottom: 1px solid #ccc;
 }
 .filter_menu .field-title:not(.first) {
-  margin-top: 5px;
+	margin-top: 5px;
 }
 
 .datatable-wrapper .no-results {
-  width: 100%;
-  text-align: center;
-  background: #f8f8f8;
-  padding: 10px;
-  font-weight: 600;
-  margin-top: -10px;
-  position: relative;
+	width: 100%;
+	text-align: center;
+	background: #f8f8f8;
+	padding: 10px;
+	font-weight: 600;
+	margin-top: -10px;
+	position: relative;
 }
 .table-wrapper {
-  overflow-x: auto;
-  margin: 0 -10px;
+	overflow-x: auto;
+	margin: 0 -10px;
 }
 .datatable-wrapper .flexbar {
-  user-select: none;
+	user-select: none;
+	-webkit-user-select: none;
 }
 .table-scroll-width {
-  padding: 0 10px;
-  width: fit-content;
-  min-width: 100%;
+	padding: 0 10px;
+	width: fit-content;
+	min-width: 100%;
 }
 .default-form
-  .datatable-wrapper
-  input:not([type="checkbox"]):not([type="radio"]),
+	.datatable-wrapper
+	input:not([type="checkbox"]):not([type="radio"]),
 .default-form .datatable-wrapper select {
-  width: auto;
+	width: auto;
 }
 .datatable .btn.secondary {
-  background: white;
-  font-weight: 600;
-  color: var(--primary-clr);
+	background: white;
+	font-weight: 600;
+	color: var(--primary-clr);
 }
 /*.datatable-wrapper .pagination {
     margin-right: auto;
   }*/
 @media only screen and (max-width: 799px) {
-  .datatable-wrapper .pagination {
-    margin-left: auto;
-  }
-  .datatable th:not(.auto-width) {
-    white-space: nowrap;
-  }
+	.datatable-wrapper .pagination {
+		margin-left: auto;
+	}
+	.datatable th:not(.auto-width) {
+		white-space: nowrap;
+	}
 }
 .datatable {
-  border-spacing: 0;
-  text-align: left;
-  width: 100%;
+	border-spacing: 0;
+	text-align: left;
+	width: 100%;
 }
 @media only screen and (min-width: 800px) {
-  .datatable {
-    table-layout: fixed;
-  }
+	.datatable {
+		table-layout: fixed;
+	}
 }
 .datatable td:not(.auto-width) {
-  padding: 6px 8px;
+	padding: 6px 8px;
 }
 .datatable th:not(.auto-width) {
-  padding: 9px 8px;
+	padding: 9px 8px;
 }
 .datatable td:not(.auto-width) {
-  max-width: 400px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	max-width: 400px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .datatable tr:nth-child(even) {
-  background: #fcfcfc;
+	background: #fcfcfc;
 }
 .datatable tr:nth-child(odd) {
-  background: #f3f3f3;
+	background: #f3f3f3;
 }
 .datatable th {
-  background: var(--primary-clr);
-  color: white;
-  font-weight: 600;
-  user-select: none;
+	background: var(--primary-clr);
+	color: white;
+	font-weight: 600;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .datatable-wrapper.noOrder td:nth-child(1) * {
-  visibility: hidden;
-  pointer-events: none;
+	visibility: hidden;
+	pointer-events: none;
 }
 
 .datatable-sort-btn {
-  width: 31px;
-  text-align: center;
+	width: 31px;
+	text-align: center;
 }
 .datatable-search-btn {
-  width: 30px;
-  text-align: center;
+	width: 30px;
+	text-align: center;
 }
 .datatable th:not(:first-child),
 .datatable td:not(:first-child) {
-  border-left: 1px solid #0001;
+	border-left: 1px solid #0001;
 }
 
 .table-search-toggle {
-  display: none;
+	display: none;
 }
 .table-search-container {
-  padding: 10px;
-  border: 1px solid #bbb;
+	padding: 10px;
+	border: 1px solid #bbb;
 }
 
 .datatable th > span {
-  min-height: 29px;
+	min-height: 29px;
 }
 
 .datatable-wrapper:not(.table-without-headers) thead th {
-  border-bottom: 1px solid #999;
+	border-bottom: 1px solid #999;
 }
 .datatable-wrapper:not(.table-without-headers) tbody tr:first-child td {
-  border-top: 1px solid #ccc;
+	border-top: 1px solid #ccc;
 }
 
 .has_selected_rows .selected-results-count,
 .has_selected_rows .na-strone,
 .has_selected_rows [data-param="rowCount"] {
-  display: none !important;
+	display: none !important;
 }
 
 .datatable td .fa-minus-circle,
 .datatable td .fa-plus-circle {
-  color: #aaa;
-  cursor: pointer;
-  transform: scale(1.5);
+	color: #aaa;
+	cursor: pointer;
+	transform: scale(1.5);
 }
 .datatable td .fa-minus-circle:hover {
-  color: #c55;
+	color: #c55;
 }
 .datatable td .fa-plus-circle:hover {
-  color: #5c5;
+	color: #5c5;
 }
 .selected_rows.required:before {
-  content: "Musisz wybrać min. 1 element";
-  padding: 4px;
-  display: block;
-  text-align: center;
-  background: #fdd;
-  color: red;
-  border: 1px solid;
-  font-weight: bold;
+	content: "Musisz wybrać min. 1 element";
+	padding: 4px;
+	display: block;
+	text-align: center;
+	background: #fdd;
+	color: red;
+	border: 1px solid;
+	font-weight: bold;
 }
 .selected_rows.required {
-  box-shadow: none;
+	box-shadow: none;
 }
 .table-header-buttons {
-  display: inline-block;
-  margin: -3px 0;
+	display: inline-block;
+	margin: -3px 0;
 }
 .table-header-buttons .btn {
-  min-height: unset;
+	min-height: unset;
 }
 .selected_rows .table-header-buttons {
-  display: none;
+	display: none;
 }
 .selected_rows {
-  max-height: 1000px;
-  overflow-y: auto;
-  overflow-x: hidden;
+	max-height: 1000px;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .selected-results-count {
-  text-align: center;
-  width: 100%;
-  display: inline-block;
+	text-align: center;
+	width: 100%;
+	display: inline-block;
 }
 
 .datatable .kolejnosc {
-  width: 50px;
+	width: 50px;
 }
 
 .table-search-wrapper .metadata-column {
-  display: none;
+	display: none;
 }
 
 .datatable-column-highlighted {
-  filter: brightness(1.1);
+	filter: brightness(1.1);
 }
 
 .bulk_edit_checkbox + .checkbox {
-  margin: -2px 0;
+	margin: -2px 0;
 }
 
 .datatable th:first-child,
 .datatable-wrapper.table-without-headers tr:first-child td:first-child {
-  border-top-left-radius: 4px;
+	border-top-left-radius: 4px;
 }
 .datatable th:last-child,
 .datatable-wrapper.table-without-headers tr:first-child td:last-child {
-  border-top-right-radius: 4px;
+	border-top-right-radius: 4px;
 }
 .datatable tr:last-child td:first-child {
-  border-bottom-left-radius: 4px;
+	border-bottom-left-radius: 4px;
 }
 .datatable tr:last-child td:last-child {
-  border-bottom-right-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
 .datatable-wrapper:not(.table-without-headers) tbody tr:first-child td {
-  border-top: 1px solid #ccc;
+	border-top: 1px solid #ccc;
 }
 
 .datatable {
-  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
-  position: relative;
-  margin: 10px 0;
-  border-radius: 4px;
+	box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
+	position: relative;
+	margin: 10px 0;
+	border-radius: 4px;
 }
 
 .datatable .selected_rows th:first-child {
-  filter: brightness(0.9);
+	filter: brightness(0.9);
 }
 
 .datatable-wrapper .showBtn {
-  width: 100%;
+	width: 100%;
 }
 
 .kolejnosc-column i {
-  opacity: 0.6;
+	opacity: 0.6;
 }
 
 .has_selected_rows .kolejnosc-column {
-  display: none;
+	display: none;
 }

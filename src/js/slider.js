@@ -8,191 +8,240 @@ domload(() => {
 
 	document.addEventListener("mouseup", releaseAllSliders);
 	document.addEventListener("touchend", releaseAllSliders);
+
+	window.addEventListener("resize", () => {
+		wo997_sliders.forEach((node) => {
+			node._slider.update();
+		});
+	});
 });
 
 function releaseAllSliders() {
-	wo997_sliders.forEach((slider) => {
-		slider._release_slider();
+	wo997_sliders.forEach((node) => {
+		node._slider.release();
 	});
 }
 
-/** @type {PiepSlider[]} */
+/** @type {PiepSliderNode[]} */
 let wo997_sliders = [];
 let next_slider_id = 0;
 function animateSliders() {
-	wo997_sliders.forEach((slider) => {
-		const slides_container = slider._slides_container;
+	wo997_sliders.forEach((node) => {
+		const slider = node._slider;
+		const slides_container = slider.slides_container;
 
 		let follow_rate = 0.5;
 
 		const bounce_rate = 0.1;
 		const slow_rate = 0.5;
-		if (slider._scroll < slider._min_scroll) {
-			slider._scroll = slider._scroll * (1 - bounce_rate);
-			slider._velocity *= slow_rate;
+		if (slider.scroll < slider.min_scroll) {
+			slider.scroll = slider.scroll * (1 - bounce_rate);
+			slider.velocity *= slow_rate;
 		}
-		if (slider._scroll > slider._max_scroll) {
-			slider._scroll =
-				slider._scroll * (1 - bounce_rate) + slider._max_scroll * bounce_rate;
-			slider._velocity *= slow_rate;
+		if (slider.scroll > slider.max_scroll) {
+			slider.scroll =
+				slider.scroll * (1 - bounce_rate) + slider.max_scroll * bounce_rate;
+			slider.velocity *= slow_rate;
 
 			follow_rate = 0.2;
 		}
 
-		slider.classList.toggle(
+		node.classList.toggle(
 			"first_slide",
-			slider._scroll < slider._slide_width * 0.5
+			slider.scroll < slider.slide_width * 0.5
 		);
-		slider.classList.toggle(
+		node.classList.toggle(
 			"last_slide",
-			slider._scroll > slider._max_scroll - slider._slide_width * 0.5
+			slider.scroll > slider.max_scroll - slider.slide_width * 0.5
 		);
 
-		if (slider._grabbed_at_scroll !== undefined) {
-			const target_velocity = slider._last_input_scroll - slider._input_scroll;
+		if (slider.grabbed_atscroll !== undefined) {
+			const targetvelocity = slider.last_inputscroll - slider.inputscroll;
 
-			slider._velocity =
-				target_velocity * follow_rate + slider._velocity * (1 - follow_rate);
-			slider._last_input_scroll = slider._input_scroll;
+			slider.velocity =
+				targetvelocity * follow_rate + slider.velocity * (1 - follow_rate);
+			slider.last_inputscroll = slider.inputscroll;
 
-			slider._scroll =
-				slider._grabbed_at_scroll +
-				slider._grabbed_input_scroll -
-				slider._input_scroll;
-		} else {
-			if (slider._just_released === true) {
-				const was_slide_id = slider._slide_id;
-				const sensitivity_speed = 2500 / slider._slide_width; // avg swipe speed
-				let jumps = slider._velocity / sensitivity_speed;
+			let target_scroll =
+				slider.grabbed_atscroll +
+				slider.grabbedinputscroll -
+				slider.inputscroll;
 
-				const max_jump = Math.floor(
-					slider.offsetWidth / slider._slide_width + 0.01
-				);
+			/**
+			 *
+			 * @param {number} x
+			 */
+			const smooth = (x) => {
+				return 20 * (1 - 20 / (20 + x)) + 0.05 * x;
+			};
 
-				jumps +=
-					Math.round(slider._scroll / slider._slide_width) - was_slide_id;
-
-				if (Math.round(jumps) === 0 && Math.abs(slider._velocity) > 0.5) {
-					jumps = Math.sign(slider._velocity);
-				}
-				slider._set_slide(
-					slider._slide_id + Math.round(clamp(-max_jump, jumps, max_jump))
-				);
-
-				slider._just_released = false;
+			if (target_scroll > slider.max_scroll) {
+				target_scroll =
+					slider.max_scroll + smooth(target_scroll - slider.max_scroll);
 			}
 
-			const target_scroll = slider._slide_id * slider._slide_width;
+			if (target_scroll < slider.min_scroll) {
+				target_scroll =
+					slider.min_scroll - smooth(slider.min_scroll - target_scroll);
+			}
 
-			slider._velocity +=
-				(target_scroll - (slider._scroll + slider._velocity * 10)) * 0.05;
+			slider.scroll = target_scroll;
+		} else {
+			if (slider.justreleased === true) {
+				const was_slide_id = slider.slide_id;
+				const sensitivity_speed = 2500 / slider.slide_width; // avg swipe speed
+				let jumps = slider.velocity / sensitivity_speed;
 
-			slider._scroll += slider._velocity;
+				const max_jump = Math.floor(
+					node.offsetWidth / slider.slide_width + 0.01
+				);
+
+				jumps += Math.round(slider.scroll / slider.slide_width) - was_slide_id;
+
+				if (Math.round(jumps) === 0 && Math.abs(slider.velocity) > 0.5) {
+					jumps = Math.sign(slider.velocity);
+				}
+				slider.set_slide(
+					slider.slide_id + Math.round(clamp(-max_jump, jumps, max_jump))
+				);
+
+				slider.justreleased = false;
+			}
+
+			const target_scroll = clamp(
+				slider.min_scroll,
+				slider.slide_id * slider.slide_width,
+				slider.max_scroll
+			);
+
+			slider.velocity +=
+				(target_scroll - (slider.scroll + slider.velocity * 10)) * 0.05;
+
+			slider.scroll += slider.velocity;
 		}
 
 		slides_container.style.transform = `translateX(${
-			Math.round(-slider._scroll * 10) * 0.1
+			Math.round(-slider.scroll * 10) * 0.1
 		}px)`;
 	});
 
 	requestAnimationFrame(animateSliders);
 }
 
-window.addEventListener("resize", () => {
-	wo997_sliders.forEach((slider) => {
-		slider._resize();
-	});
-});
+/**
+ * @typedef {{
+ * scroll: number
+ * velocity: number
+ * slides_container: PiepNode
+ * grabbed_atscroll: number
+ * grabbedinputscroll: number
+ * inputscroll: number
+ * last_inputscroll: number
+ * release()
+ * resize()
+ * slide_width: number
+ * slide_id: number
+ * justreleased: boolean
+ * set_slide(id: number)
+ * update()
+ * max_scroll: number
+ * min_scroll: number
+ * edge_offset: number
+ * }} PiepSlider
+ */
 
 /**
  * @typedef {{
- * _scroll: number
- * _velocity: number
- * _slides_container: PiepNode
- * _grabbed_at_scroll: number
- * _grabbed_input_scroll: number
- * _input_scroll: number
- * _last_input_scroll: number
- * _release_slider()
- * _resize()
- * _slide_width: number
- * _slide_id: number
- * _just_released: boolean
- * _set_slide(id: number)
- * _update_slider()
- * _max_scroll: number
- * _min_scroll: number
- * } & PiepNode} PiepSlider
+ * _slider: PiepSlider
+ * } & PiepNode} PiepSliderNode
  */
 
 /**
  *
- * @param {PiepNode} node
+ * @param {PiepNode} elem
  */
-function initSlider(node) {
-	/** @type {PiepSlider} */
+function initSlider(elem) {
+	/** @type {PiepSliderNode} */
 	// @ts-ignore
-	const slider = node;
-	const slides_container = slider._child(".wo997_slides_container");
+	const node = elem;
+
+	node._slider = {
+		scroll: 0,
+		velocity: 0,
+		slides_container: undefined,
+		grabbed_atscroll: undefined,
+		grabbedinputscroll: undefined,
+		inputscroll: undefined,
+		last_inputscroll: undefined,
+		slide_width: 0,
+		slide_id: 0,
+		justreleased: false,
+		max_scroll: 0,
+		min_scroll: 0,
+		edge_offset: 0,
+		release: () => {
+			if (slider.grabbed_atscroll !== undefined) {
+				slider.justreleased = true;
+			}
+			slider.grabbed_atscroll = undefined;
+			slider.inputscroll = undefined;
+			slider.last_inputscroll = undefined;
+			slider.grabbedinputscroll = undefined;
+		},
+		resize: () => {
+			const target_width = evalCss(node.dataset.slide_width, node);
+
+			const slider_width = node.offsetWidth;
+			const visible_slide_count = slider_width / target_width;
+			const slide_width =
+				(target_width * visible_slide_count) /
+				(Math.max(1, Math.round(visible_slide_count)) + slider.edge_offset);
+
+			slider.slide_width = slide_width;
+			node.style.setProperty("--slide_width", `${slide_width.toFixed(1)}px`);
+		},
+		set_slide: (id) => {
+			const slide_count = Math.round(
+				(slider.max_scroll + slider.edge_offset) / slider.slide_width
+			);
+			slider.slide_id = clamp(0, id, slide_count);
+		},
+		update: () => {
+			let show_next_mobile = def(node.dataset.show_next_mobile, "0");
+			if (show_next_mobile === "") {
+				show_next_mobile = "0.5";
+			}
+			show_next_mobile = parseFloat(show_next_mobile);
+
+			slider.edge_offset = IS_TOUCH_DEVICE ? show_next_mobile : 0;
+
+			slider.resize();
+
+			slider.min_scroll = 0;
+			slider.max_scroll = slides_container.offsetWidth - node.offsetWidth;
+		},
+	};
+	const slider = node._slider;
+
+	const slides_container = node._child(".wo997_slides_container");
 	//const slides = slides_container._direct_children();
 
-	slider._slides_container = slides_container;
-
-	slider._release_slider = () => {
-		if (slider._grabbed_at_scroll !== undefined) {
-			slider._just_released = true;
-		}
-		slider._grabbed_at_scroll = undefined;
-		slider._input_scroll = undefined;
-		slider._last_input_scroll = undefined;
-		slider._grabbed_input_scroll = undefined;
-	};
-
-	slider._resize = () => {
-		const target_width = evalCss(slider.dataset.slide_width, slider);
-		let show_next_mobile = def(slider.dataset.show_next_mobile, "0");
-		if (show_next_mobile === "") {
-			show_next_mobile = "0.5";
-		}
-		show_next_mobile = parseFloat(show_next_mobile);
-
-		const edge_offset = IS_TOUCH_DEVICE ? show_next_mobile : 0;
-		const slider_width = slider.offsetWidth;
-		const visible_slide_count = slider_width / target_width;
-		const slide_width =
-			(target_width * visible_slide_count) /
-			(Math.max(1, Math.round(visible_slide_count)) + edge_offset);
-
-		slider._slide_width = slide_width;
-		slider.style.setProperty("--slide_width", `${slide_width.toFixed(1)}px`);
-
-		slider._update_slider();
-	};
-
-	slider._set_slide = (id) => {
-		const slide_count = Math.round(slider._max_scroll / slider._slide_width);
-		slider._slide_id = clamp(0, id, slide_count);
-	};
-
-	slider._update_slider = () => {
-		slider._min_scroll = 0;
-		slider._max_scroll = slides_container.offsetWidth - slider.offsetWidth;
-	};
+	slider.slides_container = slides_container;
 
 	/**
 	 *
 	 * @param {number} pos_x
 	 */
 	const grab = (pos_x) => {
-		if (slider._grabbed_at_scroll !== undefined) {
+		if (slider.grabbed_atscroll !== undefined) {
 			return;
 		}
-		slider._grabbed_at_scroll = slider._scroll;
-		slider._input_scroll = pos_x;
-		slider._last_input_scroll = pos_x;
-		slider._grabbed_input_scroll = pos_x;
-		slider._velocity = 0;
-		slider._just_released = false;
+		slider.grabbed_atscroll = slider.scroll;
+		slider.inputscroll = pos_x;
+		slider.last_inputscroll = pos_x;
+		slider.grabbedinputscroll = pos_x;
+		slider.velocity = 0;
+		slider.justreleased = false;
 	};
 
 	/**
@@ -200,11 +249,11 @@ function initSlider(node) {
 	 * @param {number} pos_x
 	 */
 	const scroll = (pos_x) => {
-		if (slider._grabbed_at_scroll === undefined) {
+		if (slider.grabbed_atscroll === undefined) {
 			return;
 		}
 
-		slider._input_scroll = pos_x;
+		slider.inputscroll = pos_x;
 	};
 
 	slides_container.addEventListener("touchstart", (ev) => {
@@ -231,17 +280,17 @@ function initSlider(node) {
 		ev.preventDefault();
 	});
 
-	slider._velocity = 0;
-	slider._scroll = 0;
-	slider._just_released = false;
-	slider._slide_id = 0;
+	slider.velocity = 0;
+	slider.scroll = 0;
+	slider.justreleased = false;
+	slider.slide_id = 0;
 
-	slider._release_slider();
-	slider._resize();
+	slider.release();
+	slider.update();
 
-	wo997_sliders.push(slider);
+	wo997_sliders.push(node);
 
-	slider.insertAdjacentHTML(
+	node.insertAdjacentHTML(
 		"beforeend",
 		/*html*/ `
             <div class="nav nav_prev">${ICONS.chevron_left}</div>
@@ -249,10 +298,10 @@ function initSlider(node) {
         `
 	);
 
-	const nav_prev = slider._child(".nav_prev");
+	const nav_prev = node._child(".nav_prev");
 	const prev_svg = nav_prev._child("svg");
 
-	const nav_next = slider._child(".nav_next");
+	const nav_next = node._child(".nav_next");
 	const next_svg = nav_next._child("svg");
 
 	const animate_nav = (svg) => {
@@ -266,11 +315,11 @@ function initSlider(node) {
 		);
 	};
 	nav_prev.addEventListener("click", () => {
-		slider._set_slide(slider._slide_id - 1);
+		slider.set_slide(slider.slide_id - 1);
 		animate_nav(prev_svg);
 	});
 	nav_next.addEventListener("click", () => {
-		slider._set_slide(slider._slide_id + 1);
+		slider.set_slide(slider.slide_id + 1);
 		animate_nav(next_svg);
 	});
 }

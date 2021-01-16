@@ -3,6 +3,8 @@
 .wo997_slider {
 	position: relative;
 	overflow-x: hidden;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .wo997_slides_container {
