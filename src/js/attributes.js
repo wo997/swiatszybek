@@ -61,7 +61,7 @@ function getAttibutePickerValues(input) {
 		if (attr_val_node) {
 			attribute_values.push({
 				attribute_id: attr_id,
-				value: attr_val_node.getValue(),
+				value: attr_val_node._get_value(),
 			});
 		}
 	});

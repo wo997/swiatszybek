@@ -6,7 +6,7 @@ domload(() => {
 		e.addEventListener("change", () => {
 			var name = e.getAttribute("data-store");
 			if (!name) name = e.getAttribute("name");
-			localStorage.setItem(name, e.getValue());
+			localStorage.setItem(name, e._get_value());
 		});
 	});
 });
@@ -18,7 +18,7 @@ function loadFormFromLocalStorage() {
 
 		var value = localStorage.getItem(name);
 		if (value) {
-			setValue(e, value);
+			e._set_value(value);
 		}
 	});
 }

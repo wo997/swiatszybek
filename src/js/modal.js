@@ -111,7 +111,7 @@ function showModal(name = null, params = {}) {
 					window.modalOBserverTimeout = setTimeout(() => {
 						window.modalOBserverTimeout = null;
 						//console.log(123);
-						modal_copy_content.setContent(modal_content.innerHTML);
+						modal_copy_content._set_content(modal_content.innerHTML);
 						//modal_copy_content.innerHTML = modal_content.innerHTML;
 						modal_copy_content._children(".lazy").forEach((e) => {
 							e.classList.remove("lazy");

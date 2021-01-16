@@ -404,7 +404,7 @@ function topSearchProducts(force) {
 	var search = $(".main-search-wrapper input").value.trim();
 
 	var callback = (content) => {
-		$(".main-search-wrapper .search-results").setContent(content);
+		$(".main-search-wrapper .search-results")._set_content(content);
 	};
 
 	if (search.length === 0 && !force) {
@@ -469,7 +469,7 @@ domload(() => {
 function goToSearchProducts() {
 	localStorage.setItem(
 		"products_search",
-		$(".main-search-wrapper input").getValue()
+		$(".main-search-wrapper input")._get_value()
 	);
 	window.location = "/produkty/wszystkie";
 }

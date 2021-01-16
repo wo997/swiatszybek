@@ -176,7 +176,7 @@ function search(data = {}) {
 																} zł</td>
                             </tr>`;
 				}
-				setContent($(".variants"), table_html);
+				$(".variants")._set_content(table_html);
 			} else wrong = true;
 			if (wrong) {
 			}
@@ -217,8 +217,8 @@ function changeDate(direction) {
 	var dateFrom = $(`.daterangepicker_start`);
 	var dateTo = $(`.daterangepicker_end`);
 
-	var date1 = new Date(dateFrom.getValue());
-	var date2 = new Date(dateTo.getValue());
+	var date1 = new Date(dateFrom._get_value());
+	var date2 = new Date(dateTo._get_value());
 
 	var diff = date2.getTime() + 1000 * 3600 * 24 - date1.getTime();
 

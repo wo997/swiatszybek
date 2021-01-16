@@ -105,7 +105,7 @@ window.fileManager = {
                                 </div>
                             `;
 						}
-						$("#fileManager .gallery").setContent(out);
+						$("#fileManager .gallery")._set_content(out);
 						lazyLoadImages(false);
 					}
 				} catch (e) {
@@ -162,7 +162,7 @@ window.fileManager = {
 		}
 		hideParentModal(btn);
 
-		fileManager.choose($("#externalImage .external_link").getValue());
+		fileManager.choose($("#externalImage .external_link")._get_value());
 	},
 };
 

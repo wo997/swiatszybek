@@ -207,7 +207,7 @@ function fieldErrors(field) {
 	var validator = field.getAttribute("data-validate");
 	var [validatorType, ...validatorParams] = validator.split("|");
 
-	var val = field.getValue();
+	var val = field._get_value();
 
 	var optional = validator.indexOf("|optional") !== -1;
 
@@ -262,7 +262,7 @@ function fieldErrors(field) {
 			if (!target) {
 				console.warn("Field missing");
 			}
-			var isCorrect = val == target.getValue();
+			var isCorrect = val == target._get_value();
 			if (!isCorrect) {
 				newError("Wartości nie są identyczne");
 			}

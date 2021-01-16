@@ -34,7 +34,7 @@ class NewCmsSidebar {
 
 		const changeCallback = () => {
 			this.newCms.styling.setBlockStyles({
-				width: width.getValue(),
+				width: width._get_value(),
 			});
 		};
 		width.addEventListener("change", changeCallback);
@@ -48,7 +48,7 @@ class NewCmsSidebar {
 			//console.log(grid_template_columns.getValue());
 			this.newCms.styling.setBlockStyles(
 				{
-					"grid-template-columns": grid_template_columns.getValue(),
+					"grid-template-columns": grid_template_columns._get_value(),
 				},
 				null,
 				{
@@ -68,7 +68,7 @@ class NewCmsSidebar {
 				if (block_type == "image") {
 					this.newCms.edit_block.edit_node
 						.find(".newCms_block_content")
-						._set_value(image.getValue(), { quiet: true });
+						._set_value(image._get_value(), { quiet: true });
 
 					setTimeout(() => {
 						lazyLoadImages();
@@ -108,7 +108,7 @@ class NewCmsSidebar {
 			//if (block_type == "container") {
 			this.newCms.styling.setBlockStyles(
 				{
-					"justify-content": justify_content.getValue(),
+					"justify-content": justify_content._get_value(),
 				},
 				null,
 				{
@@ -124,7 +124,7 @@ class NewCmsSidebar {
 			if (block_type == "container") {
 				this.newCms.styling.setBlockStyles(
 					{
-						"flex-flow": container_flow.getValue(),
+						"flex-flow": container_flow._get_value(),
 					},
 					null,
 					{
@@ -137,7 +137,7 @@ class NewCmsSidebar {
 		const custom_css = this.node.find(`[name="custom_css"]`);
 
 		const changeCallback5 = () => {
-			this.newCms.styling.setBlockStyles(custom_css.getValue(), null, {
+			this.newCms.styling.setBlockStyles(custom_css._get_value(), null, {
 				type: "custom",
 			});
 		};
@@ -168,7 +168,7 @@ class NewCmsSidebar {
 		}
 		if (block_type == "image") {
 			const image = this.newCms.sidebar.node.find(`[name="image"]`);
-			image._set_value(block.find(".newCms_block_content").getValue(), {
+			image._set_value(block.find(".newCms_block_content")._get_value(), {
 				quiet: true,
 			});
 			lazyLoadImages();

@@ -145,7 +145,7 @@ function getFormData(form, params = {}) {
 			}
 
 			var field_name = e.getAttribute(find_by);
-			var field_value = e.getValue();
+			var field_value = e._get_value();
 
 			var parent_sub_form = e;
 			var inside = true;
@@ -321,7 +321,7 @@ function formFieldOnChangeEvent(event) {
 			pushFormHistory(parent_form);
 		}
 	}
-	field.prev_value = field.getValue();
+	field.prev_value = field._get_value();
 }
 
 function formFieldOnChange(field, options = {}) {
@@ -363,7 +363,7 @@ function togglePasswordFieldType(btn, input, make_visible = null) {
 }
 
 function rewrite(source, target, options = {}) {
-	var val = source.getValue();
+	var val = source._get_value();
 	if (options.link) {
 		val = escapeUrl(val);
 	}

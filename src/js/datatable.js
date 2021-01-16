@@ -601,7 +601,7 @@ function createDatatable(datatable) {
 				if (e._parent(".hidden", { inside: datatable.target })) {
 					return;
 				}
-				params[e.getAttribute("data-param")] = e.getValue();
+				params[e.getAttribute("data-param")] = e._get_value();
 			});
 
 			if (datatable.selectable) {
@@ -738,10 +738,10 @@ function createDatatable(datatable) {
 				}
 
 				if (createList) {
-					datatable.selectionBodyElement.setContent(output);
+					datatable.selectionBodyElement._set_content(output);
 				} else {
-					datatable.totalRowsElement.setContent(res.totalRows);
-					datatable.tableBodyElement.setContent(output);
+					datatable.totalRowsElement._set_content(res.totalRows);
+					datatable.tableBodyElement._set_content(output);
 
 					datatable.paginationElement.style.display =
 						window.innerWidth > 1000 ? "" : "none";
@@ -929,7 +929,7 @@ function createDatatable(datatable) {
 					var row = {};
 					row[datatable.primary] = parseInt(e.getAttribute("data-primary"));
 					e._children("[data-metadata]").forEach((m) => {
-						row[m.getAttribute("data-metadata")] = m.getValue();
+						row[m.getAttribute("data-metadata")] = m._get_value();
 					});
 					metadata.push(row);
 				});
@@ -1182,7 +1182,7 @@ function setPublish(obj, published) {
 
 	if (listElement) {
 		var input = obj._parent()._prev();
-		input._set_value(1 - input.getValue());
+		input._set_value(1 - input._get_value());
 		return;
 	}
 
@@ -1361,7 +1361,7 @@ function datatableFilter(btn, column_id) {
 
 	if (IS_TOUCH_DEVICE) {
 		setModalTitle("#filter_menu", "Filtruj " + col_def.title.toLowerCase());
-		filter_menu.setContent(
+		filter_menu._set_content(
 			/*html*/ `<span class="field-title">${menu_header}</span>${menu_body}${menu_footer}`
 		);
 		showModal("filter_menu", {
@@ -1371,7 +1371,7 @@ function datatableFilter(btn, column_id) {
 		if (menu_header) {
 			menu_html = /*html*/ `<span class='field-title header first'>${menu_header}</span>${menu_body}${menu_footer}`;
 		}
-		filter_menu.setContent(menu_html);
+		filter_menu._set_content(menu_html);
 		filter_menu.style.display = "block";
 
 		var nonstatic_parent = datatable.target.findNonStaticParent();
@@ -1462,7 +1462,7 @@ function filterCheckboxChanged(checkbox, select_single) {
 
 function dateTypeChanged(select) {
 	var isRange = false;
-	if (select.getValue() == "<>") {
+	if (select._get_value() == "<>") {
 		isRange = true;
 	}
 
@@ -1540,27 +1540,27 @@ function setFilters(datatable, column_id) {
 			});
 		}
 	} else if (col_def.searchable == "date") {
-		var date_type = filter_menu._child(".date_type").getValue();
+		var date_type = filter_menu._child(".date_type")._get_value();
 
 		if (date_type == "<>") {
 			datatable.filters.push({
 				field: col_def.field,
 				type: date_type,
 				value: [
-					reverseDateString($(".date_range_picker .start").getValue(), "-"),
-					reverseDateString($(".date_range_picker .end").getValue(), "-"),
+					reverseDateString($(".date_range_picker .start")._get_value(), "-"),
+					reverseDateString($(".date_range_picker .end")._get_value(), "-"),
 				],
 			});
 		} else {
 			datatable.filters.push({
 				field: col_def.field,
 				type: date_type,
-				value: reverseDateString($(".default_datepicker").getValue(), "-"),
+				value: reverseDateString($(".default_datepicker")._get_value(), "-"),
 			});
 		}
 	} else {
-		var value = filter_menu._child(`.field`).getValue();
-		var exact = filter_menu._child(`[name='exact']`).getValue();
+		var value = filter_menu._child(`.field`)._get_value();
+		var exact = filter_menu._child(`[name='exact']`)._get_value();
 
 		if (value || exact) {
 			if (!exact) {
@@ -1637,7 +1637,7 @@ function filterOrSortChanged() {
 		var search_value = "";
 		var se = datatableElem._child(`[data-param="search"]`);
 		if (se) {
-			search_value = se.getValue();
+			search_value = se._get_value();
 		}
 
 		datatableElem

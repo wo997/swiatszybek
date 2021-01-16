@@ -150,7 +150,7 @@ class NewCmsEditBlock {
 		}
 		edit_block_html += `</div>`;
 
-		this.node.setContent(edit_block_html);
+		this.node._set_content(edit_block_html);
 
 		// add block actions
 		const edit_block_btn = this.node.find(".edit_btn");

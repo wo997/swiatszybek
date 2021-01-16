@@ -19,7 +19,7 @@ function createCountdown(node, options) {
 	const length = actual_radius * 2 * Math.PI;
 	const color = def(options.color, "black");
 
-	node.setContent(/*html*/ `
+	node._set_content(/*html*/ `
         <div class="countdown" style="
             --countdown_size:${size}px;
             --countdown_thickness:${thickness};
@@ -42,7 +42,7 @@ function createCountdown(node, options) {
 	let countdown_time = Math.round(options.duration / 1000);
 
 	const intervalCallback = () => {
-		countdown_number.setContent(countdown_time);
+		countdown_number._set_content(countdown_time);
 		countdown_time -= 1;
 		if (countdown_time <= 0) {
 			clearInterval(interval);

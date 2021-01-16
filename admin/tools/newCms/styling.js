@@ -281,7 +281,7 @@ class NewCmsStyling {
 			// @ts-ignore
 			event.detail.data.responsive_type_name = this.responsive_type.name;
 
-			this.newCms.clean_output_node.setContent(
+			this.newCms.clean_output_node._set_content(
 				this.newCms.content_node.innerHTML
 			);
 			this.newCms.clean_output_node
@@ -461,7 +461,7 @@ class NewCmsStyling {
 			}
 		}
 
-		this.node.setContent(css_full);
+		this.node._set_content(css_full);
 	}
 
 	/**

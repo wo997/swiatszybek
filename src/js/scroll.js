@@ -110,7 +110,7 @@ function scrollIntoView(elem, params = {}) {
 		diff = bottom - bottomMin;
 	}
 
-	var scroll_parent = findScrollParent(elem);
+	var scroll_parent = elem._find_scroll_parent();
 
 	smoothScroll(diff, {
 		duration: duration,

@@ -213,7 +213,7 @@ class NewCmsSelectControls {
 					"margin"
 				);
 
-				this.newCms.svg.setContent(/*html*/ `
+				this.newCms.svg._set_content(/*html*/ `
                     ${paths}
                 `);
 			}
@@ -352,7 +352,7 @@ class NewCmsSelectControls {
 
 			const icon = $(`.side_block[data-block="${block_type}"] i`);
 
-			select_control.setContent(
+			select_control._set_content(
 				icon ? icon.outerHTML : `<i class="fas fa-square"></i>`
 			);
 

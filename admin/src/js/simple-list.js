@@ -62,7 +62,7 @@ function createSimpleList(params = {}) {
 		if (prev) {
 			var add_buttons = prev.find(".add_buttons");
 			if (add_buttons) {
-				add_buttons.setContent(add_btns);
+				add_buttons._set_content(add_btns);
 				success = true;
 			}
 		}
@@ -344,7 +344,7 @@ function createSimpleList(params = {}) {
 							return;
 						}
 						var param = e.getAttribute("name");
-						row[param] = e.getValue();
+						row[param] = e._get_value();
 					});
 					rows.push(row);
 				});
@@ -362,7 +362,7 @@ function createSimpleList(params = {}) {
 								return;
 							}
 							var param = e.getAttribute("name");
-							row_data[param] = e.getValue();
+							row_data[param] = e._get_value();
 						});
 					if (level < list.recursive) {
 						row_data._children = getDirectRows(
@@ -425,7 +425,7 @@ function createSimpleList(params = {}) {
 			list.wrapper._dispatch_change();
 		}
 	};
-	list.wrapper.getValue = () => {
+	list.wrapper._get_value = () => {
 		if (list.params.data_type == "json") {
 			return JSON.stringify(list.values);
 		}
@@ -460,7 +460,7 @@ function validateSimpleList(field) {
 					.forEach((listRowWrapper) => {
 						var rowField = listRowWrapper.find(`[name="${fieldName}"]`);
 
-						var fieldValue = rowField.getValue();
+						var fieldValue = rowField._get_value();
 
 						if (!(fieldValue === "" && fieldParams.allow_empty)) {
 							if (!rowValueInputs[fieldValue]) {
