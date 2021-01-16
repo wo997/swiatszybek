@@ -139,7 +139,7 @@ function showModal(name = null, params = {}) {
 					}
 					modalObserverTimeout = setTimeout(() => {
 						modalObserverTimeout = undefined;
-						modal_copy_content.setContent(modal_content.innerHTML);
+						modal_copy_content._set_content(modal_content.innerHTML);
 						modal_copy_content._children(".lazy").forEach((e) => {
 							e.classList.remove("lazy");
 						});

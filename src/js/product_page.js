@@ -143,7 +143,7 @@ window.addEventListener("basket-change", (event) => {
 
 	var wtwoimkoszyku = $(".wtwoimkoszyku");
 	if (wtwoimkoszyku) {
-		wtwoimkoszyku.setContent(
+		wtwoimkoszyku._set_content(
 			`<h3 style='padding:25px 0 10px;margin:0'> Twoim koszyku 
           ${basket_data.basket.length > 1 ? "znajdują" : "znajduje"} się
         </h3>`

@@ -242,7 +242,7 @@ domload(() => {
 				var img = row.find("img");
 				row
 					.find(".add_img_btn span")
-					.setContent(img.getValue() ? "Zmień" : "Wybierz");
+					._set_content(img._get_value() ? "Zmień" : "Wybierz");
 			});
 			lazyLoadImages();
 		},
@@ -304,7 +304,7 @@ domload(() => {
           <div data-tooltip class='clamp-lines clamp-4'></div>
         </td>
         <td>
-          <input type='hidden' name="published" onchange='$(this)._next().setContent(renderIsPublished({published:this.getValue()}))'>
+          <input type='hidden' name="published" onchange='$(this)._next()._set_content(renderIsPublished({published:this._get_value()}))'>
           <span></span>
         </td>
         <td>
@@ -538,7 +538,7 @@ function choiceValuesChanged(values_combo) {
 
 	var attribute_value_node = values_combo.find(`.attribute_value`);
 	if (attribute_value_node) {
-		whole_value = attribute_value_node.getValue();
+		whole_value = attribute_value_node._get_value();
 	} else {
 		values_combo.findAll("select").forEach((e) => {
 			if (e.value && !e.classList.contains("hidden")) {
@@ -709,7 +709,7 @@ function createFilterOptionsSimpleList(node) {
 		onChange: (data, list, row) => {
 			var filter_wrapper = node._parent(".filter_wrapper");
 			if (filter_wrapper) {
-				filter_wrapper.find(".option_count").setContent(`(${data.length})`);
+				filter_wrapper.find(".option_count")._set_content(`(${data.length})`);
 			}
 		},
 	});
@@ -744,7 +744,7 @@ function displayAttributesPreview(target, data) {
 		});
 	} catch {}
 
-	target.setContent(output);
+	target._set_content(output);
 }
 
 function copyMainImage(node) {

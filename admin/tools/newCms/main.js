@@ -299,7 +299,7 @@ class NewCms {
 
 			input.addEventListener("change", () => {
 				let styles = {};
-				styles[`margin-${dir}`] = input.getValue();
+				styles[`margin-${dir}`] = input._get_value();
 
 				this.styling.setBlockStyles(styles);
 
@@ -319,7 +319,7 @@ class NewCms {
 
 			input.addEventListener("change", () => {
 				let styles = {};
-				styles[`padding-${dir}`] = input.getValue();
+				styles[`padding-${dir}`] = input._get_value();
 
 				this.styling.setBlockStyles(styles);
 
@@ -401,7 +401,7 @@ class NewCms {
 		if (!html) {
 			html = this.content_node.innerHTML;
 		}
-		this.clean_output_node.setContent(html);
+		this.clean_output_node._set_content(html);
 
 		this.container.dispatchEvent(new Event("clean_up_output"));
 
@@ -912,7 +912,7 @@ class NewCms {
 
 		// show the grabbed clone
 		const rearrange_node = this.rearrange_node;
-		rearrange_node.setContent(this.grabbed_block.outerHTML);
+		rearrange_node._set_content(this.grabbed_block.outerHTML);
 		this.rearrange_node_block_inside = rearrange_node.find("*");
 		const grabbed_block_rect = this.grabbed_block.getBoundingClientRect();
 		rearrange_node.style.left = grabbed_block_rect.left + "px";
@@ -1272,7 +1272,7 @@ class NewCms {
 		});
 
 		// copy overlay to hide layout update
-		this.content_node_copy.setContent(this.content_node.innerHTML);
+		this.content_node_copy._set_content(this.content_node.innerHTML);
 		this.scroll();
 
 		this.styling.recalculateLayout();

@@ -46,7 +46,7 @@
 
         var data = getFormData(form);
 
-        data.page_footer = $(`[name="page_footer"]`).getValue();
+        data.page_footer = $(`[name="page_footer"]`)._get_value();
 
         window.preview.open("/", data);
     }

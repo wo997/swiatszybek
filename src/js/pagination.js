@@ -39,7 +39,7 @@ function renderPagination(
 		output += `<span class='setMyPage'><input class='myPage field inline' type='number' placeholder='Wpisz nr'></span>`;
 	}
 
-	paginationElement.setContent(output);
+	paginationElement._set_content(output);
 	paginationElement
 		._children(".pagination_item:not(.current)")
 		.forEach((elem) => {

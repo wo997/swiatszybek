@@ -38,7 +38,7 @@ function addMessageBox(elem, message, params = {}) {
         `
 		: "";
 
-	elem.setContent(`
+	elem._set_content(`
         <div class="message-box expand_y hidden animate_hidden">
           <div class="message-container ${types[type].className} ${
 		inline ? "inline" : ""
@@ -63,7 +63,7 @@ function addMessageBox(elem, message, params = {}) {
 }
 
 function showMessageModal(message, options) {
-	$("#message-modal .modal-message").setContent(message);
+	$("#message-modal .modal-message")._set_content(message);
 	showModal("message-modal", options);
 }
 

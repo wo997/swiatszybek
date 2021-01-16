@@ -146,7 +146,7 @@ function editUser(src = null, data = null) {
 		{
 			field: "user_id",
 			type: "=",
-			value: $(`#editUser [name="user_id"]`).getValue(),
+			value: $(`#editUser [name="user_id"]`)._get_value(),
 		},
 	];
 	zamowieniatable.search();
@@ -174,5 +174,5 @@ function saveUser() {
 }
 
 function togglePasswordField(elem) {
-	expand($("#editUser .changePassword"), $(elem).getValue());
+	expand($("#editUser .changePassword"), $(elem)._get_value());
 }

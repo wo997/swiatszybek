@@ -81,7 +81,7 @@ MODULE_BLOCK = {
 	setAllCSS: (parent) => {
 		var h = MODULE_BLOCK.form
 			._child(`[name="desktop-slider-height"]`)
-			.getValue();
+			._get_value();
 		parent._children(".cms-container").forEach((e) => {
 			//console.log(e);
 			e.setAttribute("data-desktop-min-height", h);

@@ -288,7 +288,7 @@ function setValue(input, value = null, params = {}) {
 	if (
 		value === null ||
 		value === undefined ||
-		isEquivalent(input.getValue(), value)
+		isEquivalent(input._get_value(), value)
 	) {
 		if (!params.quiet) {
 			input._dispatch_change();
@@ -326,7 +326,7 @@ function setValue(input, value = null, params = {}) {
 			if (pointChild) {
 				input = input.find(pointChild);
 			}
-			input.setContent(value);
+			input._set_content(value);
 		} else if (type == "attribute_values") {
 			setAttributePickerValues(input, value);
 		} else if (input.tagName == "IMG") {
@@ -745,7 +745,7 @@ function nodePositionAgainstScrollableParent(node) {
 	node = $(node);
 	const node_rect = node.getBoundingClientRect();
 
-	const scrollable_parent = node.findScrollParent();
+	const scrollable_parent = node._find_scroll_parent();
 	const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
 
 	return {

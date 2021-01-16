@@ -151,11 +151,11 @@ window.addEventListener("basket-change", (event) => {
 			var modal_name = "variantAdded";
 
 			$(`#${modal_name} .variant_image`)._set_value(variant.zdjecie);
-			$(`#${modal_name} .variant_name`).setContent(
+			$(`#${modal_name} .variant_name`)._set_content(
 				variant.title + " " + variant.name
 			);
-			$(`#${modal_name} .variant_qty`).setContent(variant.quantity + " szt.");
-			$(`#${modal_name} .variant_price`).setContent(variant.real_price + " zł");
+			$(`#${modal_name} .variant_qty`)._set_content(variant.quantity + " szt.");
+			$(`#${modal_name} .variant_price`)._set_content(variant.real_price + " zł");
 
 			var options = {};
 			if (res.options.modal_source) {
@@ -171,11 +171,11 @@ window.addEventListener("basket-change", (event) => {
 
 	const setSummary = () => {
 		$$(".basket_item_count").forEach((e) => {
-			e.setContent(res.item_count);
+			e._set_content(res.item_count);
 		});
 
 		$$(".total_basket_cost").forEach((e) => {
-			e.setContent(basket_data.total_basket_cost + " zł");
+			e._set_content(basket_data.total_basket_cost + " zł");
 		});
 	};
 
@@ -250,7 +250,7 @@ function renderStatus(status_id) {
 function setVariantRowQty(variant_node, variant_data) {
 	var qty = variant_node._child(".qty-label");
 	if (qty) {
-		qty.setContent(variant_data.quantity);
+		qty._set_content(variant_data.quantity);
 		variant_node
 			._child(".qty-btn.add")
 			.toggleAttribute("disabled", variant_data.quantity >= variant_data.stock);
@@ -258,7 +258,7 @@ function setVariantRowQty(variant_node, variant_data) {
 
 	var ptc = variant_node._child(".variant_total_price");
 	if (ptc) {
-		ptc.setContent(variant_data.total_price + " zł");
+		ptc._set_content(variant_data.total_price + " zł");
 	}
 }
 
@@ -332,7 +332,7 @@ function showVariantChanges(
 			}
 			var pp = variant_node._child(".variant_price");
 			if (pp) {
-				pp.setContent(variant_data.real_price);
+				pp._set_content(variant_data.real_price);
 			}
 			var pl = variant_node._child(".product_link");
 			if (pl) {
@@ -340,12 +340,12 @@ function showVariantChanges(
 			}
 			var pn = variant_node._child(".variant_full_name");
 			if (pn) {
-				pn.setContent(variant_data.title + " " + variant_data.name);
+				pn._set_content(variant_data.title + " " + variant_data.name);
 			}
 
 			var pvn = variant_node._child(".variant_name");
 			if (pvn) {
-				pvn.setContent(variant_data.name);
+				pvn._set_content(variant_data.name);
 			}
 
 			variant_node.setAttribute("data-variant_id", variant_id);
@@ -416,7 +416,7 @@ function showProductChanges(
 				if (product_data.price_max) {
 					price += " - " + product_data.price_max;
 				}
-				pp.setContent(price + " zł");
+				pp._set_content(price + " zł");
 			}
 			var pl = product_node._child(".product_link");
 			if (pl) {
@@ -424,7 +424,7 @@ function showProductChanges(
 			}
 			var pn = product_node._child(".product_name");
 			if (pn) {
-				pn.setContent(product_data.title);
+				pn._set_content(product_data.title);
 			}
 
 			product_node.setAttribute("data-product_id", product_id);

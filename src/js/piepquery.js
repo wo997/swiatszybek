@@ -10,12 +10,12 @@
  * _set_value(value: any, options?: {
  *  quiet?: boolean
  * }): void
- * getValue(): any
- * findScrollParent(options?: findNodeOptions): PiepNode
- * empty(): void
- * setContent(html: string | number): void
+ * _get_value(): any
+ * _find_scroll_parent(options?: findNodeOptions): PiepNode
+ * _empty(): void
+ * _set_content(html: string | number): void
  * dataset: any;
- * setting_value?: boolean
+ * _setting_value?: boolean
  * _parent(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
  * _next(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
  * _prev(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
@@ -90,8 +90,8 @@ function $(selector, parent = undefined) {
 			setValue(node, value, options);
 		};
 	}
-	if (!node.getValue) {
-		node.getValue = () => {
+	if (!node._get_value) {
+		node._get_value = () => {
 			return getValue(node);
 		};
 	}
@@ -99,7 +99,7 @@ function $(selector, parent = undefined) {
 		return dispatchChange(node);
 	};
 
-	node.findScrollParent = (options = {}) => {
+	node._find_scroll_parent = (options = {}) => {
 		return findScrollParent(node, options);
 	};
 
@@ -107,7 +107,7 @@ function $(selector, parent = undefined) {
 		return removeContent(node);
 	};
 
-	node.setContent = (html = "") => {
+	node._set_content = (html = "") => {
 		return setContent(node, html);
 	};
 

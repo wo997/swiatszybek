@@ -12,7 +12,7 @@
             `;
         }
 
-        $(".module_list").setContent(html);
+        $(".module_list")._set_content(html);
     });
 
     function getModuleFormData() {
@@ -61,7 +61,7 @@
                 }
                 output += res.form;
 
-                form.setContent(output);
+                form._set_content(output);
                 setFormData(res.form_data, form);
             },
         });

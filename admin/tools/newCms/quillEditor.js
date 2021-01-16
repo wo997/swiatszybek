@@ -138,7 +138,7 @@ class NewCmsQuillEditor {
 				if (block_type == "quill_editor") {
 					this.newCms.edit_block.edit_node
 						.find(".newCms_block_content")
-						.setContent(this.ql_node.innerHTML);
+						._set_content(this.ql_node.innerHTML);
 
 					if (!this.change_from_cms) {
 						this.any_changes = true;
@@ -183,7 +183,7 @@ class NewCmsQuillEditor {
 	setEditorContent(html) {
 		this.any_changes = false;
 		this.change_from_cms = true;
-		this.ql_node.setContent(html);
+		this.ql_node._set_content(html);
 		setTimeout(() => {
 			// sry!
 			this.change_from_cms = false;
