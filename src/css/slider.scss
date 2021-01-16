@@ -18,10 +18,8 @@
 }
 
 .wo997_slider .nav {
-	@media (hover: none) {
-		& {
-			display: none !important;
-		}
+	body.touch_device & {
+		display: none !important;
 	}
 	& {
 		--nav_size: 50px;

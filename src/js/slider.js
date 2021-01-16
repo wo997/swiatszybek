@@ -292,7 +292,10 @@ function initSlider(elem) {
 		if (touch) {
 			scroll(touch.clientX, touch.clientY);
 		}
-		ev.preventDefault();
+
+		if (slider.grabbed_at_scroll !== undefined) {
+			ev.preventDefault();
+		}
 	});
 
 	slides_container.addEventListener("mousedown", (ev) => {
