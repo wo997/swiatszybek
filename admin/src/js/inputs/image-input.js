@@ -74,9 +74,9 @@ function registerImageInputs() {
 			return img.getValue();
 		};
 
-		input.setValue = (value, options = {}) => {
+		input._set_value = (value, options = {}) => {
 			input.setting_value = true;
-			img.setValue(value);
+			img._set_value(value);
 			delete input.setting_value;
 
 			if (!options.quiet) {
@@ -84,6 +84,6 @@ function registerImageInputs() {
 			}
 		};
 
-		input.setValue();
+		input._set_value();
 	});
 }

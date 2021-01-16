@@ -106,7 +106,7 @@ function createAttributeSelect(combo, options = {}) {
 					`[data-parent_value_id="${select.prev_value}"]`
 				);
 				if (sub_select) {
-					sub_select.setValue("");
+					sub_select._set_value("");
 				}
 			}
 			//console.log(select.prev_value);
@@ -130,7 +130,7 @@ function createAttributeSelect(combo, options = {}) {
 
 	if (options.use_all) {
 		combo.findAll(".has_attribute").forEach((e) => {
-			e.setValue(1);
+			e._set_value(1);
 		});
 	}
 
@@ -532,7 +532,7 @@ function choiceAttributeChanged(select) {
 	select = $(select);
 	var sub_filter = select._parent(`.sub_filter`);
 	var filter_name = sub_filter.find(`[name="filter_name"]`);
-	filter_name.setValue(select.value == -1 ? "" : getSelectDisplayValue(select));
+	filter_name._set_value(select.value == -1 ? "" : getSelectDisplayValue(select));
 }
 
 function choiceValuesChanged(values_combo) {
@@ -554,7 +554,7 @@ function choiceValuesChanged(values_combo) {
 	if (whole_value) {
 		var sub_filter = values_combo._parent(`.sub_filter`);
 		var value_field = sub_filter.find(`[name="value"]`);
-		value_field.setValue(whole_value);
+		value_field._set_value(whole_value);
 	}
 }
 
@@ -655,7 +655,7 @@ function createVariantFiltersSimpleList(node, options = {}) {
 			createFilterOptionsSimpleList(row.find(`[name="filter_options"]`));
 
 			// must be set first cause it's used to generate attribute pickers
-			row.find(`[name="attribute_id"]`).setValue(values.attribute_id);
+			row.find(`[name="attribute_id"]`)._set_value(values.attribute_id);
 		},
 
 		onChange: (data, list, row) => {

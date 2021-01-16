@@ -98,7 +98,7 @@ function setFormData(data, form, params = {}) {
 			return;
 		}
 
-		e.setValue(value, value_params);
+		e._set_value(value, value_params);
 	});
 
 	delete form.setting_data;
@@ -243,7 +243,7 @@ function registerForms(form = undefined) {
 		field.addEventListener("change", formFieldOnChangeEvent);
 
 		/*if (field.getAttribute("data-validate").indexOf("backend") === 0) {
-        field.setValue();
+        field._set_value();
       }*/
 
 		var obj = field;
@@ -297,10 +297,10 @@ function registerForms(form = undefined) {
 				var ddc = field.getAttribute("data-input-change");
 				if (ddc) {
 					setTimeout(() => {
-						field.setValue();
+						field._set_value();
 					}, ddc);
 				} else {
-					field.setValue();
+					field._set_value();
 				}
 			});
 		}
@@ -367,5 +367,5 @@ function rewrite(source, target, options = {}) {
 	if (options.link) {
 		val = escapeUrl(val);
 	}
-	target.setValue(val);
+	target._set_value(val);
 }

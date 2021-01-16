@@ -504,7 +504,7 @@ function deleteBlock(nodeToDelete = null, pushHistory = true) {
 
 function editCMS(t, params = {}) {
 	cmsSource = $(t);
-	cmsContainer.setValue(cmsSource.innerHTML);
+	cmsContainer._set_value(cmsSource.innerHTML);
 
 	// just in case
 	cmsContainer.findAll(".cms").forEach((e) => {
@@ -579,7 +579,7 @@ window.addEventListener("modal-hide", (event) => {
 	$("#cmsAdditional .stretch-vertical").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
 
 	cmsHistory = backupStateOfCMS.history;
-	cmsContainer.setValue(backupStateOfCMS.content);
+	cmsContainer._set_value(backupStateOfCMS.content);
 	cmsSource = backupStateOfCMS.source;
 	cmsTarget = backupStateOfCMS.target;
 	cmsParams = backupStateOfCMS.params;
@@ -602,7 +602,7 @@ function closeCms(save) {
 	if (save) {
 		cmsPrepareOutput();
 		var content = cmsContainer.innerHTML;
-		cmsSource.setValue(content);
+		cmsSource._set_value(content);
 	}
 	cmsSource = null;
 }
@@ -1085,7 +1085,7 @@ function editCMSBackground() {
 	var col = getNodeBackgroundColor(target);
 	if (!col) col = "ffffff";
 
-	$("#cmsBlockBackground .bckgcolor").setValue(col);
+	$("#cmsBlockBackground .bckgcolor")._set_value(col);
 
 	var op = getNodeBackgroundColorOpacity(target);
 	setRangeSliderValue($("#cmsBlockBackground .image-opacity"), op * 100);
@@ -2194,7 +2194,7 @@ registerModalContent(`
                 <div class="field-title">Kolor krawędzi</div>
                 <div class="glue-children">
                   <input class="jscolor field inline" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
-                  <button class="btn primary" onclick="$(this).prev().setValue('')">Brak <i class="fa fa-times"></i></button>
+                  <button class="btn primary" onclick="$(this).prev()._set_value('')">Brak <i class="fa fa-times"></i></button>
                 </div>
 
                 <div class="field-title">Zaokrąglenie krawędzi</div>
@@ -2423,7 +2423,7 @@ registerModalContent(
 
                 <div class="glue-children">
                   <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
-                  <button class="btn primary" onclick="$(this).prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
+                  <button class="btn primary" onclick="$(this).prev()._set_value('ffffff');$('#cmsBlockBackground .image-opacity')._set_value(0)">Brak <i class="fa fa-times"></i></button>
                 </div>
 
                 <div class="field-title">

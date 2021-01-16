@@ -50,7 +50,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	} else {
 		products_search = "";
 	}
-	$(".products_search").setValue(products_search);
+	$(".products_search")._set_value(products_search);
 	attributeSelectionChange(null, null);
 });
 
@@ -61,7 +61,7 @@ function goDesktop() {
 	var products_search = $(".products_search");
 	products_search.addEventListener("input", () => {
 		// instant change
-		products_search.setValue();
+		products_search._set_value();
 	});
 }
 
@@ -162,7 +162,7 @@ function clearAllFilters() {
 }
 
 function clearSearch() {
-	$(".products_search").setValue("");
+	$(".products_search")._set_value("");
 	searchProducts();
 }
 
@@ -381,7 +381,7 @@ function attributeSelectionChange(checkbox, hasChildren) {
 		var list = checkbox._parent()._next();
 		if (!checkbox.checked) {
 			list._children(":checked").forEach((subCheckbox) => {
-				subCheckbox.setValue(0);
+				subCheckbox._set_value(0);
 			});
 		}
 		expand(list, checkbox.checked);

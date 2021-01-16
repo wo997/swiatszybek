@@ -769,8 +769,8 @@ function propagateComponentData(comp) {
 		node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
 			const bind_var = sub_node.dataset.bind;
 
-			if (sub_node.setValue) {
-				sub_node.setValue(node._data[bind_var], { quiet: true });
+			if (sub_node._set_value) {
+				sub_node._set_value(node._data[bind_var], { quiet: true });
 			}
 		});
 	}

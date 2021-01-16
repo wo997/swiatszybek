@@ -210,5 +210,5 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function rewriteURL() {
-	$(`[name="link"]`).setValue(escapeUrl($(`[name="title"]`).value));
+	$(`[name="link"]`)._set_value(escapeUrl($(`[name="title"]`).value));
 }

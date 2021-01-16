@@ -474,7 +474,7 @@ class NewCms {
 
 	save() {
 		// TODO: it should go straight to backend at this point
-		this.targetNode.setValue(
+		this.targetNode._set_value(
 			//getFormData(this.container).content
 			this.getCleanOutput()
 		);

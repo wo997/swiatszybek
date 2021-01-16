@@ -138,7 +138,7 @@ function editUser(src = null, data = null) {
 		};
 	}
 
-	$("#editUser .passwordCheckbox").setValue(0);
+	$("#editUser .passwordCheckbox")._set_value(0);
 	setFormData(data, form);
 
 	removeFilterByField(zamowieniatable, "user_id");

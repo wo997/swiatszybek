@@ -41,7 +41,7 @@ window.fileManager = {
 		}
 
 		if (fileManager.target) {
-			$(fileManager.target).setValue(src);
+			$(fileManager.target)._set_value(src);
 			lazyLoadImages(true);
 		}
 
