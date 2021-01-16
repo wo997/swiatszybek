@@ -1,13 +1,40 @@
 /* js[global] */
 
-domload(function () {
-	registerModals();
+/** @type {PiepNode} */
+let modal_wrapper_node = undefined;
+/** @type {PiepNode} */
+let modal_container_node = undefined;
 
-	const modal_wrapper = $("#modal-wrapper");
-	modal_wrapper.addEventListener("touchmove", (ev) => {
+let modalObserverTimeout = undefined;
+
+function initModal() {
+	if (modal_wrapper_node !== undefined) {
+		return;
+	}
+
+	document.body.insertAdjacentHTML(
+		"beforeend",
+		/*html*/ `
+            <div id="modal_wrapper">
+                <div class="modal_container"></div>
+            </div>
+        `
+	);
+
+	modal_wrapper_node = $("#modal_wrapper");
+	modal_container_node = $(".modal_container");
+	modal_wrapper_node.addEventListener("touchmove", (ev) => {
 		ev.preventDefault();
+		//if (ev.target && $(ev.target)._parent() === modal_container_node) {
+		//}
+		//ev.stopPropagation();
 	});
-});
+
+	registerModals();
+}
+
+domload(initModal);
+
 function registerModals() {
 	$$("[data-modal]").forEach((e) => {
 		registerModal(e);
@@ -16,16 +43,18 @@ function registerModals() {
 
 function registerModalContent(html, callback) {
 	if (!document.body) {
-		domload(function () {
+		domload(() => {
 			registerModalContent(html, callback);
 			return;
 		});
 	}
 
-	var div = document.createElement("DIV");
+	initModal();
+
+	const div = document.createElement("DIV");
 	div.insertAdjacentHTML("afterbegin", html);
-	var modal = $(div.children[0]);
-	if ($("#" + modal.id)) {
+	const modal = $(div.children[0]);
+	if (modal_container_node._child("#" + modal.id)) {
 		console.error("modal defined already");
 		return;
 	}
@@ -36,23 +65,31 @@ function registerModalContent(html, callback) {
 	}
 }
 
-function registerModal(e) {
-	$("#modal-wrapper .modal_container").appendChild(e);
+function registerModal(modal) {
+	modal_container_node.appendChild(modal);
+
+	const modal_content = modal._child("*");
+
+	modal_content.addEventListener("touchmove", (ev) => {
+		console.log(ev);
+		ev.stopPropagation();
+		//ev.stopImmediatePropagation();
+	});
+	console.log(modal);
 }
 
 function showModal(name = null, params = {}) {
-	var modal_wrapper = $("#modal-wrapper");
-	var visible = name != null;
-	modal_wrapper.classList.toggle("visible", visible);
+	let visible = name != null;
+	modal_wrapper_node.classList.toggle("visible", visible);
 	if (visible) {
-		var total = 0;
-		modal_wrapper._children(".modal_container > *").forEach((modal) => {
-			var shownow = false;
+		let total = 0;
+		modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
+			let shownow = false;
 			if (modal.id == name && !modal.classList.contains("visible")) {
 				shownow = true;
 			}
 			if (modal.classList.contains("visible")) {
-				var expand = modal.getAttribute("data-expand");
+				const expand = modal.getAttribute("data-expand");
 				if (expand == "large") {
 					total = 1;
 				} else if (expand == "previous") {
@@ -64,7 +101,7 @@ function showModal(name = null, params = {}) {
 
 			if (shownow) {
 				clearAllErrors(modal);
-				const modal_container = modal_wrapper._child(".modal_container");
+				const modal_container = modal_wrapper_node._child(".modal_container");
 				modal_container.appendChild(modal);
 
 				modal.style.pointerEvents = "none";
@@ -80,12 +117,6 @@ function showModal(name = null, params = {}) {
 				let dx = 0;
 				let dy = 0;
 				if (params.source) {
-					/*var r = params.source.getBoundingClientRect();
-					var p = modal_copy_content.getBoundingClientRect();
-					console.log(r, p);
-					dx = 1 * (r.left - p.left) + r.width / 2;
-					dy = 1 * (r.top - p.top) + r.height / 2;*/
-					//origin = `${dx}px ${dy}px`;
 					const src_rect = params.source.getBoundingClientRect();
 					const modal_rect = modal_copy_content.getBoundingClientRect();
 					dx =
@@ -97,22 +128,18 @@ function showModal(name = null, params = {}) {
 						modal_rect.top +
 						(src_rect.height - modal_rect.height) * 0.5;
 				}
-				//modal_copy.style.transformOrigin = origin;
-				//return;
 
 				// observe changes and apply them to the copied modal
 				const observer = new MutationObserver(() => {
 					modal_copy_content.style.width = modal_content.offsetWidth + "px";
 					modal_copy_content.style.height = modal_content.offsetHeight + "px";
 
-					if (window.modalOBserverTimeout) {
-						clearTimeout(window.modalOBserverTimeout);
+					if (modalObserverTimeout) {
+						clearTimeout(modalObserverTimeout);
 					}
-					window.modalOBserverTimeout = setTimeout(() => {
-						window.modalOBserverTimeout = null;
-						//console.log(123);
+					modalObserverTimeout = setTimeout(() => {
+						modalObserverTimeout = undefined;
 						modal_copy_content.setContent(modal_content.innerHTML);
-						//modal_copy_content.innerHTML = modal_content.innerHTML;
 						modal_copy_content._children(".lazy").forEach((e) => {
 							e.classList.remove("lazy");
 						});
@@ -181,9 +208,9 @@ function showModal(name = null, params = {}) {
 				);
 			}
 		});
-		var modal = $(`#${name}`);
+		const modal = modal_container_node._child(`#${name}`);
 		if (modal && modal.hasAttribute("data-expand")) {
-			var q = $(`#${name} > div`);
+			const q = modal._child("*");
 			if (q) {
 				if (modal.getAttribute("data-expand") == "large") total = 0; //total--;
 				q.classList.toggle("pad0", total == 0);
@@ -200,15 +227,15 @@ function showModal(name = null, params = {}) {
 }
 
 function hideAllModals() {
-	$$("#modal-wrapper .modal_container > *").forEach((e) => {
+	modal_container_node._direct_children().forEach((e) => {
 		hideModal(e.id);
 	});
 }
 
 function hideModalTopMost() {
-	var o = $$("#modal-wrapper .modal_container > *");
-	for (i = o.length - 1; i >= 0; i--) {
-		var modal = o[i];
+	const o = modal_container_node._direct_children();
+	for (let i = o.length - 1; i >= 0; i--) {
+		const modal = o[i];
 		if (modal.classList.contains("visible")) {
 			hideModal(modal ? modal.id : null);
 			break;
@@ -218,7 +245,7 @@ function hideModalTopMost() {
 
 function hideParentModal(obj = null, isCancel = false) {
 	if (obj) {
-		var modal = obj._parent("[data-modal]");
+		const modal = obj._parent("[data-modal]");
 		hideModal(modal ? modal.id : null, isCancel);
 	}
 	hideModal(null);
@@ -232,8 +259,6 @@ function hideModal(name, isCancel = false) {
 	}
 
 	let visible_modal_count = 0;
-
-	let modal_wrapper = $("#modal-wrapper");
 
 	if (name) {
 		let modal = $(`#${name}`);
@@ -265,43 +290,19 @@ function hideModal(name, isCancel = false) {
 		);
 	}
 
-	modal_wrapper._children(".modal_container > *").forEach((modal) => {
+	modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
 		if (modal.classList.contains("visible")) visible_modal_count++;
 	});
 
 	if (visible_modal_count > 0) {
-		modal_wrapper.classList.add("visible");
+		modal_wrapper_node.classList.add("visible");
 	} else {
-		modal_wrapper.style.animation = "hide 0.4s";
+		modal_wrapper_node.style.animation = "hide 0.4s";
 		setTimeout(() => {
-			modal_wrapper.classList.remove("visible");
-			modal_wrapper.style.animation = "";
+			modal_wrapper_node.classList.remove("visible");
+			modal_wrapper_node.style.animation = "";
 		}, 200);
 	}
-}
-
-function anyModalActive() {
-	return !!$("#modal-wrapper.visible");
-}
-
-function isModalActive(name) {
-	var next = $(`#${name}`);
-	var anythingAbove = false;
-	if (next.style.display != "") {
-		return false;
-	}
-	while (true) {
-		next = next._next();
-		if (!next) {
-			break; // top most :)
-		}
-		var nextVisible = next.style.display == "";
-		if (nextVisible) {
-			anythingAbove = true;
-			break;
-		}
-	}
-	return !anythingAbove;
 }
 
 function setModalTitle(modal, title) {
@@ -309,18 +310,17 @@ function setModalTitle(modal, title) {
 }
 
 window.addEventListener("mousedown", (event) => {
-	var form = null;
+	let form = null;
 
-	if (event.target.classList.contains("close-modal-btn")) {
-		form = event.target._parent("[data-modal]");
-	} else if (event.target.hasAttribute("data-dismissable")) {
-		form = event.target;
+	const target = $(event.target);
+
+	if (target.classList.contains("close-modal-btn")) {
+		form = target._parent("[data-modal]");
+	} else if (target.hasAttribute("data-dismissable")) {
+		form = target;
 	}
 
 	if (form) {
-		//hideModalTopMost();
-		// hmm, might work
-		//hideAllModals();
 		hideModal(form.id);
 	}
 });

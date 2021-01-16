@@ -4,7 +4,7 @@
 	--modal-max-width: 1500px;
 }
 
-#modal-wrapper {
+#modal_wrapper {
 	position: fixed;
 	width: 100vw;
 	height: calc(var(--vh, 1vh) * 100);
@@ -14,13 +14,13 @@
 	z-index: 1500;
 }
 
-#modal-wrapper .modal-body {
+#modal_wrapper .modal-body {
 	border-radius: 3px;
 	display: flex;
 	flex-direction: column;
 }
 
-#modal-wrapper:not(.visible) {
+#modal_wrapper:not(.visible) {
 	opacity: 0;
 	pointer-events: none;
 }

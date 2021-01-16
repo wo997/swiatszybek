@@ -1,7 +1,3 @@
-<div id="modal-wrapper">
-    <div class="modal_container"></div>
-</div>
-
 <div class="x"></div>
 <div class="wo997_slider slider_x" data-slide_width="calc(10% + 150px)" data-show_next_mobile>
     <div class="wo997_slides_container">
