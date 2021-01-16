@@ -55,17 +55,15 @@ function animateSliders() {
 			slider.scroll > slider.max_scroll - slider.slide_width * 0.5
 		);
 
-		if (slider.grabbed_atscroll !== undefined) {
-			const targetvelocity = slider.last_inputscroll - slider.inputscroll;
+		if (slider.grabbed_at_scroll !== undefined) {
+			const targetvelocity = slider.last_input_x - slider.input_x;
 
 			slider.velocity =
 				targetvelocity * follow_rate + slider.velocity * (1 - follow_rate);
-			slider.last_inputscroll = slider.inputscroll;
+			slider.last_input_x = slider.input_x;
 
 			let target_scroll =
-				slider.grabbed_atscroll +
-				slider.grabbedinputscroll -
-				slider.inputscroll;
+				slider.grabbed_at_scroll + slider.grabbed_input_x - slider.input_x;
 
 			/**
 			 *
@@ -87,7 +85,7 @@ function animateSliders() {
 
 			slider.scroll = target_scroll;
 		} else {
-			if (slider.justreleased === true) {
+			if (slider.just_released === true) {
 				const was_slide_id = slider.slide_id;
 				const sensitivity_speed = 2500 / slider.slide_width; // avg swipe speed
 				let jumps = slider.velocity / sensitivity_speed;
@@ -105,7 +103,7 @@ function animateSliders() {
 					slider.slide_id + Math.round(clamp(-max_jump, jumps, max_jump))
 				);
 
-				slider.justreleased = false;
+				slider.just_released = false;
 			}
 
 			const target_scroll = clamp(
@@ -133,15 +131,17 @@ function animateSliders() {
  * scroll: number
  * velocity: number
  * slides_container: PiepNode
- * grabbed_atscroll: number
- * grabbedinputscroll: number
- * inputscroll: number
- * last_inputscroll: number
+ * grabbed_at_scroll: number
+ * grabbed_input_x: number
+ * grabbed_input_y: number
+ * input_x: number
+ * last_input_x: number
  * release()
  * resize()
  * slide_width: number
  * slide_id: number
- * justreleased: boolean
+ * just_released: boolean
+ * just_grabbed: boolean
  * set_slide(id: number)
  * update()
  * max_scroll: number
@@ -169,24 +169,27 @@ function initSlider(elem) {
 		scroll: 0,
 		velocity: 0,
 		slides_container: undefined,
-		grabbed_atscroll: undefined,
-		grabbedinputscroll: undefined,
-		inputscroll: undefined,
-		last_inputscroll: undefined,
+		grabbed_at_scroll: undefined,
+		grabbed_input_x: undefined,
+		grabbed_input_y: undefined,
+		input_x: undefined,
+		last_input_x: undefined,
 		slide_width: 0,
 		slide_id: 0,
-		justreleased: false,
+		just_released: false,
+		just_grabbed: false,
 		max_scroll: 0,
 		min_scroll: 0,
 		edge_offset: 0,
 		release: () => {
-			if (slider.grabbed_atscroll !== undefined) {
-				slider.justreleased = true;
+			if (slider.grabbed_at_scroll !== undefined) {
+				slider.just_released = true;
 			}
-			slider.grabbed_atscroll = undefined;
-			slider.inputscroll = undefined;
-			slider.last_inputscroll = undefined;
-			slider.grabbedinputscroll = undefined;
+			slider.grabbed_at_scroll = undefined;
+			slider.input_x = undefined;
+			slider.last_input_x = undefined;
+			slider.grabbed_input_x = undefined;
+			slider.grabbed_input_y = undefined;
 		},
 		resize: () => {
 			const target_width = evalCss(node.dataset.slide_width, node);
@@ -231,59 +234,74 @@ function initSlider(elem) {
 	/**
 	 *
 	 * @param {number} pos_x
+	 * @param {number} pos_y
 	 */
-	const grab = (pos_x) => {
-		if (slider.grabbed_atscroll !== undefined) {
+	const grab = (pos_x, pos_y) => {
+		if (slider.grabbed_at_scroll !== undefined) {
 			return;
 		}
-		slider.grabbed_atscroll = slider.scroll;
-		slider.inputscroll = pos_x;
-		slider.last_inputscroll = pos_x;
-		slider.grabbedinputscroll = pos_x;
-		slider.velocity = 0;
-		slider.justreleased = false;
+		slider.grabbed_at_scroll = slider.scroll;
+		slider.input_x = pos_x;
+		slider.last_input_x = pos_x;
+		slider.grabbed_input_x = pos_x;
+		slider.grabbed_input_y = pos_y;
+		slider.just_released = false;
+		slider.just_grabbed = true;
 	};
 
 	/**
 	 *
 	 * @param {number} pos_x
+	 * @param {number} pos_y
 	 */
-	const scroll = (pos_x) => {
-		if (slider.grabbed_atscroll === undefined) {
+	const scroll = (pos_x, pos_y) => {
+		if (slider.grabbed_at_scroll === undefined) {
 			return;
 		}
 
-		slider.inputscroll = pos_x;
+		if (slider.just_grabbed) {
+			slider.just_grabbed = false;
+
+			if (IS_TOUCH_DEVICE) {
+				const dx = Math.abs(pos_x - slider.grabbed_input_x);
+				const dy = Math.abs(pos_y - slider.grabbed_input_y);
+
+				if (dx < dy) {
+					slider.release();
+					return;
+				}
+			}
+		}
+
+		slider.input_x = pos_x;
 	};
 
 	slides_container.addEventListener("touchstart", (ev) => {
 		const touch = ev.targetTouches[0];
 		if (touch) {
-			grab(touch.clientX);
+			grab(touch.clientX, touch.clientY);
 		}
 	});
 
 	slides_container.addEventListener("touchmove", (ev) => {
+		if (slider.grabbed_at_scroll === undefined) {
+			return;
+		}
+
 		const touch = ev.targetTouches[0];
 		if (touch) {
-			scroll(touch.clientX);
+			scroll(touch.clientX, touch.clientY);
 		}
 		ev.preventDefault();
 	});
 
 	slides_container.addEventListener("mousedown", (ev) => {
-		grab(ev.clientX);
+		grab(ev.clientX, ev.clientY);
 	});
 
 	slides_container.addEventListener("mousemove", (ev) => {
-		scroll(ev.clientX);
-		ev.preventDefault();
+		scroll(ev.clientX, ev.clientY);
 	});
-
-	slider.velocity = 0;
-	slider.scroll = 0;
-	slider.justreleased = false;
-	slider.slide_id = 0;
 
 	slider.release();
 	slider.update();

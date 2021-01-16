@@ -89,8 +89,7 @@ header .heart-icon,
 
 .page-header {
 	position: fixed;
-	min-width: calc(100vw - 20px);
-	width: 100vw;
+	width: 100%;
 	top: 0;
 	left: 0;
 	z-index: 600;
