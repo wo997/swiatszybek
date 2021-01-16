@@ -613,16 +613,21 @@ function removeClasses(className, selector = null) {
 	}
 }
 
+/**
+ *
+ * @param {PiepNode} node
+ * @param {string} prefix
+ */
 function removeClassesWithPrefix(node, prefix) {
-	let cn = node.className;
+	let cn = [...node.classList].join(" ");
+
 	const matches = cn.match(new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"), "");
 	if (!matches) {
 		return undefined;
 	}
 	matches.forEach((match) => {
-		cn = cn.replace(match, "");
+		node.classList.remove(match);
 	});
-	node.className = cn.trim();
 
 	return matches;
 }

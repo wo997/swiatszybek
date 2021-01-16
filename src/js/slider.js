@@ -23,24 +23,30 @@ function animateSliders() {
 	wo997_sliders.forEach((slider) => {
 		const slides_container = slider._slides_container;
 
-		const min_scroll = 0;
-		const max_scroll = slides_container.offsetWidth - slider.offsetWidth;
-
 		let follow_rate = 0.5;
 
 		const bounce_rate = 0.1;
 		const slow_rate = 0.5;
-		if (slider._scroll < min_scroll) {
+		if (slider._scroll < slider._min_scroll) {
 			slider._scroll = slider._scroll * (1 - bounce_rate);
 			slider._velocity *= slow_rate;
 		}
-		if (slider._scroll > max_scroll) {
+		if (slider._scroll > slider._max_scroll) {
 			slider._scroll =
-				slider._scroll * (1 - bounce_rate) + max_scroll * bounce_rate;
+				slider._scroll * (1 - bounce_rate) + slider._max_scroll * bounce_rate;
 			slider._velocity *= slow_rate;
 
 			follow_rate = 0.2;
 		}
+
+		slider.classList.toggle(
+			"first_slide",
+			slider._scroll < slider._slide_width * 0.5
+		);
+		slider.classList.toggle(
+			"last_slide",
+			slider._scroll > slider._max_scroll - slider._slide_width * 0.5
+		);
 
 		if (slider._grabbed_at_scroll !== undefined) {
 			const target_velocity = slider._last_input_scroll - slider._input_scroll;
@@ -69,10 +75,9 @@ function animateSliders() {
 				if (Math.round(jumps) === 0 && Math.abs(slider._velocity) > 0.5) {
 					jumps = Math.sign(slider._velocity);
 				}
-				slider._slide_id += Math.round(clamp(-max_jump, jumps, max_jump));
-
-				const slide_count = Math.round(max_scroll / slider._slide_width);
-				slider._slide_id = clamp(0, slider._slide_id, slide_count);
+				slider._set_slide(
+					slider._slide_id + Math.round(clamp(-max_jump, jumps, max_jump))
+				);
 
 				slider._just_released = false;
 			}
@@ -113,6 +118,10 @@ window.addEventListener("resize", () => {
  * _slide_width: number
  * _slide_id: number
  * _just_released: boolean
+ * _set_slide(id: number)
+ * _update_slider()
+ * _max_scroll: number
+ * _min_scroll: number
  * } & PiepNode} PiepSlider
  */
 
@@ -156,6 +165,18 @@ function initSlider(node) {
 
 		slider._slide_width = slide_width;
 		slider.style.setProperty("--slide_width", `${slide_width.toFixed(1)}px`);
+
+		slider._update_slider();
+	};
+
+	slider._set_slide = (id) => {
+		const slide_count = Math.round(slider._max_scroll / slider._slide_width);
+		slider._slide_id = clamp(0, id, slide_count);
+	};
+
+	slider._update_slider = () => {
+		slider._min_scroll = 0;
+		slider._max_scroll = slides_container.offsetWidth - slider.offsetWidth;
 	};
 
 	/**
@@ -186,14 +207,14 @@ function initSlider(node) {
 		slider._input_scroll = pos_x;
 	};
 
-	slider.addEventListener("touchstart", (ev) => {
+	slides_container.addEventListener("touchstart", (ev) => {
 		const touch = ev.targetTouches[0];
 		if (touch) {
 			grab(touch.clientX);
 		}
 	});
 
-	slider.addEventListener("touchmove", (ev) => {
+	slides_container.addEventListener("touchmove", (ev) => {
 		const touch = ev.targetTouches[0];
 		if (touch) {
 			scroll(touch.clientX);
@@ -201,11 +222,11 @@ function initSlider(node) {
 		ev.preventDefault();
 	});
 
-	slider.addEventListener("mousedown", (ev) => {
+	slides_container.addEventListener("mousedown", (ev) => {
 		grab(ev.clientX);
 	});
 
-	slider.addEventListener("mousemove", (ev) => {
+	slides_container.addEventListener("mousemove", (ev) => {
 		scroll(ev.clientX);
 		ev.preventDefault();
 	});
@@ -219,4 +240,37 @@ function initSlider(node) {
 	slider._resize();
 
 	wo997_sliders.push(slider);
+
+	slider.insertAdjacentHTML(
+		"beforeend",
+		/*html*/ `
+            <div class="nav nav_prev">${ICONS.chevron_left}</div>
+            <div class="nav nav_next">${ICONS.chevron_left}</div>
+        `
+	);
+
+	const nav_prev = slider._child(".nav_prev");
+	const prev_svg = nav_prev._child("svg");
+
+	const nav_next = slider._child(".nav_next");
+	const next_svg = nav_next._child("svg");
+
+	const animate_nav = (svg) => {
+		svg._animate(
+			`
+                0% {transform: translate(0,0);}
+                30% {transform: translate(-3px,0);}
+                100% {transform:translate(0,0);}
+            `,
+			200
+		);
+	};
+	nav_prev.addEventListener("click", () => {
+		slider._set_slide(slider._slide_id - 1);
+		animate_nav(prev_svg);
+	});
+	nav_next.addEventListener("click", () => {
+		slider._set_slide(slider._slide_id + 1);
+		animate_nav(next_svg);
+	});
 }

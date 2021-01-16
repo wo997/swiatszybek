@@ -14,22 +14,6 @@
     </div>
 </div>
 
-<style>
-    .wo997_slider {
-        overflow-x: hidden;
-    }
-
-    .wo997_slides_container {
-        display: inline-flex;
-        min-width: 100%;
-    }
-
-    .wo997_slide {
-        width: var(--slide_width);
-        flex-shrink: 0;
-    }
-</style>
-
 <footer>
     <?php
     if (isset($preview_params) && isset($preview_params["page_footer"])) {
