@@ -79,4 +79,4 @@ function registerScrollShadows() {
 	});
 }
 
-window.addEventListener("DOMContentLoaded", registerScrollShadows);
+domload(registerScrollShadows);

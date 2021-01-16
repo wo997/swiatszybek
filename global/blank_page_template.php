@@ -12,6 +12,10 @@ endSection();
     <?= def($sections, "head_content", ""); ?>
 </head>
 
-<?= def($sections, "body", ""); ?>
+<body>
+    <div class="main-container">
+        <?= def($sections, "body", ""); ?>
+    </div>
+</body>
 
 </html>

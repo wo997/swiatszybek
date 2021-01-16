@@ -1,6 +1,6 @@
 /* js[admin] */
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	if (window.innerWidth < MOBILE_WIDTH) {
 		var nv = $(".navbar_admin");
 		if (!nv) {
@@ -12,21 +12,23 @@ window.addEventListener("DOMContentLoaded", () => {
 		nv.insertAdjacentHTML(
 			"beforebegin",
 			/*html*/ `
-                <div class="btn subtle fill medium" onclick='expandMenu(this.next(),this)'>
+                <div class="btn subtle fill medium" onclick='expandMenu(this._next(),this)'>
                     <b>Menu</b> <div class='expand_arrow'><i class='fas fa-chevron-right'></i></div>
                 </div>
             `
 		);
 	}
+
+	$("body").classList.add("admin");
 });
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	let exact = null;
 	/** @type {PiepNode} */
 	let shortest_hit = null;
 	let shortest_length = 100000;
 	$$(".navbar_admin .menu_item").forEach((e) => {
-		var a = e.find("a");
+		var a = e._child("a");
 		if (!a) {
 			return;
 		}
@@ -56,15 +58,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
 		var parent_sub_menu = shortest_hit._parent(".sub_menu");
 		if (parent_sub_menu) {
-			expandMenu(parent_sub_menu, parent_sub_menu.prev(), null, {
+			expandMenu(parent_sub_menu, parent_sub_menu._prev(), null, {
 				duration: 0,
 			});
-			parent_sub_menu.prev().classList.add("current-route");
+			parent_sub_menu._prev().classList.add("current-route");
 		}
 
-		var sub_menu = shortest_hit.next();
+		var sub_menu = shortest_hit._next();
 		if (sub_menu && sub_menu.classList.contains("sub_menu")) {
-			expandMenu(sub_menu, sub_menu.prev(), null, {
+			expandMenu(sub_menu, sub_menu._prev(), null, {
 				duration: 0,
 			});
 		}

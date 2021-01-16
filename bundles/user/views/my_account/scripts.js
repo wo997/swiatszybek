@@ -41,7 +41,7 @@
             currentMenu = i;
         }
 
-        window.addEventListener("DOMContentLoaded", function() {
+        domload(function() {
             setFormData(<?= json_encode($user_data, true) ?>, "#accountForm");
 
             $$("#menu2 .field").forEach(e => {

@@ -2,7 +2,7 @@
 
 useTool("cms");
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	var output = "";
 	Object.entries(attribute_data_types).forEach(([value, attribute]) => {
 		output += `<option value='${value}'>${attribute.description}</option>`;

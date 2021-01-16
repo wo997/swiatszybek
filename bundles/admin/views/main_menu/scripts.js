@@ -1,6 +1,6 @@
 /* js[view] */
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	createDatatable({
 		name: "mytable",
 		url: STATIC_URLS["ADMIN"] + "search_menu",
@@ -229,7 +229,7 @@ function saveCategoryForm(remove = false) {
 	hideModal(mytable.tree_view.form);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	loadCategoryPicker("menu", {
 		skip: 0,
 	});

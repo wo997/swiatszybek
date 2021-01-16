@@ -112,7 +112,7 @@ class NewCmsRearrangeControls {
 
 		if (
 			!target ||
-			!target.findParentNode(this.rearrange_grabbed_rect_node, {
+			!target._parent(this.rearrange_grabbed_rect_node, {
 				inside: this.newCms.content_scroll_content,
 			})
 		) {
@@ -124,7 +124,7 @@ class NewCmsRearrangeControls {
 			if (
 				!rearrange_control_node &&
 				target &&
-				target.findParentNode(this.newCms.content_node)
+				target._parent(this.newCms.content_node)
 			) {
 				let smallest_sq_distance = 10000; // magnetic 100px
 				let second_smallest_sq_distance = 10000; // used to apply death zone :P
@@ -192,9 +192,7 @@ class NewCmsRearrangeControls {
 				rearrange_position = "inside";
 			} else {
 				// @ts-ignore
-				parent_container = rearrange_near_block._parent(
-					".container"
-				);
+				parent_container = rearrange_near_block._parent(".container");
 
 				if (!parent_container) {
 					// @ts-ignore
@@ -385,14 +383,14 @@ class NewCmsRearrangeControls {
 		if (options.same_parent) {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
-			const in_root = grabbed_block.parent() == this.newCms.content_node;
+			const in_root = grabbed_block._parent() == this.newCms.content_node;
 
 			if (in_root) {
 				rearrangable_blocks_query_selector =
 					".newCmsContent>" + rearrangable_blocks_query_selector;
 				rearrangable_blocks_query_selector_for_grids = ""; // no way u would find a grid as a root ;)
 			} else {
-				const parent_container = grabbed_block.parent().parent();
+				const parent_container = grabbed_block._parent()._parent();
 				const block_id = this.newCms.styling.getBlockId(parent_container);
 				if (block_id) {
 					const class_name =
@@ -426,7 +424,7 @@ class NewCmsRearrangeControls {
 					/** @type {NewCmsBlock} */
 					// @ts-ignore
 					const block = b;
-					if (block.findParentNode(this.newCms.grabbed_block)) {
+					if (block._parent(this.newCms.grabbed_block)) {
 						// don't touch itself or parent
 						return;
 					}
@@ -443,7 +441,7 @@ class NewCmsRearrangeControls {
 					}
 
 					const parent_container = block._parent(".container");
-				
+
 					if (parent_container && parent_container.dataset.block === "grid") {
 						// no befores and afters in a grid, just laundry
 						return;
@@ -499,7 +497,7 @@ class NewCmsRearrangeControls {
 					let parent = block;
 					while (parent != this.newCms.content_node) {
 						parent_count++;
-						parent = parent.parent();
+						parent = parent._parent();
 					}
 
 					if (position == "inside") {
@@ -573,7 +571,7 @@ class NewCmsRearrangeControls {
 				const block = b;
 				if (
 					!block.grid_data ||
-					block.findParentNode(this.newCms.grabbed_block) ||
+					block._parent(this.newCms.grabbed_block) ||
 					grabbed_block_type == "grid"
 				) {
 					// don't touch itself or parent or place in another grid

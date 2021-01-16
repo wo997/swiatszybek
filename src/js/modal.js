@@ -1,10 +1,10 @@
 /* js[global] */
 
-window.addEventListener("DOMContentLoaded", function () {
-    registerModals();
-    
+domload(function () {
+	registerModals();
+
 	const modal_wrapper = $("#modal-wrapper");
-	modal_wrapper.("touchmove", (ev) => {
+	modal_wrapper.addEventListener("touchmove", (ev) => {
 		ev.preventDefault();
 	});
 });
@@ -16,7 +16,7 @@ function registerModals() {
 
 function registerModalContent(html, callback) {
 	if (!document.body) {
-		window.addEventListener("DOMContentLoaded", function () {
+		domload(function () {
 			registerModalContent(html, callback);
 			return;
 		});
@@ -196,8 +196,6 @@ function showModal(name = null, params = {}) {
 		registerScrollShadows();
 	}
 
-	toggleBodyScroll(!visible);
-
 	return visible;
 }
 
@@ -205,9 +203,6 @@ function hideAllModals() {
 	$$("#modal-wrapper .modal_container > *").forEach((e) => {
 		hideModal(e.id);
 	});
-
-	// just in case?
-	toggleBodyScroll(true);
 }
 
 function hideModalTopMost() {
@@ -277,7 +272,6 @@ function hideModal(name, isCancel = false) {
 	if (visible_modal_count > 0) {
 		modal_wrapper.classList.add("visible");
 	} else {
-		toggleBodyScroll(true);
 		modal_wrapper.style.animation = "hide 0.4s";
 		setTimeout(() => {
 			modal_wrapper.classList.remove("visible");

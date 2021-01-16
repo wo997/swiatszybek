@@ -98,7 +98,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
     </style>
     <script>
-        window.addEventListener("DOMContentLoaded", function() {
+        domload(function() {
             window.form = $("#zakupForm");
             window.form.findAll("[name]").forEach(input => {
                 window.form[input.name] = input;
@@ -106,7 +106,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
             setFormData(<?= json_encode($zamowienie_data) ?>, window.form);
             loadFormFromLocalStorage();
-            clearAllErrors(".main-container");
+            clearAllErrors("body");
 
             if (RABAT > 0) hasKodRabatowy({
                 kwota: RABAT,
@@ -286,7 +286,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         var firstPaczkomat = true;
 
         function showPaczkomatPicker() {
-            toggleBodyScroll(false);
             if (firstPaczkomat) {
                 window.easyPackAsyncInit = function() {
                     easyPack.init({});
@@ -353,7 +352,6 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
         }
 
         function hidePaczkomatPicker() {
-            toggleBodyScroll(true);
             var picker = $('#paczkomat-picker');
             picker.classList.remove('paczkomat-picker-open');
             setTimeout(function() {

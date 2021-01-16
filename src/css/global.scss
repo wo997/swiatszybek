@@ -1,8 +1,7 @@
 /* css[global] */
 html {
 	height: 100%;
-	overflow-x: hidden;
-	overflow-y: unset;
+	overflow: hidden;
 }
 html,
 body {
@@ -11,12 +10,11 @@ body {
 	width: 100%;
 }
 :root {
-	--scrollbar-width: 0px;
 	--field-height: 35px;
 }
 body {
 	min-width: calc(100vw - 20px);
-	width: calc(100vw - var(--scrollbar-width));
+	width: 100vw;
 	min-height: 100%;
 	display: flex;
 	flex-direction: column;
@@ -164,6 +162,7 @@ textarea {
 	border: none;
 	transition: 0.15s all;
 	user-select: none;
+	-webkit-user-select: none;
 }
 
 .btn.primary,
@@ -297,6 +296,7 @@ input[type="button"] {
 .field-title {
 	margin-bottom: 0.2em;
 	user-select: none;
+	-webkit-user-select: none;
 	font-weight: 600;
 	display: block;
 }
@@ -400,6 +400,7 @@ TODO: use image pickers everywhere instead
 	color: #444;
 	cursor: pointer;
 	user-select: none;
+	-webkit-user-select: none;
 	padding: 9px 0;
 	position: relative;
 }
@@ -1076,6 +1077,7 @@ ql-icon i span {
 
 .checkbox-wrapper {
 	user-select: none;
+	-webkit-user-select: none;
 	display: inline-block;
 	cursor: pointer;
 }

@@ -271,7 +271,7 @@ class NewCms {
 
 			/** @type {PiepNode} */
 			const img = detail.img;
-			if (img.findParentNode(this.content_node)) {
+			if (img._parent(this.content_node)) {
 				this.contentChangeManageContent();
 			}
 		});
@@ -566,9 +566,7 @@ class NewCms {
 
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
-		const side_block = target
-			? target._parent(".side_block")
-			: null;
+		const side_block = target ? target._parent(".side_block") : null;
 		if (side_block) {
 			side_block.styling_data = this.styling.getDefaultBlockStyles();
 			side_block.client_rect = side_block.getBoundingClientRect();
@@ -756,7 +754,7 @@ class NewCms {
 			.forEach((newCms_block) => {
 				const newCms_block_content = newCms_block.find(".newCms_block_content");
 				newCms_block_content.classList.add("ql-editor");
-				newCms_block_content.parent().classList.add("ql-snow");
+				newCms_block_content._parent().classList.add("ql-snow");
 			});
 	}
 
@@ -962,8 +960,7 @@ class NewCms {
 		}
 
 		const do_trash =
-			this.mouse_target &&
-			this.mouse_target.findParentNode(this.trash_block.node);
+			this.mouse_target && this.mouse_target._parent(this.trash_block.node);
 
 		// if it's in a grid u wanna go for 2 steps
 		let rearrange_grid_first_node_ref = null;
@@ -1196,7 +1193,7 @@ class NewCms {
 
 				if (this.styling.allow_free_rearrangement || is_side_block) {
 					this.rearrange_controls.rearrange_near_block
-						.parent()
+						._parent()
 						.insertBefore(grabbed_block, before_node);
 				}
 
@@ -1329,7 +1326,7 @@ class NewCms {
 				top_1 = 0;
 
 			/** @type {HasRects} */
-			const real_parent = block.parent();
+			const real_parent = block._parent();
 			if (real_parent && real_parent.client_rect && real_parent.last_rect) {
 				left_0 = real_parent.last_rect.left;
 				top_0 = real_parent.last_rect.top;
@@ -1500,7 +1497,7 @@ class NewCms {
 		// cute scroll
 		if (
 			this.mouse_target &&
-			this.mouse_target.findParentNode(this.content_scroll_panel)
+			this.mouse_target._parent(this.content_scroll_panel)
 		) {
 			const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
 
@@ -1673,14 +1670,14 @@ class NewCms {
 
 	/** @param {NewCmsBlock} block */
 	getBlockParent(block) {
-		const just_parent = block.parent();
+		const just_parent = block._parent();
 
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
 		if (just_parent == this.content_node) {
 			return just_parent;
 		}
-		return just_parent.parent();
+		return just_parent._parent();
 	}
 }
 window.addEventListener("tool_loaded", (event) => {

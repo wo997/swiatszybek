@@ -42,18 +42,14 @@ class NewCmsSelectControls {
 
 		/** @type {SelectControl} */
 		// @ts-ignore
-		const select_control = target
-			? target._parent(".select_control")
-			: null;
+		const select_control = target ? target._parent(".select_control") : null;
 
 		if (select_control) {
 			hovered_block = select_control.select_block;
 		}
 
 		if (!hovered_block) {
-			hovered_block = target
-				? target._parent(".newCms_block")
-				: null;
+			hovered_block = target ? target._parent(".newCms_block") : null;
 		}
 
 		if (
@@ -255,7 +251,7 @@ class NewCmsSelectControls {
 			let parent = block;
 			while (parent != this.newCms.content_node) {
 				parent_count++;
-				parent = parent.parent();
+				parent = parent._parent();
 			}
 
 			const index = block_rect_data.relative_pos.top + parent_count;

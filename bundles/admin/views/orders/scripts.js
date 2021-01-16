@@ -1,6 +1,6 @@
 /* js[view] */
 
-document.addEventListener("DOMContentLoaded", function () {
+domload(() => {
 	useTool("loader");
 
 	var tableName = "mytable";

@@ -4,7 +4,7 @@ function renderPageItem($page)
 {
     $arrow_btn = "";
     if (isset($page["sub"])) {
-        $arrow_btn = "<div class='btn transparent expand_arrow' onclick='expandMenu($(this).parent().next(),$(this).parent(),null,{single:true})'><i class='fas fa-chevron-right'></i></div>";
+        $arrow_btn = "<div class='btn transparent expand_arrow' onclick='expandMenu($(this)._parent()._next(),$(this)._parent(),null,{single:true})'><i class='fas fa-chevron-right'></i></div>";
     }
 
     $title = "";

@@ -57,6 +57,12 @@ function $(selector, parent = undefined) {
 	node._parent = (selector = undefined, options = {}) => {
 		return findParent(node, selector, options);
 	};
+	node._next = (selector = undefined, options = {}) => {
+		return findNext(node, selector, options);
+	};
+	node._prev = (selector = undefined, options = {}) => {
+		return findPrev(node, selector, options);
+	};
 	node._child = (selector) => {
 		return $(selector, node);
 	};

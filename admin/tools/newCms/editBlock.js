@@ -126,7 +126,7 @@ class NewCmsEditBlock {
 			tooltip: "Kopiuj",
 		});
 
-		//if (!block.parent().classList.contains("newCmsContent")) {
+		//if (!block._parent().classList.contains("newCmsContent")) {
 		btn_set.push({
 			color: "#f55",
 			icon: `<i class="fas fa-trash"></i>`,

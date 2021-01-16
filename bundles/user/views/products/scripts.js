@@ -5,7 +5,7 @@ var rowCount = 24;
 var searchParams = {};
 var searchingProducts = false;
 
-window.addEventListener("DOMContentLoaded", () => {
+domload(() => {
 	var e = $(".category_name.current");
 	if (e) {
 		expandCategoriesAbove(e);

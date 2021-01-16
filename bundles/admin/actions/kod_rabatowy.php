@@ -35,7 +35,7 @@ if (!json_decode($kod_data["product_list"])) {
     }
 </style>
 <script>
-    window.addEventListener("DOMContentLoaded", function() {
+    domload(function() {
         var tableName = "users";
         createDatatable({
             name: tableName,

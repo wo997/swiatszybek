@@ -251,7 +251,7 @@ function escapeUrl(string) {
 /* never used
 domload(() => {
 	$$(".mobile-hover").forEach((e) => {
-		if (IS_MOBILE) {
+		if (IS_TOUCH_DEVICE) {
 			e.addEventListener("touchstart", () => {
 				if (!e.classList.contains("hovered")) {
 					setTimeout(() => {
@@ -444,7 +444,7 @@ function findNode(node, selector, move, options = {}) {
 		return defa;
 	}
 	if (!selector) {
-		return move(node);
+		return $(move(node));
 	}
 	node = $(node);
 	options.skip = def(options.skip, 1);
@@ -453,28 +453,32 @@ function findNode(node, selector, move, options = {}) {
 		if (options.max > 0) {
 			options.max--;
 		} else {
-			return defa;
+			break;
 		}
 		if (options.skip > 0) {
 			options.skip--;
+			continue;
+		}
+
+		if (options.inside == node) {
+			break;
+		}
+
+		if (node === document.body || node === document.documentElement) {
+			break;
+		}
+
+		if (typeof selector === "string") {
+			if (node.matches(selector)) {
+				return node;
+			}
 		} else {
-			if (typeof selector === "string") {
-				if (node.matches(selector)) {
-					return node;
-				}
-			} else {
-				if (node == selector) {
-					return node;
-				}
+			if (node == selector) {
+				return node;
 			}
 		}
-		if (options.inside == node) {
-			return defa;
-		}
-		if (node === document.body) {
-			return defa;
-		}
-		node = move(node);
+
+		node = $(move(node));
 	}
 	return defa;
 }
@@ -609,16 +613,21 @@ function removeClasses(className, selector = null) {
 	}
 }
 
+/**
+ *
+ * @param {PiepNode} node
+ * @param {string} prefix
+ */
 function removeClassesWithPrefix(node, prefix) {
-	let cn = node.className;
+	let cn = [...node.classList].join(" ");
+
 	const matches = cn.match(new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"), "");
 	if (!matches) {
 		return undefined;
 	}
 	matches.forEach((match) => {
-		cn = cn.replace(match, "");
+		node.classList.remove(match);
 	});
-	node.className = cn.trim();
 
 	return matches;
 }
@@ -841,4 +850,6 @@ function kebabToSnakeCase(string) {
 	});
 }
 
-const applyToArray = (func, array) => func.apply(Math, array);
+function applyToArray(func, array) {
+	return func.apply(Math, array);
+}

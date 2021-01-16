@@ -1310,7 +1310,7 @@ function datatableFilter(btn, column_id) {
       </label>
     `;
 	} else if (filters == "date") {
-		if (!IS_MOBILE) {
+		if (!IS_TOUCH_DEVICE) {
 			menu_header = `Wybierz datę`;
 		}
 		menu_body += /*html*/ `
@@ -1359,7 +1359,7 @@ function datatableFilter(btn, column_id) {
 		menu_body = col_def.renderSearch(menu_body);
 	}
 
-	if (IS_MOBILE) {
+	if (IS_TOUCH_DEVICE) {
 		setModalTitle("#filter_menu", "Filtruj " + col_def.title.toLowerCase());
 		filter_menu.setContent(
 			/*html*/ `<span class="field-title">${menu_header}</span>${menu_body}${menu_footer}`
@@ -1470,8 +1470,8 @@ function dateTypeChanged(select) {
 	filter_menu._child(".date_range_picker").classList.toggle("hidden", !isRange);
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-	if (IS_MOBILE) {
+domload(() => {
+	if (IS_TOUCH_DEVICE) {
 		registerModalContent(/*html*/ `
             <div id="filter_menu">
                 <div class="modal-body">
@@ -1603,7 +1603,7 @@ function removeFilters(datatable, column_id) {
 
 function filtersChanged(hide = false) {
 	if (hide) {
-		if (IS_MOBILE) {
+		if (IS_TOUCH_DEVICE) {
 			hideModal("filter_menu");
 		} else {
 			filter_menu.style.display = "none";
