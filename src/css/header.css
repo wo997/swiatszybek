@@ -90,7 +90,7 @@ header .heart-icon,
 .page-header {
 	position: fixed;
 	min-width: calc(100vw - 20px);
-	width: calc(100vw - var(--scrollbar-width));
+	width: 100vw;
 	top: 0;
 	left: 0;
 	z-index: 600;

@@ -11,12 +11,11 @@ body {
 	width: 100%;
 }
 :root {
-	--scrollbar-width: 0px;
 	--field-height: 35px;
 }
 body {
 	min-width: calc(100vw - 20px);
-	width: calc(100vw - var(--scrollbar-width));
+	width: 100vw;
 	min-height: 100%;
 	display: flex;
 	flex-direction: column;

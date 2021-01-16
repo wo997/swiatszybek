@@ -119,52 +119,19 @@ let animated_product_img = null;
 domload(() => {
 	preventProductImagesLongPress();
 
-	window.addEventListener(IS_MOBILE ? "touchstart" : "mousemove", (event) => {
+	window.addEventListener("mousemove", (event) => {
+		currentlyFocusedProduct(event.target);
+	});
+	window.addEventListener("mousemove", (event) => {
 		currentlyFocusedProduct(event.target);
 	});
 });
 
 function preventProductImagesLongPress() {
-	if (!IS_MOBILE) return;
 	$$(".product-image").forEach((e) => {
 		preventLongPressMenu(e);
 	});
 }
-
-/*
-
-domload(function () {
-  if (!IS_MOBILE) return;
-  mobileFocusProductFrame();
-});
-
-function mobileFocusProductFrame() {
-  var closest = null;
-  var distance = window.innerHeight * 0.3 * window.innerWidth * 0.3;
-  document.querySelectorAll(".product-image").forEach((e) => {
-    var p = e.getBoundingClientRect();
-    var dx = p.x + p.width / 2 - window.innerWidth / 2;
-    var dy = p.y + p.height / 2 - window.innerHeight / 2;
-    var d = dx * dx + dy * dy;
-    if (d < distance) {
-      distance = d;
-      closest = e;
-    }
-  });
-  if (animateProduct.awaitTarget != closest) {
-    animateProduct.delay = 3;
-  }
-  animateProduct.awaitTarget = closest;
-
-  if (animateProduct.delay <= 0) {
-    currentlyFocusedProduct(animateProduct.awaitTarget);
-  } else {
-    currentlyFocusedProduct(null);
-    animateProduct.delay--;
-  }
-
-  setTimeout(mobileFocusProductFrame, 300);
-}*/
 
 function currentlyFocusedProduct(node) {
 	let product_img = null;

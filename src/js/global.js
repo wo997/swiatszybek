@@ -251,7 +251,7 @@ function escapeUrl(string) {
 /* never used
 domload(() => {
 	$$(".mobile-hover").forEach((e) => {
-		if (IS_MOBILE) {
+		if (IS_TOUCH_DEVICE) {
 			e.addEventListener("touchstart", () => {
 				if (!e.classList.contains("hovered")) {
 					setTimeout(() => {

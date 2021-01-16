@@ -26,7 +26,7 @@ domload(() => {
 	let shortest_hit = null;
 	let shortest_length = 100000;
 	$$(".navbar_admin .menu_item").forEach((e) => {
-		var a = e.find("a");
+		var a = e._child("a");
 		if (!a) {
 			return;
 		}

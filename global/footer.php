@@ -2,10 +2,12 @@
     <div class="modal_container"></div>
 </div>
 
-<div class="wo997_slider slider_x" data-slide_width="calc(10% + 200px)">
+<div class="x"></div>
+<div class="wo997_slider slider_x" data-slide_width="calc(10% + 150px)" data-show_next_mobile>
     <div class="wo997_slides_container">
         <?php for ($i = 0; $i < 10; $i++) { ?>
             <div class="wo997_slide">
+                <?= $i ?>
                 <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
             </div>
         <?php } ?>
@@ -23,7 +25,7 @@
     }
 
     .wo997_slide {
-        width: var(--slide-width);
+        width: var(--slide_width);
         flex-shrink: 0;
     }
 </style>

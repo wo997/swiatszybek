@@ -30,7 +30,7 @@ function updateMouseCoords(event) {
 	mouse.target = $(event.target);
 }
 
-if (!IS_MOBILE) {
+if (!IS_TOUCH_DEVICE) {
 	this.container.addEventListener("mousemove", (event) => {
 		updateMouseCoords(event);
 		this.mouseMove();
