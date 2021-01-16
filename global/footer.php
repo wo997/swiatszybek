@@ -2,6 +2,42 @@
     <div class="modal_container"></div>
 </div>
 
+<div class="i"></div>
+
+<div class="wo997_slider slider_x" style="--slide-width:300px">
+    <div class="wo997_slides_container">
+        <div class="wo997_slide">
+            <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
+        </div>
+        <div class="wo997_slide">
+            <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
+        </div>
+        <div class="wo997_slide">
+            <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
+        </div>
+        <div class="wo997_slide">
+            <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
+        </div>
+    </div>
+</div>
+
+<style>
+    .wo997_slider {
+        overflow-x: hidden;
+        --slide-width: 500px;
+    }
+
+    .wo997_slides_container {
+        display: inline-flex;
+        min-width: 100%;
+    }
+
+    .wo997_slide {
+        width: var(--slide-width);
+        flex-shrink: 0;
+    }
+</style>
+
 <footer>
     <?php
     if (isset($preview_params) && isset($preview_params["page_footer"])) {
@@ -113,9 +149,6 @@ if (isset($JS_files)) {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 <?php endif ?>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-
-<script src="/src/swiper.min.js"></script>
-<link rel="stylesheet" href="/src/swiper.min.css">
 
 <link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">
 

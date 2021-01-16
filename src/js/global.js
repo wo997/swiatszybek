@@ -516,6 +516,7 @@ function findPrev(node, selector, options) {
  * @param {findNodeOptions} options
  */
 function findScrollParent(node, options = {}) {
+	options.default = def(options.default, $(document.body));
 	return findParent(node, `.scroll-panel:not(.horizontal)`, options);
 }
 
@@ -527,6 +528,11 @@ function removeContent(node) {
 	}
 }
 
+/**
+ *
+ * @param {*} node
+ * @param {string | number} html
+ */
 function setContent(node, html = "") {
 	node = $(node);
 	removeContent(node);
@@ -644,6 +650,10 @@ function isHidden(el) {
 	return el.offsetParent === null;
 }
 
+function inBody(node) {
+	document.body.contains(node);
+}
+
 function preventLongPressMenu(node) {
 	node.oncontextmenu = function (event) {
 		event.preventDefault();
@@ -726,7 +736,7 @@ function nodePositionAgainstScrollableParent(node) {
 	node = $(node);
 	const node_rect = node.getBoundingClientRect();
 
-	const scrollable_parent = node.findScrollParent({ default: document.body });
+	const scrollable_parent = node.findScrollParent();
 	const scrollable_parent_rect = scrollable_parent.getBoundingClientRect();
 
 	return {

@@ -11,9 +11,9 @@
  *  quiet?: boolean
  * }): void
  * getValue(): any
- * findScrollParent(options?): PiepNode
+ * findScrollParent(options?: findNodeOptions): PiepNode
  * empty(): void
- * setContent(html: string): void
+ * setContent(html: string | number): void
  * dataset: any;
  * setting_value?: boolean
  * _parent(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
@@ -23,6 +23,7 @@
  * _children(selector: string): PiepNode[]
  * _direct_children(selector?: string): PiepNode[]
  * _is_empty()
+ * _in_body()
  * _animate(keyframes: string, duration: number, options?: AnimationOptions): void
  * _dispatch_change(): void
  * } & HTMLElement} PiepNode
@@ -107,6 +108,10 @@ function $(selector, parent = undefined) {
 	node._animate = (keyframes, duration, options = {}) => {
 		// @ts-ignore
 		return animate(node, keyframes, duration, options);
+	};
+
+	node._in_body = () => {
+		inBody(node);
 	};
 
 	return node;
