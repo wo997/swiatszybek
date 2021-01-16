@@ -17,15 +17,15 @@ function setAttributePickerValues(input, value) {
 				  })
 				: null;
 			if (option) {
-				select.setValue(option.value);
+				select._set_value(option.value);
 			} else {
-				select.setValue("");
+				select._set_value("");
 			}
 		});
 	});
 
 	input._children(".any-value-wrapper").forEach((any) => {
-		any._child(`.has_attribute`).setValue(false);
+		any._child(`.has_attribute`)._set_value(false);
 	});
 
 	if (value.values) {
@@ -38,8 +38,8 @@ function setAttributePickerValues(input, value) {
 				var has_attribute_node = attribute_row._child(`.has_attribute`);
 				var attribute_value_node = attribute_row._child(`.attribute_value`);
 				if (has_attribute_node && attribute_value_node) {
-					has_attribute_node.setValue(1);
-					attribute_value_node.setValue(attribute.value);
+					has_attribute_node._set_value(1);
+					attribute_value_node._set_value(attribute.value);
 				}
 			}
 		});

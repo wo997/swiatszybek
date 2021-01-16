@@ -1,7 +1,7 @@
 window.preview = {
 	open: (url, params) => {
 		$(`#preview .preview_form`).setAttribute("action", url);
-		$(`#preview .preview_form [name="preview_params"]`).setValue(
+		$(`#preview .preview_form [name="preview_params"]`)._set_value(
 			JSON.stringify(params)
 		);
 		showModal("preview");

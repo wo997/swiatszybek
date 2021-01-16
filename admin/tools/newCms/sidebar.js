@@ -68,7 +68,7 @@ class NewCmsSidebar {
 				if (block_type == "image") {
 					this.newCms.edit_block.edit_node
 						.find(".newCms_block_content")
-						.setValue(image.getValue(), { quiet: true });
+						._set_value(image.getValue(), { quiet: true });
 
 					setTimeout(() => {
 						lazyLoadImages();
@@ -168,7 +168,7 @@ class NewCmsSidebar {
 		}
 		if (block_type == "image") {
 			const image = this.newCms.sidebar.node.find(`[name="image"]`);
-			image.setValue(block.find(".newCms_block_content").getValue(), {
+			image._set_value(block.find(".newCms_block_content").getValue(), {
 				quiet: true,
 			});
 			lazyLoadImages();
@@ -178,7 +178,7 @@ class NewCmsSidebar {
 				`[name="container_flow"]`
 			);
 
-			container_flow.setValue(block_styles.inside["flex-flow"], {
+			container_flow._set_value(block_styles.inside["flex-flow"], {
 				quiet: true,
 			});
 		}
@@ -192,7 +192,7 @@ class NewCmsSidebar {
 		margin.findAll("c-select").forEach((e) => {
 			const input = e.find("input");
 			const dir = input.dataset.dir;
-			input.setValue(def(block_styles.outside[`margin-${dir}`], ""), {
+			input._set_value(def(block_styles.outside[`margin-${dir}`], ""), {
 				quiet: true,
 			});
 		});
@@ -208,7 +208,7 @@ class NewCmsSidebar {
 			: null;
 
 		if (gtc) {
-			grid_template_columns.setValue(gtc, { quiet: true });
+			grid_template_columns._set_value(gtc, { quiet: true });
 		}
 	}
 

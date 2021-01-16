@@ -543,7 +543,7 @@ function createDatatable(datatable) {
 		clearTableSorting(datatable);
 		var se = datatable.target._child(`[data-param="search"]`);
 		if (se) {
-			se.setValue("");
+			se._set_value("");
 		}
 		datatable.search();
 	};
@@ -835,7 +835,7 @@ function createDatatable(datatable) {
 								if (m) {
 									// let f.e simple-list component be created
 									setTimeout(() => {
-										m.setValue(value);
+										m._set_value(value);
 									}, 0);
 								}
 							});
@@ -1020,7 +1020,7 @@ window.addEventListener("dragstart", (event) => {
 window.addEventListener("dragend", () => {
 	if (datatableRearrange.source) {
 		var input = datatableRearrange.source._child(".kolejnosc");
-		input.setValue(datatableRearrange.placeTo);
+		input._set_value(datatableRearrange.placeTo);
 	}
 	removeClasses("grabbed");
 	$$(".tableRearrange").forEach((e) => {
@@ -1182,7 +1182,7 @@ function setPublish(obj, published) {
 
 	if (listElement) {
 		var input = obj._parent()._prev();
-		input.setValue(1 - input.getValue());
+		input._set_value(1 - input.getValue());
 		return;
 	}
 
@@ -1428,24 +1428,24 @@ function datatableFilter(btn, column_id) {
 		if (col_def.searchable == "select") {
 			filter_menu._children(`input[type='checkbox']`).forEach((e) => {
 				if (filter_value.indexOf(e.value) != -1) {
-					e.setValue(1);
+					e._set_value(1);
 				}
 			});
 		} else if (col_def.searchable == "date") {
-			filter_menu._child(".date_type").setValue(current_filter.type);
+			filter_menu._child(".date_type")._set_value(current_filter.type);
 			if (current_filter.type == "<>") {
-				$(".date_range_picker .start").setValue(filter_value[0]);
-				$(".date_range_picker .end").setValue(filter_value[1]);
+				$(".date_range_picker .start")._set_value(filter_value[0]);
+				$(".date_range_picker .end")._set_value(filter_value[1]);
 			} else {
-				$(".default_datepicker").setValue(filter_value);
+				$(".default_datepicker")._set_value(filter_value);
 			}
 		} else {
 			var exact = current_filter.type != "%";
 			if (!exact && filter_value.length >= 2) {
 				filter_value = filter_value.substring(1, filter_value.length - 1);
 			}
-			filter_menu._child(`[name='exact']`).setValue(exact);
-			filter_menu._child(`.field`).setValue(filter_value);
+			filter_menu._child(`[name='exact']`)._set_value(exact);
+			filter_menu._child(`.field`)._set_value(filter_value);
 		}
 	}
 }
@@ -1454,7 +1454,7 @@ function filterCheckboxChanged(checkbox, select_single) {
 	if (select_single) {
 		filter_menu._children(`input[type="checkbox"]`).forEach((e) => {
 			if (e != checkbox) {
-				e.setValue(0, { quiet: true });
+				e._set_value(0, { quiet: true });
 			}
 		});
 	}
@@ -1662,6 +1662,6 @@ function getParentDatatable(node) {
 
 function selectFilterCheckboxes(values) {
 	filter_menu._children(`input[type='checkbox']`).forEach((e) => {
-		e.setValue(values.indexOf(+e.value) != -1 ? 1 : 0);
+		e._set_value(values.indexOf(+e.value) != -1 ? 1 : 0);
 	});
 }

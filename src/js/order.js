@@ -150,7 +150,7 @@ window.addEventListener("basket-change", (event) => {
 
 			var modal_name = "variantAdded";
 
-			$(`#${modal_name} .variant_image`).setValue(variant.zdjecie);
+			$(`#${modal_name} .variant_image`)._set_value(variant.zdjecie);
 			$(`#${modal_name} .variant_name`).setContent(
 				variant.title + " " + variant.name
 			);
@@ -328,7 +328,7 @@ function showVariantChanges(
 			setVariantRowQty(variant_node, variant_data);
 			var pi = variant_node._child(".variant_image");
 			if (pi) {
-				pi.setValue(variant_data.zdjecie);
+				pi._set_value(variant_data.zdjecie);
 			}
 			var pp = variant_node._child(".variant_price");
 			if (pp) {
@@ -408,7 +408,7 @@ function showProductChanges(
 
 			var pi = product_node._child(".product_image");
 			if (pi) {
-				pi.setValue(product_data.cache_thumbnail);
+				pi._set_value(product_data.cache_thumbnail);
 			}
 			var pp = product_node._child(".product_price");
 			if (pp) {

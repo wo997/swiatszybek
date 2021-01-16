@@ -7,7 +7,7 @@
 
 /**
  * @typedef {{
- * setValue(value: any, options?: {
+ * _set_value(value: any, options?: {
  *  quiet?: boolean
  * }): void
  * getValue(): any
@@ -85,8 +85,8 @@ function $(selector, parent = undefined) {
 		return node.hasChildNodes();
 	};
 
-	if (!node.setValue) {
-		node.setValue = (value, options = {}) => {
+	if (!node._set_value) {
+		node._set_value = (value, options = {}) => {
 			setValue(node, value, options);
 		};
 	}

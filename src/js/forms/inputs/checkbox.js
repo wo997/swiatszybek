@@ -18,7 +18,7 @@ function registerCheckboxes() {
 
 		c.addEventListener(IS_TOUCH_DEVICE ? "touchstart" : "mousedown", (e) => {
 			c.classList.toggle("checked");
-			c.setValue();
+			c._set_value();
 		});
 	});
 }

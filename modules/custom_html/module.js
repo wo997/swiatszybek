@@ -11,7 +11,7 @@ module_blocks[module_block_name] = {
     </div>
     `,
   formOpen: (params, block) => {
-    $("#custom-html .html").setValue(
+    $("#custom-html .html")._set_value(
       block.querySelector(".cms-block-content .html-container").innerHTML
     );
   },
