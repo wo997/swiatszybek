@@ -151,7 +151,7 @@ function getFormData(form, params = {}) {
 			var inside = true;
 
 			while (parent_sub_form) {
-				if (!parent_sub_form._parent(form, { skip: 1 })) {
+				if (!parent_sub_form._parent(form)) {
 					inside = false;
 					break;
 				}

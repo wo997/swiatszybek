@@ -5,8 +5,8 @@ useCSS("/$module_block_dir/styles.css");
 $slides = def($params, "cms_slides", []);
 
 ?>
-<div class='swiper-container slider_module swiper-all'>
-    <div class='swiper-wrapper'>
+<div class='wo997_slider slider_module' data-slide_width="100%">
+    <div class='wo997_slides_container'>
         <?php
         if (is_array($slides)) {
             foreach ($slides as $slide) {
@@ -15,7 +15,7 @@ $slides = def($params, "cms_slides", []);
                 }
 
         ?>
-                <div class='swiper-slide'>
+                <div class='wo997_slide'>
                     <div class='cms slide-desktop'><?= getCMSPageHTML($slide["content"]) ?></div>
                     <div class='cms slide-mobile'><?= getCMSPageHTML($slide["content"]) ?></div>
                 </div>
@@ -24,7 +24,4 @@ $slides = def($params, "cms_slides", []);
         }
         ?>
     </div>
-    <div class='swiper-button-prev swiper-nav'><img src="/src/img/chevron.svg"></div>
-    <div class='swiper-button-next swiper-nav'><img src="/src/img/chevron.svg"></div>
-    <div class='swiper-pagination'></div>
 </div>

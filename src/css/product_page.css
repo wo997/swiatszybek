@@ -1,9 +1,5 @@
 /* css[product_page] */
 
-.gallery-thumbs .swiper-slide:not(.swiper-slide-thumb-active) {
-	cursor: pointer;
-}
-
 .comments th {
 	display: none;
 }
@@ -166,71 +162,6 @@
 .locked {
 	opacity: 0.3;
 	cursor: auto !important;
-}
-
-.swiper-pagination {
-	font-size: 16px;
-	position: relative;
-	top: 6px;
-	font-weight: bold;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-	background: none;
-	outline: none;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.swiper-container:not(:hover) .swiper-button-prev,
-.swiper-container:not(:hover) .swiper-button-next {
-	display: none !important;
-}
-
-.swiper-container .swiper-button-prev img {
-	transform: scaleX(-0.8);
-}
-
-.swiper-container .swiper-button-next img {
-	transform: scaleX(0.8);
-}
-
-.swiper-container .swiper-button-prev img,
-.swiper-container .swiper-button-next img {
-	padding: 8px;
-	width: 34px;
-	opacity: 0.5;
-}
-
-.swiper-container .swiper-button-prev img:hover,
-.swiper-container .swiper-button-next img:hover {
-	opacity: 0.8;
-}
-
-.swiper-slide {
-	padding: 0 10px;
-}
-
-.gallery-thumbs {
-	/*height: 100px;*/
-	padding: 2px 0;
-	max-width: 500px;
-	transform: scale(0.95);
-}
-
-.gallery-thumbs .swiper-slide {
-	height: 100%;
-	opacity: 0.4;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	transform: scale(0.95);
-}
-
-.gallery-thumbs .swiper-slide-thumb-active {
-	opacity: 1;
 }
 
 .variantAdded .variant_image {

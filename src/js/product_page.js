@@ -1,40 +1,11 @@
 /* js[product_page] */
 
-var swiper;
-var galleryThumbs;
-
 var RATING = 0;
 
-domload(function () {
-	if ($(".swiper-container") != null) {
-		galleryThumbs = new Swiper(".gallery-thumbs", {
-			centerInsufficientSlides: true,
-			// spaceBetween: 10,
-			slidesPerView: 4,
-			freeMode: true,
-			watchSlidesVisibility: true,
-			watchSlidesProgress: true,
-		});
-
-		swiper = new Swiper(".product-main-slider", {
-			navigation: {
-				nextEl: ".swiper-button-next",
-				prevEl: ".swiper-button-prev",
-			},
-			thumbs: {
-				swiper: galleryThumbs,
-				autoScrollOffset: 1,
-			},
-		});
-
-		setTimeout(() => {
-			setCustomHeights();
-		});
-	}
-
+domload(() => {
 	// rating
 	var r = $$(".my-rating span");
-	for (i = 0; i < r.length; i++) {
+	for (let i = 0; i < r.length; i++) {
 		r[i].setAttribute("data-rating", 5 - i);
 		r[i].addEventListener("click", function () {
 			var rating = this.getAttribute("data-rating");
@@ -57,82 +28,10 @@ domload(function () {
 			break;
 		}
 	}
-
-	youAlreadyHaveIt();
 });
-
-function youAlreadyHaveIt(animate_variant_id = null) {
-	/*var juzMasz = "";
-  var total = 0;
-  for (basket_item of basket_data.basket) {
-    var variant = variants.find((v) => {
-      return v.variant_id == basket_item.variant_id;
-    });
-
-    if (!variant) continue;
-
-    var animate =
-      animate_variant_id == basket_item.variant_id
-        ? "style='animation: blink 0.5s'"
-        : "";
-
-    var total_price = 0;
-    for (p = 0; p < basket_item.quantity; p++) {
-      total_price += parseFloat(variant.price);
-      total++;
-    }
-
-    var remove = `
-      <button class='btn subtle qty-btn' onclick='addVariantToBasket(${basket_item.variant_id},-1)'>
-        <i class='custom-minus'></i>
-      </button>
-    `;
-    var add = `
-      <button class='btn subtle qty-btn' ${
-        basket_item.quantity <= 0 ? "disabled" : ""
-      } onclick='addVariantToBasket(${basket_item.variant_id},1)'>
-        <i class='custom-plus'></i>
-      </button>
-    `;
-
-    juzMasz += `
-      <tr ${animate}>
-        <td>${variant.name}</td>
-        <td> 
-          <div class='qty-control glue-children'>
-            ${remove} <span class='qty-label'>${basket_item.quantity}</span> ${add}
-          </div>
-          <span class="product-price">
-            ${total_price} zł
-          </span>
-        </td>
-      </tr>`;
-  }
-
-  clickVariant(VARIANT_ID);
-
-  if (juzMasz != "") {
-    juzMasz =
-      "<h3 style='margin:25px 0 10px'>W Twoim koszyku już " +
-      (total == 1 && false ? "jest" : "są") +
-      ":</h3><table class='item-list'>" +
-      juzMasz +
-      "</table>";
-    juzMasz += `<a class="btn primary medium fill" href="/zakup" style="margin-top: 20px">
-                    Przejdź do koszyka
-                    <i class="fa fa-chevron-right"></i>
-                  </a>`;
-  }
-  $("#juzMasz").innerHTML = juzMasz;
-
-  setTimeout(function () {
-    removeClasses("seethrough");
-  }, 10);*/
-}
 
 window.addEventListener("basket-change", (event) => {
 	var res = event.detail.res;
-	//youAlreadyHaveIt(res.variant_id);
 
 	showVariantChanges(
 		res,

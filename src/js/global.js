@@ -457,24 +457,23 @@ function findNode(node, selector, move, options = {}) {
 		}
 		if (options.skip > 0) {
 			options.skip--;
-			continue;
-		}
-
-		if (options.inside == node) {
-			break;
-		}
-
-		if (node === document.body || node === document.documentElement) {
-			break;
-		}
-
-		if (typeof selector === "string") {
-			if (node.matches(selector)) {
-				return node;
-			}
 		} else {
-			if (node == selector) {
-				return node;
+			if (options.inside == node) {
+				break;
+			}
+
+			if (node === document.body || node === document.documentElement) {
+				break;
+			}
+
+			if (typeof selector === "string") {
+				if (node.matches(selector)) {
+					return node;
+				}
+			} else {
+				if (node == selector) {
+					return node;
+				}
 			}
 		}
 
