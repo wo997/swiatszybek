@@ -227,7 +227,7 @@ function createListCompontent(
 			node._getRows = () => {
 				/** @type {AnyComponent[]} */
 				// @ts-ignore
-				const res = node.directChildren(":not(.removing)");
+				const res = node._direct_children(":not(.removing)");
 				return res;
 			};
 

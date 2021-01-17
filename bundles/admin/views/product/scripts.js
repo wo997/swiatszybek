@@ -529,7 +529,9 @@ function choiceAttributeChanged(select) {
 	select = $(select);
 	var sub_filter = select._parent(`.sub_filter`);
 	var filter_name = sub_filter.find(`[name="filter_name"]`);
-	filter_name._set_value(select.value == -1 ? "" : getSelectDisplayValue(select));
+	filter_name._set_value(
+		select.value == -1 ? "" : getSelectDisplayValue(select)
+	);
 }
 
 function choiceValuesChanged(values_combo) {
@@ -568,7 +570,7 @@ function choiceListChanged(attribute_row_wrapper) {
 		return;
 	}
 
-	list.directChildren().forEach((value_list_wrapper) => {
+	list._direct_children().forEach((value_list_wrapper) => {
 		var selected_attribute_values = value_list_wrapper.find(
 			`[name='selected_attribute_values']`
 		);

@@ -1,10 +1,5 @@
 /* css[admin] */
 
-body#admin {
-	height: 100%;
-	overflow: hidden;
-}
-
 .main-container {
 	flex-grow: 1;
 	display: flex;
@@ -53,11 +48,6 @@ footer {
 	flex-direction: column;
 	height: 100%;
 }
-
-.main-wrapper {
-	width: 100%;
-}
-
 .menu_item.current {
 	background: #0001;
 }
@@ -67,8 +57,9 @@ h1 {
 	margin: 40px 0 20px;
 	font-size: 24px;
 }
-.main-wrapper {
-	display: flex;
+#admin .main_container {
+	height: 100vh;
+	flex-direction: row;
 }
 @media only screen and (max-width: 799px) {
 	.navbar_admin {
@@ -78,7 +69,7 @@ h1 {
 	.content {
 		height: auto;
 	}
-	.main-wrapper {
+	#admin .main_container {
 		flex-direction: column;
 	}
 	.navbar_admin.hidden > .scroll-panel {

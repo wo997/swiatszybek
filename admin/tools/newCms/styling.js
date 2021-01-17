@@ -662,7 +662,7 @@ class NewCmsStyling {
 			  );
 
 		containers.forEach((container) => {
-			let container_blocks = container.directChildren();
+			let container_blocks = container._direct_children();
 
 			if (this.allow_free_rearrangement) {
 				// remove data-flex_order for free rearrangement blocks, they will have the position set explicitly in DOM
@@ -719,7 +719,7 @@ class NewCmsStyling {
 						// @ts-ignore
 						const b = block
 							._parent()
-							.directChildren()
+							._direct_children()
 							.find(
 								(child) =>
 									parseInt(child.dataset.flex_order) ==
@@ -732,7 +732,7 @@ class NewCmsStyling {
 						// @ts-ignore
 						const b = block
 							._parent()
-							.directChildren()
+							._direct_children()
 							.find(
 								(child) =>
 									parseInt(child.dataset.flex_order) ==
@@ -764,7 +764,7 @@ class NewCmsStyling {
 
 				let grid_children = grid
 					.find(".newCms_block_content")
-					.directChildren()
+					._direct_children()
 					.filter((b) => {
 						if (!b.classList.contains("newCms_block")) {
 							return false;
@@ -815,7 +815,7 @@ class NewCmsStyling {
 
 				const grid_children = grid
 					.find(".newCms_block_content")
-					.directChildren()
+					._direct_children()
 					.filter((b) => {
 						return b.classList.contains("newCms_block");
 					});

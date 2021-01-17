@@ -292,17 +292,17 @@ function hideModal(name, isCancel = false) {
 				modal.classList.remove("visible");
 				modal.style.animation = "";
 			}, 200);
+
+			// cleanup validators
+			// TODO: we already clean them up on modal show hmmmm, remove?
+			modal._children("[data-validate]").forEach((e) => {
+				e.classList.remove("required");
+			});
+
+			modal._children(".fa-exclamation-triangle").forEach((e) => {
+				e.remove();
+			});
 		}
-
-		// cleanup validators
-		// TODO: we already clean them up on modal show hmmmm, remove?
-		modal._children("[data-validate]").forEach((e) => {
-			e.classList.remove("required");
-		});
-
-		modal._children(".fa-exclamation-triangle").forEach((e) => {
-			e.remove();
-		});
 
 		window.dispatchEvent(
 			new CustomEvent("modal-hide", {

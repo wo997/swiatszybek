@@ -349,7 +349,7 @@ function createSimpleList(params = {}) {
 					rows.push(row);
 				});
 			} else {
-				listTarget.directChildren().forEach((simpleListRowWrapper) => {
+				listTarget._direct_children().forEach((simpleListRowWrapper) => {
 					var row_data = {};
 					$(simpleListRowWrapper)
 						.find(".simple-list-row")
@@ -451,7 +451,7 @@ function validateSimpleList(field) {
 				var rowValueInputs = {};
 				var rowsParent = list.params.table ? listNode.find("tbody") : listNode;
 				rowsParent
-					.directChildren()
+					._direct_children()
 					.filter((listRow) => {
 						return listRow.classList.contains(
 							list.params.table ? "simple-list-row" : "simple-list-row-wrapper"

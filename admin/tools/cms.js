@@ -609,7 +609,7 @@
 
 // function setNodeImageBackground(node, src = "") {
 // 	if (src === "") {
-// 		var bi = node.directChildren().find((e) => {
+// 		var bi = node._direct_children().find((e) => {
 // 			return e.classList.contains("background-image");
 // 		});
 // 		if (bi) {
@@ -617,7 +617,7 @@
 // 		}
 // 		return;
 // 	}
-// 	addMissingDirectChildren(
+// 	addMissing_direct_children(
 // 		node,
 // 		(c) => c.classList.contains("background-image"),
 // 		`<img class="background-image">`,
@@ -637,7 +637,7 @@
 // 		removeNodeColorBackground(node);
 // 		return;
 // 	}
-// 	addMissingDirectChildren(
+// 	addMissing_direct_children(
 // 		node,
 // 		(c) => c.classList.contains("background-color"),
 // 		`<div class="background-color"></div>`,
@@ -654,7 +654,7 @@
 // 		removeNodeColorBackground(node);
 // 		return;
 // 	}
-// 	addMissingDirectChildren(
+// 	addMissing_direct_children(
 // 		node,
 // 		(c) => c.classList.contains("background-color"),
 // 		`<div class="background-color"></div>`,
@@ -730,13 +730,13 @@
 // 	cmsWrapper.findAll(".cms-block").forEach((block) => {
 // 		block.setAttribute("draggable", true);
 
-// 		addMissingDirectChildren(
+// 		addMissing_direct_children(
 // 			block,
 // 			(c) => c.classList.contains("cms-block-content"),
 // 			`<div class="cms-block-content"></div>`
 // 		);
 
-// 		block.directChildren().forEach((x) => {
+// 		block._direct_children().forEach((x) => {
 // 			if (
 // 				!x.classList.contains("background-image") &&
 // 				!x.classList.contains("background-color") &&
@@ -749,7 +749,7 @@
 
 // 		if (block.getAttribute("data-module-block") == "custom-html") {
 // 			const content = block.find(".cms-block-content");
-// 			addMissingDirectChildren(
+// 			addMissing_direct_children(
 // 				content,
 // 				(c) => c.classList.contains("html-container"),
 // 				`<div class="html-container"></div>`
@@ -762,14 +762,14 @@
 // 	cmsWrapper.findAll(".cms-container").forEach((container) => {
 // 		container.setAttribute("draggable", true);
 
-// 		addMissingDirectChildren(
+// 		addMissing_direct_children(
 // 			container,
 // 			(c) => c.classList.contains("background-color"),
 // 			`<div class="background-color"></div>`,
 // 			"afterbegin"
 // 		);
 
-// 		container.directChildren().forEach((x) => {
+// 		container._direct_children().forEach((x) => {
 // 			if (
 // 				!x.classList.contains("background-image") &&
 // 				!x.classList.contains("background-color") &&
@@ -1115,7 +1115,7 @@
 // }
 
 // function removeNodeColorBackground(node) {
-// 	var bi = node.directChildren().find((e) => {
+// 	var bi = node._direct_children().find((e) => {
 // 		return e.classList.contains("background-color");
 // 	});
 // 	if (bi) {
@@ -1252,7 +1252,7 @@
 // 	var wrapperRect = wrapper.getBoundingClientRect();
 // 	var firstY = wrapperRect.top;
 // 	var secondY = wrapperRect.top + wrapper.scrollHeight;
-// 	cmsContainer.directChildren().forEach((e) => {
+// 	cmsContainer._direct_children().forEach((e) => {
 // 		var rect = e.getBoundingClientRect();
 // 		if (rect.top + rect.height < targetY) {
 // 			if (rect.top + rect.height > firstY) {
@@ -1681,7 +1681,7 @@
 // 			if (nextParent) {
 // 				var nextParentChildren = nextParent
 // 					.find(".cms-container-content")
-// 					.directChildren();
+// 					._direct_children();
 // 				if (nextParentChildren.length > 0) {
 // 					put_near = nextParentChildren[0];
 // 					did_jump = true;
@@ -1695,7 +1695,7 @@
 // 			if (previousParent) {
 // 				var previousParentChildren = previousParent
 // 					.find(".cms-container-content")
-// 					.directChildren();
+// 					._direct_children();
 // 				if (previousParentChildren.length > 0) {
 // 					put_near = previousParentChildren[previousParentChildren.length - 1];
 // 					did_jump = true;

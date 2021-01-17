@@ -19,7 +19,7 @@ domload(() => {
 		);
 	}
 
-	document.body.classList.add("admin");
+	document.body.id = "admin";
 });
 
 domload(() => {

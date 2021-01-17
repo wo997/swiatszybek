@@ -546,7 +546,7 @@ function setContent(node, html = "") {
 	}, 200);
 }
 
-function addMissingDirectChildren(
+function addMissing_direct_children(
 	parent,
 	isMissingCallback,
 	html,
