@@ -49,7 +49,9 @@ class NewCmsSelectControls {
 		}
 
 		if (!hovered_block) {
-			hovered_block = target ? target._parent(".newCms_block") : null;
+			hovered_block = target
+				? target._parent(".newCms_block", { skip: 0 })
+				: null;
 		}
 
 		if (
