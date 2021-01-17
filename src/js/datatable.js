@@ -1094,7 +1094,7 @@ window.addEventListener("dragover", (event) => {
 	if (!tr) return;
 
 	// todo abandon somehow, you don't need it yet, list component will do the job
-	var nonstatic_parent = tr.findNonStaticParent();
+	var nonstatic_parent = tr._find_scroll_parent();
 
 	/*var scroll_parent = tr.findScrollParent();
   if (scroll_parent === window) {
@@ -1374,32 +1374,26 @@ function datatableFilter(btn, column_id) {
 		filter_menu._set_content(menu_html);
 		filter_menu.style.display = "block";
 
-		var nonstatic_parent = datatable.target.findNonStaticParent();
-		var offset_y =
-			nonstatic_parent === document.body ? 0 : nonstatic_parent.scrollTop;
+		var nonstatic_parent = datatable.target._find_scroll_parent();
 
 		nonstatic_parent.appendChild(filter_menu);
 
-		var btn_rect = btn.getBoundingClientRect();
-		var filter_rect = filter_menu.getBoundingClientRect();
-		var nonstatic_rect = nonstatic_parent.getBoundingClientRect();
+		const pos = nodePositionAgainstScrollableParent(btn);
+
+		const edge = 20;
 
 		filter_menu.style.left =
 			clamp(
-				30,
-				btn_rect.left +
-					(btn_rect.width - filter_rect.width) / 2 -
-					nonstatic_rect.left,
-				nonstatic_rect.width - filter_rect.width - 30
+				edge,
+				pos.relative_pos.left + (btn.clientWidth - filter_menu.clientWidth) / 2,
+				nonstatic_parent.clientWidth - edge - filter_menu.clientWidth
 			) + "px";
 
 		filter_menu.style.top =
 			clamp(
-				30,
-				btn_rect.top + btn_rect.height - nonstatic_rect.top + offset_y,
-				def(nonstatic_parent.scrollHeight, nonstatic_rect.height) -
-					filter_rect.height -
-					30
+				edge,
+				pos.relative_pos.top + btn.clientHeight,
+				nonstatic_parent.scrollHeight - edge - filter_menu.clientHeight
 			) + "px";
 
 		btn._parent("th").classList.add("datatable-column-highlighted");
@@ -1495,7 +1489,7 @@ domload(() => {
 
 		window.addEventListener("click", (e) => {
 			var hide = true;
-			var btn = $(e.target)._parent(".datatable-search-btn");
+			var btn = $(e.target)._parent(".datatable-search-btn", { skip: 0 });
 			if (btn) {
 				hide = false;
 			} else {

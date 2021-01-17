@@ -1357,12 +1357,12 @@
 									"insert" === s.peekType() && s.peekLength() <= u;
 
 								)
-									(u -= s.peekLength()), n.push(s._next());
+									(u -= s.peekLength()), n.push(s.next());
 								l.retain - u > 0 && i.next(l.retain - u);
 							}
 							for (var c = new t(n); s.hasNext() || i.hasNext(); )
-								if ("insert" === i.peekType()) c.push(i._next());
-								else if ("delete" === s.peekType()) c.push(s._next());
+								if ("insert" === i.peekType()) c.push(i.next());
+								else if ("delete" === s.peekType()) c.push(s.next());
 								else {
 									var h = Math.min(s.peekLength(), i.peekLength()),
 										d = s.next(h),
@@ -1463,7 +1463,7 @@
 										"string" == typeof l.insert
 											? l.insert.indexOf(s, o) - o
 											: -1;
-								if (u < 0) r.push(i._next());
+								if (u < 0) r.push(i.next());
 								else if (u > 0) r.push(i.next(u));
 								else {
 									if (!1 === e(r, i.next(1).attributes || {}, n)) return;
@@ -1487,7 +1487,7 @@
 									"insert" !== r.peekType() ||
 									(!s && "insert" === n.peekType())
 								)
-									if ("insert" === n.peekType()) l.push(n._next());
+									if ("insert" === n.peekType()) l.push(n.next());
 									else {
 										var u = Math.min(r.peekLength(), n.peekLength()),
 											c = r.next(u),
@@ -1500,7 +1500,7 @@
 													o.default.transform(c.attributes, h.attributes, s)
 											  );
 									}
-								else l.retain(a.default.length(r._next()));
+								else l.retain(a.default.length(r.next()));
 							return l.chop();
 						}),
 						(t.prototype.transformPosition = function (t, e) {
@@ -1512,7 +1512,7 @@
 							) {
 								var r = s.peekLength(),
 									n = s.peekType();
-								s._next(),
+								s.next(),
 									"delete" !== n
 										? ("insert" === n && (i < t || !e) && (t += r), (i += r))
 										: (t -= Math.min(r, t - i));
@@ -1755,7 +1755,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -2499,7 +2499,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -3616,7 +3616,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -5185,7 +5185,7 @@
 								if (0 === this.offset) return this.ops.slice(this.index);
 								var t = this.offset,
 									e = this.index,
-									s = this._next(),
+									s = this.next(),
 									i = this.ops.slice(this.index);
 								return (this.offset = t), (this.index = e), [s].concat(i);
 							}
@@ -5211,7 +5211,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -5726,7 +5726,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -6022,7 +6022,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -7288,7 +7288,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -7455,7 +7455,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -7635,7 +7635,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
@@ -8117,7 +8117,7 @@
 								try {
 									for (
 										var l, o = t[Symbol.iterator]();
-										!(i = (l = o._next()).done) &&
+										!(i = (l = o.next()).done) &&
 										(s.push(l.value), !e || s.length !== e);
 										i = !0
 									);
