@@ -131,37 +131,35 @@ if ($is_basic) {
             $product["gallery"] = $product["cache_thumbnail"];
         }
         if ($layout == "slider") {
-            $res .= "<div class='product-block-wapper swiper-slide'>";
+            $res .= '<div class="wo997_slide">';
         } else {
             $res .= "<div class='product-block-wapper'>";
         }
 
         $res .= "
-      <div class='product-block' data-product_id='" . $product["product_id"] . "'>
-        <a href='" . getProductLink($product["product_id"], $product["link"]) . "'>
-          <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image wo997_img' alt='" . $product["title"] . "' data-gallery='" . $product["gallery"] . "'>
-          <h3 class='product-title'><span class='check-tooltip'>" . $product["title"] . "</span></h3>
-        </a>
-        <div class='product-row'>
-            <span class='product-price pln'>$priceText zł</span>
-            <span class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>
-        </div>
-      </div>
-    ";
+            <div class='product-block' data-product_id='" . $product["product_id"] . "'>
+                <a href='" . getProductLink($product["product_id"], $product["link"]) . "'>
+                <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product-image wo997_img' alt='" . $product["title"] . "' data-gallery='" . $product["gallery"] . "'>
+                <h3 class='product-title'><span class='check-tooltip'>" . $product["title"] . "</span></h3>
+                </a>
+                <div class='product-row'>
+                    <span class='product-price pln'>$priceText zł</span>
+                    <span class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>
+                </div>
+            </div>
+        ";
 
         $res .= "</div>";
     }
 
     if ($layout == "slider") {
-        echo "
-      <div class='product_list_module slider swiper-all'>
-        <div class='swiper-container'>
-          <div class='swiper-wrapper'>$res</div>
+?>
+        <div class="wo997_slider" data-slide_width="calc(10% + 150px)" data-show_next_mobile>
+            <div class="wo997_slides_container">
+                <?= $res ?>
+            </div>
         </div>
-        <div class='swiper-button-prev swiper-nav'><img src='/src/img/chevron.svg'></div>
-        <div class='swiper-button-next swiper-nav'><img src='/src/img/chevron.svg'></div>
-      </div>
-    ";
+<?php
     } else {
         echo "<div class='product_list_module grid'>$res</div>";
     }

@@ -33,7 +33,7 @@ include "global/includes_for_cms_page.php";
     }
 
     @media only screen and (max-width: <?= intval($page_width) + 40 ?>px) {
-        .page_wrapper {
+        /*.page_wrapper {
             padding: 0 20px;
         }
 
@@ -41,7 +41,7 @@ include "global/includes_for_cms_page.php";
             margin-left: -20px !important;
             margin-right: -20px !important;
             width: calc(100% + 40px);
-        }
+        }*/
     }
 
     @media only screen and (max-width: 800px) {

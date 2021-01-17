@@ -1,10 +1,22 @@
 /* js[global] */
 
+let let_click_slide = false;
+
 domload(() => {
-	const slider = $(".slider_x");
-	initSlider(slider);
+	$$(".wo997_slider").forEach((slider) => {
+		initSlider(slider);
+	});
 
 	animateSliders();
+
+	document.addEventListener("mousedown", (ev) => {
+		let_click_slide = true;
+	});
+	document.addEventListener("click", (ev) => {
+		if (!let_click_slide) {
+			ev.preventDefault();
+		}
+	});
 
 	document.addEventListener("mouseup", releaseAllSliders);
 	document.addEventListener("touchend", releaseAllSliders);
@@ -304,6 +316,7 @@ function initSlider(elem) {
 
 	slides_container.addEventListener("mousemove", (ev) => {
 		scroll(ev.clientX, ev.clientY);
+		let_click_slide = false;
 	});
 
 	slider.release();

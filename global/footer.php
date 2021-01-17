@@ -1,5 +1,4 @@
 <footer>
-    <div class="x"></div>
     <div class="wo997_slider slider_x" data-slide_width="calc(10% + 150px)" data-show_next_mobile>
         <div class="wo997_slides_container">
             <?php for ($i = 0; $i < 10; $i++) { ?>
