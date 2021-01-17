@@ -60,7 +60,7 @@ function createSimpleList(params = {}) {
 		var prev = list.wrapper._prev();
 		prev.classList.add("above-simple-list");
 		if (prev) {
-			var add_buttons = prev.find(".add_buttons");
+			var add_buttons = prev._child(".add_buttons");
 			if (add_buttons) {
 				add_buttons._set_content(add_btns);
 				success = true;
@@ -99,7 +99,7 @@ function createSimpleList(params = {}) {
 		);
 		list.wrapper
 			._next()
-			.find(".simple-list-scroll-content")
+			._child(".simple-list-scroll-content")
 			.appendChild(list.wrapper);
 	}
 
@@ -111,8 +111,8 @@ function createSimpleList(params = {}) {
 		var row = list.insertRow(
 			params.default_row,
 			slr
-				? slr.find(".list")
-				: btn._parent(".above-simple-list")._next().find(".list"),
+				? slr._child(".list")
+				: btn._parent(".above-simple-list")._next()._child(".list"),
 			begin,
 			user
 		);
@@ -123,20 +123,20 @@ function createSimpleList(params = {}) {
 	};
 
 	list.insertRowFromTopBtn = (btn, begin = true, user = true) => {
-		var add_btn = btn._parent()._next().find(".add_btn");
+		var add_btn = btn._parent()._next()._child(".add_btn");
 		if (add_btn) {
 			list.insertRowFromBtn(add_btn, begin, user);
 		}
 	};
 
 	list.target = params.table
-		? list.wrapper.find(`.list tbody`)
-		: list.wrapper.find(`.list`);
+		? list.wrapper._child(`.list tbody`)
+		: list.wrapper._child(`.list`);
 	list.target.setAttribute("data-depth", 1);
 
 	//list.outputNode = $(`.${params.name} .simple-list-value`);
 
-	list.emptyNode = list.wrapper.find(`.list-empty`);
+	list.emptyNode = list.wrapper._child(`.list-empty`);
 
 	list.rows = [];
 
@@ -163,7 +163,7 @@ function createSimpleList(params = {}) {
 				for (var value_data of values) {
 					var parent_value_list = list
 						.insertRow(value_data, listTarget)
-						.find(".list");
+						._child(".list");
 				}
 			} else {
 				for (var value_data of values) {
@@ -173,7 +173,7 @@ function createSimpleList(params = {}) {
 							value_data.values ? value_data.values : value_data,
 							listTarget
 						)
-						.find(".list");
+						._child(".list");
 					if (value_data.children || value_data._children) {
 						addValues(
 							value_data._children ? value_data._children : value_data.children,
@@ -210,7 +210,7 @@ function createSimpleList(params = {}) {
 			listTarget = list.target;
 		}
 		if (list.params.table && listTarget.tagName != "TBODY") {
-			listTarget = listTarget.find("tbody");
+			listTarget = listTarget._child("tbody");
 		}
 
 		var depth = parseInt(listTarget.getAttribute("data-depth"));
@@ -308,7 +308,7 @@ function createSimpleList(params = {}) {
 			listTarget = list.target;
 		}
 
-		listTarget.findAll("[name]:not(.param-registered)").forEach((e) => {
+		listTarget._children("[name]:not(.param-registered)").forEach((e) => {
 			var parent_named_node = e._parent("[name]");
 			// only direct named children communicate with subform
 			if (parent_named_node && parent_named_node._parent(listTarget)) {
@@ -335,9 +335,9 @@ function createSimpleList(params = {}) {
 			var rows = [];
 
 			if (params.table) {
-				listTarget.findAll("tr").forEach((row_node) => {
+				listTarget._children("tr").forEach((row_node) => {
 					var row = {};
-					row_node.findAll("[name]").forEach((e) => {
+					row_node._children("[name]").forEach((e) => {
 						var parent_named_node = e._parent("[name]");
 						// there is no other component allowed when we read the data, we use its value instead
 						if (parent_named_node != list.wrapper) {
@@ -352,8 +352,8 @@ function createSimpleList(params = {}) {
 				listTarget._direct_children().forEach((simpleListRowWrapper) => {
 					var row_data = {};
 					$(simpleListRowWrapper)
-						.find(".simple-list-row")
-						.findAll("[name]")
+						._child(".simple-list-row")
+						._children("[name]")
 						.forEach((e) => {
 							var parent_row_node = e._parent(".simple-list-row");
 
@@ -366,7 +366,7 @@ function createSimpleList(params = {}) {
 						});
 					if (level < list.recursive) {
 						row_data._children = getDirectRows(
-							$(simpleListRowWrapper).find(".sub-list > .list"),
+							$(simpleListRowWrapper)._child(".sub-list > .list"),
 							level + 1
 						);
 					}
@@ -383,7 +383,7 @@ function createSimpleList(params = {}) {
 		list.values = getDirectRows(list.target, 1);
 
 		if (list.recursive) {
-			list.target.findAll(".simple-list-row-wrapper").forEach((listRow) => {
+			list.target._children(".simple-list-row-wrapper").forEach((listRow) => {
 				var parent_sl_node = listRow._parent(".simple-list");
 
 				// only direct named children communicate with subform
@@ -391,13 +391,15 @@ function createSimpleList(params = {}) {
 					return;
 				}
 
-				var empty = !listRow.find(".sub-list").find(".simple-list-row-wrapper");
+				var empty = !listRow
+					._child(".sub-list")
+					._child(".simple-list-row-wrapper");
 
-				var add_btn_top = listRow.find(".add_btn_top");
+				var add_btn_top = listRow._child(".add_btn_top");
 				if (add_btn_top) {
 					add_btn_top.style.display = empty ? "" : "none";
 				}
-				var sublist = listRow.find(".sub-list");
+				var sublist = listRow._child(".sub-list");
 				if (sublist) {
 					sublist.style.display = empty ? "none" : "";
 				}
@@ -441,15 +443,17 @@ function validateSimpleList(field) {
 
 	var list = field.list;
 
-	list.wrapper.findAll(".simple-list-field-error").forEach((e) => {
+	list.wrapper._children(".simple-list-field-error").forEach((e) => {
 		e.classList.remove("simple-list-field-error");
 	});
 
 	Object.entries(list.fields).forEach(([fieldName, fieldParams]) => {
 		if (fieldParams.unique) {
-			field.findAll(".list").forEach((listNode) => {
+			field._children(".list").forEach((listNode) => {
 				var rowValueInputs = {};
-				var rowsParent = list.params.table ? listNode.find("tbody") : listNode;
+				var rowsParent = list.params.table
+					? listNode._child("tbody")
+					: listNode;
 				rowsParent
 					._direct_children()
 					.filter((listRow) => {
@@ -458,7 +462,7 @@ function validateSimpleList(field) {
 						);
 					})
 					.forEach((listRowWrapper) => {
-						var rowField = listRowWrapper.find(`[name="${fieldName}"]`);
+						var rowField = listRowWrapper._child(`[name="${fieldName}"]`);
 
 						var fieldValue = rowField._get_value();
 

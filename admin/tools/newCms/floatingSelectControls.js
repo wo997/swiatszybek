@@ -10,8 +10,8 @@ class NewCmsSelectControls {
 	/** @param {NewCms} newCms */
 	constructor(newCms) {
 		this.newCms = newCms;
-		this.node = this.newCms.container.find(`.select_controls`);
-		this.selection_node = this.newCms.container.find(`.selection_node`);
+		this.node = this.newCms.container._child(`.select_controls`);
+		this.selection_node = this.newCms.container._child(`.selection_node`);
 		this.init();
 
 		this.newCms.container.addEventListener("edit", (event) => {
@@ -27,12 +27,12 @@ class NewCmsSelectControls {
 	}
 
 	removeSelection() {
-		this.newCms.container.findAll(".select_active").forEach((e) => {
+		this.newCms.container._children(".select_active").forEach((e) => {
 			e.classList.remove("select_active");
 		});
 
 		this.selection_node.classList.remove("visible");
-		this.newCms.svg.def();
+		this.newCms.svg._empty();
 	}
 
 	mouseMove() {
@@ -239,7 +239,7 @@ class NewCmsSelectControls {
 	addFloatingSelectControls() {
 		this.removeSelection();
 
-		const blocks = this.newCms.content_node.findAll(
+		const blocks = this.newCms.content_node._children(
 			".newCms_block:not(.cramped):not(.parent_cramped)"
 		);
 
@@ -279,7 +279,7 @@ class NewCmsSelectControls {
 		const sorted_blocks_data_length = sorted_blocks_data.length;
 		let upper_bound = 0;
 
-		this.node.def();
+		this.node._empty();
 
 		for (let i = 0; i < sorted_blocks_data_length; i++) {
 			const block_data = sorted_blocks_data[i];

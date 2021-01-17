@@ -116,11 +116,11 @@ class NewCmsQuillEditor {
 			},
 		});
 
-		this.ql_node = this.node.find(".ql-editor");
+		this.ql_node = this.node._child(".ql-editor");
 		this.ql_node.classList.add("field");
 
 		this.newCms.container.addEventListener(
-			IS_MOBILE ? "click" : "mousedown",
+			IS_TOUCH_DEVICE ? "click" : "mousedown",
 			(event) => {
 				// idk why we have this but it wont hurt
 				this.newCms.updateMouseCoords(event);
@@ -137,7 +137,7 @@ class NewCmsQuillEditor {
 				);
 				if (block_type == "quill_editor") {
 					this.newCms.edit_block.edit_node
-						.find(".newCms_block_content")
+						._child(".newCms_block_content")
 						._set_content(this.ql_node.innerHTML);
 
 					if (!this.change_from_cms) {
@@ -148,12 +148,12 @@ class NewCmsQuillEditor {
 		});
 
 		this.newCms.container.addEventListener(
-			IS_MOBILE ? "touchstart" : "mousemove",
+			IS_TOUCH_DEVICE ? "touchstart" : "mousemove",
 			(event) => {
 				this.newCms.updateMouseCoords(event);
 				if (
 					!this.newCms.mouse_target ||
-					!this.newCms.mouse_target._parent(this.newCms.sidebar)
+					!this.newCms.mouse_target._parent(this.newCms.sidebar.node)
 				) {
 					this.saveChanges();
 				}

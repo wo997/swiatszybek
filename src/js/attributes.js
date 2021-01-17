@@ -30,7 +30,7 @@ function setAttributePickerValues(input, value) {
 
 	if (value.values) {
 		value.values.forEach((attribute) => {
-			var attribute_row = input.find(
+			var attribute_row = input._child(
 				`[data-attribute_id="${attribute.attribute_id}"]`
 			);
 

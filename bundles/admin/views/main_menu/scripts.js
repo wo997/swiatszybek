@@ -197,9 +197,9 @@ function loadCategoryForm(formId, data, isNew) {
 	if (data.product_id) tab_id = 3;
 	showTab($(".tab-menu-link"), tab_id);
 
-	formElement.find(".caseCanDelete").classList.toggle("hidden", isNew);
-	formElement.find(`.btn.red`).toggleAttribute("disabled", !canDelete);
-	formElement.find(".btn.red + i").classList.toggle("hidden", canDelete);
+	formElement._child(".caseCanDelete").classList.toggle("hidden", isNew);
+	formElement._child(`.btn.red`).toggleAttribute("disabled", !canDelete);
+	formElement._child(".btn.red + i").classList.toggle("hidden", canDelete);
 }
 
 function saveCategoryForm(remove = false) {

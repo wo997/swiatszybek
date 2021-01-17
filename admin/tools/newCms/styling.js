@@ -53,8 +53,8 @@ class NewCmsStyling {
 	constructor(newCms, node) {
 		this.newCms = newCms;
 		this.node = node;
-		this.content_wrapper = this.newCms.container.find(".content_wrapper");
-		this.content_responsive_wrapper = this.newCms.container.find(
+		this.content_wrapper = this.newCms.container._child(".content_wrapper");
+		this.content_responsive_wrapper = this.newCms.container._child(
 			".content_responsive_wrapper"
 		);
 
@@ -177,7 +177,7 @@ class NewCmsStyling {
 			this.responsive_type.name == this.biggest_responsive_type_name;
 
 		this.newCms.container
-			.findAll(`.custom-toolbar [data-responsive_type]`)
+			._children(`.custom-toolbar [data-responsive_type]`)
 			.forEach((e) => {
 				const curr = e.dataset.responsive_type == type_name;
 				e.classList.toggle("important", curr);
@@ -285,7 +285,7 @@ class NewCmsStyling {
 				this.newCms.content_node.innerHTML
 			);
 			this.newCms.clean_output_node
-				.findAll(this.newCms.query_for_visible_blocks)
+				._children(this.newCms.query_for_visible_blocks)
 				.forEach((e) => {
 					cleanNodeFromAnimations(e);
 				});
@@ -317,7 +317,7 @@ class NewCmsStyling {
 
 					/** @type {NewCmsBlock} */
 					// @ts-ignore
-					const node = this.newCms.content_node.find(
+					const node = this.newCms.content_node._child(
 						`.${this.getBlockClassName(block_id)}`
 					);
 
@@ -339,7 +339,7 @@ class NewCmsStyling {
 
 	setAllRegisteredBlocks() {
 		this.newCms.content_node
-			.findAll(this.newCms.query_for_visible_blocks)
+			._children(this.newCms.query_for_visible_blocks)
 			.forEach((/** @type {NewCmsBlock} */ node) => {
 				const block_id = this.getBlockId(node);
 
@@ -372,7 +372,7 @@ class NewCmsStyling {
 	}
 
 	registerMissingBlocks() {
-		this.newCms.content_node.findAll(".newCms_block").forEach((
+		this.newCms.content_node._children(".newCms_block").forEach((
 			/** @type {NewCmsBlock} */ node
 		) => {
 			if (this.getBlockId(node)) {
@@ -608,7 +608,7 @@ class NewCmsStyling {
 			return false;
 		}
 
-		this.newCms.content_node.findAll(`.newCms_block`).forEach((b) => {
+		this.newCms.content_node._children(`.newCms_block`).forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
 			const block = b;
@@ -656,8 +656,8 @@ class NewCmsStyling {
 
 		// not content_node (.newCmsContent) to include it as well
 		const containers = parent
-			? [parent.find(".newCms_block_content")]
-			: this.newCms.content_scroll_content.findAll(
+			? [parent._child(".newCms_block_content")]
+			: this.newCms.content_scroll_content._children(
 					`.newCmsContent .newCms_block[data-block="container"] > .newCms_block_content, .newCmsContent`
 			  );
 
@@ -719,11 +719,8 @@ class NewCmsStyling {
 						// @ts-ignore
 						const b = block
 							._parent()
-							._direct_children()
-							.find(
-								(child) =>
-									parseInt(child.dataset.flex_order) ==
-									parseInt(block.dataset.flex_order) - 1
+							._direct_child(
+								`[flex_order="${parseInt(block.dataset.flex_order) - 1}"]`
 							);
 						return b;
 					};
@@ -732,11 +729,8 @@ class NewCmsStyling {
 						// @ts-ignore
 						const b = block
 							._parent()
-							._direct_children()
-							.find(
-								(child) =>
-									parseInt(child.dataset.flex_order) ==
-									parseInt(block.dataset.flex_order) + 1
+							._direct_child(
+								`[flex_order="${parseInt(block.dataset.flex_order) + 1}"]`
 							);
 						return b;
 					};
@@ -756,14 +750,14 @@ class NewCmsStyling {
 		}
 
 		this.newCms.content_node
-			.findAll(`.newCms_block[data-block="grid"]`)
+			._children(`.newCms_block[data-block="grid"]`)
 			.forEach((g) => {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
 				const grid = g;
 
 				let grid_children = grid
-					.find(".newCms_block_content")
+					._child(".newCms_block_content")
 					._direct_children()
 					.filter((b) => {
 						if (!b.classList.contains("newCms_block")) {
@@ -807,14 +801,14 @@ class NewCmsStyling {
 
 	alignGridBlocksVertically() {
 		this.newCms.content_node
-			.findAll(this.newCms.query_for_visible_blocks + `[data-block="grid"]`)
+			._children(this.newCms.query_for_visible_blocks + `[data-block="grid"]`)
 			.forEach((g) => {
 				/** @type {NewCmsGrid} */
 				// @ts-ignore
 				const grid = g;
 
 				const grid_children = grid
-					.find(".newCms_block_content")
+					._child(".newCms_block_content")
 					._direct_children()
 					.filter((b) => {
 						return b.classList.contains("newCms_block");
@@ -1173,7 +1167,7 @@ class NewCmsStyling {
 	resetLayout() {
 		this.assignRects();
 
-		const all_blocks = this.newCms.content_node.findAll(
+		const all_blocks = this.newCms.content_node._children(
 			this.newCms.query_for_visible_blocks
 		);
 
@@ -1198,7 +1192,7 @@ class NewCmsStyling {
 	}
 
 	recalculateLayout() {
-		const all_blocks = this.newCms.content_node.findAll(
+		const all_blocks = this.newCms.content_node._children(
 			this.newCms.query_for_visible_blocks
 		);
 

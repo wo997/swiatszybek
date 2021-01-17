@@ -26,14 +26,14 @@ class NewCmsRearrangeControls {
 	/** @param {NewCms} newCms */
 	constructor(newCms) {
 		this.newCms = newCms;
-		this.node = newCms.container.find(`.rearrange_controls`);
-		this.rearrange_insert_rect_node = newCms.container.find(
+		this.node = newCms.container._child(`.rearrange_controls`);
+		this.rearrange_insert_rect_node = newCms.container._child(
 			`.rearrange_insert_rect`
 		);
-		this.rearrange_grabbed_rect_node = newCms.container.find(
+		this.rearrange_grabbed_rect_node = newCms.container._child(
 			`.rearrange_grabbed_rect`
 		);
-		this.rearrange_target_rect_node = newCms.container.find(
+		this.rearrange_target_rect_node = newCms.container._child(
 			`.rearrange_target_rect`
 		);
 		this.init();
@@ -79,7 +79,7 @@ class NewCmsRearrangeControls {
 		this.rearrange_position = "";
 		this.rearrange_control_node = null;
 
-		this.newCms.container.findAll(".rearrange_possible").forEach((e) => {
+		this.newCms.container._children(".rearrange_possible").forEach((e) => {
 			if (options.except && options.except.includes(e)) {
 				return;
 			}
@@ -89,13 +89,13 @@ class NewCmsRearrangeControls {
 		this.newCms.container.classList.remove("rearrange_possible");
 		this.rearrange_target_rect_node.classList.remove("visible");
 
-		const add_block_hint = this.newCms.content_node.find(".add_block_hint");
+		const add_block_hint = this.newCms.content_node._child(".add_block_hint");
 		if (add_block_hint) {
 			add_block_hint.classList.remove("invisible");
 		}
 
 		if (options.empty) {
-			this.node.def();
+			this.node._empty();
 		}
 	}
 
@@ -132,7 +132,9 @@ class NewCmsRearrangeControls {
 				let smallest_sq_distance_control = null;
 				let last_sq_distance = 10000;
 				this.newCms.content_scroll_content
-					.findAll(".rearrange_control:not(.unavailable):not(.first_grid_node)")
+					._children(
+						".rearrange_control:not(.unavailable):not(.first_grid_node)"
+					)
 					.forEach((control) => {
 						const rect = control.getBoundingClientRect();
 
@@ -332,7 +334,7 @@ class NewCmsRearrangeControls {
 	addFloatingRearrangeControls(block) {
 		this.removeRearrangement();
 
-		this.node.def();
+		this.node._empty();
 
 		const options = {};
 		if (!this.newCms.styling.allow_free_rearrangement) {
@@ -390,7 +392,7 @@ class NewCmsRearrangeControls {
 					".newCmsContent>" + rearrangable_blocks_query_selector;
 				rearrangable_blocks_query_selector_for_grids = ""; // no way u would find a grid as a root ;)
 			} else {
-				const parent_container = grabbed_block._parent()._parent();
+				const parent_container = this.newCms.getBlockParent(grabbed_block);
 				const block_id = this.newCms.styling.getBlockId(parent_container);
 				if (block_id) {
 					const class_name =
@@ -419,7 +421,7 @@ class NewCmsRearrangeControls {
 		const addControls = (position) => {
 			// not content_node (.newCmsContent) to include it as well
 			this.newCms.content_scroll_content
-				.findAll(rearrangable_blocks_query_selector)
+				._children(rearrangable_blocks_query_selector)
 				.forEach((b) => {
 					/** @type {NewCmsBlock} */
 					// @ts-ignore
@@ -486,7 +488,7 @@ class NewCmsRearrangeControls {
 
 					if (
 						position == "inside" &&
-						(block.find(".newCms_block") || block_type != "container")
+						(block._child(".newCms_block") || block_type != "container")
 					) {
 						// has a kid? no need to add that little icon to add more bro
 						return;
@@ -551,7 +553,7 @@ class NewCmsRearrangeControls {
 				});
 		};
 
-		this.newCms.content_node.findAll(".newCms_block").forEach((b) => {
+		this.newCms.content_node._children(".newCms_block").forEach((b) => {
 			/** @type {NewCmsBlock} */
 			// @ts-ignore
 			const block = b;
@@ -562,7 +564,7 @@ class NewCmsRearrangeControls {
 
 		// grids first ;)
 		this.newCms.content_node
-			.findAll(
+			._children(
 				rearrangable_blocks_query_selector_for_grids + `[data-block="grid"]`
 			)
 			.forEach((b) => {
@@ -648,7 +650,7 @@ class NewCmsRearrangeControls {
 		addControls("after");
 
 		/*if (blocks_data.length === 0) {
-			const add_block_hint = this.newCms.content_node.find(".add_block_hint");
+			const add_block_hint = this.newCms.content_node._child(".add_block_hint");
 			if (add_block_hint) {
 				add_block_hint.classList.add("invisible");
 			}
@@ -789,7 +791,9 @@ class NewCmsRearrangeControls {
 
 			rearrange_control.innerHTML = rearrange_control_html;
 
-			$(rearrange_control).find("*").style.transform = `rotate(${rotation}deg)`;
+			$(rearrange_control)._child(
+				"*"
+			).style.transform = `rotate(${rotation}deg)`;
 
 			block[`rearrange_control_${block_data.position}`] = rearrange_control;
 			rearrange_control.rearrange_near_block = block;

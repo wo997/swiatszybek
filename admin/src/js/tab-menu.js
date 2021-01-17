@@ -12,10 +12,10 @@ document.addEventListener("click", (event) => {
 });
 
 function showTab(tab_menu, tab_id) {
-	tab_menu.findAll(".tab-header .tab-option").forEach((e) => {
+	tab_menu._children(".tab-header .tab-option").forEach((e) => {
 		e.classList.toggle("current", e.getAttribute("data-tab_id") == tab_id);
 	});
-	tab_menu.findAll(".tab-content").forEach((e) => {
+	tab_menu._children(".tab-content").forEach((e) => {
 		e.classList.toggle("hidden", e.getAttribute("data-tab_id") != tab_id);
 	});
 }

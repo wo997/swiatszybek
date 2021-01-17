@@ -204,7 +204,7 @@ function createDatatable(datatable) {
 			datatable.bulk_selection = bulk_selection;
 
 			if (any_checked) {
-				var bulk_selection_count = datatable.target.find(
+				var bulk_selection_count = datatable.target._child(
 					".bulk_selection_count"
 				);
 				if (bulk_selection_count) {
@@ -399,13 +399,13 @@ function createDatatable(datatable) {
 	datatable.totalRowsElement = datatable.target._child(".total-rows");
 	datatable.paginationElement = datatable.target._child(".pagination");
 	datatable.bulkMenuElement = datatable.target._child(".bulk_menu");
-	datatable.paginationBottomElement = datatable.target.find(
+	datatable.paginationBottomElement = datatable.target._child(
 		".pagination-bottom"
 	);
 	datatable.selectionBodyElement = datatable.tableSelectionElement
 		? datatable.tableSelectionElement._child("tbody")
 		: null;
-	datatable.selectionValueElement = datatable.target.find(
+	datatable.selectionValueElement = datatable.target._child(
 		".table-selection-value"
 	);
 
@@ -826,7 +826,7 @@ function createDatatable(datatable) {
 			if (datatable.selectable && datatable.selectable.has_metadata) {
 				try {
 					datatable.metadata.forEach((row_data) => {
-						var row = datatable.selectionBodyElement.find(
+						var row = datatable.selectionBodyElement._child(
 							`[data-primary="${row_data[datatable.primary]}"]`
 						);
 						if (row) {
@@ -1008,7 +1008,7 @@ window.addEventListener("dragstart", (event) => {
 	}
 
 	datatableRearrange.source = target;
-	datatableRearrange.placeFrom = datatableRearrange.source.find(
+	datatableRearrange.placeFrom = datatableRearrange.source._child(
 		".kolejnosc"
 	).value;
 

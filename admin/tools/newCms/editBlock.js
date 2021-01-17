@@ -41,7 +41,7 @@ class NewCmsEditBlock {
 			node = this.newCms.container;
 		}
 
-		node.findAll(".edit_active").forEach((e) => {
+		node._children(".edit_active").forEach((e) => {
 			e.classList.remove("edit_active");
 		});
 	}
@@ -153,7 +153,7 @@ class NewCmsEditBlock {
 		this.node._set_content(edit_block_html);
 
 		// add block actions
-		const edit_block_btn = this.node.find(".edit_btn");
+		const edit_block_btn = this.node._child(".edit_btn");
 		if (edit_block_btn) {
 			edit_block_btn.addEventListener("click", () => {
 				this.init();
@@ -161,7 +161,7 @@ class NewCmsEditBlock {
 			});
 		}
 
-		const relocate_btn = this.node.find(".relocate_btn");
+		const relocate_btn = this.node._child(".relocate_btn");
 		if (relocate_btn) {
 			relocate_btn.addEventListener("click", () => {
 				this.hideContextMenu();
@@ -169,7 +169,7 @@ class NewCmsEditBlock {
 			});
 		}
 
-		const copy_btn = this.node.find(".copy_btn");
+		const copy_btn = this.node._child(".copy_btn");
 		if (copy_btn) {
 			copy_btn.addEventListener("click", () => {
 				/** @type {NewCmsBlock} */
@@ -200,7 +200,7 @@ class NewCmsEditBlock {
 			});
 		}
 
-		const remove_btn = this.node.find(".remove_btn");
+		const remove_btn = this.node._child(".remove_btn");
 		if (remove_btn) {
 			remove_btn.addEventListener("click", () => {
 				this.hideContextMenu();
@@ -208,14 +208,14 @@ class NewCmsEditBlock {
 			});
 		}
 
-		const dismiss_btn = this.node.find(".dismiss_btn");
+		const dismiss_btn = this.node._child(".dismiss_btn");
 		if (dismiss_btn) {
 			dismiss_btn.addEventListener("click", () => {
 				this.hideContextMenu();
 			});
 		}
 
-		const grid_btn = this.node.find(".grid_btn");
+		const grid_btn = this.node._child(".grid_btn");
 		if (grid_btn) {
 			grid_btn.addEventListener("click", () => {
 				this.hideContextMenu();

@@ -536,7 +536,7 @@ function removeContent(node) {
  * @param {*} node
  * @param {string | number} html
  */
-function setContent(node, html = "") {
+function _set_content(node, html = "") {
 	node = $(node);
 	removeContent(node);
 	node.insertAdjacentHTML("afterbegin", html);

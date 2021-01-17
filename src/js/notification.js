@@ -23,7 +23,7 @@
  * @returns {PiepNotification}
  */
 function showNotification(message, params = {}) {
-	//params.findAll(query)
+	//params._children(query)
 	$$(".notification").forEach((e) => {
 		e.style.opacity = 0;
 		e.style.top = "-10px";

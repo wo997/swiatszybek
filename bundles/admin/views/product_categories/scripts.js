@@ -174,9 +174,9 @@ function loadCategoryForm(formId, data, isNew) {
 
 	var canDelete = !data.subcategories;
 
-	formElement.find(".caseCanDelete").classList.toggle("hidden", isNew);
-	formElement.find(`.btn.red`).toggleAttribute("disabled", !canDelete);
-	formElement.find(".btn.red + i").classList.toggle("hidden", canDelete);
+	formElement._child(".caseCanDelete").classList.toggle("hidden", isNew);
+	formElement._child(`.btn.red`).toggleAttribute("disabled", !canDelete);
+	formElement._child(".btn.red + i").classList.toggle("hidden", canDelete);
 
 	lazyLoadImages();
 }

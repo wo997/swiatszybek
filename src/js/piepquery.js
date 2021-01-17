@@ -21,6 +21,7 @@
  * _prev(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
  * _child(selector: string): PiepNode | undefined
  * _children(selector: string): PiepNode[]
+ * _direct_child(selector?: string): PiepNode
  * _direct_children(selector?: string): PiepNode[]
  * _is_empty()
  * _in_body()
@@ -69,6 +70,12 @@ function $(selector, parent = undefined) {
 	node._children = (selector) => {
 		return $$(selector, node);
 	};
+	node._direct_child = (selector = "*") => {
+		/** @type {PiepNode[]} */
+		// @ts-ignore
+		const nodes = [...node.children];
+		return nodes.find((e) => $(e).matches(selector));
+	};
 	node._direct_children = (selector = undefined) => {
 		/** @type {PiepNode[]} */
 		// @ts-ignore
@@ -103,12 +110,12 @@ function $(selector, parent = undefined) {
 		return findScrollParent(node, options);
 	};
 
-	node.empty = () => {
+	node._empty = () => {
 		return removeContent(node);
 	};
 
 	node._set_content = (html = "") => {
-		return setContent(node, html);
+		return _set_content(node, html);
 	};
 
 	node._animate = (keyframes, duration, options = {}) => {

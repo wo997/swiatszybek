@@ -382,7 +382,7 @@ function createListCompontent(
 			};
 
 			// basically empty when created
-			//node.setContent();
+			//node._set_content();
 		},
 	});
 }

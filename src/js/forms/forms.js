@@ -74,7 +74,7 @@ function setFormData(data, form, params = {}) {
 		}
 
 		var selector = `[${find_by}="${name}"]`;
-		var e = form.find(selector);
+		var e = form._child(selector);
 		if (!e) {
 			return;
 		}

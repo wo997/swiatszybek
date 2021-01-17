@@ -97,7 +97,7 @@
 // 		} else {
 // 			if (cmsTarget) {
 // 				cmsTarget
-// 					.find(".cms-container-content")
+// 					._child(".cms-container-content")
 // 					.insertAdjacentHTML("beforeend", v);
 // 			}
 // 		}
@@ -130,16 +130,16 @@
 
 // var cmsModalLoaded = () => {
 // 	cmsWrapper = $("#actual_cms_wrapper");
-// 	cmsContainer = cmsWrapper.find(".cms");
+// 	cmsContainer = cmsWrapper._child(".cms");
 // 	cmsObserver.observe(cmsContainer, {
 // 		childList: true,
 // 		subtree: true,
 // 	});
 
-// 	CMSBlockHeader.options = cmsWrapper.find(".cms-block-options");
-// 	CMSBlockHeader.actions = cmsWrapper.find(".cms-block-actions");
+// 	CMSBlockHeader.options = cmsWrapper._child(".cms-block-options");
+// 	CMSBlockHeader.actions = cmsWrapper._child(".cms-block-actions");
 
-// 	CMSContainerHeader.options = cmsWrapper.find(".cms-container-options");
+// 	CMSContainerHeader.options = cmsWrapper._child(".cms-container-options");
 
 // 	cmsInsertContainerBtn = $(".insert_container_btn");
 
@@ -159,7 +159,7 @@
 //     `;
 // 	}
 
-// 	$(".modules-sidebar .modules").setContent(module_blocks_html);
+// 	$(".modules-sidebar .modules")._set_content(module_blocks_html);
 // }
 
 // function editModule(block) {
@@ -210,7 +210,7 @@
 // 			module_block_name: module_block_name,
 // 		},
 // 		success: (res) => {
-// 			modal.find(".scroll-panel").setContent(res);
+// 			modal._child(".scroll-panel")._set_content(res);
 // 			module_block.formOpen(params, modal, block);
 // 			setFormData(params, modal);
 // 		},
@@ -220,7 +220,7 @@
 // function saveModule(button) {
 // 	hideParentModal(button);
 
-// 	cmsTarget = cmsWrapper.find(".during-module-edit");
+// 	cmsTarget = cmsWrapper._child(".during-module-edit");
 // 	if (!cmsTarget) return;
 // 	removeClasses("during-module-edit");
 // 	var module_block_name = cmsTarget.getAttribute("data-module-block");
@@ -240,7 +240,7 @@
 // 		);
 // 	}
 
-// 	var c = cmsTarget.find(".module-content"); // force update
+// 	var c = cmsTarget._child(".module-content"); // force update
 // 	if (c) c.remove();
 // }
 
@@ -250,7 +250,7 @@
 // 		editModule(cmsTarget);
 // 		return;
 // 	}
-// 	var block_content = cmsTarget.find(".cms-block-content");
+// 	var block_content = cmsTarget._child(".cms-block-content");
 // 	quillEditor.open(block_content, {
 // 		container: cmsTarget._parent(".cms-container"),
 // 		block: cmsTarget,
@@ -311,7 +311,7 @@
 // 	awaitingScroll = true;
 // 	if (container) {
 // 		container
-// 			.find(".cms-container-content")
+// 			._child(".cms-container-content")
 // 			.insertAdjacentHTML(
 // 				placeAfter ? "beforeend" : "afterbegin",
 // 				getBlock(content)
@@ -507,13 +507,13 @@
 // 	cmsContainer._set_value(cmsSource.innerHTML);
 
 // 	// just in case
-// 	cmsContainer.findAll(".cms").forEach((e) => {
+// 	cmsContainer._children(".cms").forEach((e) => {
 // 		e.outerHTML = e.innerHTML;
 // 	});
 
 // 	// trigger cache warmup
-// 	cmsContainer.findAll(".cms-block[data-module-block]").forEach((e) => {
-// 		var c = e.find(".module-content");
+// 	cmsContainer._children(".cms-block[data-module-block]").forEach((e) => {
+// 		var c = e._child(".module-content");
 // 		if (c) c.remove();
 // 	});
 
@@ -527,9 +527,9 @@
 // 		showModal("cms", { source: cmsSource });
 // 		cmsPreview = params.preview;
 
-// 		cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
+// 		cmsWrapper._child(".preview_btn").classList.toggle("hidden", !cmsPreview);
 // 	} else {
-// 		cmsWrapper.find(".preview_btn").classList.toggle("hidden", true);
+// 		cmsWrapper._child(".preview_btn").classList.toggle("hidden", true);
 // 	}
 
 // 	cmsTarget = null;
@@ -548,7 +548,7 @@
 // // additional start
 // var backupStateOfCMS = null;
 // function editCMSAdditional(t, params) {
-// 	$("#cmsAdditional .stretch-vertical").def();
+// 	$("#cmsAdditional .stretch-vertical")._empty();
 // 	$("#cmsAdditional .stretch-vertical").appendChild(cmsWrapper);
 // 	$("#cms .stretch-vertical").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
 
@@ -573,7 +573,7 @@
 // 	if (event.detail.node.id != "cmsAdditional") {
 // 		return;
 // 	}
-// 	$("#cms .stretch-vertical").def();
+// 	$("#cms .stretch-vertical")._empty();
 // 	$("#cms .stretch-vertical").appendChild(cmsWrapper);
 
 // 	$("#cmsAdditional .stretch-vertical").appendChild(cmsWrapper.cloneNode(true)); // don't make it disappear
@@ -584,14 +584,14 @@
 // 	cmsTarget = backupStateOfCMS.target;
 // 	cmsParams = backupStateOfCMS.params;
 
-// 	cmsWrapper.find(".preview_btn").classList.toggle("hidden", !cmsPreview);
+// 	cmsWrapper._child(".preview_btn").classList.toggle("hidden", !cmsPreview);
 
 // 	$("#cmsAdditional").removeAttribute("data-type");
 // });
 // // additional end
 
 // function cmsPrepareOutput() {
-// 	cmsWrapper.findAll("[draggable]").forEach((e) => {
+// 	cmsWrapper._children("[draggable]").forEach((e) => {
 // 		e.removeAttribute("draggable");
 // 		e.style.opacity = "";
 // 	});
@@ -623,7 +623,7 @@
 // 		`<img class="background-image">`,
 // 		"afterbegin"
 // 	);
-// 	var bi = node.find(".background-image");
+// 	var bi = node._child(".background-image");
 // 	if (bi) {
 // 		bi.setAttribute("src", src);
 // 	}
@@ -643,7 +643,7 @@
 // 		`<div class="background-color"></div>`,
 // 		"afterbegin"
 // 	);
-// 	var bi = node.find(".background-color");
+// 	var bi = node._child(".background-color");
 // 	if (bi) {
 // 		bi.style.backgroundColor = backgroundColor;
 // 	}
@@ -660,14 +660,14 @@
 // 		`<div class="background-color"></div>`,
 // 		"afterbegin"
 // 	);
-// 	var bi = node.find(".background-color");
+// 	var bi = node._child(".background-color");
 // 	if (bi) {
 // 		bi.style.opacity = op;
 // 	}
 // }
 
 // function getNodeImageBackground(node) {
-// 	var bi = node.find(".background-image");
+// 	var bi = node._child(".background-image");
 // 	if (bi) {
 // 		return bi.getAttribute("src");
 // 	}
@@ -675,7 +675,7 @@
 // }
 
 // function getNodeBackgroundColor(node) {
-// 	var bi = node.find(".background-color");
+// 	var bi = node._child(".background-color");
 // 	if (bi) {
 // 		return rgbStringToHex(bi.style.backgroundColor);
 // 	}
@@ -683,7 +683,7 @@
 // }
 
 // function getNodeBackgroundColorOpacity(node) {
-// 	var bi = node.find(".background-color");
+// 	var bi = node._child(".background-color");
 // 	if (bi) {
 // 		return bi.style.opacity;
 // 	}
@@ -709,10 +709,10 @@
 // 	resizeCallback();
 
 // 	cmsWrapper
-// 		.find(".cms-undo")
+// 		._child(".cms-undo")
 // 		.toggleAttribute("disabled", cmsHistoryStepBack >= cmsHistory.length - 1);
 // 	cmsWrapper
-// 		.find(".cms-redo")
+// 		._child(".cms-redo")
 // 		.toggleAttribute("disabled", cmsHistoryStepBack == 0);
 
 // 	$$("[data-module]").forEach((e) => {
@@ -727,7 +727,7 @@
 // 		e.removeAttribute("data-module-params");
 // 	});
 
-// 	cmsWrapper.findAll(".cms-block").forEach((block) => {
+// 	cmsWrapper._children(".cms-block").forEach((block) => {
 // 		block.setAttribute("draggable", true);
 
 // 		addMissing_direct_children(
@@ -748,7 +748,7 @@
 // 		});
 
 // 		if (block.getAttribute("data-module-block") == "custom-html") {
-// 			const content = block.find(".cms-block-content");
+// 			const content = block._child(".cms-block-content");
 // 			addMissing_direct_children(
 // 				content,
 // 				(c) => c.classList.contains("html-container"),
@@ -759,7 +759,7 @@
 // 		migrateImageBackground(block);
 // 	});
 
-// 	cmsWrapper.findAll(".cms-container").forEach((container) => {
+// 	cmsWrapper._children(".cms-container").forEach((container) => {
 // 		container.setAttribute("draggable", true);
 
 // 		addMissing_direct_children(
@@ -783,7 +783,7 @@
 // 		migrateImageBackground(container);
 // 	});
 
-// 	if (!cmsWrapper.find(".cms-container")) {
+// 	if (!cmsWrapper._child(".cms-container")) {
 // 		setTimeout(() => {
 // 			if (cmsHistory.length > 0) {
 // 				cmsHistory.pop();
@@ -792,16 +792,16 @@
 // 		}, 100);
 // 	}
 
-// 	cmsWrapper.findAll(".cms-container").forEach((e) => {
-// 		if (!e.find(".cms-block")) {
+// 	cmsWrapper._children(".cms-container").forEach((e) => {
+// 		if (!e._child(".cms-block")) {
 // 			setTimeout(() => {
 // 				addBlock("", e);
 // 			}, 100);
 // 		}
 // 	});
 
-// 	cmsWrapper.findAll(".cms-block[data-module-block]").forEach((e) => {
-// 		var c = e.find(".cms-block-content");
+// 	cmsWrapper._children(".cms-block[data-module-block]").forEach((e) => {
+// 		var c = e._child(".cms-block-content");
 // 		if (!c.innerHTML.trim()) {
 // 			var module_block_name = e.getAttribute("data-module-block");
 // 			var module_block = app_module_blocks[module_block_name];
@@ -812,7 +812,7 @@
 // 			} catch {}
 
 // 			if (module_block && module_block.render) {
-// 				e.find(".cms-block-content").setContent(`
+// 				e._child(".cms-block-content")._set_content(`
 //             <div class="module-content">
 //                 <div>
 //                     ${module_block.icon} ${module_block.title}
@@ -847,7 +847,7 @@
 
 // 			var group = e._parent("[data-select-group]");
 // 			if (group) {
-// 				var option = group.find(`[data-option="${e.value}"]`);
+// 				var option = group._child(`[data-option="${e.value}"]`);
 // 				if (option) {
 // 					option.click();
 // 				}
@@ -863,7 +863,7 @@
 // function selectInGroup(option) {
 // 	var group = option._parent("[data-select-group]");
 
-// 	var input = group.find("input");
+// 	var input = group._child("input");
 // 	if (!input) return;
 // 	input.value = option.getAttribute("data-option");
 
@@ -1003,9 +1003,9 @@
 // }
 
 // function editCMSBorder() {
-// 	var target = cmsTarget.find(".cms-container-content");
+// 	var target = cmsTarget._child(".cms-container-content");
 // 	if (!target) {
-// 		target = cmsTarget; //.find(".cms-block-content");
+// 		target = cmsTarget; //._child(".cms-block-content");
 // 	}
 // 	if (!target) return;
 
@@ -1051,9 +1051,9 @@
 // function saveCMSBorder() {
 // 	var preview = $("#cmsBorder .borderPreview");
 
-// 	var target = cmsTarget.find(".cms-container-content");
+// 	var target = cmsTarget._child(".cms-container-content");
 // 	if (!target) {
-// 		target = cmsTarget; //.find(".cms-block-content");
+// 		target = cmsTarget; //._child(".cms-block-content");
 // 	}
 // 	if (!target) {
 // 		return false;
@@ -1244,7 +1244,7 @@
 
 // 	if (!isModalActive("cms") && !isModalActive("cmsAdditional")) return;
 
-// 	var wrapper = cmsWrapper.find(".cms-wrapper");
+// 	var wrapper = cmsWrapper._child(".cms-wrapper");
 
 // 	var targetY = event.clientY;
 
@@ -1654,7 +1654,7 @@
 
 // 						if (is_side_module) {
 // 							copiedNode.classList.remove("side-module");
-// 							copiedNode.find(".cms-block-content").def();
+// 							copiedNode._child(".cms-block-content")._empty();
 // 						}
 // 						removeClasses("add_after");
 // 						removeClasses("add_before");
@@ -1680,7 +1680,7 @@
 // 			var nextParent = cmsTarget._parent()._parent()._next();
 // 			if (nextParent) {
 // 				var nextParentChildren = nextParent
-// 					.find(".cms-container-content")
+// 					._child(".cms-container-content")
 // 					._direct_children();
 // 				if (nextParentChildren.length > 0) {
 // 					put_near = nextParentChildren[0];
@@ -1694,7 +1694,7 @@
 // 			var previousParent = cmsTarget._parent()._parent()._prev();
 // 			if (previousParent) {
 // 				var previousParentChildren = previousParent
-// 					.find(".cms-container-content")
+// 					._child(".cms-container-content")
 // 					._direct_children();
 // 				if (previousParentChildren.length > 0) {
 // 					put_near = previousParentChildren[previousParentChildren.length - 1];

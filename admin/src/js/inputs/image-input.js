@@ -22,9 +22,9 @@ function registerImageInputs() {
             `
 		);
 
-		const img = input.find("img");
-		const button = input.find("button");
-		const wrapper = input.find(".image-input-img-wrapper");
+		const img = input._child("img");
+		const button = input._child("button");
+		const wrapper = input._child(".image-input-img-wrapper");
 
 		const options_json = input.getAttribute("data-options");
 		if (options_json) {
@@ -50,7 +50,7 @@ function registerImageInputs() {
 
 		img.addEventListener("change", () => {
 			const selected = !!img._get_value();
-			const btn = input.find("button");
+			const btn = input._child("button");
 			btn._set_content(selected ? "Zmień" : "Wybierz");
 			btn.classList.toggle("primary", !selected);
 			btn.classList.toggle("secondary", selected);

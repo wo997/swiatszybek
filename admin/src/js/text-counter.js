@@ -10,7 +10,7 @@ function registerTextCounters() {
 	$$("[data-show-count]:not(.registered)").forEach((e) => {
 		e.classList.add("registered");
 		const changeCallback = () => {
-			e._next().find("span").innerHTML = e.value.length;
+			e._next()._child("span").innerHTML = e.value.length;
 			if (e.value.length > e.getAttribute("data-show-count")) {
 				e._next().style.color = "#f00";
 				e._next().style.fontWeight = "bold";

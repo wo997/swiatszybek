@@ -30,7 +30,7 @@ class NewCmsSidebar {
 				this.sidebar_width - this.sidebar_collapsed_width;
 		});
 
-		const width = this.node.find(`[name="width"]`);
+		const width = this.node._child(`[name="width"]`);
 
 		const changeCallback = () => {
 			this.newCms.styling.setBlockStyles({
@@ -40,7 +40,7 @@ class NewCmsSidebar {
 		width.addEventListener("change", changeCallback);
 		width.addEventListener("input", changeCallback);
 
-		const grid_template_columns = this.node.find(
+		const grid_template_columns = this.node._child(
 			`[name="grid_template_columns"]`
 		);
 
@@ -59,7 +59,7 @@ class NewCmsSidebar {
 		grid_template_columns.addEventListener("change", changeCallback2);
 		grid_template_columns.addEventListener("input", changeCallback2);
 
-		const image = this.node.find(`[name="image"]`);
+		const image = this.node._child(`[name="image"]`);
 		image.addEventListener("change", () => {
 			if (this.newCms.edit_block.edit_node) {
 				const block_type = this.newCms.edit_block.edit_node.getAttribute(
@@ -67,7 +67,7 @@ class NewCmsSidebar {
 				);
 				if (block_type == "image") {
 					this.newCms.edit_block.edit_node
-						.find(".newCms_block_content")
+						._child(".newCms_block_content")
 						._set_value(image._get_value(), { quiet: true });
 
 					setTimeout(() => {
@@ -76,7 +76,7 @@ class NewCmsSidebar {
 
 					/** @type {NewCmsBlock} */
 					// @ts-ignore
-					const block_content = this.newCms.edit_block.edit_node.find(
+					const block_content = this.newCms.edit_block.edit_node._child(
 						".newCms_block_content"
 					);
 					const img_data = getResponsiveImageData(block_content.dataset.src);
@@ -102,7 +102,7 @@ class NewCmsSidebar {
 			}
 		});
 
-		const justify_content = this.node.find(`[name="justify_content"]`);
+		const justify_content = this.node._child(`[name="justify_content"]`);
 		justify_content.addEventListener("change", () => {
 			//const block_type = this.newCms.edit_block.edit_node.dataset.block;
 			//if (block_type == "container") {
@@ -118,7 +118,7 @@ class NewCmsSidebar {
 			//}
 		});
 
-		const container_flow = this.node.find(`[name="container_flow"]`);
+		const container_flow = this.node._child(`[name="container_flow"]`);
 		container_flow.addEventListener("change", () => {
 			const block_type = this.newCms.edit_block.edit_node.dataset.block;
 			if (block_type == "container") {
@@ -134,7 +134,7 @@ class NewCmsSidebar {
 			}
 		});
 
-		const custom_css = this.node.find(`[name="custom_css"]`);
+		const custom_css = this.node._child(`[name="custom_css"]`);
 
 		const changeCallback5 = () => {
 			this.newCms.styling.setBlockStyles(custom_css._get_value(), null, {
@@ -163,18 +163,18 @@ class NewCmsSidebar {
 		const block_type = block.dataset.block;
 		if (block_type == "quill_editor") {
 			this.newCms.quill_editor.setEditorContent(
-				block.find(".newCms_block_content").innerHTML
+				block._child(".newCms_block_content").innerHTML
 			);
 		}
 		if (block_type == "image") {
-			const image = this.newCms.sidebar.node.find(`[name="image"]`);
-			image._set_value(block.find(".newCms_block_content")._get_value(), {
+			const image = this.newCms.sidebar.node._child(`[name="image"]`);
+			image._set_value(block._child(".newCms_block_content")._get_value(), {
 				quiet: true,
 			});
 			lazyLoadImages();
 		}
 		if (block_type == "container") {
-			const container_flow = this.newCms.sidebar.node.find(
+			const container_flow = this.newCms.sidebar.node._child(
 				`[name="container_flow"]`
 			);
 
@@ -184,20 +184,20 @@ class NewCmsSidebar {
 		}
 
 		// for all blocks types
-		const margin = this.newCms.sidebar.node.find(`.margin`);
+		const margin = this.newCms.sidebar.node._child(`.margin`);
 
 		// TODO: each "style component" should be added externally maybe with index to sort it nicely
 		// anyway the goal is to keep them separate, have event for when the block is edited and when each of those field changes
 		// which is pretty straightforward, seems like a clean solution baby, why am I talkin to myself wtf :* :* :*
-		margin.findAll("c-select").forEach((e) => {
-			const input = e.find("input");
+		margin._children("c-select").forEach((e) => {
+			const input = e._child("input");
 			const dir = input.dataset.dir;
 			input._set_value(def(block_styles.outside[`margin-${dir}`], ""), {
 				quiet: true,
 			});
 		});
 
-		const grid_template_columns = this.newCms.sidebar.node.find(
+		const grid_template_columns = this.newCms.sidebar.node._child(
 			`[name="grid_template_columns"]`
 		);
 
@@ -238,7 +238,7 @@ class NewCmsSidebar {
 	}
 
 	getCurrentMenuNode() {
-		return this.node.find(`[data-side_menu].active`);
+		return this.node._child(`[data-side_menu].active`);
 	}
 
 	showSideMenu(target_side_menu_name, options = {}) {
@@ -264,7 +264,7 @@ class NewCmsSidebar {
 		target_side_menu_name = getLast(this.opened_menus);
 
 		const current_menu = this.getCurrentMenuNode();
-		const target_menu = this.node.find(
+		const target_menu = this.node._child(
 			`[data-side_menu="${target_side_menu_name}"]`
 		);
 

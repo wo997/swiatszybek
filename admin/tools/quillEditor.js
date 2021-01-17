@@ -499,7 +499,7 @@
 // 		var isMyVideo = false;
 // 		if (n.tagName == "MYVIDEO") {
 // 			isMyVideo = true;
-// 			n = n.find("video");
+// 			n = n._child("video");
 // 		}
 
 // 		if (!n) return;
@@ -519,7 +519,7 @@
 // 			}
 // 			n.innerHTML = v;
 // 		} else if (prop == "buttontitle") {
-// 			n.find("span").innerHTML = v;
+// 			n._child("span").innerHTML = v;
 // 		} else if (prop == "buttonhref") {
 // 			n.setAttribute("data-href", v);
 // 		} else if (prop == "buttonstyle") {
@@ -650,7 +650,7 @@
 // 			}
 
 // 			static value(node) {
-// 				var vid = $(node).find("video");
+// 				var vid = $(node)._child("video");
 // 				return {
 // 					/*value: node.getAttribute("src"),
 //           width: node.style.width,*/
@@ -734,7 +734,7 @@
 // 			}
 
 // 			static value(node) {
-// 				var img = $(node).find("img");
+// 				var img = $(node)._child("img");
 // 				return {
 // 					src: img.getAttribute("src"),
 // 					width: img.style.width,
@@ -761,7 +761,7 @@
 // 			}
 
 // 			static value(node) {
-// 				var n = $(node).find("i");
+// 				var n = $(node)._child("i");
 // 				var v = n ? n.className : "";
 // 				return { value: v };
 // 			}
@@ -1250,32 +1250,32 @@
 // 				var cloud = null;
 // 				if (n.tagName == "MYVIDEO") {
 // 					cloud = $(".video-buttons");
-// 					var vid = n.find("video");
-// 					cloud.find(".src").value = vid.src;
-// 					cloud.find(".width").value = vid.style.width;
-// 					cloud.find(".alt").value = vid.getAttribute("alt");
+// 					var vid = n._child("video");
+// 					cloud._child(".src").value = vid.src;
+// 					cloud._child(".width").value = vid.style.width;
+// 					cloud._child(".alt").value = vid.getAttribute("alt");
 // 				} else if (n.classList.contains("ql-video")) {
 // 					cloud = $(".video-buttons");
-// 					cloud.find(".src").value = getUrlFromYoutubeId(
+// 					cloud._child(".src").value = getUrlFromYoutubeId(
 // 						getIdFromYoutubeThumbnail(n.src)
 // 					);
-// 					cloud.find(".width").value = n.style.width;
-// 					cloud.find(".alt").value = n.getAttribute("alt");
+// 					cloud._child(".width").value = n.style.width;
+// 					cloud._child(".alt").value = n.getAttribute("alt");
 // 				} else if (n.tagName == "A") {
 // 					cloud = $(".my-link");
-// 					cloud.find(".href").value = n.href;
-// 					cloud.find(".title").value = n.innerHTML;
-// 					cloud.find(".alt").value = n.getAttribute("alt");
+// 					cloud._child(".href").value = n.href;
+// 					cloud._child(".title").value = n.innerHTML;
+// 					cloud._child(".alt").value = n.getAttribute("alt");
 // 				} else if (n.tagName == "BUTTON") {
 // 					cloud = $(".button-options");
-// 					cloud.find(".title").value = n.textContent;
-// 					cloud.find(".href").value = n.getAttribute("data-href");
-// 					cloud.find(".alt").value = n.getAttribute("alt");
+// 					cloud._child(".title").value = n.textContent;
+// 					cloud._child(".href").value = n.getAttribute("data-href");
+// 					cloud._child(".alt").value = n.getAttribute("alt");
 // 				} else {
 // 					cloud = $(".image-buttons");
-// 					cloud.find(".width").value = n.style.width;
-// 					cloud.find(".alt").value = n.getAttribute("alt");
-// 					cloud.find(".href").value = n.getAttribute("data-href");
+// 					cloud._child(".width").value = n.style.width;
+// 					cloud._child(".alt").value = n.getAttribute("alt");
+// 					cloud._child(".href").value = n.getAttribute("data-href");
 // 				}
 
 // 				if (cloud) {

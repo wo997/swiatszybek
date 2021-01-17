@@ -116,7 +116,7 @@ if ($kopia) {
                 <div class="field-title">Link strony</div>
                 <div class="glue-children">
                     <input type="text" name="link" data-validate class="field">
-                    <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev().find(`.field`), {link:true})" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: var(--field-height);">
+                    <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev()._child(`.field`), {link:true})" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: var(--field-height);">
                         <i class="fas fa-pen"></i>
                     </button>
                 </div>
@@ -124,7 +124,7 @@ if ($kopia) {
                 <div class="field-title">Tytuł (SEO)</div>
                 <div class="glue-children">
                     <input type="text" name="seo_title" class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
-                    <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev().find(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: var(--field-height);">
+                    <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev()._child(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: var(--field-height);">
                         <i class="fas fa-pen"></i>
                     </button>
                 </div>

@@ -100,7 +100,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
     <script>
         domload(function() {
             window.form = $("#zakupForm");
-            window.form.findAll("[name]").forEach(input => {
+            window.form._children("[name]").forEach(input => {
                 window.form[input.name] = input;
             });
 
@@ -129,7 +129,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
             $$(`[name*="_kurier"]`).forEach(e => {
                 e.addEventListener("change", () => {
                     var name = e.getAttribute("name").replace("_kurier", "_dostawa");
-                    var input = form.find(`input[name="${name}"]`);
+                    var input = form._child(`input[name="${name}"]`);
                     if (input) {
                         setValue(input, e.value);
                     }
@@ -205,7 +205,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     setCustomHeights();
                     var view = $(`[data-view='${scroll}`);
                     if (!view) {
-                        view = now.find(`*`);
+                        view = now._child(`*`);
                     }
                     if (view) {
                         scrollIntoView(view, params);
