@@ -659,7 +659,7 @@ function isHidden(el) {
 }
 
 function inBody(node) {
-	document.body.contains(node);
+	return document.body.contains(node);
 }
 
 function preventLongPressMenu(node) {

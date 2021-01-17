@@ -62,14 +62,14 @@ domload(() => {
 /**
  * @param {ListRowComponent} node
  * @param {*} parent
- * @param {ListRowComponentData} _data
+ * @param {ListRowComponentData} data
  */
-function createListRowCompontent(node, parent, _data = undefined) {
-	if (_data === undefined) {
-		_data = { email: "", name: "name" };
+function createListRowCompontent(node, parent, data = undefined) {
+	if (data === undefined) {
+		data = { email: "", name: "name" };
 	}
 
-	createComponent(node, parent, _data, {
+	createComponent(node, parent, data, {
 		template: /*html*/ `
             <span data-node="row_index"></span>
             <input type="text" class="field inline" data-bind="email">
@@ -88,7 +88,7 @@ function createListRowCompontent(node, parent, _data = undefined) {
 
 			// /** @type {ListComponent} */
 			// // @ts-ignore
-			// const parent = node._parent_component;
+			// const parent = node.parent_component;
 			// if (parent && parent._data && isArray(parent._data)) {
 			// 	parent._subscribers.push({
 			// 		fetch: (
@@ -104,11 +104,11 @@ function createListRowCompontent(node, parent, _data = undefined) {
 			// inefficient af, what if u bubble up info tho?
 			// /** @type {ListComponent} */
 			// // @ts-ignore
-			// const grand_parent = node._parent_component
-			// 	? node._parent_component._parent_component
+			// const grandparent = node.parent_component
+			// 	? node.parent_component.parent_component
 			// 	: null;
-			// if (grand_parent) {
-			// 	grand_parent._subscribers.push({
+			// if (grandparent) {
+			// 	grandparent._subscribers.push({
 			// 		fetch: (
 			// 			/** @type {FirstComponent} */ source,
 			// 			/** @type {ListRowComponent} */ receiver
@@ -559,7 +559,7 @@ function createFirstCompontent(node, parent, data = undefined) {
  *
  * @typedef {{
  * _bindNodes: PiepNode[]
- * _parent_component?: AnyComponent
+ * parent_component?: AnyComponent
  * _referenceParent: CallableFunction
  * _pointChildsData(child: AnyComponent): ObjectData
  * _addSubscriber(subscribe: SubscribeToData)
@@ -588,25 +588,25 @@ function createFirstCompontent(node, parent, data = undefined) {
 /**
  * @param {BaseComponent} comp
  * @param {*} parent_comp
- * @param {*} _data
+ * @param {*} data
  * @param {createComponentOptions} options
  * */
-function createComponent(comp, parent_comp, _data, options) {
+function createComponent(comp, parent_comp, data, options) {
 	/** @type {AnyComponent} */
 	// @ts-ignore
 	const node = comp;
 
 	/** @type {AnyComponent} */
 	// @ts-ignore
-	const _parent = parent_comp;
+	const parent = parent_comp;
 
 	//node.classList.add("component");
 
-	if (!!_parent && !(_parent instanceof HTMLElement)) {
-		console.error("Parent is not a node!", _parent);
+	if (!!parent && !(parent instanceof HTMLElement)) {
+		console.error("Parent is not a node!", parent);
 		console.trace();
 	}
-	node._parent_component = _parent;
+	node.parent_component = parent;
 
 	node._subscribers = [];
 
@@ -662,12 +662,12 @@ function createComponent(comp, parent_comp, _data, options) {
 		}
 	});
 
-	if (_data !== undefined) {
-		node._setData(_data);
+	if (data !== undefined) {
+		node._setData(data);
 	}
 
-	if (_parent) {
-		_parent._subscribers.push({
+	if (parent) {
+		parent._subscribers.push({
 			receiver: node,
 			fetch: (
 				/** @type {AnyComponent} */ source,
@@ -680,7 +680,7 @@ function createComponent(comp, parent_comp, _data, options) {
 			},
 		});
 		node._subscribers.push({
-			receiver: _parent,
+			receiver: parent,
 			fetch: (
 				/** @type {AnyComponent} */ source,
 				/** @type {AnyComponent} */ receiver

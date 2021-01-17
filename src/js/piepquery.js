@@ -117,7 +117,7 @@ function $(selector, parent = undefined) {
 	};
 
 	node._in_body = () => {
-		inBody(node);
+		return inBody(node);
 	};
 
 	return node;
