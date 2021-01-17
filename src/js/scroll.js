@@ -5,19 +5,14 @@ function windowHeightResizeCallback() {
 	let vh = window.innerHeight * 0.01;
 	document.documentElement.style.setProperty("--vh", `${vh}px`);
 }
-domload(() => {
-	const observer = new ResizeObserver(() => {
-		windowHeightResizeCallback();
-	});
-	observer.observe(document.body);
-	windowHeightResizeCallback();
-});
-setTimeout(() => {
-	windowHeightResizeCallback();
-});
+domload(windowHeightResizeCallback);
+setTimeout(windowHeightResizeCallback);
 
 window.addEventListener("resize", windowHeightResizeCallback);
 window.addEventListener("touchend", windowHeightResizeCallback);
+if (IS_TOUCH_DEVICE) {
+	window.addEventListener("scroll", windowHeightResizeCallback);
+}
 
 function scrollToElement(elem, options = {}) {
 	if (!elem) return;

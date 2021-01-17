@@ -20,9 +20,9 @@
                     <img class="search-icon" src="/src/img/search_icon.svg">
                 </div>
             </div>
-            <div class="user-wrapper headerbtn">
+            <div class="user-wrapper">
                 <?php if ($app["user"]["id"]) : ?>
-                    <a href="/moje-konto">
+                    <a href="/moje-konto" class="headerbtn">
                         <!--<div class="my-acc-text">
               <span class="case-desktop">Moje konto</span>
             </div>-->
@@ -47,9 +47,11 @@
                         <a class="menu_item border-top" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
                     </div>
                 <?php else : ?>
-                    <a onclick="showModal('loginForm',{source:this});">
-                        <span class="case-desktop">Zaloguj się </span>
-                        <img class="user-icon" src="/src/img/user_icon.svg">
+                    <a onclick="showModal('loginForm',{source:this});" class="headerbtn">
+                        <div>
+                            <span class="case-desktop">Zaloguj się </span>
+                            <img class="user-icon" src="/src/img/user_icon.svg">
+                        </div>
                     </a>
                 <?php endif ?>
             </div>
@@ -86,7 +88,7 @@
                         <div style='text-align:center;margin:2em 0'>Twój koszyk jest pusty!</div>
                     </div>
                     <div class='case_basket_not_empty expand_y'>
-                        <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Koszyk</h3>
+                        <h3 style='text-align:center;margin:0.3em 0;font-weight:600;'>Koszyk</h3>
                         <hr>
                         <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper smooth-scrollbar'>
                             <div class='header_basket_content'></div>

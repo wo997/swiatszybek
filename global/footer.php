@@ -1,16 +1,16 @@
-<div class="x"></div>
-<div class="wo997_slider slider_x" data-slide_width="calc(10% + 150px)" data-show_next_mobile>
-    <div class="wo997_slides_container">
-        <?php for ($i = 0; $i < 10; $i++) { ?>
-            <div class="wo997_slide">
-                <?= $i ?>
-                <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
-            </div>
-        <?php } ?>
-    </div>
-</div>
-
 <footer>
+    <div class="x"></div>
+    <div class="wo997_slider slider_x" data-slide_width="calc(10% + 150px)" data-show_next_mobile>
+        <div class="wo997_slides_container">
+            <?php for ($i = 0; $i < 10; $i++) { ?>
+                <div class="wo997_slide">
+                    <?= $i ?>
+                    <img data-src="/uploads/-/strona-monicy-123-4_1080x1307.jpg" class="wo997_img" style="width: 100%;">
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+
     <?php
     if (isset($preview_params) && isset($preview_params["page_footer"])) {
         $page_footer = $preview_params["page_footer"];

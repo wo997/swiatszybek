@@ -166,10 +166,12 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-shrink: 0;
 }
 
 .modal_container .footer {
 	border-top: 1px solid #ddd;
+	flex-shrink: 0;
 }
 
 .modal_container .modal-header img {

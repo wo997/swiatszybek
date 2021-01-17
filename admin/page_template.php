@@ -61,9 +61,10 @@ endSection();
         </div>
     </div>
 
-    <!-- hidden -->
-    <?php include "global/footer.php"; ?>
-
 </body>
 
 </html>
+
+
+<?php //TODO: include "global/blank_page_template.php"; 
+?>

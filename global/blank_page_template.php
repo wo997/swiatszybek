@@ -13,8 +13,11 @@ endSection();
 </head>
 
 <body>
-    <div class="main-container">
-        <?= def($sections, "body", ""); ?>
+    <div class="main_wrapper">
+        <div class="main_container">
+            <?= def($sections, "body", ""); ?>
+            <?php include "global/footer.php"; ?>
+        </div>
     </div>
 </body>
 

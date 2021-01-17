@@ -23,11 +23,13 @@ function initModal() {
 
 	modal_wrapper_node = $("#modal_wrapper");
 	modal_container_node = $(".modal_container");
-	modal_wrapper_node.addEventListener("touchmove", (ev) => {
+
+	modal_wrapper_node.addEventListener("mousewheel", (ev) => {
 		ev.preventDefault();
-		//if (ev.target && $(ev.target)._parent() === modal_container_node) {
-		//}
-		//ev.stopPropagation();
+	});
+
+	modal_wrapper_node.addEventListener("touchmove", (ev) => {
+		ev.preventDefault(); // the modal panel etc. can stop propagation tho
 	});
 
 	registerModals();
@@ -68,14 +70,35 @@ function registerModalContent(html, callback) {
 function registerModal(modal) {
 	modal_container_node.appendChild(modal);
 
-	const modal_content = modal._child("*");
+	modal._children(`.scroll-panel:not(.horizontal)`).forEach((scr) => {
+		const panel_on_edge = (dy) => {
+			return (
+				scr.scrollHeight < 2 ||
+				(scr.scrollTop >= scr.scrollHeight - scr.offsetHeight - 1 && dy > 0) ||
+				(scr.scrollTop < 1 && dy < 0)
+			);
+		};
 
-	modal_content.addEventListener("touchmove", (ev) => {
-		console.log(ev);
-		ev.stopPropagation();
-		//ev.stopImmediatePropagation();
+		scr.addEventListener("mousewheel", (ev) => {
+			if (!panel_on_edge(ev.deltaY)) {
+				ev.stopPropagation();
+			}
+		});
+		scr.addEventListener("touchmove", (ev) => {
+			for (let i = 0; i < scr._touches.length; i++) {
+				if (ev.targetTouches[i] && scr._touches[i]) {
+					const dy = scr._touches[i].clientY - ev.targetTouches[i].clientY;
+					if (!panel_on_edge(dy)) {
+						ev.stopPropagation();
+					}
+				}
+			}
+			scr._touches = ev.targetTouches;
+		});
+		scr.addEventListener("touchstart", (ev) => {
+			scr._touches = ev.targetTouches;
+		});
 	});
-	console.log(modal);
 }
 
 function showModal(name = null, params = {}) {
