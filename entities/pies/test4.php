@@ -47,7 +47,7 @@ class EntityObject
     private $name;
     private $id_column;
     private $data = []; // row data in DB
-    private $fetched = []; // stores info of already fetched relations
+    private $fetched = []; // stores info of what relations that were fetched already
     private $curr_data = null; // in case the object existed in DB
 
     public function __construct($name, &$data)
