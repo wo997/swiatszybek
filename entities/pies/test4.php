@@ -1,169 +1,325 @@
 <?php //route[{ADMIN}entity_test]
 
+/*
+createTable("pies", [
+    ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "food", "type" => "INT"],
+    ["name" => "food_double", "type" => "INT"],
+    ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
+]);
+
+createTable("pies_paw", [
+    ["name" => "pies_paw_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "pies_id", "type" => "INT", "index" => "index"],
+    ["name" => "name", "type" => "TINYTEXT"],
+]);
+*/
+
+// maybe worth it to have those but still, not necessary by the entity manager, but rather for the dev / extention
+$entities = [
+    "pies" => [
+        "properties" => [
+            "food",
+            "food_double",
+            "ate_at"
+        ]
+    ],
+    "pies_paw" => [
+        "properties" => [
+            "pies_id",
+            "name",
+        ]
+    ],
+];
+
+class EntityObject
+{
+    private $name;
+    private $id_column;
+    private $data = []; // row data in DB
+    private $fetched = []; // stores info of already fetched relations
+    private $curr_data = null; // in case the object existed in DB
+
+    public function __construct($name, &$data)
+    {
+        // must go first
+        $this->name = $name;
+        // must go second
+        $this->id_column = $this->getEntityIdColumn();
+
+        $obj_curr_id = $this->getIdFromData($data);
+        if ($obj_curr_id === -1) {
+            $this->setDataFromArray($data);
+        } else {
+            $this->curr_data = fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
+            $this->setDataFromArray(def($this->curr_data, []));
+            $this->setDataFromArray($data);
+        }
+
+        // make sure u have the id no matter if it was in the constructor data or not
+        if (!isset($this->data[$this->id_column])) {
+            $this->data[$this->id_column] = -1;
+        }
+    }
+
+    /**
+     * saveChildren
+     *
+     * @param  EntityObjects[] $objs
+     * @return void
+     */
+    public function saveChildren($objs)
+    {
+        foreach ($objs as $obj) {
+            if ($obj instanceof EntityObject) {
+                $obj->saveToDB();
+            }
+        }
+    }
+
+    public function saveToDB()
+    {
+        if ($this->curr_data) {
+            $update_data = [];
+            foreach ($this->data as $key => $value) {
+                if ($key === $this->id_column) {
+                    continue;
+                }
+                if (is_array($value)) {
+                    $this->saveChildren($value);
+                    continue;
+                }
+                if ($this->curr_data[$key] === $value) {
+                    continue;
+                }
+
+                $update_data[$key] = $value;
+            }
+
+            if (!empty($update_data)) {
+                // update
+                $query = "UPDATE " . $this->name . " SET ";
+                foreach (array_keys($update_data) as $field) {
+                    $query .= clean($field) . "=?,";
+                }
+                $query = rtrim($query, ",");
+                $query .= " WHERE " . $this->id_column . "=" . intval($this->data[$this->id_column]);
+                var_dump($query, array_values($update_data));
+                //query($query, array_values($update_data));
+                //return true;
+            }
+        } else {
+            $insert_data = [];
+            foreach ($this->data as $key => $value) {
+                if ($key === $this->id_column) {
+                    continue;
+                }
+                if (is_array($value)) {
+                    $this->saveChildren($value);
+                    continue;
+                }
+                $insert_data[$key] = $value;
+            }
+
+            $keys_query = "";
+            foreach (array_keys($insert_data) as $field) {
+                $keys_query .= clean($field) . ",";
+            }
+            $keys_query = rtrim($keys_query, ",");
+            $values_query = rtrim(str_repeat("?,", count($insert_data)), ",");
+
+            $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
+
+            var_dump($query, array_values($insert_data));
+            //query($query, array_values($insert_data));
+            //$entity_id = getLastInsertedId();
+            //return $entity_id;
+        }
+    }
+
+    public function setData($var, $val, $quiet = false)
+    {
+        if ($var === $this->id_column && $this->getId() !== -1) {
+            // set id once, ezy
+            return;
+        }
+
+        if ($quiet === false) {
+            $setter = "SET_" . $this->name . "_" . $var;
+            if (function_exists($setter)) {
+                $res = call_user_func($setter, $this, $val);
+                if ($res) { // handle errors maybe?
+                    $val = $res;
+                }
+            } else if (is_array($val)) { // nah
+                return;
+            }
+        }
+
+        $this->data[$var] = $val;
+    }
+
+    public function setDataFromArray($arr)
+    {
+        foreach ($arr as $var => $val) {
+            $this->setData($var, $val);
+        }
+    }
+
+    public function getData($var)
+    {
+        if ($this->shouldFetch($var)) {
+            $getter = "GET_" . $this->name . "_" . $var;
+            if (function_exists($getter)) {
+                $res = call_user_func($getter, $this);
+                if ($res !== null) {
+                    return $res;
+                }
+            }
+        }
+        return def($this->data, $var, null);
+    }
+
+    public function shouldFetch($var)
+    {
+        if (in_array($var, $this->fetched)) {
+            return false;
+        }
+
+        $this->fetched[] = $var;
+        return true;
+    }
+
+    /*public function addChildren(EntityObject $obj)
+    {
+        $this->children[] = $obj;
+    }*/
+
+
+    private function getEntityIdColumn()
+    {
+        return $this->name . "_id";
+    }
+
+    public function getId()
+    {
+        return $this->getIdFromData($this->data);
+    }
+
+    public function getIdFromData(&$data)
+    {
+        return intval(def($data, $this->id_column, -1));
+    }
+}
+
 // imagine it's another file start
-function setPiesPies_id(&$obj, $data)
+// function SET_pies_pies_id(EntityObject $obj, $data) // if u don't add it it's completely fine!, it's assumed as default
+// {
+//     $obj->setData("pies_id", $data, true);
+// }
+function SET_pies_food(EntityObject $obj, $data)
 {
-    $obj["pies_id"] = $data;
-}
-function setPiesFood(&$obj, $data)
-{
-    $obj["food"] = $data;
+    // other actions
+    $obj->setData("food_double", 2 * $data);
 
-    $paws = getPiesPaws($obj);
-    var_dump($paws);
-    $obj["food"] += count($paws);
+    // modify value itself, what about errors tho?
+    //return $data;
 }
-function setPiesPaws(&$obj, $data)
+
+/*function SET_pies_food_double(EntityObject $obj)
 {
-    $obj["paws"] = $data;
-    /*foreach ($data as $paw) {
-        createEntityObject("pies_paw", $paw);
+    $obj->setData("food_double", 2 * $obj->getData("food"), false);
+}*/
+
+function SET_pies_paws(EntityObject $obj, $data)
+{
+    /** @var EntityObject[] */
+    $obj_paws = def($obj->getData("paws"), []);
+
+    foreach ($data as $paw_data) {
+        if ($paw_data instanceof EntityObject) {
+            return;
+        }
+
+        $pies_paw_id = intval(def($paw_data, "pies_paw_id", -1));
+        if ($pies_paw_id === -1) {
+            $paw = new EntityObject("pies_paw", $paw_data);
+            $obj_paws[] = $paw;
+        } else {
+            foreach ($obj_paws as &$obj_paw) {
+                if ($obj_paw->getId() === $pies_paw_id) {
+                    $obj_paw->setDataFromArray($paw_data);
+                }
+            }
+            unset($obj_paw);
+        }
     }
-    $obj["paws"] = $data;*/
+    return $obj_paws;
 }
-function getPiesPaws(&$obj)
+
+function GET_pies_paws(EntityObject $obj)
 {
-    if (!isset($obj["pies_id"])) {
-        return ["error" => "No ID"];
-    }
-    $field = "paws";
+    $var = "paws";
 
-    if (!isset($obj[$field])) {
-        $obj[$field] = [];
+    if (!isset($obj->data[$var])) {
+        $obj->setData($var, []);
     }
-    if (!in_array($field, $obj["_fetched"])) {
-        $fetched_data = fetchArray("SELECT * FROM pies_paw WHERE pies_id = " . intval($obj["pies_id"]));
-        $obj[$field] = array_merge($obj[$field], $fetched_data);
-        $obj["_fetched"][] = $field;
+    $paws = [];
+    $paws_data = fetchArray("SELECT * FROM pies_paw WHERE pies_id = " . intval($obj->getData("pies_id")));
+    foreach ($paws_data as $paw_data) {
+        $paws[] = new EntityObject("pies_paw", $paw_data);
     }
-
-    return $obj[$field];
+    $obj->setData($var, $paws, true);
+    return $paws;
 }
 // imagine it's another file end
 
-function createEntityObject($entity_name, &$data)
+/*function createEntityObject($entity_name, $data)
 {
-    // init obj
-    $obj = [];
-    $obj["_fetched"] = [];
-    //$data["_more_stuff"] = [];
+    $obj = new EntityObject();
+    $obj->name = $entity_name;
 
     foreach ($data as $key => $value) {
-        $function = "set" . ucfirst($entity_name) . ucfirst($key);
+        $function = "SET_" . ucfirst($entity_name) . "_" . ucfirst($key);
         if (function_exists($function)) {
-            call_user_func($function, ...[&$obj, $value]);
+            call_user_func($function, ...[$obj, $value]);
         }
     }
 
     return $obj;
-}
+}*/
 
 $data = [
     "pies_id" => 20,
     "food" => 666,
     "paws" => [
-        "pies_paw_id" => 69,
-        "name" => "wtf"
+        [
+            "pies_paw_id" => 8, // change
+            "name" => "changed name"
+        ],
+        [
+            "pies_paw_id" => -1, // create
+            "name" => "created"
+        ],
     ]
 ];
 
-$pies = createEntityObject("pies", $data);
+$pies = new EntityObject("pies", $data);
 
-var_dump($pies);
+//var_dump($pies);
 
-echo "x";
-die;
+$pies->saveToDB();
 
 
-// $u = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
-// $u["cat_id"];
-
-// $u = fetchArray("SELECT dddd, mother, children_json js, pies as piesekx FROM cat");
-// $u[0]["cat_id"];
-// $u[1]["mother"];
-
-// foreach ($u as $p) {
-//     $p["dddd"];
-// }
-
-// /**
-//  * heyca
-//  *
-//  * @param  GridData $x
-//  * @param  string $y
-//  * @return void
-//  */
-// function heyca($x, $y)
+// function getEntityById($entity_name, $entity_id = -1, &$data = [])
 // {
-//     $x["x_coords"];
+//     $id_column = getEntityIdColumn($entity_name);
+//     if ($entity_id !== -1) {
+//         $data = fetchRow("SELECT * FROM $entity_name WHERE $id_column = " . intval($entity_id));
+//     }
+//     createEntityObject($data);
+//     return $data;
 // }
-// createTable("product_attribute_values", [
-//     ["name" => "", "type" => ""],
-//     ["name" => "product_id", "type" => "INT"],
-//     ["name" => "attribute_id", "type" => "INT"],
-//     ["name" => "numerical_value", "type" => "INT", "null" => true],
-//     ["name" => "text_value", "type" => "TEXT", "null" => true],
-//     ["name" => "date_value", "type" => "DATE", "null" => true],
-// ]);
-
-// $a = fetchArray("select pies from dog", []);
-// $a[""]["pies"];
-
-
-$pies_data = json_decode("{
-    \"pies_id\":-1,
-    \"food\":1234,
-    \"paws\":[
-     {\"pies_paw_id\":-1,\"name\":\"elaxu\"},
-     {\"pies_paw_id\":-1,\"name\":\"zupkaxu\"}
-    ]
-   }", true);
-
-$pies = createEntityObject($pies_data);
-
-//var_dump("manage new pies");
-//var_Dump(manageEntity("pies", $pies_data));
-
-/*$pies_data_2 = json_decode("{
-    \"pies_id\":18,
-    \"food\":123
-   }", true);*/
-
-// createEntityObject(json_decode("{
-//     \"pies_id\":18,
-//     \"food\":123,
-//     \"paws\":[
-//      {\"pies_paw_id\":-1,\"name\":\"ela\"},
-//      {\"pies_paw_id\":-1,\"name\":\"zupka\"}
-//     ]
-//    }", true));
-
-$pies_data_2 = getEntityById("pies", 22);
-
-var_dump($pies_data_2);
-var_dump(getPiesPaws($pies_data_2));
-var_dump($pies_data_2); // has pies paws
-
-/*function createEntityObject(&$data)
-{
-    $data["_fetched"] = [];
-    return $data;
-}*/
-
-function getEntityIdColumn($entity_name)
-{
-    return $entity_name . "_id";
-}
-
-function getEntityById($entity_name, $entity_id = -1, &$data = [])
-{
-    $id_column = getEntityIdColumn($entity_name);
-    if ($entity_id !== -1) {
-        $data = fetchRow("SELECT * FROM $entity_name WHERE $id_column = " . intval($entity_id));
-    }
-    createEntityObject($data);
-    return $data;
-}
 
 // all functions of that type will act like a singleton, fetch only when necessary, ezy
 // remember to use a &reference
@@ -186,75 +342,75 @@ function getEntityById($entity_name, $entity_id = -1, &$data = [])
 //     return $data[$field];
 // }
 
-function combineEntityData(&$data, $key, $new_data)
-{
-    $data[$key] = array_merge($data[$key], $new_data);
-}
+// function combineEntityData(&$data, $key, $new_data)
+// {
+//     $data[$key] = array_merge($data[$key], $new_data);
+// }
 
 // !!! event for managing pies:
-function pies_listen(&$data)
-{
-    //var_dump(def($data, "paws", []));
-    if ($data["food"] < 0) {
-        return ["error" => "Cannot set food to a negative number"];
-    }
+// function pies_listen(&$data)
+// {
+//     //var_dump(def($data, "paws", []));
+//     if ($data["food"] < 0) {
+//         return ["error" => "Cannot set food to a negative number"];
+//     }
 
-    foreach (getPiesPaws($data) as $paw_data) {
-        $paw_data["pies_id"] = $data["pies_id"];
-        $response = manageEntity("pies_paw", $paw_data);
-        if ($error = def($response, "error")) {
-            return ["error" => $error];
-        }
-    }
-    return ["success" => true];
-}
+//     foreach (getPiesPaws($data) as $paw_data) {
+//         $paw_data["pies_id"] = $data["pies_id"];
+//         $response = manageEntity("pies_paw", $paw_data);
+//         if ($error = def($response, "error")) {
+//             return ["error" => $error];
+//         }
+//     }
+//     return ["success" => true];
+// }
 
-function manageEntity($entity_name, &$data)
-{
-    try {
-        //var_dump($entity_name, $data);
+// function manageEntity($entity_name, &$data)
+// {
+//     try {
+//         //var_dump($entity_name, $data);
 
-        $id_column = getEntityIdColumn($entity_name);
-        if (!isset($data[$id_column])) {
-            return ["error" => "No $id_column found in " . json_encode($data)];
-        }
+//         $id_column = getEntityIdColumn($entity_name);
+//         if (!isset($data[$id_column])) {
+//             return ["error" => "No $id_column found in " . json_encode($data)];
+//         }
 
-        $entity_id = $data[$id_column];
-        if ($entity_id === -1) {
-            query("INSERT INTO $entity_name () VALUES ()");
-            // deleting might be necessary in that case
-            $entity_id = getLastInsertedId();
-            $data[$id_column] = $entity_id;
-        } else {
-            $data = array_merge(query("SELECT * FROM $entity_name"), $data);
-        }
+//         $entity_id = $data[$id_column];
+//         if ($entity_id === -1) {
+//             query("INSERT INTO $entity_name () VALUES ()");
+//             // deleting might be necessary in that case
+//             $entity_id = getLastInsertedId();
+//             $data[$id_column] = $entity_id;
+//         } else {
+//             $data = array_merge(query("SELECT * FROM $entity_name"), $data);
+//         }
 
-        if ($entity_name === "pies") {
-            $response = pies_listen($data);
-            if ($error = def($response, "error")) {
-                return ["error" => $error];
-            }
-        }
+//         if ($entity_name === "pies") {
+//             $response = pies_listen($data);
+//             if ($error = def($response, "error")) {
+//                 return ["error" => $error];
+//             }
+//         }
 
-        $update_data = [];
-        foreach ($data as $key => $value) {
-            // _fetched is an array so it own't be included
-            if (!is_array($value)) {
-                $update_data[$key] = $value;
-            }
-        }
+//         $update_data = [];
+//         foreach ($data as $key => $value) {
+//             // _fetched is an array so it own't be included
+//             if (!is_array($value)) {
+//                 $update_data[$key] = $value;
+//             }
+//         }
 
-        $query = "UPDATE " . clean($entity_name) . " SET ";
-        foreach (array_keys($update_data) as $field) {
-            $query .= clean($field) . "=?,";
-        }
-        $query = rtrim($query, ",");
-        $query .= " WHERE " . clean($id_column) . "=" . intval($entity_id);
-        query($query, array_values($update_data));
+//         $query = "UPDATE " . clean($entity_name) . " SET ";
+//         foreach (array_keys($update_data) as $field) {
+//             $query .= clean($field) . "=?,";
+//         }
+//         $query = rtrim($query, ",");
+//         $query .= " WHERE " . clean($id_column) . "=" . intval($entity_id);
+//         query($query, array_values($update_data));
 
-        return ["success" => true];
-    } catch (Exception $e) {
-        var_dump($e);
-        // here u might wanna delete shit
-    }
-}
+//         return ["success" => true];
+//     } catch (Exception $e) {
+//         var_dump($e);
+//         // here u might wanna delete shit
+//     }
+// }

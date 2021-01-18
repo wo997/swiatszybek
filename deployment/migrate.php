@@ -180,6 +180,7 @@ manageTableColumns("uploads", [
 createTable("pies", [
     ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
     ["name" => "food", "type" => "INT"],
+    ["name" => "food_double", "type" => "INT"],
     ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
 ]);
 
