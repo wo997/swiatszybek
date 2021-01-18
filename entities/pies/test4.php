@@ -17,6 +17,7 @@ createTable("pies_paw", [
 
 $entities = [
     // maybe worth it to have those but still, not necessary by the entity manager, but rather for the dev / extention
+    // UPDATE: well, both might need it
     "pies" => [
         "properties" => [
             "food",
@@ -114,7 +115,7 @@ class EntityObject
                 }
                 $query = rtrim($query, ",");
                 $query .= " WHERE " . $this->id_column . "=" . intval($this->data[$this->id_column]);
-                var_dump($query, array_values($update_data));
+                var_dump([$query, array_values($update_data)]);
                 //query($query, array_values($update_data));
                 //return true;
             }
@@ -140,7 +141,12 @@ class EntityObject
 
             $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
 
-            var_dump($query, array_values($insert_data));
+            // TODO: a child must have it's parent ID, especially (or only?) when created / inserted
+            // ANOTHER TODO: XD many to many relation and we are done
+            // except we need to handle object deletion and versioning lol
+            // storing objects in db is easier tho, ezy af to recreate, you just set the data
+
+            var_dump([$query, array_values($insert_data)]);
             //query($query, array_values($insert_data));
             //$entity_id = getLastInsertedId();
             //return $entity_id;
@@ -155,7 +161,7 @@ class EntityObject
         }
 
         if ($quiet === false) {
-            $setter = "SET_" . $this->name . "_" . $var;
+            $setter = "set__" . $this->name . "_" . $var;
             if (function_exists($setter)) {
                 $res = call_user_func($setter, $this, $val);
                 if ($res) { // handle errors maybe?
@@ -179,7 +185,7 @@ class EntityObject
     public function getData($var)
     {
         if ($this->shouldFetch($var)) {
-            $getter = "GET_" . $this->name . "_" . $var;
+            $getter = "get__" . $this->name . "_" . $var;
             if (function_exists($getter)) {
                 $res = call_user_func($getter, $this);
                 if ($res !== null) {
@@ -211,7 +217,7 @@ class EntityObject
         return true;
     }
 
-    private function getIdColumn()
+    public function getIdColumn()
     {
         return getEntityIdColumn($this->name);
     }
@@ -233,66 +239,85 @@ function getEntityIdColumn($name)
 }
 
 // imagine it's another file start
-// function SET_pies_pies_id(EntityObject $obj, $data) // if u don't add it it's completely fine!, it's assumed as default
+// function set__pies_pies_id(EntityObject $obj, $data) // if u don't add it it's completely fine!, it's assumed as default
 // {
 //     
 // }
-function SET_pies_food(EntityObject $obj, $data)
+function set__pies_food(EntityObject $obj, $data)
 {
     // other actions
     $obj->setData("food_double", 2 * $data);
-    $obj->setData("ate_at", date("Y-m-d.h:i:s"));
+    $obj->setData("ate_at", date("Y-m-d.H:i:s"));
 
     // modify value itself, what about errors tho?
     //return $data;
 }
+// what about append?
 
-/*function SET_pies_food_double(EntityObject $obj)
+/*function set__pies_food_double(EntityObject $obj)
 {
     
 }*/
 
-function SET_pies_paws(EntityObject $obj, $data)
+function set__pies_paws(EntityObject $obj, $data)
 {
-    /** @var EntityObject[] */
-    $obj_paws = def($obj->getData("paws"), []);
+    return setManyToOneEntities($obj, "paws", "pies_paw", $data);
+}
 
-    foreach ($data as $paw_data) {
-        if ($paw_data instanceof EntityObject) {
+function get__pies_paws(EntityObject $obj)
+{
+    return getManyToOneEntities($obj, "paws", "pies_paw");
+}
+
+function setManyToOneEntities(EntityObject $obj, $obj_var_name, $child_entity_name, $children_data)
+{
+    //$obj->getId();
+    /** @var EntityObject[] */
+    $children = def($obj->getData($obj_var_name), []);
+
+    foreach ($children_data as $child_data) {
+        if ($child_data instanceof EntityObject) {
             return;
         }
 
-        $pies_paw_id = intval(def($paw_data, "pies_paw_id", -1));
-        if ($pies_paw_id === -1) {
-            $paw = createEntityObject("pies_paw", $paw_data);
-            $obj_paws[] = $paw;
+        $child_id_column = getEntityIdColumn($child_entity_name);
+
+        $child_id = intval(def($child_data, $child_id_column, -1));
+        if ($child_id === -1) {
+            $child = createEntityObject($child_entity_name, $child_data);
+            $children[] = $child;
         } else {
-            foreach ($obj_paws as &$obj_paw) {
-                if ($obj_paw->getId() === $pies_paw_id) {
-                    $obj_paw->setDataFromArray($paw_data);
+            $exists = false;
+            foreach ($children as &$child) {
+                if ($child->getId() === $child_id) {
+                    $child->setDataFromArray($child_data);
+                    $exists = true;
+                    break;
                 }
             }
-            unset($obj_paw);
+            unset($child);
+
+            // if (!$exists) hey that's wrong, foreaches should be run in different order lol
         }
     }
-    return $obj_paws;
+
+    return $children;
 }
 
-function GET_pies_paws(EntityObject $obj)
+function getManyToOneEntities(EntityObject $obj, $obj_var_name, $child_entity_name)
 {
-    $var = "paws";
-
-    if (!isset($obj->data[$var])) {
-        $obj->setData($var, []);
+    if (!isset($obj->data[$obj_var_name])) {
+        $obj->setData($obj_var_name, []);
     }
-    $paws = [];
-    $paws_data = fetchArray("SELECT * FROM pies_paw WHERE pies_id = " . intval($obj->getData("pies_id")));
-    foreach ($paws_data as $paw_data) {
-        $paws[] = createEntityObject("pies_paw", $paw_data);
+    $children = [];
+    $children_data = fetchArray("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
+    foreach ($children_data as $child_data) {
+        $children[] = createEntityObject($child_entity_name, $child_data);
     }
-    $obj->setData($var, $paws, true);
-    return $paws;
+    $obj->setData($obj_var_name, $children, true);
+    return $children;
 }
+
 // imagine it's another file end
 
 $data = [
@@ -317,11 +342,13 @@ if ($pies) {
     $pies->saveToDB();
 }
 
-$pies2 = getEntityObject("pies", 21);
+// $pies2 = getEntityObject("pies", 20);
 
-if ($pies2) {
-    $pies2->setData("ate_at", date("Y-m-d.h:i:s", strtotime("-2 days")));
-    $pies2->saveToDB();
-}
+// if ($pies2) {
+//     $pies2->setData("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));
+//     var_dump(["pies 2 paws: "], $pies2->getData("paws"));
+//     $pies2->saveToDB();
+// }
 
-//var_dump($pies, "\n\n\n", $same_pies, "\n\n\n");
+//var_dump($pies, "\n\n\n", $pies2, "\n\n\n");
+//var_dump($pies2);
