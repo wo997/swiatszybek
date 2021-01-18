@@ -182,6 +182,8 @@ createTable("pies", [
     ["name" => "food", "type" => "INT"],
     ["name" => "food_double", "type" => "INT"],
     ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
+    ["name" => "paws_json", "type" => "TEXT"],
+
 ]);
 
 createTable("pies_paw", [

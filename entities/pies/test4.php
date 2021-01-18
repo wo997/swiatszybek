@@ -50,6 +50,7 @@ class EntityObject
     private $data = []; // row data in DB
     private $fetched = []; // stores info of what relations that were fetched already
     private $curr_data = null; // in case the object existed in DB
+    private $will_delete = false;
 
     public function __construct($name, &$data)
     {
@@ -66,11 +67,18 @@ class EntityObject
             $this->setDataFromArray(def($this->curr_data, []));
             $this->setDataFromArray($data);
         }
+    }
 
-        // make sure u have the id no matter if it was in the constructor data or not
-        if (!isset($this->data[$this->id_column])) {
-            $this->data[$this->id_column] = -1;
-        }
+
+    /**
+     * willDelete
+     *
+     * @param  boolean $delete
+     * @return void
+     */
+    public function willDelete($delete = true)
+    {
+        $this->will_delete = $delete;
     }
 
     /**
@@ -90,6 +98,12 @@ class EntityObject
 
     public function saveToDB()
     {
+        if ($this->will_delete) {
+            $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
+            var_dump([$query]);
+            return;
+        }
+
         if ($this->curr_data) {
             $update_data = [];
             foreach ($this->data as $key => $value) {
@@ -114,12 +128,13 @@ class EntityObject
                     $query .= clean($field) . "=?,";
                 }
                 $query = rtrim($query, ",");
-                $query .= " WHERE " . $this->id_column . "=" . intval($this->data[$this->id_column]);
+                $query .= " WHERE " . $this->id_column . "=" . $this->getId();
                 var_dump([$query, array_values($update_data)]);
                 //query($query, array_values($update_data));
                 //return true;
             }
         } else {
+            // insert
             $insert_data = [];
             foreach ($this->data as $key => $value) {
                 if ($key === $this->id_column) {
@@ -141,11 +156,6 @@ class EntityObject
 
             $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
 
-            // TODO: a child must have it's parent ID, especially (or only?) when created / inserted
-            // ANOTHER TODO: XD many to many relation and we are done
-            // except we need to handle object deletion and versioning lol
-            // storing objects in db is easier tho, ezy af to recreate, you just set the data
-
             var_dump([$query, array_values($insert_data)]);
             //query($query, array_values($insert_data));
             //$entity_id = getLastInsertedId();
@@ -153,23 +163,21 @@ class EntityObject
         }
     }
 
-    public function setData($var, $val, $quiet = false)
+    public function setData($var, $val)
     {
         if ($var === $this->id_column && $this->getId() !== -1) {
             // set id once, ezy
             return;
         }
 
-        if ($quiet === false) {
-            $setter = "set__" . $this->name . "_" . $var;
-            if (function_exists($setter)) {
-                $res = call_user_func($setter, $this, $val);
-                if ($res) { // handle errors maybe?
-                    $val = $res;
-                }
-            } else if (is_array($val)) { // nah
-                return;
+        $setter = "set__" . $this->name . "_" . $var;
+        if (function_exists($setter)) {
+            $res = call_user_func($setter, $this, $val);
+            if ($res) { // handle errors maybe?
+                $val = $res;
             }
+        } else if (is_array($val)) { // nah
+            return;
         }
 
         $this->data[$var] = $val;
@@ -187,13 +195,29 @@ class EntityObject
         if ($this->shouldFetch($var)) {
             $getter = "get__" . $this->name . "_" . $var;
             if (function_exists($getter)) {
-                $res = call_user_func($getter, $this);
-                if ($res !== null) {
-                    return $res;
-                }
+                $val = call_user_func($getter, $this);
+                $this->data[$var] = $val;
+                //if ($val !== null) {}
             }
         }
         return def($this->data, $var, null);
+    }
+
+    public function getAllData()
+    {
+        return $this->data;
+    }
+
+    public function getAllRowData()
+    {
+        $row_data = [];
+        foreach ($this->data as $data) {
+            if ($data instanceof EntityObject) {
+                return;
+            }
+            $row_data[] = $data;
+        }
+        return $this->data;
     }
 
     /**
@@ -224,6 +248,9 @@ class EntityObject
 
     public function getId()
     {
+        if (!isset($this->data[$this->id_column])) {
+            $this->data[$this->id_column] = -1;
+        }
         return $this->getIdFromData($this->data);
     }
 
@@ -261,7 +288,14 @@ function set__pies_food(EntityObject $obj, $data)
 
 function set__pies_paws(EntityObject $obj, $data)
 {
-    return setManyToOneEntities($obj, "paws", "pies_paw", $data);
+    $paws = setManyToOneEntities($obj, "paws", "pies_paw", $data);
+    $paws_data = [];
+    foreach ($paws as $paw) {
+        $paws_data[] = $paw->getAllRowData();
+    }
+    $obj->setData("paws_json", json_encode($paws_data));
+
+    return $paws;
 }
 
 function get__pies_paws(EntityObject $obj)
@@ -269,52 +303,61 @@ function get__pies_paws(EntityObject $obj)
     return getManyToOneEntities($obj, "paws", "pies_paw");
 }
 
+/**
+ * setManyToOneEntities
+ *
+ * @param  mixed $obj
+ * @param  mixed $obj_var_name
+ * @param  mixed $child_entity_name
+ * @param  mixed $children_data
+ * @return EntityObject[]
+ */
 function setManyToOneEntities(EntityObject $obj, $obj_var_name, $child_entity_name, $children_data)
 {
-    //$obj->getId();
     /** @var EntityObject[] */
-    $children = def($obj->getData($obj_var_name), []);
+    $curr_children = def($obj->getData($obj_var_name), []);
 
-    foreach ($children_data as $child_data) {
+    $children_with_id_data = [];
+    $children = [];
+    foreach ($children_data as &$child_data) {
         if ($child_data instanceof EntityObject) {
             return;
         }
 
         $child_id_column = getEntityIdColumn($child_entity_name);
-
         $child_id = intval(def($child_data, $child_id_column, -1));
         if ($child_id === -1) {
+            $child_data[$obj->getIdColumn()] = $obj->getId();
             $child = createEntityObject($child_entity_name, $child_data);
             $children[] = $child;
         } else {
-            $exists = false;
-            foreach ($children as &$child) {
-                if ($child->getId() === $child_id) {
-                    $child->setDataFromArray($child_data);
-                    $exists = true;
-                    break;
-                }
-            }
-            unset($child);
-
-            // if (!$exists) hey that's wrong, foreaches should be run in different order lol
+            $children_with_id_data[$child_id] = $child_data;
         }
     }
+    unset($child_data);
+
+    foreach ($curr_children as &$curr_child) {
+        $child_data = def($children_with_id_data, $curr_child->getId(), null);
+
+        if ($child_data) {
+            $curr_child->setDataFromArray($child_data);
+        } else {
+            $curr_child->willDelete();
+        }
+        $children[] = $curr_child;
+    }
+    unset($child);
 
     return $children;
 }
 
 function getManyToOneEntities(EntityObject $obj, $obj_var_name, $child_entity_name)
 {
-    if (!isset($obj->data[$obj_var_name])) {
-        $obj->setData($obj_var_name, []);
-    }
     $children = [];
     $children_data = fetchArray("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
     foreach ($children_data as $child_data) {
         $children[] = createEntityObject($child_entity_name, $child_data);
     }
-    $obj->setData($obj_var_name, $children, true);
     return $children;
 }
 
