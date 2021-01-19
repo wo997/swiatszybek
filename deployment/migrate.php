@@ -177,21 +177,6 @@ manageTableColumns("uploads", [
     ["name" => "user_id", "type" => "INT", "null" => true, "index" => "index"],
 ]);
 
-createTable("pies", [
-    ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
-    ["name" => "food", "type" => "INT"],
-    ["name" => "food_double", "type" => "INT"],
-    ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
-    ["name" => "paws_json", "type" => "TEXT"],
-
-]);
-
-createTable("pies_paw", [
-    ["name" => "pies_paw_id", "type" => "INT", "index" => "primary", "increment" => true],
-    ["name" => "pies_id", "type" => "INT", "index" => "index"],
-    ["name" => "name", "type" => "TINYTEXT"],
-]);
-
 createTable("page", [
     ["name" => "page_id", "type" => "INT", "index" => "primary", "increment" => true],
     ["name" => "url", "type" => "TINYTEXT"], // I think we should index that field ezy
@@ -200,6 +185,22 @@ createTable("page", [
     ["name" => "html_content", "type" => "MEDIUMTEXT"],
     ["name" => "settings_json", "type" => "MEDIUMTEXT"],
     ["name" => "published", "type" => "TINYINT(1)"],
+]);
+
+
+
+createTable("pies", [
+    ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "food", "type" => "INT"],
+    ["name" => "food_double", "type" => "INT"],
+    ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
+    ["name" => "paws_json", "type" => "TEXT"],
+]);
+
+createTable("pies_paw", [
+    ["name" => "pies_paw_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "pies_id", "type" => "INT", "index" => "index"],
+    ["name" => "name", "type" => "TINYTEXT"],
 ]);
 
 echo "<h3>✅ All migrations completed</h3>";

@@ -3,16 +3,40 @@
 class EntityManager
 {
     private static $entities = [];
+    private static $entities_with_parent = [];
 
-    public static function registerEntity($name, $data)
+    public static function registerEntity($name, $data = [])
     {
         if (!isset(self::$entities[$name])) {
             self::$entities[$name] = [
-                "props" => []
+                "props" => [],
+                "parent" => null
             ];
         }
+
+        $parent = def(self::$entities_with_parent, $name, null);
+        if ($parent) {
+            $data["parent"] = $parent;
+        }
+
+        // it should tell other entities that there is a prop that is a child of other entity ezy
         if (isset($data["props"])) {
             self::$entities[$name]["props"] = array_merge($data["props"], self::$entities[$name]["props"]);
+
+            foreach (self::$entities[$name]["props"] as $prop) {
+                $prop_type = $prop["type"];
+
+                if ($prop_type && endsWith($prop_type, "[]")) {
+                    $child_entity_name = substr($prop_type, 0, -2);
+
+                    self::$entities_with_parent[$child_entity_name]["parent"] = $name;
+                    self::registerEntity($child_entity_name);
+                }
+            }
+        }
+
+        if (isset($data["parent"])) {
+            self::$entities[$name]["parent"] = $data["parent"];
         }
     }
 
@@ -42,8 +66,73 @@ class EntityManager
      */
     public static function getById($name, $id)
     {
-        $data = [getEntityIdColumn($name) => $id];
+        $data = [self::getEntityIdColumn($name) => $id];
         return new EntityObject($name, $data);
+    }
+
+    public static function getEntityIdColumn($name)
+    {
+        return $name . "_id";
+    }
+
+    /**
+     * setManyToOneEntities
+     *
+     * @param  mixed $obj
+     * @param  mixed $obj_prop_name
+     * @param  mixed $child_entity_name
+     * @param  mixed $children_data
+     * @return EntityObject[]
+     */
+    public static function setManyToOneEntities(EntityObject $obj, $obj_prop_name, $child_entity_name, $children_data)
+    {
+        /** @var EntityObject[] */
+        $curr_children = def($obj->getProp($obj_prop_name), []);
+
+        $children_with_id_data = [];
+        $children = [];
+        foreach ($children_data as &$child_data) {
+            if ($child_data instanceof EntityObject) {
+                return;
+            }
+
+            $child_id_column = EntityManager::getEntityIdColumn($child_entity_name);
+            $child_id = intval(def($child_data, $child_id_column, -1));
+            if ($child_id === -1) {
+                $child_data[$obj->getIdColumn()] = $obj->getId();
+                $child = EntityManager::getFromData($child_entity_name, $child_data);
+                $children[] = $child;
+            } else {
+                $children_with_id_data[$child_id] = $child_data;
+            }
+        }
+        unset($child_data);
+
+        foreach ($curr_children as &$curr_child) {
+            $child_data = def($children_with_id_data, $curr_child->getId(), null);
+
+            if ($child_data) {
+                $curr_child->setVarFromArray($child_data);
+            } else {
+                $curr_child->willDelete();
+            }
+            $children[] = $curr_child;
+        }
+        unset($child);
+
+        return $children;
+    }
+
+    public static function getManyToOneEntities(EntityObject $obj, $child_entity_name)
+    {
+        $children = [];
+        $children_data = fetchArray("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
+        foreach ($children_data as $child_data) {
+            $child = EntityManager::getFromData($child_entity_name, $child_data);
+            $child->setParent($obj);
+            $children[] = $child;
+        }
+        return $children;
     }
 }
 
@@ -62,6 +151,7 @@ createTable("pies_paw", [
 ]);
 */
 
+// what about registering events like that? it would definitely work
 EntityManager::registerEntity("pies", [
     "props" => [
         "food" => ["type" => "number"],
@@ -76,6 +166,17 @@ EntityManager::registerEntity("pies", [
         "paws" => ["type" => "pies_paw[]"]
     ],
 ]);
+
+EntityManager::registerEntity("pies_paw", [
+    "props" => [
+        "pies_id" => ["type" => "number"],
+        "name" => ["type" => "string"],
+    ],
+    //"parent" => ["type" => "pies"] // entity manager understands that and assigns it for you :*
+]);
+
+//var_dump(EntityManager::getEntityData(("pies_paw")));
+//die;
 
 
 // imagine it's another file start
@@ -127,6 +228,7 @@ class EntityObject
     private $fetched = []; // stores info of what relations that were fetched already
     private $curr_data = null; // in case the object existed in DB
     private $will_delete = false;
+    private $parent = null; // in case there is any
 
     public function __construct($name, &$data)
     {
@@ -249,7 +351,7 @@ class EntityObject
         $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
         if ($prop_type && endsWith($prop_type, "[]")) {
             $child_entity_name = substr($prop_type, 0, -2);
-            setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
+            EntityManager::setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
         }
 
         $setter = "set__" . $this->name . "_" . $prop_name; // TODO: setters as events?
@@ -283,7 +385,7 @@ class EntityObject
             $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $child_entity_name = substr($prop_type, 0, -2);
-                $this->data[$prop_name] =  getManyToOneEntities($this, $child_entity_name);
+                $this->data[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name);
             }
 
             $getter = "get__" . $this->name . "_" . $prop_name;
@@ -294,6 +396,22 @@ class EntityObject
             }
         }
         return def($this->data, $prop_name, null);
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getParent()
+    {
+        if (!$this->parent) {
+            $parent_name = def(EntityManager::getEntityData($this->name), ["parent", "type"]);
+            if ($parent_name) {
+                $this->parent = EntityManager::getById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
+            }
+        }
+        return $this->parent;
     }
 
     public function getData()
@@ -336,7 +454,7 @@ class EntityObject
 
     public function getIdColumn()
     {
-        return getEntityIdColumn($this->name);
+        return EntityManager::getEntityIdColumn($this->name);
     }
 
     public function getId()
@@ -351,69 +469,6 @@ class EntityObject
     {
         return intval(def($data, $this->id_column, -1));
     }
-}
-
-function getEntityIdColumn($name)
-{
-    return $name . "_id";
-}
-
-/**
- * setManyToOneEntities
- *
- * @param  mixed $obj
- * @param  mixed $obj_prop_name
- * @param  mixed $child_entity_name
- * @param  mixed $children_data
- * @return EntityObject[]
- */
-function setManyToOneEntities(EntityObject $obj, $obj_prop_name, $child_entity_name, $children_data)
-{
-    /** @var EntityObject[] */
-    $curr_children = def($obj->getProp($obj_prop_name), []);
-
-    $children_with_id_data = [];
-    $children = [];
-    foreach ($children_data as &$child_data) {
-        if ($child_data instanceof EntityObject) {
-            return;
-        }
-
-        $child_id_column = getEntityIdColumn($child_entity_name);
-        $child_id = intval(def($child_data, $child_id_column, -1));
-        if ($child_id === -1) {
-            $child_data[$obj->getIdColumn()] = $obj->getId();
-            $child = EntityManager::getFromData($child_entity_name, $child_data);
-            $children[] = $child;
-        } else {
-            $children_with_id_data[$child_id] = $child_data;
-        }
-    }
-    unset($child_data);
-
-    foreach ($curr_children as &$curr_child) {
-        $child_data = def($children_with_id_data, $curr_child->getId(), null);
-
-        if ($child_data) {
-            $curr_child->setVarFromArray($child_data);
-        } else {
-            $curr_child->willDelete();
-        }
-        $children[] = $curr_child;
-    }
-    unset($child);
-
-    return $children;
-}
-
-function getManyToOneEntities(EntityObject $obj, $child_entity_name)
-{
-    $children = [];
-    $children_data = fetchArray("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
-    foreach ($children_data as $child_data) {
-        $children[] = EntityManager::getFromData($child_entity_name, $child_data);
-    }
-    return $children;
 }
 
 $data = [
@@ -432,19 +487,30 @@ $data = [
 ];
 
 // TODO: transactions :P
-// $pies = EntityObject::getFromData("pies", $data);
+$pies = EntityManager::getFromData("pies", $data);
 
-// if ($pies) {
-//     $pies->saveToDB();
+$pies_paw_8 = EntityManager::getById("pies_paw", 8);
+$pies_paw_8->willDelete();
+$pies_paw_8->saveToDB();
+
+//var_dump($pies_paw_8->getParent());
+
+/** @var EntityObject[] */
+//$pies_paws = $pies->getProp("paws");
+//$pies_paws[1]->willDelete(); actually deletes pies_paw_8
+//var_dump();
+
+//if ($pies) {
+//$pies->saveToDB();
+//}
+
+// $pies2 = EntityManager::getById("pies", 20);
+
+// if ($pies2) {
+//     $pies2->setProp("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));
+//     var_dump(["pies 2 paws: "], $pies2->getProp("paws"));
+//     $pies2->saveToDB();
 // }
-
-$pies2 = EntityManager::getById("pies", 20);
-
-if ($pies2) {
-    $pies2->setProp("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));
-    var_dump(["pies 2 paws: "], $pies2->getProp("paws"));
-    $pies2->saveToDB();
-}
 
 //var_dump($pies, "\n\n\n", $pies2, "\n\n\n");
 //var_dump($pies2);
