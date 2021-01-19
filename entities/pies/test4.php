@@ -1,5 +1,52 @@
 <?php //route[{ADMIN}entity_test]
 
+class EntityManager
+{
+    private static $entities = [];
+
+    public static function registerEntity($name, $data)
+    {
+        if (!isset(self::$entities[$name])) {
+            self::$entities[$name] = [
+                "props" => []
+            ];
+        }
+        if (isset($data["props"])) {
+            self::$entities[$name]["props"] = array_merge($data["props"], self::$entities[$name]["props"]);
+        }
+    }
+
+    public static function getEntityData($name)
+    {
+        return def(self::$entities, $name, null);
+    }
+
+    /**
+     * if you pass just the ID it will act like getById
+     *
+     * @param  string $name
+     * @param  array $data
+     * @return EntityObject
+     */
+    public static function getFromData($name, $data)
+    {
+        return new EntityObject($name, $data);
+    }
+
+    /**
+     * createById
+     *
+     * @param  string $name
+     * @param  number $id
+     * @return EntityObject
+     */
+    public static function getById($name, $id)
+    {
+        $data = [getEntityIdColumn($name) => $id];
+        return new EntityObject($name, $data);
+    }
+}
+
 /*
 createTable("pies", [
     ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
@@ -15,39 +62,62 @@ createTable("pies_paw", [
 ]);
 */
 
-// TODO: instead of creating app scope, maybe we should have static classes?
-// or even raw classes, cause why not, we do instantiate the user on each request
-function getEntitiesData()
-{
-    $entities = [
-        "pies" => [
-            "props" => [
-                "food" => ["type" => "number"],
-                "food_double" => ["type" => "number"],
-                "ate_at" => ["type" => "datetime"],
-                "paws" => ["type" => "pies_paw[]"]
-            ],
-        ],
-        "pies_paw" => [
-            "props" => [
-                "pies_id" => ["type" => "number"],
-                "name" => ["type" => "number"],
-            ]
-        ],
-    ];
+EntityManager::registerEntity("pies", [
+    "props" => [
+        "food" => ["type" => "number"],
+        "food_double" => ["type" => "number"],
+        "ate_at" => ["type" => "datetime"],
+    ],
+]);
 
-    return $entities;
+// this can be a module yay
+EntityManager::registerEntity("pies", [
+    "props" => [
+        "paws" => ["type" => "pies_paw[]"]
+    ],
+]);
+
+
+// imagine it's another file start
+// function set__pies_pies_id(EntityObject $obj, $data) // if u don't add it it's completely fine!, it's assumed as default
+// {
+//     
+// }
+function set__pies_food(EntityObject $obj, $data)
+{
+    // other actions
+    $obj->setProp("food_double", 2 * $data);
+    $obj->setProp("ate_at", date("Y-m-d.H:i:s"));
+
+    // modify value itself, what about errors tho?
+    //return $data;
+}
+// what about append?
+
+/*function set__pies_food_double(EntityObject $obj)
+{
+    
+}*/
+
+function set__pies_paws(EntityObject $obj, $data)
+{
+    $paws = $obj->getProp("paws"); //setManyToOneEntities($obj, "paws", "pies_paw", $data);
+
+    $paws_data = [];
+    foreach ($paws as $paw) {
+        $paws_data[] = $paw->getRowData();
+    }
+    $obj->setProp("paws_json", json_encode($paws_data));
+
+    return $paws;
 }
 
-function createEntityObject($name, $data)
-{
-    return new EntityObject($name, $data);
-}
+// function get__pies_paws(EntityObject $obj)
+// {
+//     return getManyToOneEntities($obj, "pies_paw");
+// }
 
-function getEntityObject($name, $id)
-{
-    return createEntityObject($name, [getEntityIdColumn($name) => $id]);
-}
+// imagine it's another file end
 
 class EntityObject
 {
@@ -176,9 +246,7 @@ class EntityObject
             return;
         }
 
-        $entities_data = getEntitiesData();
-
-        $prop_type = def($entities_data, [$this->name, "props", $prop_name, "type"]);
+        $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
         if ($prop_type && endsWith($prop_type, "[]")) {
             $child_entity_name = substr($prop_type, 0, -2);
             setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
@@ -212,9 +280,7 @@ class EntityObject
     public function getProp($prop_name)
     {
         if ($this->shouldFetchProp($prop_name)) {
-            $entities_data = getEntitiesData();
-
-            $prop_type = def($entities_data, [$this->name, "props", $prop_name, "type"]);
+            $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $child_entity_name = substr($prop_type, 0, -2);
                 $this->data[$prop_name] =  getManyToOneEntities($this, $child_entity_name);
@@ -292,45 +358,6 @@ function getEntityIdColumn($name)
     return $name . "_id";
 }
 
-// imagine it's another file start
-// function set__pies_pies_id(EntityObject $obj, $data) // if u don't add it it's completely fine!, it's assumed as default
-// {
-//     
-// }
-function set__pies_food(EntityObject $obj, $data)
-{
-    // other actions
-    $obj->setProp("food_double", 2 * $data);
-    $obj->setProp("ate_at", date("Y-m-d.H:i:s"));
-
-    // modify value itself, what about errors tho?
-    //return $data;
-}
-// what about append?
-
-/*function set__pies_food_double(EntityObject $obj)
-{
-    
-}*/
-
-function set__pies_paws(EntityObject $obj, $data)
-{
-    $paws = $obj->getProp("paws"); //setManyToOneEntities($obj, "paws", "pies_paw", $data);
-
-    $paws_data = [];
-    foreach ($paws as $paw) {
-        $paws_data[] = $paw->getRowData();
-    }
-    $obj->setProp("paws_json", json_encode($paws_data));
-
-    return $paws;
-}
-
-// function get__pies_paws(EntityObject $obj)
-// {
-//     return getManyToOneEntities($obj, "pies_paw");
-// }
-
 /**
  * setManyToOneEntities
  *
@@ -356,7 +383,7 @@ function setManyToOneEntities(EntityObject $obj, $obj_prop_name, $child_entity_n
         $child_id = intval(def($child_data, $child_id_column, -1));
         if ($child_id === -1) {
             $child_data[$obj->getIdColumn()] = $obj->getId();
-            $child = createEntityObject($child_entity_name, $child_data);
+            $child = EntityManager::getFromData($child_entity_name, $child_data);
             $children[] = $child;
         } else {
             $children_with_id_data[$child_id] = $child_data;
@@ -384,12 +411,10 @@ function getManyToOneEntities(EntityObject $obj, $child_entity_name)
     $children = [];
     $children_data = fetchArray("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
     foreach ($children_data as $child_data) {
-        $children[] = createEntityObject($child_entity_name, $child_data);
+        $children[] = EntityManager::getFromData($child_entity_name, $child_data);
     }
     return $children;
 }
-
-// imagine it's another file end
 
 $data = [
     "pies_id" => 20,
@@ -407,19 +432,19 @@ $data = [
 ];
 
 // TODO: transactions :P
-$pies = createEntityObject("pies", $data);
+// $pies = EntityObject::getFromData("pies", $data);
 
-if ($pies) {
-    $pies->saveToDB();
-}
-
-// $pies2 = getEntityObject("pies", 20);
-
-// if ($pies2) {
-//     $pies2->setProp("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));
-//     var_dump(["pies 2 paws: "], $pies2->getProp("paws"));
-//     $pies2->saveToDB();
+// if ($pies) {
+//     $pies->saveToDB();
 // }
+
+$pies2 = EntityManager::getById("pies", 20);
+
+if ($pies2) {
+    $pies2->setProp("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));
+    var_dump(["pies 2 paws: "], $pies2->getProp("paws"));
+    $pies2->saveToDB();
+}
 
 //var_dump($pies, "\n\n\n", $pies2, "\n\n\n");
 //var_dump($pies2);
