@@ -15,23 +15,29 @@ createTable("pies_paw", [
 ]);
 */
 
-$entities = [
-    // maybe worth it to have those but still, not necessary by the entity manager, but rather for the dev / extention
-    // UPDATE: well, both might need it
-    "pies" => [
-        "properties" => [
-            "food",
-            "food_double",
-            "ate_at"
-        ]
-    ],
-    "pies_paw" => [
-        "properties" => [
-            "pies_id",
-            "name",
-        ]
-    ],
-];
+// TODO: instead of creating app scope, maybe we should have static classes?
+// or even raw classes, cause why not, we do instantiate the user on each request
+function getEntitiesData()
+{
+    $entities = [
+        "pies" => [
+            "props" => [
+                "food" => ["type" => "number"],
+                "food_double" => ["type" => "number"],
+                "ate_at" => ["type" => "datetime"],
+                "paws" => ["type" => "pies_paw[]"]
+            ],
+        ],
+        "pies_paw" => [
+            "props" => [
+                "pies_id" => ["type" => "number"],
+                "name" => ["type" => "number"],
+            ]
+        ],
+    ];
+
+    return $entities;
+}
 
 function createEntityObject($name, $data)
 {
@@ -61,11 +67,11 @@ class EntityObject
 
         $obj_curr_id = $this->getIdFromData($data);
         if ($obj_curr_id === -1) {
-            $this->setDataFromArray($data);
+            $this->setVarFromArray($data);
         } else {
             $this->curr_data = fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
-            $this->setDataFromArray(def($this->curr_data, []));
-            $this->setDataFromArray($data);
+            $this->setVarFromArray(def($this->curr_data, []));
+            $this->setVarFromArray($data);
         }
     }
 
@@ -163,52 +169,73 @@ class EntityObject
         }
     }
 
-    public function setData($var, $val)
+    public function setProp($prop_name, $val)
     {
-        if ($var === $this->id_column && $this->getId() !== -1) {
+        if ($prop_name === $this->id_column && $this->getId() !== -1) {
             // set id once, ezy
             return;
         }
 
-        $setter = "set__" . $this->name . "_" . $var;
+        $entities_data = getEntitiesData();
+
+        $prop_type = def($entities_data, [$this->name, "props", $prop_name, "type"]);
+        if ($prop_type && endsWith($prop_type, "[]")) {
+            $child_entity_name = substr($prop_type, 0, -2);
+            setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
+        }
+
+        $setter = "set__" . $this->name . "_" . $prop_name; // TODO: setters as events?
         if (function_exists($setter)) {
             $res = call_user_func($setter, $this, $val);
-            if ($res) { // handle errors maybe?
+            if ($res !== null) { // handle errors maybe?
                 $val = $res;
             }
         } else if (is_array($val)) { // nah
             return;
         }
 
-        $this->data[$var] = $val;
+        $this->data[$prop_name] = $val;
     }
 
-    public function setDataFromArray($arr)
+    public function warmupProp($prop_name)
     {
-        foreach ($arr as $var => $val) {
-            $this->setData($var, $val);
+        $this->setProp($prop_name, $this->getProp($prop_name));
+    }
+
+    public function setVarFromArray($arr)
+    {
+        foreach ($arr as $prop_name => $val) {
+            $this->setProp($prop_name, $val);
         }
     }
 
-    public function getData($var)
+    public function getProp($prop_name)
     {
-        if ($this->shouldFetch($var)) {
-            $getter = "get__" . $this->name . "_" . $var;
+        if ($this->shouldFetchProp($prop_name)) {
+            $entities_data = getEntitiesData();
+
+            $prop_type = def($entities_data, [$this->name, "props", $prop_name, "type"]);
+            if ($prop_type && endsWith($prop_type, "[]")) {
+                $child_entity_name = substr($prop_type, 0, -2);
+                $this->data[$prop_name] =  getManyToOneEntities($this, $child_entity_name);
+            }
+
+            $getter = "get__" . $this->name . "_" . $prop_name;
             if (function_exists($getter)) {
                 $val = call_user_func($getter, $this);
-                $this->data[$var] = $val;
+                $this->data[$prop_name] = $val;
                 //if ($val !== null) {}
             }
         }
-        return def($this->data, $var, null);
+        return def($this->data, $prop_name, null);
     }
 
-    public function getAllData()
+    public function getData()
     {
         return $this->data;
     }
 
-    public function getAllRowData()
+    public function getRowData()
     {
         $row_data = [];
         foreach ($this->data as $data) {
@@ -223,21 +250,21 @@ class EntityObject
     /**
      * Usually used for comparing changes
      *
-     * @param  mixed $var
+     * @param  mixed $prop_name
      * @return void
      */
-    public function getCurrData($var)
+    public function getCurrData($prop_name)
     {
-        return def($this->curr_data, $var, null);
+        return def($this->curr_data, $prop_name, null);
     }
 
-    private function shouldFetch($var)
+    private function shouldFetchProp($prop_name)
     {
-        if (in_array($var, $this->fetched)) {
+        if (in_array($prop_name, $this->fetched)) {
             return false;
         }
 
-        $this->fetched[] = $var;
+        $this->fetched[] = $prop_name;
         return true;
     }
 
@@ -273,8 +300,8 @@ function getEntityIdColumn($name)
 function set__pies_food(EntityObject $obj, $data)
 {
     // other actions
-    $obj->setData("food_double", 2 * $data);
-    $obj->setData("ate_at", date("Y-m-d.H:i:s"));
+    $obj->setProp("food_double", 2 * $data);
+    $obj->setProp("ate_at", date("Y-m-d.H:i:s"));
 
     // modify value itself, what about errors tho?
     //return $data;
@@ -288,34 +315,35 @@ function set__pies_food(EntityObject $obj, $data)
 
 function set__pies_paws(EntityObject $obj, $data)
 {
-    $paws = setManyToOneEntities($obj, "paws", "pies_paw", $data);
+    $paws = $obj->getProp("paws"); //setManyToOneEntities($obj, "paws", "pies_paw", $data);
+
     $paws_data = [];
     foreach ($paws as $paw) {
-        $paws_data[] = $paw->getAllRowData();
+        $paws_data[] = $paw->getRowData();
     }
-    $obj->setData("paws_json", json_encode($paws_data));
+    $obj->setProp("paws_json", json_encode($paws_data));
 
     return $paws;
 }
 
-function get__pies_paws(EntityObject $obj)
-{
-    return getManyToOneEntities($obj, "paws", "pies_paw");
-}
+// function get__pies_paws(EntityObject $obj)
+// {
+//     return getManyToOneEntities($obj, "pies_paw");
+// }
 
 /**
  * setManyToOneEntities
  *
  * @param  mixed $obj
- * @param  mixed $obj_var_name
+ * @param  mixed $obj_prop_name
  * @param  mixed $child_entity_name
  * @param  mixed $children_data
  * @return EntityObject[]
  */
-function setManyToOneEntities(EntityObject $obj, $obj_var_name, $child_entity_name, $children_data)
+function setManyToOneEntities(EntityObject $obj, $obj_prop_name, $child_entity_name, $children_data)
 {
     /** @var EntityObject[] */
-    $curr_children = def($obj->getData($obj_var_name), []);
+    $curr_children = def($obj->getProp($obj_prop_name), []);
 
     $children_with_id_data = [];
     $children = [];
@@ -340,7 +368,7 @@ function setManyToOneEntities(EntityObject $obj, $obj_var_name, $child_entity_na
         $child_data = def($children_with_id_data, $curr_child->getId(), null);
 
         if ($child_data) {
-            $curr_child->setDataFromArray($child_data);
+            $curr_child->setVarFromArray($child_data);
         } else {
             $curr_child->willDelete();
         }
@@ -351,7 +379,7 @@ function setManyToOneEntities(EntityObject $obj, $obj_var_name, $child_entity_na
     return $children;
 }
 
-function getManyToOneEntities(EntityObject $obj, $obj_var_name, $child_entity_name)
+function getManyToOneEntities(EntityObject $obj, $child_entity_name)
 {
     $children = [];
     $children_data = fetchArray("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
@@ -388,8 +416,8 @@ if ($pies) {
 // $pies2 = getEntityObject("pies", 20);
 
 // if ($pies2) {
-//     $pies2->setData("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));
-//     var_dump(["pies 2 paws: "], $pies2->getData("paws"));
+//     $pies2->setProp("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));
+//     var_dump(["pies 2 paws: "], $pies2->getProp("paws"));
 //     $pies2->saveToDB();
 // }
 
