@@ -23,13 +23,16 @@ class EntityManager
         if (isset($data["props"])) {
             self::$entities[$name]["props"] = array_merge($data["props"], self::$entities[$name]["props"]);
 
-            foreach (self::$entities[$name]["props"] as $prop) {
+            foreach (self::$entities[$name]["props"] as $prop_name => $prop) {
                 $prop_type = $prop["type"];
 
                 if ($prop_type && endsWith($prop_type, "[]")) {
                     $child_entity_name = substr($prop_type, 0, -2);
 
-                    self::$entities_with_parent[$child_entity_name]["parent"] = $name;
+                    self::$entities_with_parent[$child_entity_name] = [
+                        "name" => $name,
+                        "prop" => $prop_name
+                    ];
                     self::registerEntity($child_entity_name);
                 }
             }
@@ -52,7 +55,7 @@ class EntityManager
      * @param  array $data
      * @return EntityObject
      */
-    public static function getFromData($name, $data)
+    public static function getFromData($name, $data) // reference?
     {
         return new EntityObject($name, $data);
     }
@@ -82,10 +85,13 @@ class EntityManager
      * @param  mixed $obj_prop_name
      * @param  mixed $child_entity_name
      * @param  mixed $children_data
+     * @param  mixed $options
      * @return EntityObject[]
      */
     public static function setManyToOneEntities(EntityObject $obj, $obj_prop_name, $child_entity_name, $children_data)
     {
+        //var_dump($options);
+
         /** @var EntityObject[] */
         $curr_children = def($obj->getProp($obj_prop_name), []);
 
@@ -114,7 +120,7 @@ class EntityManager
             if ($child_data) {
                 $curr_child->setVarFromArray($child_data);
             } else {
-                $curr_child->willDelete();
+                $curr_child->setWillDelete();
             }
             $children[] = $curr_child;
         }
@@ -123,15 +129,28 @@ class EntityManager
         return $children;
     }
 
-    public static function getManyToOneEntities(EntityObject $obj, $child_entity_name)
+    public static function getManyToOneEntities(EntityObject $obj, $child_entity_name, $options = [])
     {
+        /** @var EntityObject */
+        $child = def($options, "child", null);
+
         $children = [];
-        $children_data = fetchArray("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
-        foreach ($children_data as $child_data) {
-            $child = EntityManager::getFromData($child_entity_name, $child_data);
-            $child->setParent($obj);
+
+        $query = "SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId();
+
+        if ($child) {
+            $query .= " AND " . EntityManager::getEntityIdColumn($child_entity_name) . " <> " . $child->getId();
             $children[] = $child;
         }
+
+        $children_data = fetchArray($query);
+        foreach ($children_data as $child_data) {
+            $child = EntityManager::getFromData($child_entity_name, $child_data);
+            $child->setParent($obj); // ugh it should be the same thing that's a parent but it loops kinda like if it wasn't the case
+            $children[] = $child;
+        }
+
+        //var_dump(["children <<<<<", $children, "children >>>>>"]);
         return $children;
     }
 }
@@ -175,8 +194,8 @@ EntityManager::registerEntity("pies_paw", [
     //"parent" => ["type" => "pies"] // entity manager understands that and assigns it for you :*
 ]);
 
-//var_dump(EntityManager::getEntityData(("pies_paw")));
-//die;
+// var_dump(EntityManager::getEntityData(("pies_paw")));
+// die;
 
 
 // imagine it's another file start
@@ -202,10 +221,14 @@ function set__pies_food(EntityObject $obj, $data)
 
 function set__pies_paws(EntityObject $obj, $data)
 {
+    /** @var EntityObject[] */
     $paws = $obj->getProp("paws"); //setManyToOneEntities($obj, "paws", "pies_paw", $data);
 
     $paws_data = [];
     foreach ($paws as $paw) {
+        if ($paw->getWillDelete()) {
+            continue;
+        }
         $paws_data[] = $paw->getRowData();
     }
     $obj->setProp("paws_json", json_encode($paws_data));
@@ -229,6 +252,8 @@ class EntityObject
     private $curr_data = null; // in case the object existed in DB
     private $will_delete = false;
     private $parent = null; // in case there is any
+    private $fetched_parent = false;
+    private $saved = false;
 
     public function __construct($name, &$data)
     {
@@ -249,15 +274,21 @@ class EntityObject
 
 
     /**
-     * willDelete
+     * setWillDelete
      *
      * @param  boolean $delete
      * @return void
      */
-    public function willDelete($delete = true)
+    public function setWillDelete($delete = true)
     {
         $this->will_delete = $delete;
     }
+
+    public function getWillDelete()
+    {
+        return $this->will_delete;
+    }
+
 
     /**
      * saveChildren
@@ -269,13 +300,28 @@ class EntityObject
     {
         foreach ($objs as $obj) {
             if ($obj instanceof EntityObject) {
-                $obj->saveToDB();
+                $obj->saveToDB(["propagate_to_parent" => false]);
             }
         }
     }
 
-    public function saveToDB()
+    public function saveToDB($options = [])
     {
+        if ($this->saved) {
+            return;
+        }
+
+        if (def($options, "propagate_to_parent", true) === true) {
+            // possibly delegate
+            $parent = $this->getParent();
+            if ($parent) {
+                $parent->saveToDB();
+                return;
+            }
+        }
+
+        $this->saved = true;
+
         if ($this->will_delete) {
             $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
             var_dump([$query]);
@@ -311,6 +357,8 @@ class EntityObject
                 //query($query, array_values($update_data));
                 //return true;
             }
+
+            return;
         } else {
             // insert
             $insert_data = [];
@@ -338,17 +386,24 @@ class EntityObject
             //query($query, array_values($insert_data));
             //$entity_id = getLastInsertedId();
             //return $entity_id;
+
+            return;
         }
     }
 
-    public function setProp($prop_name, $val)
+    public function setProp($prop_name, $val = null)
     {
         if ($prop_name === $this->id_column && $this->getId() !== -1) {
             // set id once, ezy
             return;
         }
 
+        if ($val === null) {
+            $val = $this->getProp($prop_name);
+        }
+
         $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
+
         if ($prop_type && endsWith($prop_type, "[]")) {
             $child_entity_name = substr($prop_type, 0, -2);
             EntityManager::setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
@@ -367,11 +422,6 @@ class EntityObject
         $this->data[$prop_name] = $val;
     }
 
-    public function warmupProp($prop_name)
-    {
-        $this->setProp($prop_name, $this->getProp($prop_name));
-    }
-
     public function setVarFromArray($arr)
     {
         foreach ($arr as $prop_name => $val) {
@@ -379,13 +429,13 @@ class EntityObject
         }
     }
 
-    public function getProp($prop_name)
+    public function getProp($prop_name, $options = [])
     {
         if ($this->shouldFetchProp($prop_name)) {
             $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $child_entity_name = substr($prop_type, 0, -2);
-                $this->data[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name);
+                $this->data[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
             }
 
             $getter = "get__" . $this->name . "_" . $prop_name;
@@ -398,20 +448,32 @@ class EntityObject
         return def($this->data, $prop_name, null);
     }
 
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-    }
-
+    /**
+     * getParent
+     *
+     * @return EntityObject
+     */
     public function getParent()
     {
-        if (!$this->parent) {
-            $parent_name = def(EntityManager::getEntityData($this->name), ["parent", "type"]);
-            if ($parent_name) {
+        if ($this->fetched_parent === false) {
+            $this->fetched_parent = true;
+
+            $parent_data = def(EntityManager::getEntityData($this->name), ["parent"]);
+            if ($parent_data) {
+                $parent_name = $parent_data["name"];
+                $parent_prop = $parent_data["prop"];
                 $this->parent = EntityManager::getById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
+                // assign the child, a single reference
+                $this->parent->setProp($parent_prop, $this->parent->getProp($parent_prop, ["child" => $this]));
             }
         }
         return $this->parent;
+    }
+
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+        $this->fetched_parent = true;
     }
 
     public function getData()
@@ -465,6 +527,11 @@ class EntityObject
         return $this->getIdFromData($this->data);
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     private function getIdFromData(&$data)
     {
         return intval(def($data, $this->id_column, -1));
@@ -487,21 +554,22 @@ $data = [
 ];
 
 // TODO: transactions :P
-$pies = EntityManager::getFromData("pies", $data);
+/*$pies = EntityManager::getFromData("pies", $data);
+$pies->saveToDB();*/
 
 $pies_paw_8 = EntityManager::getById("pies_paw", 8);
-$pies_paw_8->willDelete();
+$pies_paw_8->setWillDelete();
 $pies_paw_8->saveToDB();
 
 //var_dump($pies_paw_8->getParent());
 
 /** @var EntityObject[] */
 //$pies_paws = $pies->getProp("paws");
-//$pies_paws[1]->willDelete(); actually deletes pies_paw_8
+//$pies_paws[1]->setWillDelete(); actually deletes pies_paw_8
 //var_dump();
 
 //if ($pies) {
-//$pies->saveToDB();
+
 //}
 
 // $pies2 = EntityManager::getById("pies", 20);

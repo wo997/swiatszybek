@@ -22,8 +22,11 @@ function filterArrayKeys($array, $keys)
 {
     $res = [];
     foreach ($keys as $key) {
+        if (!isset($array[$key])) {
+            continue;
+        }
         $res[$key] = $array[$key];
-        // TODO: add isset($array[$key]) and if doesn't exist log it
+        // TODO: add isset($array[$key]) and if doesn't exist log it - nahhhhh
     }
     return $res;
 }
