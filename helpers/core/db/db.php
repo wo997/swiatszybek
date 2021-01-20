@@ -4,6 +4,18 @@ class DB
 {
     // TODO: transactions
 
+    private static $con;
+
+    /**
+     * @param string $sql !SQL_query
+     * @param array $params
+     */
+    public static function connect($db_server, $db_user, $db_pass, $db_name) // returns nothing; update delete insert purpose 
+    {
+        self::$con = new mysqli($db_server, $db_user, $db_pass, $db_name) or die("Failed to connect to MySQL: " . mysqli_connect_error());
+        self::$con->set_charset("utf8mb4");
+    }
+
     /**
      * @param string $sql !SQL_query
      * @param array $params
@@ -20,15 +32,13 @@ class DB
      */
     public static function fetchArr($sql, $params = [], $give_response = true)
     {
-        global $con;
-
         try {
             // TODO: apply table prefixes with sql string replace, might never happen but in emergency u can try
             // way more effortless comparing to other solutions, we dont want a developer to die typing these.
             // for example:
             // 'FROM ' => 'FROM $prefix_'
             // 'JOIN ' => 'JOIN $prefix_'
-            $stmt = $con->prepare($sql);
+            $stmt = self::$con->prepare($sql);
             $paramCount = count($params);
             if ($paramCount) {
                 $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
@@ -84,8 +94,7 @@ class DB
 
     public static function insertedId()
     {
-        global $con;
-        return mysqli_insert_id($con);
+        return mysqli_insert_id(self::$con);
     }
 
     /**
@@ -97,11 +106,10 @@ class DB
      */
     public static function escape($var, $quote = true)
     {
-        global $con;
         if (!preg_match("/\D/", $var)) {
             $ret = intval($var);
         } else {
-            $ret = mysqli_real_escape_string($con, $var);
+            $ret = mysqli_real_escape_string(self::$con, $var);
         }
         if ($quote) {
             $ret = "'$ret'";
