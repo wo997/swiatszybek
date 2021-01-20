@@ -402,7 +402,12 @@ class EntityObject
             $val = $this->getProp($prop_name);
         }
 
-        $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
+        $prop_data = def(EntityManager::getEntityData($this->name), ["props", $prop_name]);
+        $prop_type = def($prop_data, "type", "");
+
+        if (!$prop_data || !$prop_type) {
+            return; // error?
+        }
 
         if ($prop_type && endsWith($prop_type, "[]")) {
             $child_entity_name = substr($prop_type, 0, -2);
@@ -541,6 +546,7 @@ class EntityObject
 $data = [
     "pies_id" => 20,
     "food" => 666,
+    "unknown_field" => 12345,
     "paws" => [
         [
             "pies_paw_id" => 8, // change
@@ -554,12 +560,12 @@ $data = [
 ];
 
 // TODO: transactions :P
-/*$pies = EntityManager::getFromData("pies", $data);
-$pies->saveToDB();*/
+$pies = EntityManager::getFromData("pies", $data);
+$pies->saveToDB();
 
-$pies_paw_8 = EntityManager::getById("pies_paw", 8);
-$pies_paw_8->setWillDelete();
-$pies_paw_8->saveToDB();
+// $pies_paw_8 = EntityManager::getById("pies_paw", 8);
+// $pies_paw_8->setWillDelete();
+// $pies_paw_8->saveToDB();
 
 //var_dump($pies_paw_8->getParent());
 
