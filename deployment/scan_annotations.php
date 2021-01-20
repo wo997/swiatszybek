@@ -39,7 +39,7 @@ scanDirectories(
         } else if ($event = getAnnotationPHP("event", $first_line)) {
             $_link_event_paths[$event][] = "  '$path'";
         } else if ($hook = getAnnotationPHP("hook", $first_line)) {
-            $_link_hooks_paths[$hook][] = $path;
+            $_link_hooks_paths[$hook][] = "include_once \"$path\";";
         }
     }
 );
@@ -63,14 +63,12 @@ $out .= "];";
 
 saveFile(BUILDS_PATH . "link_event_paths.php", $out);
 
-$out = "<?php\n";
-foreach ($_link_hooks_paths as $event => $paths_strings) {
-    foreach ($paths_strings as $path) {
-        $out .= "include_once \"$path\";\n";
-    }
+foreach ($_link_hooks_paths as $name => $paths_strings) {
+    $out = "<?php\n";
+    $out .= implode("\n", $paths_strings);
+    saveFile(BUILDS_PATH . "hooks/" . "$name.php", $out);
 }
 
-saveFile(BUILDS_PATH . "include_hooks.php", $out);
 
 // that's nasty, will work as u build it
 //@include BUILDS_PATH . "include_hooks.php";

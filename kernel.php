@@ -80,7 +80,8 @@ if (DEV_MODE) {
 // run always? cause why not
 include "deployment/automatic_build.php";
 
-@include BUILDS_PATH . "include_hooks.php";
+// not earlier than the build cause it could break something
+@include BUILDS_PATH . "hooks/helper.php";
 
 // TODO: define or setting
 $currency = "PLN"; // used by p24

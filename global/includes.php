@@ -7,11 +7,11 @@ if (!def($page_data, "seo_image", "")) {
 if (defined("ROUTE")) {
     $js_schema = getJsSchema();
     $groups = def($js_schema, "files_groups", []);
-    $has_js = isset($groups[BUILD_VIEWS_PATH_PARTIAL . ROUTE]);
+    $has_js = isset($groups["views/" . ROUTE]);
 
     $css_schema = getCssSchema();
     $groups = def($css_schema, "files_groups", []);
-    $has_css = isset($groups[BUILD_VIEWS_PATH_PARTIAL . ROUTE]);
+    $has_css = isset($groups["views/" . ROUTE]);
 } else {
     $has_css = false;
     $has_js = false;
@@ -169,8 +169,8 @@ if (defined("ROUTE")) {
 </style>
 
 <?php if ($has_js) { ?>
-    <script src="/<?= BUILD_VIEWS_PATH . ROUTE . ".js" ?>?v=<?= JS_RELEASE ?>"></script>
+    <script src="/<?= BUILDS_PATH . "views/" . ROUTE . ".js" ?>?v=<?= JS_RELEASE ?>"></script>
 <?php } ?>
 <?php if ($has_css) { ?>
-    <link href="/<?= BUILD_VIEWS_PATH . ROUTE . ".css" ?>?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+    <link href="/<?= BUILDS_PATH . "views/" . ROUTE . ".css" ?>?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 <?php } ?>

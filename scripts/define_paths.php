@@ -12,6 +12,3 @@ define("THEME_SETTINGS_PATH", SETTINGS_PATH . "theme/");
 define("GENERAL_SETTINGS_PATH", SETTINGS_PATH . "general/");
 
 define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
-
-define("BUILD_VIEWS_PATH_PARTIAL", "views/");
-define("BUILD_VIEWS_PATH", BUILDS_PATH . BUILD_VIEWS_PATH_PARTIAL);
