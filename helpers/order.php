@@ -1,4 +1,4 @@
-<?php //helper[global]
+<?php //hook[helper]
 
 //var_dump(123);
 

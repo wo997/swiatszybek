@@ -77,6 +77,10 @@ include "scripts/server_settings.php";
 if (DEV_MODE) {
     include "scripts/errors.php";
 }
+// run always? cause why not
+include "deployment/automatic_build.php";
+
+@include BUILDS_PATH . "include_hooks.php";
 
 // TODO: define or setting
 $currency = "PLN"; // used by p24
@@ -103,7 +107,3 @@ include "scripts/preload_data.php";
 
 // in case e-mails are not configured (for debugging), kinda weird it's not a part of settings, it's more like a dev mode in reality, there is a need to define it on the code level
 define("DISPLAY_EMAIL", false);
-
-if (DEV_MODE) {
-    include "deployment/automatic_build.php";
-}

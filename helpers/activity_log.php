@@ -1,4 +1,4 @@
-<?php //helper[global]
+<?php //hook[helper]
 
 function addZamowienieLog($zamowienie_id, $log, $previous_state = "", $current_state = "", $log_user_id = null)
 {

@@ -1,4 +1,4 @@
-<?php //helper[global]
+<?php //hook[helper]
 
 function validateEmail($val)
 {

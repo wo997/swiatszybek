@@ -1,26 +1,27 @@
 <?php
 
-global $image_default_dimensions;
+// we don't need it lol, cause saveFile handles it for us <3
+// global $image_default_dimensions;
 
-$project_directories = [
-    BUILDS_PATH,
+// $project_directories = [
+//     BUILDS_PATH,
 
-    UPLOADS_PATH,
-    UPLOADS_PLAIN_PATH,
-    UPLOADS_VIDEOS_PATH,
+//     UPLOADS_PATH,
+//     UPLOADS_PLAIN_PATH,
+//     UPLOADS_VIDEOS_PATH,
 
-    SETTINGS_PATH,
-    MODULE_SETTINGS_PATH,
-    THEME_SETTINGS_PATH,
-    GENERAL_SETTINGS_PATH,
+//     SETTINGS_PATH,
+//     MODULE_SETTINGS_PATH,
+//     THEME_SETTINGS_PATH,
+//     GENERAL_SETTINGS_PATH,
 
-    BUILD_VIEWS_PATH
-];
+//     BUILD_VIEWS_PATH
+// ];
 
-foreach ($image_default_dimensions as $size_name => $area) {
-    $project_directories[] = UPLOADS_PATH . $size_name;
-}
+// foreach ($image_default_dimensions as $size_name => $area) {
+//     $project_directories[] = UPLOADS_PATH . $size_name;
+// }
 
-foreach ($project_directories as $directory) {
-    createDir($directory);
-}
+// foreach ($project_directories as $directory) {
+//     createDir($directory);
+// }
