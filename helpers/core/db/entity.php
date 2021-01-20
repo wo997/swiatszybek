@@ -153,4 +153,18 @@ class Entity
         //var_dump(["children <<<<<", $children, "children >>>>>"]);
         return $children;
     }
+
+    public static function setter($name, $prop, $callback)
+    {
+        EventListener::register($name . "_set_" . $prop, function ($params) use ($callback) {
+            $callback($params["obj"], $params["val"]);
+        });
+    }
+
+    public static function getter($name, $prop, $callback)
+    {
+        EventListener::register($name . "_get_" . $prop, function ($params) use ($callback) {
+            $callback($params["obj"]);
+        });
+    }
 }

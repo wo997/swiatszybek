@@ -204,7 +204,7 @@ function initSlider(elem) {
 			slider.grabbed_input_y = undefined;
 		},
 		resize: () => {
-			const target_width = evalCss(node.dataset.slide_width, node);
+			const target_width = evalCss(def(node.dataset.slide_width, "100%"), node);
 
 			const slider_width = node.offsetWidth;
 			const visible_slide_count = slider_width / target_width;

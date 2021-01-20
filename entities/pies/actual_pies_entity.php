@@ -11,7 +11,7 @@ Entity::register("pies", [
 // this can be a module yay
 Entity::register("pies", [
     "props" => [
-        "paws" => ["type" => "pies_paw[]"]
+        "paws" => ["type" => "pies_paw[]"] // that's enough to tell the entity manager that piew_paw is its child
     ],
 ]);
 
@@ -20,31 +20,22 @@ Entity::register("pies_paw", [
         "pies_id" => ["type" => "number"],
         "name" => ["type" => "string"],
     ],
-    //"parent" => ["type" => "pies"] // entity manager understands that and assigns it for you :*
 ]);
 
-EventListener::register("pies_set_food", function ($params) {
-    /** @var EntityObject */
-    $obj = $params["obj"];
-    $val = $params["val"];
-
+Entity::setter("pies", "food", function (EntityObject $obj, $val) {
     //$obj->setProp("food_double", 2 * $val);
     $obj->setProp("ate_at", date("Y-m-d.H:i:s"));
 });
 
-EventListener::register("pies_set_food", function ($params) {
-    /** @var EntityObject */
-    $obj = $params["obj"];
-    $val = $params["val"];
-
+Entity::setter("pies", "food", function (EntityObject $obj, $val) {
     $obj->setProp("food_double", 2 * $val);
     //$obj->setProp("ate_at", date("Y-m-d.H:i:s"));
 });
 
-EventListener::register("pies_set_paws", function ($params) {
-    /** @var EntityObject */
-    $obj = $params["obj"];
-
+Entity::setter("pies", "paws", function (EntityObject $obj, $val) {
+    // TODO: HEY! I have an idea, what if the plugin just added those type annotations? That's all we really need lol
+    // won't make the code cleaner, but that's not the point
+    // btw it will have to know the difference between an actual class or typedef, but once we have them listed that's not a big deal
     /** @var EntityObject[] */
     $paws = $obj->getProp("paws");
 
