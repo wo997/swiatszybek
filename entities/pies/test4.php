@@ -5,7 +5,7 @@ class EntityManager
     private static $entities = [];
     private static $entities_with_parent = [];
 
-    public static function registerEntity($name, $data = [])
+    public static function registerEntity($name, $props = [])
     {
         if (!isset(self::$entities[$name])) {
             self::$entities[$name] = [
@@ -16,12 +16,12 @@ class EntityManager
 
         $parent = def(self::$entities_with_parent, $name, null);
         if ($parent) {
-            $data["parent"] = $parent;
+            $props["parent"] = $parent;
         }
 
         // it should tell other entities that there is a prop that is a child of other entity ezy
-        if (isset($data["props"])) {
-            self::$entities[$name]["props"] = array_merge($data["props"], self::$entities[$name]["props"]);
+        if (isset($props["props"])) {
+            self::$entities[$name]["props"] = array_merge($props["props"], self::$entities[$name]["props"]);
 
             foreach (self::$entities[$name]["props"] as $prop_name => $prop) {
                 $prop_type = $prop["type"];
@@ -38,12 +38,12 @@ class EntityManager
             }
         }
 
-        if (isset($data["parent"])) {
-            self::$entities[$name]["parent"] = $data["parent"];
+        if (isset($props["parent"])) {
+            self::$entities[$name]["parent"] = $props["parent"];
         }
     }
 
-    public static function getEntityData($name)
+    public static function getEntityProps($name)
     {
         return def(self::$entities, $name, null);
     }
@@ -52,12 +52,12 @@ class EntityManager
      * if you pass just the ID it will act like getById
      *
      * @param  string $name
-     * @param  array $data
+     * @param  array $props
      * @return EntityObject
      */
-    public static function getFromData($name, $data) // reference?
+    public static function getFromProps($name, $props) // reference?
     {
-        return new EntityObject($name, $data);
+        return new EntityObject($name, $props);
     }
 
     /**
@@ -69,8 +69,8 @@ class EntityManager
      */
     public static function getById($name, $id)
     {
-        $data = [self::getEntityIdColumn($name) => $id];
-        return new EntityObject($name, $data);
+        $props = [self::getEntityIdColumn($name) => $id];
+        return new EntityObject($name, $props);
     }
 
     public static function getEntityIdColumn($name)
@@ -84,41 +84,41 @@ class EntityManager
      * @param  mixed $obj
      * @param  mixed $obj_prop_name
      * @param  mixed $child_entity_name
-     * @param  mixed $children_data
+     * @param  mixed $children_props
      * @param  mixed $options
      * @return EntityObject[]
      */
-    public static function setManyToOneEntities(EntityObject $obj, $obj_prop_name, $child_entity_name, $children_data)
+    public static function setManyToOneEntities(EntityObject $obj, $obj_prop_name, $child_entity_name, $children_props)
     {
         //var_dump($options);
 
         /** @var EntityObject[] */
         $curr_children = def($obj->getProp($obj_prop_name), []);
 
-        $children_with_id_data = [];
+        $children_with_id_props = [];
         $children = [];
-        foreach ($children_data as &$child_data) {
-            if ($child_data instanceof EntityObject) {
+        foreach ($children_props as &$child_props) {
+            if ($child_props instanceof EntityObject) {
                 return;
             }
 
             $child_id_column = EntityManager::getEntityIdColumn($child_entity_name);
-            $child_id = intval(def($child_data, $child_id_column, -1));
+            $child_id = intval(def($child_props, $child_id_column, -1));
             if ($child_id === -1) {
-                $child_data[$obj->getIdColumn()] = $obj->getId();
-                $child = EntityManager::getFromData($child_entity_name, $child_data);
+                $child_props[$obj->getIdColumn()] = $obj->getId();
+                $child = EntityManager::getFromProps($child_entity_name, $child_props);
                 $children[] = $child;
             } else {
-                $children_with_id_data[$child_id] = $child_data;
+                $children_with_id_props[$child_id] = $child_props;
             }
         }
-        unset($child_data);
+        unset($child_props);
 
         foreach ($curr_children as &$curr_child) {
-            $child_data = def($children_with_id_data, $curr_child->getId(), null);
+            $child_props = def($children_with_id_props, $curr_child->getId(), null);
 
-            if ($child_data) {
-                $curr_child->setVarFromArray($child_data);
+            if ($child_props) {
+                $curr_child->setVarFromArray($child_props);
             } else {
                 $curr_child->setWillDelete();
             }
@@ -143,9 +143,9 @@ class EntityManager
             $children[] = $child;
         }
 
-        $children_data = fetchArray($query);
-        foreach ($children_data as $child_data) {
-            $child = EntityManager::getFromData($child_entity_name, $child_data);
+        $children_props = fetchArray($query);
+        foreach ($children_props as $child_props) {
+            $child = EntityManager::getFromProps($child_entity_name, $child_props);
             $child->setParent($obj); // ugh it should be the same thing that's a parent but it loops kinda like if it wasn't the case
             $children[] = $child;
         }
@@ -194,23 +194,23 @@ EntityManager::registerEntity("pies_paw", [
     //"parent" => ["type" => "pies"] // entity manager understands that and assigns it for you :*
 ]);
 
-// var_dump(EntityManager::getEntityData(("pies_paw")));
+// var_dump(EntityManager::getEntityProps(("pies_paw")));
 // die;
 
 
 // imagine it's another file start
-// function set__pies_pies_id(EntityObject $obj, $data) // if u don't add it it's completely fine!, it's assumed as default
+// function set__pies_pies_id(EntityObject $obj, $props) // if u don't add it it's completely fine!, it's assumed as default
 // {
 //     
 // }
-function set__pies_food(EntityObject $obj, $data)
+function set__pies_food(EntityObject $obj, $props)
 {
     // other actions
-    $obj->setProp("food_double", 2 * $data);
+    $obj->setProp("food_double", 2 * $props);
     $obj->setProp("ate_at", date("Y-m-d.H:i:s"));
 
     // modify value itself, what about errors tho?
-    //return $data;
+    //return $props;
 }
 // what about append?
 
@@ -219,19 +219,19 @@ function set__pies_food(EntityObject $obj, $data)
     
 }*/
 
-function set__pies_paws(EntityObject $obj, $data)
+function set__pies_paws(EntityObject $obj, $props)
 {
     /** @var EntityObject[] */
-    $paws = $obj->getProp("paws"); //setManyToOneEntities($obj, "paws", "pies_paw", $data);
+    $paws = $obj->getProp("paws"); //setManyToOneEntities($obj, "paws", "pies_paw", $props);
 
-    $paws_data = [];
+    $paws_props = [];
     foreach ($paws as $paw) {
         if ($paw->getWillDelete()) {
             continue;
         }
-        $paws_data[] = $paw->getRowData();
+        $paws_props[] = $paw->getRowProps();
     }
-    $obj->setProp("paws_json", json_encode($paws_data));
+    $obj->setProp("paws_json", json_encode($paws_props));
 
     return $paws;
 }
@@ -247,28 +247,28 @@ class EntityObject
 {
     private $name;
     private $id_column;
-    private $data = []; // row data in DB
+    private $props = []; // row props in DB
     private $fetched = []; // stores info of what relations that were fetched already
-    private $curr_data = null; // in case the object existed in DB
+    private $curr_props = null; // in case the object existed in DB
     private $will_delete = false;
     private $parent = null; // in case there is any
     private $fetched_parent = false;
     private $saved = false;
 
-    public function __construct($name, &$data)
+    public function __construct($name, &$props)
     {
         // must go first
         $this->name = $name;
         // must go second
         $this->id_column = $this->getIdColumn();
 
-        $obj_curr_id = $this->getIdFromData($data);
+        $obj_curr_id = $this->getIdFromProps($props);
         if ($obj_curr_id === -1) {
-            $this->setVarFromArray($data);
+            $this->setVarFromArray($props);
         } else {
-            $this->curr_data = fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
-            $this->setVarFromArray(def($this->curr_data, []));
-            $this->setVarFromArray($data);
+            $this->curr_props = fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
+            $this->setVarFromArray(def($this->curr_props, []));
+            $this->setVarFromArray($props);
         }
     }
 
@@ -328,9 +328,9 @@ class EntityObject
             return;
         }
 
-        if ($this->curr_data) {
-            $update_data = [];
-            foreach ($this->data as $key => $value) {
+        if ($this->curr_props) {
+            $update_props = [];
+            foreach ($this->props as $key => $value) {
                 if ($key === $this->id_column) {
                     continue;
                 }
@@ -338,31 +338,31 @@ class EntityObject
                     $this->saveChildren($value);
                     continue;
                 }
-                if ($this->curr_data[$key] === $value) {
+                if ($this->curr_props[$key] === $value) {
                     continue;
                 }
 
-                $update_data[$key] = $value;
+                $update_props[$key] = $value;
             }
 
-            if (!empty($update_data)) {
+            if (!empty($update_props)) {
                 // update
                 $query = "UPDATE " . $this->name . " SET ";
-                foreach (array_keys($update_data) as $field) {
+                foreach (array_keys($update_props) as $field) {
                     $query .= clean($field) . "=?,";
                 }
                 $query = rtrim($query, ",");
                 $query .= " WHERE " . $this->id_column . "=" . $this->getId();
-                var_dump([$query, array_values($update_data)]);
-                //query($query, array_values($update_data));
+                var_dump([$query, array_values($update_props)]);
+                //query($query, array_values($update_props));
                 //return true;
             }
 
             return;
         } else {
             // insert
-            $insert_data = [];
-            foreach ($this->data as $key => $value) {
+            $insert_props = [];
+            foreach ($this->props as $key => $value) {
                 if ($key === $this->id_column) {
                     continue;
                 }
@@ -370,20 +370,20 @@ class EntityObject
                     $this->saveChildren($value);
                     continue;
                 }
-                $insert_data[$key] = $value;
+                $insert_props[$key] = $value;
             }
 
             $keys_query = "";
-            foreach (array_keys($insert_data) as $field) {
+            foreach (array_keys($insert_props) as $field) {
                 $keys_query .= clean($field) . ",";
             }
             $keys_query = rtrim($keys_query, ",");
-            $values_query = rtrim(str_repeat("?,", count($insert_data)), ",");
+            $values_query = rtrim(str_repeat("?,", count($insert_props)), ",");
 
             $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
 
-            var_dump([$query, array_values($insert_data)]);
-            //query($query, array_values($insert_data));
+            var_dump([$query, array_values($insert_props)]);
+            //query($query, array_values($insert_props));
             //$entity_id = getLastInsertedId();
             //return $entity_id;
 
@@ -402,10 +402,10 @@ class EntityObject
             $val = $this->getProp($prop_name);
         }
 
-        $prop_data = def(EntityManager::getEntityData($this->name), ["props", $prop_name]);
-        $prop_type = def($prop_data, "type", "");
+        $prop_props = def(EntityManager::getEntityProps($this->name), ["props", $prop_name]);
+        $prop_type = def($prop_props, "type", "");
 
-        if (!$prop_data || !$prop_type) {
+        if (!$prop_props || !$prop_type) {
             return; // error?
         }
 
@@ -424,7 +424,7 @@ class EntityObject
             return;
         }
 
-        $this->data[$prop_name] = $val;
+        $this->props[$prop_name] = $val;
     }
 
     public function setVarFromArray($arr)
@@ -437,20 +437,20 @@ class EntityObject
     public function getProp($prop_name, $options = [])
     {
         if ($this->shouldFetchProp($prop_name)) {
-            $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
+            $prop_type = def(EntityManager::getEntityProps($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $child_entity_name = substr($prop_type, 0, -2);
-                $this->data[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
+                $this->props[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
             }
 
             $getter = "get__" . $this->name . "_" . $prop_name;
             if (function_exists($getter)) {
                 $val = call_user_func($getter, $this);
-                $this->data[$prop_name] = $val;
+                $this->props[$prop_name] = $val;
                 //if ($val !== null) {}
             }
         }
-        return def($this->data, $prop_name, null);
+        return def($this->props, $prop_name, null);
     }
 
     /**
@@ -463,10 +463,10 @@ class EntityObject
         if ($this->fetched_parent === false) {
             $this->fetched_parent = true;
 
-            $parent_data = def(EntityManager::getEntityData($this->name), ["parent"]);
-            if ($parent_data) {
-                $parent_name = $parent_data["name"];
-                $parent_prop = $parent_data["prop"];
+            $parent_props = def(EntityManager::getEntityProps($this->name), ["parent"]);
+            if ($parent_props) {
+                $parent_name = $parent_props["name"];
+                $parent_prop = $parent_props["prop"];
                 $this->parent = EntityManager::getById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
                 // assign the child, a single reference
                 $this->parent->setProp($parent_prop, $this->parent->getProp($parent_prop, ["child" => $this]));
@@ -481,21 +481,21 @@ class EntityObject
         $this->fetched_parent = true;
     }
 
-    public function getData()
+    public function getProps()
     {
-        return $this->data;
+        return $this->props;
     }
 
-    public function getRowData()
+    public function getRowProps()
     {
-        $row_data = [];
-        foreach ($this->data as $data) {
-            if ($data instanceof EntityObject) {
+        $row_props = [];
+        foreach ($this->props as $props) {
+            if ($props instanceof EntityObject) {
                 return;
             }
-            $row_data[] = $data;
+            $row_props[] = $props;
         }
-        return $this->data;
+        return $this->props;
     }
 
     /**
@@ -504,9 +504,9 @@ class EntityObject
      * @param  mixed $prop_name
      * @return void
      */
-    public function getCurrData($prop_name)
+    public function getCurrProps($prop_name)
     {
-        return def($this->curr_data, $prop_name, null);
+        return def($this->curr_props, $prop_name, null);
     }
 
     private function shouldFetchProp($prop_name)
@@ -526,10 +526,10 @@ class EntityObject
 
     public function getId()
     {
-        if (!isset($this->data[$this->id_column])) {
-            $this->data[$this->id_column] = -1;
+        if (!isset($this->props[$this->id_column])) {
+            $this->props[$this->id_column] = -1;
         }
-        return $this->getIdFromData($this->data);
+        return $this->getIdFromProps($this->props);
     }
 
     public function getName()
@@ -537,13 +537,13 @@ class EntityObject
         return $this->name;
     }
 
-    private function getIdFromData(&$data)
+    private function getIdFromProps(&$props)
     {
-        return intval(def($data, $this->id_column, -1));
+        return intval(def($props, $this->id_column, -1));
     }
 }
 
-$data = [
+$props = [
     "pies_id" => 20,
     "food" => 666,
     "unknown_field" => 12345,
@@ -560,7 +560,7 @@ $data = [
 ];
 
 // TODO: transactions :P
-$pies = EntityManager::getFromData("pies", $data);
+$pies = EntityManager::getFromProps("pies", $props);
 $pies->saveToDB();
 
 // $pies_paw_8 = EntityManager::getById("pies_paw", 8);
