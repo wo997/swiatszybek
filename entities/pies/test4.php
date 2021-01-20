@@ -15,7 +15,7 @@ DB::createTable("pies_paw", [
 ]);
 */
 
-// function get__pies_paws(EntityObject $obj)
+// function get__pies_paws(Entity $obj)
 // {
 //     return getManyToOneEntities($obj, "pies_paw");
 // }
@@ -40,25 +40,25 @@ $props = [
 // ugh, paws don't change?
 
 // TODO: transactions :P
-$pies = Entity::getFromProps("pies", $props);
-$pies->saveToDB();
+// $pies = EntityManager::getFromProps("pies", $props);
+// $pies->saveToDB();
 
 // memory test - it's totally fine, there might be no room for improvement
 // $piess = [];
 // for ($i = 0; $i < 10; $i++) {
-//     $pies = Entity::getFromProps("pies", $props);
+//     $pies = EntityManager::getFromProps("pies", $props);
 //     $piess[] = $pies;
 //     $pies->saveToDB();
 //     var_dump([$i, memory_get_usage()]);
 // }
 
-// $pies_paw_8 = Entity::getById("pies_paw", 8);
-// $pies_paw_8->setWillDelete();
-// $pies_paw_8->saveToDB();
+$pies_paw_8 = EntityManager::getById("pies_paw", 8);
+$pies_paw_8->setWillDelete();
+$pies_paw_8->saveToDB();
 
 //var_dump($pies_paw_8->getParent());
 
-///** @var EntityObject[] */
+///** @var Entity[] */
 //$pies_paws = $pies->getProp("paws");
 //$pies_paws[1]->setWillDelete(); actually deletes pies_paw_8
 //var_dump();
@@ -67,7 +67,7 @@ $pies->saveToDB();
 
 //}
 
-// $pies2 = Entity::getById("pies", 20);
+// $pies2 = EntityManager::getById("pies", 20);
 
 // if ($pies2) {
 //     $pies2->setProp("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));
