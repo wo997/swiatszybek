@@ -102,7 +102,7 @@ DB::execute(
     ]
 );
 
-$zamowienie_id = DB::lastInsertedId();
+$zamowienie_id = DB::insertedId();
 
 // cannot use order/print_basket_nice because in email no css stylesheets are allowed, would we want to merge it?
 $res = "<table style='border-spacing: 0;'><tr style='background: " . primary_clr . ";color: white;'><td style='padding:4px'>Ilość</td><td style='padding:4px'>Produkt</td><td style='padding:4px'>Cena</td></tr>";

@@ -90,6 +90,6 @@ if ($user_data) {
         $user_type, $first_name, $last_name, $email, "1", $authentication_token, "Polska"
     ]);
 
-    $user_id = DB::lastInsertedId();
+    $user_id = DB::insertedId();
 }
 loginUser($user_id, $email, $user_type, ["name" => $first_name . " " . $last_name]);

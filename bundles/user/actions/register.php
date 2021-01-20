@@ -50,7 +50,7 @@ if ($user_data) {
         $password_hash, "0",
         $authentication_token, $_SESSION["basket"]
     ]);
-    $user_data["user_id"] = DB::lastInsertedId();
+    $user_data["user_id"] = DB::insertedId();
 }
 
 // send mail no matter if exists to make sure he will receive it

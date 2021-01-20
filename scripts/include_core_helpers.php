@@ -14,7 +14,6 @@ include_once "helpers/core/db/db.php";
 include_once "helpers/core/db/entity.php";
 include_once "helpers/core/db/entity_object.php";
 include_once "helpers/core/db/entity_old.php";
-include_once "helpers/core/db/migration.php";
 
 include_once "helpers/core/email.php";
 include_once "helpers/core/request.php";

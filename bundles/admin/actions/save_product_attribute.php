@@ -13,7 +13,7 @@ if (isset($_POST["remove"])) {
     $attribute_id = isset($_POST["attribute_id"]) ? $_POST["attribute_id"] : "-1";
     if ($attribute_id == "-1") {
         DB::execute("INSERT INTO product_attributes () VALUES ()");
-        $attribute_id = DB::lastInsertedId();
+        $attribute_id = DB::insertedId();
     } else {
         $attribute_id = intval($_POST["attribute_id"]);
     }
@@ -39,7 +39,7 @@ if (isset($_POST["remove"])) {
             $value_value = $value_data["value"];
             if ($value_id == "-1") {
                 DB::execute("INSERT INTO attribute_values () VALUES ()");
-                $value_id = DB::lastInsertedId();
+                $value_id = DB::insertedId();
             }
 
             $additional_data = $value_data ? json_encode(getArrayWithoutKeys($value_data, ["value_id", "value", "_children"])) : "";

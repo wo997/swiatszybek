@@ -2,6 +2,6 @@
 
 // TODO: abandon
 DB::execute("INSERT INTO products (title) VALUES (?)", [$_POST["title"]]);
-$id = DB::lastInsertedId();
+$id = DB::insertedId();
 
 redirect(STATIC_URLS["ADMIN"] . "produkt/$id");

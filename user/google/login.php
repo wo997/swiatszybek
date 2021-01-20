@@ -35,7 +35,7 @@ if ($user_data) {
         $user_type, $google_email, "1", $authentication_token, "Polska"
     ]);
 
-    $user_id = DB::lastInsertedId();
+    $user_id = DB::insertedId();
 }
 
 loginUser($user_id, $google_email, $user_type, ['name' => $payload['name']]);

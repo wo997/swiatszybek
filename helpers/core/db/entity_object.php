@@ -140,7 +140,7 @@ class EntityObject
 
             var_dump([$query, array_values($insert_props)]);
             //DB::execute($query, array_values($insert_props));
-            //$entity_id = DB::lastInsertedId();
+            //$entity_id = DB::insertedId();
             //return $entity_id;
 
             return;

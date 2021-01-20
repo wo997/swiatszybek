@@ -1,6 +1,6 @@
 <?php //hook[entity]
 
-createTable("pies", [
+DB::createTable("pies", [
     ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
     ["name" => "food", "type" => "INT"],
     ["name" => "food_double", "type" => "INT"],
@@ -8,7 +8,7 @@ createTable("pies", [
     ["name" => "paws_json", "type" => "TEXT"],
 ]);
 
-createTable("pies_paw", [
+DB::createTable("pies_paw", [
     ["name" => "pies_paw_id", "type" => "INT", "index" => "primary", "increment" => true],
     ["name" => "pies_id", "type" => "INT", "index" => "index"],
     ["name" => "name", "type" => "TINYTEXT"],

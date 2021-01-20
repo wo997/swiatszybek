@@ -9,7 +9,7 @@ if (isset($_POST["remove"])) {
 
     if ($slide_id == "-1") {
         DB::execute("INSERT INTO slides () VALUES ()");
-        $slide_id = DB::lastInsertedId();
+        $slide_id = DB::insertedId();
     } else {
         $slide_id = $_POST["slide_id"];
     }

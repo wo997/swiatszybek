@@ -1,14 +1,14 @@
 <?php //route[{ADMIN}entity_test]
 
 /*
-createTable("pies", [
+DB::createTable("pies", [
     ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
     ["name" => "food", "type" => "INT"],
     ["name" => "food_double", "type" => "INT"],
     ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
 ]);
 
-createTable("pies_paw", [
+DB::createTable("pies_paw", [
     ["name" => "pies_paw_id", "type" => "INT", "index" => "primary", "increment" => true],
     ["name" => "pies_id", "type" => "INT", "index" => "index"],
     ["name" => "name", "type" => "TINYTEXT"],

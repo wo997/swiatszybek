@@ -8,7 +8,7 @@ if (isset($_POST["remove"])) {
     $category_id = isset($_POST["category_id"]) ? $_POST["category_id"] : "-1";
     if ($category_id == "-1") {
         DB::execute("INSERT INTO product_categories () VALUES ()");
-        $category_id = DB::lastInsertedId();
+        $category_id = DB::insertedId();
     } else {
         $category_id = $_POST["category_id"];
     }

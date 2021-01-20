@@ -44,7 +44,7 @@ function addEntity($table, $options = [])
     $values_query = rtrim(str_repeat("?,", count($data)), ",");
 
     DB::execute("INSERT INTO " . clean($table) . "($keys_query) VALUES($values_query)", array_values($data));
-    $entity_id = DB::lastInsertedId();
+    $entity_id = DB::insertedId();
     return $entity_id;
 }
 
