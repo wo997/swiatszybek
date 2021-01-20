@@ -11,7 +11,7 @@ if ($action == "remove") {
     die;
 }
 
-$kod_data = fetchRow("SELECT kwota, user_id_list, product_list, ilosc, date_from, date_to, type FROM kody_rabatowe WHERE kod = ? ORDER BY kod_id DESC LIMIT 1", [$kod]);
+$kod_data = DB::fetchRow("SELECT kwota, user_id_list, product_list, ilosc, date_from, date_to, type FROM kody_rabatowe WHERE kod = ? ORDER BY kod_id DESC LIMIT 1", [$kod]);
 
 if ($kod_data) {
     $now = strtotime(date("Y-m-d"));
@@ -44,7 +44,7 @@ if ($kod_data) {
         $required_quantity = isset($required_product["qty"]) ? $required_product["qty"] : 1;
 
         if ($basket_product_quantity < $required_quantity) {
-            $i_product = fetchRow("SELECT title, link FROM products WHERE product_id = " . intval($required_product_id));
+            $i_product = DB::fetchRow("SELECT title, link FROM products WHERE product_id = " . intval($required_product_id));
             $product_link = "<a href='" . getProductLink($required_product_id, $i_product["link"]) . "'>" . $i_product["title"] . "</a>";
             if ($required_quantity == 1) {
                 $error .= "<br>- $product_link";

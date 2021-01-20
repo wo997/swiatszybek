@@ -35,8 +35,8 @@ $zamowienie_data = [
 ];
 
 if ($app["user"]["id"]) {
-    //$user_data = fetchRow("SELECT imie, nazwisko, email, telefon, firma, nip, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu FROM `users` WHERE user_id = ".intval($app["user"]["id"]));
-    $user_data = fetchRow("SELECT * FROM users WHERE user_id = " . intval($app["user"]["id"]));
+    //$user_data = DB::fetchRow("SELECT imie, nazwisko, email, telefon, firma, nip, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu FROM `users` WHERE user_id = ".intval($app["user"]["id"]));
+    $user_data = DB::fetchRow("SELECT * FROM users WHERE user_id = " . intval($app["user"]["id"]));
 
     // rewrite empty
     foreach ($user_data as $key => $value) {
@@ -51,8 +51,8 @@ if ($app["user"]["id"]) {
 $zamowienie_link = urlParam(1);
 $impersonate = 0;
 if (strlen($zamowienie_link) > 5) {
-    // $zamowienie_data = fetchRow("SELECT zamowienie_id, user_id, user_type, basket, koszt, zlozono, oplacono, nip, status, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, dostawa, uwagi, koszt_dostawy, session_id, rabat, kod_pocztowy_z, miejscowosc_z, kraj_z, ulica_z, nr_domu_z, nr_lokalu_z,  imie_d, nazwisko_d, firma_d, buyer_type FROM zamowienia LEFT JOIN users USING (user_id) WHERE link = ?", $zamowienie_link);
-    $zamowienie_data = fetchRow("SELECT *, z.cache_basket, z.imie, z.nazwisko, z.email, z.telefon, z.nip, z.kraj, z.miejscowosc, z.ulica, z.kod_pocztowy, z.nr_domu, z.nr_lokalu FROM zamowienia z LEFT JOIN users USING (user_id) WHERE link = ?", [$zamowienie_link]);
+    // $zamowienie_data = DB::fetchRow("SELECT zamowienie_id, user_id, user_type, basket, koszt, zlozono, oplacono, nip, status, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, dostawa, uwagi, koszt_dostawy, session_id, rabat, kod_pocztowy_z, miejscowosc_z, kraj_z, ulica_z, nr_domu_z, nr_lokalu_z,  imie_d, nazwisko_d, firma_d, buyer_type FROM zamowienia LEFT JOIN users USING (user_id) WHERE link = ?", $zamowienie_link);
+    $zamowienie_data = DB::fetchRow("SELECT *, z.cache_basket, z.imie, z.nazwisko, z.email, z.telefon, z.nip, z.kraj, z.miejscowosc, z.ulica, z.kod_pocztowy, z.nr_domu, z.nr_lokalu FROM zamowienia z LEFT JOIN users USING (user_id) WHERE link = ?", [$zamowienie_link]);
 
     $basket_swap = json_decode($zamowienie_data["cache_basket"], true);
     $basket = [];

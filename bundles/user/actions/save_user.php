@@ -59,13 +59,13 @@ if (isset($_POST["imie"])) {
     updateEntity($data, "users", "user_id", $user_id);
 
     $email = trim($_POST["email"]);
-    $user_old_data = fetchRow("SELECT email, authentication_token FROM users WHERE user_id = ?", [$user_id]);
+    $user_old_data = DB::fetchRow("SELECT email, authentication_token FROM users WHERE user_id = ?", [$user_id]);
 
     if ($email != trim($user_old_data["email"])) {
         if ($app["user"]["type"] == 'regular') {
             updateEntity(["email_request" => $email], "users", "user_id", $user_id);
 
-            query("UPDATE users SET email_request = ? WHERE user_id = ? LIMIT 1", [
+            DB::execute("UPDATE users SET email_request = ? WHERE user_id = ? LIMIT 1", [
                 $email, $user_id
             ]);
 

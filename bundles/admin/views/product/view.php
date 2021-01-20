@@ -19,23 +19,23 @@ if ($product_id === -1) {
         "product_id" => "-1",
     ];
 } else {
-    $product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
+    $product_data = DB::fetchRow("SELECT * FROM products WHERE product_id = $product_id");
 
     if (!$product_data) {
         redirect(STATIC_URLS["ADMIN"] . "produkt/");
     }
 }
 
-$categories_csv = fetchValue("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
+$categories_csv = DB::fetchVal("SELECT GROUP_CONCAT(category_id SEPARATOR ',') FROM link_product_category WHERE product_id = $product_id");
 
 $allAttributeOptions = getAllAttributeOptions();
 $allAttributeOptionsHTMLArray = $allAttributeOptions["html_array"];
 
 $product_data["attributes"] = getAttributesFromDB("link_product_attribute_value", "product_attribute_values", "product_id", $product_id);
 
-$product_data["variant_attribute_options"] = fetchArray("SELECT attribute_id, attribute_values FROM link_variant_attribute_option WHERE product_id = $product_id ORDER BY kolejnosc ASC");
+$product_data["variant_attribute_options"] = DB::fetchArr("SELECT attribute_id, attribute_values FROM link_variant_attribute_option WHERE product_id = $product_id ORDER BY kolejnosc ASC");
 
-$variants = fetchArray("SELECT * FROM variant WHERE product_id = $product_id ORDER BY kolejnosc ASC");
+$variants = DB::fetchArr("SELECT * FROM variant WHERE product_id = $product_id ORDER BY kolejnosc ASC");
 
 foreach ($variants as $key => $variant) {
     $variant["attributes"] = json_encode(getAttributesFromDB("link_variant_attribute_value", "variant_attribute_values", "variant_id", $variant["variant_id"]));
@@ -71,8 +71,8 @@ if ($kopia) {
 
     var product_id = <?= $product_id ?>;
     var attribute_options_htmls = <?= json_encode($allAttributeOptionsHTMLArray) ?>;
-    var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id, attribute_id, parent_value_id FROM attribute_values'), true) ?>;
-    var attributes_array = <?= json_encode(fetchArray('SELECT name, attribute_id FROM product_attributes'), true) ?>;
+    var attribute_values_array = <?= json_encode(DB::fetchArr('SELECT value, value_id, attribute_id, parent_value_id FROM attribute_values'), true) ?>;
+    var attributes_array = <?= json_encode(DB::fetchArr('SELECT name, attribute_id FROM product_attributes'), true) ?>;
     var product_categories = [<?= $categories_csv ?>];
     var product_data = <?= json_encode($product_data) ?>;
 </script>

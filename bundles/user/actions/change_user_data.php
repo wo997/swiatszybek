@@ -44,17 +44,17 @@ function quit($message, $type)
     return "<div style='text-align:center;'><h4 style='color: $color;display: inline-block;border: 1px solid $color;padding: 7px;margin: 0 auto;border-radius: 5px;'>$message</h4></div>";
 }
 
-query("UPDATE users SET imie = ?, nazwisko = ?, telefon = ?, firma = ?, kraj = ?, miejscowosc = ?, kod_pocztowy = ?, ulica = ?, nr_domu = ?, nip = ?, nr_lokalu = ? WHERE user_id = ? LIMIT 1", [
+DB::execute("UPDATE users SET imie = ?, nazwisko = ?, telefon = ?, firma = ?, kraj = ?, miejscowosc = ?, kod_pocztowy = ?, ulica = ?, nr_domu = ?, nip = ?, nr_lokalu = ? WHERE user_id = ? LIMIT 1", [
     $imie, $nazwisko, $telefon, $firma, $kraj, $miejscowosc, $kod_pocztowy, $ulica, $nr_domu, $nip, $nr_lokalu, $user_id
 ]);
 
 $response["message"] = quit("Zapisano zmiany", 1);
 
 if ($app["user"]["type"] == 'regular') {
-    $user_old_data = fetchRow("SELECT email, authentication_token FROM users WHERE user_id = ?", [$user_id]);
+    $user_old_data = DB::fetchRow("SELECT email, authentication_token FROM users WHERE user_id = ?", [$user_id]);
 
     if (trim($email) != trim($user_old_data["email"])) {
-        query("UPDATE users SET email_request = ? WHERE user_id = ? LIMIT 1", [
+        DB::execute("UPDATE users SET email_request = ? WHERE user_id = ? LIMIT 1", [
             $email, $user_id
         ]);
 
@@ -65,9 +65,9 @@ if ($app["user"]["type"] == 'regular') {
         $response["message"] = quit("Wysłaliśmy link do zmiany maila na $email", 1);
     }
 } else {
-    query("UPDATE users SET email = ? WHERE user_id = ? LIMIT 1", [
+    DB::execute("UPDATE users SET email = ? WHERE user_id = ? LIMIT 1", [
         $email, $user_id
     ]);
 }
-$response["data"] = fetchRow("SELECT imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nip, nr_lokalu FROM users WHERE user_id = ?", [$user_id]);
+$response["data"] = DB::fetchRow("SELECT imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nip, nr_lokalu FROM users WHERE user_id = ?", [$user_id]);
 json_response($response);

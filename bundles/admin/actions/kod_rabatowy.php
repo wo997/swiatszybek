@@ -2,7 +2,7 @@
 
 $kod_id = urlParam(2);
 if ($kod_id) {
-    $kod_data = fetchRow("SELECT * FROM kody_rabatowe WHERE kod_id = $kod_id");
+    $kod_data = DB::fetchRow("SELECT * FROM kody_rabatowe WHERE kod_id = $kod_id");
 } else {
     $kod_data = [
         "kod_id" => -1,

@@ -64,10 +64,10 @@ if (isset($_POST['search'])) { // return list
     $where .= $searchQuery;
 
     if (isset($_POST["asset_types"])) {
-        $where .= " AND asset_type IN (" . escapeSQL($_POST["asset_types"]) . ")";
+        $where .= " AND asset_type IN (" . DB::escape($_POST["asset_types"]) . ")";
     }
 
-    $paths = fetchArray("SELECT file_path, asset_type, uploaded_file_name, email
+    $paths = DB::fetchArr("SELECT file_path, asset_type, uploaded_file_name, email
      FROM uploads LEFT JOIN users USING(user_id) 
      WHERE $where ORDER BY file_id DESC LIMIT 60");
 

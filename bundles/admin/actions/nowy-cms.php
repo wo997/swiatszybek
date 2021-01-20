@@ -3,7 +3,7 @@
 $page_id = urlParam(2);
 if ($page_id) {
     $page_id = intval($page_id);
-    $page_data = fetchRow("SELECT * FROM page WHERE page_id = $page_id");
+    $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = $page_id");
 } else {
     $page_id = -1;
     $page_data = null;

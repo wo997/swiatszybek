@@ -4,7 +4,7 @@ $user_id = urlParam(1);
 $authentication_token = urlParam(2);
 
 if ($authentication_token) {
-    $email = fetchValue("SELECT email FROM users WHERE user_id = ? AND authentication_token = ?", [$user_id, $authentication_token]);
+    $email = DB::fetchVal("SELECT email FROM users WHERE user_id = ? AND authentication_token = ?", [$user_id, $authentication_token]);
     if (!$email) {
         redirect("Location: /resetowanie-hasla");
     }

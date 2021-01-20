@@ -12,12 +12,12 @@ function quit($message, $type)
 $user_id = urlParam(1);
 $authentication_token = urlParam(2);
 
-$email_request = fetchValue("SELECT email_request FROM users WHERE user_id = ? AND authentication_token = ? AND email_request IS NOT NULL", [
+$email_request = DB::fetchVal("SELECT email_request FROM users WHERE user_id = ? AND authentication_token = ? AND email_request IS NOT NULL", [
     $user_id, $authentication_token
 ]);
 
 if ($email_request) {
-    query("UPDATE users SET email = ?, email_request = NULL WHERE user_id = ?", [
+    DB::execute("UPDATE users SET email = ?, email_request = NULL WHERE user_id = ?", [
         $email_request, $user_id
     ]);
 

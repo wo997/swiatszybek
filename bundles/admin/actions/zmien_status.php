@@ -7,7 +7,7 @@ $case_oplacono = $new_status_id == 1 ? ", oplacono = NOW()" : "";
 $case_wyslano = $new_status_id == 2 ? ", wyslano = NOW()" : "";
 $case_odebrano = $new_status_id == 3 ? ", odebrano = NOW()" : "";
 
-$zamowienie_data = fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
+$zamowienie_data = DB::fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
 
 /*$stmt = $con->prepare("SELECT imie, nazwisko, email, link, dostawa, status_id, basket, miejscowosc, kod_pocztowy, ulica, nr_domu, track, dostawa FROM zamowienia WHERE zamowienie_id = ?");
 $stmt->bind_param("i", $zamowienie_data["zamowienie_id"]);
@@ -16,7 +16,7 @@ $stmt->bind_result($zamowienie_data["imie"], $zamowienie_data["nazwisko"], $zamo
 mysqli_stmt_fetch($stmt);
 $stmt->close();*/
 
-query("UPDATE zamowienia SET status_id = ? $case_oplacono $case_wyslano $case_odebrano WHERE zamowienie_id = ?", [$new_status_id, $zamowienie_data["zamowienie_id"]]);
+DB::execute("UPDATE zamowienia SET status_id = ? $case_oplacono $case_wyslano $case_odebrano WHERE zamowienie_id = ?", [$new_status_id, $zamowienie_data["zamowienie_id"]]);
 
 $oldStatusString = getRowById($status_list, $zamowienie_data["status_id"])["title"];
 $newStatusString = getRowById($status_list, $new_status_id)["title"];
@@ -65,7 +65,7 @@ if ($new_status_id == 2) {
     $message .= $zamowienie_data["kod_pocztowy_dostawa"] . " " . $zamowienie_data["miejscowosc_dostawa"] . ", " . $zamowienie_data["ulica_dostawa"] . " " . $zamowienie_data["nr_domu_dostawa"] . ($zamowienie_data["nr_lokalu_dostawa"] ? "/" : "") . $zamowienie_data["nr_lokalu_dostawa"];
     $message .= getEmailFooter();
 } else if ($new_status_id == 1) {
-    query("UPDATE zamowienia SET oplacono = NOW() WHERE zamowienie_id = " . $zamowienie_data["zamowienie_id"]);
+    DB::execute("UPDATE zamowienia SET oplacono = NOW() WHERE zamowienie_id = " . $zamowienie_data["zamowienie_id"]);
     include "user/oplacono_mail.php";
 }
 
@@ -87,7 +87,7 @@ if ($add_subtract_stock !== "") {
   $basket_swap = json_decode($zamowienie_data["basket"], true); // TODO: REWORK THAT
   $basket = [];
   foreach ($basket_swap as $b) {
-    query("UPDATE variant SET stock = stock $add_subtract_stock " . intval($b['q']) . " WHERE variant_id = " . intval($b['v']));
+    DB::execute("UPDATE variant SET stock = stock $add_subtract_stock " . intval($b['q']) . " WHERE variant_id = " . intval($b['v']));
   }
 }*/
 

@@ -21,21 +21,21 @@ if (validatePassword($_POST["password"])) {
 $user_type = "regular";
 
 // check if has email
-$user_data = fetchRow("SELECT user_id, authenticated, authentication_token, password_hash FROM `users` WHERE user_type = '$user_type' AND email = ?", [$_POST["email"]]);
+$user_data = DB::fetchRow("SELECT user_id, authenticated, authentication_token, password_hash FROM `users` WHERE user_type = '$user_type' AND email = ?", [$_POST["email"]]);
 
 $password_hash = getPasswordHash($_POST["password"]);
 $authentication_token = generateAuthenticationToken();
 
 if ($user_data) {
     /*if ($user_data["authenticated"] == "0") {
-    query("UPDATE users SET imie = ?, nazwisko = ?, telefon = ?, password_hash = ?, authentication_token = ? WHERE user_id = " . intval($user_data["user_id"]), [
+    DB::execute("UPDATE users SET imie = ?, nazwisko = ?, telefon = ?, password_hash = ?, authentication_token = ? WHERE user_id = " . intval($user_data["user_id"]), [
       $_POST["imie"], $_POST["nazwisko"], $_POST["telefon"], $password_hash, $authentication_token
     ]);
     json_response("Użytkownik " . $_POST["email"] . " już istnieje");
   }*/
     $authentication_token = $user_data["authentication_token"];
 } else {
-    query("INSERT INTO users (
+    DB::execute("INSERT INTO users (
     user_type,imie,nazwisko,
     email,telefon,
     password_hash,authenticated,
@@ -50,7 +50,7 @@ if ($user_data) {
         $password_hash, "0",
         $authentication_token, $_SESSION["basket"]
     ]);
-    $user_data["user_id"] = getLastInsertedId();
+    $user_data["user_id"] = DB::lastInsertedId();
 }
 
 // send mail no matter if exists to make sure he will receive it

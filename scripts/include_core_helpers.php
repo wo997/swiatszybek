@@ -10,9 +10,9 @@ include_once "helpers/core/array.php";
 include_once "helpers/core/files.php";
 include_once "helpers/core/settings.php";
 
+include_once "helpers/core/db/db.php";
 include_once "helpers/core/db/entity.php";
 include_once "helpers/core/db/entity_object.php";
-include_once "helpers/core/db/general.php";
 include_once "helpers/core/db/entity_old.php";
 include_once "helpers/core/db/migration.php";
 

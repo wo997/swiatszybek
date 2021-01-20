@@ -19,7 +19,7 @@ function updateEntity($data, $table, $primary, $id, $log = false)
     }
     $query = rtrim($query, ",");
     $query .= " WHERE " . clean($primary) . "=" . intval($id);
-    query($query, array_values($data));
+    DB::execute($query, array_values($data));
 }
 
 /**
@@ -43,8 +43,8 @@ function addEntity($table, $options = [])
     $keys_query = rtrim($keys_query, ",");
     $values_query = rtrim(str_repeat("?,", count($data)), ",");
 
-    query("INSERT INTO " . clean($table) . "($keys_query) VALUES($values_query)", array_values($data));
-    $entity_id = getLastInsertedId();
+    DB::execute("INSERT INTO " . clean($table) . "($keys_query) VALUES($values_query)", array_values($data));
+    $entity_id = DB::lastInsertedId();
     return $entity_id;
 }
 
@@ -66,7 +66,7 @@ function getEntityId($table, $id, $options = [])
 
 function removeEntity($table, $primary, $id)
 {
-    query("DELETE FROM " . clean($table) . " WHERE " . clean($primary) . "=" . intval($id));
+    DB::execute("DELETE FROM " . clean($table) . " WHERE " . clean($primary) . "=" . intval($id));
 }
 
 
@@ -83,7 +83,7 @@ function updateEnt($entity_name, $entity_id, $data)
     //$current_data
 
     // that should be kinda optional, tbh I think that if there are some dependencies the event should tell us what to fetch, that would make it crazy fast
-    $current_data = fetchRow("SELECT * FROM $entity_name WHERE $primary = $entity_id");
+    $current_data = DB::fetchRow("SELECT * FROM $entity_name WHERE $primary = $entity_id");
 
     $before_res = triggerEvent($entity_name . "__before", ["current_data" => $current_data, "data" => $data, "entity_id" => $entity_id]);
 
@@ -115,7 +115,7 @@ function updateEnt($entity_name, $entity_id, $data)
     $query = rtrim($query, ",");
     $query .= " WHERE " . clean($primary) . "=" . intval($entity_id);
 
-    query($query, array_values($data));
+    DB::execute($query, array_values($data));
 
     // TODO: are you sure we would even need $current_data?
     triggerEvent($entity_name . "__after", ["current_data" => $current_data, "data" => $data, "entity_id" => $entity_id]);

@@ -20,7 +20,7 @@
  */
 function tableExists($name)
 {
-    return fetchValue("show tables like '" . clean($name) . "'");
+    return DB::fetchVal("show tables like '" . clean($name) . "'");
 }
 
 /**
@@ -33,7 +33,7 @@ function tableExists($name)
 function columnExists($table, $name)
 {
     if (!tableExists($table)) return null;
-    if (fetchValue("SHOW COLUMNS FROM " . clean($table) . " LIKE '" . clean($name) . "'")) return true;
+    if (DB::fetchVal("SHOW COLUMNS FROM " . clean($table) . " LIKE '" . clean($name) . "'")) return true;
     return false;
 }
 
@@ -49,7 +49,7 @@ function dropColumns($table, $columns)
 {
     foreach ($columns as $column) {
         if (columnExists($table, $column)) {
-            query("ALTER TABLE " . clean($table) . " DROP COLUMN " . clean($column));
+            DB::execute("ALTER TABLE " . clean($table) . " DROP COLUMN " . clean($column));
 
             echo "🗑️ Column '$column' dropped from $table! <br>";
         }
@@ -65,7 +65,7 @@ function dropColumns($table, $columns)
 function dropTable($table)
 {
     if (tableExists($table)) {
-        query("DROP TABLE " . clean($table));
+        DB::execute("DROP TABLE " . clean($table));
         echo "🗑️ Table '$table' dropped! <br>";
     }
 }
@@ -79,7 +79,7 @@ function getColumnDefinition($column, $keys = true)
     if (isset($column["default"])) {
         $definition .= " DEFAULT " . $column["default"];
     } else if (isset($column["default_string"])) {
-        $definition .= " DEFAULT " . escapeSQL($column["default_string"]);
+        $definition .= " DEFAULT " . DB::escape($column["default_string"]);
     }
 
     if (!$keys) {
@@ -105,7 +105,7 @@ function getColumnDefinition($column, $keys = true)
 
 function getIndex($table, $column)
 {
-    return fetchRow("SHOW INDEX FROM " . clean($table) . " WHERE Column_name = '" . clean($column) . "'");
+    return DB::fetchRow("SHOW INDEX FROM " . clean($table) . " WHERE Column_name = '" . clean($column) . "'");
 }
 
 /**
@@ -156,13 +156,13 @@ function addIndex($table, $column, $type = "index")
     }
 
     if ($type == "index") {
-        query("ALTER TABLE " . clean($table) . " ADD INDEX (" . clean($column) . ")");
+        DB::execute("ALTER TABLE " . clean($table) . " ADD INDEX (" . clean($column) . ")");
         echo "➕ INDEX '$column' added to '$table<br>";
     } else if ($type == "unique") {
-        query("ALTER TABLE " . clean($table) . " ADD CONSTRAINT " . clean($column) . " UNIQUE (" . clean($column) . ")");
+        DB::execute("ALTER TABLE " . clean($table) . " ADD CONSTRAINT " . clean($column) . " UNIQUE (" . clean($column) . ")");
         echo "➕ UNIQUE '$column' added to '$table<br>";
     } else if ($type == "primary") {
-        query("ALTER TABLE " . clean($table) . " ADD PRIMARY KEY (" . clean($column) . ")");
+        DB::execute("ALTER TABLE " . clean($table) . " ADD PRIMARY KEY (" . clean($column) . ")");
         echo "➕ PRIMARY key '$column' added to '$table<br>";
     }
 }
@@ -179,10 +179,10 @@ function dropIndexByName($table, $key_name)
 {
     try {
         if ($key_name == "PRIMARY") {
-            query("ALTER TABLE " . clean($table) . " DROP PRIMARY KEY");
+            DB::execute("ALTER TABLE " . clean($table) . " DROP PRIMARY KEY");
             echo "🗑️ PRIMARY KEY dropped from '$table<br>";
         } else {
-            query("ALTER TABLE " . clean($table) . " DROP INDEX " . clean($key_name));
+            DB::execute("ALTER TABLE " . clean($table) . " DROP INDEX " . clean($key_name));
             echo "🗑️ Key '$key_name' dropped from '$table<br>";
         }
     } catch (Exception $e) {
@@ -213,7 +213,7 @@ function createTable($table, $columns)
         $sql = rtrim($sql, ",");
         $sql .= ")";
 
-        query($sql);
+        DB::execute($sql);
 
         echo "➕ Table '$table' created<br>";
     }
@@ -269,7 +269,7 @@ function manageTableColumns($table, $columns)
         if (!$modify && !$columnExists) {
             $isNew = true;
         } else { // compare new column with already existing one
-            foreach (fetchArray("DESC " . clean($table)) as $existing_column) {
+            foreach (DB::fetchArr("DESC " . clean($table)) as $existing_column) {
                 // early escape if names are different
                 if ($existing_column["Field"] != $column["previous_name"]) {
                     continue;
@@ -302,7 +302,7 @@ function manageTableColumns($table, $columns)
                 if (isset($column["increment"]) xor $existing_column["Extra"] == "auto_increment") {
                     $def = getColumnDefinition($column, false);
                     $def = str_replace($column["name"], $column["previous_name"], str_replace("AUTO_INCREMENT", "", $def));
-                    query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $def);
+                    DB::execute("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $def);
                     dropIndex($table, $column["name"]);
                     $modify = true;
                     break;
@@ -328,10 +328,10 @@ function manageTableColumns($table, $columns)
         $definition = getColumnDefinition($column);
 
         if ($modify) {
-            query("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);
+            DB::execute("ALTER TABLE " . clean($table) . " CHANGE " . $column["previous_name"] . " " . $definition);
             echo "🔄 Column '" . $column["name"] . "' modified in $table<br>";
         } else if ($isNew) {
-            query("ALTER TABLE " . clean($table) . " ADD " . $definition);
+            DB::execute("ALTER TABLE " . clean($table) . " ADD " . $definition);
             echo "➕ Column '" . $column["name"] . "' added into $table<br>";
         }
     }
@@ -361,7 +361,7 @@ function getForeignKey($table_1, $field_1, $table_2, $field_2 = null)
         WHERE TABLE_NAME = '$table_1' AND COLUMN_NAME = '$field_1'
         AND REFERENCED_TABLE_NAME = '$table_2' AND REFERENCED_COLUMN_NAME = '$field_2'
 SQL;
-    return fetchRow($sql);
+    return DB::fetchRow($sql);
 }
 
 function addForeignKey($table_1, $field_1, $table_2, $field_2 = null)
@@ -386,7 +386,7 @@ function addForeignKey($table_1, $field_1, $table_2, $field_2 = null)
         ON DELETE CASCADE
         ON UPDATE NO ACTION
 SQL;
-    query($sql);
+    DB::execute($sql);
     echo "🔗 Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
 }
 
@@ -406,6 +406,6 @@ function dropForeignKey($table_1, $field_1, $table_2, $field_2 = null)
         return;
     }
 
-    query("ALTER TABLE $table_1 DROP FOREIGN KEY " . $key["CONSTRAINT_NAME"]);
+    DB::execute("ALTER TABLE $table_1 DROP FOREIGN KEY " . $key["CONSTRAINT_NAME"]);
     echo "🗑️ Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
 }

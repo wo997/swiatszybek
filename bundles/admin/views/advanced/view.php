@@ -40,7 +40,7 @@ function getEntityActualOne($table_name, $id, $options = [])
 
     $select = def($options, "select", "*");
 
-    $data = fetchRow("select $select from $table_name WHERE product_id = $id");
+    $data = DB::fetchRow("select $select from $table_name WHERE product_id = $id");
 
     //var_dump($data);
     //loadEntityFields($entity, $data);

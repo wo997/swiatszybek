@@ -23,7 +23,7 @@ function initUser()
     }
 
     if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
-        $user_data = fetchRow("SELECT * FROM `users` WHERE user_type = 'regular' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
+        $user_data = DB::fetchRow("SELECT * FROM `users` WHERE user_type = 'regular' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
         if ($user_data) {
             loginUser($user_data["user_id"], $user_data["email"], "regular", ["name" => $user_data["email"]], false);
         }
@@ -55,7 +55,7 @@ function loginUser($user_id, $email, $user_type, $data = [])
 
     $_SESSION["just_logged_in"] = true;
 
-    $user_data = fetchRow("SELECT * FROM users WHERE user_id = $user_id");
+    $user_data = DB::fetchRow("SELECT * FROM users WHERE user_id = $user_id");
 
     $user = [
         "id" => $user_id,

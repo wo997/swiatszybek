@@ -7,8 +7,8 @@ if (!$app["user"]["id"]) {
 
 $user_id = $app["user"]["id"];
 
-//$user_data = fetchRow("SELECT user_id, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, nip, authentication_token FROM `users` WHERE user_id = ".intval($user_id));
-$user_data = fetchRow("SELECT * FROM users WHERE user_id = " . intval($user_id));
+//$user_data = DB::fetchRow("SELECT user_id, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, nip, authentication_token FROM `users` WHERE user_id = ".intval($user_id));
+$user_data = DB::fetchRow("SELECT * FROM users WHERE user_id = " . intval($user_id));
 
 $menu = "zamowienia";
 if (strpos(URL, "dane-uzytkownika") !== false)

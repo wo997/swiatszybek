@@ -96,7 +96,7 @@ function setBasketData($basket_json_or_array)
     setcookie("basket", $basket_json, (time() + 31536000), "/");
 
     if ($app["user"]["id"]) {
-        query("UPDATE users SET basket = ? WHERE user_id = ?", [
+        DB::execute("UPDATE users SET basket = ? WHERE user_id = ?", [
             $basket_json, $app["user"]["id"]
         ]);
     }
@@ -249,7 +249,7 @@ function canUserGetCommentRebate($product_id)
     $can_user_get_comment_rebate = false;
 
     if ($app["user"]["id"]) {
-        $can_user_get_comment_rebate = fetchRow("
+        $can_user_get_comment_rebate = DB::fetchRow("
             SELECT * FROM basket_content INNER JOIN zamowienia USING (zamowienie_id)
             WHERE user_id = " . $app["user"]["id"] . "
             AND status_id IN (2,3)

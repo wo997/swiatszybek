@@ -16,7 +16,7 @@ function getProductsFullData($product_id_list)
         return [];
     }
 
-    $product_list = fetchArray("SELECT product_id, title, link, cache_thumbnail, price_min, price_max FROM products WHERE $where ORDER BY $order");
+    $product_list = DB::fetchArr("SELECT product_id, title, link, cache_thumbnail, price_min, price_max FROM products WHERE $where ORDER BY $order");
 
     foreach ($product_list as $product_index => $product) {
         $product["full_link"] = getProductLink($product["product_id"], $product["link"]);
@@ -36,7 +36,7 @@ function getVariantsFullData($variant_id_list)
     $where = "variant_id IN ($variant_id_list_string)";
     $order = "FIELD(variant_id,$variant_id_list_string)";
 
-    $variant_list = fetchArray("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, stock, gallery FROM products i INNER JOIN variant v USING (product_id) WHERE $where ORDER BY $order");
+    $variant_list = DB::fetchArr("SELECT variant_id, product_id, title, link, name, zdjecie, price, rabat, stock, gallery FROM products i INNER JOIN variant v USING (product_id) WHERE $where ORDER BY $order");
 
     foreach ($variant_list as $variant_index => $variant) {
         // maybe move to cache? not the greatest idea though

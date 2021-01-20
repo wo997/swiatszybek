@@ -5,9 +5,9 @@ $anuluj = urlParam(2);
 
 $accepted = $anuluj ? "0" : "1";
 
-query("UPDATE newsletter SET accepted = $accepted WHERE token = ?", [$token]);
+DB::execute("UPDATE newsletter SET accepted = $accepted WHERE token = ?", [$token]);
 
-$email = fetchValue("SELECT email FROM newsletter WHERE token = ?", [$token]);
+$email = DB::fetchVal("SELECT email FROM newsletter WHERE token = ?", [$token]);
 
 function quit($message, $type)
 {

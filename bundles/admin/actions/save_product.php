@@ -3,10 +3,10 @@
 $product_data = json_decode($_POST["product_data"], true);
 
 if (isset($product_data["remove"])) {
-    query("DELETE FROM variant WHERE product_id = ?", [
+    DB::execute("DELETE FROM variant WHERE product_id = ?", [
         $product_data["product_id"]
     ]);
-    query("DELETE FROM link_variant_attribute_value INNER JOIN variant USING (variant_id) WHERE product_id = ?", [
+    DB::execute("DELETE FROM link_variant_attribute_value INNER JOIN variant USING (variant_id) WHERE product_id = ?", [
         $product_data["product_id"]
     ]);
 } else {
@@ -27,14 +27,14 @@ if (isset($product_data["remove"])) {
     updateEntity($product_entity_data, "products", "product_id", $product_id);
 
     // categories
-    query("DELETE FROM link_product_category WHERE product_id = ?", [$product_id]);
+    DB::execute("DELETE FROM link_product_category WHERE product_id = ?", [$product_id]);
     $insert = "";
     foreach ($product_data["categories"] as $category_id) {
         $insert .= "($product_id," . intval($category_id) . "),";
     }
     if ($insert) {
         $insert = substr($insert, 0, -1);
-        query("INSERT INTO link_product_category (product_id, category_id) VALUES $insert");
+        DB::execute("INSERT INTO link_product_category (product_id, category_id) VALUES $insert");
     }
 
     triggerEvent("product_gallery_change", ["product_id" => intval($product_id)]);
@@ -66,7 +66,7 @@ if (isset($product_data["remove"])) {
     if (count($present_variant_ids) > 0) {
         $where .= " AND variant_id NOT IN (" . join(",", $present_variant_ids) . ")";
     }
-    query("DELETE FROM variant WHERE $where");
+    DB::execute("DELETE FROM variant WHERE $where");
 }
 
 triggerEvent("sitemap_change");

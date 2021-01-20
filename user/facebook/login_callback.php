@@ -76,7 +76,7 @@ if ($accessToken !== null) {
 $user_type = 'facebook';
 $authentication_token = $user_key;
 
-$user_data = fetchRow("SELECT user_id, email FROM users WHERE user_type = '$user_type' AND authentication_token = ?", [$authentication_token]);
+$user_data = DB::fetchRow("SELECT user_id, email FROM users WHERE user_type = '$user_type' AND authentication_token = ?", [$authentication_token]);
 if ($user_data) {
     $user_id = $user_data["user_id"];
     $email = $user_data["email"];
@@ -86,10 +86,10 @@ if ($user_data) {
         $email = "";
     }
 
-    query("INSERT INTO users (user_type,imie,nazwisko,email,authenticated,authentication_token,kraj,stworzono) VALUES (?,?,?,?,?,?,?,NOW())", [
+    DB::execute("INSERT INTO users (user_type,imie,nazwisko,email,authenticated,authentication_token,kraj,stworzono) VALUES (?,?,?,?,?,?,?,NOW())", [
         $user_type, $first_name, $last_name, $email, "1", $authentication_token, "Polska"
     ]);
 
-    $user_id = getLastInsertedId();
+    $user_id = DB::lastInsertedId();
 }
 loginUser($user_id, $email, $user_type, ["name" => $first_name . " " . $last_name]);

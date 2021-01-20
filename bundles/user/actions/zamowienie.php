@@ -5,7 +5,7 @@ if (!$zamowienie_link) {
     redirect("/");
 }
 
-$zamowienie_data = fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
+$zamowienie_data = DB::fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
 
 $basket = $zamowienie_data["cache_basket"];
 
@@ -38,7 +38,7 @@ if (empty($basket)) {
         return $v['variant_id'];
     }, $basket)), "[]");
 
-    $products = fetchArray("SELECT product_id, title, link, zdjecie, variant_id FROM variant v INNER JOIN products i USING(product_id) WHERE variant_id IN ($ids)");
+    $products = DB::fetchArr("SELECT product_id, title, link, zdjecie, variant_id FROM variant v INNER JOIN products i USING(product_id) WHERE variant_id IN ($ids)");
     $links = [];
     foreach ($products as $product) {
         $variant_id = $product["variant_id"];
@@ -285,7 +285,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
                 }
 
                 if (!empty($zamowienie_data["user_id"])) {
-                    $user = fetchRow("SELECT imie, nazwisko, firma, email,
+                    $user = DB::fetchRow("SELECT imie, nazwisko, firma, email,
                   (select count(1) from zamowienia z where z.user_id = u.user_id) as count
                   FROM users u WHERE user_id = " . intval($zamowienie_data["user_id"]));
 

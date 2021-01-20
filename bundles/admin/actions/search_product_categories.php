@@ -37,7 +37,7 @@ $responseArray = paginateData([
 
 if (isset($_POST["include_attributes"])) {
     foreach ($responseArray["results"] as $row_id => $row) {
-        $selected_attributes = fetchArray("SELECT attribute_id, main_filter FROM link_category_attribute WHERE category_id = " . $row["category_id"]);
+        $selected_attributes = DB::fetchArr("SELECT attribute_id, main_filter FROM link_category_attribute WHERE category_id = " . $row["category_id"]);
         $responseArray["results"][$row_id]["attributes"] = json_encode($selected_attributes);
     }
 }

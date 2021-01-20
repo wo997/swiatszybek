@@ -5,7 +5,7 @@ function showMenu($category_id, $depth = 0)
     $html = "";
 
     $category_id = intval($category_id);
-    $menu = fetchArray("SELECT url, category_id, m.title as title,
+    $menu = DB::fetchArr("SELECT url, category_id, m.title as title,
         cms.title as cms_title, cms.link as cms_url,
         p.product_id as product_id, p.title as product_title
         FROM menu m

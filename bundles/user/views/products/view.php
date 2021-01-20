@@ -4,7 +4,7 @@ $show_category = null;
 
 $category_link = urlParam(1);
 if ($category_link) {
-    $show_category = fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
+    $show_category = DB::fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
 }
 
 if (!$show_category) {
@@ -15,7 +15,7 @@ function showCategory($category, $level = 0)
 {
     global $category_link;
     $category_id = intval($category["category_id"]);
-    $subcategories = fetchArray("SELECT category_id, title, link, (
+    $subcategories = DB::fetchArr("SELECT category_id, title, link, (
       SELECT COUNT(1) FROM link_product_category link INNER JOIN products pr USING(product_id) WHERE link.category_id = pc.category_id AND pr.published
     ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND pc.published ORDER BY kolejnosc");
     $count = count($subcategories);
@@ -193,7 +193,7 @@ function showCategory($category, $level = 0)
                     return $html;
                 }
 
-                $attributes = fetchArray("SELECT name, attribute_id, data_type FROM product_attributes
+                $attributes = DB::fetchArr("SELECT name, attribute_id, data_type FROM product_attributes
         INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($show_category["category_id"]));
 
                 $output = "";

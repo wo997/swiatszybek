@@ -101,7 +101,7 @@ $params = [
     "main_search_fields" => ["title", "name"],
 ];
 
-$price_info = fetchRow("SELECT MIN(price_min) as min, MAX(price_max) as max FROM products p $join WHERE " . str_replace($price_query, "", $where));
+$price_info = DB::fetchRow("SELECT MIN(price_min) as min, MAX(price_max) as max FROM products p $join WHERE " . str_replace($price_query, "", $where));
 
 if ($search) {
     $params["search"] = $search;

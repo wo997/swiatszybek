@@ -20,7 +20,7 @@ function quit($message, $type, $destitation)
 $email = $_POST["email"];
 
 // is unauthenticated? fuck off
-$user_id = fetchValue("SELECT user_id FROM users WHERE email = ? AND authenticated = 0", [$email]);
+$user_id = DB::fetchVal("SELECT user_id FROM users WHERE email = ? AND authenticated = 0", [$email]);
 
 if ($user_id) {
     quit("Wyloguj się i przejdź proces rejestracji", 0, 'moje-konto');
@@ -31,7 +31,7 @@ if (isset($_POST["password"]) && isset($_POST["user_id"]) && isset($_POST["authe
     $user_id = $_POST["user_id"];
     $authentication_token = $_POST["authentication_token"];
 
-    query("UPDATE users SET password_hash = ?, authenticated = '1' WHERE user_id = ? AND authentication_token = ?", [
+    DB::execute("UPDATE users SET password_hash = ?, authenticated = '1' WHERE user_id = ? AND authentication_token = ?", [
         getPasswordHash($password), $_POST["user_id"], $authentication_token
     ]);
 
@@ -52,7 +52,7 @@ if (isset($_POST["password"]) && isset($_POST["user_id"]) && isset($_POST["authe
     redirect("/");
 }
 
-$user_data = fetchRow("SELECT user_id, authentication_token FROM users WHERE email = ?", [$email]);
+$user_data = DB::fetchRow("SELECT user_id, authentication_token FROM users WHERE email = ?", [$email]);
 
 if ($user_data) {
     $message = "<h2>Kliknij w link poniżej, żeby zmienić swoje hasło</h2><br><a style='font-size:18px' href='" . SITE_URL . "/resetowanie-hasla/" . $user_data["user_id"] . "/" . $user_data["authentication_token"] . "'>Zmień hasło</a>";
@@ -81,7 +81,7 @@ if ($user_data) {
 // $response = [];
 
 // // is unauthenticated? fuck off
-// $user_id = fetchValue("SELECT user_id FROM users WHERE email = ? AND authenticated = 0", [$email]);
+// $user_id = DB::fetchVal("SELECT user_id FROM users WHERE email = ? AND authenticated = 0", [$email]);
 
 // if ($user_id) {
 //   $response["message"] = quit("Wyloguj się i przejdź proces rejestracji", 0);
@@ -94,7 +94,7 @@ if ($user_data) {
 //   $user_id = $_POST["user_id"];
 //   $authentication_token = $_POST["authentication_token"];
 
-//   query("UPDATE users SET password_hash = ?, authenticated = '1' WHERE user_id = ? AND authentication_token = ?", [
+//   DB::execute("UPDATE users SET password_hash = ?, authenticated = '1' WHERE user_id = ? AND authentication_token = ?", [
 //     getPasswordHash($password), $_POST["user_id"], $authentication_token
 //   ]);
 
@@ -108,7 +108,7 @@ if ($user_data) {
 //   json_response($response));
 // }
 
-// $user_data = fetchRow("SELECT user_id, authentication_token FROM users WHERE email = ?", [$email]);
+// $user_data = DB::fetchRow("SELECT user_id, authentication_token FROM users WHERE email = ?", [$email]);
 
 // $response["redirect"] = "/resetowanie-hasla";
 

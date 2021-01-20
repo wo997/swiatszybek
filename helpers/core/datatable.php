@@ -30,7 +30,7 @@ function getRegularSearchQuery($fields, $words)
             break;
         }
 
-        $word = escapeSQL($word, false);
+        $word = DB::escape($word, false);
         if (!$word) {
             continue;
         }
@@ -88,7 +88,7 @@ function getRelevanceQuery($fields, $words)
         }
 
         foreach ($letter_groups as $letter_group => $points) {
-            $letter_group = escapeSQL($letter_group, false);
+            $letter_group = DB::escape($letter_group, false);
 
             foreach ($fields as $field) {
                 if (!$first) {
@@ -214,7 +214,7 @@ function paginateData($params = [])
             if ($group) {
                 $frmq = "(SELECT $order_key, " . join(",", $main_search_fields) . " FROM $frmq) t";
             }
-            $order_info = fetchRow("SELECT MAX($test_order_key) as order_max, MIN($test_order_key) as order_min, MAX($search_query) as relevance_max FROM $from WHERE $where");
+            $order_info = DB::fetchRow("SELECT MAX($test_order_key) as order_max, MIN($test_order_key) as order_min, MAX($search_query) as relevance_max FROM $from WHERE $where");
 
             $ratio = 1000; //round(30 * $order_info["relevance_max"] / max(abs($order_info["order_max"] - $order_info["order_min"]), 5)) / 100; // 30 % care about the order key, we want a match right?
 
@@ -232,14 +232,14 @@ function paginateData($params = [])
         $countQuery = "SELECT COUNT(*) FROM($countQuery) t";
     }
 
-    $totalRows = fetchValue($countQuery);
+    $totalRows = DB::fetchVal($countQuery);
     $pageCount = $rowCount > 0 ? ceil($totalRows / $rowCount) : 0;
 
     if ($order) {
         $order = "ORDER BY $order";
     }
 
-    $results = fetchArray("SELECT $select FROM $from WHERE $where $group $order LIMIT $bottomIndex,$rowCount");
+    $results = DB::fetchArr("SELECT $select FROM $from WHERE $where $group $order LIMIT $bottomIndex,$rowCount");
 
     $index = 0;
     foreach ($results as &$result) {
@@ -279,14 +279,14 @@ function getFilterCondition($field, $type, $filter_value)
     //if (in_array($type, ["=", "!=", "%"])) {
 
     if ($type == "<>") {
-        return " AND $field BETWEEN " . escapeSQL($filter_value[0]) . " AND " . escapeSQL(changeDate($filter_value[1], "+1 day"));
+        return " AND $field BETWEEN " . DB::escape($filter_value[0]) . " AND " . DB::escape(changeDate($filter_value[1], "+1 day"));
     }
 
     if (is_array($filter_value)) {
         if ($filter_value) {
             $list = "";
             foreach ($filter_value as $value) {
-                $list .= escapeSQL($value) . ",";
+                $list .= DB::escape($value) . ",";
             }
             $list = substr($list, 0, -1);
             return " AND $field " . ($type == "!=" ? " NOT IN" : " IN") . "(" . $list . ")";
@@ -302,18 +302,18 @@ function getFilterCondition($field, $type, $filter_value)
         if (!preg_replace("/[^%]/", "", $filter_value)) {
             return "";
         }
-        return " AND $field LIKE " . escapeSQL($filter_value);
+        return " AND $field LIKE " . DB::escape($filter_value);
     }
 
     if ($type == ">") {
-        return " AND $field > " . escapeSQL($filter_value);
+        return " AND $field > " . DB::escape($filter_value);
     }
 
     if ($type == "<") {
-        return " AND $field < " . escapeSQL(changeDate($filter_value, "+1 day"));
+        return " AND $field < " . DB::escape(changeDate($filter_value, "+1 day"));
     }
 
-    return " AND $field " . ($type == "!=" ? "!=" : "=") . escapeSQL($filter_value);
+    return " AND $field " . ($type == "!=" ? "!=" : "=") . DB::escape($filter_value);
 }
 
 $requiredFilterTables = [
@@ -336,7 +336,7 @@ function getRequiredFilterQuery($table, $params = [])
             return "$column_name=" . intval($params[$column_name]);
         }
 
-        return "$column_name=" . escapeSQL($params[$column_name]);
+        return "$column_name=" . DB::escape($params[$column_name]);
     }
     return "1";
 }
@@ -351,7 +351,7 @@ function rearrangeTable($table, $primary, $itemId = null, $toIndex = null, $para
 
     $primary = clean($primary);
 
-    $idList = fetchColumn("SELECT $primary FROM $table WHERE $where ORDER BY kolejnosc ASC");
+    $idList = DB::fetchCol("SELECT $primary FROM $table WHERE $where ORDER BY kolejnosc ASC");
     if ($itemId !== null && $toIndex !== null) {
         $itemId = intval($itemId);
         $fromIndex = array_search($itemId, $idList) + 1;
@@ -374,7 +374,7 @@ function rearrangeTable($table, $primary, $itemId = null, $toIndex = null, $para
     $i = 0;
     foreach ($idList as $id) {
         $i++;
-        query("UPDATE $table SET kolejnosc = $i WHERE $primary = $id");
+        DB::execute("UPDATE $table SET kolejnosc = $i WHERE $primary = $id");
     }
 }
 
@@ -386,8 +386,8 @@ function orderTableBeforeListing($table, $primary, $params = [])
     }
 
     if (
-        fetchValue("SELECT 1 FROM $table WHERE kolejnosc = 0") || // any new?
-        fetchValue("SELECT 1 FROM $table WHERE $where GROUP BY kolejnosc HAVING COUNT(1) > 1") // duplicates
+        DB::fetchVal("SELECT 1 FROM $table WHERE kolejnosc = 0") || // any new?
+        DB::fetchVal("SELECT 1 FROM $table WHERE $where GROUP BY kolejnosc HAVING COUNT(1) > 1") // duplicates
     ) {
         rearrangeTable($table, $primary, null, null, $params);
     }

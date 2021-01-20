@@ -243,7 +243,7 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
     $file_path = $base_path . $name . $name_suffix . "." . $file_type;
 
     while (true) {
-        if (fetchValue("SELECT 1 FROM uploads WHERE file_path = ?", [$file_path])) {
+        if (DB::fetchVal("SELECT 1 FROM uploads WHERE file_path = ?", [$file_path])) {
             if ($iterator < 10) {
                 $iterator++;
             } else if ($iterator > 10000) {
@@ -260,7 +260,7 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
     // save plain file
     copy($tmp_file_path, $file_path);
 
-    query("INSERT INTO uploads(file_path, uploaded_file_name, asset_type, user_id) VALUES (?,?,?,?)", [
+    DB::execute("INSERT INTO uploads(file_path, uploaded_file_name, asset_type, user_id) VALUES (?,?,?,?)", [
         $file_path, $uploaded_file_name, $asset_type, $user_id
     ]);
 
@@ -280,7 +280,7 @@ function deleteAssetByPath($path)
 
     $image_file_path = ltrim($path, "/");
     $file_name = getFilenameWithoutExtension($image_file_path);
-    $asset_type = fetchValue("SELECT asset_type FROM uploads WHERE file_path = ?", [$image_file_path]);
+    $asset_type = DB::fetchVal("SELECT asset_type FROM uploads WHERE file_path = ?", [$image_file_path]);
 
     @unlink($image_file_path);
 
@@ -295,7 +295,7 @@ function deleteAssetByPath($path)
         }
     }
 
-    query("DELETE FROM uploads WHERE file_path = ?", [$image_file_path]);
+    DB::execute("DELETE FROM uploads WHERE file_path = ?", [$image_file_path]);
 }
 
 function mime2ext($mime)

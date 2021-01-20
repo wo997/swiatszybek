@@ -3,7 +3,7 @@
 $cms_id = urlParam(2);
 if ($cms_id) {
     $cms_id = intval($cms_id);
-    $page_data = fetchRow("SELECT * FROM cms WHERE cms_id = $cms_id");
+    $page_data = DB::fetchRow("SELECT * FROM cms WHERE cms_id = $cms_id");
 } else {
     $cms_id = -1;
     $page_data = null;

@@ -3,11 +3,11 @@
 $user_id = urlParam(1);
 $authentication_token = urlParam(2);
 
-query("UPDATE users SET authenticated = 1, stworzono = NOW() WHERE user_id = ? AND authentication_token = ?", [
+DB::execute("UPDATE users SET authenticated = 1, stworzono = NOW() WHERE user_id = ? AND authentication_token = ?", [
     $user_id, $authentication_token
 ]);
 
-$user_data = fetchRow("SELECT email, authenticated FROM users WHERE user_id = ?", [$user_id]);
+$user_data = DB::fetchRow("SELECT email, authenticated FROM users WHERE user_id = ?", [$user_id]);
 
 if ($user_data["authenticated"] == "1") {
     $response_footer = "

@@ -55,7 +55,7 @@ class Entity
      * @param  array $props
      * @return EntityObject
      */
-    public static function getFromProps($name, $props) // reference?
+    public static function getFromProps($name, $props) // reference? seems to make 0 difference for memory management, wow
     {
         return new EntityObject($name, $props);
     }
@@ -143,7 +143,7 @@ class Entity
             $children[] = $child;
         }
 
-        $children_props = fetchArray($query);
+        $children_props = DB::fetchArr($query);
         foreach ($children_props as $child_props) {
             $child = Entity::getFromProps($child_entity_name, $child_props);
             $child->setParent($obj); // ugh it should be the same thing that's a parent but it loops kinda like if it wasn't the case

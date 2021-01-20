@@ -6,7 +6,7 @@ if (!isset($CRON)) die;
 
 include_once "kernel.php";
 
-query("UPDATE products SET cache_sales = cache_sales * 0.95"); // bestsellers
+DB::execute("UPDATE products SET cache_sales = cache_sales * 0.95"); // bestsellers
 
 function dailyReport()
 {
@@ -18,9 +18,9 @@ function dailyReport()
 
     $variant_list = [];
 
-    $info = fetchRow("SELECT SUM(koszt) as koszt, SUM(1) as zamowienia FROM zamowienia WHERE $where");
+    $info = DB::fetchRow("SELECT SUM(koszt) as koszt, SUM(1) as zamowienia FROM zamowienia WHERE $where");
 
-    $baskets = fetchArray("SELECT basket FROM zamowienia WHERE $where ORDER BY oplacono ASC LIMIT 1000");
+    $baskets = DB::fetchArr("SELECT basket FROM zamowienia WHERE $where ORDER BY oplacono ASC LIMIT 1000");
     foreach ($baskets as $basket) {
         $variants = json_decode($basket["basket"], true);
         foreach ($variants as $variant) {

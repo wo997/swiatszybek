@@ -24,7 +24,7 @@ namespace abc;
 
 echo "x";
 
-$u = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
+$u = DB::fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
 $u[""];
 
 /** @type {Cat[]} */
@@ -37,7 +37,7 @@ foreach ($cats as $cat) {
 $cats[0]["name"] = "sdsad";
 
 /** @type {Cat} */
-$a = fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
+$a = DB::fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
 
 $a["age"]["value"] = "1";
 

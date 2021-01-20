@@ -6,7 +6,7 @@ $productsXML = "";
 //$now = str_replace("/","T",date("Y-m-d/H:i:s+00.00"));
 $now = date("Y-m-d");
 
-$products = fetchArray("SELECT i.product_id, title, link FROM products i WHERE i.published = 1");
+$products = DB::fetchArr("SELECT i.product_id, title, link FROM products i WHERE i.published = 1");
 foreach ($products as $product) {
     $productsXML .= "<url>
         <loc>" . getProductLink($product["product_id"], $product["link"]) . "</loc>
@@ -16,7 +16,7 @@ foreach ($products as $product) {
 }
 
 $cmssXML = "";
-$cmss = fetchArray("SELECT link FROM cms WHERE published = 1");
+$cmss = DB::fetchArr("SELECT link FROM cms WHERE published = 1");
 foreach ($cmss as $cms) {
     $prio = 1 - 0.2 * (1 + substr_count($cms["link"], "/"));
     if ($cms["link"] == "") $prio = 1;

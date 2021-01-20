@@ -14,7 +14,7 @@ if (isset($args["data"]["food"]) && $args["data"]["food"] != $args["current_data
     $res["append_set_query"][] = "ate_at = NOW()";
 
     // 3. immediately (__before), but if you wanna validate data go for __after or maybe we could gather all sqls from here, less files to handle ofc
-    //query("UPDATE pies SET ate_at = NOW() WHERE pies_id = " . $args["entity_id"]);
+    //DB::execute("UPDATE pies SET ate_at = NOW() WHERE pies_id = " . $args["entity_id"]);
 
     if ($args["data"]["food"] < 0) {
         $res["errors"][] = "Food quantity: " . $args["data"]["food"] . " is below 0";

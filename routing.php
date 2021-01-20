@@ -96,11 +96,11 @@ function getNotificationCountForPage($page, $children_notification_count = 0)
     $notification_count = $children_notification_count;
     if (isset($page['url'])) {
         if ($page['url'] == "zamowienia") {
-            $notification_count += fetchValue("SELECT COUNT(1) FROM zamowienia WHERE status_id IN (0,1)");
+            $notification_count += DB::fetchVal("SELECT COUNT(1) FROM zamowienia WHERE status_id IN (0,1)");
         } else if ($page['url'] == "komentarze") {
-            $notification_count += fetchValue("SELECT COUNT(1) FROM comments WHERE accepted = 0");
+            $notification_count += DB::fetchVal("SELECT COUNT(1) FROM comments WHERE accepted = 0");
         } else if ($page['url'] == "oczekujacy") {
-            $notification_count += fetchValue("SELECT COUNT(1) FROM notifications WHERE sent = 0");
+            $notification_count += DB::fetchVal("SELECT COUNT(1) FROM notifications WHERE sent = 0");
         }
     }
     return $notification_count;
@@ -194,7 +194,7 @@ function checkUrl($url)
 if ($pageName) {
     // hardcoded page example - will be removed in the future
     if (strpos(URL, "deployment") !== 0) {
-        $page_data = fetchRow(
+        $page_data = DB::fetchRow(
             "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
             [explode("/", URL)[0] . "%"]
         );
@@ -209,7 +209,7 @@ if ($pageName) {
 } else {
 
     $canSee = $app["user"]["priveleges"]["backend_access"] ? "1" : "published = 1";
-    $page_data = fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [URL]);
+    $page_data = DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [URL]);
 
     if (isset($_POST["content"])) {
         $page_data["content"] = $_POST["content"];

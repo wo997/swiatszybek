@@ -4,7 +4,7 @@ $link = $_POST["link"];
 
 $log = "";
 
-$zamowienie_id = intval(fetchValue("SELECT zamowienie_id FROM zamowienia WHERE link = ?", [$link]));
+$zamowienie_id = intval(DB::fetchVal("SELECT zamowienie_id FROM zamowienia WHERE link = ?", [$link]));
 
 include "helpers/safe_post.php";
 
@@ -15,7 +15,7 @@ foreach ($_POST as $k => $new) {
 
     $k = clean(substr($k, 2));
 
-    $old = fetchValue("SELECT $k FROM zamowienia WHERE zamowienie_id = $zamowienie_id");
+    $old = DB::fetchVal("SELECT $k FROM zamowienia WHERE zamowienie_id = $zamowienie_id");
 
     if ($old == $new) continue;
 
@@ -23,7 +23,7 @@ foreach ($_POST as $k => $new) {
         $log .= "$k: $old => $new<br>";
     }
 
-    query("UPDATE zamowienia SET $k = ? WHERE zamowienie_id = $zamowienie_id", [$new]);
+    DB::execute("UPDATE zamowienia SET $k = ? WHERE zamowienie_id = $zamowienie_id", [$new]);
 
     addZamowienieLog($zamowienie_id, $k, $old, $new);
 }

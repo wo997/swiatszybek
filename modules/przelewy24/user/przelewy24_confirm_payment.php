@@ -4,7 +4,7 @@
 
 require_once __DIR__ . "/../przelewy24_init.php";
 
-$zamowienie_data = fetchRow("SELECT * FROM zamowienia WHERE session_id = ?", [$_POST["p24_session_id"]]);
+$zamowienie_data = DB::fetchRow("SELECT * FROM zamowienia WHERE session_id = ?", [$_POST["p24_session_id"]]);
 
 $P24 = $app["przelewy24"];
 

@@ -1,7 +1,7 @@
 <?php //event[config_change]
 
 
-$props = fetchArray("SELECT prop_id, prop_name, prop_value FROM konfiguracja");
+$props = DB::fetchArr("SELECT prop_id, prop_name, prop_value FROM konfiguracja");
 
 $out = "<?php \$config=[";
 foreach ($props as $p) {

@@ -14,9 +14,9 @@ if (!$zamowienie_link) {
 }*/
 
 // set auth token
-query("UPDATE zamowienia SET session_id = ? WHERE link = ?", [$zamowienie_link . "-" . uniqid(), $zamowienie_link]);
+DB::execute("UPDATE zamowienia SET session_id = ? WHERE link = ?", [$zamowienie_link . "-" . uniqid(), $zamowienie_link]);
 
-$zamowienie_data = fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
+$zamowienie_data = DB::fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);
 
 if ($zamowienie_data["status_id"] === 0) {
     require_once __DIR__ . "/../przelewy24_init.php";
@@ -49,7 +49,7 @@ if ($zamowienie_data["status_id"] === 0) {
 
     if (isset($RET["token"])) {
         $przelewy24_token = $RET["token"];
-        //query("UPDATE zamowienia SET przelewy24_token = ? WHERE zamowienie_id = ? LIMIT 1", [$przelewy24_token, $zamowienie_id]); // do we ever use it? idk
+        //DB::execute("UPDATE zamowienia SET przelewy24_token = ? WHERE zamowienie_id = ? LIMIT 1", [$przelewy24_token, $zamowienie_id]); // do we ever use it? idk
         $url = "https://" . (secret("p24_testMode") ? "sandbox" : "secure") . ".przelewy24.pl/trnRequest/" . $przelewy24_token;
 
         $_SESSION["p24_back_url"] = $link;

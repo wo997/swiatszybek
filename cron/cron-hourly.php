@@ -9,7 +9,7 @@ function sendPaymentNotification($delayHours = 5)
     $dateBottom = date("Y-m-d H", time() + 100 - 3600 * $delayHours) . ":00:00";
     $dateTop = date("Y-m-d H", time() + 100 - 3600 * ($delayHours - 1)) . ":00:00";
 
-    $zamowienia = fetchArray(
+    $zamowienia = DB::fetchArr(
         "SELECT zamowienie_id, link, email, imie, nazwisko, zlozono
         FROM zamowienia WHERE status_id = 0 AND zlozono >= '$dateBottom' AND zlozono < '$dateTop'"
     );
@@ -39,7 +39,7 @@ function inviteToGiveComment($hour = 18, $daysAfterSent = 14)
     if ($currentHour == $hour || isset($TEST)) {
         $someDaysAgoDate = date("Y-m-d", time() - 3600 * 24 * $daysAfterSent);
 
-        $zamowienia = fetchArray(
+        $zamowienia = DB::fetchArr(
             "SELECT zamowienie_id, link, email, imie, nazwisko, zlozono, basket, user_id
             FROM zamowienia WHERE status_id IN (2,3) AND DATE(wyslano) = '$someDaysAgoDate'"
         );
@@ -51,7 +51,7 @@ function inviteToGiveComment($hour = 18, $daysAfterSent = 14)
                 return $v['i'];
             }, $basket)), "[]");
 
-            $products = fetchArray("SELECT product_id, link FROM products WHERE product_id IN ($ids)");
+            $products = DB::fetchArr("SELECT product_id, link FROM products WHERE product_id IN ($ids)");
             $links = [];
             foreach ($products as $item) {
                 $links[$item["product_id"]] = $item["link"];

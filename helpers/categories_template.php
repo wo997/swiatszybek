@@ -13,7 +13,7 @@ function showCategory($category, $level = 0)
     global $table_name;
     $category_id = $category["category_id"];
     $where = "parent_id = " . intval($category_id);
-    $subcategories = fetchArray("SELECT category_id, title, published FROM $table_name WHERE $where ORDER BY kolejnosc");
+    $subcategories = DB::fetchArr("SELECT category_id, title, published FROM $table_name WHERE $where ORDER BY kolejnosc");
     $count = count($subcategories);
 
     $published = $category["published"] ? "" : "style='text-decoration: line-through' data-tooltip='Kategoria jest ukryta!'";
@@ -35,9 +35,9 @@ function showCategory($category, $level = 0)
 
 
 
-//$category = fetchRow("SELECT category_id, title, published FROM product_categories WHERE category_id = $category_id");
+//$category = DB::fetchRow("SELECT category_id, title, published FROM product_categories WHERE category_id = $category_id");
 if ($parent_id > 0) {
-    $category = fetchRow("SELECT category_id, title, published FROM $table_name WHERE category_id = $parent_id");
+    $category = DB::fetchRow("SELECT category_id, title, published FROM $table_name WHERE category_id = $parent_id");
 } else {
     $category = [
         "category_id" => 0,

@@ -71,7 +71,7 @@ $session_id = $link_hash . session_id();
 
 $paczkomat = $_POST["dostawa"] == 'p' ? def($_POST, "paczkomat", NULL) : NULL;
 
-query(
+DB::execute(
     "INSERT INTO zamowienia (
     user_id, link, koszt, zlozono, status_id,
     imie, nazwisko, email, telefon, firma, nip,
@@ -102,19 +102,19 @@ query(
     ]
 );
 
-$zamowienie_id = getLastInsertedId();
+$zamowienie_id = DB::lastInsertedId();
 
 // cannot use order/print_basket_nice because in email no css stylesheets are allowed, would we want to merge it?
 $res = "<table style='border-spacing: 0;'><tr style='background: " . primary_clr . ";color: white;'><td style='padding:4px'>Ilość</td><td style='padding:4px'>Produkt</td><td style='padding:4px'>Cena</td></tr>";
 
 foreach ($app["user"]["basket"]["variants"] as $v) {
-    query("INSERT INTO basket_content (zamowienie_id, variant_id, product_id, real_price, quantity, total_price, title, zdjecie) VALUES (?,?,?,?,?,?,?,?)", [
+    DB::execute("INSERT INTO basket_content (zamowienie_id, variant_id, product_id, real_price, quantity, total_price, title, zdjecie) VALUES (?,?,?,?,?,?,?,?)", [
         $zamowienie_id, $v["variant_id"], $v["product_id"], $v["real_price"], $v["quantity"], $v["total_price"], $v["title"] . " " . $v["name"], $v["zdjecie"]
     ]);
 
-    query("UPDATE products SET cache_sales = cache_sales + ? WHERE product_id = ?", [$v["quantity"], $v["variant_id"]]);
+    DB::execute("UPDATE products SET cache_sales = cache_sales + ? WHERE product_id = ?", [$v["quantity"], $v["variant_id"]]);
 
-    query("UPDATE variant SET stock = stock - " . intval($v["quantity"]) . " where variant_id = " . intval($v["quantity"]));
+    DB::execute("UPDATE variant SET stock = stock - " . intval($v["quantity"]) . " where variant_id = " . intval($v["quantity"]));
 
     $res .= "<tr><td style='padding:4px'>" . $v["quantity"] . " szt.</td><td style='padding:4px'>" . $v["title"] . " " . $v["name"] . "</td><td style='padding:4px'>" . $v["total_price"] . " zł</td></tr>";
 }
@@ -137,23 +137,23 @@ $link_full = getZamowienieLink($link);
 /*
 if (!$impersonate) {
   if ($_POST["dostawa"] == 'k' && $_POST["miejscowosc"] != "") {
-    query("UPDATE users SET kraj = ?, miejscowosc = ?, kod_pocztowy = ?, ulica = ?, nr_domu = ? WHERE user_id = $user_id LIMIT 1", [
+    DB::execute("UPDATE users SET kraj = ?, miejscowosc = ?, kod_pocztowy = ?, ulica = ?, nr_domu = ? WHERE user_id = $user_id LIMIT 1", [
       $_POST["kraj"], $_POST["miejscowosc"], $_POST["kod_pocztowy"], $_POST["ulica"], $_POST["nr_domu"]
     ]);
   }
 
   if ($user_type != 'regular') {
-    query("UPDATE users SET email = ? WHERE user_id = $user_id LIMIT 1", [
+    DB::execute("UPDATE users SET email = ? WHERE user_id = $user_id LIMIT 1", [
       $_POST["email"], $user_id
     ]);
   }
 
   if ($_POST["buyer_type"] == 'f') {
-    query("UPDATE users SET firma = ?, nip = ?, email = ?, telefon = ? WHERE user_id = ? LIMIT 1", [
+    DB::execute("UPDATE users SET firma = ?, nip = ?, email = ?, telefon = ? WHERE user_id = ? LIMIT 1", [
       $_POST["firma"], $_POST["nip"], $_POST["email"], $_POST["telefon"], $user_id
     ]);
   } else {
-    query("UPDATE users SET imie = ?, nazwisko = ?, email = ?, telefon = ? WHERE user_id = ? LIMIT 1", [
+    DB::execute("UPDATE users SET imie = ?, nazwisko = ?, email = ?, telefon = ? WHERE user_id = ? LIMIT 1", [
       $_POST["imie"], $_POST["nazwisko"], $_POST["email"], $_POST["telefon"], $user_id
     ]);
   }

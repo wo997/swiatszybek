@@ -10,7 +10,7 @@ if ($product_id) {
     redirect("/");
 }
 
-$product_data = fetchRow("SELECT * FROM products WHERE product_id = $product_id");
+$product_data = DB::fetchRow("SELECT * FROM products WHERE product_id = $product_id");
 if (isset($preview_params) && isset($preview_params["variants"])) {
     $product_data = array_merge($product_data, $preview_params);
 }
@@ -28,7 +28,7 @@ $priceText = $product_data["price_min"];
 if (!empty($product_data["price_max"]) && $product_data["price_min"] != $product_data["price_max"])
     $priceText .= " - " . $product_data["price_max"];
 
-$variants = fetchArray("SELECT * FROM variant WHERE product_id = $product_id AND published = 1 ORDER BY kolejnosc");
+$variants = DB::fetchArr("SELECT * FROM variant WHERE product_id = $product_id AND published = 1 ORDER BY kolejnosc");
 
 if (isset($preview_params) && isset($preview_params["variants"])) {
     $variants = json_decode($preview_params["variants"], true);
@@ -75,7 +75,7 @@ include "global/includes_for_cms_page.php";
     var variants = <?= json_encode($variants) ?>;
     const PRODUCT_ID = <?= $product_data["product_id"] ?>;
 
-    var attribute_values_array = <?= json_encode(fetchArray('SELECT value, value_id, attribute_id, parent_value_id FROM attribute_values'), true) ?>;
+    var attribute_values_array = <?= json_encode(DB::fetchArr('SELECT value, value_id, attribute_id, parent_value_id FROM attribute_values'), true) ?>;
     var attribute_values = {};
     attribute_values_array.forEach(value => {
         attribute_values[value["value_id"]] = {
@@ -104,7 +104,7 @@ include "global/includes_for_cms_page.php";
         value.whole_value = whole_value;
     });
 
-    var attributes_array = <?= json_encode(fetchArray('SELECT name, attribute_id FROM product_attributes'), true) ?>;
+    var attributes_array = <?= json_encode(DB::fetchArr('SELECT name, attribute_id FROM product_attributes'), true) ?>;
     var attributes = {};
     attributes_array.forEach(attribute => {
         attributes[attribute["attribute_id"]] = attribute["name"];
@@ -296,7 +296,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
         <div class="comments table-without-headers">
             <?php
-            $comments = fetchArray("SELECT dodano, pseudonim, tresc, user_id, comment_id, rating, accepted FROM comments WHERE product_id = " . $product_data["product_id"] . " AND accepted = 1");
+            $comments = DB::fetchArr("SELECT dodano, pseudonim, tresc, user_id, comment_id, rating, accepted FROM comments WHERE product_id = " . $product_data["product_id"] . " AND accepted = 1");
 
             foreach ($comments as $comment) {
                 echo '<div style="display:none">' . $comment["pseudonim"] . ' - ' . $comment["tresc"] . '</div>';

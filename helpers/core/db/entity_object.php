@@ -23,7 +23,7 @@ class EntityObject
         if ($obj_curr_id === -1) {
             $this->setVarFromArray($props);
         } else {
-            $this->curr_props = fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
+            $this->curr_props = DB::fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
             $this->setVarFromArray(def($this->curr_props, []));
             $this->setVarFromArray($props);
         }
@@ -110,7 +110,7 @@ class EntityObject
                 $query = rtrim($query, ",");
                 $query .= " WHERE " . $this->id_column . "=" . $this->getId();
                 var_dump([$query, array_values($update_props)]);
-                //query($query, array_values($update_props));
+                //DB::execute($query, array_values($update_props));
                 //return true;
             }
 
@@ -139,8 +139,8 @@ class EntityObject
             $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
 
             var_dump([$query, array_values($insert_props)]);
-            //query($query, array_values($insert_props));
-            //$entity_id = getLastInsertedId();
+            //DB::execute($query, array_values($insert_props));
+            //$entity_id = DB::lastInsertedId();
             //return $entity_id;
 
             return;

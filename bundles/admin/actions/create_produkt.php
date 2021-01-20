@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}create_product]
 
 // TODO: abandon
-query("INSERT INTO products (title) VALUES (?)", [$_POST["title"]]);
-$id = getLastInsertedId();
+DB::execute("INSERT INTO products (title) VALUES (?)", [$_POST["title"]]);
+$id = DB::lastInsertedId();
 
 redirect(STATIC_URLS["ADMIN"] . "produkt/$id");

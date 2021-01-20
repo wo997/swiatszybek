@@ -37,10 +37,20 @@ $props = [
         ],
     ]
 ];
+// ugh, paws don't change?
 
 // TODO: transactions :P
 $pies = Entity::getFromProps("pies", $props);
 $pies->saveToDB();
+
+// memory test - it's totally fine, there might be no room for improvement
+// $piess = [];
+// for ($i = 0; $i < 10; $i++) {
+//     $pies = Entity::getFromProps("pies", $props);
+//     $piess[] = $pies;
+//     $pies->saveToDB();
+//     var_dump([$i, memory_get_usage()]);
+// }
 
 // $pies_paw_8 = Entity::getById("pies_paw", 8);
 // $pies_paw_8->setWillDelete();
