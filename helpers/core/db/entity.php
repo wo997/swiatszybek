@@ -1,136 +1,156 @@
 <?php
 
-
-/**
- * Updates entity
- * - $data: associative array
- * - $table: string 
- * - $primary: string 
- * - $id: int
- * - ?$log: bool
- * - return: void
- *
- */
-function updateEntity($data, $table, $primary, $id, $log = false)
+class Entity
 {
-    $query = "UPDATE " . clean($table) . " SET ";
-    foreach (array_keys($data) as $field) {
-        $query .= clean($field) . "=?,";
-    }
-    $query = rtrim($query, ",");
-    $query .= " WHERE " . clean($primary) . "=" . intval($id);
-    query($query, array_values($data));
-}
+    private static $entities = [];
+    private static $entities_with_parent = [];
 
-/**
- * **USE getEntityId INSTEAD**
- * - Creates entity and returns its id
- * - $table: string
- * - return: int
- *
- */
-function addEntity($table, $options = [])
-{
-    // TODO logging
-    // $log = false, $primary = null
-
-    $data = def($options, "data", []);
-
-    $keys_query = "";
-    foreach (array_keys($data) as $field) {
-        $keys_query .= clean($field) . ",";
-    }
-    $keys_query = rtrim($keys_query, ",");
-    $values_query = rtrim(str_repeat("?,", count($data)), ",");
-
-    query("INSERT INTO " . clean($table) . "($keys_query) VALUES($values_query)", array_values($data));
-    $entity_id = getLastInsertedId();
-    return $entity_id;
-}
-
-/**
- * Creates entity for id = -1 and returns id 
- * - $table: string 
- * - $id: int (-1 for new instances)
- * - return: int
- *
- */
-function getEntityId($table, $id, $options = [])
-{
-    if ($id == "-1") {
-        return addEntity($table, $options);
-    } else {
-        return intval($id);
-    }
-}
-
-function removeEntity($table, $primary, $id)
-{
-    query("DELETE FROM " . clean($table) . " WHERE " . clean($primary) . "=" . intval($id));
-}
-
-
-/* NEW FAKE ORM BELOW */
-
-/* different name cause it's already used */
-/* these are pretty much setters but we might want to have getters as well, simple event listeners will do the job */
-function updateEnt($entity_name, $entity_id, $data)
-{
-    $entity_name = clean($entity_name);
-    $primary = $entity_name . "_id"; // hardcoded but could come from _definition.json as well
-
-
-    //$current_data
-
-    // that should be kinda optional, tbh I think that if there are some dependencies the event should tell us what to fetch, that would make it crazy fast
-    $current_data = fetchRow("SELECT * FROM $entity_name WHERE $primary = $entity_id");
-
-    $before_res = triggerEvent($entity_name . "__before", ["current_data" => $current_data, "data" => $data, "entity_id" => $entity_id]);
-
-    $append_set_query_arr = [];
-    $errors = [];
-    foreach ($before_res as $res) {
-        $append_data = def($res, "append_data", []);
-        foreach ($append_data as $field => $value) {
-            $data[$field] = $value;
+    public static function register($name, $props = [])
+    {
+        if (!isset(self::$entities[$name])) {
+            self::$entities[$name] = [
+                "props" => [],
+                "parent" => null
+            ];
         }
-        $append_set_query_arr = array_merge($append_set_query_arr, def($res, "append_set_query", []));
-        $errors = array_merge($errors, def($res, "errors", []));
+
+        $parent = def(self::$entities_with_parent, $name, null);
+        if ($parent) {
+            $props["parent"] = $parent;
+        }
+
+        // it should tell other entities that there is a prop that is a child of other entity ezy
+        if (isset($props["props"])) {
+            self::$entities[$name]["props"] = array_merge($props["props"], self::$entities[$name]["props"]);
+
+            foreach (self::$entities[$name]["props"] as $prop_name => $prop) {
+                $prop_type = $prop["type"];
+
+                if ($prop_type && endsWith($prop_type, "[]")) {
+                    $child_entity_name = substr($prop_type, 0, -2);
+
+                    self::$entities_with_parent[$child_entity_name] = [
+                        "name" => $name,
+                        "prop" => $prop_name
+                    ];
+                    self::register($child_entity_name);
+                }
+            }
+        }
+
+        if (isset($props["parent"])) {
+            self::$entities[$name]["parent"] = $props["parent"];
+        }
     }
 
-    if (isset($errors[0])) {
-        // TODO: feel free to log it baby, devs would love u
-        var_dump($errors);
-        return $errors;
+    public static function getEntityProps($name)
+    {
+        return def(self::$entities, $name, null);
     }
 
-    // run the actual update query
-    $query = "UPDATE $entity_name SET ";
-    foreach (array_keys($data) as $field) {
-        $query .= clean($field) . "=?,";
+    /**
+     * if you pass just the ID it will act like getById
+     *
+     * @param  string $name
+     * @param  array $props
+     * @return EntityObject
+     */
+    public static function getFromProps($name, $props) // reference?
+    {
+        return new EntityObject($name, $props);
     }
-    if (isset($append_set_query_arr[0])) {
-        $query .= join(",", $append_set_query_arr) . ",";
+
+    /**
+     * createById
+     *
+     * @param  string $name
+     * @param  number $id
+     * @return EntityObject
+     */
+    public static function getById($name, $id)
+    {
+        $props = [self::getEntityIdColumn($name) => $id];
+        return new EntityObject($name, $props);
     }
-    $query = rtrim($query, ",");
-    $query .= " WHERE " . clean($primary) . "=" . intval($entity_id);
 
-    query($query, array_values($data));
+    public static function getEntityIdColumn($name)
+    {
+        return $name . "_id";
+    }
 
-    // TODO: are you sure we would even need $current_data?
-    triggerEvent($entity_name . "__after", ["current_data" => $current_data, "data" => $data, "entity_id" => $entity_id]);
-    //var_Dump();
+    /**
+     * setManyToOneEntities
+     *
+     * @param  mixed $obj
+     * @param  mixed $obj_prop_name
+     * @param  mixed $child_entity_name
+     * @param  mixed $children_props
+     * @param  mixed $options
+     * @return EntityObject[]
+     */
+    public static function setManyToOneEntities(EntityObject $obj, $obj_prop_name, $child_entity_name, $children_props)
+    {
+        //var_dump($options);
 
-    //$entity_name
+        /** @var EntityObject[] */
+        $curr_children = def($obj->getProp($obj_prop_name), []);
 
-    // empty array means success, kinda counterintuitive to return errors but it is the way it is man;
-    return [];
-}
+        $children_with_id_props = [];
+        $children = [];
+        foreach ($children_props as &$child_props) {
+            if ($child_props instanceof EntityObject) {
+                return;
+            }
 
-function updateManyEntities($entity_name, $entity_ids, $data)
-{
-    // performance issues are going to occour
-    foreach ($entity_ids as $entity_id) {
-        updateEnt($entity_name, $entity_id, $data);
+            $child_id_column = Entity::getEntityIdColumn($child_entity_name);
+            $child_id = intval(def($child_props, $child_id_column, -1));
+            if ($child_id === -1) {
+                $child_props[$obj->getIdColumn()] = $obj->getId();
+                $child = Entity::getFromProps($child_entity_name, $child_props);
+                $children[] = $child;
+            } else {
+                $children_with_id_props[$child_id] = $child_props;
+            }
+        }
+        unset($child_props);
+
+        foreach ($curr_children as &$curr_child) {
+            $child_props = def($children_with_id_props, $curr_child->getId(), null);
+
+            if ($child_props) {
+                $curr_child->setVarFromArray($child_props);
+            } else {
+                $curr_child->setWillDelete();
+            }
+            $children[] = $curr_child;
+        }
+        unset($child);
+
+        return $children;
+    }
+
+    public static function getManyToOneEntities(EntityObject $obj, $child_entity_name, $options = [])
+    {
+        /** @var EntityObject */
+        $child = def($options, "child", null);
+
+        $children = [];
+
+        $query = "SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId();
+
+        if ($child) {
+            $query .= " AND " . Entity::getEntityIdColumn($child_entity_name) . " <> " . $child->getId();
+            $children[] = $child;
+        }
+
+        $children_props = fetchArray($query);
+        foreach ($children_props as $child_props) {
+            $child = Entity::getFromProps($child_entity_name, $child_props);
+            $child->setParent($obj); // ugh it should be the same thing that's a parent but it loops kinda like if it wasn't the case
+            $children[] = $child;
+        }
+
+        //var_dump(["children <<<<<", $children, "children >>>>>"]);
+        return $children;
     }
 }

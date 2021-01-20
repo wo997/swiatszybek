@@ -158,7 +158,7 @@ class EntityObject
             $val = $this->getProp($prop_name);
         }
 
-        $prop_props = def(EntityManager::getEntityProps($this->name), ["props", $prop_name]);
+        $prop_props = def(Entity::getEntityProps($this->name), ["props", $prop_name]);
         $prop_type = def($prop_props, "type", "");
 
         if (!$prop_props || !$prop_type) {
@@ -167,18 +167,23 @@ class EntityObject
 
         if ($prop_type && endsWith($prop_type, "[]")) {
             $child_entity_name = substr($prop_type, 0, -2);
-            EntityManager::setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
+            Entity::setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
         }
 
-        $setter = "set__" . $this->name . "_" . $prop_name; // TODO: setters as events?
-        if (function_exists($setter)) {
+        $setter = $this->name . "_set_" .  $prop_name;
+        $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
+        foreach ($vals as $val) {
+            return $val;
+        }
+
+        /*if (function_exists($setter)) {
             $res = call_user_func($setter, $this, $val);
             if ($res !== null) { // handle errors maybe?
                 $val = $res;
             }
         } else if (is_array($val)) { // nah
             return;
-        }
+        }*/
 
         $this->props[$prop_name] = $val;
     }
@@ -193,18 +198,23 @@ class EntityObject
     public function getProp($prop_name, $options = [])
     {
         if ($this->shouldFetchProp($prop_name)) {
-            $prop_type = def(EntityManager::getEntityProps($this->name), ["props", $prop_name, "type"]);
+            $prop_type = def(Entity::getEntityProps($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $child_entity_name = substr($prop_type, 0, -2);
-                $this->props[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
+                $this->props[$prop_name] = Entity::getManyToOneEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
             }
 
-            $getter = "get__" . $this->name . "_" . $prop_name;
-            if (function_exists($getter)) {
+            $getter = $this->name . "_get_" .  $prop_name;
+            $vals = EventListener::dispatch($getter, ["obj" => $this]);
+            foreach ($vals as $val) {
+                return $val;
+            }
+
+            /*if (function_exists($getter)) {
                 $val = call_user_func($getter, $this);
                 $this->props[$prop_name] = $val;
                 //if ($val !== null) {}
-            }
+            }*/
         }
         return def($this->props, $prop_name, null);
     }
@@ -219,11 +229,11 @@ class EntityObject
         if ($this->fetched_parent === false) {
             $this->fetched_parent = true;
 
-            $parent_props = def(EntityManager::getEntityProps($this->name), ["parent"]);
+            $parent_props = def(Entity::getEntityProps($this->name), ["parent"]);
             if ($parent_props) {
                 $parent_name = $parent_props["name"];
                 $parent_prop = $parent_props["prop"];
-                $this->parent = EntityManager::getById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
+                $this->parent = Entity::getById($parent_name, $this->getProp(Entity::getEntityIdColumn($parent_name)));
                 // assign the child, a single reference
                 $this->parent->setProp($parent_prop, $this->parent->getProp($parent_prop, ["child" => $this]));
             }
@@ -277,7 +287,7 @@ class EntityObject
 
     public function getIdColumn()
     {
-        return $this->id_column ? $this->id_column : EntityManager::getEntityIdColumn($this->name);
+        return $this->id_column ? $this->id_column : Entity::getEntityIdColumn($this->name);
     }
 
     public function getId()
