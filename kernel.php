@@ -1,5 +1,8 @@
 <?php
 
+// in case e-mails are not configured (for debugging), kinda weird it's not a part of settings, it's more like a dev mode in reality, there is a need to define it on the code level
+define("DISPLAY_EMAIL", false);
+
 include "scripts/define_paths.php";
 
 // temporary
@@ -111,6 +114,3 @@ include "theme/variables.php";
 include_once 'helpers/facebook_register.php';
 
 include "scripts/preload_data.php";
-
-// in case e-mails are not configured (for debugging), kinda weird it's not a part of settings, it's more like a dev mode in reality, there is a need to define it on the code level
-define("DISPLAY_EMAIL", false);

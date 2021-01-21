@@ -52,9 +52,41 @@ $props = [
 //     var_dump([$i, memory_get_usage()]);
 // }
 
+// /**
+//  * u
+//  *
+//  * @return number
+//  */
+// function u()
+// {
+//     return 1;
+// }
+
+// /**
+//  * u
+//  *
+//  * @return number
+//  */
+// function z()
+// {
+//     return "this function is so darn good that it will know we return a string hah";
+// }
+
 $pies_paw_8 = EntityManager::getById("pies_paw", 8);
 $pies_paw_8->setWillDelete();
 $pies_paw_8->saveToDB();
+
+$b = 5;
+$b = "asd";
+
+// $a = new Entity($name, $props);
+// $b = "9";
+// $b = $a->getId();
+
+// $c = (((new Entity($name, $props))))->getId();
+
+// $p = z();
+//$b = u();
 
 // works
 // DB::beginTransaction();

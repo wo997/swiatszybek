@@ -187,4 +187,6 @@ DB::createTable("page", [
     ["name" => "published", "type" => "TINYINT(1)"],
 ]);
 
+@include BUILDS_PATH . "hooks/migration.php";
+
 echo "<h3>✅ All migrations completed</h3>";

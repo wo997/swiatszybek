@@ -291,6 +291,12 @@ class Entity
         return $this->id_column ? $this->id_column : EntityManager::getEntityIdColumn($this->name);
     }
 
+
+    /**
+     * getId
+     *
+     * @return number
+     */
     public function getId()
     {
         if (!isset($this->props[$this->id_column])) {

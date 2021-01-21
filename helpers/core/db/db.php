@@ -4,10 +4,6 @@ class DB
 {
     private static $con;
 
-    /**
-     * @param string $sql !SQL_query
-     * @param array $params
-     */
     public static function connect($db_server, $db_user, $db_pass, $db_name) // returns nothing; update delete insert purpose 
     {
         self::$con = new mysqli($db_server, $db_user, $db_pass, $db_name) or die("Failed to connect to MySQL: " . mysqli_connect_error());

@@ -1,19 +1,5 @@
 <?php //hook[entity]
 
-DB::createTable("pies", [
-    ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
-    ["name" => "food", "type" => "INT"],
-    ["name" => "food_double", "type" => "INT"],
-    ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
-    ["name" => "paws_json", "type" => "TEXT"],
-]);
-
-DB::createTable("pies_paw", [
-    ["name" => "pies_paw_id", "type" => "INT", "index" => "primary", "increment" => true],
-    ["name" => "pies_id", "type" => "INT", "index" => "index"],
-    ["name" => "name", "type" => "TINYTEXT"],
-]);
-
 // the plugin should be able to tell what these props are to type hint getProp and setProp
 EntityManager::register("pies", [
     "props" => [
@@ -27,7 +13,7 @@ EntityManager::register("pies", [
 // this can be a module yay
 EntityManager::register("pies", [
     "props" => [
-        "paws" => ["type" => "pies_paw[]"] // that's enough to tell the entity manager that piew_paw is its child
+        "paws" => ["type" => "pies_paw[]"] // that's enough to tell the entity manager that pies_paw is its child
     ],
 ]);
 
