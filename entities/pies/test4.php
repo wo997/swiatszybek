@@ -56,6 +56,12 @@ $pies_paw_8 = EntityManager::getById("pies_paw", 8);
 $pies_paw_8->setWillDelete();
 $pies_paw_8->saveToDB();
 
+// works
+// DB::beginTransaction();
+// DB::execute("update pies set food = food + 1 WHERE pies_id = 1");
+// //DB::commitTransaction();
+// DB::rollbackTransation();
+
 //var_dump($pies_paw_8->getParent());
 
 ///** @var Entity[] */

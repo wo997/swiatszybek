@@ -2,8 +2,6 @@
 
 class DB
 {
-    // TODO: transactions
-
     private static $con;
 
     /**
@@ -525,5 +523,20 @@ SQL;
 
         DB::execute("ALTER TABLE $table_1 DROP FOREIGN KEY " . $key["CONSTRAINT_NAME"]);
         echo "🗑️ Added foreign key from $table_1($field_1) to $table_2($field_2)<br>";
+    }
+
+    public static function beginTransaction()
+    {
+        self::$con->begin_transaction();
+    }
+
+    public static function commitTransaction()
+    {
+        self::$con->commit();
+    }
+
+    public static function rollbackTransation()
+    {
+        self::$con->rollback();
     }
 }
