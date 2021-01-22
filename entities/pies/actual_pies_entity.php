@@ -1,5 +1,14 @@
 <?php //hook[entity]
 
+/*DB::fetchArr("select cat from pies", [])[""]["catx"];
+
+class A
+{
+    public static function x()
+    {
+    }
+}*/
+
 // the plugin should be able to tell what these props are to type hint getProp and setProp
 EntityManager::register("pies", [
     "props" => [
@@ -35,7 +44,6 @@ EntityManager::setter("pies", "food", function (Entity $obj, $val) {
 });
 
 EntityManager::setter("pies", "paws", function (Entity $obj, $val) {
-
     // TODO: HEY! I have an idea, what if the plugin just added those type annotations? That's all we really need lol
     // won't make the code cleaner, but that's not the point
     // btw it will have to know the difference between an actual class or typedef, but once we have them listed that's not a big deal
@@ -47,6 +55,8 @@ EntityManager::setter("pies", "paws", function (Entity $obj, $val) {
         if ($paw->getWillDelete()) {
             continue;
         }
+        // it's private, show an error / warning
+        // $paw->will_delete;
         $paws_props[] = $paw->getRowProps();
     }
     $obj->setProp("paws_json", json_encode($paws_props));

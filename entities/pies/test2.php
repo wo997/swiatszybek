@@ -4,7 +4,7 @@ class A
 {
     function b()
     {
-        /** @type {number} */
+        /** @var {number} */
         $var = 5;
 
         $var = 6;
@@ -14,7 +14,7 @@ class A
             "from" => "cms c",
             "order" => "c.cms_id DESC",
             "main_search_fields" => ["c.link", "c.title", "c.seo_description", "c.seo_title"],
-            "where"
+            "where" => ""
         ]);
     }
 }

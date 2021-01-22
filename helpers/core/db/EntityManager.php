@@ -5,6 +5,19 @@ class EntityManager
     private static $entities = [];
     private static $entities_with_parent = [];
 
+    /**
+     * @typedef RegisterEntityData {
+     * props: string
+     * }
+     */
+
+    /**
+     * register
+     *
+     * @param  string $name
+     * @param  RegisterEntityData $data
+     * @return void
+     */
     public static function register($name, $data = [])
     {
         if (!isset(self::$entities[$name])) {
@@ -55,7 +68,7 @@ class EntityManager
     /**
      * if you pass just the ID it will act like getById
      *
-     * @param  string $name
+     * @param  string $name !entity_name
      * @param  array $props
      * @return Entity
      */
@@ -67,7 +80,7 @@ class EntityManager
     /**
      * createById
      *
-     * @param  string $name
+     * @param  string $name !entity_name
      * @param  number $id
      * @return Entity
      */
@@ -158,6 +171,14 @@ class EntityManager
         return $children;
     }
 
+    /**
+     * setter
+     *
+     * @param  string $name !entity_name
+     * @param  string $prop !entity_prop_name
+     * @param  callback $callback !entity_setter_callback
+     * @return void
+     */
     public static function setter($name, $prop, $callback)
     {
         EventListener::register($name . "_set_" . $prop, function ($params) use ($callback) {

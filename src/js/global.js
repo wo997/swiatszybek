@@ -843,12 +843,6 @@ function isObjectdef(obj) {
 	return !obj || Object.keys(obj).length === 0;
 }
 
-function kebabToSnakeCase(string) {
-	return string.replace(/-([a-z])/gi, function (s, group1) {
-		return group1.toUpperCase();
-	});
-}
-
 function applyToArray(func, array) {
 	return func.apply(Math, array);
 }

@@ -1,6 +1,5 @@
 <?php //route[pies]
 
-namespace abc;
 
 /**
  * @typedef GridData {
@@ -25,9 +24,9 @@ namespace abc;
 echo "x";
 
 $u = DB::fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
-$u[""];
+$u["cat_id"];
 
-/** @type {Cat[]} */
+/** @var {Cat[]} */
 $cats = [];
 foreach ($cats as $cat) {
     echo $cat["name"];
@@ -36,7 +35,7 @@ foreach ($cats as $cat) {
 
 $cats[0]["name"] = "sdsad";
 
-/** @type {Cat} */
+/** @var {Cat} */
 $a = DB::fetchRow("SELECT cat_id, mother, children_json js, pies as piesekx FROM cat");
 
 $a["age"]["value"] = "1";
@@ -85,7 +84,7 @@ function heyca($x, $y)
 {
     $x[""];
 
-    /** @type {Cat} */
+    /** @var {Cat} */
     $x["a"];
     $x["a"][""];
 }

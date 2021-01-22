@@ -689,9 +689,9 @@ class NewCms {
 					styles.inside["grid-template-rows"] = "1fr 1fr";
 				}
 				const columns =
-					def(styles.inside["grid-template-columns"], "").strCount(" +") + 1;
+					regexCount(def(styles.inside["grid-template-columns"], ""), " +") + 1;
 				const rows =
-					def(styles.inside["grid-template-rows"], "").strCount(" +") + 1;
+					regexCount(def(styles.inside["grid-template-rows"], ""), " +") + 1;
 
 				const block_content = grid._child(".newCms_block_content");
 

@@ -147,6 +147,13 @@ class Entity
         }
     }
 
+    /**
+     * setProp
+     *
+     * @param  string $prop_name !entity_prop_name
+     * @param  mixed $val
+     * @return void
+     */
     public function setProp($prop_name, $val = null)
     {
         if ($prop_name === $this->id_column && $this->getId() !== -1) {
@@ -196,6 +203,13 @@ class Entity
         }
     }
 
+    /**
+     * getProp
+     *
+     * @param  string $prop_name !entity_prop_name
+     * @param  mixed $options
+     * @return void
+     */
     public function getProp($prop_name, $options = [])
     {
         if ($this->shouldFetchProp($prop_name)) {

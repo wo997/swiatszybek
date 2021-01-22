@@ -8,6 +8,12 @@ String.prototype.capitalize = function () {
 	return capitalize(this);
 };
 
-String.prototype.strCount = function (str_or_regexp) {
-	return (this.match(new RegExp(`${str_or_regexp}`, "g")) || []).length;
-};
+function regexCount(str, reg_str) {
+	return (str.match(new RegExp(`${reg_str}`, "g")) || []).length;
+}
+
+function kebabToSnakeCase(string) {
+	return string.replace(/-([a-z])/gi, function (s, group1) {
+		return group1.toUpperCase();
+	});
+}
