@@ -22,9 +22,9 @@ class Entity
         $obj_curr_id = $this->getIdFromProps($props);
         if ($obj_curr_id !== -1) {
             $this->curr_props = DB::fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
-            $this->setVarFromArray(def($this->curr_props, []));
+            $this->setProps(def($this->curr_props, []));
         }
-        $this->setVarFromArray($props);
+        $this->setProps($props);
     }
 
     /**
@@ -196,7 +196,7 @@ class Entity
         $this->props[$prop_name] = $val;
     }
 
-    public function setVarFromArray($arr)
+    public function setProps($arr)
     {
         foreach ($arr as $prop_name => $val) {
             $this->setProp($prop_name, $val);

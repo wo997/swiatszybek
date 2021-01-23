@@ -36,6 +36,10 @@ $props = [
 $pies = EntityManager::getFromProps("pies", $props);
 $pies->saveToDB();
 
+
+//EntityManager::clearObjects();
+//var_dump(EntityManager::$objects);
+
 // example of warming up data, u might ask - when should I do it? when some table/column does not exist and you suppose the data aint ready yet
 // just create a hook and place it in a single file right after u modify the table, you need a simple rule to say it
 // you can even select a single record and tell if it's ok or not

@@ -3,7 +3,7 @@
 class EntityManager
 {
     private static $entities = [];
-    private static $entities_with_parent = [];
+    private static $objects = [];
 
     /**
      * @typedef RegisterEntityData {
@@ -58,15 +58,49 @@ class EntityManager
     }
 
     /**
+     * getObjectGlobalId
+     *
+     * @param  string $name
+     * @param  mixed $id
+     * @return void
+     */
+    public static function getObjectGlobalId($name, $id)
+    {
+        return $name . "_" . $id;
+    }
+
+    /**
      * if you pass just the ID it will act like getById
      *
      * @param  string $name !entity_name
      * @param  array $props !entity_props // to be added I guess, oh also the modifier should stop at whitespaces
      * @return Entity
      */
-    public static function getFromProps($name, $props) // reference? seems to make 0 difference for memory management, wow
+    public static function getFromProps($name, $props) // must be the only place where we create Entities for consistency
     {
-        return new Entity($name, $props);
+        $id = $props[self::getEntityIdColumn($name)];
+        $global_id = self::getObjectGlobalId($name, $id);
+        $cacheable = $id != -1;
+
+        if ($cacheable && isset(self::$objects[$global_id])) {
+            return self::$objects[$global_id];
+        }
+
+        $obj = new Entity($name, $props);
+        if ($cacheable) {
+            self::$objects[$global_id] = $obj; // u can restore the data yay :) not used yet bro, think about it
+        }
+        return $obj;
+    }
+
+    /**
+     * it just removes references to objects that could be used multiple times, they are necessary for the ORM to work so be careful ;)
+     *
+     * @return void
+     */
+    public static function clearObjects()
+    {
+        self::$objects = [];
     }
 
     /**
@@ -79,7 +113,7 @@ class EntityManager
     public static function getById($name, $id)
     {
         $props = [self::getEntityIdColumn($name) => $id];
-        return new Entity($name, $props);
+        return self::getFromProps($name, $props);
     }
 
     public static function getEntityIdColumn($name)
@@ -113,7 +147,7 @@ class EntityManager
             $child_id = intval(def($child_props, $child_id_column, -1));
             $child_props[$obj->getIdColumn()] = $obj->getId();
             if ($child_id == -1) {
-                $child = EntityManager::getFromProps($child_entity_name, $child_props);
+                $child = self::getFromProps($child_entity_name, $child_props);
                 $children[] = $child;
             } else {
                 $children_with_id_props[$child_id] = $child_props;
@@ -125,7 +159,7 @@ class EntityManager
             $child_props = def($children_with_id_props, $curr_child->getId(), null);
 
             if ($child_props) {
-                $curr_child->setVarFromArray($child_props);
+                $curr_child->setProps($child_props);
             } else {
                 $curr_child->setWillDelete();
             }
@@ -146,18 +180,17 @@ class EntityManager
         $query = "SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId();
 
         if ($child) {
-            $query .= " AND " . EntityManager::getEntityIdColumn($child_entity_name) . " <> " . $child->getId();
+            $query .= " AND " . self::getEntityIdColumn($child_entity_name) . " <> " . $child->getId();
             $children[] = $child;
         }
 
         $children_props = DB::fetchArr($query);
         foreach ($children_props as $child_props) {
-            $child = EntityManager::getFromProps($child_entity_name, $child_props);
-            $child->setParent($obj); // ugh it should be the same thing that's a parent but it loops kinda like if it wasn't the case
+            $child = self::getFromProps($child_entity_name, $child_props);
+            $child->setParent($obj);
             $children[] = $child;
         }
 
-        //var_dump(["children <<<<<", $children, "children >>>>>"]);
         return $children;
     }
 
@@ -184,11 +217,8 @@ class EntityManager
     }
 
     /**
-     * if you pass just the ID it will act like getById
-     *
      * @param  string $name1 !entity_name
      * @param  string $name2 !entity_name
-     * @return Entity
      */
     public static function manyToMany($name1, $name2)
     {
@@ -197,12 +227,9 @@ class EntityManager
     }
 
     /**
-     * if you pass just the ID it will act like getById
-     *
      * @param  string $parent_name !entity_name
      * @param  string $prop_name !entity_prop_name
      * @param  string $child_name !entity_name
-     * @return Entity
      */
     public static function OneToMany($parent_name, $prop_name, $child_name)
     {
