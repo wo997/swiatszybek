@@ -81,7 +81,8 @@ class Entity
         if ($this->will_delete) {
             $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
             var_dump([$query]);
-            return;
+            DB::execute($query);
+            return true;
         }
 
         if ($this->curr_props) {
@@ -110,8 +111,8 @@ class Entity
                 $query = rtrim($query, ",");
                 $query .= " WHERE " . $this->id_column . "=" . $this->getId();
                 var_dump([$query, array_values($update_props)]);
-                //DB::execute($query, array_values($update_props));
-                //return true;
+                DB::execute($query, array_values($update_props));
+                return true;
             }
 
             return;
@@ -139,11 +140,9 @@ class Entity
             $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
 
             var_dump([$query, array_values($insert_props)]);
-            //DB::execute($query, array_values($insert_props));
-            //$entity_id = DB::insertedId();
-            //return $entity_id;
-
-            return;
+            DB::execute($query, array_values($insert_props));
+            $entity_id = DB::insertedId();
+            return $entity_id;
         }
     }
 

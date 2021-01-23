@@ -178,7 +178,7 @@ DB::manageTableColumns("uploads", [
 ]);
 
 DB::createTable("page", [
-    ["name" => "page_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "page_id", "type" => "INT", "index" => "primary"],
     ["name" => "url", "type" => "TINYTEXT"], // I think we should index that field ezy
     ["name" => "seo_title", "type" => "TINYTEXT"],
     ["name" => "seo_description", "type" => "TINYTEXT"],

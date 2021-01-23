@@ -14,7 +14,7 @@ class EntityManager
     /**
      * register
      *
-     * @param  string $name
+     * @param  string $name !register_entity_name
      * @param  RegisterEntityData $data
      * @return void
      */
@@ -27,10 +27,6 @@ class EntityManager
             ];
         }
 
-        $parent = def(self::$entities_with_parent, $name, null);
-        if ($parent) {
-            $data["parent"] = $parent;
-        }
 
         // it should tell other entities that there is a prop that is a child of other entity ezy
         if (isset($data["props"])) {
@@ -51,8 +47,9 @@ class EntityManager
             }
         }
 
-        if (isset($data["parent"])) {
-            self::$entities[$name]["parent"] = $data["parent"];
+        $parent = def(self::$entities_with_parent, $name, null);
+        if ($parent) {
+            self::$entities[$name]["parent"] = $parent;
         }
 
         if (!def(self::$entities, [$name, "props", self::getEntityIdColumn($name)], null)) {
@@ -69,7 +66,7 @@ class EntityManager
      * if you pass just the ID it will act like getById
      *
      * @param  string $name !entity_name
-     * @param  array $props
+     * @param  array $props !entity_props // to be added I guess, oh also the modifier should stop at whitespaces
      * @return Entity
      */
     public static function getFromProps($name, $props) // reference? seems to make 0 difference for memory management, wow

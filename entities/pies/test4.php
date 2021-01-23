@@ -1,26 +1,10 @@
 <?php //route[{ADMIN}entity_test]
 
-/*
-DB::createTable("pies", [
-    ["name" => "pies_id", "type" => "INT", "index" => "primary", "increment" => true],
-    ["name" => "food", "type" => "INT"],
-    ["name" => "food_double", "type" => "INT"],
-    ["name" => "ate_at", "type" => "DATETIME", "index" => "index"],
+
+$color = EntityManager::getFromProps("color", [
+    "name" => "blue"
 ]);
-
-DB::createTable("pies_paw", [
-    ["name" => "pies_paw_id", "type" => "INT", "index" => "primary", "increment" => true],
-    ["name" => "pies_id", "type" => "INT", "index" => "index"],
-    ["name" => "name", "type" => "TINYTEXT"],
-]);
-*/
-
-// function get__pies_paws(Entity $obj)
-// {
-//     return getManyToOneEntities($obj, "pies_paw");
-// }
-
-// imagine it's another file end
+//$color->saveToDB();
 
 $props = [
     "pies_id" => 20,
@@ -28,20 +12,27 @@ $props = [
     "unknown_field" => 12345,
     "paws" => [
         [
-            "pies_paw_id" => 8, // change
+            "paw_of_pies_id" => 8, // change
             "name" => "changed name"
         ],
         [
-            "pies_paw_id" => -1, // create
+            "paw_of_pies_id" => -1, // create
             "name" => "created"
         ],
     ]
 ];
-// ugh, paws don't change?
 
-// TODO: transactions :P
-// $pies = EntityManager::getFromProps("pies", $props);
-// $pies->saveToDB();
+$pies = EntityManager::getFromProps("pies", $props);
+$pies->saveToDB();
+
+// example of warming up data, u might ask - when should I do it? when some table/column does not exist and you suppose the data aint ready yet
+// just create a hook and place it in a single file right after u modify the table, you need a simple rule to say it
+// you can even select a single record and tell if it's ok or not
+// foreach (DB::fetchCol("select pies_id from pies") as $id) {
+//     $pies = EntityManager::getById("pies", $id);
+//     $pies->setProp("paws");
+//     $pies->saveToDB();
+// }
 
 // memory test - it's totally fine, there might be no room for improvement
 // $piess = [];
@@ -72,12 +63,12 @@ $props = [
 //     return "this function is so darn good that it will know we return a string hah";
 // }
 
-$pies_paw_8 = EntityManager::getById("pies_paw", 8);
-$pies_paw_8->setWillDelete();
-$pies_paw_8->saveToDB();
+// $paw_of_pies_8 = EntityManager::getById("paw_of_pies", 8);
+// $paw_of_pies_8->setWillDelete();
+// $paw_of_pies_8->saveToDB();
 
-$b = 5;
-$b = "asd";
+// $b = 5;
+// $b = "asd";
 
 // $a = new Entity($name, $props);
 // $b = "9";
@@ -94,11 +85,11 @@ $b = "asd";
 // //DB::commitTransaction();
 // DB::rollbackTransation();
 
-//var_dump($pies_paw_8->getParent());
+//var_dump($paw_of_pies_8->getParent());
 
 ///** @var Entity[] */
-//$pies_paws = $pies->getProp("paws");
-//$pies_paws[1]->setWillDelete(); actually deletes pies_paw_8
+//$paw_of_piess = $pies->getProp("paws");
+//$paw_of_piess[1]->setWillDelete(); actually deletes paw_of_pies_8
 //var_dump();
 
 //if ($pies) {

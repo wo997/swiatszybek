@@ -314,6 +314,9 @@ class DB
 
             foreach ($columns as $column) {
                 $column["null"] = def($column, "null", false);
+                if (def($column, "index", null) === "primary" && !isset($column["increment"])) {
+                    $column["increment"] = true;
+                }
                 $column["type"] = strtoupper($column["type"]);
 
                 $definition = DB::getColumnDefinition($column);
@@ -352,6 +355,9 @@ class DB
     {
         foreach ($columns as $column) {
             $column["null"] = def($column, "null", false);
+            if (def($column, "index", null) === "primary" && !isset($column["increment"])) {
+                $column["increment"] = true;
+            }
             $column["type"] = strtoupper($column["type"]);
 
             $columnExists = DB::columnExists($table, $column["name"]);

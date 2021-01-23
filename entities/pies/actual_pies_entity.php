@@ -22,11 +22,11 @@ EntityManager::register("pies", [
 // this can be a module yay
 EntityManager::register("pies", [
     "props" => [
-        "paws" => ["type" => "pies_paw[]"] // that's enough to tell the entity manager that pies_paw is its child
+        "paws" => ["type" => "paw_of_pies[]"] // that's enough to tell the entity manager that paw_of_pies is its child
     ],
 ]);
 
-EntityManager::register("pies_paw", [
+EntityManager::register("paw_of_pies", [
     "props" => [
         "pies_id" => ["type" => "number"],
         "name" => ["type" => "string"],
