@@ -56,9 +56,10 @@ EntityManager::setter("pies", "paws", function (Entity $obj, $val) {
         // $paw->will_delete;
         $paws_props[] = $paw->getRowProps();
     }
+
     $obj->setProp("paws_json", json_encode($paws_props));
     //var_dump("XXXX", json_encode($paws));
-    return $paws;
+    //return $paws;
 });
 
 // var_dump(EntityManager::getEntityData("pies"));

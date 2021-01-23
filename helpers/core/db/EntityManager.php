@@ -47,11 +47,6 @@ class EntityManager
             // }
         }
 
-        $parent = def(self::$entities_with_parent, $name, null);
-        if ($parent) {
-            self::$entities[$name]["parent"] = $parent;
-        }
-
         if (!def(self::$entities, [$name, "props", self::getEntityIdColumn($name)], null)) {
             self::$entities[$name]["props"][self::getEntityIdColumn($name)] = ["type" => "number"];
         }
@@ -93,7 +88,7 @@ class EntityManager
     }
 
     /**
-     * setManyToOneEntities
+     * setOneToManyEntities
      *
      * @param  mixed $obj
      * @param  mixed $obj_prop_name
@@ -101,10 +96,12 @@ class EntityManager
      * @param  mixed $children_props
      * @return Entity[]
      */
-    public static function setManyToOneEntities(Entity $obj, $obj_prop_name, $child_entity_name, $children_props)
+    public static function setOneToManyEntities(Entity $obj, $obj_prop_name, $child_entity_name, $children_props)
     {
         /** @var Entity[] */
         $curr_children = def($obj->getProp($obj_prop_name), []);
+
+        $child_id_column = self::getEntityIdColumn($child_entity_name);
 
         $children_with_id_props = [];
         $children = [];
@@ -113,10 +110,9 @@ class EntityManager
                 return;
             }
 
-            $child_id_column = EntityManager::getEntityIdColumn($child_entity_name);
             $child_id = intval(def($child_props, $child_id_column, -1));
-            if ($child_id === -1) {
-                $child_props[$obj->getIdColumn()] = $obj->getId();
+            $child_props[$obj->getIdColumn()] = $obj->getId();
+            if ($child_id == -1) {
                 $child = EntityManager::getFromProps($child_entity_name, $child_props);
                 $children[] = $child;
             } else {
@@ -140,7 +136,7 @@ class EntityManager
         return $children;
     }
 
-    public static function getManyToOneEntities(Entity $obj, $child_entity_name, $options = [])
+    public static function getOneToManyEntities(Entity $obj, $child_entity_name, $options = [])
     {
         /** @var Entity */
         $child = def($options, "child", null);
@@ -196,7 +192,8 @@ class EntityManager
      */
     public static function manyToMany($name1, $name2)
     {
-        var_dump([$name1, $name2]);
+        self::$entities[$name1]["linked_with"] = $name2;
+        self::$entities[$name2]["linked_with"] = $name1;
     }
 
     /**
@@ -209,11 +206,9 @@ class EntityManager
      */
     public static function OneToMany($parent_name, $prop_name, $child_name)
     {
-        self::$entities_with_parent[$child_name] = [
+        self::$entities[$child_name]["parent"] = [
             "name" => $parent_name,
             "prop" => $prop_name
         ];
-        self::register($child_name); // make sure the child uses the parent
-        self::register($parent_name); // just in case
     }
 }

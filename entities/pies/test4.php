@@ -4,7 +4,7 @@
 // $color = EntityManager::getFromProps("color", [
 //     "name" => "blue"
 // ]);
-//$color->saveToDB();
+// $color->saveToDB();
 
 
 $props = [
@@ -14,10 +14,20 @@ $props = [
     "paws" => [
         [
             "paw_of_pies_id" => 8, // change
-            "name" => "changed name"
+            "name" => "changed namex"
         ],
         [
             "paw_of_pies_id" => -1, // create
+            "name" => "createdx"
+        ],
+    ],
+    "colors" => [
+        [
+            "color_id" => 1, // change
+            "name" => "changed name"
+        ],
+        [
+            "color_id" => -1, // create
             "name" => "created"
         ],
     ]

@@ -7,10 +7,10 @@ EntityManager::register("color", [
     ],
 ]);
 
-// EntityManager::register("pies", [
-//     "props" => [
-//         "colors" => ["type" => "color[]"]
-//     ],
-// ]);
+EntityManager::register("pies", [
+    "props" => [
+        "colors" => ["type" => "color[]"]
+    ],
+]);
 
 EntityManager::manyToMany("color", "pies");

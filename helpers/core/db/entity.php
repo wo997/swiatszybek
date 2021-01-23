@@ -172,13 +172,20 @@ class Entity
 
         if ($prop_type && endsWith($prop_type, "[]")) {
             $child_entity_name = substr($prop_type, 0, -2);
-            if ($this->name === def(EntityManager::getEntityData($child_entity_name), ["parent", "name"])) {
-                $val = EntityManager::setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
+            $child_entity_data = EntityManager::getEntityData($child_entity_name);
+            if ($this->name === def($child_entity_data, ["parent", "name"])) {
+                // no need to $this->props[$prop_name] but $val instead if u use before and after setters
+                $this->props[$prop_name] = EntityManager::setOneToManyEntities($this, $prop_name, $child_entity_name, $val);
+            } else if ($this->name === def($child_entity_data, ["linked_with"])) {
+                //$this->props[$prop_name] = EntityManager::setManyToManyEntities($this, $prop_name, $child_entity_name, $val);
+
+                // $this, ($this->name), $child_entity_name, $val
+                //var_dump([$this->name, $prop_name, $linked_with, $child_entity_name]);
             }
         }
 
         $setter = $this->name . "_set_" .  $prop_name;
-        $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
+        $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]); // before and after?
         foreach ($vals as $v) {
             if ($v) {
                 // doesn't make sense but ok
@@ -210,7 +217,7 @@ class Entity
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $child_entity_name = substr($prop_type, 0, -2);
                 if ($this->name === def(EntityManager::getEntityData($child_entity_name), ["parent", "name"])) {
-                    $this->props[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
+                    $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
                 }
             }
 
@@ -265,13 +272,13 @@ class Entity
     public function getRowProps()
     {
         $row_props = [];
-        foreach ($this->props as $props) {
-            if ($props instanceof Entity) {
+        foreach ($this->props as $prop => $val) {
+            if ($val instanceof Entity) {
                 return;
             }
-            $row_props[] = $props;
+            $row_props[$prop] = $val;
         }
-        return $this->props;
+        return $row_props;
     }
 
     /**
