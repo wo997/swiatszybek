@@ -1,10 +1,11 @@
 <?php //route[{ADMIN}entity_test]
 
 
-$color = EntityManager::getFromProps("color", [
-    "name" => "blue"
-]);
+// $color = EntityManager::getFromProps("color", [
+//     "name" => "blue"
+// ]);
 //$color->saveToDB();
+
 
 $props = [
     "pies_id" => 20,

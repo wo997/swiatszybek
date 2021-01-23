@@ -32,19 +32,19 @@ class EntityManager
         if (isset($data["props"])) {
             self::$entities[$name]["props"] = array_merge($data["props"], self::$entities[$name]["props"]);
 
-            foreach (self::$entities[$name]["props"] as $prop_name => $prop) {
-                $prop_type = $prop["type"];
+            // foreach (self::$entities[$name]["props"] as $prop_name => $prop) {
+            //     $prop_type = $prop["type"];
 
-                if ($prop_type && endsWith($prop_type, "[]")) {
-                    $child_entity_name = substr($prop_type, 0, -2);
+            //     if ($prop_type && endsWith($prop_type, "[]")) {
+            //         $child_entity_name = substr($prop_type, 0, -2);
 
-                    self::$entities_with_parent[$child_entity_name] = [
-                        "name" => $name,
-                        "prop" => $prop_name
-                    ];
-                    self::register($child_entity_name);
-                }
-            }
+            //         self::$entities_with_parent[$child_entity_name] = [
+            //             "name" => $name,
+            //             "prop" => $prop_name
+            //         ];
+            //         self::register($child_entity_name);
+            //     }
+            // }
         }
 
         $parent = def(self::$entities_with_parent, $name, null);
@@ -99,13 +99,10 @@ class EntityManager
      * @param  mixed $obj_prop_name
      * @param  mixed $child_entity_name
      * @param  mixed $children_props
-     * @param  mixed $options
      * @return Entity[]
      */
     public static function setManyToOneEntities(Entity $obj, $obj_prop_name, $child_entity_name, $children_props)
     {
-        //var_dump($options);
-
         /** @var Entity[] */
         $curr_children = def($obj->getProp($obj_prop_name), []);
 
@@ -188,5 +185,35 @@ class EntityManager
         EventListener::register($name . "_get_" . $prop, function ($params) use ($callback) {
             $callback($params["obj"]);
         });
+    }
+
+    /**
+     * if you pass just the ID it will act like getById
+     *
+     * @param  string $name1 !entity_name
+     * @param  string $name2 !entity_name
+     * @return Entity
+     */
+    public static function manyToMany($name1, $name2)
+    {
+        var_dump([$name1, $name2]);
+    }
+
+    /**
+     * if you pass just the ID it will act like getById
+     *
+     * @param  string $parent_name !entity_name
+     * @param  string $prop_name !entity_prop_name
+     * @param  string $child_name !entity_name
+     * @return Entity
+     */
+    public static function OneToMany($parent_name, $prop_name, $child_name)
+    {
+        self::$entities_with_parent[$child_name] = [
+            "name" => $parent_name,
+            "prop" => $prop_name
+        ];
+        self::register($child_name); // make sure the child uses the parent
+        self::register($parent_name); // just in case
     }
 }

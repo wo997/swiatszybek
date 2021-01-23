@@ -21,6 +21,7 @@ DB::createTable("color", [
     ["name" => "name", "type" => "TINYTEXT"],
 ]);
 
+// that could even be a cute helper
 DB::createTable("color_to_pies", [
     ["name" => "color_id", "type" => "INT", "index" => "index"],
     ["name" => "pies_id", "type" => "INT", "index" => "index"],

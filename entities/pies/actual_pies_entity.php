@@ -22,7 +22,7 @@ EntityManager::register("pies", [
 // this can be a module yay
 EntityManager::register("pies", [
     "props" => [
-        "paws" => ["type" => "paw_of_pies[]"] // that's enough to tell the entity manager that paw_of_pies is its child
+        "paws" => ["type" => "paw_of_pies[]"]
     ],
 ]);
 
@@ -33,14 +33,11 @@ EntityManager::register("paw_of_pies", [
     ],
 ]);
 
-EntityManager::setter("pies", "food", function (Entity $obj, $val) {
-    //$obj->setProp("food_double", 2 * $val);
-    $obj->setProp("ate_at", date("Y-m-d.H:i:s"));
-});
+EntityManager::OneToMany("pies", "paws", "paw_of_pies");
 
 EntityManager::setter("pies", "food", function (Entity $obj, $val) {
     $obj->setProp("food_double", 2 * $val);
-    //$obj->setProp("ate_at", date("Y-m-d.H:i:s"));
+    $obj->setProp("ate_at", date("Y-m-d.H:i:s"));
 });
 
 EntityManager::setter("pies", "paws", function (Entity $obj, $val) {
@@ -64,5 +61,6 @@ EntityManager::setter("pies", "paws", function (Entity $obj, $val) {
     return $paws;
 });
 
-//var_dump(EntityManager::getEntityData("pies"));
-//die;
+// var_dump(EntityManager::getEntityData("pies"));
+// var_dump(EntityManager::getEntityData("paw_of_pies"));
+// die;

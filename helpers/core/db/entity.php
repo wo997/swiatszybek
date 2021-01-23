@@ -20,13 +20,11 @@ class Entity
         $this->id_column = $this->getIdColumn();
 
         $obj_curr_id = $this->getIdFromProps($props);
-        if ($obj_curr_id === -1) {
-            $this->setVarFromArray($props);
-        } else {
+        if ($obj_curr_id !== -1) {
             $this->curr_props = DB::fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
             $this->setVarFromArray(def($this->curr_props, []));
-            $this->setVarFromArray($props);
         }
+        $this->setVarFromArray($props);
     }
 
     /**
@@ -174,23 +172,19 @@ class Entity
 
         if ($prop_type && endsWith($prop_type, "[]")) {
             $child_entity_name = substr($prop_type, 0, -2);
-            EntityManager::setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
+            if ($this->name === def(EntityManager::getEntityData($child_entity_name), ["parent", "name"])) {
+                $val = EntityManager::setManyToOneEntities($this, $prop_name, $child_entity_name, $val);
+            }
         }
 
         $setter = $this->name . "_set_" .  $prop_name;
         $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
-        foreach ($vals as $val) {
-            return $val;
-        }
-
-        /*if (function_exists($setter)) {
-            $res = call_user_func($setter, $this, $val);
-            if ($res !== null) { // handle errors maybe?
-                $val = $res;
+        foreach ($vals as $v) {
+            if ($v) {
+                // doesn't make sense but ok
+                $val = $v; //return $val;
             }
-        } else if (is_array($val)) { // nah
-            return;
-        }*/
+        }
 
         $this->props[$prop_name] = $val;
     }
@@ -215,7 +209,9 @@ class Entity
             $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $child_entity_name = substr($prop_type, 0, -2);
-                $this->props[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
+                if ($this->name === def(EntityManager::getEntityData($child_entity_name), ["parent", "name"])) {
+                    $this->props[$prop_name] = EntityManager::getManyToOneEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
+                }
             }
 
             $getter = $this->name . "_get_" .  $prop_name;

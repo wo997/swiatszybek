@@ -369,7 +369,7 @@
 //                       <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
 //                   </div>
 //                   <div class="scroll-panel scroll-shadow panel-padding">
-                      
+
 //                   </div>
 //               </div>
 //           </div>
@@ -1798,7 +1798,7 @@
 //                     <button class="btn primary" onclick="window.pasteType='container';showModal('pasteBlock')" data-tooltip="Wklej skopiowany kontener / blok"><i class="fas fa-paste"></i></button>
 //                     <button class="btn primary" onclick="copyCMS()" data-tooltip="Skopiuj całą zawartość do schowka"> <i class="fas fa-clipboard"></i> </button>
 //                 </span>
-                
+
 //                 <button class="btn secondary" onclick="showModal('cms_poradnik')">Poradnik <i class="fas fa-info-circle"></i></button>
 //                 <button class="btn secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
 //                 <button onclick="showCmsPreview()" class="btn primary preview_btn">Podgląd <i class="fas fa-eye"></i></button>
@@ -1809,7 +1809,7 @@
 //                 <div class="modules-sidebar shown">
 //                   <button class="toggle-sidebar-btn btn subtle" onclick="toggleModuleSidebar()" data-tooltip="Ukryj moduły"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
 //                   <span class="field-title modules-sidebar-title" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
-//                    Moduły 
+//                    Moduły
 //                    <i class="fas fa-info-circle" data-tooltip="Przeciągnij w prawo i upuść"></i>
 //                   </span>
 //                   <div class="modules"></div>
@@ -1838,7 +1838,7 @@
 //                             </div>
 
 //                             <div class="btn" onclick="copyContainer()" data-tooltip="Skopiuj kontener do schowka"> <i class="fas fa-clipboard"></i> </div>
-                            
+
 //                             <div class="btn" onclick="duplicateContainer()" data-tooltip="Duplikuj kontener"> <i class="fas fa-clone"></i> </div>
 
 //                             <div class="btn" onclick="window.pasteType='block';showModal('pasteBlock')" data-tooltip="Wklej skopiowany blok"><i class="fas fa-paste"></i></div>
@@ -1856,7 +1856,7 @@
 //                             <div class="btn" onclick="editBlock()" data-tooltip="Edytuj zawartość"> <i class="fas fa-edit"></i> </div>
 
 //                             <div class="btn" onclick="editBlockSettings()" data-tooltip="Wymiary / Ułożenie"> <i class="fas fa-crop-alt"></i> <i class="fas fa-arrows-alt"></i> </div>
-                            
+
 //                             <div class="btn" onclick="editCMSBackground()" data-tooltip="Tło bloku - zdjęcie / kolor"> <i class="fas fa-image"></i> <i class="fas fa-fill-drip"></i> </div>
 
 //                             <div class="btn" onclick="editCMSBorder()" data-tooltip="Obramowanie bloku"> <i class="fas fa-border-style"></i> </div>
@@ -2194,11 +2194,7 @@
 //                 <div class="field-title">Kolor krawędzi</div>
 //                 <div class="glue-children">
 //                   <input class="jscolor field inline" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
-<<<<<<< HEAD
-//                   <button class="btn primary" onclick="$(this).prev()._set_value('')">Brak <i class="fa fa-times"></i></button>
-=======
 //                   <button class="btn primary" onclick="$(this)._prev().setValue('')">Brak <i class="fa fa-times"></i></button>
->>>>>>> 213b901f52c646bef879395c2b9471c0748a969c
 //                 </div>
 
 //                 <div class="field-title">Zaokrąglenie krawędzi</div>
@@ -2427,11 +2423,7 @@
 
 //                 <div class="glue-children">
 //                   <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
-<<<<<<< HEAD
-//                   <button class="btn primary" onclick="$(this).prev()._set_value('ffffff');$('#cmsBlockBackground .image-opacity')._set_value(0)">Brak <i class="fa fa-times"></i></button>
-=======
 //                   <button class="btn primary" onclick="$(this)._prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
->>>>>>> 213b901f52c646bef879395c2b9471c0748a969c
 //                 </div>
 
 //                 <div class="field-title">
