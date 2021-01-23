@@ -13,4 +13,4 @@ EntityManager::register("pies", [
     ],
 ]);
 
-EntityManager::manyToMany("color", "pies");
+EntityManager::manyToMany("color", "pies", "color_to_pies");

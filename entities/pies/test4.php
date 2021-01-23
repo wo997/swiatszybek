@@ -26,6 +26,7 @@ $props = [
             "color_id" => 1, // change
             "name" => "changed name"
         ],
+        2, // just use the damn id
         [
             "color_id" => -1, // create
             "name" => "created"
@@ -34,7 +35,8 @@ $props = [
 ];
 
 $pies = EntityManager::getEntity("pies", $props);
-$pies->saveToDB();
+//var_dump($pies->getProps());
+//$pies->saveToDB(); // it all works except setting up relationships in the db, color_to_pies
 
 
 //EntityManager::clearObjects();

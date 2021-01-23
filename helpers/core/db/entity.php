@@ -175,12 +175,16 @@ class Entity
             $child_entity_data = EntityManager::getEntityData($child_entity_name);
             if ($this->name === def($child_entity_data, ["parent", "name"])) {
                 // no need to $this->props[$prop_name] but $val instead if u use before and after setters
-                $this->props[$prop_name] = EntityManager::setOneToManyEntities($this, $prop_name, $child_entity_name, $val);
-            } else if ($this->name === def($child_entity_data, ["linked_with"])) {
-                //$this->props[$prop_name] = EntityManager::setManyToManyEntities($this, $prop_name, $child_entity_name, $val);
-
-                // $this, ($this->name), $child_entity_name, $val
-                //var_dump([$this->name, $prop_name, $linked_with, $child_entity_name]);
+                $val = EntityManager::setOneToManyEntities($this, $prop_name, $child_entity_name, $val);
+                $this->props[$prop_name] = $val;
+            } else {
+                $linked_with = def($child_entity_data, ["linked_with"]);
+                foreach ($linked_with as $link) {
+                    if ($this->name === $link["other_entity_name"]) {
+                        $val = EntityManager::setManyToManyEntities($this, $prop_name, $child_entity_name, $val);
+                        $this->props[$prop_name] = $val;
+                    }
+                }
             }
         }
 
@@ -210,14 +214,22 @@ class Entity
      * @param  mixed $options
      * @return void
      */
-    public function getProp($prop_name, $options = [])
+    public function getProp($prop_name)
     {
         if ($this->shouldFetchProp($prop_name)) {
             $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $child_entity_name = substr($prop_type, 0, -2);
-                if ($this->name === def(EntityManager::getEntityData($child_entity_name), ["parent", "name"])) {
-                    $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $child_entity_name, filterArrayKeys($options, ["child"]));
+                $child_entity_data = EntityManager::getEntityData($child_entity_name);
+                if ($this->name === def($child_entity_data, ["parent", "name"])) {
+                    $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $child_entity_name);
+                } else {
+                    $linked_with = def($child_entity_data, ["linked_with"]);
+                    foreach ($linked_with as $link) {
+                        if ($this->name === $link["other_entity_name"]) {
+                            $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $child_entity_name, $link["relation_table"]);
+                        }
+                    }
                 }
             }
 
@@ -251,8 +263,8 @@ class Entity
                 $parent_name = $parent_props["name"];
                 $parent_prop = $parent_props["prop"];
                 $this->parent = EntityManager::getEntityById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
-                // assign the child, a single reference
-                $this->parent->setProp($parent_prop, $this->parent->getProp($parent_prop, ["child" => $this]));
+                // warmup, not sure if we need it but ok
+                $this->parent->setProp($parent_prop);
             }
         }
         return $this->parent;

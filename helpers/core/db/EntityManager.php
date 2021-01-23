@@ -27,24 +27,8 @@ class EntityManager
             ];
         }
 
-
-        // it should tell other entities that there is a prop that is a child of other entity ezy
         if (isset($data["props"])) {
             self::$entities[$name]["props"] = array_merge($data["props"], self::$entities[$name]["props"]);
-
-            // foreach (self::$entities[$name]["props"] as $prop_name => $prop) {
-            //     $prop_type = $prop["type"];
-
-            //     if ($prop_type && endsWith($prop_type, "[]")) {
-            //         $child_entity_name = substr($prop_type, 0, -2);
-
-            //         self::$entities_with_parent[$child_entity_name] = [
-            //             "name" => $name,
-            //             "prop" => $prop_name
-            //         ];
-            //         self::register($child_entity_name);
-            //     }
-            // }
         }
 
         if (!def(self::$entities, [$name, "props", self::getEntityIdColumn($name)], null)) {
@@ -137,8 +121,8 @@ class EntityManager
 
         $child_id_column = self::getEntityIdColumn($child_entity_name);
 
-        $children_with_id_props = [];
         $children = [];
+        $children_with_id_props = [];
         foreach ($children_props as &$child_props) {
             if ($child_props instanceof Entity) {
                 return;
@@ -170,21 +154,11 @@ class EntityManager
         return $children;
     }
 
-    public static function getOneToManyEntities(Entity $obj, $child_entity_name, $options = [])
+    public static function getOneToManyEntities(Entity $obj, $child_entity_name)
     {
-        /** @var Entity */
-        $child = def($options, "child", null);
-
         $children = [];
 
-        $query = "SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId();
-
-        if ($child) {
-            $query .= " AND " . self::getEntityIdColumn($child_entity_name) . " <> " . $child->getId();
-            $children[] = $child;
-        }
-
-        $children_props = DB::fetchArr($query);
+        $children_props = DB::fetchArr("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
         foreach ($children_props as $child_props) {
             $child = self::getEntity($child_entity_name, $child_props);
             $child->setParent($obj);
@@ -192,6 +166,77 @@ class EntityManager
         }
 
         return $children;
+    }
+
+    public static function getManyToManyTableName($name_1, $name_2)
+    {
+        return $name_1 . "_to_" . $name_2;
+    }
+
+    /**
+     * setManyToManyEntities
+     *
+     * @param  mixed $obj
+     * @param  mixed $obj_prop_name
+     * @param  mixed $child_entity_name
+     * @param  mixed $children_props
+     * @return Entity[]
+     */
+    public static function setManyToManyEntities(Entity $obj, $obj_prop_name, $other_entity_name, $other_entities_props)
+    {
+        /** @var Entity[] */
+        $curr_other_entities = def($obj->getProp($obj_prop_name), []);
+
+        $other_entity_id_column = self::getEntityIdColumn($other_entity_name);
+
+        $other_entity = [];
+        $other_entities_with_id_props = [];
+        foreach ($other_entities_props as &$other_entity_props) {
+            if ($other_entity_props instanceof Entity) {
+                return;
+            }
+            if (is_numeric($other_entity_props)) {
+                $other_entity_props = [
+                    $other_entity_id_column => intval($other_entity_props)
+                ];
+            }
+
+            $other_entity_id = intval(def($other_entity_props, $other_entity_id_column, -1));
+            $other_entity_props[$obj->getIdColumn()] = $obj->getId();
+            if ($other_entity_id == -1) {
+                $other_entity = self::getEntity($other_entity_name, $other_entity_props);
+                $other_entities[] = $other_entity;
+            } else {
+                $other_entities_with_id_props[$other_entity_id] = $other_entity_props;
+            }
+        }
+        unset($other_entity_props);
+
+        foreach ($curr_other_entities as &$curr_other_entity) {
+            $other_entity_props = def($other_entities_with_id_props, $curr_other_entity->getId(), null);
+
+            if ($other_entity_props) {
+                $curr_other_entity->setProps($other_entity_props);
+            }
+            $other_entities[] = $curr_other_entity;
+        }
+        unset($other_entity);
+
+        return $other_entities;
+    }
+
+    public static function getManyToManyEntities(Entity $obj, $other_entity_name, $relation_table)
+    {
+        $other_entities = [];
+
+        $othed_entity_id_column = self::getEntityIdColumn($other_entity_name);
+        $other_entities_props = DB::fetchArr("SELECT * FROM " . $other_entity_name . " WHERE " . $othed_entity_id_column . " IN (SELECT " . $othed_entity_id_column . " FROM " . $relation_table . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId() . ")");
+        foreach ($other_entities_props as $other_entity_props) {
+            $other_entity = self::getEntity($other_entity_name, $other_entity_props);
+            $other_entities[] = $other_entity;
+        }
+
+        return $other_entities;
     }
 
     /**
@@ -220,10 +265,16 @@ class EntityManager
      * @param  string $name1 !entity_name
      * @param  string $name2 !entity_name
      */
-    public static function manyToMany($name1, $name2)
+    public static function manyToMany($name1, $name2, $relation_table)
     {
-        self::$entities[$name1]["linked_with"] = $name2;
-        self::$entities[$name2]["linked_with"] = $name1;
+        self::$entities[$name1]["linked_with"][] = [
+            "relation_table" => $relation_table,
+            "other_entity_name" => $name2
+        ];
+        self::$entities[$name2]["linked_with"] = [
+            "relation_table" => $relation_table,
+            "other_entity_name" => $name1
+        ];
     }
 
     /**
