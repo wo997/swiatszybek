@@ -217,6 +217,8 @@ class EntityManager
 
             if ($other_entity_props) {
                 $curr_other_entity->setProps($other_entity_props);
+            } else {
+                $curr_other_entity->willUnlinkFromEntity($obj->getName());
             }
             $other_entities[] = $curr_other_entity;
         }
@@ -229,8 +231,8 @@ class EntityManager
     {
         $other_entities = [];
 
-        $othed_entity_id_column = self::getEntityIdColumn($other_entity_name);
-        $other_entities_props = DB::fetchArr("SELECT * FROM " . $other_entity_name . " WHERE " . $othed_entity_id_column . " IN (SELECT " . $othed_entity_id_column . " FROM " . $relation_table . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId() . ")");
+        $other_entity_id_column = self::getEntityIdColumn($other_entity_name);
+        $other_entities_props = DB::fetchArr("SELECT * FROM " . $other_entity_name . " WHERE " . $other_entity_id_column . " IN (SELECT " . $other_entity_id_column . " FROM " . $relation_table . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId() . ")");
         foreach ($other_entities_props as $other_entity_props) {
             $other_entity = self::getEntity($other_entity_name, $other_entity_props);
             $other_entities[] = $other_entity;
@@ -267,13 +269,11 @@ class EntityManager
      */
     public static function manyToMany($name1, $name2, $relation_table)
     {
-        self::$entities[$name1]["linked_with"][] = [
-            "relation_table" => $relation_table,
-            "other_entity_name" => $name2
+        self::$entities[$name1]["linked_with"][$name2] = [
+            "relation_table" => $relation_table
         ];
-        self::$entities[$name2]["linked_with"] = [
+        self::$entities[$name2]["linked_with"][$name1] = [
             "relation_table" => $relation_table,
-            "other_entity_name" => $name1
         ];
     }
 
@@ -288,5 +288,51 @@ class EntityManager
             "name" => $parent_name,
             "prop" => $prop_name
         ];
+    }
+
+    public static function setManyToManyRelationship(Entity $obj, $other_entity_name, $curr_val, $val, $relation_table)
+    {
+        $our_id = $obj->getId(); // HEY! it won't work before we save it, so you should do it at the end!
+        $our_id_column = $obj->getIdColumn();
+        $other_entity_id_column = self::getEntityIdColumn($other_entity_name);
+
+        $curr_ids = [];
+        foreach ($curr_val as $other_obj) {
+            $other_id = $other_obj->getProp($other_entity_id_column);
+            if ($other_id > 0) { // always but prevents bugs
+                $curr_ids[] = $other_id;
+            }
+        }
+
+        $ids = [];
+        foreach ($val as $oo) {
+            /** @var Entity */
+            $other_obj = $oo;
+
+            if (in_array($obj->getName(), $other_obj->getWillUnlinkFromEntities())) {
+                continue;
+            }
+
+            $other_id = $other_obj->getProp($other_entity_id_column);
+            if ($other_id > 0) { // always but prevents bugs
+                $ids[] = $other_id;
+            }
+        }
+
+        $removed_ids = array_diff($curr_ids, $ids);
+        $added_ids = array_diff($ids, $curr_ids);
+
+        if ($removed_ids) {
+            $query = "DELETE FROM $relation_table WHERE $our_id_column = $our_id AND $other_entity_id_column IN (" . implode(",", $removed_ids) . ")";
+            var_dump([$query]);
+            DB::execute($query);
+        }
+        if ($added_ids) {
+            $query = "INSERT INTO $relation_table ($our_id_column, $other_entity_id_column) VALUES " . implode(",", array_map(function ($a) use ($our_id) {
+                return "($our_id,$a)";
+            }, $added_ids));
+            var_dump([$query]);
+            DB::execute($query);
+        }
     }
 }

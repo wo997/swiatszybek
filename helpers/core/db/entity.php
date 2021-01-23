@@ -14,10 +14,10 @@ class Entity
 
     public function __construct($name, &$props)
     {
-        // must go first
         $this->name = $name;
-        // must go second
         $this->id_column = $this->getIdColumn();
+        $this->will_delete = false;
+        $this->will_unlink_from_entities = [];
 
         $obj_curr_id = $this->getIdFromProps($props);
         if ($obj_curr_id !== -1) {
@@ -41,6 +41,22 @@ class Entity
     public function getWillDelete()
     {
         return $this->will_delete;
+    }
+
+    /**
+     * setWillDelete
+     *
+     * @param  boolean $delete
+     * @return void
+     */
+    public function willUnlinkFromEntity($name)
+    {
+        $this->will_unlink_from_entities[] = $name;
+    }
+
+    public function getWillUnlinkFromEntities()
+    {
+        return $this->will_unlink_from_entities;
     }
 
 
@@ -83,64 +99,64 @@ class Entity
             return true;
         }
 
-        if ($this->curr_props) {
-            $update_props = [];
-            foreach ($this->props as $key => $value) {
-                if ($key === $this->id_column) {
-                    continue;
-                }
-                if (is_array($value)) {
-                    $this->saveChildren($value);
-                    continue;
-                }
-                if ($this->curr_props[$key] === $value) {
-                    continue;
-                }
+        $entity_data = EntityManager::getEntityData($this->name);
 
-                $update_props[$key] = $value;
+        $changed_props = [];
+        foreach ($this->props as $key => $value) {
+            if ($key === $this->id_column) {
+                continue;
+            }
+            if (def($this->curr_props, $key, null) === $value) {
+                continue;
             }
 
-            if (!empty($update_props)) {
+            if (is_array($value)) {
+                $this->saveChildren($value);
+            }
+
+            $other_entity_type = str_replace("[]", "", def($entity_data, ["props", $key, "type"], ""));
+
+            $link = def($entity_data, ["linked_with", $other_entity_type]);
+            if ($link) {
+                EntityManager::setManyToManyRelationship($this, $other_entity_type, def($this->curr_props, $key, []), $value, $link["relation_table"]);
+            }
+
+            if (is_array($value)) {
+                continue;
+            }
+
+            $changed_props[$key] = $value;
+        }
+
+        if (!empty($changed_props)) {
+            if ($this->curr_props) {
                 // update
                 $query = "UPDATE " . $this->name . " SET ";
-                foreach (array_keys($update_props) as $field) {
+                foreach (array_keys($changed_props) as $field) {
                     $query .= clean($field) . "=?,";
                 }
                 $query = rtrim($query, ",");
                 $query .= " WHERE " . $this->id_column . "=" . $this->getId();
-                var_dump([$query, array_values($update_props)]);
-                DB::execute($query, array_values($update_props));
+                var_dump([$query, array_values($changed_props)]);
+                DB::execute($query, array_values($changed_props));
                 return true;
-            }
-
-            return;
-        } else {
-            // insert
-            $insert_props = [];
-            foreach ($this->props as $key => $value) {
-                if ($key === $this->id_column) {
-                    continue;
+            } else {
+                // insert
+                $keys_query = "";
+                foreach (array_keys($changed_props) as $field) {
+                    $keys_query .= clean($field) . ",";
                 }
-                if (is_array($value)) {
-                    $this->saveChildren($value);
-                    continue;
-                }
-                $insert_props[$key] = $value;
+                $keys_query = rtrim($keys_query, ",");
+                $values_query = rtrim(str_repeat("?,", count($changed_props)), ",");
+
+                $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
+
+                var_dump([$query, array_values($changed_props)]);
+                DB::execute($query, array_values($changed_props));
+                $entity_id = DB::insertedId();
+                $this->setId($entity_id);
+                return $entity_id;
             }
-
-            $keys_query = "";
-            foreach (array_keys($insert_props) as $field) {
-                $keys_query .= clean($field) . ",";
-            }
-            $keys_query = rtrim($keys_query, ",");
-            $values_query = rtrim(str_repeat("?,", count($insert_props)), ",");
-
-            $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
-
-            var_dump([$query, array_values($insert_props)]);
-            DB::execute($query, array_values($insert_props));
-            $entity_id = DB::insertedId();
-            return $entity_id;
         }
     }
 
@@ -178,12 +194,10 @@ class Entity
                 $val = EntityManager::setOneToManyEntities($this, $prop_name, $child_entity_name, $val);
                 $this->props[$prop_name] = $val;
             } else {
-                $linked_with = def($child_entity_data, ["linked_with"]);
-                foreach ($linked_with as $link) {
-                    if ($this->name === $link["other_entity_name"]) {
-                        $val = EntityManager::setManyToManyEntities($this, $prop_name, $child_entity_name, $val);
-                        $this->props[$prop_name] = $val;
-                    }
+                $link = def($child_entity_data, ["linked_with", $this->name]);
+                if ($link) {
+                    $val = EntityManager::setManyToManyEntities($this, $prop_name, $child_entity_name, $val);
+                    $this->props[$prop_name] = $val;
                 }
             }
         }
@@ -223,12 +237,12 @@ class Entity
                 $child_entity_data = EntityManager::getEntityData($child_entity_name);
                 if ($this->name === def($child_entity_data, ["parent", "name"])) {
                     $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $child_entity_name);
+                    $this->curr_props[$prop_name] = $this->props[$prop_name];
                 } else {
-                    $linked_with = def($child_entity_data, ["linked_with"]);
-                    foreach ($linked_with as $link) {
-                        if ($this->name === $link["other_entity_name"]) {
-                            $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $child_entity_name, $link["relation_table"]);
-                        }
+                    $link = def($child_entity_data, ["linked_with", $this->name]);
+                    if ($link) {
+                        $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $child_entity_name, $link["relation_table"]);
+                        $this->curr_props[$prop_name] = $this->props[$prop_name];
                     }
                 }
             }
@@ -331,6 +345,16 @@ class Entity
             $this->props[$this->id_column] = -1;
         }
         return $this->getIdFromProps($this->props);
+    }
+
+    /**
+     * setId
+     *
+     * @return number
+     */
+    public function setId($id)
+    {
+        $this->props[$this->id_column] = $id;
     }
 
     public function getName()
