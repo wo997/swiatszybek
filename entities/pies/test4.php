@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}entity_test]
 
 
-// $color = EntityManager::getFromProps("color", [
+// $color = EntityManager::getEntity("color", [
 //     "name" => "blue"
 // ]);
 // $color->saveToDB();
@@ -33,7 +33,7 @@ $props = [
     ]
 ];
 
-$pies = EntityManager::getFromProps("pies", $props);
+$pies = EntityManager::getEntity("pies", $props);
 $pies->saveToDB();
 
 
@@ -44,7 +44,7 @@ $pies->saveToDB();
 // just create a hook and place it in a single file right after u modify the table, you need a simple rule to say it
 // you can even select a single record and tell if it's ok or not
 // foreach (DB::fetchCol("select pies_id from pies") as $id) {
-//     $pies = EntityManager::getById("pies", $id);
+//     $pies = EntityManager::getEntityById("pies", $id);
 //     $pies->setProp("paws");
 //     $pies->saveToDB();
 // }
@@ -52,7 +52,7 @@ $pies->saveToDB();
 // memory test - it's totally fine, there might be no room for improvement
 // $piess = [];
 // for ($i = 0; $i < 10; $i++) {
-//     $pies = EntityManager::getFromProps("pies", $props);
+//     $pies = EntityManager::getEntity("pies", $props);
 //     $piess[] = $pies;
 //     $pies->saveToDB();
 //     var_dump([$i, memory_get_usage()]);
@@ -78,7 +78,7 @@ $pies->saveToDB();
 //     return "this function is so darn good that it will know we return a string hah";
 // }
 
-// $paw_of_pies_8 = EntityManager::getById("paw_of_pies", 8);
+// $paw_of_pies_8 = EntityManager::getEntityById("paw_of_pies", 8);
 // $paw_of_pies_8->setWillDelete();
 // $paw_of_pies_8->saveToDB();
 
@@ -111,7 +111,7 @@ $pies->saveToDB();
 
 //}
 
-// $pies2 = EntityManager::getById("pies", 20);
+// $pies2 = EntityManager::getEntityById("pies", 20);
 
 // if ($pies2) {
 //     $pies2->setProp("ate_at", date("Y-m-d.H:i:s", strtotime("-2 days")));

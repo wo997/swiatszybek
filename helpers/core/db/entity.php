@@ -250,7 +250,7 @@ class Entity
             if ($parent_props) {
                 $parent_name = $parent_props["name"];
                 $parent_prop = $parent_props["prop"];
-                $this->parent = EntityManager::getById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
+                $this->parent = EntityManager::getEntityById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
                 // assign the child, a single reference
                 $this->parent->setProp($parent_prop, $this->parent->getProp($parent_prop, ["child" => $this]));
             }

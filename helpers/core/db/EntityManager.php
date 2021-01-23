@@ -70,13 +70,13 @@ class EntityManager
     }
 
     /**
-     * if you pass just the ID it will act like getById
+     * if you pass just the ID it will act like getEntityById
      *
      * @param  string $name !entity_name
      * @param  array $props !entity_props // to be added I guess, oh also the modifier should stop at whitespaces
      * @return Entity
      */
-    public static function getFromProps($name, $props) // must be the only place where we create Entities for consistency
+    public static function getEntity($name, $props) // must be the only place where we create Entities for consistency
     {
         $id = $props[self::getEntityIdColumn($name)];
         $global_id = self::getObjectGlobalId($name, $id);
@@ -110,10 +110,10 @@ class EntityManager
      * @param  number $id
      * @return Entity
      */
-    public static function getById($name, $id)
+    public static function getEntityById($name, $id)
     {
         $props = [self::getEntityIdColumn($name) => $id];
-        return self::getFromProps($name, $props);
+        return self::getEntity($name, $props);
     }
 
     public static function getEntityIdColumn($name)
@@ -147,7 +147,7 @@ class EntityManager
             $child_id = intval(def($child_props, $child_id_column, -1));
             $child_props[$obj->getIdColumn()] = $obj->getId();
             if ($child_id == -1) {
-                $child = self::getFromProps($child_entity_name, $child_props);
+                $child = self::getEntity($child_entity_name, $child_props);
                 $children[] = $child;
             } else {
                 $children_with_id_props[$child_id] = $child_props;
@@ -186,7 +186,7 @@ class EntityManager
 
         $children_props = DB::fetchArr($query);
         foreach ($children_props as $child_props) {
-            $child = self::getFromProps($child_entity_name, $child_props);
+            $child = self::getEntity($child_entity_name, $child_props);
             $child->setParent($obj);
             $children[] = $child;
         }

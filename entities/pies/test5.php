@@ -1,6 +1,6 @@
 <?php
 
-EntityManager::getById("pies", 28)->getProp("paw");
+EntityManager::getEntityById("pies", 28)->getProp("paw");
 
 $obj = new Entity("piesx", []);
 $obj->setProp("aaa");
