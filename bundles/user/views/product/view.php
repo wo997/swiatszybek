@@ -48,11 +48,10 @@ if (!$gallery) {
 }
 
 $galleryhtml = "";
-$gallerythumbshtml = "";
 foreach ($gallery as $pic) {
-    $galleryhtml .= "<div class='wo997_slide'><img style='max-width:100%' data-src='" . $pic["src"] . "' data-height='1w' class='product-image wo997_img'></div>";
-    $gallerythumbshtml .= "<img style='max-width:100%' data-src='" . $pic["src"] . "' data-height='1w' class='swiper-slide product-image wo997_img'>";
+    $galleryhtml .= "<div class='wo997_slide'><img data-src='" . $pic["src"] . "' data-height='1w' class='product-image wo997_img'></div>";
 }
+$galleryhtml .= $galleryhtml . $galleryhtml;
 
 $page_data["seo_description"] = $product_data["seo_description"];
 $page_data["seo_title"] = $product_data["seo_title"];
@@ -154,20 +153,14 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
     <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;">
         <div style="width: 50%;margin: 32px auto 0;">
             <?php if (count($gallery) == 1) : ?>
-                <img style='max-width:100%' data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image wo997_img'>
+                <img data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image wo997_img'>
             <?php else : ?>
-                <div class="wo997_slider product-main-slider">
+                <div class="wo997_slider" data-slider_below>
                     <div class="wo997_slides_container">
                         <?= $galleryhtml ?>
                     </div>
                 </div>
-                <div class="swiper-container gallery-thumbs">
-                    <div class="swiper-wrapper">
-                        <?= $gallerythumbshtml ?>
-                    </div>
-                </div>
-
-
+                <div data-slide_width="100px" data-show_next_mobile style="--slide_padding:5px"></div>
             <?php endif ?>
         </div>
         <div style="width: 40%; margin-top: 20px">
@@ -175,20 +168,51 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                 <h1 class="h1"><?= $product_data["title"] ?></h1>
 
                 <div>
-
-                    <h3 class="h1" style='color:var(--error-clr)'>W TRAKCIE ROZWOJU</h3>
-
                     <?php
-                    $variant_filters = json_decode($product_data["variant_filters"], true);
+                    $variant_filters = [
+                        /*[
+                            "filter_name" => "Model",
+                            "columns" => "3",
+                            "height" => "80px",
+                            "filter_options" => [
+                                ["value" => "Z20"],
+                                ["value" => "Z20+"],
+                                ["value" => "Z20 Undra"],
+                            ]
+                        ],*/
+                        [
+                            "filter_name" => "Kolor",
+                            "columns" => "3",
+                            "height" => "80px",
+                            "filter_options" => [
+                                ["value" => "Czerwony"],
+                                ["value" => "Zielony"],
+                                ["value" => "Żólty"],
+                            ]
+                        ],
+                    ];
 
-                    foreach ($variant_filters as $filter_key => $filter) {
+                    $values = [];
+                    for ($i = 20; $i < 30; $i += 0.5) {
+                        $values[] = ["value" => $i];
+                    }
+                    $variant_filters[] =
+                        [
+                            "filter_name" => "Rozmiar",
+                            "columns" => "6",
+                            "height" => "40px",
+                            "filter_options" => $values
+                        ];
+                    // json_decode($product_data["variant_filters"], true);
+
+                    foreach ($variant_filters as $filter) {
                     ?>
                         <span class="field-title"><?= $filter["filter_name"] ?></span>
-                        <radio-input name="filter_<?= $filter_id ?>" class="blocks" style='margin-bottom:20px;'>
+                        <radio-input name="filter" class="blocks columns_<?= def($filter, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($filter, "height", "80px") ?>'>
                             <?php
-                            foreach (json_decode($filter["filter_options"], true) as $option_key => $option) {
+                            foreach ($filter["filter_options"] as $option) {
                             ?>
-                                <radio-option value="<?= $option_key ?>" class="<?= def($filter, "style", "") ?>">
+                                <radio-option value="1">
                                     <?= $option["value"] ?>
                                 </radio-option>
                             <?php

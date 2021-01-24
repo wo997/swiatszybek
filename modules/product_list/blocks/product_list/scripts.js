@@ -119,11 +119,11 @@ let animated_product_img = null;
 domload(() => {
 	preventProductImagesLongPress();
 
-	window.addEventListener("mousemove", (event) => {
-		currentlyFocusedProduct(event.target);
+	window.addEventListener("touchmove", (event) => {
+		currentlyFocusedProduct($(event.target));
 	});
 	window.addEventListener("mousemove", (event) => {
-		currentlyFocusedProduct(event.target);
+		currentlyFocusedProduct($(event.target));
 	});
 });
 
@@ -133,10 +133,19 @@ function preventProductImagesLongPress() {
 	});
 }
 
+/**
+ *
+ * @param {PiepNode} node
+ */
 function currentlyFocusedProduct(node) {
 	let product_img = null;
 
-	if (node && node.classList && node.classList.contains("product-image")) {
+	if (
+		node &&
+		node.classList &&
+		node.classList.contains("product-image") &&
+		node._parent(".product-block")
+	) {
 		product_img = node;
 	}
 

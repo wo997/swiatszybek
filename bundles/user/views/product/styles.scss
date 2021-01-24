@@ -331,17 +331,17 @@
 /* variant list end */
 
 radio-option.col1 {
-	width: calc(100% - var(--radio-input-margin));
+	width: calc(100% - var(--radio_input_margin));
 }
 
 radio-option.col2 {
-	width: calc(50% - var(--radio-input-margin));
+	width: calc(50% - var(--radio_input_margin));
 }
 
 radio-option.col3 {
-	width: calc(33.333% - var(--radio-input-margin));
+	width: calc(33.333% - var(--radio_input_margin));
 }
 
 radio-option.col4 {
-	width: calc(25% - var(--radio-input-margin));
+	width: calc(25% - var(--radio_input_margin));
 }

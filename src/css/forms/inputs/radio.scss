@@ -1,7 +1,8 @@
 /* css[global] */
 
 :root {
-	--radio-input-margin: 6px;
+	--radio_input_margin: 6px;
+	--radio_input_block_height: 80px;
 }
 
 radio-input radio-option:not(.selected) {
@@ -49,20 +50,19 @@ radio-input.blocks {
 	& {
 		display: flex;
 		flex-wrap: wrap;
-		margin-right: calc(var(--radio-input-margin) * -1);
-		margin-bottom: calc(var(--radio-input-margin) * -1);
+		margin-right: calc(var(--radio_input_margin) * -1);
+		margin-bottom: calc(var(--radio_input_margin) * -1);
 	}
 	& radio-option {
 		padding: 10px;
 		display: flex;
 		flex-wrap: wrap;
-		min-height: 80px;
+		min-height: var(--radio_input_block_height);
 		text-align: center;
 		align-items: center;
 		justify-content: center;
-		/*flex-grow: 1;*/
-		margin-right: var(--radio-input-margin);
-		margin-bottom: var(--radio-input-margin);
+		margin-right: var(--radio_input_margin);
+		margin-bottom: var(--radio_input_margin);
 		font-weight: inherit !important;
 		transition: all 0.2s;
 		border-radius: 4px;
@@ -82,48 +82,35 @@ radio-input.blocks {
 }
 
 radio-input {
+	&.columns_1,
 	&.columns_2,
 	&.columns_3 {
 		& {
 			display: flex;
 			flex-flow: row wrap;
-			margin-right: 1px;
 			--option-padding: 0;
 		}
 		& radio-option {
-			border-radius: 0 !important;
-			margin-right: -1px;
-			width: 50%;
 			padding: var(--option-padding);
 		}
 	}
 
+	&.columns_1 radio-option {
+		width: calc(100% - var(--radio_input_margin));
+	}
 	&.columns_2 radio-option {
-		width: 50%;
+		width: calc(50% - var(--radio_input_margin));
 	}
 	&.columns_3 radio-option {
-		width: 33.33333%;
+		width: calc(33.33333% - var(--radio_input_margin));
+	}
+	&.columns_4 radio-option {
+		width: calc(25% - var(--radio_input_margin));
+	}
+	&.columns_5 radio-option {
+		width: calc(20% - var(--radio_input_margin));
+	}
+	&.columns_6 radio-option {
+		width: calc(16.66666% - var(--radio_input_margin));
 	}
 }
-/*--column-count: 2
-& radio-input[name="container_flow"] {
-    & radio-option {
-        & {
-            border-radius: 0 !important;
-            padding: 5px !important;
-            margin-right: -1px;
-            width: 50%;
-        }
-        & img {
-            width: 50px;
-            height: 50px;
-            object-fit: fill;
-            vertical-align: middle;
-            margin-right: 5px;
-        }
-    }
-    & {
-        display: flex;
-        flex-flow: row wrap;
-    }
-}*/

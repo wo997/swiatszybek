@@ -66,6 +66,7 @@
 
 .product-image {
 	width: 100%;
+	max-width: 100%;
 	object-fit: contain;
 	display: block !important;
 }

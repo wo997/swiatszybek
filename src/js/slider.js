@@ -3,7 +3,7 @@
 let let_click_slide = false;
 
 domload(() => {
-	$$(".wo997_slider").forEach((slider) => {
+	$$(".wo997_slider:not(.wo997_slider_ready)").forEach((slider) => {
 		initSlider(slider);
 	});
 
@@ -143,6 +143,7 @@ function animateSliders() {
  * scroll: number
  * velocity: number
  * slides_container: PiepNode
+ * slide_nodes?: PiepNode[]
  * grabbed_at_scroll: number
  * grabbed_input_x: number
  * grabbed_input_y: number
@@ -154,11 +155,12 @@ function animateSliders() {
  * slide_id: number
  * just_released: boolean
  * just_grabbed: boolean
- * set_slide(id: number)
+ * set_slide(id: number, options?: {duration?: number, big_jump_duration?: number})
  * update()
  * max_scroll: number
  * min_scroll: number
  * edge_offset: number
+ * select_slide(id: number)
  * }} PiepSlider
  */
 
@@ -176,6 +178,9 @@ function initSlider(elem) {
 	/** @type {PiepSliderNode} */
 	// @ts-ignore
 	const node = elem;
+
+	node.classList.add("wo997_slider"); // in case it wasn't here already
+	node.classList.add("wo997_slider_ready");
 
 	node._slider = {
 		scroll: 0,
@@ -215,11 +220,28 @@ function initSlider(elem) {
 			slider.slide_width = slide_width;
 			node.style.setProperty("--slide_width", `${slide_width.toFixed(1)}px`);
 		},
-		set_slide: (id) => {
+		set_slide: (id, options = {}) => {
 			const slide_count = Math.round(
 				(slider.max_scroll + slider.edge_offset) / slider.slide_width
 			);
+			const was_slide = slider.slide_id;
 			slider.slide_id = clamp(0, id, slide_count);
+			if (
+				options.duration === 0 ||
+				(options.big_jump_duration === 0 &&
+					Math.abs(slider.slide_id - was_slide) > 1)
+			) {
+				slider.scroll = slider.slide_id * slider.slide_width;
+				slider.velocity = 0;
+			}
+
+			node.dispatchEvent(
+				new CustomEvent("slide_changed", {
+					detail: {
+						slide_id: slider.slide_id,
+					},
+				})
+			);
 		},
 		update: () => {
 			let show_next_mobile = def(node.dataset.show_next_mobile, "0");
@@ -234,12 +256,25 @@ function initSlider(elem) {
 
 			slider.min_scroll = 0;
 			slider.max_scroll = slides_container.offsetWidth - node.offsetWidth;
+
+			slider.slide_nodes = slides_container._direct_children();
+		},
+		select_slide: (id) => {
+			slider.slides_container._children(".selected_slide").forEach((e) => {
+				e.classList.remove("selected_slide");
+			});
+			slider.slide_nodes[id].classList.add("selected_slide");
+
+			const offset = Math.floor(
+				(node.clientWidth / slider.slide_width - 1) / 2 + 0.05
+			);
+
+			slider.set_slide(id - offset);
 		},
 	};
 	const slider = node._slider;
 
 	const slides_container = node._child(".wo997_slides_container");
-	//const slides = slides_container._direct_children();
 
 	slider.slides_container = slides_container;
 
@@ -319,10 +354,40 @@ function initSlider(elem) {
 		let_click_slide = false;
 	});
 
-	slider.release();
-	slider.update();
+	// must be before arrows are created!
+	if (node.dataset.slider_below !== undefined) {
+		/** @type {PiepSliderNode} */
+		// @ts-ignore
+		const slider_below_node = elem._next();
+		if (slider_below_node) {
+			slider_below_node._set_content(node.innerHTML);
+			initSlider(slider_below_node);
+			const slider_below = slider_below_node._slider;
+			slider_below_node.classList.add("slider_below");
 
-	wo997_sliders.push(node);
+			node.addEventListener("slide_changed", (event) => {
+				// @ts-ignore
+				const detail = event.detail;
+				const slide_id = detail.slide_id;
+
+				slider_below.select_slide(slide_id);
+			});
+
+			let slide_id = -1;
+			slider_below_node._slider.slides_container
+				._direct_children()
+				.forEach((slide) => {
+					slide_id++;
+					const slide_id_val = slide_id;
+					slide.addEventListener("click", () => {
+						slider_below.release();
+						slider_below.just_released = false; // lol
+						slider_below.select_slide(slide_id_val);
+						slider.set_slide(slide_id_val, { big_jump_duration: 0 });
+					});
+				});
+		}
+	}
 
 	node.insertAdjacentHTML(
 		"beforeend",
@@ -356,4 +421,10 @@ function initSlider(elem) {
 		slider.set_slide(slider.slide_id + 1);
 		animate_nav(next_svg);
 	});
+
+	wo997_sliders.push(node);
+
+	slider.release();
+	slider.update();
+	slider.set_slide(0);
 }
