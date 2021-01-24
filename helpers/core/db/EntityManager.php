@@ -63,17 +63,18 @@ class EntityManager
     public static function getEntity($name, $props) // must be the only place where we create Entities for consistency
     {
         $id = $props[self::getEntityIdColumn($name)];
-        $global_id = self::getObjectGlobalId($name, $id);
-        $cacheable = $id != -1;
 
-        if ($cacheable && isset(self::$objects[$global_id])) {
-            return self::$objects[$global_id];
+        if (intval($id) >= 0) {
+            $global_id = self::getObjectGlobalId($name, $id);
+            if (isset(self::$objects[$global_id])) {
+                return self::$objects[$global_id];
+            }
         }
 
         $obj = new Entity($name, $props);
-        if ($cacheable) {
-            self::$objects[$global_id] = $obj; // u can restore the data yay :) not used yet bro, think about it
-        }
+        $global_id = self::getObjectGlobalId($name, $obj->getId());
+        self::$objects[$global_id] = $obj; // u can restore the data yay :) not used yet bro, think about it
+
         return $obj;
     }
 
@@ -251,14 +252,14 @@ class EntityManager
      */
     public static function setter($name, $prop, $callback)
     {
-        EventListener::register($name . "_set_" . $prop, function ($params) use ($callback) {
+        EventListener::register("set_" . $name . "_entity_" . $prop, function ($params) use ($callback) {
             $callback($params["obj"], $params["val"]);
         });
     }
 
     public static function getter($name, $prop, $callback)
     {
-        EventListener::register($name . "_get_" . $prop, function ($params) use ($callback) {
+        EventListener::register("get_" . $name . "_entity_" . $prop, function ($params) use ($callback) {
             $callback($params["obj"]);
         });
     }

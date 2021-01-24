@@ -41,6 +41,7 @@ class DB
             if (!$give_response) {
                 $res = $stmt->execute();
             } else {
+                // if you ever get stuck here, maybe you meant to use DB::execute()?
                 $stmt->execute();
                 $res = $stmt->get_result()->fetch_all(1);
             }

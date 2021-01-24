@@ -1,47 +1,56 @@
 <?php //route[{ADMIN}entity_test]
 
+$pies = EntityManager::getEntityById("pies", 2);
+$pies->getProp("paws");
+
 // $color = EntityManager::getEntity("color", [
 //     "name" => "blue"
 // ]);
 // $color->saveToDB();
 
-$props = [
-    "pies_id" => 20,
-    "food" => 666,
-    "unknown_field" => 12345,
-    "paws" => [
-        [
-            "paw_of_pies_id" => 5, // change
-            "name" => "it won't be created if it does not exist with that id"
+$a =
+    /** @var JsonPathAndValue */
+    ["path" => [], "value" => ""];
+
+$props =
+    /** @var EntityPies */
+    [
+        "pies_id" => 20,
+        "food" => 666,
+        "unknown_field" => 12345,
+        "paws" => [
+            [
+                "paw_of_pies_id" => 5, // change
+                "name" => "it won't be created if it does not exist with that id"
+            ],
+            [
+                "paw_of_pies_id" => 86, // change, don't be confused when the owner is different
+                "name" => "changed namexzx"
+            ],
+            [
+                "paw_of_pies_id" => -1, // create
+                "name" => "createdx A"
+            ],
         ],
-        [
-            "paw_of_pies_id" => 86, // change
-            "name" => "changed namexz"
-        ],
-        [
-            "paw_of_pies_id" => -1, // create
-            "name" => "createdx A"
-        ],
-    ],
-    "colors" => [
-        [
-            "color_id" => 5, // change
-            "name" => "it won't be created if it does not exist with that id"
-        ],
-        [
-            "color_id" => 35, // change
-            "name" => "changed namexxxY"
-        ],
-        2, // just use the damn id
-        [
-            "color_id" => -1, // create
-            "name" => "created"
-        ],
-    ]
-];
+        "colors" => [
+            [
+                "color_id" => 5, // change
+                "name" => "it won't be created if it does not exist with that id"
+            ],
+            [
+                "color_id" => 35, // change
+                "name" => "changed namexxxY"
+            ],
+            2, // just use the damn id
+            [
+                "color_id" => -1, // create
+                "name" => "created"
+            ],
+        ]
+    ];
 
 $pies = EntityManager::getEntity("pies", $props);
-//$pies->getProps();
+$pies->getProps();
 //var_dump($pies->getProps());
 $pies->saveToDB(); // it all works except setting up relationships in the db, color_to_pies
 

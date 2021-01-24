@@ -20,7 +20,12 @@ class Entity
         $this->will_unlink_from_entities = [];
 
         $obj_curr_id = $this->getIdFromProps($props);
-        if ($obj_curr_id !== -1) {
+        if ($obj_curr_id == -1) {
+            $this->curr_props = [];
+            DB::execute("INSERT INTO $name () VALUES ()");
+            $this->setId(DB::insertedId());
+            //EntityManager pass global ids of those items to entity manager to handle them? or use just a damn transaction?
+        } else {
             $this->curr_props = DB::fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
             $this->setProps(def($this->curr_props, []));
         }
@@ -81,6 +86,9 @@ class Entity
             return;
         }
 
+        $saver = "save_" . $this->name . "_entity";
+        EventListener::dispatch($saver, ["obj" => $this]);
+
         if (def($options, "propagate_to_parent", true) === true) {
             // possibly delegate
             $parent = $this->getParent();
@@ -99,8 +107,8 @@ class Entity
             return true;
         }
 
+        // save primitive types and complex types / relations etc.
         $entity_data = EntityManager::getEntityData($this->name);
-
         $changed_props = [];
         foreach ($this->props as $key => $value) {
             if ($key === $this->id_column) {
@@ -124,12 +132,28 @@ class Entity
             if (is_array($value)) {
                 continue;
             }
-
             $changed_props[$key] = $value;
         }
 
         if (!empty($changed_props)) {
-            if ($this->curr_props) {
+            if ($this->getId() == -1) {
+                // // insert
+                // $keys_query = "";
+                // foreach (array_keys($changed_props) as $field) {
+                //     $keys_query .= clean($field) . ",";
+                // }
+                // $keys_query = rtrim($keys_query, ",");
+                // $values_query = rtrim(str_repeat("?,", count($changed_props)), ",");
+
+                // $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
+
+                // var_dump([$query, array_values($changed_props)]);
+                // DB::execute($query, array_values($changed_props));
+                // $entity_id = DB::insertedId();
+                // $this->setId($entity_id);
+                // return $entity_id;
+            } else {
+                // HEY we made it set id every time we create an object, that should indeed work bro, slower but more stable
                 // update
                 $query = "UPDATE " . $this->name . " SET ";
                 foreach (array_keys($changed_props) as $field) {
@@ -140,22 +164,6 @@ class Entity
                 var_dump([$query, array_values($changed_props)]);
                 DB::execute($query, array_values($changed_props));
                 return true;
-            } else {
-                // insert
-                $keys_query = "";
-                foreach (array_keys($changed_props) as $field) {
-                    $keys_query .= clean($field) . ",";
-                }
-                $keys_query = rtrim($keys_query, ",");
-                $values_query = rtrim(str_repeat("?,", count($changed_props)), ",");
-
-                $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
-
-                var_dump([$query, array_values($changed_props)]);
-                DB::execute($query, array_values($changed_props));
-                $entity_id = DB::insertedId();
-                $this->setId($entity_id);
-                return $entity_id;
             }
         }
     }
@@ -202,12 +210,13 @@ class Entity
             }
         }
 
-        $setter = $this->name . "_set_" .  $prop_name;
+        // I think it should not modify anything, just throw an error or set something else
+        $setter = "set_" . $this->name . "_entity_" .  $prop_name;
         $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]); // before and after?
         foreach ($vals as $v) {
             if ($v) {
                 // doesn't make sense but ok
-                $val = $v; //return $val;
+                //$val = $v; //return $val;
             }
         }
 
@@ -247,10 +256,16 @@ class Entity
                 }
             }
 
-            $getter = $this->name . "_get_" .  $prop_name;
+            // Are you sure you even need this step bro?
+            $getter = "get_" . $this->name . "_entity_" .  $prop_name;
             $vals = EventListener::dispatch($getter, ["obj" => $this]);
             foreach ($vals as $val) {
-                return $val;
+                // not sure of that
+                // if ($val !== null) {
+                //     $this->props[$prop_name] = $val;
+                //     $this->curr_props[$prop_name] = $val;
+                // }
+                //return $val;
             }
 
             /*if (function_exists($getter)) {
