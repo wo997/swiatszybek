@@ -50,7 +50,7 @@ if (!$gallery) {
 $galleryhtml = "";
 $gallerythumbshtml = "";
 foreach ($gallery as $pic) {
-    $galleryhtml .= "<div class='swiper-slide'><img style='max-width:100%' data-src='" . $pic["src"] . "' data-height='1w' class='swiper-slide product-image wo997_img'></div>";
+    $galleryhtml .= "<div class='wo997_slide'><img style='max-width:100%' data-src='" . $pic["src"] . "' data-height='1w' class='product-image wo997_img'></div>";
     $gallerythumbshtml .= "<img style='max-width:100%' data-src='" . $pic["src"] . "' data-height='1w' class='swiper-slide product-image wo997_img'>";
 }
 
@@ -67,9 +67,6 @@ addLastViewedProducts([$product_id]);
 <?php
 include "global/includes_for_cms_page.php";
 ?>
-
-<script src="/builds/product_page.js?v=<?= JS_RELEASE ?>"></script>
-<link href="/builds/product_page.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
 <script>
     var variants = <?= json_encode($variants) ?>;
@@ -159,12 +156,10 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
             <?php if (count($gallery) == 1) : ?>
                 <img style='max-width:100%' data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image wo997_img'>
             <?php else : ?>
-                <div class="swiper-container product-main-slider">
-                    <div class="swiper-wrapper">
+                <div class="wo997_slider product-main-slider">
+                    <div class="wo997_slides_container">
                         <?= $galleryhtml ?>
                     </div>
-                    <div class="swiper-nav swiper-button-next"><img src="/src/img/chevron.svg"></div>
-                    <div class="swiper-nav swiper-button-prev"><img src="/src/img/chevron.svg"></div>
                 </div>
                 <div class="swiper-container gallery-thumbs">
                     <div class="swiper-wrapper">

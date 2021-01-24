@@ -247,56 +247,32 @@ window.addEventListener("load", () => {
 });
 
 function lazyLoadImages(animate = true) {
-	setTimeout(() => {
-		scrollCallbackLazy();
-		setCustomHeights();
-
-		$$(".lazy").forEach((img) => {
-			const rect = img.getBoundingClientRect();
-
-			if (rect.top < window.innerHeight + lazyLoadOffset) {
-				loadLazyNode(img, animate);
-			}
-		});
-
-		// @ts-ignore
-		$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((
-			/** @type {ResponsiveImage} */ img
-		) => {
-			const rect = setImageDimensions(img);
-
-			if (rect.top < window.innerHeight + lazyLoadOffset) {
-				loadImage(img, animate);
-			}
-		});
-
-		setCustomHeights();
-	});
-}
-
-document.addEventListener("scroll", scrollCallbackLazy);
-/*document.addEventListener("scroll", scrollCallbackLazy);
-document.addEventListener("click", scrollCallbackLazy);
-document.addEventListener("touchmove", scrollCallbackLazy);
-document.addEventListener("drag", scrollCallbackLazy);
-document.addEventListener("mouseover", () => {
-	delay("scrollCallbackLazy", 100);
-});*/
-
-// some images might be small at the beginning and wanna grow later
-setInterval(() => {
+	//setTimeout(() => {
 	scrollCallbackLazy();
-	// @ts-ignore
-	$$(".wo997_img_shown").forEach((/** @type {ResponsiveImage} */ img) => {
-		const rect = isNodeOnScreen(img);
-		const dimensions = getImageDimenstions(img, rect);
-		// it's ok to show an image that's tiny with high res
-		if (dimensions > img.last_dimension + 25) {
-			img.last_dimension = dimensions;
-			loadImage(img, false);
+	setCustomHeights();
+
+	$$(".lazy").forEach((img) => {
+		const rect = img.getBoundingClientRect();
+
+		if (rect.top < window.innerHeight + lazyLoadOffset) {
+			loadLazyNode(img, animate);
 		}
 	});
-}, 300);
+
+	// @ts-ignore
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((
+		/** @type {ResponsiveImage} */ img
+	) => {
+		const rect = setImageDimensions(img);
+
+		if (rect.top < window.innerHeight + lazyLoadOffset) {
+			loadImage(img, animate);
+		}
+	});
+
+	setCustomHeights();
+	//});
+}
 
 function scrollCallbackLazy() {
 	$$(".lazy:not(.wo997_img_waiting)").forEach((node) => {
@@ -314,6 +290,20 @@ function scrollCallbackLazy() {
 		});
 	}, 100);
 }
+setInterval(() => {
+	scrollCallbackLazy();
+
+	// some images might be small at the beginning and wanna grow later
+	$$(".wo997_img_shown").forEach((/** @type {ResponsiveImage} */ img) => {
+		const rect = isNodeOnScreen(img);
+		const dimensions = getImageDimenstions(img, rect);
+		// it's ok to show an image that's tiny with high res
+		if (dimensions > img.last_dimension + 25) {
+			img.last_dimension = dimensions;
+			//loadImage(img, false);
+		}
+	});
+}, 150);
 
 function preloadImage(url) {
 	const img = new Image();
