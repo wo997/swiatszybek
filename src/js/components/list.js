@@ -163,7 +163,13 @@ function createListCompontent(
 
 									const offset_0 = Math.round(rect_before.top - rect_after.top);
 
-									if (Math.abs(offset_0) > 2) {
+									const ronscr = (r) => {
+										return r.top < window.innerHeight && r.top + r.height > 0;
+									};
+									if (
+										Math.abs(offset_0) > 2 &&
+										(ronscr(rect_before) || ronscr(rect_after))
+									) {
 										child._animate(
 											`
                                                    0% {transform:translateY(${offset_0}px)}
