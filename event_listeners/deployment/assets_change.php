@@ -11,7 +11,7 @@ if (!$modifyJS && !$modifyCSS) {
 }
 
 use MatthiasMullie\Minify;
-//use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 //use Patchwork\JSqueeze;
 
 //$jz = new JSqueeze();
@@ -118,7 +118,7 @@ if ($modifyJS) {
         // );
 
         //saveFile(BUILDS_PATH . "$jsGroup.js", $minifiedJs);
-        //$minifier = new Minify\JS($js_full);
+        $minifier = new Minify\JS($js_full);
         saveFile(BUILDS_PATH . "$jsGroup.js", $minifier->minify());
     }
 }
