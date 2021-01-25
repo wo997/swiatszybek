@@ -154,9 +154,11 @@ if ($is_basic) {
 
     if ($layout == "slider") {
 ?>
-        <div class="wo997_slider" data-slide_width="calc(10% + 150px)" data-show_next_mobile>
-            <div class="wo997_slides_container">
-                <?= $res ?>
+        <div class="wo997_slides_container" data-slide_width="calc(10% + 150px)" data-show_next_mobile>
+            <div class="wo997_slider">
+                <div class="wo997_slides_wrapper">
+                    <?= $res ?>
+                </div>
             </div>
         </div>
 <?php

@@ -2,12 +2,15 @@
 
 .wo997_slider {
 	position: relative;
-	overflow-x: hidden;
 	user-select: none;
 	-webkit-user-select: none;
 }
 
 .wo997_slides_container {
+	overflow-x: hidden;
+}
+
+.wo997_slides_wrapper {
 	display: inline-flex;
 	min-width: 100%;
 }
@@ -36,7 +39,7 @@
 		box-shadow: 0 1px 5px -1px #0008;
 		cursor: pointer;
 		overflow: hidden;
-		transition: all 0.2s;
+		transition: all 0.2s, left 0s, right 0s;
 
 		background: #fff6;
 		opacity: 0.5;
@@ -96,4 +99,13 @@
 
 .slider_below .wo997_slide {
 	cursor: pointer;
+}
+
+.wo997_slider.nav_out {
+	.nav_prev {
+		left: -55px;
+	}
+	.nav_next {
+		right: -55px;
+	}
 }

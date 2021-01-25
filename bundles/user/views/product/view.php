@@ -215,16 +215,18 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 ?>
 
     <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;">
-        <div style="width: 50%;margin: 32px auto 0;">
+        <div style="width: 47%;margin: 32px auto 0;">
             <?php if (count($gallery) == 1) : ?>
                 <img data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image wo997_img'>
             <?php else : ?>
-                <div class="wo997_slider" data-slider_below>
+                <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
                     <div class="wo997_slides_container">
-                        <?= $galleryhtml ?>
+                        <div class="wo997_slides_wrapper">
+                            <?= $galleryhtml ?>
+                        </div>
                     </div>
                 </div>
-                <div data-slide_width="100px" data-show_next_mobile style="--slide_padding:5px"></div>
+                <div data-slide_width="100px" data-show_next_mobile style="--slide_padding:5px" data-nav_out_from="1000px"></div>
             <?php endif ?>
         </div>
         <div style="width: 40%; margin-top: 20px">
