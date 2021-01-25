@@ -26,6 +26,8 @@ domload(() => {
 			node._slider.update();
 		});
 	});
+
+	lazyLoadImages();
 });
 
 function releaseAllSliders() {

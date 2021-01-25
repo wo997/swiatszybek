@@ -247,7 +247,6 @@ window.addEventListener("load", () => {
 });
 
 function lazyLoadImages(animate = true) {
-	//setTimeout(() => {
 	scrollCallbackLazy();
 	setCustomHeights();
 
@@ -263,15 +262,17 @@ function lazyLoadImages(animate = true) {
 	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((
 		/** @type {ResponsiveImage} */ img
 	) => {
-		const rect = setImageDimensions(img);
+		if (!img._parent(".wo997_slider:not(.wo997_slider_ready)")) {
+			// probably more components wanna join in the future
+			const rect = setImageDimensions(img);
 
-		if (rect.top < window.innerHeight + lazyLoadOffset) {
-			loadImage(img, animate);
+			if (rect.top < window.innerHeight + lazyLoadOffset) {
+				loadImage(img, animate);
+			}
 		}
 	});
 
 	setCustomHeights();
-	//});
 }
 
 function scrollCallbackLazy() {
