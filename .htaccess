@@ -7,7 +7,7 @@ RewriteRule ^([^\.]*)$ routing.php?url=$1 [QSA]
     Deny from all
 </Files>
 
-<Files routing.php>
+<FilesMatch (routing.php|ping.php)>
     Order Allow,Deny
     Allow from all
-</Files>
+</FilesMatch>

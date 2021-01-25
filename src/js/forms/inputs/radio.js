@@ -26,10 +26,10 @@ function getRadioInputValue(input) {
 }
 
 function setRadioInputValue(input, value, params = {}) {
-	var option_exists = input._child(`radio-option[value="${value}"]`);
-	if (!!option_exists) {
-		input._children(`radio-option`).forEach((e) => {
-			e.classList.toggle("selected", e.getAttribute("value") == value);
-		});
-	}
+	//var option_exists = input._child(`radio-option[value="${value}"]`);
+	//if (!!option_exists) {
+	input._children(`radio-option`).forEach((e) => {
+		e.classList.toggle("selected", e.getAttribute("value") == value);
+	});
+	//}
 }

@@ -360,66 +360,36 @@ function xor(a, b) {
 }
 
 function getValue(input) {
-	// TODO: move these motherfuckers to them components instead
-	// funny how some might not have registering process so we can leave some in here ;)
+	let v = input.value;
+
 	if (input.tagName == "RADIO-INPUT") {
-		return getRadioInputValue(input);
+		v = getRadioInputValue(input);
 	} else if (input.tagName == "CHECKBOX") {
-		return input.classList.contains("checked") ? 1 : 0;
+		v = input.classList.contains("checked") ? 1 : 0;
+	} else if (input.getAttribute("type") == "checkbox") {
+		v = input.checked ? 1 : 0;
 	} else if (input.datepicker) {
-		var value = input.value;
-		if (value && value.substr(6, 4).match(/\d{4}/)) {
-			value = reverseDateString(value, "-");
+		if (v && v.substr(6, 4).match(/\d{4}/)) {
+			v = reverseDateString(v, "-");
 		}
-		return value;
-	}
-	if (input.classList.contains("jscolor")) {
-		var value = input.value;
-		if (value && value.charAt(0) != "#") {
-			value = "#" + value;
+	} else if (input.classList.contains("jscolor")) {
+		if (v && v.charAt(0) != "#") {
+			v = "#" + v;
 		}
-		return value;
-	}
-	if (input.getAttribute("type") == "checkbox") {
-		return input.checked ? 1 : 0;
-	}
-	if (input.classList.contains("category-picker")) {
-		return input.category_picker && input.category_picker.value
-			? input.category_picker.value
-			: [];
 	} else {
-		var type = input.getAttribute("data-type");
+		var type = input.dataset.type;
 		if (type == "html") {
-			var pointChild = input.getAttribute("data-point-child");
-			if (pointChild) {
-				input = input.find(pointChild);
-			}
-			if (input.hasAttribute("data-number")) {
-				return +input.innerHTML;
-			}
-			return input.innerHTML;
-		} else if (type == "attribute_values") {
-			return getAttibutePickerValues(input);
-		} else if (input.tagName == "IMG") {
-			if (input.classList.contains("wo997_img")) {
-				return def(input.getAttribute(`data-src`), "");
-			}
-			return input.getAttribute(`src`);
-		} else if (type == "date") {
-			var format = input.getAttribute(`data-format`);
-			if (format == "dmy") {
-				return reverseDateString(input.value, "-");
-			}
-			return input.value;
-		} else if (["INPUT", "SELECT", "TEXTAREA"].includes(input.tagName)) {
-			if (input.hasAttribute("data-number")) {
-				return +input.value;
-			}
-			return input.value;
-		} else {
-			return undefined;
+			v = input.innerHTML;
+		} else if (input.classList.contains("wo997_img")) {
+			v = def(input.getAttribute(`data-src`), "");
 		}
 	}
+
+	if (input.hasAttribute("data-number")) {
+		v = +v;
+	}
+
+	return v;
 }
 
 /**

@@ -60,14 +60,78 @@ $page_data["seo_image"] = "/uploads/sm" . getUploadedFileName($product_data["cac
 $stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 
 addLastViewedProducts([$product_id]);
+
+
+
+
+
+
+$variants = [
+    /*[
+        "filter_name" => "Model",
+        "columns" => "3",
+        "height" => "80px",
+        "filter_options" => [
+            ["value" => "Z20"],
+            ["value" => "Z20+"],
+            ["value" => "Z20 Undra"],
+        ]
+    ],*/
+    [
+        "variant_id" => "3",
+        "filter_name" => "Kolor",
+        "columns" => "3",
+        "height" => "80px",
+        "variant_options" => [
+            ["option_id" => 123, "value" => "Czerwony"],
+            ["option_id" => 124, "value" => "Zielony"],
+            ["option_id" => 125, "value" => "Żólty"],
+        ]
+    ],
+];
+
+$values = [];
+$id = 1000;
+for ($i = 20; $i < 30; $i += 0.5) {
+    $id++;
+    $values[] = ["option_id" => $id, "value" => $i];
+}
+$variants[] =
+    [
+        "variant_id" => "4",
+        "filter_name" => "Rozmiar",
+        "columns" => "6",
+        "height" => "40px",
+        "variant_options" => $values
+    ];
+// json_decode($product_data["variant_filters"], true);
+
+$page_products = [];
+
+// will come straight from DB !!!!
+$product_id = 0;
+foreach ($variants[0]["variant_options"] as $color_option) {
+    foreach ($variants[1]["variant_options"] as $size_option) {
+        $product_id++;
+
+        $page_products[] = [
+            "product_id" => $product_id,
+            "price" => $product_id + ($color_option["option_id"] == "124" ? 50 : 0),
+            "stock" => rand(0, 5),
+            "variants" => [
+                $variants[0]["variant_id"] => $color_option["option_id"],
+                $variants[1]["variant_id"] => $size_option["option_id"],
+            ]
+        ];
+    }
+}
 ?>
 
 <?php startSection("head_content"); ?>
-<?php
-include "global/includes_for_cms_page.php";
-?>
 
 <script>
+    const page_products = <?= json_encode($page_products) ?>;
+
     var variants = <?= json_encode($variants) ?>;
     const PRODUCT_ID = <?= $product_data["product_id"] ?>;
 
@@ -169,50 +233,14 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
                 <div>
                     <?php
-                    $variant_filters = [
-                        /*[
-                            "filter_name" => "Model",
-                            "columns" => "3",
-                            "height" => "80px",
-                            "filter_options" => [
-                                ["value" => "Z20"],
-                                ["value" => "Z20+"],
-                                ["value" => "Z20 Undra"],
-                            ]
-                        ],*/
-                        [
-                            "filter_name" => "Kolor",
-                            "columns" => "3",
-                            "height" => "80px",
-                            "filter_options" => [
-                                ["value" => "Czerwony"],
-                                ["value" => "Zielony"],
-                                ["value" => "Żólty"],
-                            ]
-                        ],
-                    ];
-
-                    $values = [];
-                    for ($i = 20; $i < 30; $i += 0.5) {
-                        $values[] = ["value" => $i];
-                    }
-                    $variant_filters[] =
-                        [
-                            "filter_name" => "Rozmiar",
-                            "columns" => "6",
-                            "height" => "40px",
-                            "filter_options" => $values
-                        ];
-                    // json_decode($product_data["variant_filters"], true);
-
-                    foreach ($variant_filters as $filter) {
+                    foreach ($variants as $variant) {
                     ?>
-                        <span class="field-title"><?= $filter["filter_name"] ?></span>
-                        <radio-input name="filter" class="blocks columns_<?= def($filter, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($filter, "height", "80px") ?>'>
+                        <span class="field-title"><?= $variant["filter_name"] ?></span>
+                        <radio-input class="variant_radio blocks columns_<?= def($variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($variant, "height", "80px") ?>' data-variant_id="<?= $variant["variant_id"] ?>" data-number>
                             <?php
-                            foreach ($filter["filter_options"] as $option) {
+                            foreach ($variant["variant_options"] as $option) {
                             ?>
-                                <radio-option value="1">
+                                <radio-option class="variant_option" value="<?= $option["option_id"] ?>">
                                     <?= $option["value"] ?>
                                 </radio-option>
                             <?php
@@ -223,24 +251,6 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                     }
 
                     ?>
-
-                    <div class="variants">
-                        <?php
-
-                        for ($i = 0; $i < count($variants); $i++) {
-                            $color = empty($variants[$i]['color'])  ? "" : "<b class='colour' style='background:{$variants[$i]['color']}'></b>";
-
-                            $scroll_to_image = "onclick='clickVariant({$variants[$i]['variant_id']})'";
-
-                            $wyprz = $variants[$i]['rabat'] > 0 ? "<div class='percentOff'>-" . round($variants[$i]['rabat']) . " zł</div>" : "";
-
-                            $small_font = strlen($variants[$i]['name']) > 28 ? "small_font" : "";
-
-                            echo "<div class='color $small_font'><label><input type='radio' class='option' name='variant' value='{$variants[$i]['variant_id']}'><div class='boxy' $scroll_to_image>$color{$variants[$i]['name']}</div>$wyprz</label></div>";
-                        }
-
-                        ?>
-                    </div>
 
                     <h3 style='font-weight:normal;margin-bottom: 0;    font-size: 22px;'>
                         <span>Cena: </span><span id="priceText" class="pln"><?= $priceText ?></span> <span class="pln">zł</span> <span id="wasPrice" class='slash'></span> <span id="kolejnyTaniej"></span>
