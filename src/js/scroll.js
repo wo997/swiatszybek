@@ -14,23 +14,6 @@ if (IS_TOUCH_DEVICE) {
 	window.addEventListener("scroll", windowHeightResizeCallback);
 }
 
-function scrollToElement(elem, options = {}) {
-	if (!elem) return;
-	var rect = elem.getBoundingClientRect();
-	var diff =
-		(options.parent ? position(elem) : rect).top - def(options.offset, 0);
-	if (options.parent) {
-		diff -= options.parent.scrollTop;
-	}
-	if (!options.top) {
-		diff += (rect.height - window.innerHeight) * 0.5;
-	}
-	var sag = def(options.sag, 100);
-	if (Math.abs(diff) > sag) {
-		diff -= sag * Math.sign(diff);
-		scrollFromTo(options.parent, diff, def(options.duration, 50));
-	}
-}
 function scrollFromTo(parent, diff, time, t = 0) {
 	if (time < 2) {
 		time = 2;
@@ -44,13 +27,6 @@ function scrollFromTo(parent, diff, time, t = 0) {
 		window.requestAnimationFrame(function () {
 			scrollFromTo(parent, diff, time, t + 1);
 		});
-}
-
-function getWindowScroll() {
-	var doc = document.documentElement;
-	var left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-	var top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-	return { left: left, top: top };
 }
 
 function smoothScroll(diff, params = {}) {

@@ -69,7 +69,7 @@ function loadImage(img, animate = true, offset = null) {
 		let target_size_name = "df";
 
 		if (image_dimension < natural_image_dimension + 1) {
-			const pixelDensityFactor = window.devicePixelRatio * 0.5 + 0.5; // compromise quality and speed
+			const pixelDensityFactor = window.devicePixelRatio * 0.3 + 0.7; // compromise quality and speed
 			Object.entries(image_default_dimensions).forEach(
 				([size_name, size_dimension]) => {
 					if (size_name == "df") {
@@ -198,9 +198,7 @@ function setImageDimensions(img) {
 	let rect = img.getBoundingClientRect();
 
 	if (!data) {
-		img.style.animation = "show 0.45s";
-
-		const duration = 450;
+		const duration = 300;
 		img.style.animation = `show ${duration}ms`;
 		setTimeout(() => {
 			img.style.animation = "";

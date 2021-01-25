@@ -1,5 +1,7 @@
 /* js[global] */
 
+// TODO no kurwa, to jest zjebane, za dużo waży i kod jest jebnięty, popraw to
+
 // TODO: add the rest of params to doc
 /**
  *

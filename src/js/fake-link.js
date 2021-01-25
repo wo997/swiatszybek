@@ -1,11 +1,11 @@
 /* js[global] */
 
 document.addEventListener("click", (e) => {
-	var target = $(e.target);
+	const target = $(e.target);
 
-	var href_parent = target._parent("[data-href]");
+	const href_parent = target._parent("[data-href]");
 	if (href_parent) {
-		href = href_parent.getAttribute("data-href");
-		window.location = href;
+		const href = href_parent.getAttribute("data-href");
+		window.location.href= = href;
 	}
 });

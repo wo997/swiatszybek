@@ -1,4 +1,4 @@
-/* js[cms-page] */
+/* js[global] */
 
 domload(() => {
 	$$(".cms").forEach((e) => {

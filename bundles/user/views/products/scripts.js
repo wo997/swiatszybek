@@ -372,12 +372,14 @@ function searchProducts(options = {}) {
 
 function scrollToTopOfProductList() {
 	setTimeout(() => {
-		scrollToElement($(".hook_view"), {
-			top: true,
-			offset: window.innerWidth < MOBILE_WIDTH ? 200 : 300,
-			sag: window.innerWidth < MOBILE_WIDTH ? 0 : 100,
-			duration: 30,
-		});
+		// scrollIntoView(elem)
+		// depcrecated!
+		// scrollToElement($(".hook_view"), {
+		// 	top: true,
+		// 	offset: window.innerWidth < MOBILE_WIDTH ? 200 : 300,
+		// 	sag: window.innerWidth < MOBILE_WIDTH ? 0 : 100,
+		// 	duration: 30,
+		// });
 	}, 0);
 }
 

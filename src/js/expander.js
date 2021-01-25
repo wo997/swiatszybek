@@ -152,7 +152,7 @@ function expand(elem, show = null, options = {}) {
 
 domload(() => {
 	$$("nav a").forEach((a) => {
-		href = a.getAttribute("href");
+		const href = a.getAttribute("href");
 		if (href == "/") {
 			if (location.pathname == "/") {
 				a.classList.add("current-route");

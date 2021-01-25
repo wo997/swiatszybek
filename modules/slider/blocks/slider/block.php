@@ -19,7 +19,6 @@ $slides = def($params, "cms_slides", []);
             ?>
                     <div class='wo997_slide'>
                         <div class='cms slide-desktop'><?= getCMSPageHTML($slide["content"]) ?></div>
-                        <div class='cms slide-mobile'><?= getCMSPageHTML($slide["content"]) ?></div>
                     </div>
             <?php
                 }

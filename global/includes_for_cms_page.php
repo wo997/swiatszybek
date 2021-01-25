@@ -5,11 +5,13 @@
 
     .cms {
         opacity: 0;
-        transition: opacity 0.2s;
     }
 
     .cms .wo997_img {
         display: inline-block;
     }
+
+    .cms.slide-desktop {
+        height: 40vw;
+    }
 </style>
-<script src="/builds/cms-page.js?v=<?= JS_RELEASE ?>"></script>

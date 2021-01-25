@@ -70,21 +70,6 @@ function xhr(data) {
 	return xhr;
 }
 
-// deprecated
-function ajax(url, data, good, wrong) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("enctype", "multipart/form-data");
-	xhr.onload = function () {
-		good(xhr.responseText);
-	};
-	var formData = new FormData();
-	for (const [key, value] of Object.entries(data)) {
-		formData.append(key, value);
-	}
-	xhr.send(formData);
-}
-
 /**
  *
  * @param {*} value
@@ -270,18 +255,6 @@ domload(() => {
 	});
 });*/
 
-function updateOnlineStatus() {
-	$(".offline").classList.toggle("shown", !navigator.onLine);
-}
-domload(() => {
-	window.addEventListener("offline", () => {
-		updateOnlineStatus();
-	});
-	window.addEventListener("online", () => {
-		updateOnlineStatus();
-	});
-});
-
 function setValue(input, value = null, params = {}) {
 	input = $(input);
 
@@ -327,8 +300,6 @@ function setValue(input, value = null, params = {}) {
 				input = input.find(pointChild);
 			}
 			input._set_content(value);
-		} else if (type == "attribute_values") {
-			setAttributePickerValues(input, value);
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
 				switchImage(input, value);
@@ -543,28 +514,6 @@ function swapNodes(a, b) {
 
 	aParent.replaceChild(b, aHolder);
 	bParent.replaceChild(a, bHolder);
-}
-
-function position(node) {
-	var left = 0,
-		top = 0;
-
-	do {
-		left += node.offsetLeft;
-		top += node.offsetTop;
-	} while ((node = node.offsetParent));
-
-	return { left: left, top: top };
-}
-
-// probably another thing to die, nodePositionAgainstScrollableParent is better
-function positionWithOffset(node, offsetX, offestY) {
-	var pos = position(node);
-	var rect = node.getBoundingClientRect();
-	return {
-		left: pos.left + offsetX * rect.width,
-		top: pos.top + offestY * rect.height,
-	};
 }
 
 function removeClasses(className, selector = null) {

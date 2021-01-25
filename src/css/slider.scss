@@ -1,5 +1,9 @@
 /* css[global] */
 
+.wo997_slider:not(.wo997_slider_ready) {
+	/*display: none;*/
+}
+
 .wo997_slider {
 	position: relative;
 	user-select: none;
