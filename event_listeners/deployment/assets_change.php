@@ -11,7 +11,10 @@ if (!$modifyJS && !$modifyCSS) {
 }
 
 use MatthiasMullie\Minify;
-use ScssPhp\ScssPhp\Compiler;
+//use ScssPhp\ScssPhp\Compiler;
+//use Patchwork\JSqueeze;
+
+//$jz = new JSqueeze();
 
 $css_file_groups = [];
 $css_dependencies = [];
@@ -102,7 +105,20 @@ if ($modifyJS) {
             $js_full .= $js_content;
         }
 
-        $minifier = new Minify\JS($js_full);
+        //$minifiedJs = \JShrink\Minifier::minify($js_full);
+
+        //$myPacker = new GK\JavascriptPacker($js_full, 'None');
+        //$minifiedJs = $js_full; //$myPacker->pack();
+
+        // $minifiedJs = $jz->squeeze(
+        //     $js_full,
+        //     true,   // $singleLine
+        //     true,   // $keepImportantComments
+        //     false   // $specialVarRx
+        // );
+
+        //saveFile(BUILDS_PATH . "$jsGroup.js", $minifiedJs);
+        //$minifier = new Minify\JS($js_full);
         saveFile(BUILDS_PATH . "$jsGroup.js", $minifier->minify());
     }
 }

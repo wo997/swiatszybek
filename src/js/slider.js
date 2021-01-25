@@ -182,6 +182,7 @@ function initSlider(elem) {
 	// @ts-ignore
 	const node = elem;
 
+	node.classList.add("overflow_hidden");
 	node.classList.add("wo997_slider"); // in case it wasn't here already
 	node.classList.add("wo997_slider_ready");
 

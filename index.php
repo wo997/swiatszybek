@@ -10,7 +10,7 @@ if (!isset($_GET["token"]) || $_GET["token"] !== $secrets["deployment_token"]) {
 $zip_file_path = 'piepsklep.zip';
 
 // not sure about this either
-chmod(getcwd() . "/", 755);
+//chmod(getcwd() . "/", 755); don't do this on local server for sure
 
 $zip = new ZipArchive;
 if ($zip->open($zip_file_path) === TRUE) {

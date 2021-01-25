@@ -757,13 +757,31 @@ function createNodeFromHtml(html) {
 	return node;
 }
 
+/**
+ *
+ * @param {PiepNode} node
+ * @param {number} offset
+ */
 function isNodeOnScreen(node, offset = -10) {
-	var r = node.getBoundingClientRect();
+	const parent = node._parent(".overflow_hidden");
+
+	let px0 = 0;
+	let py0 = 0;
+	let px1 = window.innerWidth;
+	let py1 = window.innerHeight;
+	const r = node.getBoundingClientRect();
+	if (parent) {
+		const pr = parent.getBoundingClientRect();
+		px0 = pr.left;
+		py0 = pr.top;
+		px1 = pr.left + pr.width;
+		py1 = pr.top + pr.height;
+	}
 	if (
-		r.y > window.innerHeight + offset ||
-		r.y + r.height < -offset ||
-		r.x > window.innerWidth + offset ||
-		r.x + r.width < -offset
+		r.y > py1 + offset ||
+		r.y + r.height < py0 - offset ||
+		r.x > px1 + offset ||
+		r.x + r.width < px0 - offset
 	) {
 		return false;
 	}

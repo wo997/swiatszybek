@@ -6,8 +6,8 @@ $slides = def($params, "cms_slides", []);
 
 ?>
 
-<div class="wo997_slides_container" data-slide_width="100%">
-    <div class="wo997_slider">
+<div class="wo997_slider" data-slide_width="100%">
+    <div class="wo997_slides_container">
         <div class='wo997_slides_wrapper'>
             <?php
             if (is_array($slides)) {

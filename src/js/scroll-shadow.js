@@ -43,6 +43,7 @@ function registerScrollShadows() {
 			};
 		} else {
 			e.classList.add("registered");
+			e.classList.add("overflow_hidden");
 
 			e.insertAdjacentHTML(
 				"beforebegin",
