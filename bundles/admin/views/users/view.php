@@ -48,14 +48,11 @@
                     <div class="field-title">Kraj</div>
                     <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
 
-                    <div class="miejscowosc-picker-wrapper">
-                        <div class="field-title">Kod pocztowy</div>
-                        <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" onchange="kodPocztowyChange(this)" data-validate>
+                    <div class="field-title">Kod pocztowy</div>
+                    <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" data-validate>
 
-                        <div class="field-title">Miejscowość</div>
-                        <input class="field miejscowosc-picker-target" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate>
-                        <div class="miejscowosc-picker-list"></div>
-                    </div>
+                    <div class="field-title">Miejscowość</div>
+                    <input class="field" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate>
 
                     <div class="field-title">Ulica</div>
                     <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate>
