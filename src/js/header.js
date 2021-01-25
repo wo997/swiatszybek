@@ -255,7 +255,7 @@ domload(() => {
 
 	// last viewed products
 	registerModalContent(`
-      <div id="lastViewedProducts" data-expand="previous">
+      <div id="lastViewedProducts" class="lastViewedProducts" data-expand="previous">
         <div class="modal-body">
             <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
             <h3 class="modal-header">
@@ -279,7 +279,7 @@ domload(() => {
 
 	// wishlist
 	registerModalContent(`
-      <div id="wishList" data-expand="previous">
+      <div id="wishList" class="wishList" data-expand="previous">
         <div class="modal-body">
             <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
             <h3 class="modal-header">

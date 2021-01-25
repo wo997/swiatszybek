@@ -37,7 +37,7 @@
 }
 
 header .heart-icon,
-#wishList .heart-icon {
+.wishList .heart-icon {
 	width: 30px;
 }
 /*@media only screen and (max-width: 360px) {
@@ -533,11 +533,11 @@ header .last_viewed_products_wrapper {
 }
 
 header .product-history-icon,
-#lastViewedProducts .product-history-icon {
+.lastViewedProducts .product-history-icon {
 	width: 34px;
 }
 
-#lastViewedProducts .modal-header {
+.lastViewedProducts .modal-header {
 	font-size: 16px;
 	padding-right: 53px;
 }

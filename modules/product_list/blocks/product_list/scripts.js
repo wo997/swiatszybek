@@ -65,7 +65,7 @@ function setProductListGridDimensions(node) {
 window.addEventListener("products-swiper-created", (event) => {
 	setProductListSwiperDimensions(event.detail.node);
 	setCustomHeights();
-	window.tooltip.resizeCallback();
+	tooltip.resizeCallback();
 	preventProductImagesLongPress();
 });
 

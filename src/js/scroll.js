@@ -65,8 +65,8 @@ function smoothScroll(diff, params = {}) {
 			(duration * duration)
 	);
 
-	if (t == 0 && window.tooltip && Math.abs(diff) > 5) {
-		window.tooltip.dismiss();
+	if (t == 0 && tooltip && Math.abs(diff) > 5) {
+		tooltip.dismiss();
 	}
 
 	if (t < duration) {

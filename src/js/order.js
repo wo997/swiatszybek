@@ -155,7 +155,9 @@ window.addEventListener("basket-change", (event) => {
 				variant.title + " " + variant.name
 			);
 			$(`#${modal_name} .variant_qty`)._set_content(variant.quantity + " szt.");
-			$(`#${modal_name} .variant_price`)._set_content(variant.real_price + " zł");
+			$(`#${modal_name} .variant_price`)._set_content(
+				variant.real_price + " zł"
+			);
 
 			var options = {};
 			if (res.options.modal_source) {
@@ -277,7 +279,9 @@ function showVariantChanges(
 
 	if (res.changes) {
 		res.changes.quantity.forEach((variant_id) => {
-			var variant_node = basket_node._child(`[data-variant_id="${variant_id}"]`);
+			var variant_node = basket_node._child(
+				`[data-variant_id="${variant_id}"]`
+			);
 			if (!variant_node) {
 				return;
 			}
@@ -358,7 +362,9 @@ function showVariantChanges(
 			}
 		});
 		res.changes.removed.forEach((variant_id) => {
-			var variant_node = basket_node._child(`[data-variant_id="${variant_id}"]`);
+			var variant_node = basket_node._child(
+				`[data-variant_id="${variant_id}"]`
+			);
 			expand(variant_node, false, {
 				callback: () => {
 					variant_node.remove();
@@ -372,7 +378,7 @@ function showVariantChanges(
 	setTimeout(() => {
 		lazyLoadImages();
 		setCustomHeights();
-		window.tooltip.resizeCallback();
+		tooltip.resizeCallback();
 	});
 }
 
@@ -437,7 +443,9 @@ function showProductChanges(
 			}
 		});
 		res.changes.removed.forEach((product_id) => {
-			var product_node = basket_node._child(`[data-product_id="${product_id}"]`);
+			var product_node = basket_node._child(
+				`[data-product_id="${product_id}"]`
+			);
 			expand(product_node, false, {
 				callback: () => {
 					product_node.remove();
@@ -451,6 +459,6 @@ function showProductChanges(
 	setTimeout(() => {
 		lazyLoadImages();
 		setCustomHeights();
-		window.tooltip.resizeCallback();
+		tooltip.resizeCallback();
 	});
 }

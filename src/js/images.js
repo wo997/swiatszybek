@@ -262,8 +262,8 @@ function lazyLoadImages(animate = true) {
 	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((
 		/** @type {ResponsiveImage} */ img
 	) => {
+		// probably more components wanna join in the future
 		if (!img._parent(".wo997_slider:not(.wo997_slider_ready)")) {
-			// probably more components wanna join in the future
 			const rect = setImageDimensions(img);
 
 			if (rect.top < window.innerHeight + lazyLoadOffset) {
@@ -276,7 +276,7 @@ function lazyLoadImages(animate = true) {
 }
 
 function scrollCallbackLazy() {
-	$$(".lazy:not(.wo997_img_waiting)").forEach((node) => {
+	$$(".lazy").forEach((node) => {
 		loadLazyNode(node);
 	});
 	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach(
@@ -301,7 +301,7 @@ setInterval(() => {
 		// it's ok to show an image that's tiny with high res
 		if (dimensions > img.last_dimension + 25) {
 			img.last_dimension = dimensions;
-			//loadImage(img, false);
+			loadImage(img, false);
 		}
 	});
 }, 150);

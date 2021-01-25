@@ -5,20 +5,34 @@ var rowCount = 24;
 var searchParams = {};
 var searchingProducts = false;
 
+/** @var {PiepNode} */
+let productListNode;
+/** @var {PiepNode} */
+let productListAnimationNode;
+/** @var {PiepNode} */
+let productListSwapNode;
+/** @var {PiepNode} */
+let productListSwapContentNode;
+/** @var {PiepNode} */
+let productListSwapBackgroundNode;
+/** @var {PiepNode} */
+let paginationNode;
+
+let filtersInitialState;
+let filtersStateBeforeOpen;
+
 domload(() => {
 	var e = $(".category_name.current");
 	if (e) {
 		expandCategoriesAbove(e);
 	}
 
-	window.productListNode = $(".product_list-container");
-	window.productListAnimationNode = $(".product_list-animation-wrapper");
-	window.productListSwapNode = $(".product_list-container-swap");
-	window.productListSwapContentNode = $(".product_list-container-swap-content");
-	window.productListSwapBackgroundNode = $(
-		".product_list-container-swap-background"
-	);
-	window.paginationNode = $(".under-products .pagination");
+	productListNode = $(".product_list-container");
+	productListAnimationNode = $(".product_list-animation-wrapper");
+	productListSwapNode = $(".product_list-container-swap");
+	productListSwapContentNode = $(".product_list-container-swap-content");
+	productListSwapBackgroundNode = $(".product_list-container-swap-background");
+	paginationNode = $(".under-products .pagination");
 
 	$$(".order_by_item input").forEach((e) => {
 		e.addEventListener("change", () => {
@@ -30,7 +44,7 @@ domload(() => {
 		$(`.order_by_item input[value="sale"]`).checked = true;
 	}
 
-	window.filtersInitialState = getFormData(".filters");
+	filtersInitialState = getFormData(".filters");
 
 	if (window.innerWidth < 800) {
 		goMobile();
@@ -46,7 +60,7 @@ domload(() => {
 	var products_search = localStorage.getItem("products_search");
 	if (products_search) {
 		localStorage.removeItem("products_search");
-		$(`.relevance_option`).checked = true;
+		$(`.relevance_option`)._set_value(1, { quiet: true });
 	} else {
 		products_search = "";
 	}
@@ -141,11 +155,11 @@ function goMobile() {
 
 function beforeFiltersShown() {
 	blockProductsSearch = true;
-	window.filtersStateBeforeOpen = getFormData(".filters");
+	filtersStateBeforeOpen = getFormData(".filters");
 }
 
 function restoreFilters() {
-	setFormData(window.filtersStateBeforeOpen, ".filters");
+	setFormData(filtersStateBeforeOpen, ".filters");
 }
 
 function afterFiltersSelected() {
@@ -156,7 +170,7 @@ function afterFiltersSelected() {
 }
 
 function clearAllFilters() {
-	setFormData(window.filtersInitialState, ".filters");
+	setFormData(filtersInitialState, ".filters");
 	searchingProducts = false;
 	searchProducts();
 }
@@ -193,7 +207,7 @@ function searchProducts(options = {}) {
 				? subCheckboxes._child(":checked")
 				: false;
 			if (!anySubChecked) {
-				attribute_value_sub_ids.push(checkbox.value);
+				attribute_value_sub_ids.push(checkbox._get_value());
 			}
 		});
 		if (attribute_value_sub_ids.length > 0) {
@@ -261,7 +275,9 @@ function searchProducts(options = {}) {
 			setProductListGridDimensions(
 				productListSwapContentNode._child(".product_list_module.grid")
 			);
+
 			lazyLoadImages(false);
+
 			var h = productListSwapContentNode.getBoundingClientRect().height;
 
 			productListAnimationNode._animate(
@@ -293,8 +309,10 @@ function searchProducts(options = {}) {
 						searchingProducts = false;
 						productListNode._set_content(productListSwapNode.innerHTML);
 						productListSwapContentNode._empty();
-						window.tooltip.resizeCallback();
+						tooltip.resizeCallback();
 						productListLoaded();
+
+						lazyLoadImages(false);
 					},
 				}
 			);
@@ -424,15 +442,15 @@ function productsSearchChange(input, instant = false) {
 	});
 
 	if (searchParams.search === "" && value !== "") {
-		$(`.order_by_item .relevance_option`).checked = true;
+		$(`.order_by_item .relevance_option`)._set_value(1, { quiet: true });
 	}
 
 	if (!filled && $(".relevance_option:checked")) {
-		$(`.sale_option`).checked = true;
+		$(`.sale_option`)._set_value(1, { quiet: true });
 	}
 
 	if (filled && $(".random_option:checked")) {
-		$(`.sale_option`).checked = true;
+		$(`.sale_option`)._set_value(1, { quiet: true });
 	}
 
 	anySearchChange(instant);

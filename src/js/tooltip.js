@@ -1,15 +1,17 @@
 /* js[global] */
+
+let tooltip;
 domload(() => {
 	document.body.insertAdjacentHTML(
 		"beforeend",
 		`<div class="wo997tooltip" style="display:none"></div>`
 	);
-	window.tooltip = {
+	tooltip = {
 		target: $(".wo997tooltip"),
 		dismiss: () => {
-			var t = window.tooltip.target;
+			var t = tooltip.target;
 			t.style.display = "none";
-			window.tooltip.lastTooltipNode = null;
+			tooltip.lastTooltipNode = null;
 		},
 		resizeCallback: () => {
 			$$(".check-tooltip").forEach((e) => {
@@ -22,7 +24,7 @@ domload(() => {
 	};
 
 	window.addEventListener("mousemove", function (event) {
-		var t = window.tooltip.target;
+		var t = tooltip.target;
 
 		const target = $(event.target);
 		var e = target._parent("[data-tooltip]", { skip: 0 });
@@ -37,7 +39,7 @@ domload(() => {
 				}
 			}
 
-			if (window.tooltip.lastTooltipNode != e) {
+			if (tooltip.lastTooltipNode != e) {
 				t.style.display = "block";
 				t.innerHTML = tooltipText;
 				t.style.animation = "show 0.15s";
@@ -84,23 +86,23 @@ domload(() => {
 			t.style.top = top + "px";
 		} else t.style.display = "none";
 
-		window.tooltip.lastTooltipNode = e;
+		tooltip.lastTooltipNode = e;
 	});
 	window.addEventListener("mousewheel", () => {
-		window.tooltip.dismiss();
+		tooltip.dismiss();
 	});
 	window.addEventListener("mousedown", (event) => {
 		// click could be prevented lol
-		window.tooltip.dismiss();
-		/*if (!event.target._parent(window.tooltip.lastTooltipNode)) {
-			window.tooltip.dismiss();
+		tooltip.dismiss();
+		/*if (!event.target._parent(tooltip.lastTooltipNode)) {
+			tooltip.dismiss();
 		} else {
-			if (window.tooltip.lastTooltipNode.hasAttribute("data-tooltip-hide")) {
-				window.tooltip.dismiss();
+			if (tooltip.lastTooltipNode.hasAttribute("data-tooltip-hide")) {
+				tooltip.dismiss();
 			}
 		}*/
 	});
 
-	window.addEventListener("resize", window.tooltip.resizeCallback);
-	window.tooltip.resizeCallback();
+	window.addEventListener("resize", tooltip.resizeCallback);
+	tooltip.resizeCallback();
 });
