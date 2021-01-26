@@ -441,13 +441,19 @@ function topSearchProducts(force) {
 }
 
 domload(() => {
-	$$("header .scroll-panel, header .user-menu").forEach((e) => {
+	$$(
+		`header .scroll-panel,
+        header .user-menu,
+        header .headerbtn_hover_content`
+	).forEach((e) => {
 		e.addEventListener("mousewheel", (event) => {
 			if (
 				(event.deltaY < 0 && e.scrollTop < 1) ||
 				(event.deltaY > 0 && e.scrollTop > e.scrollHeight - e.offsetHeight - 1)
 			) {
 				event.preventDefault();
+			} else {
+				event.stopPropagation();
 			}
 		});
 	});

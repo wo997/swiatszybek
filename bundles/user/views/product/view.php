@@ -262,14 +262,15 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                                     <div>
                                         <div class="price_diff_before"></div>
                                         <div>
-                                            <?= $option["value"] ?>
                                             <?php
                                             $color = def($option, ["extra", "color"], "");
                                             if ($color) {
-                                            ?> <div class="color_circle" style="background-color:<?= $color ?>"></div>
+                                            ?>
+                                                <div class="color_circle" style="background-color:<?= $color ?>"></div>
                                             <?php
                                             }
                                             ?>
+                                            <?= $option["value"] ?>
                                         </div>
                                         <div class="price_diff"></div>
                                     </div>
