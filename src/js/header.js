@@ -441,28 +441,15 @@ function topSearchProducts(force) {
 }
 
 domload(() => {
-	var ss = $("header .header_basket_content_wrapper");
-	if (!ss) {
-		return;
-	}
-	ss.addEventListener("mousewheel", (event) => {
-		var h = ss.getBoundingClientRect().height;
-		var y = ss.scrollTop;
-
-		if (
-			(event.deltaY < 0 && y < 1) ||
-			(event.deltaY > 0 && y > ss.scrollHeight - h - 1)
-		) {
-			event.preventDefault();
-		}
-	});
-
-	var uw = $("header .user-wrapper");
-	if (!uw) {
-		return;
-	}
-	uw.addEventListener("mousewheel", (event) => {
-		event.preventDefault();
+	$$("header .scroll-panel, header .user-menu").forEach((e) => {
+		e.addEventListener("mousewheel", (event) => {
+			if (
+				(event.deltaY < 0 && e.scrollTop < 1) ||
+				(event.deltaY > 0 && e.scrollTop > e.scrollHeight - e.offsetHeight - 1)
+			) {
+				event.preventDefault();
+			}
+		});
 	});
 });
 

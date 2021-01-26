@@ -8,6 +8,10 @@
 	font-weight: 400;
 }
 
+.price_diff_4 .price_diff {
+	display: none;
+}
+
 .price_diff_1 {
 	.price_diff {
 		display: block;
@@ -72,14 +76,21 @@
 	font-size: 0.8em;
 }
 
+.buy_btn {
+	background: var(--buynow-clr);
+	color: white;
+}
+
+.buy_btn .basket-icon {
+	filter: invert(1);
+	vertical-align: sub;
+	width: 1.35em;
+}
+
 /* deprecated below */
 
 .comments th {
 	display: none;
-}
-
-#buyNow {
-	background: var(--buynow-clr);
 }
 
 .short-description {

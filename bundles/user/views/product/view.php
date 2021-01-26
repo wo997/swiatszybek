@@ -246,6 +246,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                     <radio-option value="1" class="default">Subtelny napis</radio-option>
                     <radio-option value="2">Czerwony prostokąt</radio-option>
                     <radio-option value="3">Szary prostokąt</radio-option>
+                    <radio-option value="4">Brak</radio-option>
                 </radio-input>
 
                 <div>
@@ -282,35 +283,18 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
                     ?>
 
-                    <h3 style='font-weight:normal;margin-bottom: 0; font-size: 22px;'>
+                    <p style='font-weight:normal;margin: 0; font-size: 1.6em;'>
                         <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
-
-                        <div style="display:inline-block;cursor:pointer" data-tooltip="Przejdź do komentarzy" data-tooltip-position="center" onclick='scrollIntoView($(".comments"),{margin:0.5,duration:70})'>
-                            <?= ratingBlock($product_data["cache_avg_rating"]); ?>
-
-                            <span style="font-size:15px;">
-                                (<?php
-                                    function ileOcen($n)
-                                    {
-                                        if ($n == 0) return "Brak ocen";
-                                        if ($n == 1) return "$n ocena";
-                                        if ($n > 1 && $n < 5) return "$n oceny";
-                                        return "$n ocen";
-                                    }
-                                    echo ileOcen($product_data["cache_rating_count"]);
-                                    ?>)
-                            </span>
-                        </div>
-                    </h3>
+                    </p>
 
                     <p style='font-weight:normal;margin:0;font-size: 1.1em;' id="quantity"></p>
 
                     <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Czas realizacji: 24h</p>
 
                     <div style="height:20px"></div>
-                    <button id="buyNow" class="btn primary medium fill" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true,modal_source:this})">
+                    <button class="btn medium fill buy_btn" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true,modal_source:this})">
                         Dodaj do koszyka
-                        <i class="fa fa-check" style="font-size: 14px;vertical-align: middle;"></i>
+                        <img class="basket-icon" src="/src/img/basket_icon.svg">
                     </button>
 
                     <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-product_id="<?= $product_id ?>"></div>
@@ -322,19 +306,16 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                         </a>
                     </div>
 
-                    <div style="margin-top: 13px;display:none" id="caseZero">
-                        <div id="hideWhenNotificationAdded">
-                            <div style="margin:12px 0 0;display:none" id="caseLast">Dodałaś/eś do koszyka <b>ostatnią szukę!</b><span> Chcesz kolejną?</span></div>
-                            <h3 style="margin:12px 0 0">Wyślij powiadomienie o dostępności</h3>
-                            <label style="font-size:16px;margin: 10px 0;display: flex;align-items: center;">
-                                <span>Twój e-mail: </span>
-                                <input type="text" value="<?= $app["user"]["email"] ?>" id="notification_email" style="width: auto;flex-grow: 1;margin-left: 10px;padding: 1px 4px;">
-                            </label>
-                            <button id="notify" class="btn primary medium fill" onclick="sendNotification()">
-                                Potwierdź powiadomienie
-                                <i class="fa fa-envelope" style="font-size: 14px;"></i>
-                            </button>
-                        </div>
+                    <div class="expand_y hidden animate_hidden notify_product_available">
+                        <h3 style="margin:12px 0 0">Powiadom o dostępności</h3>
+                        <label style="font-size:16px;margin: 10px 0;display: flex;align-items: center;">
+                            <span>Twój e-mail: </span>
+                            <input type="text" value="<?= $app["user"]["email"] ?>" id="notification_email" style="width: auto;flex-grow: 1;margin-left: 10px;padding: 1px 4px;">
+                        </label>
+                        <button id="notify" class="btn primary medium fill" onclick="sendNotification()">
+                            Potwierdź powiadomienie
+                            <i class="fa fa-envelope" style="font-size: 14px;"></i>
+                        </button>
                         <p id="whenNotificationAdded" style="display:none;color: white; background: #1b1; border-radius: 3px; padding: 3px 10px;text-align:center;max-width:450px;">Wyślemy powiadomienie na <span id="user_email"></span> kiedy produkt pojawi się w sklepie <i class="fa fa-envelope"></i></p>
                     </div>
                 </div>
