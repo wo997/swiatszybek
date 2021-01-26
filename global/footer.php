@@ -39,10 +39,10 @@
 
         <div class="scroll-panel scroll-shadow panel-padding">
             <div>
-                <div class="field-title first">E-mail</div>
+                <div class="label first">E-mail</div>
                 <input class="field" type="text" autocomplete="username" name="email" data-validate="backend|custom:validateLoginUserEmail|delay:300">
 
-                <div class="field-title">
+                <div class="label">
                     <span>Hasło</span>
                     <i class="fas fa-eye btn" onclick="togglePasswordFieldType(this,$(this)._parent()._next())" data-tooltip="Pokaż hasło" data-tooltip-position="right"></i>
                 </div>
@@ -106,7 +106,7 @@ if (isset($JS_files)) {
 ?>
 <?php /* just to score higher, we need our own icons later for sure */ ?>
 <?php if (IS_ADMIN_PAGE || !IS_MAIN_PAGE || $app["user"]["id"] /*$app["user"]["priveleges"]["backend_access"]*/) : ?>
-    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 <?php endif ?>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 

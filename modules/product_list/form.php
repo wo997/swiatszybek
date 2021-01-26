@@ -1,7 +1,7 @@
 <?php //module_form[product_list]
 ?>
 
-<span class="field-title first">Liczba produktów</span>
+<span class="label first">Liczba produktów</span>
 <input type="number" name="product_list_count" class="field" />
 
 siemka

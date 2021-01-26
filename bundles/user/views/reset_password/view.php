@@ -39,10 +39,10 @@ if ($authentication_token) {
             echo $_POST["message"];
         ?>
         <?php if ($authenticated) : ?>
-            <div class="field-title">Hasło (min. 8 znaków)</div>
+            <div class="label">Hasło (min. 8 znaków)</div>
             <input type="password" name="password" class="field" data-validate="password">
 
-            <div class="field-title">Powtórz hasło</div>
+            <div class="label">Powtórz hasło</div>
             <input type="password" name="password_rewrite" class="field" data-validate="|match:form [name='password']">
 
             <input type="hidden" name="user_id" value="<?= $user_id ?>">
@@ -53,7 +53,7 @@ if ($authentication_token) {
                 <i class="fa fa-chevron-right"></i>
             </button>
         <?php else : ?>
-            <div class="field-title">Twój e-mail</div>
+            <div class="label">Twój e-mail</div>
             <input type="text" class="field" name="email" data-validate="email">
 
             <button class="btn primary medium" style="margin:10px 0; width: 100%">

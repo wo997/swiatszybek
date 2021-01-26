@@ -364,7 +364,7 @@ domload(() => {
 		onChange: () => {},
 		onNewRowDataSet: (row, values, list, options) => {
 			if (options.user) {
-				editVariant(row, list.wrapper._child(".field-title .add_btn"));
+				editVariant(row, list.wrapper._child(".label .add_btn"));
 			}
 		},
 	});
@@ -628,7 +628,7 @@ function createVariantFiltersSimpleList(node, options = {}) {
             <div class='indent'>
               <div>
                 <button class='btn transparent expand_arrow open' onclick='expandMenu($(this)._parent()._next(),$(this)._parent())'><i class='fas fa-chevron-right'></i></button>
-                <span class='field-title inline indent_field_title'>
+                <span class='label inline indent_field_title'>
                   Lista opcji
                   <span class='option_count'></span>
                   <span class='add_buttons'></span>
@@ -694,7 +694,7 @@ function createFilterOptionsSimpleList(node) {
             <button class='btn secondary semi-bold add_additional_filters' onclick='this._next()._child(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
 
             <div class='indent'>
-              <div class='field-title indent_field_title'>
+              <div class='label indent_field_title'>
                 Pola wyboru
                 <span class='add_buttons'></span>
               </div>

@@ -214,7 +214,7 @@ window.addEventListener("tool_loaded", (event) => {
 
                 <div class="scroll-panel panel-padding">
                 <div class="field-wrapper">
-                    <div class="field-title">Wstaw link do zdjęcia zewnętrznego</div>
+                    <div class="label">Wstaw link do zdjęcia zewnętrznego</div>
                     <div class="glue-children">
                     <input type="text" data-validate class="external_link field">
                     <button class="btn primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
@@ -243,7 +243,7 @@ window.addEventListener("tool_loaded", (event) => {
                 </div>
 
                 <form class="panel-padding">
-                <div class="field-title">Nazwa zdjęcia</div>
+                <div class="label">Nazwa zdjęcia</div>
                 <input type="text" class="name field">
                 <label style="text-align:right;display: block;margin-top: 10px;">
                     <input type="file" name="files[]" multiple onchange="$(this)._next().click()" style="display:none">

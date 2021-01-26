@@ -1316,7 +1316,7 @@ function datatableFilter(btn, column_id) {
 			menu_header = `Wybierz datę`;
 		}
 		menu_body += /*html*/ `
-      <span class="field-title first">Typ wyszukiwania</span>
+      <span class="label first">Typ wyszukiwania</span>
       <select class="field date_type" onchange="dateTypeChanged(this)">
         <option value='='>Dokładna data</option>
         <option value='>'>Data od</option>
@@ -1324,17 +1324,17 @@ function datatableFilter(btn, column_id) {
         <option value='<>'>Przedział</option>
       </select>
       <div class="singledate_wrapper">
-        <span class="field-title">Data</span>
+        <span class="label">Data</span>
         <input type="text" class="field default_datepicker margin_bottom" data-orientation="auto bottom" style='width: 254px;'>
       </div>
 
       <div class="margin_bottom date_range_picker hidden" style='width: 254px;display:flex;'>
         <div style="margin-right:5px">
-          <span class="field-title">Od</span>
+          <span class="label">Od</span>
           <input type="text" class="field start" data-orientation="left bottom">
         </div>
         <div>
-          <span class="field-title">Do</span>
+          <span class="label">Do</span>
           <input type="text" class="field end" data-orientation="right bottom">
         </div>
       </div>
@@ -1364,14 +1364,14 @@ function datatableFilter(btn, column_id) {
 	if (IS_TOUCH_DEVICE) {
 		setModalTitle("#filter_menu", "Filtruj " + col_def.title.toLowerCase());
 		filter_menu._set_content(
-			/*html*/ `<span class="field-title">${menu_header}</span>${menu_body}${menu_footer}`
+			/*html*/ `<span class="label">${menu_header}</span>${menu_body}${menu_footer}`
 		);
 		showModal("filter_menu", {
 			source: btn,
 		});
 	} else {
 		if (menu_header) {
-			menu_html = /*html*/ `<span class='field-title header first'>${menu_header}</span>${menu_body}${menu_footer}`;
+			menu_html = /*html*/ `<span class='label header first'>${menu_header}</span>${menu_body}${menu_footer}`;
 		}
 		filter_menu._set_content(menu_html);
 		filter_menu.style.display = "block";

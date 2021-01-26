@@ -122,10 +122,10 @@ $static = checkUrl($page_data["link"]);
     </div>
 
     <div style="max-width: 600px">
-        <div class="field-title">Nazwa strony</div>
+        <div class="label">Nazwa strony</div>
         <input type="text" name="title" class="field" value="<?= $page_data["title"] ?>" style='width:100%;max-width:500px'>
 
-        <div class="field-title">Link strony (URL)</div>
+        <div class="label">Link strony (URL)</div>
         <div class="glue-children">
             <input type='text' name='link' data-validate="|optional" class="field">
             <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev()._child(`.field`), {link:true})" data-tooltip="Uzupełnij na podstawie nazwy strony" style="height: var(--field-height);">
@@ -133,7 +133,7 @@ $static = checkUrl($page_data["link"]);
             </button>
         </div>
 
-        <div class="field-title">Tytuł (SEO)</div>
+        <div class="label">Tytuł (SEO)</div>
         <div class="glue-children">
             <input type='text' name='seo_title' class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
             <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev()._child(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy strony" style="height: var(--field-height);">
@@ -141,14 +141,14 @@ $static = checkUrl($page_data["link"]);
             </button>
         </div>
 
-        <div class="field-title">Opis (SEO)</div>
+        <div class="label">Opis (SEO)</div>
         <textarea class="seo_description field" name='seo_description' data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
     </div>
 
     <div <?php if ($static) echo "style='display:none'" ?>>
 
         <div>
-            <div class="field-title">Zawartość strony <button onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></div>
+            <div class="label">Zawartość strony <button onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></button></div>
             <div class="cms preview_html" name="content" data-type="html"></div>
         </div>
 

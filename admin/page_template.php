@@ -22,7 +22,7 @@ endSection();
             </a>
 
             <div style="padding:0 10px 10px">
-                <div class="field-title first">Wyszukaj w panelu admina</div>
+                <div class="label first">Wyszukaj w panelu admina</div>
                 <input type="text" class="field" placeholder="W planach...">
             </div>
 

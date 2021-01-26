@@ -21,11 +21,11 @@
         <div class="scroll-panel scroll-shadow panel-padding">
             <div class="desktopRow spaceColumns">
                 <div>
-                    <div class="field-title">Nazwa menu</div>
+                    <div class="label">Nazwa menu</div>
                     <input type="text" name="title" data-validate autocomplete="off" class="field">
                 </div>
                 <div>
-                    <div class="field-title">Widoczność</div>
+                    <div class="label">Widoczność</div>
                     <select name="published" class="field">
                         <option value="1">Publiczna</option>
                         <option value="0">Ukryta</option>
@@ -33,10 +33,10 @@
                 </div>
             </div>
 
-            <div class="field-title">Menu nadrzędne</div>
+            <div class="label">Menu nadrzędne</div>
             <div class="category-picker" name="parent_id" data-source="menu" data-single></div>
 
-            <div class="field-title">Powiązanie</div>
+            <div class="label">Powiązanie</div>
             <div class="tab-menu tab-menu-link">
                 <div class="tab-header">
                     <div class="tab-option" data-tab_id="1">
@@ -50,18 +50,18 @@
                     </div>
                 </div>
                 <div class="tab-content hidden" data-tab_id="1">
-                    <div class="field-title">Wpisz link do strony - URL</div>
+                    <div class="label">Wpisz link do strony - URL</div>
                     <input type="text" name="url" autocomplete="off" class="field" data-validate>
                 </div>
                 <div class="tab-content hidden" data-tab_id="2">
                     <div class="field-wrapper">
-                        <div class="field-title">Wskaż stronę CMS</div>
+                        <div class="label">Wskaż stronę CMS</div>
                         <div class="strony"></div>
                     </div>
                 </div>
                 <div class="tab-content hidden" data-tab_id="3">
                     <div class="field-wrapper">
-                        <div class="field-title">Wskaż produkt</div>
+                        <div class="label">Wskaż produkt</div>
                         <div class="produkty"></div>
                     </div>
                 </div>

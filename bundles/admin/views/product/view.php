@@ -103,17 +103,17 @@ if ($kopia) {
 <?php startSection("body_content"); ?>
 
 <div id="productForm" data-form data-warn-before-leave class="form-field-spacing" data-history="30" data-history-buttons=".product-history-buttons">
-    <div class="field-title">Czy publiczny?</div>
+    <div class="label">Czy publiczny?</div>
     <checkbox name="published"></checkbox>
 
     <div style="display: flex" class="mobileRow">
         <div style="flex-grow:1; padding-right: 15px">
             <div style="max-width: 600px">
-                <div class="field-title">Nazwa produktu</div>
+                <div class="label">Nazwa produktu</div>
 
                 <input type="text" name="title" class="field" data-validate onchange="$(`#variantForm .product-title-copy`).setValue(this.value)">
 
-                <div class="field-title">Link strony</div>
+                <div class="label">Link strony</div>
                 <div class="glue-children">
                     <input type="text" name="link" data-validate class="field">
                     <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev()._child(`.field`), {link:true})" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: var(--field-height);">
@@ -121,7 +121,7 @@ if ($kopia) {
                     </button>
                 </div>
 
-                <div class="field-title">Tytuł (SEO)</div>
+                <div class="label">Tytuł (SEO)</div>
                 <div class="glue-children">
                     <input type="text" name="seo_title" class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
                     <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev()._child(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: var(--field-height);">
@@ -129,40 +129,40 @@ if ($kopia) {
                     </button>
                 </div>
 
-                <div class="field-title">Opis (SEO)</div>
+                <div class="label">Opis (SEO)</div>
                 <textarea class="seo_description field" name="seo_description" data-show-count="158" data-count-description="(zalecane 130-155)"></textarea>
             </div>
         </div>
     </div>
 
-    <div class='field-title'>
+    <div class='label'>
         Galeria zdjęć
         <span class='add_buttons'></span>
     </div>
     <div name="gallery" data-validate="|count:1+" style="max-width:600px"></div>
 
-    <div class="field-title">Kategorie</div>
+    <div class="label">Kategorie</div>
     <div class="category-picker" name="categories" data-source="product_categories"></div>
 
     <div style="margin-top: 10px">
 
-        <div class="field-title">
+        <div class="label">
             Opis główny
             <div onclick="editPage()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
         </div>
         <div name="description" data-type="html" class="cms preview_html" style="max-height: 400px"></div>
     </div>
 
-    <div class="field-title">Cechy produktu (wspólne dla wszystkich wariantów produktu)</div>
+    <div class="label">Cechy produktu (wspólne dla wszystkich wariantów produktu)</div>
     <div name="attributes" data-type="attribute_values"></div>
 
-    <div class='field-title'>
+    <div class='label'>
         Oferta / Pola wyboru wariantów produktów
         <span class='add_buttons'></span>
     </div>
     <div name="variant_filters" class="slim root"></div>
 
-    <span class='field-title'>
+    <span class='label'>
         Wszystkie warianty
         <span class='add_buttons' style='display:none'></span>
         <button class="btn important" onclick="fillVariantsFromFilters()">
@@ -193,41 +193,41 @@ if ($kopia) {
         </div>
         <div class="scroll-panel scroll-shadow panel-padding">
             <div>
-                <div class="field-title">Nazwa wariantu <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></div>
+                <div class="label">Nazwa wariantu <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></div>
 
                 <div class="glue-children">
                     <div class="product-title-copy field-description" data-type="html"></div>
                     <input type="text" name="name" class="field">
                 </div>
 
-                <div class="field-title">Cena</div>
+                <div class="label">Cena</div>
                 <input type="number" name="price" class="field">
 
-                <div class="field-title">Rabat</div>
+                <div class="label">Rabat</div>
                 <input type="number" name="rabat" class="field">
 
-                <div class="field-title">Ilość</div>
+                <div class="label">Ilość</div>
                 <input type="number" name="stock" class="field">
 
-                <div class="field-title">Kod produktu</div>
+                <div class="label">Kod produktu</div>
                 <input type="text" name="product_code" class="field">
 
                 <div style="display:none">
-                    <div class="field-title">Kolor</div>
+                    <div class="label">Kolor</div>
                     <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
                     <div class="btn primary" onclick="this._prev().value='';this._prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
                 </div>
 
-                <div class="field-title">Cechy wariantu (inne niż wspólne dla wszystkich wariantów produktu)</div>
+                <div class="label">Cechy wariantu (inne niż wspólne dla wszystkich wariantów produktu)</div>
                 <div name="attributes" data-type="attribute_values"></div>
 
-                <div class="field-title">
+                <div class="label">
                     Zdjecie
                     <button class="btn primary" onclick='fileManager.open(this._next(),{asset_types: ["image"]})'>Wybierz</button>
                     <img name="zdjecie" />
                 </div>
 
-                <div class="field-title">Widoczność</div>
+                <div class="label">Widoczność</div>
                 <select name="published" class="field">
                     <option value="1">Publiczny</option>
                     <option value="0">Ukryty</option>

@@ -21,14 +21,14 @@
         <div class="scroll-panel scroll-shadow panel-padding">
             <div class="desktopRow spaceColumns">
                 <div>
-                    <div class="field-title">Nazwa cechy</div>
+                    <div class="label">Nazwa cechy</div>
                     <input type="text" name="name" data-validate autocomplete="off" class="field">
 
-                    <div class="field-title">Typ danych</div>
+                    <div class="label">Typ danych</div>
                     <select name="data_type" class="field" onchange="toggleValues()"></select>
 
                     <div class="attribute_values_textlist_wrapper">
-                        <span class='field-title'>
+                        <span class='label'>
                             Wszystkie wartości
                             <span class='add_buttons'></span>
                         </span>
@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="attribute_values_colorlist_wrapper">
-                        <span class='field-title'>
+                        <span class='label'>
                             Wszystkie kolory
                             <span class='add_buttons'></span>
                         </span>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="field-title">Wyświetl filtry w kategoriach <a href="<?= STATIC_URLS["ADMIN"] ?>kategorie" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a></div>
+                    <div class="label">Wyświetl filtry w kategoriach <a href="<?= STATIC_URLS["ADMIN"] ?>kategorie" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a></div>
                     <div class="kategorie"></div>
                 </div>
             </div>

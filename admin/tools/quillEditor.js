@@ -1505,7 +1505,7 @@
 //             </div>
 //             <div>
 //               <div class="field-wrapper">
-//                 <span class="field-title">Link do filmu Youtube</span>
+//                 <span class="label">Link do filmu Youtube</span>
 //                 <div class="glue-children">
 //                     <input type="text" class="field" data-validate="youtube-video">
 //                     <button class="btn primary" onclick="quillEditor.putVideoBySource($(this)._prev(), $(this)._parent())">Wstaw</button>
@@ -1513,14 +1513,14 @@
 //               </div>
 
 //               <div class="field-wrapper">
-//                 <span class="field-title">Link do dowolnego filmu</span>
+//                 <span class="label">Link do dowolnego filmu</span>
 //                 <div class="glue-children">
 //                     <input type="text" class="field" data-validate="">
 //                     <button class="btn primary" onclick="quillEditor.putVideoBySource($(this)._prev(), $(this)._parent())">Wstaw</button>
 //                 </div>
 //               </div>
 
-//               <span class="field-title">
+//               <span class="label">
 //                 Wybierz z galerii filmów
 //                 <button class="btn primary" onclick="quillEditor.chooseVideoFromGallery(this);">Wybierz</button>
 //               </span>

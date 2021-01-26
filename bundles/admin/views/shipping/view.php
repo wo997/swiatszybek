@@ -23,7 +23,7 @@
     <div>
         <div class="form-header">Ogólne</div>
 
-        <div class="field-title">Email</div>
+        <div class="label">Email</div>
         <input type="text" class="field" name="main_email" data-validate="email">
 
     </div>

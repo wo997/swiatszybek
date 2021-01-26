@@ -32,7 +32,7 @@ $module_content .= "
             <div style='width:100%'>
                 <div class='uzupelnij' style='color:red;display:none;margin: 0 0 -5px;font-size:13px'>Uzupełnij e-mail</div>
                 <label>
-                    <span class='field-title'>Adres e-mail</span>
+                    <span class='label'>Adres e-mail</span>
                     <input type='text' name='email' class='field' placeholder=' ' value='$contact_email'>
                 </label>
                 <div style='margin: 8px 0'>

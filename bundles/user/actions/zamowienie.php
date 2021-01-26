@@ -480,117 +480,117 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
                 <div style="margin-right:5px;width:50%">
                     <p>Dane kontaktowe</p>
                     <label>
-                        <span class='field-title'>Imię</span>
+                        <span class='label'>Imię</span>
                         <input class='field' type="text" name="e_imie" value="<?= $zamowienie_data["imie"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Nazwisko</span>
+                        <span class='label'>Nazwisko</span>
                         <input class='field' type="text" name="e_nazwisko" value="<?= $zamowienie_data["nazwisko"] ?>">
                     </label>
 
                     <label>
-                        <span class='field-title'>Nazwa firmy</span>
+                        <span class='label'>Nazwa firmy</span>
                         <input class='field' type="text" name="e_firma" value="<?= $zamowienie_data["firma"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>NIP</span>
+                        <span class='label'>NIP</span>
                         <input class='field' type="text" name="e_nip" value="<?= $zamowienie_data["nip"] ?>">
                     </label>
 
                     <label>
-                        <span class='field-title'>Adres e-mail</span>
+                        <span class='label'>Adres e-mail</span>
                         <input class='field' type="text" name="e_email" value="<?= $zamowienie_data["email"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Nr telefonu</span>
+                        <span class='label'>Nr telefonu</span>
                         <input class='field' type="text" name="e_telefon" value="<?= $zamowienie_data["telefon"] ?>">
                     </label>
 
                     <label>
-                        <span class='field-title'>Kraj</span>
+                        <span class='label'>Kraj</span>
                         <input class='field' type="text" name="e_kraj" value="<?= $zamowienie_data["kraj"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Kod pocztowy</span>
+                        <span class='label'>Kod pocztowy</span>
                         <input class='field' type="text" name="e_kod_pocztowy" value="<?= $zamowienie_data["kod_pocztowy"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Miejscowość</span>
+                        <span class='label'>Miejscowość</span>
                         <input class='field' id="miejscowosc_z" type="text" name="e_miejscowosc" placeholder=" " value="<?= $zamowienie_data["miejscowosc"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Ulica</span>
+                        <span class='label'>Ulica</span>
                         <input class='field' type="text" name="e_ulica" value="<?= $zamowienie_data["ulica"] ?>">
                     </label>
                     <div style="display:flex">
                         <label style="flex-grow:1;margin-right:10px">
-                            <span class='field-title'>Nr domu</span>
+                            <span class='label'>Nr domu</span>
                             <input class='field' type="text" name="e_nr_domu" value="<?= $zamowienie_data["nr_domu"] ?>">
                         </label>
                         <label style="flex-grow:1;">
-                            <span class='field-title'>Nr lokalu</span>
+                            <span class='label'>Nr lokalu</span>
                             <input class='field' type="text" name="e_nr_lokalu" value="<?= $zamowienie_data["nr_lokalu"] ?>">
                         </label>
                     </div>
 
                     <label>
-                        <span class='field-title'>Notatki</span>
+                        <span class='label'>Notatki</span>
                         <textarea class='field' name="e_notes" style="width: 100%; height: 80px; resize: none; border-radius: 4px;box-sizing: border-box;padding:4px"><?= $zamowienie_data["notes"] ?></textarea>
                     </label>
                 </div>
                 <div style="margin-left:5px;width:50%">
                     <p>Adres dostawy</p>
                     <label>
-                        <span class='field-title'>Imię</span>
+                        <span class='label'>Imię</span>
                         <input class='field' type="text" name="e_imie_dostawa" value="<?= $zamowienie_data["imie_dostawa"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Nazwisko</span>
+                        <span class='label'>Nazwisko</span>
                         <input class='field' type="text" name="e_nazwisko_dostawa" value="<?= $zamowienie_data["nazwisko_dostawa"] ?>">
                     </label>
 
                     <label>
-                        <span class='field-title'>Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></span>
+                        <span class='label'>Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></span>
                         <input class='field' type="text" name="e_firma_dostawa" value="<?= $zamowienie_data["firma_dostawa"] ?>">
                     </label>
 
                     <label>
-                        <span class='field-title'>Nr Paczkomatu</span>
+                        <span class='label'>Nr Paczkomatu</span>
                         <input class='field' type="text" name="e_paczkomat" value="<?= $zamowienie_data["paczkomat"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Kraj</span>
+                        <span class='label'>Kraj</span>
                         <input class='field' type="text" name="e_kraj_dostawa" value="<?= $zamowienie_data["kraj_dostawa"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Kod pocztowy</span>
+                        <span class='label'>Kod pocztowy</span>
                         <input class='field' type="text" name="e_kod_pocztowy_dostawa" value="<?= $zamowienie_data["kod_pocztowy_dostawa"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Miejscowość</span>
+                        <span class='label'>Miejscowość</span>
                         <input class='field' id="miejscowosc" type="text" name="e_miejscowosc_dostawa" value="<?= $zamowienie_data["miejscowosc_dostawa"] ?>">
                     </label>
                     <label>
-                        <span class='field-title'>Ulica</span>
+                        <span class='label'>Ulica</span>
                         <input class='field' type="text" value="<?= $zamowienie_data["ulica_dostawa"] ?>" name="e_ulica_dostawa">
                     </label>
                     <div style="display:flex">
                         <label style="flex-grow:1;margin-right:10px">
-                            <span class='field-title'>Nr domu</span>
+                            <span class='label'>Nr domu</span>
                             <input class='field' type="text" value="<?= $zamowienie_data["nr_domu_dostawa"] ?>" name="e_nr_domu_dostawa">
                         </label>
                         <label style="flex-grow:1;">
-                            <span class='field-title'>Nr lokalu</span>
+                            <span class='label'>Nr lokalu</span>
                             <input class='field' type="text" value="<?= $zamowienie_data["nr_lokalu_dostawa"] ?>" name="e_nr_lokalu_dostawa">
                         </label>
                     </div>
                     <label>
-                        <span class='field-title'>Uwagi</span>
+                        <span class='label'>Uwagi</span>
                         <textarea class='field' name="e_uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;box-sizing: border-box;padding:4px"><?= $zamowienie_data["uwagi"] ?></textarea>
                     </label>
 
                     <label>
-                        <span class='field-title'>Nr śledzenia paczki</span>
+                        <span class='label'>Nr śledzenia paczki</span>
                         <input class='field' type="text" name="e_track" value="<?= $zamowienie_data["track"] ?>">
                     </label>
 
@@ -605,7 +605,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
         <div id="notatkaForm" data-modal>
             <div class="modal-padding" style="width:100%;max-width:500px">
                 <label>
-                    <span class="field-title">Notatki</span>
+                    <span class="label">Notatki</span>
                     <textarea name="e_notes" class="field" style="width: 100%; height: 80px; resize: none; border-radius: 4px;box-sizing: border-box;padding:4px"><?= $zamowienie_data["notes"] ?></textarea>
                 </label>
 

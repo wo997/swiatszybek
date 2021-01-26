@@ -6,7 +6,7 @@ module_blocks[module_block_name] = {
   icon: '<i class="fas fa-code"></i>',
   form: `
     <div style="width:600px; max-width:90vw;">
-        <div class="field-title">HTML</div>
+        <div class="label">HTML</div>
         <textarea class="field html" style="height:400px"></textarea>
     </div>
     `,

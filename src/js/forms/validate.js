@@ -20,19 +20,19 @@ function showFieldErrors(field, errors = [], options = {}) {
 	var previousNode = field._prev();
 	if (!field_title && previousNode) {
 		if (
-			previousNode.classList.contains("field-title") ||
+			previousNode.classList.contains("label") ||
 			previousNode.classList.contains("above-simple-list")
 		) {
 			field_title = previousNode;
 		} else {
-			var maybe = previousNode._child(".field-title");
+			var maybe = previousNode._child(".label");
 			if (maybe) {
 				field_title = maybe;
 			}
 		}
 	}
 	if (!field_title) {
-		var inside = field._child(".field-title");
+		var inside = field._child(".label");
 		if (inside) {
 			field_title = inside;
 		}
@@ -40,7 +40,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 	if (!field_title) {
 		const field_wrapper = field._parent(".field-wrapper");
 		if (field_wrapper) {
-			field_title = field_wrapper._child(".field-title");
+			field_title = field_wrapper._child(".label");
 		}
 	}
 

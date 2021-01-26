@@ -169,9 +169,9 @@ if (!json_decode($kod_data["product_list"])) {
         <h2 style="text-align:center">Kod rabatowy</h2>
         <div class="desktopRow spaceColumns">
             <div>
-                <div class="field-title">Kod</div>
+                <div class="label">Kod</div>
                 <input class="field" type="text" name="kod">
-                <div class="field-title">Kwota</div>
+                <div class="label">Kwota</div>
                 <div class="glue-children">
                     <input type="text" name="kwota" class="field" data-wrapper-style="flex-grow:1">
                     <select name="type" class="field inline">
@@ -181,25 +181,25 @@ if (!json_decode($kod_data["product_list"])) {
                 </div>
             </div>
             <div>
-                <div class="field-title">Ilość</div>
+                <div class="label">Ilość</div>
                 <input class="field" type="number" name="ilosc">
                 <div class="desktopRow spaceColumns">
                     <div>
-                        <div class="field-title">Dostępny od</div>
+                        <div class="label">Dostępny od</div>
                         <input class="field default_datepicker" type="text" name="date_from">
                     </div>
                     <div>
-                        <div class="field-title">Dostępny do</div>
+                        <div class="label">Dostępny do</div>
                         <input class="field default_datepicker" type="text" name="date_to">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="field-title">Ogranicz do konkretnych użytkowników</div>
+        <div class="label">Ogranicz do konkretnych użytkowników</div>
         <div class="users"></div>
 
-        <div class="field-title">Ogranicz do konkretnych produktów</div>
+        <div class="label">Ogranicz do konkretnych produktów</div>
         <div class="product_list"></div>
 
         <input type="hidden" name="kod_id" value="<?= $kod_data["kod_id"] ?>">

@@ -1,5 +1,21 @@
 /* js[view] */
 
+domload(() => {
+	const vdo = $(".vdo");
+	vdo._set_value("regular");
+});
+
+/**
+ *
+ * @param {PiepNode} radio
+ */
+function toggleVariantStyle(radio) {
+	const val = radio._get_value();
+	document.body.classList.toggle("price_diff_1", val === "1");
+	document.body.classList.toggle("price_diff_2", val === "2");
+	document.body.classList.toggle("price_diff_3", val === "3");
+}
+
 window.addEventListener("popstate", (event) => {
 	setVariantsFromUrl();
 });
@@ -15,66 +31,151 @@ function setVariantsFromUrl() {
 		url_variants.split(".").forEach((e) => {
 			const [variant_id, option_id] = e.split("~");
 			if (variant_id && option_id) {
-				sv[variant_id] = option_id;
+				sv[variant_id] = { option_id };
 			}
 		});
 	}
 
 	$$(".variant_radio").forEach((variant_radio) => {
-		variant_radio._set_value(def(sv[variant_radio.dataset.variant_id], ""), {
+		const option_data = sv[variant_radio.dataset.variant_id];
+		const val = option_data ? option_data.option_id : "";
+		variant_radio._set_value(val, {
 			quiet: true,
 		});
 	});
 
 	selected_variants = sv;
+	variantChanged();
+}
+
+function getProductVariantsData(sv) {
+	const matched_products = page_products.filter((product) => {
+		let exists = true;
+		for (const [variant_id, option_info] of Object.entries(sv)) {
+			if (!product.published || product.stock <= 0) {
+				exists = false;
+			}
+			if (product.variants[variant_id] !== option_info.option_id) {
+				exists = false;
+			}
+		}
+		return exists;
+	});
+
+	let price_min = 10000000;
+	let price_max = 0;
+	matched_products.forEach((product) => {
+		price_min = Math.min(price_min, product.price);
+		price_max = Math.max(price_max, product.price);
+	});
+
+	return {
+		matched_products,
+		price_min,
+		price_max,
+	};
 }
 
 function variantChanged() {
 	let sv = {};
 
 	$$(".variant_radio").forEach((variant_radio) => {
-		const v = variant_radio._get_value();
-		if (v) {
-			sv[variant_radio.dataset.variant_id] = v;
+		const option_id = variant_radio._get_value();
+		if (option_id) {
+			sv[variant_radio.dataset.variant_id] = { option_id };
 		}
 	});
 
 	if (!isEquivalent(sv, selected_variants)) {
 		selected_variants = sv;
 
+		// manage state
 		const url_variants = [];
-		for (const [variant_id, option_id] of Object.entries(selected_variants)) {
-			url_variants.push(variant_id + "~" + option_id);
+		for (const [variant_id, option_info] of Object.entries(selected_variants)) {
+			url_variants.push(variant_id + "~" + option_info.option_id);
 		}
 
 		const params = new URLSearchParams(window.location.search);
 		params.set("v", url_variants.join("."));
-
-		const match_products = page_products.filter((product) => {
-			let exists = true;
-			for (const [variant_id, option_id] of Object.entries(selected_variants)) {
-				if (product.variants[variant_id] !== option_id) {
-					exists = false;
-				}
-			}
-			//console.log(product.variants);
-			return exists;
-		});
-
-		let price_min = 10000000;
-		let price_max = 0;
-		match_products.forEach((product) => {
-			price_min = Math.min(price_min, product.price);
-			price_max = Math.max(price_max, product.price);
-		});
-
-		console.log(price_min, price_max, match_products);
 
 		history.pushState(
 			undefined,
 			"wariant jakiś tutaj will be",
 			"?" + params.toString()
 		);
+
+		// other mechanics
+		const data = getProductVariantsData(selected_variants);
+
+		let price_min = data.price_min;
+		let price_max = data.price_max;
+
+		//console.log(, matched_products);
+
+		//if (data.matched_products.length === 1) {
+		$$(".variant_radio").forEach((variant_radio) => {
+			//const selected_option_id = variant_radio._get_value();
+
+			variant_radio._children("radio-option").forEach((option) => {
+				const option_id = +option.getAttribute("value");
+
+				const assume_other_selected = cloneObject(selected_variants);
+
+				assume_other_selected[variant_radio.dataset.variant_id] = {
+					option_id,
+				};
+
+				const other_data = getProductVariantsData(assume_other_selected);
+				const inactive = other_data.matched_products.length === 0;
+				option.classList.toggle("inactive", inactive);
+
+				const p_min_d = other_data.price_min - data.price_min;
+				const p_max_d = other_data.price_max - data.price_max;
+
+				let price_diff = "";
+				if (p_min_d === p_max_d && p_min_d !== 0) {
+					//console.log(option);
+					price_diff = " " + (p_min_d > 0 ? "+" : "") + p_min_d + "zł";
+				}
+
+				option.classList.toggle("has_price_diff", !!price_diff);
+				const price_diff_node = option._child(".price_diff");
+				if (price_diff) {
+					// otherwise just fade out nicely
+					price_diff_node._set_content(price_diff);
+				}
+			});
+		});
+		//}
+
+		let selected_product_price = "";
+		let selected_product_was_price = "";
+
+		const any_matched = !!price_max;
+		if (any_matched) {
+			selected_product_price = price_min + "";
+
+			if (
+				data.matched_products[0].was_price != data.matched_products[0].price
+			) {
+				selected_product_was_price = data.matched_products[0].was_price;
+			}
+		}
+		if (price_max !== price_min) {
+			selected_product_price += " - " + price_max;
+		}
+
+		if (any_matched) {
+			selected_product_price += `<span style="width:4px" class="price_space"></span>zł`;
+		} else {
+			selected_product_price = "Brak produktu";
+		}
+		if (any_matched && selected_product_was_price) {
+			selected_product_was_price += `<span style="width:4px" class="price_space"></span>zł`;
+		}
+
+		$(".selected_product_price")._set_content(selected_product_price);
+		$(".selected_product_was_price")._set_content(selected_product_was_price);
 	}
 }
 

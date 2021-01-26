@@ -1808,7 +1808,7 @@
 //             <div class="mobileRow" style="flex-shrink: 1;overflow-y: hidden;flex-grow: 1;">
 //                 <div class="modules-sidebar shown">
 //                   <button class="toggle-sidebar-btn btn subtle" onclick="toggleModuleSidebar()" data-tooltip="Ukryj moduły"><i class="fas fa-chevron-left"></i><i class="fas fa-puzzle-piece"></i></button>
-//                   <span class="field-title modules-sidebar-title" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
+//                   <span class="label modules-sidebar-title" style='margin-bottom:7px'><i class="fas fa-puzzle-piece"></i>
 //                    Moduły
 //                    <i class="fas fa-info-circle" data-tooltip="Przeciągnij w prawo i upuść"></i>
 //                   </span>
@@ -2179,7 +2179,7 @@
 //             </div>
 
 //             <div style="padding:10px;margin-top:-15px">
-//                 <div class="field-title">Grubość krawędzi</div>
+//                 <div class="label">Grubość krawędzi</div>
 //                 <c-select style="width:100px" class="inline">
 //                     <input type="text" class="field" data-attribute="border-width" onchange="updateBorderPreview()">
 //                     <c-arrow></c-arrow>
@@ -2191,13 +2191,13 @@
 //                     </c-options>
 //                 </c-select>
 
-//                 <div class="field-title">Kolor krawędzi</div>
+//                 <div class="label">Kolor krawędzi</div>
 //                 <div class="glue-children">
 //                   <input class="jscolor field inline" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
 //                   <button class="btn primary" onclick="$(this)._prev().setValue('')">Brak <i class="fa fa-times"></i></button>
 //                 </div>
 
-//                 <div class="field-title">Zaokrąglenie krawędzi</div>
+//                 <div class="label">Zaokrąglenie krawędzi</div>
 //                 <c-select style="width:100px" class="inline">
 //                     <input type="text" class="field" data-attribute="border-radius" onchange="updateBorderPreview()">
 //                     <c-arrow></c-arrow>
@@ -2209,7 +2209,7 @@
 //                     </c-options>
 //                 </c-select>
 
-//                 <div class="field-title">Podgląd</div>
+//                 <div class="label">Podgląd</div>
 //                 <div class="borderPreview"></div>
 //             </div>
 //         </div>
@@ -2271,7 +2271,7 @@
 
 //                         <br>
 
-//                         <label class="checkbox-wrapper field-title"><input type="checkbox" data-attribute="desktop-full-width"><div class="checkbox"></div>100% szerokości okna przeglądarki</label>
+//                         <label class="checkbox-wrapper label"><input type="checkbox" data-attribute="desktop-full-width"><div class="checkbox"></div>100% szerokości okna przeglądarki</label>
 
 //                         <br><br>
 //                     </div>
@@ -2368,7 +2368,7 @@
 //                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
 //             </div>
 //             <div style="padding:10px;">
-//                 <div class="field-title">Wklej kod w pole poniżej (Kliknij -> CTRL+V)</div>
+//                 <div class="label">Wklej kod w pole poniżej (Kliknij -> CTRL+V)</div>
 //                 <textarea class="field" style="resize:none" oninput="pasteBlock(this)"></textarea>
 //             </div>
 //         </div>
@@ -2407,7 +2407,7 @@
 //             <div style="padding:10px 0;" class="mobileRow">
 //               <div style="padding: 20px;">
 
-//                 <div class="field-title">
+//                 <div class="label">
 //                   <span> Zdjęcie </span>
 
 //                   <div class="btn primary" onclick='fileManager.open(null, {callback: setNodeBackgroundImagePreview, source: this, asset_types: ["image"]})'>Wybierz <i class="fas fa-image"></i></div>
@@ -2417,7 +2417,7 @@
 
 //                 <br>
 
-//                 <div class="field-title">
+//                 <div class="label">
 //                   Kolor tła <i class='fas fa-info-circle' data-tooltip='Wpisz kolor lub kliknij w pole i wybierz'></i>
 //                 </div>
 
@@ -2426,7 +2426,7 @@
 //                   <button class="btn primary" onclick="$(this)._prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
 //                 </div>
 
-//                 <div class="field-title">
+//                 <div class="label">
 //                   Widoczność koloru
 //                   <i class='fas fa-info-circle' data-tooltip='Pozwala dostosować kontrast pomiędzy tekstem, a zdjęciem'></i>
 //                 </div>

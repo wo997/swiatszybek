@@ -225,7 +225,7 @@ function createSimpleList(params = {}) {
       </div>`;
 
 			btnTop = `
-        <div class='field-title'>
+        <div class='label'>
           Wartości podrzędne
           <div class="btn primary add_btn add_begin" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,true)">
           <i class="fas fa-plus"></i> <i class="fas fa-arrow-up"></i>

@@ -119,47 +119,47 @@ if (strpos(URL, "resetowanie-hasla") !== false)
                                 <div style="width:100%;margin:auto;max-width:350px">
                                     <h3 class="form-header">Dane kontaktowe</h3>
 
-                                    <div class="field-title">Imię</div>
+                                    <div class="label">Imię</div>
                                     <input type="text" class="field" name="imie" autocomplete="first-name" data-validate>
 
-                                    <div class="field-title">Nazwisko</div>
+                                    <div class="label">Nazwisko</div>
                                     <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate>
 
-                                    <div class="field-title">Adres e-mail</div>
+                                    <div class="label">Adres e-mail</div>
                                     <input type="text" class="field" name="email" autocomplete="email" data-validate="email">
 
-                                    <div class="field-title">Nr telefonu</div>
+                                    <div class="label">Nr telefonu</div>
                                     <input type="text" class="field" name="telefon" autocomplete="tel" data-validate>
 
-                                    <div class="field-title">Nazwa firmy</div>
+                                    <div class="label">Nazwa firmy</div>
                                     <input type="text" class="field" name="firma" autocomplete="organization">
 
-                                    <div class="field-title">NIP</div>
+                                    <div class="label">NIP</div>
                                     <input type="text" class="field" name="nip">
                                 </div>
                             </div>
                             <div style="width: 50%; padding:10px;">
                                 <div style="width:100%;margin:auto;max-width:350px">
                                     <h3 class="form-header">Adres</h3>
-                                    <div class="field-title">Kraj</div>
+                                    <div class="label">Kraj</div>
                                     <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
 
-                                    <div class="field-title">Kod pocztowy</div>
+                                    <div class="label">Kod pocztowy</div>
                                     <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" data-validate data-store>
 
-                                    <div class="field-title">Miejscowość</div>
+                                    <div class="label">Miejscowość</div>
                                     <input class="field" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate data-store>
 
-                                    <div class="field-title">Ulica</div>
+                                    <div class="label">Ulica</div>
                                     <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate>
 
                                     <div class="desktopRow spaceColumns">
                                         <div>
-                                            <div class="field-title">Nr domu</div>
+                                            <div class="label">Nr domu</div>
                                             <input type="text" class="field" name="nr_domu" autocomplete="address-line2" data-validate>
                                         </div>
                                         <div>
-                                            <div class="field-title">Nr lokalu</div>
+                                            <div class="label">Nr lokalu</div>
                                             <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3">
                                         </div>
                                     </div>
@@ -179,10 +179,10 @@ if (strpos(URL, "resetowanie-hasla") !== false)
                     <div style="width:100%;margin:40px auto;max-width:350px">
                         <h3 class="form-header">Zmiana hasła</h3>
 
-                        <div class="field-title">Hasło (min. 8 znaków)</div>
+                        <div class="label">Hasło (min. 8 znaków)</div>
                         <input type="password" name="password" class="field" data-validate="password" autocomplete="new-password">
 
-                        <div class="field-title">Powtórz hasło</div>
+                        <div class="label">Powtórz hasło</div>
                         <input type="password" name="password_rewrite" class="field" data-validate="|match:#menu3 .field[name='password']" autocomplete="new-password">
 
                         <input type="hidden" name="user_id">

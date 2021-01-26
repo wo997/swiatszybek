@@ -250,7 +250,7 @@ tr.simple-list-row td:last-child {
 	pointer-events: none !important;
 }
 
-.simple-list > .field-title {
+.simple-list > .label {
 	margin-bottom: 0.4em;
 }
 

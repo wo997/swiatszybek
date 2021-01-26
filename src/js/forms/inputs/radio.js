@@ -1,26 +1,39 @@
 /* js[global] */
 
 document.addEventListener("click", (e) => {
-	var target = $(e.target);
+	const target = $(e.target);
 
-	var option = target._parent("radio-option", { skip: 0 });
+	const option = target._parent("radio-option", { skip: 0 });
 	if (option) {
-		var input = option._parent("radio-input", { skip: 0 });
+		const input = option._parent("radio-input", { skip: 0 });
 		input._children("radio-option").forEach((e) => {
-			e.classList.toggle("selected", e === option);
+			if (input.classList.contains("unselectable")) {
+				if (e === option) {
+					e.classList.toggle("selected");
+				} else {
+					e.classList.remove("selected");
+				}
+			} else {
+				e.classList.toggle("selected", e === option);
+			}
 		});
 		input._dispatch_change();
 	}
 });
 
+/**
+ *
+ * @param {PiepNode} input
+ */
 function getRadioInputValue(input) {
-	var value = "";
-	var selected = input._child(".selected");
+	let value = "";
+	let selected = input._child(".selected");
 	if (!selected) {
-		selected = input._child("[data-default]");
+		selected = input._child(".default");
 	}
 	if (selected) {
 		value = selected.getAttribute("value");
+		selected.classList.add("selected");
 	}
 	return value;
 }

@@ -18,16 +18,16 @@
 <?php startSection("body_content"); ?>
 
 <div id="zaawansowaneForm">
-    <span class="field-title">Certyfikat SSL</span>
+    <span class="label">Certyfikat SSL</span>
     <checkbox name="ssl"></checkbox>
 
-    <span class="field-title">Tryb developmentu</span>
+    <span class="label">Tryb developmentu</span>
     <checkbox name="dev_mode"></checkbox>
 
-    <span class="field-title">Tryb debugowania</span>
+    <span class="label">Tryb debugowania</span>
     <checkbox name="debug_mode"></checkbox>
 
-    <span class="field-title">Domena witryny</span>
+    <span class="label">Domena witryny</span>
     <input type="text" class="field" name="domain">
 
 </div>

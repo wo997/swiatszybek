@@ -75,7 +75,7 @@ include "global/includes_for_cms_page.php";
             <i class="fas fa-chevron-right"></i>
             <i class="fas fa-cog"></i>
         </button>
-        <div class="field-title first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
+        <div class="label first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
 
         <?php if ($page_data["published"] === 1) {
             $clr = "var(--success-clr)";

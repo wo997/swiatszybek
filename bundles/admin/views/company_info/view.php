@@ -27,38 +27,38 @@
     <div>
         <div class="form-header">Ogólne</div>
 
-        <div class="field-title">Email</div>
+        <div class="label">Email</div>
         <input type="text" class="field" name="main_email" data-validate="email">
 
-        <div class="field-title">Nazwa nadawcy maila</div>
+        <div class="label">Nazwa nadawcy maila</div>
         <input type="text" class="field" name="email_sender">
 
-        <div class="field-title">Nr telefonu</div>
+        <div class="label">Nr telefonu</div>
         <input type="text" class="field" name="main_phone">
 
-        <div class="field-title">Nazwa firmy</div>
+        <div class="label">Nazwa firmy</div>
         <input type="text" class="field" name="company_name">
 
-        <div class="field-title">Godziny otwarcia (słownie)</div>
+        <div class="label">Godziny otwarcia (słownie)</div>
         <input type="text" class="field" name="opening_hours">
     </div>
 
     <div>
         <div class="form-header">Adres firmy</div>
 
-        <div class="field-title">Kod pocztowy</div>
+        <div class="label">Kod pocztowy</div>
         <input type="text" class="field" name="postal_code">
 
-        <div class="field-title">Miasto</div>
+        <div class="label">Miasto</div>
         <input type="text" class="field" name="city">
 
-        <div class="field-title">Nazwa ulicy</div>
+        <div class="label">Nazwa ulicy</div>
         <input type="text" class="field" name="street_name">
 
-        <div class="field-title">Nr ulicy</div>
+        <div class="label">Nr ulicy</div>
         <input type="text" class="field" name="street_number">
 
-        <div class="field-title">Adres fanpage</div>
+        <div class="label">Adres fanpage</div>
         <input type="text" class="field" name="fb_fanpage_url" data-validate="url|optional">
     </div>
 </div>

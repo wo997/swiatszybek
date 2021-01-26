@@ -10,7 +10,7 @@
 
 <h1>Logo / Ikony</h1>
 
-<div class="field-title">Logo sklepu</div>
+<div class="label">Logo sklepu</div>
 <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext style='margin-left:0'>
 <form onsubmit="uploadImageWithCopy(event,'logo')">
     <label>
@@ -20,7 +20,7 @@
     </label>
 </form>
 
-<div class="field-title">Ikonka sklepu (favicon)</div>
+<div class="label">Ikonka sklepu (favicon)</div>
 <img class="favicon wo997_img" data-src="<?= FAVICON_PATH_LOCAL_TN ?>">
 <form onsubmit="uploadImageWithCopy(event,'favicon')">
     <label>
@@ -30,7 +30,7 @@
     </label>
 </form>
 
-<div class="field-title">Domyślne zdjęcie udostępniania</div>
+<div class="label">Domyślne zdjęcie udostępniania</div>
 <img class="share_img wo997_img" data-src="<?= SHARE_IMG_PATH_LOCAL_SM ?>">
 <form onsubmit="uploadImageWithCopy(event,'share_img')">
     <label>

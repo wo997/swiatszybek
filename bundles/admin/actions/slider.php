@@ -125,7 +125,7 @@
         </div>
         <div class="scroll-panel scroll-shadow panel-padding">
             <div>
-                <div class="field-title">Widoczność</div>
+                <div class="label">Widoczność</div>
                 <select name="published" class="field">
                     <option value="1">Publiczny</option>
                     <option value="0">Ukryty</option>

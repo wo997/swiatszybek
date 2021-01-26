@@ -42,20 +42,20 @@ $company_data = $app["company_data"];
             <div class='uzupelnij' style='color:red;display:none;margin: 0 8px;'>Uzupełnij wszystkie pola</div>
             <div class='mobileRow'>
                 <label>
-                    <span class='field-title'>Imię i nazwisko</span>
+                    <span class='label'>Imię i nazwisko</span>
                     <input class='field' type='text' name='name' placeholder=' '>
                 </label>
                 <label>
-                    <span class='field-title'>Adres e-mail</span>
+                    <span class='label'>Adres e-mail</span>
                     <input class='field' type='text' name='email' placeholder=' ' value='<?= $app["user"]["id"] ? $app["user"]["email"] : ""; ?>'>
                 </label>
             </div>
             <label>
-                <span class='field-title'>Temat</span>
+                <span class='label'>Temat</span>
                 <input class='field' type='text' name='subject' placeholder=' '>
             </label>
             <label style='margin-top: 16px'>
-                <span class='field-title'>Treść wiadomości</span>
+                <span class='label'>Treść wiadomości</span>
                 <textarea class='field' name='message' placeholder=' '></textarea>
             </label>
             <div style='margin: 8px'>

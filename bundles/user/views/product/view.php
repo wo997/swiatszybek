@@ -80,12 +80,12 @@ $variants = [
     [
         "variant_id" => "3",
         "filter_name" => "Kolor",
-        "columns" => "3",
+        "columns" => "2",
         "height" => "80px",
         "variant_options" => [
-            ["option_id" => 123, "value" => "Czerwony"],
-            ["option_id" => 124, "value" => "Zielony"],
-            ["option_id" => 125, "value" => "Żólty"],
+            ["option_id" => 123, "value" => "Czerwony", "extra" => ["color" => "#c22"]],
+            ["option_id" => 124, "value" => "Zielony", "extra" => ["color" => "#2c2"]],
+            ["option_id" => 125, "value" => "Żólty", "extra" => ["color" => "#ff2"]],
         ]
     ],
 ];
@@ -100,8 +100,8 @@ $variants[] =
     [
         "variant_id" => "4",
         "filter_name" => "Rozmiar",
-        "columns" => "6",
-        "height" => "40px",
+        "columns" => "4",
+        "height" => "50px",
         "variant_options" => $values
     ];
 // json_decode($product_data["variant_filters"], true);
@@ -110,14 +110,22 @@ $page_products = [];
 
 // will come straight from DB !!!!
 $product_id = 0;
-foreach ($variants[0]["variant_options"] as $color_option) {
-    foreach ($variants[1]["variant_options"] as $size_option) {
+foreach ($variants[1]["variant_options"] as $size_option) {
+    foreach ($variants[0]["variant_options"] as $color_option) {
         $product_id++;
+
+        $was_price = 20 + $product_id + ($color_option["option_id"] == "124" ? 1 : 0);
+        $price = $was_price;
+        if (rand(0, 5) < 2) {
+            $price -= rand(10, 0);
+        }
 
         $page_products[] = [
             "product_id" => $product_id,
-            "price" => $product_id + ($color_option["option_id"] == "124" ? 50 : 0),
+            "price" => $price,
+            "was_price" => $was_price,
             "stock" => rand(0, 5),
+            "published" => rand(0, 5) >= 1,
             "variants" => [
                 $variants[0]["variant_id"] => $color_option["option_id"],
                 $variants[1]["variant_id"] => $size_option["option_id"],
@@ -233,17 +241,37 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
             <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">
                 <h1 class="h1"><?= $product_data["title"] ?></h1>
 
+                <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
+                <radio-input class="vdo default columns_1" style="--option-padding:3px;margin-bottom:20px;" onchange="toggleVariantStyle(this)">
+                    <radio-option value="1" class="default">Subtelny napis</radio-option>
+                    <radio-option value="2">Czerwony prostokąt</radio-option>
+                    <radio-option value="3">Szary prostokąt</radio-option>
+                </radio-input>
+
                 <div>
                     <?php
                     foreach ($variants as $variant) {
                     ?>
-                        <span class="field-title"><?= $variant["filter_name"] ?></span>
-                        <radio-input class="variant_radio blocks columns_<?= def($variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($variant, "height", "80px") ?>' data-variant_id="<?= $variant["variant_id"] ?>" data-number>
+                        <span class="label"><?= $variant["filter_name"] ?></span>
+                        <radio-input class="variant_radio blocks unselectable columns_<?= def($variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($variant, "height", "80px") ?>' data-variant_id="<?= $variant["variant_id"] ?>" data-number>
                             <?php
                             foreach ($variant["variant_options"] as $option) {
                             ?>
                                 <radio-option class="variant_option" value="<?= $option["option_id"] ?>">
-                                    <?= $option["value"] ?>
+                                    <div>
+                                        <div class="price_diff_before"></div>
+                                        <div>
+                                            <?= $option["value"] ?>
+                                            <?php
+                                            $color = def($option, ["extra", "color"], "");
+                                            if ($color) {
+                                            ?> <div class="color_circle" style="background-color:<?= $color ?>"></div>
+                                            <?php
+                                            }
+                                            ?>
+                                        </div>
+                                        <div class="price_diff"></div>
+                                    </div>
                                 </radio-option>
                             <?php
                             }
@@ -254,8 +282,8 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
                     ?>
 
-                    <h3 style='font-weight:normal;margin-bottom: 0;    font-size: 22px;'>
-                        <span>Cena: </span><span class="pln"><?= $priceText ?></span> <span class="pln">zł</span> <span id="wasPrice" class='slash'></span>
+                    <h3 style='font-weight:normal;margin-bottom: 0; font-size: 22px;'>
+                        <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
 
                         <div style="display:inline-block;cursor:pointer" data-tooltip="Przejdź do komentarzy" data-tooltip-position="center" onclick='scrollIntoView($(".comments"),{margin:0.5,duration:70})'>
                             <?= ratingBlock($product_data["cache_avg_rating"]); ?>
@@ -277,13 +305,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
 
                     <p style='font-weight:normal;margin:0;font-size: 1.1em;' id="quantity"></p>
 
-                    <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Kurier: <span class="pln"><?= config('kurier_cena', 0) ?> zł</span>, Paczkomat: <span class="pln"><?= config('paczkomat_cena', 0) ?> zł</span>, Odbiór osobisty: <span class="pln">0 zł</span></p>
-
-                    <p style='font-weight:normal;margin:0;font-size: 1.1em;'>
-                        <span class="caseMore">Czas realizacji: <span class="pln">24h</span></span>
-                        <b class="caseZero">Na zamówienie</b>
-                    </p>
-
+                    <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Czas realizacji: 24h</p>
 
                     <div style="height:20px"></div>
                     <button id="buyNow" class="btn primary medium fill" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true,modal_source:this})">
@@ -349,7 +371,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                 }
                 ?>
                 <div style="height:10px"></div>
-                <div class="field-title">
+                <div class="label">
                     Ocena
                 </div>
                 <div class="rating my-rating" style="margin:0;font-size: 20px;">
@@ -361,12 +383,12 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                 </div>
 
                 <label>
-                    <div class="field-title">Pseudonim</div>
+                    <div class="label">Pseudonim</div>
                     <input type="text" class="field pseudonim" value="<?= $pseudonim ?>">
                 </label>
 
                 <label>
-                    <div class="field-title">Komentarz</div>
+                    <div class="label">Komentarz</div>
                     <textarea class="field tresc" data-validate style=height:150px;min-height:100px;max-height:200px;"></textarea>
                 </label>
 
@@ -398,7 +420,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
             <i class="fas fa-chevron-right"></i>
             <i class="fas fa-cog"></i>
         </button>
-        <div class="field-title first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
+        <div class="label first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
 
         <?php if ($product_data["published"] === 1) {
             $clr = "var(--success-clr)";

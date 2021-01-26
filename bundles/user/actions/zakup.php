@@ -669,46 +669,46 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                         </div>
 
                         <div id="casePerson" class="expand_y">
-                            <div class="field-title">Imię</div>
+                            <div class="label">Imię</div>
                             <input type="text" class="field" name="imie" autocomplete="first-name" data-validate data-store>
 
-                            <div class="field-title">Nazwisko</div>
+                            <div class="label">Nazwisko</div>
                             <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate data-store>
                         </div>
 
                         <div class="expand_y caseFirma hidden animate_hidden">
-                            <div class="field-title">Nazwa firmy</div>
+                            <div class="label">Nazwa firmy</div>
                             <input type="text" class="field" name="firma" autocomplete="organization" data-validate data-store>
 
-                            <div class="field-title">NIP</div>
+                            <div class="label">NIP</div>
                             <input type="text" class="field" name="nip" data-validate="nip" data-store>
                         </div>
 
-                        <div class="field-title">Adres e-mail</div>
+                        <div class="label">Adres e-mail</div>
                         <input type="text" class="field" name="email" autocomplete="email" data-validate="email" data-store>
 
-                        <div class="field-title">Nr telefonu</div>
+                        <div class="label">Nr telefonu</div>
                         <input type="text" class="field" name="telefon" autocomplete="tel" data-validate data-store>
 
-                        <div class="field-title">Kraj</div>
+                        <div class="label">Kraj</div>
                         <input type="text" class="field" name="kraj" data-validate data-store>
 
-                        <div class="field-title">Kod pocztowy</div>
+                        <div class="label">Kod pocztowy</div>
                         <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" data-validate data-store>
 
-                        <div class="field-title">Miejscowość</div>
+                        <div class="label">Miejscowość</div>
                         <input class="field " type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate data-store>
 
-                        <div class="field-title">Ulica</div>
+                        <div class="label">Ulica</div>
                         <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate data-store>
 
                         <div class="desktopRow spaceColumns">
                             <div>
-                                <div class="field-title">Nr domu</div>
+                                <div class="label">Nr domu</div>
                                 <input type="text" class="field" name="nr_domu" autocomplete="address-line2" data-validate data-store>
                             </div>
                             <div>
-                                <div class="field-title">Nr lokalu</div>
+                                <div class="label">Nr lokalu</div>
                                 <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3" data-store>
                             </div>
                         </div>
@@ -757,34 +757,34 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 </label>--->
 
 
-                                <div class="field-title">Imię</div>
+                                <div class="label">Imię</div>
                                 <input type="text" class="field" name="imie_kurier" autocomplete="first-name" data-validate data-store>
 
-                                <div class="field-title">Nazwisko</div>
+                                <div class="label">Nazwisko</div>
                                 <input type="text" class="field" name="nazwisko_kurier" autocomplete="family-name" data-validate data-store>
 
-                                <div class="field-title">Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></div>
+                                <div class="label">Nazwa firmy <i style="font-size: 0.8em;color: #666;font-style: normal;">(opcjonalnie)</i></div>
                                 <input type="text" class="field" name="firma_kurier" autocomplete="organization" data-store>
 
-                                <div class="field-title">Kraj</div>
+                                <div class="label">Kraj</div>
                                 <input type="text" class="field" name="kraj_kurier" data-validate data-store>
 
-                                <div class="field-title">Kod pocztowy</div>
+                                <div class="label">Kod pocztowy</div>
                                 <input type="text" class="field" name="kod_pocztowy_kurier" autocomplete="postal-code" data-validate data-store>
 
-                                <div class="field-title">Miejscowość</div>
+                                <div class="label">Miejscowość</div>
                                 <input class="field" type="text" name="miejscowosc_kurier" autocomplete="address-level2" placeholder=" " data-validate data-store>
 
-                                <div class="field-title">Ulica</div>
+                                <div class="label">Ulica</div>
                                 <input type="text" class="field" autocomplete="address-line1" name="ulica_kurier" data-validate data-store>
 
                                 <div class="desktopRow spaceColumns">
                                     <div>
-                                        <div class="field-title">Nr domu</div>
+                                        <div class="label">Nr domu</div>
                                         <input type="text" class="field" autocomplete="address-line2" name="nr_domu_kurier" data-validate data-store>
                                     </div>
                                     <div>
-                                        <div class="field-title">Nr lokalu</div>
+                                        <div class="label">Nr lokalu</div>
                                         <input type="text" class="field" autocomplete="address-line3" name="nr_lokalu_kurier" data-store>
                                     </div>
                                 </div>
@@ -921,7 +921,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     <h4 style="margin-top: 40px">Twoje uwagi dotyczące zamówienia</h4>
                     <textarea name="uwagi" style="width: 100%; height: 80px; resize: none; border-radius: 4px;padding:4px"><?= htmlspecialchars($uwagi) ?></textarea>
 
-                    <label class="checkbox-wrapper field-title">
+                    <label class="checkbox-wrapper label">
                         <input type="checkbox" data-validate="checkbox|value:1">
                         <div class="checkbox"></div>
                         Akceptuję

@@ -1,16 +1,16 @@
 <?php //module_form[przelewy24]
 ?>
 
-<span class="field-title first">ID sprzedawcy</span>
+<span class="label first">ID sprzedawcy</span>
 <input type="text" name="merchant_id" class="field" />
 
-<span class="field-title">ID punktu sprzedaży</span>
+<span class="label">ID punktu sprzedaży</span>
 <input type="text" name="pos_id" class="field" />
 
-<span class="field-title">Klucz CRC</span>
+<span class="label">Klucz CRC</span>
 <input type="text" name="crc" class="field" />
 
-<label class="checkbox-wrapper field-title block">
+<label class="checkbox-wrapper label block">
     Tryb testowy
     <input type="checkbox" name="test_mode">
     <div class="checkbox"></div>

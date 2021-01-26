@@ -27,10 +27,10 @@
     <div>
         <div class="form-header">Zamówienia</div>
 
-        <!--<div class="field-title">E-maile dla nowych / zmiany statusów zamówień</div>
+        <!--<div class="label">E-maile dla nowych / zmiany statusów zamówień</div>
         <input type="text" class="field" name="orders_email" data-validate="email|optional" placeholder="<?= $main_email ?>">-->
 
-        <span class='field-title'>
+        <span class='label'>
             E-mail(e) do zamówień
             <span class='add_buttons'></span>
         </span>
@@ -42,7 +42,7 @@
             Dodaj <?= $app["company_data"]["main_email"] ?>
         </button>
 
-        <span class='field-title'>
+        <span class='label'>
             E-mail(e) do raportów dziennych (sprzedaży)
             <span class='add_buttons'></span>
         </span>

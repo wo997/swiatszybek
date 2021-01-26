@@ -1,5 +1,79 @@
 /* css[view] */
 
+.variant_option {
+	font-weight: 600;
+}
+
+.price_diff {
+	font-weight: 400;
+}
+
+.price_diff_1 {
+	.price_diff {
+		display: block;
+	}
+
+	.price_diff,
+	.price_diff_before {
+		transition: height 0.2s;
+		width: 100%;
+		font-size: 0.8em;
+	}
+
+	.variant_option.has_price_diff {
+		.price_diff {
+			height: 1.5em;
+		}
+		.price_diff_before {
+			height: 0;
+		}
+	}
+	.variant_option:not(.has_price_diff) {
+		.price_diff,
+		.price_diff_before {
+			opacity: 0;
+			height: 0.75em;
+		}
+	}
+}
+
+.price_diff_2,
+.price_diff_3 {
+	& .price_diff {
+		& {
+			position: absolute;
+			right: -1px;
+			top: -1px;
+			font-size: 0.8em;
+			line-height: 1;
+			height: 1.35em;
+			background: #e32;
+			color: white;
+			padding: 2px 3px;
+			border-top-right-radius: 4px;
+			border-bottom-left-radius: 4px;
+			min-width: 20px;
+			transition: opacity 0.2s;
+		}
+	}
+
+	& .variant_option:not(.has_price_diff) .price_diff {
+		opacity: 0;
+	}
+}
+
+.price_diff_3 .price_diff {
+	background: #888;
+}
+
+.selected_product_was_price {
+	position: relative;
+	bottom: 0.2em;
+	font-size: 0.8em;
+}
+
+/* deprecated below */
+
 .comments th {
 	display: none;
 }

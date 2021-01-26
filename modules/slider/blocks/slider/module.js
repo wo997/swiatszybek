@@ -13,13 +13,13 @@ MODULE_BLOCK = {
 			render: () => {
 				return `
               <div style="flex-grow: 1;">
-                    <span class="field-title">Tytuł <input type='text' class='field inline' name="title"></span>
-                    <label class="field-title checkbox-wrapper">
+                    <span class="label">Tytuł <input type='text' class='field inline' name="title"></span>
+                    <label class="label checkbox-wrapper">
                       Czy publiczny?
                       <input type="checkbox" name="published">
                       <div class="checkbox"></div>
                     </label>
-                    <span class="field-title">
+                    <span class="label">
                       Zawartość
                       <button onclick="MODULE_BLOCK.editSlide($(this)._parent()._next())" class="btn primary" style="white-space: nowrap;">
                         Edytuj <i class="far fa-edit"></i>

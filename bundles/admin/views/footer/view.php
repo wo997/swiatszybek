@@ -21,7 +21,7 @@
 <?php startSection("body_content"); ?>
 
 <div id="footerForm">
-    <div class="field-title">
+    <div class="label">
         Stopka
         <div onclick="editFooter()" class="btn primary">Edytuj <i class="far fa-edit"></i></div>
     </div>

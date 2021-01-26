@@ -85,7 +85,7 @@ function getAllAttributeOptions()
         $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
         $html = "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . " attribute-row' data-attribute_id='" . $attribute["attribute_id"] . "'>";
-        $html .= "<span class='field-title first'>";
+        $html .= "<span class='label first'>";
         $html .= "<i class='fas fa-check-circle'></i><i class='fas fa-times-circle' data-tooltip='Nie dotyczy'></i>" . $attribute["name"];
         if ($any) {
             $html .=  '

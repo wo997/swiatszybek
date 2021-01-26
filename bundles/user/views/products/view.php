@@ -179,7 +179,7 @@ function showCategory($category, $level = 0)
                         $html .= $value_data["value"];
 
                         if (isset($value_data["color"])) {
-                            $html .= "<div class='color-circle' style='background-color:" . $value_data["color"] . "'></div>";
+                            $html .= "<div class='color_circle' style='background-color:" . $value_data["color"] . "'></div>";
                         }
 
                         $html .= "</label>";

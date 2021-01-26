@@ -24,46 +24,46 @@
                 <div>
                     <h3 class="form-header">Dane kontaktowe</h3>
 
-                    <div class="field-title">Imię</div>
+                    <div class="label">Imię</div>
                     <input type="text" class="field" name="imie" autocomplete="first-name" data-validate>
 
-                    <div class="field-title">Nazwisko</div>
+                    <div class="label">Nazwisko</div>
                     <input type="text" class="field" name="nazwisko" autocomplete="family-name" data-validate>
 
-                    <div class="field-title">Adres e-mail</div>
+                    <div class="label">Adres e-mail</div>
                     <input type="text" class="field" name="email" autocomplete="email" data-validate="email">
 
-                    <div class="field-title">Nr telefonu</div>
+                    <div class="label">Nr telefonu</div>
                     <input type="text" class="field" name="telefon" autocomplete="tel" data-validate="tel">
 
-                    <div class="field-title">Nazwa firmy</div>
+                    <div class="label">Nazwa firmy</div>
                     <input type="text" class="field" name="firma" autocomplete="organization">
 
-                    <div class="field-title">NIP</div>
+                    <div class="label">NIP</div>
                     <input type="text" class="field" name="nip">
                 </div>
                 <div>
                     <h3 class="form-header">Adres</h3>
 
-                    <div class="field-title">Kraj</div>
+                    <div class="label">Kraj</div>
                     <input type="text" class="field" name="kraj" autocomplete="country-name" data-validate>
 
-                    <div class="field-title">Kod pocztowy</div>
+                    <div class="label">Kod pocztowy</div>
                     <input type="text" class="field" name="kod_pocztowy" autocomplete="postal-code" data-validate>
 
-                    <div class="field-title">Miejscowość</div>
+                    <div class="label">Miejscowość</div>
                     <input class="field" type="text" name="miejscowosc" autocomplete="address-level2" placeholder=" " data-validate>
 
-                    <div class="field-title">Ulica</div>
+                    <div class="label">Ulica</div>
                     <input type="text" class="field" name="ulica" autocomplete="address-line1" data-validate>
 
                     <div class="desktopRow spaceColumns">
                         <div>
-                            <div class="field-title">Nr domu</div>
+                            <div class="label">Nr domu</div>
                             <input type="text" class="field" name="nr_domu" autocomplete="address-line2" data-validate>
                         </div>
                         <div>
-                            <div class="field-title">Nr lokalu</div>
+                            <div class="label">Nr lokalu</div>
                             <input type="text" class="field" name="nr_lokalu" autocomplete="address-line3">
                         </div>
                     </div>
@@ -77,21 +77,21 @@
 
             <div class="desktopRow spaceColumns">
                 <div>
-                    <div class="field-title">Uprawnienia</div>
+                    <div class="label">Uprawnienia</div>
                     <select name="privelege_id" class="field">
                         <?php foreach ($privelege_list as $permission) : ?>
                             <option value="<?= $permission["id"] ?>"><?= $permission["name"] ?></option>
                         <?php endforeach; ?>
                     </select>
 
-                    <label class="checkbox-wrapper field-title">
+                    <label class="checkbox-wrapper label">
                         <input class="passwordCheckbox" type="checkbox" onchange="togglePasswordField(this);">
                         <div class="checkbox"></div>
                         Zmień hasło
                     </label>
 
                     <div class="expand_y changePassword">
-                        <div class="field-title first">Hasło (min. 8 znaków)</div>
+                        <div class="label first">Hasło (min. 8 znaków)</div>
                         <input type="password" name="password" class="field" data-validate="password">
                     </div>
                 </div>
