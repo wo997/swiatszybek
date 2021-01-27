@@ -1,15 +1,5 @@
 <?php
 
-define("EMAIL_CLIENT_URLS", [
-    "gmail.com" => "https://mail.google.com/",
-    "wp.pl" => "https://profil.wp.pl/",
-    "outlook.com" => "https://outlook.live.com/",
-    "yahoo.com" => "https://mail.yahoo.com/",
-    "icloud.com" => "https://icloud.com/mail",
-    "aol.com" => "https://mail.aol.com/",
-    "o2.pl" => "https://poczta.o2.pl/",
-]);
-
 function sendEmail($recipient, $message, $title, $headers = null, $from = null)
 {
     global $app;

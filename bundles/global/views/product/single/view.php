@@ -222,8 +222,9 @@ foreach ($variants[1]["variant_options"] as $size_option) {
 if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] || $preview_params) :
 ?>
 
-    <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;">
-        <div style="width: 47%;margin: 32px auto 0;">
+    <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;position: relative;align-items: flex-start;">
+        <div style="width: 47%;margin: 32px auto 0;/*position: sticky;top: 150px;*/">
+            <!-- sticky on desktop only -->
             <?php if (count($gallery) == 1) : ?>
                 <img data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image wo997_img'>
             <?php else : ?>

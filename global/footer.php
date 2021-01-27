@@ -1,3 +1,5 @@
+<link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+
 <footer>
     <?php
     if (isset($preview_params) && isset($preview_params["page_footer"])) {
@@ -80,13 +82,9 @@
     </div>
 </div>
 
-<div id="message-modal" data-modal data-dismissable>
-    <div>
-        <div class="modal-message">
-        </div>
-        <div>
-            <span class="link details-btn" style="display: none; width: 100px; margin-left: 10px;">Co dalej?</span>
-        </div>
+<div id="messagebox_modal" class="messagebox_modal" data-modal data-dismissable>
+    <div class="modal-body">
+        <div></div>
     </div>
 </div>
 
@@ -106,8 +104,8 @@ if (isset($JS_files)) {
 ?>
 <?php /* just to score higher, we need our own icons later for sure */ ?>
 <?php if (IS_ADMIN_PAGE || !IS_MAIN_PAGE || $app["user"]["id"] /*$app["user"]["priveleges"]["backend_access"]*/) : ?>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 <?php endif ?>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 <link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">

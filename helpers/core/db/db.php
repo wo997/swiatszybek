@@ -56,10 +56,13 @@ class DB
     /**
      * @param string $sql !SQL_query
      * @param array $params
-     * @return array $sql !SQL_selected
+     * @return array !SQL_selected
      */
     public static function fetchRow($sql, $params = [])
     {
+        if (!strpos(strtolower($sql), "limit") && strpos(strtolower($sql), "show tables")) {
+            $sql = $sql .= " LIMIT 1";
+        }
         $res = DB::fetchArr($sql, $params);
         return isset($res[0]) ? $res[0] : [];
     }
@@ -349,7 +352,7 @@ class DB
      * - increment: bool
      *
      * @param  string $table
-     * @param array<array> $columns
+     * @param DBTableColumn[] $columns
      * @return void
      */
     public static function manageTableColumns($table, $columns)
@@ -541,5 +544,36 @@ SQL;
     public static function rollbackTransation()
     {
         self::$con->rollback();
+    }
+
+    public static function insert($table, $array)
+    {
+        $keys_query = "";
+        foreach (array_keys($array) as $field) {
+            $keys_query .= clean($field) . ",";
+        }
+        $keys_query = rtrim($keys_query, ",");
+        $values_query = rtrim(str_repeat("?,", count($array)), ",");
+
+        DB::execute("INSERT INTO " . clean($table) . "($keys_query) VALUES($values_query)", array_values($array));
+        return DB::insertedId();
+    }
+
+    public static function update($table, $array, $where)
+    {
+        $query = "UPDATE " . clean($table) . " SET ";
+        foreach (array_keys($array) as $field) {
+            $query .= clean($field) . "=?,";
+        }
+        $query = rtrim($query, ",");
+        $query .= " WHERE " . $where;
+        DB::execute($query, array_values($array));
+    }
+
+    public static function delete($table, $where)
+    {
+        $query = "DELETE FROM " . clean($table);
+        $query .= " WHERE " . $where;
+        DB::execute($query);
     }
 }

@@ -8,13 +8,28 @@ function windowload(callback) {
 	window.addEventListener("load", callback);
 }
 
-function xhr(data) {
+/**
+ * @typedef {{
+ * url: string
+ * type?: string
+ * success(res?: any)
+ * formData?: FormData
+ * params?: any
+ * }} xhrParams
+ */
+
+/**
+ *
+ * @param {xhrParams} params
+ */
+
+function xhr(params) {
 	var xhr = new XMLHttpRequest();
-	xhr.open("POST", data.url, true);
+	xhr.open("POST", params.url, true);
 	xhr.setRequestHeader("enctype", "multipart/form-data");
 	xhr.onload = function () {
 		var res = xhr.responseText;
-		data.type = def(data.type, "json");
+		params.type = def(params.type, "json");
 		var res_json = null;
 
 		var match_reload_required = "[reload_required]";
@@ -30,8 +45,8 @@ function xhr(data) {
 			res_json = JSON.parse(res);
 		} catch {}
 
-		if (data.success) {
-			data.success(data.type == "json" ? res_json : res);
+		if (params.success) {
+			params.success(params.type == "json" ? res_json : res);
 		}
 
 		let reloading = false;
@@ -56,16 +71,16 @@ function xhr(data) {
 		}
 	};
 
-	var formData = data.formData ? data.formData : new FormData();
-	if (data.params) {
-		for (var [key, value] of Object.entries(data.params)) {
+	var formData = params.formData ? params.formData : new FormData();
+	if (params.params) {
+		for (var [key, value] of Object.entries(params.params)) {
 			if (typeof value === "object" && value !== null) {
 				value = JSON.stringify(value);
 			}
 			formData.append(key, value);
 		}
 	}
-	formData.append("xhr", true);
+	formData.append("xhr", "1");
 	xhr.send(formData);
 	return xhr;
 }

@@ -1,8 +1,23 @@
 /* js[view] */
 
+let user_cart = [];
+
+function addProductToCart(product_id, qty) {
+	xhr({
+		url: "add_product_to_cart",
+		params: {
+			product_id,
+			qty,
+		},
+		success: (res) => {
+			user_cart = res.cart;
+		},
+	});
+}
+
 domload(() => {
 	const vdo = $(".vdo");
-	vdo._set_value("regular");
+	vdo._set_value("1");
 });
 
 /**

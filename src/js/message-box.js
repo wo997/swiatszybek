@@ -1,5 +1,68 @@
 /* js[global] */
 
+const MESSAGE_HEADER_ERROR = /*html*/ `
+    <div class='messagebox_header' style='background: var(--error-clr);color: white;'>
+        <i class='fas fa-times-circle' style='font-size:30px'></i>
+    </div>
+`;
+
+const MESSAGE_OK_BUTTON = /*html*/ `
+    <button class='btn success medium' onclick='hideParentModal(this)' style='width:80px'>
+        Ok
+    </button>
+`;
+
+/**
+ *
+ * @param {{
+ * type?: ("success" | "error")
+ * header?: string
+ * body?: string
+ * footer?: string
+ * }} params
+ */
+function getMessageHTML(params = {}) {
+	let html = "";
+
+	const header_color =
+		params.type === "error" ? "var(--error-clr)" : "var(--success-clr)";
+
+	const header_icon =
+		params.type === "error"
+			? /*html*/ `<i class='fas fa-times-circle'></i>`
+			: /*html*/ `<i class='fas fa-check-circle'></i>`;
+
+	params.header = def(params.header, "Udało się!");
+
+	html += /*html*/ `
+        <div class='messagebox_header' style='background:${header_color}'>
+            ${header_icon} ${params.header}
+        </div>
+    `;
+
+	if (params.body) {
+		html += /*html*/ `<div class='messagebox_body'>${params.body}</div>`;
+	}
+
+	if (params.footer) {
+		html += /*html*/ `<div class='messagebox_footer'>${params.footer}</div>`;
+	}
+
+	return html;
+}
+
+/**
+ *
+ * @param {*} elem
+ * @param {*} message
+ * @param {{
+ * type?: ("info" | "error" | "success")
+ * show?: boolean
+ * inline?: boolean
+ * dismissable?: boolean
+ * instant?: boolean
+ * }} params
+ */
 function addMessageBox(elem, message, params = {}) {
 	elem = $(elem);
 
@@ -30,31 +93,30 @@ function addMessageBox(elem, message, params = {}) {
 		},
 	};
 
-	var dismiss_btn = params.dismissable
-		? `
-          <button class="btn transparent" onclick="toggleMessageBox($(this)._parent()._parent()._parent(), false)">
+	const dismiss_btn = params.dismissable
+		? /*html*/ `
+          <button class="btn transparent dismiss_btn" onclick="toggleMessageBox($(this)._parent()._parent()._parent(), false)">
             <img class='cross-icon' src='/src/img/cross.svg'>
           </button>
         `
 		: "";
 
-	elem._set_content(`
+	elem._set_content(/*html*/ `
         <div class="message-box expand_y hidden animate_hidden">
-          <div class="message-container ${types[type].className} ${
-		inline ? "inline" : ""
-	}"
-          >
-            ${types[type].icon}
-            <span style="margin: 0 3px;">
-              ${message}
-            </span>
-            ${dismiss_btn}
-          </div>
-        </div>
+            <div class="message-container ${types[type].className}
+                ${inline ? "inline" : ""}"
+                >
+                    ${types[type].icon}
+                    <span style="margin: 0 3px;">
+                        ${message}
+                    </span>
+                    ${dismiss_btn}
+                </div>
+            </div>
           `);
 
 	if (show) {
-		var options = {};
+		let options = {};
 		if (params.instant) {
 			options.instant = params.instant;
 		}
@@ -63,8 +125,8 @@ function addMessageBox(elem, message, params = {}) {
 }
 
 function showMessageModal(message, options) {
-	$("#message-modal .modal-message")._set_content(message);
-	showModal("message-modal", options);
+	$("#messagebox_modal > .modal-body > *")._set_content(message);
+	showModal("messagebox_modal", options);
 }
 
 function toggleMessageBox(elem, show = null, options = {}) {

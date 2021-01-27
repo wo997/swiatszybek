@@ -44,11 +44,11 @@ if (isset($_POST["password"]) && isset($_POST["user_id"]) && isset($_POST["authe
     </button>
   ";
     $response_body = MESSAGE_HEADER_SUCCESS
-        . "<div class='default-message-text'>Hasło zostało zmienione dla<br>konta "
+        . "<div class=''>Hasło zostało zmienione dla<br>konta "
         . $email . "</div>";
 
 
-    $_SESSION["message_modal"] = $response_body . "<div class='message-footer'>$response_footer</div>";
+    $_SESSION["message_modal"] = $response_body . "<div class='messagebox_footer'>$response_footer</div>";
     redirect("/");
 }
 

@@ -115,6 +115,7 @@ function getRelevanceQuery($fields, $words)
  * filters?: string
  * order?: string dhfghdfghfgh
  * main_search_fields?: array
+ * renderers?: array
  * }
  */
 

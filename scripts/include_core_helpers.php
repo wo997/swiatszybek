@@ -18,7 +18,9 @@ include_once "helpers/core/db/entity_old.php";
 include_once "helpers/core/email.php";
 include_once "helpers/core/request.php";
 
-include_once "helpers/core/user.php";
+include_once "helpers/core/User.php";
+include_once "helpers/core/Cart.php";
+include_once "helpers/core/Security.php";
 
 include_once "helpers/core/EventListener.php";
 include_once "helpers/core/datatable.php";

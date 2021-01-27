@@ -109,7 +109,7 @@
         }
 
         window.addEventListener("modal-hide", (event) => {
-            if (event.detail.node.id != "message-modal") {
+            if (event.detail.node.id != "messagebox_modal") {
                 return;
             }
             var form = $("#menu2");

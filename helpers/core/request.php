@@ -1,13 +1,13 @@
 <?php
 
 define("MESSAGE_HEADER_SUCCESS", "
-    <div class='message-header' style='background: var(--success-clr);color: white;'>
+    <div class='messagebox_header' style='background: var(--success-clr);color: white;'>
         <i class='fas fa-check-circle' style='font-size:30px'></i>
     </div>
 ");
 
 define("MESSAGE_HEADER_ERROR", "
-    <div class='message-header' style='background: var(--error-clr);color: white;'>
+    <div class='messagebox_header' style='background: var(--error-clr);color: white;'>
         <i class='fas fa-times-circle' style='font-size:30px'></i>
     </div>
 ");

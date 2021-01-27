@@ -1,4 +1,4 @@
-<?php //route[aktywuj]
+<?php //route[activate_account]
 
 $user_id = urlParam(1);
 $authentication_token = urlParam(2);
@@ -19,12 +19,12 @@ if ($user_data["authenticated"] == "1") {
     </button>
   ";
     $response_body = MESSAGE_HEADER_SUCCESS
-        . "<div class='default-message-text'>Konto "
+        . "<div class=''>Konto "
         . $user_data["email"] . "<br>zostało aktywowane</div>";
 } else {
     $response_footer = MESSAGE_OK_BUTTON;
-    $response_body = MESSAGE_HEADER_ERROR . "<div class='default-message-text'>Wystąpił błąd aktywacji konta</div>";
+    $response_body = MESSAGE_HEADER_ERROR . "<div class=''>Wystąpił błąd aktywacji konta</div>";
 }
 
-$_SESSION["message_modal"] = $response_body . "<div class='message-footer'>$response_footer</div>";
+$_SESSION["message_modal"] = $response_body . "<div class='messagebox_footer'>$response_footer</div>";
 redirect("/");
