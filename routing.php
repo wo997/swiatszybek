@@ -201,7 +201,7 @@ if ($pageName) {
     }
 
     if (IS_ADMIN_PAGE) {
-        adminRequired();
+        Security::adminRequired();
     }
 
     include $pageName;

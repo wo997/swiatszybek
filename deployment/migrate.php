@@ -197,8 +197,6 @@ DB::createTable("user", [
     ["name" => "login", "type" => "VARCHAR(255)", "index" => "index"],
     ["name" => "phone", "type" => "VARCHAR(255)"],
     ["name" => "password_hash", "type" => "VARCHAR(255)"],
-    ["name" => "authentication_token", "type" => "VARCHAR(255)"],
-    ["name" => "authentication_token_untill", "type" => "DATETIME"],
     ["name" => "remember_me_token", "type" => "VARCHAR(255)"],
     ["name" => "visited_at", "type" => "DATETIME"],
     ["name" => "created_at", "type" => "DATETIME"],
@@ -206,6 +204,13 @@ DB::createTable("user", [
     ["name" => "cart_json", "type" => "TEXT"],
     ["name" => "privelege_id", "type" => "TINYINT"],
     //["name" => "last_active_at", "type" => "DATETIME"],
+]);
+
+DB::createTable("authentication_token", [
+    ["name" => "authentication_token_id", "type" => "INT", "index" => "primary"],
+    ["name" => "token", "type" => "VARCHAR(255)", "index" => "index"],
+    ["name" => "action", "type" => "VARCHAR(255)"],
+    ["name" => "valid_untill", "type" => "DATETIME"],
 ]);
 
 @include BUILDS_PATH . "hooks/migration.php";

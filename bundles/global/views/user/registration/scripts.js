@@ -86,3 +86,9 @@ function register(validate = true) {
 		},
 	});
 }
+
+domload(() => {
+	if (register_email) {
+		setFormData({ email: register_email }, $(`#registerForm`));
+	}
+});

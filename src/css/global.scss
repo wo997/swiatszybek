@@ -250,7 +250,6 @@ input[type="button"] {
 	font-size: 12px;
 	width: 218px;
 	text-align: center;
-	box-sizing: border-box;
 }
 .abcRioButtonIcon {
 	margin-left: 10px;
@@ -593,7 +592,6 @@ hr {
 	display: flex;
 	justify-content: center;
 	padding-bottom: 50px;
-	box-sizing: border-box;
 }
 .rect {
 	border-radius: 4px;
@@ -734,7 +732,6 @@ a {
 .items > div {
 	width: 33.3333%;
 	padding: 1%;
-	box-sizing: border-box;
 }
 @media only screen and (max-width: 1000px) {
 	.items > div {
@@ -757,7 +754,6 @@ a {
 	}
 	.mobileRow > div {
 		width: 100% !important;
-		box-sizing: border-box;
 	}
 	.mobileCenter {
 		margin-left: auto;
@@ -800,7 +796,6 @@ footer {
 .paddingable {
 	width: 100%;
 	padding: 10px;
-	box-sizing: border-box;
 }
 
 .dropdown {
@@ -826,7 +821,6 @@ footer {
 	right: 0;
 	top: 100%;
 	text-align: left;
-	box-sizing: border-box;
 	min-width: 200px;
 	opacity: 0;
 	pointer-events: all;

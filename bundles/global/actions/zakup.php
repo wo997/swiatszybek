@@ -78,7 +78,7 @@ if (strlen($zamowienie_link) > 5) {
 }
 
 
-if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
+if (empty(User::getCurrent()->cart["variants"]) && !isset($_GET['produkt'])) {
     header("Location: /");
     die;
 }
@@ -902,7 +902,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                                 </button>
                                 KOD RABATOWY <span class="pln" id="kod_rabatowy_label"></span></span>
                             <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia:</span>
-                            <b style="display:inline-block;font-size: 20px;"><span id="final-cost" style="display:inline-block;" class="pln"><?= $app["user"]["basket"]["total_basket_cost"] ?></span> zł</b>
+                            <b style="display:inline-block;font-size: 20px;"><span id="final-cost" style="display:inline-block;" class="pln"><?= User::getCurrent()->cart["total_basket_cost"] ?></span> zł</b>
                         </div>
                     </div>
 

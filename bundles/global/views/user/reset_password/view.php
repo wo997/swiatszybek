@@ -1,4 +1,8 @@
-<?php //route[resetowanie-hasla]
+<?php //route[zresetuj-haslo]
+
+$user_id = urlParam(1);
+$authentication_token = urlParam(2);
+
 ?>
 
 
@@ -8,34 +12,21 @@
 
 <?php startSection("body_content"); ?>
 
-<form data-form onsubmit="return validateForm(this)" action="/reset_password" method="post" class="paddingable" style="margin:auto;padding-bottom:50px;max-width:350px">
-    <h1 class="h1" style="text-align:center">Resetowanie hasła</h1>
+<form onsubmit="return false" id="resetPasswordForm" data-form method="post" class="paddingable" style="margin:auto;padding-bottom:50px;max-width:350px">
+    <h1 class="h1" style="text-align:center">Zresetuj hasło</h1>
 
-    <div class="label">Twój e-mail</div>
-    <input type="text" class="field" name="email" data-validate="email">
+    <div class="label">Hasło (min. 8 znaków)</div>
+    <input type="password" name="password" class="field" data-validate="password" autocomplete="new-password">
 
-    <button class="btn primary medium" style="margin:10px 0; width: 100%">
-        Wyślij link na maila
-        <i class="fa fa-envelope"></i>
+    <div class="label">Powtórz hasło</div>
+    <input type="password" name="password_rewrite" class="field" data-validate="|match:#resetPasswordForm [name='password']" autocomplete="new-password">
+
+    <input type="hidden" name="user_id" value="<?= $user_id ?>">
+    <input type="hidden" name="authentication_token" value="<?= $authentication_token ?>">
+    <button class="btn primary medium" style="margin:10px 0; width: 100%" onclick="resetPassword()">
+        Akceptuj zmianę hasła
+        <i class="fa fa-chevron-right"></i>
     </button>
-
-    <?php if (false) : ?>
-        <div class="label">Hasło (min. 8 znaków)</div>
-        <input type="password" name="password" class="field" data-validate="password">
-
-        <div class="label">Powtórz hasło</div>
-        <input type="password" name="password_rewrite" class="field" data-validate="|match:form [name='password']">
-
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <input type="hidden" name="authentication_token" value="<?= $authentication_token ?>">
-        <input type="hidden" name="email" value="<?= $email ?>">
-        <button class="btn primary medium" style="margin:10px 0; width: 100%">
-            Akceptuj zmianę hasła
-            <i class="fa fa-chevron-right"></i>
-        </button>
-    <?php else : ?>
-
-    <?php endif ?>
 </form>
 
 <?php include "user/page_template.php"; ?>

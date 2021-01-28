@@ -59,9 +59,9 @@ if ($_POST["dostawa"] == 'p') {
 }
 
 if ($kod_rabatowy_type == "static") {
-    $koszt = $app["user"]["basket"]["total_basket_cost"] - $kod_rabatowy_wartosc;
+    $koszt = User::getCurrent()->cart["total_basket_cost"] - $kod_rabatowy_wartosc;
 } else {
-    $koszt = roundPrice($app["user"]["basket"]["total_basket_cost"] * (1 - 0.01 * $kod_rabatowy_wartosc));
+    $koszt = roundPrice(User::getCurrent()->cart["total_basket_cost"] * (1 - 0.01 * $kod_rabatowy_wartosc));
 }
 $koszt += $koszt_dostawy;
 
@@ -107,7 +107,7 @@ $zamowienie_id = DB::insertedId();
 // cannot use order/print_basket_nice because in email no css stylesheets are allowed, would we want to merge it?
 $res = "<table style='border-spacing: 0;'><tr style='background: " . primary_clr . ";color: white;'><td style='padding:4px'>Ilość</td><td style='padding:4px'>Produkt</td><td style='padding:4px'>Cena</td></tr>";
 
-foreach ($app["user"]["basket"]["variants"] as $v) {
+foreach (User::getCurrent()->cart["variants"] as $v) {
     DB::execute("INSERT INTO basket_content (zamowienie_id, variant_id, product_id, real_price, quantity, total_price, title, zdjecie) VALUES (?,?,?,?,?,?,?,?)", [
         $zamowienie_id, $v["variant_id"], $v["product_id"], $v["real_price"], $v["quantity"], $v["total_price"], $v["title"] . " " . $v["name"], $v["zdjecie"]
     ]);
@@ -188,7 +188,7 @@ $message .= "<tr><td style='vertical-align: top;'>Adres zamawiającego: </td><td
 $message .= "<tr><td>Data utworzenia: </td><td>" . niceDate() . "</td></tr>";
 $message .= "<tr><td style='vertical-align: top;'>Rodzaj dostawy: </td><td>$dostawaString ($koszt_dostawy zł)</td></tr>";
 $message .= "<tr><td style='vertical-align: top;'>Adres dostawy: </td><td>$adresWho<div style='height: 7px;'></div>$dostawaAdresString</td></tr>";
-$message .= "<tr><td>Koszt produktów: </td><td>" . $app["user"]["basket"]["total_basket_cost"] . " zł</td></tr>";
+$message .= "<tr><td>Koszt produktów: </td><td>" . User::getCurrent()->cart["total_basket_cost"] . " zł</td></tr>";
 $message .= "<tr><td><b>Całkowity koszt zamówienia: </b></td><td><b>$koszt zł</b></td></tr>";
 $message .= "</table>";
 

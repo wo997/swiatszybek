@@ -43,7 +43,7 @@ function registerModals() {
 	});
 }
 
-function registerModalContent(html, callback) {
+function registerModalContent(html, callback = undefined) {
 	if (!document.body) {
 		domload(() => {
 			registerModalContent(html, callback);

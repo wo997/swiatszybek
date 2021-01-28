@@ -11,3 +11,24 @@
 		padding: min(calc(10px + 1vw), 20px);
 	}
 }
+
+.loginForm .login_btn .fa-chevron-right {
+	transition: 0.2s all;
+}
+
+.loginForm .login_btn span {
+	width: 110px;
+	transition: 0.2s all;
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.loginForm.success .login_btn span {
+	width: 0;
+	opacity: 0;
+	transform: scale(0);
+}
+
+.loginForm:not(.success) .login_btn .fa-check {
+	opacity: 0;
+}

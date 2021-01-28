@@ -72,10 +72,10 @@ function showFieldErrors(field, errors = [], options = {}) {
 
 		const inputElements = wrapper._next();
 		const validationBox = inputElements
-			? inputElements._child(".validation-error-box")
+			? inputElements._child(".message_wrapper")
 			: null;
 		const correctIndicator = inputElements
-			? inputElements._child(".input-error-indicator .correct")
+			? inputElements._child(".correctness .correct")
 			: null;
 		if (!correctIndicator && field.hasAttribute("data-validate")) {
 			console.error(
@@ -85,7 +85,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 			return;
 		}
 		const wrongIndicator = inputElements
-			? inputElements._child(".input-error-indicator .wrong")
+			? inputElements._child(".correctness .wrong")
 			: null;
 		const toggleErrorIcons = (type) => {
 			if (correctIndicator && wrongIndicator) {
@@ -260,7 +260,7 @@ function fieldErrors(field) {
 		if (params["match"]) {
 			var target = $(params["match"]);
 			if (!target) {
-				console.warn("Field missing");
+				console.error("Field missing");
 			}
 			var isCorrect = val == target._get_value();
 			if (!isCorrect) {

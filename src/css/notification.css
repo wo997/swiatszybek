@@ -9,7 +9,6 @@
 	z-index: 900;
 	box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.18);
 	border-radius: 8px;
-	transition: all 0.2s;
 	background: #fff;
 	font-weight: 600;
 }
@@ -47,6 +46,8 @@
 
 .notification.one_line {
 	padding-right: 36px;
+	white-space: nowrap;
+	margin-right: -50%;
 }
 
 .notification.one_line .fa-times {

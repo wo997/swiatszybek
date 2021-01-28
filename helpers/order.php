@@ -161,7 +161,7 @@ function prepareBasketData()
     $user_basket["total_basket_cost"] = roundPrice($total_basket_cost);
     $user_basket["item_count"] = $item_count;
 
-    $app["user"]["basket"] = $user_basket;
+    User::getCurrent()->cart = $user_basket;
 }
 
 function validateStock()
@@ -173,17 +173,17 @@ function validateStock()
     try {
         $fail = false;
 
-        foreach ($app["user"]["basket"]["variants"] as $key => $variant) {
+        foreach (User::getCurrent()->cart["variants"] as $key => $variant) {
             if ($variant["quantity"] > $variant["stock"]) {
-                $app["user"]["basket"]["variants"][$key]["quantity"] = $variant["stock"];
+                User::getCurrent()->cart["variants"][$key]["quantity"] = $variant["stock"];
                 $fail = true;
             }
             if ($variant["quantity"] <= 0) {
-                unset($app["user"]["basket"]["variants"][$key]);
+                unset(User::getCurrent()->cart["variants"][$key]);
             }
         }
 
-        setBasketData($app["user"]["basket"]["variants"]);
+        setBasketData(User::getCurrent()->cart["variants"]);
 
         if ($fail) {
             throw new Exception("out of stock");
@@ -215,9 +215,9 @@ function getBasketDataAll()
 
     $response = [];
 
-    $response["basket"] = $app["user"]["basket"]["variants"];
-    $response["total_basket_cost"] = $app["user"]["basket"]["total_basket_cost"];
-    $response["item_count"] = $app["user"]["basket"]["item_count"];
+    $response["basket"] = User::getCurrent()->cart["variants"];
+    $response["total_basket_cost"] = User::getCurrent()->cart["total_basket_cost"];
+    $response["item_count"] = User::getCurrent()->cart["item_count"];
 
     return $response;
 }

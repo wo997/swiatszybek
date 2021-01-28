@@ -1,31 +1,28 @@
 /* js[global] */
 
 /**
- * @typedef {Object} PiepNotificationData
- * @property {number} [countdown_timeout]
- * @property {number} [countdown_time]
- * @property {number} [countdown_interval]
- *
- * @typedef {PiepNotificationData & PiepNode} PiepNotification
- */
-/**
- * @typedef {Object} PiepNotificationParams
- * @property {boolean} [one_line]
- * @property {string} [width]
- * @property {string} [type]
- * @property {number} [duration]
+ * @typedef {{
+ * countdown_timeout?: number
+ * countdown_time?: number
+ * countdown_interval?: number
+ * addDismissTimeout()
+ * } & PiepNode} PiepNotification
  */
 
 /**
  *
  * @param {string} message
- * @param {PiepNotificationParams} params
+ * @param {{
+ * one_line?: boolean
+ * width?: string
+ * type?: string
+ * duration?: number
+ * }} params
  * @returns {PiepNotification}
  */
 function showNotification(message, params = {}) {
-	//params._children(query)
 	$$(".notification").forEach((e) => {
-		e.style.opacity = 0;
+		e.style.opacity = "0";
 		e.style.top = "-10px";
 	});
 
@@ -40,13 +37,11 @@ function showNotification(message, params = {}) {
             ${message}
         `
 	);
-	notification.style.top = "-20px";
-	notification.style.opacity = "0";
 	if (params.width) {
 		notification.style.width = params.width;
 		notification.style.maxWidth = params.width;
 	} else {
-		notification.style.width = "fit-content";
+		notification.style.width = "";
 		notification.style.maxWidth = "unset";
 	}
 
@@ -58,10 +53,16 @@ function showNotification(message, params = {}) {
 	}
 
 	document.body.append(notification);
-	setTimeout(() => {
-		notification.style.top = "";
-		notification.style.opacity = "";
-	});
+
+	notification.style.top = "";
+	notification.style.opacity = "";
+	notification._animate(
+		`
+            0% {top:-20px;opacity:0}
+            100% {top:${notification.getBoundingClientRect().top}px;opacity:1}
+        `,
+		200
+	);
 
 	const duration = def(params.duration, 2000);
 
@@ -95,11 +96,10 @@ function showNotification(message, params = {}) {
 
 function dismissParentNotification(n) {
 	if (!n) return;
-	n = $(n)._parent(".notification");
+	n = $(n)._parent(".notification", { skip: 0 });
 	if (!n) return;
 
-	n.style.opacity = 0;
-	n.style.pointerEvents = "none";
+	n.style.animation = "hide 200ms";
 	setTimeout(() => {
 		n.remove();
 	}, 200);

@@ -1,6 +1,7 @@
 /* css[global] */
 
 :root {
-  --success-clr: #27ba31;
-  --error-clr: #d41326;
+	--success-clr: #27ba31;
+	--error-clr: #d41326;
+	--info-clr: #4076bb;
 }

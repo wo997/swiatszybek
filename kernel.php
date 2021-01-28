@@ -22,7 +22,7 @@ include "scripts/include_core_helpers.php";
 
 // required by CMS
 include "packages/simple_html_dom.php";
-include "scripts/requests.php";
+include "scripts/request.php";
 
 $secrets = [];
 @include_once "secrets.php";
@@ -95,9 +95,8 @@ $currency = "PLN"; // used by p24
 include "scripts/images.php";
 include "scripts/previews.php";
 
-include "scripts/init_user.php";
+//triggerEvent("request_begin"); // hooks are way nicer bro
 
-triggerEvent("request_begin");
 // TODO: move to a module / can trigger an event here
 if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) {
     header("Location: /oplacono");

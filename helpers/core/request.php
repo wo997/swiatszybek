@@ -53,3 +53,29 @@ function urlParam($index, $default = "")
 {
     return def(URL_PARAMS, $index, $default);
 }
+
+class Request
+{
+    // u can use it for views yay
+    public static $single_usage_session = null;
+
+    public static function init()
+    {
+        if (self::$single_usage_session === null) {
+            self::$single_usage_session = def($_SESSION, "single_usage_session", []);
+            if (!IS_XHR) {
+                unset($_SESSION["single_usage_session"]);
+            }
+        }
+    }
+
+    public static function setSingleUsageSessionVar($name, $val)
+    {
+        $_SESSION["single_usage_session"][$name] = $val;
+    }
+
+    public static function getSingleUsageSessionVar($name)
+    {
+        return def(self::$single_usage_session, $name, "");
+    }
+}

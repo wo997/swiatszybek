@@ -104,8 +104,6 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
             margin: 2px;
             border: 1px solid #ccc;
             display: inline-block;
-            /*width: 100%;*/
-            box-sizing: border-box;
         }
 
         @media only screen and (min-width: 900px) {

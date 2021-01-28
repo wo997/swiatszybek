@@ -1,13 +1,13 @@
 /* css[global] */
 
-.input-elements .input-error-indicator {
+.input_nodes .correctness {
 	position: relative;
 	height: 0;
 	width: 100%;
 	display: block;
 }
-.input-elements .input-error-indicator .correct,
-.input-elements .input-error-indicator .wrong {
+.input_nodes .correctness .correct,
+.input_nodes .correctness .wrong {
 	position: absolute;
 	pointer-events: none;
 	right: 0.75em;
@@ -17,21 +17,21 @@
 	transition: 0.2s all;
 	transform: scale(0);
 }
-.input-elements .input-error-indicator .correct.visible,
-.input-elements .input-error-indicator .wrong.visible {
+.input_nodes .correctness .correct.visible,
+.input_nodes .correctness .wrong.visible {
 	opacity: 1;
 	transform: scale(1);
 }
-.input-elements .input-error-indicator .correct {
+.input_nodes .correctness .correct {
 	margin-right: -0.1em;
 }
-.input-elements .input-error-indicator .correct {
+.input_nodes .correctness .correct {
 	color: var(--success-clr);
 }
-.input-elements .input-error-indicator .wrong {
+.input_nodes .correctness .wrong {
 	color: var(--error-clr);
 }
-.input-elements .validation-error-box {
+.input_nodes .message_wrapper {
 	color: var(--error-clr);
 	padding-top: 0.2em;
 	font-weight: 600;
@@ -53,7 +53,7 @@ img.required {
 	box-shadow: 0px 0px 0px 2px var(--error-clr);
 }
 
-textarea + .input-elements .input-error-indicator {
+textarea + .input_nodes .correctness {
 	display: none;
 }
 
@@ -67,7 +67,7 @@ textarea + .input-elements .input-error-indicator {
 	pointer-events: all;
 }
 
-.checkbox-wrapper + .input-elements .input-error-indicator {
+.checkbox-wrapper + .input_nodes .correctness {
 	display: none !important;
 }
 

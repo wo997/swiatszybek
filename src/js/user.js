@@ -54,10 +54,15 @@ function login() {
 		url: "/login",
 		params: getFormData(loginForm),
 		success: (res) => {
-			if (res.message && res.error_field_name) {
+			if (res.success) {
+				loginForm.classList.add("success");
+				setTimeout(() => {
+					window.location.reload();
+				}, 200);
+			} else {
 				showFieldErrors(
-					loginForm._child(`[name="${res.error_field_name}"]`),
-					[res.message],
+					loginForm._child(`[name="password"]`),
+					["Niepoprawne hasło"],
 					{ scroll: true }
 				);
 			}

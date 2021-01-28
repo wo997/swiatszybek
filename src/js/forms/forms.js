@@ -60,8 +60,6 @@ function setFormData(data, form, params = {}) {
 		return;
 	}
 
-	var find_by = def(params.find_by, "name");
-
 	registerForms();
 
 	Object.entries(data).forEach(([name, value]) => {
@@ -73,7 +71,7 @@ function setFormData(data, form, params = {}) {
 			}
 		}
 
-		var selector = `[${find_by}="${name}"]`;
+		var selector = `[name="${name}"]`;
 		var e = form._child(selector);
 		if (!e) {
 			return;
@@ -128,12 +126,10 @@ function getFormData(form, params = {}) {
 	form = $(form);
 	var data = {};
 
-	var find_by = def(params.find_by, "name");
-
 	var excludeHidden = form.hasAttribute("data-exclude-hidden");
 
 	$(form)
-		._children(`[${find_by}]`)
+		._children(`[name]`)
 		.forEach((e) => {
 			if (excludeHidden && e._parent(".hidden, .form-hidden")) {
 				return;
@@ -144,7 +140,7 @@ function getFormData(form, params = {}) {
 				return;
 			}
 
-			var field_name = e.getAttribute(find_by);
+			var field_name = e.getAttribute("name");
 			var field_value = e._get_value();
 
 			var parent_sub_form = e;
@@ -214,7 +210,7 @@ function registerForms(form = undefined) {
 
 		form.addEventListener("keydown", (e) => {
 			// IT DOES NOT WORK, it's because we register all forms at once every time, these need to be changed
-			// btw u might wanna change registered to abbrev like reg
+			// btw u might wanna change registered to abbrev like rdy
 			setTimeout(() => {
 				if (e.key === "Enter") {
 					var submit = $(form)._child("[data-submit]");
@@ -226,7 +222,6 @@ function registerForms(form = undefined) {
 		});
 	}
 
-	// TODO: consider mutation observer, isn't it obvious?
 	window.dispatchEvent(new Event("register-form-components"));
 
 	var unique_forms = [];
@@ -242,11 +237,7 @@ function registerForms(form = undefined) {
 		field.classList.add("change-registered");
 		field.addEventListener("change", formFieldOnChangeEvent);
 
-		/*if (field.getAttribute("data-validate").indexOf("backend") === 0) {
-        field._set_value();
-      }*/
-
-		var obj = field;
+		let obj = field;
 		if (field.type == "checkbox") {
 			obj = obj._parent();
 		}
@@ -259,17 +250,17 @@ function registerForms(form = undefined) {
 		) {
 			// TODO: what if the user defined the field wrapper already? should be left as it is
 			obj.insertAdjacentHTML("afterend", `<div class="field-wrapper"></div>`);
-			var field_wrapper = obj._next();
+			const field_wrapper = obj._next();
 			field_wrapper.appendChild(obj);
 			if (field.classList.contains("inline")) {
 				field_wrapper.classList.add("inline");
 			}
-			var dwc = field.getAttribute("data-wrapper-class");
+			const dwc = field.getAttribute("data-wrapper-class");
 			if (dwc) {
 				field_wrapper.classList.add(...dwc.split(" "));
 			}
 
-			var dws = field.getAttribute("data-wrapper-style");
+			const dws = field.getAttribute("data-wrapper-style");
 			if (dws) {
 				field_wrapper.style.cssText = dws;
 			}
@@ -277,17 +268,17 @@ function registerForms(form = undefined) {
 			if (field.hasAttribute("data-validate")) {
 				field_wrapper.insertAdjacentHTML(
 					"beforeend",
-					`
-          <div class="input-elements">
-            <div class="input-error-indicator">
-              <i class="fas fa-check correct"></i>
-              <i class="fas fa-times wrong"></i>
-            </div>
-            <div class="validation-error-box expand_y hidden animate_hidden">
-             <div class="message"></div>
-            </div>
-          </div>
-        `
+					/*html*/ `
+                        <div class="input_nodes">
+                            <div class="correctness">
+                            <i class="fas fa-check correct"></i>
+                            <i class="fas fa-times wrong"></i>
+                            </div>
+                            <div class="message_wrapper expand_y hidden animate_hidden">
+                                <div class="message"></div>
+                            </div>
+                        </div>
+                    `
 				);
 			}
 		}

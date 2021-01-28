@@ -783,9 +783,7 @@ function saveVariant(remove = false) {
 	var data = getFormData($(`#variantForm`));
 	data.attributes = JSON.stringify(data.attributes);
 
-	setFormData(data, variantRow, {
-		find_by: "name",
-	});
+	setFormData(data, variantRow);
 
 	lazyLoadImages();
 }

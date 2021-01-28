@@ -1,5 +1,7 @@
 <?php
 
+// TODO: user will have multiple options to authenticate but these will target to a single user account, really simple
+
 class User
 {
     public static ?User $current_user = null;
@@ -36,6 +38,13 @@ class User
         }
 
         $this->cart = new Cart($this->getId());
+    }
+
+    public static function getEmailclientUrl($email)
+    {
+        $email_domain = def(explode("@", $email), 1);
+        $email_client_url = def(User::$email_client_urls, $email_domain, "");
+        return $email_client_url;
     }
 
     private function setData()
@@ -84,6 +93,7 @@ class User
 
         if ($this->data["authenticated"]) {
             $res["errors"][] = "Konto zostało już aktywowane!";
+            $res["is_info"] = true;
             return $res;
         }
 
@@ -98,39 +108,79 @@ class User
                 return $res;
             }
 
-            $password_hash = "";
-
-            $authentication_token = Security::generateToken();
+            $password_hash = Security::getPasswordHash($data["password"]);
 
             $this->id = DB::insert("user", array_merge(filterArrayKeys($data, ["email", "first_name", "last_name", "phone"]),  [
                 "password_hash" => $password_hash,
                 "created_at" => date("Y-m-d.H:i:s"),
                 "type" => "regular",
-                "authentication_token" => $authentication_token,
-                "authentication_token_untill" => date("Y-m-d H:i:s", strtotime("+24 hours"))
             ]));
             $this->setData();
         }
 
-        $this->sendActivationLink();
+        return $this->sendActivationLink(
+            $this->getId()
+        );
+    }
+
+    public static function reset($data)
+    {
+        $res =
+            /** @var ValidationResponse */
+            [
+                "errors" => [],
+                "success" => false
+            ];
+
+        $reset = Security::useAuthenticationToken("reset_user_" . $data["user_id"], $data["authentication_token"]);
+
+        if (!$reset["success"]) {
+            return $reset;
+        }
+
+        DB::update("user ", [
+            "password_hash" => Security::getPasswordHash($data["password"])
+        ], "user_id = " . $data["user_id"]);
+        self::getCurrent()->setData();
 
         $res["success"] = true;
         return $res;
     }
 
-    public function sendActivationLink()
+    public static function sendResetPasswordLink($email)
     {
-        if ($this->data["authenticated"]) {
-            return false;
+        $res =
+            /** @var ValidationResponse */
+            [
+                "errors" => [],
+                "success" => false
+            ];
+
+        $user_data = DB::fetchRow("SELECT user_id, authenticated FROM user WHERE type = 'regular' AND email = ?", [$email]);
+        if (!$user_data) {
+            $res["errors"][] = "";
+            return $res;
         }
+
+        if (!$user_data["authenticated"]) {
+            // probably an exception but let's send it anyway in case the user is silly
+            return self::sendActivationLink($user_data["user_id"]);
+        }
+
+        $authentication_token = Security::createAuthenticationToken("reset_user_" . $user_data["user_id"]);
+
         $message = "
-            <h3>Kliknij w link poniżej, żeby aktywować swoje konto</h3>
-            <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/activate_account/" .  $this->getId() . "/" . $this->data["authentication_token"] . "'>Aktywuj</a>
+            <h3>Kliknij w link poniżej, żeby potwierdzić chęć zresetowania hasła</h3>
+            <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/zresetuj-haslo/" .  $user_data["user_id"] . "/" . $authentication_token . "'>Resetuj</a>
         ";
-        $mailTitle = "Aktywacja konta " . "LSIT" . " " . date("d-m-Y");
+
+        $mailTitle = "Resetowanie hasła konta " . $email . " - LSIT";
         $message .= getEmailFooter();
 
-        @sendEmail($this->data["email"], $message, $mailTitle);
+        @sendEmail($email, $message, $mailTitle);
+
+        $res["success"] = true;
+        return $res;
     }
 
     public function login($email_or_login, $password)
@@ -155,7 +205,17 @@ class User
 
         $this->authenticated($user_data["user_id"]);
 
+        Request::setSingleUsageSessionVar("just_logged_in", true);
+
+        $res["success"] = true;
         return $res;
+    }
+
+    public function logout()
+    {
+        unset($_SESSION["user_id"]);
+        unset($_SESSION["redirect_on_login"]);
+        setcookie("remember_me_token", "", 0);
     }
 
     public function authenticated($user_id)
@@ -174,7 +234,7 @@ class User
 
     public function isLoggedIn()
     {
-        return !!$this->id;
+        return $this->data["privelege_id"] !== 0;
     }
 
     /**
@@ -218,125 +278,58 @@ class User
             ];
 
         if (!$user_id || !$authentication_token) {
-            $res["erros"][] = "Wystąpił błąd aktywacji konta";
+            $res["erros"][] = "Błąd krytyczny";
             return $res;
         }
 
-        DB::execute("UPDATE user SET authenticated = 1, authentication_token = '' WHERE user_id = ? AND authentication_token = ?", [
-            $user_id, $authentication_token
+        $activate = Security::useAuthenticationToken("activate_user_$user_id", $authentication_token);
+
+        if (!$activate["success"]) {
+            return $activate;
+        }
+
+        DB::execute("UPDATE user SET authenticated = 1 WHERE user_id = ?", [
+            $user_id
         ]);
-
-        $user_data = DB::fetchRow("SELECT email, authenticated FROM user WHERE user_id = ?", [$user_id]);
-
-        if ($user_data["authenticated"] == "1") {
-            self::getCurrent()->authenticated($user_id);
-        } else {
-            $res["errors"][] = "Wystąpił błąd aktywacji konta";
-            return $res;
-        }
+        self::getCurrent()->authenticated($user_id);
 
         $res["success"] = true;
         return $res;
     }
-}
 
+    public static function sendActivationLink($user_id)
+    {
+        $res =
+            /** @var ValidationResponse */
+            [
+                "errors" => [],
+                "success" => false
+            ];
 
-define("visitor_priveleges", ["backend_access" => false]);
-$privelege_list = [
-    ["id" => 0, "name" => "Klient", "backend_access" => false],
-    ["id" => 1, "name" => "Admin", "backend_access" => true],
-    ["id" => 2, "name" => "Sprzedawca", "backend_access" => true],
-];
-
-function initUser()
-{
-    global $app;
-
-    if (isset($_SESSION["user"])) {
-        $app["user"] = $_SESSION["user"];
-    } else {
-        $app["user"] = [
-            "id" => null,
-            "privelege_id" => visitor_priveleges,
-            "type" => "",
-            "email" => ""
-        ];
-    }
-
-    if (!isset($_SESSION["user"]) && isset($_COOKIE["remember_me_token"])) {
-        $user_data = DB::fetchRow("SELECT * FROM `users` WHERE user_type = 'regular' AND authenticated = 1 AND remember_me_token = ?", [$_COOKIE["remember_me_token"]]);
-        if ($user_data) {
-            loginUser($user_data["user_id"], $user_data["email"], "regular", ["name" => $user_data["email"]], false);
+        $user_data = DB::fetchRow("SELECT email, authenticated FROM user WHERE user_id = ?", [$user_id]);
+        if (!$user_data) {
+            $res["errors"][] = "Konto nie istnieje!";
+            return $res;
         }
-    }
-
-    $app["user"]["priveleges"] = array_merge(visitor_priveleges, $app["user"]["privelege_id"]);
-
-    if (empty($_SESSION["basket"]) || $_SESSION["basket"] == "null" || !$_SESSION["basket"]) {
-        $b = "[]";
-        if (isset($_COOKIE["basket"])) {
-            $b = $_COOKIE["basket"];
+        if ($user_data["authenticated"]) {
+            $res["errors"][] = "Konto zostało już aktywowane!";
+            $res["is_info"] = true;
+            return $res;
         }
-        setBasketData($b);
+
+        $authentication_token = Security::createAuthenticationToken("activate_user_$user_id");
+
+        $message = "
+            <h3>Kliknij w link poniżej, żeby aktywować swoje konto</h3>
+            <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/activate_account/$user_id]/$authentication_token'>Aktywuj</a>
+        ";
+
+        $mailTitle = "Aktywacja konta " . $user_data["email"] . " - LSIT";
+        $message .= getEmailFooter();
+
+        @sendEmail($user_data["email"], $message, $mailTitle);
+
+        $res["success"] = true;
+        return $res;
     }
-}
-
-function adminRequired()
-{
-    global $app;
-    if (!User::getCurrent()->priveleges["backend_access"]) {
-        $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
-        redirect("/logowanie");
-    }
-}
-
-function loginUser($user_id, $email, $user_type, $data = [])
-{
-    global $privelege_list;
-
-    $_SESSION["just_logged_in"] = true;
-
-    $user_data = DB::fetchRow("SELECT * FROM users WHERE user_id = $user_id");
-
-    $user = [
-        "id" => $user_id,
-        "privelege_id" => getRowById($privelege_list, $user_data["privelege_id"]),
-        "type" => $user_type,
-        "email" => $email,
-    ];
-
-    if (isset($data["name"])) {
-        $user["name"] = $data["name"];
-    }
-
-    $_SESSION["user"] = $user;
-
-    // bring basket back if empty only?
-    $basket = $user_data["basket"];
-    // I think we should prompt the user in other case what he wanna do, correct?
-    if ($basket && count(getBasketData()) < 1) {
-        setBasketData($basket);
-    }
-
-    $last_viewed_products_safe_string = preg_replace("/[^0-9,]/", "", $user_data["last_viewed_products"]);
-    $last_viewed_products = explode(",", $last_viewed_products_safe_string);
-    addLastViewedProducts($last_viewed_products, false);
-
-    if (isset($_SESSION["redirect_on_login"])) {
-        $url = $_SESSION["redirect_on_login"];
-        unset($_SESSION["redirect_on_login"]);
-        redirect($url);
-    } else {
-        reload();
-    }
-}
-
-function getPasswordHash($val)
-{
-    return password_hash($val, PASSWORD_BCRYPT, ['cost' => 12]);
-}
-
-function generateAuthenticationToken($length = 14)
-{
-    return bin2hex(random_bytes($length));
 }

@@ -1,10 +1,20 @@
 <?php //route[rejestracja]
 
+$register_email = "";
+if (isset($_SESSION["register_email"])) {
+    $register_email = $_SESSION["register_email"];
+    unset($_SESSION["register_email"]);
+}
+
 ?>
 
 <?php startSection("head_content"); ?>
 
 <title>Rejestracja</title>
+
+<script>
+    const register_email = `<?= $register_email ?>`;
+</script>
 
 <?php startSection("body_content"); ?>
 

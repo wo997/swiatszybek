@@ -8,7 +8,7 @@ function showMessageModal(message, options) {
 /**
  *
  * @param {{
- * type?: ("success" | "error")
+ * type?: ("success" | "error" | "info")
  * header?: string
  * body?: string
  * footer?: string
@@ -17,18 +17,24 @@ function showMessageModal(message, options) {
 function getMessageHTML(params = {}) {
 	let html = "";
 
-	const header_color =
-		params.type === "error" ? "var(--error-clr)" : "var(--success-clr)";
+	let header_color = "";
+	let header_icon = "";
 
-	const header_icon =
-		params.type === "error"
-			? /*html*/ `<i class='fas fa-times-circle'></i>`
-			: /*html*/ `<i class='fas fa-check-circle'></i>`;
-
-	params.header = def(
-		params.header,
-		params.type === "error" ? "Coś poszło nie tak" : "Udało się!"
-	);
+	if (params.type === "info") {
+		header_icon = /*html*/ `<i class='fas fa-info-circle'></i>`;
+		header_color = "var(--info-clr)";
+		if (!params.header) {
+			params.header = "Ciekawe";
+		}
+	} else if (params.type === "error") {
+		header_icon = /*html*/ `<i class='fas fa-times-circle'></i>`;
+		header_color = "var(--error-clr)";
+		params.header = "Coś poszło nie tak";
+	} else {
+		header_icon = /*html*/ `<i class='fas fa-check-circle'></i>`;
+		header_color = "var(--success-clr)";
+		params.header = "Udało się!";
+	}
 
 	html += /*html*/ `
         <div class='messagebox_header' style='background:${header_color}'>
@@ -36,11 +42,11 @@ function getMessageHTML(params = {}) {
         </div>
     `;
 
-	if (params.body) {
+	if (params.body !== undefined) {
 		html += /*html*/ `<div class='messagebox_body'>${params.body}</div>`;
 	}
 
-	if (!params.footer) {
+	if (params.footer === undefined) {
 		params.footer = `<button class='btn subtle medium' onclick='hideParentModal(this)' style='width:80px'>Ok</button>`;
 	}
 
@@ -134,3 +140,13 @@ function toggleMessageBox(elem, show = null, options = {}) {
 		}, duration);
 	}
 }
+
+domload(() => {
+	registerModalContent(/*html*/ `
+        <div id="messagebox_modal" class="messagebox_modal" data-dismissable>
+            <div class="modal-body">
+                <div></div>
+            </div>
+        </div>    
+    `);
+});

@@ -2,7 +2,7 @@
 
 /**
  * @typedef CartProduct {
- * product_id: number
+                                 * product_id: number
  * qty: number
  * }
  * you can add more props later
@@ -137,6 +137,7 @@ class Cart
      * @typedef ValidationResponse {
      * errors: array
      * success: boolean
+     * is_info?: boolean
      * data?: array
      * }
      */

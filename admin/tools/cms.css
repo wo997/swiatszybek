@@ -233,7 +233,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-sizing: border-box;
 	background: #333f;
 	font-size: 15px;
 	cursor: pointer;
@@ -300,7 +299,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-sizing: border-box;
 	background: #59c236;
 	font-size: 24px;
 	cursor: pointer;

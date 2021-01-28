@@ -54,14 +54,6 @@
             if (emailRequest) {
                 wyslalismyLinkDoZmianyEmaila(emailRequest, true);
             }
-
-            <?php if (isset($_SESSION["message"])) : ?>
-                addMessageBox($(".messagebox-container2"), `<?= $_SESSION["message"]["text"] ?>`, {
-                    type: `<?= $_SESSION["message"]["type"] ?>`,
-                    dismissable: true,
-                });
-                <?php unset($_SESSION["message"]); ?>
-            <?php endif ?>
         });
 
         function cancelEmailChange() {

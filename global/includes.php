@@ -29,8 +29,8 @@ if (defined("ROUTE")) {
     const CSS_RELEASE = <?= CSS_RELEASE ?>;
     const MODULES_RELEASE = <?= MODULES_RELEASE ?>;
 
-    const IS_LOGGED = <?= User::getCurrent()->getId() ? "true" : "false" ?>;
-    const USER_ID = <?= def($app["user"], "id", 0) ?>;
+    const IS_LOGGED = <?= User::getCurrent()->isLoggedIn() ? "true" : "false" ?>;
+    const USER_ID = <?= User::getCurrent()->getId() ?>;
     const IS_ADMIN = <?= User::getCurrent()->priveleges["backend_access"] ? "true" : "false" ?>;
     const USER_TYPE = "<?= User::getCurrent()->data["type"] ?>";
 
@@ -50,7 +50,7 @@ if (defined("ROUTE")) {
     <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
         const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
         const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
-        const privelege_list = <?= json_encode($privelege_list) ?>;
+        const privelege_list = null;
 
         <?php if (isset($preview_params) && isset($preview_params["js_visible"])) : ?>
             const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
@@ -59,7 +59,7 @@ if (defined("ROUTE")) {
 
     const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 
-    <?php if (JUST_LOGGED_IN) : ?>
+    <?php if (Request::getSingleUsageSessionVar("just_logged_in")) : ?>
         domload(() => {
             showNotification("Zalogowano pomyślnie", {
                 one_line: true,
@@ -68,11 +68,10 @@ if (defined("ROUTE")) {
         });
     <?php endif ?>
 
-    <?php if (isset($_SESSION["message_modal"])) : ?>
+    <?php if ($message_modal = Request::getSingleUsageSessionVar("message_modal")) : ?>
         windowload(() => {
             showMessageModal(getMessageHTML(
-                <?php echo $_SESSION["message_modal"];
-                unset($_SESSION["message_modal"]); ?>
+                <?= $message_modal ?>
             ));
         });
     <?php endif ?>
@@ -90,9 +89,9 @@ if (defined("ROUTE")) {
     });
 
     function basketReady() {
-        _setBasketData(<?= json_encode(getBasketDataAll()) ?>, {
+        /*_setBasketData(<?= json_encode(getBasketDataAll()) ?>, {
             instant: true
-        });
+        });*/
     };
 
     const last_viewed_products_ids = <?= json_encode(getLastViewedProductsIds()) ?>;

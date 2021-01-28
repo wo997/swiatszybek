@@ -44,7 +44,7 @@
 
                 <div class="label">
                     <span>Hasło</span>
-                    <i class="fas fa-eye btn" onclick="togglePasswordFieldType(this,$(this)._parent()._next())" data-tooltip="Pokaż hasło" data-tooltip-position="right"></i>
+                    <i class="fas fa-eye btn" onclick="togglePasswordFieldType(this,$(`#loginForm [name='password']`))" data-tooltip="Pokaż hasło" data-tooltip-position="right"></i>
                 </div>
                 <input class="field" type="password" autocomplete="current-password" name="password" data-validate="backend|blank_on_change:true">
 
@@ -56,9 +56,9 @@
                     </label>
                 </div>
 
-                <button class="btn primary medium" style="margin:10px 0; width: 100%" onclick="login()" data-submit>
-                    Zaloguj się
-                    <i class="fa fa-chevron-right"></i>
+                <button class="btn primary medium login_btn" style="margin:10px 0; width: 100%" onclick="login()" data-submit>
+                    <span>Zaloguj się <i class="fa fa-chevron-right"></i></span>
+                    <i class="fa fa-check"></i>
                 </button>
 
                 <div style="text-align: center; padding: 10px 0">
@@ -80,12 +80,6 @@
     </div>
 </div>
 
-<div id="messagebox_modal" class="messagebox_modal" data-modal data-dismissable>
-    <div class="modal-body">
-        <div></div>
-    </div>
-</div>
-
 <?php
 
 if (isset($CSS_files)) {
@@ -100,15 +94,11 @@ if (isset($JS_files)) {
 }
 
 ?>
-<?php /* just to score higher, we need our own icons later for sure */ ?>
-<?php if (IS_ADMIN_PAGE || !IS_MAIN_PAGE || User::getCurrent()->getId() /*User::getCurrent()->priveleges["backend_access"]*/) : ?>
-<?php endif ?>
+
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 <link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">
-
-<div class="pretend-scrollbar"></div>
 
 <div id="variantAdded" class="variantAdded" data-form data-modal data-dismissable>
     <div class="modal-body">
