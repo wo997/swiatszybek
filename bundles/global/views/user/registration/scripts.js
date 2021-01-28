@@ -1,5 +1,12 @@
 /* js[view] */
 
+function accountExists(src) {
+	$(`#loginForm [name='email']`)._set_value(
+		$(`#registerForm [name='email']`)._get_value()
+	);
+	showModal("loginForm", { source: src });
+}
+
 function validateUserEmailExists(input) {
 	const registerForm = $(`#registerForm`);
 
@@ -12,7 +19,7 @@ function validateUserEmailExists(input) {
 				let m = /*html*/ `<span style='color: black'>`;
 				m += /*html*/ `To konto jest aktywne`;
 				if (!IS_LOGGED) {
-					m += /*html*/ ` <b style="color:var(--success-clr);" class="link" onclick="showModal('loginForm',{source:this})">ZALOGUJ SIĘ</b>`;
+					m += /*html*/ ` <b style="color:var(--success-clr);" class="link" onclick="accountExists(this)">ZALOGUJ SIĘ</b>`;
 				}
 				m += /*html*/ `</span>`;
 				errors.push(m);
