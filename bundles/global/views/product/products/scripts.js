@@ -52,19 +52,17 @@ domload(() => {
 		goDesktop();
 	}
 
-	searchProducts({
-		scroll: false,
-	});
-
-	// must go after inital search
-	var products_search = localStorage.getItem("products_search");
+	let products_search = localStorage.getItem("products_search");
 	if (products_search) {
 		localStorage.removeItem("products_search");
 		$(`.relevance_option`)._set_value(1, { quiet: true });
+		$(".products_search")._set_value(products_search);
 	} else {
-		products_search = "";
+		searchProducts({
+			scroll: false,
+		});
 	}
-	$(".products_search")._set_value(products_search);
+
 	attributeSelectionChange(null, null);
 });
 
