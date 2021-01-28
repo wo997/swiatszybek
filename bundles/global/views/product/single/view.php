@@ -219,7 +219,7 @@ foreach ($variants[1]["variant_options"] as $size_option) {
 <?php startSection("body_content"); ?>
 
 <?php
-if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] || $preview_params) :
+if ($product_data["published"] || User::getCurrent()->priveleges["backend_access"] || $preview_params) :
 ?>
 
     <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;position: relative;align-items: flex-start;">
@@ -312,7 +312,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                         <h3 style="margin:12px 0 0">Powiadom o dostępności</h3>
                         <label style="font-size:16px;margin: 10px 0;display: flex;align-items: center;">
                             <span>Twój e-mail: </span>
-                            <input type="text" value="<?= $app["user"]["email"] ?>" id="notification_email" style="width: auto;flex-grow: 1;margin-left: 10px;padding: 1px 4px;">
+                            <input type="text" value="<?= User::getCurrent()->data["email"] ?>" id="notification_email" style="width: auto;flex-grow: 1;margin-left: 10px;padding: 1px 4px;">
                         </label>
                         <button id="notify" class="btn primary medium fill" onclick="sendNotification()">
                             Potwierdź powiadomienie
@@ -340,9 +340,9 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
             ?>
         </div>
 
-        <?php if ($app["user"]["id"]) : ?>
+        <?php if (User::getCurrent()->isLoggedIn()) : ?>
             <?php
-            $pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval($app["user"]["id"]), "");
+            $pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()), "");
             ?>
             <div id="formComment" data-form>
                 <h4 style="font-size: 22px; margin: 70px 0 10px;">Podziel się swoją opinią</h4>
@@ -397,7 +397,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
     </div>
 <?php endif ?>
 
-<?php if ($app["user"]["priveleges"]["backend_access"] && !isset($preview_params)) : ?>
+<?php if (User::getCurrent()->priveleges["backend_access"] && !isset($preview_params)) : ?>
     <div class="right_side_menu freeze_before_load">
         <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
             <i class="fas fa-chevron-right"></i>

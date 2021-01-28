@@ -1,6 +1,6 @@
 <?php //route[addComment]
 
-if (!$app["user"]["id"]) {
+if (!User::getCurrent()->getId()) {
     die;
 }
 
@@ -17,12 +17,12 @@ foreach ($posts as $p) {
 $tresc = htmlspecialchars($tresc);
 
 if ($pseudonim != "") {
-    DB::execute("UPDATE users SET pseudonim = ? WHERE user_id = ?", [$pseudonim, $app["user"]["id"]]);
+    DB::execute("UPDATE users SET pseudonim = ? WHERE user_id = ?", [$pseudonim, User::getCurrent()->getId()]);
 } else $pseudonim = "Anonim";
 
 DB::execute(
     "INSERT INTO comments (pseudonim,dodano,tresc,product_id,user_id,rating) VALUES (?,NOW(),?,?,?,?)",
-    [$pseudonim, $tresc, $product_id, $app["user"]["id"], $rating]
+    [$pseudonim, $tresc, $product_id, User::getCurrent()->getId(), $rating]
 );
 
 triggerEvent("product_rating_change", ["product_id" => $product_id]);
@@ -56,7 +56,7 @@ if ($can_user_get_comment_rebate) {
     $mailTitle = "Kod rabatowy za zamówienie #" . $can_user_get_comment_rebate["zamowienie_id"] . " - " . $app["company_data"]['email_sender'];
 
     sendEmail("wojtekwo997@gmail.com", $message, $mailTitle);
-    sendEmail($app["user"]["email"], $message, $mailTitle);
+    sendEmail(User::getCurrent()->data["email"], $message, $mailTitle);
 
     echo "{\"kod_rabatowy\":\"$kod_rabatowy_example\"}";
 }

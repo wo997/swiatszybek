@@ -1,11 +1,11 @@
 <?php //route[moje-konto]
 
-if (!$app["user"]["id"]) {
+if (!User::getCurrent()->getId()) {
     header("Location: /");
     die;
 }
 
-$user_id = $app["user"]["id"];
+$user_id = User::getCurrent()->getId();
 
 //$user_data = DB::fetchRow("SELECT user_id, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, nip, authentication_token FROM `users` WHERE user_id = ".intval($user_id));
 $user_data = DB::fetchRow("SELECT * FROM users WHERE user_id = " . intval($user_id));
@@ -27,17 +27,17 @@ if (strpos(URL, "resetowanie-hasla") !== false)
     <link href="/src/zamowienia.css" rel="stylesheet">
 </head>
 
-<body class="default-form">
+<body>
     <?php include "global/header.php"; ?>
     <div id="accountForm" class="main-container">
         <div style="margin-top:30px"></div>
 
         <div style=" text-align:center;padding: 25px;font-size: 17px">
             <?php
-            if ($app["user"]["type"] == 'google') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
-            if ($app["user"]["type"] == 'facebook') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
-            if ($app["user"]["type"] == 'regular') echo '<i class="fas fa-user" style="font-size: 1em;"></i> ';
-            echo $app["user"]["name"];
+            if (User::getCurrent()->data["type"] == 'google') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
+            if (User::getCurrent()->data["type"] == 'facebook') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
+            if (User::getCurrent()->data["type"] == 'regular') echo '<i class="fas fa-user" style="font-size: 1em;"></i> ';
+            echo User::getCurrent()->getDisplayName();
             ?>
         </div>
 
@@ -51,7 +51,7 @@ if (strpos(URL, "resetowanie-hasla") !== false)
                     <i class="fas fa-address-book"></i>
                     <span>Dane użytkownika</span>
                 </div>
-                <?php if ($app["user"]["type"] == 'regular') : ?>
+                <?php if (User::getCurrent()->data["type"] == 'regular') : ?>
                     <div id="menuHeader3" onclick="showMenu(3)" <?php if ($menu == "haslo") echo 'class="selected"'; ?>>
                         <i class="fas fa-unlock-alt"></i>
                         <span>Zmiana hasła</span>

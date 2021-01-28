@@ -30,9 +30,9 @@ function setLastViewedProductsIds($last_viewed_products_json_or_array)
     $_SESSION["last_viewed_products"] = $last_viewed_products_json;
     setcookie("last_viewed_products", $last_viewed_products_json, (time() + 31536000));
 
-    if ($app["user"]["id"]) {
+    if (User::getCurrent()->isLoggedIn()) {
         DB::execute("UPDATE users SET last_viewed_products = ? WHERE user_id = ?", [
-            $last_viewed_products_json, $app["user"]["id"]
+            $last_viewed_products_json, User::getCurrent()->getId()
         ]);
     }
 }

@@ -16,7 +16,7 @@ include "scripts/errors.php";
 
 include "scripts/set_time_zone.php";
 
-include "scripts/init_app.php"; // we will exclude this lol, static classes are the kings
+include "scripts/init_app.php"; // TODO: remove this lol, static classes are the kings
 
 include "scripts/include_core_helpers.php";
 

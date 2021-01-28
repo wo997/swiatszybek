@@ -29,10 +29,10 @@ if (defined("ROUTE")) {
     const CSS_RELEASE = <?= CSS_RELEASE ?>;
     const MODULES_RELEASE = <?= MODULES_RELEASE ?>;
 
-    const IS_LOGGED = <?= $app["user"]["id"] ? "true" : "false" ?>;
+    const IS_LOGGED = <?= User::getCurrent()->getId() ? "true" : "false" ?>;
     const USER_ID = <?= def($app["user"], "id", 0) ?>;
-    const IS_ADMIN = <?= $app["user"]["priveleges"]["backend_access"] ? "true" : "false" ?>;
-    const USER_TYPE = "<?= $app["user"]["type"] ?>";
+    const IS_ADMIN = <?= User::getCurrent()->priveleges["backend_access"] ? "true" : "false" ?>;
+    const USER_TYPE = "<?= User::getCurrent()->data["type"] ?>";
 
     <?php $sizes = ["lg" => null, "sm" => 800]; ?>
 
@@ -47,7 +47,7 @@ if (defined("ROUTE")) {
     const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
     const same_ext_image_allowed_types = <?= json_encode($same_ext_image_allowed_types) ?>;
 
-    <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+    <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
         const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
         const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
         const privelege_list = <?= json_encode($privelege_list) ?>;
@@ -124,7 +124,7 @@ if (defined("ROUTE")) {
     <script src="/src/quill-2.0.js?v=<?= RELEASE ?>"></script>
 <?php endif ?>
 
-<?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+<?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
 
     <link href="/builds/admin_everywhere.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
     <script src="/builds/admin_everywhere.js?v=<?= JS_RELEASE ?>"></script>
@@ -163,7 +163,7 @@ if (defined("ROUTE")) {
     --subtle-background-clr: <?= subtle_background_clr ?>;
   }*/
 
-    <?php if ($app["user"]["id"]) : ?>.hide_case_logged_in {
+    <?php if (User::getCurrent()->isLoggedIn()) : ?>.hide_case_logged_in {
         display: none;
     }
 

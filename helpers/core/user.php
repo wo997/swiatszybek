@@ -5,6 +5,8 @@ class User
     public static ?User $current_user = null;
     public $cart;
     public $data;
+    public $priveleges;
+    public $display_name;
 
     public static $email_client_urls = [
         "gmail.com" => "https://mail.google.com/",
@@ -15,6 +17,14 @@ class User
         "aol.com" => "https://mail.aol.com/",
         "o2.pl" => "https://poczta.o2.pl/",
     ];
+
+    public static $privelege_list = [
+        ["privelege_id" => 0, "name" => "Gość", "backend_access" => false],
+        ["privelege_id" => 1, "name" => "Klient", "backend_access" => false],
+        ["privelege_id" => 2, "name" => "Admin", "backend_access" => true],
+        ["privelege_id" => 3, "name" => "Sprzedawca", "backend_access" => true],
+    ];
+
 
     public function __construct($user_id)
     {
@@ -31,6 +41,17 @@ class User
     private function setData()
     {
         $this->data = DB::fetchRow("SELECT * FROM user WHERE user_id = " . $this->id);
+
+        $this->priveleges = arrayFind(self::$privelege_list, function ($p) {
+            return $p["privelege_id"] === $this->data["privelege_id"];
+        }, self::$privelege_list[0]);
+
+        $this->display_name = $this->data["email"];
+    }
+
+    public function getDisplayName()
+    {
+        return $this->display_name;
     }
 
     /** 
@@ -151,6 +172,11 @@ class User
         return $this->id;
     }
 
+    public function isLoggedIn()
+    {
+        return !!$this->id;
+    }
+
     /**
      * getCurrent
      *
@@ -191,7 +217,7 @@ class User
                 "success" => false
             ];
 
-        if (!$authentication_token || !$user_id) {
+        if (!$user_id || !$authentication_token) {
             $res["erros"][] = "Wystąpił błąd aktywacji konta";
             return $res;
         }
@@ -200,7 +226,7 @@ class User
             $user_id, $authentication_token
         ]);
 
-        $user_data = DB::fetchRow("SELECT email, authenticated FROM users WHERE user_id = ?", [$user_id]);
+        $user_data = DB::fetchRow("SELECT email, authenticated FROM user WHERE user_id = ?", [$user_id]);
 
         if ($user_data["authenticated"] == "1") {
             self::getCurrent()->authenticated($user_id);
@@ -258,7 +284,7 @@ function initUser()
 function adminRequired()
 {
     global $app;
-    if (!$app["user"]["priveleges"]["backend_access"]) {
+    if (!User::getCurrent()->priveleges["backend_access"]) {
         $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
         redirect("/logowanie");
     }

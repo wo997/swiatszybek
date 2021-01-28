@@ -4,7 +4,7 @@ $status = isset($_POST["status"]) ? $_POST["status"] : "";
 $product_id = isset($_POST['product_id']) ? " AND product_id = " . intval($_POST['product_id']) : "";
 
 $canSee = "";
-if ($app["user"]["id"] && !$app["user"]["priveleges"]["backend_access"]) $canSee = "AND (user_id = " . $app["user"]["id"] . " OR accepted = 1)";
+if (User::getCurrent()->getId() && !User::getCurrent()->priveleges["backend_access"]) $canSee = "AND (user_id = " . User::getCurrent()->getId() . " OR accepted = 1)";
 
 $where = "1 $product_id $canSee";
 

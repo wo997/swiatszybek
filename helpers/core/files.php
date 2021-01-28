@@ -211,7 +211,7 @@ function saveImage($tmp_file_path, $uploaded_file_name, $name, $options = [])
     $asset_type = getAssetTypeFromMime($mime_type);
 
     global $app;
-    $user_id = $app["user"]["id"];
+    $user_id = User::getCurrent()->getId();
 
     if (!$name) $name = rand(1000, 9999);
 

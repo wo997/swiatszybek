@@ -89,3 +89,20 @@ function filterArrayByKey($array, $key, $value, $invert = false)
         }
     }
 }
+
+/**
+ * arraySingle
+ *
+ * @param  array $array
+ * @param  function $callback
+ * @return void
+ */
+function arrayFind($array, $callback, $default = null)
+{
+    foreach ($array as $item) {
+        if ($callback($item)) {
+            return $item;
+        }
+    }
+    return $default;
+}

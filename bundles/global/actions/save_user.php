@@ -13,7 +13,7 @@
 //         $user_id = $_POST["user_id"];
 //     }
 // } else {
-//     $user_id = $app["user"]["id"];
+//     $user_id = User::getCurrent()->getId();
 // }
 
 // $password = def($_POST, "password");
@@ -62,7 +62,7 @@
 //     $user_old_data = DB::fetchRow("SELECT email, authentication_token FROM users WHERE user_id = ?", [$user_id]);
 
 //     if ($email != trim($user_old_data["email"])) {
-//         if ($app["user"]["type"] == 'regular') {
+//         if (User::getCurrent()->data["type"] == 'regular') {
 //             updateEntity(["email_request" => $email], "users", "user_id", $user_id);
 
 //             DB::execute("UPDATE users SET email_request = ? WHERE user_id = ? LIMIT 1", [

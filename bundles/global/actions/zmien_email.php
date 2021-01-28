@@ -21,8 +21,8 @@ if ($email_request) {
         $email_request, $user_id
     ]);
 
-    $app["user"]["email"] = $email_request;
-    $app["user"]["name"] = $email_request;
+    User::getCurrent()->data["email"] = $email_request;
+    User::getCurrent()->getDisplayName() = $email_request;
 
     $_SESSION["user"] = $app["user"];
 

@@ -34,9 +34,9 @@ $zamowienie_data = [
     "uwagi" => "",
 ];
 
-if ($app["user"]["id"]) {
-    //$user_data = DB::fetchRow("SELECT imie, nazwisko, email, telefon, firma, nip, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu FROM `users` WHERE user_id = ".intval($app["user"]["id"]));
-    $user_data = DB::fetchRow("SELECT * FROM users WHERE user_id = " . intval($app["user"]["id"]));
+if (User::getCurrent()->isLoggedIn()) {
+    //$user_data = DB::fetchRow("SELECT imie, nazwisko, email, telefon, firma, nip, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu FROM `users` WHERE user_id = ".intval(User::getCurrent()->isLoggedIn()));
+    $user_data = DB::fetchRow("SELECT * FROM users WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()));
 
     // rewrite empty
     foreach ($user_data as $key => $value) {
@@ -165,7 +165,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                 i = +currentMenu - 1;
             }
 
-            <?php if ($app["user"]["id"]) { ?>
+            <?php if (User::getCurrent()->isLoggedIn()) { ?>
                 // if (i == 2) i = 2 * i - currentMenu;
             <?php } ?>
 
@@ -615,7 +615,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     </div>
 
                     <div class="mobile-column" style="display:flex;justify-content: center;flex-wrap:wrap;margin-top: 15px;">
-                        <?php if (!$app["user"]["id"]) : ?>
+                        <?php if (!User::getCurrent()->getId()) : ?>
                             <div>
                                 <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="min-width:250px;margin-top: 25px;">
                                     Zaloguj się
@@ -634,9 +634,9 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                             <div style="flex-grow:1"></div>
                         <?php endif ?>
                         <div>
-                            <button class="btn <?= $app["user"]["id"] ? "primary" : "secondary" ?> medium" onclick="showMenu(2, 'kontakt')" style="margin-top: 25px;min-width:250px">
+                            <button class="btn <?= User::getCurrent()->getId() ? "primary" : "secondary" ?> medium" onclick="showMenu(2, 'kontakt')" style="margin-top: 25px;min-width:250px">
                                 <?php
-                                if ($app["user"]["id"]) {
+                                if (User::getCurrent()->isLoggedIn()) {
                                     echo "Złóż zamówienie";
                                 } else {
                                     echo "Kontynuuj bez rejestracji";
@@ -878,7 +878,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
 
                     <div class="mobileRow" style="justify-content:space-between;margin-top: 10px;">
                         <label style="margin:10px 0">
-                            <?php if ($app["user"]["id"]) : ?>
+                            <?php if (User::getCurrent()->isLoggedIn()) : ?>
                                 <div id="rabat_hide">
                                     <span>Kod rabatowy</span>
                                     <div style="display:flex">

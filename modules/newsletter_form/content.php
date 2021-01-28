@@ -4,14 +4,14 @@ include_once __DIR__ . "/helpers.php";
 
 useJS($moduleDir . "/main.js");
 
-$contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
+$contact_email = User::getCurrent()->getId() ? User::getCurrent()->data["email"] : "";
 
 $has_already = "";
 if ($hasNewsletter) {
     if ($hasNewsletter["accepted"] == "1")
-        $has_already = "<p style='text-align:center'>" . $app["user"]["email"] . " został już dodany do Newslettera</p>";
+        $has_already = "<p style='text-align:center'>" . User::getCurrent()->data["email"] . " został już dodany do Newslettera</p>";
     else
-        $has_already = "<p style='text-align:center;color:#c22'>Newsletter nie został aktywowany dla " . $app["user"]["email"] . "!<br>Sprawdź swoją skrzynkę pocztową</p>";
+        $has_already = "<p style='text-align:center;color:#c22'>Newsletter nie został aktywowany dla " . User::getCurrent()->data["email"] . "!<br>Sprawdź swoją skrzynkę pocztową</p>";
     $contact_email = "";
 }
 

@@ -9,7 +9,7 @@ $company_data = $app["company_data"];
 ?>
 
 <?php if (!$company_data) : ?>
-    <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+    <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
         <div class="missing-module-block-label">
             Blok formularza kontaktowego niedostepny!
             <br>
@@ -47,7 +47,7 @@ $company_data = $app["company_data"];
                 </label>
                 <label>
                     <span class='label'>Adres e-mail</span>
-                    <input class='field' type='text' name='email' placeholder=' ' value='<?= $app["user"]["id"] ? $app["user"]["email"] : ""; ?>'>
+                    <input class='field' type='text' name='email' placeholder=' ' value='<?= User::getCurrent()->getId() ? User::getCurrent()->data["email"] : ""; ?>'>
                 </label>
             </div>
             <label>

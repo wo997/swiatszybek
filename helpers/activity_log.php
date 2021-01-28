@@ -8,7 +8,7 @@ function addZamowienieLog($zamowienie_id, $log, $previous_state = "", $current_s
 function addLog($log, $previous_state = "", $current_state = "", $log_user_id = null, $scope = "", $scope_item_id = null)
 {
     global $app;
-    if (!$log_user_id) $log_user_id = $app["user"]["id"];
+    if (!$log_user_id) $log_user_id = User::getCurrent()->getId();
     DB::execute("INSERT INTO activity_log (log, current_state, previous_state, user_id, scope, scope_item_id) VALUES (?,?,?,?,?,?)", [
         $log, $current_state, $previous_state, $log_user_id, $scope, $scope_item_id
     ]);

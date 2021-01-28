@@ -10,11 +10,11 @@ foreach ($posts as $p) {
 
 $product_id = DB::fetchVal("SELECT product_id FROM comments WHERE comment_id = ?", [$comment_id]);
 
-if ($action == -1 && $app["user"]["id"]) {
+if ($action == -1 && User::getCurrent()->getId()) {
     $condition = "";
-    if (!$app["user"]["priveleges"]["backend_access"]) $condition .= " AND user_id = " . intval($app["user"]["id"]);
+    if (!User::getCurrent()->priveleges["backend_access"]) $condition .= " AND user_id = " . intval(User::getCurrent()->isLoggedIn());
     DB::execute("DELETE FROM comments WHERE comment_id = ? $condition", [$comment_id]);
-} else if ($app["user"]["priveleges"]["backend_access"]) {
+} else if (User::getCurrent()->priveleges["backend_access"]) {
     DB::execute("UPDATE comments SET accepted = 1 WHERE comment_id = ?", [$comment_id]);
 }
 

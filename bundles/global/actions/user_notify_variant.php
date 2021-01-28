@@ -18,7 +18,7 @@ $stmt->close();
 
 
 if (!$res) {
-    $set_user = $app["user"]["id"] ? intval($app["user"]["id"]) : "NULL";
+    $set_user = User::getCurrent()->getId() ? intval(User::getCurrent()->isLoggedIn()) : "NULL";
     $stmt = $con->prepare("INSERT INTO notifications (user_id, variant_id, email, requested) VALUES ($set_user,?,?,NOW())");
     $stmt->bind_param("ss", $variant_id, $email);
     $stmt->execute();
@@ -32,8 +32,8 @@ $stmt->bind_result($q, $a_title, $a_product_id, $a_image, $a_v_name);
 mysqli_stmt_fetch($stmt);
 $stmt->close();
 
-if ($app["user"]["id"]) {
-    $stmt = $con->prepare("SELECT imie, nazwisko, email FROM users u WHERE user_id = " . intval($app["user"]["id"]));
+if (User::getCurrent()->isLoggedIn()) {
+    $stmt = $con->prepare("SELECT imie, nazwisko, email FROM users u WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()));
     $stmt->execute();
     $stmt->bind_result($a_imie, $a_nazwisko, $a_email);
     mysqli_stmt_fetch($stmt);

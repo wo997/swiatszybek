@@ -21,27 +21,24 @@
                 </div>
             </div>
             <div class="user-wrapper">
-                <?php if ($app["user"]["id"]) : ?>
+                <?php if (User::getCurrent()->isLoggedIn()) : ?>
                     <a href="/moje-konto" class="headerbtn">
-                        <!--<div class="my-acc-text">
-              <span class="case-desktop">Moje konto</span>
-            </div>-->
                         <img class="user-icon" src="/src/img/user_icon.svg">
                     </a>
                     <div class="user-menu">
                         <div class="username">
                             <?php
-                            if ($app["user"]["type"] == 'google') echo '<img src="/img/google.png" style="width: 15px;vertical-align: sub;"> ';
-                            if ($app["user"]["type"] == 'facebook') echo '<i class="fab fa-facebook-square" style="font-size: 15px;color: #3b5998;"></i> ';
-                            echo $app["user"]["name"];
+                            if (User::getCurrent()->data["type"] == 'google') echo '<img src="/img/google.png" style="width: 15px;vertical-align: sub;"> ';
+                            if (User::getCurrent()->data["type"] == 'facebook') echo '<i class="fab fa-facebook-square" style="font-size: 15px;color: #3b5998;"></i> ';
+                            echo User::getCurrent()->getDisplayName();
                             ?>
                         </div>
-                        <?php if ($app["user"]["priveleges"]["backend_access"]) : ?>
+                        <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
                             <a class="admin border-bottom border-top menu_item" href="<?= STATIC_URLS["ADMIN"] ?>zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
                         <?php endif ?>
                         <a class="menu_item" href="/moje-konto"> <i class="fas fa-box"></i> Moje zamówienia</a>
                         <a class="menu_item" href="/moje-konto/dane-uzytkownika"> <i class="fas fa-address-book"></i> Dane użytkownika</a>
-                        <?php if ($app["user"]["type"] == 'regular') : ?>
+                        <?php if (User::getCurrent() == 'regular') : ?>
                             <a class="menu_item" href="/moje-konto/resetowanie-hasla"> <i class="fas fa-unlock-alt"></i> Zmiana hasła </a>
                         <?php endif ?>
                         <a class="menu_item border-top" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
@@ -55,7 +52,7 @@
                     </a>
                 <?php endif ?>
             </div>
-            <?php if ($app["user"]["id"]) : ?>
+            <?php if (User::getCurrent()->isLoggedIn()) : ?>
                 <div class="headerbtn case-desktop">
                     <img class="heart-icon" src="/src/img/heart_icon.svg">
                 </div>

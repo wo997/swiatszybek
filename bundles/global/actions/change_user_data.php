@@ -1,6 +1,6 @@
 <?php //route[change_user_data]
 
-if (!$app["user"]["id"]) {
+if (!User::getCurrent()->getId()) {
     die;
 }
 
@@ -13,7 +13,7 @@ foreach ($posts as $p) {
     $$p = $_POST[$p];
 }
 
-$user_id = $app["user"]["id"];
+$user_id = User::getCurrent()->getId();
 
 // function quit($message, $type)
 // {
@@ -50,7 +50,7 @@ DB::execute("UPDATE users SET imie = ?, nazwisko = ?, telefon = ?, firma = ?, kr
 
 $response["message"] = quit("Zapisano zmiany", 1);
 
-if ($app["user"]["type"] == 'regular') {
+if (User::getCurrent()->data["type"] == 'regular') {
     $user_old_data = DB::fetchRow("SELECT email, authentication_token FROM users WHERE user_id = ?", [$user_id]);
 
     if (trim($email) != trim($user_old_data["email"])) {

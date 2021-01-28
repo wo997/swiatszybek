@@ -203,6 +203,8 @@ DB::createTable("user", [
     ["name" => "visited_at", "type" => "DATETIME"],
     ["name" => "created_at", "type" => "DATETIME"],
     ["name" => "cart_json", "type" => "TEXT"],
+    ["name" => "cart_json", "type" => "TEXT"],
+    ["name" => "privelege_id", "type" => "TINYINT"],
     //["name" => "last_active_at", "type" => "DATETIME"],
 ]);
 

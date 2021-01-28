@@ -69,12 +69,6 @@
 	width: fit-content;
 	min-width: 100%;
 }
-.default-form
-	.datatable-wrapper
-	input:not([type="checkbox"]):not([type="radio"]),
-.default-form .datatable-wrapper select {
-	width: auto;
-}
 .datatable .btn.secondary {
 	background: white;
 	font-weight: 600;

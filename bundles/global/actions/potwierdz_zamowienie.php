@@ -6,8 +6,8 @@ if (isset($_POST["impersonate"]) && $_POST["impersonate"] == 1) {
     $user_id = isset($_SESSION["user_id_impersonate"]) ? $_SESSION["user_id_impersonate"] : NULL;
     $user_type = $_SESSION["user_type_impersonate"];
 } else {
-    $user_id = $app["user"]["id"];
-    $user_type = $app["user"]["type"];
+    $user_id = User::getCurrent()->getId();
+    $user_type = User::getCurrent()->data["type"];
 }
 $user_id = intval($user_id);
 

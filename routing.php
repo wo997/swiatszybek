@@ -208,7 +208,7 @@ if ($pageName) {
     die;
 } else {
 
-    $canSee = $app["user"]["priveleges"]["backend_access"] ? "1" : "published = 1";
+    $canSee = User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";
     $page_data = DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [URL]);
 
     if (isset($_POST["content"])) {

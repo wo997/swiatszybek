@@ -95,9 +95,9 @@ function setBasketData($basket_json_or_array)
     $_SESSION["basket"] = $basket_json;
     setcookie("basket", $basket_json, (time() + 31536000), "/");
 
-    if ($app["user"]["id"]) {
+    if (User::getCurrent()->isLoggedIn()) {
         DB::execute("UPDATE users SET basket = ? WHERE user_id = ?", [
-            $basket_json, $app["user"]["id"]
+            $basket_json, User::getCurrent()->getId()
         ]);
     }
 }
@@ -248,10 +248,10 @@ function canUserGetCommentRebate($product_id)
 
     $can_user_get_comment_rebate = false;
 
-    if ($app["user"]["id"]) {
+    if (User::getCurrent()->isLoggedIn()) {
         $can_user_get_comment_rebate = DB::fetchRow("
             SELECT * FROM basket_content INNER JOIN zamowienia USING (zamowienie_id)
-            WHERE user_id = " . $app["user"]["id"] . "
+            WHERE user_id = " . User::getCurrent()->getId() . "
             AND status_id IN (2,3)
             AND product_id = " . intval($product_id) . "
             AND rebate_generated = 0

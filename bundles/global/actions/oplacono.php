@@ -31,7 +31,7 @@ if (isset($_SESSION["p24_back_url"])) {
             <h1>Zamówienie zostało złożone<i class="fas fa-check-circle" style="margin-left: 5px;color: var(--primary-clr);"></i></h1>
             <p style="font-size: 16px;padding: 6px;">Dziękujemy za zakupy w naszym sklepie.<br>Potwierdzenie wysłaliśmy na Twoją skrzynkę pocztową.<br>Zapraszamy do dalszych zakupów w przyszłości.</p>
             <div class="mobileRow">
-                <?php if ($app["user"]["id"]) : ?>
+                <?php if (User::getCurrent()->isLoggedIn()) : ?>
                     <a href="/moje-konto" class="btn primary medium" style="margin: 5px;flex-grow: 1">Moje zamówienia</a>
                 <?php else : ?>
                     <a href="<?= $p24_back_url ?>" class="btn primary medium" style="margin: 5px;flex-grow: 1;">Przejdź do zamówienia</a>

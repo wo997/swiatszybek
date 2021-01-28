@@ -1,6 +1,6 @@
 <?php //route[validate_kod_rabatowy]
 
-if (!$app["user"]["id"]) die;
+if (!User::getCurrent()->getId()) die;
 
 $kod = $_POST["code"];
 $action = $_POST["action"];
@@ -24,7 +24,7 @@ if ($kod_data) {
     if ($kod_data["ilosc"] < 1) {
         die('{"error":"Kod wyczerpany!"}');
     }
-    if (strlen($kod_data["user_id_list"]) > 2 && strpos($kod_data["user_id_list"], "," . $app["user"]["id"] . ",") === false) {
+    if (strlen($kod_data["user_id_list"]) > 2 && strpos($kod_data["user_id_list"], "," . User::getCurrent()->getId() . ",") === false) {
         die('{"error":"Kod niedostępny dla tego użytkownika!"}');
     }
     if ($kod_data["kwota"] < 1) {

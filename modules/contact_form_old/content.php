@@ -3,7 +3,7 @@
 useJS($moduleDir . "/main.js");
 useCSS($moduleDir . "/main.css");
 
-$contact_email = $app["user"]["id"] ? $app["user"]["email"] : "";
+$contact_email = User::getCurrent()->getId() ? User::getCurrent()->data["email"] : "";
 
 $module_content .= "
 <div>
