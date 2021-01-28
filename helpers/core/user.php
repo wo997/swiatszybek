@@ -94,7 +94,6 @@ class User
         $this->sendActivationLink();
 
         $res["success"] = true;
-
         return $res;
     }
 
@@ -181,6 +180,37 @@ class User
         }
 
         return self::$current_user;
+    }
+
+    public static function activateAccount($user_id, $authentication_token)
+    {
+        $res =
+            /** @var ValidationResponse */
+            [
+                "errors" => [],
+                "success" => false
+            ];
+
+        if (!$authentication_token || !$user_id) {
+            $res["erros"][] = "Wystąpił błąd aktywacji konta";
+            return $res;
+        }
+
+        DB::execute("UPDATE user SET authenticated = 1, authentication_token = '' WHERE user_id = ? AND authentication_token = ?", [
+            $user_id, $authentication_token
+        ]);
+
+        $user_data = DB::fetchRow("SELECT email, authenticated FROM users WHERE user_id = ?", [$user_id]);
+
+        if ($user_data["authenticated"] == "1") {
+            self::getCurrent()->authenticated($user_id);
+        } else {
+            $res["errors"][] = "Wystąpił błąd aktywacji konta";
+            return $res;
+        }
+
+        $res["success"] = true;
+        return $res;
     }
 }
 

@@ -154,8 +154,9 @@ function showModal(name = null, params = {}) {
 
 				// observe changes and apply them to the copied modal
 				const observer = new MutationObserver(() => {
-					modal_copy_content.style.width = modal_content.offsetWidth + "px";
-					modal_copy_content.style.height = modal_content.offsetHeight + "px";
+					modal_copy_content.style.width = modal_content.offsetWidth + 1 + "px"; // weird but let's just keep it like this
+					modal_copy_content.style.height =
+						modal_content.offsetHeight + 1 + "px";
 
 					if (modalObserverTimeout) {
 						clearTimeout(modalObserverTimeout);

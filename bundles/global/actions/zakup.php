@@ -516,11 +516,11 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                     <div class='cl cl4'>
                         <div class='qty-control glue-children'>
                         <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1,{cancellable:true})'>
-                            <i class='custom-minus'></i>
+                            <i class='fas fa-minus'></i>
                         </button>
                         <span class='qty-label'></span>
                         <button class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
-                            <i class='custom-plus'></i>
+                            <i class='fas fa-plus'></i>
                         </button>
                         </div>
                     </div>

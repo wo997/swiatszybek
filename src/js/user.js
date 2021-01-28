@@ -69,7 +69,7 @@ function validateLoginUserEmail(input) {
 	const loginForm = $(`#loginForm`);
 
 	xhr({
-		url: "/validate-email",
+		url: "/validate_email",
 		params: getFormData(loginForm),
 		success: (res) => {
 			var errors = [];

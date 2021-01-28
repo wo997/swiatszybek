@@ -69,9 +69,11 @@ if (defined("ROUTE")) {
     <?php endif ?>
 
     <?php if (isset($_SESSION["message_modal"])) : ?>
-        window.addEventListener("load", () => {
-            showMessageModal(`<?= $_SESSION["message_modal"] ?>`);
-            <?php unset($_SESSION["message_modal"]); ?>
+        windowload(() => {
+            showMessageModal(getMessageHTML(
+                <?php echo $_SESSION["message_modal"];
+                unset($_SESSION["message_modal"]); ?>
+            ));
         });
     <?php endif ?>
 

@@ -1,88 +1,64 @@
 /* css[global] */
 
 .qty-btn {
-  width: 2em;
-  height: 2em;
-  padding: 0 !important;
-}
-.custom-minus,
-.custom-plus {
-  position: relative;
-}
-.custom-minus:before,
-.custom-plus:before,
-.custom-plus:after {
-  content: "";
-  background: #999;
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: translate(-50%, -50%);
-  border-radius: 3px;
-}
-.custom-minus:before,
-.custom-plus:before {
-  width: 0.8em;
-  height: 0.15em;
-}
-.custom-plus:after {
-  height: 0.8em;
-  width: 0.15em;
+	width: 2em;
+	height: 2em;
+	padding: 0 !important;
+	opacity: 0.7;
 }
 .qty-label {
-  min-width: 2em;
-  display: inline-block;
-  text-align: center;
-  padding: 0 3px;
-  margin: -2px 0;
+	min-width: 2em;
+	display: inline-block;
+	text-align: center;
+	padding: 0 3px;
+	margin: -2px 0;
 }
 .qty-control {
-  display: inline-flex !important;
-  align-items: center;
-  background: #fafafa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  vertical-align: middle;
+	display: inline-flex !important;
+	align-items: center;
+	background: #fafafa;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	vertical-align: middle;
 }
 .qty-control .btn.subtle {
-  box-shadow: unset;
-  background: #f3f3f3;
-  margin: -1px;
-  border: 1px solid #ddd;
+	box-shadow: unset;
+	background: #f3f3f3;
+	margin: -1px;
+	border: 1px solid #ddd;
 }
 
 .qty-control + .product-price {
-  margin-left: 0.3em;
-  transform: translateY(2px);
-  display: inline-block;
+	margin-left: 0.3em;
+	transform: translateY(2px);
+	display: inline-block;
 }
 
 .product-block .remove-product-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 .remove-product-btn {
-  display: flex !important;
-  width: 34px;
-  height: 34px;
-  justify-content: center;
-  align-items: center;
-  background: white;
-  border: none;
-  font-size: 17px;
-  opacity: 0.7;
-  transition: 0.1s all;
-  color: #0008;
+	display: flex !important;
+	width: 34px;
+	height: 34px;
+	justify-content: center;
+	align-items: center;
+	background: white;
+	border: none;
+	font-size: 17px;
+	opacity: 0.7;
+	transition: 0.1s all;
+	color: #0008;
 }
 
 .remove-product-btn:hover {
-  opacity: 1;
-  color: #800;
+	opacity: 1;
+	color: #800;
 }
 
 .total_basket_cost,
 .variant_total_price {
-  display: inline-block;
+	display: inline-block;
 }

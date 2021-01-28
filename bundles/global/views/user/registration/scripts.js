@@ -79,7 +79,9 @@ function register(validate = true) {
 
 				showMessageModal(getMessageHTML({ type: "success", body, footer }));
 			} else {
-				//showMessageModal(getMessageHTML({ type: "success", body, footer }));
+				showMessageModal(
+					getMessageHTML({ type: "error", body: "Wystąpił błąd rejestracji" })
+				);
 			}
 		},
 	});

@@ -112,8 +112,8 @@ if (strpos(URL, "resetowanie-hasla") !== false)
 
                 <div id="menu2" data-form class="menu mobileRow <?php if ($menu == "uzytkownik") echo "showNow"; ?>" style="<?php if ($menu != "uzytkownik") echo 'display:none;'; ?>">
                     <div style="width:100%;">
-                        <div class="message-box-container"></div>
-                        <div class="message-box-container2"></div>
+                        <div class="messagebox-container"></div>
+                        <div class="messagebox-container2"></div>
                         <div class="mobileRow" style="max-width: 820px;margin: 0 auto;">
                             <div style="width: 50%; padding:10px">
                                 <div style="width:100%;margin:auto;max-width:350px">

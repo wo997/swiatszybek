@@ -296,7 +296,7 @@ if ($product_data["published"] || $app["user"]["priveleges"]["backend_access"] |
                     <div style="height:20px"></div>
                     <button class="btn medium fill buy_btn" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true,modal_source:this})">
                         Dodaj do koszyka
-                        <img class="basket-icon" src="/src/img/basket_icon.svg">
+                        <i class="fas fa-shopping-bag"></i>
                     </button>
 
                     <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-product_id="<?= $product_id ?>"></div>

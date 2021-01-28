@@ -524,11 +524,11 @@ const header_basket_variant_template = /*html*/ `
       <div style='text-align:center'>
         <div class='qty-control glue-children'>
           <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
-            <i class='custom-minus'></i>
+            <i class='fas fa-minus'></i>                            
           </button>
           <span class='qty-label'></span>
           <button class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
-            <i class='custom-plus'></i>
+            <i class='fas fa-plus'></i>
           </button>
         </div>
         <span class='product-price pln variant_total_price'></span>

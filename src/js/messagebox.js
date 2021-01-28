@@ -1,16 +1,9 @@
 /* js[global] */
 
-const MESSAGE_HEADER_ERROR = /*html*/ `
-    <div class='messagebox_header' style='background: var(--error-clr);color: white;'>
-        <i class='fas fa-times-circle' style='font-size:30px'></i>
-    </div>
-`;
-
-const MESSAGE_OK_BUTTON = /*html*/ `
-    <button class='btn success medium' onclick='hideParentModal(this)' style='width:80px'>
-        Ok
-    </button>
-`;
+function showMessageModal(message, options) {
+	$("#messagebox_modal > .modal-body > *")._set_content(message);
+	showModal("messagebox_modal", options);
+}
 
 /**
  *
@@ -32,7 +25,10 @@ function getMessageHTML(params = {}) {
 			? /*html*/ `<i class='fas fa-times-circle'></i>`
 			: /*html*/ `<i class='fas fa-check-circle'></i>`;
 
-	params.header = def(params.header, "Udało się!");
+	params.header = def(
+		params.header,
+		params.type === "error" ? "Coś poszło nie tak" : "Udało się!"
+	);
 
 	html += /*html*/ `
         <div class='messagebox_header' style='background:${header_color}'>
@@ -44,9 +40,11 @@ function getMessageHTML(params = {}) {
 		html += /*html*/ `<div class='messagebox_body'>${params.body}</div>`;
 	}
 
-	if (params.footer) {
-		html += /*html*/ `<div class='messagebox_footer'>${params.footer}</div>`;
+	if (!params.footer) {
+		params.footer = `<button class='btn subtle medium' onclick='hideParentModal(this)' style='width:80px'>Ok</button>`;
 	}
+
+	html += /*html*/ `<div class='messagebox_footer'>${params.footer}</div>`;
 
 	return html;
 }
@@ -66,7 +64,7 @@ function getMessageHTML(params = {}) {
 function addMessageBox(elem, message, params = {}) {
 	elem = $(elem);
 
-	var mb = elem._child(".message-box");
+	var mb = elem._child(".messagebox");
 	if (mb) {
 		toggleMessageBox(elem, false, {
 			callback: () => {
@@ -102,7 +100,7 @@ function addMessageBox(elem, message, params = {}) {
 		: "";
 
 	elem._set_content(/*html*/ `
-        <div class="message-box expand_y hidden animate_hidden">
+        <div class="messagebox expand_y hidden animate_hidden">
             <div class="message-container ${types[type].className}
                 ${inline ? "inline" : ""}"
                 >
@@ -124,15 +122,10 @@ function addMessageBox(elem, message, params = {}) {
 	}
 }
 
-function showMessageModal(message, options) {
-	$("#messagebox_modal > .modal-body > *")._set_content(message);
-	showModal("messagebox_modal", options);
-}
-
 function toggleMessageBox(elem, show = null, options = {}) {
 	elem = $(elem);
 	var duration = options.instant ? 0 : 350;
-	expand(elem._child(".message-box"), show, {
+	expand(elem._child(".messagebox"), show, {
 		duration: duration,
 	});
 	if (options.callback) {

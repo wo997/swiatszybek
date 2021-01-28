@@ -56,7 +56,7 @@
             }
 
             <?php if (isset($_SESSION["message"])) : ?>
-                addMessageBox($(".message-box-container2"), `<?= $_SESSION["message"]["text"] ?>`, {
+                addMessageBox($(".messagebox-container2"), `<?= $_SESSION["message"]["text"] ?>`, {
                     type: `<?= $_SESSION["message"]["type"] ?>`,
                     dismissable: true,
                 });
@@ -68,7 +68,7 @@
             xhr({
                 url: "/cancel_email_change_request",
                 success: (res) => {
-                    addMessageBox($(".message-box-container"), `Anulowano zmianę adresu e-mail`, {
+                    addMessageBox($(".messagebox-container"), `Anulowano zmianę adresu e-mail`, {
                         dismissable: true,
                     });
                 }
@@ -76,7 +76,7 @@
         }
 
         function wyslalismyLinkDoZmianyEmaila(emailRequest, instant = false) {
-            addMessageBox($(".message-box-container"), `
+            addMessageBox($(".messagebox-container"), `
         Wysłaliśmy link do zmiany adresu
         <br>email na ${emailRequest}
         <br><b class='btn' onclick='cancelEmailChange()' style="margin-bottom: -0.7em">ANULUJ ZMIANĘ</b>`, {
