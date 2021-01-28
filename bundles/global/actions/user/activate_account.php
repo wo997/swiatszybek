@@ -15,7 +15,7 @@ if ($user_data["authenticated"] == "1") {
       Zaloguj się <i class='fas fa-user'></i>
     </button>
     <button class='btn subtle medium' onclick='hideParentModal(this)'>
-      Zamknij <img class='cross-icon' src='/src/img/cross.svg'>
+      Zamknij <i class='fas fa-times'></i>
     </button>
   ";
     $response_body = MESSAGE_HEADER_SUCCESS

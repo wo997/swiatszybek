@@ -280,8 +280,8 @@ function registerForms(form = undefined) {
 					`
           <div class="input-elements">
             <div class="input-error-indicator">
-              <img class='correct check-icon' src='/src/img/check-green-thick.svg'>
-              <img class='wrong cross-icon' src='/src/img/cross-red-thick.svg'>
+              <i class="fas fa-check correct"></i>
+              <i class="fas fa-times wrong"></i>
             </div>
             <div class="validation-error-box expand_y hidden animate_hidden">
              <div class="message"></div>

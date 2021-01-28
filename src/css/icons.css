@@ -1,25 +1,17 @@
 /* css[global] */
 
-.cross-icon {
-  width: 0.8em;
-}
-
-.check-icon {
-  width: 1.05em;
-}
-
 .user-icon {
-  width: 0.9em;
+	width: 0.9em;
 }
 
 .chevron-icon {
-  width: 0.9em;
+	width: 0.9em;
 }
 
 .icon-white {
-  filter: invert(1);
+	filter: invert(1);
 }
 
 .icon-flip {
-  transform: scaleX(-1);
+	transform: scaleX(-1);
 }

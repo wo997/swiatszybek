@@ -56,7 +56,7 @@ function register(validate = true) {
 				let body = /*html*/ `Link do aktywacji konta został wysłany<br>na ${params.email}`;
 				let footer = /*html*/ `
                     <button class='btn subtle medium' onclick='hideParentModal(this)'>
-				        Zamknij <img class='cross-icon' src='/src/img/cross.svg'>
+				        Zamknij <i class="fas fa-times"></i>
                     </button>
                 `;
 

@@ -1,5 +1,3 @@
-<link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-
 <footer>
     <?php
     if (isset($preview_params) && isset($preview_params["page_footer"])) {
@@ -32,7 +30,7 @@
 <!-- TODO: inject with js -->
 <div id="loginForm" data-form data-modal data-dismissable class="loginForm">
     <div class="modal-body">
-        <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+        <button class="close-modal-btn"><i class="fas fa-times"></i></button>
 
         <h3 class="modal-header">
             <img class="user-icon" src="/src/img/user_icon.svg">

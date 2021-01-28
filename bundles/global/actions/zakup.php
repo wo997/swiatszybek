@@ -898,7 +898,7 @@ if (empty($app["user"]["basket"]["variants"]) && !isset($_GET['produkt'])) {
                             <span style="display:block;font-size: 15px;">Koszt dostawy: <span class="pln" id="koszt_dostawy_label"></span></span>
                             <span style="font-size: 15px;display:none;color: var(--primary-clr);font-weight: bold;" id="kod_rabatowy_wrapper">
                                 <button onclick="aktywujKodRabatowy('remove')" style="cursor:pointer;font-weight: bold;margin-right: 5px;font-size: 11px;line-height: 0;width: 18px;height: 18px;border: none;background: #eee;color: #777;vertical-align: text-top;padding: 0;">
-                                    <img class='cross-icon' src='/src/img/cross.svg'>
+                                    <i class="fas fa-times"></i>
                                 </button>
                                 KOD RABATOWY <span class="pln" id="kod_rabatowy_label"></span></span>
                             <span style="display:inline-block;font-size: 16px;padding: 0 3px;">Całkowity koszt zamówienia:</span>

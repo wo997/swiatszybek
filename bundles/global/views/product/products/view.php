@@ -79,7 +79,7 @@ function showCategory($category, $level = 0)
                 <i class="fas fa-search"></i>
                 Szukaj
                 <button class='btn subtle case_search' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-tooltip-position='right' style='margin:-10px 0'>
-                    <img class='cross-icon' src='/src/img/cross.svg'>
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class='float-icon mobile-margin-bottom any-search-wrapper glue-children'>
@@ -123,7 +123,7 @@ function showCategory($category, $level = 0)
                     Filtry
                     <span class='filter_count'></span>
                     <button class='btn subtle case_any_filters' onclick='clearAllFilters()' data-tooltip='Wyczyść filtry' data-tooltip-position='right' style='margin:-10px 0'>
-                        <img class="cross-icon" src="/src/img/cross.svg">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
 

@@ -95,9 +95,9 @@ function addMessageBox(elem, message, params = {}) {
 
 	const dismiss_btn = params.dismissable
 		? /*html*/ `
-          <button class="btn transparent dismiss_btn" onclick="toggleMessageBox($(this)._parent()._parent()._parent(), false)">
-            <img class='cross-icon' src='/src/img/cross.svg'>
-          </button>
+            <button class="btn transparent dismiss_btn" onclick="toggleMessageBox($(this)._parent()._parent()._parent(), false)">
+                <i class="fas fa-times"></i>
+            </button>
         `
 		: "";
 

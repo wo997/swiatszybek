@@ -107,7 +107,7 @@ function goMobile() {
                   <div class='footer' style='display:flex;padding:5px'>
                     <button class="btn secondary fill" onclick="clearAllFilters()">
                       Wyczyść filtry
-                      <img class='cross-icon' src='/src/img/cross.svg'>
+                      <i class="fas fa-times"></i>
                     </button>
                     <button class="btn primary fill" style='margin-left:5px' onclick="hideParentModal(this);afterFiltersSelected()">
                       Pokaż wyniki
@@ -250,7 +250,7 @@ function searchProducts(options = {}) {
 				var caseFilters =
 					searchParams.attribute_value_ids.length > 0 ||
 					searchParams.search !== ""
-						? `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><img class='cross-icon' src='/src/img/cross.svg'> Wyczyść filtry</button>`
+						? `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class="fas fa-times"></i> Wyczyść filtry</button>`
 						: "Wyszukaj inną kategorię";
 				res.content = `
               <div style='font-size:22px;padding: 60px 10px;text-align:center;font-weight:600'>

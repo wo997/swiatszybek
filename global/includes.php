@@ -19,9 +19,10 @@ if (defined("ROUTE")) {
 ?>
 
 <script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
+<link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
 
 <script>
-    // TODO: should go to cookie maybe window.devicePixelRatio
+    // TODO: should go to cookie maybe window.devicePixelRatio, probably no
 
     const RELEASE = <?= RELEASE ?>; // general asset version
     const JS_RELEASE = <?= JS_RELEASE ?>;

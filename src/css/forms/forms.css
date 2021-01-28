@@ -1,95 +1,95 @@
 /* css[global] */
 
 .input-elements .input-error-indicator {
-  position: relative;
-  height: 0;
-  width: 100%;
-  display: block;
+	position: relative;
+	height: 0;
+	width: 100%;
+	display: block;
 }
 .input-elements .input-error-indicator .correct,
 .input-elements .input-error-indicator .wrong {
-  position: absolute;
-  pointer-events: none;
-  right: 0.7em;
-  top: -1.7em;
-  text-align: center;
-  opacity: 0;
-  transition: 0.2s all;
-  transform: scale(0);
+	position: absolute;
+	pointer-events: none;
+	right: 0.75em;
+	top: -2em;
+	text-align: center;
+	opacity: 0;
+	transition: 0.2s all;
+	transform: scale(0);
 }
 .input-elements .input-error-indicator .correct.visible,
 .input-elements .input-error-indicator .wrong.visible {
-  opacity: 1;
-  transform: scale(1);
+	opacity: 1;
+	transform: scale(1);
 }
 .input-elements .input-error-indicator .correct {
-  margin-right: -0.1em;
+	margin-right: -0.1em;
 }
-/*.input-elements .input-error-indicator .correct {
-  color: var(--success-clr);
+.input-elements .input-error-indicator .correct {
+	color: var(--success-clr);
 }
 .input-elements .input-error-indicator .wrong {
-  color: var(--error-clr);
-}*/
+	color: var(--error-clr);
+}
 .input-elements .validation-error-box {
-  color: var(--error-clr);
-  padding-top: 0.2em;
-  font-weight: 600;
+	color: var(--error-clr);
+	padding-top: 0.2em;
+	font-weight: 600;
 }
 
 .field-wrapper {
-  position: relative;
+	position: relative;
 }
 
 .field-wrapper:not(.inline) {
-  flex-grow: 1;
+	flex-grow: 1;
 }
 
 .simple-list[data-count="0"].required > .add_btn.add_begin {
-  background: var(--error-clr);
+	background: var(--error-clr);
 }
 
 img.required {
-  box-shadow: 0px 0px 0px 2px var(--error-clr);
+	box-shadow: 0px 0px 0px 2px var(--error-clr);
 }
 
 textarea + .input-elements .input-error-indicator {
-  display: none;
+	display: none;
 }
 
 .field-error {
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.3s opacity;
+	opacity: 0;
+	pointer-events: none;
+	transition: 0.3s opacity;
 }
 .field-error.field-error-visible {
-  opacity: 1;
-  pointer-events: all;
+	opacity: 1;
+	pointer-events: all;
 }
 
 .checkbox-wrapper + .input-elements .input-error-indicator {
-  display: none !important;
+	display: none !important;
 }
 
 .form-space {
-  height: 0.6em;
+	height: 0.6em;
 }
 
 .warn-outline-active,
 .simple-list-field-error {
-  border-color: var(--error-clr);
-  box-shadow: 0 0 0 1px var(--error-clr) inset !important;
+	border-color: var(--error-clr);
+	box-shadow: 0 0 0 1px var(--error-clr) inset !important;
 }
 
 .field-description {
-  flex-shrink: 0;
-  max-width: 50%;
-  background: #eee;
-  display: flex;
-  align-items: center;
-  padding: 0 7px;
-  border: 1px solid #ccc;
-  color: #555;
-  border-radius: 4px;
-  margin: 0 -2px;
+	flex-shrink: 0;
+	max-width: 50%;
+	background: #eee;
+	display: flex;
+	align-items: center;
+	padding: 0 7px;
+	border: 1px solid #ccc;
+	color: #555;
+	border-radius: 4px;
+	margin: 0 -2px;
 }
