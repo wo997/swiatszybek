@@ -34,7 +34,7 @@
                             ?>
                         </div>
                         <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-                            <a class="admin border-bottom border-top menu_item" href="<?= STATIC_URLS["ADMIN"] ?>zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
+                            <a class="admin border-bottom border-top menu_item" href="<?= Request::$static_urls["ADMIN"] ?>zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
                         <?php endif ?>
                         <a class="menu_item" href="/moje-konto"> <i class="fas fa-box"></i> Moje zamówienia</a>
                         <a class="menu_item" href="/moje-konto/dane-uzytkownika"> <i class="fas fa-address-book"></i> Dane użytkownika</a>

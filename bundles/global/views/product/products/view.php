@@ -2,7 +2,7 @@
 
 $show_category = null;
 
-$category_link = urlParam(1);
+$category_link = Request::urlParam(1);
 if ($category_link) {
     $show_category = DB::fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
 }

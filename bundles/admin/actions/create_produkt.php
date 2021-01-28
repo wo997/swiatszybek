@@ -4,4 +4,4 @@
 DB::execute("INSERT INTO products (title) VALUES (?)", [$_POST["title"]]);
 $id = DB::insertedId();
 
-redirect(STATIC_URLS["ADMIN"] . "produkt/$id");
+redirect(Request::$static_urls["ADMIN"] . "produkt/$id");

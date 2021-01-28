@@ -44,7 +44,7 @@
                 <div class="label">Kategoria nadrzędna</div>
                 <div class="category-picker" name="parent_id" data-source="product_categories" data-single></div>
 
-                <div class="label">Wyświetlane filtry (atrybuty) <a href="<?= STATIC_URLS["ADMIN"] ?>atrybuty" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a> </div>
+                <div class="label">Wyświetlane filtry (atrybuty) <a href="<?= Request::$static_urls["ADMIN"] ?>atrybuty" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a> </div>
                 <div class="atrybuty"></div>
 
                 <div class="label">Opis górny <button class="btn primary" onclick='quillEditor.open($(`#editCategory .description`));'>Edytuj</button></div>

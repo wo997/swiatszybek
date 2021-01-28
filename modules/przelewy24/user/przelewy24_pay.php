@@ -1,6 +1,6 @@
 <?php //route[przelewy24_pay]
 
-$zamowienie_link = urlParam(1);
+$zamowienie_link = Request::urlParam(1);
 if (!$zamowienie_link) {
     header("Location: " . $zamowienie_data["link"]); // fail
     die;

@@ -1,7 +1,7 @@
 <?php //route[potwierdz_newsletter]
 
-$token = urlParam(1);
-$anuluj = urlParam(2);
+$token = Request::urlParam(1);
+$anuluj = Request::urlParam(2);
 
 $accepted = $anuluj ? "0" : "1";
 

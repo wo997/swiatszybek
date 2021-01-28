@@ -1,7 +1,7 @@
 <?php //route[activate_account]
 
-$user_id = urlParam(1);
-$authentication_token = urlParam(2);
+$user_id = Request::urlParam(1);
+$authentication_token = Request::urlParam(2);
 
 $activate = User::activateAccount($user_id, $authentication_token);
 

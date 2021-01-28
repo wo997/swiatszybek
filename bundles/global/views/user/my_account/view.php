@@ -11,9 +11,9 @@ $user_id = User::getCurrent()->getId();
 $user_data = DB::fetchRow("SELECT * FROM users WHERE user_id = " . intval($user_id));
 
 $menu = "zamowienia";
-if (strpos(URL, "dane-uzytkownika") !== false)
+if (strpos(Request::$url, "dane-uzytkownika") !== false)
     $menu = "uzytkownik";
-if (strpos(URL, "resetowanie-hasla") !== false)
+if (strpos(Request::$url, "resetowanie-hasla") !== false)
     $menu = "haslo";
 
 ?>

@@ -1,6 +1,6 @@
 <?php //route[{ADMIN}nowy-cms]
 
-$page_id = urlParam(2);
+$page_id = Request::urlParam(2);
 if ($page_id) {
     $page_id = intval($page_id);
     $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = $page_id");

@@ -1,6 +1,6 @@
 <?php //route[{ADMIN}produkt]
 
-$product_id = urlParam(2, -1);
+$product_id = Request::urlParam(2, -1);
 
 $kopia = false;
 if (isset($parts[3]) && $parts[3] == 'kopia') {
@@ -22,7 +22,7 @@ if ($product_id === -1) {
     $product_data = DB::fetchRow("SELECT * FROM products WHERE product_id = $product_id");
 
     if (!$product_data) {
-        redirect(STATIC_URLS["ADMIN"] . "produkt/");
+        redirect(Request::$static_urls["ADMIN"] . "produkt/");
     }
 }
 
@@ -83,7 +83,7 @@ if ($kopia) {
 <?php startSection("header"); ?>
 
 <div class="custom-toolbar">
-    <a class="btn transparent" href="<?= STATIC_URLS["ADMIN"] ?>produkty"><i class="fas fa-chevron-left"></i></a>
+    <a class="btn transparent" href="<?= Request::$static_urls["ADMIN"] ?>produkty"><i class="fas fa-chevron-left"></i></a>
 
     <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
         <?= $product_form_header ?>
@@ -91,9 +91,9 @@ if ($kopia) {
     <div class="history-buttons product-history-buttons"></div>
 
     <?php if ($kopia) : ?>
-        <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
+        <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
     <?php else : ?>
-        <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
+        <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
         <button data-href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></button>
     <?php endif ?>
     <button onclick="showPreview()" class="btn primary">Podgląd <i class="fas fa-eye"></i></button>

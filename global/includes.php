@@ -97,10 +97,10 @@ if (defined("ROUTE")) {
     const last_viewed_products_ids = <?= json_encode(getLastViewedProductsIds()) ?>;
     const last_viewed_products = <?= json_encode(getLastViewedProducts()) ?>;
 
-    const STATIC_URLS = <?= json_encode(STATIC_URLS) ?>;
+    const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
 </script>
 
-<?php if (IS_ADMIN_PAGE || strpos(URL, "zamowienie") === 0) : ?>
+<?php if (Request::$is_admin_url || strpos(Request::$url, "zamowienie") === 0) : ?>
 
     <script>
         const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;

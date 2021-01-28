@@ -1,6 +1,6 @@
 <?php //route[zamowienie]
 
-$zamowienie_link = urlParam(1);
+$zamowienie_link = Request::urlParam(1);
 if (!$zamowienie_link) {
     redirect("/");
 }
@@ -279,7 +279,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
                     if ($status["id"] == 2 && !$tracking_link)
                         $current .=  " onclick='return confirm(\"Nie podałeś nr śledzenia paczki, kontynuować pomimo tego?\");' ";
 
-                    echo "<a class='status_btn' $current href='" . STATIC_URLS["ADMIN"] . "zmien_status/" . $zamowienie_link . "/" . $status["id"] . "'>$c. $status_text</a>";
+                    echo "<a class='status_btn' $current href='" . Request::$static_urls["ADMIN"] . "zmien_status/" . $zamowienie_link . "/" . $status["id"] . "'>$c. $status_text</a>";
                 }
 
                 if (!empty($zamowienie_data["user_id"])) {
@@ -296,7 +296,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
                             . $user["firma"]
                             . " "
                             . $user["email"]
-                            . "</a> <a tyle='button' class='btn primary' href='" . STATIC_URLS["ADMIN"] . "uzytkownicy/" . $zamowienie_data["user_id"] . "'>Zamówienia (" . $user["count"] . ")</a></div>";
+                            . "</a> <a tyle='button' class='btn primary' href='" . Request::$static_urls["ADMIN"] . "uzytkownicy/" . $zamowienie_data["user_id"] . "'>Zamówienia (" . $user["count"] . ")</a></div>";
                     }
                 }
             }

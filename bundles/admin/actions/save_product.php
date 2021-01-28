@@ -71,4 +71,4 @@ if (isset($product_data["remove"])) {
 
 triggerEvent("sitemap_change");
 
-redirect(STATIC_URLS["ADMIN"] . "produkt/$product_id");
+redirect(Request::$static_urls["ADMIN"] . "produkt/$product_id");

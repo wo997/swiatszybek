@@ -49,19 +49,30 @@ function reload($ask = false)
     }
 }
 
-function urlParam($index, $default = "")
-{
-    return def(URL_PARAMS, $index, $default);
-}
-
 class Request
 {
     // u can use it for views yay
-    public static $single_usage_session = null;
+    private static $ready = false;
+    public static $url;
+    public static $route = null;
+    private static $url_params;
+    private static $single_usage_session = null;
+    public static $is_admin_url = null;
+    public static $is_deployment_url = null;
+    public static $static_urls = ["ADMIN" => "/admin/"];
 
     public static function init()
     {
-        if (self::$single_usage_session === null) {
+
+        if (!self::$ready) {
+            self::$ready = true;
+
+            self::$url = rtrim(isset($_GET['url']) ? $_GET['url'] : "", "/");
+            self::$url_params = explode("/", self::$url);
+
+            self::$is_admin_url = strpos(self::$url, ltrim(Request::$static_urls["ADMIN"], "/")) === 0;
+            self::$is_deployment_url = strpos(self::$url, "deployment") === 0;
+
             self::$single_usage_session = def($_SESSION, "single_usage_session", []);
             if (!IS_XHR) {
                 unset($_SESSION["single_usage_session"]);
@@ -77,5 +88,11 @@ class Request
     public static function getSingleUsageSessionVar($name)
     {
         return def(self::$single_usage_session, $name, "");
+    }
+
+    public static function urlParam($index, $default = "")
+    {
+        // TODO: add index from the url? well, it's harded than I thought
+        return def(self::$url_params, $index, $default);
     }
 }

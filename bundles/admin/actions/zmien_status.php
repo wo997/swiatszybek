@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}zmien_status]
 
-$zamowienie_link = urlParam(2);
-$new_status_id = intval(urlParam(3));
+$zamowienie_link = Request::urlParam(2);
+$new_status_id = intval(Request::urlParam(3));
 
 $case_oplacono = $new_status_id == 1 ? ", oplacono = NOW()" : "";
 $case_wyslano = $new_status_id == 2 ? ", wyslano = NOW()" : "";

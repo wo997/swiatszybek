@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="label">Wyświetl filtry w kategoriach <a href="<?= STATIC_URLS["ADMIN"] ?>kategorie" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a></div>
+                    <div class="label">Wyświetl filtry w kategoriach <a href="<?= Request::$static_urls["ADMIN"] ?>kategorie" target="_blank" class="btn secondary" onclick="editAttribute()"><span>Zarządzaj</span> <i class="fa fa-cog"></i></a></div>
                     <div class="kategorie"></div>
                 </div>
             </div>

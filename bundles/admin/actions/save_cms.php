@@ -5,7 +5,7 @@ $main_page = $_POST["link"] == "" && false;
 $isRemove = isset($_POST["remove"]) && !$main_page;
 if ($isRemove) {
     removeEntity("cms", "cms_id", $_POST["cms_id"]);
-    redirect(STATIC_URLS["ADMIN"] . "strony");
+    redirect(Request::$static_urls["ADMIN"] . "strony");
 } else {
     $cms_id = getEntityId("cms", $_POST["cms_id"]);
 
@@ -21,7 +21,7 @@ if ($isRemove) {
 
     updateEntity($data, "cms", "cms_id", $cms_id);
 
-    redirect(STATIC_URLS["ADMIN"] . "strona/" . $cms_id);
+    redirect(Request::$static_urls["ADMIN"] . "strona/" . $cms_id);
 }
 
 triggerEvent("sitemap_change");

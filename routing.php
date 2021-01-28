@@ -2,15 +2,6 @@
 
 define("time", microtime(true));
 
-define("URL", rtrim(isset($_GET['url']) ? $_GET['url'] : "", "/"));
-
-define("URL_PARAMS", explode("/", URL));
-
-define("STATIC_URLS", ["ADMIN" => "/admin/", "DOCS" => "/docs/"]);
-define("IS_MAIN_PAGE", URL === "");
-define("IS_ADMIN_PAGE", strpos(URL, ltrim(STATIC_URLS["ADMIN"], "/")) === 0);
-define("IS_DEPLOYMENT_URL", strpos(URL, "deployment") === 0);
-
 require_once 'kernel.php';
 
 if (setting(["general", "advanced", "ssl"])) {
@@ -114,7 +105,7 @@ function renderNotification($notification_count)
     return "";
 }
 
-if (IS_ADMIN_PAGE) {
+if (Request::$is_admin_url) {
     // set notification_count for each page at each level
     foreach ($admin_navigations_tree as $key => $admin_navigations_branch) {
         $children_notification_count = 0;
@@ -167,7 +158,7 @@ $pageName = "";
 
 $found = false;
 
-$pageName = checkUrl(URL);
+$pageName = checkUrl(Request::$url);
 
 function checkUrl($url)
 {
@@ -176,6 +167,7 @@ function checkUrl($url)
     foreach ($link_route_path as $route => $file) // new routing
     {
         if (strpos($url . "/", $route . "/") === 0 || $url == $route) {
+            Request::$route = $route;
             define("ROUTE", $route);
             return $file;
         }
@@ -193,14 +185,14 @@ function checkUrl($url)
 
 if ($pageName) {
     // hardcoded page example - will be removed in the future
-    if (strpos(URL, "deployment") !== 0) {
+    if (strpos(Request::$url, "deployment") !== 0) {
         $page_data = DB::fetchRow(
             "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
-            [explode("/", URL)[0] . "%"]
+            [Request::urlParam(0) . "%"] // TODO: WARNING: that seems to be so wrong
         );
     }
 
-    if (IS_ADMIN_PAGE) {
+    if (Request::$is_admin_url) {
         Security::adminRequired();
     }
 
@@ -209,7 +201,7 @@ if ($pageName) {
 } else {
 
     $canSee = User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";
-    $page_data = DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [URL]);
+    $page_data = DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [Request::$url]);
 
     if (isset($_POST["content"])) {
         $page_data["content"] = $_POST["content"];
@@ -220,7 +212,7 @@ if ($pageName) {
         die;
     }
 }
-if (URL == "") {
+if (Request::$url == "") {
     $page_data["content"] = "Pusta strona";
     include "user/cms_page.php";
     die;

@@ -589,8 +589,8 @@ function getAnnotationRoute($line)
         $static_url = substr($static_url_width_curly_braces, 1, -1);
         //var_dump($static_url);
         //die;
-        if (isset(STATIC_URLS[$static_url])) {
-            $url = str_replace($static_url_width_curly_braces, ltrim(STATIC_URLS[$static_url], "/"), $url);
+        if (isset(Request::$static_urls[$static_url])) {
+            $url = str_replace($static_url_width_curly_braces, ltrim(Request::$static_urls[$static_url], "/"), $url);
         }
     }
 

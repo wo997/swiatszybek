@@ -48,7 +48,7 @@ if (User::getCurrent()->isLoggedIn()) {
     }
 }
 
-$zamowienie_link = urlParam(1);
+$zamowienie_link = Request::urlParam(1);
 $impersonate = 0;
 if (strlen($zamowienie_link) > 5) {
     // $zamowienie_data = DB::fetchRow("SELECT zamowienie_id, user_id, user_type, basket, koszt, zlozono, oplacono, nip, status, imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nr_lokalu, dostawa, uwagi, koszt_dostawy, session_id, rabat, kod_pocztowy_z, miejscowosc_z, kraj_z, ulica_z, nr_domu_z, nr_lokalu_z,  imie_d, nazwisko_d, firma_d, buyer_type FROM zamowienia LEFT JOIN users USING (user_id) WHERE link = ?", $zamowienie_link);

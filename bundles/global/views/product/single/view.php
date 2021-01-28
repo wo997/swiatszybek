@@ -2,7 +2,7 @@
 
 global $PRODUCT_ID;
 
-$product_id = urlParam(1);
+$product_id = Request::urlParam(1);
 if ($product_id) {
     $product_id = intval($product_id);
     $PRODUCT_ID = $product_id;
@@ -19,7 +19,7 @@ if (!$product_data) {
     redirect("/");
 }
 
-$link = urlParam(2);
+$link = Request::urlParam(2);
 if ($link != $product_data["link"] && $product_data["link"]) {
     redirect(getProductLink($product_data["product_id"], $product_data["link"]));
 }
@@ -185,7 +185,7 @@ foreach ($variants[1]["variant_options"] as $size_option) {
             "@context": "https://schema.org/",
             "@type": "Product",
             "name": "<?= htmlspecialchars($product_data["title"]) ?>",
-            "url": "<?= SITE_URL . "/" . URL ?>",
+            "url": "<?= SITE_URL . "/" . Request::$url ?>",
             "image": [
                 "<?= $product_data["cache_thumbnail"] ?>"
             ],
@@ -426,7 +426,7 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
         <div style="height:10px"></div>
 
         <div>
-            <a href="<?= STATIC_URLS["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
+            <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
         </div>
     </div>
 

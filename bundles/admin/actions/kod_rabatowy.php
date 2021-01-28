@@ -1,6 +1,6 @@
 <?php //route[{ADMIN}kod_rabatowy]
 
-$kod_id = urlParam(2);
+$kod_id = Request::urlParam(2);
 if ($kod_id) {
     $kod_data = DB::fetchRow("SELECT * FROM kody_rabatowe WHERE kod_id = $kod_id");
 } else {
@@ -204,7 +204,7 @@ if (!json_decode($kod_data["product_list"])) {
 
         <input type="hidden" name="kod_id" value="<?= $kod_data["kod_id"] ?>">
         <div style="margin-top:10px;text-align:right">
-            <a href="<?= STATIC_URLS["ADMIN"] ?>kody-rabatowe" class="btn secondary"><i class="fas fa-chevron-circle-left"></i> Wróć</a>
+            <a href="<?= Request::$static_urls["ADMIN"] ?>kody-rabatowe" class="btn secondary"><i class="fas fa-chevron-circle-left"></i> Wróć</a>
             <?php if ($kod_data["kod_id"] != -1) : ?>
                 <button class="btn secondary red" onclick='if (confirm("Czy aby na pewno chcesz usunąć kod rabatowy?")) {save(true)};'>Usuń <i class="fa fa-times"></i></button>
             <?php endif ?>
