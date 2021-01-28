@@ -329,18 +329,20 @@ domload(() => {
 	document.addEventListener("mousedown", (event) => {
 		main_search_wrapper.classList.toggle(
 			"active",
-			$(event.target)._parent(".main-search-wrapper")
+			$(event.target)
+				? !!$(event.target)._parent(".main-search-wrapper")
+				: false
 		);
 	});
 	input.addEventListener("input", () => {
 		delay("topSearchProducts", 400);
 	});
 	main_search_wrapper.addEventListener("mousemove", (event) => {
-		if (event.target.classList.contains("result")) {
+		if ($(event.target).classList.contains("result")) {
 			main_search_wrapper._children(".selected").forEach((e) => {
 				e.classList.remove("selected");
 			});
-			event.target.classList.add("selected");
+			$(event.target).classList.add("selected");
 		}
 	});
 

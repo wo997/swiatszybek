@@ -94,6 +94,12 @@ if (defined("ROUTE")) {
         });*/
     };
 
+    <?php if (Request::getSingleUsageSessionVar("login")) : ?>
+        domload(() => {
+            showModal("loginForm");
+        });
+    <?php endif ?>
+
     const last_viewed_products_ids = <?= json_encode(getLastViewedProductsIds()) ?>;
     const last_viewed_products = <?= json_encode(getLastViewedProducts()) ?>;
 

@@ -11,7 +11,8 @@ class Security
     {
         if (!User::getCurrent()->priveleges["backend_access"]) {
             $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
-            redirect("/logowanie");
+            Request::setSingleUsageSessionVar("login", true);
+            redirect("/");
         }
     }
 

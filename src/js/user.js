@@ -57,7 +57,11 @@ function login() {
 			if (res.success) {
 				loginForm.classList.add("success");
 				setTimeout(() => {
-					window.location.reload();
+					if (res.data && res.data.redirect_url) {
+						window.location.href = res.data.redirect_url;
+					} else {
+						window.location.reload();
+					}
 				}, 200);
 			} else {
 				showFieldErrors(

@@ -4,7 +4,7 @@
 
 class User
 {
-    public static ?User $current_user = null;
+    private static ?User $current_user = null;
     public $cart;
     public $data;
     public $priveleges;
@@ -206,6 +206,11 @@ class User
         $this->authenticated($user_data["user_id"]);
 
         Request::setSingleUsageSessionVar("just_logged_in", true);
+
+        if (isset($_SESSION["redirect_on_login"])) {
+            $res["data"]["redirect_url"] = $_SESSION["redirect_on_login"];
+            unset($_SESSION["redirect_on_login"]);
+        }
 
         $res["success"] = true;
         return $res;

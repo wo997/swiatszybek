@@ -1,7 +1,13 @@
 /* js[view] */
 
 function resetPassword() {
-	const params = getFormData($("#resetPasswordForm"));
+	const form = $("#resetPasswordForm");
+
+	if (!validateForm(form)) {
+		return;
+	}
+
+	const params = getFormData(form);
 
 	xhr({
 		url: "/reset_password",
