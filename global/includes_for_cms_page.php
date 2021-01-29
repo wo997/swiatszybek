@@ -9,6 +9,7 @@
 
     .cms .wo997_img {
         display: inline-block;
+        width: 100%;
     }
 
     .cms.slide-desktop {

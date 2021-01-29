@@ -213,6 +213,44 @@ DB::createTable("authentication_token", [
     ["name" => "valid_untill", "type" => "DATETIME"],
 ]);
 
+// DB::createTable("page", [
+//     ["name" => "page_id", "type" => "INT", "index" => "primary"],
+//     ["name" => "url", "type" => "TINYTEXT"], // I think we should index that field ezy
+//     ["name" => "seo_title", "type" => "TINYTEXT"],
+//     ["name" => "seo_description", "type" => "TINYTEXT"],
+//     ["name" => "html_content", "type" => "MEDIUMTEXT"],
+//     ["name" => "settings_json", "type" => "MEDIUMTEXT"],
+//     ["name" => "published", "type" => "TINYINT(1)"],
+// ]);
+
+// DB::createTable("product_page", [
+//     ["name" => "product_page_id", "type" => "INT", "index" => "primary"],
+//     ["name" => "page_id", "type" => "INT", "index" => "index"],
+//     ["name" => "name", "type" => "VARCHAR(255)"],
+//     ["name" => "price_min", "type" => "DECIMAL(10,2)"],
+// ]);
+
+// DB::createTable("product", [
+//     ["name" => "product_id", "type" => "INT", "index" => "primary"],
+//     ["name" => "name", "type" => "VARCHAR(255)"],
+//     ["name" => "base_price", "type" => "DECIMAL(10,2)"],
+//     ["name" => "rebate", "type" => "DECIMAL(10,2)"],
+//     ["name" => "price", "type" => "DECIMAL(10,2)"],
+// ]);
+
+// TODO:
+// product_category
+// product_to_product_category
+// product_feature
+// product_to_product_feature
+
+// OR:
+// product_category
+// product_to_category
+// product_feature
+// product_to_feature
+
+
 @include BUILDS_PATH . "hooks/migration.php";
 
 echo "<h3>✅ All migrations completed</h3>";

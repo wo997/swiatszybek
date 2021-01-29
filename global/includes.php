@@ -18,8 +18,8 @@ if (defined("ROUTE")) {
 }
 ?>
 
-<script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
 <link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+<script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
 
 <script>
     // TODO: should go to cookie maybe window.devicePixelRatio, probably no
