@@ -20,6 +20,7 @@
  * _subscribers: SubscribeToData[]
  * _bind_var?: string
  * _changed_data?: object
+ * _evaluables: {node?: PiepNode, eval_str: string}[]
  * } & PiepNode} BaseComponent
  *
  * @typedef {{
@@ -77,8 +78,33 @@ function createComponent(comp, parent_comp, data, options) {
 		};
 	}
 
+	node._evaluables = [];
 	if (options.template) {
-		node._set_content(options.template);
+		let template = options.template;
+		const matches = template.match(/{{.*?}}/gm);
+		if (matches) {
+			for (const match of matches) {
+				const content = match.substring(2, match.length - 2);
+				const eval_str = content.replace(/@/g, `node._data.`);
+				node._evaluables.push({
+					eval_str,
+				});
+				const node_html = `<span class='evaluable_${
+					node._evaluables.length - 1
+				}'></span>`;
+				template = template.replace(match, node_html);
+			}
+		}
+
+		node._set_content(template);
+
+		if (matches) {
+			let index = -1;
+			for (const evaluable of node._evaluables) {
+				index++;
+				evaluable.node = node._child(`.evaluable_${index}`);
+			}
+		}
 	}
 
 	node._nodes = {};
@@ -197,6 +223,10 @@ function setComponentData(comp, _data = undefined, options = {}) {
 		// it should be ezy to send what the changes are, the array handles it by itself which is weird, cause maybe it should be there?
 		// array diff works fine, what about another helper methods though? object diff, idk
 		options.render();
+	}
+
+	for (const evaluable of node._evaluables) {
+		evaluable.node._set_content(eval(evaluable.eval_str));
 	}
 
 	if (equal) {

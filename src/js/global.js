@@ -716,9 +716,9 @@ function createNodeFromHtml(html) {
 		"beforeend",
 		`<div class="${random_class_name}" style="display:none">${html}</div>`
 	);
-	const node = $(`.${random_class_name} *`);
+	const node = $(`.${random_class_name}`);
 	node.remove();
-	return node;
+	return node._direct_child();
 }
 
 /**
