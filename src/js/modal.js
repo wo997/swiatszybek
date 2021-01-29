@@ -338,7 +338,7 @@ window.addEventListener("mousedown", (event) => {
 
 	const target = $(event.target);
 
-	if (target.classList.contains("close-modal-btn")) {
+	if (target._parent(".close-modal-btn", { skip: 0 })) {
 		form = target._parent("[data-modal]");
 	} else if (target.hasAttribute("data-dismissable")) {
 		form = target;
