@@ -1,6 +1,6 @@
 <?php //module_block[slider]
 
-useCSS("/$module_block_dir/styles.css");
+//useCSS("/$module_block_dir/styles.css");
 
 $slides = def($params, "cms_slides", []);
 

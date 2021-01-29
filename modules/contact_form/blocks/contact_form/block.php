@@ -1,6 +1,6 @@
 <?php //module_block[contact_form]
 
-// TODO: main page should minify everything literally
+// TODO: pages should minify everything literally
 useJS("/$module_block_dir/scripts.js");
 useCSS("/$module_block_dir/styles.css");
 
