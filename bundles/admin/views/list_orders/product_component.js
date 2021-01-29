@@ -6,7 +6,6 @@
  *  name: string
  *  state: number
  *  list_data: ListRowComponentData[]
- *  list_row: ListRowComponentData
  *  variants: ProductVariantComponentData[]
  * }} FirstComponentData
  *
@@ -20,15 +19,11 @@
  *      crazy: PiepNode
  *      my_list: ListComponent
  *      my_list_copy: ListComponent
- *      load_btn: PiepNode
- *      save_btn: PiepNode
- *      add_btn: PiepNode
  *      add_variant_btn: PiepNode
  *      list_count: PiepNode
  *      expand_y_1: PiepNode
  *      list_row: ListRowComponent
  *      variants: ListComponent
- *      variants_counter: PiepNode
  *  }
  * } & BaseComponent} FirstComponent
  */
@@ -45,113 +40,52 @@ function createFirstCompontent(node, parent, data = undefined) {
 			name: "",
 			state: 0,
 			list_data: [],
-			list_row: { email: "", name: "name" },
 			variants: [],
 		};
 	}
 
 	createComponent(node, parent, data, {
 		template: /*html*/ `
-               <div>
-                   <h3>
-                       Save state of the component
-                       <button data-node="save_btn" class="btn primary">Save</button>
-                       <button data-node="load_btn" class="btn primary">Load</button>
-                   </h3>
-   
-                   <div class="label">Nazwa produktu</div>
-                   <input type="text" class="field" data-bind="name"/></span>
-   
-                   <div class="label">Sprzedawaj na</div>
-                   <select data-bind="sell_by" class="field">
-                       <option value="qty">Sztuki</option>
-                       <option value="weight">Wagę</option>
-                       <option value="length">Długość</option>
-                   </select>
-   
-                   <div class="case_sell_by_qty">
-                       <div class="label">
-                       Warianty <span data-node="variants_counter"></span>
-                       {{@variants.length}}, {{@variants.length*@variants.length}}
-                       <button data-node="add_variant_btn" class="btn primary">Dodaj kolejny <i class="fas fa-plus"></i></button>
-                       </div>
-                       <div data-bind="variants" data-node="variants"></div>
-                   </div>
-   
-                   <h3>Some state (changes list visibility) </h3>
-                   <checkbox data-bind="state"></checkbox>
-                   <br>
-   
-                   <h3>
-                       We can even have a list!
-                       <span data-node="list_count"></span>
-                       <button data-node="add_btn" class="btn primary">Add a new row!</button>
-                   </h3>
-                   <div data-node="expand_y_1" class="expand_y">
-                       <div data-node="my_list" data-bind="list_data"></div>
-                   </div>
-   
-                   <h3>List copied for no reason</h3>
-                   <div style="display:flex">
-                       <div data-node="my_list_copy" data-bind="list_data"></div>
-                   </div>
-   
-                   <h3>Example of standalone list row, dumb but we can do it</h3>
-                   <div data-node="list_row" data-bind="list_row"></div>
-   
-                   <h3>Display form json</h3>
-                   <div data-node="crazy"></div>
-               </div>
-           `,
+            <div>
+                <div class="label">Nazwa produktu</div>
+                <input type="text" class="field" data-bind="name"/></span>
+
+                <div class="label">Sprzedawaj na</div>
+                <select data-bind="sell_by" class="field">
+                    <option value="qty">Sztuki</option>
+                    <option value="weight">Wagę</option>
+                    <option value="length">Długość</option>
+                </select>
+
+                <div class="case_sell_by_qty">
+                    <div class="label">
+                    Warianty {{@variants.length}}
+                    <button data-node="add_variant_btn" class="btn primary">Dodaj kolejny <i class="fas fa-plus"></i></button>
+                    </div>
+                    <div data-bind="variants" data-node="variants"></div>
+                </div>
+
+                <h3>Some state (changes list visibility) </h3>
+                <checkbox data-bind="state"></checkbox>
+                <br>
+
+                <h3>
+                    We can even have a list!
+                    <span data-node="list_count"></span>
+                    <button data-node="add_btn" class="btn primary">Add a new row!</button>
+                </h3>
+                <div data-node="expand_y_1" class="expand_y">
+                    <div data-node="my_list" data-bind="list_data"></div>
+                </div>
+
+                <h3>Display form json</h3>
+                <div data-node="crazy"></div>
+            </div>
+        `,
 		initialize: () => {
 			// TODO: make _setData a required parameter of create component, maybe you also want a defualts parameter for... defaults
-			node._setData = (data = undefined, options = {}) => {
-				if (data === undefined) {
-					data = node._data;
-				}
-
-				// a way to pass data deeper easily,
-				// luckily that works great and is kinda optimized unlike listening from a child,
-				// u always wanna go deeper intstead of asking parents for data
-				data.list_data.forEach((e) => {
-					e.name = data.name;
-				});
-
-				setComponentData(node, data, {
-					...options,
-					render: () => {
-						node._nodes.crazy._set_content(`
-                               This string was generated by the compontent
-                               ${JSON.stringify(node._data, null, 3)}
-                           `);
-
-						node._nodes.variants_counter._set_content(
-							node._data.variants.length
-						);
-
-						expand(node._nodes.expand_y_1, node._data.state === 1);
-
-						const equivalent = isEquivalent(node._data, node._saved_data);
-						const disable = !node._saved_data || equivalent;
-						node._nodes.load_btn.toggleAttribute("disabled", disable);
-						node._nodes.save_btn.toggleAttribute("disabled", equivalent);
-
-						node._nodes.list_count._set_content(
-							`(${node._data.list_data.length})`
-						);
-					},
-				});
-			};
 
 			createListCompontent(node._nodes.my_list, node, createListRowCompontent);
-
-			/*createListCompontent(
-                   node._nodes.my_list_copy,
-                   node,
-                   createListRowCompontent
-               );*/
-
-			createListRowCompontent(node._nodes.list_row, node);
 
 			createListCompontent(
 				node._nodes.variants,
@@ -159,24 +93,40 @@ function createFirstCompontent(node, parent, data = undefined) {
 				createProductVariantComponent
 			);
 
-			node._nodes.add_btn.addEventListener("click", () => {
-				node._data.list_data.push({ email: "", name: "dff" });
-				node._setData();
-			});
-
 			node._nodes.add_variant_btn.addEventListener("click", () => {
 				node._data.variants.push({ email: "", name: "dff" });
 				node._setData();
 			});
+		},
+		setData: (
+			/** @type {FirstComponentData} */ data = undefined,
+			options = {}
+		) => {
+			if (data === undefined) {
+				data = node._data;
+			}
 
-			node._nodes.save_btn.addEventListener("click", () => {
-				node._saved_data = cloneObject(node._data);
-				node._setData(undefined, { force_render: true });
+			data.list_data.forEach((e) => {
+				e.name = data.name;
 			});
 
-			node._nodes.load_btn.addEventListener("click", () => {
-				node._data = cloneObject(node._saved_data);
-				node._setData();
+			setComponentData(node, data, {
+				...options,
+				render: () => {
+					node._nodes.crazy._set_content(`
+                               This string was generated by the compontent
+                               ${JSON.stringify(node._data, null, 3)}
+                           `);
+
+					expand(node._nodes.expand_y_1, node._data.state === 1);
+
+					const equivalent = isEquivalent(node._data, node._saved_data);
+					const disable = !node._saved_data || equivalent;
+
+					node._nodes.list_count._set_content(
+						`(${node._data.list_data.length})`
+					);
+				},
 			});
 		},
 	});

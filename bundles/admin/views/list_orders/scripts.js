@@ -17,10 +17,9 @@ domload(() => {
 			{ email: "111", name: "name" },
 			{ email: "4th", name: "name" },
 		],
-		list_row: { email: "xxx", name: "u" },
 		variants: [
 			{ name: "123", email: "555" },
-			{ name: "123", email: "555" },
+			{ name: "123xxx", email: "555" },
 		],
 	});
 
@@ -124,38 +123,6 @@ function createListRowCompontent(node, parent, data = undefined) {
 			// }
 
 			node.classList.add("my_list_row");
-			node._setData = (data = undefined, options = {}) => {
-				setComponentData(node, data, {
-					...options,
-					render: () => {
-						node._nodes.idk._set_content(JSON.stringify(node._data));
-						if (node._data.row_index !== undefined) {
-							node._nodes.row_index._set_content(
-								node._data.row_index +
-									1 +
-									" / " +
-									def(node._data.list_length, 0)
-							);
-						}
-
-						if (node._data.list_length !== undefined) {
-							node._nodes.down_btn.toggleAttribute(
-								"disabled",
-								node._data.row_index >= node._data.list_length - 1
-							);
-
-							node._nodes.up_btn.toggleAttribute(
-								"disabled",
-								node._data.row_index <= 0
-							);
-							node._nodes.double_up_btn.toggleAttribute(
-								"disabled",
-								node._data.row_index <= 0
-							);
-						}
-					},
-				});
-			};
 
 			node._nodes.delete_btn.addEventListener("click", () => {
 				if (parent._removeRow) {
@@ -179,6 +146,38 @@ function createListRowCompontent(node, parent, data = undefined) {
 				if (parent._moveRow) {
 					parent._moveRow(node._data.row_index, 0);
 				}
+			});
+		},
+		setData: (
+			/** @type {ListRowComponentData} */ data = undefined,
+			options = {}
+		) => {
+			setComponentData(node, data, {
+				...options,
+				render: () => {
+					node._nodes.idk._set_content(JSON.stringify(node._data));
+					if (node._data.row_index !== undefined) {
+						node._nodes.row_index._set_content(
+							node._data.row_index + 1 + " / " + def(node._data.list_length, 0)
+						);
+					}
+
+					if (node._data.list_length !== undefined) {
+						node._nodes.down_btn.toggleAttribute(
+							"disabled",
+							node._data.row_index >= node._data.list_length - 1
+						);
+
+						node._nodes.up_btn.toggleAttribute(
+							"disabled",
+							node._data.row_index <= 0
+						);
+						node._nodes.double_up_btn.toggleAttribute(
+							"disabled",
+							node._data.row_index <= 0
+						);
+					}
+				},
 			});
 		},
 	});

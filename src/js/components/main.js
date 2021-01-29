@@ -38,6 +38,7 @@
  * @typedef {{
  * template?: string
  * initialize?()
+ * setData(data: any, options: SetComponentDataOptions)
  * }} createComponentOptions
  */
 
@@ -107,17 +108,19 @@ function createComponent(comp, parent_comp, data, options) {
 		}
 	}
 
+	// kinda weird but it creates f.e. checkbox base component
+	registerForms();
+
 	node._nodes = {};
 	node._children(`[data-node]`).forEach((n) => {
 		node._nodes[n.dataset.node] = n;
 	});
 
+	node._setData = options.setData;
+
 	if (options.initialize) {
 		options.initialize();
 	}
-
-	// kinda weird but it creates the checkbox subcomponent
-	registerForms();
 
 	node._bindNodes = node._children(`[data-bind]`);
 
@@ -246,6 +249,16 @@ function propagateComponentData(comp) {
 	// @ts-ignore
 	const node = comp;
 
+	if (node._bindNodes) {
+		node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
+			const bind_var = sub_node.dataset.bind;
+
+			if (sub_node._set_value && node._changed_data[bind_var]) {
+				sub_node._set_value(node._data[bind_var], { quiet: true });
+			}
+		});
+	}
+
 	const subscribers = node._subscribers;
 	if (subscribers) {
 		for (let i = subscribers.length - 1; i >= 0; i--) {
@@ -261,15 +274,5 @@ function propagateComponentData(comp) {
 			const receiver = subscribe.receiver;
 			receiver._setData();
 		}
-	}
-
-	if (node._bindNodes) {
-		node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
-			const bind_var = sub_node.dataset.bind;
-
-			if (sub_node._set_value && node._changed_data[bind_var]) {
-				sub_node._set_value(node._data[bind_var], { quiet: true });
-			}
-		});
 	}
 }
