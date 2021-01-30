@@ -9,6 +9,7 @@
  * _removeRow(row_index: number)
  * _moveRow(from: number, to: number)
  * _getRows(): AnyComponent[]
+ * _row_template: string
  * } & BaseComponent} ListComponent
  *
  * @typedef {{
@@ -29,6 +30,9 @@ function listComp(node, parent, data = undefined, params = {}) {
 	if (data === undefined) {
 		data = [];
 	}
+
+	node._row_template = node.innerHTML;
+	node._empty();
 
 	createComponent(node, parent, data, {
 		initialize: () => {
@@ -131,7 +135,7 @@ function listComp(node, parent, data = undefined, params = {}) {
 								// @ts-ignore
 								child = createNodeFromHtml(/*html*/ `
                                     <div class="my_list_row_wrapper expand_y hidden animate_hidden">
-                                    <div class="my_list_row"></div>
+                                        <div class="my_list_row"></div>
                                     </div>
                                 `);
 							}
@@ -146,7 +150,18 @@ function listComp(node, parent, data = undefined, params = {}) {
 							if (add) {
 								const row_data = node._data[diff_info.to];
 								const the_row = child._child(".my_list_row");
-								params.rowContructor(the_row, node, row_data, {});
+								the_row._set_content(node._row_template);
+
+								directComps(the_row).forEach((comp) => {
+									const constructor = snakeCase(
+										comp.tagName.toLocaleLowerCase()
+									);
+									if (window[constructor]) {
+										// @ts-ignore
+										window[constructor](comp, node, row_data, {});
+									}
+								});
+
 								expand(child, true, { duration: animation_duration });
 							} else if (remove) {
 								expand(child, false, { duration: animation_duration });

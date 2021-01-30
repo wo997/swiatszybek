@@ -1,6 +1,39 @@
 /* js[global] */
 
 /**
+ *
+ * @param {PiepNode} node
+ * @returns {PiepNode[]}
+ */
+function directComps(node) {
+	return node._children("*").filter((comp) => {
+		let n = comp.tagName.toLocaleLowerCase();
+		if (!n.endsWith("-comp")) {
+			return false;
+		}
+
+		let p = comp;
+		let direct = true;
+		while (true) {
+			p = p._parent();
+			if (!p || p === node) {
+				break;
+			}
+			const n2 = p.tagName.toLocaleLowerCase();
+			if (n2.endsWith("-comp")) {
+				direct = false;
+				break;
+			}
+		}
+		if (!direct) {
+			return false;
+		}
+
+		return true;
+	});
+}
+
+/**
  * @typedef {{
  * from: number,
  * to: number,

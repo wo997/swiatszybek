@@ -33,11 +33,9 @@ function productVariantComp(node, parent, data = undefined) {
 
             <p-batch-trait data-trait="list_controls"></p-batch-trait>
             <p-component data-bind="state"></p-component>
+            {{JSON.stringify(@)}}
         `,
 
-		// {{#list_down_btn}}
-		// {{#list_up_btn}}
-		// {{#list_delete_btn}}
 		initialize: () => {
 			node.classList.add("product_variant");
 		},
@@ -47,9 +45,7 @@ function productVariantComp(node, parent, data = undefined) {
 		) => {
 			setComponentData(node, data, {
 				...options,
-				render: () => {
-					//node._nodes.idk._set_content(JSON.stringify(node._data));
-				},
+				render: () => {},
 			});
 		},
 	});

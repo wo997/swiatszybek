@@ -23,6 +23,7 @@
  * _children(selector: string): PiepNode[]
  * _direct_child(selector?: string): PiepNode
  * _direct_children(selector?: string): PiepNode[]
+ * _first_children(selector: string): PiepNode[]
  * _is_empty()
  * _in_body()
  * _animate(keyframes: string, duration: number, options?: AnimationOptions): void
@@ -88,6 +89,13 @@ function $(selector, parent = undefined) {
 		}
 		return nodes.filter((e) => $(e).matches(selector));
 	};
+	node._first_children = (selector) => {
+		return node._children(selector).filter((e) => {
+			const p = e._parent(selector);
+			return p === node || !node.contains(p);
+		});
+	};
+
 	node._is_empty = () => {
 		return node.hasChildNodes();
 	};

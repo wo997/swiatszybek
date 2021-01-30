@@ -62,7 +62,7 @@ function createComponent(comp, parent_comp, data, options) {
 	// @ts-ignore
 	const parent = parent_comp;
 
-	//node.classList.add("component");
+	node.classList.add("comp");
 	node.classList.add("freeze");
 	setTimeout(() => {
 		node.classList.remove("freeze");
@@ -99,7 +99,9 @@ function createComponent(comp, parent_comp, data, options) {
 		if (matches_e) {
 			for (const match of matches_e) {
 				const content = match.substring(2, match.length - 2);
-				const eval_str = content.replace(/@/g, `node._data.`);
+				const eval_str = content
+					.replace(/@(?=\w)/g, `node._data.`)
+					.replace(/@/g, `node._data`);
 				node._evaluables.push({
 					eval_str,
 				});
@@ -144,14 +146,14 @@ function createComponent(comp, parent_comp, data, options) {
 			}
 		}
 
-		for (const comp of node._children("*")) {
-			let n = comp.tagName.toLocaleLowerCase();
-			if (!n.endsWith("-comp")) {
-				continue;
+		directComps(node).forEach((comp) => {
+			const constructor = snakeCase(comp.tagName.toLocaleLowerCase());
+			if (window[constructor]) {
+				//console.log(node, constructor, "xxx");
+				// @ts-ignore
+				window[constructor](comp, node, undefined, {});
 			}
-			const constructor = snakeCase(n);
-			console.log(constructor);
-		}
+		});
 	}
 
 	node._nodes = {};
