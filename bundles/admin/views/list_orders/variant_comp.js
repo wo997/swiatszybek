@@ -29,7 +29,11 @@ function productVariantComp(node, parent, data = undefined) {
 	createComponent(node, parent, data, {
 		template: /*html*/ `
             {${data.row_index + 1}}
-            <input type="text" class="field inline" data-bind="name" style="">
+            <input type="text" data-bind="name" class="
+                field inline
+                some-class
+                {pies:${data.row_index > 3}}
+                {cat:${data.name == "qty"}}">
 
             <p-batch-trait data-trait="list_controls"></p-batch-trait>
             <p-component data-bind="state"></p-component>

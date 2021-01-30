@@ -95,13 +95,12 @@ function createComponent(comp, parent_comp, data, options) {
 
 	if (options.template) {
 		let template = options.template;
+
 		const matches_e = template.match(/{{.*?}}/gm);
 		if (matches_e) {
 			for (const match of matches_e) {
 				const content = match.substring(2, match.length - 2);
 				const eval_str = content;
-				// .replace(/@(?=\w)/g, `node._data.`)
-				// .replace(/@/g, `node._data`);
 				node._evaluables.push({
 					eval_str,
 				});
@@ -149,9 +148,31 @@ function createComponent(comp, parent_comp, data, options) {
 		directComps(node).forEach((comp) => {
 			const constructor = snakeCase(comp.tagName.toLocaleLowerCase());
 			if (window[constructor]) {
-				//console.log(node, constructor, "xxx");
 				// @ts-ignore
 				window[constructor](comp, node, undefined, {});
+			}
+		});
+
+		// reactive classes and maybe even more
+		node._children("*").forEach((e) => {
+			let p = e;
+			while (true) {
+				p = p._parent();
+				if (!p || p === node) {
+					break;
+				}
+				const n2 = p.tagName.toLocaleLowerCase();
+				if (n2.endsWith("-comp")) {
+					console.log("cipka");
+					return;
+				}
+			}
+
+			// yup - it's a direct comp
+
+			const match_c = e.className.match(/{.*?: ?{.*?}}/gm);
+			if (match_c) {
+				console.log(match_c);
 			}
 		});
 	}
