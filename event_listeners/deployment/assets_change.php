@@ -126,7 +126,7 @@ if ($modifyJS) {
         }
 
         // binding
-        if (preg_match_all('/data-bind="\{\{[^()]*data\.[^()]*}}"/', $js_full, $matches)) {
+        if (preg_match_all('/data-bind="\{\{[^()]*?data\.[^()]*?}}"/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
                 $rep = $match;
                 $rep = preg_replace("/(?<=[\s{])data\./", "", $rep);
@@ -140,11 +140,11 @@ if ($modifyJS) {
         // BUT!!! you can give the developer an option to mark elements that might require whitespaces, ezy
         //$js_full = preg_replace('/\s{2,}/', ' ', $js_full);
 
-        var_dump(BUILDS_PATH . "$jsGroup.js");
-        var_dump($js_full, "<br><br><br><br><br><br><br><br><br><br><br>");
+        //var_dump(BUILDS_PATH . "$jsGroup.js");
+        //var_dump($js_full, "<br><br><br><br><br><br><br><br><br><br><br>");
         saveFile(BUILDS_PATH . "$jsGroup.js", $js_full);
     }
-    die; // if u wanna see the output
+    //die; // if u wanna see the output
 }
 
 

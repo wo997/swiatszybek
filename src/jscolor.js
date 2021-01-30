@@ -1,5 +1,3 @@
-/* js[admin] */
-
 /**
  * jscolor - JavaScript Color Picker
  *

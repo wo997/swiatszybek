@@ -122,6 +122,8 @@ if (defined("ROUTE")) {
     <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">
     <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= RELEASE ?>"></script>
 
+    <script src="/src/jscolor.js?v=<?= RELEASE ?>"></script>
+
     <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
     <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>
 
