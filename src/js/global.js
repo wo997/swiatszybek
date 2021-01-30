@@ -147,7 +147,7 @@ function escapeHTML(unsafeText) {
 }
 
 function escapeCSS(prop, val) {
-	const prop_css = kebabToSnakeCase(prop);
+	const prop_css = snakeCase(prop);
 	let div = document.createElement("div");
 	div.style[prop_css] = val;
 	return div.style[prop_css];
@@ -180,68 +180,12 @@ function validURL(str) {
 }
 
 // also links.php
-function replacePolishLetters(string) {
-	const pl = [
-		"ę",
-		"Ę",
-		"ó",
-		"Ó",
-		"ą",
-		"Ą",
-		"ś",
-		"Ś",
-		"ł",
-		"Ł",
-		"ż",
-		"Ż",
-		"ź",
-		"Ź",
-		"ć",
-		"Ć",
-		"ń",
-		"Ń",
-	];
-	const en = [
-		"e",
-		"E",
-		"o",
-		"O",
-		"a",
-		"A",
-		"s",
-		"S",
-		"l",
-		"L",
-		"z",
-		"Z",
-		"z",
-		"Z",
-		"c",
-		"C",
-		"n",
-		"N",
-	];
-
-	var len = pl.length;
-	for (let i = 0; i < len; i++) {
-		string = string.replace(new RegExp(`${pl[i]}`, "g"), en[i]);
-	}
-	return string;
-}
-
-function capitalize(str) {
-	const first = str.charAt(0);
-	return str.replace(first, first.toUpperCase());
-}
-
-// also links.php
 /**
  *
  * @param {string} string
  */
 function escapeUrl(string) {
-	return string
-		.replacePolishLetters()
+	return replacePolishLetters(string)
 		.replace(/[, ]+/g, "-")
 		.toLowerCase()
 		.replace(/[^(a-zA-Z0-9-)]/g, "")

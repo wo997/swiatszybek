@@ -35,7 +35,7 @@
  * @param {*} parent
  * @param {FirstComponentData} data
  */
-function createFirstCompontent(node, parent, data = undefined) {
+function firstComp(node, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			id: -1,
@@ -89,12 +89,12 @@ function createFirstCompontent(node, parent, data = undefined) {
             </div>
         `,
 		initialize: () => {
-			createListCompontent(node._nodes.my_list, node, createListRowCompontent);
+			listComp(node._nodes.my_list, node, listRowComp);
 
-			/*createListCompontent(
+			/*listComp(
 				node._nodes.variants,
 				node,
-				createProductVariantComponent
+				productVariantComp
 			);*/
 
 			node._nodes.add_variant_btn.addEventListener("click", () => {

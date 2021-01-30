@@ -143,6 +143,15 @@ function createComponent(comp, parent_comp, data, options) {
 				node._component_traits.push(trait_node);
 			}
 		}
+
+		for (const comp of node._children("*")) {
+			let n = comp.tagName.toLocaleLowerCase();
+			if (!n.endsWith("-comp")) {
+				continue;
+			}
+			const constructor = snakeCase(n);
+			console.log(constructor);
+		}
 	}
 
 	node._nodes = {};

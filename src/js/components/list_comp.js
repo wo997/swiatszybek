@@ -23,21 +23,13 @@
  * @param {CallableFunction} createRowCallback
  * @param {Array} data
  */
-function createListCompontent(
-	node,
-	parent,
-	createRowCallback,
-	data = undefined
-) {
+function listComp(node, parent, createRowCallback, data = undefined) {
 	if (data === undefined) {
 		data = [];
 	}
 
 	createComponent(node, parent, data, {
 		initialize: () => {
-			// why negative? it won't overlap with for example entity ids
-			//node._nextRowId = -1000;
-
 			node.classList.add("my_list");
 
 			node._getRows = () => {
@@ -81,8 +73,7 @@ function createListCompontent(
 				data = node._data;
 			}
 
-			//node._nextRowId = 0;
-			let nextRowId = 0; // act like a singleton for efficiency
+			let nextRowId = 0;
 
 			data.forEach((row_data, index) => {
 				// pass data no matter who the child is - should be defined by options cause it's inefficient to set each row every time u do anything
@@ -137,10 +128,10 @@ function createListCompontent(
 								/** @type {AnyComponent} */
 								// @ts-ignore
 								child = createNodeFromHtml(/*html*/ `
-                                           <div class="my_list_row_wrapper expand_y hidden animate_hidden">
-                                           <div class="my_list_row"></div>
-                                           </div>
-                                       `);
+                                    <div class="my_list_row_wrapper expand_y hidden animate_hidden">
+                                    <div class="my_list_row"></div>
+                                    </div>
+                                `);
 							}
 
 							const target_index_real =
@@ -160,7 +151,6 @@ function createListCompontent(
 								child.classList.add("removing");
 								setTimeout(() => {
 									child.remove();
-									//child.classList.remove("component");
 								}, animation_duration);
 
 								removed_before_current++;
@@ -192,10 +182,3 @@ function createListCompontent(
 		},
 	});
 }
-
-// {{#list_down_btn}}
-//             {{#list_up_btn}}
-//             {{#list_delete_btn}}
-//             <button data-node="down_btn" class="btn subtle"><i class="fas fa-chevron-down"></i></button>
-//             <button data-node="up_btn" class="btn subtle"><i class="fas fa-chevron-up"></i></button>
-//             <button data-node="delete_btn" class="btn red"><i class="fas fa-trash"></i></button>

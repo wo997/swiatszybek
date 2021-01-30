@@ -21,7 +21,7 @@
  * @param {*} parent
  * @param {ProductVariantComponentData} data
  */
-function createProductVariantComponent(node, parent, data = undefined) {
+function productVariantComp(node, parent, data = undefined) {
 	if (data === undefined) {
 		data = { email: "", name: "name" };
 	}

@@ -7,7 +7,7 @@ domload(() => {
 
 	// todo? force setting data on the main component and prevent doing so for children?
 	// or prevent animations on creation, you might need it anyway
-	createFirstCompontent(my_list_node, undefined, {
+	firstComp(my_list_node, undefined, {
 		id: 5,
 		name: "asdsad",
 		state: 1,
@@ -24,7 +24,7 @@ domload(() => {
 		],
 	});
 
-	// createFirstCompontent(my_list_node, undefined);
+	// firstComp(my_list_node, undefined);
 
 	// my_list_node._set_data({
 	// 	id: 5,
@@ -68,7 +68,7 @@ domload(() => {
  * @param {*} parent
  * @param {ListRowComponentData} data
  */
-function createListRowCompontent(node, parent, data = undefined) {
+function listRowComp(node, parent, data = undefined) {
 	if (data === undefined) {
 		data = { email: "", name: "name" };
 	}
