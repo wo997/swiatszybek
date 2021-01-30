@@ -112,6 +112,9 @@ if ($modifyJS) {
             $js_full .= $js_content;
         }
 
+        // allows reactive data 
+        $js_full = str_replace("{\${", "{{", $js_full);
+
         $minifier = new Minify\JS($js_full);
         saveFile(BUILDS_PATH . "$jsGroup.js", $minifier->minify());
     }

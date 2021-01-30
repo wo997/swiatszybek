@@ -55,7 +55,7 @@ function firstComp(node, parent, data = undefined) {
 
                 <div data-node="case_sell_by_qty" class="expand_y">
                     <div class="label">
-                    Warianty ({{@variants.length}})
+                    Warianty ({${data.variants.length}})
                     <button data-node="add_variant_btn" class="btn primary">Dodaj kolejny <i class="fas fa-plus"></i></button>
                     </div>
                     <list-comp data-bind="variants">
@@ -67,7 +67,7 @@ function firstComp(node, parent, data = undefined) {
                 </div>
 
                 <h3>Display form json</h3>
-                <div>{{JSON.stringify(@)}}</div>
+                <div>{{JSON.stringify(data)}}</div>
             </div>
         `,
 		initialize: () => {

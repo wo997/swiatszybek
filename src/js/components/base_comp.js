@@ -99,9 +99,9 @@ function createComponent(comp, parent_comp, data, options) {
 		if (matches_e) {
 			for (const match of matches_e) {
 				const content = match.substring(2, match.length - 2);
-				const eval_str = content
-					.replace(/@(?=\w)/g, `node._data.`)
-					.replace(/@/g, `node._data`);
+				const eval_str = content;
+				// .replace(/@(?=\w)/g, `node._data.`)
+				// .replace(/@/g, `node._data`);
 				node._evaluables.push({
 					eval_str,
 				});
@@ -288,7 +288,13 @@ function setComponentData(comp, _data = undefined, options = {}) {
 	}
 
 	for (const evaluable of node._evaluables) {
-		evaluable.node._set_content(eval(evaluable.eval_str));
+		try {
+			const data = node._data; // it's passed to the eval, it's just a keyword
+			evaluable.node._set_content(eval(evaluable.eval_str));
+		} catch (e) {
+			console.error(`Component cannot evaluate ${evaluable.eval_str}: ${e}`);
+			console.trace();
+		}
 	}
 
 	if (equal) {

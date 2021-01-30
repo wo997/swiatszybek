@@ -28,12 +28,12 @@ function productVariantComp(node, parent, data = undefined) {
 
 	createComponent(node, parent, data, {
 		template: /*html*/ `
-            {{@row_index+1}}
-            <input type="text" class="field inline" data-bind="name">
+            {${data.row_index + 1}}
+            <input type="text" class="field inline" data-bind="name" style="">
 
             <p-batch-trait data-trait="list_controls"></p-batch-trait>
             <p-component data-bind="state"></p-component>
-            {{JSON.stringify(@)}}
+            {${JSON.stringify(data)}}
         `,
 
 		initialize: () => {
