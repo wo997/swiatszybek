@@ -35,7 +35,7 @@
  * I'm not a fan of it but regular inheritance doesn't seem to work as expected os we assign common props in here
  * @typedef {{
  * _data: any
- * _setData(data?: any, options?: SetComponentDataOptions)
+ * _set_data(data?: any, options?: SetComponentDataOptions)
  * _prev_data: any
  * _nodes: any
  * } & BaseComponent} AnyComponent
@@ -70,7 +70,7 @@ function createComponent(comp, parent_comp, data, options) {
 	}
 	node.parent_component = parent;
 
-	node._setData = options.setData;
+	node._set_data = options.setData;
 
 	node._subscribers = [];
 
@@ -173,7 +173,7 @@ function createComponent(comp, parent_comp, data, options) {
 				if (sub_node_data !== undefined) {
 					if (node._data[bind_var] !== undefined) {
 						node._data[bind_var] = sub_node_data;
-						node._setData();
+						node._set_data();
 					}
 				}
 			});
@@ -184,7 +184,7 @@ function createComponent(comp, parent_comp, data, options) {
 	});
 
 	if (data !== undefined) {
-		node._setData(data);
+		node._set_data(data);
 	}
 
 	if (parent) {
@@ -316,7 +316,7 @@ function propagateComponentData(comp) {
 			/** @type {AnyComponent} */
 			// @ts-ignore
 			const receiver = subscribe.receiver;
-			receiver._setData();
+			receiver._set_data();
 		}
 	}
 }

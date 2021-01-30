@@ -5,6 +5,7 @@
  *  id: number
  *  name: string
  *  state: number
+ *  sell_by: string
  *  list_data: ListRowComponentData[]
  *  variants: ProductVariantComponentData[]
  * }} FirstComponentData
@@ -12,7 +13,7 @@
  * @typedef {{
  *  _data: FirstComponentData
  *  _prev_data: FirstComponentData
- *  _setData(data?: FirstComponentData, options?: SetComponentDataOptions)
+ *  _set_data(data?: FirstComponentData, options?: SetComponentDataOptions)
  *  _getData()
  *  _saved_data: FirstComponentData
  *  _nodes: {
@@ -24,6 +25,7 @@
  *      expand_y_1: PiepNode
  *      list_row: ListRowComponent
  *      variants: ListComponent
+ *      case_sell_by_qty: PiepNode
  *  }
  * } & BaseComponent} FirstComponent
  */
@@ -39,6 +41,7 @@ function createFirstCompontent(node, parent, data = undefined) {
 			id: -1,
 			name: "",
 			state: 0,
+			sell_by: "qty",
 			list_data: [],
 			variants: [],
 		};
@@ -51,13 +54,13 @@ function createFirstCompontent(node, parent, data = undefined) {
                 <input type="text" class="field" data-bind="name"/></span>
 
                 <div class="label">Sprzedawaj na</div>
-                <select data-bind="sell_by" class="field">
+                <select class="field" data-bind="sell_by">
                     <option value="qty">Sztuki</option>
                     <option value="weight">Wagę</option>
                     <option value="length">Długość</option>
                 </select>
 
-                <div class="case_sell_by_qty">
+                <div data-node="case_sell_by_qty" class="expand_y animate_hidden hidden">
                     <div class="label">
                     Warianty {{@variants.length}}
                     <button data-node="add_variant_btn" class="btn primary">Dodaj kolejny <i class="fas fa-plus"></i></button>
@@ -83,8 +86,6 @@ function createFirstCompontent(node, parent, data = undefined) {
             </div>
         `,
 		initialize: () => {
-			// TODO: make _setData a required parameter of create component, maybe you also want a defualts parameter for... defaults
-
 			createListCompontent(node._nodes.my_list, node, createListRowCompontent);
 
 			createListCompontent(
@@ -95,7 +96,7 @@ function createFirstCompontent(node, parent, data = undefined) {
 
 			node._nodes.add_variant_btn.addEventListener("click", () => {
 				node._data.variants.push({ email: "", name: "dff" });
-				node._setData();
+				node._set_data();
 			});
 		},
 		setData: (
@@ -120,12 +121,15 @@ function createFirstCompontent(node, parent, data = undefined) {
 
 					expand(node._nodes.expand_y_1, node._data.state === 1);
 
-					const equivalent = isEquivalent(node._data, node._saved_data);
-					const disable = !node._saved_data || equivalent;
-
 					node._nodes.list_count._set_content(
 						`(${node._data.list_data.length})`
 					);
+
+					console.log(
+						node._data.sell_by === "qty",
+						node._nodes.case_sell_by_qty
+					);
+					expand(node._nodes.case_sell_by_qty, node._data.sell_by === "qty");
 				},
 			});
 		},

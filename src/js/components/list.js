@@ -4,7 +4,7 @@
  * @typedef {{
  * _data: Array
  * _prev_data: Array
- * _setData(data?: Array, options?: SetComponentDataOptions)
+ * _set_data(data?: Array, options?: SetComponentDataOptions)
  * _nextRowId: number
  * _removeRow(row_index: number)
  * _moveRow(from: number, to: number)
@@ -63,7 +63,7 @@ function createListCompontent(
 				});
 				if (remove_index !== -1) {
 					node._data.splice(remove_index, 1);
-					node._setData();
+					node._set_data();
 				}
 			};
 
@@ -73,7 +73,7 @@ function createListCompontent(
 
 				const temp = node._data.splice(from, 1);
 				node._data.splice(to, 0, ...temp);
-				node._setData();
+				node._set_data();
 			};
 		},
 		setData: (data = undefined, options = {}) => {

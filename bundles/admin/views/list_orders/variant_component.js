@@ -10,7 +10,7 @@
  * @typedef {{
  * _data: ProductVariantComponentData
  * _prev_data: ProductVariantComponentData
- * _setData(data?: ProductVariantComponentData, options?: SetComponentDataOptions)
+ * _set_data(data?: ProductVariantComponentData, options?: SetComponentDataOptions)
  * _nodes: {
  * }
  * } & BaseComponent} ProductVariantComponent

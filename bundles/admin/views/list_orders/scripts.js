@@ -11,6 +11,7 @@ domload(() => {
 		id: 5,
 		name: "asdsad",
 		state: 1,
+		sell_by: "qty",
 		list_data: [
 			{ email: "wojtekwo997@gmail.com", name: "name" },
 			{ email: "pies@pies.pies", name: "name" },
@@ -25,7 +26,7 @@ domload(() => {
 
 	// createFirstCompontent(my_list_node, undefined);
 
-	// my_list_node._setData({
+	// my_list_node._set_data({
 	// 	id: 5,
 	// 	name: "asdsad",
 	// 	state: 1,
@@ -50,7 +51,7 @@ domload(() => {
  * @typedef {{
  * _data: ListRowComponentData
  * _prev_data: ListRowComponentData
- * _setData(data?: ListRowComponentData, options?: SetComponentDataOptions)
+ * _set_data(data?: ListRowComponentData, options?: SetComponentDataOptions)
  * _nodes: {
  *  idk: PiepNode
  *  delete_btn: PiepNode
