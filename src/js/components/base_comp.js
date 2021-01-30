@@ -20,7 +20,8 @@
  * _subscribers: SubscribeToData[]
  * _bind_var?: string
  * _changed_data?: object
- * _evaluables: {node?: PiepNode, eval_str: string}[]
+ * _eval_html: {node?: PiepNode, eval_str: string}[]
+ * _eval_class: {node: PiepNode, eval_str: string, className: string}[]
  * _component_traits: ComponentTrait[]
  * } & PiepNode} BaseComponent
  *
@@ -90,7 +91,8 @@ function createComponent(comp, parent_comp, data, options) {
 		};
 	}
 
-	node._evaluables = [];
+	node._eval_html = [];
+	node._eval_class = [];
 	node._component_traits = [];
 
 	if (options.template) {
@@ -101,11 +103,11 @@ function createComponent(comp, parent_comp, data, options) {
 			for (const match of matches_e) {
 				const content = match.substring(2, match.length - 2);
 				const eval_str = content;
-				node._evaluables.push({
+				node._eval_html.push({
 					eval_str,
 				});
-				const node_html = `<span class='evaluable_${
-					node._evaluables.length - 1
+				const node_html = `<span class='eval_html_${
+					node._eval_html.length - 1
 				}'></span>`;
 				template = template.replace(match, node_html);
 			}
@@ -114,9 +116,9 @@ function createComponent(comp, parent_comp, data, options) {
 		node._set_content(template);
 
 		let index = -1;
-		for (const evaluable of node._evaluables) {
+		for (const eval_html of node._eval_html) {
 			index++;
-			evaluable.node = node._child(`.evaluable_${index}`);
+			eval_html.node = node._child(`.eval_html_${index}`);
 		}
 
 		for (const trait of node._children("p-batch-trait")) {
@@ -163,17 +165,25 @@ function createComponent(comp, parent_comp, data, options) {
 				}
 				const n2 = p.tagName.toLocaleLowerCase();
 				if (n2.endsWith("-comp")) {
-					console.log("cipka");
 					return;
 				}
 			}
 
-			// yup - it's a direct comp
+			// yup - it's a direct sibling
 
-			const match_c = e.className.match(/{.*?: ?{.*?}}/gm);
-			if (match_c) {
-				console.log(match_c);
+			let out = e.className;
+			const matches_c = out.match(/\{\w*?:\{.*?}}/gm);
+			if (matches_c) {
+				for (const match of matches_c) {
+					const content = match.substring(1, match.length - 1);
+					const [className, ev] = content.split(":");
+					const eval_str = ev.substring(1, ev.length - 1);
+
+					node._eval_class.push({ eval_str, node: e, className });
+					out = out.replace(match, "");
+				}
 			}
+			e.className = out.replace(/\n/g, " ").replace(/ +/g, " ").trim();
 		});
 	}
 
@@ -308,12 +318,24 @@ function setComponentData(comp, _data = undefined, options = {}) {
 		});
 	}
 
-	for (const evaluable of node._evaluables) {
+	const data = node._data; // it's passed to the eval, it's just a keyword
+	for (const eval_html of node._eval_html) {
 		try {
-			const data = node._data; // it's passed to the eval, it's just a keyword
-			evaluable.node._set_content(eval(evaluable.eval_str));
+			eval_html.node._set_content(eval(eval_html.eval_str));
 		} catch (e) {
-			console.error(`Component cannot evaluate ${evaluable.eval_str}: ${e}`);
+			console.error(`Cannot evaluate html ${eval_html.eval_str}: ${e}`);
+			console.trace();
+		}
+	}
+
+	for (const eval_class of node._eval_class) {
+		try {
+			eval_class.node.classList.toggle(
+				eval_class.className,
+				!!eval(eval_class.eval_str)
+			);
+		} catch (e) {
+			console.error(`Cannot evaluate class ${eval_class.eval_str}: ${e}`);
 			console.trace();
 		}
 	}

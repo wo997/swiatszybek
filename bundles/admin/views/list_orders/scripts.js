@@ -20,7 +20,7 @@ domload(() => {
 		],
 		variants: [
 			{ name: "123", email: "555" },
-			{ name: "123xxx", email: "555" },
+			{ name: "", email: "" },
 		],
 	});
 

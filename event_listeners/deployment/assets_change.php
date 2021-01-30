@@ -115,7 +115,7 @@ if ($modifyJS) {
         // allows reactive data 
         $js_full = str_replace('{${', '{{', $js_full);
 
-        if (preg_match_all('/\{.*?: ?\$\{.*?}}/', $js_full, $matches)) {
+        if (preg_match_all('/\{\w*?:\$\{.*?}}/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
                 //var_dump([$match, htmlspecialchars(strReplaceFirst('$', '', $match)), preg_match('/\{.*?: ?\$\{.*?}}/', $match)]);
                 $js_full = str_replace($match, htmlspecialchars(strReplaceFirst('$', '', $match)), $js_full);

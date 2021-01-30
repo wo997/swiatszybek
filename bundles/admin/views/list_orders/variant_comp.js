@@ -23,7 +23,7 @@
  */
 function productVariantComp(node, parent, data = undefined) {
 	if (data === undefined) {
-		data = { email: "", name: "name" };
+		data = { email: "", name: "" };
 	}
 
 	createComponent(node, parent, data, {
@@ -31,9 +31,8 @@ function productVariantComp(node, parent, data = undefined) {
             {${data.row_index + 1}}
             <input type="text" data-bind="name" class="
                 field inline
-                some-class
-                {pies:${data.row_index > 3}}
-                {cat:${data.name == "qty"}}">
+                {even:${data.row_index % 2 === 0}}
+                {type_something:${data.name == ""}}">
 
             <p-batch-trait data-trait="list_controls"></p-batch-trait>
             <p-component data-bind="state"></p-component>
