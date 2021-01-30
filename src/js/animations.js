@@ -2,52 +2,17 @@
 
 /* in general u wanna use the animator for variable animations, not the static ones ;) */
 const ANIMATIONS = {
-	blink: `
-    0% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
+	blink: `0% {opacity: 1;}50% {opacity: 0;}100% {opacity: 1;}
   `,
 	/* for some of them you better dont use the animator but the animate property instead like $.style.animation = "hide 0.4s";*/
-	show: `
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  `,
-	hide: `
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-  `,
+	show: `0% {opacity: 0;}100% {opacity: 1;}`,
+	hide: `0% {opacity: 1;}100% {opacity: 0;}`,
 	replace: (zoom_factor = 0.25) => {
 		return `
-      0% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0;
-        transform: scale(${1 - zoom_factor});
-      }
-      51% {
-        opacity: 0;
-        transform: scale(${1 + zoom_factor});
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+      0% {opacity: 1;transform: scale(1);}
+      50% {opacity: 0;transform: scale(${1 - zoom_factor});}
+      51% {opacity: 0;transform: scale(${1 + zoom_factor});}
+      100% {opacity: 1;transform: scale(1);}
     `;
 	},
 };
@@ -55,7 +20,7 @@ const ANIMATIONS = {
 var wo997_animation_counter = 0;
 function createAnimation(keyframes, duration) {
 	wo997_animation_counter++;
-	var animation_name = `wo997_animation_${wo997_animation_counter}`;
+	const animation_name = `wo997_animation_${wo997_animation_counter}`;
 	document.body.insertAdjacentHTML(
 		"beforeend",
 		/*html*/ `<style id="${animation_name}">
@@ -131,7 +96,11 @@ function finishNodeAnimation(node, is_early = false) {
  */
 
 function animate(node, keyframes, duration, options = {}) {
-	var animation_name = createAnimation(keyframes, duration);
+	if (node._parent(".freeze, .freeze_before_load")) {
+		duration = 0;
+	}
+
+	const animation_name = createAnimation(keyframes, duration);
 	if (node.wo997_animation_timeout) {
 		finishNodeAnimation(node, true);
 		window.clearTimeout(node.wo997_animation_timeout);
@@ -148,7 +117,7 @@ function animate(node, keyframes, duration, options = {}) {
 	}
 	node.wo997_animation_early_callback = def(options.early_callback, true);
 
-	// crazy, start the second timeout once you finish the frame ;)
+	// start the second timeout once you finish the frame, that way all animations start at the same time yay
 	setTimeout(() => {
 		node.wo997_animation_timeout = setTimeout(() => {
 			finishNodeAnimation(node);

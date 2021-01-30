@@ -63,6 +63,10 @@ function createComponent(comp, parent_comp, data, options) {
 	const parent = parent_comp;
 
 	//node.classList.add("component");
+	node.classList.add("freeze");
+	setTimeout(() => {
+		node.classList.remove("freeze");
+	}, 200);
 
 	if (!!parent && !(parent instanceof HTMLElement)) {
 		console.error("Parent is not a node!", parent);

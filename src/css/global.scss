@@ -1448,8 +1448,10 @@ input:placeholder-shown + .miejscowosc-picker-list:hover {
 
 .freeze_before_load,
 .freeze_before_load *,
-.freeze {
+.freeze,
+.freeze * {
 	transition: 0s all !important;
+	animation: none !important;
 }
 
 h1,
