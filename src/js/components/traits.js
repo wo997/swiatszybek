@@ -3,17 +3,17 @@
 /**
  * @typedef {{
  * template: string
- * initialize?(node: AnyComponent)
- * render?(node: AnyComponent)
- * }} ComponentTraitDefinition
+ * initialize?(node: AnyComp)
+ * render?(node: AnyComp)
+ * }} CompTraitDefinition
  */
-const component_traits = {};
+const comp_traits = {};
 
 /**
  *
  * @param {*} name
- * @param {ComponentTraitDefinition} trait_def
+ * @param {CompTraitDefinition} trait_def
  */
-function registerComponentTrait(name, trait_def) {
-	component_traits[name] = trait_def;
+function registerCompTrait(name, trait_def) {
+	comp_traits[name] = trait_def;
 }

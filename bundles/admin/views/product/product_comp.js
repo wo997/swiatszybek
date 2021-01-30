@@ -6,29 +6,29 @@
  *  name: string
  *  state: number
  *  sell_by: string
- *  list_data: ListRowComponentData[]
- *  variants: ProductVariantComponentData[]
- * }} FirstComponentData
+ *  list_data: ListRowCompData[]
+ *  variants: ProductVariantCompData[]
+ * }} ProductCompData
  *
  * @typedef {{
- *  _data: FirstComponentData
- *  _prev_data: FirstComponentData
- *  _set_data(data?: FirstComponentData, options?: SetComponentDataOptions)
+ *  _data: ProductCompData
+ *  _prev_data: ProductCompData
+ *  _set_data(data?: ProductCompData, options?: SetCompDataOptions)
  *  _getData()
- *  _saved_data: FirstComponentData
+ *  _saved_data: ProductCompData
  *  _nodes: {
  *      add_variant_btn: PiepNode
  *      case_sell_by_qty: PiepNode
  *  }
- * } & BaseComponent} FirstComponent
+ * } & BaseComp} ProductComp
  */
 
 /**
- * @param {FirstComponent} node
+ * @param {ProductComp} node
  * @param {*} parent
- * @param {FirstComponentData} data
+ * @param {ProductCompData} data
  */
-function firstComp(node, parent, data = undefined) {
+function productComp(node, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			id: -1,
@@ -40,14 +40,16 @@ function firstComp(node, parent, data = undefined) {
 		};
 	}
 
-	createComponent(node, parent, data, {
+	createComp(node, parent, data, {
 		template: /*html*/ `
             <div>
                 <div class="label">Nazwa produktu</div>
-                <input type="text" class="field" data-bind="name"/></span>
+                <input type="text" class="field" data-bind="{${
+									data.name
+								}}"/></span>
 
                 <div class="label">Sprzedawaj na</div>
-                <select class="field" data-bind="sell_by">
+                <select class="field" data-bind="{${data.sell_by}}">
                     <option value="qty">Sztuki</option>
                     <option value="weight">Wagę</option>
                     <option value="length">Długość</option>
@@ -58,16 +60,13 @@ function firstComp(node, parent, data = undefined) {
                     Warianty ({${data.variants.length}})
                     <button data-node="add_variant_btn" class="btn primary">Dodaj kolejny <i class="fas fa-plus"></i></button>
                     </div>
-                    <list-comp data-bind="variants">
+                    <list-comp data-bind="{${data.variants}}">
                         <product-variant-comp></product-variant-comp>
-                        <product-variant-comp></product-variant-comp>
-                        Oh baby, I can add random shit here and it acts like a <span class="semi-bold">template</span>, cool,
-                        more components are welcome!
                     </list-comp>
                 </div>
 
                 <h3>Display form json</h3>
-                <div>{{JSON.stringify(data)}}</div>
+                <div>{${JSON.stringify(data)}}</div>
             </div>
         `,
 		initialize: () => {
@@ -77,7 +76,7 @@ function firstComp(node, parent, data = undefined) {
 			});
 		},
 		setData: (
-			/** @type {FirstComponentData} */ data = undefined,
+			/** @type {ProductCompData} */ data = undefined,
 			options = {}
 		) => {
 			if (data === undefined) {
@@ -88,7 +87,7 @@ function firstComp(node, parent, data = undefined) {
 				e.name = data.name;
 			});
 
-			setComponentData(node, data, {
+			setCompData(node, data, {
 				...options,
 				render: () => {
 					expand(node._nodes.case_sell_by_qty, node._data.sell_by === "qty");

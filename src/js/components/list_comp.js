@@ -4,22 +4,22 @@
  * @typedef {{
  * _data: Array
  * _prev_data: Array
- * _set_data(data?: Array, options?: SetComponentDataOptions)
+ * _set_data(data?: Array, options?: SetCompDataOptions)
  * _nextRowId: number
  * _removeRow(row_index: number)
  * _moveRow(from: number, to: number)
- * _getRows(): AnyComponent[]
+ * _getRows(): AnyComp[]
  * _row_template: string
- * } & BaseComponent} ListComponent
+ * } & BaseComp} ListComp
  *
  * @typedef {{
  * row_index?: number
  * row_id?: number
- * }} ListComponentRowData row_index is a part of set of consecutive numbers, meanwhile row_id is a number that uniquely defines a row even when it chagnes the order etc.
+ * }} ListCompRowData row_index is a part of set of consecutive numbers, meanwhile row_id is a number that uniquely defines a row even when it chagnes the order etc.
  */
 
 /**
- * @param {ListComponent} node
+ * @param {ListComp} node
  * @param {*} parent
  * @param {{
  * rowContructor?(node, parent, data, params)
@@ -34,12 +34,12 @@ function listComp(node, parent, data = undefined, params = {}) {
 	node._row_template = node.innerHTML;
 	node._empty();
 
-	createComponent(node, parent, data, {
+	createComp(node, parent, data, {
 		initialize: () => {
 			node.classList.add("my_list");
 
 			node._getRows = () => {
-				/** @type {AnyComponent[]} */
+				/** @type {AnyComp[]} */
 				// @ts-ignore
 				const res = node._direct_children(":not(.removing)");
 				return res;
@@ -96,7 +96,7 @@ function listComp(node, parent, data = undefined, params = {}) {
 				row_data.list_length = data.length;
 			});
 
-			setComponentData(node, data, {
+			setCompData(node, data, {
 				...options,
 				render: () => {
 					const diff = diffArrays(node._prev_data, node._data, (e) => e.row_id);
@@ -131,7 +131,7 @@ function listComp(node, parent, data = undefined, params = {}) {
 							let child = add ? undefined : rows_before[diff_info.from];
 
 							if (add) {
-								/** @type {AnyComponent} */
+								/** @type {AnyComp} */
 								// @ts-ignore
 								child = createNodeFromHtml(/*html*/ `
                                     <div class="my_list_row_wrapper expand_y hidden animate_hidden">

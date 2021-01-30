@@ -1,6 +1,6 @@
 /* js[global] */
 
-registerComponentBatchTrait(
+registerCompBatchTrait(
 	"list_controls",
 	/*html*/ `
         <p-trait data-trait="list_down_btn"></p-trait>

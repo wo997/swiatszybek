@@ -2,13 +2,13 @@
 
 {
 	const trait_name = "list_delete_btn";
-	registerComponentTrait(trait_name, {
+	registerCompTrait(trait_name, {
 		template: /*html*/ `<button data-node="${trait_name}" class="btn subtle"><i class="fas fa-trash"></i></button>`,
 		initialize: (node) => {
 			node._nodes[trait_name].addEventListener("click", () => {
-				/** @type {ListComponent} */
+				/** @type {ListComp} */
 				// @ts-ignore
-				const parent = node.parent_component;
+				const parent = node._parent_comp;
 				if (parent._removeRow) {
 					parent._removeRow(node._data.row_index);
 				}

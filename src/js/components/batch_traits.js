@@ -1,7 +1,7 @@
 /* js[!global] */
 
-const component_batch_traits = {};
+const comp_batch_traits = {};
 
-function registerComponentBatchTrait(name, html) {
-	component_batch_traits[name] = html;
+function registerCompBatchTrait(name, html) {
+	comp_batch_traits[name] = html;
 }

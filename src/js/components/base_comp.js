@@ -2,8 +2,8 @@
 
 /**
  * @typedef {{
- * fetch(source: BaseComponent, receiver: BaseComponent)
- * receiver: BaseComponent
+ * fetch(source: BaseComp, receiver: BaseComp)
+ * receiver: BaseComp
  * }} SubscribeToData
  *
  * @typedef {{
@@ -13,53 +13,53 @@
  *
  * @typedef {{
  * _bindNodes: PiepNode[]
- * parent_component?: AnyComponent
+ * _parent_comp?: AnyComp
  * _referenceParent: CallableFunction
- * _pointChildsData(child: AnyComponent): ObjectData
+ * _pointChildsData(child: AnyComp): ObjectData
  * _addSubscriber(subscribe: SubscribeToData)
  * _subscribers: SubscribeToData[]
  * _bind_var?: string
  * _changed_data?: object
  * _eval_html: {node?: PiepNode, eval_str: string}[]
  * _eval_class: {node: PiepNode, eval_str: string, className: string}[]
- * _component_traits: ComponentTrait[]
- * } & PiepNode} BaseComponent
+ * _comp_traits: CompTrait[]
+ * } & PiepNode} BaseComp
  *
  ** @typedef {{
- * _trait_def: ComponentTraitDefinition
- * } & PiepNode} ComponentTrait
+ * _trait_def: CompTraitDefinition
+ * } & PiepNode} CompTrait
  *
  * @typedef {{
  * force_render?: boolean
- * }} SetComponentDataOptions
+ * }} SetCompDataOptions
  *
  * I'm not a fan of it but regular inheritance doesn't seem to work as expected os we assign common props in here
  * @typedef {{
  * _data: any
- * _set_data(data?: any, options?: SetComponentDataOptions)
+ * _set_data(data?: any, options?: SetCompDataOptions)
  * _prev_data: any
  * _nodes: any
- * } & BaseComponent} AnyComponent
+ * } & BaseComp} AnyComp
  *
  * @typedef {{
  * template?: string
  * initialize?()
- * setData(data: any, options: SetComponentDataOptions)
- * }} createComponentOptions
+ * setData(data: any, options: SetCompDataOptions)
+ * }} createCompOptions
  */
 
 /**
- * @param {BaseComponent} comp
+ * @param {BaseComp} comp
  * @param {*} parent_comp
  * @param {*} data
- * @param {createComponentOptions} options
+ * @param {createCompOptions} options
  * */
-function createComponent(comp, parent_comp, data, options) {
-	/** @type {AnyComponent} */
+function createComp(comp, parent_comp, data, options) {
+	/** @type {AnyComp} */
 	// @ts-ignore
 	const node = comp;
 
-	/** @type {AnyComponent} */
+	/** @type {AnyComp} */
 	// @ts-ignore
 	const parent = parent_comp;
 
@@ -73,7 +73,7 @@ function createComponent(comp, parent_comp, data, options) {
 		console.error("Parent is not a node!", parent);
 		console.trace();
 	}
-	node.parent_component = parent;
+	node._parent_comp = parent;
 
 	node._set_data = options.setData;
 
@@ -93,7 +93,7 @@ function createComponent(comp, parent_comp, data, options) {
 
 	node._eval_html = [];
 	node._eval_class = [];
-	node._component_traits = [];
+	node._comp_traits = [];
 
 	if (options.template) {
 		let template = options.template;
@@ -124,7 +124,7 @@ function createComponent(comp, parent_comp, data, options) {
 		for (const trait of node._children("p-batch-trait")) {
 			const trait_name = trait.dataset.trait;
 
-			const trait_html = component_batch_traits[trait_name];
+			const trait_html = comp_batch_traits[trait_name];
 			if (trait_html) {
 				trait.insertAdjacentHTML("afterend", trait_html);
 			}
@@ -134,16 +134,16 @@ function createComponent(comp, parent_comp, data, options) {
 		for (const trait of node._children("p-trait")) {
 			const trait_name = trait.dataset.trait;
 
-			/** @type {ComponentTraitDefinition} */
-			const trait_def = component_traits[trait_name];
+			/** @type {CompTraitDefinition} */
+			const trait_def = comp_traits[trait_name];
 			if (trait_def) {
-				/** @type {ComponentTrait} */
+				/** @type {CompTrait} */
 				// @ts-ignore
 				const trait_node = createNodeFromHtml(trait_def.template);
 				trait_node._trait_def = trait_def;
 				trait._parent().insertBefore(trait_node, trait);
 				trait.remove();
-				node._component_traits.push(trait_node);
+				node._comp_traits.push(trait_node);
 			}
 		}
 
@@ -201,13 +201,13 @@ function createComponent(comp, parent_comp, data, options) {
 		options.initialize();
 	}
 
-	node._component_traits.forEach((trait) => {
+	node._comp_traits.forEach((trait) => {
 		if (trait._trait_def.initialize) {
 			trait._trait_def.initialize(node);
 		}
 	});
 
-	node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
+	node._bindNodes.forEach((/** @type {AnyComp} */ sub_node) => {
 		const bind_var = sub_node.dataset.bind;
 		sub_node._bind_var = bind_var;
 
@@ -237,8 +237,8 @@ function createComponent(comp, parent_comp, data, options) {
 		parent._subscribers.push({
 			receiver: node,
 			fetch: (
-				/** @type {AnyComponent} */ source,
-				/** @type {AnyComponent} */ receiver
+				/** @type {AnyComp} */ source,
+				/** @type {AnyComp} */ receiver
 			) => {
 				const x = source._pointChildsData(node);
 				if (x) {
@@ -252,8 +252,8 @@ function createComponent(comp, parent_comp, data, options) {
 		node._subscribers.push({
 			receiver: parent,
 			fetch: (
-				/** @type {AnyComponent} */ source,
-				/** @type {AnyComponent} */ receiver
+				/** @type {AnyComp} */ source,
+				/** @type {AnyComp} */ receiver
 			) => {
 				const { obj, key } = receiver._pointChildsData(node);
 				if (key !== undefined) {
@@ -267,16 +267,16 @@ function createComponent(comp, parent_comp, data, options) {
 /**
  * @typedef {{
  * render?: CallableFunction
- * } & SetComponentDataOptions} SetAnyComponentDataOptions
+ * } & SetCompDataOptions} SetAnyCompDataOptions
  */
 
 /**
- * @param {BaseComponent} comp
+ * @param {BaseComp} comp
  * @param {*} _data
- * @param {SetAnyComponentDataOptions} options
+ * @param {SetAnyCompDataOptions} options
  */
-function setComponentData(comp, _data = undefined, options = {}) {
-	/** @type {AnyComponent} */
+function setCompData(comp, _data = undefined, options = {}) {
+	/** @type {AnyComp} */
 	// @ts-ignore
 	const node = comp;
 
@@ -311,7 +311,7 @@ function setComponentData(comp, _data = undefined, options = {}) {
 	if (options.render) {
 		options.render();
 
-		node._component_traits.forEach((trait) => {
+		node._comp_traits.forEach((trait) => {
 			if (trait._trait_def.render) {
 				trait._trait_def.render(node);
 			}
@@ -346,19 +346,19 @@ function setComponentData(comp, _data = undefined, options = {}) {
 
 	node._prev_data = cloneObject(node._data);
 
-	propagateComponentData(node);
+	propagateCompData(node);
 }
 
 /**
- * @param {BaseComponent} comp
+ * @param {BaseComp} comp
  */
-function propagateComponentData(comp) {
-	/** @type {AnyComponent} */
+function propagateCompData(comp) {
+	/** @type {AnyComp} */
 	// @ts-ignore
 	const node = comp;
 
 	if (node._bindNodes) {
-		node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
+		node._bindNodes.forEach((/** @type {AnyComp} */ sub_node) => {
 			const bind_var = sub_node.dataset.bind;
 
 			if (sub_node._set_value && node._changed_data[bind_var]) {
@@ -377,7 +377,7 @@ function propagateComponentData(comp) {
 				// remove subscriber reference - kinda lazy garbage collector
 				subscribers.splice(i, 1);
 			}
-			/** @type {AnyComponent} */
+			/** @type {AnyComp} */
 			// @ts-ignore
 			const receiver = subscribe.receiver;
 			receiver._set_data();

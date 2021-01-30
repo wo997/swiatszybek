@@ -8,7 +8,7 @@ var zamowienia_table_definition = [
 			var products_info = "<table>";
 			try {
 				var produkty = JSON.parse(r.cache_basket);
-				for (produkt of produkty) {
+				for (const produkt of produkty) {
 					products_info += `<tr><td><b>${produkt["total_price"]}zł</b></td><td>${produkt["quantity"]}szt. ${produkt["title"]}</td></tr>`;
 				}
 			} catch (e) {}

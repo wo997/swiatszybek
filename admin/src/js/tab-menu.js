@@ -4,7 +4,7 @@ document.addEventListener("click", (event) => {
 	var t = $(event.target);
 	var option = t._parent(".tab-option");
 	var menu = t._parent(".tab-menu");
-	if (!option || !header) return;
+	if (!option || !menu) return;
 
 	var tab_id = option.getAttribute("data-tab_id");
 

@@ -2,13 +2,13 @@
 
 {
 	const trait_name = "list_up_btn";
-	registerComponentTrait(trait_name, {
+	registerCompTrait(trait_name, {
 		template: /*html*/ `<button data-node="${trait_name}" class="btn subtle"><i class="fas fa-chevron-up"></i></button>`,
 		initialize: (node) => {
 			node._nodes[trait_name].addEventListener("click", () => {
-				/** @type {ListComponent} */
+				/** @type {ListComp} */
 				// @ts-ignore
-				const parent = node.parent_component;
+				const parent = node._parent_comp;
 				if (parent._moveRow) {
 					parent._moveRow(node._data.row_index, node._data.row_index - 1);
 				}

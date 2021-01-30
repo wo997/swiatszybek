@@ -70,14 +70,11 @@ if ($modifyCSS) {
         foreach ($files as $file) {
             $css_full .= " " . file_get_contents($file);
         }
-        $minifier = new Minify\CSS($scss->compile($css_full));
-        saveFile(BUILDS_PATH . "$cssGroup.css", $minifier->minify());
+        saveFile(BUILDS_PATH . "$cssGroup.css", (new Minify\CSS($scss->compile($css_full)))->minify());
     }
 }
 if ($modifyJS) {
     foreach ($js_file_groups as $jsGroup => $files) {
-        //@include(admin/tools/newCms/template.html)
-
         $js_full = "";
         foreach ($files as $file) {
             $js_content = file_get_contents($file);
@@ -100,6 +97,7 @@ if ($modifyJS) {
 
             $js_content = implode(PHP_EOL, $js_content_arr);
 
+            //@include(admin/tools/newCms/template.html)
             if (preg_match("/(?<=\@include\()[^\)]*(?=\))/", $js_content, $matches)) {
                 foreach ($matches as $file_to_include) {
                     $js_dependencies[] = $file_to_include;
@@ -112,20 +110,41 @@ if ($modifyJS) {
             $js_full .= $js_content;
         }
 
+        // minify first, then you are safe to say that all variables are in a single line, ok, strings are not ;) but [^()]* does the trick
+        $js_full = (new Minify\JS($js_full))->minify();
+
         // allows reactive data 
         $js_full = str_replace('{${', '{{', $js_full);
 
+        // reactive classes
         if (preg_match_all('/\{\w*?:\$\{.*?}}/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
-                //var_dump([$match, htmlspecialchars(strReplaceFirst('$', '', $match)), preg_match('/\{.*?: ?\$\{.*?}}/', $match)]);
-                $js_full = str_replace($match, htmlspecialchars(strReplaceFirst('$', '', $match)), $js_full);
+                $rep = strReplaceFirst('$', '', $match);
+                $rep = htmlspecialchars($rep);
+                $js_full = str_replace($match, $rep, $js_full);
             }
         }
 
-        $minifier = new Minify\JS($js_full);
-        saveFile(BUILDS_PATH . "$jsGroup.js", $minifier->minify());
+        // binding
+        if (preg_match_all('/data-bind="\{\{[^()]*data\.[^()]*}}"/', $js_full, $matches)) {
+            foreach ($matches[0] as $match) {
+                $rep = $match;
+                $rep = preg_replace("/(?<=[\s{])data\./", "", $rep);
+                $rep = preg_replace("/\s/", "", $rep);
+                $rep = str_replace(["{{", "}}"], "", $rep);
+                $js_full = str_replace($match, $rep, $js_full);
+            }
+        }
+
+        // fuck everything, even html strings etc, everything will become a single line lol, that's not clever
+        // BUT!!! you can give the developer an option to mark elements that might require whitespaces, ezy
+        //$js_full = preg_replace('/\s{2,}/', ' ', $js_full);
+
+        var_dump(BUILDS_PATH . "$jsGroup.js");
+        var_dump($js_full, "<br><br><br><br><br><br><br><br><br><br><br>");
+        saveFile(BUILDS_PATH . "$jsGroup.js", $js_full);
     }
-    //die;
+    die; // if u wanna see the output
 }
 
 
