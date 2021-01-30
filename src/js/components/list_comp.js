@@ -20,10 +20,12 @@
 /**
  * @param {ListComponent} node
  * @param {*} parent
- * @param {CallableFunction} createRowCallback
+ * @param {{
+ * rowContructor?(node, parent, data, params)
+ * }} params
  * @param {Array} data
  */
-function listComp(node, parent, createRowCallback, data = undefined) {
+function listComp(node, parent, data = undefined, params = {}) {
 	if (data === undefined) {
 		data = [];
 	}
@@ -144,7 +146,7 @@ function listComp(node, parent, createRowCallback, data = undefined) {
 							if (add) {
 								const row_data = node._data[diff_info.to];
 								const the_row = child._child(".my_list_row");
-								createRowCallback(the_row, node, row_data, {});
+								params.rowContructor(the_row, node, row_data, {});
 								expand(child, true, { duration: animation_duration });
 							} else if (remove) {
 								expand(child, false, { duration: animation_duration });

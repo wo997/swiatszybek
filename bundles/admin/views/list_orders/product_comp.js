@@ -67,6 +67,7 @@ function firstComp(node, parent, data = undefined) {
                     </div>
                     <div data-bind="variants" data-node="variants"></div>
                     <list-comp data-bind="variants">
+                        pies pies pies
                         <product-variant-comp></product-variant-comp>
                     </list-comp>
                 </div>
@@ -89,13 +90,13 @@ function firstComp(node, parent, data = undefined) {
             </div>
         `,
 		initialize: () => {
-			listComp(node._nodes.my_list, node, listRowComp);
+			listComp(node._nodes.my_list, node, undefined, {
+				rowContructor: listRowComp,
+			});
 
-			/*listComp(
-				node._nodes.variants,
-				node,
-				productVariantComp
-			);*/
+			listComp(node._nodes.variants, node, undefined, {
+				rowContructor: productVariantComp,
+			});
 
 			node._nodes.add_variant_btn.addEventListener("click", () => {
 				node._data.variants.push({ email: "", name: "dff" });
