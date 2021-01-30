@@ -66,6 +66,9 @@ function createFirstCompontent(node, parent, data = undefined) {
                     <button data-node="add_variant_btn" class="btn primary">Dodaj kolejny <i class="fas fa-plus"></i></button>
                     </div>
                     <div data-bind="variants" data-node="variants"></div>
+                    <list-comp data-bind="variants">
+                        <product-variant-comp></product-variant-comp>
+                    </list-comp>
                 </div>
 
                 <h3>Some state (changes list visibility) </h3>
@@ -88,11 +91,11 @@ function createFirstCompontent(node, parent, data = undefined) {
 		initialize: () => {
 			createListCompontent(node._nodes.my_list, node, createListRowCompontent);
 
-			createListCompontent(
+			/*createListCompontent(
 				node._nodes.variants,
 				node,
 				createProductVariantComponent
-			);
+			);*/
 
 			node._nodes.add_variant_btn.addEventListener("click", () => {
 				node._data.variants.push({ email: "", name: "dff" });

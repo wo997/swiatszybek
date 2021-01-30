@@ -5,7 +5,7 @@
 	--radio_input_block_height: 80px;
 }
 
-radio-input {
+p-radio {
 	user-select: none;
 }
 
@@ -14,11 +14,11 @@ radio-option {
 	color: #444;
 }
 
-radio-input:not(.unselectable) radio-option.selected {
+p-radio:not(.unselectable) radio-option.selected {
 	pointer-events: none;
 }
 
-radio-input.default {
+p-radio.default {
 	& radio-option {
 		padding: 2px 5px;
 		display: block;
@@ -55,7 +55,7 @@ radio-input.default {
 }
 
 /* blocks start */
-radio-input.blocks {
+p-radio.blocks {
 	& {
 		display: flex;
 		flex-flow: row wrap;
@@ -115,7 +115,7 @@ radio-input.blocks {
 	}
 }
 
-radio-input {
+p-radio {
 	&.columns_1,
 	&.columns_2,
 	&.columns_3,

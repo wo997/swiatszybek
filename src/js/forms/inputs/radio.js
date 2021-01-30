@@ -5,7 +5,7 @@ document.addEventListener("click", (e) => {
 
 	const option = target._parent("radio-option", { skip: 0 });
 	if (option) {
-		const input = option._parent("radio-input", { skip: 0 });
+		const input = option._parent("p-radio", { skip: 0 });
 		input._children("radio-option").forEach((e) => {
 			if (input.classList.contains("unselectable")) {
 				if (e === option) {

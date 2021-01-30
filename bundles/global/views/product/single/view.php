@@ -243,19 +243,19 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
                 <h1 class="h1"><?= $product_data["title"] ?></h1>
 
                 <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
-                <radio-input class="vdo default columns_1" style="--option-padding:3px;margin-bottom:20px;" onchange="toggleVariantStyle(this)">
+                <p-radio class="vdo default columns_1" style="--option-padding:3px;margin-bottom:20px;" onchange="toggleVariantStyle(this)">
                     <radio-option value="1" class="default">Subtelny napis</radio-option>
                     <radio-option value="2">Czerwony prostokąt</radio-option>
                     <radio-option value="3">Szary prostokąt</radio-option>
                     <radio-option value="4">Brak</radio-option>
-                </radio-input>
+                </p-radio>
 
                 <div>
                     <?php
                     foreach ($variants as $variant) {
                     ?>
                         <span class="label"><?= $variant["filter_name"] ?></span>
-                        <radio-input class="variant_radio blocks unselectable columns_<?= def($variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($variant, "height", "80px") ?>' data-variant_id="<?= $variant["variant_id"] ?>" data-number>
+                        <p-radio class="variant_radio blocks unselectable columns_<?= def($variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($variant, "height", "80px") ?>' data-variant_id="<?= $variant["variant_id"] ?>" data-number>
                             <?php
                             foreach ($variant["variant_options"] as $option) {
                             ?>
@@ -279,7 +279,7 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
                             <?php
                             }
                             ?>
-                        </radio-input>
+                        </p-radio>
                     <?php
                     }
 

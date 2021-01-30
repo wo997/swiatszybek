@@ -118,7 +118,7 @@ function createComponent(comp, parent_comp, data, options) {
 			evaluable.node = node._child(`.evaluable_${index}`);
 		}
 
-		for (const trait of node._children("batch-trait")) {
+		for (const trait of node._children("p-batch-trait")) {
 			const trait_name = trait.dataset.trait;
 
 			const trait_html = component_batch_traits[trait_name];
