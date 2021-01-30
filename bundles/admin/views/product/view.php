@@ -104,8 +104,7 @@ if ($kopia) {
 
 <div id="productForm" data-form data-warn-before-leave class="form-field-spacing" data-history="30" data-history-buttons=".product-history-buttons">
     <div class="label">Czy publiczny?</div>
-    <checkbox name="published"></checkbox>
-
+    <p-checkbox name="published"></p-checkbox>
     <div style="display: flex" class="mobileRow">
         <div style="flex-grow:1; padding-right: 15px">
             <div style="max-width: 600px">

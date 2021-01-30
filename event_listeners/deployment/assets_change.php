@@ -23,6 +23,9 @@ $js_dependencies = [];
 
 function appendGroup(&$file_groups, $group, $path, $parent_dir)
 {
+    $important = strpos($group, "!") !== false;
+    $group = str_replace("!", "", $group);
+
     if ($group === "view") {
         $view_path = $parent_dir . "view.php";
         if (file_exists($view_path)) {
@@ -32,7 +35,11 @@ function appendGroup(&$file_groups, $group, $path, $parent_dir)
             }
         }
     }
-    $file_groups[$group][] = $path;
+    if ($important) {
+        array_unshift($file_groups[$group], $path);
+    } else {
+        $file_groups[$group][] = $path;
+    }
 }
 
 scanDirectories(
@@ -105,19 +112,6 @@ if ($modifyJS) {
             $js_full .= $js_content;
         }
 
-        //$minifiedJs = \JShrink\Minifier::minify($js_full);
-
-        //$myPacker = new GK\JavascriptPacker($js_full, 'None');
-        //$minifiedJs = $js_full; //$myPacker->pack();
-
-        // $minifiedJs = $jz->squeeze(
-        //     $js_full,
-        //     true,   // $singleLine
-        //     true,   // $keepImportantComments
-        //     false   // $specialVarRx
-        // );
-
-        //saveFile(BUILDS_PATH . "$jsGroup.js", $minifiedJs);
         $minifier = new Minify\JS($js_full);
         saveFile(BUILDS_PATH . "$jsGroup.js", $minifier->minify());
     }

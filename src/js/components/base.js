@@ -21,7 +21,12 @@
  * _bind_var?: string
  * _changed_data?: object
  * _evaluables: {node?: PiepNode, eval_str: string}[]
+ * _component_traits: ComponentTrait[]
  * } & PiepNode} BaseComponent
+ *
+ ** @typedef {{
+ * _trait_def: ComponentTraitDefinition
+ * } & PiepNode} ComponentTrait
  *
  * @typedef {{
  * force_render?: boolean
@@ -65,6 +70,8 @@ function createComponent(comp, parent_comp, data, options) {
 	}
 	node.parent_component = parent;
 
+	node._setData = options.setData;
+
 	node._subscribers = [];
 
 	if (!node._pointChildsData) {
@@ -80,11 +87,13 @@ function createComponent(comp, parent_comp, data, options) {
 	}
 
 	node._evaluables = [];
+	node._component_traits = [];
+
 	if (options.template) {
 		let template = options.template;
-		const matches = template.match(/{{.*?}}/gm);
-		if (matches) {
-			for (const match of matches) {
+		const matches_e = template.match(/{{.*?}}/gm);
+		if (matches_e) {
+			for (const match of matches_e) {
 				const content = match.substring(2, match.length - 2);
 				const eval_str = content.replace(/@/g, `node._data.`);
 				node._evaluables.push({
@@ -99,30 +108,58 @@ function createComponent(comp, parent_comp, data, options) {
 
 		node._set_content(template);
 
-		if (matches) {
-			let index = -1;
-			for (const evaluable of node._evaluables) {
-				index++;
-				evaluable.node = node._child(`.evaluable_${index}`);
+		let index = -1;
+		for (const evaluable of node._evaluables) {
+			index++;
+			evaluable.node = node._child(`.evaluable_${index}`);
+		}
+
+		for (const trait of node._children("batch-trait")) {
+			const trait_name = trait.dataset.trait;
+
+			const trait_html = component_batch_traits[trait_name];
+			if (trait_html) {
+				trait.insertAdjacentHTML("afterend", trait_html);
+			}
+			trait.remove();
+		}
+
+		for (const trait of node._children("p-trait")) {
+			const trait_name = trait.dataset.trait;
+
+			/** @type {ComponentTraitDefinition} */
+			const trait_def = component_traits[trait_name];
+			if (trait_def) {
+				/** @type {ComponentTrait} */
+				// @ts-ignore
+				const trait_node = createNodeFromHtml(trait_def.template);
+				trait_node._trait_def = trait_def;
+				trait._parent().insertBefore(trait_node, trait);
+				trait.remove();
+				node._component_traits.push(trait_node);
 			}
 		}
 	}
-
-	// kinda weird but it creates f.e. checkbox base component
-	registerForms();
 
 	node._nodes = {};
 	node._children(`[data-node]`).forEach((n) => {
 		node._nodes[n.dataset.node] = n;
 	});
 
-	node._setData = options.setData;
+	// kinda weird but it creates f.e. checkbox base component
+	registerForms();
+
+	node._bindNodes = node._children(`[data-bind]`);
 
 	if (options.initialize) {
 		options.initialize();
 	}
 
-	node._bindNodes = node._children(`[data-bind]`);
+	node._component_traits.forEach((trait) => {
+		if (trait._trait_def.initialize) {
+			trait._trait_def.initialize(node);
+		}
+	});
 
 	node._bindNodes.forEach((/** @type {AnyComponent} */ sub_node) => {
 		const bind_var = sub_node.dataset.bind;
@@ -157,9 +194,12 @@ function createComponent(comp, parent_comp, data, options) {
 				/** @type {AnyComponent} */ source,
 				/** @type {AnyComponent} */ receiver
 			) => {
-				const { obj, key } = source._pointChildsData(node);
-				if (key !== undefined) {
-					receiver._data = obj[key];
+				const x = source._pointChildsData(node);
+				if (x) {
+					const { obj, key } = x;
+					if (key !== undefined) {
+						receiver._data = obj[key];
+					}
 				}
 			},
 		});
@@ -223,9 +263,13 @@ function setComponentData(comp, _data = undefined, options = {}) {
 	}
 
 	if (options.render) {
-		// it should be ezy to send what the changes are, the array handles it by itself which is weird, cause maybe it should be there?
-		// array diff works fine, what about another helper methods though? object diff, idk
 		options.render();
+
+		node._component_traits.forEach((trait) => {
+			if (trait._trait_def.render) {
+				trait._trait_def.render(node);
+			}
+		});
 	}
 
 	for (const evaluable of node._evaluables) {

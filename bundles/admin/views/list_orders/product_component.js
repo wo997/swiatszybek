@@ -66,7 +66,7 @@ function createFirstCompontent(node, parent, data = undefined) {
                 </div>
 
                 <h3>Some state (changes list visibility) </h3>
-                <checkbox data-bind="state"></checkbox>
+                <p-checkbox data-bind="state"></p-checkbox>
                 <br>
 
                 <h3>
