@@ -138,7 +138,7 @@ if ($modifyJS) {
 
         // fuck everything, even html strings etc, everything will become a single line lol, that's not clever
         // BUT!!! you can give the developer an option to mark elements that might require whitespaces, ezy
-        //$js_full = preg_replace('/\s{2,}/', ' ', $js_full);
+        $js_full = preg_replace('/\s{2,}/', ' ', $js_full);
 
         //var_dump(BUILDS_PATH . "$jsGroup.js");
         //var_dump($js_full, "<br><br><br><br><br><br><br><br><br><br><br>");
