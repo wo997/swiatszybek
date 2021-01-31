@@ -21,11 +21,7 @@
  * @param {*} parent
  * @param {ProductVariantCompData} data
  */
-function productVariantComp(node, parent, data = undefined) {
-	if (data === undefined) {
-		data = { email: "", name: "" };
-	}
-
+function productVariantComp(node, parent, data = { email: "", name: "" }) {
 	node._set_data = (data = undefined, options = {}) => {
 		setCompData(node, data, {
 			...options,

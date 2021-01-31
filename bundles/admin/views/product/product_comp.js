@@ -10,10 +10,9 @@
  *
  * @typedef {{
  *  _data: ProductCompData
- *  _prev_data: ProductCompData
+ *  _prev_data: ProductComp
  *  _set_data(data?: ProductCompData, options?: SetCompDataOptions)
  *  _getData()
- *  _saved_data: ProductCompData
  *  _nodes: {
  *      add_variant_btn: PiepNode
  *      case_sell_by_qty: PiepNode
@@ -26,16 +25,16 @@
  * @param {*} parent
  * @param {ProductCompData} data
  */
-function productComp(node, parent, data = undefined) {
-	if (data === undefined) {
-		data = {
-			id: -1,
-			name: "",
-			sell_by: "qty",
-			variants: [],
-		};
+function productComp(
+	node,
+	parent,
+	data = {
+		id: -1,
+		name: "",
+		sell_by: "qty",
+		variants: [],
 	}
-
+) {
 	node._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
 			data = node._data;

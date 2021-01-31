@@ -21,16 +21,9 @@
 /**
  * @param {ListComp} node
  * @param {*} parent
- * @param {{
- * rowContructor?(node, parent, data, params)
- * }} params
  * @param {Array} data
  */
-function listComp(node, parent, data = undefined, params = {}) {
-	if (data === undefined) {
-		data = [];
-	}
-
+function listComp(node, parent, data = []) {
 	node._row_template = node.innerHTML;
 	node._empty();
 
