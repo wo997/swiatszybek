@@ -2,6 +2,7 @@
 
 /**
  * @typedef {{
+ * feature_id?: number
  * option_id: number
  * name?: string
  * } & ListCompRowData} ProductVariantOptionCompData
@@ -10,6 +11,7 @@
  * _data: ProductVariantOptionCompData
  * _set_data(data?: ProductVariantOptionCompData, options?: SetCompDataOptions)
  * _nodes: {
+ *  option_name: PiepNode
  * }
  * } & BaseComp} ProductVariantOptionComp
  */
@@ -27,7 +29,20 @@ function productVariantOptionComp(
 	node._set_data = (data = undefined, options = {}) => {
 		setCompData(node, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				const feature = product_features.find(
+					(e) => e.feature_id === node._data.feature_id
+				);
+				if (feature) {
+					const option = feature.options.find(
+						(e) => e.option_id === node._data.option_id
+					);
+
+					if (option) {
+						node._nodes.option_name._set_content(option.name);
+					}
+				}
+			},
 		});
 	};
 
@@ -35,7 +50,8 @@ function productVariantOptionComp(
 
 	createComp(node, parent, data, {
 		template: /*html*/ `
-            <input type="text" data-bind="{${data.name}}" class="field inline">
+            <div class="title inline" data-node="{${node._nodes.option_name}}"></div>    
+
             <p-batch-trait data-trait="list_controls"></p-batch-trait>
         `,
 		initialize: () => {

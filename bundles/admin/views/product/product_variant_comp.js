@@ -10,7 +10,7 @@
  * _data: ProductVariantCompData
  * _set_data(data?: ProductVariantCompData, options?: SetCompDataOptions)
  * _nodes: {
- *  option_name: PiepNode
+ *  feature_name: PiepNode
  * }
  * } & BaseComp} ProductVariantComp
  */
@@ -26,6 +26,16 @@ function productVariantComp(
 	data = { feature_id: -1, options: [] }
 ) {
 	node._set_data = (data = undefined, options = {}) => {
+		if (data === undefined) {
+			data = node._data;
+		}
+
+		if (data) {
+			data.options.forEach((e) => {
+				e.feature_id = data.feature_id;
+			});
+		}
+
 		setCompData(node, data, {
 			...options,
 			render: () => {
@@ -33,7 +43,7 @@ function productVariantComp(
 					(e) => e.feature_id === node._data.feature_id
 				);
 				if (feature) {
-					node._nodes.option_name._set_content(feature.name);
+					node._nodes.feature_name._set_content(feature.name);
 				}
 			},
 		});
@@ -45,7 +55,7 @@ function productVariantComp(
 		template: /*html*/ `
             {${data.row_index + 1}}.
             <div class="title inline" data-node="{${
-							node._nodes.option_name
+							node._nodes.feature_name
 						}}"></div>
 
             <p-batch-trait data-trait="list_controls"></p-batch-trait>
