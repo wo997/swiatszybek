@@ -108,10 +108,10 @@ function getRelevanceQuery($fields, $words)
 }
 
 /**
- * @typedef TableParams {
+ * @typedef DatatableParams {
  * filters?: string
  * order?: string
- * main_search: string
+ * main_search?: string
  * }
  */
 
@@ -122,9 +122,10 @@ function getRelevanceQuery($fields, $words)
  * where?: string
  * filters?: string
  * order?: string
+ * group?: string
  * main_search_fields?: array
  * renderers?: array
- * table_params?: TableParams
+ * datatable_params?: DatatableParams
  * }
  */
 
@@ -206,15 +207,7 @@ function paginateData($params = [])
 
     $group = isset($params["group"]) ? ("GROUP BY " . $params["group"]) : "";
 
-    //$order = def($params, "order");
-    $order = def($params["table_params"], ""); // def($params, "order");
-    //$params["table_params"][""]
-
-    // $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
-
-    // if ($sort) {
-    //     $order = str_replace $sort . " " . (strpos($_POST['sort'], "ASC") !== false ? "ASC" : "DESC");
-    // }
+    $order = def($params, ["datatable_params", "order"], "");
 
     if ($search_type == "extended") {
         if ($order) {
@@ -228,7 +221,7 @@ function paginateData($params = [])
             }
             $order_info = DB::fetchRow("SELECT MAX($test_order_key) as order_max, MIN($test_order_key) as order_min, MAX($search_query) as relevance_max FROM $from WHERE $where");
 
-            $ratio = 1000; //round(30 * $order_info["relevance_max"] / max(abs($order_info["order_max"] - $order_info["order_min"]), 5)) / 100; // 30 % care about the order key, we want a match right?
+            $ratio = round(30 * $order_info["relevance_max"] / max(abs($order_info["order_max"] - $order_info["order_min"]), 5)) / 100; // 30 % care about the order key, we want a match right?
 
             $order = "(SELECT $search_query"
                 . ($order_dir == "DESC" ? "+" : "-")

@@ -22,6 +22,7 @@
  * }} DatatableFilterData
  *
  * @typedef {{
+ *  primary_key?: string
  *  search_url?: string
  *  dataset?: Array
  *  search_request?: any
@@ -40,6 +41,7 @@
  *      table_header: PiepNode
  *      style: PiepNode
  *  }
+ * _datatable_search()
  * } & BaseComp} DatatableComp
  */
 
@@ -59,6 +61,25 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 		data.dataset = [];
 	}
 	data.rows = [];
+
+	node._datatable_search = () => {
+		const datatable_params = {};
+		if (node._data.sort) {
+			datatable_params.order = node._data.sort.key + " " + node._data.sort.order.toUpperCase();
+		}
+
+		node._data.search_request = xhr({
+			url: node._data.search_url,
+			params: {
+				datatable_params,
+			},
+			success: (res) => {
+				node._data.dataset = res.results;
+				node._set_data();
+				//console.log(res);
+			},
+		});
+	};
 
 	node._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
@@ -117,21 +138,11 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 				node._nodes.style._set_content(styles_html);
 
 				if (node._changed_data.sort || node._changed_data.filters) {
-					node._data.search_request = xhr({
-						url: node._data.search_url,
-						params: {},
-						success: (res) => {
-							node._data.dataset = res.results;
-							//console.log(res);
-						},
-					});
+					node._datatable_search();
 				}
 			},
 		});
 	};
-
-	const primary_kolumn = data.columns.find((e) => e.primary);
-	const primary_column_key = primary_kolumn ? "row." + primary_kolumn.key : undefined;
 
 	createComp(node, parent, data, {
 		template: /*html*/ `
@@ -139,7 +150,7 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
                 
             </div>
             <div class="table_body">
-                <list-comp data-bind="{${data.rows}}" ${primary_column_key ? `data-primary="${primary_column_key}"` : ""}>
+                <list-comp data-bind="{${data.rows}}" ${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}>
                     <datatable-row-comp></datatable-row-comp>
                 </list-comp>
             </div>
@@ -166,7 +177,7 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 					} else if (curr_order === "asc") {
 						new_order = "";
 					}
-					node._data.sort = { key: column_data.key, order: new_order };
+					node._data.sort = new_order ? { key: column_data.key, order: new_order } : undefined;
 					node._set_data();
 				}
 

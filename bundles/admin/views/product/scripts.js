@@ -75,11 +75,11 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "search_products",
 		columns: [
-			{ label: "product_id", key: "product_id", width: "100px", primary: true },
-			{ label: "Produkt", key: "title", width: "300px", primary: true },
+			{ label: "Produkt", key: "title", width: "300px", sortable: true, searchable: "string" },
 			{ label: "Publiczny", key: "published", width: "200px", sortable: true, searchable: "string" },
-			{ label: "W magazynie", key: "stock", width: "200px" },
+			{ label: "W magazynie", key: "stock", width: "200px", sortable: true, searchable: "number" },
 		],
+		primary_key: "product_id",
 	});
 });
 
