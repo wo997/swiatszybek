@@ -1,8 +1,12 @@
 /* css[global] */
 
 datatable-comp.comp {
-	& {
+	.table_body,
+	.table_header {
 		border: 1px solid #ccc;
+	}
+	.table_body {
+		border-top-width: 0;
 	}
 	.table_header,
 	.dt_row {
@@ -34,11 +38,14 @@ datatable-comp.comp {
 		vertical-align: middle;
 	}
 	.table_header {
-		border-bottom: 1px solid #ccc;
 		box-shadow: 0 2px 2px 0 #0001;
 		position: relative;
 	}
 	.dt_header_controls > .btn {
 		width: 28px;
+	}
+	.datatable_label {
+		font-weight: 600;
+		font-size: 1.3em;
 	}
 }

@@ -121,10 +121,10 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 								btn_class = "primary";
 							}
 						}
-						cell_html += /*html*/ ` <i class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="Sortuj malejąco / rosnąco"></i>`;
+						cell_html += /*html*/ ` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="Sortuj malejąco / rosnąco"></button>`;
 					}
 					if (column.searchable) {
-						cell_html += /*html*/ ` <i class="btn subtle dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></i>`;
+						cell_html += /*html*/ ` <button class="btn subtle dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
 					}
 
 					cell_html += /*html*/ `</div>`;
@@ -146,14 +146,28 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 
 	createComp(node, parent, data, {
 		template: /*html*/ `
-            <div class="table_header" data-node="table_header">
-                
+            <div>
+                <span class="datatable_label">Produkty</span>
+
+                <div class="float-icon" style="display: inline-block;">
+                    <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
+                    <i class="fas fa-search"></i>
+                </div>
+
+                <button class="btn important">Dodaj nowy <i class="fas fa-plus"></i></button>
             </div>
+
+            <br>
+
+            <div class="table_header" data-node="table_header"></div>
+
             <div class="table_body">
                 <list-comp data-bind="{${data.rows}}" ${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}>
                     <datatable-row-comp></datatable-row-comp>
                 </list-comp>
             </div>
+
+            1 2 3 4 5 6 7
 
             <style data-node="style"></style>
         `,
