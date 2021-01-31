@@ -85,7 +85,7 @@ function goMobile() {
 	registerModalContent(`
           <div id="searchCategory" data-expand>
               <div class="modal-body">
-                  <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+                  <button class="close-modal-btn"><i class="fas fa-times"></i></button>
                   <h3 class="modal-header">Kategorie</h3>
                   <div class="scroll-panel scroll-shadow">
                     <div></div>
@@ -97,7 +97,7 @@ function goMobile() {
 	registerModalContent(`
           <div id="searchFilters" data-expand>
               <div class="modal-body">
-                  <button class="close-modal-btn" onclick="restoreFilters();"><img src="/src/img/cross.svg"></button>
+                  <button class="close-modal-btn" onclick="restoreFilters();"><i class="fas fa-times"></i></button>
                   <h3 class="modal-header"><div>Filtry <span class="filter_count"></span></div></h3>
                   <div class="scroll-panel scroll-shadow panel-padding">
                     <div></div>

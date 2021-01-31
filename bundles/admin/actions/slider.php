@@ -120,7 +120,7 @@
     <div class="modal-body">
         <div class="custom-toolbar">
             <span class="title"></span>
-            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="scroll-panel scroll-shadow panel-padding">

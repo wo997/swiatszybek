@@ -365,7 +365,7 @@
 //               <div class="modal-body">
 //                   <div class="custom-toolbar">
 //                       <span class="title">${module_block.description}</span>
-//                       <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+//                       <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                       <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
 //                   </div>
 //                   <div class="scroll-panel scroll-shadow panel-padding">
@@ -1800,7 +1800,7 @@
 //                 </span>
 
 //                 <button class="btn secondary" onclick="showModal('cms_poradnik')">Poradnik <i class="fas fa-info-circle"></i></button>
-//                 <button class="btn secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fa fa-times"></i></button>
+//                 <button class="btn secondary" onclick="closeCms(false);hideParentModal(this)">Anuluj <i class="fas fa-times"></i></button>
 //                 <button onclick="showCmsPreview()" class="btn primary preview_btn">Podgląd <i class="fas fa-eye"></i></button>
 //                 <button class="btn primary" onclick="closeCms(true);hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
 //             </div>
@@ -1911,7 +1911,7 @@
 //             <div class="custom-toolbar">
 //                 <span class="title">Wymiary / Położenie</span>
 //                 ${hide_complicated_btn}
-//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                 <div class="btn primary" onclick="saveBlockSettings();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
 //             </div>
 
@@ -2174,7 +2174,7 @@
 
 //             <div class="custom-toolbar">
 //                 <span class="title">Obramowanie</span>
-//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                 <div class="btn primary" onclick="saveCMSBorder();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
 //             </div>
 
@@ -2194,7 +2194,7 @@
 //                 <div class="label">Kolor krawędzi</div>
 //                 <div class="glue-children">
 //                   <input class="jscolor field inline" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
-//                   <button class="btn primary" onclick="$(this)._prev().setValue('')">Brak <i class="fa fa-times"></i></button>
+//                   <button class="btn primary" onclick="$(this)._prev().setValue('')">Brak <i class="fas fa-times"></i></button>
 //                 </div>
 
 //                 <div class="label">Zaokrąglenie krawędzi</div>
@@ -2223,7 +2223,7 @@
 //             <div class="custom-toolbar">
 //                 <span class="title">Wymiary / Położenie</span>
 //                 ${hide_complicated_btn}
-//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                 <div class="btn primary" onclick="saveContainerSettings();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
 //             </div>
 
@@ -2316,7 +2316,7 @@
 //         <div>
 //             <div class="custom-toolbar">
 //                 <span class="title">Animacje</span>
-//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                 <div class="btn primary" onclick="saveBlockAnimation();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
 //             </div>
 
@@ -2327,7 +2327,7 @@
 //                         <h4>Animacje przy pierwszym wyświetleniu</h4>
 //                         <label style="display:block">
 //                             <input type='radio' class='classList' name='animation' value=''>
-//                             Brak <i class="fa fa-times"></i>
+//                             Brak <i class="fas fa-times"></i>
 //                         </label>
 //                         <label style="display:block">
 //                             <input type='radio' class='classList' name='animation' value='opacity'>
@@ -2365,7 +2365,7 @@
 //         <div>
 //             <div class="custom-toolbar">
 //                 <span class="title">Wstawianie skopiowanego bloku</span>
-//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //             </div>
 //             <div style="padding:10px;">
 //                 <div class="label">Wklej kod w pole poniżej (Kliknij -> CTRL+V)</div>
@@ -2381,7 +2381,7 @@
 //         <div>
 //             <div class="custom-toolbar">
 //                 <span class="title">Wstawianie modułu</span>
-//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //             </div>
 //             <div style="padding:10px;" class="moduleList">
 
@@ -2400,7 +2400,7 @@
 //         <div style="width:100%;max-width:650px">
 //             <div class="custom-toolbar">
 //                 <span class="title">Tło</span>
-//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fa fa-times"></i></div>
+//                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                 <div class="btn primary" onclick="saveCMSBackground();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
 //             </div>
 
@@ -2412,7 +2412,7 @@
 
 //                   <div class="btn primary" onclick='fileManager.open(null, {callback: setNodeBackgroundImagePreview, source: this, asset_types: ["image"]})'>Wybierz <i class="fas fa-image"></i></div>
 
-//                   <div class="btn primary" onclick="setNodeBackgroundImagePreview()">Usuń <i class="fa fa-times"></i></div>
+//                   <div class="btn primary" onclick="setNodeBackgroundImagePreview()">Usuń <i class="fas fa-times"></i></div>
 //                 </div>
 
 //                 <br>
@@ -2423,7 +2423,7 @@
 
 //                 <div class="glue-children">
 //                   <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
-//                   <button class="btn primary" onclick="$(this)._prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fa fa-times"></i></button>
+//                   <button class="btn primary" onclick="$(this)._prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fas fa-times"></i></button>
 //                 </div>
 
 //                 <div class="label">

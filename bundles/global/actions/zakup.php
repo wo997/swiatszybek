@@ -538,7 +538,7 @@ if (empty(User::getCurrent()->cart["variants"]) && !isset($_GET['produkt'])) {
     <div id="paczkomat-picker">
         <div style="display: flex; flex-wrap: wrap; justify-content:space-between;height: 44px;">
             <h3 style="margin: 10px 0; text-align:center; flex-grow:1">Wybór paczkomatu</h3>
-            <button id="closeBtn" onclick="hidePaczkomatPicker()">Zamknij <i class="fa fa-times"></i></button>
+            <button id="closeBtn" onclick="hidePaczkomatPicker()">Zamknij <i class="fas fa-times"></i></button>
         </div>
         <div id="easypack-map"></div>
     </div>

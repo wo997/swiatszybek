@@ -1473,7 +1473,7 @@ domload(() => {
                 <div class="modal-body">
                     <div class="custom-toolbar">
                         <span class="title"></span>
-                        <div class="btn secondary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></div>
+                        <div class="btn secondary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></div>
                     </div>
                     <div class="menu_body"></div>
                 </div>

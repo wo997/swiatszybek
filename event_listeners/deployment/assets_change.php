@@ -136,9 +136,20 @@ if ($modifyJS) {
             }
         }
 
+        // nodes
+        if (preg_match_all('/data-node="\{\{[^()]*?node\._nodes\.[^()]*?}}"/', $js_full, $matches)) {
+            foreach ($matches[0] as $match) {
+                $rep = $match;
+                $rep = preg_replace("/(?<=[\s{])node\._nodes\./", "", $rep);
+                $rep = preg_replace("/\s/", "", $rep);
+                $rep = str_replace(["{{", "}}"], "", $rep);
+                $js_full = str_replace($match, $rep, $js_full);
+            }
+        }
+
         // fuck everything, even html strings etc, everything will become a single line lol, that's not clever
         // BUT!!! you can give the developer an option to mark elements that might require whitespaces, ezy
-        //$js_full = preg_replace('/\s{2,}/', ' ', $js_full);
+        $js_full = preg_replace('/\s{2,}/', ' ', $js_full);
 
         //var_dump(BUILDS_PATH . "$jsGroup.js");
         //var_dump($js_full, "<br><br><br><br><br><br><br><br><br><br><br>");

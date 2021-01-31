@@ -2,16 +2,15 @@
 
 /**
  * @typedef {{
- * email: string
- * list_length?: number
- * name: string
+ * feature_id: number
+ * options: ProductVariantOptionCompData[]
  * } & ListCompRowData} ProductVariantCompData
  *
  * @typedef {{
  * _data: ProductVariantCompData
- * _prev_data: ProductVariantCompData
  * _set_data(data?: ProductVariantCompData, options?: SetCompDataOptions)
  * _nodes: {
+ *  option_name: PiepNode
  * }
  * } & BaseComp} ProductVariantComp
  */
@@ -21,11 +20,22 @@
  * @param {*} parent
  * @param {ProductVariantCompData} data
  */
-function productVariantComp(node, parent, data = { email: "", name: "" }) {
+function productVariantComp(
+	node,
+	parent,
+	data = { feature_id: -1, options: [] }
+) {
 	node._set_data = (data = undefined, options = {}) => {
 		setCompData(node, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				const feature = product_features.find(
+					(e) => e.feature_id === node._data.feature_id
+				);
+				if (feature) {
+					node._nodes.option_name._set_content(feature.name);
+				}
+			},
 		});
 	};
 
@@ -33,17 +43,16 @@ function productVariantComp(node, parent, data = { email: "", name: "" }) {
 
 	createComp(node, parent, data, {
 		template: /*html*/ `
-            {${data.row_index + 1}}
-            <select class="field inline">
-                <option value="a">A</option>
-                <option value="b">B</option>
-                <option value="c">C</option>
-            </select>
-            <input type="text" data-bind="{${data.name}}" class="field inline">
+            {${data.row_index + 1}}.
+            <div class="title inline" data-node="{${
+							node._nodes.option_name
+						}}"></div>
 
             <p-batch-trait data-trait="list_controls"></p-batch-trait>
 
-            {${JSON.stringify(data)}}
+            <list-comp data-bind="{${data.options}}">
+                <product-variant-option-comp></product-variant-option-comp>
+            </list-comp>
         `,
 		initialize: () => {
 			node.classList.add("product_variant");

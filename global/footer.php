@@ -102,7 +102,7 @@ if (isset($JS_files)) {
 
 <div id="variantAdded" class="variantAdded" data-form data-modal data-dismissable>
     <div class="modal-body">
-        <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+        <button class="close-modal-btn"><i class="fas fa-times"></i></button>
 
         <h3 class="modal-header">Dodano do koszyka</h3>
 

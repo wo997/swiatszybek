@@ -15,7 +15,7 @@
     <div class="modal-body">
         <div class="custom-toolbar">
             <span class="title">Edycja menu</span>
-            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="scroll-panel scroll-shadow panel-padding">
@@ -70,7 +70,7 @@
             <br>
             <div class="caseCanDelete" style="margin-top:auto;text-align:right; padding-top:30px">
                 <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu wszystkich podmenu'></i>
-                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć to menu?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
+                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć to menu?')) saveCategoryForm(true);">Usuń <i class="fas fa-times"></i></button>
             </div>
             <input type="hidden" name="category_id">
 

@@ -188,7 +188,7 @@ window.addEventListener("tool_loaded", (event) => {
                     <button class="btn secondary use_external_image_btn" onclick="showModal('externalImage')" style="margin-left: 4px;">Użyj zdjęcia zewnętrznego <i class="fas fa-external-link-alt"></i></button>
                 </span>
                     
-                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+                <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
                 </div>
 
                 <div class="scroll-panel scroll-shadow panel-padding">
@@ -209,7 +209,7 @@ window.addEventListener("tool_loaded", (event) => {
                     <span class="title">
                     Wybór zdjęcia zewnętrznego
                     </span>
-                    <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+                    <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
                 </div>
 
                 <div class="scroll-panel panel-padding">
@@ -239,7 +239,7 @@ window.addEventListener("tool_loaded", (event) => {
                     <span class="title">
                     Przesyłanie plików
                     </span>
-                    <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fa fa-times"></i></button>
+                    <button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
                 </div>
 
                 <form class="panel-padding">

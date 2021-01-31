@@ -91,7 +91,7 @@ if ($kopia) {
     <div class="history-buttons product-history-buttons"></div>
 
     <?php if ($kopia) : ?>
-        <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fa fa-times"></i></a>
+        <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary">Anuluj kopiowanie <i class="fas fa-times"></i></a>
     <?php else : ?>
         <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $product_id ?>/kopia" class="btn secondary">Kopiuj <i class="fas fa-copy"></i></a>
         <button data-href="<?= getProductLink($product_id, $product_data["title"]) ?>" class="btn primary">Pokaż produkt <i class="fas fa-chevron-circle-right"></i></button>
@@ -187,7 +187,7 @@ if ($kopia) {
     <div class="modal-body">
         <div class="custom-toolbar">
             <span class="title">Edycja wariantu produktu</span>
-            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveVariant();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="scroll-panel scroll-shadow panel-padding">
@@ -214,7 +214,7 @@ if ($kopia) {
                 <div style="display:none">
                     <div class="label">Kolor</div>
                     <input class="jscolor" name="color" onclick="this.select()" onchange="this.style.backgroundColor = this.value" style="width: 65px;text-align: center;">
-                    <div class="btn primary" onclick="this._prev().value='';this._prev().style.backgroundColor=''">Brak <i class="fa fa-times"></i></div>-->
+                    <div class="btn primary" onclick="this._prev().value='';this._prev().style.backgroundColor=''">Brak <i class="fas fa-times"></i></div>-->
                 </div>
 
                 <div class="label">Cechy wariantu (inne niż wspólne dla wszystkich wariantów produktu)</div>

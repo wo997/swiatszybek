@@ -47,8 +47,8 @@ function registerModalContent(html, callback = undefined) {
 	if (!document.body) {
 		domload(() => {
 			registerModalContent(html, callback);
-			return;
 		});
+		return;
 	}
 
 	initModal();
@@ -101,11 +101,19 @@ function registerModal(modal) {
 	});
 }
 
+/**
+ *
+ * @param {*} name
+ * @param {{
+ * source?: PiepNode
+ * callback?: CallableFunction
+ * }} params
+ */
 function showModal(name = null, params = {}) {
 	let visible = name != null;
 	modal_wrapper_node.classList.toggle("visible", visible);
 	if (visible) {
-		let total = 0;
+		let total = 1;
 		modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
 			let shownow = false;
 			if (modal.id == name && !modal.classList.contains("visible")) {

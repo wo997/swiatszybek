@@ -79,8 +79,12 @@ function productComp(
         `,
 		initialize: () => {
 			node._nodes.add_variant_btn.addEventListener("click", () => {
-				node._data.variants.push({ email: "", name: "dff" });
-				node._set_data();
+				showModal("selectProductVariant", {
+					source: node._nodes.add_variant_btn,
+				});
+
+				//node._data.variants.push({ feature_id: -1, options: [] });
+				//node._set_data();
 			});
 		},
 	});

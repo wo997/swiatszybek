@@ -127,7 +127,7 @@ domload(() => {
 	registerModalContent(`
       <div id="mainSearch" class="mainSearch" data-expand>
           <div class="modal-body">
-              <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+              <button class="close-modal-btn"><i class="fas fa-times"></i></button>
               <h3 class="modal-header"><img class="search-icon" src="/src/img/search_icon.svg"> Wyszukiwarka</h3>
               <div class="scroll-panel scroll-shadow panel-padding">
                 <div></div>
@@ -149,7 +149,7 @@ domload(() => {
 		registerModalContent(`
       <div id="userMenu" data-expand class="userMenu">
           <div class="modal-body">
-              <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+              <button class="close-modal-btn"><i class="fas fa-times"></i></button>
               <h3 class="modal-header"><img class="user-icon" src="/src/img/user_icon.svg"> Moje konto</h3>
               <div class="scroll-panel scroll-shadow">
                 <div></div>
@@ -176,7 +176,7 @@ domload(() => {
 	registerModalContent(`
     <div id="basketMenu" class="basketMenu" data-expand>
         <div class="modal-body">
-            <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+            <button class="close-modal-btn"><i class="fas fa-times"></i></button>
             <h3 class="modal-header">
               <div class="basket-icon-wrapper">
                 <img class="basket-icon" src="/src/img/basket_icon.svg">
@@ -222,7 +222,7 @@ domload(() => {
 	registerModalContent(`
       <div id="mainMenu" class="mainMenu" data-expand>
           <div class="modal-body">
-              <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+              <button class="close-modal-btn"><i class="fas fa-times"></i></button>
               <h3 class="modal-header"><img class="menu-icon" src="/src/img/menu_icon.svg"> Menu</h3>
               <div class="scroll-panel scroll-shadow">
                 <div></div>
@@ -257,7 +257,7 @@ domload(() => {
 	registerModalContent(`
       <div id="lastViewedProducts" class="lastViewedProducts" data-expand="previous">
         <div class="modal-body">
-            <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+            <button class="close-modal-btn"><i class="fas fa-times"></i></button>
             <h3 class="modal-header">
               <img class="product-history-icon" src="/src/img/product_history_icon.svg">
               Ostatnio przeglądane  
@@ -281,7 +281,7 @@ domload(() => {
 	registerModalContent(`
       <div id="wishList" class="wishList" data-expand="previous">
         <div class="modal-body">
-            <button class="close-modal-btn"><img src="/src/img/cross.svg"></button>
+            <button class="close-modal-btn"><i class="fas fa-times"></i></button>
             <h3 class="modal-header">
               <img class="heart-icon" src="/src/img/heart_icon.svg"></img>
               Schowek  

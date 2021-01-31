@@ -15,7 +15,7 @@
     <div class="modal-body">
         <div class="custom-toolbar">
             <span class="title">Edycja kategorii</span>
-            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fa fa-times"></i></button>
+            <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>
         </div>
         <div class="scroll-panel scroll-shadow panel-padding">
@@ -54,7 +54,7 @@
                 <div class="content cms preview_html" name="content" data-type="html" style="max-height: 300px;"></div>
 
                 <div class="caseCanDelete" style="margin-left:auto;margin-top:auto;align-self: flex-end; padding-top:30px; padding-bottom: 15px">
-                    <button class="btn red" onclick="if(confirm(' Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fa fa-times"></i></button>
+                    <button class="btn red" onclick="if(confirm(' Czy aby na pewno chcesz usunąć tą kategorię?')) saveCategoryForm(true);">Usuń <i class="fas fa-times"></i></button>
                     <i class='fas fa-info-circle' data-tooltip='Możliwe tylko po usunięciu podkategorii'></i>
                 </div>
             </div>
