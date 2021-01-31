@@ -4,9 +4,7 @@
  * @typedef {{
  *  id: number
  *  name: string
- *  state: number
  *  sell_by: string
- *  list_data: ListRowCompData[]
  *  variants: ProductVariantCompData[]
  * }} ProductCompData
  *
@@ -33,12 +31,23 @@ function productComp(node, parent, data = undefined) {
 		data = {
 			id: -1,
 			name: "",
-			state: 0,
 			sell_by: "qty",
-			list_data: [],
 			variants: [],
 		};
 	}
+
+	node._set_data = (data = undefined, options = {}) => {
+		if (data === undefined) {
+			data = node._data;
+		}
+
+		setCompData(node, data, {
+			...options,
+			render: () => {
+				expand(node._nodes.case_sell_by_qty, node._data.sell_by === "qty");
+			},
+		});
+	};
 
 	createComp(node, parent, data, {
 		template: /*html*/ `
@@ -73,25 +82,6 @@ function productComp(node, parent, data = undefined) {
 			node._nodes.add_variant_btn.addEventListener("click", () => {
 				node._data.variants.push({ email: "", name: "dff" });
 				node._set_data();
-			});
-		},
-		setData: (
-			/** @type {ProductCompData} */ data = undefined,
-			options = {}
-		) => {
-			if (data === undefined) {
-				data = node._data;
-			}
-
-			data.list_data.forEach((e) => {
-				e.name = data.name;
-			});
-
-			setCompData(node, data, {
-				...options,
-				render: () => {
-					expand(node._nodes.case_sell_by_qty, node._data.sell_by === "qty");
-				},
 			});
 		},
 	});

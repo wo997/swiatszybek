@@ -26,6 +26,13 @@ function productVariantComp(node, parent, data = undefined) {
 		data = { email: "", name: "" };
 	}
 
+	node._set_data = (data = undefined, options = {}) => {
+		setCompData(node, data, {
+			...options,
+			render: () => {},
+		});
+	};
+
 	// you can add classes like this inline: {even:${data.row_index % 2 === 0}}
 
 	createComp(node, parent, data, {
@@ -42,18 +49,8 @@ function productVariantComp(node, parent, data = undefined) {
 
             {${JSON.stringify(data)}}
         `,
-
 		initialize: () => {
 			node.classList.add("product_variant");
-		},
-		setData: (
-			/** @type {ProductVariantCompData} */ data = undefined,
-			options = {}
-		) => {
-			setCompData(node, data, {
-				...options,
-				render: () => {},
-			});
 		},
 	});
 }

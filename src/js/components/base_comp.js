@@ -44,7 +44,6 @@
  * @typedef {{
  * template?: string
  * initialize?()
- * setData(data: any, options: SetCompDataOptions)
  * }} createCompOptions
  */
 
@@ -77,8 +76,6 @@ function createComp(comp, parent_comp, data, options) {
 		console.trace();
 	}
 	node._parent_comp = parent;
-
-	node._set_data = options.setData;
 
 	node._subscribers = [];
 
