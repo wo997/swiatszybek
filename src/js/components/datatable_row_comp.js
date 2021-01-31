@@ -37,7 +37,7 @@ function datatableRowComp(node, parent, data = { row: {}, columns: [] }) {
 				for (const column of node._data.columns) {
 					let cell_html = "";
 
-					cell_html += `<div class='datatable_cell' style="width:${def(column.width, "10%")}">${node._data.row[column.key]}</div>`;
+					cell_html += `<div class='datatable_cell'>${node._data.row[column.key]}</div>`;
 
 					row_html += cell_html;
 				}

@@ -20,7 +20,8 @@
  *  _set_data(data?: DatatableCompData, options?: SetCompDataOptions)
  *  _getData()
  *  _nodes: {
- *  table_header: PiepNode
+ *      table_header: PiepNode
+ *      style: PiepNode
  *  }
  * } & BaseComp} DatatableComp
  */
@@ -41,16 +42,23 @@ function datatableComp(node, parent, data = { rows: [], columns: [] }) {
 			pass_list_data: [{ what: "columns", where: "rows" }],
 			render: () => {
 				if (node._changed_data.columns) {
+					let styles_html = "";
 					let header_html = "";
 
+					let cell_index = 0;
 					for (const column of node._data.columns) {
+						cell_index++;
+
 						let cell_html = "";
 
-						cell_html += `<div class='datatable_cell' style="width:${def(column.width, "10%")}">${column.label}</div>`;
+						cell_html += `<div class='datatable_cell'>${column.label}</div>`;
 
 						header_html += cell_html;
+
+						styles_html += `.${node._dom_class} .datatable_cell:nth-child(${cell_index}) {width:${def(column.width, "10%")};}\n`;
 					}
 					node._nodes.table_header._set_content(header_html);
+					node._nodes.style._set_content(styles_html);
 				}
 			},
 		});
@@ -69,6 +77,8 @@ function datatableComp(node, parent, data = { rows: [], columns: [] }) {
                     <datatable-row-comp></datatable-row-comp>
                 </list-comp>
             </div>
+
+            <style data-node="style"></style>
         `,
 		initialize: () => {},
 	});

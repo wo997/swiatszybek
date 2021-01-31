@@ -17,6 +17,8 @@
  * }} ObjectData
  *
  * @typedef {{
+ * _dom_id: number
+ * _dom_class: string
  * _bindNodes: PiepNode[]
  * _parent_comp?: AnyComp
  * _referenceParent: CallableFunction
@@ -29,6 +31,7 @@
  * _eval_html: {node?: PiepNode, eval_str: string}[]
  * _eval_class: {node: PiepNode, eval_str: string, className: string}[]
  * _comp_traits: CompTrait[]
+ * _propagating_data: boolean
  * } & PiepNode} BaseComp
  *
  ** @typedef {{
@@ -54,6 +57,8 @@
  * }} createCompOptions
  */
 
+let comp_id = 0;
+
 /**
  * @param {BaseComp} comp
  * @param {*} parent_comp
@@ -70,6 +75,12 @@ function createComp(comp, parent_comp, data, options) {
 	const parent = parent_comp;
 
 	node.classList.add("comp");
+
+	node._propagating_data = false;
+
+	node._dom_id = comp_id++;
+	node._dom_class = `comp_${node._dom_id}`;
+	node.classList.add(node._dom_class);
 
 	if (!parent_comp) {
 		node.classList.add("freeze");
@@ -360,7 +371,9 @@ function setCompData(comp, _data = undefined, options = {}) {
 
 	node._prev_data = cloneObject(node._data);
 
+	//node._propagating_data = true;
 	propagateCompData(node);
+	//node._propagating_data = false;
 }
 
 /**
@@ -385,15 +398,21 @@ function propagateCompData(comp) {
 	if (subscribers) {
 		for (let i = subscribers.length - 1; i >= 0; i--) {
 			const subscribe = subscribers[i];
-			if (subscribe.receiver._in_body()) {
-				subscribe.fetch(node, subscribe.receiver);
+
+			/** @type {AnyComp} */
+			// @ts-ignore
+			const receiver = subscribe.receiver;
+
+			// if (receiver._propagating_data) {
+			// 	continue;
+			// }
+
+			if (receiver._in_body()) {
+				subscribe.fetch(node, receiver);
 			} else {
 				// remove subscriber reference - kinda lazy garbage collector
 				subscribers.splice(i, 1);
 			}
-			/** @type {AnyComp} */
-			// @ts-ignore
-			const receiver = subscribe.receiver;
 			receiver._set_data();
 		}
 	}

@@ -127,12 +127,12 @@ domload(() => {
 			// { row: { pies_id: 12, kot: "fsfsfds" } },
 			// { row: { pies_id: 8, kot: "ads" } },
 		];
-		// console.time();
-		// for (let i = 0; i < 20; i++) {
-		// 	datatable_comp._data.rows.push({ row: { pies_id: i + 100, kot: "c" } });
-		// }
+		console.time();
+		for (let i = 0; i < 20; i++) {
+			datatable_comp._data.rows.push({ row: { pies_id: i + 100, kot: "c" } });
+		}
 		datatable_comp._set_data();
-		// console.timeEnd();
+		console.timeEnd();
 	}, 1000);
 });
 
