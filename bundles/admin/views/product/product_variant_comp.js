@@ -30,14 +30,9 @@ function productVariantComp(
 			data = node._data;
 		}
 
-		if (data) {
-			data.options.forEach((e) => {
-				e.feature_id = data.feature_id;
-			});
-		}
-
 		setCompData(node, data, {
 			...options,
+			pass_list_data: [{ what: "feature_id", where: "options" }],
 			render: () => {
 				const feature = product_features.find(
 					(e) => e.feature_id === node._data.feature_id
