@@ -13,7 +13,7 @@
  *  _set_data(data?: DatatableRowCompData, options?: SetCompDataOptions)
  *  _getData()
  *  _nodes: {
- *      datatable_row: PiepNode
+ *      dt_row: PiepNode
  *  }
  * } & BaseComp} DatatableRowComp
  */
@@ -37,19 +37,19 @@ function datatableRowComp(node, parent, data = { row: {}, columns: [] }) {
 				for (const column of node._data.columns) {
 					let cell_html = "";
 
-					cell_html += `<div class='datatable_cell'>${node._data.row[column.key]}</div>`;
+					cell_html += `<div class='dt_cell'>${node._data.row[column.key]}</div>`;
 
 					row_html += cell_html;
 				}
 
-				if (node._nodes.datatable_row.innerHTML != row_html) {
-					node._nodes.datatable_row._set_content(row_html);
+				if (node._nodes.dt_row.innerHTML != row_html) {
+					node._nodes.dt_row._set_content(row_html);
 				}
 			},
 		});
 	};
 
 	createComp(node, parent, data, {
-		template: /*html*/ `<div data-node="{${node._nodes.datatable_row}}" class="datatable_row {even:${data.row_index % 2 === 0}}"></div>`,
+		template: /*html*/ `<div data-node="{${node._nodes.dt_row}}" class="dt_row {even:${data.row_index % 2 === 0}}"></div>`,
 	});
 }

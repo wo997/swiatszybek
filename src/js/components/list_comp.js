@@ -81,6 +81,19 @@ function listComp(node, parent, data = []) {
 					target_index: e.to !== -1 ? e.to : e.from,
 				}));
 
+				let instant = false; // adding and removing, if we have too many of these we won't animate the list, simple
+				let expand_nodes = 0;
+
+				for (const d of diff) {
+					if (d.from === -1 || d.to === -1) {
+						expand_nodes++;
+						if (expand_nodes > 4) {
+							instant = true;
+							break;
+						}
+					}
+				}
+
 				const animation_duration = 250;
 
 				const rows_before = node._getRows();
@@ -130,10 +143,19 @@ function listComp(node, parent, data = []) {
 								}
 							});
 
-							expand(child, true, { duration: animation_duration });
+							if (instant) {
+								child.classList.remove("hidden", "animate_hidden");
+							} else {
+								expand(child, true, { duration: animation_duration });
+							}
 						} else if (remove) {
-							expand(child, false, { duration: animation_duration });
+							if (instant) {
+								child.classList.add("hidden", "animate_hidden");
+							} else {
+								expand(child, false, { duration: animation_duration });
+							}
 							child.classList.add("removing");
+
 							setTimeout(() => {
 								child.remove();
 							}, animation_duration);

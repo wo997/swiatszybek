@@ -51,11 +51,11 @@ function datatableComp(node, parent, data = { rows: [], columns: [] }) {
 
 						let cell_html = "";
 
-						cell_html += `<div class='datatable_cell'>${column.label}</div>`;
+						cell_html += `<div class='dt_cell'>${column.label}</div>`;
 
 						header_html += cell_html;
 
-						styles_html += `.${node._dom_class} .datatable_cell:nth-child(${cell_index}) {width:${def(column.width, "10%")};}\n`;
+						styles_html += `.${node._dom_class} .dt_cell:nth-child(${cell_index}) {width:${def(column.width, "10%")};}\n`;
 					}
 					node._nodes.table_header._set_content(header_html);
 					node._nodes.style._set_content(styles_html);
