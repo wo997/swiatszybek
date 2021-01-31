@@ -76,7 +76,7 @@ function createComp(comp, parent_comp, data, options) {
 
 	node.classList.add("comp");
 
-	node._propagating_data = false;
+	//node._propagating_data = false;
 
 	node._dom_id = comp_id++;
 	node._dom_class = `comp_${node._dom_id}`;

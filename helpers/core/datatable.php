@@ -108,14 +108,23 @@ function getRelevanceQuery($fields, $words)
 }
 
 /**
+ * @typedef TableParams {
+ * filters?: string
+ * order?: string
+ * main_search: string
+ * }
+ */
+
+/**
  * @typedef PaginationParams {
  * select: string
  * from: string
  * where?: string
  * filters?: string
- * order?: string dhfghdfghfgh
+ * order?: string
  * main_search_fields?: array
  * renderers?: array
+ * table_params?: TableParams
  * }
  */
 
@@ -197,13 +206,15 @@ function paginateData($params = [])
 
     $group = isset($params["group"]) ? ("GROUP BY " . $params["group"]) : "";
 
-    $order = def($params, "order");
+    //$order = def($params, "order");
+    $order = def($params["table_params"], ""); // def($params, "order");
+    //$params["table_params"][""]
 
-    $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
+    // $sort = isset($_POST['sort']) ? clean($_POST['sort']) : null;
 
-    if ($sort) {
-        $order = $sort . " " . (strpos($_POST['sort'], "+") !== false ? "ASC" : "DESC");
-    }
+    // if ($sort) {
+    //     $order = str_replace $sort . " " . (strpos($_POST['sort'], "ASC") !== false ? "ASC" : "DESC");
+    // }
 
     if ($search_type == "extended") {
         if ($order) {

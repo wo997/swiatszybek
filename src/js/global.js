@@ -34,9 +34,7 @@ function xhr(params) {
 
 		var match_reload_required = "[reload_required]";
 		var reload_required = false;
-		if (
-			res.substring(0, match_reload_required.length) === match_reload_required
-		) {
+		if (res.substring(0, match_reload_required.length) === match_reload_required) {
 			res = res.substring(match_reload_required.length);
 			reload_required = true;
 		}
@@ -61,12 +59,7 @@ function xhr(params) {
 			}
 		}
 
-		if (
-			!reloading &&
-			reload_required &&
-			IS_ADMIN &&
-			confirm("Wymagane jest odświeżenie strony, czy chcesz kontynuować?")
-		) {
+		if (!reloading && reload_required && IS_ADMIN && confirm("Wymagane jest odświeżenie strony, czy chcesz kontynuować?")) {
 			window.location.reload();
 		}
 	};
@@ -90,7 +83,7 @@ function xhr(params) {
  * @param {*} value
  * @param {*} def
  */
-function def(value, def = "") {
+function def(value, def) {
 	if (value === null || value === undefined) return def;
 	return value;
 }
@@ -217,11 +210,7 @@ domload(() => {
 function setValue(input, value = null, params = {}) {
 	input = $(input);
 
-	if (
-		value === null ||
-		value === undefined ||
-		isEquivalent(input._get_value(), value)
-	) {
+	if (value === null || value === undefined || isEquivalent(input._get_value(), value)) {
 		if (!params.quiet) {
 			input._dispatch_change();
 		}
@@ -239,9 +228,7 @@ function setValue(input, value = null, params = {}) {
 		input.datepicker.setDate(value);
 	} else if (input.classList.contains("table-selection-value")) {
 		var datatable = input._parent(".datatable-wrapper");
-		window[
-			datatable.getAttribute("data-datatable-name")
-		].setSelectedValuesFromString(value);
+		window[datatable.getAttribute("data-datatable-name")].setSelectedValuesFromString(value);
 	} else if (input.classList.contains("jscolor")) {
 		value = rgbStringToHex(value);
 		var hex = value.replace("#", "");
@@ -406,12 +393,7 @@ function findNext(node, selector, options) {
  * @param {findNodeOptions} options
  */
 function findPrev(node, selector, options) {
-	return findNode(
-		node,
-		selector,
-		(node) => node.previousElementSibling,
-		options
-	);
+	return findNode(node, selector, (node) => node.previousElementSibling, options);
 }
 
 /**
@@ -446,12 +428,7 @@ function _set_content(node, html = "") {
 	}, 200);
 }
 
-function addMissing_direct_children(
-	parent,
-	isMissingCallback,
-	html,
-	position = "beforeend"
-) {
+function addMissing_direct_children(parent, isMissingCallback, html, position = "beforeend") {
 	if (!$(parent)._direct_children().find(isMissingCallback)) {
 		parent.insertAdjacentHTML(position, html);
 	}
@@ -519,9 +496,7 @@ function matchClassesWithPrefix(node, prefix) {
 
 function getNodeTextWidth(node) {
 	if (!node) return;
-	var textNode = [...node.childNodes].find(
-		(child) => child.nodeType === Node.TEXT_NODE
-	);
+	var textNode = [...node.childNodes].find((child) => child.nodeType === Node.TEXT_NODE);
 	if (!textNode) return getNodeTextWidth(node.children[0]);
 	var range = document.createRange();
 	range.selectNode(textNode);
@@ -627,14 +602,8 @@ function nodePositionAgainstScrollableParent(node) {
 
 	return {
 		relative_pos: {
-			left:
-				node_rect.left -
-				scrollable_parent_rect.left +
-				scrollable_parent.scrollLeft,
-			top:
-				node_rect.top -
-				scrollable_parent_rect.top +
-				scrollable_parent.scrollTop,
+			left: node_rect.left - scrollable_parent_rect.left + scrollable_parent.scrollLeft,
+			top: node_rect.top - scrollable_parent_rect.top + scrollable_parent.scrollTop,
 		},
 		node_rect: node_rect,
 		scrollable_parent: scrollable_parent,
@@ -656,10 +625,7 @@ function positionAgainstScrollableParent(x, y, scrollable_parent) {
  */
 function createNodeFromHtml(html) {
 	const random_class_name = "sddsfgsdfgsdfgcvcvc";
-	document.body.insertAdjacentHTML(
-		"beforeend",
-		`<div class="${random_class_name}" style="display:none">${html}</div>`
-	);
+	document.body.insertAdjacentHTML("beforeend", `<div class="${random_class_name}" style="display:none">${html}</div>`);
 	const node = $(`.${random_class_name}`);
 	node.remove();
 	return node._direct_child();
@@ -685,12 +651,7 @@ function isNodeOnScreen(node, offset = -10) {
 		px1 = pr.left + pr.width;
 		py1 = pr.top + pr.height;
 	}
-	if (
-		r.y > py1 + offset ||
-		r.y + r.height < py0 - offset ||
-		r.x > px1 + offset ||
-		r.x + r.width < px0 - offset
-	) {
+	if (r.y > py1 + offset || r.y + r.height < py0 - offset || r.x > px1 + offset || r.x + r.width < px0 - offset) {
 		return false;
 	}
 	return r;

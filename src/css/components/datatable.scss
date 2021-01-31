@@ -22,4 +22,23 @@ datatable-comp.comp {
 	.dt_row.even {
 		background: #f3f3f3;
 	}
+	.dt_header_controls {
+		display: inline-block;
+		/*margin: -2px 0;*/
+	}
+	.table_header .dt_cell .label {
+		margin: 4px 0;
+		display: inline-block;
+	}
+	.table_header .dt_cell > * {
+		vertical-align: middle;
+	}
+	.table_header {
+		border-bottom: 1px solid #ccc;
+		box-shadow: 0 2px 2px 0 #0001;
+		position: relative;
+	}
+	.dt_header_controls > .btn {
+		width: 28px;
+	}
 }

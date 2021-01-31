@@ -73,67 +73,14 @@ domload(() => {
 	const datatable_comp = $("datatable-comp");
 
 	datatableComp(datatable_comp, undefined, {
-		rows: [
-			{ row: { pies_id: 5, kot: "aaaa" } },
-			{ row: { pies_id: 6, kot: "aaaabb" } },
-			{ row: { pies_id: 7, kot: "ggg" } },
-			{ row: { pies_id: 8, kot: "ads" } },
-			{ row: { pies_id: 9, kot: "v" } },
-			{ row: { pies_id: 10, kot: "7777777" } },
-			{ row: { pies_id: 11, kot: " " } },
-			{ row: { pies_id: 12, kot: "fsfsfds" } },
-		],
+		search_url: STATIC_URLS["ADMIN"] + "search_products",
 		columns: [
-			{ label: "Pies", key: "pies_id", width: "100px", primary: true },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
-			{ label: "Kot", key: "kot", width: "200px" },
+			{ label: "product_id", key: "product_id", width: "100px", primary: true },
+			{ label: "Produkt", key: "title", width: "300px", primary: true },
+			{ label: "Publiczny", key: "published", width: "200px", sortable: true, searchable: "string" },
+			{ label: "W magazynie", key: "stock", width: "200px" },
 		],
 	});
-
-	setTimeout(() => {
-		datatable_comp._data.rows = [
-			{ row: { pies_id: 12, kot: "fsfsfds" } },
-			{ row: { pies_id: 5, kot: "aaaa" } },
-			{ row: { pies_id: 6, kot: "aaaabb" } },
-			{ row: { pies_id: 7, kot: "ggg" } },
-			{ row: { pies_id: 8, kot: "ads" } },
-			{ row: { pies_id: 9, kot: "v" } },
-			{ row: { pies_id: 10, kot: "7777777" } },
-			{ row: { pies_id: 11, kot: " " } },
-
-			// { row: { pies_id: 6, kot: "aaaabb" } },
-			// { row: { pies_id: 5, kot: "aaaa" } },
-			// { row: { pies_id: 10, kot: "7777777" } },
-			// { row: { pies_id: 8, kot: "ads" } },
-			// { row: { pies_id: 9, kot: "v" } },
-			// { row: { pies_id: 11, kot: " " } },
-			// { row: { pies_id: 12, kot: "fsfsfds" } },
-			// { row: { pies_id: 7, kot: "ggg" } },
-
-			// { row: { pies_id: 6, kot: "aaaabb" } },
-			// { row: { pies_id: 5, kot: "aaaa" } },
-			// { row: { pies_id: 11, kot: " " } },
-			// { row: { pies_id: 7, kot: "ggg" } },
-			// { row: { pies_id: 9, kot: "v" } },
-			// { row: { pies_id: 10, kot: "7777777" } },
-			// { row: { pies_id: 12, kot: "fsfsfds" } },
-			// { row: { pies_id: 8, kot: "ads" } },
-		];
-		console.time();
-		for (let i = 0; i < 20; i++) {
-			datatable_comp._data.rows.push({ row: { pies_id: i + 100, kot: "c" } });
-		}
-		datatable_comp._set_data();
-		console.timeEnd();
-	}, 1000);
 });
 
 registerModalContent(/*html*/ `

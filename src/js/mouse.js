@@ -1,3 +1,5 @@
+/* js[global] */
+
 /**
  * @typedef {{
  * x: number
@@ -14,8 +16,8 @@
 let mouse = {
 	target: null,
 	pos: {
-		x: 0,
-		y: 0,
+		x: -100,
+		y: -100,
 	},
 };
 
@@ -30,9 +32,8 @@ function updateMouseCoords(event) {
 	mouse.target = $(event.target);
 }
 
-if (!IS_TOUCH_DEVICE) {
-	this.container.addEventListener("mousemove", (event) => {
-		updateMouseCoords(event);
-		this.mouseMove();
-	});
-}
+//if (!IS_TOUCH_DEVICE) {
+document.addEventListener("mousemove", (event) => {
+	updateMouseCoords(event);
+});
+//}
