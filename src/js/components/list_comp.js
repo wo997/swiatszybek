@@ -5,11 +5,11 @@
  * _data: Array
  * _prev_data: Array
  * _set_data(data?: Array, options?: SetCompDataOptions)
- * _nextRowId: number
  * _removeRow(row_index: number)
  * _moveRow(from: number, to: number)
  * _getRows(): AnyComp[]
  * _row_template: string
+ * _primary_key: string | undefined
  * } & BaseComp} ListComp
  *
  * @typedef {{
@@ -26,6 +26,8 @@
 function listComp(node, parent, data = []) {
 	node._row_template = node.innerHTML;
 	node._empty();
+
+	node._primary_key = node.dataset.primary;
 
 	node._pointChildsData = (child) => {
 		let source_sub_data_index = node._data.findIndex((e) => {
@@ -47,13 +49,19 @@ function listComp(node, parent, data = []) {
 		data.forEach((row_data, index) => {
 			// pass data no matter who the child is - should be defined by options cause it's inefficient to set each row every time u do anything
 			if (row_data.row_id === undefined) {
-				if (nextRowId === 0) {
-					nextRowId = applyToArray(Math.min, [
-						...data.map((e) => e.row_id).filter((e) => e),
-						-1000,
-					]); // that will be unique for sure
+				const pk = node._primary_key;
+				if (pk) {
+					let ref = row_data;
+					pk.split(".").forEach((e) => {
+						ref = ref[e];
+					});
+					row_data.row_id = ref;
+				} else {
+					if (nextRowId === 0) {
+						nextRowId = applyToArray(Math.min, [...data.map((e) => e.row_id).filter((e) => e), -1000]); // that will be unique for sure
+					}
+					row_data.row_id = --nextRowId;
 				}
-				row_data.row_id = --nextRowId;
 			}
 			row_data.row_index = index;
 			row_data.list_length = data.length;
@@ -97,22 +105,21 @@ function listComp(node, parent, data = []) {
 							/** @type {AnyComp} */
 							// @ts-ignore
 							child = createNodeFromHtml(/*html*/ `
-                                <div class="my_list_row_wrapper expand_y hidden animate_hidden">
-                                    <div class="my_list_row"></div>
+                                <div class="list_row_wrapper expand_y hidden animate_hidden">
+                                    <div class="list_row"></div>
                                 </div>
                             `);
 						}
 
-						const target_index_real =
-							diff_info.target_index + removed_before_current;
+						const target_index_real = diff_info.target_index + removed_before_current;
 
-						if (target_index_real !== diff_info.from) {
-							node.insertBefore(child, node.children[target_index_real]);
-						}
+						//if (target_index_real !== diff_info.from) { // you tried but it was the reason why it failed hard
+						node.insertBefore(child, node.children[target_index_real]);
+						//}
 
 						if (add) {
 							const row_data = node._data[diff_info.to];
-							const the_row = child._child(".my_list_row");
+							const the_row = child._child(".list_row");
 							the_row._set_content(node._row_template);
 
 							directComps(the_row).forEach((comp) => {
@@ -141,10 +148,7 @@ function listComp(node, parent, data = []) {
 							const ronscr = (r) => {
 								return r.top < window.innerHeight && r.top + r.height > 0;
 							};
-							if (
-								Math.abs(offset_0) > 2 &&
-								(ronscr(rect_before) || ronscr(rect_after))
-							) {
+							if (Math.abs(offset_0) > 2 && (ronscr(rect_before) || ronscr(rect_after))) {
 								child._animate(
 									`
                                            0% {transform:translateY(${offset_0}px)}

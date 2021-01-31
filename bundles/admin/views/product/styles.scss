@@ -1,17 +1,14 @@
 /* css[view] */
 
-.my_component {
-	border: 1px solid #ccc;
-	padding: 10px;
-}
+product-comp {
+	list-comp {
+		border: 1px solid #ccc;
+		padding: 10px;
+		width: 100%;
+	}
 
-.my_list {
-	border: 1px solid #ccc;
-	padding: 10px;
-	width: 100%;
-}
-
-.my_list_row {
-	border: 1px solid #ccc;
-	padding: 10px;
+	.list_row {
+		border: 1px solid #ccc;
+		padding: 10px;
+	}
 }

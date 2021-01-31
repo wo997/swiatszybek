@@ -119,9 +119,7 @@ function createComp(comp, parent_comp, data, options) {
 				node._eval_html.push({
 					eval_str,
 				});
-				const node_html = `<span class='eval_html_${
-					node._eval_html.length - 1
-				}'></span>`;
+				const node_html = `<span class='eval_html_${node._eval_html.length - 1}'></span>`;
 				template = template.replace(match, node_html);
 			}
 		}
@@ -251,30 +249,27 @@ function createComp(comp, parent_comp, data, options) {
 	if (parent) {
 		parent._subscribers.push({
 			receiver: node,
-			fetch: (
-				/** @type {AnyComp} */ source,
-				/** @type {AnyComp} */ receiver
-			) => {
+			fetch: (/** @type {AnyComp} */ source, /** @type {AnyComp} */ receiver) => {
 				const x = source._pointChildsData(node);
 				if (x) {
-					const { obj, key } = x;
-					if (key !== undefined) {
-						const receiver_data = receiver._pointSelfData();
-						receiver_data.obj[receiver_data.key] = obj[key];
+					const { obj: s_obj, key: s_key } = x;
+					if (s_key !== undefined) {
+						const { obj: r_obj, key: r_key } = receiver._pointSelfData();
+						r_obj[r_key] = s_obj[s_key];
 					}
 				}
 			},
 		});
 		node._subscribers.push({
 			receiver: parent,
-			fetch: (
-				/** @type {AnyComp} */ source,
-				/** @type {AnyComp} */ receiver
-			) => {
-				const { obj, key } = receiver._pointChildsData(node);
-				if (key !== undefined) {
-					const source_data = source._pointSelfData();
-					obj[key] = source_data.obj[source_data.key];
+			fetch: (/** @type {AnyComp} */ source, /** @type {AnyComp} */ receiver) => {
+				const x = receiver._pointChildsData(node);
+				if (x) {
+					const { obj: r_obj, key: r_key } = x;
+					if (r_key !== undefined) {
+						const { obj: s_obj, key: s_key } = source._pointSelfData();
+						r_obj[r_key] = s_obj[s_key];
+					}
 				}
 			},
 		});
@@ -324,10 +319,7 @@ function setCompData(comp, _data = undefined, options = {}) {
 	if (isObject(node._data)) {
 		node._changed_data = {};
 		for (const [key, value] of Object.entries(node._data)) {
-			if (
-				!node._prev_data ||
-				!isEquivalent(def(node._prev_data[key], undefined), value)
-			) {
+			if (!node._prev_data || !isEquivalent(def(node._prev_data[key], undefined), value)) {
 				node._changed_data[key] = true;
 			}
 		}
@@ -355,10 +347,7 @@ function setCompData(comp, _data = undefined, options = {}) {
 
 	for (const eval_class of node._eval_class) {
 		try {
-			eval_class.node.classList.toggle(
-				eval_class.className,
-				!!eval(eval_class.eval_str)
-			);
+			eval_class.node.classList.toggle(eval_class.className, !!eval(eval_class.eval_str));
 		} catch (e) {
 			console.error(`Cannot evaluate class ${eval_class.eval_str}: ${e}`);
 			console.trace();

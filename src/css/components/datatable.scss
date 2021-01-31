@@ -1,0 +1,25 @@
+/* css[global] */
+
+datatable-comp.comp {
+	& {
+		border: 1px solid #ccc;
+	}
+	.table_header,
+	.datatable_row {
+		display: flex;
+	}
+	.datatable_cell {
+		padding: 6px 8px;
+	}
+	.table_body .datatable_cell {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.datatable_row {
+		transition: 0.25s background-color;
+	}
+	.datatable_row.even {
+		background: #f3f3f3;
+	}
+}

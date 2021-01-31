@@ -5,7 +5,7 @@
  * @typedef {{
  *  row: any
  *  columns: DatatableColumnDef[]
- * }} DatatableRowCompData
+ * } & ListCompRowData} DatatableRowCompData
  *
  * @typedef {{
  *  _data: DatatableRowCompData
@@ -13,6 +13,7 @@
  *  _set_data(data?: DatatableRowCompData, options?: SetCompDataOptions)
  *  _getData()
  *  _nodes: {
+ *      datatable_row: PiepNode
  *  }
  * } & BaseComp} DatatableRowComp
  */
@@ -23,10 +24,6 @@
  * @param {DatatableRowCompData} data
  */
 function datatableRowComp(node, parent, data = { row: {}, columns: [] }) {
-	node._pointSelfData = () => {
-		return { obj: node._data, key: "row" };
-	};
-
 	node._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
 			data = node._data;
@@ -34,17 +31,25 @@ function datatableRowComp(node, parent, data = { row: {}, columns: [] }) {
 
 		setCompData(node, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				let row_html = "";
+
+				for (const column of node._data.columns) {
+					let cell_html = "";
+
+					cell_html += `<div class='datatable_cell' style="width:${def(column.width, "10%")}">${node._data.row[column.key]}</div>`;
+
+					row_html += cell_html;
+				}
+
+				if (node._nodes.datatable_row.innerHTML != row_html) {
+					node._nodes.datatable_row._set_content(row_html);
+				}
+			},
 		});
 	};
 
 	createComp(node, parent, data, {
-		template: /*html*/ `
-            {${JSON.stringify(data.row)}}
-            <list-comp>
-                <datatable-cell-comp></datatable-cell-comp>
-            </list-comp>
-        `,
-		initialize: () => {},
+		template: /*html*/ `<div data-node="{${node._nodes.datatable_row}}" class="datatable_row {even:${data.row_index % 2 === 0}}"></div>`,
 	});
 }

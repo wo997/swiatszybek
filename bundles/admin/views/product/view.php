@@ -17,8 +17,8 @@
 
 <?php startSection("body_content"); ?>
 
-<product-comp></product-comp>
-
 <datatable-comp></datatable-comp>
+
+<product-comp></product-comp>
 
 <?php include "admin/page_template.php"; ?>
