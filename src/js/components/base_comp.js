@@ -21,6 +21,7 @@
  * _parent_comp?: AnyComp
  * _referenceParent: CallableFunction
  * _pointChildsData(child: AnyComp): ObjectData
+ * _pointSelfData(): ObjectData
  * _addSubscriber(subscribe: SubscribeToData)
  * _subscribers: SubscribeToData[]
  * _bind_var?: string
@@ -97,6 +98,12 @@ function createComp(comp, parent_comp, data, options) {
 		};
 	}
 
+	if (!node._pointSelfData) {
+		node._pointSelfData = () => {
+			return { obj: node, key: "_data" };
+		};
+	}
+
 	node._eval_html = [];
 	node._eval_class = [];
 	node._comp_traits = [];
@@ -124,7 +131,9 @@ function createComp(comp, parent_comp, data, options) {
 		let index = -1;
 		for (const eval_html of node._eval_html) {
 			index++;
-			eval_html.node = node._child(`.eval_html_${index}`);
+			const c = `eval_html_${index}`;
+			eval_html.node = node._child("." + c);
+			eval_html.node.classList.remove(c);
 		}
 
 		for (const trait of node._children("p-batch-trait")) {
@@ -250,7 +259,8 @@ function createComp(comp, parent_comp, data, options) {
 				if (x) {
 					const { obj, key } = x;
 					if (key !== undefined) {
-						receiver._data = obj[key];
+						const receiver_data = receiver._pointSelfData();
+						receiver_data.obj[receiver_data.key] = obj[key];
 					}
 				}
 			},
@@ -263,7 +273,8 @@ function createComp(comp, parent_comp, data, options) {
 			) => {
 				const { obj, key } = receiver._pointChildsData(node);
 				if (key !== undefined) {
-					obj[key] = source._data;
+					const source_data = source._pointSelfData();
+					obj[key] = source_data.obj[source_data.key];
 				}
 			},
 		});

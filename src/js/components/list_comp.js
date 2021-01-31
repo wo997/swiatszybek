@@ -27,6 +27,16 @@ function listComp(node, parent, data = []) {
 	node._row_template = node.innerHTML;
 	node._empty();
 
+	node._pointChildsData = (child) => {
+		let source_sub_data_index = node._data.findIndex((e) => {
+			return e.row_id === child._data.row_id;
+		});
+		return {
+			obj: node._data,
+			key: source_sub_data_index === -1 ? null : source_sub_data_index,
+		};
+	};
+
 	node._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
 			data = node._data;
@@ -158,16 +168,6 @@ function listComp(node, parent, data = []) {
 				// @ts-ignore
 				const res = node._direct_children(":not(.removing)");
 				return res;
-			};
-
-			node._pointChildsData = (child) => {
-				let source_sub_data_index = node._data.findIndex((e) => {
-					return e.row_id === child._data.row_id;
-				});
-				return {
-					obj: node._data,
-					key: source_sub_data_index === -1 ? null : source_sub_data_index,
-				};
 			};
 
 			node._removeRow = (row_index) => {

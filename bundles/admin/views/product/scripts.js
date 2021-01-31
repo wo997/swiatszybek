@@ -50,9 +50,9 @@ domload(() => {
 
 	/** @type {ProductComp} */
 	// @ts-ignore
-	const my_list_node = $("product-comp");
+	const product_comp = $("product-comp");
 
-	productComp(my_list_node, undefined, {
+	productComp(product_comp, undefined, {
 		id: 5,
 		name: "asdsad",
 		sell_by: "qty",
@@ -65,6 +65,18 @@ domload(() => {
 				feature_id: 4,
 				options: [{ option_id: 4 }],
 			},
+		],
+	});
+
+	/** @type {DatatableComp} */
+	// @ts-ignore
+	const datatable_comp = $("datatable-comp");
+
+	datatableComp(datatable_comp, undefined, {
+		rows: [{ pies_id: 5, kot: "aaaa" }],
+		columns: [
+			{ key: "pies_id", width: "100px" },
+			{ key: "kot", width: "200px" },
 		],
 	});
 });

@@ -19,4 +19,6 @@
 
 <product-comp></product-comp>
 
+<datatable-comp></datatable-comp>
+
 <?php include "admin/page_template.php"; ?>
