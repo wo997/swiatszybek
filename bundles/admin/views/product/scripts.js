@@ -67,20 +67,6 @@ domload(() => {
 			},
 		],
 	});
-
-	/** @type {DatatableComp} */
-	// @ts-ignore
-	const datatable_comp = $("datatable-comp");
-
-	datatableComp(datatable_comp, undefined, {
-		search_url: STATIC_URLS["ADMIN"] + "search_products",
-		columns: [
-			{ label: "Produkt", key: "title", width: "300px", sortable: true, searchable: "string" },
-			{ label: "Publiczny", key: "published", width: "200px", sortable: true, searchable: "string" },
-			{ label: "W magazynie", key: "stock", width: "200px", sortable: true, searchable: "number" },
-		],
-		primary_key: "product_id",
-	});
 });
 
 registerModalContent(/*html*/ `

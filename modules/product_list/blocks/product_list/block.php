@@ -112,12 +112,12 @@ $products = paginateData($params);
 
 $res = "";
 if ($is_basic) {
-    foreach ($products["results"] as $product) {
+    foreach ($products["rows"] as $product) {
         $res .= "<a class='result' href='" . getProductLink($product["product_id"], $product["link"]) . "'>" . $product["title"] . "</a>";
     }
     echo $res;
 } else {
-    foreach ($products["results"] as $product) {
+    foreach ($products["rows"] as $product) {
         $already_shown_product_ids_string .= $product["product_id"] . ",";
 
         $priceText = $product["price_min"];

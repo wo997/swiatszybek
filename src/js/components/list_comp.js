@@ -25,6 +25,7 @@
  */
 function listComp(node, parent, data = []) {
 	node._row_template = node.innerHTML;
+	const is_horizontal = node.classList.contains("horizontal");
 	node._empty();
 
 	node._primary_key = node.dataset.primary;
@@ -82,19 +83,25 @@ function listComp(node, parent, data = []) {
 				}));
 
 				let instant = false; // adding and removing, if we have too many of these we won't animate the list, simple
-				let expand_nodes = 0;
+				//let expand_nodes = 0;
+				// let moves = 0;
 
-				for (const d of diff) {
-					if (d.from === -1 || d.to === -1) {
-						expand_nodes++;
-						if (expand_nodes > 4) {
-							instant = true;
-							break;
-						}
-					}
-				}
+				// //if (!instant) {
+				// for (const d of diff) {
+				// 	if (d.from === -1 || d.to === -1) {
+				// 		moves++;
+				// 	}
+				// 	// if (d.from !== d.to) {
+				// 	// 	moves++;
+				// 	// }
+				// 	if (moves > diff.length * 4) {
+				// 		instant = true;
+				// 		break;
+				// 	}
+				// }
+				//}
 
-				const animation_duration = 250;
+				const animation_duration = instant ? 0 : 250;
 
 				const rows_before = node._getRows();
 
@@ -118,7 +125,7 @@ function listComp(node, parent, data = []) {
 							/** @type {AnyComp} */
 							// @ts-ignore
 							child = createNodeFromHtml(/*html*/ `
-                                <div class="list_row_wrapper expand_y hidden animate_hidden">
+                                <div class="list_row_wrapper expand_y hidden animate_hidden ${is_horizontal ? "horizontal" : ""}">
                                     <div class="list_row"></div>
                                 </div>
                             `);
@@ -165,17 +172,22 @@ function listComp(node, parent, data = []) {
 							const rect_before = row_rects_before[diff_info.from];
 							const rect_after = child.getBoundingClientRect();
 
-							const offset_0 = Math.round(rect_before.top - rect_after.top);
+							const off_x = Math.round(rect_before.left - rect_after.left);
+							const off_y = Math.round(rect_before.top - rect_after.top);
 
+							/**
+							 *
+							 * @param {ClientRect} r
+							 */
 							const ronscr = (r) => {
-								return r.top < window.innerHeight && r.top + r.height > 0;
+								return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
 							};
-							if (Math.abs(offset_0) > 2 && (ronscr(rect_before) || ronscr(rect_after))) {
+							if ((Math.abs(off_y) > 2 || Math.abs(off_x) > 2) && (ronscr(rect_before) || ronscr(rect_after))) {
 								child._animate(
 									`
-                                           0% {transform:translateY(${offset_0}px)}
-                                           100% {transform:translateY(0px)}
-                                       `,
+                                        0% {transform:translate(${off_x}px,${off_y}px)}
+                                        100% {transform:translate(0px,0px)}
+                                    `,
 									animation_duration
 								);
 							}

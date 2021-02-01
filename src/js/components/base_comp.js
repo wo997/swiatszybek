@@ -241,10 +241,10 @@ function createComp(comp, parent_comp, data, options) {
 				let sub_node_data = sub_node._get_value();
 
 				if (sub_node_data !== undefined) {
-					if (node._data[bind_var] !== undefined) {
-						node._data[bind_var] = sub_node_data;
-						node._set_data();
-					}
+					//if (node._data[bind_var] !== undefined) { // add it anyway
+					node._data[bind_var] = sub_node_data;
+					node._set_data();
+					//}
 				}
 			});
 			sub_node.addEventListener("input", () => {

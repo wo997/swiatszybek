@@ -180,6 +180,7 @@ textarea {
 .btn.primary {
 	background: var(--primary-clr);
 	color: white;
+	border: 1px solid var(--primary-clr);
 }
 .btn.secondary {
 	background: #fafafa;
@@ -190,15 +191,18 @@ textarea {
 .btn.subtle {
 	background: var(--subtle-background-clr);
 	color: var(--subtle-font-clr);
+	border: 1px solid var(--subtle-background-clr);
 }
 
 .btn.success {
 	background: var(--success-clr);
 	color: white;
+	border: 1px solid var(--success-clr);
 }
 .btn.error {
 	background: var(--error-clr);
 	color: white;
+	border: 1px solid var(--error-clr);
 }
 
 .btn.black-outline {
@@ -1091,20 +1095,7 @@ ql-icon i span {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#000000', GradientType=1 );
 }
 
-.expand_y {
-	padding-top: 0 !important;
-	padding-bottom: 0 !important;
-}
-.expand_y.animate_hidden {
-	height: 0 !important;
-	min-height: 0 !important;
-	pointer-events: none;
-}
-.expand_y.animating,
-.expand_y.animate_hidden {
-	pointer-events: none;
-	overflow: hidden;
-}
+/* old */
 .hidden:not(.expand_y) {
 	display: none !important;
 }

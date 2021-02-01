@@ -1,0 +1,11 @@
+/* css[global] */
+
+list-comp.horizontal {
+	display: flex;
+}
+
+pagination-comp.comp {
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-between;
+}

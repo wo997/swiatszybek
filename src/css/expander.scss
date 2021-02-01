@@ -1,0 +1,27 @@
+/* css[global] */
+.expand_y {
+	& {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	&.animate_hidden {
+		pointer-events: none;
+	}
+	&.horizontal.animate_hidden {
+		width: 0 !important;
+		min-width: 0 !important;
+	}
+	&:not(.horizontal).animate_hidden {
+		height: 0 !important;
+		min-height: 0 !important;
+	}
+	&.animating,
+	&.animate_hidden {
+		pointer-events: none;
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+	&.horizontal {
+		display: flex;
+	}
+}

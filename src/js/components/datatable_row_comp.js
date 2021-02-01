@@ -9,7 +9,6 @@
  *
  * @typedef {{
  *  _data: DatatableRowCompData
- *  _prev_data: DatatableRowComp
  *  _set_data(data?: DatatableRowCompData, options?: SetCompDataOptions)
  *  _getData()
  *  _nodes: {

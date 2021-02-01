@@ -10,7 +10,6 @@
  *
  * @typedef {{
  *  _data: ProductCompData
- *  _prev_data: ProductComp
  *  _set_data(data?: ProductCompData, options?: SetCompDataOptions)
  *  _getData()
  *  _nodes: {
@@ -52,9 +51,7 @@ function productComp(
 		template: /*html*/ `
             <div>
                 <div class="label">Nazwa produktu</div>
-                <input type="text" class="field" data-bind="{${
-									data.name
-								}}"/></span>
+                <input type="text" class="field" data-bind="{${data.name}}"/></span>
 
                 <div class="label">Sprzedawaj na</div>
                 <select class="field" data-bind="{${data.sell_by}}">

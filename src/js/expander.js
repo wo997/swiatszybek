@@ -16,9 +16,7 @@ function expandMenu(elem, btn, open = null, options = {}) {
 		return;
 	}
 
-	var open = open
-		? expand_btn.classList.toggle("open", open)
-		: expand_btn.classList.toggle("open");
+	var open = open ? expand_btn.classList.toggle("open", open) : expand_btn.classList.toggle("open");
 	var keyframes = "";
 	if (open) {
 		keyframes = `
@@ -68,10 +66,11 @@ function expand(elem, show = null, options = {}) {
 	if (!elem) {
 		return;
 	}
+	const ch = elem.classList.contains("hidden");
 	if (show === null) {
-		show = elem.classList.contains("hidden");
+		show = ch;
 	}
-	if (xor(show, elem.classList.contains("hidden"))) {
+	if (xor(show, ch)) {
 		return;
 	}
 
@@ -87,12 +86,13 @@ function expand(elem, show = null, options = {}) {
 	finishNodeAnimation(elem);
 	finishNodeAnimation(animation_node);
 
-	let duration =
-		options.duration || options.duration === 0 ? options.duration : 250;
-	let h = elem.scrollHeight;
+	const is_horizontal = elem.classList.contains("horizontal");
 
-	let h1 = (!show ? h : 0) + "px";
-	let h2 = (show ? h : 0) + "px";
+	let duration = options.duration || options.duration === 0 ? options.duration : 250;
+	let h = is_horizontal ? elem.scrollWidth : elem.scrollHeight;
+
+	let h1 = !show ? h : 0;
+	let h2 = show ? h : 0;
 
 	let o1 = !show ? 1 : 0;
 	let o2 = show ? 1 : 0;
@@ -104,16 +104,19 @@ function expand(elem, show = null, options = {}) {
 		elem.classList.remove("animate_hidden");
 	}
 
-	let m1 = (show ? -25 : 0) + "px";
-	let m2 = (!show ? -25 : 0) + "px";
+	let m1 = show ? -25 : 0;
+	let m2 = !show ? -25 : 0;
+
+	const mr = is_horizontal ? "left" : "top";
+	const dim = is_horizontal ? "width" : "height";
 
 	animation_node._animate(
 		`
             0% {
-                margin-top: ${m1};
+                margin-${mr}: ${m1}px;
             }
             100% {
-                margin-top: ${m2};
+                margin-${mr}: ${m2}px;
             }
         `,
 		duration
@@ -122,18 +125,18 @@ function expand(elem, show = null, options = {}) {
 	elem._animate(
 		`
             0% {
-                height: ${h1};
+                ${dim}: ${h1}px;
                 opacity: ${o1};
             }
             100% {
-                height: ${h2};
+                ${dim}: ${h2}px;
                 opacity: ${o2};
             }
         `,
 		duration,
 		{
 			callback: () => {
-				elem.style.height = show ? "" : "0px";
+				elem.style[dim] = show ? "" : "0px";
 
 				if (!show) {
 					elem.classList.add("animate_hidden");

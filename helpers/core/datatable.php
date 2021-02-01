@@ -138,13 +138,13 @@ function getRelevanceQuery($fields, $words)
  */
 function paginateData($params = [])
 {
-    $order = $rowCount = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 20;
-    $page_id = def($params, ["datatable_params", "page"], 0) - 1; // start from 0
+    $row_count = def($params, ["datatable_params", "row_count"], 20);
+    $page_id = def($params, ["datatable_params", "page_id"], 0);
     if ($page_id < 0) {
         $page_id = 0;
     }
 
-    $bottomIndex = $page_id * $rowCount;
+    $bottomIndex = $page_id * $row_count;
 
     $select = $params["select"];
 
@@ -215,18 +215,18 @@ function paginateData($params = [])
     }
 
     $totalRows = DB::fetchVal($countQuery);
-    $page_idCount = $rowCount > 0 ? ceil($totalRows / $rowCount) : 0;
+    $page_idCount = $row_count > 0 ? ceil($totalRows / $row_count) : 0;
 
     if ($order) {
         $order = "ORDER BY $order";
     }
 
-    $results = DB::fetchArr("SELECT $select FROM $from WHERE $where $group $order LIMIT $bottomIndex,$rowCount");
+    $results = DB::fetchArr("SELECT $select FROM $from WHERE $where $group $order LIMIT $bottomIndex,$row_count");
 
     $index = 0;
     foreach ($results as &$result) {
         $index++;
-        $result["kolejnosc"] = $page_id * $rowCount + $index;
+        $result["kolejnosc"] = $page_id * $row_count + $index;
 
         if (isset($params["renderers"])) {
             foreach ($params["renderers"] as $field => $renderer) {
@@ -238,7 +238,7 @@ function paginateData($params = [])
 
     //$page_idCount = $page_idCount * 4;$results = array_merge($results, $results, $results, $results);
 
-    $responseArray = ["page_count" => $page_idCount, "rows_count" => $totalRows, "rows" => $results];
+    $responseArray = ["page_count" => $page_idCount, "total_rows" => $totalRows, "rows" => $results];
 
     return isset($params["raw"]) ? $responseArray : json_encode($responseArray);
 }
