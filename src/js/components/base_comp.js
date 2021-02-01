@@ -330,7 +330,7 @@ function setCompData(comp, _data = undefined, options = {}) {
 	if (isObject(node._data)) {
 		node._changed_data = {};
 		for (const [key, value] of Object.entries(node._data)) {
-			if (!node._prev_data || !isEquivalent(def(node._prev_data[key], undefined), value)) {
+			if (node._prev_data === undefined || !isEquivalent(def(node._prev_data[key], undefined), value)) {
 				node._changed_data[key] = true;
 			}
 		}

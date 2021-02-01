@@ -542,9 +542,10 @@ function isArray(input) {
 }
 
 function isEquivalent(a, b) {
-	if (!a || !b) {
+	if (!a || !b || typeof a !== "object" || typeof b !== "object") {
 		return a === b;
 	}
+
 	const aProps = Object.getOwnPropertyNames(a);
 	const bProps = Object.getOwnPropertyNames(b);
 

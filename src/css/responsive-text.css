@@ -2,12 +2,12 @@
 
 input,
 select {
-  font-size: 1em;
-  width: 185px; /* default width man */
+	font-size: 1em;
+	width: 185px; /* default width man */
 }
 
 /* buttons */
-.btn {
+/* .btn {
   font-size: 15px;
   padding: 0.25em 0.7em;
   min-height: 2.1em;
@@ -23,14 +23,14 @@ select {
 }
 .btn.xlarge {
   font-size: 38px;
-}
+} */
 /* buttons */
 
-body,
+/* body,
 .ql-editor,
 .ql-size .ql-picker-options {
   font-size: 15px;
-}
+} */
 
 /*
 @media only screen and (min-width: 900px) {

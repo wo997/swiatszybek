@@ -43,9 +43,14 @@ datatable-comp.comp {
 	}
 	.dt_header_controls > .btn {
 		width: 28px;
+		height: 28px;
+		padding: 0;
 	}
 	.datatable_label {
 		font-weight: 600;
 		font-size: 1.3em;
+	}
+	.pagination {
+		margin-top: 10px;
 	}
 }

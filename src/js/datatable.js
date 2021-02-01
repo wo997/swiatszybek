@@ -178,11 +178,9 @@ function createDatatable(datatable) {
 
 		datatable.bulkEditSelectAll = () => {
 			var checked = datatable.target._child(".bulk_edit_checkbox_all").checked;
-			datatable.tableSearchElement
-				._children("tbody .bulk_edit_checkbox")
-				.forEach((e) => {
-					e.checked = checked;
-				});
+			datatable.tableSearchElement._children("tbody .bulk_edit_checkbox").forEach((e) => {
+				e.checked = checked;
+			});
 
 			datatable.bulkEditSelectionChange();
 		};
@@ -191,24 +189,18 @@ function createDatatable(datatable) {
 			var bulk_selection = [];
 			var all_checked = true;
 			var any_checked = false;
-			datatable.tableSearchElement
-				._children("tbody .bulk_edit_checkbox")
-				.forEach((e) => {
-					if (e.checked) {
-						bulk_selection.push(
-							+e._parent()._parent()._parent().getAttribute("data-index")
-						);
-						any_checked = true;
-					} else {
-						all_checked = false;
-					}
-				});
+			datatable.tableSearchElement._children("tbody .bulk_edit_checkbox").forEach((e) => {
+				if (e.checked) {
+					bulk_selection.push(+e._parent()._parent()._parent().getAttribute("data-index"));
+					any_checked = true;
+				} else {
+					all_checked = false;
+				}
+			});
 			datatable.bulk_selection = bulk_selection;
 
 			if (any_checked) {
-				var bulk_selection_count = datatable.target._child(
-					".bulk_selection_count"
-				);
+				var bulk_selection_count = datatable.target._child(".bulk_selection_count");
 				if (bulk_selection_count) {
 					bulk_selection_count.innerHTML = bulk_selection.length;
 				}
@@ -223,16 +215,11 @@ function createDatatable(datatable) {
 	var breadcrumb_html = "";
 
 	if (datatable.tree_view) {
-		datatable.lang.main_category = def(
-			datatable.lang.main_category,
-			"Kategoria główna"
-		);
+		datatable.lang.main_category = def(datatable.lang.main_category, "Kategoria główna");
 
 		datatable.breadcrumb = [
 			{
-				title:
-					/*html*/ `<i class="fas fa-home" style="margin-right: 4px;"></i>` +
-					datatable.lang.main_category,
+				title: /*html*/ `<i class="fas fa-home" style="margin-right: 4px;"></i>` + datatable.lang.main_category,
 				category_id: -1,
 			},
 		];
@@ -257,17 +244,9 @@ function createDatatable(datatable) {
           <span class="total-rows"></span>
           <span class="space-right">&nbsp;${datatable.lang.subject}</span>
           <select data-param="rowCount" class="field inline">
-              <option value='10' ${
-								datatable.rowCount == 10 ? "selected" : ""
-							}>10</option>
-              <option value='20' ${
-								!datatable.rowCount || datatable.rowCount == 20
-									? "selected"
-									: ""
-							}>20</option>
-              <option value='50' ${
-								datatable.rowCount == 50 ? "selected" : ""
-							}>50</option>
+              <option value='10' ${datatable.rowCount == 10 ? "selected" : ""}>10</option>
+              <option value='20' ${!datatable.rowCount || datatable.rowCount == 20 ? "selected" : ""}>20</option>
+              <option value='50' ${datatable.rowCount == 50 ? "selected" : ""}>50</option>
           </select>
           <span class="big space-right no-space-mobile na-strone">&nbsp;&nbsp;na stronę</span>
           <div class="pagination"></div>
@@ -294,8 +273,7 @@ function createDatatable(datatable) {
 		var scalePercentages = 100 / sumWidthPercentages;
 		for (const column of datatable.definition) {
 			if (column.width && column.width.indexOf("%") != -1) {
-				column.width =
-					Math.round(parseFloat(column.width) * scalePercentages) + "%";
+				column.width = Math.round(parseFloat(column.width) * scalePercentages) + "%";
 			}
 		}
 
@@ -356,13 +334,9 @@ function createDatatable(datatable) {
 						}.toggleSearchVisibility(true)">Wyszukaj <i class="fas fa-plus"></i> </div>
           </div>
           <input type="hidden" class="table-selection-value" name="${
-						datatable.selectable.output
-							? datatable.selectable.output
-							: datatable.primary
+						datatable.selectable.output ? datatable.selectable.output : datatable.primary
 					}" ${datatable.selectable.validate ? `data-validate` : ""}>
-          <div class="has_selected_rows table-search-wrapper ${
-						datatable.selectable ? `expand_y hidden animate_hidden` : ""
-					}">
+          <div class="has_selected_rows table-search-wrapper ${datatable.selectable ? `expand_y hidden animate_hidden` : ""}">
             <div class="table-search-container">
               <div class="btn secondary fill hideBtn" onclick="${
 								datatable.name
@@ -375,10 +349,7 @@ function createDatatable(datatable) {
 
 		datatable.target
 			._child(".selected_rows .datatable")
-			.insertAdjacentHTML(
-				"afterend",
-				/*html*/ `<div class="no-results">Brak powiązanych ${datatable.lang.subject}</div>`
-			);
+			.insertAdjacentHTML("afterend", /*html*/ `<div class="no-results">Brak powiązanych ${datatable.lang.subject}</div>`);
 	} else {
 		datatable.target.insertAdjacentHTML(
 			"afterbegin",
@@ -387,29 +358,18 @@ function createDatatable(datatable) {
 	}
 	datatable.target
 		._child(".table-search-wrapper .datatable")
-		.insertAdjacentHTML(
-			"afterend",
-			/*html*/ `<div class="no-results">Brak ${datatable.lang.subject}</div>`
-		);
+		.insertAdjacentHTML("afterend", /*html*/ `<div class="no-results">Brak ${datatable.lang.subject}</div>`);
 
 	datatable.searchElement = datatable.target._child(".search-wrapper");
-	datatable.tableSearchElement = datatable.target._child(
-		".table-search-wrapper"
-	);
+	datatable.tableSearchElement = datatable.target._child(".table-search-wrapper");
 	datatable.tableSelectionElement = datatable.target._child(".selected_rows");
 	datatable.tableBodyElement = datatable.tableSearchElement._child("tbody");
 	datatable.totalRowsElement = datatable.target._child(".total-rows");
 	datatable.paginationElement = datatable.target._child(".pagination");
 	datatable.bulkMenuElement = datatable.target._child(".bulk_menu");
-	datatable.paginationBottomElement = datatable.target._child(
-		".pagination-bottom"
-	);
-	datatable.selectionBodyElement = datatable.tableSelectionElement
-		? datatable.tableSelectionElement._child("tbody")
-		: null;
-	datatable.selectionValueElement = datatable.target._child(
-		".table-selection-value"
-	);
+	datatable.paginationBottomElement = datatable.target._child(".pagination-bottom");
+	datatable.selectionBodyElement = datatable.tableSelectionElement ? datatable.tableSelectionElement._child("tbody") : null;
+	datatable.selectionValueElement = datatable.target._child(".table-selection-value");
 
 	if (datatable.onCreate) datatable.onCreate();
 
@@ -498,15 +458,13 @@ function createDatatable(datatable) {
 			showModal(form_name, { source: btn });
 		};
 		datatable.postSaveCategory = (params, remove) => {
-			var parentChanged =
-				datatable.tree_view.form_data.parent_id != params.parent_id;
+			var parentChanged = datatable.tree_view.form_data.parent_id != params.parent_id;
 			var isCurrent = datatable.getParentId() == params.category_id;
 			if ((remove || parentChanged) && isCurrent) {
 				datatable.categoryStepBack(1);
 			} else {
 				if (isCurrent) {
-					datatable.breadcrumb[datatable.breadcrumb.length - 1].title =
-						params.title;
+					datatable.breadcrumb[datatable.breadcrumb.length - 1].title = params.title;
 				}
 				datatable.search();
 			}
@@ -562,11 +520,9 @@ function createDatatable(datatable) {
 			for (let category of datatable.breadcrumb) {
 				index++;
 				if (index > 0) out += /*html*/ ` <i class="fas fa-chevron-right"></i> `;
-				out += /*html*/ `<div class="${
-					index < datatable.breadcrumb.length - 1 ? "btn subtle" : "current"
-				}" onclick="${datatable.name}.backToCategory(${
-					category.category_id
-				})">${category.title}</div>`;
+				out += /*html*/ `<div class="${index < datatable.breadcrumb.length - 1 ? "btn subtle" : "current"}" onclick="${
+					datatable.name
+				}.backToCategory(${category.category_id})">${category.title}</div>`;
 			}
 			if (datatable.breadcrumb.length > 1)
 				out += /*html*/ ` <div class="btn subtle" onclick="${datatable.name}.showEditCategory(this,null)" style="margin-left:6px"><i class="fa fa-cog"></i></div>`;
@@ -576,10 +532,7 @@ function createDatatable(datatable) {
 		var params = {
 			filters: [],
 		};
-		Object.assign(params.filters, [
-			...datatable.filters,
-			...datatable.fixed_filters,
-		]);
+		Object.assign(params.filters, [...datatable.filters, ...datatable.fixed_filters]);
 
 		if (createList) {
 			if (datatable.selection) {
@@ -698,9 +651,7 @@ function createDatatable(datatable) {
 					var row = res.results[i];
 					var attr = "";
 					if (canOrder) attr = "draggable='true'";
-					output += /*html*/ `<tr data-index='${i}' ${attr} ${
-						datatable.primary ? `data-primary=${row[datatable.primary]}` : ""
-					}>`;
+					output += /*html*/ `<tr data-index='${i}' ${attr} ${datatable.primary ? `data-primary=${row[datatable.primary]}` : ""}>`;
 
 					if (datatable.renderRow) {
 						var cell = datatable.renderRow(row, i);
@@ -727,10 +678,7 @@ function createDatatable(datatable) {
 							} else if (definition.field) {
 								cell_html = row[definition.field];
 							}
-							if (
-								!definition.hasOwnProperty("escape") ||
-								definition.escape === true
-							) {
+							if (!definition.hasOwnProperty("escape") || definition.escape === true) {
 								cell_html = escapeHTML(cell_html);
 							}
 							output += `<td ${datatable.columnStyles[x]}>${cell_html}</td>`;
@@ -745,8 +693,7 @@ function createDatatable(datatable) {
 					datatable.totalRowsElement._set_content(res.totalRows);
 					datatable.tableBodyElement._set_content(output);
 
-					datatable.paginationElement.style.display =
-						window.innerWidth > 1000 ? "" : "none";
+					datatable.paginationElement.style.display = window.innerWidth > 1000 ? "" : "none";
 
 					renderPagination(
 						datatable.paginationElement,
@@ -761,9 +708,7 @@ function createDatatable(datatable) {
 
 					if (datatable.paginationBottomElement) {
 						datatable.paginationBottomElement.style.display =
-							window.innerWidth <= 1000 ||
-							datatable.tableBodyElement.getBoundingClientRect().height >
-								window.innerHeight - 100
+							window.innerWidth <= 1000 || datatable.tableBodyElement.getBoundingClientRect().height > window.innerHeight - 100
 								? ""
 								: "none";
 
@@ -806,11 +751,7 @@ function createDatatable(datatable) {
 	};
 
 	datatable.initialSearch = () => {
-		if (
-			!datatable.hasOwnProperty("nosearch") ||
-			datatable.nosearch === false ||
-			datatable.selectable
-		) {
+		if (!datatable.hasOwnProperty("nosearch") || datatable.nosearch === false || datatable.selectable) {
 			datatable.search(() => {
 				datatable.ready = true;
 			});
@@ -828,9 +769,7 @@ function createDatatable(datatable) {
 			if (datatable.selectable && datatable.selectable.has_metadata) {
 				try {
 					datatable.metadata.forEach((row_data) => {
-						var row = datatable.selectionBodyElement._child(
-							`[data-primary="${row_data[datatable.primary]}"]`
-						);
+						var row = datatable.selectionBodyElement._child(`[data-primary="${row_data[datatable.primary]}"]`);
 						if (row) {
 							Object.entries(row_data).forEach(([key, value]) => {
 								var m = row._child(`[data-metadata="${key}"]`);
@@ -887,9 +826,7 @@ function createDatatable(datatable) {
 		var x = datatable.target._child(`[data-primary='${data_id}']`);
 		datatable.tableBodyElement.appendChild(x);
 		var d = x._child(".fa-minus-circle");
-		d.outerHTML = d.outerHTML
-			.replace("minus", "plus")
-			.replace("removeRow", "addRow");
+		d.outerHTML = d.outerHTML.replace("minus", "plus").replace("removeRow", "addRow");
 		datatable.selectionChange();
 	};
 	datatable.addRow = (data_id) => {
@@ -907,9 +844,7 @@ function createDatatable(datatable) {
 			var x = datatable.target._child(`[data-primary='${data_id}']`);
 			datatable.selectionBodyElement.appendChild(x);
 			var d = x._child(".fa-plus-circle");
-			d.outerHTML = d.outerHTML
-				.replace("plus", "minus")
-				.replace("addRow", "removeRow");
+			d.outerHTML = d.outerHTML.replace("plus", "minus").replace("addRow", "removeRow");
 			datatable.selectionChange();
 		}
 	};
@@ -925,16 +860,14 @@ function createDatatable(datatable) {
 
 		if (datatable.selectable.has_metadata) {
 			var metadata = [];
-			datatable.selectionBodyElement
-				._children("tr[data-primary]")
-				.forEach((e) => {
-					var row = {};
-					row[datatable.primary] = parseInt(e.getAttribute("data-primary"));
-					e._children("[data-metadata]").forEach((m) => {
-						row[m.getAttribute("data-metadata")] = m._get_value();
-					});
-					metadata.push(row);
+			datatable.selectionBodyElement._children("tr[data-primary]").forEach((e) => {
+				var row = {};
+				row[datatable.primary] = parseInt(e.getAttribute("data-primary"));
+				e._children("[data-metadata]").forEach((m) => {
+					row[m.getAttribute("data-metadata")] = m._get_value();
 				});
+				metadata.push(row);
+			});
 			datatable.metadata = metadata;
 		}
 
@@ -953,9 +886,7 @@ function createDatatable(datatable) {
 			datatable.search();
 		}
 
-		datatable.tableSelectionElement._child(
-			".selected-results-count"
-		).innerHTML = datatable.selection.length;
+		datatable.tableSelectionElement._child(".selected-results-count").innerHTML = datatable.selection.length;
 
 		if (datatable.sortable) {
 			var index = 0;
@@ -976,24 +907,16 @@ function createDatatable(datatable) {
 	};
 	if (datatable.selectable && datatable.selectable.has_metadata) {
 		datatable.registerMetadataFields = () => {
-			datatable.selectionBodyElement
-				._children("[data-metadata]")
-				.forEach((m) => {
-					m.oninput = () => {
-						datatable.selectionChange(false);
-					};
-					m.onchange = () => {
-						datatable.selectionChange(false);
-					};
-				});
+			datatable.selectionBodyElement._children("[data-metadata]").forEach((m) => {
+				m.oninput = () => {
+					datatable.selectionChange(false);
+				};
+				m.onchange = () => {
+					datatable.selectionChange(false);
+				};
+			});
 		};
 	}
-}
-
-function getSafePageIndex(i, pageCount) {
-	if (i < 1) return 1;
-	if (i > pageCount) return pageCount;
-	return i;
 }
 
 // rearrange start
@@ -1010,9 +933,7 @@ window.addEventListener("dragstart", (event) => {
 	}
 
 	datatableRearrange.source = target;
-	datatableRearrange.placeFrom = datatableRearrange.source._child(
-		".kolejnosc"
-	).value;
+	datatableRearrange.placeFrom = datatableRearrange.source._child(".kolejnosc").value;
 
 	if (datatableRearrange.source && datatableRearrange.source.classList) {
 		datatableRearrange.source.classList.add("grabbed");
@@ -1125,15 +1046,12 @@ window.addEventListener("dragover", (event) => {
 		var isAfter = event.offsetY > rect.height / 2;
 
 		datatableRearrange.element.style.left = rect.left - parent_rect.left + "px";
-		datatableRearrange.element.style.top =
-			rect.top - parent_rect.top - h / 2 + isAfter * rect.height + "px";
+		datatableRearrange.element.style.top = rect.top - parent_rect.top - h / 2 + isAfter * rect.height + "px";
 		datatableRearrange.element.style.width = rect.width + "px";
 		datatableRearrange.element.style.height = h + "px";
 		datatableRearrange.element.classList.add("tableRearrange");
-		datatableRearrange.placeTo =
-			+datatableRearrange.target._child(".kolejnosc").value + isAfter * 1;
-		if (datatableRearrange.placeTo > datatableRearrange.placeFrom)
-			datatableRearrange.placeTo--;
+		datatableRearrange.placeTo = +datatableRearrange.target._child(".kolejnosc").value + isAfter * 1;
+		if (datatableRearrange.placeTo > datatableRearrange.placeFrom) datatableRearrange.placeTo--;
 	}
 });
 
@@ -1207,9 +1125,7 @@ function setPublish(obj, published) {
 		},
 		success: () => {
 			showNotification(
-				/*html*/ `<i class="fas fa-check"></i> Pomyślnie ustawiono element jako <b>${
-					published ? "publiczny" : "ukryty"
-				}</b>`,
+				/*html*/ `<i class="fas fa-check"></i> Pomyślnie ustawiono element jako <b>${published ? "publiczny" : "ukryty"}</b>`,
 				{
 					one_line: true,
 					type: "success",
@@ -1363,9 +1279,7 @@ function datatableFilter(btn, column_id) {
 
 	if (IS_TOUCH_DEVICE) {
 		setModalTitle("#filter_menu", "Filtruj " + col_def.title.toLowerCase());
-		filter_menu._set_content(
-			/*html*/ `<span class="label">${menu_header}</span>${menu_body}${menu_footer}`
-		);
+		filter_menu._set_content(/*html*/ `<span class="label">${menu_header}</span>${menu_body}${menu_footer}`);
 		showModal("filter_menu", {
 			source: btn,
 		});
@@ -1392,11 +1306,7 @@ function datatableFilter(btn, column_id) {
 			) + "px";
 
 		filter_menu.style.top =
-			clamp(
-				edge,
-				pos.relative_pos.top + btn.clientHeight,
-				nonstatic_parent.scrollHeight - edge - filter_menu.clientHeight
-			) + "px";
+			clamp(edge, pos.relative_pos.top + btn.clientHeight, nonstatic_parent.scrollHeight - edge - filter_menu.clientHeight) + "px";
 
 		btn._parent("th").classList.add("datatable-column-highlighted");
 	}
@@ -1482,10 +1392,7 @@ domload(() => {
 
 		window.filter_menu = $("#filter_menu .menu_body");
 	} else {
-		document.body.insertAdjacentHTML(
-			"beforeend",
-			/*html*/ `<div class='filter_menu'></div>`
-		);
+		document.body.insertAdjacentHTML("beforeend", /*html*/ `<div class='filter_menu'></div>`);
 
 		window.filter_menu = $(".filter_menu");
 
@@ -1610,17 +1517,15 @@ function filtersChanged(hide = false) {
 
 	$$(".datatable-wrapper").forEach((datatableElem) => {
 		var datatable = window[datatableElem.getAttribute("data-datatable-name")];
-		datatable.tableSearchElement
-			._children(".datatable-search-btn")
-			.forEach((elem) => {
-				var field = elem.getAttribute("data-field");
-				var active = !!datatable.filters.find((e) => {
-					return e.field == field;
-				});
-
-				elem.classList.toggle("secondary", active);
-				elem.classList.toggle("primary", !active);
+		datatable.tableSearchElement._children(".datatable-search-btn").forEach((elem) => {
+			var field = elem.getAttribute("data-field");
+			var active = !!datatable.filters.find((e) => {
+				return e.field == field;
 			});
+
+			elem.classList.toggle("secondary", active);
+			elem.classList.toggle("primary", !active);
+		});
 	});
 
 	filterOrSortChanged();
@@ -1638,10 +1543,7 @@ function filterOrSortChanged() {
 
 		datatableElem
 			._child(".clear-filters-btn")
-			.classList.toggle(
-				"hidden",
-				datatable.filters.length === 0 && !datatable.sort && !search_value
-			);
+			.classList.toggle("hidden", datatable.filters.length === 0 && !datatable.sort && !search_value);
 	});
 }
 

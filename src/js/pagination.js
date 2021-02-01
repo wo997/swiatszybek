@@ -1,33 +1,31 @@
 /* js[global] */
 
-function renderPagination(
-	paginationElement,
-	currPage,
-	pageCount,
-	callback,
-	options = {}
-) {
-	currPage = getSafePageIndex(currPage, pageCount);
+/**
+ *
+ * @param {PiepNode} paginationElement
+ * @param {number} currPage
+ * @param {number} pageCount
+ * @param {*} callback
+ * @param {*} options
+ */
+function renderPagination(paginationElement, currPage, pageCount, callback, options = {}) {
+	currPage = clamp(1, currPage, pageCount);
 
-	var output = "<div class='pages-wrapper'>";
-	var range = 3;
-	var mobile = window.innerWidth < 760;
+	paginationElement.classList.add("pagination");
+
+	let output = "<div class='pages-wrapper'>";
+	let range = 3;
+	let mobile = window.innerWidth < 760;
 	//if (mobile) range = 2;
 	var center = currPage;
 	if (currPage < range + 1) center = range + 1;
 	if (currPage > pageCount - range) center = pageCount - range;
-	for (i = 1; i <= pageCount; i++) {
-		if (
-			i == 1 ||
-			i == pageCount ||
-			(i > center - range && i < center + range)
-		) {
+	for (let i = 1; i <= pageCount; i++) {
+		if (i == 1 || i == pageCount || (i > center - range && i < center + range)) {
 			if (i == center - range + 1 && i > 2) {
 				output += `<div class='splitter'>...</div>`;
 			}
-			output += `<div data-index='${i}' class='pagination_item ${
-				i == currPage ? " current" : ``
-			}'>${i}</div>`;
+			output += `<div data-index='${i}' class='pagination_item ${i == currPage ? " current" : ``}'>${i}</div>`;
 			if (i == center + range - 1 && i < pageCount - 1) {
 				output += `<div class='splitter'>...</div>`;
 			}
@@ -40,20 +38,18 @@ function renderPagination(
 	}
 
 	paginationElement._set_content(output);
-	paginationElement
-		._children(".pagination_item:not(.current)")
-		.forEach((elem) => {
-			var i = parseInt(elem.getAttribute("data-index"));
-			i = getSafePageIndex(i, pageCount);
-			elem.addEventListener("click", () => {
-				callback(i);
-			});
+	paginationElement._children(".pagination_item:not(.current)").forEach((elem) => {
+		let i = parseInt(elem.getAttribute("data-index"));
+		i = clamp(1, i, pageCount);
+		elem.addEventListener("click", () => {
+			callback(i);
 		});
+	});
 	paginationElement._children(".myPage").forEach((elem) => {
 		elem.addEventListener("keypress", (event) => {
 			if (event.code == "Enter") {
-				var i = parseInt(elem.value);
-				i = getSafePageIndex(i, pageCount);
+				let i = parseInt(elem._get_value());
+				i = clamp(1, i, pageCount);
 				callback(i);
 			}
 		});

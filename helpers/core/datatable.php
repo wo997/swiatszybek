@@ -112,6 +112,7 @@ function getRelevanceQuery($fields, $words)
  * filters?: string
  * order?: string
  * main_search?: string
+ * page?: number
  * }
  */
 
@@ -137,37 +138,13 @@ function getRelevanceQuery($fields, $words)
  */
 function paginateData($params = [])
 {
-    /*
-    required POSTS:
-    - search (+search_type)
-    - rowCount
-    - pageNumber
-    - primary
-
-    params:
-    - select
-    - from
-    - where
-    - filters
-    - order
-    - main_search_fields
-
-    optional params:
-    - renderers
-    - raw (return array instead of json)
-
-    optional POSTS:
-    - sort
-     */
-
-    $rowCount = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 20;
-    $pageNumber = isset($_POST['pageNumber']) ? intval($_POST['pageNumber']) : 0;
-    $pageIndex = $pageNumber - 1; // start from 0
-    if ($pageIndex < 0) {
-        $pageIndex = 0;
+    $order = $rowCount = isset($_POST['rowCount']) ? intval($_POST['rowCount']) : 20;
+    $page_id = def($params, ["datatable_params", "page"], 0) - 1; // start from 0
+    if ($page_id < 0) {
+        $page_id = 0;
     }
 
-    $bottomIndex = $pageIndex * $rowCount;
+    $bottomIndex = $page_id * $rowCount;
 
     $select = $params["select"];
 
@@ -238,7 +215,7 @@ function paginateData($params = [])
     }
 
     $totalRows = DB::fetchVal($countQuery);
-    $pageCount = $rowCount > 0 ? ceil($totalRows / $rowCount) : 0;
+    $page_idCount = $rowCount > 0 ? ceil($totalRows / $rowCount) : 0;
 
     if ($order) {
         $order = "ORDER BY $order";
@@ -249,7 +226,7 @@ function paginateData($params = [])
     $index = 0;
     foreach ($results as &$result) {
         $index++;
-        $result["kolejnosc"] = $pageIndex * $rowCount + $index;
+        $result["kolejnosc"] = $page_id * $rowCount + $index;
 
         if (isset($params["renderers"])) {
             foreach ($params["renderers"] as $field => $renderer) {
@@ -259,9 +236,9 @@ function paginateData($params = [])
     }
     unset($result);
 
-    //$pageCount = $pageCount * 4;$results = array_merge($results, $results, $results, $results);
+    //$page_idCount = $page_idCount * 4;$results = array_merge($results, $results, $results, $results);
 
-    $responseArray = ["pageCount" => $pageCount, "totalRows" => $totalRows, "results" => $results];
+    $responseArray = ["page_count" => $page_idCount, "rows_count" => $totalRows, "rows" => $results];
 
     return isset($params["raw"]) ? $responseArray : json_encode($responseArray);
 }

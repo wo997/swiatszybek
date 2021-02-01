@@ -25,11 +25,13 @@
  *  primary_key?: string
  *  search_url?: string
  *  dataset?: Array
- *  search_request?: any
  *  rows?: {row:any}[]
  *  columns: DatatableColumnDef[]
  *  sort?: DatatableSortData | undefined
  *  filters?: DatatableFilterData[]
+ *  curr_page?: number
+ *  rows_count?: number
+ *  page_count?: number
  * }} DatatableCompData
  *
  * @typedef {{
@@ -40,8 +42,10 @@
  *  _nodes: {
  *      table_header: PiepNode
  *      style: PiepNode
+ *      pagination: PiepNode
  *  }
  * _datatable_search()
+ * _search_request: XMLHttpRequest | undefined
  * } & BaseComp} DatatableComp
  */
 
@@ -60,23 +64,48 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 	if (!data.dataset) {
 		data.dataset = [];
 	}
+	if (!data.curr_page) {
+		data.curr_page = 0;
+	}
+	if (!data.rows_count) {
+		data.rows_count = 0;
+	}
+	if (!data.page_count) {
+		data.page_count = 0;
+	}
+
 	data.rows = [];
 
 	node._datatable_search = () => {
+		if (node._search_request) {
+			node._search_request.abort();
+			node._search_request = undefined;
+		}
+
 		const datatable_params = {};
 		if (node._data.sort) {
 			datatable_params.order = node._data.sort.key + " " + node._data.sort.order.toUpperCase();
 		}
+		datatable_params.page = node._data.curr_page;
 
-		node._data.search_request = xhr({
+		node._search_request = xhr({
 			url: node._data.search_url,
 			params: {
 				datatable_params,
 			},
 			success: (res) => {
-				node._data.dataset = res.results;
+				node._search_request = undefined;
+
+				if (res.rows.length === 0 && node._data.curr_page > 1) {
+					node._data.curr_page = 1;
+					node._datatable_search();
+					return;
+				}
+
+				node._data.dataset = res.rows;
+				node._data.page_count = res.page_count;
+				node._data.rows_count = res.rows_count;
 				node._set_data();
-				//console.log(res);
 			},
 		});
 	};
@@ -137,27 +166,26 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 				node._nodes.table_header._set_content(header_html);
 				node._nodes.style._set_content(styles_html);
 
-				if (node._changed_data.sort || node._changed_data.filters) {
+				if (node._changed_data.sort || node._changed_data.filters || node._changed_data.curr_page) {
 					node._datatable_search();
 				}
+
+				renderPagination(node._nodes.pagination, node._data.curr_page, 100, (page) => {
+					node._data.curr_page = page;
+					node._set_data();
+				});
 			},
 		});
 	};
 
 	createComp(node, parent, data, {
 		template: /*html*/ `
-            <div>
-                <span class="datatable_label">Produkty</span>
-
-                <div class="float-icon" style="display: inline-block;">
+            <div style="margin-bottom:10px">
+                <span class="datatable_label">Produkty</span><div class="float-icon" style="display: inline-block;margin:0 10px">
                     <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
-                </div>
-
-                <button class="btn important">Dodaj nowy <i class="fas fa-plus"></i></button>
+                </div><button class="btn important">Dodaj nowy <i class="fas fa-plus"></i></button>
             </div>
-
-            <br>
 
             <div class="table_header" data-node="table_header"></div>
 
@@ -167,7 +195,7 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
                 </list-comp>
             </div>
 
-            1 2 3 4 5 6 7
+            <div data-node="pagination"></div>
 
             <style data-node="style"></style>
         `,
