@@ -20,9 +20,15 @@ pagination-comp .splitter {
 pagination-comp list-comp {
 	background: #eee;
 }
-pagination-btn-comp .btn.transparent {
+pagination-comp .btn.transparent,
+pagination-comp .arrows .btn {
 	--btn-border-clr: #ddd;
 	margin-right: -1px;
+}
+
+pagination-comp .arrows {
+	background: #eee;
+	margin-left: 10px;
 }
 
 pagination-comp list-comp {

@@ -15,6 +15,8 @@
  *  _set_data(data?: PaginationCompData, options?: SetCompDataOptions)
  *  _getData()
  *  _nodes: {
+ *      next: PiepNode
+ *      prev: PiepNode
  *  }
  * } & BaseComp} PaginationComp
  */
@@ -79,6 +81,25 @@ function paginationComp(comp, parent, data = {}) {
             <list-comp data-bind="{${data.buttons}}" class="horizontal" data-primary="page_id">
                 <pagination-btn-comp></pagination-btn-comp>
             </list-comp>
+
+            <div class="arrows glue-children">
+                <button class="btn transparent {disabled:${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="btn transparent {disabled:${data.page_id >= data.page_count - 1}}" data-node="{${comp._nodes.next}}">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         `,
+		initialize: () => {
+			comp._nodes.next.addEventListener("click", () => {
+				comp._data.page_id = Math.min(comp._data.page_id + 1, comp._data.page_count - 1);
+				comp._set_data();
+			});
+			comp._nodes.prev.addEventListener("click", () => {
+				comp._data.page_id = Math.max(0, comp._data.page_id - 1);
+				comp._set_data();
+			});
+		},
 	});
 }
