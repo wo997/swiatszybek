@@ -108,9 +108,6 @@ function listComp(comp, parent, data = []) {
 
 				const animation_duration = instant ? 0 : 250;
 
-				const list_w_before = comp.offsetWidth;
-				const list_h_before = comp.offsetHeight;
-
 				let removed_before_current = 0;
 
 				const rows_before = comp._getRows();
@@ -170,6 +167,8 @@ function listComp(comp, parent, data = []) {
 					}
 				});
 
+				const list_rect_before = comp.getBoundingClientRect();
+
 				let index = -1;
 				diff_with_target_index.forEach((diff_info) => {
 					index++;
@@ -191,6 +190,11 @@ function listComp(comp, parent, data = []) {
 					// @ts-ignore
 					child.rect_after = child.getBoundingClientRect();
 				});
+
+				const list_rect_after = comp.getBoundingClientRect();
+
+				const list_dl = list_rect_after.left - list_rect_before.left;
+				const list_dt = list_rect_after.top - list_rect_before.top;
 
 				index = -1;
 				diff_with_target_index.forEach((diff_info) => {
@@ -215,8 +219,8 @@ function listComp(comp, parent, data = []) {
 					// @ts-ignore
 					let rect_after = child.rect_after;
 
-					let off_x = 0;
-					let off_y = 0;
+					let off_x = list_dl;
+					let off_y = list_dt;
 
 					if (rect_before && rect_after) {
 						off_x += rect_before.left - rect_after.left;
@@ -271,8 +275,8 @@ function listComp(comp, parent, data = []) {
 				comp.classList.add("animating");
 				comp._animate(
 					`
-				        0% {width:${list_w_before}px;height:${list_h_before}px;}
-				        100% {width:${comp.offsetWidth}px;height:${comp.offsetHeight}px;}
+                        0% {width:${list_rect_before.width}px;height:${list_rect_before.height}px;}
+				        100% {width:${list_rect_after.width}px;height:${list_rect_after.height}px;}
 				    `,
 					animation_duration,
 					{

@@ -63,7 +63,7 @@ domload(() => {
 			},
 			{
 				feature_id: 4,
-				options: [{ option_id: 4 }],
+				options: [{ option_id: 8 }],
 			},
 		],
 	});

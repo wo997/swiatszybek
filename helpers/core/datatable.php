@@ -236,7 +236,10 @@ function paginateData($params = [])
     }
     unset($result);
 
-    //$page_idCount = $page_idCount * 4;$results = array_merge($results, $results, $results, $results);
+    // $page_idCount = $page_idCount * 2;
+    // $results = array_merge($results, $results);
+    // $page_idCount = $page_idCount * 4;
+    // $results = array_merge($results, $results, $results, $results);
 
     $responseArray = ["page_count" => $page_idCount, "total_rows" => $totalRows, "rows" => $results];
 
