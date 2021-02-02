@@ -184,11 +184,11 @@ textarea {
 		--btn-font-clr: #000;
 		--brighten-factor: 1;
 	}
-	&.transparent:hover {
+	&.transparent:hover:not(:disabled) {
 		background: #0001;
 	}
 
-	&:hover:not(:active) {
+	&:hover:not(:disabled):not(:active) {
 		filter: brightness(var(--brighten-factor));
 		z-index: 10;
 	}
@@ -202,7 +202,7 @@ textarea {
 		position: absolute;
 		border-radius: inherit;
 	}
-	&:hover::after {
+	&:hover:not(:disabled)::after {
 		box-shadow: 0 2px 3px 0 #0003;
 	}
 	&:active::after {
@@ -216,10 +216,14 @@ textarea {
 		cursor: not-allowed !important;
 		filter: contrast(0.85);
 	}
-}
 
-.btn.fill {
-	width: 100%;
+	&.fill {
+		width: 100%;
+	}
+
+	&.small {
+		padding: 0.2em 0.5em;
+	}
 }
 
 /* buttons end */
@@ -283,14 +287,6 @@ textarea {
 .label [data-type] {
 	margin-top: 4px;
 }
-/*
-TODO: use image pickers everywhere instead
-.label [data-type="src"] {
-	max-width: 100%;
-	max-height: 200px;
-	max-width: 200px;
-	display: block;
-}*/
 
 .btn,
 .field {

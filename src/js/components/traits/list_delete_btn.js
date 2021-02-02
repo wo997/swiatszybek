@@ -3,7 +3,7 @@
 {
 	const trait_name = "list_delete_btn";
 	registerCompTrait(trait_name, {
-		template: /*html*/ `<button data-node="${trait_name}" class="btn subtle"><i class="fas fa-trash"></i></button>`,
+		template: /*html*/ `<button data-node="${trait_name}" class="btn subtle small"><i class="fas fa-trash"></i></button>`,
 		initialize: (comp) => {
 			comp._nodes[trait_name].addEventListener("click", () => {
 				/** @type {ListComp} */
