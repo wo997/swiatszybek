@@ -153,17 +153,19 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 						if (column.sortable) {
 							let icon = "fa-sort";
 							let btn_class = "transparent";
-
+							let tooltip = "Sortuj malejąco";
 							if (comp._data.sort && comp._data.sort.key === column.key) {
-								if (comp._data.sort.order === "asc") {
-									icon = "fa-arrow-up";
-									btn_class = "primary";
-								} else if (comp._data.sort.order === "desc") {
+								if (comp._data.sort.order === "desc") {
 									icon = "fa-arrow-down";
 									btn_class = "primary";
+									tooltip = "Sortuj rosnąco";
+								} else if (comp._data.sort.order === "asc") {
+									icon = "fa-arrow-up";
+									btn_class = "primary";
+									tooltip = "Wyłącz sortowanie";
 								}
 							}
-							cell_html += /*html*/ ` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="Sortuj malejąco / rosnąco"></button>`;
+							cell_html += /*html*/ ` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
 						}
 						if (column.searchable) {
 							cell_html += /*html*/ ` <button class="btn transparent dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;

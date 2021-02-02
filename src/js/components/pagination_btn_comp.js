@@ -4,7 +4,8 @@
  *
  * @typedef {{
  * page_id: number
- * curr_page_id: number
+ * active?: boolean
+ * splitter?: boolean
  * }} PaginationBtnCompData
  *
  * @typedef {{
@@ -32,8 +33,9 @@ function paginationBtnComp(comp, parent, data) {
 	createComp(comp, parent, data, {
 		template: /*html*/ `
             <button class="btn
-                {primary:${data.page_id === data.curr_page_id}}
-                {subtle:${data.page_id !== data.curr_page_id}}">{${data.page_id + 1}}
+                {primary:${data.active}}
+                {transparent:${!data.active}}
+                {splitter:${data.splitter}}">{${data.splitter ? "..." : data.page_id + 1}}
             </button>
         `,
 		initialize: () => {

@@ -9,3 +9,29 @@ pagination-comp.comp {
 	display: flex;
 	justify-content: space-between;
 }
+
+pagination-comp .splitter {
+	background: none;
+	pointer-events: none;
+	padding-left: 7px;
+	padding-right: 7px;
+}
+
+pagination-comp list-comp {
+	background: #eee;
+}
+pagination-btn-comp .btn.transparent {
+	--btn-border-clr: #ddd;
+	margin-right: -1px;
+}
+
+pagination-comp list-comp {
+	& > *:not(:last-child) .btn {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+	& > *:not(:first-child) .btn {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+}

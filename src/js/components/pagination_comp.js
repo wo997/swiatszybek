@@ -35,8 +35,8 @@ function paginationComp(comp, parent, data = {}) {
 		}
 
 		data.buttons = [];
-		for (let i = 0; i < data.page_count; i++) {
-			data.buttons.push({ page_id: i, curr_page_id: data.page_id });
+		for (let i = 0; i < data.page_count * 15; i++) {
+			data.buttons.push({ page_id: i, active: i === data.page_id, splitter: Math.random() > 0.8 });
 		}
 
 		setCompData(comp, data, {
