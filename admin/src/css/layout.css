@@ -71,6 +71,7 @@ h1 {
 	}
 	#admin .main_container {
 		flex-direction: column;
+		height: auto;
 	}
 	.navbar_admin.hidden > .scroll-panel {
 		overflow: initial !important;
