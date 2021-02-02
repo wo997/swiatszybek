@@ -35,8 +35,28 @@ function paginationComp(comp, parent, data = {}) {
 		}
 
 		data.buttons = [];
-		for (let i = 0; i < data.page_count * 15; i++) {
-			data.buttons.push({ page_id: i, active: i === data.page_id, splitter: Math.random() > 0.8 });
+
+		let range = 2;
+		let min_page_id = 0;
+		let max_page_id = data.page_count - 1;
+		let center = clamp(min_page_id + range, data.page_id, max_page_id - range);
+		let min = Math.max(min_page_id, center - range);
+		let max = Math.min(max_page_id, center + range);
+
+		if (min > min_page_id) {
+			data.buttons.push({ page_id: min_page_id, active: false });
+		}
+		if (min > min_page_id + 1) {
+			data.buttons.push({ page_id: -1, active: false, splitter: true });
+		}
+		for (let i = min; i <= max; i++) {
+			data.buttons.push({ page_id: i, active: i === data.page_id });
+		}
+		if (max < max_page_id - 1) {
+			data.buttons.push({ page_id: -2, active: false, splitter: true });
+		}
+		if (max < max_page_id) {
+			data.buttons.push({ page_id: max_page_id, active: false });
 		}
 
 		setCompData(comp, data, {
@@ -47,9 +67,9 @@ function paginationComp(comp, parent, data = {}) {
 
 	createComp(comp, parent, data, {
 		template: /*html*/ `
-            <div>
+            <div class="pages">
                 <select data-bind="{${data.row_count}}" class="field inline" data-number>
-                    <option value='3'>3</option>
+                    <option value='1'>3</option>
                     <option value='10'>10</option>
                     <option value='20'>20</option>
                     <option value='7'>7</option>

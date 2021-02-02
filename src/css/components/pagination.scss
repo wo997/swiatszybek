@@ -7,7 +7,7 @@ list-comp.horizontal {
 pagination-comp.comp {
 	margin-top: 10px;
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 }
 
 pagination-comp .splitter {
@@ -33,5 +33,15 @@ pagination-comp list-comp {
 	& > *:not(:first-child) .btn {
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
+	}
+}
+
+pagination-comp .pages {
+	margin-right: auto;
+}
+
+@media only screen and (max-width: 799px) {
+	pagination-comp .pages {
+		display: none;
 	}
 }

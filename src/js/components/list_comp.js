@@ -57,7 +57,8 @@ function listComp(comp, parent, data = []) {
 						ref = ref[e];
 					});
 					row_data.row_id = ref;
-				} else {
+				}
+				if (row_data.row_id === undefined) {
 					if (nextRowId === 0) {
 						nextRowId = applyToArray(Math.min, [...data.map((e) => e.row_id).filter((e) => e), -1000]); // that will be unique for sure
 					}
@@ -252,7 +253,7 @@ function listComp(comp, parent, data = []) {
 					const ronscr = (r) => {
 						return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
 					};
-					child.style.zIndex = "" + (1 + Math.abs(off_x) + Math.abs(off_y) + (add || remove ? 0 : 1000));
+					child.style.zIndex = "" + Math.round((Math.abs(off_x) + Math.abs(off_y)) * 0.02 + (add || remove ? 1 : 2));
 
 					setTimeout(() => {
 						child.style.zIndex = "";
