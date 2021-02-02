@@ -20,18 +20,18 @@
  */
 
 /**
- * @param {PaginationComp} node
+ * @param {PaginationComp} comp
  * @param {*} parent
  * @param {PaginationCompData} data
  */
-function paginationComp(node, parent, data = {}) {
+function paginationComp(comp, parent, data = {}) {
 	// data.buttons = def(data.buttons, []);
 	// data.page_id = def(data.page_id, 0);
 	// data.page_count = def(data.page_count, 0);
 	// data.row_count = def(data.row_count, 20);
-	node._set_data = (data = undefined, options = {}) => {
+	comp._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
-			data = node._data;
+			data = comp._data;
 		}
 
 		data.buttons = [];
@@ -39,13 +39,13 @@ function paginationComp(node, parent, data = {}) {
 			data.buttons.push({ page_id: i, curr_page_id: data.page_id });
 		}
 
-		setCompData(node, data, {
+		setCompData(comp, data, {
 			...options,
 			render: () => {},
 		});
 	};
 
-	createComp(node, parent, data, {
+	createComp(comp, parent, data, {
 		template: /*html*/ `
             <div>
                 <select data-bind="{${data.row_count}}" class="field inline" data-number>

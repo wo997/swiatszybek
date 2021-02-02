@@ -54,70 +54,74 @@
  * @typedef {{
  * template?: string
  * initialize?()
+ * unfreeze_by_self?: boolean
  * }} createCompOptions
  */
 
 let comp_id = 0;
 
 /**
- * @param {BaseComp} comp
+ * @param {BaseComp} node
  * @param {*} parent_comp
  * @param {*} data
  * @param {createCompOptions} options
  * */
-function createComp(comp, parent_comp, data, options) {
+function createComp(node, parent_comp, data, options) {
 	/** @type {AnyComp} */
 	// @ts-ignore
-	const node = comp;
+	const comp = node;
 
 	/** @type {AnyComp} */
 	// @ts-ignore
 	const parent = parent_comp;
 
-	node.classList.add("comp");
+	comp.classList.add("comp");
 
 	//node._propagating_data = false;
 
-	node._dom_id = comp_id++;
-	node._dom_class = `comp_${node._dom_id}`;
-	node.classList.add(node._dom_class);
+	comp._dom_id = comp_id++;
+	comp._dom_class = `comp_${comp._dom_id}`;
+	comp.classList.add(comp._dom_class);
 
 	if (!parent_comp) {
-		node.classList.add("freeze");
-		setTimeout(() => {
-			node.classList.remove("freeze");
-		}, 200);
+		comp.classList.add("freeze");
+
+		if (!options.unfreeze_by_self) {
+			setTimeout(() => {
+				comp.classList.remove("freeze");
+			}, 200);
+		}
 	}
 
 	if (!!parent && !(parent instanceof HTMLElement)) {
 		console.error("Parent is not a node!", parent);
 		console.trace();
 	}
-	node._parent_comp = parent;
+	comp._parent_comp = parent;
 
-	node._subscribers = [];
+	comp._subscribers = [];
 
-	if (!node._pointChildsData) {
-		node._pointChildsData = (child) => {
+	if (!comp._pointChildsData) {
+		comp._pointChildsData = (child) => {
 			const bind_var = child.dataset.bind;
 			if (bind_var) {
 				return {
-					obj: node._data,
+					obj: comp._data,
 					key: bind_var,
 				};
 			}
 		};
 	}
 
-	if (!node._pointSelfData) {
-		node._pointSelfData = () => {
-			return { obj: node, key: "_data" };
+	if (!comp._pointSelfData) {
+		comp._pointSelfData = () => {
+			return { obj: comp, key: "_data" };
 		};
 	}
 
-	node._eval_html = [];
-	node._eval_class = [];
-	node._comp_traits = [];
+	comp._eval_html = [];
+	comp._eval_class = [];
+	comp._comp_traits = [];
 
 	if (options.template) {
 		let template = options.template;
@@ -127,25 +131,25 @@ function createComp(comp, parent_comp, data, options) {
 			for (const match of matches_e) {
 				const content = match.substring(2, match.length - 2);
 				const eval_str = content;
-				node._eval_html.push({
+				comp._eval_html.push({
 					eval_str,
 				});
-				const node_html = `<span class='eval_html_${node._eval_html.length - 1}'></span>`;
+				const node_html = `<span class='eval_html_${comp._eval_html.length - 1}'></span>`;
 				template = template.replace(match, node_html);
 			}
 		}
 
-		node._set_content(template);
+		comp._set_content(template);
 
 		let index = -1;
-		for (const eval_html of node._eval_html) {
+		for (const eval_html of comp._eval_html) {
 			index++;
 			const c = `eval_html_${index}`;
-			eval_html.node = node._child("." + c);
+			eval_html.node = comp._child("." + c);
 			eval_html.node.classList.remove(c);
 		}
 
-		for (const trait of node._children("p-batch-trait")) {
+		for (const trait of comp._children("p-batch-trait")) {
 			const trait_name = trait.dataset.trait;
 
 			const trait_html = comp_batch_traits[trait_name];
@@ -155,7 +159,7 @@ function createComp(comp, parent_comp, data, options) {
 			trait.remove();
 		}
 
-		for (const trait of node._children("p-trait")) {
+		for (const trait of comp._children("p-trait")) {
 			const trait_name = trait.dataset.trait;
 
 			/** @type {CompTraitDefinition} */
@@ -167,24 +171,24 @@ function createComp(comp, parent_comp, data, options) {
 				trait_node._trait_def = trait_def;
 				trait._parent().insertBefore(trait_node, trait);
 				trait.remove();
-				node._comp_traits.push(trait_node);
+				comp._comp_traits.push(trait_node);
 			}
 		}
 
-		directComps(node).forEach((comp) => {
-			const constructor = snakeCase(comp.tagName.toLocaleLowerCase());
+		directComps(comp).forEach((dc) => {
+			const constructor = snakeCase(dc.tagName.toLocaleLowerCase());
 			if (window[constructor]) {
 				// @ts-ignore
-				window[constructor](comp, node, undefined, {});
+				window[constructor](dc, comp, undefined, {});
 			}
 		});
 
 		// reactive classes and maybe even more
-		node._children("*").forEach((e) => {
+		comp._children("*").forEach((e) => {
 			let p = e;
 			while (true) {
 				p = p._parent();
-				if (!p || p === node) {
+				if (!p || p === comp) {
 					break;
 				}
 				const n2 = p.tagName.toLocaleLowerCase();
@@ -203,7 +207,7 @@ function createComp(comp, parent_comp, data, options) {
 					const [className, ev] = content.split(":");
 					const eval_str = ev.substring(1, ev.length - 1);
 
-					node._eval_class.push({ eval_str, node: e, className });
+					comp._eval_class.push({ eval_str, node: e, className });
 					out = out.replace(match, "");
 				}
 			}
@@ -211,27 +215,27 @@ function createComp(comp, parent_comp, data, options) {
 		});
 	}
 
-	node._nodes = {};
-	node._children(`[data-node]`).forEach((n) => {
-		node._nodes[n.dataset.node] = n;
+	comp._nodes = {};
+	comp._children(`[data-node]`).forEach((n) => {
+		comp._nodes[n.dataset.node] = n;
 	});
 
 	// kinda weird but it creates f.e. checkbox base component
 	registerForms();
 
-	node._bindNodes = node._children(`[data-bind]`);
+	comp._bindNodes = comp._children(`[data-bind]`);
 
 	if (options.initialize) {
 		options.initialize();
 	}
 
-	node._comp_traits.forEach((trait) => {
+	comp._comp_traits.forEach((trait) => {
 		if (trait._trait_def.initialize) {
-			trait._trait_def.initialize(node);
+			trait._trait_def.initialize(comp);
 		}
 	});
 
-	node._bindNodes.forEach((/** @type {AnyComp} */ sub_node) => {
+	comp._bindNodes.forEach((/** @type {AnyComp} */ sub_node) => {
 		const bind_var = sub_node.dataset.bind;
 		sub_node._bind_var = bind_var;
 
@@ -242,8 +246,8 @@ function createComp(comp, parent_comp, data, options) {
 
 				if (sub_node_data !== undefined) {
 					//if (node._data[bind_var] !== undefined) { // add it anyway
-					node._data[bind_var] = sub_node_data;
-					node._set_data();
+					comp._data[bind_var] = sub_node_data;
+					comp._set_data();
 					//}
 				}
 			});
@@ -254,14 +258,14 @@ function createComp(comp, parent_comp, data, options) {
 	});
 
 	if (data !== undefined) {
-		node._set_data(data);
+		comp._set_data(data);
 	}
 
 	if (parent) {
 		parent._subscribers.push({
-			receiver: node,
+			receiver: comp,
 			fetch: (/** @type {AnyComp} */ source, /** @type {AnyComp} */ receiver) => {
-				const x = source._pointChildsData(node);
+				const x = source._pointChildsData(comp);
 				if (x) {
 					const { obj: s_obj, key: s_key } = x;
 					if (s_key !== undefined) {
@@ -271,10 +275,10 @@ function createComp(comp, parent_comp, data, options) {
 				}
 			},
 		});
-		node._subscribers.push({
+		comp._subscribers.push({
 			receiver: parent,
 			fetch: (/** @type {AnyComp} */ source, /** @type {AnyComp} */ receiver) => {
-				const x = receiver._pointChildsData(node);
+				const x = receiver._pointChildsData(comp);
 				if (x) {
 					const { obj: r_obj, key: r_key } = x;
 					if (r_key !== undefined) {

@@ -20,12 +20,12 @@
  */
 
 /**
- * @param {ProductComp} node
+ * @param {ProductComp} comp
  * @param {*} parent
  * @param {ProductCompData} data
  */
 function productComp(
-	node,
+	comp,
 	parent,
 	data = {
 		id: -1,
@@ -34,20 +34,20 @@ function productComp(
 		variants: [],
 	}
 ) {
-	node._set_data = (data = undefined, options = {}) => {
+	comp._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
-			data = node._data;
+			data = comp._data;
 		}
 
-		setCompData(node, data, {
+		setCompData(comp, data, {
 			...options,
 			render: () => {
-				expand(node._nodes.case_sell_by_qty, node._data.sell_by === "qty");
+				expand(comp._nodes.case_sell_by_qty, comp._data.sell_by === "qty");
 			},
 		});
 	};
 
-	createComp(node, parent, data, {
+	createComp(comp, parent, data, {
 		template: /*html*/ `
             <div>
                 <div class="label">Nazwa produktu</div>
@@ -75,9 +75,9 @@ function productComp(
             </div>
         `,
 		initialize: () => {
-			node._nodes.add_variant_btn.addEventListener("click", () => {
+			comp._nodes.add_variant_btn.addEventListener("click", () => {
 				showModal("selectProductVariant", {
-					source: node._nodes.add_variant_btn,
+					source: comp._nodes.add_variant_btn,
 				});
 
 				//node._data.variants.push({ feature_id: -1, options: [] });

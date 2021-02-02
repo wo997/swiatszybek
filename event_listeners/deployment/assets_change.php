@@ -137,10 +137,10 @@ if ($modifyJS) {
         }
 
         // nodes
-        if (preg_match_all('/data-node="\{\{[^()]*?node\._nodes\.[^()]*?}}"/', $js_full, $matches)) {
+        if (preg_match_all('/data-node="\{\{[^()]*?comp\._nodes\.[^()]*?}}"/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
                 $rep = $match;
-                $rep = preg_replace("/(?<=[\s{])node\._nodes\./", "", $rep);
+                $rep = preg_replace("/(?<=[\s{])comp\._nodes\./", "", $rep);
                 $rep = preg_replace("/\s/", "", $rep);
                 $rep = str_replace(["{{", "}}"], "", $rep);
                 $js_full = str_replace($match, $rep, $js_full);

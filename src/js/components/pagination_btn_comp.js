@@ -17,19 +17,19 @@
  */
 
 /**
- * @param {PaginationBtnComp} node
+ * @param {PaginationBtnComp} comp
  * @param {*} parent
  * @param {PaginationBtnCompData} data
  */
-function paginationBtnComp(node, parent, data) {
-	node._set_data = (data = undefined, options = {}) => {
-		setCompData(node, data, {
+function paginationBtnComp(comp, parent, data) {
+	comp._set_data = (data = undefined, options = {}) => {
+		setCompData(comp, data, {
 			...options,
 			render: () => {},
 		});
 	};
 
-	createComp(node, parent, data, {
+	createComp(comp, parent, data, {
 		template: /*html*/ `
             <button class="btn
                 {primary:${data.page_id === data.curr_page_id}}
@@ -37,11 +37,11 @@ function paginationBtnComp(node, parent, data) {
             </button>
         `,
 		initialize: () => {
-			node.addEventListener("click", () => {
+			comp.addEventListener("click", () => {
 				/** @type {PaginationComp} */
 				// @ts-ignore
-				const parent = node._parent_comp._parent_comp;
-				parent._data.page_id = node._data.page_id;
+				const parent = comp._parent_comp._parent_comp;
+				parent._data.page_id = comp._data.page_id;
 				parent._set_data();
 			});
 		},

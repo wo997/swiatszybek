@@ -16,23 +16,23 @@
  */
 
 /**
- * @param {ProductVariantComp} node
+ * @param {ProductVariantComp} comp
  * @param {*} parent
  * @param {ProductVariantCompData} data
  */
-function productVariantComp(node, parent, data = { feature_id: -1, options: [] }) {
-	node._set_data = (data = undefined, options = {}) => {
+function productVariantComp(comp, parent, data = { feature_id: -1, options: [] }) {
+	comp._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
-			data = node._data;
+			data = comp._data;
 		}
 
-		setCompData(node, data, {
+		setCompData(comp, data, {
 			...options,
 			pass_list_data: [{ what: "feature_id", where: "options" }],
 			render: () => {
-				const feature = product_features.find((e) => e.feature_id === node._data.feature_id);
+				const feature = product_features.find((e) => e.feature_id === comp._data.feature_id);
 				if (feature) {
-					node._nodes.feature_name._set_content(feature.name);
+					comp._nodes.feature_name._set_content(feature.name);
 				}
 			},
 		});
@@ -40,10 +40,10 @@ function productVariantComp(node, parent, data = { feature_id: -1, options: [] }
 
 	// you can add classes like this inline: {even:${data.row_index % 2 === 0}}
 
-	createComp(node, parent, data, {
+	createComp(comp, parent, data, {
 		template: /*html*/ `
             {${data.row_index + 1}}.
-            <div class="title inline" data-node="{${node._nodes.feature_name}}"></div>
+            <div class="title inline" data-node="{${comp._nodes.feature_name}}"></div>
 
             <p-batch-trait data-trait="list_controls"></p-batch-trait>
 
@@ -52,7 +52,7 @@ function productVariantComp(node, parent, data = { feature_id: -1, options: [] }
             </list-comp>
         `,
 		initialize: () => {
-			node.classList.add("product_variant");
+			comp.classList.add("product_variant");
 		},
 	});
 }

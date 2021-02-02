@@ -52,11 +52,11 @@
  */
 
 /**
- * @param {DatatableComp} node
+ * @param {DatatableComp} comp
  * @param {*} parent
  * @param {DatatableCompData} data
  */
-function datatableComp(node, parent, data = { rows: [], columns: [], filters: [], sort: undefined }) {
+function datatableComp(comp, parent, data = { rows: [], columns: [], filters: [], sort: undefined }) {
 	if (!data.filters) {
 		data.filters = [];
 	}
@@ -72,54 +72,56 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 
 	data.rows = [];
 
-	node._datatable_search = (delay = 0) => {
-		if (node._search_timeout) {
-			clearTimeout(node._search_timeout);
-			node._search_timeout = undefined;
+	comp._datatable_search = (delay = 0) => {
+		if (comp._search_timeout) {
+			clearTimeout(comp._search_timeout);
+			comp._search_timeout = undefined;
 		}
-		node._search_timeout = setTimeout(() => {
-			if (node._search_request) {
+		comp._search_timeout = setTimeout(() => {
+			if (comp._search_request) {
 				//node._search_request.abort(); // causes a shitty delay
-				node._search_request = undefined;
+				comp._search_request = undefined;
 			}
 
 			const datatable_params = {};
-			if (node._data.sort) {
-				datatable_params.order = node._data.sort.key + " " + node._data.sort.order.toUpperCase();
+			if (comp._data.sort) {
+				datatable_params.order = comp._data.sort.key + " " + comp._data.sort.order.toUpperCase();
 			}
-			if (node._data.filters) {
-				datatable_params.filters = node._data.filters;
+			if (comp._data.filters) {
+				datatable_params.filters = comp._data.filters;
 			}
-			datatable_params.row_count = node._data.pagination_data.row_count;
-			datatable_params.page_id = node._data.pagination_data.page_id;
-			datatable_params.page = node._data.curr_page;
+			datatable_params.row_count = comp._data.pagination_data.row_count;
+			datatable_params.page_id = comp._data.pagination_data.page_id;
+			datatable_params.page = comp._data.curr_page;
 
-			node._search_request = xhr({
-				url: node._data.search_url,
+			comp._search_request = xhr({
+				url: comp._data.search_url,
 				params: {
 					datatable_params,
 				},
 				success: (res) => {
-					node._search_request = undefined;
+					comp._search_request = undefined;
 
-					if (res.rows.length === 0 && node._data.curr_page > 1) {
-						node._data.curr_page = 1;
-						node._datatable_search();
+					if (res.rows.length === 0 && comp._data.curr_page > 1) {
+						comp._data.curr_page = 1;
+						comp._datatable_search();
 						return;
 					}
 
-					node._data.dataset = res.rows;
-					node._data.pagination_data.page_count = res.page_count;
-					node._data.pagination_data.total_rows = res.total_rows;
-					node._set_data();
+					comp._data.dataset = res.rows;
+					comp._data.pagination_data.page_count = res.page_count;
+					comp._data.pagination_data.total_rows = res.total_rows;
+					comp._set_data();
+
+					comp.classList.remove("freeze");
 				},
 			});
 		}, delay);
 	};
 
-	node._set_data = (data = undefined, options = {}) => {
+	comp._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
-			data = node._data;
+			data = comp._data;
 		}
 
 		data.rows = [];
@@ -127,7 +129,7 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 			data.rows.push({ row: e });
 		});
 
-		setCompData(node, data, {
+		setCompData(comp, data, {
 			...options,
 			pass_list_data: [{ what: "columns", where: "rows" }],
 			render: () => {
@@ -135,7 +137,7 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 				let header_html = "";
 
 				let column_index = -1;
-				for (const column of node._data.columns) {
+				for (const column of comp._data.columns) {
 					column_index++;
 
 					let cell_html = "";
@@ -148,11 +150,11 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 						let icon = "fa-sort";
 						let btn_class = "subtle";
 
-						if (node._data.sort && node._data.sort.key === column.key) {
-							if (node._data.sort.order === "asc") {
+						if (comp._data.sort && comp._data.sort.key === column.key) {
+							if (comp._data.sort.order === "asc") {
 								icon = "fa-arrow-up";
 								btn_class = "primary";
-							} else if (node._data.sort.order === "desc") {
+							} else if (comp._data.sort.order === "desc") {
 								icon = "fa-arrow-down";
 								btn_class = "primary";
 							}
@@ -168,27 +170,27 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 
 					header_html += cell_html;
 
-					styles_html += `.${node._dom_class} .dt_cell:nth-child(${column_index + 1}) {width:${def(column.width, "10%")};}\n`;
+					styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {width:${def(column.width, "10%")};}\n`;
 				}
-				node._nodes.table_header._set_content(header_html);
-				node._nodes.style._set_content(styles_html);
+				comp._nodes.table_header._set_content(header_html);
+				comp._nodes.style._set_content(styles_html);
 
-				const cd = node._changed_data;
+				const cd = comp._changed_data;
 
 				if (
-					!node._prev_data ||
+					!comp._prev_data ||
 					cd.sort ||
 					cd.filters ||
-					node._prev_data.pagination_data.page_id != node._data.pagination_data.page_id ||
-					node._prev_data.pagination_data.row_count != node._data.pagination_data.row_count
+					comp._prev_data.pagination_data.page_id != comp._data.pagination_data.page_id ||
+					comp._prev_data.pagination_data.row_count != comp._data.pagination_data.row_count
 				) {
-					node._datatable_search(100);
+					comp._datatable_search(100);
 				}
 			},
 		});
 	};
 
-	createComp(node, parent, data, {
+	createComp(comp, parent, data, {
 		template: /*html*/ `
             <div style="margin-bottom:10px;display:flex;align-items:center">
                 <span class="datatable_label">Produkty</span>
@@ -214,7 +216,7 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
             <style data-node="style"></style>
         `,
 		initialize: () => {
-			node.addEventListener("click", (event) => {
+			comp.addEventListener("click", (event) => {
 				const target = $(event.target);
 				if (!target) {
 					return;
@@ -223,9 +225,9 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 				const dt_filter = target._parent(".dt_filter", { skip: 0 });
 
 				if (dt_sort) {
-					const column_data = node._data.columns[+dt_sort._parent(".dt_cell").dataset.column];
+					const column_data = comp._data.columns[+dt_sort._parent(".dt_cell").dataset.column];
 
-					const curr_order = node._data.sort && node._data.sort.key === column_data.key ? node._data.sort.order : "";
+					const curr_order = comp._data.sort && comp._data.sort.key === column_data.key ? comp._data.sort.order : "";
 					/** @type {DatatableSortOrder} */
 					let new_order = "desc";
 					if (curr_order === "desc") {
@@ -233,8 +235,8 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 					} else if (curr_order === "asc") {
 						new_order = "";
 					}
-					node._data.sort = new_order ? { key: column_data.key, order: new_order } : undefined;
-					node._set_data();
+					comp._data.sort = new_order ? { key: column_data.key, order: new_order } : undefined;
+					comp._set_data();
 				}
 
 				if (dt_filter) {
@@ -242,5 +244,6 @@ function datatableComp(node, parent, data = { rows: [], columns: [], filters: []
 				}
 			});
 		},
+		unfreeze_by_self: true,
 	});
 }

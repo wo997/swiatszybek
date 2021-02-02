@@ -18,37 +18,37 @@
  */
 
 /**
- * @param {DatatableRowComp} node
+ * @param {DatatableRowComp} comp
  * @param {*} parent
  * @param {DatatableRowCompData} data
  */
-function datatableRowComp(node, parent, data = { row: {}, columns: [] }) {
-	node._set_data = (data = undefined, options = {}) => {
+function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
+	comp._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
-			data = node._data;
+			data = comp._data;
 		}
 
-		setCompData(node, data, {
+		setCompData(comp, data, {
 			...options,
 			render: () => {
 				let row_html = "";
 
-				for (const column of node._data.columns) {
+				for (const column of comp._data.columns) {
 					let cell_html = "";
 
-					cell_html += `<div class='dt_cell'>${node._data.row[column.key]}</div>`;
+					cell_html += `<div class='dt_cell'>${comp._data.row[column.key]}</div>`;
 
 					row_html += cell_html;
 				}
 
-				if (node._nodes.dt_row.innerHTML != row_html) {
-					node._nodes.dt_row._set_content(row_html);
+				if (comp._nodes.dt_row.innerHTML != row_html) {
+					comp._nodes.dt_row._set_content(row_html);
 				}
 			},
 		});
 	};
 
-	createComp(node, parent, data, {
-		template: /*html*/ `<div data-node="{${node._nodes.dt_row}}" class="dt_row {even:${data.row_index % 2 === 0}}"></div>`,
+	createComp(comp, parent, data, {
+		template: /*html*/ `<div data-node="{${comp._nodes.dt_row}}" class="dt_row {even:${data.row_index % 2 === 0}}"></div>`,
 	});
 }

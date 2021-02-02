@@ -19,30 +19,30 @@
  */
 
 /**
- * @param {ListComp} node
+ * @param {ListComp} comp
  * @param {*} parent
  * @param {Array} data
  */
-function listComp(node, parent, data = []) {
-	node._row_template = node.innerHTML;
-	const is_horizontal = node.classList.contains("horizontal");
-	node._empty();
+function listComp(comp, parent, data = []) {
+	comp._row_template = comp.innerHTML;
+	const is_horizontal = comp.classList.contains("horizontal");
+	comp._empty();
 
-	node._primary_key = node.dataset.primary;
+	comp._primary_key = comp.dataset.primary;
 
-	node._pointChildsData = (child) => {
-		let source_sub_data_index = node._data.findIndex((e) => {
+	comp._pointChildsData = (child) => {
+		let source_sub_data_index = comp._data.findIndex((e) => {
 			return e.row_id === child._data.row_id;
 		});
 		return {
-			obj: node._data,
+			obj: comp._data,
 			key: source_sub_data_index === -1 ? null : source_sub_data_index,
 		};
 	};
 
-	node._set_data = (data = undefined, options = {}) => {
+	comp._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
-			data = node._data;
+			data = comp._data;
 		}
 
 		let nextRowId = 0;
@@ -50,7 +50,7 @@ function listComp(node, parent, data = []) {
 		data.forEach((row_data, index) => {
 			// pass data no matter who the child is - should be defined by options cause it's inefficient to set each row every time u do anything
 			if (row_data.row_id === undefined) {
-				const pk = node._primary_key;
+				const pk = comp._primary_key;
 				if (pk) {
 					let ref = row_data;
 					pk.split(".").forEach((e) => {
@@ -68,10 +68,10 @@ function listComp(node, parent, data = []) {
 			row_data.list_length = data.length;
 		});
 
-		setCompData(node, data, {
+		setCompData(comp, data, {
 			...options,
 			render: () => {
-				const diff = diffArrays(node._prev_data, node._data, (e) => e.row_id);
+				const diff = diffArrays(comp._prev_data, comp._data, (e) => e.row_id);
 
 				if (diff.length === 0) {
 					return;
@@ -108,12 +108,12 @@ function listComp(node, parent, data = []) {
 
 				const animation_duration = instant ? 0 : 250;
 
-				const list_w_before = node.offsetWidth;
-				const list_h_before = node.offsetHeight;
+				const list_w_before = comp.offsetWidth;
+				const list_h_before = comp.offsetHeight;
 
 				let removed_before_current = 0;
 
-				const rows_before = node._getRows();
+				const rows_before = comp._getRows();
 
 				rows_before.forEach((child) => {
 					// @ts-ignore
@@ -146,17 +146,17 @@ function listComp(node, parent, data = []) {
 
 					const target_index_real = diff_info.target_index + removed_before_current;
 
-					node.insertBefore(child, node.children[target_index_real]);
+					comp.insertBefore(child, comp.children[target_index_real]);
 
 					if (add) {
-						const row_data = node._data[diff_info.to];
-						child._set_content(node._row_template);
+						const row_data = comp._data[diff_info.to];
+						child._set_content(comp._row_template);
 
-						directComps(child).forEach((comp) => {
-							const constructor = snakeCase(comp.tagName.toLocaleLowerCase());
+						directComps(child).forEach((dc) => {
+							const constructor = snakeCase(dc.tagName.toLocaleLowerCase());
 							if (window[constructor]) {
 								// @ts-ignore
-								window[constructor](comp, node, row_data);
+								window[constructor](dc, comp, row_data);
 							}
 						});
 					}
@@ -266,10 +266,10 @@ function listComp(node, parent, data = []) {
 						);
 					}
 				});
-				node._animate(
+				comp._animate(
 					`
 				        0% {width:${list_w_before}px;height:${list_h_before}px;}
-				        100% {width:${node.offsetWidth}px;height:${node.offsetHeight}px;}
+				        100% {width:${comp.offsetWidth}px;height:${comp.offsetHeight}px;}
 				    `,
 					animation_duration
 				);
@@ -277,34 +277,32 @@ function listComp(node, parent, data = []) {
 		});
 	};
 
-	createComp(node, parent, data, {
+	createComp(comp, parent, data, {
 		initialize: () => {
-			node.classList.add("my_list");
-
-			node._getRows = () => {
+			comp._getRows = () => {
 				/** @type {AnyComp[]} */
 				// @ts-ignore
-				const res = node._direct_children(":not(.removing)");
+				const res = comp._direct_children(":not(.removing)");
 				return res;
 			};
 
-			node._removeRow = (row_index) => {
-				const remove_index = node._data.findIndex((d) => {
+			comp._removeRow = (row_index) => {
+				const remove_index = comp._data.findIndex((d) => {
 					return d.row_index === row_index;
 				});
 				if (remove_index !== -1) {
-					node._data.splice(remove_index, 1);
-					node._set_data();
+					comp._data.splice(remove_index, 1);
+					comp._set_data();
 				}
 			};
 
-			node._moveRow = (from, to) => {
-				from = clamp(0, from, node._data.length - 1);
-				to = clamp(0, to, node._data.length - 1);
+			comp._moveRow = (from, to) => {
+				from = clamp(0, from, comp._data.length - 1);
+				to = clamp(0, to, comp._data.length - 1);
 
-				const temp = node._data.splice(from, 1);
-				node._data.splice(to, 0, ...temp);
-				node._set_data();
+				const temp = comp._data.splice(from, 1);
+				comp._data.splice(to, 0, ...temp);
+				comp._set_data();
 			};
 		},
 	});

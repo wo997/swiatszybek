@@ -4,21 +4,18 @@
 	const trait_name = "list_down_btn";
 	registerCompTrait(trait_name, {
 		template: /*html*/ `<button data-node="${trait_name}" class="btn subtle"><i class="fas fa-chevron-down"></i></button>`,
-		initialize: (node) => {
-			node._nodes[trait_name].addEventListener("click", () => {
+		initialize: (comp) => {
+			comp._nodes[trait_name].addEventListener("click", () => {
 				/** @type {ListComp} */
 				// @ts-ignore
-				const parent = node._parent_comp;
+				const parent = comp._parent_comp;
 				if (parent._moveRow) {
-					parent._moveRow(node._data.row_index, node._data.row_index + 1);
+					parent._moveRow(comp._data.row_index, comp._data.row_index + 1);
 				}
 			});
 		},
-		render: (node) => {
-			node._nodes[trait_name].toggleAttribute(
-				"disabled",
-				node._data.row_index >= node._data.list_length - 1
-			);
+		render: (comp) => {
+			comp._nodes[trait_name].toggleAttribute("disabled", comp._data.row_index >= comp._data.list_length - 1);
 		},
 	});
 }
