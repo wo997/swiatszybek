@@ -222,9 +222,9 @@ function listComp(node, parent, data = []) {
 					}
 					if (add) {
 						if (is_horizontal) {
-							off_x -= rect_after.width * 0.5;
+							off_x -= rect_after.width;
 						} else {
-							off_y -= rect_after.height * 0.5;
+							off_y -= rect_after.height;
 						}
 					}
 
