@@ -211,6 +211,23 @@ function listComp(node, parent, data = []) {
 						off_y += rect_before.top - rect_after.top;
 					}
 
+					let after_x = 0;
+					let after_y = 0;
+					if (remove) {
+						if (is_horizontal) {
+							after_x -= rect_after.width * 0.5;
+						} else {
+							after_y -= rect_after.height * 0.5;
+						}
+					}
+					if (add) {
+						if (is_horizontal) {
+							off_x -= rect_after.width * 0.5;
+						} else {
+							off_y -= rect_after.height * 0.5;
+						}
+					}
+
 					/**
 					 *
 					 * @param {ClientRect} r
@@ -231,7 +248,7 @@ function listComp(node, parent, data = []) {
 						child._animate(
 							`
 						        0% {transform:translate(${off_x}px,${off_y}px);opacity:${add ? 0 : 1};}
-						        100% {transform:translate(0px,0px);opacity:${remove ? 0 : 1};}
+						        100% {transform:translate(${after_x}px,${after_y}px);opacity:${remove ? 0 : 1};}
 						    `,
 							animation_duration
 						);
