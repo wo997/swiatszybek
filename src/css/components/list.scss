@@ -21,3 +21,11 @@ list-comp.horizontal .list_row.cramp_row {
 	min-width: 0 !important;
 	min-height: 0 !important;
 }
+
+list-comp.comp {
+	display: flex;
+}
+
+list-comp:not(.horizontal) {
+	flex-direction: column;
+}

@@ -17,6 +17,8 @@
  *  _nodes: {
  *      next: PiepNode
  *      prev: PiepNode
+ *      select: PiepNode
+ *      select_overlay: PiepNode
  *  }
  * } & BaseComp} PaginationComp
  */
@@ -27,14 +29,16 @@
  * @param {PaginationCompData} data
  */
 function paginationComp(comp, parent, data = {}) {
-	// data.buttons = def(data.buttons, []);
-	// data.page_id = def(data.page_id, 0);
-	// data.page_count = def(data.page_count, 0);
-	// data.row_count = def(data.row_count, 20);
 	comp._set_data = (data = undefined, options = {}) => {
 		if (data === undefined) {
 			data = comp._data;
 		}
+
+		data.page_id = def(data.page_id, 0);
+		data.page_count = def(data.page_count, 0);
+		data.row_count = def(data.row_count, 20);
+		data.total_rows = def(data.total_rows, 0);
+		data.buttons = def(data.buttons, []);
 
 		data.buttons = [];
 
@@ -63,7 +67,21 @@ function paginationComp(comp, parent, data = {}) {
 
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				const print_page = (i) => {
+					return comp._data.total_rows > 0
+						? `${i + 1} (${i * comp._data.row_count + 1} - ${Math.min((i + 1) * comp._data.row_count, comp._data.total_rows)})`
+						: " ".repeat(7);
+				};
+
+				let options = "";
+				for (let i = 0; i < comp._data.page_count; i++) {
+					options += /*html*/ `<option value="${i}">${print_page(i)}</option>`;
+				}
+				comp._nodes.select._set_content(options);
+				comp._nodes.select_overlay._set_content(print_page(comp._data.page_id));
+				comp._nodes.select.style.width = print_page(comp._data.page_count - 1).length * 7 + 18 + "px";
+			},
 		});
 	};
 
@@ -83,10 +101,14 @@ function paginationComp(comp, parent, data = {}) {
             </list-comp>
 
             <div class="arrows glue-children">
-                <button class="btn transparent {disabled:${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
+                <button class="btn subtle {disabled:${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <button class="btn transparent {disabled:${data.page_id >= data.page_count - 1}}" data-node="{${comp._nodes.next}}">
+                <div style="position:relative">
+                    <select data-node="{${comp._nodes.select}}" class="field inline" data-number data-bind="{${data.page_id}}"></select>
+                    <div class="select_overlay" data-node="{${comp._nodes.select_overlay}}"></div>
+                </div>
+                <button class="btn subtle {disabled:${data.page_id >= data.page_count - 1}}" data-node="{${comp._nodes.next}}">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>

@@ -34,7 +34,7 @@ function paginationBtnComp(comp, parent, data) {
 		template: /*html*/ `
             <button class="btn
                 {primary:${data.active}}
-                {transparent:${!data.active}}
+                {subtle:${!data.active}}
                 {splitter:${data.splitter}}">{${data.splitter ? "..." : data.page_id + 1}}
             </button>
         `,

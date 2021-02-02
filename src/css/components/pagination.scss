@@ -1,9 +1,5 @@
 /* css[global] */
 
-list-comp.horizontal {
-	display: flex;
-}
-
 pagination-comp.comp {
 	margin-top: 10px;
 	display: flex;
@@ -20,7 +16,7 @@ pagination-comp .splitter {
 pagination-comp list-comp {
 	background: #eee;
 }
-pagination-comp .btn.transparent,
+pagination-comp .btn.subtle,
 pagination-comp .arrows .btn {
 	--btn-border-clr: #ddd;
 	margin-right: -1px;
@@ -29,6 +25,11 @@ pagination-comp .arrows .btn {
 pagination-comp .arrows {
 	background: #eee;
 	margin-left: 10px;
+}
+
+pagination-comp .arrows select {
+	background: #fff;
+	padding-right: 0.42em;
 }
 
 pagination-comp list-comp {
@@ -50,4 +51,17 @@ pagination-comp .pages {
 	pagination-comp .pages {
 		display: none;
 	}
+}
+
+.select_overlay {
+	position: absolute;
+	left: 2px;
+	top: 2px;
+	right: 2px;
+	bottom: 2px;
+	background: white;
+	pointer-events: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

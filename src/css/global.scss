@@ -601,10 +601,10 @@ input[type="text"]:not(.field) {
 	padding-right: 4px;
 }
 
-select {
+select.field {
 	background: url(/img/dropdown.png) 100% / 20px no-repeat white;
-	padding-right: 30px !important;
-	padding: 0.1em 0.5em;
+	cursor: pointer;
+	padding-right: 30px;
 }
 select.inline,
 .btn.inline {
