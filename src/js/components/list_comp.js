@@ -231,6 +231,7 @@ function listComp(comp, parent, data = []) {
 						} else {
 							after_y -= rect_after.height * 0.5;
 						}
+						child.classList.add("removing");
 					}
 					if (add) {
 						if (is_horizontal) {
@@ -266,12 +267,19 @@ function listComp(comp, parent, data = []) {
 						);
 					}
 				});
+
+				comp.classList.add("animating");
 				comp._animate(
 					`
 				        0% {width:${list_w_before}px;height:${list_h_before}px;}
 				        100% {width:${comp.offsetWidth}px;height:${comp.offsetHeight}px;}
 				    `,
-					animation_duration
+					animation_duration,
+					{
+						callback: () => {
+							comp.classList.remove("animating");
+						},
+					}
 				);
 			},
 		});

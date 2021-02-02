@@ -1,6 +1,6 @@
 /* css[admin] */
 
-.btn.important {
+/* .btn.important {
 	background: var(--important-clr);
 	color: white;
 	font-weight: 600;
@@ -20,7 +20,7 @@
 .btn.subtle {
 	background: var(--subtle-background-clr);
 	color: var(--subtle-font-clr);
-}
+} */
 
 body,
 .btn {

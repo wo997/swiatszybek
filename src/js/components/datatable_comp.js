@@ -40,7 +40,6 @@
  *  _nodes: {
  *      table_header: PiepNode
  *      style: PiepNode
- *      pagination: PiepNode
  *  }
  * _datatable_search(delay?: number)
  * _search_timeout: number
@@ -129,48 +128,6 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 			...options,
 			pass_list_data: [{ what: "columns", where: "rows" }],
 			render: () => {
-				let styles_html = "";
-				let header_html = "";
-
-				let column_index = -1;
-				for (const column of comp._data.columns) {
-					column_index++;
-
-					let cell_html = "";
-
-					cell_html += /*html*/ `<div class="dt_cell" data-column="${column_index}">`;
-					cell_html += /*html*/ `<span class="label">${column.label}</span>`;
-					cell_html += /*html*/ ` <div class="dt_header_controls">`;
-
-					if (column.sortable) {
-						let icon = "fa-sort";
-						let btn_class = "subtle";
-
-						if (comp._data.sort && comp._data.sort.key === column.key) {
-							if (comp._data.sort.order === "asc") {
-								icon = "fa-arrow-up";
-								btn_class = "primary";
-							} else if (comp._data.sort.order === "desc") {
-								icon = "fa-arrow-down";
-								btn_class = "primary";
-							}
-						}
-						cell_html += /*html*/ ` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="Sortuj malejąco / rosnąco"></button>`;
-					}
-					if (column.searchable) {
-						cell_html += /*html*/ ` <button class="btn subtle dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
-					}
-
-					cell_html += /*html*/ `</div>`;
-					cell_html += /*html*/ `</div>`;
-
-					header_html += cell_html;
-
-					styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {width:${def(column.width, "10%")};}\n`;
-				}
-				comp._nodes.table_header._set_content(header_html);
-				comp._nodes.style._set_content(styles_html);
-
 				const cd = comp._changed_data;
 
 				if (
@@ -180,6 +137,48 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 					comp._prev_data.pagination_data.page_id != comp._data.pagination_data.page_id ||
 					comp._prev_data.pagination_data.row_count != comp._data.pagination_data.row_count
 				) {
+					let styles_html = "";
+					let header_html = "";
+
+					let column_index = -1;
+					for (const column of comp._data.columns) {
+						column_index++;
+
+						let cell_html = "";
+
+						cell_html += /*html*/ `<div class="dt_cell" data-column="${column_index}">`;
+						cell_html += /*html*/ `<span class="label">${column.label}</span>`;
+						cell_html += /*html*/ ` <div class="dt_header_controls">`;
+
+						if (column.sortable) {
+							let icon = "fa-sort";
+							let btn_class = "transparent";
+
+							if (comp._data.sort && comp._data.sort.key === column.key) {
+								if (comp._data.sort.order === "asc") {
+									icon = "fa-arrow-up";
+									btn_class = "primary";
+								} else if (comp._data.sort.order === "desc") {
+									icon = "fa-arrow-down";
+									btn_class = "primary";
+								}
+							}
+							cell_html += /*html*/ ` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="Sortuj malejąco / rosnąco"></button>`;
+						}
+						if (column.searchable) {
+							cell_html += /*html*/ ` <button class="btn transparent dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
+						}
+
+						cell_html += /*html*/ `</div>`;
+						cell_html += /*html*/ `</div>`;
+
+						header_html += cell_html;
+
+						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {width:${def(column.width, "10%")};}\n`;
+					}
+					comp._nodes.table_header._set_content(header_html);
+					comp._nodes.style._set_content(styles_html);
+
 					comp._datatable_search(100);
 				}
 			},
