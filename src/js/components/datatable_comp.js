@@ -29,9 +29,6 @@
  *  columns: DatatableColumnDef[]
  *  sort?: DatatableSortData | undefined
  *  filters?: DatatableFilterData[]
- *  curr_page?: number
- *  total_rows?: number
- *  page_count?: number
  *  pagination_data?: PaginationCompData
  * }} DatatableCompData
  *
@@ -92,7 +89,6 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 			}
 			datatable_params.row_count = comp._data.pagination_data.row_count;
 			datatable_params.page_id = comp._data.pagination_data.page_id;
-			datatable_params.page = comp._data.curr_page;
 
 			comp._search_request = xhr({
 				url: comp._data.search_url,
@@ -102,8 +98,8 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 				success: (res) => {
 					comp._search_request = undefined;
 
-					if (res.rows.length === 0 && comp._data.curr_page > 1) {
-						comp._data.curr_page = 1;
+					if (res.rows.length === 0 && comp._data.pagination_data.page_id > 0) {
+						comp._data.pagination_data.page_id = 0;
 						comp._datatable_search();
 						return;
 					}
