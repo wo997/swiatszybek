@@ -52,7 +52,7 @@ function paginationComp(node, parent, data = {}) {
                     <option value='3'>3</option>
                     <option value='10'>10</option>
                     <option value='20'>20</option>
-                    <option value='50'>50</option>
+                    <option value='7'>7</option>
                 </select>
                 na stronę
             </div>

@@ -7,23 +7,23 @@ select {
 }
 
 /* buttons */
-/* .btn {
-  font-size: 15px;
-  padding: 0.25em 0.7em;
-  min-height: 2.1em;
+.btn {
+	font-size: 15px;
+	/*padding: 0.25em 0.7em;*/
+	/*min-height: 2.1em;*/
 }
 .btn.medium {
-  font-size: 18px;
+	font-size: 18px;
 }
 .btn.big {
-  font-size: 22px;
+	font-size: 22px;
 }
 .btn.large {
-  font-size: 29px;
+	font-size: 29px;
 }
 .btn.xlarge {
-  font-size: 38px;
-} */
+	font-size: 38px;
+}
 /* buttons */
 
 /* body,

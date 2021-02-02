@@ -1,0 +1,14 @@
+/* css[global] */
+
+list-comp {
+	// overflow: hidden;
+}
+list-comp .list_row {
+	transform-origin: 0 0;
+}
+list-comp:not(.horizontal) .list_row.cramp_row {
+	height: 0 !important;
+}
+list-comp.horizontal .list_row.cramp_row {
+	width: 0 !important;
+}

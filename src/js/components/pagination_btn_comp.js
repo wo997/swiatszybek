@@ -42,7 +42,6 @@ function paginationBtnComp(node, parent, data) {
 				// @ts-ignore
 				const parent = node._parent_comp._parent_comp;
 				parent._data.page_id = node._data.page_id;
-				console.log(parent, parent._data);
 				parent._set_data();
 			});
 		},

@@ -23,6 +23,7 @@ datatable-comp.comp {
 	}
 	.dt_row {
 		transition: 0.25s background-color;
+		background: #fff;
 	}
 	.dt_row.even {
 		background: #f3f3f3;

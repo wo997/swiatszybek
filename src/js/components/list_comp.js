@@ -77,122 +77,173 @@ function listComp(node, parent, data = []) {
 					return;
 				}
 
-				const diff_with_target_index = diff.map((e) => ({
-					...e,
-					target_index: e.to !== -1 ? e.to : e.from,
-				}));
+				const diff_with_target_index = diff
+					.map((e) => ({
+						...e,
+						target_index: e.to !== -1 ? e.to : e.from,
+					}))
+					.sort((a, b) => Math.sign(a.target_index - b.target_index));
 
-				let instant = false; // adding and removing, if we have too many of these we won't animate the list, simple
-				//let expand_nodes = 0;
-				// let moves = 0;
+				let instant = false;
 
-				// //if (!instant) {
-				// for (const d of diff) {
-				// 	if (d.from === -1 || d.to === -1) {
-				// 		moves++;
-				// 	}
-				// 	// if (d.from !== d.to) {
-				// 	// 	moves++;
-				// 	// }
-				// 	if (moves > diff.length * 4) {
-				// 		instant = true;
-				// 		break;
+				let added = 0;
+				let removed = 0;
+				let all = diff.length;
+
+				// if (!instant) {
+				// 	for (const d of diff) {
+				// 		if (d.from === -1) {
+				// 			added++;
+				// 		}
+				// 		if (d.to === -1) {
+				// 			removed++;
+				// 		}
 				// 	}
 				// }
-				//}
 
-				const animation_duration = instant ? 0 : 250;
+				// adding and removing, if we have too many of these we won't animate the list, simple
+				if (added * removed > all * all * 0.25) {
+					//instant = true;
+				}
 
-				const rows_before = node._getRows();
+				const animation_duration = instant ? 0 : 1000;
 
-				/** @type {ClientRect[]} */
-				const row_rects_before = [];
-				rows_before.forEach((e) => {
-					row_rects_before.push(e.getBoundingClientRect());
-				});
+				const list_w_before = node.offsetWidth;
+				const list_h_before = node.offsetHeight;
 
 				let removed_before_current = 0;
 
-				diff_with_target_index
-					.sort((a, b) => Math.sign(a.target_index - b.target_index))
-					.forEach((diff_info) => {
-						const remove = diff_info.to === -1;
-						const add = diff_info.from === -1;
+				const rows_before = node._getRows();
 
-						let child = add ? undefined : rows_before[diff_info.from];
+				rows_before.forEach((child) => {
+					// @ts-ignore
+					child.rect_before = child.getBoundingClientRect();
+				});
 
-						if (add) {
-							/** @type {AnyComp} */
-							// @ts-ignore
-							child = createNodeFromHtml(/*html*/ `
-                                <div class="list_row_wrapper expand_y hidden animate_hidden ${is_horizontal ? "horizontal" : ""}">
-                                    <div class="list_row"></div>
-                                </div>
-                            `);
-						}
+				const animatable_rows = [];
 
-						const target_index_real = diff_info.target_index + removed_before_current;
+				diff_with_target_index.forEach((diff_info) => {
+					const remove = diff_info.to === -1;
+					const add = diff_info.from === -1;
 
-						//if (target_index_real !== diff_info.from) { // you tried but it was the reason why it failed hard
-						node.insertBefore(child, node.children[target_index_real]);
-						//}
+					let child = add ? undefined : rows_before[diff_info.from];
 
-						if (add) {
-							const row_data = node._data[diff_info.to];
-							const the_row = child._child(".list_row");
-							the_row._set_content(node._row_template);
+					if (add) {
+						/** @type {AnyComp} */
+						// @ts-ignore
+						child = createNodeFromHtml(/*html*/ `<div class="list_row"></div>`);
+						child.classList.add("cramp_row");
 
-							directComps(the_row).forEach((comp) => {
-								const constructor = snakeCase(comp.tagName.toLocaleLowerCase());
-								if (window[constructor]) {
-									// @ts-ignore
-									window[constructor](comp, node, row_data, {});
-								}
-							});
+						const row_data = node._data[diff_info.to];
+						child._set_content(node._row_template);
 
-							if (instant) {
-								child.classList.remove("hidden", "animate_hidden");
-							} else {
-								expand(child, true, { duration: animation_duration });
+						directComps(child).forEach((comp) => {
+							const constructor = snakeCase(comp.tagName.toLocaleLowerCase());
+							if (window[constructor]) {
+								// @ts-ignore
+								window[constructor](comp, node, row_data, {});
 							}
-						} else if (remove) {
-							if (instant) {
-								child.classList.add("hidden", "animate_hidden");
-							} else {
-								expand(child, false, { duration: animation_duration });
-							}
-							child.classList.add("removing");
+						});
+					}
 
-							setTimeout(() => {
-								child.remove();
-							}, animation_duration);
+					if (remove) {
+						setTimeout(() => {
+							child.remove();
+						}, animation_duration);
 
-							removed_before_current++;
-						} else {
-							const rect_before = row_rects_before[diff_info.from];
-							const rect_after = child.getBoundingClientRect();
+						removed_before_current++;
+					}
 
-							const off_x = Math.round(rect_before.left - rect_after.left);
-							const off_y = Math.round(rect_before.top - rect_after.top);
+					const target_index_real = diff_info.target_index + removed_before_current;
 
-							/**
-							 *
-							 * @param {ClientRect} r
-							 */
-							const ronscr = (r) => {
-								return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
-							};
-							if ((Math.abs(off_y) > 2 || Math.abs(off_x) > 2) && (ronscr(rect_before) || ronscr(rect_after))) {
-								child._animate(
-									`
-                                        0% {transform:translate(${off_x}px,${off_y}px)}
-                                        100% {transform:translate(0px,0px)}
-                                    `,
-									animation_duration
-								);
-							}
-						}
-					});
+					node.insertBefore(child, node.children[target_index_real]);
+
+					animatable_rows.push(child);
+
+					// @ts-ignore
+					if (!child.rect_before) {
+						// @ts-ignore
+						child.rect_before = child.getBoundingClientRect();
+					}
+				});
+
+				let index = -1;
+				diff_with_target_index.forEach((diff_info) => {
+					index++;
+
+					const remove = diff_info.to === -1;
+					const add = diff_info.from === -1;
+
+					let child = animatable_rows[index];
+
+					if (add) {
+						child.classList.remove("cramp_row");
+					}
+					if (remove) {
+						child.classList.add("cramp_row");
+					}
+				});
+
+				animatable_rows.forEach((child) => {
+					// @ts-ignore
+					child.rect_after = child.getBoundingClientRect();
+				});
+
+				index = -1;
+				diff_with_target_index.forEach((diff_info) => {
+					index++;
+
+					const remove = diff_info.to === -1;
+					const add = diff_info.from === -1;
+
+					const child = animatable_rows[index];
+
+					// @ts-ignore
+					let rect_before = child.rect_before;
+					// @ts-ignore
+					let rect_after = child.rect_after;
+
+					let off_x = 0;
+					let off_y = 0;
+
+					if (rect_before && rect_after) {
+						off_x += rect_before.left - rect_after.left;
+						off_y += rect_before.top - rect_after.top;
+					}
+
+					/**
+					 *
+					 * @param {ClientRect} r
+					 */
+					const ronscr = (r) => {
+						return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
+					};
+					child.style.zIndex = "" + (Math.abs(off_x) + Math.abs(off_y) + (add || remove ? 0 : 1000));
+
+					setTimeout(() => {
+						child.style.zIndex = "";
+					}, animation_duration);
+
+					if (
+						(add || remove || Math.abs(off_y) > 2 || Math.abs(off_x) > 2) &&
+						((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after)))
+					) {
+						child._animate(
+							`
+						        0% {transform:translate(${off_x}px,${off_y}px);opacity:${add ? 0 : 1};}
+						        100% {transform:translate(0px,0px);opacity:${remove ? 0 : 1};}
+						    `,
+							animation_duration
+						);
+					}
+				});
+				node._animate(
+					`
+				        0% {width:${list_w_before}px;height:${list_h_before}px;}
+				        100% {width:${node.offsetWidth}px;height:${node.offsetHeight}px;}
+				    `,
+					animation_duration
+				);
 			},
 		});
 	};
