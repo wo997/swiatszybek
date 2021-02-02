@@ -125,6 +125,14 @@ if ($modifyJS) {
             }
         }
 
+        // reactive attributes - just escping
+        if (preg_match_all('/(?<=["\'])\{\{.*?}}(?=["\'])/', $js_full, $matches)) {
+            foreach ($matches[0] as $match) {
+                $rep = htmlspecialchars($match);
+                $js_full = str_replace($match, $rep, $js_full);
+            }
+        }
+
         // binding
         if (preg_match_all('/data-bind="\{\{[^()]*?data\.[^()]*?}}"/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {

@@ -7,7 +7,6 @@
  * page_count?: number
  * row_count?: number
  * total_rows?: number
- * buttons?: PaginationBtnCompData[]
  * }} PaginationCompData
  *
  * @typedef {{
@@ -38,32 +37,6 @@ function paginationComp(comp, parent, data = {}) {
 		data.page_count = def(data.page_count, 0);
 		data.row_count = def(data.row_count, 20);
 		data.total_rows = def(data.total_rows, 0);
-		data.buttons = def(data.buttons, []);
-
-		data.buttons = [];
-
-		let range = 2;
-		let min_page_id = 0;
-		let max_page_id = data.page_count - 1;
-		let center = clamp(min_page_id + range, data.page_id, max_page_id - range);
-		let min = Math.max(min_page_id, center - range);
-		let max = Math.min(max_page_id, center + range);
-
-		if (min > min_page_id) {
-			data.buttons.push({ page_id: min_page_id, active: false });
-		}
-		if (min > min_page_id + 1) {
-			data.buttons.push({ page_id: -1, active: false, splitter: true });
-		}
-		for (let i = min; i <= max; i++) {
-			data.buttons.push({ page_id: i, active: i === data.page_id });
-		}
-		if (max < max_page_id - 1) {
-			data.buttons.push({ page_id: -2, active: false, splitter: true });
-		}
-		if (max < max_page_id) {
-			data.buttons.push({ page_id: max_page_id, active: false });
-		}
 
 		setCompData(comp, data, {
 			...options,
@@ -96,19 +69,16 @@ function paginationComp(comp, parent, data = {}) {
                 </select>
                 na stronę
             </div>
-            <list-comp data-bind="{${data.buttons}}" class="horizontal" data-primary="page_id">
-                <pagination-btn-comp></pagination-btn-comp>
-            </list-comp>
 
             <div class="arrows glue-children">
-                <button class="btn subtle {disabled:${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
+                <button class="btn subtle" disabled="{${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div style="position:relative">
                     <select data-node="{${comp._nodes.select}}" class="field inline" data-number data-bind="{${data.page_id}}"></select>
                     <div class="select_overlay" data-node="{${comp._nodes.select_overlay}}"></div>
                 </div>
-                <button class="btn subtle {disabled:${data.page_id >= data.page_count - 1}}" data-node="{${comp._nodes.next}}">
+                <button class="btn subtle" disabled="{${data.page_id >= data.page_count - 1}}" data-node="{${comp._nodes.next}}">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>

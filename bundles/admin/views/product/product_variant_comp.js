@@ -42,7 +42,7 @@ function productVariantComp(comp, parent, data = { feature_id: -1, options: [] }
 
 	createComp(comp, parent, data, {
 		template: /*html*/ `
-            {${data.row_index + 1}}.
+            <span html="{${data.row_index + 1 + "."}}"></span>
             <div class="title inline" data-node="{${comp._nodes.feature_name}}"></div>
 
             <p-batch-trait data-trait="list_controls"></p-batch-trait>

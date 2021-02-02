@@ -28,7 +28,7 @@
  * _subscribers: SubscribeToData[]
  * _bind_var?: string
  * _changed_data?: object
- * _eval_html: {node?: PiepNode, eval_str: string}[]
+ * _eval_attrs: {node?: PiepNode, evals: {name: string, eval_str: string}[]}[]
  * _eval_class: {node: PiepNode, eval_str: string, className: string}[]
  * _comp_traits: CompTrait[]
  * _propagating_data: boolean
@@ -119,35 +119,14 @@ function createComp(node, parent_comp, data, options) {
 		};
 	}
 
-	comp._eval_html = [];
+	comp._eval_attrs = [];
 	comp._eval_class = [];
 	comp._comp_traits = [];
 
 	if (options.template) {
 		let template = options.template;
 
-		const matches_e = template.match(/{{.*?}}/gm);
-		if (matches_e) {
-			for (const match of matches_e) {
-				const content = match.substring(2, match.length - 2);
-				const eval_str = content;
-				comp._eval_html.push({
-					eval_str,
-				});
-				const node_html = `<span class='eval_html_${comp._eval_html.length - 1}'></span>`;
-				template = template.replace(match, node_html);
-			}
-		}
-
 		comp._set_content(template);
-
-		let index = -1;
-		for (const eval_html of comp._eval_html) {
-			index++;
-			const c = `eval_html_${index}`;
-			eval_html.node = comp._child("." + c);
-			eval_html.node.classList.remove(c);
-		}
 
 		for (const trait of comp._children("p-batch-trait")) {
 			const trait_name = trait.dataset.trait;
@@ -184,8 +163,8 @@ function createComp(node, parent_comp, data, options) {
 		});
 
 		// reactive classes and maybe even more
-		comp._children("*").forEach((e) => {
-			let p = e;
+		comp._children("*").forEach((child) => {
+			let p = child;
 			while (true) {
 				p = p._parent();
 				if (!p || p === comp) {
@@ -199,7 +178,7 @@ function createComp(node, parent_comp, data, options) {
 
 			// yup - it's a direct sibling
 
-			let out = e.className;
+			let out = child.className;
 			const matches_c = out.match(/\{\w*?:\{.*?}}/gm);
 			if (matches_c) {
 				for (const match of matches_c) {
@@ -207,11 +186,26 @@ function createComp(node, parent_comp, data, options) {
 					const [className, ev] = content.split(":");
 					const eval_str = ev.substring(1, ev.length - 1);
 
-					comp._eval_class.push({ eval_str, node: e, className });
+					comp._eval_class.push({ eval_str, node: child, className });
 					out = out.replace(match, "");
 				}
 			}
-			e.className = out.replace(/\n/g, " ").replace(/ +/g, " ").trim();
+			child.className = out.replace(/\n/g, " ").replace(/ +/g, " ").trim();
+
+			for (const attr of child.attributes) {
+				const val = attr.value;
+
+				if (val.match(/^\{\{.*}}$/)) {
+					let g = comp._eval_attrs.find((x) => x.node === child);
+					if (!g) {
+						g = { node: child, evals: [] };
+						comp._eval_attrs.push(g);
+					}
+					g.evals.push({ name: attr.name, eval_str: val });
+
+					child.removeAttribute(attr.name);
+				}
+			}
 		});
 	}
 
@@ -352,12 +346,23 @@ function setCompData(comp, _data = undefined, options = {}) {
 	}
 
 	const data = node._data; // it's passed to the eval, it's just a keyword
-	for (const eval_html of node._eval_html) {
-		try {
-			eval_html.node._set_content(eval(eval_html.eval_str));
-		} catch (e) {
-			console.error(`Cannot evaluate html ${eval_html.eval_str}: ${e}`);
-			console.trace();
+	for (const ev of node._eval_attrs) {
+		for (const attr of ev.evals) {
+			try {
+				const val = eval(attr.eval_str);
+				if (attr.name === "html") {
+					ev.node._set_content(val);
+				} else {
+					if (!val && val !== "") {
+						ev.node.removeAttribute(attr.name);
+					} else {
+						ev.node.setAttribute(attr.name, val);
+					}
+				}
+			} catch (e) {
+				console.error(`Cannot evaluate ${attr.name} ${attr.eval_str}: ${e}`);
+				console.trace();
+			}
 		}
 	}
 

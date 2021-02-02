@@ -62,7 +62,7 @@ function productComp(
 
                 <div data-node="case_sell_by_qty" class="expand_y">
                     <div class="label">
-                    Warianty ({${data.variants.length}})
+                    Warianty (<span html="{${data.variants.length}}"></span>)
                     <button data-node="add_variant_btn" class="btn primary">Dodaj kolejny <i class="fas fa-plus"></i></button>
                     </div>
                     <list-comp data-bind="{${data.variants}}">
@@ -71,7 +71,7 @@ function productComp(
                 </div>
 
                 <h3>Display form json</h3>
-                <div>{${JSON.stringify(data)}}</div>
+                <div html="{${JSON.stringify(data)}}"></div>
             </div>
         `,
 		initialize: () => {
