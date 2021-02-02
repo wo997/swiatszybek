@@ -196,6 +196,7 @@ function listComp(comp, parent, data = []) {
 
 				const list_dl = list_rect_after.left - list_rect_before.left;
 				const list_dt = list_rect_after.top - list_rect_before.top;
+				//console.log(list_dl, list_dt);
 
 				index = -1;
 				diff_with_target_index.forEach((diff_info) => {
@@ -255,37 +256,64 @@ function listComp(comp, parent, data = []) {
 					};
 					child.style.zIndex = "" + Math.round((Math.abs(off_x) + Math.abs(off_y)) * 0.02 + (add || remove ? 1 : 2));
 
-					setTimeout(() => {
-						child.style.zIndex = "";
-					}, animation_duration);
+					if ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after))) {
+						setTimeout(() => {
+							child.style.zIndex = "";
+						}, animation_duration);
 
-					if (
-						(add || remove || Math.abs(off_y) > 2 || Math.abs(off_x) > 2) &&
-						((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after)))
-					) {
-						child._animate(
-							`
-						        0% {transform:translate(${off_x}px,${off_y}px);opacity:${add ? 0 : 1};}
-						        100% {transform:translate(${after_x}px,${after_y}px);opacity:${remove ? 0 : 1};}
-						    `,
-							animation_duration
-						);
+						let step_0 = "";
+						let step_1 = "";
+
+						if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2) {
+							step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px);`;
+							step_1 += `transform:translate(${after_x}px,${after_y}px);`;
+						}
+
+						if (add) {
+							step_0 += "opacity:0;";
+							step_1 += "opacity:1;";
+						}
+						if (remove) {
+							step_0 += "opacity:1;";
+							step_1 += "opacity:0;";
+						}
+
+						if (step_1) {
+							child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration);
+						}
 					}
 				});
 
 				comp.classList.add("animating");
-				comp._animate(
-					`
-                        0% {width:${list_rect_before.width}px;height:${list_rect_before.height}px;}
-				        100% {width:${list_rect_after.width}px;height:${list_rect_after.height}px;}
-				    `,
-					animation_duration,
-					{
-						callback: () => {
-							comp.classList.remove("animating");
-						},
-					}
-				);
+
+				const w1 = list_rect_before.width;
+				const w2 = list_rect_after.width;
+
+				const h1 = list_rect_before.height;
+				const h2 = list_rect_after.height;
+
+				if (Math.abs(w1 - w2) < 1 && Math.abs(h1 - h2) < 1) {
+					comp.style.width = w2 + "px";
+					comp.style.height = h2 + "px";
+
+					setTimeout(() => {
+						comp.style.width = "";
+						comp.style.height = "";
+					}, animation_duration);
+				} else {
+					comp._animate(
+						`
+                            0% {width:${list_rect_before.width}px;height:${list_rect_before.height}px;}
+                            100% {width:${list_rect_after.width}px;height:${list_rect_after.height}px;}
+                        `,
+						animation_duration,
+						{
+							callback: () => {
+								comp.classList.remove("animating");
+							},
+						}
+					);
+				}
 			},
 		});
 	};

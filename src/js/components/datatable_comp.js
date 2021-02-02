@@ -103,10 +103,28 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 						return;
 					}
 
+					//console.log(res.rows);
+					//comp._data.dataset = [];
 					comp._data.dataset = res.rows;
 					comp._data.pagination_data.page_count = res.page_count;
 					comp._data.pagination_data.total_rows = res.total_rows;
+
+					// maybe for more than 20 rows it makes sense, not ideal though
+					// let i = 0;
+					// res.rows.forEach((e) => {
+					// 	i++;
+					// 	if (i > 5) {
+					// 		setTimeout(() => {
+					// 			comp._data.dataset.push(e);
+					// 		}, 50);
+					// 	} else {
+					// 		comp._data.dataset.push(e);
+					// 	}
+					// });
 					comp._set_data();
+					// setTimeout(() => {
+					// 	comp._set_data();
+					// }, 100);
 
 					comp.classList.remove("freeze");
 				},

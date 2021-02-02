@@ -77,7 +77,7 @@ function createComp(node, parent_comp, data, options) {
 
 	comp.classList.add("comp");
 
-	node._propagating_data = false;
+	//node._propagating_data = false;
 
 	comp._dom_id = comp_id++;
 	comp._dom_class = `comp_${comp._dom_id}`;
@@ -294,6 +294,7 @@ function createComp(node, parent_comp, data, options) {
 /**
  * @typedef {{
  * render?: CallableFunction
+ * second?: boolean
  * } & SetCompDataOptions} SetAnyCompDataOptions
  */
 
@@ -375,9 +376,15 @@ function setCompData(comp, _data = undefined, options = {}) {
 
 	node._prev_data = cloneObject(node._data);
 
-	node._propagating_data = true;
+	//node._propagating_data = true;
 	propagateCompData(node);
-	node._propagating_data = false;
+	//node._propagating_data = false;
+
+	/*if (!options.second) {
+		setCompData(comp, undefined, {
+			second: true,
+		});
+	}*/
 }
 
 /**
@@ -407,9 +414,9 @@ function propagateCompData(comp) {
 			// @ts-ignore
 			const receiver = subscribe.receiver;
 
-			if (receiver._propagating_data) {
-				continue;
-			}
+			// if (receiver._propagating_data) {
+			// 	continue;
+			// }
 
 			if (receiver._in_body()) {
 				subscribe.fetch(node, receiver);

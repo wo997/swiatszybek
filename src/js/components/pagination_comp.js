@@ -69,7 +69,7 @@ function paginationComp(comp, parent, data = {}) {
 		template: /*html*/ `
             <div class="pages">
                 <select data-bind="{${data.row_count}}" class="field inline" data-number>
-                    <option value='1'>3</option>
+                    <option value='1'>1</option>
                     <option value='10'>10</option>
                     <option value='20'>20</option>
                     <option value='7'>7</option>
