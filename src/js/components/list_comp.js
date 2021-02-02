@@ -106,7 +106,7 @@ function listComp(node, parent, data = []) {
 					//instant = true;
 				}
 
-				const animation_duration = instant ? 0 : 1000;
+				const animation_duration = instant ? 0 : 250;
 
 				const list_w_before = node.offsetWidth;
 				const list_h_before = node.offsetHeight;
@@ -133,17 +133,6 @@ function listComp(node, parent, data = []) {
 						// @ts-ignore
 						child = createNodeFromHtml(/*html*/ `<div class="list_row"></div>`);
 						child.classList.add("cramp_row");
-
-						const row_data = node._data[diff_info.to];
-						child._set_content(node._row_template);
-
-						directComps(child).forEach((comp) => {
-							const constructor = snakeCase(comp.tagName.toLocaleLowerCase());
-							if (window[constructor]) {
-								// @ts-ignore
-								window[constructor](comp, node, row_data, {});
-							}
-						});
 					}
 
 					if (remove) {
@@ -157,6 +146,19 @@ function listComp(node, parent, data = []) {
 					const target_index_real = diff_info.target_index + removed_before_current;
 
 					node.insertBefore(child, node.children[target_index_real]);
+
+					if (add) {
+						const row_data = node._data[diff_info.to];
+						child._set_content(node._row_template);
+
+						directComps(child).forEach((comp) => {
+							const constructor = snakeCase(comp.tagName.toLocaleLowerCase());
+							if (window[constructor]) {
+								// @ts-ignore
+								window[constructor](comp, node, row_data);
+							}
+						});
+					}
 
 					animatable_rows.push(child);
 

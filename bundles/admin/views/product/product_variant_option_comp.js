@@ -21,22 +21,14 @@
  * @param {*} parent
  * @param {ProductVariantOptionCompData} data
  */
-function productVariantOptionComp(
-	node,
-	parent,
-	data = { option_id: -1, name: "" }
-) {
+function productVariantOptionComp(node, parent, data = { option_id: -1, name: "" }) {
 	node._set_data = (data = undefined, options = {}) => {
 		setCompData(node, data, {
 			...options,
 			render: () => {
-				const feature = product_features.find(
-					(e) => e.feature_id === node._data.feature_id
-				);
+				const feature = product_features.find((e) => e.feature_id === node._data.feature_id);
 				if (feature) {
-					const option = feature.options.find(
-						(e) => e.option_id === node._data.option_id
-					);
+					const option = feature.options.find((e) => e.option_id === node._data.option_id);
 
 					if (option) {
 						node._nodes.option_name._set_content(option.name);
