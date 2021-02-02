@@ -622,14 +622,13 @@ function positionAgainstScrollableParent(x, y, scrollable_parent) {
 }
 
 /**
+ * it must be a single node!
+ *
  * @returns {PiepNode}
  */
 function createNodeFromHtml(html) {
-	const random_class_name = "sddsfgsdfgsdfgcvcvc";
-	document.body.insertAdjacentHTML("beforeend", `<div class="${random_class_name}" style="display:none">${html}</div>`);
-	const node = $(`.${random_class_name}`);
-	node.remove();
-	return node._direct_child();
+	document.body.insertAdjacentHTML("beforeend", html);
+	return $(document.body.lastChild);
 }
 
 /**

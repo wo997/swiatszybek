@@ -120,6 +120,7 @@ function listComp(node, parent, data = []) {
 					child.rect_before = child.getBoundingClientRect();
 				});
 
+				/** @type {PiepNode[]} */
 				const animatable_rows = [];
 
 				diff_with_target_index.forEach((diff_info) => {
@@ -200,6 +201,15 @@ function listComp(node, parent, data = []) {
 
 					const child = animatable_rows[index];
 
+					if (remove) {
+						child.classList.remove("cramp_row");
+						if (is_horizontal) {
+							child.style.marginRight = -child.offsetWidth + "px";
+						} else {
+							child.style.marginBottom = -child.offsetHeight + "px";
+						}
+					}
+
 					// @ts-ignore
 					let rect_before = child.rect_before;
 					// @ts-ignore
@@ -237,7 +247,7 @@ function listComp(node, parent, data = []) {
 					const ronscr = (r) => {
 						return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
 					};
-					child.style.zIndex = "" + (Math.abs(off_x) + Math.abs(off_y) + (add || remove ? 0 : 1000));
+					child.style.zIndex = "" + (1 + Math.abs(off_x) + Math.abs(off_y) + (add || remove ? 0 : 1000));
 
 					setTimeout(() => {
 						child.style.zIndex = "";
