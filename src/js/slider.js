@@ -31,6 +31,14 @@ domload(() => {
 	lazyLoadImages();
 });
 
+window.addEventListener("dragstart", (event) => {
+	const target = $(event.target);
+	if (target._parent(".wo997_slider")) {
+		event.preventDefault();
+		return false;
+	}
+});
+
 function releaseAllSliders() {
 	wo997_sliders.forEach((node) => {
 		node._slider.release();
@@ -54,31 +62,22 @@ function animateSliders() {
 			slider.velocity *= slow_rate;
 		}
 		if (slider.scroll > slider.max_scroll) {
-			slider.scroll =
-				slider.scroll * (1 - bounce_rate) + slider.max_scroll * bounce_rate;
+			slider.scroll = slider.scroll * (1 - bounce_rate) + slider.max_scroll * bounce_rate;
 			slider.velocity *= slow_rate;
 
 			follow_rate = 0.2;
 		}
 
-		node.classList.toggle(
-			"first_slide",
-			slider.scroll < slider.slide_width * 0.5
-		);
-		node.classList.toggle(
-			"last_slide",
-			slider.scroll > slider.max_scroll - slider.slide_width * 0.5
-		);
+		node.classList.toggle("first_slide", slider.scroll < slider.slide_width * 0.5);
+		node.classList.toggle("last_slide", slider.scroll > slider.max_scroll - slider.slide_width * 0.5);
 
 		if (slider.grabbed_at_scroll !== undefined) {
 			const targetvelocity = slider.last_input_x - slider.input_x;
 
-			slider.velocity =
-				targetvelocity * follow_rate + slider.velocity * (1 - follow_rate);
+			slider.velocity = targetvelocity * follow_rate + slider.velocity * (1 - follow_rate);
 			slider.last_input_x = slider.input_x;
 
-			let target_scroll =
-				slider.grabbed_at_scroll + slider.grabbed_input_x - slider.input_x;
+			let target_scroll = slider.grabbed_at_scroll + slider.grabbed_input_x - slider.input_x;
 
 			/**
 			 *
@@ -89,13 +88,11 @@ function animateSliders() {
 			};
 
 			if (target_scroll > slider.max_scroll) {
-				target_scroll =
-					slider.max_scroll + smooth(target_scroll - slider.max_scroll);
+				target_scroll = slider.max_scroll + smooth(target_scroll - slider.max_scroll);
 			}
 
 			if (target_scroll < slider.min_scroll) {
-				target_scroll =
-					slider.min_scroll - smooth(slider.min_scroll - target_scroll);
+				target_scroll = slider.min_scroll - smooth(slider.min_scroll - target_scroll);
 			}
 
 			slider.scroll = target_scroll;
@@ -105,37 +102,26 @@ function animateSliders() {
 				const sensitivity_speed = 2500 / slider.slide_width; // avg swipe speed
 				let jumps = slider.velocity / sensitivity_speed;
 
-				const max_jump = Math.floor(
-					node.offsetWidth / slider.slide_width + 0.01
-				);
+				const max_jump = Math.floor(node.offsetWidth / slider.slide_width + 0.01);
 
 				jumps += Math.round(slider.scroll / slider.slide_width) - was_slide_id;
 
 				if (Math.round(jumps) === 0 && Math.abs(slider.velocity) > 0.5) {
 					jumps = Math.sign(slider.velocity);
 				}
-				slider.set_slide(
-					slider.slide_id + Math.round(clamp(-max_jump, jumps, max_jump))
-				);
+				slider.set_slide(slider.slide_id + Math.round(clamp(-max_jump, jumps, max_jump)));
 
 				slider.just_released = false;
 			}
 
-			const target_scroll = clamp(
-				slider.min_scroll,
-				slider.slide_id * slider.slide_width,
-				slider.max_scroll
-			);
+			const target_scroll = clamp(slider.min_scroll, slider.slide_id * slider.slide_width, slider.max_scroll);
 
-			slider.velocity +=
-				(target_scroll - (slider.scroll + slider.velocity * 10)) * 0.05;
+			slider.velocity += (target_scroll - (slider.scroll + slider.velocity * 10)) * 0.05;
 
 			slider.scroll += slider.velocity;
 		}
 
-		slides_wrapper.style.transform = `translateX(${
-			Math.round(-slider.scroll * 10) * 0.1
-		}px)`;
+		slides_wrapper.style.transform = `translateX(${Math.round(-slider.scroll * 10) * 0.1}px)`;
 	});
 
 	requestAnimationFrame(animateSliders);
@@ -217,24 +203,16 @@ function initSlider(elem) {
 
 			const slider_width = node.offsetWidth;
 			const visible_slide_count = slider_width / target_width;
-			const slide_width =
-				(target_width * visible_slide_count) /
-				(Math.max(1, Math.round(visible_slide_count)) + slider.edge_offset);
+			const slide_width = (target_width * visible_slide_count) / (Math.max(1, Math.round(visible_slide_count)) + slider.edge_offset);
 
 			slider.slide_width = slide_width;
 			node.style.setProperty("--slide_width", `${slide_width.toFixed(1)}px`);
 		},
 		set_slide: (id, options = {}) => {
-			const slide_count = Math.round(
-				(slider.max_scroll + slider.edge_offset) / slider.slide_width
-			);
+			const slide_count = Math.round((slider.max_scroll + slider.edge_offset) / slider.slide_width);
 			const was_slide = slider.slide_id;
 			slider.slide_id = clamp(0, id, slide_count);
-			if (
-				options.duration === 0 ||
-				(options.big_jump_duration === 0 &&
-					Math.abs(slider.slide_id - was_slide) > 1)
-			) {
+			if (options.duration === 0 || (options.big_jump_duration === 0 && Math.abs(slider.slide_id - was_slide) > 1)) {
 				slider.scroll = slider.slide_id * slider.slide_width;
 				slider.velocity = 0;
 			}
@@ -269,9 +247,7 @@ function initSlider(elem) {
 			});
 			slider.slide_nodes[id].classList.add("selected_slide");
 
-			const offset = Math.floor(
-				(node.clientWidth / slider.slide_width - 1) / 2 + 0.05
-			);
+			const offset = Math.floor((node.clientWidth / slider.slide_width - 1) / 2 + 0.05);
 
 			slider.set_slide(id - offset);
 		},
@@ -380,18 +356,16 @@ function initSlider(elem) {
 			});
 
 			let slide_id = -1;
-			slider_below_node._slider.slides_wrapper
-				._direct_children()
-				.forEach((slide) => {
-					slide_id++;
-					const slide_id_val = slide_id;
-					slide.addEventListener("click", () => {
-						slider_below.release();
-						slider_below.just_released = false; // lol
-						slider_below.select_slide(slide_id_val);
-						slider.set_slide(slide_id_val, { big_jump_duration: 0 });
-					});
+			slider_below_node._slider.slides_wrapper._direct_children().forEach((slide) => {
+				slide_id++;
+				const slide_id_val = slide_id;
+				slide.addEventListener("click", () => {
+					slider_below.release();
+					slider_below.just_released = false; // lol
+					slider_below.select_slide(slide_id_val);
+					slider.set_slide(slide_id_val, { big_jump_duration: 0 });
 				});
+			});
 		}
 	}
 
@@ -441,9 +415,6 @@ window.addEventListener("resize", () => {
 
 function resizeSlidersCallback() {
 	$$(`[data-nav_out_from]`).forEach((e) => {
-		e.classList.toggle(
-			"nav_out",
-			window.innerWidth > evalCss(e.dataset.nav_out_from)
-		);
+		e.classList.toggle("nav_out", window.innerWidth > evalCss(e.dataset.nav_out_from));
 	});
 }
