@@ -36,7 +36,7 @@ function productFeatureOptionComp(comp, parent, data = { option_id: -1, name: ""
                 <div class="label">Opcje</div> 
                 <list-comp data-bind="{${data.sub_options}}">
                     <product-feature-option-comp></product-feature-option-comp>
-                <list-comp>
+                </list-comp>
     
                 <div html="{${JSON.stringify(data)}}"></div>
             `,

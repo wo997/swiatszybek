@@ -149,7 +149,6 @@ function listComp(comp, parent, data = []) {
 						directComps(child).forEach((dc) => {
 							const constructor = snakeCase(dc.tagName.toLocaleLowerCase());
 							if (window[constructor]) {
-								console.log(constructor, dc, comp, row_data);
 								// @ts-ignore
 								window[constructor](dc, comp, row_data);
 							}

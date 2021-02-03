@@ -42,7 +42,7 @@ function productFeatureComp(comp, parent, data = { feature_id: -1, name: "", opt
             </div>
             <list-comp data-bind="{${data.options}}">
                 <product-feature-option-comp></product-feature-option-comp>
-            <list-comp>
+            </list-comp>
 
             <div html="{${JSON.stringify(data)}}"></div>
         `,
