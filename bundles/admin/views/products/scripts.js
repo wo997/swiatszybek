@@ -16,8 +16,8 @@ domload(() => {
 		empty_html: /*html*/ `Brak produktów`,
 		label: "Produkty",
 		after_label: /*html*/ `
-            <a href="${STATIC_URLS["ADMIN"]}produkt" style="margin:0 10px" class="btn important">
-                Dodaj nowy <i class="fas fa-plus"></i>
+            <a href="${STATIC_URLS["ADMIN"]}produkt" class="btn important">
+                Dodaj <i class="fas fa-plus"></i>
             </a>
         `,
 	});
