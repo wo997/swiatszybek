@@ -84,7 +84,7 @@ domload(() => {
 		label: "Cechy produktów",
 		after_label: /*html*/ `
             <a href="${STATIC_URLS["ADMIN"]}produkt" style="margin:0 10px" class="btn important">
-                Dodaj nową HALO TO NIE MA BYĆ LINK TYLKO MODAL KOLEJNY <i class="fas fa-plus"></i>
+                Dodaj nową <i class="fas fa-plus"></i>
             </a>
         `,
 	});

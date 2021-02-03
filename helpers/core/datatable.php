@@ -134,7 +134,6 @@ function getRelevanceQuery($fields, $words)
  * paginateData
  *
  * @param  PaginationParams $params
- * @return void
  */
 function paginateData($params = [])
 {
@@ -241,9 +240,10 @@ function paginateData($params = [])
     // $page_idCount = $page_idCount * 4;
     // $results = array_merge($results, $results, $results, $results);
 
-    $responseArray = ["page_count" => $page_idCount, "total_rows" => $totalRows, "rows" => $results];
+    // a dynamic type would be dope but indexing gets tricky
+    $res = ["page_count" => $page_idCount, "total_rows" => $totalRows, "rows" => $results];
 
-    return isset($params["raw"]) ? $responseArray : json_encode($responseArray);
+    return $res;
 }
 
 /**
