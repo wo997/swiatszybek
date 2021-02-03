@@ -18,7 +18,7 @@ define("MESSAGE_OK_BUTTON", "
     </button>
 ");
 
-function json_response($response)
+function jsonResponse($response)
 {
     die(json_encode($response));
 }
@@ -27,7 +27,7 @@ function redirect($url)
 {
     if (IS_XHR) {
         $_SESSION["redirect"] = $url;
-        json_response(["redirect" => $url]);
+        jsonResponse(["redirect" => $url]);
     } else {
         header("Location: $url");
         die;
@@ -40,7 +40,7 @@ function reload($ask = false)
         if ($ask) {
             echo "[reload_required]";
         } else {
-            json_response(["reload" => true]);
+            jsonResponse(["reload" => true]);
         }
     } else {
         ob_clean();

@@ -9,4 +9,4 @@ if ($register["success"]) {
     $response["email_client_url"] = User::getEmailclientUrl($_POST["email"]);
 }
 
-json_response($response);
+jsonResponse($response);

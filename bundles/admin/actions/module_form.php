@@ -22,7 +22,7 @@ if (isset($_POST["module_name"])) {
         $form_data = [];
     }
 
-    json_response([
+    jsonResponse([
         "form" => $form,
         "form_data" => $form_data,
     ]);

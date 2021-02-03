@@ -9,10 +9,10 @@ if (isset($_POST['scope_item_id'])) {
     $where .= " AND scope_item_id = " . intval($_POST['scope_item_id']);
 }
 
-echo paginateData([
+jsonResponse(paginateData([
     "select" => "imie, nazwisko, email, logged_at, log, previous_state, current_state",
     "from" => "activity_log a LEFT JOIN users u USING(user_id)",
     "where" => $where,
     "order" => "a.activity_id DESC",
     "quick_search_fields" => ["imie", "nazwisko", "email", "log"],
-]);
+]));

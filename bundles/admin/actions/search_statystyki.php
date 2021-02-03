@@ -23,8 +23,8 @@ $variants = DB::fetchArr(
     ORDER BY SUM(total_price) DESC"
 );
 
-echo json_encode([
+jsonResponse([
     "zamowienia" => $zamowienia,
     "oplacono" => $oplacono,
     "variants" => $variants
-], JSON_UNESCAPED_UNICODE);
+]);
