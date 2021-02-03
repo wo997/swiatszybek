@@ -212,9 +212,9 @@ textarea {
 
 	&:disabled,
 	&.disabled {
-		opacity: 0.7;
+		opacity: 0.4;
 		cursor: not-allowed !important;
-		filter: contrast(0.85);
+		filter: contrast(0.5);
 	}
 
 	&.fill {

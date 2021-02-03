@@ -59,7 +59,7 @@ if (isset($_POST['search'])) { // return list
     $where = "1";
     $searchQuery = getSearchQuery([
         "main_search_value" => $_POST['search'],
-        "main_search_fields" => ["file_path", "uploaded_file_name"]
+        "quick_search_fields" => ["file_path", "uploaded_file_name"]
     ]);
     $where .= $searchQuery;
 

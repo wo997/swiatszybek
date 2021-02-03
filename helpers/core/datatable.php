@@ -2,21 +2,21 @@
 
 function getSearchQuery($data)
 {
-    $main_search_fields = $data["main_search_fields"];
+    $quick_search_fields = $data["quick_search_fields"];
     $search_type = def($data, "search_type", "regular");
 
-    if (!$main_search_fields) {
+    if (!$quick_search_fields) {
         return "";
     }
-    $main_search_value = trim($data["main_search_value"]);
-    $main_search_value = preg_replace("/\s{2,}/", " ", $main_search_value);
+    $quick_search_value = trim($data["quick_search"]);
+    $quick_search_value = preg_replace("/\s{2,}/", " ", $quick_search_value);
 
-    $words = explode(" ", $main_search_value);
+    $words = explode(" ", $quick_search_value);
 
     if ($search_type == "extended") {
-        return getRelevanceQuery($main_search_fields, $words);
+        return getRelevanceQuery($quick_search_fields, $words);
     } else {
-        return getRegularSearchQuery($main_search_fields, $words);
+        return getRegularSearchQuery($quick_search_fields, $words);
     }
 }
 
@@ -111,8 +111,8 @@ function getRelevanceQuery($fields, $words)
  * @typedef DatatableParams {
  * filters?: string
  * order?: string
- * main_search?: string
- * page?: number
+ * quick_search?: string
+ * page_id?: number
  * }
  */
 
@@ -124,7 +124,7 @@ function getRelevanceQuery($fields, $words)
  * filters?: string
  * order?: string
  * group?: string
- * main_search_fields?: array
+ * quick_search_fields?: array
  * renderers?: array
  * datatable_params?: DatatableParams
  * }
@@ -164,13 +164,13 @@ function paginateData($params = [])
         }
     }
 
-    $main_search_value = def($params, "search", def($_POST, 'search'));
-    $main_search_fields = def($params, "main_search_fields", []);
+    $quick_search = def($params, ["datatable_params", "quick_search"], "");
+    $quick_search_fields = def($params, "quick_search_fields", []);
     $search_type = def($params, "search_type", "regular");
 
     $search_query = getSearchQuery([
-        "main_search_value" => $main_search_value,
-        "main_search_fields" => $main_search_fields,
+        "quick_search" => $quick_search,
+        "quick_search_fields" => $quick_search_fields,
         "search_type" => $search_type,
     ]);
 
@@ -194,7 +194,7 @@ function paginateData($params = [])
 
             $frmq = "$from WHERE $where $group";
             if ($group) {
-                $frmq = "(SELECT $order_key, " . join(",", $main_search_fields) . " FROM $frmq) t";
+                $frmq = "(SELECT $order_key, " . join(",", $quick_search_fields) . " FROM $frmq) t";
             }
             $order_info = DB::fetchRow("SELECT MAX($test_order_key) as order_max, MIN($test_order_key) as order_min, MAX($search_query) as relevance_max FROM $from WHERE $where");
 

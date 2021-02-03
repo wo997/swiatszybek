@@ -32,5 +32,5 @@ echo paginateData([
     "from" => "variant v LEFT JOIN products p USING(product_id)",
     "where" => $where,
     "order" => $order,
-    "main_search_fields" => ["p.title", "v.name", "v.name"],
+    "quick_search_fields" => ["p.title", "v.name", "v.name"],
 ]);

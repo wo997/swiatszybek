@@ -4,5 +4,5 @@ echo paginateData([
     "select" => "page_id, url, seo_title, seo_description, published",
     "from" => "page",
     "order" => "page_id DESC",
-    "main_search_fields" => ["url", "seo_title", "seo_description"],
+    "quick_search_fields" => ["url", "seo_title", "seo_description"],
 ]);

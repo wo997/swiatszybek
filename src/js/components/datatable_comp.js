@@ -30,6 +30,7 @@
  *  sort?: DatatableSortData | undefined
  *  filters?: DatatableFilterData[]
  *  pagination_data?: PaginationCompData
+ *  quick_search?: string
  * }} DatatableCompData
  *
  * @typedef {{
@@ -75,7 +76,7 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 		}
 		comp._search_timeout = setTimeout(() => {
 			if (comp._search_request) {
-				//node._search_request.abort(); // causes a shitty delay
+				comp._search_request.abort();
 				comp._search_request = undefined;
 			}
 
@@ -88,6 +89,7 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 			}
 			datatable_params.row_count = comp._data.pagination_data.row_count;
 			datatable_params.page_id = comp._data.pagination_data.page_id;
+			datatable_params.quick_search = comp._data.quick_search;
 
 			comp._search_request = xhr({
 				url: comp._data.search_url,
@@ -148,6 +150,10 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 			render: () => {
 				const cd = comp._changed_data;
 
+				if (cd.quick_search) {
+					comp._datatable_search(300);
+				}
+
 				if (
 					!comp._prev_data ||
 					cd.sort ||
@@ -199,7 +205,7 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 					comp._nodes.table_header._set_content(header_html);
 					comp._nodes.style._set_content(styles_html);
 
-					comp._datatable_search(100);
+					comp._datatable_search(0);
 				}
 			},
 		});
@@ -213,7 +219,7 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 									STATIC_URLS["ADMIN"]
 								}produkt" style="margin:0 10px" class="btn important">Dodaj nowy <i class="fas fa-plus"></i></a>
                 <div class="float-icon" style="display: inline-block;margin-left:auto">
-                    <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
+                    <input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}">
                     <i class="fas fa-search"></i>
                 </div>
             </div>

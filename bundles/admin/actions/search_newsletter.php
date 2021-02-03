@@ -5,5 +5,5 @@ echo paginateData([
     "from" => "newsletter n",
     "where" => "n.accepted = 1",
     "order" => "person_id DESC",
-    "main_search_fields" => ["n.email"],
+    "quick_search_fields" => ["n.email"],
 ]);

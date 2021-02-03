@@ -20,7 +20,7 @@ $responseArray = paginateData([
     "from" => "product_categories c",
     "where" => $where,
     "order" => "c.kolejnosc ASC",
-    "main_search_fields" => ["c.title"],
+    "quick_search_fields" => ["c.title"],
     "renderers" => [
         "description_text" => function ($row) {
             return strip_tags($row["description"]);

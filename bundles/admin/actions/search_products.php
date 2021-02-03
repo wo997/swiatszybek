@@ -8,6 +8,6 @@ echo paginateData([
     "where" => $where,
     "group" => "p.product_id",
     "order" => "p.product_id DESC",
-    "main_search_fields" => ["p.title"],
+    "quick_search_fields" => ["p.title"],
     "datatable_params" => json_decode($_POST["datatable_params"], true)
 ]);

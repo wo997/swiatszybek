@@ -20,7 +20,7 @@ $responseArray = paginateData([
     "where" => $where,
     "order" => "a.kolejnosc ASC",
     "group" => "attribute_id",
-    "main_search_fields" => ["a.name"],
+    "quick_search_fields" => ["a.name"],
     "raw" => true
 ]);
 

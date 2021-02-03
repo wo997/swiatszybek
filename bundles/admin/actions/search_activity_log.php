@@ -14,5 +14,5 @@ echo paginateData([
     "from" => "activity_log a LEFT JOIN users u USING(user_id)",
     "where" => $where,
     "order" => "a.activity_id DESC",
-    "main_search_fields" => ["imie", "nazwisko", "email", "log"],
+    "quick_search_fields" => ["imie", "nazwisko", "email", "log"],
 ]);

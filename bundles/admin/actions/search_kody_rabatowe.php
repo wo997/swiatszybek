@@ -9,5 +9,5 @@ echo paginateData([
     "from" => "kody_rabatowe k",
     "where" => $where,
     "order" => "k.kod_id DESC",
-    "main_search_fields" => ["k.kod", "k.kwota", $getUserListQuery],
+    "quick_search_fields" => ["k.kod", "k.kwota", $getUserListQuery],
 ]);

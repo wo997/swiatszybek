@@ -19,7 +19,7 @@ echo paginateData([
     "from" => "menu m LEFT JOIN cms USING (cms_id) LEFT JOIN products i USING(product_id)",
     "where" => $where,
     "order" => "m.kolejnosc ASC",
-    "main_search_fields" => ["m.title"],
+    "quick_search_fields" => ["m.title"],
     "renderers" => [
         "actual_link" => function ($row) {
             return getMenuLink($row);

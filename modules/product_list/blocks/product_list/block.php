@@ -98,7 +98,7 @@ $params = [
     "order" => $order_by,
     "group" => "product_id",
     "raw" => true,
-    "main_search_fields" => ["title", "name"],
+    "quick_search_fields" => ["title", "name"],
 ];
 
 $price_info = DB::fetchRow("SELECT MIN(price_min) as min, MAX(price_max) as max FROM products p $join WHERE " . str_replace($price_query, "", $where));

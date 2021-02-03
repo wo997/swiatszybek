@@ -5,5 +5,5 @@ echo paginateData([
     "from" => "slides",
     "where" => "",
     "order" => "kolejnosc ASC",
-    "main_search_fields" => ["content_desktop", "content_mobile"],
+    "quick_search_fields" => ["content_desktop", "content_mobile"],
 ]);

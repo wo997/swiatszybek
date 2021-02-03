@@ -16,7 +16,7 @@ echo paginateData([
     "from" => "comments c LEFT JOIN products i using(product_id)",
     "where" => $where,
     "order" => "comment_id DESC",
-    "main_search_fields" => ["c.pseudonim", "c.tresc", "i.title"],
+    "quick_search_fields" => ["c.pseudonim", "c.tresc", "i.title"],
     "renderers" => [
         "rating" => function ($row) {
             return ratingBlock($row["rating"]);
