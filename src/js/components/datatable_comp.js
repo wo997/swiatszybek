@@ -31,6 +31,7 @@
  *  filters?: DatatableFilterData[]
  *  pagination_data?: PaginationCompData
  *  quick_search?: string
+ *  empty_html?: string
  * }} DatatableCompData
  *
  * @typedef {{
@@ -41,6 +42,7 @@
  *  _nodes: {
  *      table_header: PiepNode
  *      style: PiepNode
+ *      empty_table: PiepNode
  *  }
  * _datatable_search(delay?: number)
  * _search_timeout: number
@@ -207,6 +209,8 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 
 					comp._datatable_search(0);
 				}
+
+				expand(comp._nodes.empty_table, comp._data.rows.length === 0);
 			},
 		});
 	};
@@ -230,6 +234,10 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
                 <list-comp data-bind="{${data.rows}}" ${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}>
                     <datatable-row-comp></datatable-row-comp>
                 </list-comp>
+            </div>
+
+            <div class="expand_y" data-node="empty_table">
+                <div class="empty_table" html="{${data.empty_html}}"></div>
             </div>
 
             <pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>

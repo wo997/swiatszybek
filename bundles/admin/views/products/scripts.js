@@ -13,6 +13,7 @@ domload(() => {
 			{ label: "W magazynie", key: "stock", width: "200px", sortable: true, searchable: "number" },
 		],
 		primary_key: "product_id",
+		empty_html: /*html*/ `Brak produktów`,
 	});
 
 	// var tableName = "mytable";
