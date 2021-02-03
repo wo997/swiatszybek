@@ -11,7 +11,7 @@ $where = "1 $product_id $canSee";
 if ($status == "n")
     $where .= " AND accepted = 0";
 
-echo paginateData([
+jsonResponse(paginateData([
     "select" => "dodano, pseudonim, tresc, user_id, comment_id, rating, accepted, product_id, title, link",
     "from" => "comments c LEFT JOIN products i using(product_id)",
     "where" => $where,
@@ -28,4 +28,4 @@ echo paginateData([
             return dateDifference($row["dodano"]);
         }
     ]
-]);
+]));

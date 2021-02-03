@@ -9,4 +9,4 @@
 
 $cart = User::getCurrent()->cart;
 $cart->setProductQty($_POST["product_id"], $_POST["qty"]);
-json_response(["cart" => $cart->getProducts()]);
+jsonResponse(["cart" => $cart->getProducts()]);

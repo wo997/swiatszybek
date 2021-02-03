@@ -32,7 +32,6 @@ $responseArray = paginateData([
             return array_map("intval", explode(",", $row["attributes"]));
         },
     ],
-    "raw" => true
 ]);
 
 if (isset($_POST["include_attributes"])) {
@@ -42,4 +41,4 @@ if (isset($_POST["include_attributes"])) {
     }
 }
 
-json_response($responseArray);
+jsonResponse($responseArray);

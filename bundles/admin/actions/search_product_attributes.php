@@ -21,7 +21,6 @@ $responseArray = paginateData([
     "order" => "a.kolejnosc ASC",
     "group" => "attribute_id",
     "quick_search_fields" => ["a.name"],
-    "raw" => true
 ]);
 
 if (isset($_POST["everything"])) {
@@ -34,4 +33,4 @@ if (isset($_POST["everything"])) {
     }
 }
 
-json_response($responseArray);
+jsonResponse($responseArray);

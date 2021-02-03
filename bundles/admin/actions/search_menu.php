@@ -12,7 +12,7 @@ if (isset($_POST["category_id"])) {
     $where .= " AND parent_id = " . intval($_POST["parent_id"]);
 }
 
-echo paginateData([
+jsonResponse(paginateData([
     "select" => "category_id, m.title, (
         SELECT GROUP_CONCAT(sm.title SEPARATOR ', ') FROM menu sm WHERE sm.parent_id = m.category_id) as subcategories,
     m.published, parent_id, url, cms_id, cms.title as cms_title, cms.link as cms_url, i.product_id as product_id, i.title as product_title, i.link as product_link",
@@ -25,4 +25,4 @@ echo paginateData([
             return getMenuLink($row);
         }
     ]
-]);
+]));

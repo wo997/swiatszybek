@@ -135,7 +135,7 @@
 // }
 
 // if ($response) {
-//     json_response($response);
+//     jsonResponse($response);
 // } else {
 //     die;
 // }
