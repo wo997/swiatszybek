@@ -74,6 +74,13 @@ function listComp(comp, parent, data = []) {
 					return;
 				}
 
+				if (comp.classList.contains("animating")) {
+					finishNodeAnimation(comp);
+					comp._getRows().forEach((e) => {
+						finishNodeAnimation(e);
+					});
+				}
+
 				const diff_with_target_index = diff
 					.map((e) => ({
 						...e,
@@ -250,13 +257,14 @@ function listComp(comp, parent, data = []) {
 					const ronscr = (r) => {
 						return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
 					};
+
 					child.style.zIndex = "" + Math.round((Math.abs(off_x) + Math.abs(off_y)) * 0.02 + (add || remove ? 1 : 2));
 
-					if ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after))) {
-						setTimeout(() => {
-							child.style.zIndex = "";
-						}, animation_duration);
+					setTimeout(() => {
+						child.style.zIndex = "";
+					}, animation_duration);
 
+					if ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after))) {
 						let step_0 = "";
 						let step_1 = "";
 
