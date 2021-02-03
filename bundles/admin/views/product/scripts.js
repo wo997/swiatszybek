@@ -67,18 +67,35 @@ domload(() => {
 			},
 		],
 	});
-});
 
-registerModalContent(/*html*/ `
-    <div id="selectProductVariant" data-expand data-dismissable>
-        <div class="modal-body">
-            <div class="custom-toolbar">
-                <span class="title">Cechy produktów</span>
-                <button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
-            </div>
-            <div class="stretch-vertical">
-                Cechy produktów tutaj
-            </div>
-        </div>
-    </div>
-`);
+	/** @type {DatatableComp} */
+	// @ts-ignore
+	const dt_product_features = $(".dt_product_features");
+
+	datatableComp(dt_product_features, undefined, {
+		search_url: STATIC_URLS["ADMIN"] + "search_product_attributes",
+		columns: [
+			{ label: "Cecha", key: "name", width: "300px", sortable: true, searchable: "string" },
+			{ label: "Typ danych", key: "data_type", width: "200px", sortable: true, searchable: "string" },
+			{ label: "Wartości", key: "attr_values", width: "200px", sortable: true, searchable: "number" },
+		],
+		primary_key: "attribute_id",
+		empty_html: /*html*/ `Brak cech`,
+		label: "Cechy produktów",
+		after_label: /*html*/ `
+            <a href="${STATIC_URLS["ADMIN"]}produkt" style="margin:0 10px" class="btn important">
+                Dodaj nową HALO TO NIE MA BYĆ LINK TYLKO MODAL KOLEJNY <i class="fas fa-plus"></i>
+            </a>
+        `,
+	});
+
+	// "select" => "attribute_id, name, data_type,
+	//     GROUP_CONCAT(v.value ORDER BY v.kolejnosc ASC) as attr_values
+	// ",
+	// "from" => "product_attributes a LEFT JOIN attribute_values v USING(attribute_id)",
+	// "where" => $where,
+	// "order" => "a.kolejnosc ASC",
+	// "group" => "attribute_id",
+	// "quick_search_fields" => ["a.name"],
+	// "raw" => true
+});

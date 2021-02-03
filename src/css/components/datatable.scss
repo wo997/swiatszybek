@@ -22,6 +22,9 @@ datatable-comp {
 	.dt_cell:not(:last-child) {
 		border-right: 1px solid #0001;
 	}
+	&.searching .table_body {
+		filter: contrast(0.9);
+	}
 	.table_body .dt_cell {
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -68,10 +71,11 @@ datatable-comp {
 	.empty_table {
 		padding: 5px;
 		text-align: center;
-		background: #00000005;
+		background: #fff7;
 		border: 1px solid #ccc;
 		border-bottom-left-radius: 4px;
 		border-bottom-right-radius: 4px;
 		color: #555;
+		border-top-width: 0;
 	}
 }

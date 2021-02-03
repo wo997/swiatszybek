@@ -32,6 +32,8 @@
  *  pagination_data?: PaginationCompData
  *  quick_search?: string
  *  empty_html?: string
+ *  label?: string
+ *  after_label?: string
  * }} DatatableCompData
  *
  * @typedef {{
@@ -93,6 +95,7 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 			datatable_params.page_id = comp._data.pagination_data.page_id;
 			datatable_params.quick_search = comp._data.quick_search;
 
+			comp.classList.add("searching");
 			comp._search_request = xhr({
 				url: comp._data.search_url,
 				params: {
@@ -107,30 +110,14 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 						return;
 					}
 
-					//console.log(res.rows);
-					//comp._data.dataset = [];
 					comp._data.dataset = res.rows;
 					comp._data.pagination_data.page_count = res.page_count;
 					comp._data.pagination_data.total_rows = res.total_rows;
 
-					// maybe for more than 20 rows it makes sense, not ideal though
-					// let i = 0;
-					// res.rows.forEach((e) => {
-					// 	i++;
-					// 	if (i > 5) {
-					// 		setTimeout(() => {
-					// 			comp._data.dataset.push(e);
-					// 		}, 50);
-					// 	} else {
-					// 		comp._data.dataset.push(e);
-					// 	}
-					// });
 					comp._set_data();
-					// setTimeout(() => {
-					// 	comp._set_data();
-					// }, 100);
 
 					comp.classList.remove("freeze");
+					comp.classList.remove("searching");
 				},
 			});
 		}, delay);
@@ -218,10 +205,8 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 	createComp(comp, parent, data, {
 		template: /*html*/ `
             <div style="margin-bottom:10px;display:flex;align-items:center">
-                <span class="datatable_label">Produkty</span>
-                <a href="${
-									STATIC_URLS["ADMIN"]
-								}produkt" style="margin:0 10px" class="btn important">Dodaj nowy <i class="fas fa-plus"></i></a>
+                <span class="datatable_label" html="{${data.label}}"></span>
+                <span html="{${data.after_label}}"></span>
                 <div class="float-icon" style="display: inline-block;margin-left:auto">
                     <input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}">
                     <i class="fas fa-search"></i>
