@@ -50,7 +50,7 @@ function productVariantComp(comp, parent, data = { feature_id: -1, options: [] }
             </div>
 
             <span html="{${"Opcje: (" + data.options.length + ")"}}"></span>
-            <button data-node="add_option_btn" class="btn primary small">Dodaj <i class="fas fa-plus"></i></button>
+            <button data-node="add_option_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 
             <list-comp data-bind="{${data.options}}" class="options">
                 <product-variant-option-comp></product-variant-option-comp>

@@ -63,7 +63,7 @@ function productComp(
                 <div data-node="case_sell_by_qty" class="expand_y">
                     <div class="label">
                         <span html="{${"Warianty (" + data.variants.length + ")"}}"></span>
-                        <button data-node="add_variant_btn" class="btn primary small">Dodaj <i class="fas fa-plus"></i></button>
+                        <button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
                     </div>
                     <list-comp data-bind="{${data.variants}}" class="variants">
                         <product-variant-comp></product-variant-comp>
