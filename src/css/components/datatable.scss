@@ -55,6 +55,8 @@ datatable-comp {
 		border-top-left-radius: 4px;
 		border-top-right-radius: 4px;
 		z-index: 200;
+		position: sticky;
+		top: 0;
 	}
 	.dt_header_controls > .btn {
 		width: 28px;

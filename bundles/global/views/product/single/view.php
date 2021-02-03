@@ -255,7 +255,7 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
                     foreach ($variants as $variant) {
                     ?>
                         <span class="label"><?= $variant["filter_name"] ?></span>
-                        <p-radio class="variant_radio blocks unselectable columns_<?= def($variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($variant, "height", "80px") ?>' data-variant_id="<?= $variant["variant_id"] ?>" data-number>
+                        <p-radio class="variant_radio blocks columns_<?= def($variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($variant, "height", "80px") ?>' data-variant_id="<?= $variant["variant_id"] ?>" data-number>
                             <?php
                             foreach ($variant["variant_options"] as $option) {
                             ?>

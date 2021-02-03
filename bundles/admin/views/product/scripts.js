@@ -54,7 +54,7 @@ domload(() => {
                     <button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
                 </div>
                 <div class="scroll-panel scroll-shadow panel-padding">
-                    <product-feature-comp class="dt_product_features"></product-feature-comp>
+                    <product-feature-comp></product-feature-comp>
                 </div>
             </div>
         </div>
@@ -112,4 +112,10 @@ domload(() => {
 			});
 		}
 	});
+
+	/** @type {ProductFeatureComp} */
+	// @ts-ignore
+	const product_feature_comp = $("#addProductFeature product-feature-comp");
+
+	productFeatureComp(product_feature_comp, undefined, { name: "", feature_id: -1, options: [] });
 });

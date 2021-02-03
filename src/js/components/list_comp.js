@@ -40,11 +40,7 @@ function listComp(comp, parent, data = []) {
 		};
 	};
 
-	comp._set_data = (data = undefined, options = {}) => {
-		if (data === undefined) {
-			data = comp._data;
-		}
-
+	comp._set_data = (data, options = {}) => {
 		let nextRowId = 0;
 
 		data.forEach((row_data, index) => {
@@ -72,7 +68,7 @@ function listComp(comp, parent, data = []) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				const diff = diffArrays(comp._prev_data, comp._data, (e) => e.row_id);
+				const diff = diffArrays(comp._prev_data, data, (e) => e.row_id);
 
 				if (diff.length === 0) {
 					return;
@@ -147,12 +143,13 @@ function listComp(comp, parent, data = []) {
 					comp.insertBefore(child, comp.children[target_index_real]);
 
 					if (add) {
-						const row_data = comp._data[diff_info.to];
+						const row_data = data[diff_info.to];
 						child._set_content(comp._row_template);
 
 						directComps(child).forEach((dc) => {
 							const constructor = snakeCase(dc.tagName.toLocaleLowerCase());
 							if (window[constructor]) {
+								console.log(constructor, dc, comp, row_data);
 								// @ts-ignore
 								window[constructor](dc, comp, row_data);
 							}
@@ -333,17 +330,18 @@ function listComp(comp, parent, data = []) {
 				});
 				if (remove_index !== -1) {
 					comp._data.splice(remove_index, 1);
-					comp._set_data();
+					comp._render();
 				}
 			};
 
 			comp._moveRow = (from, to) => {
-				from = clamp(0, from, comp._data.length - 1);
-				to = clamp(0, to, comp._data.length - 1);
+				const data = comp._data;
+				from = clamp(0, from, data.length - 1);
+				to = clamp(0, to, data.length - 1);
 
-				const temp = comp._data.splice(from, 1);
-				comp._data.splice(to, 0, ...temp);
-				comp._set_data();
+				const temp = data.splice(from, 1);
+				data.splice(to, 0, ...temp);
+				comp._render();
 			};
 		},
 	});

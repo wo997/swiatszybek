@@ -17,6 +17,10 @@ product-comp {
 		}
 	}
 
+	list-comp:empty {
+		border-width: 0;
+	}
+
 	.variant_header,
 	.option_header {
 		display: flex;

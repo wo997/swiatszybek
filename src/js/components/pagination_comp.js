@@ -28,11 +28,7 @@
  * @param {PaginationCompData} data
  */
 function paginationComp(comp, parent, data = {}) {
-	comp._set_data = (data = undefined, options = {}) => {
-		if (data === undefined) {
-			data = comp._data;
-		}
-
+	comp._set_data = (data, options = {}) => {
 		data.page_id = def(data.page_id, 0);
 		data.page_count = def(data.page_count, 0);
 		data.row_count = def(data.row_count, 20);
@@ -43,17 +39,17 @@ function paginationComp(comp, parent, data = {}) {
 			render: () => {
 				const print_page = (i) => {
 					return comp._data.total_rows > 0
-						? `${i + 1} (${i * comp._data.row_count + 1} - ${Math.min((i + 1) * comp._data.row_count, comp._data.total_rows)})`
+						? `${i + 1} (${i * data.row_count + 1} - ${Math.min((i + 1) * data.row_count, data.total_rows)})`
 						: " ".repeat(7);
 				};
 
 				let options = "";
-				for (let i = 0; i < comp._data.page_count; i++) {
+				for (let i = 0; i < data.page_count; i++) {
 					options += /*html*/ `<option value="${i}">${print_page(i)}</option>`;
 				}
 				comp._nodes.select._set_content(options);
-				comp._nodes.select_overlay._set_content(print_page(comp._data.page_id));
-				comp._nodes.select.style.width = print_page(comp._data.page_count - 1).length * 7 + 18 + "px";
+				comp._nodes.select_overlay._set_content(print_page(data.page_id));
+				comp._nodes.select.style.width = print_page(data.page_count - 1).length * 7 + 18 + "px";
 			},
 		});
 	};
@@ -86,11 +82,11 @@ function paginationComp(comp, parent, data = {}) {
 		initialize: () => {
 			comp._nodes.next.addEventListener("click", () => {
 				comp._data.page_id = Math.min(comp._data.page_id + 1, comp._data.page_count - 1);
-				comp._set_data();
+				comp._render();
 			});
 			comp._nodes.prev.addEventListener("click", () => {
 				comp._data.page_id = Math.max(0, comp._data.page_id - 1);
-				comp._set_data();
+				comp._render();
 			});
 		},
 	});

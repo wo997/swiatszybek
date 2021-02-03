@@ -23,7 +23,7 @@
  * @param {PaginationBtnCompData} data
  */
 function paginationBtnComp(comp, parent, data) {
-	comp._set_data = (data = undefined, options = {}) => {
+	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {},
@@ -44,7 +44,7 @@ function paginationBtnComp(comp, parent, data) {
 				// @ts-ignore
 				const parent = comp._parent_comp._parent_comp;
 				parent._data.page_id = comp._data.page_id;
-				parent._set_data();
+				parent._render();
 			});
 		},
 	});

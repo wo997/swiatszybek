@@ -85,36 +85,37 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 			}
 
 			const datatable_params = {};
-			if (comp._data.sort) {
-				datatable_params.order = comp._data.sort.key + " " + comp._data.sort.order.toUpperCase();
+			const data = comp._data;
+			if (data.sort) {
+				datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
 			}
-			if (comp._data.filters) {
-				datatable_params.filters = comp._data.filters;
+			if (data.filters) {
+				datatable_params.filters = data.filters;
 			}
-			datatable_params.row_count = comp._data.pagination_data.row_count;
-			datatable_params.page_id = comp._data.pagination_data.page_id;
-			datatable_params.quick_search = comp._data.quick_search;
+			datatable_params.row_count = data.pagination_data.row_count;
+			datatable_params.page_id = data.pagination_data.page_id;
+			datatable_params.quick_search = data.quick_search;
 
 			comp.classList.add("searching");
 			comp._search_request = xhr({
-				url: comp._data.search_url,
+				url: data.search_url,
 				params: {
 					datatable_params,
 				},
 				success: (res) => {
 					comp._search_request = undefined;
 
-					if (res.rows.length === 0 && comp._data.pagination_data.page_id > 0) {
-						comp._data.pagination_data.page_id = 0;
+					if (res.rows.length === 0 && data.pagination_data.page_id > 0) {
+						data.pagination_data.page_id = 0;
 						comp._datatable_search();
 						return;
 					}
 
-					comp._data.dataset = res.rows;
-					comp._data.pagination_data.page_count = res.page_count;
-					comp._data.pagination_data.total_rows = res.total_rows;
+					data.dataset = res.rows;
+					data.pagination_data.page_count = res.page_count;
+					data.pagination_data.total_rows = res.total_rows;
 
-					comp._set_data();
+					comp._render();
 
 					comp.classList.remove("freeze");
 					comp.classList.remove("searching");
@@ -123,11 +124,7 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 		}, delay);
 	};
 
-	comp._set_data = (data = undefined, options = {}) => {
-		if (data === undefined) {
-			data = comp._data;
-		}
-
+	comp._set_data = (data, options = {}) => {
 		data.rows = [];
 		data.dataset.forEach((e) => {
 			data.rows.push({ row: e });
@@ -147,14 +144,14 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 					!comp._prev_data ||
 					cd.sort ||
 					cd.filters ||
-					comp._prev_data.pagination_data.page_id != comp._data.pagination_data.page_id ||
-					comp._prev_data.pagination_data.row_count != comp._data.pagination_data.row_count
+					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
+					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count
 				) {
 					let styles_html = "";
 					let header_html = "";
 
 					let column_index = -1;
-					for (const column of comp._data.columns) {
+					for (const column of data.columns) {
 						column_index++;
 
 						let cell_html = "";
@@ -167,12 +164,12 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 							let icon = "fa-sort";
 							let btn_class = "transparent";
 							let tooltip = "Sortuj malejąco";
-							if (comp._data.sort && comp._data.sort.key === column.key) {
-								if (comp._data.sort.order === "desc") {
+							if (data.sort && data.sort.key === column.key) {
+								if (data.sort.order === "desc") {
 									icon = "fa-arrow-down";
 									btn_class = "primary";
 									tooltip = "Sortuj rosnąco";
-								} else if (comp._data.sort.order === "asc") {
+								} else if (data.sort.order === "asc") {
 									icon = "fa-arrow-up";
 									btn_class = "primary";
 									tooltip = "Wyłącz sortowanie";
@@ -197,7 +194,7 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 					comp._datatable_search(0);
 				}
 
-				expand(comp._nodes.empty_table, comp._data.rows.length === 0);
+				expand(comp._nodes.empty_table, data.rows.length === 0);
 			},
 		});
 	};
@@ -213,12 +210,14 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
                 </div>
             </div>
 
-            <div class="table_header" data-node="table_header"></div>
+            <div style="position:relative">
+                <div class="table_header" data-node="table_header"></div>
 
-            <div class="table_body">
-                <list-comp data-bind="{${data.rows}}" ${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}>
-                    <datatable-row-comp></datatable-row-comp>
-                </list-comp>
+                <div class="table_body">
+                    <list-comp data-bind="{${data.rows}}" ${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}>
+                        <datatable-row-comp></datatable-row-comp>
+                    </list-comp>
+                </div>
             </div>
 
             <div class="expand_y" data-node="empty_table">
@@ -239,9 +238,10 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 				const dt_filter = target._parent(".dt_filter", { skip: 0 });
 
 				if (dt_sort) {
-					const column_data = comp._data.columns[+dt_sort._parent(".dt_cell").dataset.column];
+					const data = comp._data;
+					const column_data = data.columns[+dt_sort._parent(".dt_cell").dataset.column];
 
-					const curr_order = comp._data.sort && comp._data.sort.key === column_data.key ? comp._data.sort.order : "";
+					const curr_order = data.sort && data.sort.key === column_data.key ? data.sort.order : "";
 					/** @type {DatatableSortOrder} */
 					let new_order = "desc";
 					if (curr_order === "desc") {
@@ -249,8 +249,8 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 					} else if (curr_order === "asc") {
 						new_order = "";
 					}
-					comp._data.sort = new_order ? { key: column_data.key, order: new_order } : undefined;
-					comp._set_data();
+					data.sort = new_order ? { key: column_data.key, order: new_order } : undefined;
+					comp._render();
 				}
 
 				if (dt_filter) {

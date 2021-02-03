@@ -22,13 +22,13 @@
  * @param {ProductVariantOptionCompData} data
  */
 function productVariantOptionComp(comp, parent, data = { option_id: -1, name: "" }) {
-	comp._set_data = (data = undefined, options = {}) => {
+	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				const feature = product_features.find((e) => e.feature_id === comp._data.feature_id);
+				const feature = product_features.find((e) => e.feature_id === data.feature_id);
 				if (feature) {
-					const option = feature.options.find((e) => e.option_id === comp._data.option_id);
+					const option = feature.options.find((e) => e.option_id === data.option_id);
 
 					if (option) {
 						comp._nodes.option_name._set_content(option.name);
@@ -37,8 +37,6 @@ function productVariantOptionComp(comp, parent, data = { option_id: -1, name: ""
 			},
 		});
 	};
-
-	// you can add classes like this inline: {even:${data.row_index % 2 === 0}}
 
 	createComp(comp, parent, data, {
 		template: /*html*/ `

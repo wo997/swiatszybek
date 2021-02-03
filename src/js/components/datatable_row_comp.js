@@ -23,20 +23,16 @@
  * @param {DatatableRowCompData} data
  */
 function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
-	comp._set_data = (data = undefined, options = {}) => {
-		if (data === undefined) {
-			data = comp._data;
-		}
-
+	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
 				let row_html = "";
 
-				for (const column of comp._data.columns) {
+				for (const column of data.columns) {
 					let cell_html = "";
 
-					cell_html += `<div class='dt_cell'>${comp._data.row[column.key]}</div>`;
+					cell_html += `<div class='dt_cell'>${data.row[column.key]}</div>`;
 
 					row_html += cell_html;
 				}

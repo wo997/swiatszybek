@@ -32,6 +32,7 @@
  * _eval_class: {node: PiepNode, eval_str: string, className: string}[]
  * _comp_traits: CompTrait[]
  * _propagating_data: boolean
+ * _render(options?: SetAnyCompDataOptions): void
  * } & PiepNode} BaseComp
  *
  ** @typedef {{
@@ -46,7 +47,7 @@
  * I'm not a fan of it but regular inheritance doesn't seem to work as expected os we assign common props in here
  * @typedef {{
  * _data: any
- * _set_data(data?: any, options?: SetCompDataOptions)
+ * _set_data(data?: any, options?: SetAnyCompDataOptions)
  * _prev_data: any
  * _nodes: any
  * } & BaseComp} AnyComp
@@ -78,6 +79,10 @@ function createComp(node, parent_comp, data, options) {
 	comp.classList.add("comp");
 
 	//node._propagating_data = false;
+
+	comp._render = (options) => {
+		comp._set_data(comp._data, options);
+	};
 
 	comp._dom_id = comp_id++;
 	comp._dom_class = `comp_${comp._dom_id}`;
@@ -241,7 +246,7 @@ function createComp(node, parent_comp, data, options) {
 				if (sub_node_data !== undefined) {
 					//if (node._data[bind_var] !== undefined) { // add it anyway
 					comp._data[bind_var] = sub_node_data;
-					comp._set_data();
+					comp._render();
 					//}
 				}
 			});
@@ -288,7 +293,6 @@ function createComp(node, parent_comp, data, options) {
 /**
  * @typedef {{
  * render?: CallableFunction
- * second?: boolean
  * } & SetCompDataOptions} SetAnyCompDataOptions
  */
 
@@ -323,6 +327,7 @@ function setCompData(comp, _data = undefined, options = {}) {
 	const equal = isEquivalent(node._prev_data, node._data);
 
 	if (equal && def(options.force_render, false) === false) {
+		// never used force_render lol
 		return;
 	}
 
@@ -429,7 +434,7 @@ function propagateCompData(comp) {
 				// remove subscriber reference - kinda lazy garbage collector
 				subscribers.splice(i, 1);
 			}
-			receiver._set_data();
+			receiver._render();
 		}
 	}
 }

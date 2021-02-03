@@ -217,7 +217,7 @@ function setValue(input, value = null, params = {}) {
 		return;
 	}
 
-	if (input.tagName == "p-radio") {
+	if (input.tagName == "P-RADIO") {
 		setRadioInputValue(input, value, params);
 	} else if (input.tagName == "CHECKBOX") {
 		input.classList.toggle("checked", !!value);
@@ -279,7 +279,7 @@ function xor(a, b) {
 function getValue(input) {
 	let v = input.value;
 
-	if (input.tagName == "p-radio") {
+	if (input.tagName == "P-RADIO") {
 		v = getRadioInputValue(input);
 	} else if (input.tagName == "CHECKBOX") {
 		v = input.classList.contains("checked") ? 1 : 0;
