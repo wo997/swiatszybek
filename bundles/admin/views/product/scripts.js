@@ -46,6 +46,20 @@ function fetchProductFeatures() {
 }
 
 domload(() => {
+	registerModalContent(/*html*/ `
+        <div id="addProductFeature" data-expand data-dismissable>
+            <div class="modal-body">
+                <div class="custom-toolbar">
+                    <span class="title">Cecha produktu</span>
+                    <button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
+                </div>
+                <div class="scroll-panel scroll-shadow panel-padding">
+                    <product-feature-comp class="dt_product_features"></product-feature-comp>
+                </div>
+            </div>
+        </div>
+    `);
+
 	fetchProductFeatures();
 
 	/** @type {ProductComp} */
@@ -83,19 +97,19 @@ domload(() => {
 		empty_html: /*html*/ `Brak cech`,
 		label: "Cechy produktów",
 		after_label: /*html*/ `
-            <a href="${STATIC_URLS["ADMIN"]}produkt" style="margin:0 10px" class="btn important">
-                Dodaj nową <i class="fas fa-plus"></i>
-            </a>
+            <button class="add_feature_btn btn important">
+                Dodaj <i class="fas fa-plus"></i>
+            </button>
         `,
 	});
 
-	// "select" => "attribute_id, name, data_type,
-	//     GROUP_CONCAT(v.value ORDER BY v.kolejnosc ASC) as attr_values
-	// ",
-	// "from" => "product_attributes a LEFT JOIN attribute_values v USING(attribute_id)",
-	// "where" => $where,
-	// "order" => "a.kolejnosc ASC",
-	// "group" => "attribute_id",
-	// "quick_search_fields" => ["a.name"],
-	// "raw" => true
+	dt_product_features.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+		const add_feature_btn = target._parent(".add_feature_btn", { skip: 0 });
+		if (add_feature_btn) {
+			showModal("addProductFeature", {
+				source: add_feature_btn,
+			});
+		}
+	});
 });
