@@ -88,16 +88,12 @@ class NewCms {
 		/** @type {NewCmsContentNode} */
 		this.content_node = this.container._child(`.newCmsContent`);
 		this.content_scroll_panel = this.container._child(`.content_scroll_panel`);
-		this.content_scroll_content = this.container._child(
-			`.content_scroll_content`
-		);
+		this.content_scroll_content = this.container._child(`.content_scroll_content`);
 		this.rearrange_node = this.container._child(`.rearrange_node`);
 		this.clean_output_node = this.container._child(`.clean_output`);
 		this.content_node_copy = this.container._child(`.newCmsContent_copy`);
 		this.svg = this.container._child(`.svg`);
-		this.copied_block_container = this.container._child(
-			`.copied_block_container`
-		);
+		this.copied_block_container = this.container._child(`.copied_block_container`);
 
 		this.mouse_x = 0;
 		this.mouse_y = 0;
@@ -135,13 +131,10 @@ class NewCms {
 			container
 		);
 
-		this.container.addEventListener(
-			IS_TOUCH_DEVICE ? "touchstart" : "mousemove",
-			(event) => {
-				this.updateMouseCoords(event);
-				this.mouseMove();
-			}
-		);
+		this.container.addEventListener(IS_TOUCH_DEVICE ? "touchstart" : "mousemove", (event) => {
+			this.updateMouseCoords(event);
+			this.mouseMove();
+		});
 
 		this.container.addEventListener("mouseleave", (event) => {
 			this.updateMouseCoords(event);
@@ -278,17 +271,11 @@ class NewCms {
 	}
 
 	initStyling() {
-		this.styling = new NewCmsStyling(
-			this,
-			this.container._child(".styles_node")
-		);
+		this.styling = new NewCmsStyling(this, this.container._child(".styles_node"));
 	}
 
 	initTrashBlock() {
-		this.trash_block = new NewCmsTrashBlock(
-			this,
-			this.container._child(".trash_block")
-		);
+		this.trash_block = new NewCmsTrashBlock(this, this.container._child(".trash_block"));
 	}
 	initMargins() {
 		// definitelly should be a part of the sidebar!
@@ -332,45 +319,35 @@ class NewCms {
 	}
 
 	insertMarginControl(node, name) {
-		const options = /*html*/ `
-            <c-option>0</c-option>
-            <c-option>12px</c-option>
-            <c-option>24px</c-option>
-            <c-option>36px</c-option>
-            <c-option>2%</c-option>
-            <c-option>4%</c-option>
-            <c-option>6%</c-option>
-        `;
+		const options = html`
+			<c-option>0</c-option>
+			<c-option>12px</c-option>
+			<c-option>24px</c-option>
+			<c-option>36px</c-option>
+			<c-option>2%</c-option>
+			<c-option>4%</c-option>
+			<c-option>6%</c-option>
+		`;
 
 		const getInput = (dir) => {
-			return /*html*/ `
-                <c-select style="width:100px">
-                    <input type="text" class="field"
-                        name="${name + dir}" data-dir=${dir}>
-                    <c-arrow></c-arrow>
-                    <c-options>
-                        ${options}
-                    </c-options>
-                </c-select>
-            `;
+			return html`
+				<c-select style="width:100px">
+					<input type="text" class="field" name="${name + dir}" data-dir=${dir} />
+					<c-arrow></c-arrow>
+					<c-options> ${options} </c-options>
+				</c-select>
+			`;
 		};
 
 		node.insertAdjacentHTML(
 			"afterbegin",
-			/*html*/ `
-            <div style="max-width:400px">
-                <div style="display:flex;justify-content:center">
-                    ${getInput("top")}
-                </div>
-                <div style="display:flex;justify-content: space-around;padding: 20px 0;">
-                    ${getInput("left")}
-                    ${getInput("right")}
-                </div>
-                <div style="display:flex;justify-content:center">
-                    ${getInput("bottom")}
-                </div>
-            </div>
-            `
+			html`
+				<div style="max-width:400px">
+					<div style="display:flex;justify-content:center">${getInput("top")}</div>
+					<div style="display:flex;justify-content: space-around;padding: 20px 0;">${getInput("left")} ${getInput("right")}</div>
+					<div style="display:flex;justify-content:center">${getInput("bottom")}</div>
+				</div>
+			`
 		);
 	}
 	initHistory() {
@@ -416,17 +393,11 @@ class NewCms {
 	}
 
 	initEditBlock() {
-		this.edit_block = new NewCmsEditBlock(
-			this,
-			this.container._child(`.edit_block_node`)
-		);
+		this.edit_block = new NewCmsEditBlock(this, this.container._child(`.edit_block_node`));
 	}
 
 	initQuillEditor() {
-		this.quill_editor = new NewCmsQuillEditor(
-			this,
-			this.container._child(".quill_editor")
-		);
+		this.quill_editor = new NewCmsQuillEditor(this, this.container._child(".quill_editor"));
 	}
 
 	initFloatingSelectControls() {
@@ -527,9 +498,7 @@ class NewCms {
 	updateMouseTarget() {
 		// TODO: should we care?
 		if (!IS_TOUCH_DEVICE) {
-			this.mouse_target = $(
-				document.elementFromPoint(this.mouse_x, this.mouse_y)
-			);
+			this.mouse_target = $(document.elementFromPoint(this.mouse_x, this.mouse_y));
 		}
 	}
 
@@ -589,9 +558,7 @@ class NewCms {
 	}
 
 	caseEmptyHint() {
-		const has_any_block = !!this.content_node._child(
-			".newCms_block:not(.cramped):not(.parent_cramped)"
-		);
+		const has_any_block = !!this.content_node._child(".newCms_block:not(.cramped):not(.parent_cramped)");
 
 		if (!has_any_block) {
 			const new_block = this.createBlock("container");
@@ -669,100 +636,80 @@ class NewCms {
 	manageGrids() {
 		this.cleanupGrids();
 
-		const any_grid = this.content_node._child(
-			`.newCms_block[data-block="grid"]`
-		);
+		const any_grid = this.content_node._child(`.newCms_block[data-block="grid"]`);
 		if (!any_grid) {
 			return;
 		}
 
-		this.content_node
-			._children(this.query_for_visible_blocks + `[data-block="grid"]`)
-			.forEach((/** @type {NewCmsGrid} */ grid) => {
-				const styles = this.styling.getBlockCurrentStyles(grid);
+		this.content_node._children(this.query_for_visible_blocks + `[data-block="grid"]`).forEach((/** @type {NewCmsGrid} */ grid) => {
+			const styles = this.styling.getBlockCurrentStyles(grid);
 
-				// THAT LOOKS WEIRD HMMM BUT MAYBE WE SHOULD LEAVE IT
-				if (!styles.inside["grid-template-columns"]) {
-					styles.inside["grid-template-columns"] = "1fr 1fr";
+			// THAT LOOKS WEIRD HMMM BUT MAYBE WE SHOULD LEAVE IT
+			if (!styles.inside["grid-template-columns"]) {
+				styles.inside["grid-template-columns"] = "1fr 1fr";
+			}
+			if (!styles.inside["grid-template-rows"]) {
+				styles.inside["grid-template-rows"] = "1fr 1fr";
+			}
+			const columns = regexCount(def(styles.inside["grid-template-columns"], ""), " +") + 1;
+			const rows = regexCount(def(styles.inside["grid-template-rows"], ""), " +") + 1;
+
+			const block_content = grid._child(".newCms_block_content");
+
+			const grid_rect = grid.getBoundingClientRect();
+
+			let x_coords = [];
+			for (let column = 1; column < columns + 1; column++) {
+				const grid_wireframe = document.createElement("DIV");
+
+				grid_wireframe.style.gridArea = `${1}/${column}/${rows + 1}/${column + 1}`;
+
+				block_content.appendChild(grid_wireframe);
+
+				const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
+
+				if (column === 1) {
+					grid_wireframe.classList.add("grid_wireframe_line_left");
+					x_coords.push(grid_wireframe_rect.left - grid_rect.left);
 				}
-				if (!styles.inside["grid-template-rows"]) {
-					styles.inside["grid-template-rows"] = "1fr 1fr";
+				grid_wireframe.classList.add("grid_wireframe_line");
+				grid_wireframe.classList.add("grid_wireframe_line_right");
+				x_coords.push(grid_wireframe_rect.left + grid_wireframe_rect.width - grid_rect.left);
+			}
+
+			let y_coords = [];
+			for (let row = 1; row < rows + 1; row++) {
+				const grid_wireframe = document.createElement("DIV");
+
+				grid_wireframe.style.gridArea = `${row}/${1}/${row + 1}/${columns + 1}`;
+
+				block_content.appendChild(grid_wireframe);
+
+				const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
+
+				if (row === 1) {
+					grid_wireframe.classList.add("grid_wireframe_line_top");
+					y_coords.push(grid_wireframe_rect.top - grid_rect.top);
 				}
-				const columns =
-					regexCount(def(styles.inside["grid-template-columns"], ""), " +") + 1;
-				const rows =
-					regexCount(def(styles.inside["grid-template-rows"], ""), " +") + 1;
+				grid_wireframe.classList.add("grid_wireframe_line");
+				grid_wireframe.classList.add("grid_wireframe_line_bottom");
+				y_coords.push(grid_wireframe_rect.top + grid_wireframe_rect.height - grid_rect.top);
+			}
 
-				const block_content = grid._child(".newCms_block_content");
-
-				const grid_rect = grid.getBoundingClientRect();
-
-				let x_coords = [];
-				for (let column = 1; column < columns + 1; column++) {
-					const grid_wireframe = document.createElement("DIV");
-
-					grid_wireframe.style.gridArea = `${1}/${column}/${rows + 1}/${
-						column + 1
-					}`;
-
-					block_content.appendChild(grid_wireframe);
-
-					const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
-
-					if (column === 1) {
-						grid_wireframe.classList.add("grid_wireframe_line_left");
-						x_coords.push(grid_wireframe_rect.left - grid_rect.left);
-					}
-					grid_wireframe.classList.add("grid_wireframe_line");
-					grid_wireframe.classList.add("grid_wireframe_line_right");
-					x_coords.push(
-						grid_wireframe_rect.left +
-							grid_wireframe_rect.width -
-							grid_rect.left
-					);
-				}
-
-				let y_coords = [];
-				for (let row = 1; row < rows + 1; row++) {
-					const grid_wireframe = document.createElement("DIV");
-
-					grid_wireframe.style.gridArea = `${row}/${1}/${row + 1}/${
-						columns + 1
-					}`;
-
-					block_content.appendChild(grid_wireframe);
-
-					const grid_wireframe_rect = grid_wireframe.getBoundingClientRect();
-
-					if (row === 1) {
-						grid_wireframe.classList.add("grid_wireframe_line_top");
-						y_coords.push(grid_wireframe_rect.top - grid_rect.top);
-					}
-					grid_wireframe.classList.add("grid_wireframe_line");
-					grid_wireframe.classList.add("grid_wireframe_line_bottom");
-					y_coords.push(
-						grid_wireframe_rect.top + grid_wireframe_rect.height - grid_rect.top
-					);
-				}
-
-				grid.grid_data = {
-					x_coords,
-					y_coords,
-				};
-			});
+			grid.grid_data = {
+				x_coords,
+				y_coords,
+			};
+		});
 	}
 
 	insertMissingQlClasses() {
 		// TODO: should we use it on the whole container instead? probably no XD
-		this.content_node
-			._children(this.query_for_visible_blocks + `[data-block="quill_editor"]`)
-			.forEach((newCms_block) => {
-				const newCms_block_content = newCms_block._child(
-					".newCms_block_content"
-				);
-				newCms_block_content.classList.add("ql-editor");
-				newCms_block_content._parent().classList.add("ql-snow");
-			});
+		this.content_node._children(this.query_for_visible_blocks + `[data-block="quill_editor"]`).forEach((newCms_block) => {
+			const newCms_block_content = newCms_block._child(".newCms_block_content");
+			newCms_block_content.classList.add("ql-editor");
+			newCms_block_content._parent().classList.add("ql-snow");
+		});
 	}
 
 	/**
@@ -783,31 +730,29 @@ class NewCms {
 
 		// TODO: event listeners, any ype of modularity
 		if (type === "quill_editor") {
-			content_html = /*html*/ `<div class="newCms_block_content ql-editor"><p class="ql-align-center">Paragraf</p></div>`;
+			content_html = html`<div class="newCms_block_content ql-editor"><p class="ql-align-center">Paragraf</p></div>`;
 		} else if (type === "image") {
 			styles.desktop.outside = {
 				"justify-content": "center",
 			};
-			content_html = /*html*/ `<img class="newCms_block_content wo997_img">`;
+			content_html = html`<img class="newCms_block_content wo997_img" />`;
 		} else if (type === "video") {
 			// TODO: just do it
-			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
+			content_html = html`<div class="newCms_block_content"></div>`;
 		} else if (type === "container") {
 			class_list.push("container");
-			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
+			content_html = html`<div class="newCms_block_content"></div>`;
 
 			let container_horizontal = false;
 			if (options.from) {
-				container_horizontal = options.from.classList.contains(
-					"container_horizontal"
-				);
+				container_horizontal = options.from.classList.contains("container_horizontal");
 			}
 			styles.desktop.inside = {
 				"flex-flow": container_horizontal ? "row" : "column",
 			};
 		} else if (type === "grid") {
 			class_list.push("container");
-			content_html = /*html*/ `<div class="newCms_block_content"></div>`;
+			content_html = html`<div class="newCms_block_content"></div>`;
 			styles.desktop.inside = {
 				"grid-template-columns": "1fr 1fr",
 				"grid-template-rows": "1fr 1fr",
@@ -816,13 +761,9 @@ class NewCms {
 
 		/** @type {NewCmsBlock} */
 		// @ts-ignore
-		const new_block = createNodeFromHtml(/*html*/ `
-            <div class="newCms_block${class_list.map(
-							(e) => " " + e
-						)}" data-block="${type}">
-                ${content_html}
-            </div>
-        `);
+		const new_block = createNodeFromHtml(html`
+			<div class="newCms_block${class_list.map((e) => " " + e)}" data-block="${type}">${content_html}</div>
+		`);
 		new_block.styling_data = styles;
 		return new_block;
 	}
@@ -892,17 +833,13 @@ class NewCms {
 			block.last_rect = block.client_rect;
 		}
 
-		this.source_grabbed_node = block.classList.contains("side_block")
-			? this.sidebar.node
-			: this.content_scroll_content;
+		this.source_grabbed_node = block.classList.contains("side_block") ? this.sidebar.node : this.content_scroll_content;
 
 		/*this.grabbed_node_scroll_parent = this.source_grabbed_node.findScrollParent(
 			{ default: document.body }
 		);*/
 
-		this.source_grabbed_node.appendChild(
-			this.rearrange_controls.rearrange_grabbed_rect_node
-		);
+		this.source_grabbed_node.appendChild(this.rearrange_controls.rearrange_grabbed_rect_node);
 
 		this.grabbed_block = block;
 		this.grabbed_block.classList.add("is_grabbed");
@@ -924,10 +861,8 @@ class NewCms {
 		const grabbed_block_rect = this.grabbed_block.getBoundingClientRect();
 		rearrange_node.style.left = grabbed_block_rect.left + "px";
 		rearrange_node.style.top = grabbed_block_rect.top + "px";
-		this.rearrange_node_block_inside.style.width =
-			grabbed_block_rect.width + "px";
-		this.rearrange_node_block_inside.style.height =
-			grabbed_block_rect.height + "px";
+		this.rearrange_node_block_inside.style.width = grabbed_block_rect.width + "px";
+		this.rearrange_node_block_inside.style.height = grabbed_block_rect.height + "px";
 		rearrange_node.classList.add("visible");
 
 		this.rearrange_controls.addFloatingRearrangeControls(this.grabbed_block);
@@ -946,17 +881,13 @@ class NewCms {
 		this.rearrange_grid_first_node = null;
 		this.grab_animation_speed = 0;
 
-		this.content_scroll_content
-			._children(".rearrange_control.unavailable")
-			.forEach((control) => {
-				control.classList.remove("unavailable");
-			});
+		this.content_scroll_content._children(".rearrange_control.unavailable").forEach((control) => {
+			control.classList.remove("unavailable");
+		});
 
-		this.content_scroll_content
-			._children(".rearrange_control.first_grid_node")
-			.forEach((control) => {
-				control.classList.remove("first_grid_node");
-			});
+		this.content_scroll_content._children(".rearrange_control.first_grid_node").forEach((control) => {
+			control.classList.remove("first_grid_node");
+		});
 	}
 
 	releaseBlock() {
@@ -966,16 +897,12 @@ class NewCms {
 			return;
 		}
 
-		const do_trash =
-			this.mouse_target && this.mouse_target._parent(this.trash_block.node);
+		const do_trash = this.mouse_target && this.mouse_target._parent(this.trash_block.node);
 
 		// if it's in a grid u wanna go for 2 steps
 		let rearrange_grid_first_node_ref = null;
 		let rearrange_grid_second_node_ref = null;
-		if (
-			this.rearrange_controls.rearrange_near_block &&
-			this.rearrange_controls.rearrange_position == "grid"
-		) {
+		if (this.rearrange_controls.rearrange_near_block && this.rearrange_controls.rearrange_position == "grid") {
 			if (!this.rearrange_grid_first_node) {
 				this.rearrange_grid_first_node = this.rearrange_controls.rearrange_control_node;
 				this.grab_animation_speed = 0;
@@ -983,33 +910,29 @@ class NewCms {
 				const fst = this.rearrange_grid_first_node;
 				fst.classList.add("first_grid_node");
 
-				this.content_scroll_content
-					._children(".rearrange_control:not(.first_grid_node)")
-					.forEach((/** @type {RearrangeControl} */ control) => {
-						control.classList.toggle(
-							"unavailable",
-							control.position !== "grid" ||
-								control.rearrange_near_block !== fst.rearrange_near_block ||
-								control.grid_position.column === fst.grid_position.column ||
-								control.grid_position.row === fst.grid_position.row
-						);
-					});
+				this.content_scroll_content._children(".rearrange_control:not(.first_grid_node)").forEach((
+					/** @type {RearrangeControl} */ control
+				) => {
+					control.classList.toggle(
+						"unavailable",
+						control.position !== "grid" ||
+							control.rearrange_near_block !== fst.rearrange_near_block ||
+							control.grid_position.column === fst.grid_position.column ||
+							control.grid_position.row === fst.grid_position.row
+					);
+				});
 
 				this.updateMouseTarget();
 				this.mouseMove();
 
 				return;
 			} else {
-				if (
-					this.rearrange_grid_first_node ===
-					this.rearrange_controls.rearrange_control_node
-				) {
+				if (this.rearrange_grid_first_node === this.rearrange_controls.rearrange_control_node) {
 					this.unselectFirstGridNode();
 					return;
 				}
 				rearrange_grid_first_node_ref = this.rearrange_grid_first_node;
-				rearrange_grid_second_node_ref = this.rearrange_controls
-					.rearrange_control_node;
+				rearrange_grid_second_node_ref = this.rearrange_controls.rearrange_control_node;
 
 				this.unselectFirstGridNode();
 
@@ -1042,8 +965,7 @@ class NewCms {
 
 		let delay_rearrange_node_fadeout = 0;
 
-		const is_side_block =
-			block_type && grabbed_block.classList.contains("side_block");
+		const is_side_block = block_type && grabbed_block.classList.contains("side_block");
 
 		const gbad = grabbed_block.animation_data;
 
@@ -1120,9 +1042,7 @@ class NewCms {
 		this.rearrange_controls.node.classList.remove("visible");
 
 		setTimeout(() => {
-			this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove(
-				"visible"
-			);
+			this.rearrange_controls.rearrange_grabbed_rect_node.classList.remove("visible");
 		}, delay_grabbed_rect_node_fadeout);
 
 		this.beforeContentAnimation();
@@ -1132,24 +1052,20 @@ class NewCms {
 				grabbed_block.style.display = "";
 
 				// copy styles
-				[grabbed_block, ...grabbed_block._children(".newCms_block")].forEach(
-					(gr_block) => {
-						const block_id = this.styling.getBlockId(gr_block);
-						const block_class_name = this.styling.getBlockClassName(block_id);
-						if (!block_class_name) {
-							return;
-						}
-
-						gr_block.classList.remove(block_class_name);
-
-						const copy_styles_from = this.content_node._child(
-							`.${block_class_name}`
-						);
-
-						// @ts-ignore
-						gr_block.styling_data = cloneObject(copy_styles_from.styling_data);
+				[grabbed_block, ...grabbed_block._children(".newCms_block")].forEach((gr_block) => {
+					const block_id = this.styling.getBlockId(gr_block);
+					const block_class_name = this.styling.getBlockClassName(block_id);
+					if (!block_class_name) {
+						return;
 					}
-				);
+
+					gr_block.classList.remove(block_class_name);
+
+					const copy_styles_from = this.content_node._child(`.${block_class_name}`);
+
+					// @ts-ignore
+					gr_block.styling_data = cloneObject(copy_styles_from.styling_data);
+				});
 			}
 
 			if (this.rearrange_controls.rearrange_position != "grid") {
@@ -1165,14 +1081,10 @@ class NewCms {
 			}
 
 			if (this.rearrange_controls.rearrange_position == "inside") {
-				this.rearrange_controls.rearrange_near_block
-					._child(".newCms_block_content")
-					.appendChild(grabbed_block);
+				this.rearrange_controls.rearrange_near_block._child(".newCms_block_content").appendChild(grabbed_block);
 			} else if (this.rearrange_controls.rearrange_position == "grid") {
 				// TODO: maybe you don't wanna append the child that is already in its parent cause it affects the index :*
-				this.rearrange_controls.rearrange_near_block
-					._child(".newCms_block_content")
-					.appendChild(grabbed_block);
+				this.rearrange_controls.rearrange_near_block._child(".newCms_block_content").appendChild(grabbed_block);
 
 				const fst = rearrange_grid_first_node_ref.grid_position;
 				const scd = rearrange_grid_second_node_ref.grid_position;
@@ -1199,15 +1111,11 @@ class NewCms {
 				}
 
 				if (this.styling.allow_free_rearrangement || is_side_block) {
-					this.rearrange_controls.rearrange_near_block
-						._parent()
-						.insertBefore(grabbed_block, before_node);
+					this.rearrange_controls.rearrange_near_block._parent().insertBefore(grabbed_block, before_node);
 				}
 
 				if (!this.styling.allow_free_rearrangement) {
-					let target_flex_order = before_node
-						? parseInt(before_node.dataset.flex_order) - 0.5
-						: 1000000;
+					let target_flex_order = before_node ? parseInt(before_node.dataset.flex_order) - 0.5 : 1000000;
 
 					grabbed_block.dataset.flex_order = target_flex_order;
 				}
@@ -1243,11 +1151,7 @@ class NewCms {
 	 * @returns {HasRects[]}
 	 */
 	getAllNodesWithRects() {
-		return [
-			this.content_node,
-			...this.content_node._children(".newCms_block"),
-			...this.content_node._children(".newCms_block_content"),
-		];
+		return [this.content_node, ...this.content_node._children(".newCms_block"), ...this.content_node._children(".newCms_block_content")];
 	}
 
 	beforeContentAnimation() {
@@ -1264,11 +1168,9 @@ class NewCms {
 		this.styling.resetLayout();
 		this.manageGrids();
 
-		const all_animatable_blocks = this.content_node
-			._children(".newCms_block")
-			.filter((/** @type {NewCmsBlock} */ block) => {
-				return !!block.last_rect && !block.classList.contains("parent_cramped");
-			});
+		const all_animatable_blocks = this.content_node._children(".newCms_block").filter((/** @type {NewCmsBlock} */ block) => {
+			return !!block.last_rect && !block.classList.contains("parent_cramped");
+		});
 
 		all_animatable_blocks.forEach((/** @type {NewCmsBlock} */ block) => {
 			if (!block.animation_data) {
@@ -1309,10 +1211,7 @@ class NewCms {
 			const lr = block.last_rect;
 			const nr = block.client_rect;
 
-			if (
-				(lr.top < window.innerHeight && lr.top + lr.height > 0) ||
-				(nr.top < window.innerHeight && nr.top + nr.height > 0)
-			) {
+			if ((lr.top < window.innerHeight && lr.top + lr.height > 0) || (nr.top < window.innerHeight && nr.top + nr.height > 0)) {
 				// visible - animate
 			} else {
 				block.classList.add("hidden_during_rearrangement");
@@ -1383,12 +1282,7 @@ class NewCms {
                     100% {
                         ${common_keyframes}
                         left: ${block.last_rect.left - left_0}px;
-                        top: ${
-													block.last_rect.top +
-													top_0 -
-													block.last_rect.height * 0.5 -
-													cso.mt
-												}px;
+                        top: ${block.last_rect.top + top_0 - block.last_rect.height * 0.5 - cso.mt}px;
                         width: ${block.last_rect.width}px;
                         height: ${block.last_rect.height}px;
                         transform: scale(0);
@@ -1502,16 +1396,12 @@ class NewCms {
 		const const_acc = 0.5;
 
 		// cute scroll
-		if (
-			this.mouse_target &&
-			this.mouse_target._parent(this.content_scroll_panel)
-		) {
+		if (this.mouse_target && this.mouse_target._parent(this.content_scroll_panel)) {
 			const content_scroll_panel_rect = this.content_scroll_panel.getBoundingClientRect();
 
 			const scroll_offset = 50;
 
-			const upper_dy =
-				this.mouse_y - content_scroll_panel_rect.top - scroll_offset;
+			const upper_dy = this.mouse_y - content_scroll_panel_rect.top - scroll_offset;
 			if (upper_dy < 0) {
 				target_speed_y = upper_dy;
 				if (target_speed_y < -scroll_offset) {
@@ -1519,11 +1409,7 @@ class NewCms {
 				}
 			}
 
-			const bottom_dy =
-				scroll_offset -
-				content_scroll_panel_rect.top -
-				content_scroll_panel_rect.height +
-				this.mouse_y;
+			const bottom_dy = scroll_offset - content_scroll_panel_rect.top - content_scroll_panel_rect.height + this.mouse_y;
 			if (bottom_dy > 0) {
 				target_speed_y = bottom_dy;
 
@@ -1560,9 +1446,7 @@ class NewCms {
 
 			const gb_rect = grabbed_block.last_rect;
 			if (!gb_rect) {
-				console.error(
-					"hey, we need to add the last rect before we start movign the node"
-				);
+				console.error("hey, we need to add the last rect before we start movign the node");
 				return;
 			}
 			const base_w = gb_rect.width;
@@ -1584,23 +1468,16 @@ class NewCms {
 			if (this.rearrange_grid_first_node) {
 				//this.grab_options.copied_from.computed_styles
 				// basically hanging laundry
-				const rearrange_grid_first_node_actual_position = this
-					.rearrange_grid_first_node.actual_position;
+				const rearrange_grid_first_node_actual_position = this.rearrange_grid_first_node.actual_position;
 
-				target_dx =
-					rearrange_grid_first_node_actual_position.left -
-					grabbed_block_rect.left;
-				target_dy =
-					rearrange_grid_first_node_actual_position.top -
-					grabbed_block_rect.top;
+				target_dx = rearrange_grid_first_node_actual_position.left - grabbed_block_rect.left;
+				target_dy = rearrange_grid_first_node_actual_position.top - grabbed_block_rect.top;
 
-				target_w =
-					this.mouse_x - rearrange_grid_first_node_actual_position.left;
+				target_w = this.mouse_x - rearrange_grid_first_node_actual_position.left;
 				target_h = this.mouse_y - rearrange_grid_first_node_actual_position.top;
 
 				const scr_dx = 0; // this.content_scroll_panel.scrollLeft;
-				const scr_dy =
-					this.content_scroll_panel.scrollTop - this.grabbed_scroll_top;
+				const scr_dy = this.content_scroll_panel.scrollTop - this.grabbed_scroll_top;
 
 				const scr_pos_factor = is_side_block ? -1 : -2;
 
@@ -1628,10 +1505,8 @@ class NewCms {
 				}
 			} else {
 				// pull center to the cursor
-				target_dx =
-					this.mouse_x - (gb_rect.left + grabbed_block_rect.width * 0.5);
-				target_dy =
-					this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
+				target_dx = this.mouse_x - (gb_rect.left + grabbed_block_rect.width * 0.5);
+				target_dy = this.mouse_y - (gb_rect.top + grabbed_block_rect.height * 0.5);
 			}
 
 			/*const margin_data = this.getBlockAbsoluteMarginOffset(
@@ -1647,15 +1522,10 @@ class NewCms {
 			let set_w = gbad.w;
 			let set_h = gbad.h;
 
-			const side_block_side_padding = parseInt(
-				getComputedStyle(document.documentElement).getPropertyValue(
-					"--side_block_side_padding"
-				)
-			);
+			const side_block_side_padding = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--side_block_side_padding"));
 
 			if (is_side_block) {
-				this.rearrange_node_block_inside.style.padding =
-					"0 " + ((set_w - base_w) * 0.5 + side_block_side_padding) + "px";
+				this.rearrange_node_block_inside.style.padding = "0 " + ((set_w - base_w) * 0.5 + side_block_side_padding) + "px";
 			}
 
 			this.rearrange_node_block_inside.style.width = set_w + "px";

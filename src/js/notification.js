@@ -32,10 +32,10 @@ function showNotification(message, params = {}) {
 	notification.className = "notification";
 	notification.insertAdjacentHTML(
 		"beforeend",
-		/*html*/ `
-            <i class="fas fa-times" onclick="dismissParentNotification(this)"></i>
-            ${message}
-        `
+		html`
+			<i class="fas fa-times" onclick="dismissParentNotification(this)"></i>
+			${message}
+		`
 	);
 	if (params.width) {
 		notification.style.width = params.width;

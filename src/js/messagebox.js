@@ -21,36 +21,32 @@ function getMessageHTML(params = {}) {
 	let header_icon = "";
 
 	if (params.type === "info") {
-		header_icon = /*html*/ `<i class='fas fa-info-circle'></i>`;
+		header_icon = html`<i class="fas fa-info-circle"></i>`;
 		header_color = "var(--info-clr)";
 		if (!params.header) {
 			params.header = "Ciekawe";
 		}
 	} else if (params.type === "error") {
-		header_icon = /*html*/ `<i class='fas fa-times-circle'></i>`;
+		header_icon = html`<i class="fas fa-times-circle"></i>`;
 		header_color = "var(--error-clr)";
 		params.header = "Coś poszło nie tak";
 	} else {
-		header_icon = /*html*/ `<i class='fas fa-check-circle'></i>`;
+		header_icon = html`<i class="fas fa-check-circle"></i>`;
 		header_color = "var(--success-clr)";
 		params.header = "Udało się!";
 	}
 
-	html += /*html*/ `
-        <div class='messagebox_header' style='background:${header_color}'>
-            ${header_icon} ${params.header}
-        </div>
-    `;
+	html += html`<div class="messagebox_header" style="background:${header_color}">${header_icon} ${params.header}</div> `;
 
 	if (params.body !== undefined) {
-		html += /*html*/ `<div class='messagebox_body'>${params.body}</div>`;
+		html += html`<div class="messagebox_body">${params.body}</div>`;
 	}
 
 	if (params.footer === undefined) {
 		params.footer = `<button class='btn subtle medium' onclick='hideParentModal(this)' style='width:80px'>Ok</button>`;
 	}
 
-	html += /*html*/ `<div class='messagebox_footer'>${params.footer}</div>`;
+	html += html`<div class="messagebox_footer">${params.footer}</div>`;
 
 	return html;
 }
@@ -98,26 +94,25 @@ function addMessageBox(elem, message, params = {}) {
 	};
 
 	const dismiss_btn = params.dismissable
-		? /*html*/ `
-            <button class="btn transparent dismiss_btn" onclick="toggleMessageBox($(this)._parent()._parent()._parent(), false)">
-                <i class="fas fa-times"></i>
-            </button>
-        `
+		? html`
+				<button class="btn transparent dismiss_btn" onclick="toggleMessageBox($(this)._parent()._parent()._parent(), false)">
+					<i class="fas fa-times"></i>
+				</button>
+		  `
 		: "";
 
-	elem._set_content(/*html*/ `
-        <div class="messagebox expand_y hidden animate_hidden">
-            <div class="message-container ${types[type].className}
+	elem._set_content(html`
+		<div class="messagebox expand_y hidden animate_hidden">
+			<div
+				class="message-container ${types[type].className}
                 ${inline ? "inline" : ""}"
-                >
-                    ${types[type].icon}
-                    <span style="margin: 0 3px;">
-                        ${message}
-                    </span>
-                    ${dismiss_btn}
-                </div>
-            </div>
-          `);
+			>
+				${types[type].icon}
+				<span style="margin: 0 3px;"> ${message} </span>
+				${dismiss_btn}
+			</div>
+		</div>
+	`);
 
 	if (show) {
 		let options = {};
@@ -142,11 +137,11 @@ function toggleMessageBox(elem, show = null, options = {}) {
 }
 
 domload(() => {
-	registerModalContent(/*html*/ `
-        <div id="messagebox_modal" class="messagebox_modal" data-dismissable>
-            <div class="modal-body">
-                <div></div>
-            </div>
-        </div>    
-    `);
+	registerModalContent(html`
+		<div id="messagebox_modal" class="messagebox_modal" data-dismissable>
+			<div class="modal-body">
+				<div></div>
+			</div>
+		</div>
+	`);
 });

@@ -39,14 +39,14 @@ function productVariantOptionComp(comp, parent, data = { option_id: -1, name: ""
 	};
 
 	createComp(comp, parent, data, {
-		template: /*html*/ `
-            <div class="option_header">
-                <div class="title inline" data-node="{${comp._nodes.option_name}}"></div>    
-                <div>
-                    <p-batch-trait data-trait="list_controls"></p-batch-trait>
-                </div>
-            </div>
-        `,
+		template: html`
+			<div class="option_header">
+				<div class="title inline" data-node="{${comp._nodes.option_name}}"></div>
+				<div>
+					<p-batch-trait data-trait="list_controls"></p-batch-trait>
+				</div>
+			</div>
+		`,
 		initialize: () => {
 			comp.classList.add("product_variant");
 		},

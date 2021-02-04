@@ -23,9 +23,7 @@ function checkFormCloseWarning(form) {
 	const nowState = form.history ? getLast(form.history) : getFormData(form);
 
 	if (!isEquivalent(wasState, nowState)) {
-		return confirm(
-			"Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?"
-		);
+		return confirm("Wprowadzone zmiany zostaną usunięte, czy chcesz je anulować?");
 	}
 	return true;
 }
@@ -268,17 +266,17 @@ function registerForms(form = undefined) {
 			if (field.hasAttribute("data-validate")) {
 				field_wrapper.insertAdjacentHTML(
 					"beforeend",
-					/*html*/ `
-                        <div class="input_nodes">
-                            <div class="correctness">
-                            <i class="fas fa-check correct"></i>
-                            <i class="fas fa-times wrong"></i>
-                            </div>
-                            <div class="message_wrapper expand_y hidden animate_hidden">
-                                <div class="message"></div>
-                            </div>
-                        </div>
-                    `
+					html`
+						<div class="input_nodes">
+							<div class="correctness">
+								<i class="fas fa-check correct"></i>
+								<i class="fas fa-times wrong"></i>
+							</div>
+							<div class="message_wrapper expand_y hidden animate_hidden">
+								<div class="message"></div>
+							</div>
+						</div>
+					`
 				);
 			}
 		}

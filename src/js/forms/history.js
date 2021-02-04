@@ -19,10 +19,10 @@ function registerFormHistory(form) {
 		form.history_buttons = btns;
 		btns.insertAdjacentHTML(
 			"afterbegin",
-			/*html*/ `
-        <button class="btn primary undo" data-tooltip="Cofnij (Ctrl + Z)"> <i class="fas fa-undo-alt"></i> </button>
-        <button class="btn primary redo" data-tooltip="Ponów (Ctrl + Y)"> <i class="fas fa-redo-alt"></i> </button>
-      `
+			html`
+				<button class="btn primary undo" data-tooltip="Cofnij (Ctrl + Z)"><i class="fas fa-undo-alt"></i></button>
+				<button class="btn primary redo" data-tooltip="Ponów (Ctrl + Y)"><i class="fas fa-redo-alt"></i></button>
+			`
 		);
 		btns._child(".btn.undo").addEventListener("click", () => {
 			formHistoryUndo(form);
@@ -55,13 +55,9 @@ function formHistoryRedo(form) {
 
 function setFormDataToLastHistory(form) {
 	form = $(form);
-	setFormData(
-		form.history[form.history.length - 1 - form.history_step_back],
-		form,
-		{
-			history: true,
-		}
-	);
+	setFormData(form.history[form.history.length - 1 - form.history_step_back], form, {
+		history: true,
+	});
 	formHistoryChange(form);
 }
 
@@ -112,14 +108,7 @@ document.addEventListener("keydown", (ev) => {
 
 function formHistoryChange(form) {
 	if (form.history_buttons) {
-		form.history_buttons
-			._child(".btn.undo")
-			.toggleAttribute(
-				"disabled",
-				form.history_step_back >= form.history.length - 1
-			);
-		form.history_buttons
-			._child(".btn.redo")
-			.toggleAttribute("disabled", form.history_step_back == 0);
+		form.history_buttons._child(".btn.undo").toggleAttribute("disabled", form.history_step_back >= form.history.length - 1);
+		form.history_buttons._child(".btn.redo").toggleAttribute("disabled", form.history_step_back == 0);
 	}
 }

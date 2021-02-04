@@ -46,19 +46,19 @@ function fetchProductFeatures() {
 }
 
 domload(() => {
-	registerModalContent(/*html*/ `
-        <div id="addProductFeature" data-expand data-dismissable>
-            <div class="modal-body">
-                <div class="custom-toolbar">
-                    <span class="title">Cecha produktu</span>
-                    <button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
-                </div>
-                <div class="scroll-panel scroll-shadow panel-padding">
-                    <product-feature-comp></product-feature-comp>
-                </div>
-            </div>
-        </div>
-    `);
+	registerModalContent(html`
+		<div id="addProductFeature" data-expand data-dismissable>
+			<div class="modal-body">
+				<div class="custom-toolbar">
+					<span class="title">Cecha produktu</span>
+					<button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
+				</div>
+				<div class="scroll-panel scroll-shadow panel-padding">
+					<product-feature-comp></product-feature-comp>
+				</div>
+			</div>
+		</div>
+	`);
 
 	fetchProductFeatures();
 
@@ -94,13 +94,9 @@ domload(() => {
 			{ label: "Wartości", key: "attr_values", width: "200px", sortable: true, searchable: "number" },
 		],
 		primary_key: "attribute_id",
-		empty_html: /*html*/ `Brak cech`,
+		empty_html: html`Brak cech`,
 		label: "Cechy produktów",
-		after_label: /*html*/ `
-            <button class="add_feature_btn btn important">
-                Dodaj <i class="fas fa-plus"></i>
-            </button>
-        `,
+		after_label: html`<button class="add_feature_btn btn important">Dodaj <i class="fas fa-plus"></i></button> `,
 	});
 
 	dt_product_features.addEventListener("click", (ev) => {

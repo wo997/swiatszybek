@@ -2105,7 +2105,7 @@
 // 	for (var direction of ["top", "left", "right", "bottom"]) {
 // 		defaults[direction] = defaults.all ? defaults.all : "";
 // 	}
-// 	return /*html*/ `
+// 	return html`
 //     <div style="max-width:400px">
 //         <div style="display:flex;justify-content:center">
 //             <c-select style="width:100px">
@@ -2395,7 +2395,7 @@
 // );
 
 // registerModalContent(
-// 	/*html*/ `
+// 	html`
 //     <div id="cmsBlockBackground">
 //         <div style="width:100%;max-width:650px">
 //             <div class="custom-toolbar">

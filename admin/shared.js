@@ -11,11 +11,12 @@ domload(() => {
 		nv.classList.add("animate_hidden");
 		nv.insertAdjacentHTML(
 			"beforebegin",
-			/*html*/ `
-                <div class="btn subtle fill medium" onclick='expandMenu(this._next(),this)'>
-                    <b>Menu</b> <div class='expand_arrow'><i class='fas fa-chevron-right'></i></div>
-                </div>
-            `
+			html`
+				<div class="btn subtle fill medium" onclick="expandMenu(this._next(),this)">
+					<b>Menu</b>
+					<div class="expand_arrow"><i class="fas fa-chevron-right"></i></div>
+				</div>
+			`
 		);
 	}
 
@@ -34,10 +35,7 @@ domload(() => {
 		}
 		const href = a.getAttribute("href");
 
-		if (
-			location.pathname.indexOf(href) === 0 ||
-			location.href.indexOf(href) === 0
-		) {
+		if (location.pathname.indexOf(href) === 0 || location.href.indexOf(href) === 0) {
 			if (href.length <= shortest_length) {
 				shortest_hit = e;
 				shortest_length = href.length;

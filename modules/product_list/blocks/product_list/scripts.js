@@ -14,10 +14,7 @@ function setProductListGridDimensions(node) {
 		product_list_id = `product_list_${productListCounter}`;
 		node.setAttribute("data-product-list-id", product_list_id);
 		node.classList.add(product_list_id);
-		document.body.insertAdjacentHTML(
-			"beforeend",
-			`<style class='${product_list_id}'></style>`
-		);
+		document.body.insertAdjacentHTML("beforeend", `<style class='${product_list_id}'></style>`);
 	}
 
 	var rect = node.getBoundingClientRect();
@@ -57,17 +54,16 @@ function productListLoaded() {
 		if (!e._child(".product-actions")) {
 			e.insertAdjacentHTML(
 				"beforeend",
-				/*html*/ `<div class='product-actions'>
-                    <div class='btn-wrapper'>
-                        <img class='heart-icon below' src='/src/img/heart_icon.svg'>
-                        <img class='heart-icon over' src='/src/img/heart_icon_fill.svg'>
-                    </div>
-                    <div class='btn-wrapper' onclick='showOffersOntopBabbyohohohohohoh'>
-                        <img class='basket-icon below' src='/src/img/basket_icon.svg'>
-                        <img class='basket-icon over' src='/src/img/basket_icon_fill.svg'>
-                    </div>
-                    </div>
-                `
+				html`<div class="product-actions">
+					<div class="btn-wrapper">
+						<img class="heart-icon below" src="/src/img/heart_icon.svg" />
+						<img class="heart-icon over" src="/src/img/heart_icon_fill.svg" />
+					</div>
+					<div class="btn-wrapper" onclick="showOffersOntopBabbyohohohohohoh">
+						<img class="basket-icon below" src="/src/img/basket_icon.svg" />
+						<img class="basket-icon over" src="/src/img/basket_icon_fill.svg" />
+					</div>
+				</div> `
 			);
 		}
 	});
@@ -106,12 +102,7 @@ function preventProductImagesLongPress() {
 function currentlyFocusedProduct(node) {
 	let product_img = null;
 
-	if (
-		node &&
-		node.classList &&
-		node.classList.contains("product-image") &&
-		node._parent(".product-block")
-	) {
+	if (node && node.classList && node.classList.contains("product-image") && node._parent(".product-block")) {
 		product_img = node;
 	}
 
@@ -155,10 +146,7 @@ function currentlyFocusedProduct(node) {
 			product_img.animation_frames = JSON.parse(g).map((e) => e.src);
 
 			if (!product_img.hasAttribute("data-default_src")) {
-				product_img.setAttribute(
-					"data-default_src",
-					product_img.getAttribute("data-src")
-				);
+				product_img.setAttribute("data-default_src", product_img.getAttribute("data-src"));
 			}
 			if (product_img.animation_frames.length > 1) {
 				product_img.animation_frame_id = 0;

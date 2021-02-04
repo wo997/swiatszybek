@@ -42,9 +42,7 @@ attributes_array.forEach((attribute) => {
 function comboSelectValuesChanged(combo, options = {}) {
 	combo._children("select").forEach((select) => {
 		for (option of select.options) {
-			var childSelect = combo._child(
-				`select[data-parent_value_id="${option.value}"]`
-			);
+			var childSelect = combo._child(`select[data-parent_value_id="${option.value}"]`);
 			if (!childSelect) continue;
 			if (option.value == select.value) {
 				childSelect.classList.remove("hidden");
@@ -82,39 +80,32 @@ function createAttributeSelect(combo, options = {}) {
 	attribute_options_html = "";
 
 	attribute_options_htmls.forEach((data) => {
-		if (
-			!options.attribute_ids ||
-			options.attribute_ids.indexOf(+data.attribute_id) !== -1
-		) {
+		if (!options.attribute_ids || options.attribute_ids.indexOf(+data.attribute_id) !== -1) {
 			attribute_options_html += data.html;
 		}
 	});
 
 	combo.insertAdjacentHTML("afterbegin", attribute_options_html);
-	combo
-		._children("select:not(.combo-attribute-registered)")
-		.forEach((select) => {
-			select.classList.add("combo-attribute-registered");
+	combo._children("select:not(.combo-attribute-registered)").forEach((select) => {
+		select.classList.add("combo-attribute-registered");
 
-			const changeCallback = () => {
-				var wrapper = select._parent(".combo-select-wrapper");
-				comboSelectValuesChanged(wrapper, options);
+		const changeCallback = () => {
+			var wrapper = select._parent(".combo-select-wrapper");
+			comboSelectValuesChanged(wrapper, options);
 
-				if (select.value === "" && select.prev_value) {
-					var sub_select = wrapper._child(
-						`[data-parent_value_id="${select.prev_value}"]`
-					);
-					if (sub_select) {
-						sub_select._set_value("");
-					}
+			if (select.value === "" && select.prev_value) {
+				var sub_select = wrapper._child(`[data-parent_value_id="${select.prev_value}"]`);
+				if (sub_select) {
+					sub_select._set_value("");
 				}
-				//console.log(select.prev_value);
-				//select.prev_value = select.value;
-			};
-			select.addEventListener("change", changeCallback);
+			}
+			//console.log(select.prev_value);
+			//select.prev_value = select.value;
+		};
+		select.addEventListener("change", changeCallback);
 
-			changeCallback();
-		});
+		changeCallback();
+	});
 
 	if (options.required) {
 		combo._children(".combo-select-wrapper").forEach((e) => {
@@ -145,10 +136,7 @@ function anythingValueChanged(anything_wrapper) {
 
 	anything_wrapper.classList.toggle("any_selected", any_selected);
 
-	var attribute_values = anything_wrapper._parent(
-		"[data-type]",
-		"[attribute_values]"
-	);
+	var attribute_values = anything_wrapper._parent("[data-type]", "[attribute_values]");
 	if (attribute_values) {
 		attribute_values._dispatch_change();
 	}
@@ -156,9 +144,7 @@ function anythingValueChanged(anything_wrapper) {
 
 function registerAnythingValues() {
 	$$(".any-value-wrapper").forEach((anything_wrapper) => {
-		var checkbox = anything_wrapper._child(
-			`input[type="checkbox"]:not(.active-registered)`
-		);
+		var checkbox = anything_wrapper._child(`input[type="checkbox"]:not(.active-registered)`);
 		if (!checkbox) return;
 		checkbox.classList.add("active-registered");
 		const changeCallback = () => {
@@ -211,12 +197,14 @@ domload(() => {
 			},
 		},
 		render: (data) => {
-			return /*html*/ `
-            <div class='select-image-wrapper' style="display: flex;align-items: center">
-              <img name="src" data-height='1w' style="object-fit:contain;width:120px;display: block;margin-right:10px;">
-              <button class="btn primary add_img_btn" onclick="fileManager.open(this._prev(),{asset_types: ['image']})"> <span>Wybierz</span> <i class="fas fa-image"></i></button>
-            </div>
-          `;
+			return html`
+				<div class="select-image-wrapper" style="display: flex;align-items: center">
+					<img name="src" data-height="1w" style="object-fit:contain;width:120px;display: block;margin-right:10px;" />
+					<button class="btn primary add_img_btn" onclick="fileManager.open(this._prev(),{asset_types: ['image']})">
+						<span>Wybierz</span> <i class="fas fa-image"></i>
+					</button>
+				</div>
+			`;
 		},
 		onChange: (values, list) => {
 			var rowIndex = -1;
@@ -230,7 +218,13 @@ domload(() => {
 							._child(".select-image-wrapper")
 							.insertAdjacentHTML(
 								"beforeend",
-								/*html*/ `<span class="main-img rect" data-tooltip="Wyświetlane przy wyszukiwaniu produktów" style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;"> Zdjęcie główne <i class="fas fa-eye"></i> </span>`
+								html`<span
+									class="main-img rect"
+									data-tooltip="Wyświetlane przy wyszukiwaniu produktów"
+									style="font-weight: 600;margin-left: 10px;color: #0008;background: #0001;"
+								>
+									Zdjęcie główne <i class="fas fa-eye"></i>
+								</span>`
 							);
 					}
 				} else {
@@ -242,9 +236,7 @@ domload(() => {
 				}
 
 				var img = row._child("img");
-				row
-					._child(".add_img_btn span")
-					._set_content(img._get_value() ? "Zmień" : "Wybierz");
+				row._child(".add_img_btn span")._set_content(img._get_value() ? "Zmień" : "Wybierz");
 			});
 			lazyLoadImages();
 		},
@@ -281,70 +273,78 @@ domload(() => {
 			zdjecie: {},
 		},
 		table: true,
-		header: /*html*/ `
-      <th>Nazwa <i class="fas fa-info-circle" data-tooltip="Nazwa wariantu wyświetlana w koszyku, np.:<br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></th>
-      <th>Cechy</th>
-      <th>Aktywny</th>
-      <th>Zdjęcie</th>
-      <th>Cena Netto</th>
-      <th>VAT</th>
-      <th>Cena Brutto</th>
-      <th>Rabat</th>
-      <th>Kod produktu</th>
-      <th>W magazynie</th>
-      <th></th>
-      <th></th>
-    `,
+		header: html`
+			<th>
+				Nazwa
+				<i
+					class="fas fa-info-circle"
+					data-tooltip="Nazwa wariantu wyświetlana w koszyku, np.:<br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"
+				></i>
+			</th>
+			<th>Cechy</th>
+			<th>Aktywny</th>
+			<th>Zdjęcie</th>
+			<th>Cena Netto</th>
+			<th>VAT</th>
+			<th>Cena Brutto</th>
+			<th>Rabat</th>
+			<th>Kod produktu</th>
+			<th>W magazynie</th>
+			<th></th>
+			<th></th>
+		`,
 		render: (data) => {
-			return /*html*/ `
-        <td>
-          <input type='hidden' data-number name="variant_id">
-          <textarea name="name" class="field inline" style="height: 3.75em;"></textarea>
-        </td>
-        <td>
-          <input type='hidden' name="attributes" onchange="displayAttributesPreview($(this)._next(), this.value)">
-          <div data-tooltip class='clamp-lines clamp-4'></div>
-        </td>
-        <td>
-          <input type='hidden' name="published" onchange='$(this)._next()._set_content(renderIsPublished({published:this._get_value()}))'>
-          <span></span>
-        </td>
-        <td>
-          <img name="zdjecie" style="width:80px;height:80px;object-fit:contain"/>
-        </td>
-        <td>
-          <div class='glue-children'>
-            <input type='number' name="price" class="field inline no-wrap"><span class='field-description'>zł</span>
-          </div>
-        </td>
-        <td>
-          <div class='glue-children'>
-            <input type='number' name="vat" class="field inline no-wrap"><span class='field-description'>%</span>
-          </div>
-        </td>
-        <td>
-          <div class='glue-children'>
-            <input type='number' name="gross_price" class="field inline no-wrap"><span class='field-description'>zł</span>
-          </div>
-        </td>
-        <td>
-          <div class='glue-children'>
-            <input type='number' name="rabat" class="field inline no-wrap"><span class='field-description'>zł</span>
-          </div>
-        </td>
-        <td>
-          <input type='text' name="product_code" class="field inline" style="width: 150px;">
-        </td>
-        <td>
-          <div class='glue-children'>
-            <input type='number' name="stock" class="field inline no-wrap"><span class='field-description'>szt.</span>
-          </div>
-          <input type='hidden' name="was_stock">
-        </td>
-        <td style="width:90px;">
-          <button class='btn primary edit-btn' onclick='editVariant($(this)._parent()._parent(), this)'>Edytuj <i class="fas fa-cog"></i></button>
-        </td>
-      `;
+			return html`
+				<td>
+					<input type="hidden" data-number name="variant_id" />
+					<textarea name="name" class="field inline" style="height: 3.75em;"></textarea>
+				</td>
+				<td>
+					<input type="hidden" name="attributes" onchange="displayAttributesPreview($(this)._next(), this.value)" />
+					<div data-tooltip class="clamp-lines clamp-4"></div>
+				</td>
+				<td>
+					<input type="hidden" name="published" onchange="$(this)._next()._set_content(renderIsPublished({published:this._get_value()}))" />
+					<span></span>
+				</td>
+				<td>
+					<img name="zdjecie" style="width:80px;height:80px;object-fit:contain" />
+				</td>
+				<td>
+					<div class="glue-children">
+						<input type="number" name="price" class="field inline no-wrap" /><span class="field-description">zł</span>
+					</div>
+				</td>
+				<td>
+					<div class="glue-children">
+						<input type="number" name="vat" class="field inline no-wrap" /><span class="field-description">%</span>
+					</div>
+				</td>
+				<td>
+					<div class="glue-children">
+						<input type="number" name="gross_price" class="field inline no-wrap" /><span class="field-description">zł</span>
+					</div>
+				</td>
+				<td>
+					<div class="glue-children">
+						<input type="number" name="rabat" class="field inline no-wrap" /><span class="field-description">zł</span>
+					</div>
+				</td>
+				<td>
+					<input type="text" name="product_code" class="field inline" style="width: 150px;" />
+				</td>
+				<td>
+					<div class="glue-children">
+						<input type="number" name="stock" class="field inline no-wrap" /><span class="field-description">szt.</span>
+					</div>
+					<input type="hidden" name="was_stock" />
+				</td>
+				<td style="width:90px;">
+					<button class="btn primary edit-btn" onclick="editVariant($(this)._parent()._parent(), this)">
+						Edytuj <i class="fas fa-cog"></i>
+					</button>
+				</td>
+			`;
 		},
 		default_row: {
 			variant_id: -1,
@@ -420,10 +420,7 @@ function fillVariantsFromFilters() {
 				return true;
 			}
 			var va = JSON.parse(variant.attributes);
-			return (
-				isEquivalent(unique_variant_attributes.selected, va.selected) &&
-				isEquivalent(unique_variant_attributes.values, va.values)
-			);
+			return isEquivalent(unique_variant_attributes.selected, va.selected) && isEquivalent(unique_variant_attributes.values, va.values);
 		}, false);
 
 		if (!exists) {
@@ -450,9 +447,7 @@ function getVariantFiltersUniqueOptions(variant_filters) {
 		var new_unique_variants = [];
 
 		variant_filter.filter_options.forEach((filter_option) => {
-			var option_unique_variants = getVariantFiltersUniqueOptions(
-				filter_option.variant_filters
-			);
+			var option_unique_variants = getVariantFiltersUniqueOptions(filter_option.variant_filters);
 
 			if (option_unique_variants.length == 0) {
 				option_unique_variants.push([]);
@@ -488,10 +483,7 @@ function choiceNameChanged(input) {
 			);
 			add_buttons
 				._child(".add_end")
-				.setAttribute(
-					"data-tooltip",
-					`Dodaj opcję do pola wyboru <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`
-				);
+				.setAttribute("data-tooltip", `Dodaj opcję do pola wyboru <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`);
 		}
 	}
 }
@@ -511,10 +503,7 @@ function optionNameChanged(input) {
 			);
 			add_buttons
 				._child(".add_end")
-				.setAttribute(
-					"data-tooltip",
-					`Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`
-				);
+				.setAttribute("data-tooltip", `Dodaj pole wyboru do opcji <span class='semi-bold'>${input.value.toLowerCase()}</span> na końcu`);
 		}
 	}
 
@@ -531,9 +520,7 @@ function choiceAttributeChanged(select) {
 	select = $(select);
 	var sub_filter = select._parent(`.sub_filter`);
 	var filter_name = sub_filter._child(`[name="filter_name"]`);
-	filter_name._set_value(
-		select.value == -1 ? "" : getSelectDisplayValue(select)
-	);
+	filter_name._set_value(select.value == -1 ? "" : getSelectDisplayValue(select));
 }
 
 function choiceValuesChanged(values_combo) {
@@ -573,13 +560,9 @@ function choiceListChanged(attribute_row_wrapper) {
 	}
 
 	list._direct_children().forEach((value_list_wrapper) => {
-		var selected_attribute_values = value_list_wrapper._child(
-			`[name='selected_attribute_values']`
-		);
+		var selected_attribute_values = value_list_wrapper._child(`[name='selected_attribute_values']`);
 
-		if (
-			selected_attribute_values._child(`[data-attribute_id="${attribute_id}"]`)
-		) {
+		if (selected_attribute_values._child(`[data-attribute_id="${attribute_id}"]`)) {
 			// nothing to create
 			return;
 		}
@@ -612,41 +595,56 @@ function createVariantFiltersSimpleList(node, options = {}) {
 			attribute_id: {},
 		},
 		render: (data) => {
-			return /*html*/ `
-          <div class='sub_filter filter_wrapper'>
-            <div style='margin-right:6px' class="inline">
-              <div class='fancy-label label-filters'>
-                <i class="fas fa-th-large"></i>
-                <input type="text" class="field inline no-wrap semi-bold white" name="filter_name" placeholder="Nazwa pola wyboru" data-tooltip="Wpisz nazwę pola wyboru<br>Np.: <span class='semi-bold'>kolor</span>" data-tooltip-position="center" onchange="choiceNameChanged(this)">
-              </div>
-              Cecha
-              <select class="field inline no-wrap" name="attribute_id" onchange="choiceAttributeChanged(this)" data-tooltip="W tym miejscu możesz:<br>1. Wybrać cechę z listy wcześniej przygotowanej w zakładce › Produkty › Cechy<br>2. Wybrać pole niestandardowe (gdy cecha opisuje tylko dany produkt)">
-                ${attribute_select_options}
-                <option value='-1'>⋆ Pole niestandardowe ⋆</option>
-              </select>
-            </div>
-            <div class='indent'>
-              <div>
-                <button class='btn transparent expand_arrow open' onclick='expandMenu($(this)._parent()._next(),$(this)._parent())'><i class='fas fa-chevron-right'></i></button>
-                <span class='label inline indent_field_title'>
-                  Lista opcji
-                  <span class='option_count'></span>
-                  <span class='add_buttons'></span>
-                </span>
-                <span style='margin-left:10px'>
-                  <i class="fas fa-arrows-alt-h"></i>
-                  <select name="style" class="field inline" data-tooltip='Szerokość "kafelek" opcji widocznych dla klienta'>
-                    <option value="col1">100%</option>
-                    <option value="col2">1/2</option>
-                    <option value="col3">1/3</option>
-                    <option value="col4">1/4</option>
-                  </select>
-                </span>
-              </div>
-              <div name="filter_options" class="expand_y" data-validate="|count:1+"></div>
-            </div>
-          </div>
-        `;
+			return html`
+				<div class="sub_filter filter_wrapper">
+					<div style="margin-right:6px" class="inline">
+						<div class="fancy-label label-filters">
+							<i class="fas fa-th-large"></i>
+							<input
+								type="text"
+								class="field inline no-wrap semi-bold white"
+								name="filter_name"
+								placeholder="Nazwa pola wyboru"
+								data-tooltip="Wpisz nazwę pola wyboru<br>Np.: <span class='semi-bold'>kolor</span>"
+								data-tooltip-position="center"
+								onchange="choiceNameChanged(this)"
+							/>
+						</div>
+						Cecha
+						<select
+							class="field inline no-wrap"
+							name="attribute_id"
+							onchange="choiceAttributeChanged(this)"
+							data-tooltip="W tym miejscu możesz:<br>1. Wybrać cechę z listy wcześniej przygotowanej w zakładce › Produkty › Cechy<br>2. Wybrać pole niestandardowe (gdy cecha opisuje tylko dany produkt)"
+						>
+							${attribute_select_options}
+							<option value="-1">⋆ Pole niestandardowe ⋆</option>
+						</select>
+					</div>
+					<div class="indent">
+						<div>
+							<button class="btn transparent expand_arrow open" onclick="expandMenu($(this)._parent()._next(),$(this)._parent())">
+								<i class="fas fa-chevron-right"></i>
+							</button>
+							<span class="label inline indent_field_title">
+								Lista opcji
+								<span class="option_count"></span>
+								<span class="add_buttons"></span>
+							</span>
+							<span style="margin-left:10px">
+								<i class="fas fa-arrows-alt-h"></i>
+								<select name="style" class="field inline" data-tooltip='Szerokość "kafelek" opcji widocznych dla klienta'>
+									<option value="col1">100%</option>
+									<option value="col2">1/2</option>
+									<option value="col3">1/3</option>
+									<option value="col4">1/4</option>
+								</select>
+							</span>
+						</div>
+						<div name="filter_options" class="expand_y" data-validate="|count:1+"></div>
+					</div>
+				</div>
+			`;
 		},
 		default_row: {
 			filter_name: "",
@@ -682,26 +680,34 @@ function createFilterOptionsSimpleList(node) {
 			value: {},
 		},
 		render: (data) => {
-			return /*html*/ `
-          <div class='sub_filter options_wrapper'>
-            <div class='fancy-label label-options'>
-              <input type='text' name="value" class="field inline no-wrap semi-bold white" placeholder="Nazwa wariantu / Cecha" onchange="optionNameChanged(this)">
-            </div>
-            <div style='margin-right:6px' class="inline select_value_wrapper">
-              Wartość:
-              <div class='inline' name='selected_attribute_values' data-type="attribute_values" onchange="choiceValuesChanged(this)"></div>
-            </div>
-            <button class='btn secondary semi-bold add_additional_filters' onclick='this._next()._child(".add_begin").click()'>Dodatkowe pola wyboru <i class='fas fa-plus'></i></button>
+			return html`
+				<div class="sub_filter options_wrapper">
+					<div class="fancy-label label-options">
+						<input
+							type="text"
+							name="value"
+							class="field inline no-wrap semi-bold white"
+							placeholder="Nazwa wariantu / Cecha"
+							onchange="optionNameChanged(this)"
+						/>
+					</div>
+					<div style="margin-right:6px" class="inline select_value_wrapper">
+						Wartość:
+						<div class="inline" name="selected_attribute_values" data-type="attribute_values" onchange="choiceValuesChanged(this)"></div>
+					</div>
+					<button class="btn secondary semi-bold add_additional_filters" onclick='this._next()._child(".add_begin").click()'>
+						Dodatkowe pola wyboru <i class="fas fa-plus"></i>
+					</button>
 
-            <div class='indent'>
-              <div class='label indent_field_title'>
-                Pola wyboru
-                <span class='add_buttons'></span>
-              </div>
-              <div name="variant_filters"></div>
-            </div>
-          </div>
-        `;
+					<div class="indent">
+						<div class="label indent_field_title">
+							Pola wyboru
+							<span class="add_buttons"></span>
+						</div>
+						<div name="variant_filters"></div>
+					</div>
+				</div>
+			`;
 		},
 		default_row: {
 			value: "",

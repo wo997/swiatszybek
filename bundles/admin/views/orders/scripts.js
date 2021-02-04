@@ -5,20 +5,14 @@ domload(() => {
 
 	var tableName = "mytable";
 
-	var statusDefinition = zamowienia_table_definition.find(
-		(e) => e.title == "Status"
-	);
+	var statusDefinition = zamowienia_table_definition.find((e) => e.title == "Status");
 
 	if (statusDefinition) {
 		statusDefinition.className = "switchControls";
 		statusDefinition.render = (r) => {
 			return `
           ${renderStatus(r.status_id)}
-          <select data-value="${
-						r.status_id
-					}" onchange="changeZamowienieStatus('${
-				r.link
-			}',this.value, { can_undo: true })">
+          <select data-value="${r.status_id}" onchange="changeZamowienieStatus('${r.link}',this.value, { can_undo: true })">
             <?= $options ?>
           </select>
         `;
@@ -73,12 +67,7 @@ async function bulkStatusUpdate(select) {
 		})
 		.map((r) => r.link);
 
-	if (
-		!confirm(
-			`Czy chcesz zmienić wszystkie statusy (${datatable.bulk_selection.length})?`
-		)
-	)
-		return;
+	if (!confirm(`Czy chcesz zmienić wszystkie statusy (${datatable.bulk_selection.length})?`)) return;
 
 	loader.show();
 
@@ -123,19 +112,22 @@ function changeZamowienieStatus(zamowienie_link, new_status_id, options = {}) {
 							).title;
 
 							showNotification(
-								/*html*/ `
-                                        <div style='text-align:center;line-height:1.8'>
-                                            <div class='header'>Zmieniono status</div>
-                                            Zamówienie #${zamowienie_id}
-                                            <br>
-                                            ${was_status_title} <i class="fas fa-angle-double-right"></i> ${now_status_title}
-                                            <br>
-                                            <button class='btn primary semi-bold' onclick="changeZamowienieStatus('${zamowienie_link}', ${was_status_id});dismissParentNotification(this);">
-                                                Cofnij
-                                                <span class='countdown'></span>
-                                            </button>
-                                        </div>
-                                    `,
+								html`
+									<div style="text-align:center;line-height:1.8">
+										<div class="header">Zmieniono status</div>
+										Zamówienie #${zamowienie_id}
+										<br />
+										${was_status_title} <i class="fas fa-angle-double-right"></i> ${now_status_title}
+										<br />
+										<button
+											class="btn primary semi-bold"
+											onclick="changeZamowienieStatus('${zamowienie_link}', ${was_status_id});dismissParentNotification(this);"
+										>
+											Cofnij
+											<span class="countdown"></span>
+										</button>
+									</div>
+								`,
 								{
 									duration: 5000,
 								}

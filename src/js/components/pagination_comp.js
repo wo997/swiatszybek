@@ -45,7 +45,7 @@ function paginationComp(comp, parent, data = {}) {
 
 				let options = "";
 				for (let i = 0; i < data.page_count; i++) {
-					options += /*html*/ `<option value="${i}">${print_page(i)}</option>`;
+					options += html`<option value="${i}">${print_page(i)}</option>`;
 				}
 				comp._nodes.select._set_content(options);
 				comp._nodes.select_overlay._set_content(print_page(data.page_id));
@@ -55,30 +55,30 @@ function paginationComp(comp, parent, data = {}) {
 	};
 
 	createComp(comp, parent, data, {
-		template: /*html*/ `
-            <div class="pages">
-                <select data-bind="{${data.row_count}}" class="field inline" data-number>
-                    <option value='1'>1</option>
-                    <option value='10'>10</option>
-                    <option value='20'>20</option>
-                    <option value='7'>7</option>
-                </select>
-                na stronę
-            </div>
+		template: html`
+			<div class="pages">
+				<select data-bind="{${data.row_count}}" class="field inline" data-number>
+					<option value="1">1</option>
+					<option value="10">10</option>
+					<option value="20">20</option>
+					<option value="7">7</option>
+				</select>
+				na stronę
+			</div>
 
-            <div class="arrows glue-children">
-                <button class="btn subtle" disabled="{${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div style="position:relative">
-                    <select data-node="{${comp._nodes.select}}" class="field inline" data-number data-bind="{${data.page_id}}"></select>
-                    <div class="select_overlay" data-node="{${comp._nodes.select_overlay}}"></div>
-                </div>
-                <button class="btn subtle" disabled="{${data.page_id >= data.page_count - 1}}" data-node="{${comp._nodes.next}}">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        `,
+			<div class="arrows glue-children">
+				<button class="btn subtle" disabled="{${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
+					<i class="fas fa-chevron-left"></i>
+				</button>
+				<div style="position:relative">
+					<select data-node="{${comp._nodes.select}}" class="field inline" data-number data-bind="{${data.page_id}}"></select>
+					<div class="select_overlay" data-node="{${comp._nodes.select_overlay}}"></div>
+				</div>
+				<button class="btn subtle" disabled="{${data.page_id >= data.page_count - 1}}" data-node="{${comp._nodes.next}}">
+					<i class="fas fa-chevron-right"></i>
+				</button>
+			</div>
+		`,
 		initialize: () => {
 			comp._nodes.next.addEventListener("click", () => {
 				comp._data.page_id = Math.min(comp._data.page_id + 1, comp._data.page_count - 1);

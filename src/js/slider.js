@@ -371,10 +371,10 @@ function initSlider(elem) {
 
 	node.insertAdjacentHTML(
 		"beforeend",
-		/*html*/ `
-            <div class="nav nav_prev">${ICONS.chevron_left}</div>
-            <div class="nav nav_next">${ICONS.chevron_left}</div>
-        `
+		html`
+			<div class="nav nav_prev">${ICONS.chevron_left}</div>
+			<div class="nav nav_next">${ICONS.chevron_left}</div>
+		`
 	);
 
 	const nav_prev = node._child(".nav_prev");

@@ -59,9 +59,7 @@ function addVariantToBasket(variant_id, quantity_diff, options = {}) {
 	}
 
 	if (typeof variant_id === "object") {
-		variant_id = $(variant_id)
-			._parent("[data-variant_id]")
-			.getAttribute("data-variant_id");
+		variant_id = $(variant_id)._parent("[data-variant_id]").getAttribute("data-variant_id");
 
 		if (!variant_id) {
 			return;
@@ -98,18 +96,16 @@ function addVariantToBasket(variant_id, quantity_diff, options = {}) {
 
 				if (variant && variant.quantity + quantity_diff <= 0) {
 					const notification = showNotification(
-						/*html*/ `
-                        <div style='text-align:center;line-height:1.8'>
-                            <div class='header'>Usunięto produkt</div>
-                            <div style="padding:10px">
-                                ${variant.title} ${variant.name}
-                            </div>
-                            <button class='btn primary semi-bold cancel_btn'>
-                                Przywróć
-                                <span class='countdown'></span>
-                            </button>
-                        </div>
-                    `,
+						html`
+							<div style="text-align:center;line-height:1.8">
+								<div class="header">Usunięto produkt</div>
+								<div style="padding:10px">${variant.title} ${variant.name}</div>
+								<button class="btn primary semi-bold cancel_btn">
+									Przywróć
+									<span class="countdown"></span>
+								</button>
+							</div>
+						`,
 						{
 							duration: 8000,
 						}
@@ -151,13 +147,9 @@ window.addEventListener("basket-change", (event) => {
 			var modal_name = "variantAdded";
 
 			$(`#${modal_name} .variant_image`)._set_value(variant.zdjecie);
-			$(`#${modal_name} .variant_name`)._set_content(
-				variant.title + " " + variant.name
-			);
+			$(`#${modal_name} .variant_name`)._set_content(variant.title + " " + variant.name);
 			$(`#${modal_name} .variant_qty`)._set_content(variant.quantity + " szt.");
-			$(`#${modal_name} .variant_price`)._set_content(
-				variant.real_price + " zł"
-			);
+			$(`#${modal_name} .variant_price`)._set_content(variant.real_price + " zł");
 
 			var options = {};
 			if (res.options.modal_source) {
@@ -181,12 +173,7 @@ window.addEventListener("basket-change", (event) => {
 		});
 	};
 
-	if (
-		(res.changes.added.length > 0 ||
-			res.changes.quantity.length > 0 ||
-			res.changes.removed.length > 0) &&
-		!res.options.instant
-	) {
+	if ((res.changes.added.length > 0 || res.changes.quantity.length > 0 || res.changes.removed.length > 0) && !res.options.instant) {
 		$$(".basket_item_count, .total_basket_cost").forEach((e) => {
 			e._animate(ANIMATIONS.replace(0.2), 400);
 		});
@@ -244,18 +231,14 @@ function renderStatus(status_id) {
 	if (!status) {
 		return "";
 	}
-	return `<div class='rect status_rect' style='background:#${def(
-		status.color
-	)}'>${status.title}</div>`;
+	return `<div class='rect status_rect' style='background:#${def(status.color)}'>${status.title}</div>`;
 }
 
 function setVariantRowQty(variant_node, variant_data) {
 	var qty = variant_node._child(".qty-label");
 	if (qty) {
 		qty._set_content(variant_data.quantity);
-		variant_node
-			._child(".qty-btn.add")
-			.toggleAttribute("disabled", variant_data.quantity >= variant_data.stock);
+		variant_node._child(".qty-btn.add").toggleAttribute("disabled", variant_data.quantity >= variant_data.stock);
 	}
 
 	var ptc = variant_node._child(".variant_total_price");
@@ -264,12 +247,7 @@ function setVariantRowQty(variant_node, variant_data) {
 	}
 }
 
-function showVariantChanges(
-	res,
-	basket_node,
-	basket_row_template,
-	data_source
-) {
+function showVariantChanges(res, basket_node, basket_row_template, data_source) {
 	if (!basket_node) {
 		return;
 	}
@@ -279,9 +257,7 @@ function showVariantChanges(
 
 	if (res.changes) {
 		res.changes.quantity.forEach((variant_id) => {
-			var variant_node = basket_node._child(
-				`[data-variant_id="${variant_id}"]`
-			);
+			var variant_node = basket_node._child(`[data-variant_id="${variant_id}"]`);
 			if (!variant_node) {
 				return;
 			}
@@ -321,8 +297,7 @@ function showVariantChanges(
 
 			basket_node.insertAdjacentHTML("beforeend", basket_row_template);
 			const variant_node_children = basket_node._direct_children();
-			var variant_node =
-				variant_node_children[variant_node_children.length - 1];
+			var variant_node = variant_node_children[variant_node_children.length - 1];
 
 			if (!res.options.instant) {
 				variant_node.classList.add("hidden");
@@ -362,9 +337,7 @@ function showVariantChanges(
 			}
 		});
 		res.changes.removed.forEach((variant_id) => {
-			var variant_node = basket_node._child(
-				`[data-variant_id="${variant_id}"]`
-			);
+			var variant_node = basket_node._child(`[data-variant_id="${variant_id}"]`);
 			expand(variant_node, false, {
 				callback: () => {
 					variant_node.remove();
@@ -382,12 +355,7 @@ function showVariantChanges(
 	});
 }
 
-function showProductChanges(
-	res,
-	basket_node,
-	basket_row_template,
-	data_source
-) {
+function showProductChanges(res, basket_node, basket_row_template, data_source) {
 	if (!basket_node) {
 		return;
 	}
@@ -404,8 +372,7 @@ function showProductChanges(
 
 			basket_node.insertAdjacentHTML("beforeend", basket_row_template);
 			product_node_children = basket_node._direct_children();
-			var product_node =
-				product_node_children[product_node_children.length - 1];
+			var product_node = product_node_children[product_node_children.length - 1];
 
 			if (!res.options.instant) {
 				product_node.classList.add("hidden");
@@ -443,9 +410,7 @@ function showProductChanges(
 			}
 		});
 		res.changes.removed.forEach((product_id) => {
-			var product_node = basket_node._child(
-				`[data-product_id="${product_id}"]`
-			);
+			var product_node = basket_node._child(`[data-product_id="${product_id}"]`);
 			expand(product_node, false, {
 				callback: () => {
 					product_node.remove();

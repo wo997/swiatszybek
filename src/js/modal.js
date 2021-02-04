@@ -14,11 +14,11 @@ function initModal() {
 
 	document.body.insertAdjacentHTML(
 		"beforeend",
-		/*html*/ `
-            <div id="modal_wrapper">
-                <div class="modal_container"></div>
-            </div>
-        `
+		html`
+			<div id="modal_wrapper">
+				<div class="modal_container"></div>
+			</div>
+		`
 	);
 
 	modal_wrapper_node = $("#modal_wrapper");
@@ -72,11 +72,7 @@ function registerModal(modal) {
 
 	modal._children(`.scroll-panel:not(.horizontal)`).forEach((scr) => {
 		const panel_on_edge = (dy) => {
-			return (
-				scr.scrollHeight < 2 ||
-				(scr.scrollTop >= scr.scrollHeight - scr.offsetHeight - 1 && dy > 0) ||
-				(scr.scrollTop < 1 && dy < 0)
-			);
+			return scr.scrollHeight < 2 || (scr.scrollTop >= scr.scrollHeight - scr.offsetHeight - 1 && dy > 0) || (scr.scrollTop < 1 && dy < 0);
 		};
 
 		scr.addEventListener("mousewheel", (ev) => {
@@ -150,21 +146,14 @@ function showModal(name = null, params = {}) {
 				if (params.source) {
 					const src_rect = params.source.getBoundingClientRect();
 					const modal_rect = modal_copy_content.getBoundingClientRect();
-					dx =
-						src_rect.left -
-						modal_rect.left +
-						(src_rect.width - modal_rect.width) * 0.5;
-					dy =
-						src_rect.top -
-						modal_rect.top +
-						(src_rect.height - modal_rect.height) * 0.5;
+					dx = src_rect.left - modal_rect.left + (src_rect.width - modal_rect.width) * 0.5;
+					dy = src_rect.top - modal_rect.top + (src_rect.height - modal_rect.height) * 0.5;
 				}
 
 				// observe changes and apply them to the copied modal
 				const observer = new MutationObserver(() => {
 					modal_copy_content.style.width = modal_content.offsetWidth + 1 + "px"; // weird but let's just keep it like this
-					modal_copy_content.style.height =
-						modal_content.offsetHeight + 1 + "px";
+					modal_copy_content.style.height = modal_content.offsetHeight + 1 + "px";
 
 					if (modalObserverTimeout) {
 						clearTimeout(modalObserverTimeout);

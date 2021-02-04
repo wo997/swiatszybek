@@ -49,3 +49,16 @@ product-comp {
 		margin-top: 5px;
 	}
 }
+
+product-feature-option-comp {
+	& {
+		padding: 5px;
+		border: 1px solid #ccc;
+	}
+	product-feature-option-comp {
+		margin-left: 30px;
+	}
+	& > list-comp:not(:empty) {
+		margin-top: 5px;
+	}
+}

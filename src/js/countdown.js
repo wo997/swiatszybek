@@ -19,23 +19,23 @@ function createCountdown(node, options) {
 	const length = actual_radius * 2 * Math.PI;
 	const color = def(options.color, "black");
 
-	node._set_content(/*html*/ `
-        <div class="countdown" style="
+	node._set_content(html`
+		<div
+			class="countdown"
+			style="
             --countdown_size:${size}px;
             --countdown_thickness:${thickness};
             --countdown_length:${length}px;
             --countdown_duration:${options.duration}ms;
             --countdown_color:${color};
-        ">
-            <div class="countdown_number"></div>
-            <svg>
-                <circle
-                    r="${actual_radius}"
-                    cx="${size * 0.5}"
-                    cy="${size * 0.5}"></circle>
-            </svg>
-        </div>
-    `);
+        "
+		>
+			<div class="countdown_number"></div>
+			<svg>
+				<circle r="${actual_radius}" cx="${size * 0.5}" cy="${size * 0.5}"></circle>
+			</svg>
+		</div>
+	`);
 
 	const countdown_number = node._child(".countdown_number");
 

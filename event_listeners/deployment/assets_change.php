@@ -113,6 +113,11 @@ if ($modifyJS) {
         // minify first, then you are safe to say that all variables are in a single line, ok, strings are not ;) but [^()]* does the trick
         $js_full = (new Minify\JS($js_full))->minify();
 
+
+
+        // fake lit-html lol
+        $js_full = str_replace('html`', '`', $js_full);
+
         // allows reactive data 
         $js_full = str_replace('{${', '{{', $js_full);
 

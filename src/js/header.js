@@ -80,8 +80,7 @@ window.addEventListener("load", () => {
 			return;
 		}
 
-		var bottomOfPage =
-			window.innerHeight + window.scrollY >= document.body.offsetHeight;
+		var bottomOfPage = window.innerHeight + window.scrollY >= document.body.offsetHeight;
 
 		var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 		var movingDown = scrollTop >= def(window.scrollTop, 0);
@@ -105,9 +104,7 @@ function headerResizeCallback() {
 
 	header_height.style.marginBottom =
 		$(".header-top").getBoundingClientRect().height +
-		(window.innerWidth >= MOBILE_WIDTH
-			? $(".navigation").getBoundingClientRect().height
-			: 0) +
+		(window.innerWidth >= MOBILE_WIDTH ? $(".navigation").getBoundingClientRect().height : 0) +
 		"px";
 }
 
@@ -302,10 +299,7 @@ domload(() => {
     wls.appendChild(wl);
   }*/
 
-	document.body.insertAdjacentHTML(
-		"beforeend",
-		`<style>.headerbtn_hover_content {display:none!important}</style>`
-	);
+	document.body.insertAdjacentHTML("beforeend", `<style>.headerbtn_hover_content {display:none!important}</style>`);
 });
 
 // perform search
@@ -327,12 +321,7 @@ domload(() => {
 	}
 	var main_search_wrapper = $(".main-search-wrapper");
 	document.addEventListener("mousedown", (event) => {
-		main_search_wrapper.classList.toggle(
-			"active",
-			$(event.target)
-				? !!$(event.target)._parent(".main-search-wrapper")
-				: false
-		);
+		main_search_wrapper.classList.toggle("active", $(event.target) ? !!$(event.target)._parent(".main-search-wrapper") : false);
 	});
 	input.addEventListener("input", () => {
 		delay("topSearchProducts", 400);
@@ -414,11 +403,7 @@ function topSearchProducts(force) {
 	}
 
 	if (search.length < 3) {
-		return callback(
-			force
-				? `<i class='result' style='pointer-events:none'> Wpisz mininum 3 znaki...</i>`
-				: ""
-		);
+		return callback(force ? `<i class='result' style='pointer-events:none'> Wpisz mininum 3 znaki...</i>` : "");
 	}
 
 	var searchParams = JSON.stringify({
@@ -435,7 +420,7 @@ function topSearchProducts(force) {
 		},
 		success: (res) => {
 			if (!res.content) {
-				res.content = /*html*/ `<div class='result no-results' style='pointer-events:none'><i class="fas fa-ban"></i> Brak wyników</div>`;
+				res.content = html`<div class="result no-results" style="pointer-events:none"><i class="fas fa-ban"></i> Brak wyników</div>`;
 			}
 			callback(res.content);
 		},
@@ -449,10 +434,7 @@ domload(() => {
         header .headerbtn_hover_content`
 	).forEach((e) => {
 		e.addEventListener("mousewheel", (event) => {
-			if (
-				(event.deltaY < 0 && e.scrollTop < 1) ||
-				(event.deltaY > 0 && e.scrollTop > e.scrollHeight - e.offsetHeight - 1)
-			) {
+			if ((event.deltaY < 0 && e.scrollTop < 1) || (event.deltaY > 0 && e.scrollTop > e.scrollHeight - e.offsetHeight - 1)) {
 				event.preventDefault();
 			} else {
 				event.stopPropagation();
@@ -462,21 +444,13 @@ domload(() => {
 });
 
 function goToSearchProducts() {
-	localStorage.setItem(
-		"products_search",
-		$(".main-search-wrapper input")._get_value()
-	);
+	localStorage.setItem("products_search", $(".main-search-wrapper input")._get_value());
 	window.location = "/produkty/wszystkie";
 }
 
 window.addEventListener("basket-change", (event) => {
 	var res = event.detail.res;
-	showVariantChanges(
-		res,
-		$(`.header_basket_content`),
-		header_basket_variant_template,
-		basket_data.basket
-	);
+	showVariantChanges(res, $(`.header_basket_content`), header_basket_variant_template, basket_data.basket);
 });
 
 domload(() => {
@@ -516,42 +490,42 @@ domload(() => {
 	});
 });
 
-const header_basket_variant_template = /*html*/ `
-  <div class='expand_y'>
-    <div class='product_row product-block'>
-      <a class='product_link'>
-        <img class='product-image variant_image' data-height='1w'>
-        <h3 class='product-title'><span class='check-tooltip variant_full_name'></span></h3>
-      </a>
-      <div style='text-align:center'>
-        <div class='qty-control glue-children'>
-          <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
-            <i class='fas fa-minus'></i>                            
-          </button>
-          <span class='qty-label'></span>
-          <button class='btn subtle qty-btn add' onclick='addVariantToBasket(this,1)'>
-            <i class='fas fa-plus'></i>
-          </button>
-        </div>
-        <span class='product-price pln variant_total_price'></span>
-      </div>
-      <button class='cl cl6 fas remove-product-btn' onclick='addVariantToBasket(this,-100000);return false;'>
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-  </div>
+const header_basket_variant_template = html`
+	<div class="expand_y">
+		<div class="product_row product-block">
+			<a class="product_link">
+				<img class="product-image variant_image" data-height="1w" />
+				<h3 class="product-title"><span class="check-tooltip variant_full_name"></span></h3>
+			</a>
+			<div style="text-align:center">
+				<div class="qty-control glue-children">
+					<button class="btn subtle qty-btn remove" onclick="addVariantToBasket(this,-1)">
+						<i class="fas fa-minus"></i>
+					</button>
+					<span class="qty-label"></span>
+					<button class="btn subtle qty-btn add" onclick="addVariantToBasket(this,1)">
+						<i class="fas fa-plus"></i>
+					</button>
+				</div>
+				<span class="product-price pln variant_total_price"></span>
+			</div>
+			<button class="cl cl6 fas remove-product-btn" onclick="addVariantToBasket(this,-100000);return false;">
+				<i class="fas fa-times"></i>
+			</button>
+		</div>
+	</div>
 `;
 
-const header_basket_product_template = /*html*/ `
-  <div class='expand_y'>
-    <div class='product_row product-block'>
-      <a class='product_link'>
-        <img class='product-image product_image' data-height='1w'>
-        <h3 class='product-title'><span class='check-tooltip product_name'></span></h3>
-      </a>
-      <div style='text-align:center'>
-        <span class='product-price pln product_price'></span>
-      </div>
-    </div>
-  </div>
+const header_basket_product_template = html`
+	<div class="expand_y">
+		<div class="product_row product-block">
+			<a class="product_link">
+				<img class="product-image product_image" data-height="1w" />
+				<h3 class="product-title"><span class="check-tooltip product_name"></span></h3>
+			</a>
+			<div style="text-align:center">
+				<span class="product-price pln product_price"></span>
+			</div>
+		</div>
+	</div>
 `;

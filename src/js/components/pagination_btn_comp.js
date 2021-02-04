@@ -31,13 +31,16 @@ function paginationBtnComp(comp, parent, data) {
 	};
 
 	createComp(comp, parent, data, {
-		template: /*html*/ `
-            <button class="btn
+		template: html`
+			<button
+				class="btn
                 {primary:${data.active}}
                 {subtle:${!data.active}}
-                {splitter:${data.splitter}}">{${data.splitter ? "..." : data.page_id + 1}}
-            </button>
-        `,
+                {splitter:${data.splitter}}"
+			>
+				{${data.splitter ? "..." : data.page_id + 1}}
+			</button>
+		`,
 		initialize: () => {
 			comp.addEventListener("click", () => {
 				/** @type {PaginationComp} */

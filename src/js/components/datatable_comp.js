@@ -157,7 +157,7 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 						let cell_html = "";
 
 						cell_html += /*html*/ `<div class="dt_cell" data-column="${column_index}">`;
-						cell_html += /*html*/ `<span class="label">${column.label}</span>`;
+						cell_html += html`<span class="label">${column.label}</span>`;
 						cell_html += /*html*/ ` <div class="dt_header_controls">`;
 
 						if (column.sortable) {
@@ -175,10 +175,10 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 									tooltip = "Wyłącz sortowanie";
 								}
 							}
-							cell_html += /*html*/ ` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
+							cell_html += html` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
 						}
 						if (column.searchable) {
-							cell_html += /*html*/ ` <button class="btn transparent dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
+							cell_html += html` <button class="btn transparent dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
 						}
 
 						cell_html += /*html*/ `</div>`;
@@ -200,34 +200,34 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 	};
 
 	createComp(comp, parent, data, {
-		template: /*html*/ `
-            <div style="margin-bottom:10px;display:flex;align-items:center">
-                <span class="datatable_label" html="{${data.label}}"></span>
-                <span html="{${data.after_label}}"></span>
-                <div class="float-icon" style="display: inline-block;margin-left:auto">
-                    <input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}">
-                    <i class="fas fa-search"></i>
-                </div>
-            </div>
+		template: html`
+			<div style="margin-bottom:10px;display:flex;align-items:center">
+				<span class="datatable_label" html="{${data.label}}"></span>
+				<span html="{${data.after_label}}"></span>
+				<div class="float-icon" style="display: inline-block;margin-left:auto">
+					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" />
+					<i class="fas fa-search"></i>
+				</div>
+			</div>
 
-            <div style="position:relative">
-                <div class="table_header" data-node="table_header"></div>
+			<div style="position:relative">
+				<div class="table_header" data-node="table_header"></div>
 
-                <div class="table_body">
-                    <list-comp data-bind="{${data.rows}}" ${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}>
-                        <datatable-row-comp></datatable-row-comp>
-                    </list-comp>
-                </div>
-            </div>
+				<div class="table_body">
+					<list-comp data-bind="{${data.rows}}" ${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}>
+						<datatable-row-comp></datatable-row-comp>
+					</list-comp>
+				</div>
+			</div>
 
-            <div class="expand_y" data-node="empty_table">
-                <div class="empty_table" html="{${data.empty_html}}"></div>
-            </div>
+			<div class="expand_y" data-node="empty_table">
+				<div class="empty_table" html="{${data.empty_html}}"></div>
+			</div>
 
-            <pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
+			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
 
-            <style data-node="style"></style>
-        `,
+			<style data-node="style"></style>
+		`,
 		initialize: () => {
 			comp.addEventListener("click", (event) => {
 				const target = $(event.target);

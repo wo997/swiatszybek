@@ -100,9 +100,43 @@ class NewCmsEditBlock {
 		if (block.dataset.block == "grid") {
 			btn_set.push({
 				color: "#b5b",
-				icon: /*html*/ `
-                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="-21 -21 682.667 682.667" width="1em"><rect width="676.881" height="86.78" x="-18" y="48.904" rx="6.68" ry="6.429" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18" y="325.585" rx="6.68" ry="6.429" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18" y="507.446" rx="6.68" ry="6.429" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18.215" y="-134.96" rx="6.68" ry="6.429" transform="rotate(90)" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18.215" y="-418.28" rx="6.68" ry="6.429" transform="rotate(90)" paint-order="markers fill stroke"/><rect width="676.881" height="86.78" x="-18.215" y="-597.681" rx="6.68" ry="6.429" transform="rotate(90)" paint-order="markers fill stroke"/></svg>
-                `,
+				icon: html`
+					<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="-21 -21 682.667 682.667" width="1em">
+						<rect width="676.881" height="86.78" x="-18" y="48.904" rx="6.68" ry="6.429" paint-order="markers fill stroke" />
+						<rect width="676.881" height="86.78" x="-18" y="325.585" rx="6.68" ry="6.429" paint-order="markers fill stroke" />
+						<rect width="676.881" height="86.78" x="-18" y="507.446" rx="6.68" ry="6.429" paint-order="markers fill stroke" />
+						<rect
+							width="676.881"
+							height="86.78"
+							x="-18.215"
+							y="-134.96"
+							rx="6.68"
+							ry="6.429"
+							transform="rotate(90)"
+							paint-order="markers fill stroke"
+						/>
+						<rect
+							width="676.881"
+							height="86.78"
+							x="-18.215"
+							y="-418.28"
+							rx="6.68"
+							ry="6.429"
+							transform="rotate(90)"
+							paint-order="markers fill stroke"
+						/>
+						<rect
+							width="676.881"
+							height="86.78"
+							x="-18.215"
+							y="-597.681"
+							rx="6.68"
+							ry="6.429"
+							transform="rotate(90)"
+							paint-order="markers fill stroke"
+						/>
+					</svg>
+				`,
 				className: "grid_btn",
 				tooltip: "Wiersze / kolumny",
 			});
@@ -146,7 +180,9 @@ class NewCmsEditBlock {
 			if (["dismiss_btn", "remove_btn"].includes(btn.className)) {
 				edit_block_html += `</div> <div class="glue-children inline-flex">`;
 			}
-			edit_block_html += /*html*/ `<button class="btn subtle ${btn.className}" data-tooltip="${btn.tooltip}" data-tooltip-position="bottom">${btn.icon}</button>`;
+			edit_block_html += html`<button class="btn subtle ${btn.className}" data-tooltip="${btn.tooltip}" data-tooltip-position="bottom">
+				${btn.icon}
+			</button>`;
 		}
 		edit_block_html += `</div>`;
 
@@ -241,38 +277,25 @@ class NewCmsEditBlock {
 		const node_width = node_rect.width;
 		const node_height = node_rect.height;
 
-		const block_pos_data = nodePositionAgainstScrollableParent(
-			this.select_node
-		);
+		const block_pos_data = nodePositionAgainstScrollableParent(this.select_node);
 		const block_relative_pos = block_pos_data.relative_pos;
 
-		let left =
-			block_relative_pos.left - this.newCms.content_scroll_panel.scrollLeft;
+		let left = block_relative_pos.left - this.newCms.content_scroll_panel.scrollLeft;
 
-		let top =
-			block_relative_pos.top -
-			this.newCms.content_scroll_panel.scrollTop -
-			node_height;
+		let top = block_relative_pos.top - this.newCms.content_scroll_panel.scrollTop - node_height;
 
 		//if (node_width > block_pos_data.node_rect.width) {
 		left -= 0.5 * (node_width - block_pos_data.node_rect.width);
 		//}
 
 		left = Math.max(left, off);
-		left = Math.min(
-			left,
-			this.newCms.content_scroll_panel.clientWidth - node_width - off
-		);
+		left = Math.min(left, this.newCms.content_scroll_panel.clientWidth - node_width - off);
 
 		top = Math.max(top, off);
-		top = Math.min(
-			top,
-			this.newCms.content_scroll_panel.clientHeight - node_height - off
-		);
+		top = Math.min(top, this.newCms.content_scroll_panel.clientHeight - node_height - off);
 
 		this.node.style.left = left + "px";
-		this.node.style.top =
-			top + this.newCms.content_scroll_panel.scrollTop + "px";
+		this.node.style.top = top + this.newCms.content_scroll_panel.scrollTop + "px";
 
 		this.node.classList.toggle("visible", true);
 	}

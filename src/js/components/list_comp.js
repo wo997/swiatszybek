@@ -74,7 +74,11 @@ function listComp(comp, parent, data = []) {
 					return;
 				}
 
+				let instant = false;
+
 				if (comp.classList.contains("animating")) {
+					//instant = true;
+
 					finishNodeAnimation(comp);
 					comp._getRows().forEach((e) => {
 						finishNodeAnimation(e);
@@ -87,8 +91,6 @@ function listComp(comp, parent, data = []) {
 						target_index: e.to !== -1 ? e.to : e.from,
 					}))
 					.sort((a, b) => Math.sign(a.target_index - b.target_index));
-
-				let instant = false;
 
 				let added = 0;
 				let removed = 0;
@@ -133,7 +135,7 @@ function listComp(comp, parent, data = []) {
 					if (add) {
 						/** @type {AnyComp} */
 						// @ts-ignore
-						child = createNodeFromHtml(/*html*/ `<div class="list_row"></div>`);
+						child = createNodeFromHtml(html`<div class="list_row"></div>`);
 						child.classList.add("cramp_row");
 					}
 

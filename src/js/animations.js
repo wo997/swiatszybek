@@ -23,15 +23,14 @@ function createAnimation(keyframes, duration) {
 	const animation_name = `wo997_animation_${wo997_animation_counter}`;
 	document.body.insertAdjacentHTML(
 		"beforeend",
-		/*html*/ `<style id="${animation_name}">
-      @keyframes ${animation_name} {
-          ${keyframes}
-      }
-      .${animation_name} {
-        animation: ${animation_name} ${duration}ms cubic-bezier(.46,0,.56,1) forwards !important;
-      }
-    </style>
-    `
+		html`<style id="${animation_name}">
+			@keyframes ${animation_name} {
+			    ${keyframes}
+			}
+			.${animation_name} {
+			  animation: ${animation_name} ${duration}ms cubic-bezier(.46,0,.56,1) forwards !important;
+			}
+		</style> `
 	);
 	return animation_name;
 }

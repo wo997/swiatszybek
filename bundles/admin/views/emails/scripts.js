@@ -11,9 +11,7 @@ domload(() => {
 			},
 		},
 		render: (data) => {
-			return /*html*/ `
-                    <input type='text' class='field warn-outline' style='flex-grow:1' name="email" data-validate="email">
-                `;
+			return html`<input type="text" class="field warn-outline" style="flex-grow:1" name="email" data-validate="email" /> `;
 		},
 		default_row: {
 			email: "",
@@ -22,10 +20,7 @@ domload(() => {
 			var add_main_email_btn = $(".add_main_to_orders");
 			if (add_main_email_btn) {
 				var has_main_email = !!values.find((e) => e.email.trim() == main_email);
-				add_main_email_btn.classList.toggle(
-					"hidden",
-					has_main_email || !main_email
-				);
+				add_main_email_btn.classList.toggle("hidden", has_main_email || !main_email);
 			}
 
 			setTimeout(() => {
@@ -43,9 +38,7 @@ domload(() => {
 			},
 		},
 		render: (data) => {
-			return /*html*/ `
-                    <input type='text' class='field warn-outline' style='flex-grow:1' name="email" data-validate="email">
-                `;
+			return html`<input type="text" class="field warn-outline" style="flex-grow:1" name="email" data-validate="email" /> `;
 		},
 		default_row: {
 			email: "",
@@ -54,10 +47,7 @@ domload(() => {
 			var add_main_email_btn = $(".add_main_to_daily_report");
 			if (add_main_email_btn) {
 				var has_main_email = !!values.find((e) => e.email.trim() == main_email);
-				add_main_email_btn.classList.toggle(
-					"hidden",
-					has_main_email || !main_email
-				);
+				add_main_email_btn.classList.toggle("hidden", has_main_email || !main_email);
 			}
 
 			// TODO: might not be neeeded

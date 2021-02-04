@@ -44,7 +44,7 @@ function productComp(
 	};
 
 	createComp(comp, parent, data, {
-		template: /*html*/ `
+		template: html`
             <div class="label">Nazwa produktu</div>
             <input type="text" class="field" data-bind="{${data.name}}"/></span>
 

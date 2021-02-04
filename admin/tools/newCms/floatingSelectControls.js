@@ -49,18 +49,13 @@ class NewCmsSelectControls {
 		}
 
 		if (!hovered_block) {
-			hovered_block = target
-				? target._parent(".newCms_block", { skip: 0 })
-				: null;
+			hovered_block = target ? target._parent(".newCms_block", { skip: 0 }) : null;
 		}
 
 		if (
 			this.selected_block != hovered_block ||
 			(this.selected_block &&
-				(!this.selected_block.select_control ||
-					!this.selected_block.select_control.classList.contains(
-						"select_active"
-					)))
+				(!this.selected_block.select_control || !this.selected_block.select_control.classList.contains("select_active")))
 		) {
 			this.removeSelection();
 
@@ -122,17 +117,16 @@ class NewCmsSelectControls {
 						clr = "0c05";
 					}
 
-					return /*html*/ `<path
-                        d="
+					return html`<path
+						d="
                             M ${a.x},${a.y}
                             L ${b.x},${b.y}
                             L ${c.x},${c.y}
                             L ${d.x},${d.y}
                             Z
                         "
-                        fill="#${clr}"
-                        />
-                        `;
+						fill="#${clr}"
+					/> `;
 				};
 
 				// left
@@ -215,24 +209,15 @@ class NewCmsSelectControls {
 					"margin"
 				);
 
-				this.newCms.svg._set_content(/*html*/ `
-                    ${paths}
-                `);
+				this.newCms.svg._set_content(html`${paths} `);
 			}
 		}
 
-		this.newCms.container.classList.toggle(
-			"anything_selected",
-			!!this.selected_block
-		);
+		this.newCms.container.classList.toggle("anything_selected", !!this.selected_block);
 	}
 	//mouseDown() {
 	mouseClick() {
-		if (
-			this.selected_block &&
-			this.selected_block != this.newCms.edit_block.select_node &&
-			!this.newCms.grabbed_block
-		) {
+		if (this.selected_block && this.selected_block != this.newCms.edit_block.select_node && !this.newCms.grabbed_block) {
 			this.newCms.edit_block.showControlsToBlock(this.selected_block);
 			//this.newCms.grabBlock(this.selected_block);
 		}
@@ -241,9 +226,7 @@ class NewCmsSelectControls {
 	addFloatingSelectControls() {
 		this.removeSelection();
 
-		const blocks = this.newCms.content_node._children(
-			".newCms_block:not(.cramped):not(.parent_cramped)"
-		);
+		const blocks = this.newCms.content_node._children(".newCms_block:not(.cramped):not(.parent_cramped)");
 
 		let blocks_data = [];
 		blocks.forEach((block) => {
@@ -267,16 +250,8 @@ class NewCmsSelectControls {
 			return Math.sign(a.index - b.index);
 		});
 
-		const select_control_width = parseInt(
-			getComputedStyle(document.documentElement).getPropertyValue(
-				"--select_control_width"
-			)
-		);
-		const select_control_height = parseInt(
-			getComputedStyle(document.documentElement).getPropertyValue(
-				"--select_control_height"
-			)
-		);
+		const select_control_width = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--select_control_width"));
+		const select_control_height = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--select_control_height"));
 
 		const sorted_blocks_data_length = sorted_blocks_data.length;
 		let upper_bound = 0;
@@ -291,20 +266,10 @@ class NewCmsSelectControls {
 			let top = block_data.rect_data.relative_pos.top;
 
 			left = Math.max(left, 0);
-			left = Math.min(
-				left,
-				this.newCms.content_scroll_content.clientWidth -
-					select_control_width -
-					0
-			);
+			left = Math.min(left, this.newCms.content_scroll_content.clientWidth - select_control_width - 0);
 
 			top = Math.max(top, 0);
-			top = Math.min(
-				top,
-				this.newCms.content_scroll_content.clientHeight -
-					select_control_height -
-					0
-			);
+			top = Math.min(top, this.newCms.content_scroll_content.clientHeight - select_control_height - 0);
 
 			let moving = true;
 			while (moving) {
@@ -312,8 +277,7 @@ class NewCmsSelectControls {
 				for (let u = i - 1; u >= upper_bound; u--) {
 					const prev_block_data = sorted_blocks_data[u];
 
-					const prev_y2 =
-						prev_block_data.rect_data.relative_pos.top + select_control_height;
+					const prev_y2 = prev_block_data.rect_data.relative_pos.top + select_control_height;
 
 					if (top >= prev_y2) {
 						// optimization
@@ -322,14 +286,10 @@ class NewCmsSelectControls {
 					}
 
 					if (
-						prev_block_data.rect_data.relative_pos.left <
-							left + select_control_width &&
-						prev_block_data.rect_data.relative_pos.left + select_control_width >
-							left
+						prev_block_data.rect_data.relative_pos.left < left + select_control_width &&
+						prev_block_data.rect_data.relative_pos.left + select_control_width > left
 					) {
-						left =
-							prev_block_data.rect_data.relative_pos.left +
-							select_control_width;
+						left = prev_block_data.rect_data.relative_pos.left + select_control_width;
 						moving = true;
 					}
 				}
@@ -354,9 +314,7 @@ class NewCmsSelectControls {
 
 			const icon = $(`.side_block[data-block="${block_type}"] i`);
 
-			select_control._set_content(
-				icon ? icon.outerHTML : `<i class="fas fa-square"></i>`
-			);
+			select_control._set_content(icon ? icon.outerHTML : `<i class="fas fa-square"></i>`);
 
 			block.select_control = select_control;
 			select_control.select_block = block;
