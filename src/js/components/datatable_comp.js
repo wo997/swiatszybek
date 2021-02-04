@@ -196,7 +196,9 @@ function datatableComp(comp, parent, data) {
 					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count
 				) {
 					let styles_html = "";
-					let header_html = "";
+
+					/** @type {string[]} */
+					let cells_html = [];
 
 					let column_index = -1;
 					for (const column of data.columns) {
@@ -235,14 +237,16 @@ function datatableComp(comp, parent, data) {
 
 						cell_html += /*html*/ `</div>`;
 
-						header_html += cell_html;
+						cells_html.push(cell_html);
 
 						const flex_grow = column.width && column.width.includes("px") ? 0 : 1;
 						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {
                             width:${def(column.width, "10%")};flex-grow:${flex_grow};
                         }`;
 					}
-					comp._nodes.table_header._set_content(header_html);
+
+					setNodeChildren(comp._nodes.table_header, cells_html);
+
 					comp._nodes.style._set_content(styles_html);
 					registerForms();
 

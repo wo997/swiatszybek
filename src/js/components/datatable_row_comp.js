@@ -27,7 +27,8 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				let row_html = "";
+				/** @type {string[]} */
+				let cells_html = [];
 
 				for (const column of data.columns) {
 					let cell_html = "";
@@ -40,17 +41,15 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 
 					cell_html = `<div class='dt_cell'>${cell_html}</div>`;
 
-					row_html += cell_html;
+					cells_html.push(cell_html);
 				}
 
-				if (comp._nodes.dt_row.innerHTML != row_html) {
-					comp._nodes.dt_row._set_content(row_html);
-				}
+				setNodeChildren(comp._nodes.dt_row, cells_html);
 			},
 		});
 	};
 
 	createComp(comp, parent, data, {
-		template: html`<div data-node="{${comp._nodes.dt_row}}" class="dt_row {even:${data.row_index % 2 === 0}}"></div>`,
+		template: html`<div data-node="{${comp._nodes.dt_row}}" class="dt_row"></div>`,
 	});
 }

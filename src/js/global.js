@@ -429,10 +429,14 @@ function removeContent(node) {
 
 /**
  *
- * @param {*} node
- * @param {string | number} html
+ * @param {PiepNode} node
+ * @param {any} html
  */
 function _set_content(node, html = "") {
+	if (node.innerHTML === html) {
+		return;
+	}
+
 	node = $(node);
 	removeContent(node);
 	node.insertAdjacentHTML("afterbegin", html);

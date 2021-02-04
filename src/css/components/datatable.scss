@@ -30,11 +30,11 @@ datatable-comp {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-	.dt_row {
+	.table_body list-comp > .list_row {
 		transition: 0.25s background-color;
 		background: #fff;
 	}
-	.dt_row.even {
+	.table_body list-comp > .list_row:nth-child(odd) {
 		background: #f3f3f3;
 	}
 	.dt_header_controls {

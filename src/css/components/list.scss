@@ -3,7 +3,7 @@
 list-comp.animating {
 	overflow: hidden;
 }
-list-comp .list_row {
+list-comp > .list_row {
 	flex-shrink: 0;
 }
 list-comp:not(.horizontal) .list_row.cramp_row {
