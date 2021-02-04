@@ -6,6 +6,7 @@
  * @param {string[]} children_html
  */
 function setNodeChildren(node, children_html) {
+	//console.log(node, children_html);
 	// @ts-ignore
 	const last_children_html = def(node._last_children_html, []);
 
@@ -22,10 +23,11 @@ function setNodeChildren(node, children_html) {
 		}
 	}
 
-	node._children(`.dt_cell:nth-child(n + ${children_html.length + 1})`).forEach((e) => {
+	node._direct_children(`.dt_cell:nth-child(n + ${children_html.length + 1})`).forEach((e) => {
 		e.remove();
 	});
 
 	// @ts-ignore
 	node._last_children_html = children_html;
+	//console.log(node, children_html);
 }

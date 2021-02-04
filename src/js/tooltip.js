@@ -2,10 +2,7 @@
 
 let tooltip;
 domload(() => {
-	document.body.insertAdjacentHTML(
-		"beforeend",
-		`<div class="wo997tooltip" style="display:none"></div>`
-	);
+	document.body.insertAdjacentHTML("beforeend", `<div class="wo997tooltip" style="display:none"></div>`);
 	tooltip = {
 		target: $(".wo997tooltip"),
 		dismiss: () => {
@@ -15,10 +12,7 @@ domload(() => {
 		},
 		resizeCallback: () => {
 			$$(".check-tooltip").forEach((e) => {
-				e.classList.toggle(
-					"require-tooltip",
-					e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight
-				);
+				e.classList.toggle("require-tooltip", e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight);
 			});
 		},
 	};
@@ -28,7 +22,9 @@ domload(() => {
 
 		const target = $(event.target);
 		var e = target._parent("[data-tooltip]", { skip: 0 });
-		if (e && !e.hasAttribute("disabled")) {
+		console.log(e);
+		if (e) {
+			// && !e.hasAttribute("disabled")) {
 			var tooltipText = e.getAttribute("data-tooltip");
 
 			if (tooltipText === "") {

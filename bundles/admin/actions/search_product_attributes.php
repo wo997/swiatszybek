@@ -21,6 +21,7 @@ $responseArray = paginateData([
     "order" => "a.kolejnosc ASC",
     "group" => "attribute_id",
     "quick_search_fields" => ["a.name"],
+    "datatable_params" => $_POST["datatable_params"],
 ]);
 
 if (isset($_POST["everything"])) {

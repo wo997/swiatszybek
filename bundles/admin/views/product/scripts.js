@@ -47,11 +47,19 @@ function fetchProductFeatures() {
 
 domload(() => {
 	registerModalContent(html`
-		<div id="addProductFeature" data-expand data-dismissable>
+		<div id="selectProductFeatures" data-expand data-dismissable>
+			<div class="modal-body">
+				<select-product-features-modal-comp></select-product-features-modal-comp>
+			</div>
+		</div>
+	`);
+
+	registerModalContent(html`
+		<div id="productFeature" data-expand data-dismissable>
 			<div class="modal-body">
 				<div class="custom-toolbar">
 					<span class="title">Cecha produktu</span>
-					<button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
+					<button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				</div>
 				<div class="scroll-panel scroll-shadow panel-padding">
 					<product-feature-comp></product-feature-comp>
@@ -82,46 +90,24 @@ domload(() => {
 		],
 	});
 
-	/** @type {DatatableComp} */
-	// @ts-ignore
-	const dt_product_features = $(".dt_product_features");
-
-	datatableComp(dt_product_features, undefined, {
-		search_url: STATIC_URLS["ADMIN"] + "search_product_attributes",
-		columns: [
-			{ label: "Cecha", key: "name", width: "300px", sortable: true, searchable: "string" },
-			{
-				label: "Typ danych",
-				key: "data_type",
-				width: "200px",
-				sortable: true,
-				searchable: "string",
-				render: (data) => {
-					return data.data_type + "_x";
-				},
-			},
-			{ label: "Wartości", key: "attr_values", width: "200px", sortable: true, searchable: "number" },
-		],
-		primary_key: "attribute_id",
-		empty_html: html`Brak cech`,
-		label: "Cechy produktów",
-		after_label: html`<button class="add_feature_btn btn important">Dodaj <i class="fas fa-plus"></i></button> `,
-		selectable: true,
-	});
-
-	dt_product_features.addEventListener("click", (ev) => {
-		const target = $(ev.target);
-		const add_feature_btn = target._parent(".add_feature_btn", { skip: 0 });
-		if (add_feature_btn) {
-			showModal("addProductFeature", {
-				source: add_feature_btn,
-			});
-		}
-	});
+	const name_input = product_comp._child(`product-comp [data-bind="name"]`);
+	const nameChange = () => {
+		$$(`.product_name`).forEach((e) => {
+			e._set_content(name_input._get_value());
+		});
+	};
+	name_input.addEventListener("change", nameChange);
+	nameChange();
 
 	/** @type {ProductFeatureComp} */
 	// @ts-ignore
-	const product_feature_comp = $("#addProductFeature product-feature-comp");
+	const product_feature_comp = $("#productFeature product-feature-comp");
 
 	productFeatureComp(product_feature_comp, undefined, { name: "", feature_id: -1, options: [] });
+
+	/** @type {SelectProductFeaturesComp} */
+	// @ts-ignore
+	const select_product_features_comp = $("#selectProductFeatures select-product-features-modal-comp");
+
+	selectProductFeaturesComp(select_product_features_comp, undefined);
 });

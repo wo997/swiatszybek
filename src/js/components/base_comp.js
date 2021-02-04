@@ -118,6 +118,7 @@ function createComp(node, parent_comp, data, options) {
 		};
 	}
 
+	// warning: it should never ever change
 	if (!comp._pointSelfData) {
 		comp._pointSelfData = () => {
 			return { obj: comp, key: "_data" };
@@ -162,8 +163,12 @@ function createComp(node, parent_comp, data, options) {
 		directComps(comp).forEach((dc) => {
 			const constructor = snakeCase(dc.tagName.toLocaleLowerCase());
 			if (window[constructor]) {
+				const bind_var = dc.dataset.bind;
+				//console.log(bind_var);
+
 				// @ts-ignore
-				window[constructor](dc, comp, undefined, {});
+				window[constructor](dc, comp, data[bind_var]);
+				//window[constructor](dc, comp, undefined);
 			}
 		});
 

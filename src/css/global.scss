@@ -325,14 +325,14 @@ textarea {
 	& {
 		display: flex;
 	}
-	:not(:first-child):not(.ignore-glue) {
+	& > :not(:first-child):not(.ignore-glue) {
 		*&,
 		.field-wrapper& .field {
 			border-top-left-radius: 0;
 			border-bottom-left-radius: 0;
 		}
 	}
-	:not(:last-child):not(.ignore-glue) {
+	& > :not(:last-child):not(.ignore-glue) {
 		*&,
 		.field-wrapper& .field {
 			border-top-right-radius: 0;
@@ -903,6 +903,7 @@ input:read-only {
 }
 .link:hover {
 	color: #58c;
+	text-decoration: underline;
 }
 .linkable {
 	border-bottom: 1px solid #35f;

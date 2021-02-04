@@ -45,7 +45,7 @@ function productComp(
 
 	createComp(comp, parent, data, {
 		template: html`
-            <div class="label">Nazwa produktu</div>
+            <div class="label first">Nazwa produktu</div>
             <input type="text" class="field" data-bind="{${data.name}}"/></span>
 
             <div class="label">Sprzedawaj na</div>
@@ -70,7 +70,7 @@ function productComp(
         `,
 		initialize: () => {
 			comp._nodes.add_variant_btn.addEventListener("click", () => {
-				showModal("selectProductVariant", {
+				showModal("selectProductFeatures", {
 					source: comp._nodes.add_variant_btn,
 				});
 			});

@@ -67,7 +67,7 @@ datatable-comp {
 	}
 	.datatable_label {
 		font-weight: 600;
-		font-size: 1.3em;
+		font-size: 1.2em;
 		margin-right: 10px;
 	}
 	.pagination {
@@ -82,5 +82,9 @@ datatable-comp {
 		border-bottom-right-radius: 4px;
 		color: #555;
 		border-top-width: 0;
+	}
+
+	p-checkbox.shrink {
+		margin: -2px -4px;
 	}
 }

@@ -6,5 +6,5 @@ Request::jsonResponse(paginateData([
     "group" => "p.product_id",
     "order" => "p.product_id DESC",
     "quick_search_fields" => ["p.title"],
-    "datatable_params" => json_decode($_POST["datatable_params"], true)
+    "datatable_params" => $_POST["datatable_params"]
 ]));

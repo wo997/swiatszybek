@@ -31,7 +31,7 @@ function productFeatureComp(comp, parent, data = { feature_id: -1, name: "", opt
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="label">Nazwa cechy produktu</div>
+			<div class="label first">Nazwa cechy produktu</div>
 			<input type="text" class="field" data-bind="{${data.name}}" />
 			<div class="label">
 				Opcje

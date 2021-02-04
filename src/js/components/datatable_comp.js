@@ -78,11 +78,11 @@ function datatableComp(comp, parent, data) {
 		data.selection = [];
 
 		data.columns.unshift({
-			label: html`<p-checkbox class="square select_all_rows"></p-checkbox>`,
+			label: html`<p-checkbox class="square select_all_rows shrink"></p-checkbox>`,
 			key: "",
-			width: "45px",
+			width: "37px",
 			render: (row) => {
-				return html`<p-checkbox class="square select_row" data-primary_id="${row[data.primary_key]}"></p-checkbox>`;
+				return html`<p-checkbox class="square select_row shrink" data-primary_id="${row[data.primary_key]}"></p-checkbox>`;
 			},
 		});
 
@@ -245,6 +245,7 @@ function datatableComp(comp, parent, data) {
                         }`;
 					}
 
+					console.log(comp, comp._nodes.table_header);
 					setNodeChildren(comp._nodes.table_header, cells_html);
 
 					comp._nodes.style._set_content(styles_html);
@@ -256,28 +257,40 @@ function datatableComp(comp, parent, data) {
 				expand(comp._nodes.empty_table, data.rows.length === 0);
 
 				if (data.selectable) {
-					setTimeout(() => {
-						let select_count = 0;
-						/** @type {number[]} */
-						const visible_selection = [];
-						const ids = [];
-						comp._nodes.list._getRows().forEach((row) => {
-							const select_row = row._child(".select_row");
-							const primary_id = +select_row.dataset.primary_id;
-							ids.push(primary_id);
-							const selected = comp._data.selection.indexOf(primary_id) !== -1;
-							if (selected) {
-								visible_selection.push(primary_id);
-								select_count++;
-							}
-							select_row._set_value(selected, { quiet: true });
-						});
-
-						comp._data.selection = visible_selection;
-
-						const select_all = select_count === comp._data.rows.length && comp._data.rows.length > 0;
-						comp._child(".select_all_rows")._set_value(select_all ? 1 : 0);
+					let select_count = 0;
+					/** @type {number[]} */
+					const visible_selection = [];
+					const ids = [];
+					comp._nodes.list._getRows().forEach((row) => {
+						const select_row = row._child(".select_row");
+						const primary_id = +select_row.dataset.primary_id;
+						ids.push(primary_id);
+						const selected = comp._data.selection.indexOf(primary_id) !== -1;
+						if (selected) {
+							visible_selection.push(primary_id);
+							select_count++;
+						}
+						select_row._set_value(selected, { quiet: true });
 					});
+
+					comp._data.selection = visible_selection;
+
+					const select_all = select_count === comp._data.rows.length && comp._data.rows.length > 0;
+					const select_all_rows = comp._child(".select_all_rows");
+					if (select_all_rows) {
+						select_all_rows._set_value(select_all ? 1 : 0);
+					}
+
+					// never used but keep it
+					// if (cd.selection) {
+					// 	comp.dispatchEvent(
+					// 		new CustomEvent("selection_changed", {
+					// 			detail: {
+					// 				selection: comp._data.selection,
+					// 			},
+					// 		})
+					// 	);
+					// }
 				}
 			},
 		});
@@ -295,7 +308,7 @@ function datatableComp(comp, parent, data) {
 			</div>
 
 			<div style="position:relative">
-				<div class="table_header" data-node="table_header"></div>
+				<div class="table_header" data-node="{${comp._nodes.table_header}}"></div>
 
 				<div class="table_body">
 					<list-comp

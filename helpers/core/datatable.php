@@ -137,6 +137,10 @@ function getRelevanceQuery($fields, $words)
  */
 function paginateData($params = [])
 {
+    if (isset($params["datatable_params"])) {
+        $params["datatable_params"] = json_decode($params["datatable_params"], true);
+    }
+
     $row_count = def($params, ["datatable_params", "row_count"], 20);
     $page_id = def($params, ["datatable_params", "page_id"], 0);
     if ($page_id < 0) {

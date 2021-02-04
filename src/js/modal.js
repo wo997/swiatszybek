@@ -107,13 +107,14 @@ function registerModal(modal) {
  */
 function showModal(name = null, params = {}) {
 	let visible = name != null;
-	modal_wrapper_node.classList.toggle("visible", visible);
 	if (visible) {
 		let total = 1;
+		let any = false;
 		modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
 			let shownow = false;
 			if (modal.id == name && !modal.classList.contains("visible")) {
 				shownow = true;
+				any = true;
 			}
 			if (modal.classList.contains("visible")) {
 				const expand = modal.getAttribute("data-expand");
@@ -229,6 +230,12 @@ function showModal(name = null, params = {}) {
 				);
 			}
 		});
+
+		if (!any) {
+			console.error(`Modal ${name} doesn't exist!`);
+			return;
+		}
+
 		const modal = modal_container_node._child(`#${name}`);
 		if (modal && modal.hasAttribute("data-expand")) {
 			const q = modal._child("*");
@@ -243,6 +250,8 @@ function showModal(name = null, params = {}) {
 
 		registerScrollShadows();
 	}
+
+	modal_wrapper_node.classList.toggle("visible", visible);
 
 	return visible;
 }
