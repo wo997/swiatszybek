@@ -219,9 +219,6 @@ function createComp(node, parent_comp, data, options) {
 		comp._nodes[n.dataset.node] = n;
 	});
 
-	// kinda weird but it creates f.e. checkbox base component
-	registerForms();
-
 	comp._bindNodes = comp._children(`[data-bind]`);
 
 	if (options.initialize) {
@@ -330,6 +327,9 @@ function setCompData(comp, _data = undefined, options = {}) {
 		// never used force_render lol
 		return;
 	}
+
+	// kinda weird but it creates f.e. checkbox base component
+	delay("registerForms", 0);
 
 	if (isObject(node._data)) {
 		node._changed_data = {};

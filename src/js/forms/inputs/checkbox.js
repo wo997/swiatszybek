@@ -3,7 +3,7 @@
 window.addEventListener("register-form-components", registerCheckboxes);
 
 function registerCheckboxes() {
-	$$("checkbox:not(.checkbox-registered)").forEach((c) => {
+	$$("p-checkbox:not(.checkbox-registered)").forEach((c) => {
 		c.classList.add("checkbox-registered", "field");
 
 		c.insertAdjacentHTML(

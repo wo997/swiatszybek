@@ -88,8 +88,22 @@ function def(value, def) {
 	return value;
 }
 
-function delay(action, time, context = window, params = []) {
-	if (context["await" + action]) clearTimeout(context["await" + action]);
+/**
+ *
+ * @param {string} action
+ * @param {number} time
+ * @param {*} context
+ * @param {*} params
+ * @param {{twice?: boolean}} [options]
+ */
+function delay(action, time, context = window, params = [], options = {}) {
+	if (context["await" + action]) {
+		clearTimeout(context["await" + action]);
+	} else {
+		if (options.twice) {
+			context[action](...params);
+		}
+	}
 	context["await" + action] = setTimeout(function () {
 		context[action](...params);
 	}, time);
@@ -219,7 +233,7 @@ function setValue(input, value = null, params = {}) {
 
 	if (input.tagName == "P-RADIO") {
 		setRadioInputValue(input, value, params);
-	} else if (input.tagName == "CHECKBOX") {
+	} else if (input.tagName == "P-CHECKBOX") {
 		input.classList.toggle("checked", !!value);
 	} else if (input.datepicker) {
 		if (value && value.substr(0, 4).match(/\d{4}/)) {
@@ -281,7 +295,7 @@ function getValue(input) {
 
 	if (input.tagName == "P-RADIO") {
 		v = getRadioInputValue(input);
-	} else if (input.tagName == "CHECKBOX") {
+	} else if (input.tagName == "P-CHECKBOX") {
 		v = input.classList.contains("checked") ? 1 : 0;
 	} else if (input.getAttribute("type") == "checkbox") {
 		v = input.checked ? 1 : 0;

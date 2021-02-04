@@ -38,16 +38,18 @@ datatable-comp {
 		background: #f3f3f3;
 	}
 	.dt_header_controls {
-		display: inline-block;
-		/*margin: -2px 0;*/
+		display: flex;
+		margin-left: 3px;
 	}
 	.table_header .dt_cell .label {
 		margin: 4px 0;
 		display: inline-block;
 	}
-	.table_header .dt_cell > * {
-		vertical-align: middle;
+	.table_header .dt_cell {
+		display: flex;
+		align-items: center;
 	}
+
 	.table_header {
 		box-shadow: 0 2px 2px 0 #0001;
 		position: relative;

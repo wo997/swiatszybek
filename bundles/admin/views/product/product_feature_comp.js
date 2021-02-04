@@ -36,7 +36,6 @@ function productFeatureComp(comp, parent, data = { feature_id: -1, name: "", opt
 			<div class="label">
 				Opcje
 				<button class="btn primary small" data-node="{${comp._nodes.add_option_btn}}">Dodaj <i class="fas fa-plus"></i></button>
-				<p-batch-trait data-trait="list_controls"></p-batch-trait>
 			</div>
 			<list-comp data-bind="{${data.options}}">
 				<product-feature-option-comp></product-feature-option-comp>

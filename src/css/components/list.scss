@@ -4,7 +4,6 @@ list-comp.animating {
 	overflow: hidden;
 }
 list-comp .list_row {
-	transform-origin: 0 0;
 	flex-shrink: 0;
 }
 list-comp:not(.horizontal) .list_row.cramp_row {

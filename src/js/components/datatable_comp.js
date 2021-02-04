@@ -8,6 +8,7 @@
  *  sortable?: boolean | undefined
  *  searchable?: string
  *  primary?: boolean
+ *  render?(data: any)
  * }} DatatableColumnDef
  *
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder
@@ -34,6 +35,8 @@
  *  empty_html?: string
  *  label?: string
  *  after_label?: string
+ *  selectable?: boolean
+ *  selection?: number[]
  * }} DatatableCompData
  *
  * @typedef {{
@@ -45,6 +48,7 @@
  *      table_header: PiepNode
  *      style: PiepNode
  *      empty_table: PiepNode
+ *      list: ListComp
  *  }
  * _datatable_search(delay?: number)
  * _search_timeout: number
@@ -57,21 +61,65 @@
  * @param {*} parent
  * @param {DatatableCompData} data
  */
-function datatableComp(comp, parent, data = { rows: [], columns: [], filters: [], sort: undefined }) {
-	if (!data.filters) {
-		data.filters = [];
-	}
-	if (!data.sort) {
-		data.sort = undefined;
-	}
-	if (!data.dataset) {
-		data.dataset = [];
-	}
-	if (!data.pagination_data) {
-		data.pagination_data = { page_count: 0, page_id: 0, row_count: 20 };
-	}
+function datatableComp(comp, parent, data) {
+	data.filters = def(data.filters, []);
+	data.sort = def(data.sort, undefined);
+	data.dataset = def(data.dataset, []);
+	data.pagination_data = {};
 
 	data.rows = [];
+
+	if (data.selectable) {
+		if (!data.primary_key) {
+			console.error("Primary key is required!");
+			return;
+		}
+
+		data.selection = [];
+
+		data.columns.unshift({
+			label: html`<p-checkbox class="square select_all_rows"></p-checkbox>`,
+			key: "",
+			width: "45px",
+			render: (row) => {
+				return html`<p-checkbox class="square select_row" data-primary_id="${row[data.primary_key]}"></p-checkbox>`;
+			},
+		});
+
+		comp.addEventListener("click", (ev) => {
+			const target = $(ev.target);
+			const select_row = target._parent(".select_row", { skip: 0 });
+			if (select_row) {
+				// just in case
+				setTimeout(() => {
+					const primary_id = +select_row.dataset.primary_id;
+
+					if (select_row._get_value()) {
+						comp._data.selection.push(primary_id);
+						comp._render();
+					} else {
+						const index = comp._data.selection.indexOf(primary_id);
+						if (index !== -1) {
+							comp._data.selection.splice(index, 1);
+							comp._render();
+						}
+					}
+				});
+			}
+			const select_all_rows = target._parent(".select_all_rows", { skip: 0 });
+			if (select_all_rows) {
+				const selection = [];
+
+				if (select_all_rows._get_value()) {
+					for (const row_data of comp._data.rows) {
+						selection.push(row_data.row[data.primary_key]);
+					}
+				}
+				comp._data.selection = selection;
+				comp._render();
+			}
+		});
+	}
 
 	comp._datatable_search = (delay = 0) => {
 		if (comp._search_timeout) {
@@ -158,43 +206,75 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 
 						cell_html += /*html*/ `<div class="dt_cell" data-column="${column_index}">`;
 						cell_html += html`<span class="label">${column.label}</span>`;
-						cell_html += /*html*/ ` <div class="dt_header_controls">`;
 
-						if (column.sortable) {
-							let icon = "fa-sort";
-							let btn_class = "transparent";
-							let tooltip = "Sortuj malejąco";
-							if (data.sort && data.sort.key === column.key) {
-								if (data.sort.order === "desc") {
-									icon = "fa-arrow-down";
-									btn_class = "primary";
-									tooltip = "Sortuj rosnąco";
-								} else if (data.sort.order === "asc") {
-									icon = "fa-arrow-up";
-									btn_class = "primary";
-									tooltip = "Wyłącz sortowanie";
+						if (column.sortable || column.searchable) {
+							cell_html += /*html*/ ` <div class="dt_header_controls">`;
+
+							if (column.sortable) {
+								let icon = "fa-sort";
+								let btn_class = "transparent";
+								let tooltip = "Sortuj malejąco";
+								if (data.sort && data.sort.key === column.key) {
+									if (data.sort.order === "desc") {
+										icon = "fa-arrow-down";
+										btn_class = "primary";
+										tooltip = "Sortuj rosnąco";
+									} else if (data.sort.order === "asc") {
+										icon = "fa-arrow-up";
+										btn_class = "primary";
+										tooltip = "Wyłącz sortowanie";
+									}
 								}
+								cell_html += html` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
 							}
-							cell_html += html` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
-						}
-						if (column.searchable) {
-							cell_html += html` <button class="btn transparent dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
+							if (column.searchable) {
+								cell_html += html` <button class="btn transparent dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
+							}
+							cell_html += /*html*/ `</div>`;
 						}
 
-						cell_html += /*html*/ `</div>`;
 						cell_html += /*html*/ `</div>`;
 
 						header_html += cell_html;
 
-						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {width:${def(column.width, "10%")};}\n`;
+						const flex_grow = column.width && column.width.includes("px") ? 0 : 1;
+						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {
+                            width:${def(column.width, "10%")};flex-grow:${flex_grow};
+                        }`;
 					}
 					comp._nodes.table_header._set_content(header_html);
 					comp._nodes.style._set_content(styles_html);
+					registerForms();
 
 					comp._datatable_search(0);
 				}
 
 				expand(comp._nodes.empty_table, data.rows.length === 0);
+
+				if (data.selectable) {
+					setTimeout(() => {
+						let select_count = 0;
+						/** @type {number[]} */
+						const visible_selection = [];
+						const ids = [];
+						comp._nodes.list._getRows().forEach((row) => {
+							const select_row = row._child(".select_row");
+							const primary_id = +select_row.dataset.primary_id;
+							ids.push(primary_id);
+							const selected = comp._data.selection.indexOf(primary_id) !== -1;
+							if (selected) {
+								visible_selection.push(primary_id);
+								select_count++;
+							}
+							select_row._set_value(selected, { quiet: true });
+						});
+
+						comp._data.selection = visible_selection;
+
+						const select_all = select_count === comp._data.rows.length && comp._data.rows.length > 0;
+						comp._child(".select_all_rows")._set_value(select_all ? 1 : 0);
+					});
+				}
 			},
 		});
 	};
@@ -214,7 +294,11 @@ function datatableComp(comp, parent, data = { rows: [], columns: [], filters: []
 				<div class="table_header" data-node="table_header"></div>
 
 				<div class="table_body">
-					<list-comp data-bind="{${data.rows}}" ${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}>
+					<list-comp
+						data-node="{${comp._nodes.list}}"
+						data-bind="{${data.rows}}"
+						${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}
+					>
 						<datatable-row-comp></datatable-row-comp>
 					</list-comp>
 				</div>

@@ -31,7 +31,7 @@ function paginationComp(comp, parent, data = {}) {
 	comp._set_data = (data, options = {}) => {
 		data.page_id = def(data.page_id, 0);
 		data.page_count = def(data.page_count, 0);
-		data.row_count = def(data.row_count, 20);
+		data.row_count = def(data.row_count, 15);
 		data.total_rows = def(data.total_rows, 0);
 
 		setCompData(comp, data, {
@@ -59,9 +59,11 @@ function paginationComp(comp, parent, data = {}) {
 			<div class="pages">
 				<select data-bind="{${data.row_count}}" class="field inline" data-number>
 					<option value="1">1</option>
+					<option value="4">4</option>
 					<option value="10">10</option>
+					<option value="15">15</option>
 					<option value="20">20</option>
-					<option value="7">7</option>
+					<option value="50">50</option>
 				</select>
 				na stronę
 			</div>

@@ -90,13 +90,23 @@ domload(() => {
 		search_url: STATIC_URLS["ADMIN"] + "search_product_attributes",
 		columns: [
 			{ label: "Cecha", key: "name", width: "300px", sortable: true, searchable: "string" },
-			{ label: "Typ danych", key: "data_type", width: "200px", sortable: true, searchable: "string" },
+			{
+				label: "Typ danych",
+				key: "data_type",
+				width: "200px",
+				sortable: true,
+				searchable: "string",
+				render: (data) => {
+					return data.data_type + "_x";
+				},
+			},
 			{ label: "Wartości", key: "attr_values", width: "200px", sortable: true, searchable: "number" },
 		],
 		primary_key: "attribute_id",
 		empty_html: html`Brak cech`,
 		label: "Cechy produktów",
 		after_label: html`<button class="add_feature_btn btn important">Dodaj <i class="fas fa-plus"></i></button> `,
+		selectable: true,
 	});
 
 	dt_product_features.addEventListener("click", (ev) => {

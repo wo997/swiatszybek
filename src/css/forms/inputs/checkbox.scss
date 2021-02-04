@@ -1,0 +1,106 @@
+/* css[global] */
+
+:root {
+	--p-checkbox-height: 2em;
+	--p-checkbox-width: 4.5em;
+}
+
+p-checkbox {
+	width: var(--p-checkbox-width) !important;
+	height: var(--p-checkbox-height);
+	border: 1px solid #ccc;
+	border-radius: var(--p-checkbox-height);
+	position: relative;
+	overflow: hidden;
+	border: none;
+	cursor: pointer;
+}
+
+p-checkbox::before {
+	content: "";
+	width: var(--p-checkbox-width);
+	height: var(--p-checkbox-height);
+	border: 1px solid #bbb;
+	box-shadow: inset 0px 0px 2px 0px #ccc;
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	border-radius: var(--p-checkbox-height);
+	background: #0001;
+}
+
+p-checkbox .circle {
+	width: var(--p-checkbox-height);
+	height: var(--p-checkbox-height);
+	border-radius: var(--p-checkbox-height);
+	background: #f7f7f7;
+	position: absolute;
+	left: 0;
+	top: 0;
+	box-shadow: inset 0 0 3px 0 #0007;
+	transition: 0.2s all;
+}
+
+p-checkbox:hover .circle {
+	filter: brightness(1.02);
+}
+
+p-checkbox.checked:hover .circle {
+	filter: brightness(1.13);
+}
+
+p-checkbox .circle::before {
+	content: "";
+	background: transparent;
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0.3;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	border-radius: inherit;
+	box-shadow: calc(-50px - 0.5 * var(--p-checkbox-height)) 0 0 50px var(--success-clr);
+}
+
+p-checkbox.checked .circle {
+	background: var(--success-clr);
+	left: calc(var(--p-checkbox-width) - var(--p-checkbox-height));
+}
+
+p-checkbox .fa-check,
+p-checkbox .fa-minus {
+	position: absolute;
+	opacity: 1;
+	transition: 0.2s all;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+p-checkbox .fa-check {
+	color: white;
+}
+p-checkbox .fa-minus {
+	color: #999;
+}
+
+p-checkbox:not(.checked) .fa-check,
+p-checkbox.checked .fa-minus {
+	opacity: 0;
+	pointer-events: none;
+}
+
+p-checkbox.square {
+	& {
+		--p-checkbox-width: var(--p-checkbox-height);
+		border-radius: 4px;
+	}
+	.circle {
+		border-radius: 4px;
+	}
+	/*&,
+	* {
+		transition: none !important;
+	}*/
+}

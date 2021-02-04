@@ -173,6 +173,8 @@ function listComp(comp, parent, data = []) {
 					}
 				});
 
+				registerForms();
+
 				const list_rect_before = comp.getBoundingClientRect();
 
 				let index = -1;

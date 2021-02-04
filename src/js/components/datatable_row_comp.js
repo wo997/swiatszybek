@@ -32,7 +32,13 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 				for (const column of data.columns) {
 					let cell_html = "";
 
-					cell_html += `<div class='dt_cell'>${data.row[column.key]}</div>`;
+					if (column.render) {
+						cell_html += column.render(data.row);
+					} else {
+						cell_html += data.row[column.key];
+					}
+
+					cell_html = `<div class='dt_cell'>${cell_html}</div>`;
 
 					row_html += cell_html;
 				}
