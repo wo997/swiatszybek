@@ -135,7 +135,7 @@
 // }
 
 // if ($response) {
-//     jsonResponse($response);
+//     Request::jsonResponse($response);
 // } else {
 //     die;
 // }

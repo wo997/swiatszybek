@@ -7,7 +7,7 @@
 $user_data = DB::fetchRow("SELECT authenticated FROM user WHERE type = 'regular' AND email = ?", [$_POST["email"]]);
 
 if ($user_data) {
-    jsonResponse($user_data["authenticated"] ? "exists" : "unauthenticated");
+    Request::jsonResponse($user_data["authenticated"] ? "exists" : "unauthenticated");
 } else {
-    jsonResponse(validateEmail($_POST["email"]) ? "valid" : "invalid");
+    Request::jsonResponse(validateEmail($_POST["email"]) ? "valid" : "invalid");
 }

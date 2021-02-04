@@ -29,4 +29,4 @@ if (isset($mailTitle) && $mailTitle) {
     $stmt->close();
 }
 
-reload(Request::$static_urls["ADMIN"] . "newsletter?wyslano=tak");
+Request::reload(Request::$static_urls["ADMIN"] . "newsletter?wyslano=tak");

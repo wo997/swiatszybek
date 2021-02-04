@@ -5,7 +5,7 @@ $module_block_data = getModuleBlockData(
     json_decode(def($_POST, "product_filters", "{}"), true)
 );
 
-jsonResponse(
+Request::jsonResponse(
     [
         "content" => $module_block_data["content"],
         "page_count" => $module_block_data["data"]["products"]["page_count"],

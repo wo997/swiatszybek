@@ -22,7 +22,7 @@ if ($product_id === -1) {
     $product_data = DB::fetchRow("SELECT * FROM products WHERE product_id = $product_id");
 
     if (!$product_data) {
-        redirect(Request::$static_urls["ADMIN"] . "produkt/");
+        Request::redirect(Request::$static_urls["ADMIN"] . "produkt/");
     }
 }
 

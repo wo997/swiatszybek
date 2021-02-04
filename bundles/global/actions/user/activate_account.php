@@ -25,7 +25,7 @@ if ($activate["success"]) {
     $res["body"] = $body;
     setSingleUsageSessionVar("message_modal", json_encode($res));
 
-    redirect("/rejestracja");
+    Request::redirect("/rejestracja");
 }
 
-redirect("/");
+Request::redirect("/");

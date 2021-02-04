@@ -23,7 +23,7 @@ if ($_POST["buyer_type"] == 'f') {
 }
 
 if ($_POST["email"] == '') {
-    redirect("/zakup");
+    Request::redirect("/zakup");
 }
 
 // lower kod rabatowy count
@@ -215,4 +215,4 @@ foreach (getOrderEmailList() as $email) {
   header("Location: $link");
   die;
 }*/
-redirect($link_relative);
+Request::redirect($link_relative);

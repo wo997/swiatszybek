@@ -6,4 +6,4 @@ if ($response["success"]) {
     $response["data"]["email_client_url"] = User::getEmailclientUrl($_POST["email"]);
 }
 
-jsonResponse($response);
+Request::jsonResponse($response);

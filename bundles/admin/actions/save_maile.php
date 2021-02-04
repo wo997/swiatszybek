@@ -5,4 +5,4 @@ saveSetting("general", "emails", [
     "value" => json_decode($_POST["emails"], true)
 ]);
 
-reload();
+Request::reload();

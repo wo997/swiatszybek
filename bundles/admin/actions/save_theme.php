@@ -7,4 +7,4 @@ saveSetting("theme", "general", [
 
 triggerEvent("theme_change");
 
-reload();
+Request::reload();

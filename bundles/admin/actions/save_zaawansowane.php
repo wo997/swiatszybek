@@ -8,4 +8,4 @@ saveSetting("general", "advanced", [
 // consider queuing handling it at the end of the request
 triggerEvent("settings_change");
 
-reload();
+Request::reload();

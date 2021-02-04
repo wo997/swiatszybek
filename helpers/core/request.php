@@ -18,36 +18,6 @@ define("MESSAGE_OK_BUTTON", "
     </button>
 ");
 
-function jsonResponse($response)
-{
-    die(json_encode($response));
-}
-
-function redirect($url)
-{
-    if (IS_XHR) {
-        $_SESSION["redirect"] = $url;
-        jsonResponse(["redirect" => $url]);
-    } else {
-        header("Location: $url");
-        die;
-    }
-}
-
-function reload($ask = false)
-{
-    if (IS_XHR) {
-        if ($ask) {
-            echo "[reload_required]";
-        } else {
-            jsonResponse(["reload" => true]);
-        }
-    } else {
-        ob_clean();
-        header("Refresh:0");
-        die;
-    }
-}
 
 class Request
 {
@@ -70,7 +40,7 @@ class Request
             self::$url = rtrim(isset($_GET['url']) ? $_GET['url'] : "", "/");
             self::$url_params = explode("/", self::$url);
 
-            self::$is_admin_url = strpos(self::$url, ltrim(Request::$static_urls["ADMIN"], "/")) === 0;
+            self::$is_admin_url = strpos(self::$url, ltrim(self::$static_urls["ADMIN"], "/")) === 0;
             self::$is_deployment_url = strpos(self::$url, "deployment") === 0;
 
             self::$single_usage_session = def($_SESSION, "single_usage_session", []);
@@ -94,5 +64,36 @@ class Request
     {
         // TODO: add index from the url? well, it's harded than I thought
         return def(self::$url_params, $index, $default);
+    }
+
+    public static function reload($ask = false)
+    {
+        if (IS_XHR) {
+            if ($ask) {
+                echo "[reload_required]";
+            } else {
+                self::jsonResponse(["reload" => true]);
+            }
+        } else {
+            ob_clean();
+            header("Refresh:0");
+            die;
+        }
+    }
+
+    public static function redirect($url)
+    {
+        if (IS_XHR) {
+            $_SESSION["redirect"] = $url;
+            self::jsonResponse(["redirect" => $url]);
+        } else {
+            header("Location: $url");
+            die;
+        }
+    }
+
+    public static function jsonResponse($response)
+    {
+        die(json_encode($response));
     }
 }

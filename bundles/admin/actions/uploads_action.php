@@ -30,7 +30,7 @@ if (IS_XHR && isset($_FILES['files'])) {
                     ]
                 ]
             ]);
-            jsonResponse([
+            Request::jsonResponse([
                 "path" => $file_data["file_path"]
             ]);
         }
@@ -71,5 +71,5 @@ if (isset($_POST['search'])) { // return list
      FROM uploads LEFT JOIN users USING(user_id) 
      WHERE $where ORDER BY file_id DESC LIMIT 60");
 
-    jsonResponse($paths);
+    Request::jsonResponse($paths);
 }

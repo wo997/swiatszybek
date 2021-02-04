@@ -6,7 +6,7 @@
 //         "text" => $message,
 //         "type" => $type
 //     ];
-//     redirect("/moje-konto/dane-uzytkownika");
+//     Request::redirect("/moje-konto/dane-uzytkownika");
 // }
 
 // $user_id = Request::urlParam(1);

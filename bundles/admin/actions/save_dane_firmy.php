@@ -5,4 +5,4 @@ saveSetting("general", "company", [
     "value" => json_decode($_POST["company"], true)
 ]);
 
-reload();
+Request::reload();

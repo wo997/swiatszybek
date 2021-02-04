@@ -70,4 +70,4 @@ if (User::getCurrent()->data["type"] == 'regular') {
     ]);
 }
 $response["data"] = DB::fetchRow("SELECT imie, nazwisko, email, telefon, firma, kraj, miejscowosc, kod_pocztowy, ulica, nr_domu, nip, nr_lokalu FROM users WHERE user_id = ?", [$user_id]);
-jsonResponse($response);
+Request::jsonResponse($response);

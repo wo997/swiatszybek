@@ -8,7 +8,7 @@ if ($category_link) {
 }
 
 if (!$show_category) {
-    redirect("/produkty/wszystkie");
+    Request::redirect("/produkty/wszystkie");
 }
 
 function showCategory($category, $level = 0)

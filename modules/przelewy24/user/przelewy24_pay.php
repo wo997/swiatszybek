@@ -53,9 +53,9 @@ if ($zamowienie_data["status_id"] === 0) {
         $url = "https://" . (secret("p24_testMode") ? "sandbox" : "secure") . ".przelewy24.pl/trnRequest/" . $przelewy24_token;
 
         $_SESSION["p24_back_url"] = $link;
-        redirect($url);
+        Request::redirect($url);
     } else {
         // fail
-        redirect($zamowienie_data["link"]);
+        Request::redirect($zamowienie_data["link"]);
     }
 }

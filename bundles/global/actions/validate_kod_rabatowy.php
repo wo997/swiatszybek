@@ -65,7 +65,7 @@ if ($kod_data) {
     $_SESSION["rabat"] = $kod_data["kwota"];
     $_SESSION["rabat_type"] = $kod_data["type"];
 
-    jsonResponse([
+    Request::jsonResponse([
         "success" => true,
         "kwota" => $kod_data["kwota"],
         "type" => $kod_data["type"]

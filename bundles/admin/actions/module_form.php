@@ -22,7 +22,7 @@ if (isset($_POST["module_name"])) {
         $form_data = [];
     }
 
-    jsonResponse([
+    Request::jsonResponse([
         "form" => $form,
         "form_data" => $form_data,
     ]);

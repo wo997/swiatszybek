@@ -2,4 +2,4 @@
 
 User::getCurrent()->cart->changeProductQty($_POST["product_id"], $_POST["qty_diff"]);
 
-//jsonResponse(User::getCurrent()->cart->);
+//Request::jsonResponse(User::getCurrent()->cart->);

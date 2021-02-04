@@ -11,7 +11,7 @@ $where = "1 $product_id $canSee";
 if ($status == "n")
     $where .= " AND accepted = 0";
 
-jsonResponse(paginateData([
+Request::jsonResponse(paginateData([
     "select" => "dodano, pseudonim, tresc, user_id, comment_id, rating, accepted, product_id, title, link",
     "from" => "comments c LEFT JOIN products i using(product_id)",
     "where" => $where,

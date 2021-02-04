@@ -7,7 +7,7 @@ if ($product_id) {
     $product_id = intval($product_id);
     $PRODUCT_ID = $product_id;
 } else {
-    redirect("/");
+    Request::redirect("/");
 }
 
 $product_data = DB::fetchRow("SELECT * FROM products WHERE product_id = $product_id");
@@ -16,12 +16,12 @@ if (isset($preview_params) && isset($preview_params["variants"])) {
 }
 
 if (!$product_data) {
-    redirect("/");
+    Request::redirect("/");
 }
 
 $link = Request::urlParam(2);
 if ($link != $product_data["link"] && $product_data["link"]) {
-    redirect(getProductLink($product_data["product_id"], $product_data["link"]));
+    Request::redirect(getProductLink($product_data["product_id"], $product_data["link"]));
 }
 
 $priceText = $product_data["price_min"];

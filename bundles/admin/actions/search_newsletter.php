@@ -1,6 +1,6 @@
 <?php //route[{ADMIN}search_newsletter]  
 
-jsonResponse(paginateData([
+Request::jsonResponse(paginateData([
     "select" => "email, DATE_FORMAT(invitation_sent, '%d-%m-%Y %H:%i') as requested",
     "from" => "newsletter n",
     "where" => "n.accepted = 1",

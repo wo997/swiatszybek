@@ -23,7 +23,7 @@ $variants = DB::fetchArr(
     ORDER BY SUM(total_price) DESC"
 );
 
-jsonResponse([
+Request::jsonResponse([
     "zamowienia" => $zamowienia,
     "oplacono" => $oplacono,
     "variants" => $variants

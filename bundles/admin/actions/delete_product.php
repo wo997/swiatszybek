@@ -4,4 +4,4 @@ $product_id = intval(Request::urlParam(2));
 
 DB::execute("DELETE FROM products WHERE product_id = $product_id");
 
-redirect(Request::$static_urls["ADMIN"] . "produkty");
+Request::redirect(Request::$static_urls["ADMIN"] . "produkty");

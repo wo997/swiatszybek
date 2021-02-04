@@ -9,7 +9,7 @@ if (isset($_POST['scope_item_id'])) {
     $where .= " AND scope_item_id = " . intval($_POST['scope_item_id']);
 }
 
-jsonResponse(paginateData([
+Request::jsonResponse(paginateData([
     "select" => "imie, nazwisko, email, logged_at, log, previous_state, current_state",
     "from" => "activity_log a LEFT JOIN users u USING(user_id)",
     "where" => $where,

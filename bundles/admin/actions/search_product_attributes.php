@@ -33,4 +33,4 @@ if (isset($_POST["everything"])) {
     }
 }
 
-jsonResponse($responseArray);
+Request::jsonResponse($responseArray);

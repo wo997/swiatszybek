@@ -41,4 +41,4 @@ if (isset($_POST["include_attributes"])) {
     }
 }
 
-jsonResponse($responseArray);
+Request::jsonResponse($responseArray);

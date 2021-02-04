@@ -14,7 +14,7 @@ $data["link"] = escapeUrl($_POST["link"]);
 
 updateEntity($data, "cms", "page_id", $page_id);
 
-redirect(Request::$static_urls["ADMIN"] . "strona/" . $page_id);
+Request::redirect(Request::$static_urls["ADMIN"] . "strona/" . $page_id);
 
 triggerEvent("sitemap_change");
 
@@ -25,4 +25,4 @@ saveSetting("general", "random", [
     "value" => $_POST["random"]
 ]);
 
-reload();
+Request::reload();

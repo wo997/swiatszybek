@@ -35,5 +35,5 @@ $res = json_encode($_settings);
 
 if (file_get_contents($sp) !== $res) {
     saveFile($sp, $res);
-    reload(true);
+    Request::reload(true);
 }

@@ -2,7 +2,7 @@
 
 $zamowienie_link = Request::urlParam(1);
 if (!$zamowienie_link) {
-    redirect("/");
+    Request::redirect("/");
 }
 
 $zamowienie_data = DB::fetchRow("SELECT * FROM zamowienia WHERE link = ?", [$zamowienie_link]);

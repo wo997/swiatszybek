@@ -4,12 +4,12 @@ $user_id = Request::urlParam(1);
 $authentication_token = Request::urlParam(2);
 
 if (Request::getSingleUsageSessionVar("just_logged_in") || !$user_id || !$authentication_token) {
-    redirect("/");
+    Request::redirect("/");
 }
 
 if (User::getCurrent()->isLoggedIn()) {
     User::getCurrent()->logout();
-    reload();
+    Request::reload();
 }
 
 ?>

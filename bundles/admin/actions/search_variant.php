@@ -27,7 +27,7 @@ if (isset($_POST["order"])) {
 //(SELECT GROUP_CONCAT(value_id SEPARATOR ',') FROM link_variant_attribute_value WHERE variant_id = v.variant_id) as attribute_selected_values,
 //(SELECT GROUP_CONCAT(CONCAT(attribute_id, ',', numerical_value, ',', text_value, ',', date_value) SEPARATOR ',') FROM variant_attribute_values WHERE variant_id = v.variant_id) as attribute_values
 
-jsonResponse(paginateData([
+Request::jsonResponse(paginateData([
     "select" => "variant_id, title, name, stock, v.published published, p.published product_published, product_id, price, rabat, color, product_code, zdjecie",
     "from" => "variant v LEFT JOIN products p USING(product_id)",
     "where" => $where,

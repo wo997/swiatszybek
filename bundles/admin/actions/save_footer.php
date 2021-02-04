@@ -5,4 +5,4 @@ saveSetting("theme", "general", [
     "value" => $_POST["page_footer"]
 ]);
 
-reload();
+Request::reload();
