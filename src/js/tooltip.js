@@ -17,15 +17,15 @@ domload(() => {
 		},
 	};
 
-	window.addEventListener("mousemove", function (event) {
+	// crazy shit lol
+	document.addEventListener("pointermove", (event) => {
 		var t = tooltip.target;
 
 		const target = $(event.target);
 		var e = target._parent("[data-tooltip]", { skip: 0 });
-		console.log(e);
 		if (e) {
 			// && !e.hasAttribute("disabled")) {
-			var tooltipText = e.getAttribute("data-tooltip");
+			var tooltipText = e.dataset.tooltip;
 
 			if (tooltipText === "") {
 				if (e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight) {
