@@ -116,9 +116,7 @@ function goMobile() {
           </div>
       `);
 
-	$(`#searchCategory .modal-body .scroll-panel > div`).appendChild(
-		$(".search-wrapper .categories")
-	);
+	$(`#searchCategory .modal-body .scroll-panel > div`).appendChild($(".search-wrapper .categories"));
 
 	var filters = $(".search-wrapper .filters");
 
@@ -135,10 +133,7 @@ function goMobile() {
 	scroll_wrapper.classList.add("horizontal");
 	scroll_wrapper.classList.add("light");
 
-	scroll_wrapper.insertAdjacentHTML(
-		"afterend",
-		"<div class='horizontal-scroll-wrapper'></div>"
-	);
+	scroll_wrapper.insertAdjacentHTML("afterend", "<div class='horizontal-scroll-wrapper'></div>");
 	var container = scroll_wrapper._next();
 	container.appendChild(scroll_wrapper);
 
@@ -198,12 +193,8 @@ function searchProducts(options = {}) {
 	$$(".combo-select-wrapper[data-attribute_id]").forEach((list) => {
 		var attribute_value_sub_ids = [];
 		list._children(":checked").forEach((checkbox) => {
-			var subCheckboxes = checkbox
-				._parent(".attributes-list-wrapper")
-				._child(".attribute-list");
-			var anySubChecked = subCheckboxes
-				? subCheckboxes._child(":checked")
-				: false;
+			var subCheckboxes = checkbox._parent(".attributes-list-wrapper")._child(".attribute-list");
+			var anySubChecked = subCheckboxes ? subCheckboxes._child(":checked") : false;
 			if (!anySubChecked) {
 				attribute_value_sub_ids.push(checkbox._get_value());
 			}
@@ -244,10 +235,9 @@ function searchProducts(options = {}) {
 			pageNumber: currPage,
 		},
 		success: (res) => {
-			if (res.totalRows == 0) {
+			if (res.total_rows == 0) {
 				var caseFilters =
-					searchParams.attribute_value_ids.length > 0 ||
-					searchParams.search !== ""
+					searchParams.attribute_value_ids.length > 0 || searchParams.search !== ""
 						? `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class="fas fa-times"></i> Wyczyść filtry</button>`
 						: "Wyszukaj inną kategorię";
 				res.content = `
@@ -261,18 +251,14 @@ function searchProducts(options = {}) {
 			}
 
 			$(".price_range_info")._set_content(
-				res.price_info.min && res.price_info.max
-					? `(${res.price_info.min} zł - ${res.price_info.max} zł)`
-					: ""
+				res.price_info.min && res.price_info.max ? `(${res.price_info.min} zł - ${res.price_info.max} zł)` : ""
 			);
 
 			var duration = firstSearch ? 0 : 300;
 			firstSearch = false;
 			var was_h = productListAnimationNode.getBoundingClientRect().height;
 			productListSwapContentNode._set_content(res.content);
-			setProductListGridDimensions(
-				productListSwapContentNode._child(".product_list_module.grid")
-			);
+			setProductListGridDimensions(productListSwapContentNode._child(".product_list_module.grid"));
 
 			lazyLoadImages(false);
 
@@ -316,7 +302,7 @@ function searchProducts(options = {}) {
 			);
 
 			if ($(".order_by_item input[value='random']:checked")) {
-				if (res.totalRows > 0) {
+				if (res.total_rows > 0) {
 					paginationNode._set_content(`
               <button class='btn primary medium randomize_btn' onclick='beforeSearchProducts()'><span class='randomize_text'>Losuj więcej</span> <span class='randomize_loader_wrapper'><i class='randomize_loader fas fa-dice-three'></i></span></button>
             `);
@@ -324,7 +310,7 @@ function searchProducts(options = {}) {
 					paginationNode._empty();
 				}
 			} else {
-				renderPagination(paginationNode, currPage, res.pageCount, (i) => {
+				renderPagination(paginationNode, currPage, res.page_count, (i) => {
 					currPage = i;
 					scrollToTopOfProductList();
 					searchProducts({
@@ -338,29 +324,17 @@ function searchProducts(options = {}) {
 				setTimeout(() => {
 					var out = [];
 					if (searchParams.search) {
-						out.push(
-							`Wyszukaj: <span style='font-weight:600'>${searchParams.search}</span>`
-						);
+						out.push(`Wyszukaj: <span style='font-weight:600'>${searchParams.search}</span>`);
 					}
 					if (searchParams.price_min && searchParams.price_max) {
-						out.push(
-							`Cena: <span class='pln'>${searchParams.price_min} - ${searchParams.price_max} zł</span>`
-						);
+						out.push(`Cena: <span class='pln'>${searchParams.price_min} - ${searchParams.price_max} zł</span>`);
 					} else if (searchParams.price_min) {
-						out.push(
-							`Cena: <span class='pln'>od ${searchParams.price_min} zł</span>`
-						);
+						out.push(`Cena: <span class='pln'>od ${searchParams.price_min} zł</span>`);
 					} else if (searchParams.price_max) {
-						out.push(
-							`Cena: <span class='pln'>do ${searchParams.price_max} zł</span>`
-						);
+						out.push(`Cena: <span class='pln'>do ${searchParams.price_max} zł</span>`);
 					}
 
-					out.push(
-						`Sortuj: <span style='font-weight:600'>${
-							$(`[value="${searchParams.order_by}"]`)._next().textContent
-						}</span>`
-					);
+					out.push(`Sortuj: <span style='font-weight:600'>${$(`[value="${searchParams.order_by}"]`)._next().textContent}</span>`);
 					e.innerHTML = out.join(", ");
 				}, duration / 2);
 			});
@@ -457,8 +431,7 @@ function productsSearchChange(input, instant = false) {
 }
 
 function setMobileSearchBtnOpacity(input) {
-	input._parent()._child(".search-btn").style.opacity =
-		input._get_value() !== searchParams.search ? 1 : 0;
+	input._parent()._child(".search-btn").style.opacity = input._get_value() !== searchParams.search ? 1 : 0;
 }
 
 function anySearchChange(instant = false) {

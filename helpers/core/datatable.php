@@ -213,8 +213,8 @@ function paginateData($params = [])
         $countQuery = "SELECT COUNT(*) FROM($countQuery) t";
     }
 
-    $totalRows = DB::fetchVal($countQuery);
-    $page_idCount = $row_count > 0 ? ceil($totalRows / $row_count) : 0;
+    $total_rows = DB::fetchVal($countQuery);
+    $page_idCount = $row_count > 0 ? ceil($total_rows / $row_count) : 0;
 
     if ($order) {
         $order = "ORDER BY $order";
@@ -241,7 +241,7 @@ function paginateData($params = [])
     // $results = array_merge($results, $results, $results, $results);
 
     // a dynamic type would be dope but indexing gets tricky
-    $res = ["page_count" => $page_idCount, "total_rows" => $totalRows, "rows" => $results];
+    $res = ["page_count" => $page_idCount, "total_rows" => $total_rows, "rows" => $results];
 
     return $res;
 }

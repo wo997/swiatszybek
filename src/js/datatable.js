@@ -50,7 +50,7 @@
 // 	window[datatable.name] = datatable;
 // 	datatable.awaitId = null;
 // 	datatable.currPage = 1;
-// 	datatable.pageCount = 0;
+// 	datatable.page_count = 0;
 // 	datatable.request = null;
 // 	datatable.results = [];
 // 	datatable.filters = [];
@@ -364,7 +364,7 @@
 // 	datatable.tableSearchElement = datatable.target._child(".table-search-wrapper");
 // 	datatable.tableSelectionElement = datatable.target._child(".selected_rows");
 // 	datatable.tableBodyElement = datatable.tableSearchElement._child("tbody");
-// 	datatable.totalRowsElement = datatable.target._child(".total-rows");
+// 	datatable.total_rowsElement = datatable.target._child(".total-rows");
 // 	datatable.paginationElement = datatable.target._child(".pagination");
 // 	datatable.bulkMenuElement = datatable.target._child(".bulk_menu");
 // 	datatable.paginationBottomElement = datatable.target._child(".pagination-bottom");
@@ -635,7 +635,7 @@
 
 // 					datatable.selectionResults = res.results;
 // 				} else {
-// 					datatable.pageCount = res.pageCount;
+// 					datatable.page_count = res.page_count;
 // 					datatable.results = res.results;
 // 				}
 
@@ -690,7 +690,7 @@
 // 				if (createList) {
 // 					datatable.selectionBodyElement._set_content(output);
 // 				} else {
-// 					datatable.totalRowsElement._set_content(res.totalRows);
+// 					datatable.total_rowsElement._set_content(res.total_rows);
 // 					datatable.tableBodyElement._set_content(output);
 
 // 					datatable.paginationElement.style.display = window.innerWidth > 1000 ? "" : "none";
@@ -698,7 +698,7 @@
 // 					renderPagination(
 // 						datatable.paginationElement,
 // 						datatable.currPage,
-// 						datatable.pageCount,
+// 						datatable.page_count,
 // 						(i) => {
 // 							datatable.currPage = i;
 // 							datatable.search();
@@ -715,7 +715,7 @@
 // 						renderPagination(
 // 							datatable.paginationBottomElement,
 // 							datatable.currPage,
-// 							datatable.pageCount,
+// 							datatable.page_count,
 // 							(i) => {
 // 								datatable.currPage = i;
 // 								datatable.search();

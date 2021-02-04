@@ -8,8 +8,8 @@ $module_block_data = getModuleBlockData(
 jsonResponse(
     [
         "content" => $module_block_data["content"],
-        "pageCount" => $module_block_data["data"]["products"]["pageCount"],
-        "totalRows" => $module_block_data["data"]["products"]["totalRows"],
+        "page_count" => $module_block_data["data"]["products"]["page_count"],
+        "total_rows" => $module_block_data["data"]["products"]["total_rows"],
         "price_info" => $module_block_data["data"]["price_info"],
     ]
 );
