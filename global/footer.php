@@ -44,7 +44,7 @@
 
                 <div class="label">
                     <span>Hasło</span>
-                    <i class="fas fa-eye btn" onclick="togglePasswordFieldType(this,$(`#loginForm [name='password']`))" data-tooltip="Pokaż hasło" data-tooltip_position="right"></i>
+                    <i class="fas fa-eye btn small" onclick="togglePasswordFieldType(this,$(`#loginForm [name='password']`))" data-tooltip="Pokaż hasło" data-tooltip_position="right"></i>
                 </div>
                 <input class="field" type="password" autocomplete="current-password" name="password" data-validate="backend|blank_on_change:true">
 

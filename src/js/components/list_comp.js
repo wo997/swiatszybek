@@ -81,6 +81,7 @@ function listComp(comp, parent, data = []) {
 
 					finishNodeAnimation(comp);
 					comp._getRows().forEach((e) => {
+						const bef = e.offsetHeight;
 						finishNodeAnimation(e);
 					});
 				}
@@ -246,13 +247,13 @@ function listComp(comp, parent, data = []) {
 						}
 						child.classList.add("removing");
 					}
-					if (add) {
-						if (is_horizontal) {
-							off_x -= rect_after.width;
-						} else {
-							off_y -= rect_after.height;
-						}
-					}
+					// if (add) {
+					// 	if (is_horizontal) {
+					// 		off_x -= rect_after.width;
+					// 	} else {
+					// 		off_y -= rect_after.height;
+					// 	}
+					// }
 
 					/**
 					 *
@@ -275,6 +276,7 @@ function listComp(comp, parent, data = []) {
 						if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2) {
 							step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px);`;
 							step_1 += `transform:translate(${after_x}px,${after_y}px);`;
+							console.log(Math.round(off_y), after_y);
 						}
 
 						if (add) {
