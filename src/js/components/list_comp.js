@@ -118,7 +118,6 @@ function listComp(comp, parent, data = []) {
 					//instant = true;
 					chaos = true;
 				}
-				console.log(chaos, added, removed, row_c * row_c * 0.25);
 
 				const animation_duration = instant ? 0 : 250;
 
@@ -211,7 +210,6 @@ function listComp(comp, parent, data = []) {
 
 				const list_dl = list_rect_after.left - list_rect_before.left;
 				const list_dt = list_rect_after.top - list_rect_before.top;
-				//console.log(list_dl, list_dt);
 
 				index = -1;
 				diff_with_target_index.forEach((diff_info) => {
