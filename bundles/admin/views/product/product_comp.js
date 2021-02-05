@@ -2,10 +2,20 @@
 
 /**
  * @typedef {{
+ *  product_id: number
+ *  name: string
+ *  net_price: number
+ *  vat: number
+ *  gross_price: number
+ * }} ProductData
+ *
+ * @typedef {{
  *  id: number
  *  name: string
  *  sell_by: string
  *  variants: ProductVariantCompData[]
+ *  products: ProductData[]
+ *  products_dt?: DatatableCompData
  * }} ProductCompData
  *
  * @typedef {{
@@ -24,16 +34,21 @@
  * @param {*} parent
  * @param {ProductCompData} data
  */
-function productComp(
-	comp,
-	parent,
-	data = {
-		id: -1,
-		name: "",
-		sell_by: "qty",
-		variants: [],
-	}
-) {
+function productComp(comp, parent, data) {
+	/** @type {ProductData[]} */
+	const products = [{ product_id: 2, name: "sadfas", gross_price: 234, net_price: 40, vat: 23 }]; // will be empty
+
+	data.products_dt = def(data.products_dt, {
+		columns: [
+			{ key: "product_id", label: "ID", width: "10%", sortable: true, searchable: "number" },
+			{ key: "name", label: "Nazwa", width: "10%", sortable: true, searchable: "string" },
+			{ key: "net_price", label: "Cena Netto", width: "10%", sortable: true, searchable: "number" },
+			{ key: "vat", label: "Vat", width: "10%", sortable: true, searchable: "number" },
+			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
+		],
+		dataset: products,
+	});
+
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -64,6 +79,8 @@ function productComp(
                     <product-variant-comp></product-variant-comp>
                 </list-comp>
             </div>
+
+            <datatable-comp data-bind="{${data.products_dt}}"></datatable-comp>
 
             <h3>Display form json</h3>
             <div html="{${JSON.stringify(data)}}"></div>

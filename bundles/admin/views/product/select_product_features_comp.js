@@ -75,7 +75,7 @@ function selectProductFeaturesComp(comp, parent, data = undefined) {
 				</button>
 			</div>
 			<div class="scroll-panel scroll-shadow panel-padding">
-				<datatable-comp data-bind="{${data.datatable}}" class="dt_product_features"></datatable-comp>
+				<datatable-comp data-bind="{${data.datatable}}"></datatable-comp>
 			</div>
 		`,
 		initialize: () => {

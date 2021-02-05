@@ -7,7 +7,6 @@
  *  width: string
  *  sortable?: boolean | undefined
  *  searchable?: string
- *  primary?: boolean
  *  render?(data: any)
  * }} DatatableColumnDef
  *
@@ -122,6 +121,11 @@ function datatableComp(comp, parent, data) {
 	}
 
 	comp._datatable_search = (delay = 0) => {
+		if (!comp._data.search_url) {
+			console.error("You have to define filters on frontend, keep it simple");
+			return;
+		}
+
 		if (comp._search_timeout) {
 			clearTimeout(comp._search_timeout);
 			comp._search_timeout = undefined;
@@ -151,6 +155,11 @@ function datatableComp(comp, parent, data) {
 					datatable_params,
 				},
 				success: (res) => {
+					if (!res) {
+						console.error(`Datatable search error: ${data.search_url}`, res);
+						return;
+					}
+
 					comp._search_request = undefined;
 
 					if (res.rows.length === 0 && data.pagination_data.page_id > 0) {

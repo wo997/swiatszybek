@@ -75,19 +75,11 @@ domload(() => {
 	const product_comp = $("product-comp");
 
 	productComp(product_comp, undefined, {
-		id: 5,
-		name: "asdsad",
+		id: -1,
+		name: "",
 		sell_by: "qty",
-		variants: [
-			{
-				feature_id: 3,
-				options: [{ option_id: 4 }, { option_id: 5 }],
-			},
-			{
-				feature_id: 4,
-				options: [{ option_id: 8 }],
-			},
-		],
+		variants: [],
+		products: [],
 	});
 
 	/** @type {ProductFeatureComp} */
