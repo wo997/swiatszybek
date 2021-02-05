@@ -177,21 +177,7 @@ function createComp(node, parent_comp, data, options) {
 		});
 
 		// reactive classes and maybe even more
-		comp._children("*").forEach((child) => {
-			let p = child;
-			while (true) {
-				p = p._parent();
-				if (!p || p === comp) {
-					break;
-				}
-				const n2 = p.tagName.toLocaleLowerCase();
-				if (n2.endsWith("-comp")) {
-					return;
-				}
-			}
-
-			// yup - it's a direct sibling
-
+		directCompNodes(node).forEach((child) => {
 			let out = child.className;
 			const matches_c = out.match(/\{\w*?:\{.*?}}/gm);
 			if (matches_c) {
@@ -228,7 +214,7 @@ function createComp(node, parent_comp, data, options) {
 	}
 
 	comp._nodes = {};
-	comp._children(`[data-node]`).forEach((n) => {
+	directCompNodes(comp, `[data-node]`).forEach((n) => {
 		comp._nodes[n.dataset.node] = n;
 	});
 

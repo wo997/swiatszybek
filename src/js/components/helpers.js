@@ -5,13 +5,8 @@
  * @param {PiepNode} node
  * @returns {PiepNode[]}
  */
-function directComps(node) {
-	return node._children("*").filter((comp) => {
-		let n = comp.tagName.toLocaleLowerCase();
-		if (!n.endsWith("-comp")) {
-			return false;
-		}
-
+function directCompNodes(node, query = "*") {
+	return node._children(query).filter((comp) => {
 		let p = comp;
 		let direct = true;
 		while (true) {
@@ -25,11 +20,19 @@ function directComps(node) {
 				break;
 			}
 		}
-		if (!direct) {
-			return false;
-		}
+		return direct;
+	});
+}
 
-		return true;
+/**
+ *
+ * @param {PiepNode} node
+ * @returns {PiepNode[]}
+ */
+function directComps(node) {
+	return directCompNodes(node).filter((comp) => {
+		let n = comp.tagName.toLocaleLowerCase();
+		return n.endsWith("-comp");
 	});
 }
 

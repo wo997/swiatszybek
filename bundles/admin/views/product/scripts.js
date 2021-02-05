@@ -90,15 +90,6 @@ domload(() => {
 		],
 	});
 
-	const name_input = product_comp._child(`product-comp [data-bind="name"]`);
-	const nameChange = () => {
-		$$(`.product_name`).forEach((e) => {
-			e._set_content(name_input._get_value());
-		});
-	};
-	name_input.addEventListener("change", nameChange);
-	nameChange();
-
 	/** @type {ProductFeatureComp} */
 	// @ts-ignore
 	const product_feature_comp = $("#productFeature product-feature-comp");
@@ -110,4 +101,14 @@ domload(() => {
 	const select_product_features_comp = $("#selectProductFeatures select-product-features-modal-comp");
 
 	selectProductFeaturesComp(select_product_features_comp, undefined);
+
+	// finally
+	const name_input = product_comp._child(`product-comp [data-bind="name"]`);
+	const nameChange = () => {
+		$$(`.product_name`).forEach((e) => {
+			e._set_content(name_input._get_value());
+		});
+	};
+	name_input.addEventListener("change", nameChange);
+	nameChange();
 });
