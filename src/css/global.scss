@@ -162,8 +162,10 @@ textarea {
 		--btn-border-clr: var(--primary-clr);
 	}
 	&.subtle {
-		--btn-background-clr: var(--subtle-background-clr);
-		--btn-font-clr: var(--subtle-font-clr);
+		//--btn-background-clr: var(--subtle-background-clr);
+		//--btn-font-clr: var(--subtle-font-clr);
+		--btn-background-clr: #f4f4f4;
+		--btn-font-clr: #444;
 		--brighten-factor: 1.02;
 	}
 	&.success {

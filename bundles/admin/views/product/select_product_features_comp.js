@@ -59,14 +59,19 @@ function selectProductFeaturesComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="custom-toolbar">
 				<span class="title">Wybierz cechy <span class="product_name"></span></span>
-				<button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button
 					class="btn primary"
 					onclick="hideParentModal(this)"
 					disabled="{${data.datatable.selection.length === 0}}"
-					data-tooltip="{${data.datatable.selection.length === 0 ? "Zaznacz ☑️ wybrane elementy listy" : ""}}"
+					style="min-width: 115px;"
+					data-tooltip="{${data.datatable.selection.length === 0 ? "☑️ Zaznacz wybrane elementy listy" : ""}}"
 				>
-					Wybierz (<span class="semi-bold" html="{${data.datatable.selection.length}}"></span>) <i class="fas fa-check"></i>
+					Wybierz
+					<span
+						class="semi-bold"
+						html="{${data.datatable.selection.length ? "(" + data.datatable.selection.length + ') <i class="fas fa-check"></i>' : ""}}"
+					></span>
 				</button>
 			</div>
 			<div class="scroll-panel scroll-shadow panel-padding">

@@ -245,7 +245,6 @@ function datatableComp(comp, parent, data) {
                         }`;
 					}
 
-					console.log(comp, comp._nodes.table_header);
 					setNodeChildren(comp._nodes.table_header, cells_html);
 
 					comp._nodes.style._set_content(styles_html);

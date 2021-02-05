@@ -27,7 +27,12 @@ domload(() => {
 			// && !e.hasAttribute("disabled")) {
 			var tooltipText = e.dataset.tooltip;
 
-			if (tooltipText === "") {
+			if (!tooltipText) {
+				return;
+			}
+
+			// !!! !!! !!! important !!! !!! !!!
+			if (tooltipText === "html") {
 				if (e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight) {
 					tooltipText = e.innerHTML;
 				} else {

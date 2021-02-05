@@ -1,6 +1,9 @@
 /* css[admin] */
 
 .breadcrumbs {
+	& {
+		font-weight: 600;
+	}
 	.crumb {
 		padding: 0.1em;
 		display: inline-block;

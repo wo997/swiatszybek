@@ -76,8 +76,6 @@ function createComp(node, parent_comp, data, options) {
 	// @ts-ignore
 	const parent = parent_comp;
 
-	comp.classList.add("comp");
-
 	//node._propagating_data = false;
 
 	comp._render = (options) => {
@@ -87,6 +85,12 @@ function createComp(node, parent_comp, data, options) {
 	comp._dom_id = comp_id++;
 	comp._dom_class = `comp_${comp._dom_id}`;
 	comp.classList.add(comp._dom_class);
+
+	if (comp.classList.contains("comp")) {
+		console.error("Component has been initialized already", comp);
+		return;
+	}
+	comp.classList.add("comp");
 
 	if (!parent_comp) {
 		comp.classList.add("freeze");
@@ -202,10 +206,11 @@ function createComp(node, parent_comp, data, options) {
 			}
 			child.className = out.replace(/\n/g, " ").replace(/ +/g, " ").trim();
 
+			const rem = [];
 			for (const attr of child.attributes) {
 				const val = attr.value;
 
-				if (val.match(/^\{\{.*}}$/)) {
+				if (val.match(/^\{\{.*?}}$/)) {
 					let g = comp._eval_attrs.find((x) => x.node === child);
 					if (!g) {
 						g = { node: child, evals: [] };
@@ -213,9 +218,12 @@ function createComp(node, parent_comp, data, options) {
 					}
 					g.evals.push({ name: attr.name, eval_str: val });
 
-					child.removeAttribute(attr.name);
+					rem.push(attr.name);
 				}
 			}
+			rem.forEach((e) => {
+				child.removeAttribute(e);
+			});
 		});
 	}
 
