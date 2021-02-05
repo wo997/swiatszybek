@@ -262,13 +262,6 @@ function listComp(comp, parent, data = []) {
 							off_y -= rect_after.height * fac;
 						}
 					}
-					// if (add && !chaos) {
-					// 	if (is_horizontal) {
-					// 		off_x -= rect_after.width * 0.5;
-					// 	} else {
-					// 		off_y -= rect_after.height * 0.5;
-					// 	}
-					// }
 
 					/**
 					 *
