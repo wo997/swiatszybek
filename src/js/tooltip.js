@@ -1,5 +1,13 @@
 /* js[global] */
 
+/**
+ * @type {{
+ * target: PiepNode,
+ * dismiss()
+ * resizeCallback()
+ * last_target: PiepNode
+ * }}
+ */
 let tooltip;
 domload(() => {
 	document.body.insertAdjacentHTML("beforeend", `<div class="wo997tooltip" style="display:none"></div>`);
@@ -8,21 +16,22 @@ domload(() => {
 		dismiss: () => {
 			var t = tooltip.target;
 			t.style.display = "none";
-			tooltip.lastTooltipNode = null;
+			tooltip.last_target = null;
 		},
 		resizeCallback: () => {
 			$$(".check-tooltip").forEach((e) => {
 				e.classList.toggle("require-tooltip", e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight);
 			});
 		},
+		last_target: undefined,
 	};
 
 	// crazy shit lol
 	document.addEventListener("pointermove", (event) => {
-		var t = tooltip.target;
+		const t = tooltip.target;
 
 		const target = $(event.target);
-		var e = target._parent("[data-tooltip]", { skip: 0 });
+		const e = target._parent("[data-tooltip]", { skip: 0 });
 		if (e) {
 			// && !e.hasAttribute("disabled")) {
 			var tooltipText = e.dataset.tooltip;
@@ -40,21 +49,21 @@ domload(() => {
 				}
 			}
 
-			if (tooltip.lastTooltipNode != e) {
+			if (tooltip.last_target != e) {
 				t.style.display = "block";
-				t.innerHTML = tooltipText;
+				t._set_content(tooltipText);
 				t.style.animation = "show 0.15s";
 			}
 
-			var nodeRect = e.getBoundingClientRect();
-			var tooltipRect = t.getBoundingClientRect();
+			const nodeRect = e.getBoundingClientRect();
+			const tooltipRect = t.getBoundingClientRect();
 
-			var offsetX = 3;
-			var offsetY = 2;
-			var left = nodeRect.left + offsetX + nodeRect.width;
-			var top = nodeRect.top + offsetY + nodeRect.height;
+			const offsetX = 3;
+			const offsetY = 2;
+			let left = nodeRect.left + offsetX + nodeRect.width * 0.5;
+			let top = nodeRect.top + offsetY + nodeRect.height;
 
-			var nodeRectPosition = e.getAttribute("data-tooltip-position");
+			const nodeRectPosition = e.dataset.tooltip_position;
 			if (nodeRectPosition == "center") {
 				left -= nodeRect.width / 2 + tooltipRect.width / 2 + offsetX;
 			} else if (nodeRectPosition == "right") {
@@ -64,9 +73,9 @@ domload(() => {
 				left -= nodeRect.width + tooltipRect.width + offsetX * 2;
 			}
 
-			var maxLeft = window.innerWidth - 30 - tooltipRect.width;
+			const maxLeft = window.innerWidth - 30 - tooltipRect.width;
 			if (left > maxLeft) {
-				left -= tooltipRect.width + offsetX * 2 + nodeRect.width;
+				left -= tooltipRect.width + offsetX * 2; // + nodeRect.width;
 			}
 			if (left > maxLeft) {
 				left = maxLeft;
@@ -78,7 +87,7 @@ domload(() => {
 			if (top < 10) {
 				top = 10;
 			}
-			var maxH = window.innerHeight - tooltipRect.height - 10;
+			const maxH = window.innerHeight - tooltipRect.height - 10;
 			if (top > maxH) {
 				top = maxH - nodeRect.height;
 			}
@@ -87,7 +96,7 @@ domload(() => {
 			t.style.top = top + "px";
 		} else t.style.display = "none";
 
-		tooltip.lastTooltipNode = e;
+		tooltip.last_target = e;
 	});
 	window.addEventListener("mousewheel", () => {
 		tooltip.dismiss();
@@ -95,10 +104,10 @@ domload(() => {
 	window.addEventListener("mousedown", (event) => {
 		// click could be prevented lol
 		tooltip.dismiss();
-		/*if (!event.target._parent(tooltip.lastTooltipNode)) {
+		/*if (!event.target._parent(tooltip.last_target)) {
 			tooltip.dismiss();
 		} else {
-			if (tooltip.lastTooltipNode.hasAttribute("data-tooltip-hide")) {
+			if (tooltip.last_target.hasAttribute("data-tooltip-hide")) {
 				tooltip.dismiss();
 			}
 		}*/

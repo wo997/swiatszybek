@@ -314,7 +314,7 @@ function listComp(comp, parent, data = []) {
                             0% {width:${list_rect_before.width}px;height:${list_rect_before.height}px;}
                             100% {width:${list_rect_after.width}px;height:${list_rect_after.height}px;}
                         `,
-						0,
+						animation_duration,
 						{
 							callback: () => {
 								comp.classList.remove("animating");

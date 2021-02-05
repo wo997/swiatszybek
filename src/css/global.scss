@@ -164,9 +164,9 @@ textarea {
 	&.subtle {
 		//--btn-background-clr: var(--subtle-background-clr);
 		//--btn-font-clr: var(--subtle-font-clr);
-		--btn-background-clr: #f4f4f4;
-		--btn-font-clr: #444;
-		--brighten-factor: 1.02;
+		--btn-background-clr: #0000000c;
+		--btn-font-clr: #000b;
+		--btn-border-clr: #0002;
 	}
 	&.success {
 		--btn-background-clr: var(--success-clr);
@@ -225,6 +225,12 @@ textarea {
 
 	&.small {
 		padding: 0.2em 0.5em;
+	}
+
+	.fas,
+	.fas,
+	.fab {
+		margin: -1px 0;
 	}
 }
 

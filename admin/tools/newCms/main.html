@@ -1,39 +1,17 @@
-<div
-	id="newCms"
-	class="newCms"
-	data-expand="large"
-	data-form
-	data-history
-	data-exclude-hidden
-	data-warn-before-leave
->
+<div id="newCms" class="newCms" data-expand="large" data-form data-history data-exclude-hidden data-warn-before-leave>
 	<div class="modal-body">
 		<div class="custom-toolbar">
-			<a class="btn transparent return_btn">
-				<i class="fas fa-chevron-left"></i
-			></a>
+			<a class="btn transparent return_btn"> <i class="fas fa-chevron-left"></i></a>
 			<span class="title"> Edycja zawartości </span>
 
 			<div style="margin-right: auto" class="glue-children responsive_types">
-				<button
-					class="btn important"
-					data-responsive_type="desktop"
-					data-tooltip="Wersja na komputery"
-				>
+				<button class="btn important" data-responsive_type="desktop" data-tooltip="Wersja na komputery">
 					<i class="fas fa-desktop"></i>
 				</button>
-				<button
-					class="btn primary"
-					data-responsive_type="tablet"
-					data-tooltip="Wersja na tablety"
-				>
+				<button class="btn primary" data-responsive_type="tablet" data-tooltip="Wersja na tablety">
 					<i class="fas fa-tablet-alt"></i>
 				</button>
-				<button
-					class="btn primary"
-					data-responsive_type="mobile"
-					data-tooltip="Wersja na telefony"
-				>
+				<button class="btn primary" data-responsive_type="mobile" data-tooltip="Wersja na telefony">
 					<i class="fas fa-mobile-alt"></i>
 				</button>
 			</div>
@@ -56,25 +34,15 @@
 			<!--<button class="btn secondary" onclick="hideParentModal(this)">
 				Anuluj <i class="fas fa-times"></i>
 			</button>-->
-			<button onclick="showCmsPreview()" class="btn primary preview_btn">
-				Podgląd <i class="fas fa-eye"></i>
-			</button>
-			<button
-				class="btn primary"
-				onclick="newCms.save();hideParentModal(this);"
-			>
-				Zapisz <i class="fa fa-save"></i>
-			</button>
+			<button onclick="showCmsPreview()" class="btn primary preview_btn">Podgląd <i class="fas fa-eye"></i></button>
+			<button class="btn primary" onclick="newCms.save();hideParentModal(this);">Zapisz <i class="fa fa-save"></i></button>
 		</div>
 
-		<div
-			class="mobileRow"
-			style="flex-shrink: 1; flex-grow: 1; overflow: hidden"
-		>
+		<div class="mobileRow" style="flex-shrink: 1; flex-grow: 1; overflow: hidden">
 			<button
 				class="btn subtle toggle_sidebar toggle_sidebar_when_collapsed"
 				data-tooltip="Rozwiń menu wyboru bloków"
-				data-tooltip-position="right"
+				data-tooltip_position="right"
 			>
 				<i class="fas fa-th-large"></i>
 			</button>
@@ -87,11 +55,7 @@
 							tylko w trybie edycji
 							<br />
 
-							<button
-								class="btn primary"
-								data-responsive_type="desktop"
-								style="margin-top: 5px"
-							>
+							<button class="btn primary" data-responsive_type="desktop" style="margin-top: 5px">
 								Na komputery
 								<i class="fas fa-desktop" style="margin-left: 3px"></i>
 							</button>
@@ -103,10 +67,7 @@
 								<i class="fas fa-chevron-left"></i>
 							</button>
 							Wstaw blok
-							<i
-								class="fas fa-info-circle"
-								data-tooltip="Kliknij, przeciągnij na dokument i upuść"
-							></i>
+							<i class="fas fa-info-circle" data-tooltip="Kliknij, przeciągnij na dokument i upuść"></i>
 						</span>
 					</div>
 					<div class="scroll-panel scroll-shadow hide_scrollbar">
@@ -122,84 +83,27 @@
 									<span>Zdjęcie</span>
 								</div>
 
-								<div
-									class="side_block container_horizontal"
-									data-block="container"
-								>
+								<div class="side_block container_horizontal" data-block="container">
 									<div style="display: none">
 										<i class="fas fa-columns"></i>
 									</div>
-									<div
-										style="
-											width: 1.8em;
-											height: 1.8em;
-											display: inline-flex;
-											margin-right: 3px;
-										"
-									>
-										<div
-											style="
-												margin-right: -3px;
-												border: 3px solid var(--primary-clr);
-												flex-grow: 1;
-											"
-										></div>
-										<div
-											style="
-												margin-right: -3px;
-												border: 3px solid var(--primary-clr);
-												flex-grow: 1;
-											"
-										></div>
-										<div
-											style="
-												margin-right: -3px;
-												border: 3px solid var(--primary-clr);
-												flex-grow: 1;
-											"
-										></div>
+									<div style="width: 1.8em; height: 1.8em; display: inline-flex; margin-right: 3px">
+										<div style="margin-right: -3px; border: 3px solid var(--primary-clr); flex-grow: 1"></div>
+										<div style="margin-right: -3px; border: 3px solid var(--primary-clr); flex-grow: 1"></div>
+										<div style="margin-right: -3px; border: 3px solid var(--primary-clr); flex-grow: 1"></div>
 									</div>
 
 									<span>Kontener (poziomy)</span>
 								</div>
 
-								<div
-									class="side_block container_vertical"
-									data-block="container"
-								>
+								<div class="side_block container_vertical" data-block="container">
 									<div style="display: none">
 										<i class="fas fa-columns"></i>
 									</div>
-									<div
-										style="
-											width: 1.8em;
-											height: 1.8em;
-											display: inline-flex;
-											flex-direction: column;
-											margin-bottom: 3px;
-										"
-									>
-										<div
-											style="
-												margin-bottom: -3px;
-												border: 3px solid var(--primary-clr);
-												flex-grow: 1;
-											"
-										></div>
-										<div
-											style="
-												margin-bottom: -3px;
-												border: 3px solid var(--primary-clr);
-												flex-grow: 1;
-											"
-										></div>
-										<div
-											style="
-												margin-bottom: -3px;
-												border: 3px solid var(--primary-clr);
-												flex-grow: 1;
-											"
-										></div>
+									<div style="width: 1.8em; height: 1.8em; display: inline-flex; flex-direction: column; margin-bottom: 3px">
+										<div style="margin-bottom: -3px; border: 3px solid var(--primary-clr); flex-grow: 1"></div>
+										<div style="margin-bottom: -3px; border: 3px solid var(--primary-clr); flex-grow: 1"></div>
+										<div style="margin-bottom: -3px; border: 3px solid var(--primary-clr); flex-grow: 1"></div>
 									</div>
 
 									<span>Kontener (pionowy)</span>
@@ -231,62 +135,29 @@
 					<div class="scroll-panel scroll-shadow hide_scrollbar">
 						<div>
 							<span class="label first"
-								>Dodatkowy CSS
-								<i
-									class="fas fa-info-circle"
-									data-tooltip="Wpisz <b>&</b> jako selektor edytowanego bloku."
-								></i
+								>Dodatkowy CSS <i class="fas fa-info-circle" data-tooltip="Wpisz <b>&</b> jako selektor edytowanego bloku."></i
 							></span>
-							<textarea
-								name="custom_css"
-								class="field"
-								style="height: 200px; overflow-y: auto"
-							></textarea>
+							<textarea name="custom_css" class="field" style="height: 200px; overflow-y: auto"></textarea>
 
 							<span class="label">Tekst</span>
 							<div class="quill_editor"></div>
 
 							<span class="label">Zdjęcie</span>
-							<image-input
-								name="image"
-								data-options='{"width":"100%","height":"1w"}'
-							></image-input>
+							<image-input name="image" data-options='{"width":"100%","height":"1w"}'></image-input>
 
 							<span class="label">Ułożenie zawartości</span>
-							<p-radio
-								name="container_flow"
-								class="default columns_2"
-								style="--option-padding: 4px"
-							>
-								<radio-option value="row">
-									<img src="/src/img/flex_row.svg" /> Wiersz
-								</radio-option>
-								<radio-option value="column">
-									<img src="/src/img/flex_column.svg" /> Kolumna
-								</radio-option>
-								<radio-option value="row wrap">
-									<img src="/src/img/flex_row_wrap.svg" /> Wiersz
-								</radio-option>
-								<radio-option value="column wrap">
-									<img src="/src/img/flex_column_wrap.svg" />Odradzam
-								</radio-option>
+							<p-radio name="container_flow" class="default columns_2" style="--option-padding: 4px">
+								<radio-option value="row"> <img src="/src/img/flex_row.svg" /> Wiersz </radio-option>
+								<radio-option value="column"> <img src="/src/img/flex_column.svg" /> Kolumna </radio-option>
+								<radio-option value="row wrap"> <img src="/src/img/flex_row_wrap.svg" /> Wiersz </radio-option>
+								<radio-option value="column wrap"> <img src="/src/img/flex_column_wrap.svg" />Odradzam </radio-option>
 							</p-radio>
 
 							<span class="label">Wyrównaj zawartość</span>
-							<p-radio
-								name="justify_content"
-								class="default columns_3"
-								style="--option-padding: 7px"
-							>
-								<radio-option value="flex-start">
-									<i class="fas fa-align-left"></i> Lewo
-								</radio-option>
-								<radio-option value="center">
-									<i class="fas fa-align-center"></i> Środek
-								</radio-option>
-								<radio-option value="flex-end">
-									<i class="fas fa-align-right"></i> Prawo
-								</radio-option>
+							<p-radio name="justify_content" class="default columns_3" style="--option-padding: 7px">
+								<radio-option value="flex-start"> <i class="fas fa-align-left"></i> Lewo </radio-option>
+								<radio-option value="center"> <i class="fas fa-align-center"></i> Środek </radio-option>
+								<radio-option value="flex-end"> <i class="fas fa-align-right"></i> Prawo </radio-option>
 							</p-radio>
 
 							<span class="label">Marginesy</span>
@@ -299,11 +170,7 @@
 							<input type="text" class="field inline" name="width" />
 
 							<span class="label">Kolumny siatki</span>
-							<input
-								type="text"
-								class="field inline"
-								name="grid_template_columns"
-							/>
+							<input type="text" class="field inline" name="grid_template_columns" />
 
 							<span class="label">wiersze siatki</span>
 							<input type="text" class="field inline" name="grid_rows" />
@@ -314,9 +181,7 @@
 
 			<div class="content_wrapper">
 				<div class="content_responsive_wrapper">
-					<div
-						class="scroll-panel scroll-shadow content_scroll_panel hide_scrollbar"
-					>
+					<div class="scroll-panel scroll-shadow content_scroll_panel hide_scrollbar">
 						<div class="content_scroll_content">
 							<div class="content_overlay">
 								<div class="copied_block_container"></div>
@@ -340,17 +205,7 @@
 			<!-- maybe it should be a part of the contents, who knows, we can do it both ways -->
 			<style class="styles_node"></style>
 			<div class="clean_output" style="display: none !important"></div>
-			<div
-				style="
-					position: absolute;
-					width: 100%;
-					height: 100%;
-					left: 0;
-					top: 0;
-					overflow: hidden;
-					pointer-events: none;
-				"
-			></div>
+			<div style="position: absolute; width: 100%; height: 100%; left: 0; top: 0; overflow: hidden; pointer-events: none"></div>
 			<div class="trash_block">
 				<i class="fas fa-trash"></i>
 			</div>

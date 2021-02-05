@@ -606,7 +606,7 @@ function createVariantFiltersSimpleList(node, options = {}) {
 								name="filter_name"
 								placeholder="Nazwa pola wyboru"
 								data-tooltip="Wpisz nazwę pola wyboru<br>Np.: <span class='semi-bold'>kolor</span>"
-								data-tooltip-position="center"
+								data-tooltip_position="center"
 								onchange="choiceNameChanged(this)"
 							/>
 						</div>

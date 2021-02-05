@@ -1,7 +1,12 @@
 /* css[global] */
 
 list-comp.animating {
-	overflow: hidden;
+	& {
+		overflow: hidden;
+	}
+	.btn {
+		transition: 0.25s all;
+	}
 }
 list-comp > .list_row {
 	flex-shrink: 0;
