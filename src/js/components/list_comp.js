@@ -78,13 +78,16 @@ function listComp(comp, parent, data = []) {
 				}
 
 				let instant = false;
+				let chaos = false;
 
 				if (comp.classList.contains("animating")) {
 					//instant = true;
 				}
 
 				finishNodeAnimation(comp);
+				let row_c = 0;
 				comp._getRows().forEach((e) => {
+					row_c++;
 					finishNodeAnimation(e);
 				});
 
@@ -99,21 +102,23 @@ function listComp(comp, parent, data = []) {
 				let removed = 0;
 				let all = diff.length;
 
-				// if (!instant) {
-				// 	for (const d of diff) {
-				// 		if (d.from === -1) {
-				// 			added++;
-				// 		}
-				// 		if (d.to === -1) {
-				// 			removed++;
-				// 		}
-				// 	}
-				// }
+				if (!instant) {
+					for (const d of diff) {
+						if (d.from === -1) {
+							added++;
+						}
+						if (d.to === -1) {
+							removed++;
+						}
+					}
+				}
 
 				// adding and removing, if we have too many of these we won't animate the list, simple
-				if (added * removed > all * all * 0.25) {
+				if (added * removed > row_c * row_c * 0.25) {
 					//instant = true;
+					chaos = true;
 				}
+				console.log(chaos, added, removed, row_c * row_c * 0.25);
 
 				const animation_duration = instant ? 0 : 250;
 
@@ -250,12 +255,20 @@ function listComp(comp, parent, data = []) {
 						child.classList.add("removing");
 					}
 					if (add) {
+						const fac = chaos ? 1 : 1.5;
 						if (is_horizontal) {
-							off_x -= rect_after.width * 0.5;
+							off_x -= rect_after.width * fac;
 						} else {
-							off_y -= rect_after.height * 0.5;
+							off_y -= rect_after.height * fac;
 						}
 					}
+					// if (add && !chaos) {
+					// 	if (is_horizontal) {
+					// 		off_x -= rect_after.width * 0.5;
+					// 	} else {
+					// 		off_y -= rect_after.height * 0.5;
+					// 	}
+					// }
 
 					/**
 					 *

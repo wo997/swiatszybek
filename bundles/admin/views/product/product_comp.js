@@ -36,9 +36,15 @@
  */
 function productComp(comp, parent, data) {
 	/** @type {ProductData[]} */
-	const products = [{ product_id: 2, name: "sadfas", gross_price: 234, net_price: 40, vat: 23 }]; // will be empty
+	const products = [
+		{ product_id: 2, name: "sadfas", gross_price: 234, net_price: 40, vat: 23 },
+		{ product_id: 3, name: "a", gross_price: 234, net_price: 12, vat: 23 },
+		{ product_id: 4, name: "b", gross_price: 100, net_price: 40, vat: 5 },
+		{ product_id: 5, name: "c", gross_price: 264, net_price: 4, vat: 8 },
+	]; // will be empty
 
-	data.products_dt = def(data.products_dt, {
+	/** @type {DatatableCompData} */
+	const table = {
 		columns: [
 			{ key: "product_id", label: "ID", width: "10%", sortable: true, searchable: "number" },
 			{ key: "name", label: "Nazwa", width: "10%", sortable: true, searchable: "string" },
@@ -47,7 +53,10 @@ function productComp(comp, parent, data) {
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
 		],
 		dataset: products,
-	});
+		label: "Wszystkie produkty",
+	};
+
+	data.products_dt = def(data.products_dt, table);
 
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {

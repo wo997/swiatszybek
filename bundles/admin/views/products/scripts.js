@@ -14,7 +14,7 @@ domload(() => {
 		],
 		primary_key: "product_id",
 		empty_html: html`Brak produktów`,
-		label: "Produkty",
+		label: "<div class='medium'>Produkty</div>",
 		after_label: html`<a href="${STATIC_URLS["ADMIN"]}produkt" class="btn important"> Dodaj <i class="fas fa-plus"></i> </a> `,
 		selectable: true,
 	});

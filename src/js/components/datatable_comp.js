@@ -27,7 +27,7 @@
  *  dataset?: Array
  *  rows?: {row:any}[]
  *  columns: DatatableColumnDef[]
- *  sort?: DatatableSortData | undefined
+ *  sort?: DatatableSortData | false
  *  filters?: DatatableFilterData[]
  *  pagination_data?: PaginationCompData
  *  quick_search?: string
@@ -50,6 +50,7 @@
  *      list: ListComp
  *  }
  * _datatable_search(delay?: number)
+ * _client_search()
  * _search_timeout: number
  * _search_request: XMLHttpRequest | undefined
  * } & BaseComp} DatatableComp
@@ -62,7 +63,7 @@
  */
 function datatableComp(comp, parent, data) {
 	data.filters = def(data.filters, []);
-	data.sort = def(data.sort, undefined);
+	data.sort = def(data.sort, false);
 	data.dataset = def(data.dataset, []);
 	data.pagination_data = {};
 
@@ -120,12 +121,25 @@ function datatableComp(comp, parent, data) {
 		});
 	}
 
-	comp._datatable_search = (delay = 0) => {
-		if (!comp._data.search_url) {
-			console.error("You have to define filters on frontend, keep it simple");
-			return;
-		}
+	comp._client_search = () => {
+		// cant call render in a render ofc
+		setTimeout(() => {
+			if (comp._data.sort) {
+				const sort_key = comp._data.sort.key;
+				const order = comp._data.sort.order === "asc" ? 1 : -1;
+				comp._data.dataset = comp._data.dataset.sort((a, b) => {
+					if (a[sort_key] < b[sort_key]) return -order;
+					if (a[sort_key] > b[sort_key]) return order;
+					return 0;
+				});
+				comp._render();
+			} else {
+				// hey prevent that from happening, require a sort
+			}
+		}, 0);
+	};
 
+	comp._datatable_search = (delay = 0) => {
 		if (comp._search_timeout) {
 			clearTimeout(comp._search_timeout);
 			comp._search_timeout = undefined;
@@ -162,7 +176,7 @@ function datatableComp(comp, parent, data) {
 
 					comp._search_request = undefined;
 
-					if (res.rows.length === 0 && data.pagination_data.page_id > 0) {
+					if (res.rows.length === 0 && data.pagination_data.page_id > 0 && data.search_url) {
 						data.pagination_data.page_id = 0;
 						comp._datatable_search();
 						return;
@@ -194,7 +208,11 @@ function datatableComp(comp, parent, data) {
 				const cd = comp._changed_data;
 
 				if (cd.quick_search) {
-					comp._datatable_search(300);
+					if (comp._data.search_url) {
+						comp._datatable_search(300);
+					} else {
+						comp._client_search();
+					}
 				}
 
 				if (
@@ -233,7 +251,9 @@ function datatableComp(comp, parent, data) {
 									} else if (data.sort.order === "asc") {
 										icon = "fa-arrow-up";
 										btn_class = "primary";
-										tooltip = "Wyłącz sortowanie";
+										if (data.search_url) {
+											tooltip = "Wyłącz sortowanie";
+										}
 									}
 								}
 								cell_html += html` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
@@ -259,7 +279,11 @@ function datatableComp(comp, parent, data) {
 					comp._nodes.style._set_content(styles_html);
 					registerForms();
 
-					comp._datatable_search(0);
+					if (comp._data.search_url) {
+						comp._datatable_search(0);
+					} else {
+						comp._client_search();
+					}
 				}
 
 				expand(comp._nodes.empty_table, data.rows.length === 0);
@@ -355,10 +379,10 @@ function datatableComp(comp, parent, data) {
 					let new_order = "desc";
 					if (curr_order === "desc") {
 						new_order = "asc";
-					} else if (curr_order === "asc") {
+					} else if (curr_order === "asc" && data.search_url) {
 						new_order = "";
 					}
-					data.sort = new_order ? { key: column_data.key, order: new_order } : undefined;
+					data.sort = new_order ? { key: column_data.key, order: new_order } : false;
 					comp._render();
 				}
 
