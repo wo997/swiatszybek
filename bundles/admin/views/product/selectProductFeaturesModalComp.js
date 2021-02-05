@@ -3,22 +3,22 @@
 /**
  * @typedef {{
  * datatable: DatatableCompData
- * }} SelectProductFeaturesCompData
+ * }} SelectProductFeaturesModalCompData
  *
  * @typedef {{
- * _data: SelectProductFeaturesCompData
- * _set_data(data?: SelectProductFeaturesCompData, options?: SetCompDataOptions)
+ * _data: SelectProductFeaturesModalCompData
+ * _set_data(data?: SelectProductFeaturesModalCompData, options?: SetCompDataOptions)
  * _nodes: {
  * }
- * } & BaseComp} SelectProductFeaturesComp
+ * } & BaseComp} SelectProductFeaturesModalComp
  */
 
 /**
- * @param {SelectProductFeaturesComp} comp
+ * @param {SelectProductFeaturesModalComp} comp
  * @param {*} parent
- * @param {SelectProductFeaturesCompData} data
+ * @param {SelectProductFeaturesModalCompData} data
  */
-function selectProductFeaturesComp(comp, parent, data = undefined) {
+function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			datatable: {

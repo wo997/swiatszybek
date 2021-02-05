@@ -96,7 +96,7 @@ function productComp(comp, parent, data) {
         `,
 		initialize: () => {
 			comp._nodes.add_variant_btn.addEventListener("click", () => {
-				/** @type {SelectProductFeaturesComp} */
+				/** @type {SelectProductFeaturesModalComp} */
 				// @ts-ignore
 				const select_product_features_comp = $("#selectProductFeatures select-product-features-modal-comp");
 

@@ -11,6 +11,9 @@ pagination-comp {
 		--btn-border-clr: #ddd;
 		margin-right: -1px;
 	}
+	.arrows .btn:disabled {
+		opacity: 0.4;
+	}
 
 	.arrows {
 		background: #eee;

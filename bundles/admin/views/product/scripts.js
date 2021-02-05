@@ -57,13 +57,7 @@ domload(() => {
 	registerModalContent(html`
 		<div id="productFeature" data-expand data-dismissable>
 			<div class="modal-body">
-				<div class="custom-toolbar">
-					<span class="title">Cecha produktu</span>
-					<button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-				</div>
-				<div class="scroll-panel scroll-shadow panel-padding">
-					<product-feature-comp></product-feature-comp>
-				</div>
+				<product-feature-modal-comp></product-feature-modal-comp>
 			</div>
 		</div>
 	`);
@@ -82,17 +76,17 @@ domload(() => {
 		products: [],
 	});
 
-	/** @type {ProductFeatureComp} */
+	/** @type {ProductFeatureModalComp} */
 	// @ts-ignore
-	const product_feature_comp = $("#productFeature product-feature-comp");
+	const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
 
-	productFeatureComp(product_feature_comp, undefined, { name: "", feature_id: -1, options: [] });
+	productFeatureModalComp(product_feature_modal_comp, undefined, { product_feature: { name: "", feature_id: -1, options: [] } });
 
-	/** @type {SelectProductFeaturesComp} */
+	/** @type {SelectProductFeaturesModalComp} */
 	// @ts-ignore
-	const select_product_features_comp = $("#selectProductFeatures select-product-features-modal-comp");
+	const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
 
-	selectProductFeaturesComp(select_product_features_comp, undefined);
+	selectProductFeaturesModalComp(select_product_features_modal_comp, undefined);
 
 	// finally
 	const name_input = product_comp._child(`product-comp [data-bind="name"]`);
