@@ -31,6 +31,9 @@ function listComp(comp, parent, data = []) {
 	comp._primary_key = comp.dataset.primary;
 
 	comp._pointChildsData = (child) => {
+		if (!child) {
+			return undefined;
+		}
 		let source_sub_data_index = comp._data.findIndex((e) => {
 			return e.row_id === child._data.row_id;
 		});
@@ -78,13 +81,12 @@ function listComp(comp, parent, data = []) {
 
 				if (comp.classList.contains("animating")) {
 					//instant = true;
-
-					finishNodeAnimation(comp);
-					comp._getRows().forEach((e) => {
-						const bef = e.offsetHeight;
-						finishNodeAnimation(e);
-					});
 				}
+
+				finishNodeAnimation(comp);
+				comp._getRows().forEach((e) => {
+					finishNodeAnimation(e);
+				});
 
 				const diff_with_target_index = diff
 					.map((e) => ({
@@ -247,13 +249,13 @@ function listComp(comp, parent, data = []) {
 						}
 						child.classList.add("removing");
 					}
-					// if (add) {
-					// 	if (is_horizontal) {
-					// 		off_x -= rect_after.width;
-					// 	} else {
-					// 		off_y -= rect_after.height;
-					// 	}
-					// }
+					if (add) {
+						if (is_horizontal) {
+							off_x -= rect_after.width * 0.5;
+						} else {
+							off_y -= rect_after.height * 0.5;
+						}
+					}
 
 					/**
 					 *
@@ -276,7 +278,6 @@ function listComp(comp, parent, data = []) {
 						if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2) {
 							step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px);`;
 							step_1 += `transform:translate(${after_x}px,${after_y}px);`;
-							console.log(Math.round(off_y), after_y);
 						}
 
 						if (add) {
@@ -289,7 +290,7 @@ function listComp(comp, parent, data = []) {
 						}
 
 						if (step_1) {
-							child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration);
+							child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration, { early_callback: false });
 						}
 					}
 				});
@@ -302,28 +303,30 @@ function listComp(comp, parent, data = []) {
 				const h1 = list_rect_before.height;
 				const h2 = list_rect_after.height;
 
-				if (Math.abs(w1 - w2) < 1 && Math.abs(h1 - h2) < 1) {
-					comp.style.width = w2 + "px";
-					comp.style.height = h2 + "px";
+				// if (Math.abs(w1 - w2) < 1 && Math.abs(h1 - h2) < 1) {
+				// 	//comp.style.width = w2 + "px";
+				// 	//comp.style.height = h2 + "px";
 
-					setTimeout(() => {
-						comp.style.width = "";
-						comp.style.height = "";
-					}, animation_duration);
-				} else {
-					comp._animate(
-						`
-                            0% {width:${list_rect_before.width}px;height:${list_rect_before.height}px;}
-                            100% {width:${list_rect_after.width}px;height:${list_rect_after.height}px;}
-                        `,
-						animation_duration,
-						{
-							callback: () => {
-								comp.classList.remove("animating");
-							},
-						}
-					);
-				}
+				// 	setTimeout(() => {
+
+				// 	}, animation_duration);
+				// } else {
+
+				// }
+				comp._animate(
+					`
+                        0% {width:${w1}px;height:${h1}px;}
+                        100% {width:${w2}px;height:${h2}px;}
+                    `,
+					animation_duration,
+					{
+						callback: () => {
+							comp.classList.remove("animating");
+							comp.style.width = "";
+							comp.style.height = "";
+						},
+					}
+				);
 			},
 		});
 	};

@@ -69,6 +69,8 @@ function finishNodeAnimation(node, is_early = false) {
 	matches.forEach((match) => {
 		removeAnimation(match);
 	});
+
+	return true;
 }
 
 /**
