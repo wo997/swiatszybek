@@ -70,6 +70,13 @@ function productComp(
         `,
 		initialize: () => {
 			comp._nodes.add_variant_btn.addEventListener("click", () => {
+				/** @type {SelectProductFeaturesComp} */
+				// @ts-ignore
+				const select_product_features_comp = $("#selectProductFeatures select-product-features-modal-comp");
+
+				select_product_features_comp._data.datatable.selection = [];
+				select_product_features_comp._render();
+
 				showModal("selectProductFeatures", {
 					source: comp._nodes.add_variant_btn,
 				});
