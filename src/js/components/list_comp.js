@@ -142,8 +142,8 @@ function listComp(comp, parent, data = []) {
 					if (add) {
 						/** @type {AnyComp} */
 						// @ts-ignore
-						child = createNodeFromHtml(html`<div class="list_row"></div>`);
-						child.classList.add("cramp_row");
+						child = $(document.createElement("DIV"));
+						child.classList.add("list_row", "cramp_row");
 					}
 
 					if (remove) {
@@ -161,6 +161,14 @@ function listComp(comp, parent, data = []) {
 					if (add) {
 						const row_data = data[diff_info.to];
 						child._set_content(comp._row_template);
+						const pk = comp._primary_key;
+						if (pk) {
+							let ref = row_data;
+							pk.split(".").forEach((e) => {
+								ref = ref[e];
+							});
+							child.dataset.primary = ref;
+						}
 
 						directComps(child).forEach((dc) => {
 							const constructor = snakeCase(dc.tagName.toLocaleLowerCase());

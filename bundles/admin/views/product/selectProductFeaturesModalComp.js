@@ -24,7 +24,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			datatable: {
 				search_url: STATIC_URLS["ADMIN"] + "product/feature/search",
 				columns: [
-					{ label: "Cecha", key: "name", width: "300px", sortable: true, searchable: "string" },
+					{ label: "Cecha", key: "name", width: "20%", sortable: true, searchable: "string" },
 					{
 						label: "Typ danych",
 						key: "data_type",
@@ -35,7 +35,14 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							return data.data_type + "_x";
 						},
 					},
-					{ label: "Wartości", key: "attr_values", width: "200px", sortable: true, searchable: "number" },
+					{ label: "Wartości", key: "attr_values", width: "50%", sortable: true, searchable: "number" },
+					{
+						label: "",
+						width: "50px",
+						render: (data) => {
+							return html`<button class="btn subtle small edit_btn"><i class="fas fa-cog"></i></button>`;
+						},
+					},
 				],
 				primary_key: "product_feature_id",
 				empty_html: html`Brak cech`,
@@ -90,6 +97,16 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					showModal("productFeature", {
 						source: add_feature_btn,
 					});
+				}
+				const edit_btn = target._parent(".edit_btn", { skip: 0 });
+				if (edit_btn) {
+					const list_row = edit_btn._parent(".list_row", { skip: 0 });
+					if (list_row) {
+						console.log(+list_row.dataset.primary);
+						showModal("productFeature", {
+							source: add_feature_btn,
+						});
+					}
 				}
 			});
 		},

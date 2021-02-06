@@ -2,9 +2,9 @@
 
 /**
  * @typedef {{
- *  label: string
- *  key: string
- *  width: string
+ *  label?: string
+ *  key?: string
+ *  width?: string
  *  sortable?: boolean | undefined
  *  searchable?: string
  *  render?(data: any)
