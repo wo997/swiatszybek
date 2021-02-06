@@ -107,6 +107,34 @@ function productComp(comp, parent, data) {
 					source: comp._nodes.add_variant_btn,
 				});
 			});
+
+			// selectProductFeatures
+			registerModalContent(html`
+				<div id="selectProductFeatures" data-expand data-dismissable>
+					<div class="modal-body">
+						<select-product-features-modal-comp></select-product-features-modal-comp>
+					</div>
+				</div>
+			`);
+
+			/** @type {SelectProductFeaturesModalComp} */
+			// @ts-ignore
+			const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
+			selectProductFeaturesModalComp(select_product_features_modal_comp, undefined);
+
+			// productFeature
+			registerModalContent(html`
+				<div id="productFeature" data-expand data-dismissable>
+					<div class="modal-body">
+						<product-feature-modal-comp></product-feature-modal-comp>
+					</div>
+				</div>
+			`);
+
+			/** @type {ProductFeatureModalComp} */
+			// @ts-ignore
+			const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
+			productFeatureModalComp(product_feature_modal_comp, undefined, { product_feature: { name: "", feature_id: -1, options: [] } });
 		},
 	});
 }
