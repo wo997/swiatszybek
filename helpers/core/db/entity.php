@@ -195,16 +195,16 @@ class Entity
         }
 
         if ($prop_type && endsWith($prop_type, "[]")) {
-            $child_entity_name = substr($prop_type, 0, -2);
-            $child_entity_data = EntityManager::getEntityData($child_entity_name);
+            $other_entity_name = substr($prop_type, 0, -2);
+            $child_entity_data = EntityManager::getEntityData($other_entity_name);
             if ($this->name === def($child_entity_data, ["parent", "name"])) {
                 // no need to $this->props[$prop_name] but $val instead if u use before and after setters
-                $val = EntityManager::setOneToManyEntities($this, $prop_name, $child_entity_name, $val);
+                $val = EntityManager::setOneToManyEntities($this, $prop_name, $other_entity_name, $val);
                 $this->props[$prop_name] = $val;
             } else {
                 $link = def($child_entity_data, ["linked_with", $this->name]);
                 if ($link) {
-                    $val = EntityManager::setManyToManyEntities($this, $prop_name, $child_entity_name, $val);
+                    $val = EntityManager::setManyToManyEntities($this, $prop_name, $other_entity_name, $val);
                     $this->props[$prop_name] = $val;
                 }
             }
@@ -242,15 +242,15 @@ class Entity
         if ($this->shouldFetchProp($prop_name)) {
             $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
-                $child_entity_name = substr($prop_type, 0, -2);
-                $child_entity_data = EntityManager::getEntityData($child_entity_name);
+                $other_entity_name = substr($prop_type, 0, -2);
+                $child_entity_data = EntityManager::getEntityData($other_entity_name);
                 if ($this->name === def($child_entity_data, ["parent", "name"])) {
-                    $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $child_entity_name);
+                    $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $other_entity_name);
                     $this->curr_props[$prop_name] = $this->props[$prop_name];
                 } else {
                     $link = def($child_entity_data, ["linked_with", $this->name]);
                     if ($link) {
-                        $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $child_entity_name, $link["relation_table"]);
+                        $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $other_entity_name, $link["relation_table"]);
                         $this->curr_props[$prop_name] = $this->props[$prop_name];
                     }
                 }

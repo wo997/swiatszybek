@@ -36,6 +36,16 @@ class EntityManager
         }
     }
 
+    public static function getEntities()
+    {
+        return self::$entities;
+    }
+
+    public static function getObjects()
+    {
+        return self::$objects;
+    }
+
     public static function getEntityData($name)
     {
         return def(self::$entities, $name, null);
@@ -62,7 +72,7 @@ class EntityManager
      */
     public static function getEntity($name, $props) // must be the only place where we create Entities for consistency
     {
-        $id = $props[self::getEntityIdColumn($name)];
+        $id = def($props, self::getEntityIdColumn($name), -1);
 
         if (intval($id) >= 0) {
             $global_id = self::getObjectGlobalId($name, $id);
@@ -185,12 +195,16 @@ class EntityManager
      */
     public static function setManyToManyEntities(Entity $obj, $obj_prop_name, $other_entity_name, $other_entities_props)
     {
+
+        var_dump([[[$obj, $obj_prop_name, $other_entity_name, $other_entities_props]]]);
+
+
         /** @var Entity[] */
         $curr_other_entities = def($obj->getProp($obj_prop_name), []);
 
         $other_entity_id_column = self::getEntityIdColumn($other_entity_name);
 
-        $other_entity = [];
+        $other_entities = [];
         $other_entities_with_id_props = [];
         foreach ($other_entities_props as &$other_entity_props) {
             if ($other_entity_props instanceof Entity) {
@@ -214,16 +228,34 @@ class EntityManager
         unset($other_entity_props);
 
         foreach ($curr_other_entities as &$curr_other_entity) {
-            $other_entity_props = def($other_entities_with_id_props, $curr_other_entity->getId(), null);
+            $other_id = $curr_other_entity->getId();
+            $other_entity_props = def($other_entities_with_id_props, $other_id, null);
 
             if ($other_entity_props) {
                 $curr_other_entity->setProps($other_entity_props);
+                //unset($other_entities_with_id_props);
             } else {
                 $curr_other_entity->willUnlinkFromEntity($obj->getName());
             }
             $other_entities[] = $curr_other_entity;
         }
         unset($other_entity);
+
+        // the ones that were not linked so far
+        foreach ($other_entities_with_id_props as &$other_entity_props) {
+            if ($other_entity_props instanceof Entity) {
+                return;
+            }
+            if (is_numeric($other_entity_props)) {
+                $other_entity_props = [
+                    $other_entity_id_column => intval($other_entity_props)
+                ];
+            }
+
+            $other_entity = self::getEntity($other_entity_name, $other_entity_props);
+            $other_entities[] = $other_entity;
+        }
+        unset($other_entity_props);
 
         return $other_entities;
     }

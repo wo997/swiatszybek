@@ -3,7 +3,8 @@
 EntityManager::register("product_feature", [
     "props" => [
         "product_feature_id" => ["type" => "number"],
-        "name" => ["type" => "string"]
+        "name" => ["type" => "string"],
+        "products" => ["type" => "product[]"]
     ],
 ]);
 
