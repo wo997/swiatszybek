@@ -54,6 +54,7 @@ function productComp(comp, parent, data) {
 		],
 		dataset: products,
 		label: "Wszystkie produkty",
+		primary_key: "product_id",
 	};
 
 	data.products_dt = def(data.products_dt, table);

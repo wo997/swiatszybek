@@ -41,14 +41,23 @@ function productFeatureModalComp(comp, parent, data = { product_feature: { featu
 		initialize: () => {
 			comp._nodes.save_btn.addEventListener("click", () => {
 				xhr({
-					url: STATIC_URLS["ADMIN"] + "product/attribute/save",
+					url: STATIC_URLS["ADMIN"] + "product/feature/save",
 					params: {
 						product_feature: {
 							name: comp._data.product_feature.name,
 						},
 					},
 					success: (res) => {
-						console.log(res);
+						//console.log(res);
+						hideParentModal(comp);
+
+						/** @type {DatatableComp} */
+						// @ts-ignore
+						const dt_product_features = $("#selectProductFeatures datatable-comp");
+
+						if (dt_product_features) {
+							dt_product_features._datatable_search();
+						}
 					},
 				});
 				//hideParentModal(this);

@@ -22,7 +22,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			datatable: {
-				search_url: STATIC_URLS["ADMIN"] + "search_product_attributes",
+				search_url: STATIC_URLS["ADMIN"] + "product/feature/search",
 				columns: [
 					{ label: "Cecha", key: "name", width: "300px", sortable: true, searchable: "string" },
 					{
@@ -37,7 +37,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					},
 					{ label: "Wartości", key: "attr_values", width: "200px", sortable: true, searchable: "number" },
 				],
-				primary_key: "attribute_id",
+				primary_key: "product_feature_id",
 				empty_html: html`Brak cech`,
 				label: "Cechy produktów",
 				after_label: html`<button class="add_feature_btn btn important" data-tooltip="W przypadku gdy nie widzisz takiej cechy na liście">
