@@ -2,7 +2,7 @@
 
 /**
  * @typedef {{
- * feature_id: number
+ * product_feature_id: number
  * name: string
  * options: ProductFeatureOptionCompData[]
  * }} ProductFeatureCompData
@@ -13,6 +13,7 @@
  * _nodes: {
  *  add_option_btn: PiepNode
  * }
+ * _load_data?(id: number)
  * } & BaseComp} ProductFeatureComp
  */
 
@@ -21,11 +22,20 @@
  * @param {*} parent
  * @param {ProductFeatureCompData} data
  */
-function productFeatureComp(comp, parent, data = { feature_id: -1, name: "", options: [] }) {
+function productFeatureComp(comp, parent, data = { product_feature_id: -1, name: "", options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {},
+		});
+	};
+
+	comp._load_data = (id) => {
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
+			success: (res) => {
+				comp._set_data(res.product_feature);
+			},
 		});
 	};
 

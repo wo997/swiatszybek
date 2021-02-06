@@ -102,10 +102,14 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				if (edit_btn) {
 					const list_row = edit_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						console.log(+list_row.dataset.primary);
 						showModal("productFeature", {
 							source: add_feature_btn,
 						});
+
+						/** @type {ProductFeatureComp} */
+						// @ts-ignore
+						const product_feature_comp = $("#productFeature product-feature-comp");
+						product_feature_comp._load_data(+list_row.dataset.primary);
 					}
 				}
 			});

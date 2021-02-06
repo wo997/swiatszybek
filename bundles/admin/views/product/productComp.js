@@ -135,7 +135,9 @@ function productComp(comp, parent, data) {
 			/** @type {ProductFeatureModalComp} */
 			// @ts-ignore
 			const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
-			productFeatureModalComp(product_feature_modal_comp, undefined, { product_feature: { name: "", feature_id: -1, options: [] } });
+			productFeatureModalComp(product_feature_modal_comp, undefined, {
+				product_feature: { name: "", product_feature_id: -1, options: [] },
+			});
 		},
 	});
 }

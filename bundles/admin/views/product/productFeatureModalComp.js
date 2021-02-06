@@ -19,7 +19,7 @@
  * @param {*} parent
  * @param {ProducttFeatureModalCompData} data
  */
-function productFeatureModalComp(comp, parent, data = { product_feature: { feature_id: -1, name: "", options: [] } }) {
+function productFeatureModalComp(comp, parent, data = { product_feature: { product_feature_id: -1, name: "", options: [] } }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
