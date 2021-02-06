@@ -36,6 +36,7 @@
  *  after_label?: string
  *  selectable?: boolean
  *  selection?: number[]
+ *  save_state_name?: string
  * }} DatatableCompData
  *
  * @typedef {{
@@ -48,11 +49,14 @@
  *      style: PiepNode
  *      empty_table: PiepNode
  *      list: ListComp
+ *      clear_filters_btn: PiepNode
  *  }
  * _datatable_search(delay?: number)
  * _client_search()
  * _search_timeout: number
  * _search_request: XMLHttpRequest | undefined
+ * _save_state()
+ * _load_state(data_obj)
  * } & BaseComp} DatatableComp
  */
 
@@ -120,6 +124,29 @@ function datatableComp(comp, parent, data) {
 			}
 		});
 	}
+
+	const rewriteState = (src, to) => {
+		to.filters = src.filters;
+		to.quick_search = src.quick_search;
+		to.sort = src.sort;
+		to.pagination_data = src.pagination_data;
+	};
+
+	comp._save_state = () => {
+		const state = {};
+		rewriteState(comp._data, state);
+		const state_json = JSON.stringify(state);
+		localStorage.setItem("datatable_" + data.save_state_name, state_json);
+	};
+
+	comp._load_state = (data_obj) => {
+		const state_json = localStorage.getItem("datatable_" + data.save_state_name);
+		if (!state_json) {
+			return;
+		}
+		const state = JSON.parse(state_json);
+		rewriteState(state, data_obj);
+	};
 
 	comp._client_search = () => {
 		// cant call render in a render ofc
@@ -208,7 +235,7 @@ function datatableComp(comp, parent, data) {
 				const cd = comp._changed_data;
 
 				if (cd.quick_search) {
-					if (comp._data.search_url) {
+					if (data.search_url) {
 						comp._datatable_search(300);
 					} else {
 						comp._client_search();
@@ -279,7 +306,7 @@ function datatableComp(comp, parent, data) {
 					comp._nodes.style._set_content(styles_html);
 					registerForms();
 
-					if (comp._data.search_url) {
+					if (data.search_url) {
 						comp._datatable_search(0);
 					} else {
 						comp._client_search();
@@ -324,16 +351,30 @@ function datatableComp(comp, parent, data) {
 					// 	);
 					// }
 				}
+
+				if (data.save_state_name) {
+					comp._save_state();
+				}
+
+				comp._nodes.clear_filters_btn.classList.toggle("active", !!(data.filters.length > 0 || data.quick_search !== "" || data.sort));
 			},
 		});
 	};
+
+	if (data.save_state_name) {
+		comp._load_state(data);
+	}
 
 	createComp(comp, parent, data, {
 		template: html`
 			<div style="margin-bottom:10px;display:flex;align-items:center">
 				<span class="datatable_label" html="{${data.label}}"></span>
 				<span html="{${data.after_label}}"></span>
-				<div class="float-icon" style="display: inline-block;margin-left:auto">
+				<div style="flex-grow:1"></div>
+				<div class="btn error_light" data-node="{${comp._nodes.clear_filters_btn}}" data-tooltip="Wyczyść wszystkie filtry">
+					<i class="fas fa-times"></i>
+				</div>
+				<div class="float-icon" style="display: inline-block;">
 					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" />
 					<i class="fas fa-search"></i>
 				</div>
@@ -388,6 +429,21 @@ function datatableComp(comp, parent, data) {
 
 				if (dt_filter) {
 					return;
+				}
+			});
+
+			comp._nodes.clear_filters_btn.addEventListener("click", () => {
+				const data = comp._data;
+				data.filters = [];
+				data.quick_search = "";
+				data.sort = false;
+				data.pagination_data.page_id = 0;
+
+				if (data.search_url) {
+					comp._render();
+					comp._datatable_search(0);
+				} else {
+					comp._client_search();
 				}
 			});
 		},

@@ -87,4 +87,14 @@ datatable-comp {
 	p-checkbox.shrink {
 		margin: -2px -4px;
 	}
+
+	[data-node="clear_filters_btn"] {
+		& {
+			margin-right: 10px;
+			transition: opacity 0.2s;
+		}
+		&:not(.active) {
+			opacity: 0;
+		}
+	}
 }

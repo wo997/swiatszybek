@@ -176,6 +176,12 @@ textarea {
 		--btn-background-clr: var(--error-clr);
 		--btn-font-clr: #fff;
 	}
+	&.error_light {
+		--btn-background-clr: #fff;
+		--btn-font-clr: var(--error-clr);
+		--btn-border-clr: var(--error-clr);
+		font-weight: 600;
+	}
 	&.important {
 		--btn-background-clr: var(--important-clr);
 		--btn-font-clr: #fff;
