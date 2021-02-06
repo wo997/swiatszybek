@@ -13,7 +13,9 @@
  * _nodes: {
  *  add_option_btn: PiepNode
  * }
- * _load_data?(id: number)
+ * _load_data(id: number)
+ * _save_data()
+ * _delete()
  * } & BaseComp} ProductFeatureComp
  */
 
@@ -34,9 +36,53 @@ function productFeatureComp(comp, parent, data = { product_feature_id: -1, name:
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
 			success: (res) => {
-				comp._set_data(res.product_feature);
+				//comp._set_data(res.product_feature);
+				rewritePropsObjHas(res.product_feature, comp._data);
+				comp._render();
 			},
 		});
+	};
+
+	const hideAndSearch = () => {
+		hideParentModal(comp);
+
+		/** @type {DatatableComp} */
+		// @ts-ignore
+		const dt_product_features = $("#selectProductFeatures datatable-comp");
+
+		if (dt_product_features) {
+			dt_product_features._datatable_search();
+		}
+	};
+
+	comp._save_data = () => {
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "product/feature/save",
+			params: {
+				product_feature: comp._data,
+			},
+			success: (res) => {
+				//console.log(res);
+				hideAndSearch();
+			},
+		});
+	};
+
+	comp._delete = () => {
+		if (comp._data.product_feature_id !== -1) {
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "product/feature/delete/" + comp._data.product_feature_id,
+				params: {
+					product_feature: comp._data,
+				},
+				success: (res) => {
+					//console.log(res);
+					hideAndSearch();
+				},
+			});
+		} else {
+			hideAndSearch();
+		}
 	};
 
 	createComp(comp, parent, data, {

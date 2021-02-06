@@ -81,6 +81,7 @@ $css_changed = false;
 $js_changed = false;
 $modules_changed = false;
 $settings_changed = false;
+
 // only when url is different than deployment so we can debug the app
 if (!Request::$is_deployment_url) {
     if ($prev_mod_time_php != $mod_time_php) {

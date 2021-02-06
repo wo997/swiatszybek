@@ -44,6 +44,9 @@ function listComp(comp, parent, data = []) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		if (!data) {
+			return;
+		}
 		let nextRowId = 0;
 
 		data.forEach((row_data, index) => {

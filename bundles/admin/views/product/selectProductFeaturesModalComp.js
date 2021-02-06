@@ -18,7 +18,7 @@
  * @param {*} parent
  * @param {SelectProductFeaturesModalCompData} data
  */
-function selectProductFeaturesModalComp(comp, parent, data = undefined) {
+function selectProductFeaturesModalComp(comp, parent, data) {
 	if (data === undefined) {
 		data = {
 			datatable: {

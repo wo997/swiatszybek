@@ -69,8 +69,17 @@ function registerModalContent(html, callback = undefined) {
 
 function registerModal(modal) {
 	modal_container_node.appendChild(modal);
+	registerModalScroll(modal);
+}
 
-	modal._children(`.scroll-panel:not(.horizontal)`).forEach((scr) => {
+/**
+ *
+ * @param {PiepNode} modal
+ */
+function registerModalScroll(modal) {
+	modal._children(`.scroll-panel:not(.horizontal):not(.modal_scroll_registered)`).forEach((scr) => {
+		scr.classList.add("modal_scroll_registered");
+
 		const panel_on_edge = (dy) => {
 			return scr.scrollHeight < 2 || (scr.scrollTop >= scr.scrollHeight - scr.offsetHeight - 1 && dy > 0) || (scr.scrollTop < 1 && dy < 0);
 		};
@@ -131,6 +140,8 @@ function showModal(name = null, params = {}) {
 				clearAllErrors(modal);
 				const modal_container = modal_wrapper_node._child(".modal_container");
 				modal_container.appendChild(modal);
+
+				registerModalScroll(modal);
 
 				modal.style.pointerEvents = "none";
 				modal.classList.add("visible");

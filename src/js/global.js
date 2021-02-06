@@ -721,3 +721,24 @@ function isObjectdef(obj) {
 function applyToArray(func, array) {
 	return func.apply(Math, array);
 }
+
+/**
+ *
+ * @param {*} src
+ * @param {*} to
+ * @param {string[]} props
+ */
+function rewriteProps(src, to, props) {
+	props.forEach((e) => {
+		to[e] = src[e];
+	});
+}
+
+/**
+ *
+ * @param {*} src
+ * @param {*} to
+ */
+function rewritePropsObjHas(src, to) {
+	rewriteProps(src, to, Object.keys(to));
+}

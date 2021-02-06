@@ -310,11 +310,48 @@ class Entity
         return $this->props;
     }
 
+    public function getAllProps()
+    {
+        $entity_data = EntityManager::getEntityData("product_feature");
+        //$prop_names = array_keys(def($entity_data, ["props"], []));
+        $props = def($entity_data, ["props"], []);
+
+        $all_props = [];
+        foreach ($props as $prop_name => $prop_data) {
+            $val = $this->getProp($prop_name);
+
+            if (is_array($val)) {
+                $entities_data = [];
+                foreach ($val as
+                    /** @var Entity */
+                    $ent) {
+                    if ($ent instanceof Entity) {
+                        $entities_data[] = $ent->getAllProps();
+                    }
+                }
+                $val = $entities_data;
+            }
+            $all_props[$prop_name] = $val;
+
+            /*if (strpos($prop_data["type"], "") !== false) {
+                $v = $prop_data;
+            } else {
+            }*/
+
+            // if ($val instanceof Entity) {
+            //     $val = $val->getAllProps();
+            // }
+            //$all_props[$prop_name] = $val;
+        }
+        //var_dump($all_props);
+        return $all_props;
+    }
+
     public function getRowProps()
     {
         $row_props = [];
         foreach ($this->props as $prop => $val) {
-            if ($val instanceof Entity) {
+            if ($val instanceof Entity) { // might never happen? isn't it the arrays element that should indicate it? or even better, the entity def
                 return;
             }
             $row_props[$prop] = $val;

@@ -64,3 +64,12 @@ product-feature-option-comp {
 		margin-top: 5px;
 	}
 }
+
+select-product-features-modal-comp.comp,
+product-feature-modal-comp.comp {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+}
