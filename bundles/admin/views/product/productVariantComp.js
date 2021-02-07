@@ -30,6 +30,11 @@ function productVariantComp(comp, parent, data = { product_feature_id: -1, optio
 				const feature = product_features.find((e) => e.product_feature_id === data.product_feature_id);
 				if (feature) {
 					comp._nodes.feature_name._set_content(feature.name);
+				} else {
+					/** @type {ListComp} */
+					// @ts-ignore
+					const parent = comp._parent_comp;
+					parent._removeRow(comp._data.row_index);
 				}
 			},
 		});

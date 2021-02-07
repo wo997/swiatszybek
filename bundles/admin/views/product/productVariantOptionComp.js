@@ -26,13 +26,15 @@ function productVariantOptionComp(comp, parent, data = { option_id: -1, name: ""
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				const feature = product_features.find((e) => e.feature_id === data.feature_id);
-				if (feature) {
-					const option = feature.options.find((e) => e.option_id === data.option_id);
+				const option = feature.options.find((e) => e.option_id === data.option_id);
 
-					if (option) {
-						comp._nodes.option_name._set_content(option.name);
-					}
+				if (option && option) {
+					comp._nodes.option_name._set_content(option.name);
+				} else {
+					/** @type {ListComp} */
+					// @ts-ignore
+					const parent = comp._parent_comp;
+					parent._removeRow(comp._data.row_index);
 				}
 			},
 		});
