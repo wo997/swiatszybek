@@ -36,7 +36,7 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 					if (column.render) {
 						cell_html += column.render(data.row);
 					} else {
-						cell_html += data.row[column.key];
+						cell_html += def(data.row[column.key], "");
 					}
 
 					cell_html = `<div class='dt_cell'>${cell_html}</div>`;

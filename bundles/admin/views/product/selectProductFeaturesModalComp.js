@@ -40,7 +40,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					},*/
 					{ label: "Wartości", key: "attr_values", width: "50%", sortable: true, searchable: "number" },
 					{
-						label: "",
+						label: "Akcja",
 						width: "155px",
 						render: (data) => {
 							let cell = html`<button class="btn subtle small edit_btn" data-tooltip="Edytuj">
