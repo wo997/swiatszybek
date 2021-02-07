@@ -24,7 +24,6 @@
  *  _getData()
  *  _nodes: {
  *      add_variant_btn: PiepNode
- *      case_sell_by_qty: PiepNode
  *  }
  * } & BaseComp} ProductComp
  */
@@ -63,7 +62,7 @@ function productComp(comp, parent, data) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				expand(comp._nodes.case_sell_by_qty, data.sell_by === "qty");
+				//expand(comp._nodes.case_sell_by_qty, data.sell_by === "qty");
 			},
 		});
 	};
@@ -80,7 +79,6 @@ function productComp(comp, parent, data) {
                 <option value="length">Długość</option>
             </select>
 
-            <div data-node="case_sell_by_qty" class="expand_y">
                 <div class="label">
                     <span html="{${"Warianty (" + data.variants.length + ")"}}"></span>
                     <button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
@@ -88,7 +86,6 @@ function productComp(comp, parent, data) {
                 <list-comp data-bind="{${data.variants}}" class="variants">
                     <product-variant-comp></product-variant-comp>
                 </list-comp>
-            </div>
 
             <datatable-comp data-bind="{${data.products_dt}}"></datatable-comp>
 

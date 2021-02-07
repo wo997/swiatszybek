@@ -150,7 +150,6 @@ function datatableComp(comp, parent, data) {
 	};
 
 	comp._client_search = () => {
-		// cant call render in a render ofc
 		setTimeout(() => {
 			if (comp._data.sort) {
 				const sort_key = comp._data.sort.key;
@@ -160,10 +159,8 @@ function datatableComp(comp, parent, data) {
 					if (a[sort_key] > b[sort_key]) return order;
 					return 0;
 				});
-				comp._render();
-			} else {
-				// hey prevent that from happening, require a sort
 			}
+			comp._render();
 		}, 0);
 	};
 
