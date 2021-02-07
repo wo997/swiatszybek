@@ -155,6 +155,11 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						product_comp._data.variants.push({ product_feature_id: +list_row.dataset.primary, options: [] });
 						product_comp._render();
 						comp._nodes.datatable._set_dataset();
+
+						showNotification("Dodano cechę produktu", {
+							one_line: true,
+							type: "success",
+						});
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");
@@ -170,6 +175,12 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							product_comp._data.variants.splice(ind, 1);
 							product_comp._render();
 							comp._nodes.datatable._set_dataset();
+
+							showNotification("Usunięto cechę produktu", {
+								one_line: true,
+								type: "success",
+								duration: 10000000,
+							});
 						}
 					}
 

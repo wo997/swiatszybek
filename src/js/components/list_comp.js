@@ -31,7 +31,7 @@ function listComp(comp, parent, data = []) {
 	comp._primary_key = comp.dataset.primary;
 
 	comp._pointChildsData = (child) => {
-		if (!child) {
+		if (!child || !child._data) {
 			return undefined;
 		}
 		let source_sub_data_index = comp._data.findIndex((e) => {

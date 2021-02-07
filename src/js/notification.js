@@ -21,9 +21,22 @@
  * @returns {PiepNotification}
  */
 function showNotification(message, params = {}) {
+	const top = 25;
+
 	$$(".notification").forEach((e) => {
-		e.style.opacity = "0";
-		e.style.top = "-10px";
+		e.style.pointerEvents = "none";
+		e._animate(
+			`
+                0% {top:${top}px;opacity:1}
+                100% {top:-20px;opacity:0}
+            `,
+			200,
+			{
+				callback: () => {
+					e.remove();
+				},
+			}
+		);
 	});
 
 	/** @type {PiepNotification} */
@@ -54,14 +67,17 @@ function showNotification(message, params = {}) {
 
 	document.body.append(notification);
 
-	notification.style.top = "";
-	notification.style.opacity = "";
 	notification._animate(
 		`
             0% {top:-20px;opacity:0}
-            100% {top:${notification.getBoundingClientRect().top}px;opacity:1}
+            100% {top:${top}px;opacity:1}
         `,
-		200
+		200,
+		{
+			callback: () => {
+				notification.style.top = top + "px";
+			},
+		}
 	);
 
 	const duration = def(params.duration, 2000);
