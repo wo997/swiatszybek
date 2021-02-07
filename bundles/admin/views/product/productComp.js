@@ -69,6 +69,8 @@ function productComp(comp, parent, data) {
 
 	createComp(comp, parent, data, {
 		template: html`
+			<p-trait data-trait="history"></p-trait>
+
 			<div class="label first">Nazwa produktu</div>
 			<input type="text" class="field" data-bind="{${data.name}}" />
 
@@ -129,6 +131,12 @@ function productComp(comp, parent, data) {
 			comp._nodes.add_variant_btn.addEventListener("click", () => {
 				select_product_features_modal_comp._show_modal({ source: comp._nodes.add_variant_btn });
 			});
+
+			const history_btns = comp._child(".history_btns");
+			const history_btns_wrapper = $(".custom-toolbar .history_btns_wrapper");
+			if (history_btns_wrapper) {
+				history_btns_wrapper.appendChild(history_btns);
+			}
 		},
 	});
 }

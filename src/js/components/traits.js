@@ -3,8 +3,8 @@
 /**
  * @typedef {{
  * template: string
- * initialize?(node: AnyComp)
- * render?(node: AnyComp)
+ * initialize?(comp: AnyComp)
+ * render?(comp: AnyComp)
  * }} CompTraitDefinition
  */
 const comp_traits = {};

@@ -27,31 +27,17 @@ class NewCmsRearrangeControls {
 	constructor(newCms) {
 		this.newCms = newCms;
 		this.node = newCms.container._child(`.rearrange_controls`);
-		this.rearrange_insert_rect_node = newCms.container._child(
-			`.rearrange_insert_rect`
-		);
-		this.rearrange_grabbed_rect_node = newCms.container._child(
-			`.rearrange_grabbed_rect`
-		);
-		this.rearrange_target_rect_node = newCms.container._child(
-			`.rearrange_target_rect`
-		);
+		this.rearrange_insert_rect_node = newCms.container._child(`.rearrange_insert_rect`);
+		this.rearrange_grabbed_rect_node = newCms.container._child(`.rearrange_grabbed_rect`);
+		this.rearrange_target_rect_node = newCms.container._child(`.rearrange_target_rect`);
 		this.init();
 
 		/** @type {RearrangePositionEnum} */
 		this.rearrange_position = "";
 
 		this.newCms.container.addEventListener("styles_loaded", () => {
-			this.rearrange_control_width = parseInt(
-				getComputedStyle(document.documentElement).getPropertyValue(
-					"--rearrange_control_width"
-				)
-			);
-			this.rearrange_control_height = parseInt(
-				getComputedStyle(document.documentElement).getPropertyValue(
-					"--rearrange_control_height"
-				)
-			);
+			this.rearrange_control_width = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--rearrange_control_width"));
+			this.rearrange_control_height = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--rearrange_control_height"));
 		});
 
 		this.newCms.container.addEventListener("edit", (event) => {
@@ -117,58 +103,41 @@ class NewCmsRearrangeControls {
 			})
 		) {
 			// @ts-ignore
-			rearrange_control_node = target
-				? target._parent(".rearrange_control")
-				: null;
+			rearrange_control_node = target ? target._parent(".rearrange_control") : null;
 
-			if (
-				!rearrange_control_node &&
-				target &&
-				target._parent(this.newCms.content_node)
-			) {
+			if (!rearrange_control_node && target && target._parent(this.newCms.content_node)) {
 				let smallest_sq_distance = 10000; // magnetic 100px
 				let second_smallest_sq_distance = 10000; // used to apply death zone :P
 				/** @type {RearrangeControl} */
 				let smallest_sq_distance_control = null;
 				let last_sq_distance = 10000;
-				this.newCms.content_scroll_content
-					._children(
-						".rearrange_control:not(.unavailable):not(.first_grid_node)"
-					)
-					.forEach((control) => {
-						const rect = control.getBoundingClientRect();
+				this.newCms.content_scroll_content._children(".rearrange_control:not(.unavailable):not(.first_grid_node)").forEach((control) => {
+					const rect = control.getBoundingClientRect();
 
-						const left = rect.left + this.rearrange_control_width * 0.5;
-						const top = rect.top + this.rearrange_control_height * 0.5;
+					const left = rect.left + this.rearrange_control_width * 0.5;
+					const top = rect.top + this.rearrange_control_height * 0.5;
 
-						const dx = left - this.newCms.mouse_x;
+					const dx = left - this.newCms.mouse_x;
 
-						const dy = top - this.newCms.mouse_y;
+					const dy = top - this.newCms.mouse_y;
 
-						const sq_distance = dx * dx + dy * dy;
+					const sq_distance = dx * dx + dy * dy;
 
-						if (sq_distance < smallest_sq_distance) {
-							smallest_sq_distance = sq_distance;
-							// @ts-ignore
-							smallest_sq_distance_control = control;
-						}
+					if (sq_distance < smallest_sq_distance) {
+						smallest_sq_distance = sq_distance;
+						// @ts-ignore
+						smallest_sq_distance_control = control;
+					}
 
-						if (
-							sq_distance <= second_smallest_sq_distance &&
-							smallest_sq_distance < sq_distance
-						) {
-							second_smallest_sq_distance = sq_distance;
-						}
+					if (sq_distance <= second_smallest_sq_distance && smallest_sq_distance < sq_distance) {
+						second_smallest_sq_distance = sq_distance;
+					}
 
-						last_sq_distance = sq_distance;
-					});
+					last_sq_distance = sq_distance;
+				});
 
 				if (smallest_sq_distance_control) {
-					if (
-						Math.sqrt(second_smallest_sq_distance) -
-							Math.sqrt(smallest_sq_distance) >
-						11
-					) {
+					if (Math.sqrt(second_smallest_sq_distance) - Math.sqrt(smallest_sq_distance) > 11) {
 						rearrange_control_node = smallest_sq_distance_control;
 						rearrange_position = rearrange_control_node.position;
 					}
@@ -186,10 +155,7 @@ class NewCmsRearrangeControls {
 		let is_container_horizontal = false;
 
 		if (rearrange_near_block) {
-			if (
-				rearrange_control_node &&
-				rearrange_control_node.classList.contains("insert_inside")
-			) {
+			if (rearrange_control_node && rearrange_control_node.classList.contains("insert_inside")) {
 				parent_container = rearrange_near_block;
 				rearrange_position = "inside";
 			} else {
@@ -201,9 +167,7 @@ class NewCmsRearrangeControls {
 					parent_container = this.newCms.content_node;
 				}
 
-				is_container_horizontal = this.newCms.styling.isContainerHorizontal(
-					parent_container
-				);
+				is_container_horizontal = this.newCms.styling.isContainerHorizontal(parent_container);
 			}
 
 			if (rearrange_control_node) {
@@ -212,8 +176,7 @@ class NewCmsRearrangeControls {
 				const near_block_type = rearrange_near_block.dataset.block;
 				if (near_block_type === "container") {
 					rearrange_position = "inside";
-					rearrange_control_node =
-						rearrange_near_block.rearrange_control_inside;
+					rearrange_control_node = rearrange_near_block.rearrange_control_inside;
 
 					/** @type {NewCmsBlock} */
 					// @ts-ignore
@@ -235,15 +198,9 @@ class NewCmsRearrangeControls {
 		this.rearrange_position = rearrange_position;
 		this.rearrange_control_node = rearrange_control_node;
 
-		this.rearrange_insert_rect_node.classList.toggle(
-			"visible",
-			!!rearrange_control_node
-		);
+		this.rearrange_insert_rect_node.classList.toggle("visible", !!rearrange_control_node);
 
-		this.newCms.container.classList.toggle(
-			"rearrange_possible",
-			!!rearrange_control_node
-		);
+		this.newCms.container.classList.toggle("rearrange_possible", !!rearrange_control_node);
 
 		if (rearrange_control_node) {
 			if (!rearrange_control_node.classList.contains("rearrange_possible")) {
@@ -252,9 +209,7 @@ class NewCmsRearrangeControls {
 				let width = min_size;
 				let height = min_size;
 
-				const rearrange_near_block_rect_data = nodePositionAgainstScrollableParent(
-					rearrange_near_block
-				);
+				const rearrange_near_block_rect_data = nodePositionAgainstScrollableParent(rearrange_near_block);
 
 				let x = rearrange_near_block_rect_data.relative_pos.left;
 				let y = rearrange_near_block_rect_data.relative_pos.top;
@@ -353,23 +308,15 @@ class NewCmsRearrangeControls {
 		// just a rect u grab from
 		if (grabbed_block) {
 			if (!this.newCms.grab_options.copy) {
-				const block_rect_data = nodePositionAgainstScrollableParent(
-					grabbed_block
-				);
+				const block_rect_data = nodePositionAgainstScrollableParent(grabbed_block);
 				const rearrange_grabbed_rect_node = this.rearrange_grabbed_rect_node;
 
-				block_rect_data.scrollable_parent.appendChild(
-					rearrange_grabbed_rect_node
-				);
+				block_rect_data.scrollable_parent.appendChild(rearrange_grabbed_rect_node);
 
-				rearrange_grabbed_rect_node.style.left =
-					block_rect_data.relative_pos.left + "px";
-				rearrange_grabbed_rect_node.style.top =
-					block_rect_data.relative_pos.top + "px";
-				rearrange_grabbed_rect_node.style.width =
-					block_rect_data.node_rect.width + "px";
-				rearrange_grabbed_rect_node.style.height =
-					block_rect_data.node_rect.height + "px";
+				rearrange_grabbed_rect_node.style.left = block_rect_data.relative_pos.left + "px";
+				rearrange_grabbed_rect_node.style.top = block_rect_data.relative_pos.top + "px";
+				rearrange_grabbed_rect_node.style.width = block_rect_data.node_rect.width + "px";
+				rearrange_grabbed_rect_node.style.height = block_rect_data.node_rect.height + "px";
 				rearrange_grabbed_rect_node.classList.add("visible");
 			}
 		} else {
@@ -378,8 +325,7 @@ class NewCmsRearrangeControls {
 
 		const grabbed_block_type = grabbed_block.dataset.block;
 
-		let rearrangable_blocks_query_selector =
-			".newCms_block:not(.cramped):not(.parent_cramped)";
+		let rearrangable_blocks_query_selector = ".newCms_block:not(.cramped):not(.parent_cramped)";
 		let rearrangable_blocks_query_selector_for_grids = rearrangable_blocks_query_selector;
 
 		if (options.same_parent) {
@@ -388,169 +334,125 @@ class NewCmsRearrangeControls {
 			const in_root = grabbed_block._parent() == this.newCms.content_node;
 
 			if (in_root) {
-				rearrangable_blocks_query_selector =
-					".newCmsContent>" + rearrangable_blocks_query_selector;
+				rearrangable_blocks_query_selector = ".newCmsContent>" + rearrangable_blocks_query_selector;
 				rearrangable_blocks_query_selector_for_grids = ""; // no way u would find a grid as a root ;)
 			} else {
 				const parent_container = this.newCms.getBlockParent(grabbed_block);
 				const block_id = this.newCms.styling.getBlockId(parent_container);
 				if (block_id) {
-					const class_name =
-						"." + this.newCms.styling.getBlockClassName(block_id);
+					const class_name = "." + this.newCms.styling.getBlockClassName(block_id);
 					rearrangable_blocks_query_selector =
-						".newCmsContent " +
-						class_name +
-						">.newCms_block_content>" +
-						rearrangable_blocks_query_selector;
+						".newCmsContent " + class_name + ">.newCms_block_content>" + rearrangable_blocks_query_selector;
 
-					rearrangable_blocks_query_selector_for_grids =
-						".newCmsContent " +
-						class_name +
-						rearrangable_blocks_query_selector_for_grids;
+					rearrangable_blocks_query_selector_for_grids = ".newCmsContent " + class_name + rearrangable_blocks_query_selector_for_grids;
 				}
 			}
 		} else {
-			rearrangable_blocks_query_selector =
-				".newCmsContent " + rearrangable_blocks_query_selector;
-			rearrangable_blocks_query_selector_for_grids =
-				".newCmsContent " + rearrangable_blocks_query_selector_for_grids;
+			rearrangable_blocks_query_selector = ".newCmsContent " + rearrangable_blocks_query_selector;
+			rearrangable_blocks_query_selector_for_grids = ".newCmsContent " + rearrangable_blocks_query_selector_for_grids;
 		}
 
 		// them floating controls
 		let blocks_data = [];
 		const addControls = (position) => {
 			// not content_node (.newCmsContent) to include it as well
-			this.newCms.content_scroll_content
-				._children(rearrangable_blocks_query_selector)
-				.forEach((b) => {
-					/** @type {NewCmsBlock} */
+			this.newCms.content_scroll_content._children(rearrangable_blocks_query_selector).forEach((b) => {
+				/** @type {NewCmsBlock} */
+				// @ts-ignore
+				const block = b;
+				if (block._parent(this.newCms.grabbed_block)) {
+					// don't touch itself or parent
+					return;
+				}
+
+				if (
+					this.newCms.grabbed_block &&
+					((position === "after" && block.getNextBlock() == this.newCms.grabbed_block) ||
+						(position === "before" && block.getPrevBlock() == this.newCms.grabbed_block))
+				) {
+					// no siblings
+					return;
+				}
+
+				const parent_container = block._parent(".container");
+
+				if (parent_container && parent_container.dataset.block === "grid") {
+					// no befores and afters in a grid, just laundry
+					return;
+				}
+
+				let is_container_horizontal = this.newCms.styling.isContainerHorizontal(
 					// @ts-ignore
-					const block = b;
-					if (block._parent(this.newCms.grabbed_block)) {
-						// don't touch itself or parent
-						return;
-					}
+					parent_container
+				);
 
-					if (
-						this.newCms.grabbed_block &&
-						((position === "after" &&
-							block.getNextBlock() == this.newCms.grabbed_block) ||
-							(position === "before" &&
-								block.getPrevBlock() == this.newCms.grabbed_block))
-					) {
-						// no siblings
-						return;
-					}
+				const block_rect_data = nodePositionAgainstScrollableParent(block);
+				const block_type = block.dataset.block;
+				const prev_node = block.getPrevBlock();
 
-					const parent_container = block._parent(".container");
-
-					if (parent_container && parent_container.dataset.block === "grid") {
-						// no befores and afters in a grid, just laundry
-						return;
-					}
-
-					let is_container_horizontal = this.newCms.styling.isContainerHorizontal(
-						// @ts-ignore
-						parent_container
-					);
-
-					const block_rect_data = nodePositionAgainstScrollableParent(block);
-					const block_type = block.dataset.block;
-					const prev_node = block.getPrevBlock();
-
-					if (
-						position === "before" &&
-						prev_node &&
-						prev_node.classList.contains("newCms_block")
-					) {
-						// no kissing ugh
-						if (is_container_horizontal) {
-							const prev_node_rect = prev_node.getBoundingClientRect();
-							const node_rect = block_rect_data.node_rect;
-							if (
-								Math.abs(node_rect.left - prev_node_rect.right) <
-									this.rearrange_control_width &&
-								Math.abs(
-									node_rect.top +
-										node_rect.height * 0.5 -
-										prev_node_rect.top -
-										prev_node_rect.height * 0.5
-								) < this.rearrange_control_height
-							) {
-								// rows kissing
-								return;
-							}
-						} else {
-							// no need to put stuff on top
+				if (position === "before" && prev_node && prev_node.classList.contains("newCms_block")) {
+					// no kissing ugh
+					if (is_container_horizontal) {
+						const prev_node_rect = prev_node.getBoundingClientRect();
+						const node_rect = block_rect_data.node_rect;
+						if (
+							Math.abs(node_rect.left - prev_node_rect.right) < this.rearrange_control_width &&
+							Math.abs(node_rect.top + node_rect.height * 0.5 - prev_node_rect.top - prev_node_rect.height * 0.5) <
+								this.rearrange_control_height
+						) {
+							// rows kissing
 							return;
 						}
-					}
-
-					if (
-						position == "inside" &&
-						(block._child(".newCms_block") || block_type != "container")
-					) {
-						// has a kid? no need to add that little icon to add more bro
+					} else {
+						// no need to put stuff on top
 						return;
 					}
+				}
 
-					let parent_count = 0;
-					/** @type {PiepNode} */
-					let parent = block;
-					while (parent != this.newCms.content_node) {
-						parent_count++;
-						parent = parent._parent();
-					}
+				if (position == "inside" && (block._child(".newCms_block") || block_type != "container")) {
+					// has a kid? no need to add that little icon to add more bro
+					return;
+				}
 
-					if (position == "inside") {
-						block_rect_data.relative_pos.left +=
-							(block_rect_data.node_rect.width - this.rearrange_control_width) *
-							0.5;
-						block_rect_data.relative_pos.top +=
-							(block_rect_data.node_rect.height -
-								this.rearrange_control_height) *
-							0.5;
+				let parent_count = 0;
+				/** @type {PiepNode} */
+				let parent = block;
+				while (parent != this.newCms.content_node) {
+					parent_count++;
+					parent = parent._parent();
+				}
+
+				if (position == "inside") {
+					block_rect_data.relative_pos.left += (block_rect_data.node_rect.width - this.rearrange_control_width) * 0.5;
+					block_rect_data.relative_pos.top += (block_rect_data.node_rect.height - this.rearrange_control_height) * 0.5;
+				} else {
+					if (is_container_horizontal) {
+						block_rect_data.relative_pos.left -= this.rearrange_control_width * 0.5;
+						block_rect_data.relative_pos.top += (block_rect_data.node_rect.height - this.rearrange_control_height) * 0.5;
+
+						if (position === "after") {
+							block_rect_data.relative_pos.left += block_rect_data.node_rect.width;
+						}
 					} else {
-						if (is_container_horizontal) {
-							block_rect_data.relative_pos.left -=
-								this.rearrange_control_width * 0.5;
-							block_rect_data.relative_pos.top +=
-								(block_rect_data.node_rect.height -
-									this.rearrange_control_height) *
-								0.5;
+						block_rect_data.relative_pos.left += (block_rect_data.node_rect.width - this.rearrange_control_width) * 0.5;
+						block_rect_data.relative_pos.top -= this.rearrange_control_width * 0.5;
 
-							if (position === "after") {
-								block_rect_data.relative_pos.left +=
-									block_rect_data.node_rect.width;
-							}
-						} else {
-							block_rect_data.relative_pos.left +=
-								(block_rect_data.node_rect.width -
-									this.rearrange_control_width) *
-								0.5;
-							block_rect_data.relative_pos.top -=
-								this.rearrange_control_width * 0.5;
-
-							if (position === "after") {
-								block_rect_data.relative_pos.top +=
-									block_rect_data.node_rect.height;
-							}
+						if (position === "after") {
+							block_rect_data.relative_pos.top += block_rect_data.node_rect.height;
 						}
 					}
+				}
 
-					const index =
-						block_rect_data.relative_pos.top +
-						parent_count -
-						(position == "inside" ? 100 : 0); // prefer insides
+				const index = block_rect_data.relative_pos.top + parent_count - (position == "inside" ? 100 : 0); // prefer insides
 
-					blocks_data.push({
-						index: index,
-						block: block,
-						rect_data: block_rect_data,
-						is_container_horizontal: is_container_horizontal,
-						position: position,
-					});
+				blocks_data.push({
+					index: index,
+					block: block,
+					rect_data: block_rect_data,
+					is_container_horizontal: is_container_horizontal,
+					position: position,
 				});
+			});
 		};
 
 		this.newCms.content_node._children(".newCms_block").forEach((b) => {
@@ -563,85 +465,77 @@ class NewCmsRearrangeControls {
 		});
 
 		// grids first ;)
-		this.newCms.content_node
-			._children(
-				rearrangable_blocks_query_selector_for_grids + `[data-block="grid"]`
-			)
-			.forEach((b) => {
-				/** @type {NewCmsGrid} */
+		this.newCms.content_node._children(rearrangable_blocks_query_selector_for_grids + `[data-block="grid"]`).forEach((b) => {
+			/** @type {NewCmsGrid} */
+			// @ts-ignore
+			const block = b;
+			if (!block.grid_data || block._parent(this.newCms.grabbed_block) || grabbed_block_type == "grid") {
+				// don't touch itself or parent or place in another grid
+				return;
+			}
+			const parent_container = block._parent(".container");
+
+			const is_container_horizontal = this.newCms.styling.isContainerHorizontal(
 				// @ts-ignore
-				const block = b;
-				if (
-					!block.grid_data ||
-					block._parent(this.newCms.grabbed_block) ||
-					grabbed_block_type == "grid"
-				) {
-					// don't touch itself or parent or place in another grid
-					return;
-				}
-				const parent_container = block._parent(".container");
+				parent_container
+			);
 
-				const is_container_horizontal = this.newCms.styling.isContainerHorizontal(
-					// @ts-ignore
-					parent_container
-				);
+			const block_rect_data = nodePositionAgainstScrollableParent(block);
 
-				const block_rect_data = nodePositionAgainstScrollableParent(block);
+			const x_coords = block.grid_data.x_coords;
+			const y_coords = block.grid_data.y_coords;
 
-				const x_coords = block.grid_data.x_coords;
-				const y_coords = block.grid_data.y_coords;
+			for (let xi = 0; xi < x_coords.length; xi++) {
+				for (let yi = 0; yi < y_coords.length; yi++) {
+					let left = x_coords[xi];
+					let top = y_coords[yi];
 
-				for (let xi = 0; xi < x_coords.length; xi++) {
-					for (let yi = 0; yi < y_coords.length; yi++) {
-						let left = x_coords[xi];
-						let top = y_coords[yi];
+					const actual_position = {
+						left: block_rect_data.node_rect.left + left,
+						top: block_rect_data.node_rect.top + top,
+					};
 
-						const actual_position = {
-							left: block_rect_data.node_rect.left + left,
-							top: block_rect_data.node_rect.top + top,
-						};
-
-						if (xi === x_coords.length - 1) {
-							left -= this.rearrange_control_width;
-						} else if (xi !== 0) {
-							left -= this.rearrange_control_width * 0.5;
-						}
-
-						if (yi === y_coords.length - 1) {
-							top -= this.rearrange_control_height;
-						} else if (yi !== 0) {
-							top -= this.rearrange_control_height * 0.5;
-						}
-
-						// TODO: xy, yi should be stored in blocks_data, ezy
-						let block_rect_data_copy = deepAssign(
-							{
-								node_rect: {},
-								relative_pos: {},
-								scrollable_parent: {},
-								scrollable_parent_rect: {},
-							},
-							block_rect_data
-						);
-
-						block_rect_data_copy.relative_pos.left += left;
-						block_rect_data_copy.relative_pos.top += top;
-
-						const index = block_rect_data_copy.relative_pos.top - 100; // these are important
-						blocks_data.push({
-							index: index,
-							top: top,
-							block: block,
-							rect_data: block_rect_data_copy,
-							is_container_horizontal: is_container_horizontal,
-							position: "grid",
-							xi: xi,
-							yi: yi,
-							actual_position: actual_position,
-						});
+					if (xi === x_coords.length - 1) {
+						left -= this.rearrange_control_width;
+					} else if (xi !== 0) {
+						left -= this.rearrange_control_width * 0.5;
 					}
+
+					if (yi === y_coords.length - 1) {
+						top -= this.rearrange_control_height;
+					} else if (yi !== 0) {
+						top -= this.rearrange_control_height * 0.5;
+					}
+
+					// TODO: xy, yi should be stored in blocks_data, ezy
+					let block_rect_data_copy = deepAssign(
+						{
+							node_rect: {},
+							relative_pos: {},
+							scrollable_parent: {},
+							scrollable_parent_rect: {},
+						},
+						block_rect_data
+					);
+
+					block_rect_data_copy.relative_pos.left += left;
+					block_rect_data_copy.relative_pos.top += top;
+
+					const index = block_rect_data_copy.relative_pos.top - 100; // these are important
+					blocks_data.push({
+						index: index,
+						top: top,
+						block: block,
+						rect_data: block_rect_data_copy,
+						is_container_horizontal: is_container_horizontal,
+						position: "grid",
+						xi: xi,
+						yi: yi,
+						actual_position: actual_position,
+					});
 				}
-			});
+			}
+		});
 
 		if (!options.same_parent) {
 			addControls("inside");
@@ -688,20 +582,10 @@ class NewCmsRearrangeControls {
 			let top = block_data.rect_data.relative_pos.top;
 
 			left = Math.max(left, 0);
-			left = Math.min(
-				left,
-				this.newCms.content_scroll_content.clientWidth -
-					this.rearrange_control_width -
-					0
-			);
+			left = Math.min(left, this.newCms.content_scroll_content.clientWidth - this.rearrange_control_width - 0);
 
 			top = Math.max(top, 0);
-			top = Math.min(
-				top,
-				this.newCms.content_scroll_content.clientHeight -
-					this.rearrange_control_height -
-					0
-			);
+			top = Math.min(top, this.newCms.content_scroll_content.clientHeight - this.rearrange_control_height - 0);
 
 			let moving = true;
 			while (moving) {
@@ -710,31 +594,17 @@ class NewCmsRearrangeControls {
 					const prev_block_data = sorted_blocks_data[u];
 
 					if (
-						prev_block_data.rect_data.relative_pos.top <
-							top + this.rearrange_control_height - 1 &&
-						prev_block_data.rect_data.relative_pos.top +
-							this.rearrange_control_height -
-							1 >
-							top &&
-						prev_block_data.rect_data.relative_pos.left <
-							left + this.rearrange_control_width - 1 &&
-						prev_block_data.rect_data.relative_pos.left +
-							this.rearrange_control_width -
-							1 >
-							left
+						prev_block_data.rect_data.relative_pos.top < top + this.rearrange_control_height - 1 &&
+						prev_block_data.rect_data.relative_pos.top + this.rearrange_control_height - 1 > top &&
+						prev_block_data.rect_data.relative_pos.left < left + this.rearrange_control_width - 1 &&
+						prev_block_data.rect_data.relative_pos.left + this.rearrange_control_width - 1 > left
 					) {
 						if (block_data.position === "after") {
 							// go left
-							left =
-								prev_block_data.rect_data.relative_pos.left -
-								this.rearrange_control_width;
-						} else if (
-							["before", "inside", "grid"].includes(block_data.position)
-						) {
+							left = prev_block_data.rect_data.relative_pos.left - this.rearrange_control_width;
+						} else if (["before", "inside", "grid"].includes(block_data.position)) {
 							// go right
-							left =
-								prev_block_data.rect_data.relative_pos.left +
-								this.rearrange_control_width;
+							left = prev_block_data.rect_data.relative_pos.left + this.rearrange_control_width;
 						}
 						moving = true;
 					}
@@ -772,10 +642,8 @@ class NewCmsRearrangeControls {
 					rotation += 90;
 				}
 
-				const has_prev =
-					block_data.position == "after" ? true : !!block.getPrevBlock();
-				const has_next =
-					block_data.position == "before" ? true : !!block.getNextBlock();
+				const has_prev = block_data.position == "after" ? true : !!block.getPrevBlock();
+				const has_next = block_data.position == "before" ? true : !!block.getNextBlock();
 
 				if (has_next && has_prev) {
 					rearrange_control_html = `<img style='width:1em' src="/src/img/arrows_insert_between.svg">`;
@@ -791,9 +659,7 @@ class NewCmsRearrangeControls {
 
 			rearrange_control.innerHTML = rearrange_control_html;
 
-			$(rearrange_control)._child(
-				"*"
-			).style.transform = `rotate(${rotation}deg)`;
+			$(rearrange_control)._child("*").style.transform = `rotate(${rotation}deg)`;
 
 			block[`rearrange_control_${block_data.position}`] = rearrange_control;
 			rearrange_control.rearrange_near_block = block;

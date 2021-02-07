@@ -1,0 +1,9 @@
+/* css[admin] */
+
+.history_btns {
+	display: flex;
+}
+
+.history_btns > *:not(:first-child) {
+	margin-left: 5px;
+}

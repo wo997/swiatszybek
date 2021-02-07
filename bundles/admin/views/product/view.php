@@ -23,6 +23,7 @@
             <span class="product_name"></span>
         </div>
     </span>
+    <div class="history_btns_wrapper"></div>
     <button class="btn primary" onclick="saveProduct()">Zapisz <i class="fas fa-save"></i></button>
 </div>
 

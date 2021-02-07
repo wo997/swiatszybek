@@ -152,6 +152,7 @@ textarea {
 		user-select: none;
 		-webkit-user-select: none;
 		--brighten-factor: 1.1;
+		--disabled-opacity: 0.8;
 	}
 	&.primary {
 		--btn-background-clr: var(--primary-clr);
@@ -167,6 +168,7 @@ textarea {
 		--btn-background-clr: #0000000c;
 		--btn-font-clr: #000b;
 		--btn-border-clr: #0002;
+		--disabled-opacity: 0.4;
 	}
 	&.success {
 		--btn-background-clr: var(--success-clr);
@@ -191,6 +193,7 @@ textarea {
 		--btn-background-clr: transparent;
 		--btn-font-clr: #000;
 		--brighten-factor: 1;
+		--disabled-opacity: 0.4;
 	}
 	&.transparent:hover:not(:disabled) {
 		background: #0001;
@@ -220,7 +223,7 @@ textarea {
 
 	&:disabled,
 	&.disabled {
-		opacity: 0.8;
+		opacity: var(--disabled-opacity);
 		cursor: not-allowed !important;
 		filter: contrast(0.5);
 	}
