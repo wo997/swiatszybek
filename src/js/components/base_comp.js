@@ -56,6 +56,7 @@
  * template?: string
  * initialize?()
  * unfreeze_by_self?: boolean
+ * ready?()
  * }} createCompOptions
  */
 
@@ -283,6 +284,10 @@ function createComp(node, parent_comp, data, options) {
 				}
 			},
 		});
+	}
+
+	if (options.ready) {
+		options.ready();
 	}
 }
 

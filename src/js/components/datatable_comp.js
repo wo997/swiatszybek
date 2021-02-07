@@ -22,10 +22,14 @@
  * }} DatatableFilterData
  *
  * @typedef {{
+ * row:any
+ * } & ListCompRowData} DatatableRowData
+ *
+ * @typedef {{
  *  primary_key?: string
  *  search_url?: string
  *  dataset?: Array
- *  rows?: {row:any}[]
+ *  rows?: DatatableRowData[]
  *  columns: DatatableColumnDef[]
  *  sort?: DatatableSortData | false
  *  filters?: DatatableFilterData[]
@@ -57,6 +61,7 @@
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
  * _load_state(data_obj)
+ * _set_dataset(Array)
  * } & BaseComp} DatatableComp
  */
 
@@ -149,16 +154,34 @@ function datatableComp(comp, parent, data) {
 		rewriteState(state, data_obj);
 	};
 
+	comp._set_dataset = (dataset = undefined) => {
+		if (dataset) {
+			comp._data.dataset = dataset;
+		}
+
+		comp.dispatchEvent(
+			new CustomEvent("dataset_set", {
+				detail: {
+					data: comp._data,
+				},
+			})
+		);
+
+		comp._render();
+	};
+
 	comp._client_search = () => {
 		setTimeout(() => {
 			if (comp._data.sort) {
 				const sort_key = comp._data.sort.key;
 				const order = comp._data.sort.order === "asc" ? 1 : -1;
-				comp._data.dataset = comp._data.dataset.sort((a, b) => {
-					if (a[sort_key] < b[sort_key]) return -order;
-					if (a[sort_key] > b[sort_key]) return order;
-					return 0;
-				});
+				comp._set_dataset(
+					comp._data.dataset.sort((a, b) => {
+						if (a[sort_key] < b[sort_key]) return -order;
+						if (a[sort_key] > b[sort_key]) return order;
+						return 0;
+					})
+				);
 			}
 			comp._render();
 		}, 0);
@@ -207,11 +230,10 @@ function datatableComp(comp, parent, data) {
 						return;
 					}
 
-					data.dataset = res.rows;
 					data.pagination_data.page_count = res.page_count;
 					data.pagination_data.total_rows = res.total_rows;
 
-					comp._render();
+					comp._set_dataset(res.rows);
 
 					comp.classList.remove("freeze");
 					comp.classList.remove("searching");
@@ -446,5 +468,11 @@ function datatableComp(comp, parent, data) {
 			});
 		},
 		unfreeze_by_self: true,
+		ready: () => {
+			// warmup
+			if (comp.dataset) {
+				comp._set_dataset(comp._data.dataset);
+			}
+		},
 	});
 }

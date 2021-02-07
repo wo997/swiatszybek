@@ -10,6 +10,7 @@
  * _set_data(data?: SelectProductFeaturesModalCompData, options?: SetCompDataOptions)
  * _nodes: {
  *      close_btn: PiepNode
+ *      datatable: DatatableComp
  * }
  * _show_modal(options?: {source?: PiepNode})
  * } & BaseComp} SelectProductFeaturesModalComp
@@ -47,7 +48,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							</button>`;
 
 							if (data.selected) {
-								cell += html` <b>Wybrano</b> <i class="fas fa-check"></i>`;
+								cell += html` <button class="btn subtle small remove_btn">Odznacz <i class="fas fa-times"></i></button>`;
 							} else {
 								cell += html` <button class="btn primary small select_btn">Wybierz <i class="fas fa-plus"></i></button>`;
 							}
@@ -93,22 +94,36 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				</button>
 			</div>
 			<div class="scroll-panel scroll-shadow panel-padding">
-				<datatable-comp data-bind="{${data.datatable}}"></datatable-comp>
+				<datatable-comp data-node="{${comp._nodes.datatable}}" data-bind="{${data.datatable}}"></datatable-comp>
 			</div>
 		`,
 		initialize: () => {
+			/** @type {ProductComp} */
+			// @ts-ignore
+			const product_comp = $("product-comp");
+
 			/** @type {DatatableComp} */
 			// @ts-ignore
 			const dt_product_features = comp._child("datatable-comp");
+
+			dt_product_features.addEventListener("dataset_set", (ev) => {
+				// @ts-ignore
+				const detail = ev.detail;
+
+				/** @type {DatatableCompData} */
+				const data = detail.data;
+				data.dataset.forEach((data) => {
+					product_comp._data.variants.find((e) => {
+						return e.product_feature_id === data.product_feature_id;
+					});
+					data.selected = !!product_comp._data.variants.find((e) => e.product_feature_id === data.product_feature_id);
+				});
+			});
 
 			dt_product_features.addEventListener("click", (ev) => {
 				/** @type {ProductFeatureComp} */
 				// @ts-ignore
 				const product_feature_comp = $("#productFeature product-feature-comp");
-
-				/** @type {ProductComp} */
-				// @ts-ignore
-				const product_comp = $("product-comp");
 
 				const target = $(ev.target);
 
@@ -138,6 +153,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					if (list_row) {
 						product_comp._data.variants.push({ product_feature_id: +list_row.dataset.primary, options: [] });
 						product_comp._render();
+						comp._nodes.datatable._set_dataset();
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");
