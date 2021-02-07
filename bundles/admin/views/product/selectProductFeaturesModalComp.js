@@ -72,7 +72,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 		comp._nodes.datatable._datatable_search();
 
 		comp._nodes.close_btn.classList.add("subtle");
-		comp._nodes.close_btn.classList.remove("primary");
+		comp._nodes.close_btn.classList.remove("important");
 
 		showModal("selectProductFeatures", {
 			source: options.source,
