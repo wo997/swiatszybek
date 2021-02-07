@@ -33,6 +33,7 @@ function productFeatureModalComp(comp, parent, data) {
 		template: html`
 			<div class="custom-toolbar">
 				<span class="title">Cecha produktu</span>
+				<p-trait data-trait="history"></p-trait>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">Zapisz</button>
 			</div>
