@@ -47,8 +47,6 @@ function productVariantOptionComp(comp, parent, data = { option_id: -1, name: ""
 				</div>
 			</div>
 		`,
-		initialize: () => {
-			comp.classList.add("product_variant");
-		},
+		initialize: () => {},
 	});
 }

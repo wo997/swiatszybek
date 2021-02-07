@@ -33,14 +33,18 @@ function productFeatureComp(comp, parent, data) {
 	};
 
 	comp._load_data = (id) => {
-		xhr({
-			url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
-			success: (res) => {
-				//comp._set_data(res.product_feature);
-				rewritePropsObjHas(res.product_feature, comp._data);
-				comp._render();
-			},
-		});
+		if (id === -1) {
+			comp._set_data();
+		} else {
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
+				success: (res) => {
+					//comp._set_data(res.product_feature);
+					rewritePropsObjHas(res.product_feature, comp._data);
+					comp._render();
+				},
+			});
+		}
 	};
 
 	const hideAndSearch = () => {

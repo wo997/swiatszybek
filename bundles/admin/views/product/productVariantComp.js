@@ -11,6 +11,7 @@
  * _set_data(data?: ProductVariantCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  feature_name: PiepNode
+ *  edit_feature: PiepNode
  * }
  * } & BaseComp} ProductVariantComp
  */
@@ -39,6 +40,7 @@ function productVariantComp(comp, parent, data = { product_feature_id: -1, optio
 			<div class="variant_header">
 				<div class="title inline semi-bold" data-node="{${comp._nodes.feature_name}}"></div>
 				<div>
+					<button data-node="{${comp._nodes.edit_feature}}" class="btn subtle small"><i class="fas fa-cog"></i></button>
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>
@@ -51,7 +53,17 @@ function productVariantComp(comp, parent, data = { product_feature_id: -1, optio
 			</list-comp>
 		`,
 		initialize: () => {
-			comp.classList.add("product_variant");
+			/** @type {ProductFeatureComp} */
+			// @ts-ignore
+			const product_feature_comp = $("#productFeature product-feature-comp");
+
+			comp._nodes.edit_feature.addEventListener("click", () => {
+				showModal("productFeature", {
+					source: comp._nodes.edit_feature,
+				});
+
+				product_feature_comp._load_data(comp._data.product_feature_id);
+			});
 		},
 	});
 }

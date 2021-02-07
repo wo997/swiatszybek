@@ -133,7 +133,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					showModal("productFeature", {
 						source: add_feature_btn,
 					});
-					product_feature_comp._set_data();
+					product_feature_comp._load_data(-1);
 				}
 
 				const edit_btn = target._parent(".edit_btn", { skip: 0 });
