@@ -91,12 +91,17 @@ function selectProductFeaturesModalComp(comp, parent, data) {
 			const dt_product_features = comp._child("datatable-comp");
 
 			dt_product_features.addEventListener("click", (ev) => {
+				/** @type {ProductFeatureComp} */
+				// @ts-ignore
+				const product_feature_comp = $("#productFeature product-feature-comp");
+
 				const target = $(ev.target);
 				const add_feature_btn = target._parent(".add_feature_btn", { skip: 0 });
 				if (add_feature_btn) {
 					showModal("productFeature", {
 						source: add_feature_btn,
 					});
+					product_feature_comp._set_data();
 				}
 				const edit_btn = target._parent(".edit_btn", { skip: 0 });
 				if (edit_btn) {
@@ -106,9 +111,6 @@ function selectProductFeaturesModalComp(comp, parent, data) {
 							source: add_feature_btn,
 						});
 
-						/** @type {ProductFeatureComp} */
-						// @ts-ignore
-						const product_feature_comp = $("#productFeature product-feature-comp");
 						product_feature_comp._load_data(+list_row.dataset.primary);
 					}
 				}

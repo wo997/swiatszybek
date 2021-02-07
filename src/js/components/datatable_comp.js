@@ -69,6 +69,7 @@ function datatableComp(comp, parent, data) {
 	data.filters = def(data.filters, []);
 	data.sort = def(data.sort, false);
 	data.dataset = def(data.dataset, []);
+	data.quick_search = def(data.quick_search, "");
 	data.pagination_data = {};
 
 	data.rows = [];
@@ -356,7 +357,7 @@ function datatableComp(comp, parent, data) {
 					comp._save_state();
 				}
 
-				comp._nodes.clear_filters_btn.classList.toggle("active", !!(data.filters.length > 0 || data.quick_search !== "" || data.sort));
+				comp._nodes.clear_filters_btn.classList.toggle("active", !!(data.filters.length > 0 || data.quick_search.trim() || data.sort));
 			},
 		});
 	};

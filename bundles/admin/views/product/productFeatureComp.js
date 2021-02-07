@@ -24,8 +24,8 @@
  * @param {*} parent
  * @param {ProductFeatureCompData} data
  */
-function productFeatureComp(comp, parent, data = { product_feature_id: -1, name: "", options: [] }) {
-	comp._set_data = (data, options = {}) => {
+function productFeatureComp(comp, parent, data) {
+	comp._set_data = (data = { product_feature_id: -1, name: "", options: [] }, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {},
