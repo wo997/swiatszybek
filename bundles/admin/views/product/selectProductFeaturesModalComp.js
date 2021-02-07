@@ -60,7 +60,10 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				primary_key: "product_feature_id",
 				empty_html: html`Brak cech`,
 				label: "Cechy produktów",
-				after_label: html`<button class="add_feature_btn btn primary" data-tooltip="W przypadku gdy nie widzisz takiej cechy na liście">
+				after_label: html`<button
+					class="add_feature_btn btn small primary"
+					data-tooltip="W przypadku gdy nie widzisz takiej cechy na liście"
+				>
 					Dodaj <i class="fas fa-plus"></i>
 				</button> `,
 			},
@@ -122,29 +125,22 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			});
 
 			dt_product_features.addEventListener("click", (ev) => {
-				/** @type {ProductFeatureComp} */
+				/** @type {ProductFeatureModalComp} */
 				// @ts-ignore
-				const product_feature_comp = $("#productFeature product-feature-comp");
+				const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
 
 				const target = $(ev.target);
 
 				const add_feature_btn = target._parent(".add_feature_btn", { skip: 0 });
 				if (add_feature_btn) {
-					showModal("productFeature", {
-						source: add_feature_btn,
-					});
-					product_feature_comp._load_data(-1);
+					product_feature_modal_comp._show(-1, { source: add_feature_btn });
 				}
 
 				const edit_btn = target._parent(".edit_btn", { skip: 0 });
 				if (edit_btn) {
 					const list_row = edit_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						showModal("productFeature", {
-							source: add_feature_btn,
-						});
-
-						product_feature_comp._load_data(+list_row.dataset.primary);
+						product_feature_modal_comp._show(+list_row.dataset.primary, { source: add_feature_btn });
 					}
 				}
 

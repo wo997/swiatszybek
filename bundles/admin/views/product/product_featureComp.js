@@ -53,16 +53,12 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			</list-comp>
 		`,
 		initialize: () => {
-			/** @type {ProductFeatureComp} */
+			/** @type {ProductFeatureModalComp} */
 			// @ts-ignore
-			const product_feature_comp = $("#productFeature product-feature-comp");
+			const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
 
 			comp._nodes.edit_feature.addEventListener("click", () => {
-				showModal("productFeature", {
-					source: comp._nodes.edit_feature,
-				});
-
-				product_feature_comp._load_data(comp._data.product_feature_id);
+				product_feature_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.edit_feature });
 			});
 		},
 	});

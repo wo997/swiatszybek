@@ -13,7 +13,7 @@
  * _nodes: {
  *  add_option_btn: PiepNode
  * }
- * _load_data(id: number)
+ * _load_data(id: number,options?:{callback?: CallableFunction})
  * _save_data()
  * _delete()
  * } & BaseComp} ProductFeatureComp
@@ -32,7 +32,7 @@ function productFeatureComp(comp, parent, data) {
 		});
 	};
 
-	comp._load_data = (id) => {
+	comp._load_data = (id, options = {}) => {
 		if (id === -1) {
 			comp._set_data();
 		} else {
@@ -42,6 +42,9 @@ function productFeatureComp(comp, parent, data) {
 					//comp._set_data(res.product_feature);
 					rewritePropsObjHas(res.product_feature, comp._data);
 					comp._render();
+					if (options.callback) {
+						options.callback();
+					}
 				},
 			});
 		}

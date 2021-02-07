@@ -13,6 +13,7 @@
  *      product_feature_comp: ProductFeatureComp
  *      delete_btn: PiepNode
  * }
+ * _show?(id: number, options?: {source?: PiepNode})
  * } & BaseComp} ProductFeatureModalComp
  */
 
@@ -22,6 +23,18 @@
  * @param {ProducttFeatureModalCompData} data
  */
 function productFeatureModalComp(comp, parent, data) {
+	comp._show = (id, options = {}) => {
+		showModal("productFeature", {
+			source: options.source,
+		});
+
+		comp._nodes.product_feature_comp._load_data(id, {
+			callback: () => {
+				clearCompHistory(comp);
+			},
+		});
+	};
+
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,

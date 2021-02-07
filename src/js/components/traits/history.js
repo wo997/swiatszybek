@@ -19,10 +19,20 @@ function renderCompHistory(comp) {
 }
 
 /**
- * @param {CompWithHistory} comp
+ * @param {BaseComp} c
  */
-function clearCompHistory(comp) {
-	comp._data_history = [JSON.stringify(comp._data)];
+function clearCompHistory(c) {
+	/** @type {CompWithHistory} */
+	// @ts-ignore
+	const comp = c;
+	if (comp._data !== undefined && comp._data_history === undefined) {
+		console.error("Component doesn't have history", comp);
+		return;
+	}
+	comp._data_history = [];
+	if (comp._data) {
+		comp._data_history.push(JSON.stringify(comp._data));
+	}
 	comp._history_steps_back = 0;
 	comp._active_element = undefined;
 	renderCompHistory(comp);
@@ -79,9 +89,11 @@ registerCompTrait("history", {
 			}
 			comp._active_element = document.activeElement;
 
-			const json = JSON.stringify(comp._data);
-			if (json !== getLast(comp._data_history)) {
-				comp._data_history.push(json);
+			if (comp._data) {
+				const json = JSON.stringify(comp._data);
+				if (json !== getLast(comp._data_history)) {
+					comp._data_history.push(json);
+				}
 			}
 
 			renderCompHistory(comp);
