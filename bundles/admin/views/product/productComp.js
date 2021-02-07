@@ -13,7 +13,7 @@
  *  id: number
  *  name: string
  *  sell_by: string
- *  variants: ProductVariantCompData[]
+ features: Product_FeatureCompData[]
  *  products: ProductData[]
  *  products_dt?: DatatableCompData
  * }} ProductCompData
@@ -82,12 +82,12 @@ function productComp(comp, parent, data) {
 			</select>
 
 			<div class="label">
-				<span html="{${"Warianty (" + data.variants.length + ")"}}"></span>
+				<span html="{${"Warianty (" + data.features.length + ")"}}"></span>
 				<button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 			</div>
 
-			<list-comp data-bind="{${data.variants}}" class="variants">
-				<product-variant-comp></product-variant-comp>
+			<list-comp data-bind="{${data.features}}" class="variants">
+				<product_feature-comp></product_feature-comp>
 			</list-comp>
 
 			<div class="label"></div>

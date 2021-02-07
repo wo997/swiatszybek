@@ -7,6 +7,26 @@ function refreshProductFeatures() {
 			console.log(res);
 		},
 	});
+
+	/** @type {ProductComp} */
+	// @ts-ignore
+	const product_comp = $("product-comp");
+
+	product_comp._data.features = product_comp._data.features.filter((curr_feature) => {
+		return !!product_features.find((feature) => {
+			return feature.product_feature_id === curr_feature.product_feature_id;
+		});
+	});
+
+	product_comp._data.features.forEach((curr_feature) => {
+		curr_feature.options = curr_feature.options.filter((curr_option) => {
+			return !!product_options.find((option) => {
+				return option.product_feature_option_id === curr_option.product_feature_option_id;
+			});
+		});
+	});
+
+	product_comp._render();
 }
 
 domload(() => {
@@ -18,7 +38,7 @@ domload(() => {
 		id: -1,
 		name: "",
 		sell_by: "qty",
-		variants: [],
+		features: [],
 		products: [],
 	});
 

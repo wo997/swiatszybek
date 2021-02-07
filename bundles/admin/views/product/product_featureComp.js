@@ -3,25 +3,25 @@
 /**
  * @typedef {{
  * product_feature_id: number
- * options: ProductVariantOptionCompData[]
- * } & ListCompRowData} ProductVariantCompData
+ * options: Product_FeatureOptionCompData[]
+ * } & ListCompRowData} Product_FeatureCompData
  *
  * @typedef {{
- * _data: ProductVariantCompData
- * _set_data(data?: ProductVariantCompData, options?: SetCompDataOptions)
+ * _data: Product_FeatureCompData
+ * _set_data(data?: Product_FeatureCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  feature_name: PiepNode
  *  edit_feature: PiepNode
  * }
- * } & BaseComp} ProductVariantComp
+ * } & BaseComp} Product_FeatureComp
  */
 
 /**
- * @param {ProductVariantComp} comp
+ * @param {Product_FeatureComp} comp
  * @param {*} parent
- * @param {ProductVariantCompData} data
+ * @param {Product_FeatureCompData} data
  */
-function productVariantComp(comp, parent, data = { product_feature_id: -1, options: [] }) {
+function product_featureComp(comp, parent, data = { product_feature_id: -1, options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -30,11 +30,6 @@ function productVariantComp(comp, parent, data = { product_feature_id: -1, optio
 				const feature = product_features.find((e) => e.product_feature_id === data.product_feature_id);
 				if (feature) {
 					comp._nodes.feature_name._set_content(feature.name);
-				} else {
-					/** @type {ListComp} */
-					// @ts-ignore
-					const parent = comp._parent_comp;
-					parent._removeRow(comp._data.row_index);
 				}
 			},
 		});
@@ -54,7 +49,7 @@ function productVariantComp(comp, parent, data = { product_feature_id: -1, optio
 			<button data-node="add_option_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 
 			<list-comp data-bind="{${data.options}}" class="options">
-				<product-variant-option-comp></product-variant-option-comp>
+				<product_feature-option-comp></product_feature-option-comp>
 			</list-comp>
 		`,
 		initialize: () => {
