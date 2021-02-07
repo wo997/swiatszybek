@@ -69,29 +69,31 @@ function productComp(comp, parent, data) {
 
 	createComp(comp, parent, data, {
 		template: html`
-            <div class="label first">Nazwa produktu</div>
-            <input type="text" class="field" data-bind="{${data.name}}"/></span>
+			<div class="label first">Nazwa produktu</div>
+			<input type="text" class="field" data-bind="{${data.name}}" />
 
-            <div class="label">Sprzedawaj na</div>
-            <select class="field" data-bind="{${data.sell_by}}">
-                <option value="qty">Sztuki</option>
-                <option value="weight">Wagę</option>
-                <option value="length">Długość</option>
-            </select>
+			<div class="label">Sprzedawaj na</div>
+			<select class="field" data-bind="{${data.sell_by}}">
+				<option value="qty">Sztuki</option>
+				<option value="weight">Wagę</option>
+				<option value="length">Długość</option>
+			</select>
 
-                <div class="label">
-                    <span html="{${"Warianty (" + data.variants.length + ")"}}"></span>
-                    <button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
-                </div>
-                <list-comp data-bind="{${data.variants}}" class="variants">
-                    <product-variant-comp></product-variant-comp>
-                </list-comp>
+			<div class="label">
+				<span html="{${"Warianty (" + data.variants.length + ")"}}"></span>
+				<button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
+			</div>
 
-            <datatable-comp data-bind="{${data.products_dt}}"></datatable-comp>
+			<list-comp data-bind="{${data.variants}}" class="variants">
+				<product-variant-comp></product-variant-comp>
+			</list-comp>
 
-            <h3>Display form json</h3>
-            <div html="{${JSON.stringify(data)}}"></div>
-        `,
+			<div class="label"></div>
+			<datatable-comp data-bind="{${data.products_dt}}"></datatable-comp>
+
+			<h3>Display form json</h3>
+			<div html="{${JSON.stringify(data)}}"></div>
+		`,
 		initialize: () => {
 			// selectProductFeatures
 			registerModalContent(html`

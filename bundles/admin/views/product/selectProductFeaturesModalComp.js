@@ -165,10 +165,8 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				if (remove_btn) {
 					const list_row = remove_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						const ind = product_comp._data.variants.findIndex((e) => {
-							e.product_feature_id === +list_row.dataset.primary;
-						});
-						if (ind) {
+						const ind = product_comp._data.variants.findIndex((e) => e.product_feature_id === +list_row.dataset.primary);
+						if (ind !== -1) {
 							product_comp._data.variants.splice(ind, 1);
 							product_comp._render();
 							comp._nodes.datatable._set_dataset();
