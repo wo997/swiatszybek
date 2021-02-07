@@ -50,7 +50,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							if (data.selected) {
 								cell += html` <button class="btn subtle small remove_btn">Odznacz <i class="fas fa-times"></i></button>`;
 							} else {
-								cell += html` <button class="btn primary small select_btn">Wybierz <i class="fas fa-plus"></i></button>`;
+								cell += html` <button class="btn primary small select_btn">Wybierz <i class="fas fa-check"></i></button>`;
 							}
 
 							return cell;
@@ -69,6 +69,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 
 	comp._show_modal = (options = {}) => {
 		//comp._render(); // but why?
+		comp._nodes.datatable._datatable_search();
 
 		comp._nodes.close_btn.classList.add("subtle");
 		comp._nodes.close_btn.classList.remove("primary");
@@ -157,7 +158,25 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");
-					comp._nodes.close_btn.classList.add("primary");
+					comp._nodes.close_btn.classList.add("important");
+				}
+
+				const remove_btn = target._parent(".remove_btn", { skip: 0 });
+				if (remove_btn) {
+					const list_row = remove_btn._parent(".list_row", { skip: 0 });
+					if (list_row) {
+						const ind = product_comp._data.variants.findIndex((e) => {
+							e.product_feature_id === +list_row.dataset.primary;
+						});
+						if (ind) {
+							product_comp._data.variants.splice(ind, 1);
+							product_comp._render();
+							comp._nodes.datatable._set_dataset();
+						}
+					}
+
+					comp._nodes.close_btn.classList.remove("subtle");
+					comp._nodes.close_btn.classList.add("important");
 				}
 			});
 		},
