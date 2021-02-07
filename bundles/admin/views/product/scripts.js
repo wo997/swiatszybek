@@ -1,53 +1,67 @@
 /* js[view] */
 
-//let select_feature_options_html = "";
-/**
- * @type {{
- * feature_id: number,
- * name: string,
- * options: {
- *  option_id: number,
- *  name: string
- * }[]
- * }[]}
- */
-let product_features = [];
-function fetchProductFeatures() {
-	product_features = [
-		{
-			feature_id: 3,
-			name: "Kolor",
-			options: [
-				{ option_id: 4, name: "Czerwony" },
-				{ option_id: 5, name: "Zielony" },
-				{ option_id: 6, name: "Żółty" },
-			],
+function refreshProductFeatures() {
+	xhr({
+		url: STATIC_URLS["ADMIN"] + "product/feature/all",
+		success: (res) => {
+			console.log(res);
 		},
-		{
-			feature_id: 4,
-			name: "Pojemość dysku",
-			options: [
-				{ option_id: 8, name: "64 GB" },
-				{ option_id: 9, name: "128 GB" },
-				{ option_id: 10, name: "256 GB" },
-			],
-		},
-	];
-
-	// select_feature_options_html = "";
-
-	// for (const feature of features) {
-	// 	select_feature_options_html += `<option value='${feature.feature_id}'>${feature.name}</option>`;
-	// }
-
-	// $$(".feature_list").forEach((e) => {
-	// 	e._set_content(select_feature_options_html);
-	// });
+	});
 }
 
-domload(() => {
-	fetchProductFeatures();
+// //let select_feature_options_html = "";
+// /**
+//  * @type {{
+//  * feature_id: number,
+//  * name: string,
+//  * options: {
+//  *  option_id: number,
+//  *  name: string
+//  * }[]
+//  * }[]}
+//  */
+// let product_features = [];
+// function fetchProductFeatures() {
+// 	xhr({
+// 		url: STATIC_URLS["ADMIN"] + "product/feature/all",
+// 		success: (res) => {
+// 			console.log(res);
+// 		},
+// 	});
 
+// 	product_features = [
+// 		{
+// 			feature_id: 3,
+// 			name: "Kolor",
+// 			options: [
+// 				{ option_id: 4, name: "Czerwony" },
+// 				{ option_id: 5, name: "Zielony" },
+// 				{ option_id: 6, name: "Żółty" },
+// 			],
+// 		},
+// 		{
+// 			feature_id: 4,
+// 			name: "Pojemość dysku",
+// 			options: [
+// 				{ option_id: 8, name: "64 GB" },
+// 				{ option_id: 9, name: "128 GB" },
+// 				{ option_id: 10, name: "256 GB" },
+// 			],
+// 		},
+// 	];
+
+// 	// select_feature_options_html = "";
+
+// 	// for (const feature of features) {
+// 	// 	select_feature_options_html += `<option value='${feature.feature_id}'>${feature.name}</option>`;
+// 	// }
+
+// 	// $$(".feature_list").forEach((e) => {
+// 	// 	e._set_content(select_feature_options_html);
+// 	// });
+// }
+
+domload(() => {
 	/** @type {ProductComp} */
 	// @ts-ignore
 	const product_comp = $("product-comp");

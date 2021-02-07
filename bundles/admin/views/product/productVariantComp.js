@@ -2,7 +2,7 @@
 
 /**
  * @typedef {{
- * feature_id: number
+ * product_feature_id: number
  * options: ProductVariantOptionCompData[]
  * } & ListCompRowData} ProductVariantCompData
  *
@@ -20,13 +20,13 @@
  * @param {*} parent
  * @param {ProductVariantCompData} data
  */
-function productVariantComp(comp, parent, data = { feature_id: -1, options: [] }) {
+function productVariantComp(comp, parent, data = { product_feature_id: -1, options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			pass_list_data: [{ what: "feature_id", where: "options" }],
+			pass_list_data: [{ what: "product_feature_id", where: "options" }],
 			render: () => {
-				const feature = product_features.find((e) => e.feature_id === data.feature_id);
+				const feature = product_features.find((e) => e.product_feature_id === data.product_feature_id);
 				if (feature) {
 					comp._nodes.feature_name._set_content(feature.name);
 				}

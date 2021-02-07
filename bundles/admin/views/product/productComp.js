@@ -93,19 +93,6 @@ function productComp(comp, parent, data) {
             <div html="{${JSON.stringify(data)}}"></div>
         `,
 		initialize: () => {
-			comp._nodes.add_variant_btn.addEventListener("click", () => {
-				/** @type {SelectProductFeaturesModalComp} */
-				// @ts-ignore
-				const select_product_features_comp = $("#selectProductFeatures select-product-features-modal-comp");
-
-				select_product_features_comp._data.datatable.selection = [];
-				select_product_features_comp._render();
-
-				showModal("selectProductFeatures", {
-					source: comp._nodes.add_variant_btn,
-				});
-			});
-
 			// selectProductFeatures
 			registerModalContent(html`
 				<div id="selectProductFeatures" data-expand data-dismissable>
@@ -134,6 +121,11 @@ function productComp(comp, parent, data) {
 			const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
 			productFeatureModalComp(product_feature_modal_comp, undefined, {
 				product_feature: { name: "", product_feature_id: -1, options: [] },
+			});
+
+			// other
+			comp._nodes.add_variant_btn.addEventListener("click", () => {
+				select_product_features_modal_comp._show_modal({ source: comp._nodes.add_variant_btn });
 			});
 		},
 	});

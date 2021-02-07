@@ -6,7 +6,9 @@
 
 <title>Produkt</title>
 
-
+<script>
+    let product_features = <?= json_encode(getAllProductFeatures()) ?>;
+</script>
 
 <?php startSection("header"); ?>
 

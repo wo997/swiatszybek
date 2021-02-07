@@ -98,4 +98,8 @@ datatable-comp {
 			pointer-events: none;
 		}
 	}
+
+	.table_body .btn + .btn {
+		margin-left: 5px;
+	}
 }
