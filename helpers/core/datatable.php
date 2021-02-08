@@ -218,7 +218,7 @@ function paginateData($params = [])
     }
 
     $total_rows = DB::fetchVal($countQuery);
-    $page_idCount = $row_count > 0 ? ceil($total_rows / $row_count) : 0;
+    //$page_idCount = $row_count > 0 ? ceil($total_rows / $row_count) : 0;
 
     if ($order) {
         $order = "ORDER BY $order";
