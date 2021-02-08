@@ -29,7 +29,6 @@
  *  primary_key?: string
  *  search_url?: string
  *  dataset?: Array
- *  dataset_computed?: Array
  *  rows?: DatatableRowData[]
  *  columns: DatatableColumnDef[]
  *  sort?: DatatableSortData | false
@@ -75,7 +74,6 @@ function datatableComp(comp, parent, data) {
 	data.filters = def(data.filters, []);
 	data.sort = def(data.sort, false);
 	data.dataset = def(data.dataset, []);
-	data.dataset_computed = def(data.dataset_computed, []);
 	data.quick_search = def(data.quick_search, "");
 	data.pagination_data = def(data.pagination_data, {});
 
@@ -170,7 +168,7 @@ function datatableComp(comp, parent, data) {
 		);
 
 		if (comp._data.search_url) {
-			comp._data.dataset_computed = comp._data.dataset;
+			data.rows = data.dataset.map((e) => ({ row: e }));
 			comp._render();
 		} else {
 			comp._client_search();
@@ -185,6 +183,7 @@ function datatableComp(comp, parent, data) {
 		comp._search_timeout = setTimeout(() => {
 			const data = comp._data;
 
+			/** @type {Array} */
 			let rows = cloneObject(data.dataset);
 
 			const qs = data.quick_search.trim();
@@ -210,9 +209,12 @@ function datatableComp(comp, parent, data) {
 				});
 			}
 
-			data.dataset_computed = rows;
+			data.pagination_data.total_rows = rows.length;
 
-			data.pagination_data.total_rows = data.dataset_computed.length;
+			const rc = data.pagination_data.row_count;
+			const pi = data.pagination_data.page_id;
+
+			data.rows = rows.slice(pi * rc, (pi + 1) * rc).map((e) => ({ row: e }));
 
 			comp._render();
 		}, delay);
@@ -268,8 +270,6 @@ function datatableComp(comp, parent, data) {
 	};
 
 	comp._set_data = (data, options = {}) => {
-		data.rows = data.dataset_computed.map((e) => ({ row: e }));
-
 		setCompData(comp, data, {
 			...options,
 			pass_list_data: [{ what: "columns", where: "rows" }],
