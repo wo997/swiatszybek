@@ -135,7 +135,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					if (list_row) {
 						const ind = product_comp._data.feature_options.findIndex((e) => e.product_feature_option_id === +list_row.dataset.primary);
 						if (ind !== -1) {
-							product_comp._data.features.splice(ind, 1);
+							product_comp._data.feature_options.splice(ind, 1);
 							product_comp._render();
 							comp._nodes.datatable._set_dataset();
 

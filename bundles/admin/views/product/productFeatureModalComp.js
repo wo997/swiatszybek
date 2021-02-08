@@ -24,7 +24,6 @@
  */
 function productFeatureModalComp(comp, parent, data) {
 	comp._show = (id, options = {}) => {
-		comp.classList.add("freeze");
 		setTimeout(() => {
 			showModal("productFeature", {
 				source: options.source,
@@ -34,7 +33,6 @@ function productFeatureModalComp(comp, parent, data) {
 		comp._nodes.product_feature_comp._load_data(id, {
 			callback: () => {
 				clearCompHistory(comp);
-				comp.classList.remove("freeze");
 			},
 		});
 	};

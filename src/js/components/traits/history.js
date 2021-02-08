@@ -98,7 +98,7 @@ registerCompTrait("history", {
 			comp._separate_history_timeout = setTimeout(() => {
 				comp._active_element = undefined;
 				comp._separate_history_timeout = undefined;
-			}, 3000);
+			}, 2000);
 
 			if (comp._data) {
 				if (json !== getLast(comp._data_history)) {
