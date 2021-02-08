@@ -114,12 +114,16 @@ class Entity
             if ($key === $this->id_column) {
                 continue;
             }
-            if (def($this->curr_props, $key, null) === $value) {
-                continue;
-            }
 
             if (is_array($value)) {
-                $this->saveChildren($value);
+                $zeroth = def($value, 0, null);
+                if (is_object($zeroth) && $zeroth instanceof Entity) {
+                    $this->saveChildren($value);
+                }
+            }
+
+            if (def($this->curr_props, $key, null) === $value) {
+                continue;
             }
 
             $other_entity_type = str_replace("[]", "", def($entity_data, ["props", $key, "type"], ""));

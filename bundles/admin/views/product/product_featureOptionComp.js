@@ -38,39 +38,31 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 				</div>
 			</div>
 		`,
-
-		// <button data-node="{${comp._nodes.down_btn}}" class="btn subtle small"><i class="fas fa-chevron-down"></i></button>
-		// <button data-node="{${comp._nodes.up_btn}}" class="btn subtle small"><i class="fas fa-chevron-up"></i></button>
-		// <button data-node="{${comp._nodes.delete_btn}}" class="btn subtle small"><i class="fas fa-trash"></i></button>
 		initialize: () => {
 			/** @type {ProductComp} */
 			// @ts-ignore
 			const product_comp = $("product-comp");
 
-			comp._nodes.list_delete_btn.addEventListener("click", () => {
+			const doWithRow = (action) => {
 				const pfoi = product_comp._data.product_feature_option_ids;
 				const id = pfoi.indexOf(comp._data.product_feature_option_id);
 				if (id !== -1) {
-					pfoi.splice(id, 1);
+					action(pfoi, id);
 				}
 				product_comp._render();
+			};
+
+			comp._nodes.list_delete_btn.addEventListener("click", () => {
+				doWithRow((pfoi, id) => pfoi.splice(id, 1));
 			});
 
 			comp._nodes.list_up_btn.addEventListener("click", () => {
-				const pfoi = product_comp._data.product_feature_option_ids;
-				const id = pfoi.indexOf(comp._data.product_feature_option_id);
-				if (id !== -1) {
-					[pfoi[id], pfoi[id - 1]] = [pfoi[id - 1], pfoi[id]];
-				}
+				doWithRow((pfoi, id) => ([pfoi[id], pfoi[id - 1]] = [pfoi[id - 1], pfoi[id]]));
 				product_comp._render();
 			});
 
 			comp._nodes.list_down_btn.addEventListener("click", () => {
-				const pfoi = product_comp._data.product_feature_option_ids;
-				const id = pfoi.indexOf(comp._data.product_feature_option_id);
-				if (id !== -1) {
-					[pfoi[id], pfoi[id + 1]] = [pfoi[id + 1], pfoi[id]];
-				}
+				doWithRow((pfoi, id) => ([pfoi[id], pfoi[id + 1]] = [pfoi[id + 1], pfoi[id]]));
 				product_comp._render();
 			});
 		},

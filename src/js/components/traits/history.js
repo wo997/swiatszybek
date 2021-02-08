@@ -24,7 +24,6 @@ document.addEventListener(
 	"click",
 	() => {
 		history_attention = true;
-		console.log(1);
 	},
 	true
 );

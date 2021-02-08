@@ -13,8 +13,9 @@
  *  id: number
  *  name: string
  *  sell_by: string
- *  features: Product_FeatureCompData[]
  *  product_feature_option_ids: number[]
+ *  product_feature_ids: number[]
+ *  features: Product_FeatureCompData[]
  *  products: ProductData[]
  *  products_dt?: DatatableCompData
  * }} ProductCompData
@@ -62,14 +63,38 @@ function productComp(comp, parent, data) {
 	data.products_dt = def(data.products_dt, table);
 
 	comp._set_data = (data, options = {}) => {
+		const missing_feature_ids = [];
+
+		data.features = data.product_feature_ids.map((product_feature_id) => {
+			const fe = product_features.find((pf) => {
+				return pf.product_feature_id === product_feature_id;
+			});
+			if (fe) {
+				return {
+					product_feature_id: fe.product_feature_id,
+					name: fe.name,
+					options: [],
+				};
+			} else {
+				missing_feature_ids.push(product_feature_id);
+			}
+		});
+
+		data.product_feature_ids = data.product_feature_ids.filter((e) => missing_feature_ids.indexOf(e) === -1);
+
+		const missing_option_ids = [];
+
 		data.features.forEach((feature) => {
 			feature.options = data.product_feature_option_ids
 				.filter((product_feature_option_id) => {
-					return (
-						product_feature_options.find((pfo) => {
-							return pfo.product_feature_option_id === product_feature_option_id;
-						}).product_feature_id === feature.product_feature_id
-					);
+					const fo = product_feature_options.find((pfo) => {
+						return pfo.product_feature_option_id === product_feature_option_id;
+					});
+					if (fo) {
+						return fo.product_feature_id === feature.product_feature_id;
+					} else {
+						missing_option_ids.push(product_feature_option_id);
+					}
 				})
 				.map((product_feature_option_id) => {
 					const fo = product_feature_options.find((e) => {
@@ -82,6 +107,8 @@ function productComp(comp, parent, data) {
 					};
 				});
 		});
+
+		data.product_feature_option_ids = data.product_feature_option_ids.filter((e) => missing_option_ids.indexOf(e) === -1);
 
 		setCompData(comp, data, {
 			...options,

@@ -13,7 +13,7 @@
  *  feature_name: PiepNode
  *  edit_feature_btn: PiepNode
  *  add_option_btn: PiepNode
- * }
+ * } & ListControlTraitNodes
  * } & BaseComp} Product_FeatureComp
  */
 
@@ -42,7 +42,9 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				<div class="title inline semi-bold" data-node="{${comp._nodes.feature_name}}"></div>
 				<div>
 					<button data-node="{${comp._nodes.edit_feature_btn}}" class="btn subtle small"><i class="fas fa-cog"></i></button>
-					<p-batch-trait data-trait="list_controls"></p-batch-trait>
+					<div class="no_actions">
+						<p-batch-trait data-trait="list_controls"></p-batch-trait>
+					</div>
 				</div>
 			</div>
 
@@ -68,6 +70,33 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 
 			comp._nodes.add_option_btn.addEventListener("click", () => {
 				select_product_features_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.add_option_btn });
+			});
+
+			/** @type {ProductComp} */
+			// @ts-ignore
+			const product_comp = $("product-comp");
+
+			const doWithRow = (action) => {
+				const pfi = product_comp._data.product_feature_ids;
+				const id = pfi.indexOf(comp._data.product_feature_id);
+				if (id !== -1) {
+					action(pfi, id);
+				}
+				product_comp._render();
+			};
+
+			comp._nodes.list_delete_btn.addEventListener("click", () => {
+				doWithRow((pfi, id) => pfi.splice(id, 1));
+			});
+
+			comp._nodes.list_up_btn.addEventListener("click", () => {
+				doWithRow((pfi, id) => ([pfi[id], pfi[id - 1]] = [pfi[id - 1], pfi[id]]));
+				product_comp._render();
+			});
+
+			comp._nodes.list_down_btn.addEventListener("click", () => {
+				doWithRow((pfi, id) => ([pfi[id], pfi[id + 1]] = [pfi[id + 1], pfi[id]]));
+				product_comp._render();
 			});
 		},
 	});

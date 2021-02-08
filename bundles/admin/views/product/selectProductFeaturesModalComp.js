@@ -149,7 +149,8 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				if (select_btn) {
 					const list_row = select_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						product_comp._data.features.push({ product_feature_id: +list_row.dataset.primary, options: [] });
+						product_comp._data.product_feature_ids.push(+list_row.dataset.primary);
+						//product_comp._data.features.push({ product_feature_id: +list_row.dataset.primary, options: [] });
 						product_comp._render();
 						comp._nodes.datatable._set_dataset();
 

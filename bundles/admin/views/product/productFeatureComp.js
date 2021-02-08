@@ -65,6 +65,7 @@ function productFeatureComp(comp, parent, data) {
 
 		if (dt_product_features) {
 			dt_product_features._datatable_search();
+			refreshProductFeatures();
 		}
 	};
 
@@ -75,7 +76,6 @@ function productFeatureComp(comp, parent, data) {
 				product_feature: comp._data,
 			},
 			success: (res) => {
-				//console.log(res);
 				hideAndSearch();
 			},
 		});
@@ -89,7 +89,6 @@ function productFeatureComp(comp, parent, data) {
 					product_feature: comp._data,
 				},
 				success: (res) => {
-					//console.log(res);
 					hideAndSearch();
 				},
 			});
