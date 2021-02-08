@@ -14,7 +14,7 @@
  *  name: string
  *  sell_by: string
  *  features: Product_FeatureCompData[]
- *  feature_options: ProductFeatureOptionCompData[]
+ *  product_feature_option_ids: number[]
  *  products: ProductData[]
  *  products_dt?: DatatableCompData
  * }} ProductCompData
@@ -62,6 +62,27 @@ function productComp(comp, parent, data) {
 	data.products_dt = def(data.products_dt, table);
 
 	comp._set_data = (data, options = {}) => {
+		data.features.forEach((feature) => {
+			feature.options = data.product_feature_option_ids
+				.filter((product_feature_option_id) => {
+					return (
+						product_feature_options.find((e) => {
+							return e.product_feature_option_id === product_feature_option_id;
+						}).product_feature_id === feature.product_feature_id
+					);
+				})
+				.map((product_feature_option_id) => {
+					const fo = product_feature_options.find((e) => {
+						return e.product_feature_option_id === product_feature_option_id;
+					});
+					return {
+						product_feature_option_id,
+						product_feature_id: fo.product_feature_id,
+						name: fo.name,
+					};
+				});
+		});
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {

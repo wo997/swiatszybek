@@ -101,10 +101,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				/** @type {DatatableCompData} */
 				const data = detail.data;
 				data.dataset.forEach((data) => {
-					product_comp._data.feature_options.find((e) => {
-						return e.product_feature_option_id === data.product_feature_option_id;
-					});
-					data.selected = !!product_comp._data.feature_options.find((e) => e.product_feature_option_id === data.product_feature_option_id);
+					data.selected = product_comp._data.product_feature_option_ids.indexOf(data.product_feature_option_id) !== -1;
 				});
 			});
 
@@ -115,7 +112,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				if (select_btn) {
 					const list_row = select_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						product_comp._data.feature_options.push({ product_feature_option_id: +list_row.dataset.primary, name: "xxxxxx" });
+						product_comp._data.product_feature_option_ids.push(+list_row.dataset.primary);
 						product_comp._render();
 						comp._nodes.datatable._set_dataset();
 
@@ -133,9 +130,9 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				if (remove_btn) {
 					const list_row = remove_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						const ind = product_comp._data.feature_options.findIndex((e) => e.product_feature_option_id === +list_row.dataset.primary);
+						const ind = product_comp._data.product_feature_option_ids.indexOf(+list_row.dataset.primary);
 						if (ind !== -1) {
-							product_comp._data.feature_options.splice(ind, 1);
+							product_comp._data.product_feature_option_ids.splice(ind, 1);
 							product_comp._render();
 							comp._nodes.datatable._set_dataset();
 

@@ -1,5 +1,11 @@
 /* js[global] */
 
+/**
+ * @typedef {{
+ * list_delete_btn: PiepNode
+ * }} ListDeleteBtnTraitNodes
+ */
+
 {
 	const trait_name = "list_delete_btn";
 	registerCompTrait(trait_name, {

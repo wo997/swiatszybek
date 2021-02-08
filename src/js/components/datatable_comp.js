@@ -90,7 +90,7 @@ function datatableComp(comp, parent, data) {
 		data.columns.unshift({
 			label: html`<p-checkbox class="square select_all_rows shrink"></p-checkbox>`,
 			key: "",
-			width: "37px",
+			width: "38px",
 			render: (row) => {
 				return html`<p-checkbox class="square select_row shrink" data-primary_id="${row[data.primary_key]}"></p-checkbox>`;
 			},

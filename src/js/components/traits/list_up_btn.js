@@ -1,5 +1,11 @@
 /* js[global] */
 
+/**
+ * @typedef {{
+ * list_up_btn: PiepNode
+ * }} ListUpBtnTraitNodes
+ */
+
 {
 	const trait_name = "list_up_btn";
 	registerCompTrait(trait_name, {

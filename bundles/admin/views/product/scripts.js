@@ -48,7 +48,7 @@ domload(() => {
 		name: "",
 		sell_by: "qty",
 		features: [],
-		feature_options: [],
+		product_feature_option_ids: [],
 		products: [],
 	});
 

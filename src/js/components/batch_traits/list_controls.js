@@ -1,5 +1,10 @@
 /* js[global] */
 
+/**
+ * @typedef {{
+ * } & ListDownBtnTraitNodes & ListUpBtnTraitNodes & ListDeleteBtnTraitNodes} ListControlTraitNodes
+ */
+
 registerCompBatchTrait(
 	"list_controls",
 	html`
