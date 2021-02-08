@@ -45,24 +45,21 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 						},
 					},
 				],
-				primary_key: "product_feature_id",
-				empty_html: html`Brak cech`,
-				label: "Cechy produktów",
-				after_label: html`<button
-					class="add_feature_btn btn small primary"
-					data-tooltip="W przypadku gdy nie widzisz takiej cechy na liście"
-				>
-					Dodaj <i class="fas fa-plus"></i>
-				</button> `,
+				primary_key: "product_feature_option_id",
+				empty_html: html`Brak opcji`,
+				label: "Opcje",
 			},
 		};
 	}
 
 	comp._show = (product_feature_id, options = {}) => {
-		comp._nodes.datatable._set_dataset(product_feature_options.filter((e) => e.product_feature_id === product_feature_id));
-
 		comp._nodes.close_btn.classList.add("subtle");
 		comp._nodes.close_btn.classList.remove("important");
+
+		comp._nodes.datatable._set_dataset(
+			product_feature_options.filter((e) => e.product_feature_id === product_feature_id),
+			{ immediately: true }
+		);
 
 		showModal("selectProductFeatureOptions", {
 			source: options.source,

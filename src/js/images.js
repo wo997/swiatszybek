@@ -70,28 +70,20 @@ function loadImage(img, animate = true, offset = null) {
 
 		if (image_dimension < natural_image_dimension + 1) {
 			const pixelDensityFactor = window.devicePixelRatio * 0.3 + 0.7; // compromise quality and speed
-			Object.entries(image_default_dimensions).forEach(
-				([size_name, size_dimension]) => {
-					if (size_name == "df") {
-						return;
-					}
-					if (
-						image_dimension < size_dimension / pixelDensityFactor + 1 &&
-						size_dimension < natural_image_dimension
-					) {
-						target_size_name = size_name;
-					}
+			Object.entries(image_default_dimensions).forEach(([size_name, size_dimension]) => {
+				if (size_name == "df") {
+					return;
 				}
-			);
+				if (image_dimension < size_dimension / pixelDensityFactor + 1 && size_dimension < natural_image_dimension) {
+					target_size_name = size_name;
+				}
+			});
 		}
 
 		// TODO: we should generate that and pull to the dev env, it's enough to have a separate file with type defs, really simple stuff
 		let src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
 
-		if (
-			img.hasAttribute("data-same-ext") &&
-			same_ext_image_allowed_types.indexOf(img.extension) !== -1
-		) {
+		if (img.hasAttribute("data-same-ext") && same_ext_image_allowed_types.indexOf(img.extension) !== -1) {
 			src += "." + img.extension;
 		} else if (WEBP_SUPPORT) {
 			src += ".webp";
@@ -130,10 +122,7 @@ function loadImage(img, animate = true, offset = null) {
 
 function showWaitingImage(img, duration) {
 	if (img.classList.contains("wo997_img_waiting") && isNodeOnScreen(img)) {
-		animateVisibility(
-			img,
-			img.classList.contains("wo997_img_freeze") ? 0 : duration
-		);
+		animateVisibility(img, img.classList.contains("wo997_img_freeze") ? 0 : duration);
 	}
 }
 
@@ -257,9 +246,7 @@ function lazyLoadImages(animate = true) {
 	});
 
 	// @ts-ignore
-	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((
-		/** @type {ResponsiveImage} */ img
-	) => {
+	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((/** @type {ResponsiveImage} */ img) => {
 		// probably more components wanna join in the future
 		if (!img._parent(".wo997_slider:not(.wo997_slider_ready)")) {
 			const rect = setImageDimensions(img);

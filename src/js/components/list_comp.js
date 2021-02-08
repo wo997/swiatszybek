@@ -318,30 +318,24 @@ function listComp(comp, parent, data = []) {
 				const h1 = list_rect_before.height;
 				const h2 = list_rect_after.height;
 
-				// if (Math.abs(w1 - w2) < 1 && Math.abs(h1 - h2) < 1) {
-				// 	//comp.style.width = w2 + "px";
-				// 	//comp.style.height = h2 + "px";
+				let step_0 = "";
+				let step_1 = "";
 
-				// 	setTimeout(() => {
+				if (Math.abs(w1 - w2) > 1) {
+					step_0 = `width:${w1}px;`;
+					step_1 = `width:${w2}px;`;
+				} else if (Math.abs(h1 - h2) > 1) {
+					step_0 = `height:${h1}px;`;
+					step_1 = `height:${h2}px;`;
+				}
 
-				// 	}, animation_duration);
-				// } else {
-
-				// }
-				comp._animate(
-					`
-                        0% {width:${w1}px;height:${h1}px;}
-                        100% {width:${w2}px;height:${h2}px;}
-                    `,
-					animation_duration,
-					{
-						callback: () => {
-							comp.classList.remove("animating");
-							comp.style.width = "";
-							comp.style.height = "";
-						},
-					}
-				);
+				comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration, {
+					callback: () => {
+						comp.classList.remove("animating");
+						comp.style.width = "";
+						comp.style.height = "";
+					},
+				});
 			},
 		});
 	};

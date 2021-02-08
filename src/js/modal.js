@@ -172,7 +172,7 @@ function showModal(name = null, params = {}) {
 				const animation_2 = `0% {transform: translate(${dx * 0.5}px,${dy * 0.5}px)scale(0.5);}
                     100% {transform: translate(0px,0px) scale(1);}`;
 
-				if (def(params.keep_size, true)) {
+				if (def(params.keep_size, false)) {
 					// why a copy? it's required to get bounding client rect to work properly on modal open
 					modal_container.insertAdjacentHTML("beforeend", modal.outerHTML);
 					const modal_copy = $(modal_container.lastElementChild);

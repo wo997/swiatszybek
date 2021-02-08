@@ -1,5 +1,9 @@
 /* js[global] */
 
+// TODO: HEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+// should the modal really freeze/duplicate when showing up to maintain data-height?
+// that sucks af, you better set it in the first frame, then call showModal and voila!
+
 const MOBILE_WIDTH = 800;
 
 window.addEventListener("resize", function () {

@@ -61,7 +61,7 @@
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
  * _load_state(data_obj)
- * _set_dataset(Array)
+ * _set_dataset(Array, options?: {immediately?: boolean})
  * } & BaseComp} DatatableComp
  */
 
@@ -154,7 +154,7 @@ function datatableComp(comp, parent, data) {
 		rewriteState(state, data_obj);
 	};
 
-	comp._set_dataset = (dataset = undefined) => {
+	comp._set_dataset = (dataset = undefined, options = {}) => {
 		if (dataset) {
 			comp._data.dataset = dataset;
 		}
@@ -172,16 +172,17 @@ function datatableComp(comp, parent, data) {
 			data.rows = data.dataset.map((e) => ({ row: e }));
 			comp._render();
 		} else {
-			comp._client_search();
+			comp._client_search(options.immediately ? undefined : 0);
 		}
 	};
 
-	comp._client_search = (delay = 0) => {
+	comp._client_search = (delay) => {
 		if (comp._search_timeout) {
 			clearTimeout(comp._search_timeout);
 			comp._search_timeout = undefined;
 		}
-		comp._search_timeout = setTimeout(() => {
+
+		const action = () => {
 			const data = comp._data;
 
 			/** @type {Array} */
@@ -217,7 +218,13 @@ function datatableComp(comp, parent, data) {
 
 			data.rows = rows.slice(pi * rc, (pi + 1) * rc).map((e) => ({ row: e }));
 			comp._render();
-		}, delay);
+		};
+
+		if (delay === undefined) {
+			action();
+		} else {
+			comp._search_timeout = setTimeout(action, delay);
+		}
 	};
 
 	comp._datatable_search = (delay = 0) => {
@@ -350,7 +357,7 @@ function datatableComp(comp, parent, data) {
 					if (data.search_url) {
 						comp._datatable_search(0);
 					} else {
-						comp._client_search();
+						comp._client_search(0);
 					}
 				}
 
@@ -484,7 +491,7 @@ function datatableComp(comp, parent, data) {
 					comp._render();
 					comp._datatable_search(0);
 				} else {
-					comp._client_search();
+					comp._client_search(0);
 				}
 			});
 		},
