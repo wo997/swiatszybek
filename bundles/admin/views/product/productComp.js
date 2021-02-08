@@ -54,7 +54,7 @@ function productComp(comp, parent, data) {
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
 		],
 		dataset: products,
-		label: "Konkretne produkty",
+		label: "Pełna lista produktów",
 		primary_key: "product_id",
 	};
 
@@ -84,7 +84,7 @@ function productComp(comp, parent, data) {
 			</select>
 
 			<div class="label">
-				<span html="{${"Warianty (" + data.features.length + ")"}}"></span>
+				<span html="{${"Cechy (" + data.features.length + ")"}}"></span>
 				<button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 			</div>
 
@@ -112,6 +112,20 @@ function productComp(comp, parent, data) {
 			// @ts-ignore
 			const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
 			selectProductFeaturesModalComp(select_product_features_modal_comp, undefined);
+
+			// selectProductFeatures
+			registerModalContent(html`
+				<div id="selectProductFeatureOptions" data-expand data-dismissable>
+					<div class="modal-body">
+						<select-product-feature-options-modal-comp></select-product-feature-options-modal-comp>
+					</div>
+				</div>
+			`);
+
+			/** @type {SelectProductFeatureOptionsModalComp} */
+			// @ts-ignore
+			const select_product_feature_options_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
+			selectProductFeatureOptionsModalComp(select_product_feature_options_modal_comp, undefined);
 
 			// productFeature
 			registerModalContent(html`

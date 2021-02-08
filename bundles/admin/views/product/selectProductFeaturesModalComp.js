@@ -71,7 +71,6 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show_modal = (options = {}) => {
-		//comp._render(); // but why?
 		comp._nodes.datatable._datatable_search();
 
 		comp._nodes.close_btn.classList.add("subtle");

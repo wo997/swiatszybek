@@ -4,7 +4,14 @@ function refreshProductFeatures() {
 	xhr({
 		url: STATIC_URLS["ADMIN"] + "product/feature/all",
 		success: (res) => {
-			console.log(res);
+			product_features = res;
+		},
+	});
+
+	xhr({
+		url: STATIC_URLS["ADMIN"] + "product/feature/option/all",
+		success: (res) => {
+			product_feature_options = res;
 		},
 	});
 
@@ -19,13 +26,14 @@ function refreshProductFeatures() {
 		});
 	});
 
-	product_comp._data.features.forEach((curr_feature) => {
-		curr_feature.options = curr_feature.options.filter((curr_option) => {
-			return !!product_options.find((option) => {
-				return option.product_feature_option_id === curr_option.product_feature_option_id;
-			});
-		});
-	});
+	// rework this shit
+	// product_comp._data.features.forEach((curr_feature) => {
+	// 	curr_feature.options = curr_feature.options.filter((curr_option) => {
+	// 		return !!product_feature_options.find((option) => {
+	// 			return option.product_feature_option_id === curr_option.product_feature_option_id;
+	// 		});
+	// 	});
+	// });
 
 	product_comp._render();
 }

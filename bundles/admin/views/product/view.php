@@ -12,6 +12,7 @@ $general_product = EntityManager::getEntityById("general_product", $general_prod
 
 <script>
     let product_features = <?= json_encode(getAllProductFeatures()) ?>;
+    let product_feature_options = <?= json_encode(getAllProductFeatureOptions()) ?>;
     let general_product_data = <?= json_encode($general_product->getSimpleProps()) ?>;
 </script>
 

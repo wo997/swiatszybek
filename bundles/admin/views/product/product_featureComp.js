@@ -11,7 +11,8 @@
  * _set_data(data?: Product_FeatureCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  feature_name: PiepNode
- *  edit_feature: PiepNode
+ *  edit_feature_btn: PiepNode
+ *  add_option_btn: PiepNode
  * }
  * } & BaseComp} Product_FeatureComp
  */
@@ -40,13 +41,13 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			<div class="variant_header">
 				<div class="title inline semi-bold" data-node="{${comp._nodes.feature_name}}"></div>
 				<div>
-					<button data-node="{${comp._nodes.edit_feature}}" class="btn subtle small"><i class="fas fa-cog"></i></button>
+					<button data-node="{${comp._nodes.edit_feature_btn}}" class="btn subtle small"><i class="fas fa-cog"></i></button>
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>
 
 			<span html="{${"Opcje: (" + data.options.length + ")"}}"></span>
-			<button data-node="add_option_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
+			<button data-node="{${comp._nodes.add_option_btn}}" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 
 			<list-comp data-bind="{${data.options}}" class="options">
 				<product_feature-option-comp></product_feature-option-comp>
@@ -57,8 +58,17 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			// @ts-ignore
 			const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
 
-			comp._nodes.edit_feature.addEventListener("click", () => {
-				product_feature_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.edit_feature });
+			comp._nodes.edit_feature_btn.addEventListener("click", () => {
+				product_feature_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.edit_feature_btn });
+			});
+
+			/** @type {SelectProductFeatureOptionsModalComp} */
+			// @ts-ignore
+			const select_product_features_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
+
+			comp._nodes.add_option_btn.addEventListener("click", () => {
+				console.log(12123123);
+				//				select_product_features_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.add_option_btn });
 			});
 		},
 	});
