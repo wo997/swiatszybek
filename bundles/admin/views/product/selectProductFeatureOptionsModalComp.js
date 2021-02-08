@@ -31,9 +31,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 						label: "Akcja",
 						width: "155px",
 						render: (data) => {
-							let cell = html`<button class="btn subtle small edit_btn" data-tooltip="Edytuj">
-								<i class="fas fa-cog"></i>
-							</button>`;
+							let cell = "";
 
 							if (data.selected) {
 								cell += html` <button class="btn subtle small remove_btn">Odznacz <i class="fas fa-times"></i></button>`;
@@ -104,10 +102,53 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				const data = detail.data;
 				data.dataset.forEach((data) => {
 					product_comp._data.feature_options.find((e) => {
-						return e.product_feature_id === data.product_feature_id;
+						return e.product_feature_option_id === data.product_feature_option_id;
 					});
-					data.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.product_feature_id);
+					data.selected = !!product_comp._data.feature_options.find((e) => e.product_feature_option_id === data.product_feature_option_id);
 				});
+			});
+
+			dt_product_feature_options.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+
+				const select_btn = target._parent(".select_btn", { skip: 0 });
+				if (select_btn) {
+					const list_row = select_btn._parent(".list_row", { skip: 0 });
+					if (list_row) {
+						product_comp._data.feature_options.push({ product_feature_option_id: +list_row.dataset.primary, name: "xxxxxx" });
+						product_comp._render();
+						comp._nodes.datatable._set_dataset();
+
+						showNotification("Dodano opcję", {
+							one_line: true,
+							type: "success",
+						});
+					}
+
+					comp._nodes.close_btn.classList.remove("subtle");
+					comp._nodes.close_btn.classList.add("important");
+				}
+
+				const remove_btn = target._parent(".remove_btn", { skip: 0 });
+				if (remove_btn) {
+					const list_row = remove_btn._parent(".list_row", { skip: 0 });
+					if (list_row) {
+						const ind = product_comp._data.feature_options.findIndex((e) => e.product_feature_option_id === +list_row.dataset.primary);
+						if (ind !== -1) {
+							product_comp._data.features.splice(ind, 1);
+							product_comp._render();
+							comp._nodes.datatable._set_dataset();
+
+							showNotification("Usunięto opcję", {
+								one_line: true,
+								type: "success",
+							});
+						}
+					}
+
+					comp._nodes.close_btn.classList.remove("subtle");
+					comp._nodes.close_btn.classList.add("important");
+				}
 			});
 		},
 	});

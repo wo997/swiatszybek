@@ -4,7 +4,7 @@
  * @typedef {{
  * product_feature_option_id: number
  * name: string
- * selected: boolean
+ * selected?: boolean
  * } & ListCompRowData} ProductFeatureOptionCompData
  *
  * @typedef {{
@@ -21,7 +21,8 @@
  * @param {ProductFeatureOptionCompData} data
  */
 function productFeatureOptionComp(comp, parent, data) {
-	comp._set_data = (data = { product_feature_option_id: -1, name: "", selected: false }, options = {}) => {
+	comp._set_data = (data = { product_feature_option_id: -1, name: "" }, options = {}) => {
+		data.selected = def(data.selected, false);
 		setCompData(comp, data, {
 			...options,
 			render: () => {},

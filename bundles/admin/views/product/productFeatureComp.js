@@ -121,7 +121,7 @@ function productFeatureComp(comp, parent, data) {
 		`,
 		initialize: () => {
 			comp._nodes.add_option_btn.addEventListener("click", () => {
-				comp._data.options.push({ name: "", product_feature_option_id: -1, selected: false });
+				comp._data.options.push({ name: "", product_feature_option_id: -1 });
 				comp._render();
 			});
 		},

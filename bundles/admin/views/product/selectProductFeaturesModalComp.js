@@ -176,7 +176,6 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							showNotification("Usunięto cechę produktu", {
 								one_line: true,
 								type: "success",
-								duration: 10000000,
 							});
 						}
 					}
