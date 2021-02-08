@@ -29,6 +29,7 @@
  *  primary_key?: string
  *  search_url?: string
  *  dataset?: Array
+ *  dataset_computed?: Array
  *  rows?: DatatableRowData[]
  *  columns: DatatableColumnDef[]
  *  sort?: DatatableSortData | false
@@ -56,7 +57,7 @@
  *      clear_filters_btn: PiepNode
  *  }
  * _datatable_search(delay?: number)
- * _client_search()
+ * _client_search(delay?: number)
  * _search_timeout: number
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
@@ -74,6 +75,7 @@ function datatableComp(comp, parent, data) {
 	data.filters = def(data.filters, []);
 	data.sort = def(data.sort, false);
 	data.dataset = def(data.dataset, []);
+	data.dataset_computed = def(data.dataset_computed, []);
 	data.quick_search = def(data.quick_search, "");
 	data.pagination_data = def(data.pagination_data, {});
 
@@ -168,7 +170,7 @@ function datatableComp(comp, parent, data) {
 		);
 
 		if (comp._data.search_url) {
-			comp._data.rows = comp._data.dataset.map((e) => ({ row: e }));
+			comp._data.dataset_computed = comp._data.dataset;
 			comp._render();
 		} else {
 			comp._client_search();
@@ -181,9 +183,11 @@ function datatableComp(comp, parent, data) {
 			comp._search_timeout = undefined;
 		}
 		comp._search_timeout = setTimeout(() => {
-			let rows = cloneObject(comp._data.dataset);
+			const data = comp._data;
 
-			const qs = comp._data.quick_search.trim();
+			let rows = cloneObject(data.dataset);
+
+			const qs = data.quick_search.trim();
 			if (qs) {
 				rows = rows.filter((r) => {
 					for (const v of Object.values(r)) {
@@ -196,9 +200,9 @@ function datatableComp(comp, parent, data) {
 				});
 			}
 
-			if (comp._data.sort) {
-				const sort_key = comp._data.sort.key;
-				const order = comp._data.sort.order === "asc" ? 1 : -1;
+			if (data.sort) {
+				const sort_key = data.sort.key;
+				const order = data.sort.order === "asc" ? 1 : -1;
 				rows = rows.sort((a, b) => {
 					if (a[sort_key] < b[sort_key]) return -order;
 					if (a[sort_key] > b[sort_key]) return order;
@@ -206,7 +210,9 @@ function datatableComp(comp, parent, data) {
 				});
 			}
 
-			comp._data.rows = rows.map((e) => ({ row: e }));
+			data.dataset_computed = rows;
+
+			data.pagination_data.total_rows = data.dataset_computed.length;
 
 			comp._render();
 		}, delay);
@@ -242,16 +248,10 @@ function datatableComp(comp, parent, data) {
 					datatable_params,
 				},
 				success: (res) => {
-					if (!res) {
-						console.error(`Datatable search error: ${data.search_url}`, res);
-						return;
-					}
-
 					comp._search_request = undefined;
 
-					if (res.rows.length === 0 && data.pagination_data.page_id > 0 && data.search_url) {
-						data.pagination_data.page_id = 0;
-						comp._datatable_search();
+					if (!res) {
+						console.error(`Datatable search error: ${data.search_url}`, res);
 						return;
 					}
 
@@ -268,6 +268,8 @@ function datatableComp(comp, parent, data) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		data.rows = data.dataset_computed.map((e) => ({ row: e }));
+
 		setCompData(comp, data, {
 			...options,
 			pass_list_data: [{ what: "columns", where: "rows" }],
@@ -282,13 +284,14 @@ function datatableComp(comp, parent, data) {
 					}
 				}
 
-				if (
+				const chng =
 					!comp._prev_data ||
 					cd.sort ||
 					cd.filters ||
 					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
-					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count
-				) {
+					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count;
+
+				if (chng) {
 					let styles_html = "";
 
 					/** @type {string[]} */
@@ -318,9 +321,7 @@ function datatableComp(comp, parent, data) {
 									} else if (data.sort.order === "asc") {
 										icon = "fa-arrow-up";
 										btn_class = "primary";
-										if (data.search_url) {
-											tooltip = "Wyłącz sortowanie";
-										}
+										tooltip = "Wyłącz sortowanie";
 									}
 								}
 								cell_html += html` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
@@ -460,7 +461,7 @@ function datatableComp(comp, parent, data) {
 					let new_order = "desc";
 					if (curr_order === "desc") {
 						new_order = "asc";
-					} else if (curr_order === "asc" && data.search_url) {
+					} else if (curr_order === "asc") {
 						new_order = "";
 					}
 					data.sort = new_order ? { key: column_data.key, order: new_order } : false;

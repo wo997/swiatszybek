@@ -30,9 +30,14 @@
 function paginationComp(comp, parent, data = {}) {
 	comp._set_data = (data, options = {}) => {
 		data.page_id = def(data.page_id, 0);
-		data.page_count = def(data.page_count, 0);
 		data.row_count = def(data.row_count, 15);
 		data.total_rows = def(data.total_rows, 0);
+		data.page_count = Math.ceil(data.total_rows / data.row_count);
+
+		if (data.page_id > 0 && data.page_id > data.page_count - 1) {
+			data.page_id = 0;
+			return;
+		}
 
 		setCompData(comp, data, {
 			...options,

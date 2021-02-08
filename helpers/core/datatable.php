@@ -245,7 +245,8 @@ function paginateData($params = [])
     // $results = array_merge($results, $results, $results, $results);
 
     // a dynamic type would be dope but indexing gets tricky
-    $res = ["page_count" => $page_idCount, "total_rows" => $total_rows, "rows" => $results];
+    //$res = ["page_count" => $page_idCount, "total_rows" => $total_rows, "rows" => $results];
+    $res = ["total_rows" => $total_rows, "rows" => $results];
 
     return $res;
 }
