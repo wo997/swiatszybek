@@ -52,10 +52,12 @@ registerCompTrait("history", {
 		comp._setting_data_from_history = false;
 
 		const setCompDataFromHistory = () => {
+			comp.classList.add("freeze");
 			comp._setting_data_from_history = true;
 			comp._set_data(JSON.parse(comp._data_history[comp._data_history.length - 1 - comp._history_steps_back]));
 			setTimeout(() => {
 				comp._setting_data_from_history = false;
+				comp.classList.remove("freeze");
 			});
 		};
 
