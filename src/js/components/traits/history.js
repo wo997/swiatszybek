@@ -7,6 +7,7 @@
  * _setting_data_from_history: boolean
  * _active_element: Element
  * _clean_history()
+ * _separate_history_timeout: number | undefined
  * } & AnyComp} CompWithHistory
  */
 
@@ -90,6 +91,14 @@ registerCompTrait("history", {
 				comp._data_history.splice(comp._data_history.length - 1, 1);
 			}
 			comp._active_element = document.activeElement;
+
+			if (comp._separate_history_timeout) {
+				clearTimeout(comp._separate_history_timeout);
+			}
+			comp._separate_history_timeout = setTimeout(() => {
+				comp._active_element = undefined;
+				comp._separate_history_timeout = undefined;
+			}, 3000);
 
 			if (comp._data) {
 				if (json !== getLast(comp._data_history)) {
