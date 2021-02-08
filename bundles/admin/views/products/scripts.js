@@ -8,9 +8,19 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "search_products",
 		columns: [
-			{ label: "Produkt", key: "title", width: "300px", sortable: true, searchable: "string" },
-			{ label: "Publiczny", key: "published", width: "200px", sortable: true, searchable: "string" },
-			{ label: "W magazynie", key: "stock", width: "200px", sortable: true, searchable: "number" },
+			{ label: "Produkt", key: "title", width: "20%", sortable: true, searchable: "string" },
+			{ label: "Publiczny", key: "published", width: "20%", sortable: true, searchable: "string" },
+			{ label: "W magazynie", key: "stock", width: "20%", sortable: true, searchable: "number" },
+			{
+				label: "Akcja",
+				key: "stock",
+				width: "100px",
+				render: (data) => {
+					return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "produkt/" + data.product_id}">
+						Edytuj <i class="fas fa-cog"></i>
+					</a>`;
+				},
+			},
 		],
 		primary_key: "product_id",
 		empty_html: html`Brak produktów`,

@@ -1,5 +1,9 @@
 <?php //route[{ADMIN}produkt]
 
+$general_product_id = Request::urlParam(2, -1);
+
+$general_product = EntityManager::getEntityById("general_product", $general_product_id);
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -8,6 +12,7 @@
 
 <script>
     let product_features = <?= json_encode(getAllProductFeatures()) ?>;
+    let general_product_data = <?= json_encode($general_product->getSimpleProps()) ?>;
 </script>
 
 <?php startSection("header"); ?>

@@ -12,6 +12,7 @@ function refreshProductFeatures() {
 	// @ts-ignore
 	const product_comp = $("product-comp");
 
+	// HEY, it watches removals only, what about changes????
 	product_comp._data.features = product_comp._data.features.filter((curr_feature) => {
 		return !!product_features.find((feature) => {
 			return feature.product_feature_id === curr_feature.product_feature_id;
@@ -42,13 +43,11 @@ domload(() => {
 		products: [],
 	});
 
-	// finally
-	const name_input = product_comp._child(`product-comp [data-bind="name"]`);
 	const nameChange = () => {
 		$$(`.product_name`).forEach((e) => {
-			e._set_content(name_input._get_value());
+			e._set_content(product_comp._data.name);
 		});
 	};
-	name_input.addEventListener("change", nameChange);
+	product_comp.addEventListener("change", nameChange);
 	nameChange();
 });

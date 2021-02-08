@@ -213,6 +213,7 @@ DB::createTable("authentication_token", [
     ["name" => "valid_untill", "type" => "DATETIME"],
 ]);
 
+
 // DB::createTable("page", [
 //     ["name" => "page_id", "type" => "INT", "index" => "primary"],
 //     ["name" => "url", "type" => "TINYTEXT"], // I think we should index that field ezy

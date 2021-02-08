@@ -399,6 +399,8 @@ function setCompData(comp, _data = undefined, options = {}) {
 			second: true,
 		});
 	}*/
+
+	comp._dispatch_change();
 }
 
 /**

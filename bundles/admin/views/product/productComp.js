@@ -13,7 +13,7 @@
  *  id: number
  *  name: string
  *  sell_by: string
- features: Product_FeatureCompData[]
+ *  features: Product_FeatureCompData[]
  *  products: ProductData[]
  *  products_dt?: DatatableCompData
  * }} ProductCompData
@@ -40,6 +40,8 @@ function productComp(comp, parent, data) {
 		{ product_id: 3, name: "a", gross_price: 234, net_price: 12, vat: 23 },
 		{ product_id: 4, name: "b", gross_price: 100, net_price: 40, vat: 5 },
 		{ product_id: 5, name: "c", gross_price: 264, net_price: 4, vat: 8 },
+		{ product_id: 6, name: "b", gross_price: 100, net_price: 40, vat: 5 },
+		{ product_id: 7, name: "c", gross_price: 264, net_price: 4, vat: 8 },
 	]; // will be empty
 
 	/** @type {DatatableCompData} */
@@ -54,6 +56,9 @@ function productComp(comp, parent, data) {
 		dataset: products,
 		label: "Wszystkie produkty",
 		primary_key: "product_id",
+		pagination_data: {
+			row_count: 4,
+		},
 	};
 
 	data.products_dt = def(data.products_dt, table);

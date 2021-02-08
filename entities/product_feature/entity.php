@@ -15,3 +15,11 @@ EntityManager::register("product", [
 ]);
 
 EntityManager::manyToMany("product", "product_feature", "product_to_feature");
+
+EntityManager::register("general_product", [
+    "props" => [
+        "features" => ["type" => "general_product_feature[]"]
+    ],
+]);
+
+EntityManager::manyToMany("general_product", "product_feature", "general_product_to_feature");

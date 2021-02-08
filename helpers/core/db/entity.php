@@ -312,7 +312,7 @@ class Entity
 
     public function getAllProps()
     {
-        $entity_data = EntityManager::getEntityData("product_feature");
+        $entity_data = EntityManager::getEntityData($this->name);
         //$prop_names = array_keys(def($entity_data, ["props"], []));
         $props = def($entity_data, ["props"], []);
 
@@ -345,6 +345,36 @@ class Entity
         }
         //var_dump($all_props);
         return $all_props;
+    }
+
+    /**
+     * F.e. used to reacreate a frontend object
+     *
+     * @return void
+     */
+    public function getSimpleProps()
+    {
+        $entity_data = EntityManager::getEntityData($this->name);
+        $props = def($entity_data, ["props"], []);
+
+        $simple_props = [];
+        foreach ($props as $prop_name => $prop_data) {
+            $val = $this->getProp($prop_name);
+
+            if (is_array($val)) {
+                $entities_data = [];
+                foreach ($val as
+                    /** @var Entity */
+                    $ent) {
+                    if ($ent instanceof Entity) {
+                        $entities_data[] = $ent->getId();
+                    }
+                }
+                $val = $entities_data;
+            }
+            $simple_props[$prop_name] = $val;
+        }
+        return $simple_props;
     }
 
     public function getRowProps()

@@ -75,7 +75,7 @@ function datatableComp(comp, parent, data) {
 	data.sort = def(data.sort, false);
 	data.dataset = def(data.dataset, []);
 	data.quick_search = def(data.quick_search, "");
-	data.pagination_data = {};
+	data.pagination_data = def(data.pagination_data, {});
 
 	data.rows = [];
 
@@ -167,24 +167,49 @@ function datatableComp(comp, parent, data) {
 			})
 		);
 
-		comp._render();
+		if (comp._data.search_url) {
+			comp._data.rows = comp._data.dataset.map((e) => ({ row: e }));
+			comp._render();
+		} else {
+			comp._client_search();
+		}
 	};
 
-	comp._client_search = () => {
-		setTimeout(() => {
+	comp._client_search = (delay = 0) => {
+		if (comp._search_timeout) {
+			clearTimeout(comp._search_timeout);
+			comp._search_timeout = undefined;
+		}
+		comp._search_timeout = setTimeout(() => {
+			let rows = cloneObject(comp._data.dataset);
+
+			const qs = comp._data.quick_search.trim();
+			if (qs) {
+				rows = rows.filter((r) => {
+					for (const v of Object.values(r)) {
+						if ((v + "").indexOf(qs) !== -1) {
+							return true;
+						}
+					}
+
+					return false;
+				});
+			}
+
 			if (comp._data.sort) {
 				const sort_key = comp._data.sort.key;
 				const order = comp._data.sort.order === "asc" ? 1 : -1;
-				comp._set_dataset(
-					comp._data.dataset.sort((a, b) => {
-						if (a[sort_key] < b[sort_key]) return -order;
-						if (a[sort_key] > b[sort_key]) return order;
-						return 0;
-					})
-				);
+				rows = rows.sort((a, b) => {
+					if (a[sort_key] < b[sort_key]) return -order;
+					if (a[sort_key] > b[sort_key]) return order;
+					return 0;
+				});
 			}
+
+			comp._data.rows = rows.map((e) => ({ row: e }));
+
 			comp._render();
-		}, 0);
+		}, delay);
 	};
 
 	comp._datatable_search = (delay = 0) => {
@@ -243,11 +268,6 @@ function datatableComp(comp, parent, data) {
 	};
 
 	comp._set_data = (data, options = {}) => {
-		data.rows = [];
-		data.dataset.forEach((e) => {
-			data.rows.push({ row: e });
-		});
-
 		setCompData(comp, data, {
 			...options,
 			pass_list_data: [{ what: "columns", where: "rows" }],
@@ -258,7 +278,7 @@ function datatableComp(comp, parent, data) {
 					if (data.search_url) {
 						comp._datatable_search(300);
 					} else {
-						comp._client_search();
+						comp._client_search(300);
 					}
 				}
 
@@ -415,7 +435,7 @@ function datatableComp(comp, parent, data) {
 			</div>
 
 			<div class="expand_y" data-node="empty_table">
-				<div class="empty_table" html="{${data.empty_html}}"></div>
+				<div class="empty_table" html="{${def(data.empty_html, "Brak wyników")}}"></div>
 			</div>
 
 			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>

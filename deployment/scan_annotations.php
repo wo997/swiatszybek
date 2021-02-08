@@ -20,7 +20,6 @@ scanDirectories(
             return;
         }
 
-
         if ($url = getAnnotationRoute($first_line)) {
             if (isset($_link_route_path[$url])) {
                 /*// remove old route if existed on server, might cause data loss, pls dont do that
