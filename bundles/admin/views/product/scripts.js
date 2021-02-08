@@ -45,7 +45,7 @@ domload(() => {
 
 	const nameChange = () => {
 		$$(`.product_name`).forEach((e) => {
-			e._set_content(product_comp._data.name);
+			e._set_content(product_comp._data.name ? product_comp._data.name : "Nowy produkt");
 		});
 	};
 	product_comp.addEventListener("change", nameChange);

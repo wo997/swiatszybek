@@ -168,6 +168,7 @@ function datatableComp(comp, parent, data) {
 		);
 
 		if (comp._data.search_url) {
+			const data = comp._data;
 			data.rows = data.dataset.map((e) => ({ row: e }));
 			comp._render();
 		} else {
@@ -215,7 +216,6 @@ function datatableComp(comp, parent, data) {
 			const pi = data.pagination_data.page_id;
 
 			data.rows = rows.slice(pi * rc, (pi + 1) * rc).map((e) => ({ row: e }));
-
 			comp._render();
 		}, delay);
 	};

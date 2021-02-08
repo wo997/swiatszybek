@@ -54,11 +54,8 @@ function productComp(comp, parent, data) {
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
 		],
 		dataset: products,
-		label: "Wszystkie produkty",
+		label: "Konkretne produkty",
 		primary_key: "product_id",
-		pagination_data: {
-			row_count: 4,
-		},
 	};
 
 	data.products_dt = def(data.products_dt, table);

@@ -24,7 +24,6 @@ $general_product = EntityManager::getEntityById("general_product", $general_prod
         </a>
         <i class="fas fa-chevron-right"></i>
         <div class="crumb">
-            Produkt
             <span class="product_name"></span>
         </div>
     </span>
