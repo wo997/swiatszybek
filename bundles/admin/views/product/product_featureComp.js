@@ -67,8 +67,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			const select_product_features_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
 
 			comp._nodes.add_option_btn.addEventListener("click", () => {
-				console.log(12123123);
-				//				select_product_features_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.add_option_btn });
+				select_product_features_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.add_option_btn });
 			});
 		},
 	});

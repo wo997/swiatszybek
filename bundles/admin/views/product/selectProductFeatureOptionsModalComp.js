@@ -12,7 +12,7 @@
  *      close_btn: PiepNode
  *      datatable: DatatableComp
  * }
- * _show_modal(options?: {source?: PiepNode})
+ * _show(product_feature_id: number, options?: {source?: PiepNode})
  * } & BaseComp} SelectProductFeatureOptionsModalComp
  */
 
@@ -58,13 +58,13 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		};
 	}
 
-	comp._show_modal = (options = {}) => {
-		comp._nodes.datatable._set_dataset(product_feature_options.filter((e) => e.product_feature_id === 1));
+	comp._show = (product_feature_id, options = {}) => {
+		comp._nodes.datatable._set_dataset(product_feature_options.filter((e) => e.product_feature_id === product_feature_id));
 
 		comp._nodes.close_btn.classList.add("subtle");
 		comp._nodes.close_btn.classList.remove("important");
 
-		showModal("selectProductFeatures", {
+		showModal("selectProductFeatureOptions", {
 			source: options.source,
 		});
 	};

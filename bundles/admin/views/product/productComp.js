@@ -145,7 +145,7 @@ function productComp(comp, parent, data) {
 
 			// other
 			comp._nodes.add_variant_btn.addEventListener("click", () => {
-				select_product_features_modal_comp._show_modal({ source: comp._nodes.add_variant_btn });
+				select_product_features_modal_comp._show({ source: comp._nodes.add_variant_btn });
 			});
 
 			const history_btns = comp._child(".history_btns");

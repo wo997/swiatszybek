@@ -12,7 +12,7 @@
  *      close_btn: PiepNode
  *      datatable: DatatableComp
  * }
- * _show_modal(options?: {source?: PiepNode})
+ * _show(options?: {source?: PiepNode})
  * } & BaseComp} SelectProductFeaturesModalComp
  */
 
@@ -70,7 +70,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 		};
 	}
 
-	comp._show_modal = (options = {}) => {
+	comp._show = (options = {}) => {
 		comp._nodes.datatable._datatable_search();
 
 		comp._nodes.close_btn.classList.add("subtle");
