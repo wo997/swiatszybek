@@ -81,16 +81,17 @@ registerCompTrait("history", {
 		}
 
 		setTimeout(() => {
+			const json = JSON.stringify(comp._data);
+
 			if (comp._history_steps_back > 0) {
 				comp._data_history.splice(comp._data_history.length - comp._history_steps_back, comp._history_steps_back);
 				comp._history_steps_back = 0;
-			} else if (comp._active_element === document.activeElement) {
+			} else if (comp._active_element === document.activeElement && json !== def(comp._data_history[comp._data_history.length - 2])) {
 				comp._data_history.splice(comp._data_history.length - 1, 1);
 			}
 			comp._active_element = document.activeElement;
 
 			if (comp._data) {
-				const json = JSON.stringify(comp._data);
 				if (json !== getLast(comp._data_history)) {
 					comp._data_history.push(json);
 				}
