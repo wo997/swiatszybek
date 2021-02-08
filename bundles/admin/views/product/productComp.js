@@ -14,6 +14,7 @@
  *  name: string
  *  sell_by: string
  *  features: Product_FeatureCompData[]
+ *  feature_options: ProductFeatureOptionCompData[]
  *  products: ProductData[]
  *  products_dt?: DatatableCompData
  * }} ProductCompData

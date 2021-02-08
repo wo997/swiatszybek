@@ -2,16 +2,15 @@
 
 /**
  * @typedef {{
- * option_id: number
+ * product_feature_option_id: number
  * name: string
- * options: ProductFeatureOptionCompData[]
+ * selected: boolean
  * } & ListCompRowData} ProductFeatureOptionCompData
  *
  * @typedef {{
  * _data: ProductFeatureOptionCompData
  * _set_data(data?: ProductFeatureOptionCompData, options?: SetCompDataOptions)
  * _nodes: {
- *  add_option_btn: PiepNode
  * }
  * } & BaseComp} ProductFeatureOptionComp
  */
@@ -21,33 +20,26 @@
  * @param {*} parent
  * @param {ProductFeatureOptionCompData} data
  */
-function productFeatureOptionComp(comp, parent, data = { option_id: -1, name: "", options: [] }) {
-	comp._set_data = (data, options = {}) => {
+function productFeatureOptionComp(comp, parent, data) {
+	comp._set_data = (data = { product_feature_option_id: -1, name: "", selected: false }, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {},
 		});
 	};
+	//<p-checkbox class="square inline" data-bind="{${data.selected}}"></p-checkbox>
 
 	createComp(comp, parent, data, {
 		template: html`
-            <input type="text" class="field inline" data-bind="{${data.name}}"/></span>
-
-            <div class="inline">
-                <button class="btn primary small" data-node="{${comp._nodes.add_option_btn}}">
-                    Dodaj opcję podrzędną <i class="fas fa-plus"></i>
-                </button>
-                <p-batch-trait data-trait="list_controls"></p-batch-trait>
-            </div> 
-            <list-comp data-bind="{${data.options}}">
-                <product-feature-option-comp></product-feature-option-comp>
-            </list-comp>
-        `,
-		initialize: () => {
-			comp._nodes.add_option_btn.addEventListener("click", () => {
-				comp._data.options.push({ name: "", option_id: -1, options: [] });
-				comp._render();
-			});
-		},
+			<div class="option_row">
+				<div style="margin-right:auto">
+					<input type="text" class="field inline small" data-bind="{${data.name}}" />
+				</div>
+				<div>
+					<p-batch-trait data-trait="list_controls"></p-batch-trait>
+				</div>
+			</div>
+		`,
+		initialize: () => {},
 	});
 }

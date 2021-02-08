@@ -232,10 +232,6 @@ textarea {
 		width: 100%;
 	}
 
-	&.small {
-		padding: 0.2em 0.5em;
-	}
-
 	.fas,
 	.fas,
 	.fab {
@@ -307,17 +303,20 @@ textarea {
 
 .btn,
 .field {
-	padding: 0.42em 0.8em;
+	& {
+		padding: 0.42em 0.8em;
+	}
+	&.small {
+		padding: 0.2em 0.5em;
+	}
 }
+
 .field {
 	background-color: var(--form-field-background);
 	box-shadow: inset 0px 1px 5px -2px rgba(0, 0, 0, 0.2);
 }
 .field.white {
 	background: white;
-}
-.field.small {
-	padding: 1px 5px;
 }
 .field:not(.inline) {
 	display: block;

@@ -80,7 +80,7 @@ function listComp(comp, parent, data = []) {
 					return;
 				}
 
-				let instant = false;
+				let instant = !!comp._parent(".freeze");
 				let chaos = false;
 
 				if (comp.classList.contains("animating")) {
@@ -103,18 +103,17 @@ function listComp(comp, parent, data = []) {
 
 				let added = 0;
 				let removed = 0;
-				let all = diff.length;
 
-				if (!instant) {
-					for (const d of diff) {
-						if (d.from === -1) {
-							added++;
-						}
-						if (d.to === -1) {
-							removed++;
-						}
+				//if (!instant) {
+				for (const d of diff) {
+					if (d.from === -1) {
+						added++;
+					}
+					if (d.to === -1) {
+						removed++;
 					}
 				}
+				//}
 
 				// adding and removing, if we have too many of these we won't animate the list, simple
 				if (added * removed > row_c * row_c * 0.25) {

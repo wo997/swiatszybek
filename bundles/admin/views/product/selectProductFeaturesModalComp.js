@@ -76,8 +76,10 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 		comp._nodes.close_btn.classList.add("subtle");
 		comp._nodes.close_btn.classList.remove("important");
 
-		showModal("selectProductFeatures", {
-			source: options.source,
+		setTimeout(() => {
+			showModal("selectProductFeatures", {
+				source: options.source,
+			});
 		});
 	};
 

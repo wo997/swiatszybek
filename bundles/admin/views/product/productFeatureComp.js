@@ -12,6 +12,7 @@
  * _set_data(data?: ProductFeatureCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  add_option_btn: PiepNode
+ *  select_parent_option_btn: PiepNode
  * }
  * _load_data(id: number,options?:{callback?: CallableFunction})
  * _save_data()
@@ -98,7 +99,10 @@ function productFeatureComp(comp, parent, data) {
 			<input type="text" class="field" data-bind="{${data.name}}" />
 			<div class="label">
 				Opcje
-				<button class="btn primary small" data-node="{${comp._nodes.add_option_btn}}">Dodaj <i class="fas fa-plus"></i></button>
+				<button class="btn primary small" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>
+				<button class="btn primary {active:${data.options.length > 0}} small" data-node="{${comp._nodes.select_parent_option_btn}}">
+					Połącz z opcją nadrzędną <i class="fas fa-search"></i>
+				</button>
 			</div>
 			<list-comp data-bind="{${data.options}}">
 				<product-feature-option-comp></product-feature-option-comp>
@@ -106,7 +110,7 @@ function productFeatureComp(comp, parent, data) {
 		`,
 		initialize: () => {
 			comp._nodes.add_option_btn.addEventListener("click", () => {
-				comp._data.options.push({ name: "", option_id: -1, options: [] });
+				comp._data.options.push({ name: "", product_feature_option_id: -1, selected: false });
 				comp._render();
 			});
 		},

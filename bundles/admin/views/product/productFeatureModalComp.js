@@ -24,13 +24,17 @@
  */
 function productFeatureModalComp(comp, parent, data) {
 	comp._show = (id, options = {}) => {
-		showModal("productFeature", {
-			source: options.source,
+		comp.classList.add("freeze");
+		setTimeout(() => {
+			showModal("productFeature", {
+				source: options.source,
+			});
 		});
 
 		comp._nodes.product_feature_comp._load_data(id, {
 			callback: () => {
 				clearCompHistory(comp);
+				comp.classList.remove("freeze");
 			},
 		});
 	};

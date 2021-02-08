@@ -61,8 +61,10 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 			{ immediately: true }
 		);
 
-		showModal("selectProductFeatureOptions", {
-			source: options.source,
+		setTimeout(() => {
+			showModal("selectProductFeatureOptions", {
+				source: options.source,
+			});
 		});
 	};
 
@@ -101,10 +103,10 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				/** @type {DatatableCompData} */
 				const data = detail.data;
 				data.dataset.forEach((data) => {
-					// product_comp._data.features.find((e) => {
-					// 	return e.product_feature_id === data.product_feature_id;
-					// });
-					// data.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.product_feature_id);
+					product_comp._data.feature_options.find((e) => {
+						return e.product_feature_id === data.product_feature_id;
+					});
+					data.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.product_feature_id);
 				});
 			});
 		},
