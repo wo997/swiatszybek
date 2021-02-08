@@ -428,13 +428,13 @@ function propagateCompData(comp) {
 
 			/** @type {AnyComp} */
 			// @ts-ignore
-			const receiver = subscribe.receiver;
+			const receiver = subscribe ? subscribe.receiver : undefined;
 
 			// if (receiver._propagating_data) {
 			// 	continue;
 			// }
 
-			if (receiver._in_body()) {
+			if (receiver && receiver._in_body()) {
 				subscribe.fetch(node, receiver);
 			} else {
 				// remove subscriber reference - kinda lazy garbage collector
