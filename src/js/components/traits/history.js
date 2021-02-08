@@ -19,6 +19,16 @@ function renderCompHistory(comp) {
 	comp._nodes.history_redo.toggleAttribute("disabled", comp._history_steps_back === 0);
 }
 
+let history_attention = false;
+document.addEventListener(
+	"click",
+	() => {
+		history_attention = true;
+		console.log(1);
+	},
+	true
+);
+
 /**
  * @param {BaseComp} c
  */
@@ -79,7 +89,6 @@ registerCompTrait("history", {
 
 		if (comp._setting_data_from_history) {
 			renderCompHistory(comp);
-
 			return;
 		}
 
@@ -89,6 +98,8 @@ registerCompTrait("history", {
 			if (comp._history_steps_back > 0) {
 				comp._data_history.splice(comp._data_history.length - comp._history_steps_back, comp._history_steps_back);
 				comp._history_steps_back = 0;
+			} else if (history_attention) {
+				history_attention = false;
 			} else if (comp._active_element === document.activeElement && json !== def(comp._data_history[comp._data_history.length - 2])) {
 				comp._data_history.splice(comp._data_history.length - 1, 1);
 			}
@@ -100,7 +111,7 @@ registerCompTrait("history", {
 			comp._separate_history_timeout = setTimeout(() => {
 				comp._active_element = undefined;
 				comp._separate_history_timeout = undefined;
-			}, 2000);
+			}, 3000);
 
 			if (comp._data) {
 				if (json !== getLast(comp._data_history)) {
