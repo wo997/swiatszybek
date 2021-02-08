@@ -1,17 +1,15 @@
 /* js[global] */
 
-/**
- * @typedef {{
- * list_up_btn: PiepNode
- * }} ListUpBtnTraitNodes
- */
-
 {
 	const trait_name = "list_up_btn";
 	registerCompTrait(trait_name, {
 		template: html`<button data-node="${trait_name}" class="btn subtle small"><i class="fas fa-chevron-up"></i></button>`,
 		initialize: (comp) => {
-			comp._nodes[trait_name].addEventListener("click", () => {
+			const n = comp._nodes[trait_name];
+			if (n._parent(".no_actions")) {
+				return;
+			}
+			n.addEventListener("click", () => {
 				/** @type {ListComp} */
 				// @ts-ignore
 				const parent = comp._parent_comp;
@@ -25,3 +23,8 @@
 		},
 	});
 }
+/**
+ * @typedef {{
+ * list_up_btn: PiepNode
+ * }} ListUpBtnTraitNodes
+ */

@@ -115,7 +115,7 @@ function productFeatureComp(comp, parent, data) {
 					<i class="fas fa-search"></i>
 				</button>
 			</div>
-			<list-comp data-bind="{${data.options}}">
+			<list-comp data-bind="{${data.options}}" data-primary="product_feature_option_id">
 				<product-feature-option-comp></product-feature-option-comp>
 			</list-comp>
 		`,

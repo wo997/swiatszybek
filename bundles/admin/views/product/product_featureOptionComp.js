@@ -33,7 +33,7 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 		template: html`
 			<div class="option_header">
 				<div class="title inline" html="{${data.name}}"></div>
-				<div>
+				<div class="no_actions">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>
@@ -47,20 +47,29 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 			// @ts-ignore
 			const product_comp = $("product-comp");
 
-			comp._nodes.delete_btn.addEventListener("click", () => {
-				const product_feature_option_ids = product_comp._data.product_feature_option_ids;
-				const id = product_feature_option_ids.indexOf(comp._data.product_feature_option_id);
+			comp._nodes.list_delete_btn.addEventListener("click", () => {
+				const pfoi = product_comp._data.product_feature_option_ids;
+				const id = pfoi.indexOf(comp._data.product_feature_option_id);
 				if (id !== -1) {
-					product_feature_option_ids.splice(id, 1);
+					pfoi.splice(id, 1);
 				}
 				product_comp._render();
 			});
 
-			comp._nodes.up_btn.addEventListener("click", () => {
-				const product_feature_option_ids = product_comp._data.product_feature_option_ids;
-				const id = product_feature_option_ids.indexOf(comp._data.product_feature_option_id);
+			comp._nodes.list_up_btn.addEventListener("click", () => {
+				const pfoi = product_comp._data.product_feature_option_ids;
+				const id = pfoi.indexOf(comp._data.product_feature_option_id);
 				if (id !== -1) {
-					product_feature_option_ids.splice(id, 1);
+					[pfoi[id], pfoi[id - 1]] = [pfoi[id - 1], pfoi[id]];
+				}
+				product_comp._render();
+			});
+
+			comp._nodes.list_down_btn.addEventListener("click", () => {
+				const pfoi = product_comp._data.product_feature_option_ids;
+				const id = pfoi.indexOf(comp._data.product_feature_option_id);
+				if (id !== -1) {
+					[pfoi[id], pfoi[id + 1]] = [pfoi[id + 1], pfoi[id]];
 				}
 				product_comp._render();
 			});

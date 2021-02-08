@@ -66,8 +66,8 @@ function productComp(comp, parent, data) {
 			feature.options = data.product_feature_option_ids
 				.filter((product_feature_option_id) => {
 					return (
-						product_feature_options.find((e) => {
-							return e.product_feature_option_id === product_feature_option_id;
+						product_feature_options.find((pfo) => {
+							return pfo.product_feature_option_id === product_feature_option_id;
 						}).product_feature_id === feature.product_feature_id
 					);
 				})
@@ -110,7 +110,7 @@ function productComp(comp, parent, data) {
 				<button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 			</div>
 
-			<list-comp data-bind="{${data.features}}" class="variants">
+			<list-comp data-bind="{${data.features}}" class="features" data-primary="product_feature_id">
 				<product_feature-comp></product_feature-comp>
 			</list-comp>
 
