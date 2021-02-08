@@ -45,7 +45,8 @@ datatable-comp {
 		margin: 4px 0;
 		display: inline-block;
 	}
-	.table_header .dt_cell {
+	/*.table_header */
+	.dt_cell {
 		display: flex;
 		align-items: center;
 	}

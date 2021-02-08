@@ -112,6 +112,7 @@ function registerModalScroll(modal) {
  * @param {{
  * source?: PiepNode
  * callback?: CallableFunction
+ * keep_size?: boolean
  * }} params
  */
 function showModal(name = null, params = {}) {
@@ -140,98 +141,92 @@ function showModal(name = null, params = {}) {
 				clearAllErrors(modal);
 				const modal_container = modal_wrapper_node._child(".modal_container");
 				modal_container.appendChild(modal);
+				const modal_content = modal._child("*");
 
 				registerModalScroll(modal);
 
 				modal.style.pointerEvents = "none";
 				modal.classList.add("visible");
 
-				// why a copy? it's required to get bounding client rect to work properly on modal open
-				modal_container.insertAdjacentHTML("beforeend", modal.outerHTML);
-				const modal_copy = $(modal_container.lastElementChild);
-				const modal_copy_content = modal_copy._child("*");
-				const modal_content = modal._child("*");
-				modal_copy.id = "";
+				const duration = 300;
+
+				const basic_callback = () => {
+					modal.style.pointerEvents = "";
+					modal.style.opacity = "";
+
+					if (params.callback) {
+						params.callback();
+					}
+				};
 
 				let dx = 0;
 				let dy = 0;
 				if (params.source) {
 					const src_rect = params.source.getBoundingClientRect();
-					const modal_rect = modal_copy_content.getBoundingClientRect();
+					const modal_rect = modal_content.getBoundingClientRect();
 					dx = src_rect.left - modal_rect.left + (src_rect.width - modal_rect.width) * 0.5;
 					dy = src_rect.top - modal_rect.top + (src_rect.height - modal_rect.height) * 0.5;
 				}
 
-				// observe changes and apply them to the copied modal
-				const observer = new MutationObserver(() => {
-					modal_copy_content.style.width = modal_content.offsetWidth + 1 + "px"; // weird but let's just keep it like this
-					modal_copy_content.style.height = modal_content.offsetHeight + 1 + "px";
+				const animation_1 = `0% {opacity: 0;} 100% {opacity: 1;}`;
+				const animation_2 = `0% {transform: translate(${dx * 0.5}px,${dy * 0.5}px)scale(0.5);}
+                    100% {transform: translate(0px,0px) scale(1);}`;
 
-					if (modalObserverTimeout) {
-						clearTimeout(modalObserverTimeout);
-					}
-					modalObserverTimeout = setTimeout(() => {
-						modalObserverTimeout = undefined;
-						modal_copy_content._set_content(modal_content.innerHTML);
-						modal_copy_content._children(".lazy").forEach((e) => {
-							e.classList.remove("lazy");
-						});
-						modal_copy_content._children("[data-height]").forEach((e) => {
-							e.removeAttribute("data-height");
-						});
-					}, 0);
-				});
-				observer.observe(modal, {
-					attributes: true,
-					childList: true,
-					subtree: true,
-				});
+				if (params.keep_size) {
+					// why a copy? it's required to get bounding client rect to work properly on modal open
+					modal_container.insertAdjacentHTML("beforeend", modal.outerHTML);
+					const modal_copy = $(modal_container.lastElementChild);
+					const modal_copy_content = modal_copy._child("*");
+					modal_copy.id = "";
 
-				modal.style.opacity = "0.001";
+					// observe changes and apply them to the copied modal
+					const observer = new MutationObserver(() => {
+						modal_copy_content.style.width = modal_content.offsetWidth + 1 + "px"; // weird but let's just keep it like this
+						modal_copy_content.style.height = modal_content.offsetHeight + 1 + "px";
 
-				const duration = 300;
-				modal_copy._animate(
-					`
-                        0% {
-                            opacity: 0;
-                        }
-                        100% {
-                            opacity: 1;
-                        }
-                    `,
-					duration
-				);
+						if (modalObserverTimeout) {
+							clearTimeout(modalObserverTimeout);
+						}
+						modalObserverTimeout = setTimeout(() => {
+							modalObserverTimeout = undefined;
+							modal_copy_content._set_content(modal_content.innerHTML);
+							modal_copy_content._children(".lazy").forEach((e) => {
+								e.classList.remove("lazy");
+							});
+							modal_copy_content._children("[data-height]").forEach((e) => {
+								e.removeAttribute("data-height");
+							});
+						}, 0);
+					});
+					observer.observe(modal, {
+						attributes: true,
+						childList: true,
+						subtree: true,
+					});
 
-				modal_copy_content._animate(
-					`
-                        0% {
-                            transform: translate(
-                                ${dx * 0.5}px,
-                                ${dy * 0.5}px)
-                            scale(0.5);
-                        }
-                        100% {
-                            transform: translate(0px,0px) scale(1);
-                        }
-                    `,
-					duration,
-					{
+					modal.style.opacity = "0.001";
+
+					modal_copy._animate(animation_1, duration);
+					modal_copy_content._animate(animation_2, duration, {
 						callback: () => {
-							modal.style.pointerEvents = "";
-							modal.style.opacity = "";
-							modal_copy.classList.remove("visible");
+							basic_callback();
 
+							modal_copy.classList.remove("visible");
 							setTimeout(() => {
 								observer.disconnect();
 								modal_copy.remove();
 							}, 100);
-
-							if (params.callback) {
-								params.callback();
-							}
 						},
-					}
-				);
+					});
+				} else {
+					modal._animate(animation_1, duration);
+					modal_content._animate(animation_2, duration, {
+						callback: () => {
+							basic_callback();
+						},
+					});
+				}
+
 				window.dispatchEvent(
 					new CustomEvent("modal-show", {
 						detail: {
