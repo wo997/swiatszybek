@@ -27,12 +27,12 @@ function productFeatureOptionComp(comp, parent, data) {
 			render: () => {},
 		});
 	};
-	//<p-checkbox class="square inline" data-bind="{${data.selected}}"></p-checkbox>
 
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="option_row">
 				<div style="margin-right:auto">
+					<p-checkbox class="square inline" data-bind="{${data.selected}}"></p-checkbox>
 					<input type="text" class="field inline small" data-bind="{${data.name}}" />
 				</div>
 				<div>

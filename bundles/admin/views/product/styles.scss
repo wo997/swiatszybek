@@ -52,16 +52,6 @@ product-comp {
 	}
 }
 
-product-feature-comp {
-	[data-node="select_parent_option_btn"] {
-		& {
-			transition: 0.2s opacity;
-		}
-		&:not(.active) {
-			opacity: 0;
-		}
-	}
-}
 product-feature-option-comp {
 	& {
 		padding: 5px;

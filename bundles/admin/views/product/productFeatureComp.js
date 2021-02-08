@@ -5,6 +5,8 @@
  * product_feature_id: number
  * name: string
  * options: ProductFeatureOptionCompData[]
+ * selection?: Array
+ * selection_ok?: boolean
  * }} ProductFeatureCompData
  *
  * @typedef {{
@@ -27,6 +29,9 @@
  */
 function productFeatureComp(comp, parent, data) {
 	comp._set_data = (data = { product_feature_id: -1, name: "", options: [] }, options = {}) => {
+		data.selection = data.options.filter((e) => e.selected);
+		data.selection_ok = data.selection.length > 0;
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {},
@@ -100,8 +105,14 @@ function productFeatureComp(comp, parent, data) {
 			<div class="label">
 				Opcje
 				<button class="btn primary small" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>
-				<button class="btn primary {active:${data.options.length > 0}} small" data-node="{${comp._nodes.select_parent_option_btn}}">
-					Połącz z opcją nadrzędną <i class="fas fa-search"></i>
+				<button
+					class="btn {important:${data.selection_ok}} {subtle:${!data.selection_ok}} small"
+					data-node="{${comp._nodes.select_parent_option_btn}}"
+					data-tooltip="{${!data.selection_ok ? "Najpierw wybierz opcje z listy poniżej" : ""}}"
+				>
+					Połącz <span class="semi-bold" html="{${data.selection.length ? "(" + data.selection.length + ")" : ""}}"></span> z opcją
+					nadrzędną
+					<i class="fas fa-search"></i>
 				</button>
 			</div>
 			<list-comp data-bind="{${data.options}}">
