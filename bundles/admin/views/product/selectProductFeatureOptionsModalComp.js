@@ -92,14 +92,14 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 			// @ts-ignore
 			const dt_product_feature_options = comp._child("datatable-comp");
 
-			dt_product_feature_options.addEventListener("dataset_set", (ev) => {
+			dt_product_feature_options.addEventListener("rows_set", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
 
 				/** @type {DatatableCompData} */
 				const data = detail.data;
-				data.dataset.forEach((data) => {
-					data.selected = product_comp._data.product_feature_option_ids.indexOf(data.product_feature_option_id) !== -1;
+				data.rows.forEach((data) => {
+					data.row.selected = product_comp._data.product_feature_option_ids.indexOf(data.row.product_feature_option_id) !== -1;
 				});
 			});
 

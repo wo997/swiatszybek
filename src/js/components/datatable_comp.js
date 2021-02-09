@@ -197,6 +197,14 @@ function datatableComp(comp, parent, data) {
 						return { row: d };
 					});
 
+					comp.dispatchEvent(
+						new CustomEvent("rows_set", {
+							detail: {
+								data: comp._data,
+							},
+						})
+					);
+
 					comp.classList.remove("freeze");
 					comp.classList.remove("searching");
 
@@ -265,13 +273,13 @@ function datatableComp(comp, parent, data) {
 			});
 		}
 
-		// comp.dispatchEvent(
-		// 	new CustomEvent("dataset_set", {
-		// 		detail: {
-		// 			data: comp._data,
-		// 		},
-		// 	})
-		// );
+		comp.dispatchEvent(
+			new CustomEvent("rows_set", {
+				detail: {
+					data: comp._data,
+				},
+			})
+		);
 
 		setCompData(comp, data, {
 			...options,
