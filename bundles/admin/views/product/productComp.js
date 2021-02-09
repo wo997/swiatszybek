@@ -83,6 +83,7 @@ function productComp(comp, parent, data) {
 		data.product_feature_ids = data.product_feature_ids.filter((e) => missing_feature_ids.indexOf(e) === -1);
 
 		const missing_option_ids = [];
+		const product_feature_option_ids = [];
 
 		data.features.forEach((feature) => {
 			feature.options = data.product_feature_option_ids
@@ -106,9 +107,36 @@ function productComp(comp, parent, data) {
 						name: fo.name,
 					};
 				});
+
+			product_feature_option_ids.push(...feature.options.map((option) => option.product_feature_option_id));
 		});
 
-		data.product_feature_option_ids = data.product_feature_option_ids.filter((e) => missing_option_ids.indexOf(e) === -1);
+		// important usage of product_feature_option_ids, these are ordered properly
+		data.product_feature_option_ids = product_feature_option_ids.filter((e) => missing_option_ids.indexOf(e) === -1);
+
+		// full product list
+		let cross_features = [[]];
+		data.features.forEach((feature) => {
+			const cross_features_next = [];
+			cross_features.forEach((feature_set) => {
+				feature.options.forEach((option) => {
+					const feature_set_copy = cloneObject(feature_set);
+
+					feature_set_copy.push(option.product_feature_option_id);
+					cross_features_next.push(feature_set_copy);
+				});
+			});
+			cross_features = cross_features_next;
+		});
+
+		cross_features.forEach((feature_set) => {
+			const define_as = {};
+			feature_set.forEach((product_feature_option_id) => {
+				const option = product_feature_options.find((fo) => fo.product_feature_option_id === product_feature_option_id);
+				define_as["feature_" + option.product_feature_id] = product_feature_option_id;
+			});
+			console.log(define_as);
+		});
 
 		setCompData(comp, data, {
 			...options,

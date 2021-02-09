@@ -91,12 +91,10 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 
 			comp._nodes.list_up_btn.addEventListener("click", () => {
 				doWithRow((pfi, id) => ([pfi[id], pfi[id - 1]] = [pfi[id - 1], pfi[id]]));
-				product_comp._render();
 			});
 
 			comp._nodes.list_down_btn.addEventListener("click", () => {
 				doWithRow((pfi, id) => ([pfi[id], pfi[id + 1]] = [pfi[id + 1], pfi[id]]));
-				product_comp._render();
 			});
 		},
 	});
