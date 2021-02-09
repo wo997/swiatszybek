@@ -169,9 +169,22 @@ function datatableComp(comp, parent, data) {
 
 		if (comp._data.search_url) {
 			const data = comp._data;
-			data.rows = data.dataset.map((e) => ({ row: e }));
+
+			data.rows = data.dataset.map((d) => {
+				return { row: d };
+			});
 			comp._render();
 		} else {
+			let cnt = -10000;
+			comp._data.dataset.forEach((d) => {
+				if (data.primary_key && d[data.primary_key] && d[data.primary_key] !== -1) {
+					d._row_id = d[data.primary_key];
+				} else {
+					cnt--;
+					d._row_id = cnt;
+				}
+			});
+
 			comp._client_search(options.immediately ? undefined : 0);
 		}
 	};
@@ -217,7 +230,13 @@ function datatableComp(comp, parent, data) {
 			const rc = data.pagination_data.row_count;
 			const pi = data.pagination_data.page_id;
 
-			data.rows = rows.slice(pi * rc, (pi + 1) * rc).map((e) => ({ row: e }));
+			data.rows = rows.slice(pi * rc, (pi + 1) * rc).map((e) => {
+				const ret = { row: e };
+				if (e._row_id) {
+					ret.row_id = e._row_id;
+				}
+				return ret;
+			});
 			comp._render();
 		};
 

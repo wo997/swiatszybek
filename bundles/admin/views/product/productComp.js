@@ -170,7 +170,7 @@ function productComp(comp, parent, data) {
 			});
 
 			if (missing_product) {
-				// TODO: check if list handles -1 correctly, hmmm, we shouldn't replace the data, but push and pop instead, but we do, right?
+				/** @type {ProductData} */
 				const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77 };
 
 				for (const [feature_id, option_id] of Object.entries(product_features)) {
