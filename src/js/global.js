@@ -576,6 +576,10 @@ function isEquivalent(a, b) {
 			if (!isEquivalent(a[prop], b[prop])) {
 				return false;
 			}
+		} else if (typeof a[prop] === "function") {
+			if (a[prop].toString() !== b[prop].toString()) {
+				return false;
+			}
 		} else {
 			if (a[prop] !== b[prop]) {
 				return false;

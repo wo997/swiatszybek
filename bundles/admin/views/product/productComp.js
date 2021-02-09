@@ -124,28 +124,66 @@ function productComp(comp, parent, data) {
 		const getFeatureKeyFromId = (feature_id) => {
 			return `feature_${feature_id}`;
 		};
+		const getFeatureIdFromKey = (key) => {
+			const feature_id = +key.replace(`feature_`, "");
+			if (isNaN(feature_id)) {
+				return 0;
+			}
+			return feature_id;
+		};
 
 		data.product_feature_ids.forEach((feature_id) => {
 			const key = getFeatureKeyFromId(feature_id);
-			if (!data.products_dt.columns.find((column) => column.key === key)) {
-				const feature = product_features.find((feature) => feature.product_feature_id === feature_id);
-				data.products_dt.columns.unshift({
-					key,
-					label: feature.name,
-					width: "10%",
-					searchable: "string",
-					sortable: true,
-					render: (data) => {
-						const option_id = data[key];
-						const option = product_feature_options.find((option) => option.product_feature_option_id === option_id);
-						if (option) {
-							return option.name;
-						}
-						return "-";
-					},
-				});
+			const feature = product_features.find((feature) => feature.product_feature_id === feature_id);
+			const column = {
+				key,
+				label: feature.name,
+				width: "10%",
+				searchable: "string",
+				sortable: true,
+				render: (data) => {
+					const option_id = data[key];
+					const option = product_feature_options.find((option) => option.product_feature_option_id === option_id);
+					if (option) {
+						return option.name;
+					}
+					return "-";
+				},
+			};
+
+			const columns = data.products_dt.columns;
+			const column_index = columns.findIndex((column) => column.key === key);
+
+			if (column_index !== -1) {
+				if (!isEquivalent(columns[column_index], column)) {
+					columns[column_index] = column;
+				}
+			} else {
+				columns.unshift(column);
 			}
 		});
+
+		let any_column_change = false;
+		let column_index = -1;
+		let features_count = 0;
+		/** @type {DatatableColumnDef[]} */
+		const feature_columns = [];
+		data.products_dt.columns.forEach((column) => {
+			column_index++;
+			const feature_id = getFeatureIdFromKey(column.key);
+			if (feature_id) {
+				features_count++;
+				const req_column_index = data.product_feature_ids.indexOf(feature_id);
+				feature_columns[req_column_index] = column;
+				if (req_column_index !== column_index) {
+					any_column_change = true;
+				}
+			}
+		});
+
+		if (any_column_change) {
+			data.products_dt.columns.splice(0, features_count, ...feature_columns);
+		}
 
 		cross_features.forEach((feature_set) => {
 			const product_features = {};
@@ -226,7 +264,7 @@ function productComp(comp, parent, data) {
 			registerModalContent(html`
 				<div id="selectProductFeatures" data-expand data-dismissable>
 					<div class="modal-body">
-						<select-product-features-modal-comp></select-product-features-modal-comp>
+						<select-product-features-modal-comp class="flex_stretch"></select-product-features-modal-comp>
 					</div>
 				</div>
 			`);
@@ -240,7 +278,7 @@ function productComp(comp, parent, data) {
 			registerModalContent(html`
 				<div id="selectProductFeatureOptions" data-expand data-dismissable>
 					<div class="modal-body">
-						<select-product-feature-options-modal-comp></select-product-feature-options-modal-comp>
+						<select-product-feature-options-modal-comp class="flex_stretch"></select-product-feature-options-modal-comp>
 					</div>
 				</div>
 			`);
@@ -254,7 +292,7 @@ function productComp(comp, parent, data) {
 			registerModalContent(html`
 				<div id="productFeature" data-expand data-dismissable>
 					<div class="modal-body">
-						<product-feature-modal-comp></product-feature-modal-comp>
+						<product-feature-modal-comp class="flex_stretch"></product-feature-modal-comp>
 					</div>
 				</div>
 			`);
