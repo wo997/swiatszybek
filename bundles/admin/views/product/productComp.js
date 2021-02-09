@@ -52,7 +52,7 @@ function productComp(comp, parent, data) {
 			{ key: "product_id", label: "ID", width: "10%", sortable: true, searchable: "number" },
 			{ key: "name", label: "Nazwa", width: "10%", sortable: true, searchable: "string" },
 			{ key: "net_price", label: "Cena Netto", width: "10%", sortable: true, searchable: "number" },
-			{ key: "vat", label: "Vat", width: "10%", sortable: true, searchable: "number" },
+			{ key: "vat", label: "Vat (daj stały wyżej)", width: "10%", sortable: true, searchable: "number" },
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
 		],
 		dataset: products,
@@ -130,12 +130,23 @@ function productComp(comp, parent, data) {
 		});
 
 		cross_features.forEach((feature_set) => {
-			const define_as = {};
+			const product_features = {};
 			feature_set.forEach((product_feature_option_id) => {
 				const option = product_feature_options.find((fo) => fo.product_feature_option_id === product_feature_option_id);
-				define_as["feature_" + option.product_feature_id] = product_feature_option_id;
+				product_features[option.product_feature_id] = product_feature_option_id;
 			});
-			console.log(define_as);
+			console.log(product_features);
+		});
+
+		const getFeatureKeyFromId = (feature_id) => {
+			return `feature_${feature_id}`;
+		};
+
+		data.product_feature_ids.forEach((feature_id) => {
+			const key = getFeatureKeyFromId(feature_id);
+			if (!data.products_dt.columns.find((column) => column.key === key)) {
+				data.products_dt.columns.unshift({ key, label: "haha", width: "10%", searchable: "string", sortable: true });
+			}
 		});
 
 		setCompData(comp, data, {

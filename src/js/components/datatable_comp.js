@@ -295,6 +295,7 @@ function datatableComp(comp, parent, data) {
 					!comp._prev_data ||
 					cd.sort ||
 					cd.filters ||
+					cd.columns ||
 					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
 					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count;
 
