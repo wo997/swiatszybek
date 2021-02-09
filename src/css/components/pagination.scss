@@ -7,10 +7,6 @@ pagination-comp {
 		justify-content: center;
 	}
 
-	.arrows .btn {
-		--btn-border-clr: #ddd;
-		margin-right: -1px;
-	}
 	.arrows .btn:disabled {
 		opacity: 0.4;
 	}

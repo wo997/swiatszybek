@@ -88,9 +88,9 @@ function listComp(comp, parent, data = []) {
 				}
 
 				finishNodeAnimation(comp);
-				let row_c = 0;
+				let row_c_before = 0;
 				comp._getRows().forEach((e) => {
-					row_c++;
+					row_c_before++;
 					finishNodeAnimation(e);
 				});
 
@@ -103,23 +103,6 @@ function listComp(comp, parent, data = []) {
 
 				let added = 0;
 				let removed = 0;
-
-				//if (!instant) {
-				for (const d of diff) {
-					if (d.from === -1) {
-						added++;
-					}
-					if (d.to === -1) {
-						removed++;
-					}
-				}
-				//}
-
-				// adding and removing, if we have too many of these we won't animate the list, simple
-				if (added * removed > row_c * row_c * 0.25) {
-					//instant = true;
-					chaos = true;
-				}
 
 				const animation_duration = instant ? 0 : 250;
 
@@ -146,6 +129,7 @@ function listComp(comp, parent, data = []) {
 						// @ts-ignore
 						child = $(document.createElement("DIV"));
 						child.classList.add("list_row", "cramp_row");
+						added++;
 					}
 
 					if (remove) {
@@ -154,6 +138,7 @@ function listComp(comp, parent, data = []) {
 						}, animation_duration);
 
 						removed_before_current++;
+						removed++;
 					}
 
 					const target_index_real = diff_info.target_index + removed_before_current;
@@ -189,6 +174,14 @@ function listComp(comp, parent, data = []) {
 						child.rect_before = child.getBoundingClientRect();
 					}
 				});
+
+				// adding and removing, if we have too many of these we won't animate the list, simple
+				const row_c_after = diff_with_target_index.length - removed;
+				const row_c = Math.min(row_c_before, row_c_after);
+				if (added * removed > row_c * row_c * 0.25) {
+					//instant = true;
+					chaos = true;
+				}
 
 				registerForms();
 

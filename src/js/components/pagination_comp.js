@@ -64,7 +64,7 @@ function paginationComp(comp, parent, data = {}) {
 			<div class="pages">
 				<select data-bind="{${data.row_count}}" class="field inline" data-number>
 					<option value="1">1</option>
-					<option value="4">4</option>
+					<option value="5">5</option>
 					<option value="10">10</option>
 					<option value="15">15</option>
 					<option value="20">20</option>
@@ -77,7 +77,7 @@ function paginationComp(comp, parent, data = {}) {
 				<button class="btn subtle" disabled="{${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
 					<i class="fas fa-chevron-left"></i>
 				</button>
-				<div style="position:relative">
+				<div style="position:relative;margin:0 -1px">
 					<select data-node="{${comp._nodes.select}}" class="field inline" data-number data-bind="{${data.page_id}}"></select>
 					<div class="select_overlay" data-node="{${comp._nodes.select_overlay}}"></div>
 				</div>
