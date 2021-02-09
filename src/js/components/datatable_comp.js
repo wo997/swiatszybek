@@ -192,6 +192,7 @@ function datatableComp(comp, parent, data) {
 			if (qs) {
 				rows = rows.filter((r) => {
 					for (const v of Object.values(r)) {
+						// TODO: split qs and hope that all pieces match
 						if ((v + "").indexOf(qs) !== -1) {
 							return true;
 						}

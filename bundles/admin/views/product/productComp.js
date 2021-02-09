@@ -26,6 +26,7 @@
  *  _getData()
  *  _nodes: {
  *      add_variant_btn: PiepNode
+ *      all_products: DatatableComp
  *  }
  * } & BaseComp} ProductComp
  */
@@ -36,16 +37,6 @@
  * @param {ProductCompData} data
  */
 function productComp(comp, parent, data) {
-	/** @type {ProductData[]} */
-	const products = [
-		{ product_id: 2, name: "sadfas", gross_price: 234, net_price: 40, vat: 23 },
-		{ product_id: 3, name: "a", gross_price: 234, net_price: 12, vat: 23 },
-		{ product_id: 4, name: "b", gross_price: 100, net_price: 40, vat: 5 },
-		{ product_id: 5, name: "c", gross_price: 264, net_price: 4, vat: 8 },
-		{ product_id: 6, name: "b", gross_price: 100, net_price: 40, vat: 5 },
-		{ product_id: 7, name: "c", gross_price: 264, net_price: 4, vat: 8 },
-	]; // will be empty
-
 	/** @type {DatatableCompData} */
 	const table = {
 		columns: [
@@ -55,12 +46,13 @@ function productComp(comp, parent, data) {
 			{ key: "vat", label: "Vat (daj stały wyżej)", width: "10%", sortable: true, searchable: "number" },
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
 		],
-		dataset: products,
+		dataset: [],
 		label: "Pełna lista produktów",
 		primary_key: "product_id",
 	};
 
 	data.products_dt = def(data.products_dt, table);
+	data.products = [];
 
 	comp._set_data = (data, options = {}) => {
 		const missing_feature_ids = [];
@@ -129,15 +121,6 @@ function productComp(comp, parent, data) {
 			cross_features = cross_features_next;
 		});
 
-		cross_features.forEach((feature_set) => {
-			const product_features = {};
-			feature_set.forEach((product_feature_option_id) => {
-				const option = product_feature_options.find((fo) => fo.product_feature_option_id === product_feature_option_id);
-				product_features[option.product_feature_id] = product_feature_option_id;
-			});
-			console.log(product_features);
-		});
-
 		const getFeatureKeyFromId = (feature_id) => {
 			return `feature_${feature_id}`;
 		};
@@ -145,9 +128,60 @@ function productComp(comp, parent, data) {
 		data.product_feature_ids.forEach((feature_id) => {
 			const key = getFeatureKeyFromId(feature_id);
 			if (!data.products_dt.columns.find((column) => column.key === key)) {
-				data.products_dt.columns.unshift({ key, label: "haha", width: "10%", searchable: "string", sortable: true });
+				const feature = product_features.find((feature) => feature.product_feature_id === feature_id);
+				data.products_dt.columns.unshift({
+					key,
+					label: feature.name,
+					width: "10%",
+					searchable: "string",
+					sortable: true,
+					render: (data) => {
+						const option_id = data[key];
+						const option = product_feature_options.find((option) => option.product_feature_option_id === option_id);
+						if (option) {
+							return option.name;
+						}
+						return "-";
+					},
+				});
 			}
 		});
+
+		cross_features.forEach((feature_set) => {
+			const product_features = {};
+			feature_set.forEach((product_feature_option_id) => {
+				const option = product_feature_options.find((fo) => fo.product_feature_option_id === product_feature_option_id);
+				product_features[option.product_feature_id] = product_feature_option_id;
+			});
+
+			let missing_product = true;
+			data.products.forEach((product) => {
+				let options_match = true;
+				for (const [feature_id, option_id] of Object.entries(product_features)) {
+					const key = getFeatureKeyFromId(feature_id);
+					if (product[key] !== option_id) {
+						options_match = false;
+						break;
+					}
+				}
+				if (options_match) {
+					missing_product = false;
+				}
+			});
+
+			if (missing_product) {
+				// TODO: check if list handles -1 correctly, hmmm, we shouldn't replace the data, but push and pop instead, but we do, right?
+				const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77 };
+
+				for (const [feature_id, option_id] of Object.entries(product_features)) {
+					const key = getFeatureKeyFromId(feature_id);
+					product_data[key] = option_id;
+				}
+				data.products.push(product_data);
+			}
+		});
+
+		comp._nodes.all_products._set_dataset(data.products);
 
 		setCompData(comp, data, {
 			...options,
@@ -181,7 +215,7 @@ function productComp(comp, parent, data) {
 			</list-comp>
 
 			<div class="label"></div>
-			<datatable-comp data-bind="{${data.products_dt}}"></datatable-comp>
+			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
 
 			<h3>Display form json</h3>
 			<div html="{${JSON.stringify(data)}}"></div>

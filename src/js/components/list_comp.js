@@ -60,7 +60,7 @@ function listComp(comp, parent, data = []) {
 					});
 					row_data.row_id = ref;
 				}
-				if (row_data.row_id === undefined) {
+				if (row_data.row_id === undefined || row_data.row_id === -1) {
 					if (nextRowId === 0) {
 						nextRowId = applyToArray(Math.min, [...data.map((e) => e.row_id).filter((e) => e), -1000]); // that will be unique for sure
 					}
