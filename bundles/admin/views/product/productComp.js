@@ -181,12 +181,12 @@ function productComp(comp, parent, data) {
 			}
 		});
 
-		comp._nodes.all_products._set_dataset(data.products);
-
 		setCompData(comp, data, {
 			...options,
 			render: () => {
 				//expand(comp._nodes.case_sell_by_qty, data.sell_by === "qty");
+
+				comp._nodes.all_products._set_dataset(data.products, { immediately: true });
 			},
 		});
 	};

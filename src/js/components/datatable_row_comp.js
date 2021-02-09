@@ -30,6 +30,10 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 				/** @type {string[]} */
 				let cells_html = [];
 
+				if (data.columns === undefined) {
+					console.trace();
+				}
+
 				for (const column of data.columns) {
 					let cell_html = "";
 

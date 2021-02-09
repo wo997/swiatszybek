@@ -185,65 +185,7 @@ function datatableComp(comp, parent, data) {
 				}
 			});
 
-			comp._client_search(options.immediately ? undefined : 0);
-		}
-	};
-
-	comp._client_search = (delay) => {
-		if (comp._search_timeout) {
-			clearTimeout(comp._search_timeout);
-			comp._search_timeout = undefined;
-		}
-
-		const action = () => {
-			const data = comp._data;
-
-			/** @type {Array} */
-			let rows = cloneObject(data.dataset);
-
-			const qs = data.quick_search.trim();
-			if (qs) {
-				rows = rows.filter((r) => {
-					for (const v of Object.values(r)) {
-						// TODO: split qs and hope that all pieces match
-						if ((v + "").indexOf(qs) !== -1) {
-							return true;
-						}
-					}
-
-					return false;
-				});
-			}
-
-			if (data.sort) {
-				const sort_key = data.sort.key;
-				const order = data.sort.order === "asc" ? 1 : -1;
-				rows = rows.sort((a, b) => {
-					if (a[sort_key] < b[sort_key]) return -order;
-					if (a[sort_key] > b[sort_key]) return order;
-					return 0;
-				});
-			}
-
-			data.pagination_data.total_rows = rows.length;
-
-			const rc = data.pagination_data.row_count;
-			const pi = data.pagination_data.page_id;
-
-			data.rows = rows.slice(pi * rc, (pi + 1) * rc).map((e) => {
-				const ret = { row: e };
-				if (e._row_id) {
-					ret.row_id = e._row_id;
-				}
-				return ret;
-			});
 			comp._render();
-		};
-
-		if (delay === undefined) {
-			action();
-		} else {
-			comp._search_timeout = setTimeout(action, delay);
 		}
 	};
 
@@ -297,6 +239,48 @@ function datatableComp(comp, parent, data) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		if (!data.search_url) {
+			/** @type {Array} */
+			let rows = cloneObject(data.dataset);
+
+			const qs = def(data.quick_search, "").trim();
+			if (qs) {
+				rows = rows.filter((r) => {
+					for (const v of Object.values(r)) {
+						// TODO: split qs and hope that all pieces match
+						if ((v + "").indexOf(qs) !== -1) {
+							return true;
+						}
+					}
+
+					return false;
+				});
+			}
+
+			if (data.sort) {
+				const sort_key = data.sort.key;
+				const order = data.sort.order === "asc" ? 1 : -1;
+				rows = rows.sort((a, b) => {
+					if (a[sort_key] < b[sort_key]) return -order;
+					if (a[sort_key] > b[sort_key]) return order;
+					return 0;
+				});
+			}
+
+			data.pagination_data.total_rows = rows.length;
+
+			const rc = data.pagination_data.row_count;
+			const pi = data.pagination_data.page_id;
+
+			data.rows = rows.slice(pi * rc, (pi + 1) * rc).map((e) => {
+				const ret = { row: e };
+				if (e._row_id) {
+					ret.row_id = e._row_id;
+				}
+				return ret;
+			});
+		}
+
 		setCompData(comp, data, {
 			...options,
 			pass_list_data: [{ what: "columns", where: "rows" }],
@@ -306,8 +290,6 @@ function datatableComp(comp, parent, data) {
 				if (cd.quick_search) {
 					if (data.search_url) {
 						comp._datatable_search(300);
-					} else {
-						comp._client_search(300);
 					}
 				}
 
@@ -377,8 +359,6 @@ function datatableComp(comp, parent, data) {
 
 					if (data.search_url) {
 						comp._datatable_search(0);
-					} else {
-						comp._client_search(0);
 					}
 				}
 
@@ -507,20 +487,18 @@ function datatableComp(comp, parent, data) {
 				data.quick_search = "";
 				data.sort = false;
 				data.pagination_data.page_id = 0;
+				comp._render();
 
 				if (data.search_url) {
-					comp._render();
 					comp._datatable_search(0);
-				} else {
-					comp._client_search(0);
 				}
 			});
 		},
 		unfreeze_by_self: true,
 		ready: () => {
-			// warmup
+			// warmup, uhm no?
 			if (comp.dataset) {
-				comp._set_dataset(comp._data.dataset);
+				//comp._set_dataset(comp._data.dataset);
 			}
 		},
 	});
