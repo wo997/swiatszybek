@@ -41,7 +41,7 @@ function clearCompHistory(c) {
 	}
 	comp._data_history = [];
 	if (comp._data) {
-		comp._data_history.push(JSON.stringify(comp._data));
+		comp._data_history.push(cloneObject(comp._data));
 	}
 	comp._history_steps_back = 0;
 	comp._active_element = undefined;
@@ -63,7 +63,7 @@ registerCompTrait("history", {
 		const setCompDataFromHistory = () => {
 			comp.classList.add("freeze");
 			comp._setting_data_from_history = true;
-			comp._set_data(JSON.parse(comp._data_history[comp._data_history.length - 1 - comp._history_steps_back]));
+			comp._set_data(comp._data_history[comp._data_history.length - 1 - comp._history_steps_back]);
 			setTimeout(() => {
 				comp._setting_data_from_history = false;
 				comp.classList.remove("freeze");
@@ -92,14 +92,15 @@ registerCompTrait("history", {
 		}
 
 		setTimeout(() => {
-			const json = JSON.stringify(comp._data);
-
 			if (comp._history_steps_back > 0) {
 				comp._data_history.splice(comp._data_history.length - comp._history_steps_back, comp._history_steps_back);
 				comp._history_steps_back = 0;
 			} else if (history_attention) {
 				history_attention = false;
-			} else if (comp._active_element === document.activeElement && json !== def(comp._data_history[comp._data_history.length - 2])) {
+			} else if (
+				comp._active_element === document.activeElement &&
+				!isEquivalent(comp._data, comp._data_history[comp._data_history.length - 2])
+			) {
 				comp._data_history.splice(comp._data_history.length - 1, 1);
 			}
 			comp._active_element = document.activeElement;
@@ -113,8 +114,8 @@ registerCompTrait("history", {
 			}, 3000);
 
 			if (comp._data) {
-				if (json !== getLast(comp._data_history)) {
-					comp._data_history.push(json);
+				if (!isEquivalent(comp._data, getLast(comp._data_history))) {
+					comp._data_history.push(cloneObject(comp._data));
 				}
 			}
 

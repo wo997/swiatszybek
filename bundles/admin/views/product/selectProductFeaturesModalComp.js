@@ -152,7 +152,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						product_comp._data.product_feature_ids.push(+list_row.dataset.primary);
 						//product_comp._data.features.push({ product_feature_id: +list_row.dataset.primary, options: [] });
 						product_comp._render();
-						comp._nodes.datatable._set_dataset();
+						comp._nodes.datatable._render();
 
 						showNotification("Dodano cechę produktu", {
 							one_line: true,
@@ -172,7 +172,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						if (ind !== -1) {
 							product_comp._data.features.splice(ind, 1);
 							product_comp._render();
-							comp._nodes.datatable._set_dataset();
+							comp._nodes.datatable._render();
 
 							showNotification("Usunięto cechę produktu", {
 								one_line: true,

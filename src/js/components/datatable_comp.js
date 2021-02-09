@@ -61,7 +61,6 @@
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
  * _load_state(data_obj)
- * _set_dataset(Array, options?: {immediately?: boolean})
  * } & BaseComp} DatatableComp
  */
 
@@ -154,41 +153,6 @@ function datatableComp(comp, parent, data) {
 		rewriteState(state, data_obj);
 	};
 
-	comp._set_dataset = (dataset = undefined, options = {}) => {
-		if (dataset) {
-			comp._data.dataset = dataset;
-		}
-
-		comp.dispatchEvent(
-			new CustomEvent("dataset_set", {
-				detail: {
-					data: comp._data,
-				},
-			})
-		);
-
-		if (comp._data.search_url) {
-			const data = comp._data;
-
-			data.rows = data.dataset.map((d) => {
-				return { row: d };
-			});
-			comp._render();
-		} else {
-			let cnt = -10000;
-			comp._data.dataset.forEach((d) => {
-				if (data.primary_key && d[data.primary_key] && d[data.primary_key] !== -1) {
-					d._row_id = d[data.primary_key];
-				} else {
-					cnt--;
-					d._row_id = cnt;
-				}
-			});
-
-			comp._render();
-		}
-	};
-
 	comp._datatable_search = (delay = 0) => {
 		if (comp._search_timeout) {
 			clearTimeout(comp._search_timeout);
@@ -229,10 +193,14 @@ function datatableComp(comp, parent, data) {
 					data.pagination_data.page_count = res.page_count;
 					data.pagination_data.total_rows = res.total_rows;
 
-					comp._set_dataset(res.rows);
+					data.rows = res.rows.map((d) => {
+						return { row: d };
+					});
 
 					comp.classList.remove("freeze");
 					comp.classList.remove("searching");
+
+					comp._render();
 				},
 			});
 		}, delay);
@@ -246,9 +214,25 @@ function datatableComp(comp, parent, data) {
 			const qs = def(data.quick_search, "").trim();
 			if (qs) {
 				rows = rows.filter((r) => {
-					for (const v of Object.values(r)) {
+					for (let [key, val] of Object.entries(r)) {
+						const column = data.columns.find((e) => e.key === key);
+
+						if (column && column.render) {
+							val = column.render(r);
+						}
+
+						/**
+						 * @param {string} str
+						 */
+						const minify_word = (str) => {
+							if (!str) {
+								return "";
+							}
+							return replacePolishLetters((str + "").toLocaleLowerCase());
+						};
+
 						// TODO: split qs and hope that all pieces match
-						if ((v + "").indexOf(qs) !== -1) {
+						if (minify_word(val).indexOf(minify_word(qs)) !== -1) {
 							return true;
 						}
 					}
@@ -280,6 +264,14 @@ function datatableComp(comp, parent, data) {
 				return ret;
 			});
 		}
+
+		// comp.dispatchEvent(
+		// 	new CustomEvent("dataset_set", {
+		// 		detail: {
+		// 			data: comp._data,
+		// 		},
+		// 	})
+		// );
 
 		setCompData(comp, data, {
 			...options,
@@ -495,11 +487,5 @@ function datatableComp(comp, parent, data) {
 			});
 		},
 		unfreeze_by_self: true,
-		ready: () => {
-			// warmup, uhm no?
-			if (comp.dataset) {
-				//comp._set_dataset(comp._data.dataset);
-			}
-		},
 	});
 }

@@ -186,7 +186,8 @@ function productComp(comp, parent, data) {
 			render: () => {
 				//expand(comp._nodes.case_sell_by_qty, data.sell_by === "qty");
 
-				comp._nodes.all_products._set_dataset(data.products, { immediately: true });
+				comp._nodes.all_products._data.dataset = data.products;
+				comp._nodes.all_products._render();
 			},
 		});
 	};

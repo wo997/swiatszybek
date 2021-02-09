@@ -54,10 +54,8 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		comp._nodes.close_btn.classList.add("subtle");
 		comp._nodes.close_btn.classList.remove("important");
 
-		comp._nodes.datatable._set_dataset(
-			product_feature_options.filter((e) => e.product_feature_id === product_feature_id),
-			{ immediately: true }
-		);
+		comp._nodes.datatable._data.dataset = product_feature_options.filter((e) => e.product_feature_id === product_feature_id);
+		comp._nodes.datatable._render();
 
 		setTimeout(() => {
 			showModal("selectProductFeatureOptions", {
@@ -114,7 +112,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					if (list_row) {
 						product_comp._data.product_feature_option_ids.push(+list_row.dataset.primary);
 						product_comp._render();
-						comp._nodes.datatable._set_dataset();
+						comp._nodes.datatable._render();
 
 						showNotification("Dodano opcję", {
 							one_line: true,
@@ -134,7 +132,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 						if (ind !== -1) {
 							product_comp._data.product_feature_option_ids.splice(ind, 1);
 							product_comp._render();
-							comp._nodes.datatable._set_dataset();
+							comp._nodes.datatable._render();
 
 							showNotification("Usunięto opcję", {
 								one_line: true,
