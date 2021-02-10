@@ -11,6 +11,7 @@ setTimeout(windowHeightResizeCallback);
 window.addEventListener("resize", windowHeightResizeCallback);
 window.addEventListener("touchend", windowHeightResizeCallback);
 if (IS_TOUCH_DEVICE) {
+	// important
 	window.addEventListener("scroll", windowHeightResizeCallback);
 }
 
@@ -35,11 +36,7 @@ function smoothScroll(diff, params = {}) {
 
 	var scroll_parent = def(params.scroll_parent, window);
 
-	scroll_parent.scrollBy(
-		0,
-		(4 * diff * (duration / 2 - Math.abs(duration / 2 - t))) /
-			(duration * duration)
-	);
+	scroll_parent.scrollBy(0, (4 * diff * (duration / 2 - Math.abs(duration / 2 - t))) / (duration * duration));
 
 	if (t == 0 && tooltip && Math.abs(diff) > 5) {
 		tooltip.dismiss();
