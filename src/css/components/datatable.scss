@@ -18,6 +18,7 @@ datatable-comp {
 	.dt_cell {
 		padding: 6px 8px;
 		flex-grow: 1;
+		min-height: 55px;
 	}
 	.dt_cell:not(:last-child) {
 		border-right: 1px solid #0001;
