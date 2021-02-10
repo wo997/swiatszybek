@@ -10,9 +10,11 @@ product-comp {
 		.list_row {
 			& {
 				padding: 10px;
+				border: 1px solid #ccc;
+				margin: -1px;
 			}
-			&:not(:first-child) {
-				border-top: 1px solid #ccc;
+			&:first-child {
+				margin-top: 0;
 			}
 		}
 	}
@@ -69,6 +71,11 @@ product-feature-option-comp {
 	& {
 		padding: 5px;
 		border: 1px solid #ccc;
+		margin: -1px;
+		background: #fff;
+	}
+	&:first-child {
+		margin-top: 0;
 	}
 	.option_row {
 		display: flex;

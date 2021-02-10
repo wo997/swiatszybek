@@ -54,8 +54,10 @@ let list_grab = {
 				list_grab.place_index++;
 			}
 
+			let d = (edy - etry) * 0.2;
+			d = clamp(-20, d, 20);
 			// @ts-ignore
-			e._translateY = etry * 0.8 + edy * 0.2;
+			e._translateY += d;
 			// @ts-ignore
 			e.style.transform = `translateY(${Math.round(e._translateY)}px)`;
 		});
