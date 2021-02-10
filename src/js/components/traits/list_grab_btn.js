@@ -43,10 +43,10 @@ let list_grab = {
 			// @ts-ignore
 			const etry = def(e._translateY, 0);
 			let edy = 0;
-			if (er.top - etry + er.height > r.top + r.height * 0.5 && above) {
+			if (er.top - etry + er.height * 0.5 > r.top && above) {
 				edy = r.height;
 			}
-			if (er.top - etry < r.top + r.height * 0.5 && !above) {
+			if (er.top - etry + er.height * 0.5 < r.top + r.height && !above) {
 				edy = -r.height;
 			}
 
@@ -83,7 +83,6 @@ document.addEventListener("mouseup", () => {
 	list_grab.row.classList.remove("grabbed");
 	list_grab.list.classList.remove("row_grabbed");
 	list_grab.row = undefined;
-	console.log(list_grab);
 });
 
 {

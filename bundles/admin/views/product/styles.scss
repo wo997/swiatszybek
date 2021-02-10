@@ -13,9 +13,6 @@ product-comp {
 				border: 1px solid #ccc;
 				margin: -1px;
 			}
-			&:first-child {
-				margin-top: 0;
-			}
 		}
 	}
 
@@ -70,9 +67,6 @@ product-feature-option-comp {
 		border: 1px solid #ccc;
 		margin: -1px;
 		background: #fff;
-	}
-	&:first-child {
-		margin-top: 0;
 	}
 	.option_row {
 		display: flex;
