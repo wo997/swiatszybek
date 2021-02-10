@@ -5,8 +5,8 @@
  * _data: Array
  * _prev_data: Array
  * _set_data(data?: Array, options?: SetCompDataOptions)
- * _removeRow(row_index: number)
- * _moveRow(from: number, to: number)
+ * _remove_row(row_index: number)
+ * _move_row(from: number, to: number)
  * _getRows(): AnyComp[]
  * _row_template: string
  * _primary_key: string | undefined
@@ -344,24 +344,47 @@ function listComp(comp, parent, data = []) {
 				return res;
 			};
 
-			comp._removeRow = (row_index) => {
-				const remove_index = comp._data.findIndex((d) => {
-					return d.row_index === row_index;
-				});
-				if (remove_index !== -1) {
-					comp._data.splice(remove_index, 1);
-					comp._render();
+			let res = {};
+			comp._remove_row = (row_index) => {
+				comp.dispatchEvent(
+					new CustomEvent("remove_row", {
+						detail: {
+							row_index,
+							res,
+						},
+					})
+				);
+				if (!res.removed) {
+					const remove_index = comp._data.findIndex((d) => {
+						return d.row_index === row_index;
+					});
+					if (remove_index !== -1) {
+						comp._data.splice(remove_index, 1);
+						comp._render();
+					}
 				}
 			};
 
-			comp._moveRow = (from, to) => {
-				const data = comp._data;
-				from = clamp(0, from, data.length - 1);
-				to = clamp(0, to, data.length - 1);
+			res = {};
+			comp._move_row = (from, to) => {
+				comp.dispatchEvent(
+					new CustomEvent("move_row", {
+						detail: {
+							from,
+							to,
+							res,
+						},
+					})
+				);
+				if (!res.moved) {
+					const data = comp._data;
+					from = clamp(0, from, data.length - 1);
+					to = clamp(0, to, data.length - 1);
 
-				const temp = data.splice(from, 1);
-				data.splice(to, 0, ...temp);
-				comp._render();
+					const temp = data.splice(from, 1);
+					data.splice(to, 0, ...temp);
+					comp._render();
+				}
 			};
 		},
 	});

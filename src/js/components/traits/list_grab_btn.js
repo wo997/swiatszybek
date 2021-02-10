@@ -75,8 +75,8 @@ document.addEventListener("mouseup", () => {
 	/** @type {ListComp} */
 	// @ts-ignore
 	const parent = comp._parent_comp;
-	if (parent._moveRow) {
-		parent._moveRow(comp._data.row_index, list_grab.place_index);
+	if (parent._move_row) {
+		parent._move_row(comp._data.row_index, list_grab.place_index);
 	}
 
 	list_grab.row.style.transform = ``;
@@ -129,10 +129,6 @@ document.addEventListener("mouseup", () => {
 
 				list_grab.animate();
 			});
-			if (n._parent(".no_actions")) {
-				// ugh, event listeners?
-				return;
-			}
 		},
 	});
 }

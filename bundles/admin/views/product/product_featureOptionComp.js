@@ -33,7 +33,7 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 		template: html`
 			<div class="option_header">
 				<div class="title inline" html="{${data.name}}"></div>
-				<div class="no_actions">
+				<div>
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>
@@ -43,27 +43,54 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 			// @ts-ignore
 			const product_comp = $("product-comp");
 
-			const doWithRow = (action) => {
+			/** @type {ListComp} */
+			// @ts-ignore
+			const list = comp._parent_comp;
+
+			list.addEventListener("remove_row", (ev) => {
+				// @ts-ignore
+				const detail = ev.detail;
+				if (detail.res.removed) {
+					return;
+				}
+
+				if (detail.row_index !== comp._data.row_index) {
+					return;
+				}
+
+				detail.res.removed = true;
+
 				const pfoi = product_comp._data.product_feature_option_ids;
 				const id = pfoi.indexOf(comp._data.product_feature_option_id);
 				if (id !== -1) {
-					action(pfoi, id);
+					pfoi.splice(id, 1);
 				}
 				product_comp._render();
-			};
-
-			comp._nodes.list_delete_btn.addEventListener("click", () => {
-				doWithRow((pfoi, id) => pfoi.splice(id, 1));
 			});
 
-			// comp._nodes.list_up_btn.addEventListener("click", () => {
-			// 	// swaping is possible because we made sure that the data is ordered per feature and the fatures are ordered as well
-			// 	doWithRow((pfoi, id) => ([pfoi[id], pfoi[id - 1]] = [pfoi[id - 1], pfoi[id]]));
-			// });
+			list.addEventListener("move_row", (ev) => {
+				// @ts-ignore
+				const detail = ev.detail;
+				if (detail.res.moved) {
+					return;
+				}
 
-			// comp._nodes.list_down_btn.addEventListener("click", () => {
-			// 	doWithRow((pfoi, id) => ([pfoi[id], pfoi[id + 1]] = [pfoi[id + 1], pfoi[id]]));
-			// });
+				const from = detail.from;
+				if (from !== comp._data.row_index) {
+					return;
+				}
+
+				detail.res.moved = true;
+
+				const pfoi = product_comp._data.product_feature_option_ids;
+				const id = pfoi.indexOf(comp._data.product_feature_option_id);
+				if (id !== -1) {
+					// swaping is possible because we made sure that the data is ordered per feature and the fatures are ordered as well
+					const other_id = id + detail.to - from;
+					[pfoi[id], pfoi[other_id]] = [pfoi[other_id], pfoi[id]];
+					product_comp._render();
+				}
+			});
 		},
 	});
 }
