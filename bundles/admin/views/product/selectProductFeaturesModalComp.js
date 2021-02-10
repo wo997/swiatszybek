@@ -29,16 +29,6 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				dataset: product_features,
 				columns: [
 					{ label: "Cecha", key: "name", width: "20%", sortable: true, searchable: "string" },
-					/*{
-						label: "Typ danych",
-						key: "data_type",
-						width: "200px",
-						sortable: true,
-						searchable: "string",
-						render: (data) => {
-							return data.data_type + "_x";
-						},
-					},*/
 					{ label: "Opcje", key: "options", width: "50%", sortable: true, searchable: "number" },
 					{
 						label: "Akcja",
@@ -124,10 +114,10 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				/** @type {DatatableCompData} */
 				const data = detail.data;
 				data.rows.forEach((data) => {
-					// product_comp._data.features.find((e) => {
-					// 	return e.product_feature_id === data.row.product_feature_id;
-					// });
-					// data.row.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.row.product_feature_id);
+					product_comp._data.features.find((e) => {
+						return e.product_feature_id === data.row.product_feature_id;
+					});
+					data.row.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.row.product_feature_id);
 				});
 			});
 

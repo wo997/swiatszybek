@@ -269,7 +269,7 @@ function productComp(comp, parent, data) {
 			<h3>Display form json</h3>
 			<div html="{${JSON.stringify(data)}}"></div>
 		`,
-		initialize: () => {
+		ready: () => {
 			// selectProductFeatures
 			registerModalContent(html`
 				<div id="selectProductFeatures" data-expand data-dismissable>
