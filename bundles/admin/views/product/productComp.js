@@ -71,6 +71,7 @@ function productComp(comp, parent, data) {
 		dataset: [],
 		label: "Pełna lista produktów",
 		primary_key: "product_id",
+		selectable: true,
 	};
 
 	data.products_dt = def(data.products_dt, table);
@@ -197,14 +198,17 @@ function productComp(comp, parent, data) {
 				features_count++;
 				const req_column_index = data.product_feature_ids.indexOf(feature_id);
 				feature_columns[req_column_index] = column;
-				if (req_column_index !== column_index) {
+				if (req_column_index + 1 !== column_index) {
 					any_column_change = true;
 				}
 			}
 		});
 
 		if (any_column_change) {
-			data.products_dt.columns.splice(0, features_count, ...feature_columns);
+			data.products_dt.columns = data.products_dt.columns.filter((e) => getFeatureIdFromKey(e.key) === 0);
+			data.products_dt.columns.splice(1, 0, ...feature_columns);
+			//console.log(data.products_dt.columns, features_count, feature_columns);
+			//data.products_dt.columns.splice(1, features_count, ...feature_columns);
 		}
 
 		cross_features.forEach((feature_set) => {
@@ -256,30 +260,29 @@ function productComp(comp, parent, data) {
 		template: html`
 			<p-trait data-trait="history"></p-trait>
 
-			<div class="label first">Nazwa produktu</div>
-			<input type="text" class="field" data-bind="{${data.name}}" />
+			<div style="max-width:800px">
+				<div class="label first">Nazwa produktu</div>
+				<input type="text" class="field" data-bind="{${data.name}}" />
 
-			<div class="label">Sprzedawaj na</div>
-			<select class="field" data-bind="{${data.sell_by}}">
-				<option value="qty">Sztuki</option>
-				<option value="weight">Wagę</option>
-				<option value="length">Długość</option>
-			</select>
+				<div class="label">Sprzedawaj na</div>
+				<select class="field" data-bind="{${data.sell_by}}">
+					<option value="qty">Sztuki</option>
+					<option value="weight">Wagę</option>
+					<option value="length">Długość</option>
+				</select>
 
-			<div class="label">
-				<span html="{${"Cechy (" + data.features.length + ")"}}"></span>
-				<button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
+				<div class="label">
+					<span html="{${"Cechy (" + data.features.length + ")"}}"></span>
+					<button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
+				</div>
+
+				<list-comp data-bind="{${data.features}}" class="features" data-primary="product_feature_id">
+					<product_feature-comp></product_feature-comp>
+				</list-comp>
 			</div>
-
-			<list-comp data-bind="{${data.features}}" class="features" data-primary="product_feature_id">
-				<product_feature-comp></product_feature-comp>
-			</list-comp>
 
 			<div class="label"></div>
 			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
-
-			<h3>Display form json</h3>
-			<div html="{${JSON.stringify(data)}}"></div>
 		`,
 		ready: () => {
 			// selectProductFeatures
