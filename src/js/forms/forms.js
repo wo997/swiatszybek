@@ -195,6 +195,9 @@ domload(() => {
 });
 
 function registerForms(form = undefined) {
+	window.dispatchEvent(new Event("register-form-components"));
+	return; // lol
+
 	form = $(form);
 	let inputs = [];
 	if (form === undefined) {

@@ -29,6 +29,12 @@ list-comp.horizontal .list_row.cramp_row {
 	&.removing {
 		pointer-events: none;
 	}
+
+	&.grabbed {
+		position: relative;
+		z-index: 200;
+		box-shadow: 0 2px 5px 0 #0007;
+	}
 }
 
 list-comp.comp {
