@@ -31,6 +31,17 @@
  * } & BaseComp} ProductComp
  */
 
+const getFeatureKeyFromId = (feature_id) => {
+	return `feature_${feature_id}`;
+};
+const getFeatureIdFromKey = (key) => {
+	const feature_id = +key.replace(`feature_`, "");
+	if (isNaN(feature_id)) {
+		return 0;
+	}
+	return feature_id;
+};
+
 /**
  * @param {ProductComp} comp
  * @param {*} parent
@@ -78,176 +89,170 @@ function productComp(comp, parent, data) {
 	data.products = [];
 
 	comp._set_data = (data, options = {}) => {
-		const missing_feature_ids = [];
-
-		data.features = data.product_feature_ids.map((product_feature_id) => {
-			const fe = product_features.find((pf) => {
-				return pf.product_feature_id === product_feature_id;
-			});
-			if (fe) {
-				return {
-					product_feature_id: fe.product_feature_id,
-					name: fe.name,
-					options: [],
-				};
-			} else {
-				missing_feature_ids.push(product_feature_id);
-			}
-		});
-
-		data.product_feature_ids = data.product_feature_ids.filter((e) => missing_feature_ids.indexOf(e) === -1);
-
-		const missing_option_ids = [];
-		const product_feature_option_ids = [];
-
-		data.features.forEach((feature) => {
-			feature.options = data.product_feature_option_ids
-				.filter((product_feature_option_id) => {
-					const fo = product_feature_options.find((pfo) => {
-						return pfo.product_feature_option_id === product_feature_option_id;
-					});
-					if (fo) {
-						return fo.product_feature_id === feature.product_feature_id;
-					} else {
-						missing_option_ids.push(product_feature_option_id);
-					}
-				})
-				.map((product_feature_option_id) => {
-					const fo = product_feature_options.find((e) => {
-						return e.product_feature_option_id === product_feature_option_id;
-					});
-					return {
-						product_feature_option_id,
-						product_feature_id: fo.product_feature_id,
-						name: fo.name,
-					};
-				});
-
-			product_feature_option_ids.push(...feature.options.map((option) => option.product_feature_option_id));
-		});
-
-		// important usage of product_feature_option_ids, these are ordered properly
-		data.product_feature_option_ids = product_feature_option_ids.filter((e) => missing_option_ids.indexOf(e) === -1);
-
-		// full product list
-		let cross_features = [[]];
-		data.features.forEach((feature) => {
-			const cross_features_next = [];
-			cross_features.forEach((feature_set) => {
-				feature.options.forEach((option) => {
-					const feature_set_copy = cloneObject(feature_set);
-
-					feature_set_copy.push(option.product_feature_option_id);
-					cross_features_next.push(feature_set_copy);
-				});
-			});
-			cross_features = cross_features_next;
-		});
-
-		const getFeatureKeyFromId = (feature_id) => {
-			return `feature_${feature_id}`;
-		};
-		const getFeatureIdFromKey = (key) => {
-			const feature_id = +key.replace(`feature_`, "");
-			if (isNaN(feature_id)) {
-				return 0;
-			}
-			return feature_id;
-		};
-
-		data.product_feature_ids.forEach((feature_id) => {
-			const key = getFeatureKeyFromId(feature_id);
-			const feature = product_features.find((feature) => feature.product_feature_id === feature_id);
-			const column = {
-				key,
-				label: feature.name,
-				width: "10%",
-				searchable: "string",
-				sortable: true,
-				render: (data) => {
-					const option_id = data[key];
-					const option = product_feature_options.find((option) => option.product_feature_option_id === option_id);
-					if (option) {
-						return option.name;
-					}
-					return "-";
-				},
-			};
-
-			const columns = data.products_dt.columns;
-			const column_index = columns.findIndex((column) => column.key === key);
-
-			if (column_index !== -1) {
-				if (!isEquivalent(columns[column_index], column)) {
-					columns[column_index] = column;
-				}
-			} else {
-				columns.unshift(column);
-			}
-		});
-
-		let any_column_change = false;
-		let column_index = -1;
-		let features_count = 0;
-		/** @type {DatatableColumnDef[]} */
-		const feature_columns = [];
-		data.products_dt.columns.forEach((column) => {
-			column_index++;
-			const feature_id = getFeatureIdFromKey(column.key);
-			if (feature_id) {
-				features_count++;
-				const req_column_index = data.product_feature_ids.indexOf(feature_id);
-				feature_columns[req_column_index] = column;
-				if (req_column_index + 1 !== column_index) {
-					any_column_change = true;
-				}
-			}
-		});
-
-		if (any_column_change) {
-			data.products_dt.columns = data.products_dt.columns.filter((e) => getFeatureIdFromKey(e.key) === 0);
-			data.products_dt.columns.splice(1, 0, ...feature_columns);
-			//console.log(data.products_dt.columns, features_count, feature_columns);
-			//data.products_dt.columns.splice(1, features_count, ...feature_columns);
-		}
-
-		cross_features.forEach((feature_set) => {
-			const product_features = {};
-			feature_set.forEach((product_feature_option_id) => {
-				const option = product_feature_options.find((fo) => fo.product_feature_option_id === product_feature_option_id);
-				product_features[option.product_feature_id] = product_feature_option_id;
-			});
-
-			let missing_product = true;
-			data.products.forEach((product) => {
-				let options_match = true;
-				for (const [feature_id, option_id] of Object.entries(product_features)) {
-					const key = getFeatureKeyFromId(feature_id);
-					if (product[key] !== option_id) {
-						options_match = false;
-						break;
-					}
-				}
-				if (options_match) {
-					missing_product = false;
-				}
-			});
-
-			if (missing_product) {
-				/** @type {ProductData} */
-				const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77 };
-
-				for (const [feature_id, option_id] of Object.entries(product_features)) {
-					const key = getFeatureKeyFromId(feature_id);
-					product_data[key] = option_id;
-				}
-				data.products.push(product_data);
-			}
-		});
-
 		setCompData(comp, data, {
 			...options,
 			render: () => {
+				const data = comp._data;
+				const missing_feature_ids = [];
+
+				data.features = data.product_feature_ids.map((product_feature_id) => {
+					const fe = product_features.find((pf) => {
+						return pf.product_feature_id === product_feature_id;
+					});
+					if (fe) {
+						return {
+							product_feature_id: fe.product_feature_id,
+							name: fe.name,
+							options: [],
+						};
+					} else {
+						missing_feature_ids.push(product_feature_id);
+					}
+				});
+
+				data.product_feature_ids = data.product_feature_ids.filter((e) => missing_feature_ids.indexOf(e) === -1);
+
+				const missing_option_ids = [];
+				const product_feature_option_ids = [];
+
+				data.features.forEach((feature) => {
+					feature.options = data.product_feature_option_ids
+						.filter((product_feature_option_id) => {
+							const fo = product_feature_options.find((pfo) => {
+								return pfo.product_feature_option_id === product_feature_option_id;
+							});
+							if (fo) {
+								return fo.product_feature_id === feature.product_feature_id;
+							} else {
+								missing_option_ids.push(product_feature_option_id);
+							}
+						})
+						.map((product_feature_option_id) => {
+							const fo = product_feature_options.find((e) => {
+								return e.product_feature_option_id === product_feature_option_id;
+							});
+							return {
+								product_feature_option_id,
+								product_feature_id: fo.product_feature_id,
+								name: fo.name,
+							};
+						});
+
+					product_feature_option_ids.push(...feature.options.map((option) => option.product_feature_option_id));
+				});
+
+				// important usage of product_feature_option_ids, these are ordered properly
+				data.product_feature_option_ids = product_feature_option_ids.filter((e) => missing_option_ids.indexOf(e) === -1);
+
+				// full product list
+				let cross_features = [[]];
+				data.features.forEach((feature) => {
+					if (feature.options.length < 2) {
+						return;
+					}
+
+					const cross_features_next = [];
+					cross_features.forEach((feature_set) => {
+						feature.options.forEach((option) => {
+							const feature_set_copy = cloneObject(feature_set);
+
+							feature_set_copy.push(option.product_feature_option_id);
+							cross_features_next.push(feature_set_copy);
+						});
+					});
+					cross_features = cross_features_next;
+				});
+
+				data.product_feature_ids.forEach((feature_id) => {
+					const key = getFeatureKeyFromId(feature_id);
+					const feature = product_features.find((feature) => feature.product_feature_id === feature_id);
+					const column = {
+						key,
+						label: feature.name,
+						width: "10%",
+						searchable: "string",
+						sortable: true,
+						render: (data) => {
+							const option_id = data[key];
+							const option = product_feature_options.find((option) => option.product_feature_option_id === option_id);
+							if (option) {
+								return option.name;
+							}
+							return "-";
+						},
+					};
+
+					const columns = data.products_dt.columns;
+					const column_index = columns.findIndex((column) => column.key === key);
+
+					if (column_index !== -1) {
+						if (!isEquivalent(columns[column_index], column)) {
+							columns[column_index] = column;
+						}
+					} else {
+						columns.unshift(column);
+					}
+				});
+
+				let any_column_change = false;
+				let column_index = -1;
+				let features_count = 0;
+				/** @type {DatatableColumnDef[]} */
+				const feature_columns = [];
+				data.products_dt.columns.forEach((column) => {
+					column_index++;
+					const feature_id = getFeatureIdFromKey(column.key);
+					if (feature_id) {
+						features_count++;
+						const req_column_index = data.product_feature_ids.indexOf(feature_id);
+						feature_columns[req_column_index] = column;
+						if (req_column_index + 1 !== column_index) {
+							any_column_change = true;
+						}
+					}
+				});
+
+				if (any_column_change) {
+					data.products_dt.columns = data.products_dt.columns.filter((e) => getFeatureIdFromKey(e.key) === 0);
+					data.products_dt.columns.splice(1, 0, ...feature_columns);
+					//console.log(data.products_dt.columns, features_count, feature_columns);
+					//data.products_dt.columns.splice(1, features_count, ...feature_columns);
+				}
+
+				cross_features.forEach((feature_set) => {
+					const product_features = {};
+					feature_set.forEach((product_feature_option_id) => {
+						const option = product_feature_options.find((fo) => fo.product_feature_option_id === product_feature_option_id);
+						product_features[option.product_feature_id] = product_feature_option_id;
+					});
+
+					let missing_product = true;
+					data.products.forEach((product) => {
+						let options_match = true;
+						for (const [feature_id, option_id] of Object.entries(product_features)) {
+							const key = getFeatureKeyFromId(feature_id);
+							if (product[key] !== option_id) {
+								options_match = false;
+								break;
+							}
+						}
+						if (options_match) {
+							missing_product = false;
+						}
+					});
+
+					if (missing_product) {
+						/** @type {ProductData} */
+						const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77 };
+
+						for (const [feature_id, option_id] of Object.entries(product_features)) {
+							const key = getFeatureKeyFromId(feature_id);
+							product_data[key] = option_id;
+						}
+						data.products.push(product_data);
+					}
+				});
+
 				//expand(comp._nodes.case_sell_by_qty, data.sell_by === "qty");
 
 				comp._nodes.all_products._data.dataset = data.products;

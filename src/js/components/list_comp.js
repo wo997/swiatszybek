@@ -79,12 +79,12 @@ function listComp(comp, parent, data = []) {
 					return;
 				}
 
-				let instant = !!comp._parent(".freeze");
+				let instant = !!comp._parent(".freeze") || diff.length > 15;
 				let chaos = false;
 
-				if (comp.classList.contains("animating")) {
-					//instant = true;
-				}
+				// if (comp.classList.contains("animating")) {
+				// 	//instant = true;
+				// }
 
 				finishNodeAnimation(comp);
 				let row_c_before = 0;
