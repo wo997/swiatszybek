@@ -85,7 +85,7 @@ document.addEventListener("mouseup", () => {
 	setTimeout(() => {
 		row_ref.classList.remove("grabbed");
 		row_ref.style.zIndex = "200";
-	}, 250);
+	}, 200);
 	list_grab.row = undefined;
 });
 
