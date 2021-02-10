@@ -83,6 +83,7 @@ document.addEventListener("mouseup", () => {
 	list_grab.row.classList.remove("grabbed");
 	list_grab.list.classList.remove("row_grabbed");
 	list_grab.row = undefined;
+	console.log(list_grab);
 });
 
 {

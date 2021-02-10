@@ -363,6 +363,7 @@ function listComp(comp, parent, data = []) {
 						comp._render();
 					}
 				}
+				res = {};
 			};
 
 			res = {};
@@ -385,6 +386,7 @@ function listComp(comp, parent, data = []) {
 					data.splice(to, 0, ...temp);
 					comp._render();
 				}
+				res = {};
 			};
 		},
 	});
