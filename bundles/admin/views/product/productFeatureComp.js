@@ -58,15 +58,7 @@ function productFeatureComp(comp, parent, data) {
 
 	const hideAndSearch = () => {
 		hideParentModal(comp);
-
-		/** @type {DatatableComp} */
-		// @ts-ignore
-		const dt_product_features = $("#selectProductFeatures datatable-comp");
-
-		if (dt_product_features) {
-			dt_product_features._datatable_search();
-			refreshProductFeatures();
-		}
+		refreshProductFeatures();
 	};
 
 	comp._save_data = () => {

@@ -13,6 +13,7 @@
  *      datatable: DatatableComp
  * }
  * _show(options?: {source?: PiepNode})
+ * _refresh_dataset()
  * } & BaseComp} SelectProductFeaturesModalComp
  */
 
@@ -25,7 +26,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			datatable: {
-				search_url: STATIC_URLS["ADMIN"] + "product/feature/search",
+				dataset: product_features,
 				columns: [
 					{ label: "Cecha", key: "name", width: "20%", sortable: true, searchable: "string" },
 					/*{
@@ -38,7 +39,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							return data.data_type + "_x";
 						},
 					},*/
-					{ label: "Wartości", key: "attr_values", width: "50%", sortable: true, searchable: "number" },
+					{ label: "Opcje", key: "options", width: "50%", sortable: true, searchable: "number" },
 					{
 						label: "Akcja",
 						width: "155px",
@@ -70,11 +71,16 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 		};
 	}
 
-	comp._show = (options = {}) => {
-		comp._nodes.datatable._datatable_search();
+	comp._refresh_dataset = () => {
+		comp._nodes.datatable._data.dataset = product_features;
+		comp._nodes.datatable._render();
+	};
 
+	comp._show = (options = {}) => {
 		comp._nodes.close_btn.classList.add("subtle");
 		comp._nodes.close_btn.classList.remove("important");
+
+		comp._refresh_dataset();
 
 		setTimeout(() => {
 			showModal("selectProductFeatures", {
@@ -118,10 +124,10 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				/** @type {DatatableCompData} */
 				const data = detail.data;
 				data.rows.forEach((data) => {
-					product_comp._data.features.find((e) => {
-						return e.product_feature_id === data.row.product_feature_id;
-					});
-					data.row.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.row.product_feature_id);
+					// product_comp._data.features.find((e) => {
+					// 	return e.product_feature_id === data.row.product_feature_id;
+					// });
+					// data.row.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.row.product_feature_id);
 				});
 			});
 

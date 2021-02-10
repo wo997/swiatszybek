@@ -155,6 +155,11 @@ function datatableComp(comp, parent, data) {
 	};
 
 	comp._datatable_search = (delay = 0) => {
+		if (!comp._data.search_url) {
+			console.error("No search url");
+			console.trace();
+			return;
+		}
 		if (comp._search_timeout) {
 			clearTimeout(comp._search_timeout);
 			comp._search_timeout = undefined;
