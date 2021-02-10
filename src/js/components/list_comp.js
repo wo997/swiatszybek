@@ -48,7 +48,6 @@ function listComp(comp, parent, data = []) {
 			return;
 		}
 		let nextRowId = 0;
-
 		data.forEach((row_data, index) => {
 			// pass data no matter who the child is - should be defined by options cause it's inefficient to set each row every time u do anything
 			if (row_data.row_id === undefined) {
@@ -62,7 +61,7 @@ function listComp(comp, parent, data = []) {
 				}
 				if (row_data.row_id === undefined || row_data.row_id === -1) {
 					if (nextRowId === 0) {
-						nextRowId = applyToArray(Math.min, [...data.map((e) => e.row_id).filter((e) => e), -1000]); // that will be unique for sure
+						nextRowId = applyToArray(Math.min, [...data.map((e) => e.row_id).filter((e) => e), -1000]);
 					}
 					row_data.row_id = --nextRowId;
 				}

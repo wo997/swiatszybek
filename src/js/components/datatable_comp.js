@@ -222,6 +222,22 @@ function datatableComp(comp, parent, data) {
 
 	comp._set_data = (data, options = {}) => {
 		if (!data.search_url) {
+			//if (!comp._data || !isEquivalent(data.dataset, def(comp._data.dataset, []))) {
+			let nextRowId = 0;
+			data.dataset.forEach((d) => {
+				if (d._row_id === undefined) {
+					if (data.primary_key && d[data.primary_key] && d[data.primary_key] !== -1) {
+						d._row_id = d[data.primary_key];
+					} else {
+						if (nextRowId === 0) {
+							nextRowId = applyToArray(Math.min, [...data.dataset.map((e) => e._row_id).filter((e) => e), -1000]);
+						}
+						d._row_id = --nextRowId;
+					}
+				}
+			});
+			//}
+
 			/** @type {Array} */
 			let rows = cloneObject(data.dataset);
 
