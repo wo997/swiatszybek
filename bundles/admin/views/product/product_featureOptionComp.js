@@ -56,14 +56,14 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 				doWithRow((pfoi, id) => pfoi.splice(id, 1));
 			});
 
-			comp._nodes.list_up_btn.addEventListener("click", () => {
-				// swaping is possible because we made sure that the data is ordered per feature and the fatures are ordered as well
-				doWithRow((pfoi, id) => ([pfoi[id], pfoi[id - 1]] = [pfoi[id - 1], pfoi[id]]));
-			});
+			// comp._nodes.list_up_btn.addEventListener("click", () => {
+			// 	// swaping is possible because we made sure that the data is ordered per feature and the fatures are ordered as well
+			// 	doWithRow((pfoi, id) => ([pfoi[id], pfoi[id - 1]] = [pfoi[id - 1], pfoi[id]]));
+			// });
 
-			comp._nodes.list_down_btn.addEventListener("click", () => {
-				doWithRow((pfoi, id) => ([pfoi[id], pfoi[id + 1]] = [pfoi[id + 1], pfoi[id]]));
-			});
+			// comp._nodes.list_down_btn.addEventListener("click", () => {
+			// 	doWithRow((pfoi, id) => ([pfoi[id], pfoi[id + 1]] = [pfoi[id + 1], pfoi[id]]));
+			// });
 		},
 	});
 }

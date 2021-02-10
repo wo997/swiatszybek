@@ -31,9 +31,15 @@ list-comp.horizontal .list_row.cramp_row {
 	}
 
 	&.grabbed {
-		position: relative;
-		z-index: 200;
-		box-shadow: 0 2px 5px 0 #0007;
+		& {
+			position: relative;
+			z-index: 200;
+			box-shadow: 0 2px 5px 0 #0007;
+		}
+		&,
+		* {
+			cursor: grab !important;
+		}
 	}
 }
 

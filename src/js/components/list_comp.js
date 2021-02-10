@@ -237,7 +237,11 @@ function listComp(comp, parent, data = []) {
 					let rect_after = child.rect_after;
 
 					let off_x = list_dl;
-					let off_y = list_dt;
+					// @ts-ignore
+					let off_y = list_dt + def(child._translateY, 0);
+					child.style.transform = "";
+					// @ts-ignore
+					child._translateY = 0;
 
 					if (rect_before && rect_after) {
 						off_x += rect_before.left - rect_after.left;

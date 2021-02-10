@@ -89,13 +89,13 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				doWithRow((pfi, id) => pfi.splice(id, 1));
 			});
 
-			comp._nodes.list_up_btn.addEventListener("click", () => {
-				doWithRow((pfi, id) => ([pfi[id], pfi[id - 1]] = [pfi[id - 1], pfi[id]]));
-			});
+			// comp._nodes.list_up_btn.addEventListener("click", () => {
+			// 	doWithRow((pfi, id) => ([pfi[id], pfi[id - 1]] = [pfi[id - 1], pfi[id]]));
+			// });
 
-			comp._nodes.list_down_btn.addEventListener("click", () => {
-				doWithRow((pfi, id) => ([pfi[id], pfi[id + 1]] = [pfi[id + 1], pfi[id]]));
-			});
+			// comp._nodes.list_down_btn.addEventListener("click", () => {
+			// 	doWithRow((pfi, id) => ([pfi[id], pfi[id + 1]] = [pfi[id + 1], pfi[id]]));
+			// });
 		},
 	});
 }
