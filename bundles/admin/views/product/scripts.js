@@ -1,28 +1,33 @@
 /* js[view] */
 
+function loadedProductFeatures() {
+	product_features.forEach((feature) => {
+		feature.options = product_feature_options
+			.filter((e) => e.product_feature_id === feature.product_feature_id)
+			.map((e) => e.name)
+			.join(", ");
+	});
+}
+
 function refreshProductFeatures() {
 	xhr({
-		url: STATIC_URLS["ADMIN"] + "product/feature/all",
+		url: STATIC_URLS["ADMIN"] + "product/feature/all_with_options",
 		success: (res) => {
-			product_features = res;
+			product_features = res.features;
+			product_feature_options = res.options;
 
-			xhr({
-				url: STATIC_URLS["ADMIN"] + "product/feature/option/all",
-				success: (res) => {
-					product_feature_options = res;
+			/** @type {ProductComp} */
+			// @ts-ignore
+			const product_comp = $("product-comp");
 
-					/** @type {ProductComp} */
-					// @ts-ignore
-					const product_comp = $("product-comp");
-
-					product_comp._render({ force_render: true });
-				},
-			});
+			product_comp._render({ force_render: true });
 		},
 	});
 }
 
 domload(() => {
+	loadedProductFeatures();
+
 	/** @type {ProductComp} */
 	// @ts-ignore
 	const product_comp = $("product-comp");
