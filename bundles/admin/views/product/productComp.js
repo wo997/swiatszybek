@@ -44,6 +44,17 @@ function productComp(comp, parent, data) {
 			//{ key: "name", label: "Nazwa", width: "10%", sortable: true, searchable: "string" },
 			{
 				key: "net_price",
+				label: "Aktywny",
+				width: "130px",
+				sortable: true,
+				searchable: "boolean",
+				editable: "boolean",
+				render: (data) => {
+					return html`<p-checkbox></p-checkbox>`;
+				},
+			},
+			{
+				key: "net_price",
 				label: "Cena Netto",
 				width: "10%",
 				sortable: true,
@@ -55,6 +66,7 @@ function productComp(comp, parent, data) {
 			},
 			{ key: "vat", label: "Vat (daj stały wyżej)", width: "10%", sortable: true, searchable: "number" },
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
+			{ key: "gross_price", label: "Stan magazynowy", width: "10%", sortable: true, searchable: "number" },
 		],
 		dataset: [],
 		label: "Pełna lista produktów",
