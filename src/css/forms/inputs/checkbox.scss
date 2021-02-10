@@ -23,7 +23,7 @@ p-checkbox::before {
 	width: var(--p-checkbox-width);
 	height: var(--p-checkbox-height);
 	border: 1px solid #bbb;
-	box-shadow: inset 0px 0px 2px 0px #ccc;
+	/*box-shadow: inset 0px 0px 2px 0px #ccc;*/
 	display: block;
 	position: absolute;
 	left: 0;
@@ -40,8 +40,12 @@ p-checkbox .circle {
 	position: absolute;
 	left: 0;
 	top: 0;
-	box-shadow: inset 0 0 3px 0 #0007;
+	/*box-shadow: inset 0 0 3px 0 #0007;*/
 	transition: 0.2s all;
+}
+
+p-checkbox:not(.checked) .circle {
+	border: 1px solid #aaa;
 }
 
 p-checkbox:hover .circle {
