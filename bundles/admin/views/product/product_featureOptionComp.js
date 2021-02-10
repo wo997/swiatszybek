@@ -75,8 +75,8 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 					return;
 				}
 
-				const from = detail.from;
-				if (from !== comp._data.row_index) {
+				const from_id = detail.from;
+				if (from_id !== comp._data.row_index) {
 					return;
 				}
 
@@ -86,8 +86,15 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 				const id = pfoi.indexOf(comp._data.product_feature_option_id);
 				if (id !== -1) {
 					// swaping is possible because we made sure that the data is ordered per feature and the fatures are ordered as well
-					const other_id = id + detail.to - from;
-					[pfoi[id], pfoi[other_id]] = [pfoi[other_id], pfoi[id]];
+					const other_id = id + detail.to - from_id;
+					//[pfoi[id], pfoi[other_id]] = [pfoi[other_id], pfoi[id]];
+
+					const from = clamp(0, id, pfoi.length - 1);
+					const to = clamp(0, other_id, pfoi.length - 1);
+
+					const temp = pfoi.splice(from, 1);
+					pfoi.splice(to, 0, ...temp);
+
 					product_comp._render();
 				}
 			});
