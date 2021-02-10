@@ -85,9 +85,8 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 				const pfoi = product_comp._data.product_feature_option_ids;
 				const id = pfoi.indexOf(comp._data.product_feature_option_id);
 				if (id !== -1) {
-					// swaping is possible because we made sure that the data is ordered per feature and the fatures are ordered as well
+					// swaping is possible because we made sure that the data options are always next each other
 					const other_id = id + detail.to - from_id;
-					//[pfoi[id], pfoi[other_id]] = [pfoi[other_id], pfoi[id]];
 
 					const from = clamp(0, id, pfoi.length - 1);
 					const to = clamp(0, other_id, pfoi.length - 1);

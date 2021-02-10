@@ -2,7 +2,7 @@
 
 list-comp.animating {
 	& {
-		overflow: hidden;
+		/*overflow: hidden;*/
 	}
 	.btn {
 		transition: 0.25s all;
@@ -19,6 +19,9 @@ list-comp.horizontal .list_row.cramp_row {
 }
 
 .list_row {
+	& {
+		transition: box-shadow 0.2s;
+	}
 	&.cramp_row {
 		padding: 0 !important;
 		border-width: 0 !important;
@@ -33,7 +36,7 @@ list-comp.horizontal .list_row.cramp_row {
 	&.grabbed {
 		& {
 			position: relative;
-			z-index: 200;
+			z-index: 500;
 			box-shadow: 0 2px 5px 0 #0007;
 		}
 		&,

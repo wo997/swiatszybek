@@ -67,7 +67,8 @@ let list_grab = {
 };
 
 document.addEventListener("mouseup", () => {
-	if (!list_grab.row) {
+	const row_ref = list_grab.row;
+	if (!row_ref) {
 		return;
 	}
 
@@ -79,9 +80,12 @@ document.addEventListener("mouseup", () => {
 		parent._move_row(comp._data.row_index, list_grab.place_index);
 	}
 
-	list_grab.row.style.transform = ``;
-	list_grab.row.classList.remove("grabbed");
-	list_grab.list.classList.remove("row_grabbed");
+	row_ref.style.transform = "";
+	row_ref.style.zIndex = `200`;
+	setTimeout(() => {
+		row_ref.classList.remove("grabbed");
+		row_ref.style.zIndex = "200";
+	}, 250);
 	list_grab.row = undefined;
 });
 
@@ -110,7 +114,6 @@ document.addEventListener("mouseup", () => {
 				list_grab.scroll_parent = list_row._find_scroll_parent();
 				list_grab.grabbed_at_y_scroll = list_grab.scroll_parent.scrollTop;
 				list_grab.list = list_row._parent();
-				list_grab.list.classList.add("row_grabbed");
 				list_grab.all_rows = list_grab.list._direct_children();
 				let i = 0;
 				list_grab.all_rows.forEach((e) => {
