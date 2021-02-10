@@ -12,6 +12,7 @@
  * all_rows?: PiepNode[]
  * min_y?: number
  * max_y?: number
+ * place_index?: number
  * }}
  */
 let list_grab = {
@@ -23,12 +24,13 @@ let list_grab = {
 		}
 
 		const r = row.getBoundingClientRect();
-		const dy = mouse.pos.y - list_grab.grabbed_at_y + list_grab.scroll_parent.scrollTop - list_grab.grabbed_at_y_scroll;
-		const dyf = clamp(list_grab.min_y, dy, list_grab.max_y);
+		let dy = mouse.pos.y - list_grab.grabbed_at_y + list_grab.scroll_parent.scrollTop - list_grab.grabbed_at_y_scroll;
+		dy = clamp(list_grab.min_y, dy, list_grab.max_y);
 		// @ts-ignore
-		row._translateY = dyf;
-		row.style.transform = `translateY(${Math.round(dyf)}px)`;
+		row._translateY = dy;
+		row.style.transform = `translateY(${Math.round(dy)}px)`;
 
+		list_grab.place_index = 0;
 		list_grab.all_rows.forEach((e) => {
 			if (e === list_grab.row) {
 				return;
@@ -46,6 +48,10 @@ let list_grab = {
 			}
 			if (er.top - etry < r.top + r.height * 0.5 && !above) {
 				edy = -r.height;
+			}
+
+			if (er.top < r.top) {
+				list_grab.place_index++;
 			}
 
 			// @ts-ignore
@@ -68,7 +74,7 @@ document.addEventListener("mouseup", () => {
 	// @ts-ignore
 	const parent = comp._parent_comp;
 	if (parent._moveRow) {
-		parent._moveRow(comp._data.row_index, comp._data.row_index - 1);
+		parent._moveRow(comp._data.row_index, list_grab.place_index);
 	}
 
 	list_grab.row.style.transform = ``;
