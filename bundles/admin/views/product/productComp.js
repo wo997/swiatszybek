@@ -41,8 +41,18 @@ function productComp(comp, parent, data) {
 	const table = {
 		columns: [
 			//{ key: "product_id", label: "ID", width: "10%", sortable: true, searchable: "number" },
-			{ key: "name", label: "Nazwa", width: "10%", sortable: true, searchable: "string" },
-			{ key: "net_price", label: "Cena Netto", width: "10%", sortable: true, searchable: "number" },
+			//{ key: "name", label: "Nazwa", width: "10%", sortable: true, searchable: "string" },
+			{
+				key: "net_price",
+				label: "Cena Netto",
+				width: "10%",
+				sortable: true,
+				searchable: "number",
+				editable: "number",
+				render: (data) => {
+					return html`<input type="text" class="field small" value="${data.net_price}" />`;
+				},
+			},
 			{ key: "vat", label: "Vat (daj stały wyżej)", width: "10%", sortable: true, searchable: "number" },
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
 		],

@@ -144,6 +144,7 @@ function showModal(name = null, params = {}) {
 				const modal_content = modal._child("*");
 
 				registerModalScroll(modal);
+				registerScrollShadows();
 
 				modal.style.pointerEvents = "none";
 				modal.classList.add("visible");
@@ -255,8 +256,6 @@ function showModal(name = null, params = {}) {
 				q.classList.toggle("pad3", total >= 3);
 			}
 		}
-
-		registerScrollShadows();
 	}
 
 	modal_wrapper_node.classList.toggle("visible", visible);

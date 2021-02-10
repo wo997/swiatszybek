@@ -8,6 +8,7 @@
  *  sortable?: boolean | undefined
  *  searchable?: string
  *  render?(data: any)
+ *  editable?: string
  * }} DatatableColumnDef
  *
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder
