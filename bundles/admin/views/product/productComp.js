@@ -75,9 +75,9 @@ function productComp(comp, parent, data) {
 					return html`<input type="text" class="field small" value="${data.net_price}" />`;
 				},
 			},
-			{ key: "vat", label: "Vat (daj stały wyżej)", width: "10%", sortable: true, searchable: "number" },
-			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, searchable: "number" },
-			{ key: "gross_price", label: "Stan magazynowy", width: "10%", sortable: true, searchable: "number" },
+			{ key: "vat", label: "Vat (stały?)", width: "10%", sortable: true },
+			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true },
+			{ key: "gross_price", label: "Stan magazynowy", width: "10%", sortable: true },
 		],
 		dataset: [],
 		label: "Pełna lista produktów",
