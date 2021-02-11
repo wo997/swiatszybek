@@ -337,7 +337,7 @@ function setCompData(comp, _data = undefined, options = {}) {
 	}
 
 	// kinda weird but it creates f.e. checkbox base component
-	//delay("registerForms", 0);
+	delay("registerForms", 0);
 
 	if (isObject(node._data)) {
 		node._changed_data = {};

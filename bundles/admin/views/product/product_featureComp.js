@@ -49,7 +49,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			<span html="{${"Opcje: (" + data.options.length + ")"}}"></span>
 			<button data-node="{${comp._nodes.add_option_btn}}" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 
-			<list-comp data-bind="{${data.options}}" class="options" data-primary="product_feature_option_id">
+			<list-comp data-bind="{${data.options}}" class="options round" data-primary="product_feature_option_id">
 				<product_feature-option-comp></product_feature-option-comp>
 			</list-comp>
 		`,
@@ -91,7 +91,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			list.addEventListener("remove_row", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
-				if (detail.res.removed) {
+				if (detail.res.removed || !comp._data) {
 					return;
 				}
 

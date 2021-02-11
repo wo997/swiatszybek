@@ -50,7 +50,7 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 			list.addEventListener("remove_row", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
-				if (detail.res.removed) {
+				if (detail.res.removed || !comp._data) {
 					return;
 				}
 

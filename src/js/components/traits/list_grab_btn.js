@@ -13,6 +13,7 @@
  * min_y?: number
  * max_y?: number
  * place_index?: number
+ * height?: number
  * }}
  */
 let list_grab = {
@@ -44,10 +45,10 @@ let list_grab = {
 			const etry = def(e._translateY, 0);
 			let edy = 0;
 			if (er.top - etry + er.height * 0.5 > r.top && above) {
-				edy = r.height;
+				edy = list_grab.height; // r.height - 3; // -1px*3 margin
 			}
 			if (er.top - etry + er.height * 0.5 < r.top + r.height && !above) {
-				edy = -r.height;
+				edy = -list_grab.height; // -r.height + 3; // -1px*3 margin
 			}
 
 			if (er.top < r.top) {
@@ -130,6 +131,9 @@ document.addEventListener("mouseup", () => {
 				const last = getLast(list_grab.all_rows);
 				const lr = last.getBoundingClientRect();
 				list_grab.max_y = lr.top + lr.height - cr.height - cr.top;
+
+				const st = window.getComputedStyle(list_row);
+				list_grab.height = numberFromStr(st.height) + (numberFromStr(st.marginTop) + numberFromStr(st.marginBottom)) * 1.5;
 
 				list_grab.animate();
 			});
