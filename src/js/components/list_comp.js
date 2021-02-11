@@ -95,7 +95,7 @@ function listComp(comp, parent, data = []) {
 				let added = 0;
 				let removed = 0;
 
-				const animation_duration = instant ? 0 : 250;
+				const duration = instant ? 0 : 250;
 
 				let removed_before_current = 0;
 
@@ -124,14 +124,7 @@ function listComp(comp, parent, data = []) {
 					}
 
 					if (remove) {
-						if (!animation_duration) {
-							child.classList.add("to_remove");
-						} else {
-							setTimeout(() => {
-								child.remove();
-							}, animation_duration);
-						}
-
+						child.classList.add("to_remove");
 						removed_before_current++;
 						removed++;
 					}
@@ -182,6 +175,12 @@ function listComp(comp, parent, data = []) {
 
 				const list_rect_before = comp.getBoundingClientRect();
 
+				const removeRows = () => {
+					comp._children(".to_remove").forEach((e) => {
+						e.remove();
+					});
+				};
+
 				if (chaos) {
 					animatable_rows.forEach((child) => {
 						child.classList.remove("list_row", "cramp_row");
@@ -190,9 +189,7 @@ function listComp(comp, parent, data = []) {
 						child._translateY = 0;
 					});
 
-					comp._children(".to_remove").forEach((e) => {
-						e.remove();
-					});
+					removeRows();
 				} else {
 					let index = -1;
 					diff_with_target_index.forEach((diff_info) => {
@@ -287,7 +284,7 @@ function listComp(comp, parent, data = []) {
 
 						setTimeout(() => {
 							child.style.zIndex = "";
-						}, animation_duration);
+						}, duration);
 
 						if ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after))) {
 							let step_0 = "";
@@ -308,7 +305,7 @@ function listComp(comp, parent, data = []) {
 							}
 
 							if (step_1) {
-								child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration, { early_callback: false });
+								child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, duration, { early_callback: false });
 							}
 						}
 					});
@@ -332,7 +329,7 @@ function listComp(comp, parent, data = []) {
 						step_1 = `height:${h2}px;`;
 					}
 
-					comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration, {
+					comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, duration, {
 						callback: () => {
 							comp.classList.remove("animating");
 							comp.style.width = "";
@@ -340,6 +337,7 @@ function listComp(comp, parent, data = []) {
 						},
 					});
 				}
+				setTimeout(removeRows, duration);
 			},
 		});
 	};
