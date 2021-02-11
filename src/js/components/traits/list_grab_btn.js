@@ -79,14 +79,18 @@ document.addEventListener("mouseup", () => {
 	const parent = comp._parent_comp;
 	if (parent._move_row) {
 		if (comp._data.row_index === list_grab.place_index) {
-			// @ts-ignore
-			row_ref._animate(`0%{transform:translateY(${row_ref._translateY}px)}100%{transform:translateY(0px)}`, 250);
+			list_grab.all_rows.forEach((x) => {
+				// @ts-ignore
+				x._animate(`0%{transform:translateY(${x._translateY}px)}100%{transform:translateY(0px)}`, 250);
+				// @ts-ignore
+				x._translateY = 0;
+				x.style.transform = "";
+			});
 		} else {
 			parent._move_row(comp._data.row_index, list_grab.place_index);
 		}
 	}
 
-	row_ref.style.transform = "";
 	row_ref.style.zIndex = `200`;
 	setTimeout(() => {
 		row_ref.classList.remove("grabbed");
