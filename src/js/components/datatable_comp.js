@@ -9,6 +9,7 @@
  *  searchable?: string
  *  render?(data: any)
  *  editable?: string
+ *  default?: any
  * }} DatatableColumnDef
  *
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder
@@ -226,6 +227,8 @@ function datatableComp(comp, parent, data) {
 
 	comp._set_data = (data, options = {}) => {
 		if (!data.search_url) {
+			// todo optimisation for just changing pages? might be fine, but still hmmm
+
 			// it's so quick that nobody really cares anyway
 			// const dataset_changed = !comp._prev_data || !isEquivalent(data.dataset, def(comp._prev_data.dataset, []));
 			// if (dataset_changed) {
@@ -501,6 +504,7 @@ function datatableComp(comp, parent, data) {
 						new_order = "";
 					}
 					data.sort = new_order ? { key: column_data.key, order: new_order } : false;
+					data.pagination_data.page_id = 0;
 					comp._render();
 				}
 

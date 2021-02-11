@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  *  product_id: number
+ *  active: number
  *  name: string
  *  net_price: number
  *  vat: number
@@ -58,6 +59,7 @@ function productComp(comp, parent, data) {
 				sortable: true,
 				searchable: "boolean",
 				editable: "checkbox",
+				default: 0,
 			},
 			{
 				key: "net_price",
@@ -244,7 +246,7 @@ function productComp(comp, parent, data) {
 
 						if (missing_product) {
 							/** @type {ProductData} */
-							const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77 };
+							const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77, active: 0 };
 
 							for (const [feature_id, option_id] of Object.entries(product_features)) {
 								const key = getFeatureKeyFromId(feature_id);
