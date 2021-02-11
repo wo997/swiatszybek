@@ -81,7 +81,6 @@ function productComp(comp, parent, data) {
 		],
 		dataset: [],
 		label: "Pełna lista produktów",
-		primary_key: "product_id",
 		selectable: true,
 	};
 

@@ -80,6 +80,10 @@ function datatableComp(comp, parent, data) {
 	data.rows = [];
 
 	if (data.selectable) {
+		if (!data.primary_key && !data.search_url) {
+			data.primary_key = "_row_id";
+		}
+
 		if (!data.primary_key) {
 			console.error("Primary key is required!");
 			return;
