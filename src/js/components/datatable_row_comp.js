@@ -66,7 +66,7 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 				const _row_id = +row.dataset.primary;
 				const row_data = dt._data.dataset.find((d) => d._row_id === _row_id);
 
-				registerForms();
+				registerForms(comp._nodes.dt_row);
 
 				if (row_data) {
 					row._children("[data-bind]").forEach((input) => {
