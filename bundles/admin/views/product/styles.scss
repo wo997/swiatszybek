@@ -38,19 +38,22 @@ product-comp {
 	}
 
 	.features {
-		&,
-		.list_row {
-			background: #fafafa;
+		& > .list_row {
+			& {
+				background: #f6f6f6;
+				border-radius: 4px;
+				margin: 5px 0 0;
+			}
+			// &:not(:first-child) {
+			// }
 		}
-		& {
-			border: 1px solid #ccc;
-			margin-top: 5px;
-			border-radius: 4px;
-		}
+		// & {
+		//     margin-top: 10px;
+		// }
 	}
 	.options {
 		&,
-		.list_row {
+		& > .list_row {
 			background: #fff;
 		}
 		& {

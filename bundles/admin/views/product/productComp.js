@@ -290,7 +290,7 @@ function productComp(comp, parent, data) {
 					<button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 				</div>
 
-				<list-comp data-bind="{${data.features}}" class="features round" data-primary="product_feature_id">
+				<list-comp data-bind="{${data.features}}" class="features" data-primary="product_feature_id">
 					<product_feature-comp></product_feature-comp>
 				</list-comp>
 			</div>

@@ -71,7 +71,7 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 			list.addEventListener("move_row", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
-				if (detail.res.moved) {
+				if (detail.res.moved || !comp._data) {
 					return;
 				}
 

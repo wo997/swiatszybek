@@ -107,7 +107,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				// @ts-ignore
 				const detail = ev.detail;
 				const from = detail.from;
-				if (detail.res.moved) {
+				if (detail.res.moved || !comp._data) {
 					return;
 				}
 

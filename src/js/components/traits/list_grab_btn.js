@@ -133,7 +133,7 @@ document.addEventListener("mouseup", () => {
 				list_grab.max_y = lr.top + lr.height - cr.height - cr.top;
 
 				const st = window.getComputedStyle(list_row);
-				list_grab.height = numberFromStr(st.height) + (numberFromStr(st.marginTop) + numberFromStr(st.marginBottom)) * 1.5;
+				list_grab.height = numberFromStr(st.height) + (numberFromStr(st.marginTop) + numberFromStr(st.marginBottom));
 
 				list_grab.animate();
 			});
