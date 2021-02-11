@@ -20,6 +20,10 @@ product-comp {
 		border-width: 0;
 	}
 
+	.table_container {
+		min-width: 1200px;
+	}
+
 	.variant_header,
 	.option_header {
 		display: flex;

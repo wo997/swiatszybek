@@ -20,7 +20,7 @@
  *
  * @typedef {{
  * key: string
- * value: any
+ * val: string
  * }} DatatableFilterData
  *
  * @typedef {{
@@ -448,7 +448,7 @@ function datatableComp(comp, parent, data) {
 					);
 				}
 				data.filters.forEach((f) => {
-					filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.value);
+					filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.val);
 				});
 				comp._nodes.filters_info._set_content(filters_info.length ? `<i class="fas fa-filter"></i> Filtry (${filters_info.length}) ` : "");
 				comp._nodes.filters_info.dataset.tooltip = filters_info.join("<br>");
@@ -478,17 +478,19 @@ function datatableComp(comp, parent, data) {
 				</div>
 			</div>
 
-			<div style="position:relative">
-				<div class="table_header" data-node="{${comp._nodes.table_header}}"></div>
+			<div class="scroll-panel scroll-shadow horizontal">
+				<div class="table_container">
+					<div class="table_header" data-node="{${comp._nodes.table_header}}"></div>
 
-				<div class="table_body">
-					<list-comp
-						data-node="{${comp._nodes.list}}"
-						data-bind="{${data.rows}}"
-						${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}
-					>
-						<datatable-row-comp></datatable-row-comp>
-					</list-comp>
+					<div class="table_body">
+						<list-comp
+							data-node="{${comp._nodes.list}}"
+							data-bind="{${data.rows}}"
+							${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}
+						>
+							<datatable-row-comp></datatable-row-comp>
+						</list-comp>
+					</div>
 				</div>
 			</div>
 
@@ -509,24 +511,27 @@ function datatableComp(comp, parent, data) {
 				const dt_sort = target._parent(".dt_sort", { skip: 0 });
 				const dt_filter = target._parent(".dt_filter", { skip: 0 });
 
-				if (dt_sort) {
+				if (dt_sort || dt_filter) {
 					const data = comp._data;
-					const column_data = data.columns[+dt_sort._parent(".dt_cell").dataset.column];
+					const column_data = data.columns[+target._parent(".dt_cell").dataset.column];
 
-					const curr_order = data.sort && data.sort.key === column_data.key ? data.sort.order : "";
-					/** @type {DatatableSortOrder} */
-					let new_order = "desc";
-					if (curr_order === "desc") {
-						new_order = "asc";
-					} else if (curr_order === "asc") {
-						new_order = "";
+					if (dt_sort) {
+						const curr_order = data.sort && data.sort.key === column_data.key ? data.sort.order : "";
+						/** @type {DatatableSortOrder} */
+						let new_order = "desc";
+						if (curr_order === "desc") {
+							new_order = "asc";
+						} else if (curr_order === "asc") {
+							new_order = "";
+						}
+						data.sort = new_order ? { key: column_data.key, order: new_order } : false;
+						data.pagination_data.page_id = 0;
+					} else if (dt_filter) {
+						data.filters = data.filters.filter((f) => f.key !== column_data.key);
+						data.filters.push({ key: column_data.key, val: "123" });
 					}
-					data.sort = new_order ? { key: column_data.key, order: new_order } : false;
 					data.pagination_data.page_id = 0;
 					comp._render();
-				}
-
-				if (dt_filter) {
 					return;
 				}
 			});
