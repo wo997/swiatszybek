@@ -9,7 +9,6 @@
  *  searchable?: string
  *  render?(data: any)
  *  editable?: string
- *  default?: any
  * }} DatatableColumnDef
  *
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder

@@ -59,7 +59,6 @@ function productComp(comp, parent, data) {
 				sortable: true,
 				searchable: "boolean",
 				editable: "checkbox",
-				default: 0,
 			},
 			{
 				key: "net_price",
@@ -69,9 +68,9 @@ function productComp(comp, parent, data) {
 				searchable: "number",
 				editable: "number",
 			},
-			{ key: "vat", label: "Vat (stały?)", width: "10%", sortable: true },
-			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true },
-			{ key: "gross_price", label: "Stan magazynowy", width: "10%", sortable: true },
+			{ key: "vat", label: "Vat (stały?)", width: "10%", sortable: true, editable: "number" },
+			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, editable: "number" },
+			{ key: "stock", label: "Stan magazynowy", width: "10%", sortable: true, editable: "number" },
 		],
 		dataset: [],
 		label: "Pełna lista produktów",
@@ -246,7 +245,7 @@ function productComp(comp, parent, data) {
 
 						if (missing_product) {
 							/** @type {ProductData} */
-							const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77, active: 0 };
+							const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77, active: 1 };
 
 							for (const [feature_id, option_id] of Object.entries(product_features)) {
 								const key = getFeatureKeyFromId(feature_id);
