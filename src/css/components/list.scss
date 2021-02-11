@@ -51,6 +51,7 @@ list-comp.horizontal .list_row.cramp_row {
 	.grab_btn {
 		cursor: grab;
 		transition: 0.25s all;
+		min-width: 28px;
 	}
 }
 
