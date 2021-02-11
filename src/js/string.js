@@ -2,46 +2,8 @@
 
 // also links.php
 function replacePolishLetters(string) {
-	const pl = [
-		"ę",
-		"Ę",
-		"ó",
-		"Ó",
-		"ą",
-		"Ą",
-		"ś",
-		"Ś",
-		"ł",
-		"Ł",
-		"ż",
-		"Ż",
-		"ź",
-		"Ź",
-		"ć",
-		"Ć",
-		"ń",
-		"Ń",
-	];
-	const en = [
-		"e",
-		"E",
-		"o",
-		"O",
-		"a",
-		"A",
-		"s",
-		"S",
-		"l",
-		"L",
-		"z",
-		"Z",
-		"z",
-		"Z",
-		"c",
-		"C",
-		"n",
-		"N",
-	];
+	const pl = ["ę", "Ę", "ó", "Ó", "ą", "Ą", "ś", "Ś", "ł", "Ł", "ż", "Ż", "ź", "Ź", "ć", "Ć", "ń", "Ń"];
+	const en = ["e", "E", "o", "O", "a", "A", "s", "S", "l", "L", "z", "Z", "z", "Z", "c", "C", "n", "N"];
 
 	var len = pl.length;
 	for (let i = 0; i < len; i++) {
@@ -66,13 +28,30 @@ function snakeCase(str) {
 }
 function camelCase(str) {
 	let arr = str.split("-");
-	let capital = arr.map((item, i) =>
-		i
-			? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
-			: item.toLowerCase()
-	);
+	let capital = arr.map((item, i) => (i ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase() : item.toLowerCase()));
 	// ^-- change here.
 	let capitalString = capital.join("");
 
 	console.log(capitalString);
+}
+
+function escapeHTML(unsafeText) {
+	let div = document.createElement("div");
+	div.innerText = unsafeText;
+	return div.innerHTML;
+}
+
+function escapeCSS(prop, val) {
+	const prop_css = snakeCase(prop);
+	let div = document.createElement("div");
+	div.style[prop_css] = val;
+	return div.style[prop_css];
+}
+
+function escapeNumericalExpression(str) {
+	return str.replace(/[^\d,.\*\-\+\/\(\)]*/g, "");
+}
+
+function escapeAttribute(str) {
+	return (str + "").replace(/"/g, "&quot;");
 }

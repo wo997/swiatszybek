@@ -37,7 +37,15 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 				for (const column of data.columns) {
 					let cell_html = "";
 
-					if (column.render) {
+					if (column.editable) {
+						if (column.editable === "checkbox") {
+							cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
+						} else if (column.editable === "number") {
+							cell_html += html`<input type="number" class="field small" data-bind="${column.key}" />`;
+						} else if (column.editable === "string") {
+							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
+						}
+					} else if (column.render) {
 						cell_html += column.render(data.row);
 					} else {
 						cell_html += def(data.row[column.key], "");

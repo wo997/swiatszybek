@@ -147,23 +147,6 @@ function copyTextToClipboard(text) {
   });*/
 }
 
-function escapeHTML(unsafeText) {
-	let div = document.createElement("div");
-	div.innerText = unsafeText;
-	return div.innerHTML;
-}
-
-function escapeCSS(prop, val) {
-	const prop_css = snakeCase(prop);
-	let div = document.createElement("div");
-	div.style[prop_css] = val;
-	return div.style[prop_css];
-}
-
-function escapeNumericalExpression(str) {
-	return str.replace(/[^\d,.\*\-\+\/\(\)]*/g, "");
-}
-
 /*
 never used
 function decodeHtmlEntities(html) {

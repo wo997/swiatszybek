@@ -434,6 +434,31 @@ function datatableComp(comp, parent, data) {
 				}
 
 				comp._nodes.clear_filters_btn.classList.toggle("active", !!(data.filters.length > 0 || data.quick_search.trim() || data.sort));
+
+				setTimeout(() => {
+					comp._children(".list_row").forEach((row) => {
+						const _row_id = +row.dataset.primary;
+						const row_data = comp._data.dataset.find((d) => d._row_id === _row_id);
+
+						if (row_data) {
+							row._children("[data-bind]").forEach((input) => {
+								const key = input.dataset.bind;
+								input._set_value(row_data[key], { quiet: true });
+
+								input.addEventListener("change", () => {
+									if (comp._data.search_url) {
+										console.warn("TODO");
+									} else {
+										row_data[key] = input._get_value();
+									}
+								});
+								// b.addEventListener("input", () => {
+								// 	b._dispatch_change();
+								// });
+							});
+						}
+					});
+				});
 			},
 		});
 	};

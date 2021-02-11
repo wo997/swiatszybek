@@ -51,18 +51,13 @@ function productComp(comp, parent, data) {
 	/** @type {DatatableCompData} */
 	const table = {
 		columns: [
-			//{ key: "product_id", label: "ID", width: "10%", sortable: true, searchable: "number" },
-			//{ key: "name", label: "Nazwa", width: "10%", sortable: true, searchable: "string" },
 			{
-				key: "net_price",
+				key: "active",
 				label: "Aktywny",
 				width: "130px",
 				sortable: true,
 				searchable: "boolean",
-				editable: "boolean",
-				render: (data) => {
-					return html`<p-checkbox></p-checkbox>`;
-				},
+				editable: "checkbox",
 			},
 			{
 				key: "net_price",
@@ -71,9 +66,6 @@ function productComp(comp, parent, data) {
 				sortable: true,
 				searchable: "number",
 				editable: "number",
-				render: (data) => {
-					return html`<input type="text" class="field small" value="${data.net_price}" />`;
-				},
 			},
 			{ key: "vat", label: "Vat (stały?)", width: "10%", sortable: true },
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true },
