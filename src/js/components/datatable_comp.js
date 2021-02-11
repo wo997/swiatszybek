@@ -20,6 +20,7 @@
  *
  * @typedef {{
  * key: string
+ * value: any
  * }} DatatableFilterData
  *
  * @typedef {{
@@ -55,6 +56,7 @@
  *      empty_table: PiepNode
  *      list: ListComp
  *      clear_filters_btn: PiepNode
+ *      filters_info: PiepNode
  *  }
  * _datatable_search(delay?: number)
  * _client_search(delay?: number)
@@ -226,25 +228,22 @@ function datatableComp(comp, parent, data) {
 
 	comp._set_data = (data, options = {}) => {
 		if (!data.search_url) {
-			// todo optimisation for just changing pages? might be fine, but still hmmm
-
-			// it's so quick that nobody really cares anyway
-			// const dataset_changed = !comp._prev_data || !isEquivalent(data.dataset, def(comp._prev_data.dataset, []));
-			// if (dataset_changed) {
-			let nextRowId = 0;
-			data.dataset.forEach((d) => {
-				if (d._row_id === undefined) {
-					if (data.primary_key && d[data.primary_key] && d[data.primary_key] !== -1) {
-						d._row_id = d[data.primary_key];
-					} else {
-						if (nextRowId === 0) {
-							nextRowId = applyToArray(Math.min, [...data.dataset.map((e) => e._row_id).filter((e) => e), -1000]);
+			const dataset_changed = !comp._prev_data || !isEquivalent(data.dataset, def(comp._prev_data.dataset, []));
+			if (dataset_changed) {
+				let nextRowId = 0;
+				data.dataset.forEach((d) => {
+					if (d._row_id === undefined) {
+						if (data.primary_key && d[data.primary_key] && d[data.primary_key] !== -1) {
+							d._row_id = d[data.primary_key];
+						} else {
+							if (nextRowId === 0) {
+								nextRowId = applyToArray(Math.min, [...data.dataset.map((e) => e._row_id).filter((e) => e), -1000]);
+							}
+							d._row_id = --nextRowId;
 						}
-						d._row_id = --nextRowId;
 					}
-				}
-			});
-			//}
+				});
+			}
 
 			/** @type {Array} */
 			let rows = cloneObject(data.dataset);
@@ -434,8 +433,24 @@ function datatableComp(comp, parent, data) {
 				if (data.save_state_name) {
 					comp._save_state();
 				}
+				const filters_info = [];
+				if (data.quick_search) {
+					filters_info.push(`Wyszukaj ${data.quick_search}`);
+				}
+				if (data.sort) {
+					filters_info.push(
+						`Sortuj
+                        ${data.columns.find((c) => data.sort && c.key === data.sort.key).label}
+                        ${data.sort.order === "asc" ? "rosnąco" : "malejąco"}`
+					);
+				}
+				data.filters.forEach((f) => {
+					filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.value);
+				});
+				comp._nodes.filters_info._set_content(filters_info.length ? `<i class="fas fa-filter"></i> Filtry (${filters_info.length}) ` : "");
+				comp._nodes.filters_info.dataset.tooltip = filters_info.join("<br>");
 
-				comp._nodes.clear_filters_btn.classList.toggle("active", !!(data.filters.length > 0 || data.quick_search.trim() || data.sort));
+				comp._nodes.clear_filters_btn.classList.toggle("active", filters_info.length > 0);
 			},
 		});
 	};
@@ -450,6 +465,7 @@ function datatableComp(comp, parent, data) {
 				<span class="datatable_label" html="{${data.label}}"></span>
 				<span html="{${data.after_label}}"></span>
 				<div style="flex-grow:1"></div>
+				<div data-node="{${comp._nodes.filters_info}}" style="padding:0 10px;font-weight:600"></div>
 				<div class="btn error_light" data-node="{${comp._nodes.clear_filters_btn}}" data-tooltip="Wyczyść wszystkie filtry">
 					<i class="fas fa-times"></i>
 				</div>
@@ -473,7 +489,7 @@ function datatableComp(comp, parent, data) {
 				</div>
 			</div>
 
-			<div class="expand_y" data-node="empty_table">
+			<div class="expand_y" data-node="{${comp._nodes.empty_table}}">
 				<div class="empty_table" html="{${def(data.empty_html, "Brak wyników")}}"></div>
 			</div>
 

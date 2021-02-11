@@ -94,11 +94,12 @@ datatable-comp {
 	[data-node="clear_filters_btn"] {
 		& {
 			margin-right: 10px;
-			transition: opacity 0.2s;
+			/*transition: opacity 0.2s;*/
 		}
 		&:not(.active) {
-			opacity: 0;
-			pointer-events: none;
+			/*opacity: 0;
+			pointer-events: none;*/
+			display: none;
 		}
 	}
 
