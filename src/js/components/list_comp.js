@@ -124,9 +124,13 @@ function listComp(comp, parent, data = []) {
 					}
 
 					if (remove) {
-						setTimeout(() => {
-							child.remove();
-						}, animation_duration);
+						if (!animation_duration) {
+							child.classList.add("to_remove");
+						} else {
+							setTimeout(() => {
+								child.remove();
+							}, animation_duration);
+						}
 
 						removed_before_current++;
 						removed++;
@@ -178,151 +182,164 @@ function listComp(comp, parent, data = []) {
 
 				const list_rect_before = comp.getBoundingClientRect();
 
-				let index = -1;
-				diff_with_target_index.forEach((diff_info) => {
-					index++;
+				if (chaos) {
+					animatable_rows.forEach((child) => {
+						child.classList.remove("list_row", "cramp_row");
+						child.style.transform = "";
+						// @ts-ignore
+						child._translateY = 0;
+					});
 
-					const remove = diff_info.to === -1;
-					const add = diff_info.from === -1;
+					comp._children(".to_remove").forEach((e) => {
+						e.remove();
+					});
+				} else {
+					let index = -1;
+					diff_with_target_index.forEach((diff_info) => {
+						index++;
 
-					let child = animatable_rows[index];
+						const remove = diff_info.to === -1;
+						const add = diff_info.from === -1;
 
-					if (add) {
-						child.classList.remove("cramp_row");
-					}
-					if (remove) {
-						child.classList.add("cramp_row");
-					}
-				});
-
-				animatable_rows.forEach((child) => {
-					// @ts-ignore
-					child.rect_after = child.getBoundingClientRect();
-				});
-
-				const list_rect_after = comp.getBoundingClientRect();
-
-				const list_dl = list_rect_after.left - list_rect_before.left;
-				const list_dt = list_rect_after.top - list_rect_before.top;
-
-				index = -1;
-				diff_with_target_index.forEach((diff_info) => {
-					index++;
-
-					const remove = diff_info.to === -1;
-					const add = diff_info.from === -1;
-
-					const child = animatable_rows[index];
-
-					if (remove) {
-						child.classList.remove("cramp_row");
-						if (is_horizontal) {
-							child.style.marginRight = -child.offsetWidth + "px";
-						} else {
-							child.style.marginBottom = -child.offsetHeight + "px";
-						}
-					}
-
-					// @ts-ignore
-					let rect_before = child.rect_before;
-					// @ts-ignore
-					let rect_after = child.rect_after;
-
-					let off_x = list_dl;
-					// @ts-ignore
-					let off_y = list_dt + def(child._translateY, 0);
-					child.style.transform = "";
-					// @ts-ignore
-					child._translateY = 0;
-
-					if (rect_before && rect_after) {
-						off_x += rect_before.left - rect_after.left;
-						off_y += rect_before.top - rect_after.top;
-					}
-
-					let after_x = 0;
-					let after_y = 0;
-					if (remove) {
-						if (is_horizontal) {
-							after_x -= rect_after.width * 0.5;
-						} else {
-							after_y -= rect_after.height * 0.5;
-						}
-						child.classList.add("removing");
-					}
-					if (add) {
-						const fac = chaos ? 1 : 1.5;
-						if (is_horizontal) {
-							off_x -= rect_after.width * fac;
-						} else {
-							off_y -= rect_after.height * fac;
-						}
-					}
-
-					/**
-					 *
-					 * @param {ClientRect} r
-					 */
-					const ronscr = (r) => {
-						return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
-					};
-
-					child.style.zIndex = "" + Math.round((Math.abs(off_x) + Math.abs(off_y)) * 0.02 + (add || remove ? 1 : 2));
-
-					setTimeout(() => {
-						child.style.zIndex = "";
-					}, animation_duration);
-
-					if ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after))) {
-						let step_0 = "";
-						let step_1 = "";
-
-						if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2) {
-							step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px);`;
-							step_1 += `transform:translate(${after_x}px,${after_y}px);`;
-						}
+						let child = animatable_rows[index];
 
 						if (add) {
-							step_0 += "opacity:0;";
-							step_1 += "opacity:1;";
+							child.classList.remove("cramp_row");
 						}
 						if (remove) {
-							step_0 += "opacity:1;";
-							step_1 += "opacity:0;";
+							child.classList.add("cramp_row");
+						}
+					});
+
+					animatable_rows.forEach((child) => {
+						// @ts-ignore
+						child.rect_after = child.getBoundingClientRect();
+					});
+
+					const list_rect_after = comp.getBoundingClientRect();
+
+					const list_dl = list_rect_after.left - list_rect_before.left;
+					const list_dt = list_rect_after.top - list_rect_before.top;
+
+					index = -1;
+					diff_with_target_index.forEach((diff_info) => {
+						index++;
+
+						const remove = diff_info.to === -1;
+						const add = diff_info.from === -1;
+
+						const child = animatable_rows[index];
+
+						if (remove) {
+							child.classList.remove("cramp_row");
+							if (is_horizontal) {
+								child.style.marginRight = -child.offsetWidth + "px";
+							} else {
+								child.style.marginBottom = -child.offsetHeight + "px";
+							}
 						}
 
-						if (step_1) {
-							child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration, { early_callback: false });
+						// @ts-ignore
+						let rect_before = child.rect_before;
+						// @ts-ignore
+						let rect_after = child.rect_after;
+
+						let off_x = list_dl;
+						// @ts-ignore
+						let off_y = list_dt + def(child._translateY, 0);
+						child.style.transform = "";
+						// @ts-ignore
+						child._translateY = 0;
+
+						if (rect_before && rect_after) {
+							off_x += rect_before.left - rect_after.left;
+							off_y += rect_before.top - rect_after.top;
 						}
+
+						let after_x = 0;
+						let after_y = 0;
+						if (remove) {
+							if (is_horizontal) {
+								after_x -= rect_after.width * 0.5;
+							} else {
+								after_y -= rect_after.height * 0.5;
+							}
+							child.classList.add("removing");
+						}
+						if (add) {
+							const fac = chaos ? 1 : 1.5;
+							if (is_horizontal) {
+								off_x -= rect_after.width * fac;
+							} else {
+								off_y -= rect_after.height * fac;
+							}
+						}
+
+						/**
+						 *
+						 * @param {ClientRect} r
+						 */
+						const ronscr = (r) => {
+							return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
+						};
+
+						child.style.zIndex = "" + Math.round((Math.abs(off_x) + Math.abs(off_y)) * 0.02 + (add || remove ? 1 : 2));
+
+						setTimeout(() => {
+							child.style.zIndex = "";
+						}, animation_duration);
+
+						if ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after))) {
+							let step_0 = "";
+							let step_1 = "";
+
+							if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2) {
+								step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px);`;
+								step_1 += `transform:translate(${after_x}px,${after_y}px);`;
+							}
+
+							if (add) {
+								step_0 += "opacity:0;";
+								step_1 += "opacity:1;";
+							}
+							if (remove) {
+								step_0 += "opacity:1;";
+								step_1 += "opacity:0;";
+							}
+
+							if (step_1) {
+								child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration, { early_callback: false });
+							}
+						}
+					});
+
+					comp.classList.add("animating");
+
+					const w1 = list_rect_before.width;
+					const w2 = list_rect_after.width;
+
+					const h1 = list_rect_before.height;
+					const h2 = list_rect_after.height;
+
+					let step_0 = "";
+					let step_1 = "";
+
+					if (Math.abs(w1 - w2) > 1) {
+						step_0 = `width:${w1}px;`;
+						step_1 = `width:${w2}px;`;
+					} else if (Math.abs(h1 - h2) > 1) {
+						step_0 = `height:${h1}px;`;
+						step_1 = `height:${h2}px;`;
 					}
-				});
 
-				comp.classList.add("animating");
-
-				const w1 = list_rect_before.width;
-				const w2 = list_rect_after.width;
-
-				const h1 = list_rect_before.height;
-				const h2 = list_rect_after.height;
-
-				let step_0 = "";
-				let step_1 = "";
-
-				if (Math.abs(w1 - w2) > 1) {
-					step_0 = `width:${w1}px;`;
-					step_1 = `width:${w2}px;`;
-				} else if (Math.abs(h1 - h2) > 1) {
-					step_0 = `height:${h1}px;`;
-					step_1 = `height:${h2}px;`;
+					comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration, {
+						callback: () => {
+							comp.classList.remove("animating");
+							comp.style.width = "";
+							comp.style.height = "";
+						},
+					});
 				}
-
-				comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, animation_duration, {
-					callback: () => {
-						comp.classList.remove("animating");
-						comp.style.width = "";
-						comp.style.height = "";
-					},
-				});
 			},
 		});
 	};
