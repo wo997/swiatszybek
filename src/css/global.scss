@@ -301,6 +301,11 @@ textarea {
 	margin-top: 4px;
 }
 
+label {
+	cursor: pointer;
+	display: block;
+}
+
 .btn,
 .field {
 	& {

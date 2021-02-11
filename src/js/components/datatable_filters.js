@@ -12,17 +12,16 @@ let filter_menus = [
 	{
 		name: "string",
 		html: html`<span class="label first">Wpisz frazę</span>
-			<input type="text" class="field phrase" />
-			<label class="heckbox-wrapper block margin_bottom text-align:center;color:#555">
-				<input type="checkbox" name="exact" />
-				<div class="checkbox"></div>
+			<input type="text" class="field" style="width: 210px;" />
+			<label style="margin-top:10px">
+				<p-checkbox class="square inline"></p-checkbox>
 				Dopasuj całą frazę
-			</label> `,
-		open: (elem, val) => {
-			elem._child(".phrase")._set_value(val);
+			</label>`,
+		open: (elem, val = "") => {
+			elem._child("input")._set_value(val);
 		},
 		apply: (elem) => {
-			return elem._child(".phrase")._get_value();
+			return elem._child("input")._get_value();
 		},
 	},
 	{

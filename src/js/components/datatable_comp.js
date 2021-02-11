@@ -57,6 +57,7 @@
  *      list: ListComp
  *      clear_filters_btn: PiepNode
  *      filters_info: PiepNode
+ *      filter_menu: PiepNode
  *  }
  * _datatable_search(delay?: number)
  * _client_search(delay?: number)
@@ -493,6 +494,7 @@ function datatableComp(comp, parent, data) {
 							</list-comp>
 						</div>
 					</div>
+					<div data-node="{${comp._nodes.filter_menu}}" class="filter_menu"></div>
 				</div>
 			</div>
 
@@ -529,8 +531,33 @@ function datatableComp(comp, parent, data) {
 						data.sort = new_order ? { key: column_data.key, order: new_order } : false;
 						data.pagination_data.page_id = 0;
 					} else if (dt_filter) {
-						data.filters = data.filters.filter((f) => f.key !== column_data.key);
-						data.filters.push({ key: column_data.key, val: "123" });
+						const curr_filter = data.filters.find((f) => f.key !== column_data.key);
+
+						//data.filters.push({ key: column_data.key, val: "123" });
+
+						const filter_menu = comp._nodes.filter_menu;
+
+						const filter_menu_data = filter_menus.find((e) => e.name === column_data.searchable);
+
+						if (filter_menu_data) {
+							filter_menu._set_content(filter_menu_data.html);
+							registerForms(filter_menu);
+
+							const pos = nodePositionAgainstScrollableParent(dt_filter);
+							const filter_menu_rect = filter_menu.getBoundingClientRect();
+
+							filter_menu.classList.add("active");
+							filter_menu.style.left = pos.relative_pos.left + (pos.node_rect.width - filter_menu_rect.width) * 0.5 + "px";
+							filter_menu.style.top = pos.relative_pos.top + pos.node_rect.height + "px";
+
+							filter_menu_data.open(filter_menu, curr_filter ? curr_filter.val : "");
+
+							filter_menu._animate(
+								`0%{transform-origin:50% 0;transform:scale(0.5);opacity:0}
+                                100%{transform-origin:50% 0;transform:scale(1);opacity:1}`,
+								200
+							);
+						}
 					}
 					data.pagination_data.page_id = 0;
 					comp._render();

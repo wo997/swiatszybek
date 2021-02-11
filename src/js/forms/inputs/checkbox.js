@@ -23,7 +23,8 @@ function registerCheckboxes(parent) {
 			`
 		);
 
-		c.addEventListener("click", () => {
+		const clickable = def(c._parent("label"), c);
+		clickable.addEventListener("click", () => {
 			c.classList.toggle("checked");
 			c._set_value();
 		});

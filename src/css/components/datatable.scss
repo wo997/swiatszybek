@@ -109,4 +109,18 @@ datatable-comp {
 	.table_body .btn + .btn {
 		margin-left: 5px;
 	}
+
+	.filter_menu {
+		position: absolute;
+		z-index: 1500;
+		background: white;
+		border: 1px solid #ccc;
+		padding: 10px;
+		box-shadow: 0 2px 4px 0 #0004;
+		border-radius: 4px;
+	}
+	.filter_menu:not(.active) {
+		opacity: 0;
+		pointer-events: none;
+	}
 }

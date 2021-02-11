@@ -194,6 +194,10 @@ domload(() => {
 	registerForms();
 });
 
+/**
+ *
+ * @param {PiepNode} parent
+ */
 function registerForms(parent = undefined) {
 	window.dispatchEvent(
 		new CustomEvent("register-form-components", {

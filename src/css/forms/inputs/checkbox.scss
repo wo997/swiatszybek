@@ -14,7 +14,7 @@ p-checkbox {
 	overflow: hidden;
 	border: none;
 	cursor: pointer;
-	vertical-align: bottom;
+	vertical-align: middle;
 	user-select: none;
 }
 
@@ -55,22 +55,20 @@ p-checkbox:not(.checked) .circle {
 	border: 1px solid #aaa;
 }
 
-p-checkbox:hover .circle {
-	filter: brightness(1.02);
-	border-color: #888;
-}
-
-p-checkbox.checked:hover .circle {
-	border: 1px solid #090;
-}
-
-p-checkbox.checked:hover .circle {
-	filter: brightness(1.13);
-}
-
-p-checkbox:hover::before {
-	background: #f4f4f4;
-	border-color: #999;
+label:hover p-checkbox,
+p-checkbox:hover {
+	.circle {
+		filter: brightness(1.02);
+		border-color: #888;
+	}
+	&.checked .circle {
+		border: 1px solid #090;
+		filter: brightness(1.13);
+	}
+	&::before {
+		background: #f4f4f4;
+		border-color: #999;
+	}
 }
 
 p-checkbox:not(.square) .circle::before {

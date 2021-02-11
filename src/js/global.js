@@ -399,7 +399,8 @@ function findPrev(node, selector, options) {
  */
 function findScrollParent(node, options = {}) {
 	options.default = def(options.default, $(document.body));
-	return findParent(node, `.scroll-panel:not(.horizontal)`, options);
+	//return findParent(node, `.scroll-panel:not(.horizontal)`, options);
+	return findParent(node, `.scroll-panel`, options);
 }
 
 function removeContent(node) {
@@ -588,7 +589,7 @@ function removeSelection() {
 
 /**
  *
- * @param {*} node
+ * @param {PiepNode} node
  * @returns {{
  * relative_pos: {
  * left: number
