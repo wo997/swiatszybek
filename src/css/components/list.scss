@@ -43,6 +43,14 @@ list-comp.horizontal .list_row.cramp_row {
 		* {
 			cursor: grab !important;
 		}
+		.grab_btn {
+			--btn-background-clr: var(--important-clr);
+			--btn-font-clr: #fff;
+		}
+	}
+	.grab_btn {
+		cursor: grab;
+		transition: 0.25s all;
 	}
 }
 
