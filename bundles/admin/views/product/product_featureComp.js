@@ -74,16 +74,6 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			// @ts-ignore
 			const product_comp = $("product-comp");
 
-			// @ts-ignore
-			const doWithRow = (action) => {
-				const pfi = product_comp._data.product_feature_ids;
-				const id = pfi.indexOf(comp._data.product_feature_id);
-				if (id !== -1) {
-					action(pfi, id);
-				}
-				product_comp._render();
-			};
-
 			/** @type {ListComp} */
 			// @ts-ignore
 			const list = comp._parent_comp;
@@ -100,13 +90,19 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				}
 
 				detail.res.removed = true;
-				doWithRow((pfi, id) => pfi.splice(id, 1));
+
+				const pfi = product_comp._data.product_feature_ids;
+				const id = pfi.indexOf(comp._data.product_feature_id);
+				if (id !== -1) {
+					pfi.splice(id, 1);
+				}
+				product_comp._render();
 			});
 
 			list.addEventListener("move_row", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
-				const from = detail.from;
+				let from = detail.from;
 				if (detail.res.moved || !comp._data) {
 					return;
 				}
@@ -114,10 +110,22 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				if (from !== comp._data.row_index) {
 					return;
 				}
-				const to = detail.to;
+				let to = detail.to;
 
 				detail.res.moved = true;
-				doWithRow((pfi, id) => ([pfi[from], pfi[to]] = [pfi[to], pfi[from]]));
+
+				const pfi = product_comp._data.product_feature_ids;
+				const id = pfi.indexOf(comp._data.product_feature_id);
+				if (id !== -1) {
+					const other_id = detail.to;
+
+					from = clamp(0, from, pfi.length - 1);
+					to = clamp(0, to, pfi.length - 1);
+
+					const temp = pfi.splice(from, 1);
+					pfi.splice(to, 0, ...temp);
+				}
+				product_comp._render();
 			});
 		},
 	});

@@ -93,9 +93,8 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 
 					const temp = pfoi.splice(from, 1);
 					pfoi.splice(to, 0, ...temp);
-
-					product_comp._render();
 				}
+				product_comp._render();
 			});
 		},
 	});
