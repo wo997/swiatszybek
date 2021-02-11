@@ -45,10 +45,10 @@ let list_grab = {
 			const etry = def(e._translateY, 0);
 			let edy = 0;
 			if (er.top - 0.95 * etry + er.height * 0.5 > r.top && above) {
-				edy = list_grab.height; // r.height - 3; // -1px*3 margin
+				edy = list_grab.height;
 			}
 			if (er.top - 0.95 * etry + er.height * 0.5 < r.top + r.height && !above) {
-				edy = -list_grab.height; // -r.height + 3; // -1px*3 margin
+				edy = -list_grab.height;
 			}
 
 			if (er.top + er.height * 0.5 < r.top + r.height * 0.5) {
