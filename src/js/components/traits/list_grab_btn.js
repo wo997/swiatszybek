@@ -76,7 +76,13 @@ document.addEventListener("mouseup", () => {
 	/** @type {ListComp} */
 	// @ts-ignore
 	const parent = comp._parent_comp;
+	let dur = 150;
 	if (parent._move_row) {
+		if (comp._data.row_index === list_grab.place_index) {
+			// @ts-ignore
+			row_ref._animate(`0%{transform:translateY(${row_ref._translateY}px)}100%{transform:translateY(0px)}`, 100);
+			dur = 0;
+		}
 		parent._move_row(comp._data.row_index, list_grab.place_index);
 	}
 
@@ -85,7 +91,7 @@ document.addEventListener("mouseup", () => {
 	setTimeout(() => {
 		row_ref.classList.remove("grabbed");
 		row_ref.style.zIndex = "200";
-	}, 200);
+	}, dur);
 	list_grab.row = undefined;
 });
 

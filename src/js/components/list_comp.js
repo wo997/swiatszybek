@@ -75,16 +75,8 @@ function listComp(comp, parent, data = []) {
 			render: () => {
 				const diff = diffArrays(comp._prev_data, data, (e) => e.row_id);
 
-				if (diff.length === 0) {
-					return;
-				}
-
 				let instant = !!comp._parent(".freeze") || diff.length > 15;
 				let chaos = false;
-
-				// if (comp.classList.contains("animating")) {
-				// 	//instant = true;
-				// }
 
 				finishNodeAnimation(comp);
 				let row_c_before = 0;
