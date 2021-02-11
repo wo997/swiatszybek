@@ -44,14 +44,14 @@ let list_grab = {
 			// @ts-ignore
 			const etry = def(e._translateY, 0);
 			let edy = 0;
-			if (er.top - etry + er.height * 0.5 > r.top && above) {
+			if (er.top - 0.95 * etry + er.height * 0.5 > r.top && above) {
 				edy = list_grab.height; // r.height - 3; // -1px*3 margin
 			}
-			if (er.top - etry + er.height * 0.5 < r.top + r.height && !above) {
+			if (er.top - 0.95 * etry + er.height * 0.5 < r.top + r.height && !above) {
 				edy = -list_grab.height; // -r.height + 3; // -1px*3 margin
 			}
 
-			if (er.top < r.top) {
+			if (er.top + er.height * 0.5 < r.top + r.height * 0.5) {
 				list_grab.place_index++;
 			}
 
