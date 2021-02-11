@@ -81,7 +81,10 @@ document.addEventListener("mouseup", () => {
 		if (comp._data.row_index === list_grab.place_index) {
 			list_grab.all_rows.forEach((x) => {
 				// @ts-ignore
-				x._animate(`0%{transform:translateY(${x._translateY}px)}100%{transform:translateY(0px)}`, 250);
+				if (Math.abs(x._translateY) > 1) {
+					// @ts-ignore
+					x._animate(`0%{transform:translateY(${x._translateY}px)}100%{transform:translateY(0px)}`, 250);
+				}
 				// @ts-ignore
 				x._translateY = 0;
 				x.style.transform = "";
