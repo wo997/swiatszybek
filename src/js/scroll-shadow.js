@@ -3,50 +3,39 @@
 // scroll-shadow doc
 // horizontal requires the parent to be a row flexbox
 function registerScrollShadows() {
-	$$(".scroll-shadow:not(.scrsh_registered)").forEach((e) => {
-		e.classList.add("scrsh_registered");
-		e.classList.add("overflow_hidden");
+	$$(".scroll-shadow:not(.scrsh_registered)").forEach((pan) => {
+		pan.classList.add("scrsh_registered");
+		pan.classList.add("overflow_hidden");
 		const offset = 25.0;
-		const light = e.classList.contains("light");
-		var class_list = "shadow-node";
+		const light = pan.classList.contains("light");
+		let class_list = "shadow-node";
+
 		if (light) {
 			class_list += " light";
 		}
 
-		if (e.classList.contains("horizontal")) {
-			e.insertAdjacentHTML("beforebegin", html`<div class="${class_list} left"></div>`);
-			e.insertAdjacentHTML("afterend", html`<div class="${class_list} right"></div>`);
+		const hor = pan.classList.contains("horizontal");
 
-			var shadow_left = e._prev();
-			var shadow_right = e._next();
+		pan.insertAdjacentHTML("beforebegin", html`<div class="${class_list} ${hor ? "left" : "top"}"></div>`);
+		pan.insertAdjacentHTML("afterend", html`<div class="${class_list} ${hor ? "right" : "bottom"}"></div>`);
 
-			var panelScrollCallback = () => {
-				var w = e.getBoundingClientRect().width;
-				var x = e.scrollLeft;
+		const bef = pan._prev();
+		const aft = pan._next();
 
-				shadow_left.style.opacity = Math.min(x / offset, 1) + "";
-				shadow_right.style.opacity = Math.min((e.scrollWidth - w - x) / offset, 1) + "";
-			};
-		} else {
-			e.insertAdjacentHTML("beforebegin", html`<div class="${class_list} top"></div>`);
-			e.insertAdjacentHTML("afterend", html`<div class="${class_list} bottom"></div>`);
+		const panelScrollCallback = () => {
+			const h = pan[hor ? "offsetWidth" : "offsetHeight"];
+			const s = pan[hor ? "scrollLeft" : "scrollTop"];
+			const x = pan[hor ? "scrollWidth" : "scrollHeight"];
 
-			var shadow_top = e._prev();
-			var shadow_bottom = e._next();
+			bef.style.opacity = Math.min(s / offset, 1) + "";
+			aft.style.opacity = Math.min((x - h - s) / offset, 1) + "";
+		};
 
-			var panelScrollCallback = () => {
-				var h = e.getBoundingClientRect().height;
-				var y = e.scrollTop;
-
-				shadow_top.style.opacity = Math.min(y / offset, 1) + "";
-				shadow_bottom.style.opacity = Math.min((e.scrollHeight - h - y) / offset, 1) + "";
-			};
-		}
-
-		e.addEventListener("scroll", panelScrollCallback);
+		pan.addEventListener("scroll", panelScrollCallback);
 		window.addEventListener("resize", panelScrollCallback);
 		panelScrollCallback();
 	});
 }
 
 domload(registerScrollShadows);
+windowload(registerScrollShadows);

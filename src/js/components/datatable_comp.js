@@ -478,18 +478,20 @@ function datatableComp(comp, parent, data) {
 				</div>
 			</div>
 
-			<div class="scroll-panel scroll-shadow horizontal">
-				<div class="table_container">
-					<div class="table_header" data-node="{${comp._nodes.table_header}}"></div>
+			<div style="position:relative">
+				<div class="scroll-panel scroll-shadow horizontal">
+					<div class="table_container">
+						<div class="table_header" data-node="{${comp._nodes.table_header}}"></div>
 
-					<div class="table_body">
-						<list-comp
-							data-node="{${comp._nodes.list}}"
-							data-bind="{${data.rows}}"
-							${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}
-						>
-							<datatable-row-comp></datatable-row-comp>
-						</list-comp>
+						<div class="table_body">
+							<list-comp
+								data-node="{${comp._nodes.list}}"
+								data-bind="{${data.rows}}"
+								${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}
+							>
+								<datatable-row-comp></datatable-row-comp>
+							</list-comp>
+						</div>
 					</div>
 				</div>
 			</div>
