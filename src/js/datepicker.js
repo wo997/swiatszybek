@@ -1,6 +1,9 @@
 /* js[global] */
 
-window.addEventListener("register-form-components", registerDatepickers);
+window.addEventListener("register-form-components", (ev) => {
+	// @ts-ignore
+	registerDatepickers(ev.detail.parent);
+});
 
 function getDatepickerDefaultOptions(e) {
 	var options = {
@@ -22,13 +25,17 @@ function getDatepickerDefaultOptions(e) {
 	return options;
 }
 
-// can't go before modals are created from raw html
+// can't go before modals are created from raw html, ugh, register before u show a modal instead?
 window.addEventListener("load", () => {
-	registerDatepickers();
+	registerDatepickers($(document));
 });
 
-function registerDatepickers() {
-	$$(".default_datepicker:not(.registered)").forEach((e) => {
+/**
+ *
+ * @param {PiepNode} parent
+ */
+function registerDatepickers(parent) {
+	parent._children(".default_datepicker:not(.registered)").forEach((e) => {
 		e.classList.add("registered");
 		createDatePicker(e);
 	});
@@ -39,15 +46,10 @@ function createDatePicker(node) {
 }
 
 function createDateRangePicker(node) {
-	var dateRangePicker = new DateRangePicker(
-		node,
-		getDatepickerDefaultOptions(node)
-	);
+	var dateRangePicker = new DateRangePicker(node, getDatepickerDefaultOptions(node));
 
 	for (let i = 0; i < 2; i++) {
-		dateRangePicker.datepickers[i].setOptions(
-			getDatepickerDefaultOptions($(dateRangePicker.inputs[i]))
-		);
+		dateRangePicker.datepickers[i].setOptions(getDatepickerDefaultOptions($(dateRangePicker.inputs[i])));
 	}
 
 	return dateRangePicker;

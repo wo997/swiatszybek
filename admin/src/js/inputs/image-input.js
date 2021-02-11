@@ -1,9 +1,16 @@
 /* js[admin] */
 
-window.addEventListener("register-form-components", registerImageInputs);
+window.addEventListener("register-form-components", (ev) => {
+	// @ts-ignore
+	registerImageInputs(ev.detail.parent);
+});
 
-function registerImageInputs() {
-	$$("image-input:not(.image-input-registered)").forEach((input) => {
+/**
+ *
+ * @param {PiepNode} parent
+ */
+function registerImageInputs(parent) {
+	parent._children("image-input:not(.image-input-registered)").forEach((input) => {
 		input.classList.add("image-input-registered");
 
 		// TODO: crazy, we use names so far hmm

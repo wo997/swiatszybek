@@ -124,9 +124,6 @@ if (defined("ROUTE")) {
 
     <script src="/src/jscolor.js?v=<?= RELEASE ?>"></script>
 
-    <link rel="stylesheet" href="/src/range-slider.css?v=<?= RELEASE ?>">
-    <script src="/src/range-slider.js?v=<?= RELEASE ?>"></script>
-
     <script src="/src/highlight.min.js?v=<?= RELEASE ?>"></script>
     <script src="/src/quill-2.0.js?v=<?= RELEASE ?>"></script>
 <?php endif ?>

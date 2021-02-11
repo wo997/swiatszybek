@@ -1,9 +1,16 @@
 /* js[global] */
 
-window.addEventListener("register-form-components", registerCheckboxes);
+window.addEventListener("register-form-components", (ev) => {
+	// @ts-ignore
+	registerCheckboxes(ev.detail.parent);
+});
 
-function registerCheckboxes() {
-	$$("p-checkbox:not(.checkbox-registered)").forEach((c) => {
+/**
+ *
+ * @param {PiepNode} parent
+ */
+function registerCheckboxes(parent) {
+	parent._children("p-checkbox:not(.checkbox-registered)").forEach((c) => {
 		c.classList.add("checkbox-registered", "field");
 
 		c.insertAdjacentHTML(

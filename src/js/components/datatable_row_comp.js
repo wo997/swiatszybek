@@ -57,6 +57,35 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 				}
 
 				setNodeChildren(comp._nodes.dt_row, cells_html);
+
+				/** @type {DatatableComp} */
+				// @ts-ignore
+				const dt = comp._parent_comp._parent_comp;
+
+				const row = comp._parent();
+				const _row_id = +row.dataset.primary;
+				const row_data = dt._data.dataset.find((d) => d._row_id === _row_id);
+
+				registerForms();
+
+				if (row_data) {
+					row._children("[data-bind]").forEach((input) => {
+						const key = input.dataset.bind;
+						input._set_value(row_data[key], { quiet: true });
+
+						input.addEventListener("change", () => {
+							if (dt._data.search_url) {
+								console.warn("TODO");
+							} else {
+								const row_data = dt._data.dataset.find((d) => d._row_id === _row_id); // recreate ref
+								row_data[key] = input._get_value();
+							}
+						});
+						// b.addEventListener("input", () => {
+						// 	b._dispatch_change();
+						// });
+					});
+				}
 			},
 		});
 	};
