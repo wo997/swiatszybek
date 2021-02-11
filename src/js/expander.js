@@ -89,6 +89,10 @@ function expand(elem, show = null, options = {}) {
 	const is_horizontal = elem.classList.contains("horizontal");
 
 	let duration = options.duration || options.duration === 0 ? options.duration : 250;
+	if (elem._parent(".freeze", { skip: 0 })) {
+		duration = 0;
+	}
+	console.log("hui", elem);
 	let h = is_horizontal ? elem.scrollWidth : elem.scrollHeight;
 
 	let h1 = !show ? h : 0;

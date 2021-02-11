@@ -241,14 +241,27 @@ function createComp(node, parent_comp, data, options) {
 				let sub_node_data = sub_node._get_value();
 
 				if (sub_node_data !== undefined) {
-					//if (node._data[bind_var] !== undefined) { // add it anyway
 					comp._data[bind_var] = sub_node_data;
 					comp._render();
-					//}
 				}
 			});
 			sub_node.addEventListener("input", () => {
-				sub_node._dispatch_change();
+				const dis = () => {
+					sub_node._dispatch_change();
+					// @ts-ignore
+					delete sub_node._input_timeout;
+				};
+				if (sub_node.dataset.input_delay !== undefined) {
+					// @ts-ignore
+					if (sub_node._input_timeout) {
+						// @ts-ignore
+						clearTimeout(sub_node._input_timeout);
+					}
+					// @ts-ignore
+					sub_node._input_timeout = setTimeout(dis, +sub_node.dataset.input_delay);
+				} else {
+					dis();
+				}
 			});
 		}
 	});

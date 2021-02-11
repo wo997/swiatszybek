@@ -169,8 +169,8 @@ function listComp(comp, parent, data = []) {
 				if (added * removed > row_c * row_c * 0.25) {
 					//instant = true;
 					chaos = true;
+					instant = true;
 				}
-
 				registerForms();
 
 				const list_rect_before = comp.getBoundingClientRect();
@@ -180,6 +180,10 @@ function listComp(comp, parent, data = []) {
 						e.remove();
 					});
 				};
+
+				if (instant) {
+					comp.dispatchEvent(new CustomEvent("instant"));
+				}
 
 				if (chaos) {
 					animatable_rows.forEach((child) => {
@@ -324,7 +328,8 @@ function listComp(comp, parent, data = []) {
 					if (Math.abs(w1 - w2) > 1) {
 						step_0 = `width:${w1}px;`;
 						step_1 = `width:${w2}px;`;
-					} else if (Math.abs(h1 - h2) > 1) {
+					}
+					if (Math.abs(h1 - h2) > 1) {
 						step_0 = `height:${h1}px;`;
 						step_1 = `height:${h2}px;`;
 					}

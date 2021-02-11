@@ -318,7 +318,7 @@ function datatableComp(comp, parent, data) {
 
 				if (cd.quick_search) {
 					if (data.search_url) {
-						comp._datatable_search(300);
+						comp._datatable_search();
 					}
 				}
 
@@ -387,11 +387,14 @@ function datatableComp(comp, parent, data) {
 					registerForms();
 
 					if (data.search_url) {
-						comp._datatable_search(0);
+						comp._datatable_search();
 					}
 				}
 
-				expand(comp._nodes.empty_table, data.rows.length === 0);
+				setTimeout(() => {
+					// it listens to list's event
+					expand(comp._nodes.empty_table, data.rows.length === 0);
+				});
 
 				if (data.selectable) {
 					let select_count = 0;
@@ -470,7 +473,7 @@ function datatableComp(comp, parent, data) {
 					<i class="fas fa-times"></i>
 				</div>
 				<div class="float-icon" style="display: inline-block;">
-					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" />
+					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" data-input_delay="300" />
 					<i class="fas fa-search"></i>
 				</div>
 			</div>
@@ -537,8 +540,16 @@ function datatableComp(comp, parent, data) {
 				comp._render();
 
 				if (data.search_url) {
-					comp._datatable_search(0);
+					comp._datatable_search();
 				}
+			});
+
+			comp._nodes.list.addEventListener("instant", () => {
+				// I think it works but I'm not sure, meh no
+				comp._nodes.empty_table.classList.add("freeze");
+				setTimeout(() => {
+					comp._nodes.empty_table.classList.remove("freeze");
+				}, 250);
 			});
 		},
 		unfreeze_by_self: true,
