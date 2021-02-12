@@ -46,6 +46,7 @@ domload(() => {
 		sell_by: "qty",
 		product_feature_ids: [],
 		product_feature_option_ids: [],
+		missing_products_features: [],
 		features: [],
 		products: [],
 	});
@@ -3046,5 +3047,5 @@ domload(() => {
 		d.active = Math.random() < 0.8 ? 1 : 0;
 		d.stock = Math.floor(100 * Math.random());
 	});
-	product_comp._set_data(ppp);
+	//product_comp._set_data(ppp);
 });

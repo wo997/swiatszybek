@@ -187,7 +187,7 @@ function listComp(comp, parent, data = []) {
 
 				if (chaos) {
 					animatable_rows.forEach((child) => {
-						child.classList.remove("list_row", "cramp_row");
+						child.classList.remove("cramp_row");
 						child.style.transform = "";
 						// @ts-ignore
 						child._translateY = 0;

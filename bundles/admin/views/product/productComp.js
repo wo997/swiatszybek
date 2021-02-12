@@ -4,7 +4,6 @@
  * @typedef {{
  *  product_id: number
  *  active: number
- *  name: string
  *  net_price: number
  *  vat: number
  *  gross_price: number
@@ -17,7 +16,7 @@
  *  product_feature_option_ids: number[]
  *  product_feature_ids: number[]
  *  features: Product_FeatureCompData[]
- *  products: ProductData[]
+ *  missing_products_features: Object[]
  *  products_dt?: DatatableCompData
  * }} ProductCompData
  *
@@ -26,9 +25,11 @@
  *  _set_data(data?: ProductCompData, options?: SetCompDataOptions)
  *  _getData()
  *  _nodes: {
- *      add_variant_btn: PiepNode
+ *      add_feature_btn: PiepNode
  *      all_products: DatatableComp
+ *      add_products_btn: PiepNode
  *  }
+ *  _add_missing_products()
  * } & BaseComp} ProductComp
  */
 
@@ -78,7 +79,24 @@ function productComp(comp, parent, data) {
 	};
 
 	data.products_dt = def(data.products_dt, table);
-	data.products = [];
+
+	comp._add_missing_products = () => {
+		const data = comp._data;
+
+		data.missing_products_features.forEach((features) => {
+			/** @type {ProductData} */
+			const product_data = { gross_price: 12.3, net_price: 45.6, product_id: -1, vat: 8, active: 1 };
+
+			for (const [feature_id, option_id] of Object.entries(features)) {
+				const key = getFeatureKeyFromId(feature_id);
+				product_data[key] = option_id;
+			}
+			data.products_dt.dataset.push(product_data);
+		});
+
+		console.log(123);
+		comp._render();
+	};
 
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
@@ -197,7 +215,7 @@ function productComp(comp, parent, data) {
 					}
 				});
 
-				if (ch.product_feature_ids || ch.product_feature_option_ids) {
+				if (ch.product_feature_ids || ch.product_feature_option_ids || ch.product_dt) {
 					let any_column_change = false;
 					let column_index = -1;
 					let features_count = 0;
@@ -221,6 +239,7 @@ function productComp(comp, parent, data) {
 						data.products_dt.columns.splice(1, 0, ...feature_columns.filter((e) => e));
 					}
 
+					const missing_products_features = [];
 					cross_features.forEach((feature_set) => {
 						const product_features = {};
 						feature_set.forEach((product_feature_option_id) => {
@@ -229,7 +248,9 @@ function productComp(comp, parent, data) {
 						});
 
 						let missing_product = true;
-						data.products.forEach((product) => {
+						/** @type {ProductData[]} */
+						const products = data.products_dt.dataset;
+						products.forEach((product) => {
 							let options_match = true;
 							for (const [feature_id, option_id] of Object.entries(product_features)) {
 								const key = getFeatureKeyFromId(feature_id);
@@ -244,18 +265,12 @@ function productComp(comp, parent, data) {
 						});
 
 						if (missing_product) {
-							/** @type {ProductData} */
-							const product_data = { name: "asdads", gross_price: 45.6, net_price: 45.2, product_id: -1, vat: 77, active: 1 };
-
-							for (const [feature_id, option_id] of Object.entries(product_features)) {
-								const key = getFeatureKeyFromId(feature_id);
-								product_data[key] = option_id;
-							}
-							data.products.push(product_data);
+							missing_products_features.push(product_features);
 						}
 					});
 
-					comp._nodes.all_products._data.dataset = data.products;
+					comp._data.missing_products_features = missing_products_features;
+
 					comp._nodes.all_products._render();
 				}
 			},
@@ -279,7 +294,7 @@ function productComp(comp, parent, data) {
 
 				<div class="label">
 					<span html="{${"Cechy (" + data.features.length + ")"}}"></span>
-					<button data-node="add_variant_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
+					<button data-node="add_feature_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
 				</div>
 
 				<list-comp data-bind="{${data.features}}" class="features" data-primary="product_feature_id">
@@ -288,6 +303,10 @@ function productComp(comp, parent, data) {
 			</div>
 
 			<div class="label"></div>
+			<button class="btn important" style="margin-bottom: var(--form-field-space)" data-node="{${comp._nodes.add_products_btn}}">
+				Dodaj brakujące produkty (<span html="{${data.missing_products_features.length}}"></span>)
+			</button>
+
 			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
 		`,
 		ready: () => {
@@ -336,8 +355,8 @@ function productComp(comp, parent, data) {
 			});
 
 			// other
-			comp._nodes.add_variant_btn.addEventListener("click", () => {
-				select_product_features_modal_comp._show({ source: comp._nodes.add_variant_btn });
+			comp._nodes.add_feature_btn.addEventListener("click", () => {
+				select_product_features_modal_comp._show({ source: comp._nodes.add_feature_btn });
 			});
 
 			const history_btns = comp._child(".history_btns");
@@ -345,6 +364,10 @@ function productComp(comp, parent, data) {
 			if (history_btns_wrapper) {
 				history_btns_wrapper.appendChild(history_btns);
 			}
+
+			comp._nodes.add_products_btn.addEventListener("click", () => {
+				comp._add_missing_products();
+			});
 		},
 	});
 }

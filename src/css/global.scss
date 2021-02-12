@@ -281,15 +281,15 @@ textarea {
 
 /* new form start */
 :root {
-	--form-field-space: 0.8em;
+	--form-field-space: 1em;
 	--form-field-background: #fbfbfb;
 }
 .label:not(.first) {
 	margin-top: var(--form-field-space);
 }
-.form-field-spacing {
+/*.form-field-spacing {
 	--form-field-space: 0.8em;
-}
+}*/
 .label {
 	margin-bottom: 0.2em;
 	user-select: none;

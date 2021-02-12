@@ -20,9 +20,12 @@ product-comp {
 		border-width: 0;
 	}
 
-	.table_container {
-		min-width: 1200px;
+	datatable-comp .dt_cell {
+		min-width: 150px;
 	}
+	/*.table_container {
+		min-width: 1200px;
+	}*/
 
 	.variant_header,
 	.option_header {

@@ -507,15 +507,15 @@ function datatableComp(comp, parent, data) {
 								<datatable-row-comp></datatable-row-comp>
 							</list-comp>
 						</div>
+
+						<div class="expand_y" data-node="{${comp._nodes.empty_table}}">
+							<div class="empty_table" html="{${def(data.empty_html, "Brak wyników")}}"></div>
+						</div>
 					</div>
 				</div>
 			</div>
 
 			<div data-node="{${comp._nodes.filter_menu}}" class="filter_menu"></div>
-
-			<div class="expand_y" data-node="{${comp._nodes.empty_table}}">
-				<div class="empty_table" html="{${def(data.empty_html, "Brak wyników")}}"></div>
-			</div>
 
 			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
 
