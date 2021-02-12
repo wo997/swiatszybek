@@ -20,7 +20,7 @@
  *
  * @typedef {{
  * key: string
- * val: string
+ * data: any
  * }} DatatableFilterData
  *
  * @typedef {{
@@ -367,7 +367,11 @@ function datatableComp(comp, parent, data) {
 								cell_html += html` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
 							}
 							if (column.searchable) {
-								cell_html += html` <button class="btn transparent dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
+								let btn_class = "transparent";
+								if (data.filters.find((e) => e.key === column.key)) {
+									btn_class = "primary";
+								}
+								cell_html += html` <button class="btn ${btn_class} dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
 							}
 							cell_html += /*html*/ `</div>`;
 						}
@@ -449,7 +453,7 @@ function datatableComp(comp, parent, data) {
 					);
 				}
 				data.filters.forEach((f) => {
-					filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.val);
+					filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.data.display);
 				});
 				comp._nodes.filters_info._set_content(filters_info.length ? `<i class="fas fa-filter"></i> Filtry (${filters_info.length}) ` : "");
 				comp._nodes.filters_info.dataset.tooltip = filters_info.join("<br>");
@@ -509,6 +513,8 @@ function datatableComp(comp, parent, data) {
 		initialize: () => {
 			const filter_menu = comp._nodes.filter_menu;
 			const hideFilterMenu = () => {
+				if (!filter_menu.classList.contains("active")) return;
+
 				filter_menu.classList.remove("active");
 				filter_menu.style.animation = "hide 0.2s";
 				setTimeout(() => {
@@ -550,7 +556,7 @@ function datatableComp(comp, parent, data) {
 					} else if (dt_filter) {
 						filterFocusChange();
 						dt_filter.classList.add("open");
-						const curr_filter = data.filters.find((f) => f.key !== column_data.key);
+						const curr_filter = data.filters.find((f) => f.key === column_data.key);
 
 						const filter_menu_data = filter_menus.find((e) => e.name === column_data.searchable);
 
@@ -565,7 +571,7 @@ function datatableComp(comp, parent, data) {
 									filter_menu_data.html +
 									html`<div style="display:flex;margin-top:10px">
 										<button class="btn primary apply" style="width:50%;margin-right:10px">Zastosuj <i class="fas fa-check"></i></button>
-										<button class="btn subtle clear" style="width:50%;">Wyczyść <i class="fas fa-eraser"></i></button>
+										<button class="btn subtle clear" style="width:50%;">Usuń <i class="fas fa-eraser"></i></button>
 									</div>`
 							);
 							registerForms(filter_menu);
@@ -577,7 +583,7 @@ function datatableComp(comp, parent, data) {
 							filter_menu.style.left = pos.relative_pos.left + (pos.node_rect.width - filter_menu_rect.width) * 0.5 + "px";
 							filter_menu.style.top = pos.relative_pos.top + pos.node_rect.height + "px";
 
-							filter_menu_data.open(filter_menu, curr_filter ? curr_filter.val : "");
+							filter_menu_data.open(filter_menu, curr_filter ? curr_filter.data : undefined);
 
 							filter_menu._animate(
 								`0%{transform-origin:50% 0;transform:scale(0.5);opacity:0}
@@ -585,14 +591,21 @@ function datatableComp(comp, parent, data) {
 								200
 							);
 							filter_menu._child(".apply").addEventListener("click", () => {
-								const val = filter_menu_data.apply(filter_menu);
-								data.filters = data.filters.filter((f) => f.key !== column_data.key);
-								data.filters.push({ key: column_data.key, val });
+								const data = filter_menu_data.apply(filter_menu);
+								comp._data.filters = comp._data.filters.filter((f) => f.key !== column_data.key);
+								if (data.display) {
+									comp._data.filters.push({ key: column_data.key, data });
+								}
 
+								comp._render();
 								hideFilterMenu();
 							});
 							filter_menu._child(".clear").addEventListener("click", () => {
-								filter_menu_data.clear(filter_menu);
+								//filter_menu_data.clear(filter_menu);
+								comp._data.filters = comp._data.filters.filter((f) => f.key !== column_data.key);
+								comp._render();
+
+								hideFilterMenu();
 							});
 							filter_menu._child(".close").addEventListener("click", () => {
 								hideFilterMenu();

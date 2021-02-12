@@ -4,7 +4,7 @@
  * @type {{
  * name: string
  * html: string
- * open(elem: PiepNode, val: string)
+ * open(elem: PiepNode, val: any)
  * apply(elem: PiepNode)
  * clear(elem: PiepNode)
  * }[]}
@@ -18,14 +18,17 @@ let filter_menus = [
 				<p-checkbox class="square inline"></p-checkbox>
 				Dopasuj całość
 			</label>`,
-		open: (elem, val = "") => {
-			elem._child("input")._set_value(val);
+
+		open: (elem, val = { text: "", full_match: false }) => {
+			elem._child("input")._set_value(val.text);
 		},
 		apply: (elem) => {
-			return elem._child("input")._get_value();
+			const text = elem._child("input")._get_value();
+			return { type: "string", text, full_match: elem._child("p-checkbox")._get_value(), display: text };
 		},
 		clear: (elem) => {
-			return elem._child("input")._set_value("");
+			elem._child("input")._set_value("");
+			elem._child("p-checkbox")._set_value(0);
 		},
 	},
 	{
