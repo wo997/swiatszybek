@@ -107,9 +107,6 @@ function datatableComp(comp, parent, data) {
 			const target = $(ev.target);
 			const select_row = target._parent(".select_row", { skip: 0 });
 			if (select_row) {
-				// just in case
-				// TODO: DO WE NEED THIS???
-				//setTimeout(() => {
 				const primary_id = +select_row.dataset.primary_id;
 
 				if (select_row._get_value()) {
@@ -122,7 +119,6 @@ function datatableComp(comp, parent, data) {
 						comp._render();
 					}
 				}
-				//});
 			}
 			const select_all_rows = target._parent(".select_all_rows", { skip: 0 });
 			if (select_all_rows) {
@@ -418,7 +414,6 @@ function datatableComp(comp, parent, data) {
 					const visible_selection = [];
 					const ids = [];
 					comp._nodes.list._getRows().forEach((row) => {
-						console.log(row);
 						const select_row = row._child(".select_row");
 						const primary_id = +select_row.dataset.primary_id;
 						ids.push(primary_id);
