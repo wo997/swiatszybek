@@ -507,13 +507,30 @@ function datatableComp(comp, parent, data) {
 			<style data-node="style"></style>
 		`,
 		initialize: () => {
+			const filter_menu = comp._nodes.filter_menu;
+			const hideFilterMenu = () => {
+				filter_menu.classList.remove("active");
+				filter_menu.style.animation = "hide 0.2s";
+				setTimeout(() => {
+					filter_menu.style.animation = "";
+				}, 200);
+
+				filterFocusChange();
+			};
+
+			const filterFocusChange = () => {
+				comp._children(".dt_filter.open").forEach((e) => {
+					e.classList.remove("open");
+				});
+			};
+
 			comp.addEventListener("click", (event) => {
 				const target = $(event.target);
 				if (!target) {
 					return;
 				}
 				const dt_sort = target._parent(".dt_sort", { skip: 0 });
-				const dt_filter = target._parent(".dt_filter", { skip: 0 });
+				const dt_filter = target._parent(".dt_filter:not(.open)", { skip: 0 });
 
 				if (dt_sort || dt_filter) {
 					const data = comp._data;
@@ -531,16 +548,26 @@ function datatableComp(comp, parent, data) {
 						data.sort = new_order ? { key: column_data.key, order: new_order } : false;
 						data.pagination_data.page_id = 0;
 					} else if (dt_filter) {
+						filterFocusChange();
+						dt_filter.classList.add("open");
 						const curr_filter = data.filters.find((f) => f.key !== column_data.key);
-
-						//data.filters.push({ key: column_data.key, val: "123" });
-
-						const filter_menu = comp._nodes.filter_menu;
 
 						const filter_menu_data = filter_menus.find((e) => e.name === column_data.searchable);
 
 						if (filter_menu_data) {
-							filter_menu._set_content(filter_menu_data.html);
+							filter_menu._set_content(
+								html`<div
+									style="display: flex;margin-bottom: 10px;align-items: center;justify-content: space-between;padding-bottom: 5px;border-bottom: 1px solid #ccc;"
+								>
+									<span class="semi-bold">Filtruj ${column_data.label}</span>
+									<button class="btn transparent small close" style="margin: -5px;"><i class="fas fa-times"></i></button>
+								</div>` +
+									filter_menu_data.html +
+									html`<div style="display:flex;margin-top:10px">
+										<button class="btn primary apply" style="width:50%;margin-right:10px">Zastosuj <i class="fas fa-check"></i></button>
+										<button class="btn subtle clear" style="width:50%;">Wyczyść <i class="fas fa-eraser"></i></button>
+									</div>`
+							);
 							registerForms(filter_menu);
 
 							const pos = nodePositionAgainstScrollableParent(dt_filter);
@@ -557,11 +584,31 @@ function datatableComp(comp, parent, data) {
                                 100%{transform-origin:50% 0;transform:scale(1);opacity:1}`,
 								200
 							);
+							filter_menu._child(".apply").addEventListener("click", () => {
+								const val = filter_menu_data.apply(filter_menu);
+								data.filters = data.filters.filter((f) => f.key !== column_data.key);
+								data.filters.push({ key: column_data.key, val });
+
+								hideFilterMenu();
+							});
+							filter_menu._child(".clear").addEventListener("click", () => {
+								filter_menu_data.clear(filter_menu);
+							});
+							filter_menu._child(".close").addEventListener("click", () => {
+								hideFilterMenu();
+							});
 						}
 					}
 					data.pagination_data.page_id = 0;
 					comp._render();
 					return;
+				}
+			});
+
+			document.body.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				if (target && !target._parent(".filter_menu, .dt_filter", { skip: 0 })) {
+					hideFilterMenu();
 				}
 			});
 

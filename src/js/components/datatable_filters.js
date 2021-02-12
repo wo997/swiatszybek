@@ -6,22 +6,26 @@
  * html: string
  * open(elem: PiepNode, val: string)
  * apply(elem: PiepNode)
+ * clear(elem: PiepNode)
  * }[]}
  */
 let filter_menus = [
 	{
 		name: "string",
-		html: html`<span class="label first">Wpisz frazę</span>
+		html: html`<span>Wpisz frazę</span>
 			<input type="text" class="field" style="width: 210px;" />
 			<label style="margin-top:10px">
 				<p-checkbox class="square inline"></p-checkbox>
-				Dopasuj całą frazę
+				Dopasuj całość
 			</label>`,
 		open: (elem, val = "") => {
 			elem._child("input")._set_value(val);
 		},
 		apply: (elem) => {
 			return elem._child("input")._get_value();
+		},
+		clear: (elem) => {
+			return elem._child("input")._set_value("");
 		},
 	},
 	{
@@ -35,6 +39,9 @@ let filter_menus = [
 		},
 		apply: (elem) => {
 			return elem._child("p-radio")._get_value();
+		},
+		clear: (elem) => {
+			return elem._child("p-radio")._set_value("");
 		},
 	},
 	{
@@ -66,6 +73,9 @@ let filter_menus = [
 		},
 		apply: (elem) => {
 			return elem._child(".phrase")._get_value();
+		},
+		clear: (elem) => {
+			return elem._child("input")._set_value("");
 		},
 	},
 ];

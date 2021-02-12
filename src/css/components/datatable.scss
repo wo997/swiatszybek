@@ -123,4 +123,12 @@ datatable-comp {
 		opacity: 0;
 		pointer-events: none;
 	}
+
+	.dt_filter.open {
+		border: 1px solid #ccc;
+		border-bottom-width: 0;
+		box-shadow: 0 2px 3px 0 #0002;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
 }
