@@ -204,6 +204,12 @@ domload(() => {
 	});
 });*/
 
+/**
+ *
+ * @param {PiepNode} input
+ * @param {*} value
+ * @param {*} params
+ */
 function setValue(input, value = null, params = {}) {
 	input = $(input);
 
@@ -214,7 +220,9 @@ function setValue(input, value = null, params = {}) {
 		return;
 	}
 
-	if (input.tagName == "P-RADIO") {
+	if (input.classList.contains("radio_group")) {
+		input.dataset.value = value;
+	} else if (input.tagName == "P-RADIO") {
 		setRadioInputValue(input, value, params);
 	} else if (input.tagName == "P-CHECKBOX") {
 		input.classList.toggle("checked", !!value);
@@ -276,7 +284,9 @@ function xor(a, b) {
 function getValue(input) {
 	let v = input.value;
 
-	if (input.tagName == "P-RADIO") {
+	if (input.classList.contains("radio_group")) {
+		v = def(input.dataset.value, "");
+	} else if (input.tagName == "P-RADIO") {
 		v = getRadioInputValue(input);
 	} else if (input.tagName == "P-CHECKBOX") {
 		v = input.classList.contains("checked") ? 1 : 0;

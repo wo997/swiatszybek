@@ -4,7 +4,7 @@
  * @type {{
  * name: string
  * html: string
- * open(elem: PiepNode, val: any)
+ * open(elem: PiepNode, data: any)
  * apply(elem: PiepNode)
  * clear(elem: PiepNode)
  * }[]}
@@ -19,8 +19,8 @@ let filter_menus = [
 				Dopasuj całość
 			</label>`,
 
-		open: (elem, val = { string: "", full_match: false }) => {
-			elem._child("input")._set_value(val.string);
+		open: (elem, data = { string: "", full_match: false }) => {
+			elem._child("input")._set_value(data.string);
 		},
 		apply: (elem) => {
 			const string = elem._child("input")._get_value();
@@ -33,22 +33,32 @@ let filter_menus = [
 	},
 	{
 		name: "boolean",
-		html: html`<label class="inline">
-				<p-checkbox class="circle inline"></p-checkbox>
+		html: html`<div style="display:flex;justify-content:space-around" class="radio_group">
+			<label class="inline">
+				<p-checkbox class="inline" data-value="1"></p-checkbox>
 				<span class="semi-bold">Tak</span>
 			</label>
 			<label class="inline">
-				<p-checkbox class="circle inline"></p-checkbox>
+				<p-checkbox class="inline" data-value="0"></p-checkbox>
 				<span class="semi-bold">Nie</span>
-			</label>`,
-		open: (elem, val) => {
-			elem._child("p-radio")._set_value(val);
+			</label>
+		</div>`,
+		open: (elem, data = { value: "" }) => {
+			elem._child(".radio_group")._set_value(data.value);
 		},
 		apply: (elem) => {
-			return elem._child("p-radio")._get_value();
+			const value = elem._child(".radio_group")._get_value();
+			let display = undefined;
+			if (value === "1") {
+				display = "Tak";
+			}
+			if (value === "0") {
+				display = "Nie";
+			}
+			return { type: "boolean", value, display };
 		},
 		clear: (elem) => {
-			return elem._child("p-radio")._set_value("");
+			return elem._child(".radio_group")._set_value("");
 		},
 	},
 	{
