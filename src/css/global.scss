@@ -315,6 +315,9 @@ label {
 		padding: 0.2em 0.5em;
 	}
 }
+.label > .btn {
+	margin-left: 5px;
+}
 
 .field {
 	background-color: var(--form-field-background);
