@@ -5,8 +5,8 @@ product-comp {
 		max-width: 700px;
 	}*/
 
-	.features,
-	.options {
+	.bind_features,
+	.bind_options {
 		.list_row {
 			& {
 				padding: 10px;
@@ -44,7 +44,7 @@ product-comp {
 		}
 	}
 
-	.features {
+	.bind_features {
 		& > .list_row {
 			& {
 				background: #f6f6f6;
@@ -58,7 +58,7 @@ product-comp {
 		//     margin-top: 10px;
 		// }
 	}
-	.options {
+	.bind_options {
 		&,
 		& > .list_row {
 			background: #fff;

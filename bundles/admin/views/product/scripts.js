@@ -48,7 +48,6 @@ domload(() => {
 		product_feature_option_ids: [],
 		missing_products_features: [],
 		features: [],
-		products: [],
 	});
 
 	const nameChange = () => {

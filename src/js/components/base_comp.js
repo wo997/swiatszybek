@@ -222,9 +222,13 @@ function createComp(node, parent_comp, data, options) {
 	comp._nodes = {};
 	directCompNodes(comp, `[data-node]`).forEach((n) => {
 		comp._nodes[n.dataset.node] = n;
+		n.classList.add("node_" + n.dataset.node);
 	});
 
 	comp._bindNodes = comp._children(`[data-bind]`);
+	comp._bindNodes.forEach((n) => {
+		n.classList.add("bind_" + n.dataset.bind);
+	});
 
 	if (options.initialize) {
 		options.initialize();
