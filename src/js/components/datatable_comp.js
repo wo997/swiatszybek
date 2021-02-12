@@ -591,10 +591,10 @@ function datatableComp(comp, parent, data) {
 								clamp(
 									5,
 									pos.relative_pos.left + (pos.node_rect.width - filter_menu_rect.width) * 0.5,
-									pos.scrollable_parent.offsetWidth - filter_menu_rect.width - 5
+									pos.scrollable_parent.scrollWidth - filter_menu_rect.width - 5
 								) + "px";
 							filter_menu.style.top =
-								clamp(5, pos.relative_pos.top + pos.node_rect.height, pos.scrollable_parent.offsetHeight - filter_menu_rect.height - 5) +
+								clamp(5, pos.relative_pos.top + pos.node_rect.height, pos.scrollable_parent.scrollHeight - filter_menu_rect.height - 5) +
 								"px";
 
 							filter_menu_data.open(filter_menu, curr_filter ? curr_filter.data : undefined);
