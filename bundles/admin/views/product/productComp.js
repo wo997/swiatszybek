@@ -17,6 +17,7 @@
  *  product_feature_ids: number[]
  *  features: Product_FeatureCompData[]
  *  missing_products_features: Object[]
+ *  unnecessary_product_ids?: number[]
  *  products_dt?: DatatableCompData
  * }} ProductCompData
  *
@@ -79,6 +80,7 @@ function productComp(comp, parent, data) {
 	};
 
 	data.products_dt = def(data.products_dt, table);
+	data.unnecessary_product_ids = [];
 
 	comp._add_missing_products = () => {
 		const data = comp._data;
@@ -298,19 +300,27 @@ function productComp(comp, parent, data) {
 				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id">
 					<product_feature-comp></product_feature-comp>
 				</list-comp>
+
+				<p
+					style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #555;text-align: justify;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;"
+				>
+					<i class="fas fa-info-circle"></i> Na podstawie cech zostanie wygenerowana lista produktów - tych samych, które są w Twoim
+					magazynie. Przykładowo jeśli wybierzemy kolory czerwony i niebieski, oraz rozmiary 36, 37 i 38, otrzymamy 6 produktów będących
+					"krzyżówką" podanych cech. Domyślnie (bez wybrania cech) będzie to tylko 1 produkt.
+				</p>
 			</div>
 
-			<div class="label"></div>
 			<button
 				class="btn {${data.missing_products_features.length > 0}?important:subtle}"
-				style="margin-bottom: var(--form-field-space)"
 				data-node="{${comp._nodes.add_products_btn}}"
 				data-tooltip="{${data.missing_products_features.length > 0
 					? "Zalecane po uzupełnieniu wszystkich cech produktu"
-					: "Nie wybrano dodatkowych cech produktu"}}"
+					: "Nie wybrano dodatkowych cech produktu względem listy"}}"
 			>
 				Dodaj brakujące produkty (<span html="{${data.missing_products_features.length}}"></span>)
 			</button>
+			<button class="btn subtle">Usuń niepotrzebne produkty (<span html="{${data.missing_products_features.length}}"></span>)</button>
+			<div class="label"></div>
 
 			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
 		`,
