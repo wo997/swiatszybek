@@ -278,6 +278,10 @@ function datatableComp(comp, parent, data) {
 							if (minify_word(val).indexOf(minify_word(filter.data.string)) === -1) {
 								return false;
 							}
+						} else if (filter.data.type === "boolean") {
+							if (xor(val, filter.data.value)) {
+								return false;
+							}
 						}
 					}
 				}

@@ -255,6 +255,11 @@ function getFilterCondition($key, $data)
             $string = "%$string%";
         }
         return " AND $key LIKE '$string'";
+    } else if ($type === "boolean") {
+        if ($data["value"]) {
+            return " AND $key";
+        }
+        return " AND NOT $key";
     }
 
     return "";

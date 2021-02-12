@@ -3043,7 +3043,7 @@ domload(() => {
 	};
 
 	ppp.products.forEach((d) => {
-		d.active = 1;
+		d.active = Math.random() < 0.8 ? 1 : 0;
 		d.stock = Math.floor(100 * Math.random());
 	});
 	product_comp._set_data(ppp);

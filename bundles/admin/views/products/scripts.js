@@ -9,7 +9,7 @@ domload(() => {
 		search_url: STATIC_URLS["ADMIN"] + "search_products",
 		columns: [
 			{ label: "Produkt", key: "title", width: "20%", sortable: true, searchable: "string" },
-			{ label: "Publiczny", key: "published", width: "20%", sortable: true, searchable: "string" },
+			{ label: "Publiczny", key: "published", width: "20%", sortable: true, searchable: "boolean" },
 			{ label: "W magazynie", key: "stock", width: "20%", sortable: true, searchable: "number" },
 			{
 				label: "Akcja",

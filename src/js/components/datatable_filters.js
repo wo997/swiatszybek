@@ -55,7 +55,7 @@ let filter_menus = [
 			if (value === "0") {
 				display = "Nie";
 			}
-			return { type: "boolean", value, display };
+			return { type: "boolean", value: +value, display };
 		},
 		clear: (elem) => {
 			return elem._child(".radio_group")._set_value("");
