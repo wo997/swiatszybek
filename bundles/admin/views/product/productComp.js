@@ -346,11 +346,11 @@ function productComp(comp, parent, data) {
 			<button
 				class="btn subtle"
 				data-node="{${comp._nodes.remove_products_btn}}"
-				data-tooltip="{${data.missing_products_features.length > 0
+				data-tooltip="{${data.unnecessary_product_ids.length === 0
+					? "Wszystko się zgadza!"
+					: data.missing_products_features.length > 0
 					? "Najpierw dodaj brakujące produkty"
-					: data.unnecessary_product_ids.length > 0
-					? "Pamiętaj o przepisaniu istotnych danych"
-					: "Wszystko się zgadza!"}}"
+					: "Pamiętaj o przepisaniu istotnych danych"}}"
 			>
 				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)
 			</button>

@@ -108,20 +108,21 @@ function datatableComp(comp, parent, data) {
 			const select_row = target._parent(".select_row", { skip: 0 });
 			if (select_row) {
 				// just in case
-				setTimeout(() => {
-					const primary_id = +select_row.dataset.primary_id;
+				// TODO: DO WE NEED THIS???
+				//setTimeout(() => {
+				const primary_id = +select_row.dataset.primary_id;
 
-					if (select_row._get_value()) {
-						comp._data.selection.push(primary_id);
+				if (select_row._get_value()) {
+					comp._data.selection.push(primary_id);
+					comp._render();
+				} else {
+					const index = comp._data.selection.indexOf(primary_id);
+					if (index !== -1) {
+						comp._data.selection.splice(index, 1);
 						comp._render();
-					} else {
-						const index = comp._data.selection.indexOf(primary_id);
-						if (index !== -1) {
-							comp._data.selection.splice(index, 1);
-							comp._render();
-						}
 					}
-				});
+				}
+				//});
 			}
 			const select_all_rows = target._parent(".select_all_rows", { skip: 0 });
 			if (select_all_rows) {
@@ -417,6 +418,7 @@ function datatableComp(comp, parent, data) {
 					const visible_selection = [];
 					const ids = [];
 					comp._nodes.list._getRows().forEach((row) => {
+						console.log(row);
 						const select_row = row._child(".select_row");
 						const primary_id = +select_row.dataset.primary_id;
 						ids.push(primary_id);
