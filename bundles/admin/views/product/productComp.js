@@ -7,6 +7,7 @@
  *  net_price: number
  *  vat: number
  *  gross_price: number
+ *  stock: number
  *  is_necessary?: boolean
  * }} ProductData
  *
@@ -87,16 +88,46 @@ function productComp(comp, parent, data) {
 
 	comp._add_missing_products = () => {
 		const data = comp._data;
+		const add_products = [];
+
+		const all_feature_keys = data.product_feature_ids.map((feature_id) => getFeatureKeyFromId(feature_id));
+		const copy_keys_same = ["net_price", "vat", "gross_price", "active"];
 
 		data.missing_products_features.forEach((features) => {
 			/** @type {ProductData} */
-			const product_data = { gross_price: 12.3, net_price: 45.6, product_id: -1, vat: 8, active: 1 };
+			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat: 0, active: 1, stock: 0 };
 
 			for (const [feature_id, option_id] of Object.entries(features)) {
 				const key = getFeatureKeyFromId(feature_id);
 				product_data[key] = option_id;
 			}
-			data.products_dt.dataset.push(product_data);
+
+			let copy_product = undefined;
+			let max_shared_features = 0;
+			data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
+				let shared_features = 0;
+				for (const feature_key of all_feature_keys) {
+					if (product_data[feature_key] === other_product[feature_key]) {
+						shared_features++;
+					}
+				}
+
+				if (shared_features > max_shared_features) {
+					max_shared_features = shared_features;
+					copy_product = other_product;
+				}
+			});
+
+			if (copy_product) {
+				for (const key of copy_keys_same) {
+					product_data[key] = copy_product[key];
+				}
+			}
+
+			add_products.push(product_data);
+		});
+		add_products.forEach((p) => {
+			data.products_dt.dataset.push(p);
 		});
 
 		comp._render();
@@ -344,7 +375,7 @@ function productComp(comp, parent, data) {
 				Dodaj brakujące produkty (<span html="{${data.missing_products_features.length}}"></span>)
 			</button>
 			<button
-				class="btn subtle"
+				class="btn {${data.unnecessary_product_ids.length > 0}?error_light:subtle}"
 				data-node="{${comp._nodes.remove_products_btn}}"
 				data-tooltip="{${data.unnecessary_product_ids.length === 0
 					? "Wszystko się zgadza!"
