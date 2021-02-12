@@ -7,6 +7,7 @@
  *  net_price: number
  *  vat: number
  *  gross_price: number
+ *  is_necessary?: boolean
  * }} ProductData
  *
  * @typedef {{
@@ -29,8 +30,10 @@
  *      add_feature_btn: PiepNode
  *      all_products: DatatableComp
  *      add_products_btn: PiepNode
+ *      remove_products_btn: PiepNode
  *  }
  *  _add_missing_products()
+ *  _remove_missing_products()
  * } & BaseComp} ProductComp
  */
 
@@ -94,6 +97,16 @@ function productComp(comp, parent, data) {
 				product_data[key] = option_id;
 			}
 			data.products_dt.dataset.push(product_data);
+		});
+
+		comp._render();
+	};
+
+	comp._remove_missing_products = () => {
+		const data = comp._data;
+
+		data.products_dt.dataset = data.products_dt.dataset.filter((/** @type {ProductData} */ product) => {
+			return product.is_necessary;
 		});
 
 		comp._render();
@@ -242,6 +255,13 @@ function productComp(comp, parent, data) {
 
 				if (selection_changed || ch.products_dt) {
 					const missing_products_features = [];
+
+					/** @type {ProductData[]} */
+					const products = data.products_dt.dataset;
+					products.forEach((p) => {
+						p.is_necessary = false;
+					});
+
 					cross_features.forEach((feature_set) => {
 						const product_features = {};
 						feature_set.forEach((product_feature_option_id) => {
@@ -250,9 +270,11 @@ function productComp(comp, parent, data) {
 						});
 
 						let missing_product = true;
-						/** @type {ProductData[]} */
-						const products = data.products_dt.dataset;
 						products.forEach((product) => {
+							if (product.is_necessary) {
+								return;
+							}
+
 							let options_match = true;
 							for (const [feature_id, option_id] of Object.entries(product_features)) {
 								const key = getFeatureKeyFromId(feature_id);
@@ -263,6 +285,7 @@ function productComp(comp, parent, data) {
 							}
 							if (options_match) {
 								missing_product = false;
+								product.is_necessary = true;
 							}
 						});
 
@@ -271,7 +294,8 @@ function productComp(comp, parent, data) {
 						}
 					});
 
-					comp._data.missing_products_features = missing_products_features;
+					data.missing_products_features = missing_products_features;
+					data.unnecessary_product_ids = products.filter((p) => !p.is_necessary).map((p) => p.product_id);
 				}
 			},
 		});
@@ -315,11 +339,21 @@ function productComp(comp, parent, data) {
 				data-node="{${comp._nodes.add_products_btn}}"
 				data-tooltip="{${data.missing_products_features.length > 0
 					? "Zalecane po uzupełnieniu wszystkich cech produktu"
-					: "Nie wybrano dodatkowych cech produktu względem listy"}}"
+					: "Wszystko się zgadza!"}}"
 			>
 				Dodaj brakujące produkty (<span html="{${data.missing_products_features.length}}"></span>)
 			</button>
-			<button class="btn subtle">Usuń niepotrzebne produkty (<span html="{${data.missing_products_features.length}}"></span>)</button>
+			<button
+				class="btn subtle"
+				data-node="{${comp._nodes.remove_products_btn}}"
+				data-tooltip="{${data.missing_products_features.length > 0
+					? "Najpierw dodaj brakujące produkty"
+					: data.unnecessary_product_ids.length > 0
+					? "Pamiętaj o przepisaniu istotnych danych"
+					: "Wszystko się zgadza!"}}"
+			>
+				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)
+			</button>
 			<div class="label"></div>
 
 			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
@@ -382,6 +416,10 @@ function productComp(comp, parent, data) {
 
 			comp._nodes.add_products_btn.addEventListener("click", () => {
 				comp._add_missing_products();
+			});
+
+			comp._nodes.remove_products_btn.addEventListener("click", () => {
+				comp._remove_missing_products();
 			});
 		},
 	});
