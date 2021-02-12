@@ -19,12 +19,12 @@ let filter_menus = [
 				Dopasuj całość
 			</label>`,
 
-		open: (elem, val = { text: "", full_match: false }) => {
-			elem._child("input")._set_value(val.text);
+		open: (elem, val = { string: "", full_match: false }) => {
+			elem._child("input")._set_value(val.string);
 		},
 		apply: (elem) => {
-			const text = elem._child("input")._get_value();
-			return { type: "string", text, full_match: elem._child("p-checkbox")._get_value(), display: text };
+			const string = elem._child("input")._get_value();
+			return { type: "string", string, full_match: elem._child("p-checkbox")._get_value(), display: string };
 		},
 		clear: (elem) => {
 			elem._child("input")._set_value("");

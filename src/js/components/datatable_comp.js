@@ -182,9 +182,7 @@ function datatableComp(comp, parent, data) {
 			if (data.sort) {
 				datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
 			}
-			if (data.filters) {
-				datatable_params.filters = data.filters;
-			}
+			datatable_params.filters = data.filters;
 			datatable_params.row_count = data.pagination_data.row_count;
 			datatable_params.page_id = data.pagination_data.page_id;
 			datatable_params.quick_search = data.quick_search;
@@ -250,34 +248,42 @@ function datatableComp(comp, parent, data) {
 			let rows = cloneObject(data.dataset);
 
 			const qs = def(data.quick_search, "").trim();
-			if (qs) {
-				rows = rows.filter((r) => {
-					for (let [key, val] of Object.entries(r)) {
-						const column = data.columns.find((e) => e.key === key);
 
-						if (column && column.render) {
-							val = column.render(r);
-						}
+			rows = rows.filter((r) => {
+				for (let [key, val] of Object.entries(r)) {
+					const column = data.columns.find((e) => e.key === key);
 
-						/**
-						 * @param {string} str
-						 */
-						const minify_word = (str) => {
-							if (!str) {
-								return "";
-							}
-							return replacePolishLetters((str + "").toLocaleLowerCase());
-						};
-
-						// TODO: split qs and hope that all pieces match
-						if (minify_word(val).indexOf(minify_word(qs)) !== -1) {
-							return true;
-						}
+					if (column && column.render) {
+						val = column.render(r);
 					}
 
-					return false;
-				});
-			}
+					/**
+					 * @param {string} str
+					 */
+					const minify_word = (str) => {
+						if (!str) {
+							return "";
+						}
+						return replacePolishLetters((str + "").toLocaleLowerCase());
+					};
+
+					// TODO: split qs and hope that all pieces match
+					if (qs && minify_word(val).indexOf(minify_word(qs)) === -1) {
+						return false;
+					}
+
+					const filter = data.filters.find((e) => e.key === key);
+					if (filter) {
+						if (filter.data.type === "string") {
+							if (minify_word(val).indexOf(minify_word(filter.data.string)) === -1) {
+								return false;
+							}
+						}
+					}
+				}
+
+				return true;
+			});
 
 			if (data.sort) {
 				const sort_key = data.sort.key;
