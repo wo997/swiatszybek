@@ -29,7 +29,7 @@
  * _bind_var?: string
  * _changed_data?: object
  * _eval_attrs: {node?: PiepNode, evals: {name: string, eval_str: string}[]}[]
- * _eval_class: {node: PiepNode, eval_str: string, className: string}[]
+ * _eval_class: {node: PiepNode, eval_str: string, className: string, opposite?: string}[]
  * _comp_traits: CompTrait[]
  * _propagating_data: boolean
  * _render(options?: SetAnyCompDataOptions): void
@@ -180,14 +180,19 @@ function createComp(node, parent_comp, data, options) {
 		// reactive classes and maybe even more
 		directCompNodes(node).forEach((child) => {
 			let out = child.className;
-			const matches_c = out.match(/\{\w*?:\{.*?}}/gm);
+			const matches_c = out.match(/\{\{.*?\}\?.*?\}/gm);
 			if (matches_c) {
 				for (const match of matches_c) {
 					const content = match.substring(1, match.length - 1);
-					const [className, ev] = content.split(":");
-					const eval_str = ev.substring(1, ev.length - 1);
+					let [eval_str, className] = content.split("}?");
+					const data = { eval_str: eval_str.substring(1), node: child, className };
+					let parts = className.split(":");
+					if (parts.length > 1) {
+						data.className = parts[0];
+						data.opposite = parts[1];
+					}
 
-					comp._eval_class.push({ eval_str, node: child, className });
+					comp._eval_class.push(data);
 					out = out.replace(match, "");
 				}
 			}
@@ -394,7 +399,11 @@ function setCompData(comp, _data = undefined, options = {}) {
 
 	for (const eval_class of node._eval_class) {
 		try {
-			eval_class.node.classList.toggle(eval_class.className, !!eval(eval_class.eval_str));
+			const ok = !!eval(eval_class.eval_str);
+			eval_class.node.classList.toggle(eval_class.className, ok);
+			if (eval_class.opposite) {
+				eval_class.node.classList.toggle(eval_class.opposite, !ok);
+			}
 		} catch (e) {
 			console.error(`Cannot evaluate class ${eval_class.eval_str}: ${e}`);
 			console.trace();

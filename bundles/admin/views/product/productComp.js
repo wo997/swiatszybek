@@ -305,7 +305,9 @@ function productComp(comp, parent, data) {
 				class="btn {${data.missing_products_features.length > 0}?important:subtle}"
 				style="margin-bottom: var(--form-field-space)"
 				data-node="{${comp._nodes.add_products_btn}}"
-				data-tooltip="Zalecamy zrobić to dopiero gdy<br>uzupełnisz wszystkie cechy produktu"
+				data-tooltip="{${data.missing_products_features.length > 0
+					? "Zalecane po uzupełnieniu wszystkich cech produktu"
+					: "Nie wybrano dodatkowych cech produktu"}}"
 			>
 				Dodaj brakujące produkty (<span html="{${data.missing_products_features.length}}"></span>)
 			</button>
