@@ -122,7 +122,7 @@ if ($modifyJS) {
         $js_full = str_replace('{${', '{{', $js_full);
 
         // reactive classes
-        if (preg_match_all('/\{\w*?:\$\{.*?}}/', $js_full, $matches)) {
+        if (preg_match_all('/\{\$\{.*?\}\?.*?\}/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
                 $rep = strReplaceFirst('$', '', $match);
                 $rep = htmlspecialchars($rep);
@@ -131,7 +131,7 @@ if ($modifyJS) {
         }
 
         // reactive attributes - just escping
-        if (preg_match_all('/(?<=["\'])\{\{.*?}}(?=["\'])/', $js_full, $matches)) {
+        if (preg_match_all('/(?<=["\'])\{\{.*?\}\}(?=["\'])/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
                 $rep = htmlspecialchars($match);
                 $js_full = str_replace($match, $rep, $js_full);
@@ -139,7 +139,7 @@ if ($modifyJS) {
         }
 
         // binding
-        if (preg_match_all('/data-bind="\{\{[^()]*?data\.[^()]*?}}"/', $js_full, $matches)) {
+        if (preg_match_all('/data-bind="\{\{[^()]*?data\.[^()]*?\}\}"/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
                 $rep = $match;
                 $rep = preg_replace("/(?<=[\s{])data\./", "", $rep);
@@ -150,7 +150,7 @@ if ($modifyJS) {
         }
 
         // nodes
-        if (preg_match_all('/data-node="\{\{[^()]*?comp\._nodes\.[^()]*?}}"/', $js_full, $matches)) {
+        if (preg_match_all('/data-node="\{\{[^()]*?comp\._nodes\.[^()]*?\}\}"/', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
                 $rep = $match;
                 $rep = preg_replace("/(?<=[\s{])comp\._nodes\./", "", $rep);

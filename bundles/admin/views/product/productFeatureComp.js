@@ -97,7 +97,7 @@ function productFeatureComp(comp, parent, data) {
 				Opcje
 				<button class="btn primary small" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>
 				<button
-					class="btn {important:${data.selection_ok}} {subtle:${!data.selection_ok}} small"
+					class="btn {${data.selection_ok}?important:subtle} small"
 					data-node="{${comp._nodes.select_parent_option_btn}}"
 					data-tooltip="{${!data.selection_ok ? "Najpierw wybierz opcje z listy poniżej" : ""}}"
 				>

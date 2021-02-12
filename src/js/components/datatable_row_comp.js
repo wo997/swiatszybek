@@ -91,6 +91,6 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 	};
 
 	createComp(comp, parent, data, {
-		template: html`<div data-node="{${comp._nodes.dt_row}}" class="dt_row {even:${data.row_index % 2 === 0}}"></div>`,
+		template: html`<div data-node="{${comp._nodes.dt_row}}" class="dt_row {${data.row_index % 2 === 0}?even}"></div>`,
 	});
 }

@@ -94,7 +94,6 @@ function productComp(comp, parent, data) {
 			data.products_dt.dataset.push(product_data);
 		});
 
-		console.log(123);
 		comp._render();
 	};
 
@@ -215,17 +214,16 @@ function productComp(comp, parent, data) {
 					}
 				});
 
-				if (ch.product_feature_ids || ch.product_feature_option_ids || ch.product_dt) {
+				const selection_changed = ch.product_feature_ids || ch.product_feature_option_ids;
+				if (selection_changed) {
 					let any_column_change = false;
 					let column_index = -1;
-					let features_count = 0;
 					/** @type {DatatableColumnDef[]} */
 					const feature_columns = [];
 					data.products_dt.columns.forEach((column) => {
 						column_index++;
 						const feature_id = getFeatureIdFromKey(column.key);
 						if (feature_id) {
-							features_count++;
 							const req_column_index = data.product_feature_ids.indexOf(feature_id);
 							feature_columns[req_column_index] = column;
 							if (req_column_index + 1 !== column_index) {
@@ -238,7 +236,9 @@ function productComp(comp, parent, data) {
 						data.products_dt.columns = data.products_dt.columns.filter((e) => getFeatureIdFromKey(e.key) === 0);
 						data.products_dt.columns.splice(1, 0, ...feature_columns.filter((e) => e));
 					}
+				}
 
+				if (selection_changed || ch.products_dt) {
 					const missing_products_features = [];
 					cross_features.forEach((feature_set) => {
 						const product_features = {};
@@ -270,8 +270,6 @@ function productComp(comp, parent, data) {
 					});
 
 					comp._data.missing_products_features = missing_products_features;
-
-					comp._nodes.all_products._render();
 				}
 			},
 		});
@@ -303,7 +301,12 @@ function productComp(comp, parent, data) {
 			</div>
 
 			<div class="label"></div>
-			<button class="btn important" style="margin-bottom: var(--form-field-space)" data-node="{${comp._nodes.add_products_btn}}">
+			<button
+				class="btn {${data.missing_products_features.length > 0}?important:subtle}"
+				style="margin-bottom: var(--form-field-space)"
+				data-node="{${comp._nodes.add_products_btn}}"
+				data-tooltip="Zalecamy zrobić to dopiero gdy<br>uzupełnisz wszystkie cechy produktu"
+			>
 				Dodaj brakujące produkty (<span html="{${data.missing_products_features.length}}"></span>)
 			</button>
 
