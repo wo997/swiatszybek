@@ -27,7 +27,7 @@ domload(() => {
 	};
 
 	// crazy shit lol
-	document.addEventListener("pointermove", (event) => {
+	const tacz = (event) => {
 		const t = tooltip.target;
 
 		const target = $(event.target);
@@ -97,7 +97,10 @@ domload(() => {
 		} else t.style.display = "none";
 
 		tooltip.last_target = e;
-	});
+	};
+	document.body.addEventListener("mousemove", tacz);
+	document.body.addEventListener("touchstart", tacz);
+
 	window.addEventListener("mousewheel", () => {
 		tooltip.dismiss();
 	});

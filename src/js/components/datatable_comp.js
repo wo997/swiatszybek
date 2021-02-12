@@ -504,9 +504,10 @@ function datatableComp(comp, parent, data) {
 							</list-comp>
 						</div>
 					</div>
-					<div data-node="{${comp._nodes.filter_menu}}" class="filter_menu"></div>
 				</div>
 			</div>
+
+			<div data-node="{${comp._nodes.filter_menu}}" class="filter_menu"></div>
 
 			<div class="expand_y" data-node="{${comp._nodes.empty_table}}">
 				<div class="empty_table" html="{${def(data.empty_html, "Brak wyników")}}"></div>
@@ -586,8 +587,15 @@ function datatableComp(comp, parent, data) {
 							const filter_menu_rect = filter_menu.getBoundingClientRect();
 
 							filter_menu.classList.add("active");
-							filter_menu.style.left = pos.relative_pos.left + (pos.node_rect.width - filter_menu_rect.width) * 0.5 + "px";
-							filter_menu.style.top = pos.relative_pos.top + pos.node_rect.height + "px";
+							filter_menu.style.left =
+								clamp(
+									5,
+									pos.relative_pos.left + (pos.node_rect.width - filter_menu_rect.width) * 0.5,
+									pos.scrollable_parent.offsetWidth - filter_menu_rect.width - 5
+								) + "px";
+							filter_menu.style.top =
+								clamp(5, pos.relative_pos.top + pos.node_rect.height, pos.scrollable_parent.offsetHeight - filter_menu_rect.height - 5) +
+								"px";
 
 							filter_menu_data.open(filter_menu, curr_filter ? curr_filter.data : undefined);
 
@@ -624,12 +632,15 @@ function datatableComp(comp, parent, data) {
 				}
 			});
 
-			document.body.addEventListener("click", (ev) => {
+			const tacz = (ev) => {
 				const target = $(ev.target);
 				if (target && !target._parent(".filter_menu, .dt_filter", { skip: 0 })) {
 					hideFilterMenu();
 				}
-			});
+			};
+
+			document.body.addEventListener("mousedown", tacz);
+			document.body.addEventListener("touchstart", tacz);
 
 			comp._nodes.clear_filters_btn.addEventListener("click", () => {
 				const data = comp._data;

@@ -159,11 +159,11 @@ function paginateData($params = [])
         $where = "1";
     }
 
-    $filters = def($_POST, "filters");
+    $filters = def($params, ["datatable_params", "filters"], []);
     if ($filters) {
-        $filters = json_decode($filters, true);
         foreach ($filters as $filter) {
-            $where .= getFilterCondition($filter["field"], $filter["type"], $filter["value"]);
+            //$where .= getFilterCondition($filter["field"], $filter["type"], $filter["value"]);
+            $where .= getFilterCondition($filter["key"], $filter["data"]);
         }
     }
 
@@ -218,7 +218,6 @@ function paginateData($params = [])
     }
 
     $total_rows = DB::fetchVal($countQuery);
-    //$page_idCount = $row_count > 0 ? ceil($total_rows / $row_count) : 0;
 
     if ($order) {
         $order = "ORDER BY $order";
@@ -239,72 +238,84 @@ function paginateData($params = [])
     }
     unset($result);
 
-    // $page_idCount = $page_idCount * 2;
-    // $results = array_merge($results, $results);
-    // $page_idCount = $page_idCount * 4;
-    // $results = array_merge($results, $results, $results, $results);
-
-    // a dynamic type would be dope but indexing gets tricky
-    //$res = ["page_count" => $page_idCount, "total_rows" => $total_rows, "rows" => $results];
     $res = ["total_rows" => $total_rows, "rows" => $results];
 
     return $res;
 }
 
-/**
- * Example filters:
- * - 3, include 3
- * - !3, exclude 3
- * - "abc", include "abc"
- * - [1, 2, 3], include 1, 2, 3
- * - !["a", "b", "c"], exclude "a", "b", "c"
- *
- * @param  string $field column name
- * @param  string $filter_string json
- * @return void
- */
-function getFilterCondition($field, $type, $filter_value)
+function getFilterCondition($key, $data)
 {
-    $field = clean($field);
-    //if (in_array($type, ["=", "!=", "%"])) {
+    $key = clean($key);
+    $type = def($data, "type", "");
 
-    if ($type == "<>") {
-        return " AND $field BETWEEN " . DB::escape($filter_value[0]) . " AND " . DB::escape(changeDate($filter_value[1], "+1 day"));
-    }
-
-    if (is_array($filter_value)) {
-        if ($filter_value) {
-            $list = "";
-            foreach ($filter_value as $value) {
-                $list .= DB::escape($value) . ",";
-            }
-            $list = substr($list, 0, -1);
-            return " AND $field " . ($type == "!=" ? " NOT IN" : " IN") . "(" . $list . ")";
-        } else {
-            if ($type == "=") {
-                return " AND 0";
-            }
-            return "";
+    if ($type === "string") {
+        $full_match = def($data, "full_match", 0);
+        $string = DB::escape($data["string"], false);
+        if (!$full_match) {
+            $string = "%$string%";
         }
+        return " AND $key LIKE '$string'";
     }
 
-    if ($type == "%") {
-        if (!preg_replace("/[^%]/", "", $filter_value)) {
-            return "";
-        }
-        return " AND $field LIKE " . DB::escape($filter_value);
-    }
-
-    if ($type == ">") {
-        return " AND $field > " . DB::escape($filter_value);
-    }
-
-    if ($type == "<") {
-        return " AND $field < " . DB::escape(changeDate($filter_value, "+1 day"));
-    }
-
-    return " AND $field " . ($type == "!=" ? "!=" : "=") . DB::escape($filter_value);
+    return "";
 }
+
+// /** 
+//  * DEPRECATED
+//  * 
+//  * Example filters:
+//  * - 3, include 3
+//  * - !3, exclude 3
+//  * - "abc", include "abc"
+//  * - [1, 2, 3], include 1, 2, 3
+//  * - !["a", "b", "c"], exclude "a", "b", "c"
+//  *
+//  * @param  string $field column name
+//  * @param  string $filter_string json
+//  * @return void
+//  */
+// function getFilterCondition($field, $type, $filter_value)
+// {
+//     $field = clean($field);
+//     //if (in_array($type, ["=", "!=", "%"])) {
+
+//     if ($type == "<>") {
+//         return " AND $field BETWEEN " . DB::escape($filter_value[0]) . " AND " . DB::escape(changeDate($filter_value[1], "+1 day"));
+//     }
+
+//     if (is_array($filter_value)) {
+//         if ($filter_value) {
+//             $list = "";
+//             foreach ($filter_value as $value) {
+//                 $list .= DB::escape($value) . ",";
+//             }
+//             $list = substr($list, 0, -1);
+//             return " AND $field " . ($type == "!=" ? " NOT IN" : " IN") . "(" . $list . ")";
+//         } else {
+//             if ($type == "=") {
+//                 return " AND 0";
+//             }
+//             return "";
+//         }
+//     }
+
+//     if ($type == "%") {
+//         if (!preg_replace("/[^%]/", "", $filter_value)) {
+//             return "";
+//         }
+//         return " AND $field LIKE " . DB::escape($filter_value);
+//     }
+
+//     if ($type == ">") {
+//         return " AND $field > " . DB::escape($filter_value);
+//     }
+
+//     if ($type == "<") {
+//         return " AND $field < " . DB::escape(changeDate($filter_value, "+1 day"));
+//     }
+
+//     return " AND $field " . ($type == "!=" ? "!=" : "=") . DB::escape($filter_value);
+// }
 
 $requiredFilterTables = [
     "product_categories" => "parent_id",
