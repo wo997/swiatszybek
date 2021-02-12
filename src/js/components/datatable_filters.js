@@ -33,10 +33,14 @@ let filter_menus = [
 	},
 	{
 		name: "boolean",
-		html: html`<p-radio class="default columns_1">
-			<radio-option value="1">Tak</radio-option>
-			<radio-option value="0">Nie</radio-option>
-		</p-radio>`,
+		html: html`<label class="inline">
+				<p-checkbox class="circle inline"></p-checkbox>
+				<span class="semi-bold">Tak</span>
+			</label>
+			<label class="inline">
+				<p-checkbox class="circle inline"></p-checkbox>
+				<span class="semi-bold">Nie</span>
+			</label>`,
 		open: (elem, val) => {
 			elem._child("p-radio")._set_value(val);
 		},

@@ -46,9 +46,12 @@ p-checkbox .circle {
 	transition: 0.2s all;
 }
 
-p-checkbox.square:not(.checked) .circle {
-	transform: scale(0.3);
-	opacity: 0;
+p-checkbox.square,
+p-checkbox.circle {
+	&:not(.checked) .circle {
+		transform: scale(0.3);
+		opacity: 0;
+	}
 }
 
 p-checkbox:not(.checked) .circle {
@@ -71,7 +74,7 @@ p-checkbox:hover {
 	}
 }
 
-p-checkbox:not(.square) .circle::before {
+p-checkbox:not(.square):not(.circle) .circle::before {
 	content: "";
 	background: transparent;
 	position: absolute;
@@ -115,18 +118,19 @@ p-checkbox.checked .fa-minus {
 
 p-checkbox.square {
 	& {
-		--p-checkbox-width: var(--p-checkbox-height);
 		border-radius: 4px;
 	}
 	.circle {
 		border-radius: 4px;
 	}
-	/*&,
-	* {
-		transition: none !important;
-	}*/
 }
 
-p-checkbox.square .fa-minus {
-	display: none;
+p-checkbox.square,
+p-checkbox.circle {
+	& {
+		--p-checkbox-width: var(--p-checkbox-height);
+	}
+	.fa-minus {
+		display: none;
+	}
 }

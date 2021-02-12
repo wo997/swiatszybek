@@ -576,7 +576,7 @@ function datatableComp(comp, parent, data) {
 									<button class="btn transparent small close" style="margin: -5px;"><i class="fas fa-times"></i></button>
 								</div>` +
 									filter_menu_data.html +
-									html`<div style="display:flex;margin-top:10px">
+									html`<div style="display:flex;margin-top:10px;min-width: 215px;">
 										<button class="btn primary apply" style="width:50%;margin-right:10px">Zastosuj <i class="fas fa-check"></i></button>
 										<button class="btn subtle clear" style="width:50%;">Usuń <i class="fas fa-eraser"></i></button>
 									</div>`
