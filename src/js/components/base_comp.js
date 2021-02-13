@@ -422,9 +422,9 @@ function setCompData(comp, _data = undefined, options = {}) {
 		}
 	}
 
-	if (equal) {
-		return;
-	}
+	// if (equal) {
+	// 	return;
+	// }
 
 	node._prev_data = cloneObject(node._data);
 
