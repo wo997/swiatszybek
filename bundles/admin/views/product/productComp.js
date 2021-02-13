@@ -266,7 +266,7 @@ function productComp(comp, parent, data) {
 
 				const ch = comp._changed_data;
 
-				if (ch.product_feature_ids) {
+				if (ch.product_feature_ids || options.force_render) {
 					data.features = data.product_feature_ids.map((product_feature_id) => {
 						const fe = product_features.find((pf) => {
 							return pf.product_feature_id === product_feature_id;
@@ -285,7 +285,7 @@ function productComp(comp, parent, data) {
 					data.product_feature_ids = data.product_feature_ids.filter((e) => missing_feature_ids.indexOf(e) === -1);
 				}
 
-				if (ch.product_feature_ids || ch.product_feature_option_ids) {
+				if (ch.product_feature_ids || ch.product_feature_option_ids || options.force_render) {
 					const missing_option_ids = [];
 					const product_feature_option_ids = [];
 
@@ -375,7 +375,7 @@ function productComp(comp, parent, data) {
 				});
 
 				const selection_changed = ch.product_feature_ids || ch.product_feature_option_ids;
-				if (selection_changed) {
+				if (selection_changed || options.force_render) {
 					let any_column_change = false;
 					let column_index = -1;
 					/** @type {DatatableColumnDef[]} */
@@ -398,7 +398,7 @@ function productComp(comp, parent, data) {
 					}
 				}
 
-				if (selection_changed || ch.products_dt) {
+				if (selection_changed || ch.products_dt || options.force_render) {
 					const missing_products_features = [];
 
 					/** @type {ProductData[]} */
