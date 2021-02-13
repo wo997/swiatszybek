@@ -2192,7 +2192,7 @@
 //                 </c-select>
 
 //                 <div class="label">Kolor krawędzi</div>
-//                 <div class="glue-children">
+//                 <div class="glue_children">
 //                   <input class="jscolor field inline" onclick="this.select()" data-attribute="border-color" onchange="updateBorderPreview()">
 //                   <button class="btn primary" onclick="$(this)._prev().setValue('')">Brak <i class="fas fa-times"></i></button>
 //                 </div>
@@ -2421,7 +2421,7 @@
 //                   Kolor tła <i class='fas fa-info-circle' data-tooltip='Wpisz kolor lub kliknij w pole i wybierz'></i>
 //                 </div>
 
-//                 <div class="glue-children">
+//                 <div class="glue_children">
 //                   <input class="bckgcolor jscolor field" onclick="this.select()" onchange="setNodeBackgroundColorPreview(this.value,true)" style="width: 65px;text-align: center;">
 //                   <button class="btn primary" onclick="$(this)._prev().setValue('ffffff');$('#cmsBlockBackground .image-opacity').setValue(0)">Brak <i class="fas fa-times"></i></button>
 //                 </div>

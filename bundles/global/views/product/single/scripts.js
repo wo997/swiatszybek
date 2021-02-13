@@ -262,7 +262,7 @@ domload(() => {
 //     <div class='product_row'>
 //       <div class='cl cl1'><span class='variant_name clamp-lines clamp-2' data-tooltip></span></div>
 //       <div class='cl cl2'>
-//         <div class='qty-control glue-children'>
+//         <div class='qty-control glue_children'>
 //           <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1)'>
 //             <i class='fas fa-minus'></i>
 //           </button>

@@ -81,7 +81,7 @@ textarea + .input_nodes .correctness {
 	box-shadow: 0 0 0 1px var(--error-clr) inset !important;
 }
 
-.field-description {
+.field_desc {
 	flex-shrink: 0;
 	max-width: 50%;
 	background: #eee;

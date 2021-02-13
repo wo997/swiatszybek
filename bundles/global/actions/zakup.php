@@ -514,7 +514,7 @@ if (empty(User::getCurrent()->cart["variants"]) && !isset($_GET['produkt'])) {
                     <div class='cl cl2'><a class='link product_link variant_full_name'></a></div>
                     <div class='pln cl cl3' style='font-weight:normal'><label>Cena:</label> <span class='variant_price'></span> zł</div>
                     <div class='cl cl4'>
-                        <div class='qty-control glue-children'>
+                        <div class='qty-control glue_children'>
                         <button class='btn subtle qty-btn remove' onclick='addVariantToBasket(this,-1,{cancellable:true})'>
                             <i class='fas fa-minus'></i>
                         </button>

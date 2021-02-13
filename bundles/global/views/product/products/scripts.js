@@ -69,7 +69,7 @@ domload(() => {
 var blockProductsSearch = false;
 
 function goDesktop() {
-	$(".products_search")._parent().classList.remove("glue-children");
+	$(".products_search")._parent().classList.remove("glue_children");
 	var products_search = $(".products_search");
 	products_search.addEventListener("input", () => {
 		// instant change

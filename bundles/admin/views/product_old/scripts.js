@@ -311,31 +311,29 @@ domload(() => {
 					<img name="zdjecie" style="width:80px;height:80px;object-fit:contain" />
 				</td>
 				<td>
-					<div class="glue-children">
-						<input type="number" name="price" class="field inline no-wrap" /><span class="field-description">zł</span>
+					<div class="glue_children">
+						<input type="number" name="price" class="field inline no-wrap" /><span class="field_desc">zł</span>
 					</div>
 				</td>
 				<td>
-					<div class="glue-children">
-						<input type="number" name="vat" class="field inline no-wrap" /><span class="field-description">%</span>
+					<div class="glue_children"><input type="number" name="vat" class="field inline no-wrap" /><span class="field_desc">%</span></div>
+				</td>
+				<td>
+					<div class="glue_children">
+						<input type="number" name="gross_price" class="field inline no-wrap" /><span class="field_desc">zł</span>
 					</div>
 				</td>
 				<td>
-					<div class="glue-children">
-						<input type="number" name="gross_price" class="field inline no-wrap" /><span class="field-description">zł</span>
-					</div>
-				</td>
-				<td>
-					<div class="glue-children">
-						<input type="number" name="rabat" class="field inline no-wrap" /><span class="field-description">zł</span>
+					<div class="glue_children">
+						<input type="number" name="rabat" class="field inline no-wrap" /><span class="field_desc">zł</span>
 					</div>
 				</td>
 				<td>
 					<input type="text" name="product_code" class="field inline" style="width: 150px;" />
 				</td>
 				<td>
-					<div class="glue-children">
-						<input type="number" name="stock" class="field inline no-wrap" /><span class="field-description">szt.</span>
+					<div class="glue_children">
+						<input type="number" name="stock" class="field inline no-wrap" /><span class="field_desc">szt.</span>
 					</div>
 					<input type="hidden" name="was_stock" />
 				</td>
@@ -360,7 +358,7 @@ domload(() => {
 			attributes: '{"selected:"[],"values:"[]"}',
 		},
 		title: "Warianty produktu",
-		empty: `<div class='rect light-gray'>Dodaj min. 1 wariant</div>`,
+		empty: `<div class='rect light_gray'>Dodaj min. 1 wariant</div>`,
 		onChange: () => {},
 		onNewRowDataSet: (row, values, list, options) => {
 			if (options.user) {

@@ -12,13 +12,14 @@
 let filter_menus = [
 	{
 		name: "string",
-		html: html`<span>Wpisz frazę</span>
+		html: html`
+			<span>Wpisz frazę</span>
 			<input type="text" class="field" style="width: 210px;" />
 			<label style="margin-top:10px">
 				<p-checkbox class="square inline"></p-checkbox>
 				Dopasuj całość
-			</label>`,
-
+			</label>
+		`,
 		open: (elem, data = { string: "", full_match: false }) => {
 			elem._child("input")._set_value(data.string);
 		},
@@ -33,16 +34,18 @@ let filter_menus = [
 	},
 	{
 		name: "boolean",
-		html: html`<div style="display:flex;justify-content:space-around" class="radio_group">
-			<label class="inline">
-				<p-checkbox data-value="1"></p-checkbox>
-				<span class="semi-bold">Tak</span>
-			</label>
-			<label class="inline">
-				<p-checkbox data-value="0"></p-checkbox>
-				<span class="semi-bold">Nie</span>
-			</label>
-		</div>`,
+		html: html`
+			<div style="display:flex;justify-content:space-around" class="radio_group">
+				<label class="inline">
+					<p-checkbox data-value="1"></p-checkbox>
+					<span class="semi-bold">Tak</span>
+				</label>
+				<label class="inline">
+					<p-checkbox data-value="0"></p-checkbox>
+					<span class="semi-bold">Nie</span>
+				</label>
+			</div>
+		`,
 		open: (elem, data = { value: "" }) => {
 			elem._child(".radio_group")._set_value(data.value);
 		},
@@ -62,8 +65,69 @@ let filter_menus = [
 		},
 	},
 	{
+		name: "number",
+		html: html`
+			<span class="label first">
+				<span>Typ wyszukiwania</span>
+			</span>
+			<select class="type field">
+				<option value="=">Równy</option>
+				<option value=">=">Większy, bądź równy</option>
+				<option value="<=">Mniejszy, bądź równy</option>
+				<option value="<>">Przedział</option>
+			</select>
+			<span class="label case_single input_wrapper glue_children">
+				<span class="field_desc">
+					<span>X <b class="single_operator">=</b></span>
+				</span>
+				<input type="text" class="field num" />
+			</span>
+			<span class="label case_range input_wrapper glue_children">
+				<input type="text" class="field more_than" />
+				<span class="field_desc">
+					<span><b><=</b> X <b><=</b></span>
+				</span>
+				<input type="text" class="field less_than" />
+			</span>
+		`,
+		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {
+			const type = elem._child(".type");
+			const num = elem._child(".num");
+			const more_than = elem._child(".more_than");
+			const less_than = elem._child(".less_than");
+
+			type.addEventListener("change", () => {
+				const _type = type._get_value();
+				const is_range = _type === "<>";
+				elem._child(".case_single").style.display = is_range ? "none" : "";
+				elem._child(".case_range").style.display = is_range ? "" : "none";
+				elem._child(".single_operator")._set_content(_type);
+			});
+
+			num._set_value(def(data.num, ""));
+			more_than._set_value(def(data.more_than, ""));
+			less_than._set_value(def(data.less_than, ""));
+
+			type._set_value(def(data.operator, "="));
+		},
+		apply: (elem) => {
+			const type = elem._child(".type")._get_value();
+			const num = elem._child(".num")._get_value();
+			const more_than = elem._child(".more_than")._get_value();
+			const less_than = elem._child(".less_than")._get_value();
+
+			if (type === "<>") {
+				return { type: "number", more_than, less_than, operator: type, display: `${more_than} <= X <= ${less_than}` };
+			} else {
+				return { type: "number", num, operator: type, display: `X ${type} ${num}` };
+			}
+		},
+		clear: (elem) => {},
+	},
+	{
 		name: "date",
-		html: html`<span class="label first">Typ wyszukiwania</span>
+		html: html`
+			<span class="label first">Typ wyszukiwania</span>
 			<select class="field date_type" onchange="dateTypeChanged(this)">
 				<option value="=">Dokładna data</option>
 				<option value=">">Data od</option>
@@ -84,7 +148,8 @@ let filter_menus = [
 					<span class="label">Do</span>
 					<input type="text" class="field end" data-orientation="right bottom" />
 				</div>
-			</div>`,
+			</div>
+		`,
 		open: (elem, val) => {
 			elem._child(".phrase")._set_value(val);
 		},

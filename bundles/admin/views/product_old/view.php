@@ -113,7 +113,7 @@ if ($kopia) {
                 <input type="text" name="title" class="field" data-validate onchange="$(`#variantForm .product-title-copy`).setValue(this.value)">
 
                 <div class="label">Link strony</div>
-                <div class="glue-children">
+                <div class="glue_children">
                     <input type="text" name="link" data-validate class="field">
                     <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev()._child(`.field`), {link:true})" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: var(--field-height);">
                         <i class="fas fa-pen"></i>
@@ -121,7 +121,7 @@ if ($kopia) {
                 </div>
 
                 <div class="label">Tytuł (SEO)</div>
-                <div class="glue-children">
+                <div class="glue_children">
                     <input type="text" name="seo_title" class="field" data-show-count="60" data-count-description="(zalecane 50-58)">
                     <button class="btn primary" onclick="rewrite($(`[name='title']`), $(this)._prev()._child(`.field`))" data-tooltip="Uzupełnij na podstawie nazwy produktu" style="height: var(--field-height);">
                         <i class="fas fa-pen"></i>
@@ -194,8 +194,8 @@ if ($kopia) {
             <div>
                 <div class="label">Nazwa wariantu <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></div>
 
-                <div class="glue-children">
-                    <div class="product-title-copy field-description" data-type="html"></div>
+                <div class="glue_children">
+                    <div class="product-title-copy field_desc" data-type="html"></div>
                     <input type="text" name="name" class="field">
                 </div>
 

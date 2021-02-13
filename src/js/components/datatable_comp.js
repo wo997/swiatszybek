@@ -512,7 +512,7 @@ function datatableComp(comp, parent, data) {
 				</div>
 			</div>
 
-			<div data-node="{${comp._nodes.filter_menu}}" class="filter_menu"></div>
+			<div data-node="{${comp._nodes.filter_menu}}"></div>
 
 			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
 
@@ -569,6 +569,7 @@ function datatableComp(comp, parent, data) {
 						const filter_menu_data = filter_menus.find((e) => e.name === column_data.searchable);
 
 						if (filter_menu_data) {
+							filter_menu.dataset.filter = filter_menu_data.name;
 							filter_menu._set_content(
 								html`<div
 									style="display: flex;margin-bottom: 10px;align-items: center;justify-content: space-between;padding-bottom: 5px;border-bottom: 1px solid #ccc;"
@@ -635,7 +636,7 @@ function datatableComp(comp, parent, data) {
 
 			const tacz = (ev) => {
 				const target = $(ev.target);
-				if (target && !target._parent(".filter_menu, .dt_filter", { skip: 0 })) {
+				if (target && !target._parent(".node_filter_menu, .dt_filter", { skip: 0 })) {
 					hideFilterMenu();
 				}
 			};

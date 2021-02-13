@@ -172,7 +172,7 @@ if (!json_decode($kod_data["product_list"])) {
                 <div class="label">Kod</div>
                 <input class="field" type="text" name="kod">
                 <div class="label">Kwota</div>
-                <div class="glue-children">
+                <div class="glue_children">
                     <input type="text" name="kwota" class="field" data-wrapper-style="flex-grow:1">
                     <select name="type" class="field inline">
                         <option value='static'>zł</option>

@@ -82,7 +82,7 @@ function showCategory($category, $level = 0)
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class='float-icon mobile-margin-bottom any-search-wrapper glue-children'>
+            <div class='float-icon mobile-margin-bottom any-search-wrapper glue_children'>
                 <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
                 <i class="fas fa-search"></i>
                 <button class="btn primary case-mobile search-btn can-disappear">

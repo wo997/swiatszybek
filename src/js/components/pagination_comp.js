@@ -73,7 +73,7 @@ function paginationComp(comp, parent, data = {}) {
 				wyników / <span html="{${data.total_rows}}"></span>
 			</div>
 
-			<div class="arrows glue-children">
+			<div class="arrows glue_children">
 				<button class="btn subtle" disabled="{${data.page_id <= 0}}" data-node="{${comp._nodes.prev}}">
 					<i class="fas fa-chevron-left"></i>
 				</button>

@@ -498,7 +498,7 @@ const header_basket_variant_template = html`
 				<h3 class="product-title"><span class="check-tooltip variant_full_name"></span></h3>
 			</a>
 			<div style="text-align:center">
-				<div class="qty-control glue-children">
+				<div class="qty-control glue_children">
 					<button class="btn subtle qty-btn remove" onclick="addVariantToBasket(this,-1)">
 						<i class="fas fa-minus"></i>
 					</button>

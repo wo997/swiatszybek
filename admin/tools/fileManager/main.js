@@ -222,7 +222,7 @@ window.addEventListener("tool_loaded", (event) => {
 					<div class="scroll-panel panel-padding">
 						<div class="field-wrapper">
 							<div class="label">Wstaw link do zdjęcia zewnętrznego</div>
-							<div class="glue-children">
+							<div class="glue_children">
 								<input type="text" data-validate class="external_link field" />
 								<button class="btn primary" onclick="fileManager.addExternalImage(this);">Wstaw</button>
 							</div>

@@ -1370,7 +1370,7 @@
 //                     <tr>
 //                       <td>Link</td>
 //                       <td>
-//                         <div class="glue-children">
+//                         <div class="glue_children">
 //                           <input type="text" autocomplete="off" class="href field slim" placeholder='Opcjonalny link' oninput="quillEditor.modifyNode('data-href',this.value)">
 //                           <button class="btn primary slim" onclick="window.open($(this)._prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
 //                         </div>
@@ -1383,7 +1383,7 @@
 //                     <tr>
 //                       <td>Żródło</td>
 //                       <td>
-//                         <div class="glue-children">
+//                         <div class="glue_children">
 //                           <input type="text" autocomplete="off" class="src field slim" placeholder='https://www.youtube.com/watch?v=...' oninput="quillEditor.modifyNode('youtube',this.value)">
 //                           <button class="btn primary slim" onclick="window.open($(this)._prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
 //                         </div>
@@ -1415,7 +1415,7 @@
 //                       <tr>
 //                         <td>Link</td>
 //                         <td>
-//                           <div class="glue-children">
+//                           <div class="glue_children">
 //                             <input type="text" autocomplete="off" placeholder="https://google.com" class="href field slim" oninput="quillEditor.modifyNode('href',this.value)" style="flex-grow: 1;">
 //                             <button class="btn secondary" onclick="quillEditor.removeLink()" data-tooltip="Usuń link"><i class="fas fa-unlink"></i></button>
 //                             <button class="btn primary slim" onclick="window.open($(this)._prev()._prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
@@ -1442,7 +1442,7 @@
 //                       <tr>
 //                         <td>Link</td>
 //                         <td>
-//                           <div class="glue-children">
+//                           <div class="glue_children">
 //                             <input type="text" autocomplete="off" placeholder="https://google.com" class="href field slim" oninput="quillEditor.modifyNode('data-href',this.value)" style="flex-grow: 1;">
 //                             <button class="btn primary" onclick="window.open($(this)._prev().value);" data-tooltip="Otwórz link w nowej karcie"><i class="fas fa-external-link-alt"></i></button>
 //                           </div>
@@ -1506,7 +1506,7 @@
 //             <div>
 //               <div class="field-wrapper">
 //                 <span class="label">Link do filmu Youtube</span>
-//                 <div class="glue-children">
+//                 <div class="glue_children">
 //                     <input type="text" class="field" data-validate="youtube-video">
 //                     <button class="btn primary" onclick="quillEditor.putVideoBySource($(this)._prev(), $(this)._parent())">Wstaw</button>
 //                 </div>
@@ -1514,7 +1514,7 @@
 
 //               <div class="field-wrapper">
 //                 <span class="label">Link do dowolnego filmu</span>
-//                 <div class="glue-children">
+//                 <div class="glue_children">
 //                     <input type="text" class="field" data-validate="">
 //                     <button class="btn primary" onclick="quillEditor.putVideoBySource($(this)._prev(), $(this)._parent())">Wstaw</button>
 //                 </div>
