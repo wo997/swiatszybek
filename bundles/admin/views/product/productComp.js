@@ -92,8 +92,6 @@ function productComp(comp, parent, data) {
 		const data = comp._data;
 		const add_products = [];
 
-		console.log(params);
-
 		const all_feature_keys = data.product_feature_ids.map((feature_id) => getFeatureKeyFromId(feature_id));
 
 		data.missing_products_features.forEach((features) => {
@@ -105,16 +103,30 @@ function productComp(comp, parent, data) {
 				product_data[key] = option_id;
 			}
 
+			if (params) {
+				data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
+					params.options_existed.forEach((option_id) => {
+						const feature_id = product_feature_options.find((option) => option.product_feature_option_id === option_id).product_feature_id;
+						const feature_key = getFeatureKeyFromId(feature_id);
+						other_product[feature_key] = option_id;
+					});
+				});
+			}
+
 			let copy_product = undefined;
 			let max_shared_features = 0;
+			let product_existed = false;
 			data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
 				let shared_features = 0;
+				let matched_existed_option = false;
 				for (const feature_key of all_feature_keys) {
 					const pr_opt_id = product_data[feature_key];
-
 					const compare_opt_ids = [pr_opt_id];
 
 					if (params) {
+						if (params.options_existed.includes(pr_opt_id)) {
+							matched_existed_option = true;
+						}
 						compare_opt_ids.push(...params.similar_products.filter((e) => e.new_option_id === pr_opt_id).map((e) => e.option_id));
 					}
 
@@ -129,15 +141,21 @@ function productComp(comp, parent, data) {
 					max_shared_features = shared_features;
 					copy_product = other_product;
 				}
+
+				if (matched_existed_option && max_shared_features === all_feature_keys.length) {
+					product_existed = true;
+				}
 			});
 
-			if (copy_product) {
-				for (const key of product_copy_keys) {
-					product_data[key] = copy_product[key];
+			if (!product_existed) {
+				if (copy_product) {
+					for (const key of product_copy_keys) {
+						product_data[key] = copy_product[key];
+					}
 				}
-			}
 
-			add_products.push(product_data);
+				add_products.push(product_data);
+			}
 		});
 
 		data.product_feature_ids;
