@@ -46,12 +46,27 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
 			<div class="scroll-panel scroll-shadow panel-padding">
-				<p style="font-size: 1.15em;text-align:center;margin:30px 0 20px;font-weight: 600;">
-					Odpowiedz na poniższe pytania, a my pomożemy Ci uzupełnić dane nowych produktów:
-				</p>
+				<div class="label first" style="font-size:1.1em">
+					Pytania pomocnicze (<span html="{${data.questions.filter((q) => q.value).length + "/" + data.questions.length}}"></span>)
+					<i
+						class="fas fa-info-circle"
+						data-tooltip="Odpowiedzi pomogą nam dokonać precyzyjnych<br>modyfikacji produktów oraz oszczędzą Ci pracy"
+					></i>
+				</div>
+
 				<list-comp data-bind="{${data.questions}}" class="round">
 					<manage-product-list_question-comp></manage-product-list_question-comp>
 				</list-comp>
+				<button
+					class="btn {${data.questions.find((q) => !q.value)}?primary:important}"
+					style="margin: 10px auto 0;min-width: 160px;"
+					data-tooltip="{${data.questions.find((q) => !q.value)
+						? "Dane możesz uzupełnić ręcznie, ale zalecamy odpowiedzieć na wszystkie pytania"
+						: ""}}"
+				>
+					Dodaj produkty
+					<i class="fas fa-check"></i>
+				</button>
 			</div>
 		`,
 		initialize: () => {

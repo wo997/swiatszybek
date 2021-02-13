@@ -177,7 +177,7 @@ function productComp(comp, parent, data) {
 						const option_name = product_feature_options.find((op) => op.product_feature_option_id === option_after_id).name;
 
 						questions.push({
-							label: `Dane której opcji chcesz skopiować dla opcji <span style="text-decoration:underline">${option_name}</span> (${feature_name})?`,
+							label: `Które dane chcesz skopiować dla opcji <span style="text-decoration:underline">${option_name}</span> (${feature_name})?`,
 							options,
 						});
 					}
@@ -433,7 +433,7 @@ function productComp(comp, parent, data) {
 				</list-comp>
 
 				<p
-					style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #555;text-align: justify;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;"
+					style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #444;text-align: justify;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;"
 				>
 					<i class="fas fa-info-circle"></i> Na podstawie cech zostanie wygenerowana lista produktów - tych samych, które są w Twoim
 					magazynie. Przykładowo jeśli wybierzemy kolory czerwony i niebieski, oraz rozmiary 36, 37 i 38, otrzymamy 6 produktów będących
@@ -496,8 +496,8 @@ function productComp(comp, parent, data) {
 
 			// productFeature
 			registerModalContent(html`
-				<div id="manageProductList" data-expand data-dismissable>
-					<div class="modal-body" style="max-width: calc(50% + 200px);max-height: calc(50% + 200px);">
+				<div id="manageProductList" data-dismissable>
+					<div class="modal-body" style="width: calc(20% + 300px);">
 						<manage-product-list-modal-comp class="flex_stretch"></manage-product-list-modal-comp>
 					</div>
 				</div>
