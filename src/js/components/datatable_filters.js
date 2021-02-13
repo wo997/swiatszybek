@@ -87,7 +87,7 @@ let filter_menus = [
 				<span class="field_desc">
 					<b>≤ x ≤</b>
 				</span>
-				<input type="text" class="field less_than" data-validate="number" data-number />
+				<input type="text" class="field less_than" data-validate="number|optional" data-number />
 			</span>
 		`,
 		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {
@@ -121,21 +121,24 @@ let filter_menus = [
 			const less_than_v = less_than._get_value();
 
 			if (type_v === "<>") {
-				const validate = validateFields([less_than, more_than]);
+				const validate = validateInputs([less_than, more_than]);
+				if (validate.length > 0) {
+					return false;
+				}
 
 				return {
 					type: "number",
-					more_than: numberFromStr(more_than_v),
-					less_than: numberFromStr(less_than_v),
+					more_than: +more_than_v,
+					less_than: +less_than_v,
 					operator: type,
 					display: `${more_than_v} <= X <= ${less_than_v}`,
 				};
 			} else {
-				if (!strNumerical(num)) {
-					alert(num);
+				const validate = validateInputs([num]);
+				if (validate.length > 0) {
 					return false;
 				}
-				return { type: "number", num: numberFromStr(num), operator: type, display: `X ${type} ${num}` };
+				return { type: "number", num: +num_v, operator: type, display: `X ${type} ${num}` };
 			}
 		},
 		clear: (elem) => {},

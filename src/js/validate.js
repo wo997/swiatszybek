@@ -18,7 +18,9 @@ function getManyValidationErrors(inputs) {
 	const inputs_errors = [];
 	for (const input of inputs) {
 		const errors = getInputValidationErrors(input);
-		inputs_errors.push({ input, errors });
+		if (errors.length > 0) {
+			inputs_errors.push({ input, errors });
+		}
 	}
 
 	return inputs_errors;
@@ -34,11 +36,13 @@ function inputChangeValidation(ev) {
  *
  * @param {PiepNode[]} inputs
  */
-function showManyValidationErrors(inputs) {
+function validateInputs(inputs) {
 	const inputs_errors = getManyValidationErrors(inputs);
 	inputs_errors.forEach((input_errors) => {
 		showValidationErrors(input_errors.input, input_errors.errors);
 	});
+
+	return inputs_errors;
 }
 
 /**
@@ -47,9 +51,7 @@ function showManyValidationErrors(inputs) {
  * @param {string[]} errors
  */
 function showValidationErrors(input, errors) {
-	console.log(input);
-	console.trace();
-	if (!input.classList.contains("input_registered")) {
+	if (!input.classList.contains("input_registered") && errors.length > 0) {
 		input.addEventListener("change", inputChangeValidation);
 		input.addEventListener("input", inputChangeValidation);
 	}
@@ -67,18 +69,27 @@ function getInputValidationErrors(input) {
 	const errors = [];
 	// @ts-ignore
 	const value = input.value;
-	switch (validator) {
-		case "number": {
-			if (!strNumerical(value)) {
-				errors.push("Wpisz liczbę");
-			}
-			break;
+
+	const [type, ...extra] = validator.split("|");
+
+	if (!extra.includes("optional")) {
+		if (value.trim() === "") {
+			errors.push("Uzupełnij to pole");
 		}
-		case "string": {
-			if (value.length === 0) {
-				errors.push("Uzupełnij to pole");
+	} else {
+		switch (type) {
+			case "number": {
+				if (isNaN(value)) {
+					errors.push("Podaj liczbę");
+				}
+				break;
 			}
-			break;
+			case "string": {
+				// if (value.length === 0) {
+				// 	errors.push("Uzupełnij to pole");
+				// }
+				break;
+			}
 		}
 	}
 
