@@ -310,7 +310,7 @@ function getValue(input) {
 	}
 
 	if (input.hasAttribute("data-number")) {
-		v = +v;
+		v = numberFromStr(v);
 	}
 
 	return v;

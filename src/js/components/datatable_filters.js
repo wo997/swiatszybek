@@ -80,14 +80,14 @@ let filter_menus = [
 				<span class="field_desc">
 					<b>x <span class="single_operator">=</span></b>
 				</span>
-				<input type="text" class="field num" />
+				<input type="text" class="field num" data-validate="number" data-number />
 			</span>
 			<span class="label case_range input_wrapper glue_children">
-				<input type="text" class="field more_than" />
+				<input type="text" class="field more_than" data-validate="number" data-number />
 				<span class="field_desc">
 					<b>≤ x ≤</b>
 				</span>
-				<input type="text" class="field less_than" />
+				<input type="text" class="field less_than" data-validate="number" data-number />
 			</span>
 		`,
 		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {
@@ -111,26 +111,24 @@ let filter_menus = [
 			type._set_value(def(data.operator, "="));
 		},
 		apply: (elem) => {
-			const type = elem._child(".type")._get_value();
-			const num = elem._child(".num")._get_value();
-			const more_than = elem._child(".more_than")._get_value();
-			const less_than = elem._child(".less_than")._get_value();
+			const type = elem._child(".type");
+			const num = elem._child(".num");
+			const more_than = elem._child(".more_than");
+			const less_than = elem._child(".less_than");
+			const type_v = type._get_value();
+			const num_v = num._get_value();
+			const more_than_v = more_than._get_value();
+			const less_than_v = less_than._get_value();
 
-			if (type === "<>") {
-				if (!strNumerical(more_than)) {
-					alert(more_than);
-					return false;
-				}
-				if (!strNumerical(less_than)) {
-					alert(less_than);
-					return false;
-				}
+			if (type_v === "<>") {
+				const validate = validateFields([less_than, more_than]);
+
 				return {
 					type: "number",
-					more_than: numberFromStr(more_than),
-					less_than: numberFromStr(less_than),
+					more_than: numberFromStr(more_than_v),
+					less_than: numberFromStr(less_than_v),
 					operator: type,
-					display: `${more_than} <= X <= ${less_than}`,
+					display: `${more_than_v} <= X <= ${less_than_v}`,
 				};
 			} else {
 				if (!strNumerical(num)) {

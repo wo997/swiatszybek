@@ -18,3 +18,7 @@ function getLast(arr) {
 	}
 	return arr[arr.length - 1];
 }
+
+function onlyUnique(value, index, self) {
+	return self.indexOf(value) === index;
+}

@@ -1510,3 +1510,8 @@ input:placeholder-shown {
 	height: 100%;
 	width: 100%;
 }
+
+.invalid {
+	border: 1px solid red !important;
+	background: #fee;
+}

@@ -196,7 +196,7 @@ function productComp(comp, parent, data) {
 			if (options_before[feature_id]) {
 				for (const option_after_id of options_after[feature_id]) {
 					if (!options_before[feature_id].includes(option_after_id)) {
-						const options = options_before[feature_id].map((option_id) => {
+						const options = options_before[feature_id].filter(onlyUnique).map((option_id) => {
 							return {
 								label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name,
 								value: option_id,
@@ -215,7 +215,7 @@ function productComp(comp, parent, data) {
 					}
 				}
 			} else {
-				const options = options_after[feature_id].map((option_id) => {
+				const options = options_after[feature_id].filter(onlyUnique).map((option_id) => {
 					return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
 				});
 				options.push({ label: "Nie", value: -1 });
