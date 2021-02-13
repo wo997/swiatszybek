@@ -173,6 +173,7 @@ function productComp(comp, parent, data) {
 						const options = options_before[feature_id].map((option_id) => {
 							return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
 						});
+						options.push({ label: "Nie kopiuj (utwórz puste)", value: -1 });
 
 						const option_name = product_feature_options.find((op) => op.product_feature_option_id === option_after_id).name;
 
@@ -186,6 +187,7 @@ function productComp(comp, parent, data) {
 				const options = options_after[feature_id].map((option_id) => {
 					return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
 				});
+				options.push({ label: "Nie", value: -1 });
 
 				questions.push({ label: `Czy któraś opcja (${feature_name}) należała już do produktu?`, options });
 			}

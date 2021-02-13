@@ -50,7 +50,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 					Pytania pomocnicze (<span html="{${data.questions.filter((q) => q.value).length + "/" + data.questions.length}}"></span>)
 					<i
 						class="fas fa-info-circle"
-						data-tooltip="Odpowiedzi pomogą nam dokonać precyzyjnych<br>modyfikacji produktów oraz oszczędzą Ci pracy"
+						data-tooltip="Odpowiedzi pomogą nam dokonać precyzyjnych<br>modyfikacji produktów oraz skrócą Twój czas pracy"
 					></i>
 				</div>
 
