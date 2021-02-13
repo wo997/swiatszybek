@@ -213,10 +213,10 @@ function datatableComp(comp, parent, data) {
 						})
 					);
 
-					comp.classList.remove("freeze");
 					comp.classList.remove("searching");
 
 					comp._render();
+					comp.classList.remove("freeze");
 				},
 			});
 		}, delay);

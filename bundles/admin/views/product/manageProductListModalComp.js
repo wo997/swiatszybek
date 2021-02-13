@@ -47,7 +47,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll-panel scroll-shadow panel-padding">
 				<p style="font-size: 1.15em;text-align:center;margin:30px 0 20px;font-weight: 600;">
-					Odpowiedz na poniższe pytania, a my pomożemy uzupełnić Ci dane nowych produktów:
+					Odpowiedz na poniższe pytania, a my pomożemy Ci uzupełnić dane nowych produktów:
 				</p>
 				<list-comp data-bind="{${data.questions}}" class="round">
 					<manage-product-list_question-comp></manage-product-list_question-comp>

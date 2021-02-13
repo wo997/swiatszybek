@@ -412,7 +412,7 @@ function productComp(comp, parent, data) {
 		template: html`
 			<p-trait data-trait="history"></p-trait>
 
-			<div style="max-width:800px">
+			<div style="max-width:600px">
 				<div class="label first">Nazwa produktu</div>
 				<input type="text" class="field" data-bind="{${data.name}}" />
 
