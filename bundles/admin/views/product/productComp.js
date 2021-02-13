@@ -194,6 +194,9 @@ function productComp(comp, parent, data) {
 		for (const feature_id of Object.keys(options_after)) {
 			const feature_name = product_features.find((fe) => fe.product_feature_id === +feature_id).name;
 			if (options_before[feature_id]) {
+				if (options_after[feature_id].length < 2) {
+					return;
+				}
 				for (const option_after_id of options_after[feature_id]) {
 					if (!options_before[feature_id].includes(option_after_id)) {
 						const options = options_before[feature_id].filter(onlyUnique).map((option_id) => {
