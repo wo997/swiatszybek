@@ -79,6 +79,7 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 							} else {
 								const row_data = dt._data.dataset.find((d) => d._row_id === _row_id); // recreate ref
 								row_data[key] = input._get_value();
+								dt._render();
 							}
 						});
 						// b.addEventListener("input", () => {
