@@ -3,12 +3,14 @@
 /**
  * @typedef {{
  * questions: ManageProductList_QuestionCompData[]
+ * add_products: any[]
  * }} ManageProductListModalCompData
  *
  * @typedef {{
  * _data: ManageProductListModalCompData
  * _set_data(data?: ManageProductListModalCompData, options?: SetCompDataOptions)
  * _nodes: {
+ *  add_btn: PiepNode
  * }
  * _show()
  * } & BaseComp} ManageProductListModalComp
@@ -21,7 +23,7 @@
  */
 function manageProductListModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { questions: [] };
+		data = { questions: [], add_products: [] };
 	}
 
 	comp._show = (product_feature_id, options = {}) => {
@@ -58,6 +60,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 					<manage-product-list_question-comp></manage-product-list_question-comp>
 				</list-comp>
 				<button
+					data-node="{${comp._nodes.add_btn}}"
 					class="btn {${data.questions.find((q) => !q.value)}?primary:important}"
 					style="margin: 10px auto 0;min-width: 160px;"
 					data-tooltip="{${data.questions.find((q) => !q.value)
@@ -73,6 +76,16 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 			/** @type {ProductComp} */
 			// @ts-ignore
 			const product_comp = $("product-comp");
+
+			comp._nodes.add_btn.addEventListener("click", () => {
+				hideParentModal(comp);
+
+				comp._data.add_products.forEach((p) => {
+					product_comp._data.products_dt.dataset.push(p);
+				});
+
+				product_comp._render();
+			});
 		},
 	});
 }

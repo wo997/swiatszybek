@@ -280,9 +280,14 @@ function hideModalTopMost() {
 	}
 }
 
+/**
+ *
+ * @param {PiepNode} obj
+ * @param {boolean} isCancel
+ */
 function hideParentModal(obj = null, isCancel = false) {
 	if (obj) {
-		const modal = obj._parent("[data-modal]");
+		const modal = obj._parent("[data-modal]", { skip: 0 });
 		hideModal(modal ? modal.id : null, isCancel);
 	}
 	hideModal(null);

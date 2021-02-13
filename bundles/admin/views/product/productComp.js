@@ -199,6 +199,7 @@ function productComp(comp, parent, data) {
 			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
 
 			manage_product_list_modal_comp._data.questions = questions;
+			manage_product_list_modal_comp._data.add_products = add_products;
 			manage_product_list_modal_comp._render();
 
 			manage_product_list_modal_comp._show();
