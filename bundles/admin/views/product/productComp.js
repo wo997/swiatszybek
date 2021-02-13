@@ -497,7 +497,7 @@ function productComp(comp, parent, data) {
 			// productFeature
 			registerModalContent(html`
 				<div id="manageProductList" data-dismissable>
-					<div class="modal-body" style="width: calc(20% + 300px);">
+					<div class="modal-body" style="width: calc(20% + 300px);max-height: calc(75% + 100px);">
 						<manage-product-list-modal-comp class="flex_stretch"></manage-product-list-modal-comp>
 					</div>
 				</div>
