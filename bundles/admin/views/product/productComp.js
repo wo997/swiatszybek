@@ -118,21 +118,22 @@ function productComp(comp, parent, data) {
 			let product_existed = false;
 			data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
 				let shared_features = 0;
-				let matched_existed_option = false;
+				let shared_features_with_similarities = 0;
 				for (const feature_key of all_feature_keys) {
 					const pr_opt_id = product_data[feature_key];
 					const compare_opt_ids = [pr_opt_id];
 
+					if (pr_opt_id === other_product[feature_key]) {
+						shared_features++;
+					}
+
 					if (params) {
-						if (params.options_existed.includes(pr_opt_id)) {
-							matched_existed_option = true;
-						}
 						compare_opt_ids.push(...params.similar_products.filter((e) => e.new_option_id === pr_opt_id).map((e) => e.option_id));
 					}
 
 					compare_opt_ids.forEach((opt_id) => {
 						if (opt_id === other_product[feature_key]) {
-							shared_features++;
+							shared_features_with_similarities++;
 						}
 					});
 				}
@@ -142,7 +143,7 @@ function productComp(comp, parent, data) {
 					copy_product = other_product;
 				}
 
-				if (matched_existed_option && max_shared_features === all_feature_keys.length) {
+				if (shared_features === all_feature_keys.length) {
 					product_existed = true;
 				}
 			});
@@ -186,12 +187,6 @@ function productComp(comp, parent, data) {
 			}
 			options_after[feature_id].push(option_id);
 		});
-
-		// features we had
-		// 1:A, 1:B
-		// features we have
-		// 1:A, 1:B, 1:C
-		//const
 
 		/** @type {ManageProductList_QuestionCompData[]} */
 		const questions = [];
