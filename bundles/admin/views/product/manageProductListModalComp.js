@@ -79,51 +79,23 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 
 			comp._nodes.add_btn.addEventListener("click", () => {
 				hideParentModal(comp);
-				//const all_feature_keys = product_comp._data.product_feature_ids.map((feature_id) => getFeatureKeyFromId(feature_id));
 
-				const similar_products_by_features = [];
+				const similar_products = [];
+				const options_existed = [];
 
 				comp._data.questions.forEach((question) => {
-					if (question.type === "copy") {
-						const option_id = question.value;
-						if (!option_id || option_id === -1) {
-							return;
-						}
-						similar_products_by_features.push({ new_option_id: question.copy_option_id, option_id: option_id });
-
-						// const option = product_feature_options.find((option) => option.product_feature_option_id === option_id);
-						// const feature_key = getFeatureKeyFromId(option.product_feature_id);
-
-						// comp._data.add_products.forEach((product) => {
-						// 	if (product[feature_key] === option_id) {
-						// 		console.log(product, "lol");
-						// 	}
-
-						// 	let copy_product = undefined;
-						// 	let max_shared_features = 0;
-						// 	comp._data.add_products.forEach((/** @type {ProductData} */ other_product) => {
-						// 		let shared_features = 0;
-						// 		for (const feature_key of all_feature_keys) {
-						// 			if (product_data[feature_key] === other_product[feature_key]) {
-						// 				shared_features++;
-						// 			}
-						// 		}
-
-						// 		if (shared_features > max_shared_features) {
-						// 			max_shared_features = shared_features;
-						// 			copy_product = other_product;
-						// 		}
-						// 	});
-						// });
+					const option_id = question.value;
+					if (!option_id || option_id === -1) {
+						return;
 					}
-					//question.value
+					if (question.type === "copy") {
+						similar_products.push({ new_option_id: question.copy_option_id, option_id: option_id });
+					} else if (question.type === "existed") {
+						options_existed.push(option_id);
+					}
 				});
 
-				// comp._data.add_products.forEach((p) => {
-				// 	product_comp._data.products_dt.dataset.push(p);
-				// });
-
-				product_comp._add_missing_products({ similar_products_by_features });
+				product_comp._add_missing_products({ similar_products, options_existed });
 				product_comp._render();
 			});
 		},

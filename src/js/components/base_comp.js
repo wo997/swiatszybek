@@ -45,8 +45,6 @@
  * pass_list_data?: PassListData[]
  * }} SetCompDataOptions
  *
- * TODO: freeze render options ezyyyyy
- *
  * I'm not a fan of it but regular inheritance doesn't seem to work as expected os we assign common props in here
  * @typedef {{
  * _data: any
@@ -357,8 +355,15 @@ function setCompData(comp, _data = undefined, options = {}) {
 	const equal = isEquivalent(node._prev_data, node._data);
 
 	if (equal && def(options.force_render, false) === false) {
-		// never used force_render lol
+		// never used force_render lol, OK JUST ONCE
 		return;
+	}
+
+	if (options.freeze) {
+		comp.classList.add("freeze");
+		setTimeout(() => {
+			comp.classList.remove("freeze");
+		}, 0);
 	}
 
 	// kinda weird but it creates f.e. checkbox base component

@@ -33,7 +33,7 @@
  *      add_products_btn: PiepNode
  *      remove_products_btn: PiepNode
  *  }
- *  _add_missing_products(params?: {similar_products_by_features: {new_option_id, option_id}[]})
+ *  _add_missing_products(params?: {similar_products: {new_option_id, option_id}[], options_existed: number[]})
  *  _remove_missing_products()
  * } & BaseComp} ProductComp
  */
@@ -92,6 +92,8 @@ function productComp(comp, parent, data) {
 		const data = comp._data;
 		const add_products = [];
 
+		console.log(params);
+
 		const all_feature_keys = data.product_feature_ids.map((feature_id) => getFeatureKeyFromId(feature_id));
 
 		data.missing_products_features.forEach((features) => {
@@ -113,9 +115,7 @@ function productComp(comp, parent, data) {
 					const compare_opt_ids = [pr_opt_id];
 
 					if (params) {
-						compare_opt_ids.push(
-							...params.similar_products_by_features.filter((e) => e.new_option_id === pr_opt_id).map((e) => e.option_id)
-						);
+						compare_opt_ids.push(...params.similar_products.filter((e) => e.new_option_id === pr_opt_id).map((e) => e.option_id));
 					}
 
 					compare_opt_ids.forEach((opt_id) => {
@@ -222,7 +222,7 @@ function productComp(comp, parent, data) {
 
 			manage_product_list_modal_comp._data.questions = questions;
 			manage_product_list_modal_comp._data.add_products = add_products;
-			manage_product_list_modal_comp._render();
+			manage_product_list_modal_comp._render({ freeze: true });
 
 			manage_product_list_modal_comp._show({ source: comp._nodes.add_products_btn });
 		} else {
