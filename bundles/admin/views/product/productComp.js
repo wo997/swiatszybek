@@ -33,10 +33,12 @@
  *      add_products_btn: PiepNode
  *      remove_products_btn: PiepNode
  *  }
- *  _add_missing_products()
+ *  _add_missing_products(params?: {similar_products_by_features: {new_option_id, option_id}[]})
  *  _remove_missing_products()
  * } & BaseComp} ProductComp
  */
+
+const product_copy_keys = ["net_price", "vat", "gross_price", "active"];
 
 const getFeatureKeyFromId = (feature_id) => {
 	return `feature_${feature_id}`;
@@ -86,12 +88,11 @@ function productComp(comp, parent, data) {
 	data.products_dt = def(data.products_dt, table);
 	data.unnecessary_product_ids = [];
 
-	comp._add_missing_products = () => {
+	comp._add_missing_products = (params) => {
 		const data = comp._data;
 		const add_products = [];
 
 		const all_feature_keys = data.product_feature_ids.map((feature_id) => getFeatureKeyFromId(feature_id));
-		const copy_keys_same = ["net_price", "vat", "gross_price", "active"];
 
 		data.missing_products_features.forEach((features) => {
 			/** @type {ProductData} */
@@ -107,9 +108,21 @@ function productComp(comp, parent, data) {
 			data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
 				let shared_features = 0;
 				for (const feature_key of all_feature_keys) {
-					if (product_data[feature_key] === other_product[feature_key]) {
-						shared_features++;
+					const pr_opt_id = product_data[feature_key];
+
+					const compare_opt_ids = [pr_opt_id];
+
+					if (params) {
+						compare_opt_ids.push(
+							...params.similar_products_by_features.filter((e) => e.new_option_id === pr_opt_id).map((e) => e.option_id)
+						);
 					}
+
+					compare_opt_ids.forEach((opt_id) => {
+						if (opt_id === other_product[feature_key]) {
+							shared_features++;
+						}
+					});
 				}
 
 				if (shared_features > max_shared_features) {
@@ -119,7 +132,7 @@ function productComp(comp, parent, data) {
 			});
 
 			if (copy_product) {
-				for (const key of copy_keys_same) {
+				for (const key of product_copy_keys) {
 					product_data[key] = copy_product[key];
 				}
 			}
@@ -182,6 +195,7 @@ function productComp(comp, parent, data) {
 
 						questions.push({
 							type: "copy",
+							copy_option_id: option_after_id,
 							label: `Które dane chcesz skopiować dla opcji <span style="text-decoration:underline">${option_name}</span> (${feature_name})?`,
 							options,
 						});
@@ -201,7 +215,7 @@ function productComp(comp, parent, data) {
 			}
 		}
 
-		if (questions.length > 0) {
+		if (questions.length > 0 && !params) {
 			/** @type {ManageProductListModalComp} */
 			// @ts-ignore
 			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");

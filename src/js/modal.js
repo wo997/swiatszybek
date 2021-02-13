@@ -122,8 +122,10 @@ function showModal(name = null, params = {}) {
 		let any = false;
 		modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
 			let shownow = false;
-			if (modal.id == name && !modal.classList.contains("visible")) {
-				shownow = true;
+			if (modal.id == name) {
+				if (!modal.classList.contains("visible")) {
+					shownow = true;
+				}
 				any = true;
 			}
 			if (modal.classList.contains("visible")) {

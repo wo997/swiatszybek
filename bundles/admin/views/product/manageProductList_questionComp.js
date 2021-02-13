@@ -5,6 +5,7 @@
  * label: string
  * type: "copy" | "existed"
  * options: {label: string, value: any}[],
+ * copy_option_id?: number
  * value?: number
  * } & ListCompRowData} ManageProductList_QuestionCompData
  *
