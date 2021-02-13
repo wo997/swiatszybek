@@ -78,16 +78,16 @@ let filter_menus = [
 			</select>
 			<span class="label case_single input_wrapper glue_children">
 				<span class="field_desc">
-					<span>X <b class="single_operator">=</b></span>
+					<b>x <span class="single_operator">=</span></b>
 				</span>
-				<input type="text" class="field num" data-number />
+				<input type="text" class="field num" />
 			</span>
 			<span class="label case_range input_wrapper glue_children">
-				<input type="text" class="field more_than" data-number />
+				<input type="text" class="field more_than" />
 				<span class="field_desc">
-					<span><b><=</b> X <b><=</b></span>
+					<b>≤ x ≤</b>
 				</span>
-				<input type="text" class="field less_than" data-number />
+				<input type="text" class="field less_than" />
 			</span>
 		`,
 		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {
@@ -97,11 +97,11 @@ let filter_menus = [
 			const less_than = elem._child(".less_than");
 
 			type.addEventListener("change", () => {
-				const _type = type._get_value();
-				const is_range = _type === "<>";
+				const type_v = type._get_value();
+				const is_range = type_v === "<>";
 				elem._child(".case_single").style.display = is_range ? "none" : "";
 				elem._child(".case_range").style.display = is_range ? "" : "none";
-				elem._child(".single_operator")._set_content(_type);
+				elem._child(".single_operator")._set_content({ "<=": "≤", ">=": "≥", "=": "=" }[type_v]);
 			});
 
 			num._set_value(def(data.num, ""));
@@ -117,9 +117,27 @@ let filter_menus = [
 			const less_than = elem._child(".less_than")._get_value();
 
 			if (type === "<>") {
-				return { type: "number", more_than, less_than, operator: type, display: `${more_than} <= X <= ${less_than}` };
+				if (!strNumerical(more_than)) {
+					alert(more_than);
+					return false;
+				}
+				if (!strNumerical(less_than)) {
+					alert(less_than);
+					return false;
+				}
+				return {
+					type: "number",
+					more_than: numberFromStr(more_than),
+					less_than: numberFromStr(less_than),
+					operator: type,
+					display: `${more_than} <= X <= ${less_than}`,
+				};
 			} else {
-				return { type: "number", num, operator: type, display: `X ${type} ${num}` };
+				if (!strNumerical(num)) {
+					alert(num);
+					return false;
+				}
+				return { type: "number", num: numberFromStr(num), operator: type, display: `X ${type} ${num}` };
 			}
 		},
 		clear: (elem) => {},

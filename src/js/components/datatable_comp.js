@@ -624,13 +624,15 @@ function datatableComp(comp, parent, data) {
 							);
 							filter_menu._child(".apply").addEventListener("click", () => {
 								const data = filter_menu_data.apply(filter_menu);
-								comp._data.filters = comp._data.filters.filter((f) => f.key !== column_data.key);
-								if (data.display) {
-									comp._data.filters.push({ key: column_data.key, data });
-								}
+								if (data) {
+									comp._data.filters = comp._data.filters.filter((f) => f.key !== column_data.key);
+									if (data.display) {
+										comp._data.filters.push({ key: column_data.key, data });
+									}
 
-								comp._render();
-								hideFilterMenu();
+									comp._render();
+									hideFilterMenu();
+								}
 							});
 							filter_menu._child(".clear").addEventListener("click", () => {
 								//filter_menu_data.clear(filter_menu);
