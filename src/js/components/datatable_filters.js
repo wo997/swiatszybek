@@ -80,14 +80,14 @@ let filter_menus = [
 				<span class="field_desc">
 					<span>X <b class="single_operator">=</b></span>
 				</span>
-				<input type="text" class="field num" />
+				<input type="text" class="field num" data-number />
 			</span>
 			<span class="label case_range input_wrapper glue_children">
-				<input type="text" class="field more_than" />
+				<input type="text" class="field more_than" data-number />
 				<span class="field_desc">
 					<span><b><=</b> X <b><=</b></span>
 				</span>
-				<input type="text" class="field less_than" />
+				<input type="text" class="field less_than" data-number />
 			</span>
 		`,
 		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {

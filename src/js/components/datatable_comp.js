@@ -271,13 +271,25 @@ function datatableComp(comp, parent, data) {
 
 					const filter = data.filters.find((e) => e.key === key);
 					if (filter) {
-						if (filter.data.type === "string") {
-							if (minify_word(val).indexOf(minify_word(filter.data.string)) === -1) {
+						const fd = filter.data;
+						if (fd.type === "string") {
+							if (minify_word(val).indexOf(minify_word(fd.string)) === -1) {
 								return false;
 							}
-						} else if (filter.data.type === "boolean") {
-							if (xor(val, filter.data.value)) {
+						} else if (fd.type === "boolean") {
+							if (xor(val, fd.value)) {
 								return false;
+							}
+						} else if (fd.type === "number") {
+							const precision = 0.0001;
+							if (fd.operator === "=") {
+								return Math.abs(val - fd.num) < precision;
+							} else if (fd.operator === ">=") {
+								return val > fd.num - precision;
+							} else if (fd.operator === "<=") {
+								return val < fd.num + precision;
+							} else if (fd.operator === "<>") {
+								return fd.more_than - precision < val && val < fd.less_than + precision;
 							}
 						}
 					}
@@ -527,6 +539,7 @@ function datatableComp(comp, parent, data) {
 				filter_menu.style.animation = "hide 0.2s";
 				setTimeout(() => {
 					filter_menu.style.animation = "";
+					filter_menu.classList.remove("visible");
 				}, 200);
 
 				filterFocusChange();
@@ -569,7 +582,11 @@ function datatableComp(comp, parent, data) {
 						const filter_menu_data = filter_menus.find((e) => e.name === column_data.searchable);
 
 						if (filter_menu_data) {
+							filter_menu.classList.add("active");
+							filter_menu.classList.add("visible");
+
 							filter_menu.dataset.filter = filter_menu_data.name;
+
 							filter_menu._set_content(
 								html`<div
 									style="display: flex;margin-bottom: 10px;align-items: center;justify-content: space-between;padding-bottom: 5px;border-bottom: 1px solid #ccc;"
@@ -588,7 +605,6 @@ function datatableComp(comp, parent, data) {
 							const pos = nodePositionAgainstScrollableParent(dt_filter);
 							const filter_menu_rect = filter_menu.getBoundingClientRect();
 
-							filter_menu.classList.add("active");
 							filter_menu.style.left =
 								clamp(
 									5,
