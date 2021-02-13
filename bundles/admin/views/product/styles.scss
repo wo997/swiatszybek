@@ -11,7 +11,10 @@ product-comp {
 			& {
 				padding: 10px;
 				border: 1px solid #ccc;
-				margin: -1px;
+				margin: -1px -1px 0;
+			}
+			&:last-child {
+				margin-bottom: -1px;
 			}
 		}
 	}
@@ -48,7 +51,6 @@ product-comp {
 		& > .list_row {
 			& {
 				background: #f6f6f6;
-				border-radius: 4px;
 				margin: 5px 0 0;
 			}
 			// &:not(:first-child) {
@@ -81,5 +83,31 @@ product-feature-option-comp {
 	.option_row {
 		display: flex;
 		align-items: center;
+	}
+}
+
+manage-product-list-modal-comp {
+	.bind_questions {
+		&,
+		& > .list_row {
+			border: 1px solid #ccc;
+		}
+		& .list_row {
+			& {
+				padding: 10px;
+				margin: -1px -1px 0;
+			}
+			&:last-child {
+				margin-bottom: -1px;
+			}
+			& .option {
+				& {
+					margin-top: 10px;
+				}
+				p-checkbox {
+					margin-right: 3px;
+				}
+			}
+		}
 	}
 }

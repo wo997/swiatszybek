@@ -35,11 +35,11 @@ let filter_menus = [
 		name: "boolean",
 		html: html`<div style="display:flex;justify-content:space-around" class="radio_group">
 			<label class="inline">
-				<p-checkbox class="inline" data-value="1"></p-checkbox>
+				<p-checkbox data-value="1"></p-checkbox>
 				<span class="semi-bold">Tak</span>
 			</label>
 			<label class="inline">
-				<p-checkbox class="inline" data-value="0"></p-checkbox>
+				<p-checkbox data-value="0"></p-checkbox>
 				<span class="semi-bold">Nie</span>
 			</label>
 		</div>`,

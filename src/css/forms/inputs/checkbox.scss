@@ -1,8 +1,10 @@
 /* css[global] */
 
 :root {
-	--p-checkbox-height: 2.05em;
-	--p-checkbox-width: 4.5em;
+	/*--p-checkbox-height: 2.05em;*/
+	/*--p-checkbox-width: 4.5em;*/
+	--p-checkbox-height: 1.9em;
+	--p-checkbox-width: 4em;
 }
 
 p-checkbox {
@@ -16,6 +18,7 @@ p-checkbox {
 	cursor: pointer;
 	vertical-align: middle;
 	user-select: none;
+	font-size: 0.9em;
 }
 
 p-checkbox::before {
@@ -58,8 +61,18 @@ p-checkbox:not(.checked) .circle {
 	border: 1px solid #aaa;
 }
 
+p-checkbox {
+	display: block;
+}
+label p-checkbox {
+	display: inline-block;
+}
+
 label:hover p-checkbox,
 p-checkbox:hover {
+	& {
+		box-shadow: var(--field-hover-shadow);
+	}
 	.circle {
 		filter: brightness(1.02);
 		border-color: #888;

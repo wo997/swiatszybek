@@ -126,11 +126,87 @@ function productComp(comp, parent, data) {
 
 			add_products.push(product_data);
 		});
-		add_products.forEach((p) => {
-			data.products_dt.dataset.push(p);
+
+		data.product_feature_ids;
+		data.product_feature_option_ids;
+
+		// compare features
+		const options_before = {};
+
+		data.products_dt.dataset.forEach((/** @type {ProductData} */ product) => {
+			for (const [feature_key, option_id] of Object.entries(product)) {
+				const feature_id = getFeatureIdFromKey(feature_key);
+				if (!feature_id) {
+					continue;
+				}
+
+				if (!options_before[feature_id]) {
+					options_before[feature_id] = [];
+				}
+				options_before[feature_id].push(option_id);
+			}
 		});
 
-		comp._render();
+		const options_after = {};
+		data.product_feature_option_ids.forEach((option_id) => {
+			const feature_id = product_feature_options.find((option) => option.product_feature_option_id === option_id).product_feature_id;
+			if (!options_after[feature_id]) {
+				options_after[feature_id] = [];
+			}
+			options_after[feature_id].push(option_id);
+		});
+
+		// features we had
+		// 1:A, 1:B
+		// features we have
+		// 1:A, 1:B, 1:C
+		//const
+
+		/** @type {ManageProductList_QuestionCompData[]} */
+		const questions = [];
+
+		for (const feature_id of Object.keys(options_after)) {
+			const feature_name = product_features.find((fe) => fe.product_feature_id === +feature_id).name;
+			if (options_before[feature_id]) {
+				for (const option_after_id of options_after[feature_id]) {
+					if (!options_before[feature_id].includes(option_after_id)) {
+						const options = options_before[feature_id].map((option_id) => {
+							return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
+						});
+
+						const option_name = product_feature_options.find((op) => op.product_feature_option_id === option_after_id).name;
+
+						questions.push({
+							label: `Dane której opcji chcesz skopiować dla opcji <span style="text-decoration:underline">${option_name}</span> (${feature_name})?`,
+							options,
+						});
+					}
+				}
+			} else {
+				const options = options_after[feature_id].map((option_id) => {
+					return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
+				});
+
+				questions.push({ label: `Czy któraś opcja (${feature_name}) należała już do produktu?`, options });
+			}
+		}
+
+		if (questions.length > 0) {
+			/** @type {ManageProductListModalComp} */
+			// @ts-ignore
+			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
+
+			manage_product_list_modal_comp._data.questions = questions;
+			manage_product_list_modal_comp._render();
+
+			manage_product_list_modal_comp._show();
+		} else {
+			add_products.forEach((p) => {
+				data.products_dt.dataset.push(p);
+			});
+
+			comp._render();
+		}
 	};
 
 	comp._remove_missing_products = () => {
@@ -393,7 +469,7 @@ function productComp(comp, parent, data) {
 			// selectProductFeatures
 			registerModalContent(html`
 				<div id="selectProductFeatures" data-expand data-dismissable>
-					<div class="modal-body">
+					<div class="modal-body" style="max-width: calc(75% + 100px);max-height: calc(75% + 100px);">
 						<select-product-features-modal-comp class="flex_stretch"></select-product-features-modal-comp>
 					</div>
 				</div>
@@ -407,7 +483,7 @@ function productComp(comp, parent, data) {
 			// selectProductFeatures
 			registerModalContent(html`
 				<div id="selectProductFeatureOptions" data-expand data-dismissable>
-					<div class="modal-body">
+					<div class="modal-body" style="max-width: calc(75% + 100px);max-height: calc(75% + 100px);">
 						<select-product-feature-options-modal-comp class="flex_stretch"></select-product-feature-options-modal-comp>
 					</div>
 				</div>
@@ -420,8 +496,22 @@ function productComp(comp, parent, data) {
 
 			// productFeature
 			registerModalContent(html`
+				<div id="manageProductList" data-expand data-dismissable>
+					<div class="modal-body" style="max-width: calc(50% + 200px);max-height: calc(50% + 200px);">
+						<manage-product-list-modal-comp class="flex_stretch"></manage-product-list-modal-comp>
+					</div>
+				</div>
+			`);
+
+			/** @type {ManageProductListModalComp} */
+			// @ts-ignore
+			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
+			manageProductListModalComp(manage_product_list_modal_comp, undefined);
+
+			// productFeature
+			registerModalContent(html`
 				<div id="productFeature" data-expand data-dismissable>
-					<div class="modal-body">
+					<div class="modal-body" style="max-width: calc(70% + 100px);max-height: calc(70% + 100px);">
 						<product-feature-modal-comp class="flex_stretch"></product-feature-modal-comp>
 					</div>
 				</div>

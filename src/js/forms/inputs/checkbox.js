@@ -11,7 +11,7 @@ window.addEventListener("register-form-components", (ev) => {
  */
 function registerCheckboxes(parent) {
 	parent._children("p-checkbox:not(.checkbox-registered)").forEach((ch) => {
-		ch.classList.add("checkbox-registered", "field");
+		ch.classList.add("checkbox-registered");
 
 		ch.insertAdjacentHTML(
 			"afterbegin",

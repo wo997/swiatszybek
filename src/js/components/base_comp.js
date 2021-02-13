@@ -41,8 +41,11 @@
  *
  * @typedef {{
  * force_render?: boolean
+ * freeze?: boolean
  * pass_list_data?: PassListData[]
  * }} SetCompDataOptions
+ *
+ * TODO: freeze render options ezyyyyy
  *
  * I'm not a fan of it but regular inheritance doesn't seem to work as expected os we assign common props in here
  * @typedef {{
