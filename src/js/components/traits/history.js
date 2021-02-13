@@ -21,7 +21,14 @@ function renderCompHistory(comp) {
 
 let history_attention = false;
 document.addEventListener(
-	"click",
+	"mousedown",
+	() => {
+		history_attention = true;
+	},
+	true
+);
+document.addEventListener(
+	"touchstart",
 	() => {
 		history_attention = true;
 	},
