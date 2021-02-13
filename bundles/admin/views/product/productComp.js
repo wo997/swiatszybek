@@ -171,13 +171,17 @@ function productComp(comp, parent, data) {
 				for (const option_after_id of options_after[feature_id]) {
 					if (!options_before[feature_id].includes(option_after_id)) {
 						const options = options_before[feature_id].map((option_id) => {
-							return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
+							return {
+								label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name,
+								value: option_id,
+							};
 						});
 						options.push({ label: "Nie kopiuj (utwórz puste)", value: -1 });
 
 						const option_name = product_feature_options.find((op) => op.product_feature_option_id === option_after_id).name;
 
 						questions.push({
+							type: "copy",
 							label: `Które dane chcesz skopiować dla opcji <span style="text-decoration:underline">${option_name}</span> (${feature_name})?`,
 							options,
 						});
@@ -189,7 +193,11 @@ function productComp(comp, parent, data) {
 				});
 				options.push({ label: "Nie", value: -1 });
 
-				questions.push({ label: `Czy któraś opcja (${feature_name}) należała już do produktu?`, options });
+				questions.push({
+					type: "existed",
+					label: `Czy któraś opcja (${feature_name}) należała już do produktu?`,
+					options,
+				});
 			}
 		}
 
@@ -202,7 +210,7 @@ function productComp(comp, parent, data) {
 			manage_product_list_modal_comp._data.add_products = add_products;
 			manage_product_list_modal_comp._render();
 
-			manage_product_list_modal_comp._show();
+			manage_product_list_modal_comp._show({ source: comp._nodes.add_products_btn });
 		} else {
 			add_products.forEach((p) => {
 				data.products_dt.dataset.push(p);

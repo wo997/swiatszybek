@@ -12,7 +12,7 @@
  * _nodes: {
  *  add_btn: PiepNode
  * }
- * _show()
+ * _show(options?: {source?: PiepNode})
  * } & BaseComp} ManageProductListModalComp
  */
 
@@ -26,7 +26,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 		data = { questions: [], add_products: [] };
 	}
 
-	comp._show = (product_feature_id, options = {}) => {
+	comp._show = (options = {}) => {
 		setTimeout(() => {
 			showModal("manageProductList", {
 				source: options.source,

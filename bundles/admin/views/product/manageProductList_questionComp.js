@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * label: string
+ * type: "copy" | "existed"
  * options: {label: string, value: any}[],
  * value?: number
  * } & ListCompRowData} ManageProductList_QuestionCompData
