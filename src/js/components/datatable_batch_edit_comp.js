@@ -28,7 +28,6 @@ function datatableBatchEditComp(comp, parent, data = { row_data: {}, columns: []
 			...options,
 			render: () => {
 				const cells_html = getDatatableRowHtml({ columns: data.columns, row_data: {} });
-				console.log(data);
 
 				setNodeChildren(comp, cells_html);
 
