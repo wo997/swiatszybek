@@ -84,11 +84,10 @@ document.addEventListener("mouseup", () => {
 		if (comp._data.row_index === list_grab.place_index) {
 			list_grab.all_rows.forEach((x) => {
 				// @ts-ignore
-				if (Math.abs(x._translateY) > 1) {
-					// @ts-ignore
-					const sc = def(x._scale, 1);
-					// @ts-ignore
-					const ty = x._translateY;
+				const sc = def(x._scale, 1);
+				// @ts-ignore
+				const ty = x._translateY;
+				if (Math.abs(ty) > 1 || sc > 1.001) {
 					x._animate(`0%{transform:scale(${sc}) translateY(${ty}px)}100%{transform:scale(1) translateY(0px)}`, 250);
 				}
 				// @ts-ignore
