@@ -121,6 +121,9 @@ datatable-comp {
 			border-radius: 4px;
 			--form-spacing: 10px;
 		}
+		&:not(.active) {
+			opacity: 0;
+		}
 		&:not(.visible) {
 			display: none;
 		}

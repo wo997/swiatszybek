@@ -128,9 +128,9 @@ let filter_menus = [
 
 				return {
 					type: "number",
-					more_than: +more_than_v,
-					less_than: +less_than_v,
-					operator: type,
+					more_than: more_than_v,
+					less_than: less_than_v,
+					operator: type_v,
 					display: `${more_than_v} <= X <= ${less_than_v}`,
 				};
 			} else {
@@ -138,7 +138,7 @@ let filter_menus = [
 				if (validate.length > 0) {
 					return false;
 				}
-				return { type: "number", num: +num_v, operator: type, display: `X ${type} ${num}` };
+				return { type: "number", num: num_v, operator: type_v, display: `X ${type_v} ${num_v}` };
 			}
 		},
 		clear: (elem) => {},
