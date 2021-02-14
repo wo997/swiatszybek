@@ -206,7 +206,7 @@ function datatableComp(comp, parent, data) {
 					data.pagination_data.total_rows = res.total_rows;
 
 					data.rows = res.rows.map((d) => {
-						return { row: d };
+						return { row_data: d };
 					});
 
 					comp.dispatchEvent(

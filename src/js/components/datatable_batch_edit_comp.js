@@ -30,7 +30,7 @@ function datatableBatchEditComp(comp, parent, data = { row_data: {}, columns: []
 				const cells_html = getDatatableRowHtml({ columns: data.columns, row_data: {} });
 				console.log(data);
 
-				setNodeChildren(comp._nodes.dt_row, cells_html);
+				setNodeChildren(comp, cells_html);
 
 				/** @type {DatatableComp} */
 				// @ts-ignore
@@ -50,8 +50,9 @@ function datatableBatchEditComp(comp, parent, data = { row_data: {}, columns: []
 	};
 
 	createComp(comp, parent, data, {
-		template: html`<div data-node="{${comp._nodes.dt_row}}" class="dt_row"></div>`,
 		ready: () => {
+			comp.classList.add("dt_row");
+
 			/** @type {DatatableComp} */
 			// @ts-ignore
 			const dt = comp._parent_comp;

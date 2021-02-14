@@ -29,7 +29,7 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 			render: () => {
 				const cells_html = getDatatableRowHtml(data);
 
-				setNodeChildren(comp._nodes.dt_row, cells_html);
+				setNodeChildren(comp, cells_html);
 
 				/** @type {DatatableComp} */
 				// @ts-ignore
@@ -39,7 +39,7 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 				const _row_id = +row.dataset.primary;
 				const row_data = dt._data.dataset.find((d) => d._row_id === _row_id);
 
-				registerForms(comp._nodes.dt_row);
+				registerForms(comp);
 
 				if (row_data) {
 					row._children("[data-bind]").forEach((input) => {
@@ -47,13 +47,16 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 						input._set_value(row_data[key], { quiet: true });
 					});
 				}
+
+				comp.classList.toggle("even", data.row_index % 2 === 0);
 			},
 		});
 	};
 
 	createComp(comp, parent, data, {
-		template: html`<div data-node="{${comp._nodes.dt_row}}" class="dt_row {${data.row_index % 2 === 0}?even}"></div>`,
 		ready: () => {
+			comp.classList.add("dt_row");
+
 			/** @type {DatatableComp} */
 			// @ts-ignore
 			const dt = comp._parent_comp._parent_comp;
