@@ -126,7 +126,7 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 						);
 						dt._render();
 
-						// well, sometimes there is a need to modify a field to it's previous value, so that is necessary
+						// well, sometimes there is a need to modify a field to it's previous value, so that is necessary, fails at 82.59999 blah
 						comp._render({ force_render: true });
 					}
 				});
