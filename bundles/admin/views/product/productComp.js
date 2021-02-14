@@ -620,12 +620,15 @@ function productComp(comp, parent, data) {
 				const detail = ev.detail;
 				/** @type {ProductData} */
 				const row_data = detail.row_data;
+				const key = detail.key;
 
 				const vat = vats.find((e) => e.vat_id === row_data.vat_id).value;
-				if (detail.key === "gross_price") {
+				row_data.gross_price = round(row_data.gross_price, 2);
+				row_data.net_price = round(row_data.net_price, 2);
+				if (key === "gross_price") {
 					row_data.net_price = round(row_data.gross_price / (1 + vat), 2);
 				}
-				if (detail.key === "net_price" || detail.key === "vat_id") {
+				if (key === "net_price" || key === "vat_id") {
 					row_data.gross_price = round(row_data.net_price * (1 + vat), 2);
 				}
 			});
