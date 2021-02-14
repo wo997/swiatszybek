@@ -162,8 +162,9 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 
 /**
  * @param {DatatableRowCompData} row
+ * @param {{just_editables?: boolean}} opts
  */
-function getDatatableRowHtml(row) {
+function getDatatableRowHtml(row, opts = {}) {
 	/** @type {string[]} */
 	let cells_html = [];
 
@@ -183,6 +184,9 @@ function getDatatableRowHtml(row) {
 			} else if (column.editable === "select") {
 				let options = "";
 				let number = "";
+				if (opts.just_editables) {
+					options += html`<option value="-1"></option>`;
+				}
 				column.select_options.forEach((e) => {
 					options += html`<option value="${e.val}">${e.label}</option>`;
 					if (typeof e.val === "number") {
@@ -193,10 +197,12 @@ function getDatatableRowHtml(row) {
 					${options}
 				</select>`;
 			}
-		} else if (column.render) {
-			cell_html += column.render(row.row_data);
-		} else {
-			cell_html += def(row.row_data[column.key], "");
+		} else if (!opts.just_editables) {
+			if (column.render) {
+				cell_html += column.render(row.row_data);
+			} else {
+				cell_html += def(row.row_data[column.key], "");
+			}
 		}
 
 		cell_html = html`<div class="dt_cell" data-column_id="${column_id}">${cell_html}</div>`;

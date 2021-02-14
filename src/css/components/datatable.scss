@@ -150,4 +150,10 @@ datatable-comp {
 	.dt_filter {
 		margin-left: 2px;
 	}
+
+	datatable-batch-edit-comp.comp.dt_row {
+		background: #eee;
+		border: 2px solid #aaa;
+		border-top-width: 1px;
+	}
 }
