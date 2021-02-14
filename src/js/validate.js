@@ -51,12 +51,16 @@ function validateInputs(inputs) {
  * @param {string[]} errors
  */
 function showValidationErrors(input, errors) {
-	if (!input.classList.contains("input_registered") && errors.length > 0) {
+	const wrong = errors.length > 0;
+	if (!input.classList.contains("input_registered") && wrong) {
 		input.addEventListener("change", inputChangeValidation);
 		input.addEventListener("input", inputChangeValidation);
 	}
-	input.classList.toggle("invalid", errors.length > 0);
+	input.classList.toggle("invalid", wrong);
 	input.dataset.tooltip = errors.join("<br>");
+	if (wrong) {
+		scrollToInvalid(input);
+	}
 }
 
 /**
@@ -94,4 +98,18 @@ function getInputValidationErrors(input) {
 	}
 
 	return errors;
+}
+
+let scrollingToInvalid = false;
+function scrollToInvalid(field) {
+	if (scrollingToInvalid) {
+		return;
+	}
+	scrollingToInvalid = true;
+	scrollIntoView(field, {
+		callback: () => {
+			scrollingToInvalid = false;
+			field.focus();
+		},
+	});
 }

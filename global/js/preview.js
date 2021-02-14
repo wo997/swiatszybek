@@ -7,8 +7,7 @@ function getCenterCmsBlockInfo(cms_container) {
 	const dist_info = cms_container._children(".cms-block").reduce(
 		(dist_info, block, block_index) => {
 			const block_rect = block.getBoundingClientRect();
-			const dist_to_center =
-				block_rect.top + block_rect.height * 0.5 - half_screen_height;
+			const dist_to_center = block_rect.top + block_rect.height * 0.5 - half_screen_height;
 			if (Math.abs(dist_to_center) < Math.abs(dist_info.dist_to_center)) {
 				dist_info.dist_to_center = dist_to_center;
 				dist_info.block_index = block_index;
@@ -32,14 +31,11 @@ domload(() => {
 			const block_we_wanna_see = cms_blocks[block_index];
 			if (block_we_wanna_see) {
 				block_we_wanna_see_rect = block_we_wanna_see.getBoundingClientRect();
-				const dist_to_center =
-					block_we_wanna_see_rect.top +
-					block_we_wanna_see_rect.height * 0.5 -
-					half_screen_height;
+				const dist_to_center = block_we_wanna_see_rect.top + block_we_wanna_see_rect.height * 0.5 - half_screen_height;
 
-				var diff = dist_to_center - preview_params.dist_info.dist_to_center;
+				var diff = preview_params.dist_info.dist_to_center - dist_to_center;
 
-				const scroll_parent = cms_wrapper._find_scroll_parent();
+				const scroll_parent = cms_wrapper._scroll_parent();
 				scroll_parent.scrollBy(0, diff);
 				smoothScroll();
 			}

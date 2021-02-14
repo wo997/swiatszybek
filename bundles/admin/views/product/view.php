@@ -29,7 +29,7 @@ $general_product = EntityManager::getEntityById("general_product", $general_prod
         </div>
     </span>
     <div class="history_btns_wrapper"></div>
-    <button class="btn primary" onclick="saveProduct()">Zapisz <i class="fas fa-save"></i></button>
+    <div class="save_btn_wrapper"></div>
 </div>
 
 <?php startSection("body_content"); ?>

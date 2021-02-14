@@ -11,7 +11,7 @@
  *  quiet?: boolean
  * }): void
  * _get_value(): any
- * _find_scroll_parent(options?: findNodeOptions): PiepNode
+ * _scroll_parent(options?: findNodeOptions): PiepNode
  * _empty(): void
  * _set_content(html: string | number): void
  * dataset: any;
@@ -114,7 +114,7 @@ function $(selector, parent = undefined) {
 		return dispatchChange(node);
 	};
 
-	node._find_scroll_parent = (options = {}) => {
+	node._scroll_parent = (options = {}) => {
 		return findScrollParent(node, options);
 	};
 

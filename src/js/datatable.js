@@ -1017,7 +1017,7 @@
 // 	if (!tr) return;
 
 // 	// todo abandon somehow, you don't need it yet, list component will do the job
-// 	var nonstatic_parent = tr._find_scroll_parent();
+// 	var nonstatic_parent = tr._scroll_parent();
 
 // 	/*var scroll_parent = tr.findScrollParent();
 //   if (scroll_parent === window) {
@@ -1290,7 +1290,7 @@
 // 		filter_menu._set_content(menu_html);
 // 		filter_menu.style.display = "block";
 
-// 		var nonstatic_parent = datatable.target._find_scroll_parent();
+// 		var nonstatic_parent = datatable.target._scroll_parent();
 
 // 		nonstatic_parent.appendChild(filter_menu);
 

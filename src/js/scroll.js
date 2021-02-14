@@ -31,10 +31,19 @@ function scrollFromTo(parent, diff, time, t = 0) {
 }
 
 function smoothScroll(diff, params = {}) {
-	var duration = def(params.duration, 40);
-	var t = def(params.t, 0);
-
-	var scroll_parent = def(params.scroll_parent, window);
+	const t = def(params.t, 0);
+	/** @type {PiepNode} */
+	const scroll_parent = def(params.scroll_parent, window);
+	const duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
+	// duration is weird, but it's fine
+	diff =
+		t > 0
+			? diff
+			: clamp(
+					-scroll_parent.scrollTop - duration,
+					diff,
+					scroll_parent.scrollHeight - scroll_parent.clientHeight - scroll_parent.scrollTop + duration
+			  );
 
 	scroll_parent.scrollBy(0, (4 * diff * (duration / 2 - Math.abs(duration / 2 - t))) / (duration * duration));
 
@@ -42,46 +51,45 @@ function smoothScroll(diff, params = {}) {
 		tooltip.dismiss();
 	}
 
-	if (t < duration) {
-		requestAnimationFrame(() => {
-			params.t = t + 1;
-			smoothScroll(diff, params);
-		});
-	} else if (params.callback) {
+	if (t >= duration) {
 		params.callback();
+		return;
 	}
+
+	requestAnimationFrame(() => {
+		params.t = t + 1;
+		smoothScroll(diff, params);
+	});
 }
 
+/**
+ *
+ * @param {PiepNode} elem
+ * @param {{duration?: number, offset?: number, margin?: number, callback?: CallableFunction}} params
+ */
 function scrollIntoView(elem, params = {}) {
 	elem = $(elem);
-	var duration = def(params.duration, 40);
-	var offset = def(params.offset, 0);
-	var margin = def(params.margin, 0.2);
 
-	var r = elem.getBoundingClientRect();
-	if (r.left == 0) {
-		elem = elem._parent();
-		r = elem.getBoundingClientRect();
+	//const duration = def(params.duration, 40);
+	const scroll_parent = elem._scroll_parent();
+	const offset = def(params.offset, 0.15 * scroll_parent.offsetHeight);
+
+	const elem_r = elem.getBoundingClientRect();
+	const parent_r = scroll_parent.getBoundingClientRect();
+
+	const top = elem_r.top - parent_r.top - offset;
+	const bottom = elem_r.top + elem_r.height - (parent_r.top + parent_r.height - offset);
+
+	let diff = 0;
+	if (top < 0 && bottom > 0) {
+		diff = top < -bottom ? top : bottom;
+	} else if (top < 0) {
+		diff = top;
+	} else if (bottom > 0) {
+		diff = bottom;
 	}
-
-	var top = r.top + offset;
-	var bottom = r.top + r.height + offset;
-
-	var topMin = window.innerHeight * margin;
-	var bottomMin = window.innerHeight * (1 - margin);
-
-	var diff = 0;
-
-	if (top < topMin) {
-		diff = top - topMin;
-	} else if (bottom > bottomMin) {
-		diff = bottom - bottomMin;
-	}
-
-	var scroll_parent = elem._find_scroll_parent();
 
 	smoothScroll(diff, {
-		duration: duration,
 		callback: params.callback,
 		scroll_parent: scroll_parent,
 	});

@@ -12,6 +12,12 @@
  */
 
 /**
+ * @typedef {{
+ * history: PiepNode
+ * }} CompWithHistoryNodes
+ */
+
+/**
  * @param {CompWithHistory} comp
  */
 function renderCompHistory(comp) {
@@ -56,7 +62,7 @@ function clearCompHistory(c) {
 }
 
 registerCompTrait("history", {
-	template: html`<div data-node="history" class="history_btns">
+	template: html`<div data-node="history">
 		<button class="btn subtle fas fa-undo" data-node="history_undo" data-tooltip="Cofnij zmiany"></button>
 		<button class="btn subtle fas fa-redo" data-node="history_redo" data-tooltip="Ponów zmiany"></button>
 	</div>`,

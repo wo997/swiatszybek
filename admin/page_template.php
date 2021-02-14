@@ -36,7 +36,9 @@ endSection();
     </div>
 </header>
 <div class="content">
-    <?= def($sections, "header", ""); ?>
+    <div class="main_header">
+        <?= def($sections, "header", ""); ?>
+    </div>
     <?php
     if (!isset($sections["header"])) {
     ?>

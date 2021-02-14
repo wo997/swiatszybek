@@ -176,20 +176,6 @@ function getFormData(form, params = {}) {
 	return data;
 }
 
-var scrollingToInvalid = false;
-function scrollToInvalid(field) {
-	if (scrollingToInvalid) {
-		return;
-	}
-	scrollingToInvalid = true;
-	scrollIntoView(field, {
-		callback: () => {
-			scrollingToInvalid = false;
-			field.focus();
-		},
-	});
-}
-
 domload(() => {
 	registerForms();
 });

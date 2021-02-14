@@ -32,7 +32,8 @@
  *      all_products: DatatableComp
  *      add_products_btn: PiepNode
  *      remove_products_btn: PiepNode
- *  }
+ *      save_btn: PiepNode
+ *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products: {new_option_id, option_id}[], options_existed: number[]})
  *  _remove_missing_products()
  * } & BaseComp} ProductComp
@@ -453,9 +454,11 @@ function productComp(comp, parent, data) {
 		template: html`
 			<p-trait data-trait="history"></p-trait>
 
+			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
+
 			<div style="max-width:600px">
 				<div class="label first">Nazwa produktu</div>
-				<input type="text" class="field" data-bind="{${data.name}}" />
+				<input type="text" class="field" data-bind="{${data.name}}" data-validate="string" />
 
 				<div class="label">Sprzedawaj na</div>
 				<select class="field" data-bind="{${data.sell_by}}">
@@ -567,11 +570,24 @@ function productComp(comp, parent, data) {
 				select_product_features_modal_comp._show({ source: comp._nodes.add_feature_btn });
 			});
 
-			const history_btns = comp._child(".history_btns");
-			const history_btns_wrapper = $(".custom-toolbar .history_btns_wrapper");
+			const history_wrapper = comp._nodes.history;
+			const history_btns_wrapper = $(".main_header .history_btns_wrapper");
 			if (history_btns_wrapper) {
-				history_btns_wrapper.appendChild(history_btns);
+				history_btns_wrapper.appendChild(history_wrapper);
 			}
+
+			const save_btn = comp._nodes.save_btn;
+			const save_btn_wrapper = $(".main_header .save_btn_wrapper");
+			if (save_btn_wrapper) {
+				save_btn_wrapper.appendChild(save_btn);
+			}
+			save_btn.addEventListener("click", () => {
+				const errors = validateInputs(directCompNodes(comp, "[data-validate]"));
+
+				if (errors.length === 0) {
+					alert("SAVE");
+				}
+			});
 
 			comp._nodes.add_products_btn.addEventListener("click", () => {
 				comp._add_missing_products();
