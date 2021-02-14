@@ -51,7 +51,7 @@ let list_grab = {
 				edy = -list_grab.height;
 			}
 
-			if (er.top + er.height * 0.5 < r.top + r.height * 0.5) {
+			if (er.top + edy - etry + er.height * 0.5 < r.top + r.height * 0.5) {
 				list_grab.place_index++;
 			}
 
