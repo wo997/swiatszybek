@@ -82,7 +82,7 @@ function datatableComp(comp, parent, data) {
 	data.quick_search = def(data.quick_search, "");
 	data.pagination_data = def(data.pagination_data, {});
 	data.batch_edit = def(data.batch_edit, {});
-	data.batch_edit = { columns: data.columns, row_data: {} };
+	data.batch_edit = { columns: [], row_data: {} };
 
 	data.rows = [];
 

@@ -191,6 +191,8 @@ function listComp(comp, parent, data = []) {
 						child.style.transform = "";
 						// @ts-ignore
 						child._translateY = 0;
+						// @ts-ignore
+						child._scale = 1;
 					});
 
 					removeRows();
@@ -295,17 +297,22 @@ function listComp(comp, parent, data = []) {
 							let step_1 = "";
 
 							if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2) {
-								step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px);`;
-								step_1 += `transform:translate(${after_x}px,${after_y}px);`;
+								// @ts-ignore
+								const scale = def(child._scale, 1);
+								// @ts-ignore
+								child._scale = 1;
+
+								step_0 += `transform:scale(${scale}) translate(${Math.round(off_x)}px,${Math.round(off_y)}px);`;
+								step_1 += `transform:scale(1) translate(${after_x}px,${after_y}px);`;
 							}
 
 							if (add) {
-								step_0 += "opacity:0;";
+								step_0 += "opacity:0;transform:scale(1,0.8);";
 								step_1 += "opacity:1;";
 							}
 							if (remove) {
 								step_0 += "opacity:1;";
-								step_1 += "opacity:0;";
+								step_1 += "opacity:0;transform:scale(1,0.8);";
 							}
 
 							if (step_1) {

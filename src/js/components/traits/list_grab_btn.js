@@ -29,7 +29,10 @@ let list_grab = {
 		dy = clamp(list_grab.min_y, dy, list_grab.max_y);
 		// @ts-ignore
 		row._translateY = dy;
-		row.style.transform = `translateY(${Math.round(dy)}px)`;
+		// @ts-ignore
+		row._scale = Math.min(def(row._scale, 1) + 0.001, 1.007);
+		// @ts-ignore
+		row.style.transform = `scale(${row._scale}) translateY(${Math.round(dy)}px)`;
 
 		list_grab.place_index = 0;
 		list_grab.all_rows.forEach((e) => {
@@ -83,8 +86,13 @@ document.addEventListener("mouseup", () => {
 				// @ts-ignore
 				if (Math.abs(x._translateY) > 1) {
 					// @ts-ignore
-					x._animate(`0%{transform:translateY(${x._translateY}px)}100%{transform:translateY(0px)}`, 250);
+					const sc = def(x._scale, 1);
+					// @ts-ignore
+					const ty = x._translateY;
+					x._animate(`0%{transform:scale(${sc}) translateY(${ty}px)}100%{transform:scale(1) translateY(0px)}`, 250);
 				}
+				// @ts-ignore
+				x._scale = 1;
 				// @ts-ignore
 				x._translateY = 0;
 				x.style.transform = "";
