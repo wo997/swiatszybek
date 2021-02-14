@@ -374,6 +374,7 @@ function productComp(comp, parent, data) {
 							columns[column_index] = column;
 						}
 					} else {
+						// TODO: add after the products are added idk
 						columns.unshift(column);
 					}
 				});
