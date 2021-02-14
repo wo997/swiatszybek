@@ -106,7 +106,6 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 			row._children("[data-bind]").forEach((input) => {
 				const key = input.dataset.bind;
 				input.addEventListener("change", () => {
-					console.log(123, input);
 					if (dt._data.search_url) {
 						console.warn("TODO");
 					} else {
@@ -126,6 +125,9 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 							})
 						);
 						dt._render();
+
+						// well, sometimes there is a need to modify a field to it's previous value, so that is necessary
+						comp._render({ force_render: true });
 					}
 				});
 				// b.addEventListener("input", () => {

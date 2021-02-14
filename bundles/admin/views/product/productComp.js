@@ -628,9 +628,7 @@ function productComp(comp, parent, data) {
 				if (key === "gross_price") {
 					row_data.net_price = round(row_data.gross_price / (1 + vat), 2);
 				}
-				if (key === "net_price" || key === "vat_id") {
-					row_data.gross_price = round(row_data.net_price * (1 + vat), 2);
-				}
+				row_data.gross_price = round(row_data.net_price * (1 + vat), 2);
 			});
 		},
 	});

@@ -326,16 +326,16 @@ function createComp(node, parent_comp, data, options) {
 
 /**
  * @param {BaseComp} comp
- * @param {*} _data
+ * @param {*} data
  * @param {SetAnyCompDataOptions} options
  */
-function setCompData(comp, _data = undefined, options = {}) {
+function setCompData(comp, data = undefined, options = {}) {
 	/** @type {AnyComp} */
 	// @ts-ignore
 	const node = comp;
 
-	if (_data !== undefined) {
-		node._data = cloneObject(_data);
+	if (data !== undefined) {
+		node._data = cloneObject(data);
 	}
 
 	if (!node || node._data === undefined) {
@@ -388,23 +388,25 @@ function setCompData(comp, _data = undefined, options = {}) {
 		});
 	}
 
-	const data = node._data; // it's passed to the eval, it's just a keyword
-	for (const ev of node._eval_attrs) {
-		for (const attr of ev.evals) {
-			try {
-				const val = eval(attr.eval_str);
-				if (attr.name === "html") {
-					ev.node._set_content(val);
-				} else {
-					if (!val && val !== "") {
-						ev.node.removeAttribute(attr.name);
+	{
+		const data = node._data; // it's passed to the eval, it's just a keyword
+		for (const ev of node._eval_attrs) {
+			for (const attr of ev.evals) {
+				try {
+					const val = eval(attr.eval_str);
+					if (attr.name === "html") {
+						ev.node._set_content(val);
 					} else {
-						ev.node.setAttribute(attr.name, val);
+						if (!val && val !== "") {
+							ev.node.removeAttribute(attr.name);
+						} else {
+							ev.node.setAttribute(attr.name, val);
+						}
 					}
+				} catch (e) {
+					console.error(`Cannot evaluate ${attr.name} ${attr.eval_str}: ${e}`);
+					console.trace();
 				}
-			} catch (e) {
-				console.error(`Cannot evaluate ${attr.name} ${attr.eval_str}: ${e}`);
-				console.trace();
 			}
 		}
 	}
