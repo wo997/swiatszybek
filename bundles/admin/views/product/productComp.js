@@ -95,6 +95,7 @@ function productComp(comp, parent, data) {
 		dataset: [],
 		label: "Pełna lista produktów",
 		selectable: true,
+		pagination_data: { row_count: 50 },
 	};
 
 	data.products_dt = def(data.products_dt, table);

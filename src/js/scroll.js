@@ -40,13 +40,12 @@ function smoothScroll(diff, params = {}) {
 	/** @type {PiepNode} */
 	params.scroll_parent = def(params.scroll_parent, window);
 	const scroll_parent = params.scroll_parent;
-	const prodably_duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
+	const prodably_duration = def(params.duration, Math.sqrt(Math.abs(diff)));
 	// duration is weird to be addde here,, but it's intentional
-	diff = clamp(
-		-scroll_parent.scrollTop - prodably_duration,
-		diff,
-		scroll_parent.scrollHeight - scroll_parent.clientHeight - scroll_parent.scrollTop + prodably_duration
-	);
+
+	const min_s = -scroll_parent.scrollTop;
+	const max_s = scroll_parent.scrollHeight - scroll_parent.clientHeight - scroll_parent.scrollTop;
+	diff = clamp(min_s - prodably_duration, diff, max_s + prodably_duration);
 	params.duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
 
 	//console.log(diff);
@@ -58,7 +57,7 @@ function smoothScroll(diff, params = {}) {
 		return;
 	}
 
-	if (tooltip && Math.abs(diff) > 5) {
+	if (tooltip) {
 		tooltip.dismiss();
 	}
 
