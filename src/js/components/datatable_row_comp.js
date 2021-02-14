@@ -3,7 +3,7 @@
 /**
  *
  * @typedef {{
- *  row: any
+ *  row_data: any
  *  columns: DatatableColumnDef[]
  * } & ListCompRowData} DatatableRowCompData
  *
@@ -22,54 +22,12 @@
  * @param {*} parent
  * @param {DatatableRowCompData} data
  */
-function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
+function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				/** @type {string[]} */
-				let cells_html = [];
-
-				if (data.columns === undefined) {
-					console.trace();
-				}
-
-				let column_id = -1;
-				for (const column of data.columns) {
-					column_id++;
-					let cell_html = "";
-
-					if (column.editable) {
-						if (column.editable === "checkbox") {
-							cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
-						} else if (column.editable === "number") {
-							// dumb shit doesn't support selection so I use text
-							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" data-number />`;
-						} else if (column.editable === "string") {
-							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
-						} else if (column.editable === "select") {
-							let options = "";
-							let number = "";
-							column.select_options.forEach((e) => {
-								options += html`<option value="${e.val}">${e.label}</option>`;
-								if (typeof e.val === "number") {
-									number = "data-number";
-								}
-							});
-							cell_html += html`<select class="field small" data-bind="${column.key}" ${number}>
-								${options}
-							</select>`;
-						}
-					} else if (column.render) {
-						cell_html += column.render(data.row);
-					} else {
-						cell_html += def(data.row[column.key], "");
-					}
-
-					cell_html = html`<div class="dt_cell" data-column_id="${column_id}">${cell_html}</div>`;
-
-					cells_html.push(cell_html);
-				}
+				const cells_html = getDatatableRowHtml(data);
 
 				setNodeChildren(comp._nodes.dt_row, cells_html);
 
@@ -197,4 +155,53 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 			});
 		},
 	});
+}
+
+/**
+ * @param {DatatableRowCompData} row
+ */
+function getDatatableRowHtml(row) {
+	/** @type {string[]} */
+	let cells_html = [];
+
+	console.log(row);
+
+	let column_id = -1;
+	for (const column of row.columns) {
+		column_id++;
+		let cell_html = "";
+
+		if (column.editable) {
+			if (column.editable === "checkbox") {
+				cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
+			} else if (column.editable === "number") {
+				// dumb shit doesn't support selection so I use text
+				cell_html += html`<input type="text" class="field small" data-bind="${column.key}" data-number />`;
+			} else if (column.editable === "string") {
+				cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
+			} else if (column.editable === "select") {
+				let options = "";
+				let number = "";
+				column.select_options.forEach((e) => {
+					options += html`<option value="${e.val}">${e.label}</option>`;
+					if (typeof e.val === "number") {
+						number = "data-number";
+					}
+				});
+				cell_html += html`<select class="field small" data-bind="${column.key}" ${number}>
+					${options}
+				</select>`;
+			}
+		} else if (column.render) {
+			cell_html += column.render(row.row_data);
+		} else {
+			cell_html += def(row.row_data[column.key], "");
+		}
+
+		cell_html = html`<div class="dt_cell" data-column_id="${column_id}">${cell_html}</div>`;
+
+		cells_html.push(cell_html);
+	}
+
+	return cells_html;
 }

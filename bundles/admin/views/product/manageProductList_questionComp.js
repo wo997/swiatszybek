@@ -26,7 +26,7 @@
  */
 function manageProductList_questionComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { label: "", options: [] };
+		data = { label: "", options: [], type: "copy" };
 	}
 
 	comp._set_data = (data, options = {}) => {

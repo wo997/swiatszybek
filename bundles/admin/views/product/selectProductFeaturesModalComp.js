@@ -115,9 +115,9 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				const data = detail.data;
 				data.rows.forEach((data) => {
 					product_comp._data.features.find((e) => {
-						return e.product_feature_id === data.row.product_feature_id;
+						return e.product_feature_id === data.row_data.product_feature_id;
 					});
-					data.row.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.row.product_feature_id);
+					data.row_data.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.row_data.product_feature_id);
 				});
 			});
 

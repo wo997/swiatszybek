@@ -150,7 +150,7 @@ domload(() => {
 			pagination_data: { page_id: 0, row_count: 15, total_rows: 2, page_count: 1 },
 			rows: [
 				{
-					row: {
+					row_data: {
 						gross_price: 12.3,
 						net_price: 66.9,
 						product_id: -1,
@@ -164,7 +164,7 @@ domload(() => {
 					row_id: -1001,
 				},
 				{
-					row: {
+					row_data: {
 						gross_price: 12.3,
 						net_price: 50,
 						product_id: -1,

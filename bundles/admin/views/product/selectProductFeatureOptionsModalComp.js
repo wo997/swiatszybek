@@ -99,7 +99,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				/** @type {DatatableCompData} */
 				const data = detail.data;
 				data.rows.forEach((data) => {
-					data.row.selected = product_comp._data.product_feature_option_ids.indexOf(data.row.product_feature_option_id) !== -1;
+					data.row_data.selected = product_comp._data.product_feature_option_ids.indexOf(data.row_data.product_feature_option_id) !== -1;
 				});
 			});
 

@@ -25,7 +25,7 @@
  * }} DatatableFilterData
  *
  * @typedef {{
- * row:any
+ * row_data:any
  * } & ListCompRowData} DatatableRowData
  *
  * @typedef {{
@@ -127,7 +127,7 @@ function datatableComp(comp, parent, data) {
 
 				if (select_all_rows._get_value()) {
 					for (const row_data of comp._data.rows) {
-						selection.push(row_data.row[data.primary_key]);
+						selection.push(row_data.row_data[data.primary_key]);
 					}
 				}
 				comp._data.selection = selection;
@@ -315,7 +315,7 @@ function datatableComp(comp, parent, data) {
 			const pi = data.pagination_data.page_id;
 
 			data.rows = rows.slice(pi * rc, (pi + 1) * rc).map((e) => {
-				const ret = { row: e };
+				const ret = { row_data: e };
 				if (e._row_id) {
 					ret.row_id = e._row_id;
 				}
@@ -512,7 +512,7 @@ function datatableComp(comp, parent, data) {
 							<list-comp
 								data-node="{${comp._nodes.list}}"
 								data-bind="{${data.rows}}"
-								${data.primary_key ? `data-primary="row.${data.primary_key}"` : ""}
+								${data.primary_key ? `data-primary="row_data.${data.primary_key}"` : ""}
 							>
 								<datatable-row-comp></datatable-row-comp>
 							</list-comp>
@@ -530,7 +530,7 @@ function datatableComp(comp, parent, data) {
 			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
 
 			<style data-node="style"></style>
-		`,
+		`, //<datatable-batch-edit-comp></datatable-batch-edit-comp>
 		initialize: () => {
 			const filter_menu = comp._nodes.filter_menu;
 			const hideFilterMenu = () => {
