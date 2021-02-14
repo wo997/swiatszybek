@@ -14,6 +14,19 @@ $general_product = EntityManager::getEntityById("general_product", $general_prod
     let product_features = <?= json_encode(getAllProductFeatures()) ?>;
     let product_feature_options = <?= json_encode(getAllProductFeatureOptions()) ?>;
     let general_product_data = <?= json_encode($general_product->getSimpleProps()) ?>;
+    let vats = [{
+            vat_id: 1,
+            value: 0.23
+        },
+        {
+            vat_id: 2,
+            value: 0.08
+        },
+        {
+            vat_id: 3,
+            value: 0.05
+        },
+    ];
 </script>
 
 <?php startSection("header"); ?>

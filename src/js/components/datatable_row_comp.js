@@ -44,15 +44,19 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 							cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
 						} else if (column.editable === "number") {
 							// dumb shit doesn't support selection so I use text
-							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
+							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" data-number />`;
 						} else if (column.editable === "string") {
 							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
 						} else if (column.editable === "select") {
 							let options = "";
+							let number = "";
 							column.select_options.forEach((e) => {
 								options += html`<option value="${e.val}">${e.label}</option>`;
+								if (typeof e.val === "number") {
+									number = "data-number";
+								}
 							});
-							cell_html += html`<select class="field small" data-bind="${column.key}">
+							cell_html += html`<select class="field small" data-bind="${column.key}" ${number}>
 								${options}
 							</select>`;
 						}
@@ -89,7 +93,20 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 								console.warn("TODO");
 							} else {
 								const row_data = dt._data.dataset.find((d) => d._row_id === _row_id); // recreate ref
-								row_data[key] = input._get_value();
+								const val = input._get_value();
+								const prev_value = row_data[key];
+								row_data[key] = val;
+								dt.dispatchEvent(
+									new CustomEvent("editable_change", {
+										detail: {
+											_row_id,
+											row_data,
+											key,
+											prev_value: prev_value,
+											value: val,
+										},
+									})
+								);
 								dt._render();
 							}
 						});
@@ -97,6 +114,7 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 						// 	b._dispatch_change();
 						// });
 
+						// @ts-ignore
 						if (input.type === "text") {
 							input.addEventListener("keydown", (ev) => {
 								const down = ev.key === "ArrowDown";

@@ -15,3 +15,11 @@ let product_features = [];
  * }[]}
  */
 let product_feature_options = [];
+
+/**
+ * @type {{
+ * vat_id: number
+ * value: number
+ * }[]}
+ */
+let vats = [];

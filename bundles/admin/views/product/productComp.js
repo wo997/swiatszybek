@@ -5,7 +5,7 @@
  *  product_id: number
  *  active: number
  *  net_price: number
- *  vat: number
+ *  vat_id: number
  *  gross_price: number
  *  stock: number
  *  is_necessary?: boolean
@@ -78,15 +78,15 @@ function productComp(comp, parent, data) {
 				editable: "number",
 			},
 			{
-				key: "vat",
-				label: "Vat (stały?)",
+				key: "vat_id",
+				label: "Vat",
 				width: "10%",
 				sortable: true,
 				editable: "select",
 				select_options: [
-					{ label: "5%", val: 1 },
+					{ label: "23%", val: 1 },
 					{ label: "8%", val: 2 },
-					{ label: "23%", val: 3 },
+					{ label: "5%", val: 3 },
 				],
 			},
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, editable: "number" },
@@ -108,7 +108,7 @@ function productComp(comp, parent, data) {
 
 		data.missing_products_features.forEach((features) => {
 			/** @type {ProductData} */
-			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat: 0, active: 1, stock: 0 };
+			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat_id: 0, active: 1, stock: 0 };
 
 			for (const [feature_id, option_id] of Object.entries(features)) {
 				const key = getFeatureKeyFromId(feature_id);
@@ -273,6 +273,12 @@ function productComp(comp, parent, data) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		data.products_dt.dataset.forEach((row_data) => {
+			// warmup
+			const vat = vats.find((e) => e.vat_id === row_data.vat_id).value;
+			row_data.gross_price = round(row_data.net_price * (1 + vat), 2);
+		});
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
@@ -607,6 +613,21 @@ function productComp(comp, parent, data) {
 
 			comp._nodes.remove_products_btn.addEventListener("click", () => {
 				comp._remove_missing_products();
+			});
+
+			comp._nodes.all_products.addEventListener("editable_change", (ev) => {
+				// @ts-ignore
+				const detail = ev.detail;
+				/** @type {ProductData} */
+				const row_data = detail.row_data;
+
+				const vat = vats.find((e) => e.vat_id === row_data.vat_id).value;
+				if (detail.key === "gross_price") {
+					row_data.net_price = round(row_data.gross_price / (1 + vat), 2);
+				}
+				if (detail.key === "net_price" || detail.key === "vat_id") {
+					row_data.gross_price = round(row_data.net_price * (1 + vat), 2);
+				}
 			});
 		},
 	});
