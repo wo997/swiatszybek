@@ -19,10 +19,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 	var field_title = null;
 	var previousNode = field._prev();
 	if (!field_title && previousNode) {
-		if (
-			previousNode.classList.contains("label") ||
-			previousNode.classList.contains("above-simple-list")
-		) {
+		if (previousNode.classList.contains("label") || previousNode.classList.contains("above-simple-list")) {
 			field_title = previousNode;
 		} else {
 			var maybe = previousNode._child(".label");
@@ -71,12 +68,8 @@ function showFieldErrors(field, errors = [], options = {}) {
 		}
 
 		const inputElements = wrapper._next();
-		const validationBox = inputElements
-			? inputElements._child(".message_wrapper")
-			: null;
-		const correctIndicator = inputElements
-			? inputElements._child(".correctness .correct")
-			: null;
+		const validationBox = inputElements ? inputElements._child(".message_wrapper") : null;
+		const correctIndicator = inputElements ? inputElements._child(".correctness .correct") : null;
 		if (!correctIndicator && field.hasAttribute("data-validate")) {
 			console.error(
 				field,
@@ -84,9 +77,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 			);
 			return;
 		}
-		const wrongIndicator = inputElements
-			? inputElements._child(".correctness .wrong")
-			: null;
+		const wrongIndicator = inputElements ? inputElements._child(".correctness .wrong") : null;
 		const toggleErrorIcons = (type) => {
 			if (correctIndicator && wrongIndicator) {
 				if (type == "correct") {
@@ -125,7 +116,7 @@ function showFieldErrors(field, errors = [], options = {}) {
 
 	if (wrong) {
 		if (options.scroll) {
-			scrollToInvalid(field);
+			scrollIntoView(field);
 		}
 	} else {
 		if (window.fieldRequiringFilling == field) {
@@ -142,10 +133,7 @@ function validateForm(form, params = {}) {
 	for (const field of fields) {
 		if (field._parent(".hidden")) continue;
 
-		if (
-			params.except_backend &&
-			field.getAttribute("data-validate").indexOf("backend") === 0
-		) {
+		if (params.except_backend && field.getAttribute("data-validate").indexOf("backend") === 0) {
 			continue;
 		}
 
@@ -269,13 +257,9 @@ function fieldErrors(field) {
 		}
 
 		if (params["length"]) {
-			var errors = getSizeValidationErrors(
-				val.length,
-				params["length"],
-				(info) => {
-					return `Wymagana ilość znaków: ${info}`;
-				}
-			);
+			var errors = getSizeValidationErrors(val.length, params["length"], (info) => {
+				return `Wymagana ilość znaków: ${info}`;
+			});
 			if (errors) {
 				newError(errors);
 			}
@@ -301,13 +285,9 @@ function fieldErrors(field) {
 			var list = field.list;
 
 			if (params["count"]) {
-				var errors = getSizeValidationErrors(
-					list.values.length,
-					params["count"],
-					(info) => {
-						return `Wymagana ilość elementów: ${info}`;
-					}
-				);
+				var errors = getSizeValidationErrors(list.values.length, params["count"], (info) => {
+					return `Wymagana ilość elementów: ${info}`;
+				});
 
 				if (errors) {
 					newError(errors);
@@ -358,9 +338,7 @@ function fieldErrors(field) {
 }
 
 function clearAllErrors(node = null) {
-	var fields = node
-		? $(node)._children(`[data-validate]`)
-		: $$(`[data-form] [data-validate]`);
+	var fields = node ? $(node)._children(`[data-validate]`) : $$(`[data-form] [data-validate]`);
 	fields.forEach((field) => {
 		var errors = fieldErrors(field);
 		if (Array.isArray(errors) && errors.length > 0) {

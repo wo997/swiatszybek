@@ -59,7 +59,11 @@ function showValidationErrors(input, errors) {
 	input.classList.toggle("invalid", wrong);
 	input.dataset.tooltip = errors.join("<br>");
 	if (wrong) {
-		scrollToInvalid(input);
+		scrollIntoView(input, {
+			callback: () => {
+				input.focus();
+			},
+		});
 	}
 }
 
@@ -98,18 +102,4 @@ function getInputValidationErrors(input) {
 	}
 
 	return errors;
-}
-
-let scrollingToInvalid = false;
-function scrollToInvalid(field) {
-	if (scrollingToInvalid) {
-		return;
-	}
-	scrollingToInvalid = true;
-	scrollIntoView(field, {
-		callback: () => {
-			scrollingToInvalid = false;
-			field.focus();
-		},
-	});
 }

@@ -34,7 +34,9 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 					console.trace();
 				}
 
+				let column_id = -1;
 				for (const column of data.columns) {
+					column_id++;
 					let cell_html = "";
 
 					if (column.editable) {
@@ -51,7 +53,7 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 						cell_html += def(data.row[column.key], "");
 					}
 
-					cell_html = `<div class='dt_cell'>${cell_html}</div>`;
+					cell_html = html`<div class="dt_cell" data-column_id="${column_id}">${cell_html}</div>`;
 
 					cells_html.push(cell_html);
 				}
@@ -85,6 +87,33 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 						// b.addEventListener("input", () => {
 						// 	b._dispatch_change();
 						// });
+
+						input.addEventListener("keydown", (ev) => {
+							const down = ev.key === "ArrowDown";
+							const up = ev.key === "ArrowUp";
+							if (up || down) {
+								ev.preventDefault();
+
+								const dt_cell = input._parent(".dt_cell");
+								const list_row = dt_cell._parent(".list_row");
+								let next_list_row = up ? list_row._prev() : list_row._next();
+								if (up && !next_list_row) {
+									next_list_row = list_row._last_sibling();
+								}
+								if (down && !next_list_row) {
+									next_list_row = list_row._first_sibling();
+								}
+								const next_list_column = next_list_row._child(`[data-column_id="${dt_cell.dataset.column_id}"]`);
+								const next_input = next_list_column._child(`[data-bind="${input.dataset.bind}"]`);
+								scrollIntoView(next_input, {
+									callback: () => {
+										next_input.focus();
+										// @ts-ignore
+										next_input.select();
+									},
+								});
+							}
+						});
 					});
 				}
 			},

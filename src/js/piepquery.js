@@ -19,6 +19,8 @@
  * _parent(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
  * _next(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
  * _prev(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
+ * _first_sibling(): PiepNode
+ * _last_sibling(): PiepNode
  * _child(selector: string): PiepNode | undefined
  * _children(selector: string): PiepNode[]
  * _direct_child(selector?: string): PiepNode
@@ -64,6 +66,12 @@ function $(selector, parent = undefined) {
 	};
 	node._prev = (selector = undefined, options = {}) => {
 		return findPrev(node, selector, options);
+	};
+	node._first_sibling = () => {
+		return $(node._parent().firstElementChild);
+	};
+	node._last_sibling = () => {
+		return $(node._parent().lastElementChild);
 	};
 	node._child = (selector) => {
 		return $(selector, node);

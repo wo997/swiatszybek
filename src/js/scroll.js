@@ -30,8 +30,15 @@ function scrollFromTo(parent, diff, time, t = 0) {
 		});
 }
 
+let smooth_scrolling = false;
 function smoothScroll(diff, params = {}) {
 	const t = def(params.t, 0);
+	if (t === 0) {
+		if (smooth_scrolling) {
+			return;
+		}
+		smooth_scrolling = true;
+	}
 	/** @type {PiepNode} */
 	const scroll_parent = def(params.scroll_parent, window);
 	const duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
@@ -45,15 +52,18 @@ function smoothScroll(diff, params = {}) {
 					scroll_parent.scrollHeight - scroll_parent.clientHeight - scroll_parent.scrollTop + duration
 			  );
 
+	if (Math.abs(diff) < 10 || t >= duration) {
+		if (params.callback) {
+			params.callback();
+		}
+		smooth_scrolling = false;
+		return;
+	}
+
 	scroll_parent.scrollBy(0, (4 * diff * (duration / 2 - Math.abs(duration / 2 - t))) / (duration * duration));
 
 	if (t == 0 && tooltip && Math.abs(diff) > 5) {
 		tooltip.dismiss();
-	}
-
-	if (t >= duration) {
-		params.callback();
-		return;
 	}
 
 	requestAnimationFrame(() => {
