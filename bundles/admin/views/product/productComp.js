@@ -108,7 +108,7 @@ function productComp(comp, parent, data) {
 
 		data.missing_products_features.forEach((features) => {
 			/** @type {ProductData} */
-			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat_id: 0, active: 1, stock: 0 };
+			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat_id: 1, active: 1, stock: 0 };
 
 			for (const [feature_id, option_id] of Object.entries(features)) {
 				const key = getFeatureKeyFromId(feature_id);

@@ -6,7 +6,6 @@
  * html: string
  * open(elem: PiepNode, data: any)
  * apply(elem: PiepNode)
- * clear(elem: PiepNode)
  * }[]}
  */
 let filter_menus = [
@@ -26,10 +25,6 @@ let filter_menus = [
 		apply: (elem) => {
 			const string = elem._child("input")._get_value();
 			return { type: "string", string, full_match: elem._child("p-checkbox")._get_value(), display: string };
-		},
-		clear: (elem) => {
-			elem._child("input")._set_value("");
-			elem._child("p-checkbox")._set_value(0);
 		},
 	},
 	{
@@ -59,9 +54,6 @@ let filter_menus = [
 				display = "Nie";
 			}
 			return { type: "boolean", value: +value, display };
-		},
-		clear: (elem) => {
-			return elem._child(".radio_group")._set_value("");
 		},
 	},
 	{
@@ -141,11 +133,11 @@ let filter_menus = [
 				return { type: "number", num: num_v, operator: type_v, display: `X ${type_v} ${num_v}` };
 			}
 		},
-		clear: (elem) => {},
 	},
 	{
 		name: "date",
 		html: html`
+			TODO same as numbers
 			<span class="label first">Typ wyszukiwania</span>
 			<select class="field date_type" onchange="dateTypeChanged(this)">
 				<option value="=">Dokładna data</option>
@@ -174,9 +166,6 @@ let filter_menus = [
 		},
 		apply: (elem) => {
 			return elem._child(".phrase")._get_value();
-		},
-		clear: (elem) => {
-			return elem._child("input")._set_value("");
 		},
 	},
 ];
