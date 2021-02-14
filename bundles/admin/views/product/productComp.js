@@ -496,14 +496,15 @@ function productComp(comp, parent, data) {
 				</list-comp>
 			</div>
 
-			<p
-				style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #444;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;display:inline-block"
-			>
-				<i class="fas fa-info-circle"></i> Na podstawie cech zostanie wygenerowana lista produktów - tych samych, które są w Twoim
-				magazynie.<br />Przykładowo jeśli wybierzemy kolory czerwony i niebieski, oraz rozmiary 36, 37 i 38,<br />otrzymamy 6 produktów
-				będących "krzyżówką" podanych cech.<br />Domyślnie (bez wybrania cech) będzie to tylko 1 produkt.
-			</p>
-			<br />
+			<div>
+				<p
+					style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #444;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;display:inline-block"
+				>
+					<i class="fas fa-info-circle"></i> Na podstawie cech zostanie wygenerowana lista produktów - tych samych, które są w Twoim
+					magazynie.<br />Przykładowo jeśli wybierzemy kolory czerwony i niebieski, oraz rozmiary 36, 37 i 38,<br />otrzymamy 6 produktów
+					będących "krzyżówką" podanych cech.<br />Domyślnie (bez wybrania cech) będzie to tylko 1 produkt.
+				</p>
+			</div>
 
 			<button
 				class="btn {${data.missing_products_features.length > 0}?important:subtle}"
@@ -523,14 +524,15 @@ function productComp(comp, parent, data) {
 				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)
 			</button>
 
-			<p
-				style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #444;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;display:inline-block"
-			>
-				<i class="fas fa-info-circle"></i> By szybciej edytować dane w tabelce warto rozważyć obsługę przy użyciu samej klawiatury.<br />Kliknij
-				w dowolne pole i poruszaj się za pomocą <span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałek</span>.<br />
-				By otworzyć listę naciśnij <span style="text-decoration:underline;white-space:nowrap">ENTER</span> i wybierz konkretną opcję
-			</p>
-			<br />
+			<div>
+				<p
+					style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #444;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;display:inline-block"
+				>
+					<i class="fas fa-info-circle"></i> Aby szybciej edytować dane tabelki warto roważyć obsługę przy użyciu klawiatury.<br />
+					Poruszanie się po polach: <span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
+					Otwieranie pola wyboru / listy: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
+				</p>
+			</div>
 
 			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
 		`,
