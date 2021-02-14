@@ -43,7 +43,8 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 						if (column.editable === "checkbox") {
 							cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
 						} else if (column.editable === "number") {
-							cell_html += html`<input type="number" class="field small" data-bind="${column.key}" />`;
+							// dumb shit doesn't support selection so I use text
+							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
 						} else if (column.editable === "string") {
 							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
 						}
@@ -88,32 +89,65 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 						// 	b._dispatch_change();
 						// });
 
-						input.addEventListener("keydown", (ev) => {
-							const down = ev.key === "ArrowDown";
-							const up = ev.key === "ArrowUp";
-							if (up || down) {
-								ev.preventDefault();
+						if (input.type === "text") {
+							input.addEventListener("keydown", (ev) => {
+								const down = ev.key === "ArrowDown";
+								const up = ev.key === "ArrowUp";
+								if (up || down) {
+									ev.preventDefault();
 
-								const dt_cell = input._parent(".dt_cell");
-								const list_row = dt_cell._parent(".list_row");
-								let next_list_row = up ? list_row._prev() : list_row._next();
-								if (up && !next_list_row) {
-									next_list_row = list_row._last_sibling();
+									const dt_cell = input._parent(".dt_cell");
+									const list_row = dt_cell._parent(".list_row");
+									let next_list_row = up ? list_row._prev() : list_row._next();
+									if (up && !next_list_row) {
+										next_list_row = list_row._last_sibling();
+									}
+									if (down && !next_list_row) {
+										next_list_row = list_row._first_sibling();
+									}
+									const next_list_column = next_list_row._child(`[data-column_id="${dt_cell.dataset.column_id}"]`);
+									const next_input = next_list_column._child(`[data-bind="${input.dataset.bind}"]`);
+									scrollIntoView(next_input, {
+										callback: () => {
+											next_input.focus();
+											// @ts-ignore
+											const x = next_input.value.length;
+											// @ts-ignore
+											next_input.setSelectionRange(x, x);
+										},
+									});
 								}
-								if (down && !next_list_row) {
-									next_list_row = list_row._first_sibling();
+
+								const left = ev.key === "ArrowLeft";
+								const right = ev.key === "ArrowRight";
+
+								// @ts-ignore
+								if ((left && input.selectionStart === 0) || (right && input.selectionEnd === input.value.length)) {
+									const dt_cell = input._parent(".dt_cell");
+									let next_cell = dt_cell;
+
+									let next_input = undefined;
+									while (!next_input) {
+										next_cell = left ? next_cell._prev() : next_cell._next();
+										if (left && !next_cell) {
+											next_cell = dt_cell._last_sibling();
+										}
+										if (right && !next_cell) {
+											next_cell = dt_cell._first_sibling();
+										}
+
+										if (next_cell) {
+											next_input = next_cell._child(`input[type="text"][data-bind]`);
+										}
+									}
+									// @ts-ignore
+									const x = right ? next_input.value.length : 0;
+									// @ts-ignore
+									next_input.setSelectionRange(x, x);
+									next_input.focus();
 								}
-								const next_list_column = next_list_row._child(`[data-column_id="${dt_cell.dataset.column_id}"]`);
-								const next_input = next_list_column._child(`[data-bind="${input.dataset.bind}"]`);
-								scrollIntoView(next_input, {
-									callback: () => {
-										next_input.focus();
-										// @ts-ignore
-										next_input.select();
-									},
-								});
-							}
-						});
+							});
+						}
 					});
 				}
 			},
