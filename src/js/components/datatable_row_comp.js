@@ -164,8 +164,6 @@ function getDatatableRowHtml(row) {
 	/** @type {string[]} */
 	let cells_html = [];
 
-	console.log(row);
-
 	let column_id = -1;
 	for (const column of row.columns) {
 		column_id++;

@@ -3,7 +3,7 @@
 /**
  *
  * @typedef {{
- *  row: any
+ *  row_data: any
  *  columns: DatatableColumnDef[]
  * } & ListCompRowData} DatatableBatchEditCompData
  *
@@ -22,12 +22,13 @@
  * @param {*} parent
  * @param {DatatableBatchEditCompData} data
  */
-function datatableBatchEditComp(comp, parent, data = { row: {}, columns: [] }) {
+function datatableBatchEditComp(comp, parent, data = { row_data: {}, columns: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				//const cells_html = getDatatableRowHtml({columns: columns});
+				const cells_html = getDatatableRowHtml({ columns: data.columns, row_data: {} });
+				console.log(data);
 
 				setNodeChildren(comp._nodes.dt_row, cells_html);
 

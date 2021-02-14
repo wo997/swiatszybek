@@ -12,6 +12,11 @@
  * }} PassListData
  *
  * @typedef {{
+ * what: string
+ * where: string
+ * }} PassData
+ *
+ * @typedef {{
  * obj: any
  * key: any
  * }} ObjectData
@@ -43,6 +48,7 @@
  * force_render?: boolean
  * freeze?: boolean
  * pass_list_data?: PassListData[]
+ * pass_data?: PassData[]
  * }} SetCompDataOptions
  *
  * I'm not a fan of it but regular inheritance doesn't seem to work as expected os we assign common props in here
@@ -348,6 +354,14 @@ function setCompData(comp, data = undefined, options = {}) {
 			node._data[d.where].forEach((e) => {
 				e[d.what] = node._data[d.what];
 			});
+		});
+	}
+
+	if (options.pass_data) {
+		options.pass_data.forEach((d) => {
+			if (node._data[d.where]) {
+				node._data[d.where][d.what] = node._data[d.what];
+			}
 		});
 	}
 

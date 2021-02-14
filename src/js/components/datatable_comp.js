@@ -44,6 +44,7 @@
  *  selectable?: boolean
  *  selection?: number[]
  *  save_state_name?: string
+ *  batch_edit?: DatatableBatchEditCompData
  * }} DatatableCompData
  *
  * @typedef {{
@@ -80,6 +81,8 @@ function datatableComp(comp, parent, data) {
 	data.dataset = def(data.dataset, []);
 	data.quick_search = def(data.quick_search, "");
 	data.pagination_data = def(data.pagination_data, {});
+	data.batch_edit = def(data.batch_edit, {});
+	data.batch_edit = { columns: data.columns, row_data: {} };
 
 	data.rows = [];
 
@@ -334,6 +337,7 @@ function datatableComp(comp, parent, data) {
 		setCompData(comp, data, {
 			...options,
 			pass_list_data: [{ what: "columns", where: "rows" }],
+			pass_data: [{ what: "columns", where: "batch_edit" }],
 			render: () => {
 				const cd = comp._changed_data;
 
@@ -508,6 +512,8 @@ function datatableComp(comp, parent, data) {
 					<div class="table_container">
 						<div class="table_header" data-node="{${comp._nodes.table_header}}"></div>
 
+						<datatable-batch-edit-comp data-bind="{${data.batch_edit}}"></datatable-batch-edit-comp>
+
 						<div class="table_body">
 							<list-comp
 								data-node="{${comp._nodes.list}}"
@@ -530,7 +536,7 @@ function datatableComp(comp, parent, data) {
 			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
 
 			<style data-node="style"></style>
-		`, //<datatable-batch-edit-comp></datatable-batch-edit-comp>
+		`,
 		initialize: () => {
 			const filter_menu = comp._nodes.filter_menu;
 			const hideFilterMenu = () => {
