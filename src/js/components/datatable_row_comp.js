@@ -47,6 +47,14 @@ function datatableRowComp(comp, parent, data = { row: {}, columns: [] }) {
 							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
 						} else if (column.editable === "string") {
 							cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
+						} else if (column.editable === "select") {
+							let options = "";
+							column.select_options.forEach((e) => {
+								options += html`<option value="${e.val}">${e.label}</option>`;
+							});
+							cell_html += html`<select class="field small" data-bind="${column.key}">
+								${options}
+							</select>`;
 						}
 					} else if (column.render) {
 						cell_html += column.render(data.row);
