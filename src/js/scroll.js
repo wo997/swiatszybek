@@ -32,16 +32,48 @@ function scrollFromTo(parent, diff, time, t = 0) {
 
 let smooth_scrolling = false;
 function smoothScroll(diff, params = {}) {
-	const t = def(params.t, 0);
-	if (t === 0) {
-		if (smooth_scrolling) {
-			return;
-		}
-		smooth_scrolling = true;
+	if (smooth_scrolling) {
+		return;
 	}
+	smooth_scrolling = true;
+
 	/** @type {PiepNode} */
-	const scroll_parent = def(params.scroll_parent, window);
-	const duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
+	params.scroll_parent = def(params.scroll_parent, window);
+	const scroll_parent = params.scroll_parent;
+	const prodably_duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
+	// duration is weird to be addde here,, but it's intentional
+	diff = clamp(
+		-scroll_parent.scrollTop - prodably_duration,
+		diff,
+		scroll_parent.scrollHeight - scroll_parent.clientHeight - scroll_parent.scrollTop + prodably_duration
+	);
+	params.duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
+
+	//console.log(diff);
+	if (Math.abs(diff) < 10) {
+		if (params.callback) {
+			params.callback();
+		}
+		smooth_scrolling = false;
+		return;
+	}
+
+	if (tooltip && Math.abs(diff) > 5) {
+		tooltip.dismiss();
+	}
+
+	params.t = 1;
+	smoothScrolling(diff, params);
+}
+
+/**
+ * Call smoothScroll instead
+ */
+function smoothScrolling(diff, params = {}) {
+	const t = params.t;
+	/** @type {PiepNode} */
+	const scroll_parent = params.scroll_parent;
+	const duration = params.duration;
 	// duration is weird, but it's fine
 	diff =
 		t > 0
@@ -52,7 +84,7 @@ function smoothScroll(diff, params = {}) {
 					scroll_parent.scrollHeight - scroll_parent.clientHeight - scroll_parent.scrollTop + duration
 			  );
 
-	if (Math.abs(diff) < 10 || t >= duration) {
+	if (t >= duration) {
 		if (params.callback) {
 			params.callback();
 		}
@@ -62,13 +94,9 @@ function smoothScroll(diff, params = {}) {
 
 	scroll_parent.scrollBy(0, (4 * diff * (duration / 2 - Math.abs(duration / 2 - t))) / (duration * duration));
 
-	if (t == 0 && tooltip && Math.abs(diff) > 5) {
-		tooltip.dismiss();
-	}
-
 	requestAnimationFrame(() => {
 		params.t = t + 1;
-		smoothScroll(diff, params);
+		smoothScrolling(diff, params);
 	});
 }
 
