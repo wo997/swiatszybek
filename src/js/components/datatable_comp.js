@@ -10,8 +10,11 @@
  *  render?(data: any)
  *  editable?: string
  *  batch_edit?: boolean
- *  select_options?: {label: string, val: any}[]
+ *  select_options?: {val: any, label: string}[]
+ *  map_name?: string
  * }} DatatableColumnDef
+ *
+ * THESE ARE SIMILAR AF, editable map will work?
  *
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder
  *
@@ -47,6 +50,11 @@
  *  selection?: number[]
  *  save_state_name?: string
  *  print_row_as_string?(row_data: any): string
+ *  maps: {
+ *      name: string
+ *      getMap?(): {val:any,label:any}[]
+ *      map?: {val:any,label:any}[]
+ *  }[]
  * }} DatatableCompData
  *
  * @typedef {{
@@ -69,6 +77,7 @@
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
  * _load_state(data_obj)
+ * _warmup_maps()
  * } & BaseComp} DatatableComp
  */
 
@@ -85,6 +94,7 @@ function datatableComp(comp, parent, data) {
 	data.pagination_data = def(data.pagination_data, {});
 
 	data.rows = [];
+	data.maps = [];
 
 	if (data.selectable) {
 		if (!data.primary_key && !data.search_url) {
@@ -226,6 +236,14 @@ function datatableComp(comp, parent, data) {
 		}, delay);
 	};
 
+	comp._warmup_maps = () => {
+		for (const map of comp._data.maps) {
+			if (map.getMap) {
+				map.map = map.getMap();
+			}
+		}
+	};
+
 	comp._set_data = (data, options = {}) => {
 		if (!data.search_url) {
 			const dataset_changed = !comp._prev_data || !isEquivalent(data.dataset, def(comp._prev_data.dataset, []));
@@ -345,6 +363,10 @@ function datatableComp(comp, parent, data) {
 					if (data.search_url) {
 						comp._datatable_search();
 					}
+				}
+
+				if (cd.maps) {
+					comp._warmup_maps();
 				}
 
 				const chng =

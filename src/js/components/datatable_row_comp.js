@@ -27,13 +27,13 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				const cells_html = getDatatableRowHtml(data);
-
-				setNodeChildren(comp, cells_html);
-
 				/** @type {DatatableComp} */
 				// @ts-ignore
 				const dt = comp._parent_comp._parent_comp;
+
+				const cells_html = getDatatableRowHtml(dt, data);
+
+				setNodeChildren(comp, cells_html);
 
 				const row = comp._parent();
 				const _row_id = +row.dataset.primary;
@@ -171,10 +171,11 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 }
 
 /**
+ * @param {DatatableComp} dt
  * @param {DatatableRowCompData} row
  * @param {{just_editables?: boolean}} opts
  */
-function getDatatableRowHtml(row, opts = {}) {
+function getDatatableRowHtml(dt, row, opts = {}) {
 	/** @type {string[]} */
 	let cells_html = [];
 
@@ -185,6 +186,17 @@ function getDatatableRowHtml(row, opts = {}) {
 
 		if (column.editable) {
 			cell_html += getEditableCellHtml(column);
+		} else if (column.map_name) {
+			const map = dt._data.maps.find((e) => e.name === column.map_name);
+
+			if (map) {
+				const opt = map.map.find((e) => e.val === row.row_data[column.key]);
+				if (opt) {
+					cell_html += opt.label;
+				}
+			} else {
+				console.error("Map is missing: ", column.map_name);
+			}
 		} else if (column.render) {
 			cell_html += column.render(row.row_data);
 		} else {

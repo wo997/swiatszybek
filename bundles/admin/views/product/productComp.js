@@ -377,21 +377,27 @@ function productComp(comp, parent, data) {
 						return;
 					}
 
+					/** @type {DatatableColumnDef} */
 					const column = {
 						key,
 						label: feature.name,
 						width: "10%",
 						searchable: "string",
 						sortable: true,
-						render: (data) => {
-							const option_id = data[key];
-							const option = product_feature_options.find((option) => option.product_feature_option_id === option_id);
-							if (option) {
-								return option.name;
-							}
-							return "-";
+						map_name: "product_feature_option",
+					};
+
+					const maps = data.products_dt.maps;
+					const map = {
+						name: "product_feature_option",
+						getMap: () => {
+							return product_feature_options.map((option) => ({ val: option.product_feature_option_id, label: option.name }));
 						},
 					};
+
+					if (!maps.find((e) => e.name === map.name)) {
+						maps.push(map);
+					}
 
 					const columns = data.products_dt.columns;
 					const column_index = columns.findIndex((column) => column.key === key);
