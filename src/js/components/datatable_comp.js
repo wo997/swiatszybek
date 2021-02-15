@@ -398,8 +398,8 @@ function datatableComp(comp, parent, data) {
 							if (column.batch_edit) {
 								const tooltip =
 									data.selection.length > 0
-										? `Edytuj dane zaznaczonych elementów (${data.selection.length})`
-										: `Edytuj dane wszystkich przefiltrowanych elementów (${data.pagination_data.total_rows})`;
+										? `Edytuj dane zaznaczonych wierszy (${data.selection.length})`
+										: `Edytuj dane wszystkich przefiltrowanych wierszy (${data.pagination_data.total_rows})`;
 								cell_html += html` <button class="btn transparent dt_batch_edit fas fa-edit" data-tooltip="${tooltip}"></button>`;
 							}
 							cell_html += /*html*/ `</div>`;

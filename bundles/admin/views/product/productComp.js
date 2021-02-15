@@ -538,6 +538,8 @@ function productComp(comp, parent, data) {
 			</div>
 
 			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
+
+			<div style="height:100px"></div>
 		`,
 		ready: () => {
 			// selectProductFeatures

@@ -79,7 +79,7 @@ let filter_menus = [
 				<span class="field_desc">
 					<b>≤ x ≤</b>
 				</span>
-				<input type="text" class="field less_than" data-validate="number|optional" data-number />
+				<input type="text" class="field less_than" data-validate="number" data-number />
 			</span>
 		`,
 		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {
