@@ -599,8 +599,12 @@ function datatableComp(comp, parent, data) {
 
 						<div class="label"></div>
 
-						<button class="btn primary">Potwierdź</button>
+						<button class="btn primary accept">Potwierdź</button>
 					`);
+
+					cont._child(".accept").addEventListener("click", () => {
+						hideParentModal(cont);
+					});
 
 					const val = highestOccurence(modify_rows.map((e) => e[column.key]));
 					cont._child(`[data-bind="${column.key}"]`)._set_value(val);
