@@ -349,6 +349,7 @@ function datatableComp(comp, parent, data) {
 					cd.sort ||
 					cd.filters ||
 					cd.columns ||
+					cd.selection ||
 					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
 					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count;
 
@@ -395,10 +396,11 @@ function datatableComp(comp, parent, data) {
 								cell_html += html` <button class="btn ${btn_class} dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
 							}
 							if (column.batch_edit) {
-								cell_html += html` <button
-									class="btn transparent dt_batch_edit fas fa-edit"
-									data-tooltip="Edytuj dane zaznaczonych elementów (6)"
-								></button>`;
+								const tooltip =
+									data.selection.length > 0
+										? `Edytuj dane zaznaczonych elementów (${data.selection.length})`
+										: `Edytuj dane wszystkich przefiltrowanych elementów (${data.pagination_data.total_rows})`;
+								cell_html += html` <button class="btn transparent dt_batch_edit fas fa-edit" data-tooltip="${tooltip}"></button>`;
 							}
 							cell_html += /*html*/ `</div>`;
 							cell_html += /*html*/ `</div>`;

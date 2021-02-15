@@ -5,6 +5,12 @@ window.addEventListener("register-form-components", (ev) => {
 	registerCheckboxes(ev.detail.parent);
 });
 
+document.addEventListener("mouseup", () => {
+	$$("p-checkbox.focus").forEach((e) => {
+		e.classList.remove("focus");
+	});
+});
+
 /**
  *
  * @param {PiepNode} parent
