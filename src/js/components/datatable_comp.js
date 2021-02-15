@@ -631,6 +631,11 @@ function datatableComp(comp, parent, data) {
 						comp._render();
 
 						hideParentModal(cont);
+
+						showNotification("Zmodyfikowano dane", {
+							one_line: true,
+							type: "success",
+						});
 					});
 				} else if (dt_sort || dt_filter) {
 					if (dt_sort) {
