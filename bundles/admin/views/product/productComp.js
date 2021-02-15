@@ -85,11 +85,7 @@ function productComp(comp, parent, data) {
 				width: "10%",
 				sortable: true,
 				editable: "select",
-				select_options: [
-					{ label: "23%", val: 1 },
-					{ label: "8%", val: 2 },
-					{ label: "5%", val: 3 },
-				],
+				map_name: "vat",
 				batch_edit: true,
 			},
 			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, editable: "number", batch_edit: true },
@@ -105,6 +101,18 @@ function productComp(comp, parent, data) {
 				.map(([key, option_id]) => product_feature_options.find((option) => option.product_feature_option_id === option_id).name)
 				.join(" ");
 		},
+		maps: [
+			{
+				name: "vat",
+				getMap: () => {
+					return [
+						{ label: "23%", val: 1 },
+						{ label: "8%", val: 2 },
+						{ label: "5%", val: 3 },
+					];
+				},
+			},
+		],
 	};
 
 	data.products_dt = def(data.products_dt, table);
@@ -382,7 +390,7 @@ function productComp(comp, parent, data) {
 						key,
 						label: feature.name,
 						width: "10%",
-						searchable: "string",
+						searchable: "select",
 						sortable: true,
 						map_name: "product_feature_option",
 					};

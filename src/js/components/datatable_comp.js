@@ -10,7 +10,6 @@
  *  render?(data: any)
  *  editable?: string
  *  batch_edit?: boolean
- *  select_options?: {val: any, label: string}[]
  *  map_name?: string
  * }} DatatableColumnDef
  *
@@ -50,7 +49,7 @@
  *  selection?: number[]
  *  save_state_name?: string
  *  print_row_as_string?(row_data: any): string
- *  maps: {
+ *  maps?: {
  *      name: string
  *      getMap?(): {val:any,label:any}[]
  *      map?: {val:any,label:any}[]
@@ -94,7 +93,7 @@ function datatableComp(comp, parent, data) {
 	data.pagination_data = def(data.pagination_data, {});
 
 	data.rows = [];
-	data.maps = [];
+	data.maps = def(data.maps, []);
 
 	if (data.selectable) {
 		if (!data.primary_key && !data.search_url) {
@@ -613,7 +612,7 @@ function datatableComp(comp, parent, data) {
 					const cont = $("#datatableBatchEdit .scroll-panel");
 					cont._set_content(html`
 						<div class="label first">${column.label}</div>
-						${getEditableCellHtml(column)}
+						${getEditableCellHtml(comp, column)}
 
 						<div class="label">Wiersze, które zostaną zmodyfikowane <b>(${modify_rows.length + "/" + data.dataset.length})</b>:</div>
 						<div class="scroll-panel" style="max-height:200px;border: 1px solid #ccc;border-radius:4px;background: #fafafa;padding: 5px;">

@@ -185,7 +185,7 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 		let cell_html = "";
 
 		if (column.editable) {
-			cell_html += getEditableCellHtml(column);
+			cell_html += getEditableCellHtml(dt, column);
 		} else if (column.map_name) {
 			const map = dt._data.maps.find((e) => e.name === column.map_name);
 
@@ -212,10 +212,10 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 }
 
 /**
- *
+ * @param {DatatableComp} dt
  * @param {DatatableColumnDef} column
  */
-function getEditableCellHtml(column) {
+function getEditableCellHtml(dt, column) {
 	let cell_html = "";
 	if (column.editable === "checkbox") {
 		cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
@@ -227,12 +227,19 @@ function getEditableCellHtml(column) {
 	} else if (column.editable === "select") {
 		let options = "";
 		let number = "";
-		column.select_options.forEach((e) => {
-			options += html`<option value="${e.val}">${e.label}</option>`;
-			if (typeof e.val === "number") {
-				number = "data-number";
-			}
-		});
+		if (!column.map_name) {
+			console.error("You must define a map for select");
+		}
+		const map = dt._data.maps.find((e) => e.name === column.map_name);
+		if (map) {
+			map.map.forEach((e) => {
+				options += html`<option value="${e.val}">${e.label}</option>`;
+				if (typeof e.val === "number") {
+					number = "data-number";
+				}
+			});
+		}
+
 		cell_html += html`<select class="field small" data-bind="${column.key}" ${number}>
 			${options}
 		</select>`;
