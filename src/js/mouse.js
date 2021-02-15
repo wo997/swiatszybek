@@ -37,3 +37,11 @@ document.addEventListener("mousemove", (event) => {
 	updateMouseCoords(event);
 });
 //}
+
+/**
+ * @type {PiepNode}
+ */
+let mouse_down_target = undefined;
+document.addEventListener("mousedown", (ev) => {
+	mouse_down_target = $(ev.target);
+});

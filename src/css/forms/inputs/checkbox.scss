@@ -1,8 +1,8 @@
 /* css[global] */
 
 :root {
-	/*--p-checkbox-height: 2.05em;*/
-	/*--p-checkbox-width: 4.5em;*/
+	// --p-checkbox-height: 2.05em;
+	// --p-checkbox-width: 4.5em;
 	--p-checkbox-height: 1.9em;
 	--p-checkbox-width: 4em;
 }
@@ -10,15 +10,14 @@
 p-checkbox {
 	width: var(--p-checkbox-width) !important;
 	height: var(--p-checkbox-height);
-	border: 1px solid #ccc;
 	border-radius: var(--p-checkbox-height);
 	position: relative;
-	overflow: hidden;
 	border: none;
 	cursor: pointer;
 	vertical-align: middle;
 	user-select: none;
 	font-size: 0.9em;
+	transition: 0.2s box-shadow;
 }
 
 p-checkbox::before {
@@ -47,6 +46,7 @@ p-checkbox .circle {
 	left: 0;
 	top: 0;
 	transition: 0.2s all;
+	z-index: 2;
 }
 
 p-checkbox.square,
@@ -87,18 +87,21 @@ p-checkbox:hover {
 	}
 }
 
-p-checkbox:not(.square):not(.circle) .circle::before {
+p-checkbox:not(.square):not(.circle)::after {
 	content: "";
-	background: transparent;
+	background: var(--success-clr);
 	position: absolute;
 	left: 0;
 	top: 0;
 	opacity: 0.3;
-	z-index: 1;
-	width: 100%;
-	height: 100%;
+	width: var(--p-checkbox-height);
+	height: var(--p-checkbox-height);
 	border-radius: inherit;
-	box-shadow: calc(-50px - 0.5 * var(--p-checkbox-height)) 0 0 50px var(--success-clr);
+	transition: 0.2s all;
+}
+
+p-checkbox:not(.square):not(.circle).checked::after {
+	width: var(--p-checkbox-width);
 }
 
 p-checkbox.checked .circle {
@@ -150,6 +153,12 @@ p-checkbox.circle {
 
 p-checkbox:focus-within,
 p-checkbox.focus {
-	box-shadow: 0 0 0 2px var(--primary-clr) !important;
-	outline: none;
+	& {
+		box-shadow: 0 0 0 2px var(--primary-clr) !important;
+		outline: none;
+		transition: 0s all;
+	}
+	&::before {
+		border-width: 0 !important;
+	}
 }
