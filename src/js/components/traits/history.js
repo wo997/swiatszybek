@@ -30,30 +30,44 @@ function renderCompHistory(comp) {
 /** @type {CompWithHistory} */
 let history_comp_focus = undefined;
 let history_attention = false;
-function historyFocus(ev) {
+
+/**
+ *
+ * @param {PiepNode} target
+ */
+function historyFocus(target) {
 	history_attention = true;
 
-	if (!ev.target) {
+	if (!target) {
 		return;
 	}
 
-	const has_history_trait = $(ev.target)._parent(".has_history_trait");
+	const has_history_trait = $(target)._parent(".has_history_trait");
 	if (has_history_trait) {
 		// @ts-ignore
 		history_comp_focus = has_history_trait;
 	}
 }
+
+window.addEventListener("modal-show", () => {
+	history_comp_focus = undefined;
+});
+
+window.addEventListener("modal-hide", () => {
+	history_comp_focus = undefined;
+});
+
 document.addEventListener(
 	"mousedown",
 	(ev) => {
-		historyFocus(ev);
+		historyFocus($(ev.target));
 	},
 	true
 );
 document.addEventListener(
 	"touchstart",
 	(ev) => {
-		historyFocus(ev);
+		historyFocus($(ev.target));
 	},
 	true
 );
