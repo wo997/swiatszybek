@@ -28,6 +28,17 @@ let filter_menus = [
 		},
 	},
 	{
+		name: "select",
+		html: html`
+			<span>Cipa</span>
+			<select class="field" style="width: 210px;"></select>
+		`,
+		open: (elem, data = { string: "", full_match: false }) => {},
+		apply: (elem) => {
+			//return { type: "select", string, full_match: elem._child("p-checkbox")._get_value(), display: string };
+		},
+	},
+	{
 		name: "boolean",
 		html: html`
 			<div style="display:flex;justify-content:space-around" class="radio_group" data-validate="radio">

@@ -29,6 +29,8 @@ function refreshProductFeatures() {
 			if (spfmc) {
 				spfmc._refresh_dataset();
 			}
+
+			product_comp._nodes.all_products._warmup_maps();
 		},
 	});
 }

@@ -35,7 +35,7 @@
  *  primary_key?: string
  *  search_url?: string
  *  dataset?: Array
- * _dataset_filtered?: Array
+ *  _dataset_filtered?: Array
  *  rows?: DatatableRowData[]
  *  columns: DatatableColumnDef[]
  *  sort?: DatatableSortData | false
@@ -70,8 +70,7 @@
  *      filters_info: PiepNode
  *      filter_menu: PiepNode
  *  }
- * _datatable_search(delay?: number)
- * _client_search(delay?: number)
+ * _datatable_search()
  * _search_timeout: number
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
@@ -171,7 +170,7 @@ function datatableComp(comp, parent, data) {
 		rewriteState(state, data_obj);
 	};
 
-	comp._datatable_search = (delay = 0) => {
+	comp._datatable_search = () => {
 		if (!comp._data.search_url) {
 			console.error("No search url");
 			console.trace();
@@ -232,20 +231,27 @@ function datatableComp(comp, parent, data) {
 					comp.classList.remove("freeze");
 				},
 			});
-		}, delay);
+		});
 	};
 
-	comp._warmup_maps = () => {
+	comp._warmup_maps = (render = true) => {
 		for (const map of comp._data.maps) {
 			if (map.getMap) {
 				map.map = map.getMap();
 			}
 		}
+		comp._nodes.list._children(".dt_row").forEach((/** @type {DatatableRowComp} */ r) => {
+			r._render({ force_render: true });
+		});
 	};
 
 	comp._set_data = (data, options = {}) => {
 		if (!data.search_url) {
-			const dataset_changed = !comp._prev_data || !isEquivalent(data.dataset, def(comp._prev_data.dataset, []));
+			const dataset_changed =
+				!comp._prev_data ||
+				!isEquivalent(data.dataset, def(comp._prev_data.dataset, [])) ||
+				!isEquivalent(data.maps, def(comp._prev_data.maps, []));
+
 			if (dataset_changed) {
 				let nextRowId = 0;
 				data.dataset.forEach((d) => {
