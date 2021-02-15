@@ -393,6 +393,7 @@ function productComp(comp, parent, data) {
 						searchable: "select",
 						sortable: true,
 						map_name: "product_feature_option",
+						quick_filter: true,
 					};
 
 					const maps = data.products_dt.maps;

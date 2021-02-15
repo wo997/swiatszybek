@@ -63,7 +63,7 @@ let filter_menus = [
 		apply: (elem) => {
 			const select = elem._child("select");
 			const val = select._get_value();
-			return { type: "select", val, display: getSelectDisplayValue(select) };
+			return { type: "exact", val, display: getSelectDisplayValue(select) };
 		},
 	},
 	{

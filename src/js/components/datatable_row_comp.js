@@ -203,6 +203,25 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 			cell_html += def(row.row_data[column.key], "");
 		}
 
+		if (column.quick_filter) {
+			if (dt._data.filters.find((e) => e.key === column.key)) {
+				cell_html = html`<i
+						class="fas fa-filter dt_rm_quick_filter btn transparent small"
+						data-key="${column.key}"
+						data-tooltip="Usuń szybki filtr"
+					></i>
+					${cell_html}`;
+			} else {
+				cell_html = html`<i
+						class="fas fa-filter dt_quick_filter btn transparent small"
+						data-val="${def(row.row_data[column.key], "")}"
+						data-key="${column.key}"
+						data-tooltip="Szybki filtr"
+					></i>
+					${cell_html}`;
+			}
+		}
+
 		cell_html = html`<div class="dt_cell" data-column_id="${column_id}">${cell_html}</div>`;
 
 		cells_html.push(cell_html);

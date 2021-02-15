@@ -11,6 +11,7 @@
  *  editable?: string
  *  batch_edit?: boolean
  *  map_name?: string
+ *  quick_filter?: boolean
  * }} DatatableColumnDef
  *
  * THESE ARE SIMILAR AF, editable map will work?
@@ -303,7 +304,7 @@ function datatableComp(comp, parent, data) {
 							if (minify_word(val).indexOf(minify_word(fd.string)) === -1) {
 								return false;
 							}
-						} else if (fd.type === "select") {
+						} else if (fd.type === "exact") {
 							if (val !== fd.val) {
 								return false;
 							}
@@ -609,6 +610,23 @@ function datatableComp(comp, parent, data) {
 				const dt_cell = target._parent(".dt_cell");
 				const data = comp._data;
 				const column = dt_cell ? data.columns[+dt_cell.dataset.column] : undefined;
+
+				const dt_quick_filter = target._parent(".dt_quick_filter", { skip: 0 });
+				const dt_rm_quick_filter = target._parent(".dt_rm_quick_filter", { skip: 0 });
+
+				if (dt_quick_filter || dt_rm_quick_filter) {
+					const x = def(dt_quick_filter, dt_rm_quick_filter);
+					const key = x.dataset.key;
+					comp._data.filters = comp._data.filters.filter((e) => e.key !== x.dataset.key);
+					if (dt_quick_filter) {
+						comp._data.filters.push({
+							key,
+							data: { type: "exact", val: +x.dataset.val, display: dt_cell.innerText },
+						});
+					}
+					comp._render();
+					return;
+				}
 
 				if (dt_batch_edit) {
 					let modify_rows;
