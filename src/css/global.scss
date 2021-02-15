@@ -635,7 +635,9 @@ input[type="text"]:not(.field) {
 }
 
 select.field {
-	background: url(/img/dropdown.png) 100% / 20px no-repeat white;
+	background-image: url(/img/dropdown.png);
+	background-position: 100% 50%;
+	background-repeat: no-repeat;
 	cursor: pointer;
 	padding-right: 30px;
 }
