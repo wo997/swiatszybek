@@ -5,24 +5,30 @@
  * @param {PiepNode} node
  */
 function showLoader(node) {
+	if (node._child(".mul7")) return;
+
 	node.insertAdjacentHTML(
 		"beforeend",
 		html`
 			<div class="mul7">
-				<div class="mul7circ m7c1"></div>
-				<div class="mul7circ m7c2"></div>
-				<div class="mul7circ m7c3"></div>
-				<div class="mul7circ m7c4"></div>
-				<div class="mul7circ m7c5"></div>
-				<div class="mul7circ m7c6"></div>
-				<div class="mul7circ m7c7"></div>
-				<div class="mul7circ m7c8"></div>
-				<div class="mul7circ m7c9"></div>
-				<div class="mul7circ m7c10"></div>
-				<div class="mul7circ m7c11"></div>
-				<div class="mul7circ m7c12"></div>
+				<div class="m7c1"></div>
+				<div class="m7c3"></div>
+				<div class="m7c5"></div>
+				<div class="m7c7"></div>
+				<div class="m7c9"></div>
+				<div class="m7c11"></div>
 			</div>
-			<link href="/admin/tools/loader.css?v=${RELEASE}" rel="stylesheet" />
 		`
 	);
+}
+/**
+ *
+ * @param {PiepNode} node
+ */
+function hideLoader(node) {
+	const mul7 = node._child(".mul7");
+	mul7.style.animation = "0.4s hide";
+	setTimeout(() => {
+		mul7.remove();
+	}, 200);
 }
