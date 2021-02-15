@@ -24,16 +24,15 @@
  */
 function productFeatureModalComp(comp, parent, data) {
 	comp._show = (id, options = {}) => {
-		setTimeout(() => {
-			showModal("productFeature", {
-				source: options.source,
-			});
-		});
-
 		comp._nodes.product_feature_comp._load_data(id, {
 			callback: () => {
 				clearCompHistory(comp);
 			},
+		});
+		setTimeout(() => {
+			showModal("productFeature", {
+				source: options.source,
+			});
 		});
 	};
 
