@@ -11,7 +11,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		animation: show 0.2s;
+		animation: show 0.3s;
 		z-index: 90000;
 	}
 	.rec {
@@ -28,9 +28,9 @@
 		content: "";
 		background: #fff;
 		position: absolute;
-		left: 0;
+		left: -1px;
 		top: 0;
-		right: 0;
+		right: -1px;
 		bottom: 0;
 		animation: 1.5s infinite ease-in recX;
 	}
