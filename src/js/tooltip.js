@@ -98,8 +98,8 @@ domload(() => {
 
 		tooltip.last_target = e;
 	};
-	document.body.addEventListener("mousemove", tacz);
-	document.body.addEventListener("touchstart", tacz);
+	window.addEventListener("mousemove", tacz);
+	window.addEventListener("touchstart", tacz);
 
 	window.addEventListener("mousewheel", () => {
 		tooltip.dismiss();
