@@ -44,11 +44,13 @@ function onSignIn(googleUser) {
 
 // requires loginForm included, basically everywhere, chill
 function login() {
-	const loginForm = $(`#loginForm`);
+	const loginForm = $(`#loginForm .modal-body`);
 
 	if (!validateForm(loginForm)) {
 		return;
 	}
+
+	showLoader(loginForm);
 
 	xhr({
 		url: "/login",
@@ -56,19 +58,17 @@ function login() {
 		success: (res) => {
 			if (res.success) {
 				loginForm.classList.add("success");
-				setTimeout(() => {
-					if (res.data && res.data.redirect_url) {
-						window.location.href = res.data.redirect_url;
-					} else {
-						window.location.reload();
-					}
-				}, 200);
+				//setTimeout(() => {
+				if (res.data && res.data.redirect_url) {
+					window.location.href = res.data.redirect_url;
+				} else {
+					window.location.reload();
+				}
+				//}, 200);
+
+				//hideLoader(loginForm);
 			} else {
-				showFieldErrors(
-					loginForm._child(`[name="password"]`),
-					["Niepoprawne hasło"],
-					{ scroll: true }
-				);
+				showFieldErrors(loginForm._child(`[name="password"]`), ["Niepoprawne hasło"], { scroll: true });
 			}
 		},
 	});

@@ -11,12 +11,7 @@ function showLoader(node) {
 		"beforeend",
 		html`
 			<div class="mul7">
-				<div class="m7c1"></div>
-				<div class="m7c3"></div>
-				<div class="m7c5"></div>
-				<div class="m7c7"></div>
-				<div class="m7c9"></div>
-				<div class="m7c11"></div>
+				<div class="rec"></div>
 			</div>
 		`
 	);
