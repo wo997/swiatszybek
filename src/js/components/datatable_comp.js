@@ -33,6 +33,7 @@
  *  primary_key?: string
  *  search_url?: string
  *  dataset?: Array
+ * _dataset_filtered?: Array
  *  rows?: DatatableRowData[]
  *  columns: DatatableColumnDef[]
  *  sort?: DatatableSortData | false
@@ -45,6 +46,7 @@
  *  selectable?: boolean
  *  selection?: number[]
  *  save_state_name?: string
+ *  print_row_as_string?(row_data: any): string
  * }} DatatableCompData
  *
  * @typedef {{
@@ -310,6 +312,7 @@ function datatableComp(comp, parent, data) {
 				});
 			}
 
+			data._dataset_filtered = rows;
 			data.pagination_data.total_rows = rows.length;
 
 			const rc = data.pagination_data.row_count;
@@ -576,16 +579,31 @@ function datatableComp(comp, parent, data) {
 				const column_data = dt_cell ? data.columns[+dt_cell.dataset.column] : undefined;
 
 				if (dt_batch_edit) {
-					showModal("datatableBatchEdit");
+					//const which = data.selection.length > 0 ? JSON.stringify(data.selection) : comp._nodes.filters_info.dataset.tooltip;
 
-					//data.selection.length > 0
-					//data.
+					let which = [];
+
+					if (data.selection.length > 0) {
+						which = data._dataset_filtered.filter((row_data) => data.selection.includes(row_data._row_id));
+					} else {
+						which = data._dataset_filtered;
+					}
 
 					$("#datatableBatchEdit .scroll-panel")._set_content(html`
 						<div class="label first">${column_data.label}</div>
 						<input type="text" class="field" />
+
+						<div class="label">Wiersze, które zostaną zmodyfikowane <b>(${which.length + "/" + data.dataset.length})</b>:</div>
+						<div class="scroll-panel panel-padding" style="max-height:200px;border: 1px solid #ccc;border-radius:4px;background: #fafafa;">
+							<div>${which.map((row_data) => data.print_row_as_string(row_data)).join("<br>")}</div>
+						</div>
+
+						<div class="label"></div>
+
 						<button class="btn primary">Potwierdź</button>
 					`);
+
+					showModal("datatableBatchEdit", { source: dt_batch_edit });
 				} else if (dt_sort || dt_filter) {
 					if (dt_sort) {
 						const curr_order = data.sort && data.sort.key === column_data.key ? data.sort.order : "";

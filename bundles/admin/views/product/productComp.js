@@ -99,6 +99,12 @@ function productComp(comp, parent, data) {
 		label: "Pełna lista produktów",
 		selectable: true,
 		pagination_data: { row_count: 50 },
+		print_row_as_string: (row_data) => {
+			return Object.entries(row_data)
+				.filter(([key, option_id]) => getFeatureIdFromKey(key))
+				.map(([key, option_id]) => product_feature_options.find((option) => option.product_feature_option_id === option_id).name)
+				.join(" ");
+		},
 	};
 
 	data.products_dt = def(data.products_dt, table);
