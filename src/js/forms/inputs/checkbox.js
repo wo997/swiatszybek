@@ -33,8 +33,8 @@ function registerCheckboxes(parent) {
 		const native = ch._child("input");
 
 		const checkbox_change = () => {
-			ch._dispatch_change();
 			ch.classList.toggle("checked");
+			ch._dispatch_change();
 		};
 
 		const clickable = def(ch._parent("label"), ch);

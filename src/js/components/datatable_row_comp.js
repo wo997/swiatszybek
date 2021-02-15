@@ -64,6 +64,8 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 			const row = comp._parent();
 			const _row_id = +row.dataset.primary;
 
+			registerForms();
+
 			row._children("[data-bind]").forEach((input) => {
 				const key = input.dataset.bind;
 				input.addEventListener("change", () => {
@@ -182,26 +184,7 @@ function getDatatableRowHtml(row, opts = {}) {
 		let cell_html = "";
 
 		if (column.editable) {
-			if (column.editable === "checkbox") {
-				cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
-			} else if (column.editable === "number") {
-				// dumb shit doesn't support selection so I use text
-				cell_html += html`<input type="text" class="field small" data-bind="${column.key}" data-number />`;
-			} else if (column.editable === "string") {
-				cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
-			} else if (column.editable === "select") {
-				let options = "";
-				let number = "";
-				column.select_options.forEach((e) => {
-					options += html`<option value="${e.val}">${e.label}</option>`;
-					if (typeof e.val === "number") {
-						number = "data-number";
-					}
-				});
-				cell_html += html`<select class="field small" data-bind="${column.key}" ${number}>
-					${options}
-				</select>`;
-			}
+			cell_html += getEditableCellHtml(column);
 		} else if (column.render) {
 			cell_html += column.render(row.row_data);
 		} else {
@@ -214,4 +197,33 @@ function getDatatableRowHtml(row, opts = {}) {
 	}
 
 	return cells_html;
+}
+
+/**
+ *
+ * @param {DatatableColumnDef} column
+ */
+function getEditableCellHtml(column) {
+	let cell_html = "";
+	if (column.editable === "checkbox") {
+		cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
+	} else if (column.editable === "number") {
+		// dumb shit doesn't support selection so I use text
+		cell_html += html`<input type="text" class="field small" data-bind="${column.key}" data-number />`;
+	} else if (column.editable === "string") {
+		cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
+	} else if (column.editable === "select") {
+		let options = "";
+		let number = "";
+		column.select_options.forEach((e) => {
+			options += html`<option value="${e.val}">${e.label}</option>`;
+			if (typeof e.val === "number") {
+				number = "data-number";
+			}
+		});
+		cell_html += html`<select class="field small" data-bind="${column.key}" ${number}>
+			${options}
+		</select>`;
+	}
+	return cell_html;
 }

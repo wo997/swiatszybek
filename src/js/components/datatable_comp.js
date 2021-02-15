@@ -576,26 +576,24 @@ function datatableComp(comp, parent, data) {
 
 				const dt_cell = target._parent(".dt_cell");
 				const data = comp._data;
-				const column_data = dt_cell ? data.columns[+dt_cell.dataset.column] : undefined;
+				const column = dt_cell ? data.columns[+dt_cell.dataset.column] : undefined;
 
 				if (dt_batch_edit) {
-					//const which = data.selection.length > 0 ? JSON.stringify(data.selection) : comp._nodes.filters_info.dataset.tooltip;
-
-					let which = [];
+					let modify_rows;
 
 					if (data.selection.length > 0) {
-						which = data._dataset_filtered.filter((row_data) => data.selection.includes(row_data._row_id));
+						modify_rows = data._dataset_filtered.filter((row_data) => data.selection.includes(row_data._row_id));
 					} else {
-						which = data._dataset_filtered;
+						modify_rows = data._dataset_filtered;
 					}
 
 					$("#datatableBatchEdit .scroll-panel")._set_content(html`
-						<div class="label first">${column_data.label}</div>
-						<input type="text" class="field" />
+						<div class="label first">${column.label}</div>
+						${getEditableCellHtml(column)}
 
-						<div class="label">Wiersze, które zostaną zmodyfikowane <b>(${which.length + "/" + data.dataset.length})</b>:</div>
+						<div class="label">Wiersze, które zostaną zmodyfikowane <b>(${modify_rows.length + "/" + data.dataset.length})</b>:</div>
 						<div class="scroll-panel panel-padding" style="max-height:200px;border: 1px solid #ccc;border-radius:4px;background: #fafafa;">
-							<div>${which.map((row_data) => data.print_row_as_string(row_data)).join("<br>")}</div>
+							<div>${modify_rows.map((row_data) => data.print_row_as_string(row_data)).join("<br>")}</div>
 						</div>
 
 						<div class="label"></div>
@@ -603,10 +601,15 @@ function datatableComp(comp, parent, data) {
 						<button class="btn primary">Potwierdź</button>
 					`);
 
+					console.log(
+						highestOccurence(modify_rows.map((e) => e[column.key])),
+						modify_rows.map((e) => e[column.key])
+					);
+
 					showModal("datatableBatchEdit", { source: dt_batch_edit });
 				} else if (dt_sort || dt_filter) {
 					if (dt_sort) {
-						const curr_order = data.sort && data.sort.key === column_data.key ? data.sort.order : "";
+						const curr_order = data.sort && data.sort.key === column.key ? data.sort.order : "";
 						/** @type {DatatableSortOrder} */
 						let new_order = "desc";
 						if (curr_order === "desc") {
@@ -614,14 +617,14 @@ function datatableComp(comp, parent, data) {
 						} else if (curr_order === "asc") {
 							new_order = "";
 						}
-						data.sort = new_order ? { key: column_data.key, order: new_order } : false;
+						data.sort = new_order ? { key: column.key, order: new_order } : false;
 						data.pagination_data.page_id = 0;
 					} else if (dt_filter) {
 						filterFocusChange();
 						dt_filter.classList.add("open");
-						const curr_filter = data.filters.find((f) => f.key === column_data.key);
+						const curr_filter = data.filters.find((f) => f.key === column.key);
 
-						const filter_menu_data = filter_menus.find((e) => e.name === column_data.searchable);
+						const filter_menu_data = filter_menus.find((e) => e.name === column.searchable);
 
 						if (filter_menu_data) {
 							filter_menu.classList.add("active");
@@ -633,7 +636,7 @@ function datatableComp(comp, parent, data) {
 								html`<div
 									style="display: flex;margin-bottom: 10px;align-items: center;justify-content: space-between;padding-bottom: 5px;border-bottom: 1px solid #ccc;"
 								>
-									<span class="semi-bold">Filtruj ${column_data.label}</span>
+									<span class="semi-bold">Filtruj ${column.label}</span>
 									<button class="btn transparent small close" style="margin: -5px;"><i class="fas fa-times"></i></button>
 								</div>` +
 									filter_menu_data.html +
@@ -667,9 +670,9 @@ function datatableComp(comp, parent, data) {
 							filter_menu._child(".apply").addEventListener("click", () => {
 								const filter_data = filter_menu_data.apply(filter_menu);
 								if (filter_data) {
-									comp._data.filters = comp._data.filters.filter((f) => f.key !== column_data.key);
+									comp._data.filters = comp._data.filters.filter((f) => f.key !== column.key);
 									if (filter_data.display) {
-										comp._data.filters.push({ key: column_data.key, data: filter_data });
+										comp._data.filters.push({ key: column.key, data: filter_data });
 									}
 									data.pagination_data.page_id = 0;
 									comp._render();
@@ -678,7 +681,7 @@ function datatableComp(comp, parent, data) {
 							});
 							filter_menu._child(".clear").addEventListener("click", () => {
 								//filter_menu_data.clear(filter_menu);
-								comp._data.filters = comp._data.filters.filter((f) => f.key !== column_data.key);
+								comp._data.filters = comp._data.filters.filter((f) => f.key !== column.key);
 								comp._render();
 
 								hideFilterMenu();

@@ -145,6 +145,7 @@ function showModal(name = null, params = {}) {
 				modal_container.appendChild(modal);
 				const modal_content = modal._child("*");
 
+				registerForms();
 				registerModalScroll(modal);
 				registerScrollShadows();
 

@@ -22,3 +22,21 @@ function getLast(arr) {
 function onlyUnique(value, index, self) {
 	return self.indexOf(value) === index;
 }
+
+/**
+ *
+ * @param {any[]} a
+ */
+function highestOccurence(a) {
+	const obj = {};
+	let max_val;
+	let max_occ;
+	for (let v of a) {
+		obj[v] = ++obj[v] || 1;
+		if (max_occ === undefined || obj[v] > max_occ) {
+			max_val = v;
+			max_occ = obj[v];
+		}
+	}
+	return max_val;
+}
