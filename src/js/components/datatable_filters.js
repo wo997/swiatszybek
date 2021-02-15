@@ -3,7 +3,7 @@
 /**
  * @type {{
  * name: string
- * html: string
+ * getHtml(column: DatatableColumnDef, data: DatatableCompData): string
  * open(elem: PiepNode, data: any)
  * apply(elem: PiepNode)
  * }[]}
@@ -11,7 +11,7 @@
 let filter_menus = [
 	{
 		name: "string",
-		html: html`
+		getHtml: (column, data) => html`
 			<span>Wpisz frazę</span>
 			<input type="text" class="field" style="width: 210px;" />
 			<label style="margin-top:10px">
@@ -29,18 +29,46 @@ let filter_menus = [
 	},
 	{
 		name: "select",
-		html: html`
-			<span>Cipa</span>
-			<select class="field" style="width: 210px;"></select>
-		`,
-		open: (elem, data = { string: "", full_match: false }) => {},
+		getHtml: (column, data) => {
+			const options_ids = data.dataset.map((e) => e[column.key]).filter(onlyUnique);
+
+			let options = "";
+			let number = "";
+			if (!column.map_name) {
+				console.error("You must define a map for select");
+			}
+			const map = data.maps.find((e) => e.name === column.map_name);
+			if (map) {
+				map.map
+					.filter((e) => options_ids.includes(e.val))
+					.forEach((e) => {
+						options += html`<option value="${e.val}">${e.label}</option>`;
+						if (typeof e.val === "number") {
+							number = "data-number";
+						}
+					});
+			}
+
+			return html`
+				<span>Wybierz opcję</span>
+				<select class="field" style="width: 210px;" ${number}>
+					<option value=""></option>
+					${options}
+				</select>
+			`;
+		},
+		open: (elem, data = { string: "" }) => {
+			elem._child("select")._set_value(data.val);
+		},
 		apply: (elem) => {
-			//return { type: "select", string, full_match: elem._child("p-checkbox")._get_value(), display: string };
+			const select = elem._child("select");
+			const val = select._get_value();
+			return { type: "select", val, display: getSelectDisplayValue(select) };
 		},
 	},
 	{
 		name: "boolean",
-		html: html`
+		getHtml: (column, data) => html`
 			<div style="display:flex;justify-content:space-around" class="radio_group" data-validate="radio">
 				<label class="inline">
 					<p-checkbox data-value="1"></p-checkbox>
@@ -75,7 +103,7 @@ let filter_menus = [
 	},
 	{
 		name: "number",
-		html: html`
+		getHtml: (column, data) => html`
 			<span class="label first">
 				<span>Typ wyszukiwania</span>
 			</span>
@@ -153,7 +181,7 @@ let filter_menus = [
 	},
 	{
 		name: "date",
-		html: html`
+		getHtml: (column, data) => html`
 			TODO same as numbers
 			<span class="label first">Typ wyszukiwania</span>
 			<select class="field date_type" onchange="dateTypeChanged(this)">

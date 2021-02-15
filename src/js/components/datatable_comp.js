@@ -277,9 +277,9 @@ function datatableComp(comp, parent, data) {
 				for (let [key, val] of Object.entries(r)) {
 					const column = data.columns.find((e) => e.key === key);
 
-					if (column && column.render) {
-						val = column.render(r);
-					}
+					// if (column && column.render) {
+					// 	val = column.render(r);
+					// }
 
 					/**
 					 * @param {string} str
@@ -301,6 +301,10 @@ function datatableComp(comp, parent, data) {
 						const fd = filter.data;
 						if (fd.type === "string") {
 							if (minify_word(val).indexOf(minify_word(fd.string)) === -1) {
+								return false;
+							}
+						} else if (fd.type === "select") {
+							if (val !== fd.val) {
 								return false;
 							}
 						} else if (fd.type === "boolean") {
@@ -701,7 +705,7 @@ function datatableComp(comp, parent, data) {
 									<span class="semi-bold">Filtruj ${column.label}</span>
 									<button class="btn transparent small close" style="margin: -5px;"><i class="fas fa-times"></i></button>
 								</div>` +
-									filter_menu_data.html +
+									filter_menu_data.getHtml(column, data) +
 									html`<div style="display:flex;margin-top:10px;min-width: 215px;">
 										<button class="btn primary apply" style="width:50%;margin-right:10px">Zastosuj <i class="fas fa-check"></i></button>
 										<button class="btn subtle clear" style="width:50%;">Usuń <i class="fas fa-eraser"></i></button>
