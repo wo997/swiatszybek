@@ -5,6 +5,14 @@ window.addEventListener("register-form-components", (ev) => {
 	registerCheckboxes(ev.detail.parent);
 });
 
+document.addEventListener("mouseup", () => {
+	$$("p-checkbox.focus").forEach((e) => {
+		e.classList.remove("focus");
+		// @ts-ignore
+		e._child("input").select();
+	});
+});
+
 /**
  *
  * @param {PiepNode} parent
@@ -34,11 +42,18 @@ function registerCheckboxes(parent) {
 		const clickable = def(ch._parent("label"), ch);
 		if (clickable === ch) {
 			clickable.addEventListener("click", (ev) => {
-				checkbox_change();
+				if (ev.target && ev.target.tagName !== "INPUT") {
+					checkbox_change();
+				}
 			});
 		}
+
 		clickable.addEventListener("mousedown", () => {
 			ch.classList.add("focus");
+			native.focus();
+			setTimeout(() => {
+				native.focus();
+			}, 500);
 		});
 
 		native.addEventListener("keypress", () => {
