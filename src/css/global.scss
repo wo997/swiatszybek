@@ -968,7 +968,9 @@ input:read-only {
 }
 
 input[type="checkbox"] {
-	display: none !important;
+	width: 0;
+	height: 0;
+	opacity: 0;
 }
 input[type="checkbox"]:checked ~ .checkbox {
 	background-color: var(--primary-clr);

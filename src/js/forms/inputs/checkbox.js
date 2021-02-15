@@ -16,6 +16,7 @@ function registerCheckboxes(parent) {
 		ch.insertAdjacentHTML(
 			"afterbegin",
 			html`
+				<input type="checkbox" />
 				<div class="circle">
 					<i class="fas fa-minus"></i>
 					<i class="fas fa-check"></i>
@@ -23,8 +24,19 @@ function registerCheckboxes(parent) {
 			`
 		);
 
+		const native = ch._child("input");
+
 		const clickable = def(ch._parent("label"), ch);
 		clickable.addEventListener("click", () => {
+			native.click();
+			native.focus();
+		});
+
+		native.addEventListener("keypress", () => {
+			native.click();
+		});
+
+		native.addEventListener("change", () => {
 			ch.classList.toggle("checked");
 			ch._dispatch_change();
 		});
