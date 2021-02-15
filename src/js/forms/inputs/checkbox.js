@@ -83,6 +83,8 @@ function registerCheckboxes(parent) {
 			ch.addEventListener("change", () => {
 				radio_group._set_value(ch._get_value() ? ch.dataset.value : "");
 			});
+
+			radio_group.dataset.value = "";
 		}
 	});
 }

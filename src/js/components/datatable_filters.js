@@ -30,7 +30,7 @@ let filter_menus = [
 	{
 		name: "boolean",
 		html: html`
-			<div style="display:flex;justify-content:space-around" class="radio_group">
+			<div style="display:flex;justify-content:space-around" class="radio_group" data-validate="radio">
 				<label class="inline">
 					<p-checkbox data-value="1"></p-checkbox>
 					<span class="semi-bold">Tak</span>
@@ -45,7 +45,8 @@ let filter_menus = [
 			elem._child(".radio_group")._set_value(data.value);
 		},
 		apply: (elem) => {
-			const value = elem._child(".radio_group")._get_value();
+			const radio_group = elem._child(".radio_group");
+			const value = radio_group._get_value();
 			let display = undefined;
 			if (value === "1") {
 				display = "Tak";
@@ -53,6 +54,11 @@ let filter_menus = [
 			if (value === "0") {
 				display = "Nie";
 			}
+			const validate = validateInputs([radio_group]);
+			if (validate.length > 0) {
+				return false;
+			}
+
 			return { type: "boolean", value: +value, display };
 		},
 	},

@@ -26,8 +26,7 @@ function getManyValidationErrors(inputs) {
 	return inputs_errors;
 }
 
-function inputChangeValidation(ev) {
-	const input = ev.target;
+function inputChangeValidation(input) {
 	const errors = getInputValidationErrors(input);
 	showValidationErrors(input, errors);
 }
@@ -53,8 +52,12 @@ function validateInputs(inputs) {
 function showValidationErrors(input, errors) {
 	const wrong = errors.length > 0;
 	if (!input.classList.contains("input_registered") && wrong) {
-		input.addEventListener("change", inputChangeValidation);
-		input.addEventListener("input", inputChangeValidation);
+		input.addEventListener("change", () => {
+			inputChangeValidation(input);
+		});
+		input.addEventListener("input", () => {
+			inputChangeValidation(input);
+		});
 	}
 	input.classList.toggle("invalid", wrong);
 	input.dataset.tooltip = errors.join("<br>");
@@ -74,15 +77,21 @@ function showValidationErrors(input, errors) {
  */
 function getInputValidationErrors(input) {
 	const validator = input.dataset.validate;
+	if (!validator) {
+		return [];
+	}
 	const errors = [];
-	// @ts-ignore
-	const value = input.value;
+	const value = input._get_value({ plain: true });
 
 	const [type, ...extra] = validator.split("|");
 
 	if (!extra.includes("optional")) {
 		if (value.trim() === "") {
-			errors.push("Uzupełnij to pole");
+			if (validator === "radio") {
+				errors.push("Wybierz 1 opcję");
+			} else {
+				errors.push("Uzupełnij to pole");
+			}
 		}
 	} else {
 		switch (type) {
@@ -92,12 +101,10 @@ function getInputValidationErrors(input) {
 				}
 				break;
 			}
-			case "string": {
-				// if (value.length === 0) {
-				// 	errors.push("Uzupełnij to pole");
-				// }
-				break;
-			}
+			// case "string": {
+			// }
+			// case "radio": {
+			// }
 		}
 	}
 

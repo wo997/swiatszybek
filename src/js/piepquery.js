@@ -7,10 +7,8 @@
 
 /**
  * @typedef {{
- * _set_value(value: any, options?: {
- *  quiet?: boolean
- * }): void
- * _get_value(): any
+ * _set_value(value: any, options?: SetDataOptions): void
+ * _get_value(options?: GetDataOptions): any
  * _scroll_parent(options?: findNodeOptions): PiepNode
  * _empty(): void
  * _set_content(html: string | number): void
@@ -114,8 +112,8 @@ function $(selector, parent = undefined) {
 		};
 	}
 	if (!node._get_value) {
-		node._get_value = () => {
-			return getValue(node);
+		node._get_value = (options = {}) => {
+			return getValue(node, options);
 		};
 	}
 	node._dispatch_change = () => {

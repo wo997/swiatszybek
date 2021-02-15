@@ -162,3 +162,7 @@ p-checkbox.focus {
 		border-width: 0 !important;
 	}
 }
+
+.radio_group.invalid label span {
+	text-decoration: underline red !important;
+}

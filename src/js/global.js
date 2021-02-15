@@ -205,10 +205,16 @@ domload(() => {
 });*/
 
 /**
+ * @typedef {{
+ * quiet?: boolean
+ * }} SetDataOptions
+ */
+
+/**
  *
  * @param {PiepNode} input
  * @param {*} value
- * @param {*} params
+ * @param {SetDataOptions} params
  */
 function setValue(input, value = null, params = {}) {
 	input = $(input);
@@ -222,14 +228,14 @@ function setValue(input, value = null, params = {}) {
 
 	if (input.classList.contains("radio_group")) {
 		input.dataset.value = value;
-	} else if (input.tagName == "P-RADIO") {
-		setRadioInputValue(input, value, params);
 	} else if (input.tagName == "P-CHECKBOX") {
 		input.classList.toggle("checked", !!value);
+		// @ts-ignore
 	} else if (input.datepicker) {
 		if (value && value.substr(0, 4).match(/\d{4}/)) {
 			value = reverseDateString(value, "-");
 		}
+		// @ts-ignore
 		input.datepicker.setDate(value);
 	} else if (input.classList.contains("table-selection-value")) {
 		var datatable = input._parent(".datatable-wrapper");
@@ -281,17 +287,29 @@ function xor(a, b) {
 	return (a || b) && !(a && b);
 }
 
-function getValue(input) {
+/**
+ * @typedef {{
+ * plain?: boolean
+ * }} GetDataOptions
+ */
+
+/**
+ *
+ * @param {PiepNode} input
+ * @param {GetDataOptions} options
+ */
+function getValue(input, options = {}) {
+	// @ts-ignore
 	let v = input.value;
 
 	if (input.classList.contains("radio_group")) {
 		v = def(input.dataset.value, "");
-	} else if (input.tagName == "P-RADIO") {
-		v = getRadioInputValue(input);
 	} else if (input.tagName == "P-CHECKBOX") {
 		v = input.classList.contains("checked") ? 1 : 0;
 	} else if (input.getAttribute("type") == "checkbox") {
+		// @ts-ignore
 		v = input.checked ? 1 : 0;
+		// @ts-ignore
 	} else if (input.datepicker) {
 		if (v && v.substr(6, 4).match(/\d{4}/)) {
 			v = reverseDateString(v, "-");
@@ -309,8 +327,10 @@ function getValue(input) {
 		}
 	}
 
-	if (input.hasAttribute("data-number")) {
-		v = numberFromStr(v);
+	if (!options.plain) {
+		if (input.hasAttribute("data-number")) {
+			v = numberFromStr(v);
+		}
 	}
 
 	return v;
