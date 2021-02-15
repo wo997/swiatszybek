@@ -38,9 +38,11 @@ function registerCheckboxes(parent) {
 		};
 
 		const clickable = def(ch._parent("label"), ch);
-		clickable.addEventListener("click", (ev) => {
-			checkbox_change();
-		});
+		if (clickable === ch) {
+			clickable.addEventListener("click", (ev) => {
+				checkbox_change();
+			});
+		}
 		clickable.addEventListener("mousedown", () => {
 			ch.classList.add("focus");
 		});

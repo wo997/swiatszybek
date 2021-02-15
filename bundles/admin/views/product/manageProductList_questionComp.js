@@ -33,15 +33,14 @@ function manageProductList_questionComp(comp, parent, data = undefined) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				comp._nodes.options._set_content(
-					data.options
-						.map(
-							(o) => html`<label class="option">
-								<p-checkbox data-value="${o.value}"></p-checkbox>
-								${o.label}
-							</label>`
-						)
-						.join("")
+				setNodeChildren(
+					comp._nodes.options,
+					data.options.map(
+						(o) => html`<label class="option">
+							<p-checkbox data-value="${o.value}"></p-checkbox>
+							${o.label}
+						</label>`
+					)
 				);
 			},
 		});
