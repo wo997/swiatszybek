@@ -70,7 +70,7 @@ function paginationComp(comp, parent, data = {}) {
 					<option value="20">20</option>
 					<option value="50">50</option>
 				</select>
-				wyników / <span html="{${data.total_rows}}"></span>
+				/ stronę z <span html="{${data.total_rows}}"></span>
 			</div>
 
 			<div class="arrows glue_children">
