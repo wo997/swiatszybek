@@ -608,12 +608,25 @@ function datatableComp(comp, parent, data) {
 					showModal("datatableBatchEdit", { source: dt_batch_edit });
 
 					cont._child(".accept").addEventListener("click", () => {
+						const key = column.key;
 						const ids = modify_rows.map((e) => e._row_id);
-						const val = cont._child(`[data-bind="${column.key}"]`)._get_value();
+						const value = cont._child(`[data-bind="${key}"]`)._get_value();
 						data.dataset
 							.filter((e) => ids.includes(e._row_id))
 							.forEach((row_data) => {
-								row_data[column.key] = val;
+								const prev_value = row_data[key];
+								row_data[key] = value;
+								comp.dispatchEvent(
+									new CustomEvent("editable_change", {
+										detail: {
+											_row_id: row_data._row_id,
+											row_data,
+											key,
+											prev_value,
+											value,
+										},
+									})
+								);
 							});
 						comp._render();
 

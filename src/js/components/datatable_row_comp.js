@@ -73,17 +73,17 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 						console.warn("TODO");
 					} else {
 						const row_data = dt._data.dataset.find((d) => d._row_id === _row_id); // recreate ref
-						const val = input._get_value();
+						const value = input._get_value();
 						const prev_value = row_data[key];
-						row_data[key] = val;
+						row_data[key] = value;
 						dt.dispatchEvent(
 							new CustomEvent("editable_change", {
 								detail: {
 									_row_id,
 									row_data,
 									key,
-									prev_value: prev_value,
-									value: val,
+									prev_value,
+									value,
 								},
 							})
 						);
