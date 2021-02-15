@@ -528,9 +528,9 @@ function productComp(comp, parent, data) {
 				<p
 					style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #444;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;display:inline-block"
 				>
-					<i class="fas fa-info-circle"></i> Aby szybciej edytować dane tabelki warto roważyć obsługę przy użyciu klawiatury.<br />
+					<i class="fas fa-info-circle"></i> Aby szybciej edytować dane tabelki warto rozważyć obsługę przy użyciu klawiatury.<br />
 					Poruszanie się po polach: <span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
-					Otwieranie pola wyboru / listy: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
+					Otwieranie pola wyboru / zmiana wartości: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
 				</p>
 			</div>
 
