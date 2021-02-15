@@ -569,11 +569,24 @@ function datatableComp(comp, parent, data) {
 				}
 				const dt_sort = target._parent(".dt_sort", { skip: 0 });
 				const dt_filter = target._parent(".dt_filter:not(.open)", { skip: 0 });
+				const dt_batch_edit = target._parent(".dt_batch_edit", { skip: 0 });
 
-				if (dt_sort || dt_filter) {
-					const data = comp._data;
-					const column_data = data.columns[+target._parent(".dt_cell").dataset.column];
+				const dt_cell = target._parent(".dt_cell");
+				const data = comp._data;
+				const column_data = dt_cell ? data.columns[+dt_cell.dataset.column] : undefined;
 
+				if (dt_batch_edit) {
+					showModal("datatableBatchEdit");
+
+					//data.selection.length > 0
+					//data.
+
+					$("#datatableBatchEdit .scroll-panel")._set_content(html`
+						<div class="label first">${column_data.label}</div>
+						<input type="text" class="field" />
+						<button class="btn primary">Potwierdź</button>
+					`);
+				} else if (dt_sort || dt_filter) {
 					if (dt_sort) {
 						const curr_order = data.sort && data.sort.key === column_data.key ? data.sort.order : "";
 						/** @type {DatatableSortOrder} */
@@ -634,13 +647,13 @@ function datatableComp(comp, parent, data) {
 								200
 							);
 							filter_menu._child(".apply").addEventListener("click", () => {
-								const data = filter_menu_data.apply(filter_menu);
-								if (data) {
+								const filter_data = filter_menu_data.apply(filter_menu);
+								if (filter_data) {
 									comp._data.filters = comp._data.filters.filter((f) => f.key !== column_data.key);
-									if (data.display) {
-										comp._data.filters.push({ key: column_data.key, data });
+									if (filter_data.display) {
+										comp._data.filters.push({ key: column_data.key, data: filter_data });
 									}
-
+									data.pagination_data.page_id = 0;
 									comp._render();
 									hideFilterMenu();
 								}
@@ -657,7 +670,6 @@ function datatableComp(comp, parent, data) {
 							});
 						}
 					}
-					data.pagination_data.page_id = 0;
 					comp._render();
 					return;
 				}
@@ -693,6 +705,21 @@ function datatableComp(comp, parent, data) {
 					comp._nodes.empty_table.classList.remove("freeze");
 				}, 250);
 			});
+
+			if (!$("#datatableBatchEdit")) {
+				// selectProductFeatures
+				registerModalContent(html`
+					<div id="datatableBatchEdit" data-dismissable>
+						<div class="modal-body">
+							<div class="custom-toolbar">
+								<span class="title">Grupowa edycja danych</span>
+								<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+							</div>
+							<div class="scroll-panel scroll-shadow panel-padding"></div>
+						</div>
+					</div>
+				`);
+			}
 		},
 		unfreeze_by_self: true,
 	});
