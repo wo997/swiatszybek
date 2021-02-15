@@ -8,6 +8,8 @@
  * _active_element: Element
  * _clean_history()
  * _separate_history_timeout: number | undefined
+ * _history_undo()
+ * _history_redo()
  * } & AnyComp} CompWithHistory
  */
 
@@ -25,18 +27,33 @@ function renderCompHistory(comp) {
 	comp._nodes.history_redo.toggleAttribute("disabled", comp._history_steps_back === 0);
 }
 
+/** @type {CompWithHistory} */
+let history_comp_focus = undefined;
 let history_attention = false;
+function historyFocus(ev) {
+	history_attention = true;
+
+	if (!ev.target) {
+		return;
+	}
+
+	const has_history_trait = $(ev.target)._parent(".has_history_trait");
+	if (has_history_trait) {
+		// @ts-ignore
+		history_comp_focus = has_history_trait;
+	}
+}
 document.addEventListener(
 	"mousedown",
-	() => {
-		history_attention = true;
+	(ev) => {
+		historyFocus(ev);
 	},
 	true
 );
 document.addEventListener(
 	"touchstart",
-	() => {
-		history_attention = true;
+	(ev) => {
+		historyFocus(ev);
 	},
 	true
 );
@@ -73,6 +90,8 @@ registerCompTrait("history", {
 
 		comp._setting_data_from_history = false;
 
+		comp.classList.add("has_history_trait");
+
 		const setCompDataFromHistory = () => {
 			comp.classList.add("freeze");
 			comp._setting_data_from_history = true;
@@ -83,13 +102,20 @@ registerCompTrait("history", {
 			});
 		};
 
-		comp._nodes.history_undo.addEventListener("click", () => {
+		comp._history_undo = () => {
 			comp._history_steps_back = Math.min(comp._history_steps_back + 1, comp._data_history.length - 1);
 			setCompDataFromHistory();
-		});
-		comp._nodes.history_redo.addEventListener("click", () => {
+		};
+		comp._history_redo = () => {
 			comp._history_steps_back = Math.max(0, comp._history_steps_back - 1);
 			setCompDataFromHistory();
+		};
+
+		comp._nodes.history_undo.addEventListener("click", () => {
+			comp._history_undo();
+		});
+		comp._nodes.history_redo.addEventListener("click", () => {
+			comp._history_redo();
 		});
 
 		clearCompHistory(comp);
@@ -137,4 +163,21 @@ registerCompTrait("history", {
 
 		comp._setting_data_from_history = false;
 	},
+});
+
+document.addEventListener("keydown", (ev) => {
+	if (!history_comp_focus) {
+		return;
+	}
+
+	if (ev.key && ev.ctrlKey) {
+		if (ev.key.toLowerCase() == "z") {
+			ev.preventDefault();
+			history_comp_focus._history_undo();
+		}
+		if (ev.key.toLowerCase() == "y") {
+			ev.preventDefault();
+			history_comp_focus._history_redo();
+		}
+	}
 });
