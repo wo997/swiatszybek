@@ -148,7 +148,8 @@ p-checkbox.circle {
 	}
 }
 
-p-checkbox:focus-within {
+p-checkbox:focus-within,
+p-checkbox.focus {
 	box-shadow: 0 0 0 2px var(--primary-clr) !important;
 	outline: none;
 }

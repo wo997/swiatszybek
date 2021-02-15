@@ -31,6 +31,9 @@ function registerCheckboxes(parent) {
 			native.click();
 			native.focus();
 		});
+		clickable.addEventListener("mousedown", () => {
+			ch.classList.add("focus");
+		});
 
 		native.addEventListener("keypress", () => {
 			native.click();
@@ -39,6 +42,7 @@ function registerCheckboxes(parent) {
 		native.addEventListener("change", () => {
 			ch.classList.toggle("checked");
 			ch._dispatch_change();
+			ch.classList.remove("focus");
 		});
 
 		const radio_group = ch._parent(".radio_group");
