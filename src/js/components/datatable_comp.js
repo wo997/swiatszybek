@@ -602,14 +602,23 @@ function datatableComp(comp, parent, data) {
 						<button class="btn primary accept">Potwierdź</button>
 					`);
 
-					cont._child(".accept").addEventListener("click", () => {
-						hideParentModal(cont);
-					});
-
 					const val = highestOccurence(modify_rows.map((e) => e[column.key]));
 					cont._child(`[data-bind="${column.key}"]`)._set_value(val);
 
 					showModal("datatableBatchEdit", { source: dt_batch_edit });
+
+					cont._child(".accept").addEventListener("click", () => {
+						const ids = modify_rows.map((e) => e._row_id);
+						const val = cont._child(`[data-bind="${column.key}"]`)._get_value();
+						data.dataset
+							.filter((e) => ids.includes(e._row_id))
+							.forEach((row_data) => {
+								row_data[column.key] = val;
+							});
+						comp._render();
+
+						hideParentModal(cont);
+					});
 				} else if (dt_sort || dt_filter) {
 					if (dt_sort) {
 						const curr_order = data.sort && data.sort.key === column.key ? data.sort.order : "";
