@@ -587,7 +587,8 @@ function datatableComp(comp, parent, data) {
 						modify_rows = data._dataset_filtered;
 					}
 
-					$("#datatableBatchEdit .scroll-panel")._set_content(html`
+					const cont = $("#datatableBatchEdit .scroll-panel");
+					cont._set_content(html`
 						<div class="label first">${column.label}</div>
 						${getEditableCellHtml(column)}
 
@@ -601,10 +602,8 @@ function datatableComp(comp, parent, data) {
 						<button class="btn primary">Potwierdź</button>
 					`);
 
-					console.log(
-						highestOccurence(modify_rows.map((e) => e[column.key])),
-						modify_rows.map((e) => e[column.key])
-					);
+					const val = highestOccurence(modify_rows.map((e) => e[column.key]));
+					cont._child(`[data-bind="${column.key}"]`)._set_value(val);
 
 					showModal("datatableBatchEdit", { source: dt_batch_edit });
 				} else if (dt_sort || dt_filter) {
