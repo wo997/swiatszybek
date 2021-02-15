@@ -611,10 +611,14 @@ function datatableComp(comp, parent, data) {
 						const key = column.key;
 						const ids = modify_rows.map((e) => e._row_id);
 						const value = cont._child(`[data-bind="${key}"]`)._get_value();
+						let changes = 0;
 						data.dataset
 							.filter((e) => ids.includes(e._row_id))
 							.forEach((row_data) => {
 								const prev_value = row_data[key];
+								if (prev_value !== value) {
+									changes++;
+								}
 								row_data[key] = value;
 								comp.dispatchEvent(
 									new CustomEvent("editable_change", {
@@ -632,7 +636,7 @@ function datatableComp(comp, parent, data) {
 
 						hideParentModal(cont);
 
-						showNotification("Zmodyfikowano dane", {
+						showNotification(`Zmodyfikowano ${changes} wyników`, {
 							one_line: true,
 							type: "success",
 						});
