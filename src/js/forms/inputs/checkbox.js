@@ -32,10 +32,14 @@ function registerCheckboxes(parent) {
 
 		const native = ch._child("input");
 
+		const checkbox_change = () => {
+			ch._dispatch_change();
+			ch.classList.toggle("checked");
+		};
+
 		const clickable = def(ch._parent("label"), ch);
-		clickable.addEventListener("click", () => {
-			native.click();
-			native.focus();
+		clickable.addEventListener("click", (ev) => {
+			checkbox_change();
 		});
 		clickable.addEventListener("mousedown", () => {
 			ch.classList.add("focus");
@@ -46,9 +50,7 @@ function registerCheckboxes(parent) {
 		});
 
 		native.addEventListener("change", () => {
-			ch.classList.toggle("checked");
-			ch._dispatch_change();
-			ch.classList.remove("focus");
+			checkbox_change();
 		});
 
 		const radio_group = ch._parent(".radio_group");
