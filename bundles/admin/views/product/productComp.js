@@ -68,6 +68,7 @@ function productComp(comp, parent, data) {
 				sortable: true,
 				searchable: "boolean",
 				editable: "checkbox",
+				batch_edit: true,
 			},
 			{
 				key: "net_price",
@@ -76,6 +77,7 @@ function productComp(comp, parent, data) {
 				sortable: true,
 				searchable: "number",
 				editable: "number",
+				batch_edit: true,
 			},
 			{
 				key: "vat_id",
@@ -88,9 +90,10 @@ function productComp(comp, parent, data) {
 					{ label: "8%", val: 2 },
 					{ label: "5%", val: 3 },
 				],
+				batch_edit: true,
 			},
-			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, editable: "number" },
-			{ key: "stock", label: "Stan magazynowy", width: "10%", sortable: true, editable: "number" },
+			{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, editable: "number", batch_edit: true },
+			{ key: "stock", label: "Stan magazynowy", width: "10%", sortable: true, editable: "number", batch_edit: true },
 		],
 		dataset: [],
 		label: "Pełna lista produktów",

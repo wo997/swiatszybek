@@ -9,6 +9,7 @@
  *  searchable?: string
  *  render?(data: any)
  *  editable?: string
+ *  batch_edit?: boolean
  *  select_options?: {label: string, val: any}[]
  * }} DatatableColumnDef
  *
@@ -366,7 +367,7 @@ function datatableComp(comp, parent, data) {
 						cell_html += /*html*/ `<div class="dt_cell" data-column="${column_index}">`;
 						cell_html += html`<span class="label">${column.label}</span>`;
 
-						if (column.sortable || column.searchable) {
+						if (column.sortable || column.searchable || column.batch_edit) {
 							cell_html += /*html*/ ` <div class="dt_header_controls">`;
 
 							if (column.sortable) {
@@ -393,6 +394,13 @@ function datatableComp(comp, parent, data) {
 								}
 								cell_html += html` <button class="btn ${btn_class} dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
 							}
+							if (column.batch_edit) {
+								cell_html += html` <button
+									class="btn transparent dt_batch_edit fas fa-edit"
+									data-tooltip="Edytuj dane zaznaczonych elementów (6)"
+								></button>`;
+							}
+							cell_html += /*html*/ `</div>`;
 							cell_html += /*html*/ `</div>`;
 						}
 
