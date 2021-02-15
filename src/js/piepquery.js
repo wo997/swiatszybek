@@ -50,7 +50,7 @@ function $(selector, parent = undefined) {
 	}
 
 	if (parent === undefined) {
-		parent = document.body;
+		parent = document;
 	}
 
 	node = typeof node == "string" ? parent.querySelector(node) : node;
