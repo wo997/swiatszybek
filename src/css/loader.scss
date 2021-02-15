@@ -1,10 +1,17 @@
 /* css[global] */
 
 .mul7 {
-	height: 90px;
-	width: 90px;
-	position: relative;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	position: absolute;
 	overflow: hidden;
+	background: #0002;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	animation: show 0.2s;
 }
 
 .mul7circ {
@@ -19,38 +26,9 @@
 	margin: 0 auto;
 	width: 13px;
 	height: 13px;
-	background-color: #333;
+	background: var(--primary-clr);
 	border-radius: 100%;
-	-webkit-animation: multiple7Animation 1.2s infinite ease-in-out both;
 	animation: multiple7Animation 1.2s infinite ease-in-out both;
-}
-
-/* Circle Colors */
-.m7c12:before {
-	background-color: #f5d76e;
-}
-.m7c1:before,
-.m7c11:before {
-	background-color: #f8ba72;
-}
-.m7c2:before,
-.m7c10:before {
-	background-color: #eb9532;
-}
-.m7c3:before,
-.m7c9:before {
-	background-color: #f27935;
-}
-.m7c4:before,
-.m7c8:before {
-	background-color: #ec644b;
-}
-.m7c5:before,
-.m7c7:before {
-	background-color: #ef4836;
-}
-.m7c6:before {
-	background-color: #c0392b;
 }
 
 /* Rotate circles */

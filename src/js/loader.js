@@ -7,8 +7,8 @@
 function showLoader(node) {
 	node.insertAdjacentHTML(
 		"beforeend",
-		html`<div id="loader">
-			<div class="mul7 blank">
+		html`
+			<div class="mul7">
 				<div class="mul7circ m7c1"></div>
 				<div class="mul7circ m7c2"></div>
 				<div class="mul7circ m7c3"></div>
@@ -23,6 +23,6 @@ function showLoader(node) {
 				<div class="mul7circ m7c12"></div>
 			</div>
 			<link href="/admin/tools/loader.css?v=${RELEASE}" rel="stylesheet" />
-		</div>`
+		`
 	);
 }
