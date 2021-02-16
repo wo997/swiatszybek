@@ -876,9 +876,7 @@ function datatableComp(comp, parent, data) {
 			}
 		},
 		ready: () => {
-			console.log("ha");
 			if (comp._data.sortable) {
-				console.log("HA");
 				const list = comp._nodes.list;
 
 				list.addEventListener("remove_row", (ev) => {
@@ -891,7 +889,9 @@ function datatableComp(comp, parent, data) {
 
 					detail.res.removed = true;
 
-					comp._data.dataset.splice(detail.row_index, 1);
+					const ind_offset = comp._data.pagination_data.row_count * comp._data.pagination_data.page_id;
+
+					comp._data.dataset.splice(ind_offset + detail.row_index, 1);
 					comp._render();
 				});
 
@@ -907,8 +907,10 @@ function datatableComp(comp, parent, data) {
 
 					detail.res.moved = true;
 
-					from = clamp(0, from, comp._data.dataset.length - 1);
-					to = clamp(0, to, comp._data.dataset.length - 1);
+					const ind_offset = comp._data.pagination_data.row_count * comp._data.pagination_data.page_id;
+
+					from = clamp(0, from, comp._data.dataset.length - 1) + ind_offset;
+					to = clamp(0, to, comp._data.dataset.length - 1) + ind_offset;
 
 					const temp = comp._data.dataset.splice(from, 1);
 					comp._data.dataset.splice(to, 0, ...temp);
