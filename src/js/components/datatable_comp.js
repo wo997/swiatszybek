@@ -875,6 +875,47 @@ function datatableComp(comp, parent, data) {
 				`);
 			}
 		},
+		ready: () => {
+			console.log("ha");
+			if (comp._data.sortable) {
+				console.log("HA");
+				const list = comp._nodes.list;
+
+				list.addEventListener("remove_row", (ev) => {
+					// @ts-ignore
+					const detail = ev.detail;
+
+					if (detail.res.removed) {
+						return;
+					}
+
+					detail.res.removed = true;
+
+					comp._data.dataset.splice(detail.row_index, 1);
+					comp._render();
+				});
+
+				list.addEventListener("move_row", (ev) => {
+					// @ts-ignore
+					const detail = ev.detail;
+					let from = detail.from;
+					if (detail.res.moved) {
+						return;
+					}
+
+					let to = detail.to;
+
+					detail.res.moved = true;
+
+					from = clamp(0, from, comp._data.dataset.length - 1);
+					to = clamp(0, to, comp._data.dataset.length - 1);
+
+					const temp = comp._data.dataset.splice(from, 1);
+					comp._data.dataset.splice(to, 0, ...temp);
+					comp._render();
+				});
+			}
+		},
 		unfreeze_by_self: true,
 	});
 }

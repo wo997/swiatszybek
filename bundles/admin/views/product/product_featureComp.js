@@ -117,8 +117,6 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				const pfi = product_comp._data.product_feature_ids;
 				const id = pfi.indexOf(comp._data.product_feature_id);
 				if (id !== -1) {
-					const other_id = detail.to;
-
 					from = clamp(0, from, pfi.length - 1);
 					to = clamp(0, to, pfi.length - 1);
 
