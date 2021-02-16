@@ -57,23 +57,31 @@ function productFeatureComp(comp, parent, data) {
 	};
 
 	comp._load_data = (id, options = {}) => {
+		comp._data.product_feature_id = id;
 		if (id === -1) {
-			comp._set_data();
+			comp._data.name = "";
+			comp._data.datatable.dataset = [];
 		} else {
-			xhr({
-				url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
-				success: (res) => {
-					//comp._set_data(res.product_feature);
-					//rewritePropsObjHas(res.product_feature, comp._data);
-					comp._data.name = res.product_feature.name;
-					comp._data.product_feature_id = res.product_feature.name;
-					comp._render();
-					if (options.callback) {
-						options.callback();
-					}
-				},
-			});
+			const feature = product_features.find((f) => f.product_feature_id === id);
+			if (feature) {
+				comp._data.name = feature.name;
+				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
+			}
+			// xhr({
+			// 	url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
+			// 	success: (res) => {
+			// 		//comp._set_data(res.product_feature);
+			// 		//rewritePropsObjHas(res.product_feature, comp._data);
+			// 		comp._data.name = res.product_feature.name;
+			// 		comp._data.product_feature_id = res.product_feature.name;
+			// 		comp._render();
+			// 		if (options.callback) {
+			// 			options.callback();
+			// 		}
+			// 	},
+			// });
 		}
+		comp._render();
 	};
 
 	const hideAndSearch = () => {

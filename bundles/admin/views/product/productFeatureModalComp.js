@@ -28,13 +28,7 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (id, options = {}) => {
-		comp._data.product_feature.product_feature_id = id;
-		const feature = product_features.find((f) => f.product_feature_id === id);
-		if (feature) {
-			comp._data.product_feature.name = feature.name;
-			comp._data.product_feature.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
-		}
-		comp._render();
+		comp._nodes.product_feature_comp._load_data(id);
 		clearCompHistory(comp);
 
 		showModal("productFeature", {
