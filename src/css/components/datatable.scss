@@ -182,10 +182,6 @@ datatable-comp {
 		}
 	}
 
-	.sortable_width {
-		width: 115px !important;
-		flex-grow: 0 !important;
-	}
 	&:not(.sortable) {
 		.node_list_grab_btn,
 		.node_list_up_btn,
@@ -195,5 +191,47 @@ datatable-comp {
 	}
 	&:not(.deletable) .node_list_delete_btn {
 		display: none;
+	}
+}
+
+.sortable_width {
+	flex-grow: 0 !important;
+	padding-right: 0 !important;
+}
+
+body.touch_device {
+	.node_list_grab_btn {
+		display: none;
+	}
+	.sortable_width {
+		width: 110px !important;
+	}
+	datatable-comp {
+		&:not(.sortable),
+		&:not(.deletable) {
+			.sortable_width {
+				width: 77px !important;
+			}
+		}
+	}
+	.node_list_down_btn {
+		margin-left: 0 !important;
+	}
+}
+body:not(.touch_device) {
+	.node_list_up_btn,
+	.node_list_down_btn {
+		display: none;
+	}
+	.sortable_width {
+		width: 77px !important;
+	}
+	datatable-comp {
+		&:not(.sortable),
+		&:not(.deletable) {
+			.sortable_width {
+				width: 44px !important;
+			}
+		}
 	}
 }
