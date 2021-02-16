@@ -83,7 +83,7 @@ function productFeatureComp(comp, parent, data) {
 			if (feature) {
 				comp._data.name = feature.name;
 				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
-				comp._data.datatable.dataset.forEach((e) => (e.parent_product_feature_option_id = 59));
+				//comp._data.datatable.dataset.forEach((e) => (e.parent_product_feature_option_id = 59));
 			}
 			// xhr({
 			// 	url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
@@ -172,7 +172,15 @@ function productFeatureComp(comp, parent, data) {
 					select_product_feature_option_modal_comp._show({
 						source: comp._nodes.select_parent_option_btn,
 						callback: (option_id) => {
-							console.log(option_id);
+							const selection = comp._data.datatable.selection;
+							console.log(selection);
+							comp._data.datatable.dataset.forEach((/** @type {ProductFeatureOptionData} */ e) => {
+								// @ts-ignore
+								if (selection.includes(e._row_id)) {
+									e.parent_product_feature_option_id = option_id;
+								}
+							});
+							comp._render();
 						},
 					});
 				}
