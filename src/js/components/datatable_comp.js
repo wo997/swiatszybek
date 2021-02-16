@@ -269,9 +269,21 @@ function datatableComp(comp, parent, data) {
 			/** @type {Array} */
 			let rows = cloneObject(data.dataset);
 
-			const qs = def(data.quick_search, "").trim();
+			/**
+			 * @param {string} str
+			 */
+			const minify_word = (str) => {
+				if (!str) {
+					return "";
+				}
+				return replacePolishLetters((str + "").toLocaleLowerCase());
+			};
+
+			/** @type {string} */
+			const qs = minify_word(def(data.quick_search, "").trim().replace(/ {2}/g, " "));
 
 			rows = rows.filter((r) => {
+				let search_parts = qs.split(" ").filter((e) => e.length > 0);
 				for (let [key, val] of Object.entries(r)) {
 					//const column = data.columns.find((e) => e.key === key);
 
@@ -279,27 +291,27 @@ function datatableComp(comp, parent, data) {
 					// 	val = column.render(r);
 					// }
 
-					/**
-					 * @param {string} str
-					 */
-					const minify_word = (str) => {
-						if (!str) {
-							return "";
-						}
-						return replacePolishLetters((str + "").toLocaleLowerCase());
-					};
-
-					// TODO: split qs and hope that all pieces match
-					if (qs && minify_word(val).indexOf(minify_word(qs)) === -1) {
-						return false;
-					}
-
 					const filter = data.filters.find((e) => e.key === key);
 					if (filter) {
 						const fd = filter.data;
 						if (fd.type === "string") {
-							if (minify_word(val).indexOf(minify_word(fd.string)) === -1) {
-								return false;
+							if (fd.full_match) {
+								if (minify_word(val).indexOf(minify_word(fd.string)) === -1) {
+									return false;
+								}
+							} else {
+								/** @type {string} */
+								const sss = minify_word(fd.string.trim().replace(/ {2}/g, " "));
+								if (
+									!sss
+										.split(" ")
+										.filter((e) => e.length > 0)
+										.reduce((acc, ss) => {
+											return acc && minify_word(val).indexOf(ss) !== -1;
+										}, true)
+								) {
+									return false;
+								}
 							}
 						} else if (fd.type === "exact") {
 							if (val !== fd.val) {
@@ -322,6 +334,33 @@ function datatableComp(comp, parent, data) {
 							}
 						}
 					}
+
+					if (qs) {
+						const column = data.columns.find((e) => e.key === key);
+						if (column) {
+							let comp_val = val;
+							if (column.map_name) {
+								const map = data.maps.find((map) => map.name === column.map_name);
+								if (map) {
+									const opt = map.map.find((e) => e.val === val);
+									if (opt) {
+										comp_val = opt.label;
+									}
+								}
+							}
+							//const comp_val = column.render ? column.render(r) : val;
+							const found_words = [];
+							for (const word of search_parts) {
+								if (minify_word(comp_val).indexOf(word) !== -1) {
+									found_words.push(word);
+								}
+							}
+							search_parts = search_parts.filter((e) => !found_words.includes(e));
+						}
+					}
+				}
+				if (search_parts.length > 0) {
+					return false;
 				}
 
 				return true;
