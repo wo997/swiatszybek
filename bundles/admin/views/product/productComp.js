@@ -64,7 +64,7 @@ function productComp(comp, parent, data) {
 			{
 				key: "active",
 				label: "Aktywny",
-				width: "130px",
+				width: "110px",
 				sortable: true,
 				searchable: "boolean",
 				editable: "checkbox",
