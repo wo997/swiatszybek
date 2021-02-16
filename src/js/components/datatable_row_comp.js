@@ -184,6 +184,8 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 		column_id++;
 		let cell_html = "";
 
+		const val = def(row.row_data[column.key], "");
+
 		if (column.editable) {
 			cell_html += getEditableCellHtml(dt, column);
 		} else if (column.map_name) {
@@ -200,10 +202,10 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 		} else if (column.render) {
 			cell_html += column.render(row.row_data);
 		} else {
-			cell_html += def(row.row_data[column.key], "");
+			cell_html += val;
 		}
 
-		if (column.quick_filter) {
+		if (column.quick_filter && val) {
 			if (dt._data.filters.find((e) => e.key === column.key)) {
 				cell_html = html`<i
 						class="fas fa-filter dt_rm_quick_filter btn transparent small"
@@ -214,7 +216,7 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 			} else {
 				cell_html = html`<i
 						class="fas fa-filter dt_quick_filter btn transparent small"
-						data-val="${def(row.row_data[column.key], "")}"
+						data-val="${val}"
 						data-key="${column.key}"
 						data-tooltip="Szybki filtr"
 					></i>
