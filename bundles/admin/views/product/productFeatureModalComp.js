@@ -71,3 +71,13 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 		},
 	});
 }
+
+function registerProductFeatureComp() {
+	registerModalContent(html`
+		<div id="productFeature" data-expand data-dismissable>
+			<div class="modal-body" style="max-width: calc(70% + 100px);max-height: calc(70% + 100px);">
+				<product-feature-modal-comp class="flex_stretch"></product-feature-modal-comp>
+			</div>
+		</div>
+	`);
+}

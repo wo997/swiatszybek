@@ -103,11 +103,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			// @ts-ignore
 			const product_comp = $("product-comp");
 
-			/** @type {DatatableComp} */
-			// @ts-ignore
-			const dt_product_features = comp._child("datatable-comp");
-
-			dt_product_features.addEventListener("rows_set", (ev) => {
+			comp._nodes.datatable.addEventListener("rows_set", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
 
@@ -121,7 +117,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				});
 			});
 
-			dt_product_features.addEventListener("click", (ev) => {
+			comp._nodes.datatable.addEventListener("click", (ev) => {
 				/** @type {ProductFeatureModalComp} */
 				// @ts-ignore
 				const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
@@ -183,4 +179,15 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			});
 		},
 	});
+}
+
+function registerSelectProductFeaturesModal() {
+	// selectProductFeatures
+	registerModalContent(html`
+		<div id="selectProductFeatures" data-expand data-dismissable>
+			<div class="modal-body" style="max-width: calc(75% + 100px);max-height: calc(75% + 100px);">
+				<select-product-features-modal-comp class="flex_stretch"></select-product-features-modal-comp>
+			</div>
+		</div>
+	`);
 }

@@ -124,11 +124,11 @@ function productFeatureComp(comp, parent, data) {
 			<div class="adv_controls">
 				<button class="btn primary" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>
 				<button
-					class="btn {${true}?important:subtle}"
+					class="btn {${data.datatable.selection.length > 0}?important:subtle}"
 					data-node="{${comp._nodes.select_parent_option_btn}}"
-					data-tooltip="{${!true ? "Najpierw wybierz opcje z listy poniżej" : ""}}"
+					data-tooltip="{${data.datatable.selection.length === 0 ? "Najpierw zaznacz opcje na liście poniżej" : ""}}"
 				>
-					Połącz <span class="semi-bold" html="{${"(" + 0 + ")"}}"></span> z opcją nadrzędną
+					Połącz (<span html="{${data.datatable.selection.length}}"></span>) z opcją nadrzędną
 					<i class="fas fa-search"></i>
 				</button>
 			</div>

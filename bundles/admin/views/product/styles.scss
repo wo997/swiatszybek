@@ -74,19 +74,6 @@ product-comp {
 	}
 }
 
-product-feature-option-comp {
-	& {
-		padding: 5px;
-		border: 1px solid #ccc;
-		margin: -1px;
-		background: #fff;
-	}
-	.option_row {
-		display: flex;
-		align-items: center;
-	}
-}
-
 manage-product-list-modal-comp {
 	.bind_questions {
 		&,

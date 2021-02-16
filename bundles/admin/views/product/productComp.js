@@ -563,57 +563,25 @@ function productComp(comp, parent, data) {
 			<div style="height:100px"></div>
 		`,
 		ready: () => {
-			// selectProductFeatures
-			registerModalContent(html`
-				<div id="selectProductFeatures" data-expand data-dismissable>
-					<div class="modal-body" style="max-width: calc(75% + 100px);max-height: calc(75% + 100px);">
-						<select-product-features-modal-comp class="flex_stretch"></select-product-features-modal-comp>
-					</div>
-				</div>
-			`);
-
+			registerSelectProductFeaturesModal();
 			/** @type {SelectProductFeaturesModalComp} */
 			// @ts-ignore
 			const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
 			selectProductFeaturesModalComp(select_product_features_modal_comp, undefined);
 
-			// selectProductFeatures
-			registerModalContent(html`
-				<div id="selectProductFeatureOptions" data-expand data-dismissable>
-					<div class="modal-body" style="max-width: calc(75% + 100px);max-height: calc(75% + 100px);">
-						<select-product-feature-options-modal-comp class="flex_stretch"></select-product-feature-options-modal-comp>
-					</div>
-				</div>
-			`);
-
+			registerSelectProductFeatureOptionsModal();
 			/** @type {SelectProductFeatureOptionsModalComp} */
 			// @ts-ignore
 			const select_product_feature_options_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
 			selectProductFeatureOptionsModalComp(select_product_feature_options_modal_comp, undefined);
 
-			// productFeature
-			registerModalContent(html`
-				<div id="manageProductList" data-dismissable>
-					<div class="modal-body" style="width: calc(20% + 300px);max-height: calc(75% + 100px);">
-						<manage-product-list-modal-comp class="flex_stretch"></manage-product-list-modal-comp>
-					</div>
-				</div>
-			`);
-
+			registerManageProductListModal();
 			/** @type {ManageProductListModalComp} */
 			// @ts-ignore
 			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
 			manageProductListModalComp(manage_product_list_modal_comp, undefined);
 
-			// productFeature
-			registerModalContent(html`
-				<div id="productFeature" data-expand data-dismissable>
-					<div class="modal-body" style="max-width: calc(70% + 100px);max-height: calc(70% + 100px);">
-						<product-feature-modal-comp class="flex_stretch"></product-feature-modal-comp>
-					</div>
-				</div>
-			`);
-
+			registerProductFeatureComp();
 			/** @type {ProductFeatureModalComp} */
 			// @ts-ignore
 			const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
