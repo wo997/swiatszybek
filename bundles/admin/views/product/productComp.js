@@ -572,7 +572,7 @@ function productComp(comp, parent, data) {
 			const product_feature_modal_comp = registerProductFeatureModal();
 
 			const select_product_feature_option_modal_comp = registerSelectProductFeatureOptionModal();
-			//select_product_feature_option_modal_comp._show();
+			select_product_feature_option_modal_comp._show();
 
 			// other
 			comp._nodes.add_feature_btn.addEventListener("click", () => {

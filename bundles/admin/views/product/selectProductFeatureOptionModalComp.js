@@ -25,13 +25,21 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 		data = {
 			datatable: {
 				columns: [
-					{ label: "Cecha", key: "feature_name" },
+					{ label: "Cecha", key: "product_feature_id", map_name: "product_feature", searchable: "select" },
 					{ label: "Opcja", key: "name", width: "20%", sortable: true, searchable: "string" },
 					{
 						label: "Akcja",
 						width: "135px",
 						render: (data) => {
 							return html`<button class="btn primary small select_btn">Wybierz <i class="fas fa-check"></i></button>`;
+						},
+					},
+				],
+				maps: [
+					{
+						name: "product_feature",
+						getMap: () => {
+							return product_features.map((option) => ({ val: option.product_feature_id, label: option.name }));
 						},
 					},
 				],
@@ -43,10 +51,11 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (options = {}) => {
-		comp._nodes.datatable._data.dataset = product_feature_options.map((opt) => {
-			const feature = product_features.find((fea) => fea.product_feature_id === opt.product_feature_id);
-			return { name: opt.name, feature_name: feature ? feature.name : "" };
-		});
+		// comp._nodes.datatable._data.dataset = product_feature_options.map((opt) => {
+		// 	const feature = product_features.find((fea) => fea.product_feature_id === opt.product_feature_id);
+		// 	return { name: opt.name, feature_name: feature ? feature.name : "" };
+		// });
+		comp._nodes.datatable._data.dataset = product_feature_options;
 		comp._nodes.datatable._render();
 
 		setTimeout(() => {
