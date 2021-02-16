@@ -47,7 +47,7 @@ datatable-comp {
 	}
 	.has_grabbed_row datatable-row-comp {
 		background: #fff !important;
-		box-shadow: 0 -2px 0 -1px #0003;
+		box-shadow: 0 -2px 0 -1px #ccc, inset 0 -2px 0 -1px #ccc;
 	}
 	.dt_header_controls {
 		display: flex;
