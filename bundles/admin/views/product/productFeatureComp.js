@@ -61,6 +61,7 @@ function productFeatureComp(comp, parent, data) {
 		dataset: [],
 		selectable: true,
 		pagination_data: { row_count: 50 },
+		sortable: true,
 	};
 
 	data.datatable = def(data.datatable, dt);

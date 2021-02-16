@@ -5,6 +5,7 @@
  * @typedef {{
  *  row_data: any
  *  columns: DatatableColumnDef[]
+ *  sortable: boolean
  * } & ListCompRowData} DatatableRowCompData
  *
  * @typedef {{
@@ -22,7 +23,7 @@
  * @param {*} parent
  * @param {DatatableRowCompData} data
  */
-function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
+function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sortable: false }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -33,13 +34,13 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 
 				const cells_html = getDatatableRowHtml(dt, data);
 
-				setNodeChildren(comp, cells_html);
+				setNodeChildren(comp._nodes.dt_row, cells_html);
 
 				const row = comp._parent();
 				const _row_id = +row.dataset.primary;
 				const row_data = dt._data.dataset.find((d) => d._row_id === _row_id);
 
-				registerForms(comp);
+				registerForms(comp._nodes.dt_row);
 
 				if (row_data) {
 					row._children("[data-bind]").forEach((input) => {
@@ -54,9 +55,9 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [] }) {
 	};
 
 	createComp(comp, parent, data, {
+		template: html`<div data-node="{${comp._nodes.dt_row}}" class="dt_row"></div>
+			${data.sortable ? html`<div class="dt_cell sortable_width"><p-batch-trait data-trait="list_controls"></p-batch-trait></div>` : ""}`,
 		ready: () => {
-			comp.classList.add("dt_row");
-
 			/** @type {DatatableComp} */
 			// @ts-ignore
 			const dt = comp._parent_comp._parent_comp;

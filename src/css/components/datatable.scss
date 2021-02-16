@@ -24,7 +24,8 @@ datatable-comp {
 		min-height: 50px;
 		flex-wrap: wrap;
 	}
-	.dt_cell:not(:last-child) {
+	.dt_cell:not(:last-child),
+	&.sortable .dt_row .dt_cell {
 		border-right: 1px solid #0001;
 	}
 	&.searching .table_body {
@@ -35,12 +36,18 @@ datatable-comp {
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-	.dt_row {
-		transition: 0.25s background-color;
-		background: #fff;
+	datatable-row-comp {
+		& {
+			transition: 0.25s background-color;
+			background: #fff;
+		}
+		&.even {
+			background: #f6f6f6;
+		}
 	}
-	.dt_row.even {
-		background: #f6f6f6;
+	.has_grabbed_row datatable-row-comp {
+		background: #fff !important;
+		box-shadow: 0 -2px 0 -1px #0003;
 	}
 	.dt_header_controls {
 		display: flex;
@@ -164,5 +171,19 @@ datatable-comp {
 	.dt_cell .dt_rm_quick_filter {
 		margin-right: 5px;
 		--btn-font-clr: #c33;
+	}
+
+	.list_row datatable-row-comp {
+		& {
+			display: flex;
+		}
+		& > .dt_row {
+			flex-grow: 1;
+		}
+	}
+
+	.sortable_width {
+		width: 115px !important;
+		flex-grow: 0 !important;
 	}
 }

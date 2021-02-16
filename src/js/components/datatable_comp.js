@@ -53,6 +53,7 @@
  *      getMap?(): {val:any,label:any}[]
  *      map?: {val:any,label:any}[]
  *  }[]
+ *  sortable?: boolean
  * }} DatatableCompData
  *
  * @typedef {{
@@ -401,7 +402,10 @@ function datatableComp(comp, parent, data) {
 
 		setCompData(comp, data, {
 			...options,
-			pass_list_data: [{ what: "columns", where: "rows" }],
+			pass_list_data: [
+				{ what: "columns", where: "rows" },
+				{ what: "sortable", where: "rows" },
+			],
 			render: () => {
 				const cd = comp._changed_data;
 
@@ -415,6 +419,10 @@ function datatableComp(comp, parent, data) {
 					comp._warmup_maps();
 				}
 
+				if (cd.sortable) {
+					comp.classList.toggle("sortable", data.sortable);
+				}
+
 				const chng =
 					!comp._prev_data ||
 					cd.sort ||
@@ -422,7 +430,8 @@ function datatableComp(comp, parent, data) {
 					cd.columns ||
 					cd.selection ||
 					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
-					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count;
+					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count ||
+					cd.sortable;
 
 				if (chng) {
 					let styles_html = "";
@@ -486,6 +495,10 @@ function datatableComp(comp, parent, data) {
 						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {
                             width:${def(column.width, "10%")};flex-grow:${flex_grow};
                         }`;
+					}
+
+					if (data.sortable) {
+						cells_html.push(html`<div class="dt_cell sortable_width"><span class="label">Sortuj</span></div>`);
 					}
 
 					setNodeChildren(comp._nodes.table_header, cells_html);

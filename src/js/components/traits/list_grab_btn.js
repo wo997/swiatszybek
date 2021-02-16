@@ -103,6 +103,7 @@ document.addEventListener("mouseup", () => {
 
 	row_ref.style.zIndex = `200`;
 	setTimeout(() => {
+		list_grab.list.classList.remove("has_grabbed_row");
 		row_ref.classList.remove("grabbed");
 		row_ref.style.zIndex = "200";
 	}, 150);
@@ -131,6 +132,8 @@ document.addEventListener("mouseup", () => {
 				list_grab.grabbed_at_y_scroll = list_grab.scroll_parent.scrollTop;
 				list_grab.list = list_row._parent();
 				list_grab.all_rows = list_grab.list._direct_children();
+				list_grab.list.classList.add("has_grabbed_row");
+
 				let i = 0;
 				list_grab.all_rows.forEach((e) => {
 					// @ts-ignore
