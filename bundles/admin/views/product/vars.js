@@ -12,6 +12,7 @@ let product_features = [];
  * product_feature_option_id: number
  * product_feature_id: number
  * name: string
+ * feature_name?: string
  * }[]}
  */
 let product_feature_options = [];

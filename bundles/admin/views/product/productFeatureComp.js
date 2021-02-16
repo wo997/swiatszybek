@@ -38,7 +38,24 @@ function productFeatureComp(comp, parent, data) {
 	const dt = {
 		columns: [
 			{ label: "Opcja", key: "name", width: "20%", sortable: true, searchable: "string", editable: "string" },
-			{ label: "Opcja nadrzędna", key: "parent_option", width: "20%" },
+			{
+				label: "Opcja nadrzędna",
+				key: "parent_product_feature_option_id",
+				width: "20%",
+				map_name: "product_feature_option",
+				searchable: "select",
+			},
+		],
+		maps: [
+			{
+				name: "product_feature_option",
+				getMap: () => {
+					return product_feature_options.map((option) => ({
+						val: option.product_feature_option_id,
+						label: option.feature_name + " " + option.name,
+					}));
+				},
+			},
 		],
 		empty_html: html`Brak opcji`,
 		label: "Opcje",
@@ -66,6 +83,7 @@ function productFeatureComp(comp, parent, data) {
 			if (feature) {
 				comp._data.name = feature.name;
 				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
+				comp._data.datatable.dataset.forEach((e) => (e.parent_product_feature_option_id = 59));
 			}
 			// xhr({
 			// 	url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
@@ -151,7 +169,12 @@ function productFeatureComp(comp, parent, data) {
 
 			comp._nodes.select_parent_option_btn.addEventListener("click", () => {
 				if (comp._data.datatable.selection.length > 0) {
-					select_product_feature_option_modal_comp._show();
+					select_product_feature_option_modal_comp._show({
+						source: comp._nodes.select_parent_option_btn,
+						callback: (option_id) => {
+							console.log(option_id);
+						},
+					});
 				}
 			});
 		},

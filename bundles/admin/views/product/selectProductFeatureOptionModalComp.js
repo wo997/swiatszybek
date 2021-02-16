@@ -6,12 +6,18 @@
  * }} SelectProductFeatureOptionModalCompData
  *
  * @typedef {{
+ * source?: PiepNode
+ * callback?(option_id)
+ * }} ShowSelectOptionsOptions
+ *
+ * @typedef {{
  * _data: SelectProductFeatureOptionModalCompData
  * _set_data(data?: SelectProductFeatureOptionModalCompData, options?: SetCompDataOptions)
  * _nodes: {
  *      datatable: DatatableComp
  * }
- * _show(options?: {source?: PiepNode})
+ * _show(options?: ShowSelectOptionsOptions)
+ * _options?: ShowSelectOptionsOptions
  * } & BaseComp} SelectProductFeatureOptionModalComp
  */
 
@@ -39,7 +45,7 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 					{
 						name: "product_feature",
 						getMap: () => {
-							return product_features.map((option) => ({ val: option.product_feature_id, label: option.name }));
+							return product_features.map((feature) => ({ val: feature.product_feature_id, label: feature.name }));
 						},
 					},
 				],
@@ -58,11 +64,12 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 		comp._nodes.datatable._data.dataset = product_feature_options;
 		comp._nodes.datatable._render();
 
-		setTimeout(() => {
-			showModal("selectProductFeatureOption", {
-				source: options.source,
-			});
+		comp._options = options;
+		//setTimeout(() => {
+		showModal("selectProductFeatureOption", {
+			source: options.source,
 		});
+		//});
 	};
 
 	comp._set_data = (data, options = {}) => {
@@ -90,7 +97,8 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 				if (select_btn) {
 					const list_row = select_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						//+list_row.dataset.primary
+						comp._options.callback(+list_row.dataset.primary);
+						hideParentModal(comp);
 					}
 				}
 			});

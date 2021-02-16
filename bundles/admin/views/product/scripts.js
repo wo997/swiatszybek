@@ -7,6 +7,11 @@ function loadedProductFeatures() {
 			.map((e) => e.name)
 			.join(", ");
 	});
+
+	product_feature_options.forEach((option) => {
+		const feature = product_features.find((feature) => feature.product_feature_id === option.product_feature_id);
+		option.feature_name = feature ? feature.name : "";
+	});
 }
 
 function refreshProductFeatures() {
