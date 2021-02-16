@@ -30,7 +30,7 @@ let list_grab = {
 		// @ts-ignore
 		row._translateY = dy;
 		// @ts-ignore
-		row._scale = Math.min(def(row._scale, 1) + 0.001, 1.007);
+		row._scale = Math.max(def(row._scale, 1) - 0.002, 0.99);
 		// @ts-ignore
 		row.style.transform = `scale(${row._scale}) translateY(${Math.round(dy)}px)`;
 
@@ -87,7 +87,7 @@ document.addEventListener("mouseup", () => {
 				const sc = def(x._scale, 1);
 				// @ts-ignore
 				const ty = x._translateY;
-				if (Math.abs(ty) > 1 || sc > 1.001) {
+				if (Math.abs(ty) > 1 || sc < 0.999) {
 					x._animate(`0%{transform:scale(${sc}) translateY(${ty}px)}100%{transform:scale(1) translateY(0px)}`, 250);
 				}
 				// @ts-ignore
@@ -105,7 +105,7 @@ document.addEventListener("mouseup", () => {
 	setTimeout(() => {
 		list_grab.list.classList.remove("has_grabbed_row");
 		row_ref.classList.remove("grabbed");
-		row_ref.style.zIndex = "200";
+		row_ref.style.zIndex = "";
 	}, 150);
 	list_grab.row = undefined;
 });
@@ -121,6 +121,10 @@ document.addEventListener("mouseup", () => {
 				const list_row = comp._parent(".list_row");
 				if (!list_row) {
 					console.error("List row missing");
+					return;
+				}
+
+				if (list_row._parent().classList.contains("has_grabbed_row")) {
 					return;
 				}
 
