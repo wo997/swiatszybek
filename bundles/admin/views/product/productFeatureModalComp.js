@@ -28,8 +28,15 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (id, options = {}) => {
-		// load data by id ofc
+		comp._data.product_feature.product_feature_id = id;
+		const feature = product_features.find((f) => f.product_feature_id === id);
+		if (feature) {
+			comp._data.product_feature.name = feature.name;
+			comp._data.product_feature.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
+		}
+		comp._render();
 		clearCompHistory(comp);
+
 		showModal("productFeature", {
 			source: options.source,
 		});

@@ -64,7 +64,7 @@ function productFeatureComp(comp, parent, data) {
 				url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
 				success: (res) => {
 					//comp._set_data(res.product_feature);
-					rewritePropsObjHas(res.product_feature, comp._data);
+					//rewritePropsObjHas(res.product_feature, comp._data);
 					comp._data.name = res.product_feature.name;
 					comp._data.product_feature_id = res.product_feature.name;
 					comp._render();
