@@ -72,9 +72,14 @@ datatable-comp {
 		padding: 0;
 	}
 	.datatable_label {
-		font-weight: 600;
-		font-size: 1.2em;
-		margin-right: 10px;
+		& {
+			font-weight: 600;
+			font-size: 1.2em;
+			margin-right: 10px;
+		}
+		&:empty {
+			display: none;
+		}
 	}
 	.pagination {
 		margin-top: 10px;

@@ -133,6 +133,9 @@ if ($modifyJS) {
         // reactive attributes - just escaping
         if (preg_match_all('/(?<=["\'])\{\{.*?\}\}(?=["\'])/s', $js_full, $matches)) {
             foreach ($matches[0] as $match) {
+                if (strpos($match, "&quot;") !== false) {
+                    continue;
+                }
                 $rep = htmlspecialchars($match);
                 $js_full = str_replace($match, $rep, $js_full);
             }

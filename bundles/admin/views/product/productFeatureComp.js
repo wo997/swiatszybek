@@ -58,7 +58,6 @@ function productFeatureComp(comp, parent, data) {
 			},
 		],
 		empty_html: html`Brak opcji`,
-		label: "Opcje",
 		dataset: [],
 		selectable: true,
 		pagination_data: { row_count: 50 },
@@ -139,6 +138,9 @@ function productFeatureComp(comp, parent, data) {
 		template: html`
 			<div class="label first">Nazwa cechy produktu</div>
 			<input type="text" class="field" data-bind="{${data.name}}" />
+
+			<p class="label" style="font-size: 1.2em;">Opcje</p>
+
 			<div class="adv_controls">
 				<button class="btn primary" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>
 				<button
@@ -173,7 +175,6 @@ function productFeatureComp(comp, parent, data) {
 						source: comp._nodes.select_parent_option_btn,
 						callback: (option_id) => {
 							const selection = comp._data.datatable.selection;
-							console.log(selection);
 							comp._data.datatable.dataset.forEach((/** @type {ProductFeatureOptionData} */ e) => {
 								// @ts-ignore
 								if (selection.includes(e._row_id)) {
