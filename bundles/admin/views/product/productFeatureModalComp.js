@@ -22,17 +22,16 @@
  * @param {*} parent
  * @param {ProducttFeatureModalCompData} data
  */
-function productFeatureModalComp(comp, parent, data) {
+function productFeatureModalComp(comp, parent, data = undefined) {
+	if (data === undefined) {
+		data = { product_feature: { name: "", product_feature_id: -1 } };
+	}
+
 	comp._show = (id, options = {}) => {
-		comp._nodes.product_feature_comp._load_data(id, {
-			callback: () => {
-				clearCompHistory(comp);
-			},
-		});
-		setTimeout(() => {
-			showModal("productFeature", {
-				source: options.source,
-			});
+		// load data by id ofc
+		clearCompHistory(comp);
+		showModal("productFeature", {
+			source: options.source,
 		});
 	};
 

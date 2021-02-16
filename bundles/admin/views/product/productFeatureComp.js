@@ -2,11 +2,9 @@
 
 /**
  * @typedef {{
+ * datatable?: DatatableCompData
  * product_feature_id: number
  * name: string
- * options: ProductFeatureOptionCompData[]
- * selection?: Array
- * selection_ok?: boolean
  * }} ProductFeatureCompData
  *
  * @typedef {{
@@ -15,8 +13,9 @@
  * _nodes: {
  *  add_option_btn: PiepNode
  *  select_parent_option_btn: PiepNode
+ *  datatable: DatatableComp
  * }
- * _load_data(id: number,options?:{callback?: CallableFunction})
+ * _load_data(id: number, options?:{callback?: CallableFunction})
  * _save_data()
  * _delete()
  * } & BaseComp} ProductFeatureComp
@@ -28,10 +27,29 @@
  * @param {ProductFeatureCompData} data
  */
 function productFeatureComp(comp, parent, data) {
-	comp._set_data = (data = { product_feature_id: -1, name: "", options: [] }, options = {}) => {
-		data.selection = data.options.filter((e) => e.selected);
-		data.selection_ok = data.selection.length > 0;
+	if (data === undefined) {
+		data = {
+			product_feature_id: -1,
+			name: "",
+		};
+	}
 
+	/** @type {DatatableCompData} */
+	const dt = {
+		columns: [
+			{ label: "Opcja", key: "name", width: "20%", sortable: true, searchable: "string", editable: "string" },
+			{ label: "Opcja nadrzędna", key: "parent_option", width: "20%" },
+		],
+		empty_html: html`Brak opcji`,
+		label: "Opcje",
+		dataset: [],
+		selectable: true,
+		pagination_data: { row_count: 50 },
+	};
+
+	data.datatable = def(data.datatable, dt);
+
+	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {},
@@ -47,6 +65,8 @@ function productFeatureComp(comp, parent, data) {
 				success: (res) => {
 					//comp._set_data(res.product_feature);
 					rewritePropsObjHas(res.product_feature, comp._data);
+					comp._data.name = res.product_feature.name;
+					comp._data.product_feature_id = res.product_feature.name;
 					comp._render();
 					if (options.callback) {
 						options.callback();
@@ -93,26 +113,29 @@ function productFeatureComp(comp, parent, data) {
 		template: html`
 			<div class="label first">Nazwa cechy produktu</div>
 			<input type="text" class="field" data-bind="{${data.name}}" />
-			<div class="label">
-				Opcje
-				<button class="btn primary small" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>
+			<div class="adv_controls">
+				<button class="btn primary" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>
 				<button
-					class="btn {${data.selection_ok}?important:subtle} small"
+					class="btn {${true}?important:subtle}"
 					data-node="{${comp._nodes.select_parent_option_btn}}"
-					data-tooltip="{${!data.selection_ok ? "Najpierw wybierz opcje z listy poniżej" : ""}}"
+					data-tooltip="{${!true ? "Najpierw wybierz opcje z listy poniżej" : ""}}"
 				>
-					Połącz <span class="semi-bold" html="{${data.selection.length ? "(" + data.selection.length + ")" : ""}}"></span> z opcją
-					nadrzędną
+					Połącz <span class="semi-bold" html="{${"(" + 0 + ")"}}"></span> z opcją nadrzędną
 					<i class="fas fa-search"></i>
 				</button>
 			</div>
-			<list-comp data-bind="{${data.options}}" data-primary="product_feature_option_id">
-				<product-feature-option-comp></product-feature-option-comp>
-			</list-comp>
+			<datatable-comp
+				style="margin-top:var(--form-spacing)"
+				data-bind="{${data.datatable}}"
+				data-node="{${comp._nodes.datatable}}"
+			></datatable-comp>
 		`,
-		initialize: () => {
+		ready: () => {
+			const datatable_label = comp._nodes.datatable._child(".datatable_label");
+			datatable_label._parent().insertBefore(comp._child(".adv_controls"), datatable_label._next());
+
 			comp._nodes.add_option_btn.addEventListener("click", () => {
-				comp._data.options.push({ name: "", product_feature_option_id: -1 });
+				comp._data.datatable.dataset.push({ name: "", product_feature_option_id: -1 });
 				comp._render();
 			});
 		},

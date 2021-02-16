@@ -14,8 +14,6 @@
  *  quick_filter?: boolean
  * }} DatatableColumnDef
  *
- * THESE ARE SIMILAR AF, editable map will work?
- *
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder
  *
  * @typedef {{
@@ -95,11 +93,10 @@ function datatableComp(comp, parent, data) {
 	data.rows = [];
 	data.maps = def(data.maps, []);
 
+	if (!data.primary_key && !data.search_url) {
+		data.primary_key = "_row_id";
+	}
 	if (data.selectable) {
-		if (!data.primary_key && !data.search_url) {
-			data.primary_key = "_row_id";
-		}
-
 		if (!data.primary_key) {
 			console.error("Primary key is required!");
 			return;
@@ -276,7 +273,7 @@ function datatableComp(comp, parent, data) {
 
 			rows = rows.filter((r) => {
 				for (let [key, val] of Object.entries(r)) {
-					const column = data.columns.find((e) => e.key === key);
+					//const column = data.columns.find((e) => e.key === key);
 
 					// if (column && column.render) {
 					// 	val = column.render(r);
