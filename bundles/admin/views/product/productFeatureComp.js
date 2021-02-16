@@ -146,6 +146,14 @@ function productFeatureComp(comp, parent, data) {
 				comp._data.datatable.dataset.push({ name: "", product_feature_option_id: -1 });
 				comp._render();
 			});
+
+			const select_product_feature_option_modal_comp = registerSelectProductFeatureOptionModal();
+
+			comp._nodes.select_parent_option_btn.addEventListener("click", () => {
+				if (comp._data.datatable.selection.length > 0) {
+					select_product_feature_option_modal_comp._show();
+				}
+			});
 		},
 	});
 }
