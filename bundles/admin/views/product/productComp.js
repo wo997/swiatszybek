@@ -563,29 +563,16 @@ function productComp(comp, parent, data) {
 			<div style="height:100px"></div>
 		`,
 		ready: () => {
-			registerSelectProductFeaturesModal();
-			/** @type {SelectProductFeaturesModalComp} */
-			// @ts-ignore
-			const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
-			selectProductFeaturesModalComp(select_product_features_modal_comp, undefined);
+			const select_product_features_modal_comp = registerSelectProductFeaturesModal();
 
-			registerSelectProductFeatureOptionsModal();
-			/** @type {SelectProductFeatureOptionsModalComp} */
-			// @ts-ignore
-			const select_product_feature_options_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
-			selectProductFeatureOptionsModalComp(select_product_feature_options_modal_comp, undefined);
+			const select_product_feature_options_modal_comp = registerSelectProductFeatureOptionsModal();
 
-			registerManageProductListModal();
-			/** @type {ManageProductListModalComp} */
-			// @ts-ignore
-			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
-			manageProductListModalComp(manage_product_list_modal_comp, undefined);
+			const manage_product_list_modal_comp = registerManageProductListModal();
 
-			registerProductFeatureComp();
-			/** @type {ProductFeatureModalComp} */
-			// @ts-ignore
-			const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
-			productFeatureModalComp(product_feature_modal_comp, undefined);
+			const product_feature_modal_comp = registerProductFeatureModal();
+
+			const select_product_feature_option_modal_comp = registerSelectProductFeatureOptionModal();
+			//select_product_feature_option_modal_comp._show();
 
 			// other
 			comp._nodes.add_feature_btn.addEventListener("click", () => {

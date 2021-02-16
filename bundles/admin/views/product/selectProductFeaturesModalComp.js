@@ -190,4 +190,11 @@ function registerSelectProductFeaturesModal() {
 			</div>
 		</div>
 	`);
+
+	/** @type {SelectProductFeaturesModalComp} */
+	// @ts-ignore
+	const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
+	selectProductFeaturesModalComp(select_product_features_modal_comp, undefined);
+
+	return select_product_features_modal_comp;
 }

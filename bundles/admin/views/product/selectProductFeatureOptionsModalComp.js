@@ -153,4 +153,11 @@ function registerSelectProductFeatureOptionsModal() {
 			</div>
 		</div>
 	`);
+
+	/** @type {SelectProductFeatureOptionsModalComp} */
+	// @ts-ignore
+	const select_product_feature_options_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
+	selectProductFeatureOptionsModalComp(select_product_feature_options_modal_comp, undefined);
+
+	return select_product_feature_options_modal_comp;
 }

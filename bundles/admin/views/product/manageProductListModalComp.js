@@ -110,4 +110,11 @@ function registerManageProductListModal() {
 			</div>
 		</div>
 	`);
+
+	/** @type {ManageProductListModalComp} */
+	// @ts-ignore
+	const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
+	manageProductListModalComp(manage_product_list_modal_comp, undefined);
+
+	return manage_product_list_modal_comp;
 }

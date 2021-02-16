@@ -72,7 +72,7 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 	});
 }
 
-function registerProductFeatureComp() {
+function registerProductFeatureModal() {
 	registerModalContent(html`
 		<div id="productFeature" data-expand data-dismissable>
 			<div class="modal-body" style="max-width: calc(70% + 100px);max-height: calc(70% + 100px);">
@@ -80,4 +80,11 @@ function registerProductFeatureComp() {
 			</div>
 		</div>
 	`);
+
+	/** @type {ProductFeatureModalComp} */
+	// @ts-ignore
+	const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
+	productFeatureModalComp(product_feature_modal_comp, undefined);
+
+	return product_feature_modal_comp;
 }

@@ -9,7 +9,6 @@
  * _data: SelectProductFeatureOptionModalCompData
  * _set_data(data?: SelectProductFeatureOptionModalCompData, options?: SetCompDataOptions)
  * _nodes: {
- *      close_btn: PiepNode
  *      datatable: DatatableComp
  * }
  * _show(options?: {source?: PiepNode})
@@ -44,11 +43,9 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (options = {}) => {
-		comp._nodes.close_btn.classList.add("subtle");
-		comp._nodes.close_btn.classList.remove("important");
-
 		comp._nodes.datatable._data.dataset = product_feature_options.map((opt) => {
-			return { name: opt.name, feature_name: product_features.find((fea) => fea.product_feature_id === opt.product_feature_id).name };
+			const feature = product_features.find((fea) => fea.product_feature_id === opt.product_feature_id);
+			return { name: opt.name, feature_name: feature ? feature.name : "" };
 		});
 		comp._nodes.datatable._render();
 
@@ -90,4 +87,21 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 			});
 		},
 	});
+}
+
+function registerSelectProductFeatureOptionModal() {
+	registerModalContent(html`
+		<div id="selectProductFeatureOption" data-expand data-dismissable>
+			<div class="modal-body" style="max-width: calc(70% + 100px);max-height: calc(70% + 100px);">
+				<select-product-feature-option-modal-comp class="flex_stretch"></select-product-feature-option-modal-comp>
+			</div>
+		</div>
+	`);
+
+	/** @type {SelectProductFeatureOptionModalComp} */
+	// @ts-ignore
+	const select_product_feature_option_modal_comp = $("#selectProductFeatureOption select-product-feature-option-modal-comp");
+	selectProductFeatureOptionModalComp(select_product_feature_option_modal_comp, undefined);
+
+	return select_product_feature_option_modal_comp;
 }
