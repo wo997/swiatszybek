@@ -48,6 +48,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						},
 					},
 				],
+				pagination_data: { row_count: 50 },
 				primary_key: "product_feature_id",
 				empty_html: html`Brak cech`,
 				label: "Cechy produktów",
@@ -174,6 +175,23 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					comp._nodes.close_btn.classList.remove("subtle");
 					comp._nodes.close_btn.classList.add("important");
 				}
+			});
+		},
+		ready: () => {
+			const dt = comp._nodes.datatable;
+			const list = dt._nodes.list;
+
+			const updateOrder = () => {
+				const poses = dt._data.dataset.map((e) => e.product_feature_id);
+				console.log(poses);
+			};
+
+			list.addEventListener("remove_row", (ev) => {
+				setTimeout(updateOrder);
+			});
+
+			list.addEventListener("move_row", (ev) => {
+				setTimeout(updateOrder);
 			});
 		},
 	});

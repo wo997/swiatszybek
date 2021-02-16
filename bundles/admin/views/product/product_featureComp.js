@@ -39,7 +39,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="variant_header">
-				<div class="title inline semi-bold" data-node="{${comp._nodes.feature_name}}"></div>
+				<div class="title inline semi-bold rect" data-node="{${comp._nodes.feature_name}}"></div>
 				<div>
 					<button data-node="{${comp._nodes.edit_feature_btn}}" class="btn subtle small"><i class="fas fa-cog"></i></button>
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
