@@ -3,6 +3,7 @@
 DB::createTable("product_feature", [
     ["name" => "product_feature_id", "type" => "INT", "index" => "primary"],
     ["name" => "name", "type" => "VARCHAR(255)"],
+    ["name" => "pos", "type" => "INT", "index" => "index"],
 ]);
 
 DB::createTable("product_to_feature", [

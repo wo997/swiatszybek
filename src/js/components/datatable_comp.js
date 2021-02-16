@@ -54,6 +54,7 @@
  *      map?: {val:any,label:any}[]
  *  }[]
  *  sortable?: boolean
+ *  deletable?: boolean
  * }} DatatableCompData
  *
  * @typedef {{
@@ -422,6 +423,9 @@ function datatableComp(comp, parent, data) {
 				if (cd.sortable) {
 					comp.classList.toggle("sortable", data.sortable);
 				}
+				if (cd.deletable) {
+					comp.classList.toggle("deletable", data.deletable);
+				}
 
 				const chng =
 					!comp._prev_data ||
@@ -431,7 +435,8 @@ function datatableComp(comp, parent, data) {
 					cd.selection ||
 					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
 					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count ||
-					cd.sortable;
+					cd.sortable ||
+					cd.deletable;
 
 				if (chng) {
 					let styles_html = "";
@@ -497,8 +502,8 @@ function datatableComp(comp, parent, data) {
                         }`;
 					}
 
-					if (data.sortable) {
-						cells_html.push(html`<div class="dt_cell sortable_width"><span class="label">Sortuj</span></div>`);
+					if (data.sortable || data.deletable) {
+						cells_html.push(html`<div class="dt_cell sortable_width"></div>`);
 					}
 
 					setNodeChildren(comp._nodes.table_header, cells_html);
@@ -876,7 +881,7 @@ function datatableComp(comp, parent, data) {
 			}
 		},
 		ready: () => {
-			if (comp._data.sortable) {
+			if (comp._data.sortable || comp._data.deletable) {
 				const list = comp._nodes.list;
 
 				list.addEventListener("remove_row", (ev) => {

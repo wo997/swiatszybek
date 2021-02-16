@@ -37,7 +37,7 @@ function productFeatureComp(comp, parent, data) {
 	/** @type {DatatableCompData} */
 	const dt = {
 		columns: [
-			{ label: "Opcja", key: "name", width: "20%", sortable: true, searchable: "string", editable: "string" },
+			{ label: "Opcja", key: "name", width: "20%", searchable: "string", editable: "string" },
 			{
 				label: "Opcja nadrzędna",
 				key: "parent_product_feature_option_id",
@@ -62,6 +62,7 @@ function productFeatureComp(comp, parent, data) {
 		selectable: true,
 		pagination_data: { row_count: 50 },
 		sortable: true,
+		deletable: true,
 	};
 
 	data.datatable = def(data.datatable, dt);
@@ -111,10 +112,22 @@ function productFeatureComp(comp, parent, data) {
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "product/feature/save",
 			params: {
-				product_feature: comp._data,
+				product_feature: {
+					name: comp._data.name,
+					product_feature_id: comp._data.product_feature_id,
+					options: comp._data.datatable.dataset.map((e) => ({
+						product_feature_option_id: e.product_feature_option_id,
+						name: e.name,
+						parent_product_feature_option_id: e.parent_product_feature_option_id,
+					})),
+				},
 			},
 			success: (res) => {
 				hideAndSearch();
+				showNotification(comp._data.product_feature_id === -1 ? "Dodano cechę" : "Zapisano cechę", {
+					one_line: true,
+					type: "success",
+				});
 			},
 		});
 	};
@@ -128,6 +141,10 @@ function productFeatureComp(comp, parent, data) {
 				},
 				success: (res) => {
 					hideAndSearch();
+					showNotification("Usunięto cechę", {
+						one_line: true,
+						type: "success",
+					});
 				},
 			});
 		} else {

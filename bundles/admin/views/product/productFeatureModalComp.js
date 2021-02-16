@@ -66,7 +66,9 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 				comp._nodes.product_feature_comp._save_data();
 			});
 			comp._nodes.delete_btn.addEventListener("click", () => {
-				comp._nodes.product_feature_comp._delete();
+				if (confirm("Czy aby na pewno chcesz usunąć tę cechę?")) {
+					comp._nodes.product_feature_comp._delete();
+				}
 			});
 		},
 	});

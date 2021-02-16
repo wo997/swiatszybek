@@ -113,7 +113,7 @@ document.addEventListener("mouseup", () => {
 {
 	const trait_name = "list_grab_btn";
 	registerCompTrait(trait_name, {
-		template: html`<button data-node="${trait_name}" class="btn subtle small grab_btn"><i class="fas fa-sort"></i></button>`,
+		template: html`<button data-node="${trait_name}" class="btn subtle small"><i class="fas fa-sort"></i></button>`,
 		initialize: (comp) => {
 			/** @type {PiepNode} */
 			const n = comp._nodes[trait_name];

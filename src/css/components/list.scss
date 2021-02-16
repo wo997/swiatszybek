@@ -43,12 +43,12 @@ list-comp.horizontal .list_row.cramp_row {
 		* {
 			cursor: grab !important;
 		}
-		.grab_btn:active {
+		.node_list_grab_btn:active {
 			--btn-background-clr: var(--important-clr);
 			--btn-font-clr: #fff;
 		}
 	}
-	.grab_btn {
+	.node_list_grab_btn {
 		cursor: grab;
 		transition: 0.25s all;
 		min-width: 28px;

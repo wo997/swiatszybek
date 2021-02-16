@@ -4,8 +4,10 @@ EntityManager::register("product_feature", [
     "props" => [
         "product_feature_id" => ["type" => "number"],
         "name" => ["type" => "string"],
-        "products" => ["type" => "product[]"]
+        "products" => ["type" => "product[]"],
+        "pos" => ["type" => "number"],
     ],
+    "sortable" => "pos",
 ]);
 
 EntityManager::register("product", [
