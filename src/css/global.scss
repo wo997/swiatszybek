@@ -290,16 +290,32 @@ textarea {
 .label:not(.first) {
 	margin-top: var(--form-spacing);
 }
+// .label.font_medium:not(.first) {
+// 	margin-top: calc(1.8 * var(--form-spacing));
+// }
+// .label.font_big:not(.first) {
+// 	margin-top: calc(2.4 * var(--form-spacing));
+// }
+
 /*.form-field-spacing {
 	--form-spacing: 0.8em;
 }*/
 .label {
-	margin-bottom: 0.2em;
-	user-select: none;
-	-webkit-user-select: none;
-	font-weight: 600;
-	display: block;
+	& {
+		margin-bottom: 0.2em;
+		user-select: none;
+		-webkit-user-select: none;
+		font-weight: 600;
+		display: block;
+	}
 }
+// .font_medium {
+// 	font-size: 1.1em;
+// }
+// .font_big {
+// 	font-size: 1.2em;
+// 	font-weight: 700;
+// }
 .label [data-type] {
 	margin-top: 4px;
 }

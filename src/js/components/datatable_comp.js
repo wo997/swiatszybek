@@ -663,7 +663,7 @@ function datatableComp(comp, parent, data) {
 					return;
 				}
 				const dt_sort = target._parent(".dt_sort", { skip: 0 });
-				const dt_filter = target._parent(".dt_filter:not(.open)", { skip: 0 });
+				const dt_filter = target._parent(".dt_filter", { skip: 0 });
 				const dt_batch_edit = target._parent(".dt_batch_edit", { skip: 0 });
 
 				const dt_cell = target._parent(".dt_cell");
@@ -763,6 +763,10 @@ function datatableComp(comp, parent, data) {
 						data.sort = new_order ? { key: column.key, order: new_order } : false;
 						data.pagination_data.page_id = 0;
 					} else if (dt_filter) {
+						if (dt_filter.classList.contains("open")) {
+							hideFilterMenu();
+							return;
+						}
 						filterFocusChange();
 						dt_filter.classList.add("open");
 						const curr_filter = data.filters.find((f) => f.key === column.key);

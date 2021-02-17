@@ -33,7 +33,7 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 		template: html`
 			<div class="option_header">
 				<div class="title inline" html="{${data.name}}"></div>
-				<div>
+				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>

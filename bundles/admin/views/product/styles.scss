@@ -37,28 +37,14 @@ product-comp {
 	}
 
 	.variant_header {
-		padding-bottom: 10px;
-	}
-
-	.variant_header {
-		.title {
-			background: #0001;
-			color: #000;
-		}
-	}
-
-	.variant_header,
-	.option_header {
-		.title {
-			margin-right: auto;
-		}
+		margin-bottom: 10px;
 	}
 
 	.bind_features {
 		& > .list_row {
 			& {
 				background: #f6f6f6;
-				margin: 5px 0 0;
+				margin: 10px 0 0;
 				border-radius: 4px;
 			}
 			// &:not(:first-child) {

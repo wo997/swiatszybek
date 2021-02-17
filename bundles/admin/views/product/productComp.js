@@ -510,9 +510,9 @@ function productComp(comp, parent, data) {
 					<option value="length">Długość</option>
 				</select>
 
-				<div class="label">
-					<span html="{${"Cechy (" + data.features.length + ")"}}"></span>
-					<button data-node="add_feature_btn" class="btn primary small">Wybierz <i class="fas fa-search"></i></button>
+				<div style="margin-top:10px">
+					<span class="label inline" style="font-size: 1.1em;" html="{${"Cechy (" + data.features.length + ")"}}"></span>
+					<button data-node="add_feature_btn" class="btn primary small">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
 
 				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id">
