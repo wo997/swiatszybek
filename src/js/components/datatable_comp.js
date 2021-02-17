@@ -586,7 +586,7 @@ function datatableComp(comp, parent, data) {
 				comp._nodes.filters_info.dataset.tooltip = filters_info.join("<br>");
 
 				comp._nodes.clear_filters_btn.classList.toggle("active", filters_info.length > 0);
-				comp.classList.toggle("has_filters", filters_info.length > 0);
+				comp.classList.toggle("cant_sort", filters_info.length > 0);
 			},
 		});
 	};
