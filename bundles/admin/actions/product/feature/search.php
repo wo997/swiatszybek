@@ -16,7 +16,7 @@ $responseArray = paginateData([
     ",
     "from" => "product_feature f",
     "where" => $where,
-    //"order" => "product_feature_id DESC", probably never used hmmm
+    "order" => "pos",
     "quick_search_fields" => ["name"],
     "datatable_params" => $_POST["datatable_params"],
 ]);

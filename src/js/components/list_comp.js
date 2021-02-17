@@ -175,9 +175,18 @@ function listComp(comp, parent, data = []) {
 
 				const list_rect_before = comp.getBoundingClientRect();
 
-				const removeRows = () => {
+				const finish = () => {
 					comp._children(".to_remove").forEach((e) => {
 						e.remove();
+					});
+
+					comp._direct_children().forEach((child) => {
+						child.classList.remove("cramp_row");
+						child.style.transform = "";
+						// @ts-ignore
+						child._translateY = 0;
+						// @ts-ignore
+						child._scale = 1;
 					});
 				};
 
@@ -186,16 +195,7 @@ function listComp(comp, parent, data = []) {
 				}
 
 				if (chaos) {
-					animatable_rows.forEach((child) => {
-						child.classList.remove("cramp_row");
-						child.style.transform = "";
-						// @ts-ignore
-						child._translateY = 0;
-						// @ts-ignore
-						child._scale = 1;
-					});
-
-					removeRows();
+					finish();
 				} else {
 					let index = -1;
 					diff_with_target_index.forEach((diff_info) => {
@@ -348,7 +348,7 @@ function listComp(comp, parent, data = []) {
 						},
 					});
 				}
-				setTimeout(removeRows, duration);
+				setTimeout(finish, duration);
 			},
 		});
 	};

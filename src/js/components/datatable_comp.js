@@ -240,7 +240,7 @@ function datatableComp(comp, parent, data) {
 				map.map = map.getMap();
 			}
 		}
-		comp._nodes.list._children(".dt_row").forEach((/** @type {DatatableRowComp} */ r) => {
+		comp._nodes.list._children("datatable-row-comp").forEach((/** @type {DatatableRowComp} */ r) => {
 			r._render({ force_render: true });
 		});
 	};
@@ -266,6 +266,11 @@ function datatableComp(comp, parent, data) {
 						}
 					}
 				});
+			}
+
+			if (data.sortable && data.sort) {
+				const key = data.sort.key;
+				data.dataset = data.dataset.sort((a, b) => Math.sign(a[key] - b[key]));
 			}
 
 			/** @type {Array} */
@@ -371,6 +376,7 @@ function datatableComp(comp, parent, data) {
 			if (data.sort) {
 				const sort_key = data.sort.key;
 				const order = data.sort.order === "asc" ? 1 : -1;
+
 				rows = rows.sort((a, b) => {
 					if (a[sort_key] < b[sort_key]) return -order;
 					if (a[sort_key] > b[sort_key]) return order;
@@ -566,11 +572,10 @@ function datatableComp(comp, parent, data) {
 					filters_info.push(`Wyszukaj ${data.quick_search}`);
 				}
 				if (data.sort) {
-					filters_info.push(
-						`Sortuj
-                        ${data.columns.find((c) => data.sort && c.key === data.sort.key).label}
-                        ${data.sort.order === "asc" ? "rosnąco" : "malejąco"}`
-					);
+					const column = data.columns.find((c) => data.sort && c.key === data.sort.key);
+					if (column) {
+						filters_info.push(`Sortuj ${column.label} ${data.sort.order === "asc" ? "rosnąco" : "malejąco"}`);
+					}
 				}
 				data.filters.forEach((f) => {
 					filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.data.display);
@@ -884,6 +889,31 @@ function datatableComp(comp, parent, data) {
 			if (comp._data.sortable || comp._data.deletable) {
 				const list = comp._nodes.list;
 
+				const orderData = () => {
+					let pos = 0;
+					const positions = comp._data.dataset.map((e) => {
+						pos++;
+						e.pos = pos;
+						return e.product_feature_id;
+					});
+
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "datatable/sort",
+						params: {
+							table: "product_feature",
+							order_key: "pos",
+							positions,
+						},
+						success: (res) => {
+							showNotification("Zapisano zmianę kolejności", {
+								one_line: true,
+								type: "success",
+							});
+							refreshProductFeatures();
+						},
+					});
+				};
+
 				list.addEventListener("remove_row", (ev) => {
 					// @ts-ignore
 					const detail = ev.detail;
@@ -897,6 +927,9 @@ function datatableComp(comp, parent, data) {
 					const ind_offset = comp._data.pagination_data.row_count * comp._data.pagination_data.page_id;
 
 					comp._data.dataset.splice(ind_offset + detail.row_index, 1);
+
+					orderData();
+
 					comp._render();
 				});
 
@@ -919,6 +952,9 @@ function datatableComp(comp, parent, data) {
 
 					const temp = comp._data.dataset.splice(from, 1);
 					comp._data.dataset.splice(to, 0, ...temp);
+
+					orderData();
+
 					comp._render();
 				});
 			}

@@ -28,8 +28,8 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			datatable: {
 				dataset: product_features,
 				columns: [
-					{ label: "Cecha", key: "name", width: "20%", sortable: true, searchable: "string" },
-					{ label: "Opcje", key: "options", width: "50%", sortable: true, searchable: "number" },
+					{ label: "Cecha", key: "name", width: "20%", searchable: "string" },
+					{ label: "Opcje", key: "options", width: "50%", searchable: "number" },
 					{
 						label: "Akcja",
 						width: "155px",
@@ -56,6 +56,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					Dodaj <i class="fas fa-plus"></i>
 				</button> `,
 				sortable: true,
+				sort: { key: "pos", order: "asc" },
 			},
 		};
 	}
@@ -178,21 +179,38 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			});
 		},
 		ready: () => {
-			const dt = comp._nodes.datatable;
-			const list = dt._nodes.list;
-
-			const updateOrder = () => {
-				const poses = dt._data.dataset.map((e) => e.product_feature_id);
-				console.log(poses);
-			};
-
-			list.addEventListener("remove_row", (ev) => {
-				setTimeout(updateOrder);
-			});
-
-			list.addEventListener("move_row", (ev) => {
-				setTimeout(updateOrder);
-			});
+			// const dt = comp._nodes.datatable;
+			// const list = dt._nodes.list;
+			// const updateOrder = () => {
+			// 	let pos = 0;
+			// 	const positions = dt._data.dataset.map((e) => {
+			// 		pos++;
+			// 		e.pos = pos;
+			// 		return e.product_feature_id;
+			// 	});
+			// 	dt._render();
+			// 	xhr({
+			// 		url: STATIC_URLS["ADMIN"] + "datatable/sort",
+			// 		params: {
+			// 			table: "product_feature",
+			// 			order_key: "pos",
+			// 			positions,
+			// 		},
+			// 		success: (res) => {
+			// 			showNotification("Zapisano zmianę kolejności", {
+			// 				one_line: true,
+			// 				type: "success",
+			// 			});
+			// 			refreshProductFeatures();
+			// 		},
+			// 	});
+			// };
+			// list.addEventListener("remove_row", (ev) => {
+			// 	setTimeout(updateOrder);
+			// });
+			// list.addEventListener("move_row", (ev) => {
+			// 	setTimeout(updateOrder);
+			// });
 		},
 	});
 }
