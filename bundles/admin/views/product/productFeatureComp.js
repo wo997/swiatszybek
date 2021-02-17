@@ -14,6 +14,8 @@
  *  add_option_btn: PiepNode
  *  select_parent_option_btn: PiepNode
  *  datatable: DatatableComp
+ *  scope: PiepNode
+ *  groups: PiepNode
  * }
  * _load_data(id: number, options?:{callback?: CallableFunction})
  * _save_data()
@@ -39,7 +41,7 @@ function productFeatureComp(comp, parent, data) {
 		columns: [
 			{ label: "Opcja", key: "name", width: "20%", searchable: "string", editable: "string" },
 			{
-				label: "Opcja nadrzędna",
+				label: "Opcja nadrzędna / Grupa",
 				key: "parent_product_feature_option_id",
 				width: "20%",
 				map_name: "product_feature_option",
@@ -50,10 +52,12 @@ function productFeatureComp(comp, parent, data) {
 			{
 				name: "product_feature_option",
 				getMap: () => {
-					return product_feature_options.map((option) => ({
+					const map = product_feature_options.map((option) => ({
 						val: option.product_feature_option_id,
-						label: option.feature_name + " " + option.name,
+						label: option.feature_name + ": " + option.name,
 					}));
+					map.push({ val: -1, label: "Brak" });
+					return map;
 				},
 			},
 		],
@@ -68,14 +72,12 @@ function productFeatureComp(comp, parent, data) {
 
 	data.datatable = def(data.datatable, dt);
 
-	comp._set_data = (data, options = {}) => {
-		setCompData(comp, data, {
-			...options,
-			render: () => {},
-		});
-	};
-
 	comp._load_data = (id, options = {}) => {
+		// console.log("warmup", comp._nodes.datatable);
+		// console.log(JSON.stringify(comp._nodes.datatable._data.maps[0].map.map((e) => e.label)));
+		// comp._nodes.datatable._warmup_maps();
+		// console.log(JSON.stringify(comp._nodes.datatable._data.maps[0].map.map((e) => e.label)));
+
 		comp._data.product_feature_id = id;
 		if (id === -1) {
 			comp._data.name = "";
@@ -85,23 +87,10 @@ function productFeatureComp(comp, parent, data) {
 			if (feature) {
 				comp._data.name = feature.name;
 				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
-				//comp._data.datatable.dataset.forEach((e) => (e.parent_product_feature_option_id = 59));
 			}
-			// xhr({
-			// 	url: STATIC_URLS["ADMIN"] + "product/feature/get/" + id,
-			// 	success: (res) => {
-			// 		//comp._set_data(res.product_feature);
-			// 		//rewritePropsObjHas(res.product_feature, comp._data);
-			// 		comp._data.name = res.product_feature.name;
-			// 		comp._data.product_feature_id = res.product_feature.name;
-			// 		comp._render();
-			// 		if (options.callback) {
-			// 			options.callback();
-			// 		}
-			// 	},
-			// });
 		}
-		comp._render();
+		comp._nodes.datatable._warmup_maps();
+		comp._render({ force_render: true });
 	};
 
 	const hideAndSearch = () => {
@@ -154,12 +143,48 @@ function productFeatureComp(comp, parent, data) {
 		}
 	};
 
+	comp._set_data = (data, options = {}) => {
+		setCompData(comp, data, {
+			...options,
+			render: () => {
+				comp._nodes.scope._set_content("Wszystkie");
+
+				const options_ids = data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique);
+
+				let options = "";
+
+				const map = data.datatable.maps.find((e) => e.name === "product_feature_option");
+				if (map && map.map) {
+					map.map
+						.filter((e) => options_ids.includes(e.val))
+						.forEach((e) => {
+							options += html`<button class="btn subtle">${e.label}</button> `;
+						});
+				}
+
+				comp._nodes.groups._set_content(options);
+			},
+		});
+	};
+
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="label first">Nazwa cechy produktu</div>
 			<input type="text" class="field" data-bind="{${data.name}}" />
 
-			<p class="label" style="font-size: 1.2em;">Opcje</p>
+			<div class="label" style="font-size: 1.2em;">Opcje</div>
+
+			<span data-node="{${comp._nodes.groups}}"></span>
+
+			<span class="title breadcrumbs" style="font-size: 1.2em;margin-top:20px">
+				<button class="btn transparent crumb" style="font-weight: inherit;" data-tooltip="Wyświetl wszystkie opcje">Opcje</button>
+				<i class="fas fa-chevron-right"></i>
+				<div class="crumb">
+					Grupa:
+					<span data-node="{${comp._nodes.scope}}"></span>
+					<button class="btn important" style="font-size: 0.8333em;" data-tooltip="Wyświetl opcje konkretnej grupy">Wybierz</button>
+				</div>
+			</span>
 
 			<div class="adv_controls">
 				<button class="btn primary" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>

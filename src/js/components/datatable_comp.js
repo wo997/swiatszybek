@@ -79,7 +79,7 @@
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
  * _load_state(data_obj)
- * _warmup_maps()
+ * _warmup_maps(render?: boolean)
  * } & BaseComp} DatatableComp
  */
 
@@ -247,6 +247,10 @@ function datatableComp(comp, parent, data) {
 		comp._nodes.list._children("datatable-row-comp").forEach((/** @type {DatatableRowComp} */ r) => {
 			r._render({ force_render: true });
 		});
+
+		if (render) {
+			comp._render();
+		}
 	};
 
 	comp._set_data = (data, options = {}) => {
@@ -427,7 +431,7 @@ function datatableComp(comp, parent, data) {
 				}
 
 				if (cd.maps) {
-					comp._warmup_maps();
+					comp._warmup_maps(false);
 				}
 
 				if (cd.sortable) {
