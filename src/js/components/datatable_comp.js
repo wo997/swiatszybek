@@ -903,6 +903,8 @@ function datatableComp(comp, parent, data) {
 							table: "product_feature",
 							order_key: "pos",
 							positions,
+							// offset: comp._data.pagination_data.row_count * comp._data.pagination_data.page_id
+							// might be good to use for backend search if u ever do it but pls don't
 						},
 						success: (res) => {
 							showNotification("Zapisano zmianę kolejności", {
