@@ -55,6 +55,7 @@
  *  }[]
  *  sortable?: boolean
  *  deletable?: boolean
+ *  require_sort?: DatatableSortData
  * }} DatatableCompData
  *
  * @typedef {{
@@ -87,7 +88,8 @@
  */
 function datatableComp(comp, parent, data) {
 	data.filters = def(data.filters, []);
-	data.sort = def(data.sort, false);
+	data.sort = def(data.require_sort, def(data.sort, false));
+
 	data.dataset = def(data.dataset, []);
 	data.quick_search = def(data.quick_search, "");
 	data.pagination_data = def(data.pagination_data, {});
@@ -584,6 +586,7 @@ function datatableComp(comp, parent, data) {
 				comp._nodes.filters_info.dataset.tooltip = filters_info.join("<br>");
 
 				comp._nodes.clear_filters_btn.classList.toggle("active", filters_info.length > 0);
+				comp.classList.toggle("has_filters", filters_info.length > 0);
 			},
 		});
 	};
@@ -857,7 +860,7 @@ function datatableComp(comp, parent, data) {
 				const data = comp._data;
 				data.filters = [];
 				data.quick_search = "";
-				data.sort = false;
+				data.sort = def(data.require_sort, false);
 				data.pagination_data.page_id = 0;
 				comp._render();
 

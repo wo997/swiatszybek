@@ -182,7 +182,8 @@ datatable-comp {
 		}
 	}
 
-	&:not(.sortable) {
+	&:not(.sortable),
+	&.has_filters {
 		.node_list_grab_btn,
 		.node_list_up_btn,
 		.node_list_down_btn {

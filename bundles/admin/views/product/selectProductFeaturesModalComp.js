@@ -56,7 +56,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					Dodaj <i class="fas fa-plus"></i>
 				</button> `,
 				sortable: true,
-				sort: { key: "pos", order: "asc" },
+				require_sort: { key: "pos", order: "asc" },
 			},
 		};
 	}
