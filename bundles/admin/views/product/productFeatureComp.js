@@ -41,13 +41,12 @@ function productFeatureComp(comp, parent, data) {
 	/** @type {DatatableCompData} */
 	const dt = {
 		columns: [
-			{ label: "Opcja", key: "name", width: "20%", searchable: "string", editable: "string" },
+			{ label: "Opcja", key: "name", width: "20%", editable: "string" },
 			{
-				label: "Opcja nadrzędna / Grupa",
+				label: "Opcja nadrzędna (Grupa)",
 				key: "parent_product_feature_option_id",
 				width: "20%",
 				map_name: "product_feature_option",
-				searchable: "select",
 			},
 		],
 		maps: [
@@ -70,17 +69,13 @@ function productFeatureComp(comp, parent, data) {
 		sortable: true,
 		deletable: true,
 		require_sort: { key: "pos", order: "asc" },
+		require_sort_filter: "parent_product_feature_option_id",
 		label: "Opcje",
 	};
 
 	data.datatable = def(data.datatable, dt);
 
 	comp._load_data = (id, options = {}) => {
-		// console.log("warmup", comp._nodes.datatable);
-		// console.log(JSON.stringify(comp._nodes.datatable._data.maps[0].map.map((e) => e.label)));
-		// comp._nodes.datatable._warmup_maps();
-		// console.log(JSON.stringify(comp._nodes.datatable._data.maps[0].map.map((e) => e.label)));
-
 		comp._data.product_feature_id = id;
 		if (id === -1) {
 			comp._data.name = "";
@@ -93,6 +88,7 @@ function productFeatureComp(comp, parent, data) {
 			}
 		}
 		comp._nodes.datatable._warmup_maps();
+		comp._data.current_group_id = -1;
 		comp._render({ force_render: true, freeze: true });
 	};
 
@@ -170,11 +166,29 @@ function productFeatureComp(comp, parent, data) {
 
 				expand(comp._nodes.case_has_groups, group_btns.length > 0);
 
+				if (group_btns.length > 0) {
+					group_btns.unshift(html`<button
+						class="btn ${data.current_group_id === null ? "primary" : "subtle"} group_nav"
+						data-option_id="null"
+					>
+						<i class="fas fa-ban"></i> Bez grupy
+					</button> `);
+					group_btns.unshift(html`<button class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav" data-option_id="-1">
+						<i class="fas fa-border-all"></i> Wszystkie
+					</button> `);
+				}
+
 				comp._nodes.groups._set_content(group_btns.join(""));
 
 				comp._nodes.groups._children(".group_nav").forEach((e) => {
 					e.addEventListener("click", () => {
-						comp._data.current_group_id = +e.dataset.option_id;
+						const option_id = e.dataset.option_id === "null" ? null : +e.dataset.option_id;
+						comp._data.current_group_id = option_id;
+						if (option_id === -1) {
+							comp._data.datatable.filters = [];
+						} else {
+							comp._data.datatable.filters = [{ key: "parent_product_feature_option_id", data: { type: "exact", val: option_id } }];
+						}
 						comp._render();
 					});
 				});

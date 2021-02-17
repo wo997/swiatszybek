@@ -366,7 +366,6 @@ function setCompData(comp, data = undefined, options = {}) {
 	}
 
 	if (options.freeze) {
-		console.log(comp);
 		comp.classList.add("freeze");
 		setTimeout(() => {
 			comp.classList.remove("freeze");

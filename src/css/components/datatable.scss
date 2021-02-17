@@ -25,7 +25,8 @@ datatable-comp {
 		flex-wrap: wrap;
 	}
 	.dt_cell:not(:last-child),
-	&.sortable .dt_row .dt_cell {
+	&.sortable .dt_row .dt_cell,
+	&.deletable .dt_row .dt_cell {
 		border-right: 1px solid #0001;
 	}
 	&.searching .table_body {
@@ -182,8 +183,7 @@ datatable-comp {
 		}
 	}
 
-	&:not(.sortable),
-	&.cant_sort {
+	&:not(.sortable) {
 		.node_list_grab_btn,
 		.node_list_up_btn,
 		.node_list_down_btn {
@@ -192,6 +192,10 @@ datatable-comp {
 	}
 	&:not(.deletable) .node_list_delete_btn {
 		display: none;
+	}
+
+	&.deletable:not(.sortable) .node_list_delete_btn {
+		margin-left: 0 !important;
 	}
 }
 

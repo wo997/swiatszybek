@@ -56,6 +56,7 @@
  *  sortable?: boolean
  *  deletable?: boolean
  *  require_sort?: DatatableSortData
+ *  require_sort_filter?: string
  *  db_table?: string
  *  sort_on_backend?: boolean
  * }} DatatableCompData
@@ -434,13 +435,6 @@ function datatableComp(comp, parent, data) {
 					comp._warmup_maps(false);
 				}
 
-				if (cd.sortable) {
-					comp.classList.toggle("sortable", data.sortable);
-				}
-				if (cd.deletable) {
-					comp.classList.toggle("deletable", data.deletable);
-				}
-
 				const chng =
 					!comp._prev_data ||
 					cd.sort ||
@@ -596,7 +590,20 @@ function datatableComp(comp, parent, data) {
 				comp._nodes.filters_info.dataset.tooltip = filters_info.join("<br>");
 
 				comp._nodes.clear_filters_btn.classList.toggle("active", filters_info.length > 0);
-				comp.classList.toggle("cant_sort", filters_info.length > 0);
+
+				if (comp._data.sortable) {
+					let sortable = filters_info.length === 0;
+					const rsf = comp._data.require_sort_filter;
+					if (rsf) {
+						sortable =
+							comp._data.filters.filter((e) => e.key === rsf).length > 0 && comp._data.filters.filter((e) => e.key !== rsf).length === 0;
+					}
+					comp.classList.toggle("sortable", sortable);
+				}
+
+				if (cd.deletable) {
+					comp.classList.toggle("deletable", data.deletable);
+				}
 			},
 		});
 	};
