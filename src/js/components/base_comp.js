@@ -365,19 +365,20 @@ function setCompData(comp, data = undefined, options = {}) {
 		});
 	}
 
+	if (options.freeze) {
+		console.log(comp);
+		comp.classList.add("freeze");
+		setTimeout(() => {
+			comp.classList.remove("freeze");
+		}, 2000);
+	}
+
 	// just for optimization
 	const equal = isEquivalent(node._prev_data, node._data);
 
 	if (equal && def(options.force_render, false) === false) {
 		// never used force_render lol, OK JUST ONCE
 		return;
-	}
-
-	if (options.freeze) {
-		comp.classList.add("freeze");
-		setTimeout(() => {
-			comp.classList.remove("freeze");
-		}, 0);
 	}
 
 	// kinda weird but it creates f.e. checkbox base component

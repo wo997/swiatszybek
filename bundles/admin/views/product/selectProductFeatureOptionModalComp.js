@@ -61,15 +61,13 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 		// 	const feature = product_features.find((fea) => fea.product_feature_id === opt.product_feature_id);
 		// 	return { name: opt.name, feature_name: feature ? feature.name : "" };
 		// });
-		comp._nodes.datatable._data.dataset = product_feature_options;
-		comp._nodes.datatable._render();
+		comp._data.datatable.dataset = product_feature_options;
+		comp._render({ freeze: true });
 
 		comp._options = options;
-		//setTimeout(() => {
 		showModal("selectProductFeatureOption", {
 			source: options.source,
 		});
-		//});
 	};
 
 	comp._set_data = (data, options = {}) => {
