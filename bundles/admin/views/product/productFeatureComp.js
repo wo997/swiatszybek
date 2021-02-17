@@ -89,6 +89,7 @@ function productFeatureComp(comp, parent, data) {
 		}
 		comp._nodes.datatable._warmup_maps();
 		comp._data.current_group_id = -1;
+		comp._data.datatable.filters = [];
 		comp._render({ force_render: true, freeze: true });
 	};
 
