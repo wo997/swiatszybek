@@ -461,6 +461,10 @@ function datatableComp(comp, parent, data) {
 						cell_html += /*html*/ `<div class="dt_cell" data-column="${column_index}">`;
 						cell_html += html`<span class="label">${column.label}</span>`;
 
+						if (data.require_sort && column.sortable) {
+							console.error("Table can't be sortable with required_sorting applied");
+						}
+
 						if (column.sortable || column.searchable || column.batch_edit) {
 							cell_html += /*html*/ ` <div class="dt_header_controls">`;
 
