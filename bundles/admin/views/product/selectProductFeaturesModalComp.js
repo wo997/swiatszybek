@@ -57,6 +57,8 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				</button> `,
 				sortable: true,
 				require_sort: { key: "pos", order: "asc" },
+				db_table: "product_feature",
+				sort_on_backend: true,
 			},
 		};
 	}

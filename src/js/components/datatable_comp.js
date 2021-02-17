@@ -56,6 +56,8 @@
  *  sortable?: boolean
  *  deletable?: boolean
  *  require_sort?: DatatableSortData
+ *  db_table?: string
+ *  sort_on_backend?: boolean
  * }} DatatableCompData
  *
  * @typedef {{
@@ -908,23 +910,25 @@ function datatableComp(comp, parent, data) {
 						return e.product_feature_id;
 					});
 
-					xhr({
-						url: STATIC_URLS["ADMIN"] + "datatable/sort",
-						params: {
-							table: "product_feature",
-							order_key: "pos",
-							positions,
-							// offset: comp._data.pagination_data.row_count * comp._data.pagination_data.page_id
-							// might be good to use for backend search if u ever do it but pls don't
-						},
-						success: (res) => {
-							showNotification("Zapisano zmianę kolejności", {
-								one_line: true,
-								type: "success",
-							});
-							refreshProductFeatures();
-						},
-					});
+					if (comp._data.sort_on_backend) {
+						xhr({
+							url: STATIC_URLS["ADMIN"] + "datatable/sort",
+							params: {
+								table: comp._data.db_table,
+								order_key: "pos",
+								positions,
+								// offset: comp._data.pagination_data.row_count * comp._data.pagination_data.page_id
+								// might be good to use for backend search if u ever do it but pls don't
+							},
+							success: (res) => {
+								showNotification("Zapisano zmianę kolejności", {
+									one_line: true,
+									type: "success",
+								});
+								refreshProductFeatures();
+							},
+						});
+					}
 				};
 
 				list.addEventListener("remove_row", (ev) => {
