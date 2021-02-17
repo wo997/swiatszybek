@@ -7,7 +7,7 @@ EntityManager::register("product_feature", [
         "products" => ["type" => "product[]"],
         "pos" => ["type" => "number"],
     ],
-    "sortable" => "pos",
+    //"sortable" => "pos",
 ]);
 
 EntityManager::register("product", [

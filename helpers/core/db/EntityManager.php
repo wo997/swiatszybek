@@ -8,7 +8,7 @@ class EntityManager
     /**
      * @typedef RegisterEntityData {
      * props: string
-     * sortable?: string
+     * //sortable?: string
      * }
      */
 
@@ -33,9 +33,9 @@ class EntityManager
             self::$entities[$name]["props"] = array_merge($data["props"], self::$entities[$name]["props"]);
         }
 
-        if (isset($data["sortable"])) {
-            self::$entities[$name]["sortable"] = $data["sortable"];
-        }
+        // if (isset($data["sortable"])) {
+        //     self::$entities[$name]["sortable"] = $data["sortable"];
+        // }
 
         if (!def(self::$entities, [$name, "props", self::getEntityIdColumn($name)], null)) {
             self::$entities[$name]["props"][self::getEntityIdColumn($name)] = ["type" => "number"];

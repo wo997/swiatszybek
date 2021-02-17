@@ -11,13 +11,13 @@ class Entity
     private $parent = null; // in case there is any
     private $fetched_parent = false;
     private $saved = false;
+    private $sort_children = [];
+    private $will_unlink_from_entities = [];
 
     public function __construct($name, &$props)
     {
         $this->name = $name;
         $this->id_column = $this->getIdColumn();
-        $this->will_delete = false;
-        $this->will_unlink_from_entities = [];
 
         $obj_curr_id = $this->getIdFromProps($props);
         if ($obj_curr_id == -1) {
@@ -86,20 +86,23 @@ class Entity
             return;
         }
 
+        $entity_data = EntityManager::getEntityData($this->name);
+
         $saver = "save_" . $this->name . "_entity";
         EventListener::dispatch($saver, ["obj" => $this]);
 
         if (def($options, "propagate_to_parent", true) === true) {
             // possibly delegate
             $parent = $this->getParent();
+
             if ($parent) {
                 $parent->saveToDB();
                 return;
             }
         }
-
         $this->saved = true;
 
+        // don't worry about sorting removed items, the order is still the same
         if ($this->will_delete) {
             $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
             var_dump([$query]);
@@ -108,7 +111,6 @@ class Entity
         }
 
         // save primitive types and complex types / relations etc.
-        $entity_data = EntityManager::getEntityData($this->name);
         $changed_props = [];
         foreach ($this->props as $key => $value) {
             if ($key === $this->id_column) {
@@ -122,11 +124,25 @@ class Entity
                 }
             }
 
+            $other_entity_data = str_replace("[]", "", def($entity_data, ["props", $key], []));
+            $other_entity_type = def($other_entity_data, ["type"], "");
+
+            // // sort sortables from parent
+            // if (def($other_entity_data, "sortable")) {
+            //     $ids = [];
+            //     foreach ($value as
+            //         /** @var Entity */
+            //         $ent) {
+            //         $ids[] = $ent->getId();
+            //     }
+
+            //     var_dump($other_entity_type, $ids);
+            //     sortTable($other_entity_type, $ids);
+            // }
+
             if (def($this->curr_props, $key, null) === $value) {
                 continue;
             }
-
-            $other_entity_type = str_replace("[]", "", def($entity_data, ["props", $key, "type"], ""));
 
             $link = def($entity_data, ["linked_with", $other_entity_type]);
             if ($link) {

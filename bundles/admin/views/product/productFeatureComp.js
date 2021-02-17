@@ -63,6 +63,7 @@ function productFeatureComp(comp, parent, data) {
 		pagination_data: { row_count: 50 },
 		sortable: true,
 		deletable: true,
+		require_sort: { key: "pos", order: "asc" },
 	};
 
 	data.datatable = def(data.datatable, dt);
@@ -115,10 +116,11 @@ function productFeatureComp(comp, parent, data) {
 				product_feature: {
 					name: comp._data.name,
 					product_feature_id: comp._data.product_feature_id,
-					options: comp._data.datatable.dataset.map((e) => ({
+					options: comp._data.datatable.dataset.map((e, index) => ({
 						product_feature_option_id: e.product_feature_option_id,
 						name: e.name,
 						parent_product_feature_option_id: e.parent_product_feature_option_id,
+						pos: index + 1,
 					})),
 				},
 			},
