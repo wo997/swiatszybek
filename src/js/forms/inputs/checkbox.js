@@ -51,9 +51,6 @@ function registerCheckboxes(parent) {
 		clickable.addEventListener("mousedown", () => {
 			ch.classList.add("focus");
 			native.focus();
-			setTimeout(() => {
-				native.focus();
-			}, 500);
 		});
 
 		native.addEventListener("keypress", () => {
