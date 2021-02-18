@@ -235,7 +235,11 @@ function productFeatureComp(comp, parent, data) {
 			datatable_label._parent().insertBefore(comp._child(".adv_controls"), datatable_label._next());
 
 			comp._nodes.add_option_btn.addEventListener("click", () => {
-				comp._data.datatable.dataset.push({ name: "", product_feature_option_id: -1 });
+				comp._data.datatable.dataset.push({
+					name: "",
+					product_feature_option_id: -1,
+					parent_product_feature_option_id: comp._data.current_group_id,
+				});
 				comp._render();
 			});
 
