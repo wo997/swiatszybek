@@ -32,7 +32,7 @@ let list_grab = {
 		// @ts-ignore
 		row._scale = Math.max(def(row._scale, 1) - 0.002, 0.99);
 		// @ts-ignore
-		row.style.transform = `scale(${row._scale}) translateY(${Math.round(dy)}px)`;
+		row.style.transform = `translateY(${Math.round(dy)}px) scale(${row._scale})`;
 
 		list_grab.place_index = 0;
 		list_grab.all_rows.forEach((e) => {

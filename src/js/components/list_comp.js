@@ -302,8 +302,8 @@ function listComp(comp, parent, data = []) {
 							// @ts-ignore
 							child._scale = 1;
 							if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2 || scale < 0.999) {
-								step_0 += `transform:scale(${scale}) translate(${Math.round(off_x)}px,${Math.round(off_y)}px);`;
-								step_1 += `transform:scale(1) translate(${after_x}px,${after_y}px);`;
+								step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px) scale(${scale})`;
+								step_1 += `transform:translate(${after_x}px,${after_y}px) scale(1)`;
 							}
 
 							if (add) {
