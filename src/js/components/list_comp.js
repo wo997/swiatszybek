@@ -198,6 +198,8 @@ function listComp(comp, parent, data = []) {
 				if (chaos) {
 					finish();
 				} else {
+					let row_margin_top = undefined;
+
 					let index = -1;
 					diff_with_target_index.forEach((diff_info) => {
 						index++;
@@ -211,7 +213,14 @@ function listComp(comp, parent, data = []) {
 							child.classList.remove("cramp_row");
 						}
 						if (remove) {
+							let before_top;
+							if (row_margin_top === undefined) {
+								before_top = child.offsetTop;
+							}
 							child.classList.add("cramp_row");
+							if (row_margin_top === undefined) {
+								row_margin_top = before_top - child.offsetTop;
+							}
 						}
 					});
 
@@ -269,6 +278,9 @@ function listComp(comp, parent, data = []) {
 								after_y -= rect_after.height * 0.5;
 							}
 							child.classList.add("removing");
+							if (row_margin_top) {
+								off_y -= row_margin_top;
+							}
 						}
 						if (add) {
 							const fac = chaos ? 1 : 1.5;
