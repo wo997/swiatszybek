@@ -319,12 +319,12 @@ function listComp(comp, parent, data = []) {
 							}
 
 							if (add) {
-								step_0 += "opacity:0;transform:scale(0.96);";
+								step_0 += "opacity:0;transform:scale(0.94);";
 								step_1 += "opacity:1;";
 							}
 							if (remove) {
 								step_0 += "opacity:1;";
-								step_1 += "opacity:0;transform:scale(0.96);";
+								step_1 += "opacity:0;transform:scale(0.94);";
 							}
 
 							if (step_1) {

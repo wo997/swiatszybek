@@ -1007,27 +1007,20 @@ function datatableComp(comp, parent, data) {
 
 					const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
 
-					const donttouch = [];
-
 					data.dataset
 						.filter((e) => filtered_row_ids.includes(e._row_id))
 						.forEach((e) => {
 							let tar;
 							if (e.pos === from_pos) {
-								tar = to_pos;
-							}
-							if (to_pos > from_pos) {
+								e.pos = to_pos;
+							} else if (to_pos > from_pos) {
 								if (from_pos < e.pos && e.pos <= to_pos) {
-									tar = e.pos - 1;
+									e.pos--;
 								}
 							} else {
 								if (to_pos <= e.pos && e.pos < from_pos) {
-									tar = e.pos + 1;
+									e.pos++;
 								}
-							}
-							if (!donttouch.includes(e.pos)) {
-								donttouch.push(tar);
-								e.pos = tar;
 							}
 						});
 
