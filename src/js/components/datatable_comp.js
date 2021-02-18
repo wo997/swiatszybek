@@ -279,7 +279,6 @@ function datatableComp(comp, parent, data) {
 
 			if (data.sortable && data.sort) {
 				const key = data.sort.key;
-
 				data.dataset = data.dataset.sort((a, b) => Math.sign(a[key] - b[key]));
 			}
 
@@ -933,6 +932,11 @@ function datatableComp(comp, parent, data) {
 
 				const orderBackend = () => {
 					const data = comp._data;
+
+					if (data.sortable && data.sort) {
+						const key = data.sort.key;
+						data.dataset = data.dataset.sort((a, b) => Math.sign(a[key] - b[key]));
+					}
 
 					if (comp._data.sort_on_backend) {
 						const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);

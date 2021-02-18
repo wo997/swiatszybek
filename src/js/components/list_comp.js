@@ -75,7 +75,7 @@ function listComp(comp, parent, data = []) {
 			render: () => {
 				const diff = diffArrays(comp._prev_data, data, (e) => e.row_id);
 
-				let instant = !!comp._parent(".freeze") || diff.length > 15;
+				let instant = !!comp._parent(".freeze"); // || diff.length > 15;
 				let chaos = false;
 
 				finishNodeAnimation(comp);
@@ -94,8 +94,6 @@ function listComp(comp, parent, data = []) {
 
 				let added = 0;
 				let removed = 0;
-
-				const duration = instant ? 0 : 250;
 
 				let removed_before_current = 0;
 
@@ -171,6 +169,9 @@ function listComp(comp, parent, data = []) {
 					chaos = true;
 					instant = true;
 				}
+
+				const duration = instant ? 0 : 250;
+
 				registerForms();
 
 				const list_rect_before = comp.getBoundingClientRect();
