@@ -24,7 +24,7 @@
  */
 function productFeatureModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { product_feature: { name: "", product_feature_id: -1, current_group_id: -1 } };
+		data = { product_feature: { name: "", product_feature_id: -1, current_group_id: -1, groups: [] } };
 	}
 
 	comp._show = (id, options = {}) => {

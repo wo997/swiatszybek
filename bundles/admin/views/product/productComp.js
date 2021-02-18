@@ -112,6 +112,12 @@ function productComp(comp, parent, data) {
 					];
 				},
 			},
+			{
+				name: "product_feature_option",
+				getMap: () => {
+					return product_feature_options.map((option) => ({ val: option.product_feature_option_id, label: option.name }));
+				},
+			},
 		],
 	};
 
@@ -396,18 +402,6 @@ function productComp(comp, parent, data) {
 						quick_filter: true,
 					};
 
-					const maps = data.products_dt.maps;
-					const map = {
-						name: "product_feature_option",
-						getMap: () => {
-							return product_feature_options.map((option) => ({ val: option.product_feature_option_id, label: option.name }));
-						},
-					};
-
-					if (!maps.find((e) => e.name === map.name)) {
-						maps.push(map);
-					}
-
 					const columns = data.products_dt.columns;
 					const column_index = columns.findIndex((column) => column.key === key);
 
@@ -416,8 +410,7 @@ function productComp(comp, parent, data) {
 							columns[column_index] = column;
 						}
 					} else {
-						// TODO: add after the products are added idk
-						columns.unshift(column);
+						columns.unshift({ key });
 					}
 				});
 

@@ -6,6 +6,7 @@
  * product_feature_id: number
  * name: string
  * current_group_id: number
+ * groups: any[]
  * }} ProductFeatureCompData
  *
  * @typedef {{
@@ -35,6 +36,7 @@ function productFeatureComp(comp, parent, data) {
 			product_feature_id: -1,
 			name: "",
 			current_group_id: -1,
+			groups: [],
 		};
 	}
 
@@ -161,31 +163,32 @@ function productFeatureComp(comp, parent, data) {
 					return data.datatable.dataset.filter((e) => e.parent_product_feature_option_id === option_id).length;
 				};
 
-				const options = data.datatable.dataset
-					.map((e) => e.parent_product_feature_option_id)
-					.filter(onlyUnique)
-					.map((option_id) => ({ option_id, count: getCount(option_id) }));
-				if (!options.find((e) => e.option_id === comp._data.current_group_id)) {
-					options.push({ option_id: comp._data.current_group_id, count: 0 });
+				const want_groups = data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique);
+
+				if (!want_groups.includes(comp._data.current_group_id)) {
+					want_groups.push(comp._data.current_group_id);
 				}
+				want_groups.forEach((option_id) => {
+					if (!comp._data.groups.includes(option_id)) {
+						comp._data.groups.push(option_id);
+					}
+				});
 
 				let group_btns = [];
 
 				const map = data.datatable.maps.find((e) => e.name === "product_feature_option");
 				if (map && map.map) {
-					options
-						//.sort((a, b) => Math.sign(b.count - a.count))
-						.forEach((option) => {
-							const map_option = map.map.find((map_option) => map_option.val === option.option_id);
-							if (map_option) {
-								group_btns.push(html`<button
-									class="btn ${map_option.val === data.current_group_id ? "primary" : "subtle"} group_nav"
-									data-option_id="${map_option.val}"
-								>
-									${map_option.label} (${option.count})
-								</button> `);
-							}
-						});
+					comp._data.groups.forEach((option_id) => {
+						const map_option = map.map.find((map_option) => map_option.val === option_id);
+						if (map_option) {
+							group_btns.push(html`<button
+								class="btn ${map_option.val === data.current_group_id ? "primary" : "subtle"} group_nav"
+								data-option_id="${map_option.val}"
+							>
+								${map_option.label} (${getCount(option_id)})
+							</button> `);
+						}
+					});
 				}
 
 				if (group_btns.length > 0) {

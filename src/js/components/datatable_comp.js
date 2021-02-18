@@ -432,6 +432,7 @@ function datatableComp(comp, parent, data) {
 			...options,
 			pass_list_data: [
 				{ what: "columns", where: "rows" },
+				{ what: "filters", where: "rows" },
 				{ what: "sortable", where: "rows" },
 			],
 			render: () => {
