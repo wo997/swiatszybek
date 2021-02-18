@@ -6,12 +6,8 @@ DB::createTable("product_feature", [
     ["name" => "pos", "type" => "INT", "index" => "index"],
 ]);
 
-DB::createTable("product_to_feature", [
-    ["name" => "product_id", "type" => "INT", "index" => "index"],
-    ["name" => "product_feature_id", "type" => "INT", "index" => "index"],
-]);
-
 DB::createTable("general_product_to_feature", [
     ["name" => "general_product_id", "type" => "INT", "index" => "index"],
     ["name" => "product_feature_id", "type" => "INT", "index" => "index"],
+    ["name" => "pos", "type" => "INT", "index" => "index"],
 ]);

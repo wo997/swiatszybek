@@ -7,3 +7,14 @@ DB::createTable("product_feature_option", [
     ["name" => "name", "type" => "VARCHAR(255)"],
     ["name" => "pos", "type" => "INT", "index" => "index"],
 ]);
+
+DB::createTable("product_to_feature_option", [
+    ["name" => "product_id", "type" => "INT", "index" => "index"],
+    ["name" => "product_feature_id", "type" => "INT", "index" => "index"],
+]);
+
+DB::createTable("general_product_to_feature_option", [
+    ["name" => "general_product_id", "type" => "INT", "index" => "index"],
+    ["name" => "product_feature_id", "type" => "INT", "index" => "index"],
+    ["name" => "pos", "type" => "INT", "index" => "index"],
+]);

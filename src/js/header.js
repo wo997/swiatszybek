@@ -158,7 +158,7 @@ domload(() => {
 		$("#userMenu .scroll-panel > div").appendChild(um);
 	}
 
-	$("#loginForm").setAttribute("data-expand", "");
+	//$("#loginForm").setAttribute("data-expand", "");
 
 	var hua = $("header .user-wrapper a");
 	if (hua) {

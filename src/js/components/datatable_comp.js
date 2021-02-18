@@ -510,8 +510,7 @@ function datatableComp(comp, parent, data) {
 									data.selection.length > 0
 										? `Edytuj dane zaznaczonych wierszy (${data.selection.length})`
 										: `Edytuj dane wszystkich przefiltrowanych wierszy (${data.pagination_data.total_rows})`;
-								const disab = data.pagination_data.total_rows === 0 ? "disabled" : "";
-								cell_html += html` <button class="btn transparent dt_batch_edit fas fa-edit" data-tooltip="${tooltip}" ${disab}></button>`;
+								cell_html += html` <button class="btn transparent dt_batch_edit fas fa-edit" data-tooltip="${tooltip}"></button>`;
 							}
 							cell_html += /*html*/ `</div>`;
 							cell_html += /*html*/ `</div>`;
@@ -538,6 +537,12 @@ function datatableComp(comp, parent, data) {
 
 					if (data.search_url) {
 						comp._datatable_search();
+					} else {
+						setTimeout(() => {
+							comp._children(".dt_batch_edit").forEach((e) => {
+								e.toggleAttribute("disabled", comp._data.pagination_data.total_rows === 0);
+							});
+						});
 					}
 				}
 

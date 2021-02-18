@@ -4,6 +4,7 @@ $general_product_id = Request::urlParam(2, -1);
 
 $general_product = EntityManager::getEntityById("general_product", $general_product_id);
 
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -13,7 +14,7 @@ $general_product = EntityManager::getEntityById("general_product", $general_prod
 <script>
     let product_features = <?= json_encode(getAllProductFeatures()) ?>;
     let product_feature_options = <?= json_encode(getAllProductFeatureOptions()) ?>;
-    let general_product_data = <?= json_encode($general_product->getSimpleProps()) ?>;
+    let general_product_data = <?= json_encode($general_product->getAllProps()) ?>;
     let vats = [{
             vat_id: 1,
             value: 0.23

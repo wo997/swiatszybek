@@ -12,9 +12,24 @@ EntityManager::register("product_feature_option", [
 
 EntityManager::register("product_feature", [
     "props" => [
-        //"options" => ["type" => "product_feature_option[]", "sortable" => "pos"]
         "options" => ["type" => "product_feature_option[]"]
     ],
 ]);
 
 EntityManager::OneToMany("product_feature", "options", "product_feature_option");
+
+EntityManager::register("product", [
+    "props" => [
+        "feature_options" => ["type" => "product_feature_option[]"]
+    ],
+]);
+
+EntityManager::manyToMany("product", "product_feature_option", "product_to_feature_option");
+
+EntityManager::register("general_product", [
+    "props" => [
+        "feature_options" => ["type" => "product_feature_option[]"]
+    ],
+]);
+
+EntityManager::manyToMany("general_product", "product_feature_option", "general_product_to_feature_option");
