@@ -117,8 +117,6 @@ domload(() => {
 		products_dt: {
 			columns: [
 				{ label: '<p-checkbox class="square select_all_rows shrink"></p-checkbox>', key: "", width: "38px" },
-				{ key: "feature_1", label: "Kolor", width: "10%", searchable: "string", sortable: true },
-				{ key: "feature_2", label: "aaabbbb", width: "10%", searchable: "string", sortable: true },
 				{ key: "active", label: "Aktywny", width: "130px", sortable: true, searchable: "boolean", editable: "checkbox" },
 				{ key: "net_price", label: "Cena Netto", width: "10%", sortable: true, searchable: "number", editable: "number" },
 				{ key: "vat", label: "Vat (stały?)", width: "10%", sortable: true, editable: "number" },

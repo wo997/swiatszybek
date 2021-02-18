@@ -154,7 +154,6 @@ function productComp(comp, parent, data) {
 			let product_existed = false;
 			data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
 				let shared_features = 0;
-				let shared_features_with_similarities = 0;
 				for (const feature_key of all_feature_keys) {
 					const pr_opt_id = product_data[feature_key];
 					const compare_opt_ids = [pr_opt_id];
@@ -166,12 +165,6 @@ function productComp(comp, parent, data) {
 					if (params) {
 						compare_opt_ids.push(...params.similar_products.filter((e) => e.new_option_id === pr_opt_id).map((e) => e.option_id));
 					}
-
-					compare_opt_ids.forEach((opt_id) => {
-						if (opt_id === other_product[feature_key]) {
-							shared_features_with_similarities++;
-						}
-					});
 				}
 
 				if (shared_features > max_shared_features) {
@@ -282,6 +275,20 @@ function productComp(comp, parent, data) {
 				data.products_dt.dataset.push(p);
 			});
 
+			data.product_feature_ids.forEach((feature_id) => {
+				const key = getFeatureKeyFromId(feature_id);
+				if (data.features.find((f) => f.product_feature_id === feature_id).options.length < 2) {
+					return;
+				}
+
+				const columns = data.products_dt.columns;
+				const column_index = columns.findIndex((column) => column.key === key);
+
+				if (column_index === -1) {
+					columns.unshift({ key });
+				}
+			});
+
 			comp._render();
 		}
 	};
@@ -309,9 +316,9 @@ function productComp(comp, parent, data) {
 				const data = comp._data;
 				const missing_feature_ids = [];
 
-				const ch = comp._changed_data;
+				const cd = comp._changed_data;
 
-				if (ch.product_feature_ids || options.force_render) {
+				if (cd.product_feature_ids || options.force_render) {
 					data.features = data.product_feature_ids.map((product_feature_id) => {
 						const fe = product_features.find((pf) => {
 							return pf.product_feature_id === product_feature_id;
@@ -330,7 +337,7 @@ function productComp(comp, parent, data) {
 					data.product_feature_ids = data.product_feature_ids.filter((e) => missing_feature_ids.indexOf(e) === -1);
 				}
 
-				if (ch.product_feature_ids || ch.product_feature_option_ids || options.force_render) {
+				if (cd.product_feature_ids || cd.product_feature_option_ids || options.force_render) {
 					const missing_option_ids = [];
 					const product_feature_option_ids = [];
 
@@ -409,13 +416,11 @@ function productComp(comp, parent, data) {
 						if (!isEquivalent(columns[column_index], column)) {
 							columns[column_index] = column;
 						}
-					} else {
-						columns.unshift({ key });
 					}
 				});
 
-				const selection_changed = ch.product_feature_ids || ch.product_feature_option_ids;
-				if (selection_changed || options.force_render) {
+				const selection_changed = cd.product_feature_ids || cd.product_feature_option_ids;
+				if (selection_changed || cd.products_dt || options.force_render) {
 					let any_column_change = false;
 					let column_index = -1;
 					/** @type {DatatableColumnDef[]} */
@@ -438,7 +443,7 @@ function productComp(comp, parent, data) {
 					}
 				}
 
-				if (selection_changed || ch.products_dt || options.force_render) {
+				if (selection_changed || cd.products_dt || options.force_render) {
 					const missing_products_features = [];
 
 					/** @type {ProductData[]} */
