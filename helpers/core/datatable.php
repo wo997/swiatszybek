@@ -187,7 +187,7 @@ function paginateData($params = [])
 
     $group = isset($params["group"]) ? ("GROUP BY " . $params["group"]) : "";
 
-    $order = def($params, ["datatable_params", "order"], def($params, "datatable_params"));
+    $order = def($params, ["datatable_params", "order"], def($params, "order"));
 
     if ($search_type == "extended") {
         if ($order) {

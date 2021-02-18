@@ -34,7 +34,7 @@
  *  primary_key?: string
  *  search_url?: string
  *  dataset?: Array
- *  _dataset_filtered?: Array
+ *  dataset_filtered?: Array
  *  rows?: DatatableRowData[]
  *  columns: DatatableColumnDef[]
  *  sort?: DatatableSortData | false
@@ -393,7 +393,7 @@ function datatableComp(comp, parent, data) {
 				});
 			}
 
-			data._dataset_filtered = rows;
+			data.dataset_filtered = rows;
 			data.pagination_data.total_rows = rows.length;
 
 			const rc = data.pagination_data.row_count;
@@ -583,13 +583,18 @@ function datatableComp(comp, parent, data) {
 						filters_info.push(`Sortuj ${column.label} ${data.sort.order === "asc" ? "rosnąco" : "malejąco"}`);
 					}
 				}
-				data.filters.forEach((f) => {
-					filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.data.display);
-				});
-				comp._nodes.filters_info._set_content(filters_info.length ? `<i class="fas fa-filter"></i> Filtry (${filters_info.length}) ` : "");
-				comp._nodes.filters_info.dataset.tooltip = filters_info.join("<br>");
 
-				comp._nodes.clear_filters_btn.classList.toggle("active", filters_info.length > 0);
+				if (!data.require_sort_filter) {
+					data.filters.forEach((f) => {
+						filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.data.display);
+					});
+					comp._nodes.filters_info._set_content(
+						filters_info.length ? `<i class="fas fa-filter"></i> Filtry (${filters_info.length}) ` : ""
+					);
+					comp._nodes.filters_info.dataset.tooltip = filters_info.join("<br>");
+
+					comp._nodes.clear_filters_btn.classList.toggle("active", filters_info.length > 0);
+				}
 
 				if (comp._data.sortable) {
 					let sortable = filters_info.length === 0;
@@ -711,9 +716,9 @@ function datatableComp(comp, parent, data) {
 					let modify_rows;
 
 					if (data.selection.length > 0) {
-						modify_rows = data._dataset_filtered.filter((row_data) => data.selection.includes(row_data._row_id));
+						modify_rows = data.dataset_filtered.filter((row_data) => data.selection.includes(row_data._row_id));
 					} else {
-						modify_rows = data._dataset_filtered;
+						modify_rows = data.dataset_filtered;
 					}
 
 					const cont = $("#datatableBatchEdit .scroll-panel");
@@ -915,11 +920,22 @@ function datatableComp(comp, parent, data) {
 
 				const orderData = () => {
 					let pos = 0;
-					const positions = comp._data.dataset.map((e) => {
-						pos++;
-						e.pos = pos;
-						return e.product_feature_id;
-					});
+					const data = comp._data;
+					const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
+
+					const positions = data.dataset
+						.filter((e) => filtered_row_ids.includes(e._row_id))
+						.map((e) => {
+							pos++;
+							e.pos = pos;
+							return e[data.primary_key];
+						});
+
+					// const positions = comp._data.dataset.map((e) => {
+					// 	pos++;
+					// 	e.pos = pos;
+					// 	return e.product_feature_id;
+					// });
 
 					if (comp._data.sort_on_backend) {
 						xhr({
