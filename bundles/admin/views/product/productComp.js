@@ -511,7 +511,7 @@ function productComp(comp, parent, data) {
 					<button data-node="add_feature_btn" class="btn primary small">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
 
-				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id">
+				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id" class="wireframe">
 					<product_feature-comp></product_feature-comp>
 				</list-comp>
 			</div>

@@ -50,7 +50,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				</div>
 			</div>
 
-			<list-comp data-bind="{${data.options}}" class="round" data-primary="product_feature_option_id">
+			<list-comp data-bind="{${data.options}}" class="wireframe" data-primary="product_feature_option_id">
 				<product_feature-option-comp></product_feature-option-comp>
 			</list-comp>
 		`,

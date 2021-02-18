@@ -44,7 +44,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom-toolbar">
-				<span class="title">Dodawanie produktów do listy</span>
+				<span class="title">Zarządzanie listą produktów</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
 			<div class="scroll-panel scroll-shadow panel-padding">
@@ -56,7 +56,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 					></i>
 				</div>
 
-				<list-comp data-bind="{${data.questions}}" class="round">
+				<list-comp data-bind="{${data.questions}}" class="wireframe">
 					<manage-product-list_question-comp></manage-product-list_question-comp>
 				</list-comp>
 				<button

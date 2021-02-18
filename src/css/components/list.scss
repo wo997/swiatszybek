@@ -1,26 +1,76 @@
 /* css[global] */
 
-list-comp.animating {
-	& {
-		/*overflow: hidden;*/
+list-comp {
+	&.comp {
+		display: flex;
+		border: var(--list_border);
+		--list_row_border: none;
+		--list_border: none;
+		--list_row_margin: 0;
+		--list_row_margin_bottom_last: var(--list_row_margin);
+		--list_row_padding: 0;
+		--border_radius: 4px;
+		& {
+			border-radius: var(--border_radius);
+		}
 	}
-	.btn {
-		transition: 0.25s all;
+	& > .list_row {
+		&:first-child,
+		&.grabbed {
+			border-top-left-radius: var(--border_radius);
+			border-top-right-radius: var(--border_radius);
+		}
+		&:last-child,
+		&.grabbed {
+			border-bottom-left-radius: var(--border_radius);
+			border-bottom-right-radius: var(--border_radius);
+		}
 	}
-}
-list-comp > .list_row {
-	flex-shrink: 0;
-}
-list-comp:not(.horizontal) .list_row.cramp_row {
-	height: 0 !important;
-}
-list-comp.horizontal .list_row.cramp_row {
-	width: 0 !important;
+	&.animating {
+		// & {
+		// 	overflow: hidden;
+		// }
+		.btn {
+			transition: 0.25s all;
+		}
+	}
+	& > .list_row {
+		flex-shrink: 0;
+	}
+	&:not(.horizontal) .list_row.cramp_row {
+		height: 0 !important;
+	}
+	&.horizontal .list_row.cramp_row {
+		width: 0 !important;
+	}
+
+	&:not(.horizontal) {
+		flex-direction: column;
+	}
+
+	&.wireframe {
+		& {
+			--list_border: 1px solid #ccc;
+			--list_row_border: 1px solid #ccc;
+			--list_row_margin: -1px -1px 0;
+			--list_row_margin_bottom_last: -1px;
+			--list_row_padding: 10px;
+		}
+		&:empty {
+			border-bottom-width: 0;
+		}
+	}
 }
 
 .list_row {
 	& {
 		transition: box-shadow 0.2s;
+		margin: var(--list_row_margin);
+		border: var(--list_row_border);
+		padding: var(--list_row_padding);
+	}
+	&:last-child {
+		margin-bottom: var(--list_row_margin_bottom_last);
 	}
 	&.cramp_row {
 		padding: 0 !important;
@@ -52,31 +102,5 @@ list-comp.horizontal .list_row.cramp_row {
 		cursor: grab;
 		transition: 0.25s all;
 		min-width: 28px;
-	}
-}
-
-list-comp.comp {
-	display: flex;
-}
-
-list-comp:not(.horizontal) {
-	flex-direction: column;
-}
-
-list-comp.round {
-	& {
-		border-radius: 4px;
-	}
-	& > .list_row {
-		&:first-child,
-		&.grabbed {
-			border-top-left-radius: 4px;
-			border-top-right-radius: 4px;
-		}
-		&:last-child,
-		&.grabbed {
-			border-bottom-left-radius: 4px;
-			border-bottom-right-radius: 4px;
-		}
 	}
 }
