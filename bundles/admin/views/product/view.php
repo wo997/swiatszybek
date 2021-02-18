@@ -4,7 +4,6 @@ $general_product_id = Request::urlParam(2, -1);
 
 $general_product = EntityManager::getEntityById("general_product", $general_product_id);
 
-
 ?>
 
 <?php startSection("head_content"); ?>
