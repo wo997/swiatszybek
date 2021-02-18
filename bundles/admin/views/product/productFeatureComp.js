@@ -147,6 +147,9 @@ function productFeatureComp(comp, parent, data) {
 			...options,
 			render: () => {
 				const options_ids = data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique);
+				const getCount = (option_id) => {
+					return data.datatable.dataset.filter((e) => e.parent_product_feature_option_id === option_id).length;
+				};
 
 				let group_btns = [];
 
@@ -159,7 +162,7 @@ function productFeatureComp(comp, parent, data) {
 								class="btn ${e.val === data.current_group_id ? "primary" : "subtle"} group_nav"
 								data-option_id="${e.val}"
 							>
-								${e.label}
+								${e.label} (${getCount(e.val)})
 							</button> `);
 						});
 				}
@@ -171,10 +174,10 @@ function productFeatureComp(comp, parent, data) {
 						class="btn ${data.current_group_id === null ? "primary" : "subtle"} group_nav"
 						data-option_id="null"
 					>
-						<i class="fas fa-ban"></i> Bez grupy
+						<i class="fas fa-ban"></i> Bez grupy (${getCount(null)})
 					</button> `);
 					group_btns.unshift(html`<button class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav" data-option_id="-1">
-						<i class="fas fa-border-all"></i> Wszystkie
+						<i class="fas fa-border-all"></i> Wszystkie (${data.datatable.dataset.length})
 					</button> `);
 				}
 
