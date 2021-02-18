@@ -407,6 +407,18 @@ function datatableComp(comp, parent, data) {
 				}
 				return ret;
 			});
+
+			if (data.sortable) {
+				let pos = 0;
+				const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
+
+				data.dataset
+					.filter((e) => filtered_row_ids.includes(e._row_id))
+					.forEach((e) => {
+						pos++;
+						e.pos = pos;
+					});
+			}
 		}
 
 		comp.dispatchEvent(
@@ -920,18 +932,11 @@ function datatableComp(comp, parent, data) {
 				const list = comp._nodes.list;
 
 				const orderData = () => {
-					let pos = 0;
 					const data = comp._data;
-					const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
-
-					data.dataset
-						.filter((e) => filtered_row_ids.includes(e._row_id))
-						.forEach((e) => {
-							pos++;
-							e.pos = pos;
-						});
 
 					if (comp._data.sort_on_backend) {
+						const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
+
 						const positions = data.dataset.filter((e) => filtered_row_ids.includes(e._row_id)).map((e) => e[data.primary_key]);
 
 						xhr({
@@ -976,22 +981,47 @@ function datatableComp(comp, parent, data) {
 				list.addEventListener("move_row", (ev) => {
 					// @ts-ignore
 					const detail = ev.detail;
-					let from = detail.from;
+
 					if (detail.res.moved) {
 						return;
 					}
+					const data = comp._data;
 
-					let to = detail.to;
+					let from_pos = detail.from + 1;
+					let to_pos = detail.to + 1;
 
 					detail.res.moved = true;
 
-					const ind_offset = comp._data.pagination_data.row_count * comp._data.pagination_data.page_id;
+					const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
 
-					from = clamp(0, from, comp._data.dataset.length - 1) + ind_offset;
-					to = clamp(0, to, comp._data.dataset.length - 1) + ind_offset;
+					const donttouch = [];
 
-					const temp = comp._data.dataset.splice(from, 1);
-					comp._data.dataset.splice(to, 0, ...temp);
+					data.dataset
+						.filter((e) => filtered_row_ids.includes(e._row_id))
+						.forEach((e) => {
+							let tar;
+							if (e.pos === from_pos) {
+								tar = to_pos;
+							}
+							if (to_pos > from_pos) {
+								if (from_pos < e.pos && e.pos <= to_pos) {
+									tar = e.pos - 1;
+								}
+							} else {
+								if (to_pos <= e.pos && e.pos < from_pos) {
+									tar = e.pos + 1;
+								}
+							}
+							if (!donttouch.includes(tar)) {
+								e.pos = tar;
+							}
+						});
+
+					console.log(
+						from_pos,
+						to_pos,
+						data.dataset.filter((e) => filtered_row_ids.includes(e._row_id)).map((e) => e.pos)
+					);
 
 					orderData();
 
