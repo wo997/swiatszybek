@@ -279,6 +279,7 @@ function datatableComp(comp, parent, data) {
 
 			if (data.sortable && data.sort) {
 				const key = data.sort.key;
+
 				data.dataset = data.dataset.sort((a, b) => Math.sign(a[key] - b[key]));
 			}
 
@@ -923,21 +924,16 @@ function datatableComp(comp, parent, data) {
 					const data = comp._data;
 					const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
 
-					const positions = data.dataset
+					data.dataset
 						.filter((e) => filtered_row_ids.includes(e._row_id))
-						.map((e) => {
+						.forEach((e) => {
 							pos++;
 							e.pos = pos;
-							return e[data.primary_key];
 						});
 
-					// const positions = comp._data.dataset.map((e) => {
-					// 	pos++;
-					// 	e.pos = pos;
-					// 	return e.product_feature_id;
-					// });
-
 					if (comp._data.sort_on_backend) {
+						const positions = data.dataset.filter((e) => filtered_row_ids.includes(e._row_id)).map((e) => e[data.primary_key]);
+
 						xhr({
 							url: STATIC_URLS["ADMIN"] + "datatable/sort",
 							params: {

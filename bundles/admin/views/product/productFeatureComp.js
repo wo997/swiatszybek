@@ -57,7 +57,6 @@ function productFeatureComp(comp, parent, data) {
 						val: option.product_feature_option_id,
 						label: option.feature_name + ": " + option.name,
 					}));
-					map.push({ val: -1, label: "Brak" });
 					return map;
 				},
 			},
@@ -238,7 +237,7 @@ function productFeatureComp(comp, parent, data) {
 				comp._data.datatable.dataset.push({
 					name: "",
 					product_feature_option_id: -1,
-					parent_product_feature_option_id: comp._data.current_group_id,
+					parent_product_feature_option_id: comp._data.current_group_id === -1 ? null : comp._data.current_group_id,
 				});
 				comp._render();
 			});
