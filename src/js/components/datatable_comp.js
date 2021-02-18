@@ -931,7 +931,7 @@ function datatableComp(comp, parent, data) {
 			if (comp._data.sortable || comp._data.deletable) {
 				const list = comp._nodes.list;
 
-				const orderData = () => {
+				const orderBackend = () => {
 					const data = comp._data;
 
 					if (comp._data.sort_on_backend) {
@@ -973,7 +973,7 @@ function datatableComp(comp, parent, data) {
 
 					comp._data.dataset.splice(ind_offset + detail.row_index, 1);
 
-					orderData();
+					orderBackend();
 
 					comp._render();
 				});
@@ -1017,13 +1017,7 @@ function datatableComp(comp, parent, data) {
 							}
 						});
 
-					console.log(
-						from_pos,
-						to_pos,
-						data.dataset.filter((e) => filtered_row_ids.includes(e._row_id)).map((e) => e.pos)
-					);
-
-					orderData();
+					orderBackend();
 
 					comp._render();
 				});
