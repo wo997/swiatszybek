@@ -521,9 +521,7 @@ function productComp(comp, parent, data) {
 			</div>
 
 			<div>
-				<p
-					style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #444;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;display:inline-block"
-				>
+				<p class="user_info">
 					<i class="fas fa-info-circle"></i> Na podstawie cech zostanie wygenerowana lista produktów - tych samych, które są w Twoim
 					magazynie.<br />Przykładowo jeśli wybierzemy kolory czerwony i niebieski, oraz rozmiary 36, 37 i 38,<br />otrzymamy 6 produktów
 					będących "krzyżówką" podanych cech.<br />Domyślnie (bez wybrania cech) będzie to tylko 1 produkt.
@@ -549,9 +547,7 @@ function productComp(comp, parent, data) {
 			</button>
 
 			<div>
-				<p
-					style="margin:25px 0;background: #fafafa;padding: 10px;border-radius: 4px;color: #444;box-shadow: 0 1px 4px 0 #0003;font-weight: 600;display:inline-block"
-				>
+				<p class="user_info">
 					<i class="fas fa-info-circle"></i> Aby szybciej edytować dane tabelki warto rozważyć obsługę przy użyciu klawiatury.<br />
 					Poruszanie się po polach: <span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
 					Otwieranie pola wyboru / zmiana wartości: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>

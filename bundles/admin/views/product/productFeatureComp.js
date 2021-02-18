@@ -16,11 +16,11 @@
  *  select_parent_option_btn: PiepNode
  *  datatable: DatatableComp
  *  groups: PiepNode
- *  case_has_groups: PiepNode
  * }
  * _load_data(id: number, options?:{callback?: CallableFunction})
  * _save_data()
  * _delete()
+ * _select_current_group_id(id: any)
  * } & BaseComp} ProductFeatureComp
  */
 
@@ -73,6 +73,17 @@ function productFeatureComp(comp, parent, data) {
 	};
 
 	data.datatable = def(data.datatable, dt);
+
+	comp._select_current_group_id = (id) => {
+		const option_id = id === "null" ? null : +id;
+		comp._data.current_group_id = option_id;
+		if (option_id === -1) {
+			comp._data.datatable.filters = [];
+		} else {
+			comp._data.datatable.filters = [{ key: "parent_product_feature_option_id", data: { type: "exact", val: option_id } }];
+		}
+		comp._render();
+	};
 
 	comp._load_data = (id, options = {}) => {
 		comp._data.product_feature_id = id;
@@ -146,28 +157,36 @@ function productFeatureComp(comp, parent, data) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				const options_ids = data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique);
 				const getCount = (option_id) => {
 					return data.datatable.dataset.filter((e) => e.parent_product_feature_option_id === option_id).length;
 				};
+
+				const options = data.datatable.dataset
+					.map((e) => e.parent_product_feature_option_id)
+					.filter(onlyUnique)
+					.map((option_id) => ({ option_id, count: getCount(option_id) }));
+				if (!options.find((e) => e.option_id === comp._data.current_group_id)) {
+					options.push({ option_id: comp._data.current_group_id, count: 0 });
+				}
 
 				let group_btns = [];
 
 				const map = data.datatable.maps.find((e) => e.name === "product_feature_option");
 				if (map && map.map) {
-					map.map
-						.filter((e) => options_ids.includes(e.val))
-						.forEach((e) => {
-							group_btns.push(html`<button
-								class="btn ${e.val === data.current_group_id ? "primary" : "subtle"} group_nav"
-								data-option_id="${e.val}"
-							>
-								${e.label} (${getCount(e.val)})
-							</button> `);
+					options
+						//.sort((a, b) => Math.sign(b.count - a.count))
+						.forEach((option) => {
+							const map_option = map.map.find((map_option) => map_option.val === option.option_id);
+							if (map_option) {
+								group_btns.push(html`<button
+									class="btn ${map_option.val === data.current_group_id ? "primary" : "subtle"} group_nav"
+									data-option_id="${map_option.val}"
+								>
+									${map_option.label} (${option.count})
+								</button> `);
+							}
 						});
 				}
-
-				expand(comp._nodes.case_has_groups, group_btns.length > 0);
 
 				if (group_btns.length > 0) {
 					group_btns.unshift(html`<button
@@ -176,23 +195,33 @@ function productFeatureComp(comp, parent, data) {
 					>
 						<i class="fas fa-ban"></i> Bez grupy (${getCount(null)})
 					</button> `);
-					group_btns.unshift(html`<button class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav" data-option_id="-1">
-						<i class="fas fa-border-all"></i> Wszystkie (${data.datatable.dataset.length})
-					</button> `);
 				}
+				group_btns.unshift(html`<button class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav" data-option_id="-1">
+					<i class="fas fa-border-all"></i> Wszystkie (${data.datatable.dataset.length})
+				</button> `);
+
+				group_btns.push(html`<button class="btn subtle group_nav" data-option_id="new" data-tooltip="Utwórz nową grupę">
+					<i class="fas fa-plus"></i>
+				</button> `);
 
 				comp._nodes.groups._set_content(group_btns.join(""));
 
 				comp._nodes.groups._children(".group_nav").forEach((e) => {
 					e.addEventListener("click", () => {
-						const option_id = e.dataset.option_id === "null" ? null : +e.dataset.option_id;
-						comp._data.current_group_id = option_id;
-						if (option_id === -1) {
-							comp._data.datatable.filters = [];
+						if (e.dataset.option_id === "new") {
+							/** @type {SelectProductFeatureOptionModalComp} */
+							// @ts-ignore
+							const select_product_feature_option_modal_comp = $("#selectProductFeatureOption select-product-feature-option-modal-comp");
+
+							select_product_feature_option_modal_comp._show({
+								source: comp._nodes.select_parent_option_btn,
+								callback: (option_id) => {
+									comp._select_current_group_id(option_id);
+								},
+							});
 						} else {
-							comp._data.datatable.filters = [{ key: "parent_product_feature_option_id", data: { type: "exact", val: option_id } }];
+							comp._select_current_group_id(e.dataset.option_id);
 						}
-						comp._render();
 					});
 				});
 			},
@@ -204,15 +233,24 @@ function productFeatureComp(comp, parent, data) {
 			<div class="label first">Nazwa cechy produktu</div>
 			<input type="text" class="field" data-bind="{${data.name}}" />
 
-			<div data-node="{${comp._nodes.case_has_groups}}" class="expand_y">
+			<div>
+				<div class="label" style="font-size: 1.2em;">Grupy opcji</div>
+
 				<div>
-					<div class="label" style="font-size: 1.2em;">Grupy opcji</div>
-					<span
-						data-node="{${comp._nodes.groups}}"
-						class="glue_children"
-						style="display: inline-flex;flex-wrap: wrap;padding-bottom:10px"
-					></span>
+					<p class="user_info" style="margin-top:5px">
+						<i class="fas fa-info-circle"></i> Czym są grupy opcji? Jest to sposób na uporządkowanie danych w systemie dla sprzedawcy oraz
+						klienta. <br />Zamiast tworzyć listę np. 100 modeli telefonów, można podzielić je na grupy - producent A, producent B itd.
+						<br />Klient nie zobaczy już listy 100 modeli, tylko wybierze jednego z 10 producentów, a potem jeden z 10 modeli od wybranego
+						producenta. <br />W razie potrzeby mozna wprowadzić podział np. Producent <i class="fas fa-chevron-right"></i> Seria
+						<i class="fas fa-chevron-right"></i> Model.
+					</p>
 				</div>
+
+				<span
+					data-node="{${comp._nodes.groups}}"
+					class="glue_children"
+					style="display: inline-flex;flex-wrap: wrap;padding-bottom:10px"
+				></span>
 			</div>
 
 			<div class="adv_controls">
@@ -222,7 +260,7 @@ function productFeatureComp(comp, parent, data) {
 					data-node="{${comp._nodes.select_parent_option_btn}}"
 					data-tooltip="{${data.datatable.selection.length === 0 ? "Najpierw zaznacz opcje na liście poniżej" : ""}}"
 				>
-					Połącz (<span html="{${data.datatable.selection.length}}"></span>) z opcją nadrzędną
+					Połącz (<span html="{${data.datatable.selection.length}}"></span>) z grupą
 					<i class="fas fa-search"></i>
 				</button>
 			</div>
