@@ -369,7 +369,7 @@ function setCompData(comp, data = undefined, options = {}) {
 		comp.classList.add("freeze");
 		setTimeout(() => {
 			comp.classList.remove("freeze");
-		}, 2000);
+		}, 100);
 	}
 
 	// just for optimization
