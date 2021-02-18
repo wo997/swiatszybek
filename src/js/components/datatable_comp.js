@@ -1025,7 +1025,8 @@ function datatableComp(comp, parent, data) {
 									tar = e.pos + 1;
 								}
 							}
-							if (!donttouch.includes(tar)) {
+							if (!donttouch.includes(e.pos)) {
+								donttouch.push(tar);
 								e.pos = tar;
 							}
 						});

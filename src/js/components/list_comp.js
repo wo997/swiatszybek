@@ -302,17 +302,17 @@ function listComp(comp, parent, data = []) {
 							// @ts-ignore
 							child._scale = 1;
 							if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2 || scale < 0.999) {
-								step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px) scale(${scale})`;
-								step_1 += `transform:translate(${after_x}px,${after_y}px) scale(1)`;
+								step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px) scale(${scale});`;
+								step_1 += `transform:translate(${after_x}px,${after_y}px) scale(1);`;
 							}
 
 							if (add) {
-								step_0 += "opacity:0;transform:scale(1,0.8);";
+								step_0 += "opacity:0;transform:scale(0.96);";
 								step_1 += "opacity:1;";
 							}
 							if (remove) {
 								step_0 += "opacity:1;";
-								step_1 += "opacity:0;transform:scale(1,0.8);";
+								step_1 += "opacity:0;transform:scale(0.96);";
 							}
 
 							if (step_1) {

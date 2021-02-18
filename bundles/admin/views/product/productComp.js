@@ -421,26 +421,24 @@ function productComp(comp, parent, data) {
 
 				const selection_changed = cd.product_feature_ids || cd.product_feature_option_ids;
 				if (selection_changed || cd.products_dt || options.force_render) {
-					let any_column_change = false;
-					let column_index = -1;
 					/** @type {DatatableColumnDef[]} */
-					const feature_columns = [];
+					const columns = data.products_dt.columns;
+					const donttouch = [];
+					let column_index = -1;
 					data.products_dt.columns.forEach((column) => {
 						column_index++;
 						const feature_id = getFeatureIdFromKey(column.key);
 						if (feature_id) {
-							const req_column_index = data.product_feature_ids.indexOf(feature_id);
-							feature_columns[req_column_index] = column;
-							if (req_column_index + 1 !== column_index) {
-								any_column_change = true;
+							const found_index = data.product_feature_ids.indexOf(feature_id);
+							const req_column_index = found_index + 1;
+							if (found_index !== -1 && req_column_index !== column_index) {
+								if (!donttouch.includes(column_index)) {
+									[columns[column_index], columns[req_column_index]] = [columns[req_column_index], columns[column_index]];
+									donttouch.push(req_column_index);
+								}
 							}
 						}
 					});
-
-					if (any_column_change) {
-						data.products_dt.columns = data.products_dt.columns.filter((e) => getFeatureIdFromKey(e.key) === 0);
-						data.products_dt.columns.splice(1, 0, ...feature_columns.filter((e) => e));
-					}
 				}
 
 				if (selection_changed || cd.products_dt || options.force_render) {
