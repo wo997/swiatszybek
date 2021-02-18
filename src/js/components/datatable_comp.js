@@ -520,9 +520,9 @@ function datatableComp(comp, parent, data) {
 
 						cells_html.push(cell_html);
 
-						const flex_grow = column.width && column.width.includes("px") ? 0 : 1;
+						const flex = column.width && column.width.includes("px") ? "" : "flex:1 0 0;";
 						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {
-                            width:${def(column.width, "10%")};flex-grow:${flex_grow};
+                            width:${def(column.width, "10%")};${flex}
                         }`;
 					}
 

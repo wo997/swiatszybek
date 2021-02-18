@@ -29,7 +29,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				dataset: product_features,
 				columns: [
 					{ label: "Cecha", key: "name", width: "20%", searchable: "string" },
-					{ label: "Opcje", key: "options", width: "50%", searchable: "number" },
+					{ label: "Opcje", key: "options", width: "50%", searchable: "string" },
 					{
 						label: "Akcja",
 						width: "155px",
