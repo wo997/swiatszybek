@@ -970,13 +970,23 @@ function datatableComp(comp, parent, data) {
 					if (detail.res.removed) {
 						return;
 					}
+					const data = comp._data;
 
 					detail.res.removed = true;
 
-					const ind_offset = comp._data.pagination_data.row_count * comp._data.pagination_data.page_id;
+					// const ind_offset = comp._data.pagination_data.row_count * comp._data.pagination_data.page_id;
+					// comp._data.dataset.splice(ind_offset + detail.row_index, 1);
 
-					comp._data.dataset.splice(ind_offset + detail.row_index, 1);
+					const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
 
+					const row_data = data.dataset.filter((e) => filtered_row_ids.includes(e._row_id)).find((e) => e.pos === detail.row_index + 1);
+
+					if (row_data) {
+						const index = data.dataset.findIndex((e) => e._row_id === row_data._row_id);
+						if (index !== -1) {
+							data.dataset.splice(index, 1);
+						}
+					}
 					orderBackend();
 
 					comp._render();
