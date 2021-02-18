@@ -4,6 +4,17 @@ $general_product_id = Request::urlParam(2, -1);
 
 $general_product = EntityManager::getEntityById("general_product", $general_product_id);
 
+$general_product_data = $general_product->getSimpleProps(); //array_merge($general_product->getSimpleProps(), [
+// "product_feature_ids" => array_map(function (Entity $e) {
+//     return $e->getId();
+// }, $general_product->getProp("features")),
+// "product_feature_option_ids" =>  array_map(function (Entity $e) {
+//     return $e->getId();
+// }, $general_product->getProp("feature_options")),
+//]);
+$general_product_data["product_feature_ids"] = $general_product_data["features"];
+$general_product_data["product_feature_option_ids"] = $general_product_data["feature_options"];
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -13,7 +24,7 @@ $general_product = EntityManager::getEntityById("general_product", $general_prod
 <script>
     let product_features = <?= json_encode(getAllProductFeatures()) ?>;
     let product_feature_options = <?= json_encode(getAllProductFeatureOptions()) ?>;
-    let general_product_data = <?= json_encode($general_product->getAllProps()) ?>;
+    let general_product_data = <?= json_encode($general_product_data) ?>;
     let vats = [{
             vat_id: 1,
             value: 0.23

@@ -11,7 +11,6 @@ class Entity
     private $parent = null; // in case there is any
     private $fetched_parent = false;
     private $saved = false;
-    private $sort_children = [];
     private $will_unlink_from_entities = [];
 
     public function __construct($name, &$props)
@@ -255,7 +254,6 @@ class Entity
      *
      * @param  string $prop_name !entity_prop_name
      * @param  mixed $options
-     * @return void
      */
     public function getProp($prop_name)
     {
@@ -369,8 +367,6 @@ class Entity
 
     /**
      * F.e. used to reacreate a frontend object
-     *
-     * @return void
      */
     public function getSimpleProps()
     {

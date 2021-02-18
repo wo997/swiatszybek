@@ -12,7 +12,7 @@
  * }} ProductData
  *
  * @typedef {{
- *  id: number
+ *  general_product_id: number
  *  name: string
  *  sell_by: string
  *  product_feature_option_ids: number[]
@@ -583,7 +583,23 @@ function productComp(comp, parent, data) {
 				const errors = validateInputs(directCompNodes(comp, "[data-validate]"));
 
 				if (errors.length === 0) {
-					alert("SAVE");
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "general_product/save",
+						params: {
+							general_product: {
+								general_product_id: comp._data.general_product_id,
+								name: comp._data.name,
+								features: comp._data.product_feature_ids,
+								feature_options: comp._data.product_feature_option_ids,
+							},
+						},
+						success: (res) => {
+							showNotification(comp._data.general_product_id === -1 ? "Dodano produkt" : "Zapisano produkt", {
+								one_line: true,
+								type: "success",
+							});
+						},
+					});
 				}
 			});
 

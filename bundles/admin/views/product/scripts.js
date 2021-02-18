@@ -69,7 +69,7 @@ domload(() => {
 	//const d = `{"id":-1,"name":"","sell_by":"qty","features":[{"product_feature_id":1,"name":"Kolor","options":[{"product_feature_option_id":59,"product_feature_id":1,"name":"Czerwony"},{"product_feature_option_id":60,"product_feature_id":1,"name":"Beżowy"},{"product_feature_option_id":62,"product_feature_id":1,"name":"Zielony"}]},{"product_feature_id":3,"name":"Model","options":[{"product_feature_option_id":39,"product_feature_id":3,"name":"sdfgsdgfsdfgdsfg"},{"product_feature_option_id":40,"product_feature_id":3,"name":"hfghfgh"}]}],"product_feature_option_ids":[59,60,62,39,40],"products":[{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":59,"feature_3":39,"_row_id":-10001},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":59,"feature_3":40,"_row_id":-10002},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":60,"feature_3":39,"_row_id":-10003},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":60,"feature_3":40,"_row_id":-10004},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":62,"feature_3":39,"_row_id":-10005},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":62,"feature_3":40,"_row_id":-10006}],"products_dt":{"columns":[{"key":"feature_3","label":"Model","width":"10%","searchable":"string","sortable":true},{"key":"feature_1","label":"Kolor","width":"10%","searchable":"string","sortable":true},{"key":"name","label":"Nazwa","width":"10%","sortable":true,"searchable":"string"},{"key":"net_price","label":"Cena Netto","width":"10%","sortable":true,"searchable":"number"},{"key":"vat","label":"Vat","width":"10%","sortable":true,"searchable":"number"},{"key":"gross_price","label":"Cena Brutto","width":"10%","sortable":true,"searchable":"number"}],"dataset":[{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":59,"feature_3":39,"_row_id":-10001},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":59,"feature_3":40,"_row_id":-10002},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":60,"feature_3":39,"_row_id":-10003},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":60,"feature_3":40,"_row_id":-10004},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":62,"feature_3":39,"_row_id":-10005},{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":62,"feature_3":40,"_row_id":-10006}],"label":"Pełna lista produktów","primary_key":"product_id","filters":[],"sort":false,"quick_search":"","pagination_data":{"page_id":0,"row_count":15,"total_rows":6,"page_count":1},"rows":[{"row":{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":59,"feature_3":39,"_row_id":-10001},"row_id":-10001},{"row":{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":59,"feature_3":40,"_row_id":-10002},"row_id":-10002},{"row":{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":60,"feature_3":39,"_row_id":-10003},"row_id":-10003},{"row":{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":60,"feature_3":40,"_row_id":-10004},"row_id":-10004},{"row":{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":62,"feature_3":39,"_row_id":-10005},"row_id":-10005},{"row":{"name":"asdads","gross_price":45.6,"net_price":45.2,"product_id":-1,"vat":77,"feature_1":62,"feature_3":40,"_row_id":-10006},"row_id":-10006}]},"product_feature_ids":[1,3]}`;
 	const d = {
 		id: -1,
-		name: "",
+		name: "abc product",
 		sell_by: "qty",
 		product_feature_ids: [1, 2],
 		product_feature_option_ids: [59, 60, 62, 64, 56, 57, 58],
@@ -195,8 +195,20 @@ domload(() => {
 	// });
 	//const dt_ref = d.products_dt;
 	//d.products_dt = {};
-	product_comp._data.product_feature_ids = d.product_feature_ids;
-	product_comp._data.product_feature_option_ids = d.product_feature_option_ids;
-	product_comp._data.products_dt.dataset = d.products_dt.dataset;
+
+	// product_comp._data.product_feature_ids = d.product_feature_ids;
+	// product_comp._data.product_feature_option_ids = d.product_feature_option_ids;
+	// product_comp._data.products_dt.dataset = d.products_dt.dataset;
+	// product_comp._data.name = d.name;
+	// product_comp._data.general_product_id = 1;
+
+	product_comp._data.general_product_id = 1;
+	product_comp._data.name = general_product_data.name;
+	product_comp._data.product_feature_ids = general_product_data.product_feature_ids;
+	product_comp._data.product_feature_option_ids = general_product_data.product_feature_option_ids;
+	//product_comp._data.products_dt.dataset = general_product_data.products_dt.dataset;
+
+	//product_comp._set_data();
+
 	product_comp._render();
 });
