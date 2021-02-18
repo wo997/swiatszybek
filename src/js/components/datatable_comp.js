@@ -974,9 +974,6 @@ function datatableComp(comp, parent, data) {
 
 					detail.res.removed = true;
 
-					// const ind_offset = comp._data.pagination_data.row_count * comp._data.pagination_data.page_id;
-					// comp._data.dataset.splice(ind_offset + detail.row_index, 1);
-
 					const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
 
 					const row_data = data.dataset.filter((e) => filtered_row_ids.includes(e._row_id)).find((e) => e.pos === detail.row_index + 1);
@@ -1001,8 +998,9 @@ function datatableComp(comp, parent, data) {
 					}
 					const data = comp._data;
 
-					let from_pos = detail.from + 1;
-					let to_pos = detail.to + 1;
+					const ind_offset = comp._data.pagination_data.row_count * comp._data.pagination_data.page_id;
+					let from_pos = detail.from + 1 + ind_offset;
+					let to_pos = detail.to + 1 + ind_offset;
 
 					detail.res.moved = true;
 
