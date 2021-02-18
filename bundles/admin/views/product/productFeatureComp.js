@@ -218,6 +218,7 @@ function productFeatureComp(comp, parent, data) {
 								callback: (option_id) => {
 									comp._select_current_group_id(option_id);
 								},
+								exclude: comp._data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique),
 							});
 						} else {
 							comp._select_current_group_id(e.dataset.option_id);

@@ -8,6 +8,7 @@
  * @typedef {{
  * source?: PiepNode
  * callback?(option_id)
+ * exclude?: number[]
  * }} ShowSelectOptionsOptions
  *
  * @typedef {{
@@ -57,11 +58,10 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (options = {}) => {
-		// comp._nodes.datatable._data.dataset = product_feature_options.map((opt) => {
-		// 	const feature = product_features.find((fea) => fea.product_feature_id === opt.product_feature_id);
-		// 	return { name: opt.name, feature_name: feature ? feature.name : "" };
-		// });
 		comp._data.datatable.dataset = product_feature_options;
+		if (options.exclude) {
+			comp._data.datatable.dataset = comp._data.datatable.dataset.filter((e) => !options.exclude.includes(e.product_feature_option_id));
+		}
 		comp._render({ freeze: true });
 
 		comp._options = options;
