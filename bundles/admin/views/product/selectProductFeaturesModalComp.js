@@ -35,7 +35,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						searchable: "string",
 						render: (data) => {
 							if (data.selected) {
-								return html`<div style="font-weight: 600;color: var(--success-clr);">${data.name} <i class="fas fa-check"></i></div>`;
+								return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.name}</div>`;
 							}
 							return data.name;
 						},
@@ -43,7 +43,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					{ label: "Opcje", key: "options", width: "2", searchable: "string" },
 					{
 						label: "Akcja",
-						width: "320px",
+						width: "200px",
 						flex: true,
 						render: (data) => {
 							let cell = "";
@@ -52,7 +52,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 								cell += html` <button class="btn subtle small remove_btn" style="min-width: 73px;">
 									Usuń <i class="fas fa-times"></i>
 								</button>`;
-								cell += html` <button class="btn subtle small options_btn" style="margin-left:10px">
+								cell += html` <button class="btn ${data.option_count ? "subtle" : "important"} small options_btn" style="margin-left:10px">
 									Opcje (${data.option_count}) <i class="fas fa-list"></i>
 								</button>`;
 							} else {
@@ -61,9 +61,15 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 								</button>`;
 							}
 
-							cell += html`<button class="btn subtle small edit_btn" style="margin-left:auto">Edytuj <i class="fas fa-cog"></i></button>`;
-
 							return cell;
+						},
+					},
+					{
+						label: "",
+						width: "90px",
+						flex: true,
+						render: (data) => {
+							return html`<button class="btn subtle small edit_btn" style="margin-left:auto">Edytuj <i class="fas fa-cog"></i></button>`;
 						},
 					},
 				],

@@ -2,7 +2,7 @@
 
 /**
  * @typedef {{
- *  label?: string
+ *  label: string
  *  key?: string
  *  width?: string
  *  sortable?: boolean | undefined

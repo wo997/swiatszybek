@@ -34,7 +34,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 						searchable: "string",
 						render: (data) => {
 							if (data.selected) {
-								return html`<div style="font-weight: 600;color: var(--success-clr);">${data.name} <i class="fas fa-check"></i></div>`;
+								return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.name}</div>`;
 							}
 							return data.name;
 						},
@@ -73,10 +73,8 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		comp._nodes.datatable._data.dataset = product_feature_options.filter((e) => e.product_feature_id === product_feature_id);
 		comp._nodes.datatable._render();
 
-		setTimeout(() => {
-			showModal("selectProductFeatureOptions", {
-				source: options.source,
-			});
+		showModal("selectProductFeatureOptions", {
+			source: options.source,
 		});
 	};
 
@@ -128,6 +126,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					if (list_row) {
 						product_comp._data.product_feature_option_ids.push(+list_row.dataset.primary);
 						product_comp._render();
+						select_product_features_modal_comp._render();
 						comp._nodes.datatable._render();
 
 						showNotification("Dodano opcję", {

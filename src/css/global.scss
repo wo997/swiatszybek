@@ -153,6 +153,7 @@ textarea {
 		-webkit-user-select: none;
 		--brighten-factor: 1.1;
 		--disabled-opacity: 0.8;
+		font-weight: 600;
 	}
 	&.primary {
 		--btn-background-clr: var(--primary-clr);
@@ -182,12 +183,10 @@ textarea {
 		--btn-background-clr: #fff;
 		--btn-font-clr: var(--error-clr);
 		--btn-border-clr: var(--error-clr);
-		font-weight: 600;
 	}
 	&.important {
 		--btn-background-clr: var(--important-clr);
 		--btn-font-clr: #fff;
-		font-weight: 600;
 	}
 	&.transparent {
 		--btn-background-clr: transparent;
