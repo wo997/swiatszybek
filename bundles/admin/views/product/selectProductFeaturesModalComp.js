@@ -28,21 +28,40 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			datatable: {
 				dataset: product_features,
 				columns: [
-					{ label: "Cecha", key: "name", width: "1", searchable: "string" },
-					{ label: "Opcje", key: "options", width: "1", searchable: "string" },
+					{
+						label: "Cecha",
+						key: "name",
+						width: "1",
+						searchable: "string",
+						render: (data) => {
+							if (data.selected) {
+								return html`<div style="font-weight: 600;color: var(--success-clr);">${data.name} <i class="fas fa-check"></i></div>`;
+							}
+							return data.name;
+						},
+					},
+					{ label: "Opcje", key: "options", width: "2", searchable: "string" },
 					{
 						label: "Akcja",
-						width: "255px",
+						width: "320px",
+						flex: true,
 						render: (data) => {
-							let cell = html`<button class="btn subtle small edit_btn" data-tooltip="Edytuj">
-								<i class="fas fa-cog"></i>
-							</button>`;
+							let cell = "";
 
 							if (data.selected) {
-								cell += html` <button class="btn subtle small remove_btn">Odznacz <i class="fas fa-times"></i></button>`;
+								cell += html` <button class="btn subtle small remove_btn" style="min-width: 73px;">
+									Usuń <i class="fas fa-times"></i>
+								</button>`;
+								cell += html` <button class="btn subtle small options_btn" style="margin-left:10px">
+									Opcje (${data.option_count}) <i class="fas fa-list"></i>
+								</button>`;
 							} else {
-								cell += html` <button class="btn primary small select_btn">Wybierz <i class="fas fa-check"></i></button>`;
+								cell += html` <button class="btn primary small select_btn" style="min-width: 73px;">
+									Dodaj <i class="fas fa-plus"></i>
+								</button>`;
 							}
+
+							cell += html`<button class="btn subtle small edit_btn" style="margin-left:auto">Edytuj <i class="fas fa-cog"></i></button>`;
 
 							return cell;
 						},
@@ -115,7 +134,10 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					product_comp._data.features.find((e) => {
 						return e.product_feature_id === data.row_data.product_feature_id;
 					});
-					data.row_data.selected = !!product_comp._data.features.find((e) => e.product_feature_id === data.row_data.product_feature_id);
+
+					const feature = product_comp._data.features.find((e) => e.product_feature_id === data.row_data.product_feature_id);
+					data.row_data.selected = !!feature;
+					data.row_data.option_count = feature ? feature.options.length : undefined;
 				});
 			});
 
@@ -139,16 +161,19 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					}
 				}
 
+				const showOptionsFrom = (product_feature_id, btn) => {
+					/** @type {SelectProductFeatureOptionsModalComp} */
+					// @ts-ignore
+					const select_product_features_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
+					select_product_features_modal_comp._show(product_feature_id, { source: btn });
+				};
+
 				const select_btn = target._parent(".select_btn", { skip: 0 });
 				if (select_btn) {
 					const list_row = select_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
 						const product_feature_id = +list_row.dataset.primary;
-
-						/** @type {SelectProductFeatureOptionsModalComp} */
-						// @ts-ignore
-						const select_product_features_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
-						select_product_features_modal_comp._show(product_feature_id, { source_rect: select_btn.getBoundingClientRect() });
+						showOptionsFrom(product_feature_id, select_btn);
 
 						product_comp._data.product_feature_ids.push(product_feature_id);
 						product_comp._render();
@@ -158,6 +183,18 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							one_line: true,
 							type: "success",
 						});
+					}
+
+					comp._nodes.close_btn.classList.remove("subtle");
+					comp._nodes.close_btn.classList.add("important");
+				}
+
+				const options_btn = target._parent(".options_btn", { skip: 0 });
+				if (options_btn) {
+					const list_row = options_btn._parent(".list_row", { skip: 0 });
+					if (list_row) {
+						const product_feature_id = +list_row.dataset.primary;
+						showOptionsFrom(product_feature_id, options_btn);
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");
@@ -227,7 +264,7 @@ function registerSelectProductFeaturesModal() {
 	// selectProductFeatures
 	registerModalContent(html`
 		<div id="selectProductFeatures" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(75% + 100px);max-height: calc(75% + 100px);">
+			<div class="modal-body" style="max-width: 1000px;max-height: calc(75% + 100px);">
 				<select-product-features-modal-comp class="flex_stretch"></select-product-features-modal-comp>
 			</div>
 		</div>

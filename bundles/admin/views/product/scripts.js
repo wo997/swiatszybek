@@ -48,7 +48,7 @@ domload(() => {
 	const product_comp = $("product-comp");
 
 	productComp(product_comp, undefined, {
-		id: -1,
+		general_product_id: -1,
 		name: "",
 		sell_by: "qty",
 		product_feature_ids: [],

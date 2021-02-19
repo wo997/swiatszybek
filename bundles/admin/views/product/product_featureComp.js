@@ -69,7 +69,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 
 			comp._nodes.add_option_btn.addEventListener("click", () => {
 				select_product_features_modal_comp._show(comp._data.product_feature_id, {
-					source_rect: comp._nodes.add_option_btn.getBoundingClientRect(),
+					source: comp._nodes.add_option_btn,
 				});
 			});
 

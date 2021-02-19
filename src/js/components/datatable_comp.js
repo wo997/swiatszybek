@@ -12,6 +12,7 @@
  *  batch_edit?: boolean
  *  map_name?: string
  *  quick_filter?: boolean
+ *  flex?: boolean
  * }} DatatableColumnDef
  *
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder
@@ -118,6 +119,7 @@ function datatableComp(comp, parent, data) {
 			render: (row) => {
 				return html`<p-checkbox class="square select_row shrink" data-primary_id="${row[data.primary_key]}"></p-checkbox>`;
 			},
+			flex: true,
 		});
 
 		comp.addEventListener("click", (ev) => {
@@ -522,9 +524,9 @@ function datatableComp(comp, parent, data) {
 
 						let cell_style = "";
 						if (column.width && column.width.includes("px")) {
-							cell_style = `width:${def(column.width, "10%")};`;
+							cell_style = `flex:0 0 ${column.width};`;
 						} else {
-							cell_style = `flex:${def(column.width, "1")} 0 0;`;
+							cell_style = `flex:${def(column.width, "1")} 1 0;`;
 						}
 						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) { ${cell_style} }`;
 					}

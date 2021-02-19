@@ -218,6 +218,10 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 			}
 		}
 
+		const flex = def(column.flex, def(column.editable, false));
+		if (!flex) {
+			cell_html = html`<div class="cell_wrapper">${cell_html}</div>`;
+		}
 		cell_html = html`<div class="dt_cell" data-column_id="${column_id}">${cell_html}</div>`;
 
 		cells_html.push(cell_html);

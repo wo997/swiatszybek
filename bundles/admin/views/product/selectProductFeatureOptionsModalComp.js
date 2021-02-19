@@ -12,7 +12,7 @@
  *      close_btn: PiepNode
  *      datatable: DatatableComp
  * }
- * _show(product_feature_id: number, options?: {source_rect?: DOMRect})
+ * _show(product_feature_id: number, options?: {source?: PiepNode})
  * } & BaseComp} SelectProductFeatureOptionsModalComp
  */
 
@@ -26,7 +26,19 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		data = {
 			datatable: {
 				columns: [
-					{ label: "Opcja", key: "name", width: "1", sortable: true, searchable: "string" },
+					{
+						label: "Opcja",
+						key: "name",
+						width: "1",
+						sortable: true,
+						searchable: "string",
+						render: (data) => {
+							if (data.selected) {
+								return html`<div style="font-weight: 600;color: var(--success-clr);">${data.name} <i class="fas fa-check"></i></div>`;
+							}
+							return data.name;
+						},
+					},
 					{
 						label: "Akcja",
 						width: "155px",
@@ -34,9 +46,13 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 							let cell = "";
 
 							if (data.selected) {
-								cell += html` <button class="btn subtle small remove_btn">Odznacz <i class="fas fa-times"></i></button>`;
+								cell += html` <button class="btn subtle small remove_btn" style="min-width: 73px;">
+									Usuń <i class="fas fa-times"></i>
+								</button>`;
 							} else {
-								cell += html` <button class="btn primary small select_btn">Wybierz <i class="fas fa-check"></i></button>`;
+								cell += html` <button class="btn primary small select_btn" style="min-width: 73px;">
+									Dodaj <i class="fas fa-plus"></i>
+								</button>`;
 							}
 
 							return cell;
@@ -59,7 +75,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 
 		setTimeout(() => {
 			showModal("selectProductFeatureOptions", {
-				source_rect: options.source_rect,
+				source: options.source,
 			});
 		});
 	};
@@ -87,6 +103,10 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 			/** @type {ProductComp} */
 			// @ts-ignore
 			const product_comp = $("product-comp");
+
+			/** @type {SelectProductFeaturesModalComp} */
+			// @ts-ignore
+			const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
 
 			comp._nodes.datatable.addEventListener("rows_set", (ev) => {
 				// @ts-ignore
@@ -128,6 +148,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 						if (ind !== -1) {
 							product_comp._data.product_feature_option_ids.splice(ind, 1);
 							product_comp._render();
+							select_product_features_modal_comp._render();
 							comp._nodes.datatable._render();
 
 							showNotification("Usunięto opcję", {
@@ -148,7 +169,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 function registerSelectProductFeatureOptionsModal() {
 	registerModalContent(html`
 		<div id="selectProductFeatureOptions" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(75% + 100px);max-height: calc(75% + 100px);">
+			<div class="modal-body" style="max-width: calc(20% + 300px);max-height: calc(65% + 100px);">
 				<select-product-feature-options-modal-comp class="flex_stretch"></select-product-feature-options-modal-comp>
 			</div>
 		</div>
