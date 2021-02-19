@@ -245,18 +245,23 @@ function productComp(comp, parent, data) {
 							options,
 						});
 					}
+					if (options_after[feature_id].length < 2) {
+						return;
+					}
 				}
 			} else {
-				const options = options_after[feature_id].filter(onlyUnique).map((option_id) => {
-					return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
-				});
-				options.push({ label: "Nie", value: -1 });
+				if (data.products_dt.dataset.length > 0) {
+					const options = options_after[feature_id].filter(onlyUnique).map((option_id) => {
+						return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
+					});
+					options.push({ label: "Nie", value: -1 });
 
-				questions.push({
-					type: "existed",
-					label: `Czy któraś opcja (${feature_name}) należała już do produktu?`,
-					options,
-				});
+					questions.push({
+						type: "existed",
+						label: `Czy któraś opcja cechy ${feature_name} należała już do produktu?`,
+						options,
+					});
+				}
 			}
 		}
 
