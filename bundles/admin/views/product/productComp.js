@@ -525,7 +525,7 @@ function productComp(comp, parent, data) {
 			</div>
 
 			<button
-				class="btn {${data.missing_products_features.length > 0}?important:subtle}"
+				class="btn {${data.missing_products_features.length > 0}?primary:subtle}"
 				data-node="{${comp._nodes.add_products_btn}}"
 				data-tooltip="{${data.missing_products_features.length > 0
 					? "Zalecane po uzupełnieniu wszystkich cech produktu"

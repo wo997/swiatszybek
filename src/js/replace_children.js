@@ -23,7 +23,7 @@ function setNodeChildren(node, children_html) {
 		}
 	}
 
-	node._direct_children(`.dt_cell:nth-child(n + ${children_html.length + 1})`).forEach((e) => {
+	node._direct_children(`:nth-child(n + ${children_html.length + 1})`).forEach((e) => {
 		e.remove();
 	});
 
