@@ -228,6 +228,7 @@ function setValue(input, value = null, params = {}) {
 
 	if (input.classList.contains("radio_group")) {
 		input.dataset.value = value;
+		onRadioGroupValueSet(input);
 	} else if (input.tagName == "P-CHECKBOX") {
 		input.classList.toggle("checked", !!value);
 		// @ts-ignore

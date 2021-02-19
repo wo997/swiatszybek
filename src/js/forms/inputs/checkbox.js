@@ -15,6 +15,16 @@ document.addEventListener("mouseup", () => {
 
 /**
  *
+ * @param {PiepNode} radio_group
+ */
+function onRadioGroupValueSet(radio_group) {
+	radio_group._children("p-checkbox").forEach((ch) => {
+		ch._set_value(ch.dataset.value === radio_group.dataset.value ? 1 : 0, { quiet: true });
+	});
+}
+
+/**
+ *
  * @param {PiepNode} parent
  */
 function registerCheckboxes(parent) {
@@ -68,9 +78,7 @@ function registerCheckboxes(parent) {
 				radio_group.classList.add("rg_registered");
 
 				radio_group.addEventListener("change", () => {
-					radio_group._children("p-checkbox").forEach((ch) => {
-						ch._set_value(ch.dataset.value === radio_group.dataset.value ? 1 : 0, { quiet: true });
-					});
+					onRadioGroupValueSet(radio_group);
 				});
 			}
 

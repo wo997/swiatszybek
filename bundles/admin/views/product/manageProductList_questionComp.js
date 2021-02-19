@@ -42,6 +42,10 @@ function manageProductList_questionComp(comp, parent, data = undefined) {
 						</label>`
 					)
 				);
+
+				registerForms(comp);
+
+				comp._nodes.options._set_value(data.value ? data.value : "", { quiet: true });
 			},
 		});
 	};
