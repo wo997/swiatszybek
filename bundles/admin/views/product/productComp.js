@@ -589,8 +589,14 @@ function productComp(comp, parent, data) {
 							general_product: {
 								general_product_id: comp._data.general_product_id,
 								name: comp._data.name,
-								features: comp._data.product_feature_ids,
-								feature_options: comp._data.product_feature_option_ids,
+								features: comp._data.product_feature_ids.map((product_feature_id, index) => ({
+									product_feature_id,
+									_meta_pos: index,
+								})),
+								feature_options: comp._data.product_feature_option_ids.map((product_feature_option_id, index) => ({
+									product_feature_option_id,
+									_meta_pos: index,
+								})),
 							},
 						},
 						success: (res) => {

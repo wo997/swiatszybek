@@ -12,6 +12,9 @@ class Entity
     private $fetched_parent = false;
     private $saved = false;
     private $will_unlink_from_entities = [];
+    private $meta = []; // used for many to many relations
+    private $curr_meta = []; // same as curr_props
+
 
     public function __construct($name, &$props)
     {
@@ -23,11 +26,13 @@ class Entity
             $this->curr_props = [];
             DB::execute("INSERT INTO $name () VALUES ()");
             $this->setId(DB::insertedId());
-            //EntityManager pass global ids of those items to entity manager to handle them? or use just a damn transaction?
+            $this->curr_meta = [];
         } else {
             $this->curr_props = DB::fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
             $this->setProps(def($this->curr_props, []));
+            $this->curr_meta = $this->meta;
         }
+
         $this->setProps($props);
     }
 
@@ -45,6 +50,11 @@ class Entity
     public function getWillDelete()
     {
         return $this->will_delete;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
     }
 
     /**
@@ -139,13 +149,13 @@ class Entity
             //     sortTable($other_entity_type, $ids);
             // }
 
-            if (def($this->curr_props, $key, null) === $value) {
-                continue;
-            }
-
             $link = def($entity_data, ["linked_with", $other_entity_type]);
             if ($link) {
                 EntityManager::setManyToManyRelationship($this, $other_entity_type, def($this->curr_props, $key, []), $value, $link["relation_table"]);
+            }
+
+            if (def($this->curr_props, $key, null) === $value) {
+                continue;
             }
 
             if (is_array($value)) {
@@ -203,6 +213,11 @@ class Entity
 
         if ($val === null) {
             $val = $this->getProp($prop_name);
+        }
+
+        if (strpos($prop_name, "_meta_", 0) !== false) {
+            $this->meta[str_replace("_meta_", "", $prop_name)] = $val;
+            return;
         }
 
         $prop_data = def(EntityManager::getEntityData($this->name), ["props", $prop_name]);
@@ -268,7 +283,7 @@ class Entity
                 } else {
                     $link = def($child_entity_data, ["linked_with", $this->name]);
                     if ($link) {
-                        $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $other_entity_name, $link["relation_table"]);
+                        $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $other_entity_name, $link);
                         $this->curr_props[$prop_name] = $this->props[$prop_name];
                     }
                 }
@@ -383,7 +398,11 @@ class Entity
                     /** @var Entity */
                     $ent) {
                     if ($ent instanceof Entity) {
-                        $entities_data[] = $ent->getId();
+                        $d = [$ent->getIdColumn() => $ent->getId()];
+                        foreach ($ent->meta as $key => $val) {
+                            $d["_meta_$key"] = $val;
+                        }
+                        $entities_data[] = $d;
                     }
                 }
                 $val = $entities_data;

@@ -201,12 +201,15 @@ class EntityManager
      */
     public static function setManyToManyEntities(Entity $obj, $obj_prop_name, $other_entity_name, $other_entities_props)
     {
-
-        var_dump([[[$obj, $obj_prop_name, $other_entity_name, $other_entities_props]]]);
-
+        //var_dump([[[$obj, $obj_prop_name, $other_entity_name, $other_entities_props]]]);
 
         /** @var Entity[] */
         $curr_other_entities = def($obj->getProp($obj_prop_name), []);
+        $curr_ids = [];
+        foreach ($curr_other_entities as &$curr_other_entity) {
+            $curr_ids[] = $curr_other_entity->getId();
+        }
+        unset($curr_other_entity);
 
         $other_entity_id_column = self::getEntityIdColumn($other_entity_name);
 
@@ -258,6 +261,10 @@ class EntityManager
                 ];
             }
 
+            if (in_array($other_entity_props[$other_entity_id_column], $curr_ids)) {
+                continue;
+            }
+
             $other_entity = self::getEntity($other_entity_name, $other_entity_props);
             $other_entities[] = $other_entity;
         }
@@ -266,12 +273,23 @@ class EntityManager
         return $other_entities;
     }
 
-    public static function getManyToManyEntities(Entity $obj, $other_entity_name, $relation_table)
+    public static function getManyToManyEntities(Entity $obj, $other_entity_name, $link)
     {
+        $relation_table = $link["relation_table"];
+
         $other_entities = [];
 
         $other_entity_id_column = self::getEntityIdColumn($other_entity_name);
-        $other_entities_props = DB::fetchArr("SELECT * FROM " . $other_entity_name . " WHERE " . $other_entity_id_column . " IN (SELECT " . $other_entity_id_column . " FROM " . $relation_table . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId() . ")");
+        $meta_sql = "";
+        $meta = def($link, ["extra", "meta"], null);
+        if ($meta) {
+            foreach (array_keys($meta) as $key) {
+                $meta_sql .= ", $relation_table.$key _meta_$key";
+            }
+        }
+
+        $other_entities_props = DB::fetchArr("SELECT *$meta_sql FROM $other_entity_name INNER JOIN $relation_table USING ($other_entity_id_column) WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
+
         foreach ($other_entities_props as $other_entity_props) {
             $other_entity = self::getEntity($other_entity_name, $other_entity_props);
             $other_entities[] = $other_entity;
@@ -306,13 +324,15 @@ class EntityManager
      * @param  string $name1 !entity_name
      * @param  string $name2 !entity_name
      */
-    public static function manyToMany($name1, $name2, $relation_table)
+    public static function manyToMany($name1, $name2, $relation_table, $extra = [])
     {
         self::$entities[$name1]["linked_with"][$name2] = [
-            "relation_table" => $relation_table
+            "relation_table" => $relation_table,
+            "extra" => $extra
         ];
         self::$entities[$name2]["linked_with"][$name1] = [
             "relation_table" => $relation_table,
+            "extra" => $extra
         ];
     }
 
@@ -329,6 +349,15 @@ class EntityManager
         ];
     }
 
+    /**
+     * setManyToManyRelationship
+     *
+     * @param  Entity $obj
+     * @param  string $other_entity_name
+     * @param  Entity[] $curr_val
+     * @param  Entity[] $val
+     * @param  string $relation_table
+     */
     public static function setManyToManyRelationship(Entity $obj, $other_entity_name, $curr_val, $val, $relation_table)
     {
         $our_id = $obj->getId(); // HEY! it won't work before we save it, so you should do it at the end!
@@ -344,10 +373,8 @@ class EntityManager
         }
 
         $ids = [];
-        foreach ($val as $oo) {
-            /** @var Entity */
-            $other_obj = $oo;
-
+        $update_meta_sqls = [];
+        foreach ($val as $other_obj) {
             if (in_array($obj->getName(), $other_obj->getWillUnlinkFromEntities())) {
                 continue;
             }
@@ -355,6 +382,14 @@ class EntityManager
             $other_id = $other_obj->getProp($other_entity_id_column);
             if ($other_id > 0) { // always but prevents bugs
                 $ids[] = $other_id;
+            }
+
+            if ($other_obj->getMeta()) {
+                $update_meta_sql = "UPDATE $relation_table SET";
+                foreach ($other_obj->getMeta() as $key => $val) {
+                    $update_meta_sql .= " " . clean($key) . " = " . DB::escape($val) . ",";
+                }
+                $update_meta_sqls[] = substr($update_meta_sql, 0, -1) . " WHERE $other_entity_id_column = $other_id";
             }
         }
 
@@ -372,6 +407,10 @@ class EntityManager
             }, $added_ids));
             var_dump([$query]);
             DB::execute($query);
+        }
+
+        foreach ($update_meta_sqls as $update_meta_sql) {
+            DB::execute($update_meta_sql);
         }
     }
 }

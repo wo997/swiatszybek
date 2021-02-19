@@ -4,17 +4,23 @@ $general_product_id = Request::urlParam(2, -1);
 
 $general_product = EntityManager::getEntityById("general_product", $general_product_id);
 
-$general_product_data = $general_product->getSimpleProps(); //array_merge($general_product->getSimpleProps(), [
-// "product_feature_ids" => array_map(function (Entity $e) {
-//     return $e->getId();
-// }, $general_product->getProp("features")),
-// "product_feature_option_ids" =>  array_map(function (Entity $e) {
-//     return $e->getId();
-// }, $general_product->getProp("feature_options")),
-//]);
-$general_product_data["product_feature_ids"] = $general_product_data["features"];
-$general_product_data["product_feature_option_ids"] = $general_product_data["feature_options"];
+$general_product_data = $general_product->getSimpleProps();
 
+$product_feature_ids = $general_product_data["features"];
+usort($product_feature_ids, function ($a, $b) {
+    return $a["_meta_pos"] - $b["_meta_pos"];
+});
+$product_feature_option_ids = $general_product_data["feature_options"];
+usort($product_feature_option_ids, function ($a, $b) {
+    return $a["_meta_pos"] - $b["_meta_pos"];
+});
+
+$general_product_data["product_feature_ids"] = array_map(function ($a) {
+    return $a["product_feature_id"];
+}, $product_feature_ids);
+$general_product_data["product_feature_option_ids"] = array_map(function ($a) {
+    return $a["product_feature_option_id"];
+}, $product_feature_option_ids);
 ?>
 
 <?php startSection("head_content"); ?>

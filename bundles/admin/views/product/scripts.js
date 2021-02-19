@@ -202,7 +202,7 @@ domload(() => {
 	// product_comp._data.name = d.name;
 	// product_comp._data.general_product_id = 1;
 
-	product_comp._data.general_product_id = 1;
+	product_comp._data.general_product_id = general_product_data.general_product_id;
 	product_comp._data.name = general_product_data.name;
 	product_comp._data.product_feature_ids = general_product_data.product_feature_ids;
 	product_comp._data.product_feature_option_ids = general_product_data.product_feature_option_ids;

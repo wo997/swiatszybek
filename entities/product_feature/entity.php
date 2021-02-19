@@ -15,4 +15,13 @@ EntityManager::register("general_product", [
     ],
 ]);
 
-EntityManager::manyToMany("general_product", "product_feature", "general_product_to_feature");
+EntityManager::manyToMany(
+    "general_product",
+    "product_feature",
+    "general_product_to_feature",
+    [
+        "meta" => [
+            "pos" => ["type" => "number"],
+        ]
+    ]
+);
