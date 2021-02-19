@@ -335,19 +335,6 @@ function formFieldOnInput(field, options = {}) {
 	return errors;
 }
 
-function togglePasswordFieldType(btn, input, make_visible = null) {
-	var make_visible = def(make_visible, btn.classList.contains("fa-eye"));
-	if (make_visible) {
-		btn.classList.replace("fa-eye", "fa-eye-slash");
-		btn.setAttribute("data-tooltip", "Ukryj hasło");
-		input.type = "text";
-	} else {
-		btn.classList.replace("fa-eye-slash", "fa-eye");
-		btn.setAttribute("data-tooltip", "Pokaż hasło");
-		input.type = "password";
-	}
-}
-
 function rewrite(source, target, options = {}) {
 	var val = source._get_value();
 	if (options.link) {

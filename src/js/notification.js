@@ -15,7 +15,7 @@
  * @param {{
  * one_line?: boolean
  * width?: string
- * type?: string
+ * type?: ("success" | "error")
  * duration?: number
  * }} params
  * @returns {PiepNotification}
@@ -60,10 +60,8 @@ function showNotification(message, params = {}) {
 
 	notification.classList.toggle("one_line", def(params.one_line, false));
 
-	notification.classList.remove("success");
-	if (params.type == "success") {
-		notification.classList.add("success");
-	}
+	notification.classList.toggle("success", params.type == "success");
+	notification.classList.toggle("error", params.type == "error");
 
 	document.body.append(notification);
 

@@ -67,8 +67,13 @@ function registerModalContent(html, callback = undefined) {
 	}
 }
 
+/**
+ *
+ * @param {PiepNode} modal
+ */
 function registerModal(modal) {
 	modal_container_node.appendChild(modal);
+	modal.classList.add(modal.id);
 	registerModalScroll(modal);
 }
 
@@ -140,7 +145,7 @@ function showModal(name = null, params = {}) {
 			}
 
 			if (shownow) {
-				clearAllErrors(modal);
+				//clearAllErrors(modal);
 				const modal_container = modal_wrapper_node._child(".modal_container");
 				modal_container.appendChild(modal);
 				const modal_content = modal._child("*");

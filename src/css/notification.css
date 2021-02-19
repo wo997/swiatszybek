@@ -18,6 +18,9 @@
 .notification.success {
 	background: #8e8;
 }
+.notification.error {
+	background: #e88;
+}
 .notification .fa-times {
 	position: absolute;
 	padding: 5px;
