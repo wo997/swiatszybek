@@ -158,21 +158,19 @@ function productComp(comp, parent, data) {
 
 				for (const feature_key of all_feature_keys) {
 					const pr_opt_id = product_data[feature_key];
-					const compare_opt_ids = [pr_opt_id];
 
 					if (pr_opt_id === other_product[feature_key]) {
 						shared_features++;
+						shared_features_for_similar_products++;
 					}
 
 					if (params) {
-						compare_opt_ids.push(...params.similar_products.filter((e) => e.new_option_id === pr_opt_id).map((e) => e.option_id));
+						params.similar_products.forEach((e) => {
+							if (e.new_option_id === pr_opt_id && e.option_id === other_product[feature_key]) {
+								shared_features_for_similar_products++;
+							}
+						});
 					}
-
-					compare_opt_ids.forEach((opt_id) => {
-						if (opt_id === other_product[feature_key]) {
-							shared_features_for_similar_products++;
-						}
-					});
 				}
 
 				if (shared_features_for_similar_products > max_shared_features_for_similar_products) {
