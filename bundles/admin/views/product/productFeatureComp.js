@@ -43,11 +43,11 @@ function productFeatureComp(comp, parent, data) {
 	/** @type {DatatableCompData} */
 	const dt = {
 		columns: [
-			{ label: "Opcja", key: "name", width: "20%", editable: "string" },
+			{ label: "Opcja", key: "name", width: "1", editable: "string" },
 			{
 				label: "Opcja nadrzędna (Grupa)",
 				key: "parent_product_feature_option_id",
-				width: "20%",
+				width: "1",
 				map_name: "product_feature_option",
 			},
 		],

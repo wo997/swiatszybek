@@ -118,10 +118,10 @@ domload(() => {
 			columns: [
 				{ label: '<p-checkbox class="square select_all_rows shrink"></p-checkbox>', key: "", width: "38px" },
 				{ key: "active", label: "Aktywny", width: "130px", sortable: true, searchable: "boolean", editable: "checkbox" },
-				{ key: "net_price", label: "Cena Netto", width: "10%", sortable: true, searchable: "number", editable: "number" },
-				{ key: "vat", label: "Vat (stały?)", width: "10%", sortable: true, editable: "number" },
-				{ key: "gross_price", label: "Cena Brutto", width: "10%", sortable: true, editable: "number" },
-				{ key: "stock", label: "Stan magazynowy", width: "10%", sortable: true, editable: "number" },
+				{ key: "net_price", label: "Cena Netto", width: "1", sortable: true, searchable: "number", editable: "number" },
+				{ key: "vat", label: "Vat (stały?)", width: "1", sortable: true, editable: "number" },
+				{ key: "gross_price", label: "Cena Brutto", width: "1", sortable: true, editable: "number" },
+				{ key: "stock", label: "Stan magazynowy", width: "1", sortable: true, editable: "number" },
 			],
 			dataset: [
 				{

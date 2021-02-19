@@ -28,11 +28,11 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			datatable: {
 				dataset: product_features,
 				columns: [
-					{ label: "Cecha", key: "name", width: "20%", searchable: "string" },
-					{ label: "Opcje", key: "options", width: "50%", searchable: "string" },
+					{ label: "Cecha", key: "name", width: "1", searchable: "string" },
+					{ label: "Opcje", key: "options", width: "1", searchable: "string" },
 					{
 						label: "Akcja",
-						width: "155px",
+						width: "255px",
 						render: (data) => {
 							let cell = html`<button class="btn subtle small edit_btn" data-tooltip="Edytuj">
 								<i class="fas fa-cog"></i>
@@ -143,8 +143,14 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				if (select_btn) {
 					const list_row = select_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						product_comp._data.product_feature_ids.push(+list_row.dataset.primary);
-						//product_comp._data.features.push({ product_feature_id: +list_row.dataset.primary, options: [] });
+						const product_feature_id = +list_row.dataset.primary;
+
+						/** @type {SelectProductFeatureOptionsModalComp} */
+						// @ts-ignore
+						const select_product_features_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
+						select_product_features_modal_comp._show(product_feature_id, { source_rect: select_btn.getBoundingClientRect() });
+
+						product_comp._data.product_feature_ids.push(product_feature_id);
 						product_comp._render();
 						comp._nodes.datatable._render();
 

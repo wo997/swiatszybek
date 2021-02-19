@@ -12,7 +12,7 @@
  *      close_btn: PiepNode
  *      datatable: DatatableComp
  * }
- * _show(product_feature_id: number, options?: {source?: PiepNode})
+ * _show(product_feature_id: number, options?: {source_rect?: DOMRect})
  * } & BaseComp} SelectProductFeatureOptionsModalComp
  */
 
@@ -26,7 +26,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		data = {
 			datatable: {
 				columns: [
-					{ label: "Opcja", key: "name", width: "20%", sortable: true, searchable: "string" },
+					{ label: "Opcja", key: "name", width: "1", sortable: true, searchable: "string" },
 					{
 						label: "Akcja",
 						width: "155px",
@@ -59,7 +59,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 
 		setTimeout(() => {
 			showModal("selectProductFeatureOptions", {
-				source: options.source,
+				source_rect: options.source_rect,
 			});
 		});
 	};

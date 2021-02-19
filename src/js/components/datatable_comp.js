@@ -520,10 +520,13 @@ function datatableComp(comp, parent, data) {
 
 						cells_html.push(cell_html);
 
-						const flex = column.width && column.width.includes("px") ? "" : "flex:1 0 0;";
-						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) {
-                            width:${def(column.width, "10%")};${flex}
-                        }`;
+						let cell_style = "";
+						if (column.width && column.width.includes("px")) {
+							cell_style = `width:${def(column.width, "10%")};`;
+						} else {
+							cell_style = `flex:${def(column.width, "1")} 0 0;`;
+						}
+						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) { ${cell_style} }`;
 					}
 
 					if (data.sortable || data.deletable) {

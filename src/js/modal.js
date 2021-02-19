@@ -116,6 +116,7 @@ function registerModalScroll(modal) {
  * @param {*} name
  * @param {{
  * source?: PiepNode
+ * source_rect?: DOMRect
  * callback?: CallableFunction
  * keep_size?: boolean
  * }} params
@@ -170,8 +171,8 @@ function showModal(name = null, params = {}) {
 
 				let dx = 0;
 				let dy = 0;
-				if (params.source) {
-					const src_rect = params.source.getBoundingClientRect();
+				if (params.source || params.source_rect) {
+					const src_rect = params.source_rect ? params.source_rect : params.source.getBoundingClientRect();
 					const modal_rect = modal_content.getBoundingClientRect();
 					dx = src_rect.left - modal_rect.left + (src_rect.width - modal_rect.width) * 0.5;
 					dy = src_rect.top - modal_rect.top + (src_rect.height - modal_rect.height) * 0.5;
