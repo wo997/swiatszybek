@@ -50,6 +50,109 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 				}
 
 				comp.classList.toggle("even", data.row_index % 2 === 0);
+
+				// bind
+				row._children("[data-bind]:not(.binded)").forEach((input) => {
+					input.classList.add("binded");
+					const key = input.dataset.bind;
+					input.addEventListener("change", () => {
+						if (dt._data.search_url) {
+							console.warn("TODO");
+						} else {
+							const row_data = dt._data.dataset.find((d) => d._row_id === _row_id); // recreate ref
+							const value = input._get_value();
+							const prev_value = row_data[key];
+							row_data[key] = value;
+							dt.dispatchEvent(
+								new CustomEvent("editable_change", {
+									detail: {
+										_row_id,
+										row_data,
+										key,
+										prev_value,
+										value,
+									},
+								})
+							);
+							dt._render();
+
+							// well, sometimes there is a need to modify a field to it's previous value, so that is necessary, fails at 82.59999 blah
+							comp._render({ force_render: true });
+						}
+					});
+					// b.addEventListener("input", () => {
+					// 	b._dispatch_change();
+					// });
+
+					// @ts-ignore
+					if (input.type === "text" || input.tagName === "SELECT" || input.tagName === "P-CHECKBOX") {
+						input.addEventListener("keydown", (ev) => {
+							const up = ev.key === "ArrowUp";
+							const right = ev.key === "ArrowRight";
+							const down = ev.key === "ArrowDown";
+							const left = ev.key === "ArrowLeft";
+
+							if (up || down || (input.tagName === "SELECT" && (right || left))) {
+								ev.preventDefault();
+							}
+
+							if (ev.ctrlKey) {
+								/**
+								 *
+								 * @param {PiepNode} next_input
+								 */
+								const selectInput = (next_input) => {
+									if (next_input.tagName === "P-CHECKBOX") {
+										next_input._child("input").focus();
+									}
+									if (next_input.focus) {
+										next_input.focus();
+									}
+									if (next_input instanceof HTMLInputElement) {
+										setTimeout(() => {
+											next_input.select();
+										}, 0);
+									}
+								};
+
+								if (up || down) {
+									const dt_cell = input._parent(".dt_cell");
+									const list_row = dt_cell._parent(".list_row");
+									let next_list_row = up ? list_row._prev() : list_row._next();
+									if (!next_list_row) {
+										next_list_row = up ? list_row._last_sibling() : list_row._first_sibling();
+									}
+									const next_list_column = next_list_row._child(`[data-column_id="${dt_cell.dataset.column_id}"]`);
+									const next_input = next_list_column._child(`[data-bind="${input.dataset.bind}"]`);
+									scrollIntoView(next_input, {
+										callback: () => {
+											selectInput(next_input);
+										},
+									});
+								}
+
+								if (left || right) {
+									const dt_cell = input._parent(".dt_cell");
+									let next_cell = dt_cell;
+
+									let next_input = undefined;
+									while (!next_input) {
+										next_cell = left ? next_cell._prev() : next_cell._next();
+										if (!next_cell) {
+											next_cell = left ? dt_cell._last_sibling() : dt_cell._first_sibling();
+										}
+
+										if (next_cell) {
+											next_input = next_cell._child(`[data-bind]`);
+										}
+									}
+
+									selectInput(next_input);
+								}
+							}
+						});
+					}
+				});
 			},
 		});
 	};
@@ -57,117 +160,7 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 	createComp(comp, parent, data, {
 		template: html`<div data-node="{${comp._nodes.dt_row}}" class="dt_row"></div>
 			${data.sortable ? html`<div class="dt_cell sortable_width"><p-batch-trait data-trait="list_controls"></p-batch-trait></div>` : ""}`,
-		ready: () => {
-			/** @type {DatatableComp} */
-			// @ts-ignore
-			const dt = comp._parent_comp._parent_comp;
-
-			const row = comp._parent();
-			const _row_id = +row.dataset.primary;
-
-			registerForms();
-
-			row._children("[data-bind]").forEach((input) => {
-				const key = input.dataset.bind;
-				input.addEventListener("change", () => {
-					if (dt._data.search_url) {
-						console.warn("TODO");
-					} else {
-						const row_data = dt._data.dataset.find((d) => d._row_id === _row_id); // recreate ref
-						const value = input._get_value();
-						const prev_value = row_data[key];
-						row_data[key] = value;
-						dt.dispatchEvent(
-							new CustomEvent("editable_change", {
-								detail: {
-									_row_id,
-									row_data,
-									key,
-									prev_value,
-									value,
-								},
-							})
-						);
-						dt._render();
-
-						// well, sometimes there is a need to modify a field to it's previous value, so that is necessary, fails at 82.59999 blah
-						comp._render({ force_render: true });
-					}
-				});
-				// b.addEventListener("input", () => {
-				// 	b._dispatch_change();
-				// });
-
-				// @ts-ignore
-				if (input.type === "text" || input.tagName === "SELECT" || input.tagName === "P-CHECKBOX") {
-					input.addEventListener("keydown", (ev) => {
-						const up = ev.key === "ArrowUp";
-						const right = ev.key === "ArrowRight";
-						const down = ev.key === "ArrowDown";
-						const left = ev.key === "ArrowLeft";
-
-						if (up || down || (input.tagName === "SELECT" && (right || left))) {
-							ev.preventDefault();
-						}
-
-						if (ev.ctrlKey) {
-							/**
-							 *
-							 * @param {PiepNode} next_input
-							 */
-							const selectInput = (next_input) => {
-								if (next_input.tagName === "P-CHECKBOX") {
-									next_input._child("input").focus();
-								}
-								if (next_input.focus) {
-									next_input.focus();
-								}
-								if (next_input instanceof HTMLInputElement) {
-									setTimeout(() => {
-										next_input.select();
-									}, 0);
-								}
-							};
-
-							if (up || down) {
-								const dt_cell = input._parent(".dt_cell");
-								const list_row = dt_cell._parent(".list_row");
-								let next_list_row = up ? list_row._prev() : list_row._next();
-								if (!next_list_row) {
-									next_list_row = up ? list_row._last_sibling() : list_row._first_sibling();
-								}
-								const next_list_column = next_list_row._child(`[data-column_id="${dt_cell.dataset.column_id}"]`);
-								const next_input = next_list_column._child(`[data-bind="${input.dataset.bind}"]`);
-								scrollIntoView(next_input, {
-									callback: () => {
-										selectInput(next_input);
-									},
-								});
-							}
-
-							if (left || right) {
-								const dt_cell = input._parent(".dt_cell");
-								let next_cell = dt_cell;
-
-								let next_input = undefined;
-								while (!next_input) {
-									next_cell = left ? next_cell._prev() : next_cell._next();
-									if (!next_cell) {
-										next_cell = left ? dt_cell._last_sibling() : dt_cell._first_sibling();
-									}
-
-									if (next_cell) {
-										next_input = next_cell._child(`[data-bind]`);
-									}
-								}
-
-								selectInput(next_input);
-							}
-						}
-					});
-				}
-			});
-		},
+		ready: () => {},
 	});
 }
 
