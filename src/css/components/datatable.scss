@@ -22,6 +22,10 @@ datatable-comp {
 		padding: 6px 8px;
 		min-height: 50px;
 		flex-wrap: wrap;
+		min-width: 0;
+		display: flex;
+		align-items: center;
+		overflow: hidden;
 	}
 	.dt_cell:not(:last-child),
 	&.sortable .dt_row .dt_cell,
@@ -32,9 +36,6 @@ datatable-comp {
 		filter: contrast(0.9);
 	}
 	.table_body .dt_cell {
-		& {
-			overflow: hidden;
-		}
 		& > .cell_wrapper {
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -63,11 +64,6 @@ datatable-comp {
 		display: inline-block;
 	}
 	/*.table_header */
-	.dt_cell {
-		display: flex;
-		align-items: center;
-	}
-
 	.table_header {
 		box-shadow: 0 2px 2px 0 #0001;
 		position: relative;
