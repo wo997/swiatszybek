@@ -546,7 +546,9 @@ function datatableComp(comp, parent, data) {
 					registerForms();
 
 					if (data.search_url) {
-						comp._datatable_search();
+						if (!cd.selection) {
+							comp._datatable_search();
+						}
 					} else {
 						setTimeout(() => {
 							comp._children(".dt_batch_edit").forEach((e) => {
