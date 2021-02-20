@@ -40,7 +40,11 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 		template: html`
 			<div class="variant_header">
 				<div class="title inline semi-bold" data-node="{${comp._nodes.feature_name}}"></div>
-				<button style="margin-left:5px" data-node="{${comp._nodes.add_option_btn}}" class="btn primary small">
+				<button
+					style="margin-left:5px"
+					data-node="{${comp._nodes.add_option_btn}}"
+					class="btn {${data.options.length === 0}?important:primary} small"
+				>
 					Dodaj opcje <i class="fas fa-plus"></i>
 				</button>
 
