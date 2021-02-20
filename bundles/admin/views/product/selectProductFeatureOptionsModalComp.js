@@ -14,6 +14,7 @@
  *      datatable: DatatableComp
  * }
  * _show(product_feature_id: number, options?: {source?: PiepNode})
+ * _reload_data()
  * } & BaseComp} SelectProductFeatureOptionsModalComp
  */
 
@@ -83,9 +84,19 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				primary_key: "product_feature_option_id",
 				empty_html: html`Brak opcji`,
 				label: "Opcje",
+				after_label: html`<button
+					class="add_feature_option_btn btn primary"
+					data-tooltip="W przypadku gdy nie widzisz takiej opcji na liście"
+				>
+					Dodaj <i class="fas fa-plus"></i>
+				</button> `,
 			},
 		};
 	}
+
+	comp._reload_data = () => {
+		comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === comp._data.product_feature_id);
+	};
 
 	comp._show = (product_feature_id, options = {}) => {
 		comp._nodes.close_btn.classList.add("subtle");
@@ -94,7 +105,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		comp._data.product_feature_id = product_feature_id;
 
 		comp._data.datatable.label = product_features.find((e) => e.product_feature_id === product_feature_id).name;
-		comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === product_feature_id);
+		comp._reload_data();
 		comp._render({ freeze: true });
 
 		showModal("selectProductFeatureOptions", {
@@ -190,10 +201,21 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					comp._nodes.close_btn.classList.remove("subtle");
 					comp._nodes.close_btn.classList.add("important");
 				}
+
+				const add_feature_option_btn = target._parent(".add_feature_option_btn", { skip: 0 });
+				if (add_feature_option_btn) {
+					/** @type {ProductFeatureModalComp} */
+					// @ts-ignore
+					const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
+
+					product_feature_modal_comp._show(comp._data.product_feature_id, { source: add_feature_option_btn });
+				}
 			});
 
 			window.addEventListener("product_features_changed", () => {
 				comp._nodes.datatable._warmup_maps();
+				comp._reload_data();
+				comp._render();
 			});
 		},
 	});
