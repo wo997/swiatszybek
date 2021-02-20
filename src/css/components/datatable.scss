@@ -57,10 +57,11 @@ datatable-comp {
 	}
 	.dt_header_controls {
 		display: flex;
+		margin-left: -2px;
 	}
 	.table_header .dt_cell .label {
 		margin: 4px 0;
-		margin-right: 3px;
+		margin-right: 5px;
 		display: inline-block;
 	}
 	/*.table_header */
