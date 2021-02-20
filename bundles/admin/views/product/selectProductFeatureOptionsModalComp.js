@@ -42,8 +42,15 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 						},
 					},
 					{
+						label: "Opcja nadrzędna (Grupa)",
+						key: "parent_product_feature_option_id",
+						width: "1",
+						map_name: "product_feature_option",
+						searchable: "select",
+					},
+					{
 						label: "Akcja",
-						width: "155px",
+						width: "105px",
 						render: (data) => {
 							let cell = "";
 
@@ -58,6 +65,18 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 							}
 
 							return cell;
+						},
+					},
+				],
+				maps: [
+					{
+						name: "product_feature_option",
+						getMap: () => {
+							const map = product_feature_options.map((option) => ({
+								val: option.product_feature_option_id,
+								label: option.feature_name + ": " + option.name,
+							}));
+							return map;
 						},
 					},
 				],
@@ -172,6 +191,10 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					comp._nodes.close_btn.classList.add("important");
 				}
 			});
+
+			window.addEventListener("product_features_changed", () => {
+				comp._nodes.datatable._warmup_maps();
+			});
 		},
 	});
 }
@@ -179,7 +202,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 function registerSelectProductFeatureOptionsModal() {
 	registerModalContent(html`
 		<div id="selectProductFeatureOptions" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(20% + 300px);max-height: calc(65% + 100px);">
+			<div class="modal-body" style="max-width: calc(40% + 200px);max-height: calc(65% + 100px);">
 				<select-product-feature-options-modal-comp class="flex_stretch"></select-product-feature-options-modal-comp>
 			</div>
 		</div>

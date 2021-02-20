@@ -35,7 +35,7 @@ function refreshProductFeatures() {
 				spfmc._refresh_dataset();
 			}
 
-			product_comp._nodes.all_products._warmup_maps();
+			window.dispatchEvent(new CustomEvent("product_features_changed"));
 		},
 	});
 }

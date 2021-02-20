@@ -652,6 +652,10 @@ function productComp(comp, parent, data) {
 					row_data.gross_price = round(row_data.net_price * (1 + vat), 2);
 				}
 			});
+
+			window.addEventListener("product_features_changed", () => {
+				comp._nodes.all_products._warmup_maps();
+			});
 		},
 	});
 }

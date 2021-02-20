@@ -100,7 +100,7 @@ function productFeatureComp(comp, parent, data) {
 				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
 			}
 		}
-		comp._nodes.datatable._warmup_maps();
+
 		comp._data.current_group_id = -1;
 		comp._data.datatable.filters = [];
 		comp._data.groups = [];
@@ -332,6 +332,10 @@ function productFeatureComp(comp, parent, data) {
 						},
 					});
 				}
+			});
+
+			window.addEventListener("product_features_changed", () => {
+				comp._nodes.datatable._warmup_maps();
 			});
 		},
 	});

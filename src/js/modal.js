@@ -167,6 +167,14 @@ function showModal(name = null, params = {}) {
 					if (params.callback) {
 						params.callback();
 					}
+
+					window.dispatchEvent(
+						new CustomEvent("modal-shown", {
+							detail: {
+								node: modal,
+							},
+						})
+					);
 				};
 
 				let dx = 0;
