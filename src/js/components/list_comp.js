@@ -178,6 +178,7 @@ function listComp(comp, parent, data = []) {
 				}
 
 				const duration = instant ? 0 : 250;
+				console.log(duration);
 
 				registerForms();
 

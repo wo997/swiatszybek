@@ -91,6 +91,7 @@ function productComp(comp, parent, data) {
 			{ key: "gross_price", label: "Cena Brutto", width: "1", sortable: true, editable: "number", batch_edit: true },
 			{ key: "stock", label: "Stan magazynowy", width: "1", sortable: true, editable: "number", batch_edit: true },
 		],
+		empty_html: "Brak produktów",
 		dataset: [],
 		label: "Pełna lista produktów",
 		selectable: true,

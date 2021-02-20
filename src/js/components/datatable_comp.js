@@ -615,9 +615,22 @@ function datatableComp(comp, parent, data) {
 				}
 
 				if (!data.require_sort_filter) {
+					const remove_filters = [];
 					data.filters.forEach((f) => {
-						filters_info.push(data.columns.find((c) => c.key === f.key).label + ": " + f.data.display);
+						const column = data.columns.find((c) => c.key === f.key);
+						if (!column) {
+							console.error(`Column ${f.key} not found`, comp);
+							remove_filters.push(f.key);
+						} else {
+							filters_info.push(column.label + ": " + f.data.display);
+						}
 					});
+					if (remove_filters.length > 0) {
+						setTimeout(() => {
+							comp._data.filters = data.filters.filter((e) => !remove_filters.includes(e.key));
+							comp._render();
+						});
+					}
 					comp._nodes.filters_info._set_content(
 						filters_info.length ? `<i class="fas fa-filter"></i> Filtry (${filters_info.length}) ` : ""
 					);

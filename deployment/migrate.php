@@ -174,25 +174,6 @@ DB::createTable("page", [
     ["name" => "published", "type" => "TINYINT(1)"],
 ]);
 
-DB::createTable("user", [
-    ["name" => "user_id", "type" => "INT", "index" => "primary"],
-    ["name" => "authenticated", "type" => "TINYINT(1)"],
-    ["name" => "first_name", "type" => "VARCHAR(255)"],
-    ["name" => "last_name", "type" => "VARCHAR(255)"],
-    ["name" => "type", "type" => "VARCHAR(255)"],
-    ["name" => "email", "type" => "VARCHAR(255)", "index" => "index"],
-    ["name" => "login", "type" => "VARCHAR(255)", "index" => "index"],
-    ["name" => "phone", "type" => "VARCHAR(255)"],
-    ["name" => "password_hash", "type" => "VARCHAR(255)"],
-    ["name" => "remember_me_token", "type" => "VARCHAR(255)"],
-    ["name" => "visited_at", "type" => "DATETIME"],
-    ["name" => "created_at", "type" => "DATETIME"],
-    ["name" => "cart_json", "type" => "TEXT"],
-    ["name" => "cart_json", "type" => "TEXT"],
-    ["name" => "privelege_id", "type" => "TINYINT"],
-    //["name" => "last_active_at", "type" => "DATETIME"],
-]);
-
 DB::createTable("authentication_token", [
     ["name" => "authentication_token_id", "type" => "INT", "index" => "primary"],
     ["name" => "token", "type" => "VARCHAR(255)", "index" => "index"],

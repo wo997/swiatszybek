@@ -7,6 +7,6 @@
 
 <?php startSection("body_content"); ?>
 
-<datatable-comp></datatable-comp>
+<datatable-comp class="products"></datatable-comp>
 
 <?php include "admin/page_template.php"; ?>

@@ -8,8 +8,9 @@
 
 <?php startSection("body_content"); ?>
 
-<h1>Użytkownicy</h1>
+<datatable-comp class="users"></datatable-comp>
 
+<!-- 
 <div class="mytable" id="caseAllUsers"></div>
 
 <div id="editUser" data-modal data-expand data-exclude-hidden data-form>
@@ -109,11 +110,8 @@
             </div>
 
             <br>
-            <!--<div style="margin-top:auto; align-self: flex-end; padding-top:30px; margin-bottom:10px">
-                <button class="btn red" onclick="if(confirm('Czy aby na pewno chcesz usunąć użytkownika?')) saveUser(true);">Usuń <i class="fas fa-times"></i></button>
-            </div>-->
         </div>
     </div>
-</div>
+</div> -->
 
 <?php include "admin/page_template.php"; ?>
