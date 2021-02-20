@@ -140,6 +140,13 @@ function listComp(comp, parent, data = []) {
 							pk.split(".").forEach((e) => {
 								ref = ref[e];
 							});
+
+							// @ts-ignore
+							if (isNaN(ref) && !comp.shown_primary_key_error) {
+								console.error("Error with primary key", comp);
+								// @ts-ignore
+								comp.shown_primary_key_error = true;
+							}
 							child.dataset.primary = ref;
 						}
 

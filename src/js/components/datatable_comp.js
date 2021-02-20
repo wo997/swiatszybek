@@ -118,7 +118,7 @@ function datatableComp(comp, parent, data) {
 			key: "",
 			width: "38px",
 			render: (row) => {
-				return html`<p-checkbox class="square select_row shrink" data-primary_id="${row[data.primary_key]}"></p-checkbox>`;
+				return html`<p-checkbox class="square select_row shrink"></p-checkbox>`;
 			},
 			flex: true,
 		});
@@ -127,7 +127,7 @@ function datatableComp(comp, parent, data) {
 			const target = $(ev.target);
 			const select_row = target._parent(".select_row", { skip: 0 });
 			if (select_row) {
-				const primary_id = +select_row.dataset.primary_id;
+				const primary_id = +select_row._parent(`.list_row`).dataset.primary;
 
 				if (select_row._get_value()) {
 					comp._data.selection.push(primary_id);
@@ -570,7 +570,7 @@ function datatableComp(comp, parent, data) {
 					const ids = [];
 					comp._nodes.list._getRows().forEach((row) => {
 						const select_row = row._child(".select_row");
-						const primary_id = +select_row.dataset.primary_id;
+						const primary_id = +row.dataset.primary;
 						ids.push(primary_id);
 						const selected = comp._data.selection.indexOf(primary_id) !== -1;
 						if (selected) {
