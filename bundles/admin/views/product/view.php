@@ -1,18 +1,25 @@
 <?php //route[{ADMIN}produkt]
 
-$general_product_id = Request::urlParam(2, -1);
+$general_product_id = intval(Request::urlParam(2, -1));
 
-$general_product = EntityManager::getEntityById("general_product", $general_product_id);
+if ($general_product_id !== -1) {
+    $general_product = EntityManager::getEntityById("general_product", $general_product_id);
+    if (!$general_product) {
+        Request::redirect(Request::$static_urls["ADMIN"] . "produkt");
+    }
 
-$general_product_data = $general_product->getSimpleProps();
+    $general_product_data = $general_product->getSimpleProps();
 
-/** @var Entity[] */
-$products = $general_product->getProp("products");
-$pd = [];
-foreach ($products as $product) {
-    $pd[] = $product->getSimpleProps();
+    /** @var Entity[] */
+    $products = $general_product->getProp("products");
+    $pd = [];
+    foreach ($products as $product) {
+        $pd[] = $product->getSimpleProps();
+    }
+    $general_product_data["products"] = $pd;
+} else {
+    $general_product_data = [];
 }
-$general_product_data["products"] = $pd;
 ?>
 
 <?php startSection("head_content"); ?>

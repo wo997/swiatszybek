@@ -10,8 +10,10 @@ class Security
     public static function adminRequired()
     {
         if (!User::getCurrent()->priveleges["backend_access"]) {
-            $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
-            Request::setSingleUsageSessionVar("login", true);
+            if (!IS_XHR) {
+                $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
+                Request::setSingleUsageSessionVar("login", true);
+            }
             Request::redirect("/");
         }
     }

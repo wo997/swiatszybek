@@ -15,7 +15,6 @@ class Entity
     private $meta = []; // used for many to many relations
     private $curr_meta = []; // same as curr_props
 
-
     public function __construct($name, &$props)
     {
         $this->name = $name;
@@ -29,6 +28,9 @@ class Entity
             $this->curr_meta = [];
         } else {
             $this->curr_props = DB::fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
+            if (!$this->curr_props) {
+                throw new Exception("Entity does not exist in the DB");
+            }
             $this->setProps(def($this->curr_props, []));
             $this->curr_meta = $this->meta;
         }

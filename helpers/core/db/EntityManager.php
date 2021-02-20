@@ -87,7 +87,13 @@ class EntityManager
             }
         }
 
-        $obj = new Entity($name, $props);
+        try {
+            $obj = new Entity($name, $props);
+        } catch (Exception $e) {
+            //var_dump($e);
+            //die;
+            return false;
+        }
         $global_id = self::getObjectGlobalId($name, $obj->getId());
         self::$objects[$global_id] = $obj; // u can restore the data yay :) not used yet bro, think about it
 
