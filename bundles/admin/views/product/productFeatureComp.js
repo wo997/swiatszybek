@@ -72,6 +72,7 @@ function productFeatureComp(comp, parent, data) {
 		deletable: true,
 		require_sort: { key: "pos", order: "asc" },
 		require_sort_filter: "parent_product_feature_option_id",
+		required_empty_sortable: true,
 		label: "Opcje",
 	};
 

@@ -58,6 +58,7 @@
  *  deletable?: boolean
  *  require_sort?: DatatableSortData
  *  require_sort_filter?: string
+ *  required_empty_sortable?: boolean
  *  db_table?: string
  *  sort_on_backend?: boolean
  * }} DatatableCompData
@@ -623,12 +624,18 @@ function datatableComp(comp, parent, data) {
 					comp._nodes.clear_filters_btn.classList.toggle("active", filters_info.length > 0);
 				}
 
-				if (comp._data.sortable) {
+				if (data.sortable) {
 					let sortable = filters_info.length === 0;
-					const rsf = comp._data.require_sort_filter;
+					const rsf = data.require_sort_filter;
 					if (rsf) {
-						sortable =
-							comp._data.filters.filter((e) => e.key === rsf).length > 0 && comp._data.filters.filter((e) => e.key !== rsf).length === 0;
+						sortable = data.filters.filter((e) => e.key === rsf).length > 0 && data.filters.filter((e) => e.key !== rsf).length === 0;
+					}
+					if (
+						!sortable &&
+						data.required_empty_sortable &&
+						!data.dataset.find((e) => ![null, undefined, -1, 0, "", false].includes(e[rsf]))
+					) {
+						sortable = true;
 					}
 					comp.classList.toggle("sortable", sortable);
 				}
