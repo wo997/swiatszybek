@@ -1,10 +1,10 @@
 <?php //route[{ADMIN}search_products]  
 
 Request::jsonResponse(paginateData([
-    "select" => "product_id, title, published",
-    "from" => "products",
-    "group" => "product_id",
-    "order" => "product_id DESC",
-    "quick_search_fields" => ["title"],
+    "select" => "general_product_id, name", //, published",
+    "from" => "general_product",
+    "group" => "general_product_id",
+    "order" => "general_product_id ASC",
+    "quick_search_fields" => ["name"],
     "datatable_params" => $_POST["datatable_params"]
 ]));

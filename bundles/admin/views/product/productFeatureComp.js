@@ -17,6 +17,7 @@
  *  select_parent_option_btn: PiepNode
  *  datatable: DatatableComp
  *  groups: PiepNode
+ *  name: PiepNode
  * }
  * _load_data(id: number, options?:{callback?: CallableFunction})
  * _save_data()
@@ -111,6 +112,17 @@ function productFeatureComp(comp, parent, data) {
 	};
 
 	comp._save_data = () => {
+		const errors = validateInputs([comp._nodes.name]);
+
+		if (errors.length > 0) {
+			return;
+		}
+
+		if (comp._data.datatable.dataset.length === 0) {
+			showNotification("Musisz dodać min. 1 opcję", { type: "error", one_line: true });
+			return;
+		}
+
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "product/feature/save",
 			params: {
@@ -127,7 +139,7 @@ function productFeatureComp(comp, parent, data) {
 			},
 			success: (res) => {
 				hideAndSearch();
-				showNotification(comp._data.product_feature_id === -1 ? "Dodano cechę" : "Zapisano cechę", {
+				showNotification(comp._data.product_feature_id === -1 ? "Dodano cechę produktu" : "Zapisano cechę produktu", {
 					one_line: true,
 					type: "success",
 				});
@@ -235,7 +247,7 @@ function productFeatureComp(comp, parent, data) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="label first">Nazwa cechy produktu</div>
-			<input type="text" class="field" data-bind="{${data.name}}" data-validate="string" />
+			<input type="text" class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="string" />
 
 			<div>
 				<div class="label" style="font-size: 1.2em;">Grupy opcji</div>

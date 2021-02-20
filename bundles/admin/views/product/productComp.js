@@ -611,10 +611,16 @@ function productComp(comp, parent, data) {
 							},
 						},
 						success: (res) => {
+							if (!res.general_product_id) {
+								alert("Wystąpił błąd krytyczny");
+							}
+
 							showNotification(comp._data.general_product_id === -1 ? "Dodano produkt" : "Zapisano produkt", {
 								one_line: true,
 								type: "success",
 							});
+
+							comp._data.general_product_id = res.general_product_id;
 						},
 					});
 				}

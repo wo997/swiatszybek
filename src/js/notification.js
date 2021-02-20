@@ -78,7 +78,7 @@ function showNotification(message, params = {}) {
 		}
 	);
 
-	const duration = def(params.duration, 2000);
+	const duration = def(params.duration, 3500);
 
 	// @ts-ignore
 	notification.addDismissTimeout = () => {

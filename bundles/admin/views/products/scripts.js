@@ -8,7 +8,7 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "search_products",
 		columns: [
-			{ label: "Produkt", key: "title", width: "20%", sortable: true, searchable: "string" },
+			{ label: "Produkt", key: "name", width: "20%", sortable: true, searchable: "string" },
 			{ label: "Publiczny", key: "published", width: "20%", sortable: true, searchable: "boolean" },
 			{ label: "W magazynie", key: "stock", width: "20%", sortable: true, searchable: "number" },
 			{
@@ -16,7 +16,7 @@ domload(() => {
 				key: "stock",
 				width: "100px",
 				render: (data) => {
-					return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "produkt/" + data.product_id}">
+					return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "produkt/" + data.general_product_id}">
 						Edytuj <i class="fas fa-cog"></i>
 					</a>`;
 				},

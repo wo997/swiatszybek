@@ -8,6 +8,8 @@ try {
 
     //var_dump(count($general_product->getProp("feature_options")));
     DB::commitTransaction();
+
+    Request::jsonResponse(["general_product_id" => $general_product->getId()]);
 } catch (Exception $e) {
     var_dump($e);
     DB::rollbackTransation();
