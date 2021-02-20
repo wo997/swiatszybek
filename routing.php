@@ -31,8 +31,8 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-shopping-bag"></i> Zamówienia', "quick_menu" => true,
         "sub" => [
             ["url" => "zamowienia", "title" => '<i class="fas fa-clipboard-list"></i> Lista zamówień'],
-            ["url" => "statusy", "title" => '<i class="fas fa-hourglass-half"></i> Statusy zamówień'],
-            ["url" => "statusy-wewnetrzne", "title" => '<i class="fas fa-bookmark"></i> Statusy wewnętrzne'],
+            //["url" => "statusy", "title" => '<i class="fas fa-hourglass-half"></i> Statusy zamówień'],
+            //["url" => "statusy-wewnetrzne", "title" => '<i class="fas fa-bookmark"></i> Statusy wewnętrzne'],
         ]
     ],
     [
@@ -51,15 +51,15 @@ $admin_navigations_tree = [
             ["url" => "uzytkownicy", "title" => '<i class="fas fa-users"></i> Lista użytkowników'],
             ["url" => "oczekujacy", "title" => '<i class="fas fa-clock"></i> Oczekujący'],
             ["url" => "komentarze", "title" => '<i class="fas fa-comment"></i> Komentarze'],
-            ["url" => "newsletter", "title" => '<i class="fas fa-newspaper"></i> Newsletter'],
+            //["url" => "newsletter", "title" => '<i class="fas fa-newspaper"></i> Newsletter'],
         ]
     ],
     [
         "title" => '<i class="fas fa-chart-pie"></i> Marketing', "quick_menu" => true,
         "sub" => [
-            ["url" => "statystyki", "title" => '<i class="fas fa-chart-line"></i> Statystyki'],
-            ["url" => "zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'],
-            ["url" => "kody-rabatowe", "title" => '<i class="fas fa-tag"></i> Kody rabatowe'],
+            ["url" => "sprzedaz", "title" => '<i class="fas fa-chart-line"></i> Sprzedaż'],
+            //["url" => "zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'],
+            //["url" => "kody-rabatowe", "title" => '<i class="fas fa-tag"></i> Kody rabatowe'],
         ]
     ],
     ["url" => "wysylki", "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki'],
