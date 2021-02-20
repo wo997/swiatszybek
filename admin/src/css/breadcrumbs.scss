@@ -6,7 +6,8 @@
 
 .breadcrumbs,
 .breadcrumbs.title {
-	& {
+	&,
+	& .btn {
 		font-weight: 700;
 	}
 	.crumb {
