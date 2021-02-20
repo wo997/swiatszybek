@@ -507,7 +507,7 @@ if (empty(User::getCurrent()->cart["variants"]) && !isset($_GET['produkt'])) {
             updateTotalCost();
         });
 
-        const zakup_basket_row_template = /*html*/ `
+        const zakup_basket_row_template = html `
             <div class='expand_y'>
                 <div class='product_row'>
                     <div class='cl cl1'><img class='variant_image' data-height='1w'></div>

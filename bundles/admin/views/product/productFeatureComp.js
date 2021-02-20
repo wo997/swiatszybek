@@ -19,7 +19,7 @@
  *  groups: PiepNode
  *  name: PiepNode
  * }
- * _load_data(id: number, options?:{callback?: CallableFunction})
+ * _load_data(id: number)
  * _save_data()
  * _delete()
  * _select_current_group_id(id: any)
@@ -88,7 +88,7 @@ function productFeatureComp(comp, parent, data) {
 		comp._render();
 	};
 
-	comp._load_data = (id, options = {}) => {
+	comp._load_data = (id) => {
 		comp._data.product_feature_id = id;
 		if (id === -1) {
 			comp._data.name = "";
@@ -103,6 +103,7 @@ function productFeatureComp(comp, parent, data) {
 		comp._nodes.datatable._warmup_maps();
 		comp._data.current_group_id = -1;
 		comp._data.datatable.filters = [];
+		comp._data.groups = [];
 		comp._render({ force_render: true, freeze: true });
 	};
 

@@ -621,6 +621,7 @@ function productComp(comp, parent, data) {
 							});
 
 							comp._data.general_product_id = res.general_product_id;
+							comp._render();
 						},
 					});
 				}

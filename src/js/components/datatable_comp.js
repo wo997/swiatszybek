@@ -2,7 +2,7 @@
 
 /**
  * @typedef {{
- *  label: string
+ *  label?: string
  *  key?: string
  *  width?: string
  *  sortable?: boolean | undefined
@@ -473,7 +473,6 @@ function datatableComp(comp, parent, data) {
 
 						let cell_html = "";
 
-						cell_html += /*html*/ `<div class="dt_cell" data-column="${column_index}">`;
 						cell_html += html`<span class="label">${column.label}</span>`;
 
 						if (data.require_sort && column.sortable) {
@@ -481,7 +480,7 @@ function datatableComp(comp, parent, data) {
 						}
 
 						if (column.sortable || column.searchable || column.batch_edit) {
-							cell_html += /*html*/ ` <div class="dt_header_controls">`;
+							let dt_header_controls = "";
 
 							if (column.sortable) {
 								let icon = "fa-sort";
@@ -498,27 +497,32 @@ function datatableComp(comp, parent, data) {
 										tooltip = "Wyłącz sortowanie";
 									}
 								}
-								cell_html += html` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
+								dt_header_controls += html` <button class="btn ${btn_class} dt_sort fas ${icon}" data-tooltip="${tooltip}"></button>`;
 							}
 							if (column.searchable) {
 								let btn_class = "transparent";
 								if (data.filters.find((e) => e.key === column.key)) {
 									btn_class = "primary";
 								}
-								cell_html += html` <button class="btn ${btn_class} dt_filter fas fa-search" data-tooltip="Filtruj wyniki"></button>`;
+								dt_header_controls += html` <button
+									class="btn ${btn_class} dt_filter fas fa-search"
+									data-tooltip="Filtruj wyniki"
+								></button>`;
 							}
 							if (column.batch_edit) {
 								const tooltip =
 									data.selection.length > 0
 										? `Edytuj dane zaznaczonych wierszy (${data.selection.length})`
 										: `Edytuj dane wszystkich przefiltrowanych wierszy (${data.pagination_data.total_rows})`;
-								cell_html += html` <button class="btn transparent dt_batch_edit fas fa-edit" data-tooltip="${tooltip}"></button>`;
+								dt_header_controls += html` <button class="btn transparent dt_batch_edit fas fa-edit" data-tooltip="${tooltip}"></button>`;
 							}
-							cell_html += /*html*/ `</div>`;
-							cell_html += /*html*/ `</div>`;
+
+							dt_header_controls = html`<div class="dt_header_controls">${dt_header_controls}</div>`;
+
+							cell_html += dt_header_controls;
 						}
 
-						cell_html += /*html*/ `</div>`;
+						cell_html = html`<div class="dt_cell" data-column="${column_index}">${cell_html}</div>`;
 
 						cells_html.push(cell_html);
 
@@ -643,7 +647,7 @@ function datatableComp(comp, parent, data) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div style="margin-bottom:10px;display:flex;align-items:center">
-				<span class="datatable_label" html="{${data.label}}"></span>
+				<span class="datatable_label" html="{${def(data.label, "")}}"></span>
 				<span html="{${data.after_label}}"></span>
 				<div style="flex-grow:1"></div>
 				<div data-node="{${comp._nodes.filters_info}}" style="padding:0 10px;font-weight:600"></div>
