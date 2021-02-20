@@ -75,6 +75,10 @@ function listComp(comp, parent, data = []) {
 			render: () => {
 				const diff = diffArrays(comp._prev_data, data, (e) => e.row_id);
 
+				if (diff.length === 0) {
+					return;
+				}
+
 				let instant = !!comp._parent(".freeze"); // || diff.length > 15;
 				let chaos = false;
 
@@ -178,7 +182,6 @@ function listComp(comp, parent, data = []) {
 				}
 
 				const duration = instant ? 0 : 250;
-				console.log(duration);
 
 				registerForms();
 
