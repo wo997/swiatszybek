@@ -2,6 +2,7 @@
 
 /**
  * @typedef {{
+ * product_feature_id: number
  * datatable: DatatableCompData
  * }} SelectProductFeatureOptionsModalCompData
  *
@@ -24,6 +25,7 @@
 function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
+			product_feature_id: -1,
 			datatable: {
 				columns: [
 					{
@@ -70,8 +72,11 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		comp._nodes.close_btn.classList.add("subtle");
 		comp._nodes.close_btn.classList.remove("important");
 
-		comp._nodes.datatable._data.dataset = product_feature_options.filter((e) => e.product_feature_id === product_feature_id);
-		comp._nodes.datatable._render();
+		comp._data.product_feature_id = product_feature_id;
+
+		comp._data.datatable.label = product_features.find((e) => e.product_feature_id === product_feature_id).name;
+		comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === product_feature_id);
+		comp._render({ freeze: true });
 
 		showModal("selectProductFeatureOptions", {
 			source: options.source,
@@ -124,15 +129,21 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				if (select_btn) {
 					const list_row = select_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
+						const product_feature_id = comp._data.product_feature_id;
+						const pfids = product_comp._data.product_feature_ids;
+						if (!pfids.includes(product_feature_id)) {
+							pfids.push(product_feature_id);
+						}
+
 						product_comp._data.product_feature_option_ids.push(+list_row.dataset.primary);
 						product_comp._render();
 						select_product_features_modal_comp._render();
 						comp._nodes.datatable._render();
 
-						showNotification("Dodano opcję", {
-							one_line: true,
-							type: "success",
-						});
+						// showNotification("Dodano opcję", {
+						// 	one_line: true,
+						// 	type: "success",
+						// });
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");
@@ -150,10 +161,10 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 							select_product_features_modal_comp._render();
 							comp._nodes.datatable._render();
 
-							showNotification("Usunięto opcję", {
-								one_line: true,
-								type: "success",
-							});
+							// showNotification("Usunięto opcję", {
+							// 	one_line: true,
+							// 	type: "success",
+							// });
 						}
 					}
 

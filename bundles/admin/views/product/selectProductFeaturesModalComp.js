@@ -43,7 +43,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					{ label: "Opcje", key: "options", width: "2", searchable: "string" },
 					{
 						label: "Akcja",
-						width: "200px",
+						width: "207px",
 						flex: true,
 						render: (data) => {
 							let cell = "";
@@ -181,14 +181,10 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						const product_feature_id = +list_row.dataset.primary;
 						showOptionsFrom(product_feature_id, select_btn);
 
-						product_comp._data.product_feature_ids.push(product_feature_id);
-						product_comp._render();
-						comp._nodes.datatable._render();
-
-						showNotification("Dodano cechę produktu", {
-							one_line: true,
-							type: "success",
-						});
+						// showNotification("Dodano cechę produktu", {
+						// 	one_line: true,
+						// 	type: "success",
+						// });
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");
@@ -217,10 +213,10 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							product_comp._render();
 							comp._nodes.datatable._render();
 
-							showNotification("Usunięto cechę produktu", {
-								one_line: true,
-								type: "success",
-							});
+							// showNotification("Usunięto cechę produktu", {
+							// 	one_line: true,
+							// 	type: "success",
+							// });
 						}
 					}
 

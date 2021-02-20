@@ -144,7 +144,7 @@ function productFeatureComp(comp, parent, data) {
 				},
 				success: (res) => {
 					hideAndSearch();
-					showNotification("Usunięto cechę", {
+					showNotification(`Usunięto cechę ${comp._data.name}`, {
 						one_line: true,
 						type: "success",
 					});
@@ -235,7 +235,7 @@ function productFeatureComp(comp, parent, data) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="label first">Nazwa cechy produktu</div>
-			<input type="text" class="field" data-bind="{${data.name}}" />
+			<input type="text" class="field" data-bind="{${data.name}}" data-validate="string" />
 
 			<div>
 				<div class="label" style="font-size: 1.2em;">Grupy opcji</div>
@@ -258,7 +258,7 @@ function productFeatureComp(comp, parent, data) {
 			</div>
 
 			<div class="adv_controls">
-				<button class="btn primary" data-node="{${comp._nodes.add_option_btn}}">Dodaj nową <i class="fas fa-plus"></i></button>
+				<button class="btn primary" data-node="{${comp._nodes.add_option_btn}}">Dodaj opcję <i class="fas fa-plus"></i></button>
 				<button
 					class="btn {${data.datatable.selection.length > 0}?important:subtle}"
 					data-node="{${comp._nodes.select_parent_option_btn}}"
