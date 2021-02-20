@@ -34,7 +34,7 @@
  *      remove_products_btn: PiepNode
  *      save_btn: PiepNode
  *  } & CompWithHistoryNodes
- *  _add_missing_products(params?: {similar_products: {new_option_id, option_id}[], options_existed: number[]})
+ *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], dont_ask?: boolean})
  *  _remove_missing_products()
  * } & BaseComp} ProductComp
  */
@@ -124,7 +124,7 @@ function productComp(comp, parent, data) {
 	data.products_dt = def(data.products_dt, table);
 	data.unnecessary_product_ids = [];
 
-	comp._add_missing_products = (params) => {
+	comp._add_missing_products = (params = {}) => {
 		const data = comp._data;
 		const add_products = [];
 
@@ -139,7 +139,7 @@ function productComp(comp, parent, data) {
 				product_data[key] = option_id;
 			}
 
-			if (params) {
+			if (params && params.options_existed) {
 				data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
 					params.options_existed.forEach((option_id) => {
 						const feature_id = product_feature_options.find((option) => option.product_feature_option_id === option_id).product_feature_id;
@@ -164,7 +164,7 @@ function productComp(comp, parent, data) {
 						shared_features_for_similar_products++;
 					}
 
-					if (params) {
+					if (params && params.similar_products) {
 						params.similar_products.forEach((e) => {
 							if (e.new_option_id === pr_opt_id && e.option_id === other_product[feature_key]) {
 								shared_features_for_similar_products++;
@@ -271,24 +271,16 @@ function productComp(comp, parent, data) {
 			}
 		}
 
-		if (questions.length > 0 && !params) {
-			/** @type {ManageProductListModalComp} */
-			// @ts-ignore
-			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
-
-			manage_product_list_modal_comp._data.questions = questions;
-			manage_product_list_modal_comp._data.add_products = add_products;
-			manage_product_list_modal_comp._render({ freeze: true });
-
-			manage_product_list_modal_comp._show({ source: comp._nodes.add_products_btn });
-		} else {
+		const answered = params.options_existed || params.similar_products;
+		if (questions.length === 0 || answered || params.dont_ask) {
 			add_products.forEach((p) => {
 				data.products_dt.dataset.push(p);
 			});
 
 			data.product_feature_ids.forEach((feature_id) => {
 				const key = getFeatureKeyFromId(feature_id);
-				if (data.features.find((f) => f.product_feature_id === feature_id).options.length < 2) {
+				const feature = data.features.find((f) => f.product_feature_id === feature_id);
+				if (!feature || feature.options.length < 2) {
 					return;
 				}
 
@@ -301,6 +293,16 @@ function productComp(comp, parent, data) {
 			});
 
 			comp._render();
+		} else {
+			/** @type {ManageProductListModalComp} */
+			// @ts-ignore
+			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
+
+			manage_product_list_modal_comp._data.questions = questions;
+			manage_product_list_modal_comp._data.add_products = add_products;
+			manage_product_list_modal_comp._render({ freeze: true });
+
+			manage_product_list_modal_comp._show({ source: comp._nodes.add_products_btn });
 		}
 	};
 
