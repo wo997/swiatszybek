@@ -114,7 +114,7 @@ class Entity
         // don't worry about sorting removed items, the order is still the same
         if ($this->will_delete) {
             $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
-            var_dump([$query]);
+            //var_dump([$query]);
             DB::execute($query);
             return true;
         }
@@ -151,7 +151,7 @@ class Entity
 
             $link = def($entity_data, ["linked_with", $other_entity_type]);
             if ($link) {
-                EntityManager::setManyToManyRelationship($this, $other_entity_type, def($this->curr_props, $key, []), $value, $link["relation_table"]);
+                EntityManager::setManyToManyRelationship($this, $other_entity_type, def($this->curr_props, $key, []), $value, $link);
             }
 
             if (def($this->curr_props, $key, null) === $value) {
@@ -190,7 +190,7 @@ class Entity
                 }
                 $query = rtrim($query, ",");
                 $query .= " WHERE " . $this->id_column . "=" . $this->getId();
-                var_dump([$query, array_values($changed_props)]);
+                //var_dump([$query, array_values($changed_props)]);
                 DB::execute($query, array_values($changed_props));
                 return true;
             }

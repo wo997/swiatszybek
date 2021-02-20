@@ -317,8 +317,9 @@ function productComp(comp, parent, data) {
 	comp._set_data = (data, options = {}) => {
 		data.products_dt.dataset.forEach((row_data) => {
 			// warmup
-			const vat = vats.find((e) => e.vat_id === row_data.vat_id).value;
-			row_data.gross_price = round(row_data.net_price * (1 + vat), 2);
+			const vat = vats.find((e) => e.vat_id === row_data.vat_id);
+			const vat_val = vat ? vat.value : 0;
+			row_data.gross_price = round(row_data.net_price * (1 + vat_val), 2);
 		});
 
 		setCompData(comp, data, {
@@ -591,23 +592,36 @@ function productComp(comp, parent, data) {
 				save_btn_wrapper.appendChild(save_btn);
 			}
 			save_btn.addEventListener("click", () => {
+				const data = comp._data;
 				const errors = validateInputs(directCompNodes(comp, "[data-validate]"));
 
 				if (errors.length === 0) {
+					const db_products = cloneObject(data.products_dt.dataset);
+					undefined;
+					db_products.forEach((product) => {
+						product.feature_options = [];
+						data.product_feature_ids.forEach((fid) => {
+							const fkey = getFeatureKeyFromId(fid);
+							product.feature_options.push(product[fkey]);
+							delete product[fkey];
+						});
+					});
+
 					xhr({
 						url: STATIC_URLS["ADMIN"] + "general_product/save",
 						params: {
 							general_product: {
-								general_product_id: comp._data.general_product_id,
-								name: comp._data.name,
-								features: comp._data.product_feature_ids.map((product_feature_id, index) => ({
+								general_product_id: data.general_product_id,
+								name: data.name,
+								features: data.product_feature_ids.map((product_feature_id, index) => ({
 									product_feature_id,
 									_meta_pos: index,
 								})),
-								feature_options: comp._data.product_feature_option_ids.map((product_feature_option_id, index) => ({
+								feature_options: data.product_feature_option_ids.map((product_feature_option_id, index) => ({
 									product_feature_option_id,
 									_meta_pos: index,
 								})),
+								products: db_products,
 							},
 						},
 						success: (res) => {
@@ -641,15 +655,16 @@ function productComp(comp, parent, data) {
 				/** @type {ProductData} */
 				const row_data = detail.row_data;
 				const key = detail.key;
-				const vat = vats.find((e) => e.vat_id === row_data.vat_id).value;
+				const vat = vats.find((e) => e.vat_id === row_data.vat_id);
+				const vat_val = vat ? vat.value : 0;
 
 				row_data.gross_price = round(row_data.gross_price, 2);
 				row_data.net_price = round(row_data.net_price, 2);
 				if (key === "gross_price") {
-					row_data.net_price = round(row_data.gross_price / (1 + vat), 2);
+					row_data.net_price = round(row_data.gross_price / (1 + vat_val), 2);
 				}
 				if (key === "net_price" || key === "vat_id") {
-					row_data.gross_price = round(row_data.net_price * (1 + vat), 2);
+					row_data.gross_price = round(row_data.net_price * (1 + vat_val), 2);
 				}
 			});
 

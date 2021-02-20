@@ -202,13 +202,36 @@ domload(() => {
 	// product_comp._data.name = d.name;
 	// product_comp._data.general_product_id = 1;
 
-	product_comp._data.general_product_id = general_product_data.general_product_id;
-	product_comp._data.name = general_product_data.name;
-	product_comp._data.product_feature_ids = general_product_data.product_feature_ids;
-	product_comp._data.product_feature_option_ids = general_product_data.product_feature_option_ids;
-	//product_comp._data.products_dt.dataset = general_product_data.products_dt.dataset;
+	const data = product_comp._data;
 
-	//product_comp._set_data();
+	data.general_product_id = general_product_data.general_product_id;
+
+	data.name = general_product_data.name;
+
+	data.product_feature_ids = [];
+	for (const feature of general_product_data.features.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
+		data.product_feature_ids.push(feature.product_feature_id);
+	}
+
+	data.product_feature_option_ids = [];
+	for (const feature of general_product_data.feature_options.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
+		data.product_feature_option_ids.push(feature.product_feature_option_id);
+	}
+
+	data.products_dt.dataset = [];
+	for (const product of general_product_data.products) {
+		product.feature_options.forEach((opt) => {
+			const product_feature_option_id = opt.product_feature_option_id;
+			const product_feature_option = product_feature_options.find((e) => e.product_feature_option_id === product_feature_option_id);
+			if (product_feature_option) {
+				const fkey = getFeatureKeyFromId(product_feature_option.product_feature_id);
+				product[fkey] = product_feature_option_id;
+			}
+		});
+		delete product.feature_options;
+
+		data.products_dt.dataset.push(product);
+	}
 
 	product_comp._render();
 });

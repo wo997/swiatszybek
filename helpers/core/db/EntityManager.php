@@ -356,10 +356,12 @@ class EntityManager
      * @param  string $other_entity_name
      * @param  Entity[] $curr_val
      * @param  Entity[] $val
-     * @param  string $relation_table
+     * @param  array $link
      */
-    public static function setManyToManyRelationship(Entity $obj, $other_entity_name, $curr_val, $val, $relation_table)
+    public static function setManyToManyRelationship(Entity $obj, $other_entity_name, $curr_val, $val, $link)
     {
+        $relation_table = $link["relation_table"];
+
         $our_id = $obj->getId(); // HEY! it won't work before we save it, so you should do it at the end!
         $our_id_column = $obj->getIdColumn();
         $other_entity_id_column = self::getEntityIdColumn($other_entity_name);
@@ -373,6 +375,7 @@ class EntityManager
         }
 
         $ids = [];
+        $meta = def($link, ["extra", "meta"], null);
         $update_meta_sqls = [];
         foreach ($val as $other_obj) {
             if (in_array($obj->getName(), $other_obj->getWillUnlinkFromEntities())) {
@@ -384,10 +387,13 @@ class EntityManager
                 $ids[] = $other_id;
             }
 
-            if ($other_obj->getMeta()) {
+            if ($meta && $other_obj->getMeta()) {
                 $update_meta_sql = "UPDATE $relation_table SET";
+
                 foreach ($other_obj->getMeta() as $key => $val) {
-                    $update_meta_sql .= " " . clean($key) . " = " . DB::escape($val) . ",";
+                    if (isset($meta[$key])) {
+                        $update_meta_sql .= " " . clean($key) . " = " . DB::escape($val) . ",";
+                    }
                 }
                 $update_meta_sqls[] = substr($update_meta_sql, 0, -1) . " WHERE $other_entity_id_column = $other_id";
             }
@@ -398,14 +404,14 @@ class EntityManager
 
         if ($removed_ids) {
             $query = "DELETE FROM $relation_table WHERE $our_id_column = $our_id AND $other_entity_id_column IN (" . implode(",", $removed_ids) . ")";
-            var_dump([$query]);
+            //var_dump([$query]);
             DB::execute($query);
         }
         if ($added_ids) {
             $query = "INSERT INTO $relation_table ($our_id_column, $other_entity_id_column) VALUES " . implode(",", array_map(function ($a) use ($our_id) {
                 return "($our_id,$a)";
             }, $added_ids));
-            var_dump([$query]);
+            //var_dump([$query]);
             DB::execute($query);
         }
 

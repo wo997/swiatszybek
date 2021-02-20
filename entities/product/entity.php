@@ -6,6 +6,8 @@ EntityManager::register("product", [
         "name" => ["type" => "string"],
         "net_price" => ["type" => "number"],
         "gross_price" => ["type" => "number"],
+        "vat_id" => ["type" => "number"],
+        "active" => ["type" => "number"],
     ],
 ]);
 

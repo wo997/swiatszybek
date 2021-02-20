@@ -6,21 +6,13 @@ $general_product = EntityManager::getEntityById("general_product", $general_prod
 
 $general_product_data = $general_product->getSimpleProps();
 
-$product_feature_ids = $general_product_data["features"];
-usort($product_feature_ids, function ($a, $b) {
-    return $a["_meta_pos"] - $b["_meta_pos"];
-});
-$product_feature_option_ids = $general_product_data["feature_options"];
-usort($product_feature_option_ids, function ($a, $b) {
-    return $a["_meta_pos"] - $b["_meta_pos"];
-});
-
-$general_product_data["product_feature_ids"] = array_map(function ($a) {
-    return $a["product_feature_id"];
-}, $product_feature_ids);
-$general_product_data["product_feature_option_ids"] = array_map(function ($a) {
-    return $a["product_feature_option_id"];
-}, $product_feature_option_ids);
+/** @var Entity[] */
+$products = $general_product->getProp("products");
+$pd = [];
+foreach ($products as $product) {
+    $pd[] = $product->getSimpleProps();
+}
+$general_product_data["products"] = $pd;
 ?>
 
 <?php startSection("head_content"); ?>

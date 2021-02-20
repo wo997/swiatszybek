@@ -31,5 +31,4 @@ let product_feature_options = [];
  */
 let vats = [];
 
-/** @type {ProductCompData} */
 let general_product_data;
