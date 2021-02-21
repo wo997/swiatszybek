@@ -12,7 +12,7 @@ domload(() => {
 				category_list: {
 					categories: [
 						{
-							name: "Nazwa x",
+							name: "x",
 							category_list: {
 								categories: [
 									{
@@ -22,7 +22,7 @@ domload(() => {
 										},
 									},
 									{
-										name: "Nazwa z",
+										name: "mmm",
 										category_list: {
 											categories: [],
 										},
@@ -41,7 +41,7 @@ domload(() => {
 										},
 									},
 									{
-										name: "Nazwa z",
+										name: "z",
 										category_list: {
 											categories: [],
 										},

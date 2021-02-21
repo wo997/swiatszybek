@@ -33,19 +33,17 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		});
 	};
 
-	createComp(comp, parent, data, {
-		template: html`
-			${comp.classList.contains("main")
-				? html`
-						<p-trait data-trait="history"></p-trait>
+	let template = "";
+	if (comp.classList.contains("main")) {
+		template += html`<p-trait data-trait="history"></p-trait>
+			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button> `;
+	}
+	template += html` <list-comp data-bind="{${data.categories}}">
+		<product-category-comp></product-category-comp>
+	</list-comp>`;
 
-						<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
-				  `
-				: ""}
-			<list-comp data-bind="{${data.categories}}">
-				<product-category-comp></product-category-comp>
-			</list-comp>
-		`,
+	createComp(comp, parent, data, {
+		template,
 		initialize: () => {
 			if (comp.classList.contains("main")) {
 				const history_wrapper = comp._nodes.history;

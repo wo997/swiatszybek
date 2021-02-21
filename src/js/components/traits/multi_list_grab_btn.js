@@ -185,18 +185,22 @@ document.addEventListener("mouseup", () => {
 			/** @type {ListComp} */
 			// @ts-ignore
 			const list = row_ref._parent("list-comp");
+			const target_list = best_pos_ref.list;
 
 			const row_index = +row_ref.dataset.row_index;
+			const target_index = best_pos_ref.index;
 
-			const remove_index = list._data.findIndex((d) => {
-				return d.row_index === row_index;
-			});
-			if (remove_index !== -1) {
-				const data = list._data.splice(remove_index, 1);
-				const target_list = best_pos_ref.list;
-				list._render({ freeze: true });
-				target_list._data.splice(best_pos_ref.index, 0, ...data);
-				target_list._render({ freeze: true });
+			const same_list = target_list === list;
+			if (!same_list || target_index !== row_index) {
+				master_ref.classList.add("freeze");
+
+				const data = cloneObject(list._data.splice(row_index, 1));
+				list._render();
+				target_list._data.splice(target_index - (same_list && row_index <= target_index ? 1 : 0), 0, ...data);
+				target_list._render();
+				setTimeout(() => {
+					master_ref.classList.remove("freeze");
+				});
 			}
 		}
 	}, 0);
