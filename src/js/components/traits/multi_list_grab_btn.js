@@ -84,7 +84,7 @@ let multi_list_grab = {
 			}
 
 			let d = (edy - etry) * 0.2;
-			d = clamp(-20, d, 20);
+			d = clamp(-40, d, 40);
 			// @ts-ignore
 			const ty = etry + d;
 			// @ts-ignore
@@ -194,16 +194,19 @@ document.addEventListener("mouseup", () => {
 			if (!same_list || target_index !== row_index) {
 				master_ref.classList.add("freeze");
 
-				const data = cloneObject(list._data.splice(row_index, 1));
-				// it's always a single row, but make it clear
-				data.forEach((e) => {
-					delete e.row_id;
-				});
-				list._render();
-				target_list._data.splice(target_index - (same_list && row_index <= target_index ? 1 : 0), 0, ...data);
-				target_list._render();
 				setTimeout(() => {
-					master_ref.classList.remove("freeze");
+					const data = cloneObject(list._data.splice(row_index, 1));
+					// it's always a single row, but make it clear
+					data.forEach((e) => {
+						delete e.row_id;
+					});
+					list._render();
+					target_list._data.splice(target_index - (same_list && row_index <= target_index ? 1 : 0), 0, ...data);
+					target_list._render();
+
+					setTimeout(() => {
+						master_ref.classList.remove("freeze");
+					});
 				});
 			}
 		}
