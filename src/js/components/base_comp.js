@@ -235,7 +235,7 @@ function createComp(node, parent_comp, data, options) {
 		n.classList.add("node_" + n.dataset.node);
 	});
 
-	comp._bindNodes = comp._children(`[data-bind]`);
+	comp._bindNodes = directCompNodes(comp, `[data-bind]`);
 	comp._bindNodes.forEach((n) => {
 		n.classList.add("bind_" + n.dataset.bind);
 	});
