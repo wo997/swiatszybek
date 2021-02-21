@@ -1,7 +1,13 @@
 /* css[view] */
 
-product-category-comp {
+product-categories-comp {
 	&.comp {
+	}
+	& product-categories-comp {
+		margin-left: 50px;
+	}
+	&.categories {
+		box-shadow: inset 0 0 0 1px #ccc;
 	}
 	.category_wrapper {
 		& {
@@ -14,8 +20,5 @@ product-category-comp {
 			border: 1px solid var(--primary-clr);
 			box-shadow: inset 0px 0px 0px 1px var(--primary-clr);
 		}
-	}
-	& > product-categories-comp {
-		margin-left: 50px;
 	}
 }

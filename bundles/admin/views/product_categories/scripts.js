@@ -3,7 +3,7 @@
 domload(() => {
 	/** @type {ProductCategoriesComp} */
 	// @ts-ignore
-	const product_categories_comp = $("product-categories-comp.categories");
+	const product_categories_comp = $("product-categories-comp.main");
 
 	productCategoriesComp(product_categories_comp, undefined, {
 		categories: [

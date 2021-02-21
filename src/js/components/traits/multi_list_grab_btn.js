@@ -52,7 +52,6 @@ let multi_list_grab = {
 		// @ts-ignore
 		row.style.transform = `translate(${Math.round(mdx)}px, ${Math.round(mdy)}px) scale(${row._scale})`;
 
-		let probably_y = undefined;
 		multi_list_grab.all_rows.forEach((e) => {
 			const er = e.getBoundingClientRect();
 
@@ -73,9 +72,10 @@ let multi_list_grab = {
 				edy = -multi_list_grab.height;
 			}
 
-			if (probably_y === undefined && initial_y - er.height * 0.5 <= r.top && initial_y + er.height * 0.5 >= r.top) {
-				probably_y = initial_y;
-			}
+			// const compare_y = initial_y - (above ? 0 : multi_list_grab.height);
+			// if (probably_y === undefined && compare_y - er.height * 0.5 <= r.top && compare_y + er.height * 0.5 >= r.top) {
+			// 	probably_y = initial_y - (above ? 0 : multi_list_grab.height);
+			// }
 
 			if (e === multi_list_grab.row) {
 				return;
@@ -93,20 +93,24 @@ let multi_list_grab = {
 
 		/** @type {MultiListPosition} */
 		let best_position = undefined;
-		let min_dx = 1000;
-
-		if (probably_y) {
-			multi_list_grab.positions.forEach((e) => {
-				const dy = Math.abs(e.y - probably_y);
-				if (dy < 5) {
-					const dx = Math.abs(e.x - r.left);
-					if (dx < min_dx) {
-						min_dx = dx;
-						best_position = e;
-					}
+		let min_dx = 100;
+		let min_dy = 100;
+		multi_list_grab.positions.forEach((e) => {
+			const dy = Math.abs(e.y - r.top);
+			if (dy < min_dy) {
+				min_dy = dy;
+			}
+		});
+		multi_list_grab.positions.forEach((e) => {
+			const dy = Math.abs(e.y - r.top);
+			if (dy < min_dy + 5) {
+				const dx = Math.abs(e.x - r.left);
+				if (dx < min_dx) {
+					min_dx = dx;
+					best_position = e;
 				}
-			});
-		}
+			}
+		});
 
 		multi_list_grab.list._children(".row_highlight").forEach((e) => e.classList.remove("row_highlight"));
 
