@@ -151,14 +151,16 @@ document.addEventListener("mouseup", () => {
 				let list = list_row._parent();
 				while (true) {
 					const p = list._parent("list-comp");
-					if (p) {
-						list = p;
-					} else {
+					if (!p) {
 						break;
 					}
+					list = p;
 				}
 				multi_list_grab.list = list;
-				multi_list_grab.all_rows = multi_list_grab.list._children(n.dataset.multi_row_selector);
+
+				multi_list_grab.all_rows = multi_list_grab.list._children(n.dataset.multi_row_selector).filter((e) => {
+					return !list_row.contains(e);
+				});
 
 				multi_list_grab.list.classList.add("has_grabbed_row");
 
