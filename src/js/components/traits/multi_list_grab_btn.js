@@ -11,8 +11,6 @@
  * grabbed_at_y_scroll?: number
  * list?: PiepNode
  * all_rows?: PiepNode[]
- * min_x?: number
- * max_x?: number
  * min_y?: number
  * max_y?: number
  * place_index?: number
@@ -30,7 +28,6 @@ let multi_list_grab = {
 		const r = row.getBoundingClientRect();
 		let dx = mouse.pos.x - multi_list_grab.grabbed_at_x;
 		let dy = mouse.pos.y - multi_list_grab.grabbed_at_y + multi_list_grab.scroll_parent.scrollTop - multi_list_grab.grabbed_at_y_scroll;
-		dx = clamp(multi_list_grab.min_x, dx, multi_list_grab.max_x);
 		dy = clamp(multi_list_grab.min_y, dy, multi_list_grab.max_y);
 		// @ts-ignore
 		row._translateX = dx;
@@ -214,15 +211,15 @@ document.addEventListener("mouseup", () => {
 
 				const cr = list_row.getBoundingClientRect();
 
-				multi_list_grab.min_y = multi_list_grab.all_rows[0].getBoundingClientRect().top - cr.top;
-
-				multi_list_grab.min_x = -200;
-				multi_list_grab.max_x = 200;
-
-				/** @type {PiepNode} */
-				const last = getLast(multi_list_grab.all_rows);
-				const lr = last.getBoundingClientRect();
-				multi_list_grab.max_y = lr.top + lr.height - cr.height - cr.top;
+				multi_list_grab.min_y = 100000;
+				multi_list_grab.max_y = -100000;
+				multi_list_grab.all_rows.forEach((e) => {
+					const rr = e.getBoundingClientRect();
+					const tmin = rr.top - cr.top;
+					const tmax = rr.top + rr.height - cr.height - cr.top;
+					if (tmin < multi_list_grab.min_y) multi_list_grab.min_y = tmin;
+					if (tmax > multi_list_grab.max_y) multi_list_grab.max_y = tmax;
+				});
 
 				const st = window.getComputedStyle(list_row);
 				multi_list_grab.height = numberFromStr(st.height) + (numberFromStr(st.marginTop) + numberFromStr(st.marginBottom));
