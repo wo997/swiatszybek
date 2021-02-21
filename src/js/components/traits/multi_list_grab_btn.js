@@ -200,12 +200,7 @@ document.addEventListener("mouseup", () => {
 					delete e.row_id;
 				});
 
-				//master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
-				//const overlay = master_ref._next();
-
 				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
-				//target_list.insertBefore(row_ref, target_list._direct_children()[target_index]);
-				//row_ref.classList.add("to_remove");
 
 				setTimeout(() => {
 					list._render({ delay_change: true });
@@ -216,7 +211,6 @@ document.addEventListener("mouseup", () => {
 
 					setTimeout(() => {
 						master_ref.classList.remove("freeze");
-						//overlay.remove();
 					}, 0);
 				});
 			}
