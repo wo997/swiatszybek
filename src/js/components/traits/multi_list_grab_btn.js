@@ -48,7 +48,7 @@ let multi_list_grab = {
 		// @ts-ignore
 		row._translateY = mdy;
 		// @ts-ignore
-		row._scale = Math.max(def(row._scale, 1) - 0.002, 0.99);
+		row._scale = Math.max(def(row._scale, 1) - 0.01, 0.95);
 		// @ts-ignore
 		row.style.transform = `translate(${Math.round(mdx)}px, ${Math.round(mdy)}px) scale(${row._scale})`;
 
