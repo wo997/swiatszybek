@@ -1,1 +1,11 @@
 /* css[view] */
+
+product-category-comp {
+	&.comp {
+		max-width: 400px;
+		display: block;
+		padding: 10px;
+		border: 1px solid #ccc;
+		background: white;
+	}
+}

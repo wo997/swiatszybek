@@ -3,11 +3,11 @@
 /**
  * @typedef {{
  * product_feature: ProductFeatureCompData
- * }} ProducttFeatureModalCompData
+ * }} ProductFeatureModalCompData
  *
  * @typedef {{
- * _data: ProducttFeatureModalCompData
- * _set_data(data?: ProducttFeatureModalCompData, options?: SetCompDataOptions)
+ * _data: ProductFeatureModalCompData
+ * _set_data(data?: ProductFeatureModalCompData, options?: SetCompDataOptions)
  * _nodes: {
  *      save_btn: PiepNode
  *      product_feature_comp: ProductFeatureComp
@@ -20,7 +20,7 @@
 /**
  * @param {ProductFeatureModalComp} comp
  * @param {*} parent
- * @param {ProducttFeatureModalCompData} data
+ * @param {ProductFeatureModalCompData} data
  */
 function productFeatureModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {

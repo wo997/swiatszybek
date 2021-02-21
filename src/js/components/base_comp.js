@@ -340,6 +340,11 @@ function setCompData(comp, data = undefined, options = {}) {
 	// @ts-ignore
 	const node = comp;
 
+	if (!comp) {
+		console.error("Comp not found");
+		return;
+	}
+
 	if (data !== undefined) {
 		node._data = cloneObject(data);
 	}
