@@ -28,6 +28,7 @@
  * height?: number
  * insert_rect?: PiepNode
  * positions?: MultiListPosition[]
+ * row_selector?: string
  * }}
  */
 let multi_list_grab = {
@@ -63,7 +64,6 @@ let multi_list_grab = {
 
 			// @ts-ignore
 			const initial_y = e._initial_y;
-			console.log(initial_y);
 
 			let edy = 0;
 			if (initial_y + er.height * 0.5 > r.top && above) {
@@ -108,11 +108,24 @@ let multi_list_grab = {
 			});
 		}
 
+		multi_list_grab.list._children(".row_highlight").forEach((e) => e.classList.remove("row_highlight"));
+
 		if (best_position) {
 			const scrr = multi_list_grab.scroll_parent.getBoundingClientRect();
 			multi_list_grab.insert_rect.style.left = best_position.x - scrr.left + "px";
 			// @ts-ignore
 			multi_list_grab.insert_rect.style.top = best_position.y - scrr.top + "px";
+
+			const list = best_position.list;
+			if (list) {
+				const list_row = list._parent(".list_row");
+				if (list_row) {
+					const row = list_row._child(multi_list_grab.row_selector);
+					if (row) {
+						row.classList.add("row_highlight");
+					}
+				}
+			}
 		}
 		multi_list_grab.insert_rect.classList.toggle("active", !!best_position);
 
@@ -197,8 +210,9 @@ document.addEventListener("mouseup", () => {
 					list = p;
 				}
 				multi_list_grab.list = list;
+				multi_list_grab.row_selector = n.dataset.multi_row_selector;
 
-				multi_list_grab.all_rows = multi_list_grab.list._children(n.dataset.multi_row_selector).filter((e) => {
+				multi_list_grab.all_rows = multi_list_grab.list._children(multi_list_grab.row_selector).filter((e) => {
 					return !list_row.contains(e);
 				});
 				if (multi_list_grab.all_rows.length === 0) {
@@ -212,7 +226,7 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.max_y = -100000;
 
 				const cr = list_row.getBoundingClientRect();
-				const xr = list_row._child(n.dataset.multi_row_selector).getBoundingClientRect();
+				const xr = list_row._child(multi_list_grab.row_selector).getBoundingClientRect();
 
 				[list_row, ...multi_list_grab.all_rows].forEach((e) => {
 					const rr = e.getBoundingClientRect();
@@ -224,9 +238,6 @@ document.addEventListener("mouseup", () => {
 					const tmax = rr.top + rr.height - cr.height - cr.top;
 					if (tmin < multi_list_grab.min_y) multi_list_grab.min_y = tmin;
 					if (tmax > multi_list_grab.max_y) multi_list_grab.max_y = tmax;
-
-					// addPos(-1, e, rr);
-					// addPos(1, e, rr);
 				});
 
 				const st = window.getComputedStyle(list_row);
@@ -271,9 +282,8 @@ document.addEventListener("mouseup", () => {
 							});
 						};
 
-						insertPos(list, 0, list.getBoundingClientRect());
-
 						let n = 0;
+						insertPos(list, n, list.getBoundingClientRect());
 						list._direct_children().forEach((row) => {
 							n++;
 							insertPos(list, n, row.getBoundingClientRect());

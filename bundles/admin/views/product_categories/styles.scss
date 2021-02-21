@@ -4,10 +4,16 @@ product-category-comp {
 	&.comp {
 	}
 	.category_wrapper {
-		display: inline-block;
-		padding: 5px;
-		border: 1px solid #ccc;
-		background: #fff;
+		& {
+			display: inline-block;
+			padding: 5px;
+			border: 1px solid #ccc;
+			background: #fff;
+		}
+		&.row_highlight {
+			border: 1px solid var(--primary-clr);
+			box-shadow: inset 0px 0px 0px 1px var(--primary-clr);
+		}
 	}
 	& > product-categories-comp {
 		margin-left: 50px;
