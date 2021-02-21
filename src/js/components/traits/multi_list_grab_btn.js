@@ -73,7 +73,7 @@ let multi_list_grab = {
 				edy = -multi_list_grab.height;
 			}
 
-			if (initial_y - er.height * 0.5 < r.top && initial_y + er.height * 0.5 > r.top) {
+			if (initial_y - er.height * 0.5 <= r.top && initial_y + er.height * 0.5 >= r.top) {
 				probably_y = initial_y;
 			}
 
