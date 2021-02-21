@@ -10,6 +10,7 @@
  * _data: ProductCategoryCompData
  * _set_data(data?: ProductCategoryCompData, options?: SetCompDataOptions)
  * _nodes: {
+ * grab_btn: PiepNode
  * categories: ProductCategoryComp
  * }
  * } & BaseComp} ProductCategoryComp
@@ -39,10 +40,12 @@ function productCategoryComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div>
-				<input class="field" data-bind="{${data.name}}" placeholder="Nazwa kategorii" />
-				<product-categories-comp data-bind="{${data.category_list}}"></product-categories-comp>
+			<div class="category_wrapper">
+				<input class="field small inline" data-bind="{${data.name}}" placeholder="Nazwa kategorii" />
+				<p-trait data-trait="list_delete_btn"></p-trait>
+				<button data-node="{${comp._nodes.grab_btn}}" class="btn subtle small"><i class="fas fa-arrows-alt"></i></button>
 			</div>
+			<product-categories-comp data-bind="{${data.category_list}}"></product-categories-comp>
 		`,
 		initialize: () => {},
 	});

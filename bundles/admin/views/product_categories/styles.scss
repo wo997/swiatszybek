@@ -2,10 +2,14 @@
 
 product-category-comp {
 	&.comp {
-		max-width: 400px;
-		display: block;
-		padding: 10px;
+	}
+	.category_wrapper {
+		display: inline-block;
+		padding: 5px;
 		border: 1px solid #ccc;
 		background: white;
+	}
+	& > product-categories-comp {
+		margin-left: 50px;
 	}
 }
