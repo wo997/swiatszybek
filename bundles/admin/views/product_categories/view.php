@@ -19,6 +19,24 @@
 
 <?php startSection("body_content"); ?>
 
+<div>
+    <p class="user_info" style="margin-top:0">
+        <i class="fas fa-info-circle"></i> Warto ograniczyć ilośc kategorii i skorzystać z cech produktu żeby zachować przejrzystość sklepu.
+        <br>
+        Przykładowo zamiast utworzyć kategorie
+        <span style="text-decoration: underline;">
+            Smartfony
+            <i class="fas fa-chevron-right"></i>
+            Lista producentów
+            <i class="fas fa-chevron-right"></i>
+            Modele
+        </span>
+        .
+        Zalecamy<br>utworzyć tylko kategorię <span style="text-decoration: underline;">Smartfony</span>
+        i oprócz tego cechy produktu taką jak Producent, Model itd.
+    </p>
+</div>
+
 <div class="categories_wrapper">
     <product-categories-comp class="main"></product-categories-comp>
 </div>

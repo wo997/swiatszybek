@@ -53,9 +53,7 @@ let multi_list_grab = {
 		// @ts-ignore
 		row._translateY = mdy;
 		// @ts-ignore
-		row._scale = Math.max(def(row._scale, 1) - 0.002, 0.99);
-		// @ts-ignore
-		row.style.transform = `translate(${Math.round(mdx)}px, ${Math.round(mdy)}px) scale(${row._scale})`;
+		row.style.transform = `translate(${Math.round(mdx)}px, ${Math.round(mdy)}px)`;
 
 		multi_list_grab.ticks++;
 		multi_list_grab.all_rows.forEach((e, index) => {
@@ -71,10 +69,10 @@ let multi_list_grab = {
 			const initial_y = e._initial_y;
 
 			let edy = 0;
-			if (initial_y + er.height * 0.5 > r.top + scroll_dy && above) {
+			if (initial_y + er.height * 0.5 >= r.top + scroll_dy && above) {
 				edy = multi_list_grab.height;
 			}
-			if (initial_y + er.height * 0.5 < r.top + r.height + scroll_dy && !above) {
+			if (initial_y + er.height * 0.5 <= r.top + r.height + scroll_dy && !above) {
 				edy = -multi_list_grab.height;
 			}
 
@@ -152,48 +150,74 @@ document.addEventListener("mouseup", () => {
 		return;
 	}
 
-	// multi_list_grab.all_rows.forEach((x) => {
-	// 	// @ts-ignore
-	// 	const sc = def(x._scale, 1);
-	// 	// @ts-ignore
-	// 	const tx = def(x._translateX, 0);
-	// 	// @ts-ignore
-	// 	const ty = def(x._translateY, 0);
-	// 	if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
-	// 		//x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translate(0px, 0px)}`, 250);
-	// 	}
-	// 	// @ts-ignore
-	// 	x._scale = 1;
-	// 	// @ts-ignore
-	// 	x._translateX = 0;
-	// 	// @ts-ignore
-	// 	x._translateY = 0;
-	// 	x.style.transform = "";
-	// });
+	const otherRowsFix = (fall_back = false) => {
+		multi_list_grab.all_rows.forEach((x) => {
+			if (!fall_back && x === row_ref) {
+				return;
+			}
+			// @ts-ignore
+			const tx = def(x._translateX, 0);
+			// @ts-ignore
+			const ty = def(x._translateY, 0);
+			if (Math.abs(tx) > 1 || Math.abs(ty) > 1) {
+				if (fall_back) {
+					x._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(0px, 0px)}`, 150);
+				}
+			}
+			// @ts-ignore
+			x._translateX = 0;
+			// @ts-ignore
+			x._translateY = 0;
+			x.style.transform = "";
+		});
+	};
 
 	const master_ref = multi_list_grab.master_list;
-	row_ref.style.zIndex = `200`;
+
 	removeMultiGrabHighlight();
 
+	row_ref.style.zIndex = `200`;
 	setTimeout(() => {
 		master_ref.classList.remove("has_grabbed_row");
 		row_ref.classList.remove("multi_grabbed");
 		row_ref.style.zIndex = "";
-	}, 0);
+	}, 150);
 
 	const best_pos_ref = multi_list_grab.best_position;
-	setTimeout(() => {
-		if (best_pos_ref) {
-			/** @type {ListComp} */
+	const insert_rect_ref = multi_list_grab.insert_rect;
+	let change = false;
+	if (best_pos_ref) {
+		/** @type {ListComp} */
+		// @ts-ignore
+		const list = row_ref._parent("list-comp");
+		const target_list = best_pos_ref.list;
+
+		const row_index = +row_ref.dataset.row_index;
+		const target_index = best_pos_ref.index;
+
+		const same_list = target_list === list;
+		if (!same_list || target_index !== row_index) {
+			change = true;
+
 			// @ts-ignore
-			const list = row_ref._parent("list-comp");
-			const target_list = best_pos_ref.list;
+			const tx = def(row_ref._translateX, 0);
+			// @ts-ignore
+			const ty = def(row_ref._translateY, 0);
 
-			const row_index = +row_ref.dataset.row_index;
-			const target_index = best_pos_ref.index;
+			const rr = row_ref.getBoundingClientRect();
+			const ir = insert_rect_ref.getBoundingClientRect();
+			const etx = ir.left + tx - rr.left;
+			const ety = ir.top + ty - rr.top;
 
-			const same_list = target_list === list;
-			if (!same_list || target_index !== row_index) {
+			row_ref._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(${etx}px, ${ety}px)}`, 150);
+
+			// @ts-ignore
+			row_ref._translateX = 0;
+			// @ts-ignore
+			row_ref._translateY = 0;
+			row_ref.style.transform = "";
+
+			setTimeout(() => {
 				master_ref.classList.add("freeze");
 
 				const data = cloneObject(list._data.splice(row_index, 1));
@@ -204,39 +228,22 @@ document.addEventListener("mouseup", () => {
 
 				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
 
-				setTimeout(() => {
-					list._render({ delay_change: true });
-					target_list._data.splice(actual_index, 0, ...data);
-					target_list._render({ delay_change: true });
-					list._finish_animation();
-					target_list._finish_animation();
+				//setTimeout(() => {
+				list._render({ delay_change: true });
+				target_list._data.splice(actual_index, 0, ...data);
+				target_list._render({ delay_change: true });
+				list._finish_animation();
+				target_list._finish_animation();
+				master_ref.classList.remove("freeze");
 
-					multi_list_grab.all_rows.forEach((x) => {
-						// @ts-ignore
-						const sc = def(x._scale, 1);
-						// @ts-ignore
-						const tx = def(x._translateX, 0);
-						// @ts-ignore
-						const ty = def(x._translateY, 0);
-						if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
-							//x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translate(0px, 0px)}`, 250);
-						}
-						// @ts-ignore
-						x._scale = 1;
-						// @ts-ignore
-						x._translateX = 0;
-						// @ts-ignore
-						x._translateY = 0;
-						x.style.transform = "";
-					});
-
-					setTimeout(() => {
-						master_ref.classList.remove("freeze");
-					}, 0);
-				});
-			}
+				otherRowsFix(false);
+				//});
+			}, 150);
 		}
-	}, 0);
+	}
+	if (!change) {
+		otherRowsFix(true);
+	}
 
 	multi_list_grab.insert_rect.remove();
 	multi_list_grab.row = undefined;
@@ -347,8 +354,6 @@ document.addEventListener("mouseup", () => {
 								off_y -= cr.height;
 							}
 							top += off_y;
-
-							//top += multi_list_grab.scroll_parent.scrollTop;
 
 							multi_list_grab.positions.push({
 								list,
