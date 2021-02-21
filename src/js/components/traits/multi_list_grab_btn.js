@@ -86,6 +86,8 @@ let multi_list_grab = {
 			const ty = etry + d;
 			// @ts-ignore
 			e._translateY = ty;
+			// @ts-ignore
+			e._wants_y = edy;
 
 			// @ts-ignore
 			e.style.transform = `translateY(${Math.round(ty)}px)`;
@@ -103,7 +105,7 @@ let multi_list_grab = {
 		});
 		multi_list_grab.positions.forEach((e) => {
 			const dy = Math.abs(e.y - scroll_dy - r.top);
-			if (dy < min_dy + 5) {
+			if (dy < min_dy + 1) {
 				const dx = Math.abs(e.x - r.left);
 				if (dx < min_dx) {
 					min_dx = dx;
@@ -150,7 +152,16 @@ document.addEventListener("mouseup", () => {
 		return;
 	}
 
-	const otherRowsFix = (fall_back = false) => {
+	const rowsFix = (e) => {
+		multi_list_grab.all_rows.forEach((x) => {
+			// @ts-ignore
+			x._translateX = 0;
+			// @ts-ignore
+			x._translateY = 0;
+			x.style.transform = "";
+		});
+	};
+	const otherRowsAnimate = (fall_back = false) => {
 		multi_list_grab.all_rows.forEach((x) => {
 			if (!fall_back && x === row_ref) {
 				return;
@@ -159,16 +170,12 @@ document.addEventListener("mouseup", () => {
 			const tx = def(x._translateX, 0);
 			// @ts-ignore
 			const ty = def(x._translateY, 0);
-			if (Math.abs(tx) > 1 || Math.abs(ty) > 1) {
-				if (fall_back) {
-					x._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(0px, 0px)}`, 150);
-				}
+			// @ts-ignore
+			const eny = fall_back ? 0 : def(x._wants_y, 0);
+
+			if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || Math.abs(eny) > 1) {
+				x._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(0px, ${eny}px)}`, 150);
 			}
-			// @ts-ignore
-			x._translateX = 0;
-			// @ts-ignore
-			x._translateY = 0;
-			x.style.transform = "";
 		});
 	};
 
@@ -211,38 +218,37 @@ document.addEventListener("mouseup", () => {
 
 			row_ref._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(${etx}px, ${ety}px)}`, 150);
 
-			// @ts-ignore
-			row_ref._translateX = 0;
-			// @ts-ignore
-			row_ref._translateY = 0;
-			row_ref.style.transform = "";
-
 			setTimeout(() => {
-				master_ref.classList.add("freeze");
+				otherRowsAnimate();
+				rowsFix();
 
-				const data = cloneObject(list._data.splice(row_index, 1));
-				// it's always a single row, but make it clear
-				data.forEach((e) => {
-					delete e.row_id;
-				});
+				setTimeout(() => {
+					master_ref.classList.add("freeze");
 
-				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
+					const data = cloneObject(list._data.splice(row_index, 1));
+					// it's always a single row, but make it clear
+					data.forEach((e) => {
+						delete e.row_id;
+					});
 
-				//setTimeout(() => {
-				list._render({ delay_change: true });
-				target_list._data.splice(actual_index, 0, ...data);
-				target_list._render({ delay_change: true });
-				list._finish_animation();
-				target_list._finish_animation();
-				master_ref.classList.remove("freeze");
+					const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
 
-				otherRowsFix(false);
-				//});
-			}, 150);
+					setTimeout(() => {
+						list._render({ delay_change: true });
+						target_list._data.splice(actual_index, 0, ...data);
+						target_list._render({ delay_change: true });
+						list._finish_animation();
+						target_list._finish_animation();
+						master_ref.classList.remove("freeze");
+					});
+				}, 150);
+			});
 		}
 	}
+
 	if (!change) {
-		otherRowsFix(true);
+		otherRowsAnimate(true);
+		rowsFix();
 	}
 
 	multi_list_grab.insert_rect.remove();
