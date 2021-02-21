@@ -31,6 +31,7 @@
  * positions?: MultiListPosition[]
  * row_selector?: string
  * best_position?: MultiListPosition
+ * ticks?: number
  * }}
  */
 let multi_list_grab = {
@@ -56,7 +57,8 @@ let multi_list_grab = {
 		// @ts-ignore
 		row.style.transform = `translate(${Math.round(mdx)}px, ${Math.round(mdy)}px) scale(${row._scale})`;
 
-		multi_list_grab.all_rows.forEach((e) => {
+		multi_list_grab.ticks++;
+		multi_list_grab.all_rows.forEach((e, index) => {
 			const er = e.getBoundingClientRect();
 
 			// @ts-ignore
@@ -76,12 +78,7 @@ let multi_list_grab = {
 				edy = -multi_list_grab.height;
 			}
 
-			// const compare_y = initial_y - (above ? 0 : multi_list_grab.height);
-			// if (probably_y === undefined && compare_y - er.height * 0.5 <= r.top && compare_y + er.height * 0.5 >= r.top) {
-			// 	probably_y = initial_y - (above ? 0 : multi_list_grab.height);
-			// }
-
-			if (e === multi_list_grab.row) {
+			if (e === multi_list_grab.row || index > multi_list_grab.ticks) {
 				return;
 			}
 
@@ -91,6 +88,7 @@ let multi_list_grab = {
 			const ty = etry + d;
 			// @ts-ignore
 			e._translateY = ty;
+
 			// @ts-ignore
 			e.style.transform = `translateY(${Math.round(ty)}px)`;
 		});
@@ -124,8 +122,8 @@ let multi_list_grab = {
 			// @ts-ignore
 			multi_list_grab.insert_rect.style.top = best_position.y - scrr.top + multi_list_grab.grabbed_at_y_scroll + "px";
 
-			const list = best_position.list;
-			if (list) {
+			let list = best_position.list;
+			while (list) {
 				const list_row = list._parent(".list_row");
 				if (list_row) {
 					const row = list_row._child(multi_list_grab.row_selector);
@@ -133,6 +131,8 @@ let multi_list_grab = {
 						row.classList.add("row_highlight");
 					}
 				}
+				// @ts-ignore
+				list = list._parent("list-comp");
 			}
 		}
 		multi_list_grab.best_position = best_position;
@@ -239,6 +239,7 @@ document.addEventListener("mouseup", () => {
 			}
 
 			n.addEventListener("mousedown", () => {
+				const key = Math.random().toString();
 				const list_row = comp._parent(".list_row");
 				if (!list_row) {
 					console.error("List row missing");
@@ -250,6 +251,7 @@ document.addEventListener("mouseup", () => {
 				}
 
 				list_row.classList.add("multi_grabbed");
+				multi_list_grab.ticks = 0;
 				multi_list_grab.comp = comp;
 				multi_list_grab.row = list_row;
 				multi_list_grab.grabbed_at_x = mouse.pos.x;
@@ -346,7 +348,6 @@ document.addEventListener("mouseup", () => {
 							insertPos(list, n, row.getBoundingClientRect());
 						});
 					});
-
 				multi_list_grab.animate();
 			});
 		},
