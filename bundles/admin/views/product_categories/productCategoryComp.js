@@ -4,7 +4,7 @@
  * @typedef {{
  * name: string
  * category_list: ProductCategoriesCompData
- * }} ProductCategoryCompData
+ * } & ListCompRowData} ProductCategoryCompData
  *
  * @typedef {{
  * _data: ProductCategoryCompData

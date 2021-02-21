@@ -15,6 +15,7 @@
  * @typedef {{
  * row_index?: number
  * row_id?: number
+ * list_length?: number
  * }} ListCompRowData row_index is a part of set of consecutive numbers, meanwhile row_id is a number that uniquely defines a row even when it chagnes the order etc.
  */
 

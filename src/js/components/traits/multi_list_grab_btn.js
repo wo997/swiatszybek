@@ -120,7 +120,10 @@ document.addEventListener("mouseup", () => {
 {
 	const trait_name = "multi_list_grab_btn";
 	registerCompTrait(trait_name, {
-		template: html`<button data-node="${trait_name}" class="btn subtle small"><i class="fas fa-arrows-alt"></i></button>`,
+		// @ts-ignore
+		template: html`<button data-node="${trait_name}" class="btn subtle small" disabled="{${data.list_length < 2}}">
+			<i class="fas fa-arrows-alt"></i>
+		</button>`,
 		initialize: (comp) => {
 			/** @type {PiepNode} */
 			const n = comp._nodes[trait_name];
@@ -162,6 +165,10 @@ document.addEventListener("mouseup", () => {
 					return !list_row.contains(e);
 				});
 
+				if (multi_list_grab.all_rows.length === 0) {
+					return;
+				}
+
 				multi_list_grab.list.classList.add("has_grabbed_row");
 
 				let i = 0;
@@ -174,8 +181,8 @@ document.addEventListener("mouseup", () => {
 
 				multi_list_grab.min_y = multi_list_grab.all_rows[0].getBoundingClientRect().top - cr.top;
 
-				multi_list_grab.min_x = -100;
-				multi_list_grab.max_x = 100;
+				multi_list_grab.min_x = -200;
+				multi_list_grab.max_x = 200;
 
 				/** @type {PiepNode} */
 				const last = getLast(multi_list_grab.all_rows);
