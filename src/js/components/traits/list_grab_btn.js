@@ -61,7 +61,7 @@ let list_grab = {
 			let d = (edy - etry) * 0.2;
 			d = clamp(-20, d, 20);
 			// @ts-ignore
-			const ty = e._translateY + d;
+			const ty = etry + d;
 			// @ts-ignore
 			e._translateY = ty;
 			// @ts-ignore
