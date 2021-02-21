@@ -10,6 +10,7 @@
  * _getRows(): AnyComp[]
  * _row_template: string
  * _primary_key: string | undefined
+ * _finish_animation()
  * } & BaseComp} ListComp
  *
  * @typedef {{
@@ -42,6 +43,23 @@ function listComp(comp, parent, data = []) {
 			obj: comp._data,
 			key: source_sub_data_index === -1 ? null : source_sub_data_index,
 		};
+	};
+
+	comp._finish_animation = () => {
+		comp._children(".to_remove").forEach((e) => {
+			e.remove();
+		});
+
+		comp._direct_children().forEach((child) => {
+			child.classList.remove("cramp_row");
+			child.style.transform = "";
+			// @ts-ignore
+			child._translateX = 0;
+			// @ts-ignore
+			child._translateY = 0;
+			// @ts-ignore
+			child._scale = 1;
+		});
 	};
 
 	comp._set_data = (data, options = {}) => {
@@ -189,20 +207,9 @@ function listComp(comp, parent, data = []) {
 				const list_rect_before = comp.getBoundingClientRect();
 
 				const finish = () => {
-					comp._children(".to_remove").forEach((e) => {
-						e.remove();
-					});
-
-					comp._direct_children().forEach((child) => {
-						child.classList.remove("cramp_row");
-						child.style.transform = "";
-						// @ts-ignore
-						child._translateX = 0;
-						// @ts-ignore
-						child._translateY = 0;
-						// @ts-ignore
-						child._scale = 1;
-					});
+					if (!options.delay_change) {
+						comp._finish_animation();
+					}
 				};
 
 				if (instant) {
@@ -382,7 +389,11 @@ function listComp(comp, parent, data = []) {
 						},
 					});
 				}
-				setTimeout(finish, duration);
+				if (duration === 0) {
+					finish();
+				} else {
+					setTimeout(finish, duration);
+				}
 			},
 		});
 	};

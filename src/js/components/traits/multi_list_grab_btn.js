@@ -200,17 +200,17 @@ document.addEventListener("mouseup", () => {
 					delete e.row_id;
 				});
 
-				// master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
-				// const overlay = master_ref._next();
+				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
 
-				list._render();
-				target_list._data.splice(target_index - (same_list && row_index <= target_index ? 1 : 0), 0, ...data);
-				target_list._render();
+				list._render({ delay_change: true });
+				target_list._data.splice(actual_index, 0, ...data);
+				target_list._render({ delay_change: true });
 
 				setTimeout(() => {
+					list._finish_animation();
+					target_list._finish_animation();
 					master_ref.classList.remove("freeze");
-					//overlay.remove();
-				}, 500);
+				}, 0);
 			}
 		}
 	}, 0);

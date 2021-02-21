@@ -49,6 +49,7 @@
  * freeze?: boolean
  * pass_list_data?: PassListData[]
  * pass_data?: PassData[]
+ * delay_change?: boolean
  * }} SetCompDataOptions
  *
  * I'm not a fan of it but regular inheritance doesn't seem to work as expected os we assign common props in here
