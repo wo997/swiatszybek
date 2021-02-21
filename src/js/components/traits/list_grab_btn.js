@@ -42,7 +42,7 @@ let list_grab = {
 			const er = e.getBoundingClientRect();
 
 			// @ts-ignore
-			const above = e._row_id < row._row_id;
+			const above = e._initial_y < row._initial_y;
 
 			// @ts-ignore
 			const etry = def(e._translateY, 0);
@@ -88,7 +88,7 @@ document.addEventListener("mouseup", () => {
 				// @ts-ignore
 				const sc = def(x._scale, 1);
 				// @ts-ignore
-				const ty = x._translateY;
+				const ty = def(x._translateY, 0);
 				if (Math.abs(ty) > 1 || sc < 0.999) {
 					x._animate(`0%{transform:scale(${sc}) translateY(${ty}px)}100%{transform:scale(1) translateY(0px)}`, 250);
 				}
@@ -140,10 +140,9 @@ document.addEventListener("mouseup", () => {
 				list_grab.all_rows = list_grab.list._direct_children();
 				list_grab.list.classList.add("has_grabbed_row");
 
-				let i = 0;
 				list_grab.all_rows.forEach((e) => {
 					// @ts-ignore
-					e._row_id = i++;
+					e._initial_y = e.getBoundingClientRect().top;
 				});
 
 				const cr = list_row.getBoundingClientRect();

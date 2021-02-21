@@ -49,7 +49,7 @@ let multi_list_grab = {
 			const er = e.getBoundingClientRect();
 
 			// @ts-ignore
-			const above = e._row_id < row._row_id;
+			const above = e._initial_y < row._initial_y;
 
 			// @ts-ignore
 			const etry = def(e._translateY, 0);
@@ -86,6 +86,35 @@ document.addEventListener("mouseup", () => {
 		return;
 	}
 
+	multi_list_grab.all_rows.forEach((x) => {
+		// @ts-ignore
+		const sc = def(x._scale, 1);
+		// @ts-ignore
+		const tx = def(x._translateX, 0);
+		// @ts-ignore
+		const ty = def(x._translateY, 0);
+		if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
+			x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translate(0px, 0px)}`, 250);
+		}
+		// @ts-ignore
+		x._scale = 1;
+		// @ts-ignore
+		x._translateX = 0;
+		// @ts-ignore
+		x._translateY = 0;
+		x.style.transform = "";
+	});
+
+	row_ref.style.zIndex = `200`;
+	setTimeout(() => {
+		multi_list_grab.list.classList.remove("has_grabbed_row");
+		row_ref.classList.remove("multi_grabbed");
+		row_ref.style.zIndex = "";
+	}, 150);
+	multi_list_grab.row = undefined;
+
+	return;
+
 	const comp = multi_list_grab.comp;
 	/** @type {ListComp} */
 	// @ts-ignore
@@ -96,12 +125,16 @@ document.addEventListener("mouseup", () => {
 				// @ts-ignore
 				const sc = def(x._scale, 1);
 				// @ts-ignore
-				const ty = x._translateY;
-				if (Math.abs(ty) > 1 || sc < 0.999) {
-					x._animate(`0%{transform:scale(${sc}) translateY(${ty}px)}100%{transform:scale(1) translateY(0px)}`, 250);
+				const tx = def(x._translateX, 0);
+				// @ts-ignore
+				const ty = def(x._translateY, 0);
+				if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
+					x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translateY(0px)}`, 250);
 				}
 				// @ts-ignore
 				x._scale = 1;
+				// @ts-ignore
+				x._translateX = 0;
 				// @ts-ignore
 				x._translateY = 0;
 				x.style.transform = "";
@@ -114,7 +147,7 @@ document.addEventListener("mouseup", () => {
 	row_ref.style.zIndex = `200`;
 	setTimeout(() => {
 		multi_list_grab.list.classList.remove("has_grabbed_row");
-		row_ref.classList.remove("grabbed");
+		row_ref.classList.remove("multi_grabbed");
 		row_ref.style.zIndex = "";
 	}, 150);
 	multi_list_grab.row = undefined;
@@ -147,7 +180,7 @@ document.addEventListener("mouseup", () => {
 					return;
 				}
 
-				list_row.classList.add("grabbed");
+				list_row.classList.add("multi_grabbed");
 				multi_list_grab.comp = comp;
 				multi_list_grab.row = list_row;
 				multi_list_grab.grabbed_at_x = mouse.pos.x;
@@ -167,17 +200,16 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.all_rows = multi_list_grab.list._children(n.dataset.multi_row_selector).filter((e) => {
 					return !list_row.contains(e);
 				});
-
 				if (multi_list_grab.all_rows.length === 0) {
 					return;
 				}
+				multi_list_grab.all_rows.push(list_row);
 
 				multi_list_grab.list.classList.add("has_grabbed_row");
 
-				let i = 0;
 				multi_list_grab.all_rows.forEach((e) => {
 					// @ts-ignore
-					e._row_id = i++;
+					e._initial_y = e.getBoundingClientRect().top;
 				});
 
 				const cr = list_row.getBoundingClientRect();

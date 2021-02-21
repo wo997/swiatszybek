@@ -98,6 +98,22 @@ list-comp {
 			--btn-font-clr: #fff;
 		}
 	}
+	&.multi_grabbed {
+		& {
+			position: relative;
+			z-index: 500;
+			filter: drop-shadow(0 2px 2px #0007);
+		}
+		&,
+		* {
+			cursor: grab !important;
+		}
+		.node_multi_list_grab_btn:active {
+			--btn-background-clr: var(--important-clr);
+			--btn-font-clr: #fff;
+		}
+	}
+
 	.node_list_grab_btn {
 		cursor: grab;
 		transition: 0.25s all;
