@@ -1,6 +1,17 @@
 /* js[global] */
 
 /**
+ * @typedef {{
+ * list: ListComp
+ * index: number
+ * x: number
+ * y: number
+ * w: number
+ * h: number
+ * }} MultiListPosition
+ */
+
+/**
  * @type {{
  * row: PiepNode
  * animate()
@@ -16,6 +27,7 @@
  * place_index?: number
  * height?: number
  * insert_rect?: PiepNode
+ * positions?: MultiListPosition[]
  * }}
  */
 let multi_list_grab = {
@@ -27,23 +39,20 @@ let multi_list_grab = {
 		}
 
 		const r = row.getBoundingClientRect();
-		let dx = mouse.pos.x - multi_list_grab.grabbed_at_x;
-		let dy = mouse.pos.y - multi_list_grab.grabbed_at_y + multi_list_grab.scroll_parent.scrollTop - multi_list_grab.grabbed_at_y_scroll;
-		dy = clamp(multi_list_grab.min_y, dy, multi_list_grab.max_y);
+		let mdx = mouse.pos.x - multi_list_grab.grabbed_at_x;
+		let mdy = mouse.pos.y - multi_list_grab.grabbed_at_y + multi_list_grab.scroll_parent.scrollTop - multi_list_grab.grabbed_at_y_scroll;
+		mdy = clamp(multi_list_grab.min_y, mdy, multi_list_grab.max_y);
 		// @ts-ignore
-		row._translateX = dx;
+		row._translateX = mdx;
 		// @ts-ignore
-		row._translateY = dy;
+		row._translateY = mdy;
 		// @ts-ignore
 		row._scale = Math.max(def(row._scale, 1) - 0.002, 0.99);
 		// @ts-ignore
-		row.style.transform = `translate(${Math.round(dx)}px, ${Math.round(dy)}px) scale(${row._scale})`;
+		row.style.transform = `translate(${Math.round(mdx)}px, ${Math.round(mdy)}px) scale(${row._scale})`;
 
-		let last_above = multi_list_grab.all_rows[0];
+		let probably_y = undefined;
 		multi_list_grab.all_rows.forEach((e) => {
-			if (e === multi_list_grab.row) {
-				return;
-			}
 			const er = e.getBoundingClientRect();
 
 			// @ts-ignore
@@ -52,16 +61,24 @@ let multi_list_grab = {
 			// @ts-ignore
 			const etry = def(e._translateY, 0);
 
+			// @ts-ignore
+			const initial_y = e._initial_y;
+			console.log(initial_y);
+
 			let edy = 0;
-			if (er.top - 0.95 * etry + er.height * 0.5 > r.top && above) {
+			if (initial_y + er.height * 0.5 > r.top && above) {
 				edy = multi_list_grab.height;
 			}
-			if (er.top - 0.95 * etry + er.height * 0.5 < r.top + r.height && !above) {
+			if (initial_y + er.height * 0.5 < r.top + r.height && !above) {
 				edy = -multi_list_grab.height;
 			}
 
-			if (er.top + edy - etry + er.height * 0.5 < r.top + r.height * 0.5) {
-				last_above = e;
+			if (initial_y - er.height * 0.5 < r.top && initial_y + er.height * 0.5 > r.top) {
+				probably_y = initial_y;
+			}
+
+			if (e === multi_list_grab.row) {
+				return;
 			}
 
 			let d = (edy - etry) * 0.2;
@@ -74,13 +91,30 @@ let multi_list_grab = {
 			e.style.transform = `translateY(${Math.round(ty)}px)`;
 		});
 
-		// if (last_above) {
-		// 	const lar = last_above.getBoundingClientRect();
-		// 	const scrr = multi_list_grab.scroll_parent.getBoundingClientRect();
-		// 	multi_list_grab.insert_rect.style.left = lar.left - scrr.left + "px";
-		// 	// @ts-ignore
-		// 	multi_list_grab.insert_rect.style.top = last_above._initial_y + lar.height - scrr.top + "px";
-		// }
+		/** @type {MultiListPosition} */
+		let best_position = undefined;
+		let min_dx = 1000;
+
+		if (probably_y) {
+			multi_list_grab.positions.forEach((e) => {
+				const dy = Math.abs(e.y - probably_y);
+				if (dy < 5) {
+					const dx = Math.abs(e.x - r.left);
+					if (dx < min_dx) {
+						min_dx = dx;
+						best_position = e;
+					}
+				}
+			});
+		}
+
+		if (best_position) {
+			const scrr = multi_list_grab.scroll_parent.getBoundingClientRect();
+			multi_list_grab.insert_rect.style.left = best_position.x - scrr.left + "px";
+			// @ts-ignore
+			multi_list_grab.insert_rect.style.top = best_position.y - scrr.top + "px";
+		}
+		multi_list_grab.insert_rect.classList.toggle("active", !!best_position);
 
 		requestAnimationFrame(multi_list_grab.animate);
 	},
@@ -179,31 +213,8 @@ document.addEventListener("mouseup", () => {
 
 				const cr = list_row.getBoundingClientRect();
 				const xr = list_row._child(n.dataset.multi_row_selector).getBoundingClientRect();
-				const scrr = multi_list_grab.scroll_parent.getBoundingClientRect();
 
-				// const poses = [];
-				// /**
-				//  *
-				//  * @param {number} pos
-				//  * @param {PiepNode} node
-				//  * @param {DOMRect} rr
-				//  */
-				// const addPos = (pos, node, rr) => {
-				// 	const above = true;
-				// 	//rr.top < cr.top;
-				// 	multi_list_grab.scroll_parent.insertAdjacentHTML("afterbegin", html` <div class="multi_list_grab_insert_rect"></div> `);
-				// 	multi_list_grab.insert_rect = multi_list_grab.scroll_parent._child(".multi_list_grab_insert_rect");
-				// 	multi_list_grab.insert_rect.style.width = xr.width + "px";
-				// 	multi_list_grab.insert_rect.style.height = cr.height + "px";
-				// 	multi_list_grab.insert_rect.style.left = rr.left - scrr.left + "px";
-				// 	multi_list_grab.insert_rect.style.top =
-				// 		rr.top - scrr.top - (above ? 0 : cr.height) + (pos === 1 ? node._parent(".list_row").offsetHeight : 0) + "px";
-
-				// 	console.log(above, node);
-				// 	//poses.push();
-				// };
-
-				multi_list_grab.all_rows.forEach((e) => {
+				[list_row, ...multi_list_grab.all_rows].forEach((e) => {
 					const rr = e.getBoundingClientRect();
 
 					// @ts-ignore
@@ -221,11 +232,12 @@ document.addEventListener("mouseup", () => {
 				const st = window.getComputedStyle(list_row);
 				multi_list_grab.height = numberFromStr(st.height) + (numberFromStr(st.marginTop) + numberFromStr(st.marginBottom));
 
-				// multi_list_grab.scroll_parent.insertAdjacentHTML("beforeend", html` <div class="multi_list_grab_insert_rect"></div> `);
-				// multi_list_grab.insert_rect = multi_list_grab.scroll_parent._child(".multi_list_grab_insert_rect");
-				// multi_list_grab.insert_rect.style.width = xr.width + "px";
-				// multi_list_grab.insert_rect.style.height = cr.height + "px";
+				multi_list_grab.scroll_parent.insertAdjacentHTML("beforeend", html` <div class="multi_list_grab_insert_rect"></div> `);
+				multi_list_grab.insert_rect = multi_list_grab.scroll_parent._child(".multi_list_grab_insert_rect");
+				multi_list_grab.insert_rect.style.width = xr.width + "px";
+				multi_list_grab.insert_rect.style.height = cr.height + "px";
 
+				multi_list_grab.positions = [];
 				[multi_list_grab.list, ...multi_list_grab.list._children("list-comp")]
 					.filter((e) => {
 						return !list_row.contains(e);
@@ -238,8 +250,8 @@ document.addEventListener("mouseup", () => {
 						 * @param {DOMRect} rect
 						 */
 						const insertPos = (list, index, rect) => {
-							let left = rect.left - scrr.left;
-							let top = rect.top - scrr.top;
+							let left = rect.left;
+							let top = rect.top;
 							let off_y = 0;
 							if (index > 0) {
 								off_y += rect.height;
@@ -249,15 +261,16 @@ document.addEventListener("mouseup", () => {
 							}
 							top += off_y;
 
-							multi_list_grab.scroll_parent.insertAdjacentHTML("afterbegin", html` <div class="multi_list_grab_insert_rect"></div> `);
-							multi_list_grab.insert_rect = multi_list_grab.scroll_parent._child(".multi_list_grab_insert_rect");
-							multi_list_grab.insert_rect.style.width = xr.width + "px";
-							multi_list_grab.insert_rect.style.height = cr.height + "px";
-							multi_list_grab.insert_rect.style.left = left + "px";
-							multi_list_grab.insert_rect.style.top = top + "px";
+							multi_list_grab.positions.push({
+								list,
+								index,
+								x: left,
+								y: top,
+								w: xr.width,
+								h: cr.height,
+							});
 						};
 
-						// insert pos 0
 						insertPos(list, 0, list.getBoundingClientRect());
 
 						let n = 0;
