@@ -5,7 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const product_categories_comp = $("product-categories-comp.main");
 
-	productCategoriesComp(product_categories_comp, undefined, {
+	let d = {
 		categories: [
 			{
 				name: "Nazwa",
@@ -109,5 +109,18 @@ domload(() => {
 				},
 			},
 		],
+	};
+
+	//d.categories = [...d.categories, ...d.categories, ...d.categories, ...d.categories];
+	//d.categories = [...d.cloneObject(d.categories), ...cloneObject(d.categories)];
+	let arr = [];
+	d.categories.forEach((e) => {
+		arr.push(cloneObject(e));
+		arr.push(cloneObject(e));
+		arr.push(cloneObject(e));
+		arr.push(cloneObject(e));
 	});
+	d.categories.push(...arr);
+
+	productCategoriesComp(product_categories_comp, undefined, d);
 });

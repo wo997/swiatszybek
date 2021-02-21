@@ -41,9 +41,11 @@ let multi_list_grab = {
 			return;
 		}
 
+		const scroll_dy = multi_list_grab.scroll_parent.scrollTop - multi_list_grab.grabbed_at_y_scroll;
+
 		const r = row.getBoundingClientRect();
 		let mdx = mouse.pos.x - multi_list_grab.grabbed_at_x;
-		let mdy = mouse.pos.y - multi_list_grab.grabbed_at_y + multi_list_grab.scroll_parent.scrollTop - multi_list_grab.grabbed_at_y_scroll;
+		let mdy = mouse.pos.y - multi_list_grab.grabbed_at_y + scroll_dy;
 		mdy = clamp(multi_list_grab.min_y, mdy, multi_list_grab.max_y);
 		// @ts-ignore
 		row._translateX = mdx;
@@ -67,10 +69,10 @@ let multi_list_grab = {
 			const initial_y = e._initial_y;
 
 			let edy = 0;
-			if (initial_y + er.height * 0.5 > r.top && above) {
+			if (initial_y + er.height * 0.5 > r.top + scroll_dy && above) {
 				edy = multi_list_grab.height;
 			}
-			if (initial_y + er.height * 0.5 < r.top + r.height && !above) {
+			if (initial_y + er.height * 0.5 < r.top + r.height + scroll_dy && !above) {
 				edy = -multi_list_grab.height;
 			}
 
@@ -98,13 +100,13 @@ let multi_list_grab = {
 		let min_dx = 100;
 		let min_dy = 100;
 		multi_list_grab.positions.forEach((e) => {
-			const dy = Math.abs(e.y - r.top);
+			const dy = Math.abs(e.y - scroll_dy - r.top);
 			if (dy < min_dy) {
 				min_dy = dy;
 			}
 		});
 		multi_list_grab.positions.forEach((e) => {
-			const dy = Math.abs(e.y - r.top);
+			const dy = Math.abs(e.y - scroll_dy - r.top);
 			if (dy < min_dy + 5) {
 				const dx = Math.abs(e.x - r.left);
 				if (dx < min_dx) {
@@ -120,7 +122,7 @@ let multi_list_grab = {
 			const scrr = multi_list_grab.scroll_parent.getBoundingClientRect();
 			multi_list_grab.insert_rect.style.left = best_position.x - scrr.left + "px";
 			// @ts-ignore
-			multi_list_grab.insert_rect.style.top = best_position.y - scrr.top + "px";
+			multi_list_grab.insert_rect.style.top = best_position.y - scrr.top + multi_list_grab.grabbed_at_y_scroll + "px";
 
 			const list = best_position.list;
 			if (list) {
@@ -324,6 +326,8 @@ document.addEventListener("mouseup", () => {
 								off_y -= cr.height;
 							}
 							top += off_y;
+
+							//top += multi_list_grab.scroll_parent.scrollTop;
 
 							multi_list_grab.positions.push({
 								list,
