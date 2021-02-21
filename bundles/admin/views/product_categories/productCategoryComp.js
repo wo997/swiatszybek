@@ -41,8 +41,8 @@ function productCategoryComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="category_wrapper">
 				<input class="field small inline" data-bind="{${data.name}}" placeholder="Nazwa kategorii" />
-				<p-trait data-trait="list_delete_btn"></p-trait>
 				<p-trait data-trait="multi_list_grab_btn" data-multi_row_selector=".category_wrapper"></p-trait>
+				<p-trait data-trait="list_delete_btn"></p-trait>
 			</div>
 			<product-categories-comp data-bind="{${data.category_list}}"></product-categories-comp>
 		`,
