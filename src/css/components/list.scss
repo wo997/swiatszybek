@@ -120,3 +120,10 @@ list-comp {
 		min-width: 28px;
 	}
 }
+
+.multi_list_grab_insert_rect {
+	border: 3px solid var(--primary-clr);
+	display: block;
+	position: absolute;
+	pointer-events: none;
+}

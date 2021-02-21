@@ -15,6 +15,7 @@
  * max_y?: number
  * place_index?: number
  * height?: number
+ * insert_rect?: PiepNode
  * }}
  */
 let multi_list_grab = {
@@ -108,45 +109,7 @@ document.addEventListener("mouseup", () => {
 		row_ref.classList.remove("multi_grabbed");
 		row_ref.style.zIndex = "";
 	}, 150);
-	multi_list_grab.row = undefined;
-
-	return;
-
-	const comp = multi_list_grab.comp;
-	/** @type {ListComp} */
-	// @ts-ignore
-	const parent = comp._parent_comp;
-	if (parent._move_row) {
-		if (comp._data.row_index === multi_list_grab.place_index) {
-			multi_list_grab.all_rows.forEach((x) => {
-				// @ts-ignore
-				const sc = def(x._scale, 1);
-				// @ts-ignore
-				const tx = def(x._translateX, 0);
-				// @ts-ignore
-				const ty = def(x._translateY, 0);
-				if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
-					x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translateY(0px)}`, 250);
-				}
-				// @ts-ignore
-				x._scale = 1;
-				// @ts-ignore
-				x._translateX = 0;
-				// @ts-ignore
-				x._translateY = 0;
-				x.style.transform = "";
-			});
-		} else {
-			parent._move_row(comp._data.row_index, multi_list_grab.place_index);
-		}
-	}
-
-	row_ref.style.zIndex = `200`;
-	setTimeout(() => {
-		multi_list_grab.list.classList.remove("has_grabbed_row");
-		row_ref.classList.remove("multi_grabbed");
-		row_ref.style.zIndex = "";
-	}, 150);
+	multi_list_grab.insert_rect.remove();
 	multi_list_grab.row = undefined;
 });
 
@@ -223,6 +186,16 @@ document.addEventListener("mouseup", () => {
 
 				const st = window.getComputedStyle(list_row);
 				multi_list_grab.height = numberFromStr(st.height) + (numberFromStr(st.marginTop) + numberFromStr(st.marginBottom));
+
+				const xr = list_row._child(n.dataset.multi_row_selector).getBoundingClientRect();
+				multi_list_grab.scroll_parent.insertAdjacentHTML("beforeend", html` <div class="multi_list_grab_insert_rect"></div> `);
+				multi_list_grab.insert_rect = multi_list_grab.scroll_parent._child(".multi_list_grab_insert_rect");
+				multi_list_grab.insert_rect.style.width = xr.width + "px";
+				multi_list_grab.insert_rect.style.height = cr.height + "px";
+
+				const scrr = multi_list_grab.scroll_parent.getBoundingClientRect();
+				multi_list_grab.insert_rect.style.left = xr.left - scrr.left + "px";
+				multi_list_grab.insert_rect.style.top = cr.top - scrr.top + "px";
 
 				multi_list_grab.animate();
 			});
