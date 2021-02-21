@@ -38,9 +38,10 @@ function productCategoryComp(comp, parent, data = undefined) {
 	};
 
 	createComp(comp, parent, data, {
+		//<input class="field small inline" data-bind="{${data.name}}" placeholder="Nazwa kategorii" />
 		template: html`
 			<div class="category_wrapper">
-				<input class="field small inline" data-bind="{${data.name}}" placeholder="Nazwa kategorii" />
+				<span class="category_name" html="{${data.name}}"></span>
 				<p-trait data-trait="multi_list_grab_btn" data-multi_row_selector=".category_wrapper"></p-trait>
 				<p-trait data-trait="list_delete_btn"></p-trait>
 			</div>

@@ -152,24 +152,24 @@ document.addEventListener("mouseup", () => {
 		return;
 	}
 
-	multi_list_grab.all_rows.forEach((x) => {
-		// @ts-ignore
-		const sc = def(x._scale, 1);
-		// @ts-ignore
-		const tx = def(x._translateX, 0);
-		// @ts-ignore
-		const ty = def(x._translateY, 0);
-		if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
-			//x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translate(0px, 0px)}`, 250);
-		}
-		// @ts-ignore
-		x._scale = 1;
-		// @ts-ignore
-		x._translateX = 0;
-		// @ts-ignore
-		x._translateY = 0;
-		x.style.transform = "";
-	});
+	// multi_list_grab.all_rows.forEach((x) => {
+	// 	// @ts-ignore
+	// 	const sc = def(x._scale, 1);
+	// 	// @ts-ignore
+	// 	const tx = def(x._translateX, 0);
+	// 	// @ts-ignore
+	// 	const ty = def(x._translateY, 0);
+	// 	if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
+	// 		//x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translate(0px, 0px)}`, 250);
+	// 	}
+	// 	// @ts-ignore
+	// 	x._scale = 1;
+	// 	// @ts-ignore
+	// 	x._translateX = 0;
+	// 	// @ts-ignore
+	// 	x._translateY = 0;
+	// 	x.style.transform = "";
+	// });
 
 	const master_ref = multi_list_grab.master_list;
 	row_ref.style.zIndex = `200`;
@@ -210,6 +210,25 @@ document.addEventListener("mouseup", () => {
 					target_list._render({ delay_change: true });
 					list._finish_animation();
 					target_list._finish_animation();
+
+					multi_list_grab.all_rows.forEach((x) => {
+						// @ts-ignore
+						const sc = def(x._scale, 1);
+						// @ts-ignore
+						const tx = def(x._translateX, 0);
+						// @ts-ignore
+						const ty = def(x._translateY, 0);
+						if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
+							//x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translate(0px, 0px)}`, 250);
+						}
+						// @ts-ignore
+						x._scale = 1;
+						// @ts-ignore
+						x._translateX = 0;
+						// @ts-ignore
+						x._translateY = 0;
+						x.style.transform = "";
+					});
 
 					setTimeout(() => {
 						master_ref.classList.remove("freeze");

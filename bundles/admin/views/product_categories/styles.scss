@@ -27,6 +27,12 @@
 				z-index: 10;
 			}
 		}
+		& .category_name {
+			width: 250px;
+			padding: 0 10px;
+			display: inline-block;
+			font-weight: 600;
+		}
 	}
 
 	.overlay {
