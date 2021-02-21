@@ -31,7 +31,7 @@ domload(() => {
 							},
 						},
 						{
-							name: "Nazwa x",
+							name: "2 x",
 							category_list: {
 								categories: [
 									{
@@ -59,23 +59,23 @@ domload(() => {
 				},
 			},
 			{
-				name: "Nazwa xxxxxxx",
+				name: "4 xxxxxxx",
 				category_list: {
 					categories: [
 						{
-							name: "Nazwa zasxaxs",
+							name: "6 zasxaxs",
 							category_list: {
 								categories: [],
 							},
 						},
 						{
-							name: "Nazwa zasdadsasd",
+							name: "7 zasdadsasd",
 							category_list: {
 								categories: [],
 							},
 						},
 						{
-							name: "Nazwa 453453",
+							name: "8 453453",
 							category_list: {
 								categories: [],
 							},
@@ -84,7 +84,7 @@ domload(() => {
 				},
 			},
 			{
-				name: "Nazwa xxxxxxx 8888888",
+				name: "LL xxxxxxx 8888888",
 				category_list: {
 					categories: [
 						{

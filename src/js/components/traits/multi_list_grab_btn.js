@@ -194,20 +194,23 @@ document.addEventListener("mouseup", () => {
 			if (!same_list || target_index !== row_index) {
 				master_ref.classList.add("freeze");
 
-				setTimeout(() => {
-					const data = cloneObject(list._data.splice(row_index, 1));
-					// it's always a single row, but make it clear
-					data.forEach((e) => {
-						delete e.row_id;
-					});
-					list._render();
-					target_list._data.splice(target_index - (same_list && row_index <= target_index ? 1 : 0), 0, ...data);
-					target_list._render();
-
-					setTimeout(() => {
-						master_ref.classList.remove("freeze");
-					});
+				const data = cloneObject(list._data.splice(row_index, 1));
+				// it's always a single row, but make it clear
+				data.forEach((e) => {
+					delete e.row_id;
 				});
+
+				// master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
+				// const overlay = master_ref._next();
+
+				list._render();
+				target_list._data.splice(target_index - (same_list && row_index <= target_index ? 1 : 0), 0, ...data);
+				target_list._render();
+
+				setTimeout(() => {
+					master_ref.classList.remove("freeze");
+					//overlay.remove();
+				}, 500);
 			}
 		}
 	}, 0);

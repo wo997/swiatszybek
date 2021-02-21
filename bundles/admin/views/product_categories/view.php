@@ -19,6 +19,8 @@
 
 <?php startSection("body_content"); ?>
 
-<product-categories-comp class="main"></product-categories-comp>
+<div class="categories_wrapper">
+    <product-categories-comp class="main"></product-categories-comp>
+</div>
 
 <?php include "admin/page_template.php"; ?>
