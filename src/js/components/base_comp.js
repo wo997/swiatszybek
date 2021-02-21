@@ -167,6 +167,9 @@ function createComp(node, parent_comp, data, options) {
 				const trait_node = createNodeFromHtml(trait_def.template);
 				trait_node._trait_def = trait_def;
 				trait._parent().insertBefore(trait_node, trait);
+				for (const attr of trait.attributes) {
+					trait_node.setAttribute(attr.name, attr.value);
+				}
 				trait.remove();
 				comp._comp_traits.push(trait_node);
 			}

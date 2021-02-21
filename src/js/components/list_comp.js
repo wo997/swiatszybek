@@ -196,6 +196,8 @@ function listComp(comp, parent, data = []) {
 						child.classList.remove("cramp_row");
 						child.style.transform = "";
 						// @ts-ignore
+						child._translateX = 0;
+						// @ts-ignore
 						child._translateY = 0;
 						// @ts-ignore
 						child._scale = 1;
@@ -268,10 +270,13 @@ function listComp(comp, parent, data = []) {
 						// @ts-ignore
 						let rect_after = child.rect_after;
 
-						let off_x = list_dl;
+						// @ts-ignore
+						let off_x = list_dl + def(child._translateX, 0);
 						// @ts-ignore
 						let off_y = list_dt + def(child._translateY, 0);
 						child.style.transform = "";
+						// @ts-ignore
+						child._translateX = 0;
 						// @ts-ignore
 						child._translateY = 0;
 

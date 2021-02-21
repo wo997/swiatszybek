@@ -6,10 +6,13 @@
  * animate()
  * comp?: AnyComp
  * scroll_parent?: PiepNode
+ * grabbed_at_x?: number
  * grabbed_at_y?: number
  * grabbed_at_y_scroll?: number
  * list?: PiepNode
  * all_rows?: PiepNode[]
+ * min_x?: number
+ * max_x?: number
  * min_y?: number
  * max_y?: number
  * place_index?: number
@@ -25,14 +28,18 @@ let multi_list_grab = {
 		}
 
 		const r = row.getBoundingClientRect();
+		let dx = mouse.pos.x - multi_list_grab.grabbed_at_x;
 		let dy = mouse.pos.y - multi_list_grab.grabbed_at_y + multi_list_grab.scroll_parent.scrollTop - multi_list_grab.grabbed_at_y_scroll;
+		dx = clamp(multi_list_grab.min_x, dx, multi_list_grab.max_x);
 		dy = clamp(multi_list_grab.min_y, dy, multi_list_grab.max_y);
+		// @ts-ignore
+		row._translateX = dx;
 		// @ts-ignore
 		row._translateY = dy;
 		// @ts-ignore
 		row._scale = Math.max(def(row._scale, 1) - 0.002, 0.99);
 		// @ts-ignore
-		row.style.transform = `translateY(${Math.round(dy)}px) scale(${row._scale})`;
+		row.style.transform = `translate(${Math.round(dx)}px, ${Math.round(dy)}px) scale(${row._scale})`;
 
 		multi_list_grab.place_index = 0;
 		multi_list_grab.all_rows.forEach((e) => {
@@ -117,6 +124,12 @@ document.addEventListener("mouseup", () => {
 		initialize: (comp) => {
 			/** @type {PiepNode} */
 			const n = comp._nodes[trait_name];
+
+			if (!n.dataset.multi_row_selector) {
+				console.error("Multi row selector not specified");
+				return;
+			}
+
 			n.addEventListener("mousedown", () => {
 				const list_row = comp._parent(".list_row");
 				if (!list_row) {
@@ -131,11 +144,22 @@ document.addEventListener("mouseup", () => {
 				list_row.classList.add("grabbed");
 				multi_list_grab.comp = comp;
 				multi_list_grab.row = list_row;
+				multi_list_grab.grabbed_at_x = mouse.pos.x;
 				multi_list_grab.grabbed_at_y = mouse.pos.y;
 				multi_list_grab.scroll_parent = list_row._scroll_parent();
 				multi_list_grab.grabbed_at_y_scroll = multi_list_grab.scroll_parent.scrollTop;
-				multi_list_grab.list = list_row._parent();
-				multi_list_grab.all_rows = multi_list_grab.list._direct_children();
+				let list = list_row._parent();
+				while (true) {
+					const p = list._parent("list-comp");
+					if (p) {
+						list = p;
+					} else {
+						break;
+					}
+				}
+				multi_list_grab.list = list;
+				multi_list_grab.all_rows = multi_list_grab.list._children(n.dataset.multi_row_selector);
+
 				multi_list_grab.list.classList.add("has_grabbed_row");
 
 				let i = 0;
@@ -147,6 +171,9 @@ document.addEventListener("mouseup", () => {
 				const cr = list_row.getBoundingClientRect();
 
 				multi_list_grab.min_y = multi_list_grab.all_rows[0].getBoundingClientRect().top - cr.top;
+
+				multi_list_grab.min_x = -100;
+				multi_list_grab.max_x = 100;
 
 				/** @type {PiepNode} */
 				const last = getLast(multi_list_grab.all_rows);
