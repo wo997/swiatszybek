@@ -18,7 +18,7 @@ if ($general_product_id !== -1) {
     }
     $general_product_data["products"] = $pd;
 } else {
-    $general_product_data = [];
+    $general_product_data = null;
 }
 ?>
 

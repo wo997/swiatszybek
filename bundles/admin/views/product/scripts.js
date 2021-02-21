@@ -204,7 +204,7 @@ domload(() => {
 
 	const data = product_comp._data;
 
-	data.general_product_id = general_product_data.general_product_id;
+	data.general_product_id = general_product_data ? general_product_data.general_product_id : -1;
 	if (general_product_data) {
 		data.name = general_product_data.name;
 

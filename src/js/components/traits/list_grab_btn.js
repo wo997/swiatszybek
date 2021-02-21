@@ -61,9 +61,11 @@ let list_grab = {
 			let d = (edy - etry) * 0.2;
 			d = clamp(-20, d, 20);
 			// @ts-ignore
-			e._translateY += d;
+			const ty = e._translateY + d;
 			// @ts-ignore
-			e.style.transform = `translateY(${Math.round(e._translateY)}px)`;
+			e._translateY = ty;
+			// @ts-ignore
+			e.style.transform = `translateY(${Math.round(ty)}px)`;
 		});
 
 		requestAnimationFrame(list_grab.animate);

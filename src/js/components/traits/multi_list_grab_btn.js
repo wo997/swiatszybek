@@ -53,6 +53,7 @@ let multi_list_grab = {
 
 			// @ts-ignore
 			const etry = def(e._translateY, 0);
+
 			let edy = 0;
 			if (er.top - 0.95 * etry + er.height * 0.5 > r.top && above) {
 				edy = multi_list_grab.height;
@@ -68,9 +69,11 @@ let multi_list_grab = {
 			let d = (edy - etry) * 0.2;
 			d = clamp(-20, d, 20);
 			// @ts-ignore
-			e._translateY += d;
+			const ty = e._translateY + d;
 			// @ts-ignore
-			e.style.transform = `translateY(${Math.round(e._translateY)}px)`;
+			e._translateY = ty;
+			// @ts-ignore
+			e.style.transform = `translateY(${Math.round(ty)}px)`;
 		});
 
 		requestAnimationFrame(multi_list_grab.animate);
