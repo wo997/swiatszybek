@@ -216,183 +216,192 @@ function listComp(comp, parent, data = []) {
 					comp.dispatchEvent(new CustomEvent("instant"));
 				}
 
-				if (chaos) {
-					finish();
-				} else {
-					let row_margin_top = undefined;
+				// chaos = true;
+				// console.log(instant, chaos);
+				// if (chaos) {
+				// 	finish();
+				// } else {
+				let row_margin_top = undefined;
 
-					let index = -1;
-					diff_with_target_index.forEach((diff_info) => {
-						index++;
+				let index = -1;
+				diff_with_target_index.forEach((diff_info) => {
+					index++;
 
-						const remove = diff_info.to === -1;
-						const add = diff_info.from === -1;
+					const remove = diff_info.to === -1;
+					const add = diff_info.from === -1;
 
-						let child = animatable_rows[index];
+					let child = animatable_rows[index];
 
-						if (add) {
+					if (add) {
+						if (!options.delay_change) {
 							child.classList.remove("cramp_row");
 						}
-						if (remove) {
-							let before_top;
-							if (row_margin_top === undefined) {
-								before_top = child.offsetTop;
-							}
+					}
+					if (remove) {
+						let before_top;
+						if (row_margin_top === undefined) {
+							before_top = child.offsetTop;
+						}
+						if (!options.delay_change) {
 							child.classList.add("cramp_row");
-							if (row_margin_top === undefined) {
-								row_margin_top = before_top - child.offsetTop;
-							}
 						}
-					});
+						if (row_margin_top === undefined) {
+							row_margin_top = before_top - child.offsetTop;
+						}
+					}
+				});
 
-					animatable_rows.forEach((child) => {
-						// @ts-ignore
-						child.rect_after = child.getBoundingClientRect();
-					});
+				animatable_rows.forEach((child) => {
+					// @ts-ignore
+					child.rect_after = child.getBoundingClientRect();
+				});
 
-					const list_rect_after = comp.getBoundingClientRect();
+				const list_rect_after = comp.getBoundingClientRect();
 
-					const list_dl = list_rect_after.left - list_rect_before.left;
-					const list_dt = list_rect_after.top - list_rect_before.top;
+				const list_dl = list_rect_after.left - list_rect_before.left;
+				const list_dt = list_rect_after.top - list_rect_before.top;
 
-					let row_index = -1;
-					index = -1;
-					diff_with_target_index.forEach((diff_info) => {
-						index++;
+				let row_index = -1;
+				index = -1;
+				diff_with_target_index.forEach((diff_info) => {
+					index++;
 
-						const remove = diff_info.to === -1;
-						const add = diff_info.from === -1;
+					const remove = diff_info.to === -1;
+					const add = diff_info.from === -1;
 
-						const child = animatable_rows[index];
+					const child = animatable_rows[index];
 
-						if (remove) {
-							child.classList.remove("cramp_row");
-							if (is_horizontal) {
-								child.style.marginRight = -child.offsetWidth + "px";
-							} else {
-								child.style.marginBottom = -child.offsetHeight + "px";
-							}
+					if (remove) {
+						child.classList.remove("cramp_row");
+						if (is_horizontal) {
+							child.style.marginRight = -child.offsetWidth + "px";
 						} else {
-							row_index++;
-							child.dataset.row_index = row_index;
+							child.style.marginBottom = -child.offsetHeight + "px";
+						}
+					} else {
+						row_index++;
+						child.dataset.row_index = row_index;
+					}
+
+					// @ts-ignore
+					let rect_before = child.rect_before;
+					// @ts-ignore
+					let rect_after = child.rect_after;
+
+					// @ts-ignore
+					let off_x = list_dl + def(child._translateX, 0);
+					// @ts-ignore
+					let off_y = list_dt + def(child._translateY, 0);
+					child.style.transform = "";
+					// @ts-ignore
+					child._translateX = 0;
+					// @ts-ignore
+					child._translateY = 0;
+
+					if (rect_before && rect_after) {
+						off_x += rect_before.left - rect_after.left;
+						off_y += rect_before.top - rect_after.top;
+					}
+
+					let after_x = 0;
+					let after_y = 0;
+					if (remove) {
+						if (is_horizontal) {
+							after_x -= rect_after.width * 0.5;
+						} else {
+							after_y -= rect_after.height * 0.5;
+						}
+						child.classList.add("removing");
+						if (instant) {
+							child.style.opacity = "0";
+						}
+						if (row_margin_top) {
+							off_y -= row_margin_top;
+						}
+					}
+					if (add) {
+						const fac = chaos ? 1 : 1.5;
+						if (is_horizontal) {
+							off_x -= rect_after.width * fac;
+						} else {
+							off_y -= rect_after.height * fac;
+						}
+					}
+
+					/**
+					 *
+					 * @param {ClientRect} r
+					 */
+					const ronscr = (r) => {
+						return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
+					};
+
+					child.style.zIndex = "" + Math.round((Math.abs(off_x) + Math.abs(off_y)) * 0.02 + (add || remove ? 1 : 2));
+
+					setTimeout(() => {
+						child.style.zIndex = "";
+					}, duration);
+
+					if (duration && ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after)))) {
+						let step_0 = "";
+						let step_1 = "";
+
+						// @ts-ignore
+						const scale = def(child._scale, 1);
+						// @ts-ignore
+						child._scale = 1;
+						if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2 || scale < 0.999) {
+							step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px) scale(${scale});`;
+							step_1 += `transform:translate(${after_x}px,${after_y}px) scale(1);`;
 						}
 
-						// @ts-ignore
-						let rect_before = child.rect_before;
-						// @ts-ignore
-						let rect_after = child.rect_after;
-
-						// @ts-ignore
-						let off_x = list_dl + def(child._translateX, 0);
-						// @ts-ignore
-						let off_y = list_dt + def(child._translateY, 0);
-						child.style.transform = "";
-						// @ts-ignore
-						child._translateX = 0;
-						// @ts-ignore
-						child._translateY = 0;
-
-						if (rect_before && rect_after) {
-							off_x += rect_before.left - rect_after.left;
-							off_y += rect_before.top - rect_after.top;
-						}
-
-						let after_x = 0;
-						let after_y = 0;
-						if (remove) {
-							if (is_horizontal) {
-								after_x -= rect_after.width * 0.5;
-							} else {
-								after_y -= rect_after.height * 0.5;
-							}
-							child.classList.add("removing");
-							if (row_margin_top) {
-								off_y -= row_margin_top;
-							}
-						}
 						if (add) {
-							const fac = chaos ? 1 : 1.5;
-							if (is_horizontal) {
-								off_x -= rect_after.width * fac;
-							} else {
-								off_y -= rect_after.height * fac;
-							}
+							step_0 += "opacity:0;transform:scale(0.94);";
+							step_1 += "opacity:1;";
+						}
+						if (remove) {
+							step_0 += "opacity:1;";
+							step_1 += "opacity:0;transform:scale(0.94);";
 						}
 
-						/**
-						 *
-						 * @param {ClientRect} r
-						 */
-						const ronscr = (r) => {
-							return r.top < window.innerHeight && r.top + r.height > 0 && r.left < window.innerWidth && r.left + r.width > 0;
-						};
-
-						child.style.zIndex = "" + Math.round((Math.abs(off_x) + Math.abs(off_y)) * 0.02 + (add || remove ? 1 : 2));
-
-						setTimeout(() => {
-							child.style.zIndex = "";
-						}, duration);
-
-						if ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after))) {
-							let step_0 = "";
-							let step_1 = "";
-
-							// @ts-ignore
-							const scale = def(child._scale, 1);
-							// @ts-ignore
-							child._scale = 1;
-							if (Math.abs(off_y) > 2 || Math.abs(off_x) > 2 || scale < 0.999) {
-								step_0 += `transform:translate(${Math.round(off_x)}px,${Math.round(off_y)}px) scale(${scale});`;
-								step_1 += `transform:translate(${after_x}px,${after_y}px) scale(1);`;
-							}
-
-							if (add) {
-								step_0 += "opacity:0;transform:scale(0.94);";
-								step_1 += "opacity:1;";
-							}
-							if (remove) {
-								step_0 += "opacity:1;";
-								step_1 += "opacity:0;transform:scale(0.94);";
-							}
-
-							if (step_1) {
-								child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, duration, { early_callback: false });
-							}
+						if (step_1) {
+							child._animate(`0%{ ${step_0} }100%{ ${step_1} }`, duration, { early_callback: false });
 						}
-					});
-
-					comp.classList.add("animating");
-
-					const w1 = list_rect_before.width;
-					const w2 = list_rect_after.width;
-
-					const h1 = list_rect_before.height;
-					const h2 = list_rect_after.height;
-
-					let step_0 = "";
-					let step_1 = "";
-
-					if (Math.abs(w1 - w2) > 1) {
-						step_0 = `width:${w1}px;`;
-						step_1 = `width:${w2}px;`;
 					}
-					if (Math.abs(h1 - h2) > 1) {
-						step_0 = `height:${h1}px;`;
-						step_1 = `height:${h2}px;`;
-					}
+				});
 
-					comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, duration, {
-						callback: () => {
-							comp.classList.remove("animating");
-							comp.style.width = "";
-							comp.style.height = "";
-						},
-					});
+				comp.classList.add("animating");
+
+				const w1 = list_rect_before.width;
+				const w2 = list_rect_after.width;
+
+				const h1 = list_rect_before.height;
+				const h2 = list_rect_after.height;
+
+				let step_0 = "";
+				let step_1 = "";
+
+				if (Math.abs(w1 - w2) > 1) {
+					step_0 = `width:${w1}px;`;
+					step_1 = `width:${w2}px;`;
 				}
-				if (duration === 0) {
-					finish();
-				} else {
+				if (Math.abs(h1 - h2) > 1) {
+					step_0 = `height:${h1}px;`;
+					step_1 = `height:${h2}px;`;
+				}
+
+				comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, duration, {
+					callback: () => {
+						comp.classList.remove("animating");
+						comp.style.width = "";
+						comp.style.height = "";
+					},
+				});
+
+				if (duration > 0) {
 					setTimeout(finish, duration);
+				} else {
+					finish();
 				}
 			},
 		});

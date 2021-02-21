@@ -200,17 +200,25 @@ document.addEventListener("mouseup", () => {
 					delete e.row_id;
 				});
 
-				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
+				//master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
+				//const overlay = master_ref._next();
 
-				list._render({ delay_change: true });
-				target_list._data.splice(actual_index, 0, ...data);
-				target_list._render({ delay_change: true });
+				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
+				//target_list.insertBefore(row_ref, target_list._direct_children()[target_index]);
+				//row_ref.classList.add("to_remove");
 
 				setTimeout(() => {
+					list._render({ delay_change: true });
+					target_list._data.splice(actual_index, 0, ...data);
+					target_list._render({ delay_change: true });
 					list._finish_animation();
 					target_list._finish_animation();
-					master_ref.classList.remove("freeze");
-				}, 0);
+
+					setTimeout(() => {
+						master_ref.classList.remove("freeze");
+						//overlay.remove();
+					}, 0);
+				});
 			}
 		}
 	}, 0);
