@@ -126,7 +126,7 @@ document.addEventListener("mouseup", () => {
 					return;
 				}
 
-				if (list_row._parent().classList.contains("has_grabbed_row")) {
+				if (list_row._parent(".has_grabbed_row")) {
 					return;
 				}
 

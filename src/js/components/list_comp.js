@@ -80,7 +80,7 @@ function listComp(comp, parent, data = []) {
 					return;
 				}
 
-				let instant = !!comp._parent(".freeze"); // || diff.length > 15;
+				let instant = !!comp._parent(".freeze", { skip: 0 }); // || diff.length > 15;
 				let chaos = false;
 
 				finishNodeAnimation(comp);
@@ -248,6 +248,7 @@ function listComp(comp, parent, data = []) {
 					const list_dl = list_rect_after.left - list_rect_before.left;
 					const list_dt = list_rect_after.top - list_rect_before.top;
 
+					let row_index = -1;
 					index = -1;
 					diff_with_target_index.forEach((diff_info) => {
 						index++;
@@ -264,6 +265,9 @@ function listComp(comp, parent, data = []) {
 							} else {
 								child.style.marginBottom = -child.offsetHeight + "px";
 							}
+						} else {
+							row_index++;
+							child.dataset.row_index = row_index;
 						}
 
 						// @ts-ignore

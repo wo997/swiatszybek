@@ -20,6 +20,7 @@
  * grabbed_at_x?: number
  * grabbed_at_y?: number
  * grabbed_at_y_scroll?: number
+ * master_list?: PiepNode
  * list?: PiepNode
  * all_rows?: PiepNode[]
  * min_y?: number
@@ -29,6 +30,7 @@
  * insert_rect?: PiepNode
  * positions?: MultiListPosition[]
  * row_selector?: string
+ * best_position?: MultiListPosition
  * }}
  */
 let multi_list_grab = {
@@ -112,7 +114,7 @@ let multi_list_grab = {
 			}
 		});
 
-		multi_list_grab.list._children(".row_highlight").forEach((e) => e.classList.remove("row_highlight"));
+		removeMultiGrabHighlight();
 
 		if (best_position) {
 			const scrr = multi_list_grab.scroll_parent.getBoundingClientRect();
@@ -131,11 +133,16 @@ let multi_list_grab = {
 				}
 			}
 		}
+		multi_list_grab.best_position = best_position;
 		multi_list_grab.insert_rect.classList.toggle("active", !!best_position);
 
 		requestAnimationFrame(multi_list_grab.animate);
 	},
 };
+
+function removeMultiGrabHighlight() {
+	multi_list_grab.master_list._children(".row_highlight").forEach((e) => e.classList.remove("row_highlight"));
+}
 
 document.addEventListener("mouseup", () => {
 	const row_ref = multi_list_grab.row;
@@ -151,7 +158,7 @@ document.addEventListener("mouseup", () => {
 		// @ts-ignore
 		const ty = def(x._translateY, 0);
 		if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || sc < 0.999) {
-			x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translate(0px, 0px)}`, 250);
+			//x._animate(`0%{transform:scale(${sc}) translate(${tx}px, ${ty}px)}100%{transform:scale(1) translate(0px, 0px)}`, 250);
 		}
 		// @ts-ignore
 		x._scale = 1;
@@ -162,12 +169,38 @@ document.addEventListener("mouseup", () => {
 		x.style.transform = "";
 	});
 
+	const master_ref = multi_list_grab.master_list;
 	row_ref.style.zIndex = `200`;
+	removeMultiGrabHighlight();
+
 	setTimeout(() => {
-		multi_list_grab.list.classList.remove("has_grabbed_row");
+		master_ref.classList.remove("has_grabbed_row");
 		row_ref.classList.remove("multi_grabbed");
 		row_ref.style.zIndex = "";
-	}, 150);
+	}, 0);
+
+	const best_pos_ref = multi_list_grab.best_position;
+	setTimeout(() => {
+		if (best_pos_ref) {
+			/** @type {ListComp} */
+			// @ts-ignore
+			const list = row_ref._parent("list-comp");
+
+			const row_index = +row_ref.dataset.row_index;
+
+			const remove_index = list._data.findIndex((d) => {
+				return d.row_index === row_index;
+			});
+			if (remove_index !== -1) {
+				const data = list._data.splice(remove_index, 1);
+				const target_list = best_pos_ref.list;
+				list._render({ freeze: true });
+				target_list._data.splice(best_pos_ref.index, 0, ...data);
+				target_list._render({ freeze: true });
+			}
+		}
+	}, 0);
+
 	multi_list_grab.insert_rect.remove();
 	multi_list_grab.row = undefined;
 });
@@ -194,7 +227,7 @@ document.addEventListener("mouseup", () => {
 					return;
 				}
 
-				if (list_row._parent().classList.contains("has_grabbed_row")) {
+				if (list_row._parent(".has_grabbed_row")) {
 					return;
 				}
 
@@ -213,10 +246,10 @@ document.addEventListener("mouseup", () => {
 					}
 					list = p;
 				}
-				multi_list_grab.list = list;
+				multi_list_grab.master_list = list;
 				multi_list_grab.row_selector = n.dataset.multi_row_selector;
 
-				multi_list_grab.all_rows = multi_list_grab.list._children(multi_list_grab.row_selector).filter((e) => {
+				multi_list_grab.all_rows = multi_list_grab.master_list._children(multi_list_grab.row_selector).filter((e) => {
 					return !list_row.contains(e);
 				});
 				if (multi_list_grab.all_rows.length === 0) {
@@ -224,7 +257,7 @@ document.addEventListener("mouseup", () => {
 				}
 				multi_list_grab.all_rows.push(list_row);
 
-				multi_list_grab.list.classList.add("has_grabbed_row");
+				multi_list_grab.master_list.classList.add("has_grabbed_row");
 
 				multi_list_grab.min_y = 100000;
 				multi_list_grab.max_y = -100000;
@@ -253,7 +286,7 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.insert_rect.style.height = cr.height + "px";
 
 				multi_list_grab.positions = [];
-				[multi_list_grab.list, ...multi_list_grab.list._children("list-comp")]
+				[multi_list_grab.master_list, ...multi_list_grab.master_list._children("list-comp")]
 					.filter((e) => {
 						return !list_row.contains(e);
 					})
