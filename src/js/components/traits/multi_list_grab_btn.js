@@ -229,6 +229,7 @@ document.addEventListener("mouseup", () => {
 					const overlay = master_ref._next();
 
 					master_ref.classList.add("freeze");
+					master_ref.style.height = master_ref.offsetHeight + "px";
 
 					const data = cloneObject(list._data.splice(row_index, 1));
 					// it's always a single row, but make it clear
@@ -250,8 +251,8 @@ document.addEventListener("mouseup", () => {
 						master_ref.classList.remove("freeze");
 
 						setTimeout(() => {
+							master_ref.style.height = "";
 							overlay.remove();
-							console.log("remo");
 						}, 100);
 					});
 				}, 150);

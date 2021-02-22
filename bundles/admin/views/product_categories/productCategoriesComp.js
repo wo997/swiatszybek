@@ -38,7 +38,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		template += html`<p-trait data-trait="history"></p-trait>
 			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button> `;
 	}
-	template += html` <list-comp data-bind="{${data.categories}}">
+	template += html` <list-comp data-bind="{${data.categories}}" class="clean">
 		<product-category-comp></product-category-comp>
 	</list-comp>`;
 

@@ -27,9 +27,9 @@ list-comp {
 		}
 	}
 	&.animating {
-		// & {
-		// 	overflow: hidden;
-		// }
+		& {
+			overflow: hidden;
+		}
 		.btn {
 			transition: 0.25s all;
 		}
@@ -58,6 +58,11 @@ list-comp {
 		}
 		&:empty {
 			border-bottom-width: 0;
+		}
+	}
+	&.clean {
+		& {
+			--list_row_margin: -1px -1px 0;
 		}
 	}
 }
