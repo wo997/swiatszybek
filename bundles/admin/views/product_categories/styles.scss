@@ -8,7 +8,7 @@
 		&.comp {
 		}
 		& product-categories-comp {
-			margin-left: 36px;
+			margin-left: 33px;
 		}
 		&.categories {
 			box-shadow: inset 0 0 0 1px #ccc;
@@ -18,10 +18,12 @@
 				display: inline-block;
 				padding: 5px;
 				border: 1px solid #ccc;
-				background: #fff;
+				border-top-width: 0;
+				box-shadow: 0 -1px 0 0 #ccc;
+				background: #fafafa;
 			}
 			&.row_highlight {
-				border: 1px solid var(--primary-clr);
+				border-color: var(--primary-clr);
 				box-shadow: inset 0px 0px 0px 1px var(--primary-clr);
 				position: relative;
 				z-index: 10;
@@ -42,5 +44,6 @@
 		right: 0;
 		bottom: 0;
 		pointer-events: none;
+		background: white;
 	}
 }

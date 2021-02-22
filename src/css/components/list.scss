@@ -27,9 +27,9 @@ list-comp {
 		}
 	}
 	&.animating {
-		& {
-			overflow: hidden;
-		}
+		// & {
+		// 	overflow: hidden;
+		// }
 		.btn {
 			transition: 0.25s all;
 		}

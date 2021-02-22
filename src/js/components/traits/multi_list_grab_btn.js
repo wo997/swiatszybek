@@ -152,7 +152,7 @@ document.addEventListener("mouseup", () => {
 		return;
 	}
 
-	const rowsFix = (e) => {
+	const rowsFix = () => {
 		multi_list_grab.all_rows.forEach((x) => {
 			// @ts-ignore
 			x._translateX = 0;
@@ -161,7 +161,7 @@ document.addEventListener("mouseup", () => {
 			x.style.transform = "";
 		});
 	};
-	const otherRowsAnimate = (fall_back = false) => {
+	const otherRowsAnimate = (fall_back) => {
 		multi_list_grab.all_rows.forEach((x) => {
 			if (!fall_back && x === row_ref) {
 				return;
@@ -173,8 +173,10 @@ document.addEventListener("mouseup", () => {
 			// @ts-ignore
 			const eny = fall_back ? 0 : def(x._wants_y, 0);
 
+			//console.log("haha");
 			if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || Math.abs(eny) > 1) {
 				x._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(0px, ${eny}px)}`, 150);
+				x.style.transform = `translate(0px, ${eny}px)`;
 			}
 		});
 	};
@@ -188,7 +190,7 @@ document.addEventListener("mouseup", () => {
 		master_ref.classList.remove("has_grabbed_row");
 		row_ref.classList.remove("multi_grabbed");
 		row_ref.style.zIndex = "";
-	}, 150);
+	}, 100);
 
 	const best_pos_ref = multi_list_grab.best_position;
 	const insert_rect_ref = multi_list_grab.insert_rect;
@@ -217,12 +219,15 @@ document.addEventListener("mouseup", () => {
 			const ety = ir.top + ty - rr.top;
 
 			row_ref._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(${etx}px, ${ety}px)}`, 150);
+			row_ref.style.transform = `translate(${etx}px, ${ety}px)`;
 
 			setTimeout(() => {
-				otherRowsAnimate();
-				rowsFix();
+				otherRowsAnimate(false);
 
 				setTimeout(() => {
+					master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
+					const overlay = master_ref._next();
+
 					master_ref.classList.add("freeze");
 
 					const data = cloneObject(list._data.splice(row_index, 1));
@@ -233,13 +238,21 @@ document.addEventListener("mouseup", () => {
 
 					const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
 
+					rowsFix();
 					setTimeout(() => {
-						list._render({ delay_change: true });
+						list._render();
+						//list._render({ delay_change: true });
 						target_list._data.splice(actual_index, 0, ...data);
-						target_list._render({ delay_change: true });
-						list._finish_animation();
-						target_list._finish_animation();
+						target_list._render();
+						//target_list._render({ delay_change: true });
+						//list._finish_animation();
+						//target_list._finish_animation();
 						master_ref.classList.remove("freeze");
+
+						setTimeout(() => {
+							overlay.remove();
+							console.log("remo");
+						}, 100);
 					});
 				}, 150);
 			});
