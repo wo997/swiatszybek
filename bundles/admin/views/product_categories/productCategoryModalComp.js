@@ -81,7 +81,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 function registerProductCategoryModal() {
 	registerModalContent(html`
 		<div id="ProductCategory" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(40% + 200px);max-height: calc(40% + 100px);">
+			<div class="modal-body" style="max-width: calc(40% + 100px);max-height: calc(40% + 200px);">
 				<product-category-modal-comp class="flex_stretch"></product-category-modal-comp>
 			</div>
 		</div>

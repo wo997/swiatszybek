@@ -171,6 +171,9 @@ textarea {
 		--btn-border-clr: #0002;
 		--disabled-opacity: 0.4;
 	}
+	&.subtle:hover {
+		--btn-hover-clr: #8888880c;
+	}
 	&.success {
 		--btn-background-clr: var(--success-clr);
 		--btn-font-clr: #fff;
@@ -198,6 +201,9 @@ textarea {
 		background: #0001;
 	}
 
+	&:hover {
+		background-color: var(--btn-hover-clr, var(--btn-background-clr, none));
+	}
 	&:hover:not(:disabled):not(:active) {
 		filter: brightness(var(--brighten-factor));
 	}
