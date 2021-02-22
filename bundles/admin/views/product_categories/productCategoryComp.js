@@ -48,7 +48,7 @@ function productCategoryComp(comp, parent, data = undefined) {
 					data-trait="multi_list_grab_btn"
 					data-multi_row_selector=".category_wrapper"
 					data-tooltip="Zmień położenie kategorię"
-					data-invisible="true"
+					data-invisible="1"
 				></p-trait>
 			</div>
 			<product-categories-comp data-bind="{${data.category_list}}"></product-categories-comp>

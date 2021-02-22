@@ -283,13 +283,19 @@ document.addEventListener("mouseup", () => {
 			/** @type {PiepNode} */
 			const n = comp._nodes[trait_name];
 
-			if (!n.dataset.multi_row_selector) {
+			const multi_row_selector = n.dataset.multi_row_selector;
+			if (!multi_row_selector) {
 				console.error("Multi row selector not specified");
 				return;
 			}
 
-			n.addEventListener("mousedown", () => {
-				const key = Math.random().toString();
+			if (n.dataset.invisible) {
+				n.style.display = "none";
+			}
+
+			const grab_target = n.dataset.invisible ? n._parent(multi_row_selector) : n;
+
+			grab_target.addEventListener("mousedown", () => {
 				const list_row = comp._parent(".list_row");
 				if (!list_row) {
 					console.error("List row missing");
@@ -317,7 +323,7 @@ document.addEventListener("mouseup", () => {
 					list = p;
 				}
 				multi_list_grab.master_list = list;
-				multi_list_grab.row_selector = n.dataset.multi_row_selector;
+				multi_list_grab.row_selector = multi_row_selector;
 
 				multi_list_grab.all_rows = multi_list_grab.master_list._children(multi_list_grab.row_selector).filter((e) => {
 					return !list_row.contains(e);

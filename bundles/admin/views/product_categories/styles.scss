@@ -22,12 +22,13 @@
 				padding: 5px;
 				border: 1px solid #999;
 				position: relative;
+				cursor: grab;
 			}
 			& .btn.subtle {
 				--btn-border-clr: #0004;
 				--btn-background-clr: #00000012;
 				width: 30px;
-				opacity: 0.85;
+				height: 30px;
 			}
 			&::before {
 				position: absolute;
