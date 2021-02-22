@@ -8,6 +8,7 @@ domload(() => {
 	let d = {
 		categories: [
 			{
+				product_category_id: 4,
 				name: "Nazwa",
 				category_list: {
 					categories: [

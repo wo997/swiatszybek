@@ -30,12 +30,12 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (id, options = {}) => {
-		const category = product_categories.find((e) => e.product_category_id === id);
-		if (category) {
-			comp._data.name = category.name;
-			comp._data.product_category_id = category.product_category_id;
-		}
-		clearCompHistory(comp);
+		// const category = product_categories.find((e) => e.product_category_id === id);
+		// if (category) {
+		// 	comp._data.name = category.name;
+		// 	comp._data.product_category_id = category.product_category_id;
+		// }
+		// clearCompHistory(comp);
 
 		showModal("ProductCategory", {
 			source: options.source,
@@ -59,6 +59,10 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 			<div class="scroll-panel scroll-shadow panel-padding">
 				<div class="label first">Nazwa kategorii</div>
 				<input class="field" data-bind="{${data.name}}" />
+
+				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
+					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń <i class="fas fa-trash"></i></button>
+				</div>
 			</div>
 		`,
 		initialize: () => {
@@ -77,16 +81,21 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 function registerProductCategoryModal() {
 	registerModalContent(html`
 		<div id="ProductCategory" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(40% + 500px);max-height: calc(40% + 500px);">
-				<product-feature-modal-comp class="flex_stretch"></product-feature-modal-comp>
+			<div class="modal-body" style="max-width: calc(40% + 200px);max-height: calc(40% + 100px);">
+				<product-category-modal-comp class="flex_stretch"></product-category-modal-comp>
 			</div>
 		</div>
 	`);
 
-	/** @type {ProductCategoryModalComp} */
-	// @ts-ignore
-	const product_category_modal_comp = $("#ProductCategory product-category-modal-comp");
+	const product_category_modal_comp = getProductCategoryModal();
 	productCategoryModalComp(product_category_modal_comp, undefined);
-
 	return product_category_modal_comp;
+}
+
+/**
+ * @returns {ProductCategoryModalComp}
+ */
+function getProductCategoryModal() {
+	// @ts-ignore
+	return $("#ProductCategory product-category-modal-comp");
 }

@@ -85,6 +85,11 @@ function createComp(node, parent_comp, data, options) {
 	// @ts-ignore
 	const parent = parent_comp;
 
+	if (!comp) {
+		console.error("Comp missing");
+		return;
+	}
+
 	//node._propagating_data = false;
 
 	comp._render = (options) => {

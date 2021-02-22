@@ -73,6 +73,8 @@ function productCategoriesComp(comp, parent, data = undefined) {
 				save_btn_wrapper.appendChild(save_btn);
 			}
 			save_btn.addEventListener("click", () => {});
+
+			registerProductCategoryModal();
 		},
 	});
 }
