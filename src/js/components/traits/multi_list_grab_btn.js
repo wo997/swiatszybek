@@ -152,7 +152,7 @@ document.addEventListener("mouseup", () => {
 		return;
 	}
 
-	const duration = 0; // multi_list_grab.all_rows.length > 50 ? 0 : 150;
+	const duration = 150; // multi_list_grab.all_rows.length > 50 ? 0 : 150;
 
 	const rowsFix = () => {
 		multi_list_grab.all_rows.forEach((x) => {
@@ -180,8 +180,7 @@ document.addEventListener("mouseup", () => {
 			// @ts-ignore
 			const eny = fall_back ? 0 : def(x._wants_y, 0);
 
-			//console.log("haha");
-			if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || Math.abs(eny) > 1) {
+			if (fall_back && (Math.abs(tx) > 1 || Math.abs(ty - eny) > 1)) {
 				x._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(0px, ${eny}px)}`, duration);
 			}
 			x.style.transform = `translate(0px, ${eny}px)`;
@@ -247,7 +246,6 @@ document.addEventListener("mouseup", () => {
 
 				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
 
-				rowsFix();
 				list._render();
 				//list._render({ delay_change: true });
 				target_list._data.splice(actual_index, 0, ...data);
@@ -255,11 +253,12 @@ document.addEventListener("mouseup", () => {
 				//target_list._render({ delay_change: true });
 				//list._finish_animation();
 				//target_list._finish_animation();
-				master_ref.classList.remove("freeze");
+				rowsFix();
 
 				setTimeout(() => {
 					master_ref.style.height = "";
 					overlay.remove();
+					master_ref.classList.remove("freeze");
 				}, 0);
 			}, duration);
 		}
