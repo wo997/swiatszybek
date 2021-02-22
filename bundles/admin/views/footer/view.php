@@ -28,4 +28,4 @@
     <div name="page_footer" data-type="html" class="cms preview_html"></div>
 </div>
 
-<?php include "admin/page_template.php"; ?>
+<?php include "bundles/admin/templates/default.php"; ?>

@@ -100,4 +100,4 @@ $product = getEntityActualOne("product", 29, [
 
 </div>
 
-<?php include "admin/page_template.php"; ?>
+<?php include "bundles/admin/templates/default.php"; ?>

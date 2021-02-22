@@ -213,4 +213,4 @@ if (!json_decode($kod_data["product_list"])) {
     </div>
 </div>
 
-<?php include "admin/page_template.php"; ?>
+<?php include "bundles/admin/templates/default.php"; ?>

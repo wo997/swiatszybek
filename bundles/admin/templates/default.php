@@ -26,7 +26,7 @@ endSection();
                 <input type="text" class="field" placeholder="W planach...">
             </div>
 
-            <?php include "navbar.php" ?>
+            <?php include "bundles/admin/navbar.php" ?>
 
             <hr>
             <div class="menu_item" onclick="return logout()">

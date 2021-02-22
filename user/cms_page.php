@@ -126,4 +126,4 @@ include "global/includes_for_cms_page.php";
     </script>
 <?php endif ?>
 
-<?php include "user/page_template.php"; ?>
+<?php include "bundles/global/templates/default.php"; ?>

@@ -7,4 +7,4 @@
 
 <?php startSection("body_content"); ?>
 
-<?php include "admin/page_template.php"; ?>
+<?php include "bundles/admin/templates/default.php"; ?>

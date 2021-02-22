@@ -454,4 +454,4 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
     </script>
 <?php endif ?>
 
-<?php include "user/page_template.php"; ?>
+<?php include "bundles/global/templates/default.php"; ?>

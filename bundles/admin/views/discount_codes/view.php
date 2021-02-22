@@ -11,4 +11,4 @@
 
 <div class="mytable"></div>
 
-<?php include "admin/page_template.php"; ?>
+<?php include "bundles/admin/templates/default.php"; ?>

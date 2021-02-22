@@ -21,7 +21,7 @@ include "scripts/init_app.php"; // TODO: remove this lol, static classes are the
 include "scripts/include_core_helpers.php";
 
 // required by CMS
-include "packages/simple_html_dom.php";
+include "helpers/simple_html_dom.php";
 include "scripts/request.php";
 
 $secrets = [];
@@ -107,6 +107,6 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
 include "theme/variables.php";
 
 // TODO: move to the FB module instead
-include_once 'helpers/facebook_register.php';
+//include_once 'helpers/facebook_register.php';
 
 include "scripts/preload_data.php";

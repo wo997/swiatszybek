@@ -13,4 +13,4 @@
 <div class="module_list"></div>
 <div class="module_info panel"></div>
 
-<?php include "admin/page_template.php"; ?>
+<?php include "bundles/admin/templates/default.php"; ?>

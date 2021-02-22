@@ -45,4 +45,4 @@
     <product-categories-comp></product-categories-comp>
 </div>
 
-<?php include "admin/page_template.php"; ?>
+<?php include "bundles/admin/templates/default.php"; ?>

@@ -66,4 +66,4 @@ if ($general_product_id !== -1) {
 
 <product-comp></product-comp>
 
-<?php include "admin/page_template.php"; ?>
+<?php include "bundles/admin/templates/default.php"; ?>

@@ -1,6 +1,8 @@
 /* js[admin] */
 
 domload(() => {
+	document.body.id = "admin";
+
 	if (window.innerWidth < MOBILE_WIDTH) {
 		var nv = $(".navbar_admin");
 		if (!nv) {
@@ -19,8 +21,6 @@ domload(() => {
 			`
 		);
 	}
-
-	document.body.id = "admin";
 });
 
 domload(() => {

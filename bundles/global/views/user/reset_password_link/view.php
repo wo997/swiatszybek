@@ -20,4 +20,4 @@
     </button>
 </form>
 
-<?php include "user/page_template.php"; ?>
+<?php include "bundles/global/templates/default.php"; ?>
