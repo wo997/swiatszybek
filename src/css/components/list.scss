@@ -99,8 +99,8 @@ list-comp {
 			cursor: grab !important;
 		}
 		.node_list_grab_btn:active {
-			--btn-background-clr: var(--important-clr);
-			--btn-font-clr: #fff;
+			--btn-background-clr: var(--important-clr) !important;
+			--btn-font-clr: #fff !important;
 		}
 	}
 	&.multi_grabbed {
@@ -115,8 +115,8 @@ list-comp {
 			cursor: grab !important;
 		}
 		.node_multi_list_grab_btn:active {
-			--btn-background-clr: var(--important-clr);
-			--btn-font-clr: #fff;
+			--btn-background-clr: var(--important-clr) !important;
+			--btn-font-clr: #fff !important;
 		}
 	}
 

@@ -42,6 +42,7 @@ function productCategoryComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="category_wrapper">
 				<span class="category_name" html="{${data.name}}"></span>
+				<button class="btn subtle small"><i class="fas fa-edit"></i></button>
 				<p-trait data-trait="multi_list_grab_btn" data-multi_row_selector=".category_wrapper"></p-trait>
 				<p-trait data-trait="list_delete_btn"></p-trait>
 			</div>
