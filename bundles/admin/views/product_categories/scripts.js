@@ -116,9 +116,9 @@ domload(() => {
 	let arr = [];
 	d.categories.forEach((e) => {
 		arr.push(cloneObject(e));
-		//arr.push(cloneObject(e));
-		//arr.push(cloneObject(e));
-		//arr.push(cloneObject(e));
+		arr.push(cloneObject(e));
+		arr.push(cloneObject(e));
+		arr.push(cloneObject(e));
 	});
 	d.categories.push(...arr);
 

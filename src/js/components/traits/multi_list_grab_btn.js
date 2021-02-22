@@ -152,16 +152,23 @@ document.addEventListener("mouseup", () => {
 		return;
 	}
 
+	const duration = 0; // multi_list_grab.all_rows.length > 50 ? 0 : 150;
+
 	const rowsFix = () => {
 		multi_list_grab.all_rows.forEach((x) => {
 			// @ts-ignore
 			x._translateX = 0;
 			// @ts-ignore
 			x._translateY = 0;
+			// @ts-ignore
+			x._wants_y = 0;
 			x.style.transform = "";
 		});
 	};
 	const otherRowsAnimate = (fall_back) => {
+		if (!duration) {
+			return;
+		}
 		multi_list_grab.all_rows.forEach((x) => {
 			if (!fall_back && x === row_ref) {
 				return;
@@ -175,9 +182,9 @@ document.addEventListener("mouseup", () => {
 
 			//console.log("haha");
 			if (Math.abs(tx) > 1 || Math.abs(ty) > 1 || Math.abs(eny) > 1) {
-				x._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(0px, ${eny}px)}`, 150);
-				x.style.transform = `translate(0px, ${eny}px)`;
+				x._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(0px, ${eny}px)}`, duration);
 			}
+			x.style.transform = `translate(0px, ${eny}px)`;
 		});
 	};
 
@@ -218,45 +225,43 @@ document.addEventListener("mouseup", () => {
 			const etx = ir.left + tx - rr.left;
 			const ety = ir.top + ty - rr.top;
 
-			row_ref._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(${etx}px, ${ety}px)}`, 150);
+			if (duration) {
+				row_ref._animate(`0%{transform:translate(${tx}px, ${ty}px)}100%{transform:translate(${etx}px, ${ety}px)}`, duration);
+			}
 			row_ref.style.transform = `translate(${etx}px, ${ety}px)`;
 
+			otherRowsAnimate(false);
+
 			setTimeout(() => {
-				otherRowsAnimate(false);
+				master_ref.classList.add("freeze");
+				master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
+				const overlay = master_ref._next();
+
+				master_ref.style.height = master_ref.offsetHeight + "px";
+
+				const data = cloneObject(list._data.splice(row_index, 1));
+				// it's always a single row, but make it clear
+				data.forEach((e) => {
+					delete e.row_id;
+				});
+
+				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
+
+				rowsFix();
+				list._render();
+				//list._render({ delay_change: true });
+				target_list._data.splice(actual_index, 0, ...data);
+				target_list._render();
+				//target_list._render({ delay_change: true });
+				//list._finish_animation();
+				//target_list._finish_animation();
+				master_ref.classList.remove("freeze");
 
 				setTimeout(() => {
-					master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
-					const overlay = master_ref._next();
-
-					master_ref.classList.add("freeze");
-					master_ref.style.height = master_ref.offsetHeight + "px";
-
-					const data = cloneObject(list._data.splice(row_index, 1));
-					// it's always a single row, but make it clear
-					data.forEach((e) => {
-						delete e.row_id;
-					});
-
-					const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
-
-					rowsFix();
-					setTimeout(() => {
-						list._render();
-						//list._render({ delay_change: true });
-						target_list._data.splice(actual_index, 0, ...data);
-						target_list._render();
-						//target_list._render({ delay_change: true });
-						//list._finish_animation();
-						//target_list._finish_animation();
-						master_ref.classList.remove("freeze");
-
-						setTimeout(() => {
-							master_ref.style.height = "";
-							overlay.remove();
-						}, 100);
-					});
-				}, 150);
-			});
+					master_ref.style.height = "";
+					overlay.remove();
+				}, 0);
+			}, duration);
 		}
 	}
 
