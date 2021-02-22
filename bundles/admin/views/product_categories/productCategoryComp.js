@@ -33,20 +33,7 @@ function productCategoryComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {
-				setTimeout(() => {
-					const list_row = comp._parent(".list_row");
-					const pr = list_row._prev();
-					const ne = list_row._next();
-					const round = data.category_list.categories.length > 0;
-					const category_wrapper = comp._child(".category_wrapper");
-					category_wrapper.classList.toggle("round_bottom", !ne || round);
-					category_wrapper.classList.toggle("round_top", !pr);
-					if (ne) {
-						ne._child(".category_wrapper").classList.toggle("round_top", round);
-					}
-				});
-			},
+			render: () => {},
 		});
 	};
 

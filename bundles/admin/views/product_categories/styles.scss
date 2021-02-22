@@ -3,6 +3,7 @@
 .categories_wrapper {
 	& {
 		position: relative;
+		user-select: none;
 	}
 	product-categories-comp {
 		& list-comp {

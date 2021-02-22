@@ -29,7 +29,28 @@ function productCategoriesComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				setTimeout(() => {
+					comp._children(".round_top").forEach((e) => e.classList.remove("round_top"));
+					comp._children("product-category-comp").forEach((/** @type {ProductCategoryComp} */ com) => {
+						if (!com._data) {
+							return;
+						}
+						const list_row = com._parent(".list_row");
+						const pr = list_row._prev();
+						const ne = list_row._next();
+						const round = com._data.category_list.categories.length > 0;
+						const category_wrapper = com._child(".category_wrapper");
+						category_wrapper.classList.toggle("round_bottom", !ne || round);
+						if (!pr) {
+							category_wrapper.classList.add("round_top");
+						}
+						if (ne && round) {
+							ne._child(".category_wrapper").classList.add("round_top");
+						}
+					});
+				});
+			},
 		});
 	};
 
