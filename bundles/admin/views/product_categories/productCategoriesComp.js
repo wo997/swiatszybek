@@ -2,6 +2,24 @@
 
 /**
  * @typedef {{
+ * product_category_id: number
+ * parent_product_category_id: number
+ * name: string
+ * pos: number
+ * }} ProductCategoryData
+ */
+
+/**
+ * @typedef {{
+ * product_category_id: number
+ * name: string
+ * pos: number
+ * sub_categories: ProductCategoryBranch[]
+ * }} ProductCategoryBranch
+ */
+
+/**
+ * @typedef {{
  * category_list: ProductSubCategoriesCompData
  * }} ProductCategoriesCompData
  *
@@ -12,6 +30,7 @@
  *      add_btn: PiepNode
  *      save_btn: PiepNode
  * } & CompWithHistoryNodes
+ *_recreate_tree()
  * } & BaseComp} ProductCategoriesComp
  */
 
@@ -27,13 +46,40 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		};
 	}
 
+	comp._recreate_tree = () => {
+		comp._data.category_list.categories = [];
+
+		/**
+		 *
+		 * @param {ProductSubCategoryCompData} branch
+		 * @param {ProductCategoryBranch[]} sub_categories
+		 */
+		const connectWithParent = (branch, sub_categories) => {
+			const list = branch ? branch.category_list.categories : comp._data.category_list.categories;
+			for (const copy_cat of sub_categories) {
+				/** @type {ProductSubCategoryCompData} */
+				const sub_cat = {
+					name: copy_cat.name,
+					product_category_id: copy_cat.product_category_id,
+					category_list: { categories: [] },
+				};
+				list.push(sub_cat);
+				connectWithParent(sub_cat, copy_cat.sub_categories);
+			}
+		};
+
+		connectWithParent(undefined, product_categories_tree);
+
+		comp._render();
+	};
+
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
 				setTimeout(() => {
 					comp._children(".round_top").forEach((e) => e.classList.remove("round_top"));
-					comp._children("product-category-comp").forEach((/** @type {ProductSubCategoryComp} */ com) => {
+					comp._children("product-sub-category-comp").forEach((/** @type {ProductSubCategoryComp} */ com) => {
 						if (!com._data) {
 							return;
 						}
@@ -65,7 +111,9 @@ function productCategoriesComp(comp, parent, data = undefined) {
 				<i class="fas fa-plus"></i>
 			</button>
 		`,
-		initialize: () => {
+		ready: () => {
+			comp._recreate_tree();
+
 			const history_wrapper = comp._nodes.history;
 			const history_btns_wrapper = $(".main_header .history_btns_wrapper");
 			if (history_btns_wrapper) {
@@ -86,7 +134,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			});
 
 			window.addEventListener("product_categories_changed", () => {
-				// warmup, yeah, same like products? on set data or idk, blah, maybe externally better and provide actual data for tree view
+				comp._recreate_tree();
 			});
 		},
 	});

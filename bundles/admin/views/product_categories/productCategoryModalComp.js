@@ -4,6 +4,7 @@
  * @typedef {{
  * product_category_id: number
  * name: string
+ * parent_product_category_id: number
  * }} ProductCategoryModalCompData
  *
  * @typedef {{
@@ -13,6 +14,7 @@
  *      save_btn: PiepNode
  *      delete_btn: PiepNode
  *      name: PiepNode
+ *      parent_product_category: PiepNode
  * }
  * _show?(id: number, options?: {source?: PiepNode})
  * _save()
@@ -27,7 +29,7 @@
  */
 function productCategoryModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { name: "", product_category_id: -1 }; // , parent_product_category_id: -1
+		data = { name: "", product_category_id: -1, parent_product_category_id: -1 };
 	}
 
 	comp._show = (id, options = {}) => {
@@ -72,10 +74,53 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 		});
 	};
 
+	comp._delete = () => {
+		if (comp._data.product_category_id !== -1) {
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "product/category/delete/" + comp._data.product_category_id,
+				params: {
+					product_category: comp._data,
+				},
+				success: (res) => {
+					hideAndSearch();
+					showNotification(`Usunięto kategorię ${comp._data.name}`, {
+						one_line: true,
+						type: "success",
+					});
+				},
+			});
+		} else {
+			hideAndSearch();
+		}
+	};
+
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				let options = html`<option value="-1">BRAK (KATEGORIA GŁÓWNA)</option>`;
+				for (const category of product_categories) {
+					let full_name = category.name;
+
+					let parent_category = category;
+					while (true) {
+						const pid = parent_category.parent_product_category_id;
+						if (pid === -1) {
+							break;
+						}
+						parent_category = parent_category[pid];
+						if (!parent_category) {
+							break;
+						}
+
+						full_name = html`${parent_category.name} › ${full_name}`;
+					}
+
+					options += html`<option value="${category.product_category_id}">${full_name}</option>`;
+				}
+				comp._nodes.parent_product_category._set_content(options);
+				comp._nodes.parent_product_category._set_value(data.parent_product_category_id, { quiet: true });
+			},
 		});
 	};
 
@@ -89,6 +134,13 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 			<div class="scroll-panel scroll-shadow panel-padding">
 				<div class="label first">Nazwa kategorii</div>
 				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="string" />
+
+				<div class="label">Kategoria nadrzędna</div>
+				<select
+					class="field"
+					data-bind="{${data.parent_product_category_id}}"
+					data-node="{${comp._nodes.parent_product_category}}"
+				></select>
 
 				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
 					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń <i class="fas fa-trash"></i></button>
@@ -111,7 +163,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 function registerProductCategoryModal() {
 	registerModalContent(html`
 		<div id="ProductCategory" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(40% + 100px);max-height: calc(40% + 200px);">
+			<div class="modal-body" style="max-width: calc(20% + 250px);max-height: calc(20% + 100px);">
 				<product-category-modal-comp class="flex_stretch"></product-category-modal-comp>
 			</div>
 		</div>
