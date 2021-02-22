@@ -2,7 +2,7 @@
 
 /**
  * @typedef {{
- * categories: ProductCategoryCompData[]
+ * category_list: ProductSubCategoriesCompData
  * }} ProductCategoriesCompData
  *
  * @typedef {{
@@ -22,7 +22,7 @@
 function productCategoriesComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			categories: [],
+			category_list: { categories: [] },
 		};
 	}
 
@@ -32,7 +32,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			render: () => {
 				setTimeout(() => {
 					comp._children(".round_top").forEach((e) => e.classList.remove("round_top"));
-					comp._children("product-category-comp").forEach((/** @type {ProductCategoryComp} */ com) => {
+					comp._children("product-category-comp").forEach((/** @type {ProductSubCategoryComp} */ com) => {
 						if (!com._data) {
 							return;
 						}
@@ -54,32 +54,25 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		});
 	};
 
-	let template = "";
-	if (comp.classList.contains("main")) {
-		template += html`<p-trait data-trait="history"></p-trait>
-			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button> `;
-	}
-	template += html` <list-comp data-bind="{${data.categories}}" class="clean">
-		<product-category-comp></product-category-comp>
-	</list-comp>`;
-
 	createComp(comp, parent, data, {
-		template,
+		template: html`
+			<p-trait data-trait="history"></p-trait>
+			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
+			<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
+		`,
 		initialize: () => {
-			if (comp.classList.contains("main")) {
-				const history_wrapper = comp._nodes.history;
-				const history_btns_wrapper = $(".main_header .history_btns_wrapper");
-				if (history_btns_wrapper) {
-					history_btns_wrapper.appendChild(history_wrapper);
-				}
-
-				const save_btn = comp._nodes.save_btn;
-				const save_btn_wrapper = $(".main_header .save_btn_wrapper");
-				if (save_btn_wrapper) {
-					save_btn_wrapper.appendChild(save_btn);
-				}
-				save_btn.addEventListener("click", () => {});
+			const history_wrapper = comp._nodes.history;
+			const history_btns_wrapper = $(".main_header .history_btns_wrapper");
+			if (history_btns_wrapper) {
+				history_btns_wrapper.appendChild(history_wrapper);
 			}
+
+			const save_btn = comp._nodes.save_btn;
+			const save_btn_wrapper = $(".main_header .save_btn_wrapper");
+			if (save_btn_wrapper) {
+				save_btn_wrapper.appendChild(save_btn);
+			}
+			save_btn.addEventListener("click", () => {});
 		},
 	});
 }

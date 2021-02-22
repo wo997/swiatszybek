@@ -128,5 +128,5 @@ domload(() => {
 	});
 	d.categories.push(...arr);
 
-	productCategoriesComp(product_categories_comp, undefined, d);
+	productCategoriesComp(product_categories_comp, undefined, { category_list: d });
 });

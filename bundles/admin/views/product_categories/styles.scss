@@ -5,7 +5,7 @@
 		position: relative;
 		user-select: none;
 	}
-	product-categories-comp {
+	product-sub-categories-comp {
 		& list-comp {
 			padding: 1px;
 			margin: -1px;
@@ -30,6 +30,9 @@
 				--btn-background-clr: #00000012;
 				width: 30px;
 				height: 30px;
+			}
+			& .btn.subtle:hover {
+				--btn-background-clr: #fffffff0c;
 			}
 			&::before {
 				position: absolute;
@@ -56,7 +59,7 @@
 				border-bottom-right-radius: 4px;
 			}
 		}
-		& product-categories-comp {
+		& product-sub-categories-comp {
 			& {
 				margin-left: 35px;
 			}
@@ -66,7 +69,7 @@
 			& .category_wrapper {
 				background: #fafafa;
 			}
-			& product-categories-comp {
+			& product-sub-categories-comp {
 				& .category_name {
 					font-weight: 400;
 				}

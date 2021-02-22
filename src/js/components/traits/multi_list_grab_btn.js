@@ -295,7 +295,10 @@ document.addEventListener("mouseup", () => {
 
 			const grab_target = n.dataset.invisible ? n._parent(multi_row_selector) : n;
 
-			grab_target.addEventListener("mousedown", () => {
+			grab_target.addEventListener("mousedown", (ev) => {
+				if (grab_target !== n && $(ev.target)._parent(".btn", { skip: 0 })) {
+					return;
+				}
 				const list_row = comp._parent(".list_row");
 				if (!list_row) {
 					console.error("List row missing");

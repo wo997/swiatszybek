@@ -178,6 +178,10 @@ function createComp(node, parent_comp, data, options) {
 
 		directComps(comp).forEach((dc) => {
 			const constructor = snakeCase(dc.tagName.toLocaleLowerCase());
+			if (comp.tagName === dc.tagName) {
+				console.error("Cannot nest self");
+				return;
+			}
 			if (window[constructor]) {
 				const bind_var = dc.dataset.bind;
 				//console.log(bind_var, dc, comp, data[bind_var]);

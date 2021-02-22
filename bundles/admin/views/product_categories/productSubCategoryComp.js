@@ -3,24 +3,24 @@
 /**
  * @typedef {{
  * name: string
- * category_list: ProductCategoriesCompData
- * } & ListCompRowData} ProductCategoryCompData
+ * category_list: ProductSubCategoriesCompData
+ * } & ListCompRowData} ProductSubCategoryCompData
  *
  * @typedef {{
- * _data: ProductCategoryCompData
- * _set_data(data?: ProductCategoryCompData, options?: SetCompDataOptions)
+ * _data: ProductSubCategoryCompData
+ * _set_data(data?: ProductSubCategoryCompData, options?: SetCompDataOptions)
  * _nodes: {
- * categories: ProductCategoryComp
+ * categories: ProductSubCategoryComp
  * }
- * } & BaseComp} ProductCategoryComp
+ * } & BaseComp} ProductSubCategoryComp
  */
 
 /**
- * @param {ProductCategoryComp} comp
+ * @param {ProductSubCategoryComp} comp
  * @param {*} parent
- * @param {ProductCategoryCompData} data
+ * @param {ProductSubCategoryCompData} data
  */
-function productCategoryComp(comp, parent, data = undefined) {
+function productSubCategoryComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			name: "",
@@ -38,7 +38,6 @@ function productCategoryComp(comp, parent, data = undefined) {
 	};
 
 	createComp(comp, parent, data, {
-		//<input class="field small inline" data-bind="{${data.name}}" placeholder="Nazwa kategorii" />
 		template: html`
 			<div class="category_wrapper">
 				<span class="category_name" html="{${data.name}}"></span>
@@ -51,7 +50,7 @@ function productCategoryComp(comp, parent, data = undefined) {
 					data-invisible="1"
 				></p-trait>
 			</div>
-			<product-categories-comp data-bind="{${data.category_list}}"></product-categories-comp>
+			<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
 		`,
 		//<p-trait data-trait="list_delete_btn" data-tooltip="Usuń kategorię"></p-trait>
 
