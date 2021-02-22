@@ -247,12 +247,8 @@ document.addEventListener("mouseup", () => {
 				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
 
 				list._render();
-				//list._render({ delay_change: true });
 				target_list._data.splice(actual_index, 0, ...data);
 				target_list._render();
-				//target_list._render({ delay_change: true });
-				//list._finish_animation();
-				//target_list._finish_animation();
 				rowsFix();
 
 				setTimeout(() => {

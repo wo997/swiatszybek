@@ -9,7 +9,8 @@
  * _data: ProductCategoriesCompData
  * _set_data(data?: ProductCategoriesCompData, options?: SetCompDataOptions)
  * _nodes: {
- *      save_btn?: PiepNode
+ *      add_btn: PiepNode
+ *      save_btn: PiepNode
  * } & CompWithHistoryNodes
  * } & BaseComp} ProductCategoriesComp
  */
@@ -59,6 +60,10 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			<p-trait data-trait="history"></p-trait>
 			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
+			<button class="btn primary" data-tooltip="Dodaj kategorię podrzędną" data-node="{${comp._nodes.add_btn}}" style="margin:15px 0 50px">
+				Dodaj kategorię główną
+				<i class="fas fa-plus"></i>
+			</button>
 		`,
 		initialize: () => {
 			const history_wrapper = comp._nodes.history;
@@ -74,7 +79,11 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			}
 			save_btn.addEventListener("click", () => {});
 
-			registerProductCategoryModal();
+			const product_category_modal_comp = registerProductCategoryModal();
+			const add_btn = comp._nodes.add_btn;
+			add_btn.addEventListener("click", () => {
+				product_category_modal_comp._show(-1, { source: add_btn });
+			});
 		},
 	});
 }

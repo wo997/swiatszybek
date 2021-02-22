@@ -62,15 +62,15 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 		`,
 		//<p-trait data-trait="list_delete_btn" data-tooltip="Usuń kategorię"></p-trait>
 
-		initialize: () => {
-			comp._nodes.edit_btn.addEventListener("click", () => {
-				const product_category_modal_comp = getProductCategoryModal();
-				product_category_modal_comp._show(data.product_category_id);
+		ready: () => {
+			const edit_btn = comp._nodes.edit_btn;
+			edit_btn.addEventListener("click", () => {
+				getProductCategoryModal()._show(data.product_category_id, { source: edit_btn });
 			});
 
-			comp._nodes.add_btn.addEventListener("click", () => {
-				const product_category_modal_comp = getProductCategoryModal();
-				product_category_modal_comp._show(-1);
+			const add_btn = comp._nodes.add_btn;
+			add_btn.addEventListener("click", () => {
+				getProductCategoryModal()._show(-1, { source: add_btn });
 			});
 		},
 	});

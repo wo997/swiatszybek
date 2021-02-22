@@ -6,6 +6,9 @@
 		user-select: none;
 	}
 	product-sub-categories-comp {
+		& {
+			position: relative;
+		}
 		& list-comp {
 			padding: 1px;
 			margin: -1px;
