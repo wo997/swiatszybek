@@ -180,11 +180,6 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					if (list_row) {
 						const product_feature_id = +list_row.dataset.primary;
 						showOptionsFrom(product_feature_id, select_btn);
-
-						// showNotification("Dodano cechę produktu", {
-						// 	one_line: true,
-						// 	type: "success",
-						// });
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");
@@ -212,11 +207,6 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							product_comp._data.product_feature_ids.splice(ind, 1);
 							product_comp._render();
 							comp._nodes.datatable._render();
-
-							// showNotification("Usunięto cechę produktu", {
-							// 	one_line: true,
-							// 	type: "success",
-							// });
 						}
 					}
 
@@ -224,41 +214,12 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					comp._nodes.close_btn.classList.add("important");
 				}
 			});
+
+			window.addEventListener("product_features_changed", () => {
+				comp._refresh_dataset();
+			});
 		},
-		ready: () => {
-			// const dt = comp._nodes.datatable;
-			// const list = dt._nodes.list;
-			// const updateOrder = () => {
-			// 	let pos = 0;
-			// 	const positions = dt._data.dataset.map((e) => {
-			// 		pos++;
-			// 		e.pos = pos;
-			// 		return e.product_feature_id;
-			// 	});
-			// 	dt._render();
-			// 	xhr({
-			// 		url: STATIC_URLS["ADMIN"] + "datatable/sort",
-			// 		params: {
-			// 			table: "product_feature",
-			// 			order_key: "pos",
-			// 			positions,
-			// 		},
-			// 		success: (res) => {
-			// 			showNotification("Zapisano zmianę kolejności", {
-			// 				one_line: true,
-			// 				type: "success",
-			// 			});
-			// 			refreshProductFeatures();
-			// 		},
-			// 	});
-			// };
-			// list.addEventListener("remove_row", (ev) => {
-			// 	setTimeout(updateOrder);
-			// });
-			// list.addEventListener("move_row", (ev) => {
-			// 	setTimeout(updateOrder);
-			// });
-		},
+		ready: () => {},
 	});
 }
 

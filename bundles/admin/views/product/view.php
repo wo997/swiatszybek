@@ -20,6 +20,7 @@ if ($general_product_id !== -1) {
 } else {
     $general_product_data = null;
 }
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -27,8 +28,8 @@ if ($general_product_id !== -1) {
 <title>Produkt</title>
 
 <script>
-    let product_features = <?= json_encode(getAllProductFeatures()) ?>;
-    let product_feature_options = <?= json_encode(getAllProductFeatureOptions()) ?>;
+    <?= preloadProductFeatures() ?>
+    <?= preloadProductCategories() ?>
     let general_product_data = <?= json_encode($general_product_data) ?>;
     let vats = [{
             vat_id: 1,

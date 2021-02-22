@@ -4,3 +4,11 @@ function getAllProductCategories()
 {
     return DB::fetchArr("SELECT * FROM product_category");
 }
+
+function preloadProductCategories()
+{
+    $product_categories = json_encode(getAllProductCategories());
+    return <<<JS
+    let product_categories = $product_categories;
+JS;
+}

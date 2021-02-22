@@ -12,9 +12,10 @@
  * _nodes: {
  *      save_btn: PiepNode
  *      delete_btn: PiepNode
+ *      name: PiepNode
  * }
  * _show?(id: number, options?: {source?: PiepNode})
- * _save_data()
+ * _save()
  * _delete()
  * } & BaseComp} ProductCategoryModalComp
  */
@@ -30,15 +31,44 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (id, options = {}) => {
-		// const category = product_categories.find((e) => e.product_category_id === id);
-		// if (category) {
-		// 	comp._data.name = category.name;
-		// 	comp._data.product_category_id = category.product_category_id;
-		// }
-		// clearCompHistory(comp);
+		const category = product_categories.find((e) => e.product_category_id === id);
+		if (category) {
+			comp._data.name = category.name;
+			comp._data.product_category_id = category.product_category_id;
+		}
 
 		showModal("ProductCategory", {
 			source: options.source,
+		});
+	};
+
+	const hideAndSearch = () => {
+		hideParentModal(comp);
+		refreshProductCategories();
+	};
+
+	comp._save = () => {
+		const errors = validateInputs([comp._nodes.name]);
+
+		if (errors.length > 0) {
+			return;
+		}
+
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "product/category/save",
+			params: {
+				product_feature: {
+					name: comp._data.name,
+					product_category_id: comp._data.product_category_id,
+				},
+			},
+			success: (res) => {
+				hideAndSearch();
+				showNotification(comp._data.product_category_id === -1 ? "Dodano kategorię produktu" : "Zapisano kategorię produktu", {
+					one_line: true,
+					type: "success",
+				});
+			},
 		});
 	};
 
@@ -58,7 +88,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll-panel scroll-shadow panel-padding">
 				<div class="label first">Nazwa kategorii</div>
-				<input class="field" data-bind="{${data.name}}" />
+				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" />
 
 				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
 					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń <i class="fas fa-trash"></i></button>
@@ -67,7 +97,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 		`,
 		initialize: () => {
 			comp._nodes.save_btn.addEventListener("click", () => {
-				comp._save_data();
+				comp._save();
 			});
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				if (confirm("Czy aby na pewno chcesz usunąć tę kategorię?")) {

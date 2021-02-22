@@ -21,20 +21,6 @@ function refreshProductFeatures() {
 			product_features = res.features;
 			product_feature_options = res.options;
 			loadedProductFeatures();
-
-			/** @type {ProductComp} */
-			// @ts-ignore
-			const product_comp = $("product-comp");
-
-			product_comp._render({ force_render: true });
-
-			/** @type {SelectProductFeaturesModalComp} */
-			// @ts-ignore
-			const spfmc = $("#selectProductFeatures select-product-features-modal-comp");
-			if (spfmc) {
-				spfmc._refresh_dataset();
-			}
-
 			window.dispatchEvent(new CustomEvent("product_features_changed"));
 		},
 	});

@@ -20,7 +20,7 @@
  *  name: PiepNode
  * }
  * _load_data(id: number)
- * _save_data()
+ * _save()
  * _delete()
  * _select_current_group_id(id: any)
  * } & BaseComp} ProductFeatureComp
@@ -113,7 +113,7 @@ function productFeatureComp(comp, parent, data) {
 		refreshProductFeatures();
 	};
 
-	comp._save_data = () => {
+	comp._save = () => {
 		const errors = validateInputs([comp._nodes.name]);
 
 		if (errors.length > 0) {

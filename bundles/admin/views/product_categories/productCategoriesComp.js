@@ -84,6 +84,10 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			add_btn.addEventListener("click", () => {
 				product_category_modal_comp._show(-1, { source: add_btn });
 			});
+
+			window.addEventListener("product_categories_changed", () => {
+				// warmup, yeah, same like products? on set data or idk, blah, maybe externally better and provide actual data for tree view
+			});
 		},
 	});
 }

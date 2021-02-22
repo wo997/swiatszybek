@@ -673,6 +673,7 @@ function productComp(comp, parent, data) {
 
 			window.addEventListener("product_features_changed", () => {
 				comp._nodes.all_products._warmup_maps();
+				comp._render({ force_render: true });
 			});
 		},
 	});

@@ -5,6 +5,10 @@
 
 <title>Kategorie produktów</title>
 
+<script>
+    <?= preloadProductCategories() ?>
+</script>
+
 <?php startSection("header"); ?>
 
 <div class="custom-toolbar">
@@ -38,7 +42,7 @@
 </div>
 
 <div class="categories_wrapper">
-    <product-categories-comp class="main"></product-categories-comp>
+    <product-categories-comp></product-categories-comp>
 </div>
 
 <?php include "admin/page_template.php"; ?>
