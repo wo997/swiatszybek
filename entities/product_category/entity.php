@@ -3,6 +3,7 @@
 EntityManager::register("product_category", [
     "props" => [
         "product_category_id" => ["type" => "number"],
+        "parent_product_category_id" => ["type" => "number"],
         "name" => ["type" => "string"],
         "pos" => ["type" => "number"],
     ],

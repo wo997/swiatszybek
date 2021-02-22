@@ -2,9 +2,9 @@
 
 function refreshProductCategories() {
 	xhr({
-		url: STATIC_URLS["ADMIN"] + "product/categories/all_with_options",
+		url: STATIC_URLS["ADMIN"] + "product/categories/all",
 		success: (res) => {
-			product_categories = res.categories;
+			product_categories = res;
 			window.dispatchEvent(new CustomEvent("product_categories_changed"));
 		},
 	});

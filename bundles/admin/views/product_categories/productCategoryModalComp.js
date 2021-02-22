@@ -57,7 +57,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "product/category/save",
 			params: {
-				product_feature: {
+				product_category: {
 					name: comp._data.name,
 					product_category_id: comp._data.product_category_id,
 				},
@@ -88,7 +88,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll-panel scroll-shadow panel-padding">
 				<div class="label first">Nazwa kategorii</div>
-				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" />
+				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="string" />
 
 				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
 					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń <i class="fas fa-trash"></i></button>
