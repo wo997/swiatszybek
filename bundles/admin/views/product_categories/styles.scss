@@ -27,6 +27,7 @@
 			& .btn.subtle {
 				--btn-border-clr: #0004;
 				--btn-background-clr: #00000012;
+				width: 30px;
 			}
 			&::before {
 				position: absolute;
@@ -47,7 +48,7 @@
 		}
 		& product-categories-comp {
 			& {
-				margin-left: 33px;
+				margin-left: 35px;
 			}
 			& .category_name {
 				font-weight: 600;
