@@ -5,10 +5,9 @@
 		position: relative;
 	}
 	product-categories-comp {
-		&.main > list-comp {
-			& {
-				padding: 1px;
-			}
+		& list-comp {
+			padding: 1px;
+			margin: -1px;
 		}
 		& .category_name {
 			font-weight: 700;
@@ -28,6 +27,7 @@
 				--btn-border-clr: #0004;
 				--btn-background-clr: #00000012;
 				width: 30px;
+				opacity: 0.85;
 			}
 			&::before {
 				position: absolute;

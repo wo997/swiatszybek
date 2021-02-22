@@ -42,12 +42,19 @@ function productCategoryComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="category_wrapper">
 				<span class="category_name" html="{${data.name}}"></span>
-				<button class="btn subtle small"><i class="fas fa-edit"></i></button>
-				<p-trait data-trait="multi_list_grab_btn" data-multi_row_selector=".category_wrapper"></p-trait>
-				<p-trait data-trait="list_delete_btn"></p-trait>
+				<button class="btn subtle small" data-tooltip="Edytuj kategorię"><i class="fas fa-edit"></i></button>
+				<button class="btn subtle small" data-tooltip="Dodaj kategorię podrzędną"><i class="fas fa-plus"></i></button>
+				<p-trait
+					data-trait="multi_list_grab_btn"
+					data-multi_row_selector=".category_wrapper"
+					data-tooltip="Zmień położenie kategorię"
+					data-invisible="true"
+				></p-trait>
 			</div>
 			<product-categories-comp data-bind="{${data.category_list}}"></product-categories-comp>
 		`,
+		//<p-trait data-trait="list_delete_btn" data-tooltip="Usuń kategorię"></p-trait>
+
 		initialize: () => {},
 	});
 }
