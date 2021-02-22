@@ -105,7 +105,7 @@ let multi_list_grab = {
 		});
 		multi_list_grab.positions.forEach((e) => {
 			const dy = Math.abs(e.y - scroll_dy - r.top);
-			if (dy < min_dy + 1) {
+			if (dy < min_dy + 5) {
 				const dx = Math.abs(e.x - r.left);
 				if (dx < min_dx) {
 					min_dx = dx;
