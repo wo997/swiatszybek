@@ -392,6 +392,18 @@ label {
 		}
 	}
 }
+/*
+.glue_vertically {
+	& > :not(:first-child):not(.ignore-glue) {
+		border-top-right-radius: 0;
+		border-top-left-radius: 0;
+	}
+	& > :not(:last-child):not(.ignore-glue) {
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+}
+*/
 
 .form-header {
 	text-align: center;

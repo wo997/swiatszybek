@@ -31,6 +31,12 @@ domload(() => {
 							},
 						},
 						{
+							name: "mmm",
+							category_list: {
+								categories: [],
+							},
+						},
+						{
 							name: "2 x",
 							category_list: {
 								categories: [
