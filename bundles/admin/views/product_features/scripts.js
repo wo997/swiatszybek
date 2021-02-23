@@ -3,237 +3,64 @@
 useTool("cms");
 
 domload(() => {
-	var output = "";
-	Object.entries(attribute_data_types).forEach(([value, attribute]) => {
-		output += `<option value='${value}'>${attribute.description}</option>`;
-	});
-	$(`[name="data_type"]`).insertAdjacentHTML("afterbegin", output);
+	/** @type {DatatableComp} */
+	// @ts-ignore
+	const dt = $("datatable-comp.product_features");
 
-	createDatatable({
-		name: "mytable",
-		url: STATIC_URLS["ADMIN"] + "search_product_attributes",
-		lang: {
-			subject: "cech",
-		},
-		primary: "attribute_id",
-		db_table: "product_attributes",
-		sortable: true,
-		definition: [
+	datatableComp(dt, undefined, {
+		dataset: product_features,
+		columns: [
 			{
-				title: "Nazwa cechy",
-				width: "20%",
-				render: (r) => {
-					return `${r.name}`;
-				},
-			},
-			{
-				title: "Typ danych",
-				width: "20%",
-				render: (r) => {
-					var type_def = attribute_data_types[r.data_type];
-					if (type_def) {
-						return `${type_def.description}`;
+				label: "Cecha",
+				key: "name",
+				width: "1",
+				searchable: "string",
+				render: (data) => {
+					if (data.selected) {
+						return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.name}</div>`;
 					}
-					return "";
+					return data.name;
 				},
 			},
+			{ label: "Opcje", key: "options", width: "2", searchable: "string" },
 			{
-				title: "Wartości",
-				width: "60%",
-				render: (r) => {
-					return `${def(r.attr_values).replace(/,/g, ", ")}`;
+				label: "",
+				width: "90px",
+				flex: true,
+				render: (data) => {
+					return html`<button class="btn subtle small edit_btn" style="margin-left:auto">Edytuj <i class="fas fa-cog"></i></button>`;
 				},
-			},
-			{
-				title: "",
-				width: "97px",
-				render: (r, i, t) => {
-					return `
-                            <div class="btn secondary" onclick="editAttribute(this,${i},${t.name})">Edytuj <i class="fa fa-cog"></i></div>
-                        `;
-				},
-				escape: false,
 			},
 		],
-		controlsRight: `
-                    <div class='float-icon space-right'>
-                        <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="btn important" onclick="editAttribute(this)"><span>Cecha</span> <i class="fa fa-plus"></i></div>
-                `,
+		pagination_data: { row_count: 50 },
+		primary_key: "product_feature_id",
+		empty_html: html`Brak cech`,
+		label: "Cechy produktów",
+		after_label: html`<button class="add_feature_btn btn primary" data-tooltip="W przypadku gdy nie widzisz takiej cechy na liście">
+			Dodaj <i class="fas fa-plus"></i>
+		</button> `,
+		sortable: true,
+		require_sort: { key: "pos", order: "asc" },
+		db_table: "product_feature",
+		sort_on_backend: true,
 	});
 
-	createSimpleList({
-		name: "attribute_values_textlist",
-		fields: {
-			value_id: {},
-			value: {
-				unique: true,
-				allow_empty: true,
-			},
-		},
-		render: (data) => {
-			return `
-                    <input type='hidden' name="value_id">
-                    <input type='text' class='field' style='flex-grow:1' name="value">
-                `;
-		},
-		default_row: {
-			value_id: -1,
-			value: "",
-		},
-		recursive: 3,
-	});
+	const product_feature_modal_comp = registerProductFeatureModal();
 
-	createSimpleList({
-		name: "attribute_values_colorlist",
-		fields: {
-			value_id: {},
-			value: {
-				unique: true,
-				allow_empty: true,
-			},
-			color: {},
-		},
-		render: (data) => {
-			return `
-                    <input type='hidden' name="value_id">
-                    <input type='text' class='field inline jscolor' name="color">
-                    <input type='text' class='field' style='flex-grow:1' name="value">
-                `;
-		},
-		default_row: {
-			value_id: -1,
-			value: "",
-			color: "",
-		},
-		onChange: () => {
-			jscolor.installByClassName();
-		},
-		recursive: 3,
-	});
+	dt.addEventListener("click", (ev) => {
+		const target = $(ev.target);
 
-	createDatatable({
-		name: "kategorie",
-		url: STATIC_URLS["ADMIN"] + "search_product_categories",
-		lang: {
-			subject: "kategorii",
-		},
-		primary: "category_id",
-		db_table: "product_categories",
-		selectable: {
-			data: [],
-			output: "categories",
-			has_metadata: true,
-		},
-		definition: [
-			{
-				title: "Kategoria",
-				render: (r) => {
-					return `${r.title}`;
-				},
-			},
-			{
-				title:
-					"Główny filtr <i class='fas fa-info-circle' data-tooltip='Wyświetl powyżej listy produktów'></i>",
-				width: "130px",
-				className: "metadata-column center",
-				render: (r) => {
-					return `
-                            <label>
-                                <input type='checkbox' data-metadata='main_filter'>
-                                <div class="checkbox standalone"></div>
-                            </label>`;
-				},
-				escape: false,
-			},
-		],
-		controlsRight: `
-                    <div class='float-icon'>
-                        <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
-                        <i class="fas fa-search"></i>
-                    </div>
-                `,
+		const add_feature_btn = target._parent(".add_feature_btn", { skip: 0 });
+		if (add_feature_btn) {
+			product_feature_modal_comp._show(-1, { source: add_feature_btn });
+		}
+
+		const edit_btn = target._parent(".edit_btn", { skip: 0 });
+		if (edit_btn) {
+			const list_row = edit_btn._parent(".list_row", { skip: 0 });
+			if (list_row) {
+				product_feature_modal_comp._show(+list_row.dataset.primary, { source: edit_btn });
+			}
+		}
 	});
 });
-
-function editAttribute(btn = null, row_id = null, table = null) {
-	const form = $("#editAttribute");
-
-	var data = {
-		attribute_id: -1,
-		name: "",
-		data_type: Object.keys(attribute_data_types)[0],
-		attr_values: "",
-		categories: [],
-	};
-
-	Object.keys(attribute_data_types)
-		.filter((data_type) => {
-			return data_type.indexOf("list") != -1;
-		})
-		.forEach((data_type) => {
-			simple_lists
-				.filter((simple_list) => {
-					return simple_list.params.name == `attribute_values_${data_type}`;
-				})
-				.forEach((simple_list) => {
-					simple_list.setListValues([]);
-				});
-		});
-
-	if (row_id !== null) {
-		data = table.results[row_id];
-
-		xhr({
-			url: STATIC_URLS["ADMIN"] + "search_product_attributes",
-			params: {
-				attribute_id: data.attribute_id,
-				rowCount: 1,
-				everything: true,
-			},
-			success: (res) => {
-				setFormData(res.results[0], form);
-				setFormInitialState(form);
-			},
-		});
-	}
-
-	setFormData(data, form);
-	showModal(form.id, {
-		source: btn,
-	});
-}
-
-function saveAttribute(remove = false) {
-	var f = $("#editAttribute");
-	if (!remove && !validateForm(f)) {
-		return;
-	}
-	var params = getFormData(f);
-	if (remove) {
-		params["remove"] = true;
-	}
-	xhr({
-		url: STATIC_URLS["ADMIN"] + "save_product_attribute",
-		params: params,
-		success: (res) => {
-			mytable.search();
-		},
-	});
-	hideModalTopMost();
-}
-
-function toggleValues() {
-	var data_type = $(`[name="data_type"]`).value;
-	Object.entries(attribute_data_types).forEach(([type, params]) => {
-		if (params.field) {
-			return;
-		}
-		var node = $(`.attribute_values_${type}_wrapper`);
-		if (node) {
-			node.classList.toggle("hidden", data_type != type);
-		}
-	});
-}

@@ -12,5 +12,6 @@ function preloadProductFeatures()
     return <<<JS
     product_features = $product_features;
     product_feature_options = $product_feature_options;
+	loadedProductFeatures();
 JS;
 }

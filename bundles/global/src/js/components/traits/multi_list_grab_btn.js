@@ -255,9 +255,9 @@ document.addEventListener("mouseup", () => {
 
 				const actual_index = target_index - (same_list && row_index <= target_index ? 1 : 0);
 
-				list._render();
+				list._render({ freeze: true });
 				target_list._data.splice(actual_index, 0, ...data);
-				target_list._render();
+				target_list._render({ freeze: true });
 				rowsFix();
 
 				setTimeout(() => {

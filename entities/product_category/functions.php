@@ -10,5 +10,6 @@ function preloadProductCategories()
     $product_categories = json_encode(getAllProductCategories());
     return <<<JS
     product_categories = $product_categories;
+    loadedProductCategories();
 JS;
 }

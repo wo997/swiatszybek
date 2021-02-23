@@ -163,7 +163,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				if (edit_btn) {
 					const list_row = edit_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						product_feature_modal_comp._show(+list_row.dataset.primary, { source: add_feature_btn });
+						product_feature_modal_comp._show(+list_row.dataset.primary, { source: edit_btn });
 					}
 				}
 

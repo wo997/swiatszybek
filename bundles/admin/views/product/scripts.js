@@ -1,8 +1,6 @@
 /* js[view] */
 
 domload(() => {
-	loadedProductFeatures();
-
 	/** @type {ProductComp} */
 	// @ts-ignore
 	const product_comp = $("product-comp");
