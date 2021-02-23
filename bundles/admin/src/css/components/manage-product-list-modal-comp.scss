@@ -1,0 +1,12 @@
+/* css[admin] */
+
+manage-product-list-modal-comp {
+	.bind_questions .list_row .option {
+		& {
+			margin-top: 10px;
+		}
+		p-checkbox {
+			margin-right: 3px;
+		}
+	}
+}

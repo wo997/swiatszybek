@@ -9,6 +9,6 @@ function preloadProductCategories()
 {
     $product_categories = json_encode(getAllProductCategories());
     return <<<JS
-    let product_categories = $product_categories;
+    product_categories = $product_categories;
 JS;
 }

@@ -1,22 +1,4 @@
-/* js[view] */
-
-/**
- * @typedef {{
- * product_category_id: number
- * parent_product_category_id: number
- * name: string
- * pos: number
- * }} ProductCategoryData
- */
-
-/**
- * @typedef {{
- * product_category_id: number
- * name: string
- * pos: number
- * sub_categories: ProductCategoryBranch[]
- * }} ProductCategoryBranch
- */
+/* js[admin] */
 
 /**
  * @typedef {{

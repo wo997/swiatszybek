@@ -1,31 +1,5 @@
 /* js[view] */
 
-function loadedProductFeatures() {
-	product_features.forEach((feature) => {
-		feature.options = product_feature_options
-			.filter((e) => e.product_feature_id === feature.product_feature_id)
-			.map((e) => e.name)
-			.join(", ");
-	});
-
-	product_feature_options.forEach((option) => {
-		const feature = product_features.find((feature) => feature.product_feature_id === option.product_feature_id);
-		option.feature_name = feature ? feature.name : "";
-	});
-}
-
-function refreshProductFeatures() {
-	xhr({
-		url: STATIC_URLS["ADMIN"] + "product/feature/all_with_options",
-		success: (res) => {
-			product_features = res.features;
-			product_feature_options = res.options;
-			loadedProductFeatures();
-			window.dispatchEvent(new CustomEvent("product_features_changed"));
-		},
-	});
-}
-
 domload(() => {
 	loadedProductFeatures();
 

@@ -1,0 +1,34 @@
+/* css[admin] */
+
+product-comp {
+	.variant_header,
+	.option_header {
+		display: flex;
+		align-items: center;
+	}
+
+	.variant_header {
+		margin-bottom: 10px;
+	}
+
+	.bind_features {
+		& {
+			--list_row_margin: 10px 0 0;
+			--list_border: unset;
+		}
+		& > .list_row {
+			& {
+				background: #f6f6f6;
+			}
+		}
+	}
+	.bind_options {
+		&,
+		& > .list_row {
+			background: #fff;
+		}
+		& {
+			margin-top: 5px;
+		}
+	}
+}
