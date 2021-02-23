@@ -4,6 +4,7 @@ class Entity
 {
     private $name;
     private $id_column;
+    private $global_id;
     private $props = []; // row props in DB
     private $fetched = []; // stores info of what relations that were fetched already
     private $curr_props = null; // in case the object existed in DB
@@ -57,6 +58,11 @@ class Entity
     public function getMeta()
     {
         return $this->meta;
+    }
+
+    public function setGlobalId($id)
+    {
+        return $this->global_id = $id;
     }
 
     /**
@@ -113,7 +119,7 @@ class Entity
         }
         $this->saved = true;
 
-        // don't worry about sorting removed items, the order is still the same
+        // don't worry about sorting removed items, the order is still the same, anyway it's managed separately
         if ($this->will_delete) {
             $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
             //var_dump([$query]);
@@ -135,67 +141,36 @@ class Entity
                 }
             }
 
-            $other_entity_data = str_replace("[]", "", def($entity_data, ["props", $key], []));
+            $other_entity_data = def($entity_data, ["props", $key], []);
             $other_entity_type = def($other_entity_data, ["type"], "");
+            $other_entity_simple_type = str_replace("[]", "", def($other_entity_data, ["type"], ""));
 
-            // // sort sortables from parent
-            // if (def($other_entity_data, "sortable")) {
-            //     $ids = [];
-            //     foreach ($value as
-            //         /** @var Entity */
-            //         $ent) {
-            //         $ids[] = $ent->getId();
-            //     }
-
-            //     var_dump($other_entity_type, $ids);
-            //     sortTable($other_entity_type, $ids);
-            // }
-
-            $link = def($entity_data, ["linked_with", $other_entity_type]);
+            $link = def($entity_data, ["linked_with", $other_entity_simple_type]);
             if ($link) {
-                EntityManager::setManyToManyRelationship($this, $other_entity_type, def($this->curr_props, $key, []), $value, $link);
+                EntityManager::setManyToManyRelationship($this, $other_entity_simple_type, def($this->curr_props, $key, []), $value, $link);
             }
 
             if (def($this->curr_props, $key, null) === $value) {
                 continue;
             }
 
-            if (is_array($value)) {
+            if (($other_entity_type && endsWith($other_entity_type, "[]")) || is_array($value)) {
                 continue;
             }
             $changed_props[$key] = $value;
         }
 
         if (!empty($changed_props)) {
-            if ($this->getId() == -1) {
-                // // insert
-                // $keys_query = "";
-                // foreach (array_keys($changed_props) as $field) {
-                //     $keys_query .= clean($field) . ",";
-                // }
-                // $keys_query = rtrim($keys_query, ",");
-                // $values_query = rtrim(str_repeat("?,", count($changed_props)), ",");
-
-                // $query = "INSERT INTO " . clean($this->name) . "($keys_query) VALUES($values_query)";
-
-                // var_dump([$query, array_values($changed_props)]);
-                // DB::execute($query, array_values($changed_props));
-                // $entity_id = DB::insertedId();
-                // $this->setId($entity_id);
-                // return $entity_id;
-            } else {
-                // HEY we made it set id every time we create an object, that should indeed work bro, slower but more stable
-                // update
-                $query = "UPDATE " . $this->name . " SET ";
-                foreach (array_keys($changed_props) as $field) {
-                    $query .= clean($field) . "=?,";
-                }
-                $query = rtrim($query, ",");
-                $query .= " WHERE " . $this->id_column . "=" . $this->getId();
-                //var_dump([$query, array_values($changed_props)]);
-                DB::execute($query, array_values($changed_props));
-                return true;
+            // update
+            $query = "UPDATE " . $this->name . " SET ";
+            foreach (array_keys($changed_props) as $field) {
+                $query .= clean($field) . "=?,";
             }
+            $query = rtrim($query, ",");
+            $query .= " WHERE " . $this->id_column . "=" . $this->getId();
+            //var_dump([$query, array_values($changed_props)]);
+            DB::execute($query, array_values($changed_props));
+            return true;
         }
     }
 
@@ -236,6 +211,7 @@ class Entity
             if ($this->name === def($child_entity_data, ["parent", "name"])) {
                 // no need to $this->props[$prop_name] but $val instead if u use before and after setters
                 $val = EntityManager::setOneToManyEntities($this, $prop_name, $other_entity_name, $val);
+                //var_dump(">>>", count($val));
                 $this->props[$prop_name] = $val;
             } else {
                 $link = def($child_entity_data, ["linked_with", $this->name]);

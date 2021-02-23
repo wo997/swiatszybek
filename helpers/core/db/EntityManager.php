@@ -96,6 +96,7 @@ class EntityManager
             return false;
         }
         $global_id = self::getObjectGlobalId($name, $obj->getId());
+        $obj->setGlobalId($global_id);
         self::$objects[$global_id] = $obj; // u can restore the data yay :) not used yet bro, think about it
 
         return $obj;
@@ -156,17 +157,19 @@ class EntityManager
         $children_with_id_props = [];
         foreach ($children_props as &$child_props) {
             if ($child_props instanceof Entity) {
-                return;
+                $child_id = $child_props->getId();
+                $child_props = $child_props->getProps();
+            } else {
+                $child_id = intval(def($child_props, $child_id_column, -1));
+                $child_props[$obj->getIdColumn()] = $obj->getId();
+                if ($child_id == -1) {
+                    $child = self::getEntity($child_entity_name, $child_props);
+                    $children[] = $child;
+                    continue;
+                }
             }
 
-            $child_id = intval(def($child_props, $child_id_column, -1));
-            $child_props[$obj->getIdColumn()] = $obj->getId();
-            if ($child_id == -1) {
-                $child = self::getEntity($child_entity_name, $child_props);
-                $children[] = $child;
-            } else {
-                $children_with_id_props[$child_id] = $child_props;
-            }
+            $children_with_id_props[$child_id] = $child_props;
         }
         unset($child_props);
 
@@ -231,7 +234,8 @@ class EntityManager
         $other_entities_with_id_props = [];
         foreach ($other_entities_props as &$other_entity_props) {
             if ($other_entity_props instanceof Entity) {
-                return;
+                $other_entities[] = $other_entity_props;
+                continue;
             }
             if (is_numeric($other_entity_props)) {
                 $other_entity_props = [
@@ -267,7 +271,8 @@ class EntityManager
         // the ones that were not linked so far
         foreach ($other_entities_with_id_props as &$other_entity_props) {
             if ($other_entity_props instanceof Entity) {
-                return;
+                $other_entities[] = $other_entity_props;
+                continue;
             }
             if (is_numeric($other_entity_props)) {
                 $other_entity_props = [
