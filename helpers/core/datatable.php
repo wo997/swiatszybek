@@ -400,7 +400,7 @@ function orderTableBeforeListing($table, $primary, $params = [])
 }
 
 // LEGIT
-function sortTable($table, $positions, $order_key = "pos", $where = "1")
+function sortTable($table, $positions = [], $order_key = "pos", $where = "1")
 {
     $table = clean($table);
     $order_key = clean($order_key);
