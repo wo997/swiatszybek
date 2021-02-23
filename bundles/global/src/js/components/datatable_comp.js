@@ -1066,6 +1066,6 @@ function datatableComp(comp, parent, data) {
 				});
 			}
 		},
-		unfreeze_by_self: true,
+		unfreeze_by_self: !!data.search_url,
 	});
 }

@@ -14,6 +14,7 @@
  * max_y?: number
  * place_index?: number
  * height?: number
+ * btn?: PiepNode
  * }}
  */
 let list_grab = {
@@ -103,6 +104,9 @@ document.addEventListener("mouseup", () => {
 		}
 	}
 
+	list_grab.btn.classList.add("subtle");
+	list_grab.btn.classList.remove("important");
+
 	row_ref.style.zIndex = `200`;
 	setTimeout(() => {
 		list_grab.list.classList.remove("has_grabbed_row");
@@ -120,6 +124,8 @@ document.addEventListener("mouseup", () => {
 			/** @type {PiepNode} */
 			const n = comp._nodes[trait_name];
 			n.addEventListener("mousedown", () => {
+				n.classList.add("important");
+				n.classList.remove("subtle");
 				const list_row = comp._parent(".list_row");
 				if (!list_row) {
 					console.error("List row missing");
@@ -139,6 +145,7 @@ document.addEventListener("mouseup", () => {
 				list_grab.list = list_row._parent();
 				list_grab.all_rows = list_grab.list._direct_children();
 				list_grab.list.classList.add("has_grabbed_row");
+				list_grab.btn = n;
 
 				list_grab.all_rows.forEach((e) => {
 					// @ts-ignore

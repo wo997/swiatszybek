@@ -32,6 +32,7 @@
  * row_selector?: string
  * best_position?: MultiListPosition
  * ticks?: number
+ * btn?: PiepNode
  * }}
  */
 let multi_list_grab = {
@@ -197,6 +198,9 @@ document.addEventListener("mouseup", () => {
 
 	removeMultiGrabHighlight();
 
+	list_grab.btn.classList.add("subtle");
+	list_grab.btn.classList.remove("important");
+
 	row_ref.style.zIndex = `200`;
 	setTimeout(() => {
 		master_ref.classList.remove("has_grabbed_row");
@@ -314,6 +318,9 @@ document.addEventListener("mouseup", () => {
 					return;
 				}
 
+				n.classList.add("important");
+				n.classList.remove("subtle");
+
 				list_row.classList.add("multi_grabbed");
 				multi_list_grab.ticks = 0;
 				multi_list_grab.comp = comp;
@@ -322,6 +329,7 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.grabbed_at_y = mouse.pos.y;
 				multi_list_grab.scroll_parent = list_row._scroll_parent();
 				multi_list_grab.grabbed_at_y_scroll = multi_list_grab.scroll_parent.scrollTop;
+				multi_list_grab.btn = n;
 				let list = list_row._parent();
 				while (true) {
 					const p = list._parent("list-comp");

@@ -63,4 +63,10 @@ domload(() => {
 			}
 		}
 	});
+
+	window.addEventListener("product_features_changed", () => {
+		dt._data.dataset = product_features;
+		dt._warmup_maps();
+		dt._render({ force_render: true });
+	});
 });
