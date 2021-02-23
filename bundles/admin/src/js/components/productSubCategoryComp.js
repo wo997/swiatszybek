@@ -65,12 +65,38 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 		ready: () => {
 			const edit_btn = comp._nodes.edit_btn;
 			edit_btn.addEventListener("click", () => {
-				getProductCategoryModal()._show(data.product_category_id, { source: edit_btn });
+				getProductCategoryModal()._show({
+					cat: { name: comp._data.name, parent_product_category_id: -1, product_category_id: comp._data.product_category_id },
+					source: edit_btn,
+					save_callback: (cat) => {
+						comp._data.name = cat.name;
+						// hey, parent_product_category_id loves u
+						comp._render();
+					},
+					delete_callback: () => {
+						/** @type {ListComp} */
+						// @ts-ignore
+						const parent = comp._parent_comp;
+						if (parent._remove_row) {
+							parent._remove_row(comp._data.row_index);
+						}
+					},
+				});
 			});
 
 			const add_btn = comp._nodes.add_btn;
 			add_btn.addEventListener("click", () => {
-				getProductCategoryModal()._show(-1, { source: add_btn });
+				getProductCategoryModal()._show({
+					source: add_btn,
+					save_callback: (cat) => {
+						comp._data.category_list.categories.push({
+							name: cat.name,
+							product_category_id: cat.product_category_id,
+							category_list: { categories: [] },
+						});
+						comp._render();
+					},
+				});
 			});
 		},
 	});

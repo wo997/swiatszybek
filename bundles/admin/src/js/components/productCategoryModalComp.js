@@ -2,6 +2,14 @@
 
 /**
  * @typedef {{
+ * cat?: ProductCategoryModalCompData,
+ * source?: PiepNode,
+ * save_callback?(cat: ProductCategoryModalCompData),
+ * delete_callback?()}} ShowProductCategoryModalOptions
+ */
+
+/**
+ * @typedef {{
  * product_category_id: number
  * name: string
  * parent_product_category_id: number
@@ -16,10 +24,10 @@
  *      name: PiepNode
  *      parent_product_category: PiepNode
  * }
- * _show?(id: number, options?: {source?: PiepNode})
+ * _show?(options: ShowProductCategoryModalOptions)
  * _save()
  * _delete()
- * _product_categories_comp: ProductCategoriesComp
+ * _options: ShowProductCategoryModalOptions
  * } & BaseComp} ProductCategoryModalComp
  */
 
@@ -33,12 +41,14 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 		data = { name: "", product_category_id: -1, parent_product_category_id: -1 };
 	}
 
-	comp._show = (id, options = {}) => {
-		const ref = comp._product_categories_comp.get_ref(id);
-		const cat = ref.arr[ref.index];
+	comp._show = (options = {}) => {
+		comp._options = options;
 
-		comp._data.name = cat.name;
-		comp._data.product_category_id = cat.product_category_id;
+		if (!options.cat) {
+			options.cat = { product_category_id: -1, name: "", parent_product_category_id: -1 };
+		}
+		comp._data.name = options.cat.name;
+		comp._data.product_category_id = options.cat.product_category_id;
 		comp._render({ freeze: true });
 
 		showModal("ProductCategory", {
@@ -52,23 +62,16 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 			return;
 		}
 
-		const ref = comp._product_categories_comp.get_ref(comp._data.product_category_id);
-		if (ref) {
-			const cat = ref.arr[ref.index];
-			cat.name = comp._data.name;
-			comp._product_categories_comp._render();
+		if (comp._options.save_callback) {
+			comp._options.save_callback(comp._data);
 		}
 
 		hideParentModal(comp);
 	};
 
 	comp._delete = () => {
-		if (comp._data.product_category_id !== -1) {
-			const ref = comp._product_categories_comp.get_ref(comp._data.product_category_id);
-			if (ref) {
-				ref.arr.splice(ref.index, 1);
-				comp._product_categories_comp._render();
-			}
+		if (comp._options.delete_callback) {
+			comp._options.delete_callback();
 		}
 		hideParentModal(comp);
 	};
@@ -133,9 +136,6 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				comp._delete();
 			});
-
-			// @ts-ignore
-			comp._product_categories_comp = $("product-categories-comp");
 		},
 	});
 }

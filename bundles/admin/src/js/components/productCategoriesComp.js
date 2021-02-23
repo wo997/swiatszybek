@@ -13,7 +13,8 @@
  *      save_btn: PiepNode
  * } & CompWithHistoryNodes
  *_recreate_tree()
- * get_ref(category_id): {arr: ProductSubCategoryCompData[], index: number} | undefined
+ * get_ref_from_id(category_id): {arr: ProductSubCategoryCompData[], index: number} | undefined
+ * get_ref_from_data(data: ProductSubCategoryCompData): {arr: ProductSubCategoryCompData[], index: number} | undefined
  * } & BaseComp} ProductCategoriesComp
  */
 
@@ -56,25 +57,30 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		comp._render();
 	};
 
-	comp.get_ref = (category_id) => {
-		/**
-		 *
-		 * @param {ProductSubCategoryCompData[]} categories
-		 */
-		const traverse = (categories) => {
-			let i = -1;
-			for (const cat of categories) {
-				i++;
-				if (cat.product_category_id === category_id) {
-					return { arr: categories, index: i };
-				}
-				traverse(cat.category_list.categories);
+	/**
+	 *
+	 * @param {ProductSubCategoryCompData[]} categories
+	 * @param {{(cat: ProductSubCategoryCompData): boolean}} check
+	 */
+	const traverse = (categories, check) => {
+		let i = -1;
+		for (const cat of categories) {
+			i++;
+			if (check(cat)) {
+				return { arr: categories, index: i };
 			}
+			traverse(cat.category_list.categories, check);
+		}
 
-			return undefined;
-		};
+		return undefined;
+	};
 
-		return traverse(comp._data.category_list.categories);
+	comp.get_ref_from_id = (category_id) => {
+		return traverse(comp._data.category_list.categories, (cat) => cat.product_category_id === category_id);
+	};
+
+	comp.get_ref_from_data = (cat) => {
+		return traverse(comp._data.category_list.categories, (c) => c === cat);
 	};
 
 	comp._set_data = (data, options = {}) => {
@@ -134,7 +140,17 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			const product_category_modal_comp = registerProductCategoryModal();
 			const add_btn = comp._nodes.add_btn;
 			add_btn.addEventListener("click", () => {
-				product_category_modal_comp._show(-1, { source: add_btn });
+				product_category_modal_comp._show({
+					source: add_btn,
+					save_callback: (cat) => {
+						comp._data.category_list.categories.push({
+							name: cat.name,
+							product_category_id: cat.product_category_id,
+							category_list: { categories: [] },
+						});
+						comp._render();
+					},
+				});
 			});
 
 			window.addEventListener("product_categories_changed", () => {
