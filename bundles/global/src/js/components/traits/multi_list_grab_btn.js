@@ -381,17 +381,13 @@ document.addEventListener("mouseup", () => {
 						const insertPos = (list, index, rect) => {
 							let left = rect.left;
 							let top = rect.top;
-							let off_y = 0;
 							if (index > 0) {
-								off_y += rect.height;
+								top += rect.height;
 							}
-							// if (rect.top + off_y > cr.top) {
-							// 	off_y -= cr.height;
-							// }
-							if (rect.top > cr.top) {
-								off_y -= cr.height;
+							// 5 is just a small number
+							if (top - 5 > cr.top) {
+								top -= cr.height;
 							}
-							top += off_y;
 
 							multi_list_grab.positions.push({
 								list,
