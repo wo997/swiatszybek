@@ -54,7 +54,7 @@ function loadedProductCategories() {
 
 function refreshProductCategories() {
 	xhr({
-		url: STATIC_URLS["ADMIN"] + "product/categories/all",
+		url: STATIC_URLS["ADMIN"] + "product/category/all",
 		success: (res) => {
 			product_categories = res;
 			loadedProductCategories();

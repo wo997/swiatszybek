@@ -18,6 +18,9 @@
 			width: 250px;
 			padding: 0 10px;
 			display: inline-block;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
 		}
 		& .category_wrapper {
 			& {
@@ -27,6 +30,9 @@
 				border: 1px solid #999;
 				position: relative;
 				cursor: grab;
+			}
+			& > * {
+				vertical-align: middle;
 			}
 			& .btn.subtle {
 				--btn-border-clr: #0004;
