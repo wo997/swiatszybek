@@ -13,6 +13,7 @@
  *      save_btn: PiepNode
  * } & CompWithHistoryNodes
  *_recreate_tree()
+ * get_ref(category_id): {arr: ProductSubCategoryCompData[], index: number} | undefined
  * } & BaseComp} ProductCategoriesComp
  */
 
@@ -53,6 +54,27 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		connectWithParent(undefined, product_categories_tree);
 
 		comp._render();
+	};
+
+	comp.get_ref = (category_id) => {
+		/**
+		 *
+		 * @param {ProductSubCategoryCompData[]} categories
+		 */
+		const traverse = (categories) => {
+			let i = -1;
+			for (const cat of categories) {
+				i++;
+				if (cat.product_category_id === category_id) {
+					return { arr: categories, index: i };
+				}
+				traverse(cat.category_list.categories);
+			}
+
+			return undefined;
+		};
+
+		return traverse(comp._data.category_list.categories);
 	};
 
 	comp._set_data = (data, options = {}) => {

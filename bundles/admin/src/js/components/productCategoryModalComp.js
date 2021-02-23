@@ -19,6 +19,7 @@
  * _show?(id: number, options?: {source?: PiepNode})
  * _save()
  * _delete()
+ * _product_categories_comp: ProductCategoriesComp
  * } & BaseComp} ProductCategoryModalComp
  */
 
@@ -33,65 +34,43 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (id, options = {}) => {
-		const category = product_categories.find((e) => e.product_category_id === id);
-		if (category) {
-			comp._data.name = category.name;
-			comp._data.product_category_id = category.product_category_id;
-		}
+		const ref = comp._product_categories_comp.get_ref(id);
+		const cat = ref.arr[ref.index];
+
+		comp._data.name = cat.name;
+		comp._data.product_category_id = cat.product_category_id;
+		comp._render({ freeze: true });
 
 		showModal("ProductCategory", {
 			source: options.source,
 		});
 	};
 
-	const hideAndSearch = () => {
-		hideParentModal(comp);
-		refreshProductCategories();
-	};
-
 	comp._save = () => {
 		const errors = validateInputs([comp._nodes.name]);
-
 		if (errors.length > 0) {
 			return;
 		}
 
-		xhr({
-			url: STATIC_URLS["ADMIN"] + "product/category/save",
-			params: {
-				product_category: {
-					name: comp._data.name,
-					product_category_id: comp._data.product_category_id,
-				},
-			},
-			success: (res) => {
-				hideAndSearch();
-				showNotification(comp._data.product_category_id === -1 ? "Dodano kategorię produktu" : "Zapisano kategorię produktu", {
-					one_line: true,
-					type: "success",
-				});
-			},
-		});
+		const ref = comp._product_categories_comp.get_ref(comp._data.product_category_id);
+		if (ref) {
+			const cat = ref.arr[ref.index];
+			cat.name = comp._data.name;
+			comp._product_categories_comp._render();
+		}
+
+		hideParentModal(comp);
 	};
 
 	comp._delete = () => {
 		if (comp._data.product_category_id !== -1) {
-			xhr({
-				url: STATIC_URLS["ADMIN"] + "product/category/delete/" + comp._data.product_category_id,
-				params: {
-					product_category: comp._data,
-				},
-				success: (res) => {
-					hideAndSearch();
-					showNotification(`Usunięto kategorię ${comp._data.name}`, {
-						one_line: true,
-						type: "success",
-					});
-				},
-			});
-		} else {
-			hideAndSearch();
+			const ref = comp._product_categories_comp.get_ref(comp._data.product_category_id);
+			if (ref) {
+				ref.arr.splice(ref.index, 1);
+				comp._product_categories_comp._render();
+			}
 		}
+		hideParentModal(comp);
 	};
 
 	comp._set_data = (data, options = {}) => {
@@ -147,15 +126,16 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 				</div>
 			</div>
 		`,
-		initialize: () => {
+		ready: () => {
 			comp._nodes.save_btn.addEventListener("click", () => {
 				comp._save();
 			});
 			comp._nodes.delete_btn.addEventListener("click", () => {
-				if (confirm("Czy aby na pewno chcesz usunąć tę kategorię?")) {
-					comp._delete();
-				}
+				comp._delete();
 			});
+
+			// @ts-ignore
+			comp._product_categories_comp = $("product-categories-comp");
 		},
 	});
 }

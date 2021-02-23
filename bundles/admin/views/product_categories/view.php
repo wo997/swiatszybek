@@ -41,8 +41,6 @@
     </p>
 </div>
 
-<div class="categories_wrapper">
-    <product-categories-comp></product-categories-comp>
-</div>
+<product-categories-comp></product-categories-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>
