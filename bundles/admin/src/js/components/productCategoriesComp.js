@@ -12,9 +12,8 @@
  *      add_btn: PiepNode
  *      save_btn: PiepNode
  * } & CompWithHistoryNodes
- *_recreate_tree()
- * get_ref_from_id(category_id): {arr: ProductSubCategoryCompData[], index: number} | undefined
- * get_ref_from_data(data: ProductSubCategoryCompData): {arr: ProductSubCategoryCompData[], index: number} | undefined
+ * _recreate_tree()
+ * _save()
  * } & BaseComp} ProductCategoriesComp
  */
 
@@ -54,33 +53,48 @@ function productCategoriesComp(comp, parent, data = undefined) {
 
 		connectWithParent(undefined, product_categories_tree);
 
-		comp._render();
+		comp._render({ freeze: true });
 	};
 
-	/**
-	 *
-	 * @param {ProductSubCategoryCompData[]} categories
-	 * @param {{(cat: ProductSubCategoryCompData): boolean}} check
-	 */
-	const traverse = (categories, check) => {
-		let i = -1;
-		for (const cat of categories) {
-			i++;
-			if (check(cat)) {
-				return { arr: categories, index: i };
+	comp._save = () => {
+		/**
+		 *
+		 * @param {ProductSubCategoryCompData[]} categories
+		 * @return {ProductCategoryBranch[]}
+		 */
+		const traverse = (categories) => {
+			let data = [];
+			let pos = 0;
+
+			for (const cat of categories) {
+				pos++;
+				const sub_categories = traverse(cat.category_list.categories);
+				data.push({
+					name: cat.name,
+					pos,
+					product_category_id: cat.product_category_id,
+					sub_categories,
+				});
 			}
-			traverse(cat.category_list.categories, check);
-		}
 
-		return undefined;
-	};
+			return data;
+		};
 
-	comp.get_ref_from_id = (category_id) => {
-		return traverse(comp._data.category_list.categories, (cat) => cat.product_category_id === category_id);
-	};
+		const data = traverse(comp._data.category_list.categories);
 
-	comp.get_ref_from_data = (cat) => {
-		return traverse(comp._data.category_list.categories, (c) => c === cat);
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "product/category/save_all",
+			params: {
+				product_categories: data,
+			},
+			success: (res) => {
+				showNotification("Zapisano kategorie produktów", {
+					one_line: true,
+					type: "success",
+				});
+				refreshProductCategories();
+			},
+		});
 	};
 
 	comp._set_data = (data, options = {}) => {
@@ -135,7 +149,9 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			if (save_btn_wrapper) {
 				save_btn_wrapper.appendChild(save_btn);
 			}
-			save_btn.addEventListener("click", () => {});
+			save_btn.addEventListener("click", () => {
+				comp._save();
+			});
 
 			const product_category_modal_comp = registerProductCategoryModal();
 			const add_btn = comp._nodes.add_btn;

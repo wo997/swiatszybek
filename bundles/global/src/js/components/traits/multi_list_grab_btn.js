@@ -56,42 +56,6 @@ let multi_list_grab = {
 		row.style.transform = `translate(${Math.round(mdx)}px, ${Math.round(mdy)}px)`;
 
 		multi_list_grab.ticks++;
-		multi_list_grab.all_rows.forEach((e, index) => {
-			const er = e.getBoundingClientRect();
-
-			// @ts-ignore
-			const above = e._initial_y < row._initial_y;
-
-			// @ts-ignore
-			const etry = def(e._translateY, 0);
-
-			// @ts-ignore
-			const initial_y = e._initial_y;
-
-			let edy = 0;
-			if (initial_y + er.height * 0.5 >= r.top + scroll_dy && above) {
-				edy = multi_list_grab.height;
-			}
-			if (initial_y + er.height * 0.5 <= r.top + r.height + scroll_dy && !above) {
-				edy = -multi_list_grab.height;
-			}
-
-			if (e === multi_list_grab.row || index > multi_list_grab.ticks) {
-				return;
-			}
-
-			let d = (edy - etry) * 0.2;
-			d = clamp(-40, d, 40);
-			// @ts-ignore
-			const ty = etry + d;
-			// @ts-ignore
-			e._translateY = ty;
-			// @ts-ignore
-			e._wants_y = edy;
-
-			// @ts-ignore
-			e.style.transform = `translateY(${Math.round(ty)}px)`;
-		});
 
 		/** @type {MultiListPosition} */
 		let best_position = undefined;
@@ -137,6 +101,45 @@ let multi_list_grab = {
 		}
 		multi_list_grab.best_position = best_position;
 		multi_list_grab.insert_rect.classList.toggle("active", !!best_position);
+
+		multi_list_grab.all_rows.forEach((e, index) => {
+			if (e === multi_list_grab.row || index > multi_list_grab.ticks) {
+				return;
+			}
+
+			const er = e.getBoundingClientRect();
+
+			// @ts-ignore
+			const above = e._initial_y < row._initial_y;
+
+			// @ts-ignore
+			const etry = def(e._translateY, 0);
+
+			// @ts-ignore
+			const initial_y = e._initial_y;
+
+			let edy = 0;
+			if (best_position) {
+				if (initial_y + er.height * 0.5 >= best_position.y && above) {
+					edy = multi_list_grab.height;
+				}
+				if (initial_y - er.height * 0.5 <= best_position.y && !above) {
+					edy = -multi_list_grab.height;
+				}
+			}
+
+			let d = (edy - etry) * 0.2;
+			d = clamp(-40, d, 40);
+			// @ts-ignore
+			const ty = etry + d;
+			// @ts-ignore
+			e._translateY = ty;
+			// @ts-ignore
+			e._wants_y = edy;
+
+			// @ts-ignore
+			e.style.transform = `translateY(${Math.round(ty)}px)`;
+		});
 
 		requestAnimationFrame(multi_list_grab.animate);
 	},
@@ -206,6 +209,9 @@ document.addEventListener("mouseup", () => {
 		// @ts-ignore
 		const list = row_ref._parent("list-comp");
 		const target_list = best_pos_ref.list;
+		if (!list || !target_list) {
+			return;
+		}
 
 		const row_index = +row_ref.dataset.row_index;
 		const target_index = best_pos_ref.index;
@@ -379,7 +385,10 @@ document.addEventListener("mouseup", () => {
 							if (index > 0) {
 								off_y += rect.height;
 							}
-							if (rect.top + off_y > cr.top) {
+							// if (rect.top + off_y > cr.top) {
+							// 	off_y -= cr.height;
+							// }
+							if (rect.top > cr.top) {
 								off_y -= cr.height;
 							}
 							top += off_y;

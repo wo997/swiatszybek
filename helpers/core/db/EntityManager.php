@@ -3,6 +3,7 @@
 class EntityManager
 {
     private static $entities = [];
+    /** @var Entity[] */
     private static $objects = [];
 
     /**
@@ -98,6 +99,13 @@ class EntityManager
         self::$objects[$global_id] = $obj; // u can restore the data yay :) not used yet bro, think about it
 
         return $obj;
+    }
+
+    public static function saveAll()
+    {
+        foreach (self::$objects as $object) {
+            $object->save();
+        }
     }
 
     /**

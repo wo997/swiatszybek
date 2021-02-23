@@ -4,11 +4,9 @@ $id = Request::urlParam(4);
 
 try {
     DB::beginTransaction();
-
     $product_feature = EntityManager::getEntityById("product_feature", $id);
     $product_feature->setWillDelete();
-    $product_feature->saveToDB();
-
+    EntityManager::saveAll();
     DB::commitTransaction();
 } catch (Exception $e) {
     var_dump($e);

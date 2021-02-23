@@ -86,12 +86,12 @@ class Entity
     {
         foreach ($objs as $obj) {
             if ($obj instanceof Entity) {
-                $obj->saveToDB(["propagate_to_parent" => false]);
+                $obj->save(["propagate_to_parent" => false]);
             }
         }
     }
 
-    public function saveToDB($options = [])
+    public function save($options = [])
     {
         if ($this->saved) {
             return;
@@ -107,7 +107,7 @@ class Entity
             $parent = $this->getParent();
 
             if ($parent) {
-                $parent->saveToDB();
+                $parent->save();
                 return;
             }
         }

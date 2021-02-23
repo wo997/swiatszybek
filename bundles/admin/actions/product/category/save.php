@@ -2,10 +2,8 @@
 
 try {
     DB::beginTransaction();
-
     $product_category = EntityManager::getEntity("product_category", json_decode($_POST["product_category"], true));
-    $product_category->saveToDB();
-
+    EntityManager::saveAll();
     DB::commitTransaction();
 } catch (Exception $e) {
     var_dump($e);

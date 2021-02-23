@@ -3,6 +3,7 @@
 product-sub-categories-comp {
 	& {
 		position: relative;
+		user-select: none;
 	}
 	& list-comp {
 		padding: 1px;
