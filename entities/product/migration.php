@@ -8,4 +8,5 @@ DB::createTable("product", [
     ["name" => "gross_price", "type" => "DECIMAL(10,2)", "index" => "index"],
     ["name" => "vat_id", "type" => "INT"],
     ["name" => "active", "type" => "TINYINT(1)"],
+    ["name" => "stock", "type" => "INT"],
 ]);

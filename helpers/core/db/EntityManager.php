@@ -234,23 +234,25 @@ class EntityManager
         $other_entities_with_id_props = [];
         foreach ($other_entities_props as &$other_entity_props) {
             if ($other_entity_props instanceof Entity) {
-                $other_entities[] = $other_entity_props;
-                continue;
-            }
-            if (is_numeric($other_entity_props)) {
-                $other_entity_props = [
-                    $other_entity_id_column => intval($other_entity_props)
-                ];
+                $other_entity_id = $other_entity_props->getId();
+                $other_entity_props = $other_entity_props->getProps();
+            } else {
+                if (is_numeric($other_entity_props)) {
+                    $other_entity_props = [
+                        $other_entity_id_column => intval($other_entity_props)
+                    ];
+                }
+
+                $other_entity_id = intval(def($other_entity_props, $other_entity_id_column, -1));
+                $other_entity_props[$obj->getIdColumn()] = $obj->getId();
+                if ($other_entity_id == -1) {
+                    $other_entity = self::getEntity($other_entity_name, $other_entity_props);
+                    $other_entities[] = $other_entity;
+                    continue;
+                }
             }
 
-            $other_entity_id = intval(def($other_entity_props, $other_entity_id_column, -1));
-            $other_entity_props[$obj->getIdColumn()] = $obj->getId();
-            if ($other_entity_id == -1) {
-                $other_entity = self::getEntity($other_entity_name, $other_entity_props);
-                $other_entities[] = $other_entity;
-            } else {
-                $other_entities_with_id_props[$other_entity_id] = $other_entity_props;
-            }
+            $other_entities_with_id_props[$other_entity_id] = $other_entity_props;
         }
         unset($other_entity_props);
 
@@ -260,7 +262,6 @@ class EntityManager
 
             if ($other_entity_props) {
                 $curr_other_entity->setProps($other_entity_props);
-                //unset($other_entities_with_id_props);
             } else {
                 $curr_other_entity->willUnlinkFromEntity($obj->getName());
             }
