@@ -103,28 +103,31 @@ let multi_list_grab = {
 		multi_list_grab.insert_rect.classList.toggle("active", !!best_position);
 
 		multi_list_grab.all_rows.forEach((e, index) => {
-			if (e === multi_list_grab.row || index > multi_list_grab.ticks) {
+			// @ts-ignore
+			const initial_y = e._initial_y;
+
+			// weird optimisation, but just animates nodes over time, like a soundwave or smth
+			if (e === multi_list_grab.row || Math.abs(mouse.pos.y - initial_y) > multi_list_grab.ticks * 20) {
 				return;
 			}
 
 			const er = e.getBoundingClientRect();
-
 			// @ts-ignore
 			const above = e._initial_y < row._initial_y;
-
 			// @ts-ignore
 			const etry = def(e._translateY, 0);
 
-			// @ts-ignore
-			const initial_y = e._initial_y;
-
 			let edy = 0;
 			if (best_position) {
-				if (initial_y + er.height * 0.5 >= best_position.y && above) {
-					edy = multi_list_grab.height;
-				}
-				if (initial_y - er.height * 0.5 <= best_position.y && !above) {
-					edy = -multi_list_grab.height;
+				const compy = initial_y + er.height * 0.5;
+				if (above) {
+					if (compy >= best_position.y) {
+						edy = multi_list_grab.height;
+					}
+				} else {
+					if (compy <= best_position.y + multi_list_grab.height) {
+						edy = -multi_list_grab.height;
+					}
 				}
 			}
 
