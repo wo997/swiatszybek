@@ -21,6 +21,7 @@ let product_features = [];
  * parent_product_feature_option_id: number
  * name: string
  * feature_name?: string
+ * full_name?: string
  * }} ProductFeatureOptionData
  *
  */
@@ -41,6 +42,22 @@ function loadedProductFeatures() {
 	product_feature_options.forEach((option) => {
 		const feature = product_features.find((feature) => feature.product_feature_id === option.product_feature_id);
 		option.feature_name = feature ? feature.name : "";
+
+		let full_name = option.feature_name + ": " + option.name;
+		let parent = option;
+		while (true) {
+			if (parent.parent_product_feature_option_id === -1) {
+				break;
+			}
+			parent = product_feature_options.find((e) => e.product_feature_option_id === parent.parent_product_feature_option_id);
+			if (!parent) {
+				break;
+			}
+			full_name = parent.feature_name + ": " + parent.name + " ❯ " + full_name;
+		}
+		option.full_name = full_name;
+
+		option.parent_product_feature_option_id;
 	});
 }
 

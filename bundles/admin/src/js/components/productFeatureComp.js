@@ -56,10 +56,13 @@ function productFeatureComp(comp, parent, data) {
 			{
 				name: "product_feature_option",
 				getMap: () => {
-					const map = product_feature_options.map((option) => ({
-						val: option.product_feature_option_id,
-						label: option.feature_name + ": " + option.name,
-					}));
+					const map = product_feature_options.map((option) => {
+						const obj = {
+							val: option.product_feature_option_id,
+							label: option.full_name,
+						};
+						return obj;
+					});
 					return map;
 				},
 			},
