@@ -600,12 +600,14 @@ function productComp(comp, parent, data = undefined) {
 
 			const product_categories_modal_comp = registerProductCategoriesModal();
 
+			const select_product_categories_modal_comp = registerSelectProductCategoriesModal();
+
 			comp._nodes.add_feature_btn.addEventListener("click", () => {
 				select_product_features_modal_comp._show({ source: comp._nodes.add_feature_btn });
 			});
 
 			comp._nodes.add_category_btn.addEventListener("click", () => {
-				product_categories_modal_comp._show({ source: comp._nodes.add_category_btn });
+				select_product_categories_modal_comp._show({ source: comp._nodes.add_category_btn });
 			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {

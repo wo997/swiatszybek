@@ -26,6 +26,8 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 		data = {};
 	}
 
+	comp._refresh_dataset = () => {};
+
 	comp._show = (options = {}) => {
 		comp._refresh_dataset();
 
@@ -51,9 +53,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 					Zamknij <i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="scroll-panel scroll-shadow panel-padding">
-				<datatable-comp data-node="{${comp._nodes.datatable}}" data-bind="{${data.datatable}}"></datatable-comp>
-			</div>
+			<div class="scroll-panel scroll-shadow panel-padding"></div>
 		`,
 		initialize: () => {},
 		ready: () => {},
@@ -65,15 +65,15 @@ function registerSelectProductCategoriesModal() {
 	registerModalContent(html`
 		<div id="selectProductCategories" data-expand data-dismissable>
 			<div class="modal-body" style="max-width: 1000px;max-height: calc(75% + 100px);">
-				<select-product-Categories-modal-comp class="flex_stretch"></select-product-Categories-modal-comp>
+				<select-product-categories-modal-comp class="flex_stretch"></select-product-categories-modal-comp>
 			</div>
 		</div>
 	`);
 
 	/** @type {SelectProductCategoriesModalComp} */
 	// @ts-ignore
-	const select_product_Categories_modal_comp = $("#selectProductCategories select-product-Categories-modal-comp");
-	selectProductCategoriesModalComp(select_product_Categories_modal_comp, undefined);
+	const select_product_categories_modal_comp = $("#selectProductCategories select-product-categories-modal-comp");
+	selectProductCategoriesModalComp(select_product_categories_modal_comp, undefined);
 
-	return select_product_Categories_modal_comp;
+	return select_product_categories_modal_comp;
 }

@@ -45,6 +45,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 					name: copy_cat.name,
 					product_category_id: copy_cat.product_category_id,
 					category_list: { categories: [] },
+					expanded: true,
 				};
 				list.push(sub_cat);
 				connectWithParent(sub_cat, copy_cat.sub_categories);

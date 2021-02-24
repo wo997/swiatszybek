@@ -5,6 +5,7 @@
  * product_category_id: number
  * name: string
  * category_list: ProductSubCategoriesCompData
+ * expanded?: boolean
  * } & ListCompRowData} ProductSubCategoryCompData
  *
  * @typedef {{
@@ -14,6 +15,8 @@
  * categories: ProductSubCategoryComp
  * edit_btn: PiepNode
  * add_btn: PiepNode
+ * expand_btn: PiepNode
+ * expand: PiepNode
  * }
  * } & BaseComp} ProductSubCategoryComp
  */
@@ -31,6 +34,7 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 			category_list: {
 				categories: [],
 			},
+			expanded: true,
 		};
 	}
 
@@ -45,6 +49,13 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="category_wrapper">
 				<span class="category_name" html="{${data.name}}"></span>
+				<button
+					class="btn small {${data.expanded}?expanded subtle:primary}"
+					data-tooltip="{${data.expanded ? "Zwiń podkategorie" : "Rozwiń podkategorie"}}"
+					data-node="{${comp._nodes.expand_btn}}"
+				>
+					<i class="fas fa-chevron-right"></i>
+				</button>
 				<button class="btn subtle small" data-tooltip="Edytuj kategorię" data-node="{${comp._nodes.edit_btn}}">
 					<i class="fas fa-edit"></i>
 				</button>
@@ -58,7 +69,9 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 					data-invisible="1"
 				></p-trait>
 			</div>
-			<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
+			<div class="expand_y" data-node="{${comp._nodes.expand}}">
+				<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
+			</div>
 		`,
 		//<p-trait data-trait="list_delete_btn" data-tooltip="Usuń kategorię"></p-trait>
 
@@ -97,6 +110,12 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 						comp._render();
 					},
 				});
+			});
+
+			comp._nodes.expand_btn.addEventListener("click", () => {
+				comp._data.expanded = !comp._data.expanded;
+				expand(comp._nodes.expand, comp._data.expanded);
+				comp._render();
 			});
 		},
 	});

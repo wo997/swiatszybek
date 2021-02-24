@@ -449,9 +449,13 @@ function setCompData(comp, data = undefined, options = {}) {
 	for (const eval_class of node._eval_class) {
 		try {
 			const ok = !!eval(eval_class.eval_str);
-			eval_class.node.classList.toggle(eval_class.className, ok);
+			eval_class.className.split(" ").forEach((e) => {
+				eval_class.node.classList.toggle(e, ok);
+			});
 			if (eval_class.opposite) {
-				eval_class.node.classList.toggle(eval_class.opposite, !ok);
+				eval_class.opposite.split(" ").forEach((e) => {
+					eval_class.node.classList.toggle(e, !ok);
+				});
 			}
 		} catch (e) {
 			console.error(`Cannot evaluate class ${eval_class.eval_str}: ${e}`);

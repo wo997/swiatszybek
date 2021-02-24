@@ -30,11 +30,15 @@ product-sub-categories-comp {
 		& > * {
 			vertical-align: middle;
 		}
-		& .btn.subtle {
-			--btn-border-clr: #0004;
-			--btn-background-clr: #00000012;
-			width: 30px;
-			height: 30px;
+		& .btn {
+			&.subtle {
+				--btn-border-clr: #0004;
+				--btn-background-clr: #00000012;
+			}
+			& {
+				width: 30px;
+				height: 30px;
+			}
 		}
 		&::before {
 			position: absolute;
@@ -71,6 +75,9 @@ product-sub-categories-comp {
 		& .category_wrapper {
 			background: #fafafa;
 		}
+		& .node_expand_btn {
+			display: none;
+		}
 		& product-sub-categories-comp {
 			& .category_name {
 				font-weight: 400;
@@ -78,7 +85,7 @@ product-sub-categories-comp {
 		}
 	}
 
-	.overlay {
+	& .overlay {
 		position: absolute;
 		left: 0;
 		top: 1px;
@@ -87,5 +94,14 @@ product-sub-categories-comp {
 		pointer-events: none;
 		background: white;
 		z-index: 900;
+	}
+
+	& .node_expand_btn {
+		& i {
+			transition: 0.25s transform;
+		}
+		&.expanded i {
+			transform: rotate(90deg);
+		}
 	}
 }
