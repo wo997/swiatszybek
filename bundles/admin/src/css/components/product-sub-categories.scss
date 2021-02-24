@@ -76,7 +76,7 @@ product-sub-categories-comp {
 			background: #fafafa;
 		}
 		& .node_expand_btn {
-			display: none;
+			visibility: hidden;
 		}
 		& product-sub-categories-comp {
 			& .category_name {

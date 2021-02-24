@@ -11,6 +11,8 @@
  * _nodes: {
  *      add_btn: PiepNode
  *      save_btn: PiepNode
+ *      expand_all_btn: PiepNode
+ *      shrink_all_btn: PiepNode
  * } & CompWithHistoryNodes
  * _recreate_tree()
  * _save()
@@ -130,11 +132,26 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		template: html`
 			<p-trait data-trait="history"></p-trait>
 			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
-			<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
-			<button class="btn primary" data-tooltip="Dodaj kategorię podrzędną" data-node="{${comp._nodes.add_btn}}" style="margin:15px 0 50px">
+
+			<button class="btn primary" data-tooltip="Dodaj kategorię podrzędną" data-node="{${comp._nodes.add_btn}}">
 				Dodaj kategorię główną
 				<i class="fas fa-plus"></i>
 			</button>
+
+			<button class="btn subtle" data-node="{${comp._nodes.expand_all_btn}}">
+				Rozwiń wszystko
+				<i class="fas fa-angle-double-down"></i>
+			</button>
+			<button class="btn subtle" data-node="{${comp._nodes.shrink_all_btn}}">
+				Zwiń wszystko
+				<i class="fas fa-angle-double-up"></i>
+			</button>
+
+			<div style="height:20px"></div>
+
+			<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
+
+			<div style="height:50px"></div>
 		`,
 		ready: () => {
 			comp._recreate_tree();
@@ -156,6 +173,18 @@ function productCategoriesComp(comp, parent, data = undefined) {
 						});
 						comp._render();
 					},
+				});
+			});
+
+			comp._nodes.expand_all_btn.addEventListener("click", () => {
+				comp._children(".node_expand_btn:not(.expanded)").forEach((e) => {
+					e.click();
+				});
+			});
+
+			comp._nodes.shrink_all_btn.addEventListener("click", () => {
+				comp._children(".node_expand_btn.expanded").forEach((e) => {
+					e.click();
 				});
 			});
 
