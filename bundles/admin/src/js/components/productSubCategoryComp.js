@@ -68,7 +68,6 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 				<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
 			</div>
 		`,
-
 		ready: () => {
 			const edit_btn = comp._nodes.edit_btn;
 			edit_btn.addEventListener("click", () => {

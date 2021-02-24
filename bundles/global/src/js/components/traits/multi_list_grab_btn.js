@@ -388,6 +388,19 @@ document.addEventListener("mouseup", () => {
 					max_levels = +mln.dataset.max_level;
 				}
 
+				//const expand_multi_list_btn = list_row._child(".node_expand_multi_list_btn");
+				let max_deep = 0;
+				list_row._children(".list_row").forEach((e) => {
+					let deep = -1;
+					while (list_row.contains(e)) {
+						deep++;
+						e = e._parent(".list_row");
+					}
+					if (deep > max_deep) {
+						max_deep = deep;
+					}
+				});
+
 				multi_list_grab.positions = [];
 				[multi_list_grab.master_list, ...multi_list_grab.master_list._children("list-comp")]
 					.filter((e) => {
@@ -400,7 +413,7 @@ document.addEventListener("mouseup", () => {
 							level++;
 							lr = lr._parent(".list_row");
 						}
-						if (level > max_levels) {
+						if (level > max_levels - max_deep) {
 							return;
 						}
 
