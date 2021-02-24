@@ -27,19 +27,36 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			selection: [],
-			categories: [
-				{
-					product_category_id: 1,
-					product_category_name: "aaa",
-					categories: [{ product_category_id: 2, product_category_name: "bbb", categories: [], selected: false }],
-					selected: false,
-				},
-				{ product_category_id: 3, product_category_name: "ccc", categories: [], selected: false },
-			],
+			categories: [],
 		};
 	}
 
-	comp._refresh_dataset = () => {};
+	comp._refresh_dataset = () => {
+		/**
+		 *
+		 * @param {ProductCategoryPickerNodeCompData[]} categories_ref
+		 * @param {ProductCategoryBranch[]} wanted_categories
+		 */
+		const traverse = (categories_ref, wanted_categories) => {
+			wanted_categories.forEach((wcat) => {
+				categories_ref.push({
+					product_category_id: wcat.product_category_id,
+					categories: [],
+					product_category_name: wcat.name,
+					selected: comp._data.selection.includes(wcat.product_category_id),
+				});
+			});
+
+			categories_ref.forEach((cat) => {
+				traverse(cat.categories, wanted_categories.find((e) => e.product_category_id === cat.product_category_id).sub_categories);
+			});
+		};
+
+		comp._data.categories = [];
+		traverse(comp._data.categories, product_categories_tree);
+
+		comp._render({ force_render: true });
+	};
 
 	comp._show = (options = {}) => {
 		comp._refresh_dataset();
@@ -69,7 +86,12 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 			<div class="scroll-panel scroll-shadow panel-padding">
 				<div>
 					<button class="btn primary" data-node="{${comp._nodes.edit_btn}}">Edytuj kategorie <i class="fas fa-cog"></i></button>
-					<list-comp data-bind="{${data.categories}}" class="wireframe" style="margin-top:var(--form-spacing)">
+					<list-comp
+						data-bind="{${data.categories}}"
+						class="wireframe"
+						style="margin-top:var(--form-spacing)"
+						data-primary="product_category_id"
+					>
 						<product-category-picker-node-comp></product-category-picker-node-comp>
 					</list-comp>
 				</div>
@@ -83,7 +105,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 			});
 
 			window.addEventListener("product_categories_changed", () => {
-				comp._render({ force_render: true });
+				comp._refresh_dataset();
 			});
 		},
 	});
