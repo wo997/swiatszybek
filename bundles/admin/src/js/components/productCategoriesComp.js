@@ -122,6 +122,20 @@ function productCategoriesComp(comp, parent, data = undefined) {
 						if (ne && round) {
 							ne._child(".category_wrapper").classList.add("round_top");
 						}
+
+						// expand_btn
+						const expand_multi_list_btn = com._child(".node_expand_multi_list_btn");
+
+						let lr = list_row;
+						let level = 0;
+						while (lr) {
+							level++;
+							lr = lr._parent(".list_row");
+						}
+						const max_expand = 1;
+
+						const inactive = level > max_expand || com._data.categories.length === 0;
+						expand_multi_list_btn.classList.toggle("inactive", inactive);
 					});
 				});
 			},
@@ -154,7 +168,6 @@ function productCategoriesComp(comp, parent, data = undefined) {
 					data-bind="{${data.categories}}"
 					class="clean multi_master"
 					data-max_level="3"
-					data-expand_levels="1"
 					data-multi_row_selector=".category_wrapper"
 				>
 					<product-sub-category-comp></product-sub-category-comp>
