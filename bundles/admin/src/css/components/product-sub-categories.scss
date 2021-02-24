@@ -75,9 +75,6 @@ product-sub-categories-comp {
 		& .category_wrapper {
 			background: #fafafa;
 		}
-		& .node_expand_btn {
-			visibility: hidden;
-		}
 		& product-sub-categories-comp {
 			& .category_name {
 				font-weight: 400;
@@ -94,14 +91,5 @@ product-sub-categories-comp {
 		pointer-events: none;
 		background: white;
 		z-index: 900;
-	}
-
-	& .node_expand_btn {
-		& i {
-			transition: 0.25s transform;
-		}
-		&.expanded i {
-			transform: rotate(90deg);
-		}
 	}
 }

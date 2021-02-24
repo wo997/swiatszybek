@@ -149,7 +149,12 @@ function productCategoriesComp(comp, parent, data = undefined) {
 
 			<div style="height:20px"></div>
 
-			<product-sub-categories-comp data-bind="{${data.category_list}}" data-max_level="3"></product-sub-categories-comp>
+			<product-sub-categories-comp
+				data-bind="{${data.category_list}}"
+				class="master_list"
+				data-max_level="3"
+				data-expand_levels="1"
+			></product-sub-categories-comp>
 
 			<div style="height:50px"></div>
 		`,
@@ -192,7 +197,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			};
 
 			comp._nodes.expand_all_btn.addEventListener("click", () => {
-				comp._children(".node_expand_btn:not(.expanded)").forEach((e) => {
+				comp._children(".node_expand_multi_list_btn:not(.expanded)").forEach((e) => {
 					if (filterLevel(e, 2)) {
 						e.click();
 					}
@@ -200,7 +205,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.shrink_all_btn.addEventListener("click", () => {
-				comp._children(".node_expand_btn.expanded").forEach((e) => {
+				comp._children(".node_expand_multi_list_btn.expanded").forEach((e) => {
 					if (filterLevel(e, 2)) {
 						e.click();
 					}

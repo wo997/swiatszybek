@@ -15,7 +15,6 @@
  * categories: ProductSubCategoryComp
  * edit_btn: PiepNode
  * add_btn: PiepNode
- * expand_btn: PiepNode
  * expand: PiepNode
  * }
  * } & BaseComp} ProductSubCategoryComp
@@ -51,13 +50,7 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="category_wrapper">
 				<span class="category_name" html="{${data.name}}"></span>
-				<button
-					class="btn small {${data.expanded}?expanded subtle:primary}"
-					data-tooltip="{${data.expanded ? "Zwiń podkategorie" : "Rozwiń podkategorie"}}"
-					data-node="{${comp._nodes.expand_btn}}"
-				>
-					<i class="fas fa-chevron-right"></i>
-				</button>
+				<p-trait data-trait="expand_multi_list_btn"></p-trait>
 				<button class="btn subtle small" data-tooltip="Edytuj kategorię" data-node="{${comp._nodes.edit_btn}}">
 					<i class="fas fa-edit"></i>
 				</button>
@@ -112,19 +105,6 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 						comp._render();
 					},
 				});
-			});
-
-			comp._nodes.expand_btn.addEventListener("click", () => {
-				comp._data.expanded = !comp._data.expanded;
-				comp._render();
-			});
-
-			comp._child("list-comp").addEventListener("dropped_row", () => {
-				if (comp._data.expanded) {
-					return;
-				}
-				comp._data.expanded = true;
-				comp._render();
 			});
 		},
 	});
