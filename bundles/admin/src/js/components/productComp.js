@@ -21,6 +21,7 @@
  *  missing_products_features: Object[]
  *  unnecessary_product_ids?: number[]
  *  products_dt?: DatatableCompData
+ *  category_ids: number[]
  * }} ProductCompData
  *
  * @typedef {{
@@ -57,7 +58,20 @@ const getFeatureIdFromKey = (key) => {
  * @param {*} parent
  * @param {ProductCompData} data
  */
-function productComp(comp, parent, data) {
+function productComp(comp, parent, data = undefined) {
+	if (data === undefined) {
+		data = {
+			general_product_id: -1,
+			name: "",
+			sell_by: "qty",
+			product_feature_ids: [],
+			product_feature_option_ids: [],
+			missing_products_features: [],
+			features: [],
+			category_ids: [],
+		};
+	}
+
 	/** @type {DatatableCompData} */
 	const table = {
 		columns: [
@@ -522,6 +536,11 @@ function productComp(comp, parent, data) {
 				</select>
 
 				<div style="margin-top:10px">
+					<span class="label inline" style="font-size: 1.1em;" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
+					<button data-node="add_category_btn" class="btn primary">Dodaj kategorie <i class="fas fa-plus"></i></button>
+				</div>
+
+				<div style="margin-top:10px">
 					<span class="label inline" style="font-size: 1.1em;" html="{${"Cechy (" + data.features.length + ")"}}"></span>
 					<button data-node="add_feature_btn" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
@@ -577,6 +596,9 @@ function productComp(comp, parent, data) {
 			const manage_product_list_modal_comp = registerManageProductListModal();
 
 			const product_feature_modal_comp = registerProductFeatureModal();
+
+			const product_categories_modal_comp = registerProductCategoriesModal();
+			//product_categories_modal_comp._show({});
 
 			// other
 			comp._nodes.add_feature_btn.addEventListener("click", () => {

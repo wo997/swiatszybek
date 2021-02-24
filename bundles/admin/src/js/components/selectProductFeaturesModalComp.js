@@ -94,9 +94,6 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._show = (options = {}) => {
-		comp._nodes.close_btn.classList.add("subtle");
-		comp._nodes.close_btn.classList.remove("important");
-
 		comp._refresh_dataset();
 
 		setTimeout(() => {

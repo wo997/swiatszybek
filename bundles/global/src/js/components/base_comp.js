@@ -322,10 +322,11 @@ function createComp(node, parent_comp, data, options) {
 					if (r_key !== undefined) {
 						const { obj: s_obj, key: s_key } = source._pointSelfData();
 						if (!r_obj) {
-							console.log(r_obj, r_key, s_obj, s_key);
+							console.error("Missing data", { source, receiver });
 							console.trace();
+						} else {
+							r_obj[r_key] = s_obj[s_key];
 						}
-						r_obj[r_key] = s_obj[s_key];
 					}
 				}
 			},

@@ -5,15 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const product_comp = $("product-comp");
 
-	productComp(product_comp, undefined, {
-		general_product_id: -1,
-		name: "",
-		sell_by: "qty",
-		product_feature_ids: [],
-		product_feature_option_ids: [],
-		missing_products_features: [],
-		features: [],
-	});
+	productComp(product_comp, undefined);
 
 	$(".main_header .history_btns_wrapper").appendChild(product_comp._nodes.history);
 	$(".main_header .save_btn_wrapper").appendChild(product_comp._nodes.save_btn);

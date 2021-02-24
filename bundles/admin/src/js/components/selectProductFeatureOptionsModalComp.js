@@ -99,9 +99,6 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._show = (product_feature_id, options = {}) => {
-		comp._nodes.close_btn.classList.add("subtle");
-		comp._nodes.close_btn.classList.remove("important");
-
 		comp._data.product_feature_id = product_feature_id;
 
 		comp._data.datatable.label = product_features.find((e) => e.product_feature_id === product_feature_id).name;
