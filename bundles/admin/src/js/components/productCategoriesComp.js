@@ -150,7 +150,13 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			<div style="height:20px"></div>
 
 			<div style="position: relative;user-select: none;">
-				<list-comp data-bind="{${data.categories}}" class="clean master_list" data-max_level="3" data-expand_levels="1">
+				<list-comp
+					data-bind="{${data.categories}}"
+					class="clean multi_master"
+					data-max_level="3"
+					data-expand_levels="1"
+					data-multi_row_selector=".category_wrapper"
+				>
 					<product-sub-category-comp></product-sub-category-comp>
 				</list-comp>
 			</div>

@@ -21,6 +21,7 @@
  * grabbed_at_y?: number
  * grabbed_at_y_scroll?: number
  * master_list?: PiepNode
+ * multi_master?: PiepNode
  * list?: PiepNode
  * all_rows?: PiepNode[]
  * min_y?: number
@@ -295,9 +296,16 @@ document.addEventListener("mouseup", () => {
 			/** @type {PiepNode} */
 			const btn = comp._nodes[trait_name];
 
-			const multi_row_selector = btn.dataset.multi_row_selector;
+			const multi_master = btn._parent(".multi_master");
+
+			if (!multi_master) {
+				console.error("Multi master doesn't exist");
+				return;
+			}
+
+			const multi_row_selector = multi_master.dataset.multi_row_selector;
 			if (!multi_row_selector) {
-				console.error("Multi row selector not specified");
+				console.error("Multi row selector doesn't exist");
 				return;
 			}
 
@@ -355,6 +363,7 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.all_rows.push(list_row);
 
 				multi_list_grab.master_list.classList.add("has_grabbed_row");
+				multi_list_grab.multi_master = multi_master;
 
 				multi_list_grab.min_y = 100000;
 				multi_list_grab.max_y = -100000;
@@ -382,13 +391,8 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.insert_rect.style.width = xr.width + "px";
 				multi_list_grab.insert_rect.style.height = cr.height + "px";
 
-				let max_levels = 3; // default
-				const mln = grab_target._parent(".master_list");
-				if (mln) {
-					max_levels = +mln.dataset.max_level;
-				}
+				const max_levels = +def(multi_master.dataset.max_level, 3);
 
-				//const expand_multi_list_btn = list_row._child(".node_expand_multi_list_btn");
 				let max_deep = 0;
 				list_row._children(".list_row").forEach((e) => {
 					let deep = -1;
