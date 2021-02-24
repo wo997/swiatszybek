@@ -70,7 +70,7 @@ function registerProductCategoriesModal() {
 	// ProductCategories
 	registerModalContent(html`
 		<div id="productCategories" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: 1000px;max-height: calc(75% + 100px);">
+			<div class="modal-body" style="max-width: calc(30% + 400px);max-height: calc(75% + 100px);">
 				<product-categories-modal-comp class="flex_stretch"></product-categories-modal-comp>
 			</div>
 		</div>

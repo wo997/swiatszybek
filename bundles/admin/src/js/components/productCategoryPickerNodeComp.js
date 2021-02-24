@@ -49,7 +49,7 @@ function productCategoryPickerNodeComp(comp, parent, data = undefined) {
 				<span class="semi-bold" html="{${data.product_category_name}}"></span>
 			</label>
 			<div class="expand_y {${data.categories.length === 0}?empty}" data-node="{${comp._nodes.expand}}">
-				<list-comp data-bind="{${data.categories}}" class="wireframe">
+				<list-comp data-bind="{${data.categories}}">
 					<product-category-picker-node-comp></product-category-picker-node-comp>
 				</list-comp>
 			</div>

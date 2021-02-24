@@ -86,12 +86,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 			<div class="scroll-panel scroll-shadow panel-padding">
 				<div>
 					<button class="btn primary" data-node="{${comp._nodes.edit_btn}}">Edytuj kategorie <i class="fas fa-cog"></i></button>
-					<list-comp
-						data-bind="{${data.categories}}"
-						class="wireframe"
-						style="margin-top:var(--form-spacing)"
-						data-primary="product_category_id"
-					>
+					<list-comp data-bind="{${data.categories}}" style="margin-top:var(--form-spacing)" data-primary="product_category_id">
 						<product-category-picker-node-comp></product-category-picker-node-comp>
 					</list-comp>
 				</div>
@@ -115,7 +110,7 @@ function registerSelectProductCategoriesModal() {
 	// selectProductCategories
 	registerModalContent(html`
 		<div id="selectProductCategories" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: 1000px;max-height: calc(75% + 100px);">
+			<div class="modal-body" style="max-width: calc(20% + 350px);max-height: calc(50% + 250px);">
 				<select-product-categories-modal-comp class="flex_stretch"></select-product-categories-modal-comp>
 			</div>
 		</div>

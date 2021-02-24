@@ -1,0 +1,24 @@
+/* css[admin] */
+
+select-product-categories-modal-comp.comp {
+	& list-comp {
+		--list_row_padding: 5px 0;
+	}
+	& product-category-picker-node-comp {
+		list-comp {
+			margin-left: 20px;
+		}
+
+		& .expand_y {
+			& {
+				transition: 0.25s margin;
+			}
+			&.empty {
+				display: none !important;
+			}
+			&:not(.hidden) {
+				margin-top: 10px;
+			}
+		}
+	}
+}
