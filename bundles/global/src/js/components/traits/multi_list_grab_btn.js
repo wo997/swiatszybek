@@ -383,7 +383,7 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.insert_rect.style.height = cr.height + "px";
 
 				let max_levels = 3; // default
-				const mln = grab_target._parent("[data-max_level]");
+				const mln = grab_target._parent(".master_list");
 				if (mln) {
 					max_levels = +mln.dataset.max_level;
 				}

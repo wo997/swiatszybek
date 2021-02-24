@@ -24,7 +24,7 @@
 function productCategoriesModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			categories: { category_list: { categories: [] } },
+			categories: { categories: [] },
 		};
 	}
 

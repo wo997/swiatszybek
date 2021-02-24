@@ -2,7 +2,7 @@
 
 /**
  * @typedef {{
- * category_list: ProductSubCategoriesCompData
+ * categories: ProductSubCategoryCompData[]
  * }} ProductCategoriesCompData
  *
  * @typedef {{
@@ -27,12 +27,12 @@
 function productCategoriesComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			category_list: { categories: [] },
+			categories: [],
 		};
 	}
 
 	comp._recreate_tree = () => {
-		comp._data.category_list.categories = [];
+		comp._data.categories = [];
 
 		/**
 		 *
@@ -40,13 +40,13 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		 * @param {ProductCategoryBranch[]} sub_categories
 		 */
 		const connectWithParent = (branch, sub_categories) => {
-			const list = branch ? branch.category_list.categories : comp._data.category_list.categories;
+			const list = branch ? branch.categories : comp._data.categories;
 			for (const copy_cat of sub_categories) {
 				/** @type {ProductSubCategoryCompData} */
 				const sub_cat = {
 					name: copy_cat.name,
 					product_category_id: copy_cat.product_category_id,
-					category_list: { categories: [] },
+					categories: [],
 					expanded: true,
 				};
 				list.push(sub_cat);
@@ -71,7 +71,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 
 			for (const cat of categories) {
 				pos++;
-				const sub_categories = traverse(cat.category_list.categories);
+				const sub_categories = traverse(cat.categories);
 				data.push({
 					name: cat.name,
 					pos,
@@ -83,7 +83,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			return data;
 		};
 
-		const data = traverse(comp._data.category_list.categories);
+		const data = traverse(comp._data.categories);
 
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "product/category/save_all",
@@ -113,7 +113,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 						const list_row = com._parent(".list_row");
 						const pr = list_row._prev();
 						const ne = list_row._next();
-						const round = com._data.category_list.categories.length > 0;
+						const round = com._data.categories.length > 0;
 						const category_wrapper = com._child(".category_wrapper");
 						category_wrapper.classList.toggle("round_bottom", !ne || round);
 						if (!pr) {
@@ -149,12 +149,11 @@ function productCategoriesComp(comp, parent, data = undefined) {
 
 			<div style="height:20px"></div>
 
-			<product-sub-categories-comp
-				data-bind="{${data.category_list}}"
-				class="master_list"
-				data-max_level="3"
-				data-expand_levels="1"
-			></product-sub-categories-comp>
+			<div style="position: relative;user-select: none;">
+				<list-comp data-bind="{${data.categories}}" class="clean master_list" data-max_level="3" data-expand_levels="1">
+					<product-sub-category-comp></product-sub-category-comp>
+				</list-comp>
+			</div>
 
 			<div style="height:50px"></div>
 		`,
@@ -173,10 +172,10 @@ function productCategoriesComp(comp, parent, data = undefined) {
 				product_category_modal_comp._show({
 					source: add_btn,
 					save_callback: (cat) => {
-						comp._data.category_list.categories.unshift({
+						comp._data.categories.unshift({
 							name: cat.name,
 							product_category_id: cat.product_category_id,
-							category_list: { categories: [] },
+							categories: [],
 							expanded: true,
 						});
 						comp._render();

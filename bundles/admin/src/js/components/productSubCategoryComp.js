@@ -4,7 +4,7 @@
  * @typedef {{
  * product_category_id: number
  * name: string
- * category_list: ProductSubCategoriesCompData
+ * categories: ProductSubCategoryCompData[]
  * expanded: boolean
  * } & ListCompRowData} ProductSubCategoryCompData
  *
@@ -30,9 +30,7 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 		data = {
 			product_category_id: -1,
 			name: "",
-			category_list: {
-				categories: [],
-			},
+			categories: [],
 			expanded: true,
 		};
 	}
@@ -65,7 +63,9 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 				></p-trait>
 			</div>
 			<div class="expand_y" data-node="{${comp._nodes.expand}}">
-				<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
+				<list-comp data-bind="{${data.categories}}" class="clean">
+					<product-sub-category-comp></product-sub-category-comp>
+				</list-comp>
 			</div>
 		`,
 		ready: () => {
@@ -95,10 +95,10 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 				getProductCategoryModal()._show({
 					source: add_btn,
 					save_callback: (cat) => {
-						comp._data.category_list.categories.push({
+						comp._data.categories.push({
 							name: cat.name,
 							product_category_id: cat.product_category_id,
-							category_list: { categories: [] },
+							categories: [],
 							expanded: true,
 						});
 						comp._render();
