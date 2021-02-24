@@ -34,6 +34,7 @@
  *      add_products_btn: PiepNode
  *      remove_products_btn: PiepNode
  *      save_btn: PiepNode
+ *      add_category_btn: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], dont_ask?: boolean})
  *  _remove_missing_products()
@@ -537,12 +538,12 @@ function productComp(comp, parent, data = undefined) {
 
 				<div style="margin-top:10px">
 					<span class="label inline" style="font-size: 1.1em;" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
-					<button data-node="add_category_btn" class="btn primary">Dodaj kategorie <i class="fas fa-plus"></i></button>
+					<button data-node="{${comp._nodes.add_category_btn}}" class="btn primary">Dodaj kategorie <i class="fas fa-plus"></i></button>
 				</div>
 
 				<div style="margin-top:10px">
 					<span class="label inline" style="font-size: 1.1em;" html="{${"Cechy (" + data.features.length + ")"}}"></span>
-					<button data-node="add_feature_btn" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
+					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
 
 				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id" class="wireframe">
@@ -598,11 +599,13 @@ function productComp(comp, parent, data = undefined) {
 			const product_feature_modal_comp = registerProductFeatureModal();
 
 			const product_categories_modal_comp = registerProductCategoriesModal();
-			//product_categories_modal_comp._show({});
 
-			// other
 			comp._nodes.add_feature_btn.addEventListener("click", () => {
 				select_product_features_modal_comp._show({ source: comp._nodes.add_feature_btn });
+			});
+
+			comp._nodes.add_category_btn.addEventListener("click", () => {
+				product_categories_modal_comp._show({ source: comp._nodes.add_category_btn });
 			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {

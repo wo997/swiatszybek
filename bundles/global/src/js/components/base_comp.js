@@ -334,7 +334,9 @@ function createComp(node, parent_comp, data, options) {
 	}
 
 	if (options.ready) {
-		options.ready();
+		setTimeout(() => {
+			options.ready();
+		});
 	}
 }
 
