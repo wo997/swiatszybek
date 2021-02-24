@@ -159,7 +159,9 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			<div style="height:50px"></div>
 		`,
 		ready: () => {
-			comp._recreate_tree();
+			setTimeout(() => {
+				comp._recreate_tree();
+			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {
 				comp._save();

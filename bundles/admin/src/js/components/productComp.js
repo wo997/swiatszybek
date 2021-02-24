@@ -598,8 +598,6 @@ function productComp(comp, parent, data = undefined) {
 
 			const product_feature_modal_comp = registerProductFeatureModal();
 
-			const product_categories_modal_comp = registerProductCategoriesModal();
-
 			const select_product_categories_modal_comp = registerSelectProductCategoriesModal();
 
 			comp._nodes.add_feature_btn.addEventListener("click", () => {

@@ -1,0 +1,19 @@
+/* css[admin] */
+
+product-category-picker-node-comp {
+	product-category-picker-node-comp {
+		padding-left: 20px;
+	}
+
+	& .expand_y {
+		& {
+			transition: 0.25s margin;
+		}
+		&.empty {
+			display: none !important;
+		}
+		&:not(.hidden) {
+			margin-top: 10px;
+		}
+	}
+}

@@ -133,3 +133,30 @@ list-comp {
 		display: none;
 	}
 }
+
+.node_expand_multi_list_btn {
+	& i {
+		transition: 0.25s transform;
+	}
+	&.expanded i {
+		transform: rotate(90deg);
+	}
+	&.inactive {
+		visibility: hidden;
+	}
+}
+
+.node_expand_btn {
+	& {
+		width: 30px;
+	}
+	& i {
+		transition: 0.25s transform;
+	}
+	&.expanded i {
+		transform: rotate(90deg);
+	}
+	&.inactive {
+		visibility: hidden;
+	}
+}

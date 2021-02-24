@@ -2,6 +2,8 @@
 
 /**
  * @typedef {{
+ * selection: number[]
+ * categories: ProductCategoryPickerNodeCompData[]
  * }} SelectProductCategoriesModalCompData
  *
  * @typedef {{
@@ -9,7 +11,7 @@
  * _set_data(data?: SelectProductCategoriesModalCompData, options?: SetCompDataOptions)
  * _nodes: {
  *      close_btn: PiepNode
- *      datatable: DatatableComp
+ *      edit_btn: PiepNode
  * }
  * _show(options?: {source?: PiepNode})
  * _refresh_dataset()
@@ -23,7 +25,18 @@
  */
 function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = {};
+		data = {
+			selection: [],
+			categories: [
+				{
+					product_category_id: 1,
+					product_category_name: "aaa",
+					categories: [{ product_category_id: 2, product_category_name: "bbb", categories: [], selected: false }],
+					selected: false,
+				},
+				{ product_category_id: 3, product_category_name: "ccc", categories: [], selected: false },
+			],
+		};
 	}
 
 	comp._refresh_dataset = () => {};
@@ -53,10 +66,26 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 					Zamknij <i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="scroll-panel scroll-shadow panel-padding"></div>
+			<div class="scroll-panel scroll-shadow panel-padding">
+				<div>
+					<button class="btn primary" data-node="{${comp._nodes.edit_btn}}">Edytuj kategorie <i class="fas fa-cog"></i></button>
+					<list-comp data-bind="{${data.categories}}" class="wireframe" style="margin-top:var(--form-spacing)">
+						<product-category-picker-node-comp></product-category-picker-node-comp>
+					</list-comp>
+				</div>
+			</div>
 		`,
-		initialize: () => {},
-		ready: () => {},
+		initialize: () => {
+			const product_categories_modal_comp = registerProductCategoriesModal();
+
+			comp._nodes.edit_btn.addEventListener("click", () => {
+				product_categories_modal_comp._show();
+			});
+
+			window.addEventListener("product_categories_changed", () => {
+				comp._render({ force_render: true });
+			});
+		},
 	});
 }
 

@@ -194,6 +194,8 @@ function createComp(node, parent_comp, data, options) {
 				// @ts-ignore
 				window[constructor](dc, comp, data[bind_var]);
 				//window[constructor](dc, comp, undefined);
+			} else {
+				console.error(`Constructor ${constructor} is missing, you might have forgot to add the annotation`);
 			}
 		});
 
@@ -334,9 +336,7 @@ function createComp(node, parent_comp, data, options) {
 	}
 
 	if (options.ready) {
-		setTimeout(() => {
-			options.ready();
-		});
+		options.ready();
 	}
 }
 
@@ -494,7 +494,7 @@ function propagateCompData(comp) {
 		node._bindNodes.forEach((/** @type {AnyComp} */ sub_node) => {
 			const bind_var = sub_node.dataset.bind;
 
-			if (sub_node._set_value && node._changed_data[bind_var]) {
+			if (sub_node._set_value && (!node._changed_data || node._changed_data[bind_var])) {
 				sub_node._set_value(node._data[bind_var], { quiet: true });
 			}
 		});
