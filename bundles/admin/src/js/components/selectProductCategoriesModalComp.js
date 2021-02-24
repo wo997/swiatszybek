@@ -33,7 +33,6 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 
 	comp._refresh_dataset = () => {
 		/**
-		 *
 		 * @param {ProductCategoryPickerNodeCompData[]} categories_ref
 		 * @param {ProductCategoryBranch[]} wanted_categories
 		 */
@@ -71,7 +70,22 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				/**
+				 * @param {ProductCategoryPickerNodeCompData[]} categories_ref
+				 */
+				const traverse = (categories_ref) => {
+					categories_ref.forEach((cat) => {
+						if (cat.selected) {
+							comp._data.selection.push(cat.product_category_id);
+						}
+						traverse(cat.categories);
+					});
+				};
+
+				comp._data.selection = [];
+				traverse(comp._data.categories);
+			},
 		});
 	};
 
