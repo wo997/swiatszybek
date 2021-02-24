@@ -583,18 +583,7 @@ function productComp(comp, parent, data) {
 				select_product_features_modal_comp._show({ source: comp._nodes.add_feature_btn });
 			});
 
-			const history_wrapper = comp._nodes.history;
-			const history_btns_wrapper = $(".main_header .history_btns_wrapper");
-			if (history_btns_wrapper) {
-				history_btns_wrapper.appendChild(history_wrapper);
-			}
-
-			const save_btn = comp._nodes.save_btn;
-			const save_btn_wrapper = $(".main_header .save_btn_wrapper");
-			if (save_btn_wrapper) {
-				save_btn_wrapper.appendChild(save_btn);
-			}
-			save_btn.addEventListener("click", () => {
+			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
 				const errors = validateInputs(directCompNodes(comp, "[data-validate]"));
 

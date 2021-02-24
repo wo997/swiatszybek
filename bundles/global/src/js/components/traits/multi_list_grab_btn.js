@@ -198,8 +198,10 @@ document.addEventListener("mouseup", () => {
 
 	removeMultiGrabHighlight();
 
-	list_grab.btn.classList.add("subtle");
-	list_grab.btn.classList.remove("important");
+	if (list_grab.btn) {
+		list_grab.btn.classList.add("subtle");
+		list_grab.btn.classList.remove("important");
+	}
 
 	row_ref.style.zIndex = `200`;
 	setTimeout(() => {
@@ -290,22 +292,22 @@ document.addEventListener("mouseup", () => {
 		</button>`,
 		initialize: (comp) => {
 			/** @type {PiepNode} */
-			const n = comp._nodes[trait_name];
+			const btn = comp._nodes[trait_name];
 
-			const multi_row_selector = n.dataset.multi_row_selector;
+			const multi_row_selector = btn.dataset.multi_row_selector;
 			if (!multi_row_selector) {
 				console.error("Multi row selector not specified");
 				return;
 			}
 
-			if (n.dataset.invisible) {
-				n.style.display = "none";
+			if (btn.dataset.invisible) {
+				btn.style.display = "none";
 			}
 
-			const grab_target = n.dataset.invisible ? n._parent(multi_row_selector) : n;
+			const grab_target = btn.dataset.invisible ? btn._parent(multi_row_selector) : btn;
 
 			grab_target.addEventListener("mousedown", (ev) => {
-				if (grab_target !== n && $(ev.target)._parent(".btn", { skip: 0 })) {
+				if (grab_target !== btn && $(ev.target)._parent(".btn", { skip: 0 })) {
 					return;
 				}
 				const list_row = comp._parent(".list_row");
@@ -318,8 +320,11 @@ document.addEventListener("mouseup", () => {
 					return;
 				}
 
-				n.classList.add("important");
-				n.classList.remove("subtle");
+				multi_list_grab.btn = btn;
+				if (multi_list_grab.btn) {
+					btn.classList.add("important");
+					btn.classList.remove("subtle");
+				}
 
 				list_row.classList.add("multi_grabbed");
 				multi_list_grab.ticks = 0;
@@ -329,7 +334,6 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.grabbed_at_y = mouse.pos.y;
 				multi_list_grab.scroll_parent = list_row._scroll_parent();
 				multi_list_grab.grabbed_at_y_scroll = multi_list_grab.scroll_parent.scrollTop;
-				multi_list_grab.btn = n;
 				let list = list_row._parent();
 				while (true) {
 					const p = list._parent("list-comp");

@@ -15,6 +15,9 @@ domload(() => {
 		features: [],
 	});
 
+	$(".main_header .history_btns_wrapper").appendChild(product_comp._nodes.history);
+	$(".main_header .save_btn_wrapper").appendChild(product_comp._nodes.save_btn);
+
 	const nameChange = () => {
 		$$(`.product_name`).forEach((e) => {
 			e._set_content(product_comp._data.name ? product_comp._data.name : "Nowy produkt");

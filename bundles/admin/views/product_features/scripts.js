@@ -1,7 +1,5 @@
 /* js[view] */
 
-useTool("cms");
-
 domload(() => {
 	/** @type {DatatableComp} */
 	// @ts-ignore

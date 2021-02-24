@@ -512,7 +512,9 @@ function propagateCompData(comp) {
 				// remove subscriber reference - kinda lazy garbage collector
 				subscribers.splice(i, 1);
 			}
-			receiver._render();
+			if (receiver) {
+				receiver._render();
+			}
 		}
 	}
 }
