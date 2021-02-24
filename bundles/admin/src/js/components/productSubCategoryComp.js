@@ -5,7 +5,7 @@
  * product_category_id: number
  * name: string
  * category_list: ProductSubCategoriesCompData
- * expanded?: boolean
+ * expanded: boolean
  * } & ListCompRowData} ProductSubCategoryCompData
  *
  * @typedef {{
@@ -41,7 +41,9 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				expand(comp._nodes.expand, data.expanded);
+			},
 		});
 	};
 
@@ -73,7 +75,6 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 				<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
 			</div>
 		`,
-		//<p-trait data-trait="list_delete_btn" data-tooltip="Usuń kategorię"></p-trait>
 
 		ready: () => {
 			const edit_btn = comp._nodes.edit_btn;
@@ -106,6 +107,7 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 							name: cat.name,
 							product_category_id: cat.product_category_id,
 							category_list: { categories: [] },
+							expanded: true,
 						});
 						comp._render();
 					},
@@ -114,7 +116,14 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 
 			comp._nodes.expand_btn.addEventListener("click", () => {
 				comp._data.expanded = !comp._data.expanded;
-				expand(comp._nodes.expand, comp._data.expanded);
+				comp._render();
+			});
+
+			comp._child("list-comp").addEventListener("dropped_row", () => {
+				if (comp._data.expanded) {
+					return;
+				}
+				comp._data.expanded = true;
 				comp._render();
 			});
 		},

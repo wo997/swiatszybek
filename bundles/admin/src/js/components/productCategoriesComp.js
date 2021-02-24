@@ -149,7 +149,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 
 			<div style="height:20px"></div>
 
-			<product-sub-categories-comp data-bind="{${data.category_list}}"></product-sub-categories-comp>
+			<product-sub-categories-comp data-bind="{${data.category_list}}" data-max_level="3"></product-sub-categories-comp>
 
 			<div style="height:50px"></div>
 		`,
@@ -166,25 +166,44 @@ function productCategoriesComp(comp, parent, data = undefined) {
 				product_category_modal_comp._show({
 					source: add_btn,
 					save_callback: (cat) => {
-						comp._data.category_list.categories.push({
+						comp._data.category_list.categories.unshift({
 							name: cat.name,
 							product_category_id: cat.product_category_id,
 							category_list: { categories: [] },
+							expanded: true,
 						});
 						comp._render();
 					},
 				});
 			});
 
+			/**
+			 *
+			 * @param {PiepNode} lr
+			 * @param {number} max
+			 */
+			const filterLevel = (lr, max = 2) => {
+				let level = 0;
+				while (lr) {
+					level++;
+					lr = lr._parent(".list_row");
+				}
+				return level <= max;
+			};
+
 			comp._nodes.expand_all_btn.addEventListener("click", () => {
 				comp._children(".node_expand_btn:not(.expanded)").forEach((e) => {
-					e.click();
+					if (filterLevel(e, 2)) {
+						e.click();
+					}
 				});
 			});
 
 			comp._nodes.shrink_all_btn.addEventListener("click", () => {
 				comp._children(".node_expand_btn.expanded").forEach((e) => {
-					e.click();
+					if (filterLevel(e, 2)) {
+						e.click();
+					}
 				});
 			});
 

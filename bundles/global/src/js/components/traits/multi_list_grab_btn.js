@@ -264,6 +264,7 @@ document.addEventListener("mouseup", () => {
 				list._render({ freeze: true });
 				target_list._data.splice(actual_index, 0, ...data);
 				target_list._render({ freeze: true });
+				target_list.dispatchEvent(new CustomEvent("dropped_row"));
 				rowsFix();
 
 				setTimeout(() => {
@@ -381,12 +382,28 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.insert_rect.style.width = xr.width + "px";
 				multi_list_grab.insert_rect.style.height = cr.height + "px";
 
+				let max_levels = 3; // default
+				const mln = grab_target._parent("[data-max_level]");
+				if (mln) {
+					max_levels = +mln.dataset.max_level;
+				}
+
 				multi_list_grab.positions = [];
 				[multi_list_grab.master_list, ...multi_list_grab.master_list._children("list-comp")]
 					.filter((e) => {
 						return !list_row.contains(e);
 					})
 					.forEach((/** @type {ListComp} */ list) => {
+						let lr = $(list);
+						let level = 0;
+						while (lr) {
+							level++;
+							lr = lr._parent(".list_row");
+						}
+						if (level > max_levels) {
+							return;
+						}
+
 						/**
 						 *
 						 * @param {ListComp} list

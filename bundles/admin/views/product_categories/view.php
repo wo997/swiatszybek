@@ -33,10 +33,9 @@
             <i class="fas fa-chevron-right"></i>
             Lista producentów
             <i class="fas fa-chevron-right"></i>
-            Modele
-        </span>
-        .
-        Zalecamy<br>utworzyć tylko kategorię <span style="text-decoration: underline;">Smartfony</span>
+            Modele</span>
+
+        zalecamy<br>utworzyć tylko kategorię <span style="text-decoration: underline;">Smartfony</span>
         i oprócz tego cechy produktu taką jak Producent, Model itd.
     </p>
 </div>
