@@ -94,8 +94,8 @@ function clearCompHistory(c) {
 
 registerCompTrait("history", {
 	template: html`<div data-node="history">
-		<button class="btn subtle fas fa-undo" data-node="history_undo" data-tooltip="Cofnij zmiany"></button>
-		<button class="btn subtle fas fa-redo" data-node="history_redo" data-tooltip="Ponów zmiany"></button>
+		<button class="btn subtle" data-node="history_undo" data-tooltip="Cofnij zmiany"><i class="fas fa-undo"></i></button>
+		<button class="btn subtle" data-node="history_redo" data-tooltip="Ponów zmiany"><i class="fas fa-redo"></i></button>
 	</div>`,
 	initialize: (c) => {
 		/** @type {CompWithHistory} */

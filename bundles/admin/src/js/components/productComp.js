@@ -35,6 +35,7 @@
  *      remove_products_btn: PiepNode
  *      save_btn: PiepNode
  *      add_category_btn: PiepNode
+ *      print_categories: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], dont_ask?: boolean})
  *  _remove_missing_products()
@@ -450,22 +451,24 @@ function productComp(comp, parent, data = undefined) {
 				});
 
 				const selection_changed = cd.product_feature_ids || cd.product_feature_option_ids;
-				if (selection_changed || cd.products_dt || options.force_render) {
+				if (selection_changed || cd.products_dt || options.force_render || true) {
 					/** @type {DatatableColumnDef[]} */
 					const columns = data.products_dt.columns;
-					const donttouch = [];
+					//const donttouch = [];
 					let column_index = -1;
 					data.products_dt.columns.forEach((column) => {
 						column_index++;
 						const feature_id = getFeatureIdFromKey(column.key);
 						if (feature_id) {
 							const found_index = data.product_feature_ids.indexOf(feature_id);
-							const req_column_index = found_index + 1;
+							const req_column_index = found_index;
 							if (found_index !== -1 && req_column_index !== column_index) {
-								if (!donttouch.includes(column_index)) {
-									[columns[column_index], columns[req_column_index]] = [columns[req_column_index], columns[column_index]];
-									donttouch.push(req_column_index);
-								}
+								//if (!donttouch.includes(column_index)) {
+								//[columns[column_index], columns[req_column_index]] = [columns[req_column_index], columns[column_index]];
+								const temp = columns.splice(column_index, 1);
+								columns.splice(req_column_index, 0, ...temp);
+								//donttouch.push(req_column_index);
+								//}
 							}
 						}
 					});
@@ -515,6 +518,28 @@ function productComp(comp, parent, data = undefined) {
 					data.missing_products_features = missing_products_features;
 					data.unnecessary_product_ids = products.filter((p) => !p.is_necessary).map((p) => p.product_id);
 				}
+
+				if (cd.category_ids) {
+					const cats_html = product_categories
+						.filter((e) => data.category_ids.includes(e.product_category_id))
+						.map((e) => {
+							let dis = e.name;
+							let parents = 0;
+							let s = e;
+							while (e.parent_product_category_id !== -1) {
+								e = product_categories.find((c) => c.product_category_id === e.parent_product_category_id);
+								if (!e) {
+									break;
+								}
+								parents++;
+							}
+
+							return "― ".repeat(parents) + dis;
+						})
+						.join("<br>");
+
+					comp._nodes.print_categories._set_content(cats_html ? cats_html : "BRAK");
+				}
 			},
 		});
 	};
@@ -539,6 +564,9 @@ function productComp(comp, parent, data = undefined) {
 				<div style="margin-top:10px">
 					<span class="label inline" style="font-size: 1.1em;" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_category_btn}}" class="btn primary">Dodaj kategorie <i class="fas fa-plus"></i></button>
+					<div class="scroll-panel scroll_preview" style="max-height:200px;margin-top:10px;cursor:pointer">
+						<div data-node="{${comp._nodes.print_categories}}"></div>
+					</div>
 				</div>
 
 				<div style="margin-top:10px">
@@ -607,6 +635,9 @@ function productComp(comp, parent, data = undefined) {
 			comp._nodes.add_category_btn.addEventListener("click", () => {
 				select_product_categories_modal_comp._show({ source: comp._nodes.add_category_btn });
 			});
+			comp._nodes.print_categories.addEventListener("click", () => {
+				select_product_categories_modal_comp._show({ source: comp._nodes.print_categories });
+			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
@@ -638,6 +669,7 @@ function productComp(comp, parent, data = undefined) {
 									product_feature_option_id,
 									_meta_pos: index,
 								})),
+								categories: data.category_ids,
 								products: db_products,
 							},
 						},

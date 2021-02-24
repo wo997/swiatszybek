@@ -53,12 +53,16 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 
 		comp._data.categories = [];
 		traverse(comp._data.categories, product_categories_tree);
-
-		comp._render({ force_render: true });
 	};
 
 	comp._show = (options = {}) => {
+		/** @type {ProductComp} */
+		// @ts-ignore
+		const product_comp = $("product-comp");
+
+		comp._data.selection = product_comp._data.category_ids;
 		comp._refresh_dataset();
+		comp._render({ freeze: true });
 
 		setTimeout(() => {
 			showModal("selectProductCategories", {
@@ -71,20 +75,38 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
+				let controversial = false;
 				/**
 				 * @param {ProductCategoryPickerNodeCompData[]} categories_ref
+				 * @param {boolean} cancel
 				 */
-				const traverse = (categories_ref) => {
+				const traverse = (categories_ref, cancel) => {
 					categories_ref.forEach((cat) => {
-						if (cat.selected) {
+						if (cancel) {
+							if (cat.selected) {
+								cat.selected = false;
+								controversial = true;
+							}
+						} else if (cat.selected) {
 							comp._data.selection.push(cat.product_category_id);
 						}
-						traverse(cat.categories);
+						traverse(cat.categories, cancel || !cat.selected);
 					});
 				};
 
 				comp._data.selection = [];
-				traverse(comp._data.categories);
+				traverse(comp._data.categories, false);
+
+				if (controversial) {
+					// let's hope it executes once
+					comp._render();
+				}
+
+				/** @type {ProductComp} */
+				// @ts-ignore
+				const product_comp = $("product-comp");
+				product_comp._data.category_ids = comp._data.selection;
+				product_comp._render();
 			},
 		});
 	};
@@ -115,6 +137,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 
 			window.addEventListener("product_categories_changed", () => {
 				comp._refresh_dataset();
+				comp._render();
 			});
 		},
 	});

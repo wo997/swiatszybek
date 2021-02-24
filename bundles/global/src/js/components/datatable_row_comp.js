@@ -201,24 +201,23 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 
 		if (column.quick_filter && val) {
 			if (dt._data.filters.find((e) => e.key === column.key)) {
-				cell_html = html`<i
-						class="fas fa-filter dt_rm_quick_filter btn transparent small"
-						data-key="${column.key}"
-						data-tooltip="Usuń szybki filtr"
-					></i>
-					${cell_html}`;
+				cell_html = html`
+					<button class="dt_rm_quick_filter btn transparent small" data-key="${column.key}" data-tooltip="Usuń szybki filtr">
+						<i class="fas fa-filter"></i>
+					</button>
+					${cell_html}
+				`;
 			} else {
-				cell_html = html`<i
-						class="fas fa-filter dt_quick_filter btn transparent small"
-						data-val="${val}"
-						data-key="${column.key}"
-						data-tooltip="Szybki filtr"
-					></i>
-					${cell_html}`;
+				cell_html = html`
+					<button class="dt_quick_filter btn transparent small" data-val="${val}" data-key="${column.key}" data-tooltip="Szybki filtr">
+						<i class="fas fa-filter"></i>
+					</button>
+					${cell_html}
+				`;
 			}
 		}
 
-		const flex = def(column.flex, def(column.editable, false));
+		const flex = def(column.flex, def(column.editable || column.quick_filter, false));
 		if (!flex) {
 			cell_html = html`<div class="cell_wrapper">${cell_html}</div>`;
 		}

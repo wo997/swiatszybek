@@ -776,7 +776,7 @@ function datatableComp(comp, parent, data) {
 						${getEditableCellHtml(comp, column)}
 
 						<div class="label">Wiersze, które zostaną zmodyfikowane <b>(${modify_rows.length + "/" + data.dataset.length})</b>:</div>
-						<div class="scroll-panel" style="max-height:200px;border: 1px solid #ccc;border-radius:4px;background: #fafafa;padding: 5px;">
+						<div class="scroll-panel scroll_preview" style="max-height:200px;">
 							<div>${modify_rows.map((row_data) => data.print_row_as_string(row_data)).join("<br>")}</div>
 						</div>
 
