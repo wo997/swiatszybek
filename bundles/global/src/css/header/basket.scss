@@ -1,0 +1,147 @@
+/* css[global] */
+
+.basket-btn {
+	cursor: pointer;
+	text-align: center;
+	font-size: 14px;
+	font-weight: normal;
+}
+
+header .basket-wrapper {
+	max-width: 250px;
+	/*min-width: 50px;*/
+}
+header .basket-wrapper > a {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+}
+header .basket-wrapper h2 {
+	margin: 0;
+}
+
+header .headerbtn:hover .headerbtn_hover_content {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.basket-wrapper .basket-icon,
+.basketMenu .basket-icon {
+	width: 34px;
+}
+
+.basket-wrapper .basket-icon {
+	margin-bottom: 2px;
+	vertical-align: middle;
+}
+.basketMenu .basket-icon-wrapper {
+	margin-top: 4px;
+}
+
+.nav-wrapper .user-icon,
+.userMenu .user-icon,
+.loginForm .user-icon {
+	width: 27px;
+	vertical-align: middle;
+	margin-bottom: 2px;
+}
+
+.nav-wrapper .dropdown-header:after {
+	content: "";
+}
+
+.basket-icon-wrapper {
+	display: inline-block;
+	position: relative;
+}
+
+header .basket_item_count,
+.basketMenu .basket_item_count {
+	font-weight: bold;
+	position: absolute;
+	display: inline-block;
+	left: -8px;
+	font-size: 14px;
+	width: 50px;
+	text-align: center;
+	top: 12px;
+}
+
+.nav-wrapper .menu-icon,
+.mainMenu .menu-icon {
+	width: 21px;
+	transform: scaleY(1.4);
+}
+.mainMenu .menu-icon {
+	margin-top: 1px;
+}
+
+.header_product_list {
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	min-width: 250px;
+	margin: 0 5%;
+	background-color: white;
+	box-shadow: 0px 4px 12px -3px rgba(0, 0, 0, 0.2);
+	border-radius: 4px;
+	-webkit-transition: 0.2s;
+	transition: 0.2s;
+	top: 99%;
+	z-index: 10000;
+	right: 0;
+}
+
+header .header_basket_content_wrapper {
+	max-height: calc(90vh - 150px);
+}
+
+.header_product_list .product-image,
+.basketMenu .product-image {
+	width: 80%;
+	margin: 10px 10% 5px;
+	object-fit: contain;
+	max-width: 80vw;
+}
+
+.basketMenu .scroll-panel.panel-padding {
+	padding: 0;
+}
+
+header .smooth-scrollbar::-webkit-scrollbar {
+	width: 10px;
+	background-color: #efefef;
+	border-radius: 5px;
+}
+header .smooth-scrollbar::-webkit-scrollbar-thumb {
+	background-color: #ddd;
+	border-radius: 5px;
+}
+
+header .product-block {
+	width: 250px;
+}
+
+header .product-title span,
+.basketMenu .product-title span {
+	width: 100%;
+	text-align: center;
+}
+
+.nav_basket_summary {
+	width: 100%;
+}
+
+/*@media only screen and (max-width: 799px) {
+  .basketMenu .product-title span {
+    width: 100%;
+    text-align: center;
+  }
+}*/
+
+@media only screen and (min-width: 1300) {
+	.header_product_list {
+		right: -30px;
+	}
+}

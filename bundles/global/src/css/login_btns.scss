@@ -1,0 +1,36 @@
+/* css[global] */
+
+.fb_button {
+	padding: 5px 0px;
+	display: inline-block;
+	background: #3b5998;
+	color: white;
+	border-radius: 4px;
+	font-size: 12px;
+	width: 218px;
+	text-align: center;
+}
+.abcRioButtonIcon {
+	margin-left: 10px;
+	margin-right: -10px;
+}
+
+.abcRioButtonContents span:first-child:after {
+	content: " przez Google";
+}
+.abcRioButton.abcRioButtonLightBlue {
+	height: 35px !important;
+	width: 218px !important;
+}
+
+.fb-wrapper {
+	display: flex !important;
+	justify-content: center;
+	margin-top: 10px;
+}
+.g-signin2 {
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+	min-height: 35px; /* prevent bump */
+}

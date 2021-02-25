@@ -1,0 +1,17 @@
+/* css[global] */
+
+.main-search-wrapper {
+	position: relative;
+}
+.mainSearch .main-search-wrapper {
+	display: flex;
+}
+.mainSearch .main-search-wrapper label {
+	flex-grow: 1;
+}
+.mainSearch .main-search-wrapper label input {
+	width: 100%;
+}
+.mainSearch .result {
+	padding: 6px 9px;
+}

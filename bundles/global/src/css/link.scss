@@ -1,0 +1,19 @@
+/* css[global] */
+
+.link {
+	color: #16f;
+	font-weight: bold;
+	cursor: pointer;
+}
+.link:hover {
+	color: #58c;
+	text-decoration: underline;
+}
+.linkable {
+	border-bottom: 1px solid #35f;
+	color: #35f;
+}
+.linkable:hover {
+	border-bottom: 1px solid #13b;
+	color: #13b;
+}

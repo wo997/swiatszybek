@@ -1,0 +1,16 @@
+/* css[global] */
+
+.slash {
+	position: relative;
+}
+.slash:after {
+	content: "";
+	width: 100%;
+	background: #933;
+	height: 2px;
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: scaleX(1.2) translate(-40%, -50%) rotate(-15deg);
+}

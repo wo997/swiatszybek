@@ -6,7 +6,7 @@
 
         <div class="main-search-wrapper case-desktop">
             <label for="main_search" class="glue_children any-search-wrapper">
-                <input type="text" id="main_search" class="field inline" placeholder="Czego szukasz?">
+                <input type="text" id="main_search" class="field inline" placeholder="Wpisz nazwę produktu">
                 <button class="btn primary" onclick="btnSearchProducts()">
                     <img class="search-icon" src="/src/img/search_icon.svg">
                 </button>
@@ -112,7 +112,19 @@
     </div>
 
     <nav class="navigation">
-        <?php @include "builds/topmenu.html"; ?>
+        <?php
+        function traverseMenu($parent_id = -1, $level = 0)
+        {
+            $categories = DB::fetchArr("SELECT product_category_id, name FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
+            $html = "<ul>";
+            foreach ($categories as $category) {
+                $html .= "<ol><a>" . $category["name"] . traverseMenu($category["product_category_id"], $level + 1) . "</ol>";
+            }
+            $html .= "</ul>";
+            return $html;
+        }
+        echo traverseMenu();
+        ?>
     </nav>
 </header>
 

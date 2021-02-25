@@ -1,0 +1,39 @@
+/* css[global] */
+
+.label:not(.first) {
+	margin-top: var(--form-spacing);
+}
+.label {
+	& {
+		margin-bottom: 0.2em;
+		user-select: none;
+		-webkit-user-select: none;
+		font-weight: 600;
+		display: block;
+	}
+}
+.label [data-type] {
+	margin-top: 4px;
+}
+
+label {
+	cursor: pointer;
+	display: block;
+}
+
+.field.invalid {
+	border: 1px solid red !important;
+	background: #fee;
+}
+
+/* don't use it in that form please 
+.form-header {
+	text-align: center;
+	font-size: 22px;
+	margin-bottom: 25px;
+	font-weight: 600;
+}
+.form-header:not(.first) {
+	margin-top: 25px;
+} 
+*/

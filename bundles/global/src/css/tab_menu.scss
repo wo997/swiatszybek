@@ -1,0 +1,26 @@
+/* css[global] */
+
+.tab-option {
+	padding: 5px 10px;
+	background: #fff;
+	margin-bottom: -1px;
+	margin-right: 5px;
+	border: 1px solid #ccc;
+	background: #fafafa;
+	color: #666;
+	cursor: pointer;
+}
+
+.tab-header {
+	display: flex;
+}
+.tab-content {
+	padding: 5px;
+	border: 1px solid #bbb;
+}
+
+.tab-option.current {
+	background: #fff;
+	color: black;
+	border-bottom-color: white;
+}

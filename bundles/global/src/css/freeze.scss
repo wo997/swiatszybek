@@ -1,0 +1,11 @@
+/* css[global] */
+
+.freeze_before_load,
+.freeze_before_load *,
+.freeze,
+.freeze *,
+.freeze *::before,
+.freeze *::after {
+	transition: 0s all !important;
+	animation: none !important;
+}

@@ -1,0 +1,20 @@
+/* css[global] */
+
+.float-icon {
+	position: relative;
+}
+.float-icon i {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 0.6em;
+	opacity: 0.7;
+	font-style: normal;
+}
+.float-icon .fa-search {
+	opacity: 0.4;
+}
+.float-icon:focus-within i {
+	/*opacity: 0.2;
+  display: none;*/
+}

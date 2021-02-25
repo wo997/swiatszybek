@@ -1,60 +1,11 @@
 /* css[global] */
 
-.input_nodes .correctness {
-	position: relative;
-	height: 0;
-	width: 100%;
-	display: block;
-}
-.input_nodes .correctness .correct,
-.input_nodes .correctness .wrong {
-	position: absolute;
-	pointer-events: none;
-	right: 0.75em;
-	top: -2em;
-	text-align: center;
-	opacity: 0;
-	transition: 0.2s all;
-	transform: scale(0);
-}
-.input_nodes .correctness .correct.visible,
-.input_nodes .correctness .wrong.visible {
-	opacity: 1;
-	transform: scale(1);
-}
-.input_nodes .correctness .correct {
-	margin-right: -0.1em;
-}
-.input_nodes .correctness .correct {
-	color: var(--success-clr);
-}
-.input_nodes .correctness .wrong {
-	color: var(--error-clr);
-}
-.input_nodes .message_wrapper {
-	color: var(--error-clr);
-	padding-top: 0.2em;
-	font-weight: 600;
-}
-
-.field-wrapper {
-	position: relative;
-}
-
-.field-wrapper:not(.inline) {
-	flex-grow: 1;
-}
-
 .simple-list[data-count="0"].required > .add_btn.add_begin {
 	background: var(--error-clr);
 }
 
 img.required {
 	box-shadow: 0px 0px 0px 2px var(--error-clr);
-}
-
-textarea + .input_nodes .correctness {
-	display: none;
 }
 
 .field-error {
@@ -65,10 +16,6 @@ textarea + .input_nodes .correctness {
 .field-error.field-error-visible {
 	opacity: 1;
 	pointer-events: all;
-}
-
-.checkbox-wrapper + .input_nodes .correctness {
-	display: none !important;
 }
 
 .form-space {
