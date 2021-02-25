@@ -87,7 +87,7 @@ function goMobile() {
               <div class="modal-body">
                   <button class="close-modal-btn"><i class="fas fa-times"></i></button>
                   <h3 class="modal-header">Kategorie</h3>
-                  <div class="scroll-panel scroll-shadow">
+                  <div class="scroll_panel scroll_shadow">
                     <div></div>
                   </div>
               </div>
@@ -99,7 +99,7 @@ function goMobile() {
               <div class="modal-body">
                   <button class="close-modal-btn" onclick="restoreFilters();"><i class="fas fa-times"></i></button>
                   <h3 class="modal-header"><div>Filtry <span class="filter_count"></span></div></h3>
-                  <div class="scroll-panel scroll-shadow panel-padding">
+                  <div class="scroll_panel scroll_shadow panel_padding">
                     <div></div>
                   </div>
                   <div class='footer' style='display:flex;padding:5px'>
@@ -116,20 +116,20 @@ function goMobile() {
           </div>
       `);
 
-	$(`#searchCategory .modal-body .scroll-panel > div`).appendChild($(".search-wrapper .categories"));
+	$(`#searchCategory .modal-body .scroll_panel > div`).appendChild($(".search-wrapper .categories"));
 
 	var filters = $(".search-wrapper .filters");
 
 	if (!filters._child("*")) {
 		$(`.search-filters-btn`).style.display = "none";
 	} else {
-		$(`#searchFilters .modal-body .scroll-panel > div`).appendChild(filters);
+		$(`#searchFilters .modal-body .scroll_panel > div`).appendChild(filters);
 	}
 
 	// sorting horizontal
 	var scroll_wrapper = $(".sorting-wrapper");
-	scroll_wrapper.classList.add("scroll-panel");
-	scroll_wrapper.classList.add("scroll-shadow");
+	scroll_wrapper.classList.add("scroll_panel");
+	scroll_wrapper.classList.add("scroll_shadow");
 	scroll_wrapper.classList.add("horizontal");
 	scroll_wrapper.classList.add("light");
 

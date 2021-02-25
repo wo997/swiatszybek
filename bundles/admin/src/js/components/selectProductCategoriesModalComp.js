@@ -119,7 +119,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 					Zamknij <i class="fas fa-times"></i>
 				</button>
 			</div>
-			<div class="scroll-panel scroll-shadow panel-padding">
+			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
 					<button class="btn primary" data-node="{${comp._nodes.edit_btn}}">Edytuj kategorie <i class="fas fa-cog"></i></button>
 					<list-comp data-bind="{${data.categories}}" style="margin-top:var(--form-spacing)" data-primary="product_category_id">

@@ -430,8 +430,8 @@ function findPrev(node, selector, options) {
  */
 function findScrollParent(node, options = {}) {
 	options.default = def(options.default, $(document.body));
-	return findParent(node, `.scroll-panel:not(.horizontal)`, options);
-	//return findParent(node, `.scroll-panel`, options);
+	return findParent(node, `.scroll_panel:not(.horizontal)`, options);
+	//return findParent(node, `.scroll_panel`, options);
 }
 
 function removeContent(node) {

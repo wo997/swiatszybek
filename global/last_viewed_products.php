@@ -8,7 +8,7 @@
             <h3 style='text-align:center;margin:0.3em 0;font-weight:600'>Ostatnio przeglądane</h3>
             <hr>
         </div>
-        <div class='scroll-panel scroll-shadow scroll-padding last_viewed_products_wrapper smooth_scrollbar'>
+        <div class='scroll_panel scroll_shadow scroll-padding last_viewed_products_wrapper smooth_scrollbar'>
             <div class="last_viewed_products"></div>
         </div>
     </div>

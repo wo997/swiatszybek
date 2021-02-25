@@ -204,7 +204,7 @@ window.addEventListener("tool_loaded", (event) => {
 						<button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 					</div>
 
-					<div class="scroll-panel scroll-shadow panel-padding">
+					<div class="scroll_panel scroll_shadow panel_padding">
 						<div class="gallery"></div>
 					</div>
 				</div>
@@ -219,7 +219,7 @@ window.addEventListener("tool_loaded", (event) => {
 						<button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 					</div>
 
-					<div class="scroll-panel panel-padding">
+					<div class="scroll_panel panel_padding">
 						<div class="field-wrapper">
 							<div class="label">Wstaw link do zdjęcia zewnętrznego</div>
 							<div class="glue_children">
@@ -247,7 +247,7 @@ window.addEventListener("tool_loaded", (event) => {
 							<button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 						</div>
 
-						<form class="panel-padding">
+						<form class="panel_padding">
 							<div class="label">Nazwa zdjęcia</div>
 							<input type="text" class="name field" />
 							<label style="text-align:right;display: block;margin-top: 10px;">

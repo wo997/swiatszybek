@@ -210,7 +210,7 @@
 // 			module_block_name: module_block_name,
 // 		},
 // 		success: (res) => {
-// 			modal._child(".scroll-panel")._set_content(res);
+// 			modal._child(".scroll_panel")._set_content(res);
 // 			module_block.formOpen(params, modal, block);
 // 			setFormData(params, modal);
 // 		},
@@ -368,7 +368,7 @@
 //                       <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                       <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
 //                   </div>
-//                   <div class="scroll-panel scroll-shadow panel-padding">
+//                   <div class="scroll_panel scroll_shadow panel_padding">
 
 //                   </div>
 //               </div>
@@ -1816,7 +1816,7 @@
 //                 </div>
 
 //                 <div style="width:100%">
-//                   <div class="scroll-panel scroll-shadow cms-wrapper">
+//                   <div class="scroll_panel scroll_shadow cms-wrapper">
 //                     <div>
 //                         <div style="position:absolute;display:none;z-index:1000" onclick="addContainer('',placeContainerAfter,true)" class="action_block insert_container_btn" data-tooltip="Wstaw kontener" data-tooltip_position="center"> <i class="fas fa-plus-square"></i> </div>
 //                         <div class="cms" data-type="html"></div>

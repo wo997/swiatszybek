@@ -20,7 +20,7 @@
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveUser();">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div class="scroll-panel scroll-shadow panel-padding">
+        <div class="scroll_panel scroll_shadow panel_padding">
             <div class="desktopRow spaceColumns">
                 <div>
                     <h3 class="form-header">Dane kontaktowe</h3>

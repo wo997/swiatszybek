@@ -47,7 +47,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 				<span class="title">Zarządzanie listą produktów</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
-			<div class="scroll-panel scroll-shadow panel-padding">
+			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first" style="font-size:1.1em">
 					Pytania pomocnicze (<span html="{${data.questions.filter((q) => q.value).length + "/" + data.questions.length}}"></span>)
 					<i

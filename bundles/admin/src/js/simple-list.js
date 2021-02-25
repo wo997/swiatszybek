@@ -73,23 +73,19 @@ function createSimpleList(params = {}) {
 
 	var list_html = `
     ${
-			params.table
-				? `<table class="list"><thead><tr>${def(
-						params.header
-				  )}</tr></thead><tbody></tbody></table>`
-				: `<div class="list"></div>`
+			params.table ? `<table class="list"><thead><tr>${def(params.header)}</tr></thead><tbody></tbody></table>` : `<div class="list"></div>`
 		}
     <div class="list-empty" style="display:none">${def(params.empty, "")}</div>
   `;
 
 	list.wrapper.insertAdjacentHTML("beforeend", list_html);
 
-	if (!list.wrapper._parent(".scroll-panel.scroll-shadow.horizontal")) {
+	if (!list.wrapper._parent(".scroll_panel.scroll_shadow.horizontal")) {
 		list.wrapper.insertAdjacentHTML(
 			"afterend",
 			`
       <div class='simple-list-scroll-wrapper'>
-        <div class='scroll-panel scroll-shadow horizontal'>
+        <div class='scroll_panel scroll_shadow horizontal'>
           <div class='simple-list-scroll-content'>
             
           </div>
@@ -97,10 +93,7 @@ function createSimpleList(params = {}) {
       </div>
     `
 		);
-		list.wrapper
-			._next()
-			._child(".simple-list-scroll-content")
-			.appendChild(list.wrapper);
+		list.wrapper._next()._child(".simple-list-scroll-content").appendChild(list.wrapper);
 	}
 
 	//<div class="btn primary add_btn add_end main_add_btn" onclick="simple_lists[${simple_list_id}].insertRowFromBtn(this,false)">Dodaj <i class="fas fa-plus"></i>
@@ -110,9 +103,7 @@ function createSimpleList(params = {}) {
 
 		var row = list.insertRow(
 			params.default_row,
-			slr
-				? slr._child(".list")
-				: btn._parent(".above-simple-list")._next()._child(".list"),
+			slr ? slr._child(".list") : btn._parent(".above-simple-list")._next()._child(".list"),
 			begin,
 			user
 		);
@@ -129,9 +120,7 @@ function createSimpleList(params = {}) {
 		}
 	};
 
-	list.target = params.table
-		? list.wrapper._child(`.list tbody`)
-		: list.wrapper._child(`.list`);
+	list.target = params.table ? list.wrapper._child(`.list tbody`) : list.wrapper._child(`.list`);
 	list.target.setAttribute("data-depth", 1);
 
 	//list.outputNode = $(`.${params.name} .simple-list-value`);
@@ -161,24 +150,14 @@ function createSimpleList(params = {}) {
 
 			if (params.table) {
 				for (var value_data of values) {
-					var parent_value_list = list
-						.insertRow(value_data, listTarget)
-						._child(".list");
+					var parent_value_list = list.insertRow(value_data, listTarget)._child(".list");
 				}
 			} else {
 				for (var value_data of values) {
 					// TODO: remove once u get rid of everything, .values and .children shouldnt be there anymore
-					var parent_value_list = list
-						.insertRow(
-							value_data.values ? value_data.values : value_data,
-							listTarget
-						)
-						._child(".list");
+					var parent_value_list = list.insertRow(value_data.values ? value_data.values : value_data, listTarget)._child(".list");
 					if (value_data.children || value_data._children) {
-						addValues(
-							value_data._children ? value_data._children : value_data.children,
-							parent_value_list
-						);
+						addValues(value_data._children ? value_data._children : value_data.children, parent_value_list);
 					}
 				}
 			}
@@ -319,11 +298,7 @@ function createSimpleList(params = {}) {
 
 			e.addEventListener("change", () => {
 				list.registerFields(listTarget);
-				list.valuesChanged(
-					e._parent(
-						list.table ? ".simple-list-row" : ".simple-list-row-wrapper"
-					)
-				);
+				list.valuesChanged(e._parent(list.table ? ".simple-list-row" : ".simple-list-row-wrapper"));
 			});
 		});
 
@@ -365,10 +340,7 @@ function createSimpleList(params = {}) {
 							row_data[param] = e._get_value();
 						});
 					if (level < list.recursive) {
-						row_data._children = getDirectRows(
-							$(simpleListRowWrapper)._child(".sub-list > .list"),
-							level + 1
-						);
+						row_data._children = getDirectRows($(simpleListRowWrapper)._child(".sub-list > .list"), level + 1);
 					}
 
 					rows.push(row_data);
@@ -391,9 +363,7 @@ function createSimpleList(params = {}) {
 					return;
 				}
 
-				var empty = !listRow
-					._child(".sub-list")
-					._child(".simple-list-row-wrapper");
+				var empty = !listRow._child(".sub-list")._child(".simple-list-row-wrapper");
 
 				var add_btn_top = listRow._child(".add_btn_top");
 				if (add_btn_top) {
@@ -451,15 +421,11 @@ function validateSimpleList(field) {
 		if (fieldParams.unique) {
 			field._children(".list").forEach((listNode) => {
 				var rowValueInputs = {};
-				var rowsParent = list.params.table
-					? listNode._child("tbody")
-					: listNode;
+				var rowsParent = list.params.table ? listNode._child("tbody") : listNode;
 				rowsParent
 					._direct_children()
 					.filter((listRow) => {
-						return listRow.classList.contains(
-							list.params.table ? "simple-list-row" : "simple-list-row-wrapper"
-						);
+						return listRow.classList.contains(list.params.table ? "simple-list-row" : "simple-list-row-wrapper");
 					})
 					.forEach((listRowWrapper) => {
 						var rowField = listRowWrapper._child(`[name="${fieldName}"]`);

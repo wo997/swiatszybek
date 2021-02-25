@@ -53,7 +53,7 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
-			<div class="scroll-panel scroll-shadow panel-padding">
+			<div class="scroll_panel scroll_shadow panel_padding">
 				<product-feature-comp
 					data-node="{${comp._nodes.product_feature_comp}}"
 					data-bind="{${data.product_feature}}"

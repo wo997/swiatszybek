@@ -1,58 +1,68 @@
 /* js[global] */
 
-if (window.innerWidth >= 1200) {
-	domload(() => {
-		$$("nav > div").forEach((e) => {
-			e.addEventListener("mouseenter", () => {
-				var x = e._child(".float-category");
-				if (!x || !x.textContent) return;
-				var rect = e.getBoundingClientRect();
+// domload(() => {
+// 	$$("nav > div").forEach((e) => {
+// 		e.addEventListener("mouseenter", () => {
+// 			var x = e._child(".float-category");
+// 			if (!x || !x.textContent) return;
+// 			var rect = e.getBoundingClientRect();
 
-				if (floatCategoryHovered && floatCategoryHovered != x) {
-					hideFloatingCategory();
-				}
-				dropdownButtonHovered = e;
-				floatCategoryHovered = x;
+// 			if (floatCategoryHovered && floatCategoryHovered != x) {
+// 				hideFloatingCategory();
+// 			}
+// 			dropdownButtonHovered = e;
+// 			floatCategoryHovered = x;
 
-				dropdownButtonHovered.classList.add("hovered");
-				floatCategoryHovered.style.display = "block";
-				floatCategoryHovered.style.left = rect.left + "px";
-				floatCategoryHovered.style.top = rect.top + rect.height - 1 + "px";
-				floatCategoryHovered.style.minWidth = rect.width + "px";
-				setTimeout(() => {
-					if (floatCategoryHovered) {
-						floatCategoryHovered.classList.add("visible");
-					}
-				});
-			});
-		});
-	});
+// 			dropdownButtonHovered.classList.add("hovered");
+// 			floatCategoryHovered.style.display = "block";
+// 			floatCategoryHovered.style.left = rect.left + "px";
+// 			floatCategoryHovered.style.top = rect.top + rect.height - 1 + "px";
+// 			floatCategoryHovered.style.minWidth = rect.width + "px";
+// 			setTimeout(() => {
+// 				if (floatCategoryHovered) {
+// 					floatCategoryHovered.classList.add("visible");
+// 				}
+// 			});
+// 		});
+// 	});
+// });
 
-	function hideFloatingCategory() {
-		if (!floatCategoryHovered) {
-			return;
-		}
-		floatCategoryHovered.classList.remove("visible");
-		dropdownButtonHovered.classList.remove("hovered");
+// function hideFloatingCategory() {
+// 	if (!floatCategoryHovered) {
+// 		return;
+// 	}
+// 	floatCategoryHovered.classList.remove("visible");
+// 	dropdownButtonHovered.classList.remove("hovered");
 
-		let zzz = floatCategoryHovered;
-		setTimeout(() => {
-			zzz.style.display = "";
-		}, 150);
+// 	let zzz = floatCategoryHovered;
+// 	setTimeout(() => {
+// 		zzz.style.display = "";
+// 	}, 150);
 
-		dropdownButtonHovered = null;
-		floatCategoryHovered = null;
+// 	dropdownButtonHovered = undefined;
+// 	floatCategoryHovered = undefined;
+// }
+
+// let dropdownButtonHovered;
+// let floatCategoryHovered;
+// document.addEventListener("mousemove", (event) => {
+// 	if (!dropdownButtonHovered) return;
+// 	if ($(event.target)._parent(dropdownButtonHovered)) return;
+// 	hideFloatingCategory();
+// });
+
+function headerResizeCallback() {
+	main_header.classList.remove("menu_collapsed");
+	main_header_nav.classList.remove("bottom");
+	main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
+	const menu_collapsed = IS_TOUCH_DEVICE || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
+	main_header.classList.toggle("menu_collapsed", menu_collapsed);
+	main_header_height.style.height = main_header.offsetHeight + "px";
+
+	if (menu_collapsed) {
+		requestHeaderModals();
 	}
-
-	var dropdownButtonHovered = null;
-	var floatCategoryHovered = null;
-	document.addEventListener("mousemove", (event) => {
-		if (!dropdownButtonHovered) return;
-		if ($(event.target)._parent(dropdownButtonHovered)) return;
-		hideFloatingCategory();
-	});
 }
-
 /** @type {number} */
 let main_scroll_top = document.documentElement.scrollTop;
 let follow_scroll_top = main_scroll_top;
@@ -86,19 +96,6 @@ window.addEventListener("load", () => {
 
 window.addEventListener("resize", headerResizeCallback);
 
-function headerResizeCallback() {
-	main_header.classList.remove("menu_collapsed");
-	main_header_nav.classList.remove("bottom");
-	main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
-	const menu_collapsed = IS_TOUCH_DEVICE || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
-	main_header.classList.toggle("menu_collapsed", menu_collapsed);
-	main_header_height.style.height = main_header.offsetHeight + "px";
-
-	if (menu_collapsed) {
-		requestHeaderModals();
-	}
-}
-
 let requested_header_modals = false;
 function requestHeaderModals() {
 	if (requested_header_modals) return;
@@ -109,49 +106,41 @@ function requestHeaderModals() {
 			<div class="modal-body" style="max-width: 500px;">
 				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal-header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
-				<div class="scroll-panel scroll-shadow panel-padding">
+				<div class="scroll_panel scroll_shadow panel_padding">
 					<div></div>
 				</div>
 			</div>
 		</div>
 	`);
 
-	const sc = $("#mainSearch .scroll-panel > div");
+	const sc = $("#mainSearch .scroll_panel > div");
 	const sw = $("header .main_search_wrapper");
-	if (sc && sw) {
-		sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
-	}
+	sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
 
 	//user
-	var um = $("header .user-menu");
-	if (um) {
-		registerModalContent(html`
-			<div id="userMenu" data-expand class="userMenu">
-				<div class="modal-body" style="max-width: 500px;">
-					<button class="close-modal-btn"><i class="fas fa-times"></i></button>
-					<h3 class="modal-header"><img class="user_icon" src="/src/img/user_icon.svg" /> Moje konto</h3>
-					<div class="scroll-panel scroll-shadow">
-						<div></div>
-					</div>
+	registerModalContent(html`
+		<div id="userMenu" data-expand>
+			<div class="modal-body" style="max-width: 500px;">
+				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal-header"><img class="user_icon" src="/src/img/user_icon.svg" /> Moje konto</h3>
+				<div class="scroll_panel scroll_shadow">
+					<div></div>
 				</div>
 			</div>
-		`);
+		</div>
+	`);
+	$("#userMenu .scroll_panel > div").insertAdjacentHTML("afterbegin", $("header .user_menu").outerHTML);
 
-		$("#userMenu .scroll-panel > div").appendChild(um);
-	}
-
-	const hua = $("header .user-wrapper a");
-	if (hua) {
-		hua.addEventListener("click", (ev) => {
-			showModal("userMenu", { source: hua });
-			ev.preventDefault();
-			return false;
-		});
-	}
+	const hua = $("header .user_btn");
+	hua.addEventListener("click", (ev) => {
+		showModal("userMenu", { source: hua });
+		ev.preventDefault();
+		return false;
+	});
 
 	//basket
 	registerModalContent(html`
-		<div id="basketMenu" class="basketMenu" data-expand>
+		<div id="basketMenu" data-expand>
 			<div class="modal-body">
 				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal-header" style="max-width: 500px;">
@@ -161,7 +150,7 @@ function requestHeaderModals() {
 					</div>
 					Koszyk
 				</h3>
-				<div class="scroll-panel scroll-shadow panel-padding">
+				<div class="scroll_panel scroll_shadow panel_padding">
 					<div></div>
 				</div>
 				<div style="display:flex;padding:0 5px 5px" class="basket_menu_mobile_summary footer"></div>
@@ -170,14 +159,10 @@ function requestHeaderModals() {
 	`);
 
 	const su = $("header .nav_basket_summary");
-	if (su) {
-		$("#basketMenu .basket_menu_mobile_summary").insertAdjacentHTML("afterbegin", su.outerHTML);
-	}
+	$("#basketMenu .basket_menu_mobile_summary").insertAdjacentHTML("afterbegin", su.outerHTML);
 
 	const hc = $("header .header_basket_content_wrapper");
-	if (hc) {
-		$("#basketMenu .scroll-panel > div").appendChild(hc);
-	}
+	$("#basketMenu .scroll_panel > div").appendChild(hc);
 
 	basketReady();
 
@@ -192,49 +177,45 @@ function requestHeaderModals() {
 
 	//menu
 	registerModalContent(html`
-		<div id="mainMenu" class="mainMenu" data-expand>
+		<div id="mainMenu" data-expand>
 			<div class="modal-body" style="max-width: 500px;">
 				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal-header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
-				<div class="scroll-panel scroll-shadow">
+				<div class="scroll_panel scroll_shadow">
 					<div></div>
 				</div>
 			</div>
 		</div>
 	`);
 
-	var mm = $("#mainMenu .scroll-panel > div");
-	var nvg = $(".navigation");
-
-	if (mm && nvg) {
-		nvg.insertAdjacentHTML(
-			"beforeend",
-			html`
-        <div>
-          <a onclick="showModal('lastViewedProducts',{source:this});return false;">
-            <img class="product-history-icon" src="/src/img/product_history_icon.svg"> Ostatnio przeglądane produkty
-          </a>
-        </div>
-        <div>
-          <a onclick="showModal('wishList',{source:this});return false;">
-            <img class="heart_icon" src="/src/img/heart_icon.svg"></img> Schowek
-          </a>
-        </div>
-      `
-		);
-		mm.appendChild(nvg);
-	}
+	const mm = $("#mainMenu .scroll_panel > div");
+	mm.insertAdjacentHTML("beforebegin", $(".navigation").outerHTML);
+	mm._child(".navigation").insertAdjacentHTML(
+		"beforeend",
+		html`
+			<div>
+				<a onclick="showModal('lastViewedProducts',{source:this});return false;">
+					<img class="product-history-icon" src="/src/img/product_history_icon.svg" /> Ostatnio przeglądane produkty
+				</a>
+			</div>
+			<div>
+				<a onclick="showModal('wishList',{source:this});return false;">
+					<img class="heart_icon" src="/src/img/heart_icon.svg" /> Schowek
+				</a>
+			</div>
+		`
+	);
 
 	// last viewed products
 	registerModalContent(html`
-		<div id="lastViewedProducts" class="lastViewedProducts" data-expand="previous">
+		<div id="lastViewedProducts" data-expand="previous">
 			<div class="modal-body">
 				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal-header">
 					<img class="product-history-icon" src="/src/img/product_history_icon.svg" />
 					Ostatnio przeglądane
 				</h3>
-				<div class="scroll-panel scroll-shadow panel-padding">
+				<div class="scroll_panel scroll_shadow panel_padding">
 					<div></div>
 				</div>
 				<div style="display:flex;padding:0 5px 5px" class="basket_menu_mobile_summary footer"></div>
@@ -242,23 +223,19 @@ function requestHeaderModals() {
 		</div>
 	`);
 
-	var lvps = $("#lastViewedProducts .scroll-panel > div");
-	var lvp = $(".last_viewed_products");
-
-	if (lvps && lvp) {
-		lvps.appendChild(lvp);
-	}
+	const lvps = $("#lastViewedProducts .scroll_panel > div");
+	lvps.insertAdjacentHTML("beforeend", $(".last_viewed_products").outerHTML);
 
 	// wishlist
 	registerModalContent(html`
-      <div id="wishList" class="wishList" data-expand="previous">
+      <div id="wishList" data-expand="previous">
         <div class="modal-body">
             <button class="close-modal-btn"><i class="fas fa-times"></i></button>
             <h3 class="modal-header">
               <img class="heart_icon" src="/src/img/heart_icon.svg"></img>
               Schowek  
             </h3>
-            <div class="scroll-panel scroll-shadow panel-padding">
+            <div class="scroll_panel scroll_shadow panel_padding">
               <div></div>
             </div>
             <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
@@ -270,7 +247,7 @@ function requestHeaderModals() {
 // perform search
 
 function searchAllProducts() {
-	var search = $(".main_search_wrapper input")._get_value().trim();
+	const search = $(".main_search_wrapper input")._get_value().trim();
 
 	if (search.length < 3) {
 		topSearchProducts(true);
@@ -280,11 +257,11 @@ function searchAllProducts() {
 }
 
 domload(() => {
-	var input = $(".main_search_wrapper input");
+	const input = $(".main_search_wrapper input");
 	if (!input) {
 		return;
 	}
-	var main_search_wrapper = $(".main_search_wrapper");
+	const main_search_wrapper = $(".main_search_wrapper");
 	document.addEventListener("mousedown", (event) => {
 		main_search_wrapper.classList.toggle("active", $(event.target) ? !!$(event.target)._parent(".main_search_wrapper") : false);
 	});
@@ -301,11 +278,11 @@ domload(() => {
 	});
 
 	input.addEventListener("keydown", (event) => {
-		var down = event.key == "ArrowDown";
-		var up = event.key == "ArrowUp";
+		const down = event.key == "ArrowDown";
+		const up = event.key == "ArrowUp";
 
-		var selected = main_search_wrapper._child(".selected");
-		var select = null;
+		const selected = main_search_wrapper._child(".selected");
+		const select = null;
 
 		if (event.key == "Enter") {
 			if (selected) {
@@ -357,9 +334,9 @@ domload(() => {
 });
 
 function topSearchProducts(force) {
-	var search = $(".main_search_wrapper input").value.trim();
+	const search = $(".main_search_wrapper input")._get_value().trim();
 
-	var callback = (content) => {
+	const callback = (content) => {
 		$(".main_search_wrapper .search-results")._set_content(content);
 	};
 
@@ -371,7 +348,7 @@ function topSearchProducts(force) {
 		return callback(force ? `<i class='result' style='pointer-events:none'> Wpisz mininum 3 znaki...</i>` : "");
 	}
 
-	var searchParams = JSON.stringify({
+	const searchParams = JSON.stringify({
 		search: search,
 		basic: true,
 	});
@@ -394,7 +371,7 @@ function topSearchProducts(force) {
 
 domload(() => {
 	$$(
-		`header .scroll-panel,
+		`header .scroll_panel,
         header .user-menu,
         header .headerbtn_menu`
 	).forEach((e) => {
@@ -433,10 +410,10 @@ domload(() => {
 		last_viewed_products
 	);
 
-	var toggle = (node, visible) => {
-		var empty = last_viewed_products.length === 0;
+	const toggle = (node, visible) => {
+		const empty = last_viewed_products.length === 0;
 
-		var show = !empty;
+		let show = !empty;
 		if (!visible) {
 			show = !show;
 		}

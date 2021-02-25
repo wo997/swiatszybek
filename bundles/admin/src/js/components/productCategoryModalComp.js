@@ -113,7 +113,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
-			<div class="scroll-panel scroll-shadow panel-padding">
+			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first">Nazwa kategorii</div>
 				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="string" />
 

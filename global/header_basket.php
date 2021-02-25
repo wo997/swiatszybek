@@ -10,7 +10,7 @@
         <div class='case_basket_not_empty expand_y'>
             <h3 style='text-align:center;margin:0.3em 0;font-weight:600;'>Koszyk</h3>
             <hr>
-            <div class='scroll-panel scroll-shadow scroll-padding header_basket_content_wrapper smooth_scrollbar'>
+            <div class='scroll_panel scroll_shadow scroll-padding header_basket_content_wrapper smooth_scrollbar'>
                 <div class='header_basket_content'></div>
             </div>
             <hr>

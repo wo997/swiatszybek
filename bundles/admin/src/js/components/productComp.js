@@ -561,7 +561,7 @@ function productComp(comp, parent, data = undefined) {
 				<div style="margin-top:10px">
 					<span class="label inline" style="font-size: 1.1em;" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_category_btn}}" class="btn primary">Dodaj kategorie <i class="fas fa-plus"></i></button>
-					<div class="scroll-panel scroll_preview" style="max-height:200px;margin-top:10px;cursor:pointer">
+					<div class="scroll_panel scroll_preview" style="max-height:200px;margin-top:10px;cursor:pointer">
 						<div data-node="{${comp._nodes.print_categories}}"></div>
 					</div>
 				</div>

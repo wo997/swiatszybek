@@ -13,7 +13,7 @@ endSection();
 <?php startSection("body"); ?>
 
 <header class="navbar_admin">
-    <div class="scroll-panel scroll-shadow hide_scrollbar">
+    <div class="scroll_panel scroll_shadow hide_scrollbar">
         <div>
             <a href="/" class="home logo-wrapper">
                 <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
@@ -43,15 +43,15 @@ endSection();
     if (!isset($sections["header"])) {
     ?>
         <style>
-            .content>.scroll-panel {
+            .content>.scroll_panel {
                 background: #fafafa;
             }
         </style>
     <?php
     }
     ?>
-    <div class="scroll-panel scroll-shadow">
-        <div class="panel-padding actual-content">
+    <div class="scroll_panel scroll_shadow">
+        <div class="panel_padding actual-content">
             <?= def($sections, "body_content", ""); ?>
         </div>
         <div class="footer">Piepsklep <?= date("Y") ?></div>

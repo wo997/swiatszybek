@@ -190,7 +190,7 @@ if ($kopia) {
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveVariant();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div class="scroll-panel scroll-shadow panel-padding">
+        <div class="scroll_panel scroll_shadow panel_padding">
             <div>
                 <div class="label">Nazwa wariantu <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></div>
 

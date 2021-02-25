@@ -123,7 +123,7 @@
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>
-        <div class="scroll-panel scroll-shadow panel-padding">
+        <div class="scroll_panel scroll_shadow panel_padding">
             <div>
                 <div class="label">Widoczność</div>
                 <select name="published" class="field">

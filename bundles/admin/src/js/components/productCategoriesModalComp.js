@@ -51,7 +51,7 @@ function productCategoriesModalComp(comp, parent, data = undefined) {
 				</button>
 				<div class="save_btn_wrapper"></div>
 			</div>
-			<div class="scroll-panel scroll-shadow panel-padding">
+			<div class="scroll_panel scroll_shadow panel_padding">
 				<product-categories-comp data-node="{${comp._nodes.categories}}" data-bind="{${data.categories}}"></product-categories-comp>
 			</div>
 		`,

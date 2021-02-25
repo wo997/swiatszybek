@@ -83,7 +83,7 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 				<span class="title">Wybierz opcję</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
-			<div class="scroll-panel scroll-shadow panel-padding">
+			<div class="scroll_panel scroll_shadow panel_padding">
 				<datatable-comp data-node="{${comp._nodes.datatable}}" data-bind="{${data.datatable}}"></datatable-comp>
 			</div>
 		`,

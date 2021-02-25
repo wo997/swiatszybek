@@ -82,7 +82,7 @@ function registerModal(modal) {
  * @param {PiepNode} modal
  */
 function registerModalScroll(modal) {
-	modal._children(`.scroll-panel:not(.horizontal):not(.modal_scroll_registered)`).forEach((scr) => {
+	modal._children(`.scroll_panel:not(.horizontal):not(.modal_scroll_registered)`).forEach((scr) => {
 		scr.classList.add("modal_scroll_registered");
 
 		const panel_on_edge = (dy) => {

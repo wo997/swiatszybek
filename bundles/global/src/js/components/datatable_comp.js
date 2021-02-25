@@ -683,7 +683,7 @@ function datatableComp(comp, parent, data) {
 			</div>
 
 			<div style="position:relative">
-				<div class="scroll-panel scroll-shadow horizontal">
+				<div class="scroll_panel scroll_shadow horizontal">
 					<div class="table_container">
 						<div class="table_header" data-node="{${comp._nodes.table_header}}"></div>
 
@@ -770,13 +770,13 @@ function datatableComp(comp, parent, data) {
 						modify_rows = data.dataset_filtered;
 					}
 
-					const cont = $("#datatableBatchEdit .scroll-panel");
+					const cont = $("#datatableBatchEdit .scroll_panel");
 					cont._set_content(html`
 						<div class="label first">${column.label}</div>
 						${getEditableCellHtml(comp, column)}
 
 						<div class="label">Wiersze, które zostaną zmodyfikowane <b>(${modify_rows.length + "/" + data.dataset.length})</b>:</div>
-						<div class="scroll-panel scroll_preview" style="max-height:200px;">
+						<div class="scroll_panel scroll_preview" style="max-height:200px;">
 							<div>${modify_rows.map((row_data) => data.print_row_as_string(row_data)).join("<br>")}</div>
 						</div>
 
@@ -957,7 +957,7 @@ function datatableComp(comp, parent, data) {
 								<span class="title">Grupowa edycja danych</span>
 								<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 							</div>
-							<div class="scroll-panel scroll-shadow panel-padding"></div>
+							<div class="scroll_panel scroll_shadow panel_padding"></div>
 						</div>
 					</div>
 				`);

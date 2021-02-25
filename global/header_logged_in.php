@@ -6,10 +6,10 @@ else if ($user_type == 'facebook') $display_user = "<i class=\"fab fa-facebook-s
 ?>
 
 <div class="headerbtn">
-    <a href="/moje-konto">
+    <a href="/moje-konto" class="user_btn">
         <img class="user_icon" src="/src/img/user_icon.svg">
     </a>
-    <div class="headerbtn_menu">
+    <div class="headerbtn_menu user_menu">
         <div class="username"><?= $display_user ?></div>
         <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
             <a class="admin border-bottom border-top menu_item" href="<?= Request::$static_urls["ADMIN"] ?>zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>

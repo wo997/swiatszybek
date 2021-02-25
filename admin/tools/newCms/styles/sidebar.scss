@@ -39,7 +39,7 @@
 			transition: margin 0.3s;
 		}
 
-		.scroll-panel {
+		.scroll_panel {
 			height: 100%;
 		}
 
@@ -47,8 +47,8 @@
 			& {
 				width: 100%;
 				height: 100%;
-				--panel-padding-horizontal: 10px;
-				--panel-padding-vertical: 5px;
+				--panel_padding-horizontal: 10px;
+				--panel_padding-vertical: 5px;
 				display: flex;
 				flex-direction: column;
 			}
@@ -72,7 +72,7 @@
 			}
 			& > .side_menu_header {
 				& {
-					padding: 0 var(--panel-padding-horizontal);
+					padding: 0 var(--panel_padding-horizontal);
 					margin: 0;
 					border-bottom: 1px solid #ccc;
 					height: 38px;
@@ -83,8 +83,8 @@
 					margin: 0;
 				}
 			}
-			& > .scroll-panel {
-				padding: var(--panel-padding-horizontal);
+			& > .scroll_panel {
+				padding: var(--panel_padding-horizontal);
 			}
 
 			.menu_disabler {

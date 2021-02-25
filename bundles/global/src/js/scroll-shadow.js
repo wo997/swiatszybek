@@ -1,9 +1,9 @@
 /* js[global] */
 
-// scroll-shadow doc
+// scroll_shadow doc
 // horizontal requires the parent to be a row flexbox
 function registerScrollShadows() {
-	$$(".scroll-shadow:not(.scrsh_registered)").forEach((pan) => {
+	$$(".scroll_shadow:not(.scrsh_registered)").forEach((pan) => {
 		pan.classList.add("scrsh_registered");
 		pan.classList.add("overflow_hidden");
 		const offset = 25.0;

@@ -51,7 +51,7 @@ function loginFormModalComp(comp, parent, data = undefined) {
 				Logowanie
 			</h3>
 
-			<div class="scroll-panel scroll-shadow panel-padding">
+			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
 					<div class="label first">E-mail</div>
 					<input data-node="{${comp._nodes.email}}" class="field" type="text" autocomplete="username" name="email" data-validate="email" />

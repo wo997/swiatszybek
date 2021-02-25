@@ -73,15 +73,15 @@ h1 {
 		flex-direction: column;
 		height: auto;
 	}
-	.navbar_admin.hidden > .scroll-panel {
+	.navbar_admin.hidden > .scroll_panel {
 		overflow: initial !important;
 	}
-	.navbar_admin > .scroll-panel {
+	.navbar_admin > .scroll_panel {
 		padding-bottom: 100px;
 	}
 }
 @media only screen and (min-width: 800px) {
-	.panel-padding.actual-content {
+	.panel_padding.actual-content {
 		padding: 15px;
 	}
 	.content > .custom-toolbar {
@@ -169,14 +169,14 @@ h1 {
   flex-grow: 1;
 }*/
 
-/*.content > .scroll-panel {
+/*.content > .scroll_panel {
   background: #fafafa;
 }*/
 
-.navbar_admin > .scroll-panel {
+.navbar_admin > .scroll_panel {
 	height: 100%;
 }
 
-.navbar_admin .scroll-panel > div > .menu_item {
+.navbar_admin .scroll_panel > div > .menu_item {
 	margin-top: 10px;
 }

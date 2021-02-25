@@ -105,7 +105,7 @@ div.list .simple-list-row {
   margin-bottom: 5px;
 }*/
 
-/*.simple-list.recursive .scroll-panel > div > .add_btn {
+/*.simple-list.recursive .scroll_panel > div > .add_btn {
   background: #5c5;
 }
 .simple-list.recursive
@@ -230,18 +230,8 @@ tr.simple-list-row td:last-child {
 	display: none !important;
 }
 
-.simple-list
-	.list
-	> .simple-list-row-wrapper:first-child
-	> .simple-list-row
-	> .action_buttons
-	> .btn-up,
-.simple-list
-	.list
-	> .simple-list-row-wrapper:last-child
-	> .simple-list-row
-	> .action_buttons
-	> .btn-down,
+.simple-list .list > .simple-list-row-wrapper:first-child > .simple-list-row > .action_buttons > .btn-up,
+.simple-list .list > .simple-list-row-wrapper:last-child > .simple-list-row > .action_buttons > .btn-down,
 .simple-list table > tbody > tr:first-child > td > .btn-up,
 .simple-list table > tbody > tr:last-child > td > .btn-down {
 	filter: contrast(0.3);
