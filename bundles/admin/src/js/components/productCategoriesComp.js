@@ -158,13 +158,13 @@ function productCategoriesComp(comp, parent, data = undefined) {
 				<i class="fas fa-plus"></i>
 			</button>
 
-			<button class="btn subtle" data-node="{${comp._nodes.expand_all_btn}}">
-				Rozwiń wszystko
-				<i class="fas fa-angle-double-down"></i>
-			</button>
 			<button class="btn subtle" data-node="{${comp._nodes.shrink_all_btn}}">
 				Zwiń wszystko
 				<i class="fas fa-angle-double-up"></i>
+			</button>
+			<button class="btn subtle" data-node="{${comp._nodes.expand_all_btn}}">
+				Rozwiń wszystko
+				<i class="fas fa-angle-double-down"></i>
 			</button>
 
 			<div style="height:20px"></div>
