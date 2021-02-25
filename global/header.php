@@ -12,7 +12,7 @@ function traverseMenu($parent_id = -1, $level = 0)
 }
 ?>
 
-<header class="main">
+<header class="main menu_collapsed">
     <a href="/" class="logo-wrapper">
         <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
     </a>

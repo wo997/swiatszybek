@@ -74,6 +74,7 @@ domload(() => {
 });
 
 window.addEventListener("load", () => {
+	headerResizeCallback();
 	document.addEventListener("scroll", () => {
 		const scroll_top = document.documentElement.scrollTop;
 		follow_scroll_top = clamp(scroll_top - main_header.offsetHeight, follow_scroll_top, scroll_top);
@@ -81,8 +82,6 @@ window.addEventListener("load", () => {
 
 		main_scroll_top = document.documentElement.scrollTop;
 	});
-
-	headerResizeCallback();
 });
 
 window.addEventListener("resize", headerResizeCallback);
@@ -91,26 +90,23 @@ function headerResizeCallback() {
 	main_header.classList.remove("menu_collapsed");
 	main_header_nav.classList.remove("bottom");
 	main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
-	main_header.classList.toggle("menu_collapsed", IS_TOUCH_DEVICE || main_header_nav.offsetWidth > main_header.offsetWidth + 1);
+	const menu_collapsed = IS_TOUCH_DEVICE || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
+	main_header.classList.toggle("menu_collapsed", menu_collapsed);
 	main_header_height.style.height = main_header.offsetHeight + "px";
+
+	if (menu_collapsed) {
+		requestHeaderModals();
+	}
 }
 
-domload(() => {
-	if (window.innerWidth >= MOBILE_WIDTH) {
-		var btn = $("header .basket-wrapper .basket-btn");
-		if (btn) {
-			btn.addEventListener("click", () => {
-				$(".gotobuy").click();
-			});
-		}
-		basketReady();
-		return;
-	}
+let requested_header_modals = false;
+function requestHeaderModals() {
+	if (requested_header_modals) return;
+	requested_header_modals = true;
 
-	//search
 	registerModalContent(html`
 		<div id="mainSearch" data-expand>
-			<div class="modal-body">
+			<div class="modal-body" style="max-width: 500px;">
 				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal-header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
 				<div class="scroll-panel scroll-shadow panel-padding">
@@ -131,7 +127,7 @@ domload(() => {
 	if (um) {
 		registerModalContent(html`
 			<div id="userMenu" data-expand class="userMenu">
-				<div class="modal-body">
+				<div class="modal-body" style="max-width: 500px;">
 					<button class="close-modal-btn"><i class="fas fa-times"></i></button>
 					<h3 class="modal-header"><img class="user_icon" src="/src/img/user_icon.svg" /> Moje konto</h3>
 					<div class="scroll-panel scroll-shadow">
@@ -144,13 +140,11 @@ domload(() => {
 		$("#userMenu .scroll-panel > div").appendChild(um);
 	}
 
-	//$("#loginForm").setAttribute("data-expand", "");
-
-	var hua = $("header .user-wrapper a");
+	const hua = $("header .user-wrapper a");
 	if (hua) {
-		hua.addEventListener("click", function (event) {
-			showModal("userMenu", { source: this });
-			event.preventDefault();
+		hua.addEventListener("click", (ev) => {
+			showModal("userMenu", { source: hua });
+			ev.preventDefault();
 			return false;
 		});
 	}
@@ -160,7 +154,7 @@ domload(() => {
 		<div id="basketMenu" class="basketMenu" data-expand>
 			<div class="modal-body">
 				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal-header">
+				<h3 class="modal-header" style="max-width: 500px;">
 					<div class="basket-icon-wrapper">
 						<img class="basket-icon" src="/src/img/basket_icon.svg" />
 						<div class="basket_item_count"></div>
@@ -174,11 +168,6 @@ domload(() => {
 			</div>
 		</div>
 	`);
-
-	/*var hc = $("header .header_basket_content");
-  if (hc) {
-    $("#basketMenu .scroll-panel").appendChild(hc);
-  }*/
 
 	const su = $("header .nav_basket_summary");
 	if (su) {
@@ -204,7 +193,7 @@ domload(() => {
 	//menu
 	registerModalContent(html`
 		<div id="mainMenu" class="mainMenu" data-expand>
-			<div class="modal-body">
+			<div class="modal-body" style="max-width: 500px;">
 				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal-header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
 				<div class="scroll-panel scroll-shadow">
@@ -276,22 +265,12 @@ domload(() => {
         </div>
     </div>
   `);
-
-	// TODO: do this baby
-	/*var wls = $("#wishList .scroll-panel > div");
-  var wl = $(".wish_list");
-
-  if (wls && wl) {
-    wls.appendChild(wl);
-  }*/
-
-	document.body.insertAdjacentHTML("beforeend", `<style>.headerbtn_menu {display:none!important}</style>`);
-});
+}
 
 // perform search
 
 function searchAllProducts() {
-	var search = $(".main_search_wrapper input").value.trim();
+	var search = $(".main_search_wrapper input")._get_value().trim();
 
 	if (search.length < 3) {
 		topSearchProducts(true);
@@ -431,11 +410,12 @@ domload(() => {
 
 function goToSearchProducts() {
 	localStorage.setItem("products_search", $(".main_search_wrapper input")._get_value());
-	window.location = "/produkty/wszystkie";
+	window.location.href = "/produkty/wszystkie";
 }
 
 window.addEventListener("basket-change", (event) => {
-	var res = event.detail.res;
+	// @ts-ignore
+	const res = event.detail.res;
 	showVariantChanges(res, $(`.header_basket_content`), header_basket_variant_template, basket_data.basket);
 });
 
