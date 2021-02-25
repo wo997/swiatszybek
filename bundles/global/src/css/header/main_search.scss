@@ -2,16 +2,15 @@
 
 .main-search-wrapper {
 	position: relative;
-}
-.mainSearch .main-search-wrapper {
+	flex-grow: 0.8;
 	display: flex;
+	margin: auto;
 }
-.mainSearch .main-search-wrapper label {
+
+.any-search-wrapper {
 	flex-grow: 1;
 }
-.mainSearch .main-search-wrapper label input {
-	width: 100%;
-}
-.mainSearch .result {
-	padding: 6px 9px;
+
+.any-search-wrapper .btn {
+	flex-shrink: 0 !important;
 }

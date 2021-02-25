@@ -136,7 +136,7 @@ domload(() => {
 	var sc = $("#mainSearch .scroll-panel > div");
 	var sw = $("header .main-search-wrapper");
 	if (sc && sw) {
-		sw.classList.remove("case-desktop"); // don't remove it from header.php pls
+		sw.classList.remove("case_desktop"); // don't remove it from header.php pls
 		sc.appendChild(sw);
 	}
 
@@ -299,12 +299,12 @@ domload(() => {
     wls.appendChild(wl);
   }*/
 
-	document.body.insertAdjacentHTML("beforeend", `<style>.headerbtn_hover_content {display:none!important}</style>`);
+	document.body.insertAdjacentHTML("beforeend", `<style>.headerbtn_menu {display:none!important}</style>`);
 });
 
 // perform search
 
-function btnSearchProducts() {
+function searchAllProducts() {
 	var search = $(".main-search-wrapper input").value.trim();
 
 	if (search.length < 3) {
@@ -431,7 +431,7 @@ domload(() => {
 	$$(
 		`header .scroll-panel,
         header .user-menu,
-        header .headerbtn_hover_content`
+        header .headerbtn_menu`
 	).forEach((e) => {
 		e.addEventListener("mousewheel", (event) => {
 			if ((event.deltaY < 0 && e.scrollTop < 1) || (event.deltaY > 0 && e.scrollTop > e.scrollHeight - e.offsetHeight - 1)) {

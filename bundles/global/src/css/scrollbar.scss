@@ -12,3 +12,15 @@
 	overflow: hidden;
 	position: fixed;
 }
+
+.smooth_scrollbar {
+	&::-webkit-scrollbar {
+		width: 10px;
+		background-color: #efefef;
+		border-radius: 5px;
+	}
+	&::-webkit-scrollbar-thumb {
+		background-color: #ddd;
+		border-radius: 5px;
+	}
+}
