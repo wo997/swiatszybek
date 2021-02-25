@@ -54,29 +54,23 @@ if (window.innerWidth >= 1200) {
 }
 
 /** @type {number} */
-let scrollTop = document.documentElement.scrollTop;
+let main_scroll_top = document.documentElement.scrollTop;
+let follow_scroll_top = main_scroll_top;
 /** @type {PiepNode} */
 let main_header;
 domload(() => {
 	main_header = $("header");
-	main_header.classList.toggle("collapsed", scrollTop > 100);
+	main_header.classList.toggle("collapsed", main_scroll_top > 100);
 	headerResizeCallback();
 });
 
 window.addEventListener("load", () => {
 	document.addEventListener("scroll", () => {
-		if (window.tempScrollTop) {
-			return;
-		}
+		const scroll_top = document.documentElement.scrollTop;
+		follow_scroll_top = clamp(scroll_top - main_header.offsetHeight, follow_scroll_top, scroll_top);
+		main_header.style.transform = `translateY(${follow_scroll_top - scroll_top}px)`;
 
-		var bottomOfPage = window.innerHeight + window.scrollY >= document.body.offsetHeight;
-
-		var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-		var movingDown = scrollTop >= def(window.scrollTop, 0);
-		var collapsed = (movingDown && scrollTop > 100) || bottomOfPage;
-		top_nav.classList.toggle("collapsed", collapsed);
-
-		window.scrollTop = scrollTop;
+		main_scroll_top = document.documentElement.scrollTop;
 	});
 
 	headerResizeCallback();

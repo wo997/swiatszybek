@@ -382,7 +382,7 @@ function findNode(node, selector, move, options = {}) {
 			}
 
 			if (typeof selector === "string") {
-				if (node.matches(selector)) {
+				if (node.matches && node.matches(selector)) {
 					return node;
 				}
 			} else {

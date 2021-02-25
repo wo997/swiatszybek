@@ -1,6 +1,6 @@
 // /* css[global] */
 
-header {
+header.main {
 	& {
 		position: fixed;
 		width: 100%;
@@ -22,13 +22,6 @@ header {
 
 	.header_buttons {
 		display: flex;
-	}
-
-	.logo-default {
-		width: max(85px, min(10vw, 120px));
-		height: max(38.25px, min(4.5vw, 54px));
-		display: block;
-		object-fit: contain;
 	}
 
 	.user-wrapper:hover .user-menu {
@@ -53,12 +46,18 @@ header {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			transition: 0.2s background-color;
 			padding: 0 7px;
+			transition: 0.2s background-color;
 		}
 		&:hover {
-			background: #0001;
-			transition: none;
+			& {
+				background: #eee;
+				transition: none;
+			}
+			.basket_item_count {
+				box-shadow: 0px 0px 0px 2px #eee;
+				transition: none;
+			}
 		}
 		&:not(:hover) .headerbtn_menu {
 			opacity: 0;
@@ -92,6 +91,7 @@ header {
 			box-shadow: 0px 0px 0px 2px #fff;
 			font-size: 0.9em;
 			font-weight: 600;
+			transition: 0.2s box-shadow;
 		}
 	}
 
@@ -105,6 +105,13 @@ header {
 			box-shadow: inset 0 0 0 1px var(--primary-clr);
 		}
 	}
+}
+
+.logo-default {
+	width: max(85px, min(10vw, 120px));
+	height: max(38px, min(4.5vw, 54px));
+	display: block;
+	object-fit: contain;
 }
 
 @media only screen and (min-width: 800px) {
