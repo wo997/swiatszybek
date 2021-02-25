@@ -619,7 +619,7 @@ if (empty(User::getCurrent()->cart["variants"]) && !isset($_GET['produkt'])) {
                             <div>
                                 <button class="btn primary medium" onclick="showModal('loginForm',{source:this});" style="min-width:250px;margin-top: 25px;">
                                     Zaloguj się
-                                    <img class="user-icon icon-white" src="/src/img/user_icon.svg" style="width: 1.2em;vertical-align: sub;">
+                                    <img class="user_icon icon-white" src="/src/img/user_icon.svg" style="width: 1.2em;vertical-align: sub;">
                                 </button>
                                 <br><br>
                                 <div class="hideifempty">

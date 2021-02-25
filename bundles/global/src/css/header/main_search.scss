@@ -1,16 +1,17 @@
 /* css[global] */
 
-.main-search-wrapper {
+.main_search_wrapper {
 	position: relative;
 	flex-grow: 0.6;
 	display: flex;
 	flex-basis: 200px;
+	margin: 0 10px;
 }
 
-.any-search-wrapper {
+.search_wrapper {
 	flex-grow: 1;
 }
 
-.any-search-wrapper .btn {
+.search_wrapper .btn {
 	flex-shrink: 0 !important;
 }

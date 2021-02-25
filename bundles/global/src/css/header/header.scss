@@ -10,13 +10,22 @@ header.main {
 		background: #fff;
 		border-bottom: 1px solid #ccc;
 		box-shadow: 0 2px 6px 0 #0002;
-		padding: 10px 15px;
+		--header_padding_vertical: 10px;
+		--header_padding_horizontal: 15px;
+		padding: var(--header_padding_vertical) var(--header_padding_horizontal);
 		justify-content: space-around;
+		flex-flow: row wrap;
 	}
 
 	@media only screen and (min-width: 1200px) {
 		& {
-			padding: 15px 20px;
+			--header_padding_vertical: 15px;
+			--header_padding_horizontal: 20px;
+		}
+	}
+	@media only screen and (max-width: 400px) {
+		& {
+			--header_padding_horizontal: 10px;
 		}
 	}
 
@@ -95,7 +104,7 @@ header.main {
 		}
 	}
 
-	.main-search-wrapper {
+	.main_search_wrapper {
 		.btn {
 			padding: 0;
 			width: 40px;
@@ -104,6 +113,22 @@ header.main {
 		&.active .field {
 			box-shadow: inset 0 0 0 1px var(--primary-clr);
 		}
+	}
+
+	@media only screen and (min-width: 600px) {
+		.mobile_search_btn {
+			display: none !important;
+		}
+	}
+	@media only screen and (max-width: 599px) {
+		.main_search_wrapper {
+			display: none !important;
+		}
+	}
+
+	&:not(.menu_collapsed) .mobile_menu_btn,
+	&.menu_collapsed nav {
+		display: none !important;
 	}
 }
 
@@ -150,8 +175,8 @@ header.main {
 // 	position: relative;
 // }
 
-// header .heart-icon,
-// .wishList .heart-icon {
+// header .heart_icon,
+// .wishList .heart_icon {
 // 	width: 30px;
 // }
 
@@ -162,7 +187,7 @@ header.main {
 // 	transform: translateY(-3px);
 // 	margin-right: 1px;
 // }
-// .navigation .heart-icon {
+// .navigation .heart_icon {
 // 	width: 22px;
 // 	vertical-align: middle;
 // 	margin-bottom: -5px;
@@ -303,7 +328,7 @@ header.main {
 
 // /* search start */
 
-// header .main-search-wrapper {
+// header .main_search_wrapper {
 // 	width: auto;
 // 	flex-grow: 1;
 // 	align-self: center;
@@ -312,12 +337,12 @@ header.main {
 // 	position: relative;
 // }
 
-// header .main-search-wrapper:not(.active) .search-results,
+// header .main_search_wrapper:not(.active) .search-results,
 // .search-results:empty {
 // 	display: none;
 // }
 
-// .main-search-wrapper button {
+// .main_search_wrapper button {
 // 	width: 44px;
 // }
 
@@ -350,7 +375,7 @@ header.main {
 // 	border-bottom-left-radius: 4px;
 // 	border-bottom-right-radius: 4px;
 // }
-// .any-search-wrapper .search-icon {
+// .search_wrapper .search_icon {
 // 	width: 16px;
 // 	filter: invert(1);
 // 	transform: translateY(2px);
@@ -364,32 +389,32 @@ header.main {
 // 	height: 100%;
 // }
 
-// .mobile-main-search-wrapper .search-icon {
+// .mobile_main_search_wrapper .search_icon {
 // 	width: 23px;
 // 	transform: translateY(3px);
 // }
-// .mainSearch .search-icon {
+// .mainSearch .search_icon {
 // 	width: 23px;
 // 	transform: translateY(1px);
 // }
 
-// .any-search-wrapper input {
+// .search_wrapper input {
 // 	width: 100%;
 // 	padding: 8px 12px;
 // 	/*padding: 8px 16px;
 //   border-radius: 20px;
 //   transition: all 0.2s;*/
 // }
-// /*.any-search-wrapper input + button {
+// /*.search_wrapper input + button {
 //   border-top-right-radius: 20px;
 //   border-bottom-right-radius: 20px;
 //   transition: all 0.2s;
 // }*/
 
-// /*.any-search-wrapper.has_results input {
+// /*.search_wrapper.has_results input {
 //   border-bottom-left-radius: 0;
 // }
-// .any-search-wrapper.has_results input + button {
+// .search_wrapper.has_results input + button {
 //   border-bottom-right-radius: 0;
 // }*/
 

@@ -21,8 +21,8 @@ function traverseMenu($parent_id = -1, $level = 0)
         <?= traverseMenu() ?>
     </nav>
 
-    <div class="main-search-wrapper case_desktop">
-        <div class="glue_children any-search-wrapper">
+    <div class="main_search_wrapper">
+        <div class="glue_children search_wrapper">
             <input type="text" class="field" placeholder="Wyszukaj produkt">
             <button class="btn primary" onclick="searchAllProducts()">
                 <i class="fas fa-search"></i>
@@ -32,9 +32,9 @@ function traverseMenu($parent_id = -1, $level = 0)
     </div>
 
     <div class="header_buttons">
-        <div class="mobile-main-search-wrapper case_mobile headerbtn">
-            <div onclick='showModal("mainSearch", {source:this});setTimeout(()=>{$(".main-search-wrapper label").click()},200)'>
-                <img class="search-icon" src="/src/img/search_icon.svg">
+        <div class="mobile_search_btn headerbtn">
+            <div onclick='showModal("mainSearch", {source:this});setTimeout(()=>{$(".main_search_wrapper label").click()},200)'>
+                <img class="search_icon" src="/src/img/search_icon.svg">
             </div>
         </div>
         <?php
@@ -46,14 +46,14 @@ function traverseMenu($parent_id = -1, $level = 0)
         ?>
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
             <div class="headerbtn case_desktop">
-                <img class="heart-icon" src="/src/img/heart_icon.svg">
+                <img class="heart_icon" src="/src/img/heart_icon.svg">
             </div>
         <?php endif ?>
         <?php include "global/last_viewed_products.php"; ?>
         <?php include "global/header_basket.php"; ?>
 
-        <div class='case_mobile headerbtn' onclick='showModal("mainMenu", {source:this})'>
-            <img class="menu-icon" src="/src/img/menu_icon.svg">
+        <div class='mobile_menu_btn headerbtn' onclick='showModal("mainMenu", {source:this})'>
+            <img class="menu_icon" src="/src/img/menu_icon.svg">
         </div>
     </div>
 

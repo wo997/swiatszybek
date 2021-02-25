@@ -7,7 +7,7 @@ else if ($user_type == 'facebook') $display_user = "<i class=\"fab fa-facebook-s
 
 <div class="headerbtn">
     <a href="/moje-konto">
-        <img class="user-icon" src="/src/img/user_icon.svg">
+        <img class="user_icon" src="/src/img/user_icon.svg">
     </a>
     <div class="headerbtn_menu">
         <div class="username"><?= $display_user ?></div>

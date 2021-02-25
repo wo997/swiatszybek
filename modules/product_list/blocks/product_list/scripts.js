@@ -56,8 +56,8 @@ function productListLoaded() {
 				"beforeend",
 				html`<div class="product-actions">
 					<div class="btn-wrapper">
-						<img class="heart-icon below" src="/src/img/heart_icon.svg" />
-						<img class="heart-icon over" src="/src/img/heart_icon_fill.svg" />
+						<img class="heart_icon below" src="/src/img/heart_icon.svg" />
+						<img class="heart_icon over" src="/src/img/heart_icon_fill.svg" />
 					</div>
 					<div class="btn-wrapper" onclick="showOffersOntopBabbyohohohohohoh">
 						<img class="basket-icon below" src="/src/img/basket_icon.svg" />

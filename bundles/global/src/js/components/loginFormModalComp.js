@@ -47,7 +47,7 @@ function loginFormModalComp(comp, parent, data = undefined) {
 			<button class="close-modal-btn"><i class="fas fa-times"></i></button>
 
 			<h3 class="modal-header">
-				<img class="user-icon" src="/src/img/user_icon.svg" />
+				<img class="user_icon" src="/src/img/user_icon.svg" />
 				Logowanie
 			</h3>
 

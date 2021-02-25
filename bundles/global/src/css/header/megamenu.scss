@@ -1,6 +1,17 @@
 /* css[global] */
 
-nav {
+header nav {
+	& {
+		flex-shrink: 0;
+	}
+	&.bottom {
+		order: 2;
+		margin: calc(-1 * var(--header_padding_vertical)) calc(-1 * var(--header_padding_horizontal));
+		margin-top: var(--header_padding_vertical);
+		min-width: 100%;
+		flex-grow: 1;
+		border-top: 1px solid #ccc;
+	}
 	ul {
 		display: flex;
 		padding: 0;

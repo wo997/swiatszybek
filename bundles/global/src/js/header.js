@@ -58,8 +58,17 @@ let main_scroll_top = document.documentElement.scrollTop;
 let follow_scroll_top = main_scroll_top;
 /** @type {PiepNode} */
 let main_header;
+/** @type {PiepNode} */
+let main_header_buttons;
+/** @type {PiepNode} */
+let main_header_height;
+/** @type {PiepNode} */
+let main_header_nav;
 domload(() => {
-	main_header = $("header");
+	main_header = $("header.main");
+	main_header_height = $(".header_height");
+	main_header_buttons = main_header._child(".header_buttons");
+	main_header_nav = main_header._child("nav");
 	main_header.classList.toggle("collapsed", main_scroll_top > 100);
 	headerResizeCallback();
 });
@@ -79,10 +88,11 @@ window.addEventListener("load", () => {
 window.addEventListener("resize", headerResizeCallback);
 
 function headerResizeCallback() {
-	const header_height = $(".header_height");
-	if (header_height) {
-		header_height.style.height = $("header").offsetHeight + "px";
-	}
+	main_header.classList.remove("menu_collapsed");
+	main_header_nav.classList.remove("bottom");
+	main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
+	main_header.classList.toggle("menu_collapsed", IS_TOUCH_DEVICE || main_header_nav.offsetWidth > main_header.offsetWidth + 1);
+	main_header_height.style.height = main_header.offsetHeight + "px";
 }
 
 domload(() => {
@@ -98,39 +108,38 @@ domload(() => {
 	}
 
 	//search
-	registerModalContent(`
-      <div id="mainSearch" class="mainSearch" data-expand>
-          <div class="modal-body">
-              <button class="close-modal-btn"><i class="fas fa-times"></i></button>
-              <h3 class="modal-header"><img class="search-icon" src="/src/img/search_icon.svg"> Wyszukiwarka</h3>
-              <div class="scroll-panel scroll-shadow panel-padding">
-                <div></div>
-              </div>
-          </div>
-      </div>
-  `);
+	registerModalContent(html`
+		<div id="mainSearch" data-expand>
+			<div class="modal-body">
+				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal-header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
+				<div class="scroll-panel scroll-shadow panel-padding">
+					<div></div>
+				</div>
+			</div>
+		</div>
+	`);
 
-	var sc = $("#mainSearch .scroll-panel > div");
-	var sw = $("header .main-search-wrapper");
+	const sc = $("#mainSearch .scroll-panel > div");
+	const sw = $("header .main_search_wrapper");
 	if (sc && sw) {
-		sw.classList.remove("case_desktop"); // don't remove it from header.php pls
-		sc.appendChild(sw);
+		sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
 	}
 
 	//user
 	var um = $("header .user-menu");
 	if (um) {
-		registerModalContent(`
-      <div id="userMenu" data-expand class="userMenu">
-          <div class="modal-body">
-              <button class="close-modal-btn"><i class="fas fa-times"></i></button>
-              <h3 class="modal-header"><img class="user-icon" src="/src/img/user_icon.svg"> Moje konto</h3>
-              <div class="scroll-panel scroll-shadow">
-                <div></div>
-              </div>
-          </div>
-      </div>
-    `);
+		registerModalContent(html`
+			<div id="userMenu" data-expand class="userMenu">
+				<div class="modal-body">
+					<button class="close-modal-btn"><i class="fas fa-times"></i></button>
+					<h3 class="modal-header"><img class="user_icon" src="/src/img/user_icon.svg" /> Moje konto</h3>
+					<div class="scroll-panel scroll-shadow">
+						<div></div>
+					</div>
+				</div>
+			</div>
+		`);
 
 		$("#userMenu .scroll-panel > div").appendChild(um);
 	}
@@ -147,63 +156,63 @@ domload(() => {
 	}
 
 	//basket
-	registerModalContent(`
-    <div id="basketMenu" class="basketMenu" data-expand>
-        <div class="modal-body">
-            <button class="close-modal-btn"><i class="fas fa-times"></i></button>
-            <h3 class="modal-header">
-              <div class="basket-icon-wrapper">
-                <img class="basket-icon" src="/src/img/basket_icon.svg">
-                <div class="basket_item_count"></div>
-              </div>
-              Koszyk  
-            </h3>
-            <div class="scroll-panel scroll-shadow panel-padding">
-              <div></div>
-            </div>
-            <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
-        </div>
-    </div>
-  `);
+	registerModalContent(html`
+		<div id="basketMenu" class="basketMenu" data-expand>
+			<div class="modal-body">
+				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal-header">
+					<div class="basket-icon-wrapper">
+						<img class="basket-icon" src="/src/img/basket_icon.svg" />
+						<div class="basket_item_count"></div>
+					</div>
+					Koszyk
+				</h3>
+				<div class="scroll-panel scroll-shadow panel-padding">
+					<div></div>
+				</div>
+				<div style="display:flex;padding:0 5px 5px" class="basket_menu_mobile_summary footer"></div>
+			</div>
+		</div>
+	`);
 
 	/*var hc = $("header .header_basket_content");
   if (hc) {
     $("#basketMenu .scroll-panel").appendChild(hc);
   }*/
 
-	var sc = $("header .nav_basket_summary");
-	if (sc) {
-		$("#basketMenu .basket_menu_mobile_summary").appendChild(sc);
+	const su = $("header .nav_basket_summary");
+	if (su) {
+		$("#basketMenu .basket_menu_mobile_summary").insertAdjacentHTML("afterbegin", su.outerHTML);
 	}
 
-	var hc = $("header .header_basket_content_wrapper");
+	const hc = $("header .header_basket_content_wrapper");
 	if (hc) {
 		$("#basketMenu .scroll-panel > div").appendChild(hc);
 	}
 
 	basketReady();
 
-	var btn = $("header .basket-wrapper .basket-btn");
-	if (btn) {
-		btn.addEventListener("click", function (event) {
-			showModal("basketMenu", { source: this });
-			event.preventDefault();
+	const bbtn = $("header .basket-wrapper .basket-btn");
+	if (bbtn) {
+		bbtn.addEventListener("click", (ev) => {
+			showModal("basketMenu", { source: bbtn });
+			ev.preventDefault();
 			return false;
 		});
 	}
 
 	//menu
-	registerModalContent(`
-      <div id="mainMenu" class="mainMenu" data-expand>
-          <div class="modal-body">
-              <button class="close-modal-btn"><i class="fas fa-times"></i></button>
-              <h3 class="modal-header"><img class="menu-icon" src="/src/img/menu_icon.svg"> Menu</h3>
-              <div class="scroll-panel scroll-shadow">
-                <div></div>
-              </div>
-          </div>
-      </div>
-  `);
+	registerModalContent(html`
+		<div id="mainMenu" class="mainMenu" data-expand>
+			<div class="modal-body">
+				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal-header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
+				<div class="scroll-panel scroll-shadow">
+					<div></div>
+				</div>
+			</div>
+		</div>
+	`);
 
 	var mm = $("#mainMenu .scroll-panel > div");
 	var nvg = $(".navigation");
@@ -211,7 +220,7 @@ domload(() => {
 	if (mm && nvg) {
 		nvg.insertAdjacentHTML(
 			"beforeend",
-			`
+			html`
         <div>
           <a onclick="showModal('lastViewedProducts',{source:this});return false;">
             <img class="product-history-icon" src="/src/img/product_history_icon.svg"> Ostatnio przeglądane produkty
@@ -219,7 +228,7 @@ domload(() => {
         </div>
         <div>
           <a onclick="showModal('wishList',{source:this});return false;">
-            <img class="heart-icon" src="/src/img/heart_icon.svg"></img> Schowek
+            <img class="heart_icon" src="/src/img/heart_icon.svg"></img> Schowek
           </a>
         </div>
       `
@@ -228,21 +237,21 @@ domload(() => {
 	}
 
 	// last viewed products
-	registerModalContent(`
-      <div id="lastViewedProducts" class="lastViewedProducts" data-expand="previous">
-        <div class="modal-body">
-            <button class="close-modal-btn"><i class="fas fa-times"></i></button>
-            <h3 class="modal-header">
-              <img class="product-history-icon" src="/src/img/product_history_icon.svg">
-              Ostatnio przeglądane  
-            </h3>
-            <div class="scroll-panel scroll-shadow panel-padding">
-              <div></div>
-            </div>
-            <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
-        </div>
-    </div>
-  `);
+	registerModalContent(html`
+		<div id="lastViewedProducts" class="lastViewedProducts" data-expand="previous">
+			<div class="modal-body">
+				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal-header">
+					<img class="product-history-icon" src="/src/img/product_history_icon.svg" />
+					Ostatnio przeglądane
+				</h3>
+				<div class="scroll-panel scroll-shadow panel-padding">
+					<div></div>
+				</div>
+				<div style="display:flex;padding:0 5px 5px" class="basket_menu_mobile_summary footer"></div>
+			</div>
+		</div>
+	`);
 
 	var lvps = $("#lastViewedProducts .scroll-panel > div");
 	var lvp = $(".last_viewed_products");
@@ -252,12 +261,12 @@ domload(() => {
 	}
 
 	// wishlist
-	registerModalContent(`
+	registerModalContent(html`
       <div id="wishList" class="wishList" data-expand="previous">
         <div class="modal-body">
             <button class="close-modal-btn"><i class="fas fa-times"></i></button>
             <h3 class="modal-header">
-              <img class="heart-icon" src="/src/img/heart_icon.svg"></img>
+              <img class="heart_icon" src="/src/img/heart_icon.svg"></img>
               Schowek  
             </h3>
             <div class="scroll-panel scroll-shadow panel-padding">
@@ -282,7 +291,7 @@ domload(() => {
 // perform search
 
 function searchAllProducts() {
-	var search = $(".main-search-wrapper input").value.trim();
+	var search = $(".main_search_wrapper input").value.trim();
 
 	if (search.length < 3) {
 		topSearchProducts(true);
@@ -292,13 +301,13 @@ function searchAllProducts() {
 }
 
 domload(() => {
-	var input = $(".main-search-wrapper input");
+	var input = $(".main_search_wrapper input");
 	if (!input) {
 		return;
 	}
-	var main_search_wrapper = $(".main-search-wrapper");
+	var main_search_wrapper = $(".main_search_wrapper");
 	document.addEventListener("mousedown", (event) => {
-		main_search_wrapper.classList.toggle("active", $(event.target) ? !!$(event.target)._parent(".main-search-wrapper") : false);
+		main_search_wrapper.classList.toggle("active", $(event.target) ? !!$(event.target)._parent(".main_search_wrapper") : false);
 	});
 	input.addEventListener("input", () => {
 		delay("topSearchProducts", 400);
@@ -324,7 +333,7 @@ domload(() => {
 				selected.click();
 				event.preventDefault();
 				return false;
-			} else if ($(".main-search-wrapper input").value.trim()) {
+			} else if ($(".main_search_wrapper input").value.trim()) {
 				goToSearchProducts();
 			} else {
 				topSearchProducts(true);
@@ -369,10 +378,10 @@ domload(() => {
 });
 
 function topSearchProducts(force) {
-	var search = $(".main-search-wrapper input").value.trim();
+	var search = $(".main_search_wrapper input").value.trim();
 
 	var callback = (content) => {
-		$(".main-search-wrapper .search-results")._set_content(content);
+		$(".main_search_wrapper .search-results")._set_content(content);
 	};
 
 	if (search.length === 0 && !force) {
@@ -421,7 +430,7 @@ domload(() => {
 });
 
 function goToSearchProducts() {
-	localStorage.setItem("products_search", $(".main-search-wrapper input")._get_value());
+	localStorage.setItem("products_search", $(".main_search_wrapper input")._get_value());
 	window.location = "/produkty/wszystkie";
 }
 
