@@ -7,6 +7,12 @@
 	--p-checkbox-width: 4em;
 }
 
+input[type="checkbox"] {
+	width: 0;
+	height: 0;
+	opacity: 0;
+}
+
 p-checkbox {
 	width: var(--p-checkbox-width) !important;
 	height: var(--p-checkbox-height);

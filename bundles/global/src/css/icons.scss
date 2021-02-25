@@ -1,0 +1,29 @@
+/* css[global] */
+
+.user-icon {
+	width: 32px;
+}
+.product-history-icon {
+	width: 39px;
+}
+.basket-icon {
+	width: 40px;
+}
+.heart-icon {
+	width: 36px;
+}
+.menu-icon {
+	width: 36px;
+}
+
+.chevron-icon {
+	width: 0.9em;
+}
+
+.icon-white {
+	filter: invert(1);
+}
+
+.icon-flip {
+	transform: scaleX(-1);
+}

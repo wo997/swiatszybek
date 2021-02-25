@@ -53,28 +53,17 @@ if (window.innerWidth >= 1200) {
 	});
 }
 
+/** @type {number} */
+let scrollTop = document.documentElement.scrollTop;
+/** @type {PiepNode} */
+let main_header;
 domload(() => {
-	var top_nav = $(".navigation");
-	if (!top_nav) {
-		return;
-	}
-
-	var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-	var collapsed = scrollTop > 100;
-	top_nav.classList.toggle("collapsed", collapsed);
-	setTimeout(() => {
-		top_nav.style.transition = "all 0.5s";
-	});
-
+	main_header = $("header");
+	main_header.classList.toggle("collapsed", scrollTop > 100);
 	headerResizeCallback();
 });
 
 window.addEventListener("load", () => {
-	var top_nav = $(".navigation");
-	if (!top_nav) {
-		return;
-	}
-
 	document.addEventListener("scroll", () => {
 		if (window.tempScrollTop) {
 			return;
@@ -95,17 +84,11 @@ window.addEventListener("load", () => {
 
 window.addEventListener("resize", headerResizeCallback);
 
-// won't work untill u rework mechanics
 function headerResizeCallback() {
-	var header_height = $(".header-height");
-	if (!header_height) {
-		return;
+	const header_height = $(".header_height");
+	if (header_height) {
+		header_height.style.height = $("header").offsetHeight + "px";
 	}
-
-	header_height.style.marginBottom =
-		$(".header-top").getBoundingClientRect().height +
-		(window.innerWidth >= MOBILE_WIDTH ? $(".navigation").getBoundingClientRect().height : 0) +
-		"px";
 }
 
 domload(() => {
