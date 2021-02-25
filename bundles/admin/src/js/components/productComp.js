@@ -450,7 +450,7 @@ function productComp(comp, parent, data = undefined) {
 				});
 
 				const selection_changed = cd.product_feature_ids || cd.product_feature_option_ids;
-				if (selection_changed || cd.products_dt || options.force_render || true) {
+				if (selection_changed || cd.products_dt || options.force_render) {
 					/** @type {DatatableColumnDef[]} */
 					const columns = data.products_dt.columns;
 					let column_index = -1;
@@ -514,9 +514,12 @@ function productComp(comp, parent, data = undefined) {
 				}
 
 				if (cd.category_ids) {
-					const cats_html = product_categories
-						.filter((e) => data.category_ids.includes(e.product_category_id))
+					const cats_html = data.category_ids
+						.map((category_id) => product_categories.find((e) => e.product_category_id === category_id))
 						.map((e) => {
+							if (!e) {
+								return;
+							}
 							let dis = e.name;
 							let parents = 0;
 							let s = e;
@@ -713,6 +716,9 @@ function productComp(comp, parent, data = undefined) {
 
 			window.addEventListener("product_features_changed", () => {
 				comp._nodes.all_products._warmup_maps();
+				comp._render({ force_render: true });
+			});
+			window.addEventListener("product_categories_changed", () => {
 				comp._render({ force_render: true });
 			});
 		},

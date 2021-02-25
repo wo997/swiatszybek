@@ -135,11 +135,11 @@ function productCategoriesComp(comp, parent, data = undefined) {
 						}
 						const max_expand = 1;
 
-						const inactive = level > max_expand || com._data.categories.length === 0;
-						expand_multi_list_btn.classList.toggle("inactive", inactive);
+						const active = level <= max_expand && com._data.categories.length > 0;
+						expand_multi_list_btn.classList.toggle("active", active);
 
 						// sometimes the user can do nothing so pls don't hide the contents
-						if (inactive && !expand_multi_list_btn.classList.contains("expanded")) {
+						if (!active && !expand_multi_list_btn.classList.contains("expanded")) {
 							expand_multi_list_btn.click();
 						}
 					});
@@ -153,7 +153,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			<p-trait data-trait="history"></p-trait>
 			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 
-			<button class="btn primary" data-tooltip="Dodaj kategorię podrzędną" data-node="{${comp._nodes.add_btn}}">
+			<button class="btn primary" data-node="{${comp._nodes.add_btn}}">
 				Dodaj kategorię główną
 				<i class="fas fa-plus"></i>
 			</button>

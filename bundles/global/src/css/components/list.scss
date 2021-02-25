@@ -141,7 +141,7 @@ list-comp {
 	&.expanded i {
 		transform: rotate(90deg);
 	}
-	&.inactive {
+	&:not(.active) {
 		visibility: hidden;
 	}
 }

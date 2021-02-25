@@ -393,11 +393,10 @@ function setCompData(comp, data = undefined, options = {}) {
 		}, 0);
 	}
 
-	// just for optimization
 	const equal = isEquivalent(node._prev_data, node._data);
 
-	if (equal && def(options.force_render, false) === false) {
-		// never used force_render lol, OK JUST ONCE
+	const force_render = def(options.force_render, false);
+	if (equal && !force_render) {
 		return;
 	}
 
@@ -407,7 +406,7 @@ function setCompData(comp, data = undefined, options = {}) {
 	if (isObject(node._data)) {
 		node._changed_data = {};
 		for (const [key, value] of Object.entries(node._data)) {
-			if (node._prev_data === undefined || !isEquivalent(def(node._prev_data[key], undefined), value)) {
+			if (force_render || node._prev_data === undefined || !isEquivalent(def(node._prev_data[key], undefined), value)) {
 				node._changed_data[key] = true;
 			}
 		}

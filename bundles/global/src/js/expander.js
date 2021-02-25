@@ -125,33 +125,41 @@ function expand(elem, show = null, options = {}) {
 		duration
 	);
 
-	elem._animate(
-		`
-            0% {
-                ${dim}: ${h1}px;
-                opacity: ${o1};
-            }
-            100% {
-                ${dim}: ${h2}px;
-                opacity: ${o2};
-            }
-        `,
-		duration,
-		{
-			callback: () => {
-				elem.style[dim] = show ? "" : "0px";
+	const clb = () => {
+		elem.style[dim] = show ? "" : "0px";
 
-				if (!show) {
-					elem.classList.add("animate_hidden");
-				}
-				elem.classList.remove("animating");
-
-				if (options.callback) {
-					options.callback();
-				}
-			},
+		if (!show) {
+			elem.classList.add("animate_hidden");
 		}
-	);
+		elem.classList.remove("animating");
+
+		if (options.callback) {
+			options.callback();
+		}
+	};
+
+	if (Math.abs(h1 - h2) > 1) {
+		elem._animate(
+			`
+                0% {
+                    ${dim}: ${h1}px;
+                    opacity: ${o1};
+                }
+                100% {
+                    ${dim}: ${h2}px;
+                    opacity: ${o2};
+                }
+            `,
+			duration,
+			{
+				callback: clb,
+			}
+		);
+	} else {
+		setTimeout(() => {
+			clb();
+		}, duration);
+	}
 
 	return show;
 }
