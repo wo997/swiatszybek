@@ -208,33 +208,15 @@ function productCategoriesComp(comp, parent, data = undefined) {
 				});
 			});
 
-			/**
-			 *
-			 * @param {PiepNode} lr
-			 * @param {number} max
-			 */
-			const filterLevel = (lr, max = 2) => {
-				let level = 0;
-				while (lr) {
-					level++;
-					lr = lr._parent(".list_row");
-				}
-				return level <= max;
-			};
-
 			comp._nodes.expand_all_btn.addEventListener("click", () => {
-				comp._children(".node_expand_multi_list_btn:not(.expanded)").forEach((e) => {
-					if (filterLevel(e, 2)) {
-						e.click();
-					}
+				comp._children(".node_expand_multi_list_btn.active:not(.expanded)").forEach((e) => {
+					e.click();
 				});
 			});
 
 			comp._nodes.shrink_all_btn.addEventListener("click", () => {
-				comp._children(".node_expand_multi_list_btn.expanded").forEach((e) => {
-					if (filterLevel(e, 2)) {
-						e.click();
-					}
+				comp._children(".node_expand_multi_list_btn.active.expanded").forEach((e) => {
+					e.click();
 				});
 			});
 
