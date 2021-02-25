@@ -17,9 +17,13 @@ function traverseMenu($parent_id = -1, $level = 0)
         <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
     </a>
 
+    <nav>
+        <?= traverseMenu() ?>
+    </nav>
+
     <div class="main-search-wrapper case_desktop">
         <div class="glue_children any-search-wrapper">
-            <input type="text" class="field" placeholder="Wpisz nazwę produktu">
+            <input type="text" class="field" placeholder="Wyszukaj produkt">
             <button class="btn primary" onclick="searchAllProducts()">
                 <i class="fas fa-search"></i>
             </button>
@@ -54,8 +58,5 @@ function traverseMenu($parent_id = -1, $level = 0)
     </div>
 
 </header>
-<nav>
-    <?= traverseMenu() ?>
-</nav>
 
 <div class="header-height"></div>
