@@ -31,6 +31,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 		};
 	}
 
+	// MAKE SURE YOU CALL IT AFTER THE SELECTION WAS CHANGED
 	comp._refresh_dataset = () => {
 		/**
 		 * @param {ProductCategoryPickerNodeCompData[]} categories_ref
@@ -61,7 +62,6 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 		const product_comp = $("product-comp");
 
 		comp._data.selection = product_comp._data.category_ids;
-		comp._refresh_dataset();
 		comp._render({ freeze: true });
 
 		setTimeout(() => {
@@ -138,6 +138,18 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 			window.addEventListener("product_categories_changed", () => {
 				comp._refresh_dataset();
 				comp._render();
+			});
+		},
+		ready: () => {
+			setTimeout(() => {
+				/** @type {ProductComp} */
+				// @ts-ignore
+				const product_comp = $("product-comp");
+
+				comp._data.selection = product_comp._data.category_ids;
+				comp._refresh_dataset();
+
+				comp._render({ force_render: true });
 			});
 		},
 	});
