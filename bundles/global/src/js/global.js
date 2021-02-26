@@ -450,19 +450,26 @@ function removeContent(node) {
  *
  * @param {PiepNode} node
  * @param {any} html
+ * @param {{maintain_height?: boolean}} [options]
  */
-function _set_content(node, html = "") {
+function setContent(node, html = "", options = {}) {
 	if (node.innerHTML === html) {
 		return;
 	}
 
+	if (options.maintain_height) {
+		node.style.height = node.offsetHeight + "px";
+	}
 	node = $(node);
 	removeContent(node);
 	node.insertAdjacentHTML("afterbegin", html);
 	node.dispatchEvent(new Event("scroll"));
 	setTimeout(() => {
 		node.dispatchEvent(new Event("scroll"));
-	}, 200);
+		if (options.maintain_height) {
+			node.style.height = "";
+		}
+	}, 0);
 }
 
 function addMissing_direct_children(parent, isMissingCallback, html, position = "beforeend") {

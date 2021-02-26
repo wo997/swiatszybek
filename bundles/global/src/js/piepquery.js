@@ -11,7 +11,7 @@
  * _get_value(options?: GetDataOptions): any
  * _scroll_parent(options?: findNodeOptions): PiepNode
  * _empty(): void
- * _set_content(html: string | number): void
+ * _set_content(html: string | number, options?: {maintain_height?: boolean}): void
  * dataset: any;
  * _setting_value?: boolean
  * _parent(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
@@ -136,8 +136,8 @@ function $(selector, parent = undefined) {
 		return removeContent(node);
 	};
 
-	node._set_content = (html = "") => {
-		return _set_content(node, html);
+	node._set_content = (html = "", options) => {
+		return setContent(node, html, options);
 	};
 
 	node._animate = (keyframes, duration, options = {}) => {

@@ -2,6 +2,7 @@
 
 /**
  * @typedef {{
+ * search_data: any[]
  * pagination_data: PaginationCompData
  * droppedFiles?: FileList | undefined
  * }} FileManagerCompData
@@ -57,6 +58,42 @@ function fileManagerComp(comp, parent, data = undefined) {
 					return;
 				}
 				comp._search_request = undefined;
+
+				data.pagination_data.page_count = res.page_count;
+				data.pagination_data.total_rows = res.total_rows;
+				data.search_data = res.rows;
+
+				let out = "";
+				for (const image of data.search_data) {
+					let display = "";
+
+					if (image.asset_type == "video") {
+						display = html`<video src="/${image.file_path}" class="ql-video" controls="true" style="width:100%;height:250px;"></video>`;
+					} else {
+						display = html`<img style="width:100%;object-fit:contain" data-height="1w" class="wo997_img" data-src="/${image.file_path}" />`;
+					}
+					const image_metadata_html = html`
+						<b>Ścieżka:</b> ${image.file_path}
+						<hr style="margin:2px 0" />
+						<b>Nazwa:</b> ${image.uploaded_file_name}
+						<hr style="margin:2px 0" />
+						<b>Autor:</b> ${def(image.email, "-")}
+					`;
+					out += html`
+						<div class="gallery-item">
+							${display}
+							<div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz">
+								<i class="fas fa-check"></i>
+							</div>
+							<div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń">
+								<i class="fas fa-times"></i>
+							</div>
+							<i class="fas fa-info-circle" data-tooltip="${image_metadata_html}"></i>
+						</div>
+					`;
+				}
+				comp._nodes.file_grid._set_content(out, { maintain_height: true });
+				lazyLoadImages(false);
 			},
 		});
 	};
@@ -97,7 +134,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 			</form>
 		`,
 		ready: () => {
-			//comp._search();
+			comp._search();
 
 			comp._data.droppedFiles = undefined;
 
@@ -167,43 +204,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 					success(images) {
 						hideLoader(form);
 						form.classList.remove("uploading");
-
-						let out = "";
-						for (const image of images) {
-							let display = "";
-
-							if (image.asset_type == "video") {
-								display = html`<video src="/${image.file_path}" class="ql-video" controls="true" style="width:100%;height:250px;"></video>`;
-							} else {
-								display = html`<img
-									style="width:100%;object-fit:contain"
-									data-height="1w"
-									class="wo997_img"
-									data-src="/${image.file_path}"
-								/>`;
-							}
-							const image_metadata_html = html`
-								<b>Ścieżka:</b> ${image.file_path}
-								<hr style="margin:2px 0" />
-								<b>Nazwa:</b> ${image.uploaded_file_name}
-								<hr style="margin:2px 0" />
-								<b>Autor:</b> ${def(image.email, "-")}
-							`;
-							out += html`
-								<div class="gallery-item">
-									${display}
-									<div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz">
-										<i class="fas fa-check"></i>
-									</div>
-									<div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń">
-										<i class="fas fa-times"></i>
-									</div>
-									<i class="fas fa-info-circle" data-tooltip="${image_metadata_html}"></i>
-								</div>
-							`;
-						}
-						comp._nodes.file_grid._set_content(out);
-						lazyLoadImages(false);
+						comp._search();
 					},
 				});
 
