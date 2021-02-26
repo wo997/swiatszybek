@@ -156,7 +156,8 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 }
 
 function getSelectProductCategoriesModal() {
-	if (!$("#selectProductCategories")) {
+	const ex = $("#selectProductCategories");
+	if (!ex) {
 		registerModalContent(html`
 			<div id="selectProductCategories" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: calc(20% + 350px);max-height: calc(50% + 250px);">
@@ -169,7 +170,9 @@ function getSelectProductCategoriesModal() {
 	/** @type {SelectProductCategoriesModalComp} */
 	// @ts-ignore
 	const select_product_categories_modal_comp = $("#selectProductCategories select-product-categories-modal-comp");
-	selectProductCategoriesModalComp(select_product_categories_modal_comp, undefined);
+	if (!ex) {
+		selectProductCategoriesModalComp(select_product_categories_modal_comp, undefined);
+	}
 
 	return select_product_categories_modal_comp;
 }

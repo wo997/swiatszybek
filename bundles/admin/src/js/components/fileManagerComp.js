@@ -130,7 +130,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 			<div class="custom_toolbar">
 				<span class="title"
 					><span class="medium">Pliki / Zdjęcia</span>
-					<button class="btn important" data-node="{${comp._nodes.upload_btn}}">Prześlij pliki <i class="fas fa-plus"></i></button
+					<button class="btn primary" data-node="{${comp._nodes.upload_btn}}">Prześlij pliki <i class="fas fa-plus"></i></button
 				></span>
 			</div>
 

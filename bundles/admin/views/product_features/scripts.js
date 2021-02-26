@@ -43,7 +43,7 @@ domload(() => {
 		sort_on_backend: true,
 	});
 
-	const product_feature_modal_comp = registerProductFeatureModal();
+	const product_feature_modal_comp = getProductFeatureModal();
 
 	dt.addEventListener("click", (ev) => {
 		const target = $(ev.target);

@@ -53,7 +53,8 @@ function selectFileModalComp(comp, parent, data = undefined) {
 }
 
 function getSelectFileModal() {
-	if (!$("#selectFile")) {
+	const ex = $("#selectFile");
+	if (!ex) {
 		registerModalContent(html`
 			<div id="selectFile" data-expand data-dismissable>
 				<div class="modal_body">
@@ -66,7 +67,9 @@ function getSelectFileModal() {
 	/** @type {SelectFileModalComp} */
 	// @ts-ignore
 	const select_file_modal_comp = $("#selectFile select-file-modal-comp");
-	selectFileModalComp(select_file_modal_comp, undefined);
+	if (!ex) {
+		selectFileModalComp(select_file_modal_comp, undefined);
+	}
 
 	return select_file_modal_comp;
 }

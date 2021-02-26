@@ -13,11 +13,6 @@ function registerImageInputs(parent) {
 	parent._children("image-input:not(.image-input-registered)").forEach((input) => {
 		input.classList.add("image-input-registered");
 
-		// TODO: crazy, we use names so far hmm
-		// input.classList.add("form-input");
-
-		//useTool("fileManager");
-
 		input.insertAdjacentHTML(
 			"afterbegin",
 			html`
@@ -32,6 +27,7 @@ function registerImageInputs(parent) {
 		const img = input._child("img");
 		const button = input._child("button");
 		const wrapper = input._child(".image_input_img_wrapper");
+		const select_file_modal = getSelectFileModal();
 
 		const options_json = input.getAttribute("data-options");
 		if (options_json) {
@@ -72,9 +68,10 @@ function registerImageInputs(parent) {
 		});
 
 		button.addEventListener("click", () => {
-			fileManager.open(img, {
-				asset_types: ["image"],
-			});
+			select_file_modal._show();
+			// fileManager.open(img, {
+			// 	asset_types: ["image"],
+			// });
 		});
 
 		input._get_value = () => {

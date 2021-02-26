@@ -103,7 +103,8 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 }
 
 function getManageProductListModal() {
-	if (!$("#manageProductList")) {
+	const ex = $("#manageProductList");
+	if (!ex) {
 		registerModalContent(html`
 			<div id="manageProductList" data-dismissable>
 				<div class="modal_body" style="width: calc(20% + 300px);max-height: calc(75% + 100px);">
@@ -116,7 +117,9 @@ function getManageProductListModal() {
 	/** @type {ManageProductListModalComp} */
 	// @ts-ignore
 	const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
-	manageProductListModalComp(manage_product_list_modal_comp, undefined);
+	if (!ex) {
+		manageProductListModalComp(manage_product_list_modal_comp, undefined);
+	}
 
 	return manage_product_list_modal_comp;
 }

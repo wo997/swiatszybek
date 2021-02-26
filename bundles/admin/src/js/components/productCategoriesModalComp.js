@@ -67,7 +67,8 @@ function productCategoriesModalComp(comp, parent, data = undefined) {
 }
 
 function getProductCategoriesModal() {
-	if (!$("#productCategories")) {
+	const ex = $("#productCategories");
+	if (!ex) {
 		registerModalContent(html`
 			<div id="productCategories" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: calc(30% + 400px);max-height: calc(75% + 100px);">
@@ -80,7 +81,9 @@ function getProductCategoriesModal() {
 	/** @type {ProductCategoriesModalComp} */
 	// @ts-ignore
 	const product_categories_modal_comp = $("#productCategories product-categories-modal-comp");
-	productCategoriesModalComp(product_categories_modal_comp, undefined);
+	if (!ex) {
+		productCategoriesModalComp(product_categories_modal_comp, undefined);
+	}
 
 	return product_categories_modal_comp;
 }

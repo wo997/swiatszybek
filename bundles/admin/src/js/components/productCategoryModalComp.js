@@ -141,7 +141,8 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 }
 
 function getProductCategoryModal() {
-	if (!$("#productCategory")) {
+	const ex = $("#productCategory");
+	if (!ex) {
 		registerModalContent(html`
 			<div id="productCategory" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: calc(20% + 250px);max-height: calc(20% + 100px);">
@@ -154,6 +155,8 @@ function getProductCategoryModal() {
 	/** @type {ProductCategoryModalComp} */
 	// @ts-ignore
 	const product_category_modal_comp = $("#productCategory product-category-modal-comp");
-	productCategoryModalComp(product_category_modal_comp, undefined);
+	if (!ex) {
+		productCategoryModalComp(product_category_modal_comp, undefined);
+	}
 	return product_category_modal_comp;
 }

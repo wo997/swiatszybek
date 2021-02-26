@@ -221,7 +221,8 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 }
 
 function getSelectProductFeaturesModal() {
-	if (!$("#selectProductFeatures")) {
+	const ex = $("#selectProductFeatures");
+	if (!ex) {
 		registerModalContent(html`
 			<div id="selectProductFeatures" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: 1000px;max-height: calc(75% + 100px);">
@@ -234,7 +235,9 @@ function getSelectProductFeaturesModal() {
 	/** @type {SelectProductFeaturesModalComp} */
 	// @ts-ignore
 	const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
-	selectProductFeaturesModalComp(select_product_features_modal_comp, undefined);
+	if (!ex) {
+		selectProductFeaturesModalComp(select_product_features_modal_comp, undefined);
+	}
 
 	return select_product_features_modal_comp;
 }

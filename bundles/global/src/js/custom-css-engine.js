@@ -21,18 +21,22 @@ function resizeCallback() {
 
 function setCustomHeights() {
 	$$("[data-height]").forEach((node) => {
-		var height = node.getAttribute("data-height");
+		if (node._parent(".showing_modal")) {
+			return;
+		}
+
+		let height = node.dataset.height;
 		if (height.indexOf("w") !== -1) {
-			var r = node.getBoundingClientRect();
+			const r = node.getBoundingClientRect();
 
 			if (!r.width) {
 				return;
 			}
 
 			height = height.replace("w", "");
-			var real_height = Math.floor(r.width * parseFloat(height));
+			const real_height = Math.floor(r.width * parseFloat(height));
 
-			if (Math.abs(parseInt(r.height) - real_height) > 2) {
+			if (Math.abs(r.height - real_height) > 2) {
 				node.style.height = `${real_height}px`;
 			}
 		} else {

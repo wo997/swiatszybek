@@ -643,10 +643,6 @@ function productComp(comp, parent, data = undefined) {
 				select_product_categories_modal_comp._show({ source: comp._nodes.print_categories });
 			});
 
-			setTimeout(() => {
-				select_file_modal._show();
-			});
-
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
 				const errors = validateInputs(directCompNodes(comp, "[data-validate]"));

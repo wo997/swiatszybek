@@ -78,7 +78,8 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 }
 
 function getProductFeatureModal() {
-	if (!$("#productFeature")) {
+	const ex = $("#productFeature");
+	if (!ex) {
 		registerModalContent(html`
 			<div id="productFeature" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: calc(20% + 600px);max-height: calc(75% + 120px);">
@@ -91,7 +92,9 @@ function getProductFeatureModal() {
 	/** @type {ProductFeatureModalComp} */
 	// @ts-ignore
 	const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
-	productFeatureModalComp(product_feature_modal_comp, undefined);
+	if (!ex) {
+		productFeatureModalComp(product_feature_modal_comp, undefined);
+	}
 
 	return product_feature_modal_comp;
 }

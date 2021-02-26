@@ -109,7 +109,8 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 }
 
 function getSelectProductFeatureOptionModal() {
-	if (!$("#selectProductFeatureOption")) {
+	const ex = $("#selectProductFeatureOption");
+	if (!ex) {
 		registerModalContent(html`
 			<div id="selectProductFeatureOption" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: calc(70% + 100px);max-height: calc(70% + 100px);">
@@ -122,7 +123,9 @@ function getSelectProductFeatureOptionModal() {
 	/** @type {SelectProductFeatureOptionModalComp} */
 	// @ts-ignore
 	const select_product_feature_option_modal_comp = $("#selectProductFeatureOption select-product-feature-option-modal-comp");
-	selectProductFeatureOptionModalComp(select_product_feature_option_modal_comp, undefined);
+	if (!ex) {
+		selectProductFeatureOptionModalComp(select_product_feature_option_modal_comp, undefined);
+	}
 
 	return select_product_feature_option_modal_comp;
 }

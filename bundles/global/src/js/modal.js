@@ -242,11 +242,11 @@ function showModal(name = null, params = {}) {
 					});
 				} else {
 					modal._animate(animation_1, duration);
-					modal_content.classList.add("freeze");
+					modal_content.classList.add("freeze", "showing_modal");
 					modal_content._animate(animation_2, duration, {
 						callback: () => {
 							basic_callback();
-							modal_content.classList.remove("freeze");
+							modal_content.classList.remove("freeze", "showing_modal");
 						},
 					});
 				}
