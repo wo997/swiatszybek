@@ -72,7 +72,7 @@ $admin_navigations_tree = [
             ["url" => "nowe-strony", "title" => '<i class="fas fa-heart"></i> Nowe Strony'],
             ["url" => "nowy-cms"],
             ["url" => "pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
-            ["url" => "pliki-zdjecia?przeslij", "title" => '<i class="fas fa-upload-file"></i> Prześlij plik'],
+            ["url" => "pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
             //["url" => "menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             //["url" => "stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
             ["url" => "logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
