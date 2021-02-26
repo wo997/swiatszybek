@@ -247,6 +247,7 @@ function showModal(name = null, params = {}) {
 						callback: () => {
 							basic_callback();
 							modal_content.classList.remove("freeze", "showing_modal");
+							setCustomHeights();
 						},
 					});
 				}

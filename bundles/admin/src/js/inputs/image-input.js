@@ -56,7 +56,7 @@ function registerImageInputs(input) {
 			const btn = input._child("button");
 			btn._set_content(selected ? "Zmień" : "Wybierz");
 			btn.classList.toggle("primary", !selected);
-			btn.classList.toggle("secondary", selected);
+			btn.classList.toggle("subtle", selected);
 			if (!input._setting_value) {
 				input._dispatch_change();
 			}

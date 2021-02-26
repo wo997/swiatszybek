@@ -269,6 +269,8 @@ function fileManagerComp(comp, parent, data = undefined) {
 			`);
 
 			comp._nodes.files_grid.addEventListener("click", (ev) => {
+				const data = comp._data;
+
 				const target = $(ev.target);
 				const file_wrapper = target._parent(".file_wrapper", { skip: 0 });
 
@@ -276,6 +278,13 @@ function fileManagerComp(comp, parent, data = undefined) {
 					const select_btn = target._parent(".select_btn", { skip: 0 });
 					const preview_btn = target._parent(".preview_btn", { skip: 0 });
 					const trash_btn = target._parent(".trash_btn", { skip: 0 });
+
+					if (select_btn) {
+						hideParentModal(comp);
+						if (data.select_target) {
+							data.select_target._set_value(file_wrapper._child(".wo997_img").dataset.src);
+						}
+					}
 
 					if (preview_btn) {
 						const place = $("#previewFile .place");
