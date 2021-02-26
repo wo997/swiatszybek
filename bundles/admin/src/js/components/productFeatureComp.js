@@ -317,7 +317,7 @@ function productFeatureComp(comp, parent, data) {
 				}, 150);
 			});
 
-			const select_product_feature_option_modal_comp = registerSelectProductFeatureOptionModal();
+			const select_product_feature_option_modal_comp = getSelectProductFeatureOptionModal();
 
 			comp._nodes.select_parent_option_btn.addEventListener("click", () => {
 				if (comp._data.datatable.selection.length > 0) {

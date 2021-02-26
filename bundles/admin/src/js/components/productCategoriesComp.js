@@ -191,7 +191,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 				comp._save();
 			});
 
-			const product_category_modal_comp = registerProductCategoryModal();
+			const product_category_modal_comp = getProductCategoryModal();
 			const add_btn = comp._nodes.add_btn;
 			add_btn.addEventListener("click", () => {
 				product_category_modal_comp._show({

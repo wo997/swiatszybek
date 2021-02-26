@@ -21,7 +21,7 @@ function registerImageInputs(parent) {
 		input.insertAdjacentHTML(
 			"afterbegin",
 			html`
-				<div class="image-input-img-wrapper">
+				<div class="image_input_img_wrapper">
 					<img class="wo997_img" />
 					<i class="fas fa-image"></i>
 				</div>
@@ -31,7 +31,7 @@ function registerImageInputs(parent) {
 
 		const img = input._child("img");
 		const button = input._child("button");
-		const wrapper = input._child(".image-input-img-wrapper");
+		const wrapper = input._child(".image_input_img_wrapper");
 
 		const options_json = input.getAttribute("data-options");
 		if (options_json) {

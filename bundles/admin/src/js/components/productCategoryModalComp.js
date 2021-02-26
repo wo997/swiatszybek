@@ -140,24 +140,20 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 	});
 }
 
-function registerProductCategoryModal() {
-	registerModalContent(html`
-		<div id="ProductCategory" data-expand data-dismissable>
-			<div class="modal_body" style="max-width: calc(20% + 250px);max-height: calc(20% + 100px);">
-				<product-category-modal-comp class="flex_stretch"></product-category-modal-comp>
+function getProductCategoryModal() {
+	if (!$("#productCategory")) {
+		registerModalContent(html`
+			<div id="productCategory" data-expand data-dismissable>
+				<div class="modal_body" style="max-width: calc(20% + 250px);max-height: calc(20% + 100px);">
+					<product-category-modal-comp class="flex_stretch"></product-category-modal-comp>
+				</div>
 			</div>
-		</div>
-	`);
+		`);
+	}
 
-	const product_category_modal_comp = getProductCategoryModal();
+	/** @type {ProductCategoryModalComp} */
+	// @ts-ignore
+	const product_category_modal_comp = $("#productCategory product-category-modal-comp");
 	productCategoryModalComp(product_category_modal_comp, undefined);
 	return product_category_modal_comp;
-}
-
-/**
- * @returns {ProductCategoryModalComp}
- */
-function getProductCategoryModal() {
-	// @ts-ignore
-	return $("#ProductCategory product-category-modal-comp");
 }

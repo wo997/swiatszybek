@@ -66,15 +66,16 @@ function productCategoriesModalComp(comp, parent, data = undefined) {
 	});
 }
 
-function registerProductCategoriesModal() {
-	// ProductCategories
-	registerModalContent(html`
-		<div id="productCategories" data-expand data-dismissable>
-			<div class="modal_body" style="max-width: calc(30% + 400px);max-height: calc(75% + 100px);">
-				<product-categories-modal-comp class="flex_stretch"></product-categories-modal-comp>
+function getProductCategoriesModal() {
+	if (!$("#productCategories")) {
+		registerModalContent(html`
+			<div id="productCategories" data-expand data-dismissable>
+				<div class="modal_body" style="max-width: calc(30% + 400px);max-height: calc(75% + 100px);">
+					<product-categories-modal-comp class="flex_stretch"></product-categories-modal-comp>
+				</div>
 			</div>
-		</div>
-	`);
+		`);
+	}
 
 	/** @type {ProductCategoriesModalComp} */
 	// @ts-ignore

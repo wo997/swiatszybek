@@ -220,15 +220,16 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 	});
 }
 
-function registerSelectProductFeaturesModal() {
-	// selectProductFeatures
-	registerModalContent(html`
-		<div id="selectProductFeatures" data-expand data-dismissable>
-			<div class="modal_body" style="max-width: 1000px;max-height: calc(75% + 100px);">
-				<select-product-features-modal-comp class="flex_stretch"></select-product-features-modal-comp>
+function getSelectProductFeaturesModal() {
+	if (!$("#selectProductFeatures")) {
+		registerModalContent(html`
+			<div id="selectProductFeatures" data-expand data-dismissable>
+				<div class="modal_body" style="max-width: 1000px;max-height: calc(75% + 100px);">
+					<select-product-features-modal-comp class="flex_stretch"></select-product-features-modal-comp>
+				</div>
 			</div>
-		</div>
-	`);
+		`);
+	}
 
 	/** @type {SelectProductFeaturesModalComp} */
 	// @ts-ignore

@@ -129,7 +129,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 			</div>
 		`,
 		initialize: () => {
-			const product_categories_modal_comp = registerProductCategoriesModal();
+			const product_categories_modal_comp = getProductCategoriesModal();
 
 			comp._nodes.edit_btn.addEventListener("click", () => {
 				product_categories_modal_comp._show();
@@ -155,15 +155,16 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 	});
 }
 
-function registerSelectProductCategoriesModal() {
-	// selectProductCategories
-	registerModalContent(html`
-		<div id="selectProductCategories" data-expand data-dismissable>
-			<div class="modal_body" style="max-width: calc(20% + 350px);max-height: calc(50% + 250px);">
-				<select-product-categories-modal-comp class="flex_stretch"></select-product-categories-modal-comp>
+function getSelectProductCategoriesModal() {
+	if (!$("#selectProductCategories")) {
+		registerModalContent(html`
+			<div id="selectProductCategories" data-expand data-dismissable>
+				<div class="modal_body" style="max-width: calc(20% + 350px);max-height: calc(50% + 250px);">
+					<select-product-categories-modal-comp class="flex_stretch"></select-product-categories-modal-comp>
+				</div>
 			</div>
-		</div>
-	`);
+		`);
+	}
 
 	/** @type {SelectProductCategoriesModalComp} */
 	// @ts-ignore

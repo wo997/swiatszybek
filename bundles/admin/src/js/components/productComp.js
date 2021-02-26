@@ -22,6 +22,7 @@
  *  unnecessary_product_ids?: number[]
  *  products_dt?: DatatableCompData
  *  category_ids: number[]
+ *  main_img_url: string
  * }} ProductCompData
  *
  * @typedef {{
@@ -71,6 +72,7 @@ function productComp(comp, parent, data = undefined) {
 			missing_products_features: [],
 			features: [],
 			category_ids: [],
+			main_img_url: "",
 		};
 	}
 
@@ -551,6 +553,9 @@ function productComp(comp, parent, data = undefined) {
 				<div class="label first">Nazwa produktu</div>
 				<input type="text" class="field" data-bind="{${data.name}}" data-validate="string" />
 
+				<div class="label first">Główne zdjęcie</div>
+				<image-input data-bind="{${data.main_img_url}}" data-options='{"width":"300px","height":"1w"}'></image-input>
+
 				<div class="label">Sprzedawaj na</div>
 				<select class="field" data-bind="{${data.sell_by}}">
 					<option value="qty">Sztuki</option>
@@ -615,15 +620,17 @@ function productComp(comp, parent, data = undefined) {
 			<div style="height:100px"></div>
 		`,
 		ready: () => {
-			const select_product_features_modal_comp = registerSelectProductFeaturesModal();
+			const select_product_features_modal_comp = getSelectProductFeaturesModal();
 
-			const select_product_feature_options_modal_comp = registerSelectProductFeatureOptionsModal();
+			const select_product_feature_options_modal_comp = getSelectProductFeatureOptionsModal();
 
-			const manage_product_list_modal_comp = registerManageProductListModal();
+			const manage_product_list_modal_comp = getManageProductListModal();
 
-			const product_feature_modal_comp = registerProductFeatureModal();
+			const product_feature_modal_comp = getProductFeatureModal();
 
-			const select_product_categories_modal_comp = registerSelectProductCategoriesModal();
+			const select_product_categories_modal_comp = getSelectProductCategoriesModal();
+
+			const select_file_modal = getSelectFileModal();
 
 			comp._nodes.add_feature_btn.addEventListener("click", () => {
 				select_product_features_modal_comp._show({ source: comp._nodes.add_feature_btn });
@@ -634,6 +641,10 @@ function productComp(comp, parent, data = undefined) {
 			});
 			comp._nodes.print_categories.addEventListener("click", () => {
 				select_product_categories_modal_comp._show({ source: comp._nodes.print_categories });
+			});
+
+			setTimeout(() => {
+				select_file_modal._show();
 			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {
