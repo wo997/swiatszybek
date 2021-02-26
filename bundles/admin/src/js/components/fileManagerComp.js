@@ -8,6 +8,7 @@
  *
  * @typedef {{
  * _data: FileManagerCompData
+ * _prev_data: DatatableCompData
  * _set_data(data?: FileManagerCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  file_grid: PiepNode
@@ -39,13 +40,14 @@ function fileManagerComp(comp, parent, data = undefined) {
 
 		const search_url = STATIC_URLS["ADMIN"] + "file/search";
 
+		const data = comp._data;
 		const datatable_params = {};
 		// if (sort) {
 		// 	datatable_params.order = sort.key + " " + sort.order.toUpperCase();
 		// }
 		// datatable_params.filters = filters;
-		datatable_params.row_count = 20;
-		datatable_params.page_id = 0;
+		datatable_params.row_count = data.pagination_data.row_count;
+		datatable_params.page_id = data.pagination_data.page_id;
 		datatable_params.quick_search = "";
 
 		comp._search_request = xhr({
@@ -60,6 +62,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 				}
 				comp._search_request = undefined;
 
+				const data = comp._data;
 				data.pagination_data.page_count = res.page_count;
 				data.pagination_data.total_rows = res.total_rows;
 				data.search_data = res.rows;
@@ -94,6 +97,8 @@ function fileManagerComp(comp, parent, data = undefined) {
 				}
 				comp._nodes.file_grid._set_content(out, { maintain_height: true });
 				lazyLoadImages(false);
+
+				comp._render();
 			},
 		});
 	};
@@ -103,9 +108,16 @@ function fileManagerComp(comp, parent, data = undefined) {
 			...options,
 			render: () => {
 				const cd = comp._changed_data;
-				// if (cd.whatever || true) {
-				// 	comp._search();
-				// }
+
+				if (
+					!comp._prev_data ||
+					cd.sort ||
+					cd.filters ||
+					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
+					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count
+				) {
+					comp._search();
+				}
 			},
 		});
 	};
@@ -116,8 +128,6 @@ function fileManagerComp(comp, parent, data = undefined) {
 			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
 		`,
 		ready: () => {
-			comp._search();
-
 			// upload
 			registerModalContent(html`
 				<div id="uploadFile" data-dismissable>
