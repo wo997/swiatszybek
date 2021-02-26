@@ -7,6 +7,7 @@
  * page_count?: number
  * row_count?: number
  * total_rows?: number
+ * row_count_options?: number[]
  * }} PaginationCompData
  *
  * @typedef {{
@@ -33,6 +34,14 @@ function paginationComp(comp, parent, data = {}) {
 		data.row_count = def(data.row_count, 15);
 		data.total_rows = def(data.total_rows, 0);
 		data.page_count = Math.ceil(data.total_rows / data.row_count);
+		data.row_count_options = def(data.row_count_options, [5, 10, 15, 20, 50]);
+
+		const cd = comp._changed_data;
+		if (cd.row_count_options) {
+			const select = comp._child("select");
+			select._set_content(data.row_count_options.map((e) => html`<option value="${e}">${e}</option>`).join(""));
+			select._set_value(data.row_count, { quiet: true });
+		}
 
 		if (data.page_id > 0 && data.page_id > data.page_count - 1) {
 			data.page_id = 0;
@@ -62,14 +71,7 @@ function paginationComp(comp, parent, data = {}) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="pages">
-				<select data-bind="{${data.row_count}}" class="field inline" data-number>
-					<option value="1">1</option>
-					<option value="5">5</option>
-					<option value="10">10</option>
-					<option value="15">15</option>
-					<option value="20">20</option>
-					<option value="50">50</option>
-				</select>
+				<select data-bind="{${data.row_count}}" class="field inline" data-number></select>
 				/ stronę z <span html="{${data.total_rows}}"></span>
 			</div>
 

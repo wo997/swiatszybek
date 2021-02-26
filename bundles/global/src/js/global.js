@@ -616,6 +616,10 @@ function isEquivalent(a, b) {
 	return true;
 }
 
+function isEmpty(obj) {
+	return Object.keys(obj).length === 0;
+}
+
 function removeSelection() {
 	if (window.getSelection) {
 		const selection = window.getSelection();

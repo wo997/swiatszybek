@@ -92,6 +92,9 @@ function createComp(node, parent_comp, data, options) {
 
 	//node._propagating_data = false;
 
+	comp._prev_data = {};
+	comp._changed_data = {};
+
 	comp._render = (options) => {
 		comp._set_data(comp._data, options);
 	};

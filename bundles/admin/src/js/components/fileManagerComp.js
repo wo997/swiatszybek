@@ -12,6 +12,7 @@
  * _set_data(data?: FileManagerCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  file_grid: PiepNode
+ *  pagination: PaginationComp
  * }
  * _search()
  * _search_request: XMLHttpRequest | undefined
@@ -27,7 +28,7 @@
 function fileManagerComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			pagination_data: { page_id: 0 },
+			pagination_data: { page_id: 0, row_count_options: [12, 24, 48, 96], row_count: 48 },
 			search_data: [],
 		};
 	}
@@ -110,9 +111,9 @@ function fileManagerComp(comp, parent, data = undefined) {
 				const cd = comp._changed_data;
 
 				if (
-					!comp._prev_data ||
 					cd.sort ||
 					cd.filters ||
+					!comp._prev_data.pagination_data ||
 					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
 					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count
 				) {
@@ -125,7 +126,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div data-node="{${comp._nodes.file_grid}}"></div>
-			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
+			<pagination-comp data-bind="{${data.pagination_data}}" data-node="{${comp._nodes.pagination}}"></pagination-comp>
 		`,
 		ready: () => {
 			// upload

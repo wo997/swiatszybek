@@ -253,9 +253,7 @@ function datatableComp(comp, parent, data) {
 	comp._set_data = (data, options = {}) => {
 		if (!data.search_url) {
 			const dataset_changed =
-				!comp._prev_data ||
-				!isEquivalent(data.dataset, def(comp._prev_data.dataset, [])) ||
-				!isEquivalent(data.maps, def(comp._prev_data.maps, []));
+				!isEquivalent(data.dataset, def(comp._prev_data.dataset, [])) || !isEquivalent(data.maps, def(comp._prev_data.maps, []));
 
 			if (dataset_changed) {
 				let nextRowId = 0;
