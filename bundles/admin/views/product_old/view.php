@@ -186,7 +186,7 @@ if ($kopia) {
 <div id="variantForm" data-modal data-expand data-exclude-hidden data-form>
     <div class="modal_body">
         <div class="custom-toolbar">
-            <span class="title">Edycja wariantu produktu</span>
+            <span class="title medium">Edycja wariantu produktu</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveVariant();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>
         </div>

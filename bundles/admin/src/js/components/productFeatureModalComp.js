@@ -13,7 +13,7 @@
  *      product_feature_comp: ProductFeatureComp
  *      delete_btn: PiepNode
  * }
- * _show?(id: number, options?: {source?: PiepNode})
+ * _show?(id: number, options?: ShowModalParams)
  * } & BaseComp} ProductFeatureModalComp
  */
 
@@ -46,9 +46,10 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom-toolbar">
-				<span class="title"
-					>Cecha produktu: <span html="{${data.product_feature.name.trim() ? data.product_feature.name : "Nowa"}}"></span
-				></span>
+				<span class="title medium">
+					Cecha produktu:
+					<span html="{${data.product_feature.name.trim() ? data.product_feature.name : "Nowa"}}"> </span>
+				</span>
 				<p-trait data-trait="history"></p-trait>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">Zapisz <i class="fas fa-save"></i></button>

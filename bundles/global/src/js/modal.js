@@ -112,14 +112,18 @@ function registerModalScroll(modal) {
 }
 
 /**
- *
- * @param {*} name
- * @param {{
+ * @typedef {{
  * source?: PiepNode
  * source_rect?: DOMRect
  * callback?: CallableFunction
  * keep_size?: boolean
- * }} params
+ * }} ShowModalParams
+ */
+
+/**
+ *
+ * @param {*} name
+ * @param {ShowModalParams} params
  */
 function showModal(name = null, params = {}) {
 	let visible = name != null;

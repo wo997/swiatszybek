@@ -29,7 +29,7 @@ function loadLazyNode(node, animate = true) {
  *
  * @param {ResponsiveImage} img
  */
-function getImageDimenstions(img, rect = null) {
+function getImageDimensions(img, rect = null) {
 	if (!rect) {
 		rect = img.getBoundingClientRect();
 	}
@@ -58,7 +58,7 @@ function loadImage(img, animate = true, offset = null) {
 		const w = img.calculated_width;
 		const h = img.calculated_height;
 
-		const image_dimension = getImageDimenstions(img);
+		const image_dimension = getImageDimensions(img);
 		img.last_dimension = image_dimension;
 
 		if (!image_dimension) {
@@ -282,7 +282,7 @@ setInterval(() => {
 	// some images might be small at the beginning and wanna grow later
 	$$(".wo997_img_shown").forEach((/** @type {ResponsiveImage} */ img) => {
 		const rect = isNodeOnScreen(img);
-		const dimensions = getImageDimenstions(img, rect);
+		const dimensions = getImageDimensions(img, rect);
 		// it's ok to show an image that's tiny with high res
 		if (dimensions > img.last_dimension + 25) {
 			img.last_dimension = dimensions;

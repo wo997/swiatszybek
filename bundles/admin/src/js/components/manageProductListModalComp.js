@@ -12,7 +12,7 @@
  * _nodes: {
  *  add_btn: PiepNode
  * }
- * _show(options?: {source?: PiepNode})
+ * _show(options?: ShowModalParams)
  * } & BaseComp} ManageProductListModalComp
  */
 
@@ -44,7 +44,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom-toolbar">
-				<span class="title">Zarządzanie listą produktów</span>
+				<span class="title medium">Zarządzanie listą produktów</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">

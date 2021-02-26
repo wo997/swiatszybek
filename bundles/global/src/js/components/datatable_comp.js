@@ -662,7 +662,7 @@ function datatableComp(comp, parent, data) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div style="margin-bottom:10px;display:flex;align-items:center">
-				<span class="datatable_label" html="{${def(data.label, "")}}"></span>
+				<span class="datatable_label medium" html="{${def(data.label, "")}}"></span>
 				<span html="{${data.after_label}}"></span>
 				<div style="flex-grow:1"></div>
 				<div data-node="{${comp._nodes.filters_info}}" style="padding:0 10px;font-weight:600"></div>
@@ -947,7 +947,7 @@ function datatableComp(comp, parent, data) {
 					<div id="datatableBatchEdit" data-dismissable>
 						<div class="modal_body">
 							<div class="custom-toolbar">
-								<span class="title">Grupowa edycja danych</span>
+								<span class="title medium">Grupowa edycja danych</span>
 								<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 							</div>
 							<div class="scroll_panel scroll_shadow panel_padding"></div>

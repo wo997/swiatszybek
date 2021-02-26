@@ -12,7 +12,7 @@
  *      close_btn: PiepNode
  *      categories: ProductCategoriesComp
  * }
- * _show(options?: {source?: PiepNode})
+ * _show(options?: ShowModalParams)
  * } & BaseComp} ProductCategoriesModalComp
  */
 
@@ -44,7 +44,7 @@ function productCategoriesModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom-toolbar">
-				<span class="title">Edycja kategorii produktów</span>
+				<span class="title medium">Edycja kategorii produktów</span>
 				<div class="history_btns_wrapper"></div>
 				<button class="btn subtle" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
 					Zamknij <i class="fas fa-times"></i>

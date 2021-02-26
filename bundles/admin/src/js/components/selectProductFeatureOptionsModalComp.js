@@ -13,7 +13,7 @@
  *      close_btn: PiepNode
  *      datatable: DatatableComp
  * }
- * _show(product_feature_id: number, options?: {source?: PiepNode})
+ * _show(product_feature_id: number, options?: ShowModalParams)
  * _reload_data()
  * } & BaseComp} SelectProductFeatureOptionsModalComp
  */
@@ -120,7 +120,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom-toolbar">
-				<span class="title">Wybierz opcje dla: <span class="product_name"></span></span>
+				<span class="title medium">Wybierz opcje dla: <span class="product_name"></span></span>
 				<button class="btn subtle" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
 					Zamknij <i class="fas fa-times"></i>
 				</button>

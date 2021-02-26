@@ -7,7 +7,7 @@ select {
 }
 
 /* buttons */
-.btn {
+/* .btn {
 	font-size: 1em;
 }
 .btn.medium {
@@ -15,5 +15,17 @@ select {
 }
 .btn.big {
 	font-size: 1.4em;
+} */
+
+.btn {
+	font-size: 1em;
 }
+.medium {
+	font-size: 1.2em;
+}
+.big {
+	font-size: 1.4em;
+	font-weight: 700;
+}
+
 /* buttons */

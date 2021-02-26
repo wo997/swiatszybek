@@ -93,7 +93,10 @@ domload(() => {
 	window.addEventListener("resize", headerResizeCallback);
 });
 
-window.addEventListener("load", () => {
+windowload(() => {
+	if (!main_header) {
+		return;
+	}
 	headerResizeCallback();
 	document.addEventListener("scroll", () => {
 		const scroll_top = document.documentElement.scrollTop;

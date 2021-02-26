@@ -4,7 +4,6 @@
  * @typedef {{
  * search_data: any[]
  * pagination_data: PaginationCompData
- * droppedFiles?: FileList | undefined
  * }} FileManagerCompData
  *
  * @typedef {{
@@ -15,6 +14,7 @@
  * }
  * _search()
  * _search_request: XMLHttpRequest | undefined
+ * _show_upload_modal(options?: ShowModalParams)
  * } & BaseComp} FileManagerComp
  */
 
@@ -27,6 +27,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			pagination_data: { page_id: 0 },
+			search_data: [],
 		};
 	}
 
@@ -72,13 +73,13 @@ function fileManagerComp(comp, parent, data = undefined) {
 					} else {
 						display = html`<img style="width:100%;object-fit:contain" data-height="1w" class="wo997_img" data-src="/${image.file_path}" />`;
 					}
-					const image_metadata_html = html`
-						<b>Ścieżka:</b> ${image.file_path}
-						<hr style="margin:2px 0" />
-						<b>Nazwa:</b> ${image.uploaded_file_name}
-						<hr style="margin:2px 0" />
-						<b>Autor:</b> ${def(image.email, "-")}
-					`;
+					// const image_metadata_html = html`
+					// 	<b>Ścieżka:</b> ${image.file_path}
+					// 	<hr style="margin:2px 0" />
+					// 	<b>Nazwa:</b> ${image.uploaded_file_name}
+					// 	<hr style="margin:2px 0" />
+					// 	<b>Autor:</b> ${def(image.email, "-")}
+					// `;
 					out += html` <div class="file_wrapper">${display}</div> `;
 				}
 				comp._nodes.file_grid._set_content(out, { maintain_height: true });
@@ -101,33 +102,40 @@ function fileManagerComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div>
-				<span class="label first">Pliki / Zdjęcia</span>
-			</div>
 			<div data-node="{${comp._nodes.file_grid}}"></div>
 			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
-
-			<br /><br />
-			<form class="drop_files" action="">
-				<label>
-					<input type="file" multiple />
-					<span class="link">
-						<i class="fas fa-file-upload"></i>
-						Wybierz pliki
-					</span>
-				</label>
-				albo upuść je tutaj
-				<span class="dropitbro">Upuść plik!</span>
-				<span class="upload"></span>
-				<input type="submit" name="submit" />
-			</form>
 		`,
 		ready: () => {
 			comp._search();
 
-			comp._data.droppedFiles = undefined;
+			// upload
+			registerModalContent(html`
+				<div id="uploadFile" data-dismissable>
+					<div class="modal_body">
+						<div class="custom-toolbar">
+							<span class="title medium">Prześlij pliki</span>
+							<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+						</div>
+						<div class="scroll_panel scroll_shadow panel_padding">
+							<form class="drop_files" action="">
+								<label>
+									<input type="file" multiple />
+									<span class="link">
+										<i class="fas fa-file-upload"></i>
+										Wybierz pliki
+									</span>
+								</label>
+								<span style="margin-top:8px"> albo upuść je tutaj </span>
+								<span class="dropitbro">Upuść plik!</span>
+								<span class="upload"></span>
+								<input type="submit" name="submit" />
+							</form>
+						</div>
+					</div>
+				</div>
+			`);
 
-			const form = comp._child(".drop_files");
+			const form = $("#uploadFile .drop_files");
 
 			/** @type {HTMLInputElement} */
 			// @ts-ignore
@@ -160,8 +168,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 			};
 
 			form.addEventListener("drop", (ev) => {
-				comp._data.droppedFiles = ev.dataTransfer.files;
-				input.files = comp._data.droppedFiles;
+				input.files = ev.dataTransfer.files;
 				submit();
 			});
 
@@ -194,10 +201,53 @@ function fileManagerComp(comp, parent, data = undefined) {
 						hideLoader(form);
 						form.classList.remove("uploading");
 						comp._search();
+						showNotification("Plik został przesłany", { one_line: true, type: "success" });
 					},
 				});
 
 				showLoader(form);
+			});
+
+			comp._show_upload_modal = (params = {}) => {
+				showModal("uploadFile", params);
+			};
+
+			// preview
+			registerModalContent(html`
+				<div id="previewFile" data-dismissable data-expand>
+					<div class="modal_body">
+						<div class="custom-toolbar">
+							<span class="title medium">Podgląd pliku</span>
+							<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+						</div>
+						<div class="place flex_stretch" style="justify-content: center;align-items: center;"></div>
+					</div>
+				</div>
+			`);
+
+			comp._nodes.file_grid.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				const file_wrapper = target._parent(".file_wrapper", { skip: 0 });
+
+				if (file_wrapper) {
+					const place = $("#previewFile .place");
+					place._set_content(file_wrapper.outerHTML);
+					/** @type {ResponsiveImage} */
+					// @ts-ignore
+					let wo997_img = place._child(".wo997_img");
+					if (wo997_img) {
+						const src = wo997_img.dataset.src;
+						place._set_content(html`<img class="wo997_img" data-src="${src}" />`);
+						// @ts-ignore
+						wo997_img = place._child(".wo997_img");
+						wo997_img.style.width = "100%";
+						loadImage(wo997_img);
+						lazyLoadImages(false);
+						wo997_img.style.width = "";
+					}
+
+					showModal("previewFile", { source: file_wrapper });
+				}
 			});
 		},
 	});

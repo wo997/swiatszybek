@@ -14,7 +14,7 @@ domload(() => {
 		],
 		primary_key: "user_id",
 		empty_html: html`Brak użytkowników`,
-		label: "<div class='medium'>Użytkownicy</div>",
+		label: "Użytkownicy",
 		//after_label: html`<a href="${STATIC_URLS["ADMIN"]}user" class="btn important"> Nowy użytkownik <i class="fas fa-plus"></i> </a> `,
 		selectable: true,
 		save_state_name: "users",
