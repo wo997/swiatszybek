@@ -2,7 +2,20 @@
 
 file-manager-comp {
 	.node_file_grid {
-		border: 1px solid #ccc;
+		& {
+			border: 1px solid #ccc;
+			display: flex;
+			flex-flow: row wrap;
+			background: #eee;
+			padding: 5px;
+		}
+		.file_wrapper {
+			width: calc(25% - 10px);
+			margin: 5px;
+			border: 1px solid #ccc;
+			background: #fff;
+			cursor: pointer;
+		}
 	}
 
 	.drop_files {

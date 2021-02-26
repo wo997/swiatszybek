@@ -79,18 +79,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 						<hr style="margin:2px 0" />
 						<b>Autor:</b> ${def(image.email, "-")}
 					`;
-					out += html`
-						<div class="gallery-item">
-							${display}
-							<div class="btn primary" onclick='fileManager.choose("/${image.file_path}")' data-tooltip="Wybierz">
-								<i class="fas fa-check"></i>
-							</div>
-							<div class="btn red" onclick='fileManager.delete("/${image.file_path}")' data-tooltip="Usuń">
-								<i class="fas fa-times"></i>
-							</div>
-							<i class="fas fa-info-circle" data-tooltip="${image_metadata_html}"></i>
-						</div>
-					`;
+					out += html` <div class="file_wrapper">${display}</div> `;
 				}
 				comp._nodes.file_grid._set_content(out, { maintain_height: true });
 				lazyLoadImages(false);
