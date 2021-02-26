@@ -225,7 +225,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 
 			// preview
 			registerModalContent(html`
-				<div id="previewFile" data-dismissable data-expand>
+				<div id="previewFile" data-dismissable>
 					<div class="modal_body">
 						<div class="custom-toolbar">
 							<span class="title medium">Podgląd pliku</span>
