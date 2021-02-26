@@ -202,6 +202,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 						form.classList.remove("uploading");
 						comp._search();
 						showNotification("Plik został przesłany", { one_line: true, type: "success" });
+						hideParentModal(form);
 					},
 				});
 
@@ -240,13 +241,15 @@ function fileManagerComp(comp, parent, data = undefined) {
 						place._set_content(html`<img class="wo997_img" data-src="${src}" />`);
 						// @ts-ignore
 						wo997_img = place._child(".wo997_img");
-						wo997_img.style.width = "100%";
+						wo997_img.style.width = "10000px";
 						loadImage(wo997_img);
 						lazyLoadImages(false);
 						wo997_img.style.width = "";
 					}
 
-					showModal("previewFile", { source: file_wrapper });
+					setTimeout(() => {
+						showModal("previewFile", { source: file_wrapper });
+					});
 				}
 			});
 		},
