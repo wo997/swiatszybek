@@ -1,11 +1,8 @@
 <?php //hook[entity]
 
-EntityManager::register("file", [
+EntityManager::register("general_product", [
     "props" => [
-        "file_path" => ["type" => "string"],
-        "default_file_name" => ["type" => "string"],
-        "uploaded_at" => ["type" => "string"],
-        "file_type" => ["type" => "string"],
-        "user_id" => ["type" => "number"],
+        "name" => ["type" => "string"],
+        "main_img_url" => ["type" => "string"],
     ],
 ]);

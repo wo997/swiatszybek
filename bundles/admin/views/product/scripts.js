@@ -50,6 +50,7 @@ domload(() => {
 		}
 
 		data.category_ids = general_product_data.categories.map((e) => e.product_category_id);
+		data.main_img_url = general_product_data.main_img_url;
 
 		product_comp._render();
 

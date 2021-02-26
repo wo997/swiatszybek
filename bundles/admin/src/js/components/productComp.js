@@ -665,6 +665,7 @@ function productComp(comp, parent, data = undefined) {
 							general_product: {
 								general_product_id: data.general_product_id,
 								name: data.name,
+								main_img_url: data.main_img_url,
 								features: data.product_feature_ids.map((product_feature_id, index) => ({
 									product_feature_id,
 									_meta_pos: index,

@@ -70,7 +70,7 @@ function registerImageInputs(input) {
 		button.addEventListener("click", () => {
 			select_file_modal._data.file_manager.select_target = input;
 			select_file_modal._render();
-			select_file_modal._show();
+			select_file_modal._show({ source: input });
 
 			// fileManager.open(img, {
 			// 	asset_types: ["image"],
