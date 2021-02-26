@@ -15,7 +15,7 @@
 
 <div id="editUser" data-modal data-expand data-exclude-hidden data-form>
     <div class="modal_body">
-        <div class="custom-toolbar">
+        <div class="custom_toolbar">
             <span class="title">Edycja użytkownika</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveUser();">Zapisz <i class="fa fa-save"></i></button>

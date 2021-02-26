@@ -11,7 +11,7 @@
 
 <?php startSection("header"); ?>
 
-<div class="custom-toolbar">
+<div class="custom_toolbar">
     <span class="title breadcrumbs">
         <div class="crumb">
             Kategorie

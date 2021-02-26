@@ -118,7 +118,7 @@
 
 <div id="slideEdit" data-modal data-expand>
     <div class="modal_body">
-        <div class="custom-toolbar">
+        <div class="custom_toolbar">
             <span class="title"></span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveSlide();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>

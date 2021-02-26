@@ -173,7 +173,7 @@ window.addEventListener("tool_loaded", (event) => {
 			<div id="fileManager" data-expand="true" class="fileManager">
 				<div class="modal_body">
 					<div
-						class="custom-toolbar"
+						class="custom_toolbar"
 						style="/*display: flex;background: #eee;padding: 5px;align-items: center;border-bottom: 1px solid #777;*/"
 					>
 						<span class="title" style="display: inline-flex;align-items: center;flex-wrap:wrap">
@@ -214,7 +214,7 @@ window.addEventListener("tool_loaded", (event) => {
 		registerModalContent(html`
 			<div id="externalImage">
 				<div class="modal_body">
-					<div class="custom-toolbar">
+					<div class="custom_toolbar">
 						<span class="title"> Wybór zdjęcia zewnętrznego </span>
 						<button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 					</div>
@@ -242,7 +242,7 @@ window.addEventListener("tool_loaded", (event) => {
 			html`
 				<div id="uploadFiles">
 					<div class="modal_body">
-						<div class="custom-toolbar">
+						<div class="custom_toolbar">
 							<span class="title"> Przesyłanie plików </span>
 							<button class="btn primary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 						</div>

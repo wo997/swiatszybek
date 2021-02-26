@@ -54,9 +54,7 @@ class NewCmsStyling {
 		this.newCms = newCms;
 		this.node = node;
 		this.content_wrapper = this.newCms.container._child(".content_wrapper");
-		this.content_responsive_wrapper = this.newCms.container._child(
-			".content_responsive_wrapper"
-		);
+		this.content_responsive_wrapper = this.newCms.container._child(".content_responsive_wrapper");
 
 		// THESE MUST BE IN THE DESCENDING ORDER
 		/** @type {ResponsiveType[]} */
@@ -159,30 +157,22 @@ class NewCmsStyling {
 		if (this.responsive_type && this.responsive_type.name == type_name) {
 			return;
 		}
-		this.responsive_type = this.responsive_types.find(
-			(e) => e.name == type_name
-		);
+		this.responsive_type = this.responsive_types.find((e) => e.name == type_name);
 
 		if (!this.responsive_type) {
 			console.error("Wrong responsive type");
 			return;
 		}
 
-		$(`[data-side_menu="add_block"]`).classList.toggle(
-			"disabled",
-			this.biggest_responsive_type_name != type_name
-		);
+		$(`[data-side_menu="add_block"]`).classList.toggle("disabled", this.biggest_responsive_type_name != type_name);
 
-		this.allow_free_rearrangement =
-			this.responsive_type.name == this.biggest_responsive_type_name;
+		this.allow_free_rearrangement = this.responsive_type.name == this.biggest_responsive_type_name;
 
-		this.newCms.container
-			._children(`.custom-toolbar [data-responsive_type]`)
-			.forEach((e) => {
-				const curr = e.dataset.responsive_type == type_name;
-				e.classList.toggle("important", curr);
-				e.classList.toggle("primary", !curr);
-			});
+		this.newCms.container._children(`.custom_toolbar [data-responsive_type]`).forEach((e) => {
+			const curr = e.dataset.responsive_type == type_name;
+			e.classList.toggle("important", curr);
+			e.classList.toggle("primary", !curr);
+		});
 
 		let opts = {};
 		if (options.duration) {
@@ -205,31 +195,18 @@ class NewCmsStyling {
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
 		const content_responsive_wrapper_rect = this.content_responsive_wrapper.getBoundingClientRect();
 
-		const bw = this.responsive_type.width
-			? this.responsive_type.width * 0.012 + 5
-			: 0;
+		const bw = this.responsive_type.width ? this.responsive_type.width * 0.012 + 5 : 0;
 		const br = this.responsive_type.width ? 30 : 0;
-		const inner_br = this.responsive_type.width
-			? 8 + 140 / (this.responsive_type.width * 0.02 + 5)
-			: 0;
+		const inner_br = this.responsive_type.width ? 8 + 140 / (this.responsive_type.width * 0.02 + 5) : 0;
 		const prev_style_border = def(this.style_border, "none");
 		const prev_style_border_radius = def(this.style_border_radius, "0px");
 		this.style_border = `${bw}px solid #444`;
 		this.style_border_radius = br + "px";
-		document.documentElement.style.setProperty(
-			"--content-border-radius",
-			inner_br + "px"
-		);
+		document.documentElement.style.setProperty("--content-border-radius", inner_br + "px");
 
-		this.width = Math.min(
-			def(this.responsive_type.width, 100000) + 2 * bw,
-			content_wrapper_rect.width + width_diff
-		);
+		this.width = Math.min(def(this.responsive_type.width, 100000) + 2 * bw, content_wrapper_rect.width + width_diff);
 
-		this.height = Math.min(
-			def(this.responsive_type.height, 100000) + 2 * bw,
-			content_wrapper_rect.height
-		);
+		this.height = Math.min(def(this.responsive_type.height, 100000) + 2 * bw, content_wrapper_rect.height);
 
 		const target_width = this.width;
 		this.content_responsive_wrapper._animate(
@@ -281,14 +258,10 @@ class NewCmsStyling {
 			// @ts-ignore
 			event.detail.data.responsive_type_name = this.responsive_type.name;
 
-			this.newCms.clean_output_node._set_content(
-				this.newCms.content_node.innerHTML
-			);
-			this.newCms.clean_output_node
-				._children(this.newCms.query_for_visible_blocks)
-				.forEach((e) => {
-					cleanNodeFromAnimations(e);
-				});
+			this.newCms.clean_output_node._set_content(this.newCms.content_node.innerHTML);
+			this.newCms.clean_output_node._children(this.newCms.query_for_visible_blocks).forEach((e) => {
+				cleanNodeFromAnimations(e);
+			});
 
 			// @ts-ignore
 			event.detail.data.content = this.newCms.clean_output_node.innerHTML;
@@ -317,9 +290,7 @@ class NewCmsStyling {
 
 					/** @type {NewCmsBlock} */
 					// @ts-ignore
-					const node = this.newCms.content_node._child(
-						`.${this.getBlockClassName(block_id)}`
-					);
+					const node = this.newCms.content_node._child(`.${this.getBlockClassName(block_id)}`);
 
 					if (node) {
 						/** @type {StylingBlockData} */
@@ -338,20 +309,18 @@ class NewCmsStyling {
 	}
 
 	setAllRegisteredBlocks() {
-		this.newCms.content_node
-			._children(this.newCms.query_for_visible_blocks)
-			.forEach((/** @type {NewCmsBlock} */ node) => {
-				const block_id = this.getBlockId(node);
+		this.newCms.content_node._children(this.newCms.query_for_visible_blocks).forEach((/** @type {NewCmsBlock} */ node) => {
+			const block_id = this.getBlockId(node);
 
-				if (!block_id) {
-					return;
-				}
+			if (!block_id) {
+				return;
+			}
 
-				const block_data = this.getDefaultBlock();
-				block_data.id = block_id;
-				block_data.node = node;
-				this.addBlockData(block_data);
-			});
+			const block_data = this.getDefaultBlock();
+			block_data.id = block_id;
+			block_data.node = node;
+			this.addBlockData(block_data);
+		});
 	}
 
 	/**
@@ -372,9 +341,7 @@ class NewCmsStyling {
 	}
 
 	registerMissingBlocks() {
-		this.newCms.content_node._children(".newCms_block").forEach((
-			/** @type {NewCmsBlock} */ node
-		) => {
+		this.newCms.content_node._children(".newCms_block").forEach((/** @type {NewCmsBlock} */ node) => {
 			if (this.getBlockId(node)) {
 				return;
 			}
@@ -440,11 +407,7 @@ class NewCmsStyling {
 						css += `${prop_css}:${val};`;
 					});
 					if (css) {
-						const block_styles =
-							`#admin ` +
-							(target == "outside"
-								? `${block_selector}{${css}}`
-								: `${block_selector_inside}{${css}}`);
+						const block_styles = `#admin ` + (target == "outside" ? `${block_selector}{${css}}` : `${block_selector_inside}{${css}}`);
 						return block_styles;
 					}
 				}
@@ -593,8 +556,7 @@ class NewCmsStyling {
 		let child_count = 0;
 		container_blocks.forEach((block) => {
 			child_count++;
-			const had_flex_order =
-				block.styling_data[this.responsive_type.name].outside.order;
+			const had_flex_order = block.styling_data[this.responsive_type.name].outside.order;
 			block.dataset.flex_order = def(had_flex_order, child_count);
 		});
 	}
@@ -623,10 +585,7 @@ class NewCmsStyling {
 					if (!temp) {
 						break;
 					}
-					if (
-						temp.classList.contains("newCms_block") &&
-						!temp.classList.contains("cramped")
-					) {
+					if (temp.classList.contains("newCms_block") && !temp.classList.contains("cramped")) {
 						return temp;
 					}
 				}
@@ -642,10 +601,7 @@ class NewCmsStyling {
 					if (!temp) {
 						break;
 					}
-					if (
-						temp.classList.contains("newCms_block") &&
-						!temp.classList.contains("cramped")
-					) {
+					if (temp.classList.contains("newCms_block") && !temp.classList.contains("cramped")) {
 						return temp;
 					}
 				}
@@ -681,10 +637,7 @@ class NewCmsStyling {
 				}
 
 				container_blocks = container_blocks.sort((a, b) => {
-					return (
-						parseFloat(def(a.dataset.flex_order, 1000000)) -
-						parseFloat(def(b.dataset.flex_order, 1000000))
-					);
+					return parseFloat(def(a.dataset.flex_order, 1000000)) - parseFloat(def(b.dataset.flex_order, 1000000));
 				});
 
 				// set style flex order for squished / rearranged elements in current view
@@ -717,21 +670,13 @@ class NewCmsStyling {
 					block.getPrevBlock = () => {
 						/** @type {NewCmsBlock} */
 						// @ts-ignore
-						const b = block
-							._parent()
-							._direct_child(
-								`[flex_order="${parseInt(block.dataset.flex_order) - 1}"]`
-							);
+						const b = block._parent()._direct_child(`[flex_order="${parseInt(block.dataset.flex_order) - 1}"]`);
 						return b;
 					};
 					block.getNextBlock = () => {
 						/** @type {NewCmsBlock} */
 						// @ts-ignore
-						const b = block
-							._parent()
-							._direct_child(
-								`[flex_order="${parseInt(block.dataset.flex_order) + 1}"]`
-							);
+						const b = block._parent()._direct_child(`[flex_order="${parseInt(block.dataset.flex_order) + 1}"]`);
 						return b;
 					};
 				});
@@ -749,101 +694,92 @@ class NewCmsStyling {
 			return;
 		}
 
-		this.newCms.content_node
-			._children(`.newCms_block[data-block="grid"]`)
-			.forEach((g) => {
-				/** @type {NewCmsGrid} */
-				// @ts-ignore
-				const grid = g;
+		this.newCms.content_node._children(`.newCms_block[data-block="grid"]`).forEach((g) => {
+			/** @type {NewCmsGrid} */
+			// @ts-ignore
+			const grid = g;
 
-				let grid_children = grid
-					._child(".newCms_block_content")
-					._direct_children()
-					.filter((b) => {
-						if (!b.classList.contains("newCms_block")) {
-							return false;
-						}
+			let grid_children = grid
+				._child(".newCms_block_content")
+				._direct_children()
+				.filter((b) => {
+					if (!b.classList.contains("newCms_block")) {
+						return false;
+					}
 
-						/** @type {NewCmsBlock} */
-						// @ts-ignore
-						const block = b;
-
-						const rect = block.getBoundingClientRect();
-
-						// it's something we could run anytime we modify desktop view so we could use it later, good approx, interesting
-						block.grid_layout_index =
-							rect.top +
-							rect.height * 0.5 +
-							(0.05 * ((rect.left + rect.width * 0.5) * 1000)) /
-								this.newCms.content_node.offsetWidth;
-
-						return true;
-					});
-
-				grid_children = grid_children.sort((block_a, block_b) => {
-					return Math.sign(
-						// @ts-ignore
-						block_a.grid_layout_index - block_b.grid_layout_index
-					);
-				});
-
-				let actual_index = 0;
-				grid_children.forEach((b) => {
 					/** @type {NewCmsBlock} */
 					// @ts-ignore
 					const block = b;
 
-					actual_index++;
-					block.grid_layout_index = actual_index;
+					const rect = block.getBoundingClientRect();
+
+					// it's something we could run anytime we modify desktop view so we could use it later, good approx, interesting
+					block.grid_layout_index =
+						rect.top + rect.height * 0.5 + (0.05 * ((rect.left + rect.width * 0.5) * 1000)) / this.newCms.content_node.offsetWidth;
+
+					return true;
 				});
+
+			grid_children = grid_children.sort((block_a, block_b) => {
+				return Math.sign(
+					// @ts-ignore
+					block_a.grid_layout_index - block_b.grid_layout_index
+				);
 			});
+
+			let actual_index = 0;
+			grid_children.forEach((b) => {
+				/** @type {NewCmsBlock} */
+				// @ts-ignore
+				const block = b;
+
+				actual_index++;
+				block.grid_layout_index = actual_index;
+			});
+		});
 	}
 
 	alignGridBlocksVertically() {
-		this.newCms.content_node
-			._children(this.newCms.query_for_visible_blocks + `[data-block="grid"]`)
-			.forEach((g) => {
-				/** @type {NewCmsGrid} */
-				// @ts-ignore
-				const grid = g;
+		this.newCms.content_node._children(this.newCms.query_for_visible_blocks + `[data-block="grid"]`).forEach((g) => {
+			/** @type {NewCmsGrid} */
+			// @ts-ignore
+			const grid = g;
 
-				const grid_children = grid
-					._child(".newCms_block_content")
-					._direct_children()
-					.filter((b) => {
-						return b.classList.contains("newCms_block");
-					});
-
-				grid_children.forEach((b) => {
-					/** @type {NewCmsBlock} */
-					// @ts-ignore
-					const block = b;
-
-					this.setBlockStyles(
-						{
-							"grid-area": `${block.grid_layout_index} / 1 / ${
-								block.grid_layout_index + 1
-							} / 2`,
-						},
-						block,
-						{
-							action: "none",
-						}
-					);
+			const grid_children = grid
+				._child(".newCms_block_content")
+				._direct_children()
+				.filter((b) => {
+					return b.classList.contains("newCms_block");
 				});
+
+			grid_children.forEach((b) => {
+				/** @type {NewCmsBlock} */
+				// @ts-ignore
+				const block = b;
 
 				this.setBlockStyles(
 					{
-						"grid-template-columns": "1fr",
-						"grid-template-rows": "auto ".repeat(grid_children.length).trim(),
+						"grid-area": `${block.grid_layout_index} / 1 / ${block.grid_layout_index + 1} / 2`,
 					},
-					grid,
+					block,
 					{
-						target: "inside",
-						action: "css_and_change",
+						action: "none",
 					}
 				);
 			});
+
+			this.setBlockStyles(
+				{
+					"grid-template-columns": "1fr",
+					"grid-template-rows": "auto ".repeat(grid_children.length).trim(),
+				},
+				grid,
+				{
+					target: "inside",
+					action: "css_and_change",
+				}
+			);
+		});
 	}
 
 	/** @param {NewCmsBlock} block */
@@ -887,10 +823,7 @@ class NewCmsStyling {
 
 		const auto = val === "auto";
 		if (auto) {
-			if (
-				container === this.newCms.content_node &&
-				params.direction == "vertical"
-			) {
+			if (container === this.newCms.content_node && params.direction == "vertical") {
 				// TODO: no margin auto vertically in the root by default
 				return 0;
 			}
@@ -914,24 +847,17 @@ class NewCmsStyling {
 						const r2 = grid_area_parts[2] - 1;
 						const c2 = grid_area_parts[3] - 1;
 
-						const column_width =
-							grid.grid_data.x_coords[c2] - grid.grid_data.x_coords[c1];
+						const column_width = grid.grid_data.x_coords[c2] - grid.grid_data.x_coords[c1];
 
-						const row_height =
-							grid.grid_data.y_coords[r2] - grid.grid_data.y_coords[r1];
+						const row_height = grid.grid_data.y_coords[r2] - grid.grid_data.y_coords[r1];
 
 						const divide = params.opposite === "auto" ? 2 : 1;
 
-						const opp_mar = this.evalCss(
-							block.computed_styles.outside[params.opposite_name],
-							block,
-							{ auto: 0 }
-						);
+						const opp_mar = this.evalCss(block.computed_styles.outside[params.opposite_name], block, { auto: 0 });
 
 						return (
-							(params.direction == "horizontal"
-								? column_width - block.offsetWidth - opp_mar
-								: row_height - block.offsetHeight - opp_mar) / divide
+							(params.direction == "horizontal" ? column_width - block.offsetWidth - opp_mar : row_height - block.offsetHeight - opp_mar) /
+							divide
 						);
 					}
 				}
@@ -951,9 +877,7 @@ class NewCmsStyling {
 			if (!block.siblings_autos_count) {
 				// HEY! remember that flex wrap containers wont have the ability to set the height so that operation is way simpler
 				// consider adding it tho
-				const is_wrap =
-					is_container_horizontal &&
-					container.computed_styles.inside["flex-flow"].includes("wrap");
+				const is_wrap = is_container_horizontal && container.computed_styles.inside["flex-flow"].includes("wrap");
 
 				if (is_container_horizontal) {
 					if (!is_wrap) {
@@ -981,38 +905,22 @@ class NewCmsStyling {
 						return;
 					}
 
-					const mt = this.evalCss(
-						some_block_styles.outside["margin-top"],
-						block,
-						{
-							auto: null,
-							direction: "vertical",
-						}
-					);
-					const mr = this.evalCss(
-						some_block_styles.outside["margin-right"],
-						block,
-						{
-							auto: null,
-							direction: "horizontal",
-						}
-					);
-					const mb = this.evalCss(
-						some_block_styles.outside["margin-bottom"],
-						block,
-						{
-							auto: null,
-							direction: "vertical",
-						}
-					);
-					const ml = this.evalCss(
-						some_block_styles.outside["margin-left"],
-						block,
-						{
-							auto: null,
-							direction: "horizontal",
-						}
-					);
+					const mt = this.evalCss(some_block_styles.outside["margin-top"], block, {
+						auto: null,
+						direction: "vertical",
+					});
+					const mr = this.evalCss(some_block_styles.outside["margin-right"], block, {
+						auto: null,
+						direction: "horizontal",
+					});
+					const mb = this.evalCss(some_block_styles.outside["margin-bottom"], block, {
+						auto: null,
+						direction: "vertical",
+					});
+					const ml = this.evalCss(some_block_styles.outside["margin-left"], block, {
+						auto: null,
+						direction: "horizontal",
+					});
 
 					const d1 = some_block_in_row.offsetWidth + def(ml, 0) + def(mr, 0);
 					const d2 = some_block_in_row.offsetHeight + def(mt, 0) + def(mb, 0);
@@ -1088,10 +996,7 @@ class NewCmsStyling {
 				autos_count = block.siblings_autos_count;
 			}
 
-			if (
-				(params.direction == "horizontal" && !is_container_horizontal) ||
-				(params.direction == "vertical" && is_container_horizontal)
-			) {
+			if ((params.direction == "horizontal" && !is_container_horizontal) || (params.direction == "vertical" && is_container_horizontal)) {
 				const divide = params.opposite === "auto" ? 2 : 1;
 				// @ts-ignore
 				return (content_width - block.margin_width) / divide;
@@ -1099,13 +1004,7 @@ class NewCmsStyling {
 				// that solution would work perfectly, but since we can use .newCms_block_content (with no paddings) we will go for that
 				//const parent_outside_styles = parent_container.computed_styles.outside;
 				//const parent_content_h = parent_outside_styles.pt + parent_outside_styles.pb;
-				return (
-					((is_container_horizontal
-						? container_content.offsetWidth
-						: container_content.offsetHeight) -
-						content_length) /
-					autos_count
-				);
+				return ((is_container_horizontal ? container_content.offsetWidth : container_content.offsetHeight) - content_length) / autos_count;
 			}
 		}
 
@@ -1128,8 +1027,7 @@ class NewCmsStyling {
 						//const r2 = grid_area_parts[2]-1;
 						const c2 = grid_area_parts[3] - 1;
 
-						const column_width =
-							grid.grid_data.x_coords[c2] - grid.grid_data.x_coords[c1];
+						const column_width = grid.grid_data.x_coords[c2] - grid.grid_data.x_coords[c1];
 
 						/*const row_height =
 							grid.grid_data.y_coords[r2] - grid.grid_data.y_coords[r1];*/
@@ -1167,13 +1065,9 @@ class NewCmsStyling {
 	resetLayout() {
 		this.assignRects();
 
-		const all_blocks = this.newCms.content_node._children(
-			this.newCms.query_for_visible_blocks
-		);
+		const all_blocks = this.newCms.content_node._children(this.newCms.query_for_visible_blocks);
 
-		[this.newCms.content_node, ...all_blocks].forEach((
-			/** @type {NewCmsBlock} */ block
-		) => {
+		[this.newCms.content_node, ...all_blocks].forEach((/** @type {NewCmsBlock} */ block) => {
 			delete block.siblings_autos_count;
 			delete block.siblings_length;
 			delete block.siblings_width;
@@ -1192,9 +1086,7 @@ class NewCmsStyling {
 	}
 
 	recalculateLayout() {
-		const all_blocks = this.newCms.content_node._children(
-			this.newCms.query_for_visible_blocks
-		);
+		const all_blocks = this.newCms.content_node._children(this.newCms.query_for_visible_blocks);
 
 		all_blocks.forEach((/** @type {NewCmsBlock} */ block) => {
 			block.computed_styles = this.getBlockComputedStyles(block);
@@ -1203,83 +1095,49 @@ class NewCmsStyling {
 		all_blocks.forEach((/** @type {NewCmsBlock} */ block) => {
 			const block_styles = block.computed_styles;
 
-			block_styles.outside.mt = this.evalCss(
-				block_styles.outside["margin-top"],
-				block,
-				{
-					direction: "vertical",
-					opposite: block_styles.outside["margin-bottom"],
-					opposite_name: "margin-bottom",
-				}
-			);
-			block_styles.outside.mr = this.evalCss(
-				block_styles.outside["margin-right"],
-				block,
-				{
-					direction: "horizontal",
-					opposite: block_styles.outside["margin-left"],
-					opposite_name: "margin-left",
-				}
-			);
-			block_styles.outside.mb = this.evalCss(
-				block_styles.outside["margin-bottom"],
-				block,
-				{
-					direction: "vertical",
-					opposite: block_styles.outside["margin-top"],
-					opposite_name: "margin-top",
-				}
-			);
-			block_styles.outside.ml = this.evalCss(
-				block_styles.outside["margin-left"],
-				block,
-				{
-					direction: "horizontal",
-					opposite: block_styles.outside["margin-right"],
-					opposite_name: "margin-right",
-				}
-			);
+			block_styles.outside.mt = this.evalCss(block_styles.outside["margin-top"], block, {
+				direction: "vertical",
+				opposite: block_styles.outside["margin-bottom"],
+				opposite_name: "margin-bottom",
+			});
+			block_styles.outside.mr = this.evalCss(block_styles.outside["margin-right"], block, {
+				direction: "horizontal",
+				opposite: block_styles.outside["margin-left"],
+				opposite_name: "margin-left",
+			});
+			block_styles.outside.mb = this.evalCss(block_styles.outside["margin-bottom"], block, {
+				direction: "vertical",
+				opposite: block_styles.outside["margin-top"],
+				opposite_name: "margin-top",
+			});
+			block_styles.outside.ml = this.evalCss(block_styles.outside["margin-left"], block, {
+				direction: "horizontal",
+				opposite: block_styles.outside["margin-right"],
+				opposite_name: "margin-right",
+			});
 
-			const default_padding = block.classList.contains("container")
-				? "0"
-				: "10px";
+			const default_padding = block.classList.contains("container") ? "0" : "10px";
 
-			block_styles.outside.pt = this.evalCss(
-				block_styles.outside["padding-top"],
-				block,
-				{
-					direction: "vertical",
-					default: default_padding,
-					min: 0,
-				}
-			);
-			block_styles.outside.pr = this.evalCss(
-				block_styles.outside["padding-right"],
-				block,
-				{
-					direction: "horizontal",
-					default: default_padding,
-					min: 0,
-				}
-			);
-			block_styles.outside.pb = this.evalCss(
-				block_styles.outside["padding-bottom"],
-				block,
-				{
-					direction: "vertical",
-					default: default_padding,
-					min: 0,
-				}
-			);
-			block_styles.outside.pl = this.evalCss(
-				block_styles.outside["padding-left"],
-				block,
-				{
-					direction: "horizontal",
-					default: default_padding,
-					min: 0,
-				}
-			);
+			block_styles.outside.pt = this.evalCss(block_styles.outside["padding-top"], block, {
+				direction: "vertical",
+				default: default_padding,
+				min: 0,
+			});
+			block_styles.outside.pr = this.evalCss(block_styles.outside["padding-right"], block, {
+				direction: "horizontal",
+				default: default_padding,
+				min: 0,
+			});
+			block_styles.outside.pb = this.evalCss(block_styles.outside["padding-bottom"], block, {
+				direction: "vertical",
+				default: default_padding,
+				min: 0,
+			});
+			block_styles.outside.pl = this.evalCss(block_styles.outside["padding-left"], block, {
+				direction: "horizontal",
+				default: default_padding,
+				min: 0,
+			});
 		});
 	}
 
@@ -1315,26 +1173,17 @@ class NewCmsStyling {
 				// ok, it's the block we remove :*
 				return false;
 			}
-			const mr = this.evalCss(
-				block.computed_styles.outside["margin-right"],
-				block,
-				{
-					auto: 0,
-				}
-			);
+			const mr = this.evalCss(block.computed_styles.outside["margin-right"], block, {
+				auto: 0,
+			});
 
-			const right_kiss =
-				block.client_rect.left + block.client_rect.width + def(mr, 0);
+			const right_kiss = block.client_rect.left + block.client_rect.width + def(mr, 0);
 
 			const next = block.getNextBlock();
 			if (next) {
-				const next_ml = this.evalCss(
-					next.computed_styles.outside["margin-left"],
-					next,
-					{
-						auto: 0,
-					}
-				);
+				const next_ml = this.evalCss(next.computed_styles.outside["margin-left"], next, {
+					auto: 0,
+				});
 				const next_left_kiss = next.client_rect.left - def(next_ml, 0);
 
 				last_in_row = next_left_kiss < right_kiss - 2;

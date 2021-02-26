@@ -944,7 +944,7 @@ function datatableComp(comp, parent, data) {
 				registerModalContent(html`
 					<div id="datatableBatchEdit" data-dismissable>
 						<div class="modal_body">
-							<div class="custom-toolbar">
+							<div class="custom_toolbar">
 								<span class="title medium">Grupowa edycja danych</span>
 								<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 							</div>

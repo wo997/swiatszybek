@@ -13,7 +13,7 @@
 
 <div id="editCategory" data-modal data-expand data-form>
     <div class="modal_body">
-        <div class="custom-toolbar">
+        <div class="custom_toolbar">
             <span class="title">Edycja menu</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveCategoryForm();">Zapisz <i class="fa fa-save"></i></button>

@@ -48,7 +48,7 @@ if ($general_product_id !== -1) {
 
 <?php startSection("header"); ?>
 
-<div class="custom-toolbar">
+<div class="custom_toolbar">
     <span class="title breadcrumbs">
         <a class="btn transparent crumb" href="/admin/produkty">
             Produkty

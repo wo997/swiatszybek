@@ -363,7 +363,7 @@
 // 			registerModalContent(`
 //           <div id="modal_module_block_${module_block_name}" data-expand>
 //               <div class="modal_body">
-//                   <div class="custom-toolbar">
+//                   <div class="custom_toolbar">
 //                       <span class="title">${module_block.description}</span>
 //                       <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                       <div class="btn primary" onclick="saveModule(this);">Zapisz <i class="fa fa-save"></i></div>
@@ -1789,7 +1789,7 @@
 //     <div id="cms" data-expand="large">
 //         <div class="stretch-vertical">
 //           <div id="actual_cms_wrapper">
-//             <div class="custom-toolbar">
+//             <div class="custom_toolbar">
 //                 <span class="title">
 //                     Edycja zawartości
 //                     <button class="btn primary cms-undo" onclick="cmsHistoryUndo()"> <i class="fas fa-undo-alt"></i> </button>
@@ -1908,7 +1908,7 @@
 //     <div id="cmsBlockSettings">
 //         <div style="width: 100%;max-width: 500px">
 
-//             <div class="custom-toolbar">
+//             <div class="custom_toolbar">
 //                 <span class="title">Wymiary / Położenie</span>
 //                 ${hide_complicated_btn}
 //                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
@@ -2172,7 +2172,7 @@
 //     <div id="cmsBorder">
 //         <div style="width: 100%;max-width: 500px;height:100%;max-height:500px">
 
-//             <div class="custom-toolbar">
+//             <div class="custom_toolbar">
 //                 <span class="title">Obramowanie</span>
 //                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                 <div class="btn primary" onclick="saveCMSBorder();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
@@ -2220,7 +2220,7 @@
 //     <div id="cmsContainerSettings">
 //         <div style="width: 100%;max-width: 900px">
 
-//             <div class="custom-toolbar">
+//             <div class="custom_toolbar">
 //                 <span class="title">Wymiary / Położenie</span>
 //                 ${hide_complicated_btn}
 //                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
@@ -2314,7 +2314,7 @@
 // registerModalContent(`
 //     <div id="cmsBlockAnimation">
 //         <div>
-//             <div class="custom-toolbar">
+//             <div class="custom_toolbar">
 //                 <span class="title">Animacje</span>
 //                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                 <div class="btn primary" onclick="saveBlockAnimation();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>
@@ -2363,7 +2363,7 @@
 // registerModalContent(`
 //     <div id="pasteBlock">
 //         <div>
-//             <div class="custom-toolbar">
+//             <div class="custom_toolbar">
 //                 <span class="title">Wstawianie skopiowanego bloku</span>
 //                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //             </div>
@@ -2379,7 +2379,7 @@
 // 	`
 //     <div id="cmsModules">
 //         <div>
-//             <div class="custom-toolbar">
+//             <div class="custom_toolbar">
 //                 <span class="title">Wstawianie modułu</span>
 //                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //             </div>
@@ -2398,7 +2398,7 @@
 // 	html`
 //     <div id="cmsBlockBackground">
 //         <div style="width:100%;max-width:650px">
-//             <div class="custom-toolbar">
+//             <div class="custom_toolbar">
 //                 <span class="title">Tło</span>
 //                 <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>
 //                 <div class="btn primary" onclick="saveCMSBackground();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></div>

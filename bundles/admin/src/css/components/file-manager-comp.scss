@@ -1,7 +1,7 @@
 /* css[admin] */
 
 file-manager-comp {
-	.node_file_grid {
+	.node_files_grid {
 		& {
 			display: flex;
 			flex-flow: row wrap;
@@ -113,9 +113,14 @@ file-manager-comp {
 	}
 }
 
-#previewFile .wo997_img {
-	width: auto;
-	height: auto;
-	max-width: min(90vw, 100%);
-	max-height: 90vh;
+#previewFile {
+	.modal_body,
+	.wo997_img {
+		max-width: min(90vw, 100%);
+	}
+	.wo997_img {
+		width: auto;
+		height: auto;
+		max-height: 90vh;
+	}
 }

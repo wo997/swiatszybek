@@ -89,7 +89,7 @@ h1 {
 	.panel_padding.actual-content {
 		padding: 15px;
 	}
-	.content > .custom-toolbar {
+	.content > .custom_toolbar {
 		padding-left: 10px;
 	}
 }

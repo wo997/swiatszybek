@@ -89,7 +89,7 @@ if (!$page_data) {
 <?php startSection("header");
 ?>
 
-<div class="custom-toolbar">
+<div class="custom_toolbar">
     <span class="title">Nowy CMS</span>
     <button class="btn primary" onclick="saveNewCms()">Zapisz <i class="fa fa-save"></i></button>
 

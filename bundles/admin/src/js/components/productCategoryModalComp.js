@@ -108,7 +108,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="custom-toolbar">
+			<div class="custom_toolbar">
 				<span class="title medium">Kategoria produktu</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">Zapisz <i class="fas fa-save"></i></button>

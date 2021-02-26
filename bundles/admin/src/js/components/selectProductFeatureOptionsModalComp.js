@@ -119,7 +119,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="custom-toolbar">
+			<div class="custom_toolbar">
 				<span class="title medium">Wybierz opcje dla: <span class="product_name"></span></span>
 				<button class="btn subtle" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
 					Zamknij <i class="fas fa-times"></i>

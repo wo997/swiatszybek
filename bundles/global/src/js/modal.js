@@ -369,7 +369,7 @@ function hideModal(name, isCancel = false) {
 }
 
 function setModalTitle(modal, title) {
-	$(modal)._child(`.custom-toolbar .title`).innerHTML = title;
+	$(modal)._child(`.custom_toolbar .title`).innerHTML = title;
 }
 
 window.addEventListener("mousedown", (event) => {

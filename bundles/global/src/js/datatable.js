@@ -1381,7 +1381,7 @@
 // 		registerModalContent(html`
 //             <div id="filter_menu">
 //                 <div class="modal_body">
-//                     <div class="custom-toolbar">
+//                     <div class="custom_toolbar">
 //                         <span class="title"></span>
 //                         <div class="btn secondary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></div>
 //                     </div>

@@ -11,8 +11,10 @@
  * _prev_data: DatatableCompData
  * _set_data(data?: FileManagerCompData, options?: SetCompDataOptions)
  * _nodes: {
- *  file_grid: PiepNode
+ *  files_grid: PiepNode
  *  pagination: PaginationComp
+ *  upload_btn: PiepNode
+ *  quick_search: PiepNode
  * }
  * _search()
  * _search_request: XMLHttpRequest | undefined
@@ -96,7 +98,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 						</div>
 					`;
 				}
-				comp._nodes.file_grid._set_content(out, { maintain_height: true });
+				comp._nodes.files_grid._set_content(out, { maintain_height: true });
 				lazyLoadImages(false);
 
 				comp._render();
@@ -125,15 +127,27 @@ function fileManagerComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div data-node="{${comp._nodes.file_grid}}"></div>
+			<div class="custom_toolbar">
+				<span class="title"
+					><span class="medium">Pliki / Zdjęcia</span>
+					<button class="btn important" data-node="{${comp._nodes.upload_btn}}">Prześlij pliki <i class="fas fa-plus"></i></button
+				></span>
+			</div>
+
+			<div data-node="{${comp._nodes.files_grid}}"></div>
+
 			<pagination-comp data-bind="{${data.pagination_data}}" data-node="{${comp._nodes.pagination}}"></pagination-comp>
 		`,
 		ready: () => {
+			comp._nodes.upload_btn.addEventListener("click", () => {
+				comp._show_upload_modal();
+			});
+
 			// upload
 			registerModalContent(html`
 				<div id="uploadFile" data-dismissable>
 					<div class="modal_body">
-						<div class="custom-toolbar">
+						<div class="custom_toolbar">
 							<span class="title medium">Prześlij pliki</span>
 							<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 						</div>
@@ -231,6 +245,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 			});
 
 			comp._show_upload_modal = (params = {}) => {
+				params.source = def(params.source, comp._nodes.upload_btn);
 				showModal("uploadFile", params);
 			};
 
@@ -238,7 +253,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 			registerModalContent(html`
 				<div id="previewFile" data-dismissable>
 					<div class="modal_body">
-						<div class="custom-toolbar">
+						<div class="custom_toolbar">
 							<span class="title medium">Podgląd pliku</span>
 							<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 						</div>
@@ -247,7 +262,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 				</div>
 			`);
 
-			comp._nodes.file_grid.addEventListener("click", (ev) => {
+			comp._nodes.files_grid.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 				const file_wrapper = target._parent(".file_wrapper", { skip: 0 });
 

@@ -99,7 +99,7 @@ $static = checkUrl($page_data["link"]);
 
 <?php startSection("header"); ?>
 
-<div class="custom-toolbar">
+<div class="custom_toolbar">
     <span class="title">Edycja strony</span>
     <a class="btn secondary" href="<?= Request::$static_urls["ADMIN"] ?>strony">Wszystkie strony <i class="fas fa-file-alt"></i></a>
     <a class="btn primary" href="/<?= $page_data["link"] ?>">Pokaż stronę <i class="fas fa-chevron-circle-right"></i></a>

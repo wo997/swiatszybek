@@ -43,7 +43,7 @@ function productCategoriesModalComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="custom-toolbar">
+			<div class="custom_toolbar">
 				<span class="title medium">Edycja kategorii produktów</span>
 				<div class="history_btns_wrapper"></div>
 				<button class="btn subtle" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
@@ -56,8 +56,8 @@ function productCategoriesModalComp(comp, parent, data = undefined) {
 			</div>
 		`,
 		ready: () => {
-			comp._child(".custom-toolbar .history_btns_wrapper").appendChild(comp._nodes.categories._nodes.history);
-			comp._child(".custom-toolbar .save_btn_wrapper").appendChild(comp._nodes.categories._nodes.save_btn);
+			comp._child(".custom_toolbar .history_btns_wrapper").appendChild(comp._nodes.categories._nodes.history);
+			comp._child(".custom_toolbar .save_btn_wrapper").appendChild(comp._nodes.categories._nodes.save_btn);
 
 			comp._nodes.categories.addEventListener("saved_product_categories", () => {
 				hideParentModal(comp);

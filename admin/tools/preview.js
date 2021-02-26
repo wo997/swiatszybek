@@ -17,7 +17,7 @@ registerModalContent(
 	`
     <div id="preview" data-modal data-expand="large">
         <div class="modal_body">
-            <div class="custom-toolbar">
+            <div class="custom_toolbar">
                 <span class="title">
                     Podgląd strony
                     <button class="btn primary" onclick="window.preview.setSize('','')">Komputer <i class="fas fa-desktop"></i></button>

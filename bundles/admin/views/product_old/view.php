@@ -82,7 +82,7 @@ if ($kopia) {
 
 <?php startSection("header"); ?>
 
-<div class="custom-toolbar">
+<div class="custom_toolbar">
     <a class="btn transparent" href="<?= Request::$static_urls["ADMIN"] ?>produkty"><i class="fas fa-chevron-left"></i></a>
 
     <div class="title" style="max-width: calc(600px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
@@ -185,7 +185,7 @@ if ($kopia) {
 
 <div id="variantForm" data-modal data-expand data-exclude-hidden data-form>
     <div class="modal_body">
-        <div class="custom-toolbar">
+        <div class="custom_toolbar">
             <span class="title medium">Edycja wariantu produktu</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>
             <button class="btn primary" onclick="saveVariant();hideParentModal(this)">Zapisz <i class="fa fa-save"></i></button>

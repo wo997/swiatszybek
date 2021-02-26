@@ -12,7 +12,7 @@
 
 <?php startSection("header"); ?>
 
-<div class="custom-toolbar">
+<div class="custom_toolbar">
     <div class="title">
         Maile
     </div>
