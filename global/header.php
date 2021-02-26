@@ -25,7 +25,7 @@ function traverseMenu($parent_id = -1, $level = 0)
         <div class="glue_children search_wrapper">
             <input type="text" class="field" placeholder="Wyszukaj produkt">
             <button class="btn primary" onclick="searchAllProducts()">
-                <i class="fas fa-search"></i>
+                <img class="search_icon" src="/src/img/search_icon.svg">
             </button>
         </div>
         <div class="search-results"></div>

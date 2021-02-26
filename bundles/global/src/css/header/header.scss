@@ -145,7 +145,7 @@ header.main {
 	}
 }
 
-.main_search_wrapper {
+.search_wrapper {
 	.btn {
 		padding: 0;
 		width: 40px;
@@ -157,5 +157,10 @@ header.main {
 	&.active .field,
 	.field:focus {
 		box-shadow: inset 0 0 0 1px var(--primary-clr);
+	}
+	.search_icon {
+		width: 22px;
+		filter: invert(1);
+		transform: translateY(3px);
 	}
 }
