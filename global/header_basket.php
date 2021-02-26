@@ -1,6 +1,6 @@
 <div class="basket-wrapper headerbtn">
-    <div class="basket-icon-wrapper">
-        <img class="basket-icon" src="/src/img/basket_icon.svg">
+    <div class="basket_icon-wrapper">
+        <img class="basket_icon" src="/src/img/basket_icon.svg">
         <div class="basket_item_count">3</div>
     </div>
     <div class="nav_basket_container header_product_list headerbtn_menu">

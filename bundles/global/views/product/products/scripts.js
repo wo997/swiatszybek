@@ -84,9 +84,9 @@ function goMobile() {
 
 	registerModalContent(`
           <div id="searchCategory" data-expand>
-              <div class="modal-body">
-                  <button class="close-modal-btn"><i class="fas fa-times"></i></button>
-                  <h3 class="modal-header">Kategorie</h3>
+              <div class="modal_body">
+                  <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+                  <h3 class="modal_header">Kategorie</h3>
                   <div class="scroll_panel scroll_shadow">
                     <div></div>
                   </div>
@@ -96,9 +96,9 @@ function goMobile() {
 
 	registerModalContent(`
           <div id="searchFilters" data-expand>
-              <div class="modal-body">
-                  <button class="close-modal-btn" onclick="restoreFilters();"><i class="fas fa-times"></i></button>
-                  <h3 class="modal-header"><div>Filtry <span class="filter_count"></span></div></h3>
+              <div class="modal_body">
+                  <button class="close_modal_btn" onclick="restoreFilters();"><i class="fas fa-times"></i></button>
+                  <h3 class="modal_header"><div>Filtry <span class="filter_count"></span></div></h3>
                   <div class="scroll_panel scroll_shadow panel_padding">
                     <div></div>
                   </div>
@@ -116,14 +116,14 @@ function goMobile() {
           </div>
       `);
 
-	$(`#searchCategory .modal-body .scroll_panel > div`).appendChild($(".search-wrapper .categories"));
+	$(`#searchCategory .modal_body .scroll_panel > div`).appendChild($(".search-wrapper .categories"));
 
 	var filters = $(".search-wrapper .filters");
 
 	if (!filters._child("*")) {
 		$(`.search-filters-btn`).style.display = "none";
 	} else {
-		$(`#searchFilters .modal-body .scroll_panel > div`).appendChild(filters);
+		$(`#searchFilters .modal_body .scroll_panel > div`).appendChild(filters);
 	}
 
 	// sorting horizontal

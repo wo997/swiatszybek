@@ -48,10 +48,10 @@ if (isset($JS_files)) {
 <link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">
 
 <div id="variantAdded" class="variantAdded" data-form data-modal data-dismissable>
-    <div class="modal-body">
-        <button class="close-modal-btn"><i class="fas fa-times"></i></button>
+    <div class="modal_body">
+        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 
-        <h3 class="modal-header">Dodano do koszyka</h3>
+        <h3 class="modal_header">Dodano do koszyka</h3>
 
         <div style="display:flex;padding: min(2vw,15px);align-items: center;" class="mobileRow">
             <img class="variant_image" data-height="1w">

@@ -14,7 +14,7 @@
 <div class="mytable" id="caseAllUsers"></div>
 
 <div id="editUser" data-modal data-expand data-exclude-hidden data-form>
-    <div class="modal-body">
+    <div class="modal_body">
         <div class="custom-toolbar">
             <span class="title">Edycja użytkownika</span>
             <button class="btn secondary" onclick="hideParentModal(this,true)">Anuluj <i class="fas fa-times"></i></button>

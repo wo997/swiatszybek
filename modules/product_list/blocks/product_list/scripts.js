@@ -60,8 +60,8 @@ function productListLoaded() {
 						<img class="heart_icon over" src="/src/img/heart_icon_fill.svg" />
 					</div>
 					<div class="btn-wrapper" onclick="showOffersOntopBabbyohohohohohoh">
-						<img class="basket-icon below" src="/src/img/basket_icon.svg" />
-						<img class="basket-icon over" src="/src/img/basket_icon_fill.svg" />
+						<img class="basket_icon below" src="/src/img/basket_icon.svg" />
+						<img class="basket_icon over" src="/src/img/basket_icon_fill.svg" />
 					</div>
 				</div> `
 			);

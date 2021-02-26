@@ -1380,7 +1380,7 @@
 // 	if (IS_TOUCH_DEVICE) {
 // 		registerModalContent(html`
 //             <div id="filter_menu">
-//                 <div class="modal-body">
+//                 <div class="modal_body">
 //                     <div class="custom-toolbar">
 //                         <span class="title"></span>
 //                         <div class="btn secondary" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></div>

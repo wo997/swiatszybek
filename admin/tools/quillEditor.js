@@ -1334,7 +1334,7 @@
 // registerModalContent(
 // 	`
 //     <div id="quillEditor" data-expand="true">
-//         <div class="modal-body stretch-vertical">
+//         <div class="modal_body stretch-vertical">
 //             <div class="custom-toolbar">
 //                 <span class="title">Edytor bloku</span>
 //                 <button class="btn secondary toggle_size" onclick="quillEditor.toggleQuillSize();" data-tooltip="Ustaw na szerokość bloku / cały ekran"> <i class="fas fa-expand"></i> </button>
@@ -1498,7 +1498,7 @@
 
 // registerModalContent(`
 //     <div id="putVideo" class="form-spacing">
-//         <div class="modal-body" style="width: 100%;max-width: 300px;">
+//         <div class="modal_body" style="width: 100%;max-width: 300px;">
 //             <div class="custom-toolbar">
 //                 <span class="title">Wstawianie filmu</span>
 //                 <button class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></button>

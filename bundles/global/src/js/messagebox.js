@@ -1,7 +1,7 @@
 /* js[global] */
 
 function showMessageModal(message, options) {
-	$("#messagebox_modal > .modal-body > *")._set_content(message);
+	$("#messagebox_modal > .modal_body > *")._set_content(message);
 	showModal("messagebox_modal", options);
 }
 
@@ -139,7 +139,7 @@ function toggleMessageBox(elem, show = null, options = {}) {
 domload(() => {
 	registerModalContent(html`
 		<div id="messagebox_modal" class="messagebox_modal" data-dismissable>
-			<div class="modal-body">
+			<div class="modal_body">
 				<div></div>
 			</div>
 		</div>

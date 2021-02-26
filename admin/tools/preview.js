@@ -1,9 +1,7 @@
 window.preview = {
 	open: (url, params) => {
 		$(`#preview .preview_form`).setAttribute("action", url);
-		$(`#preview .preview_form [name="preview_params"]`)._set_value(
-			JSON.stringify(params)
-		);
+		$(`#preview .preview_form [name="preview_params"]`)._set_value(JSON.stringify(params));
 		showModal("preview");
 		$("#preview .preview_form").submit();
 	},
@@ -18,7 +16,7 @@ window.preview = {
 registerModalContent(
 	`
     <div id="preview" data-modal data-expand="large">
-        <div class="modal-body">
+        <div class="modal_body">
             <div class="custom-toolbar">
                 <span class="title">
                     Podgląd strony

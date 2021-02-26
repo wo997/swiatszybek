@@ -81,7 +81,7 @@
 	color: white;
 }
 
-.buy_btn .basket-icon {
+.buy_btn .basket_icon {
 	filter: invert(1);
 	vertical-align: sub;
 	width: 1.35em;
@@ -226,8 +226,7 @@
 	border-radius: 50%;
 	display: block;
 	margin: 5px auto;
-	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15),
-		inset 0px 0px 5px 0px rgba(0, 0, 0, 0.05),
+	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15), inset 0px 0px 5px 0px rgba(0, 0, 0, 0.05),
 		inset -1px 2px 2px 0px rgba(255, 255, 255, 0.5);
 }
 
@@ -275,7 +274,7 @@
 		max-width: 45%;
 	}
 
-	.variantAdded .modal-body {
+	.variantAdded .modal_body {
 		width: 500px;
 	}
 }

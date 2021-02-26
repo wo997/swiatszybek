@@ -32,11 +32,9 @@ function traverseMenu($parent_id = -1, $level = 0)
     </div>
 
     <div class="header_buttons">
-        <div class="mobile_search_btn headerbtn">
-            <div onclick='showModal("mainSearch", {source:this});setTimeout(()=>{$(".main_search_wrapper label").click()},200)'>
-                <img class="search_icon" src="/src/img/search_icon.svg">
-            </div>
-        </div>
+        <button class="mobile_search_btn headerbtn">
+            <img class="search_icon" src="/src/img/search_icon.svg">
+        </button>
         <?php
         if (User::getCurrent()->isLoggedIn()) {
             include "global/header_logged_in.php";

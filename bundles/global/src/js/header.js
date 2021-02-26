@@ -62,7 +62,10 @@ function headerResizeCallback() {
 	if (menu_collapsed) {
 		requestHeaderModals();
 	}
+
+	requestSearchModal();
 }
+
 /** @type {number} */
 let main_scroll_top = document.documentElement.scrollTop;
 let follow_scroll_top = main_scroll_top;
@@ -81,6 +84,7 @@ domload(() => {
 	main_header_nav = main_header._child("nav");
 	main_header.classList.toggle("collapsed", main_scroll_top > 100);
 	headerResizeCallback();
+	window.addEventListener("resize", headerResizeCallback);
 });
 
 window.addEventListener("load", () => {
@@ -94,18 +98,24 @@ window.addEventListener("load", () => {
 	});
 });
 
-window.addEventListener("resize", headerResizeCallback);
+let requested_search_modal = false;
+function requestSearchModal() {
+	const msb = $(".mobile_search_btn");
+	if (requested_search_modal || !msb.offsetTop) return;
+	requested_search_modal = true;
 
-let requested_header_modals = false;
-function requestHeaderModals() {
-	if (requested_header_modals) return;
-	requested_header_modals = true;
+	msb.addEventListener("click", () => {
+		showModal("mainSearch", {
+			source: msb,
+		});
+		$("#mainSearch input").focus();
+	});
 
 	registerModalContent(html`
 		<div id="mainSearch" data-expand>
-			<div class="modal-body" style="max-width: 500px;">
-				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal-header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
+			<div class="modal_body" style="max-width: 500px;">
+				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal_header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
 				<div class="scroll_panel scroll_shadow panel_padding">
 					<div></div>
 				</div>
@@ -116,36 +126,44 @@ function requestHeaderModals() {
 	const sc = $("#mainSearch .scroll_panel > div");
 	const sw = $("header .main_search_wrapper");
 	sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
+}
+
+let requested_header_modals = false;
+function requestHeaderModals() {
+	if (requested_header_modals) return;
+	requested_header_modals = true;
 
 	//user
-	registerModalContent(html`
-		<div id="userMenu" data-expand>
-			<div class="modal-body" style="max-width: 500px;">
-				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal-header"><img class="user_icon" src="/src/img/user_icon.svg" /> Moje konto</h3>
-				<div class="scroll_panel scroll_shadow">
-					<div></div>
+	if (IS_LOGGED) {
+		registerModalContent(html`
+			<div id="userMenu" data-expand>
+				<div class="modal_body" style="max-width: 500px;">
+					<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+					<h3 class="modal_header"><img class="user_icon" src="/src/img/user_icon.svg" /> Moje konto</h3>
+					<div class="scroll_panel scroll_shadow">
+						<div></div>
+					</div>
 				</div>
 			</div>
-		</div>
-	`);
-	$("#userMenu .scroll_panel > div").insertAdjacentHTML("afterbegin", $("header .user_menu").outerHTML);
+		`);
+		$("#userMenu .scroll_panel > div").insertAdjacentHTML("afterbegin", $("header .user_menu").outerHTML);
 
-	const hua = $("header .user_btn");
-	hua.addEventListener("click", (ev) => {
-		showModal("userMenu", { source: hua });
-		ev.preventDefault();
-		return false;
-	});
+		const hua = $("header .user_btn");
+		hua.addEventListener("click", (ev) => {
+			showModal("userMenu", { source: hua });
+			ev.preventDefault();
+			return false;
+		});
+	}
 
 	//basket
 	registerModalContent(html`
 		<div id="basketMenu" data-expand>
-			<div class="modal-body">
-				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal-header" style="max-width: 500px;">
-					<div class="basket-icon-wrapper">
-						<img class="basket-icon" src="/src/img/basket_icon.svg" />
+			<div class="modal_body">
+				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal_header" style="max-width: 500px;">
+					<div class="basket_icon-wrapper">
+						<img class="basket_icon" src="/src/img/basket_icon.svg" />
 						<div class="basket_item_count"></div>
 					</div>
 					Koszyk
@@ -178,9 +196,9 @@ function requestHeaderModals() {
 	//menu
 	registerModalContent(html`
 		<div id="mainMenu" data-expand>
-			<div class="modal-body" style="max-width: 500px;">
-				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal-header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
+			<div class="modal_body" style="max-width: 500px;">
+				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal_header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
 				<div class="scroll_panel scroll_shadow">
 					<div></div>
 				</div>
@@ -189,8 +207,8 @@ function requestHeaderModals() {
 	`);
 
 	const mm = $("#mainMenu .scroll_panel > div");
-	mm.insertAdjacentHTML("beforebegin", $(".navigation").outerHTML);
-	mm._child(".navigation").insertAdjacentHTML(
+	mm.insertAdjacentHTML("afterbegin", main_header_nav.outerHTML);
+	mm._child("nav").insertAdjacentHTML(
 		"beforeend",
 		html`
 			<div>
@@ -209,9 +227,9 @@ function requestHeaderModals() {
 	// last viewed products
 	registerModalContent(html`
 		<div id="lastViewedProducts" data-expand="previous">
-			<div class="modal-body">
-				<button class="close-modal-btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal-header">
+			<div class="modal_body">
+				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal_header">
 					<img class="product-history-icon" src="/src/img/product_history_icon.svg" />
 					Ostatnio przeglądane
 				</h3>
@@ -229,9 +247,9 @@ function requestHeaderModals() {
 	// wishlist
 	registerModalContent(html`
       <div id="wishList" data-expand="previous">
-        <div class="modal-body">
-            <button class="close-modal-btn"><i class="fas fa-times"></i></button>
-            <h3 class="modal-header">
+        <div class="modal_body">
+            <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+            <h3 class="modal_header">
               <img class="heart_icon" src="/src/img/heart_icon.svg"></img>
               Schowek  
             </h3>

@@ -79,7 +79,7 @@ function productFeatureModalComp(comp, parent, data = undefined) {
 function registerProductFeatureModal() {
 	registerModalContent(html`
 		<div id="productFeature" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(20% + 600px);max-height: calc(75% + 120px);">
+			<div class="modal_body" style="max-width: calc(20% + 600px);max-height: calc(75% + 120px);">
 				<product-feature-modal-comp class="flex_stretch"></product-feature-modal-comp>
 			</div>
 		</div>

@@ -362,7 +362,7 @@
 // 		if (link_module_block_form_path[module_block_name]) {
 // 			registerModalContent(`
 //           <div id="modal_module_block_${module_block_name}" data-expand>
-//               <div class="modal-body">
+//               <div class="modal_body">
 //                   <div class="custom-toolbar">
 //                       <span class="title">${module_block.description}</span>
 //                       <div class="btn secondary" onclick="hideParentModal(this)">Anuluj <i class="fas fa-times"></i></div>

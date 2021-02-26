@@ -221,7 +221,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 function registerSelectProductFeatureOptionsModal() {
 	registerModalContent(html`
 		<div id="selectProductFeatureOptions" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(40% + 200px);max-height: calc(65% + 100px);">
+			<div class="modal_body" style="max-width: calc(40% + 200px);max-height: calc(65% + 100px);">
 				<select-product-feature-options-modal-comp class="flex_stretch"></select-product-feature-options-modal-comp>
 			</div>
 		</div>

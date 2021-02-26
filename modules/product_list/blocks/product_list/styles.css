@@ -105,7 +105,7 @@
 .product-block:hover .product-actions {
 	opacity: 1;
 }
-.product-actions .basket-icon {
+.product-actions .basket_icon {
 	width: 1.4em;
 	margin: 0 0;
 }

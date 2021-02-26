@@ -159,7 +159,7 @@ function registerSelectProductCategoriesModal() {
 	// selectProductCategories
 	registerModalContent(html`
 		<div id="selectProductCategories" data-expand data-dismissable>
-			<div class="modal-body" style="max-width: calc(20% + 350px);max-height: calc(50% + 250px);">
+			<div class="modal_body" style="max-width: calc(20% + 350px);max-height: calc(50% + 250px);">
 				<select-product-categories-modal-comp class="flex_stretch"></select-product-categories-modal-comp>
 			</div>
 		</div>
