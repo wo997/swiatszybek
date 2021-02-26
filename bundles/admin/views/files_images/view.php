@@ -9,7 +9,7 @@
 <?php startSection("header"); ?>
 
 <div class="custom-toolbar">
-    <span class="title"><span class="medium">Pliki / Zdjęcia</span> <button class="btn important upload_btn">Prześlij zdjęcia <i class="fas fa-plus"></i></button></span>
+    <span class="title"><span class="medium">Pliki / Zdjęcia</span> <button class="btn important upload_btn">Prześlij pliki <i class="fas fa-plus"></i></button></span>
 </div>
 
 <?php startSection("body_content"); ?>

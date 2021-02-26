@@ -3,11 +3,9 @@
 file-manager-comp {
 	.node_file_grid {
 		& {
-			border: 1px solid #ccc;
 			display: flex;
 			flex-flow: row wrap;
-			background: #eee;
-			padding: 5px;
+			margin: -5px;
 		}
 		.file_wrapper {
 			& {
@@ -16,6 +14,8 @@ file-manager-comp {
 				border: 1px solid #ccc;
 				background: #fff;
 				cursor: pointer;
+				border-radius: 4px;
+				box-shadow: 0 2px 4px 0 #0001;
 			}
 			@media only screen and (min-width: 1000px) {
 				& {
