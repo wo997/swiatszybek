@@ -3,9 +3,9 @@
         visibility: hidden;
     }
 
-    .cms {
+    /* .cms {
         opacity: 0;
-    }
+    } */
 
     .cms .wo997_img {
         display: inline-block;

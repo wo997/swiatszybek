@@ -1,5 +1,10 @@
 /* css[admin] */
 
+body {
+	transition: 0 !important;
+	opacity: 1 !important;
+}
+
 .main-container {
 	flex-grow: 1;
 	display: flex;

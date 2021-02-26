@@ -1,10 +1,10 @@
 /* js[global] */
 
-domload(() => {
-	$$(".cms").forEach((e) => {
-		e.style.opacity = "1";
-	});
-});
+// domload(() => {
+// 	$$(".cms").forEach((e) => {
+// 		e.style.opacity = "1";
+// 	});
+// });
 
 // domload(() => {
 // 	$$(".ql-editor a").forEach((e) => {

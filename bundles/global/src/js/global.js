@@ -1,5 +1,9 @@
 /* js[global] */
 
+domload(() => {
+	$("body").style.opacity = "1";
+});
+
 function domload(callback) {
 	document.addEventListener("DOMContentLoaded", callback);
 }
@@ -508,7 +512,7 @@ function removeClasses(className, selector = null) {
 function removeClassesWithPrefix(node, prefix) {
 	let cn = [...node.classList].join(" ");
 
-	const matches = cn.match(new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"), "");
+	const matches = cn.match(new RegExp(`\\b${prefix}[\\w-]*\\b`, "g"));
 	if (!matches) {
 		return undefined;
 	}
