@@ -24,10 +24,6 @@
 	font-weight: 700;
 }
 
-.title .btn {
-	margin-left: 5px;
-}
-
 .custom_toolbar > *:not(.title) {
 	margin-left: 5px;
 }

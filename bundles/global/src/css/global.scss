@@ -355,3 +355,9 @@ img {
 a {
 	cursor: pointer;
 }
+
+.title .btn,
+.label .btn,
+.label + .btn {
+	margin-left: 5px;
+}

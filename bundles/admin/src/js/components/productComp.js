@@ -553,7 +553,7 @@ function productComp(comp, parent, data = undefined) {
 				<div class="label first">Nazwa produktu</div>
 				<input type="text" class="field" data-bind="{${data.name}}" data-validate="string" />
 
-				<div class="label first">Główne zdjęcie</div>
+				<div class="label">Główne zdjęcie</div>
 				<image-input data-bind="{${data.main_img_url}}" data-options='{"width":"300px","height":"1w"}'></image-input>
 
 				<div class="label">Sprzedawaj na</div>
