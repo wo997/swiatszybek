@@ -2,12 +2,14 @@
 
 /**
  * @typedef {{
+ * file_manager: FileManagerCompData
  * }} SelectFileModalCompData
  *
  * @typedef {{
  * _data: SelectFileModalCompData
  * _set_data(data?: SelectFileModalCompData, options?: SetCompDataOptions)
  * _nodes: {
+ *  file_manager: PiepNode
  * }
  * _show(options?: ShowModalParams)
  * } & BaseComp} SelectFileModalComp
@@ -20,7 +22,13 @@
  */
 function selectFileModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = {};
+		data = {
+			file_manager: {
+				pagination_data: { page_id: 0, row_count_options: [12, 24, 48, 96], row_count: 48 },
+				search_data: [],
+				select_target: undefined,
+			},
+		};
 	}
 
 	comp._show = (options = {}) => {
@@ -39,13 +47,11 @@ function selectFileModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom_toolbar">
-				<span class="title medium">Wybierz opcje dla: <span class="product_name"></span></span>
-				<button class="btn subtle" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
-					Zamknij <i class="fas fa-times"></i>
-				</button>
+				<span class="title medium">Wybierz zdjęcie</span>
+				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<file-manager-comp></file-manager-comp>
+				<file-manager-comp data-node="{${comp._nodes.file_manager}}" data-bind="{${data.file_manager}}"></file-manager-comp>
 			</div>
 		`,
 		initialize: () => {},

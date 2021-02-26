@@ -7,10 +7,10 @@ window.addEventListener("register-form-components", (ev) => {
 
 /**
  *
- * @param {PiepNode} parent
+ * @param {PiepNode} input
  */
-function registerImageInputs(parent) {
-	parent._children("image-input:not(.image-input-registered)").forEach((input) => {
+function registerImageInputs(input) {
+	input._children("image-input:not(.image-input-registered)").forEach((input) => {
 		input.classList.add("image-input-registered");
 
 		input.insertAdjacentHTML(
@@ -26,7 +26,7 @@ function registerImageInputs(parent) {
 
 		const img = input._child("img");
 		const button = input._child("button");
-		const wrapper = input._child(".image_input_img_wrapper");
+		const img_wrapper = input._child(".image_input_img_wrapper");
 		const select_file_modal = getSelectFileModal();
 
 		const options_json = input.getAttribute("data-options");
@@ -35,15 +35,15 @@ function registerImageInputs(parent) {
 				const options = JSON.parse(options_json);
 
 				if (options.width) {
-					wrapper.style.width = options.width;
+					img_wrapper.style.width = options.width;
 				}
 
 				// it could be a function
 				if (options.height) {
 					if (options.height.indexOf("w") !== -1) {
-						wrapper.setAttribute("data-height", options.height);
+						img_wrapper.setAttribute("data-height", options.height);
 					} else {
-						wrapper.style.height = options.height;
+						img_wrapper.style.height = options.height;
 					}
 				}
 			} catch (e) {
@@ -63,12 +63,15 @@ function registerImageInputs(parent) {
 			input.classList.toggle("selected", selected);
 		});
 
-		wrapper.addEventListener("click", () => {
+		img_wrapper.addEventListener("click", () => {
 			button.click();
 		});
 
 		button.addEventListener("click", () => {
+			select_file_modal._data.file_manager.select_target = input;
+			select_file_modal._render();
 			select_file_modal._show();
+
 			// fileManager.open(img, {
 			// 	asset_types: ["image"],
 			// });

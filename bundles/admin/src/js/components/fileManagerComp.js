@@ -2,6 +2,7 @@
 
 /**
  * @typedef {{
+ * select_target: PiepNode | undefined
  * search_data: any[]
  * pagination_data: PaginationCompData
  * }} FileManagerCompData
@@ -32,6 +33,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 		data = {
 			pagination_data: { page_id: 0, row_count_options: [12, 24, 48, 96], row_count: 48 },
 			search_data: [],
+			select_target: undefined,
 		};
 	}
 
@@ -120,6 +122,10 @@ function fileManagerComp(comp, parent, data = undefined) {
 					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count
 				) {
 					comp._search();
+				}
+
+				if (cd.select_target) {
+					comp.classList.toggle("selectable", !!data.select_target);
 				}
 			},
 		});

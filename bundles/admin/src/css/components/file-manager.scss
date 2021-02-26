@@ -54,6 +54,10 @@ file-manager-comp {
 			}
 		}
 	}
+
+	&:not(.selectable) .select_btn {
+		display: none;
+	}
 }
 
 .drop_files {
