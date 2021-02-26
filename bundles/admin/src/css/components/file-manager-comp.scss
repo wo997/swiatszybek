@@ -1,0 +1,59 @@
+/* css[admin] */
+
+file-manager-comp {
+	.node_file_grid {
+		border: 1px solid #ccc;
+	}
+
+	.drop_files {
+		& {
+			padding: 30px;
+			text-align: center;
+			background-color: #eef;
+			border-radius: 4px;
+			font-weight: 600;
+			background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%237578FFFF' stroke-width='4' stroke-dasharray='4%2c 8' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+			max-width: 400px;
+			position: relative;
+		}
+		&.active {
+			background-color: #ddf;
+		}
+		input {
+			display: none;
+		}
+		&:not(.active) .dropitbro {
+			opacity: 0;
+		}
+		.dropitbro {
+			transition: opacity 0.2s;
+			position: absolute;
+			left: 0;
+			top: 0;
+			background: #ccf;
+			right: 0;
+			bottom: 0;
+			justify-content: center;
+			align-items: center;
+			display: flex;
+			border-radius: inherit;
+			font-size: 1.1em;
+			pointer-events: none;
+		}
+
+		&:not(.uploading) .upload {
+			opacity: 0;
+		}
+		.upload {
+			transition: opacity 0.2s;
+			position: absolute;
+			left: 0;
+			top: 0;
+			background: #ccf;
+			right: 0;
+			bottom: 0;
+			border-radius: inherit;
+			pointer-events: none;
+		}
+	}
+}

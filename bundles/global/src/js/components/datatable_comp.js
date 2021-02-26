@@ -78,7 +78,6 @@
  *      filter_menu: PiepNode
  *  }
  * _datatable_search()
- * _search_timeout: number
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
  * _load_state(data_obj)
@@ -184,61 +183,55 @@ function datatableComp(comp, parent, data) {
 			console.trace();
 			return;
 		}
-		if (comp._search_timeout) {
-			clearTimeout(comp._search_timeout);
-			comp._search_timeout = undefined;
+		if (comp._search_request) {
+			comp._search_request.abort();
+			comp._search_request = undefined;
 		}
-		comp._search_timeout = setTimeout(() => {
-			if (comp._search_request) {
-				comp._search_request.abort();
+
+		const datatable_params = {};
+		const data = comp._data;
+		if (data.sort) {
+			datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
+		}
+		datatable_params.filters = data.filters;
+		datatable_params.row_count = data.pagination_data.row_count;
+		datatable_params.page_id = data.pagination_data.page_id;
+		datatable_params.quick_search = data.quick_search;
+
+		comp.classList.add("searching");
+		comp._search_request = xhr({
+			url: data.search_url,
+			params: {
+				datatable_params,
+			},
+			success: (res) => {
 				comp._search_request = undefined;
-			}
 
-			const datatable_params = {};
-			const data = comp._data;
-			if (data.sort) {
-				datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
-			}
-			datatable_params.filters = data.filters;
-			datatable_params.row_count = data.pagination_data.row_count;
-			datatable_params.page_id = data.pagination_data.page_id;
-			datatable_params.quick_search = data.quick_search;
+				if (!res) {
+					console.error(`Datatable search error: ${data.search_url}`, res);
+					return;
+				}
 
-			comp.classList.add("searching");
-			comp._search_request = xhr({
-				url: data.search_url,
-				params: {
-					datatable_params,
-				},
-				success: (res) => {
-					comp._search_request = undefined;
+				data.pagination_data.page_count = res.page_count;
+				data.pagination_data.total_rows = res.total_rows;
 
-					if (!res) {
-						console.error(`Datatable search error: ${data.search_url}`, res);
-						return;
-					}
+				data.rows = res.rows.map((d) => {
+					return { row_data: d };
+				});
 
-					data.pagination_data.page_count = res.page_count;
-					data.pagination_data.total_rows = res.total_rows;
+				comp.dispatchEvent(
+					new CustomEvent("rows_set", {
+						detail: {
+							data: comp._data,
+						},
+					})
+				);
 
-					data.rows = res.rows.map((d) => {
-						return { row_data: d };
-					});
+				comp.classList.remove("searching");
 
-					comp.dispatchEvent(
-						new CustomEvent("rows_set", {
-							detail: {
-								data: comp._data,
-							},
-						})
-					);
-
-					comp.classList.remove("searching");
-
-					comp._render();
-					comp.classList.remove("freeze");
-				},
-			});
+				comp._render();
+				comp.classList.remove("freeze");
+			},
 		});
 	};
 

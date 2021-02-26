@@ -8,4 +8,6 @@
 
 <?php startSection("body_content"); ?>
 
+<file-manager-comp class="files"></file-manager-comp>
+
 <?php include "bundles/admin/templates/default.php"; ?>
