@@ -17,9 +17,8 @@ product-comp {
 			--list_border: unset;
 		}
 		& > .list_row {
-			& {
-				background: #f6f6f6;
-			}
+			background: #f6f6f6;
+			border-radius: var(--border_radius);
 		}
 	}
 	.bind_options {

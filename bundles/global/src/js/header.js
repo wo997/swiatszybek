@@ -52,6 +52,9 @@
 // });
 
 function headerResizeCallback() {
+	if (!main_header) {
+		return;
+	}
 	main_header.classList.remove("menu_collapsed");
 	main_header_nav.classList.remove("bottom");
 	main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
@@ -79,6 +82,9 @@ let main_header_height;
 let main_header_nav;
 domload(() => {
 	main_header = $("header.main");
+	if (!main_header) {
+		return;
+	}
 	main_header_height = $(".header_height");
 	main_header_buttons = main_header._child(".header_buttons");
 	main_header_nav = main_header._child("nav");

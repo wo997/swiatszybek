@@ -90,7 +90,7 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 				getProductCategoryModal()._show({
 					source: add_btn,
 					save_callback: (cat) => {
-						comp._data.categories.push({
+						comp._data.categories.unshift({
 							name: cat.name,
 							product_category_id: cat.product_category_id,
 							categories: [],
