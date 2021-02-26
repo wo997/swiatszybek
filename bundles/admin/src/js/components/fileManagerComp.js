@@ -80,7 +80,17 @@ function fileManagerComp(comp, parent, data = undefined) {
 					// 	<hr style="margin:2px 0" />
 					// 	<b>Autor:</b> ${def(image.email, "-")}
 					// `;
-					out += html` <div class="file_wrapper">${display}</div> `;
+					out += html`
+						<div class="file_wrapper">
+							<div class="display">${display}</div>
+							<div class="file_controls glue_children">
+								<button class="btn subtle select_btn"><i class="fas fa-check"></i></button>
+								<button class="btn subtle preview_btn"><i class="fas fa-eye"></i></button>
+								<button class="btn subtle edit_btn"><i class="fas fa-cog"></i></button>
+								<button class="btn subtle trash_btn"><i class="fas fa-trash"></i></button>
+							</div>
+						</div>
+					`;
 				}
 				comp._nodes.file_grid._set_content(out, { maintain_height: true });
 				lazyLoadImages(false);
@@ -231,25 +241,32 @@ function fileManagerComp(comp, parent, data = undefined) {
 				const file_wrapper = target._parent(".file_wrapper", { skip: 0 });
 
 				if (file_wrapper) {
-					const place = $("#previewFile .place");
-					place._set_content(file_wrapper.outerHTML);
-					/** @type {ResponsiveImage} */
-					// @ts-ignore
-					let wo997_img = place._child(".wo997_img");
-					if (wo997_img) {
-						const src = wo997_img.dataset.src;
-						place._set_content(html`<img class="wo997_img" data-src="${src}" />`);
-						// @ts-ignore
-						wo997_img = place._child(".wo997_img");
-						wo997_img.style.width = "10000px";
-						loadImage(wo997_img);
-						lazyLoadImages(false);
-						wo997_img.style.width = "";
-					}
+					const select_btn = target._parent(".select_btn", { skip: 0 });
+					const preview_btn = target._parent(".preview_btn", { skip: 0 });
+					const trash_btn = target._parent(".trash_btn", { skip: 0 });
 
-					setTimeout(() => {
-						showModal("previewFile", { source: file_wrapper });
-					});
+					if (preview_btn) {
+						const place = $("#previewFile .place");
+						/** @type {ResponsiveImage} */
+						// @ts-ignore
+						let wo997_img = file_wrapper._child(".wo997_img");
+						if (wo997_img) {
+							const src = wo997_img.dataset.src;
+							place._set_content(html`<img class="wo997_img" data-src="${src}" />`);
+							// @ts-ignore
+							wo997_img = place._child(".wo997_img");
+							wo997_img.style.width = "10000px";
+							loadImage(wo997_img);
+							lazyLoadImages(false);
+							wo997_img.style.width = "";
+						} else {
+							place._set_content(file_wrapper._child(".display").outerHTML);
+						}
+
+						setTimeout(() => {
+							showModal("previewFile", { source: file_wrapper });
+						});
+					}
 				}
 			});
 		},

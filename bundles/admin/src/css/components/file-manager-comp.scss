@@ -16,6 +16,31 @@ file-manager-comp {
 				cursor: pointer;
 				border-radius: 4px;
 				box-shadow: 0 2px 4px 0 #0001;
+				overflow: hidden;
+				position: relative;
+			}
+			.file_controls {
+				& {
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					transition: 0.15s all;
+					opacity: 1;
+					background: #fff;
+					border-top: 1px solid #ccc;
+					padding: 4px;
+					box-shadow: 0 -1px 3px 0 #0002;
+					display: flex;
+					justify-content: center;
+				}
+				.btn:not(:first-child) {
+					margin-left: -1px;
+				}
+			}
+			&:not(:hover) .file_controls {
+				transform: translateY(100%);
+				opacity: 0;
 			}
 			@media only screen and (min-width: 1000px) {
 				& {
