@@ -1,0 +1,21 @@
+/* css[global] */
+
+.user_menu {
+	& {
+		padding: 7px 0;
+		min-width: 230px;
+	}
+	.menu_item {
+		display: block;
+		white-space: nowrap;
+		padding: 5px 17px;
+	}
+	.user_menu .dropdown-expand a:hover {
+		background: #eee;
+	}
+	.username {
+		border-bottom: 1px solid #ccc;
+		margin: 0px 14px;
+		padding: 5px 0 !important;
+	}
+}

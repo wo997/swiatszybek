@@ -400,6 +400,7 @@ domload(() => {
         header .headerbtn_menu`
 	).forEach((e) => {
 		e.addEventListener("mousewheel", (event) => {
+			// @ts-ignore
 			if ((event.deltaY < 0 && e.scrollTop < 1) || (event.deltaY > 0 && e.scrollTop > e.scrollHeight - e.offsetHeight - 1)) {
 				event.preventDefault();
 			} else {

@@ -1,4 +1,4 @@
-<div class="basket-wrapper headerbtn">
+<div class="basket-wrapper headerbtn gray_hover">
     <div class="basket_icon-wrapper">
         <img class="basket_icon" src="/src/img/basket_icon.svg">
         <div class="basket_item_count">3</div>

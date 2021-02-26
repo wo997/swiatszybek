@@ -35,20 +35,6 @@
 	cursor: pointer;
 }
 
-.dropdown-expand .menu_item,
-.dropdown-user .menu_item .dropdown-header {
-	display: block;
-	white-space: nowrap;
-}
-.dropdown-user .menu_item .dropdown-header {
-	padding: 5px 20px;
-}
-.dropdown-user .menu_item .dropdown-header {
-	font-size: 13px;
-}
-.dropdown-user .dropdown-expand a:hover {
-	background: #eee;
-}
 .dropdown.hovered .dropdown-expand {
 	opacity: 1;
 }

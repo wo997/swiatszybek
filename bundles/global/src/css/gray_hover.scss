@@ -1,0 +1,12 @@
+/* css[global] */
+
+.main_wrapper .gray_hover {
+	&:hover {
+		background: #eee;
+		transition: none;
+	}
+	&:not(:hover) {
+		background: #fff;
+		transition: 0.2s background-color;
+	}
+}

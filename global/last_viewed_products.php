@@ -1,4 +1,4 @@
-<div class="last_viewed_products_wrapper headerbtn case_desktop">
+<div class="last_viewed_products_wrapper headerbtn gray_hover case_desktop">
     <img class="product-history-icon" src="/src/img/product_history_icon.svg">
     <div class="header_product_list headerbtn_menu">
         <div class='case_last_viewed_products_empty expand_y'>

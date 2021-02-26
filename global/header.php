@@ -32,7 +32,7 @@ function traverseMenu($parent_id = -1, $level = 0)
     </div>
 
     <div class="header_buttons">
-        <button class="mobile_search_btn headerbtn">
+        <button class="mobile_search_btn headerbtn gray_hover">
             <img class="search_icon" src="/src/img/search_icon.svg">
         </button>
         <?php
@@ -43,14 +43,14 @@ function traverseMenu($parent_id = -1, $level = 0)
         }
         ?>
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
-            <div class="headerbtn case_desktop">
+            <div class="headerbtn gray_hover case_desktop gray_hover">
                 <img class="heart_icon" src="/src/img/heart_icon.svg">
             </div>
         <?php endif ?>
         <?php include "global/last_viewed_products.php"; ?>
         <?php include "global/header_basket.php"; ?>
 
-        <div class='mobile_menu_btn headerbtn' onclick='showModal("mainMenu", {source:this})'>
+        <div class='mobile_menu_btn headerbtn gray_hover gray_hover' onclick='showModal("mainMenu", {source:this})'>
             <img class="menu_icon" src="/src/img/menu_icon.svg">
         </div>
     </div>

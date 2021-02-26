@@ -1,4 +1,4 @@
-// /* css[global] */
+/* css[global] */
 
 header.main {
 	& {
@@ -15,7 +15,7 @@ header.main {
 		padding: var(--header_padding_vertical) var(--header_padding_horizontal);
 		justify-content: space-around;
 		flex-flow: row wrap;
-		--header-btn-radius: 7px;
+		--header-btn-radius: 4px;
 	}
 
 	@media only screen and (min-width: 1200px) {
@@ -45,6 +45,9 @@ header.main {
 		top: 100%;
 		transition: 0.2s opacity;
 		background: #fff;
+		border-radius: 4px;
+		box-shadow: 0 3px 3px 0 #0004;
+		border: 1px solid #ccc;
 	}
 
 	.headerbtn {
@@ -61,16 +64,11 @@ header.main {
 			background: transparent;
 			border: none;
 		}
-		&:hover {
-			& {
-				background: #eee;
-				transition: none;
-			}
-			.basket_item_count {
-				box-shadow: 0px 0px 0px 2px #eee;
-				transition: none;
-			}
+		&:hover .basket_item_count {
+			box-shadow: 0px 0px 0px 2px #eee;
+			transition: none;
 		}
+
 		&:not(:hover) .headerbtn_menu {
 			opacity: 0;
 			pointer-events: none;
