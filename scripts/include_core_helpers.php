@@ -7,7 +7,7 @@ include_once "helpers/core/string.php";
 include_once "helpers/core/date.php";
 include_once "helpers/core/number.php";
 include_once "helpers/core/array.php";
-include_once "helpers/core/files.php";
+include_once "helpers/core/Files.php";
 include_once "helpers/core/settings.php";
 
 include_once "helpers/core/db/DB.php";

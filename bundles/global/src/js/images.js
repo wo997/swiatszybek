@@ -70,7 +70,7 @@ function loadImage(img, animate = true, offset = null) {
 
 		if (image_dimension < natural_image_dimension + 1) {
 			const pixelDensityFactor = window.devicePixelRatio * 0.3 + 0.7; // compromise quality and speed
-			Object.entries(image_default_dimensions).forEach(([size_name, size_dimension]) => {
+			Object.entries(image_fixed_dimensions).forEach(([size_name, size_dimension]) => {
 				if (size_name == "df") {
 					return;
 				}

@@ -70,7 +70,7 @@ if ($modifyCSS) {
         foreach ($files as $file) {
             $css_full .= " " . file_get_contents($file);
         }
-        saveFile(BUILDS_PATH . "$cssGroup.css", (new Minify\CSS($scss->compile($css_full)))->minify());
+        Files::save(BUILDS_PATH . "$cssGroup.css", (new Minify\CSS($scss->compile($css_full)))->minify());
     }
 }
 if ($modifyJS) {
@@ -169,7 +169,7 @@ if ($modifyJS) {
 
         //var_dump(BUILDS_PATH . "$jsGroup.js");
         //var_dump($js_full, "<br><br><br><br><br><br><br><br><br><br><br>");
-        saveFile(BUILDS_PATH . "$jsGroup.js", $js_full);
+        Files::save(BUILDS_PATH . "$jsGroup.js", $js_full);
     }
     //die; // if u wanna see the output
 }
@@ -190,7 +190,7 @@ if ($modifyCSS) {
     }
     $out .= "];";
 
-    saveFile(BUILDS_PATH . "css_schema.php", $out);
+    Files::save(BUILDS_PATH . "css_schema.php", $out);
 }
 
 if ($modifyJS) {
@@ -208,5 +208,5 @@ if ($modifyJS) {
     }
     $out .= "];";
 
-    saveFile(BUILDS_PATH . "js_schema.php", $out);
+    Files::save(BUILDS_PATH . "js_schema.php", $out);
 }

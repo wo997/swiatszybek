@@ -52,7 +52,7 @@ foreach ($_link_route_path as $url => $path) {
 }
 $out .= "];";
 
-saveFile(BUILDS_PATH . "link_route_path.php", $out);
+Files::save(BUILDS_PATH . "link_route_path.php", $out);
 
 $out = "<?php return [\n";
 foreach ($_link_event_paths as $event => $paths_strings) {
@@ -60,12 +60,12 @@ foreach ($_link_event_paths as $event => $paths_strings) {
 }
 $out .= "];";
 
-saveFile(BUILDS_PATH . "link_event_paths.php", $out);
+Files::save(BUILDS_PATH . "link_event_paths.php", $out);
 
 foreach ($_link_hooks_paths as $name => $paths_strings) {
     $out = "<?php\n";
     $out .= implode("\n", $paths_strings);
-    saveFile(BUILDS_PATH . "hooks/" . "$name.php", $out);
+    Files::save(BUILDS_PATH . "hooks/" . "$name.php", $out);
 }
 
 

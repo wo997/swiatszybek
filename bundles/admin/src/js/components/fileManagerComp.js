@@ -162,7 +162,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 				formData.append("search", "");
 
 				xhr({
-					url: STATIC_URLS["ADMIN"] + "uploads_action",
+					url: STATIC_URLS["ADMIN"] + "file/upload",
 					formData: formData,
 					success(images) {
 						hideLoader(form);

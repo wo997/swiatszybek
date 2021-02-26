@@ -1,13 +1,6 @@
 <?php //hook[migration]
 
-DB::createTable(
-    "file",
-    [
-        ["name" => "file_id", "type" => "INT", "index" => "primary", "increment" => true],
-        ["name" => "file_path", "type" => "VARCHAR(255)", "index" => "unique"],
-        ["name" => "default_file_name", "type" => "VARCHAR(255)"],
-        ["name" => "uploaded_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP", "index" => "index"],
-        ["name" => "file_type", "type" => "VARCHAR(255)", "index" => "index"],
-        ["name" => "user_id", "type" => "INT", "null" => true, "index" => "index"],
-    ]
-);
+DB::createTable("general_product", [
+    ["name" => "general_product_id", "type" => "INT", "index" => "primary"],
+    ["name" => "name", "type" => "VARCHAR(255)"],
+]);

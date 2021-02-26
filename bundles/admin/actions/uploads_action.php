@@ -48,7 +48,7 @@ if (isset($_POST['base64'])) {
         $file_type = $image_type_aux[1];
         $image_base64 = base64_decode($image_parts[1]);
         $tmp_file_path = UPLOADS_PATH . "tmp." . $file_type;
-        saveFile($tmp_file_path, $image_base64);
+        Files::save($tmp_file_path, $image_base64);
 
         $name = def($_POST, "name", date("Y-m-d-H-i-s"));
         saveImage($tmp_file_path, $name, $name);

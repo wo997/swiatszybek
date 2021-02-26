@@ -5,7 +5,7 @@ if (isset($_POST["module_name"])) {
 
     $module_settings_path = MODULE_SETTINGS_PATH . "/$module_name.json";
 
-    saveFile($module_settings_path, $_POST["form_data"]);
+    Files::save($module_settings_path, $_POST["form_data"]);
 
     triggerEvent("settings_change");
 }

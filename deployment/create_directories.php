@@ -1,7 +1,7 @@
 <?php
 
-// we don't need it lol, cause saveFile handles it for us <3
-// global $image_default_dimensions;
+// we don't need it lol, cause Files::save handles it for us <3
+// global $image_fixed_dimensions;
 
 // $project_directories = [
 //     BUILDS_PATH,
@@ -18,7 +18,7 @@
 //     BUILD_VIEWS_PATH
 // ];
 
-// foreach ($image_default_dimensions as $size_name => $area) {
+// foreach ($image_fixed_dimensions as $size_name => $area) {
 //     $project_directories[] = UPLOADS_PATH . $size_name;
 // }
 

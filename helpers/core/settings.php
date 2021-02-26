@@ -135,5 +135,5 @@ function saveSettings($dir, $file, $json_paths_and_values)
         }
         $settings_sub = $value;
     }
-    saveFile($file_path, json_encode($settings));
+    Files::save($file_path, json_encode($settings));
 }

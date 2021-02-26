@@ -15,7 +15,7 @@ let WEBP_SUPPORT;
 let UPLOADS_PATH;
 let UPLOADS_PLAIN_PATH;
 
-let image_default_dimensions;
+let image_fixed_dimensions;
 let same_ext_image_allowed_types;
 
 let STATIC_URLS;

@@ -12,6 +12,6 @@ $colors_css .= "}";
 //$minifier->minify(BUILDS_PATH . "theme.css");
 
 // it's a weird place, we want it to be built but it's kinda built already
-saveFile("prebuilds/theme.css", $colors_css);
+Files::save("prebuilds/theme.css", $colors_css);
 
 triggerEvent("assets_change");

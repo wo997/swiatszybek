@@ -54,4 +54,4 @@ function showMenu($category_id, $depth = 0)
     return $html;
 }
 
-saveFile(BUILDS_PATH . "topmenu.html", showMenu(0)); // resursive
+Files::save(BUILDS_PATH . "topmenu.html", showMenu(0)); // resursive

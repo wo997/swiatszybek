@@ -129,7 +129,7 @@ if (!Request::$is_deployment_url) {
     \$version_settings = $version_settings;
 PHP;
 
-        saveFile(BUILD_INFO_PATH, $content);
+        Files::save(BUILD_INFO_PATH, $content);
     }
 
     if ($php_changed || $modules_changed) {

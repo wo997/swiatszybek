@@ -44,8 +44,8 @@ if (defined("ROUTE")) {
     const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
     const UPLOADS_PLAIN_PATH = "<?= UPLOADS_PLAIN_PATH ?>";
 
-    const image_default_dimensions = <?= json_encode($image_default_dimensions) ?>;
-    const same_ext_image_allowed_types = <?= json_encode($same_ext_image_allowed_types) ?>;
+    const image_fixed_dimensions = <?= json_encode(Files::$image_fixed_dimensions) ?>;
+    const same_ext_image_allowed_types = <?= json_encode(Files::$same_ext_image_allowed_types) ?>;
 
     <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
         const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;

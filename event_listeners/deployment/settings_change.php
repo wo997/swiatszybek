@@ -34,6 +34,6 @@ $sp = BUILDS_PATH . "settings.json";
 $res = json_encode($_settings);
 
 if (file_get_contents($sp) !== $res) {
-    saveFile($sp, $res);
+    Files::save($sp, $res);
     Request::reload(true);
 }

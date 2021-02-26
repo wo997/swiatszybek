@@ -11,4 +11,4 @@ foreach ($props as $p) {
 }
 $out .= PHP_EOL . "];";
 
-saveFile(BUILDS_PATH . "config.php", $out);
+Files::save(BUILDS_PATH . "config.php", $out);
