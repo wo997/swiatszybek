@@ -15,6 +15,7 @@ header.main {
 		padding: var(--header_padding_vertical) var(--header_padding_horizontal);
 		justify-content: space-around;
 		flex-flow: row wrap;
+		--header-btn-radius: 7px;
 	}
 
 	@media only screen and (min-width: 1200px) {
@@ -51,7 +52,7 @@ header.main {
 			position: relative;
 			min-width: 50px;
 			height: 50px;
-			border-radius: 7px;
+			border-radius: var(--header-btn-radius);
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -120,6 +121,9 @@ header.main {
 	&:not(.menu_collapsed) .mobile_menu_btn,
 	&.menu_collapsed nav {
 		display: none !important;
+	}
+	nav:not(.bottom) a {
+		border-radius: var(--header-btn-radius);
 	}
 }
 
