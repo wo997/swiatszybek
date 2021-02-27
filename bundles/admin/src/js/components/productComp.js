@@ -38,6 +38,7 @@
  *      add_category_btn: PiepNode
  *      print_categories: PiepNode
  *      preview_btn: PiepNode
+ *      open_btn: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], dont_ask?: boolean})
  *  _remove_missing_products()
@@ -550,6 +551,9 @@ function productComp(comp, parent, data = undefined) {
 				<p-trait data-trait="history"></p-trait>
 
 				<button class="btn primary" data-node="{${comp._nodes.preview_btn}}">Podgląd <i class="fas fa-eye"></i></button>
+				<button class="btn primary" data-node="{${comp._nodes.open_btn}}" data-tooltip="Otworzy produkt w nowej karcie">
+					Pokaż <i class="fas fa-external-link-square-alt"></i>
+				</button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 
@@ -647,8 +651,12 @@ function productComp(comp, parent, data = undefined) {
 				select_product_categories_modal_comp._show({ source: comp._nodes.print_categories });
 			});
 
+			comp._nodes.open_btn.addEventListener("click", () => {
+				window.open(`/produkt/${comp._data.general_product_id}`, "product_page");
+			});
+
 			comp._nodes.preview_btn.addEventListener("click", () => {
-				previewUrl("http://lsit.pl/");
+				previewUrl(`/produkt/${comp._data.general_product_id}`);
 			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {
