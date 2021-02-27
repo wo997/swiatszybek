@@ -37,6 +37,7 @@
  *      save_btn: PiepNode
  *      add_category_btn: PiepNode
  *      print_categories: PiepNode
+ *      preview_btn: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], dont_ask?: boolean})
  *  _remove_missing_products()
@@ -545,9 +546,12 @@ function productComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<p-trait data-trait="history"></p-trait>
+			<div class="injectable_header">
+				<p-trait data-trait="history"></p-trait>
 
-			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
+				<button class="btn primary" data-node="{${comp._nodes.preview_btn}}">Podgląd <i class="fas fa-eye"></i></button>
+				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
+			</div>
 
 			<div style="max-width:600px">
 				<div class="label first">Nazwa produktu</div>

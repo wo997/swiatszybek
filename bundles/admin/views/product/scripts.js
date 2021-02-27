@@ -7,8 +7,7 @@ domload(() => {
 
 	productComp(product_comp, undefined);
 
-	$(".main_header .history_btns_wrapper").appendChild(product_comp._nodes.history);
-	$(".main_header .save_btn_wrapper").appendChild(product_comp._nodes.save_btn);
+	$(".main_header .inject_header_nodes").appendChild(product_comp._child(".injectable_header"));
 
 	const nameChange = () => {
 		$$(`.product_name`).forEach((e) => {

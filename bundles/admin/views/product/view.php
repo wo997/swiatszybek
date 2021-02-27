@@ -58,8 +58,7 @@ if ($general_product_id !== -1) {
             <span class="product_name"></span>
         </div>
     </span>
-    <div class="history_btns_wrapper"></div>
-    <div class="save_btn_wrapper"></div>
+    <div class="inject_header_nodes"></div>
 </div>
 
 <?php startSection("body_content"); ?>
