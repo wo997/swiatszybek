@@ -1,138 +1,83 @@
 <?php //route[produkt]
 
-global $PRODUCT_ID;
+global $GENERAL_PRODUCT_ID;
 
-$product_id = Request::urlParam(1);
-if ($product_id) {
-    $product_id = intval($product_id);
-    $PRODUCT_ID = $product_id;
+$general_product_id = Request::urlParam(1);
+if ($general_product_id) {
+    $general_product_id = intval($general_product_id);
+    $GENERAL_PRODUCT_ID = $general_product_id;
 } else {
     Request::redirect("/");
 }
 
-$product_data = DB::fetchRow("SELECT * FROM products WHERE product_id = $product_id");
-if (isset($preview_params) && isset($preview_params["variants"])) {
-    $product_data = array_merge($product_data, $preview_params);
+$general_product_data = DB::fetchRow("SELECT * FROM general_product WHERE general_product_id = $general_product_id");
+if (isset($preview_params) && isset($preview_params["products"])) {
+    $general_product_data = array_merge($general_product_data, $preview_params);
 }
 
-if (!$product_data) {
+if (!$general_product_data) {
     Request::redirect("/");
 }
 
-$link = Request::urlParam(2);
-if ($link != $product_data["link"] && $product_data["link"]) {
-    Request::redirect(getProductLink($product_data["product_id"], $product_data["link"]));
-}
+// $link = Request::urlParam(2);
+// if ($link != $general_product_data["link"] && $general_product_data["link"]) {
+//     Request::redirect(getProductLink($general_product_data["general_product_id"], $general_product_data["link"]));
+// }
 
-$priceText = $product_data["price_min"];
-if (!empty($product_data["price_max"]) && $product_data["price_min"] != $product_data["price_max"])
-    $priceText .= " - " . $product_data["price_max"];
+// $priceText = $general_product_data["price_min"];
+// if (!empty($general_product_data["price_max"]) && $general_product_data["price_min"] != $general_product_data["price_max"])
+//     $priceText .= " - " . $general_product_data["price_max"];
 
-$variants = DB::fetchArr("SELECT * FROM variant WHERE product_id = $product_id AND published = 1 ORDER BY kolejnosc");
+$products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
-if (isset($preview_params) && isset($preview_params["variants"])) {
-    $variants = json_decode($preview_params["variants"], true);
-}
+// if (isset($preview_params) && isset($preview_params["products"])) {
+//     $products = json_decode($preview_params["products"], true);
+// }
 
-$anyVariantInStock = false;
-foreach ($variants as $variant) {
-    if ($variant["stock"] > 0) {
-        $anyVariantInStock = $variant["variant_id"];
-        break;
-    }
-}
+// $anyVariantInStock = false;
+// foreach ($products as $variant) {
+//     if ($variant["stock"] > 0) {
+//         $anyVariantInStock = $variant["variant_id"];
+//         break;
+//     }
+// }
 
-$gallery = json_decode($product_data["gallery"], true);
-if (!$gallery) {
-    $gallery = [];
-}
+$gallery = [];
+// $gallery = json_decode($general_product_data["gallery"], true);
+// if (!$gallery) {
+//     $gallery = [];
+// }
 
 $galleryhtml = "";
-foreach ($gallery as $pic) {
-    $galleryhtml .= "<div class='wo997_slide'><img data-src='" . $pic["src"] . "' data-height='1w' class='product-image wo997_img'></div>";
+// foreach ($gallery as $pic) {
+//     $galleryhtml .= "<div class='wo997_slide'><img data-src='" . $pic["src"] . "' data-height='1w' class='product-image wo997_img'></div>";
+// }
+// $galleryhtml .= $galleryhtml . $galleryhtml;
+
+// $page_data["seo_description"] = $general_product_data["seo_description"];
+// $page_data["seo_title"] = $general_product_data["seo_title"];
+// $page_data["seo_image"] = "/uploads/sm" . Files::getUploadedFileName($general_product_data["cache_thumbnail"]) . ".jpg";
+
+$stockSchema = true ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
+
+//addLastViewedProducts([$general_product_id]);
+
+$general_product_data["cache_rating_count"] = 4;
+
+$general_product_variants = DB::fetchArr("SELECT * FROM general_product_to_feature gptf
+    INNER JOIN product_feature USING (product_feature_id)
+    WHERE general_product_id = $general_product_id
+    ORDER BY gptf.pos");
+
+foreach ($general_product_variants as &$general_product_variant) {
+    $product_feature_id = $general_product_variant["product_feature_id"];
+    $general_product_variant["variant_options"] = DB::fetchArr("SELECT * FROM general_product_to_feature_option gptfo
+        INNER JOIN product_feature_option USING (product_feature_option_id)
+        WHERE general_product_id = $general_product_id AND product_feature_id = $product_feature_id
+        ORDER BY gptfo.pos");
 }
-$galleryhtml .= $galleryhtml . $galleryhtml;
+unset($general_product_variant);
 
-$page_data["seo_description"] = $product_data["seo_description"];
-$page_data["seo_title"] = $product_data["seo_title"];
-$page_data["seo_image"] = "/uploads/sm" . Files::getUploadedFileName($product_data["cache_thumbnail"]) . ".jpg";
-
-$stockSchema = $anyVariantInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
-
-addLastViewedProducts([$product_id]);
-
-
-
-
-
-
-$variants = [
-    /*[
-        "filter_name" => "Model",
-        "columns" => "3",
-        "height" => "80px",
-        "filter_options" => [
-            ["value" => "Z20"],
-            ["value" => "Z20+"],
-            ["value" => "Z20 Undra"],
-        ]
-    ],*/
-    [
-        "variant_id" => "3",
-        "filter_name" => "Kolor",
-        "columns" => "2",
-        "height" => "80px",
-        "variant_options" => [
-            ["option_id" => 123, "value" => "Czerwony", "extra" => ["color" => "#c22"]],
-            ["option_id" => 124, "value" => "Zielony", "extra" => ["color" => "#2c2"]],
-            ["option_id" => 125, "value" => "Żólty", "extra" => ["color" => "#ff2"]],
-        ]
-    ],
-];
-
-$values = [];
-$id = 1000;
-for ($i = 20; $i < 30; $i += 0.5) {
-    $id++;
-    $values[] = ["option_id" => $id, "value" => $i];
-}
-$variants[] =
-    [
-        "variant_id" => "4",
-        "filter_name" => "Rozmiar",
-        "columns" => "4",
-        "height" => "50px",
-        "variant_options" => $values
-    ];
-// json_decode($product_data["variant_filters"], true);
-
-$page_products = [];
-
-// will come straight from DB !!!!
-$product_id = 0;
-foreach ($variants[1]["variant_options"] as $size_option) {
-    foreach ($variants[0]["variant_options"] as $color_option) {
-        $product_id++;
-
-        $was_price = 20 + $product_id + ($color_option["option_id"] == "124" ? 1 : 0);
-        $price = $was_price;
-        if (rand(0, 5) < 2) {
-            $price -= rand(10, 0);
-        }
-
-        $page_products[] = [
-            "product_id" => $product_id,
-            "price" => $price,
-            "was_price" => $was_price,
-            "stock" => rand(0, 5),
-            "published" => rand(0, 5) >= 1,
-            "variants" => [
-                $variants[0]["variant_id"] => $color_option["option_id"],
-                $variants[1]["variant_id"] => $size_option["option_id"],
-            ]
-        ];
-    }
-}
 ?>
 
 <?php startSection("head_content"); ?>
@@ -140,71 +85,36 @@ foreach ($variants[1]["variant_options"] as $size_option) {
 <script>
     const page_products = <?= json_encode($page_products) ?>;
 
-    var variants = <?= json_encode($variants) ?>;
-    const PRODUCT_ID = <?= $product_data["product_id"] ?>;
-
-    var attribute_values_array = <?= json_encode(DB::fetchArr('SELECT value, value_id, attribute_id, parent_value_id FROM attribute_values'), true) ?>;
-    var attribute_values = {};
-    attribute_values_array.forEach(value => {
-        attribute_values[value["value_id"]] = {
-            value: value["value"],
-            attribute_id: +value["attribute_id"],
-            parent_value_id: +value["parent_value_id"],
-        };
-    });
-
-    Object.entries(attribute_values).forEach(([value_id, value]) => {
-        var whole_value = value.value;
-        var curr_level_value = value;
-        while (true) {
-            var parent_value_id = +curr_level_value.parent_value_id;
-            if (parent_value_id <= 0) {
-                break;
-            }
-            parent_value = attribute_values[parent_value_id];
-            if (!parent_value) {
-                break;
-            }
-            whole_value = parent_value.value + " ❯ " + whole_value;
-
-            curr_level_value = parent_value;
-        }
-        value.whole_value = whole_value;
-    });
-
-    var attributes_array = <?= json_encode(DB::fetchArr('SELECT name, attribute_id FROM product_attributes'), true) ?>;
-    var attributes = {};
-    attributes_array.forEach(attribute => {
-        attributes[attribute["attribute_id"]] = attribute["name"];
-    });
+    var products = <?= json_encode($products) ?>;
+    const GENERAL_PRODUCT_ID = <?= $general_product_data["general_product_id"] ?>;
 </script>
 
-<?php if ($product_data["cache_rating_count"] > 0) : ?>
+<?php if ($general_product_data["cache_rating_count"] > 0) : ?>
     <script <?= 'type="application/ld+json"' ?>>
         {
             "@context": "https://schema.org/",
             "@type": "Product",
-            "name": "<?= htmlspecialchars($product_data["title"]) ?>",
+            "name": "<?= htmlspecialchars($general_product_data["name"]) ?>",
             "url": "<?= SITE_URL . "/" . Request::$url ?>",
             "image": [
-                "<?= $product_data["cache_thumbnail"] ?>"
+                "<?= $general_product_data["cache_thumbnail"] ?>"
             ],
-            "description": "<?= $product_data["seo_description"] ?>",
+            "description": "<?= $general_product_data["seo_description"] ?>",
             "brand": {
                 "@type": "Thing",
                 "name": "<?= $app["company_data"]['email_sender'] ?>"
             },
             "aggregateRating": {
                 "@type": "AggregateRating",
-                "ratingValue": "<?= $product_data["cache_avg_rating"] ?>",
-                "reviewCount": "<?= $product_data["cache_rating_count"] ?>",
+                "ratingValue": "<?= $general_product_data["cache_avg_rating"] ?>",
+                "reviewCount": "<?= $general_product_data["cache_rating_count"] ?>",
                 "bestRating": 5,
                 "worstRating": 0
             },
             "offers": {
                 "@type": "Offer",
                 "priceCurrency": "PLN",
-                "price": "<?= $product_data["price_min"] ?>",
+                "price": "<?= $general_product_data["price_min"] ?>",
                 "itemCondition": "https://schema.org/UsedCondition",
                 "availability": "<?= $stockSchema ?>",
                 "seller": {
@@ -219,14 +129,14 @@ foreach ($variants[1]["variant_options"] as $size_option) {
 <?php startSection("body_content"); ?>
 
 <?php
-if ($product_data["published"] || User::getCurrent()->priveleges["backend_access"] || $preview_params) :
+if (true) : /* if ($general_product_data["published"] || User::getCurrent()->priveleges["backend_access"] || $preview_params) :*/
 ?>
 
     <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;position: relative;align-items: flex-start;">
         <div style="width: 47%;margin: 32px auto 0;/*position: sticky;top: 150px;*/">
             <!-- sticky on desktop only -->
-            <?php if (count($gallery) == 1) : ?>
-                <img data-src='<?= $product_data["cache_thumbnail"] ?>' data-height='1w' class='product-image wo997_img'>
+            <?php if (count($gallery) < 2) : ?>
+                <img data-src='<?= $general_product_data["main_img_url"] ?>' data-height='1w' class='product-image wo997_img'>
             <?php else : ?>
                 <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
                     <div class="wo997_slides_container">
@@ -240,7 +150,7 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
         </div>
         <div style="width: 40%; margin-top: 20px">
             <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">
-                <h1 class="h1"><?= $product_data["title"] ?></h1>
+                <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 
                 <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
                 <p-radio class="vdo default columns_1" style="--option-padding:3px;margin-bottom:20px;" onchange="toggleVariantStyle(this)">
@@ -252,26 +162,26 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
 
                 <div>
                     <?php
-                    foreach ($variants as $variant) {
+                    foreach ($general_product_variants as $general_product_variant) {
                     ?>
-                        <span class="label"><?= $variant["filter_name"] ?></span>
-                        <p-radio class="variant_radio blocks columns_<?= def($variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($variant, "height", "80px") ?>' data-variant_id="<?= $variant["variant_id"] ?>" data-number>
+                        <span class="label"><?= $general_product_variant["name"] ?></span>
+                        <p-radio class="variant_radio blocks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
                             <?php
-                            foreach ($variant["variant_options"] as $option) {
+                            foreach ($general_product_variant["variant_options"] as $variant_option) {
                             ?>
-                                <radio-option class="variant_option" value="<?= $option["option_id"] ?>">
+                                <radio-option class="variant_option" value="<?= $variant_option["product_feature_option_id"] ?>">
                                     <div>
                                         <div class="price_diff_before"></div>
                                         <div>
                                             <?php
-                                            $color = def($option, ["extra", "color"], "");
+                                            $color = def($variant_option, ["extra", "color"], "");
                                             if ($color) {
                                             ?>
                                                 <div class="color_circle" style="background-color:<?= $color ?>"></div>
                                             <?php
                                             }
                                             ?>
-                                            <?= $option["value"] ?>
+                                            <?= $variant_option["name"] ?>
                                         </div>
                                         <div class="price_diff"></div>
                                     </div>
@@ -299,9 +209,9 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
                         <i class="fas fa-shopping-bag"></i>
                     </button>
 
-                    <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-product_id="<?= $product_id ?>"></div>
-                    <div class="product_basket_variants" data-product_id="<?= $product_id ?>"></div>
-                    <div class="expand_y hidden animate_hidden case_basket_not_empty" data-product_id="<?= $product_id ?>">
+                    <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-general_product_id="<?= $general_product_id ?>"></div>
+                    <div class="product_basket_products" data-general_product_id="<?= $general_product_id ?>"></div>
+                    <div class="expand_y hidden animate_hidden case_basket_not_empty" data-general_product_id="<?= $general_product_id ?>">
                         <a class="btn primary medium fill" href="/zakup" style="margin-top: 20px">
                             Przejdź do koszyka
                             <i class="fa fa-chevron-right"></i>
@@ -326,17 +236,18 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
     </div>
 
     <div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
-        <div class="cms" style="margin:50px -10px;width: auto;"><?= getCMSPageHTML($product_data["description"]); ?></div>
+        <div class="cms" style="margin:50px -10px;width: auto;"><?= "" //getCMSPageHTML($general_product_data["description"]); 
+                                                                ?></div>
 
         <h3 style="margin:30px 0 30px;font-size:22px"><i class="fas fa-comments"></i> Komentarze</h3>
 
         <div class="comments table-without-headers">
             <?php
-            $comments = DB::fetchArr("SELECT dodano, pseudonim, tresc, user_id, comment_id, rating, accepted FROM comments WHERE product_id = " . $product_data["product_id"] . " AND accepted = 1");
+            // $comments = DB::fetchArr("SELECT dodano, pseudonim, tresc, user_id, comment_id, rating, accepted FROM comments WHERE general_product_id = " . $general_product_data["general_product_id"] . " AND accepted = 1");
 
-            foreach ($comments as $comment) {
-                echo '<div style="display:none">' . $comment["pseudonim"] . ' - ' . $comment["tresc"] . '</div>';
-            }
+            // foreach ($comments as $comment) {
+            //     echo '<div style="display:none">' . $comment["pseudonim"] . ' - ' . $comment["tresc"] . '</div>';
+            // }
             ?>
         </div>
 
@@ -347,7 +258,7 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
             <div id="formComment" data-form>
                 <h4 style="font-size: 22px; margin: 70px 0 10px;">Podziel się swoją opinią</h4>
                 <?php
-                $can_user_get_comment_rebate = canUserGetCommentRebate($product_id);
+                $can_user_get_comment_rebate = canUserGetCommentRebate($general_product_id);
 
                 if ($can_user_get_comment_rebate) {
                     echo '<h4 class="rebate-info">W nagrodę otrzymasz kod rabatowy o wartości 25 zł <i class="fas fa-comments-dollar" style="font-size: 26px;margin: -8px 0;"></i></h4>';
@@ -405,7 +316,7 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
         </button>
         <div class="label first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
 
-        <?php if ($product_data["published"] === 1) {
+        <?php if ($general_product_data["published"] === 1) {
             $clr = "var(--success-clr)";
             $info_label = "<i class='fas fa-eye'></i> Widoczny";
             $btn_label = 'Ukryj';
@@ -426,7 +337,7 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
         <div style="height:10px"></div>
 
         <div>
-            <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
+            <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $general_product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
         </div>
     </div>
 
@@ -436,9 +347,9 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
                 url: STATIC_URLS["ADMIN"] + "set_publish",
                 params: {
                     table: "products",
-                    primary: "product_id",
-                    primary_id: <?= $product_id ?>,
-                    published: <?= 1  - $product_data["published"] ?>,
+                    primary: "general_product_id",
+                    primary_id: <?= $general_product_id ?>,
+                    published: <?= 1  - $general_product_data["published"] ?>,
                 },
                 success: () => {
                     window.location.reload();
@@ -446,7 +357,7 @@ if ($product_data["published"] || User::getCurrent()->priveleges["backend_access
             });
         }
 
-        <?php if ($product_data["published"] == 0) : ?>
+        <?php if ($general_product_data["published"] == 0) : ?>
             domload(() => {
                 toggleRightSideMenu();
             })

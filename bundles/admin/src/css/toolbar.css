@@ -1,11 +1,5 @@
 /* css[global] */
 
-.sticky-top {
-	position: sticky;
-	top: 0;
-	z-index: 150;
-}
-
 .custom_toolbar {
 	display: flex;
 	padding: 5px;
