@@ -171,7 +171,7 @@ function requestHeaderModals() {
 			<div class="modal_body">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal_header" style="max-width: 500px;">
-					<div class="basket_icon-wrapper">
+					<div class="basket_icon_wrapper">
 						<img class="basket_icon" src="/src/img/basket_icon.svg" />
 						<div class="basket_item_count"></div>
 					</div>
@@ -193,7 +193,7 @@ function requestHeaderModals() {
 
 	basketReady();
 
-	const bbtn = $("header .basket-wrapper .basket-btn");
+	const bbtn = $("header .basket_wrapper .basket-btn");
 	if (bbtn) {
 		bbtn.addEventListener("click", (ev) => {
 			showModal("basketMenu", { source: bbtn });

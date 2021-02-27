@@ -218,9 +218,9 @@ class DB
         return $definition;
     }
 
-    public static function getIndex($table, $column)
+    public static function getIndexes($table, $column)
     {
-        return DB::fetchRow("SHOW INDEX FROM " . clean($table) . " WHERE Column_name = '" . clean($column) . "'");
+        return DB::fetchArr("SHOW INDEX FROM " . clean($table) . " WHERE Column_name = '" . clean($column) . "'");
     }
 
     /**
@@ -242,25 +242,24 @@ class DB
             echo "⚠️ Undefined index type '" . $type . "'!";
         }
 
-        $currentIndex = DB::getIndex($table, $column);
-
-        if ($currentIndex) {
+        $exists = false;
+        foreach (DB::getIndexes($table, $column) as $currentIndex) {
             if ($type == "index") {
                 $doDrop = false;
                 if ($currentIndex["Non_unique"] && $currentIndex["Key_name"] != "PRIMARY") {
-                    return;
+                    $exists = true;
                 } else {
                     $doDrop = true;
                 }
             } else if ($type == "unique") {
                 if (!$currentIndex["Non_unique"] && $currentIndex["Key_name"] != "PRIMARY") {
-                    return;
+                    $exists = true;
                 } else {
                     $doDrop = true;
                 }
             } else if ($type == "primary") {
                 if (!$currentIndex["Non_unique"] && $currentIndex["Key_name"] == "PRIMARY") {
-                    return;
+                    $exists = true;
                 } else {
                     $doDrop = true;
                 }
@@ -270,21 +269,23 @@ class DB
             }
         }
 
-        if ($type == "index") {
-            DB::execute("ALTER TABLE " . clean($table) . " ADD INDEX (" . clean($column) . ")");
-            echo "➕ INDEX '$column' added to '$table<br>";
-        } else if ($type == "unique") {
-            DB::execute("ALTER TABLE " . clean($table) . " ADD CONSTRAINT " . clean($column) . " UNIQUE (" . clean($column) . ")");
-            echo "➕ UNIQUE '$column' added to '$table<br>";
-        } else if ($type == "primary") {
-            DB::execute("ALTER TABLE " . clean($table) . " ADD PRIMARY KEY (" . clean($column) . ")");
-            echo "➕ PRIMARY key '$column' added to '$table<br>";
+        if (!$exists) {
+            if ($type == "index") {
+                DB::execute("ALTER TABLE " . clean($table) . " ADD INDEX (" . clean($column) . ")");
+                echo "➕ INDEX '$column' added to '$table<br>";
+            } else if ($type == "unique") {
+                DB::execute("ALTER TABLE " . clean($table) . " ADD CONSTRAINT " . clean($column) . " UNIQUE (" . clean($column) . ")");
+                echo "➕ UNIQUE '$column' added to '$table<br>";
+            } else if ($type == "primary") {
+                DB::execute("ALTER TABLE " . clean($table) . " ADD PRIMARY KEY (" . clean($column) . ")");
+                echo "➕ PRIMARY key '$column' added to '$table<br>";
+            }
         }
     }
 
     public static function dropIndex($table, $column)
     {
-        $index = DB::getIndex($table, $column);
+        $index = DB::getIndexes($table, $column);
         if ($index) {
             DB::dropIndexByName($table, $index["Key_name"]);
         }
@@ -396,7 +397,12 @@ class DB
                         continue;
                     }
 
-                    if ($existing_column["Key"] === "PRI" xor in_array(def($column, "index"), ["primary", "unique"])) {
+                    if ($existing_column["Key"] === "PRI" xor def($column, "index") === "primary") {
+                        $modify = true;
+                        break;
+                    }
+
+                    if ($existing_column["Key"] === "UNI" xor def($column, "index") === "unique") {
                         $modify = true;
                         break;
                     }
