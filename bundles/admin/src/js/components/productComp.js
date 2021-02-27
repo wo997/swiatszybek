@@ -587,9 +587,6 @@ function productComp(comp, parent, data = undefined) {
 					<product_feature-comp></product_feature-comp>
 				</list-comp>
 
-				<div class="label">Główne zdjęcie</div>
-				<image-input data-bind="{${data.main_img_url}}" data-options='{"width":"100px","height":"1w"}'></image-input>
-
 				<div style="margin:var(--form_small_spacing) 0">
 					<span class="label inline list_label" html="{${"Zdjęcia (" + data.images.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary">Dodaj zdjęcie <i class="fas fa-plus"></i></button>
@@ -656,7 +653,7 @@ function productComp(comp, parent, data = undefined) {
 
 			comp._nodes.add_image_btn.addEventListener("click", () => {
 				select_file_modal._data.file_manager.select_callback = (src) => {
-					comp._data.images.push({ img_url: src, product_image_id: -1 });
+					comp._data.images.push({ img_url: src, product_image_id: -1, is_main: false });
 					comp._render();
 				};
 				select_file_modal._render();
@@ -711,6 +708,7 @@ function productComp(comp, parent, data = undefined) {
 								})),
 								categories: data.category_ids,
 								products: db_products,
+								images: data.images.map((e, index) => ({ ...e, pos: index })),
 							},
 						},
 						success: (res) => {

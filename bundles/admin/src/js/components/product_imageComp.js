@@ -2,6 +2,7 @@
 
 /**
  * @typedef {{
+ * is_main: boolean
  * product_image_id
  * img_url: string
  * } & ListCompRowData} Product_ImageCompData
@@ -22,7 +23,7 @@
  * @param {*} parent
  * @param {Product_ImageCompData} data
  */
-function product_imageComp(comp, parent, data = { product_image_id: -1, img_url: "" }) {
+function product_imageComp(comp, parent, data = { product_image_id: -1, img_url: "", is_main: false }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -32,8 +33,16 @@ function product_imageComp(comp, parent, data = { product_image_id: -1, img_url:
 
 	createComp(comp, parent, data, {
 		template: html`
-			<image-input data-bind="{${data.img_url}}" data-options='{"width":"100px","height":"1w"}'></image-input>
-			<p-batch-trait data-trait="list_controls"></p-batch-trait>
+			<image-input data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-input>
+
+			<label style="margin-left: 5px" data-tooltip="Domyślne zdjęcie wyświetlane na liście produktów">
+				<p-checkbox data-bind="{${data.is_main}}" class="square"></p-checkbox>
+				Główne
+			</label>
+
+			<div style="margin-left:auto">
+				<p-batch-trait data-trait="list_controls"></p-batch-trait>
+			</div>
 		`,
 		initialize: () => {
 			/** @type {ListComp} */

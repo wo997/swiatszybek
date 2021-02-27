@@ -27,6 +27,11 @@ product-comp {
 			margin-top: 5px;
 		}
 	}
+
+	& product_image-comp.comp {
+		display: flex;
+		align-items: center;
+	}
 }
 
 .injectable_header {

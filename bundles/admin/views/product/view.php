@@ -8,7 +8,7 @@ if ($general_product_id !== -1) {
         Request::redirect(Request::$static_urls["ADMIN"] . "produkt");
     }
 
-    $general_product_data = $general_product->getSimpleProps();
+    $general_product_data = $general_product->getAllProps();
 
     /** @var Entity[] */
     $products = $general_product->getProp("products");

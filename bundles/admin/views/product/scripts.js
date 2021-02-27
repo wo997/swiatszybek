@@ -51,6 +51,8 @@ domload(() => {
 		data.category_ids = general_product_data.categories.map((e) => e.product_category_id);
 		data.main_img_url = general_product_data.main_img_url;
 
+		data.images = general_product_data.images.sort((a, b) => Math.sign(a.pos - b.pos));
+
 		product_comp._render();
 
 		// rendering provides important informations

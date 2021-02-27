@@ -30,6 +30,8 @@ if (!$general_product_data) {
 
 $products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
+$general_product_images = DB::fetchArr("SELECT * FROM product_image WHERE general_product_id = $general_product_id"); // AND active = 1
+
 // if (isset($preview_params) && isset($preview_params["products"])) {
 //     $products = json_decode($preview_params["products"], true);
 // }
@@ -41,18 +43,6 @@ $products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $gene
 //         break;
 //     }
 // }
-
-$gallery = [];
-// $gallery = json_decode($general_product_data["gallery"], true);
-// if (!$gallery) {
-//     $gallery = [];
-// }
-
-$galleryhtml = "";
-// foreach ($gallery as $pic) {
-//     $galleryhtml .= "<div class='wo997_slide'><img data-src='" . $pic["src"] . "' data-height='1w' class='product-image wo997_img'></div>";
-// }
-// $galleryhtml .= $galleryhtml . $galleryhtml;
 
 // $page_data["seo_description"] = $general_product_data["seo_description"];
 // $page_data["seo_title"] = $general_product_data["seo_title"];
@@ -135,18 +125,20 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
     <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;position: relative;align-items: flex-start;">
         <div style="width: 47%;margin: 32px auto 0;/*position: sticky;top: 150px;*/">
             <!-- sticky on desktop only -->
-            <?php if (count($gallery) < 2) : ?>
-                <img data-src='<?= $general_product_data["main_img_url"] ?>' data-height='1w' class='product-image wo997_img'>
-            <?php else : ?>
-                <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
-                    <div class="wo997_slides_container">
-                        <div class="wo997_slides_wrapper">
-                            <?= $galleryhtml ?>
-                        </div>
+            <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
+                <div class="wo997_slides_container">
+                    <div class="wo997_slides_wrapper">
+                        <?php
+                        foreach ($general_product_images as $image) {
+                        ?>
+                            <div class="wo997_slide"><img data-src="<?= $image["img_url"] ?>" data-height="1w" class="product-image wo997_img"></div>
+                        <?php
+                        }
+                        ?>
                     </div>
                 </div>
-                <div data-slide_width="100px" data-show_next_mobile style="--slide_padding:5px" data-nav_out_from="1000px"></div>
-            <?php endif ?>
+            </div>
+            <div data-slide_width="100px" data-show_next_mobile style="--slide_padding:5px" data-nav_out_from="1000px"></div>
         </div>
         <div style="width: 40%; margin-top: 20px">
             <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">

@@ -16,65 +16,32 @@ function registerImageInputs(parent) {
 		input.insertAdjacentHTML(
 			"afterbegin",
 			html`
-				<div class="image_input_img_wrapper">
-					<img class="wo997_img" />
-					<i class="fas fa-image"></i>
+				<img class="wo997_img" />
+				<div class="controls">
+					<button class="btn subtle change_btn" data-tooltip="Zmień"><i class="fas fa-cog"></i></button>
+					<button class="btn subtle preview_btn" data-tooltip="Podgląd"><i class="fas fa-eye"></i></button>
+					<button class="btn primary select_btn"><i class="fas fa-image"></i> <i class="fas fa-plus"></i></button>
 				</div>
-				<button class="btn primary"></button>
 			`
 		);
 
 		const img = input._child("img");
-		const button = input._child("button");
+		const select_btn = input._child(".select_btn");
 		const img_wrapper = input._child(".image_input_img_wrapper");
 		const select_file_modal = getSelectFileModal();
 
-		const options_json = input.getAttribute("data-options");
-		if (options_json) {
-			try {
-				const options = JSON.parse(options_json);
-
-				if (options.width) {
-					img_wrapper.style.width = options.width;
-				}
-
-				// it could be a function
-				if (options.height) {
-					if (options.height.indexOf("w") !== -1) {
-						img_wrapper.setAttribute("data-height", options.height);
-					} else {
-						img_wrapper.style.height = options.height;
-					}
-				}
-			} catch (e) {
-				console.error(e);
-			}
-		}
-
 		img.addEventListener("change", () => {
 			const selected = !!img._get_value();
-			const btn = input._child("button");
-			btn._set_content(selected ? "Zmień" : "Wybierz");
-			btn.classList.toggle("primary", !selected);
-			btn.classList.toggle("subtle", selected);
 			if (!input._setting_value) {
 				input._dispatch_change();
 			}
 			input.classList.toggle("selected", selected);
 		});
 
-		img_wrapper.addEventListener("click", () => {
-			button.click();
-		});
-
-		button.addEventListener("click", () => {
+		select_btn.addEventListener("click", () => {
 			select_file_modal._data.file_manager.select_target = input;
 			select_file_modal._render();
 			select_file_modal._show({ source: input });
-
-			// fileManager.open(img, {
-			// 	asset_types: ["image"],
-			// });
 		});
 
 		input._get_value = () => {
