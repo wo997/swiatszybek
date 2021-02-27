@@ -5,6 +5,7 @@
  * select_target: PiepNode | undefined
  * search_data: any[]
  * pagination_data: PaginationCompData
+ * quick_search?: string
  * }} FileManagerCompData
  *
  * @typedef {{
@@ -36,6 +37,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 			select_target: undefined,
 		};
 	}
+	data.quick_search = "";
 
 	comp._search = () => {
 		if (comp._search_request) {
@@ -53,7 +55,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 		// datatable_params.filters = filters;
 		datatable_params.row_count = data.pagination_data.row_count;
 		datatable_params.page_id = data.pagination_data.page_id;
-		datatable_params.quick_search = "";
+		datatable_params.quick_search = data.quick_search;
 
 		comp._search_request = xhr({
 			url: search_url,
@@ -92,7 +94,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 						<div class="file_wrapper">
 							<div class="display">${display}</div>
 							<div class="file_controls glue_children">
-								<button class="btn subtle select_btn" data-tooltip="Wybierz"><i class="fas fa-check"></i></button>
+								<button class="btn primary select_btn" data-tooltip="Wybierz"><i class="fas fa-check"></i></button>
 								<button class="btn subtle preview_btn" data-tooltip="Podgląd"><i class="fas fa-eye"></i></button>
 								<button class="btn subtle edit_btn" data-tooltip="Edytuj"><i class="fas fa-cog"></i></button>
 								<button class="btn subtle trash_btn" data-tooltip="Usuń"><i class="fas fa-trash"></i></button>
@@ -117,6 +119,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 				if (
 					cd.sort ||
 					cd.filters ||
+					cd.quick_search ||
 					!comp._prev_data.pagination_data ||
 					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
 					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count
@@ -138,6 +141,11 @@ function fileManagerComp(comp, parent, data = undefined) {
 					><span class="medium">Pliki / Zdjęcia</span>
 					<button class="btn primary" data-node="{${comp._nodes.upload_btn}}">Prześlij pliki <i class="fas fa-plus"></i></button
 				></span>
+
+				<div class="float-icon" style="display: inline-block;">
+					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" data-input_delay="300" />
+					<i class="fas fa-search"></i>
+				</div>
 			</div>
 
 			<div data-node="{${comp._nodes.files_grid}}"></div>
@@ -283,6 +291,25 @@ function fileManagerComp(comp, parent, data = undefined) {
 						hideParentModal(comp);
 						if (data.select_target) {
 							data.select_target._set_value(file_wrapper._child(".wo997_img").dataset.src);
+						}
+					}
+
+					if (trash_btn && confirm("Czy aby na pewno chcesz usunąć to zdjęcie?")) {
+						showLoader(comp);
+
+						xhr({
+							url: STATIC_URLS["ADMIN"] + "file/delete",
+							params: {
+								file_path: file_wrapper._child(".wo997_img").dataset.src,
+							},
+							success: (res) => {
+								hideLoader(comp);
+								comp._search();
+							},
+						});
+
+						if (data.select_target) {
+							data.select_target._set_value();
 						}
 					}
 

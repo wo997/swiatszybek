@@ -46,15 +46,20 @@ function selectFileModalComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="custom_toolbar">
-				<span class="title medium">Wybierz zdjęcie HAAAAAAAAAAAAAAAAAAAAAAAAAAAALO ZAMIEŃ TO</span>
-				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-			</div>
+			<div class="toolbar_wrapper"></div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<file-manager-comp data-node="{${comp._nodes.file_manager}}" data-bind="{${data.file_manager}}"></file-manager-comp>
 			</div>
 		`,
-		initialize: () => {},
+		ready: () => {
+			comp._child(".toolbar_wrapper").appendChild(comp._nodes.file_manager._child(".custom_toolbar"));
+			comp
+				._child(".toolbar_wrapper .custom_toolbar")
+				.insertAdjacentHTML(
+					"beforeend",
+					html` <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button> `
+				);
+		},
 	});
 }
 

@@ -128,7 +128,7 @@ class Files
             }
         }
 
-        $file_name_wo_extension = self::getFilenameWithoutExtension($file_path);
+        $file_name_wo_extension = self::getFileNameWithoutExtension($file_path);
 
         foreach ($sizes as $size_name => $size) {
             $file_path_wo_extension = UPLOADS_PATH . $size_name . "/" . $file_name_wo_extension;
@@ -176,7 +176,7 @@ class Files
         return substr($file_path, $start, strrpos($file_path, ".") - $start);
     }
 
-    public static function getFilenameWithoutExtension($file_path)
+    public static function getFileNameWithoutExtension($file_path)
     {
         $path_info = pathinfo($file_path);
         $file_name = $path_info["basename"];
@@ -258,10 +258,10 @@ class Files
     }
 
 
-    public static function deleteAssetByPath($path)
+    public static function deleteUploadedFile($full_file_path)
     {
-        $file_path = ltrim($path, "/");
-        $file_name = self::getFilenameWithoutExtension($file_path);
+        $file_path = ltrim($full_file_path, "/");
+        $file_name = self::getFileNameWithoutExtension($file_path);
         $file_type = DB::fetchVal("SELECT file_type FROM file WHERE file_path = ?", [$file_path]);
 
         @unlink($file_path);
@@ -269,15 +269,15 @@ class Files
         if ($file_type == "image") {
             foreach (self::$image_fixed_dimensions as $size_name => $area) {
                 foreach (self::$image_minified_formats as $format) {
-                    $file_path = UPLOADS_PATH . $size_name . "/" . $file_name . "." . $format;
-                    if (file_exists($file_path)) {
-                        @unlink($file_path);
+                    $min_file_path = UPLOADS_PATH . $size_name . "/" . $file_name . "." . $format;
+                    if (file_exists($min_file_path)) {
+                        @unlink($min_file_path);
                     }
                 }
             }
         }
 
-        DB::execute("DELETE FROM uploads WHERE file_path = ?", [$file_path]);
+        DB::execute("DELETE FROM file WHERE file_path = ?", [$file_path]);
     }
 
     public static function mime2ext($mime)
