@@ -1,0 +1,15 @@
+/* css[global] */
+
+#previewUrl {
+	iframe {
+		width: 100%;
+		height: 100%;
+		margin: auto;
+		box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15);
+		border: none;
+	}
+
+	.preview_form {
+		display: none;
+	}
+}
