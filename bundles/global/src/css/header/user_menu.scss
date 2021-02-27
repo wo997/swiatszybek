@@ -6,16 +6,24 @@
 		min-width: 230px;
 	}
 	.menu_item {
-		display: block;
-		white-space: nowrap;
-		padding: 5px 15px;
+		& {
+			display: block;
+			white-space: nowrap;
+			padding: 5px 15px;
+		}
+		i {
+			width: 20px;
+			text-align: center;
+			color: #333;
+		}
 	}
 	.user_menu .dropdown-expand a:hover {
 		background: #eee;
 	}
 	.username {
 		margin: 0px 12px;
-		padding: 5px 0 5px !important;
+		padding: 5px 0 5px;
+		text-align: center;
 	}
 	.indent {
 		margin-left: 15px;
