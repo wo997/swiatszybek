@@ -23,6 +23,7 @@
  *  products_dt?: DatatableCompData
  *  category_ids: number[]
  *  main_img_url: string
+ *  images: Product_ImageCompData[]
  * }} ProductCompData
  *
  * @typedef {{
@@ -39,6 +40,7 @@
  *      print_categories: PiepNode
  *      preview_btn: PiepNode
  *      open_btn: PiepNode
+ *      add_image_btn: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], dont_ask?: boolean})
  *  _remove_missing_products()
@@ -75,6 +77,7 @@ function productComp(comp, parent, data = undefined) {
 			features: [],
 			category_ids: [],
 			main_img_url: "",
+			images: [],
 		};
 	}
 
@@ -561,9 +564,6 @@ function productComp(comp, parent, data = undefined) {
 				<div class="label first">Nazwa produktu</div>
 				<input type="text" class="field" data-bind="{${data.name}}" data-validate="string" />
 
-				<div class="label">Główne zdjęcie</div>
-				<image-input data-bind="{${data.main_img_url}}" data-options='{"width":"300px","height":"1w"}'></image-input>
-
 				<div class="label">Sprzedawaj na</div>
 				<select class="field" data-bind="{${data.sell_by}}">
 					<option value="qty">Sztuki</option>
@@ -571,21 +571,31 @@ function productComp(comp, parent, data = undefined) {
 					<option value="length">Długość</option>
 				</select>
 
-				<div style="margin-top:10px">
-					<span class="label inline" style="font-size: 1.1em;" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
+				<div style="margin-top:var(--form_small_spacing)">
+					<span class="label inline list_label" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_category_btn}}" class="btn primary">Dodaj kategorie <i class="fas fa-plus"></i></button>
-					<div class="scroll_panel scroll_preview" style="max-height:200px;margin-top:10px;cursor:pointer">
+					<div class="scroll_panel scroll_preview" style="max-height:200px;margin-top:var(--form_small_spacing);cursor:pointer">
 						<div data-node="{${comp._nodes.print_categories}}"></div>
 					</div>
 				</div>
 
-				<div style="margin-top:10px">
-					<span class="label inline" style="font-size: 1.1em;" html="{${"Cechy (" + data.features.length + ")"}}"></span>
+				<div style="margin-top:var(--form_small_spacing)">
+					<span class="label inline list_label" html="{${"Cechy (" + data.features.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
-
 				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id" class="wireframe">
 					<product_feature-comp></product_feature-comp>
+				</list-comp>
+
+				<div class="label">Główne zdjęcie</div>
+				<image-input data-bind="{${data.main_img_url}}" data-options='{"width":"100px","height":"1w"}'></image-input>
+
+				<div style="margin:var(--form_small_spacing) 0">
+					<span class="label inline list_label" html="{${"Zdjęcia (" + data.images.length + ")"}}"></span>
+					<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary">Dodaj zdjęcie <i class="fas fa-plus"></i></button>
+				</div>
+				<list-comp class="wireframe" data-bind="{${data.images}}">
+					<product_image-comp></product_image-comp>
 				</list-comp>
 			</div>
 
@@ -642,6 +652,15 @@ function productComp(comp, parent, data = undefined) {
 
 			comp._nodes.add_feature_btn.addEventListener("click", () => {
 				select_product_features_modal_comp._show({ source: comp._nodes.add_feature_btn });
+			});
+
+			comp._nodes.add_image_btn.addEventListener("click", () => {
+				select_file_modal._data.file_manager.select_callback = (src) => {
+					comp._data.images.push({ img_url: src, product_image_id: -1 });
+					comp._render();
+				};
+				select_file_modal._render();
+				select_file_modal._show();
 			});
 
 			comp._nodes.add_category_btn.addEventListener("click", () => {

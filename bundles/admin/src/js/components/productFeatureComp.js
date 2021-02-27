@@ -286,7 +286,7 @@ function productFeatureComp(comp, parent, data) {
 				</button>
 			</div>
 			<datatable-comp
-				style="margin-top:var(--form-spacing)"
+				style="margin-top:var(--form_spacing)"
 				data-bind="{${data.datatable}}"
 				data-node="{${comp._nodes.datatable}}"
 			></datatable-comp>

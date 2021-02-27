@@ -598,6 +598,11 @@ function isEquivalent(a, b) {
 				return false;
 			}
 		} else if (typeof a[prop] === "function") {
+			if (!a[prop] || !b[prop]) {
+				if (a[prop] !== b[prop]) {
+					return false;
+				}
+			}
 			if (a[prop].toString() !== b[prop].toString()) {
 				return false;
 			}

@@ -39,13 +39,13 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 			</div>
 		`,
 		initialize: () => {
-			/** @type {ProductComp} */
-			// @ts-ignore
-			const product_comp = $("product-comp");
-
 			/** @type {ListComp} */
 			// @ts-ignore
 			const list = comp._parent_comp;
+
+			/** @type {ProductComp} */
+			// @ts-ignore
+			const product_comp = list._parent_comp._parent_comp._parent_comp;
 
 			list.addEventListener("remove_row", (ev) => {
 				// @ts-ignore

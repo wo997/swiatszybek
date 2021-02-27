@@ -2,7 +2,8 @@
 
 /**
  * @typedef {{
- * select_target: PiepNode | undefined
+ * select_target?: PiepNode
+ * select_callback?(src)
  * search_data: any[]
  * pagination_data: PaginationCompData
  * quick_search?: string
@@ -34,7 +35,6 @@ function fileManagerComp(comp, parent, data = undefined) {
 		data = {
 			pagination_data: { page_id: 0, row_count_options: [12, 24, 48, 96], row_count: 48 },
 			search_data: [],
-			select_target: undefined,
 		};
 	}
 	data.quick_search = "";
@@ -127,9 +127,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 					comp._search();
 				}
 
-				if (cd.select_target) {
-					comp.classList.toggle("selectable", !!data.select_target);
-				}
+				comp.classList.toggle("selectable", !!data.select_target || !!data.select_callback);
 			},
 		});
 	};
@@ -288,9 +286,18 @@ function fileManagerComp(comp, parent, data = undefined) {
 					const trash_btn = target._parent(".trash_btn", { skip: 0 });
 
 					if (select_btn) {
+						const img_src = file_wrapper._child(".wo997_img").dataset.src;
+
 						hideParentModal(comp);
 						if (data.select_target) {
-							data.select_target._set_value(file_wrapper._child(".wo997_img").dataset.src);
+							data.select_target._set_value(img_src);
+							data.select_target = undefined;
+							comp._render();
+						}
+						if (data.select_callback) {
+							data.select_callback(img_src);
+							data.select_callback = undefined;
+							comp._render();
 						}
 					}
 
@@ -307,10 +314,6 @@ function fileManagerComp(comp, parent, data = undefined) {
 								comp._search();
 							},
 						});
-
-						if (data.select_target) {
-							data.select_target._set_value();
-						}
 					}
 
 					if (preview_btn) {

@@ -73,6 +73,7 @@ list-comp {
 		margin: var(--list_row_margin);
 		border: var(--list_row_border);
 		padding: var(--list_row_padding);
+		background: #fff;
 	}
 	&:last-child {
 		margin-bottom: var(--list_row_margin_bottom_last);
@@ -159,4 +160,8 @@ list-comp {
 	&.inactive {
 		visibility: hidden;
 	}
+}
+
+.list_label {
+	font-size: 1.1em;
 }

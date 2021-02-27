@@ -26,7 +26,6 @@ function selectFileModalComp(comp, parent, data = undefined) {
 			file_manager: {
 				pagination_data: { page_id: 0, row_count_options: [12, 24, 48, 96], row_count: 48 },
 				search_data: [],
-				select_target: undefined,
 			},
 		};
 	}

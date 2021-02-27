@@ -7,10 +7,10 @@ window.addEventListener("register-form-components", (ev) => {
 
 /**
  *
- * @param {PiepNode} input
+ * @param {PiepNode} parent
  */
-function registerImageInputs(input) {
-	input._children("image-input:not(.image-input-registered)").forEach((input) => {
+function registerImageInputs(parent) {
+	parent._children("image-input:not(.image-input-registered)").forEach((input) => {
 		input.classList.add("image-input-registered");
 
 		input.insertAdjacentHTML(
@@ -91,6 +91,6 @@ function registerImageInputs(input) {
 			}
 		};
 
-		input._set_value();
+		input._set_value("");
 	});
 }

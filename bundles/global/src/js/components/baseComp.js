@@ -404,7 +404,8 @@ function setCompData(comp, data = undefined, options = {}) {
 	}
 
 	// kinda weird but it creates f.e. checkbox base component
-	delay("registerForms", 0);
+	//delay("registerForms", 0);
+	registerForms();
 
 	if (isObject(node._data)) {
 		node._changed_data = {};
@@ -498,6 +499,11 @@ function propagateCompData(comp) {
 
 			if (sub_node._set_value && (!node._changed_data || node._changed_data[bind_var])) {
 				sub_node._set_value(node._data[bind_var], { quiet: true });
+
+				// setTimeout(() => {
+				// 	sub_node._set_value(node._data[bind_var], { quiet: true });
+				// });
+				// if (bind_var === "img_url") console.log(sub_node, node._data[bind_var]);
 			}
 		});
 	}

@@ -77,13 +77,13 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				});
 			});
 
-			/** @type {ProductComp} */
-			// @ts-ignore
-			const product_comp = $("product-comp");
-
 			/** @type {ListComp} */
 			// @ts-ignore
 			const list = comp._parent_comp;
+
+			/** @type {ProductComp} */
+			// @ts-ignore
+			const product_comp = list._parent_comp;
 
 			list.addEventListener("remove_row", (ev) => {
 				// @ts-ignore
