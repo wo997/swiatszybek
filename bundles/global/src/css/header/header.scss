@@ -140,8 +140,7 @@ header.main {
 			min-width: 270px;
 		}
 		.go_to_buy_btn {
-			margin: -1px;
-			width: calc(100% + 2px);
+			margin: 5px;
 		}
 	}
 
@@ -159,6 +158,10 @@ header.main {
 		.last_viewed_products_wrapper {
 			min-width: 270px;
 		}
+	}
+
+	.headerbtn_menu hr.indent {
+		margin: 5px;
 	}
 }
 

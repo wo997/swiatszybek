@@ -14,8 +14,11 @@
 		background: #eee;
 	}
 	.username {
-		border-bottom: 1px solid #ccc;
 		margin: 0px 12px;
-		padding: 5px 0 7px !important;
+		padding: 5px 0 5px !important;
+	}
+	.indent {
+		margin-left: 15px;
+		margin-right: 15px;
 	}
 }
