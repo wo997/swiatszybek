@@ -9,7 +9,7 @@
  * _data: SelectFileModalCompData
  * _set_data(data?: SelectFileModalCompData, options?: SetCompDataOptions)
  * _nodes: {
- *  file_manager: PiepNode
+ *  file_manager: FileManagerComp
  * }
  * _show(options?: ShowModalParams)
  * } & BaseComp} SelectFileModalComp
@@ -47,7 +47,7 @@ function selectFileModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom_toolbar">
-				<span class="title medium">Wybierz zdjęcie</span>
+				<span class="title medium">Wybierz zdjęcie HAAAAAAAAAAAAAAAAAAAAAAAAAAAALO ZAMIEŃ TO</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
@@ -75,6 +75,8 @@ function getSelectFileModal() {
 	const select_file_modal_comp = $("#selectFile select-file-modal-comp");
 	if (!ex) {
 		selectFileModalComp(select_file_modal_comp, undefined);
+
+		//select_file_modal_comp._nodes.file_manager._nodes.pagination;
 	}
 
 	return select_file_modal_comp;
