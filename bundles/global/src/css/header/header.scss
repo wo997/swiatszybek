@@ -123,6 +123,34 @@ header.main {
 	nav:not(.bottom) a {
 		border-radius: var(--header-btn-radius);
 	}
+
+	.basket_menu {
+		& {
+			min-width: 250px;
+		}
+		.basket_content {
+			min-width: 270px;
+		}
+		.go_to_buy_btn {
+			margin: -1px;
+			width: calc(100% + 2px);
+		}
+	}
+
+	.menu_header {
+		text-align: center;
+		margin: 0.3em 0;
+		font-weight: 600;
+	}
+
+	.last_viewed_products_menu {
+		& {
+			min-width: 250px;
+		}
+		.last_viewed_products_wrapper {
+			min-width: 270px;
+		}
+	}
 }
 
 .logo-default {

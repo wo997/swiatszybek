@@ -222,7 +222,7 @@ function requestHeaderModals() {
 		html`
 			<div>
 				<a onclick="showModal('lastViewedProducts',{source:this});return false;">
-					<img class="product-history-icon" src="/src/img/product_history_icon.svg" /> Ostatnio przeglądane produkty
+					<img class="product_history_icon" src="/src/img/product_history_icon.svg" /> Ostatnio przeglądane produkty
 				</a>
 			</div>
 			<div>
@@ -239,7 +239,7 @@ function requestHeaderModals() {
 			<div class="modal_body">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal_header">
-					<img class="product-history-icon" src="/src/img/product_history_icon.svg" />
+					<img class="product_history_icon" src="/src/img/product_history_icon.svg" />
 					Ostatnio przeglądane
 				</h3>
 				<div class="scroll_panel scroll_shadow panel_padding">

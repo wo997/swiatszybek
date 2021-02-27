@@ -183,9 +183,9 @@ window.addEventListener("basket-change", (event) => {
 		setSummary();
 	}
 
-	$$(".gotobuy").forEach((e) => {
-		e.toggleAttribute("disabled", res.item_count === 0);
-	});
+	// $$(".gotobuy").forEach((e) => {
+	// 	e.toggleAttribute("disabled", res.item_count === 0);
+	// });
 
 	var options = {};
 	if (res.options.instant) {
