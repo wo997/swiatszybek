@@ -21,7 +21,7 @@ function loadLazyNode(node, animate = true) {
 
 	if (isNodeOnScreen(node, lazyLoadOffset)) {
 		node.classList.remove("lazy");
-		animateVisibility(node);
+		animateVisibility(node, 0);
 	}
 }
 
@@ -115,7 +115,7 @@ function loadImage(img, animate = true, offset = null) {
 			img.setAttribute("src", src);
 			img.classList.add("wo997_img_waiting");
 
-			showWaitingImage(img, animate ? 400 : 0);
+			showWaitingImage(img, animate && !img._parent(".freeze") ? 400 : 0);
 		}
 	}
 }
@@ -126,7 +126,7 @@ function showWaitingImage(img, duration) {
 	}
 }
 
-function animateVisibility(img, duration) {
+function animateVisibility(img, duration = 0) {
 	img.style.animation = `show ${duration}ms`;
 	img.classList.remove("wo997_img_waiting");
 	img.classList.add("wo997_img_shown");

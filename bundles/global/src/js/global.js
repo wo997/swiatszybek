@@ -252,18 +252,13 @@ function setValue(input, value = null, params = {}) {
 		input.jscolor.importColor();
 	} else if (input.getAttribute("type") == "checkbox") {
 		input.checked = value ? true : false;
-	} else if (input.classList.contains("category-picker")) {
-		setCategoryPickerValue(input, value, params);
 	} else {
 		var type = input.getAttribute("data-type");
 		if (type == "html") {
-			var pointChild = input.getAttribute("data-point-child");
-			if (pointChild) {
-				input = input.find(pointChild);
-			}
 			input._set_content(value);
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
+				// @ts-ignore
 				switchImage(input, value);
 			} else {
 				input.setAttribute("src", value);
