@@ -58,13 +58,15 @@ function loginFormModalComp(comp, parent, data = undefined) {
 
 					<div class="label">
 						<span>Hasło</span>
-						<i
+						<button
+							class="btn small transparent"
+							style="margin-left:0"
 							data-node="{${comp._nodes.password_visible_btn}}"
-							class="fas {${data.password_visible}?fa-eye-slash:fa-eye} btn small"
-							onclick="togglePasswordFieldType(this,$(this)._parent()._next())"
 							data-tooltip="{${data.password_visible ? "Ukryj hasło" : "Pokaż hasło"}}"
 							data-tooltip_position="right"
-						></i>
+						>
+							<i class="fas {${data.password_visible}?fa-eye-slash:fa-eye}"></i>
+						</button>
 					</div>
 					<input
 						data-node="{${comp._nodes.password}}"

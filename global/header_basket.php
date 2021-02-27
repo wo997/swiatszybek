@@ -15,7 +15,7 @@
             </div>
             <hr>
             <div class="basket_summary">
-                <div style='text-align:center;padding:5px;'>
+                <div style='text-align:center;padding:5px;font-weight:600'>
                     Wartość koszyka:
                     <span class="total_basket_cost pln">250 zł</span>
                 </div>
