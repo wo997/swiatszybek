@@ -44,8 +44,8 @@ function setVariantsFromUrl() {
 	const url_params = new URLSearchParams(window.location.search);
 	const url_variants = url_params.get("v");
 	if (url_variants) {
-		url_variants.split(".").forEach((e) => {
-			const [variant_id, option_id] = e.split("~");
+		url_variants.split("~").forEach((e) => {
+			const [variant_id, option_id] = e.split(".");
 			if (variant_id && option_id) {
 				sv[variant_id] = { option_id: +option_id };
 			}
@@ -68,11 +68,12 @@ function setVariantsFromUrl() {
 function getProductDataForVariants(sv) {
 	const matched_products = general_product_products.filter((product) => {
 		let exists = true;
-		for (const [variant_id, option_info] of Object.entries(sv)) {
-			if (!product.published || product.stock <= 0) {
+		for (const [product_feature_id, option_info] of Object.entries(sv)) {
+			if (!product.active || product.stock <= 0) {
 				exists = false;
 			}
-			if (product.variants[variant_id] !== option_info.option_id) {
+			const feature = product.variants.find((e) => e.product_feature_id === +product_feature_id);
+			if (!feature || feature.product_feature_option_id !== option_info.option_id) {
 				exists = false;
 			}
 		}
@@ -82,8 +83,8 @@ function getProductDataForVariants(sv) {
 	let price_min = 10000000;
 	let price_max = 0;
 	matched_products.forEach((product) => {
-		price_min = Math.min(price_min, product.price);
-		price_max = Math.max(price_max, product.price);
+		price_min = Math.min(price_min, product.gross_price);
+		price_max = Math.max(price_max, product.gross_price);
 	});
 
 	return {
@@ -110,11 +111,11 @@ function variantChanged() {
 
 		const url_variants = [];
 		for (const [variant_id, option_info] of Object.entries(selected_variants)) {
-			url_variants.push(variant_id + "~" + option_info.option_id);
+			url_variants.push(variant_id + "." + option_info.option_id);
 		}
 
 		const params = new URLSearchParams(window.location.search);
-		params.set("v", url_variants.join("."));
+		params.set("v", url_variants.join("~"));
 
 		history.pushState(undefined, "wariant jakiś tutaj will be", "?" + params.toString());
 
@@ -131,8 +132,8 @@ function setVariantData() {
 	$$(".variants").forEach((variants) => {
 		//const selected_option_id = variants._get_value();
 
-		variants._children("radio-option").forEach((option) => {
-			const option_id = +option.getAttribute("value");
+		variants._children(".variant_option").forEach((option) => {
+			const option_id = +option._child("p-checkbox").dataset.value;
 
 			const assume_other_selected = cloneObject(selected_variants);
 

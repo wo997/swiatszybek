@@ -183,7 +183,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                             <?php
                             foreach ($general_product_variant["variant_options"] as $variant_option) {
                             ?>
-                                <div class="box checkbox_area">
+                                <div class="box checkbox_area variant_option">
                                     <div>
                                         <div class="price_diff_before"></div>
                                         <div>
@@ -210,7 +210,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
                     ?>
 
-                    <p style='font-weight:normal;margin: 0; font-size: 1.6em;'>
+                    <p style='margin: 0; font-size: 1.6em;' class="semi-bold">
                         <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
                     </p>
 
