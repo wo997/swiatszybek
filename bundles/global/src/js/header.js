@@ -105,13 +105,28 @@ windowload(() => {
 		return;
 	}
 	headerResizeCallback();
-	document.addEventListener("scroll", () => {
+
+	const onScroll = () => {
 		const scroll_top = document.documentElement.scrollTop;
-		follow_scroll_top = clamp(scroll_top - main_header.offsetHeight, follow_scroll_top, scroll_top);
+
+		let res = { other_header_visible: 0 };
+		window.dispatchEvent(
+			new CustomEvent("main_header_scroll", {
+				detail: {
+					res,
+				},
+			})
+		);
+
+		const min = scroll_top - main_header.offsetHeight;
+		const max = scroll_top - main_header.offsetHeight * res.other_header_visible * 1.1;
+		follow_scroll_top = clamp(min, follow_scroll_top, max);
 		main_header.style.transform = `translateY(${follow_scroll_top - scroll_top}px)`;
 
 		main_scroll_top = document.documentElement.scrollTop;
-	});
+	};
+	document.addEventListener("scroll", onScroll);
+	onScroll();
 });
 
 let requested_header_modals = false;

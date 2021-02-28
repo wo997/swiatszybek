@@ -30,7 +30,7 @@ if (!$general_product_data) {
 
 $general_product_products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
-$general_product_images = DB::fetchArr("SELECT * FROM product_image WHERE general_product_id = $general_product_id"); // AND active = 1
+$general_product_images = DB::fetchArr("SELECT * FROM product_image WHERE general_product_id = $general_product_id ORDER BY pos ASC"); // AND active = 1
 
 foreach ($general_product_products as &$product) {
     $product_id = $product["product_id"];
@@ -134,7 +134,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
     <div class="sticky_product">
         <span class="clamp_lines clamp_2"><?= $general_product_data["name"] ?></span>
-        <img data-src="/uploads/-/2021-02-27-00-29-1_512x512.jpg" data-height="1w" class="product_image wo997_img">
+        <img data-height="1w" class="product_image wo997_img">
     </div>
 
     <div class="product_wrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;position: relative;align-items: flex-start;">
@@ -160,7 +160,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                 <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 
                 <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
-                <div class="vdo radio_group columns_1" style="--option-padding:3px;margin-bottom:20px;" onchange="toggleVariantStyle(this)">
+                <div class="vdo radio_group columns_1">
                     <div class="checkbox_area">
                         <p-checkbox data-value="1"></p-checkbox>
                         Subtelny napis
