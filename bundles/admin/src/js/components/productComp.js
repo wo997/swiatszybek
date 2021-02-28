@@ -349,6 +349,7 @@ function productComp(comp, parent, data = undefined) {
 
 		setCompData(comp, data, {
 			...options,
+			pass_list_data: [{ what: "features", where: "images" }],
 			render: () => {
 				const data = comp._data;
 				const missing_feature_ids = [];
