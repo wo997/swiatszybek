@@ -261,19 +261,6 @@ function fileManagerComp(comp, parent, data = undefined) {
 				showModal("uploadFile", params);
 			};
 
-			// preview
-			registerModalContent(html`
-				<div id="previewFile" data-dismissable>
-					<div class="modal_body">
-						<div class="custom_toolbar">
-							<span class="title medium">Podgląd pliku</span>
-							<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-						</div>
-						<div class="place flex_stretch" style="justify-content: center;align-items: center;"></div>
-					</div>
-				</div>
-			`);
-
 			comp._nodes.files_grid.addEventListener("click", (ev) => {
 				const data = comp._data;
 
@@ -317,26 +304,14 @@ function fileManagerComp(comp, parent, data = undefined) {
 					}
 
 					if (preview_btn) {
-						const place = $("#previewFile .place");
-						/** @type {ResponsiveImage} */
-						// @ts-ignore
 						let wo997_img = file_wrapper._child(".wo997_img");
 						if (wo997_img) {
 							const src = wo997_img.dataset.src;
-							place._set_content(html`<img class="wo997_img" data-src="${src}" />`);
-							// @ts-ignore
-							wo997_img = place._child(".wo997_img");
-							wo997_img.style.width = "10000px";
-							loadImage(wo997_img);
-							lazyLoadImages(false);
-							wo997_img.style.width = "";
+							zoomImage(src, { source: preview_btn });
 						} else {
-							place._set_content(file_wrapper._child(".display").outerHTML);
+							showNotification("Nie można otworzyć podglądu", { one_line: true, type: "error" });
+							return;
 						}
-
-						setTimeout(() => {
-							showModal("previewFile", { source: file_wrapper });
-						});
 					}
 				}
 			});

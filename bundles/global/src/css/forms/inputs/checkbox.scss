@@ -168,7 +168,7 @@ p-checkbox.circle {
 p-checkbox:focus-within,
 p-checkbox.focus {
 	& {
-		box-shadow: 0 0 0 2px var(--primary-clr) !important;
+		box-shadow: 0 0 0 2px var(--focus-clr) !important;
 		outline: none;
 		transition: 0s all;
 	}

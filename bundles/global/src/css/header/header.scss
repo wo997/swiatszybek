@@ -194,7 +194,7 @@ header.main {
 
 	&.active .field,
 	.field:focus {
-		box-shadow: inset 0 0 0 1px var(--primary-clr);
+		box-shadow: inset 0 0 0 1px var(--focus-clr);
 	}
 	.search_icon {
 		width: 22px;

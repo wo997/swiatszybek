@@ -116,15 +116,3 @@ file-manager-comp {
 		pointer-events: none;
 	}
 }
-
-#previewFile {
-	.modal_body,
-	.wo997_img {
-		max-width: min(90vw, 100%);
-	}
-	.wo997_img {
-		width: auto;
-		height: auto;
-		max-height: 90vh;
-	}
-}

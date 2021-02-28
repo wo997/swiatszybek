@@ -27,7 +27,8 @@ function registerImageInputs(parent) {
 
 		const img = input._child("img");
 		const select_btn = input._child(".select_btn");
-		const img_wrapper = input._child(".image_input_img_wrapper");
+		const change_btn = input._child(".change_btn");
+		const preview_btn = input._child(".preview_btn");
 		const select_file_modal = getSelectFileModal();
 
 		img.addEventListener("change", () => {
@@ -38,10 +39,22 @@ function registerImageInputs(parent) {
 			input.classList.toggle("selected", selected);
 		});
 
-		select_btn.addEventListener("click", () => {
+		const select = () => {
 			select_file_modal._data.file_manager.select_target = input;
 			select_file_modal._render();
 			select_file_modal._show({ source: input });
+		};
+
+		select_btn.addEventListener("click", () => {
+			select();
+		});
+
+		change_btn.addEventListener("click", () => {
+			select();
+		});
+
+		preview_btn.addEventListener("click", () => {
+			zoomImage(img.dataset.src, { source: input });
 		});
 
 		input._get_value = () => {
