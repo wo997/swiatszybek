@@ -13,8 +13,11 @@ product-comp {
 
 	.bind_features {
 		& {
-			--list_row_margin: 10px 0 0;
-			--list_border: unset;
+			--list_row_margin: 0 0 10px;
+			--list_row_margin_bottom_last: 0;
+		}
+		&:not(:empty) {
+			--list_border: 1px solid transparent;
 		}
 		& > .list_row {
 			background: #f6f6f6;
