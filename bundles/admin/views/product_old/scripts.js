@@ -301,7 +301,7 @@ domload(() => {
 				</td>
 				<td>
 					<input type="hidden" name="attributes" onchange="displayAttributesPreview($(this)._next(), this.value)" />
-					<div data-tooltip class="clamp-lines clamp-4"></div>
+					<div data-tooltip class="clamp_lines clamp_4"></div>
 				</td>
 				<td>
 					<input type="hidden" name="published" onchange="$(this)._next()._set_content(renderIsPublished({published:this._get_value()}))" />

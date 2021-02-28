@@ -132,8 +132,13 @@ unset($variant);
 if (true) : /* if ($general_product_data["published"] || User::getCurrent()->priveleges["backend_access"] || $preview_params) :*/
 ?>
 
-    <div class="mobileRow productWrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;position: relative;align-items: flex-start;">
-        <div style="width: 47%;margin: 32px auto 0;/*position: sticky;top: 150px;*/">
+    <div class="sticky_product">
+        <span class="clamp_lines clamp_2"><?= $general_product_data["name"] ?></span>
+        <img data-src="/uploads/-/2021-02-27-00-29-1_512x512.jpg" data-height="1w" class="product_image wo997_img">
+    </div>
+
+    <div class="product_wrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;position: relative;align-items: flex-start;">
+        <div class="product_images">
             <!-- sticky on desktop only -->
             <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
                 <div class="wo997_slides_container">
@@ -141,7 +146,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                         <?php
                         foreach ($general_product_images as $image) {
                         ?>
-                            <div class="wo997_slide"><img data-src="<?= $image["img_url"] ?>" data-height="1w" class="product-image wo997_img"></div>
+                            <div class="wo997_slide"><img data-src="<?= $image["img_url"] ?>" data-height="1w" class="product_image wo997_img"></div>
                         <?php
                         }
                         ?>
@@ -150,7 +155,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             </div>
             <div data-slide_width="100px" data-show_next_mobile style="--slide_padding:5px" data-nav_out_from="1000px"></div>
         </div>
-        <div style="width: 40%; margin-top: 20px">
+        <div class="product_offer">
             <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">
                 <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 

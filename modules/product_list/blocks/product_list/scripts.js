@@ -90,7 +90,7 @@ domload(() => {
 });
 
 function preventProductImagesLongPress() {
-	$$(".product-image").forEach((e) => {
+	$$(".product_image").forEach((e) => {
 		preventLongPressMenu(e);
 	});
 }
@@ -102,7 +102,7 @@ function preventProductImagesLongPress() {
 function currentlyFocusedProduct(node) {
 	let product_img = null;
 
-	if (node && node.classList && node.classList.contains("product-image") && node._parent(".product-block")) {
+	if (node && node.classList && node.classList.contains("product_image") && node._parent(".product-block")) {
 		product_img = node;
 	}
 

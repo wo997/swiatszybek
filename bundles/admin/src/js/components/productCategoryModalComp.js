@@ -51,7 +51,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 		comp._data.product_category_id = options.cat.product_category_id;
 		comp._render({ freeze: true });
 
-		showModal("ProductCategory", {
+		showModal("productCategory", {
 			source: options.source,
 		});
 	};

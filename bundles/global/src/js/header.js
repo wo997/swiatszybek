@@ -51,22 +51,30 @@
 // 	hideFloatingCategory();
 // });
 
+let header_modals_only = false;
+let header_use_modals = false;
+
 function headerResizeCallback() {
 	if (!main_header) {
 		return;
 	}
+
+	header_modals_only = window.innerWidth < 700;
+	main_header.classList.toggle("modals_only", header_modals_only);
+
+	header_use_modals = header_modals_only || IS_TOUCH_DEVICE;
+	main_header.classList.toggle("use_modals", header_use_modals);
+
 	main_header.classList.remove("menu_collapsed");
 	main_header_nav.classList.remove("bottom");
 	main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
-	const menu_collapsed = IS_TOUCH_DEVICE || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
+	const menu_collapsed = header_use_modals || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
 	main_header.classList.toggle("menu_collapsed", menu_collapsed);
 	main_header_height.style.height = main_header.offsetHeight + "px";
 
-	if (menu_collapsed) {
+	if (header_use_modals) {
 		requestHeaderModals();
 	}
-
-	requestSearchModal();
 }
 
 /** @type {number} */
@@ -88,7 +96,6 @@ domload(() => {
 	main_header_height = $(".header_height");
 	main_header_buttons = main_header._child(".header_buttons");
 	main_header_nav = main_header._child("nav");
-	main_header.classList.toggle("collapsed", main_scroll_top > 100);
 	headerResizeCallback();
 	window.addEventListener("resize", headerResizeCallback);
 });
@@ -107,36 +114,6 @@ windowload(() => {
 	});
 });
 
-let requested_search_modal = false;
-function requestSearchModal() {
-	const msb = $(".mobile_search_btn");
-	if (requested_search_modal || !msb.offsetTop) return;
-	requested_search_modal = true;
-
-	msb.addEventListener("click", () => {
-		showModal("mainSearch", {
-			source: msb,
-		});
-		$("#mainSearch input").focus();
-	});
-
-	registerModalContent(html`
-		<div id="mainSearch" data-expand>
-			<div class="modal_body" style="max-width: 500px;">
-				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal_header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
-				<div class="scroll_panel scroll_shadow panel_padding">
-					<div></div>
-				</div>
-			</div>
-		</div>
-	`);
-
-	const sc = $("#mainSearch .scroll_panel > div");
-	const sw = $("header .main_search_wrapper");
-	sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
-}
-
 let requested_header_modals = false;
 function requestHeaderModals() {
 	if (requested_header_modals) return;
@@ -145,7 +122,7 @@ function requestHeaderModals() {
 	//user
 	if (IS_LOGGED) {
 		registerModalContent(html`
-			<div id="userMenu" data-expand>
+			<div id="userMenu" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: 500px;">
 					<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 					<h3 class="modal_header"><img class="user_icon" src="/src/img/user_icon.svg" /> Moje konto</h3>
@@ -159,15 +136,17 @@ function requestHeaderModals() {
 
 		const hua = $("header .user_btn");
 		hua.addEventListener("click", (ev) => {
-			showModal("userMenu", { source: hua });
-			ev.preventDefault();
-			return false;
+			if (header_use_modals) {
+				showModal("userMenu", { source: hua });
+				ev.preventDefault();
+				return false;
+			}
 		});
 	}
 
 	//basket
 	registerModalContent(html`
-		<div id="basketMenu" data-expand>
+		<div id="basketMenu" data-expand data-dismissable>
 			<div class="modal_body">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal_header" style="max-width: 500px;">
@@ -185,26 +164,28 @@ function requestHeaderModals() {
 		</div>
 	`);
 
-	const su = $("header .nav_basket_summary");
-	$("#basketMenu .basket_menu_mobile_summary").insertAdjacentHTML("afterbegin", su.outerHTML);
+	// const su = $("header .nav_basket_summary");
+	// $("#basketMenu .basket_menu_mobile_summary").insertAdjacentHTML("afterbegin", su.outerHTML);
 
-	const hc = $("header .header_basket_content_wrapper");
-	$("#basketMenu .scroll_panel > div").appendChild(hc);
+	// const hc = $("header .header_basket_content_wrapper");
+	// $("#basketMenu .scroll_panel > div").appendChild(hc);
 
 	basketReady();
 
 	const bbtn = $("header .basket_wrapper .basket-btn");
 	if (bbtn) {
 		bbtn.addEventListener("click", (ev) => {
-			showModal("basketMenu", { source: bbtn });
-			ev.preventDefault();
-			return false;
+			if (header_use_modals) {
+				showModal("basketMenu", { source: bbtn });
+				ev.preventDefault();
+				return false;
+			}
 		});
 	}
 
 	//menu
 	registerModalContent(html`
-		<div id="mainMenu" data-expand>
+		<div id="mainMenu" data-expand data-dismissable>
 			<div class="modal_body" style="max-width: 500px;">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal_header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
@@ -235,7 +216,7 @@ function requestHeaderModals() {
 
 	// last viewed products
 	registerModalContent(html`
-		<div id="lastViewedProducts" data-expand="previous">
+		<div id="lastViewedProducts" data-expand="previous" data-dismissable>
 			<div class="modal_body">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal_header">
@@ -255,7 +236,7 @@ function requestHeaderModals() {
 
 	// wishlist
 	registerModalContent(html`
-      <div id="wishList" data-expand="previous">
+      <div id="wishList" data-expand="previous" data-dismissable>
         <div class="modal_body">
             <button class="close_modal_btn"><i class="fas fa-times"></i></button>
             <h3 class="modal_header">
@@ -269,6 +250,31 @@ function requestHeaderModals() {
         </div>
     </div>
   `);
+
+	const msb = $(".mobile_search_btn");
+
+	msb.addEventListener("click", () => {
+		showModal("mainSearch", {
+			source: msb,
+		});
+		$("#mainSearch input").focus();
+	});
+
+	registerModalContent(html`
+		<div id="mainSearch" data-expand data-dismissable>
+			<div class="modal_body" style="max-width: 500px;">
+				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal_header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
+				<div class="scroll_panel scroll_shadow panel_padding">
+					<div></div>
+				</div>
+			</div>
+		</div>
+	`);
+
+	const sc = $("#mainSearch .scroll_panel > div");
+	const sw = $("header .main_search_wrapper");
+	sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
 }
 
 // perform search
@@ -465,7 +471,7 @@ const header_basket_variant_template = html`
 	<div class="expand_y">
 		<div class="product_row product-block">
 			<a class="product_link">
-				<img class="product-image variant_image" data-height="1w" />
+				<img class="product_image variant_image" data-height="1w" />
 				<h3 class="product-title"><span class="check-tooltip variant_full_name"></span></h3>
 			</a>
 			<div style="text-align:center">
@@ -491,7 +497,7 @@ const header_basket_product_template = html`
 	<div class="expand_y">
 		<div class="product_row product-block">
 			<a class="product_link">
-				<img class="product-image product_image" data-height="1w" />
+				<img class="product_image product_image" data-height="1w" />
 				<h3 class="product-title"><span class="check-tooltip product_name"></span></h3>
 			</a>
 			<div style="text-align:center">

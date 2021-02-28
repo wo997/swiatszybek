@@ -1,3 +1,7 @@
+// copy the code below baby :*
+
+/* js[admin] */
+
 /**
  * @typedef {{
  * }} MyCompData

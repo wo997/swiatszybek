@@ -1,0 +1,28 @@
+/* css[global] */
+
+.clamp_lines {
+	& {
+		overflow: hidden;
+		display: -webkit-box;
+		-moz-box-orient: vertical;
+		-webkit-box-orient: vertical;
+		box-orient: vertical;
+		--clamp_lines: 1;
+		-webkit-line-clamp: var(--clamp_lines);
+		line-clamp: var(--clamp_lines);
+	}
+	&.same_height {
+		line-height: 1.3;
+		height: calc(1.3em * var(--clamp_lines));
+	}
+}
+
+.clamp_2 {
+	--clamp_lines: 2;
+}
+.clamp_3 {
+	--clamp_lines: 3;
+}
+.clamp_4 {
+	--clamp_lines: 4;
+}

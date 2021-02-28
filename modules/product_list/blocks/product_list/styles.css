@@ -64,7 +64,7 @@
 	display: block;
 }
 
-.product-image {
+.product_image {
 	width: 100%;
 	max-width: 100%;
 	object-fit: cover;

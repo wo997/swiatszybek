@@ -1,6 +1,6 @@
-<div class="headerbtn gray_hover case_desktop">
+<div class="headerbtn gray_hover last_viewed_products_menu_btn">
     <img class="product_history_icon" src="/src/img/product_history_icon.svg">
-    <div class="last_viewed_products_menu headerbtn_menu">
+    <div class="headerbtn_menu">
         <p class="menu_header">Ostatnio przeglądane</p>
         <hr class="indent">
         <div class='case_last_viewed_products_empty expand_y'>

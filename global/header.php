@@ -43,7 +43,7 @@ function traverseMenu($parent_id = -1, $level = 0)
         }
         ?>
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
-            <div class="headerbtn gray_hover case_desktop gray_hover">
+            <div class="headerbtn gray_hover gray_hover wishlist_menu_btn">
                 <img class="heart_icon" src="/src/img/heart_icon.svg">
             </div>
         <?php endif ?>

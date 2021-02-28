@@ -88,345 +88,50 @@
 	margin-top: 6px;
 }
 
-/* deprecated below */
-
-.comments th {
-	display: none;
-}
-
-.short-description {
-	padding: 0;
-	margin: 0.5em 0 1.2em;
-}
-
-.productWrapper h1 {
-	margin: 12px auto 30px;
-	/*font-size: 32px;*/
-	max-width: 600px;
-	text-align: left;
-}
-
-.variants {
-	margin-bottom: 25px;
-	display: flex;
-	flex-wrap: wrap;
-}
-
-.variant label {
-	display: block;
-	position: relative;
-	padding: 5px 0;
-}
-
-.variant span {
-	margin-left: 5px;
-}
-
-.variant input::before {
-	content: "";
-	width: 22px;
-	height: 22px;
-	content: "";
-	border: 1px solid #888;
-	display: inline-block;
-	border-radius: 4px;
-	background: #f5f5f5;
-	vertical-align: middle;
-}
-
-.variant input:checked::before {
-	background: var(--primary-clr);
-	border-color: #26e;
-}
-
-.variant input:checked::after {
-	content: "";
-	position: absolute;
-	display: block;
-	left: 12px;
-	top: 10px;
-	width: 6px;
-	height: 12px;
-	border: solid white;
-	border-width: 0 3px 3px 0;
-	-webkit-transform: rotate(45deg);
-	-ms-transform: rotate(45deg);
-	transform: rotate(45deg);
-}
-
-.variant {
-	width: 100%;
-}
-
-.color {
-	width: 48%;
-	height: 100px;
-	margin: 0 2% 2% 0;
-	position: relative;
-	user-select: none;
-	-webkit-user-select: none;
-}
-
-.color label {
-	width: 100%;
-	height: 100%;
-}
-
-.color input {
-	display: none;
-}
-
-.color label > .boxy {
-	width: 100%;
-	height: 100%;
-	border: 1px solid #bbb;
-	display: flex !important;
-	flex-direction: column;
-	justify-content: center;
-	text-align: center;
-	border-radius: 4px;
-	cursor: pointer;
-	transition: 0.1s;
-	opacity: 0.8;
-	position: relative;
-}
-
-.amount label > div > span {
-	font-size: 20px;
-	font-weight: normal;
-}
-
-.amount label > div {
-	font-size: 18px;
-	font-weight: bold;
-	color: #333;
-}
-
-.color input:checked + div {
-	border: 2px solid var(--primary-clr);
-	opacity: 1 !important;
-}
-
-.percentOff {
-	position: absolute;
-	right: -5px;
-	top: 3px;
-	width: 37px;
-	text-align: center;
-	padding: 2px 0;
-	background: #f33;
-	color: #fdd;
-	font-size: 12px;
-	border-radius: 2px;
-	cursor: pointer;
-}
-
-.colour {
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	display: block;
-	margin: 5px auto;
-	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.15), inset 0px 0px 5px 0px rgba(0, 0, 0, 0.05),
-		inset -1px 2px 2px 0px rgba(255, 255, 255, 0.5);
-}
-
-.amount {
-	display: flex;
-	margin: 25px 0;
-	font-size: 18px;
-	user-select: none;
-	-webkit-user-select: none;
-	line-height: 1.2;
-}
-
-.amount .color {
-	height: 90px !important;
-}
-
-.locked {
-	opacity: 0.3;
-	cursor: auto !important;
-}
-
-.variantAdded .variant_image {
-	max-width: 250px;
-	width: 100%;
-	object-fit: contain;
-	margin-right: 20px;
-}
-
-@media only screen and (max-width: 750px) {
-	.variantAdded .variant_image {
-		margin: 10px auto !important;
+.sticky_product {
+	& {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		padding: 5px 5px 5px 10px;
+		z-index: 700;
+		background: #fff;
+		border-bottom: 1px solid #ccc;
+		box-shadow: 0 2px 6px 0 #0002;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	span {
+		font-weight: 600;
+		flex-shrink: 1;
+	}
+	img {
+		flex-shrink: 0;
+		width: 60px;
+		height: 60px;
 	}
 }
 
-@media only screen and (max-width: 400px) {
-	.percentOff {
-		top: 2px !important;
-		width: 35px !important;
-		padding: 1px 0 !important;
+@media only screen and (min-width: 850px) {
+	.product_wrapper {
+		display: flex;
+	}
+	.product_images {
+		width: 47%;
+		margin: 32px auto 0;
+		position: sticky;
+		top: 150px;
+	}
+	.product_offer {
+		width: 40%;
+		margin-top: 20px;
+	}
+	.sticky_product {
+		display: none;
 	}
 }
 
-@media only screen and (min-width: 1000px) {
-	.variantAdded .variant_image {
-		max-width: 45%;
-	}
-
-	.variantAdded .modal_body {
-		width: 500px;
-	}
-}
-
-.comment {
-	padding: 8px 12px 12px;
-}
-
-.item-list td:first-child {
-	width: auto !important;
-}
-
-.item-list tr {
-	transition: 0.5s;
-}
-
-.item-list tr:first-child td {
-	border-top: 1px solid #ccc;
-}
-.item-list tr td {
-	border-bottom: 1px solid #ccc;
-}
-
-.seethrough {
-	opacity: 0;
-}
-
-.item-list td:last-child {
-	min-width: 180px;
-}
-
-.taniej {
-	background: #f33;
-	color: white;
-	font-size: 16px;
-	display: inline-block;
-	border-radius: 5px;
-	padding: 1px 9px;
-	vertical-align: middle;
-	position: relative;
-	top: -2px;
-	margin: 4px;
-}
-
-#wasPrice {
-	opacity: 0.7;
-	transform: translateY(-1px) scale(0.8);
-	display: inline-block;
-}
-
-.ql-editor {
-	overflow: visible;
-}
-
-.color.small_font {
-	font-size: 0.85em;
-}
-
-.small_font .colour {
-	width: 26px;
-	height: 26px;
-}
-
-.rebate-info {
-	border: 1px solid var(--success-clr);
-	border-radius: 4px;
-	font-size: 16px;
-	margin: 5px 0;
-	color: var(--success-clr);
-	font-weight: 600;
-	padding: 5px 10px;
-	display: inline-block;
-}
-
-/* variant list start */
-
-/* row */
-.product_basket_variants .product_row {
-	display: flex;
-	align-items: center;
-}
-/* cell */
-.product_basket_variants .product_row > * {
-	padding: 6px 8px;
-	flex-shrink: 0;
-	position: relative;
-}
-
-/* header cells */
-.product_basket_variants .header .product_row > * {
-	padding: 6px 8px;
-}
-
-.product_basket_variants label {
-	display: none;
-}
-.product_basket_variants .product_row {
-	border-bottom: 1px solid #ccc;
-}
-.product_basket_variants > div:first-child .product_row {
-	border-top: 1px solid #ccc;
-}
-.product_basket_variants .cl1 {
-	flex-shrink: 1;
-	flex-grow: 1;
-}
-.product_basket_variants .cl1 span {
-	height: auto;
-}
-@media only screen and (min-width: 450px) {
-	.product_basket_variants .cl2 {
-		width: 106px;
-	}
-	.product_basket_variants .cl3 {
-		width: 88px;
-	}
-	.product_basket_variants .cl4 {
-		width: 36px;
-	}
-}
-@media only screen and (max-width: 449px) {
-	.product_basket_variants .product_row {
-		flex-wrap: wrap;
-		text-align: center;
-		justify-content: center;
-	}
-	.product_basket_variants .cl1 {
-		width: 100%;
-	}
-
-	.product_basket_variants .cl1 span {
-		display: block;
-		height: auto;
-		padding-top: 10px;
-	}
-}
-
-/* variant list end */
-
-radio-option.col1 {
-	width: calc(100% - var(--radio_input_margin));
-}
-
-radio-option.col2 {
-	width: calc(50% - var(--radio_input_margin));
-}
-
-radio-option.col3 {
-	width: calc(33.333% - var(--radio_input_margin));
-}
-
-radio-option.col4 {
-	width: calc(25% - var(--radio_input_margin));
+@media only screen and (max-width: 849px) {
 }
