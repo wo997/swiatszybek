@@ -2,7 +2,6 @@
 
 /**
  * @typedef {{
- * is_main: boolean
  * product_image_id
  * img_url: string
  * option_ids: []
@@ -26,7 +25,7 @@
  * @param {*} parent
  * @param {Product_ImageCompData} data
  */
-function product_imageComp(comp, parent, data = { product_image_id: -1, img_url: "", is_main: false, option_ids: [] }) {
+function product_imageComp(comp, parent, data = { product_image_id: -1, img_url: "", option_ids: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -63,11 +62,6 @@ function product_imageComp(comp, parent, data = { product_image_id: -1, img_url:
 	createComp(comp, parent, data, {
 		template: html`
 			<image-input data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-input>
-
-			<div style="margin-left: 5px" data-tooltip="Domyślne zdjęcie wyświetlane na liście produktów" class="checkbox_area">
-				<p-checkbox data-bind="{${data.is_main}}" class="square"></p-checkbox>
-				Główne
-			</div>
 
 			<div data-node="{${comp._nodes.select_options}}"></div>
 
