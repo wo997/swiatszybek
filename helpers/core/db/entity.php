@@ -70,13 +70,14 @@ class Entity
         return $this->global_id;
     }
 
-    public function willExistForOtherEntity($global_id)
-    {
-        if ($this->getWillDelete() || in_array($global_id, $this->getWillUnlinkFromEntities())) {
-            return false;
-        }
-        return true;
-    }
+    // hah, no longer needed ;) the object is removed from the parent but kept in session handler
+    // public function willExistForOtherEntity($global_id)
+    // {
+    //     if ($this->getWillDelete() || in_array($global_id, $this->getWillUnlinkFromEntities())) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     /**
      * setWillDelete
@@ -316,8 +317,9 @@ class Entity
                 $parent_name = $parent_props["name"];
                 $parent_prop = $parent_props["prop"];
                 $this->parent = EntityManager::getEntityById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
-                // warmup, not sure if we need it but ok
-                $this->parent->setProp($parent_prop);
+                if ($this->parent) {
+                    $this->parent->setProp($parent_prop);
+                }
             }
         }
         return $this->parent;

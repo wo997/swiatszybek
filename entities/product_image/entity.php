@@ -31,9 +31,9 @@ EventListener::register("save_product_image_entity", function ($params) {
     $options = $product_image->getProp("product_feature_options");
     $options_json = [];
     foreach ($options as $option) {
-        if (!$option->willExistForOtherEntity($product_image->getGlobalId())) {
-            continue;
-        }
+        // if (!$option->willExistForOtherEntity($product_image->getGlobalId())) {
+        //     continue;
+        // }
         $options_json[] = $option->getId();
     }
     $product_image->setProp("options_json", json_encode($options_json));

@@ -178,10 +178,10 @@ class EntityManager
 
             if ($child_props) {
                 $curr_child->setProps($child_props);
+                $children[] = $curr_child;
             } else {
                 $curr_child->setWillDelete();
             }
-            $children[] = $curr_child;
         }
         unset($child);
 
@@ -262,10 +262,10 @@ class EntityManager
 
             if ($other_entity_props) {
                 $curr_other_entity->setProps($other_entity_props);
+                $other_entities[] = $curr_other_entity;
             } else {
                 $curr_other_entity->willUnlinkFromEntity($obj->getGlobalId());
             }
-            $other_entities[] = $curr_other_entity;
         }
         unset($other_entity);
 
