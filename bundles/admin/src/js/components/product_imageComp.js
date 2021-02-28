@@ -73,14 +73,15 @@ function product_imageComp(comp, parent, data = { product_image_id: -1, img_url:
 			<image-input data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-input>
 
 			<div style="margin-left: 10px">
-				<div data-node="{${comp._nodes.selected_options}}"></div>
 				<div
 					class="select_image_options_wrapper"
 					data-tooltip="Klient w pierwszej kolejności zobaczy zdjęcia,<br>które go faktycznie interesują"
+					data-tooltip_position="right"
 				>
 					<select class="field" data-node="{${comp._nodes.select_options}}"></select>
 					<button class="btn primary">Połącz z cechą</button>
 				</div>
+				<div data-node="{${comp._nodes.selected_options}}"></div>
 			</div>
 
 			<div style="margin-left:auto">

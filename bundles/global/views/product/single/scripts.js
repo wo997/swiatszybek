@@ -234,6 +234,9 @@ domload(() => {
 
 let res = { can: true };
 window.addEventListener("main_header_scroll", (ev) => {
+	if (window.innerWidth >= 850) {
+		return;
+	}
 	const r = product_offer.getBoundingClientRect();
 	const fac = 0.01;
 	const visible = Math.max(0, Math.min(1, (-50 - r.top) * fac, (r.top + r.height) * fac));

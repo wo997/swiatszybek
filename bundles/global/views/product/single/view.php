@@ -85,6 +85,7 @@ unset($variant);
 
 <script>
     const general_product_products = <?= json_encode($general_product_products) ?>;
+    const general_product_images = <?= json_encode($general_product_images) ?>;
 
     const GENERAL_PRODUCT_ID = <?= $general_product_data["general_product_id"] ?>;
 </script>
@@ -146,7 +147,9 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                         <?php
                         foreach ($general_product_images as $image) {
                         ?>
-                            <div class="wo997_slide"><img data-src="<?= $image["img_url"] ?>" data-height="1w" class="product_image wo997_img"></div>
+                            <div class="wo997_slide">
+                                <img data-src="<?= $image["img_url"] ?>" data-height="1w" class="product_image wo997_img">
+                            </div>
                         <?php
                         }
                         ?>
