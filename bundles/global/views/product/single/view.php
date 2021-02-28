@@ -155,19 +155,31 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                 <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 
                 <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
-                <p-radio class="vdo default columns_1" style="--option-padding:3px;margin-bottom:20px;" onchange="toggleVariantStyle(this)">
-                    <radio-option value="1" class="default">Subtelny napis</radio-option>
-                    <radio-option value="2">Czerwony prostokąt</radio-option>
-                    <radio-option value="3">Szary prostokąt</radio-option>
-                    <radio-option value="4">Brak</radio-option>
-                </p-radio>
+                <div class="vdo radio_group columns_1" style="--option-padding:3px;margin-bottom:20px;" onchange="toggleVariantStyle(this)">
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="1"></p-checkbox>
+                        Subtelny napis
+                    </div>
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="2"></p-checkbox>
+                        Czerwony prostokąt
+                    </div>
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="3"></p-checkbox>
+                        Szary prostokąt
+                    </div>
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="4"></p-checkbox>
+                        Brak
+                    </div>
+                </div>
 
                 <div>
                     <?php
                     foreach ($general_product_variants as $general_product_variant) {
                     ?>
                         <span class="label"><?= $general_product_variant["name"] ?></span>
-                        <div class="variant_radio radio_group boxes hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
+                        <div class="variants radio_group boxes hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
                             <?php
                             foreach ($general_product_variant["variant_options"] as $variant_option) {
                             ?>

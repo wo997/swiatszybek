@@ -52,10 +52,10 @@ function setVariantsFromUrl() {
 		});
 	}
 
-	$$(".variant_radio").forEach((variant_radio) => {
-		const option_data = sv[variant_radio.dataset.product_feature_id];
+	$$(".variants").forEach((variants) => {
+		const option_data = sv[variants.dataset.product_feature_id];
 		const val = option_data ? option_data.option_id : "";
-		variant_radio._set_value(val, {
+		variants._set_value(val, {
 			quiet: true,
 		});
 	});
@@ -96,10 +96,10 @@ function getProductDataForVariants(sv) {
 function variantChanged() {
 	let sv = {};
 
-	$$(".variant_radio").forEach((variant_radio) => {
-		const option_id = variant_radio._get_value();
+	$$(".variants").forEach((variants) => {
+		const option_id = variants._get_value();
 		if (option_id) {
-			sv[variant_radio.dataset.product_feature_id] = { option_id };
+			sv[variants.dataset.product_feature_id] = { option_id };
 		}
 	});
 
@@ -128,15 +128,15 @@ function setVariantData() {
 	let price_min = data.price_min;
 	let price_max = data.price_max;
 
-	$$(".variant_radio").forEach((variant_radio) => {
-		//const selected_option_id = variant_radio._get_value();
+	$$(".variants").forEach((variants) => {
+		//const selected_option_id = variants._get_value();
 
-		variant_radio._children("radio-option").forEach((option) => {
+		variants._children("radio-option").forEach((option) => {
 			const option_id = +option.getAttribute("value");
 
 			const assume_other_selected = cloneObject(selected_variants);
 
-			assume_other_selected[variant_radio.dataset.product_feature_id] = {
+			assume_other_selected[variants.dataset.product_feature_id] = {
 				option_id,
 			};
 
@@ -199,8 +199,8 @@ function setVariantData() {
 }
 
 domload(() => {
-	$$(".variant_radio").forEach((variant_radio) => {
-		variant_radio.addEventListener("change", () => {
+	$$(".variants").forEach((variants) => {
+		variants.addEventListener("change", () => {
 			variantChanged();
 		});
 	});
