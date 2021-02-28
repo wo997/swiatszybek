@@ -35,10 +35,10 @@ function product_imageComp(comp, parent, data = { product_image_id: -1, img_url:
 		template: html`
 			<image-input data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-input>
 
-			<label style="margin-left: 5px" data-tooltip="Domyślne zdjęcie wyświetlane na liście produktów">
+			<div style="margin-left: 5px" data-tooltip="Domyślne zdjęcie wyświetlane na liście produktów" class="checkbox_area">
 				<p-checkbox data-bind="{${data.is_main}}" class="square"></p-checkbox>
 				Główne
-			</label>
+			</div>
 
 			<div style="margin-left:auto">
 				<p-batch-trait data-trait="list_controls"></p-batch-trait>

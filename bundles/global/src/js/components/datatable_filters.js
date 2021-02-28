@@ -14,10 +14,10 @@ let filter_menus = [
 		getHtml: (column, data) => html`
 			<span>Wpisz frazę</span>
 			<input type="text" class="field" style="width: 210px;" />
-			<label style="margin-top:10px">
+			<div class="checkbox_area" style="margin-top:10px">
 				<p-checkbox class="square inline"></p-checkbox>
 				Dopasuj całość
-			</label>
+			</div>
 		`,
 		open: (elem, data = { string: "", full_match: false }) => {
 			elem._child("input")._set_value(data.string);
@@ -70,14 +70,14 @@ let filter_menus = [
 		name: "boolean",
 		getHtml: (column, data) => html`
 			<div style="display:flex;justify-content:space-around" class="radio_group" data-validate="radio">
-				<label class="inline">
+				<div class="inline checkbox_area">
 					<p-checkbox data-value="1"></p-checkbox>
 					<span class="semi-bold">Tak</span>
-				</label>
-				<label class="inline">
+				</div>
+				<div class="inline checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>
 					<span class="semi-bold">Nie</span>
-				</label>
+				</div>
 			</div>
 		`,
 		open: (elem, data = { value: "" }) => {

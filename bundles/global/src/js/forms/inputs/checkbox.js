@@ -28,10 +28,10 @@ function onRadioGroupValueSet(radio_group) {
  * @param {PiepNode} parent
  */
 function registerCheckboxes(parent) {
-	parent._children("p-checkbox:not(.checkbox-registered)").forEach((ch) => {
-		ch.classList.add("checkbox-registered");
+	parent._children("p-checkbox:not(.checkbox-registered)").forEach((input) => {
+		input.classList.add("checkbox-registered");
 
-		ch.insertAdjacentHTML(
+		input.insertAdjacentHTML(
 			"afterbegin",
 			html`
 				<input type="checkbox" />
@@ -42,24 +42,24 @@ function registerCheckboxes(parent) {
 			`
 		);
 
-		const native = ch._child("input");
+		const native = input._child("input");
+
+		/** @type {PiepNode} */
+		const checkbox_area = def(input._parent(".checkbox_area"), input);
 
 		const checkbox_change = () => {
-			ch.classList.toggle("checked");
-			ch._dispatch_change();
+			setCheckboxValue(input, !input.classList.contains("checked"));
+			input._dispatch_change();
 		};
 
-		const clickable = def(ch._parent("label"), ch);
-		if (clickable === ch) {
-			clickable.addEventListener("click", (ev) => {
-				if (ev.target && ev.target.tagName !== "INPUT") {
-					checkbox_change();
-				}
-			});
-		}
+		checkbox_area.addEventListener("click", (ev) => {
+			if (ev.target && $(ev.target).tagName !== "INPUT") {
+				checkbox_change();
+			}
+		});
 
-		clickable.addEventListener("mousedown", () => {
-			ch.classList.add("focus");
+		checkbox_area.addEventListener("mousedown", () => {
+			input.classList.add("focus");
 			native.focus();
 		});
 
@@ -71,7 +71,7 @@ function registerCheckboxes(parent) {
 			checkbox_change();
 		});
 
-		const radio_group = ch._parent(".radio_group");
+		const radio_group = input._parent(".radio_group");
 
 		if (radio_group) {
 			if (!radio_group.classList.contains("rg_registered")) {
@@ -82,14 +82,22 @@ function registerCheckboxes(parent) {
 				});
 			}
 
-			if (!ch.classList.contains("square")) {
-				ch.classList.add("circle");
+			if (!input.classList.contains("square")) {
+				input.classList.add("circle");
 			}
-			ch.addEventListener("change", () => {
-				radio_group._set_value(ch._get_value() ? ch.dataset.value : "");
+			input.addEventListener("change", () => {
+				radio_group._set_value(input._get_value() ? input.dataset.value : "");
 			});
 
 			radio_group.dataset.value = "";
 		}
 	});
+}
+
+function setCheckboxValue(input, value) {
+	input.classList.toggle("checked", !!value);
+	const checkbox_area = input._parent(".checkbox_area");
+	if (checkbox_area) {
+		checkbox_area.classList.toggle("checked", !!value);
+	}
 }

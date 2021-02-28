@@ -70,16 +70,19 @@ p-checkbox:not(.checked) .circle {
 p-checkbox {
 	display: block;
 }
-label p-checkbox {
-	& {
-		display: inline-block;
-	}
-	& + span {
-		margin-left: 2px;
+.checkbox_area {
+	cursor: pointer;
+	p-checkbox {
+		& {
+			display: inline-block;
+		}
+		& + span {
+			margin-left: 2px;
+		}
 	}
 }
 
-label:hover p-checkbox,
+.checkbox_area:hover p-checkbox,
 p-checkbox:hover {
 	& {
 		box-shadow: var(--field-hover-shadow);
@@ -174,6 +177,6 @@ p-checkbox.focus {
 	}
 }
 
-.radio_group.invalid label span {
+.radio_group.invalid .checkbox_area span {
 	text-decoration: underline red !important;
 }

@@ -36,10 +36,10 @@ function manageProductList_questionComp(comp, parent, data = undefined) {
 				setNodeChildren(
 					comp._nodes.options,
 					data.options.map(
-						(o) => html`<label class="option">
+						(o) => html`<div class="option checkbox_area">
 							<p-checkbox data-value="${o.value}"></p-checkbox>
 							${o.label}
-						</label>`
+						</div>`
 					)
 				);
 

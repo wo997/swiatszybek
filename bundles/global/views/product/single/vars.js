@@ -1,3 +1,3 @@
 // it's just for IDE
 
-let page_products;
+let general_product_products;

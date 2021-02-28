@@ -28,9 +28,20 @@ if (!$general_product_data) {
 // if (!empty($general_product_data["price_max"]) && $general_product_data["price_min"] != $general_product_data["price_max"])
 //     $priceText .= " - " . $general_product_data["price_max"];
 
-$products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
+$general_product_products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
 $general_product_images = DB::fetchArr("SELECT * FROM product_image WHERE general_product_id = $general_product_id"); // AND active = 1
+
+foreach ($general_product_products as &$product) {
+    $product_id = $product["product_id"];
+    $product["variants"] = DB::fetchArr("SELECT pto.product_feature_option_id, pto.product_feature_id
+        FROM product_to_feature_option ptfo INNER JOIN product p USING(product_id) INNER JOIN product_feature_option pto USING(product_feature_option_id)
+        WHERE product_id = $product_id");
+
+    //SELECT pto.product_feature_option_id, pto.product_feature_id feature_name FROM product_to_feature_option ptfo INNER JOIN product p USING(product_id) INNER JOIN product_feature_option pto USING(product_feature_option_id) WHERE product_id = 100
+    //SELECT * FROM product_to_feature_option INNER JOIN product USING(product_id) INNER JOIN product_feature_option USING(product_feature_option_id) INNER JOIN product_feature USING(product_feature_id) WHERE general_product_id = 1
+}
+unset($product);
 
 // if (isset($preview_params) && isset($preview_params["products"])) {
 //     $products = json_decode($preview_params["products"], true);
@@ -59,23 +70,22 @@ $general_product_variants = DB::fetchArr("SELECT * FROM general_product_to_featu
     WHERE general_product_id = $general_product_id
     ORDER BY gptf.pos");
 
-foreach ($general_product_variants as &$general_product_variant) {
-    $product_feature_id = $general_product_variant["product_feature_id"];
-    $general_product_variant["variant_options"] = DB::fetchArr("SELECT * FROM general_product_to_feature_option gptfo
+foreach ($general_product_variants as &$variant) {
+    $product_feature_id = $variant["product_feature_id"];
+    $variant["variant_options"] = DB::fetchArr("SELECT * FROM general_product_to_feature_option gptfo
         INNER JOIN product_feature_option USING (product_feature_option_id)
         WHERE general_product_id = $general_product_id AND product_feature_id = $product_feature_id
         ORDER BY gptfo.pos");
 }
-unset($general_product_variant);
+unset($variant);
 
 ?>
 
 <?php startSection("head_content"); ?>
 
 <script>
-    const page_products = <?= json_encode($page_products) ?>;
+    const general_product_products = <?= json_encode($general_product_products) ?>;
 
-    var products = <?= json_encode($products) ?>;
     const GENERAL_PRODUCT_ID = <?= $general_product_data["general_product_id"] ?>;
 </script>
 
@@ -157,14 +167,15 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     foreach ($general_product_variants as $general_product_variant) {
                     ?>
                         <span class="label"><?= $general_product_variant["name"] ?></span>
-                        <p-radio class="variant_radio blocks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--radio_input_block_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
+                        <div class="variant_radio radio_group boxes hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
                             <?php
                             foreach ($general_product_variant["variant_options"] as $variant_option) {
                             ?>
-                                <radio-option class="variant_option" value="<?= $variant_option["product_feature_option_id"] ?>">
+                                <div class="box checkbox_area">
                                     <div>
                                         <div class="price_diff_before"></div>
                                         <div>
+                                            <p-checkbox data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
                                             <?php
                                             $color = def($variant_option, ["extra", "color"], "");
                                             if ($color) {
@@ -177,11 +188,11 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                                         </div>
                                         <div class="price_diff"></div>
                                     </div>
-                                </radio-option>
+                                </div>
                             <?php
                             }
                             ?>
-                        </p-radio>
+                        </div>
                     <?php
                     }
 
@@ -334,22 +345,24 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
     </div>
 
     <script>
-        function toggleProductPublish() {
-            xhr({
-                url: STATIC_URLS["ADMIN"] + "set_publish",
-                params: {
-                    table: "products",
-                    primary: "general_product_id",
-                    primary_id: <?= $general_product_id ?>,
-                    published: <?= 1  - $general_product_data["published"] ?>,
-                },
-                success: () => {
-                    window.location.reload();
-                },
-            });
-        }
+        // function toggleProductPublish() {
+        //     xhr({
+        //         url: STATIC_URLS["ADMIN"] + "set_publish",
+        //         params: {
+        //             table: "products",
+        //             primary: "general_product_id",
+        //             primary_id: <?= $general_product_id ?>,
+        //             published: <?= 1 // - $general_product_data["published"] 
+                                    ?>,
+        //         },
+        //         success: () => {
+        //             window.location.reload();
+        //         },
+        //     });
+        // }
 
-        <?php if ($general_product_data["published"] == 0) : ?>
+        <?php if (false) : //$general_product_data["published"] == 0) : 
+        ?>
             domload(() => {
                 toggleRightSideMenu();
             })

@@ -234,7 +234,7 @@ function setValue(input, value = null, params = {}) {
 		input.dataset.value = value;
 		onRadioGroupValueSet(input);
 	} else if (input.tagName == "P-CHECKBOX") {
-		input.classList.toggle("checked", !!value);
+		setCheckboxValue(input, !!value);
 		// @ts-ignore
 	} else if (input.datepicker) {
 		if (value && value.substr(0, 4).match(/\d{4}/)) {
