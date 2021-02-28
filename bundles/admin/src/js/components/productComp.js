@@ -555,7 +555,7 @@ function productComp(comp, parent, data = undefined) {
 				<p-trait data-trait="history"></p-trait>
 
 				<button class="btn primary" data-node="{${comp._nodes.preview_btn}}">Podgląd <i class="fas fa-eye"></i></button>
-				<button class="btn primary" data-node="{${comp._nodes.open_btn}}" data-tooltip="Otworzy produkt w nowej karcie">
+				<button class="btn primary" data-node="{${comp._nodes.open_btn}}" data-tooltip="Otwórz produkt w nowej karcie">
 					Pokaż <i class="fas fa-external-link-square-alt"></i>
 				</button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
@@ -654,7 +654,7 @@ function productComp(comp, parent, data = undefined) {
 
 			comp._nodes.add_image_btn.addEventListener("click", () => {
 				select_file_modal._data.file_manager.select_callback = (src) => {
-					comp._data.images.push({ img_url: src, product_image_id: -1, option_ids: [] });
+					comp._data.images.push({ img_url: src, product_image_id: -1, product_feature_options: [] });
 					comp._render();
 				};
 				select_file_modal._render();

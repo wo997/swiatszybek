@@ -263,7 +263,7 @@ class EntityManager
             if ($other_entity_props) {
                 $curr_other_entity->setProps($other_entity_props);
             } else {
-                $curr_other_entity->willUnlinkFromEntity($obj->getName());
+                $curr_other_entity->willUnlinkFromEntity($obj->getGlobalId());
             }
             $other_entities[] = $curr_other_entity;
         }

@@ -62,7 +62,20 @@ class Entity
 
     public function setGlobalId($id)
     {
-        return $this->global_id = $id;
+        $this->global_id = $id;
+    }
+
+    public function getGlobalId()
+    {
+        return $this->global_id;
+    }
+
+    public function willExistForOtherEntity($global_id)
+    {
+        if ($this->getWillDelete() || in_array($global_id, $this->getWillUnlinkFromEntities())) {
+            return false;
+        }
+        return true;
     }
 
     /**

@@ -51,7 +51,13 @@ domload(() => {
 		data.category_ids = general_product_data.categories.map((e) => e.product_category_id);
 		data.main_img_url = general_product_data.main_img_url;
 
-		data.images = general_product_data.images.sort((a, b) => Math.sign(a.pos - b.pos));
+		data.images = general_product_data.images
+			.sort((a, b) => Math.sign(a.pos - b.pos))
+			.map((e) => {
+				return { ...e, product_feature_options: e.product_feature_options.map((op) => op.product_feature_option_id) };
+			});
+
+		product_feature_options;
 
 		product_comp._render();
 

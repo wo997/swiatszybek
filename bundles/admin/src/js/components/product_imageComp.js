@@ -4,7 +4,7 @@
  * @typedef {{
  * product_image_id
  * img_url: string
- * option_ids: number[]
+ * product_feature_options: number[]
  * features?: Product_FeatureCompData[]
  * } & ListCompRowData} Product_ImageCompData
  *
@@ -26,10 +26,8 @@
  * @param {*} parent
  * @param {Product_ImageCompData} data
  */
-function product_imageComp(comp, parent, data = { product_image_id: -1, img_url: "", option_ids: [] }) {
+function product_imageComp(comp, parent, data = { product_image_id: -1, img_url: "", product_feature_options: [] }) {
 	comp._set_data = (data, options = {}) => {
-		data.option_ids = def(data.option_ids, []);
-
 		setCompData(comp, data, {
 			...options,
 			render: () => {
@@ -41,13 +39,13 @@ function product_imageComp(comp, parent, data = { product_image_id: -1, img_url:
 
 					const fea = product_features.find((f) => f.product_feature_id === feature.product_feature_id);
 					options_html += feature.options
-						.filter((op) => !data.option_ids.includes(op.product_feature_option_id))
+						.filter((op) => !data.product_feature_options.includes(op.product_feature_option_id))
 						.map((option) => {
 							return html`<option value="${option.product_feature_option_id}">${fea.name}: ${option.name}</option>`;
 						});
 				});
 
-				const selected_options_html = html`${data.option_ids
+				const selected_options_html = html`${data.product_feature_options
 					.map((option_id) => {
 						const option = product_feature_options.find((op) => op.product_feature_option_id === option_id);
 						const fea = product_features.find((f) => f.product_feature_id === option.product_feature_id);
@@ -94,7 +92,7 @@ function product_imageComp(comp, parent, data = { product_image_id: -1, img_url:
 			so.addEventListener("change", () => {
 				const option_id = +so._get_value();
 				if (option_id) {
-					comp._data.option_ids.push(option_id);
+					comp._data.product_feature_options.push(option_id);
 					comp._render();
 				}
 			});
@@ -108,9 +106,9 @@ function product_imageComp(comp, parent, data = { product_image_id: -1, img_url:
 
 				const remove_option = target._parent(".remove_option", { skip: 0 });
 				if (remove_option) {
-					const ind = comp._data.option_ids.indexOf(+remove_option.dataset.option_id);
+					const ind = comp._data.product_feature_options.indexOf(+remove_option.dataset.option_id);
 					if (ind !== -1) {
-						comp._data.option_ids.splice(ind, 1);
+						comp._data.product_feature_options.splice(ind, 1);
 					}
 					comp._render();
 				}
