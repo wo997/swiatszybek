@@ -150,7 +150,7 @@ function setVariantData() {
 
 			let price_diff = "";
 			if (p_min_d === p_max_d && p_min_d !== 0) {
-				price_diff = " " + (p_min_d > 0 ? "+" : "") + p_min_d + "zł";
+				price_diff = " " + (p_min_d > 0 ? "+" : "") + p_min_d + " zł";
 			}
 
 			option.classList.toggle("has_price_diff", !!price_diff);

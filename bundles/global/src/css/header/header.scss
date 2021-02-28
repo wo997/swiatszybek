@@ -34,9 +34,14 @@ header.main {
 		display: flex;
 	}
 
-	.user-wrapper:hover .user-menu {
-		opacity: 1;
-		pointer-events: auto;
+	.user-wrapper {
+		&:hover .user-menu {
+			opacity: 1;
+			pointer-events: auto;
+		}
+	}
+	.user_btn .user_icon {
+		display: block;
 	}
 
 	.headerbtn_menu {
