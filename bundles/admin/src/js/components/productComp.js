@@ -654,7 +654,7 @@ function productComp(comp, parent, data = undefined) {
 
 			comp._nodes.add_image_btn.addEventListener("click", () => {
 				select_file_modal._data.file_manager.select_callback = (src) => {
-					comp._data.images.push({ img_url: src, product_image_id: -1 });
+					comp._data.images.push({ img_url: src, product_image_id: -1, option_ids: [] });
 					comp._render();
 				};
 				select_file_modal._render();

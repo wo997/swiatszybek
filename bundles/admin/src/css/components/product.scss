@@ -32,8 +32,31 @@ product-comp {
 	}
 
 	& product_image-comp.comp {
-		display: flex;
-		align-items: center;
+		& {
+			display: flex;
+			align-items: center;
+		}
+		.select_image_options_wrapper {
+			& {
+				position: relative;
+				min-width: 140px;
+			}
+			& .btn {
+				position: absolute;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				width: 100%;
+				pointer-events: none;
+			}
+			&:hover .btn {
+				filter: brightness(var(--brighten-factor));
+			}
+		}
+		.node_selected_options:not(:empty) {
+			margin-bottom: 5px;
+		}
 	}
 }
 

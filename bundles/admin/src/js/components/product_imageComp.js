@@ -4,7 +4,7 @@
  * @typedef {{
  * product_image_id
  * img_url: string
- * option_ids: []
+ * option_ids: number[]
  * features?: Product_FeatureCompData[]
  * } & ListCompRowData} Product_ImageCompData
  *
@@ -16,6 +16,7 @@
  *  edit_Image_btn: PiepNode
  *  add_option_btn: PiepNode
  *  select_options: PiepNode
+ *  selected_options: PiepNode
  * } & ListControlTraitNodes
  * } & BaseComp} Product_ImageComp
  */
@@ -27,34 +28,44 @@
  */
 function product_imageComp(comp, parent, data = { product_image_id: -1, img_url: "", option_ids: [] }) {
 	comp._set_data = (data, options = {}) => {
+		data.option_ids = def(data.option_ids, []);
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				let selects_html = "";
+				let options_html = html`<option value="0">―</option>`;
 				data.features.forEach((feature) => {
-					const options_html = feature.options.map((option) => {
-						return html`<option value="${option.product_feature_option_id}">${option.name}</option>`;
-					});
+					if (feature.options.length < 2) {
+						return;
+					}
 
 					const fea = product_features.find((f) => f.product_feature_id === feature.product_feature_id);
-					selects_html += html`<tr>
-						<td>${fea.name}</td>
-						<td>
-							<select class="field" data-product_feature_id="${fea.product_feature_id}">
-								<option value="">Wszystkie / Brak</option>
-								${options_html}
-							</select>
-						</td>
-					</tr>`;
+					options_html += feature.options
+						.filter((op) => !data.option_ids.includes(op.product_feature_option_id))
+						.map((option) => {
+							return html`<option value="${option.product_feature_option_id}">${fea.name}: ${option.name}</option>`;
+						});
 				});
-				selects_html = html`<table style="margin-left:15px">
-					${selects_html}
-				</table>`;
-				comp._nodes.select_options._set_content(selects_html);
 
-				comp._nodes.select_options._children("select").forEach((select) => {
-					select.addEventListener("change", () => {});
-				});
+				const selected_options_html = html`${data.option_ids
+					.map((option_id) => {
+						const option = product_feature_options.find((op) => op.product_feature_option_id === option_id);
+						const fea = product_features.find((f) => f.product_feature_id === option.product_feature_id);
+						if (option) {
+							return html`
+								<span class="semi-bold">${fea.name}:</span>
+								<span style="margin-left: 5px">${option.name}</span>
+								<button class="btn transparent small remove_option" data-option_id="${option_id}" style="margin-left: 2px">
+									<i class="fas fa-times"></i>
+								</button>
+							`;
+						}
+						return "";
+					})
+					.join("<br>")}`;
+
+				comp._nodes.select_options._set_content(options_html);
+				comp._nodes.selected_options._set_content(selected_options_html);
 			},
 		});
 	};
@@ -63,20 +74,47 @@ function product_imageComp(comp, parent, data = { product_image_id: -1, img_url:
 		template: html`
 			<image-input data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-input>
 
-			<div data-node="{${comp._nodes.select_options}}"></div>
+			<div style="margin-left: 10px">
+				<div data-node="{${comp._nodes.selected_options}}"></div>
+				<div
+					class="select_image_options_wrapper"
+					data-tooltip="Klient w pierwszej kolejności zobaczy zdjęcia,<br>które go faktycznie interesują"
+				>
+					<select class="field" data-node="{${comp._nodes.select_options}}"></select>
+					<button class="btn primary">Połącz z cechą</button>
+				</div>
+			</div>
 
 			<div style="margin-left:auto">
 				<p-batch-trait data-trait="list_controls"></p-batch-trait>
 			</div>
 		`,
 		initialize: () => {
-			/** @type {ListComp} */
-			// @ts-ignore
-			const list = comp._parent_comp;
+			const so = comp._nodes.select_options;
+			so.addEventListener("change", () => {
+				const option_id = +so._get_value();
+				if (option_id) {
+					comp._data.option_ids.push(option_id);
+					comp._render();
+				}
+			});
 
-			/** @type {ProductComp} */
-			// @ts-ignore
-			const product_comp = list._parent_comp;
+			comp.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+
+				if (!target) {
+					return;
+				}
+
+				const remove_option = target._parent(".remove_option", { skip: 0 });
+				if (remove_option) {
+					const ind = comp._data.option_ids.indexOf(+remove_option.dataset.option_id);
+					if (ind !== -1) {
+						comp._data.option_ids.splice(ind, 1);
+					}
+					comp._render();
+				}
+			});
 		},
 	});
 }
