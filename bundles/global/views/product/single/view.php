@@ -245,16 +245,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     </div>
 
                     <div class="expand_y hidden animate_hidden notify_product_available">
-                        <h3 style="margin:12px 0 0">Powiadom o dostępności</h3>
-                        <label style="font-size:16px;margin: 10px 0;display: flex;align-items: center;">
-                            <span>Twój e-mail: </span>
-                            <input type="text" value="<?= User::getCurrent()->data["email"] ?>" id="notification_email" style="width: auto;flex-grow: 1;margin-left: 10px;padding: 1px 4px;">
-                        </label>
-                        <button id="notify" class="btn primary medium fill" onclick="sendNotification()">
-                            Potwierdź powiadomienie
-                            <i class="fa fa-envelope" style="font-size: 14px;"></i>
-                        </button>
-                        <p id="whenNotificationAdded" style="display:none;color: white; background: #1b1; border-radius: 3px; padding: 3px 10px;text-align:center;max-width:450px;">Wyślemy powiadomienie na <span id="user_email"></span> kiedy produkt pojawi się w sklepie <i class="fa fa-envelope"></i></p>
+                        <button class="btn priamary">Powiadom o dostępności</button>
                     </div>
                 </div>
             </div>
