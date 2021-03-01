@@ -96,6 +96,7 @@
 
 .product_offer {
 	max-width: 450px;
+	padding: 0 10px;
 }
 
 @media only screen and (min-width: 850px) {
@@ -111,7 +112,6 @@
 	.product_offer {
 		width: 40%;
 		margin-top: 20px;
-		padding: 0 10px;
 	}
 	.sticky_product {
 		display: none;

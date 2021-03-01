@@ -38,7 +38,7 @@ function smoothScroll(diff, params = {}) {
 	smooth_scrolling = true;
 
 	/** @type {PiepNode} */
-	params.scroll_parent = def(params.scroll_parent, window);
+	params.scroll_parent = def(params.scroll_parent, document.documentElement);
 	const scroll_parent = params.scroll_parent;
 	const prodably_duration = def(params.duration, Math.sqrt(Math.abs(diff)));
 	// duration is weird to be addde here,, but it's intentional
@@ -49,7 +49,7 @@ function smoothScroll(diff, params = {}) {
 	params.duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
 
 	//console.log(diff);
-	if (Math.abs(diff) < 10) {
+	if (Math.abs(diff) < 2) {
 		if (params.callback) {
 			params.callback();
 		}
@@ -91,7 +91,21 @@ function smoothScrolling(diff, params = {}) {
 		return;
 	}
 
-	scroll_parent.scrollBy(0, (4 * diff * (duration / 2 - Math.abs(duration / 2 - t))) / (duration * duration));
+	const pos = (x) => {
+		if (x <= 0) {
+			return 0;
+		}
+		if (x >= 1) {
+			return 1;
+		}
+		if (x > 0.5) {
+			return 1 - pos(1 - x);
+		}
+		//return Math.pow(x * 2, 2) / 2; // adjust however u want
+		return x * x * 2;
+	};
+
+	scroll_parent.scrollBy(0, Math.round(diff * (pos((t + 1) / duration) - pos(t / duration))));
 
 	requestAnimationFrame(() => {
 		params.t = t + 1;

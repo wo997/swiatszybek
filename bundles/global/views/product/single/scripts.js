@@ -268,21 +268,37 @@ domload(() => {
 });
 
 let res = { can: true };
+let wanna_scroll_by = 0;
 window.addEventListener("main_header_scroll", (ev) => {
 	if (window.innerWidth >= 850) {
 		return;
 	}
 	const r = product_offer.getBoundingClientRect();
-	const fac = 0.005;
+	const length = 30;
 	const top = -50 - r.top;
 	const bottom = r.top + r.height;
-	const visible = Math.max(0, Math.min(1, top * fac, bottom * fac));
+	const visible = Math.max(0, Math.min(1, top / length, bottom / length));
 
-	sticky_product.style.transform = `translateY(${Math.round((2 * visible - 2) * 100)}%)`;
+	const v1 = 2 * visible - 2;
+	sticky_product.style.transform = `translateY(${Math.round(v1 * 100)}%)`;
+	wanna_scroll_by = 0;
+
+	if (top > 0 && top < length) {
+		const half = length / 2;
+		if (top > half) {
+			wanna_scroll_by = length - top;
+		} else {
+			//wanna_scroll_by = -top;
+		}
+	}
 
 	// @ts-ignore
 	if (visible > ev.detail.res.other_header_visible) {
 		// @ts-ignore
 		ev.detail.res.other_header_visible = 2 * visible;
 	}
+});
+
+document.addEventListener("touchend", (ev) => {
+	//smoothScroll(wanna_scroll_by);
 });
