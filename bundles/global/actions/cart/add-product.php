@@ -10,4 +10,4 @@
 $cart = User::getCurrent()->cart;
 $cart->changeProductQty($_POST["product_id"], $_POST["qty"]);
 $cart->saveCart();
-Request::jsonResponse(["cart" => $cart->getProducts()]);
+Request::jsonResponse(["cart" => $cart->getAllData()]);

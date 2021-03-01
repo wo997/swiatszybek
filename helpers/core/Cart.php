@@ -13,7 +13,7 @@ class Cart
     private $products;
     private $products_data;
     private $rebate_codes; // all
-    private $rebate_codes_codes; // just strings
+    private $rebate_codes_codes = []; // just strings
     private $rebate_codes_limit = 1; // that will be a subject to change
     private $products_price;
     private $final_price;
@@ -44,16 +44,21 @@ class Cart
 
         $final_price = 0;
 
+        $products_data = [];
         if ($product_ids) {
             $product_ids_string = join(",", $product_ids);
             $product_index = -1;
-            foreach (DB::fetchArr("SELECT * FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)") as $product) {
+
+            $products_data = DB::fetchArr("SELECT product_id, net_price, gross_price FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
+
+            foreach ($products_data as $product_data) {
                 $product_index++;
 
                 $cart_product =
                     /** @var CartProduct */
                     $this->products[$product_index];
-                $price = 60; //$product["price"];
+
+                $price = $product_data["gross_price"];
 
                 $final_price += $cart_product["qty"] * $price;
             }
@@ -62,6 +67,7 @@ class Cart
 
         return [
             "products" => $this->products,
+            "products_data" => $products_data,
             "final_price" => $this->final_price,
             "rebate_codes" => $this->rebate_codes_codes
         ];

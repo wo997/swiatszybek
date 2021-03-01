@@ -47,8 +47,9 @@ if (defined("ROUTE")) {
     const image_fixed_dimensions = <?= json_encode(Files::$image_fixed_dimensions) ?>;
     const same_ext_image_allowed_types = <?= json_encode(Files::$same_ext_image_allowed_types) ?>;
 
+    let cart = <?= json_encode(User::getCurrent()->cart->getAllData()) ?>;
+
     <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-        const requiredFilterTables = <?= json_encode($requiredFilterTables) ?>;
         const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
         const privelege_list = null;
 
