@@ -68,9 +68,10 @@ domload(() => {
 				left -= nodeRect.width / 2 + tooltipRect.width / 2 + offsetX;
 			} else if (nodeRectPosition == "right") {
 				top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
+				left += nodeRect.width / 2;
 			} else if (nodeRectPosition == "left") {
 				top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
-				left -= nodeRect.width + tooltipRect.width + offsetX * 2;
+				left -= nodeRect.width / 2 + tooltipRect.width + offsetX * 2;
 			}
 
 			const maxLeft = window.innerWidth - 30 - tooltipRect.width;

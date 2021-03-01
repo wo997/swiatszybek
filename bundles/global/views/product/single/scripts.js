@@ -52,7 +52,7 @@ function productImagesChange() {
 		/** @type {ResponsiveImage} */
 		// @ts-ignore
 		const sticky_product_img = $(".sticky_product img");
-		switchImage(sticky_product_img, hah[0].img_url, true);
+		switchImage(sticky_product_img, hah[0].img_url, false);
 	}
 
 	lazyLoadImages(false);
@@ -231,12 +231,12 @@ function setVariantData() {
 	}
 
 	if (any_matched) {
-		selected_product_price += `<span style="width:4px" class="price_space"></span>zł`;
+		selected_product_price += html`<span style="width:4px" class="price_space"></span> zł`;
 	} else {
 		selected_product_price = "Brak produktu";
 	}
 	if (any_matched && selected_product_was_price) {
-		selected_product_was_price += `<span style="width:4px" class="price_space"></span>zł`;
+		selected_product_was_price += html`<span style="width:4px" class="price_space"></span> zł`;
 	}
 
 	$(".selected_product_price")._set_content(selected_product_price);
@@ -273,14 +273,14 @@ window.addEventListener("main_header_scroll", (ev) => {
 		return;
 	}
 	const r = product_offer.getBoundingClientRect();
-	const fac = 0.01;
+	const fac = 0.005;
 	const visible = Math.max(0, Math.min(1, (-50 - r.top) * fac, (r.top + r.height) * fac));
 
-	sticky_product.style.transform = `translateY(${Math.round((visible - 1) * 110)}%)`;
+	sticky_product.style.transform = `translateY(${Math.round((2 * visible - 2) * 100)}%)`;
 
 	// @ts-ignore
 	if (visible > ev.detail.res.other_header_visible) {
 		// @ts-ignore
-		ev.detail.res.other_header_visible = visible;
+		ev.detail.res.other_header_visible = 2 * visible;
 	}
 });

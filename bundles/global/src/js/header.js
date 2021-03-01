@@ -119,7 +119,7 @@ windowload(() => {
 		);
 
 		const min = scroll_top - main_header.offsetHeight;
-		const max = scroll_top - main_header.offsetHeight * res.other_header_visible * 1.1;
+		const max = scroll_top - main_header.offsetHeight * res.other_header_visible;
 		follow_scroll_top = clamp(min, follow_scroll_top, max);
 		main_header.style.transform = `translateY(${follow_scroll_top - scroll_top}px)`;
 
