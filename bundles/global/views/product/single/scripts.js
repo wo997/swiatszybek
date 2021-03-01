@@ -17,15 +17,15 @@ function addProductToCart(product_id, qty) {
 
 function productImagesChange() {
 	const selected_options = Object.values(selected_variants);
-	for (const image of general_product_images) {
-		let weight = 0;
+	general_product_images.forEach((image, index) => {
+		let weight = index;
 		for (const selected_option of selected_options) {
 			if (image.option_ids.includes(selected_option.option_id)) {
-				weight++;
+				weight += 100;
 			}
 		}
 		image.weight = weight;
-	}
+	});
 
 	const hah = cloneObject(general_product_images);
 	hah.sort((a, b) => Math.sign(b.weight - a.weight));
@@ -58,7 +58,28 @@ function productImagesChange() {
 	lazyLoadImages(false);
 }
 
+/** @type {PiepNode} */
+let product_offer;
+/** @type {PiepNode} */
+let sticky_product;
+/** @type {any} */
+let single_product;
+
 domload(() => {
+	product_offer = $(".product_offer");
+	sticky_product = $(".sticky_product");
+
+	$$(".variants").forEach((variants) => {
+		variants.addEventListener("change", () => {
+			variantChanged();
+		});
+	});
+
+	setVariantsFromUrl();
+
+	initBuy();
+
+	// TEMPORARY
 	const vdo = $(".vdo");
 
 	vdo.addEventListener("change", () => {
@@ -67,6 +88,31 @@ domload(() => {
 
 	vdo._set_value("1");
 });
+
+function initBuy() {
+	$$(".qty_controls").forEach((qty_controls) => {
+		const val_qty = qty_controls._child(".val_qty");
+		qty_controls._child(".sub_qty").addEventListener("click", () => {
+			val_qty._set_value(Math.max(0, val_qty._get_value() - 1));
+		});
+		qty_controls._child(".add_qty").addEventListener("click", () => {
+			val_qty._set_value(Math.min(val_qty._get_value() + 1, single_product.stock, 10));
+		});
+	});
+
+	$(".main_buy_btn").addEventListener("click", () => {
+		xhr({
+			url: "/cart/add-product",
+			params: {
+				product_id: single_product.product_id,
+				qty: $(".main_qty_controls .val_qty")._get_value(),
+			},
+			success: (res) => {
+				console.log(res);
+			},
+		});
+	});
+}
 
 /**
  *
@@ -214,7 +260,7 @@ function setVariantData() {
 	let selected_product_was_price = "";
 
 	const any_matched = !!price_max;
-	const single_product = data.matched_products.length === 1 ? data.matched_products[0] : undefined;
+	single_product = data.matched_products.length === 1 ? data.matched_products[0] : undefined;
 
 	if (any_matched) {
 		selected_product_price = price_min + "";
@@ -248,24 +294,6 @@ function setVariantData() {
 
 	productImagesChange();
 }
-
-/** @type {PiepNode} */
-let product_offer;
-/** @type {PiepNode} */
-let sticky_product;
-
-domload(() => {
-	product_offer = $(".product_offer");
-	sticky_product = $(".sticky_product");
-
-	$$(".variants").forEach((variants) => {
-		variants.addEventListener("change", () => {
-			variantChanged();
-		});
-	});
-
-	setVariantsFromUrl();
-});
 
 let res = { can: true };
 let wanna_scroll_by = 0;

@@ -73,17 +73,6 @@
 	font-size: 0.8em;
 }
 
-.buy_btn {
-	background: var(--buynow-clr);
-	color: white;
-}
-
-.buy_btn .basket_icon {
-	filter: invert(1);
-	vertical-align: sub;
-	width: 1.35em;
-}
-
 .vdo {
 	& {
 		--option-padding: 3px;

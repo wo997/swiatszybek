@@ -63,9 +63,9 @@ function xhr(params) {
 			}
 		}
 
-		if (!reloading && reload_required && IS_ADMIN && confirm("Wymagane jest odświeżenie strony, czy chcesz kontynuować?")) {
-			window.location.reload();
-		}
+		// if (!reloading && reload_required && IS_ADMIN && confirm("Wymagane jest odświeżenie strony, czy chcesz kontynuować?")) {
+		// 	window.location.reload();
+		// }
 	};
 
 	var formData = params.formData ? params.formData : new FormData();

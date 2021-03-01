@@ -111,6 +111,10 @@ textarea {
 		--brighten-factor: 1;
 		--disabled-opacity: 0.4;
 	}
+	&.buy_btn {
+		--btn-background-clr: var(--buynow-clr);
+		--btn-font-clr: #fff;
+	}
 	&.transparent:hover:not(:disabled) {
 		background: #0001;
 	}

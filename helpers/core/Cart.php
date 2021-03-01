@@ -100,14 +100,33 @@ class Cart
         $product_id = intval($product_id);
         $qty = intval($qty);
 
+        /** @var CartProduct */
+        $match_product_index = -1;
+
+        $index = -1;
         foreach ($this->products as
             /** @var CartProduct */
             $product) {
+            $index++;
             if ($product["product_id"] == $product_id) {
-                $stock = 5; //DB::fetchVal("SELECT stock FROM product WHERE product_id = $product_id");
-                $qty = min($qty, $stock);
-                $product["qty"] = $qty;
+                $match_product_index = $index;
+                break;
             }
+        }
+
+        if ($match_product_index === -1) {
+            $match_product =
+                /** @var CartProduct */
+                ["product_id" => $product_id, "qty" => 0];
+            $this->products[] = $match_product;
+            $match_product_index = count($this->products) - 1;
+        }
+
+        if ($match_product_index !== -1) {
+            $product_id = $this->products[$match_product_index]["product_id"];
+            $stock = DB::fetchVal("SELECT stock FROM product WHERE product_id = $product_id");
+            $qty = min($qty, $stock);
+            $this->products[$match_product_index]["qty"] = $qty;
         }
     }
 
@@ -195,17 +214,19 @@ class Cart
     public function loadCart($user_id)
     {
         if ($user_id) {
-            //$cart_json = json_encode(["rebate_codes" => ["PREMIERA123"]]);
-            $cart_json = DB::execute("SELECT cart_json FROM user WHERE user_id = $user_id");
-        } else if (isset($_SESSION["current_user_cart_json"])) {
+            $cart_json = DB::fetchVal("SELECT cart_json FROM user WHERE user_id = $user_id");
+        }
+        if (!$cart_json && isset($_SESSION["current_user_cart_json"])) {
             $cart_json = $_SESSION["current_user_cart_json"];
-        } else if (isset($_COOKIE["current_user_cart_json"])) {
+        }
+        if (!$cart_json && isset($_COOKIE["current_user_cart_json"])) {
             $cart_json = $_COOKIE["current_user_cart_json"];
         }
 
         $cart_data = json_decode($cart_json, true);
 
         $this->products = def($cart_data, "products", []);
+
         $any_failed = false;
         foreach (def($cart_data, "rebate_codes", []) as $code) {
             if (!$this->activateRebateCode($code)["success"]) {

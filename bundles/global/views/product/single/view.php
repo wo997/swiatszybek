@@ -226,21 +226,20 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
                 <!-- <p style='font-weight:normal;margin:0;font-size: 1.1em;' id="quantity"></p> -->
 
-                <div style="height:20px"></div>
                 <div class="label">Ilość:</div>
-                <div class="glue_children qty_controls" style="margin-right:10px">
-                    <button class="btn subtle">
+                <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px">
+                    <button class="btn subtle sub_qty">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <input type="text" class="field inline" value="1">
-                    <button class="btn subtle">
+                    <input type="text" class="field inline val_qty" value="1" data-number>
+                    <button class="btn subtle add_qty">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
                 <br>
-                <button class="btn fill medium buy_btn" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true,modal_source:this})">
+                <button class="btn fill medium buy_btn main_buy_btn">
                     Dodaj do koszyka
-                    <i class="fas fa-check"></i>
+                    <i class="fas fa-plus-circle"></i>
                 </button>
 
                 <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-general_product_id="<?= $general_product_id ?>"></div>
