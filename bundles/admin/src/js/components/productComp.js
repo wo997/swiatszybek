@@ -701,15 +701,15 @@ function productComp(comp, parent, data = undefined) {
 								main_img_url: data.main_img_url,
 								features: data.product_feature_ids.map((product_feature_id, index) => ({
 									product_feature_id,
-									_meta_pos: index,
+									_meta_pos: index + 1,
 								})),
 								feature_options: data.product_feature_option_ids.map((product_feature_option_id, index) => ({
 									product_feature_option_id,
-									_meta_pos: index,
+									_meta_pos: index + 1,
 								})),
 								categories: data.category_ids,
 								products: db_products,
-								images: data.images.map((e, index) => ({ ...e, pos: index })),
+								images: data.images.map((e, index) => ({ ...e, pos: index + 1 })),
 							},
 						},
 						success: (res) => {

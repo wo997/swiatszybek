@@ -10,7 +10,7 @@ EntityManager::register("product", [
         "active" => ["type" => "number"],
         "stock" => ["type" => "number"],
         "__img_url" => ["type" => "string"],
-        "__full_name" => ["type" => "string"],
+        "__name" => ["type" => "string"],
     ],
 ]);
 

@@ -10,5 +10,5 @@ DB::createTable("product", [
     ["name" => "active", "type" => "TINYINT(1)"],
     ["name" => "stock", "type" => "INT"],
     ["name" => "__img_url", "type" => "VARCHAR(255)"],
-    ["name" => "__full_name", "type" => "VARCHAR(255)"],
+    ["name" => "__name", "type" => "VARCHAR(255)"],
 ]);

@@ -8,14 +8,14 @@ EntityManager::register("general_product", [
 ]);
 
 EventListener::register("before_save_general_product_entity", function ($params) {
-    /** @var Entity */
+    /** @var Entity GeneralProduct */
     $general_product = $params["obj"];
 
-    /** @var Entity[] */
+    /** @var Entity[] ProductImage */
     $images = $general_product->getProp("images");
     $images_data = [];
     foreach ($images as $image) {
-        /** @var Entity[] */
+        /** @var Entity[] ProductFeatureOption */
         $product_feature_options = $image->getProp("product_feature_options");
         $option_ids = [];
         foreach ($product_feature_options as $product_feature_option) {
@@ -24,14 +24,25 @@ EventListener::register("before_save_general_product_entity", function ($params)
         $images_data[] = ["img_url" => $image->getProp("img_url"), "option_ids" => $option_ids];
     }
 
-    /** @var Entity[] */
+    /** @var Entity[] Product */
     $products = $general_product->getProp("products");
 
+    /** @var Entity[] ProductFeature */
+    $general_product_features = $general_product->getProp("features");
+    $features = [];
+    foreach ($general_product_features as $general_product_feature) {
+        $features[] = ["id" => $general_product_feature->getProp("product_feature_id"), "pos" => $general_product_feature->getMeta()["pos"]];
+    }
+    usort($features, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
+    $sorted_feature_ids_str = join(",", array_map(fn ($a) => $a["id"], $features));
+
     foreach ($products as $product) {
-        /** @var Entity[] */
+        $product_id = $product->getId();
+
+        /** @var Entity[] ProductFeatureOption */
         $feature_options = $product->getProp("feature_options");
         $feature_option_ids = [];
-        foreach ($feature_options as  $feature_option) {
+        foreach ($feature_options as $feature_option) {
             $feature_option_ids[] = $feature_option->getId();
         }
 
@@ -51,5 +62,17 @@ EventListener::register("before_save_general_product_entity", function ($params)
         }
 
         $product->setProp("__img_url", $__img_url);
+
+        $product_name = $general_product->getProp("name");
+
+        if ($sorted_feature_ids_str) {
+            $option_names = DB::fetchCol("SELECT pfo.name
+                FROM product_to_feature_option INNER JOIN product_feature_option pfo USING (product_feature_option_id)
+                WHERE product_id = $product_id
+                ORDER BY FIELD(product_feature_id,$sorted_feature_ids_str)");
+            $product_name .= " | " . join(" | ", $option_names);
+        }
+
+        $product->setProp("__name", $product_name);
     }
 });
