@@ -162,91 +162,89 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <div data-slide_width="100px" data-show_next_mobile style="--slide_padding:5px" data-nav_out_from="1000px"></div>
         </div>
         <div class="product_offer">
-            <div style="max-width: 450px; padding: 0 10px" class="mobileCenter">
-                <h1 class="h1"><?= $general_product_data["name"] ?></h1>
+            <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 
-                <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
-                <div class="vdo radio_group columns_1">
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="1"></p-checkbox>
-                        Subtelny napis
+            <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
+            <div class="vdo radio_group columns_1">
+                <div class="checkbox_area">
+                    <p-checkbox data-value="1"></p-checkbox>
+                    Subtelny napis
+                </div>
+                <div class="checkbox_area">
+                    <p-checkbox data-value="2"></p-checkbox>
+                    Czerwony prostokąt
+                </div>
+                <div class="checkbox_area">
+                    <p-checkbox data-value="3"></p-checkbox>
+                    Szary prostokąt
+                </div>
+                <div class="checkbox_area">
+                    <p-checkbox data-value="4"></p-checkbox>
+                    Brak
+                </div>
+            </div>
+
+            <div>
+                <?php
+                foreach ($general_product_variants as $general_product_variant) {
+                ?>
+                    <span class="label"><?= $general_product_variant["name"] ?></span>
+                    <div class="variants radio_group boxes hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
+                        <?php
+                        foreach ($general_product_variant["variant_options"] as $variant_option) {
+                        ?>
+                            <div class="box checkbox_area variant_option">
+                                <div>
+                                    <div class="price_diff_before"></div>
+                                    <div>
+                                        <p-checkbox data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
+                                        <?php
+                                        $color = def($variant_option, ["extra", "color"], "");
+                                        if ($color) {
+                                        ?>
+                                            <div class="color_circle" style="background-color:<?= $color ?>"></div>
+                                        <?php
+                                        }
+                                        ?>
+                                        <?= $variant_option["name"] ?>
+                                    </div>
+                                    <div class="price_diff"></div>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        ?>
                     </div>
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="2"></p-checkbox>
-                        Czerwony prostokąt
-                    </div>
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="3"></p-checkbox>
-                        Szary prostokąt
-                    </div>
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="4"></p-checkbox>
-                        Brak
-                    </div>
+                <?php
+                }
+
+                ?>
+
+                <p style='margin: 0; font-size: 1.6em;' class="semi-bold">
+                    <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
+                </p>
+
+                <p style='font-weight:normal;margin:0;font-size: 1.1em;' id="quantity"></p>
+
+                <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Czas realizacji: 24h</p>
+
+                <div style="height:20px"></div>
+                <button class="btn medium fill buy_btn" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true,modal_source:this})">
+                    Dodaj do koszyka
+                    <i class="fas fa-shopping-bag"></i>
+                </button>
+
+                <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-general_product_id="<?= $general_product_id ?>"></div>
+                <div class="product_basket_products" data-general_product_id="<?= $general_product_id ?>"></div>
+                <div class="expand_y hidden animate_hidden case_basket_not_empty" data-general_product_id="<?= $general_product_id ?>">
+                    <a class="btn primary medium fill" href="/zakup" style="margin-top: 20px">
+                        Przejdź do koszyka
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
                 </div>
 
-                <div>
-                    <?php
-                    foreach ($general_product_variants as $general_product_variant) {
-                    ?>
-                        <span class="label"><?= $general_product_variant["name"] ?></span>
-                        <div class="variants radio_group boxes hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
-                            <?php
-                            foreach ($general_product_variant["variant_options"] as $variant_option) {
-                            ?>
-                                <div class="box checkbox_area variant_option">
-                                    <div>
-                                        <div class="price_diff_before"></div>
-                                        <div>
-                                            <p-checkbox data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
-                                            <?php
-                                            $color = def($variant_option, ["extra", "color"], "");
-                                            if ($color) {
-                                            ?>
-                                                <div class="color_circle" style="background-color:<?= $color ?>"></div>
-                                            <?php
-                                            }
-                                            ?>
-                                            <?= $variant_option["name"] ?>
-                                        </div>
-                                        <div class="price_diff"></div>
-                                    </div>
-                                </div>
-                            <?php
-                            }
-                            ?>
-                        </div>
-                    <?php
-                    }
-
-                    ?>
-
-                    <p style='margin: 0; font-size: 1.6em;' class="semi-bold">
-                        <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
-                    </p>
-
-                    <p style='font-weight:normal;margin:0;font-size: 1.1em;' id="quantity"></p>
-
-                    <p style='font-weight:normal;margin:0;font-size: 1.1em;'>Czas realizacji: 24h</p>
-
-                    <div style="height:20px"></div>
-                    <button class="btn medium fill buy_btn" onclick="addVariantToBasket(VARIANT_ID,1,{show_modal:true,modal_source:this})">
-                        Dodaj do koszyka
-                        <i class="fas fa-shopping-bag"></i>
-                    </button>
-
-                    <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-general_product_id="<?= $general_product_id ?>"></div>
-                    <div class="product_basket_products" data-general_product_id="<?= $general_product_id ?>"></div>
-                    <div class="expand_y hidden animate_hidden case_basket_not_empty" data-general_product_id="<?= $general_product_id ?>">
-                        <a class="btn primary medium fill" href="/zakup" style="margin-top: 20px">
-                            Przejdź do koszyka
-                            <i class="fa fa-chevron-right"></i>
-                        </a>
-                    </div>
-
-                    <div class="expand_y hidden animate_hidden notify_product_available">
-                        <button class="btn priamary">Powiadom o dostępności</button>
-                    </div>
+                <div class="expand_y hidden animate_hidden notify_product_available">
+                    <button class="btn priamary">Powiadom o dostępności</button>
                 </div>
             </div>
         </div>

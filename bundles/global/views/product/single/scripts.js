@@ -274,7 +274,9 @@ window.addEventListener("main_header_scroll", (ev) => {
 	}
 	const r = product_offer.getBoundingClientRect();
 	const fac = 0.005;
-	const visible = Math.max(0, Math.min(1, (-50 - r.top) * fac, (r.top + r.height) * fac));
+	const top = -50 - r.top;
+	const bottom = r.top + r.height;
+	const visible = Math.max(0, Math.min(1, top * fac, bottom * fac));
 
 	sticky_product.style.transform = `translateY(${Math.round((2 * visible - 2) * 100)}%)`;
 
