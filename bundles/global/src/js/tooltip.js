@@ -65,7 +65,7 @@ domload(() => {
 
 			const nodeRectPosition = e.dataset.tooltip_position;
 			if (nodeRectPosition == "center") {
-				left -= nodeRect.width / 2 + tooltipRect.width / 2 + offsetX;
+				left -= tooltipRect.width / 2 + offsetX;
 			} else if (nodeRectPosition == "right") {
 				top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
 				left += nodeRect.width / 2;
@@ -103,6 +103,9 @@ domload(() => {
 	window.addEventListener("touchstart", tacz);
 
 	window.addEventListener("mousewheel", () => {
+		tooltip.dismiss();
+	});
+	window.addEventListener("touchmove", () => {
 		tooltip.dismiss();
 	});
 	window.addEventListener("mousedown", (event) => {

@@ -77,9 +77,6 @@ function headerResizeCallback() {
 	}
 }
 
-/** @type {number} */
-let main_scroll_top = document.documentElement.scrollTop;
-let follow_scroll_top = main_scroll_top;
 /** @type {PiepNode} */
 let main_header;
 /** @type {PiepNode} */
@@ -120,11 +117,7 @@ windowload(() => {
 
 		const min = scroll_top - main_header.offsetHeight;
 		const max = scroll_top - main_header.offsetHeight * (res.other_header_visible ? 1 : 0);
-		follow_scroll_top = clamp(min, follow_scroll_top, max);
-		main_header.classList.toggle("visible", !res.other_header_visible);
-		//main_header.style.transform = `translateY(${follow_scroll_top - scroll_top}px)`;
-
-		main_scroll_top = document.documentElement.scrollTop;
+		main_header.classList.toggle("invisible", !!res.other_header_visible);
 	};
 	document.addEventListener("scroll", onScroll);
 	onScroll();

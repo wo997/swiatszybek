@@ -19,7 +19,7 @@ header.main {
 		transition: 0.2s transform;
 	}
 
-	&:not(.visible) {
+	&.invisible {
 		transform: translateY(-110%);
 	}
 

@@ -238,8 +238,7 @@ function getEditableCellHtml(dt, column) {
 	if (column.editable === "checkbox") {
 		cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
 	} else if (column.editable === "number") {
-		// dumb shit doesn't support selection so I use text
-		cell_html += html`<input type="text" class="field small" data-bind="${column.key}" data-number />`;
+		cell_html += html`<input type="text" class="field small" data-bind="${column.key}" data-number inputmode="numeric" />`;
 	} else if (column.editable === "string") {
 		cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
 	} else if (column.editable === "select") {

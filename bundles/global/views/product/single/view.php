@@ -138,10 +138,12 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
     <div class="sticky_product">
         <span class="clamp_lines clamp_2"><?= $general_product_data["name"] ?></span>
-        <img data-height="1w" class="product_image wo997_img">
+        <div class="img_wrapper">
+            <img data-height="1w" class="product_image wo997_img">
+        </div>
     </div>
 
-    <div class="product_wrapper" style="max-width: 1350px;margin: 10px auto;width: 100%;position: relative;align-items: flex-start;">
+    <div class="product_wrapper">
         <div class="product_images">
             <!-- sticky on desktop only -->
             <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
@@ -224,39 +226,38 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
                 </p>
 
-                <!-- <p style='font-weight:normal;margin:0;font-size: 1.1em;' id="quantity"></p> -->
+                <p style="font-weight:normal;margin:0;font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
 
-                <div class="label">Ilość:</div>
-                <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px">
-                    <button class="btn subtle sub_qty">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <input type="text" class="field inline val_qty" value="1" data-number>
-                    <button class="btn subtle add_qty">
-                        <i class="fas fa-plus"></i>
+                <div class="expand_y hidden animate_hidden notify_when_product_available">
+                    <div style="padding-top:7px">
+                        <button class="btn primary medium fill">Powiadom o dostępności <i class="fas fa-bell"></i></button>
+                    </div>
+                </div>
+
+                <div class="case_can_buy_product" data-tooltip_position="center">
+                    <div class="label">Ilość:</div>
+                    <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px">
+                        <button class="btn subtle sub_qty">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="text" class="field inline val_qty" value="1" data-number inputmode="numeric">
+                        <button class="btn subtle add_qty">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <br>
+                    <button class="btn fill medium buy_btn main_buy_btn">
+                        Dodaj do koszyka
+                        <i class="fas fa-plus-circle"></i>
                     </button>
                 </div>
-                <br>
-                <button class="btn fill medium buy_btn main_buy_btn">
-                    Dodaj do koszyka
-                    <i class="fas fa-plus-circle"></i>
-                </button>
 
-                <div class="expand_y hidden animate_hidden case_basket_not_empty wtwoimkoszyku" data-general_product_id="<?= $general_product_id ?>"></div>
-                <div class="product_basket_products" data-general_product_id="<?= $general_product_id ?>"></div>
-                <div class="expand_y hidden animate_hidden case_basket_not_empty" data-general_product_id="<?= $general_product_id ?>">
+                <!-- <div class="expand_y hidden animate_hidden case_basket_not_empty" data-general_product_id="<?= $general_product_id ?>">
                     <a class="btn primary medium fill" href="/zakup" style="margin-top: 20px">
                         Przejdź do koszyka
                         <i class="fa fa-chevron-right"></i>
                     </a>
-                </div>
-
-                <div class="expand_y hidden animate_hidden notify_product_available">
-                    <br>
-                    <p>Brak produktu</p>
-                    <br>
-                    <button class="btn primary fill">Powiadom o dostępności</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
