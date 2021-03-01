@@ -92,12 +92,30 @@ domload(() => {
 function initBuy() {
 	$$(".qty_controls").forEach((qty_controls) => {
 		const val_qty = qty_controls._child(".val_qty");
-		qty_controls._child(".sub_qty").addEventListener("click", () => {
-			val_qty._set_value(Math.max(0, val_qty._get_value() - 1));
+		const sub_qty = qty_controls._child(".sub_qty");
+		const add_qty = qty_controls._child(".add_qty");
+
+		const getMin = () => {
+			return 1;
+		};
+
+		const getMax = () => {
+			return Math.min(single_product.stock, 10);
+		};
+
+		sub_qty.addEventListener("click", () => {
+			val_qty._set_value(Math.max(getMin(), val_qty._get_value() - 1));
 		});
-		qty_controls._child(".add_qty").addEventListener("click", () => {
-			val_qty._set_value(Math.min(val_qty._get_value() + 1, single_product.stock, 10));
+		add_qty.addEventListener("click", () => {
+			val_qty._set_value(Math.min(val_qty._get_value() + 1, getMax()));
 		});
+
+		val_qty.addEventListener("change", () => {
+			const qty = val_qty._get_value();
+			sub_qty.toggleAttribute("disabled", qty === getMin());
+			add_qty.toggleAttribute("disabled", qty === getMax());
+		});
+		val_qty._dispatch_change();
 	});
 
 	$(".main_buy_btn").addEventListener("click", () => {
