@@ -8,7 +8,7 @@ header.main {
 		align-items: center;
 		z-index: 600;
 		background: #fff;
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid #aaa;
 		box-shadow: 0 2px 9px 0 #0003;
 		--header_padding_vertical: 10px;
 		--header_padding_horizontal: 15px;
@@ -16,6 +16,11 @@ header.main {
 		justify-content: space-around;
 		flex-flow: row wrap;
 		--header-btn-radius: 4px;
+		transition: 0.2s transform;
+	}
+
+	&:not(.visible) {
+		transform: translateY(-110%);
 	}
 
 	@media only screen and (min-width: 1200px) {

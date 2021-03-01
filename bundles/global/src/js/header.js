@@ -109,7 +109,7 @@ windowload(() => {
 	const onScroll = () => {
 		const scroll_top = document.documentElement.scrollTop;
 
-		let res = { other_header_visible: 0 };
+		let res = { other_header_visible: false };
 		window.dispatchEvent(
 			new CustomEvent("main_header_scroll", {
 				detail: {
@@ -119,9 +119,10 @@ windowload(() => {
 		);
 
 		const min = scroll_top - main_header.offsetHeight;
-		const max = scroll_top - main_header.offsetHeight * res.other_header_visible;
+		const max = scroll_top - main_header.offsetHeight * (res.other_header_visible ? 1 : 0);
 		follow_scroll_top = clamp(min, follow_scroll_top, max);
-		main_header.style.transform = `translateY(${follow_scroll_top - scroll_top}px)`;
+		main_header.classList.toggle("visible", !res.other_header_visible);
+		//main_header.style.transform = `translateY(${follow_scroll_top - scroll_top}px)`;
 
 		main_scroll_top = document.documentElement.scrollTop;
 	};
