@@ -86,6 +86,9 @@ unset($variant);
 <script>
     const general_product_products = <?= json_encode($general_product_products) ?>;
     const general_product_images = <?= json_encode($general_product_images) ?>;
+    for (const image of general_product_images) {
+        image.option_ids = JSON.parse(image.options_json);
+    }
 
     const GENERAL_PRODUCT_ID = <?= $general_product_data["general_product_id"] ?>;
 </script>
