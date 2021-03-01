@@ -2,7 +2,7 @@
 
 /**
  * @typedef CartProduct {
-                                 * product_id: number
+ * product_id: number
  * qty: number
  * }
  * you can add more props later
@@ -49,7 +49,8 @@ class Cart
             $product_ids_string = join(",", $product_ids);
             $product_index = -1;
 
-            $products_data = DB::fetchArr("SELECT product_id, net_price, gross_price FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
+            // watch out not to send vulnerable data
+            $products_data = DB::fetchArr("SELECT product_id, net_price, gross_price, __img_url, __full_name FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
             foreach ($products_data as $product_data) {
                 $product_index++;

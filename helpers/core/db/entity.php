@@ -99,7 +99,7 @@ class Entity
     /**
      * saveChildren
      *
-     * @param  Entitys[] $objs
+     * @param  Entity[] $objs
      * @return void
      */
     private function saveChildren($objs)
@@ -119,7 +119,7 @@ class Entity
 
         $entity_data = EntityManager::getEntityData($this->name);
 
-        $saver = "save_" . $this->name . "_entity";
+        $saver = "before_save_" . $this->name . "_entity";
         EventListener::dispatch($saver, ["obj" => $this]);
 
         if (def($options, "propagate_to_parent", true) === true) {
@@ -138,54 +138,58 @@ class Entity
             $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
             //var_dump([$query]);
             DB::execute($query);
-            return true;
-        }
+            //return true;
+        } else {
 
-        // save primitive types and complex types / relations etc.
-        $changed_props = [];
-        foreach ($this->props as $key => $value) {
-            if ($key === $this->id_column) {
-                continue;
-            }
-
-            if (is_array($value)) {
-                $zeroth = def($value, 0, null);
-                if (is_object($zeroth) && $zeroth instanceof Entity) {
-                    $this->saveChildren($value);
+            // save primitive types and complex types / relations etc.
+            $changed_props = [];
+            foreach ($this->props as $key => $value) {
+                if ($key === $this->id_column) {
+                    continue;
                 }
+
+                if (is_array($value)) {
+                    $zeroth = def($value, 0, null);
+                    if (is_object($zeroth) && $zeroth instanceof Entity) {
+                        $this->saveChildren($value);
+                    }
+                }
+
+                $other_entity_data = def($entity_data, ["props", $key], []);
+                $other_entity_type = def($other_entity_data, ["type"], "");
+                $other_entity_simple_type = str_replace("[]", "", def($other_entity_data, ["type"], ""));
+
+                $link = def($entity_data, ["linked_with", $other_entity_simple_type]);
+                if ($link) {
+                    EntityManager::setManyToManyRelationship($this, $other_entity_simple_type, def($this->curr_props, $key, []), $value, $link);
+                }
+
+                if (def($this->curr_props, $key, null) === $value) {
+                    continue;
+                }
+
+                if (($other_entity_type && endsWith($other_entity_type, "[]")) || is_array($value)) {
+                    continue;
+                }
+                $changed_props[$key] = $value;
             }
 
-            $other_entity_data = def($entity_data, ["props", $key], []);
-            $other_entity_type = def($other_entity_data, ["type"], "");
-            $other_entity_simple_type = str_replace("[]", "", def($other_entity_data, ["type"], ""));
-
-            $link = def($entity_data, ["linked_with", $other_entity_simple_type]);
-            if ($link) {
-                EntityManager::setManyToManyRelationship($this, $other_entity_simple_type, def($this->curr_props, $key, []), $value, $link);
+            if (!empty($changed_props)) {
+                // update
+                $query = "UPDATE " . $this->name . " SET ";
+                foreach (array_keys($changed_props) as $field) {
+                    $query .= clean($field) . "=?,";
+                }
+                $query = rtrim($query, ",");
+                $query .= " WHERE " . $this->id_column . "=" . $this->getId();
+                //var_dump([$query, array_values($changed_props)]);
+                DB::execute($query, array_values($changed_props));
+                //return true;
             }
-
-            if (def($this->curr_props, $key, null) === $value) {
-                continue;
-            }
-
-            if (($other_entity_type && endsWith($other_entity_type, "[]")) || is_array($value)) {
-                continue;
-            }
-            $changed_props[$key] = $value;
         }
 
-        if (!empty($changed_props)) {
-            // update
-            $query = "UPDATE " . $this->name . " SET ";
-            foreach (array_keys($changed_props) as $field) {
-                $query .= clean($field) . "=?,";
-            }
-            $query = rtrim($query, ",");
-            $query .= " WHERE " . $this->id_column . "=" . $this->getId();
-            //var_dump([$query, array_values($changed_props)]);
-            DB::execute($query, array_values($changed_props));
-            return true;
-        }
+        $saver = "after_save_" . $this->name . "_entity";
+        EventListener::dispatch($saver, ["obj" => $this]);
     }
 
     /**

@@ -18,7 +18,7 @@ function addProductToCart(product_id, qty) {
 function productImagesChange() {
 	const selected_options = Object.values(selected_variants);
 	general_product_images.forEach((image, index) => {
-		let weight = index;
+		let weight = -index;
 		for (const selected_option of selected_options) {
 			if (image.option_ids.includes(selected_option.option_id)) {
 				weight += 100;

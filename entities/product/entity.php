@@ -9,6 +9,8 @@ EntityManager::register("product", [
         "vat_id" => ["type" => "number"],
         "active" => ["type" => "number"],
         "stock" => ["type" => "number"],
+        "__img_url" => ["type" => "string"],
+        "__full_name" => ["type" => "string"],
     ],
 ]);
 

@@ -9,4 +9,6 @@ DB::createTable("product", [
     ["name" => "vat_id", "type" => "INT"],
     ["name" => "active", "type" => "TINYINT(1)"],
     ["name" => "stock", "type" => "INT"],
+    ["name" => "__img_url", "type" => "VARCHAR(255)"],
+    ["name" => "__full_name", "type" => "VARCHAR(255)"],
 ]);
