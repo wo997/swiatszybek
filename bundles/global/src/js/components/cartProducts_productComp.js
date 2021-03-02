@@ -1,4 +1,4 @@
-/* js[view] */
+/* js[global] */
 
 /**
  * @typedef {{

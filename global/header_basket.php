@@ -4,7 +4,7 @@
         <div class="basket_item_count"></div>
     </div>
     <div class="basket_menu headerbtn_menu">
-        <p class="menu_header">Koszyk</p>
+        <p class="menu_header">Twój koszyk</p>
         <hr>
         <div class="case_basket_empty expand_y">
             <div style="margin: 2em 0;text-align: center;">Twój koszyk jest pusty!</div>
