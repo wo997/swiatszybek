@@ -83,6 +83,15 @@
 	}
 }
 
+.wo997_slider.nav_out {
+	.nav_prev {
+		left: -55px;
+	}
+	.nav_next {
+		right: -55px;
+	}
+}
+
 .slider_below {
 	.wo997_slide {
 		&::before {
@@ -111,15 +120,6 @@
 
 		& {
 			cursor: pointer;
-		}
-	}
-
-	.wo997_slider.nav_out {
-		.nav_prev {
-			left: -55px;
-		}
-		.nav_next {
-			right: -55px;
 		}
 	}
 }

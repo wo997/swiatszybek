@@ -185,7 +185,7 @@ function setVariantsFromUrl() {
 		const option_checkbox = $(`.variants p-checkbox[data-value="${option_id}"]`);
 		if (option_checkbox) {
 			const variants = option_checkbox._parent(".variants");
-			option_checkbox._set_value(option_id, { quiet: true });
+			variants._set_value(option_id, { quiet: true });
 			found_variants.push(variants);
 		} else {
 			missed_option_ids.push(option_id);
@@ -210,9 +210,6 @@ function getProductDataForVariants(feature_option_ids) {
 	const matched_products = general_product_products.filter((product) => {
 		let exists = true;
 		for (const option_id of feature_option_ids) {
-			if (!product.active) {
-				exists = false;
-			}
 			if (!product.variants.includes(option_id)) {
 				exists = false;
 			}
@@ -295,7 +292,7 @@ function setVariantData() {
 			}
 
 			const other_data = getProductDataForVariants(assume_other_option_ids);
-			const inactive = other_data.matched_products.filter((e) => e.stock > 0).length === 0;
+			const inactive = other_data.matched_products.filter((e) => e.stock > 0 && e.active).length === 0;
 			option.classList.toggle("inactive", inactive);
 
 			const p_min_d = other_data.price_min - data.price_min;
@@ -346,7 +343,7 @@ function setVariantData() {
 
 	$(".selected_product_price")._set_content(selected_product_price);
 	$(".selected_product_was_price")._set_content(selected_product_was_price);
-	$(".selected_product_qty")._set_content(`${single_product ? single_product.stock : 0} szt.`);
+	$(".selected_product_qty")._set_content(`${single_product && single_product.active ? single_product.stock + " szt." : "―"}`);
 
 	const can_buy_product = !!(single_product && single_product.stock > 0);
 	const case_can_buy_product = $(".case_can_buy_product");
