@@ -62,7 +62,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 		const product_comp = $("product-comp");
 
 		comp._data.selection = product_comp._data.category_ids;
-		comp._render({ freeze: true });
+		comp._render();
 
 		setTimeout(() => {
 			showModal("selectProductCategories", {

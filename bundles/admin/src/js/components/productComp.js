@@ -323,7 +323,7 @@ function productComp(comp, parent, data = undefined) {
 
 			manage_product_list_modal_comp._data.questions = questions;
 			manage_product_list_modal_comp._data.add_products = add_products;
-			manage_product_list_modal_comp._render({ freeze: true });
+			manage_product_list_modal_comp._render();
 
 			manage_product_list_modal_comp._show({ source: comp._nodes.add_products_btn });
 		}

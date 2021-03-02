@@ -79,8 +79,9 @@ domload(() => {
 	cartProductsComp(cart_products_comp, undefined);
 
 	const loadCart = () => {
-		cart_products_comp._data.products = user_cart.products;
+		cart_products_comp._data.products = user_cart.products.filter((e) => e.general_product_id === general_product_id);
 		cart_products_comp._render();
+		expand($(".case_has_products"), cart_products_comp._data.products.length > 0);
 	};
 
 	window.addEventListener("user_cart_changed", loadCart);

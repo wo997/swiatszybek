@@ -98,7 +98,7 @@ function listComp(comp, parent, data = []) {
 					return;
 				}
 
-				let instant = !!comp._parent(".freeze", { skip: 0 }); // || diff.length > 15;
+				let instant = !!(comp._parent(".freeze", { skip: 0 }) || comp._parent(".hidden")); // || diff.length > 15;
 				let chaos = false;
 
 				finishNodeAnimation(comp);

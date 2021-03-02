@@ -64,14 +64,14 @@ function expandMenu(elem, btn, open = null, options = {}) {
  */
 function expand(elem, show = null, options = {}) {
 	if (!elem) {
-		return;
+		return undefined;
 	}
 	const ch = elem.classList.contains("hidden");
 	if (show === null) {
 		show = ch;
 	}
 	if (xor(show, ch)) {
-		return;
+		return undefined;
 	}
 
 	let animation_node = elem._direct_children().find((e) => {
@@ -89,7 +89,7 @@ function expand(elem, show = null, options = {}) {
 	const is_horizontal = elem.classList.contains("horizontal");
 
 	let duration = options.duration || options.duration === 0 ? options.duration : 250;
-	if (elem._parent(".freeze", { skip: 0 })) {
+	if (elem._parent(".freeze", { skip: 0 }) || elem._parent(".hidden")) {
 		duration = 0;
 	}
 	let h = is_horizontal ? elem.scrollWidth : elem.scrollHeight;

@@ -90,7 +90,7 @@ unset($variant);
         image.option_ids = JSON.parse(image.options_json);
     }
 
-    const GENERAL_PRODUCT_ID = <?= $general_product_data["general_product_id"] ?>;
+    const general_product_id = <?= $general_product_data["general_product_id"] ?>;
 </script>
 
 <?php if ($general_product_data["cache_rating_count"] > 0) : ?>
@@ -252,9 +252,15 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     </button>
                 </div>
 
-                <cart-products-comp class="has_products user_cart"></cart-products-comp>
                 <div class="case_has_products expand_y hidden animate_hidden">
-
+                    <div>
+                        <div class="label inyourbasket">W Twoim koszyku:</div>
+                        <cart-products-comp class="has_products user_cart"></cart-products-comp>
+                        <a class="btn fill medium primary" href="/zakup">
+                            Dodaj kasy
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

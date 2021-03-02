@@ -15,7 +15,7 @@ function initModal() {
 	document.body.insertAdjacentHTML(
 		"beforeend",
 		html`
-			<div id="modal_wrapper">
+			<div id="modal_wrapper" class="hidden">
 				<div class="modal_container"></div>
 			</div>
 		`
@@ -73,7 +73,7 @@ function registerModalContent(html, callback = undefined) {
  */
 function registerModal(modal) {
 	modal_container_node.appendChild(modal);
-	modal.classList.add(modal.id);
+	modal.classList.add(modal.id, "hidden");
 	registerModalScroll(modal);
 }
 
@@ -133,12 +133,12 @@ function showModal(name = null, params = {}) {
 		modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
 			let shownow = false;
 			if (modal.id == name) {
-				if (!modal.classList.contains("visible")) {
+				if (modal.classList.contains("hidden")) {
 					shownow = true;
 				}
 				any = true;
 			}
-			if (modal.classList.contains("visible")) {
+			if (!modal.classList.contains("hidden")) {
 				const expand = modal.getAttribute("data-expand");
 				if (expand == "large") {
 					total = 1;
@@ -160,7 +160,8 @@ function showModal(name = null, params = {}) {
 				registerScrollShadows();
 
 				modal.style.pointerEvents = "none";
-				modal.classList.add("visible");
+				modal.classList.remove("hidden");
+				modal_wrapper_node.classList.remove("hidden");
 
 				const duration = 300;
 
@@ -233,7 +234,7 @@ function showModal(name = null, params = {}) {
 						callback: () => {
 							basic_callback();
 
-							modal_copy.classList.remove("visible");
+							modal_copy.classList.add("hidden");
 							setTimeout(() => {
 								observer.disconnect();
 								modal_copy.remove();
@@ -280,7 +281,7 @@ function showModal(name = null, params = {}) {
 		}
 	}
 
-	modal_wrapper_node.classList.toggle("visible", visible);
+	modal_wrapper_node.classList.toggle("hidden", !visible);
 
 	return visible;
 }
@@ -295,7 +296,7 @@ function hideModalTopMost() {
 	const o = modal_container_node._direct_children();
 	for (let i = o.length - 1; i >= 0; i--) {
 		const modal = o[i];
-		if (modal.classList.contains("visible")) {
+		if (!modal.classList.contains("hidden")) {
 			hideModal(modal ? modal.id : null);
 			break;
 		}
@@ -330,7 +331,7 @@ function hideModal(name, isCancel = false) {
 			modal.style.animation = "hide 0.4s";
 			visible_modal_count--;
 			setTimeout(() => {
-				modal.classList.remove("visible");
+				modal.classList.add("hidden");
 				modal.style.animation = "";
 			}, 200);
 
@@ -355,15 +356,15 @@ function hideModal(name, isCancel = false) {
 	}
 
 	modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
-		if (modal.classList.contains("visible")) visible_modal_count++;
+		if (!modal.classList.contains("hidden")) visible_modal_count++;
 	});
 
 	if (visible_modal_count > 0) {
-		modal_wrapper_node.classList.add("visible");
+		modal_wrapper_node.classList.remove("hidden");
 	} else {
 		modal_wrapper_node.style.animation = "hide 0.4s";
 		setTimeout(() => {
-			modal_wrapper_node.classList.remove("visible");
+			modal_wrapper_node.classList.add("hidden");
 			modal_wrapper_node.style.animation = "";
 		}, 200);
 	}

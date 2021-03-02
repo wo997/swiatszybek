@@ -62,7 +62,7 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 		if (options.exclude) {
 			comp._data.datatable.dataset = comp._data.datatable.dataset.filter((e) => !options.exclude.includes(e.product_feature_option_id));
 		}
-		comp._render({ freeze: true });
+		comp._render();
 
 		comp._options = options;
 		showModal("selectProductFeatureOption", {

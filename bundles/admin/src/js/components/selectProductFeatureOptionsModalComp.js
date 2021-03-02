@@ -103,7 +103,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 
 		comp._data.datatable.label = product_features.find((e) => e.product_feature_id === product_feature_id).name;
 		comp._reload_data();
-		comp._render({ freeze: true });
+		comp._render();
 
 		showModal("selectProductFeatureOptions", {
 			source: options.source,
