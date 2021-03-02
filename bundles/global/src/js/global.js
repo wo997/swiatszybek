@@ -376,7 +376,7 @@ function findNode(node, selector, move, options = {}) {
 				break;
 			}
 
-			if (node === document.body || node === document.documentElement) {
+			if (node === document.documentElement) {
 				break;
 			}
 
@@ -388,6 +388,10 @@ function findNode(node, selector, move, options = {}) {
 				if (node == selector) {
 					return node;
 				}
+			}
+
+			if (node === document.body) {
+				break;
 			}
 		}
 

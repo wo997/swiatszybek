@@ -12,7 +12,7 @@ endSection();
     <?= def($sections, "head_content", ""); ?>
 </head>
 
-<body>
+<body class="freeze">
     <div class="main_wrapper">
         <div class="main_container">
             <?= def($sections, "body", ""); ?>

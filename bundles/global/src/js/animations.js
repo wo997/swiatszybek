@@ -97,7 +97,7 @@ function finishNodeAnimation(node, is_early = false) {
  */
 
 function animate(node, keyframes, duration, options = {}) {
-	if (node._parent(".freeze, .freeze_before_load")) {
+	if (node._parent(".freeze", { skip: 0 })) {
 		duration = 0;
 	}
 
@@ -128,6 +128,6 @@ function animate(node, keyframes, duration, options = {}) {
 
 domload(() => {
 	setTimeout(() => {
-		removeClasses("freeze_before_load");
+		document.body.classList.remove("freeze");
 	}, 200);
 });

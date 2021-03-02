@@ -340,7 +340,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 <?php endif ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"] && !isset($preview_params)) : ?>
-    <div class="right_side_menu freeze_before_load">
+    <div class="right_side_menu">
         <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
             <i class="fas fa-chevron-right"></i>
             <i class="fas fa-cog"></i>

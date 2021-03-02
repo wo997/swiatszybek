@@ -15,7 +15,7 @@ function renderPageItem($page)
         $hidden = "hidden";
     }
 
-    echo "<div class='menu_item freeze_before_load $hidden'>
+    echo "<div class='menu_item $hidden'>
             <a href='" . Request::$static_urls["ADMIN"] . $page['url'] . "'>" . $title . " " . renderNotification($page['notification_count']) . "</a>
             $arrow_btn
         </div>";
