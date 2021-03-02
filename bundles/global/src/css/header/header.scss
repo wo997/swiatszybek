@@ -152,12 +152,22 @@ header.main {
 	.basket_menu {
 		& {
 			min-width: 250px;
+			padding: 10px;
 		}
-		.basket_content {
-			min-width: 270px;
+		.basket_summary {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 10px;
 		}
-		.go_to_buy_btn {
-			margin: 5px;
+		.all_products {
+			& {
+				min-width: 270px;
+				transition: min-width 0.2s;
+			}
+			&:not(.empty) {
+				min-width: 430px;
+			}
 		}
 	}
 

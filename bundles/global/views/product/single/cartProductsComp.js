@@ -28,7 +28,11 @@ function cartProductsComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				setTimeout(() => {
+					comp.classList.toggle("empty", data.products.length === 0);
+				}, 250);
+			},
 		});
 	};
 

@@ -90,12 +90,6 @@ if (defined("ROUTE")) {
         });
     });
 
-    function basketReady() {
-        /*_setBasketData(<?= json_encode(getBasketDataAll()) ?>, {
-            instant: true
-        });*/
-    };
-
     <?php if (Request::getSingleUsageSessionVar("login")) : ?>
         domload(() => {
             showModal("loginForm");

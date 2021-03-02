@@ -179,8 +179,6 @@ function requestHeaderModals() {
 	// const hc = $("header .header_basket_content_wrapper");
 	// $("#basketMenu .scroll_panel > div").appendChild(hc);
 
-	basketReady();
-
 	const bbtn = $("header .basket_wrapper .basket-btn");
 	if (bbtn) {
 		bbtn.addEventListener("click", (ev) => {
@@ -324,14 +322,14 @@ domload(() => {
 		const up = event.key == "ArrowUp";
 
 		const selected = main_search_wrapper._child(".selected");
-		const select = null;
+		let select = null;
 
 		if (event.key == "Enter") {
 			if (selected) {
 				selected.click();
 				event.preventDefault();
 				return false;
-			} else if ($(".main_search_wrapper input").value.trim()) {
+			} else if ($(".main_search_wrapper input")._get_value().trim()) {
 				goToSearchProducts();
 			} else {
 				topSearchProducts(true);
@@ -412,11 +410,7 @@ function topSearchProducts(force) {
 }
 
 domload(() => {
-	$$(
-		`header .scroll_panel,
-        header .user-menu,
-        header .headerbtn_menu`
-	).forEach((e) => {
+	$$(`.headerbtn_menu`).forEach((e) => {
 		e.addEventListener("mousewheel", (event) => {
 			// @ts-ignore
 			if ((event.deltaY < 0 && e.scrollTop < 1) || (event.deltaY > 0 && e.scrollTop > e.scrollHeight - e.offsetHeight - 1)) {
@@ -433,85 +427,24 @@ function goToSearchProducts() {
 	window.location.href = "/produkty/wszystkie";
 }
 
-window.addEventListener("basket-change", (event) => {
-	// @ts-ignore
-	const res = event.detail.res;
-	showVariantChanges(res, $(`.header_basket_content`), header_basket_variant_template, basket_data.basket);
-});
-
 domload(() => {
-	showProductChanges(
-		{
-			changes: {
-				added: last_viewed_products_ids,
-				removed: [],
-			},
-			options: { instant: true },
-		},
-		$(`.last_viewed_products`),
-		header_basket_product_template,
-		last_viewed_products
-	);
+	/** @type {CartProductComp} */
+	// @ts-ignore
+	const cart_products_comp = $("cart-products-comp.all_products");
+	cartProductsComp(cart_products_comp, undefined);
 
-	const toggle = (node, visible) => {
-		const empty = last_viewed_products.length === 0;
+	const loadCart = () => {
+		cart_products_comp._data.products = user_cart.products;
+		cart_products_comp._render();
+		const empty = cart_products_comp._data.products.length === 0;
+		expand($(".case_basket_not_empty"), !empty);
+		expand($(".case_basket_empty"), empty);
 
-		let show = !empty;
-		if (!visible) {
-			show = !show;
-		}
-
-		if (node.classList.contains("expand_y")) {
-			expand(node, show, { duration: 0 });
-		} else {
-			node.classList.toggle("hidden", !show);
-		}
+		$$(".basket_item_count").forEach((e) => {
+			e._set_content(cart_products_comp._data.products.length);
+		});
 	};
 
-	$$(".case_last_viewed_products_not_empty").forEach((e) => {
-		toggle(e, true);
-	});
-	$$(".case_last_viewed_products_empty").forEach((e) => {
-		toggle(e, false);
-	});
+	window.addEventListener("user_cart_changed", loadCart);
+	loadCart();
 });
-
-const header_basket_variant_template = html`
-	<div class="expand_y">
-		<div class="product_row product-block">
-			<a class="product_link">
-				<img class="product_image variant_image" data-height="1w" />
-				<h3 class="product-title"><span class="check-tooltip variant_full_name"></span></h3>
-			</a>
-			<div style="text-align:center">
-				<div class="qty-control glue_children">
-					<button class="btn subtle qty-btn remove" onclick="addVariantToBasket(this,-1)">
-						<i class="fas fa-minus"></i>
-					</button>
-					<span class="qty-label"></span>
-					<button class="btn subtle qty-btn add" onclick="addVariantToBasket(this,1)">
-						<i class="fas fa-plus"></i>
-					</button>
-				</div>
-				<span class="product-price pln variant_total_price"></span>
-			</div>
-			<button class="cl cl6 fas remove-product-btn" onclick="addVariantToBasket(this,-100000);return false;">
-				<i class="fas fa-times"></i>
-			</button>
-		</div>
-	</div>
-`;
-
-const header_basket_product_template = html`
-	<div class="expand_y">
-		<div class="product_row product-block">
-			<a class="product_link">
-				<img class="product_image product_image" data-height="1w" />
-				<h3 class="product-title"><span class="check-tooltip product_name"></span></h3>
-			</a>
-			<div style="text-align:center">
-				<span class="product-price pln product_price"></span>
-			</div>
-		</div>
-	</div>
-`;
