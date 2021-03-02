@@ -1,20 +1,5 @@
 /* js[view] */
 
-let user_cart = [];
-
-function addProductToCart(product_id, qty) {
-	xhr({
-		url: "add_product_to_cart",
-		params: {
-			product_id,
-			qty,
-		},
-		success: (res) => {
-			user_cart = res.cart;
-		},
-	});
-}
-
 function productImagesChange() {
 	const selected_options = Object.values(selected_variants);
 	general_product_images.forEach((image, index) => {
@@ -87,6 +72,22 @@ domload(() => {
 	});
 
 	vdo._set_value("1");
+
+	// has_products
+	console.log(user_cart);
+
+	/** @type {CartProductComp} */
+	// @ts-ignore
+	const cart_products_comp = $("cart-products-comp.has_products");
+	cartProductsComp(cart_products_comp, undefined);
+
+	const loadCart = () => {
+		cart_products_comp._data.products = user_cart.products;
+		cart_products_comp._render();
+	};
+
+	window.addEventListener("user_cart_changed", loadCart);
+	loadCart();
 });
 
 function initBuy() {
@@ -135,7 +136,9 @@ function initBuy() {
 				qty: $(".main_qty_controls .val_qty")._get_value(),
 			},
 			success: (res) => {
-				console.log(res);
+				user_cart = res.user_cart;
+				loadedUserCart();
+				window.dispatchEvent(new CustomEvent("user_cart_changed"));
 			},
 		});
 	});

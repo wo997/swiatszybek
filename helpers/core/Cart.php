@@ -50,7 +50,7 @@ class Cart
             $product_index = -1;
 
             // watch out not to send vulnerable data
-            $products_data = DB::fetchArr("SELECT product_id, net_price, gross_price, __img_url, __name FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
+            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url, __name FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
             foreach ($products_data as $product_data) {
                 $product_index++;
@@ -102,6 +102,20 @@ class Cart
         return 0;
     }
 
+    /**
+     * @param  number $product_id
+     * @return void
+     */
+    public function removeProduct($product_id)
+    {
+        $this->setProductQty($product_id, 0);
+    }
+
+    /**
+     * @param  number $product_id
+     * @param  number $qty
+     * @return void
+     */
     public function setProductQty($product_id, $qty)
     {
         $product_id = intval($product_id);
@@ -121,7 +135,7 @@ class Cart
             }
         }
 
-        if ($match_product_index === -1) {
+        if ($match_product_index === -1 && $qty > 0) {
             $match_product =
                 /** @var CartProduct */
                 ["product_id" => $product_id, "qty" => 0];
@@ -130,10 +144,14 @@ class Cart
         }
 
         if ($match_product_index !== -1) {
-            $product_id = $this->products[$match_product_index]["product_id"];
-            $stock = DB::fetchVal("SELECT stock FROM product WHERE product_id = $product_id");
-            $qty = min($qty, $stock);
-            $this->products[$match_product_index]["qty"] = $qty;
+            if ($qty === 0) {
+                array_splice($this->products, $match_product_index, 1);
+            } else {
+                $product_id = $this->products[$match_product_index]["product_id"];
+                $stock = DB::fetchVal("SELECT stock FROM product WHERE product_id = $product_id");
+                $qty = min($qty, $stock);
+                $this->products[$match_product_index]["qty"] = $qty;
+            }
         }
     }
 

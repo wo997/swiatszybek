@@ -252,12 +252,10 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     </button>
                 </div>
 
-                <!-- <div class="expand_y hidden animate_hidden case_basket_not_empty" data-general_product_id="<?= $general_product_id ?>">
-                    <a class="btn primary medium fill" href="/zakup" style="margin-top: 20px">
-                        Przejdź do koszyka
-                        <i class="fa fa-chevron-right"></i>
-                    </a>
-                </div> -->
+                <cart-products-comp class="has_products"></cart-products-comp>
+                <div class="case_has_products expand_y hidden animate_hidden">
+
+                </div>
             </div>
         </div>
     </div>

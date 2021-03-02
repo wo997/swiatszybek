@@ -179,7 +179,7 @@ function listComp(comp, parent, data = []) {
 								// @ts-ignore
 								window[constructor](dc, comp, row_data);
 							} else {
-								console.error(`Constructor ${constructor} is missing, you might have forgot to add the annotation`);
+								console.error(`Constructor ${constructor} is missing, you might have forgotten to add the annotation`);
 							}
 						});
 					}

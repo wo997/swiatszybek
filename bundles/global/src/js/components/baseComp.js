@@ -198,7 +198,7 @@ function createComp(node, parent_comp, data, options) {
 				window[constructor](dc, comp, data[bind_var]);
 				//window[constructor](dc, comp, undefined);
 			} else {
-				console.error(`Constructor ${constructor} is missing, you might have forgot to add the annotation`);
+				console.error(`Constructor ${constructor} is missing, you might have forgotten to add the annotation`);
 			}
 		});
 
@@ -406,6 +406,7 @@ function setCompData(comp, data = undefined, options = {}) {
 	// kinda weird but it creates f.e. checkbox base component
 	//delay("registerForms", 0);
 	registerForms();
+	lazyLoadImages();
 
 	if (isObject(node._data)) {
 		node._changed_data = {};
