@@ -252,7 +252,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     </button>
                 </div>
 
-                <cart-products-comp class="has_products"></cart-products-comp>
+                <cart-products-comp class="has_products user_cart"></cart-products-comp>
                 <div class="case_has_products expand_y hidden animate_hidden">
 
                 </div>

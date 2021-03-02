@@ -70,7 +70,28 @@ if ($modifyCSS) {
         foreach ($files as $file) {
             $css_full .= " " . file_get_contents($file);
         }
-        Files::save(BUILDS_PATH . "$cssGroup.css", (new Minify\CSS($scss->compile($css_full)))->minify());
+
+        // that's sad
+        preg_match_all("/grid-area:.*?;/", $css_full, $matches);
+        if ($matches) {
+            foreach ($matches as $match) {
+                $new = str_replace([':', ';'], [':"', '";'], $match);
+                $css_full = str_replace($match, $new, $css_full);
+            }
+        }
+
+        $css_full = $scss->compile($css_full);
+        $css_full = (new Minify\CSS($css_full))->minify();
+
+        preg_match_all("/grid-area:.*?;/", $css_full, $matches);
+        if ($matches) {
+            foreach ($matches as $match) {
+                $new = str_replace('"', '', $match);
+                $css_full = str_replace($match, $new, $css_full);
+            }
+        }
+
+        Files::save(BUILDS_PATH . "$cssGroup.css", $css_full);
     }
 }
 if ($modifyJS) {
@@ -98,7 +119,7 @@ if ($modifyJS) {
             $js_content = implode(PHP_EOL, $js_content_arr);
 
             //@include(admin/tools/newCms/template.html)
-            if (preg_match("/(?<=\@include\()[^\)]*(?=\))/", $js_content, $matches)) {
+            if (preg_match_all("/(?<=\@include\()[^\)]*(?=\))/", $js_content, $matches)) {
                 foreach ($matches as $file_to_include) {
                     $js_dependencies[] = $file_to_include;
                     if (file_exists($file_to_include)) {
@@ -123,7 +144,7 @@ if ($modifyJS) {
 
         // reactive classes
         if (preg_match_all('/\{\$\{.*?\}\?.*?\}/s', $js_full, $matches)) {
-            foreach ($matches[0] as $match) {
+            foreach ($matches as $match) {
                 $rep = strReplaceFirst('$', '', $match);
                 $rep = htmlspecialchars($rep);
                 $js_full = str_replace($match, $rep, $js_full);
@@ -132,7 +153,7 @@ if ($modifyJS) {
 
         // reactive attributes - just escaping
         if (preg_match_all('/(?<=["\'])\{\{.*?\}\}(?=["\'])/s', $js_full, $matches)) {
-            foreach ($matches[0] as $match) {
+            foreach ($matches as $match) {
                 if (strpos($match, "&quot;") !== false) {
                     continue;
                 }
@@ -143,7 +164,7 @@ if ($modifyJS) {
 
         // binding
         if (preg_match_all('/data-bind="\{\{.*?data\..*?\}\}"/s', $js_full, $matches)) {
-            foreach ($matches[0] as $match) {
+            foreach ($matches as $match) {
                 $rep = $match;
                 $rep = preg_replace("/(?<=[\s{])data\./s", "", $rep);
                 $rep = preg_replace("/\s/", "", $rep);
@@ -154,7 +175,7 @@ if ($modifyJS) {
 
         // nodes
         if (preg_match_all('/data-node="\{\{.*?comp\._nodes\..*?\}\}"/s', $js_full, $matches)) {
-            foreach ($matches[0] as $match) {
+            foreach ($matches as $match) {
                 $rep = $match;
                 $rep = preg_replace("/(?<=[\s{])comp\._nodes\./s", "", $rep);
                 $rep = preg_replace("/\s/", "", $rep);

@@ -73,9 +73,6 @@ domload(() => {
 
 	vdo._set_value("1");
 
-	// has_products
-	console.log(user_cart);
-
 	/** @type {CartProductComp} */
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.has_products");

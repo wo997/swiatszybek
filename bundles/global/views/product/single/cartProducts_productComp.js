@@ -39,10 +39,18 @@ function cartProducts_productComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<span html="{${data.name}}" class="product_name"></span>
-			<span html="{${data.qty}}" class="product_qty"></span>
 			<img data-src="{${data.img_url}}" class="wo997_img product_image" data-height="1w" />
-			<span html="{${data.gross_price}}" class="product_price"></span>
-			<button class="btn small subtle" data-node="{${comp._nodes.remove_btn}}"><i class="fas fa-times"></i></button>
+			<div class="glue_children qty_controls main_qty_controls">
+				<button class="btn subtle sub_qty">
+					<i class="fas fa-minus"></i>
+				</button>
+				<input type="text" class="field inline val_qty" data-bind="{${data.qty}}" data-number inputmode="numeric" />
+				<button class="btn subtle add_qty small">
+					<i class="fas fa-plus"></i>
+				</button>
+			</div>
+			<div class="product_price pln"><span html="{${data.gross_price}}"></span> zł</div>
+			<button class="btn transparent product_remove small" data-node="{${comp._nodes.remove_btn}}"><i class="fas fa-times"></i></button>
 		`,
 		initialize: () => {
 			comp._nodes.remove_btn.addEventListener("click", () => {
