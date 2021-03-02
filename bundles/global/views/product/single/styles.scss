@@ -4,9 +4,10 @@
 	font-weight: 600;
 }
 
-.price_diff {
+.price_diff,
+.price_diff_before {
 	font-weight: 400;
-	transition: all 0.2s;
+	transition: all 0.15s;
 }
 
 .price_diff_4 .price_diff {
@@ -187,10 +188,7 @@
 	}
 	&:not(.can_buy) {
 		& {
-			opacity: 0.4;
-		}
-		* {
-			pointer-events: none;
+			opacity: 0.5;
 		}
 	}
 }

@@ -99,7 +99,7 @@ function initBuy() {
 		};
 
 		const getMax = () => {
-			return Math.min(single_product.stock, 10);
+			return single_product ? Math.min(single_product.stock, 10) : 100;
 		};
 
 		val_qty.addEventListener("click", () => {
@@ -127,6 +127,10 @@ function initBuy() {
 	});
 
 	$(".main_buy_btn").addEventListener("click", () => {
+		if (!single_product) {
+			showNotification(`Wybierz wariant produktu powyżej`, { type: "error", one_line: true });
+			return;
+		}
 		xhr({
 			url: "/cart/add-product",
 			params: {
@@ -320,11 +324,12 @@ function setVariantData() {
 	const can_buy_product = !!(single_product && single_product.stock > 0);
 	const case_can_buy_product = $(".case_can_buy_product");
 	case_can_buy_product.classList.toggle("can_buy", can_buy_product);
-	case_can_buy_product.dataset.tooltip = single_product ? "" : `Wybierz wariant produktu powyżej`;
 
 	expand($(".notify_when_product_available"), !!(single_product && single_product.stock <= 0));
 
 	productImagesChange();
+
+	$(".main_qty_controls .val_qty")._set_value();
 }
 
 let res = { can: true };
