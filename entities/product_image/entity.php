@@ -25,9 +25,9 @@ EntityManager::OneToMany(
 EntityManager::manyToMany("product_image", "product_feature_option", "product_image_to_feature_option");
 
 EventListener::register("before_save_product_image_entity", function ($params) {
-    /** @var Entity */
+    /** @var Entity ProductImage */
     $product_image = $params["obj"];
-    /** @var Entity[] */
+    /** @var Entity[] ProductFeatureOption */
     $options = $product_image->getProp("product_feature_options");
     $options_json = [];
     foreach ($options as $option) {

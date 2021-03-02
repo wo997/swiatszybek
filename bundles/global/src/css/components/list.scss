@@ -65,6 +65,18 @@ list-comp {
 			--list_row_margin: -1px -1px 0;
 		}
 	}
+	&.striped {
+		& {
+			--list_row_padding: 10px 0;
+			--border_radius: 0;
+		}
+		& > .list_row:first-child {
+			border-top: 1px solid #ccc;
+		}
+		& > .list_row {
+			border-bottom: 1px solid #ccc;
+		}
+	}
 }
 
 .list_row {

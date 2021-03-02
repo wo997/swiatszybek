@@ -11,6 +11,7 @@ EntityManager::register("product", [
         "stock" => ["type" => "number"],
         "__img_url" => ["type" => "string"],
         "__name" => ["type" => "string"],
+        "options_json" => ["type" => "string"],
     ],
 ]);
 
@@ -21,3 +22,15 @@ EntityManager::register("general_product", [
 ]);
 
 EntityManager::OneToMany("general_product", "products", "product");
+
+EventListener::register("before_save_product_entity", function ($params) {
+    /** @var Entity Product */
+    $product = $params["obj"];
+    /** @var Entity[] ProductFeatureOption */
+    $options = $product->getProp("feature_options");
+    $options_json = [];
+    foreach ($options as $option) {
+        $options_json[] = $option->getId();
+    }
+    $product->setProp("options_json", json_encode($options_json));
+});

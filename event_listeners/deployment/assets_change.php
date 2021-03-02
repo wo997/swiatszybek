@@ -134,8 +134,6 @@ if ($modifyJS) {
         // minify first, then you are safe to say that all variables are in a single line, ok, strings are not ;) but .* does the trick
         $js_full = (new Minify\JS($js_full))->minify();
 
-
-
         // fake lit-html lol
         $js_full = str_replace('html`', '`', $js_full);
 
@@ -144,7 +142,7 @@ if ($modifyJS) {
 
         // reactive classes
         if (preg_match_all('/\{\$\{.*?\}\?.*?\}/s', $js_full, $matches)) {
-            foreach ($matches as $match) {
+            foreach ($matches[0] as $match) {
                 $rep = strReplaceFirst('$', '', $match);
                 $rep = htmlspecialchars($rep);
                 $js_full = str_replace($match, $rep, $js_full);
@@ -153,7 +151,7 @@ if ($modifyJS) {
 
         // reactive attributes - just escaping
         if (preg_match_all('/(?<=["\'])\{\{.*?\}\}(?=["\'])/s', $js_full, $matches)) {
-            foreach ($matches as $match) {
+            foreach ($matches[0] as $match) {
                 if (strpos($match, "&quot;") !== false) {
                     continue;
                 }
@@ -164,7 +162,7 @@ if ($modifyJS) {
 
         // binding
         if (preg_match_all('/data-bind="\{\{.*?data\..*?\}\}"/s', $js_full, $matches)) {
-            foreach ($matches as $match) {
+            foreach ($matches[0] as $match) {
                 $rep = $match;
                 $rep = preg_replace("/(?<=[\s{])data\./s", "", $rep);
                 $rep = preg_replace("/\s/", "", $rep);
@@ -175,7 +173,7 @@ if ($modifyJS) {
 
         // nodes
         if (preg_match_all('/data-node="\{\{.*?comp\._nodes\..*?\}\}"/s', $js_full, $matches)) {
-            foreach ($matches as $match) {
+            foreach ($matches[0] as $match) {
                 $rep = $match;
                 $rep = preg_replace("/(?<=[\s{])comp\._nodes\./s", "", $rep);
                 $rep = preg_replace("/\s/", "", $rep);
