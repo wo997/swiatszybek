@@ -43,7 +43,7 @@ function cartProducts_productComp(comp, parent, data = undefined) {
 			<button class="btn transparent product_remove small" data-node="{${comp._nodes.remove_btn}}"><i class="fas fa-times"></i></button>
 
 			<div class="bottom_row">
-				<span class="product_price pln" html="{${data.gross_price + " zł"}}"></span>
+				<span class="product_price pln" html="{${data.gross_price + " zł / szt."}}"></span>
 				<div class="glue_children qty_controls main_qty_controls">
 					<button class="btn subtle sub_qty">
 						<i class="fas fa-minus"></i>
