@@ -11,13 +11,12 @@ function replacePolishLetters($string)
 // also global.js
 function escapeUrl($string)
 {
-    return strtolower(
+    return
         preg_replace("/-+/", "-", preg_replace("/[^(a-zA-Z0-9-)]/", "", str_replace(
             [',', ' '],
             ['-', '-'],
             replacePolishLetters($string)
-        )))
-    );
+        )));
 }
 
 

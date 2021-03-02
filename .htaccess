@@ -2,7 +2,7 @@ RewriteEngine On
 
 RewriteRule ^([^\.]*)$ routing.php?url=$1 [QSA]
 
-<Files *.php>
+<Files ~ "\.php$">
     Order Deny,Allow
     Deny from all
 </Files>

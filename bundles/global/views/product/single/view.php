@@ -24,17 +24,14 @@ if (!$general_product_data) {
 //     Request::redirect(getProductLink($general_product_data["general_product_id"], $general_product_data["link"]));
 // }
 
-// $priceText = $general_product_data["price_min"];
-// if (!empty($general_product_data["price_max"]) && $general_product_data["price_min"] != $general_product_data["price_max"])
-//     $priceText .= " - " . $general_product_data["price_max"];
-
 $general_product_products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
 $general_product_images = DB::fetchArr("SELECT * FROM product_image WHERE general_product_id = $general_product_id ORDER BY pos ASC"); // AND active = 1
 
 foreach ($general_product_products as &$product) {
     $product_id = $product["product_id"];
-    $product["variants"] = DB::fetchArr("SELECT pto.product_feature_option_id, pto.product_feature_id
+    // pto.product_feature_option_id, pto.product_feature_id
+    $product["variants"] = DB::fetchCol("SELECT pto.product_feature_option_id
         FROM product_to_feature_option ptfo INNER JOIN product p USING(product_id) INNER JOIN product_feature_option pto USING(product_feature_option_id)
         WHERE product_id = $product_id");
 
@@ -83,14 +80,19 @@ unset($variant);
 
 <?php startSection("head_content"); ?>
 
+<title><?= $general_product_data["name"] ?></title>
+
+<link rel="canonical" href="<?= SITE_URL . "/produkt/" . $general_product_id . "/" . escapeUrl($general_product_data["name"]) ?>" />
+
 <script>
+    const general_product_id = <?= $general_product_data["general_product_id"] ?>;
+    const general_product_name = "<?= htmlspecialchars($general_product_data["name"]) ?>";
     const general_product_products = <?= json_encode($general_product_products) ?>;
     const general_product_images = <?= json_encode($general_product_images) ?>;
     for (const image of general_product_images) {
         image.option_ids = JSON.parse(image.options_json);
     }
-
-    const general_product_id = <?= $general_product_data["general_product_id"] ?>;
+    const general_product_variants = <?= json_encode($general_product_variants) ?>;
 </script>
 
 <?php if ($general_product_data["cache_rating_count"] > 0) : ?>

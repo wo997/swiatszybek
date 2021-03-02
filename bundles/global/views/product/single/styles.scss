@@ -166,22 +166,6 @@
 	}
 }
 
-.qty_controls {
-	.btn {
-		--btn-font-clr: #0008;
-		font-size: 13px;
-		width: 40px;
-		height: 40px;
-	}
-	input {
-		width: 58px;
-		text-align: center;
-		font-weight: 600;
-		margin: 0 -1px;
-		padding: 0;
-	}
-}
-
 .case_can_buy_product {
 	& {
 		transition: opacity 0.2s;

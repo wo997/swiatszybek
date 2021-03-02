@@ -181,7 +181,6 @@ function validURL(str) {
 function escapeUrl(string) {
 	return replacePolishLetters(string)
 		.replace(/[, ]+/g, "-")
-		.toLowerCase()
 		.replace(/[^(a-zA-Z0-9-)]/g, "")
 		.replace(/-+/g, "-");
 }

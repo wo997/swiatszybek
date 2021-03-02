@@ -1,11 +1,10 @@
 /* js[view] */
 
 function productImagesChange() {
-	const selected_options = Object.values(selected_variants);
 	general_product_images.forEach((image, index) => {
 		let weight = -index;
-		for (const selected_option of selected_options) {
-			if (image.option_ids.includes(selected_option.option_id)) {
+		for (const option_id of selected_feature_option_ids) {
+			if (image.option_ids.includes(option_id)) {
 				weight += 100;
 			}
 		}
@@ -162,44 +161,59 @@ window.addEventListener("popstate", (event) => {
 	setVariantsFromUrl();
 });
 
-let selected_variants = {};
+/** @type {number[]} */
+let selected_feature_option_ids = [];
 
 function setVariantsFromUrl() {
-	let sv = {};
-
-	const url_params = new URLSearchParams(window.location.search);
-	const url_variants = url_params.get("v");
-	if (url_variants) {
-		url_variants.split("~").forEach((e) => {
-			const [variant_id, option_id] = e.split(".");
-			if (variant_id && option_id) {
-				sv[variant_id] = { option_id: +option_id };
-			}
-		});
+	const match_numbers = window.location.href.match(/produkt\/.*\//);
+	if (!match_numbers) {
+		// maybe reload?
+		console.error("Wrong URL");
+		return;
 	}
+	const [general_product_id, ...feature_option_ids] = match_numbers[0]
+		.split("/")[1]
+		.split("~")
+		.map((e) => +e);
+
+	selected_feature_option_ids = feature_option_ids;
+
+	/** @type {PiepNode[]} */
+	let found_variants = [];
+	let missed_option_ids = [];
+	feature_option_ids.forEach((option_id) => {
+		const option_checkbox = $(`.variants p-checkbox[data-value="${option_id}"]`);
+		if (option_checkbox) {
+			const variants = option_checkbox._parent(".variants");
+			option_checkbox._set_value(option_id, { quiet: true });
+			found_variants.push(variants);
+		} else {
+			missed_option_ids.push(option_id);
+		}
+	});
+
+	selected_feature_option_ids = selected_feature_option_ids.filter((e) => !missed_option_ids.includes(e));
 
 	$$(".variants").forEach((variants) => {
-		const option_data = sv[variants.dataset.product_feature_id];
-		const val = option_data ? option_data.option_id : "";
-		variants._set_value(val, {
+		if (found_variants.includes(variants)) {
+			return;
+		}
+		variants._set_value(false, {
 			quiet: true,
 		});
 	});
 
-	selected_variants = sv;
-
 	setVariantData();
 }
 
-function getProductDataForVariants(sv) {
+function getProductDataForVariants(feature_option_ids) {
 	const matched_products = general_product_products.filter((product) => {
 		let exists = true;
-		for (const [product_feature_id, option_info] of Object.entries(sv)) {
+		for (const option_id of feature_option_ids) {
 			if (!product.active) {
 				exists = false;
 			}
-			const feature = product.variants.find((e) => e.product_feature_id === +product_feature_id);
-			if (!feature || feature.product_feature_option_id !== option_info.option_id) {
+			if (!product.variants.includes(option_id)) {
 				exists = false;
 			}
 		}
@@ -221,53 +235,66 @@ function getProductDataForVariants(sv) {
 }
 
 function variantChanged() {
-	let sv = {};
+	let sv = [];
 
 	$$(".variants").forEach((variants) => {
 		const option_id = variants._get_value();
 		if (option_id) {
-			sv[variants.dataset.product_feature_id] = { option_id };
+			sv.push(option_id);
 		}
 	});
 
-	if (!isEquivalent(sv, selected_variants)) {
-		selected_variants = sv;
+	if (!isEquivalent(sv, selected_feature_option_ids)) {
+		selected_feature_option_ids = sv;
 
-		// manage state
+		let url = "/produkt";
+		url += "/" + [general_product_id, ...selected_feature_option_ids].join("~");
+		let name = general_product_name;
+		selected_feature_option_ids.forEach((option_id) => {
+			let option_name;
+			general_product_variants.forEach((variants) => {
+				variants.variant_options.forEach((option) => {
+					if (option.product_feature_option_id === option_id) {
+						option_name = option.name;
+					}
+				});
+			});
+			if (option_name) {
+				name += " " + option_name;
+			}
+		});
+		url += "/" + escapeUrl(name);
 
-		const url_variants = [];
-		for (const [variant_id, option_info] of Object.entries(selected_variants)) {
-			url_variants.push(variant_id + "." + option_info.option_id);
-		}
-
-		const params = new URLSearchParams(window.location.search);
-		params.set("v", url_variants.join("~"));
-
-		history.pushState(undefined, "wariant jakiś tutaj will be", "?" + params.toString());
+		// it does not work lol
+		history.pushState(undefined, name, url);
+		// workaround here
+		document.title = name;
 
 		setVariantData();
 	}
 }
 
 function setVariantData() {
-	const data = getProductDataForVariants(selected_variants);
+	const data = getProductDataForVariants(selected_feature_option_ids);
 
 	let price_min = data.price_min;
 	let price_max = data.price_max;
 
 	$$(".variants").forEach((variants) => {
-		//const selected_option_id = variants._get_value();
+		const selected_option_id = variants._get_value();
 
 		variants._children(".variant_option").forEach((option) => {
 			const option_id = +option._child("p-checkbox").dataset.value;
 
-			const assume_other_selected = cloneObject(selected_variants);
+			/** @type {number[]} */
+			const assume_other_option_ids = cloneObject(selected_feature_option_ids);
 
-			assume_other_selected[variants.dataset.product_feature_id] = {
-				option_id,
-			};
+			let option_index = assume_other_option_ids.indexOf(selected_option_id);
+			if (option_index !== -1) {
+				assume_other_option_ids[option_index] = option_id;
+			}
 
-			const other_data = getProductDataForVariants(assume_other_selected);
+			const other_data = getProductDataForVariants(assume_other_option_ids);
 			const inactive = other_data.matched_products.filter((e) => e.stock > 0).length === 0;
 			option.classList.toggle("inactive", inactive);
 
