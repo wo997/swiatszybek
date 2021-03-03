@@ -151,13 +151,12 @@ document.addEventListener(
 	(ev) => {
 		const target = $(ev.target);
 
-		const node = target._parent(".float_menu, .headerbtn_menu, #modal_wrapper, #modal_wrapper .scroll_panel", { skip: 0 });
+		const scrollables_selector = ".float_menu, .headerbtn_menu, #modal_wrapper, #modal_wrapper .scroll_panel:not(.horizontal)";
+		const node = target._parent(scrollables_selector, { skip: 0 });
 		if (node) {
 			// @ts-ignore
 			if ((ev.deltaY < 0 && node.scrollTop < 1) || (ev.deltaY > 0 && node.scrollTop > node.scrollHeight - node.offsetHeight - 1)) {
 				ev.preventDefault();
-			} else {
-				ev.stopPropagation();
 			}
 		}
 	},
