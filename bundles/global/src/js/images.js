@@ -99,7 +99,7 @@ function loadImage(img, animate = true, offset = null) {
 			img.addEventListener("load", () => {
 				// TODO: global event saying that layout could have changed?
 				// well, not rly but idk, maybe recalculating layout on page builder would be a good idea tho
-				if (!img.hasAttribute("data-height")) {
+				if (!img.hasAttribute("data-height") && img.classList.contains("had_no_height")) {
 					img.style.height = "";
 				}
 
@@ -211,6 +211,7 @@ function setImageDimensions(img) {
 	const real_height = Math.round((rect.width * data.h) / data.w);
 	if (!img.style.height) {
 		img.style.height = `${real_height}px`;
+		img.classList.add("had_no_height");
 	}
 
 	return rect;
