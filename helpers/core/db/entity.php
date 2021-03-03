@@ -128,13 +128,17 @@ class Entity
 
             if ($parent) {
                 $parent->save();
-                return;
+
+                if (!$this->getWillDelete()) {
+                    // in that case the parent will handle saving so chill
+                    return;
+                }
             }
         }
         $this->saved = true;
 
         // don't worry about sorting removed items, the order is still the same, anyway it's managed separately
-        if ($this->will_delete) {
+        if ($this->getWillDelete()) {
             $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
             //var_dump([$query]);
             DB::execute($query);

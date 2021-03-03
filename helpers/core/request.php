@@ -67,7 +67,7 @@ class Request
 
     public static function urlUntillParam($index)
     {
-        $link = SITE_URL;
+        $link = "";
         for ($i = 0; $i <= $index; $i++) {
             $p = def(self::$url_params, $i, "");
             if ($p) {

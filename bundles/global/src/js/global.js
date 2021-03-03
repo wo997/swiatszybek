@@ -210,6 +210,7 @@ domload(() => {
 /**
  * @typedef {{
  * quiet?: boolean
+ * force?: boolean
  * }} SetDataOptions
  */
 
@@ -217,17 +218,19 @@ domload(() => {
  *
  * @param {PiepNode} input
  * @param {*} value
- * @param {SetDataOptions} params
+ * @param {SetDataOptions} options
  */
-function setValue(input, value = null, params = {}) {
+function setValue(input, value = null, options = {}) {
 	input = $(input);
 
-	if (value === null || value === undefined || isEquivalent(input._get_value(), value)) {
-		if (!params.quiet) {
-			input._dispatch_change();
-		}
-		return;
-	}
+	// if (!options.force) {
+	// 	if (value === null || value === undefined || isEquivalent(input._get_value(), value)) {
+	// 		if (!options.quiet) {
+	// 			input._dispatch_change();
+	// 		}
+	// 		return;
+	// 	}
+	// }
 
 	if (input.classList.contains("radio_group")) {
 		input.dataset.value = value;
@@ -247,10 +250,10 @@ function setValue(input, value = null, params = {}) {
 	} else if (input.classList.contains("jscolor")) {
 		value = rgbStringToHex(value);
 		var hex = value.replace("#", "");
+		// @ts-ignore
 		input.value = hex;
+		// @ts-ignore
 		input.jscolor.importColor();
-	} else if (input.getAttribute("type") == "checkbox") {
-		input.checked = value ? true : false;
 	} else {
 		var type = input.getAttribute("data-type");
 		if (type == "html") {
@@ -263,17 +266,20 @@ function setValue(input, value = null, params = {}) {
 				input.setAttribute("src", value);
 			}
 		} else if (input.tagName == "SELECT") {
+			// @ts-ignore
 			if ([...input.options].find((e) => e.value == value)) {
+				// @ts-ignore
 				input.value = value;
 			}
 		} else if (["INPUT", "TEXTAREA"].includes(input.tagName)) {
 			// for text fields
+			// @ts-ignore
 			input.value = value;
 		} else {
 			return;
 		}
 	}
-	if (!params.quiet) {
+	if (!options.quiet) {
 		input._dispatch_change();
 	}
 }
@@ -305,9 +311,6 @@ function getValue(input, options = {}) {
 		v = def(input.dataset.value, "");
 	} else if (input.tagName == "P-CHECKBOX") {
 		v = input.classList.contains("checked") ? 1 : 0;
-	} else if (input.getAttribute("type") == "checkbox") {
-		// @ts-ignore
-		v = input.checked ? 1 : 0;
 		// @ts-ignore
 	} else if (input.datepicker) {
 		if (v && v.substr(6, 4).match(/\d{4}/)) {
@@ -328,7 +331,13 @@ function getValue(input, options = {}) {
 
 	if (!options.plain) {
 		if (input.hasAttribute("data-number")) {
+			const was_v = v;
 			v = numberFromStr(v);
+			if (was_v != v) {
+				setTimeout(() => {
+					input._set_value(v, { quiet: true, force: true });
+				});
+			}
 		}
 	}
 

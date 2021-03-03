@@ -7,7 +7,8 @@ $selected_feature_options_ids = [];
 $option_names = [];
 if ($product_indentifiers) {
     $product_indentifiers = explode("~", $product_indentifiers);
-    $general_product_id = intval(array_splice($product_indentifiers, 0, 1));
+    $general_product_id = intval($product_indentifiers[0]);
+    array_splice($product_indentifiers, 0, 1);
     $GENERAL_PRODUCT_ID = $general_product_id;
     if ($product_indentifiers) {
         $option_ids = clean(join(",", $product_indentifiers));
@@ -82,14 +83,18 @@ $general_product_variants = DB::fetchArr("SELECT * FROM general_product_to_featu
     WHERE general_product_id = $general_product_id
     ORDER BY gptf.pos");
 
-foreach ($general_product_variants as &$variant) {
-    $product_feature_id = $variant["product_feature_id"];
-    $variant["variant_options"] = DB::fetchArr("SELECT * FROM general_product_to_feature_option gptfo
+foreach ($general_product_variants as $key => $variant) {
+    $product_feature_id = $general_product_variants[$key]["product_feature_id"];
+    $general_product_variants[$key]["variant_options"] = DB::fetchArr("SELECT * FROM general_product_to_feature_option gptfo
         INNER JOIN product_feature_option USING (product_feature_option_id)
         WHERE general_product_id = $general_product_id AND product_feature_id = $product_feature_id
         ORDER BY gptfo.pos");
+
+    if (count($general_product_variants[$key]["variant_options"]) < 2) {
+        unset($general_product_variants[$key]);
+    }
 }
-unset($variant);
+$general_product_variants = array_values($general_product_variants);
 
 ?>
 

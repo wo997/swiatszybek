@@ -148,7 +148,7 @@ class EntityManager
      */
     public static function setOneToManyEntities(Entity $obj, $obj_prop_name, $child_entity_name, $children_props)
     {
-        /** @var Entity[] */
+        /** @var Entity[] GeneralProduct */
         $curr_children = def($obj->getProp($obj_prop_name), []);
 
         $child_id_column = self::getEntityIdColumn($child_entity_name);

@@ -300,7 +300,7 @@ function setVariantData() {
 
 			let price_diff = "";
 			if (p_min_d === p_max_d && p_min_d !== 0) {
-				price_diff = " " + (p_min_d > 0 ? "+" : "") + p_min_d + " zł";
+				price_diff = " " + (p_min_d > 0 ? "+" : "") + p_min_d.toFixed(2) + " zł";
 			}
 
 			option.classList.toggle("has_price_diff", !!price_diff);
@@ -319,16 +319,16 @@ function setVariantData() {
 	single_product = data.matched_products.length === 1 ? data.matched_products[0] : undefined;
 
 	if (any_matched) {
-		selected_product_price = price_min + "";
+		selected_product_price = price_min.toFixed(2) + "";
 
 		if (price_max !== price_min) {
-			selected_product_price += " - " + price_max;
+			selected_product_price += " - " + price_max.toFixed(2);
 		}
 	}
 
 	if (single_product) {
 		if (data.matched_products[0].was_price != data.matched_products[0].price) {
-			selected_product_was_price = data.matched_products[0].was_price;
+			selected_product_was_price = data.matched_products[0].was_price.toFixed(2);
 		}
 	}
 

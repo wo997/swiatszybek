@@ -94,7 +94,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 						<div class="file_wrapper">
 							<div class="display">${display}</div>
 							<div class="file_controls glue_children">
-								<button class="btn primary select_btn" data-tooltip="Wybierz"><i class="fas fa-check"></i></button>
+								<button class="btn primary select_btn" data-tooltip="Dodaj"><i class="fas fa-plus"></i></button>
 								<button class="btn subtle preview_btn" data-tooltip="Podgląd"><i class="fas fa-eye"></i></button>
 								<button class="btn subtle edit_btn" data-tooltip="Edytuj"><i class="fas fa-cog"></i></button>
 								<button class="btn subtle trash_btn" data-tooltip="Usuń"><i class="fas fa-trash"></i></button>

@@ -16,6 +16,9 @@ function getProductLink($general_product_id, $option_ids, $name, $options_names)
     foreach ($option_ids as $option_id) {
         $link .= "~" . $option_id;
     }
-    $link .= "/" . escapeUrl($name  . " " . join(" ", $options_names));
+    foreach ($options_names as $options_name) {
+        $name .= " " . $options_name;
+    }
+    $link .= "/" . escapeUrl($name);
     return $link;
 }

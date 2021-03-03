@@ -3,7 +3,7 @@
 function numberFromStr(str) {
 	if (!str) return 0;
 	if (typeof str === "number") return str;
-	return +str.replace(/[^\d,\.-]/g, "");
+	return parseFloat(str.replace(/,/g, ".").replace(/[^\d\.-]/g, ""));
 }
 
 function round(num, decimalPlaces = 0) {

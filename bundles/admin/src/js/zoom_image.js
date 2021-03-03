@@ -31,7 +31,5 @@ function zoomImage(src, params = {}) {
 	lazyLoadImages(false);
 	wo997_img.style.width = "";
 
-	setTimeout(() => {
-		showModal("zoomImage", params);
-	});
+	showModal("zoomImage", params);
 }
