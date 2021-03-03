@@ -91,6 +91,7 @@ header.main {
 			transition: 0.2s background-color;
 			background: transparent;
 			border: none;
+			cursor: pointer;
 		}
 		&:hover .basket_item_count {
 			box-shadow: 0px 0px 0px 2px #eee;
