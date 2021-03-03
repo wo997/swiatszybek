@@ -66,5 +66,5 @@ function addLastViewedProducts($product_ids, $as_new = true)
 
 function getLastViewedProducts()
 {
-    return getProductsFullData(getLastViewedProductsIds(), true);
+    return []; // getProductsFullData(getLastViewedProductsIds(), true);
 }

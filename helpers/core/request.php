@@ -62,8 +62,19 @@ class Request
 
     public static function urlParam($index, $default = "")
     {
-        // TODO: add index from the url? well, it's harded than I thought
         return def(self::$url_params, $index, $default);
+    }
+
+    public static function urlUntillParam($index)
+    {
+        $link = SITE_URL;
+        for ($i = 0; $i <= $index; $i++) {
+            $p = def(self::$url_params, $i, "");
+            if ($p) {
+                $link .= "/" . $p;
+            }
+        }
+        return $link;
     }
 
     public static function reload($ask = false)
