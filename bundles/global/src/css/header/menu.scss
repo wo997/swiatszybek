@@ -22,15 +22,13 @@ header nav {
 		flex-flow: column wrap;
 	}
 	li > a {
-		& {
-			padding: 4px;
-			display: block;
-			transition: 0.2s background-color;
-		}
-		&:hover {
-			background: #0001;
-			transition: none;
-		}
+		padding: 4px;
+		display: block;
+		transition: 0.2s background-color;
+	}
+	li:hover > a {
+		background: #0001;
+		transition: none;
 	}
 	.level_0 > li {
 		& {
@@ -66,11 +64,11 @@ header nav {
 	padding: 4px;
 	position: absolute;
 	display: none;
-	box-shadow: 0px 5px 8px -3px rgba(0, 0, 0, 0.14);
-	border: 1px solid #eee;
-	border-top: none;
+	border: 1px solid #aaa;
+	box-shadow: 0 2px 9px 0 #0003;
 	transition: 0.15s opacity;
 	opacity: 0;
+	border-radius: 4px;
 }
 .float_menu.visible {
 	opacity: 1;
