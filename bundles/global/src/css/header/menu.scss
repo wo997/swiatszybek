@@ -13,63 +13,88 @@ header nav {
 		border-top: 1px solid #ccc;
 	}
 	ul {
-		display: flex;
 		padding: 0;
 		margin: 0;
 		list-style: none;
 	}
-	ul:not(.level_0) {
-		flex-flow: column wrap;
+	ul.level_0 {
+		display: flex;
 	}
 	li > a {
 		padding: 4px;
 		display: block;
 		transition: 0.2s background-color;
 	}
-	li:hover > a {
-		background: #0001;
-		transition: none;
-	}
 	.level_0 > li {
 		& {
 			flex-grow: 1;
-			text-align: center;
 		}
 		& > a {
 			padding: 10px 10px;
-			font-weight: 600;
+			font-weight: 700;
 			font-size: 1.05em;
+			text-align: center;
+		}
+		&:hover > a {
+			background: #0001;
+			transition: none;
 		}
 	}
 	.level_1 {
-		font-weight: 600;
-		display: none;
+		& {
+			font-weight: 600;
+			display: none;
+		}
+		a {
+			& {
+				padding: 3px 7px;
+			}
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 	.level_2 {
 		font-weight: 400;
-		margin-left: 30px;
+		margin-left: 18px;
 	}
 }
 
-.float_menu > div {
-	padding: 10px;
-}
-.float_menu > div > a:first-child {
-	margin-bottom: 5px;
-	font-weight: bold;
-	display: inline-block;
-}
 .float_menu {
-	background: white;
-	padding: 4px;
-	position: absolute;
-	display: none;
-	border: 1px solid #aaa;
-	box-shadow: 0 2px 9px 0 #0003;
-	transition: 0.15s opacity;
-	opacity: 0;
-	border-radius: 4px;
-}
-.float_menu.visible {
-	opacity: 1;
+	& {
+		background: white;
+		padding: 4px;
+		position: absolute;
+		display: none;
+		border: 1px solid #aaa;
+		box-shadow: 0 2px 9px 0 #0003;
+		transition: 0.15s opacity;
+		opacity: 0;
+		border-radius: 4px;
+		z-index: 500;
+		margin-right: -1000px;
+	}
+	&.visible {
+		opacity: 1;
+	}
+	&:not(.visible) {
+		pointer-events: none;
+	}
+	&.created_columns {
+		& {
+			display: flex !important;
+			padding: 10px 0;
+		}
+		& > div:not(:first-child) {
+			border-left: 1px solid #cccc;
+		}
+		& > div {
+			& {
+				padding: 0 10px;
+			}
+			& > li:not(:first-child) {
+				margin-top: 10px;
+			}
+		}
+	}
 }
