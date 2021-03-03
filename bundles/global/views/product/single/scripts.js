@@ -75,7 +75,7 @@ domload(() => {
 	/** @type {CartProductComp} */
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.has_products");
-	cartProductsComp(cart_products_comp, undefined);
+	cartProductsComp(cart_products_comp, undefined, { no_redirect: true, products: [] });
 
 	const loadCart = () => {
 		cart_products_comp._data.products = user_cart.products.filter((e) => e.general_product_id === general_product_id);

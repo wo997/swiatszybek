@@ -9,6 +9,7 @@
  * gross_price: number
  * net_price: number
  * img_url: string
+ * url: string
  * }} UserCartProductData
  */
 
@@ -31,6 +32,7 @@ function loadedUserCart() {
 			product.net_price = data.net_price;
 			product.gross_price = data.gross_price;
 			product.name = data.__name;
+			product.url = data.__url;
 			product.general_product_id = data.general_product_id;
 			product.img_url = data.__img_url;
 		}

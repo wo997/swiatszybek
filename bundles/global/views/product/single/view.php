@@ -188,23 +188,25 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
         <div class="product_offer">
             <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 
-            <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
-            <div class="vdo radio_group columns_1">
-                <div class="checkbox_area">
-                    <p-checkbox data-value="1"></p-checkbox>
-                    Subtelny napis
-                </div>
-                <div class="checkbox_area">
-                    <p-checkbox data-value="2"></p-checkbox>
-                    Czerwony prostokąt
-                </div>
-                <div class="checkbox_area">
-                    <p-checkbox data-value="3"></p-checkbox>
-                    Szary prostokąt
-                </div>
-                <div class="checkbox_area">
-                    <p-checkbox data-value="4"></p-checkbox>
-                    Brak
+            <div style="display:none">
+                <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
+                <div class="vdo radio_group columns_1">
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="1"></p-checkbox>
+                        Subtelny napis
+                    </div>
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="2"></p-checkbox>
+                        Czerwony prostokąt
+                    </div>
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="3"></p-checkbox>
+                        Szary prostokąt
+                    </div>
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="4"></p-checkbox>
+                        Brak
+                    </div>
                 </div>
             </div>
 

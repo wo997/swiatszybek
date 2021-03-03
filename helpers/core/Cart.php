@@ -2,7 +2,7 @@
 
 /**
  * @typedef CartProduct {
-                                 * product_id: number
+ * product_id: number
  * qty: number
  * }
  * you can add more props later
@@ -50,7 +50,7 @@ class Cart
             $product_index = -1;
 
             // watch out not to send vulnerable data
-            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url, __name FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
+            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url, __name, __url FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
             foreach ($products_data as $product_data) {
                 $product_index++;

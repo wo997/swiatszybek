@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * products: CartProducts_ProductCompData[]
+ * no_redirect?: boolean
  * }} CartProductCompData
  *
  * @typedef {{
@@ -28,6 +29,7 @@ function cartProductsComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
+			pass_list_data: [{ what: "no_redirect", where: "products" }],
 			render: () => {
 				setTimeout(() => {
 					comp.classList.toggle("empty", data.products.length === 0);

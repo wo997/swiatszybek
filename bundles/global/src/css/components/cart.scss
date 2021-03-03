@@ -29,8 +29,13 @@ cart-products_product-comp {
 		grid-area: 1 / 1 / 3 / 2;
 	}
 	.product_name {
-		grid-area: 1 / 2 / 2 / 3;
-		font-weight: 600;
+		& {
+			grid-area: 1 / 2 / 2 / 3;
+			font-weight: 600;
+		}
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 	.product_remove {
 		grid-area: 1 / 3 / 2 / 4;
