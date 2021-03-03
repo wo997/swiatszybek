@@ -5,7 +5,10 @@ function traverseMenu($parent_id = -1, $level = 0)
     $categories = DB::fetchArr("SELECT product_category_id, name FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
     $html = "<ul class=\"level_$level\">";
     foreach ($categories as $category) {
-        $html .= "<li><a>" . $category["name"] . traverseMenu($category["product_category_id"], $level + 1) . "</a></li>";
+        $html .= "<li><a>" . $category["name"] . "</a>" .  traverseMenu($category["product_category_id"], $level + 1) . "</li>";
+        // if ($level === 0) {
+        // } else {
+        // }
     }
     $html .= "</ul>";
     return $html;

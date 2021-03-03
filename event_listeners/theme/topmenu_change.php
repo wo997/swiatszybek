@@ -22,7 +22,7 @@ function showMenu($category_id, $depth = 0)
                     <a href='" . getMenuLink($submenu)["url"] . "'>
                         <h3 class='headerplain'>" . $submenu["title"] . "</h3>
                     </a>
-                    <div class='float-category'>" . showMenu($submenu["category_id"], $depth + 1) . "</div>
+                    <div class='float_menu'>" . showMenu($submenu["category_id"], $depth + 1) . "</div>
                 </div>
             ";
             /*$html .= "
