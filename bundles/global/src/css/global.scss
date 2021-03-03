@@ -223,7 +223,7 @@ footer {
 	margin-top: auto;
 }
 
-.hidden:not(.expand_y) {
+.hidden:not(.expand_y):not(#modal_wrapper):not(.modal) {
 	display: none !important;
 }
 .expander_space {

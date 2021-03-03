@@ -20,10 +20,10 @@
 	flex-direction: column;
 }
 
-// #modal_wrapper:not(.visible) {
-// 	opacity: 0;
-// 	pointer-events: none;
-// }
+#modal_wrapper.hidden {
+	opacity: 0;
+	pointer-events: none;
+}
 
 .modal_container {
 	height: 100%;
@@ -44,11 +44,10 @@
 	align-items: center;
 	z-index: 20;
 }
-// .modal_container > *:not(.visible) {
-// 	opacity: 0;
-// 	pointer-events: none;
-// 	visibility: hidden;
-// }
+.modal.hidden {
+	opacity: 0;
+	pointer-events: none;
+}
 .modal_container > *:before {
 	width: 100vw;
 	height: 100vh;

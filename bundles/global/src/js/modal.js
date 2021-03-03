@@ -22,7 +22,7 @@ function initModal() {
 	);
 
 	modal_wrapper_node = $("#modal_wrapper");
-	modal_container_node = $(".modal_container");
+	modal_container_node = modal_wrapper_node._child(".modal_container");
 
 	modal_wrapper_node.addEventListener("mousewheel", (ev) => {
 		ev.preventDefault();
@@ -73,7 +73,7 @@ function registerModalContent(html, callback = undefined) {
  */
 function registerModal(modal) {
 	modal_container_node.appendChild(modal);
-	modal.classList.add(modal.id, "hidden");
+	modal.classList.add(modal.id, "hidden", "modal");
 	registerModalScroll(modal);
 }
 
@@ -130,7 +130,7 @@ function showModal(name = null, params = {}) {
 	if (visible) {
 		let total = 1;
 		let any = false;
-		modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
+		modal_wrapper_node._children(".modal_container > .modal").forEach((modal) => {
 			let shownow = false;
 			if (modal.id == name) {
 				if (modal.classList.contains("hidden")) {
@@ -243,11 +243,11 @@ function showModal(name = null, params = {}) {
 					});
 				} else {
 					modal._animate(animation_1, duration);
-					modal_content.classList.add("freeze", "showing_modal");
+					modal_content.classList.add("showing_modal");
 					modal_content._animate(animation_2, duration, {
 						callback: () => {
 							basic_callback();
-							modal_content.classList.remove("freeze", "showing_modal");
+							modal_content.classList.remove("showing_modal");
 							setCustomHeights();
 						},
 					});
