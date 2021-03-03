@@ -11,7 +11,7 @@
  */
 function getProductLink($general_product_id, $option_ids, $name, $options_names)
 {
-    $link = SITE_URL . "/produkt";
+    $link = "/produkt";
     $link .= "/" . $general_product_id;
     foreach ($option_ids as $option_id) {
         $link .= "~" . $option_id;

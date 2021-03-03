@@ -12,4 +12,5 @@ DB::createTable("product", [
     ["name" => "__img_url", "type" => "VARCHAR(255)"],
     ["name" => "__name", "type" => "VARCHAR(255)"],
     ["name" => "options_json", "type" => "VARCHAR(255)"],
+    ["name" => "__url", "type" => "VARCHAR(255)"],
 ]);

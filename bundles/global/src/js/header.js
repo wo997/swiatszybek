@@ -431,6 +431,9 @@ domload(() => {
 	/** @type {CartProductComp} */
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.all_products");
+	if (!cart_products_comp) {
+		return;
+	}
 	cartProductsComp(cart_products_comp, undefined);
 
 	const loadCart = () => {

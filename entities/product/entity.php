@@ -12,6 +12,7 @@ EntityManager::register("product", [
         "__img_url" => ["type" => "string"],
         "__name" => ["type" => "string"],
         "options_json" => ["type" => "string"],
+        "__url" => ["type" => "string"],
     ],
 ]);
 
@@ -28,9 +29,16 @@ EventListener::register("before_save_product_entity", function ($params) {
     $product = $params["obj"];
     /** @var Entity[] ProductFeatureOption */
     $options = $product->getProp("feature_options");
-    $options_json = [];
+    $option_ids = [];
+    $option_names = [];
     foreach ($options as $option) {
-        $options_json[] = $option->getId();
+        $option_ids[] = $option->getId();
+        $option_names[] = $option->getProp("name");
     }
-    $product->setProp("options_json", json_encode($options_json));
+    $product->setProp("options_json", json_encode($option_ids));
+
+    /** @var Entity GeneralProduct */
+    $general_product = $product->getParent();
+    $link = getProductLink($general_product->getId(), $option_ids, $general_product->getProp("name"), $option_names);
+    $product->setProp("__url", $link);
 });
