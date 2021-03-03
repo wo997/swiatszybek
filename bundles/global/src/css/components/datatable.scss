@@ -225,7 +225,7 @@ body.touch_device {
 		margin-left: 0 !important;
 	}
 }
-body:not(.touch_device) {
+.no_touch {
 	.node_list_up_btn,
 	.node_list_down_btn {
 		display: none;

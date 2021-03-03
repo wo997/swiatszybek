@@ -110,19 +110,17 @@ textarea {
 		--btn-font-clr: #000;
 		--brighten-factor: 1;
 		--disabled-opacity: 0.4;
+		--btn-hover-clr: #0001;
 	}
 	&.buy_btn {
 		--btn-background-clr: var(--buynow-clr);
 		--btn-font-clr: #fff;
 	}
-	&.transparent:hover:not(:disabled) {
-		background: #0001;
-	}
 
-	&:hover {
+	.no_touch &:hover {
 		background-color: var(--btn-hover-clr, var(--btn-background-clr, none));
 	}
-	&:hover:not(:disabled):not(:active) {
+	.no_touch &:hover:not(:disabled):not(:active) {
 		filter: brightness(var(--brighten-factor));
 	}
 	&:hover,
@@ -139,7 +137,7 @@ textarea {
 		position: absolute;
 		border-radius: inherit;
 	}
-	&:hover:not(:disabled):not(:active)::after {
+	.no_touch &:hover:not(:disabled):not(:active)::after {
 		box-shadow: 0 2px 3px 0 #0003;
 	}
 	&:active::after {

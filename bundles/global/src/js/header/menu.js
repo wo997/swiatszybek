@@ -1,7 +1,7 @@
 /* js[global] */
 
 domload(() => {
-	$$("nav > .level_0 > li").forEach((e) => {
+	$$("header .main_menu > .level_0 > li").forEach((e) => {
 		e.addEventListener("mousemove", () => {
 			const float_menu = e._child("ul");
 			if (!float_menu || !float_menu.textContent) return;

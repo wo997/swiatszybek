@@ -67,37 +67,6 @@ function requestHeaderModals() {
 		});
 	}
 
-	//menu
-	registerModalContent(html`
-		<div id="mainMenu" data-expand data-dismissable>
-			<div class="modal_body" style="max-width: 500px;">
-				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal_header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
-				<div class="scroll_panel scroll_shadow">
-					<div></div>
-				</div>
-			</div>
-		</div>
-	`);
-
-	const mm = $("#mainMenu .scroll_panel > div");
-	mm.insertAdjacentHTML("afterbegin", main_header_nav.outerHTML);
-	mm._child("nav").insertAdjacentHTML(
-		"beforeend",
-		html`
-			<div>
-				<a onclick="showModal('lastViewedProducts',{source:this});return false;">
-					<img class="product_history_icon" src="/src/img/product_history_icon.svg" /> Ostatnio przeglądane produkty
-				</a>
-			</div>
-			<div>
-				<a onclick="showModal('wishList',{source:this});return false;">
-					<img class="heart_icon" src="/src/img/heart_icon.svg" /> Schowek
-				</a>
-			</div>
-		`
-	);
-
 	// last viewed products
 	registerModalContent(html`
 		<div id="lastViewedProducts" data-expand="previous" data-dismissable>
@@ -159,4 +128,51 @@ function requestHeaderModals() {
 	const sc = $("#mainSearch .scroll_panel > div");
 	const sw = $("header .main_search_wrapper");
 	sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
+
+	//menu
+	registerModalContent(html`
+		<div id="mainMenu" data-expand data-dismissable>
+			<div class="modal_body" style="max-width: 500px;">
+				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal_header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
+				<div class="scroll_panel scroll_shadow">
+					<div></div>
+				</div>
+			</div>
+		</div>
+	`);
+
+	const mm = $("#mainMenu .scroll_panel > div");
+	mm.insertAdjacentHTML("afterbegin", main_header_nav.outerHTML);
+	mm._child(".main_menu > ul").insertAdjacentHTML(
+		"beforeend",
+		html`
+			<li>
+				<a onclick="showModal('lastViewedProducts',{source:this});return false;">
+					<img class="product_history_icon" src="/src/img/product_history_icon.svg" /> Ostatnio przeglądane produkty
+				</a>
+			</li>
+			<li>
+				<a onclick="showModal('wishList',{source:this});return false;">
+					<img class="heart_icon" src="/src/img/heart_icon.svg" /> Schowek
+				</a>
+			</li>
+		`
+	);
+
+	$$("#mainMenu ul:not(.level_0)").forEach((ul) => {
+		const a = ul._prev();
+		a.insertAdjacentHTML("beforeend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
+		ul.classList.add("expand_y", "hidden", "animate_hidden");
+	});
+
+	$("#mainMenu").addEventListener("click", (ev) => {
+		const target = $(ev.target);
+
+		const expand_btn = target._parent(".expand_btn", { skip: 0 });
+		if (expand_btn) {
+			const open = expand_btn.classList.toggle("open");
+			expand(expand_btn._parent()._next(), open);
+		}
+	});
 }

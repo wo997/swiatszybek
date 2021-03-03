@@ -1,5 +1,13 @@
 /* js[global] */
 
+/** @type {PiepNode} */
+let main_header;
+/** @type {PiepNode} */
+let main_header_buttons;
+/** @type {PiepNode} */
+let main_header_height;
+/** @type {PiepNode} */
+let main_header_nav;
 let header_modals_only = false;
 let header_use_modals = false;
 
@@ -20,20 +28,8 @@ function headerResizeCallback() {
 	const menu_collapsed = header_use_modals || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
 	main_header.classList.toggle("menu_collapsed", menu_collapsed);
 	main_header_height.style.height = main_header.offsetHeight + "px";
-
-	if (header_use_modals) {
-		requestHeaderModals();
-	}
 }
 
-/** @type {PiepNode} */
-let main_header;
-/** @type {PiepNode} */
-let main_header_buttons;
-/** @type {PiepNode} */
-let main_header_height;
-/** @type {PiepNode} */
-let main_header_nav;
 domload(() => {
 	main_header = $("header.main");
 	if (!main_header) {
@@ -42,15 +38,11 @@ domload(() => {
 	main_header_height = $(".header_height");
 	main_header_buttons = main_header._child(".header_buttons");
 	main_header_nav = main_header._child("nav");
-	headerResizeCallback();
-	window.addEventListener("resize", headerResizeCallback);
-});
 
-windowload(() => {
-	if (!main_header) {
-		return;
-	}
+	window.addEventListener("resize", headerResizeCallback);
 	headerResizeCallback();
+
+	requestHeaderModals();
 
 	const onScroll = () => {
 		const scroll_top = document.documentElement.scrollTop;

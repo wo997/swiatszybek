@@ -1,6 +1,51 @@
 /* css[global] */
 
-header nav {
+.main_menu {
+	ul {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+}
+
+#mainMenu {
+	a {
+		display: flex;
+		padding: 9px 15px;
+		box-shadow: 0 1px 0 0 #ccc;
+	}
+	.expand_btn {
+		& {
+			margin: -9px -9px -9px auto;
+		}
+		& i {
+			transition: transform 0.2s;
+		}
+		&.open i {
+			transform: rotate(90deg);
+		}
+	}
+	.level_0 > li > a {
+		font-weight: 600;
+	}
+	.level_1 a {
+		padding-left: 30px;
+	}
+	.level_2 a {
+		padding-left: 45px;
+	}
+
+	.product_history_icon {
+		width: 28px;
+		margin: -2px 4px -2px 0;
+	}
+	.heart_icon {
+		width: 28px;
+		margin: -2px 4px -2px 0;
+	}
+}
+
+header .main_menu {
 	& {
 		flex-shrink: 0;
 	}
@@ -11,11 +56,6 @@ header nav {
 		min-width: 100%;
 		flex-grow: 1;
 		border-top: 1px solid #ccc;
-	}
-	ul {
-		padding: 0;
-		margin: 0;
-		list-style: none;
 	}
 	ul.level_0 {
 		display: flex;
@@ -31,7 +71,7 @@ header nav {
 		}
 		& > a {
 			padding: 10px 10px;
-			font-weight: 700;
+			font-weight: 600;
 			font-size: 1.05em;
 			text-align: center;
 		}
