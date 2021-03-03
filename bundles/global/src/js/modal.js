@@ -24,14 +24,6 @@ function initModal() {
 	modal_wrapper_node = $("#modal_wrapper");
 	modal_container_node = modal_wrapper_node._child(".modal_container");
 
-	modal_wrapper_node.addEventListener("mousewheel", (ev) => {
-		ev.preventDefault();
-	});
-
-	modal_wrapper_node.addEventListener("touchmove", (ev) => {
-		ev.preventDefault(); // the modal panel etc. can stop propagation tho
-	});
-
 	registerModals();
 }
 
@@ -74,41 +66,6 @@ function registerModalContent(html, callback = undefined) {
 function registerModal(modal) {
 	modal_container_node.appendChild(modal);
 	modal.classList.add(modal.id, "hidden", "modal");
-	registerModalScroll(modal);
-}
-
-/**
- *
- * @param {PiepNode} modal
- */
-function registerModalScroll(modal) {
-	modal._children(`.scroll_panel:not(.horizontal):not(.modal_scroll_registered)`).forEach((scr) => {
-		scr.classList.add("modal_scroll_registered");
-
-		const panel_on_edge = (dy) => {
-			return scr.scrollHeight < 2 || (scr.scrollTop >= scr.scrollHeight - scr.offsetHeight - 1 && dy > 0) || (scr.scrollTop < 1 && dy < 0);
-		};
-
-		scr.addEventListener("mousewheel", (ev) => {
-			if (!panel_on_edge(ev.deltaY)) {
-				ev.stopPropagation();
-			}
-		});
-		scr.addEventListener("touchmove", (ev) => {
-			for (let i = 0; i < scr._touches.length; i++) {
-				if (ev.targetTouches[i] && scr._touches[i]) {
-					const dy = scr._touches[i].clientY - ev.targetTouches[i].clientY;
-					if (!panel_on_edge(dy)) {
-						ev.stopPropagation();
-					}
-				}
-			}
-			scr._touches = ev.targetTouches;
-		});
-		scr.addEventListener("touchstart", (ev) => {
-			scr._touches = ev.targetTouches;
-		});
-	});
 }
 
 /**
@@ -156,7 +113,6 @@ function showModal(name = null, params = {}) {
 				const modal_content = modal._child("*");
 
 				registerForms();
-				registerModalScroll(modal);
 				registerScrollShadows();
 
 				modal.style.pointerEvents = "none";

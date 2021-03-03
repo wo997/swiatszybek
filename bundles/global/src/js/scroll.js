@@ -145,3 +145,21 @@ function scrollIntoView(elem, params = {}) {
 		scroll_parent: scroll_parent,
 	});
 }
+
+document.addEventListener(
+	"mousewheel",
+	(ev) => {
+		const target = $(ev.target);
+
+		const node = target._parent(".float_menu, .headerbtn_menu, #modal_wrapper, #modal_wrapper .scroll_panel", { skip: 0 });
+		if (node) {
+			// @ts-ignore
+			if ((ev.deltaY < 0 && node.scrollTop < 1) || (ev.deltaY > 0 && node.scrollTop > node.scrollHeight - node.offsetHeight - 1)) {
+				ev.preventDefault();
+			} else {
+				ev.stopPropagation();
+			}
+		}
+	},
+	{ passive: false }
+);
