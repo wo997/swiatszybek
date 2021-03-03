@@ -146,19 +146,59 @@ function scrollIntoView(elem, params = {}) {
 	});
 }
 
+// prevent scroll below
+const non_scrollables_selector = "#modal_wrapper";
+const scrollables_selector = ".float_menu, .headerbtn_menu, #modal_wrapper .scroll_panel:not(.horizontal)";
+
+// desktop
 document.addEventListener(
 	"mousewheel",
 	(ev) => {
-		const target = $(ev.target);
+		if (!ev.cancelable) {
+			return;
+		}
 
-		const scrollables_selector = ".float_menu, .headerbtn_menu, #modal_wrapper, #modal_wrapper .scroll_panel:not(.horizontal)";
+		const target = $(ev.target);
 		const node = target._parent(scrollables_selector, { skip: 0 });
 		if (node) {
 			// @ts-ignore
 			if ((ev.deltaY < 0 && node.scrollTop < 1) || (ev.deltaY > 0 && node.scrollTop > node.scrollHeight - node.offsetHeight - 1)) {
 				ev.preventDefault();
 			}
+		} else if (target._parent(non_scrollables_selector, { skip: 0 })) {
+			ev.preventDefault();
 		}
 	},
-	{ passive: false }
+	{ passive: false, capture: true }
+);
+
+// mobile
+let documentTouches;
+document.addEventListener("touchstart", (ev) => {
+	documentTouches = ev.targetTouches;
+});
+document.addEventListener(
+	"touchmove",
+	(ev) => {
+		if (!ev.cancelable) {
+			return;
+		}
+
+		const target = $(ev.target);
+		const node = target._parent(scrollables_selector, { skip: 0 });
+		if (node) {
+			for (let i = 0; i < documentTouches.length; i++) {
+				if (ev.targetTouches[i] && documentTouches[i]) {
+					const dy = documentTouches[i].clientY - ev.targetTouches[i].clientY;
+					if ((dy < 0 && node.scrollTop < 1) || (dy > 0 && node.scrollTop > node.scrollHeight - node.offsetHeight - 1)) {
+						ev.preventDefault();
+					}
+				}
+			}
+		} else if (target._parent(non_scrollables_selector, { skip: 0 })) {
+			ev.preventDefault();
+		}
+		documentTouches = ev.targetTouches;
+	},
+	{ passive: false, capture: true }
 );
