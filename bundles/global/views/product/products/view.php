@@ -57,11 +57,11 @@ function showCategory($category, $level = 0)
 
     <div class="main-container desktopRow">
         <div class="search-wrapper">
-            <button class="btn primary medium fill mobile-search-btn" onclick="showModal('searchCategory', {source:this})">
+            <button class="btn primary fill mobile_search_btn" onclick="showModal('searchCategory', {source:this})">
                 <i class="fas fa-list"></i> Kategorie
             </button>
 
-            <button class="btn secondary medium fill mobile-search-btn search-filters-btn" onclick="beforeFiltersShown();showModal('searchFilters', {source:this})">
+            <button class="btn primary fill mobile_search_btn search-filters-btn" onclick="beforeFiltersShown();showModal('searchFilters', {source:this})">
                 <i class="fas fa-sliders-h"></i> Filtry <span class="filter_count"></span>
             </button>
 

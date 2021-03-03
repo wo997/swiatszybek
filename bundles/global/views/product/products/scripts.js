@@ -24,7 +24,7 @@ let filtersStateBeforeOpen;
 domload(() => {
 	var e = $(".category_name.current");
 	if (e) {
-		expandCategoriesAbove(e);
+		//expandCategoriesAbove(e);
 	}
 
 	productListNode = $(".product_list-container");
