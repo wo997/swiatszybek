@@ -82,39 +82,41 @@ function goMobile() {
 		e.remove();
 	});
 
-	registerModalContent(`
-          <div id="searchCategory" data-expand>
-              <div class="modal_body">
-                  <button class="close_modal_btn"><i class="fas fa-times"></i></button>
-                  <h3 class="modal_header">Kategorie</h3>
-                  <div class="scroll_panel scroll_shadow">
-                    <div></div>
-                  </div>
-              </div>
-          </div>
-      `);
+	registerModalContent(html`
+		<div id="searchCategory" data-expand>
+			<div class="modal_body">
+				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+				<h3 class="modal_header">Kategorie</h3>
+				<div class="scroll_panel scroll_shadow">
+					<div></div>
+				</div>
+			</div>
+		</div>
+	`);
 
-	registerModalContent(`
-          <div id="searchFilters" data-expand>
-              <div class="modal_body">
-                  <button class="close_modal_btn" onclick="restoreFilters();"><i class="fas fa-times"></i></button>
-                  <h3 class="modal_header"><div>Filtry <span class="filter_count"></span></div></h3>
-                  <div class="scroll_panel scroll_shadow panel_padding">
-                    <div></div>
-                  </div>
-                  <div class='footer' style='display:flex;padding:5px'>
-                    <button class="btn secondary fill" onclick="clearAllFilters()">
-                      Wyczyść filtry
-                      <i class="fas fa-times"></i>
-                    </button>
-                    <button class="btn primary fill" style='margin-left:5px' onclick="hideParentModal(this);afterFiltersSelected()">
-                      Pokaż wyniki
-                    <i class="fas fa-chevron-right"></i>
-                    </button>
-                  </div>
-              </div>
-          </div>
-      `);
+	registerModalContent(html`
+		<div id="searchFilters" data-expand>
+			<div class="modal_body">
+				<button class="close_modal_btn" onclick="restoreFilters();"><i class="fas fa-times"></i></button>
+				<h3 class="modal_header">
+					<div>Filtry <span class="filter_count"></span></div>
+				</h3>
+				<div class="scroll_panel scroll_shadow panel_padding">
+					<div></div>
+				</div>
+				<div class="footer" style="display:flex;padding:5px">
+					<button class="btn secondary fill" onclick="clearAllFilters()">
+						Wyczyść filtry
+						<i class="fas fa-times"></i>
+					</button>
+					<button class="btn primary fill" style="margin-left:5px" onclick="hideParentModal(this);afterFiltersSelected()">
+						Pokaż wyniki
+						<i class="fas fa-chevron-right"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+	`);
 
 	$(`#searchCategory .modal_body .scroll_panel > div`).appendChild($(".search-wrapper .categories"));
 
@@ -133,7 +135,7 @@ function goMobile() {
 	scroll_wrapper.classList.add("horizontal");
 	scroll_wrapper.classList.add("light");
 
-	scroll_wrapper.insertAdjacentHTML("afterend", "<div class='horizontal-scroll-wrapper'></div>");
+	scroll_wrapper.insertAdjacentHTML("afterend", html`<div class="horizontal-scroll-wrapper"></div>`);
 	var container = scroll_wrapper._next();
 	container.appendChild(scroll_wrapper);
 
@@ -227,27 +229,36 @@ function searchProducts(options = {}) {
 		scrollToTopOfProductList();
 	}
 
+	const datatable_params = {};
+	//datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
+	datatable_params.filters = [];
+	datatable_params.row_count = 3;
+	datatable_params.page_id = 0;
+	datatable_params.quick_search = 0;
+
 	xhr({
-		url: "/search_products",
+		url: "/product/search",
 		params: {
-			product_filters: JSON.stringify(searchParams),
-			rowCount: rowCount,
-			pageNumber: currPage,
+			datatable_params,
 		},
 		success: (res) => {
 			if (res.total_rows == 0) {
 				var caseFilters =
 					searchParams.attribute_value_ids.length > 0 || searchParams.search !== ""
-						? `<button class='btn subtle' onclick="clearSearch();clearAllFilters();"><i class="fas fa-times"></i> Wyczyść filtry</button>`
+						? html`<button class="btn subtle" onclick="clearSearch();clearAllFilters();">
+								<i class="fas fa-times"></i> Wyczyść filtry
+						  </button>`
 						: "Wyszukaj inną kategorię";
-				res.content = `
-              <div style='font-size:22px;padding: 60px 10px;text-align:center;font-weight:600'>
-                <span style='color: var(--error-clr);'><i class="fas fa-exclamation-circle"></i> Brak produktów!</span>
-                <div style='font-size:0.8em;margin:0.7em'>${caseFilters}</div>
-              </div>
-              `;
+				res.content = html`
+					<div style="font-size:22px;padding: 60px 10px;text-align:center;font-weight:600">
+						<span style="color: var(--error-clr);"><i class="fas fa-exclamation-circle"></i> Brak produktów!</span>
+						<div style="font-size:0.8em;margin:0.7em">${caseFilters}</div>
+					</div>
+				`;
 			} else {
-				res.content = `<div style='height:50px'></div>${res.content}<div style='height:50px'></div>`;
+				res.content = html`<div style="height:50px"></div>
+					${res.content}
+					<div style="height:50px"></div>`;
 			}
 
 			$(".price_range_info")._set_content(
@@ -303,9 +314,12 @@ function searchProducts(options = {}) {
 
 			if ($(".order_by_item input[value='random']:checked")) {
 				if (res.total_rows > 0) {
-					paginationNode._set_content(`
-              <button class='btn primary medium randomize_btn' onclick='beforeSearchProducts()'><span class='randomize_text'>Losuj więcej</span> <span class='randomize_loader_wrapper'><i class='randomize_loader fas fa-dice-three'></i></span></button>
-            `);
+					paginationNode._set_content(html`
+						<button class="btn primary medium randomize_btn" onclick="beforeSearchProducts()">
+							<span class="randomize_text">Losuj więcej</span>
+							<span class="randomize_loader_wrapper"><i class="randomize_loader fas fa-dice-three"></i></span>
+						</button>
+					`);
 				} else {
 					paginationNode._empty();
 				}
@@ -324,17 +338,17 @@ function searchProducts(options = {}) {
 				setTimeout(() => {
 					var out = [];
 					if (searchParams.search) {
-						out.push(`Wyszukaj: <span style='font-weight:600'>${searchParams.search}</span>`);
+						out.push(html`Wyszukaj: <span style="font-weight:600">${searchParams.search}</span>`);
 					}
 					if (searchParams.price_min && searchParams.price_max) {
-						out.push(`Cena: <span class='pln'>${searchParams.price_min} - ${searchParams.price_max} zł</span>`);
+						out.push(html`Cena: <span class="pln">${searchParams.price_min} - ${searchParams.price_max} zł</span>`);
 					} else if (searchParams.price_min) {
-						out.push(`Cena: <span class='pln'>od ${searchParams.price_min} zł</span>`);
+						out.push(html`Cena: <span class="pln">od ${searchParams.price_min} zł</span>`);
 					} else if (searchParams.price_max) {
-						out.push(`Cena: <span class='pln'>do ${searchParams.price_max} zł</span>`);
+						out.push(html`Cena: <span class="pln">do ${searchParams.price_max} zł</span>`);
 					}
 
-					out.push(`Sortuj: <span style='font-weight:600'>${$(`[value="${searchParams.order_by}"]`)._next().textContent}</span>`);
+					out.push(html`Sortuj: <span style="font-weight:600">${$(`[value="${searchParams.order_by}"]`)._next().textContent}</span>`);
 					e.innerHTML = out.join(", ");
 				}, duration / 2);
 			});
@@ -343,16 +357,7 @@ function searchProducts(options = {}) {
 }
 
 function scrollToTopOfProductList() {
-	setTimeout(() => {
-		// scrollIntoView(elem)
-		// depcrecated!
-		// scrollToElement($(".hook_view"), {
-		// 	top: true,
-		// 	offset: window.innerWidth < MOBILE_WIDTH ? 200 : 300,
-		// 	sag: window.innerWidth < MOBILE_WIDTH ? 0 : 100,
-		// 	duration: 30,
-		// });
-	}, 0);
+	setTimeout(() => {}, 0);
 }
 
 function beforeSearchProducts() {

@@ -3,7 +3,7 @@
 EntityManager::register("general_product", [
     "props" => [
         "name" => ["type" => "string"],
-        "main_img_url" => ["type" => "string"],
+        "__img_url" => ["type" => "string"],
     ],
 ]);
 
@@ -36,6 +36,8 @@ EventListener::register("before_save_general_product_entity", function ($params)
     usort($features, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
     $sorted_feature_ids_str = join(",", array_map(fn ($a) => $a["id"], $features));
 
+    $main_img_url = "";
+
     foreach ($products as $product) {
         $product_id = $product->getId();
 
@@ -54,6 +56,9 @@ EventListener::register("before_save_general_product_entity", function ($params)
                 if (in_array($feature_option_id, $image_data["option_ids"])) {
                     $matches++;
                 }
+            }
+            if (!$main_img_url) {
+                $main_img_url = $image_data["img_url"];
             }
             if ($matches > $most_matches) {
                 $most_matches = $matches;
@@ -75,4 +80,6 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
         $product->setProp("__name", $product_name);
     }
+
+    $general_product->setProp("__img_url", $main_img_url);
 });

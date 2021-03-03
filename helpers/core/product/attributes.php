@@ -1,5 +1,6 @@
 <?php
 
+// DEPRECATED
 
 $attribute_data_types = [
     "textlist" => [

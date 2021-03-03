@@ -8,6 +8,11 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "general_product/search",
 		columns: [
+			{
+				label: "Zdjęcie",
+				width: "65px",
+				render: (data) => html`<img data-src="${data.__img_url}" class="product_image wo997_img" style="width:48px;height:48px" />`,
+			},
 			{ label: "Produkt", key: "name", width: "1", sortable: true, searchable: "string" },
 			{ label: "Publiczny", key: "published", width: "1", sortable: true, searchable: "boolean" },
 			{ label: "W magazynie", key: "stock", width: "1", sortable: true, searchable: "number" },
