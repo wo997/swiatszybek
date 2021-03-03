@@ -5,7 +5,7 @@ domload(() => {
 		e.addEventListener("mousemove", () => {
 			const float_menu = e._child("ul");
 			if (!float_menu || !float_menu.textContent) return;
-			float_menu.classList.add("float_menu");
+			float_menu.classList.add("float_menu", "visible");
 			const btn_rect = e.getBoundingClientRect();
 
 			if (active_float_menu && active_float_menu != float_menu) {
@@ -14,7 +14,6 @@ domload(() => {
 			active_float_menu_btn = e;
 			active_float_menu = float_menu;
 
-			float_menu.classList.add("hovered");
 			float_menu.style.display = "block";
 			const left = btn_rect.left;
 			const top = btn_rect.top + btn_rect.height - 1;
@@ -53,8 +52,6 @@ domload(() => {
 				}
 			}
 
-			float_menu.classList.add("visible");
-
 			const max_left = main_header.offsetWidth - float_menu.offsetWidth;
 			if (left > max_left) {
 				// u might wanna do it just once but trust me - it's ok for safety
@@ -69,7 +66,6 @@ function hideFloatingMenu() {
 		return;
 	}
 	active_float_menu.classList.remove("visible");
-	active_float_menu_btn.classList.remove("hovered");
 
 	const menu_ref = active_float_menu;
 	setTimeout(() => {

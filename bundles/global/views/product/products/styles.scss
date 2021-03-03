@@ -140,7 +140,7 @@
 	text-decoration: underline #000c;
 }
 
-.product_list-wrapper {
+.product_list_wrapper {
 	padding: 2vw;
 	overflow: hidden;
 }
@@ -156,8 +156,8 @@
 	overflow: hidden;
 }
 
-.product_list-container-swap,
-.product_list-container-swap-background {
+.product_list_container-swap,
+.product_list_container-swap-background {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -167,7 +167,7 @@
 	z-index: 100;
 }
 
-.product_list-container-swap-background {
+.product_list_container-swap-background {
 	height: 10000px;
 	top: 100%;
 }

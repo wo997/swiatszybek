@@ -5,8 +5,8 @@ include "event_listeners/deployment/build.php";
 
 foreach (DB::fetchCol("SELECT general_product_id FROM general_product") as $general_product_id) {
     $general_product = EntityManager::getEntityById("general_product", $general_product_id);
-    $general_product->save();
 }
+EntityManager::saveAll();
 
 // foreach (DB::fetchCol("SELECT product_id FROM products") as $product_id) {
 //     triggerEvent("product_rating_change", ["product_id" => $product_id]);

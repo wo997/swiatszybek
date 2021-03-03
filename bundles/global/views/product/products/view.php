@@ -213,7 +213,7 @@ function showCategory($category, $level = 0)
         ?>
     </div>
 </div>
-<div class="product_list-wrapper">
+<div class="product_list_wrapper">
     <div style="margin: 35px 0">
         <h1 class="h1" style="margin: 5px 0"><?= $show_category["title"] ?></h1>
         <p class="filters_description"></p>
@@ -222,22 +222,7 @@ function showCategory($category, $level = 0)
 
     <div class="hook_view"></div>
 
-    <div class="product_list-animation-wrapper">
-        <div class="product_list-container">
-            <?php
-            /*$moduleParams = [];
-$module_content = "";
-$moduleParams["category_ids"] = [$show_category["category_id"]];
-include "modules/product_list/content.php";
-echo $module_content;*/
-            ?>
-        </div>
-
-        <div class="product_list-container-swap">
-            <div class="product_list-container-swap-content"></div>
-            <div class="product_list-container-swap-background"></div>
-        </div>
-    </div>
+    <div class="product_list"></div>
 
     <div class="under-products">
         <div class="flexbar">
