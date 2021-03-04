@@ -30,9 +30,20 @@ domload(() => {
 		}
 	});
 
-	var e = $(".category_name.current");
-	if (e) {
-		//expandCategoriesAbove(e);
+	const current = $(`.product_categories li[data-category_id="${product_category_id}"]`);
+	if (current) {
+		let open_cat = current;
+		while (true) {
+			open_cat._child("a").classList.add("current");
+			const expand_btn = open_cat._child(".expand_btn");
+			if (expand_btn) {
+				expand_btn.click();
+			}
+			open_cat = open_cat._parent("li");
+			if (!open_cat) {
+				break;
+			}
+		}
 	}
 
 	product_list = $(".product_list");

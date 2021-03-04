@@ -50,6 +50,9 @@
 		&:hover {
 			text-decoration: underline #000c;
 		}
+		&.current {
+			text-decoration: underline #000c;
+		}
 	}
 
 	.level_0 > li > a {

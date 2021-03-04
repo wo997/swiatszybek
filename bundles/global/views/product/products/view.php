@@ -16,7 +16,7 @@ function traverseCategories($parent_id = -1, $level = 0)
     }
     $html = "<ul class=\"level_$level\">";
     foreach ($categories as $category) {
-        $html .= "<li><a href=\"/produkty/" . $category["product_category_id"] . "/" . $category["name"] . "\">" . $category["name"] . "</a>" .  traverseCategories($category["product_category_id"], $level + 1) . "</li>";
+        $html .= "<li data-category_id=\"" . $category["product_category_id"] . "\" ><a href=\"/produkty/" . $category["product_category_id"] . "/" . $category["name"] . "\">" . $category["name"] . "</a>" .  traverseCategories($category["product_category_id"], $level + 1) . "</li>";
     }
     $html .= "</ul>";
     return $html;
@@ -52,7 +52,7 @@ function traverseCategories($parent_id = -1, $level = 0)
         <div class="search_header">
             <i class="fas fa-search"></i>
             Szukaj
-            <button class='btn subtle case_search' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-tooltip_position='right' style='margin:-10px 0'>
+            <button class='btn subtle case_search small' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-tooltip_position='right' style='margin:-10px 0'>
                 <i class="fas fa-times"></i>
             </button>
         </div>
