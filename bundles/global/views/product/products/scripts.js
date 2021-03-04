@@ -125,7 +125,7 @@ function searchProducts() {
 		//url += "/" + escapeUrl(options_names.join(" "));
 	}
 
-	let full_name = product_category_full_name + " " + options_data.full_names.join(" ");
+	let full_name = product_category_full_name.replace(/\//g, " ") + " " + options_data.full_names.join(" ");
 
 	// it does not work lol
 	history.pushState(undefined, full_name, url);
