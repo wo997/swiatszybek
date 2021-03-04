@@ -71,7 +71,10 @@ p-checkbox {
 	display: block;
 }
 .checkbox_area {
-	cursor: pointer;
+	& {
+		cursor: pointer;
+		user-select: none;
+	}
 	p-checkbox {
 		& {
 			display: inline-block;

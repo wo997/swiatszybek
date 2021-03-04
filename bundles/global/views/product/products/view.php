@@ -36,8 +36,9 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
     foreach ($product_feature_options as $product_feature_option) {
         $html .= "<li>";
         $html .= "<div class=\"checkbox_area\">";
-        $html .= "<p-checkbox class=\"square inline option_checkbox\" data-option_id=" . $product_feature_option["product_feature_option_id"] . "></p-checkbox> ";
-        $html .= "<span class=\"feature_option_label\">" . $product_feature_option["name"] . "</span>";
+        $html .= "<p-checkbox class=\"square inline option_checkbox\" data-option_id=" . $product_feature_option["product_feature_option_id"] . "></p-checkbox>";
+        $html .= " <span class=\"feature_option_label\">" . $product_feature_option["name"] . "</span>";
+        $html .= " <span class=\"count\"></span>";
         $html .= "</div> ";
         $html .= traverseFeatureOptions($feature_id, $product_feature_option["product_feature_option_id"], $level + 1);
         $html .= "</li>";

@@ -2,10 +2,15 @@
 
 $where = "1";
 
-if (isset($_POST["option_ids"])) {
-    $option_ids = clean($_POST["option_ids"]);
-    if ($option_ids) {
-        $where .= " AND gptfo.product_feature_option_id IN ($option_ids)";
+//var_dump()
+
+if (isset($_POST["option_id_groups"])) {
+    $option_id_groups = json_decode($_POST["option_id_groups"]);
+    foreach ($option_id_groups as $option_ids) {
+        $option_ids_csv = clean(implode(",", $option_ids));
+        if ($option_ids_csv) {
+            $where .= " AND gptfo.product_feature_option_id IN ($option_ids_csv)";
+        }
     }
 }
 
@@ -48,8 +53,8 @@ foreach ($products_data["rows"] as $product) {
 }
 
 $all_ids_csv = implode(",", $products_data["all_ids"]);
-$option_ids = $all_ids_csv ? DB::fetchCol("SELECT DISTINCT product_feature_option_id
+$options_data = $all_ids_csv ? DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id option_id
     FROM general_product INNER JOIN general_product_to_feature_option gptfo USING (general_product_id)
-    WHERE general_product_id IN ($all_ids_csv)") : [];
+    WHERE general_product_id IN ($all_ids_csv) GROUP BY product_feature_option_id") : [];
 
-Request::jsonResponse(["html" => $html, "option_ids" => $option_ids]);
+Request::jsonResponse(["html" => $html, "options_data" => $options_data]);
