@@ -113,7 +113,7 @@ function searchProducts() {
 
 	let url = "/produkty";
 	url += "/" + product_category_id;
-	url += "/" + escapeUrl(product_category_name);
+	url += "/" + escapeUrl(product_category_full_name.replace(/\//g, " "));
 	const option_ids = options.map((e) => e.option_id);
 	const options_names = options.map((e) => e.name);
 	if (options.length > 0) {
@@ -121,7 +121,7 @@ function searchProducts() {
 		//url += "/" + escapeUrl(options_names.join(" "));
 	}
 
-	let full_name = product_category_name + " " + options_data.full_names.join(" ");
+	let full_name = product_category_full_name + " " + options_data.full_names.join(" ");
 
 	// it does not work lol
 	history.pushState(undefined, full_name, url);
