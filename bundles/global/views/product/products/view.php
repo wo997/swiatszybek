@@ -36,7 +36,7 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
     foreach ($product_feature_options as $product_feature_option) {
         $html .= "<li>";
         $html .= "<div class=\"checkbox_area\">";
-        $html .= "<p-checkbox class=\"square inline\"></p-checkbox> ";
+        $html .= "<p-checkbox class=\"square inline option_checkbox\" data-option_id=" . $product_feature_option["product_feature_option_id"] . "></p-checkbox> ";
         $html .= "<span class=\"feature_option_label\">" . $product_feature_option["name"] . "</span>";
         $html .= "</div> ";
         $html .= traverseFeatureOptions($feature_id, $product_feature_option["product_feature_option_id"], $level + 1);
@@ -73,6 +73,7 @@ function traverseFeatures()
 
 <script>
     const product_category_id = <?= $product_category_id ?>;
+    const product_category_name = "<?= htmlspecialchars($show_category["__full_name"]) ?>";
 </script>
 
 <?php startSection("body_content"); ?>
@@ -245,7 +246,7 @@ function traverseFeatures()
         <div style="margin: 40px 0">
             <h1 class="h1 category_name">
                 <?php
-                $category_name_parts = explode("/", $show_category["__full_name"]);
+                $category_name_parts = explode("/", htmlspecialchars($show_category["__full_name"]));
                 foreach ($category_name_parts as $sub_name) {
                     echo "<span>$sub_name</span>";
                 }

@@ -44,6 +44,7 @@ if ($product_link !== $current_link) {
 $general_product_products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
 $general_product_images_json = $general_product_data["__images_json"]; //DB::fetchArr("SELECT * FROM product_image WHERE general_product_id = $general_product_id ORDER BY pos ASC"); // AND active = 1
+$general_product_images = json_decode($general_product_images_json, true);
 
 foreach ($general_product_products as &$product) {
     $product_id = $product["product_id"];

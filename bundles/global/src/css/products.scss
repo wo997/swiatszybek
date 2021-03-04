@@ -4,11 +4,11 @@
 	& {
 		display: flex;
 		flex-flow: row wrap;
-		margin: -1vw;
+		margin: -1.618vw -1vw;
 	}
 	.product_block {
 		width: var(--product_width);
-		padding: 1vw;
+		padding: 1.618vw 1vw;
 	}
 }
 .product_block {

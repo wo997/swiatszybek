@@ -120,7 +120,7 @@ if ($modifyJS) {
 
             //@include(admin/tools/newCms/template.html)
             if (preg_match_all("/(?<=\@include\()[^\)]*(?=\))/", $js_content, $matches)) {
-                foreach ($matches as $file_to_include) {
+                foreach ($matches[0] as $file_to_include) {
                     $js_dependencies[] = $file_to_include;
                     if (file_exists($file_to_include)) {
                         $js_content = str_replace("@include($file_to_include)", file_get_contents($file_to_include), $js_content);

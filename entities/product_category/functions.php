@@ -17,9 +17,9 @@ function getProductCategoryLink($product_category_id, $full_name, $option_ids = 
     if ($option_ids) {
         $link .= "/" . join("~", $option_ids);
     }
-    if ($options_names) {
-        $link .= "/" . escapeUrl(join(" ", $options_names));
-    }
+    // if ($options_names) {
+    //     $link .= "/" . escapeUrl(join(" ", $options_names));
+    // }
     return $link;
 }
 

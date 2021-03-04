@@ -1,10 +1,20 @@
 <?php //route[product/search]  
 
+$where = "1";
+
+if (isset($_POST["option_ids"])) {
+    $option_ids = clean($_POST["option_ids"]);
+    if ($option_ids) {
+        $where .= " AND product_feature_option_id IN ($option_ids)";
+    }
+}
+
 $products = paginateData([
     "select" => "general_product_id, name, __img_url, __images_json",
-    "from" => "general_product",
+    "from" => "general_product INNER JOIN general_product_to_feature_option USING (general_product_id)",
     "group" => "general_product_id",
     "order" => "general_product_id DESC",
+    "where" => $where,
     "quick_search_fields" => ["name"],
     "datatable_params" => $_POST["datatable_params"]
 ]);

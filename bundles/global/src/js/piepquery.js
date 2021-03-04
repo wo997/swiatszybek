@@ -159,13 +159,5 @@ function $(selector, parent = undefined) {
  * @returns {PiepNode[]}
  */
 function $$(querySelectorAll, parent = null) {
-	if (parent === null) {
-		parent = document;
-	}
-	var group = parent.querySelectorAll(querySelectorAll);
-	var res = [];
-	group.forEach((node) => {
-		res.push($(node));
-	});
-	return res;
+	return [...def(parent, document).querySelectorAll(querySelectorAll)].map((e) => $(e));
 }
