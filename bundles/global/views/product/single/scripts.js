@@ -1,19 +1,19 @@
 /* js[view] */
 
 function productImagesChange() {
-	general_product_images.forEach((image, index) => {
+	general_product_images.forEach((img, index) => {
 		let weight = -index;
 		for (const option_id of selected_feature_option_ids) {
-			if (image.option_ids.includes(option_id)) {
+			if (img.option_ids.includes(option_id)) {
 				weight += 100;
 			}
 		}
-		image.weight = weight;
+		img.weight = weight;
 	});
 
-	const hah = cloneObject(general_product_images);
-	hah.sort((a, b) => Math.sign(b.weight - a.weight));
-	const slides_html = hah
+	const imgs_copy = cloneObject(general_product_images);
+	imgs_copy.sort((a, b) => Math.sign(b.weight - a.weight));
+	const slides_html = imgs_copy
 		.map(
 			(img) => html`<div class="wo997_slide">
 				<img data-src="${img.img_url}" data-height="1w" class="product_image wo997_img" />
@@ -32,11 +32,11 @@ function productImagesChange() {
 		slider._slider.select_slide(0);
 	});
 
-	if (hah[0]) {
+	if (imgs_copy[0]) {
 		/** @type {ResponsiveImage} */
 		// @ts-ignore
 		const sticky_product_img = $(".sticky_product img");
-		switchImage(sticky_product_img, hah[0].img_url, false);
+		switchImage(sticky_product_img, imgs_copy[0].img_url, false);
 	}
 
 	lazyLoadImages(false);

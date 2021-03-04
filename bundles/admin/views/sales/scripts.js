@@ -51,15 +51,7 @@ function drawChart(a) {
 
 		var date = new Date(dateString);
 
-		var row_date = new Date(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate(),
-			0,
-			0,
-			0,
-			0
-		);
+		var row_date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
 		ticks.push(date);
 
 		var zI = zamowieniaDate.indexOf(dateString);
@@ -75,8 +67,7 @@ function drawChart(a) {
 		dateFrom.setDate(dateFrom.getDate() + 1);
 	}
 
-	$("#summary").innerHTML =
-		"Nowe zamówienia: " + zamowien + ", Wpłacono: " + suma + " zł";
+	$("#summary").innerHTML = "Nowe zamówienia: " + zamowien + ", Wpłacono: " + suma + " zł";
 
 	data.addRows(chartData);
 
@@ -116,7 +107,7 @@ function awaitSearch() {
 	}, 400);
 }
 
-var currPage = 0;
+//var currPage = 0;
 
 function page(i) {
 	currPage = i;
@@ -135,7 +126,7 @@ domload(() => {
 	window.dateRangePicker = createDateRangePicker(e);
 });
 
-var currPage = 0;
+//var currPage = 0;
 var pages = 1;
 var requestOn = false;
 
@@ -146,10 +137,7 @@ function search(data = {}) {
 	// TODO: XHR
 	orderRequest = new XMLHttpRequest();
 	orderRequest.open("POST", STATIC_URLS["ADMIN"] + "search_statystyki", true);
-	orderRequest.setRequestHeader(
-		"Content-type",
-		"application/x-www-form-urlencoded"
-	);
+	orderRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	orderRequest.onreadystatechange = function () {
 		if (orderRequest.readyState == 4) {
 			var wrong = false;
@@ -170,10 +158,7 @@ function search(data = {}) {
                                 <td>${variant.all_quantity} szt.</td>
                                 <td>${variant.all_total_price} zł</td>
                                 <td>${variant.all_purchase_price} zł</td>
-                                <td>${
-																	variant.all_total_price -
-																	variant.all_purchase_price
-																} zł</td>
+                                <td>${variant.all_total_price - variant.all_purchase_price} zł</td>
                             </tr>`;
 				}
 				$(".variants")._set_content(table_html);
@@ -206,8 +191,7 @@ function search(data = {}) {
 		}
 	}
 
-	if (dateFrom.value.length == 10)
-		dateFilterQuery += "&dateFrom=" + dateFrom.value;
+	if (dateFrom.value.length == 10) dateFilterQuery += "&dateFrom=" + dateFrom.value;
 	if (dateTo.value.length == 10) dateFilterQuery += "&dateTo=" + dateTo.value;
 
 	orderRequest.send("chart=1" + dateFilterQuery);

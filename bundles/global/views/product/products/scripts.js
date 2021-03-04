@@ -1,15 +1,13 @@
 /* js[view] */
 
-var currPage = 1;
-var rowCount = 24;
-var searchParams = {};
-var searchingProducts = false;
+let currPage = 1;
+let rowCount = 24;
 
 /** @type {PiepNode} */
 let product_list;
 
-let filtersInitialState;
-let filtersStateBeforeOpen;
+/** @type {number[]} */
+let available_option_ids = [];
 
 domload(() => {
 	$$(".product_features ul ul:not(.level_0)").forEach((ul) => {
@@ -90,6 +88,7 @@ function getSelectedOptionsData() {
 	return data;
 }
 
+let searchingProducts = false;
 function searchProducts() {
 	if (searchingProducts) {
 		setTimeout(() => {
@@ -114,10 +113,10 @@ function searchProducts() {
 	let url = "/produkty";
 	url += "/" + product_category_id;
 	url += "/" + escapeUrl(product_category_full_name.replace(/\//g, " "));
-	const option_ids = options.map((e) => e.option_id);
+	const selected_option_ids = options.map((e) => e.option_id);
 	//const options_names = options.map((e) => e.name);
 	if (options.length > 0) {
-		url += "/" + option_ids.join("~");
+		url += "/" + selected_option_ids.join("~");
 		//url += "/" + escapeUrl(options_names.join(" "));
 	}
 
@@ -133,11 +132,32 @@ function searchProducts() {
 		params: {
 			datatable_params,
 			product_category_id,
-			option_ids,
+			option_ids: selected_option_ids,
 		},
 		success: (res) => {
 			product_list._set_content(res.html);
+			available_option_ids = res.option_ids;
+
+			product_list._children(".product_image").forEach((img) => {
+				const images = JSON.parse(img.dataset.images);
+				images.forEach((img, index) => {
+					let weight = -index;
+					for (const option_id of selected_option_ids) {
+						if (img.option_ids.includes(option_id)) {
+							weight += 100;
+						}
+					}
+					img.weight = weight;
+				});
+				images.sort((a, b) => Math.sign(b.weight - a.weight));
+
+				if (images[0]) {
+					img.dataset.src = images[0].img_url;
+				}
+			});
+
 			lazyLoadImages();
+			searchingProducts = false;
 		},
 	});
 }

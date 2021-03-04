@@ -16,7 +16,7 @@ if (isset($_POST["product_category_id"])) {
     }
 }
 
-$products = paginateData([
+$products_data = paginateData([
     "select" => "general_product_id, name, __img_url, __images_json",
     "from" => "
         general_product
@@ -27,12 +27,14 @@ $products = paginateData([
     "order" => "general_product_id DESC",
     "where" => $where,
     "quick_search_fields" => ["name"],
-    "datatable_params" => $_POST["datatable_params"]
+    "datatable_params" => $_POST["datatable_params"],
+    "return_all_ids" => true,
+    "primary_key" => "general_product_id"
 ]);
 
 $html = "";
 
-foreach ($products["rows"] as $product) {
+foreach ($products_data["rows"] as $product) {
     $html .= "<div class=\"product_block\">
         <a href=\"" . getProductLink($product["general_product_id"], $product["name"]) . "\">
             <img data-src=\"" . $product["__img_url"] . "\" data-height=\"1w\" class=\"product_image wo997_img\" alt=\"\" data-images=\"" . htmlspecialchars($product["__images_json"]) . "\">
@@ -45,4 +47,9 @@ foreach ($products["rows"] as $product) {
     </div>";
 }
 
-Request::jsonResponse(["html" => $html]);
+$all_ids_csv = implode(",", $products_data["all_ids"]);
+$option_ids = $all_ids_csv ? DB::fetchCol("SELECT DISTINCT product_feature_option_id
+    FROM general_product INNER JOIN general_product_to_feature_option gptfo USING (general_product_id)
+    WHERE general_product_id IN ($all_ids_csv)") : [];
+
+Request::jsonResponse(["html" => $html, "option_ids" => $option_ids]);
