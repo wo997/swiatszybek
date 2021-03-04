@@ -4,6 +4,7 @@ EntityManager::register("general_product", [
     "props" => [
         "name" => ["type" => "string"],
         "__img_url" => ["type" => "string"],
+        "__images_json" => ["type" => "string"],
     ],
 ]);
 
@@ -21,8 +22,9 @@ EventListener::register("before_save_general_product_entity", function ($params)
         foreach ($product_feature_options as $product_feature_option) {
             $option_ids[] = $product_feature_option->getId();
         }
-        $images_data[] = ["img_url" => $image->getProp("img_url"), "option_ids" => $option_ids];
+        $images_data[] = ["img_url" => $image->getProp("img_url"), "option_ids" => $option_ids, "pos" => $image->getProp("pos")];
     }
+    usort($images_data, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
 
     /** @var Entity[] Product */
     $products = $general_product->getProp("products");
@@ -82,4 +84,5 @@ EventListener::register("before_save_general_product_entity", function ($params)
     }
 
     $general_product->setProp("__img_url", $main_img_url);
+    $general_product->setProp("__images_json", json_encode($images_data));
 });
