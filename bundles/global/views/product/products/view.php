@@ -11,33 +11,50 @@ if (!$show_category) {
     Request::redirect("/produkty/wszystkie");
 }
 
-function showCategory($category, $level = 0)
+// function showCategory($category, $level = 0)
+// {
+//     global $category_link;
+//     $category_id = intval($category["category_id"]);
+//     $subcategories = DB::fetchArr("SELECT category_id, title, link, (
+//       SELECT COUNT(1) FROM link_product_category link INNER JOIN products pr USING(product_id) WHERE link.category_id = pc.category_id AND pr.published
+//     ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND pc.published ORDER BY kolejnosc");
+//     $count = count($subcategories);
+
+//     //if ($level > 0) {
+//     $current = $category_link == $category["link"] ? "current" : "";
+//     $displayCount = isset($category["product_count"]) ? "<span>(" . $category["product_count"] . ")</span>" : "";
+//     echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
+//     if ($count && $level > 0) {
+//         echo "<div class='btn expand_arrow' onclick='expandMenu($(this)._parent()._next(),$(this)._parent())'><i class='fas fa-chevron-right'></i></div>";
+//     }
+//     $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
+//     $styles = $level == 0 ? "style='padding-left:0'" : "";
+//     echo "</div><div class='category-picker-column $hidden' $styles>";
+//     //}
+
+//     foreach ($subcategories as $subcategory) {
+//         showCategory($subcategory, $level + 1);
+//     }
+//     //if ($level > 0) {
+//     echo "</div></div>";
+//     //}
+// }
+
+function traverseCategories($parent_id = -1, $level = 0)
 {
-    global $category_link;
-    $category_id = intval($category["category_id"]);
-    $subcategories = DB::fetchArr("SELECT category_id, title, link, (
-      SELECT COUNT(1) FROM link_product_category link INNER JOIN products pr USING(product_id) WHERE link.category_id = pc.category_id AND pr.published
-    ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND pc.published ORDER BY kolejnosc");
-    $count = count($subcategories);
-
-    //if ($level > 0) {
-    $current = $category_link == $category["link"] ? "current" : "";
-    $displayCount = isset($category["product_count"]) ? "<span>(" . $category["product_count"] . ")</span>" : "";
-    echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
-    if ($count && $level > 0) {
-        echo "<div class='btn expand_arrow' onclick='expandMenu($(this)._parent()._next(),$(this)._parent())'><i class='fas fa-chevron-right'></i></div>";
+    $categories = DB::fetchArr("SELECT product_category_id, name FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
+    if (!$categories) {
+        return "";
     }
-    $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
-    $styles = $level == 0 ? "style='padding-left:0'" : "";
-    echo "</div><div class='category-picker-column $hidden' $styles>";
-    //}
-
-    foreach ($subcategories as $subcategory) {
-        showCategory($subcategory, $level + 1);
+    $html = "<ul class=\"level_$level\">";
+    foreach ($categories as $category) {
+        $html .= "<li><a>" . $category["name"] . "</a>" .  traverseCategories($category["product_category_id"], $level + 1) . "</li>";
+        // if ($level === 0) {
+        // } else {
+        // }
     }
-    //if ($level > 0) {
-    echo "</div></div>";
-    //}
+    $html .= "</ul>";
+    return $html;
 }
 
 ?>
@@ -63,12 +80,8 @@ function showCategory($category, $level = 0)
 
         <div class="search_header"><i class="fas fa-list"></i> Kategorie</div>
 
-        <div class="categories">
-            <?= showCategory([
-                "link" => "wszystkie",
-                "category_id" => 0,
-                "title" => "Wszystkie produkty",
-            ]) ?>
+        <div class="product_categories">
+            <?= traverseCategories() ?>
         </div>
 
         <div class="search_header">
@@ -217,7 +230,7 @@ function showCategory($category, $level = 0)
     </div>
     <div class="product_list_wrapper">
         <div style="margin: 35px 0">
-            <h1 class="h1" style="margin: 5px 0"><?= $show_category["title"] ?></h1>
+            <h1 class="h1" style="margin: 5px 0;text-align:center"><?= $show_category["title"] ?></h1>
             <p class="filters_description"></p>
         </div>
         <?= ""; //$show_category["description"] 

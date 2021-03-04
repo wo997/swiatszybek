@@ -12,6 +12,22 @@ let filtersInitialState;
 let filtersStateBeforeOpen;
 
 domload(() => {
+	$$(".product_categories ul:not(.level_0)").forEach((ul) => {
+		const a = ul._prev();
+		a.insertAdjacentHTML("beforeend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
+		ul.classList.add("expand_y", "hidden", "animate_hidden");
+	});
+
+	$(".product_categories").addEventListener("click", (ev) => {
+		const target = $(ev.target);
+
+		const expand_btn = target._parent(".expand_btn", { skip: 0 });
+		if (expand_btn) {
+			const open = expand_btn.classList.toggle("open");
+			expand(expand_btn._parent()._next(), open);
+		}
+	});
+
 	var e = $(".category_name.current");
 	if (e) {
 		//expandCategoriesAbove(e);
