@@ -39,6 +39,6 @@ EventListener::register("before_save_product_entity", function ($params) {
 
     /** @var Entity GeneralProduct */
     $general_product = $product->getParent();
-    $link = getProductLink($general_product->getId(), $option_ids, $general_product->getProp("name"), $option_names);
+    $link = getProductLink($general_product->getId(), $general_product->getProp("name"), $option_ids, $option_names);
     $product->setProp("__url", $link);
 });

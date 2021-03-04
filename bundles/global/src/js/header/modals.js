@@ -173,6 +173,8 @@ function requestHeaderModals() {
 		if (expand_btn) {
 			const open = expand_btn.classList.toggle("open");
 			expand(expand_btn._parent()._next(), open);
+			ev.preventDefault();
+			return false;
 		}
 	});
 }

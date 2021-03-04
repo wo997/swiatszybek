@@ -2,43 +2,11 @@
 
 $show_category = null;
 
-$category_link = Request::urlParam(1);
-if ($category_link) {
-    $show_category = DB::fetchRow("SELECT title, category_id, description, content FROM product_categories WHERE link = ?", [$category_link]);
+$product_category_id = Request::urlParam(1, -1);
+if ($product_category_id) {
+    $product_category_id = intval($product_category_id);
+    $show_category = DB::fetchRow("SELECT name, __full_name FROM product_category WHERE product_category_id = $product_category_id");
 }
-
-if (!$show_category) {
-    Request::redirect("/produkty/wszystkie");
-}
-
-// function showCategory($category, $level = 0)
-// {
-//     global $category_link;
-//     $category_id = intval($category["category_id"]);
-//     $subcategories = DB::fetchArr("SELECT category_id, title, link, (
-//       SELECT COUNT(1) FROM link_product_category link INNER JOIN products pr USING(product_id) WHERE link.category_id = pc.category_id AND pr.published
-//     ) as product_count FROM product_categories pc WHERE parent_id = $category_id AND pc.published ORDER BY kolejnosc");
-//     $count = count($subcategories);
-
-//     //if ($level > 0) {
-//     $current = $category_link == $category["link"] ? "current" : "";
-//     $displayCount = isset($category["product_count"]) ? "<span>(" . $category["product_count"] . ")</span>" : "";
-//     echo "<div data-parent_id='$category_id'><div class='category-picker-row'><a class='category_name $current' href='/produkty/" . $category["link"] . "'>" . $category["title"] . "&nbsp;$displayCount</a>";
-//     if ($count && $level > 0) {
-//         echo "<div class='btn expand_arrow' onclick='expandMenu($(this)._parent()._next(),$(this)._parent())'><i class='fas fa-chevron-right'></i></div>";
-//     }
-//     $hidden = $level > 0 ? "expand_y hidden animate_hidden" : "";
-//     $styles = $level == 0 ? "style='padding-left:0'" : "";
-//     echo "</div><div class='category-picker-column $hidden' $styles>";
-//     //}
-
-//     foreach ($subcategories as $subcategory) {
-//         showCategory($subcategory, $level + 1);
-//     }
-//     //if ($level > 0) {
-//     echo "</div></div>";
-//     //}
-// }
 
 function traverseCategories($parent_id = -1, $level = 0)
 {
@@ -48,10 +16,7 @@ function traverseCategories($parent_id = -1, $level = 0)
     }
     $html = "<ul class=\"level_$level\">";
     foreach ($categories as $category) {
-        $html .= "<li><a>" . $category["name"] . "</a>" .  traverseCategories($category["product_category_id"], $level + 1) . "</li>";
-        // if ($level === 0) {
-        // } else {
-        // }
+        $html .= "<li><a href=\"/produkty/" . $category["product_category_id"] . "/" . $category["name"] . "\">" . $category["name"] . "</a>" .  traverseCategories($category["product_category_id"], $level + 1) . "</li>";
     }
     $html .= "</ul>";
     return $html;
@@ -63,7 +28,7 @@ function traverseCategories($parent_id = -1, $level = 0)
 <?php startSection("head_content"); ?>
 
 <script>
-    const CATEGORY_ID = <?= $show_category["category_id"] ?>;
+    const product_category_id = <?= $product_category_id ?>;
 </script>
 
 <?php startSection("body_content"); ?>
@@ -202,35 +167,41 @@ function traverseCategories($parent_id = -1, $level = 0)
                 return $html;
             }
 
-            $attributes = DB::fetchArr("SELECT name, attribute_id, data_type FROM product_attributes
-        INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($show_category["category_id"]));
+            //     $attributes = DB::fetchArr("SELECT name, attribute_id, data_type FROM product_attributes
+            // INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($show_category["name"]));
 
-            $output = "";
+            // $output = "";
 
-            foreach ($attributes as $attribute) {
+            // foreach ($attributes as $attribute) {
 
-                $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
+            //     $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
 
-                $output .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
-                $output .= "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
+            //     $output .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
+            //     $output .= "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
 
-                if ($any) {
-                } else {
-                    $values = getAttributeValues($attribute["attribute_id"]);
-                    $output .= printUserSelectValuesOfAttribute($values, $attribute);
-                }
+            //     if ($any) {
+            //     } else {
+            //         $values = getAttributeValues($attribute["attribute_id"]);
+            //         $output .= printUserSelectValuesOfAttribute($values, $attribute);
+            //     }
 
-                $output .= "</div>";
-            }
+            //     $output .= "</div>";
+            // }
 
-            echo $output;
+            // echo $output;
 
             ?>
         </div>
     </div>
     <div class="product_list_wrapper">
-        <div style="margin: 35px 0">
-            <h1 class="h1" style="margin: 5px 0;text-align:center"><?= $show_category["title"] ?></h1>
+        <div style="margin: 40px 0">
+            <h1 class="h1 category_name">
+                <?php
+                $category_name_parts = explode("/", $show_category["__full_name"]);
+                foreach ($category_name_parts as $sub_name) {
+                    echo "<span>$sub_name</span>";
+                }
+                ?></h1>
             <p class="filters_description"></p>
         </div>
         <?= ""; //$show_category["description"] 

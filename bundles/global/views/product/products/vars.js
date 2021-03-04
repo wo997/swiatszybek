@@ -1,1 +1,1 @@
-let CATEGORY_ID;
+let product_category_id;

@@ -8,10 +8,7 @@ function traverseMenu($parent_id = -1, $level = 0)
     }
     $html = "<ul class=\"level_$level\">";
     foreach ($categories as $category) {
-        $html .= "<li><a>" . $category["name"] . "</a>" .  traverseMenu($category["product_category_id"], $level + 1) . "</li>";
-        // if ($level === 0) {
-        // } else {
-        // }
+        $html .= "<li><a href=\"/produkty/" . $category["product_category_id"] . "/" . $category["name"] . "\">" . $category["name"] . "</a>" .  traverseMenu($category["product_category_id"], $level + 1) . "</li>";
     }
     $html .= "</ul>";
     return $html;
