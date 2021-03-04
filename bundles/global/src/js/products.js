@@ -15,3 +15,5 @@ function resizeProductsCallback() {
 window.addEventListener("resize", () => {
 	resizeProductsCallback();
 });
+
+domload(resizeProductsCallback);

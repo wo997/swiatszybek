@@ -259,7 +259,6 @@ function searchProducts(options = {}) {
 		},
 		success: (res) => {
 			product_list._set_content(res.html);
-			resizeProductsCallback();
 			lazyLoadImages();
 
 			// if (res.total_rows == 0) {
