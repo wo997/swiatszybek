@@ -115,7 +115,7 @@ function searchProducts() {
 	url += "/" + product_category_id;
 	url += "/" + escapeUrl(product_category_full_name.replace(/\//g, " "));
 	const option_ids = options.map((e) => e.option_id);
-	const options_names = options.map((e) => e.name);
+	//const options_names = options.map((e) => e.name);
 	if (options.length > 0) {
 		url += "/" + option_ids.join("~");
 		//url += "/" + escapeUrl(options_names.join(" "));
@@ -132,6 +132,7 @@ function searchProducts() {
 		url: "/product/search",
 		params: {
 			datatable_params,
+			product_category_id,
 			option_ids,
 		},
 		success: (res) => {

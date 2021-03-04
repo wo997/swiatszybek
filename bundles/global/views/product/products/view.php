@@ -73,7 +73,7 @@ function traverseFeatures()
 
 <script>
     const product_category_id = <?= $product_category_id ?>;
-    const product_category_name = "<?= htmlspecialchars($show_category["__full_name"]) ?>";
+    const product_category_full_name = "<?= htmlspecialchars($show_category["__full_name"]) ?>";
 </script>
 
 <?php startSection("body_content"); ?>
