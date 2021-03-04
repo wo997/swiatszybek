@@ -2,30 +2,31 @@
 
 global $GENERAL_PRODUCT_ID;
 
-$product_indentifiers = Request::urlParam(1);
-$selected_feature_options_ids = [];
-$option_names = [];
-if ($product_indentifiers) {
-    $product_indentifiers = explode("~", $product_indentifiers);
-    $general_product_id = intval($product_indentifiers[0]);
-    array_splice($product_indentifiers, 0, 1);
+$general_product_id = Request::urlParam(1);
+$option_ids_str = Request::urlParam(3);
+if ($general_product_id) {
     $GENERAL_PRODUCT_ID = $general_product_id;
-    if ($product_indentifiers) {
-        $option_ids = clean(join(",", $product_indentifiers));
-        $option_names = DB::fetchCol("SELECT name FROM product_feature_option WHERE product_feature_option_id IN ($option_ids) ORDER BY FIELD(product_feature_option_id,$option_ids)");
-    }
+    $general_product_data = DB::fetchRow("SELECT * FROM general_product WHERE general_product_id = $general_product_id");
 } else {
     Request::redirect("/");
 }
 
-$general_product_data = DB::fetchRow("SELECT * FROM general_product WHERE general_product_id = $general_product_id");
+$option_names = [];
+if ($option_ids_str) {
+    $option_ids = explode("~", $option_ids_str);
+    $option_ids_csv = clean(join(",", $option_ids));
+    $option_names = DB::fetchCol("SELECT name FROM product_feature_option WHERE product_feature_option_id IN ($option_ids_csv) ORDER BY FIELD(product_feature_option_id,$option_ids_csv)");
+} else {
+    $option_ids = [];
+}
+
 // if (isset($preview_params) && isset($preview_params["products"])) {
 //     $general_product_data = array_merge($general_product_data, $preview_params);
 // }
 
-$current_link = Request::urlUntillParam(2);
+$current_link = Request::urlUntillParam(4);
 
-$product_link = getProductLink($general_product_id, $product_indentifiers, $general_product_data["name"], $option_names);
+$product_link = getProductLink($general_product_id, $general_product_data["name"], $option_ids, $option_names);
 
 if (!$general_product_data) {
     Request::redirect("/");

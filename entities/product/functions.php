@@ -9,16 +9,16 @@
  * @param  string[] $options_names
  * @return string
  */
-function getProductLink($general_product_id, $option_ids, $name, $options_names)
+function getProductLink($general_product_id, $name, $option_ids = [], $options_names = [])
 {
     $link = "/produkt";
     $link .= "/" . $general_product_id;
-    foreach ($option_ids as $option_id) {
-        $link .= "~" . $option_id;
-    }
-    foreach ($options_names as $options_name) {
-        $name .= " " . $options_name;
-    }
     $link .= "/" . escapeUrl($name);
+    if ($option_ids) {
+        $link .= "/" . join("~", $option_ids);
+    }
+    if ($options_names) {
+        $link .= "/" . escapeUrl(join(" ", $options_names));
+    }
     return $link;
 }

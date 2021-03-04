@@ -110,7 +110,7 @@ if ($kopia) {
             <div style="max-width: 600px">
                 <div class="label">Nazwa produktu</div>
 
-                <input type="text" name="title" class="field" data-validate onchange="$(`#variantForm .product-title-copy`).setValue(this.value)">
+                <input type="text" name="title" class="field" data-validate onchange="$(`#variantForm .product_name-copy`).setValue(this.value)">
 
                 <div class="label">Link strony</div>
                 <div class="glue_children">
@@ -195,7 +195,7 @@ if ($kopia) {
                 <div class="label">Nazwa wariantu <i class="fas fa-info-circle" data-tooltip="<b>Przykład</b><br>Nazwa produktu: Etui iPhone X<br>Nazwa wariantu: <span style='text-decoration:underline'>Zielone</span>"></i></div>
 
                 <div class="glue_children">
-                    <div class="product-title-copy field_desc" data-type="html"></div>
+                    <div class="product_name-copy field_desc" data-type="html"></div>
                     <input type="text" name="name" class="field">
                 </div>
 

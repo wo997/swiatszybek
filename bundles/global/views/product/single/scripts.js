@@ -165,16 +165,8 @@ window.addEventListener("popstate", (event) => {
 let selected_feature_option_ids = [];
 
 function setVariantsFromUrl() {
-	const match_numbers = window.location.href.match(/produkt\/.*\//);
-	if (!match_numbers) {
-		// maybe reload?
-		console.error("Wrong URL");
-		return;
-	}
-	const [general_product_id, ...feature_option_ids] = match_numbers[0]
-		.split("/")[1]
-		.split("~")
-		.map((e) => +e);
+	const feature_option_ids_str = window.location.pathname.split("/")[4];
+	const feature_option_ids = feature_option_ids_str ? feature_option_ids_str.split("~").map((e) => +e) : [];
 
 	selected_feature_option_ids = feature_option_ids;
 
@@ -245,27 +237,33 @@ function variantChanged() {
 		selected_feature_option_ids = sv;
 
 		let url = "/produkt";
-		url += "/" + [general_product_id, ...selected_feature_option_ids].join("~");
-		let name = general_product_name;
-		selected_feature_option_ids.forEach((option_id) => {
-			let option_name;
-			general_product_variants.forEach((variants) => {
-				variants.variant_options.forEach((option) => {
-					if (option.product_feature_option_id === option_id) {
-						option_name = option.name;
-					}
+		url += "/" + general_product_id;
+		url += "/" + escapeUrl(general_product_name);
+		let options_names = [];
+		if (selected_feature_option_ids.length > 0) {
+			url += "/" + selected_feature_option_ids.join("~");
+			selected_feature_option_ids.forEach((option_id) => {
+				let option_name;
+				general_product_variants.forEach((variants) => {
+					variants.variant_options.forEach((option) => {
+						if (option.product_feature_option_id === option_id) {
+							option_name = option.name;
+						}
+					});
 				});
+				if (option_name) {
+					options_names.push(option_name);
+				}
 			});
-			if (option_name) {
-				name += " " + option_name;
-			}
-		});
-		url += "/" + escapeUrl(name);
+			url += "/" + escapeUrl(options_names.join(" "));
+		}
+
+		let full_name = general_product_name + " " + options_names.join(" ");
 
 		// it does not work lol
-		history.pushState(undefined, name, url);
+		history.pushState(undefined, full_name, url);
 		// workaround here
-		document.title = name;
+		document.title = full_name;
 
 		setVariantData();
 	}

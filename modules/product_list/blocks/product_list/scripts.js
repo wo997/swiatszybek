@@ -31,7 +31,7 @@ function setProductListGridDimensions(node) {
 
 	var styleNode = $(`style.${product_list_id}`);
 	styleNode.innerHTML = `
-    .${product_list_id} .product-block-wapper {
+    .${product_list_id} .product_block-wapper {
       width: ${Math.floor((100 / slidesPerView) * 1000) / 1000}%;
     }
   `;
@@ -102,7 +102,7 @@ function preventProductImagesLongPress() {
 function currentlyFocusedProduct(node) {
 	let product_img = null;
 
-	if (node && node.classList && node.classList.contains("product_image") && node._parent(".product-block")) {
+	if (node && node.classList && node.classList.contains("product_image") && node._parent(".product_block")) {
 		product_img = node;
 	}
 

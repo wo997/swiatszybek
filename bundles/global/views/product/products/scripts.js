@@ -65,7 +65,7 @@ function goDesktop() {
 }
 
 function goMobile() {
-	$$(".search-wrapper .search-header").forEach((e) => {
+	$$(".searching_wrapper .search_header").forEach((e) => {
 		e.remove();
 	});
 
@@ -105,9 +105,9 @@ function goMobile() {
 		</div>
 	`);
 
-	$(`#searchCategory .modal_body .scroll_panel > div`).appendChild($(".search-wrapper .categories"));
+	$(`#searchCategory .modal_body .scroll_panel > div`).appendChild($(".searching_wrapper .categories"));
 
-	var filters = $(".search-wrapper .filters");
+	var filters = $(".searching_wrapper .filters");
 
 	if (!filters._child("*")) {
 		$(`.search-filters-btn`).style.display = "none";
@@ -230,6 +230,7 @@ function searchProducts(options = {}) {
 		},
 		success: (res) => {
 			product_list._set_content(res.html);
+			resizeProductsCallback();
 			lazyLoadImages();
 
 			// if (res.total_rows == 0) {

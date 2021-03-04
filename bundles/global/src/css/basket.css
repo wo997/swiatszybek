@@ -34,7 +34,7 @@
 	display: inline-block;
 }
 
-.product-block .remove-product-btn {
+.product_block .remove-product-btn {
 	position: absolute;
 	top: 0;
 	right: 0;
