@@ -22,6 +22,50 @@ function traverseCategories($parent_id = -1, $level = 0)
     return $html;
 }
 
+function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $level = 0)
+{
+    $where = "parent_product_feature_option_id = $parent_feature_option_id";
+    if ($parent_feature_option_id === -1) {
+        $where .= " AND product_feature_id = $feature_id";
+    }
+    $product_feature_options = DB::fetchArr("SELECT product_feature_option_id, name FROM product_feature_option WHERE $where ORDER BY pos ASC");
+    if (!$product_feature_options) {
+        return "";
+    }
+    $html = "<ul class=\"level_$level\">";
+    foreach ($product_feature_options as $product_feature_option) {
+        $html .= "<li>";
+        $html .= "<div class=\"checkbox_area\">";
+        $html .= "<p-checkbox class=\"square inline\"></p-checkbox> ";
+        $html .= "<span class=\"feature_option_label\">" . $product_feature_option["name"] . "</span>";
+        $html .= "</div> ";
+        $html .= traverseFeatureOptions($feature_id, $product_feature_option["product_feature_option_id"], $level + 1);
+        $html .= "</li>";
+    }
+    $html .= "</ul>";
+    return $html;
+}
+
+function traverseFeatures()
+{
+    $product_features = DB::fetchArr("SELECT product_feature_id, name FROM product_feature ORDER BY pos ASC");
+    if (!$product_features) {
+        return "";
+    }
+    $html = "<ul>";
+    foreach ($product_features as $product_feature) {
+        $options_html = traverseFeatureOptions($product_feature["product_feature_id"]);
+        if ($options_html) {
+            $html .= "<li>";
+            $html .= "<span class=\"feature_label\">" . $product_feature["name"] . "</span>";
+            $html .= $options_html;
+            $html .= "</li>";
+        }
+    }
+    $html .= "</ul>";
+    return $html;
+}
+
 ?>
 
 
@@ -49,6 +93,10 @@ function traverseCategories($parent_id = -1, $level = 0)
             <?= traverseCategories() ?>
         </div>
 
+        <div class="product_features">
+            <?= traverseFeatures() ?>
+        </div>
+
         <div class="search_header">
             <i class="fas fa-search"></i>
             Szukaj
@@ -60,7 +108,7 @@ function traverseCategories($parent_id = -1, $level = 0)
             <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
             <i class="fas fa-search"></i>
             <button class="btn primary case_mobile search-btn can-disappear">
-                <img class="search_icon" src="/src/img/search_icon.svg">
+                <img class="search_icon" src="/src/ img/search_icon.svg">
             </button>
         </div>
 

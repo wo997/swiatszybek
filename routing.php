@@ -88,13 +88,13 @@ function getNotificationCountForPage($page, $children_notification_count = 0)
 {
     $notification_count = $children_notification_count;
     if (isset($page['url'])) {
-        if ($page['url'] == "zamowienia") {
-            $notification_count += DB::fetchVal("SELECT COUNT(1) FROM zamowienia WHERE status_id IN (0,1)");
-        } else if ($page['url'] == "komentarze") {
-            $notification_count += DB::fetchVal("SELECT COUNT(1) FROM comments WHERE accepted = 0");
-        } else if ($page['url'] == "oczekujacy") {
-            $notification_count += DB::fetchVal("SELECT COUNT(1) FROM notifications WHERE sent = 0");
-        }
+        // if ($page['url'] == "zamowienia") {
+        //     $notification_count += DB::fetchVal("SELECT COUNT(1) FROM zamowienia WHERE status_id IN (0,1)");
+        // } else if ($page['url'] == "komentarze") {
+        //     $notification_count += DB::fetchVal("SELECT COUNT(1) FROM comments WHERE accepted = 0");
+        // } else if ($page['url'] == "oczekujacy") {
+        //     $notification_count += DB::fetchVal("SELECT COUNT(1) FROM notifications WHERE sent = 0");
+        // }
     }
     return $notification_count;
 }

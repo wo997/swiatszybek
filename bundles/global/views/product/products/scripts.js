@@ -12,6 +12,15 @@ let filtersInitialState;
 let filtersStateBeforeOpen;
 
 domload(() => {
+	$$(".product_features ul ul:not(.level_0)").forEach((ul) => {
+		const checkbox_area = ul._prev();
+		const checkbox = checkbox_area._child("p-checkbox");
+		checkbox.addEventListener("change", () => {
+			expand(ul, checkbox_area._get_value());
+		});
+		ul.classList.add("expand_y", "hidden", "animate_hidden");
+	});
+
 	$$(".product_categories ul:not(.level_0)").forEach((ul) => {
 		const a = ul._prev();
 		a.insertAdjacentHTML("beforeend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);

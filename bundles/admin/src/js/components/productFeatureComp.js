@@ -82,7 +82,7 @@ function productFeatureComp(comp, parent, data) {
 	data.datatable = def(data.datatable, dt);
 
 	comp._select_current_group_id = (id) => {
-		const option_id = id === "null" ? null : +id;
+		const option_id = id === "-1" ? -1 : +id;
 		comp._data.current_group_id = option_id;
 		if (option_id === -1) {
 			comp._data.datatable.filters = [];
@@ -209,11 +209,8 @@ function productFeatureComp(comp, parent, data) {
 				}
 
 				if (group_btns.length > 0) {
-					group_btns.unshift(html`<button
-						class="btn ${data.current_group_id === null ? "primary" : "subtle"} group_nav"
-						data-option_id="null"
-					>
-						<i class="fas fa-ban"></i> Bez grupy (${getCount(null)})
+					group_btns.unshift(html`<button class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav" data-option_id="-1">
+						<i class="fas fa-ban"></i> Bez grupy (${getCount(-1)})
 					</button> `);
 				}
 				group_btns.unshift(html`<button class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav" data-option_id="-1">
@@ -306,7 +303,7 @@ function productFeatureComp(comp, parent, data) {
 				comp._data.datatable.dataset.unshift({
 					name: "",
 					product_feature_option_id: -1,
-					parent_product_feature_option_id: comp._data.current_group_id === -1 ? null : comp._data.current_group_id,
+					parent_product_feature_option_id: comp._data.current_group_id,
 				});
 				comp._render();
 				setTimeout(() => {
