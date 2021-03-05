@@ -73,29 +73,27 @@ domload(() => {
 function getSelectedOptionsData() {
 	/**
 	 * @type {{
-	 * option_groups: {
-	 *  option_id: number
-	 *  name: string
-	 * }[][]
-	 * full_names: string[]
-	 * }}
+	 *  option_ids: number[]
+	 *  all_names: string[]
+	 * }[]}
 	 */
-	let data = { option_groups: [], full_names: [] };
+	let data = [];
 
 	$$(".product_features > ul > li").forEach((feature) => {
-		const options = [];
+		const option_ids = [];
+		const all_names = [];
 		feature._children(".option_checkbox.checked").forEach((option_checkbox) => {
 			const checkbox_area = option_checkbox._parent(".checkbox_area");
 			const expand_y = checkbox_area._next(".expand_y");
 			const name = checkbox_area._child(".feature_option_label").innerText;
-			data.full_names.push(name);
+			all_names.push(name);
 			if (expand_y && expand_y._children(".option_checkbox.checked").length !== 0) {
 				return;
 			}
-			options.push({ option_id: +option_checkbox.dataset.option_id, name });
+			option_ids.push(+option_checkbox.dataset.option_id);
 		});
-		if (options.length > 0) {
-			data.option_groups.push(options);
+		if (option_ids.length > 0) {
+			data.push({ option_ids, all_names });
 		}
 	});
 	return data;
@@ -122,19 +120,24 @@ function searchProducts() {
 
 	const options_data = getSelectedOptionsData();
 
-	const options = options_data.option_groups.flat(1);
+	const options_flat = options_data.flat(1);
 
 	let url = "/produkty";
 	url += "/" + product_category_id;
 	url += "/" + escapeUrl(product_category_full_name.replace(/\//g, " "));
-	const selected_option_ids = options.map((e) => e.option_id);
-	//const options_names = options.map((e) => e.name);
-	if (options.length > 0) {
-		url += "/" + selected_option_ids.join("~");
-		//url += "/" + escapeUrl(options_names.join(" "));
+	const selected_option_ids = options_flat.map((e) => e.option_ids).flat(1);
+	if (options_flat.length > 0) {
+		url += "/" + selected_option_ids.map((e) => "v" + e).join("");
 	}
 
-	let full_name = product_category_full_name.replace(/\//g, " ") + " " + options_data.full_names.join(" ");
+	let full_name = product_category_full_name.replace(/\//g, " | ");
+	if (options_data.length > 0) {
+		full_name += options_data
+			.map((e) => e.all_names.join(" "))
+			.flat(1)
+			.map((e) => " | " + e)
+			.join("");
+	}
 
 	// it does not work lol
 	history.pushState(undefined, full_name, url);
@@ -146,7 +149,7 @@ function searchProducts() {
 		params: {
 			datatable_params,
 			product_category_id,
-			option_id_groups: options_data.option_groups.map((e) => e.map((x) => x.option_id)),
+			option_id_groups: options_data.map((e) => e.option_ids),
 		},
 		success: (res) => {
 			product_list._set_content(res.html);
@@ -189,20 +192,3 @@ function searchProducts() {
 		},
 	});
 }
-
-// function scrollToTopOfProductList() {
-// 	setTimeout(() => {}, 0);
-// }
-
-// function beforeSearchProducts() {
-// 	var randomize_btn = $(".randomize_btn");
-// 	if (randomize_btn) {
-// 		randomize_btn.classList.add("randomize");
-// 	}
-
-// 	setTimeout(() => {
-// 		searchProducts({
-// 			force_search: true,
-// 		});
-// 	}, 500);
-// }
