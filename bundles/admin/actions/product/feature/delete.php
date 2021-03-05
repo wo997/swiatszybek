@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}product/feature/delete]
+<?php //route[/{ADMIN}product/feature/delete]
 
 $id = Request::urlParam(4);
 

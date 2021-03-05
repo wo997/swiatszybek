@@ -1,4 +1,4 @@
-<?php //route[google/login]
+<?php //route[/google/login]
 
 // Get $id_token via HTTPS POST.
 

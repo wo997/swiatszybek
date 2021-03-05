@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}dane-firmy]
+<?php //route[/{ADMIN}dane-firmy]
 
 ?>
 

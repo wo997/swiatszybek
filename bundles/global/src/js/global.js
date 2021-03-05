@@ -179,7 +179,7 @@ function validURL(str) {
  * @param {string} string
  */
 function escapeUrl(string) {
-	return replacePolishLetters(string)
+	return replacePolishLetters(string.trim())
 		.replace(/[, ]+/g, "-")
 		.replace(/[^(a-zA-Z0-9-)]/g, "")
 		.replace(/-+/g, "-");

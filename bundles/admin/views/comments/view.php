@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}komentarze] 
+<?php //route[/{ADMIN}komentarze] 
 ?>
 
 <?php startSection("head_content"); ?>

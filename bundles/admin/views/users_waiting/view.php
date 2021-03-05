@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}oczekujacy] 
+<?php //route[/{ADMIN}oczekujacy] 
 ?>
 
 <?php startSection("head_content"); ?>

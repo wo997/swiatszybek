@@ -1,4 +1,4 @@
-<?php //route[facebook/login_callback]
+<?php //route[/facebook/login_callback]
 
 // // if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
 // //   $_SESSION["redirect"] = "/zakup";

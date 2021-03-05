@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}logo-ikony]
+<?php //route[/{ADMIN}logo-ikony]
 
 ?>
 

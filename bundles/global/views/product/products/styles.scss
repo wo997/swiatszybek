@@ -32,12 +32,17 @@
 	& > span:not(:last-child) {
 		& {
 			font-size: 0.7em;
-			color: #444;
+			color: var(--primary-clr);
 			order: 2;
 		}
 		&::after {
-			content: "/";
+			content: "";
 			margin: 5px;
+			width: 6px;
+			height: 6px;
+			border-radius: 10px;
+			background: var(--primary-clr);
+			display: inline-block;
 		}
 	}
 	& > span:last-child {

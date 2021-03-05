@@ -1,4 +1,4 @@
-<?php //route[zakup]
+<?php //route[/zakup]
 
 $progressBarCounter = 0;
 

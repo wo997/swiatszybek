@@ -1,4 +1,4 @@
-<?php //route[addComment]
+<?php //route[/addComment]
 
 if (!User::getCurrent()->getId()) {
     die;

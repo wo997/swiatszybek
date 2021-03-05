@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}strona]
+<?php //route[/{ADMIN}strona]
 
 $cms_id = Request::urlParam(2);
 if ($cms_id) {

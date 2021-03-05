@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}search_oczekujacy]
+<?php //route[/{ADMIN}search_oczekujacy]
 
 Request::jsonResponse(paginateData([
     "select" => "notification_id, n.email email, DATE_FORMAT(requested, '%d-%m-%Y %H:%i') as requested, sent, stock, CONCAT(i.title,' ',v.name) as product, i.product_id",

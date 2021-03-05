@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}stopka]
+<?php //route[/{ADMIN}stopka]
 
 ?>
 

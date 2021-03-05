@@ -1,4 +1,4 @@
-<?php //route[register]
+<?php //route[/register]
 
 $response = [];
 $register = User::getCurrent()->register($_POST);

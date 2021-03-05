@@ -1,5 +1,7 @@
 <?php
 
+use function Matrix\trace;
+
 define("MESSAGE_HEADER_SUCCESS", "
     <div class='messagebox_header' style='background: var(--success-clr);color: white;'>
         <i class='fas fa-check-circle' style='font-size:30px'></i>
@@ -33,12 +35,13 @@ class Request
 
     public static function init()
     {
-
         if (!self::$ready) {
             self::$ready = true;
 
             self::$url = rtrim(isset($_GET['url']) ? $_GET['url'] : "", "/");
             self::$url_params = explode("/", self::$url);
+            self::$url = "/" . self::$url;
+            unset($_GET["url"]);
 
             self::$is_admin_url = strpos(self::$url, ltrim(self::$static_urls["ADMIN"], "/")) === 0;
             self::$is_deployment_url = strpos(self::$url, "deployment") === 0;

@@ -1,4 +1,4 @@
-<?php //route[reset_password_link]
+<?php //route[/reset_password_link]
 
 $response = User::sendResetPasswordLink($_POST["email"]);
 

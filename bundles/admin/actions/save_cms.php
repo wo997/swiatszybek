@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}save_cms]
+<?php //route[/{ADMIN}save_cms]
 
 $main_page = $_POST["link"] == "" && false;
 

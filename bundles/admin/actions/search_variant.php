@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}search_variant]  
+<?php //route[/{ADMIN}search_variant]  
 
 orderTableBeforeListing("variant", "variant_id");
 

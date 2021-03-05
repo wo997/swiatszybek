@@ -1,4 +1,4 @@
-<?php //route[activate_account]
+<?php //route[/activate_account]
 
 $user_id = Request::urlParam(1);
 $authentication_token = Request::urlParam(2);

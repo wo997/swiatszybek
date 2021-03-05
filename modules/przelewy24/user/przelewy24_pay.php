@@ -1,4 +1,4 @@
-<?php //route[przelewy24_pay]
+<?php //route[/przelewy24_pay]
 
 $zamowienie_link = Request::urlParam(1);
 if (!$zamowienie_link) {

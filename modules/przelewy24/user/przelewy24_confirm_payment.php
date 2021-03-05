@@ -1,4 +1,4 @@
-<?php //route[przelewy24/confirm_payment]
+<?php //route[/przelewy24/confirm_payment]
 
 //{"p24_session_id":"18-c47e5da9cf13-5f2af133cef8f","p24_amount":"151600","p24_order_id":"305783848","p24_pos_id":"104861","p24_merchant_id":"104861","p24_method":"112","p24_currency":"PLN","p24_statement":"p24-F78-A38-F48","p24_sign":"5e53c276c5e1ed96d545a6da33ec6595"}
 

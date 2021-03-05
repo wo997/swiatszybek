@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}delete_product]
+<?php //route[/{ADMIN}delete_product]
 
 $product_id = intval(Request::urlParam(2));
 

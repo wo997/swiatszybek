@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}search_kody_rabatowe]  
+<?php //route[/{ADMIN}search_kody_rabatowe]  
 
 $where = "1";
 

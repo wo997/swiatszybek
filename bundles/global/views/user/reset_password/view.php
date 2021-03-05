@@ -1,4 +1,4 @@
-<?php //route[zresetuj-haslo]
+<?php //route[/zresetuj-haslo]
 
 $user_id = Request::urlParam(1);
 $authentication_token = Request::urlParam(2);

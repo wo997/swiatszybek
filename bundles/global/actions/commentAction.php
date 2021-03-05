@@ -1,4 +1,4 @@
-<?php //route[commentAction]
+<?php //route[/commentAction]
 
 $posts = ["comment_id", "action"];
 

@@ -1,4 +1,4 @@
-<?php //route[save_user]
+<?php //route[/save_user]
 
 // $response_header = MESSAGE_HEADER_SUCCESS;
 

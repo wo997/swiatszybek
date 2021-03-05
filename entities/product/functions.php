@@ -13,12 +13,9 @@ function getProductLink($general_product_id, $name, $option_ids = [], $options_n
 {
     $link = "/produkt";
     $link .= "/" . $general_product_id;
-    $link .= "/" . escapeUrl($name);
+    $link .= "/" . escapeUrl($name . " " . join(" ", $options_names));
     if ($option_ids) {
-        $link .= "/" . join("~", $option_ids);
-    }
-    if ($options_names) {
-        $link .= "/" . escapeUrl(join(" ", $options_names));
+        $link .= "?v=" . join("-", $option_ids);
     }
     return $link;
 }

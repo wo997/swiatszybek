@@ -1,4 +1,4 @@
-<?php //route[validate_kod_rabatowy]
+<?php //route[/validate_kod_rabatowy]
 
 if (!User::getCurrent()->getId()) die;
 

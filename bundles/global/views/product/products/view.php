@@ -1,4 +1,4 @@
-<?php //route[produkty]
+<?php //route[/produkty]
 
 $show_category = null;
 

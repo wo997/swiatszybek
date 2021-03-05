@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}kod_rabatowy]
+<?php //route[/{ADMIN}kod_rabatowy]
 
 $kod_id = Request::urlParam(2);
 if ($kod_id) {

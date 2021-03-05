@@ -165,8 +165,10 @@ window.addEventListener("popstate", (event) => {
 let selected_feature_option_ids = [];
 
 function setVariantsFromUrl() {
-	const feature_option_ids_str = window.location.pathname.split("/")[4];
-	const feature_option_ids = feature_option_ids_str ? feature_option_ids_str.split("~").map((e) => +e) : [];
+	const url_params = new URLSearchParams(window.location.search);
+	const feature_option_ids = def(url_params.get("v"), "")
+		.split("-")
+		.map((e) => +e);
 
 	selected_feature_option_ids = feature_option_ids;
 
@@ -238,10 +240,9 @@ function variantChanged() {
 
 		let url = "/produkt";
 		url += "/" + general_product_id;
-		url += "/" + escapeUrl(general_product_name);
+
 		let options_names = [];
 		if (selected_feature_option_ids.length > 0) {
-			url += "/" + selected_feature_option_ids.join("~");
 			selected_feature_option_ids.forEach((option_id) => {
 				let option_name;
 				general_product_variants.forEach((variants) => {
@@ -255,10 +256,18 @@ function variantChanged() {
 					options_names.push(option_name);
 				}
 			});
-			url += "/" + escapeUrl(options_names.join(" "));
 		}
 
-		let full_name = general_product_name + " " + options_names.join(" ");
+		let full_name = general_product_name + " " + options_names.map((e) => " " + e).join("");
+		url += "/" + escapeUrl(full_name);
+
+		const url_params = new URLSearchParams();
+		url_params.append("v", selected_feature_option_ids.join("-"));
+
+		const url_params_str = url_params.toString();
+		if (url_params_str) {
+			url += "?" + url_params_str;
+		}
 
 		// it does not work lol
 		history.pushState(undefined, full_name, url);

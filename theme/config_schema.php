@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}testing_form_builder_chill]
+<?php //route[/{ADMIN}testing_form_builder_chill]
 
 $variables = [
     [

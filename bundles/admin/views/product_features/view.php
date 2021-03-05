@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}cechy-produktow]
+<?php //route[/{ADMIN}cechy-produktow]
 
 ?>
 

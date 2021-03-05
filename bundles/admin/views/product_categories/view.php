@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}kategorie-produktow] 
+<?php //route[/{ADMIN}kategorie-produktow] 
 ?>
 
 <?php startSection("head_content"); ?>

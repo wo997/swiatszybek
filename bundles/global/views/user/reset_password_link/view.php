@@ -1,4 +1,4 @@
-<?php //route[resetowanie-hasla]
+<?php //route[/resetowanie-hasla]
 ?>
 
 

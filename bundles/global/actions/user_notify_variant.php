@@ -1,4 +1,4 @@
-<?php //route[user_notify_variant]
+<?php //route[/user_notify_variant]
 
 $posts = ["variant_id", "email"];
 

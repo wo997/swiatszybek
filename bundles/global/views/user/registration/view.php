@@ -1,4 +1,4 @@
-<?php //route[rejestracja]
+<?php //route[/rejestracja]
 
 $register_email = "";
 if (isset($_SESSION["register_email"])) {

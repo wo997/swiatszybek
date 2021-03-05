@@ -1,4 +1,4 @@
-<?php //route[cart/add-product]
+<?php //route[/cart/add-product]
 /**
  * @posts {
  * product_id: number

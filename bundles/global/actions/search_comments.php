@@ -1,4 +1,4 @@
-<?php //route[search_comments]
+<?php //route[/search_comments]
 $status = isset($_POST["status"]) ? $_POST["status"] : "";
 
 $product_id = isset($_POST['product_id']) ? " AND product_id = " . intval($_POST['product_id']) : "";

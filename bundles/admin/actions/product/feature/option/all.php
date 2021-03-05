@@ -1,3 +1,3 @@
-<?php //route[{ADMIN}product/feature/option/all]
+<?php //route[/{ADMIN}product/feature/option/all]
 
 Request::jsonResponse(getAllProductFeatureOptions());

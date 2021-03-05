@@ -203,7 +203,7 @@ if ($pageName) {
 } else {
 
     $canSee = User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";
-    $page_data = DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [Request::$url]);
+    $page_data = DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [ltrim(Request::$url, "/")]);
 
     if (isset($_POST["content"])) {
         $page_data["content"] = $_POST["content"];
@@ -214,7 +214,7 @@ if ($pageName) {
         die;
     }
 }
-if (Request::$url == "") {
+if (Request::$url == "/") {
     $page_data["content"] = "Pusta strona";
     include "user/cms_page.php";
     die;

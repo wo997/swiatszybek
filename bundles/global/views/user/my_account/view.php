@@ -1,4 +1,4 @@
-<?php //route[moje-konto]
+<?php //route[/moje-konto]
 
 if (!User::getCurrent()->getId()) {
     header("Location: /");

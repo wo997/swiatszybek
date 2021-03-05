@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}product/feature/search]
+<?php //route[/{ADMIN}product/feature/search]
 
 // if (isset($_POST["parent_id"])) {
 //     orderTableBeforeListing("product_attributes", "attribute_id");

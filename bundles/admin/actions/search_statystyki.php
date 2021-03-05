@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}search_statystyki]
+<?php //route[/{ADMIN}search_statystyki]
 
 
 $where = "oplacono IS NOT NULL AND status_id NOT IN (4)";

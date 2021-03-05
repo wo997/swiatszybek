@@ -1,4 +1,4 @@
-<?php //route[search_products]
+<?php //route[/search_products]
 
 $module_block_data = getModuleBlockData(
     "product_list",

@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}uzytkownicy]
+<?php //route[/{ADMIN}uzytkownicy]
 
 ?>
 

@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}strony] 
+<?php //route[/{ADMIN}strony] 
 ?>
 
 <?php startSection("head_content"); ?>

@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}save_new_cms]
+<?php //route[/{ADMIN}save_new_cms]
 
 /*$page_id = getEntityId("page", $_POST["page_id"]);
 

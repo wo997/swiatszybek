@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}general_product/search]  
+<?php //route[/{ADMIN}general_product/search]  
 
 Request::jsonResponse(paginateData([
     "select" => "general_product_id, name, __img_url",

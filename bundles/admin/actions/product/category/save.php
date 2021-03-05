@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}product/category/save]
+<?php //route[/{ADMIN}product/category/save]
 
 try {
     DB::beginTransaction();

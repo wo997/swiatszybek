@@ -1,4 +1,4 @@
-<?php //route[zmien_email]
+<?php //route[/zmien_email]
 
 // function quit($message, $type)
 // {

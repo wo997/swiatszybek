@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}zmien_status]
+<?php //route[/{ADMIN}zmien_status]
 
 $zamowienie_link = Request::urlParam(2);
 $new_status_id = intval(Request::urlParam(3));

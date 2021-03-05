@@ -1,4 +1,4 @@
-<?php //route[validate_email]
+<?php //route[/validate_email]
 
 // prevent too frequent calls, I might also require a user to be on a page for 10 seconds, totally doable yay,
 // just use a damn session

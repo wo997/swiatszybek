@@ -1,4 +1,4 @@
-<?php //route[change_user_data]
+<?php //route[/change_user_data]
 
 if (!User::getCurrent()->getId()) {
     die;

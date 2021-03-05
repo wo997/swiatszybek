@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}save_emails]
+<?php //route[/{ADMIN}save_emails]
 
 saveSetting("general", "emails", [
     "path" => [],

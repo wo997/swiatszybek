@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}nowy-cms]
+<?php //route[/{ADMIN}nowy-cms]
 
 $page_id = Request::urlParam(2);
 if ($page_id) {

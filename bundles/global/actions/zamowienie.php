@@ -1,4 +1,4 @@
-<?php //route[zamowienie]
+<?php //route[/zamowienie]
 
 $zamowienie_link = Request::urlParam(1);
 if (!$zamowienie_link) {

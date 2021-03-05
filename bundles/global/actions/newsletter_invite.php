@@ -1,4 +1,4 @@
-<?php //route[newsletter_invite]
+<?php //route[/newsletter_invite]
 
 $posts = ["email"];
 

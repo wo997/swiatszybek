@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}moduly]
+<?php //route[/{ADMIN}moduly]
 
 ?>
 

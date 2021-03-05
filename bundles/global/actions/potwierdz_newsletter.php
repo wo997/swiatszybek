@@ -1,4 +1,4 @@
-<?php //route[potwierdz_newsletter]
+<?php //route[/potwierdz_newsletter]
 
 $token = Request::urlParam(1);
 $anuluj = Request::urlParam(2);

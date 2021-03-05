@@ -1,4 +1,4 @@
-<?php //route[{ADMIN}nowe-strony] 
+<?php //route[/{ADMIN}nowe-strony] 
 ?>
 
 <?php startSection("head_content"); ?>
