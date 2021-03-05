@@ -173,7 +173,7 @@ function setVariantsFromUrl() {
 	/** @type {PiepNode[]} */
 	let found_variants = [];
 	let missed_option_ids = [];
-	feature_option_ids.forEach((option_id) => {
+	selected_option_ids.forEach((option_id) => {
 		const option_checkbox = $(`.variants p-checkbox[data-value="${option_id}"]`);
 		if (option_checkbox) {
 			const variants = option_checkbox._parent(".variants");
