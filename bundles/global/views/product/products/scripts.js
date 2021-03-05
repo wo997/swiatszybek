@@ -2,6 +2,7 @@
 
 let currPage = 1;
 let rowCount = 24;
+let pp_selected_option_ids;
 
 /** @type {PiepNode} */
 let product_list;
@@ -9,7 +10,6 @@ let product_list;
 domload(() => {
 	product_list = $(".product_list");
 
-	// remove selection from descendants
 	$$(".product_features .option_row > ul").forEach((ul) => {
 		const checkbox_area = ul._prev();
 		const checkbox = checkbox_area._child("p-checkbox");
@@ -69,7 +69,9 @@ domload(() => {
 
 	setCategoryFeaturesFromUrl();
 
-	searchProducts();
+	productsFetched({
+		options_data: preload_options_data,
+	});
 });
 
 window.addEventListener("popstate", () => {
@@ -78,13 +80,13 @@ window.addEventListener("popstate", () => {
 
 function setCategoryFeaturesFromUrl() {
 	const url_params = new URLSearchParams(window.location.search);
-	const selected_option_ids = def(url_params.get("v"), "")
+	pp_selected_option_ids = def(url_params.get("v"), "")
 		.split("-")
 		.map((e) => +e)
 		.filter((e) => e);
 
 	const matched_boxes = [];
-	selected_option_ids.forEach((option_id) => {
+	pp_selected_option_ids.forEach((option_id) => {
 		const option_checkbox = $(`.product_features .option_checkbox[data-option_id="${option_id}"]`);
 		matched_boxes.push(option_checkbox);
 		option_checkbox._set_value(1, { quiet: true });
@@ -161,10 +163,10 @@ function searchProducts() {
 	let url = "/produkty";
 	url += "/" + product_category_id;
 	url += "/" + escapeUrl(category_path_names.join(" "));
-	const selected_option_ids = options_flat.map((e) => e.option_ids).flat(1);
+	pp_selected_option_ids = options_flat.map((e) => e.option_ids).flat(1);
 	const url_params = new URLSearchParams();
-	if (selected_option_ids.length > 0) {
-		url_params.append("v", selected_option_ids.join("-"));
+	if (pp_selected_option_ids.length > 0) {
+		url_params.append("v", pp_selected_option_ids.join("-"));
 	}
 
 	const url_params_str = url_params.toString();
@@ -184,59 +186,66 @@ function searchProducts() {
 			product_category_id,
 			option_id_groups: options_data.map((e) => e.option_ids),
 		},
-		success: (res) => {
-			searchingProducts = false;
-
-			product_list._set_content(res.html);
-			const matched_features = [];
-			const matched_counters = [];
-			res.options_data.forEach((e) => {
-				const option_checkbox = $(`.product_features .option_checkbox[data-option_id="${e.option_id}"]`);
-				if (option_checkbox) {
-					const counter = option_checkbox._next(".count");
-					matched_counters.push(counter);
-					counter._set_content(`(${e.count})`);
-
-					const feature = option_checkbox._parent(".feature_row");
-					if (!matched_features.includes(feature)) {
-						matched_features.push(feature);
-					}
-				}
-			});
-			$$(`.product_features .count`).forEach((count) => {
-				if (!matched_counters.includes(count)) {
-					count._empty();
-				}
-			});
-
-			$$(`.product_features .feature_row`).forEach((feature) => {
-				feature.style.display = matched_features.includes(feature) ? "" : "none";
-			});
-
-			product_list._children(".product_img_wrapper").forEach((img_wrapper) => {
-				const product_img = img_wrapper._child(".product_img");
-				const images = JSON.parse(img_wrapper.dataset.images);
-				images.forEach((img, index) => {
-					let weight = -index;
-					for (const option_id of selected_option_ids) {
-						if (img.option_ids.includes(option_id)) {
-							weight += 100;
-						}
-					}
-					img.weight = weight;
-				});
-				images.sort((a, b) => Math.sign(b.weight - a.weight));
-
-				img_wrapper.dataset.images = JSON.stringify(images);
-				if (images[0]) {
-					product_img.dataset.src = images[0].img_url;
-				}
-				if (images[1]) {
-					preloadWo997Image(images[1].img_url, product_img);
-				}
-			});
-
-			lazyLoadImages();
-		},
+		success: productsFetched,
 	});
+}
+
+function productsFetched(res) {
+	searchingProducts = false;
+
+	if (res.html) {
+		product_list._set_content(res.html);
+	}
+
+	if (res.options_data) {
+		const matched_features = [];
+		const matched_counters = [];
+		res.options_data.forEach((e) => {
+			const option_checkbox = $(`.product_features .option_checkbox[data-option_id="${e.option_id}"]`);
+			if (option_checkbox) {
+				const counter = option_checkbox._next(".count");
+				matched_counters.push(counter);
+				counter._set_content(`(${e.count})`);
+
+				const feature = option_checkbox._parent(".feature_row");
+				if (!matched_features.includes(feature)) {
+					matched_features.push(feature);
+				}
+			}
+		});
+		$$(`.product_features .count`).forEach((count) => {
+			if (!matched_counters.includes(count)) {
+				count._empty();
+			}
+		});
+
+		$$(`.product_features .feature_row`).forEach((feature) => {
+			feature.style.display = matched_features.includes(feature) ? "" : "none";
+		});
+	}
+
+	product_list._children(".product_img_wrapper").forEach((img_wrapper) => {
+		const product_img = img_wrapper._child(".product_img");
+		const images = JSON.parse(img_wrapper.dataset.images);
+		images.forEach((img, index) => {
+			let weight = -index;
+			for (const option_id of pp_selected_option_ids) {
+				if (img.option_ids.includes(option_id)) {
+					weight += 100;
+				}
+			}
+			img.weight = weight;
+		});
+		images.sort((a, b) => Math.sign(b.weight - a.weight));
+
+		img_wrapper.dataset.images = JSON.stringify(images);
+		if (images[0]) {
+			product_img.dataset.src = images[0].img_url;
+		}
+		if (images[1]) {
+			preloadWo997Image(images[1].img_url, product_img);
+		}
+	});
+
+	lazyLoadImages();
 }

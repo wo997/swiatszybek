@@ -77,6 +77,12 @@ function traverseFeatures()
 <?php startSection("head_content"); ?>
 
 <script>
+    <?php $products_search_data = getGlobalProductsSearch([
+        "datatable_params" => "[]",
+        "product_category_id" => $product_category_id,
+        "option_id_groups" => "[]",
+    ]); ?>
+    const preload_options_data = <?= json_encode($products_search_data["options_data"]) ?>;
     const product_category_id = <?= $product_category_id ?>;
     const product_category_path = <?= $product_category_data["__category_path_json"] ?>;
 </script>
@@ -221,29 +227,6 @@ function traverseFeatures()
                 return $html;
             }
 
-            //     $attributes = DB::fetchArr("SELECT name, attribute_id, data_type FROM product_attributes
-            // INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($product_category["name"]));
-
-            // $output = "";
-
-            // foreach ($attributes as $attribute) {
-
-            //     $any = isset($attribute_data_types[$attribute["data_type"]]["field"]);
-
-            //     $output .= "<div class='" . ($any ? "any-value-wrapper" : "combo-select-wrapper") . "' data-attribute_id='" . $attribute["attribute_id"] . "'>";
-            //     $output .= "<div class='attribute-header'>" . $attribute["name"] . "</div> ";
-
-            //     if ($any) {
-            //     } else {
-            //         $values = getAttributeValues($attribute["attribute_id"]);
-            //         $output .= printUserSelectValuesOfAttribute($values, $attribute);
-            //     }
-
-            //     $output .= "</div>";
-            // }
-
-            // echo $output;
-
             ?>
         </div>
     </div>
@@ -271,7 +254,9 @@ function traverseFeatures()
 
         <div class="hook_view"></div>
 
-        <div class="product_list"></div>
+        <div class="product_list">
+            <?= $products_search_data["html"] ?>
+        </div>
 
         <!-- <div class="under-products">
             <div class="flexbar">

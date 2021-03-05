@@ -165,18 +165,18 @@ window.addEventListener("popstate", () => {
 });
 
 /** @type {number[]} */
-let selected_option_ids = [];
+let ps_selected_option_ids = [];
 
 function setProductFeaturesFromUrl() {
 	const url_params = new URLSearchParams(window.location.search);
-	selected_option_ids = def(url_params.get("v"), "")
+	ps_selected_option_ids = def(url_params.get("v"), "")
 		.split("-")
 		.map((e) => +e);
 
 	/** @type {PiepNode[]} */
 	let found_variants = [];
 	let missed_option_ids = [];
-	selected_option_ids.forEach((option_id) => {
+	ps_selected_option_ids.forEach((option_id) => {
 		const option_checkbox = $(`.variants p-checkbox[data-value="${option_id}"]`);
 		if (option_checkbox) {
 			const variants = option_checkbox._parent(".variants");
@@ -187,7 +187,7 @@ function setProductFeaturesFromUrl() {
 		}
 	});
 
-	selected_option_ids = selected_option_ids.filter((e) => !missed_option_ids.includes(e));
+	ps_selected_option_ids = ps_selected_option_ids.filter((e) => !missed_option_ids.includes(e));
 
 	$$(".variants").forEach((variants) => {
 		if (found_variants.includes(variants)) {
@@ -236,15 +236,15 @@ function variantChanged() {
 		}
 	});
 
-	if (!isEquivalent(sv, selected_option_ids)) {
-		selected_option_ids = sv;
+	if (!isEquivalent(sv, ps_selected_option_ids)) {
+		ps_selected_option_ids = sv;
 
 		let url = "/produkt";
 		url += "/" + general_product_id;
 
 		let options_names = [];
-		if (selected_option_ids.length > 0) {
-			selected_option_ids.forEach((option_id) => {
+		if (ps_selected_option_ids.length > 0) {
+			ps_selected_option_ids.forEach((option_id) => {
 				let option_name;
 				general_product_variants.forEach((variants) => {
 					variants.variant_options.forEach((option) => {
@@ -263,8 +263,8 @@ function variantChanged() {
 		url += "/" + escapeUrl(full_name);
 
 		const url_params = new URLSearchParams();
-		if (selected_option_ids.length > 0) {
-			url_params.append("v", selected_option_ids.join("-"));
+		if (ps_selected_option_ids.length > 0) {
+			url_params.append("v", ps_selected_option_ids.join("-"));
 		}
 
 		const url_params_str = url_params.toString();
@@ -282,7 +282,7 @@ function variantChanged() {
 }
 
 function setVariantData() {
-	const data = getProductDataForVariants(selected_option_ids);
+	const data = getProductDataForVariants(ps_selected_option_ids);
 
 	let price_min = data.price_min;
 	let price_max = data.price_max;
@@ -294,7 +294,7 @@ function setVariantData() {
 			const option_id = +option._child("p-checkbox").dataset.value;
 
 			/** @type {number[]} */
-			const assume_other_option_ids = cloneObject(selected_option_ids);
+			const assume_other_option_ids = cloneObject(ps_selected_option_ids);
 
 			let option_index = assume_other_option_ids.indexOf(selected_option_id);
 			if (option_index !== -1) {
