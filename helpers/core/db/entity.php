@@ -137,12 +137,16 @@ class Entity
         }
         $this->saved = true;
 
+        $changed = false;
+
         // don't worry about sorting removed items, the order is still the same, anyway it's managed separately
         if ($this->getWillDelete()) {
             $query = "DELETE FROM " . $this->name . " WHERE " . $this->id_column . "=" . $this->getId();
             //var_dump([$query]);
             DB::execute($query);
             //return true;
+
+            $changed = true;
         } else {
 
             // save primitive types and complex types / relations etc.
@@ -189,26 +193,37 @@ class Entity
                 //var_dump([$query, array_values($changed_props)]);
                 DB::execute($query, array_values($changed_props));
                 //return true;
+
+                $changed = true;
             }
         }
 
-        $warmup_other = def($entity_data, ["warmup_other"]);
-        if ($warmup_other) {
-            foreach ($warmup_other as $entity_name => $relation_table) {
-                $id_col = EntityManager::getEntityIdColumn($entity_name);
-                $our_id_col = $this->getIdColumn();
-                $our_id = $this->getId();
-                foreach (DB::fetchCol("SELECT $id_col FROM $relation_table WHERE $our_id_col = $our_id") as $other_ent_id) {
-                    $other_obj = EntityManager::getEntityById($entity_name, $other_ent_id);
-                    if ($other_obj) {
-                        EntityManager::addWarmupObject($other_obj);
-                    }
-                }
+        if ($changed) {
+            $warmup_other = def($entity_data, ["warmup_other"], []);
+            foreach ($warmup_other as $entity_name => $relation_data) {
+                $this->warmupEntity($entity_name, $relation_data["relation_table"]);
+            }
+            $linked_with = def($entity_data, ["linked_with"], []);
+            foreach ($linked_with as $entity_name => $relation_data) {
+                $this->warmupEntity($entity_name, $relation_data["relation_table"]);
             }
         }
 
         $saver = "after_save_" . $this->name . "_entity";
         EventListener::dispatch($saver, ["obj" => $this]);
+    }
+
+    function warmupEntity($other_entity_name, $relation_table)
+    {
+        $id_col = EntityManager::getEntityIdColumn($other_entity_name);
+        $our_id_col = $this->getIdColumn();
+        $our_id = $this->getId();
+        foreach (DB::fetchCol("SELECT $id_col FROM $relation_table WHERE $our_id_col = $our_id") as $other_ent_id) {
+            $other_obj = EntityManager::getEntityById($other_entity_name, $other_ent_id);
+            if ($other_obj) {
+                EntityManager::addWarmupObject($other_obj);
+            }
+        }
     }
 
     /**

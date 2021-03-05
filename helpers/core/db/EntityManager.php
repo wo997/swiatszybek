@@ -369,7 +369,12 @@ class EntityManager
         //     "relation_table" => $relation_table,
         //     "extra" => $extra
         // ];
-        self::$entities[$name1]["warmup_other"][$name2] = $relation_table;
+
+        // warmups are less important than actual links - the seconds can actually store extra information
+        self::$entities[$name1]["warmup_other"][$name2] = [
+            "relation_table" => $relation_table,
+            "extra" => $extra
+        ];
         self::$entities[$name2]["linked_with"][$name1] = [
             "relation_table" => $relation_table,
             "extra" => $extra
