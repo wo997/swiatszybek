@@ -34,7 +34,7 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
     }
     $html = "<ul class=\"level_$level\">";
     foreach ($product_feature_options as $product_feature_option) {
-        $html .= "<li>";
+        $html .= "<li class=\"option_row\">";
         $html .= "<div class=\"checkbox_area\">";
         $html .= "<p-checkbox class=\"square inline option_checkbox\" data-option_id=" . $product_feature_option["product_feature_option_id"] . "></p-checkbox>";
         $html .= " <span class=\"feature_option_label\">" . $product_feature_option["name"] . "</span>";
@@ -57,7 +57,7 @@ function traverseFeatures()
     foreach ($product_features as $product_feature) {
         $options_html = traverseFeatureOptions($product_feature["product_feature_id"]);
         if ($options_html) {
-            $html .= "<li>";
+            $html .= "<li class=\"feature_row\">";
             $html .= "<span class=\"feature_label\">" . $product_feature["name"] . "</span>";
             $html .= $options_html;
             $html .= "</li>";
