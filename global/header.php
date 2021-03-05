@@ -2,13 +2,13 @@
 
 function traverseMenu($parent_id = -1, $level = 0)
 {
-    $categories = DB::fetchArr("SELECT product_category_id, name, __full_name FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
+    $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
     if (!$categories) {
         return "";
     }
     $html = "<ul class=\"level_$level\">";
     foreach ($categories as $category) {
-        $html .= "<li><a href=\"" . getProductCategoryLink($category["product_category_id"], $category["__full_name"]) . "\">" . $category["name"] . "</a>" .  traverseMenu($category["product_category_id"], $level + 1) . "</li>";
+        $html .= "<li><a href=\"" . getProductCategoryLink(json_decode($category["__category_path_json"], true)) . "\">" . $category["name"] . "</a>" .  traverseMenu($category["product_category_id"], $level + 1) . "</li>";
     }
     $html .= "</ul>";
     return $html;

@@ -3,23 +3,21 @@
 /**
  * getProductCategoryLink
  *
- * @param  number $product_category_id
+ * @param  mixed $category_path
  * @param  number[] $option_ids
- * @param  string $full_name
- * @param  string[] $options_names
  * @return string
  */
-function getProductCategoryLink($product_category_id, $full_name, $option_ids = [], $options_names = [])
+function getProductCategoryLink($category_path, $option_ids = [])
 {
+    $category = end($category_path);
     $link = "/produkty";
-    $link .= "/" . $product_category_id;
-    $link .= "/" . escapeUrl(str_replace("/", " ", $full_name));
+    $link .= "/" . $category["id"];
+    $link .= "/" . escapeUrl(implode(" ", array_map(function ($x) {
+        return $x["name"];
+    }, $category_path)));
     if ($option_ids) {
-        $link .= "/v" . join("v", $option_ids);
+        $link .= "?v=" . join("-", $option_ids);
     }
-    // if ($options_names) {
-    //     $link .= "/" . escapeUrl(join(" ", $options_names));
-    // }
     return $link;
 }
 

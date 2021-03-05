@@ -148,9 +148,19 @@ function searchProducts() {
 
 	const options_flat = options_data.flat(1);
 
+	const category_path_names = product_category_path.map((e) => e.name);
+	let full_name = category_path_names.join(" | ");
+	if (options_data.length > 0) {
+		full_name += options_data
+			.map((e) => e.all_names.join(" "))
+			.flat(1)
+			.map((e) => " | " + e)
+			.join("");
+	}
+
 	let url = "/produkty";
 	url += "/" + product_category_id;
-	url += "/" + escapeUrl(product_category_full_name.replace(/\//g, " "));
+	url += "/" + escapeUrl(category_path_names.join(" "));
 	const selected_option_ids = options_flat.map((e) => e.option_ids).flat(1);
 	const url_params = new URLSearchParams();
 	if (selected_option_ids.length > 0) {
@@ -160,15 +170,6 @@ function searchProducts() {
 	const url_params_str = url_params.toString();
 	if (url_params_str) {
 		url += "?" + url_params_str;
-	}
-
-	let full_name = product_category_full_name.replace(/\//g, " | ");
-	if (options_data.length > 0) {
-		full_name += options_data
-			.map((e) => e.all_names.join(" "))
-			.flat(1)
-			.map((e) => " | " + e)
-			.join("");
 	}
 
 	// it does not work lol
@@ -192,7 +193,7 @@ function searchProducts() {
 				if (option_checkbox) {
 					const counter = option_checkbox._next(".count");
 					matched_counters.push(counter);
-					counter._set_content(e.count);
+					counter._set_content(`(${e.count})`);
 
 					const feature = option_checkbox._parent(".feature_row");
 					if (!matched_features.includes(feature)) {

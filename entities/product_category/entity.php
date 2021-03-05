@@ -5,8 +5,8 @@ EntityManager::register("product_category", [
         "product_category_id" => ["type" => "number"],
         "parent_product_category_id" => ["type" => "number"],
         "name" => ["type" => "string"],
-        "__full_name" => ["type" => "string"],
         "pos" => ["type" => "number"],
+        "__category_path_json" => ["type" => "string"],
         "__product_count" => ["type" => "number"],
     ],
 ]);
@@ -23,11 +23,13 @@ EventListener::register("before_save_product_category_entity", function ($params
     /** @var Entity ProductCategory */
     $product_category = $params["obj"];
 
-    $full_name = str_replace("/", "", $product_category->getProp("name"));
+    $category_path = [];
 
     /** @var Entity ProductCategory */
     $parent_product_category = $product_category;
     while (true) {
+        array_unshift($category_path, ["id" => $parent_product_category->getId(), "name" => $parent_product_category->getProp("name")]);
+
         $parent_product_category_id = $parent_product_category->getProp("parent_product_category_id");
         if ($parent_product_category_id === -1) {
             break;
@@ -36,10 +38,9 @@ EventListener::register("before_save_product_category_entity", function ($params
         if (!$parent_product_category) {
             break;
         }
-        $full_name = str_replace("/", "", $parent_product_category->getProp("name")) . "/" . $full_name;
     }
 
-    $product_category->setProp("__full_name", $full_name);
+    $product_category->setProp("__category_path_json", json_encode($category_path));
 
     $product_category->setProp("__product_count", DB::fetchVal("SELECT COUNT(1) FROM general_product_to_category WHERE product_category_id = " . $product_category->getId()));
 });

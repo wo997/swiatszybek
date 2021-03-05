@@ -1,24 +1,24 @@
 <?php //route[/produkty]
 
-$show_category = null;
+$product_category_data = null;
 
 $product_category_id = Request::urlParam(1, -1);
 if ($product_category_id) {
     $product_category_id = intval($product_category_id);
-    $show_category = DB::fetchRow("SELECT name, __full_name FROM product_category WHERE product_category_id = $product_category_id");
+    $product_category_data = DB::fetchRow("SELECT name, __category_path_json FROM product_category WHERE product_category_id = $product_category_id");
 }
 
 function traverseCategories($parent_id = -1, $level = 0)
 {
-    $categories = DB::fetchArr("SELECT product_category_id, name, __full_name, __product_count FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
+    $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json, __product_count FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
     if (!$categories) {
         return "";
     }
     $html = "<ul class=\"level_$level\">";
     foreach ($categories as $category) {
         $html .= "<li data-category_id=\"" . $category["product_category_id"] . "\" >";
-        $html .= "<a href=\"" . getProductCategoryLink($category["product_category_id"], $category["__full_name"]) . "\">" . $category["name"] . "</a>";
-        $html .= " <span class=\"count\">" . $category["__product_count"] . "</span>";
+        $html .= "<a href=\"" . getProductCategoryLink(json_decode($category["__category_path_json"], true)) . "\">" . $category["name"] . "</a>";
+        $html .= " <span class=\"count\">(" . $category["__product_count"] . ")</span>";
         $html .= traverseCategories($category["product_category_id"], $level + 1);
         $html .= "</li>";
     }
@@ -78,7 +78,7 @@ function traverseFeatures()
 
 <script>
     const product_category_id = <?= $product_category_id ?>;
-    const product_category_full_name = "<?= htmlspecialchars($show_category["__full_name"]) ?>";
+    const product_category_path = <?= $product_category_data["__category_path_json"] ?>;
 </script>
 
 <?php startSection("body_content"); ?>
@@ -222,7 +222,7 @@ function traverseFeatures()
             }
 
             //     $attributes = DB::fetchArr("SELECT name, attribute_id, data_type FROM product_attributes
-            // INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($show_category["name"]));
+            // INNER JOIN link_category_attribute USING (attribute_id) WHERE category_id=" . intval($product_category["name"]));
 
             // $output = "";
 
@@ -251,14 +251,22 @@ function traverseFeatures()
         <div style="margin: 40px 0">
             <h1 class="h1 category_name">
                 <?php
-                $category_name_parts = explode("/", htmlspecialchars($show_category["__full_name"]));
-                foreach ($category_name_parts as $sub_name) {
-                    echo "<span>$sub_name</span>";
+                $cats_so_far = [];
+                $cats = json_decode($product_category_data["__category_path_json"], true);
+                $len = count($cats);
+                for ($i = 0; $i < $len; $i++) {
+                    $cat = $cats[$i];
+                    $cats_so_far[] = $cat;
+                    if ($i === $len - 1) {
+                        echo "<span>" . $cat["name"] . "</span>";
+                    } else {
+                        echo "<a href=\"" . getProductCategoryLink($cats_so_far) . "\">" . $cat["name"] . "<i class=\"fas fa-chevron-right\"></i></a>";
+                    }
                 }
                 ?></h1>
             <p class="filters_description"></p>
         </div>
-        <?= ""; //$show_category["description"] 
+        <?= ""; //$product_category["description"] 
         ?>
 
         <div class="hook_view"></div>
@@ -270,7 +278,7 @@ function traverseFeatures()
                 <div class="pagination"></div>
             </div>
 
-            <?= ""; //getCMSPageHTML($show_category["content"]) 
+            <?= ""; //getCMSPageHTML($product_category["content"]) 
             ?>
         </div> -->
     </div>
