@@ -63,7 +63,7 @@ function loadedProductFeatures() {
 
 function refreshProductFeatures() {
 	xhr({
-		url: STATIC_URLS["ADMIN"] + "product/feature/all_with_options",
+		url: STATIC_URLS["ADMIN"] + "/product/feature/all_with_options",
 		success: (res) => {
 			product_features = res.features;
 			product_feature_options = res.options;

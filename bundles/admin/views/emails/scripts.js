@@ -72,7 +72,7 @@ function saveMaile() {
 	};
 
 	xhr({
-		url: STATIC_URLS["ADMIN"] + "save_emails",
+		url: STATIC_URLS["ADMIN"] + "/save_emails",
 		params: params,
 		success: () => {
 			setFormInitialState(form);

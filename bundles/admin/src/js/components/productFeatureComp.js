@@ -129,7 +129,7 @@ function productFeatureComp(comp, parent, data) {
 		}
 
 		xhr({
-			url: STATIC_URLS["ADMIN"] + "product/feature/save",
+			url: STATIC_URLS["ADMIN"] + "/product/feature/save",
 			params: {
 				product_feature: {
 					name: comp._data.name,
@@ -155,7 +155,7 @@ function productFeatureComp(comp, parent, data) {
 	comp._delete = () => {
 		if (comp._data.product_feature_id !== -1) {
 			xhr({
-				url: STATIC_URLS["ADMIN"] + "product/feature/delete/" + comp._data.product_feature_id,
+				url: STATIC_URLS["ADMIN"] + "/product/feature/delete/" + comp._data.product_feature_id,
 				params: {
 					product_feature: comp._data,
 				},

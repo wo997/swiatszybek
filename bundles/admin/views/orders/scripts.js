@@ -21,7 +21,7 @@ domload(() => {
 
 	createDatatable({
 		name: tableName,
-		url: STATIC_URLS["ADMIN"] + "search_zamowienia",
+		url: STATIC_URLS["ADMIN"] + "/search_zamowienia",
 		lang: {
 			subject: "zamówień",
 		},
@@ -86,7 +86,7 @@ function changeZamowienieStatus(zamowienie_link, new_status_id, options = {}) {
 	// TODO: maybe it should be a bulk request instead
 	return new Promise((resolve) => {
 		xhr({
-			url: `${STATIC_URLS["ADMIN"]}zmien_status/${zamowienie_link}/${new_status_id}`,
+			url: `${STATIC_URLS["ADMIN"]}/zmien_status/${zamowienie_link}/${new_status_id}`,
 			success: (res) => {
 				if (def(options.bulk, false)) {
 					resolve("resolved");

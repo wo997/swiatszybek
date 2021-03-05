@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}nowy-cms]
+<?php //route[{ADMIN}/nowy-cms]
 
 $page_id = Request::urlParam(2);
 if ($page_id) {
@@ -77,7 +77,7 @@ if (!$page_data) {
         };
 
         xhr({
-            url: STATIC_URLS["ADMIN"] + "save_new_cms",
+            url: STATIC_URLS["ADMIN"] + "/save_new_cms",
             params: params,
             success: () => {
                 setFormInitialState(form);

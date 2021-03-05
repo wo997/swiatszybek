@@ -3,7 +3,7 @@
 domload(() => {
 	createDatatable({
 		name: "mytable",
-		url: STATIC_URLS["ADMIN"] + "search_newsletter",
+		url: STATIC_URLS["ADMIN"] + "/search_newsletter",
 		width: 800,
 		params: () => {
 			return {};
@@ -29,7 +29,7 @@ domload(() => {
                         <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                         <i class="fas fa-search"></i>
                     </div>
-                    <a class="btn important" href="${STATIC_URLS["ADMIN"]}napisz_newsletter">Wyślij <i class="fa fa-envelope"></i></a>
+                    <a class="btn important" href="${STATIC_URLS["ADMIN"]}/napisz_newsletter">Wyślij <i class="fa fa-envelope"></i></a>
                 `,
 	});
 });

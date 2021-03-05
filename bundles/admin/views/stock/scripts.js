@@ -4,7 +4,7 @@ domload(() => {
 	var tableName = "mytable";
 	createDatatable({
 		name: tableName,
-		url: STATIC_URLS["ADMIN"] + "search_variant",
+		url: STATIC_URLS["ADMIN"] + "/search_variant",
 		lang: {
 			subject: "wariantów",
 		},
@@ -23,9 +23,7 @@ domload(() => {
 				width: "70%",
 				field: "title",
 				render: (r) => {
-					return `<a class="link" href='${STATIC_URLS["ADMIN"]}produkt/${
-						r.product_id
-					}'>${escapeHTML(r.title)}</a>`;
+					return `<a class="link" href='${STATIC_URLS["ADMIN"]}/produkt/${r.product_id}'>${escapeHTML(r.title)}</a>`;
 				},
 				escape: false,
 				searchable: "text",
@@ -61,20 +59,17 @@ domload(() => {
 function dostawa(now, was, variant_id) {
 	// TODO: ajax deprecated
 	ajax(
-		`${STATIC_URLS["ADMIN"]}change_variant_stock`,
+		`${STATIC_URLS["ADMIN"]}/change_variant_stock`,
 		{
 			stock_difference: now - was,
 			variant_id: variant_id,
 		},
 		(response) => {
 			mytable.search();
-			showNotification(
-				`Pomyślnie zmieniono stan magazynowy na <b>${now} szt.</b>`,
-				{
-					one_line: true,
-					type: "success",
-				}
-			);
+			showNotification(`Pomyślnie zmieniono stan magazynowy na <b>${now} szt.</b>`, {
+				one_line: true,
+				type: "success",
+			});
 		},
 		null
 	);

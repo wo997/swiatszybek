@@ -5,7 +5,7 @@ domload(() => {
 
 	createDatatable({
 		name: tableName,
-		url: STATIC_URLS["ADMIN"] + "search_oczekujacy",
+		url: STATIC_URLS["ADMIN"] + "/search_oczekujacy",
 		lang: {
 			subject: "oczekujących",
 		},
@@ -22,9 +22,7 @@ domload(() => {
 				title: "Produkt",
 				width: "15%",
 				render: (r) => {
-					return `<a class="link" href='${STATIC_URLS["ADMIN"]}produkt/${
-						r.product_id
-					}'>${escapeHTML(r.product)}</a>`;
+					return `<a class="link" href='${STATIC_URLS["ADMIN"]}/produkt/${r.product_id}'>${escapeHTML(r.product)}</a>`;
 				},
 				nobreak: true,
 				escape: false,

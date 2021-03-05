@@ -4,7 +4,7 @@ domload(() => {
 	var tableName = "mytable";
 	createDatatable({
 		name: tableName,
-		url: STATIC_URLS["ADMIN"] + "search_strony",
+		url: STATIC_URLS["ADMIN"] + "/search_strony",
 		db_table: "cms",
 		primary: "cms_id",
 		lang: {
@@ -18,9 +18,7 @@ domload(() => {
 				field: "title",
 				render: (r) => {
 					return `
-                            <a class="link text-plus-icon" href="${
-															STATIC_URLS["ADMIN"]
-														}strona/${r.cms_id}">
+                            <a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}/strona/${r.cms_id}">
                                 <span>${escapeHTML(r.title)}</span>
                                 <i class="fas fa-chevron-circle-right"></i>
                             </a>
@@ -34,12 +32,8 @@ domload(() => {
 				width: "20%",
 				render: (r) => {
 					return `
-                            <a class="link text-plus-icon" href="/${
-															r.link
-														}" target="_blank">
-                                <span>${escapeHTML(
-																	r.link ? r.link : "STRONA GŁÓWNA"
-																)}</span>
+                            <a class="link text-plus-icon" href="/${r.link}" target="_blank">
+                                <span>${escapeHTML(r.link ? r.link : "STRONA GŁÓWNA")}</span>
                                 <i class="fas fa-external-link-alt"></i>
                             </a>
                         `;
@@ -66,7 +60,7 @@ domload(() => {
                     <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>        
-                <button class="btn important" onclick='window.location="${STATIC_URLS["ADMIN"]}strona"'>Strona <i class="fa fa-plus"></i></button>
+                <button class="btn important" onclick='window.location="${STATIC_URLS["ADMIN"]}/strona"'>Strona <i class="fa fa-plus"></i></button>
             `,
 	});
 });

@@ -29,7 +29,7 @@
         var params = getFormData(form);
 
         xhr({
-            url: STATIC_URLS["ADMIN"] + "save_footer",
+            url: STATIC_URLS["ADMIN"] + "/save_footer",
             params: params,
             success: () => {
                 setFormInitialState(form);

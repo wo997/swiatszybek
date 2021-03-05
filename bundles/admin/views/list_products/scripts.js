@@ -4,7 +4,7 @@ domload(() => {
 	var tableName = "mytable";
 	createDatatable({
 		name: tableName,
-		url: STATIC_URLS["ADMIN"] + "search_products",
+		url: STATIC_URLS["ADMIN"] + "/search_products",
 		db_table: "products",
 		primary: "product_id",
 		lang: {
@@ -18,9 +18,7 @@ domload(() => {
 				width: "50%",
 				render: (r) => {
 					return `
-          <a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}produkt/${
-						r.product_id
-					}">
+          <a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}/produkt/${r.product_id}">
             <span>${escapeHTML(r.title)}</span>
             <i class="fas fa-chevron-circle-right"></i>
           </a>
@@ -49,7 +47,7 @@ domload(() => {
       <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
       <i class="fas fa-search"></i>
     </div>
-    <button class="btn important" onclick="window.location='${STATIC_URLS["ADMIN"]}produkt'">
+    <button class="btn important" onclick="window.location='${STATIC_URLS["ADMIN"]}/produkt'">
       Produkt <i class="fas fa-plus-circle"></i>
     </button>
   `,

@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}pliki-zdjecia]
+<?php //route[{ADMIN}/pliki-zdjecia]
 
 ?>
 

@@ -1,3 +1,3 @@
-<?php //route[/{ADMIN}product/category/all]
+<?php //route[{ADMIN}/product/category/all]
 
 Request::jsonResponse(getAllProductCategories());

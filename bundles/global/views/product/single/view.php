@@ -398,7 +398,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
     <script>
         // function toggleProductPublish() {
         //     xhr({
-        //         url: STATIC_URLS["ADMIN"] + "set_publish",
+        //         url: STATIC_URLS["ADMIN"] + "/set_publish",
         //         params: {
         //             table: "products",
         //             primary: "general_product_id",

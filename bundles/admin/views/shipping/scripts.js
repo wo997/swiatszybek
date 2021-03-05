@@ -1,15 +1,14 @@
 /* js[view] */
 
-
-    /*domload(() => {
+/*domload(() => {
         setFormData(
             <?php echo json_encode(
                 getSetting("general", "company", [])
             ); ?>, `#daneFirmyForm`);
     });*/
 
-    function saveWysylki() {
-        /*var form = $(`#daneFirmyForm`);
+function saveWysylki() {
+	/*var form = $(`#daneFirmyForm`);
 
         if (!validateForm(form)) {
             return;
@@ -20,12 +19,10 @@
         };
 
         xhr({
-            url: STATIC_URLS["ADMIN"] + "save_dane_firmy",
+            url: STATIC_URLS["ADMIN"] + "/save_dane_firmy",
             params: params,
             success: () => {
                 setFormInitialState(form);
             }
         });*/
-    }
-
-
+}

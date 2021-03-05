@@ -134,7 +134,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
             function setNabyto(basket_item_id, input) {
                 input.value = eval(input.value);
                 xhr({
-                    url: STATIC_URLS["ADMIN"] + "set_basket_variant_purchase_price",
+                    url: STATIC_URLS["ADMIN"] + "/set_basket_variant_purchase_price",
                     params: {
                         basket_item_id,
                         purchase_price: input.value
@@ -164,7 +164,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
                 updateZysk();
                 createDatatable({
                     name: "historytable",
-                    url: STATIC_URLS["ADMIN"] + "search_activity_log",
+                    url: STATIC_URLS["ADMIN"] + "/search_activity_log",
                     lang: {
                         subject: "wyników",
                     },
@@ -217,7 +217,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
             const params = getFormData(form);
 
             xhr({
-                url: STATIC_URLS["ADMIN"] + "edit_zamowienie",
+                url: STATIC_URLS["ADMIN"] + "/edit_zamowienie",
                 params,
                 success: (res) => {
                     window.location.reload();

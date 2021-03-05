@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}save_slider]
+<?php //route[{ADMIN}/save_slider]
 
 if (isset($_POST["remove"])) {
     DB::execute("DELETE FROM slides WHERE slide_id = ?", [

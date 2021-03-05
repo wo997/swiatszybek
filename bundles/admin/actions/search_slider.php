@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}search_slider]  
+<?php //route[{ADMIN}/search_slider]  
 
 Request::jsonResponse(paginateData([
     "select" => "slide_id, kolejnosc, content_desktop, content_mobile, published",

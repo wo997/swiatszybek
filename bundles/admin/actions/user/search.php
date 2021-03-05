@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}user/search]  
+<?php //route[{ADMIN}/user/search]  
 
 Request::jsonResponse(paginateData([
     "select" => "user_id, first_name, last_name, email", //, published",

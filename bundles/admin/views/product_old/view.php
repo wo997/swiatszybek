@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}produkt_old]
+<?php //route[{ADMIN}/produkt_old]
 
 $product_id = Request::urlParam(2, -1);
 

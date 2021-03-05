@@ -21,7 +21,7 @@
         };
 
         xhr({
-            url: STATIC_URLS["ADMIN"] + "save_theme",
+            url: STATIC_URLS["ADMIN"] + "/save_theme",
             params: params,
             success: () => {
                 setFormInitialState(form);

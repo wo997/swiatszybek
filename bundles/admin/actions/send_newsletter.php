@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}send_newsletter]
+<?php //route[{ADMIN}/send_newsletter]
 
 
 

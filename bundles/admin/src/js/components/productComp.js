@@ -693,7 +693,7 @@ function productComp(comp, parent, data = undefined) {
 					});
 
 					xhr({
-						url: STATIC_URLS["ADMIN"] + "general_product/save",
+						url: STATIC_URLS["ADMIN"] + "/general_product/save",
 						params: {
 							general_product: {
 								general_product_id: data.general_product_id,

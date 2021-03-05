@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}kod_rabatowy]
+<?php //route[{ADMIN}/kod_rabatowy]
 
 $kod_id = Request::urlParam(2);
 if ($kod_id) {
@@ -39,7 +39,7 @@ if (!json_decode($kod_data["product_list"])) {
         var tableName = "users";
         createDatatable({
             name: tableName,
-            url: STATIC_URLS["ADMIN"] + "search_uzytkownicy",
+            url: STATIC_URLS["ADMIN"] + "/search_uzytkownicy",
             lang: {
                 subject: "użytkowników",
             },
@@ -83,7 +83,7 @@ if (!json_decode($kod_data["product_list"])) {
         var tableName = "product_list";
         createDatatable({
             name: tableName,
-            url: STATIC_URLS["ADMIN"] + "search_products",
+            url: STATIC_URLS["ADMIN"] + "/search_products",
             db_table: "products",
             primary: "product_id",
             lang: {
@@ -100,7 +100,7 @@ if (!json_decode($kod_data["product_list"])) {
                     title: "Nazwa produktu",
                     width: "50%",
                     render: (r) => {
-                        return `<a class="btn secondary" target="_blank" href='${STATIC_URLS["ADMIN"]}produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
+                        return `<a class="btn secondary" target="_blank" href='${STATIC_URLS["ADMIN"]}/produkt/${r.product_id}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`
                     },
                     escape: false
                 },
@@ -150,10 +150,10 @@ if (!json_decode($kod_data["product_list"])) {
         }
 
         xhr({
-            url: STATIC_URLS["ADMIN"] + "save_kod_rabatowy",
+            url: STATIC_URLS["ADMIN"] + "/save_kod_rabatowy",
             params,
             success: (res) => {
-                window.location = `${STATIC_URLS["ADMIN"]}kody-rabatowe`;
+                window.location = `${STATIC_URLS["ADMIN"]}/kody-rabatowe`;
             }
         });
     }

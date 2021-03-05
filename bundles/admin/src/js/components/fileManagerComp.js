@@ -45,7 +45,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 			comp._search_request = undefined;
 		}
 
-		const search_url = STATIC_URLS["ADMIN"] + "file/search";
+		const search_url = STATIC_URLS["ADMIN"] + "/file/search";
 
 		const data = comp._data;
 		const datatable_params = {};
@@ -242,7 +242,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 				formData.append("search", "");
 
 				xhr({
-					url: STATIC_URLS["ADMIN"] + "file/upload",
+					url: STATIC_URLS["ADMIN"] + "/file/upload",
 					formData: formData,
 					success(images) {
 						hideLoader(form);
@@ -292,7 +292,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 						showLoader(comp);
 
 						xhr({
-							url: STATIC_URLS["ADMIN"] + "file/delete",
+							url: STATIC_URLS["ADMIN"] + "/file/delete",
 							params: {
 								file_path: file_wrapper._child(".wo997_img").dataset.src,
 							},

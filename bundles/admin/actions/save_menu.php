@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}save_menu]
+<?php //route[{ADMIN}/save_menu]
 
 if (isset($_POST["remove"])) {
     DB::execute("DELETE FROM menu WHERE category_id = ?", [

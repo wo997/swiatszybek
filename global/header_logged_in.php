@@ -13,7 +13,7 @@ else if ($user_type == 'facebook') $display_user = "<i class=\"fab fa-facebook-s
         <div class="username"><?= $display_user ?></div>
         <hr class="indent">
         <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-            <a class="menu_item gray_hover semi-bold" style="margin-bottom:7px" href="<?= Request::$static_urls["ADMIN"] ?>zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
+            <a class="menu_item gray_hover semi-bold" style="margin-bottom:7px" href="<?= Request::$static_urls["ADMIN"] ?>/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
         <?php endif ?>
         <a class="menu_item gray_hover" href="/moje-konto"> <i class="fas fa-box"></i> Moje zamówienia</a>
         <a class="menu_item gray_hover" href="/moje-konto/dane-uzytkownika"> <i class="fas fa-address-book"></i> Dane użytkownika</a>

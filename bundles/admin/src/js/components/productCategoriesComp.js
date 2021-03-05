@@ -86,7 +86,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 		const data = traverse(comp._data.categories);
 
 		xhr({
-			url: STATIC_URLS["ADMIN"] + "product/category/save_all",
+			url: STATIC_URLS["ADMIN"] + "/product/category/save_all",
 			params: {
 				product_categories: data,
 			},

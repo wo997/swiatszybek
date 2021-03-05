@@ -31,7 +31,7 @@ function appendGroup(&$file_groups, $group, $path, $parent_dir)
         if (file_exists($view_path)) {
             $first_line = def(file($view_path), 0, "");
             if ($url = getAnnotationRoute($first_line)) {
-                $group = "views/" . $url;
+                $group = "views" . $url;
             }
         }
     }

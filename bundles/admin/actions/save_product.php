@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}save_product]
+<?php //route[{ADMIN}/save_product]
 
 $product_data = json_decode($_POST["product_data"], true);
 

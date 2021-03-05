@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}search_zamowienia]
+<?php //route[{ADMIN}/search_zamowienia]
 
 Request::jsonResponse(paginateData([
     "select" => "zamowienie_id, imie, nazwisko, link, dostawa, koszt, status_id, DATE_FORMAT(zlozono, '%d-%m-%Y %H:%i') as zlozono, DATE_FORMAT(wyslano, '%d-%m-%Y %H:%i') as wyslano, firma, user_id, cache_basket",

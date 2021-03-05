@@ -3,7 +3,7 @@
 domload(() => {
 	createDatatable({
 		name: "mytable",
-		url: STATIC_URLS["ADMIN"] + "search_menu",
+		url: STATIC_URLS["ADMIN"] + "/search_menu",
 		primary: "category_id",
 		db_table: "menu",
 		sortable: true,
@@ -27,10 +27,7 @@ domload(() => {
 				title: "Podmenu",
 				width: "20%",
 				render: (r) => {
-					return `${def(
-						escapeHTML(r.subcategories),
-						`<i class="fas fa-ban"></i> Brak`
-					)}`;
+					return `${def(escapeHTML(r.subcategories), `<i class="fas fa-ban"></i> Brak`)}`;
 				},
 				escape: false,
 			},
@@ -69,7 +66,7 @@ domload(() => {
 
 	createDatatable({
 		name: "strony",
-		url: STATIC_URLS["ADMIN"] + "search_strony",
+		url: STATIC_URLS["ADMIN"] + "/search_strony",
 		db_table: "cms",
 		primary: "cms_id",
 		lang: {
@@ -128,7 +125,7 @@ domload(() => {
 
 	createDatatable({
 		name: "produkty",
-		url: STATIC_URLS["ADMIN"] + "search_products",
+		url: STATIC_URLS["ADMIN"] + "/search_products",
 		lang: {
 			subject: "produktów",
 		},
@@ -146,13 +143,9 @@ domload(() => {
 				title: "Nazwa produktu",
 				width: "50%",
 				render: (r) => {
-					return `<a class="btn secondary" target="_blank" href='${
-						STATIC_URLS["ADMIN"]
-					}produkt/${
+					return `<a class="btn secondary" target="_blank" href='${STATIC_URLS["ADMIN"]}/produkt/${
 						r.product_id
-					}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(
-						r.title
-					)}`;
+					}'>Pokaż <i class="fas fa-chevron-circle-right"></i></a>&nbsp;&nbsp;${escapeHTML(r.title)}`;
 				},
 				escape: false,
 			},
@@ -217,7 +210,7 @@ function saveCategoryForm(remove = false) {
 		params["remove"] = true;
 	}
 	xhr({
-		url: STATIC_URLS["ADMIN"] + "save_menu",
+		url: STATIC_URLS["ADMIN"] + "/save_menu",
 		params: params,
 		success: (res) => {
 			mytable.postSaveCategory(params, remove);

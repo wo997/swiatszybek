@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}produkt]
+<?php //route[{ADMIN}/produkt]
 
 $general_product_id = intval(Request::urlParam(2, -1));
 

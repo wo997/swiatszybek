@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}search_strony]
+<?php //route[{ADMIN}/search_strony]
 
 Request::jsonResponse(paginateData([
     "select" => "cms_id, link, title, seo_title, seo_description, published",

@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}menu-glowne] 
+<?php //route[{ADMIN}/menu-glowne] 
 ?>
 
 <?php startSection("head_content"); ?>

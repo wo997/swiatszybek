@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}edit_zamowienie]
+<?php //route[{ADMIN}/edit_zamowienie]
 
 $link = $_POST["link"];
 

@@ -19,7 +19,7 @@
         };
 
         xhr({
-            url: STATIC_URLS["ADMIN"] + "save_zaawansowane",
+            url: STATIC_URLS["ADMIN"] + "/save_zaawansowane",
             params: params,
             success: () => {
                 setFormInitialState(form);

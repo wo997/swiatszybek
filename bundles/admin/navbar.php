@@ -16,7 +16,7 @@ function renderPageItem($page)
     }
 
     echo "<div class='menu_item $hidden'>
-            <a href='" . Request::$static_urls["ADMIN"] . $page['url'] . "'>" . $title . " " . renderNotification($page['notification_count']) . "</a>
+            <a href='" . Request::$static_urls["ADMIN"] . def($page, "url") . "'>" . $title . " " . renderNotification(def($page, "notification_count", 0)) . "</a>
             $arrow_btn
         </div>";
 

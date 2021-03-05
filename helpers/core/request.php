@@ -31,7 +31,7 @@ class Request
     private static $single_usage_session = null;
     public static $is_admin_url = null;
     public static $is_deployment_url = null;
-    public static $static_urls = ["ADMIN" => "/admin/"];
+    public static $static_urls = ["ADMIN" => "/admin"];
 
     public static function init()
     {
@@ -43,7 +43,7 @@ class Request
             self::$url = "/" . self::$url;
             unset($_GET["url"]);
 
-            self::$is_admin_url = strpos(self::$url, ltrim(self::$static_urls["ADMIN"], "/")) === 0;
+            self::$is_admin_url = strpos(self::$url, self::$static_urls["ADMIN"]) === 0;
             self::$is_deployment_url = strpos(self::$url, "deployment") === 0;
 
             self::$single_usage_session = def($_SESSION, "single_usage_session", []);

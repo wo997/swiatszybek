@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}save_module_settings]
+<?php //route[{ADMIN}/save_module_settings]
 
 if (isset($_POST["module_name"])) {
     $module_name = $_POST["module_name"];

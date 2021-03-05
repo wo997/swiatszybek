@@ -189,7 +189,7 @@ class NewCms {
 		this.container
 			._child(".return_btn")
 			// @ts-ignore
-			.setAttribute("href", `${STATIC_URLS["ADMIN"]}nowe-strony`);
+			.setAttribute("href", `${STATIC_URLS["ADMIN"]}/nowe-strony`);
 	}
 
 	cleanImages(node = null) {

@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}set_publish]
+<?php //route[{ADMIN}/set_publish]
 
 $table = clean($_POST["table"]);
 

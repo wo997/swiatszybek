@@ -795,7 +795,7 @@ function saveVariant(remove = false) {
 function deleteProduct() {
 	setFormInitialState(`#productForm`);
 	if (confirm("Czy chcesz usunąć produkt?")) {
-		window.location = `${STATIC_URLS["ADMIN"]}delete_product/${product_id}`;
+		window.location = `${STATIC_URLS["ADMIN"]}/delete_product/${product_id}`;
 	}
 }
 
@@ -811,7 +811,7 @@ function saveProduct() {
 	};
 
 	xhr({
-		url: STATIC_URLS["ADMIN"] + "save_product",
+		url: STATIC_URLS["ADMIN"] + "/save_product",
 		params: params,
 		success: () => {
 			// TODO: reload why?

@@ -4,7 +4,7 @@ domload(() => {
 	var tableName = "mytable";
 	createDatatable({
 		name: tableName,
-		url: STATIC_URLS["ADMIN"] + "search_kody_rabatowe",
+		url: STATIC_URLS["ADMIN"] + "/search_kody_rabatowe",
 		lang: {
 			subject: "produktów",
 		},
@@ -17,9 +17,7 @@ domload(() => {
 				field: "kod",
 				render: (r) => {
 					return `
-              <a class="link text-plus-icon" href="${
-								STATIC_URLS["ADMIN"]
-							}kod_rabatowy/${r.kod_id}">
+              <a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}/kod_rabatowy/${r.kod_id}">
                 <span>${escapeHTML(r.kod)}</span>
                 <i class="fas fa-chevron-circle-right"></i>
               </a>
@@ -65,7 +63,7 @@ domload(() => {
           <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
           <i class="fas fa-search"></i>
         </div>
-        <a class="btn important" href="${STATIC_URLS["ADMIN"]}kod_rabatowy"><span>Kod </span> <i class="fa fa-plus"></i></a>
+        <a class="btn important" href="${STATIC_URLS["ADMIN"]}/kod_rabatowy"><span>Kod </span> <i class="fa fa-plus"></i></a>
       `,
 	});
 });

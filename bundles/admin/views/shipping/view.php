@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}wysylki]
+<?php //route[{ADMIN}/wysylki]
 
 ?>
 

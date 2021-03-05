@@ -7,11 +7,11 @@ if (!def($page_data, "seo_image", "")) {
 if (defined("ROUTE")) {
     $js_schema = getJsSchema();
     $groups = def($js_schema, "files_groups", []);
-    $has_js = isset($groups["views/" . ROUTE]);
+    $has_js = isset($groups["views" . ROUTE]);
 
     $css_schema = getCssSchema();
     $groups = def($css_schema, "files_groups", []);
-    $has_css = isset($groups["views/" . ROUTE]);
+    $has_css = isset($groups["views" . ROUTE]);
 } else {
     $has_css = false;
     $has_js = false;

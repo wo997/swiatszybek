@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}product/feature/option/search]
+<?php //route[{ADMIN}/product/feature/option/search]
 
 // we might not even need it cause it's a tiny set of data
 // $where = "1";

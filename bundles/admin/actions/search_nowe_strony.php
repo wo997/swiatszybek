@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}search_nowe_strony]
+<?php //route[{ADMIN}/search_nowe_strony]
 
 Request::jsonResponse(paginateData([
     "select" => "page_id, url, seo_title, seo_description, published",

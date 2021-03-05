@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}slider] 
+<?php //route[{ADMIN}/slider] 
 ?>
 
 <?php startSection("head_content"); ?>
@@ -19,7 +19,7 @@
     domload(() => {
         createDatatable({
             name: "mytable",
-            url: STATIC_URLS["ADMIN"] + "search_slider",
+            url: STATIC_URLS["ADMIN"] + "/search_slider",
             primary: "slide_id",
             db_table: "slides",
             sortable: true,
@@ -103,7 +103,7 @@
         }
 
         xhr({
-            url: STATIC_URLS["ADMIN"] + "save_slider",
+            url: STATIC_URLS["ADMIN"] + "/save_slider",
             params: params,
             success: (res) => {
                 mytable.search();

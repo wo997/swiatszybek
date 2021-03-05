@@ -6,7 +6,7 @@ domload(() => {
 	const datatable_comp = $("datatable-comp.users");
 
 	datatableComp(datatable_comp, undefined, {
-		search_url: STATIC_URLS["ADMIN"] + "user/search",
+		search_url: STATIC_URLS["ADMIN"] + "/user/search",
 		columns: [
 			{ label: "Imię", key: "first_name", width: "1", searchable: "string" },
 			{ label: "Nazwisko", key: "last_name", width: "1", searchable: "string" },
@@ -15,7 +15,7 @@ domload(() => {
 		primary_key: "user_id",
 		empty_html: html`Brak użytkowników`,
 		label: "Użytkownicy",
-		//after_label: html`<a href="${STATIC_URLS["ADMIN"]}user" class="btn important"> Nowy użytkownik <i class="fas fa-plus"></i> </a> `,
+		//after_label: html`<a href="${STATIC_URLS["ADMIN"]}/user" class="btn important"> Nowy użytkownik <i class="fas fa-plus"></i> </a> `,
 		selectable: true,
 		save_state_name: "users",
 	});
@@ -25,7 +25,7 @@ domload(() => {
 // 	var tableName = "mytable";
 // 	createDatatable({
 // 		name: tableName,
-// 		url: STATIC_URLS["ADMIN"] + "search_uzytkownicy",
+// 		url: STATIC_URLS["ADMIN"] + "/search_uzytkownicy",
 // 		lang: {
 // 			subject: "użytkowników",
 // 		},
@@ -132,7 +132,7 @@ domload(() => {
 // 	var tableName = "zamowieniatable";
 // 	createDatatable({
 // 		name: tableName,
-// 		url: STATIC_URLS["ADMIN"] + "search_zamowienia",
+// 		url: STATIC_URLS["ADMIN"] + "/search_zamowienia",
 // 		lang: {
 // 			subject: "zamówień",
 // 		},

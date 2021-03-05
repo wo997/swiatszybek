@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}save_theme]
+<?php //route[{ADMIN}/save_theme]
 
 saveSetting("theme", "general", [
     "path" => [],

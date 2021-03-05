@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}file/search]
+<?php //route[{ADMIN}/file/search]
 
 Request::jsonResponse(paginateData([
     "select" => "file_id, file_path, original_file_name, uploaded_at,file_type,user.email user_email",

@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}strona]
+<?php //route[{ADMIN}/strona]
 
 $cms_id = Request::urlParam(2);
 if ($cms_id) {
@@ -74,7 +74,7 @@ $static = checkUrl($page_data["link"]);
 
         setFormInitialState(form);
         if (cms_id == -1 && remove) {
-            window.location = Request::$static_urls["ADMIN"] + "strony";
+            window.location = Request::$sTATIC_URLS["ADMIN"] + "/strony";
             return;
         }
 
@@ -88,7 +88,7 @@ $static = checkUrl($page_data["link"]);
         }
 
         xhr({
-            url: Request::$static_urls["ADMIN"] + "save_cms",
+            url: Request::$sTATIC_URLS["ADMIN"] + "/save_cms",
             params: params,
             success: (res) => {
                 //showNotification(`<i class="fas fa-check"></i> Zapisano zmiany</b>`); // TODO XD

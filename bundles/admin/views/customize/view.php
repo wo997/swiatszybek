@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}szablon]
+<?php //route[{ADMIN}/szablon]
 
 ?>
 

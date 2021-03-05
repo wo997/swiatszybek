@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}file/upload]
+<?php //route[{ADMIN}/file/upload]
 
 $type = def($_POST, "type", "files");
 

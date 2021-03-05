@@ -11,7 +11,7 @@ function uploadImageWithCopy(e, name) {
 	formData.append("name", name);
 
 	xhr({
-		url: STATIC_URLS["ADMIN"] + "uploads_action",
+		url: STATIC_URLS["ADMIN"] + "/uploads_action",
 		formData: formData,
 		success(res) {
 			$$(`.${name}`).forEach((e) => {

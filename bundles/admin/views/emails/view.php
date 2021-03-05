@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}maile]
+<?php //route[{ADMIN}/maile]
 ?>
 
 <?php startSection("head_content"); ?>

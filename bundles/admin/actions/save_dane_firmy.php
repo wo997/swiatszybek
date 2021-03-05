@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}save_dane_firmy]
+<?php //route[{ADMIN}/save_dane_firmy]
 
 saveSetting("general", "company", [
     "path" => [],

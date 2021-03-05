@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}product/feature/get]
+<?php //route[{ADMIN}/product/feature/get]
 
 $id = Request::urlParam(4);
 

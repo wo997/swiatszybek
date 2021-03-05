@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}kody-rabatowe] 
+<?php //route[{ADMIN}/kody-rabatowe] 
 ?>
 
 <?php startSection("head_content"); ?>

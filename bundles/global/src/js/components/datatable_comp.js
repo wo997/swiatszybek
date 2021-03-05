@@ -972,7 +972,7 @@ function datatableComp(comp, parent, data) {
 						const positions = data.dataset.filter((e) => filtered_row_ids.includes(e._row_id)).map((e) => e[data.primary_key]);
 
 						xhr({
-							url: STATIC_URLS["ADMIN"] + "datatable/sort",
+							url: STATIC_URLS["ADMIN"] + "/datatable/sort",
 							params: {
 								table: comp._data.db_table,
 								order_key: "pos",

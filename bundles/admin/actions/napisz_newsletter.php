@@ -1,1 +1,1 @@
-<?php //route[/{ADMIN}napisz_newsletter] 
+<?php //route[{ADMIN}/napisz_newsletter] 

@@ -30,58 +30,58 @@ $admin_navigations_tree = [
     [
         "title" => '<i class="fas fa-shopping-bag"></i> Zamówienia', "quick_menu" => true,
         "sub" => [
-            ["url" => "zamowienia", "title" => '<i class="fas fa-clipboard-list"></i> Lista zamówień'],
-            //["url" => "statusy", "title" => '<i class="fas fa-hourglass-half"></i> Statusy zamówień'],
-            //["url" => "statusy-wewnetrzne", "title" => '<i class="fas fa-bookmark"></i> Statusy wewnętrzne'],
+            ["url" => "/zamowienia", "title" => '<i class="fas fa-clipboard-list"></i> Lista zamówień'],
+            //["url" => "/statusy", "title" => '<i class="fas fa-hourglass-half"></i> Statusy zamówień'],
+            //["url" => "/statusy-wewnetrzne", "title" => '<i class="fas fa-bookmark"></i> Statusy wewnętrzne'],
         ]
     ],
     [
         "title" => '<i class="fas fa-cube"></i> Produkty',
         "sub" => [
-            ["url" => "produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
-            ["url" => "produkt", "title" => '<i class="fas fa-plus-circle"></i> Nowy produkt'],
-            //["url" => "magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
-            ["url" => "kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
-            ["url" => "cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],
+            ["url" => "/produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
+            ["url" => "/produkt", "title" => '<i class="fas fa-plus-circle"></i> Nowy produkt'],
+            //["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
+            ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
+            ["url" => "/cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],
         ],
     ],
     [
         "title" => '<i class="fas fa-user"></i> Użytkownicy', "quick_menu" => true,
         "sub" => [
-            ["url" => "uzytkownicy", "title" => '<i class="fas fa-users"></i> Lista użytkowników'],
-            ["url" => "oczekujacy", "title" => '<i class="fas fa-clock"></i> Oczekujący'],
-            ["url" => "komentarze", "title" => '<i class="fas fa-comment"></i> Komentarze'],
-            //["url" => "newsletter", "title" => '<i class="fas fa-newspaper"></i> Newsletter'],
+            ["url" => "/uzytkownicy", "title" => '<i class="fas fa-users"></i> Lista użytkowników'],
+            ["url" => "/oczekujacy", "title" => '<i class="fas fa-clock"></i> Oczekujący'],
+            ["url" => "/komentarze", "title" => '<i class="fas fa-comment"></i> Komentarze'],
+            //["url" => "/newsletter", "title" => '<i class="fas fa-newspaper"></i> Newsletter'],
         ]
     ],
     [
         "title" => '<i class="fas fa-chart-pie"></i> Marketing', "quick_menu" => true,
         "sub" => [
-            ["url" => "sprzedaz", "title" => '<i class="fas fa-chart-line"></i> Sprzedaż'],
-            //["url" => "zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'],
-            //["url" => "kody-rabatowe", "title" => '<i class="fas fa-tag"></i> Kody rabatowe'],
+            ["url" => "/sprzedaz", "title" => '<i class="fas fa-chart-line"></i> Sprzedaż'],
+            //["url" => "/zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'],
+            //["url" => "/kody-rabatowe", "title" => '<i class="fas fa-tag"></i> Kody rabatowe'],
         ]
     ],
-    ["url" => "wysylki", "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki'],
-    ["url" => "dane-firmy", "title" => '<i class="fas fa-building"></i> Dane firmy'],
+    ["url" => "/wysylki", "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki'],
+    ["url" => "/dane-firmy", "title" => '<i class="fas fa-building"></i> Dane firmy'],
     [
         "title" => '<i class="fas fa-pencil-alt"></i> Zawartość / Wygląd',
         "sub" => [
-            // ["url" => "strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
-            // ["url" => "strona"],
-            ["url" => "nowe-strony", "title" => '<i class="fas fa-heart"></i> Nowe Strony'],
-            ["url" => "nowy-cms"],
-            ["url" => "pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
-            ["url" => "pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
-            //["url" => "menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
-            //["url" => "stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
-            ["url" => "logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
-            ["url" => "szablon", "title" => '<i class="fas fa-paint-brush"></i> Szablon'],
+            // ["url" => "/strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
+            // ["url" => "/strona"],
+            ["url" => "/nowe-strony", "title" => '<i class="fas fa-heart"></i> Nowe Strony'],
+            ["url" => "/nowy-cms"],
+            ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
+            ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
+            //["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
+            //["url" => "/stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
+            ["url" => "/logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
+            ["url" => "/szablon", "title" => '<i class="fas fa-paint-brush"></i> Szablon'],
         ]
     ],
-    ["url" => "zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
-    ["url" => "moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
-    ["url" => "maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
+    ["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
+    ["url" => "/moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
+    ["url" => "/maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
 ];
 
 function getNotificationCountForPage($page, $children_notification_count = 0)

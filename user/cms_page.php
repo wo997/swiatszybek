@@ -105,7 +105,7 @@ include "global/includes_for_cms_page.php";
     <script>
         function togglePagePublish() {
             xhr({
-                url: STATIC_URLS["ADMIN"] + "set_publish",
+                url: STATIC_URLS["ADMIN"] + "/set_publish",
                 params: {
                     table: "cms",
                     primary: "cms_id",

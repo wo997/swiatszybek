@@ -4,7 +4,7 @@ domload(() => {
 	var tableName = "mytable";
 	createDatatable({
 		name: tableName,
-		url: STATIC_URLS["ADMIN"] + "search_nowe_strony",
+		url: STATIC_URLS["ADMIN"] + "/search_nowe_strony",
 		db_table: "cms",
 		primary: "cms_id",
 		lang: {
@@ -18,7 +18,7 @@ domload(() => {
 				field: "title",
 				render: (r) => {
 					return html`
-						<a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}strona/${r.cms_id}">
+						<a class="link text-plus-icon" href="${STATIC_URLS["ADMIN"]}/strona/${r.cms_id}">
 							<span>${escapeHTML(r.title)}</span>
 							<i class="fas fa-chevron-circle-right"></i>
 						</a>
@@ -60,7 +60,7 @@ domload(() => {
 				<input type="text" placeholder="Szukaj..." data-param="search" class="field inline" />
 				<i class="fas fa-search"></i>
 			</div>
-			<button class="btn important" onclick='window.location="${STATIC_URLS["ADMIN"]}nowy-cms"'>Strona <i class="fa fa-plus"></i></button>
+			<button class="btn important" onclick='window.location="${STATIC_URLS["ADMIN"]}/nowy-cms"'>Strona <i class="fa fa-plus"></i></button>
 		`,
 	});
 });

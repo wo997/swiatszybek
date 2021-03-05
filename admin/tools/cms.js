@@ -204,7 +204,7 @@
 //     setFormData(module_block.default_form_values, modal);
 //   }*/
 // 	xhr({
-// 		url: STATIC_URLS["ADMIN"] + "module_block_form",
+// 		url: STATIC_URLS["ADMIN"] + "/module_block_form",
 // 		type: "html",
 // 		params: {
 // 			module_block_name: module_block_name,

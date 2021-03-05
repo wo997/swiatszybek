@@ -1,4 +1,4 @@
-<?php //route[/{ADMIN}test-view-1]
+<?php //route[{ADMIN}/test-view-1]
 
 ?>
 
