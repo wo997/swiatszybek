@@ -43,8 +43,8 @@ domload(() => {
 
 					sum_height = 0;
 					for (const item of items) {
+						const column_id = Math.floor((column_count * sum_height) / total_height);
 						sum_height += item.offsetHeight;
-						const column_id = Math.floor(((column_count - 1) * sum_height) / total_height);
 						menu_columns[column_id].append(item);
 					}
 
