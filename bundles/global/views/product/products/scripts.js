@@ -126,8 +126,14 @@ function searchProducts() {
 	url += "/" + product_category_id;
 	url += "/" + escapeUrl(product_category_full_name.replace(/\//g, " "));
 	const selected_option_ids = options_flat.map((e) => e.option_ids).flat(1);
-	if (options_flat.length > 0) {
-		url += "/" + selected_option_ids.map((e) => "v" + e).join("");
+	const url_params = new URLSearchParams();
+	if (selected_option_ids.length > 0) {
+		url_params.append("v", selected_option_ids.join("-"));
+	}
+
+	const url_params_str = url_params.toString();
+	if (url_params_str) {
+		url += "?" + url_params_str;
 	}
 
 	let full_name = product_category_full_name.replace(/\//g, " | ");

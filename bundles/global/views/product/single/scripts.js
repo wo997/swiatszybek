@@ -126,7 +126,7 @@ function initBuy() {
 	});
 
 	$(".main_buy_btn").addEventListener("click", () => {
-		if (!single_product) {
+		if (!$(".case_can_buy_product").classList.contains("can_buy")) {
 			showNotification(`Wybierz wariant produktu powyżej`, { type: "error", one_line: true });
 			return;
 		}
@@ -262,7 +262,9 @@ function variantChanged() {
 		url += "/" + escapeUrl(full_name);
 
 		const url_params = new URLSearchParams();
-		url_params.append("v", selected_feature_option_ids.join("-"));
+		if (selected_feature_option_ids.length > 0) {
+			url_params.append("v", selected_feature_option_ids.join("-"));
+		}
 
 		const url_params_str = url_params.toString();
 		if (url_params_str) {
