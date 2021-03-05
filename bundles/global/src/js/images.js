@@ -2,12 +2,11 @@
 
 /**
  * @typedef {{
- * calculated_width: number
- * calculated_height: number
+ * _calculated_width: number
+ * _calculated_height: number
  * last_dimension: number
- * file_name: string
- * extension: string
- * await_img_replace?: boolean
+ * _file_name: string
+ * _extension: string
  * } & PiepNode} ResponsiveImage
  */
 
@@ -47,7 +46,7 @@ function getImageDimensions(img, rect = null) {
  * @param {boolean} animate
  */
 function loadImage(img, animate = true, offset = null) {
-	if (!img.file_name) {
+	if (!img._file_name) {
 		return;
 	}
 	if (offset === null) {
@@ -55,8 +54,8 @@ function loadImage(img, animate = true, offset = null) {
 	}
 
 	if (isNodeOnScreen(img, offset)) {
-		const w = img.calculated_width;
-		const h = img.calculated_height;
+		const w = img._calculated_width;
+		const h = img._calculated_height;
 
 		const image_dimension = getImageDimensions(img);
 		img.last_dimension = image_dimension;
@@ -81,42 +80,36 @@ function loadImage(img, animate = true, offset = null) {
 		}
 
 		// TODO: we should generate that and pull to the dev env, it's enough to have a separate file with type defs, really simple stuff
-		let src = "/" + UPLOADS_PATH + target_size_name + "/" + img.file_name;
+		let src = "/" + UPLOADS_PATH + target_size_name + "/" + img._file_name;
 
-		if (img.hasAttribute("data-same-ext") && same_ext_image_allowed_types.indexOf(img.extension) !== -1) {
-			src += "." + img.extension;
+		if (img.hasAttribute("data-same-ext") && same_ext_image_allowed_types.indexOf(img._extension) !== -1) {
+			src += "." + img._extension;
 		} else if (WEBP_SUPPORT) {
 			src += ".webp";
 		} else {
 			src += ".jpg";
 		}
 
-		if (img.await_img_replace) {
-			preloadImage(src);
-			img.setAttribute("data-next_src", src);
-			delete img.await_img_replace;
-		} else {
-			img.addEventListener("load", () => {
-				// TODO: global event saying that layout could have changed?
-				// well, not rly but idk, maybe recalculating layout on page builder would be a good idea tho
-				if (!img.hasAttribute("data-height") && img.classList.contains("had_no_height")) {
-					img.style.height = "";
-				}
+		img.addEventListener("load", () => {
+			// TODO: global event saying that layout could have changed?
+			// well, not rly but idk, maybe recalculating layout on page builder would be a good idea tho
+			if (!img.hasAttribute("data-height") && img.classList.contains("had_no_height")) {
+				img.style.height = "";
+			}
 
-				window.dispatchEvent(
-					new CustomEvent("wo997_img_loaded", {
-						detail: {
-							img,
-						},
-					})
-				);
-			});
+			window.dispatchEvent(
+				new CustomEvent("wo997_img_loaded", {
+					detail: {
+						img,
+					},
+				})
+			);
+		});
 
-			img.setAttribute("src", src);
-			img.classList.add("wo997_img_waiting");
+		img.setAttribute("src", src);
+		img.classList.add("wo997_img_waiting");
 
-			showWaitingImage(img, animate && !img._parent(".freeze") ? 400 : 0);
-		}
+		showWaitingImage(img, animate && !img._parent(".freeze") ? 400 : 0);
 	}
 }
 
@@ -203,10 +196,10 @@ function setImageDimensions(img) {
 		rect = img.getBoundingClientRect();
 	}
 
-	img.calculated_width = data.w;
-	img.calculated_height = data.h;
-	img.file_name = data.file_name;
-	img.extension = data.extension;
+	img._calculated_width = data.w;
+	img._calculated_height = data.h;
+	img._file_name = data.file_name;
+	img._extension = data.extension;
 
 	const real_height = Math.round((rect.width * data.h) / data.w);
 	if (!img.style.height) {
@@ -306,4 +299,14 @@ function preloadImage(url) {
 			resolve("error");
 		}, 5 * 1000);
 	});
+}
+
+/**
+ *
+ * @param {string} url
+ * @param {ResponsiveImage} img
+ * @returns
+ */
+function preloadWo997Image(url, img) {
+	return preloadImage(url);
 }
