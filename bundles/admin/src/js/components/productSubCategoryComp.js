@@ -49,11 +49,11 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 			<div class="category_wrapper">
 				<span class="category_name" html="{${data.name}}"></span>
 				<p-trait data-trait="expand_multi_list_btn"></p-trait>
+				<button class="btn subtle small multi_list_add_btn" data-tooltip="Dodaj kategorię podrzędną" data-node="{${comp._nodes.add_btn}}">
+					<i class="fas fa-plus"></i>
+				</button>
 				<button class="btn subtle small" data-tooltip="Edytuj kategorię" data-node="{${comp._nodes.edit_btn}}">
 					<i class="fas fa-edit"></i>
-				</button>
-				<button class="btn subtle small" data-tooltip="Dodaj kategorię podrzędną" data-node="{${comp._nodes.add_btn}}">
-					<i class="fas fa-plus"></i>
 				</button>
 				<p-trait data-trait="multi_list_grab_btn" data-tooltip="Zmień położenie kategorię" data-invisible="1"></p-trait>
 			</div>

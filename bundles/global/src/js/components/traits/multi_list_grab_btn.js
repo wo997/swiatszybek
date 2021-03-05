@@ -249,8 +249,8 @@ document.addEventListener("mouseup", () => {
 
 			setTimeout(() => {
 				master_ref.classList.add("freeze");
-				master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
-				const overlay = master_ref._next();
+				//master_ref.insertAdjacentHTML("afterend", html`<div class="overlay">${master_ref.outerHTML}</div>`);
+				//const overlay = master_ref._next();
 
 				master_ref.style.height = master_ref.offsetHeight + "px";
 
@@ -270,7 +270,7 @@ document.addEventListener("mouseup", () => {
 
 				setTimeout(() => {
 					master_ref.style.height = "";
-					overlay.remove();
+					//overlay.remove();
 					master_ref.classList.remove("freeze");
 				}, 0);
 			}, duration);

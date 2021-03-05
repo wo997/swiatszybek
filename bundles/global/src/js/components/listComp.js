@@ -141,6 +141,7 @@ function listComp(comp, parent, data = []) {
 						// @ts-ignore
 						child = $(document.createElement("DIV"));
 						child.classList.add("list_row", "cramp_row");
+						child.style.opacity = "0";
 						added++;
 					}
 
@@ -253,6 +254,9 @@ function listComp(comp, parent, data = []) {
 					}
 				});
 
+				// IMPORTANT - using that technique we can animate 2 lists when their items are swapped and one is a descendant of another YAY!
+				// ok, for some reason it DID NOT WORK - flashing
+				//setTimeout(() => {
 				animatable_rows.forEach((child) => {
 					// @ts-ignore
 					child.rect_after = child.getBoundingClientRect();
@@ -340,9 +344,15 @@ function listComp(comp, parent, data = []) {
 
 					child.style.zIndex = "" + Math.round((Math.abs(off_x) + Math.abs(off_y)) * 0.02 + (add || remove ? 1 : 2));
 
-					setTimeout(() => {
+					const ppp = () => {
 						child.style.zIndex = "";
-					}, duration);
+						child.style.opacity = "";
+					};
+					if (duration > 0) {
+						setTimeout(ppp, duration);
+					} else {
+						ppp();
+					}
 
 					if (duration && ((rect_before && ronscr(rect_before)) || (rect_after && ronscr(rect_after)))) {
 						let step_0 = "";
@@ -383,20 +393,22 @@ function listComp(comp, parent, data = []) {
 				let step_0 = "";
 				let step_1 = "";
 
-				if (Math.abs(w1 - w2) > 1) {
-					step_0 = `width:${w1}px;`;
-					step_1 = `width:${w2}px;`;
-				}
-				if (Math.abs(h1 - h2) > 1) {
-					step_0 = `height:${h1}px;`;
-					step_1 = `height:${h2}px;`;
-				}
+				// if (Math.abs(w1 - w2) > 1) {
+				// 	step_0 = `width:${w1}px;`;
+				// 	step_1 = `width:${w2}px;`;
+				// }
+				// if (Math.abs(h1 - h2) > 1) {
+				// 	step_0 = `height:${h1}px;`;
+				// 	step_1 = `height:${h2}px;`;
+				// } else {
+				// 	comp.style.height = comp.offsetHeight + "px";
+				// }
 
 				comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, duration, {
 					callback: () => {
 						comp.classList.remove("animating");
-						comp.style.width = "";
-						comp.style.height = "";
+						// comp.style.width = "";
+						// comp.style.height = "";
 					},
 				});
 
@@ -405,6 +417,7 @@ function listComp(comp, parent, data = []) {
 				} else {
 					finish();
 				}
+				//});
 			},
 		});
 	};

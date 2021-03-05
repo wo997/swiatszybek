@@ -163,6 +163,12 @@ list-comp {
 	}
 }
 
+.multi_list_add_btn {
+	&:not(.active) {
+		visibility: hidden;
+	}
+}
+
 .node_expand_btn {
 	& {
 		width: 30px;

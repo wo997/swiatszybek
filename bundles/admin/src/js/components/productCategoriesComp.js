@@ -106,6 +106,8 @@ function productCategoriesComp(comp, parent, data = undefined) {
 			...options,
 			render: () => {
 				setTimeout(() => {
+					const multi_master = comp._child(".bind_categories");
+
 					comp._children(".round_top").forEach((e) => e.classList.remove("round_top"));
 					comp._children("product-sub-category-comp").forEach((/** @type {ProductSubCategoryComp} */ com) => {
 						if (!com._data) {
@@ -137,6 +139,11 @@ function productCategoriesComp(comp, parent, data = undefined) {
 
 						const active = level <= max_expand && com._data.categories.length > 0;
 						expand_multi_list_btn.classList.toggle("active", active);
+
+						// add_btn
+						const max_levels = +def(multi_master.dataset.max_level, 3);
+						const multi_list_add_btn = com._child(".multi_list_add_btn");
+						multi_list_add_btn.classList.toggle("active", level < max_levels);
 
 						// sometimes the user can do nothing so pls don't hide the contents
 						if (!active && !expand_multi_list_btn.classList.contains("expanded")) {
