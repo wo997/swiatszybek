@@ -7,6 +7,8 @@ let rowCount = 24;
 let product_list;
 
 domload(() => {
+	product_list = $(".product_list");
+
 	// remove selection from descendants
 	$$(".product_features .option_row > ul").forEach((ul) => {
 		const checkbox_area = ul._prev();
@@ -65,10 +67,33 @@ domload(() => {
 		}
 	}
 
-	product_list = $(".product_list");
+	setCategoryFeaturesFromUrl();
 
 	searchProducts();
 });
+
+window.addEventListener("popstate", () => {
+	setCategoryFeaturesFromUrl();
+});
+
+function setCategoryFeaturesFromUrl() {
+	const url_params = new URLSearchParams(window.location.search);
+	const selected_option_ids = def(url_params.get("v"), "")
+		.split("-")
+		.map((e) => +e);
+
+	const matched_boxes = [];
+	selected_option_ids.forEach((option_id) => {
+		const option_checkbox = $(`.product_features .option_checkbox[data-option_id="${option_id}"]`);
+		matched_boxes.push(option_checkbox);
+		option_checkbox._set_value(1, { quiet: true });
+	});
+	$$(`.product_features .option_checkbox`).forEach((option_checkbox) => {
+		if (!matched_boxes.includes(option_checkbox)) {
+			option_checkbox._set_value(0, { quiet: true });
+		}
+	});
+}
 
 function getSelectedOptionsData() {
 	/**
@@ -167,12 +192,21 @@ function searchProducts() {
 					const counter = option_checkbox._next(".count");
 					matched_counters.push(counter);
 					counter._set_content(e.count);
+
+					const feature = option_checkbox._parent(".feature_row");
+					if (!matched_features.includes(feature)) {
+						matched_features.push(feature);
+					}
 				}
 			});
 			$$(`.product_features .count`).forEach((count) => {
 				if (!matched_counters.includes(count)) {
 					count._empty();
 				}
+			});
+
+			$$(`.product_features .feature_row`).forEach((feature) => {
+				feature.style.display = matched_features.includes(feature) ? "" : "none";
 			});
 
 			product_list._children(".product_image").forEach((img) => {

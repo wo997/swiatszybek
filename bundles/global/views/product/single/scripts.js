@@ -59,7 +59,7 @@ domload(() => {
 		});
 	});
 
-	setVariantsFromUrl();
+	setProductFeaturesFromUrl();
 
 	initBuy();
 
@@ -157,14 +157,14 @@ function toggleVariantStyle(radio) {
 	document.body.classList.toggle("price_diff_4", val === "4");
 }
 
-window.addEventListener("popstate", (event) => {
-	setVariantsFromUrl();
+window.addEventListener("popstate", () => {
+	setProductFeaturesFromUrl();
 });
 
 /** @type {number[]} */
 let selected_option_ids = [];
 
-function setVariantsFromUrl() {
+function setProductFeaturesFromUrl() {
 	const url_params = new URLSearchParams(window.location.search);
 	selected_option_ids = def(url_params.get("v"), "")
 		.split("-")
@@ -363,8 +363,6 @@ function setVariantData() {
 	$(".main_qty_controls .val_qty")._set_value();
 }
 
-let res = { can: true };
-let wanna_scroll_by = 0;
 window.addEventListener("main_header_scroll", (ev) => {
 	if (window.innerWidth >= 850) {
 		return;
