@@ -2,15 +2,15 @@
 
 /**
  * @typedef {{
- * product_image_id
+ * product_img_id
  * img_url: string
  * product_feature_options: number[]
  * features?: Product_FeatureCompData[]
- * } & ListCompRowData} Product_ImageCompData
+ * } & ListCompRowData} product_imgCompData
  *
  * @typedef {{
- * _data: Product_ImageCompData
- * _set_data(data?: Product_ImageCompData, options?: SetCompDataOptions)
+ * _data: product_imgCompData
+ * _set_data(data?: product_imgCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  feature_name: PiepNode
  *  edit_Image_btn: PiepNode
@@ -18,15 +18,15 @@
  *  select_options: PiepNode
  *  selected_options: PiepNode
  * } & ListControlTraitNodes
- * } & BaseComp} Product_ImageComp
+ * } & BaseComp} product_imgComp
  */
 
 /**
- * @param {Product_ImageComp} comp
+ * @param {product_imgComp} comp
  * @param {*} parent
- * @param {Product_ImageCompData} data
+ * @param {product_imgCompData} data
  */
-function product_imageComp(comp, parent, data = { product_image_id: -1, img_url: "", product_feature_options: [] }) {
+function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "", product_feature_options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,

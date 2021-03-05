@@ -139,7 +139,7 @@
 //         $res .= "
 //             <div class='product_block' data-product_id='" . $product["product_id"] . "'>
 //                 <a href='" ./* getProductLink($product["product_id"], $product["link"]) .*/ "'>
-//                     <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product_image wo997_img' alt='" . $product["title"] . "' data-gallery='" . $product["gallery"] . "'>
+//                     <img data-src='" . $product["cache_thumbnail"] . "' data-height='1w' class='product_img wo997_img' alt='" . $product["title"] . "' data-gallery='" . $product["gallery"] . "'>
 //                     <h3 class='product_name'><span class='check-tooltip'>" . $product["title"] . "</span></h3>
 //                 </a>
 //                 <div class='product-row'>

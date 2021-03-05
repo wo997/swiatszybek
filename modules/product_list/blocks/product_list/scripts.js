@@ -90,7 +90,7 @@
 // });
 
 // function preventProductImagesLongPress() {
-// 	$$(".product_image").forEach((e) => {
+// 	$$(".product_img").forEach((e) => {
 // 		preventLongPressMenu(e);
 // 	});
 // }
@@ -102,7 +102,7 @@
 // function currentlyFocusedProduct(node) {
 // 	let product_img = null;
 
-// 	if (node && node.classList && node.classList.contains("product_image") && node._parent(".product_block")) {
+// 	if (node && node.classList && node.classList.contains("product_img") && node._parent(".product_block")) {
 // 		product_img = node;
 // 	}
 

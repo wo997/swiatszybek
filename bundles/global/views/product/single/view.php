@@ -43,8 +43,8 @@ if ($product_link_base !== Request::$url) {
 
 $general_product_products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
-$general_product_images_json = $general_product_data["__images_json"]; //DB::fetchArr("SELECT * FROM product_image WHERE general_product_id = $general_product_id ORDER BY pos ASC"); // AND active = 1
-$general_product_images = json_decode($general_product_images_json, true);
+$general_product_imgs_json = $general_product_data["__images_json"]; //DB::fetchArr("SELECT * FROM product_img WHERE general_product_id = $general_product_id ORDER BY pos ASC"); // AND active = 1
+$general_product_imgs = json_decode($general_product_imgs_json, true);
 
 foreach ($general_product_products as &$product) {
     $product_id = $product["product_id"];
@@ -110,7 +110,7 @@ $general_product_variants = array_values($general_product_variants);
     const general_product_id = <?= $general_product_data["general_product_id"] ?>;
     const general_product_name = "<?= htmlspecialchars($general_product_data["name"]) ?>";
     const general_product_products = <?= json_encode($general_product_products) ?>;
-    const general_product_images = <?= $general_product_images_json ?>;
+    const general_product_imgs = <?= $general_product_imgs_json ?>;
     const general_product_variants = <?= json_encode($general_product_variants) ?>;
 </script>
 
@@ -160,21 +160,21 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
     <div class="sticky_product">
         <span class="clamp_lines clamp_2"><?= $general_product_data["name"] ?></span>
         <div class="img_wrapper">
-            <img data-height="1w" class="product_image wo997_img">
+            <img data-height="1w" class="product_img wo997_img">
         </div>
     </div>
 
     <div class="product_wrapper">
-        <div class="product_images">
+        <div class="product_imgs">
             <!-- sticky on desktop only -->
             <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
                 <div class="wo997_slides_container">
                     <div class="wo997_slides_wrapper">
                         <?php
-                        foreach ($general_product_images as $image) {
+                        foreach ($general_product_imgs as $image) {
                         ?>
                             <div class="wo997_slide">
-                                <img data-src="<?= $image["img_url"] ?>" data-height="1w" class="product_image wo997_img">
+                                <img data-src="<?= $image["img_url"] ?>" data-height="1w" class="product_img wo997_img">
                             </div>
                         <?php
                         }

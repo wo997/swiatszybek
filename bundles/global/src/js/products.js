@@ -16,4 +16,49 @@ window.addEventListener("resize", () => {
 	resizeProductsCallback();
 });
 
-domload(resizeProductsCallback);
+/**
+ * @typedef {{
+ * _images
+ * } & PiepNode} ProductImgWrapper
+ */
+
+/** @type {PiepNode} */
+let curr_focused_product_img_wrapper;
+
+domload(() => {
+	resizeProductsCallback();
+
+	const tacz = (ev) => {
+		const target = $(ev.target);
+		const product_img_wrapper = target._parent(".product_img_wrapper", { skip: 0 });
+		const was_focused_product_img_wrapper = curr_focused_product_img_wrapper;
+		if (product_img_wrapper) {
+			if (curr_focused_product_img_wrapper !== product_img_wrapper) {
+				curr_focused_product_img_wrapper = product_img_wrapper;
+
+				//const product_img = product_img_wrapper._child(".product_img");
+				const images_json = product_img_wrapper.dataset.images;
+				if (images_json) {
+					const images = JSON.parse(images_json);
+					product_img_wrapper.insertAdjacentHTML(
+						"beforeend",
+						html`<img data-src="${images[1].img_url}" class="wo997_img product_img overlay" />`
+					);
+					lazyLoadImages(false);
+				}
+			}
+		} else {
+			curr_focused_product_img_wrapper = undefined;
+		}
+
+		if (was_focused_product_img_wrapper && was_focused_product_img_wrapper !== curr_focused_product_img_wrapper) {
+			const overlay = was_focused_product_img_wrapper._child(".overlay");
+			if (overlay) {
+				overlay.remove();
+			}
+		}
+	};
+
+	window.addEventListener("mousemove", tacz);
+	window.addEventListener("touchstart", tacz);
+});

@@ -38,7 +38,7 @@ function cartProducts_productComp(comp, parent, data = undefined) {
 		});
 	};
 
-	let template = html` <img data-src="{${data.img_url}}" class="wo997_img product_image" data-height="1w" /> `;
+	let template = html` <img data-src="{${data.img_url}}" class="wo997_img product_img" data-height="1w" /> `;
 
 	if (data.no_redirect) {
 		template += html`<span html="{${data.name}}" class="product_name"></span>`;

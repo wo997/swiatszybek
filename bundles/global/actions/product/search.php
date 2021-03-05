@@ -39,10 +39,13 @@ $products_data = paginateData([
 
 $html = "";
 
+// it should be a template to use anywhere tho
 foreach ($products_data["rows"] as $product) {
     $html .= "<div class=\"product_block\">
         <a href=\"" . getProductLink($product["general_product_id"], $product["name"]) . "\">
-            <img data-src=\"" . $product["__img_url"] . "\" data-height=\"1w\" class=\"product_image wo997_img\" alt=\"\" data-images=\"" . htmlspecialchars($product["__images_json"]) . "\">
+            <div class=\"product_img_wrapper\" data-images=\"" . htmlspecialchars($product["__images_json"]) . "\">
+                <img data-src=\"" . $product["__img_url"] . "\" data-height=\"1w\" class=\"product_img wo997_img\" alt=\"\">
+            </div>
             <h3 class=\"product_name\"><span class='check-tooltip'>" . $product["name"] . "</span></h3>
         </a>
         <div class=\"product-row\">

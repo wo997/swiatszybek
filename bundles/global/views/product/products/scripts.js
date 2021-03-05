@@ -211,8 +211,9 @@ function searchProducts() {
 				feature.style.display = matched_features.includes(feature) ? "" : "none";
 			});
 
-			product_list._children(".product_image").forEach((img) => {
-				const images = JSON.parse(img.dataset.images);
+			product_list._children(".product_img_wrapper").forEach((img_wrapper) => {
+				const product_img = img_wrapper._child(".product_img");
+				const images = JSON.parse(img_wrapper.dataset.images);
 				images.forEach((img, index) => {
 					let weight = -index;
 					for (const option_id of selected_option_ids) {
@@ -224,8 +225,14 @@ function searchProducts() {
 				});
 				images.sort((a, b) => Math.sign(b.weight - a.weight));
 
+				img_wrapper.dataset.images = JSON.stringify(images);
 				if (images[0]) {
-					img.dataset.src = images[0].img_url;
+					product_img.dataset.src = images[0].img_url;
+				}
+				if (images[1]) {
+					console.log(images[1].img_url);
+					// HAHA
+					//preloadImage(images[1].img_url);
 				}
 			});
 

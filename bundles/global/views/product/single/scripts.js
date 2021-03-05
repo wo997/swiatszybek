@@ -1,7 +1,7 @@
 /* js[view] */
 
 function productImagesChange() {
-	general_product_images.forEach((img, index) => {
+	general_product_imgs.forEach((img, index) => {
 		let weight = -index;
 		for (const option_id of selected_option_ids) {
 			if (img.option_ids.includes(option_id)) {
@@ -11,19 +11,19 @@ function productImagesChange() {
 		img.weight = weight;
 	});
 
-	const imgs_copy = cloneObject(general_product_images);
+	const imgs_copy = cloneObject(general_product_imgs);
 	imgs_copy.sort((a, b) => Math.sign(b.weight - a.weight));
 	const slides_html = imgs_copy
 		.map(
 			(img) => html`<div class="wo997_slide">
-				<img data-src="${img.img_url}" data-height="1w" class="product_image wo997_img" />
+				<img data-src="${img.img_url}" data-height="1w" class="product_img wo997_img" />
 			</div>`
 		)
 		.join("");
 
 	/** @type {PiepSliderNode[]} */
 	// @ts-ignore
-	const sliders = $$(".product_images .wo997_slider");
+	const sliders = $$(".product_imgs .wo997_slider");
 	sliders.forEach((slider) => {
 		slider._slider.slides_wrapper._set_content(slides_html);
 		slider._slider.update();

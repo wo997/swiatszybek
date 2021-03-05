@@ -23,7 +23,7 @@
  *  products_dt?: DatatableCompData
  *  category_ids: number[]
  *  main_img_url: string
- *  images: Product_ImageCompData[]
+ *  images: product_imgCompData[]
  * }} ProductCompData
  *
  * @typedef {{
@@ -593,7 +593,7 @@ function productComp(comp, parent, data = undefined) {
 					<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary">Dodaj zdjęcie <i class="fas fa-plus"></i></button>
 				</div>
 				<list-comp class="wireframe" data-bind="{${data.images}}">
-					<product_image-comp></product_image-comp>
+					<product_img-comp></product_img-comp>
 				</list-comp>
 			</div>
 
@@ -654,7 +654,7 @@ function productComp(comp, parent, data = undefined) {
 
 			comp._nodes.add_image_btn.addEventListener("click", () => {
 				select_file_modal._data.file_manager.select_callback = (src) => {
-					comp._data.images.push({ img_url: src, product_image_id: -1, product_feature_options: [] });
+					comp._data.images.push({ img_url: src, product_img_id: -1, product_feature_options: [] });
 					comp._render();
 				};
 				select_file_modal._render();

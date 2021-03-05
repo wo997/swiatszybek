@@ -19,7 +19,23 @@
 	}
 }
 
-.product_image {
+.product_img {
 	width: 100%;
 	object-fit: cover;
+	display: block;
+}
+
+.product_img_wrapper {
+	& {
+		position: relative;
+		overflow: hidden;
+	}
+	.overlay {
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		height: 100%;
+	}
 }
