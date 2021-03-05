@@ -25,8 +25,12 @@ function productImagesChange() {
 	// @ts-ignore
 	const sliders = $$(".product_imgs .wo997_slider");
 	sliders.forEach((slider) => {
+		slider.classList.add("freeze");
 		slider._slider.slides_wrapper._set_content(slides_html);
 		slider._slider.update();
+		setTimeout(() => {
+			slider.classList.remove("freeze");
+		});
 	});
 	sliders.forEach((slider) => {
 		slider._slider.select_slide(0);
@@ -36,11 +40,10 @@ function productImagesChange() {
 		// @ts-ignore
 		const sticky_product_img = $(".sticky_product img");
 		// @ts-ignore
-		setResponsiveImageUrl(sticky_product_img, getResponsiveImageRealUrl(sticky_product_img, imgs_copy[0].img_url));
+		setResponsiveImageUrl(sticky_product_img, imgs_copy[0].img_url);
 	}
 
-	//lazyLoadImages({ animate: false });
-	lazyLoadImages();
+	lazyLoadImages({ duration: 0 });
 }
 
 /** @type {PiepNode} */

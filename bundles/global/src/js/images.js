@@ -5,40 +5,17 @@ const show_image_duration = 300;
 
 /**
  *
- * @param {{
- * animate?: boolean
- * }} options
+ * @typedef {{
+ * duration?: number
+ * }} LazyLoadImageOptions
+ */
+
+/**
+ *
+ * @param {LazyLoadImageOptions} options
  */
 function lazyLoadImages(options = {}) {
-	options.animate = def(options.animate, true);
-
-	onScrollImages();
-	setCustomHeights();
-
-	// @ts-ignore
-	// $$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((img) => {
-	// 	// probably more components wanna join in the future, should be a single class tho, like hidden?
-	// 	if (img._parent(".wo997_slider:not(.wo997_slider_ready)")) {
-	// 		return;
-	// 	}
-
-	// 	const rect = img.getBoundingClientRect();
-
-	// 	if (rect.top < window.innerHeight + lazyLoadOffset) {
-	// 		// @ts-ignore
-	// 		img.src = getResponsiveImageRealUrl(img);
-	// 		img.classList.add("wo997_img_shown");
-	// 		console.log(img);
-	// 		if (options.animate) {
-	// 			const duration = show_image_duration;
-	// 			img.style.animation = `show ${duration}ms`;
-	// 			setTimeout(() => {
-	// 				img.style.animation = "";
-	// 			}, duration);
-	// 		}
-	// 	}
-	// });
-
+	onScrollImages(options);
 	setCustomHeights();
 }
 
@@ -103,7 +80,11 @@ function setImageDimensions(img) {
 	}
 }
 
-function onScrollImages() {
+/**
+ *
+ * @param {LazyLoadImageOptions} options
+ */
+function onScrollImages(options = {}) {
 	const exclude = (img) => {
 		if (img._parent(".wo997_slider:not(.wo997_slider_ready)")) {
 			return true;
@@ -129,7 +110,7 @@ function onScrollImages() {
 		if (isNodeOnScreen(img)) {
 			img.classList.remove("wo997_img_waiting");
 			img.classList.add("wo997_img_shown");
-			const duration = show_image_duration;
+			const duration = def(options.duration, show_image_duration);
 			//animate(img, ANIMATIONS.show, duration);
 			img.style.animation = `show ${duration}ms`;
 
@@ -252,6 +233,7 @@ function preloadWo997Image(base_url, img) {
 function setResponsiveImageUrl(img, url) {
 	img.classList.remove("wo997_img_waiting");
 	img.classList.remove("wo997_img_shown");
-	img.dataset.src = url;
+	// @ts-ignore
+	img.dataset.src = getResponsiveImageRealUrl(img, url);
 	delay("lazyLoadImages", 0);
 }
