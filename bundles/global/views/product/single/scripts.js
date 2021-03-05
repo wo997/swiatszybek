@@ -3,7 +3,7 @@
 function productImagesChange() {
 	general_product_imgs.forEach((img, index) => {
 		let weight = -index;
-		for (const option_id of selected_option_ids) {
+		for (const option_id of ps_selected_option_ids) {
 			if (img.option_ids.includes(option_id)) {
 				weight += 100;
 			}

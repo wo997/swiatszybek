@@ -38,5 +38,7 @@
 		bottom: 0;
 		height: 100%;
 		transition: 0.2s opacity;
+		opacity: 0;
+		pointer-events: none;
 	}
 }
