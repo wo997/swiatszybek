@@ -42,10 +42,14 @@ image-input {
 		display: none;
 	}
 	&:not(.selected) {
-		.change_btn,
-		.preview_btn,
+		& {
+			.change_btn,
+			.preview_btn {
+				display: none;
+			}
+		}
 		img {
-			display: none;
+			opacity: 0;
 		}
 	}
 }

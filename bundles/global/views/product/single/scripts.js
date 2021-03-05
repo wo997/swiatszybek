@@ -36,9 +36,7 @@ function productImagesChange() {
 		// @ts-ignore
 		const sticky_product_img = $(".sticky_product img");
 		// @ts-ignore
-		sticky_product_img.src = getResponsiveImageRealUrl(sticky_product_img, imgs_copy[0].img_url);
-		lazyLoadImages();
-		//switchImage(sticky_product_img, imgs_copy[0].img_url, false);
+		setResponsiveImageUrl(sticky_product_img, getResponsiveImageRealUrl(sticky_product_img, imgs_copy[0].img_url));
 	}
 
 	//lazyLoadImages({ animate: false });
@@ -366,16 +364,18 @@ function setVariantData() {
 	$(".main_qty_controls .val_qty")._set_value();
 }
 
-window.addEventListener("main_header_scroll", (ev) => {
-	if (window.innerWidth >= 850) {
-		return;
-	}
-	const r = product_offer.getBoundingClientRect();
-	const visible = r.top < -50 && r.top + r.height > 200;
-	sticky_product.classList.toggle("visible", visible);
+domload(() => {
+	window.addEventListener("main_header_scroll", (ev) => {
+		if (window.innerWidth >= 850) {
+			return;
+		}
+		const r = product_offer.getBoundingClientRect();
+		const visible = r.top < -50 && r.top + r.height > 200;
+		sticky_product.classList.toggle("visible", visible);
 
-	if (visible) {
-		// @ts-ignore
-		ev.detail.res.other_header_visible = true;
-	}
+		if (visible) {
+			// @ts-ignore
+			ev.detail.res.other_header_visible = true;
+		}
+	});
 });

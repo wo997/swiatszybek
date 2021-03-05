@@ -244,3 +244,14 @@ function preloadWo997Image(base_url, img) {
 	const url = getResponsiveImageRealUrl(img, base_url);
 	return preloadImage(url);
 }
+
+/**
+ *
+ * @param {PiepNode} img
+ */
+function setResponsiveImageUrl(img, url) {
+	img.classList.remove("wo997_img_waiting");
+	img.classList.remove("wo997_img_shown");
+	img.dataset.src = url;
+	delay("lazyLoadImages", 0);
+}
