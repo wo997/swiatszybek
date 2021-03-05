@@ -44,7 +44,16 @@ domload(() => {
 						"beforeend",
 						html`<img data-src="${images[1].img_url}" class="wo997_img product_img overlay" />`
 					);
-					lazyLoadImages(false);
+					const base_img = product_img_wrapper._first();
+					const overlay = product_img_wrapper._last();
+					lazyLoadImages({ animate: false });
+
+					const duration = 200;
+					overlay.style.animation = `show ${duration}ms`;
+					setTimeout(() => {
+						base_img.src = images[2].img_url;
+						overlay.style.display = "none";
+					}, duration);
 				}
 			}
 		} else {

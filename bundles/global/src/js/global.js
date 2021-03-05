@@ -259,12 +259,14 @@ function setValue(input, value = null, options = {}) {
 		if (type == "html") {
 			input._set_content(value);
 		} else if (input.tagName == "IMG") {
-			if (input.classList.contains("wo997_img")) {
-				// @ts-ignore
-				switchImage(input, value);
-			} else {
-				input.setAttribute("src", value);
-			}
+			// if (input.classList.contains("wo997_img")) {
+			// 	// @ts-ignore
+			// 	switchImage(input, value);
+			// } else {
+			// }
+			// @ts-ignore
+			input.src = getResponsiveImageRealUrl(input, value);
+			lazyLoadImages();
 		} else if (input.tagName == "SELECT") {
 			// @ts-ignore
 			if ([...input.options].find((e) => e.value == value)) {

@@ -185,6 +185,8 @@ function searchProducts() {
 			option_id_groups: options_data.map((e) => e.option_ids),
 		},
 		success: (res) => {
+			searchingProducts = false;
+
 			product_list._set_content(res.html);
 			const matched_features = [];
 			const matched_counters = [];
@@ -230,14 +232,11 @@ function searchProducts() {
 					product_img.dataset.src = images[0].img_url;
 				}
 				if (images[1]) {
-					console.log(images[1].img_url);
-					// HAHA
-					//preloadImage(images[1].img_url);
+					preloadWo997Image(images[1].img_url, product_img);
 				}
 			});
 
 			lazyLoadImages();
-			searchingProducts = false;
 		},
 	});
 }

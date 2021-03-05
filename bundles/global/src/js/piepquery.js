@@ -12,7 +12,6 @@
  * _scroll_parent(options?: findNodeOptions): PiepNode
  * _empty(): void
  * _set_content(html: string | number, options?: {maintain_height?: boolean}): void
- * dataset: any;
  * _setting_value?: boolean
  * _parent(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
  * _next(selector?: PiepSelector, options?: findNodeOptions): PiepNode | undefined
@@ -30,7 +29,7 @@
  * _in_body()
  * _animate(keyframes: string, duration: number, options?: AnimationOptions): void
  * _dispatch_change(): void
- * } & HTMLElement} PiepNode
+ * } & HTMLBaseElement} PiepNode
  */
 
 /**

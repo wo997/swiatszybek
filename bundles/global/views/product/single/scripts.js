@@ -33,13 +33,16 @@ function productImagesChange() {
 	});
 
 	if (imgs_copy[0]) {
-		/** @type {ResponsiveImage} */
 		// @ts-ignore
 		const sticky_product_img = $(".sticky_product img");
-		switchImage(sticky_product_img, imgs_copy[0].img_url, false);
+		// @ts-ignore
+		sticky_product_img.src = getResponsiveImageRealUrl(sticky_product_img, imgs_copy[0].img_url);
+		lazyLoadImages();
+		//switchImage(sticky_product_img, imgs_copy[0].img_url, false);
 	}
 
-	lazyLoadImages(false);
+	//lazyLoadImages({ animate: false });
+	lazyLoadImages();
 }
 
 /** @type {PiepNode} */
