@@ -393,22 +393,24 @@ function listComp(comp, parent, data = []) {
 				let step_0 = "";
 				let step_1 = "";
 
-				// if (Math.abs(w1 - w2) > 1) {
-				// 	step_0 = `width:${w1}px;`;
-				// 	step_1 = `width:${w2}px;`;
-				// }
-				// if (Math.abs(h1 - h2) > 1) {
-				// 	step_0 = `height:${h1}px;`;
-				// 	step_1 = `height:${h2}px;`;
-				// } else {
-				// 	comp.style.height = comp.offsetHeight + "px";
-				// }
+				if (!instant) {
+					if (Math.abs(w1 - w2) > 1) {
+						step_0 = `width:${w1}px;`;
+						step_1 = `width:${w2}px;`;
+					}
+					if (Math.abs(h1 - h2) > 1) {
+						step_0 = `height:${h1}px;`;
+						step_1 = `height:${h2}px;`;
+					} else {
+						comp.style.height = comp.offsetHeight + "px";
+					}
+				}
 
 				comp._animate(`0%{ ${step_0} }100%{ ${step_1} }`, duration, {
 					callback: () => {
 						comp.classList.remove("animating");
-						// comp.style.width = "";
-						// comp.style.height = "";
+						comp.style.width = "";
+						comp.style.height = "";
 					},
 				});
 
