@@ -141,13 +141,13 @@ if (Request::$is_admin_url) {
 }
 
 $deployment_routes = [
-    "deployment/build",
-    "deployment/migrate",
-    "deployment/warmup_cache",
-    "deployment/warmup_images",
-    "deployment/export",
-    "deployment/install",
-    "deployment/get_size",
+    "/deployment/build",
+    "/deployment/migrate",
+    "/deployment/warmup_cache",
+    "/deployment/warmup_images",
+    "/deployment/export",
+    "/deployment/install",
+    "/deployment/get_size",
 ];
 
 $routes = [];
@@ -178,7 +178,7 @@ function checkUrl($url)
     foreach ($routes as $page) // deprecated
     {
         if (strpos($url . "/", $page . "/") === 0 || $url == $page) {
-            return $page . ".php";
+            return ltrim($page, "/") . ".php";
         }
     }
 
@@ -187,7 +187,7 @@ function checkUrl($url)
 
 if ($pageName) {
     // hardcoded page example - will be removed in the future
-    if (strpos(Request::$url, "deployment") !== 0) {
+    if (!Request::$is_deployment_url) {
         $page_data = DB::fetchRow(
             "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
             [Request::urlParam(0) . "%"] // TODO: WARNING: that seems to be so wrong

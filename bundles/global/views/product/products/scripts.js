@@ -35,7 +35,7 @@ domload(() => {
 
 	$$(".product_categories ul:not(.level_0)").forEach((ul) => {
 		const a = ul._prev();
-		a.insertAdjacentHTML("beforeend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
+		a.insertAdjacentHTML("afterend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
 		ul.classList.add("expand_y", "hidden", "animate_hidden");
 	});
 
@@ -45,7 +45,7 @@ domload(() => {
 		const expand_btn = target._parent(".expand_btn", { skip: 0 });
 		if (expand_btn) {
 			const open = expand_btn.classList.toggle("open");
-			expand(expand_btn._parent()._next(), open);
+			expand(expand_btn._next(), open);
 			ev.preventDefault();
 			return false;
 		}
@@ -80,7 +80,8 @@ function setCategoryFeaturesFromUrl() {
 	const url_params = new URLSearchParams(window.location.search);
 	const selected_option_ids = def(url_params.get("v"), "")
 		.split("-")
-		.map((e) => +e);
+		.map((e) => +e)
+		.filter((e) => e);
 
 	const matched_boxes = [];
 	selected_option_ids.forEach((option_id) => {

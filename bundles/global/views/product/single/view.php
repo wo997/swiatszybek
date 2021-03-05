@@ -391,7 +391,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
         <div style="height:10px"></div>
 
         <div>
-            <a href="<?= Request::$static_urls["ADMIN"] ?>produkt/<?= $general_product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
+            <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt/<?= $general_product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
         </div>
     </div>
 

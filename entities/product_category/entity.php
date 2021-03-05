@@ -7,6 +7,7 @@ EntityManager::register("product_category", [
         "name" => ["type" => "string"],
         "__full_name" => ["type" => "string"],
         "pos" => ["type" => "number"],
+        "__product_count" => ["type" => "number"],
     ],
 ]);
 
@@ -39,4 +40,6 @@ EventListener::register("before_save_product_category_entity", function ($params
     }
 
     $product_category->setProp("__full_name", $full_name);
+
+    $product_category->setProp("__product_count", DB::fetchVal("SELECT COUNT(1) FROM general_product_to_category WHERE product_category_id = " . $product_category->getId()));
 });

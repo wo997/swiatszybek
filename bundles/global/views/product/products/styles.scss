@@ -91,6 +91,24 @@
 	}
 }
 
+.product_categories,
+.product_features {
+	.count:not(:empty) {
+		color: #fff;
+		margin-left: 3px;
+		background: var(--primary-clr);
+		padding: 0 5px;
+		display: inline-flex;
+		border-radius: 100px;
+		justify-content: center;
+		align-items: center;
+		font-weight: 600;
+		min-width: 1.3em;
+		line-height: 1.3em;
+		font-size: 0.9em;
+	}
+}
+
 .product_features {
 	.feature_label {
 		font-weight: 600;
@@ -106,21 +124,6 @@
 	}
 	.level_2 .checkbox_area {
 		padding-left: calc(2 * var(--p-checkbox-height));
-	}
-
-	.count:not(:empty) {
-		color: #fff;
-		margin-left: 3px;
-		background: var(--primary-clr);
-		padding: 0 5px;
-		display: inline-flex;
-		border-radius: 100px;
-		justify-content: center;
-		align-items: center;
-		font-weight: 600;
-		min-width: 1.3em;
-		line-height: 1.3em;
-		font-size: 0.9em;
 	}
 }
 

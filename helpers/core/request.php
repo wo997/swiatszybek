@@ -44,7 +44,7 @@ class Request
             unset($_GET["url"]);
 
             self::$is_admin_url = strpos(self::$url, self::$static_urls["ADMIN"]) === 0;
-            self::$is_deployment_url = strpos(self::$url, "deployment") === 0;
+            self::$is_deployment_url = strpos(self::$url, "/deployment") === 0;
 
             self::$single_usage_session = def($_SESSION, "single_usage_session", []);
             if (!IS_XHR) {

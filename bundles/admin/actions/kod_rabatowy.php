@@ -204,7 +204,7 @@ if (!json_decode($kod_data["product_list"])) {
 
         <input type="hidden" name="kod_id" value="<?= $kod_data["kod_id"] ?>">
         <div style="margin-top:10px;text-align:right">
-            <a href="<?= Request::$static_urls["ADMIN"] ?>kody-rabatowe" class="btn secondary"><i class="fas fa-chevron-circle-left"></i> Wróć</a>
+            <a href="<?= Request::$static_urls["ADMIN"] ?>/kody-rabatowe" class="btn secondary"><i class="fas fa-chevron-circle-left"></i> Wróć</a>
             <?php if ($kod_data["kod_id"] != -1) : ?>
                 <button class="btn secondary red" onclick='if (confirm("Czy aby na pewno chcesz usunąć kod rabatowy?")) {save(true)};'>Usuń <i class="fas fa-times"></i></button>
             <?php endif ?>

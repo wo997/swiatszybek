@@ -98,7 +98,7 @@ include "global/includes_for_cms_page.php";
         <div style="height:10px"></div>
 
         <div>
-            <a href="<?= Request::$static_urls["ADMIN"] ?>strona/<?= $page_data["cms_id"] ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
+            <a href="<?= Request::$static_urls["ADMIN"] ?>/strona/<?= $page_data["cms_id"] ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
         </div>
     </div>
 

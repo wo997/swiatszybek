@@ -5,6 +5,8 @@ class EntityManager
     private static $entities = [];
     /** @var Entity[] */
     private static $objects = [];
+    /** @var Entity[] */
+    private static $warmup_objects = [];
 
     /**
      * @typedef RegisterEntityData {
@@ -53,6 +55,17 @@ class EntityManager
         return self::$objects;
     }
 
+    /**
+     * addWarmupObject
+     *
+     * @param  Entity $entity
+     * @return void
+     */
+    public static function addWarmupObject($entity)
+    {
+        return self::$warmup_objects[] = $entity;
+    }
+
     public static function getEntityData($name)
     {
         return def(self::$entities, $name, null);
@@ -84,7 +97,10 @@ class EntityManager
         if (intval($id) >= 0) {
             $global_id = self::getObjectGlobalId($name, $id);
             if (isset(self::$objects[$global_id])) {
-                return self::$objects[$global_id];
+                /** @var Entity */
+                $entity = self::$objects[$global_id];
+                $entity->setProps($props);
+                return $entity;
             }
         }
 
@@ -105,6 +121,9 @@ class EntityManager
     public static function saveAll()
     {
         foreach (self::$objects as $object) {
+            $object->save();
+        }
+        foreach (self::$warmup_objects as $object) {
             $object->save();
         }
     }
@@ -346,10 +365,11 @@ class EntityManager
      */
     public static function manyToMany($name1, $name2, $relation_table, $extra = [])
     {
-        self::$entities[$name1]["linked_with"][$name2] = [
-            "relation_table" => $relation_table,
-            "extra" => $extra
-        ];
+        // self::$entities[$name1]["linked_with"][$name2] = [
+        //     "relation_table" => $relation_table,
+        //     "extra" => $extra
+        // ];
+        self::$entities[$name1]["warmup_other"][$name2] = $relation_table;
         self::$entities[$name2]["linked_with"][$name1] = [
             "relation_table" => $relation_table,
             "extra" => $extra

@@ -192,6 +192,21 @@ class Entity
             }
         }
 
+        $warmup_other = def($entity_data, ["warmup_other"]);
+        if ($warmup_other) {
+            foreach ($warmup_other as $entity_name => $relation_table) {
+                $id_col = EntityManager::getEntityIdColumn($entity_name);
+                $our_id_col = $this->getIdColumn();
+                $our_id = $this->getId();
+                foreach (DB::fetchCol("SELECT $id_col FROM $relation_table WHERE $our_id_col = $our_id") as $other_ent_id) {
+                    $other_obj = EntityManager::getEntityById($entity_name, $other_ent_id);
+                    if ($other_obj) {
+                        EntityManager::addWarmupObject($other_obj);
+                    }
+                }
+            }
+        }
+
         $saver = "after_save_" . $this->name . "_entity";
         EventListener::dispatch($saver, ["obj" => $this]);
     }
@@ -214,7 +229,7 @@ class Entity
             $val = $this->getProp($prop_name);
         }
 
-        if (strpos($prop_name, "_meta_", 0) !== false) {
+        if (strpos($prop_name, "_meta_", 0) === 0) {
             $this->meta[str_replace("_meta_", "", $prop_name)] = $val;
             return;
         }

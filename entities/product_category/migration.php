@@ -6,6 +6,7 @@ DB::createTable("product_category", [
     ["name" => "name", "type" => "VARCHAR(255)"],
     ["name" => "__full_name", "type" => "VARCHAR(255)"],
     ["name" => "pos", "type" => "INT", "index" => "index"],
+    ["name" => "__product_count", "type" => "INT", "index" => "index"],
 ]);
 
 DB::createTable("general_product_to_category", [
