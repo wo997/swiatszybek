@@ -42,8 +42,10 @@ function loadedProductFeatures() {
 	product_feature_options.forEach((option) => {
 		const feature = product_features.find((feature) => feature.product_feature_id === option.product_feature_id);
 		option.feature_name = feature ? feature.name : "";
+	});
 
-		let full_name = option.feature_name + ": " + option.name;
+	product_feature_options.forEach((option) => {
+		let full_name = option.feature_name + " " + option.name;
 		let parent = option;
 		while (true) {
 			if (parent.parent_product_feature_option_id === -1) {
@@ -53,7 +55,7 @@ function loadedProductFeatures() {
 			if (!parent) {
 				break;
 			}
-			full_name = parent.feature_name + ": " + parent.name + " ❯ " + full_name;
+			full_name = parent.feature_name + " " + parent.name + " | " + full_name;
 		}
 		option.full_name = full_name;
 

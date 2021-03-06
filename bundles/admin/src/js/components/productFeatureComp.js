@@ -82,10 +82,9 @@ function productFeatureComp(comp, parent, data) {
 
 	data.datatable = def(data.datatable, dt);
 
-	comp._select_current_group_id = (id) => {
-		const option_id = id === "-1" ? -1 : +id;
+	comp._select_current_group_id = (option_id) => {
 		comp._data.current_group_id = option_id;
-		if (option_id === -1) {
+		if (option_id === 0) {
 			comp._data.datatable.filters = [];
 		} else {
 			comp._data.datatable.filters = [{ key: "parent_product_feature_option_id", data: { type: "exact", val: option_id } }];
@@ -106,7 +105,7 @@ function productFeatureComp(comp, parent, data) {
 			}
 		}
 
-		comp._data.current_group_id = -1;
+		comp._data.current_group_id = 0;
 		comp._data.datatable.filters = [];
 		comp._data.groups = [];
 		comp._render({ force_render: true, freeze: true });
@@ -214,7 +213,7 @@ function productFeatureComp(comp, parent, data) {
 						<i class="fas fa-ban"></i> Bez grupy (${getCount(-1)})
 					</button> `);
 				}
-				group_btns.unshift(html`<button class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav" data-option_id="-1">
+				group_btns.unshift(html`<button class="btn ${data.current_group_id === 0 ? "primary" : "subtle"} group_nav" data-option_id="0">
 					<i class="fas fa-border-all"></i> Wszystkie (${data.datatable.dataset.length})
 				</button> `);
 
@@ -234,12 +233,12 @@ function productFeatureComp(comp, parent, data) {
 							select_product_feature_option_modal_comp._show({
 								source: comp._nodes.select_parent_option_btn,
 								callback: (option_id) => {
-									comp._select_current_group_id(option_id);
+									comp._select_current_group_id(+option_id);
 								},
 								exclude: comp._data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique),
 							});
 						} else {
-							comp._select_current_group_id(e.dataset.option_id);
+							comp._select_current_group_id(+e.dataset.option_id);
 						}
 					});
 				});
