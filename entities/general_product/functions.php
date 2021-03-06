@@ -19,9 +19,6 @@ function getGlobalProductsSearch($params)
         }
     }
 
-    // append later to the product link in "v" GET param, and that's it!
-    $unique_option_ids_str = join("-", $unique_option_ids);
-
     if (isset($params["product_category_id"])) {
         $product_category_id = intval($params["product_category_id"]);
         if ($product_category_id) {
