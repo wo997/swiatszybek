@@ -365,20 +365,31 @@ class EntityManager
      */
     public static function manyToMany($name1, $name2, $relation_table, $extra = [])
     {
-        // self::$entities[$name1]["linked_with"][$name2] = [
-        //     "relation_table" => $relation_table,
-        //     "extra" => $extra
-        // ];
+        self::$entities[$name1]["linked_with"][$name2] = [
+            "relation_table" => $relation_table,
+            "extra" => $extra
+        ];
+
+        self::$entities[$name2]["linked_with"][$name1] = [
+            "relation_table" => $relation_table,
+            "extra" => $extra
+        ];
 
         // warmups are less important than actual links - the seconds can actually store extra information
         self::$entities[$name1]["warmup_other"][$name2] = [
             "relation_table" => $relation_table,
             "extra" => $extra
         ];
-        self::$entities[$name2]["linked_with"][$name1] = [
-            "relation_table" => $relation_table,
-            "extra" => $extra
-        ];
+
+        // self::$entities[$name2]["warmup_other"][$name1] = [
+        //     "relation_table" => $relation_table,
+        //     "extra" => $extra
+        // ];
+
+        // self::$entities[$name2]["linked_with"][$name1] = [
+        //     "relation_table" => $relation_table,
+        //     "extra" => $extra
+        // ];
     }
 
     /**
