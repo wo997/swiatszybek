@@ -48,7 +48,27 @@ domload(() => {
 			data.products_dt.dataset.push(product);
 		}
 
-		data.category_ids = general_product_data.categories.map((e) => e.product_category_id);
+		{
+			const category_ids = general_product_data.categories.map((e) => e.product_category_id);
+			const ordered_category_ids = [];
+
+			/**
+			 * @param {ProductCategoryBranch[]} categories
+			 */
+			const traverse = (categories) => {
+				categories.forEach((cat) => {
+					if (category_ids.includes(cat.product_category_id)) {
+						ordered_category_ids.push(cat.product_category_id);
+					}
+
+					traverse(cat.sub_categories);
+				});
+			};
+
+			traverse(product_categories_tree);
+			data.category_ids = ordered_category_ids;
+		}
+
 		data.main_img_url = general_product_data.main_img_url;
 
 		data.images = general_product_data.images

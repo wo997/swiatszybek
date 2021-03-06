@@ -341,6 +341,8 @@ function createComp(node, parent_comp, data, options) {
 	if (options.ready) {
 		options.ready();
 	}
+
+	comp.classList.add("ready");
 }
 
 /**

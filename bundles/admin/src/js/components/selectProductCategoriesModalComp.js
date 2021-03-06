@@ -103,13 +103,13 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 					comp._render();
 				}
 
-				/** @type {ProductComp} */
-				// @ts-ignore
-				const product_comp = $("product-comp");
-				console.log(comp._data.selection);
-				console.trace();
-				product_comp._data.category_ids = comp._data.selection;
-				product_comp._render();
+				if (comp.classList.contains("ready")) {
+					/** @type {ProductComp} */
+					// @ts-ignore
+					const product_comp = $("product-comp");
+					product_comp._data.category_ids = comp._data.selection;
+					product_comp._render();
+				}
 			},
 		});
 	};
