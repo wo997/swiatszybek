@@ -85,7 +85,12 @@ EventListener::register("before_save_general_product_entity", function ($params)
                 FROM product_to_feature_option INNER JOIN product_feature_option pfo USING (product_feature_option_id)
                 WHERE product_id = $product_id
                 ORDER BY FIELD(product_feature_id,$sorted_feature_ids_str)");
-            $product_name .= " | " . join(" | ", $option_names);
+
+            foreach ($option_names as $option_name) {
+                if ($option_name) {
+                    $product_name .= " | " . $option_name;
+                }
+            }
         }
 
         $product->setProp("__name", $product_name);

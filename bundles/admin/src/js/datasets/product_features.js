@@ -22,6 +22,7 @@ let product_features = [];
  * name: string
  * feature_name?: string
  * full_name?: string
+ * all_ids?: number[]
  * }} ProductFeatureOptionData
  *
  */
@@ -46,6 +47,7 @@ function loadedProductFeatures() {
 
 	product_feature_options.forEach((option) => {
 		let full_name = option.feature_name + " " + option.name;
+		let all_ids = [option.product_feature_option_id];
 		let parent = option;
 		while (true) {
 			if (parent.parent_product_feature_option_id === -1) {
@@ -56,10 +58,12 @@ function loadedProductFeatures() {
 				break;
 			}
 			full_name = parent.feature_name + " " + parent.name + " | " + full_name;
+			all_ids.push(parent.product_feature_option_id);
 		}
 		option.full_name = full_name;
 
 		option.parent_product_feature_option_id;
+		option.all_ids = all_ids;
 	});
 }
 

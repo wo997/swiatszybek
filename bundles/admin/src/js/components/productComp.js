@@ -35,6 +35,7 @@
  *      all_products: DatatableComp
  *      add_products_btn: PiepNode
  *      remove_products_btn: PiepNode
+ *      remove_all_products_btn: PiepNode
  *      save_btn: PiepNode
  *      add_category_btn: PiepNode
  *      print_categories: PiepNode
@@ -619,6 +620,13 @@ function productComp(comp, parent, data = undefined) {
 			>
 				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)
 			</button>
+			<button
+				class="btn error_light"
+				data-node="{${comp._nodes.remove_all_products_btn}}"
+				disabled="{${data.products_dt.dataset.length === 0}}"
+			>
+				Usuń wszystkie produkty (<span html="{${data.products_dt.dataset.length}}"></span>)
+			</button>
 
 			<div>
 				<p class="user_info">
@@ -724,6 +732,18 @@ function productComp(comp, parent, data = undefined) {
 
 			comp._nodes.remove_products_btn.addEventListener("click", () => {
 				comp._remove_missing_products();
+			});
+
+			comp._nodes.remove_all_products_btn.addEventListener("click", () => {
+				if (
+					confirm(
+						`Czy aby na pewno chcesz usunąć informacje dotyczące wszystkich produktów na liście poniżej?
+                        Operację możesz później cofnąć używając przycisków historii`
+					)
+				) {
+					comp._data.products_dt.dataset = [];
+					comp._render();
+				}
 			});
 
 			comp._nodes.all_products.addEventListener("editable_change", (ev) => {

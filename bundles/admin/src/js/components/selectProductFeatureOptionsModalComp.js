@@ -30,6 +30,13 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 			datatable: {
 				columns: [
 					{
+						label: "Opcja nadrzędna (Grupa)",
+						key: "parent_product_feature_option_id",
+						width: "1.3",
+						map_name: "product_feature_option",
+						searchable: "select",
+					},
+					{
 						label: "Opcja",
 						key: "name",
 						width: "1",
@@ -41,13 +48,6 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 							}
 							return data.name;
 						},
-					},
-					{
-						label: "Opcja nadrzędna (Grupa)",
-						key: "parent_product_feature_option_id",
-						width: "1",
-						map_name: "product_feature_option",
-						searchable: "select",
 					},
 					{
 						label: "Akcja",
@@ -73,10 +73,13 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					{
 						name: "product_feature_option",
 						getMap: () => {
-							const map = product_feature_options.map((option) => ({
-								val: option.product_feature_option_id,
-								label: option.feature_name + ": " + option.name,
-							}));
+							const map = product_feature_options.map((option) => {
+								const obj = {
+									val: option.product_feature_option_id,
+									label: option.full_name,
+								};
+								return obj;
+							});
 							return map;
 						},
 					},
@@ -134,9 +137,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 			// @ts-ignore
 			const product_comp = $("product-comp");
 
-			/** @type {SelectProductFeaturesModalComp} */
-			// @ts-ignore
-			const select_product_features_modal_comp = $("#selectProductFeatures select-product-features-modal-comp");
+			const select_product_features_modal_comp = getSelectProductFeaturesModal();
 
 			comp._nodes.datatable.addEventListener("rows_set", (ev) => {
 				// @ts-ignore
@@ -156,21 +157,26 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				if (select_btn) {
 					const list_row = select_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						const product_feature_id = comp._data.product_feature_id;
-						const pfids = product_comp._data.product_feature_ids;
-						if (!pfids.includes(product_feature_id)) {
-							pfids.push(product_feature_id);
-						}
+						const product_feature_option_id = +list_row.dataset.primary;
+						const product_feature_option = product_feature_options.find(
+							(opt) => opt.product_feature_option_id === product_feature_option_id
+						);
+						product_feature_option.all_ids.forEach((option_id) => {
+							if (!product_comp._data.product_feature_option_ids.includes(option_id)) {
+								product_comp._data.product_feature_option_ids.push(option_id);
 
-						product_comp._data.product_feature_option_ids.push(+list_row.dataset.primary);
+								const product_feature_id = product_feature_options.find((opt) => opt.product_feature_option_id === option_id)
+									.product_feature_id;
+
+								if (!product_comp._data.product_feature_ids.includes(product_feature_id)) {
+									product_comp._data.product_feature_ids.push(product_feature_id);
+								}
+							}
+						});
+
 						product_comp._render();
 						select_product_features_modal_comp._render();
 						comp._nodes.datatable._render();
-
-						// showNotification("Dodano opcję", {
-						// 	one_line: true,
-						// 	type: "success",
-						// });
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");
@@ -187,11 +193,6 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 							product_comp._render();
 							select_product_features_modal_comp._render();
 							comp._nodes.datatable._render();
-
-							// showNotification("Usunięto opcję", {
-							// 	one_line: true,
-							// 	type: "success",
-							// });
 						}
 					}
 
