@@ -15,8 +15,7 @@ $option_ids_str = def($_GET, "v");
 $option_names = [];
 if ($option_ids_str) {
     $option_ids = explode("-", $option_ids_str);
-    $option_ids_csv = clean(join(",", $option_ids));
-    $option_names = DB::fetchCol("SELECT name FROM product_feature_option WHERE product_feature_option_id IN ($option_ids_csv) ORDER BY FIELD(product_feature_option_id,$option_ids_csv)");
+    $option_names = getNamesFromOptionIds($option_ids);
 } else {
     $option_ids = [];
 }
