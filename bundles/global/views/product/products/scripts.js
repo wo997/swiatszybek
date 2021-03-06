@@ -4,6 +4,7 @@ let currPage = 1;
 let rowCount = 24;
 /** @type {number[][]} */
 let pp_selected_option_groups;
+let product_list_ready = false;
 
 /** @type {PiepNode} */
 let product_list;
@@ -32,7 +33,9 @@ domload(() => {
 				}
 			}
 
-			searchProducts();
+			if (product_list_ready) {
+				searchProducts();
+			}
 		});
 	});
 
@@ -75,6 +78,8 @@ domload(() => {
 	productsFetched({
 		options_data: preload_options_data,
 	});
+
+	product_list_ready = true;
 });
 
 window.addEventListener("popstate", () => {
@@ -84,17 +89,14 @@ window.addEventListener("popstate", () => {
 function setCategoryFeaturesFromUrl() {
 	const url_params = new URLSearchParams(window.location.search);
 
-	pp_selected_option_groups = [];
-	def(url_params.get("v"), "")
-		.split("-")
-		.forEach((/** @type {string} */ group) => {
-			pp_selected_option_groups.push(
-				group
-					.split("_")
-					.map((e) => +e)
-					.filter((e) => e)
-			);
-		});
+	/** @type {string} */
+	const v = def(url_params.get("v"), "");
+	pp_selected_option_groups = v.split("-").map((/** @type {string} */ group) =>
+		group
+			.split("_")
+			.map((e) => +e)
+			.filter((e) => e)
+	);
 
 	const matched_boxes = [];
 	pp_selected_option_groups.flat(1).forEach((option_id) => {

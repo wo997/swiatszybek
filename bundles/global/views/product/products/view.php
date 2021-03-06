@@ -8,6 +8,11 @@ if ($product_category_id) {
     $product_category_data = DB::fetchRow("SELECT name, __category_path_json FROM product_category WHERE product_category_id = $product_category_id");
 }
 
+$selected_option_groups = [];
+foreach (explode("-", def($_GET, "v", "")) as $option_ids_str) {
+    $selected_option_groups[] = array_map(fn ($x) => intval($x), explode("_", $option_ids_str));
+}
+
 function traverseCategories($parent_id = -1, $level = 0)
 {
     $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json, __product_count FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
@@ -80,7 +85,7 @@ function traverseFeatures()
     <?php $products_search_data = getGlobalProductsSearch([
         "datatable_params" => "[]",
         "product_category_id" => $product_category_id,
-        "option_id_groups" => "[]",
+        "option_id_groups" => json_encode($selected_option_groups),
     ]); ?>
     const preload_options_data = <?= json_encode($products_search_data["options_data"]) ?>;
     const product_category_id = <?= $product_category_id ?>;
