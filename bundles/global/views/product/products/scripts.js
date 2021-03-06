@@ -2,7 +2,8 @@
 
 let currPage = 1;
 let rowCount = 24;
-let pp_selected_option_ids;
+/** @type {number[][]} */
+let pp_selected_option_groups;
 
 /** @type {PiepNode} */
 let product_list;
@@ -14,19 +15,21 @@ domload(() => {
 		const checkbox_area = ul._prev();
 		const checkbox = checkbox_area._child("p-checkbox");
 		checkbox.addEventListener("change", () => {
-			expand(ul, checkbox_area._get_value());
+			expand(ul, checkbox._get_value());
 		});
 		ul.classList.add("expand_y", "hidden", "animate_hidden");
 	});
 
 	$$(".product_features .option_checkbox").forEach((checkbox) => {
 		checkbox.addEventListener("change", () => {
-			const checkbox_area = checkbox._parent(".checkbox_area");
-			const expand_y = checkbox_area._next(".expand_y");
-			if (expand_y) {
-				expand_y._children(".option_checkbox.checked").forEach((c) => {
-					c._set_value(0, { quiet: true });
-				});
+			if (!checkbox._get_value()) {
+				const checkbox_area = checkbox._parent(".checkbox_area");
+				const expand_y = checkbox_area._next(".expand_y");
+				if (expand_y) {
+					expand_y._children(".option_checkbox.checked").forEach((c) => {
+						c._set_value(0, { quiet: true });
+					});
+				}
 			}
 
 			searchProducts();
@@ -80,20 +83,39 @@ window.addEventListener("popstate", () => {
 
 function setCategoryFeaturesFromUrl() {
 	const url_params = new URLSearchParams(window.location.search);
-	pp_selected_option_ids = def(url_params.get("v"), "")
+
+	pp_selected_option_groups = [];
+	def(url_params.get("v"), "")
 		.split("-")
-		.map((e) => +e)
-		.filter((e) => e);
+		.forEach((/** @type {string} */ group) => {
+			pp_selected_option_groups.push(
+				group
+					.split("_")
+					.map((e) => +e)
+					.filter((e) => e)
+			);
+		});
 
 	const matched_boxes = [];
-	pp_selected_option_ids.forEach((option_id) => {
+	pp_selected_option_groups.flat(1).forEach((option_id) => {
 		const option_checkbox = $(`.product_features .option_checkbox[data-option_id="${option_id}"]`);
 		matched_boxes.push(option_checkbox);
-		option_checkbox._set_value(1, { quiet: true });
+		option_checkbox._set_value(1);
+
+		let option_row = option_checkbox;
+		while (true) {
+			option_row = option_row._parent(".option_row");
+			if (!option_row) {
+				return;
+			}
+			const parent_box = option_row._direct_child(".checkbox_area")._child(".option_checkbox");
+			parent_box._set_value(1);
+			matched_boxes.push(parent_box);
+		}
 	});
 	$$(`.product_features .option_checkbox`).forEach((option_checkbox) => {
 		if (!matched_boxes.includes(option_checkbox)) {
-			option_checkbox._set_value(0, { quiet: true });
+			option_checkbox._set_value(0);
 		}
 	});
 }
@@ -147,8 +169,7 @@ function searchProducts() {
 	datatable_params.quick_search = 0;
 
 	const options_data = getSelectedOptionsData();
-
-	const options_flat = options_data.flat(1);
+	pp_selected_option_groups = options_data.map((e) => e.option_ids);
 
 	const category_path_names = product_category_path.map((e) => e.name);
 	let full_name = category_path_names.join(" | ");
@@ -163,10 +184,9 @@ function searchProducts() {
 	let url = "/produkty";
 	url += "/" + product_category_id;
 	url += "/" + escapeUrl(category_path_names.join(" "));
-	pp_selected_option_ids = options_flat.map((e) => e.option_ids).flat(1);
 	const url_params = new URLSearchParams();
-	if (pp_selected_option_ids.length > 0) {
-		url_params.append("v", pp_selected_option_ids.join("-"));
+	if (options_data.length > 0) {
+		url_params.append("v", options_data.map((e) => e.option_ids.join("_")).join("-"));
 	}
 
 	const url_params_str = url_params.toString();
@@ -229,7 +249,7 @@ function productsFetched(res) {
 		const images = JSON.parse(img_wrapper.dataset.images);
 		images.forEach((img, index) => {
 			let weight = -index;
-			for (const option_id of pp_selected_option_ids) {
+			for (const option_id of pp_selected_option_groups) {
 				if (img.option_ids.includes(option_id)) {
 					weight += 100;
 				}
