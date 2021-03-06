@@ -79,8 +79,6 @@ function getSelectFileModal() {
 	const select_file_modal_comp = $("#selectFile select-file-modal-comp");
 	if (!ex) {
 		selectFileModalComp(select_file_modal_comp, undefined);
-
-		//select_file_modal_comp._nodes.file_manager._nodes.pagination;
 	}
 
 	return select_file_modal_comp;

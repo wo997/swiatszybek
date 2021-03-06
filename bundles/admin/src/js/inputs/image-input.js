@@ -29,7 +29,6 @@ function registerImageInputs(parent) {
 		const select_btn = input._child(".select_btn");
 		const change_btn = input._child(".change_btn");
 		const preview_btn = input._child(".preview_btn");
-		const select_file_modal = getSelectFileModal();
 
 		img.addEventListener("change", () => {
 			const selected = !!img._get_value();
@@ -40,6 +39,7 @@ function registerImageInputs(parent) {
 		});
 
 		const select = () => {
+			const select_file_modal = getSelectFileModal();
 			select_file_modal._data.file_manager.select_target = input;
 			select_file_modal._render();
 			select_file_modal._show({ source: input });
