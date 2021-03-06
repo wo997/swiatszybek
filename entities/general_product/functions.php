@@ -27,7 +27,7 @@ function getGlobalProductsSearch($params)
     }
 
     $products_data = paginateData([
-        "select" => "general_product_id, name, __img_url, __images_json",
+        "select" => "general_product_id, name, __img_url, __images_json, __selectable_option_ids_json",
         "from" => "
         general_product
         INNER JOIN general_product_to_feature_option gptfo USING (general_product_id)
@@ -44,12 +44,22 @@ function getGlobalProductsSearch($params)
 
     // it should be a template to use anywhere tho
     foreach ($products_data["rows"] as $product) {
+        $id = $product["general_product_id"];
+        $name = $product["name"];
+        $img_url = $product["__img_url"];
+        $images_json = htmlspecialchars($product["__images_json"]);
+
+        $selectable_option_ids_json = htmlspecialchars($product["__selectable_option_ids_json"]);
+        $option_ids = array_intersect($unique_option_ids, json_decode($selectable_option_ids_json, true));
+        $option_names = getNamesFromOptionIds($option_ids);
+        $link = getProductLink($id, $name, $option_ids, $option_names);
+
         $html .= "<div class=\"product_block\">
-        <a href=\"" . getProductLink($product["general_product_id"], $product["name"], $unique_option_ids, getNamesFromOptionIds($unique_option_ids)) . "\">
-            <div class=\"product_img_wrapper\" data-images=\"" . htmlspecialchars($product["__images_json"]) . "\">
-                <img data-src=\"" . $product["__img_url"] . "\" data-height=\"1w\" class=\"product_img wo997_img\" alt=\"\">
+        <a href=\"$link\">
+            <div class=\"product_img_wrapper\" data-images=\"$images_json\">
+                <img data-src=\"$img_url\" data-height=\"1w\" class=\"product_img wo997_img\" alt=\"\">
             </div>
-            <h3 class=\"product_name\"><span class='check-tooltip'>" . $product["name"] . "</span></h3>
+            <h3 class=\"product_name\"><span class='check-tooltip'>$name</span></h3>
         </a>
         <div class=\"product-row\">
             <span class=\"product-price pln\">000 zł</span>

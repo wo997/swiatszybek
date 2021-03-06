@@ -5,4 +5,5 @@ DB::createTable("general_product", [
     ["name" => "name", "type" => "VARCHAR(255)"],
     ["name" => "__img_url", "type" => "VARCHAR(255)"],
     ["name" => "__images_json", "type" => "TEXT"],
+    ["name" => "__selectable_option_ids_json", "type" => "VARCHAR(255)"],
 ]);

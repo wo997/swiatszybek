@@ -15,6 +15,7 @@
  * _nodes: {
  *  add_option_btn: PiepNode
  *  select_parent_option_btn: PiepNode
+ *  remove_parent_option_btn: PiepNode
  *  datatable: DatatableComp
  *  groups: PiepNode
  *  name: PiepNode
@@ -281,6 +282,14 @@ function productFeatureComp(comp, parent, data) {
 					Połącz (<span html="{${data.datatable.selection.length}}"></span>) z grupą
 					<i class="fas fa-search"></i>
 				</button>
+				<button
+					class="btn {${data.datatable.selection.length > 0}?important:subtle}"
+					data-node="{${comp._nodes.remove_parent_option_btn}}"
+					data-tooltip="{${data.datatable.selection.length === 0 ? "Najpierw zaznacz opcje na liście poniżej" : ""}}"
+				>
+					Odłącz (<span html="{${data.datatable.selection.length}}"></span>) od grupy
+					<i class="fas fa-times"></i>
+				</button>
 			</div>
 			<datatable-comp
 				style="margin-top:var(--form_spacing)"
@@ -332,6 +341,20 @@ function productFeatureComp(comp, parent, data) {
 							comp._render();
 						},
 					});
+				}
+			});
+
+			comp._nodes.remove_parent_option_btn.addEventListener("click", () => {
+				if (comp._data.datatable.selection.length > 0) {
+					const selection = comp._data.datatable.selection;
+					comp._data.datatable.dataset.forEach((/** @type {ProductFeatureOptionData} */ e) => {
+						// @ts-ignore
+						if (selection.includes(e._row_id)) {
+							e.parent_product_feature_option_id = -1;
+						}
+					});
+					comp._data.datatable.selection = [];
+					comp._render();
 				}
 			});
 
