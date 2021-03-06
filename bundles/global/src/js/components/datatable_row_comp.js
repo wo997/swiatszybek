@@ -38,7 +38,7 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 
 				const row = comp._parent();
 				const _row_id = +row.dataset.primary;
-				const row_data = dt._data.dataset.find((d) => d._row_id === _row_id);
+				const row_data = dt._data ? dt._data.dataset.find((d) => d._row_id === _row_id) : undefined;
 
 				registerForms(comp._nodes.dt_row);
 
@@ -219,7 +219,7 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 
 		const flex = def(column.flex, def(column.editable || column.quick_filter, false));
 		if (!flex) {
-			cell_html = html`<div class="cell_wrapper">${cell_html}</div>`;
+			cell_html = html`<div class="cell_wrapper" data-tooltip="html">${cell_html}</div>`;
 		}
 		cell_html = html`<div class="dt_cell" data-column_id="${column_id}">${cell_html}</div>`;
 

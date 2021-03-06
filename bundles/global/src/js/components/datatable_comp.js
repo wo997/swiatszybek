@@ -155,10 +155,12 @@ function datatableComp(comp, parent, data) {
 	}
 
 	const rewriteState = (src, to) => {
-		to.filters = src.filters;
-		to.quick_search = src.quick_search;
-		to.sort = src.sort;
-		to.pagination_data = src.pagination_data;
+		["filters", "quick_search", "sort", "pagination_data", "rows"].forEach((key) => {
+			const d = src[key];
+			if (d) {
+				to[key] = d;
+			}
+		});
 	};
 
 	comp._save_state = () => {
@@ -653,10 +655,6 @@ function datatableComp(comp, parent, data) {
 		});
 	};
 
-	if (data.save_state_name) {
-		comp._load_state(data);
-	}
-
 	createComp(comp, parent, data, {
 		template: html`
 			<div style="margin-bottom:10px;display:flex;align-items:center">
@@ -702,6 +700,13 @@ function datatableComp(comp, parent, data) {
 			<style data-node="style"></style>
 		`,
 		initialize: () => {
+			if (data.save_state_name) {
+				comp._load_state(data);
+				setTimeout(() => {
+					comp._datatable_search();
+				});
+			}
+
 			const filter_menu = comp._nodes.filter_menu;
 			const hideFilterMenu = () => {
 				if (!filter_menu.classList.contains("active")) return;
