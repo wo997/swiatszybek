@@ -56,7 +56,7 @@ domload(() => {
 			},
 		],
 		controlsRight: html`
-			<div class="float-icon space-right">
+			<div class="float_icon space-right">
 				<input type="text" placeholder="Szukaj..." data-param="search" class="field inline" />
 				<i class="fas fa-search"></i>
 			</div>

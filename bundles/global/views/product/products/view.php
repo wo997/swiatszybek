@@ -137,32 +137,57 @@ foreach ($options_data as $option_data) {
             <i class="fas fa-sliders-h"></i> Filtry <span class="filter_count"></span>
         </button>
 
-        <div class="search_header"><i class="fas fa-list"></i> Kategorie</div>
-
+        <div class="search_header first"> <i class="fas fa-bars"></i> Kategorie </div>
         <div class="product_categories">
             <?= traverseCategories() ?>
         </div>
 
+        <div class="search_header"> <i class="fas fa-star"></i> Cechy </div>
         <div class="product_features">
             <?= traverseFeatures() ?>
         </div>
 
-        <div class="search_header">
+        <div class="search_header"> <i class="fas fa-tags"></i> Cena </div>
+        <div class="flex_children_width">
+            <div class="flex_column" style="margin-right:var(--form_spacing);">
+                Min.
+                <div class="float_icon mobile-margin-bottom flex">
+                    <input class="field inline price_min_search" data-number inputmode="numeric">
+                    <i>zł</i>
+                </div>
+            </div>
+            <div class="flex_column">
+                Max.
+                <div class="float_icon mobile-margin-bottom flex">
+                    <input class="field inline price_max_search" data-number inputmode="numeric">
+                    <i>zł</i>
+                </div>
+            </div>
+        </div>
+
+        <select class="field" style="margin-top:var(--form_spacing);">
+            <option value="">Wybierz zakres z listy</option>
+            <option value="10-30">10 zł - 30 zł</option>
+            <option value="30-100">30 zł - 100 zł</option>
+            <option value="100-200">100 zł - 200 zł</option>
+        </select>
+
+        <!-- <div class="search_header">
             <i class="fas fa-search"></i>
             Szukaj
             <button class='btn subtle case_search small' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-tooltip_position='right' style='margin:-10px 0'>
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class='float-icon mobile-margin-bottom search_wrapper glue_children'>
+        <div class='float_icon mobile-margin-bottom search_wrapper glue_children'>
             <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
             <i class="fas fa-search"></i>
             <button class="btn primary case_mobile search-btn can-disappear">
                 <img class="search_icon" src="/src/img/search_icon.svg">
             </button>
-        </div>
+        </div> -->
 
-        <div class="sorting-wrapper">
+        <!-- <div class="sorting-wrapper">
             <div class="search_header">
                 <i class="fas fa-sort-amount-down-alt"></i>
                 Sortuj
@@ -187,37 +212,7 @@ foreach ($options_data as $option_data) {
                 <input type="radio" name="order_by" value="relevance" class="relevance_option">
                 <span><img src="/src/img/target_icon.svg" style="width: 1em;transform: translateY(2px);"> Trafność</span>
             </label>
-        </div>
-
-        <div class="filters" data-form>
-            <div class='search_header'>
-                <i class='fas fa-sliders-h'></i>
-                Filtry
-                <span class='filter_count'></span>
-                <button class='btn subtle case_any_filters' onclick='clearAllFilters()' data-tooltip='Wyczyść filtry' data-tooltip_position='right' style='margin:-10px 0'>
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <div class='attribute-header'>Cena <span class="price_range_info"></span></div>
-
-            <div class="flex-children-width">
-                <div class="flex-column" style="margin-right:15px;">
-                    Min.
-                    <div class='float-icon mobile-margin-bottom flex'>
-                        <input type="number" class="field inline price_min_search no-wrap" name="price_min_search" style="padding-right: 24px;" oninput="filterChange()" onchange="filterChange(true);">
-                        <i>zł</i>
-                    </div>
-                </div>
-                <div class="flex-column">
-                    Max.
-                    <div class='float-icon mobile-margin-bottom flex'>
-                        <input type="number" class="field inline price_max_search no-wrap" name="price_max_search" style="padding-right: 24px;" oninput="filterChange()" onchange="filterChange(true);">
-                        <i>zł</i>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </div> -->
     </div>
     <div class="product_list_wrapper">
         <h1 class="h1 category_name">

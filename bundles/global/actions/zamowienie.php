@@ -202,7 +202,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
                         },
                     ],
                     controlsRight: `
-                <div class='float-icon'>
+                <div class='float_icon'>
                   <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
                   <i class="fas fa-search"></i>
                 </div>

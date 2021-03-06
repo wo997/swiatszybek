@@ -665,7 +665,7 @@ function datatableComp(comp, parent, data) {
 				<div class="btn error_light" data-node="{${comp._nodes.clear_filters_btn}}" data-tooltip="Wyczyść wszystkie filtry">
 					<i class="fas fa-times"></i>
 				</div>
-				<div class="float-icon" style="display: inline-block;">
+				<div class="float_icon" style="display: inline-block;">
 					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" data-input_delay="300" />
 					<i class="fas fa-search"></i>
 				</div>

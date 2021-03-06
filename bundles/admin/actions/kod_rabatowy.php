@@ -73,7 +73,7 @@ if (!json_decode($kod_data["product_list"])) {
                 },
             ],
             controlsRight: `
-                <div class='float-icon'>
+                <div class='float_icon'>
                     <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>
@@ -126,7 +126,7 @@ if (!json_decode($kod_data["product_list"])) {
                 },
             ],
             controlsRight: `
-                <div class='float-icon'>
+                <div class='float_icon'>
                     <input type="text" placeholder="Filtruj..." data-param="search" class="field inline">
                     <i class="fas fa-search"></i>
                 </div>

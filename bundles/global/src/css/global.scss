@@ -274,14 +274,14 @@ footer {
 	vertical-align: middle;
 }
 
-.flex-children-width {
+.flex_children_width {
 	display: flex;
 }
-.flex-children-width * {
+.flex_children_width * {
 	min-width: 0;
 }
 
-.flex-column {
+.flex_column {
 	display: flex;
 	flex-direction: column;
 }
