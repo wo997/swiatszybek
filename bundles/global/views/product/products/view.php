@@ -158,7 +158,7 @@ foreach ($options_data as $option_data) {
             <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
             <i class="fas fa-search"></i>
             <button class="btn primary case_mobile search-btn can-disappear">
-                <img class="search_icon" src="/src/ img/search_icon.svg">
+                <img class="search_icon" src="/src/img/search_icon.svg">
             </button>
         </div>
 
