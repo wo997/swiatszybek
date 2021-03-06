@@ -14,7 +14,7 @@ function getGlobalProductsSearch($params)
             }
             $option_ids_csv = clean(implode(",", $option_ids));
             if ($option_ids_csv) {
-                $where .= " AND gptfo.product_feature_option_id IN ($option_ids_csv)";
+                $where .= " AND ptfo.product_feature_option_id IN ($option_ids_csv)";
             }
         }
     }
@@ -27,12 +27,16 @@ function getGlobalProductsSearch($params)
     }
 
     $products_data = paginateData([
-        "select" => "general_product_id, name, __img_url, __images_json, __selectable_option_ids_json",
+        "select" => "
+            gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__selectable_option_ids_json,
+            MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price
+        ",
         "from" => "
-        general_product
-        INNER JOIN general_product_to_feature_option gptfo USING (general_product_id)
-        INNER JOIN general_product_to_category gptc USING (general_product_id)
-    ",
+            general_product gp
+            INNER JOIN product p USING (general_product_id)
+            INNER JOIN product_to_feature_option ptfo USING (product_id)
+            INNER JOIN general_product_to_category gptc USING (general_product_id)
+        ",
         "group" => "general_product_id",
         "order" => "general_product_id DESC",
         "where" => $where,
@@ -48,6 +52,12 @@ function getGlobalProductsSearch($params)
         $name = $product["name"];
         $img_url = $product["__img_url"];
         $images_json = htmlspecialchars($product["__images_json"]);
+        $min_gross_price = $product["min_gross_price"];
+        $max_gross_price = $product["max_gross_price"];
+        $display_price = $min_gross_price . "zł";
+        if ($min_gross_price !== $max_gross_price) {
+            $display_price .= " - " . $max_gross_price . "zł";
+        }
 
         $selectable_option_ids_json = htmlspecialchars($product["__selectable_option_ids_json"]);
         $option_ids = array_intersect($unique_option_ids, json_decode($selectable_option_ids_json, true));
@@ -55,17 +65,17 @@ function getGlobalProductsSearch($params)
         $link = getProductLink($id, $name, $option_ids, $option_names);
 
         $html .= "<div class=\"product_block\">
-        <a href=\"$link\">
-            <div class=\"product_img_wrapper\" data-images=\"$images_json\">
-                <img data-src=\"$img_url\" data-height=\"1w\" class=\"product_img wo997_img\" alt=\"\">
+            <a href=\"$link\">
+                <div class=\"product_img_wrapper\" data-images=\"$images_json\">
+                    <img data-src=\"$img_url\" data-height=\"1w\" class=\"product_img wo997_img\" alt=\"\">
+                </div>
+                <h3 class=\"product_name\"><span class='check-tooltip'>$name</span></h3>
+            </a>
+            <div class=\"product-row\">
+                <span class=\"product-price pln\">$display_price</span>
+                <span class=\"product-rating\"></span>
             </div>
-            <h3 class=\"product_name\"><span class='check-tooltip'>$name</span></h3>
-        </a>
-        <div class=\"product-row\">
-            <span class=\"product-price pln\">000 zł</span>
-            <span class=\"product-rating\">4/5</span>
-        </div>
-    </div>";
+        </div>";
     }
 
     return ["html" => $html, "total_rows" => $products_data["total_rows"]];
