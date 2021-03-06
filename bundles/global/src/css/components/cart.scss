@@ -16,10 +16,10 @@
 	}
 }
 
-cart-products_product-comp {
-	&.comp {
+cart-products_product-comp.comp {
+	& {
 		display: grid;
-		grid-template-columns: auto auto auto;
+		grid-template-columns: auto 1fr auto;
 		grid-template-rows: auto auto;
 		align-items: center;
 		grid-gap: 5px 12px;
@@ -62,15 +62,13 @@ cart-products_product-comp {
 			height: 34px;
 		}
 		input {
-			width: 46px;
+			width: 42px;
 		}
 	}
 
 	@media only screen and (max-width: 360px) {
 		&.comp {
-			grid-template-columns: auto auto auto;
-			grid-template-rows: auto auto;
-			grid-gap: 5px 12px;
+			grid-gap: 5px 10px;
 		}
 		.product_img {
 			width: 84px;

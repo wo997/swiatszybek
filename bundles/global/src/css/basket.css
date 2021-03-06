@@ -28,7 +28,7 @@
 	border: 1px solid #ddd;
 }
 
-.qty-control + .product-price {
+.qty-control + .product_price {
 	margin-left: 0.3em;
 	transform: translateY(2px);
 	display: inline-block;

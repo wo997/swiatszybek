@@ -143,8 +143,8 @@
 //                     <h3 class='product_name'><span class='check-tooltip'>" . $product["title"] . "</span></h3>
 //                 </a>
 //                 <div class='product-row'>
-//                     <span class='product-price pln'>$priceText zł</span>
-//                     <span class='product-rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>
+//                     <span class='product_price pln'>$priceText zł</span>
+//                     <span class='product_rating'>" . ratingBlock($product["cache_avg_rating"]) . "</span>
 //                 </div>
 //             </div>
 //         ";

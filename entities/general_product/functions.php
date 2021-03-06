@@ -6,15 +6,24 @@ function getGlobalProductsSearch($params)
 
     $unique_option_ids = [];
 
+    $from = "
+        general_product gp
+        INNER JOIN product p USING (general_product_id)
+        INNER JOIN general_product_to_category gptc USING (general_product_id)
+    ";
+
     if (isset($params["option_id_groups"])) {
         $option_id_groups = json_decode($params["option_id_groups"]);
+        $query_counter = 0;
         foreach ($option_id_groups as $option_ids) {
+            $query_counter++;
             if (count($option_ids) === 1) {
                 $unique_option_ids[] = $option_ids[0];
             }
             $option_ids_csv = clean(implode(",", $option_ids));
             if ($option_ids_csv) {
-                $where .= " AND ptfo.product_feature_option_id IN ($option_ids_csv)";
+                $where .= " AND ptfo_$query_counter.product_feature_option_id IN ($option_ids_csv)";
+                $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id)";
             }
         }
     }
@@ -31,12 +40,7 @@ function getGlobalProductsSearch($params)
             gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__selectable_option_ids_json,
             MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock
         ",
-        "from" => "
-            general_product gp
-            INNER JOIN product p USING (general_product_id)
-            INNER JOIN product_to_feature_option ptfo USING (product_id)
-            INNER JOIN general_product_to_category gptc USING (general_product_id)
-        ",
+        "from" => $from,
         "group" => "general_product_id",
         "order" => "general_product_id DESC",
         "where" => $where,
@@ -56,9 +60,16 @@ function getGlobalProductsSearch($params)
         $max_gross_price = $product["max_gross_price"];
         $sum_stock = $product["sum_stock"];
 
-        $display_price = $min_gross_price . "zł";
+        $display_price = $min_gross_price . " zł";
         if ($min_gross_price !== $max_gross_price) {
             $display_price .= " - " . $max_gross_price . "zł";
+        }
+
+        $display_stock = "";
+        if ($sum_stock > 0) {
+            $display_stock = "Dostępny";
+        } else {
+            $display_stock = "Niedostępny";
         }
 
 
@@ -75,10 +86,10 @@ function getGlobalProductsSearch($params)
                 <h3 class=\"product_name\"><span class='check-tooltip'>$name</span></h3>
             </a>
             <div class=\"product-row\">
-                <span class=\"product-price pln\">$display_price</span>
-                <span class=\"product-rating\"></span>
+                <span class=\"product_price pln\">$display_price</span>
+                <span class=\"product_rating\"></span>
                 <br>
-                <span class=\"product-stock\">$sum_stock szt.</span>
+                <span class=\"product_stock\">$display_stock</span>
             </div>
         </div>";
     }
