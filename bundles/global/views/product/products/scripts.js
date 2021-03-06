@@ -251,7 +251,7 @@ function productsFetched(res) {
 		const images = JSON.parse(img_wrapper.dataset.images);
 		images.forEach((img, index) => {
 			let weight = -index;
-			for (const option_id of pp_selected_option_groups) {
+			for (const option_id of pp_selected_option_groups.flat(2)) {
 				if (img.option_ids.includes(option_id)) {
 					weight += 100;
 				}
@@ -262,7 +262,7 @@ function productsFetched(res) {
 
 		img_wrapper.dataset.images = JSON.stringify(images);
 		if (images[0]) {
-			product_img.dataset.src = images[0].img_url;
+			setResponsiveImageUrl(product_img, images[0].img_url);
 		}
 		if (images[1]) {
 			preloadWo997Image(images[1].img_url, product_img);

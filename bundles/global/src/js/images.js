@@ -122,7 +122,7 @@ function onScrollImages(options = {}) {
 }
 
 /**
- * @param {HTMLImageElement} img
+ * @param {PiepNode} img
  * @param {string} base_url
  */
 function getResponsiveImageRealUrl(img, base_url = undefined) {
@@ -192,8 +192,7 @@ setInterval(() => {
 		if (image_dimension > img._last_dimension + 25) {
 			// @ts-ignore
 			img._last_dimension = image_dimension;
-			// @ts-ignore
-			img.src = getResponsiveImageRealUrl(img);
+			img.setAttribute("src", getResponsiveImageRealUrl(img));
 		}
 	});
 }, 150);
@@ -233,7 +232,6 @@ function preloadWo997Image(base_url, img) {
 function setResponsiveImageUrl(img, url) {
 	img.classList.remove("wo997_img_waiting");
 	img.classList.remove("wo997_img_shown");
-	// @ts-ignore
 	img.dataset.src = getResponsiveImageRealUrl(img, url);
 	delay("lazyLoadImages", 0);
 }
