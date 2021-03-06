@@ -193,9 +193,11 @@ function mainSearchProducts() {
 
 	const search_params = { datatable_params, product_category_id, option_id_groups: options_data.map((e) => e.option_ids) };
 
-	if (isEquivalent(last_search_params, search_params)) {
+	if (last_search_params === undefined || isEquivalent(last_search_params, search_params)) {
+		last_search_params = search_params;
 		return;
 	}
+	last_search_params = search_params;
 
 	const category_path_names = product_category_path.map((e) => e.name);
 	let full_name = category_path_names.join(" | ");

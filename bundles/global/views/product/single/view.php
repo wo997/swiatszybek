@@ -103,7 +103,7 @@ $general_product_variants = array_values($general_product_variants);
 
 <title><?= $general_product_data["name"] ?></title>
 
-<link rel="canonical" href="<?= SITE_URL . "/produkt/" . $general_product_id . "/" . escapeUrl($general_product_data["name"]) ?>" />
+<link rel="canonical" href="<?= SITE_URL . getProductLink($general_product_id, $general_product_data["name"]) ?>" />
 
 <script>
     const general_product_id = <?= $general_product_data["general_product_id"] ?>;

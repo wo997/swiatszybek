@@ -118,6 +118,8 @@ foreach ($options_data as $option_data) {
 
 <?php startSection("head_content"); ?>
 
+<link rel="canonical" href="<?= SITE_URL . getProductCategoryLink(json_decode($product_category_data["__category_path_json"], true)) ?>" />
+
 <script>
     const product_category_id = <?= $product_category_id ?>;
     const product_category_path = <?= $product_category_data["__category_path_json"] ?>;
