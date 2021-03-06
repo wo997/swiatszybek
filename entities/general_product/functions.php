@@ -38,8 +38,6 @@ function getGlobalProductsSearch($params)
         "where" => $where,
         "quick_search_fields" => ["name"],
         "datatable_params" => $params["datatable_params"],
-        "return_all_ids" => true,
-        "primary_key" => "general_product_id"
     ]);
 
     $html = "";
@@ -60,10 +58,5 @@ function getGlobalProductsSearch($params)
     </div>";
     }
 
-    $all_ids_csv = implode(",", $products_data["all_ids"]);
-    $options_data = $all_ids_csv ? DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id option_id
-    FROM general_product INNER JOIN general_product_to_feature_option gptfo USING (general_product_id)
-    WHERE general_product_id IN ($all_ids_csv) GROUP BY product_feature_option_id") : [];
-
-    return ["html" => $html, "options_data" => $options_data];
+    return ["html" => $html];
 }
