@@ -253,10 +253,6 @@ foreach ($options_data as $option_data) {
         <pagination-comp class="product_list_pagination"></pagination-comp>
 
         <!-- <div class="under-products">
-            <div class="flexbar">
-                <div class="pagination"></div>
-            </div>
-
             <?= ""; //getCMSPageHTML($product_category["content"]) 
             ?>
         </div> -->

@@ -65,13 +65,12 @@ function getGlobalProductsSearch($params)
             $display_price .= " - " . $max_gross_price . "zł";
         }
 
-        $display_stock = "";
+        $stock_class = "";
         if ($sum_stock > 0) {
-            $display_stock = "Dostępny";
+            $stock_class = "available";
         } else {
-            $display_stock = "Niedostępny";
+            $stock_class = "unavailable";
         }
-
 
         $selectable_option_ids_json = htmlspecialchars($product["__selectable_option_ids_json"]);
         $option_ids = array_intersect($unique_option_ids, json_decode($selectable_option_ids_json, true));
@@ -89,7 +88,7 @@ function getGlobalProductsSearch($params)
                 <span class=\"product_price pln\">$display_price</span>
                 <span class=\"product_rating\"></span>
                 <br>
-                <span class=\"product_stock\">$display_stock</span>
+                <span class=\"product_stock $stock_class\"></span>
             </div>
         </div>";
     }

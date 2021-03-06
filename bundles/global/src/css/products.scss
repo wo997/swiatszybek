@@ -11,11 +11,43 @@
 		padding: 1.618vw 1vw;
 	}
 }
-.product_block {
-	.product_name {
+
+.product_name {
+	font-weight: 600;
+	margin: 7px 0;
+	font-size: 1.1em;
+}
+
+.product_stock {
+	&::before {
+		content: "";
+		margin-right: 5px;
+		width: 0.5em;
+		height: 0.5em;
+		border-radius: 0.25em;
+		display: inline-block;
+	}
+	&::after {
+		font-size: 0.85em;
 		font-weight: 600;
-		margin: 7px 0;
-		font-size: 1.1em;
+	}
+	&.available {
+		&::before {
+			background-color: var(--success-clr);
+		}
+		&::after {
+			color: var(--success-clr);
+			content: "Dostępny";
+		}
+	}
+	&.unavailable {
+		&::before {
+			background-color: var(--error-clr);
+		}
+		&::after {
+			color: var(--error-clr);
+			content: "Niedostępny";
+		}
 	}
 }
 
