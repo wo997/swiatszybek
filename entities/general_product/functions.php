@@ -29,7 +29,7 @@ function getGlobalProductsSearch($params)
     $products_data = paginateData([
         "select" => "
             gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__selectable_option_ids_json,
-            MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price
+            MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock
         ",
         "from" => "
             general_product gp
@@ -54,10 +54,13 @@ function getGlobalProductsSearch($params)
         $images_json = htmlspecialchars($product["__images_json"]);
         $min_gross_price = $product["min_gross_price"];
         $max_gross_price = $product["max_gross_price"];
+        $sum_stock = $product["sum_stock"];
+
         $display_price = $min_gross_price . "zł";
         if ($min_gross_price !== $max_gross_price) {
             $display_price .= " - " . $max_gross_price . "zł";
         }
+
 
         $selectable_option_ids_json = htmlspecialchars($product["__selectable_option_ids_json"]);
         $option_ids = array_intersect($unique_option_ids, json_decode($selectable_option_ids_json, true));
@@ -74,6 +77,8 @@ function getGlobalProductsSearch($params)
             <div class=\"product-row\">
                 <span class=\"product-price pln\">$display_price</span>
                 <span class=\"product-rating\"></span>
+                <br>
+                <span class=\"product-stock\">$sum_stock szt.</span>
             </div>
         </div>";
     }
