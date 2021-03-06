@@ -213,7 +213,7 @@ function searchProducts() {
 function productsFetched(res) {
 	searchingProducts = false;
 
-	if (res.html) {
+	if (res.html !== undefined) {
 		product_list._set_content(res.html);
 	}
 
