@@ -68,5 +68,5 @@ function getGlobalProductsSearch($params)
     </div>";
     }
 
-    return ["html" => $html];
+    return ["html" => $html, "total_rows" => $products_data["total_rows"]];
 }

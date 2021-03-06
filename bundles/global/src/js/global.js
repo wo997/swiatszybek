@@ -100,7 +100,7 @@ function def(value, def) {
  * @param {*} params
  * @param {{twice?: boolean}} [options]
  */
-function delay(action, time, context = window, params = [], options = {}) {
+function delay(action, time = 0, context = window, params = [], options = {}) {
 	if (context["await" + action]) {
 		clearTimeout(context["await" + action]);
 	} else {
