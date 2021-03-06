@@ -101,12 +101,26 @@ $products_search_data = getGlobalProductsSearch([
     "option_id_groups" => json_encode($selected_option_groups),
 ]);
 
+$products_search_data_0 = getGlobalProductsSearch([
+    "datatable_params" => json_encode(["page_id" => 0, "row_count" => 0, "filters" => []]),
+    "product_category_id" => $product_category_id,
+    "option_id_groups" => "[]",
+    "return_all_ids" => true,
+]);
+
+$products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
+$where_0 = $products_ids_csv ? "general_product_id IN (SELECT DISTINCT general_product_id FROM product WHERE product_id IN ($products_ids_csv))" : "1";
+
 $options_data = DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id option_id
     FROM general_product
-    INNER JOIN general_product_to_feature_option gptfo USING (general_product_id)
-    INNER JOIN general_product_to_category gptc USING (general_product_id)
-    WHERE gptc.product_category_id = $product_category_id
+    INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
+    WHERE $where_0
     GROUP BY product_feature_option_id");
+
+// $options_data = DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id option_id
+//     FROM general_product INNER JOIN product USING(general_product_id)
+//     WHERE $where_0
+//     GROUP BY product_feature_option_id");
 
 $option_count = [];
 foreach ($options_data as $option_data) {

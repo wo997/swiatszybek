@@ -35,7 +35,7 @@ function getGlobalProductsSearch($params)
         }
     }
 
-    $products_data = paginateData([
+    $pagination_params = [
         "select" => "
             gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__selectable_option_ids_json,
             MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock
@@ -46,7 +46,14 @@ function getGlobalProductsSearch($params)
         "where" => $where,
         "quick_search_fields" => ["name"],
         "datatable_params" => $params["datatable_params"],
-    ]);
+    ];
+
+    if (isset($params["return_all_ids"])) {
+        $pagination_params["primary_key"] = "product_id";
+        $pagination_params["return_all_ids"] = true;
+    }
+
+    $products_data = paginateData($pagination_params);
 
     $html = "";
 
@@ -93,5 +100,6 @@ function getGlobalProductsSearch($params)
         </div>";
     }
 
-    return ["html" => $html, "total_rows" => $products_data["total_rows"]];
+    $products_data["html"] = $html;
+    return $products_data;
 }

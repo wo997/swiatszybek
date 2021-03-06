@@ -227,26 +227,12 @@ function paginateData($params = [])
 
     if (def($params, "return_all_ids", false)) {
         $primary_key = $params["primary_key"];
-        $all_ids = DB::fetchCol("SELECT DISTINCT $primary_key FROM $from WHERE $where LIMIT $bottomIndex,$row_count");
+        $all_ids = DB::fetchCol("SELECT DISTINCT $primary_key FROM $from WHERE $where");
         $all_ids_csv = implode(",", $all_ids);
         $results = $all_ids_csv ? DB::fetchArr("SELECT $select FROM $from WHERE $primary_key IN ($all_ids_csv) $group $order LIMIT $bottomIndex,$row_count") : [];
     } else {
         $results = DB::fetchArr("SELECT $select FROM $from WHERE $where $group $order LIMIT $bottomIndex,$row_count");
     }
-
-
-    // $index = 0;
-    // foreach ($results as &$result) {
-    //     $index++;
-    //     $result["kolejnosc"] = $page_id * $row_count + $index;
-
-    //     if (isset($params["renderers"])) {
-    //         foreach ($params["renderers"] as $field => $renderer) {
-    //             $result[$field] = $renderer($result);
-    //         }
-    //     }
-    // }
-    // unset($result);
 
     $res = ["total_rows" => $total_rows, "rows" => $results];
 
