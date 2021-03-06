@@ -21,9 +21,14 @@ function traverseCategories($parent_id = -1, $level = 0)
     }
     $html = "<ul class=\"level_$level\">";
     foreach ($categories as $category) {
-        $html .= "<li data-category_id=\"" . $category["product_category_id"] . "\" >";
-        $html .= "<a href=\"" . getProductCategoryLink(json_decode($category["__category_path_json"], true)) . "\">" . $category["name"] . "</a>";
-        $html .= " <span class=\"count\">(" . $category["__product_count"] . ")</span>";
+        $id = $category["product_category_id"];
+        $name = $category["name"];
+        $count = $category["__product_count"];
+        $link = getProductCategoryLink(json_decode($category["__category_path_json"], true));
+
+        $html .= "<li data-category_id=\"$id\" >";
+        $html .= "<a href=\"$link\">$name</a>";
+        $html .= " <span class=\"count\">($count)</span>";
         $html .= traverseCategories($category["product_category_id"], $level + 1);
         $html .= "</li>";
     }
@@ -33,6 +38,8 @@ function traverseCategories($parent_id = -1, $level = 0)
 
 function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $level = 0)
 {
+    global $option_count;
+
     $where = "parent_product_feature_option_id = $parent_feature_option_id";
     if ($parent_feature_option_id === -1) {
         $where .= " AND product_feature_id = $feature_id";
@@ -42,18 +49,27 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
         return "";
     }
     $html = "<ul class=\"level_$level\">";
-    foreach ($product_feature_options as $product_feature_option) {
+    $display = false;
+    foreach ($product_feature_options as $option) {
+        $id = $option["product_feature_option_id"];
+        $name = $option["name"];
+        $count = def($option_count, $id, 0);
+
+        if ($count) {
+            $display = true;
+        }
+
         $html .= "<li class=\"option_row\">";
         $html .= "<div class=\"checkbox_area\">";
-        $html .= "<p-checkbox class=\"square inline option_checkbox\" data-option_id=" . $product_feature_option["product_feature_option_id"] . "></p-checkbox>";
-        $html .= " <span class=\"feature_option_label\">" . $product_feature_option["name"] . "</span>";
-        $html .= " <span class=\"count\"></span>";
+        $html .= "<p-checkbox class=\"square inline option_checkbox\" data-option_id=\"$id\"></p-checkbox>";
+        $html .= " <span class=\"feature_option_label\">$name</span>";
+        $html .= " <span class=\"count\">($count)</span>";
         $html .= "</div> ";
-        $html .= traverseFeatureOptions($feature_id, $product_feature_option["product_feature_option_id"], $level + 1);
+        $html .= traverseFeatureOptions($feature_id, $id, $level + 1);
         $html .= "</li>";
     }
     $html .= "</ul>";
-    return $html;
+    return $display ? $html : null;
 }
 
 function traverseFeatures()
@@ -76,18 +92,30 @@ function traverseFeatures()
     return $html;
 }
 
+$products_search_data = getGlobalProductsSearch([
+    "datatable_params" => "[]",
+    "product_category_id" => $product_category_id,
+    "option_id_groups" => json_encode($selected_option_groups),
+]);
+
+$options_data = DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id option_id
+    FROM general_product
+    INNER JOIN general_product_to_feature_option gptfo USING (general_product_id)
+    INNER JOIN general_product_to_category gptc USING (general_product_id)
+    WHERE gptc.product_category_id = $product_category_id
+    GROUP BY product_feature_option_id");
+
+$option_count = [];
+foreach ($options_data as $option_data) {
+    $option_count[$option_data["option_id"]] = $option_data["count"];
+}
+
 ?>
 
 
 <?php startSection("head_content"); ?>
 
 <script>
-    <?php $products_search_data = getGlobalProductsSearch([
-        "datatable_params" => "[]",
-        "product_category_id" => $product_category_id,
-        "option_id_groups" => json_encode($selected_option_groups),
-    ]); ?>
-    const preload_options_data = <?= json_encode($products_search_data["options_data"]) ?>;
     const product_category_id = <?= $product_category_id ?>;
     const product_category_path = <?= $product_category_data["__category_path_json"] ?>;
 </script>

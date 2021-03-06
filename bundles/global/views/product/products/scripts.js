@@ -75,9 +75,7 @@ domload(() => {
 
 	setCategoryFeaturesFromUrl();
 
-	productsFetched({
-		options_data: preload_options_data,
-	});
+	productsFetched();
 
 	product_list_ready = true;
 });
@@ -212,38 +210,11 @@ function searchProducts() {
 	});
 }
 
-function productsFetched(res) {
+function productsFetched(res = {}) {
 	searchingProducts = false;
 
 	if (res.html !== undefined) {
 		product_list._set_content(res.html);
-	}
-
-	if (res.options_data) {
-		const matched_features = [];
-		const matched_counters = [];
-		res.options_data.forEach((e) => {
-			const option_checkbox = $(`.product_features .option_checkbox[data-option_id="${e.option_id}"]`);
-			if (option_checkbox) {
-				const counter = option_checkbox._next(".count");
-				matched_counters.push(counter);
-				counter._set_content(`(${e.count})`);
-
-				const feature = option_checkbox._parent(".feature_row");
-				if (!matched_features.includes(feature)) {
-					matched_features.push(feature);
-				}
-			}
-		});
-		$$(`.product_features .count`).forEach((count) => {
-			if (!matched_counters.includes(count)) {
-				count._empty();
-			}
-		});
-
-		$$(`.product_features .feature_row`).forEach((feature) => {
-			//feature.classList.toggle("hidden", !matched_features.includes(feature) && !feature._child(".option_checkbox.checked"));
-		});
 	}
 
 	product_list._children(".product_img_wrapper").forEach((img_wrapper) => {
