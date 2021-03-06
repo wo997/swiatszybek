@@ -52,9 +52,16 @@ function getResponsiveImageData(src) {
 }
 
 /**
- * @param {HTMLImageElement} img
+ * before the image is visible, makes sure that the layout is ok
+ *
+ * @param {PiepNode} img
  */
-function setImageDimensions(img) {
+function setImageSize(img) {
+	if (img.classList.contains("has_size_set")) {
+		return;
+	}
+	img.classList.add("has_size_set");
+
 	const src = img.dataset.src;
 	const data = getResponsiveImageData(src);
 	let rect = img.getBoundingClientRect();
@@ -62,7 +69,7 @@ function setImageDimensions(img) {
 	if (!data) {
 		const duration = show_image_duration;
 		img.style.animation = `show ${duration}ms`;
-		img.src = src;
+		img.setAttribute("src", src);
 		setTimeout(() => {
 			img.style.animation = "";
 		}, duration);
@@ -100,6 +107,8 @@ function onScrollImages(options = {}) {
 			// @ts-ignore
 			img.src = getResponsiveImageRealUrl(img);
 			img.classList.add("wo997_img_waiting");
+		} else {
+			setImageSize(img);
 		}
 	});
 
