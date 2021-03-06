@@ -201,10 +201,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 
 				const add_feature_option_btn = target._parent(".add_feature_option_btn", { skip: 0 });
 				if (add_feature_option_btn) {
-					/** @type {ProductFeatureModalComp} */
-					// @ts-ignore
-					const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
-
+					const product_feature_modal_comp = getProductFeatureModal();
 					product_feature_modal_comp._show(comp._data.product_feature_id, { source: add_feature_option_btn });
 				}
 			});

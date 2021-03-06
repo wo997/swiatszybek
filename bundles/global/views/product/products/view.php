@@ -179,55 +179,6 @@ function traverseFeatures()
                     </div>
                 </div>
             </div>
-
-
-            <?php
-            function printUserSelectValuesOfAttribute($values, $attribute, $value_id = null)
-            {
-                if (!isset($values[0])) {
-                    return "";
-                }
-
-                $attr = $value_id ? "data-parent_value_id='" . $value_id . "'" : "";
-                $attr .= " data-attribute_id='" . $attribute["attribute_id"] . "'";
-
-                $classes = "attribute-list";
-
-                if ($value_id) {
-                    $classes .= " expand_y hidden animate_hidden";
-                }
-
-                $html = "<div class='$classes' $attr>";
-                foreach ($values as $value_data) {
-                    if ($value_data["value"] === "") {
-                        continue;
-                    }
-                    $html .= "<div class='attributes-list-wrapper'>";
-                    $html .= "<label class='attribute-label'>";
-                    $html .= "<input type='checkbox' name='chk_" . $value_data["value_id"] . "' value='" . $value_data["value_id"] . "'";
-                    $html .= " onchange='attributeSelectionChange(this,";
-                    $html .= def($value_data, "_children", []) ? "true" : "false";
-                    $html .= ")'";
-                    $html .= ">";
-                    $html .= "<div class='checkbox'></div> ";
-                    $html .= $value_data["value"];
-
-                    if (isset($value_data["color"])) {
-                        $html .= " <div class='color_circle' style='background-color:" . $value_data["color"] . "'></div>";
-                    }
-
-                    $html .= "</label>";
-
-                    $html .= printUserSelectValuesOfAttribute($value_data["_children"], $attribute, $value_data["value_id"]);
-
-                    $html .= "</div>";
-                }
-                $html .= "</div>";
-
-                return $html;
-            }
-
-            ?>
         </div>
     </div>
     <div class="product_list_wrapper">

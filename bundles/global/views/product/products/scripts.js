@@ -220,7 +220,7 @@ function productsFetched(res) {
 		});
 
 		$$(`.product_features .feature_row`).forEach((feature) => {
-			feature.style.display = matched_features.includes(feature) ? "" : "none";
+			//feature.classList.toggle("hidden", !matched_features.includes(feature) && !feature._child(".option_checkbox.checked"));
 		});
 	}
 

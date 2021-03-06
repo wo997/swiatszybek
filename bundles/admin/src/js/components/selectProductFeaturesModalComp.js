@@ -145,9 +145,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.datatable.addEventListener("click", (ev) => {
-				/** @type {ProductFeatureModalComp} */
-				// @ts-ignore
-				const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
+				const product_feature_modal_comp = getProductFeatureModal();
 
 				const target = $(ev.target);
 
@@ -165,10 +163,8 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				}
 
 				const showOptionsFrom = (product_feature_id, btn) => {
-					/** @type {SelectProductFeatureOptionsModalComp} */
-					// @ts-ignore
-					const select_product_features_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
-					select_product_features_modal_comp._show(product_feature_id, { source: btn });
+					const select_product_features_options_modal_comp = getSelectProductFeatureOptionsModal();
+					select_product_features_options_modal_comp._show(product_feature_id, { source: btn });
 				};
 
 				const select_btn = target._parent(".select_btn", { skip: 0 });

@@ -59,20 +59,15 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			</list-comp>
 		`,
 		initialize: () => {
-			/** @type {ProductFeatureModalComp} */
-			// @ts-ignore
-			const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
+			const product_feature_modal_comp = getProductFeatureModal();
 
 			comp._nodes.edit_feature_btn.addEventListener("click", () => {
 				product_feature_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.edit_feature_btn });
 			});
 
-			/** @type {SelectProductFeatureOptionsModalComp} */
-			// @ts-ignore
-			const select_product_features_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
-
 			comp._nodes.add_option_btn.addEventListener("click", () => {
-				select_product_features_modal_comp._show(comp._data.product_feature_id, {
+				const select_product_features_options_modal_comp = getSelectProductFeatureOptionsModal();
+				select_product_features_options_modal_comp._show(comp._data.product_feature_id, {
 					source: comp._nodes.add_option_btn,
 				});
 			});

@@ -317,10 +317,7 @@ function productComp(comp, parent, data = undefined) {
 
 			comp._render();
 		} else {
-			/** @type {ManageProductListModalComp} */
-			// @ts-ignore
-			const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
-
+			const manage_product_list_modal_comp = getManageProductListModal();
 			manage_product_list_modal_comp._data.questions = questions;
 			manage_product_list_modal_comp._data.add_products = add_products;
 			manage_product_list_modal_comp._render();
@@ -636,23 +633,13 @@ function productComp(comp, parent, data = undefined) {
 			<div style="height:100px"></div>
 		`,
 		ready: () => {
-			const select_product_features_modal_comp = getSelectProductFeaturesModal();
-
-			const select_product_feature_options_modal_comp = getSelectProductFeatureOptionsModal();
-
-			const manage_product_list_modal_comp = getManageProductListModal();
-
-			const product_feature_modal_comp = getProductFeatureModal();
-
-			const select_product_categories_modal_comp = getSelectProductCategoriesModal();
-
-			const select_file_modal = getSelectFileModal();
-
 			comp._nodes.add_feature_btn.addEventListener("click", () => {
+				const select_product_features_modal_comp = getSelectProductFeaturesModal();
 				select_product_features_modal_comp._show({ source: comp._nodes.add_feature_btn });
 			});
 
 			comp._nodes.add_image_btn.addEventListener("click", () => {
+				const select_file_modal = getSelectFileModal();
 				select_file_modal._data.file_manager.select_callback = (src) => {
 					comp._data.images.push({ img_url: src, product_img_id: -1, product_feature_options: [] });
 					comp._render();
@@ -662,9 +649,11 @@ function productComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.add_category_btn.addEventListener("click", () => {
+				const select_product_categories_modal_comp = getSelectProductCategoriesModal();
 				select_product_categories_modal_comp._show({ source: comp._nodes.add_category_btn });
 			});
 			comp._nodes.print_categories.addEventListener("click", () => {
+				const select_product_categories_modal_comp = getSelectProductCategoriesModal();
 				select_product_categories_modal_comp._show({ source: comp._nodes.print_categories });
 			});
 
