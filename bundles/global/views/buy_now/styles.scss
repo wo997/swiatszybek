@@ -1,22 +1,71 @@
 /* css[view] */
 
-h1 {
-	text-align: center;
-}
+// h1 {
+// 	text-align: center;
+// }
 
 .buy_products_wrapper,
 .buy_now_form {
 	padding: 10px;
 }
 
-// .buy_now_form {
-// 	padding: 10px;
-// 	max-width: 600px;
-// }
-
-.buy_now_wrapper {
-	max-width: 600px;
-
+.buy_now_container {
 	margin: 0 auto;
 	width: 100%;
+}
+
+@media only screen and (max-width: 999px) {
+	.buy_now_container {
+		max-width: 600px;
+	}
+
+	.desktop_view {
+		display: none;
+	}
+}
+
+@media only screen and (min-width: 1000px) {
+	.buy_products_wrapper,
+	.buy_now_form {
+		max-width: 600px;
+	}
+
+	.buy_products_wrapper {
+		position: fixed;
+		left: 50%;
+		top: calc(var(--header_height));
+		width: var(--searching_wrapper_width);
+		flex-shrink: 0;
+		height: calc(100vh - var(--header_height));
+		overflow: hidden;
+		width: 500px;
+		margin-top: 100px;
+	}
+
+	.buy_now_form {
+		margin-left: 50%;
+		width: 500px;
+		transform: translateX(-100%);
+		margin-top: 100px;
+	}
+
+	.buy_now_form h1 {
+		height: 0;
+		margin: 0;
+		transform: translateY(-60px);
+	}
+
+	.mobile_view {
+		display: none;
+	}
+}
+
+@media only screen and (min-width: 1100px) {
+	.buy_products_wrapper {
+		margin-left: 30px;
+	}
+
+	.buy_now_form {
+		margin-left: calc(50% - 30px);
+	}
 }

@@ -134,6 +134,7 @@
 	.searching_wrapper {
 		& {
 			position: fixed;
+			left: 0;
 			top: var(--header_height);
 			width: var(--searching_wrapper_width);
 			flex-shrink: 0;

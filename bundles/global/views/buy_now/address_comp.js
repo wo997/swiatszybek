@@ -59,7 +59,7 @@ function addressComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="label big center first">Adres</div>
+			<div class="label big first">Adres</div>
 			<div class="radio_group boxes columns_2" data-bind="{${data.party}}">
 				<div class="checkbox_area box">
 					<div>

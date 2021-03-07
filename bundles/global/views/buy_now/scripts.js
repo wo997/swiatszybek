@@ -1,5 +1,8 @@
 /* js[view] */
 
+/** @type {PiepNode} */
+let buy_products_wrapper;
+
 domload(() => {
 	/** @type {CartProductComp} */
 	// @ts-ignore
@@ -28,4 +31,15 @@ domload(() => {
 	// @ts-ignore
 	const address_comp = $("address-comp.main_address");
 	addressComp(address_comp, undefined);
+
+	buy_products_wrapper = $(".buy_products_wrapper");
+	document.addEventListener("scroll", onBuyNowScroll);
+	window.addEventListener("resize", onBuyNowScroll);
+	onBuyNowScroll();
 });
+
+const onBuyNowScroll = () => {
+	const scroll_top = document.documentElement.scrollTop;
+	const margin_top = window.innerWidth < 1000 ? 0 : clamp(10, 100 - scroll_top, 100);
+	buy_products_wrapper.style.marginTop = `${margin_top}px`;
+};
