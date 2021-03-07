@@ -18,13 +18,15 @@
  * @typedef {{
  * products: UserCartProductData[]
  * products_data: any
+ * total_price: number
+ * rebate_codes: string[]
  * }} UserCartData
  */
 
 /**
  * @type {UserCartData}
  */
-let user_cart = { products: [], products_data: [] };
+let user_cart = { products: [], products_data: [], total_price: 0, rebate_codes: [] };
 
 function loadedUserCart(quiet = false) {
 	user_cart.products.forEach((product) => {
@@ -42,5 +44,8 @@ function loadedUserCart(quiet = false) {
 
 	if (quiet === false) {
 		window.dispatchEvent(new CustomEvent("user_cart_changed"));
+		setTimeout(() => {
+			resizeCartCallback();
+		});
 	}
 }

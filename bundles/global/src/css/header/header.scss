@@ -94,7 +94,7 @@ header.main {
 			border: none;
 			cursor: pointer;
 		}
-		&:hover .basket_item_count {
+		&:hover .cart_product_count {
 			box-shadow: 0px 0px 0px 2px #eee;
 			transition: none;
 		}
@@ -123,7 +123,7 @@ header.main {
 			align-items: center;
 			justify-content: center;
 		}
-		.basket_item_count {
+		.cart_product_count {
 			background: var(--primary-clr);
 			min-width: 22px;
 			height: 22px;
@@ -151,12 +151,12 @@ header.main {
 		border-radius: var(--header-btn-radius);
 	}
 
-	.basket_menu {
+	.cart_menu {
 		& {
 			min-width: 250px;
 			padding: 0 10px 10px;
 		}
-		.basket_summary {
+		.cart_summary {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;

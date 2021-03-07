@@ -38,25 +38,25 @@ function requestHeaderModals() {
 				<h3 class="modal_header" style="max-width: 500px;">
 					<div class="basket_icon_wrapper">
 						<img class="basket_icon" src="/src/img/basket_icon.svg" />
-						<div class="basket_item_count"></div>
+						<div class="cart_product_count"></div>
 					</div>
 					Koszyk
 				</h3>
 				<div class="scroll_panel scroll_shadow panel_padding">
 					<div></div>
 				</div>
-				<div style="display:flex;padding:0 5px 5px" class="basket_menu_mobile_summary footer"></div>
+				<div style="display:flex;padding:0 5px 5px" class="cart_menu_mobile_summary footer"></div>
 			</div>
 		</div>
 	`);
 
-	// const su = $("header .nav_basket_summary");
-	// $("#basketMenu .basket_menu_mobile_summary").insertAdjacentHTML("afterbegin", su.outerHTML);
+	// const su = $("header .nav_cart_summary");
+	// $("#basketMenu .cart_menu_mobile_summary").insertAdjacentHTML("afterbegin", su.outerHTML);
 
 	// const hc = $("header .header_basket_content_wrapper");
 	// $("#basketMenu .scroll_panel > div").appendChild(hc);
 
-	const bbtn = $("header .basket_wrapper .basket-btn");
+	const bbtn = $("header .cart_wrapper .basket-btn");
 	if (bbtn) {
 		bbtn.addEventListener("click", (ev) => {
 			if (header_use_modals) {
@@ -79,7 +79,7 @@ function requestHeaderModals() {
 				<div class="scroll_panel scroll_shadow panel_padding">
 					<div></div>
 				</div>
-				<div style="display:flex;padding:0 5px 5px" class="basket_menu_mobile_summary footer"></div>
+				<div style="display:flex;padding:0 5px 5px" class="cart_menu_mobile_summary footer"></div>
 			</div>
 		</div>
 	`);
@@ -99,7 +99,7 @@ function requestHeaderModals() {
             <div class="scroll_panel scroll_shadow panel_padding">
               <div></div>
             </div>
-            <div style='display:flex;padding:0 5px 5px' class='basket_menu_mobile_summary footer'></div>
+            <div style='display:flex;padding:0 5px 5px' class='cart_menu_mobile_summary footer'></div>
         </div>
     </div>
   `);

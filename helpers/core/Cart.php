@@ -2,7 +2,7 @@
 
 /**
  * @typedef CartProduct {
- * product_id: number
+                                 * product_id: number
  * qty: number
  * }
  * you can add more props later
@@ -14,7 +14,6 @@ class Cart
     private $rebate_codes; // all
     private $rebate_codes_codes = []; // just strings
     private $rebate_codes_limit = 1; // that will be a subject to change
-    private $final_price;
 
     public function __construct($user_id = null)
     {
@@ -40,7 +39,7 @@ class Cart
             $product_ids[] = $product["product_id"];
         }
 
-        $final_price = 0;
+        $total_price = 0;
 
         $products_data = [];
         if ($product_ids) {
@@ -59,27 +58,18 @@ class Cart
 
                 $price = $product_data["gross_price"];
 
-                $final_price += $cart_product["qty"] * $price;
+                $total_price += $cart_product["qty"] * $price;
             }
         }
-        $this->final_price = $final_price;
+        $this->total_price = $total_price;
 
         return [
             "products" => $this->products,
             "products_data" => $products_data,
-            "final_price" => $this->final_price,
+            "total_price" => $this->total_price,
             "rebate_codes" => $this->rebate_codes_codes
         ];
     }
-
-    // public function getFinalPrice()
-    // {
-    //     foreach ($this->products as $product) {
-    //         //$product[""]
-    //     }
-    //     $this->final_price = 0;
-    //     return $this->final_price;
-    // }
 
     public function changeProductQty($product_id, $qty_diff)
     {

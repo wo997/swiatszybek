@@ -4,11 +4,19 @@ h1 {
 	text-align: center;
 }
 
-cart-products-comp.buy_products {
-	max-width: 600px;
-}
-
+.buy_products_wrapper,
 .buy_now_form {
 	padding: 10px;
+}
+
+// .buy_now_form {
+// 	padding: 10px;
+// 	max-width: 600px;
+// }
+
+.buy_now_wrapper {
 	max-width: 600px;
+
+	margin: 0 auto;
+	width: 100%;
 }

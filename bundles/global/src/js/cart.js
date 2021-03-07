@@ -13,7 +13,11 @@ window.addEventListener("resize", () => {
 	resizeCartCallback();
 });
 
-domload(resizeCartCallback);
+domload(() => {
+	setTimeout(() => {
+		resizeCartCallback();
+	});
+});
 
 function initBuy() {
 	$$(".qty_controls:not(.qty_rgstrd)").forEach((qty_controls) => {

@@ -7,17 +7,17 @@
 // 	font-weight: normal;
 // }
 
-// header .basket_wrapper {
+// header .cart_wrapper {
 // 	max-width: 250px;
 // 	/*min-width: 50px;*/
 // }
-// header .basket_wrapper > a {
+// header .cart_wrapper > a {
 // 	display: flex;
 // 	flex-direction: column;
 // 	justify-content: center;
 // 	height: 100%;
 // }
-// header .basket_wrapper h2 {
+// header .cart_wrapper h2 {
 // 	margin: 0;
 // }
 
@@ -26,12 +26,12 @@
 // 	pointer-events: auto;
 // }
 
-// .basket_wrapper .basket_icon,
+// .cart_wrapper .basket_icon,
 // .basketMenu .basket_icon {
 // 	width: 34px;
 // }
 
-// .basket_wrapper .basket_icon {
+// .cart_wrapper .basket_icon {
 // 	margin-bottom: 2px;
 // 	vertical-align: middle;
 // }
@@ -56,8 +56,8 @@
 // 	position: relative;
 // }
 
-// header .basket_item_count,
-// .basketMenu .basket_item_count {
+// header .cart_product_count,
+// .basketMenu .cart_product_count {
 // 	font-weight: bold;
 // 	position: absolute;
 // 	display: inline-block;
@@ -129,7 +129,7 @@
 // 	text-align: center;
 // }
 
-// .nav_basket_summary {
+// .nav_cart_summary {
 // 	width: 100%;
 // }
 
