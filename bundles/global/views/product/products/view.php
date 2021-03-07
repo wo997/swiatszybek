@@ -255,8 +255,11 @@ foreach ($options_data as $option_data) {
         <p class="filters_description"></p>
 
         <div class="results_info">
-            Znaleziono wyników:
-            <span class="count"><?= $products_search_data["total_rows"] ?></span>
+            <span>
+                Znaleziono wyników:
+                <span class="products_total_rows"><?= $products_search_data["total_rows"] ?></span>
+            </span>
+            <button class="btn primary">Pokaż <i class="fas fa-angle-double-down"></i></button>
         </div>
 
         <div class="product_list">

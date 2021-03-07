@@ -161,6 +161,10 @@
 	header.main {
 		box-shadow: 302px 2px 9px 0 #0003;
 	}
+
+	.results_info .btn {
+		display: none;
+	}
 }
 
 @media only screen and (max-width: 849px) {
@@ -195,6 +199,33 @@
 		.level_2 a {
 			padding-left: 36px;
 		}
+	}
+
+	.results_info {
+		& {
+			position: fixed;
+			bottom: 0;
+			right: 0;
+			left: 0;
+			z-index: 600;
+			background: #fff;
+			margin: 0;
+			padding: 10px;
+			display: flex;
+			justify-content: space-evenly;
+			align-items: center;
+			border-top: 1px solid #aaa;
+			box-shadow: 0 -2px 9px 0 #0003;
+			transition: 0.2s transform;
+		}
+		&:not(.visible) {
+			transform: translateY(110%);
+		}
+	}
+}
+@media only screen and (min-width: 340px) {
+	.results_info .btn {
+		min-width: 100px;
 	}
 }
 

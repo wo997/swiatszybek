@@ -3,7 +3,8 @@
 domload(() => {
 	document.body.id = "admin";
 
-	if (window.innerWidth < MOBILE_WIDTH) {
+	if (window.innerWidth < 800) {
+		// hell no
 		var nv = $(".navbar_admin");
 		if (!nv) {
 			return;

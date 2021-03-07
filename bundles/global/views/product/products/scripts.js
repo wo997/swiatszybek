@@ -7,6 +7,10 @@ let pp_selected_option_groups;
 let product_list_ready = false;
 
 /** @type {PiepNode} */
+let sticky_results_info;
+/** @type {PiepNode} */
+let products_category_name;
+/** @type {PiepNode} */
 let products_all;
 /** @type {PiepNode} */
 let product_list;
@@ -25,7 +29,9 @@ let search_products_price_max;
 domload(() => {
 	products_all = $(".products_all");
 	product_list = $(".product_list");
-	results_info_count = $(".results_info .count");
+	results_info_count = $(".results_info .products_total_rows");
+	sticky_results_info = $(".results_info");
+	products_category_name = $(".category_name");
 
 	initPrices();
 	initPagination();
@@ -91,10 +97,10 @@ function initPagination() {
 	product_list_pagination_comp = $(`pagination-comp.product_list_pagination`);
 	paginationComp(product_list_pagination_comp, undefined);
 	product_list_pagination_comp._data = {
-		row_count: 1,
+		row_count: 2,
 		total_rows: +results_info_count.innerText,
 		page_id: 0,
-		row_count_options: [1, 5, 25, 100],
+		row_count_options: [2, 5, 25, 100],
 	};
 	product_list_pagination_comp._render();
 
@@ -334,12 +340,28 @@ function productsFetched(res = {}) {
 
 	lazyLoadImages();
 
-	const category_name = $(".category_name");
-
-	scrollIntoView(category_name, {
+	scrollIntoView(products_category_name, {
 		direction: "up",
+		//offset: 0,
 		callback: () => {
 			products_all.style.height = "";
 		},
 	});
 }
+
+domload(() => {
+	const scrclb = () => {
+		if (window.innerWidth >= 850) {
+			return;
+		}
+		const r = products_category_name.getBoundingClientRect();
+		const visible = r.top > window.innerHeight;
+		sticky_results_info.classList.toggle("visible", visible);
+	};
+	window.addEventListener("scroll", scrclb);
+	scrclb();
+
+	$(".results_info .btn").addEventListener("click", () => {
+		smoothScroll(products_category_name.getBoundingClientRect().top - 100);
+	});
+});
