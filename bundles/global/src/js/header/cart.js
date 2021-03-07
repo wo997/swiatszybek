@@ -23,4 +23,11 @@ domload(() => {
 
 	window.addEventListener("user_cart_changed", loadCart);
 	loadCart();
+
+	$("header .basket_icon_wrapper").addEventListener("click", () => {
+		if (cart_products_comp._data.products.length === 0) {
+			return;
+		}
+		window.location.href = "/kup-teraz";
+	});
 });
