@@ -118,7 +118,7 @@ function smoothScrolling(diff, params = {}) {
 /**
  *
  * @param {PiepNode} elem
- * @param {{duration?: number, offset?: number, margin?: number, callback?: CallableFunction}} params
+ * @param {{duration?: number, offset?: number, margin?: number, callback?: CallableFunction, direction?: "both" | "up" | "down"}} params
  */
 function scrollIntoView(elem, params = {}) {
 	elem = $(elem);
@@ -143,6 +143,10 @@ function scrollIntoView(elem, params = {}) {
 		diff = top;
 	} else if (bottom > 0) {
 		diff = bottom;
+	}
+
+	if ((params.direction === "up" && diff < 0) || (params.direction === "down" && diff > 0)) {
+		return;
 	}
 
 	return smoothScroll(diff, {

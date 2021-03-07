@@ -334,7 +334,10 @@ function productsFetched(res = {}) {
 
 	lazyLoadImages();
 
-	scrollIntoView($(".category_name"), {
+	const category_name = $(".category_name");
+
+	scrollIntoView(category_name, {
+		direction: "down",
 		callback: () => {
 			products_all.style.height = "";
 		},
