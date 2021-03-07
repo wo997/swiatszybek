@@ -32,8 +32,25 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         <h1 class="h1 desktop_view">Kup teraz</h1>
 
         <address-comp class="main_address"></address-comp>
+
         <div class="label big">Dostawa</div>
+        <div class="radio_group boxes columns_2 hide_checks">
+            <div class="checkbox_area box">
+                <div>
+                    <p-checkbox data-value="courier"></p-checkbox>
+                    <span>Kurier</span>
+                </div>
+            </div>
+            <div class="checkbox_area box">
+                <div>
+                    <p-checkbox data-value="parcel_locker"></p-checkbox>
+                    <span>Paczkomat</span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<div style="height: 70px"></div>
 
 <?php include "bundles/global/templates/default.php"; ?>
