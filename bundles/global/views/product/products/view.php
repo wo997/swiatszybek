@@ -146,7 +146,7 @@ foreach ($options_data as $option_data) {
 
 <div class="products_all">
     <div class="searching_wrapper">
-        <div class="scroll_panel scroll_shadow">
+        <div class="scroll_panel scroll_shadow separate_scroll">
             <div>
                 <div class="search_header first"> <i class="fas fa-bars"></i> Kategorie </div>
                 <div class="product_categories">
