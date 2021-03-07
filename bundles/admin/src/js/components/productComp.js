@@ -342,7 +342,7 @@ function productComp(comp, parent, data = undefined) {
 			// warmup
 			const vat = vats.find((e) => e.vat_id === row_data.vat_id);
 			const vat_val = vat ? vat.value : 0;
-			row_data.gross_price = round(row_data.net_price * (1 + vat_val), 2);
+			row_data.net_price = round(row_data.gross_price / (1 + vat_val), 2);
 		});
 
 		setCompData(comp, data, {
