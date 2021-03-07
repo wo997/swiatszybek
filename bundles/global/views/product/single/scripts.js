@@ -89,19 +89,31 @@ domload(() => {
 	loadCart();
 
 	$(".main_buy_btn").addEventListener("click", () => {
+		if (adding_product_from_cart) {
+			return;
+		}
+
 		if (!$(".case_can_buy_product").classList.contains("can_buy")) {
 			showNotification(`Wybierz wariant produktu powyżej`, { type: "error", one_line: true });
 			return;
 		}
+		let qty = $(".main_qty_controls .val_qty")._get_value();
+		const cart_product = user_cart.products.find((e) => e.product_id === single_product.product_id);
+		if (cart_product) {
+			qty += cart_product.qty;
+		}
+
+		adding_product_from_cart = true;
 		xhr({
 			url: "/cart/add-product",
 			params: {
 				product_id: single_product.product_id,
-				qty_diff: $(".main_qty_controls .val_qty")._get_value(),
+				qty,
 			},
 			success: (res) => {
 				user_cart = res.user_cart;
 				loadedUserCart();
+				adding_product_from_cart = false;
 			},
 		});
 	});
@@ -322,7 +334,6 @@ function setVariantData() {
 
 	productImagesChange();
 
-	$(".main_qty_controls").dataset.product = "single_product";
 	$(".main_qty_controls .val_qty")._set_value();
 }
 

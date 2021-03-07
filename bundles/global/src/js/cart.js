@@ -37,7 +37,7 @@ function initBuy() {
 
 			const ref = def(qty_controls.dataset.product, "");
 			if (ref === "single_product") {
-				val_qty._set_value(val_qty._get_value() + qty);
+				val_qty._set_value(qty);
 			} else {
 				const product = getProduct();
 				if (qty !== product.qty) {
@@ -81,23 +81,25 @@ function initBuy() {
 			return product ? Math.min(product.stock, 10) : 100;
 		};
 
+		sub_qty.addEventListener("click", () => {
+			const product = getProduct();
+			if (!product) {
+				return;
+			}
+			setQty(val_qty._get_value() - 1);
+		});
+		add_qty.addEventListener("click", () => {
+			const product = getProduct();
+			if (!product) {
+				return;
+			}
+			setQty(val_qty._get_value() + 1);
+		});
+
 		val_qty.addEventListener("click", () => {
 			// @ts-ignore
 			val_qty.select();
 		});
-		sub_qty.addEventListener("click", () => {
-			if (!getProduct()) {
-				return;
-			}
-			setQty(getProduct().qty - 1);
-		});
-		add_qty.addEventListener("click", () => {
-			if (!getProduct()) {
-				return;
-			}
-			setQty(getProduct().qty + 1);
-		});
-
 		val_qty.addEventListener("change", () => {
 			if (!getProduct()) {
 				return;

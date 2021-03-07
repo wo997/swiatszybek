@@ -20,6 +20,11 @@
 		display: flex;
 		white-space: nowrap;
 	}
+
+	&.wide_content {
+		padding: 0 10px;
+		margin: 0 -10px;
+	}
 }
 
 /*

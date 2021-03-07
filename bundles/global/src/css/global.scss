@@ -63,32 +63,12 @@ p {
 .inline-flex {
 	display: inline-flex !important;
 }
-.checkbox-wrapper.block {
-	display: block;
-}
-.btn.block {
-	display: block;
-}
-
-.desktopRow {
-	display: flex;
-}
-.desktopRow > * {
-	width: 100%;
-}
-@media only screen and (max-width: 799px) {
-	.desktopRow {
-		flex-wrap: wrap;
-	}
-}
-@media only screen and (min-width: 800px) {
-	.desktopRow.spaceColumns > * {
-		margin: 0 10px;
-	}
-	.desktopRow.spaceColumns {
-		margin: 0 -10px;
-	}
-}
+// .checkbox-wrapper.block {
+// 	display: block;
+// }
+// .btn.block {
+// 	display: block;
+// }
 
 /* showhover start */
 .showhover {

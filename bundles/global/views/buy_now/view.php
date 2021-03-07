@@ -17,7 +17,14 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
     <div class="buy_products_wrapper">
         <div class="label big first">Koszyk</div>
-        <cart-products-comp class="buy_products"></cart-products-comp>
+
+        <div class="scroll_panel scroll_shadow wide_content">
+            <cart-products-comp class="buy_products"></cart-products-comp>
+        </div>
+
+        <button class="btn primary">Posiadam kod rabatowy</button>
+
+        <span class="cart_total_price pln bold">250 zł</span>
     </div>
 
     <div class="buy_now_form">

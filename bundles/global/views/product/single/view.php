@@ -258,7 +258,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
                 <div class="case_can_buy_product" data-tooltip_position="center">
                     <div class="label">Ilość:</div>
-                    <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px">
+                    <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px" data-product="single_product">
                         <button class="btn subtle sub_qty">
                             <i class="fas fa-minus"></i>
                         </button>
