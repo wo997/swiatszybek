@@ -30,8 +30,9 @@ function traverseCategories($parent_id = -1, $level = 0)
         $link = getProductCategoryLink(json_decode($category["__category_path_json"], true));
 
         $html .= "<li data-category_id=\"$id\" >";
-        $html .= "<a href=\"$link\">$name</a>";
+        $html .= "<a href=\"$link\">$name";
         $html .= " <span class=\"count\">($count)</span>";
+        $html .= "</a>";
         $html .= traverseCategories($category["product_category_id"], $level + 1);
         $html .= "</li>";
     }

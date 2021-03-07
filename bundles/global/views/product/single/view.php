@@ -278,7 +278,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <div>
                         <div class="label inyourbasket">W Twoim koszyku:</div>
                         <cart-products-comp class="has_products"></cart-products-comp>
-                        <a class="btn fill medium primary" href="/zakup">
+                        <a class="btn fill medium primary" href="/kup-teraz">
                             Dodaj kasy
                             <i class="fas fa-chevron-right"></i>
                         </a>

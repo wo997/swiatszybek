@@ -2,7 +2,7 @@
 
 /**
  * @typedef CartProduct {
-                                 * product_id: number
+ * product_id: number
  * qty: number
  * }
  * you can add more props later
@@ -11,11 +11,9 @@
 class Cart
 {
     private $products;
-    private $products_data;
     private $rebate_codes; // all
     private $rebate_codes_codes = []; // just strings
     private $rebate_codes_limit = 1; // that will be a subject to change
-    private $products_price;
     private $final_price;
 
     public function __construct($user_id = null)

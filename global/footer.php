@@ -69,7 +69,7 @@ if (isset($JS_files)) {
                 <div class="btn primary medium fill" style="margin: 10px 0" onclick="hideParentModal(this)">
                     Kontynuuj zakupy
                 </div>
-                <a href="/zakup" class="btn primary medium fill" style="margin-bottom: 6px">
+                <a href="/kup-teraz" class="btn primary medium fill" style="margin-bottom: 6px">
                     Kup teraz
                 </a>
             </div>

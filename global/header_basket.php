@@ -18,7 +18,7 @@
                     Wartość koszyka:
                     <span class="total_basket_cost pln bold">250 zł</span>
                 </div>
-                <a class="btn primary go_to_buy_btn" href="/zakup">
+                <a class="btn primary go_to_buy_btn" href="/kup-teraz">
                     Przejdź do kasy
                     <i class="fa fa-chevron-right"></i>
                 </a>

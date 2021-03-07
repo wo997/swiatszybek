@@ -23,7 +23,7 @@ if ($_POST["buyer_type"] == 'f') {
 }
 
 if ($_POST["email"] == '') {
-    Request::redirect("/zakup");
+    Request::redirect("/kup-teraz");
 }
 
 // lower kod rabatowy count

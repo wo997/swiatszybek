@@ -1,7 +1,7 @@
 <?php //route[/facebook/login_callback]
 
-// // if (strpos($_SERVER["HTTP_REFERER"], "/zakup") !== false) {
-// //   $_SESSION["redirect"] = "/zakup";
+// // if (strpos($_SERVER["HTTP_REFERER"], "/kup-teraz") !== false) {
+// //   $_SESSION["redirect"] = "/kup-teraz";
 // // }
 
 // try {

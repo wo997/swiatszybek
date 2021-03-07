@@ -40,7 +40,7 @@ domload(() => {
 function initProductCategories() {
 	$$(".product_categories ul:not(.level_0)").forEach((ul) => {
 		const a = ul._prev();
-		a.insertAdjacentHTML("afterend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
+		a.insertAdjacentHTML("beforeend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
 		ul.classList.add("expand_y", "hidden", "animate_hidden");
 	});
 
@@ -50,7 +50,7 @@ function initProductCategories() {
 		const expand_btn = target._parent(".expand_btn", { skip: 0 });
 		if (expand_btn) {
 			const open = expand_btn.classList.toggle("open");
-			expand(expand_btn._next(), open);
+			expand(expand_btn._parent()._next(), open);
 			ev.preventDefault();
 			return false;
 		}

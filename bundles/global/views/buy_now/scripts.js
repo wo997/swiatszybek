@@ -1,9 +1,9 @@
-/* js[global] */
+/* js[view] */
 
 domload(() => {
 	/** @type {CartProductComp} */
 	// @ts-ignore
-	const cart_products_comp = $("header cart-products-comp.all_products");
+	const cart_products_comp = $("cart-products-comp.buy_products");
 	if (!cart_products_comp) {
 		return;
 	}

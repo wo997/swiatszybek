@@ -192,7 +192,7 @@ function validateStock()
         // TODO: rework that script man, it's bad to redirect no matter what the request is
         // redirect when kupuje ziom xd, reload?
         /*if (!isset($_GET['produkt'])) { // cannot loop man
-            header("Location: /zakup?produkt=brak");
+            header("Location: /kup-teraz?produkt=brak");
             die;
         }*/
         //if (!IS_XHR)

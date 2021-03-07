@@ -255,7 +255,7 @@ $tracking_link = getTrackingLink($zamowienie_data["track"], $zamowienie_data["do
 
             if (User::getCurrent()->priveleges["backend_access"]) { // status_id is an actual ID
                 echo "<button class='btn primary' style='font-size:14px;margin-left:5px;font-weight:normal' onclick='showModal(\"zamowienieForm\");'>Edytuj</button>";
-                echo "<a class='btn primary' style='font-size:14px;margin-left:5px;font-weight:normal' href='/zakup/$zamowienie_link'>Ponów</a>";
+                echo "<a class='btn primary' style='font-size:14px;margin-left:5px;font-weight:normal' href='/kup-teraz/$zamowienie_link'>Ponów</a>";
             }
             ?>
         </h3>
