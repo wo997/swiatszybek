@@ -209,6 +209,10 @@ textarea {
 		background-color: #fff;
 		transition: 0s all;
 	}
+	&.invalid {
+		border: 1px solid red !important;
+		background: #fee;
+	}
 }
 :root {
 	--field-hover-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.12);

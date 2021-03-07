@@ -1,29 +1,31 @@
 /* css[global] */
 
-.label:not(.first) {
-	margin-top: var(--form_spacing);
+:root {
+	--form_spacing_factor: 1;
 }
+
 .label {
+	&:not(.first) {
+		margin-top: calc(var(--form_spacing_factor) * var(--form_spacing));
+	}
 	& {
-		margin-bottom: 0.2em;
+		margin-bottom: calc((var(--form_spacing_factor) - 0.75) * 0.8em);
 		user-select: none;
 		-webkit-user-select: none;
 		font-weight: 600;
 		display: block;
 	}
-}
-.label [data-type] {
-	margin-top: 4px;
+
+	&.medium {
+		--form_spacing_factor: 1.3;
+	}
+	&.big {
+		--form_spacing_factor: 1.6;
+	}
 }
 
 label {
 	cursor: pointer;
-	//display: block;
-}
-
-.field.invalid {
-	border: 1px solid red !important;
-	background: #fee;
 }
 
 .form_columns {

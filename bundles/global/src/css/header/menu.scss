@@ -1,6 +1,6 @@
 /* css[global] */
 
-#mainMenu {
+.mainMenu {
 	a {
 		display: flex;
 		padding: 9px 15px;
@@ -8,7 +8,9 @@
 	}
 	.expand_btn {
 		& {
-			margin: -9px -9px -9px auto;
+			margin: -9px -14px -9px auto;
+			height: 42px;
+			width: 42px;
 		}
 		& i {
 			transition: transform 0.2s;
