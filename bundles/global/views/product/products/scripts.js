@@ -7,6 +7,8 @@ let pp_selected_option_groups;
 let product_list_ready = false;
 
 /** @type {PiepNode} */
+let products_all;
+/** @type {PiepNode} */
 let product_list;
 /** @type {PiepNode} */
 let results_info_count;
@@ -21,6 +23,7 @@ let search_products_price_min;
 let search_products_price_max;
 
 domload(() => {
+	products_all = $(".products_all");
 	product_list = $(".product_list");
 	results_info_count = $(".results_info .count");
 
@@ -296,6 +299,7 @@ function mainSearchProducts() {
 function productsFetched(res = {}) {
 	search_product_list_xhr = undefined;
 
+	products_all.style.height = products_all.offsetHeight + "px";
 	if (res.html !== undefined) {
 		product_list._set_content(res.html);
 	}
@@ -329,4 +333,10 @@ function productsFetched(res = {}) {
 	});
 
 	lazyLoadImages();
+
+	scrollIntoView($(".category_name"), {
+		callback: () => {
+			products_all.style.height = "";
+		},
+	});
 }

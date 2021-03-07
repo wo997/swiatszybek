@@ -253,8 +253,6 @@ foreach ($options_data as $option_data) {
             ?></h1>
         <p class="filters_description"></p>
 
-        <div class="hook_view"></div>
-
         <div class="results_info">
             Znaleziono wyników:
             <span class="count"><?= $products_search_data["total_rows"] ?></span>

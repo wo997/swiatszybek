@@ -128,6 +128,7 @@ function $(selector, parent = undefined) {
 	};
 
 	node._scroll_parent = (options = {}) => {
+		options.default = def(options.default, document.documentElement);
 		return findScrollParent(node, options);
 	};
 

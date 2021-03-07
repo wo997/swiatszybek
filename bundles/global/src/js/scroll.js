@@ -63,6 +63,8 @@ function smoothScroll(diff, params = {}) {
 
 	params.t = 1;
 	smoothScrolling(diff, params);
+
+	return params.duration;
 }
 
 /**
@@ -126,7 +128,10 @@ function scrollIntoView(elem, params = {}) {
 	const offset = def(params.offset, 0.15 * scroll_parent.offsetHeight);
 
 	const elem_r = elem.getBoundingClientRect();
-	const parent_r = scroll_parent.getBoundingClientRect();
+	const parent_r =
+		scroll_parent === document.documentElement
+			? { width: window.innerWidth, height: window.innerHeight, top: 0, left: 0 }
+			: scroll_parent.getBoundingClientRect();
 
 	const top = elem_r.top - parent_r.top - offset;
 	const bottom = elem_r.top + elem_r.height - (parent_r.top + parent_r.height - offset);
@@ -140,7 +145,7 @@ function scrollIntoView(elem, params = {}) {
 		diff = bottom;
 	}
 
-	smoothScroll(diff, {
+	return smoothScroll(diff, {
 		callback: params.callback,
 		scroll_parent: scroll_parent,
 	});
