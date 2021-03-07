@@ -26,7 +26,7 @@
  */
 let user_cart = { products: [], products_data: [] };
 
-function loadedUserCart() {
+function loadedUserCart(quiet = false) {
 	user_cart.products.forEach((product) => {
 		const data = user_cart.products_data.find((x) => x.product_id === product.product_id);
 		if (data) {
@@ -39,4 +39,8 @@ function loadedUserCart() {
 			product.stock = data.stock;
 		}
 	});
+
+	if (quiet === false) {
+		window.dispatchEvent(new CustomEvent("user_cart_changed"));
+	}
 }

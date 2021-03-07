@@ -48,7 +48,7 @@ if (defined("ROUTE")) {
     const same_ext_image_allowed_types = <?= json_encode(Files::$same_ext_image_allowed_types) ?>;
 
     user_cart = <?= json_encode(User::getCurrent()->cart->getAllData()) ?>;
-    loadedUserCart();
+    loadedUserCart(true);
 
     <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
         const attribute_data_types = <?= json_encode($attribute_data_types) ?>;

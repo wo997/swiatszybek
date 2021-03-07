@@ -23,6 +23,25 @@ function initBuy() {
 		const sub_qty = qty_controls._child(".sub_qty");
 		const add_qty = qty_controls._child(".add_qty");
 
+		const doDiff = (qty) => {
+			const ref = def(qty_controls.dataset.product, "");
+			if (ref === "single_product") {
+				val_qty._set_value(val_qty._get_value() + qty);
+			} else {
+				xhr({
+					url: "/cart/add-product",
+					params: {
+						product_id: getProduct().product_id,
+						qty,
+					},
+					success: (res) => {
+						user_cart = res.user_cart;
+						loadedUserCart();
+					},
+				});
+			}
+		};
+
 		const getProduct = () => {
 			/** @type {string} */
 			const ref = def(qty_controls.dataset.product, "");
@@ -50,10 +69,10 @@ function initBuy() {
 			val_qty.select();
 		});
 		sub_qty.addEventListener("click", () => {
-			val_qty._set_value(val_qty._get_value() - 1);
+			doDiff(-1);
 		});
 		add_qty.addEventListener("click", () => {
-			val_qty._set_value(val_qty._get_value() + 1);
+			doDiff(1);
 		});
 
 		val_qty.addEventListener("change", () => {

@@ -274,7 +274,7 @@ function createComp(node, parent_comp, data, options) {
 			sub_node.addEventListener("change", () => {
 				let sub_node_data = sub_node._get_value();
 
-				if (sub_node_data !== undefined) {
+				if (sub_node_data !== undefined && comp._data) {
 					comp._data[bind_var] = sub_node_data;
 					comp._render();
 				}

@@ -76,7 +76,6 @@ function cartProducts_productComp(comp, parent, data = undefined) {
 					success: (res) => {
 						user_cart = res.user_cart;
 						loadedUserCart();
-						window.dispatchEvent(new CustomEvent("user_cart_changed"));
 					},
 				});
 			});

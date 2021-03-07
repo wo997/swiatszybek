@@ -102,7 +102,6 @@ domload(() => {
 			success: (res) => {
 				user_cart = res.user_cart;
 				loadedUserCart();
-				window.dispatchEvent(new CustomEvent("user_cart_changed"));
 			},
 		});
 	});
