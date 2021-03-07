@@ -23,4 +23,9 @@ domload(() => {
 
 	window.addEventListener("user_cart_changed", loadCart);
 	loadCart();
+
+	/** @type {AddressComp} */
+	// @ts-ignore
+	const address_comp = $("address-comp.main_address");
+	addressComp(address_comp, undefined);
 });
