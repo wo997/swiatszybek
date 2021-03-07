@@ -109,18 +109,19 @@ $products_search_data_0 = getGlobalProductsSearch([
 ]);
 
 $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
-$where_0 = $products_ids_csv ? "general_product_id IN (SELECT DISTINCT general_product_id FROM product WHERE product_id IN ($products_ids_csv))" : "1";
+$where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "1";
+$where_general_products_0 = "general_product_id IN (SELECT DISTINCT general_product_id FROM product WHERE $where_products_0)";
 
 $options_data = DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id option_id
     FROM general_product
     INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
-    WHERE $where_0
+    WHERE $where_general_products_0
     GROUP BY product_feature_option_id");
 
-// $options_data = DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id option_id
-//     FROM general_product INNER JOIN product USING(general_product_id)
-//     WHERE $where_0
-//     GROUP BY product_feature_option_id");
+$prices_data = DB::fetchRow("SELECT MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price
+    FROM general_product
+    INNER JOIN product USING(general_product_id)
+    WHERE $where_products_0");
 
 $option_count = [];
 foreach ($options_data as $option_data) {
@@ -137,97 +138,103 @@ foreach ($options_data as $option_data) {
 <script>
     const product_category_id = <?= $product_category_id ?>;
     const product_category_path = <?= $product_category_data["__category_path_json"] ?>;
+    const prices_data = <?= json_encode($prices_data) ?>;
 </script>
 
 <?php startSection("body_content"); ?>
 
 <div class="products_all">
     <div class="searching_wrapper">
-        <button class="btn primary fill mobile_search_btn" onclick="showModal('searchCategory', {source:this})">
-            <i class="fas fa-list"></i> Kategorie
-        </button>
-
-        <button class="btn primary fill mobile_search_btn search-filters-btn" onclick="beforeFiltersShown();showModal('searchFilters', {source:this})">
-            <i class="fas fa-sliders-h"></i> Filtry <span class="filter_count"></span>
-        </button>
-
-        <div class="search_header first"> <i class="fas fa-bars"></i> Kategorie </div>
-        <div class="product_categories">
-            <?= traverseCategories() ?>
-        </div>
-
-        <div class="search_header"> <i class="fas fa-star"></i> Cechy </div>
-        <div class="product_features">
-            <?= traverseFeatures() ?>
-        </div>
-
-        <div class="search_header"> <i class="fas fa-tags"></i> Cena </div>
-        <div class="flex_children_width">
-            <div class="flex_column" style="margin-right:var(--form_spacing);">
-                Min.
-                <div class="float_icon mobile-margin-bottom flex">
-                    <input class="field inline price_min_search" data-number inputmode="numeric">
-                    <i>zł</i>
+        <div class="scroll_panel scroll_shadow">
+            <div>
+                <div class="search_header first"> <i class="fas fa-bars"></i> Kategorie </div>
+                <div class="product_categories">
+                    <?= traverseCategories() ?>
                 </div>
-            </div>
-            <div class="flex_column">
-                Max.
-                <div class="float_icon mobile-margin-bottom flex">
-                    <input class="field inline price_max_search" data-number inputmode="numeric">
-                    <i>zł</i>
+
+                <div class="search_header"> <i class="fas fa-star"></i> Cechy </div>
+                <div class="product_features">
+                    <?= traverseFeatures() ?>
                 </div>
+
+                <div class="search_header"> <i class="fas fa-tags"></i> Cena <span style="font-weight:400">(<?= $prices_data["min_gross_price"] . " zł - " . $prices_data["max_gross_price"] . " zł" ?>)</span> </div>
+                <div class="flex_children_width">
+                    <div class="flex_column" style="margin-right:var(--form_spacing);">
+                        Od
+                        <div class="float_icon mobile-margin-bottom flex">
+                            <input class="field inline price_min" inputmode="numeric">
+                            <i>zł</i>
+                        </div>
+                    </div>
+                    <div class="flex_column">
+                        Do
+                        <div class="float_icon mobile-margin-bottom flex">
+                            <input class="field inline price_max" inputmode="numeric">
+                            <i>zł</i>
+                        </div>
+                    </div>
+                </div>
+
+                <select class="field select_price_range" style="margin-top:var(--form_spacing);">
+                    <option value="">- Wybierz zakres z listy -</option>
+                    <?php
+                    $cute_numbers = [0, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
+                    $len = count($cute_numbers);
+                    for ($i = 0; $i < $len - 1; $i++) {
+                        $num_1 = $cute_numbers[$i];
+                        $num_2 = $cute_numbers[$i + 1];
+                        if ($num_2 >= $prices_data["min_gross_price"] && $num_1 <= $prices_data["max_gross_price"]) {
+                            echo "<option value=\"$num_1-$num_2\">$num_1 zł - $num_2 zł</option>";
+                        }
+                    }
+                    ?>
+                </select>
+
+                <!-- <div class="search_header">
+                    <i class="fas fa-search"></i>
+                    Szukaj
+                    <button class='btn subtle case_search small' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-tooltip_position='right' style='margin:-10px 0'>
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class='float_icon mobile-margin-bottom search_wrapper glue_children'>
+                    <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
+                    <i class="fas fa-search"></i>
+                    <button class="btn primary case_mobile search-btn can-disappear">
+                        <img class="search_icon" src="/src/img/search_icon.svg">
+                    </button>
+                </div> -->
+
+                <!-- <div class="sorting-wrapper">
+                    <div class="search_header">
+                        <i class="fas fa-sort-amount-down-alt"></i>
+                        Sortuj
+                    </div>
+                    <label class="order_by_item">
+                        <input type="radio" name="order_by" value="sale" class="sale_option">
+                        <span><i class="fas fa-star"></i> Bestsellery</span>
+                    </label>
+                    <label class="order_by_item">
+                        <input type="radio" name="order_by" value="new">
+                        <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
+                    </label>
+                    <label class="order_by_item">
+                        <input type="radio" name="order_by" value="cheap">
+                        <span><i class="fas fa-dollar-sign"></i> Najtańsze</span>
+                    </label>
+                    <label class="order_by_item case_no_search">
+                        <input type="radio" name="order_by" value="random" class="random_option">
+                        <span><i class="fas fa-dice-three"></i> Losowo</span>
+                    </label>
+                    <label class="order_by_item case_search">
+                        <input type="radio" name="order_by" value="relevance" class="relevance_option">
+                        <span><img src="/src/img/target_icon.svg" style="width: 1em;transform: translateY(2px);"> Trafność</span>
+                    </label>
+                </div> -->
             </div>
         </div>
-
-        <select class="field" style="margin-top:var(--form_spacing);">
-            <option value="">Wybierz zakres z listy</option>
-            <option value="10-30">10 zł - 30 zł</option>
-            <option value="30-100">30 zł - 100 zł</option>
-            <option value="100-200">100 zł - 200 zł</option>
-        </select>
-
-        <!-- <div class="search_header">
-            <i class="fas fa-search"></i>
-            Szukaj
-            <button class='btn subtle case_search small' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-tooltip_position='right' style='margin:-10px 0'>
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class='float_icon mobile-margin-bottom search_wrapper glue_children'>
-            <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
-            <i class="fas fa-search"></i>
-            <button class="btn primary case_mobile search-btn can-disappear">
-                <img class="search_icon" src="/src/img/search_icon.svg">
-            </button>
-        </div> -->
-
-        <!-- <div class="sorting-wrapper">
-            <div class="search_header">
-                <i class="fas fa-sort-amount-down-alt"></i>
-                Sortuj
-            </div>
-            <label class="order_by_item">
-                <input type="radio" name="order_by" value="sale" class="sale_option">
-                <span><i class="fas fa-star"></i> Bestsellery</span>
-            </label>
-            <label class="order_by_item">
-                <input type="radio" name="order_by" value="new">
-                <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
-            </label>
-            <label class="order_by_item">
-                <input type="radio" name="order_by" value="cheap">
-                <span><i class="fas fa-dollar-sign"></i> Najtańsze</span>
-            </label>
-            <label class="order_by_item case_no_search">
-                <input type="radio" name="order_by" value="random" class="random_option">
-                <span><i class="fas fa-dice-three"></i> Losowo</span>
-            </label>
-            <label class="order_by_item case_search">
-                <input type="radio" name="order_by" value="relevance" class="relevance_option">
-                <span><img src="/src/img/target_icon.svg" style="width: 1em;transform: translateY(2px);"> Trafność</span>
-            </label>
-        </div> -->
     </div>
+
     <div class="product_list_wrapper">
         <h1 class="h1 category_name">
             <?php
@@ -245,8 +252,6 @@ foreach ($options_data as $option_data) {
             }
             ?></h1>
         <p class="filters_description"></p>
-        <?= ""; //$product_category["description"] 
-        ?>
 
         <div class="hook_view"></div>
 
@@ -260,11 +265,6 @@ foreach ($options_data as $option_data) {
         </div>
 
         <pagination-comp class="product_list_pagination"></pagination-comp>
-
-        <!-- <div class="under-products">
-            <?= ""; //getCMSPageHTML($product_category["content"]) 
-            ?>
-        </div> -->
     </div>
 </div>
 

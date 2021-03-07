@@ -27,7 +27,7 @@ function headerResizeCallback() {
 	main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
 	const menu_collapsed = header_use_modals || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
 	main_header.classList.toggle("menu_collapsed", menu_collapsed);
-	main_header_height.style.height = main_header.offsetHeight + "px";
+	document.documentElement.style.setProperty("--header_height", `${main_header.offsetHeight}px`);
 }
 
 domload(() => {

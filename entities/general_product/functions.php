@@ -35,6 +35,13 @@ function getGlobalProductsSearch($params)
         }
     }
 
+    if (isset($params["price_min"])) {
+        $where .= " AND p.gross_price >= " . floatval($params["price_min"]);
+    }
+    if (isset($params["price_max"])) {
+        $where .= " AND p.gross_price <= " . floatval($params["price_max"]);
+    }
+
     $pagination_params = [
         "select" => "
             gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__selectable_option_ids_json,

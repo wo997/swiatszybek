@@ -234,3 +234,11 @@ header.main {
 		transform: translateY(3px);
 	}
 }
+
+:root {
+	--header_height: 75px; // just a default value
+}
+.header_height {
+	flex-shrink: 0;
+	height: var(--header_height);
+}

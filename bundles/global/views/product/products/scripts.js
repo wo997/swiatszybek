@@ -15,25 +15,46 @@ let product_list_pagination_comp;
 /** @type {XMLHttpRequest} */
 let search_product_list_xhr;
 
+/** @type {PiepNode} */
+let search_products_price_min;
+/** @type {PiepNode} */
+let search_products_price_max;
+
 domload(() => {
 	product_list = $(".product_list");
 	results_info_count = $(".results_info .count");
 
-	// @ts-ignore
-	product_list_pagination_comp = $(`pagination-comp.product_list_pagination`);
-	paginationComp(product_list_pagination_comp, undefined);
-	product_list_pagination_comp._data = {
-		row_count: 1,
-		total_rows: +results_info_count.innerText,
-		page_id: 0,
-		row_count_options: [1, 5, 25, 100],
-	};
-	product_list_pagination_comp._render();
+	initPrices();
+	initPagination();
+	initProductFeatures();
+	initProductCategories();
+	openCurrentMenu();
+	setCategoryFeaturesFromUrl();
 
-	product_list_pagination_comp.addEventListener("change", () => {
-		delay("mainSearchProducts");
+	product_list_ready = true;
+});
+
+function initProductCategories() {
+	$$(".product_categories ul:not(.level_0)").forEach((ul) => {
+		const a = ul._prev();
+		a.insertAdjacentHTML("afterend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
+		ul.classList.add("expand_y", "hidden", "animate_hidden");
 	});
 
+	$(".product_categories").addEventListener("click", (ev) => {
+		const target = $(ev.target);
+
+		const expand_btn = target._parent(".expand_btn", { skip: 0 });
+		if (expand_btn) {
+			const open = expand_btn.classList.toggle("open");
+			expand(expand_btn._next(), open);
+			ev.preventDefault();
+			return false;
+		}
+	});
+}
+
+function initProductFeatures() {
 	$$(".product_features .option_row > ul").forEach((ul) => {
 		const checkbox_area = ul._prev();
 		const checkbox = checkbox_area._child("p-checkbox");
@@ -60,25 +81,54 @@ domload(() => {
 			}
 		});
 	});
+}
 
-	$$(".product_categories ul:not(.level_0)").forEach((ul) => {
-		const a = ul._prev();
-		a.insertAdjacentHTML("afterend", `<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
-		ul.classList.add("expand_y", "hidden", "animate_hidden");
+function initPagination() {
+	// @ts-ignore
+	product_list_pagination_comp = $(`pagination-comp.product_list_pagination`);
+	paginationComp(product_list_pagination_comp, undefined);
+	product_list_pagination_comp._data = {
+		row_count: 1,
+		total_rows: +results_info_count.innerText,
+		page_id: 0,
+		row_count_options: [1, 5, 25, 100],
+	};
+	product_list_pagination_comp._render();
+
+	product_list_pagination_comp.addEventListener("change", () => {
+		delay("mainSearchProducts");
+	});
+}
+
+function initPrices() {
+	search_products_price_min = $(".searching_wrapper .price_min");
+	search_products_price_max = $(".searching_wrapper .price_max");
+	const select_price_range = $(".select_price_range");
+
+	search_products_price_min.addEventListener("input", () => {
+		delay("mainSearchProducts", 400);
+	});
+	search_products_price_min.addEventListener("change", () => {
+		delay("mainSearchProducts");
+	});
+	search_products_price_max.addEventListener("input", () => {
+		delay("mainSearchProducts", 400);
+	});
+	search_products_price_max.addEventListener("change", () => {
+		delay("mainSearchProducts");
 	});
 
-	$(".product_categories").addEventListener("click", (ev) => {
-		const target = $(ev.target);
-
-		const expand_btn = target._parent(".expand_btn", { skip: 0 });
-		if (expand_btn) {
-			const open = expand_btn.classList.toggle("open");
-			expand(expand_btn._next(), open);
-			ev.preventDefault();
-			return false;
-		}
+	select_price_range.addEventListener("change", () => {
+		const [min, max] = select_price_range._get_value().split("-");
+		select_price_range._set_value("", { quiet: true });
+		search_products_price_min._set_value(min, { quiet: true });
+		search_products_price_max._set_value(max, { quiet: true });
+		select_price_range.blur();
+		mainSearchProducts();
 	});
+}
 
+function openCurrentMenu() {
 	const current = $(`.product_categories li[data-category_id="${product_category_id}"]`);
 	if (current) {
 		let open_cat = current;
@@ -94,14 +144,7 @@ domload(() => {
 			}
 		}
 	}
-
-	setCategoryFeaturesFromUrl();
-
-	productsFetched();
-
-	product_list_ready = true;
-});
-
+}
 window.addEventListener("popstate", () => {
 	setCategoryFeaturesFromUrl();
 });
@@ -192,6 +235,15 @@ function mainSearchProducts() {
 	pp_selected_option_groups = options_data.map((e) => e.option_ids);
 
 	const search_params = { datatable_params, product_category_id, option_id_groups: options_data.map((e) => e.option_ids) };
+
+	const price_min = search_products_price_min._get_value();
+	const price_max = search_products_price_max._get_value();
+	if (price_min.trim() !== "") {
+		search_params.price_min = price_min;
+	}
+	if (price_max.trim() !== "") {
+		search_params.price_max = price_max;
+	}
 
 	if (last_search_params === undefined || isEquivalent(last_search_params, search_params)) {
 		last_search_params = search_params;

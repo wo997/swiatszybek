@@ -60,4 +60,4 @@ function traverseMenu($parent_id = -1, $level = 0)
 
 </header>
 
-<div class="header_height" style="height:71px"></div>
+<div class="header_height"></div>
