@@ -26,14 +26,18 @@ label {
 	background: #fee;
 }
 
-/* don't use it in that form please 
-.form-header {
-	text-align: center;
-	font-size: 22px;
-	margin-bottom: 25px;
-	font-weight: 600;
+.form_columns {
+	& {
+		display: flex;
+	}
 }
-.form-header:not(.first) {
-	margin-top: 25px;
-} 
-*/
+
+.form_column {
+	& {
+		flex-grow: 1;
+		flex-shrink: 1;
+	}
+	&:not(.first) {
+		margin-left: var(--form_spacing);
+	}
+}

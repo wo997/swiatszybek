@@ -10,12 +10,13 @@
 		display: flex;
 		flex-flow: row wrap;
 		margin-right: calc(var(--box_margin) * -1);
-		margin-bottom: calc(var(--box_height) * -1);
+		margin-bottom: calc(var(--box_margin) * -1);
+		--box-padding: 10px;
 	}
 	.box {
 		& {
 			position: relative;
-			padding: 10px;
+			padding: var(--box-padding);
 			display: flex;
 			flex-wrap: wrap;
 			min-height: var(--box_height);
@@ -70,14 +71,7 @@
 	&.columns_4,
 	&.columns_5,
 	&.columns_6 {
-		& {
-			display: flex;
-			flex-flow: row wrap;
-			--box-padding: 5px;
-		}
-		& .box {
-			padding: var(--box-padding);
-		}
+		--box-padding: 5px;
 	}
 
 	&.columns_1 .box {

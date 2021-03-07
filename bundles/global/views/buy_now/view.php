@@ -17,8 +17,9 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 hey maybe it should also be an absolute layout cause why not ;)
 <cart-products-comp class="buy_products"></cart-products-comp>
 
-<div>
+<div class="buy_now_form">
     <address-comp class="main_address"></address-comp>
+
 </div>
 
 <?php include "bundles/global/templates/default.php"; ?>
