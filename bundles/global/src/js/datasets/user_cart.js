@@ -10,6 +10,7 @@
  * net_price: number
  * img_url: string
  * url: string
+ * stock: number
  * }} UserCartProductData
  */
 
@@ -35,6 +36,7 @@ function loadedUserCart() {
 			product.url = data.__url;
 			product.general_product_id = data.general_product_id;
 			product.img_url = data.__img_url;
+			product.stock = data.stock;
 		}
 	});
 }

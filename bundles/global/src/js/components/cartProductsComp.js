@@ -31,6 +31,7 @@ function cartProductsComp(comp, parent, data = undefined) {
 			...options,
 			pass_list_data: [{ what: "no_redirect", where: "products" }],
 			render: () => {
+				initBuy();
 				setTimeout(() => {
 					comp.classList.toggle("empty", data.products.length === 0);
 				}, 250);

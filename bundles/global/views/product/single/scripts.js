@@ -65,8 +65,6 @@ domload(() => {
 
 	setProductFeaturesFromUrl();
 
-	initBuy();
-
 	// TEMPORARY
 	const vdo = $(".vdo");
 
@@ -89,45 +87,6 @@ domload(() => {
 
 	window.addEventListener("user_cart_changed", loadCart);
 	loadCart();
-});
-
-function initBuy() {
-	$$(".qty_controls").forEach((qty_controls) => {
-		const val_qty = qty_controls._child(".val_qty");
-		const sub_qty = qty_controls._child(".sub_qty");
-		const add_qty = qty_controls._child(".add_qty");
-
-		const getMin = () => {
-			return 1;
-		};
-
-		const getMax = () => {
-			return single_product ? Math.min(single_product.stock, 10) : 100;
-		};
-
-		val_qty.addEventListener("click", () => {
-			// @ts-ignore
-			val_qty.select();
-		});
-		sub_qty.addEventListener("click", () => {
-			val_qty._set_value(val_qty._get_value() - 1);
-		});
-		add_qty.addEventListener("click", () => {
-			val_qty._set_value(val_qty._get_value() + 1);
-		});
-
-		val_qty.addEventListener("change", () => {
-			if (!single_product) {
-				return;
-			}
-			val_qty._set_value(clamp(getMin(), val_qty._get_value(), getMax()), { quiet: true });
-
-			const qty = val_qty._get_value();
-			sub_qty.toggleAttribute("disabled", qty === getMin());
-			add_qty.toggleAttribute("disabled", qty === getMax());
-		});
-		val_qty._dispatch_change();
-	});
 
 	$(".main_buy_btn").addEventListener("click", () => {
 		if (!$(".case_can_buy_product").classList.contains("can_buy")) {
@@ -147,7 +106,7 @@ function initBuy() {
 			},
 		});
 	});
-}
+});
 
 /**
  *
@@ -364,6 +323,7 @@ function setVariantData() {
 
 	productImagesChange();
 
+	$(".main_qty_controls").dataset.product = "single_product";
 	$(".main_qty_controls .val_qty")._set_value();
 }
 

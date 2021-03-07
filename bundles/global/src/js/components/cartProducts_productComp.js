@@ -52,7 +52,7 @@ function cartProducts_productComp(comp, parent, data = undefined) {
 
 		<div class="bottom_row">
 			<span class="product_price pln" html="{${data.gross_price + " zł / szt."}}"></span>
-			<div class="glue_children qty_controls">
+			<div class="glue_children qty_controls" data-product="user_cart ${data.product_id}">
 				<button class="btn subtle sub_qty">
 					<i class="fas fa-minus"></i>
 				</button>

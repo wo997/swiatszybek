@@ -16,8 +16,8 @@
 	}
 }
 
-cart-products_product-comp.comp {
-	& {
+cart-products-comp.comp {
+	cart-products_product-comp {
 		display: grid;
 		grid-template-columns: auto 1fr auto;
 		grid-template-rows: auto auto;
@@ -66,8 +66,8 @@ cart-products_product-comp.comp {
 		}
 	}
 
-	@media only screen and (max-width: 360px) {
-		&.comp {
+	&.skinny {
+		cart-products_product-comp {
 			grid-gap: 5px 10px;
 		}
 		.product_img {
