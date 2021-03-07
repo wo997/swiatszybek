@@ -160,8 +160,8 @@ function scrollIntoView(elem, params = {}) {
 }
 
 // prevent scroll below
-const non_scrollables_selector = "#modal_wrapper";
-const scrollables_selector = ".float_menu, .headerbtn_menu, #modal_wrapper .scroll_panel:not(.horizontal)";
+const non_scrollables_selector = "#modal_wrapper, .float_menu, .headerbtn_menu";
+const scrollables_selector = "#modal_wrapper .scroll_panel:not(.horizontal), .headerbtn_menu .scroll_panel:not(.horizontal)";
 
 // desktop
 document.addEventListener(

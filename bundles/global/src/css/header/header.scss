@@ -8,7 +8,7 @@ header.main {
 		align-items: center;
 		z-index: 600;
 		background: #fff;
-		border-bottom: 1px solid #aaa;
+		border-bottom: 1px solid #ccc;
 		box-shadow: 0 2px 9px 0 #0003;
 		--header_padding_vertical: 10px;
 		--header_padding_horizontal: 15px;
@@ -154,13 +154,13 @@ header.main {
 	.cart_menu {
 		& {
 			min-width: 250px;
-			padding: 0 10px 10px;
 		}
 		.cart_summary {
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-top: 10px;
+			padding: 10px;
+			border-top: 1px solid #ccc;
 		}
 		.all_products {
 			& {
@@ -171,8 +171,15 @@ header.main {
 				min-width: 430px;
 			}
 			.list_row:first-child {
-				border-top: none;
+				border-top-width: 0;
 			}
+			.list_row:last-child {
+				border-bottom-width: 0;
+			}
+		}
+		.scroll_panel {
+			max-height: min(70vh, 500px);
+			padding: 0 10px;
 		}
 	}
 

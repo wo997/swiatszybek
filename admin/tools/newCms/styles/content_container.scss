@@ -49,12 +49,12 @@
 			box-shadow: 0 2px 7px #0005;
 			position: relative;
 		}
-		.shadow-node.top {
+		.shadow_node.top {
 			transform: translateY(5px);
 			width: calc(100% - 10px);
 			margin-left: 5px;
 		}
-		.shadow-node.bottom {
+		.shadow_node.bottom {
 			transform: translateY(-5px);
 			width: calc(100% - 10px);
 			margin-left: 5px;

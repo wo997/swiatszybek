@@ -8,7 +8,7 @@ function registerScrollShadows() {
 		pan.classList.add("overflow_hidden");
 		const offset = 25.0;
 		const light = pan.classList.contains("light");
-		let class_list = "shadow-node";
+		let class_list = "shadow_node";
 
 		if (light) {
 			class_list += " light";

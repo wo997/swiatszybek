@@ -141,7 +141,7 @@
 			height: calc(100vh - var(--header_height));
 			overflow: hidden;
 			background: white;
-			border-right: 1px solid #aaa;
+			border-right: 1px solid #ccc;
 			box-shadow: 0 2px 9px 0 #0003;
 		}
 		& > .scroll_panel {
@@ -174,7 +174,7 @@
 		padding: 15px;
 	}
 	.searching_wrapper {
-		border-bottom: 1px solid #aaa;
+		border-bottom: 1px solid #ccc;
 		box-shadow: 0 2px 5px 0 #0002;
 	}
 	.product_categories {
@@ -215,7 +215,7 @@
 			display: flex;
 			justify-content: space-evenly;
 			align-items: center;
-			border-top: 1px solid #aaa;
+			border-top: 1px solid #ccc;
 			box-shadow: 0 -2px 9px 0 #0003;
 			transition: 0.2s transform;
 		}

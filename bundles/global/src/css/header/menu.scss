@@ -49,7 +49,7 @@ header .main_menu {
 		margin-top: var(--header_padding_vertical);
 		min-width: 100%;
 		flex-grow: 1;
-		border-top: 1px solid #aaa;
+		border-top: 1px solid #ccc;
 	}
 	ul.level_0 {
 		display: flex;
@@ -100,7 +100,7 @@ header .main_menu {
 		padding: 4px;
 		position: absolute;
 		display: none;
-		border: 1px solid #aaa;
+		border: 1px solid #ccc;
 		box-shadow: 0 2px 9px 0 #0003;
 		transition: 0.15s opacity;
 		opacity: 0;

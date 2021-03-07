@@ -62,11 +62,7 @@
 .rearrange_insert_rect {
 	position: absolute;
 	pointer-events: none !important;
-	background-image: repeating-linear-gradient(
-		-45deg,
-		#fff3 0px 10px,
-		#0003 10px 20px
-	);
+	background-image: repeating-linear-gradient(-45deg, #fff3 0px 10px, #0003 10px 20px);
 }
 .rearrange_insert_rect:not(.visible),
 .newCms {
@@ -155,7 +151,7 @@
 .newCms.animating_rearrangement {
 	& .content_responsive_wrapper {
 		&::before,
-		& > .shadow-node {
+		& > .shadow_node {
 			z-index: 20000;
 		}
 	}
