@@ -94,9 +94,20 @@ function registerCheckboxes(parent) {
 	});
 }
 
+/**
+ *
+ * @param {PiepNode} input
+ * @param {*} value
+ */
 function setCheckboxValue(input, value) {
-	input.classList.toggle("checked", !!value);
 	const checkbox_area = input._parent(".checkbox_area");
+	const radio_group = input._parent(".radio_group");
+
+	if (radio_group && !radio_group.classList.contains("unselectable") && radio_group.dataset.value === input.dataset.value && !value) {
+		return;
+	}
+
+	input.classList.toggle("checked", !!value);
 	if (checkbox_area) {
 		checkbox_area.classList.toggle("checked", !!value);
 	}
