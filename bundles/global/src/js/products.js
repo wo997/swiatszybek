@@ -36,20 +36,16 @@ domload(() => {
 		const product_img_wrapper = target._parent(".product_img_wrapper", { skip: 0 });
 		const was_focused_product_img_wrapper = curr_focused_product_img_wrapper;
 		if (product_img_wrapper) {
-			if (product_img_wrapper._child(".overlay")) {
-				return;
-			}
-			if (curr_focused_product_img_wrapper !== product_img_wrapper) {
+			if (curr_focused_product_img_wrapper !== product_img_wrapper && !product_img_wrapper._child(".overlay")) {
 				curr_focused_product_img_wrapper = product_img_wrapper;
 
-				//const product_img = product_img_wrapper._child(".product_img");
 				const images_json = product_img_wrapper.dataset.images;
 				if (images_json) {
 					const images = JSON.parse(images_json);
 					product_img_wrapper.insertAdjacentHTML("beforeend", html`<img class="wo997_img product_img overlay" />`);
 					const base_img = product_img_wrapper._first();
 					const overlay = product_img_wrapper._last();
-					lazyLoadImages({ animate: false });
+					lazyLoadImages({ duration: 0 });
 
 					product_focus_unique_id++;
 					let curr_product_focus_unique_id = product_focus_unique_id;
@@ -91,11 +87,9 @@ domload(() => {
 
 			if (overlay) {
 				overlay.style.opacity = "1";
-				// @ts-ignore
-				overlay.src = images[0].img_url;
+				overlay.setAttribute("src", images[0].img_url);
 				setTimeout(() => {
-					// @ts-ignore
-					base_img.src = images[0].img_url;
+					base_img.setAttribute("src", images[0].img_url);
 
 					overlay.style.opacity = "0";
 

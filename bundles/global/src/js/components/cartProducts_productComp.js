@@ -61,7 +61,7 @@ function cartProducts_productComp(comp, parent, data = undefined) {
 					<i class="fas fa-plus"></i>
 				</button>
 			</div>
-			<span class="product_total_price pln" html="{${data.gross_price * data.qty + " zł"}}"></span>
+			<span class="product_total_price pln" html="{${(data.gross_price * data.qty).toFixed(2) + " zł"}}"></span>
 		</div>`;
 
 	createComp(comp, parent, data, {
