@@ -337,7 +337,7 @@ function productsFetched(res = {}) {
 	const category_name = $(".category_name");
 
 	scrollIntoView(category_name, {
-		direction: "down",
+		direction: "up",
 		callback: () => {
 			products_all.style.height = "";
 		},

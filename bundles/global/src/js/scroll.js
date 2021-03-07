@@ -145,7 +145,10 @@ function scrollIntoView(elem, params = {}) {
 		diff = bottom;
 	}
 
-	if ((params.direction === "up" && diff < 0) || (params.direction === "down" && diff > 0)) {
+	if ((params.direction === "up" && diff > 0) || (params.direction === "down" && diff < 0)) {
+		if (params.callback) {
+			params.callback();
+		}
 		return;
 	}
 
