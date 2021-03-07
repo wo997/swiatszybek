@@ -97,7 +97,7 @@ domload(() => {
 			url: "/cart/add-product",
 			params: {
 				product_id: single_product.product_id,
-				qty: $(".main_qty_controls .val_qty")._get_value(),
+				qty_diff: $(".main_qty_controls .val_qty")._get_value(),
 			},
 			success: (res) => {
 				user_cart = res.user_cart;

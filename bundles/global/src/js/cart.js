@@ -27,21 +27,47 @@ function initBuy() {
 		const sub_qty = qty_controls._child(".sub_qty");
 		const add_qty = qty_controls._child(".add_qty");
 
-		const doDiff = (qty) => {
+		const setQty = (qty) => {
 			const ref = def(qty_controls.dataset.product, "");
 			if (ref === "single_product") {
 				val_qty._set_value(val_qty._get_value() + qty);
 			} else {
-				xhr({
-					url: "/cart/add-product",
-					params: {
-						product_id: getProduct().product_id,
-						qty,
-					},
-					success: (res) => {
-						user_cart = res.user_cart;
-						loadedUserCart();
-					},
+				// @ts-ignore
+				if (qty_controls._add_product_timeout) {
+					// @ts-ignore
+					clearTimeout(qty_controls._add_product_timeout);
+					// @ts-ignore
+					qty_controls._add_product_timeout = undefined;
+				}
+				// @ts-ignore
+				qty_controls._add_product_timeout = setTimeout(() => {
+					// @ts-ignore
+					if (qty_controls._add_product_request) {
+						// @ts-ignore
+						console.log(qty_controls._add_product_request);
+						// @ts-ignore
+						qty_controls._add_product_request.abort();
+						// @ts-ignore
+						qty_controls._add_product_request = undefined;
+					}
+
+					const product = getProduct();
+					if (qty !== product.qty) {
+						// @ts-ignore
+						qty_controls._add_product_request = xhr({
+							url: "/cart/add-product",
+							params: {
+								product_id: getProduct().product_id,
+								qty,
+							},
+							success: (res) => {
+								// @ts-ignore
+								qty_controls._add_product_request = undefined;
+								user_cart = res.user_cart;
+								loadedUserCart();
+							},
+						});
+					}
 				});
 			}
 		};
@@ -73,21 +99,31 @@ function initBuy() {
 			val_qty.select();
 		});
 		sub_qty.addEventListener("click", () => {
-			doDiff(-1);
+			setQty(getProduct().qty - 1);
 		});
 		add_qty.addEventListener("click", () => {
-			doDiff(1);
+			setQty(getProduct().qty + 1);
 		});
 
 		val_qty.addEventListener("change", () => {
 			if (!getProduct()) {
 				return;
 			}
-			val_qty._set_value(clamp(getMin(), val_qty._get_value(), getMax()), { quiet: true });
 
 			const qty = val_qty._get_value();
+			const bound_val = clamp(getMin(), val_qty._get_value(), getMax());
+			if (qty !== bound_val) {
+				val_qty._set_value(clamp(getMin(), val_qty._get_value(), getMax()));
+				return;
+			}
+
 			sub_qty.toggleAttribute("disabled", qty === getMin());
 			add_qty.toggleAttribute("disabled", qty === getMax());
+
+			const ref = def(qty_controls.dataset.product, "");
+			if (ref.startsWith("user_cart")) {
+				setQty(qty);
+			}
 		});
 	});
 

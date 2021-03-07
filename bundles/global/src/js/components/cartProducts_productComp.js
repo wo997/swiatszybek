@@ -56,7 +56,7 @@ function cartProducts_productComp(comp, parent, data = undefined) {
 				<button class="btn subtle sub_qty">
 					<i class="fas fa-minus"></i>
 				</button>
-				<input type="text" class="field inline val_qty" data-bind="{${data.qty}}" data-number inputmode="numeric" />
+				<input type="text" class="field inline val_qty" data-bind="{${data.qty}}" data-number inputmode="numeric" data-input_delay="3000" />
 				<button class="btn subtle add_qty small">
 					<i class="fas fa-plus"></i>
 				</button>
