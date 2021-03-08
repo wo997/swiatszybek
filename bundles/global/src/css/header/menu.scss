@@ -83,7 +83,7 @@ header .main_menu {
 			& {
 				padding: 3px 7px;
 			}
-			&:hover {
+			.no_touch &:hover {
 				text-decoration: underline;
 			}
 		}

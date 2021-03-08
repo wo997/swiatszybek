@@ -33,7 +33,7 @@ cart-products-comp.comp {
 			grid-area: 1 / 2 / 2 / 3;
 			font-weight: 600;
 		}
-		&:hover {
+		.no_touch &:hover {
 			text-decoration: underline;
 		}
 	}

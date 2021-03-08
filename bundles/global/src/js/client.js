@@ -20,5 +20,5 @@ function setTouchDevice() {
 	}
 }
 window.addEventListener("resize", () => {
-	setTouchDevice();
+	setTimeout(setTouchDevice);
 });

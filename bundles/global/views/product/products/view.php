@@ -131,7 +131,6 @@ foreach ($options_data as $option_data) {
 
 ?>
 
-
 <?php startSection("head_content"); ?>
 
 <link rel="canonical" href="<?= SITE_URL . getProductCategoryLink(json_decode($product_category_data["__category_path_json"], true)) ?>" />
@@ -146,7 +145,7 @@ foreach ($options_data as $option_data) {
 
 <div class="products_all">
     <div class="searching_wrapper">
-        <div class="scroll_panel scroll_shadow separate_scroll">
+        <div class="scroll_panel scroll_shadow">
             <div>
                 <div class="search_header first"> <i class="fas fa-bars"></i> Kategorie </div>
                 <div class="product_categories">

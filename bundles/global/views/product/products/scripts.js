@@ -351,14 +351,17 @@ function productsFetched(res = {}) {
 
 domload(() => {
 	const scrclb = () => {
-		if (window.innerWidth >= 850) {
-			return;
+		const mobile = window.innerWidth < 850;
+		if (mobile) {
+			const r = products_category_name.getBoundingClientRect();
+			const visible = r.top > window.innerHeight;
+			sticky_results_info.classList.toggle("visible", visible);
 		}
-		const r = products_category_name.getBoundingClientRect();
-		const visible = r.top > window.innerHeight;
-		sticky_results_info.classList.toggle("visible", visible);
+
+		$(".searching_wrapper > .scroll_panel").classList.toggle("separate_scroll", !mobile);
 	};
 	window.addEventListener("scroll", scrclb);
+	window.addEventListener("resize", scrclb);
 	scrclb();
 
 	$(".results_info .btn").addEventListener("click", () => {
