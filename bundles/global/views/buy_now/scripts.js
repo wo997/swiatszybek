@@ -56,13 +56,14 @@ domload(() => {
 	registerModalContent(
 		html`
 			<div id="addRebateCode" data-dismissable>
-				<div class="modal_body" style="width:400px">
+				<div class="modal_body" style="width:400px;text-align: center;">
 					<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 					<h3 class="modal_header">Kod rabatowy</h3>
 
 					<div class="panel_padding">
-						<div class="label first" data-validate="string">Wpisz kod</div>
+						<div class="label first" data-validate="string">Wpisz swój kod</div>
 						<input type="text" class="field rebate_code" />
+						<div class="show_errors"></div>
 						<button class="btn primary space_top fill activate_btn">Aktywuj</button>
 					</div>
 				</div>
@@ -80,9 +81,15 @@ domload(() => {
 			url: "/cart/activate-rebate-code",
 			params: { rebate_code: rebate_code._get_value() },
 			success: (res) => {
+				if (res.errors && res.errors.length > 0) {
+					$("#addRebateCode .show_errors")._set_content(res.errors.join("<br>"));
+					showInputErrors(rebate_code, res.errors);
+				} else {
+					showNotification("Kod rabatowy został aktywowany", { one_line: true, type: "success" });
+					hideModal("addRebateCode");
+				}
 				user_cart = res.user_cart;
 				loadedUserCart();
-				console.log(res); // TODO: display errors ezy
 			},
 		});
 	});

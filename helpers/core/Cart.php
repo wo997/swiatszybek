@@ -45,8 +45,8 @@ class Cart
             $product_ids_string = join(",", $product_ids);
             $product_index = -1;
 
-            // watch out not to send vulnerable data
-            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url, __name, __url, stock FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
+            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url, __name, __url, stock
+                FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
             foreach ($products_data as $product_data) {
                 $product_index++;
@@ -157,7 +157,13 @@ class Cart
 
         $data = $this->rebateCodeValidData($code);
         if ($data["success"]) {
-            $this->rebate_codes[] = $data["data"];
+            $code = $data["data"]["code"];
+            if (in_array($code, $this->getActiveRebateCodes())) {
+                $res["errors"][] = "Kod $code został już użyty";
+                return $res;
+            } else {
+                $this->rebate_codes[] = $data["data"];
+            }
         }
 
         return $data;
@@ -220,6 +226,11 @@ class Cart
         return $res;
     }
 
+    /**
+     * getActiveRebateCodes
+     *
+     * @return string[]
+     */
     public function getActiveRebateCodes()
     {
         return array_map(fn ($x) => $x["code"], $this->rebate_codes);

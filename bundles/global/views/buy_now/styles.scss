@@ -118,3 +118,14 @@
 		margin-left: calc(50% - 30px);
 	}
 }
+
+.addRebateCode {
+	.show_errors {
+		color: var(--error-clr);
+		font-weight: 600;
+	}
+	.rebate_code {
+		text-transform: uppercase;
+		text-align: center;
+	}
+}

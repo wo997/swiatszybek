@@ -28,7 +28,7 @@ function getManyValidationErrors(inputs) {
 
 function inputChangeValidation(input) {
 	const errors = getInputValidationErrors(input);
-	showValidationErrors(input, errors);
+	showInputErrors(input, errors);
 }
 
 /**
@@ -38,7 +38,7 @@ function inputChangeValidation(input) {
 function validateInputs(inputs) {
 	const inputs_errors = getManyValidationErrors(inputs);
 	inputs_errors.forEach((input_errors) => {
-		showValidationErrors(input_errors.input, input_errors.errors);
+		showInputErrors(input_errors.input, input_errors.errors);
 	});
 
 	return inputs_errors;
@@ -49,7 +49,7 @@ function validateInputs(inputs) {
  * @param {PiepNode} input
  * @param {string[]} errors
  */
-function showValidationErrors(input, errors) {
+function showInputErrors(input, errors) {
 	const wrong = errors.length > 0;
 	if (!input.classList.contains("input_registered") && wrong) {
 		input.addEventListener("change", () => {
