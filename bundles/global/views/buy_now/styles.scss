@@ -120,9 +120,10 @@
 }
 
 .addRebateCode {
-	.show_errors {
+	.show_errors:not(:empty) {
 		color: var(--error-clr);
 		font-weight: 600;
+		margin-top: 3px;
 	}
 	.rebate_code {
 		text-transform: uppercase;

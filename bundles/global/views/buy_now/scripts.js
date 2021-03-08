@@ -61,8 +61,8 @@ domload(() => {
 					<h3 class="modal_header">Kod rabatowy</h3>
 
 					<div class="panel_padding">
-						<div class="label first" data-validate="string">Wpisz swój kod</div>
-						<input type="text" class="field rebate_code" />
+						<div class="label first">Wpisz swój kod</div>
+						<input type="text" class="field rebate_code" data-validate="string" />
 						<div class="show_errors"></div>
 						<button class="btn primary space_top fill activate_btn">Aktywuj</button>
 					</div>
@@ -73,7 +73,8 @@ domload(() => {
 
 	$("#addRebateCode .activate_btn").addEventListener("click", () => {
 		const rebate_code = $("#addRebateCode .rebate_code");
-		if (!validateInputs([rebate_code])) {
+		const errors = validateInputs([rebate_code]);
+		if (errors.length > 0) {
 			return;
 		}
 
