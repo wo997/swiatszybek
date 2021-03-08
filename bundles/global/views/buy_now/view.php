@@ -16,15 +16,32 @@ if (empty(User::getCurrent()->cart->getProducts())) {
     <h1 class="h1 mobile_view center">Kup teraz</h1>
 
     <div class="buy_products_wrapper">
-        <div class="label big first">Koszyk</div>
+        <div class="label big first">
+            Koszyk
+            (<span class="cart_product_count"></span>)
+        </div>
 
-        <div class="products_cart_panel scroll_panel scroll_shadow wide_content">
+        <div class="products_cart_panel scroll_panel scroll_shadow">
             <cart-products-comp class="buy_products"></cart-products-comp>
         </div>
 
-        <div class="cart_summary">
-            <button class="btn primary">Posiadam kod rabatowy</button>
-            <span class="cart_total_price pln bold">250 zł</span>
+        <div class="cart_summary_wrapper">
+            <button class="btn primary add_rebate_code_btn">Posiadam kod rabatowy</button>
+            <div class="cart_summary">
+
+                <div class="medium">
+                    Suma:
+                    <span class="cart_total_price pln"></span>
+                </div>
+                <div class="medium">
+                    Dostawa:
+                    <span class="cart_delivery_price pln">10 zł</span>
+                </div>
+                <div class="big">
+                    Do zapłaty:
+                    <span class="cart_total_price pln"></span>
+                </div>
+            </div>
         </div>
     </div>
 

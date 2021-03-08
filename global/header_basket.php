@@ -14,9 +14,9 @@
                 <cart-products-comp class="all_products"></cart-products-comp>
             </div>
             <div class="cart_summary">
-                <div style='text-align:center;padding:5px;font-weight:600'>
-                    Wartość koszyka:
-                    <span class="cart_total_price pln bold"></span>
+                <div class="semi-bold medium">
+                    Suma:
+                    <span class="cart_total_price pln"></span>
                 </div>
                 <a class="btn primary go_to_buy_btn" href="/kup-teraz">
                     Przejdź do kasy

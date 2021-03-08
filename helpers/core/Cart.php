@@ -2,7 +2,7 @@
 
 /**
  * @typedef CartProduct {
-                                 * product_id: number
+ * product_id: number
  * qty: number
  * }
  * you can add more props later
@@ -61,7 +61,7 @@ class Cart
                 $total_price += $cart_product["qty"] * $price;
             }
         }
-        $this->total_price = $total_price;
+        $this->total_price = roundPrice($total_price);
 
         return [
             "products" => $this->products,

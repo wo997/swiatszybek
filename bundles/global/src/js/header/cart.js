@@ -20,7 +20,7 @@ domload(() => {
 			e._set_content(user_cart.products.length);
 		});
 		$$(".cart_total_price").forEach((e) => {
-			e._set_content(user_cart.total_price);
+			e._set_content(user_cart.total_price + " zł");
 		});
 	};
 

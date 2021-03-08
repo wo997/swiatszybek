@@ -20,31 +20,4 @@
 		display: flex;
 		white-space: nowrap;
 	}
-
-	&.wide_content {
-		padding: 0 10px;
-		margin: 0 -10px;
-	}
 }
-
-/*
-
-.scroll_panel {
-	& {
-		flex-grow: 1;
-		flex-shrink: 1;
-		position: relative;
-		display: flex;
-		will-change: scroll-position;
-	}
-	&:not(.horizontal) {
-		flex-direction: column;
-		overflow: hidden auto;
-	}
-	&.horizontal {
-		overflow: auto hidden;
-		white-space: nowrap;
-	}
-}
-
-*/

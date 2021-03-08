@@ -156,11 +156,13 @@ header.main {
 			min-width: 250px;
 		}
 		.cart_summary {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding: 10px;
-			border-top: 1px solid #ccc;
+			& {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 10px;
+				border-top: 1px solid #ccc;
+			}
 		}
 		.all_products {
 			& {
