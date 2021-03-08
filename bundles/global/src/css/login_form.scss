@@ -1,5 +1,19 @@
 /* css[global] */
 
+#loginForm .modal_body {
+	& {
+		align-self: center;
+		height: auto;
+		max-width: 330px;
+	}
+
+	@media only screen and (min-width: 1100px) {
+		.flex_stretch {
+			padding: 15px;
+		}
+	}
+}
+
 .fb_button {
 	padding: 5px 0px;
 	display: inline-block;

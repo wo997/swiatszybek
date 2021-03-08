@@ -36,6 +36,28 @@ domload(() => {
 	document.addEventListener("scroll", onBuyNowScroll);
 	window.addEventListener("resize", onBuyNowScroll);
 	onBuyNowScroll();
+
+	const add_rebate_code_btn = $(".add_rebate_code_btn");
+	add_rebate_code_btn.addEventListener("click", () => {
+		showModal("addRebateCode", { source: add_rebate_code_btn });
+	});
+
+	registerModalContent(
+		html`
+			<div id="addRebateCode" data-dismissable>
+				<div class="modal_body">
+					<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+					<h3 class="modal_header">Kod rabatowy</h3>
+
+					<div class="panel_padding">
+						<div class="label first">Wpisz kod</div>
+						<input type="text" class="field" />
+						<button class="btn primary space_top fill">Aktywuj</button>
+					</div>
+				</div>
+			</div>
+		`
+	);
 });
 
 const onBuyNowScroll = () => {
