@@ -18,6 +18,8 @@
  * @typedef {{
  * products: UserCartProductData[]
  * products_data: any
+ * products_price: number
+ * delivery_price: number
  * total_price: number
  * rebate_codes: {code:string, value:string}[]
  * }} UserCartData

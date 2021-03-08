@@ -19,6 +19,12 @@ domload(() => {
 		$$(".cart_product_count").forEach((e) => {
 			e._set_content(user_cart.products.length);
 		});
+		$$(".cart_products_price").forEach((e) => {
+			e._set_content(user_cart.products_price + " zł");
+		});
+		$$(".cart_delivery_price").forEach((e) => {
+			e._set_content(user_cart.delivery_price + " zł");
+		});
 		$$(".cart_total_price").forEach((e) => {
 			e._set_content(user_cart.total_price + " zł");
 		});

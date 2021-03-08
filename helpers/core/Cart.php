@@ -2,7 +2,7 @@
 
 /**
  * @typedef CartProduct {
-                                 * product_id: number
+ * product_id: number
  * qty: number
  * }
  * you can add more props later
@@ -13,6 +13,7 @@ class Cart
     private $products;
     private $rebate_codes; // all
     private $rebate_codes_limit = 2; // that will be a subject to change
+    private $delivery_id = -1; // you know what to do with it baby
 
     public function __construct($user_id = null)
     {
@@ -38,7 +39,7 @@ class Cart
             $product_ids[] = $product["product_id"];
         }
 
-        $total_price = 0;
+        $products_price = 0;
 
         $products_data = [];
         if ($product_ids) {
@@ -57,15 +58,37 @@ class Cart
 
                 $price = $product_data["gross_price"];
 
-                $total_price += $cart_product["qty"] * $price;
+                $products_price += $cart_product["qty"] * $price;
             }
         }
-        $this->total_price = roundPrice($total_price);
+
+        $delivery_price = 12;
+
+        $total_price = $products_price;
+
+        // subtract statics first
+        foreach ($this->rebate_codes as $rebate_code) {
+            if (strpos($rebate_code["value"], "%") === false) {
+                $total_price -= floatval($rebate_code["value"]);
+            }
+        }
+
+        // then relatives, so u can save some cents
+        foreach ($this->rebate_codes as $rebate_code) {
+            if (strpos($rebate_code["value"], "%") !== false) {
+                $percent = floatval(str_replace("%", "", $rebate_code["value"]));
+                $total_price *= 1 - ($percent * 0.01);
+            }
+        }
+
+        $total_price += $delivery_price;
 
         return [
             "products" => $this->products,
             "products_data" => $products_data,
-            "total_price" => $this->total_price,
+            "products_price" => roundPrice($products_price),
+            "delivery_price" => roundPrice($delivery_price),
+            "total_price" => roundPrice($total_price),
             "rebate_codes" => array_map(fn ($x) => filterArrayKeys($x, ["code", "value"]), $this->rebate_codes)
         ];
     }

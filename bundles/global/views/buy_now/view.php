@@ -31,7 +31,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
                 <div>
                     Suma:
-                    <span class="cart_total_price pln"></span>
+                    <span class="cart_products_price pln"></span>
                 </div>
                 <div>
                     Dostawa:

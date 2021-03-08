@@ -16,7 +16,7 @@
             <div class="cart_summary">
                 <div class="semi-bold medium">
                     Suma:
-                    <span class="cart_total_price pln"></span>
+                    <span class="cart_products_price pln"></span>
                 </div>
                 <a class="btn primary go_to_buy_btn" href="/kup-teraz">
                     Przejdź do kasy
