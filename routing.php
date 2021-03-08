@@ -57,9 +57,9 @@ $admin_navigations_tree = [
     [
         "title" => '<i class="fas fa-chart-pie"></i> Marketing', "quick_menu" => true,
         "sub" => [
-            ["url" => "/sprzedaz", "title" => '<i class="fas fa-chart-line"></i> Sprzedaż'],
-            //["url" => "/zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'],
-            //["url" => "/kody-rabatowe", "title" => '<i class="fas fa-tag"></i> Kody rabatowe'],
+            //["url" => "/sprzedaz", "title" => '<i class="fas fa-chart-line"></i> Sprzedaż'],
+            ["url" => "/kody-rabatowe", "title" => '<i class="fas fa-tags"></i> Kody rabatowe'],
+            //["url" => "/zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'], // nah
         ]
     ],
     ["url" => "/wysylki", "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki'],

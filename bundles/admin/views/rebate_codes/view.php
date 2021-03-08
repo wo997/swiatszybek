@@ -7,8 +7,6 @@
 
 <?php startSection("body_content"); ?>
 
-<h1>Kody rabatowe</h1>
-
-<div class="mytable"></div>
+<datatable-comp class="rebate_codes"></datatable-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>
