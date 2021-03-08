@@ -225,7 +225,7 @@ function showModal(name = null, params = {}) {
 		}
 
 		const modal = modal_container_node._child(`#${name}`);
-		if (modal && modal.hasAttribute("data-expand")) {
+		if (modal) {
 			const q = modal._child("*");
 			if (q) {
 				if (modal.getAttribute("data-expand") == "large") total = 0; //total--;

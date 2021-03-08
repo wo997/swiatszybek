@@ -45,7 +45,7 @@ domload(() => {
 	registerModalContent(
 		html`
 			<div id="addRebateCode" data-dismissable>
-				<div class="modal_body">
+				<div class="modal_body" style="width:400px">
 					<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 					<h3 class="modal_header">Kod rabatowy</h3>
 
