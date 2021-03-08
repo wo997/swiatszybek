@@ -66,6 +66,21 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 </div>
             </div>
         </div>
+
+        <div style="height: 30px"></div>
+
+        <div class="checkbox_area">
+            <p-checkbox class="square"></p-checkbox>
+            <span>Akceptuję regulamin</span>
+        </div>
+
+        <button class="btn primary medium fill space_top">Potwierdź zamówienie</button>
+
+        <div style="margin-top: 15px;">W następnym kroku dokonasz płatności (<span class="cart_total_price pln"></span>) za zamówienie jedną z poniższych metod:</div>
+        Przelew Bankowy<br>
+        bla<br>
+        bla<br>
+        bla
     </div>
 </div>
 
