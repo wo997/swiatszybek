@@ -97,7 +97,7 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label">Kod</div>
-				<input type="text" class="field" data-bind="{${data.code}}" data-validate="string" data-number />
+				<input type="text" class="field" data-bind="{${data.code}}" data-validate="string" style="text-transform: uppercase;" />
 
 				<div class="label">Wartość</div>
 				<div class="glue_children">
@@ -120,6 +120,11 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 		`,
 		ready: () => {
 			comp._nodes.save_btn.addEventListener("click", () => {
+				const errors = validateInputs(comp._children(`[data-validate]`));
+				if (errors.length > 0) {
+					return;
+				}
+
 				const rebate_code = comp._data;
 				rebate_code.available_from = rebate_code.available_from ? rebate_code.available_from : null;
 				rebate_code.available_till = rebate_code.available_till ? rebate_code.available_till : null;
