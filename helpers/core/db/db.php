@@ -33,9 +33,10 @@ class DB
             // 'FROM ' => 'FROM $prefix_'
             // 'JOIN ' => 'JOIN $prefix_'
             $stmt = self::$con->prepare($sql);
-            $paramCount = count($params);
-            if ($paramCount) {
-                $stmt->bind_param(str_repeat("s", $paramCount), ...$params);
+            $param_count = count($params);
+
+            if ($param_count) {
+                $stmt->bind_param(str_repeat("s", $param_count), ...$params);
             }
 
             if (!$give_response) {

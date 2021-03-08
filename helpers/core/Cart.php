@@ -14,12 +14,15 @@ class Cart
     private $rebate_codes; // all
     private $rebate_codes_limit = 2; // that will be a subject to change
     private $delivery_id = -1; // you know what to do with it baby
+    public ?User $user;
 
-    public function __construct($user_id = null)
+    public function __construct($user)
     {
         $this->products = [];
         $this->rebate_codes = [];
 
+        $this->user = $user;
+        $user_id = $this->user->getId();
         if ($user_id) {
             $this->loadCart($user_id);
         }
@@ -216,11 +219,8 @@ class Cart
      * }
      */
 
-    public function rebateCodeValidData()
+    public function rebateCodeValidData($code)
     {
-        // LIKE should take care of lower upper cases :)
-        // DB::fetchRow("SELECT * FROM rebate_code WHERE rebate_code LIKE ", );
-        $rebate_code_data = ["code" => "PREMIERA123", "qty" => "4", "available_from" => "2020-12-05", "value" => "10%"];
         $res =
             /** @var ValidationResponse */
             [
@@ -228,22 +228,25 @@ class Cart
                 "success" => false,
             ];
 
-        if (!$rebate_code_data) {
+        $rebate_code_id = DB::fetchVal("SELECT rebate_code_id FROM rebate_code WHERE code LIKE '12sa3'");
+        if (!$rebate_code_id) {
             $res["errors"][] = "Niepoprawny kod rabatowy";
-            return $res; // early return lol
+            return $res;
         }
 
-        if ($rebate_code_data["qty"] <= 0) {
-            $res["errors"][] = "Kod został wykorzystany";
+        $rebate_code = EntityManager::getEntityById("rebate_code", $rebate_code_id);
+
+        if ($rebate_code->getProp("qty") <= 0) {
+            $res["errors"][] = "Kod nie jest już dostępny";
         }
 
-        // limit by price etc ezy
+        // TODO: limit by price etc ezy
 
         // ...
 
         if (!count($res["errors"])) {
             $res["success"] = true;
-            $res["data"] = $rebate_code_data;
+            $res["data"] = []; //$rebate_code->getSimpleProps();
         }
 
         return $res;
@@ -270,9 +273,9 @@ class Cart
         $_SESSION["current_user_cart_json"] = $cart_json;
         setcookie("current_user_cart_json", $cart_json, (time() + 31536000), "/");
 
-        $curr_user_id = User::getCurrent()->getId();
-        if ($curr_user_id) {
-            DB::execute("UPDATE user SET cart_json = ? WHERE user_id = $curr_user_id", [$cart_json]);
+        $user_id = $this->user->getId();
+        if ($user_id) {
+            DB::execute("UPDATE user SET cart_json = ? WHERE user_id = $user_id", [$cart_json]);
         }
     }
 

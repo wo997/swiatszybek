@@ -37,7 +37,7 @@ class User
             return;
         }
 
-        $this->cart = new Cart($this->getId());
+        $this->cart = new Cart($this);
     }
 
     public static function getEmailclientUrl($email)
