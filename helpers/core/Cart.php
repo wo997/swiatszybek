@@ -12,7 +12,6 @@ class Cart
 {
     private $products;
     private $rebate_codes; // all
-    private $rebate_codes_codes = []; // just strings
     private $rebate_codes_limit = 1; // that will be a subject to change
 
     public function __construct($user_id = null)
@@ -67,7 +66,7 @@ class Cart
             "products" => $this->products,
             "products_data" => $products_data,
             "total_price" => $this->total_price,
-            "rebate_codes" => $this->rebate_codes_codes
+            "rebate_codes" => $this->getActiveRebateCodes()
         ];
     }
 
@@ -152,17 +151,31 @@ class Cart
     public function activateRebateCode($code)
     {
         if (count($this->rebate_codes) >= $this->rebate_codes_limit) {
-            $res["errors"][] = "Niepoprawny kod rabatowy";
+            $res["errors"][] = "Maksymalna ilość kodów rabatowych: " . $this->rebate_codes_limit;
             return $res;
         }
 
         $data = $this->rebateCodeValidData($code);
         if ($data["success"]) {
             $this->rebate_codes[] = $data["data"];
-            $this->rebate_codes_codes[] = $data["data"]["code"];
         }
 
         return $data;
+    }
+
+    /**
+     *
+     * @param  string $code
+     * @return array
+     */
+    public function deactivateRebateCode($code)
+    {
+        foreach ($this->rebate_codes as $key => $rebate_code) {
+            if ($rebate_code["code"] === $code) {
+                unset($this->rebate_codes[$key]);
+            }
+        }
+        $this->rebate_codes = array_values($this->rebate_codes);
     }
 
     /**
@@ -207,11 +220,16 @@ class Cart
         return $res;
     }
 
+    public function getActiveRebateCodes()
+    {
+        return array_map(fn ($x) => $x["code"], $this->rebate_codes);
+    }
+
     public function saveCart()
     {
         $cart_data = [];
         $cart_data["products"] = $this->products;
-        $cart_data["rebate_codes"] = $this->rebate_codes_codes;
+        $cart_data["rebate_codes"] = $this->getActiveRebateCodes();
 
         $cart_json = json_encode($cart_data);
 

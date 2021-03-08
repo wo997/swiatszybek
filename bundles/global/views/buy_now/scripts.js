@@ -50,14 +50,37 @@ domload(() => {
 					<h3 class="modal_header">Kod rabatowy</h3>
 
 					<div class="panel_padding">
-						<div class="label first">Wpisz kod</div>
-						<input type="text" class="field" />
-						<button class="btn primary space_top fill">Aktywuj</button>
+						<div class="label first" data-validate="string">Wpisz kod</div>
+						<input type="text" class="field rebate_code" />
+						<button class="btn primary space_top fill activate_btn">Aktywuj</button>
 					</div>
 				</div>
 			</div>
 		`
 	);
+
+	$("#addRebateCode .activate_btn").addEventListener("click", () => {
+		const rebate_code = $("#addRebateCode .rebate_code");
+		if (!validateInputs([rebate_code])) {
+			return;
+		}
+
+		xhr({
+			url: "/cart/activate-rebate-code",
+			params: { rebate_code: rebate_code._get_value() },
+			success: (res) => {
+				console.log(res);
+			},
+		});
+	});
+
+	// xhr({
+	// 	url: "/cart/deactivate-rebate-code",
+	// 	params: { rebate_code: "PREMIERA123" },
+	// 	success: (res) => {
+	// 		console.log(res);
+	// 	},
+	// });
 });
 
 const onBuyNowScroll = () => {
