@@ -147,10 +147,11 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 					params: {
 						rebate_code,
 					},
-					success: (res) => {},
+					success: (res) => {
+						window.dispatchEvent(new CustomEvent("rebate_codes_changed"));
+					},
 				});
 				hideParentModal(comp._nodes.save_btn);
-				window.dispatchEvent(new CustomEvent("rebate_codes_changed"));
 			});
 		},
 	});

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @typedef CartProduct {
+                 * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }
@@ -11,6 +11,7 @@
 class Cart
 {
     private $products;
+    /** @var Entity[] RebateCode */
     private $rebate_codes; // all
     private $rebate_codes_limit = 2; // that will be a subject to change
     private $delivery_id = -1; // you know what to do with it baby
@@ -70,16 +71,22 @@ class Cart
         $total_price = $products_price;
 
         // subtract statics first
-        foreach ($this->rebate_codes as $rebate_code) {
-            if (strpos($rebate_code["value"], "%") === false) {
-                $total_price -= floatval($rebate_code["value"]);
+        foreach ($this->rebate_codes as
+        /** @var Entity RebateCode */
+        $rebate_code) {
+            $value = $rebate_code->getProp("value");
+            if (strpos($value, "%") === false) {
+                $total_price -= floatval($value);
             }
         }
 
         // then relatives, so u can save some cents
-        foreach ($this->rebate_codes as $rebate_code) {
-            if (strpos($rebate_code["value"], "%") !== false) {
-                $percent = floatval(str_replace("%", "", $rebate_code["value"]));
+        foreach ($this->rebate_codes as
+        /** @var Entity RebateCode */
+        $rebate_code) {
+            $value = $rebate_code->getProp("value");
+            if (strpos($value, "%") !== false) {
+                $percent = floatval(str_replace("%", "", $value));
                 $total_price *= 1 - ($percent * 0.01);
             }
         }
@@ -92,7 +99,7 @@ class Cart
             "products_price" => roundPrice($products_price),
             "delivery_price" => roundPrice($delivery_price),
             "total_price" => roundPrice($total_price),
-            "rebate_codes" => array_map(fn ($x) => filterArrayKeys($x, ["code", "value"]), $this->rebate_codes)
+            "rebate_codes" => array_map(fn ($x) => filterArrayKeys($x->getSimpleProps(), ["code", "value"]), $this->rebate_codes)
         ];
     }
 
@@ -183,7 +190,9 @@ class Cart
 
         $data = $this->rebateCodeValidData($code);
         if ($data["success"]) {
-            $code = $data["data"]["code"];
+            /** @var Entity RebateCode */
+            $rebate_code = $data["data"];
+            $code = $rebate_code->getProp("code");
             if (in_array($code, $this->getActiveRebateCodes())) {
                 $res["errors"][] = "Kod $code został już użyty";
                 return $res;
@@ -202,8 +211,8 @@ class Cart
      */
     public function deactivateRebateCode($code)
     {
-        foreach ($this->rebate_codes as $key => $rebate_code) {
-            if ($rebate_code["code"] === $code) {
+        foreach ($this->rebate_codes as $key => /** @var Entity RebateCode */ $rebate_code) {
+            if ($rebate_code->getProp("code") === $code) {
                 unset($this->rebate_codes[$key]);
             }
         }
@@ -228,7 +237,7 @@ class Cart
                 "success" => false,
             ];
 
-        $rebate_code_id = DB::fetchVal("SELECT rebate_code_id FROM rebate_code WHERE code LIKE '12sa3'");
+        $rebate_code_id = DB::fetchVal("SELECT rebate_code_id FROM rebate_code WHERE code LIKE ?", [$code]);
         if (!$rebate_code_id) {
             $res["errors"][] = "Niepoprawny kod rabatowy";
             return $res;
@@ -246,7 +255,7 @@ class Cart
 
         if (!count($res["errors"])) {
             $res["success"] = true;
-            $res["data"] = []; //$rebate_code->getSimpleProps();
+            $res["data"] = $rebate_code;
         }
 
         return $res;
@@ -259,7 +268,7 @@ class Cart
      */
     public function getActiveRebateCodes()
     {
-        return array_map(fn ($x) => $x["code"], $this->rebate_codes);
+        return array_map(fn ($x) => $x->getProp("code"), $this->rebate_codes);
     }
 
     public function saveCart()

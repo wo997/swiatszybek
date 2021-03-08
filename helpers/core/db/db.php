@@ -62,7 +62,7 @@ class DB
     public static function fetchRow($sql, $params = [])
     {
         if (!strpos(strtolower($sql), "limit") && strpos(strtolower($sql), "show tables")) {
-            $sql = $sql .= " LIMIT 1";
+            $sql .= " LIMIT 1";
         }
         $res = DB::fetchArr($sql, $params);
         return isset($res[0]) ? $res[0] : [];
