@@ -23,15 +23,3 @@ EntityManager::OneToMany(
 );
 
 EntityManager::manyToMany("product_img", "product_feature_option", "product_img_to_feature_option");
-
-// EventListener::register("before_save_product_img_entity", function ($params) {
-//     /** @var Entity ProductImage */
-//     $product_img = $params["obj"];
-//     /** @var Entity[] ProductFeatureOption */
-//     $options = $product_img->getProp("product_feature_options");
-//     $options_json = [];
-//     foreach ($options as $option) {
-//         $options_json[] = $option->getId();
-//     }
-//     $product_img->setProp("options_json", json_encode($options_json));
-// });

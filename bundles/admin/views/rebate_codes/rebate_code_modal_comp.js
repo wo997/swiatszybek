@@ -15,6 +15,7 @@
  * _data: RebateCodeModalCompData
  * _set_data(data?: RebateCodeModalCompData, options?: SetCompDataOptions)
  * _nodes: {
+ *  value: PiepNode
  *  save_btn: PiepNode
  * }
  * _show(rebate_code_id: number, options?: ShowModalParams)
@@ -84,6 +85,9 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 						comp._render();
 					}
 				});
+
+				comp._nodes.value.dataset.validate =
+					def(data.discount_type, "static") === "static" ? "number|value:{0,10000}" : "number|value:{0,100}";
 			},
 		});
 	};
@@ -97,11 +101,17 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label">Kod</div>
-				<input type="text" class="field" data-bind="{${data.code}}" data-validate="string" style="text-transform: uppercase;" />
+				<input
+					type="text"
+					class="field"
+					data-bind="{${data.code}}"
+					data-validate="string|length:{3,20}"
+					style="text-transform: uppercase;"
+				/>
 
 				<div class="label">Wartość</div>
 				<div class="glue_children">
-					<input type="text" class="field" data-bind="{${data.value}}" data-validate="number" />
+					<input type="text" class="field" data-bind="{${data.value}}" data-node="{${comp._nodes.value}}" />
 					<select type="text" class="field" data-bind="{${data.discount_type}}">
 						<option value="static">Stała kwota (zł)</option>
 						<option value="relative">Kwota proporcjonalna (%)</option>
@@ -109,7 +119,7 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 				</div>
 
 				<div class="label">Ilość</div>
-				<input type="text" class="field" data-bind="{${data.qty}}" />
+				<input type="text" class="field" data-bind="{${data.qty}}" data-validate="number|value:{0,}" />
 
 				<div class="label">Dostępny od</div>
 				<input type="text" class="field default_datepicker" data-bind="{${data.available_from}}" />

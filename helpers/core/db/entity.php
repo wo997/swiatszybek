@@ -240,6 +240,14 @@ class Entity
             return;
         }
 
+        $setter = "set_" . $this->name . "_entity_" .  $prop_name;
+        $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
+        foreach ($vals as $v) {
+            if ($v !== null) {
+                $val = $v;
+            }
+        }
+
         if ($val === null) {
             $val = $this->getProp($prop_name);
         }
@@ -271,16 +279,6 @@ class Entity
                     $val = EntityManager::setManyToManyEntities($this, $prop_name, $other_entity_name, $val);
                     $this->props[$prop_name] = $val;
                 }
-            }
-        }
-
-        // I think it should not modify anything, just throw an error or set something else
-        $setter = "set_" . $this->name . "_entity_" .  $prop_name;
-        $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]); // before and after?
-        foreach ($vals as $v) {
-            if ($v) {
-                // doesn't make sense but ok
-                //$val = $v; //return $val;
             }
         }
 
