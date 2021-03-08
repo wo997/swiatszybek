@@ -8,9 +8,12 @@
 	}
 
 	@media only screen and (min-width: 1100px) {
-		.flex_stretch {
-			padding: 15px;
+		.scroll_panel {
+			padding: 15px 15px;
 		}
+	}
+	.scroll_panel {
+		padding-bottom: 25px;
 	}
 }
 
