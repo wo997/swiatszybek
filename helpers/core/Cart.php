@@ -2,7 +2,7 @@
 
 /**
  * @typedef CartProduct {
- * product_id: number
+                                 * product_id: number
  * qty: number
  * }
  * you can add more props later
@@ -12,7 +12,7 @@ class Cart
 {
     private $products;
     private $rebate_codes; // all
-    private $rebate_codes_limit = 1; // that will be a subject to change
+    private $rebate_codes_limit = 2; // that will be a subject to change
 
     public function __construct($user_id = null)
     {
@@ -66,7 +66,7 @@ class Cart
             "products" => $this->products,
             "products_data" => $products_data,
             "total_price" => $this->total_price,
-            "rebate_codes" => $this->getActiveRebateCodes()
+            "rebate_codes" => array_map(fn ($x) => filterArrayKeys($x, ["code", "value"]), $this->rebate_codes)
         ];
     }
 
@@ -191,7 +191,7 @@ class Cart
     {
         // LIKE should take care of lower upper cases :)
         // DB::fetchRow("SELECT * FROM rebate_code WHERE rebate_code LIKE ", );
-        $rebate_code_data = ["code" => "PREMIERA123", "qty" => "4", "available_from" => "2020-12-05"];
+        $rebate_code_data = ["code" => "PREMIERA123", "qty" => "4", "available_from" => "2020-12-05", "value" => "10%"];
         $res =
             /** @var ValidationResponse */
             [

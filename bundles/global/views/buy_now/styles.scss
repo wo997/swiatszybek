@@ -19,6 +19,30 @@
 	margin-top: var(--form_spacing);
 }
 
+.cart_summary {
+	font-weight: 600;
+}
+
+.rebate_code_block {
+	& {
+		display: inline-flex;
+		background: #eee;
+		border: 1px solid #ccc;
+		border-radius: 100px;
+		padding: 0 0 0 15px;
+		height: 32px;
+		align-items: center;
+		margin: 2px 0;
+	}
+	& .btn {
+		border-radius: 100px;
+		margin-right: -5px;
+		width: 32px;
+		height: 32px;
+		margin: -2px -1px -2px 2px;
+	}
+}
+
 @media only screen and (max-width: 999px) {
 	.buy_now_container {
 		max-width: 600px;

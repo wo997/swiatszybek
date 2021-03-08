@@ -19,7 +19,7 @@
  * products: UserCartProductData[]
  * products_data: any
  * total_price: number
- * rebate_codes: string[]
+ * rebate_codes: {code:string, value:string}[]
  * }} UserCartData
  */
 

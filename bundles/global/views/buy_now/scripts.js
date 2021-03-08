@@ -2,26 +2,38 @@
 
 /** @type {PiepNode} */
 let buy_products_wrapper;
+/** @type {PiepNode} */
+let rebate_codes_list;
 
 domload(() => {
+	buy_products_wrapper = $(".buy_products_wrapper");
+	rebate_codes_list = $(".rebate_codes_list");
+
 	/** @type {CartProductComp} */
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.buy_products");
-	if (!cart_products_comp) {
-		return;
-	}
 	cartProductsComp(cart_products_comp, undefined);
 
 	const loadCart = () => {
 		cart_products_comp._data.products = user_cart.products;
 		cart_products_comp._render();
-		const empty = cart_products_comp._data.products.length === 0;
-		expand($(".case_cart_not_empty"), !empty);
-		expand($(".case_cart_empty"), empty);
 
-		$$(".cart_product_count").forEach((e) => {
-			e._set_content(cart_products_comp._data.products.length);
-		});
+		let rebate_codes_info = "";
+		if (user_cart.rebate_codes.length > 0) {
+			rebate_codes_info = user_cart.rebate_codes
+				.map(
+					(e) =>
+						html`<span class="rebate_code_block">
+							<span><span style="font-weight: 400;"> ${e.code}:</span> -${e.value}</span>
+							<button class="btn transparent small remove_rebate_code" data-code="${e.code}">
+								<i class="fas fa-times"></i>
+							</button>
+						</span>`
+				)
+				.join("<br>");
+		}
+
+		rebate_codes_list._set_content(rebate_codes_info);
 	};
 
 	window.addEventListener("user_cart_changed", loadCart);
@@ -32,7 +44,6 @@ domload(() => {
 	const address_comp = $("address-comp.main_address");
 	addressComp(address_comp, undefined);
 
-	buy_products_wrapper = $(".buy_products_wrapper");
 	document.addEventListener("scroll", onBuyNowScroll);
 	window.addEventListener("resize", onBuyNowScroll);
 	onBuyNowScroll();
@@ -69,18 +80,31 @@ domload(() => {
 			url: "/cart/activate-rebate-code",
 			params: { rebate_code: rebate_code._get_value() },
 			success: (res) => {
-				console.log(res);
+				user_cart = res.user_cart;
+				loadedUserCart();
+				console.log(res); // TODO: display errors ezy
 			},
 		});
 	});
 
-	// xhr({
-	// 	url: "/cart/deactivate-rebate-code",
-	// 	params: { rebate_code: "PREMIERA123" },
-	// 	success: (res) => {
-	// 		console.log(res);
-	// 	},
-	// });
+	document.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+		const remove_rebate_code = target._parent(".remove_rebate_code", { skip: 0 });
+		if (remove_rebate_code) {
+			const rebate_code = remove_rebate_code.dataset.code;
+
+			if (confirm(`Czy aby na pewno chcesz usunąń kod rabatowy ${rebate_code}`)) {
+				xhr({
+					url: "/cart/deactivate-rebate-code",
+					params: { rebate_code },
+					success: (res) => {
+						user_cart = res.user_cart;
+						loadedUserCart();
+					},
+				});
+			}
+		}
+	});
 });
 
 const onBuyNowScroll = () => {

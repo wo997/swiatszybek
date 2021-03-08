@@ -29,14 +29,15 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <button class="btn primary add_rebate_code_btn">Posiadam kod rabatowy</button>
             <div class="cart_summary">
 
-                <div class="medium">
+                <div>
                     Suma:
                     <span class="cart_total_price pln"></span>
                 </div>
-                <div class="medium">
+                <div>
                     Dostawa:
                     <span class="cart_delivery_price pln">10 zł</span>
                 </div>
+                <div class="rebate_codes_list"></div>
                 <div class="big">
                     Do zapłaty:
                     <span class="cart_total_price pln"></span>
