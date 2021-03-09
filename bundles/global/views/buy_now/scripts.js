@@ -9,6 +9,45 @@ domload(() => {
 	buy_products_wrapper = $(".buy_products_wrapper");
 	rebate_codes_list = $(".rebate_codes_list");
 
+	initBuyNowCart();
+
+	/** @type {AddressComp} */
+	// @ts-ignore
+	const main_address = $("address-comp.main_address");
+	addressComp(main_address, undefined);
+
+	/** @type {AddressComp} */
+	// @ts-ignore
+	const courier_address = $("address-comp.courier_address");
+	addressComp(courier_address, undefined);
+
+	document.addEventListener("scroll", onBuyNowScroll);
+	window.addEventListener("resize", onBuyNowScroll);
+	onBuyNowScroll();
+
+	initRebateCodes();
+
+	const delivery_input = $(".buy_now_form .delivery");
+	const case_courier = $(".buy_now_form .case_courier");
+	const case_parcel_locker = $(".buy_now_form .case_parcel_locker");
+	const case_form_filled = $(".buy_now_form .case_form_filled");
+	const courier_address_different_input = $(".buy_now_form .courier_address_different");
+	const case_courier_address_different = $(".buy_now_form .case_courier_address_different");
+
+	delivery_input.addEventListener("change", () => {
+		const delivery = delivery_input._get_value();
+		expand(case_courier, delivery === "courier");
+		expand(case_parcel_locker, delivery === "parcel_locker");
+		expand(case_form_filled, true);
+	});
+
+	courier_address_different_input.addEventListener("change", () => {
+		const courier_address_different = courier_address_different_input._get_value();
+		expand(case_courier_address_different, !!courier_address_different);
+	});
+});
+
+function initBuyNowCart() {
 	/** @type {CartProductComp} */
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.buy_products");
@@ -38,16 +77,9 @@ domload(() => {
 
 	window.addEventListener("user_cart_changed", loadCart);
 	loadCart();
+}
 
-	/** @type {AddressComp} */
-	// @ts-ignore
-	const address_comp = $("address-comp.main_address");
-	addressComp(address_comp, undefined);
-
-	document.addEventListener("scroll", onBuyNowScroll);
-	window.addEventListener("resize", onBuyNowScroll);
-	onBuyNowScroll();
-
+function initRebateCodes() {
 	const add_rebate_code_btn = $(".add_rebate_code_btn");
 	add_rebate_code_btn.addEventListener("click", () => {
 		showModal("addRebateCode", { source: add_rebate_code_btn });
@@ -113,10 +145,10 @@ domload(() => {
 			}
 		}
 	});
-});
+}
 
-const onBuyNowScroll = () => {
+function onBuyNowScroll() {
 	const scroll_top = document.documentElement.scrollTop;
 	const margin_top = window.innerWidth < 1000 ? 0 : clamp(10, 100 - scroll_top, 100);
 	buy_products_wrapper.style.marginTop = `${margin_top}px`;
-};
+}

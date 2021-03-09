@@ -49,10 +49,11 @@ if (empty(User::getCurrent()->cart->getProducts())) {
     <div class="buy_now_form">
         <h1 class="h1 desktop_view">Kup teraz</h1>
 
+        <div class="label big first">Twój adres</div>
         <address-comp class="main_address"></address-comp>
 
         <div class="label big">Dostawa</div>
-        <div class="radio_group boxes columns_2 hide_checks">
+        <div class="radio_group boxes columns_2 hide_checks delivery">
             <div class="checkbox_area box">
                 <div>
                     <p-checkbox data-value="courier"></p-checkbox>
@@ -67,20 +68,41 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             </div>
         </div>
 
-        <div style="height: 30px"></div>
+        <div class="expand_y animate_hidden hidden case_courier">
+            <div class="label big">Adres wysyłki</div>
 
-        <div class="checkbox_area">
-            <p-checkbox class="square"></p-checkbox>
-            <span>Akceptuję regulamin</span>
+            <div class="checkbox_area">
+                <p-checkbox class="courier_address_different"></p-checkbox>
+                <span>Chcę użyć innego adresu do wysyłki</span>
+            </div>
+
+            <div class="expand_y animate_hidden hidden case_courier_address_different">
+                <address-comp class="courier_address"></address-comp>
+            </div>
         </div>
 
-        <button class="btn primary medium fill space_top">Potwierdź zamówienie</button>
+        <div class="expand_y animate_hidden hidden case_parcel_locker">
+            <div class="label big">Paczkomat</div>
 
-        <div style="margin-top: 15px;">W następnym kroku dokonasz płatności (<span class="cart_total_price pln"></span>) za zamówienie jedną z poniższych metod:</div>
-        Przelew Bankowy<br>
-        bla<br>
-        bla<br>
-        bla
+        </div>
+
+        <div class="expand_y animate_hidden hidden case_form_filled">
+            <div class="label big">Potwierdzenie</div>
+
+            <div class="checkbox_area">
+                <p-checkbox class="square"></p-checkbox>
+                <span>Akceptuję regulamin</span>
+            </div>
+
+            <button class="btn primary medium fill space_top">Potwierdzam zamówienie</button>
+
+            <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta</div>
+            <div style="margin-top: 15px;">W następnym kroku dokonasz płatności (<span class="cart_total_price pln"></span>) za zamówienie jedną z poniższych metod:</div>
+            Przelew Bankowy<br>
+            bla<br>
+            bla<br>
+            bla
+        </div>
     </div>
 </div>
 
