@@ -157,6 +157,28 @@ class EntityManager
     }
 
     /**
+     * setOneToOneEntity
+     *
+     * @param  mixed $obj
+     * @param  mixed $child_entity_name
+     * @param  mixed $children_props
+     * @return Entity[]
+     */
+    public static function setOneToOneEntity(Entity $obj, $child_entity_name, $child_props)
+    {
+        if (!$child_props) {
+            return null;
+        }
+
+        if ($child_props instanceof Entity) {
+            return $child_props;
+        } else {
+            $child = self::getEntity($child_entity_name, $child_props);
+            return $child;
+        }
+    }
+
+    /**
      * setOneToManyEntities
      *
      * @param  mixed $obj
@@ -205,6 +227,18 @@ class EntityManager
         unset($child);
 
         return $children;
+    }
+
+    public static function getOneToOneEntity(Entity $obj, $child_entity_name)
+    {
+        $child_props = DB::fetchRow("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
+        if ($child_props) {
+            $child = self::getEntity($child_entity_name, $child_props);
+            $child->setParent($obj);
+            return $child;
+        }
+
+        return null;
     }
 
     public static function getOneToManyEntities(Entity $obj, $child_entity_name)

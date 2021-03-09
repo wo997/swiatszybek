@@ -11,9 +11,11 @@ EntityManager::register("shop_order", [
         "total_price" => ["type" => "number"],
         "delivery_id" => ["type" => "number"],
         "rebate_codes" => ["type" => "string"],
-        "ordered_products" => ["type" => "ordered_product"],
+        "ordered_products" => ["type" => "ordered_product[]"],
     ],
 ]);
+
+EntityManager::OneToMany("shop_order", "ordered_products", "ordered_product");
 
 EventListener::register("before_save_shop_order_entity", function ($params) {
     /** @var Entity ShopOrder */
@@ -39,13 +41,14 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
 
         $shop_order->setProp("delivery_id", $user_cart->getDeliveryId());
 
-        $ordered_products = [];
-        foreach ($cart_data["products"] as $product_data) {
-            $product_data["shop_order_id"] = $shop_order->getId();
-            $ordered_product = EntityManager::getEntity("ordered_product", $product_data);
-            $ordered_products[] = $ordered_product;
-        }
-        $shop_order->setProp("ordered_products", $ordered_products);
+        // $ordered_products = [];
+        // foreach ($cart_data["products"] as $product_data) {
+        //     $product_data["shop_order_id"] = $shop_order->getId();
+        //     $ordered_product = EntityManager::getEntity("ordered_product", $product_data);
+        //     $ordered_products[] = $ordered_product;
+        // }
+        // $shop_order->setProp("ordered_products", $ordered_products);
+        $shop_order->setProp("ordered_products", $cart_data["products"]);
 
         $shop_order->setProp("status_id", 1);
 

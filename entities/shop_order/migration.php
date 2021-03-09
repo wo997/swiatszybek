@@ -9,4 +9,7 @@ DB::createTable("shop_order", [
     ["name" => "total_price", "type" => "DECIMAL(10,2)"],
     ["name" => "delivery_id", "type" => "INT"],
     ["name" => "rebate_codes", "type" => "VARCHAR(255)"],
+    ["name" => "main_address_id", "type" => "INT"],
+    ["name" => "courier_address_id", "type" => "INT"],
+    ["name" => "ordered_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
 ]);

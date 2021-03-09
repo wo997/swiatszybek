@@ -164,6 +164,9 @@ class Entity
                     if (is_object($zeroth) && $zeroth instanceof Entity) {
                         $this->saveChildren($value);
                     }
+                } else if (is_object($value) && $value instanceof Entity) {
+                    $changed_props[EntityManager::getEntityIdColumn($key)] = $value->getId();
+                    $value->save(["propagate_to_parent" => false]);
                 }
 
                 $other_entity_data = def($entity_data, ["props", $key], []);
@@ -179,7 +182,7 @@ class Entity
                     continue;
                 }
 
-                if (($other_entity_type && endsWith($other_entity_type, "[]")) || is_array($value)) {
+                if (($other_entity_type && EntityManager::getEntityData(clean($other_entity_type))) || is_array($value)) {
                     continue;
                 }
                 $changed_props[$key] = $value;
@@ -264,7 +267,6 @@ class Entity
         $prop_type = def($prop_data, "type", "");
 
         if (!$prop_data) {
-            //var_dump([$this->name, $prop_name, $prop_data, $prop_type]);
             return; // error?
         }
 
@@ -272,17 +274,15 @@ class Entity
             $other_entity_name = substr($prop_type, 0, -2);
             $child_entity_data = EntityManager::getEntityData($other_entity_name);
             if ($this->name === def($child_entity_data, ["parent", "name"])) {
-                // no need to $this->props[$prop_name] but $val instead if u use before and after setters
                 $val = EntityManager::setOneToManyEntities($this, $prop_name, $other_entity_name, $val);
-                //var_dump(">>>", count($val));
-                $this->props[$prop_name] = $val;
             } else {
                 $link = def($child_entity_data, ["linked_with", $this->name]);
                 if ($link) {
                     $val = EntityManager::setManyToManyEntities($this, $prop_name, $other_entity_name, $val);
-                    $this->props[$prop_name] = $val;
                 }
             }
+        } else if ($prop_type && EntityManager::getEntityData($prop_type)) {
+            $val = EntityManager::setOneToOneEntity($this, $prop_type, $val);
         }
 
         $this->props[$prop_name] = $val;
@@ -310,14 +310,17 @@ class Entity
                 $child_entity_data = EntityManager::getEntityData($other_entity_name);
                 if ($this->name === def($child_entity_data, ["parent", "name"])) {
                     $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $other_entity_name);
-                    $this->curr_props[$prop_name] = $this->props[$prop_name];
                 } else {
                     $link = def($child_entity_data, ["linked_with", $this->name]);
                     if ($link) {
                         $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $other_entity_name, $link);
-                        $this->curr_props[$prop_name] = $this->props[$prop_name];
                     }
                 }
+            } else if ($prop_type && EntityManager::getEntityData($prop_type)) {
+                $this->props[$prop_name] = EntityManager::getOneToOneEntity($this, $prop_type);
+            }
+            if (isset($this->props[$prop_name])) {
+                $this->curr_props[$prop_name] = $this->props[$prop_name];
             }
 
             // Are you sure you even need this step bro?
