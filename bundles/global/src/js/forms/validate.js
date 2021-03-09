@@ -74,6 +74,14 @@ function showInputErrors(input, errors) {
 /**
  *
  * @param {PiepNode} input
+ */
+function clearInputErrors(input) {
+	showInputErrors(input, []);
+}
+
+/**
+ *
+ * @param {PiepNode} input
  * @returns {string[]}
  */
 function getInputValidationErrors(input) {

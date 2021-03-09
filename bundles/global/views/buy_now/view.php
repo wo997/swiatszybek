@@ -68,7 +68,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 </div>
 
                 <button class="btn primary fill buy_without_registration" style="margin-top:10px;">
-                    Zakupu bez rejestracji <i class="fas fa-chevron-right"></i>
+                    Zakupy bez rejestracji <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>

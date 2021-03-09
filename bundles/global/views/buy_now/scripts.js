@@ -111,12 +111,12 @@ function initBuyNowCart() {
 function initRebateCodes() {
 	const add_rebate_code_btn = $(".add_rebate_code_btn");
 	add_rebate_code_btn.addEventListener("click", () => {
-		showModal("addRebateCode", { source: add_rebate_code_btn });
+		showModal("activateRebateCode", { source: add_rebate_code_btn });
 	});
 
 	registerModalContent(
 		html`
-			<div id="addRebateCode" data-dismissable>
+			<div id="activateRebateCode" data-dismissable>
 				<div class="modal_body" style="width:400px;text-align: center;">
 					<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 					<h3 class="modal_header">Kod rabatowy</h3>
@@ -132,8 +132,8 @@ function initRebateCodes() {
 		`
 	);
 
-	$("#addRebateCode .activate_btn").addEventListener("click", () => {
-		const rebate_code = $("#addRebateCode .rebate_code");
+	$("#activateRebateCode .activate_btn").addEventListener("click", () => {
+		const rebate_code = $("#activateRebateCode .rebate_code");
 		const errors = validateInputs([rebate_code]);
 		if (errors.length > 0) {
 			return;
@@ -144,16 +144,27 @@ function initRebateCodes() {
 			params: { rebate_code: rebate_code._get_value() },
 			success: (res) => {
 				if (res.errors && res.errors.length > 0) {
-					$("#addRebateCode .show_errors")._set_content(res.errors.join("<br>"));
+					$("#activateRebateCode .show_errors")._set_content(res.errors.join("<br>"));
 					showInputErrors(rebate_code, res.errors);
 				} else {
 					showNotification("Kod rabatowy został aktywowany", { one_line: true, type: "success" });
-					hideModal("addRebateCode");
+					hideModal("activateRebateCode");
+					rebate_code._set_value("");
 				}
 				user_cart = res.user_cart;
 				loadedUserCart();
 			},
 		});
+	});
+
+	window.addEventListener("modal-show", (event) => {
+		// @ts-ignore
+		if (event.detail.node.id != "activateRebateCode") {
+			return;
+		}
+
+		$("#activateRebateCode .show_errors")._empty();
+		clearInputErrors($("#activateRebateCode .rebate_code"));
 	});
 
 	document.addEventListener("click", (ev) => {

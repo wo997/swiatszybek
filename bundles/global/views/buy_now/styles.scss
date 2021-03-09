@@ -81,7 +81,6 @@
 
 	.products_cart_panel {
 		max-height: min(calc(100vh - var(--header_height) - 365px), 500px);
-		padding: 0 10px;
 	}
 
 	.buy_now_form {
@@ -109,7 +108,8 @@
 
 	.cart_summary {
 		text-align: right;
-		margin-top: 8px;
+		margin-top: 10px;
+		line-height: 1.7;
 	}
 }
 
@@ -123,7 +123,7 @@
 	}
 }
 
-.addRebateCode {
+.activateRebateCode {
 	.show_errors:not(:empty) {
 		color: var(--error-clr);
 		font-weight: 600;
