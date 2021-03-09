@@ -31,6 +31,7 @@ domload(() => {
 	const choosen_account = buy_now_form._child(".choosen_account");
 	const buy_without_registration = buy_now_form._child(".buy_without_registration");
 	const case_choosen_account = buy_now_form._child(".case_choosen_account");
+	const your_address_label = buy_now_form._child(".your_address_label");
 	const delivery_input = buy_now_form._child(".delivery");
 	const case_courier = buy_now_form._child(".case_courier");
 	const case_parcel_locker = buy_now_form._child(".case_parcel_locker");
@@ -43,12 +44,16 @@ domload(() => {
 		expand(choosen_account, false);
 	} else {
 		buy_without_registration.addEventListener("click", () => {
-			expand(case_choosen_account, true);
+			expand(case_choosen_account, true, { full_height_all_time: true });
+			const rect = buy_without_registration.getBoundingClientRect();
+			const diff = rect.top + rect.height - main_header_height.offsetHeight;
+			if (diff > 0) {
+				smoothScroll(diff);
+			}
 		});
 
-		const label = case_choosen_account._child(".label.big.first");
-		if (label) {
-			label.classList.remove("first");
+		if (your_address_label) {
+			your_address_label.classList.remove("first");
 		}
 	}
 
@@ -56,7 +61,13 @@ domload(() => {
 		const delivery = delivery_input._get_value();
 		expand(case_courier, delivery === "courier");
 		expand(case_parcel_locker, delivery === "parcel_locker");
-		expand(case_form_filled, true);
+		expand(case_form_filled, true, { full_height_all_time: true });
+
+		const rect = delivery_input.getBoundingClientRect();
+		const diff = rect.top + rect.height - main_header_height.offsetHeight;
+		if (diff > 0) {
+			smoothScroll(diff);
+		}
 	});
 
 	courier_address_different_input.addEventListener("change", () => {

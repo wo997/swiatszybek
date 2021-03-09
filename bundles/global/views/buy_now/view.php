@@ -74,7 +74,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         </div>
 
         <div class="expand_y animate_hidden hidden case_choosen_account">
-            <div class="label big first">Twój adres</div>
+            <div class="label big first your_address_label">Twój adres</div>
             <address-comp class="main_address"></address-comp>
 
             <div class="label big">Dostawa</div>

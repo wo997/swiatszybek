@@ -60,6 +60,7 @@ function expandMenu(elem, btn, open = null, options = {}) {
  * @param {{
  * duration?: number
  * callback?: CallableFunction
+ * full_height_all_time?: boolean
  * }} options
  */
 function expand(elem, show = null, options = {}) {
@@ -112,6 +113,7 @@ function expand(elem, show = null, options = {}) {
 
 	const mr = is_horizontal ? "left" : "top";
 	const dim = is_horizontal ? "width" : "height";
+	const mb = is_horizontal ? "right" : "bottom";
 
 	animation_node._animate(
 		`
@@ -144,10 +146,12 @@ function expand(elem, show = null, options = {}) {
                 0% {
                     ${dim}: ${h1}px;
                     opacity: ${o1};
+                    ${options.full_height_all_time ? `margin-${mb}: ${h2 - h1}px;` : ""}
                 }
                 100% {
                     ${dim}: ${h2}px;
                     opacity: ${o2};
+                    ${options.full_height_all_time ? `margin-${mb}: 0;` : ""}
                 }
             `,
 			duration,
