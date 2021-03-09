@@ -27,7 +27,6 @@ include_once "helpers/core/datatable.php";
 include_once "helpers/core/deployment.php";
 
 include_once "helpers/core/product/product.php";
-include_once "helpers/core/product/attributes.php";
 include_once "helpers/core/product/last_viewed_products.php";
 
 include_once "helpers/core/links.php";

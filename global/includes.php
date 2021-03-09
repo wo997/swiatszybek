@@ -51,11 +51,10 @@ if (defined("ROUTE")) {
     loadedUserCart(true);
 
     <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-        const attribute_data_types = <?= json_encode($attribute_data_types) ?>;
-        const privelege_list = null;
+        const feature_data_types = <?= json_encode(getFeatureDataTypes()) ?>;
 
         <?php if (isset($preview_params) && isset($preview_params["js_visible"])) : ?>
-            const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
+            //const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
         <?php endif ?>
     <?php endif ?>
 

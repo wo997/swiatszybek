@@ -2,6 +2,7 @@
 
 /**
  * @typedef {{
+ * data_type: string
  * datatable?: DatatableCompData
  * product_feature_id: number
  * name: string
@@ -19,6 +20,7 @@
  *  datatable: DatatableComp
  *  groups: PiepNode
  *  name: PiepNode
+ *  options_wrapper: PiepNode
  * }
  * _load_data(id: number)
  * _save()
@@ -35,6 +37,7 @@
 function productFeatureComp(comp, parent, data) {
 	if (data === undefined) {
 		data = {
+			data_type: "text_list",
 			product_feature_id: -1,
 			name: "",
 			current_group_id: -1,
@@ -96,11 +99,13 @@ function productFeatureComp(comp, parent, data) {
 		comp._data.product_feature_id = id;
 		if (id === -1) {
 			comp._data.name = "";
+			comp._data.data_type = "text_list";
 			comp._data.datatable.dataset = [];
 		} else {
 			const feature = product_features.find((f) => f.product_feature_id === id);
 			if (feature) {
 				comp._data.name = feature.name;
+				comp._data.data_type = feature.data_type;
 				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
 			}
 		}
@@ -123,24 +128,33 @@ function productFeatureComp(comp, parent, data) {
 			return;
 		}
 
-		if (comp._data.datatable.dataset.length === 0) {
-			showNotification("Musisz dodać min. 1 opcję", { type: "error", one_line: true });
-			return;
+		const product_feature = {
+			name: comp._data.name,
+			data_type: comp._data.data_type,
+			product_feature_id: comp._data.product_feature_id,
+		};
+
+		const is_list = comp._data.data_type.endsWith("_list");
+		if (is_list) {
+			if (comp._data.datatable.dataset.length === 0) {
+				showNotification("Musisz dodać min. 1 opcję", { type: "error", one_line: true });
+				return;
+			}
+
+			product_feature.options = comp._data.datatable.dataset.map((e, index) => ({
+				product_feature_option_id: e.product_feature_option_id,
+				name: e.name,
+				parent_product_feature_option_id: e.parent_product_feature_option_id,
+				pos: index + 1,
+			}));
+		} else {
+			product_feature.options = [];
 		}
 
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "/product/feature/save",
 			params: {
-				product_feature: {
-					name: comp._data.name,
-					product_feature_id: comp._data.product_feature_id,
-					options: comp._data.datatable.dataset.map((e, index) => ({
-						product_feature_option_id: e.product_feature_option_id,
-						name: e.name,
-						parent_product_feature_option_id: e.parent_product_feature_option_id,
-						pos: index + 1,
-					})),
-				},
+				product_feature,
 			},
 			success: (res) => {
 				hideAndSearch();
@@ -176,72 +190,80 @@ function productFeatureComp(comp, parent, data) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				const getCount = (option_id) => {
-					return data.datatable.dataset.filter((e) => e.parent_product_feature_option_id === option_id).length;
-				};
+				const is_list = data.data_type.endsWith("_list");
+				expand(comp._nodes.options_wrapper, is_list);
 
-				const want_groups = data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique);
+				if (!is_list) {
+					const getCount = (option_id) => {
+						return data.datatable.dataset.filter((e) => e.parent_product_feature_option_id === option_id).length;
+					};
 
-				if (!want_groups.includes(comp._data.current_group_id)) {
-					want_groups.push(comp._data.current_group_id);
-				}
-				want_groups.forEach((option_id) => {
-					if (!comp._data.groups.includes(option_id)) {
-						comp._data.groups.push(option_id);
+					const want_groups = data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique);
+
+					if (!want_groups.includes(comp._data.current_group_id)) {
+						want_groups.push(comp._data.current_group_id);
 					}
-				});
-
-				let group_btns = [];
-
-				const map = data.datatable.maps.find((e) => e.name === "product_feature_option");
-				if (map && map.map) {
-					comp._data.groups.forEach((option_id) => {
-						const map_option = map.map.find((map_option) => map_option.val === option_id);
-						if (map_option) {
-							group_btns.push(html`<button
-								class="btn ${map_option.val === data.current_group_id ? "primary" : "subtle"} group_nav"
-								data-option_id="${map_option.val}"
-							>
-								${map_option.label} (${getCount(option_id)})
-							</button> `);
+					want_groups.forEach((option_id) => {
+						if (!comp._data.groups.includes(option_id)) {
+							comp._data.groups.push(option_id);
 						}
 					});
-				}
 
-				if (group_btns.length > 0) {
-					group_btns.unshift(html`<button class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav" data-option_id="-1">
-						<i class="fas fa-ban"></i> Bez grupy (${getCount(-1)})
+					let group_btns = [];
+
+					const map = data.datatable.maps.find((e) => e.name === "product_feature_option");
+					if (map && map.map) {
+						comp._data.groups.forEach((option_id) => {
+							const map_option = map.map.find((map_option) => map_option.val === option_id);
+							if (map_option) {
+								group_btns.push(html`<button
+									class="btn ${map_option.val === data.current_group_id ? "primary" : "subtle"} group_nav"
+									data-option_id="${map_option.val}"
+								>
+									${map_option.label} (${getCount(option_id)})
+								</button> `);
+							}
+						});
+					}
+
+					if (group_btns.length > 0) {
+						group_btns.unshift(html`<button
+							class="btn ${data.current_group_id === -1 ? "primary" : "subtle"} group_nav"
+							data-option_id="-1"
+						>
+							<i class="fas fa-ban"></i> Bez grupy (${getCount(-1)})
+						</button> `);
+					}
+					group_btns.unshift(html`<button class="btn ${data.current_group_id === 0 ? "primary" : "subtle"} group_nav" data-option_id="0">
+						<i class="fas fa-border-all"></i> Wszystkie (${data.datatable.dataset.length})
 					</button> `);
-				}
-				group_btns.unshift(html`<button class="btn ${data.current_group_id === 0 ? "primary" : "subtle"} group_nav" data-option_id="0">
-					<i class="fas fa-border-all"></i> Wszystkie (${data.datatable.dataset.length})
-				</button> `);
 
-				group_btns.push(html`<button class="btn subtle group_nav" data-option_id="new" data-tooltip="Utwórz nową grupę">
-					<i class="fas fa-plus"></i>
-				</button> `);
+					group_btns.push(html`<button class="btn subtle group_nav" data-option_id="new" data-tooltip="Utwórz nową grupę">
+						<i class="fas fa-plus"></i>
+					</button> `);
 
-				comp._nodes.groups._set_content(group_btns.join(""));
+					comp._nodes.groups._set_content(group_btns.join(""));
 
-				comp._nodes.groups._children(".group_nav").forEach((e) => {
-					e.addEventListener("click", () => {
-						if (e.dataset.option_id === "new") {
-							/** @type {SelectProductFeatureOptionModalComp} */
-							// @ts-ignore
-							const select_product_feature_option_modal_comp = $("#selectProductFeatureOption select-product-feature-option-modal-comp");
+					comp._nodes.groups._children(".group_nav").forEach((e) => {
+						e.addEventListener("click", () => {
+							if (e.dataset.option_id === "new") {
+								/** @type {SelectProductFeatureOptionModalComp} */
+								// @ts-ignore
+								const select_product_feature_option_modal_comp = $("#selectProductFeatureOption select-product-feature-option-modal-comp");
 
-							select_product_feature_option_modal_comp._show({
-								source: comp._nodes.select_parent_option_btn,
-								callback: (option_id) => {
-									comp._select_current_group_id(+option_id);
-								},
-								exclude: comp._data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique),
-							});
-						} else {
-							comp._select_current_group_id(+e.dataset.option_id);
-						}
+								select_product_feature_option_modal_comp._show({
+									source: comp._nodes.select_parent_option_btn,
+									callback: (option_id) => {
+										comp._select_current_group_id(+option_id);
+									},
+									exclude: comp._data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique),
+								});
+							} else {
+								comp._select_current_group_id(+e.dataset.option_id);
+							}
+						});
 					});
-				});
+				}
 			},
 		});
 	};
@@ -251,50 +273,61 @@ function productFeatureComp(comp, parent, data) {
 			<div class="label first">Nazwa cechy produktu</div>
 			<input type="text" class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="string" />
 
-			<div>
-				<div class="label" style="font-size: 1.2em;">Grupy opcji</div>
+			<div class="label">Typ wartości</div>
+			<select class="field" data-bind="{${data.data_type}}">
+				${Object.entries(feature_data_types)
+					.map(([name, data]) => {
+						return html`<option value="${name}">${data.description}</option>`;
+					})
+					.join("")}
+			</select>
 
+			<div class="expand_y" data-node="{${comp._nodes.options_wrapper}}">
 				<div>
-					<p class="user_info" style="margin-top:5px">
-						<i class="fas fa-info-circle"></i> Czym są grupy opcji? Jest to sposób na uporządkowanie danych w systemie dla sprzedawcy oraz
-						klienta. <br />Zamiast tworzyć listę np. 100 modeli telefonów, można podzielić je na grupy - producent A, producent B itd.
-						<br />Klient nie zobaczy już listy 100 modeli, tylko wybierze jednego z 10 producentów, a potem jeden z 10 modeli od wybranego
-						producenta. <br />W razie potrzeby mozna wprowadzić podział np. Producent <i class="fas fa-chevron-right"></i> Seria
-						<i class="fas fa-chevron-right"></i> Model.
-					</p>
+					<div class="label" style="font-size: 1.2em;">Grupy opcji</div>
+
+					<div>
+						<p class="user_info" style="margin-top:5px">
+							<i class="fas fa-info-circle"></i> Czym są grupy opcji? Jest to sposób na uporządkowanie danych w systemie dla sprzedawcy oraz
+							klienta. <br />Zamiast tworzyć listę np. 100 modeli telefonów, można podzielić je na grupy - producent A, producent B itd.
+							<br />Klient nie zobaczy już listy 100 modeli, tylko wybierze jednego z 10 producentów, a potem jeden z 10 modeli od wybranego
+							producenta. <br />W razie potrzeby mozna wprowadzić podział np. Producent <i class="fas fa-chevron-right"></i> Seria
+							<i class="fas fa-chevron-right"></i> Model.
+						</p>
+					</div>
+
+					<span
+						data-node="{${comp._nodes.groups}}"
+						class="glue_children"
+						style="display: inline-flex;flex-wrap: wrap;padding-bottom:10px"
+					></span>
 				</div>
 
-				<span
-					data-node="{${comp._nodes.groups}}"
-					class="glue_children"
-					style="display: inline-flex;flex-wrap: wrap;padding-bottom:10px"
-				></span>
+				<div class="adv_controls">
+					<button class="btn primary" data-node="{${comp._nodes.add_option_btn}}">Dodaj opcję <i class="fas fa-plus"></i></button>
+					<button
+						class="btn {${data.datatable.selection.length > 0}?important:subtle}"
+						data-node="{${comp._nodes.select_parent_option_btn}}"
+						data-tooltip="{${data.datatable.selection.length === 0 ? "Najpierw zaznacz opcje na liście poniżej" : ""}}"
+					>
+						Połącz (<span html="{${data.datatable.selection.length}}"></span>) z grupą
+						<i class="fas fa-search"></i>
+					</button>
+					<button
+						class="btn subtle"
+						data-node="{${comp._nodes.remove_parent_option_btn}}"
+						data-tooltip="{${data.datatable.selection.length === 0 ? "Najpierw zaznacz opcje na liście poniżej" : ""}}"
+					>
+						Odłącz (<span html="{${data.datatable.selection.length}}"></span>) od grupy
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+				<datatable-comp
+					style="margin-top:var(--form_spacing)"
+					data-bind="{${data.datatable}}"
+					data-node="{${comp._nodes.datatable}}"
+				></datatable-comp>
 			</div>
-
-			<div class="adv_controls">
-				<button class="btn primary" data-node="{${comp._nodes.add_option_btn}}">Dodaj opcję <i class="fas fa-plus"></i></button>
-				<button
-					class="btn {${data.datatable.selection.length > 0}?important:subtle}"
-					data-node="{${comp._nodes.select_parent_option_btn}}"
-					data-tooltip="{${data.datatable.selection.length === 0 ? "Najpierw zaznacz opcje na liście poniżej" : ""}}"
-				>
-					Połącz (<span html="{${data.datatable.selection.length}}"></span>) z grupą
-					<i class="fas fa-search"></i>
-				</button>
-				<button
-					class="btn {${data.datatable.selection.length > 0}?important:subtle}"
-					data-node="{${comp._nodes.remove_parent_option_btn}}"
-					data-tooltip="{${data.datatable.selection.length === 0 ? "Najpierw zaznacz opcje na liście poniżej" : ""}}"
-				>
-					Odłącz (<span html="{${data.datatable.selection.length}}"></span>) od grupy
-					<i class="fas fa-times"></i>
-				</button>
-			</div>
-			<datatable-comp
-				style="margin-top:var(--form_spacing)"
-				data-bind="{${data.datatable}}"
-				data-node="{${comp._nodes.datatable}}"
-			></datatable-comp>
 		`,
 		ready: () => {
 			const datatable_label = comp._nodes.datatable._child(".datatable_label");

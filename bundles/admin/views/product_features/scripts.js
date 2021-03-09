@@ -20,7 +20,15 @@ domload(() => {
 					return data.name;
 				},
 			},
-			{ label: "Opcje", key: "options", width: "2", searchable: "string" },
+			{
+				label: "Opcje",
+				key: "options",
+				width: "2",
+				searchable: "string",
+				render: (data) => {
+					return data.data_type.endsWith("_list") ? data.options : feature_data_types[data.data_type].description;
+				},
+			},
 			{
 				label: "",
 				width: "90px",

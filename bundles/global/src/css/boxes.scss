@@ -13,6 +13,9 @@
 		margin-bottom: calc(var(--box_margin) * -1);
 		--box-padding: 10px;
 	}
+	&.small {
+		--box_height: 0;
+	}
 	.box {
 		& {
 			position: relative;

@@ -6,6 +6,7 @@ EntityManager::register("product_feature", [
         "name" => ["type" => "string"],
         "products" => ["type" => "product[]"],
         "pos" => ["type" => "number"],
+        "data_type" => ["type" => "string"],
     ],
 ]);
 

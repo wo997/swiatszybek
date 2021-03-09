@@ -40,7 +40,15 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							return data.name;
 						},
 					},
-					{ label: "Opcje", key: "options", width: "2", searchable: "string" },
+					{
+						label: "Opcje",
+						key: "options",
+						width: "2",
+						searchable: "string",
+						render: (data) => {
+							return data.data_type.endsWith("_list") ? data.options : feature_data_types[data.data_type].description;
+						},
+					},
 					{
 						label: "Akcja",
 						width: "207px",

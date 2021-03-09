@@ -1,5 +1,32 @@
 <?php //hook[helper]
 
+function getFeatureDataTypes()
+{
+    return [
+        "text_list" => [
+            "description" => "Lista",
+            "example" => "(np. kolorów)",
+        ],
+        "int_value" => [
+            "description" => "Dowolna liczba całkowita",
+            "example" => "(np. ilość kół samochodu)",
+        ],
+        "float_value" => [
+            "description" => "Dowolna liczba zmiennoprzecinkowa",
+            "example" => "(np. długość kabla)",
+        ],
+        "date_value" => [
+            "description" => "Dowolna data",
+            "example" => "(np. data premiery)",
+        ],
+        "text_value" => [
+            "description" => "Dowolny tekst",
+            "example" => "(dowolna unikalna nazwa nie wiem co wpisać)",
+        ],
+    ];
+};
+
+
 function getAllProductFeatures()
 {
     return DB::fetchArr("SELECT * FROM product_feature");
