@@ -20,23 +20,37 @@ domload(() => {
 				next.focus();
 				ev.preventDefault();
 			}
+			if (ev.key === "Backspace") {
+				if (window.getSelection().focusOffset === 0 && prev) {
+					selectElementContentsByIndex(prev, prev.textContent.length);
+					ev.preventDefault();
+					if (target.textContent.length === 0) {
+						target.remove();
+					}
+				}
+			}
 			if (ev.key === "ArrowUp") {
 				if (prev) {
-					selectElementContents(prev, target);
+					selectElementContentsFromOther(prev, target);
 					ev.preventDefault();
 				}
 			}
 			if (ev.key === "ArrowDown") {
 				if (next) {
-					selectElementContents(next, target);
+					selectElementContentsFromOther(next, target);
 					ev.preventDefault();
 				}
 			}
-			if (ev.key === "Backspace") {
+			if (ev.key === "ArrowLeft") {
 				if (window.getSelection().focusOffset === 0 && prev) {
-					selectElementContents(next, target);
+					selectElementContentsByIndex(prev, prev.textContent.length);
 					ev.preventDefault();
-					target.remove();
+				}
+			}
+			if (ev.key === "ArrowRight") {
+				if (window.getSelection().focusOffset === target.textContent.length && next) {
+					selectElementContentsByIndex(next, 0);
+					ev.preventDefault();
 				}
 			}
 		}
@@ -49,7 +63,7 @@ domload(() => {
  * @param {HTMLBaseElement} from
  * @returns
  */
-function selectElementContents(node, from) {
+function selectElementContentsFromOther(node, from) {
 	const text_node = node.childNodes[0];
 	if (!text_node) {
 		return;
@@ -58,7 +72,6 @@ function selectElementContents(node, from) {
 	const was_cursor_x = window.getSelection().getRangeAt(0).getBoundingClientRect().left;
 
 	const sel = window.getSelection();
-
 	const range = document.createRange();
 
 	let last_cursor_x;
@@ -75,6 +88,27 @@ function selectElementContents(node, from) {
 		}
 		last_cursor_x = cursor_x;
 	}
+
+	sel.removeAllRanges();
+	sel.addRange(range);
+}
+
+/**
+ *
+ * @param {HTMLBaseElement} node
+ * @param {number} pos
+ * @returns
+ */
+function selectElementContentsByIndex(node, pos) {
+	const text_node = node.childNodes[0];
+	if (!text_node) {
+		return;
+	}
+	const sel = window.getSelection();
+	const range = document.createRange();
+
+	range.setStart(text_node, pos);
+	range.setEnd(text_node, pos);
 
 	sel.removeAllRanges();
 	sel.addRange(range);
