@@ -101,11 +101,33 @@ function initBuyNowCart() {
 				.join("<br>");
 		}
 
+		if (user_cart.products.length <= 0) {
+			showModal("emptyCart");
+		}
+
 		rebate_codes_list._set_content(rebate_codes_info);
 	};
 
 	window.addEventListener("user_cart_changed", loadCart);
 	loadCart();
+
+	initEmptyCartModal();
+}
+
+function initEmptyCartModal() {
+	registerModalContent(
+		html`
+			<div id="emptyCart">
+				<div class="modal_body" style="width:450px;text-align: center;">
+					<h3 class="modal_header">Koszyk jest pusty</h3>
+					<div class="panel_padding">
+						<div class="semi-bold" style="padding:30px 0">Mamy nadzieję, że to nie koniec naszej przygody 😉</div>
+						<a class="btn primary space_top fill" href="/"><i class="fas fa-chevron-left"></i> Wróć do zakupów</a>
+					</div>
+				</div>
+			</div>
+		`
+	);
 }
 
 function initRebateCodes() {
@@ -173,7 +195,7 @@ function initRebateCodes() {
 		if (remove_rebate_code) {
 			const rebate_code = remove_rebate_code.dataset.code;
 
-			if (confirm(`Czy aby na pewno chcesz usunąń kod rabatowy ${rebate_code}`)) {
+			if (confirm(`Czy aby na pewno chcesz usunąć kod rabatowy ${rebate_code}?`)) {
 				xhr({
 					url: "/cart/deactivate-rebate-code",
 					params: { rebate_code },

@@ -146,7 +146,7 @@ function expand(elem, show = null, options = {}) {
                 0% {
                     ${dim}: ${h1}px;
                     opacity: ${o1};
-                    ${options.full_height_all_time ? `margin-${mb}: ${h2 - h1}px;` : ""}
+                    ${options.full_height_all_time ? `margin-${mb}: ${h2 - h1 + 25}px;` : ""}
                 }
                 100% {
                     ${dim}: ${h2}px;

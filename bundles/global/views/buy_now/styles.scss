@@ -1,9 +1,5 @@
 /* css[view] */
 
-// h1 {
-// 	text-align: center;
-// }
-
 .buy_products_wrapper,
 .buy_now_form {
 	padding: 10px;
@@ -21,6 +17,11 @@
 
 .cart_summary {
 	font-weight: 600;
+}
+
+.buy_products .list_row {
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 .rebate_code_block {
