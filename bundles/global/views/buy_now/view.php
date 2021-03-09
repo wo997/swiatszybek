@@ -122,7 +122,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
             <button class="btn primary medium fill space_top">Potwierdzam zamówienie</button>
 
-            <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta/</div>
+            <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta.</div>
             <div style="margin-top: 15px;">W następnym kroku dokonasz płatności (<span class="cart_total_price pln"></span>) za zamówienie jedną z poniższych metod:</div>
             Przelew Bankowy<br>
             bla<br>
