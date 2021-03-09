@@ -6,7 +6,7 @@ $authentication_token = Request::urlParam(2);
 $activate = User::activateAccount($user_id, $authentication_token);
 
 if ($activate["success"]) {
-    setSingleUsageSessionVar("message_modal", json_encode(["type" => "success", "body" => "Konto zostało aktywowane pomyślnie!"]));
+    Request::setSingleUsageSessionVar("message_modal", json_encode(["type" => "success", "body" => "Konto zostało aktywowane pomyślnie!"]));
 } else {
     $res = ["type" => "error"];
 
@@ -23,7 +23,7 @@ if ($activate["success"]) {
     }
 
     $res["body"] = $body;
-    setSingleUsageSessionVar("message_modal", json_encode($res));
+    Request::setSingleUsageSessionVar("message_modal", json_encode($res));
 
     Request::redirect("/rejestracja");
 }

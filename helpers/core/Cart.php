@@ -1,7 +1,8 @@
 <?php
 
 /**
-                 * @typedef CartProduct {
+ * 
+                                                                                                     * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }
@@ -34,6 +35,11 @@ class Cart
         return $this->products;
     }
 
+    public function getDeliveryId()
+    {
+        return $this->delivery_id;
+    }
+
     public function getAllData()
     {
         $product_ids = [];
@@ -50,10 +56,10 @@ class Cart
             $product_ids_string = join(",", $product_ids);
             $product_index = -1;
 
-            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url, __name, __url, stock
+            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url img_url, __name name, __url url, stock
                 FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
-            foreach ($products_data as $product_data) {
+            foreach ($products_data as $key => $product_data) {
                 $product_index++;
 
                 $cart_product =
@@ -63,6 +69,8 @@ class Cart
                 $price = $product_data["gross_price"];
 
                 $products_price += $cart_product["qty"] * $price;
+
+                $products_data[$key]["qty"] = $cart_product["qty"];
             }
         }
 
@@ -72,8 +80,8 @@ class Cart
 
         // subtract statics first
         foreach ($this->rebate_codes as
-        /** @var Entity RebateCode */
-        $rebate_code) {
+            /** @var Entity RebateCode */
+            $rebate_code) {
             $value = $rebate_code->getProp("value");
             if (strpos($value, "%") === false) {
                 $total_price -= floatval($value);
@@ -82,8 +90,8 @@ class Cart
 
         // then relatives, so u can save some cents
         foreach ($this->rebate_codes as
-        /** @var Entity RebateCode */
-        $rebate_code) {
+            /** @var Entity RebateCode */
+            $rebate_code) {
             $value = $rebate_code->getProp("value");
             if (strpos($value, "%") !== false) {
                 $percent = floatval(str_replace("%", "", $value));
@@ -94,8 +102,7 @@ class Cart
         $total_price += $delivery_price;
 
         return [
-            "products" => $this->products,
-            "products_data" => $products_data,
+            "products" => $products_data,
             "products_price" => roundPrice($products_price),
             "delivery_price" => roundPrice($delivery_price),
             "total_price" => roundPrice($total_price),
@@ -211,7 +218,9 @@ class Cart
      */
     public function deactivateRebateCode($code)
     {
-        foreach ($this->rebate_codes as $key => /** @var Entity RebateCode */ $rebate_code) {
+        foreach ($this->rebate_codes as $key =>
+            /** @var Entity RebateCode */
+            $rebate_code) {
             if ($rebate_code->getProp("code") === $code) {
                 unset($this->rebate_codes[$key]);
             }
@@ -271,7 +280,12 @@ class Cart
         return array_map(fn ($x) => $x->getProp("code"), $this->rebate_codes);
     }
 
-    public function saveCart()
+    public function empty()
+    {
+        $this->products = [];
+    }
+
+    public function save()
     {
         $cart_data = [];
         $cart_data["products"] = $this->products;
@@ -312,7 +326,7 @@ class Cart
         }
 
         if ($any_failed) {
-            $this->saveCart();
+            $this->save();
         }
     }
 }

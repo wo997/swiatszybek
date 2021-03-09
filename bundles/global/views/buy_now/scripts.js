@@ -77,10 +77,18 @@ domload(() => {
 	});
 
 	confirm_order_btn.addEventListener("click", () => {
+		const data = { main_address: main_address._data, delivery: delivery_input._get_value() };
+		if (data.delivery === "courier") {
+			data.courier_address = courier_address._data;
+		}
+
 		xhr({
 			url: "/shop_order/confirm",
+			params: {
+				shop_order: data,
+			},
 			success: (res) => {
-				console.log(res);
+				// will be redirected
 			},
 		});
 	});

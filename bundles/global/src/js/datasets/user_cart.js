@@ -17,7 +17,6 @@
 /**
  * @typedef {{
  * products: UserCartProductData[]
- * products_data: any
  * products_price: number
  * delivery_price: number
  * total_price: number
@@ -28,22 +27,9 @@
 /**
  * @type {UserCartData}
  */
-let user_cart = { products: [], products_data: [], total_price: 0, rebate_codes: [] };
+let user_cart = { products: [], total_price: 0, products_price: 0, delivery_price: 0, rebate_codes: [] };
 
 function loadedUserCart(quiet = false) {
-	user_cart.products.forEach((product) => {
-		const data = user_cart.products_data.find((x) => x.product_id === product.product_id);
-		if (data) {
-			product.net_price = data.net_price;
-			product.gross_price = data.gross_price;
-			product.name = data.__name;
-			product.url = data.__url;
-			product.general_product_id = data.general_product_id;
-			product.img_url = data.__img_url;
-			product.stock = data.stock;
-		}
-	});
-
 	if (quiet === false) {
 		window.dispatchEvent(new CustomEvent("user_cart_changed"));
 		setTimeout(() => {

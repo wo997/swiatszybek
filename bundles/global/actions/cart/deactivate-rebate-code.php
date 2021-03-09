@@ -2,5 +2,5 @@
 
 $cart = User::getCurrent()->cart;
 $cart->deactivateRebateCode($_POST["rebate_code"]);
-$cart->saveCart();
+$cart->save();
 Request::jsonResponse(["user_cart" => $cart->getAllData()]);

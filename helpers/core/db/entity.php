@@ -14,6 +14,7 @@ class Entity
     private $saved = false;
     private $will_unlink_from_entities = [];
     private $meta = []; // used for many to many relations
+    public $is_new;
     private $curr_meta = []; // same as curr_props
 
     public function __construct($name, &$props)
@@ -27,6 +28,7 @@ class Entity
             DB::execute("INSERT INTO $name () VALUES ()");
             $this->setId(DB::insertedId());
             $this->curr_meta = [];
+            $this->is_new = true;
         } else {
             $this->curr_props = DB::fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
             if (!$this->curr_props) {
@@ -34,6 +36,7 @@ class Entity
             }
             $this->setProps(def($this->curr_props, []));
             $this->curr_meta = $this->meta;
+            $this->is_new = false;
         }
 
         $this->setProps($props);

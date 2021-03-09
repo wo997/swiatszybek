@@ -9,5 +9,5 @@
 
 $cart = User::getCurrent()->cart;
 $cart->setProductQty($_POST["product_id"], $_POST["qty"]);
-$cart->saveCart();
+$cart->save();
 Request::jsonResponse(["user_cart" => $cart->getAllData()]);

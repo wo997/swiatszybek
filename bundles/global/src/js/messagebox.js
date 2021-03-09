@@ -15,7 +15,7 @@ function showMessageModal(message, options) {
  * }} params
  */
 function getMessageHTML(params = {}) {
-	let html = "";
+	let message_html = "";
 
 	let header_color = "";
 	let header_icon = "";
@@ -36,19 +36,19 @@ function getMessageHTML(params = {}) {
 		params.header = "Udało się!";
 	}
 
-	html += html`<div class="messagebox_header" style="background:${header_color}">${header_icon} ${params.header}</div> `;
+	message_html += html`<div class="messagebox_header" style="background:${header_color}">${header_icon} ${params.header}</div> `;
 
 	if (params.body !== undefined) {
-		html += html`<div class="messagebox_body">${params.body}</div>`;
+		message_html += html`<div class="messagebox_body">${params.body}</div>`;
 	}
 
 	if (params.footer === undefined) {
-		params.footer = `<button class='btn subtle medium' onclick='hideParentModal(this)' style='width:80px'>Ok</button>`;
+		params.footer = `<button class='btn subtle' onclick='hideParentModal(this)' style='width:80px'>Ok</button>`;
 	}
 
-	html += html`<div class="messagebox_footer">${params.footer}</div>`;
+	message_html += html`<div class="messagebox_footer">${params.footer}</div>`;
 
-	return html;
+	return message_html;
 }
 
 /**
