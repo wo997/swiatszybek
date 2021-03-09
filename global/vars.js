@@ -22,6 +22,8 @@ let STATIC_URLS;
 
 let feature_data_types;
 
+let countries_options_html;
+
 const html = (...v) => {
 	return "";
 };

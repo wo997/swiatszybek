@@ -38,6 +38,7 @@ domload(() => {
 	const case_form_filled = buy_now_form._child(".case_form_filled");
 	const courier_address_different_input = buy_now_form._child(".courier_address_different");
 	const case_courier_address_different = buy_now_form._child(".case_courier_address_different");
+	const confirm_order_btn = buy_now_form._child(".confirm_order");
 
 	if (IS_LOGGED) {
 		expand(case_choosen_account, true);
@@ -73,6 +74,15 @@ domload(() => {
 	courier_address_different_input.addEventListener("change", () => {
 		const courier_address_different = courier_address_different_input._get_value();
 		expand(case_courier_address_different, !!courier_address_different);
+	});
+
+	confirm_order_btn.addEventListener("click", () => {
+		xhr({
+			url: "/shop_order/confirm",
+			success: (res) => {
+				console.log(res);
+			},
+		});
 	});
 });
 

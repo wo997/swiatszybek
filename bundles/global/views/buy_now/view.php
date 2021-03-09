@@ -10,6 +10,10 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
 <title>Kup teraz</title>
 
+<script>
+    <?= useUECountriesOptionsInJS() ?>
+</script>
+
 <?php startSection("body_content"); ?>
 
 <div class="buy_now_container">
@@ -99,7 +103,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
             <div class="checkbox_area">
                 <p-checkbox class="courier_address_different"></p-checkbox>
-                <span>Chcę użyć innego adresu do wysyłki</span>
+                <span class="semi-bold">Chcę użyć innego adresu do wysyłki</span>
             </div>
 
             <div class="expand_y animate_hidden hidden case_courier_address_different">
@@ -117,10 +121,10 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
             <div class="checkbox_area">
                 <p-checkbox class="square"></p-checkbox>
-                <span>Akceptuję regulamin</span>
+                <span class="semi-bold">Akceptuję regulamin</span>
             </div>
 
-            <button class="btn primary medium fill space_top">Potwierdzam zamówienie</button>
+            <button class="btn primary medium fill space_top confirm_order">Potwierdzam zamówienie</button>
 
             <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta.</div>
             <div style="margin-top: 15px;">W następnym kroku dokonasz płatności (<span class="cart_total_price pln"></span>) za zamówienie jedną z poniższych metod:</div>
