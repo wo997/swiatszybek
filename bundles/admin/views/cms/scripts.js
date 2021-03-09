@@ -12,7 +12,6 @@ domload(() => {
 			const prev = target._prev();
 			const next = target._next();
 
-			console.log(ev.key);
 			if (ev.key === "Enter") {
 				target.insertAdjacentHTML("afterend", target.outerHTML);
 				const next = target._next();
@@ -23,6 +22,15 @@ domload(() => {
 			if (ev.key === "Backspace") {
 				if (window.getSelection().focusOffset === 0 && prev) {
 					selectElementContentsByIndex(prev, prev.textContent.length);
+					ev.preventDefault();
+					if (target.textContent.length === 0) {
+						target.remove();
+					}
+				}
+			}
+			if (ev.key === "Delete") {
+				if (window.getSelection().focusOffset === target.textContent.length && next) {
+					selectElementContentsByIndex(next, 0);
 					ev.preventDefault();
 					if (target.textContent.length === 0) {
 						target.remove();
