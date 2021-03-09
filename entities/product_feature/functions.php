@@ -26,6 +26,70 @@ function getFeatureDataTypes()
     ];
 };
 
+function getPhysicalMeasures()
+{
+    return [
+        "weight" => [
+            "description" => "Waga",
+            "base_unit" => "kg",
+            "units" => [
+                "kg" => [
+                    "factor" => 1
+                ],
+                "g" => [
+                    "factor" => 0.001
+                ],
+                "t" => [
+                    "factor" => 1000
+                ],
+            ]
+        ],
+        "length" => [
+            "description" => "Długość",
+            "base_unit" => "m",
+            "units" => [
+                "m" => [
+                    "factor" => 1
+                ],
+                "cm" => [
+                    "factor" => 0.01
+                ],
+                "mm" => [
+                    "factor" => 0.001
+                ],
+                "km" => [
+                    "factor" => 1000
+                ],
+            ]
+        ],
+        "digital_memory" => [
+            "description" => "Pamięć cyfrowa",
+            "base_unit" => "b",
+            "units" => [
+                "b" => [
+                    "factor" => 1
+                ],
+                "B" => [
+                    "factor" => 8
+                ],
+                "KB" => [
+                    "factor" => 8 * 1024
+                ],
+                "MB" => [
+                    "factor" => 8 * 1024 * 1024
+                ],
+                "GB" => [
+                    "factor" => 8 * 1024 * 1024 * 1024
+                ],
+                "TB" => [
+                    "factor" => 8 * 1024 * 1024 * 1024 * 1024
+                ],
+            ]
+        ],
+    ];
+};
+
+
 
 function getAllProductFeatures()
 {
