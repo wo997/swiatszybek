@@ -49,21 +49,47 @@ if (empty(User::getCurrent()->cart->getProducts())) {
     <div class="buy_now_form">
         <h1 class="h1 desktop_view">Kup teraz</h1>
 
-        <div class="label big first">Twój adres</div>
-        <address-comp class="main_address"></address-comp>
+        <div class="expand_y choosen_account">
+            <div class="label big first">Wybór konta</div>
 
-        <div class="label big">Dostawa</div>
-        <div class="radio_group boxes columns_2 hide_checks delivery">
-            <div class="checkbox_area box">
-                <div>
-                    <p-checkbox data-value="courier"></p-checkbox>
-                    <span>Kurier</span>
+            <p class="semi-bold">Zalety korzystania z konta LSIT.pl</p>
+            <p>- Przeglądaj historię zamówień</p>
+            <p>- Zapisz swoje adresy</p>
+            <p>- Możesz wziąć udział w programie partnerskim</p>
+
+            <br>
+
+            <div style="max-width: 350px;">
+                <div style="display:flex">
+                    <button class="btn primary fill" style="margin-right:10px;" onclick="showModal(`loginForm`,{source:this});hideParentModal(this);">
+                        Zaloguj się <i class='fas fa-user'></i>
+                    </button>
+                    <a href="/rejestracja" class="btn primary fill"> Rejestracja <i class="fa fa-user-plus"></i> </a>
                 </div>
+
+                <button class="btn primary fill buy_without_registration" style="margin-top:10px;">
+                    Zakupu bez rejestracji <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-            <div class="checkbox_area box">
-                <div>
-                    <p-checkbox data-value="parcel_locker"></p-checkbox>
-                    <span>Paczkomat</span>
+        </div>
+
+        <div class="expand_y animate_hidden hidden case_choosen_account">
+            <div class="label big first">Twój adres</div>
+            <address-comp class="main_address"></address-comp>
+
+            <div class="label big">Dostawa</div>
+            <div class="radio_group boxes columns_2 hide_checks delivery">
+                <div class="checkbox_area box">
+                    <div>
+                        <p-checkbox data-value="courier"></p-checkbox>
+                        <span>Kurier</span>
+                    </div>
+                </div>
+                <div class="checkbox_area box">
+                    <div>
+                        <p-checkbox data-value="parcel_locker"></p-checkbox>
+                        <span>Paczkomat</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,7 +122,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
             <button class="btn primary medium fill space_top">Potwierdzam zamówienie</button>
 
-            <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta</div>
+            <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta/</div>
             <div style="margin-top: 15px;">W następnym kroku dokonasz płatności (<span class="cart_total_price pln"></span>) za zamówienie jedną z poniższych metod:</div>
             Przelew Bankowy<br>
             bla<br>

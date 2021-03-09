@@ -27,12 +27,30 @@ domload(() => {
 
 	initRebateCodes();
 
-	const delivery_input = $(".buy_now_form .delivery");
-	const case_courier = $(".buy_now_form .case_courier");
-	const case_parcel_locker = $(".buy_now_form .case_parcel_locker");
-	const case_form_filled = $(".buy_now_form .case_form_filled");
-	const courier_address_different_input = $(".buy_now_form .courier_address_different");
-	const case_courier_address_different = $(".buy_now_form .case_courier_address_different");
+	const buy_now_form = $(".buy_now_form");
+	const choosen_account = buy_now_form._child(".choosen_account");
+	const buy_without_registration = buy_now_form._child(".buy_without_registration");
+	const case_choosen_account = buy_now_form._child(".case_choosen_account");
+	const delivery_input = buy_now_form._child(".delivery");
+	const case_courier = buy_now_form._child(".case_courier");
+	const case_parcel_locker = buy_now_form._child(".case_parcel_locker");
+	const case_form_filled = buy_now_form._child(".case_form_filled");
+	const courier_address_different_input = buy_now_form._child(".courier_address_different");
+	const case_courier_address_different = buy_now_form._child(".case_courier_address_different");
+
+	if (IS_LOGGED) {
+		expand(case_choosen_account, true);
+		expand(choosen_account, false);
+	} else {
+		buy_without_registration.addEventListener("click", () => {
+			expand(case_choosen_account, true);
+		});
+
+		const label = case_choosen_account._child(".label.big.first");
+		if (label) {
+			label.classList.remove("first");
+		}
+	}
 
 	delivery_input.addEventListener("change", () => {
 		const delivery = delivery_input._get_value();

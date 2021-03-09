@@ -19,7 +19,7 @@ if (isset($_SESSION["register_email"])) {
 <?php startSection("body_content"); ?>
 
 <div style="margin-top: auto;padding:20px 0">
-    <h1 class="h1">Rejestracja</h1>
+    <h1 class="h1 center">Rejestracja</h1>
     <div class="paddingable" id="registerForm" data-form style="min-height: 400px;">
         <div class="main-container">
             <div class="menu mobileRow" style="max-width: 800px">
@@ -47,7 +47,7 @@ if (isset($_SESSION["register_email"])) {
                         <input type="text" name="phone" autocomplete="tel" data-validate="tel" class="field">
 
                         <button data-submit onclick="register()" class="btn primary medium fullwidthmobile" style="margin:50px 0 50px auto;display:block; max-width:220px">
-                            Zarejestruj się
+                            Rejestracja
                             <i class="fa fa-chevron-right"></i>
                         </button>
                     </div>
