@@ -175,7 +175,7 @@ foreach ($options_data as $option_data) {
                     </div>
                 </div>
 
-                <select class="field select_price_range" style="margin-top:var(--form_spacing);">
+                <!-- <select class="field select_price_range" style="margin-top:var(--form_spacing);">
                     <option value="">- Wybierz zakres z listy -</option>
                     <?php
                     $cute_numbers = [0, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
@@ -188,7 +188,7 @@ foreach ($options_data as $option_data) {
                         }
                     }
                     ?>
-                </select>
+                </select> -->
 
                 <!-- <div class="search_header">
                     <i class="fas fa-search"></i>
