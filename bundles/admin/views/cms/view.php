@@ -7,8 +7,15 @@
 
 <?php startSection("body_content"); ?>
 
-<h1>Strony</h1>
+<div class="label">Rozmiar czcionki</div>
+<input class="field font_size">
 
-<div class="mytable"></div>
+<div>
+    <div contenteditable="true">teścik</div>
+    <div contenteditable="true">dfghdsfsdfsdfsdf</div>
+    <div contenteditable="true">dfghdfg dsfgh dgfdf gds fhghf</div>
+    <div contenteditable="true">dfghdfghdfgh</div>
+    <div contenteditable="true"></div>
+</div>
 
 <?php include "bundles/admin/templates/default.php"; ?>
