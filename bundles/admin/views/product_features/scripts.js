@@ -10,14 +10,14 @@ domload(() => {
 		columns: [
 			{
 				label: "Cecha",
-				key: "name",
+				key: "value",
 				width: "1",
 				searchable: "string",
 				render: (data) => {
 					if (data.selected) {
-						return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.name}</div>`;
+						return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.value}</div>`;
 					}
-					return data.name;
+					return data.value;
 				},
 			},
 			{

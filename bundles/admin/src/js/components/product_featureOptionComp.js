@@ -4,7 +4,7 @@
  * @typedef {{
  * product_feature_id?: number
  * product_feature_option_id: number
- * name?: string
+ * value?: string
  * } & ListCompRowData} Product_FeatureOptionCompData
  *
  * @typedef {{
@@ -21,7 +21,7 @@
  * @param {*} parent
  * @param {Product_FeatureOptionCompData} data
  */
-function product_featureOptionComp(comp, parent, data = { product_feature_option_id: -1, name: "", product_feature_id: -1 }) {
+function product_featureOptionComp(comp, parent, data = { product_feature_option_id: -1, value: "", product_feature_id: -1 }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -32,7 +32,12 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="option_header">
-				<div class="title inline" html="{${data.name}}"></div>
+				<div class="expand_y">
+					<div class="title inline" html="{${data.value}}"></div>
+				</div>
+				<div class="expand_y">
+					<input class="field" data-bind="{${data.value}}" />
+				</div>
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>

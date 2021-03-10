@@ -4,6 +4,7 @@
  * @typedef {{
  * product_feature_id: number
  * name: string
+ * data_type: string
  * options?: string
  * }} ProductFeatureData
  *
@@ -19,9 +20,9 @@ let product_features = [];
  * product_feature_option_id: number
  * product_feature_id: number
  * parent_product_feature_option_id: number
- * name: string
+ * value: string
  * feature_name?: string
- * full_name?: string
+ * full_value?: string
  * all_ids?: number[]
  * }} ProductFeatureOptionData
  *
@@ -36,7 +37,7 @@ function loadedProductFeatures() {
 	product_features.forEach((feature) => {
 		feature.options = product_feature_options
 			.filter((e) => e.product_feature_id === feature.product_feature_id)
-			.map((e) => e.name)
+			.map((e) => e.value)
 			.join(", ");
 	});
 
@@ -46,7 +47,7 @@ function loadedProductFeatures() {
 	});
 
 	product_feature_options.forEach((option) => {
-		let full_name = option.feature_name + " " + option.name;
+		let full_name = option.feature_name + " " + option.value;
 		let all_ids = [option.product_feature_option_id];
 		let parent = option;
 		while (true) {
@@ -57,10 +58,10 @@ function loadedProductFeatures() {
 			if (!parent) {
 				break;
 			}
-			full_name = parent.feature_name + " " + parent.name + " | " + full_name;
+			full_name = parent.feature_name + " " + parent.value + " | " + full_name;
 			all_ids.push(parent.product_feature_option_id);
 		}
-		option.full_name = full_name;
+		option.full_value = full_name;
 
 		option.parent_product_feature_option_id;
 		option.all_ids = all_ids;

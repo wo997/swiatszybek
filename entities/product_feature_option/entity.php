@@ -4,7 +4,7 @@ EntityManager::register("product_feature_option", [
     "props" => [
         "product_feature_id" => ["type" => "number"],
         "parent_product_feature_option_id" => ["type" => "number"],
-        "name" => ["type" => "string"],
+        "value" => ["type" => "string"],
         "pos" => ["type" => "number"],
     ],
     //"sortable" => "pos",

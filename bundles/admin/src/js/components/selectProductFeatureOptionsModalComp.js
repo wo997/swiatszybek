@@ -38,15 +38,15 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					},
 					{
 						label: "Opcja",
-						key: "name",
+						key: "value",
 						width: "1",
 						sortable: true,
 						searchable: "string",
 						render: (data) => {
 							if (data.selected) {
-								return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.name}</div>`;
+								return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.value}</div>`;
 							}
-							return data.name;
+							return data.value;
 						},
 					},
 					{
@@ -76,7 +76,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 							const map = product_feature_options.map((option) => {
 								const obj = {
 									val: option.product_feature_option_id,
-									label: option.full_name,
+									label: option.full_value,
 								};
 								return obj;
 							});

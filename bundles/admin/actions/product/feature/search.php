@@ -12,7 +12,7 @@ $where = "1";
 
 $responseArray = paginateData([
     "select" => "product_feature_id, name, data_type,
-        (SELECT GROUP_CONCAT(name SEPARATOR ', ') FROM product_feature_option o WHERE o.product_feature_id = f.product_feature_id) as attr_values
+        (SELECT GROUP_CONCAT(value SEPARATOR ', ') FROM product_feature_option o WHERE o.product_feature_id = f.product_feature_id) as attr_values
     ",
     "from" => "product_feature f",
     "where" => $where,

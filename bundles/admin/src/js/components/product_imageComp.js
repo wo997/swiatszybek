@@ -41,7 +41,7 @@ function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 					options_html += feature.options
 						.filter((op) => !data.product_feature_options.includes(op.product_feature_option_id))
 						.map((option) => {
-							return html`<option value="${option.product_feature_option_id}">${fea.name}: ${option.name}</option>`;
+							return html`<option value="${option.product_feature_option_id}">${fea.name}: ${option.value}</option>`;
 						});
 				});
 
@@ -52,7 +52,7 @@ function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 						if (option) {
 							return html`
 								<span class="semi-bold">${fea.name}:</span>
-								<span style="margin-left: 5px">${option.name}</span>
+								<span style="margin-left: 5px">${option.value}</span>
 								<button class="btn transparent small remove_option" data-option_id="${option_id}" style="margin-left: 2px">
 									<i class="fas fa-times"></i>
 								</button>

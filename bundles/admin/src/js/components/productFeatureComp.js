@@ -54,7 +54,7 @@ function productFeatureComp(comp, parent, data) {
 				width: "1.3",
 				map_name: "product_feature_option",
 			},
-			{ label: "Opcja", key: "name", width: "1", editable: "string" },
+			{ label: "Opcja", key: "value", width: "1", editable: "string" },
 		],
 		maps: [
 			{
@@ -63,7 +63,7 @@ function productFeatureComp(comp, parent, data) {
 					const map = product_feature_options.map((option) => {
 						const obj = {
 							val: option.product_feature_option_id,
-							label: option.full_name,
+							label: option.full_value,
 						};
 						return obj;
 					});
@@ -143,7 +143,7 @@ function productFeatureComp(comp, parent, data) {
 
 			product_feature.options = comp._data.datatable.dataset.map((e, index) => ({
 				product_feature_option_id: e.product_feature_option_id,
-				name: e.name,
+				value: e.value,
 				parent_product_feature_option_id: e.parent_product_feature_option_id,
 				pos: index + 1,
 			}));

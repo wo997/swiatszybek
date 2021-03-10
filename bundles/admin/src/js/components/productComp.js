@@ -122,7 +122,7 @@ function productComp(comp, parent, data = undefined) {
 		print_row_as_string: (row_data) => {
 			return Object.entries(row_data)
 				.filter(([key, option_id]) => getFeatureIdFromKey(key))
-				.map(([key, option_id]) => product_feature_options.find((option) => option.product_feature_option_id === option_id).name)
+				.map(([key, option_id]) => product_feature_options.find((option) => option.product_feature_option_id === option_id).value)
 				.join(" ");
 		},
 		maps: [
@@ -139,7 +139,7 @@ function productComp(comp, parent, data = undefined) {
 			{
 				name: "product_feature_option",
 				getMap: () => {
-					return product_feature_options.map((option) => ({ val: option.product_feature_option_id, label: option.name }));
+					return product_feature_options.map((option) => ({ val: option.product_feature_option_id, label: option.value }));
 				},
 			},
 		],
@@ -260,13 +260,13 @@ function productComp(comp, parent, data = undefined) {
 					if (!options_before[feature_id].includes(option_after_id)) {
 						const options = options_before[feature_id].filter(onlyUnique).map((option_id) => {
 							return {
-								label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name,
+								label: product_feature_options.find((op) => op.product_feature_option_id === option_id).value,
 								value: option_id,
 							};
 						});
 						options.push({ label: "Nie kopiuj (utwórz puste)", value: -1 });
 
-						const option_name = product_feature_options.find((op) => op.product_feature_option_id === option_after_id).name;
+						const option_name = product_feature_options.find((op) => op.product_feature_option_id === option_after_id).value;
 
 						questions.push({
 							type: "copy",
@@ -282,7 +282,7 @@ function productComp(comp, parent, data = undefined) {
 			} else {
 				if (data.products_dt.dataset.length > 0) {
 					const options = options_after[feature_id].filter(onlyUnique).map((option_id) => {
-						return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).name, value: option_id };
+						return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).value, value: option_id };
 					});
 					options.push({ label: "Nie", value: -1 });
 
@@ -396,7 +396,7 @@ function productComp(comp, parent, data = undefined) {
 								return {
 									product_feature_option_id,
 									product_feature_id: fo.product_feature_id,
-									name: fo.name,
+									name: fo.value,
 								};
 							});
 
