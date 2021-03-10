@@ -50,46 +50,50 @@ EventListener::register("before_save_product_feature_option_entity", function ($
 
     /** @var Entity ProductFeature */
     $product_feature = $product_feature_option->getParent();
-    //var_dump($product_feature_option->getSimpleProps(), $product_feature);
 
-    $feature_data_type = $product_feature->getProp("data_type");
+    // shit happens, data may be broken, chill
+    if (!$product_feature) {
+        $product_feature_option->setWillDelete();
+    } else {
+        $feature_data_type = $product_feature->getProp("data_type");
 
-    if (!endsWith($feature_data_type, "_list")) {
-        $display_something = "";
+        if (!endsWith($feature_data_type, "_list")) {
+            $display_something = "";
 
-        $text_value = null;
-        if ($feature_data_type === "text_value") {
-            $text_value = $product_feature_option->getProp("text_value");
-            if ($text_value !== false) {
-                $display_something = $text_value;
-            } else {
-                $text_value = "";
+            $text_value = null;
+            if ($feature_data_type === "text_value") {
+                $text_value = $product_feature_option->getProp("text_value");
+                if ($text_value !== false) {
+                    $display_something = $text_value;
+                } else {
+                    $text_value = "";
+                }
             }
-        }
-        $product_feature_option->setProp("text_value", $text_value);
+            $product_feature_option->setProp("text_value", $text_value);
 
-        $float_value = null;
-        if ($feature_data_type === "float_value") {
-            $float_value = $product_feature_option->getProp("float_value");
-            if ($float_value !== false) {
-                $display_something = $float_value;
-            } else {
-                $float_value = 0;
+            $float_value = null;
+            if ($feature_data_type === "float_value") {
+                $float_value = $product_feature_option->getProp("float_value");
+                if ($float_value !== false) {
+                    $display_something = $float_value;
+                } else {
+                    $float_value = 0;
+                }
             }
-        }
-        $product_feature_option->setProp("float_value", $float_value);
+            $product_feature_option->setProp("float_value", $float_value);
 
-        $datetime_value = null;
-        if ($feature_data_type === "datetime_value") {
-            $datetime_value = $product_feature_option->getProp("datetime_value");
-            if ($datetime_value !== false) {
-                $display_something = $datetime_value;
-            } else {
-                $datetime_value = "";
+            $datetime_value = null;
+            if ($feature_data_type === "datetime_value") {
+                $datetime_value = $product_feature_option->getProp("datetime_value");
+                if ($datetime_value !== false) {
+                    $display_something = $datetime_value;
+                } else {
+                    $datetime_value = "";
+                }
             }
-        }
-        $product_feature_option->setProp("datetime_value", $datetime_value);
+            $product_feature_option->setProp("datetime_value", $datetime_value);
 
-        $product_feature_option->setProp("value", $display_something);
+            $product_feature_option->setProp("value", $display_something);
+        }
     }
 });

@@ -122,4 +122,6 @@ EventListener::register("after_save_general_product_entity", function ($params) 
         WHERE general_product_id = $general_product_id
         AND data_type NOT LIKE '%_list%'
         AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
+
+    //DB::execute("DELETE pfo FROM product_feature_option pfo WHERE product_feature_id = 0"); // not needed
 });

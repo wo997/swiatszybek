@@ -391,11 +391,12 @@ function productComp(comp, parent, data = undefined) {
 								const fo = product_feature_options.find((e) => {
 									return e.product_feature_option_id === product_feature_option_id;
 								});
-								return {
-									product_feature_option_id,
-									product_feature_id: fo.product_feature_id,
-									value: fo.value,
-								};
+								// return {
+								// 	product_feature_option_id,
+								// 	product_feature_id: fo.product_feature_id,
+								// 	value: fo.value,
+								// };
+								return fo;
 							});
 
 						product_feature_option_ids.push(...feature.options.map((option) => option.product_feature_option_id));
