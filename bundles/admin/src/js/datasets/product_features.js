@@ -68,7 +68,7 @@ function loadedProductFeatures() {
 	});
 }
 
-function refreshProductFeatures() {
+function refreshProductFeatures(callback = undefined) {
 	xhr({
 		url: STATIC_URLS["ADMIN"] + "/product/feature/all_with_options",
 		success: (res) => {

@@ -84,7 +84,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 						source: comp._nodes.add_option_btn,
 					});
 				} else {
-					showLoader();
+					//showLoader();
 
 					/** @type {Product_FeatureOptionCompData} */
 					const product_feature_option = {
@@ -98,12 +98,13 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 							product_feature_option,
 						},
 						success: (res) => {
-							hideLoader();
+							//hideLoader();
 
 							product_comp._data.product_feature_options.push(res.product_feature_option);
 							//product_feature_option.product_feature_option_id = res.product_feature_option.product_feature_option_id;
 							//product_comp._data.product_feature_options.push(product_feature_option);
-							product_comp._render();
+
+							//product_comp._render();
 
 							refreshProductFeatures();
 						},
