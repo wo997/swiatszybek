@@ -7,15 +7,11 @@ function getFeatureDataTypes()
             "description" => "Lista",
             "example" => "(np. kolorów)",
         ],
-        "int_value" => [
-            "description" => "Dowolna liczba całkowita",
-            "example" => "(np. ilość kół samochodu)",
-        ],
         "float_value" => [
-            "description" => "Dowolna liczba zmiennoprzecinkowa",
+            "description" => "Dowolna liczba całkowita",
             "example" => "(np. długość kabla)",
         ],
-        "date_value" => [
+        "datetime_value" => [
             "description" => "Dowolna data",
             "example" => "(np. data premiery)",
         ],
@@ -24,7 +20,7 @@ function getFeatureDataTypes()
             "example" => "(dowolna unikalna nazwa nie wiem co wpisać)",
         ],
     ];
-};
+}
 
 function getPhysicalMeasures()
 {
@@ -87,9 +83,7 @@ function getPhysicalMeasures()
             ]
         ],
     ];
-};
-
-
+}
 
 function getAllProductFeatures()
 {

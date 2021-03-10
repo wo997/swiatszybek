@@ -5,9 +5,10 @@ EntityManager::register("product_feature_option", [
         "product_feature_id" => ["type" => "number"],
         "parent_product_feature_option_id" => ["type" => "number"],
         "value" => ["type" => "string"],
-        "pos" => ["type" => "number"],
+        "float_value" => ["type" => "number"],
+        "datetime_value" => ["type" => "string"],
+        "text_value" => ["type" => "string"],
     ],
-    //"sortable" => "pos",
 ]);
 
 EntityManager::register("product_feature", [
