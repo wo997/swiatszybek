@@ -100,3 +100,26 @@ EventListener::register("before_save_general_product_entity", function ($params)
     $general_product->setProp("__images_json", json_encode($images_data));
     $general_product->setProp("__selectable_option_ids_json", json_encode($selectable_option_ids));
 });
+
+EventListener::register("after_save_general_product_entity", function ($params) {
+    /** @var Entity GeneralProduct */
+    $general_product = $params["obj"];
+    $general_product_id = $general_product->getId();
+
+    $non_list_option_ids = DB::fetchCol("SELECT DISTINCT product_feature_option_id
+        FROM general_product_to_feature_option
+        INNER JOIN product_feature_option USING (product_feature_option_id)
+        INNER JOIN product_feature USING (product_feature_id)
+        WHERE general_product_id = $general_product_id
+        AND data_type NOT LIKE '%_list%'");
+
+    $non_list_option_ids_csv = $non_list_option_ids ? join(",", $non_list_option_ids) : "-1";
+
+    DB::execute("DELETE pfo
+        FROM product_feature_option pfo
+        INNER JOIN general_product_to_feature_option USING (product_feature_option_id)
+        INNER JOIN product_feature USING (product_feature_id)
+        WHERE general_product_id = $general_product_id
+        AND data_type NOT LIKE '%_list%'
+        AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
+});
