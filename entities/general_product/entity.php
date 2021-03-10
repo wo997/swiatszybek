@@ -81,12 +81,12 @@ EventListener::register("before_save_general_product_entity", function ($params)
         $product_name = $general_product->getProp("name");
 
         if ($sorted_feature_ids_str) {
-            $option_names = DB::fetchCol("SELECT pfo.name
+            $option_values = DB::fetchCol("SELECT pfo.value
                 FROM product_to_feature_option INNER JOIN product_feature_option pfo USING (product_feature_option_id)
                 WHERE product_id = $product_id
                 ORDER BY FIELD(product_feature_id,$sorted_feature_ids_str)");
 
-            foreach ($option_names as $option_name) {
+            foreach ($option_values as $option_name) {
                 if ($option_name) {
                     $product_name .= " | " . $option_name;
                 }

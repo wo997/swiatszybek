@@ -48,7 +48,7 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
     if ($parent_feature_option_id === -1) {
         $where .= " AND product_feature_id = $feature_id";
     }
-    $product_feature_options = DB::fetchArr("SELECT product_feature_option_id, name FROM product_feature_option WHERE $where ORDER BY pos ASC");
+    $product_feature_options = DB::fetchArr("SELECT product_feature_option_id, value FROM product_feature_option WHERE $where ORDER BY pos ASC");
     if (!$product_feature_options) {
         return "";
     }
@@ -56,7 +56,7 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
     $display = false;
     foreach ($product_feature_options as $option) {
         $id = $option["product_feature_option_id"];
-        $name = $option["name"];
+        $value = $option["value"];
         $count = def($option_count, $id, 0);
 
         if ($count) {
@@ -66,7 +66,7 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
         $html .= "<li class=\"option_row\">";
         $html .= "<div class=\"checkbox_area\">";
         $html .= "<p-checkbox class=\"square inline option_checkbox\" data-option_id=\"$id\"></p-checkbox>";
-        $html .= " <span class=\"feature_option_label\">$name</span>";
+        $html .= " <span class=\"feature_option_label\">$value</span>";
         $html .= " <span class=\"count\">($count)</span>";
         $html .= "</div> ";
         $html .= traverseFeatureOptions($feature_id, $id, $level + 1);

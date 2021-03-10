@@ -725,8 +725,8 @@ function productComp(comp, parent, data = undefined) {
 									product_feature_id,
 									_meta_pos: index + 1,
 								})),
-								feature_options: data.product_feature_options.map((product_feature_option_id, index) => ({
-									product_feature_option_id,
+								feature_options: data.product_feature_options.map((product_feature_option, index) => ({
+									...product_feature_option,
 									_meta_pos: index + 1,
 								})),
 								categories: data.category_ids,

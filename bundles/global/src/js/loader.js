@@ -4,7 +4,10 @@
  *
  * @param {PiepNode} node
  */
-function showLoader(node) {
+function showLoader(node = undefined) {
+	if (node === undefined) {
+		node = $(document.body);
+	}
 	if (node._child(".mul7")) return;
 
 	node.insertAdjacentHTML(
@@ -20,7 +23,10 @@ function showLoader(node) {
  *
  * @param {PiepNode} node
  */
-function hideLoader(node) {
+function hideLoader(node = undefined) {
+	if (node === undefined) {
+		node = $(document.body);
+	}
 	const mul7 = node._child(".mul7");
 	mul7.style.animation = "0.4s hide";
 	setTimeout(() => {

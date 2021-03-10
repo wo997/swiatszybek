@@ -24,8 +24,25 @@ class Entity
 
         $obj_curr_id = $this->getIdFromProps($props);
         if ($obj_curr_id == -1) {
+            $columns = "";
+            $values = "";
+
+            $entity_data = EntityManager::getEntityData($this->name);
+            $parent_entity_name = def($entity_data, ["parent", "name"]);
+            if ($parent_entity_name) {
+                $parent_entity_column_id = EntityManager::getEntityIdColumn($parent_entity_name);
+                $parent_id = def($props, $parent_entity_column_id, -1);
+                if ($parent_id !== -1) {
+                    $columns .= "$parent_entity_column_id,";
+                    $values .= "$parent_id,";
+                }
+            }
+
+            $columns = trim($columns, ",");
+            $values = trim($values, ",");
+
             $this->curr_props = [];
-            DB::execute("INSERT INTO $name () VALUES ()");
+            DB::execute("INSERT INTO $name ($columns) VALUES ($values)");
             $this->setId(DB::insertedId());
             $this->curr_meta = [];
             $this->is_new = true;
@@ -151,7 +168,6 @@ class Entity
 
             $changed = true;
         } else {
-
             // save primitive types and complex types / relations etc.
             $changed_props = [];
             foreach ($this->props as $key => $value) {
@@ -178,7 +194,8 @@ class Entity
                     EntityManager::setManyToManyRelationship($this, $other_entity_simple_type, def($this->curr_props, $key, []), $value, $link);
                 }
 
-                if (def($this->curr_props, $key, null) === $value) {
+                //var_dump([$this->name, $key, $value, def($this->curr_props, $key, false)]);
+                if (def($this->curr_props, $key, false) === $value) {
                     continue;
                 }
 
@@ -239,7 +256,7 @@ class Entity
      * @param  mixed $val
      * @return void
      */
-    public function setProp($prop_name, $val = null)
+    public function setProp($prop_name, $val = false)
     {
         if ($prop_name === $this->id_column && $this->getId() !== -1) {
             // set id once, ezy
@@ -254,7 +271,8 @@ class Entity
             }
         }
 
-        if ($val === null) {
+        // tricky part here, we do want to have nulls, so maybe false?
+        if ($val === false) {
             $val = $this->getProp($prop_name);
         }
 
@@ -341,7 +359,7 @@ class Entity
                 //if ($val !== null) {}
             }*/
         }
-        return def($this->props, $prop_name, null);
+        return def($this->props, $prop_name, false);
     }
 
     /**
@@ -460,14 +478,14 @@ class Entity
     }
 
     /**
-     * Usually used for comparing changes
+     * Usually used for comparing changes, OK - NEVER USED
      *
      * @param  mixed $prop_name
      * @return void
      */
-    public function getCurrProps($prop_name)
+    public function getCurrProp($prop_name)
     {
-        return def($this->curr_props, $prop_name, null);
+        return def($this->curr_props, $prop_name, false);
     }
 
     private function shouldFetchProp($prop_name)

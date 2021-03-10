@@ -84,11 +84,28 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 						source: comp._nodes.add_option_btn,
 					});
 				} else {
-					product_comp._data.product_feature_options.push({
+					showLoader();
+
+					/** @type {Product_FeatureOptionCompData} */
+					const product_feature_option = {
 						product_feature_id: comp._data.product_feature_id,
 						product_feature_option_id: -1,
+					};
+
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
+						params: {
+							product_feature_option,
+						},
+						success: (res) => {
+							hideLoader();
+
+							//product_comp._data.product_feature_options.push(res.product_feature_option);
+							product_feature_option.product_feature_option_id = res.product_feature_option.product_feature_option_id;
+							product_comp._data.product_feature_options.push(product_feature_option);
+							product_comp._render();
+						},
 					});
-					product_comp._render();
 				}
 			});
 
