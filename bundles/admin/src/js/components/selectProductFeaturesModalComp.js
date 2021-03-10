@@ -46,7 +46,14 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						width: "2",
 						searchable: "string",
 						render: (data) => {
-							return data.data_type.endsWith("_list") ? data.options : feature_data_types[data.data_type].description;
+							if (data.data_type.endsWith("_list")) {
+								return data.options;
+							}
+							const data_type_data = feature_data_types[data.data_type];
+							if (data_type_data) {
+								data_type_data.description;
+							}
+							return "";
 						},
 					},
 					{

@@ -4,6 +4,7 @@
  * @typedef {{
  * product_feature_id: number
  * options: Product_FeatureOptionCompData[]
+ * data_type: string
  * } & ListCompRowData} Product_FeatureCompData
  *
  * @typedef {{
@@ -22,11 +23,14 @@
  * @param {*} parent
  * @param {Product_FeatureCompData} data
  */
-function product_featureComp(comp, parent, data = { product_feature_id: -1, options: [] }) {
+function product_featureComp(comp, parent, data = { product_feature_id: -1, options: [], data_type: "text_list" }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			pass_list_data: [{ what: "product_feature_id", where: "options" }],
+			pass_list_data: [
+				{ what: "product_feature_id", where: "options" },
+				{ what: "data_type", where: "options" },
+			],
 			render: () => {
 				const feature = product_features.find((e) => e.product_feature_id === data.product_feature_id);
 				if (feature) {

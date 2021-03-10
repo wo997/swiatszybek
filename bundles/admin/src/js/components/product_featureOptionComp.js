@@ -4,7 +4,11 @@
  * @typedef {{
  * product_feature_id?: number
  * product_feature_option_id: number
+ * data_type: string
  * value?: string
+ * float_value?: number
+ * datetime_value?: string
+ * text_value?: string
  * } & ListCompRowData} Product_FeatureOptionCompData
  *
  * @typedef {{
@@ -16,30 +20,59 @@
  * } & BaseComp} Product_FeatureOptionComp
  */
 
+//  "text_list" => [
+//     "description" => "Lista",
+//     "example" => "(np. kolorów)",
+// ],
+// "float_value" => [
+//     "description" => "Dowolna liczba całkowita",
+//     "example" => "(np. długość kabla)",
+// ],
+// "datetime_value" => [
+//     "description" => "Dowolna data",
+//     "example" => "(np. data premiery)",
+// ],
+// "text_value" => [
+//     "description" => "Dowolny tekst",
+//     "example" => "(dowolna unikalna nazwa nie wiem co wpisać)",
+// ],
+
 /**
  * @param {Product_FeatureOptionComp} comp
  * @param {*} parent
  * @param {Product_FeatureOptionCompData} data
  */
-function product_featureOptionComp(comp, parent, data = { product_feature_option_id: -1, value: "", product_feature_id: -1 }) {
+function product_featureOptionComp(
+	comp,
+	parent,
+	data = {
+		product_feature_option_id: -1,
+		product_feature_id: -1,
+		data_type: "text_list",
+		value: "",
+		float_value: 0,
+		datetime_value: "",
+		text_value: "",
+	}
+) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				$$(`[data-data_type]`).forEach((e) => {
+					e.classList.toggle("hidden", e.dataset.data_type != data.data_type);
+				});
+			},
 		});
 	};
 
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="option_header">
-				List
-				<div class="title inline" html="{${data.value}}"></div>
-				Text
-				<input class="field" data-bind="{${data.value}}" />
-				Date
-				<input class="field default_datepicker" data-bind="{${data.value}}" />
-				Numeric
-				<input class="field" inputmode="numeric" data-bind="{${data.value}}" />
+				<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
+				<input class="field" data-data_type="text_value" data-bind="{${data.text_value}}" />
+				<input class="field default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
+				<input class="field" inputmode="numeric" data-data_type="float_value" data-bind="{${data.float_value}}" />
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>

@@ -363,6 +363,7 @@ function productComp(comp, parent, data = undefined) {
 							return {
 								product_feature_id: fe.product_feature_id,
 								name: fe.name,
+								data_type: fe.data_type,
 								options: [],
 							};
 						} else {
