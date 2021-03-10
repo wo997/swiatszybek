@@ -3,3 +3,31 @@
 h1 {
 	padding: 10px;
 }
+
+// [contenteditable] {
+// 	background: #0001;
+// }
+
+.piep_editor {
+	& {
+		position: relative;
+	}
+
+	.piep_editor_content {
+		div {
+			border: 1px solid red;
+			margin: 1px;
+		}
+	}
+
+	::selection {
+		color: green;
+		background: yellow;
+	}
+
+	.piep_editor_cursor {
+		position: absolute;
+		background: #000;
+		text-shadow: 0 0 1px #fff;
+	}
+}
