@@ -51,7 +51,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 							}
 							const data_type_data = feature_data_types[data.data_type];
 							if (data_type_data) {
-								data_type_data.description;
+								return data_type_data.description;
 							}
 							return "";
 						},
@@ -67,9 +67,17 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 								cell += html` <button class="btn subtle small remove_btn" style="min-width: 73px;">
 									Usuń <i class="fas fa-times"></i>
 								</button>`;
-								cell += html` <button class="btn ${data.option_count ? "subtle" : "important"} small options_btn" style="margin-left:10px">
-									Opcje (${data.option_count}) <i class="fas fa-list"></i>
-								</button>`;
+								const feature = product_features.find((fea) => fea.product_feature_id === data.product_feature_id);
+								if (feature) {
+									if (feature.data_type.endsWith("_list")) {
+										cell += html` <button
+											class="btn ${data.option_count ? "subtle" : "important"} small options_btn"
+											style="margin-left:10px"
+										>
+											Opcje (${data.option_count}) <i class="fas fa-list"></i>
+										</button>`;
+									}
+								}
 							} else {
 								cell += html` <button class="btn primary small select_btn" style="min-width: 73px;">
 									Dodaj <i class="fas fa-plus"></i>
@@ -187,7 +195,19 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					const list_row = select_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
 						const product_feature_id = +list_row.dataset.primary;
-						showOptionsFrom(product_feature_id, select_btn);
+
+						const feature = product_features.find((fea) => fea.product_feature_id === product_feature_id);
+						if (feature) {
+							if (feature.data_type.endsWith("_list")) {
+								showOptionsFrom(product_feature_id, select_btn);
+							} else {
+								if (!product_comp._data.product_feature_ids.includes(product_feature_id)) {
+									product_comp._data.product_feature_ids.push(product_feature_id);
+									product_comp._render();
+									comp._render();
+								}
+							}
+						}
 					}
 
 					comp._nodes.close_btn.classList.remove("subtle");

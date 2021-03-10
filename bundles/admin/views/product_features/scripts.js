@@ -31,7 +31,7 @@ domload(() => {
 					}
 					const data_type_data = feature_data_types[data.data_type];
 					if (data_type_data) {
-						data_type_data.description;
+						return data_type_data.description;
 					}
 					return "";
 				},
