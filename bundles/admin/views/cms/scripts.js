@@ -73,28 +73,28 @@ domload(() => {
  */
 function selectElementContentsFromOther(node, from) {
 	const text_node = node.childNodes[0];
-	if (!text_node) {
-		return;
-	}
-
-	const was_cursor_x = window.getSelection().getRangeAt(0).getBoundingClientRect().left;
-
 	const sel = window.getSelection();
 	const range = document.createRange();
+	if (!text_node) {
+		range.setStart(node, 0);
+		range.setEnd(node, 0);
+	} else {
+		const was_cursor_x = window.getSelection().getRangeAt(0).getBoundingClientRect().left;
 
-	let last_cursor_x;
-	for (let i = 0; i <= text_node.textContent.length; i++) {
-		range.setStart(text_node, i);
-		range.setEnd(text_node, i);
+		let last_cursor_x;
+		for (let i = 0; i <= text_node.textContent.length; i++) {
+			range.setStart(text_node, i);
+			range.setEnd(text_node, i);
 
-		const cursor_x = range.getBoundingClientRect().left;
-		if (last_cursor_x === undefined) {
+			const cursor_x = range.getBoundingClientRect().left;
+			if (last_cursor_x === undefined) {
+				last_cursor_x = cursor_x;
+			}
+			if (-last_cursor_x * 0.5 + cursor_x * 1.5 > was_cursor_x) {
+				break;
+			}
 			last_cursor_x = cursor_x;
 		}
-		if (-last_cursor_x * 0.5 + cursor_x * 1.5 > was_cursor_x) {
-			break;
-		}
-		last_cursor_x = cursor_x;
 	}
 
 	sel.removeAllRanges();
@@ -109,15 +109,15 @@ function selectElementContentsFromOther(node, from) {
  */
 function selectElementContentsByIndex(node, pos) {
 	const text_node = node.childNodes[0];
-	if (!text_node) {
-		return;
-	}
 	const sel = window.getSelection();
 	const range = document.createRange();
-
-	range.setStart(text_node, pos);
-	range.setEnd(text_node, pos);
-
+	if (!text_node) {
+		range.setStart(node, 0);
+		range.setEnd(node, 0);
+	} else {
+		range.setStart(text_node, pos);
+		range.setEnd(text_node, pos);
+	}
 	sel.removeAllRanges();
 	sel.addRange(range);
 }
