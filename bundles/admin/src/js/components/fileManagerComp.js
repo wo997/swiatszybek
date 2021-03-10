@@ -103,7 +103,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 					`;
 				}
 				comp._nodes.files_grid._set_content(out, { maintain_height: true });
-				lazyLoadImages(false);
+				lazyLoadImages({ duration: 0 });
 
 				comp._render();
 			},

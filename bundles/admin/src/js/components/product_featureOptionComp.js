@@ -4,7 +4,7 @@
  * @typedef {{
  * product_feature_id?: number
  * product_feature_option_id: number
- * data_type: string
+ * data_type?: string
  * value?: string
  * float_value?: number
  * datetime_value?: string
@@ -19,23 +19,6 @@
  * } & ListControlTraitNodes
  * } & BaseComp} Product_FeatureOptionComp
  */
-
-//  "text_list" => [
-//     "description" => "Lista",
-//     "example" => "(np. kolorów)",
-// ],
-// "float_value" => [
-//     "description" => "Dowolna liczba całkowita",
-//     "example" => "(np. długość kabla)",
-// ],
-// "datetime_value" => [
-//     "description" => "Dowolna data",
-//     "example" => "(np. data premiery)",
-// ],
-// "text_value" => [
-//     "description" => "Dowolny tekst",
-//     "example" => "(dowolna unikalna nazwa nie wiem co wpisać)",
-// ],
 
 /**
  * @param {Product_FeatureOptionComp} comp
@@ -59,7 +42,7 @@ function product_featureOptionComp(
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				$$(`[data-data_type]`).forEach((e) => {
+				comp._children(`[data-data_type]`).forEach((e) => {
 					e.classList.toggle("hidden", e.dataset.data_type != data.data_type);
 				});
 			},
@@ -70,9 +53,9 @@ function product_featureOptionComp(
 		template: html`
 			<div class="option_header">
 				<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
-				<input class="field" data-data_type="text_value" data-bind="{${data.text_value}}" />
-				<input class="field default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
-				<input class="field" inputmode="numeric" data-data_type="float_value" data-bind="{${data.float_value}}" />
+				<input class="field small inline" data-data_type="text_value" data-bind="{${data.text_value}}" />
+				<input class="field small inline default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
+				<input class="field small inline" inputmode="numeric" data-data_type="float_value" data-bind="{${data.float_value}}" />
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
@@ -100,8 +83,8 @@ function product_featureOptionComp(
 
 				detail.res.removed = true;
 
-				const pfoi = product_comp._data.product_feature_option_ids;
-				const id = pfoi.indexOf(comp._data.product_feature_option_id);
+				const pfoi = product_comp._data.product_feature_options;
+				const id = pfoi.findIndex((opt) => opt.product_feature_option_id === comp._data.product_feature_option_id);
 				if (id !== -1) {
 					pfoi.splice(id, 1);
 				}
@@ -122,8 +105,8 @@ function product_featureOptionComp(
 
 				detail.res.moved = true;
 
-				const pfoi = product_comp._data.product_feature_option_ids;
-				const id = pfoi.indexOf(comp._data.product_feature_option_id);
+				const pfoi = product_comp._data.product_feature_options;
+				const id = pfoi.findIndex((opt) => opt.product_feature_option_id === comp._data.product_feature_option_id);
 				if (id !== -1) {
 					// swaping is possible because we made sure that the data options are always next each other
 					const other_id = id + detail.to - from_id;

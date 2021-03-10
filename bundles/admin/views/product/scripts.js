@@ -29,9 +29,10 @@ domload(() => {
 			data.product_feature_ids.push(feature.product_feature_id);
 		}
 
-		data.product_feature_option_ids = [];
-		for (const feature of general_product_data.feature_options.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
-			data.product_feature_option_ids.push(feature.product_feature_option_id);
+		data.product_feature_options = [];
+		for (const option_data of general_product_data.feature_options.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
+			const option = product_feature_options.find((opt) => opt.product_feature_option_id === option_data.product_feature_option_id);
+			data.product_feature_options.push(option);
 		}
 
 		data.products_dt.dataset = [];
@@ -77,8 +78,6 @@ domload(() => {
 			.map((e) => {
 				return { ...e, product_feature_options: e.product_feature_options.map((op) => op.product_feature_option_id) };
 			});
-
-		product_feature_options;
 
 		product_comp._render();
 

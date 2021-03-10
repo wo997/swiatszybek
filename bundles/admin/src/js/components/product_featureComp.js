@@ -69,13 +69,6 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 				product_feature_modal_comp._show(comp._data.product_feature_id, { source: comp._nodes.edit_feature_btn });
 			});
 
-			comp._nodes.add_option_btn.addEventListener("click", () => {
-				const select_product_features_options_modal_comp = getSelectProductFeatureOptionsModal();
-				select_product_features_options_modal_comp._show(comp._data.product_feature_id, {
-					source: comp._nodes.add_option_btn,
-				});
-			});
-
 			/** @type {ListComp} */
 			// @ts-ignore
 			const list = comp._parent_comp;
@@ -83,6 +76,21 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 			/** @type {ProductComp} */
 			// @ts-ignore
 			const product_comp = list._parent_comp;
+
+			comp._nodes.add_option_btn.addEventListener("click", () => {
+				if (comp._data.data_type.endsWith("_list")) {
+					const select_product_features_options_modal_comp = getSelectProductFeatureOptionsModal();
+					select_product_features_options_modal_comp._show(comp._data.product_feature_id, {
+						source: comp._nodes.add_option_btn,
+					});
+				} else {
+					product_comp._data.product_feature_options.push({
+						product_feature_id: comp._data.product_feature_id,
+						product_feature_option_id: -1,
+					});
+					product_comp._render();
+				}
+			});
 
 			list.addEventListener("remove_row", (ev) => {
 				// @ts-ignore

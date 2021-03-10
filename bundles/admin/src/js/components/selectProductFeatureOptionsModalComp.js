@@ -146,7 +146,9 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				/** @type {DatatableCompData} */
 				const data = detail.data;
 				data.rows.forEach((data) => {
-					data.row_data.selected = product_comp._data.product_feature_option_ids.indexOf(data.row_data.product_feature_option_id) !== -1;
+					data.row_data.selected = !!product_comp._data.product_feature_options.find(
+						(opt) => opt.product_feature_option_id === data.row_data.product_feature_option_id
+					);
 				});
 			});
 
@@ -162,12 +164,11 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 							(opt) => opt.product_feature_option_id === product_feature_option_id
 						);
 						product_feature_option.all_ids.forEach((option_id) => {
-							if (!product_comp._data.product_feature_option_ids.includes(option_id)) {
-								product_comp._data.product_feature_option_ids.push(option_id);
+							if (!product_comp._data.product_feature_options.find((opt) => opt.product_feature_option_id === option_id)) {
+								const option = product_feature_options.find((opt) => opt.product_feature_option_id === option_id);
+								const product_feature_id = option.product_feature_id;
 
-								const product_feature_id = product_feature_options.find((opt) => opt.product_feature_option_id === option_id)
-									.product_feature_id;
-
+								product_comp._data.product_feature_options.push(option);
 								if (!product_comp._data.product_feature_ids.includes(product_feature_id)) {
 									product_comp._data.product_feature_ids.push(product_feature_id);
 								}
@@ -187,9 +188,11 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				if (remove_btn) {
 					const list_row = remove_btn._parent(".list_row", { skip: 0 });
 					if (list_row) {
-						const ind = product_comp._data.product_feature_option_ids.indexOf(+list_row.dataset.primary);
+						const ind = product_comp._data.product_feature_options.findIndex(
+							(opt) => opt.product_feature_option_id === +list_row.dataset.primary
+						);
 						if (ind !== -1) {
-							product_comp._data.product_feature_option_ids.splice(ind, 1);
+							product_comp._data.product_feature_options.splice(ind, 1);
 							product_comp._render();
 							select_product_features_modal_comp._render();
 							comp._nodes.datatable._render();
