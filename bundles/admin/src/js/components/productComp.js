@@ -398,6 +398,7 @@ function productComp(comp, parent, data = undefined) {
 									product_feature_option_id,
 									product_feature_id: fo.product_feature_id,
 									value: fo.value,
+									data_type: feature.data_type,
 								};
 							});
 
