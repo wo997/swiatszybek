@@ -100,10 +100,12 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 						success: (res) => {
 							hideLoader();
 
-							//product_comp._data.product_feature_options.push(res.product_feature_option);
-							product_feature_option.product_feature_option_id = res.product_feature_option.product_feature_option_id;
-							product_comp._data.product_feature_options.push(product_feature_option);
+							product_comp._data.product_feature_options.push(res.product_feature_option);
+							//product_feature_option.product_feature_option_id = res.product_feature_option.product_feature_option_id;
+							//product_comp._data.product_feature_options.push(product_feature_option);
 							product_comp._render();
+
+							refreshProductFeatures();
 						},
 					});
 				}

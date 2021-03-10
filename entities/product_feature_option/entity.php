@@ -55,12 +55,14 @@ EventListener::register("before_save_product_feature_option_entity", function ($
     $feature_data_type = $product_feature->getProp("data_type");
 
     if (!endsWith($feature_data_type, "_list")) {
-        $product_feature_option->setProp("value", null);
+        $display_something = "";
 
         $text_value = null;
         if ($feature_data_type === "text_value") {
             $text_value = $product_feature_option->getProp("text_value");
-            if (!$text_value) {
+            if ($text_value !== false) {
+                $display_something = $text_value;
+            } else {
                 $text_value = "";
             }
         }
@@ -69,7 +71,9 @@ EventListener::register("before_save_product_feature_option_entity", function ($
         $float_value = null;
         if ($feature_data_type === "float_value") {
             $float_value = $product_feature_option->getProp("float_value");
-            if (!$float_value) {
+            if ($float_value !== false) {
+                $display_something = $float_value;
+            } else {
                 $float_value = 0;
             }
         }
@@ -78,10 +82,14 @@ EventListener::register("before_save_product_feature_option_entity", function ($
         $datetime_value = null;
         if ($feature_data_type === "datetime_value") {
             $datetime_value = $product_feature_option->getProp("datetime_value");
-            if (!$datetime_value) {
+            if ($datetime_value !== false) {
+                $display_something = $datetime_value;
+            } else {
                 $datetime_value = "";
             }
         }
         $product_feature_option->setProp("datetime_value", $datetime_value);
+
+        $product_feature_option->setProp("value", $display_something);
     }
 });

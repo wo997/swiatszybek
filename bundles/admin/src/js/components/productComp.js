@@ -477,7 +477,7 @@ function productComp(comp, parent, data = undefined) {
 					}
 				});
 
-				const selection_changed = cd.product_feature_ids || cd.product_feature_option_ids;
+				const selection_changed = cd.product_feature_ids || cd.product_feature_options;
 				if (selection_changed || cd.products_dt) {
 					/** @type {DatatableColumnDef[]} */
 					const columns = data.products_dt.columns;
