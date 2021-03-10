@@ -83,8 +83,8 @@ function product_featureOptionComp(
 
 				detail.res.removed = true;
 
-				const pfoi = product_comp._data.product_feature_options;
-				const id = pfoi.findIndex((opt) => opt.product_feature_option_id === comp._data.product_feature_option_id);
+				const pfoi = product_comp._data.product_feature_option_ids;
+				const id = pfoi.indexOf(comp._data.product_feature_option_id);
 				if (id !== -1) {
 					pfoi.splice(id, 1);
 				}
@@ -105,8 +105,8 @@ function product_featureOptionComp(
 
 				detail.res.moved = true;
 
-				const pfoi = product_comp._data.product_feature_options;
-				const id = pfoi.findIndex((opt) => opt.product_feature_option_id === comp._data.product_feature_option_id);
+				const pfoi = product_comp._data.product_feature_option_ids;
+				const id = pfoi.indexOf(comp._data.product_feature_option_id);
 				if (id !== -1) {
 					// swaping is possible because we made sure that the data options are always next each other
 					const other_id = id + detail.to - from_id;

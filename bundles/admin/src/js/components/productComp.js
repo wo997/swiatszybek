@@ -15,7 +15,7 @@
  *  general_product_id: number
  *  name: string
  *  sell_by: string
- *  product_feature_options: Product_FeatureOptionCompData[]
+ *  product_feature_option_ids: number[]
  *  product_feature_ids: number[]
  *  features: Product_FeatureCompData[]
  *  missing_products_features: Object[]
@@ -73,7 +73,7 @@ function productComp(comp, parent, data = undefined) {
 			name: "",
 			sell_by: "qty",
 			product_feature_ids: [],
-			product_feature_options: [],
+			product_feature_option_ids: [],
 			missing_products_features: [],
 			features: [],
 			category_ids: [],
@@ -236,11 +236,12 @@ function productComp(comp, parent, data = undefined) {
 		});
 
 		const options_after = {};
-		data.product_feature_options.forEach((option) => {
-			if (!options_after[option.product_feature_id]) {
-				options_after[option.product_feature_id] = [];
+		data.product_feature_option_ids.forEach((option_id) => {
+			const feature_id = product_feature_options.find((opt) => opt.product_feature_option_id === option_id).product_feature_id;
+			if (!options_after[feature_id]) {
+				options_after[feature_id] = [];
 			}
-			options_after[option.product_feature_id].push(option.product_feature_option_id);
+			options_after[feature_id].push(option_id);
 		});
 
 		/** @type {ManageProductList_QuestionCompData[]} */
@@ -370,63 +371,38 @@ function productComp(comp, parent, data = undefined) {
 					data.product_feature_ids = data.product_feature_ids.filter((e) => missing_feature_ids.indexOf(e) === -1);
 				}
 
-				if (cd.product_feature_ids || cd.product_feature_options) {
+				if (cd.product_feature_ids || cd.product_feature_option_ids) {
+					const missing_option_ids = [];
 					const product_feature_option_ids = [];
-					//const missing_product_feature_option_ids = [];
 
 					data.features.forEach((feature) => {
-						feature.options = data.product_feature_options
-							.filter((option) => {
-								return option.product_feature_id === feature.product_feature_id;
-								// if (feature.data_type.endsWith("_list")) {
-
-								// 	const fo = product_feature_options.find((pfo) => {
-								// 		return pfo.product_feature_option_id === option.product_feature_option_id;
-								// 	});
-								// 	if (fo) {
-
-								// 	} else {
-								// 		return false;
-								// 	}
-								// }
-								// return true;
-
-								// else {
-								// 	if (feature.data_type.endsWith("_list")) {
-								// 		console.log(feature, feature.data_type, option.product_feature_option_id);
-								// 		missing_product_feature_option_ids.push(option.product_feature_option_id);
-								// 	}
-								// 	return undefined;
-								// }
-							})
-							.map((option) => {
-								const option_id = option.product_feature_option_id;
-								if (feature.data_type.endsWith("_list")) {
-									const fo = product_feature_options.find((e) => {
-										return e.product_feature_option_id === option.product_feature_option_id;
-									});
-									if (fo) {
-										return {
-											product_feature_option_id: option_id,
-											product_feature_id: fo.product_feature_id,
-											value: fo.value,
-											data_type: feature.data_type,
-										};
-									}
+						feature.options = data.product_feature_option_ids
+							.filter((product_feature_option_id) => {
+								const fo = product_feature_options.find((pfo) => {
+									return pfo.product_feature_option_id === product_feature_option_id;
+								});
+								if (fo) {
+									return fo.product_feature_id === feature.product_feature_id;
+								} else {
+									missing_option_ids.push(product_feature_option_id);
 								}
-
-								// this one is custom, just for that general product, client side editable so u better dont touch it
-								return option;
+							})
+							.map((product_feature_option_id) => {
+								const fo = product_feature_options.find((e) => {
+									return e.product_feature_option_id === product_feature_option_id;
+								});
+								return {
+									product_feature_option_id,
+									product_feature_id: fo.product_feature_id,
+									value: fo.value,
+								};
 							});
 
 						product_feature_option_ids.push(...feature.options.map((option) => option.product_feature_option_id));
 					});
 
-					// important usage of product_feature_options, these are ordered properly, OLD COMMENT
-					// console.log(missing_product_feature_option_ids);
-					// data.product_feature_options = data.product_feature_options.filter(
-					// 	(e) => !missing_product_feature_option_ids.includes(e.product_feature_option_id)
-					// );
+					// important usage of product_feature_option_ids, these are ordered properly
+					data.product_feature_option_ids = product_feature_option_ids.filter((e) => missing_option_ids.indexOf(e) === -1);
 				}
 
 				// full product list
@@ -477,7 +453,7 @@ function productComp(comp, parent, data = undefined) {
 					}
 				});
 
-				const selection_changed = cd.product_feature_ids || cd.product_feature_options;
+				const selection_changed = cd.product_feature_ids || cd.product_feature_option_ids;
 				if (selection_changed || cd.products_dt) {
 					/** @type {DatatableColumnDef[]} */
 					const columns = data.products_dt.columns;
@@ -725,8 +701,8 @@ function productComp(comp, parent, data = undefined) {
 									product_feature_id,
 									_meta_pos: index + 1,
 								})),
-								feature_options: data.product_feature_options.map((product_feature_option, index) => ({
-									...product_feature_option,
+								feature_options: data.product_feature_option_ids.map((product_feature_option_id, index) => ({
+									product_feature_option_id,
 									_meta_pos: index + 1,
 								})),
 								categories: data.category_ids,
