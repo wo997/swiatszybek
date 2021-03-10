@@ -32,12 +32,14 @@ function product_featureOptionComp(comp, parent, data = { product_feature_option
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="option_header">
-				<div class="expand_y">
-					<div class="title inline" html="{${data.value}}"></div>
-				</div>
-				<div class="expand_y">
-					<input class="field" data-bind="{${data.value}}" />
-				</div>
+				List
+				<div class="title inline" html="{${data.value}}"></div>
+				Text
+				<input class="field" data-bind="{${data.value}}" />
+				Date
+				<input class="field default_datepicker" data-bind="{${data.value}}" />
+				Numeric
+				<input class="field" inputmode="numeric" data-bind="{${data.value}}" />
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>

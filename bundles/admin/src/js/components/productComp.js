@@ -396,7 +396,7 @@ function productComp(comp, parent, data = undefined) {
 								return {
 									product_feature_option_id,
 									product_feature_id: fo.product_feature_id,
-									name: fo.value,
+									value: fo.value,
 								};
 							});
 
