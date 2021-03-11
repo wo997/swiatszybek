@@ -84,12 +84,19 @@ function traverseFeatures()
     if (!$product_features) {
         return "";
     }
-    $html = "<ul>";
+    $html = "";
     foreach ($product_features as $product_feature) {
         $product_feature_id = $product_feature["product_feature_id"];
-        $options_html = "";
+
+        $feature_body = "";
+        $feature_label = $product_feature["name"];
+
         if (endsWith($product_feature["data_type"], "_list")) {
-            $options_html = traverseFeatureOptions($product_feature_id);
+            $feature_body = traverseFeatureOptions($product_feature_id);
+
+            if (!$feature_body) {
+                continue;
+            }
         } else {
             $data = DB::fetchRow("SELECT MIN(double_value) min_value, MAX(double_value) max_value FROM product_feature_option
                 INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
@@ -97,6 +104,11 @@ function traverseFeatures()
                 WHERE product_feature_id = $product_feature_id AND $where_products_0");
             $min_value = $data["min_value"];
             $max_value = $data["max_value"];
+
+            if ($min_value === $max_value) {
+                continue;
+            }
+            $feature_label .= " ($min_value - $max_value)";
 
             $options = "";
             $physical_measure_data = def(getPhysicalMeasures(), $product_feature["physical_measure"]);
@@ -124,8 +136,7 @@ function traverseFeatures()
             }
 
             if ($product_feature["data_type"] === "double_value") {
-                $options_html = <<<HTML
-                $min_value - $max_value
+                $feature_body = <<<HTML
                 <div class="flex_children_width">
                     <div class="flex_column" style="margin-right:var(--form_spacing);">
                         Od
@@ -149,14 +160,12 @@ function traverseFeatures()
 HTML;
             }
         }
-        if ($options_html) {
-            $html .= "<li class=\"feature_row\">";
-            $html .= "<span class=\"feature_label\">" . $product_feature["name"] . "</span>";
-            $html .= $options_html;
-            $html .= "</li>";
-        }
+
+        $html .= "<li class=\"feature_row\">";
+        $html .= "<span class=\"feature_label\">$feature_label</span>";
+        $html .= $feature_body;
+        $html .= "</li>";
     }
-    $html .= "</ul>";
     return $html;
 }
 
@@ -211,33 +220,35 @@ foreach ($options_data as $option_data) {
     <div class="searching_wrapper">
         <div class="scroll_panel scroll_shadow">
             <div>
-                <div class="search_header first"> <i class="fas fa-bars"></i> Kategorie </div>
+                <div class="search_header first"> Kategorie </div>
                 <div class="product_categories">
                     <?= traverseCategories() ?>
                 </div>
 
-                <div class="search_header"> <i class="fas fa-star"></i> Cechy </div>
-                <div class="product_features">
+                <div class="search_header"> Cechy </div>
+                <ul class="product_features">
                     <?= traverseFeatures() ?>
-                </div>
 
-                <div class="search_header"> <i class="fas fa-tags"></i> Cena <span style="font-weight:400">(<?= $prices_data["min_gross_price"] . " zł - " . $prices_data["max_gross_price"] . " zł" ?>)</span> </div>
-                <div class="flex_children_width">
-                    <div class="flex_column" style="margin-right:var(--form_spacing);">
-                        Od
-                        <div class="float_icon flex">
-                            <input class="field inline price_min" inputmode="numeric">
-                            <i>zł</i>
+                    <li class="feature_row">
+                        <span class="feature_label">Cena (<?= $prices_data["min_gross_price"] . " zł - " . $prices_data["max_gross_price"] . " zł" ?>)</span>
+                        <div class="flex_children_width">
+                            <div class="flex_column" style="margin-right:var(--form_spacing);">
+                                Od
+                                <div class="float_icon flex">
+                                    <input class="field inline price_min" inputmode="numeric">
+                                    <i>zł</i>
+                                </div>
+                            </div>
+                            <div class="flex_column">
+                                Do
+                                <div class="float_icon flex">
+                                    <input class="field inline price_max" inputmode="numeric">
+                                    <i>zł</i>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex_column">
-                        Do
-                        <div class="float_icon flex">
-                            <input class="field inline price_max" inputmode="numeric">
-                            <i>zł</i>
-                        </div>
-                    </div>
-                </div>
+                    </li>
+                </ul>
 
                 <!-- <select class="field select_price_range" style="margin-top:var(--form_spacing);">
                     <option value="">- Wybierz zakres z listy -</option>

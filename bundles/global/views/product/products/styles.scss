@@ -42,8 +42,7 @@
 		& {
 			margin-bottom: 10px;
 			font-weight: 700;
-			color: #444;
-			font-size: 1.1em;
+			font-size: 1.2em;
 		}
 		&:not(.first) {
 			margin-top: 30px;
@@ -97,8 +96,9 @@
 .product_features {
 	.feature_label {
 		font-weight: 600;
-		margin-top: 0.75em;
+		margin-top: 1em;
 		display: block;
+		margin-bottom: 0.2em;
 	}
 	.feature_option_label {
 		padding: 5px 0;
