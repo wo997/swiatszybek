@@ -10,14 +10,14 @@ domload(() => {
 		columns: [
 			{
 				label: "Cecha",
-				key: "value",
+				key: "name",
 				width: "1",
 				searchable: "string",
 				render: (data) => {
 					if (data.selected) {
-						return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.value}</div>`;
+						return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.name}</div>`;
 					}
-					return data.value;
+					return data.name;
 				},
 			},
 			{
@@ -25,16 +25,6 @@ domload(() => {
 				key: "options",
 				width: "2",
 				searchable: "string",
-				render: (data) => {
-					if (data.data_type.endsWith("_list")) {
-						return data.options;
-					}
-					const data_type_data = feature_data_types[data.data_type];
-					if (data_type_data) {
-						return data_type_data.description;
-					}
-					return "";
-				},
 			},
 			{
 				label: "",

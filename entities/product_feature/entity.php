@@ -7,6 +7,7 @@ EntityManager::register("product_feature", [
         "products" => ["type" => "product[]"],
         "pos" => ["type" => "number"],
         "data_type" => ["type" => "string"],
+        "physical_measure" => ["type" => "string"],
     ],
 ]);
 

@@ -21,6 +21,7 @@ let same_ext_image_allowed_types;
 let STATIC_URLS;
 
 let feature_data_types;
+let physical_measures;
 
 let countries_options_html;
 

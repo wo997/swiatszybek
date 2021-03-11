@@ -6,6 +6,7 @@
  * name: string
  * data_type: string
  * options?: string
+ * physical_measure?: string
  * }} ProductFeatureData
  *
  */
@@ -35,10 +36,19 @@ let product_feature_options = [];
 
 function loadedProductFeatures() {
 	product_features.forEach((feature) => {
-		feature.options = product_feature_options
-			.filter((e) => e.product_feature_id === feature.product_feature_id)
-			.map((e) => e.value)
-			.join(", ");
+		if (feature.data_type.endsWith("_list")) {
+			feature.options = product_feature_options
+				.filter((e) => e.product_feature_id === feature.product_feature_id)
+				.map((e) => e.value)
+				.join(", ");
+		} else {
+			const data_type_data = feature_data_types[feature.data_type];
+			if (data_type_data) {
+				feature.options = data_type_data.description;
+			} else {
+				feature.options = "";
+			}
+		}
 	});
 
 	product_feature_options.forEach((option) => {

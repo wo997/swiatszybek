@@ -45,16 +45,6 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						key: "options",
 						width: "2",
 						searchable: "string",
-						render: (data) => {
-							if (data.data_type.endsWith("_list")) {
-								return data.options;
-							}
-							const data_type_data = feature_data_types[data.data_type];
-							if (data_type_data) {
-								return data_type_data.description;
-							}
-							return "";
-						},
 					},
 					{
 						label: "Akcja",

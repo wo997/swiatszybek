@@ -57,6 +57,7 @@ if (defined("ROUTE")) {
             //const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
         <?php endif ?>
     <?php endif ?>
+    const physical_measures = <?= json_encode(getPhysicalMeasures()) ?>;
 
     const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 

@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * data_type: string
+ * physical_measure?: string
  * datatable?: DatatableCompData
  * product_feature_id: number
  * name: string
@@ -21,6 +22,7 @@
  *  groups: PiepNode
  *  name: PiepNode
  *  options_wrapper: PiepNode
+ *  physical_measures_wrapper: PiepNode
  * }
  * _load_data(id: number)
  * _save()
@@ -44,6 +46,8 @@ function productFeatureComp(comp, parent, data) {
 			groups: [],
 		};
 	}
+
+	data.physical_measure = def(data.physical_measure, "none");
 
 	/** @type {DatatableCompData} */
 	const dt = {
@@ -101,11 +105,13 @@ function productFeatureComp(comp, parent, data) {
 			comp._data.name = "";
 			comp._data.data_type = "text_list";
 			comp._data.datatable.dataset = [];
+			comp._data.physical_measure = "none";
 		} else {
 			const feature = product_features.find((f) => f.product_feature_id === id);
 			if (feature) {
 				comp._data.name = feature.name;
 				comp._data.data_type = feature.data_type;
+				comp._data.physical_measure = feature.physical_measure;
 				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
 			}
 		}
@@ -128,10 +134,12 @@ function productFeatureComp(comp, parent, data) {
 			return;
 		}
 
+		const data = comp._data;
 		const product_feature = {
-			name: comp._data.name,
-			data_type: comp._data.data_type,
-			product_feature_id: comp._data.product_feature_id,
+			name: data.name,
+			data_type: data.data_type,
+			product_feature_id: data.product_feature_id,
+			physical_measure: data.physical_measure,
 		};
 
 		const is_list = comp._data.data_type.endsWith("_list");
@@ -192,6 +200,9 @@ function productFeatureComp(comp, parent, data) {
 			render: () => {
 				const is_list = data.data_type.endsWith("_list");
 				expand(comp._nodes.options_wrapper, is_list);
+
+				const is_float_value = data.data_type === "float_value";
+				expand(comp._nodes.physical_measures_wrapper, is_float_value);
 
 				if (!is_list) {
 					const getCount = (option_id) => {
@@ -281,6 +292,22 @@ function productFeatureComp(comp, parent, data) {
 					})
 					.join("")}
 			</select>
+
+			<div class="expand_y" data-node="{${comp._nodes.physical_measures_wrapper}}">
+				<div class="label">Miara fizyczna</div>
+				<select class="field" data-bind="{${data.physical_measure}}">
+					${Object.entries(physical_measures)
+						.map(([name, measure_data]) => {
+							let dis = measure_data.description;
+							const units = Object.keys(measure_data.units);
+							if (units.length > 0) {
+								dis += " [" + units.join(", ") + "]";
+							}
+							return html`<option value="${name}">${dis}</option>`;
+						})
+						.join("")}
+				</select>
+			</div>
 
 			<div class="expand_y" data-node="{${comp._nodes.options_wrapper}}">
 				<div>

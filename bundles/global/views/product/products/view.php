@@ -105,7 +105,7 @@ function traverseFeatures()
                     <div class="flex_column" style="margin-right:var(--form_spacing);">
                         Od
                         <div class="glue_children">
-                            <input class="field inline price_min" inputmode="numeric">
+                            <input class="field inline" inputmode="numeric">
                             <select class="field inline blank unit_picker">
                                 <option value="g">g</option>
                                 <option value="kg">kg</option>
@@ -115,7 +115,7 @@ function traverseFeatures()
                     <div class="flex_column">
                         Do
                         <div class="glue_children">
-                            <input class="field inline price_max" inputmode="numeric">
+                            <input class="field inline" inputmode="numeric">
                             <select class="field inline blank unit_picker">
                                 <option value="g">g</option>
                                 <option value="kg">kg</option>

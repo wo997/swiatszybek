@@ -25,6 +25,11 @@ function getFeatureDataTypes()
 function getPhysicalMeasures()
 {
     return [
+        "none" => [
+            "description" => "Brak / Ilość",
+            "base_unit" => "",
+            "units" => []
+        ],
         "weight" => [
             "description" => "Waga",
             "base_unit" => "kg",
@@ -34,6 +39,9 @@ function getPhysicalMeasures()
                 ],
                 "g" => [
                     "factor" => 0.001
+                ],
+                "mg" => [
+                    "factor" => 0.001 * 0.001
                 ],
                 "t" => [
                     "factor" => 1000
