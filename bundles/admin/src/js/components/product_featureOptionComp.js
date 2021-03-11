@@ -64,7 +64,8 @@ function product_featureOptionComp(
 					const unit_factor = def(getLast(unit_factors.filter((e) => e < data.double_value * 1.000001)), unit_factors[0]);
 
 					unit_picker._set_value(unit_factor, { quiet: true });
-					comp._nodes.physical_value_input._set_value(data.double_value / unit_factor, { quiet: true });
+					const accuracy = 100000;
+					comp._nodes.physical_value_input._set_value(Math.round((accuracy * data.double_value) / unit_factor) / accuracy, { quiet: true });
 
 					comp._nodes.physical_value_wrapper.classList.remove("hidden");
 					comp._nodes.double_value.classList.add("hidden");
