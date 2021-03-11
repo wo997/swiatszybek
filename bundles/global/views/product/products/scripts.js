@@ -127,14 +127,14 @@ function initPrices() {
 		delay("mainSearchProducts");
 	});
 
-	select_price_range.addEventListener("change", () => {
-		const [min, max] = select_price_range._get_value().split("-");
-		select_price_range._set_value("", { quiet: true });
-		search_products_price_min._set_value(min, { quiet: true });
-		search_products_price_max._set_value(max, { quiet: true });
-		select_price_range.blur();
-		mainSearchProducts();
-	});
+	// select_price_range.addEventListener("change", () => {
+	// 	const [min, max] = select_price_range._get_value().split("-");
+	// 	select_price_range._set_value("", { quiet: true });
+	// 	search_products_price_min._set_value(min, { quiet: true });
+	// 	search_products_price_max._set_value(max, { quiet: true });
+	// 	select_price_range.blur();
+	// 	mainSearchProducts();
+	// });
 }
 
 function openCurrentMenu() {

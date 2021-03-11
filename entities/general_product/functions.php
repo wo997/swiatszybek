@@ -88,7 +88,7 @@ function getGlobalProductsSearch($params)
 
         $selectable_option_ids_json = htmlspecialchars($product["__selectable_option_ids_json"]);
         $option_ids = array_intersect($unique_option_ids, json_decode($selectable_option_ids_json, true));
-        $option_names = getNamesFromOptionIds($option_ids);
+        $option_names = getValuesFromOptionIds($option_ids);
         $link = getProductLink($id, $name, $option_ids, $option_names);
 
         $html .= "<div class=\"product_block\">

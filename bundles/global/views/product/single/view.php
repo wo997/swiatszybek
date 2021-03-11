@@ -15,7 +15,7 @@ $option_ids_str = def($_GET, "v");
 $option_names = [];
 if ($option_ids_str) {
     $option_ids = explode("-", $option_ids_str);
-    $option_names = getNamesFromOptionIds($option_ids);
+    $option_names = getValuesFromOptionIds($option_ids);
 } else {
     $option_ids = [];
 }
@@ -230,7 +230,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                                         <?php
                                         }
                                         ?>
-                                        <?= $variant_option["name"] ?>
+                                        <?= $variant_option["value"] ?>
                                     </div>
                                     <div class="price_diff"></div>
                                 </div>
