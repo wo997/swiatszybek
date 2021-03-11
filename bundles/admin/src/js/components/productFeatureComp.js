@@ -201,8 +201,8 @@ function productFeatureComp(comp, parent, data) {
 				const is_list = data.data_type.endsWith("_list");
 				expand(comp._nodes.options_wrapper, is_list);
 
-				const is_float_value = data.data_type === "float_value";
-				expand(comp._nodes.physical_measures_wrapper, is_float_value);
+				const is_double_value = data.data_type === "double_value";
+				expand(comp._nodes.physical_measures_wrapper, is_double_value);
 
 				if (!is_list) {
 					const getCount = (option_id) => {

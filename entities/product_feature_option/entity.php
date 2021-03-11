@@ -5,7 +5,7 @@ EntityManager::register("product_feature_option", [
         "product_feature_id" => ["type" => "number"],
         "parent_product_feature_option_id" => ["type" => "number"],
         "value" => ["type" => "string"],
-        "float_value" => ["type" => "number"],
+        "double_value" => ["type" => "number"],
         "datetime_value" => ["type" => "string"],
         "text_value" => ["type" => "string"],
     ],
@@ -71,16 +71,16 @@ EventListener::register("before_save_product_feature_option_entity", function ($
             }
             $product_feature_option->setProp("text_value", $text_value);
 
-            $float_value = null;
-            if ($feature_data_type === "float_value") {
-                $float_value = $product_feature_option->getProp("float_value");
-                if ($float_value !== false) {
-                    $display_something = $float_value;
+            $double_value = null;
+            if ($feature_data_type === "double_value") {
+                $double_value = $product_feature_option->getProp("double_value");
+                if ($double_value !== false) {
+                    $display_something = $double_value;
                 } else {
-                    $float_value = 0;
+                    $double_value = 0;
                 }
             }
-            $product_feature_option->setProp("float_value", $float_value);
+            $product_feature_option->setProp("double_value", $double_value);
 
             $datetime_value = null;
             if ($feature_data_type === "datetime_value") {

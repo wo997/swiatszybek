@@ -91,14 +91,14 @@ function traverseFeatures()
         if (endsWith($product_feature["data_type"], "_list")) {
             $options_html = traverseFeatureOptions($product_feature_id);
         } else {
-            $data = DB::fetchRow("SELECT MIN(float_value) min_value, MAX(float_value) max_value FROM product_feature_option
+            $data = DB::fetchRow("SELECT MIN(double_value) min_value, MAX(double_value) max_value FROM product_feature_option
                 INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
                 INNER JOIN product p USING(product_id)
                 WHERE product_feature_id = $product_feature_id AND $where_products_0");
             $min_value = $data["min_value"];
             $max_value = $data["max_value"];
 
-            if ($product_feature["data_type"] === "float_value") {
+            if ($product_feature["data_type"] === "double_value") {
                 $options_html = <<<HTML
                 $min_value - $max_value
                 <div class="flex_children_width">

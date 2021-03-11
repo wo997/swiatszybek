@@ -362,6 +362,7 @@ function productComp(comp, parent, data = undefined) {
 								name: fe.name,
 								data_type: fe.data_type,
 								options: [],
+								physical_measure: fe.physical_measure,
 							};
 						} else {
 							missing_feature_ids.push(product_feature_id);

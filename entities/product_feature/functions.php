@@ -7,7 +7,7 @@ function getFeatureDataTypes()
             "description" => "Lista",
             "example" => "(np. kolorów)",
         ],
-        "float_value" => [
+        "double_value" => [
             "description" => "Dowolna liczba całkowita",
             "example" => "(np. długość kabla)",
         ],

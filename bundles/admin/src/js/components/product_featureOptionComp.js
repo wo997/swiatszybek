@@ -6,11 +6,12 @@
  * product_feature_option_id: number
  * data_type?: string
  * value?: string
- * float_value?: number
+ * double_value?: number
  * datetime_value?: string
  * text_value?: string
  * save_db_timeout?: number
  * saving_db?: boolean
+ * physical_measure?: string
  * } & ListCompRowData} Product_FeatureOptionCompData
  *
  * @typedef {{
@@ -18,6 +19,10 @@
  * _set_data(data?: Product_FeatureOptionCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  option_name: PiepNode
+ *  double_value: PiepNode
+ *  physical_value_wrapper: PiepNode
+ *  physical_value_input: PiepNode
+ *  physical_value_unit: PiepNode
  * } & ListControlTraitNodes
  * } & BaseComp} Product_FeatureOptionComp
  */
@@ -33,11 +38,6 @@ function product_featureOptionComp(
 	data = {
 		product_feature_option_id: -1,
 		product_feature_id: -1,
-		data_type: "text_list",
-		value: "",
-		float_value: 0,
-		datetime_value: "",
-		text_value: "",
 	}
 ) {
 	comp._set_data = (data, options = {}) => {
@@ -48,10 +48,30 @@ function product_featureOptionComp(
 					e.classList.toggle("hidden", e.dataset.data_type != data.data_type);
 				});
 
-				// const cd = comp._changed_data;
-				// if (cd.text_value || cd.datetime_value || cd.float_value) {
+				const physical_measure_data = physical_measures[data.physical_measure];
+				if (physical_measure_data && physical_measure_data.units && Object.values(physical_measure_data.units).length > 0) {
+					const options = Object.entries(physical_measure_data.units)
+						.map(([name, data]) => {
+							return html`<option value="${data.factor}">${name}</option>`;
+						})
+						.join("");
 
-				// }
+					const unit_picker = comp._nodes.physical_value_unit;
+					unit_picker._set_content(options);
+
+					// @ts-ignore
+					const unit_factors = [...unit_picker.options].map((e) => +e.value).sort();
+					const unit_factor = def(getLast(unit_factors.filter((e) => e <= data.double_value)), unit_factors[0]);
+
+					unit_picker._set_value(unit_factor, { quiet: true });
+					comp._nodes.physical_value_input._set_value(data.double_value / unit_factor, { quiet: true });
+
+					comp._nodes.physical_value_wrapper.classList.remove("hidden");
+					comp._nodes.double_value.classList.add("hidden");
+				} else {
+					comp._nodes.physical_value_wrapper.classList.add("hidden");
+					comp._nodes.double_value.classList.remove("hidden");
+				}
 			},
 		});
 	};
@@ -62,18 +82,17 @@ function product_featureOptionComp(
 				<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
 				<input class="field small inline save_to_db" data-data_type="text_value" data-bind="{${data.text_value}}" />
 				<input class="field small inline default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
-				<div class="glue_children">
-					<input
-						class="field small inline save_to_db"
-						inputmode="numeric"
-						data-number
-						data-data_type="float_value"
-						data-bind="{${data.float_value}}"
-					/>
-					<select class="field inline blank unit_picker">
-						<option value="g">g</option>
-						<option value="kg">kg</option>
-					</select>
+				<input
+					class="field small inline save_to_db"
+					inputmode="numeric"
+					data-number
+					data-data_type="double_value"
+					data-bind="{${data.double_value}}"
+					data-node="{${comp._nodes.double_value}}"
+				/>
+				<div class="glue_children" data-node="{${comp._nodes.physical_value_wrapper}}">
+					<input class="field small inline" inputmode="numeric" data-number data-node="{${comp._nodes.physical_value_input}}" />
+					<select class="field inline blank unit_picker" data-node="{${comp._nodes.physical_value_unit}}"></select>
 				</div>
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
@@ -152,8 +171,8 @@ function product_featureOptionComp(
 					if (data.data_type === "datetime_value") {
 						product_feature_option.datetime_value = data.datetime_value;
 					}
-					if (data.data_type === "float_value") {
-						product_feature_option.float_value = data.float_value;
+					if (data.data_type === "double_value") {
+						product_feature_option.double_value = data.double_value;
 					}
 
 					xhr({
@@ -174,6 +193,19 @@ function product_featureOptionComp(
 
 			comp._children(".bind_datetime_value").forEach((input) => {
 				input.addEventListener("changeDate", save_db_action);
+			});
+
+			const recalculate_unit = () => {
+				comp._nodes.double_value._set_value(comp._nodes.physical_value_unit._get_value() * comp._nodes.physical_value_input._get_value());
+				save_db_action();
+			};
+
+			comp._nodes.physical_value_unit.addEventListener("change", () => {
+				recalculate_unit();
+			});
+
+			comp._nodes.physical_value_input.addEventListener("change", () => {
+				recalculate_unit();
 			});
 		},
 	});
