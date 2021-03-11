@@ -104,9 +104,22 @@ function traverseFeatures()
                 continue;
             }
 
-            foreach ($physical_measure_data["units"] as $unit) {
+            $units = $physical_measure_data["units"];
+            $unit_count = count($units);
+            for ($i = 0; $i < $unit_count; $i++) {
+                $unit = $units[$i];
                 $factor = $unit["factor"];
                 $name = $unit["name"];
+
+                if ($max_value * 1.000001 < $factor) {
+                    continue;
+                }
+
+                $next_unit = def($units, $i + 1, null);
+                if ($next_unit && $next_unit["factor"] * 1.000001 < $min_value) {
+                    continue;
+                }
+
                 $options .= "<option value=\"$factor\">$name</option>";
             }
 
