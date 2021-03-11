@@ -112,7 +112,6 @@ function initPagination() {
 function initPrices() {
 	search_products_price_min = $(".searching_wrapper .price_min");
 	search_products_price_max = $(".searching_wrapper .price_max");
-	const select_price_range = $(".select_price_range");
 
 	search_products_price_min.addEventListener("input", () => {
 		delay("mainSearchProducts", 400);
@@ -126,15 +125,6 @@ function initPrices() {
 	search_products_price_max.addEventListener("change", () => {
 		delay("mainSearchProducts");
 	});
-
-	// select_price_range.addEventListener("change", () => {
-	// 	const [min, max] = select_price_range._get_value().split("-");
-	// 	select_price_range._set_value("", { quiet: true });
-	// 	search_products_price_min._set_value(min, { quiet: true });
-	// 	search_products_price_max._set_value(max, { quiet: true });
-	// 	select_price_range.blur();
-	// 	mainSearchProducts();
-	// });
 }
 
 function openCurrentMenu() {
@@ -161,6 +151,7 @@ window.addEventListener("popstate", () => {
 function setCategoryFeaturesFromUrl() {
 	const url_params = new URLSearchParams(window.location.search);
 
+	// features
 	/** @type {string} */
 	const v = def(url_params.get("v"), "");
 	pp_selected_option_groups = v.split("-").map((/** @type {string} */ group) =>
@@ -193,9 +184,18 @@ function setCategoryFeaturesFromUrl() {
 		}
 	});
 
+	// paginatiobn
 	product_list_pagination_comp._data.page_id = +def(url_params.get("str"), "1") - 1;
 	product_list_pagination_comp._data.row_count = +def(url_params.get("ile"), "25");
-	product_list_pagination_comp._render();
+
+	// price
+	/** @type {string} */
+	const price_str = def(url_params.get("cena"), "");
+	const price_parts = price_str.split("~");
+	const price_min = def(price_parts[0], "");
+	const price_max = def(price_parts[1], "");
+	search_products_price_min._set_value(price_min, { quiet: true });
+	search_products_price_max._set_value(price_max, { quiet: true });
 }
 
 function getSelectedOptionsData() {
@@ -254,8 +254,7 @@ function mainSearchProducts() {
 		search_params.price_max = price_max;
 	}
 
-	if (last_search_params === undefined || isEquivalent(last_search_params, search_params)) {
-		last_search_params = search_params;
+	if (isEquivalent(last_search_params, search_params)) {
 		return;
 	}
 	last_search_params = search_params;
@@ -276,6 +275,10 @@ function mainSearchProducts() {
 	const url_params = new URLSearchParams();
 	if (options_data.length > 0) {
 		url_params.append("v", options_data.map((e) => e.option_ids.join("_")).join("-"));
+	}
+
+	if (search_params.price_min !== undefined || search_params.price_max !== undefined) {
+		url_params.append("cena", def(search_params.price_min, "") + "~" + def(search_params.price_max, ""));
 	}
 
 	if (datatable_params.page_id > 0) {
@@ -307,6 +310,9 @@ function productsFetched(res = {}) {
 
 	products_all.style.height = products_all.offsetHeight + "px";
 	if (res.html !== undefined) {
+		if (res.html === "") {
+			res.html = html`<span class="semi-bold">Nie znaleźliśmy żadnego produktu</span>`;
+		}
 		product_list._set_content(res.html);
 	}
 	if (res.total_rows !== undefined) {

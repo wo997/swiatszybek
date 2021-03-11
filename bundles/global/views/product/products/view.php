@@ -16,6 +16,11 @@ foreach (explode("-", def($_GET, "v", "")) as $option_ids_str) {
 $page_id = intval(def($_GET, "str", 1)) - 1;
 $row_count = intval(def($_GET, "ile", 25));
 
+$price_str = def($_GET, "cena", "");
+$price_parts = explode("~", $price_str);
+$price_min = def($price_parts, 0, "");
+$price_max = def($price_parts, 1, "");
+
 function traverseCategories($parent_id = -1, $level = 0)
 {
     $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json, __product_count FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
@@ -175,11 +180,20 @@ HTML;
     return $html;
 }
 
-$products_search_data = getGlobalProductsSearch([
+$params = [
     "datatable_params" => json_encode(["page_id" => $page_id, "row_count" => $row_count, "filters" => []]),
     "product_category_id" => $product_category_id,
     "option_id_groups" => json_encode($selected_option_groups),
-]);
+];
+
+if ($price_min !== "") {
+    $params["price_min"] = floatval($price_min);
+}
+if ($price_max !== "") {
+    $params["price_max"] = floatval($price_max);
+}
+
+$products_search_data = getGlobalProductsSearch($params);
 
 $products_search_data_0 = getGlobalProductsSearch([
     "datatable_params" => json_encode(["page_id" => 0, "row_count" => 0, "filters" => []]),
@@ -255,21 +269,6 @@ foreach ($options_data as $option_data) {
                         </div>
                     </li>
                 </ul>
-
-                <!-- <select class="field select_price_range" style="margin-top:var(--form_spacing);">
-                    <option value="">- Wybierz zakres z listy -</option>
-                    <?php
-                    $cute_numbers = [0, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
-                    $len = count($cute_numbers);
-                    for ($i = 0; $i < $len - 1; $i++) {
-                        $num_1 = $cute_numbers[$i];
-                        $num_2 = $cute_numbers[$i + 1];
-                        if ($num_2 >= $prices_data["min_gross_price"] && $num_1 <= $prices_data["max_gross_price"]) {
-                            echo "<option value=\"$num_1-$num_2\">$num_1 zł - $num_2 zł</option>";
-                        }
-                    }
-                    ?>
-                </select> -->
 
                 <!-- <div class="search_header">
                     <i class="fas fa-search"></i>
