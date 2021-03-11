@@ -81,7 +81,7 @@ domload(() => {
 		product_comp._render();
 
 		// rendering provides important informations
-		// product_comp._add_missing_products({ dont_ask: true });
+		product_comp._add_missing_products({ dont_ask: true });
 	}
 	product_comp._render();
 });
