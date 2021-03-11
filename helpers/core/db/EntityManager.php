@@ -491,7 +491,7 @@ class EntityManager
                         $update_meta_sql .= " " . clean($key) . " = " . DB::escape($val) . ",";
                     }
                 }
-                $update_meta_sqls[] = substr($update_meta_sql, 0, -1) . " WHERE $other_entity_id_column = $other_id";
+                $update_meta_sqls[] = substr($update_meta_sql, 0, -1) . " WHERE $other_entity_id_column = $other_id AND $our_id_column = $our_id";
             }
         }
 
