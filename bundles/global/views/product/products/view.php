@@ -80,7 +80,7 @@ function traverseFeatures()
 {
     global $where_products_0;
 
-    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type FROM product_feature ORDER BY pos ASC");
+    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type, physical_measure FROM product_feature ORDER BY pos ASC");
     if (!$product_features) {
         return "";
     }
@@ -98,6 +98,18 @@ function traverseFeatures()
             $min_value = $data["min_value"];
             $max_value = $data["max_value"];
 
+            $options = "";
+            $physical_measure_data = def(getPhysicalMeasures(), $product_feature["physical_measure"]);
+            if (!$physical_measure_data) {
+                continue;
+            }
+
+            foreach ($physical_measure_data["units"] as $unit) {
+                $factor = $unit["factor"];
+                $name = $unit["name"];
+                $options .= "<option value=\"$factor\">$name</option>";
+            }
+
             if ($product_feature["data_type"] === "double_value") {
                 $options_html = <<<HTML
                 $min_value - $max_value
@@ -107,8 +119,7 @@ function traverseFeatures()
                         <div class="glue_children">
                             <input class="field inline" inputmode="numeric">
                             <select class="field inline blank unit_picker">
-                                <option value="g">g</option>
-                                <option value="kg">kg</option>
+                                $options
                             </select>
                         </div>
                     </div>
@@ -117,8 +128,7 @@ function traverseFeatures()
                         <div class="glue_children">
                             <input class="field inline" inputmode="numeric">
                             <select class="field inline blank unit_picker">
-                                <option value="g">g</option>
-                                <option value="kg">kg</option>
+                                $options
                             </select>
                         </div>
                     </div>

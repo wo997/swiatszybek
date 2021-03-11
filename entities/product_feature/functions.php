@@ -39,14 +39,14 @@ function getPhysicalMeasures()
             "base_unit" => "kg",
             "units" => [
                 [
-                    "name" => "kg",
-                    "factor" => 1
+                    "name" => "mg",
+                    "factor" => 0.001 * 0.001
                 ], [
                     "name" => "g",
                     "factor" => 0.001
                 ], [
-                    "name" => "mg",
-                    "factor" => 0.001 * 0.001
+                    "name" => "kg",
+                    "factor" => 1
                 ], [
                     "name" => "t",
                     "factor" => 1000
@@ -58,14 +58,14 @@ function getPhysicalMeasures()
             "base_unit" => "m",
             "units" => [
                 [
-                    "name" => "m",
-                    "factor" => 1
+                    "name" => "mm",
+                    "factor" => 0.001
                 ], [
                     "name" => "cm",
                     "factor" => 0.01
                 ], [
-                    "name" => "mm",
-                    "factor" => 0.001
+                    "name" => "m",
+                    "factor" => 1
                 ], [
                     "name" => "km",
                     "factor" => 1000

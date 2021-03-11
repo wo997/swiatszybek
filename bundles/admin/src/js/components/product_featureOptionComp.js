@@ -60,7 +60,7 @@ function product_featureOptionComp(
 					unit_picker._set_content(options);
 
 					// @ts-ignore
-					const unit_factors = [...unit_picker.options].map((e) => +e.value).sort();
+					const unit_factors = [...unit_picker.options].map((e) => +e.value); //.sort();
 					const unit_factor = def(getLast(unit_factors.filter((e) => e < data.double_value * 1.000001)), unit_factors[0]);
 
 					unit_picker._set_value(unit_factor, { quiet: true });

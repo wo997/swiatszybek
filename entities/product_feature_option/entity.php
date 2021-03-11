@@ -82,7 +82,7 @@ EventListener::register("before_save_product_feature_option_entity", function ($
 
                     if ($physical_measure_data) {
                         $units = $physical_measure_data["units"];
-                        usort($units, fn ($a, $b) => $a["factor"] <=> $b["factor"]);
+                        //usort($units, fn ($a, $b) => $a["factor"] <=> $b["factor"]);
                         $target_unit = $units[0];
                         foreach ($units as  $unit) {
                             if ($unit["factor"] >= $double_value * 1.000001) {

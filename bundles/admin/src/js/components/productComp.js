@@ -573,7 +573,7 @@ function productComp(comp, parent, data = undefined) {
 					</div>
 				</div>
 
-				<div style="margin:var(--form_small_spacing)">
+				<div style="margin:var(--form_small_spacing) 0">
 					<span class="label inline list_label" html="{${"Cechy (" + data.features.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
