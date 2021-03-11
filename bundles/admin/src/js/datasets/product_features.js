@@ -52,6 +52,11 @@ function loadedProductFeatures() {
 			if (data_type_data) {
 				feature.options = data_type_data.description;
 			}
+
+			const physical_measure_data = physical_measures[feature.physical_measure];
+			if (feature.physical_measure !== "none" && physical_measure_data) {
+				feature.options += ` (${physical_measure_data.description})`;
+			}
 		}
 
 		if (data_type_data) {
