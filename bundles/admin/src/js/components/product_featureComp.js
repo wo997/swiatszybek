@@ -90,6 +90,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 					const product_feature_option = {
 						product_feature_id: comp._data.product_feature_id,
 						product_feature_option_id: -1,
+						float_value: 123456878,
 					};
 
 					xhr({
@@ -101,6 +102,7 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 							hideLoader();
 
 							product_comp._data.product_feature_option_ids.push(res.product_feature_option.product_feature_option_id);
+							//console.log(res, product_comp._data.product_feature_option_ids, res.product_feature_option.product_feature_option_id);
 							//product_feature_option.product_feature_option_id = res.product_feature_option.product_feature_option_id;
 							//product_comp._data.product_feature_options.push(product_feature_option);
 

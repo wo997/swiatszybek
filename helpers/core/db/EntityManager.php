@@ -87,7 +87,7 @@ class EntityManager
      * if you pass just the ID it will act like getEntityById
      *
      * @param  string $name !entity_name
-     * @param  array $props !entity_props // to be added I guess, oh also the modifier should stop at whitespaces
+     * @param  array $props !entity_props
      * @return Entity
      */
     public static function getEntity($name, $props) // must be the only place where we create Entities for consistency
@@ -100,6 +100,7 @@ class EntityManager
                 /** @var Entity */
                 $entity = self::$objects[$global_id];
                 $entity->setProps($props);
+                //$entity->setProps($props, true);
                 return $entity;
             }
         }
@@ -226,6 +227,21 @@ class EntityManager
         }
         unset($child);
 
+        //var_dump("===", $obj->getName(), count($obj->children_about_to_join));
+        foreach ($obj->children_about_to_join as $key => $child) {
+            if ($child->getName() === $child_entity_name) {
+                var_dump("CIPA KURWA", $child->getGlobalId(), $child->getProp("product_feature_id"));
+                $children[] = $child;
+                unset($children[$key]);
+            }
+        }
+
+        if ($obj->getName() === "product_feature") {
+            foreach ($children as $option) {
+                var_dump("___" . $option->getGlobalId() . " " . $option->getProp("product_feature_id"));
+            }
+        }
+
         return $children;
     }
 
@@ -233,7 +249,7 @@ class EntityManager
     {
         $child_props = DB::fetchRow("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
         if ($child_props) {
-            $child = self::getEntity($child_entity_name, $child_props);
+            $child = self::getEntity($child_entity_name, $child_props, true);
             $child->setParent($obj);
             return $child;
         }
@@ -247,7 +263,7 @@ class EntityManager
 
         $children_props = DB::fetchArr("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
         foreach ($children_props as $child_props) {
-            $child = self::getEntity($child_entity_name, $child_props);
+            $child = self::getEntity($child_entity_name, $child_props, true);
             $child->setParent($obj);
             $children[] = $child;
         }

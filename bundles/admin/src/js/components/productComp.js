@@ -377,27 +377,20 @@ function productComp(comp, parent, data = undefined) {
 
 					data.features.forEach((feature) => {
 						feature.options = data.product_feature_option_ids
-							.filter((product_feature_option_id) => {
-								const fo = product_feature_options.find((pfo) => {
-									return pfo.product_feature_option_id === product_feature_option_id;
-								});
+							.map((product_feature_option_id) => {
+								console.log(product_feature_option_id);
+								const fo = product_feature_options.find((pfo) => pfo.product_feature_option_id === product_feature_option_id);
+								if (fo.product_feature_id !== feature.product_feature_id) {
+									return undefined;
+								}
 								if (fo) {
-									return fo.product_feature_id === feature.product_feature_id;
+									return fo;
 								} else {
 									missing_option_ids.push(product_feature_option_id);
+									return undefined;
 								}
 							})
-							.map((product_feature_option_id) => {
-								const fo = product_feature_options.find((e) => {
-									return e.product_feature_option_id === product_feature_option_id;
-								});
-								// return {
-								// 	product_feature_option_id,
-								// 	product_feature_id: fo.product_feature_id,
-								// 	value: fo.value,
-								// };
-								return fo;
-							});
+							.filter((e) => e);
 
 						product_feature_option_ids.push(...feature.options.map((option) => option.product_feature_option_id));
 					});
