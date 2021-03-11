@@ -299,9 +299,8 @@ function productFeatureComp(comp, parent, data) {
 					${Object.entries(physical_measures)
 						.map(([name, measure_data]) => {
 							let dis = measure_data.description;
-							const units = Object.keys(measure_data.units);
-							if (units.length > 0) {
-								dis += " [" + units.join(", ") + "]";
+							if (measure_data.units.length > 0) {
+								dis += " [" + measure_data.units.map((e) => e.name).join(", ") + "]";
 							}
 							return html`<option value="${name}">${dis}</option>`;
 						})

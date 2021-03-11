@@ -34,16 +34,17 @@ function getPhysicalMeasures()
             "description" => "Waga",
             "base_unit" => "kg",
             "units" => [
-                "kg" => [
+                [
+                    "name" => "kg",
                     "factor" => 1
-                ],
-                "g" => [
+                ], [
+                    "name" => "g",
                     "factor" => 0.001
-                ],
-                "mg" => [
+                ], [
+                    "name" => "mg",
                     "factor" => 0.001 * 0.001
-                ],
-                "t" => [
+                ], [
+                    "name" => "t",
                     "factor" => 1000
                 ],
             ]
@@ -52,16 +53,17 @@ function getPhysicalMeasures()
             "description" => "Długość",
             "base_unit" => "m",
             "units" => [
-                "m" => [
+                [
+                    "name" => "m",
                     "factor" => 1
-                ],
-                "cm" => [
+                ], [
+                    "name" => "cm",
                     "factor" => 0.01
-                ],
-                "mm" => [
+                ], [
+                    "name" => "mm",
                     "factor" => 0.001
-                ],
-                "km" => [
+                ], [
+                    "name" => "km",
                     "factor" => 1000
                 ],
             ]

@@ -33,12 +33,17 @@ EventListener::register("before_save_product_entity", function ($params) {
     $option_names = [];
     foreach ($options as $option) {
         $option_ids[] = $option->getId();
-        $option_names[] = $option->getProp("name");
+        $option_names[] = $option->getProp("value");
     }
-    $product->setProp("options_json", json_encode($option_ids));
+    $product->setProp("options_json", json_encode($option_ids)); // seems like an issue, should be following __ but chill
 
     /** @var Entity GeneralProduct */
     $general_product = $product->getParent();
-    $link = getProductLink($general_product->getId(), $general_product->getProp("name"), $option_ids, $option_names);
-    $product->setProp("__url", $link);
+    if ($general_product) {
+        $link = getProductLink($general_product->getId(), $general_product->getProp("name"), $option_ids, $option_names);
+        $product->setProp("__url", $link);
+    } else {
+        // garbage
+        $product->setWillDelete();
+    }
 });

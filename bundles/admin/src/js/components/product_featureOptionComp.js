@@ -49,10 +49,10 @@ function product_featureOptionComp(
 				});
 
 				const physical_measure_data = physical_measures[data.physical_measure];
-				if (physical_measure_data && physical_measure_data.units && Object.values(physical_measure_data.units).length > 0) {
-					const options = Object.entries(physical_measure_data.units)
-						.map(([name, data]) => {
-							return html`<option value="${data.factor}">${name}</option>`;
+				if (physical_measure_data && physical_measure_data.units && physical_measure_data.units.length > 0) {
+					const options = physical_measure_data.units
+						.map((unit) => {
+							return html`<option value="${unit.factor}">${unit.name}</option>`;
 						})
 						.join("");
 
@@ -61,7 +61,7 @@ function product_featureOptionComp(
 
 					// @ts-ignore
 					const unit_factors = [...unit_picker.options].map((e) => +e.value).sort();
-					const unit_factor = def(getLast(unit_factors.filter((e) => e <= data.double_value)), unit_factors[0]);
+					const unit_factor = def(getLast(unit_factors.filter((e) => e < data.double_value * 1.000001)), unit_factors[0]);
 
 					unit_picker._set_value(unit_factor, { quiet: true });
 					comp._nodes.physical_value_input._set_value(data.double_value / unit_factor, { quiet: true });
