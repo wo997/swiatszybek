@@ -78,13 +78,54 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
 
 function traverseFeatures()
 {
-    $product_features = DB::fetchArr("SELECT product_feature_id, name FROM product_feature ORDER BY pos ASC");
+    global $where_products_0;
+
+    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type FROM product_feature ORDER BY pos ASC");
     if (!$product_features) {
         return "";
     }
     $html = "<ul>";
     foreach ($product_features as $product_feature) {
-        $options_html = traverseFeatureOptions($product_feature["product_feature_id"]);
+        $product_feature_id = $product_feature["product_feature_id"];
+        $options_html = "";
+        if (endsWith($product_feature["data_type"], "_list")) {
+            $options_html = traverseFeatureOptions($product_feature_id);
+        } else {
+            $data = DB::fetchRow("SELECT MIN(float_value) min_value, MAX(float_value) max_value FROM product_feature_option
+                INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
+                INNER JOIN product p USING(product_id)
+                WHERE product_feature_id = $product_feature_id AND $where_products_0");
+            $min_value = $data["min_value"];
+            $max_value = $data["max_value"];
+
+            if ($product_feature["data_type"] === "float_value") {
+                $options_html = <<<HTML
+                $min_value - $max_value
+                <div class="flex_children_width">
+                    <div class="flex_column" style="margin-right:var(--form_spacing);">
+                        Od
+                        <div class="glue_children">
+                            <input class="field inline price_min" inputmode="numeric">
+                            <select class="field inline blank unit_picker">
+                                <option value="g">g</option>
+                                <option value="kg">kg</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex_column">
+                        Do
+                        <div class="glue_children">
+                            <input class="field inline price_max" inputmode="numeric">
+                            <select class="field inline blank unit_picker">
+                                <option value="g">g</option>
+                                <option value="kg">kg</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+HTML;
+            }
+        }
         if ($options_html) {
             $html .= "<li class=\"feature_row\">";
             $html .= "<span class=\"feature_label\">" . $product_feature["name"] . "</span>";
@@ -161,14 +202,14 @@ foreach ($options_data as $option_data) {
                 <div class="flex_children_width">
                     <div class="flex_column" style="margin-right:var(--form_spacing);">
                         Od
-                        <div class="float_icon mobile-margin-bottom flex">
+                        <div class="float_icon flex">
                             <input class="field inline price_min" inputmode="numeric">
                             <i>zł</i>
                         </div>
                     </div>
                     <div class="flex_column">
                         Do
-                        <div class="float_icon mobile-margin-bottom flex">
+                        <div class="float_icon flex">
                             <input class="field inline price_max" inputmode="numeric">
                             <i>zł</i>
                         </div>
@@ -197,7 +238,7 @@ foreach ($options_data as $option_data) {
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class='float_icon mobile-margin-bottom search_wrapper glue_children'>
+                <div class='float_icon  search_wrapper glue_children'>
                     <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
                     <i class="fas fa-search"></i>
                     <button class="btn primary case_mobile search-btn can-disappear">

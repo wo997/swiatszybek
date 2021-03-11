@@ -194,8 +194,8 @@ textarea {
 	}
 	&:hover,
 	&:focus {
-		// z-index: 10;
 		border-color: #aaa;
+		z-index: 3;
 	}
 	&:hover {
 		box-shadow: var(--field-hover-shadow);
@@ -218,10 +218,13 @@ textarea {
 	--field-hover-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
-select.field {
+select.field:not(.blank) {
 	background-image: url(/img/dropdown.png);
 	background-position: 100% 50%;
 	background-repeat: no-repeat;
-	cursor: pointer;
 	padding-right: 30px;
+}
+
+select {
+	cursor: pointer;
 }
