@@ -110,6 +110,9 @@
 	.level_2 .checkbox_area {
 		padding-left: calc(2 * var(--p-checkbox-height));
 	}
+	.option_row > .checkbox_area {
+		display: inline-block;
+	}
 }
 
 @media only screen and (min-width: 850px) {
