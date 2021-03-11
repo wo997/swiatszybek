@@ -108,14 +108,20 @@ function traverseFeatures()
             if ($min_value === $max_value) {
                 continue;
             }
-            $feature_label .= " ($min_value - $max_value)";
 
-            $options = "";
-            $physical_measure_data = def(getPhysicalMeasures(), $product_feature["physical_measure"]);
-            if (!$physical_measure_data) {
+            $physical_measure = $product_feature["physical_measure"];
+
+            $pretty_min = prettyPrintPhysicalMeasure($min_value, $physical_measure);
+            $pretty_max = prettyPrintPhysicalMeasure($max_value, $physical_measure);
+
+            $feature_label .= " ($pretty_min - $pretty_max)";
+
+            $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
+            if (!$pretty_min || !$pretty_max) {
                 continue;
             }
 
+            $options = "";
             $units = $physical_measure_data["units"];
             $unit_count = count($units);
             for ($i = 0; $i < $unit_count; $i++) {

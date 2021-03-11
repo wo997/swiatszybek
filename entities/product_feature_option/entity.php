@@ -78,22 +78,7 @@ EventListener::register("before_save_product_feature_option_entity", function ($
                     $display_something = $double_value;
 
                     $physical_measure = $product_feature->getProp("physical_measure");
-                    $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
-
-                    if ($physical_measure_data) {
-                        $units = $physical_measure_data["units"];
-                        //usort($units, fn ($a, $b) => $a["factor"] <=> $b["factor"]);
-                        $target_unit = $units[0];
-                        foreach ($units as  $unit) {
-                            if ($unit["factor"] >= $double_value * 1.000001) {
-                                break;
-                            }
-                            $target_unit = $unit;
-                        }
-
-                        $accuracy = 100000;
-                        $display_something = (round($accuracy * $double_value / $target_unit["factor"]) / $accuracy) . " " . $target_unit["name"];
-                    }
+                    $display_something = prettyPrintPhysicalMeasure($double_value, $physical_measure);
                 } else {
                     $double_value = 0;
                 }
