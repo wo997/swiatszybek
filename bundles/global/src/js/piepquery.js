@@ -113,16 +113,22 @@ function $(selector, parent = undefined) {
 		return node.hasChildNodes();
 	};
 
-	if (!node._set_value) {
-		node._set_value = (value, options = {}) => {
-			setValue(node, value, options);
-		};
+	// jscolor is an input already, .datepicker too
+	const valid_input = node.matches ? node.matches(".radio_group, .wo997_img, p-checkbox, input, select, textarea") : false;
+
+	if (valid_input) {
+		if (!node._set_value) {
+			node._set_value = (value, options = {}) => {
+				setValue(node, value, options);
+			};
+		}
+		if (!node._get_value) {
+			node._get_value = (options = {}) => {
+				return getValue(node, options);
+			};
+		}
 	}
-	if (!node._get_value) {
-		node._get_value = (options = {}) => {
-			return getValue(node, options);
-		};
-	}
+
 	node._dispatch_change = () => {
 		return dispatchChange(node);
 	};

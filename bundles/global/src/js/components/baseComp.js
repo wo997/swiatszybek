@@ -269,8 +269,7 @@ function createComp(node, parent_comp, data, options) {
 		const bind_var = sub_node.dataset.bind;
 		sub_node._bind_var = bind_var;
 
-		if (sub_node._get_value() !== undefined) {
-			// a weird way to tell if something should actually have a set or get value, I think that piepquery should be responsible for that
+		if (sub_node._get_value) {
 			sub_node.addEventListener("change", () => {
 				let sub_node_data = sub_node._get_value();
 
@@ -502,11 +501,6 @@ function propagateCompData(comp) {
 
 			if (sub_node._set_value && (!node._changed_data || node._changed_data[bind_var])) {
 				sub_node._set_value(node._data[bind_var], { quiet: true });
-
-				// setTimeout(() => {
-				// 	sub_node._set_value(node._data[bind_var], { quiet: true });
-				// });
-				// if (bind_var === "img_url") console.log(sub_node, node._data[bind_var]);
 			}
 		});
 	}

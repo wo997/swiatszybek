@@ -28,6 +28,8 @@ function hideLoader(node = undefined) {
 		node = $(document.body);
 	}
 	const mul7 = node._child(".mul7");
+	if (!mul7) return;
+
 	mul7.style.animation = "0.4s hide";
 	setTimeout(() => {
 		mul7.remove();

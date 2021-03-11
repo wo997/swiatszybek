@@ -240,10 +240,11 @@ function setValue(input, value = null, options = {}) {
 		// @ts-ignore
 	} else if (input.datepicker) {
 		if (value && value.substr(0, 4).match(/\d{4}/)) {
+			value = value.substring(0, 10);
 			value = reverseDateString(value, "-");
+			// @ts-ignore
+			input.datepicker.setDate(value);
 		}
-		// @ts-ignore
-		input.datepicker.setDate(value);
 	} else if (input.classList.contains("table-selection-value")) {
 		var datatable = input._parent(".datatable-wrapper");
 		window[datatable.getAttribute("data-datatable-name")].setSelectedValuesFromString(value);

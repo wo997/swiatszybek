@@ -98,8 +98,6 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 							product_feature_option,
 						},
 						success: (res) => {
-							hideLoader();
-
 							product_comp._data.product_feature_option_ids.push(res.product_feature_option.product_feature_option_id);
 							//console.log(res, product_comp._data.product_feature_option_ids, res.product_feature_option.product_feature_option_id);
 							//product_feature_option.product_feature_option_id = res.product_feature_option.product_feature_option_id;
@@ -159,6 +157,10 @@ function product_featureComp(comp, parent, data = { product_feature_id: -1, opti
 					pfi.splice(to, 0, ...temp);
 				}
 				product_comp._render();
+			});
+
+			window.addEventListener("product_features_changed", () => {
+				hideLoader();
 			});
 		},
 	});

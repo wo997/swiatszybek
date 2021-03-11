@@ -41,7 +41,16 @@ function registerDatepickers(parent) {
 	});
 }
 
+/**
+ *
+ * @param {PiepNode} node
+ * @returns
+ */
 function createDatePicker(node) {
+	node.addEventListener("changeDate", () => {
+		node._dispatch_change();
+	});
+
 	return new Datepicker(node, getDatepickerDefaultOptions(node));
 }
 

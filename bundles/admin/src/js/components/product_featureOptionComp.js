@@ -61,11 +61,7 @@ function product_featureOptionComp(
 			<div class="option_header">
 				<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
 				<input class="field small inline save_to_db" data-data_type="text_value" data-bind="{${data.text_value}}" />
-				<input
-					class="field small inline default_datepicker save_to_db"
-					data-data_type="datetime_value"
-					data-bind="{${data.datetime_value}}"
-				/>
+				<input class="field small inline default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
 				<input
 					class="field small inline save_to_db"
 					inputmode="numeric"
@@ -138,7 +134,40 @@ function product_featureOptionComp(
 			});
 
 			comp._children(".save_to_db").forEach((input) => {
-				input.addEventListener("blur", () => {
+				const action = () => {
+					const data = comp._data;
+
+					/** @type {Product_FeatureOptionCompData} */
+					const product_feature_option = { product_feature_option_id: data.product_feature_option_id };
+
+					if (data.data_type === "text_value") {
+						product_feature_option.text_value = data.text_value;
+					}
+					if (data.data_type === "datetime_value") {
+						console.log(data.datetime_value);
+						product_feature_option.datetime_value = data.datetime_value;
+					}
+					if (data.data_type === "float_value") {
+						product_feature_option.float_value = data.float_value;
+					}
+
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
+						params: {
+							product_feature_option,
+						},
+						success: (res) => {
+							refreshProductFeatures();
+						},
+					});
+				};
+				input.addEventListener("blur", action);
+
+				input.addEventListener("changeDate", action);
+			});
+
+			const save_db_action = () => {
+				setTimeout(() => {
 					const data = comp._data;
 
 					/** @type {Product_FeatureOptionCompData} */
@@ -164,6 +193,14 @@ function product_featureOptionComp(
 						},
 					});
 				});
+			};
+
+			comp._children(".save_to_db").forEach((input) => {
+				input.addEventListener("blur", save_db_action);
+			});
+
+			comp._children(".bind_datetime_value").forEach((input) => {
+				input.addEventListener("changeDate", save_db_action);
 			});
 		},
 	});
