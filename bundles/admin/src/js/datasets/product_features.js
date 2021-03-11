@@ -25,6 +25,9 @@ let product_features = [];
  * feature_name?: string
  * full_value?: string
  * all_ids?: number[]
+ * text_value?: string
+ * double_value?: number
+ * datetime_value?: string
  * }} ProductFeatureOptionData
  *
  */

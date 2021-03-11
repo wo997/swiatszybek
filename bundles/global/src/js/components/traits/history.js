@@ -113,6 +113,10 @@ registerCompTrait("history", {
 			setTimeout(() => {
 				comp._setting_data_from_history = false;
 				comp.classList.remove("freeze");
+
+				setTimeout(() => {
+					comp.dispatchEvent(new CustomEvent("history_change"));
+				});
 			});
 		};
 

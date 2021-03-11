@@ -159,46 +159,67 @@ function product_featureOptionComp(
 				product_comp._render();
 			});
 
-			const save_db_action = () => {
+			const save_db_action = (quiet = false) => {
 				setTimeout(() => {
 					const data = comp._data;
 
 					/** @type {Product_FeatureOptionCompData} */
 					const product_feature_option = { product_feature_option_id: data.product_feature_option_id };
 
+					const curr_option = product_feature_options.find((opt) => opt.product_feature_option_id === data.product_feature_option_id);
+
+					let need_request = false;
+
 					if (data.data_type === "text_value") {
+						if (curr_option.text_value !== data.text_value) {
+							need_request = true;
+						}
 						product_feature_option.text_value = data.text_value;
 					}
 					if (data.data_type === "datetime_value") {
+						if (curr_option.datetime_value !== data.datetime_value) {
+							need_request = true;
+						}
 						product_feature_option.datetime_value = data.datetime_value;
 					}
 					if (data.data_type === "double_value") {
+						if (curr_option.double_value !== data.double_value) {
+							need_request = true;
+						}
 						product_feature_option.double_value = data.double_value;
 					}
 
-					xhr({
-						url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
-						params: {
-							product_feature_option,
-						},
-						success: (res) => {
-							refreshProductFeatures();
-						},
-					});
+					if (need_request) {
+						xhr({
+							url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
+							params: {
+								product_feature_option,
+							},
+							success: (res) => {
+								if (!quiet) {
+									refreshProductFeatures();
+								}
+							},
+						});
+					}
 				});
 			};
 
 			comp._children(".save_to_db").forEach((input) => {
-				input.addEventListener("blur", save_db_action);
+				input.addEventListener("blur", () => {
+					save_db_action(false);
+				});
 			});
 
 			comp._children(".bind_datetime_value").forEach((input) => {
-				input.addEventListener("changeDate", save_db_action);
+				input.addEventListener("changeDate", () => {
+					save_db_action(false);
+				});
 			});
 
 			const recalculate_unit = () => {
 				comp._nodes.double_value._set_value(comp._nodes.physical_value_unit._get_value() * comp._nodes.physical_value_input._get_value());
-				save_db_action();
+				save_db_action(false);
 			};
 
 			comp._nodes.physical_value_unit.addEventListener("change", () => {
@@ -207,6 +228,10 @@ function product_featureOptionComp(
 
 			comp._nodes.physical_value_input.addEventListener("change", () => {
 				recalculate_unit();
+			});
+
+			product_comp.addEventListener("history_change", () => {
+				save_db_action(true);
 			});
 		},
 	});
