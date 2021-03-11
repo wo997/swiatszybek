@@ -9,6 +9,8 @@
  * float_value?: number
  * datetime_value?: string
  * text_value?: string
+ * save_db_timeout?: number
+ * saving_db?: boolean
  * } & ListCompRowData} Product_FeatureOptionCompData
  *
  * @typedef {{
@@ -46,31 +48,10 @@ function product_featureOptionComp(
 					e.classList.toggle("hidden", e.dataset.data_type != data.data_type);
 				});
 
-				const cd = comp._changed_data;
-				if (cd.text_value || cd.datetime_value || cd.float_value) {
-					/** @type {Product_FeatureOptionCompData} */
-					const product_feature_option = { product_feature_option_id: data.product_feature_option_id };
+				// const cd = comp._changed_data;
+				// if (cd.text_value || cd.datetime_value || cd.float_value) {
 
-					if (data.data_type === "text_value") {
-						product_feature_option.text_value = data.text_value;
-					}
-					if (data.data_type === "datetime_value") {
-						product_feature_option.datetime_value = data.datetime_value;
-					}
-					if (data.data_type === "float_value") {
-						product_feature_option.float_value = data.float_value;
-					}
-
-					// xhr({
-					// 	url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
-					// 	params: {
-					// 		product_feature_option,
-					// 	},
-					// 	success: (res) => {
-					// 		//refreshProductFeatures();
-					// 	},
-					// });
-				}
+				// }
 			},
 		});
 	};
@@ -79,9 +60,19 @@ function product_featureOptionComp(
 		template: html`
 			<div class="option_header">
 				<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
-				<input class="field small inline" data-data_type="text_value" data-bind="{${data.text_value}}" />
-				<input class="field small inline default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
-				<input class="field small inline" inputmode="numeric" data-number data-data_type="float_value" data-bind="{${data.float_value}}" />
+				<input class="field small inline save_to_db" data-data_type="text_value" data-bind="{${data.text_value}}" />
+				<input
+					class="field small inline default_datepicker save_to_db"
+					data-data_type="datetime_value"
+					data-bind="{${data.datetime_value}}"
+				/>
+				<input
+					class="field small inline save_to_db"
+					inputmode="numeric"
+					data-number
+					data-data_type="float_value"
+					data-bind="{${data.float_value}}"
+				/>
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
@@ -144,6 +135,35 @@ function product_featureOptionComp(
 					pfoi.splice(to, 0, ...temp);
 				}
 				product_comp._render();
+			});
+
+			comp._children(".save_to_db").forEach((input) => {
+				input.addEventListener("blur", () => {
+					const data = comp._data;
+
+					/** @type {Product_FeatureOptionCompData} */
+					const product_feature_option = { product_feature_option_id: data.product_feature_option_id };
+
+					if (data.data_type === "text_value") {
+						product_feature_option.text_value = data.text_value;
+					}
+					if (data.data_type === "datetime_value") {
+						product_feature_option.datetime_value = data.datetime_value;
+					}
+					if (data.data_type === "float_value") {
+						product_feature_option.float_value = data.float_value;
+					}
+
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
+						params: {
+							product_feature_option,
+						},
+						success: (res) => {
+							refreshProductFeatures();
+						},
+					});
+				});
 			});
 		},
 	});

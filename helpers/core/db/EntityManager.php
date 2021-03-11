@@ -99,8 +99,8 @@ class EntityManager
             if (isset(self::$objects[$global_id])) {
                 /** @var Entity */
                 $entity = self::$objects[$global_id];
-                $entity->setProps($props);
-                //$entity->setProps($props, true);
+                //$entity->setProps($props);
+                $entity->setProps($props, true);
                 return $entity;
             }
         }
@@ -227,18 +227,10 @@ class EntityManager
         }
         unset($child);
 
-        //var_dump("===", $obj->getName(), count($obj->children_about_to_join));
         foreach ($obj->children_about_to_join as $key => $child) {
             if ($child->getName() === $child_entity_name) {
-                var_dump("CIPA KURWA", $child->getGlobalId(), $child->getProp("product_feature_id"));
                 $children[] = $child;
                 unset($children[$key]);
-            }
-        }
-
-        if ($obj->getName() === "product_feature") {
-            foreach ($children as $option) {
-                var_dump("___" . $option->getGlobalId() . " " . $option->getProp("product_feature_id"));
             }
         }
 

@@ -141,7 +141,6 @@ class Entity
     {
         foreach ($objs as $obj) {
             if ($obj instanceof Entity) {
-                var_dump("|||||||||||||||||||" . $obj->getGlobalId());
                 $obj->save(["propagate_to_parent" => false]);
             }
         }
@@ -160,7 +159,6 @@ class Entity
 
     public function save($options = [])
     {
-        var_dump("1. SAVING " . $this->getGlobalId());
         if ($this->saved) {
             return;
         }
@@ -188,19 +186,7 @@ class Entity
         }
         $this->saved = true;
 
-        var_dump("2. SAVING " . $this->getGlobalId());
-
-        // if ($this->getName() === "product_feature") {
-        //     foreach ($this->getProp("options") as $option) {
-        //         var_dump("!!!" . $option->getGlobalId());
-        //     }
-        // }
-
         $changed = false;
-
-        // if ($this->getId() === 1865) {
-        //     var_dump("PPPPPPPPPPPP", $this->getSimpleProps());
-        // }
 
         // don't worry about sorting removed items, the order is still the same, anyway it's managed separately
         if ($this->getWillDelete()) {
@@ -214,8 +200,6 @@ class Entity
             // save primitive types and complex types / relations etc.
             $changed_props = [];
             foreach ($this->props as $key => $value) {
-                if ($this->getName() === "product_feature")
-                    var_dump("asdasdadsasdasdasdasdasdasd " . $key);
                 if ($key === $this->id_column) {
                     continue;
                 }
