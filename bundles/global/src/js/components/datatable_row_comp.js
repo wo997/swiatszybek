@@ -178,7 +178,8 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 		column_id++;
 		let cell_html = "";
 
-		const val = def(row.row_data[column.key], "");
+		const defa = "―";
+		const val = row.row_data[column.key];
 
 		if (column.editable) {
 			cell_html += getEditableCellHtml(dt, column);
@@ -194,9 +195,9 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 				console.error("Map is missing: ", column.map_name);
 			}
 		} else if (column.render) {
-			cell_html += column.render(row.row_data);
+			cell_html += def(column.render(row.row_data), defa);
 		} else {
-			cell_html += val;
+			cell_html += def(val, defa);
 		}
 
 		if (column.quick_filter && val) {

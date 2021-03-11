@@ -45,6 +45,9 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 						key: "options",
 						width: "2",
 						searchable: "string",
+						render: (data) => {
+							return data.icon + " " + data.options;
+						},
 					},
 					{
 						label: "Akcja",

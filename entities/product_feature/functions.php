@@ -6,18 +6,22 @@ function getFeatureDataTypes()
         "text_list" => [
             "description" => "Lista",
             "example" => "(np. kolorów)",
+            "icon" => "<i class=\"fas fa-list-ul product_feature_data_type_icon\"></i>",
         ],
         "double_value" => [
-            "description" => "Dowolna liczba całkowita",
+            "description" => "Dowolna liczba",
             "example" => "(np. długość kabla)",
+            "icon" => "<i class=\"fas fa-sort-numeric-up-alt product_feature_data_type_icon\"></i>",
         ],
         "datetime_value" => [
             "description" => "Dowolna data",
             "example" => "(np. data premiery)",
+            "icon" => "<i class=\"fas fa-calendar-alt product_feature_data_type_icon\"></i>",
         ],
         "text_value" => [
             "description" => "Dowolny tekst",
             "example" => "(dowolna unikalna nazwa nie wiem co wpisać)",
+            "icon" => "<i class=\"fas fa-font product_feature_data_type_icon\"></i>",
         ],
     ];
 }
