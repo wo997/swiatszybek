@@ -168,6 +168,21 @@
 	}
 }
 
+.product_list .no_results {
+	& {
+		text-align: center;
+		width: 100%;
+		margin: 40px 0;
+	}
+	& > span {
+		font-size: max(1em, min(3vw, 1.5em));
+		font-weight: 600;
+	}
+	& > .btn {
+		margin-top: 15px;
+	}
+}
+
 @media only screen and (max-width: 849px) {
 	.product_list_wrapper,
 	.searching_wrapper > .scroll_panel {

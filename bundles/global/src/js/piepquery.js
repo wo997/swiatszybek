@@ -110,7 +110,7 @@ function $(selector, parent = undefined) {
 	};
 
 	node._is_empty = () => {
-		return node.hasChildNodes();
+		return !node.hasChildNodes();
 	};
 
 	// jscolor is an input already, .datepicker too

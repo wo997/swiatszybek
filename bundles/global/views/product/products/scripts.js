@@ -40,6 +40,10 @@ domload(() => {
 	openCurrentMenu();
 	setCategoryFeaturesFromUrl();
 
+	if (product_list._is_empty()) {
+		displayNoProducts();
+	}
+
 	product_list_ready = true;
 });
 
@@ -207,7 +211,7 @@ function getSelectedOptionsData() {
 	 */
 	let data = [];
 
-	$$(".product_features > ul > li").forEach((feature) => {
+	$$(".product_features > li").forEach((feature) => {
 		const option_ids = [];
 		const all_names = [];
 		feature._children(".option_checkbox.checked").forEach((option_checkbox) => {
@@ -305,15 +309,24 @@ function mainSearchProducts() {
 	});
 }
 
+function displayNoProducts() {
+	product_list._set_content(html`<div class="no_results">
+		<span>Nie znaleźliśmy żadnego produktu</span>
+		<br />
+		<button class="btn primary">Wyczyść filtry <i class="fas fa-eraser"></i></button>
+	</div>`);
+}
+
 function productsFetched(res = {}) {
 	search_product_list_xhr = undefined;
 
 	products_all.style.height = products_all.offsetHeight + "px";
 	if (res.html !== undefined) {
 		if (res.html === "") {
-			res.html = html`<span class="semi-bold">Nie znaleźliśmy żadnego produktu</span>`;
+			displayNoProducts();
+		} else {
+			product_list._set_content(res.html);
 		}
-		product_list._set_content(res.html);
 	}
 	if (res.total_rows !== undefined) {
 		results_info_count._set_content(res.total_rows);
