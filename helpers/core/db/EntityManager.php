@@ -279,8 +279,6 @@ class EntityManager
      */
     public static function setManyToManyEntities(Entity $obj, $obj_prop_name, $other_entity_name, $other_entities_props)
     {
-        //var_dump([[[$obj, $obj_prop_name, $other_entity_name, $other_entities_props]]]);
-
         /** @var Entity[] */
         $curr_other_entities = def($obj->getProp($obj_prop_name), []);
         $curr_ids = [];

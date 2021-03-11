@@ -447,7 +447,11 @@ class Entity
                     /** @var Entity */
                     $ent) {
                     if ($ent instanceof Entity) {
-                        $entities_data[] = $ent->getAllProps();
+                        $d = $ent->getAllProps();
+                        foreach ($ent->meta as $key => $val) {
+                            $d["_meta_$key"] = $val;
+                        }
+                        $entities_data[] = $d;
                     }
                 }
                 $val = $entities_data;
@@ -479,7 +483,6 @@ class Entity
         $simple_props = [];
         foreach ($props as $prop_name => $prop_data) {
             $val = $this->getProp($prop_name);
-
             if (is_array($val)) {
                 $entities_data = [];
                 foreach ($val as
