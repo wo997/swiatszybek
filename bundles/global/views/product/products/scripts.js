@@ -17,6 +17,8 @@ let product_list;
 /** @type {PiepNode} */
 let results_info_count;
 /** @type {PiepNode} */
+let search_phrase;
+/** @type {PiepNode} */
 let feature_filter_count;
 /** @type {PaginationComp} */
 let product_list_pagination_comp;
@@ -44,6 +46,7 @@ domload(() => {
 	initRangeFilters();
 	initProductFeatures();
 	initProductCategories();
+	initSearchPhrase();
 	openCurrentMenu();
 	initPagination();
 	productsPopState();
@@ -76,6 +79,16 @@ domload(() => {
 	});
 });
 
+function initSearchPhrase() {
+	search_phrase = $(".searching_wrapper .search_phrase");
+	search_phrase.addEventListener("input", () => {
+		delay("mainSearchProducts", search_products_input_delay);
+	});
+	search_phrase.addEventListener("change", () => {
+		delay("mainSearchProducts");
+	});
+}
+
 function initRangeFilters() {
 	$$(".searching_wrapper .range_filter").forEach((range_filter) => {
 		const input_from = range_filter._child("input.from");
@@ -106,6 +119,14 @@ function initRangeFilters() {
 			});
 		}
 	});
+}
+
+function setSearchPhraseFromUrl() {
+	const url_params = new URLSearchParams(current_url_search);
+
+	/** @type {string} */
+	const search_phrase_val = def(url_params.get("znajdz"), "");
+	search_phrase._set_value(search_phrase_val, { quiet: true });
 }
 
 function setRangesFromUrl() {
@@ -291,6 +312,8 @@ function productsPopState() {
 	setCategoryFeaturesFromUrl();
 	setRangesFromUrl();
 	setProductsFilterCountFromUrl();
+	setSearchPhraseFromUrl();
+	mainSearchProducts(true);
 }
 
 function setCategoryFeaturesFromUrl() {
@@ -310,7 +333,7 @@ function setCategoryFeaturesFromUrl() {
 	pp_selected_option_groups.flat(1).forEach((option_id) => {
 		const option_checkbox = $(`.product_features .option_checkbox[data-option_id="${option_id}"]`);
 		matched_boxes.push(option_checkbox);
-		option_checkbox._set_value(1);
+		option_checkbox._set_value(1, { quiet: true });
 
 		let option_row = option_checkbox;
 		while (true) {
@@ -319,13 +342,13 @@ function setCategoryFeaturesFromUrl() {
 				return;
 			}
 			const parent_box = option_row._direct_child(".checkbox_area")._child(".option_checkbox");
-			parent_box._set_value(1);
+			parent_box._set_value(1, { quiet: true });
 			matched_boxes.push(parent_box);
 		}
 	});
 	$$(`.product_features .option_checkbox`).forEach((option_checkbox) => {
 		if (!matched_boxes.includes(option_checkbox)) {
-			option_checkbox._set_value(0);
+			option_checkbox._set_value(0, { quiet: true });
 		}
 	});
 
@@ -373,32 +396,39 @@ function getSelectedOptionsData() {
 	return data;
 }
 
-function mainSearchProducts() {
+function mainSearchProducts(force = false) {
 	if (search_product_list_xhr) {
 		search_product_list_xhr.abort();
-	}
-
-	let url = "/produkty";
-	if (product_category_id !== -1) {
-		url += "/" + product_category_id;
 	}
 
 	const options_data = getSelectedOptionsData();
 	pp_selected_option_groups = options_data.map((e) => e.option_ids);
 
-	const category_path_names = product_category_path.map((e) => e.name);
-	let full_name = category_path_names.join(" | ");
-	if (options_data.length > 0) {
-		full_name += options_data
-			.map((e) => e.all_names.join(" "))
-			.flat(1)
-			.map((e) => " | " + e)
-			.join("");
+	let url = "/produkty";
+	let full_name = "";
+	if (product_category_id !== -1) {
+		url += "/" + product_category_id;
+
+		const category_path_names = product_category_path.map((e) => e.name);
+		full_name = category_path_names.join(" | ");
+		if (options_data.length > 0) {
+			full_name += options_data
+				.map((e) => e.all_names.join(" "))
+				.flat(1)
+				.map((e) => " | " + e)
+				.join("");
+		}
+		url += "/" + escapeUrl(category_path_names.join(" "));
 	}
 
-	url += "/" + escapeUrl(category_path_names.join(" "));
-
 	const url_params = new URLSearchParams();
+
+	/** @type {string} */
+	const search_phrase_val = search_phrase._get_value();
+	if (search_phrase_val.trim() !== "") {
+		url_params.append("znajdz", search_phrase_val);
+	}
+
 	if (options_data.length > 0) {
 		url_params.append("v", options_data.map((e) => e.option_ids.join("l")).join("-"));
 	}
@@ -464,16 +494,17 @@ function mainSearchProducts() {
 		url += "?" + url_search;
 	}
 
-	if (current_url_search === url_search) {
-		return;
+	if (!force) {
+		if (current_url_search === url_search) {
+			return;
+		}
+
+		current_url_search = url_search;
+
+		// title does not work lol
+		history.pushState(undefined, full_name, url);
 	}
 
-	current_url_search = url_search;
-
-	setProductsFilterCountFromUrl();
-
-	// it does not work lol
-	history.pushState(undefined, full_name, url);
 	// workaround here
 	document.title = full_name;
 

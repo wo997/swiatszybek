@@ -234,6 +234,9 @@ foreach ($options_data as $option_data) {
                     <?= traverseCategories() ?>
                 </div>
 
+                <div class="label"> <span>Wyszukaj po frazie</span> </div>
+                <input type="text" class="field search_phrase" placeholder="Nazwa produktu">
+
                 <div class="search_header">
                     <span>Cechy</span>
                     <span class="feature_filter_count"></span>
