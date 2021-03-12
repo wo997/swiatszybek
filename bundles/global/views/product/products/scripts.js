@@ -485,10 +485,14 @@ function mainSearchProducts() {
 }
 
 function displayNoProducts() {
+	const action_html = feature_filter_count._is_empty()
+		? html`<div style="margin-top:5px">Przejdź do innej kategorii</div>`
+		: html`<button class="btn primary clear_filters_btn">Wyczyść filtry <i class="fas fa-eraser"></i></button>`;
+
 	product_list._set_content(html`<div class="no_results">
 		<span>Nie znaleźliśmy żadnego produktu</span>
 		<br />
-		<button class="btn primary clear_filters_btn">Wyczyść filtry <i class="fas fa-eraser"></i></button>
+		${action_html}
 	</div>`);
 }
 
