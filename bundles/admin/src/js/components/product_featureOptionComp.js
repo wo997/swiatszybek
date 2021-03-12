@@ -71,7 +71,7 @@ function product_featureOptionComp(
 					comp._nodes.double_value.classList.add("hidden");
 				} else {
 					comp._nodes.physical_value_wrapper.classList.add("hidden");
-					comp._nodes.double_value.classList.remove("hidden");
+					comp._nodes.double_value.classList.toggle("hidden", def(data.data_type, "").endsWith("_list"));
 				}
 			},
 		});

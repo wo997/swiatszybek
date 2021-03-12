@@ -126,7 +126,7 @@ function prettyPrintPhysicalMeasure($double_value, $physical_measure)
         return (round($accuracy * $double_value / $target_unit["factor"]) / $accuracy) . " " . $target_unit["name"];
     }
 
-    return "";
+    return $double_value;
 }
 
 function getAllProductFeatures()

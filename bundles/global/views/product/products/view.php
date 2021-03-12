@@ -122,29 +122,35 @@ function traverseFeatures()
             $feature_label .= " ($pretty_min - $pretty_max)";
 
             $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
-            if (!$pretty_min || !$pretty_max) {
-                continue;
-            }
+            if ($physical_measure_data) {
+                $options = "";
+                $units = $physical_measure_data["units"];
+                $unit_count = count($units);
+                for ($i = 0; $i < $unit_count; $i++) {
+                    $unit = $units[$i];
+                    $factor = $unit["factor"];
+                    $name = $unit["name"];
 
-            $options = "";
-            $units = $physical_measure_data["units"];
-            $unit_count = count($units);
-            for ($i = 0; $i < $unit_count; $i++) {
-                $unit = $units[$i];
-                $factor = $unit["factor"];
-                $name = $unit["name"];
+                    if ($max_value * 1.000001 < $factor) {
+                        continue;
+                    }
 
-                if ($max_value * 1.000001 < $factor) {
-                    continue;
+                    $next_unit = def($units, $i + 1, null);
+                    if ($next_unit && $next_unit["factor"] * 1.000001 < $min_value) {
+                        continue;
+                    }
+
+                    $options .= "<option value=\"$factor\">$name</option>";
                 }
 
-                $next_unit = def($units, $i + 1, null);
-                if ($next_unit && $next_unit["factor"] * 1.000001 < $min_value) {
-                    continue;
-                }
-
-                $options .= "<option value=\"$factor\">$name</option>";
+                $from_select = "<select class=\"field inline blank unit_picker\">$options</select>";
+                $to_select = "<select class=\"field inline blank unit_picker\">$options</select>";
+            } else {
+                $from_select = "";
+                $to_select = "";
             }
+
+
 
             if ($product_feature["data_type"] === "double_value") {
                 $feature_body = <<<HTML
@@ -153,18 +159,14 @@ function traverseFeatures()
                         Od
                         <div class="glue_children">
                             <input class="field inline" inputmode="numeric">
-                            <select class="field inline blank unit_picker">
-                                $options
-                            </select>
+                            $from_select
                         </div>
                     </div>
                     <div class="flex_column">
                         Do
                         <div class="glue_children">
                             <input class="field inline" inputmode="numeric">
-                            <select class="field inline blank unit_picker">
-                                $options
-                            </select>
+                            $to_select
                         </div>
                     </div>
                 </div>
