@@ -39,6 +39,9 @@ EventListener::register("before_save_product_entity", function ($params) {
 
         /** @var Entity ProductFeature */
         $feature = $feature_option->getParent();
+        if (!$feature) {
+            continue;
+        }
         $feature_id = $feature->getId();
 
         if (!isset($options[$feature_id])) {
