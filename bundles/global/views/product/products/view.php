@@ -221,7 +221,8 @@ foreach ($options_data as $option_data) {
 
                 <div class="search_header">
                     <span>Cechy</span>
-                    <button class="btn transparent small clean_filters_btn" data-tooltip="Wyczyść filtry" data-tooltip_position="right"> <i class="fas fa-eraser"></i></button>
+                    <span class="feature_filter_count"></span>
+                    <button class="btn transparent small clear_filters_btn" data-tooltip="Wyczyść filtry" data-tooltip_position="right"> <i class="fas fa-eraser"></i></button>
                 </div>
                 <ul class="product_features">
                     <?= traverseFeatures() ?>

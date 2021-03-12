@@ -16,6 +16,8 @@ let products_all;
 let product_list;
 /** @type {PiepNode} */
 let results_info_count;
+/** @type {PiepNode} */
+let feature_filter_count;
 /** @type {PaginationComp} */
 let product_list_pagination_comp;
 /** @type {XMLHttpRequest} */
@@ -28,7 +30,9 @@ let search_products_price_max;
 
 const search_products_input_delay = 400;
 
-let current_url = window.location.pathname + def(window.location.search, "");
+/** @type {string} */
+let current_url_search;
+
 domload(() => {
 	products_all = $(".products_all");
 	product_list = $(".product_list");
@@ -42,8 +46,7 @@ domload(() => {
 	initProductFeatures();
 	initProductCategories();
 	openCurrentMenu();
-	setCategoryFeaturesFromUrl();
-	setRangesFromUrl();
+	productsPopState();
 
 	if (product_list._is_empty()) {
 		displayNoProducts();
@@ -53,11 +56,21 @@ domload(() => {
 
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
-		const clean_filters_btn = target._parent(".clean_filters_btn", { skip: 0 });
-		if (clean_filters_btn) {
+		const clear_filters_btn = target._parent(".clear_filters_btn", { skip: 0 });
+		if (clear_filters_btn) {
 			$$(".searching_wrapper .option_checkbox").forEach((option_checkbox) => {
 				option_checkbox._set_value(0, { quiet: true });
 			});
+
+			$$(".searching_wrapper input.field").forEach((input) => {
+				input._set_value("", { quiet: true });
+			});
+
+			$$(".searching_wrapper select.field").forEach((select) => {
+				// @ts-ignore
+				select.selectedIndex = 0;
+			});
+
 			mainSearchProducts();
 		}
 	});
@@ -96,7 +109,7 @@ function initRangeFilters() {
 }
 
 function setRangesFromUrl() {
-	const url_params = new URLSearchParams(window.location.search);
+	const url_params = new URLSearchParams(current_url_search);
 
 	/** @type {string} */
 	const r = def(url_params.get("r"), "");
@@ -190,6 +203,32 @@ function initProductFeatures() {
 			}
 		});
 	});
+
+	feature_filter_count = $(".searching_wrapper .feature_filter_count");
+	setProductsFilterCountFromUrl();
+}
+
+function setProductsFilterCountFromUrl() {
+	let filter_count = 0;
+
+	const url_params = new URLSearchParams(current_url_search);
+
+	const v = def(url_params.get("v"), "");
+	if (v) {
+		filter_count += v.split("-").length;
+	}
+
+	const r = def(url_params.get("r"), "");
+	if (r) {
+		filter_count += r.split("-").length;
+	}
+
+	if (url_params.get("cena")) {
+		filter_count++;
+	}
+
+	feature_filter_count._set_content(filter_count ? `(${filter_count})` : "");
+	$(".searching_wrapper .clear_filters_btn").classList.toggle("hidden", filter_count === 0);
 }
 
 function initPagination() {
@@ -245,11 +284,18 @@ function openCurrentMenu() {
 	}
 }
 window.addEventListener("popstate", () => {
-	setCategoryFeaturesFromUrl();
+	productsPopState();
 });
 
+function productsPopState() {
+	current_url_search = def(window.location.search, "");
+	setCategoryFeaturesFromUrl();
+	setRangesFromUrl();
+	setProductsFilterCountFromUrl();
+}
+
 function setCategoryFeaturesFromUrl() {
-	const url_params = new URLSearchParams(window.location.search);
+	const url_params = new URLSearchParams(current_url_search);
 
 	// features
 	/** @type {string} */
@@ -411,16 +457,18 @@ function mainSearchProducts() {
 		url_params.append("r", url_from_ranges.join("-"));
 	}
 
-	const url_params_str = url_params.toString();
-	if (url_params_str) {
-		url += "?" + url_params_str;
+	const url_search = url_params.toString();
+	if (url_search) {
+		url += "?" + url_search;
 	}
 
-	if (current_url === url) {
+	if (current_url_search === url_search) {
 		return;
 	}
 
-	current_url = url;
+	current_url_search = url_search;
+
+	setProductsFilterCountFromUrl();
 
 	// it does not work lol
 	history.pushState(undefined, full_name, url);
@@ -440,7 +488,7 @@ function displayNoProducts() {
 	product_list._set_content(html`<div class="no_results">
 		<span>Nie znaleźliśmy żadnego produktu</span>
 		<br />
-		<button class="btn primary clean_filters_btn">Wyczyść filtry <i class="fas fa-eraser"></i></button>
+		<button class="btn primary clear_filters_btn">Wyczyść filtry <i class="fas fa-eraser"></i></button>
 	</div>`);
 }
 
