@@ -104,3 +104,16 @@ domload(() => {
 	window.addEventListener("mousemove", tacz);
 	window.addEventListener("touchstart", tacz);
 });
+
+/**
+ *
+ * @param {number[]} unit_factors
+ * @param {number} double_value
+ * @returns
+ */
+function getSafeUnitValue(unit_factors, double_value) {
+	const accuracy = 100000;
+	const unit_factor = def(getLast(unit_factors.filter((e) => e < double_value * 1.000001)), unit_factors[0]);
+	const value = Math.round((accuracy * double_value) / unit_factor) / accuracy;
+	return { unit_factor, value };
+}

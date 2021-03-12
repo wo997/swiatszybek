@@ -17,7 +17,7 @@ $page_id = intval(def($_GET, "str", 1)) - 1;
 $row_count = intval(def($_GET, "ile", 25));
 
 $price_str = def($_GET, "cena", "");
-$price_parts = explode("~", $price_str);
+$price_parts = explode("l", $price_str);
 $price_min = def($price_parts, 0, "");
 $price_max = def($price_parts, 1, "");
 
