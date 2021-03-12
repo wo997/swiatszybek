@@ -60,7 +60,7 @@ function getGlobalProductsSearch($url, $options = [])
         $max = def($val_parts, 1, "");
 
         if ($min !== "" || $max !== "") {
-            $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter ON ptfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id";
+            $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter ON ptfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id AND pfo_$query_counter.product_feature_id = $product_feature_id";
             if ($min !== "") {
                 $min = floatval(preg_replace("/^0/", "0.", $min)) - 0.000001;
                 $where .= " AND pfo_$query_counter.double_value > $min";
