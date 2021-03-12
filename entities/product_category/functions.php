@@ -11,10 +11,12 @@ function getProductCategoryLink($category_path, $option_ids = [])
 {
     $category = end($category_path);
     $link = "/produkty";
-    $link .= "/" . $category["id"];
-    $link .= "/" . escapeUrl(implode(" ", array_map(function ($x) {
-        return $x["name"];
-    }, $category_path)));
+    if ($category && $category["id"] !== -1) {
+        $link .= "/" . $category["id"];
+        $link .= "/" . escapeUrl(implode(" ", array_map(function ($x) {
+            return $x["name"];
+        }, $category_path)));
+    }
     if ($option_ids) {
         $link .= "?v=" . join("-", $option_ids);
     }

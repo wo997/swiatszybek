@@ -2,19 +2,30 @@
 
 $product_category_data = null;
 
+$default_category_data = [
+    "product_category_id" => -1, "name" => "Wszystkie produkty", "__category_path_json" => json_encode([["id" => -1, "name" => "Wszystkie produkty"]]), "__product_count" => 0
+];
+
 $product_category_id = Request::urlParam(1, -1);
-if ($product_category_id) {
+if ($product_category_id !== -1) {
     $product_category_id = intval($product_category_id);
     $product_category_data = DB::fetchRow("SELECT name, __category_path_json FROM product_category WHERE product_category_id = $product_category_id");
+} else {
+    $product_category_data = $default_category_data;
 }
 
 function traverseCategories($parent_id = -1, $level = 0)
 {
+    global $default_category_data;
+
     $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json, __product_count FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
     if (!$categories) {
         return "";
     }
     $html = "<ul class=\"level_$level\">";
+    if ($level === 0) {
+        array_unshift($categories, $default_category_data);
+    }
     foreach ($categories as $category) {
         $id = $category["product_category_id"];
         $name = $category["name"];
@@ -23,9 +34,13 @@ function traverseCategories($parent_id = -1, $level = 0)
 
         $html .= "<li data-category_id=\"$id\" >";
         $html .= "<a href=\"$link\">$name";
-        $html .= " <span class=\"count\">($count)</span>";
+        if ($count) {
+            $html .= " <span class=\"count\">($count)</span>";
+        }
         $html .= "</a>";
-        $html .= traverseCategories($category["product_category_id"], $level + 1);
+        if ($id !== -1) {
+            $html .= traverseCategories($id, $level + 1);
+        }
         $html .= "</li>";
     }
     $html .= "</ul>";

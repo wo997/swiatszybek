@@ -72,10 +72,8 @@ function getGlobalProductsSearch($url, $options = [])
         }
     }
 
-    if ($product_category_id) {
-        if ($product_category_id) {
-            $where .= " AND gptc.product_category_id = $product_category_id";
-        }
+    if ($product_category_id !== -1) {
+        $where .= " AND gptc.product_category_id = $product_category_id";
     }
 
     if ($price_min !== "") {

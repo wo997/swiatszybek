@@ -42,10 +42,10 @@ domload(() => {
 
 	initPrices();
 	initRangeFilters();
-	initPagination();
 	initProductFeatures();
 	initProductCategories();
 	openCurrentMenu();
+	initPagination();
 	productsPopState();
 
 	if (product_list._is_empty()) {
@@ -235,13 +235,12 @@ function initPagination() {
 	// @ts-ignore
 	product_list_pagination_comp = $(`pagination-comp.product_list_pagination`);
 	paginationComp(product_list_pagination_comp, undefined);
-	product_list_pagination_comp._data = {
-		row_count: 2,
+
+	product_list_pagination_comp._set_data({
 		total_rows: +results_info_count.innerText,
 		page_id: 0,
-		row_count_options: [2, 5, 25, 100],
-	};
-	product_list_pagination_comp._render();
+		row_count_options: [5, 25, 100],
+	});
 
 	product_list_pagination_comp.addEventListener("change", () => {
 		delay("mainSearchProducts");
@@ -333,6 +332,7 @@ function setCategoryFeaturesFromUrl() {
 	// paginatiobn
 	product_list_pagination_comp._data.page_id = +def(url_params.get("str"), "1") - 1;
 	product_list_pagination_comp._data.row_count = +def(url_params.get("ile"), "25");
+	product_list_pagination_comp._render();
 
 	// price
 	/** @type {string} */
@@ -379,7 +379,9 @@ function mainSearchProducts() {
 	}
 
 	let url = "/produkty";
-	url += "/" + product_category_id;
+	if (product_category_id !== -1) {
+		url += "/" + product_category_id;
+	}
 
 	const options_data = getSelectedOptionsData();
 	pp_selected_option_groups = options_data.map((e) => e.option_ids);
