@@ -41,11 +41,10 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $main_img_url = "";
 
-    $options = [];
-
     /** @var Entity[] ProductFeatureOption */
     $general_product_feature_options = $general_product->getProp("feature_options");
     $all_options = [];
+    $all_option_ids = [];
     foreach ($general_product_feature_options as $option) {
         $option_id = $option->getId();
         $feature_id = $option->getProp("product_feature_id");
@@ -54,6 +53,9 @@ EventListener::register("before_save_general_product_entity", function ($params)
         }
         if (!in_array($option_id, $all_options[$feature_id])) {
             $all_options[$feature_id][] = $option_id;
+        }
+        if (!in_array($option_id, $all_option_ids)) {
+            $all_option_ids[] = $option_id;
         }
     }
     $alone_options = [];
@@ -68,28 +70,20 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
         /** @var Entity[] ProductFeatureOption */
         $feature_options = $product->getProp("feature_options");
+        /** @var Entity[] ProductFeatureOption */
         $feature_options = array_merge($feature_options, $alone_options);
+        foreach ($feature_options as $key => $feature_option) {
+            if (!in_array($feature_option->getId(), $all_option_ids)) {
+                unset($feature_options[$key]); // not tested but seems legit
+            }
+        }
+        /** @var Entity[] ProductFeatureOption */
+        $feature_options = array_values($feature_options);
         $product->setProp("feature_options", $feature_options);
 
         $feature_option_ids = [];
         foreach ($feature_options as $feature_option) {
-            $option_id = $feature_option->getId();
-            $feature_option_ids[] = $option_id;
-
-            /** @var Entity ProductFeature */
-            $feature = $feature_option->getParent();
-            if (!$feature) {
-                continue;
-            }
-
-            $feature_id = $feature->getId();
-
-            if (!isset($options[$feature_id])) {
-                $options[$feature_id] = [];
-            }
-            if (!in_array($option_id, $options[$feature_id])) {
-                $options[$feature_id][] = $option_id;
-            }
+            $feature_option_ids[] = $feature_option->getId();
         }
 
         $__img_url = "";
@@ -132,7 +126,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $general_product->setProp("__img_url", $main_img_url);
     $general_product->setProp("__images_json", json_encode($images_data));
-    $general_product->setProp("__options_json", $options ? json_encode($options) : "{}");
+    $general_product->setProp("__options_json", $all_options ? json_encode($all_options) : "{}");
 });
 
 EventListener::register("after_save_general_product_entity", function ($params) {
