@@ -31,14 +31,45 @@ function getGlobalProductsSearch($url, $options = [])
     $query_counter = 0;
     foreach (explode("-", def($get_vars, "v", "")) as $option_ids_str) {
         $query_counter++;
+
         $option_ids = array_map(fn ($x) => intval($x), explode("l", $option_ids_str));
         if (count($option_ids) === 1) {
             $unique_option_ids[] = $option_ids[0];
         }
         $option_ids_csv = clean(implode(",", $option_ids));
         if ($option_ids_csv) {
-            $where .= " AND ptfo_$query_counter.product_feature_option_id IN ($option_ids_csv)";
             $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id)";
+            $where .= " AND ptfo_$query_counter.product_feature_option_id IN ($option_ids_csv)";
+        }
+    }
+
+    foreach (explode("-", def($get_vars, "r", "")) as $range_full_str) {
+        $query_counter++;
+
+        $range_full_str_parts = explode("_", $range_full_str);
+        $product_feature_id = def($range_full_str_parts, 0, "");
+
+        if ($product_feature_id === "") {
+            continue;
+        }
+
+        $range_str = def($range_full_str_parts, 1, "");
+        $val_parts = explode("l", $range_str);
+
+        $min = def($val_parts, 0, "");
+        $max = def($val_parts, 1, "");
+
+
+        if ($min !== "" || $max !== "") {
+            $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter USING (product_feature_option_id)";
+            if ($min !== "") {
+                $min = floatval(preg_replace("/^0/", "0.", $min)) - 0.000001;
+                $where .= " AND pfo_$query_counter.double_value > $min";
+            }
+            if ($max !== "") {
+                $max = floatval(preg_replace("/^0/", "0.", $max)) + 0.000001;
+                $where .= " AND pfo_$query_counter.double_value < $max";
+            }
         }
     }
 

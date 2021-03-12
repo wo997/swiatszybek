@@ -118,12 +118,12 @@ function traverseFeatures()
                     $factor = $unit["factor"];
                     $name = $unit["name"];
 
-                    if ($max_value * 1.000001 < $factor) {
+                    if ($max_value + 0.000001 < $factor) {
                         continue;
                     }
 
                     $next_unit = def($units, $i + 1, null);
-                    if ($next_unit && $next_unit["factor"] * 1.000001 < $min_value) {
+                    if ($next_unit && $next_unit["factor"] + 0.000001 < $min_value) {
                         continue;
                     }
 

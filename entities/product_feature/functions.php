@@ -116,7 +116,7 @@ function prettyPrintPhysicalMeasure($double_value, $physical_measure)
         //usort($units, fn ($a, $b) => $a["factor"] <=> $b["factor"]);
         $target_unit = $units[0];
         foreach ($units as  $unit) {
-            if ($unit["factor"] >= $double_value * 1.000001) {
+            if ($unit["factor"] >= $double_value + 0.000001) {
                 break;
             }
             $target_unit = $unit;

@@ -392,7 +392,7 @@ function mainSearchProducts() {
 				const accuracy = 100000;
 
 				// 0.09 becomes 009, you can easily tell that the dot comes after first 0
-				return (Math.round(accuracy * number) / accuracy + "").replace(".", "");
+				return (Math.round(accuracy * number) / accuracy + "").replace(/^0./, "0");
 			};
 			const values = (from_selected ? safe_number(from) : "") + "l" + (to_selected ? safe_number(to) : "");
 			url_from_ranges.push(`${product_feature_id}_${values}`);
