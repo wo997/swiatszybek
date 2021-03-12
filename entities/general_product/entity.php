@@ -43,11 +43,34 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $options = [];
 
+    /** @var Entity[] ProductFeatureOption */
+    $general_product_feature_options = $general_product->getProp("feature_options");
+    $all_options = [];
+    foreach ($general_product_feature_options as $option) {
+        $option_id = $option->getId();
+        $feature_id = $option->getProp("product_feature_id");
+        if (!isset($all_options[$feature_id])) {
+            $all_options[$feature_id] = [];
+        }
+        if (!in_array($option_id, $all_options[$feature_id])) {
+            $all_options[$feature_id][] = $option_id;
+        }
+    }
+    $alone_options = [];
+    foreach ($all_options as $feature_id => $option_ids) {
+        if (count($option_ids) === 1) {
+            $alone_options[] = EntityManager::getEntityById("product_feature_option", $option_ids[0]);
+        }
+    }
+
     foreach ($products as $product) {
         $product_id = $product->getId();
 
         /** @var Entity[] ProductFeatureOption */
         $feature_options = $product->getProp("feature_options");
+        $feature_options = array_merge($feature_options, $alone_options);
+        $product->setProp("feature_options", $feature_options);
+
         $feature_option_ids = [];
         foreach ($feature_options as $feature_option) {
             $option_id = $feature_option->getId();
