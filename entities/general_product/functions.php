@@ -59,7 +59,6 @@ function getGlobalProductsSearch($url, $options = [])
         $min = def($val_parts, 0, "");
         $max = def($val_parts, 1, "");
 
-
         if ($min !== "" || $max !== "") {
             $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter USING (product_feature_option_id)";
             if ($min !== "") {
@@ -89,8 +88,9 @@ function getGlobalProductsSearch($url, $options = [])
 
     $pagination_params = [
         "select" => "
-            gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__selectable_option_ids_json,
-            MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock
+            gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json,
+            MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
+            GROUP_CONCAT(p.__options_json SEPARATOR '|') products_options
         ",
         "from" => $from,
         "group" => "general_product_id",
@@ -131,10 +131,39 @@ function getGlobalProductsSearch($url, $options = [])
             $stock_class = "unavailable";
         }
 
-        $selectable_option_ids_json = htmlspecialchars($product["__selectable_option_ids_json"]);
-        $option_ids = array_intersect($unique_option_ids, json_decode($selectable_option_ids_json, true));
-        $option_names = getValuesFromOptionIds($option_ids);
-        $link = getProductLink($id, $name, $option_ids, $option_names);
+        json_decode($product["__options_json"], true);
+
+        $products_options = $product["products_options"];
+
+        $matched_options = [];
+        foreach (explode("|", $products_options) as $product_options_json) {
+            $product_options = json_decode($product_options_json, true);
+            if ($product_options) {
+                foreach ($product_options as $feature_id => $option_ids) {
+                    if (!isset($matched_options[$feature_id])) {
+                        $matched_options[$feature_id] = [];
+                    }
+                    foreach ($option_ids as $option_id) {
+                        if (!in_array($option_id, $matched_options[$feature_id])) {
+                            $matched_options[$feature_id][] = $option_id;
+                        }
+                    }
+                }
+            }
+        }
+
+        $unique_options = [];
+
+        foreach ($matched_options as $feature_id => $option_ids) {
+            if (count($option_ids) === 1) {
+                $unique_options[] = $option_ids[0];
+            }
+        }
+
+        $option_names = getValuesFromOptionIds($unique_options);
+        $link = getProductLink($id, $name, $unique_options, $option_names);
+
+        $option_ids_csv = join(",", $option_ids);
 
         $html .= "<div class=\"product_block\">
             <a href=\"$link\">

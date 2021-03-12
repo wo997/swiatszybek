@@ -6,7 +6,6 @@ EntityManager::register("product_img", [
         "general_product_id" => ["type" => "number"],
         "pos" => ["type" => "number"],
         "product_feature_options" => ["type" => "product_feature_option[]"],
-        //"options_json" => ["type" => "string"],
     ],
 ]);
 

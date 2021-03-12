@@ -5,7 +5,7 @@ EntityManager::register("general_product", [
         "name" => ["type" => "string"],
         "__img_url" => ["type" => "string"],
         "__images_json" => ["type" => "string"],
-        "__selectable_option_ids_json" => ["type" => "string"],
+        "__options_json" => ["type" => "string"],
     ],
 ]);
 
@@ -41,7 +41,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $main_img_url = "";
 
-    $selectable_option_ids = [];
+    $options = [];
 
     foreach ($products as $product) {
         $product_id = $product->getId();
@@ -53,8 +53,15 @@ EventListener::register("before_save_general_product_entity", function ($params)
             $option_id = $feature_option->getId();
             $feature_option_ids[] = $option_id;
 
-            if (!in_array($option_id, $selectable_option_ids)) {
-                $selectable_option_ids[] = $option_id;
+            /** @var Entity ProductFeature */
+            $feature = $feature_option->getParent();
+            $feature_id = $feature->getId();
+
+            if (!isset($options[$feature_id])) {
+                $options[$feature_id] = [];
+            }
+            if (!in_array($option_id, $options[$feature_id])) {
+                $options[$feature_id][] = $option_id;
             }
         }
 
@@ -98,7 +105,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $general_product->setProp("__img_url", $main_img_url);
     $general_product->setProp("__images_json", json_encode($images_data));
-    $general_product->setProp("__selectable_option_ids_json", json_encode($selectable_option_ids));
+    $general_product->setProp("__options_json", $options ? json_encode($options) : "{}");
 });
 
 EventListener::register("after_save_general_product_entity", function ($params) {

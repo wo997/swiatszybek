@@ -11,7 +11,7 @@ EntityManager::register("product", [
         "stock" => ["type" => "number"],
         "__img_url" => ["type" => "string"],
         "__name" => ["type" => "string"],
-        "options_json" => ["type" => "string"],
+        "__options_json" => ["type" => "string"],
         "__url" => ["type" => "string"],
     ],
 ]);
@@ -28,14 +28,27 @@ EventListener::register("before_save_product_entity", function ($params) {
     /** @var Entity Product */
     $product = $params["obj"];
     /** @var Entity[] ProductFeatureOption */
-    $options = $product->getProp("feature_options");
+    $feature_options = $product->getProp("feature_options");
     $option_ids = [];
+    $options = [];
     $option_names = [];
-    foreach ($options as $option) {
-        $option_ids[] = $option->getId();
-        $option_names[] = $option->getProp("value");
+    foreach ($feature_options as $feature_option) {
+        $option_id = $feature_option->getId();
+        $option_ids[] = $option_id;
+        $option_names[] = $feature_option->getProp("value");
+
+        /** @var Entity ProductFeature */
+        $feature = $feature_option->getParent();
+        $feature_id = $feature->getId();
+
+        if (!isset($options[$feature_id])) {
+            $options[$feature_id] = [];
+        }
+        if (!in_array($option_id, $options[$feature_id])) {
+            $options[$feature_id][] = $option_id;
+        }
     }
-    $product->setProp("options_json", json_encode($option_ids)); // seems like an issue, should be following __ but chill
+    $product->setProp("__options_json", $options ? json_encode($options) : "{}");
 
     /** @var Entity GeneralProduct */
     $general_product = $product->getParent();
