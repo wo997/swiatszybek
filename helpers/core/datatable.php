@@ -2,6 +2,7 @@
 
 function getSearchQuery($data)
 {
+
     $quick_search_fields = $data["quick_search_fields"];
     $search_type = def($data, "search_type", "regular");
 
@@ -57,6 +58,11 @@ function getRelevanceQuery($fields, $words)
     $counter = 0;
     $first = true;
     foreach ($words as $word) {
+        $word = trim($word);
+        if (!$word) {
+            continue;
+        }
+
         $counter++;
         if ($counter > 4) {
             break;
@@ -129,6 +135,7 @@ function getRelevanceQuery($fields, $words)
  * datatable_params?: DatatableParams
  * return_all_ids?: boolean
  * primary_key?: string
+ * search_type?: string
  * }
  */
 
@@ -191,7 +198,7 @@ function paginateData($params = [])
 
     $order = def($params, ["datatable_params", "order"], def($params, "order"));
 
-    if ($search_type == "extended") {
+    if ($search_query && $search_type == "extended") {
         if ($order) {
             [$order_key, $order_dir] = explode(" ", $order);
 

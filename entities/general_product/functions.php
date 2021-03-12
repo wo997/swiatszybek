@@ -16,6 +16,7 @@ function getGlobalProductsSearch($url, $options = [])
     $price_min = def($price_parts, 0, "");
     $price_max = def($price_parts, 1, "");
 
+    /** @var DatatableParams */
     $datatable_params = ["page_id" => $page_id, "row_count" => $row_count, "filters" => []];
 
     $where = "1";
@@ -83,7 +84,12 @@ function getGlobalProductsSearch($url, $options = [])
         $where .= " AND p.gross_price <= " . floatval($price_max);
     }
 
+    $search_phrase = def($get_vars, "znajdz", "");
+    if ($search_phrase) {
+        $datatable_params["quick_search"] = $search_phrase;
+    }
 
+    /** @var PaginationParams */
     $pagination_params = [
         "select" => "
             gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json,
@@ -94,8 +100,9 @@ function getGlobalProductsSearch($url, $options = [])
         "group" => "general_product_id",
         "order" => "general_product_id DESC",
         "where" => $where,
-        "quick_search_fields" => ["name"],
         "datatable_params" => json_encode($datatable_params),
+        "search_type" => "extended",
+        "quick_search_fields" => ["gp.name"],
     ];
 
     if (isset($options["return_all_ids"])) {
