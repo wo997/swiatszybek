@@ -31,7 +31,7 @@ function getGlobalProductsSearch($url, $options = [])
     $query_counter = 0;
     foreach (explode("-", def($get_vars, "v", "")) as $option_ids_str) {
         $query_counter++;
-        $option_ids = array_map(fn ($x) => intval($x), explode("_", $option_ids_str));
+        $option_ids = array_map(fn ($x) => intval($x), explode("l", $option_ids_str));
         if (count($option_ids) === 1) {
             $unique_option_ids[] = $option_ids[0];
         }

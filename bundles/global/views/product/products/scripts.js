@@ -248,7 +248,7 @@ function setCategoryFeaturesFromUrl() {
 	const v = def(url_params.get("v"), "");
 	pp_selected_option_groups = v.split("-").map((/** @type {string} */ group) =>
 		group
-			.split("_")
+			.split("l")
 			.map((e) => +e)
 			.filter((e) => e)
 	);
@@ -344,7 +344,7 @@ function mainSearchProducts() {
 
 	const url_params = new URLSearchParams();
 	if (options_data.length > 0) {
-		url_params.append("v", options_data.map((e) => e.option_ids.join("_")).join("-"));
+		url_params.append("v", options_data.map((e) => e.option_ids.join("l")).join("-"));
 	}
 
 	const price_min = search_products_price_min._get_value();
