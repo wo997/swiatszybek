@@ -40,9 +40,11 @@
 .searching_wrapper {
 	.search_header {
 		& > span {
-			margin-bottom: 10px;
-			font-weight: 700;
 			font-size: 1.2em;
+			font-weight: 700;
+		}
+		& {
+			margin-bottom: 10px;
 		}
 		&:not(.first) {
 			margin-top: 30px;
@@ -99,9 +101,11 @@
 .product_features {
 	.feature_label {
 		font-weight: 600;
-		margin-top: 1em;
 		display: block;
 		margin-bottom: 0.2em;
+	}
+	.feature_row:not(:first-child) .feature_label {
+		margin-top: 1em;
 	}
 	.feature_option_label {
 		padding: 5px 0;
