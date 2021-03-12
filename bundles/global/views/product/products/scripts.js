@@ -28,8 +28,7 @@ let search_products_price_max;
 
 const search_products_input_delay = 400;
 
-let current_url = window.location.href;
-
+let current_url = window.location.pathname + def(window.location.search, "");
 domload(() => {
 	products_all = $(".products_all");
 	product_list = $(".product_list");
@@ -52,7 +51,16 @@ domload(() => {
 
 	product_list_ready = true;
 
-	productsFetched(); // warmups images
+	document.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+		const clean_filters_btn = target._parent(".clean_filters_btn", { skip: 0 });
+		if (clean_filters_btn) {
+			$$(".searching_wrapper .option_checkbox").forEach((option_checkbox) => {
+				option_checkbox._set_value(0, { quiet: true });
+			});
+			mainSearchProducts();
+		}
+	});
 });
 
 function initRangeFilters() {
@@ -432,7 +440,7 @@ function displayNoProducts() {
 	product_list._set_content(html`<div class="no_results">
 		<span>Nie znaleźliśmy żadnego produktu</span>
 		<br />
-		<button class="btn primary">Wyczyść filtry <i class="fas fa-eraser"></i></button>
+		<button class="btn primary clean_filters_btn">Wyczyść filtry <i class="fas fa-eraser"></i></button>
 	</div>`);
 }
 

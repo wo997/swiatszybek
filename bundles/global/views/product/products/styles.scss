@@ -39,7 +39,7 @@
 
 .searching_wrapper {
 	.search_header {
-		& {
+		& > span {
 			margin-bottom: 10px;
 			font-weight: 700;
 			font-size: 1.2em;

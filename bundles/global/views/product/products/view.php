@@ -214,12 +214,15 @@ foreach ($options_data as $option_data) {
     <div class="searching_wrapper">
         <div class="scroll_panel scroll_shadow">
             <div>
-                <div class="search_header first"> Kategorie </div>
+                <div class="search_header first"> <span>Kategorie</span> </div>
                 <div class="product_categories">
                     <?= traverseCategories() ?>
                 </div>
 
-                <div class="search_header"> Cechy </div>
+                <div class="search_header">
+                    <span>Cechy</span>
+                    <button class="btn transparent small clean_filters_btn" data-tooltip="Wyczyść filtry" data-tooltip_position="right"> <i class="fas fa-eraser"></i></button>
+                </div>
                 <ul class="product_features">
                     <?= traverseFeatures() ?>
 
