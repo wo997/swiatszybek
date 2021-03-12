@@ -26,6 +26,8 @@ let search_products_price_min;
 /** @type {PiepNode} */
 let search_products_price_max;
 
+const search_products_input_delay = 400;
+
 domload(() => {
 	products_all = $(".products_all");
 	product_list = $(".product_list");
@@ -34,6 +36,7 @@ domload(() => {
 	products_category_name = $(".category_name");
 
 	initPrices();
+	initRangeFilters();
 	initPagination();
 	initProductFeatures();
 	initProductCategories();
@@ -46,6 +49,38 @@ domload(() => {
 
 	product_list_ready = true;
 });
+
+function initRangeFilters() {
+	$$(".searching_wrapper .range_filter").forEach((range_filter) => {
+		const input_from = range_filter._child("input.from");
+		const unit_from = range_filter._child("select.from");
+		const input_to = range_filter._child("input.to");
+		const unit_to = range_filter._child("select.to");
+
+		input_from.addEventListener("input", () => {
+			delay("mainSearchProducts", search_products_input_delay);
+		});
+		input_from.addEventListener("change", () => {
+			delay("mainSearchProducts");
+		});
+		input_to.addEventListener("input", () => {
+			delay("mainSearchProducts", search_products_input_delay);
+		});
+		input_to.addEventListener("change", () => {
+			delay("mainSearchProducts");
+		});
+		if (unit_from) {
+			unit_from.addEventListener("change", () => {
+				delay("mainSearchProducts");
+			});
+		}
+		if (unit_to) {
+			unit_to.addEventListener("change", () => {
+				delay("mainSearchProducts");
+			});
+		}
+	});
+}
 
 function initProductCategories() {
 	$$(".product_categories ul:not(.level_0)").forEach((ul) => {
@@ -118,13 +153,13 @@ function initPrices() {
 	search_products_price_max = $(".searching_wrapper .price_max");
 
 	search_products_price_min.addEventListener("input", () => {
-		delay("mainSearchProducts", 400);
+		delay("mainSearchProducts", search_products_input_delay);
 	});
 	search_products_price_min.addEventListener("change", () => {
 		delay("mainSearchProducts");
 	});
 	search_products_price_max.addEventListener("input", () => {
-		delay("mainSearchProducts", 400);
+		delay("mainSearchProducts", search_products_input_delay);
 	});
 	search_products_price_max.addEventListener("change", () => {
 		delay("mainSearchProducts");
@@ -258,6 +293,51 @@ function mainSearchProducts() {
 		search_params.price_max = price_max;
 	}
 
+	let url_from_ranges = [];
+	$$(".searching_wrapper .range_filter").forEach((range_filter) => {
+		const input_from = range_filter._child("input.from");
+		const unit_from = range_filter._child("select.from");
+		const input_to = range_filter._child("input.to");
+		const unit_to = range_filter._child("select.to");
+		const product_feature_id = range_filter.dataset.product_feature_id;
+
+		let from = input_from._get_value();
+		let to = input_to._get_value();
+		const from_selected = from.trim() !== "";
+		const to_selected = to.trim() !== "";
+		if (from_selected) {
+			from = numberFromStr(from);
+			if (unit_from) {
+				from *= +unit_from._get_value();
+			}
+		}
+
+		if (to_selected) {
+			to = numberFromStr(to);
+			if (unit_to) {
+				to *= +unit_to._get_value();
+			}
+		}
+
+		if (from_selected) {
+			search_params[`r${product_feature_id}_min`] = from;
+		}
+		if (to_selected) {
+			search_params[`r${product_feature_id}_max`] = to;
+		}
+
+		if (from_selected || to_selected) {
+			const safe_number = (number) => {
+				// 0.09 becomes 009, you can easily tell that the dot comes after first 0
+				return (number + "").replace(".", "");
+			};
+			url_from_ranges.push({
+				key: `r${product_feature_id}`,
+				val: (from_selected ? safe_number(from) : "") + "~" + (to_selected ? safe_number(to) : ""),
+			});
+		}
+	});
+
 	if (isEquivalent(last_search_params, search_params)) {
 		return;
 	}
@@ -291,6 +371,10 @@ function mainSearchProducts() {
 	if (datatable_params.row_count !== 25) {
 		url_params.append("ile", datatable_params.row_count + "");
 	}
+
+	url_from_ranges.forEach((e) => {
+		url_params.append(e.key, e.val);
+	});
 
 	const url_params_str = url_params.toString();
 	if (url_params_str) {

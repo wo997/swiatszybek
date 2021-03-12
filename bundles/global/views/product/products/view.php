@@ -143,34 +143,34 @@ function traverseFeatures()
                     $options .= "<option value=\"$factor\">$name</option>";
                 }
 
-                $from_select = "<select class=\"field inline blank unit_picker\">$options</select>";
-                $to_select = "<select class=\"field inline blank unit_picker\">$options</select>";
+                $from_select = "<select class=\"field inline blank unit_picker from\">$options</select>";
+                $to_select = "<select class=\"field inline blank unit_picker to\">$options</select>";
             } else {
                 $from_select = "";
                 $to_select = "";
             }
 
-
-
             if ($product_feature["data_type"] === "double_value") {
                 $feature_body = <<<HTML
-                <div class="flex_children_width">
+                <div class="flex_children_width range_filter" data-product_feature_id="$product_feature_id">
                     <div class="flex_column" style="margin-right:var(--form_spacing);">
                         Od
                         <div class="glue_children">
-                            <input class="field inline" inputmode="numeric">
+                            <input class="field inline from" inputmode="numeric">
                             $from_select
                         </div>
                     </div>
                     <div class="flex_column">
                         Do
                         <div class="glue_children">
-                            <input class="field inline" inputmode="numeric">
+                            <input class="field inline to" inputmode="numeric">
                             $to_select
                         </div>
                     </div>
                 </div>
 HTML;
+            } else {
+                echo "missing html !!!";
             }
         }
 
