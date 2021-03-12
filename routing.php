@@ -117,7 +117,6 @@ if (Request::$is_admin_url) {
                 $admin_navigations_tree[$key]['sub'][$skey]['notification_count'] = $notification_count;
                 $children_notification_count += $notification_count;
             }
-            unset($sub_navigation);
         }
         $admin_navigations_tree[$key]['notification_count'] = getNotificationCountForPage($admin_navigations_branch, $children_notification_count);
     }
@@ -128,7 +127,6 @@ if (Request::$is_admin_url) {
             foreach ($admin_navigations_branch['sub'] as &$sub_navigation) {
                 $admin_navigations[] = $sub_navigation;
             }
-            unset($sub_navigation);
         }
         $admin_navigations[] = $admin_navigations_branch;
     }

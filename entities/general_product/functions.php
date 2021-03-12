@@ -60,7 +60,7 @@ function getGlobalProductsSearch($url, $options = [])
         $max = def($val_parts, 1, "");
 
         if ($min !== "" || $max !== "") {
-            $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter USING (product_feature_option_id)";
+            $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter ON ptfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id";
             if ($min !== "") {
                 $min = floatval(preg_replace("/^0/", "0.", $min)) - 0.000001;
                 $where .= " AND pfo_$query_counter.double_value > $min";
@@ -114,7 +114,7 @@ function getGlobalProductsSearch($url, $options = [])
         $id = $product["general_product_id"];
         $name = $product["name"];
         $img_url = $product["__img_url"];
-        $images_json = htmlspecialchars($product["__images_json"]);
+        $images_json = $product["__images_json"];
         $min_gross_price = $product["min_gross_price"];
         $max_gross_price = $product["max_gross_price"];
         $sum_stock = $product["sum_stock"];
@@ -152,22 +152,46 @@ function getGlobalProductsSearch($url, $options = [])
             }
         }
 
-        $unique_options = [];
+        $unique_option_ids = [];
 
         foreach ($matched_options as $feature_id => $option_ids) {
             if (count($option_ids) === 1) {
-                $unique_options[] = $option_ids[0];
+                $unique_option_ids[] = $option_ids[0];
             }
         }
 
-        $option_names = getValuesFromOptionIds($unique_options);
-        $link = getProductLink($id, $name, $unique_options, $option_names);
+        $option_names = getValuesFromOptionIds($unique_option_ids);
+        $link = getProductLink($id, $name, $unique_option_ids, $option_names);
 
         $option_ids_csv = join(",", $option_ids);
 
+        // adjust images positions for best relevance
+        $images = json_decode($images_json, true);
+
+        if ($images) {
+            $index = -1;
+            foreach ($images as &$image) {
+                $index++;
+                $weight = -$index;
+                foreach ($image["option_ids"] as $option_id) {
+                    if (in_array($option_id, $unique_option_ids)) {
+                        $weight += 100;
+                    }
+                }
+                $image["weight"] = $weight;
+            }
+            unset($image);
+            usort($images, fn ($a, $b) => $b["weight"] <=> $a["weight"]);
+            $images_json = json_encode($images, true);
+            $img_url = $images[0]["img_url"];
+        } else {
+            $images_json = "[]";
+        }
+        $images_json_safe = htmlspecialchars($images_json);
+
         $html .= "<div class=\"product_block\">
             <a href=\"$link\">
-                <div class=\"product_img_wrapper\" data-images=\"$images_json\">
+                <div class=\"product_img_wrapper\" data-images=\"$images_json_safe\">
                     <img data-src=\"$img_url\" data-height=\"1w\" class=\"product_img wo997_img\" alt=\"\">
                 </div>
                 <h3 class=\"product_name\"><span class='check-tooltip'>$name</span></h3>
