@@ -32,6 +32,7 @@ class Request
     public static $is_admin_url = null;
     public static $is_deployment_url = null;
     public static $static_urls = ["ADMIN" => "/admin"];
+    public static $full_url;
 
     public static function init()
     {
@@ -41,6 +42,7 @@ class Request
             self::$url = rtrim(isset($_GET['url']) ? $_GET['url'] : "", "/");
             self::$url_params = explode("/", self::$url);
             self::$url = "/" . self::$url;
+            self::$full_url = $_SERVER['REQUEST_URI'];
             unset($_GET["url"]);
 
             self::$is_admin_url = strpos(self::$url, self::$static_urls["ADMIN"]) === 0;

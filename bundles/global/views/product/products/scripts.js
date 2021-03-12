@@ -28,6 +28,8 @@ let search_products_price_max;
 
 const search_products_input_delay = 400;
 
+let current_url = window.location.href;
+
 domload(() => {
 	products_all = $(".products_all");
 	product_list = $(".product_list");
@@ -49,6 +51,8 @@ domload(() => {
 	}
 
 	product_list_ready = true;
+
+	productsFetched(); // warmups images
 });
 
 function initRangeFilters() {
@@ -119,7 +123,7 @@ function setRangesFromUrl() {
 					[...unit.options].map((e) => +e.value),
 					restore_number(val)
 				);
-				input._set_value(value_data.value, { quiet: true });
+				input._set_value(val === "" ? "" : value_data.value, { quiet: true });
 				unit._set_value(value_data.unit_factor, { quiet: true });
 			} else {
 				input._set_value(val, { quiet: true });
@@ -315,31 +319,46 @@ function getSelectedOptionsData() {
 	return data;
 }
 
-let last_search_params;
 function mainSearchProducts() {
 	if (search_product_list_xhr) {
 		search_product_list_xhr.abort();
 	}
 
-	const datatable_params = {};
-	//datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
-	datatable_params.filters = [];
-	datatable_params.row_count = product_list_pagination_comp._data.row_count;
-	datatable_params.page_id = product_list_pagination_comp._data.page_id;
-	//datatable_params.quick_search = "";
+	let url = "/produkty";
+	url += "/" + product_category_id;
 
 	const options_data = getSelectedOptionsData();
 	pp_selected_option_groups = options_data.map((e) => e.option_ids);
 
-	const search_params = { datatable_params, product_category_id, option_id_groups: options_data.map((e) => e.option_ids) };
+	const category_path_names = product_category_path.map((e) => e.name);
+	let full_name = category_path_names.join(" | ");
+	if (options_data.length > 0) {
+		full_name += options_data
+			.map((e) => e.all_names.join(" "))
+			.flat(1)
+			.map((e) => " | " + e)
+			.join("");
+	}
+
+	url += "/" + escapeUrl(category_path_names.join(" "));
+
+	const url_params = new URLSearchParams();
+	if (options_data.length > 0) {
+		url_params.append("v", options_data.map((e) => e.option_ids.join("_")).join("-"));
+	}
 
 	const price_min = search_products_price_min._get_value();
 	const price_max = search_products_price_max._get_value();
-	if (price_min.trim() !== "") {
-		search_params.price_min = price_min;
+
+	if (price_min.trim() !== "" || price_max.trim() !== "") {
+		url_params.append("cena", def(price_min, "") + "l" + def(price_max, ""));
 	}
-	if (price_max.trim() !== "") {
-		search_params.price_max = price_max;
+
+	if (product_list_pagination_comp._data.page_id > 0) {
+		url_params.append("str", product_list_pagination_comp._data.page_id + 1 + "");
+	}
+	if (product_list_pagination_comp._data.row_count !== 25) {
+		url_params.append("ile", product_list_pagination_comp._data.row_count + "");
 	}
 
 	let url_from_ranges = [];
@@ -368,13 +387,6 @@ function mainSearchProducts() {
 			}
 		}
 
-		if (from_selected) {
-			search_params[`r${product_feature_id}_min`] = from;
-		}
-		if (to_selected) {
-			search_params[`r${product_feature_id}_max`] = to;
-		}
-
 		if (from_selected || to_selected) {
 			const safe_number = (number) => {
 				const accuracy = 100000;
@@ -387,40 +399,6 @@ function mainSearchProducts() {
 		}
 	});
 
-	if (isEquivalent(last_search_params, search_params)) {
-		return;
-	}
-	last_search_params = search_params;
-
-	const category_path_names = product_category_path.map((e) => e.name);
-	let full_name = category_path_names.join(" | ");
-	if (options_data.length > 0) {
-		full_name += options_data
-			.map((e) => e.all_names.join(" "))
-			.flat(1)
-			.map((e) => " | " + e)
-			.join("");
-	}
-
-	let url = "/produkty";
-	url += "/" + product_category_id;
-	url += "/" + escapeUrl(category_path_names.join(" "));
-	const url_params = new URLSearchParams();
-	if (options_data.length > 0) {
-		url_params.append("v", options_data.map((e) => e.option_ids.join("_")).join("-"));
-	}
-
-	if (search_params.price_min !== undefined || search_params.price_max !== undefined) {
-		url_params.append("cena", def(search_params.price_min, "") + "l" + def(search_params.price_max, ""));
-	}
-
-	if (datatable_params.page_id > 0) {
-		url_params.append("str", datatable_params.page_id + 1 + "");
-	}
-	if (datatable_params.row_count !== 25) {
-		url_params.append("ile", datatable_params.row_count + "");
-	}
-
 	if (url_from_ranges.length > 0) {
 		url_params.append("r", url_from_ranges.join("-"));
 	}
@@ -430,6 +408,12 @@ function mainSearchProducts() {
 		url += "?" + url_params_str;
 	}
 
+	if (current_url === url) {
+		return;
+	}
+
+	current_url = url;
+
 	// it does not work lol
 	history.pushState(undefined, full_name, url);
 	// workaround here
@@ -437,7 +421,9 @@ function mainSearchProducts() {
 
 	search_product_list_xhr = xhr({
 		url: "/product/search",
-		params: search_params,
+		params: {
+			url,
+		},
 		success: productsFetched,
 	});
 }

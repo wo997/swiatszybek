@@ -1,7 +1,23 @@
 <?php //hook[helper]
 
-function getGlobalProductsSearch($params)
+function getGlobalProductsSearch($url, $options = [])
 {
+    $url_data = parse_url($url);
+    $url_vars = explode("/", trim($url_data["path"], "/"));
+    parse_str(def($url_data, "query", ""), $get_vars);
+
+    $product_category_id = intval(def($url_vars, 1, -1));
+
+    $page_id = intval(def($get_vars, "str", 1)) - 1;
+    $row_count = intval(def($get_vars, "ile", 25));
+
+    $price_str = def($get_vars, "cena", "");
+    $price_parts = explode("l", $price_str);
+    $price_min = def($price_parts, 0, "");
+    $price_max = def($price_parts, 1, "");
+
+    $datatable_params = ["page_id" => $page_id, "row_count" => $row_count, "filters" => []];
+
     $where = "1";
 
     $unique_option_ids = [];
@@ -12,35 +28,33 @@ function getGlobalProductsSearch($params)
         INNER JOIN general_product_to_category gptc USING (general_product_id)
     ";
 
-    if (isset($params["option_id_groups"])) {
-        $option_id_groups = json_decode($params["option_id_groups"]);
-        $query_counter = 0;
-        foreach ($option_id_groups as $option_ids) {
-            $query_counter++;
-            if (count($option_ids) === 1) {
-                $unique_option_ids[] = $option_ids[0];
-            }
-            $option_ids_csv = clean(implode(",", $option_ids));
-            if ($option_ids_csv) {
-                $where .= " AND ptfo_$query_counter.product_feature_option_id IN ($option_ids_csv)";
-                $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id)";
-            }
+    $query_counter = 0;
+    foreach (explode("-", def($get_vars, "v", "")) as $option_ids_str) {
+        $query_counter++;
+        $option_ids = array_map(fn ($x) => intval($x), explode("_", $option_ids_str));
+        if (count($option_ids) === 1) {
+            $unique_option_ids[] = $option_ids[0];
+        }
+        $option_ids_csv = clean(implode(",", $option_ids));
+        if ($option_ids_csv) {
+            $where .= " AND ptfo_$query_counter.product_feature_option_id IN ($option_ids_csv)";
+            $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id)";
         }
     }
 
-    if (isset($params["product_category_id"])) {
-        $product_category_id = intval($params["product_category_id"]);
+    if ($product_category_id) {
         if ($product_category_id) {
             $where .= " AND gptc.product_category_id = $product_category_id";
         }
     }
 
-    if (isset($params["price_min"])) {
-        $where .= " AND p.gross_price >= " . floatval($params["price_min"]);
+    if ($price_min !== "") {
+        $where .= " AND p.gross_price >= " . floatval($price_min);
     }
-    if (isset($params["price_max"])) {
-        $where .= " AND p.gross_price <= " . floatval($params["price_max"]);
+    if ($price_max !== "") {
+        $where .= " AND p.gross_price <= " . floatval($price_max);
     }
+
 
     $pagination_params = [
         "select" => "
@@ -52,10 +66,10 @@ function getGlobalProductsSearch($params)
         "order" => "general_product_id DESC",
         "where" => $where,
         "quick_search_fields" => ["name"],
-        "datatable_params" => $params["datatable_params"],
+        "datatable_params" => json_encode($datatable_params),
     ];
 
-    if (isset($params["return_all_ids"])) {
+    if (isset($options["return_all_ids"])) {
         $pagination_params["primary_key"] = "product_id";
         $pagination_params["return_all_ids"] = true;
     }

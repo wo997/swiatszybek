@@ -8,19 +8,6 @@ if ($product_category_id) {
     $product_category_data = DB::fetchRow("SELECT name, __category_path_json FROM product_category WHERE product_category_id = $product_category_id");
 }
 
-$selected_option_groups = [];
-foreach (explode("-", def($_GET, "v", "")) as $option_ids_str) {
-    $selected_option_groups[] = array_map(fn ($x) => intval($x), explode("_", $option_ids_str));
-}
-
-$page_id = intval(def($_GET, "str", 1)) - 1;
-$row_count = intval(def($_GET, "ile", 25));
-
-$price_str = def($_GET, "cena", "");
-$price_parts = explode("l", $price_str);
-$price_min = def($price_parts, 0, "");
-$price_max = def($price_parts, 1, "");
-
 function traverseCategories($parent_id = -1, $level = 0)
 {
     $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json, __product_count FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
@@ -182,27 +169,12 @@ HTML;
     return $html;
 }
 
-$params = [
-    "datatable_params" => json_encode(["page_id" => $page_id, "row_count" => $row_count, "filters" => []]),
-    "product_category_id" => $product_category_id,
-    "option_id_groups" => json_encode($selected_option_groups),
-];
+$products_search_data = getGlobalProductsSearch(Request::$full_url);
 
-if ($price_min !== "") {
-    $params["price_min"] = floatval($price_min);
-}
-if ($price_max !== "") {
-    $params["price_max"] = floatval($price_max);
-}
-
-$products_search_data = getGlobalProductsSearch($params);
-
-$products_search_data_0 = getGlobalProductsSearch([
-    "datatable_params" => json_encode(["page_id" => 0, "row_count" => 0, "filters" => []]),
-    "product_category_id" => $product_category_id,
-    "option_id_groups" => "[]",
-    "return_all_ids" => true,
-]);
+$products_search_data_0 = getGlobalProductsSearch(
+    getProductCategoryLink(json_decode($product_category_data["__category_path_json"], true)),
+    ["return_all_ids" => true]
+);
 
 $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
 $where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "1";
@@ -343,9 +315,7 @@ foreach ($options_data as $option_data) {
             <button class="btn primary">Pokaż <i class="fas fa-angle-double-down"></i></button>
         </div>
 
-        <div class="product_list">
-            <?= $products_search_data["html"] ?>
-        </div>
+        <div class="product_list"><?= $products_search_data["html"] ?></div>
 
         <pagination-comp class="product_list_pagination"></pagination-comp>
     </div>
