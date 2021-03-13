@@ -14,15 +14,26 @@ if ($product_category_id !== -1) {
     $product_category_data = $default_category_data;
 }
 
+$all_category_ids = array_map(fn ($x) => $x["id"], json_decode($product_category_data["__category_path_json"], true));
+
 function traverseCategories($parent_id = -1, $level = 0)
 {
-    global $default_category_data;
+    global $default_category_data, $all_category_ids;
 
     $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json, __product_count FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
     if (!$categories) {
         return "";
     }
-    $html = "<ul class=\"level_$level\">";
+    $ul_class = "level_$level";
+    if ($level > 0) {
+        $ul_class .= " expand_y";
+        if (!in_array($parent_id, $all_category_ids)) {
+            $ul_class .= " hidden animate_hidden";
+        }
+    }
+    $ul_class = trim($ul_class);
+
+    $html = "<ul class=\"$ul_class\">";
     if ($level === 0) {
         array_unshift($categories, $default_category_data);
     }
