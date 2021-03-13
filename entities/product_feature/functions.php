@@ -74,25 +74,26 @@ function getPhysicalMeasures()
         ],
         "digital_memory" => [
             "description" => "Pamięć cyfrowa",
-            "base_unit" => "b",
+            "base_unit" => "MB",
             "units" => [
-                "b" => [
+                [
+                    "name" => "b",
+                    "factor" => 1 / 1024 / 1014 / 8
+                ], [
+                    "name" => "B",
+                    "factor" => 1 / 1024 / 1014
+                ], [
+                    "name" => "KB",
+                    "factor" => 1 / 1024
+                ], [
+                    "name" => "MB",
                     "factor" => 1
-                ],
-                "B" => [
-                    "factor" => 8
-                ],
-                "KB" => [
-                    "factor" => 8 * 1024
-                ],
-                "MB" => [
-                    "factor" => 8 * 1024 * 1024
-                ],
-                "GB" => [
-                    "factor" => 8 * 1024 * 1024 * 1024
-                ],
-                "TB" => [
-                    "factor" => 8 * 1024 * 1024 * 1024 * 1024
+                ], [
+                    "name" => "GB",
+                    "factor" => 1024
+                ], [
+                    "name" => "TB",
+                    "factor" => 1024 * 1024
                 ],
             ]
         ],
