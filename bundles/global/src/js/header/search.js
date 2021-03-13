@@ -17,7 +17,8 @@ domload(() => {
 	}
 	const main_search_wrapper = $(".main_search_wrapper");
 	document.addEventListener("mousedown", (event) => {
-		main_search_wrapper.classList.toggle("active", $(event.target) ? !!$(event.target)._parent(".main_search_wrapper") : false);
+		const target = $(event.target);
+		main_search_wrapper.classList.toggle("active", target ? !!target._parent(".main_search_wrapper") : false);
 	});
 	input.addEventListener("input", () => {
 		delay("topSearchProducts", 400);
@@ -88,37 +89,31 @@ domload(() => {
 });
 
 function topSearchProducts(force) {
-	const search = $(".main_search_wrapper input")._get_value().trim();
+	const search_phrase_val = $(".main_search_wrapper input")._get_value().trim();
 
 	const callback = (content) => {
-		$(".main_search_wrapper .search-results")._set_content(content);
+		$(".main_search_wrapper .search_results")._set_content(content);
+		$(".main_search_wrapper").classList.toggle("show_results", !!content);
 	};
 
-	if (search.length === 0 && !force) {
+	if (search_phrase_val.length === 0 && !force) {
 		return callback("");
 	}
 
-	if (search.length < 3) {
-		return callback(force ? `<i class='result' style='pointer-events:none'> Wpisz mininum 3 znaki...</i>` : "");
+	if (search_phrase_val.length < 3) {
+		return callback(force ? html`<i class="result" style="pointer-events:none"> Wpisz mininum 3 znaki ...</i>` : "");
 	}
-
-	const searchParams = JSON.stringify({
-		search: search,
-		basic: true,
-	});
-
-	xhr({
-		url: "/search_products",
+	search_product_list_xhr = xhr({
+		url: "/product/search",
 		params: {
-			product_filters: searchParams,
-			rowCount: 10,
-			pageNumber: 0,
+			url: `/produkty?znajdz=${encodeURIComponent(search_phrase_val)}&ile=10`,
 		},
 		success: (res) => {
-			if (!res.content) {
-				res.content = html`<div class="result no-results" style="pointer-events:none"><i class="fas fa-ban"></i> Brak wyników</div>`;
+			if (res.total_rows === 0) {
+				callback(html`<div class="result no-results" style="pointer-events:none"><i class="fas fa-ban"></i> Brak wyników</div>`);
+			} else {
+				callback(res.html);
 			}
-			callback(res.content);
 		},
 	});
 }

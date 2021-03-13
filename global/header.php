@@ -31,7 +31,7 @@ function traverseMenu($parent_id = -1, $level = 0)
                 <img class="search_icon" src="/src/img/search_icon.svg">
             </button>
         </div>
-        <div class="search-results"></div>
+        <div class="search_results"></div>
     </div>
 
     <div class="header_buttons">
