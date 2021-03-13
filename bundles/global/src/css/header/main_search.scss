@@ -46,6 +46,10 @@
 			}
 			& {
 				padding: 5px 10px;
+				cursor: pointer;
+			}
+			&.selected {
+				background: #eee;
 			}
 		}
 		.product_stock {

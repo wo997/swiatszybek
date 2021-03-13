@@ -69,11 +69,11 @@ domload(() => {
 		if (!selected) {
 			if (down) {
 				if (!select) {
-					select = main_search_wrapper._child(".result");
+					select = main_search_wrapper._child(".product_block");
 				}
 			} else if (up) {
 				if (!select) {
-					select = main_search_wrapper._child(".result:last-child");
+					select = main_search_wrapper._child(".product_block:last-child");
 				}
 			}
 		}
@@ -84,6 +84,14 @@ domload(() => {
 
 		if (select && !select.classList.contains("no-results")) {
 			select.classList.add("selected");
+		}
+	});
+
+	document.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+		const product_block = target._parent("header .search_results .product_block", { skip: 0 });
+		if (product_block) {
+			product_block._child("a").click();
 		}
 	});
 });
@@ -106,7 +114,7 @@ function topSearchProducts(force) {
 	}
 
 	if (search_phrase_val.length < 3) {
-		return callback(force ? html`<i class="result" style="pointer-events:none"> Wpisz mininum 3 znaki ...</i>` : "");
+		return callback(force ? html`<i class="product_block" style="pointer-events:none"> Wpisz mininum 3 znaki ...</i>` : "");
 	}
 	search_product_list_xhr = xhr({
 		url: "/product/search",
@@ -115,7 +123,7 @@ function topSearchProducts(force) {
 		},
 		success: (res) => {
 			if (res.total_rows === 0) {
-				callback(html`<div class="result no-results" style="pointer-events:none"><i class="fas fa-ban"></i> Brak wyników</div>`);
+				callback(html`<div class="product_block no-results" style="pointer-events:none"><i class="fas fa-ban"></i> Brak wyników</div>`);
 			} else {
 				callback(res.html);
 				setCustomHeights();
