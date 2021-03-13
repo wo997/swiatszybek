@@ -518,6 +518,7 @@ function mainSearchProducts(force = false) {
 	document.title = full_name;
 
 	results_info_count_spinner.classList.add("visible");
+	product_list.style.opacity = "0.7";
 
 	search_product_list_xhr = xhr({
 		url: "/product/search",
@@ -528,6 +529,7 @@ function mainSearchProducts(force = false) {
 			search_product_list_xhr = undefined;
 
 			results_info_count_spinner.classList.remove("visible");
+			product_list.style.opacity = "1";
 
 			products_all.style.height = products_all.offsetHeight + "px";
 			if (res.html !== undefined) {
