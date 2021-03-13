@@ -27,7 +27,7 @@ function getRegularSearchQuery($fields, $words)
     $counter = 0;
     foreach ($words as $word) {
         $counter++;
-        if ($counter > 4) {
+        if ($counter > 5) { // restrict 5 words
             break;
         }
 

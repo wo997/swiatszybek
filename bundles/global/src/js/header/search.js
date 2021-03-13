@@ -53,6 +53,11 @@ domload(() => {
 			}
 		}
 
+		if (event.key == "Escape") {
+			$(".main_search_wrapper input").blur();
+			main_search_wrapper.classList.remove("active");
+		}
+
 		if (!up && !down) {
 			return;
 		}
@@ -93,7 +98,10 @@ domload(() => {
 		const target = $(ev.target);
 		const product_block = target._parent("header .search_results .product_block", { skip: 0 });
 		if (product_block) {
-			product_block._child("a").click();
+			const a = product_block._child("a");
+			if (a) {
+				a.click();
+			}
 		}
 	});
 });
@@ -108,7 +116,7 @@ function topSearchProducts(force) {
 
 	const callback = (content) => {
 		$(".main_search_wrapper .search_results")._set_content(content);
-		$(".main_search_wrapper").classList.add("show_results");
+		$(".main_search_wrapper").classList.toggle("show_results", !!content);
 	};
 
 	if (search_phrase_val.length === 0 && !force) {
@@ -116,7 +124,7 @@ function topSearchProducts(force) {
 	}
 
 	if (search_phrase_val.length < 3) {
-		return callback(force ? html`<i class="product_block" style="pointer-events:none"> Wpisz mininum 3 znaki ...</i>` : "");
+		return callback(html`<span class="product_block"> Wpisz mininum 3 znaki ...</span>`);
 	}
 	search_product_list_xhr = xhr({
 		url: "/product/search",
@@ -125,10 +133,10 @@ function topSearchProducts(force) {
 		},
 		success: (res) => {
 			if (res.total_rows === 0) {
-				callback(html`<div class="product_block no-results" style="pointer-events:none"><i class="fas fa-ban"></i> Brak wyników</div>`);
+				callback(html`<div class="product_block no-results"><i class="fas fa-ban" style="margin:0 5px"></i> Brak wyników</div>`);
 			} else {
 				callback(res.html);
-				setCustomHeights();
+				lazyLoadImages({ duration: 0 });
 			}
 		},
 	});

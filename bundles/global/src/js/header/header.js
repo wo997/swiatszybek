@@ -28,6 +28,12 @@ function headerResizeCallback() {
 	const menu_collapsed = header_use_modals || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
 	main_header.classList.toggle("menu_collapsed", menu_collapsed);
 	document.documentElement.style.setProperty("--header_height", `${main_header.offsetHeight}px`);
+
+	const main_search_wrapper = $(".main_search_wrapper");
+	const r = main_search_wrapper.getBoundingClientRect();
+	document.documentElement.style.setProperty("--main_search_wrapper_width", `${r.width}px`);
+	main_search_wrapper.classList.toggle("wanna_expand", r.width < 400);
+	main_search_wrapper.classList.toggle("expand_both", r.left < window.innerWidth * 0.5);
 }
 
 domload(() => {
