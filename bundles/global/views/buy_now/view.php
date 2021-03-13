@@ -117,7 +117,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         <div class="expand_y animate_hidden hidden case_parcel_locker">
             <div class="label big">Paczkomat</div>
             <div>
-                <button class="btn primary pick_inpost_parcel_locker_btn">Wybierz paczkomat (mapa)</button>
+                <button class="btn primary pick_inpost_parcel_locker_btn">Wybierz paczkomat <i class="fas fa-map-marker-alt"></i></button>
             </div>
         </div>
 
