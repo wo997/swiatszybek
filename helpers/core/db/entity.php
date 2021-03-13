@@ -63,7 +63,8 @@ class Entity
                 }
             }
         } else {
-            $this->curr_props = DB::fetchRow("SELECT * FROM " . $name . " WHERE " . $this->id_column . " = " . $obj_curr_id);
+            $this->setId($obj_curr_id);
+            $this->setCurrSimpleProps();
             if (!$this->curr_props) {
                 throw new Exception("Entity does not exist in the DB");
             }
@@ -73,6 +74,11 @@ class Entity
         }
 
         $this->setProps($props);
+    }
+
+    public function setCurrSimpleProps()
+    {
+        $this->curr_props = DB::fetchRow("SELECT * FROM " . $this->name . " WHERE " . $this->id_column . " = " . $this->getId());
     }
 
     /**

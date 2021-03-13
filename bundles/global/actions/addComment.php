@@ -56,7 +56,7 @@ if ($can_user_get_comment_rebate) {
     $mailTitle = "Kod rabatowy za zamówienie #" . $can_user_get_comment_rebate["zamowienie_id"] . " - " . $app["company_data"]['email_sender'];
 
     sendEmail("wojtekwo997@gmail.com", $message, $mailTitle);
-    sendEmail(User::getCurrent()->data["email"], $message, $mailTitle);
+    sendEmail(User::getCurrent()->entity->getProp("email"), $message, $mailTitle);
 
     echo "{\"kod_rabatowy\":\"$kod_rabatowy_example\"}";
 }

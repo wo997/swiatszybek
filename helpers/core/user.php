@@ -6,9 +6,11 @@ class User
 {
     private static ?User $current_user = null;
     public $cart;
-    public $data;
+    /** @var Entity User */
+    public $entity;
     public $priveleges;
     public $display_name;
+    private $id;
 
     public static $email_client_urls = [
         "gmail.com" => "https://mail.google.com/",
@@ -31,9 +33,9 @@ class User
     public function __construct($user_id)
     {
         $this->id = $user_id;
-
         $this->setData();
-        if (!$this->data) {
+
+        if (!$this->entity) {
             return;
         }
 
@@ -49,13 +51,30 @@ class User
 
     private function setData()
     {
-        $this->data = DB::fetchRow("SELECT * FROM user WHERE user_id = " . $this->id);
+        if ($this->entity) {
+            $this->entity->setCurrSimpleProps();
+        } else {
+            $this->entity = EntityManager::getEntityById("user", $this->id);
+        }
 
-        $this->priveleges = arrayFind(self::$privelege_list, function ($p) {
-            return $p["privelege_id"] === $this->data["privelege_id"];
-        }, self::$privelege_list[0]);
+        if (!$this->entity) {
+            // if ($this->id === User::getCurrent()->id) {
+            //     $this->logout();
+            //     Request::redirect("/");
+            // } else {
+            // }
+            return;
+        }
 
-        $this->display_name = $this->data["email"];
+        $priveleges = self::$privelege_list[0];
+        foreach (self::$privelege_list as $p) {
+            if ($p["privelege_id"] === $this->entity->getProp("privelege_id")) {
+                $priveleges = $p;
+            }
+        }
+        $this->priveleges = $priveleges;
+
+        $this->display_name = $this->entity->getProp("email");
     }
 
     public function getDisplayName()
@@ -91,14 +110,14 @@ class User
             $this->setData();
         }
 
-        if ($this->data["authenticated"]) {
+        if ($this->entity->getProp("authenticated")) {
             $res["errors"][] = "Konto zostało już aktywowane!";
             $res["is_info"] = true;
             return $res;
         }
 
         // if the user seems to be new
-        if ($this->data["type"] !== "regular") {
+        if ($this->entity->getProp("type") !== "regular") {
             if (!validateEmail($data["email"])) {
                 $res["errors"][] = "Wpisz poprawny email";
                 return $res;
@@ -138,10 +157,10 @@ class User
             return $reset;
         }
 
-        DB::update("user ", [
-            "password_hash" => Security::getPasswordHash($data["password"])
-        ], "user_id = " . $data["user_id"]);
-        self::getCurrent()->setData();
+        /** @var User */
+        $current_user = self::getCurrent();
+        $current_user->entity->setProp("password_hash", Security::getPasswordHash($data["password"]));
+        $current_user->entity->save();
 
         $res["success"] = true;
         return $res;
@@ -239,7 +258,7 @@ class User
 
     public function isLoggedIn()
     {
-        return $this->data["privelege_id"] !== 0;
+        return $this->entity->getProp("privelege_id") !== 0;
     }
 
     /**
@@ -262,14 +281,13 @@ class User
             $_SESSION["user_id"] = $user_id;
 
             self::$current_user = new User($user_id);
-            if (!self::$current_user->data) {
+            if (!self::$current_user->entity) {
                 // just in case
                 unset($_SESSION["user_id"]);
                 self::$current_user = null;
                 return self::getCurrent();
             }
         }
-
         return self::$current_user;
     }
 

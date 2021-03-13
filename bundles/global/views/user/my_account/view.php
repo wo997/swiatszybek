@@ -34,9 +34,9 @@ if (strpos(Request::$url, "resetowanie-hasla") !== false)
 
         <div style=" text-align:center;padding: 25px;font-size: 17px">
             <?php
-            if (User::getCurrent()->data["type"] == 'google') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
-            if (User::getCurrent()->data["type"] == 'facebook') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
-            if (User::getCurrent()->data["type"] == 'regular') echo '<i class="fas fa-user" style="font-size: 1em;"></i> ';
+            if (User::getCurrent()->entity->getProp("type") == 'google') echo '<img src="/img/google.png" style="width: 1em;vertical-align: sub;"> ';
+            if (User::getCurrent()->entity->getProp("type") == 'facebook') echo '<i class="fab fa-facebook-square" style="font-size: 1em;color: #3b5998;"></i> ';
+            if (User::getCurrent()->entity->getProp("type") == 'regular') echo '<i class="fas fa-user" style="font-size: 1em;"></i> ';
             echo User::getCurrent()->getDisplayName();
             ?>
         </div>
