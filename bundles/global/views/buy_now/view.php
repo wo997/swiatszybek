@@ -14,6 +14,9 @@ if (empty(User::getCurrent()->cart->getProducts())) {
     <?= useUECountriesOptionsInJS() ?>
 </script>
 
+<script async src="https://geowidget.easypack24.net/js/sdk-for-javascript.js"></script>
+<link rel="stylesheet" href="https://geowidget.easypack24.net/css/easypack.css" />
+
 <?php startSection("body_content"); ?>
 
 <div class="buy_now_container">
@@ -113,7 +116,9 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
         <div class="expand_y animate_hidden hidden case_parcel_locker">
             <div class="label big">Paczkomat</div>
-
+            <div>
+                <button class="btn primary pick_inpost_parcel_locker_btn">Wybierz paczkomat (mapa)</button>
+            </div>
         </div>
 
         <div class="expand_y animate_hidden hidden case_form_filled">
@@ -137,5 +142,15 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 </div>
 
 <div style="height: 70px"></div>
+
+<div id="InpostParcelLockerPicker" data-modal data-expand data-dismissable>
+    <div class="modal_body">
+        <div class="custom_toolbar">
+            <span class="title medium">Wybór paczkomatu</span>
+            <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+        </div>
+        <div id="easypack-map"></div>
+    </div>
+</div>
 
 <?php include "bundles/global/templates/default.php"; ?>

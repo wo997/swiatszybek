@@ -92,6 +92,13 @@ domload(() => {
 			},
 		});
 	});
+
+	const pick_inpost_parcel_locker_btn = $(".pick_inpost_parcel_locker_btn");
+	if (pick_inpost_parcel_locker_btn) {
+		pick_inpost_parcel_locker_btn.addEventListener("click", () => {
+			showInpostParcelLockerPickerModal(pick_inpost_parcel_locker_btn);
+		});
+	}
 });
 
 function initBuyNowCart() {
@@ -231,4 +238,29 @@ function onBuyNowScroll() {
 	const scroll_top = document.documentElement.scrollTop;
 	const margin_top = window.innerWidth < 1000 ? 0 : clamp(10, 100 - scroll_top, 100);
 	buy_products_wrapper.style.marginTop = `${margin_top}px`;
+}
+
+// @ts-ignore
+window.easyPackAsyncInit = () => {
+	// @ts-ignore
+	easyPack.init({
+		defaultLocale: "pl",
+	});
+	// @ts-ignore
+	const map = easyPack.mapWidget("easypack-map", (point) => {
+		console.log(point);
+		hideModal("InpostParcelLockerPicker");
+	});
+};
+
+/**
+ *
+ * @param {PiepNode} src
+ */
+function showInpostParcelLockerPickerModal(src) {
+	showModal("InpostParcelLockerPicker", { source: src });
+	const viewport = $(".easypack-widget .scroll-box .viewport");
+	if (viewport) {
+		viewport.classList.add("scroll_panel");
+	}
 }
