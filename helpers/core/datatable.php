@@ -83,15 +83,15 @@ function getRelevanceQuery($fields, $words)
 
         for ($i = 0; $i < $len - 2; $i++) {
             $letter_groups[substr($word, $i, 3)] = 4;
-            $letter_groups[substr($word, $i, 1) . "_" . substr($word, $i + 1, 2)] = 2;
-            $letter_groups[substr($word, $i, 2) . "_" . substr($word, $i + 2, 1)] = 2;
+            $letter_groups[substr($word, $i, 1) . "." . substr($word, $i + 1, 2)] = 2;
+            $letter_groups[substr($word, $i, 2) . "." . substr($word, $i + 2, 1)] = 2;
         }
 
         for ($i = 0; $i < $len - 3; $i++) {
-            $letter_groups[substr($word, $i, 1) . "_" . substr($word, $i + 2, 2)] = 2;
-            $letter_groups[substr($word, $i, 2) . "_" . substr($word, $i + 3, 1)] = 2;
-            $letter_groups[substr($word, $i, 1) . substr($word, $i + 2, 2)] = 2;
-            $letter_groups[substr($word, $i, 2) . substr($word, $i + 3, 1)] = 2;
+            $letter_groups[substr($word, $i, 1) . "." . substr($word, $i + 2, 2)] = 1;
+            $letter_groups[substr($word, $i, 2) . "." . substr($word, $i + 3, 1)] = 1;
+            $letter_groups[substr($word, $i, 1) . substr($word, $i + 2, 2)] = 1;
+            $letter_groups[substr($word, $i, 2) . substr($word, $i + 3, 1)] = 1;
         }
 
         foreach ($letter_groups as $letter_group => $points) {
@@ -185,7 +185,7 @@ function paginateData($params = [])
 
     if ($search_query) {
         if ($search_type == "extended") {
-            $where .= " AND $search_query > 1";
+            $where .= " AND $search_query > 0";
         } else {
             $where .= $search_query;
         }
