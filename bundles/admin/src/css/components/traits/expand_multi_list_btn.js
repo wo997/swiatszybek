@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[admin] */
 
 {
 	const trait_name = "expand_multi_list_btn";

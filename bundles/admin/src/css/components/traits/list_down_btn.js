@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[admin] */
 
 {
 	const trait_name = "list_down_btn";

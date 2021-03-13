@@ -160,10 +160,10 @@ function $(selector, parent = undefined) {
 
 /**
  *
- * @param {*} querySelectorAll
+ * @param {*} selector
  * @param {*} parent
  * @returns {PiepNode[]}
  */
-function $$(querySelectorAll, parent = null) {
-	return [...def(parent, document).querySelectorAll(querySelectorAll)].map((e) => $(e));
+function $$(selector, parent = null) {
+	return [...def(parent, document).querySelectorAll(selector)].map((e) => $(e));
 }

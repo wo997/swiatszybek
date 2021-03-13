@@ -25,11 +25,6 @@ function getDatepickerDefaultOptions(e) {
 	return options;
 }
 
-// can't go before modals are created from raw html, ugh, register before u show a modal instead?
-window.addEventListener("load", () => {
-	registerDatepickers($(document));
-});
-
 /**
  *
  * @param {PiepNode} parent

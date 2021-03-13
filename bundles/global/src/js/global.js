@@ -185,28 +185,6 @@ function escapeUrl(string) {
 		.replace(/-+/g, "-");
 }
 
-/* never used
-domload(() => {
-	$$(".mobile-hover").forEach((e) => {
-		if (IS_TOUCH_DEVICE) {
-			e.addEventListener("touchstart", () => {
-				if (!e.classList.contains("hovered")) {
-					setTimeout(() => {
-						e.classList.add("hovered");
-					}, 0);
-				}
-			});
-		} else {
-			e.addEventListener("mouseover", () => {
-				e.classList.add("hovered");
-			});
-			e.addEventListener("mouseleave", () => {
-				e.classList.remove("hovered");
-			});
-		}
-	});
-});*/
-
 /**
  * @typedef {{
  * quiet?: boolean
@@ -539,11 +517,7 @@ function removeClassesWithPrefix(node, prefix) {
 }
 
 function matchClassesWithPrefix(node, prefix) {
-	const out = [];
-	node.classList.forEach((e) => {
-		if (e.indexOf(prefix) === 0) out.push(e);
-	});
-	return out;
+	return node.classList.filter((e) => e.indexOf(prefix) === 0);
 }
 
 function getNodeTextWidth(node) {
