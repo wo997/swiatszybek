@@ -10,6 +10,17 @@
 	}
 }
 
+@media only screen and (max-width: 499px) {
+	.InpostParcelLockerPicker .modal_header .desktop {
+		display: none;
+	}
+}
+@media only screen and (min-width: 500px) {
+	.InpostParcelLockerPicker .modal_header .mobile {
+		display: none;
+	}
+}
+
 .buy_products_wrapper,
 .buy_now_form {
 	padding: 10px;
@@ -54,6 +65,10 @@
 	}
 }
 
+.account_buttons {
+	max-width: 350px;
+}
+
 @media only screen and (max-width: 999px) {
 	.buy_now_container {
 		max-width: 600px;
@@ -69,6 +84,11 @@
 
 	.buy_products_wrapper {
 		margin-bottom: 20px;
+	}
+
+	.choosen_account {
+		max-width: 350px;
+		margin: auto;
 	}
 }
 

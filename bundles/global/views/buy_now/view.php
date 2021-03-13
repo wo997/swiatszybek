@@ -66,7 +66,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
             <br>
 
-            <div style="max-width: 350px;">
+            <div class="account_buttons">
                 <div style="display:flex">
                     <button class="btn primary fill" style="margin-right:10px;" onclick="showModal(`loginForm`,{source:this});hideParentModal(this);">
                         Zaloguj się <i class='fas fa-user'></i>
@@ -145,10 +145,13 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
 <div id="InpostParcelLockerPicker" data-modal data-expand data-dismissable>
     <div class="modal_body">
-        <div class="custom_toolbar">
-            <span class="title medium">Wybór paczkomatu</span>
-            <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-        </div>
+        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+        <h3 class="modal_header">
+            <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>
+            <span class="mobile">Paczkomat</span>
+            <span class="desktop">Wybór paczkomatu</span>
+        </h3>
+
         <div id="easypack-map"></div>
     </div>
 </div>
