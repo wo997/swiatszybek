@@ -216,20 +216,19 @@ function variantChanged() {
 		let options_names = [];
 		if (ps_selected_option_ids.length > 0) {
 			ps_selected_option_ids.forEach((option_id) => {
-				let option_name;
+				let option_value;
 				general_product_variants.forEach((variants) => {
 					variants.variant_options.forEach((option) => {
 						if (option.product_feature_option_id === option_id) {
-							option_name = option.name;
+							option_value = option.value;
 						}
 					});
 				});
-				if (option_name) {
-					options_names.push(option_name);
+				if (option_value) {
+					options_names.push(option_value);
 				}
 			});
 		}
-
 		let full_name = general_product_name + " " + options_names.map((e) => " " + e).join("");
 		url += "/" + escapeUrl(full_name);
 
@@ -244,7 +243,7 @@ function variantChanged() {
 		}
 
 		// it does not work lol
-		history.pushState(undefined, full_name, url);
+		history.replaceState(undefined, full_name, url);
 		// workaround here
 		document.title = full_name;
 

@@ -6,6 +6,7 @@ EntityManager::register("general_product", [
         "__img_url" => ["type" => "string"],
         "__images_json" => ["type" => "string"],
         "__options_json" => ["type" => "string"],
+        "__search" => ["type" => "TEXT"],
     ],
 ]);
 
@@ -127,6 +128,20 @@ EventListener::register("before_save_general_product_entity", function ($params)
     $general_product->setProp("__img_url", $main_img_url);
     $general_product->setProp("__images_json", json_encode($images_data));
     $general_product->setProp("__options_json", $all_options ? json_encode($all_options) : "{}");
+
+    $search = "";
+    $search .= replacePolishLetters($general_product->getProp("name"));
+
+
+    /** @var Entity[] ProductCategory */
+    $general_product_categories = $general_product->getProp("categories");
+    foreach ($general_product_categories as $category) {
+        // we could also make here that the parent categories are included here
+        $search .= " " . $category->getProp("name");
+    }
+
+    $search = getSearchableString($search);
+    $general_product->setProp("__search", $search);
 });
 
 EventListener::register("after_save_general_product_entity", function ($params) {

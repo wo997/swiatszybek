@@ -52,13 +52,11 @@ domload(() => {
 	initSearchPhrase();
 	openCurrentMenu();
 	initPagination();
-	productsPopState(false);
+	productsPopState();
 
 	if (product_list._is_empty()) {
 		displayNoProducts();
 	}
-
-	product_list_ready = true;
 
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
@@ -79,6 +77,10 @@ domload(() => {
 
 			mainSearchProducts();
 		}
+	});
+
+	setTimeout(() => {
+		product_list_ready = true;
 	});
 });
 
@@ -307,18 +309,16 @@ function openCurrentMenu() {
 	}
 }
 window.addEventListener("popstate", () => {
-	productsPopState(true);
+	productsPopState();
 });
 
-function productsPopState(search = true) {
+function productsPopState() {
 	current_url_search = def(window.location.search, "");
 	setCategoryFeaturesFromUrl();
 	setRangesFromUrl();
 	setProductsFilterCountFromUrl();
 	setSearchPhraseFromUrl();
-	if (search) {
-		mainSearchProducts(true);
-	}
+	mainSearchProducts(true);
 }
 
 function setCategoryFeaturesFromUrl() {
@@ -402,6 +402,10 @@ function getSelectedOptionsData() {
 }
 
 function mainSearchProducts(force = false) {
+	if (!product_list_ready) {
+		return;
+	}
+
 	if (search_product_list_xhr) {
 		search_product_list_xhr.abort();
 	}
@@ -507,7 +511,7 @@ function mainSearchProducts(force = false) {
 		current_url_search = url_search;
 
 		// title does not work lol
-		history.pushState(undefined, full_name, url);
+		history.replaceState(undefined, full_name, url);
 	}
 
 	// workaround here

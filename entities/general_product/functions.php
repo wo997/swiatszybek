@@ -102,7 +102,7 @@ function getGlobalProductsSearch($url, $options = [])
         "where" => $where,
         "datatable_params" => json_encode($datatable_params),
         "search_type" => "extended",
-        "quick_search_fields" => ["gp.name"],
+        "quick_search_fields" => ["gp.__search"],
     ];
 
     if (isset($options["return_all_ids"])) {

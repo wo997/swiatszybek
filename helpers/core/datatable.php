@@ -1,5 +1,10 @@
 <?php
 
+function getSearchableString($str)
+{
+    return trim(preg_replace('/\s{2,}/', ' ', replacePolishLetters($str)));
+}
+
 function getSearchQuery($data)
 {
 
@@ -9,10 +14,14 @@ function getSearchQuery($data)
     if (!$quick_search_fields) {
         return "";
     }
-    $quick_search_value = trim($data["quick_search"]);
-    $quick_search_value = preg_replace("/\s{2,}/", " ", $quick_search_value);
+    $quick_search = trim($data["quick_search"]);
+    $quick_search = preg_replace("/\s{2,}/", " ", $quick_search);
 
-    $words = explode(" ", $quick_search_value);
+    if ($search_type == "extended") {
+        $quick_search = getSearchableString($quick_search);
+    }
+
+    $words = explode(" ", $quick_search);
 
     if ($search_type == "extended") {
         return getRelevanceQuery($quick_search_fields, $words);

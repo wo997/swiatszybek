@@ -2,7 +2,7 @@
 
 /**
  * 
-                                                                                                     * @typedef CartProduct {
+ * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }
@@ -56,7 +56,7 @@ class Cart
             $product_ids_string = join(",", $product_ids);
             $product_index = -1;
 
-            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url img_url, __name name, __url url, stock
+            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url img_url, __name name, __url url, stock, 0 as qty
                 FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
             foreach ($products_data as $key => $product_data) {
