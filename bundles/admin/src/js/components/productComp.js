@@ -380,7 +380,7 @@ function productComp(comp, parent, data = undefined) {
 						feature.options = data.product_feature_option_ids
 							.map((product_feature_option_id) => {
 								const fo = product_feature_options.find((pfo) => pfo.product_feature_option_id === product_feature_option_id);
-								if (fo.product_feature_id !== feature.product_feature_id) {
+								if (!fo || fo.product_feature_id !== feature.product_feature_id) {
 									return undefined;
 								}
 								if (fo) {
