@@ -1,9 +1,5 @@
 /* js[global] */
 
-domload(() => {
-	$("body").style.opacity = "1";
-});
-
 function domload(callback) {
 	document.addEventListener("DOMContentLoaded", callback);
 }

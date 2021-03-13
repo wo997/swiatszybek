@@ -3,6 +3,7 @@
 EntityManager::register("shop_order", [
     "props" => [
         "reference" => ["type" => "string"],
+        "user" => ["type" => "user"],
         "status_id" => ["type" => "number"],
         "main_address" => ["type" => "address"],
         "courier_address" => ["type" => "address"],
