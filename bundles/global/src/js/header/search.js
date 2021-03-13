@@ -88,6 +88,11 @@ domload(() => {
 	});
 });
 
+function getTopSearchUrl() {
+	const search_phrase_val = $(".main_search_wrapper input")._get_value().trim();
+	return `/produkty?znajdz=${encodeURIComponent(search_phrase_val)}&ile=10`;
+}
+
 function topSearchProducts(force) {
 	const search_phrase_val = $(".main_search_wrapper input")._get_value().trim();
 
@@ -106,19 +111,19 @@ function topSearchProducts(force) {
 	search_product_list_xhr = xhr({
 		url: "/product/search",
 		params: {
-			url: `/produkty?znajdz=${encodeURIComponent(search_phrase_val)}&ile=10`,
+			url: getTopSearchUrl(),
 		},
 		success: (res) => {
 			if (res.total_rows === 0) {
 				callback(html`<div class="result no-results" style="pointer-events:none"><i class="fas fa-ban"></i> Brak wyników</div>`);
 			} else {
 				callback(res.html);
+				setCustomHeights();
 			}
 		},
 	});
 }
 
 function goToSearchProducts() {
-	localStorage.setItem("products_search", $(".main_search_wrapper input")._get_value());
-	window.location.href = "/produkty/wszystkie";
+	window.location.href = getTopSearchUrl();
 }

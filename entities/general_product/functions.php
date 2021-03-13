@@ -201,7 +201,7 @@ function getGlobalProductsSearch($url, $options = [])
                 </div>
                 <h3 class=\"product_name\"><span class='check-tooltip'>$name</span></h3>
             </a>
-            <div class=\"product-row\">
+            <div class=\"product_row\">
                 <span class=\"product_price pln\">$display_price</span>
                 <span class=\"product_rating\"></span>
                 <br>

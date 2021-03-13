@@ -83,14 +83,14 @@
 	flex-wrap: wrap;
 }
 
-.product-row {
+.product_row {
 	display: inline-flex;
 	flex-wrap: wrap;
 	width: 100%;
 }
 
 
-.product-row {
+.product_row {
 	margin: 2px 0;
 }
 .product-actions {
