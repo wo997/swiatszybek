@@ -16,19 +16,21 @@ domload(() => {
 		return;
 	}
 	const main_search_wrapper = $(".main_search_wrapper");
-	document.addEventListener("mousedown", (event) => {
-		const target = $(event.target);
+	document.addEventListener("mousedown", (ev) => {
+		const target = $(ev.target);
 		main_search_wrapper.classList.toggle("active", target ? !!target._parent(".main_search_wrapper") : false);
 	});
 	input.addEventListener("input", () => {
 		delay("topSearchProducts", 400);
 	});
-	main_search_wrapper.addEventListener("mousemove", (event) => {
-		if ($(event.target).classList.contains("result")) {
+	main_search_wrapper.addEventListener("mousemove", (ev) => {
+		const target = $(ev.target);
+		const product_block = target._parent(".main_search_wrapper .product_block", { skip: 0 });
+		if (product_block) {
 			main_search_wrapper._children(".selected").forEach((e) => {
 				e.classList.remove("selected");
 			});
-			$(event.target).classList.add("selected");
+			product_block.classList.add("selected");
 		}
 	});
 
@@ -106,7 +108,7 @@ function topSearchProducts(force) {
 
 	const callback = (content) => {
 		$(".main_search_wrapper .search_results")._set_content(content);
-		$(".main_search_wrapper").classList.toggle("show_results", !!content);
+		$(".main_search_wrapper").classList.add("show_results");
 	};
 
 	if (search_phrase_val.length === 0 && !force) {

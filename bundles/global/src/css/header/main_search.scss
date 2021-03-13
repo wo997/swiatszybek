@@ -45,11 +45,15 @@
 				flex-grow: 1;
 			}
 			& {
-				padding: 5px 10px;
+				padding: 5px 10px 5px 5px;
 				cursor: pointer;
 			}
 			&.selected {
-				background: #eee;
+				& {
+					background: #f5f5f5;
+					box-shadow: 0 0 0 1px #0002;
+					z-index: 19;
+				}
 			}
 		}
 		.product_stock {
@@ -59,6 +63,7 @@
 			padding: 0 10px;
 			margin: 0;
 			font-size: 1em;
+			font-weight: 400;
 		}
 		.product_row {
 			flex-shrink: 0;
