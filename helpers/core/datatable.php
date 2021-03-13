@@ -64,7 +64,7 @@ function getRelevanceQuery($fields, $words)
         }
 
         $counter++;
-        if ($counter > 4) {
+        if ($counter > 5) {
             break;
         }
 
@@ -73,12 +73,12 @@ function getRelevanceQuery($fields, $words)
         $letter_groups = [];
 
         if ($len > 5) {
-            $letter_groups[substr($word, 0, -2) . "%"] = 15 * $len;
+            $letter_groups["[[:<:]]" . substr($word, 0, -2)] = 12 * $len;
         } else if ($len > 4) {
-            $letter_groups[substr($word, 0, -1) . "%"] = 15 * $len;
+            $letter_groups["[[:<:]]" . substr($word, 0, -1)] = 15 * $len;
         } else {
-            //$letter_groups[$word . "%"] = 15 * $len;
-            $letter_groups[$word] = 150 * $len;
+            $letter_groups["[[:<:]]" . $word] = 15 * $len;
+            $letter_groups["[[:<:]]" . $word . "[[:>:]]"] = 50;
         }
 
         for ($i = 0; $i < $len - 2; $i++) {
@@ -101,11 +101,7 @@ function getRelevanceQuery($fields, $words)
                 if (!$first) {
                     $query .= " + ";
                 }
-                if (strrpos($letter_group, "%") !== 0) {
-                    $letter_group = "%$letter_group%";
-                }
-                $query .= "CASE WHEN $field LIKE '$letter_group' THEN $points ELSE 0 END";
-
+                $query .= "CASE WHEN $field REGEXP '$letter_group' THEN $points ELSE 0 END";
                 $first = false;
             }
         }
