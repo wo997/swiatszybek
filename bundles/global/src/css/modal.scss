@@ -47,6 +47,7 @@
 .modal.hidden {
 	opacity: 0;
 	pointer-events: none;
+	transform: translateY(-10000px);
 }
 .modal_container > *:before {
 	width: 100vw;
