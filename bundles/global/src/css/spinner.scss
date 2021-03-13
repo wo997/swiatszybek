@@ -1,0 +1,41 @@
+/* css[global] */
+
+.spinner,
+.spinner:after {
+	border-radius: 50%;
+	width: var(--spinner-size);
+	height: var(--spinner-size);
+}
+.spinner {
+	--spinner-size: 1.3em;
+	--spinner-width: 0.15em;
+	--spinner-color: #000;
+	display: inline-block;
+	border: var(--spinner-width) solid var(--spinner-color);
+	border-left: var(--spinner-width) solid transparent;
+	animation: load8 1s infinite linear;
+	vertical-align: bottom;
+}
+@keyframes load8 {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+.spinner.overlay {
+	& {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin: calc(var(--spinner-size) * -0.5);
+		transition: 0.15s opacity;
+		background: var(--spinner-background);
+		--spinner-background: #fff;
+	}
+
+	&:not(.visible) {
+		opacity: 0;
+	}
+}

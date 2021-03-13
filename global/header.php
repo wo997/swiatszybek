@@ -29,6 +29,7 @@ function traverseMenu($parent_id = -1, $level = 0)
             <input type="text" class="field" placeholder="Wyszukaj produkt">
             <button class="btn primary" onclick="searchAllProducts()">
                 <img class="search_icon" src="/src/img/search_icon.svg">
+                <div class="spinner overlay"></div>
             </button>
         </div>
         <div class="search_results"></div>

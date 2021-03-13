@@ -111,8 +111,14 @@ function getTopSearchUrl() {
 	return `/produkty?znajdz=${encodeURIComponent(search_phrase_val)}&ile=10`;
 }
 
+let last_top_search_url = "";
 function topSearchProducts(force) {
 	const search_phrase_val = $(".main_search_wrapper input")._get_value().trim();
+
+	const top_search_url = getTopSearchUrl();
+	if (last_top_search_url === top_search_url) {
+		return;
+	}
 
 	const callback = (content) => {
 		$(".main_search_wrapper .search_results")._set_content(content);
@@ -126,12 +132,17 @@ function topSearchProducts(force) {
 	if (search_phrase_val.length < 3) {
 		return callback(html`<span class="product_block"> Wpisz mininum 3 znaki ...</span>`);
 	}
+	const spinner = $(".main_search_wrapper .spinner");
+	spinner.classList.add("visible");
+
+	last_top_search_url = top_search_url;
 	search_product_list_xhr = xhr({
 		url: "/product/search",
 		params: {
-			url: getTopSearchUrl(),
+			url: top_search_url,
 		},
 		success: (res) => {
+			spinner.classList.remove("visible");
 			if (res.total_rows === 0) {
 				callback(html`<div class="product_block no-results"><i class="fas fa-ban" style="margin:0 5px"></i> Brak wyników</div>`);
 			} else {

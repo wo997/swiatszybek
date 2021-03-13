@@ -332,7 +332,10 @@ foreach ($options_data as $option_data) {
         <div class="results_info">
             <span>
                 Znaleziono wyników:
-                <span class="products_total_rows"><?= $products_search_data["total_rows"] ?></span>
+                <div style="position:relative;display:inline-block; margin-left:3px">
+                    <span class="products_total_rows"><?= $products_search_data["total_rows"] ?></span>
+                    <div class="spinner overlay"></div>
+                </div>
             </span>
             <button class="btn primary">Pokaż <i class="fas fa-angle-double-down"></i></button>
         </div>

@@ -77,7 +77,8 @@ function getRelevanceQuery($fields, $words)
         } else if ($len > 4) {
             $letter_groups[substr($word, 0, -1) . "%"] = 15 * $len;
         } else {
-            $letter_groups[$word . "%"] = 15 * $len;
+            //$letter_groups[$word . "%"] = 15 * $len;
+            $letter_groups[$word] = 150 * $len;
         }
 
         for ($i = 0; $i < $len - 2; $i++) {

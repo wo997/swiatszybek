@@ -17,6 +17,8 @@ let product_list;
 /** @type {PiepNode} */
 let results_info_count;
 /** @type {PiepNode} */
+let results_info_count_spinner;
+/** @type {PiepNode} */
 let search_phrase;
 /** @type {PiepNode} */
 let feature_filter_count;
@@ -39,6 +41,7 @@ domload(() => {
 	products_all = $(".products_all");
 	product_list = $(".product_list");
 	results_info_count = $(".results_info .products_total_rows");
+	results_info_count_spinner = results_info_count._next();
 	sticky_results_info = $(".results_info");
 	products_category_name = $(".category_name");
 
@@ -49,7 +52,7 @@ domload(() => {
 	initSearchPhrase();
 	openCurrentMenu();
 	initPagination();
-	productsPopState();
+	productsPopState(false);
 
 	if (product_list._is_empty()) {
 		displayNoProducts();
@@ -304,16 +307,18 @@ function openCurrentMenu() {
 	}
 }
 window.addEventListener("popstate", () => {
-	productsPopState();
+	productsPopState(true);
 });
 
-function productsPopState() {
+function productsPopState(search = true) {
 	current_url_search = def(window.location.search, "");
 	setCategoryFeaturesFromUrl();
 	setRangesFromUrl();
 	setProductsFilterCountFromUrl();
 	setSearchPhraseFromUrl();
-	mainSearchProducts(true);
+	if (search) {
+		mainSearchProducts(true);
+	}
 }
 
 function setCategoryFeaturesFromUrl() {
@@ -508,6 +513,8 @@ function mainSearchProducts(force = false) {
 	// workaround here
 	document.title = full_name;
 
+	results_info_count_spinner.classList.add("visible");
+
 	search_product_list_xhr = xhr({
 		url: "/product/search",
 		params: {
@@ -515,6 +522,8 @@ function mainSearchProducts(force = false) {
 		},
 		success: (res = {}) => {
 			search_product_list_xhr = undefined;
+
+			results_info_count_spinner.classList.remove("visible");
 
 			products_all.style.height = products_all.offsetHeight + "px";
 			if (res.html !== undefined) {
