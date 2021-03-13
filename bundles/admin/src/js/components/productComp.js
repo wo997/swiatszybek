@@ -456,7 +456,8 @@ function productComp(comp, parent, data = undefined) {
 						column_index++;
 						const feature_id = getFeatureIdFromKey(column.key);
 						if (feature_id) {
-							const found_index = data.product_feature_ids.indexOf(feature_id);
+							const multi_feature_ids = data.features.filter((fea) => fea.options.length > 1).map((fea) => fea.product_feature_id);
+							const found_index = multi_feature_ids.indexOf(feature_id);
 							const req_column_index = found_index + 1;
 							if (found_index !== -1 && req_column_index !== column_index) {
 								const temp = columns.splice(column_index, 1);
