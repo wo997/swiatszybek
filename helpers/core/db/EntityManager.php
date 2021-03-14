@@ -160,22 +160,30 @@ class EntityManager
      * setOneToOneEntity
      *
      * @param  mixed $obj
+     * @param  mixed $obj_prop_name
      * @param  mixed $child_entity_name
      * @param  mixed $children_props
+     * @param  mixed $relation_data
      * @return Entity[]
      */
-    public static function setOneToOneEntity(Entity $obj, $child_entity_name, $child_props)
+    public static function setOneToOneEntity(Entity $obj, $obj_prop_name, $child_entity_name, $child_props, $relation_data)
     {
-        if (!$child_props) {
-            return null;
-        }
+        /** @var Entity */
+        $curr_child = def($obj->getProp($obj_prop_name), []);
+
+        $child = null;
 
         if ($child_props instanceof Entity) {
-            return $child_props;
+            $child = $child_props;
         } else {
             $child = self::getEntity($child_entity_name, $child_props);
-            return $child;
         }
+
+        if (def($relation_data, "parent_required", false) && $child->getId() !== $curr_child->getId()) {
+            $curr_child->setWillDelete();
+        }
+
+        return $child;
     }
 
     /**
@@ -185,6 +193,7 @@ class EntityManager
      * @param  mixed $obj_prop_name
      * @param  mixed $child_entity_name
      * @param  mixed $children_props
+     * @param  mixed $relation_data
      * @return Entity[]
      */
     public static function setOneToManyEntities(Entity $obj, $obj_prop_name, $child_entity_name, $children_props, $relation_data)

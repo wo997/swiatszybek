@@ -327,7 +327,8 @@ class Entity
                 }
             }
         } else if ($prop_type && EntityManager::getEntityData($prop_type)) {
-            $val = EntityManager::setOneToOneEntity($this, $prop_type, $val);
+            $relation_data = def($prop_type, ["parents", $this->name], null);
+            $val = EntityManager::setOneToOneEntity($this, $prop_name, $prop_type, $val, $relation_data);
         }
 
         $this->props[$prop_name] = $val;
