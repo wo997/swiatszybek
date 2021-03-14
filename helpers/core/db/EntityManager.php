@@ -205,7 +205,9 @@ class EntityManager
                 $child_props[$obj->getIdColumn()] = $obj->getId();
                 if ($child_id == -1) {
                     $child = self::getEntity($child_entity_name, $child_props);
-                    $children[] = $child;
+                    if ($child) {
+                        $children[] = $child;
+                    }
                     continue;
                 }
             }
@@ -241,8 +243,10 @@ class EntityManager
         $child_props = DB::fetchRow("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
         if ($child_props) {
             $child = self::getEntity($child_entity_name, $child_props, true);
-            $child->setParent($obj);
-            return $child;
+            if ($child) {
+                $child->setParent($obj);
+                return $child;
+            }
         }
 
         return null;
@@ -255,8 +259,10 @@ class EntityManager
         $children_props = DB::fetchArr("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
         foreach ($children_props as $child_props) {
             $child = self::getEntity($child_entity_name, $child_props, true);
-            $child->setParent($obj);
-            $children[] = $child;
+            if ($child) {
+                $child->setParent($obj);
+                $children[] = $child;
+            }
         }
 
         return $children;
@@ -305,7 +311,9 @@ class EntityManager
                 $other_entity_props[$obj->getIdColumn()] = $obj->getId();
                 if ($other_entity_id == -1) {
                     $other_entity = self::getEntity($other_entity_name, $other_entity_props);
-                    $other_entities[] = $other_entity;
+                    if ($other_entity) {
+                        $other_entities[] = $other_entity;
+                    }
                     continue;
                 }
             }
@@ -344,7 +352,9 @@ class EntityManager
             }
 
             $other_entity = self::getEntity($other_entity_name, $other_entity_props);
-            $other_entities[] = $other_entity;
+            if ($other_entity) {
+                $other_entities[] = $other_entity;
+            }
         }
         unset($other_entity_props);
 
@@ -370,7 +380,9 @@ class EntityManager
 
         foreach ($other_entities_props as $other_entity_props) {
             $other_entity = self::getEntity($other_entity_name, $other_entity_props);
-            $other_entities[] = $other_entity;
+            if ($other_entity) {
+                $other_entities[] = $other_entity;
+            }
         }
 
         return $other_entities;

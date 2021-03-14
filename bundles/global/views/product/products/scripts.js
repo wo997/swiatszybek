@@ -310,8 +310,8 @@ function productsPopState() {
 	current_url_search = def(window.location.search, "");
 	setCategoryFeaturesFromUrl();
 	setRangesFromUrl();
-	setProductsFilterCountFromUrl();
 	setSearchPhraseFromUrl();
+	setProductsFilterCountFromUrl();
 	mainSearchProducts(true);
 }
 
@@ -496,6 +496,8 @@ function mainSearchProducts(force = false) {
 	if (url_search) {
 		url += "?" + url_search;
 	}
+
+	setProductsFilterCountFromUrl();
 
 	if (!force) {
 		if (current_url_search === url_search) {

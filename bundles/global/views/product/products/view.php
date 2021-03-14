@@ -58,7 +58,7 @@ function traverseCategories($parent_id = -1, $level = 0)
     return $html;
 }
 
-function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $level = 0)
+function traverseFeatureOptions($feature_id, $list_type, $parent_feature_option_id = -1, $level = 0)
 {
     global $option_count;
 
@@ -70,7 +70,20 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
     if (!$product_feature_options) {
         return "";
     }
-    $html = "<ul class=\"level_$level\">";
+
+    $ul_class = "level_$level";
+    if ($list_type === "single") {
+        $ul_class .= " radio_group unselectable";
+    }
+
+    $checkbox_class = "inline option_checkbox";
+    if ($list_type === "single") {
+        $checkbox_class .= " circle";
+    } else {
+        $checkbox_class .= " square";
+    }
+
+    $html = "<ul class=\"$ul_class\">";
     $display = false;
     foreach ($product_feature_options as $option) {
         $id = $option["product_feature_option_id"];
@@ -83,11 +96,11 @@ function traverseFeatureOptions($feature_id, $parent_feature_option_id = -1, $le
 
         $html .= "<li class=\"option_row\">";
         $html .= "<div class=\"checkbox_area\">";
-        $html .= "<p-checkbox class=\"square inline option_checkbox\" data-option_id=\"$id\"></p-checkbox>";
+        $html .= "<p-checkbox class=\"$checkbox_class\" data-option_id=\"$id\" data-value=\"$id\"></p-checkbox>";
         $html .= " <span class=\"feature_option_label\">$value</span>";
         $html .= " <span class=\"count\">($count)</span>";
         $html .= "</div> ";
-        $html .= traverseFeatureOptions($feature_id, $id, $level + 1);
+        $html .= traverseFeatureOptions($feature_id, $list_type, $id, $level + 1);
         $html .= "</li>";
     }
     $html .= "</ul>";
@@ -98,7 +111,7 @@ function traverseFeatures()
 {
     global $where_products_0;
 
-    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type, physical_measure FROM product_feature ORDER BY pos ASC");
+    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type, physical_measure, list_type FROM product_feature ORDER BY pos ASC");
     if (!$product_features) {
         return "";
     }
@@ -110,7 +123,7 @@ function traverseFeatures()
         $feature_label = $product_feature["name"];
 
         if (endsWith($product_feature["data_type"], "_list")) {
-            $feature_body = traverseFeatureOptions($product_feature_id);
+            $feature_body = traverseFeatureOptions($product_feature_id, $product_feature["list_type"]);
 
             if (!$feature_body) {
                 continue;

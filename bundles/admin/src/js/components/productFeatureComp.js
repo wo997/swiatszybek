@@ -2,8 +2,9 @@
 
 /**
  * @typedef {{
- * data_type: string
+ * data_type?: string
  * physical_measure?: string
+ * list_type?: string
  * datatable?: DatatableCompData
  * product_feature_id: number
  * name: string
@@ -39,13 +40,15 @@
 function productFeatureComp(comp, parent, data) {
 	if (data === undefined) {
 		data = {
-			data_type: "text_list",
 			product_feature_id: -1,
 			name: "",
 			current_group_id: -1,
 			groups: [],
 		};
 	}
+
+	data.data_type = def(data.data_type, "text_list");
+	data.list_type = def(data.list_type, "multi");
 
 	data.physical_measure = def(data.physical_measure, "none");
 
@@ -106,12 +109,14 @@ function productFeatureComp(comp, parent, data) {
 			comp._data.data_type = "text_list";
 			comp._data.datatable.dataset = [];
 			comp._data.physical_measure = "none";
+			comp._data.list_type = "multi";
 		} else {
 			const feature = product_features.find((f) => f.product_feature_id === id);
 			if (feature) {
 				comp._data.name = feature.name;
 				comp._data.data_type = feature.data_type;
 				comp._data.physical_measure = feature.physical_measure;
+				comp._data.list_type = feature.list_type;
 				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
 			}
 		}
@@ -140,6 +145,7 @@ function productFeatureComp(comp, parent, data) {
 			data_type: data.data_type,
 			product_feature_id: data.product_feature_id,
 			physical_measure: data.physical_measure,
+			list_type: data.list_type,
 		};
 
 		const is_list = comp._data.data_type.endsWith("_list");
@@ -309,6 +315,12 @@ function productFeatureComp(comp, parent, data) {
 			</div>
 
 			<div class="expand_y" data-node="{${comp._nodes.options_wrapper}}">
+				<div class="label">Typ wyboru filtrów</div>
+				<select class="field" data-bind="{${data.list_type}}">
+					<option value="multi">Wielokrotny (można filtrować wg wielu opcji, np. kolor czerwony i zielony)</option>
+					<option value="single">Jednokrotny (opcje się wykluczają, np. tak / nie)</option>
+				</select>
+
 				<div>
 					<div class="label" style="font-size: 1.2em;">Grupy opcji</div>
 
@@ -370,7 +382,7 @@ function productFeatureComp(comp, parent, data) {
 				comp._data.datatable.dataset.unshift({
 					value: "",
 					product_feature_option_id: -1,
-					parent_product_feature_option_id: comp._data.current_group_id,
+					parent_product_feature_option_id: comp._data.current_group_id === 0 ? -1 : comp._data.current_group_id,
 				});
 				comp._render();
 				setTimeout(() => {

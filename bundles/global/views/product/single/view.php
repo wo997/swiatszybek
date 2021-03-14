@@ -369,11 +369,11 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
         </button>
         <div class="label first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
 
-        <?php if ($general_product_data["published"] === 1) {
+        <?php if (1 /*$general_product_data["published"] === 1*/) {
             $clr = "var(--success-clr)";
             $info_label = "<i class='fas fa-eye'></i> Widoczny";
             $btn_label = 'Ukryj';
-            $btn_class = 'secondary';
+            $btn_class = 'subtle';
         } else {
             $clr = "var(--error-clr)";
             $info_label = "<i class='fas fa-eye-slash'></i> Ukryty!";

@@ -8,6 +8,7 @@
  * options?: string
  * icon?: string
  * physical_measure?: string
+ * list_type?: string
  * }} ProductFeatureData
  *
  */
