@@ -4,10 +4,10 @@ EntityManager::register("shop_order", [
     "props" => [
         "reference" => ["type" => "string"],
         "status_id" => ["type" => "number"],
-        //"user_id" => ["type" => "number"],
+        "user_id" => ["type" => "number"],
         //"user" => ["type" => "user"],
-        //"main_address" => ["type" => "address"],
-        //"main_address_id" => ["type" => "address"],
+        "main_address" => ["type" => "address"],
+        //"main_address_id" => ["type" => "number"],
         //"courier_address" => ["type" => "address"],
         "products_price" => ["type" => "number"],
         "delivery_price" => ["type" => "number"],
@@ -20,13 +20,15 @@ EntityManager::register("shop_order", [
 
 EntityManager::OneToMany("shop_order", "ordered_products", "ordered_product", ["parent_required" => true]);
 
-// EntityManager::register("user", [
-//     "props" => [
-//         "shop_orders" => ["type" => "shop_order[]"]
-//     ],
-// ]);
+EntityManager::register("user", [
+    "props" => [
+        "shop_orders" => ["type" => "shop_order[]"]
+    ],
+]);
 
-// EntityManager::OneToMany("user", "shop_orders", "shop_order");
+EntityManager::OneToMany("user", "shop_orders", "shop_order");
+
+EntityManager::OneToOne("shop_order", "main_address", "address");
 
 EventListener::register("before_save_shop_order_entity", function ($params) {
     /** @var Entity ShopOrder */
@@ -59,9 +61,11 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
         //     $ordered_products[] = $ordered_product;
         // }
         // $shop_order->setProp("ordered_products", $ordered_products);
-        $shop_order->setProp("ordered_products", $cart_data["products"]);
+        $shop_order->setProp("ordered_products", $cart_data["products"]); // ezy
 
         $shop_order->setProp("status_id", 1);
+
+        $shop_order->setProp("user_id", User::getCurrent()->getId());
 
         $user_cart->empty();
         $user_cart->save();

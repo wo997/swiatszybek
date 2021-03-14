@@ -249,10 +249,13 @@ class EntityManager
         return $children;
     }
 
-    public static function getOneToOneEntity(Entity $obj, $child_entity_name)
+    public static function getOneToOneEntity(Entity $obj, $prop_name, $child_entity_name)
     {
-        $child_props = DB::fetchRow("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
-        if ($child_props) {
+        $prop_id_column = self::getEntityIdColumn($prop_name);
+        $child_id = DB::fetchVal("SELECT $prop_id_column FROM " . $obj->getName() . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
+        if ($child_id) {
+            $child_id_column = self::getEntityIdColumn($child_entity_name);
+            $child_props = DB::fetchRow("SELECT * FROM $child_entity_name WHERE $child_id_column = $child_id");
             $child = self::getEntity($child_entity_name, $child_props, true);
             if ($child) {
                 $child->addParent($obj);

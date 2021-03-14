@@ -20,6 +20,6 @@ Reference: <?= $shop_order->getProp("reference") ?>
 
 <br>
 
-<?= json_encode($shop_order->getSimpleProps()) ?>
+<?= json_encode($shop_order->getAllProps(), JSON_PRETTY_PRINT) ?>
 
 <?php include "bundles/global/templates/default.php"; ?>

@@ -371,7 +371,7 @@ class Entity
                     }
                 }
             } else if ($prop_type && EntityManager::getEntityData($prop_type)) {
-                $this->props[$prop_name] = EntityManager::getOneToOneEntity($this, $prop_type);
+                $this->props[$prop_name] = EntityManager::getOneToOneEntity($this, $prop_name, $prop_type);
                 $this->curr_props[$prop_name] = $this->props[$prop_name];
             }
 
@@ -473,19 +473,17 @@ class Entity
                 }
                 $val = $entities_data;
             }
+
+            if ($val instanceof Entity) {
+                $d = $val->getAllProps();
+                foreach ($val->meta as $key => $val) {
+                    $d["_meta_$key"] = $val;
+                }
+                $val = $d;
+            }
+
             $all_props[$prop_name] = $val;
-
-            /*if (strpos($prop_data["type"], "") !== false) {
-                $v = $prop_data;
-            } else {
-            }*/
-
-            // if ($val instanceof Entity) {
-            //     $val = $val->getAllProps();
-            // }
-            //$all_props[$prop_name] = $val;
         }
-        //var_dump($all_props);
         return $all_props;
     }
 
