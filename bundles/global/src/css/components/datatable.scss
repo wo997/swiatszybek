@@ -14,6 +14,14 @@ datatable-comp {
 	.table_container {
 		flex-grow: 1;
 	}
+	@media only screen and (min-width: 1000px) {
+		.table_container {
+			max-width: 100%;
+		}
+		.dt_row {
+			min-width: 0;
+		}
+	}
 	.table_header,
 	.dt_row {
 		display: flex;

@@ -3,8 +3,8 @@
 :root {
 	// --p-checkbox-height: 2.05em;
 	// --p-checkbox-width: 4.5em;
-	--p-checkbox-height: 1.9em;
-	--p-checkbox-width: 4em;
+	--p-checkbox-height: 2.1em;
+	--p-checkbox-width: 4.5em;
 }
 
 input[type="checkbox"] {
@@ -22,7 +22,7 @@ p-checkbox {
 	cursor: pointer;
 	vertical-align: middle;
 	user-select: none;
-	font-size: 0.9em;
+	font-size: 0.8em;
 	transition: 0.2s box-shadow;
 	margin: -5px 0;
 }
@@ -126,6 +126,19 @@ p-checkbox.checked .circle {
 	background: var(--success-clr);
 	left: calc(var(--p-checkbox-width) - var(--p-checkbox-height));
 	border: 1px solid #090;
+}
+
+p-checkbox.black_light {
+	&.checked {
+		.circle {
+			border-color: #0008;
+			background: #0001;
+			background: #fff;
+		}
+		.fa-check {
+			color: #000;
+		}
+	}
 }
 
 p-checkbox .fa-check,

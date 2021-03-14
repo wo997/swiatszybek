@@ -58,7 +58,7 @@ function traverseCategories($parent_id = -1, $level = 0)
     return $html;
 }
 
-function traverseFeatureOptions($feature_id, $list_type, $parent_feature_option_id = -1, $level = 0)
+function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent_feature_option_id = -1, $level = 0)
 {
     global $option_count;
 
@@ -66,7 +66,7 @@ function traverseFeatureOptions($feature_id, $list_type, $parent_feature_option_
     if ($parent_feature_option_id === -1) {
         $where .= " AND product_feature_id = $feature_id";
     }
-    $product_feature_options = DB::fetchArr("SELECT product_feature_option_id, value FROM product_feature_option WHERE $where ORDER BY pos ASC");
+    $product_feature_options = DB::fetchArr("SELECT product_feature_option_id, value, extra_json FROM product_feature_option WHERE $where ORDER BY pos ASC");
     if (!$product_feature_options) {
         return "";
     }
@@ -76,7 +76,7 @@ function traverseFeatureOptions($feature_id, $list_type, $parent_feature_option_
         $ul_class .= " radio_group unselectable";
     }
 
-    $checkbox_class = "inline option_checkbox";
+    $checkbox_class = "inline option_checkbox black_light";
     if ($list_type === "single") {
         $checkbox_class .= " circle";
     } else {
@@ -94,13 +94,24 @@ function traverseFeatureOptions($feature_id, $list_type, $parent_feature_option_
             $display = true;
         }
 
+        $show_before = "";
+        if ($feature_extra === "color") {
+            $extra = json_decode($option["extra_json"], true);
+            if ($extra) {
+                $color = def($extra, "color", "");
+                if ($color) {
+                    $show_before = "<div class=\"just_color\" style=\"--color:$color\"></div>";
+                }
+            }
+        }
+
         $html .= "<li class=\"option_row\">";
         $html .= "<div class=\"checkbox_area\">";
         $html .= "<p-checkbox class=\"$checkbox_class\" data-option_id=\"$id\" data-value=\"$id\"></p-checkbox>";
-        $html .= " <span class=\"feature_option_label\">$value</span>";
+        $html .= " <span class=\"feature_option_label\">$show_before $value</span>";
         $html .= " <span class=\"count\">($count)</span>";
         $html .= "</div> ";
-        $html .= traverseFeatureOptions($feature_id, $list_type, $id, $level + 1);
+        $html .= traverseFeatureOptions($feature_id, $list_type, $feature_extra, $id, $level + 1);
         $html .= "</li>";
     }
     $html .= "</ul>";
@@ -111,7 +122,7 @@ function traverseFeatures()
 {
     global $where_products_0;
 
-    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type, physical_measure, list_type FROM product_feature ORDER BY pos ASC");
+    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type, physical_measure, list_type, extra FROM product_feature ORDER BY pos ASC");
     if (!$product_features) {
         return "";
     }
@@ -123,7 +134,7 @@ function traverseFeatures()
         $feature_label = $product_feature["name"];
 
         if (endsWith($product_feature["data_type"], "_list")) {
-            $feature_body = traverseFeatureOptions($product_feature_id, $product_feature["list_type"]);
+            $feature_body = traverseFeatureOptions($product_feature_id, $product_feature["list_type"], $product_feature["extra"]);
 
             if (!$feature_body) {
                 continue;

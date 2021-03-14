@@ -272,6 +272,16 @@
 	}
 }
 
+.just_color {
+	background: var(--color);
+	width: 1.3em;
+	height: 1.3em;
+	display: inline-block;
+	vertical-align: middle;
+	box-shadow: inset 0 0 0 1px #0003;
+	border-radius: 4px;
+}
+
 /* randomize animation start */
 
 // .randomize_btn {

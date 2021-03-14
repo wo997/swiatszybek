@@ -412,6 +412,7 @@ function productFeatureComp(comp, parent, data) {
 					value: "",
 					product_feature_option_id: -1,
 					parent_product_feature_option_id: comp._data.current_group_id === 0 ? -1 : comp._data.current_group_id,
+					extra_color: "",
 				});
 				comp._render();
 				setTimeout(() => {
