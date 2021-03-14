@@ -22,7 +22,7 @@ EntityManager::register("general_product", [
     ],
 ]);
 
-EntityManager::OneToMany("general_product", "products", "product");
+EntityManager::OneToMany("general_product", "products", "product", ["parent_required" => true]);
 
 EventListener::register("before_save_product_entity", function ($params) {
     /** @var Entity Product */

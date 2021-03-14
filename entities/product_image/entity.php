@@ -15,10 +15,6 @@ EntityManager::register("general_product", [
     ],
 ]);
 
-EntityManager::OneToMany(
-    "general_product",
-    "images",
-    "product_img",
-);
+EntityManager::OneToMany("general_product", "images", "product_img", ["parent_required" => true]);
 
 EntityManager::manyToMany("product_img", "product_feature_option", "product_img_to_feature_option");

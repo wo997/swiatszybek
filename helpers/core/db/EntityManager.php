@@ -187,7 +187,7 @@ class EntityManager
      * @param  mixed $children_props
      * @return Entity[]
      */
-    public static function setOneToManyEntities(Entity $obj, $obj_prop_name, $child_entity_name, $children_props)
+    public static function setOneToManyEntities(Entity $obj, $obj_prop_name, $child_entity_name, $children_props, $relation_data)
     {
         /** @var Entity[] GeneralProduct */
         $curr_children = def($obj->getProp($obj_prop_name), []);
@@ -223,7 +223,9 @@ class EntityManager
                 $curr_child->setProps($child_props);
                 $children[] = $curr_child;
             } else {
-                $curr_child->setWillDelete();
+                if (def($relation_data, "parent_required", false)) {
+                    $curr_child->setWillDelete();
+                }
             }
         }
         unset($child);
@@ -444,26 +446,38 @@ class EntityManager
     }
 
     /**
+     * Note that it's the same as OneToMany
+     * 
      * @param  string $parent_name !entity_name
      * @param  string $prop_name !entity_prop_name
      * @param  string $child_name !entity_name
+     * @param  OneRelationOptions $options
      */
-    public static function OneToOne($parent_name, $prop_name, $child_name)
+    public static function OneToOne($parent_name, $prop_name, $child_name, $options = [])
     {
         self::$entities[$child_name]["parents"][$parent_name] = [
-            "prop" => $prop_name
+            "prop" => $prop_name,
+            "parent_required" => def($options, "parent_required")
         ];
     }
+
+    /**
+     * @typedef OneRelationOptions {
+     *  parent_required?: boolean remove child once the parent is gone
+     * }
+     */
 
     /**
      * @param  string $parent_name !entity_name
      * @param  string $prop_name !entity_prop_name
      * @param  string $child_name !entity_name
+     * @param  OneRelationOptions $options
      */
-    public static function OneToMany($parent_name, $prop_name, $child_name)
+    public static function OneToMany($parent_name, $prop_name, $child_name, $options = [])
     {
         self::$entities[$child_name]["parents"][$parent_name] = [
-            "prop" => $prop_name
+            "prop" => $prop_name,
+            "parent_required" => def($options, "parent_required")
         ];
     }
 

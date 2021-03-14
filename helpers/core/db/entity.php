@@ -317,8 +317,9 @@ class Entity
         if ($prop_type && endsWith($prop_type, "[]")) {
             $other_entity_name = substr($prop_type, 0, -2);
             $child_entity_data = EntityManager::getEntityData($other_entity_name);
-            if (isset($child_entity_data["parents"][$this->name])) {
-                $val = EntityManager::setOneToManyEntities($this, $prop_name, $other_entity_name, $val);
+            $relation_data = def($child_entity_data, ["parents", $this->name], null);
+            if ($relation_data) {
+                $val = EntityManager::setOneToManyEntities($this, $prop_name, $other_entity_name, $val, $relation_data);
             } else {
                 $link = def($child_entity_data, ["linked_with", $this->name]);
                 if ($link) {

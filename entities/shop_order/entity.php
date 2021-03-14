@@ -18,7 +18,7 @@ EntityManager::register("shop_order", [
     ],
 ]);
 
-EntityManager::OneToMany("shop_order", "ordered_products", "ordered_product");
+EntityManager::OneToMany("shop_order", "ordered_products", "ordered_product", ["parent_required" => true]);
 
 // EntityManager::register("user", [
 //     "props" => [
