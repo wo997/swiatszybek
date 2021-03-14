@@ -98,16 +98,25 @@ domload(() => {
 			return;
 		}
 		let qty = $(".main_qty_controls .val_qty")._get_value();
-		const cart_product = user_cart.products.find((e) => e.product_id === single_product.product_id);
+		const product_id = single_product.product_id;
+		const cart_product = user_cart.products.find((e) => e.product_id === product_id);
 		if (cart_product) {
 			qty += cart_product.qty;
 		}
 
 		adding_product_from_cart = true;
+
+		let offset = 100;
+		if (!user_cart.products.find((p) => p.product_id === product_id)) {
+			// new
+			offset += 140; // probably enough to contain a row
+		}
+		scrollIntoView(cart_products_comp, { offset });
+
 		xhr({
 			url: "/cart/add-product",
 			params: {
-				product_id: single_product.product_id,
+				product_id: product_id,
 				qty,
 			},
 			success: (res) => {
