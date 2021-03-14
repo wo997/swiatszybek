@@ -131,8 +131,6 @@ if (defined("ROUTE")) {
 
 <?php endif ?>
 
-
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 <link rel="shortcut icon" href="<?= FAVICON_PATH_LOCAL_TN ?>" />
@@ -156,13 +154,6 @@ if (defined("ROUTE")) {
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
 
 <style>
-    /*:root {
-    --primary-clr: <?= primary_clr ?>;
-    --buynow-clr: <?= buynow_clr ?>;
-    --subtle-font-clr: <?= subtle_font_clr ?>;
-    --subtle-background-clr: <?= subtle_background_clr ?>;
-  }*/
-
     <?php if (User::getCurrent()->isLoggedIn()) : ?>.hide_case_logged_in {
         display: none;
     }
