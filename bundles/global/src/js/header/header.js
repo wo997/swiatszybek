@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[!global] */
 
 /** @type {PiepNode} */
 let main_header;
