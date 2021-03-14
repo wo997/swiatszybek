@@ -84,6 +84,7 @@ if (DEV_MODE) {
     include "scripts/errors.php";
 }
 @include BUILDS_PATH . "hooks/entity.php"; // must be here cause the entity def is necessary run some migrations
+include "scripts/entities.php";
 @include BUILDS_PATH . "hooks/helper.php";
 @include BUILDS_PATH . "hooks/event.php";
 

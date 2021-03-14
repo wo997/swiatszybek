@@ -4,11 +4,8 @@ EntityManager::register("shop_order", [
     "props" => [
         "reference" => ["type" => "string"],
         "status_id" => ["type" => "number"],
-        "user_id" => ["type" => "number"],
-        //"user" => ["type" => "user"],
         "main_address" => ["type" => "address"],
-        //"main_address_id" => ["type" => "number"],
-        //"courier_address" => ["type" => "address"],
+        "courier_address" => ["type" => "address"],
         "products_price" => ["type" => "number"],
         "delivery_price" => ["type" => "number"],
         "total_price" => ["type" => "number"],
@@ -65,7 +62,7 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
 
         $shop_order->setProp("status_id", 1);
 
-        $shop_order->setProp("user_id", User::getCurrent()->getId());
+        $shop_order->setProp("user", User::getCurrent()->getId());
 
         $user_cart->empty();
         $user_cart->save();

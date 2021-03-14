@@ -292,7 +292,7 @@ class Entity
         $setter = "set_" . $this->name . "_entity_" .  $prop_name;
         $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
         foreach ($vals as $v) {
-            if ($v !== null) {
+            if ($v !== null) { // nulls dont look good, stick to false schema instead
                 $val = $v;
             }
         }
@@ -498,6 +498,7 @@ class Entity
         $simple_props = [];
         foreach ($props as $prop_name => $prop_data) {
             $val = $this->getProp($prop_name);
+
             if (is_array($val)) {
                 $entities_data = [];
                 foreach ($val as
@@ -513,6 +514,15 @@ class Entity
                 }
                 $val = $entities_data;
             }
+
+            if ($val instanceof Entity) {
+                $d = [$val->getIdColumn() => $val->getId()];
+                foreach ($val->meta as $key => $val) {
+                    $d["_meta_$key"] = $val;
+                }
+                $val = $d;
+            }
+
             $simple_props[$prop_name] = $val;
         }
         return $simple_props;

@@ -173,15 +173,27 @@ class EntityManager
 
         $child = null;
 
-        if ($child_props instanceof Entity) {
-            $child = $child_props;
-        } else {
-            $child = self::getEntity($child_entity_name, $child_props);
+        if ($child_props) {
+            if ($child_props instanceof Entity) {
+                $child = $child_props;
+            } else {
+                if (is_numeric($child_props)) {
+                    $other_entity_id_column = self::getEntityIdColumn($child_entity_name);
+                    $child_props = [
+                        $other_entity_id_column => intval($child_props)
+                    ];
+                }
+                $child = self::getEntity($child_entity_name, $child_props);
+            }
         }
 
         if (def($relation_data, "parent_required", false) && $child->getId() !== $curr_child->getId()) {
             $curr_child->setWillDelete();
         }
+
+        $prop_id_column = self::getEntityIdColumn($obj_prop_name);
+        $child_id = $child ? $child->getId() : null;
+        $obj->setProp($prop_id_column, $child_id);
 
         return $child;
     }
@@ -261,6 +273,9 @@ class EntityManager
                 $child->addParent($obj);
                 return $child;
             }
+            $prop_id_column = self::getEntityIdColumn($prop_name);
+            $child_id = $child ? $child->getId() : null;
+            $obj->setProp($prop_id_column, $child_id);
         }
 
         return null;
