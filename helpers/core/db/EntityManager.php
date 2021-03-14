@@ -27,7 +27,7 @@ class EntityManager
         if (!isset(self::$entities[$name])) {
             self::$entities[$name] = [
                 "props" => [],
-                "parent" => null,
+                "parents" => [],
                 "sortable" => false,
             ];
         }
@@ -244,7 +244,7 @@ class EntityManager
         if ($child_props) {
             $child = self::getEntity($child_entity_name, $child_props, true);
             if ($child) {
-                $child->setParent($obj);
+                $child->addParent($obj);
                 return $child;
             }
         }
@@ -260,7 +260,7 @@ class EntityManager
         foreach ($children_props as $child_props) {
             $child = self::getEntity($child_entity_name, $child_props, true);
             if ($child) {
-                $child->setParent($obj);
+                $child->addParent($obj);
                 $children[] = $child;
             }
         }
@@ -448,10 +448,21 @@ class EntityManager
      * @param  string $prop_name !entity_prop_name
      * @param  string $child_name !entity_name
      */
+    public static function OneToOne($parent_name, $prop_name, $child_name)
+    {
+        self::$entities[$child_name]["parents"][$parent_name] = [
+            "prop" => $prop_name
+        ];
+    }
+
+    /**
+     * @param  string $parent_name !entity_name
+     * @param  string $prop_name !entity_prop_name
+     * @param  string $child_name !entity_name
+     */
     public static function OneToMany($parent_name, $prop_name, $child_name)
     {
-        self::$entities[$child_name]["parent"] = [
-            "name" => $parent_name,
+        self::$entities[$child_name]["parents"][$parent_name] = [
             "prop" => $prop_name
         ];
     }

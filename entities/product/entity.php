@@ -38,7 +38,7 @@ EventListener::register("before_save_product_entity", function ($params) {
         $option_names[] = $feature_option->getProp("value");
 
         /** @var Entity ProductFeature */
-        $feature = $feature_option->getParent();
+        $feature = $feature_option->getParent("product_feature");
         if (!$feature) {
             continue;
         }
@@ -54,7 +54,7 @@ EventListener::register("before_save_product_entity", function ($params) {
     $product->setProp("__options_json", $options ? json_encode($options) : "{}");
 
     /** @var Entity GeneralProduct */
-    $general_product = $product->getParent();
+    $general_product = $product->getParent("general_product");
     if ($general_product) {
         $link = getProductLink($general_product->getId(), $general_product->getProp("name"), $option_ids, $option_names);
         $product->setProp("__url", $link);

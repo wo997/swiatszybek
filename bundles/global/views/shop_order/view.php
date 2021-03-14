@@ -18,4 +18,8 @@ if (!$shop_order || $shop_order->getProp("reference") !== $reference) {
 
 Reference: <?= $shop_order->getProp("reference") ?>
 
+<br>
+
+<?= json_encode($shop_order->getSimpleProps()) ?>
+
 <?php include "bundles/global/templates/default.php"; ?>

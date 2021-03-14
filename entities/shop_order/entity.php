@@ -3,10 +3,12 @@
 EntityManager::register("shop_order", [
     "props" => [
         "reference" => ["type" => "string"],
-        "user" => ["type" => "user"],
         "status_id" => ["type" => "number"],
-        "main_address" => ["type" => "address"],
-        "courier_address" => ["type" => "address"],
+        //"user_id" => ["type" => "number"],
+        //"user" => ["type" => "user"],
+        //"main_address" => ["type" => "address"],
+        //"main_address_id" => ["type" => "address"],
+        //"courier_address" => ["type" => "address"],
         "products_price" => ["type" => "number"],
         "delivery_price" => ["type" => "number"],
         "total_price" => ["type" => "number"],
@@ -17,6 +19,14 @@ EntityManager::register("shop_order", [
 ]);
 
 EntityManager::OneToMany("shop_order", "ordered_products", "ordered_product");
+
+// EntityManager::register("user", [
+//     "props" => [
+//         "shop_orders" => ["type" => "shop_order[]"]
+//     ],
+// ]);
+
+// EntityManager::OneToMany("user", "shop_orders", "shop_order");
 
 EventListener::register("before_save_shop_order_entity", function ($params) {
     /** @var Entity ShopOrder */

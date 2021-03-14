@@ -49,7 +49,7 @@ EventListener::register("before_save_product_feature_option_entity", function ($
     $product_feature_option = $params["obj"];
 
     /** @var Entity ProductFeature */
-    $product_feature = $product_feature_option->getParent();
+    $product_feature = $product_feature_option->getParent("product_feature");
 
     // shit happens, data may be broken, chill
     if (!$product_feature) {

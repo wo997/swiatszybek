@@ -9,8 +9,7 @@ class Entity
     private $fetched = []; // stores info of what relations that were fetched already
     private $curr_props = null; // in case the object existed in DB
     private $will_delete = false;
-    private $parent = null; // in case there is any
-    private $fetched_parent = false;
+    private $parents = []; // map string name -> Entity
     private $saved = false;
     private $will_unlink_from_entities = [];
     private $meta = []; // used for many to many relations
@@ -51,14 +50,14 @@ class Entity
             $this->is_new = true;
 
             $entity_data = EntityManager::getEntityData($this->name);
-            $parent_entity_name = def($entity_data, ["parent", "name"]);
-            if ($parent_entity_name) {
+            foreach (array_keys($entity_data["parents"]) as $parent_entity_name) {
                 $parent_entity_column_id = EntityManager::getEntityIdColumn($parent_entity_name);
                 $parent_id = def($props, $parent_entity_column_id, -1);
                 if ($parent_id !== -1) {
                     $parent = EntityManager::getEntityById($parent_entity_name, $parent_id);
                     if ($parent) {
                         $parent->childAboutToJoin($this);
+                        // why not just set prop? well, because it would be overriden by relation from DB
                     }
                 }
             }
@@ -112,15 +111,6 @@ class Entity
         return $this->global_id;
     }
 
-    // hah, no longer needed ;) the object is removed from the parent but kept in session handler
-    // public function willExistForOtherEntity($global_id)
-    // {
-    //     if ($this->getWillDelete() || in_array($global_id, $this->getWillUnlinkFromEntities())) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
     /**
      * setWillDelete
      *
@@ -147,7 +137,7 @@ class Entity
     {
         foreach ($objs as $obj) {
             if ($obj instanceof Entity) {
-                $obj->save(["propagate_to_parent" => false]);
+                $obj->save(["propagate_to_parents" => false]);
             }
         }
     }
@@ -174,18 +164,19 @@ class Entity
         $saver = "before_save_" . $this->name . "_entity";
         EventListener::dispatch($saver, ["obj" => $this]);
 
-        if (def($options, "propagate_to_parent", true) === true) {
+        if (def($options, "propagate_to_parents", true) === true) {
             // possibly delegate
-            $parent = $this->getParent();
+            $any_parent_just_saved = false;
+            foreach ($this->parents as $parent) {
+                if ($parent && !$parent->saved) {
+                    $any_parent_just_saved = true;
+                    $parent->save();
+                }
+            }
 
-            if ($parent && !$parent->saved) {
-                // if ($this->is_new) {
-                //     $parent->childAboutToJoin($this);
-                // }
-                $parent->save();
-
+            if ($any_parent_just_saved) {
                 if (!$this->getWillDelete()) {
-                    // in that case the parent will handle saving so chill
+                    // in that case any parent will handle saving so chill
                     return;
                 }
             }
@@ -217,7 +208,7 @@ class Entity
                     }
                 } else if (is_object($value) && $value instanceof Entity) {
                     $changed_props[EntityManager::getEntityIdColumn($key)] = $value->getId();
-                    $value->save(["propagate_to_parent" => false]);
+                    $value->save(["propagate_to_parents" => false]);
                 }
 
                 $other_entity_data = def($entity_data, ["props", $key], []);
@@ -326,7 +317,7 @@ class Entity
         if ($prop_type && endsWith($prop_type, "[]")) {
             $other_entity_name = substr($prop_type, 0, -2);
             $child_entity_data = EntityManager::getEntityData($other_entity_name);
-            if ($this->name === def($child_entity_data, ["parent", "name"])) {
+            if (isset($child_entity_data["parents"][$this->name])) {
                 $val = EntityManager::setOneToManyEntities($this, $prop_name, $other_entity_name, $val);
             } else {
                 $link = def($child_entity_data, ["linked_with", $this->name]);
@@ -367,7 +358,7 @@ class Entity
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $other_entity_name = substr($prop_type, 0, -2);
                 $child_entity_data = EntityManager::getEntityData($other_entity_name);
-                if ($this->name === def($child_entity_data, ["parent", "name"])) {
+                if (isset($child_entity_data["parents"][$this->name])) {
                     $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $other_entity_name);
                     $this->curr_props[$prop_name] = $this->props[$prop_name];
                 } else {
@@ -404,32 +395,50 @@ class Entity
     }
 
     /**
-     * getParent
+     * getParents
      *
-     * @return Entity
+     * @return Entity[]
      */
-    public function getParent()
+    public function getParents()
     {
-        if ($this->fetched_parent === false) {
-            $this->fetched_parent = true;
+        $fetched_parent_names = array_keys($this->parents);
+        $parent_names = def(EntityManager::getEntityData($this->name), ["parents"]);
 
-            $parent_props = def(EntityManager::getEntityData($this->name), ["parent"]);
-            if ($parent_props) {
-                $parent_name = $parent_props["name"];
-                $parent_prop = $parent_props["prop"];
-                $this->parent = EntityManager::getEntityById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
-                if ($this->parent) {
-                    $this->parent->setProp($parent_prop);
+        foreach ($parent_names as $parent_name => $parent_data) {
+            if (!in_array($parent_name, $fetched_parent_names)) {
+                $parent = EntityManager::getEntityById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
+                if ($parent) {
+                    $parent->setProp($parent_data["prop"]);
+                    $this->addParent($parent);
                 }
             }
         }
-        return $this->parent;
+
+        return $this->parents;
     }
 
-    public function setParent($parent)
+    /**
+     * getParent
+     *
+     * @param  string $name !entity_name
+     * @return Entity
+     */
+    public function getParent($name)
     {
-        $this->parent = $parent;
-        $this->fetched_parent = true;
+        return def($this->getParents(), $name, null);
+    }
+
+    /**
+     * addParent
+     *
+     * @param  Entity $parent
+     * @return void
+     */
+    public function addParent($parent)
+    {
+        if ($parent) {
+            $this->parents[$parent->getName()] = $parent;
+        }
     }
 
     public function getProps()
