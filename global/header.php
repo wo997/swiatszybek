@@ -15,7 +15,7 @@ function traverseMenu($parent_id = -1, $level = 0)
 }
 ?>
 
-<header class="main menu_collapsed">
+<header class="main menu_collapsed modals_only">
     <a href="/" class="logo-wrapper">
         <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
     </a>

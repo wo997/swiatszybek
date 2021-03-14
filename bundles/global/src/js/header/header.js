@@ -28,6 +28,7 @@ function headerResizeCallback() {
 	const menu_collapsed = header_use_modals || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
 	main_header.classList.toggle("menu_collapsed", menu_collapsed);
 	document.documentElement.style.setProperty("--header_height", `${main_header.offsetHeight}px`);
+	main_header.classList.add("ready");
 
 	const main_search_wrapper = $(".main_search_wrapper");
 	const r = main_search_wrapper.getBoundingClientRect();

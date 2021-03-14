@@ -1,8 +1,10 @@
 /* css[global] */
 
 header.main {
-	& {
+	&.ready {
 		position: fixed;
+	}
+	& {
 		width: 100%;
 		display: flex;
 		align-items: center;
@@ -245,7 +247,7 @@ header.main {
 }
 
 :root {
-	--header_height: 71px; // just a default value
+	--header_height: 0; // no need to set a default value, it's done on domload as well as putting the header as fixed node
 }
 .header_height {
 	flex-shrink: 0;
