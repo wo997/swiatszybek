@@ -360,7 +360,7 @@ function productFeatureComp(comp, parent, data) {
 			datatable_label._parent().insertBefore(comp._child(".adv_controls"), datatable_label._next());
 
 			comp._nodes.add_option_btn.addEventListener("click", () => {
-				for (const input of comp._nodes.datatable._children(`.list_row input[data-bind="name"]`)) {
+				for (const input of comp._nodes.datatable._children(`.list_row input[data-bind="value"]`)) {
 					if (input._get_value() === "") {
 						input.focus();
 						return;
@@ -368,13 +368,14 @@ function productFeatureComp(comp, parent, data) {
 				}
 
 				comp._data.datatable.dataset.unshift({
-					name: "",
+					value: "",
 					product_feature_option_id: -1,
 					parent_product_feature_option_id: comp._data.current_group_id,
 				});
 				comp._render();
 				setTimeout(() => {
-					const input = comp._nodes.datatable._child(`.list_row:first-child input[data-bind="name"]`);
+					const input = comp._nodes.datatable._child(`.list_row:first-child input[data-bind="value"]`);
+					console.log(comp._nodes.datatable, input);
 					if (input) {
 						input.focus();
 					}
