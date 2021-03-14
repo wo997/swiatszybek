@@ -8,6 +8,7 @@ EntityManager::register("product_feature_option", [
         "double_value" => ["type" => "number"],
         "datetime_value" => ["type" => "string"],
         "text_value" => ["type" => "string"],
+        "extra_json" => ["type" => "string"],
     ],
 ]);
 

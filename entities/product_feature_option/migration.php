@@ -9,6 +9,7 @@ DB::createTable("product_feature_option", [
     ["name" => "datetime_value", "type" => "DATETIME", "null" => true, "index" => "index"],
     ["name" => "text_value", "type" => "VARCHAR(255)", "null" => true, "index" => "index"],
     ["name" => "pos", "type" => "INT", "index" => "index"],
+    ["name" => "extra_json", "type" => "TEXT"],
 ]);
 
 DB::createTable("product_to_feature_option", [

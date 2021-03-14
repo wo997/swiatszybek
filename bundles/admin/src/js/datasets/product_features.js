@@ -9,6 +9,7 @@
  * icon?: string
  * physical_measure?: string
  * list_type?: string
+ * extra?: string
  * }} ProductFeatureData
  *
  */
@@ -30,6 +31,8 @@ let product_features = [];
  * text_value?: string
  * double_value?: number
  * datetime_value?: string
+ * extra_json?: string
+ * extra_color?: string
  * }} ProductFeatureOptionData
  *
  */
@@ -89,6 +92,15 @@ function loadedProductFeatures() {
 
 		option.parent_product_feature_option_id;
 		option.all_ids = all_ids;
+
+		option.extra_color = "";
+		try {
+			const extra = JSON.parse(option.extra_json);
+			const color = extra.color;
+			if (color) {
+				option.extra_color = color;
+			}
+		} catch {}
 	});
 }
 

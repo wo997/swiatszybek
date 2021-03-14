@@ -10,6 +10,7 @@
  * name: string
  * current_group_id: number
  * groups: any[]
+ * extra?: string
  * }} ProductFeatureCompData
  *
  * @typedef {{
@@ -49,6 +50,7 @@ function productFeatureComp(comp, parent, data) {
 
 	data.data_type = def(data.data_type, "text_list");
 	data.list_type = def(data.list_type, "multi");
+	data.extra = def(data.extra, "");
 
 	data.physical_measure = def(data.physical_measure, "none");
 
@@ -110,6 +112,7 @@ function productFeatureComp(comp, parent, data) {
 			comp._data.datatable.dataset = [];
 			comp._data.physical_measure = "none";
 			comp._data.list_type = "multi";
+			comp._data.extra = "";
 		} else {
 			const feature = product_features.find((f) => f.product_feature_id === id);
 			if (feature) {
@@ -117,6 +120,7 @@ function productFeatureComp(comp, parent, data) {
 				comp._data.data_type = feature.data_type;
 				comp._data.physical_measure = feature.physical_measure;
 				comp._data.list_type = feature.list_type;
+				comp._data.extra = feature.extra;
 				comp._data.datatable.dataset = product_feature_options.filter((e) => e.product_feature_id === id);
 			}
 		}
@@ -146,6 +150,7 @@ function productFeatureComp(comp, parent, data) {
 			product_feature_id: data.product_feature_id,
 			physical_measure: data.physical_measure,
 			list_type: data.list_type,
+			extra: data.extra,
 		};
 
 		const is_list = comp._data.data_type.endsWith("_list");
@@ -155,12 +160,19 @@ function productFeatureComp(comp, parent, data) {
 				return;
 			}
 
-			product_feature.options = comp._data.datatable.dataset.map((e, index) => ({
-				product_feature_option_id: e.product_feature_option_id,
-				value: e.value,
-				parent_product_feature_option_id: e.parent_product_feature_option_id,
-				pos: index + 1,
-			}));
+			product_feature.options = comp._data.datatable.dataset.map((option, index) => {
+				const extra = {};
+				if (option.extra_color) {
+					extra.color = option.extra_color;
+				}
+				return {
+					product_feature_option_id: option.product_feature_option_id,
+					value: option.value,
+					parent_product_feature_option_id: option.parent_product_feature_option_id,
+					pos: index + 1,
+					extra_json: JSON.stringify(extra),
+				};
+			});
 		} else {
 			product_feature.options = [];
 		}
@@ -201,6 +213,17 @@ function productFeatureComp(comp, parent, data) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		const color_col_index = data.datatable.columns.findIndex((c) => c.key === "extra_color");
+		if (data.extra === "color") {
+			if (color_col_index === -1) {
+				data.datatable.columns.push({ label: "Kolor", key: "extra_color", width: "100px", editable: "color" });
+			}
+		} else {
+			if (color_col_index !== -1) {
+				data.datatable.columns.splice(color_col_index, 1);
+			}
+		}
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
@@ -319,6 +342,12 @@ function productFeatureComp(comp, parent, data) {
 				<select class="field" data-bind="{${data.list_type}}">
 					<option value="multi">Wielokrotny (można filtrować wg wielu opcji, np. kolor czerwony i zielony)</option>
 					<option value="single">Jednokrotny (opcje się wykluczają, np. tak / nie)</option>
+				</select>
+
+				<div class="label">Dodatkowe informacje</div>
+				<select class="field" data-bind="{${data.extra}}">
+					<option value="">Brak</option>
+					<option value="color">Kolor (pojawi się przy filtrach produktów)</option>
 				</select>
 
 				<div>

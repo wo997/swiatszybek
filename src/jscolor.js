@@ -31,27 +31,17 @@ if (!window.jscolor) {
 			},
 
 			tryInstallOnElements: function (elms, className) {
-				var matchClass = new RegExp(
-					"(^|\\s)(" + className + ")(\\s*(\\{[^}]*\\})|\\s|$)",
-					"i"
-				);
+				var matchClass = new RegExp("(^|\\s)(" + className + ")(\\s*(\\{[^}]*\\})|\\s|$)", "i");
 
 				for (var i = 0; i < elms.length; i += 1) {
-					if (
-						elms[i].type !== undefined &&
-						elms[i].type.toLowerCase() == "color"
-					) {
+					if (elms[i].type !== undefined && elms[i].type.toLowerCase() == "color") {
 						if (jsc.isColorAttrSupported) {
 							// skip inputs of type 'color' if supported by the browser
 							continue;
 						}
 					}
 					var m;
-					if (
-						!elms[i].jscolor &&
-						elms[i].className &&
-						(m = elms[i].className.match(matchClass))
-					) {
+					if (!elms[i].jscolor && elms[i].className && (m = elms[i].className.match(matchClass))) {
 						var targetElm = elms[i];
 						var optsStr = null;
 
@@ -67,12 +57,7 @@ if (!window.jscolor) {
 							try {
 								opts = new Function("return (" + optsStr + ")")();
 							} catch (eParseError) {
-								jsc.warn(
-									"Error parsing jscolor options: " +
-										eParseError +
-										":\n" +
-										optsStr
-								);
+								jsc.warn("Error parsing jscolor options: " + eParseError + ":\n" + optsStr);
 							}
 						}
 						targetElm.jscolor = new jsc.jscolor(targetElm, opts);
@@ -97,9 +82,7 @@ if (!window.jscolor) {
 			})(),
 
 			fetchElement: function (mixed) {
-				return typeof mixed === "string"
-					? document.getElementById(mixed)
-					: mixed;
+				return typeof mixed === "string" ? document.getElementById(mixed) : mixed;
 			},
 
 			isElementType: function (elm, type) {
@@ -143,11 +126,7 @@ if (!window.jscolor) {
 
 			detachGroupEvents: function (groupName) {
 				if (jsc._attachedGroupEvents.hasOwnProperty(groupName)) {
-					for (
-						var i = 0;
-						i < jsc._attachedGroupEvents[groupName].length;
-						i += 1
-					) {
+					for (var i = 0; i < jsc._attachedGroupEvents[groupName].length; i += 1) {
 						var evt = jsc._attachedGroupEvents[groupName][i];
 						jsc.detachEvent(evt[0], evt[1], evt[2]);
 					}
@@ -259,12 +238,7 @@ if (!window.jscolor) {
 				if (!className) {
 					return false;
 				}
-				return (
-					-1 !=
-					(" " + elm.className.replace(/\s+/g, " ") + " ").indexOf(
-						" " + className + " "
-					)
-				);
+				return -1 != (" " + elm.className.replace(/\s+/g, " ") + " ").indexOf(" " + className + " ");
 			},
 
 			// The className parameter (str) can contain multiple class names separated by whitespace
@@ -282,15 +256,7 @@ if (!window.jscolor) {
 				var classList = jsc.classNameToList(className);
 				for (var i = 0; i < classList.length; i += 1) {
 					var repl = new RegExp(
-						"^\\s*" +
-							classList[i] +
-							"\\s*|" +
-							"\\s*" +
-							classList[i] +
-							"\\s*$|" +
-							"\\s+" +
-							classList[i] +
-							"(\\s+)",
+						"^\\s*" + classList[i] + "\\s*|" + "\\s*" + classList[i] + "\\s*$|" + "\\s+" + classList[i] + "(\\s+)",
 						"g"
 					);
 					elm.className = elm.className.replace(repl, "$1");
@@ -298,9 +264,7 @@ if (!window.jscolor) {
 			},
 
 			getStyle: function (elm) {
-				return window.getComputedStyle
-					? window.getComputedStyle(elm)
-					: elm.currentStyle;
+				return window.getComputedStyle ? window.getComputedStyle(elm) : elm.currentStyle;
 			},
 
 			setStyle: (function () {
@@ -313,16 +277,8 @@ if (!window.jscolor) {
 					}
 				};
 				var props = {
-					borderRadius: getSupportedProp([
-						"borderRadius",
-						"MozBorderRadius",
-						"webkitBorderRadius",
-					]),
-					boxShadow: getSupportedProp([
-						"boxShadow",
-						"MozBoxShadow",
-						"webkitBoxShadow",
-					]),
+					borderRadius: getSupportedProp(["borderRadius", "MozBorderRadius", "webkitBorderRadius"]),
+					boxShadow: getSupportedProp(["boxShadow", "MozBoxShadow", "webkitBoxShadow"]),
 				};
 				return function (elm, prop, value) {
 					switch (prop.toLowerCase()) {
@@ -371,10 +327,7 @@ if (!window.jscolor) {
 				}
 				var x = 0,
 					y = 0;
-				if (
-					typeof e.changedTouches !== "undefined" &&
-					e.changedTouches.length
-				) {
+				if (typeof e.changedTouches !== "undefined" && e.changedTouches.length) {
 					// touch devices
 					x = e.changedTouches[0].clientX;
 					y = e.changedTouches[0].clientY;
@@ -398,10 +351,7 @@ if (!window.jscolor) {
 
 				var clientX = 0,
 					clientY = 0;
-				if (
-					typeof e.changedTouches !== "undefined" &&
-					e.changedTouches.length
-				) {
+				if (typeof e.changedTouches !== "undefined" && e.changedTouches.length) {
 					// touch devices
 					clientX = e.changedTouches[0].clientX;
 					clientY = e.changedTouches[0].clientY;
@@ -425,10 +375,7 @@ if (!window.jscolor) {
 
 			getViewSize: function () {
 				var doc = document.documentElement;
-				return [
-					window.innerWidth || doc.clientWidth,
-					window.innerHeight || doc.clientHeight,
-				];
+				return [window.innerWidth || doc.clientWidth, window.innerHeight || doc.clientHeight];
 			},
 
 			redrawPosition: function () {
@@ -481,14 +428,12 @@ if (!window.jscolor) {
 					} else {
 						var pp = [
 							-vp[a] + tp[a] + ps[a] > vs[a]
-								? -vp[a] + tp[a] + ts[a] / 2 > vs[a] / 2 &&
-								  tp[a] + ts[a] - ps[a] >= 0
+								? -vp[a] + tp[a] + ts[a] / 2 > vs[a] / 2 && tp[a] + ts[a] - ps[a] >= 0
 									? tp[a] + ts[a] - ps[a]
 									: tp[a]
 								: tp[a],
 							-vp[b] + tp[b] + ts[b] + ps[b] - l + l * c > vs[b]
-								? -vp[b] + tp[b] + ts[b] / 2 > vs[b] / 2 &&
-								  tp[b] + ts[b] - l - l * c >= 0
+								? -vp[b] + tp[b] + ts[b] / 2 > vs[b] / 2 && tp[b] + ts[b] - l - l * c >= 0
 									? tp[b] + ts[b] - l - l * c
 									: tp[b] + ts[b] - l + l * c
 								: tp[b] + ts[b] - l + l * c >= 0
@@ -500,9 +445,7 @@ if (!window.jscolor) {
 					var x = pp[a];
 					var y = pp[b];
 					var positionValue = thisObj.fixed ? "fixed" : "absolute";
-					var contractShadow =
-						(pp[0] + ps[0] > tp[0] || pp[0] < tp[0] + ts[0]) &&
-						pp[1] + ps[1] < tp[1] + ts[1];
+					var contractShadow = (pp[0] + ps[0] > tp[0] || pp[0] < tp[0] + ts[0]) && pp[1] + ps[1] < tp[1] + ts[1];
 
 					jsc._drawPosition(thisObj, x, y, positionValue, contractShadow);
 				}
@@ -517,15 +460,7 @@ if (!window.jscolor) {
 
 				jsc.setBoxShadow(
 					jsc.picker.boxS,
-					thisObj.shadow
-						? new jsc.BoxShadow(
-								0,
-								vShadow,
-								thisObj.shadowBlur,
-								0,
-								thisObj.shadowColor
-						  )
-						: null
+					thisObj.shadow ? new jsc.BoxShadow(0, vShadow, thisObj.shadowBlur, 0, thisObj.shadowColor) : null
 				);
 			},
 
@@ -535,34 +470,22 @@ if (!window.jscolor) {
 					2 * thisObj.insetWidth +
 						2 * thisObj.padding +
 						thisObj.width +
-						(displaySlider
-							? 2 * thisObj.insetWidth +
-							  jsc.getPadToSliderPadding(thisObj) +
-							  thisObj.sliderSize
-							: 0),
+						(displaySlider ? 2 * thisObj.insetWidth + jsc.getPadToSliderPadding(thisObj) + thisObj.sliderSize : 0),
 					2 * thisObj.insetWidth +
 						2 * thisObj.padding +
 						thisObj.height +
-						(thisObj.closable
-							? 2 * thisObj.insetWidth + thisObj.padding + thisObj.buttonHeight
-							: 0),
+						(thisObj.closable ? 2 * thisObj.insetWidth + thisObj.padding + thisObj.buttonHeight : 0),
 				];
 				return dims;
 			},
 
 			getPickerOuterDims: function (thisObj) {
 				var dims = jsc.getPickerDims(thisObj);
-				return [
-					dims[0] + 2 * thisObj.borderWidth,
-					dims[1] + 2 * thisObj.borderWidth,
-				];
+				return [dims[0] + 2 * thisObj.borderWidth, dims[1] + 2 * thisObj.borderWidth];
 			},
 
 			getPadToSliderPadding: function (thisObj) {
-				return Math.max(
-					thisObj.padding,
-					1.5 * (2 * thisObj.pointerBorderWidth + thisObj.pointerThickness)
-				);
+				return Math.max(thisObj.padding, 1.5 * (2 * thisObj.pointerBorderWidth + thisObj.pointerThickness));
 			},
 
 			getPadYComponent: function (thisObj) {
@@ -661,13 +584,7 @@ if (!window.jscolor) {
 						"drag",
 						doc,
 						jsc._pointerMoveEvent[pointerType],
-						jsc.onDocumentPointerMove(
-							e,
-							target,
-							controlName,
-							pointerType,
-							offset
-						)
+						jsc.onDocumentPointerMove(e, target, controlName, pointerType, offset)
 					);
 					jsc.attachGroupEvent(
 						"drag",
@@ -718,13 +635,7 @@ if (!window.jscolor) {
 				jsc.dispatchFineChange(thisObj);
 			},
 
-			onDocumentPointerMove: function (
-				e,
-				target,
-				controlName,
-				pointerType,
-				offset
-			) {
+			onDocumentPointerMove: function (e, target, controlName, pointerType, offset) {
 				return function (e) {
 					var thisObj = target._jscInstance;
 					switch (controlName) {
@@ -781,18 +692,8 @@ if (!window.jscolor) {
 
 			setPad: function (thisObj, e, ofsX, ofsY) {
 				var pointerAbs = jsc.getAbsPointerPos(e);
-				var x =
-					ofsX +
-					pointerAbs.x -
-					jsc._pointerOrigin.x -
-					thisObj.padding -
-					thisObj.insetWidth;
-				var y =
-					ofsY +
-					pointerAbs.y -
-					jsc._pointerOrigin.y -
-					thisObj.padding -
-					thisObj.insetWidth;
+				var x = ofsX + pointerAbs.x - jsc._pointerOrigin.x - thisObj.padding - thisObj.insetWidth;
+				var y = ofsY + pointerAbs.y - jsc._pointerOrigin.y - thisObj.padding - thisObj.insetWidth;
 
 				var xVal = x * (360 / (thisObj.width - 1));
 				var yVal = 100 - y * (100 / (thisObj.height - 1));
@@ -809,12 +710,7 @@ if (!window.jscolor) {
 
 			setSld: function (thisObj, e, ofsY) {
 				var pointerAbs = jsc.getAbsPointerPos(e);
-				var y =
-					ofsY +
-					pointerAbs.y -
-					jsc._pointerOrigin.y -
-					thisObj.padding -
-					thisObj.insetWidth;
+				var y = ofsY + pointerAbs.y - jsc._pointerOrigin.y - thisObj.padding - thisObj.insetWidth;
 
 				var yVal = 100 - y * (100 / (thisObj.height - 1));
 
@@ -866,10 +762,7 @@ if (!window.jscolor) {
 						var ss = doc.createStyleSheet();
 						ss.owningElement.id = jsc._vmlCSS;
 						for (var i = 0; i < tags.length; i += 1) {
-							ss.addRule(
-								jsc._vmlNS + "\\:" + tags[i],
-								"behavior:url(#default#VML);"
-							);
+							ss.addRule(jsc._vmlNS + "\\:" + tags[i], "behavior:url(#default#VML);");
 						}
 					}
 					jsc._vmlReady = true;
@@ -936,8 +829,7 @@ if (!window.jscolor) {
 					hGrad.type = "gradient";
 					hGrad.method = "linear";
 					hGrad.angle = "90";
-					hGrad.colors =
-						"16.67% #F0F, 33.33% #00F, 50% #0FF, 66.67% #0F0, 83.33% #FF0";
+					hGrad.colors = "16.67% #F0F, 33.33% #00F, 50% #0FF, 66.67% #0F0, 83.33% #FF0";
 
 					var hRect = document.createElement(jsc._vmlNS + ":rect");
 					hRect.style.position = "absolute";
@@ -1064,14 +956,7 @@ if (!window.jscolor) {
 			leaveSld: 1 << 3,
 
 			BoxShadow: (function () {
-				var BoxShadow = function (
-					hShadow,
-					vShadow,
-					blur,
-					spread,
-					color,
-					inset
-				) {
+				var BoxShadow = function (hShadow, vShadow, blur, spread, color, inset) {
 					this.hShadow = hShadow;
 					this.vShadow = vShadow;
 					this.blur = blur;
@@ -1153,7 +1038,7 @@ if (!window.jscolor) {
 				this.pointerBorderColor = "#FFFFFF"; // px
 				this.pointerBorderWidth = 1; // px
 				this.pointerThickness = 2; // px
-				this.zIndex = 1000;
+				this.zIndex = 10000;
 				this.container = null; // where to append the color picker (BODY element by default)
 
 				for (var opt in options) {
@@ -1192,10 +1077,7 @@ if (!window.jscolor) {
 									}
 									this.exportColor(jsc.leaveValue | jsc.leaveStyle);
 								}
-							} else if (
-								!this.required &&
-								/^\s*$/.test(this.valueElement.value)
-							) {
+							} else if (!this.required && /^\s*$/.test(this.valueElement.value)) {
 								this.valueElement.value = "";
 								if (this.styleElement) {
 									this.styleElement.style.backgroundImage = this.styleElement._jscOrigStyle.backgroundImage;
@@ -1241,15 +1123,7 @@ if (!window.jscolor) {
 							this.styleElement.style.color = fgColor;
 
 							if (this.overwriteImportant) {
-								this.styleElement.setAttribute(
-									"style",
-									"background: " +
-										bgColor +
-										" !important; " +
-										"color: " +
-										fgColor +
-										" !important;"
-								);
+								this.styleElement.setAttribute("style", "background: " + bgColor + " !important; " + "color: " + fgColor + " !important;");
 							}
 						}
 					}
@@ -1320,24 +1194,14 @@ if (!window.jscolor) {
 						b = Math.max(0, Math.min(255, b));
 					}
 
-					var hsv = RGB_HSV(
-						r === null ? this.rgb[0] : r,
-						g === null ? this.rgb[1] : g,
-						b === null ? this.rgb[2] : b
-					);
+					var hsv = RGB_HSV(r === null ? this.rgb[0] : r, g === null ? this.rgb[1] : g, b === null ? this.rgb[2] : b);
 					if (hsv[0] !== null) {
 						this.hsv[0] = Math.max(0, Math.min(360, hsv[0]));
 					}
 					if (hsv[2] !== 0) {
-						this.hsv[1] =
-							hsv[1] === null
-								? null
-								: Math.max(0, this.minS, Math.min(100, this.maxS, hsv[1]));
+						this.hsv[1] = hsv[1] === null ? null : Math.max(0, this.minS, Math.min(100, this.maxS, hsv[1]));
 					}
-					this.hsv[2] =
-						hsv[2] === null
-							? null
-							: Math.max(0, this.minV, Math.min(100, this.maxV, hsv[2]));
+					this.hsv[2] = hsv[2] === null ? null : Math.max(0, this.minV, Math.min(100, this.maxV, hsv[2]));
 
 					// update RGB according to final HSV, as some values might be trimmed
 					var rgb = HSV_RGB(this.hsv[0], this.hsv[1], this.hsv[2]);
@@ -1356,12 +1220,7 @@ if (!window.jscolor) {
 
 						if (m[1].length === 6) {
 							// 6-char notation
-							this.fromRGB(
-								parseInt(m[1].substr(0, 2), 16),
-								parseInt(m[1].substr(2, 2), 16),
-								parseInt(m[1].substr(4, 2), 16),
-								flags
-							);
+							this.fromRGB(parseInt(m[1].substr(0, 2), 16), parseInt(m[1].substr(2, 2), 16), parseInt(m[1].substr(4, 2), 16), flags);
 						} else {
 							// 3-char notation
 							this.fromRGB(
@@ -1376,12 +1235,7 @@ if (!window.jscolor) {
 						var params = m[1].split(",");
 						var re = /^\s*(\d*)(\.\d+)?\s*$/;
 						var mR, mG, mB;
-						if (
-							params.length >= 3 &&
-							(mR = params[0].match(re)) &&
-							(mG = params[1].match(re)) &&
-							(mB = params[2].match(re))
-						) {
+						if (params.length >= 3 && (mR = params[0].match(re)) && (mG = params[1].match(re)) && (mB = params[2].match(re))) {
 							var r = parseFloat((mR[1] || "0") + (mR[2] || ""));
 							var g = parseFloat((mG[1] || "0") + (mG[2] || ""));
 							var b = parseFloat((mB[1] || "0") + (mB[2] || ""));
@@ -1405,22 +1259,11 @@ if (!window.jscolor) {
 				};
 
 				this.toRGBString = function () {
-					return (
-						"rgb(" +
-						Math.round(this.rgb[0]) +
-						"," +
-						Math.round(this.rgb[1]) +
-						"," +
-						Math.round(this.rgb[2]) +
-						")"
-					);
+					return "rgb(" + Math.round(this.rgb[0]) + "," + Math.round(this.rgb[1]) + "," + Math.round(this.rgb[2]) + ")";
 				};
 
 				this.isLight = function () {
-					return (
-						0.213 * this.rgb[0] + 0.715 * this.rgb[1] + 0.072 * this.rgb[2] >
-						255 / 2
-					);
+					return 0.213 * this.rgb[0] + 0.715 * this.rgb[1] + 0.072 * this.rgb[2] > 255 / 2;
 				};
 
 				this._processParentElementsInDOM = function () {
@@ -1471,12 +1314,7 @@ if (!window.jscolor) {
 					if (m === 0) {
 						return [null, 0, 100 * v];
 					}
-					var h =
-						r === n
-							? 3 + (b - g) / m
-							: g === n
-							? 5 + (r - b) / m
-							: 1 + (g - r) / m;
+					var h = r === n ? 3 + (b - g) / m : g === n ? 5 + (r - b) / m : 1 + (g - r) / m;
 					return [60 * (h === 6 ? 0 : h), 100 * (m / v), 100 * v];
 				}
 
@@ -1588,15 +1426,9 @@ if (!window.jscolor) {
 
 					var displaySlider = !!jsc.getSliderComponent(THIS);
 					var dims = jsc.getPickerDims(THIS);
-					var crossOuterSize =
-						2 * THIS.pointerBorderWidth +
-						THIS.pointerThickness +
-						2 * THIS.crossSize;
+					var crossOuterSize = 2 * THIS.pointerBorderWidth + THIS.pointerThickness + 2 * THIS.crossSize;
 					var padToSliderPadding = jsc.getPadToSliderPadding(THIS);
-					var borderRadius = Math.min(
-						THIS.borderRadius,
-						Math.round(THIS.padding * Math.PI)
-					); // px
+					var borderRadius = Math.min(THIS.borderRadius, Math.round(THIS.padding * Math.PI)); // px
 					var padCursor = "crosshair";
 
 					// wrap
@@ -1651,12 +1483,7 @@ if (!window.jscolor) {
 					p.padM.style.position = "absolute";
 					p.padM.style.left = "0";
 					p.padM.style.top = "0";
-					p.padM.style.width =
-						THIS.padding +
-						2 * THIS.insetWidth +
-						THIS.width +
-						padToSliderPadding / 2 +
-						"px";
+					p.padM.style.width = THIS.padding + 2 * THIS.insetWidth + THIS.width + padToSliderPadding / 2 + "px";
 					p.padM.style.height = dims[1] + "px";
 					p.padM.style.cursor = padCursor;
 
@@ -1667,33 +1494,20 @@ if (!window.jscolor) {
 
 					// pad cross border Y and X
 					p.crossBY.style.position = p.crossBX.style.position = "absolute";
-					p.crossBY.style.background = p.crossBX.style.background =
-						THIS.pointerBorderColor;
-					p.crossBY.style.width = p.crossBX.style.height =
-						2 * THIS.pointerBorderWidth + THIS.pointerThickness + "px";
-					p.crossBY.style.height = p.crossBX.style.width =
-						crossOuterSize + "px";
+					p.crossBY.style.background = p.crossBX.style.background = THIS.pointerBorderColor;
+					p.crossBY.style.width = p.crossBX.style.height = 2 * THIS.pointerBorderWidth + THIS.pointerThickness + "px";
+					p.crossBY.style.height = p.crossBX.style.width = crossOuterSize + "px";
 					p.crossBY.style.left = p.crossBX.style.top =
-						Math.floor(crossOuterSize / 2) -
-						Math.floor(THIS.pointerThickness / 2) -
-						THIS.pointerBorderWidth +
-						"px";
+						Math.floor(crossOuterSize / 2) - Math.floor(THIS.pointerThickness / 2) - THIS.pointerBorderWidth + "px";
 					p.crossBY.style.top = p.crossBX.style.left = "0";
 
 					// pad cross line Y and X
 					p.crossLY.style.position = p.crossLX.style.position = "absolute";
-					p.crossLY.style.background = p.crossLX.style.background =
-						THIS.pointerColor;
-					p.crossLY.style.height = p.crossLX.style.width =
-						crossOuterSize - 2 * THIS.pointerBorderWidth + "px";
-					p.crossLY.style.width = p.crossLX.style.height =
-						THIS.pointerThickness + "px";
-					p.crossLY.style.left = p.crossLX.style.top =
-						Math.floor(crossOuterSize / 2) -
-						Math.floor(THIS.pointerThickness / 2) +
-						"px";
-					p.crossLY.style.top = p.crossLX.style.left =
-						THIS.pointerBorderWidth + "px";
+					p.crossLY.style.background = p.crossLX.style.background = THIS.pointerColor;
+					p.crossLY.style.height = p.crossLX.style.width = crossOuterSize - 2 * THIS.pointerBorderWidth + "px";
+					p.crossLY.style.width = p.crossLX.style.height = THIS.pointerThickness + "px";
+					p.crossLY.style.left = p.crossLX.style.top = Math.floor(crossOuterSize / 2) - Math.floor(THIS.pointerThickness / 2) + "px";
+					p.crossLY.style.top = p.crossLX.style.left = THIS.pointerBorderWidth + "px";
 
 					// slider
 					p.sld.style.overflow = "hidden";
@@ -1718,28 +1532,20 @@ if (!window.jscolor) {
 					p.sldM.style.position = "absolute";
 					p.sldM.style.right = "0";
 					p.sldM.style.top = "0";
-					p.sldM.style.width =
-						THIS.sliderSize +
-						padToSliderPadding / 2 +
-						THIS.padding +
-						2 * THIS.insetWidth +
-						"px";
+					p.sldM.style.width = THIS.sliderSize + padToSliderPadding / 2 + THIS.padding + 2 * THIS.insetWidth + "px";
 					p.sldM.style.height = dims[1] + "px";
 					p.sldM.style.cursor = "default";
 
 					// slider pointer inner and outer border
-					p.sldPtrIB.style.border = p.sldPtrOB.style.border =
-						THIS.pointerBorderWidth + "px solid " + THIS.pointerBorderColor;
+					p.sldPtrIB.style.border = p.sldPtrOB.style.border = THIS.pointerBorderWidth + "px solid " + THIS.pointerBorderColor;
 
 					// slider pointer outer border
 					p.sldPtrOB.style.position = "absolute";
-					p.sldPtrOB.style.left =
-						-(2 * THIS.pointerBorderWidth + THIS.pointerThickness) + "px";
+					p.sldPtrOB.style.left = -(2 * THIS.pointerBorderWidth + THIS.pointerThickness) + "px";
 					p.sldPtrOB.style.top = "0";
 
 					// slider pointer middle border
-					p.sldPtrMB.style.border =
-						THIS.pointerThickness + "px solid " + THIS.pointerColor;
+					p.sldPtrMB.style.border = THIS.pointerThickness + "px solid " + THIS.pointerColor;
 
 					// slider pointer spacer
 					p.sldPtrS.style.width = THIS.sliderSize + "px";
@@ -1749,15 +1555,7 @@ if (!window.jscolor) {
 					function setBtnBorder() {
 						var insetColors = THIS.insetColor.split(/\s+/);
 						var outsetColor =
-							insetColors.length < 2
-								? insetColors[0]
-								: insetColors[1] +
-								  " " +
-								  insetColors[0] +
-								  " " +
-								  insetColors[0] +
-								  " " +
-								  insetColors[1];
+							insetColors.length < 2 ? insetColors[0] : insetColors[1] + " " + insetColors[0] + " " + insetColors[0] + " " + insetColors[1];
 						p.btn.style.borderColor = outsetColor;
 					}
 					p.btn.style.display = THIS.closable ? "block" : "none";
@@ -1822,13 +1620,8 @@ if (!window.jscolor) {
 							break;
 					}
 					var x = Math.round((THIS.hsv[0] / 360) * (THIS.width - 1));
-					var y = Math.round(
-						(1 - THIS.hsv[yComponent] / 100) * (THIS.height - 1)
-					);
-					var crossOuterSize =
-						2 * THIS.pointerBorderWidth +
-						THIS.pointerThickness +
-						2 * THIS.crossSize;
+					var y = Math.round((1 - THIS.hsv[yComponent] / 100) * (THIS.height - 1));
+					var crossOuterSize = 2 * THIS.pointerBorderWidth + THIS.pointerThickness + 2 * THIS.crossSize;
 					var ofs = -Math.floor(crossOuterSize / 2);
 					jsc.picker.cross.style.left = x + ofs + "px";
 					jsc.picker.cross.style.top = y + ofs + "px";
@@ -1838,46 +1631,15 @@ if (!window.jscolor) {
 						case "s":
 							var rgb1 = HSV_RGB(THIS.hsv[0], 100, THIS.hsv[2]);
 							var rgb2 = HSV_RGB(THIS.hsv[0], 0, THIS.hsv[2]);
-							var color1 =
-								"rgb(" +
-								Math.round(rgb1[0]) +
-								"," +
-								Math.round(rgb1[1]) +
-								"," +
-								Math.round(rgb1[2]) +
-								")";
-							var color2 =
-								"rgb(" +
-								Math.round(rgb2[0]) +
-								"," +
-								Math.round(rgb2[1]) +
-								"," +
-								Math.round(rgb2[2]) +
-								")";
-							jsc.picker.sldGrad.draw(
-								THIS.sliderSize,
-								THIS.height,
-								color1,
-								color2
-							);
+							var color1 = "rgb(" + Math.round(rgb1[0]) + "," + Math.round(rgb1[1]) + "," + Math.round(rgb1[2]) + ")";
+							var color2 = "rgb(" + Math.round(rgb2[0]) + "," + Math.round(rgb2[1]) + "," + Math.round(rgb2[2]) + ")";
+							jsc.picker.sldGrad.draw(THIS.sliderSize, THIS.height, color1, color2);
 							break;
 						case "v":
 							var rgb = HSV_RGB(THIS.hsv[0], THIS.hsv[1], 100);
-							var color1 =
-								"rgb(" +
-								Math.round(rgb[0]) +
-								"," +
-								Math.round(rgb[1]) +
-								"," +
-								Math.round(rgb[2]) +
-								")";
+							var color1 = "rgb(" + Math.round(rgb[0]) + "," + Math.round(rgb[1]) + "," + Math.round(rgb[2]) + ")";
 							var color2 = "#000";
-							jsc.picker.sldGrad.draw(
-								THIS.sliderSize,
-								THIS.height,
-								color1,
-								color2
-							);
+							jsc.picker.sldGrad.draw(THIS.sliderSize, THIS.height, color1, color2);
 							break;
 					}
 				}
@@ -1894,14 +1656,9 @@ if (!window.jscolor) {
 								var yComponent = 2;
 								break;
 						}
-						var y = Math.round(
-							(1 - THIS.hsv[yComponent] / 100) * (THIS.height - 1)
-						);
+						var y = Math.round((1 - THIS.hsv[yComponent] / 100) * (THIS.height - 1));
 						jsc.picker.sldPtrOB.style.top =
-							y -
-							(2 * THIS.pointerBorderWidth + THIS.pointerThickness) -
-							Math.floor(sliderPtrSpace / 2) +
-							"px";
+							y - (2 * THIS.pointerBorderWidth + THIS.pointerThickness) - Math.floor(sliderPtrSpace / 2) + "px";
 					}
 				}
 
@@ -1940,9 +1697,7 @@ if (!window.jscolor) {
 				this.styleElement = jsc.fetchElement(this.styleElement);
 
 				var THIS = this;
-				var container = this.container
-					? jsc.fetchElement(this.container)
-					: document.getElementsByTagName("body")[0];
+				var container = this.container ? jsc.fetchElement(this.container) : document.getElementsByTagName("body")[0];
 				var sliderPtrSpace = 3; // px
 
 				// For BUTTON elements it's important to stop them from sending the form when clicked

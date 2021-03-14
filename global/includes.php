@@ -102,7 +102,7 @@ if (defined("ROUTE")) {
     const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
 </script>
 
-<?php if (Request::$is_admin_url || strpos(Request::$url, "zamowienie") === 0) : ?>
+<?php if (Request::$is_admin_url) : ?>
 
     <script>
         const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;
