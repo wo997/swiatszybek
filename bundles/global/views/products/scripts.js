@@ -82,11 +82,14 @@ domload(() => {
 		}
 	});
 
-	const gray = parseInt("888888", 16);
 	$$("p-checkbox.colorful").forEach((e) => {
 		const checkbox_color = e.style.getPropertyValue("--checkbox_color");
 		if (checkbox_color) {
-			e.classList.toggle("bright_color", parseInt(checkbox_color.replace("#", ""), 16) > gray);
+			const hex = checkbox_color.replace("#", "");
+			const r = parseInt(hex.substr(0, 2), 16);
+			const g = parseInt(hex.substr(2, 2), 16);
+			const b = parseInt(hex.substr(4, 2), 16);
+			e.classList.toggle("bright_color", 0.299 * r + 0.587 * g + 0.114 * b > 255 / 2);
 		}
 	});
 
