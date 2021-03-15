@@ -7,29 +7,40 @@ let piep_editor_cursor;
 /** @type {PiepNode} */
 let piep_editor_content;
 
+/**
+ * @typedef {{
+ * id: number
+ * tag: string
+ * text?: string
+ * styles?: any
+ * children?: vDomNode[]
+ * }} vDomNode
+ */
+
 const virtual_dom = {
+	tag: "div",
 	id: 0,
 	children: [
-		{ id: 1, type: "h1", text: "Dobry frejmwork", styles: { fontSize: "20px", fontWeight: "bold", color: "blue" } },
+		{ id: 1, tag: "h1", text: "Dobry frejmwork", styles: { fontSize: "20px", fontWeight: "bold", color: "blue" } },
 		{
 			id: 2,
-			type: "p",
+			tag: "p",
 			text:
 				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 			styles: { marginTop: "20px" },
 		},
 		{
 			id: 3,
-			type: "div",
+			tag: "div",
 			children: [
-				{ id: 4, type: "p", text: "dziecko 1" },
-				{ id: 8, type: "p", text: "" },
+				{ id: 4, tag: "p", text: "dziecko 1" },
+				{ id: 8, tag: "p", text: "" },
 				{
 					id: 5,
-					type: "p",
+					tag: "p",
 					children: [
-						{ id: 6, type: "span", text: "dziecko 2.1" },
-						{ id: 7, type: "span", text: "dziecko 2.2" },
+						{ id: 6, tag: "span", text: "dziecko 2.1" },
+						{ id: 7, tag: "span", text: "dziecko 2.2" },
 					],
 				},
 			],
@@ -37,7 +48,7 @@ const virtual_dom = {
 	],
 };
 
-function getNewPed() {
+function getNewId() {
 	let max = 0;
 	const traversePiepHtml = (nodes) => {
 		for (const node of nodes) {
@@ -55,69 +66,82 @@ function getNewPed() {
 }
 
 function recreateDom() {
-	const traversePiepHtml = (nodes) => {
+	/**
+	 *
+	 * @param {vDomNode} node
+	 * @returns
+	 */
+	const traverseVDom = (node) => {
 		let piep_html = "";
 
-		for (const node of nodes) {
-			piep_html += `<${node.type} class="ped_${node.id}" data-ped="${node.id}">`;
+		const children = node.children;
+		const text = node.text;
 
-			const text = node.text;
-			if (text !== undefined) {
-				if (text) {
-					piep_html += text;
-				} else {
-					piep_html += "<br>";
-				}
-			} else if (node.children) {
-				piep_html += traversePiepHtml(node.children);
+		piep_html += `<${node.tag} class="ped_${node.id}" data-ped="${node.id}">`;
+
+		if (children) {
+			for (const child of children) {
+				piep_html += traverseVDom(child);
 			}
-
-			piep_html += `</${node.type}>`;
+		} else if (text !== undefined) {
+			if (text) {
+				piep_html += text;
+			} else {
+				piep_html += "<br>";
+			}
 		}
+
+		piep_html += `</${node.tag}>`;
 
 		return piep_html;
 	};
 
-	let piep_html = traversePiepHtml(virtual_dom.children);
+	let piep_html = traverseVDom(virtual_dom);
 
 	piep_editor_content._set_content(piep_html);
 }
 
 /**
  *
- * @param {number} ped
- * @param {*} v_dom
+ * @param {number} id
  * @returns {{
- * node: *,
- * children: array,
- * i: number,
+ * node: vDomNode,
+ * children: vDomNode[],
+ * index: number,
  * }}
  */
-function findNodeInVirtualDom(ped, v_dom = undefined) {
-	if (!ped) {
+function findNodeInVirtualDom(id) {
+	if (!id) {
 		return undefined;
 	}
-	if (v_dom === undefined) {
-		v_dom = virtual_dom;
-	}
-	if (v_dom.id === ped) {
-		return v_dom;
-	}
-	const children = v_dom.children;
-	if (children) {
-		for (let i = 0; i < children.length; i++) {
-			const sub_v_dom = children[i];
-			const res = findNodeInVirtualDom(ped, sub_v_dom);
-			if (res) {
-				return {
-					node: sub_v_dom,
-					children,
-					i,
-				};
+
+	/**
+	 *
+	 * @param {vDomNode} node
+	 * @returns
+	 */
+	const traverseVDom = (node) => {
+		const children = node.children;
+
+		if (children) {
+			let index = -1;
+			for (const child of children) {
+				index++;
+				if (child.id === id) {
+					return {
+						node: child,
+						children,
+						index,
+					};
+				}
+				traverseVDom(child);
 			}
 		}
-	}
-	return undefined;
+
+		return undefined;
+	};
+
+	return traverseVDom(virtual_dom);
 }
 
 domload(() => {
@@ -150,8 +174,8 @@ domload(() => {
 		const focusOffset = sel.focusOffset;
 		const focus_node = $(sel.focusNode);
 		const focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
-		const ped = focus_html_node ? +focus_html_node.dataset.ped : 0;
-		const virtual_node = findNodeInVirtualDom(ped);
+		const id = focus_html_node ? +focus_html_node.dataset.ped : 0;
+		const virtual_node = findNodeInVirtualDom(id);
 		const text_node = getTextNode(focus_node);
 
 		let prev_node;
@@ -190,7 +214,7 @@ domload(() => {
 				virtual_node.node.text = text.substr(0, focusOffset) + ev.key + text.substr(focusOffset);
 				recreateDom();
 
-				const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
+				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 
 				if (node_ref) {
 					const t = node_ref.childNodes[0];
@@ -204,16 +228,31 @@ domload(() => {
 		}
 
 		if (ev.key === "Backspace") {
-			// if (focusOffset === 0) {
-			// }
-
 			const text = virtual_node.node.text;
-			if (typeof text === "string") {
+			if (focusOffset === 0) {
+				const prev_index = virtual_node.index - 1;
+				if (prev_index >= 0) {
+					const prev_v_node = virtual_node.children[prev_index];
+					const prev_id = prev_v_node.id;
+
+					const prev_v_node_text_before = prev_v_node.text;
+					prev_v_node.text = prev_v_node_text_before + virtual_node.node.text;
+					virtual_node.children.splice(virtual_node.index, 1);
+					recreateDom();
+
+					const prev_node_ref = piep_editor_content._child(`[data-ped="${prev_id}"]`);
+					if (prev_node_ref) {
+						const t = prev_node_ref.childNodes[0];
+						range.setStart(t, prev_v_node_text_before.length);
+						range.setEnd(t, prev_v_node_text_before.length);
+						setSelectionRange(range);
+					}
+				}
+			} else {
 				virtual_node.node.text = text.substr(0, focusOffset - 1) + text.substr(focusOffset);
 				recreateDom();
 
-				const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
-
+				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 				if (node_ref) {
 					const t = node_ref.childNodes[0];
 					range.setStart(t, focusOffset - 1);
@@ -254,26 +293,23 @@ domload(() => {
 
 			ev.preventDefault();
 		}
-		if (ev.key === "Enter" && sel) {
+		if (ev.key === "Enter" && virtual_node) {
 			const text = virtual_node.node.text;
 			if (typeof text === "string") {
 				const insert_v_node = cloneObject(virtual_node.node);
 				insert_v_node.text = text.substr(focusOffset);
-				insert_v_node.id = getNewPed();
+				const insert_node_id = getNewId();
+				insert_v_node.id = insert_node_id;
 				virtual_node.node.text = text.substr(0, focusOffset);
-				virtual_node.children.splice(virtual_node.i + 1, 0, insert_v_node);
+				virtual_node.children.splice(virtual_node.index + 1, 0, insert_v_node);
 				recreateDom();
 
-				const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
-
-				if (node_ref) {
-					const next = node_ref._next();
-					if (next) {
-						const t = next.childNodes[0];
-						range.setStart(t, 0);
-						range.setEnd(t, 0);
-						setSelectionRange(range);
-					}
+				const insert_node_ref = piep_editor_content._child(`[data-ped="${insert_node_id}"]`);
+				if (insert_node_ref) {
+					const t = insert_node_ref.childNodes[0];
+					range.setStart(t, 0);
+					range.setEnd(t, 0);
+					setSelectionRange(range);
 				}
 			}
 
