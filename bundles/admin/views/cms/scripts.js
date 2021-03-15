@@ -101,6 +101,15 @@ function recreateDom() {
 	piep_editor_content._set_content(piep_html);
 }
 
+/**
+ *
+ * @param {number} id
+ * @returns {{
+ * node: vDomNode,
+ * children: vDomNode[],
+ * index: number,
+ * }}
+ */
 function findNodeInVirtualDom(id) {
 	if (!id) {
 		return undefined;
