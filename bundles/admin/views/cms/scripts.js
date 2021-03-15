@@ -172,14 +172,16 @@ domload(() => {
 		const sel = window.getSelection();
 		const range = document.createRange();
 		const focusOffset = sel.focusOffset;
-		const focus_node = $(sel.focusNode);
-		const focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
-		const id = focus_html_node ? +focus_html_node.dataset.ped : 0;
+		//const focus_node = $(sel.focusNode);
+		const focus_node = $(".piep_focus");
+		//const focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
+		//const id = focus_html_node ? +focus_html_node.dataset.ped : 0;
+		const id = focus_node ? +focus_node.dataset.ped : 0;
 		const virtual_node = findNodeInVirtualDom(id);
 		const text_node = getTextNode(focus_node);
 
 		let prev_node;
-		let parent = focus_html_node;
+		let parent = focus_node;
 		while (parent) {
 			if (parent._prev()) {
 				prev_node = parent._prev();
@@ -194,7 +196,7 @@ domload(() => {
 		}
 
 		let next_node;
-		parent = focus_html_node;
+		parent = focus_node;
 		while (parent) {
 			if (parent._next()) {
 				next_node = parent._next();
@@ -209,6 +211,8 @@ domload(() => {
 		}
 
 		if (ev.key.length === 1 && sel) {
+			ev.preventDefault();
+
 			const text = virtual_node.node.text;
 			if (typeof text === "string") {
 				virtual_node.node.text = text.substr(0, focusOffset) + ev.key + text.substr(focusOffset);
@@ -220,11 +224,11 @@ domload(() => {
 					selectElementContentsByIndex(node_ref, focusOffset + 1);
 				}
 			}
-
-			ev.preventDefault();
 		}
 
 		if (ev.key === "Backspace") {
+			ev.preventDefault();
+
 			const text = virtual_node.node.text;
 			if (focusOffset === 0) {
 				const prev_index = virtual_node.index - 1;
@@ -251,30 +255,33 @@ domload(() => {
 					selectElementContentsByIndex(node_ref, focusOffset - 1);
 				}
 			}
-
-			ev.preventDefault();
 		}
 
 		if (ev.key === "ArrowLeft") {
-			if (focusOffset === 0 && prev_textable) {
-				selectElementContentsByIndex(prev_textable, prev_textable.textContent.length);
-				ev.preventDefault();
+			ev.preventDefault();
+
+			if (focusOffset <= 0) {
+				if (prev_textable) {
+					selectElementContentsByIndex(prev_textable, prev_textable.textContent.length);
+				}
 			} else {
 				selectElementContentsByIndex(focus_node, focusOffset - 1);
 			}
-
-			ev.preventDefault();
 		}
 		if (ev.key === "ArrowRight") {
-			if (focusOffset === focus_html_node.textContent.length && next_textable) {
-				selectElementContentsByIndex(next_textable, 0);
+			ev.preventDefault();
+
+			if (focusOffset >= focus_node.textContent.length) {
+				if (next_textable) {
+					selectElementContentsByIndex(next_textable, 0);
+				}
 			} else {
 				selectElementContentsByIndex(focus_node, focusOffset + 1);
 			}
-
-			ev.preventDefault();
 		}
 		if (ev.key === "Enter" && virtual_node) {
+			ev.preventDefault();
+
 			const text = virtual_node.node.text;
 			if (typeof text === "string") {
 				const insert_v_node = cloneObject(virtual_node.node);
@@ -290,8 +297,6 @@ domload(() => {
 					selectElementContentsByIndex(insert_node_ref, 0);
 				}
 			}
-
-			ev.preventDefault();
 		}
 	});
 
@@ -329,11 +334,11 @@ function updatePiepCursorPosition() {
 	const range = document.createRange();
 
 	const focus_node = $(sel.focusNode);
-	const text_node = getTextNode(focus_node);
+	//const text_node = getTextNode(focus_node);
 
 	let focus_html_node;
 	if (sel && sel.focusNode && focus_node.innerHTML === focus_node.innerText) {
-		focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
+		focus_html_node = focus_node ? focus_node._parent(`[data-ped]`, { skip: 0 }) : undefined;
 
 		range.setStart(sel.focusNode, sel.focusOffset);
 		range.setEnd(sel.focusNode, sel.focusOffset);
