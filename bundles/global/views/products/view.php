@@ -76,12 +76,18 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
         $ul_class .= " radio_group unselectable";
     }
 
-    $checkbox_class = "inline option_checkbox black_light";
+    $checkbox_class = "inline option_checkbox";
     if ($list_type === "single") {
         $checkbox_class .= " circle";
     } else {
         $checkbox_class .= " square";
     }
+    if ($feature_extra === "color") {
+        $checkbox_class .= " colorful";
+    } else {
+        $checkbox_class .= " black_light";
+    }
+
 
     $html = "<ul class=\"$ul_class\">";
     $display = false;
@@ -94,20 +100,25 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
             $display = true;
         }
 
+        $checkbox_style = "";
+
         $show_before = "";
         if ($feature_extra === "color") {
             $extra = json_decode($option["extra_json"], true);
             if ($extra) {
                 $color = def($extra, "color", "");
                 if ($color) {
-                    $show_before = "<div class=\"just_color\" style=\"--color:$color\"></div>";
+                    //$show_before = "<div class=\"just_color\" style=\"--color:$color\"></div>";
+                    $checkbox_style = "--checkbox_color:#$color";
                 }
             }
         }
 
+        //$checkbox_style = "";
+
         $html .= "<li class=\"option_row\">";
         $html .= "<div class=\"checkbox_area\">";
-        $html .= "<p-checkbox class=\"$checkbox_class\" data-option_id=\"$id\" data-value=\"$id\"></p-checkbox>";
+        $html .= "<p-checkbox class=\"$checkbox_class\" data-value=\"$id\" style=\"$checkbox_style\"></p-checkbox>";
         $html .= " <span class=\"feature_option_label\">$show_before $value</span>";
         $html .= " <span class=\"count\">($count)</span>";
         $html .= "</div> ";
@@ -275,7 +286,7 @@ foreach ($options_data as $option_data) {
                 <div class="search_header">
                     <span>Cechy</span>
                     <span class="feature_filter_count"></span>
-                    <button class="btn transparent small clear_filters_btn" data-tooltip="Wyczyść filtry" data-tooltip_position="right"> <i class="fas fa-eraser"></i></button>
+                    <button class="btn transparent small clear_filters_btn" data-tooltip="Wyczyść filtry" data-tooltip_position="right"> <i class="fas fa-eraser" style="transform: scale(1.25);"></i></button>
                 </div>
                 <ul class="product_features">
                     <?= traverseFeatures() ?>

@@ -31,12 +31,12 @@ p-checkbox::before {
 	content: "";
 	width: var(--p-checkbox-width);
 	height: var(--p-checkbox-height);
-	border: 1px solid #bbb;
+	box-shadow: inset 0 0 0 1px #0002;
 	display: block;
 	position: absolute;
 	left: 0;
 	top: 0;
-	background: #0001;
+	background: var(--checkbox_color, #0001);
 	border-radius: 4px;
 }
 
@@ -90,18 +90,7 @@ p-checkbox {
 p-checkbox:hover {
 	& {
 		box-shadow: var(--field-hover-shadow);
-	}
-	.circle {
-		filter: brightness(1.02);
-		border-color: #888;
-	}
-	&.checked .circle {
-		border: 1px solid #090;
-		filter: brightness(1.13);
-	}
-	&::before {
-		background: #f4f4f4;
-		border-color: #999;
+		filter: brightness(1.05);
 	}
 }
 
@@ -125,24 +114,10 @@ p-checkbox:not(.square):not(.circle).checked::after {
 p-checkbox.checked .circle {
 	background: var(--success-clr);
 	left: calc(var(--p-checkbox-width) - var(--p-checkbox-height));
-	border: 1px solid #090;
 }
 
-p-checkbox.black_light {
-	&.checked {
-		.circle {
-			border-color: #0008;
-			background: #0001;
-			background: #fff;
-		}
-		.fa-check {
-			color: #000;
-		}
-	}
-}
-
-p-checkbox .fa-check,
-p-checkbox .fa-minus {
+p-checkbox .check,
+p-checkbox .minus {
 	position: absolute;
 	opacity: 1;
 	transition: 0.2s all;
@@ -150,15 +125,24 @@ p-checkbox .fa-minus {
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
-p-checkbox .fa-check {
-	color: white;
+p-checkbox .check {
+	border-bottom: 2px solid black;
+	border-left: 2px solid #000;
+	width: 1em;
+	height: 0.6em;
+	transform: translate(-47%, -83%) rotate(-53deg);
+	color: transparent;
 }
-p-checkbox .fa-minus {
-	color: #999;
+p-checkbox.checked .check {
+	border-color: #fff;
+}
+p-checkbox .minus {
+	border-bottom: 2px solid #777;
+	width: 12px;
 }
 
-p-checkbox:not(.checked) .fa-check,
-p-checkbox.checked .fa-minus {
+p-checkbox:not(.checked) .check,
+p-checkbox.checked .minus {
 	opacity: 0;
 	pointer-events: none;
 }
@@ -177,7 +161,7 @@ p-checkbox.circle {
 	& {
 		--p-checkbox-width: var(--p-checkbox-height);
 	}
-	.fa-minus {
+	.minus {
 		display: none;
 	}
 }
@@ -196,4 +180,28 @@ p-checkbox.focus {
 
 .radio_group.invalid .checkbox_area span {
 	text-decoration: underline red !important;
+}
+
+p-checkbox.black_light {
+	&.checked {
+		.circle {
+			border: 1px solid #0004;
+			background: #0001;
+			background: #fff;
+		}
+		.check {
+			border-color: #000;
+		}
+	}
+}
+p-checkbox.colorful {
+	.circle {
+		background: none;
+	}
+	.check {
+		border-color: #fff;
+	}
+	&.bright_color .check {
+		border-color: #000;
+	}
 }

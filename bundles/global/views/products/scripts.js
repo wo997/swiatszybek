@@ -78,6 +78,14 @@ domload(() => {
 		}
 	});
 
+	const gray = parseInt("888888", 16);
+	$$("p-checkbox.colorful").forEach((e) => {
+		const checkbox_color = e.style.getPropertyValue("--checkbox_color");
+		if (checkbox_color) {
+			e.classList.toggle("bright_color", parseInt(checkbox_color.replace("#", ""), 16) > gray);
+		}
+	});
+
 	setTimeout(() => {
 		product_list_ready = true;
 	});
@@ -330,7 +338,10 @@ function setCategoryFeaturesFromUrl() {
 
 	const matched_boxes = [];
 	pp_selected_option_groups.flat(1).forEach((option_id) => {
-		const option_checkbox = $(`.product_features .option_checkbox[data-option_id="${option_id}"]`);
+		const option_checkbox = $(`.product_features .option_checkbox[data-value="${option_id}"]`);
+		if (!option_checkbox) {
+			return;
+		}
 		matched_boxes.push(option_checkbox);
 		option_checkbox._set_value(1, { quiet: true });
 
@@ -386,7 +397,7 @@ function getSelectedOptionsData() {
 			if (expand_y && expand_y._children(".option_checkbox.checked").length !== 0) {
 				return;
 			}
-			option_ids.push(+option_checkbox.dataset.option_id);
+			option_ids.push(+option_checkbox.dataset.value);
 		});
 		if (option_ids.length > 0) {
 			data.push({ option_ids, all_names });

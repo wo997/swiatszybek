@@ -36,8 +36,8 @@ function registerCheckboxes(parent) {
 			html`
 				<input type="checkbox" />
 				<div class="circle">
-					<i class="fas fa-minus"></i>
-					<i class="fas fa-check"></i>
+					<i class="minus"></i>
+					<i class="check"></i>
 				</div>
 			`
 		);
@@ -83,7 +83,8 @@ function registerCheckboxes(parent) {
 			}
 
 			if (!input.classList.contains("square")) {
-				input.classList.add("circle");
+				//input.classList.add("circle");
+				input.classList.add("square");
 			}
 			input.addEventListener("change", () => {
 				radio_group._set_value(input._get_value() ? input.dataset.value : "");

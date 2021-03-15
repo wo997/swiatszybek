@@ -292,9 +292,7 @@ function getValue(input, options = {}) {
 			v = reverseDateString(v, "-");
 		}
 	} else if (input.classList.contains("jscolor")) {
-		if (v && v.charAt(0) != "#") {
-			v = "#" + v;
-		}
+		v = v.replace("#", "");
 	} else {
 		var type = input.dataset.type;
 		if (type == "html") {
@@ -758,4 +756,17 @@ function rewriteProps(src, to, props) {
  */
 function rewritePropsObjHas(src, to) {
 	rewriteProps(src, to, Object.keys(to));
+}
+
+function rgbStringToHex(rgbString) {
+	if (rgbString.substr(0, 3) != "rgb") return rgbString;
+	return rgbString.replace(/rgb\((.+?)\)/gi, (_, rgb) => {
+		return (
+			"#" +
+			rgb
+				.split(",")
+				.map((str) => parseInt(str, 10).toString(16).padStart(2, "0"))
+				.join("")
+		);
+	});
 }
