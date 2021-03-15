@@ -1,9 +1,5 @@
 /* css[view] */
 
-h1 {
-	padding: 10px;
-}
-
 // [contenteditable] {
 // 	background: #0001;
 // }
@@ -11,13 +7,10 @@ h1 {
 .piep_editor {
 	& {
 		position: relative;
+		white-space: pre-wrap;
 	}
 
 	.piep_editor_content {
-		div {
-			border: 1px solid red;
-			margin: 1px;
-		}
 	}
 
 	::selection {
@@ -29,5 +22,24 @@ h1 {
 		position: absolute;
 		background: #000;
 		text-shadow: 0 0 1px #fff;
+		pointer-events: none;
+		animation: cursor_blink 1s infinite;
+	}
+
+	.piep_focus {
+		box-shadow: 0 0 0 1px var(--focus-clr);
+		//box-shadow: 0 0 0 1px var(--focus-clr), 0 0 18px 0 #fff;
+	}
+}
+
+@keyframes cursor_blink {
+	0%,
+	20%,
+	80%,
+	100% {
+		background: #000;
+	}
+	50% {
+		background: #fff;
 	}
 }
