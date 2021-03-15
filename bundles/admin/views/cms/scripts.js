@@ -138,6 +138,34 @@ function findNodeInVirtualDom(id) {
 	return traverseVDom(virtual_dom);
 }
 
+/**
+ *
+ * @param {PiepNode} node
+ * @param {-1 | 1} direction
+ * @returns {PiepNode | undefined}
+ */
+function getTextable(node, direction) {
+	let next_node;
+	let parent = node;
+	while (parent) {
+		const next = direction === 1 ? parent._next() : parent._prev();
+		if (next) {
+			next_node = next;
+			break;
+		} else {
+			parent = parent._parent();
+		}
+	}
+	if (next_node && piep_editor_content.contains(next_node)) {
+		if (direction === 1) {
+			return def(next_node._children("*")[0], next_node);
+		} else {
+			return def(getLast(next_node._children("*")), next_node);
+		}
+	}
+	return undefined;
+}
+
 domload(() => {
 	piep_editor = $(".piep_editor");
 	piep_editor_content = piep_editor._child(".piep_editor_content");
@@ -172,37 +200,6 @@ domload(() => {
 		//const id = focus_html_node ? +focus_html_node.dataset.ped : 0;
 		const id = focus_node ? +focus_node.dataset.ped : 0;
 		const virtual_node = findNodeInVirtualDom(id);
-		const text_node = getTextNode(focus_node);
-
-		let prev_node;
-		let parent = focus_node;
-		while (parent) {
-			if (parent._prev()) {
-				prev_node = parent._prev();
-				break;
-			} else {
-				parent = parent._parent();
-			}
-		}
-		let prev_textable;
-		if (prev_node && piep_editor.contains(prev_node)) {
-			prev_textable = def(getLast(prev_node._children("*")), prev_node);
-		}
-
-		let next_node;
-		parent = focus_node;
-		while (parent) {
-			if (parent._next()) {
-				next_node = parent._next();
-				break;
-			} else {
-				parent = parent._parent();
-			}
-		}
-		let next_textable;
-		if (next_node && piep_editor.contains(next_node)) {
-			next_textable = def(next_node._children("*")[0], next_node);
-		}
 
 		if (ev.key.length === 1 && sel) {
 			ev.preventDefault();
@@ -255,6 +252,7 @@ domload(() => {
 			ev.preventDefault();
 
 			if (focusOffset <= 0) {
+				const prev_textable = getTextable(focus_node, -1);
 				if (prev_textable) {
 					selectElementContentsByIndex(prev_textable, prev_textable.textContent.length);
 				}
@@ -266,6 +264,7 @@ domload(() => {
 			ev.preventDefault();
 
 			if (focusOffset >= focus_node.textContent.length) {
+				const next_textable = getTextable(focus_node, 1);
 				if (next_textable) {
 					selectElementContentsByIndex(next_textable, 0);
 				}
@@ -328,7 +327,6 @@ function updatePiepCursorPosition() {
 	const range = document.createRange();
 
 	const focus_node = $(sel.focusNode);
-	//const text_node = getTextNode(focus_node);
 
 	let focus_html_node;
 	if (sel && sel.focusNode && focus_node.innerHTML === focus_node.innerText) {
