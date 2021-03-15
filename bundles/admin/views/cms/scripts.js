@@ -11,24 +11,54 @@ const virtual_dom = {
 	id: 0,
 	children: [
 		{ id: 1, type: "h1", text: "Dobry frejmwork", styles: { fontSize: "20px", fontWeight: "bold", color: "blue" } },
-		{ id: 2, type: "p", text: "Wirtualny DOM krul", styles: { marginTop: "20px" } },
+		{
+			id: 2,
+			type: "p",
+			text:
+				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+			styles: { marginTop: "20px" },
+		},
 		{
 			id: 3,
 			type: "div",
 			children: [
 				{ id: 4, type: "p", text: "dziecko 1" },
-				{ id: 5, type: "p", text: "dziecko 2" },
+				{
+					id: 5,
+					type: "p",
+					children: [
+						{ id: 4, type: "span", text: "dziecko 2.1" },
+						{ id: 5, type: "span", text: "dziecko 2.2" },
+					],
+				},
 			],
 		},
 	],
 };
+
+function getNewPed() {
+	let max = 0;
+	const traversePiepHtml = (nodes) => {
+		for (const node of nodes) {
+			if (node.id > max) {
+				max = node.id;
+			}
+			if (node.children) {
+				traversePiepHtml(node.children);
+			}
+		}
+	};
+
+	traversePiepHtml(virtual_dom.children);
+	return max + 1;
+}
 
 function recreateDom() {
 	const traversePiepHtml = (nodes) => {
 		let piep_html = "";
 
 		for (const node of nodes) {
-			piep_html += `<${node.type} class="ped_${node.id}" data-ped="${node.id}">(${node.id})`;
+			piep_html += `<${node.type} class="ped_${node.id}" data-ped="${node.id}">`;
 
 			if (node.text) {
 				piep_html += `${node.text}`;
@@ -45,6 +75,43 @@ function recreateDom() {
 	let piep_html = traversePiepHtml(virtual_dom.children);
 
 	piep_editor_content._set_content(piep_html);
+}
+
+/**
+ *
+ * @param {number} ped
+ * @param {*} v_dom
+ * @returns {{
+ * node: *,
+ * children: array,
+ * i: number,
+ * }}
+ */
+function findNodeInVirtualDom(ped, v_dom = undefined) {
+	if (!ped) {
+		return undefined;
+	}
+	if (v_dom === undefined) {
+		v_dom = virtual_dom;
+	}
+	if (v_dom.id === ped) {
+		return v_dom;
+	}
+	const children = v_dom.children;
+	if (children) {
+		for (let i = 0; i < children.length; i++) {
+			const sub_v_dom = children[i];
+			const res = findNodeInVirtualDom(ped, sub_v_dom);
+			if (res) {
+				return {
+					node: sub_v_dom,
+					children,
+					i,
+				};
+			}
+		}
+	}
+	return undefined;
 }
 
 domload(() => {
@@ -77,6 +144,8 @@ domload(() => {
 		const focusOffset = sel.focusOffset;
 		const focus_node = $(sel.focusNode);
 		const focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
+		const ped = +focus_html_node.dataset.ped;
+		const virtual_node = findNodeInVirtualDom(ped);
 
 		/** @type {CharacterData} */
 		// @ts-ignore
@@ -119,50 +188,19 @@ domload(() => {
 			next_textable = def(getLast(next_node._children("*")), next_node);
 		}
 
-		if (ev.key.length === 1) {
-			if (sel) {
-				if (text_node) {
-					// good except you should
+		if (ev.key.length === 1 && sel) {
+			const text = virtual_node.node.text;
+			if (typeof text === "string") {
+				virtual_node.node.text = text.substr(0, focusOffset) + ev.key + text.substr(focusOffset);
+				recreateDom();
 
-					const ped = +focus_html_node.dataset.ped;
-					const findInVirtualDom = (sub_virtual_dom) => {
-						if (sub_virtual_dom.id === ped) {
-							return sub_virtual_dom;
-						}
-						if (sub_virtual_dom.children) {
-							for (const sub_sub_virtual_dom of sub_virtual_dom.children) {
-								const res = findInVirtualDom(sub_sub_virtual_dom);
-								if (res) {
-									return res;
-								}
-							}
-						}
-						return undefined;
-					};
-					const node = findInVirtualDom(virtual_dom);
-					if (typeof node.text === "string") {
-						node.text += ev.key;
-						recreateDom();
+				const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
 
-						const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
-						console.log(node_ref);
+				if (node_ref) {
+					range.setStart(node_ref.childNodes[0], focusOffset + 1);
+					range.setEnd(node_ref.childNodes[0], focusOffset + 1);
 
-						if (node_ref) {
-							range.setStart(node_ref.childNodes[0], focusOffset + 1);
-							range.setEnd(node_ref.childNodes[0], focusOffset + 1);
-
-							setSelectionRange(range);
-						}
-					}
-
-					//text_node.insertData(sel.focusOffset, ev.key);
-					//range.setStart(text_node, focusOffset + 1);
-					//range.setEnd(text_node, focusOffset + 1);
-
-					// sel.removeAllRanges();
-					// sel.addRange(range);
-
-					// updatePiepCursorPosition();
+					setSelectionRange(range);
 				}
 			}
 		}
@@ -193,9 +231,25 @@ domload(() => {
 			}
 			updatePiepCursorPosition();
 		}
-		if (ev.key === "Enter") {
-			const next_text_node = document.createTextNode("CIPA");
-			text_node.appendChild(next_text_node);
+		if (ev.key === "Enter" && sel) {
+			const text = virtual_node.node.text;
+			if (typeof text === "string") {
+				const insert_v_node = cloneObject(virtual_node.node);
+				insert_v_node.text = text.substr(focusOffset);
+				insert_v_node.id = getNewPed();
+				virtual_node.node.text = text.substr(0, focusOffset);
+				virtual_node.children.splice(virtual_node.i + 1, 0, insert_v_node);
+				recreateDom();
+
+				// const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
+
+				// if (node_ref) {
+				// 	range.setStart(node_ref.childNodes[0], focusOffset + 1);
+				// 	range.setEnd(node_ref.childNodes[0], focusOffset + 1);
+
+				// 	setSelectionRange(range);
+				// }
+			}
 		}
 	});
 
@@ -213,10 +267,21 @@ function updatePiepCursorPosition() {
 	const sel = window.getSelection();
 	const range = document.createRange();
 
+	const focus_node = $(sel.focusNode);
 	let focus_html_node;
 
-	if (sel && sel.focusNode) {
-		const focus_node = $(sel.focusNode);
+	/** @type {CharacterData} */
+	// @ts-ignore
+	let text_node = focus_node;
+	while (text_node && text_node.nodeType === 1) {
+		if (!text_node.childNodes[0]) {
+			break;
+		}
+		// @ts-ignore
+		text_node = text_node.childNodes[0];
+	}
+
+	if (sel && sel.focusNode && focus_node.innerHTML === focus_node.innerText) {
 		focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
 
 		range.setStart(sel.focusNode, sel.focusOffset);

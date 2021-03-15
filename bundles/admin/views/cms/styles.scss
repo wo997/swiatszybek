@@ -21,8 +21,8 @@
 	.piep_editor_cursor {
 		position: absolute;
 		background: #000;
-		text-shadow: 0 0 1px #fff;
 		pointer-events: none;
+		box-shadow: 0 0 1px 1px #fff;
 		animation: cursor_blink 1s infinite;
 	}
 
