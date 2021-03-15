@@ -248,6 +248,37 @@ domload(() => {
 			}
 		}
 
+		if (ev.key === "Delete" && virtual_node) {
+			ev.preventDefault();
+
+			const text = virtual_node.node.text;
+			if (focusOffset >= focus_node.textContent.length) {
+				const next_index = virtual_node.index + 1;
+				if (next_index < virtual_node.children.length) {
+					const next_v_node = virtual_node.children[next_index];
+					const prev_id = next_v_node.id;
+
+					const next_v_node_text_before = next_v_node.text;
+					next_v_node.text = next_v_node_text_before + virtual_node.node.text;
+					virtual_node.children.splice(virtual_node.index, 1);
+					recreateDom();
+
+					const next_node_ref = piep_editor_content._child(`[data-ped="${prev_id}"]`);
+					if (next_node_ref) {
+						selectElementContentsByIndex(next_node_ref, next_v_node_text_before.length);
+					}
+				}
+			} else {
+				virtual_node.node.text = text.substr(0, focusOffset) + text.substr(focusOffset + 1);
+				recreateDom();
+
+				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
+				if (node_ref) {
+					selectElementContentsByIndex(node_ref, focusOffset);
+				}
+			}
+		}
+
 		if (ev.key === "ArrowLeft") {
 			ev.preventDefault();
 
