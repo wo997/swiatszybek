@@ -8,10 +8,11 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/shop_order/search",
 		columns: [
-			{ label: "Nr zamówienia", key: "shop_order_id", width: "1", sortable: true, searchable: "string" },
+			{ label: "Nr", key: "shop_order_id", width: "1", sortable: true, searchable: "string" },
 			{ label: "Klient", key: "__display_name", width: "1", sortable: true, searchable: "string" },
 			{ label: "Nr referencyjny", key: "reference", width: "1", sortable: true, searchable: "string" },
-			{ label: "Wartość zamówienia", key: "total_price", width: "1", sortable: true, searchable: "string" },
+			{ label: "Wartość", key: "total_price", width: "1", sortable: true, searchable: "string" },
+			{ label: "Status", key: "status_id", width: "1", sortable: true, searchable: "string" },
 			{
 				label: "Akcja",
 				key: "stock",

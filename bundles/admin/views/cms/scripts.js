@@ -23,6 +23,7 @@ const virtual_dom = {
 			type: "div",
 			children: [
 				{ id: 4, type: "p", text: "dziecko 1" },
+				{ id: 8, type: "p", text: "" },
 				{
 					id: 5,
 					type: "p",
@@ -60,8 +61,13 @@ function recreateDom() {
 		for (const node of nodes) {
 			piep_html += `<${node.type} class="ped_${node.id}" data-ped="${node.id}">`;
 
-			if (node.text) {
-				piep_html += `${node.text}`;
+			const text = node.text;
+			if (text !== undefined) {
+				if (text) {
+					piep_html += text;
+				} else {
+					piep_html += "<br>";
+				}
 			} else if (node.children) {
 				piep_html += traversePiepHtml(node.children);
 			}
@@ -146,17 +152,7 @@ domload(() => {
 		const focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
 		const ped = +focus_html_node.dataset.ped;
 		const virtual_node = findNodeInVirtualDom(ped);
-
-		/** @type {CharacterData} */
-		// @ts-ignore
-		let text_node = focus_node;
-		while (text_node && text_node.nodeType === 1) {
-			if (!text_node.childNodes[0]) {
-				break;
-			}
-			// @ts-ignore
-			text_node = text_node.childNodes[0];
-		}
+		const text_node = getTextNode(focus_node);
 
 		let prev_node;
 		let parent = focus_html_node;
@@ -197,8 +193,9 @@ domload(() => {
 				const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
 
 				if (node_ref) {
-					range.setStart(node_ref.childNodes[0], focusOffset + 1);
-					range.setEnd(node_ref.childNodes[0], focusOffset + 1);
+					const t = text_node.childNodes[0];
+					range.setStart(t, focusOffset + 1);
+					range.setEnd(t, focusOffset + 1);
 
 					setSelectionRange(range);
 				}
@@ -240,15 +237,6 @@ domload(() => {
 				virtual_node.node.text = text.substr(0, focusOffset);
 				virtual_node.children.splice(virtual_node.i + 1, 0, insert_v_node);
 				recreateDom();
-
-				// const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
-
-				// if (node_ref) {
-				// 	range.setStart(node_ref.childNodes[0], focusOffset + 1);
-				// 	range.setEnd(node_ref.childNodes[0], focusOffset + 1);
-
-				// 	setSelectionRange(range);
-				// }
 			}
 		}
 	});
@@ -263,24 +251,33 @@ function setSelectionRange(range) {
 	updatePiepCursorPosition();
 }
 
+/**
+ *
+ * @param {PiepNode} node
+ * @returns {CharacterData}
+ */
+function getTextNode(node) {
+	let text_node = node;
+	while (text_node && text_node.nodeType === 1) {
+		const t = text_node.childNodes[0];
+		if (!t) {
+			break;
+		}
+		// @ts-ignore
+		text_node = t;
+	}
+	// @ts-ignore
+	return text_node;
+}
+
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
 	const range = document.createRange();
 
 	const focus_node = $(sel.focusNode);
+	const text_node = getTextNode(focus_node);
+
 	let focus_html_node;
-
-	/** @type {CharacterData} */
-	// @ts-ignore
-	let text_node = focus_node;
-	while (text_node && text_node.nodeType === 1) {
-		if (!text_node.childNodes[0]) {
-			break;
-		}
-		// @ts-ignore
-		text_node = text_node.childNodes[0];
-	}
-
 	if (sel && sel.focusNode && focus_node.innerHTML === focus_node.innerText) {
 		focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
 
