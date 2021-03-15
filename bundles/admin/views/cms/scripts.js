@@ -101,15 +101,6 @@ function recreateDom() {
 	piep_editor_content._set_content(piep_html);
 }
 
-/**
- *
- * @param {number} id
- * @returns {{
- * node: vDomNode,
- * children: vDomNode[],
- * index: number,
- * }}
- */
 function findNodeInVirtualDom(id) {
 	if (!id) {
 		return undefined;
@@ -134,7 +125,10 @@ function findNodeInVirtualDom(id) {
 						index,
 					};
 				}
-				traverseVDom(child);
+				const deep = traverseVDom(child);
+				if (deep) {
+					return deep;
+				}
 			}
 		}
 
@@ -207,7 +201,7 @@ domload(() => {
 		}
 		let next_textable;
 		if (next_node && piep_editor.contains(next_node)) {
-			next_textable = def(getLast(next_node._children("*")), next_node);
+			next_textable = def(next_node._children("*")[0], next_node);
 		}
 
 		if (ev.key.length === 1 && sel) {
@@ -226,11 +220,11 @@ domload(() => {
 			}
 		}
 
-		if (ev.key === "Backspace") {
+		if (ev.key === "Backspace" && virtual_node) {
 			ev.preventDefault();
 
 			const text = virtual_node.node.text;
-			if (focusOffset === 0) {
+			if (focusOffset <= 0) {
 				const prev_index = virtual_node.index - 1;
 				if (prev_index >= 0) {
 					const prev_v_node = virtual_node.children[prev_index];
