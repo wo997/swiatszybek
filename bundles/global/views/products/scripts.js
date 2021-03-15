@@ -65,6 +65,10 @@ domload(() => {
 				option_checkbox._set_value(0, { quiet: true });
 			});
 
+			$$(".searching_wrapper .expand_y:not(.hidden)").forEach((expand_y) => {
+				expand(expand_y, false);
+			});
+
 			$$(".searching_wrapper input.field").forEach((input) => {
 				input._set_value("", { quiet: true });
 			});
