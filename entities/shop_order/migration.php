@@ -11,5 +11,6 @@ DB::createTable("shop_order", [
     ["name" => "rebate_codes", "type" => "VARCHAR(255)"],
     ["name" => "main_address_id", "type" => "INT", "null" => true],
     ["name" => "courier_address_id", "type" => "INT", "null" => true],
+    ["name" => "parcel_locker_id", "type" => "INT", "null" => true],
     ["name" => "ordered_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
 ]);

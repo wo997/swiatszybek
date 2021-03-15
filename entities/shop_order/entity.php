@@ -6,6 +6,7 @@ EntityManager::register("shop_order", [
         "status_id" => ["type" => "number"],
         "main_address" => ["type" => "address"],
         "courier_address" => ["type" => "address"],
+        "parcel_locker" => ["type" => "parcel_locker"],
         "products_price" => ["type" => "number"],
         "delivery_price" => ["type" => "number"],
         "total_price" => ["type" => "number"],
@@ -26,6 +27,10 @@ EntityManager::register("user", [
 EntityManager::OneToMany("user", "shop_orders", "shop_order");
 
 EntityManager::OneToOne("shop_order", "main_address", "address");
+
+EntityManager::OneToOne("shop_order", "courier_address", "address");
+
+EntityManager::OneToOne("shop_order", "parcel_locker", "parcel_locker");
 
 EventListener::register("before_save_shop_order_entity", function ($params) {
     /** @var Entity ShopOrder */
