@@ -125,16 +125,18 @@ function scrollIntoView(elem, params = {}) {
 
 	//const duration = def(params.duration, 40);
 	const scroll_parent = elem._scroll_parent();
-	const offset_height = scroll_parent === document.documentElement ? window.innerHeight : scroll_parent.offsetHeight;
+	const is_main_scroll = scroll_parent === document.documentElement;
+	const offset_height = is_main_scroll ? window.innerHeight : scroll_parent.offsetHeight;
 	const offset = def(params.offset, 0.15 * offset_height);
 
 	const elem_r = elem.getBoundingClientRect();
 	const parent_r =
 		scroll_parent === document.documentElement
-			? { width: window.innerWidth, height: window.innerHeight, top: 0, left: 0 }
+			? { width: window.innerWidth, height: window.innerHeight, top: main_header_height ? main_header_height.offsetHeight : 0, left: 0 }
 			: scroll_parent.getBoundingClientRect();
 
-	const top = elem_r.top - parent_r.top - offset;
+	let top = elem_r.top - parent_r.top - offset;
+
 	const bottom = elem_r.top + elem_r.height - (parent_r.top + parent_r.height - offset);
 
 	let diff = 0;

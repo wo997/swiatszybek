@@ -220,8 +220,7 @@ class Entity
                     EntityManager::setManyToManyRelationship($this, $other_entity_simple_type, def($this->curr_props, $key, []), $value, $link);
                 }
 
-                //var_dump([$this->name, $key, $value, def($this->curr_props, $key, false)]);
-                if (def($this->curr_props, $key, false) === $value) {
+                if (def($this->curr_props, $key, null) === $value) {
                     continue;
                 }
 
@@ -292,12 +291,11 @@ class Entity
         $setter = "set_" . $this->name . "_entity_" .  $prop_name;
         $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
         foreach ($vals as $v) {
-            if ($v !== null) { // nulls dont look good, stick to false schema instead
+            if ($v !== null) {
                 $val = $v;
             }
         }
 
-        // tricky part here, we do want to have nulls, so maybe false?
         if ($val === false) {
             $val = $this->getProp($prop_name);
         }
@@ -374,26 +372,9 @@ class Entity
                 $this->props[$prop_name] = EntityManager::getOneToOneEntity($this, $prop_name, $prop_type);
                 $this->curr_props[$prop_name] = $this->props[$prop_name];
             }
-
-            // Are you sure you even need this step bro?
-            $getter = "get_" . $this->name . "_entity_" .  $prop_name;
-            $vals = EventListener::dispatch($getter, ["obj" => $this]);
-            foreach ($vals as $val) {
-                // not sure of that
-                // if ($val !== null) {
-                //     $this->props[$prop_name] = $val;
-                //     $this->curr_props[$prop_name] = $val;
-                // }
-                //return $val;
-            }
-
-            /*if (function_exists($getter)) {
-                $val = call_user_func($getter, $this);
-                $this->props[$prop_name] = $val;
-                //if ($val !== null) {}
-            }*/
         }
-        return def($this->props, $prop_name, false);
+
+        return def($this->props, $prop_name, null);
     }
 
     /**
@@ -538,17 +519,6 @@ class Entity
             $row_props[$prop] = $val;
         }
         return $row_props;
-    }
-
-    /**
-     * Usually used for comparing changes, OK - NEVER USED
-     *
-     * @param  mixed $prop_name
-     * @return void
-     */
-    public function getCurrProp($prop_name)
-    {
-        return def($this->curr_props, $prop_name, false);
     }
 
     private function shouldFetchProp($prop_name)

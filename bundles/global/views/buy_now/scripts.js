@@ -77,6 +77,10 @@ domload(() => {
 	});
 
 	confirm_order_btn.addEventListener("click", () => {
+		if (!main_address._validate()) {
+			return;
+		}
+
 		const data = { main_address: main_address._data, delivery: delivery_input._get_value() };
 		if (data.delivery === "courier") {
 			data.courier_address = courier_address._data;

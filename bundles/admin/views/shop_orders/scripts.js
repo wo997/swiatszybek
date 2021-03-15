@@ -16,11 +16,18 @@ domload(() => {
 			{
 				label: "Akcja",
 				key: "stock",
-				width: "100px",
+				width: "140px",
 				render: (data) => {
-					// return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/order/" + data.shop_order_id}">
-					// 	Szczegóły <i class="fas fa-cog"></i>
-					// </a>`;
+					//<a class="btn subtle small" href=""> Szczegóły (brak) <i class="fas fa-cog"></i> </a>
+					return html`
+						<a
+							class="btn subtle small"
+							data-preview_url="/zamowienie/${data.shop_order_id}/${data.reference}"
+							data-tooltip="Link dla klienta"
+						>
+							<i class="fas fa-eye"></i>
+						</a>
+					`;
 				},
 			},
 		],
@@ -29,6 +36,14 @@ domload(() => {
 		label: "Zamówienia",
 		selectable: true,
 		save_state_name: "shop_orders",
+	});
+
+	datatable_comp.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+		const preview_url = target._parent(`[data-preview_url]`, { skip: 0 });
+		if (preview_url) {
+			previewUrl(preview_url.dataset.preview_url);
+		}
 	});
 });
 

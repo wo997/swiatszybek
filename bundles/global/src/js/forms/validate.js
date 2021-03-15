@@ -94,69 +94,92 @@ function getInputValidationErrors(input) {
 
 	const [type, ...extras] = validator.split("|");
 
-	for (const extra of extras) {
-		const [what, val] = extra.split(":");
-		if (what === "length") {
-			if (val.match(/\{.*?\}/)) {
-				let [min, max] = val.split(",");
-				// @ts-ignore
-				min = numberFromStr(min);
-				// @ts-ignore
-				max = numberFromStr(max);
+	const optional = extras.includes("optional");
+	const empty = value.trim() === "";
 
-				if (min !== "" && value.length < min) {
-					errors.push(`Podaj min. ${min} znaków`);
-				}
-				if (max !== "" && value.length > max) {
-					errors.push(`Podaj max. ${max} znaków`);
-				}
-			} else {
-				const len = numberFromStr(val);
-				if (value.length !== len) {
-					errors.push(`Wymagane ${len} znaków`);
-				}
-			}
-		}
-		if (what === "value") {
-			if (val.match(/\{.*?\}/)) {
-				let [min, max] = val.split(",");
-				// @ts-ignore
-				min = numberFromStr(min);
-				// @ts-ignore
-				max = numberFromStr(max);
-
-				if (min !== "" && value < min) {
-					errors.push(`Minimalna wartość: ${min}`);
-				}
-				if (max !== "" && value > max) {
-					errors.push(`Maksymalna wartość: ${max}`);
-				}
-			}
-		}
-	}
-
-	if (!extras.includes("optional")) {
-		if (value.trim() === "") {
-			if (validator === "radio") {
-				errors.push("Wybierz 1 opcję");
-			} else {
-				errors.push("Uzupełnij to pole");
-			}
+	if (!optional && empty) {
+		if (validator === "radio") {
+			errors.push("Wybierz 1 opcję");
+		} else {
+			errors.push("Uzupełnij to pole");
 		}
 	} else {
-		switch (type) {
-			case "number": {
-				if (isNaN(value)) {
-					errors.push("Podaj liczbę");
+		if (empty) {
+			switch (type) {
+				case "number": {
+					if (isNaN(value)) {
+						errors.push("Podaj liczbę");
+					}
+					break;
 				}
-				break;
+				// case "string": {
+				// }
+				// case "radio": {
+				// }
 			}
-			// case "string": {
-			// }
-			// case "radio": {
-			// }
+		}
+
+		const add_extras = [];
+		for (const extra of extras) {
+			const [what, extra_val] = extra.split(":");
+			if (what === "nip") {
+				add_extras.push("length:10");
+			}
+		}
+
+		extras.push(...add_extras);
+
+		for (const extra of extras) {
+			const [what, extra_val] = extra.split(":");
+			if (what === "email") {
+				if (!validateEmail(value)) {
+					errors.push(`Błędny adres e-mail`);
+				}
+			}
+			if (what === "length") {
+				if (extra_val.match(/\{.*?\}/)) {
+					let [min, max] = extra_val.split(",");
+					// @ts-ignore
+					min = numberFromStr(min);
+					// @ts-ignore
+					max = numberFromStr(max);
+
+					if (min !== "" && value.length < min) {
+						errors.push(`Podaj min. ${min} znaków`);
+					}
+					if (max !== "" && value.length > max) {
+						errors.push(`Podaj max. ${max} znaków`);
+					}
+				} else {
+					const len = numberFromStr(extra_val);
+					if (value.length !== len) {
+						errors.push(`Wymagane ${len} znaków`);
+					}
+				}
+			}
+			if (what === "value") {
+				if (extra_val.match(/\{.*?\}/)) {
+					let [min, max] = extra_val.split(",");
+					// @ts-ignore
+					min = numberFromStr(min);
+					// @ts-ignore
+					max = numberFromStr(max);
+
+					if (min !== "" && value < min) {
+						errors.push(`Minimalna wartość: ${min}`);
+					}
+					if (max !== "" && value > max) {
+						errors.push(`Maksymalna wartość: ${max}`);
+					}
+				}
+			}
 		}
 	}
 
 	return errors;
+}
+
+function validateEmail(email) {
+	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return re.test(String(email).toLowerCase());
 }

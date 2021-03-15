@@ -56,3 +56,13 @@ label {
 .space_left {
 	margin-left: var(--form_spacing);
 }
+
+.optional_label {
+	& {
+		font-size: 0.9em;
+		color: #555;
+	}
+	&::before {
+		content: "(opcjonalne)";
+	}
+}
