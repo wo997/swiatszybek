@@ -27,8 +27,8 @@ const virtual_dom = {
 					id: 5,
 					type: "p",
 					children: [
-						{ id: 4, type: "span", text: "dziecko 2.1" },
-						{ id: 5, type: "span", text: "dziecko 2.2" },
+						{ id: 6, type: "span", text: "dziecko 2.1" },
+						{ id: 7, type: "span", text: "dziecko 2.2" },
 					],
 				},
 			],
