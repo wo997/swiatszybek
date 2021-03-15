@@ -200,9 +200,29 @@ domload(() => {
 				}
 			}
 
-			if (ev.key === " ") {
-				ev.preventDefault();
+			ev.preventDefault();
+		}
+
+		if (ev.key === "Backspace") {
+			// if (focusOffset === 0) {
+			// }
+
+			const text = virtual_node.node.text;
+			if (typeof text === "string") {
+				virtual_node.node.text = text.substr(0, focusOffset - 1) + text.substr(focusOffset);
+				recreateDom();
+
+				const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
+
+				if (node_ref) {
+					const t = node_ref.childNodes[0];
+					range.setStart(t, focusOffset - 1);
+					range.setEnd(t, focusOffset - 1);
+					setSelectionRange(range);
+				}
 			}
+
+			ev.preventDefault();
 		}
 
 		if (ev.key === "ArrowLeft") {
@@ -217,11 +237,12 @@ domload(() => {
 				sel.addRange(range);
 			}
 			updatePiepCursorPosition();
+
+			ev.preventDefault();
 		}
 		if (ev.key === "ArrowRight") {
 			if (focusOffset === focus_html_node.textContent.length && next_textable) {
 				selectElementContentsByIndex(next_textable, 0);
-				ev.preventDefault();
 			} else {
 				range.setStart(focus_node, focusOffset + 1);
 				range.setEnd(focus_node, focusOffset + 1);
@@ -230,6 +251,8 @@ domload(() => {
 				sel.addRange(range);
 			}
 			updatePiepCursorPosition();
+
+			ev.preventDefault();
 		}
 		if (ev.key === "Enter" && sel) {
 			const text = virtual_node.node.text;
@@ -253,6 +276,8 @@ domload(() => {
 					}
 				}
 			}
+
+			ev.preventDefault();
 		}
 	});
 
