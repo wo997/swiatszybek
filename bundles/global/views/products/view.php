@@ -60,13 +60,14 @@ function traverseCategories($parent_id = -1, $level = 0)
 
 function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent_feature_option_id = -1, $level = 0)
 {
-    global $option_count;
+    global $option_count_map, $option_ids_desc_csv;
 
     $where = "parent_product_feature_option_id = $parent_feature_option_id";
     if ($parent_feature_option_id === -1) {
         $where .= " AND product_feature_id = $feature_id";
     }
-    $product_feature_options = DB::fetchArr("SELECT product_feature_option_id, value, extra_json FROM product_feature_option WHERE $where ORDER BY pos ASC");
+    //$product_feature_options = DB::fetchArr("SELECT product_feature_option_id, value, extra_json FROM product_feature_option WHERE $where ORDER BY pos ASC");
+    $product_feature_options = DB::fetchArr("SELECT product_feature_option_id, value, extra_json FROM product_feature_option WHERE $where ORDER BY FIELD(product_feature_option_id,$option_ids_desc_csv) DESC");
     if (!$product_feature_options) {
         return "";
     }
@@ -94,7 +95,7 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
     foreach ($product_feature_options as $option) {
         $id = $option["product_feature_option_id"];
         $value = $option["value"];
-        $count = def($option_count, $id, 0);
+        $count = def($option_count_map, $id, 0);
 
         if ($count) {
             $display = true;
@@ -246,16 +247,20 @@ $options_data = DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id o
     INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
     WHERE $where_general_products_0
     GROUP BY product_feature_option_id");
+usort($options_data, fn ($a, $b) => $b["count"] <=> $a["count"]);
 
 $prices_data = DB::fetchRow("SELECT MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price
     FROM general_product
     INNER JOIN product USING(general_product_id)
     WHERE $where_products_0");
 
-$option_count = [];
+$option_count_map = [];
+$option_ids_desc = [];
 foreach ($options_data as $option_data) {
-    $option_count[$option_data["option_id"]] = $option_data["count"];
+    $option_count_map[$option_data["option_id"]] = $option_data["count"];
+    $option_ids_desc[] = $option_data["option_id"];
 }
+$option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
 
 ?>
 
