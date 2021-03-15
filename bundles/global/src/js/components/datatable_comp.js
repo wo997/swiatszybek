@@ -207,6 +207,8 @@ function datatableComp(comp, parent, data) {
 				datatable_params,
 			},
 			success: (res) => {
+				const data = comp._data; // somehow the ref was lost ugh
+
 				comp._search_request = undefined;
 
 				if (!res) {
@@ -702,9 +704,10 @@ function datatableComp(comp, parent, data) {
 		initialize: () => {
 			if (data.save_state_name) {
 				comp._load_state(data);
+
 				setTimeout(() => {
 					comp._datatable_search();
-				});
+				}, 0);
 			}
 
 			const filter_menu = comp._nodes.filter_menu;
@@ -990,7 +993,6 @@ function datatableComp(comp, parent, data) {
 									one_line: true,
 									type: "success",
 								});
-								refreshProductFeatures();
 							},
 						});
 					}
