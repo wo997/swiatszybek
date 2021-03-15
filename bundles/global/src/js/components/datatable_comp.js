@@ -683,6 +683,7 @@ function datatableComp(comp, parent, data) {
 								data-node="{${comp._nodes.list}}"
 								data-bind="{${data.rows}}"
 								${data.primary_key ? `data-primary="row_data.${data.primary_key}"` : ""}
+								class="wireframe"
 							>
 								<datatable-row-comp></datatable-row-comp>
 							</list-comp>

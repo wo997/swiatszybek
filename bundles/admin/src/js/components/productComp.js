@@ -578,7 +578,7 @@ function productComp(comp, parent, data = undefined) {
 					<span class="label inline list_label" html="{${"Cechy (" + data.features.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
-				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id" class="wireframe">
+				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id" class="wireframe space">
 					<product_feature-comp></product_feature-comp>
 				</list-comp>
 
@@ -586,7 +586,7 @@ function productComp(comp, parent, data = undefined) {
 					<span class="label inline list_label" html="{${"Zdjęcia (" + data.images.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary">Dodaj zdjęcie <i class="fas fa-plus"></i></button>
 				</div>
-				<list-comp class="wireframe" data-bind="{${data.images}}">
+				<list-comp class="wireframe space" data-bind="{${data.images}}">
 					<product_img-comp></product_img-comp>
 				</list-comp>
 			</div>

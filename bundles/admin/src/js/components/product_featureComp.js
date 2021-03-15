@@ -64,7 +64,7 @@ function product_featureComp(
 				</div>
 			</div>
 
-			<list-comp data-bind="{${data.options}}" class="wireframe" data-primary="product_feature_option_id">
+			<list-comp data-bind="{${data.options}}" class="wireframe space" data-primary="product_feature_option_id">
 				<product_feature-option-comp></product_feature-option-comp>
 			</list-comp>
 		`,

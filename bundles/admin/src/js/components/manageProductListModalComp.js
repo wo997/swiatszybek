@@ -56,7 +56,7 @@ function manageProductListModalComp(comp, parent, data = undefined) {
 					></i>
 				</div>
 
-				<list-comp data-bind="{${data.questions}}" class="wireframe">
+				<list-comp data-bind="{${data.questions}}" class="wireframe space">
 					<manage-product-list_question-comp></manage-product-list_question-comp>
 				</list-comp>
 				<button

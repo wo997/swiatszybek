@@ -54,10 +54,14 @@ list-comp {
 			--list_row_border: 1px solid #ccc;
 			--list_row_margin: -1px -1px 0;
 			--list_row_margin_bottom_last: -1px;
-			--list_row_padding: 10px;
 		}
 		&:empty {
 			border-bottom-width: 0;
+		}
+	}
+	&.space {
+		& {
+			--list_row_padding: 10px;
 		}
 	}
 	&.clean {

@@ -50,18 +50,13 @@ datatable-comp {
 			white-space: nowrap;
 		}
 	}
-	datatable-row-comp {
+	.node_list > .list_row {
 		& {
-			transition: 0.25s background-color;
 			background: #fff;
 		}
-		&.even {
-			background: #f6f6f6;
+		&:not(.grabbed):hover {
+			background: #f3f3f3;
 		}
-	}
-	.has_grabbed_row datatable-row-comp {
-		background: #fff !important;
-		box-shadow: 0 -2px 0 -1px #ccc, inset 0 -2px 0 -1px #ccc;
 	}
 	.dt_header_controls {
 		display: flex;

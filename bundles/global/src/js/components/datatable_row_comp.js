@@ -49,8 +49,6 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 					});
 				}
 
-				comp.classList.toggle("even", data.row_index % 2 === 0);
-
 				// bind
 				row._children("[data-bind]:not(.binded)").forEach((input) => {
 					input.classList.add("binded");
@@ -80,9 +78,6 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 							comp._render({ force_render: true });
 						}
 					});
-					// b.addEventListener("input", () => {
-					// 	b._dispatch_change();
-					// });
 
 					// @ts-ignore
 					if (input.type === "text" || input.tagName === "SELECT" || input.tagName === "P-CHECKBOX") {
