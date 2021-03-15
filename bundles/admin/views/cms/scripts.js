@@ -150,7 +150,7 @@ domload(() => {
 		const focusOffset = sel.focusOffset;
 		const focus_node = $(sel.focusNode);
 		const focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
-		const ped = +focus_html_node.dataset.ped;
+		const ped = focus_html_node ? +focus_html_node.dataset.ped : 0;
 		const virtual_node = findNodeInVirtualDom(ped);
 		const text_node = getTextNode(focus_node);
 
@@ -193,12 +193,15 @@ domload(() => {
 				const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
 
 				if (node_ref) {
-					const t = text_node.childNodes[0];
+					const t = node_ref.childNodes[0];
 					range.setStart(t, focusOffset + 1);
 					range.setEnd(t, focusOffset + 1);
-
 					setSelectionRange(range);
 				}
+			}
+
+			if (ev.key === " ") {
+				ev.preventDefault();
 			}
 		}
 
@@ -237,6 +240,18 @@ domload(() => {
 				virtual_node.node.text = text.substr(0, focusOffset);
 				virtual_node.children.splice(virtual_node.i + 1, 0, insert_v_node);
 				recreateDom();
+
+				const node_ref = piep_editor_content._child(`[data-ped="${ped}"]`);
+
+				if (node_ref) {
+					const next = node_ref._next();
+					if (next) {
+						const t = next.childNodes[0];
+						range.setStart(t, 0);
+						range.setEnd(t, 0);
+						setSelectionRange(range);
+					}
+				}
 			}
 		}
 	});
