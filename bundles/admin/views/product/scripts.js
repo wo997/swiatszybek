@@ -15,7 +15,7 @@ domload(() => {
 		});
 	};
 	product_comp.addEventListener("change", nameChange);
-	window.addEventListener("modal-show", nameChange);
+	window.addEventListener("modal_show", nameChange);
 	nameChange();
 
 	const data = product_comp._data;

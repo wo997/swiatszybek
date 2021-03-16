@@ -61,14 +61,6 @@ unset($product);
 //     $products = json_decode($preview_params["products"], true);
 // }
 
-// $anyVariantInStock = false;
-// foreach ($products as $variant) {
-//     if ($variant["stock"] > 0) {
-//         $anyVariantInStock = $variant["variant_id"];
-//         break;
-//     }
-// }
-
 // $page_data["seo_description"] = $general_product_data["seo_description"];
 // $page_data["seo_title"] = $general_product_data["seo_title"];
 // $page_data["seo_image"] = "/uploads/sm" . Files::getUploadedFileName($general_product_data["cache_thumbnail"]) . ".jpg";
@@ -208,7 +200,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                 </div>
             </div>
 
-            <div>
+            <div class="variants_container">
                 <?php
                 foreach ($general_product_variants as $general_product_variant) {
                 ?>
@@ -239,50 +231,47 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                         }
                         ?>
                     </div>
-                <?php
-                }
+                <?php } ?>
+            </div>
 
-                ?>
+            <p style="font-size: 1.6em;" class="label">
+                <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
+            </p>
 
-                <p style="font-size: 1.6em;" class="label">
-                    <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
-                </p>
+            <p style="font-weight:normal;margin:0;font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
 
-                <p style="font-weight:normal;margin:0;font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
-
-                <div class="expand_y hidden animate_hidden notify_when_product_available">
-                    <div style="padding-top:7px">
-                        <button class="btn primary medium fill">Powiadom o dostępności <i class="fas fa-bell"></i></button>
-                    </div>
+            <div class="expand_y hidden animate_hidden notify_when_product_available">
+                <div style="padding-top:7px">
+                    <button class="btn primary medium fill">Powiadom o dostępności <i class="fas fa-bell"></i></button>
                 </div>
+            </div>
 
-                <div class="case_can_buy_product" data-tooltip_position="center">
-                    <div class="label">Ilość:</div>
-                    <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px" data-product="single_product">
-                        <button class="btn subtle sub_qty">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="text" class="field inline val_qty" value="1" data-number inputmode="numeric">
-                        <button class="btn subtle add_qty">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <br>
-                    <button class="btn fill medium buy_btn main_buy_btn">
-                        Dodaj do koszyka
-                        <i class="fas fa-plus-circle"></i>
+            <div class="case_can_buy_product" data-tooltip_position="center">
+                <div class="label">Ilość:</div>
+                <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px" data-product="single_product">
+                    <button class="btn subtle sub_qty">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="text" class="field inline val_qty" value="1" data-number inputmode="numeric">
+                    <button class="btn subtle add_qty">
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
+                <br>
+                <button class="btn fill medium buy_btn main_buy_btn">
+                    Dodaj do koszyka
+                    <i class="fas fa-plus-circle"></i>
+                </button>
+            </div>
 
-                <div class="case_has_products expand_y hidden animate_hidden">
-                    <div>
-                        <div class="label inyourbasket">W Twoim koszyku:</div>
-                        <cart-products-comp class="has_products"></cart-products-comp>
-                        <a class="btn fill medium primary" href="/kup-teraz">
-                            Kup teraz
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </div>
+            <div class="case_has_products expand_y hidden animate_hidden">
+                <div>
+                    <div class="label inyourbasket">W Twoim koszyku:</div>
+                    <cart-products-comp class="has_products"></cart-products-comp>
+                    <a class="btn fill medium primary" href="/kup-teraz">
+                        Kup teraz
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -327,11 +316,32 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             </h3>
 
             <div class="scroll_panel scroll_shadow panel_padding">
+                <div>
+                    <?php
+                    //$pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()), "");
+                    ?>
+                    <div class="variants_container">
+                        <?php
+                        foreach ($general_product_variants as $general_product_variant) {
+                        ?>
+                            <span class="label"><?= $general_product_variant["name"] ?></span>
+                            <div class="variants radio_group boxes unselectable hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "50px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
+                                <?php
+                                foreach ($general_product_variant["variant_options"] as $variant_option) {
+                                ?>
+                                    <div class="box checkbox_area variant_option">
+                                        <div>
+                                            <p-checkbox data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
+                                            <?= $variant_option["value"] ?>
+                                        </div>
+                                    </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        <?php } ?>
+                    </div>
 
-                <?php
-                //$pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()), "");
-                ?>
-                <div id="commentForm">
                     <div class="label">
                         Ocena
                     </div>
@@ -351,6 +361,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     </label>
 
                     <button class="btn primary submit_btn">Wyślij <i class="fas fa-paper-plane"></i></button>
+
                 </div>
             </div>
         </div>

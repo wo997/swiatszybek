@@ -78,7 +78,7 @@ if (defined("ROUTE")) {
         });
     <?php endif ?>
 
-    window.addEventListener("modal-show", (event) => {
+    window.addEventListener("modal_show", (event) => {
         var node = event.detail.node;
 
         if (!node || node.id != "loginForm") {

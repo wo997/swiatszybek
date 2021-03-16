@@ -60,7 +60,7 @@ function validateLoginUserEmail(input) {
 	});
 }
 
-window.addEventListener("modal-show", (event) => {
+window.addEventListener("modal_show", (event) => {
 	// @ts-ignore
 	if (event.detail.node.id != "loginForm") {
 		return;

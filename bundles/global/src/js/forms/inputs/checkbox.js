@@ -28,8 +28,8 @@ function onRadioGroupValueSet(radio_group) {
  * @param {PiepNode} parent
  */
 function registerCheckboxes(parent) {
-	parent._children("p-checkbox:not(.checkbox-registered)").forEach((input) => {
-		input.classList.add("checkbox-registered");
+	parent._children("p-checkbox:not(.checkbox_rgstrd)").forEach((input) => {
+		input.classList.add("checkbox_rgstrd");
 
 		input.insertAdjacentHTML(
 			"afterbegin",

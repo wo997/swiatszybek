@@ -57,7 +57,7 @@ domload(() => {
 	product_offer = $(".product_offer");
 	sticky_product = $(".sticky_product");
 
-	$$(".variants").forEach((variants) => {
+	product_offer._children(".variants").forEach((variants) => {
 		variants.addEventListener("change", () => {
 			variantChanged();
 		});
@@ -169,7 +169,7 @@ function setProductFeaturesFromUrl() {
 
 	ps_selected_option_ids = ps_selected_option_ids.filter((e) => !missed_option_ids.includes(e));
 
-	$$(".variants").forEach((variants) => {
+	product_offer._children(".variants").forEach((variants) => {
 		if (found_variants.includes(variants)) {
 			return;
 		}
@@ -209,7 +209,7 @@ function getProductDataForVariants(feature_option_ids) {
 function variantChanged() {
 	let sv = [];
 
-	$$(".variants").forEach((variants) => {
+	product_offer._children(".variants").forEach((variants) => {
 		const option_id = variants._get_value();
 		if (option_id) {
 			sv.push(option_id);
@@ -266,7 +266,7 @@ function setVariantData() {
 	let price_min = data.price_min;
 	let price_max = data.price_max;
 
-	$$(".variants").forEach((variants) => {
+	product_offer._children(".variants").forEach((variants) => {
 		const selected_option_id = variants._get_value();
 
 		variants._children(".variant_option").forEach((option) => {
@@ -360,3 +360,34 @@ domload(() => {
 		}
 	});
 });
+
+//window.addEventListener("modal_show", (event) => {
+// @ts-ignore
+// if (event.detail.node.id != "createComment") {
+// 	return;
+// }
+
+// const variants_container = $("#createComment .variants_container");
+// if (!variants_container._is_empty()) {
+// 	return;
+// }
+
+//variants_container.insertAdjacentHTML("afterbegin", $(".product_offer .variants_container").innerHTML);
+
+// $$("#createComment .checkbox_rgstrd").forEach((e) => {
+// 	e.classList.remove("checkbox_rgstrd");
+// });
+// $$("#createComment .rg_registered").forEach((e) => {
+// 	e.classList.remove("rg_registered");
+// });
+// $$("#createComment .checked").forEach((e) => {
+// 	e.classList.remove("checked");
+// });
+
+// const label = variants_container._child(".label");
+// if (label) {
+// 	label.classList.add("first");
+// }
+
+// registerForms();
+//});

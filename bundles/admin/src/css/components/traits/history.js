@@ -49,7 +49,7 @@ function historyFocus(target) {
 	}
 }
 
-window.addEventListener("modal-show", () => {
+window.addEventListener("modal_show", () => {
 	history_comp_focus = undefined;
 });
 

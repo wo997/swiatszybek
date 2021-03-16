@@ -130,7 +130,7 @@ function showModal(name = null, params = {}) {
 					}
 
 					window.dispatchEvent(
-						new CustomEvent("modal-shown", {
+						new CustomEvent("modal_shown", {
 							detail: {
 								node: modal,
 							},
@@ -210,7 +210,7 @@ function showModal(name = null, params = {}) {
 				}
 
 				window.dispatchEvent(
-					new CustomEvent("modal-show", {
+					new CustomEvent("modal_show", {
 						detail: {
 							node: modal,
 						},
