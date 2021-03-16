@@ -3,10 +3,12 @@
 try {
     DB::beginTransaction();
     $comment_data = json_decode($_POST["comment"], true);
+    $comment_data["comment"] = htmlspecialchars($comment_data["comment"]);
     $comment_data["options_csv"] = join(",", array_map(fn ($x) => clean($x), $comment_data["options_ids"]));
 
-    $nickname = $_POST["nickname"];
-    // TODO: update users nickname
+    /** @var EntityUser */
+    $user = User::getCurrent()->entity;
+    $user->setProp("nickname", htmlspecialchars($_POST["nickname"]));
 
     $comment = EntityManager::getEntity("comment", $comment_data);
     $comment->setProp("user", User::getCurrent()->getId());

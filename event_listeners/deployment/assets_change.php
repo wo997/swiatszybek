@@ -72,7 +72,7 @@ if ($modifyCSS) {
         }
 
         // that's sad
-        preg_match_all("/grid-area:.*?;/", $css_full, $matches);
+        preg_match_all("/grid-area:.*?[};]/", $css_full, $matches);
         if ($matches) {
             foreach ($matches as $match) {
                 $new = str_replace([':', ';'], [':"', '";'], $match);
@@ -83,7 +83,7 @@ if ($modifyCSS) {
         $css_full = $scss->compile($css_full);
         $css_full = (new Minify\CSS($css_full))->minify();
 
-        preg_match_all("/grid-area:.*?;/", $css_full, $matches);
+        preg_match_all("/grid-area:.*?[};]/", $css_full, $matches);
         if ($matches) {
             foreach ($matches as $match) {
                 $new = str_replace('"', '', $match);

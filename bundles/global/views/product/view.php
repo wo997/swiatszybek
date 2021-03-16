@@ -287,9 +287,19 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
         <?= "MIEJSCE NA OPIS PRODUKTU" //getCMSPageHTML($general_product_data["description"]); 
         ?>
 
-        <datatable-comp class="comments"></datatable-comp>
+        <div>
+            <span class="label medium inline">Komentarze</span>
+            <?php if (User::getCurrent()->isLoggedIn()) : ?>
+                <button class="btn primary small space_btn_left" onclick="showModal(`createComment`,{source:this});">
+                    Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
+                </button>
+            <?php endif ?>
+        </div>
 
-        <div style="height:1000px"></div>
+        <list-comp class="comments striped space">
+            <comment-comp></comment-comp>
+        </list-comp>
+
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
             <div class="label medium">Podziel się swoją opinią</div>
             <button class="btn primary" onclick="showModal(`createComment`,{source:this});">

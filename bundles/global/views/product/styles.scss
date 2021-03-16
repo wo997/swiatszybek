@@ -216,7 +216,7 @@ cart-products-comp.has_products {
 .rating_picker {
 	& {
 		font-size: 1.5em;
-		display: flex;
+		display: inline-flex;
 	}
 	&:hover {
 		& {
@@ -226,6 +226,13 @@ cart-products-comp.has_products {
 			filter: drop-shadow(0 1px 1px #0006);
 		}
 	}
+
+	& > i {
+		cursor: pointer;
+	}
+}
+.rating,
+.rating_picker {
 	.far.fa-star {
 		color: #555;
 	}
@@ -233,10 +240,26 @@ cart-products-comp.has_products {
 	.fa-star-half-alt {
 		color: #fd2;
 	}
-
 	& > i {
-		& {
-			cursor: pointer;
-		}
+		padding-right: 0.1em;
+	}
+}
+
+comment-comp.comp {
+	& {
+		display: grid;
+		grid-template-columns: auto auto;
+		grid-template-rows: auto auto;
+	}
+
+	.nick_rating {
+		grid-area: 1 / 1 / 2 / 2;
+	}
+	.created_at {
+		grid-area: 1 / 2 / 2 / 3;
+		justify-self: flex-end;
+	}
+	.comment {
+		grid-area: 2 / 1 / 3 / 3;
 	}
 }

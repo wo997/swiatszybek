@@ -129,5 +129,5 @@ function animate(node, keyframes, duration, options = {}) {
 domload(() => {
 	setTimeout(() => {
 		document.body.classList.remove("freeze");
-	}, 200);
+	}, 100);
 });

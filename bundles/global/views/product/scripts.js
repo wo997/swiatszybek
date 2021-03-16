@@ -363,21 +363,30 @@ domload(() => {
 
 // comments
 domload(() => {
-	/** @type {DatatableComp} */
+	/** @type {ListComp} */
 	// @ts-ignore
-	const comments_dt = $("datatable-comp.comments");
+	const comments_list = $("list-comp.comments");
 
-	datatableComp(comments_dt, undefined, {
-		search_url: "/comment/search",
-		columns: [
-			{ label: "comment", key: "comment", width: "1" },
-			{ label: "rating", key: "rating", width: "1" },
-			{ label: "nickname", key: "nickname", width: "1" },
-			{ label: "created_at", key: "created_at", width: "1" },
-		],
-		primary_key: "comment_id",
-		empty_html: html`Brak komentarzy`,
-		label: "Komentarze",
+	listComp(comments_list, undefined);
+
+	const datatable_params = {};
+	// if (data.sort) {
+	//     datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
+	// }
+	//datatable_params.filters = data.filters;
+	datatable_params.row_count = 30; //data.pagination_data.row_count;
+	datatable_params.page_id = 0; //data.pagination_data.page_id;
+	//datatable_params.quick_search = data.quick_search;
+
+	xhr({
+		url: "/comment/search",
+		params: {
+			datatable_params,
+		},
+		success: (res) => {
+			comments_list._data = res.rows;
+			comments_list._render();
+		},
 	});
 
 	/**
@@ -385,6 +394,10 @@ domload(() => {
 	 * @param {PiepNode} rating_picker
 	 */
 	const generateRating = (rating_picker) => {
+		if (!rating_picker) {
+			return;
+		}
+
 		let rating_html = "";
 		const rating = +def(rating_picker.dataset.hover_rating, def(rating_picker.dataset.rating, ""));
 		for (let i = 1; i <= 5; i++) {
@@ -394,10 +407,6 @@ domload(() => {
 		rating_picker._set_content(rating_html);
 	};
 	generateRating($(".rating_picker"));
-
-	// <i class="fas fa-star"></i>
-	// <i class="fas fa-star-half-alt"></i>
-	// <i class="far fa-star"></i>
 
 	window.addEventListener("click", (ev) => {
 		const target = $(ev.target);
@@ -427,49 +436,50 @@ domload(() => {
 	});
 
 	const createComment = $("#createComment");
+	if (createComment) {
+		createComment._children(".variants_container .radio_group").forEach((e) => e._set_value(0));
+		const label = createComment._child(".variants_container .label");
+		if (label) {
+			label.classList.add("first");
+		}
 
-	createComment._children(".variants_container .radio_group").forEach((e) => e._set_value(0));
-	const label = createComment._child(".variants_container .label");
-	if (label) {
-		label.classList.add("first");
+		createComment._child(".submit_btn").addEventListener("click", () => {
+			const rating = +def(createComment._child(".rating_picker").dataset.rating, "");
+			const nickname_input = createComment._child(".nickname");
+			const nickname = nickname_input._get_value();
+			const comment_input = createComment._child(".comment");
+			const comment = comment_input._get_value().trim();
+
+			const options_ids = createComment
+				._children(".variants_container p-checkbox.checked")
+				.map((c) => +c.dataset.value)
+				.filter((e) => e);
+
+			if (!comment) {
+				showInputErrors(comment_input, ["Uzupełnij komentarz"]);
+				return;
+			}
+
+			if (rating || confirm("Czy chcesz dodać komentarz bez oceny?")) {
+				showLoader(createComment);
+
+				xhr({
+					url: "/comment/add",
+					params: {
+						nickname,
+						comment: { comment, general_product_id, rating, options_ids },
+					},
+					success: (res) => {
+						hideModal("createComment");
+						hideLoader(createComment);
+						scrollIntoView(comments_dt._child(".datatable_label"), {
+							callback: () => {
+								comments_dt._backend_search();
+							},
+						});
+					},
+				});
+			}
+		});
 	}
-
-	createComment._child(".submit_btn").addEventListener("click", () => {
-		const rating = +def(createComment._child(".rating_picker").dataset.rating, "");
-		const nickname_input = createComment._child(".nickname");
-		const nickname = nickname_input._get_value();
-		const comment_input = createComment._child(".comment");
-		const comment = comment_input._get_value().trim();
-
-		const options_ids = createComment
-			._children(".variants_container p-checkbox.checked")
-			.map((c) => +c.dataset.value)
-			.filter((e) => e);
-
-		if (!comment) {
-			showInputErrors(comment_input, ["Uzupełnij komentarz"]);
-			return;
-		}
-
-		if (rating || confirm("Czy chcesz dodać komentarz bez oceny?")) {
-			showLoader(createComment);
-
-			xhr({
-				url: "/comment/add",
-				params: {
-					nickname,
-					comment: { comment, general_product_id, rating, options_ids },
-				},
-				success: (res) => {
-					hideModal("createComment");
-					hideLoader(createComment);
-					scrollIntoView(comments_dt._child(".datatable_label"), {
-						callback: () => {
-							comments_dt._backend_search();
-						},
-					});
-				},
-			});
-		}
-	});
 });
