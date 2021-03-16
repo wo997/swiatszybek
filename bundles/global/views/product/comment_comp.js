@@ -39,10 +39,14 @@ function commentComp(comp, parent, data = {}) {
 				comp._nodes.rating._set_content(rating_html);
 
 				let options_html = "";
-				const options = JSON.parse(data.options_json);
-				options.forEach((o) => {
-					options_html += html`<span class="option">${o.value}</span>`;
-				});
+				try {
+					const options = JSON.parse(data.options_json);
+					options.forEach((o) => {
+						if (o.option_id) {
+							options_html += html`<span class="option">${o.value}</span>`;
+						}
+					});
+				} catch {}
 
 				comp._nodes.options._set_content(options_html);
 			},
