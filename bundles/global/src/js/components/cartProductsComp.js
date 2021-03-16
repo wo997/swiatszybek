@@ -41,7 +41,7 @@ function cartProductsComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<list-comp data-bind="{${data.products}}" data-primary="product_id" class="striped">
+			<list-comp data-bind="{${data.products}}" data-primary="product_id" class="striped space">
 				<cart-products_product-comp></cart-products_product-comp>
 			</list-comp>
 		`,

@@ -71,14 +71,19 @@ list-comp {
 	}
 	&.striped {
 		& {
-			--list_row_padding: 10px 0;
 			--border_radius: 0;
 		}
-		& > .list_row:first-child {
+		&:not(.open) > .list_row:first-child {
 			border-top: 1px solid #ccc;
 		}
 		& > .list_row {
 			border-bottom: 1px solid #ccc;
+		}
+		&.open > .list_row:last-child {
+			border-bottom-width: 0;
+		}
+		&.space {
+			--list_row_padding: 10px 0;
 		}
 	}
 }
