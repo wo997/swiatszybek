@@ -452,7 +452,7 @@ domload(() => {
 			const comment_input = createComment._child(".comment");
 			const comment = comment_input._get_value().trim();
 
-			const options_ids = createComment
+			const options = createComment
 				._children(".variants_container p-checkbox.checked")
 				.map((c) => +c.dataset.value)
 				.filter((e) => e);
@@ -473,7 +473,7 @@ domload(() => {
 					url: "/comment/add",
 					params: {
 						nickname,
-						comment: { comment, general_product_id, rating, options_ids },
+						comment: { comment, general_product_id, rating, options },
 					},
 					success: (res) => {
 						hideModal("createComment");

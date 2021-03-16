@@ -94,7 +94,7 @@ function getGlobalProductsSearch($url, $options = [])
         "select" => "
             gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json,
             MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
-            GROUP_CONCAT(p.__options_json SEPARATOR '|') products_options
+            JSON_ARRAYAGG(p.__options_json) products_options_jsons_json
         ",
         "from" => $from,
         "group" => "general_product_id",
@@ -138,10 +138,10 @@ function getGlobalProductsSearch($url, $options = [])
 
         json_decode($product["__options_json"], true);
 
-        $products_options = $product["products_options"];
+        $products_options_jsons_json = json_decode($product["products_options_jsons_json"]);
 
         $matched_options = [];
-        foreach (explode("|", $products_options) as $product_options_json) {
+        foreach ($products_options_jsons_json as $product_options_json) {
             $product_options = json_decode($product_options_json, true);
             if ($product_options) {
                 foreach ($product_options as $feature_id => $option_ids) {

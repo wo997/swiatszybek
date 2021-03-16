@@ -310,7 +310,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
                 </button>
             <?php else : ?>
-                <div class="label medium">Musisz się zalogować by móc dodaj komentarz</div>
+                <div class="label medium">Aby móc dodać komentarz musisz się zalogować</div>
                 <button class="btn primary" onclick="showModal(`loginForm`,{source:this});">
                     Zaloguj się <i class="fas fa-user"></i>
                 </button>
@@ -382,7 +382,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
                     <label>
                         <div class="label">Komentarz</div>
-                        <textarea class="field comment" style="height:150px;min-height:80px;max-height:200px;"></textarea>
+                        <textarea class="field comment scroll_panel" style="height:150px;min-height:80px;"></textarea>
                     </label>
 
                     <button class="btn primary submit_btn">Wyślij <i class="fas fa-paper-plane"></i></button>

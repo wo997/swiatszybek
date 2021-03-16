@@ -4,7 +4,6 @@ try {
     DB::beginTransaction();
     $comment_data = json_decode($_POST["comment"], true);
     $comment_data["comment"] = htmlspecialchars($comment_data["comment"]);
-    $comment_data["options_csv"] = join(",", array_map(fn ($x) => clean($x), $comment_data["options_ids"]));
 
     /** @var EntityUser */
     $user = User::getCurrent()->entity;
