@@ -106,7 +106,7 @@ domload(() => {
 
 		adding_product_from_cart = true;
 
-		let offset = 100;
+		let offset = 170;
 		if (!user_cart.products.find((p) => p.product_id === product_id)) {
 			// new
 			offset += 140; // probably enough to contain a row
