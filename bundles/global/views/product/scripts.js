@@ -369,25 +369,29 @@ domload(() => {
 
 	listComp(comments_list, undefined);
 
-	const datatable_params = {};
-	// if (data.sort) {
-	//     datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
-	// }
-	//datatable_params.filters = data.filters;
-	datatable_params.row_count = 30; //data.pagination_data.row_count;
-	datatable_params.page_id = 0; //data.pagination_data.page_id;
-	//datatable_params.quick_search = data.quick_search;
+	const searchComments = () => {
+		const datatable_params = {};
+		// if (data.sort) {
+		//     datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
+		// }
+		//datatable_params.filters = data.filters;
+		datatable_params.row_count = 30; //data.pagination_data.row_count;
+		datatable_params.page_id = 0; //data.pagination_data.page_id;
+		//datatable_params.quick_search = data.quick_search;
 
-	xhr({
-		url: "/comment/search",
-		params: {
-			datatable_params,
-		},
-		success: (res) => {
-			comments_list._data = res.rows;
-			comments_list._render();
-		},
-	});
+		xhr({
+			url: "/comment/search",
+			params: {
+				datatable_params,
+			},
+			success: (res) => {
+				comments_list._data = res.rows;
+				comments_list._render();
+			},
+		});
+	};
+
+	searchComments();
 
 	/**
 	 *
@@ -472,9 +476,9 @@ domload(() => {
 					success: (res) => {
 						hideModal("createComment");
 						hideLoader(createComment);
-						scrollIntoView(comments_dt._child(".datatable_label"), {
+						scrollIntoView($(".comments_label"), {
 							callback: () => {
-								comments_dt._backend_search();
+								searchComments();
 							},
 						});
 					},

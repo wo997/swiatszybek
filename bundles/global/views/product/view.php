@@ -284,11 +284,14 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
     </div>
 
     <div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
-        <?= "MIEJSCE NA OPIS PRODUKTU" //getCMSPageHTML($general_product_data["description"]); 
-        ?>
+        <h2>MIEJSCE NA OPIS PRODUKTU</h2>
 
         <div>
-            <span class="label medium inline">Komentarze</span>
+            <h2>Podobne produkty</h2>
+        </div>
+
+        <div>
+            <span class="label medium inline comments_label">Komentarze</span>
             <?php if (User::getCurrent()->isLoggedIn()) : ?>
                 <button class="btn primary small space_btn_left" onclick="showModal(`createComment`,{source:this});">
                     Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
@@ -367,8 +370,8 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <label>
                         <div class="label">Pseudonim</div>
                         <?php
-                        $nickname = def(DB::fetchVal("SELECT nickname FROM user WHERE user_id = " . intval(User::getCurrent()->isLoggedIn())), "");
-                        if ($nickname === "") {
+                        $nickname = DB::fetchVal("SELECT nickname FROM user WHERE user_id = " . User::getCurrent()->getId());
+                        if (!$nickname || trim($nickname) === "") {
                             $nickname = "Gość";
                         }
                         ?>
