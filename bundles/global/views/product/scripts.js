@@ -393,54 +393,52 @@ domload(() => {
 
 	searchComments();
 
-	/**
-	 *
-	 * @param {PiepNode} rating_picker
-	 */
-	const generateRating = (rating_picker) => {
-		if (!rating_picker) {
-			return;
-		}
-
-		let rating_html = "";
-		const rating = +def(rating_picker.dataset.hover_rating, def(rating_picker.dataset.rating, ""));
-		for (let i = 1; i <= 5; i++) {
-			const cls = i <= rating ? "fas fa-star" : "far fa-star";
-			rating_html += html`<i class="${cls}" data-rating="${i}"></i>`;
-		}
-		rating_picker._set_content(rating_html);
-	};
-	generateRating($(".rating_picker"));
-
-	window.addEventListener("click", (ev) => {
-		const target = $(ev.target);
-		const rating_picker_star = target._parent(".rating_picker > i", { skip: 0 });
-		if (rating_picker_star) {
-			const rating_picker = target._parent(".rating_picker");
-			rating_picker.dataset.rating = rating_picker_star.dataset.rating;
-			generateRating(rating_picker);
-		}
-	});
-
-	window.addEventListener("mousemove", (ev) => {
-		const target = $(ev.target);
-		const rating_picker_star = target._parent(".rating_picker > i", { skip: 0 });
-		const has_focus = $(".rating_picker.has_focus");
-		const rating_picker = target._parent(".rating_picker");
-		if (has_focus && has_focus !== rating_picker) {
-			has_focus.classList.remove("has_focus");
-			delete has_focus.dataset.hover_rating;
-			generateRating(has_focus);
-		}
-		if (rating_picker_star) {
-			rating_picker.classList.add("has_focus");
-			rating_picker.dataset.hover_rating = rating_picker_star.dataset.rating;
-			generateRating(rating_picker);
-		}
-	});
-
 	const createComment = $("#createComment");
+
 	if (createComment) {
+		/**
+		 *
+		 * @param {PiepNode} rating_picker
+		 */
+		const generateRating = (rating_picker) => {
+			let rating_html = "";
+			const rating = +def(rating_picker.dataset.hover_rating, def(rating_picker.dataset.rating, ""));
+			for (let i = 1; i <= 5; i++) {
+				const cls = i <= rating ? "fas fa-star" : "far fa-star";
+				rating_html += html`<i class="${cls}" data-rating="${i}"></i>`;
+			}
+			rating_picker._set_content(rating_html);
+		};
+		const rating_picker = $(".rating_picker");
+		generateRating(rating_picker);
+
+		window.addEventListener("click", (ev) => {
+			const target = $(ev.target);
+			const rating_picker_star = target._parent(".rating_picker > i", { skip: 0 });
+			if (rating_picker_star) {
+				const rating_picker = target._parent(".rating_picker");
+				rating_picker.dataset.rating = rating_picker_star.dataset.rating;
+				generateRating(rating_picker);
+			}
+		});
+
+		window.addEventListener("mousemove", (ev) => {
+			const target = $(ev.target);
+			const rating_picker_star = target._parent(".rating_picker > i", { skip: 0 });
+			const has_focus = $(".rating_picker.has_focus");
+			const rating_picker = target._parent(".rating_picker");
+			if (has_focus && has_focus !== rating_picker) {
+				has_focus.classList.remove("has_focus");
+				delete has_focus.dataset.hover_rating;
+				generateRating(has_focus);
+			}
+			if (rating_picker_star) {
+				rating_picker.classList.add("has_focus");
+				rating_picker.dataset.hover_rating = rating_picker_star.dataset.rating;
+				generateRating(rating_picker);
+			}
+		});
+
 		createComment._children(".variants_container .radio_group").forEach((e) => e._set_value(0));
 		const label = createComment._child(".variants_container .label");
 		if (label) {
@@ -448,7 +446,7 @@ domload(() => {
 		}
 
 		createComment._child(".submit_btn").addEventListener("click", () => {
-			const rating = +def(createComment._child(".rating_picker").dataset.rating, "");
+			const rating = +def(rating_picker.dataset.rating, "");
 			const nickname_input = createComment._child(".nickname");
 			const nickname = nickname_input._get_value();
 			const comment_input = createComment._child(".comment");
@@ -467,6 +465,10 @@ domload(() => {
 			if (rating || confirm("Czy chcesz dodać komentarz bez oceny?")) {
 				showLoader(createComment);
 
+				comment_input._set_value("");
+				rating_picker.dataset.rating = "";
+				generateRating(rating_picker);
+
 				xhr({
 					url: "/comment/add",
 					params: {
@@ -476,6 +478,7 @@ domload(() => {
 					success: (res) => {
 						hideModal("createComment");
 						hideLoader(createComment);
+						showNotification("Dodano komentarz", { type: "success", one_line: true });
 						scrollIntoView($(".comments_label"), {
 							callback: () => {
 								searchComments();

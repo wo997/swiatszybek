@@ -7,6 +7,7 @@
  *  created_at?: string,
  *  comment?: string
  *  rating?: number
+ *  options_json?: string
  * } & ListCompRowData} CommentCompData
  *
  * @typedef {{
@@ -15,6 +16,7 @@
  *  _getData()
  *  _nodes: {
  *      rating: PiepNode
+ *      options: PiepNode
  *  }
  * } & BaseComp} CommentComp
  */
@@ -35,6 +37,14 @@ function commentComp(comp, parent, data = {}) {
 					rating_html += html`<i class="${cls}"></i>`;
 				}
 				comp._nodes.rating._set_content(rating_html);
+
+				let options_html = "";
+				const options = JSON.parse(data.options_json);
+				options.forEach((o) => {
+					options_html += html`<span class="option">${o.value}</span>`;
+				});
+
+				comp._nodes.options._set_content(options_html);
 			},
 		});
 	};
@@ -44,6 +54,7 @@ function commentComp(comp, parent, data = {}) {
 			<span class="nick_rating">
 				<span class="nickname" html="{${data.nickname}}"></span>
 				<span class="rating" data-node="{${comp._nodes.rating}}"></span>
+				<div class="options" data-node="{${comp._nodes.options}}"></div>
 			</span>
 			<span class="created_at" html="{${data.created_at}}"></span>
 			<div class="comment" html="{${data.comment}}"></div>

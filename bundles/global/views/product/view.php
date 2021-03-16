@@ -290,30 +290,32 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <h2>Podobne produkty</h2>
         </div>
 
-        <div>
-            <span class="label medium inline comments_label">Komentarze</span>
+        <div style="max-width: 1000px;margin: 0 auto">
+            <div>
+                <span class="label medium inline comments_label">Komentarze</span>
+                <?php if (User::getCurrent()->isLoggedIn()) : ?>
+                    <button class="btn primary small space_btn_left" onclick="showModal(`createComment`,{source:this});">
+                        Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
+                    </button>
+                <?php endif ?>
+            </div>
+
+            <list-comp class="comments striped" data-primary="comment_id">
+                <comment-comp></comment-comp>
+            </list-comp>
+
             <?php if (User::getCurrent()->isLoggedIn()) : ?>
-                <button class="btn primary small space_btn_left" onclick="showModal(`createComment`,{source:this});">
+                <div class="label medium">Podziel się swoją opinią</div>
+                <button class="btn primary" onclick="showModal(`createComment`,{source:this});">
                     Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
+                </button>
+            <?php else : ?>
+                <div class="label medium">Musisz się zalogować by móc dodaj komentarz</div>
+                <button class="btn primary" onclick="showModal(`loginForm`,{source:this});">
+                    Zaloguj się <i class="fas fa-user"></i>
                 </button>
             <?php endif ?>
         </div>
-
-        <list-comp class="comments striped space">
-            <comment-comp></comment-comp>
-        </list-comp>
-
-        <?php if (User::getCurrent()->isLoggedIn()) : ?>
-            <div class="label medium">Podziel się swoją opinią</div>
-            <button class="btn primary" onclick="showModal(`createComment`,{source:this});">
-                Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
-            </button>
-        <?php else : ?>
-            <div class="label medium">Musisz się zalogować by móc dodaj komentarz</div>
-            <button class="btn primary" onclick="showModal(`loginForm`,{source:this});">
-                Zaloguj się <i class="fas fa-user"></i>
-            </button>
-        <?php endif ?>
     </div>
 
 <?php else : ?>
