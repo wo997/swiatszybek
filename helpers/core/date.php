@@ -21,7 +21,7 @@ function dateDifference($time)
         else if ($m == 2 || $m == 3 || $m == 4) return $m . " godziny temu";
         else return $m . " godzin temu";
     } else {
-        return date("d", $date_time) . " " . m_pol[intval(substr($time, 5, 2)) - 1] . " " . date("Y", $date_time);
+        return date("d", $date_time) . " " . def(m_pol, intval(substr($time, 5, 2)) - 1, "") . " " . date("Y", $date_time);
     }
 }
 

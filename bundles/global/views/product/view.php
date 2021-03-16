@@ -292,9 +292,9 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <div style="max-width: 1000px;margin: 0 auto">
             <div>
-                <span class="label medium inline comments_label">Komentarze</span>
+                <span class="label medium inline comments_label">Komentarze <span class="count"></span></span>
                 <?php if (User::getCurrent()->isLoggedIn()) : ?>
-                    <button class="btn primary small space_btn_left" onclick="showModal(`createComment`,{source:this});">
+                    <button class="btn primary small space_btn_left add_comment_btn_top hidden" onclick="showModal(`createComment`,{source:this});">
                         Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
                     </button>
                 <?php endif ?>
@@ -303,6 +303,9 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <list-comp class="comments striped" data-primary="comment_id">
                 <comment-comp></comment-comp>
             </list-comp>
+            <!-- <div class="case_no_comments">
+                Brak komentarzy!
+            </div> -->
 
             <?php if (User::getCurrent()->isLoggedIn()) : ?>
                 <div class="label medium">Podziel się swoją opinią</div>

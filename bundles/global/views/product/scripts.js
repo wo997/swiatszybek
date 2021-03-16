@@ -382,11 +382,14 @@ domload(() => {
 		xhr({
 			url: "/comment/search",
 			params: {
+				general_product_id,
 				datatable_params,
 			},
 			success: (res) => {
 				comments_list._data = res.rows;
 				comments_list._render();
+				$(".comments_label .count")._set_content(`(${res.total_rows})`);
+				$(".add_comment_btn_top").classList.toggle("hidden", res.rows.length < 10);
 			},
 		});
 	};
