@@ -144,6 +144,7 @@ PHP;
 
     if ($any_changed) {
         triggerEvent("assets_change", ["css" => $css_changed, "js" => $js_changed]);
-        //Request::reload(true);
+        // drop it and update defines, well - defines, they are tricky, getters are getter or idk
+        Request::reload(true);
     }
 }

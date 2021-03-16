@@ -15,6 +15,11 @@ body {
 	margin: 0;
 	font-size: 16px;
 }
+body,
+textarea,
+button {
+	font-size: 16px;
+}
 @media only screen and (max-width: 340px) {
 	body {
 		font-size: 15px;

@@ -1,19 +1,11 @@
 <?php //hook[migration]
 
-DB::createTable("user", [
-    ["name" => "user_id", "type" => "INT", "index" => "primary"],
-    ["name" => "authenticated", "type" => "TINYINT(1)"],
-    ["name" => "first_name", "type" => "VARCHAR(255)"],
-    ["name" => "last_name", "type" => "VARCHAR(255)"],
-    ["name" => "type", "type" => "VARCHAR(255)"],
-    ["name" => "email", "type" => "VARCHAR(255)", "index" => "index"],
-    ["name" => "login", "type" => "VARCHAR(255)", "index" => "index"],
-    ["name" => "phone", "type" => "VARCHAR(255)"],
-    ["name" => "password_hash", "type" => "VARCHAR(255)"],
-    ["name" => "remember_me_token", "type" => "VARCHAR(255)"],
-    ["name" => "visited_at", "type" => "DATETIME"],
-    ["name" => "created_at", "type" => "DATETIME"],
-    ["name" => "cart_json", "type" => "TEXT"],
-    ["name" => "privelege_id", "type" => "TINYINT"],
-    //["name" => "last_active_at", "type" => "DATETIME"],
+DB::createTable("comment", [
+    ["name" => "comment_id", "type" => "INT", "index" => "primary"],
+    ["name" => "comment", "type" => "TEXT"],
+    ["name" => "rating", "type" => "VARCHAR(255)"],
+    ["name" => "general_product_id", "type" => "VARCHAR(255)"],
+    ["name" => "options_csv", "previous_name" => "options_json", "type" => "VARCHAR(255)"],
+    ["name" => "user_id", "type" => "INT", "index" => "index"],
+    ["name" => "created_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
 ]);

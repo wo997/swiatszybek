@@ -77,7 +77,7 @@
  *      filters_info: PiepNode
  *      filter_menu: PiepNode
  *  }
- * _datatable_search()
+ * _backend_search()
  * _search_request: XMLHttpRequest | undefined
  * _save_state()
  * _load_state(data_obj)
@@ -179,7 +179,7 @@ function datatableComp(comp, parent, data) {
 		rewriteState(state, data_obj);
 	};
 
-	comp._datatable_search = () => {
+	comp._backend_search = () => {
 		if (!comp._data.search_url) {
 			console.error("No search url");
 			console.trace();
@@ -438,7 +438,7 @@ function datatableComp(comp, parent, data) {
 
 				if (cd.quick_search) {
 					if (data.search_url) {
-						comp._datatable_search();
+						comp._backend_search();
 					}
 				}
 
@@ -542,7 +542,7 @@ function datatableComp(comp, parent, data) {
 
 					if (data.search_url) {
 						if (!cd.selection) {
-							comp._datatable_search();
+							comp._backend_search();
 						}
 					} else {
 						setTimeout(() => {
@@ -707,7 +707,7 @@ function datatableComp(comp, parent, data) {
 				comp._load_state(data);
 
 				setTimeout(() => {
-					comp._datatable_search();
+					comp._backend_search();
 				}, 0);
 			}
 
@@ -936,7 +936,7 @@ function datatableComp(comp, parent, data) {
 				comp._render();
 
 				if (data.search_url) {
-					comp._datatable_search();
+					comp._backend_search();
 				}
 			});
 

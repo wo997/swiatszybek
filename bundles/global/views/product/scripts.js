@@ -361,7 +361,25 @@ domload(() => {
 	});
 });
 
+// comments
 domload(() => {
+	/** @type {DatatableComp} */
+	// @ts-ignore
+	const comments_dt = $("datatable-comp.comments");
+
+	datatableComp(comments_dt, undefined, {
+		search_url: "/comment/search",
+		columns: [
+			{ label: "comment", key: "comment", width: "1" },
+			{ label: "rating", key: "rating", width: "1" },
+			{ label: "nickname", key: "nickname", width: "1" },
+			{ label: "created_at", key: "created_at", width: "1" },
+		],
+		primary_key: "comment_id",
+		empty_html: html`Brak komentarzy`,
+		label: "Komentarze",
+	});
+
 	/**
 	 *
 	 * @param {PiepNode} rating_picker
@@ -407,35 +425,51 @@ domload(() => {
 			generateRating(rating_picker);
 		}
 	});
+
+	const createComment = $("#createComment");
+
+	createComment._children(".variants_container .radio_group").forEach((e) => e._set_value(0));
+	const label = createComment._child(".variants_container .label");
+	if (label) {
+		label.classList.add("first");
+	}
+
+	createComment._child(".submit_btn").addEventListener("click", () => {
+		const rating = +def(createComment._child(".rating_picker").dataset.rating, "");
+		const nickname_input = createComment._child(".nickname");
+		const nickname = nickname_input._get_value();
+		const comment_input = createComment._child(".comment");
+		const comment = comment_input._get_value().trim();
+
+		const options_ids = createComment
+			._children(".variants_container p-checkbox.checked")
+			.map((c) => +c.dataset.value)
+			.filter((e) => e);
+
+		if (!comment) {
+			showInputErrors(comment_input, ["Uzupełnij komentarz"]);
+			return;
+		}
+
+		if (rating || confirm("Czy chcesz dodać komentarz bez oceny?")) {
+			showLoader(createComment);
+
+			xhr({
+				url: "/comment/add",
+				params: {
+					nickname,
+					comment: { comment, general_product_id, rating, options_ids },
+				},
+				success: (res) => {
+					hideModal("createComment");
+					hideLoader(createComment);
+					scrollIntoView(comments_dt._child(".datatable_label"), {
+						callback: () => {
+							comments_dt._backend_search();
+						},
+					});
+				},
+			});
+		}
+	});
 });
-
-//window.addEventListener("modal_show", (event) => {
-// @ts-ignore
-// if (event.detail.node.id != "createComment") {
-// 	return;
-// }
-
-// const variants_container = $("#createComment .variants_container");
-// if (!variants_container._is_empty()) {
-// 	return;
-// }
-
-//variants_container.insertAdjacentHTML("afterbegin", $(".product_offer .variants_container").innerHTML);
-
-// $$("#createComment .checkbox_rgstrd").forEach((e) => {
-// 	e.classList.remove("checkbox_rgstrd");
-// });
-// $$("#createComment .rg_registered").forEach((e) => {
-// 	e.classList.remove("rg_registered");
-// });
-// $$("#createComment .checked").forEach((e) => {
-// 	e.classList.remove("checked");
-// });
-
-// const label = variants_container._child(".label");
-// if (label) {
-// 	label.classList.add("first");
-// }
-
-// registerForms();
-//});

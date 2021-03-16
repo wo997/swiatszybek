@@ -289,6 +289,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <datatable-comp class="comments"></datatable-comp>
 
+        <div style="height:1000px"></div>
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
             <div class="label medium">Podziel się swoją opinią</div>
             <button class="btn primary" onclick="showModal(`createComment`,{source:this});">
@@ -323,22 +324,20 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
             <div class="scroll_panel scroll_shadow panel_padding">
                 <div>
-                    <?php
-                    //$pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()), "");
-                    ?>
-                    <span class="label first">Określ wariant produktu lub pozostaw puste</span>
                     <div class="variants_container">
                         <?php
                         foreach ($general_product_variants as $general_product_variant) {
                         ?>
                             <span class="label"><?= $general_product_variant["name"] ?></span>
-                            <div data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
+                            <div class="radio_group">
                                 <?php
-                                foreach ($general_product_variant["variant_options"] as $variant_option) {
+                                foreach ([
+                                    ["product_feature_option_id" => 0, "value" => "Wszystkie"], ...$general_product_variant["variant_options"]
+                                ] as $variant_option) {
                                 ?>
                                     <div>
                                         <div class="checkbox_area inline" style="margin-top: 7px;">
-                                            <p-checkbox class="square" data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
+                                            <p-checkbox data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
                                             <?= $variant_option["value"] ?>
                                         </div>
                                     </div>
@@ -357,13 +356,18 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
                     <label>
                         <div class="label">Pseudonim</div>
-                        <input type="text" class="field" value="<?= "" // $pseudonim 
-                                                                ?>">
+                        <?php
+                        $nickname = def(DB::fetchVal("SELECT nickname FROM user WHERE user_id = " . intval(User::getCurrent()->isLoggedIn())), "");
+                        if ($nickname === "") {
+                            $nickname = "Gość";
+                        }
+                        ?>
+                        <input type="text" class="field nickname" value="<?= htmlspecialchars($nickname) ?>">
                     </label>
 
                     <label>
                         <div class="label">Komentarz</div>
-                        <textarea class="field" style="height:150px;min-height:100px;max-height:200px;"></textarea>
+                        <textarea class="field comment" style="height:150px;min-height:80px;max-height:200px;"></textarea>
                     </label>
 
                     <button class="btn primary submit_btn">Wyślij <i class="fas fa-paper-plane"></i></button>

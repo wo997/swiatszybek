@@ -43,6 +43,6 @@ domload(() => {
 	});
 
 	window.addEventListener("rebate_codes_changed", () => {
-		datatable_comp._datatable_search();
+		datatable_comp._backend_search();
 	});
 });
