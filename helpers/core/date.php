@@ -12,12 +12,12 @@ function dateDifference($time)
         return "Przed chwilą";
     } else if ($diff < 3600) {
         $m = floor($diff / 60);
-        if ($m == 1) return "minutę temu";
+        if ($m == 1) return "1 minutę temu";
         else if ($m == 2 || $m == 3 || $m == 4) return $m . " minuty temu";
         else return $m . " minut temu";
     } else if ($diff < 12 * 3600) {
         $m = floor($diff / 3600);
-        if ($m == 1) return "godzinę temu";
+        if ($m == 1) return "1 godzinę temu";
         else if ($m == 2 || $m == 3 || $m == 4) return $m . " godziny temu";
         else return $m . " godzin temu";
     } else {

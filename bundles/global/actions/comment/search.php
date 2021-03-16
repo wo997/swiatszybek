@@ -11,7 +11,13 @@ $data = paginateData([
     ",
     "order" => "comment_id DESC",
     "group" => "comment_id",
-    "datatable_params" => $_POST["datatable_params"]
+    "datatable_params" => $_POST["datatable_params"],
+
 ]);
+
+foreach ($data["rows"] as $key => $row) {
+    $data["rows"][$key]["created_at"] = dateDifference($row["created_at"]);
+}
+
 
 Request::jsonResponse($data);
