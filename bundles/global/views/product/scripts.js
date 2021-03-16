@@ -468,6 +468,7 @@ domload(() => {
 				comment_input._set_value("");
 				rating_picker.dataset.rating = "";
 				generateRating(rating_picker);
+				createComment._children(".variants_container .radio_group ").map((c) => c._set_value(0, { quiet: true }));
 
 				xhr({
 					url: "/comment/add",
