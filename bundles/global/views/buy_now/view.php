@@ -118,6 +118,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <div class="label big">Paczkomat</div>
             <div>
                 <button class="btn primary pick_inpost_parcel_locker_btn">Wybierz paczkomat <i class="fas fa-map-marker-alt"></i></button>
+                <div class="choosen_parcel_locker"> </div>
             </div>
         </div>
 
@@ -125,7 +126,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <div class="label big">Potwierdzenie</div>
 
             <div class="checkbox_area">
-                <p-checkbox class="square"></p-checkbox>
+                <p-checkbox class="square accept_regulations"></p-checkbox>
                 <span class="semi-bold">Akceptuję regulamin</span>
             </div>
 

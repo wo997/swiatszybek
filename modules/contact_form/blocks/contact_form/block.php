@@ -22,7 +22,7 @@
             <div>
                 <b><?= $company_data['company_name'] ?></b><br><br>
                 <?= $company_data['street_name'] ?> <?= $company_data['street_number'] ?><br>
-                <?= $company_data['postal_code'] ?> <?= $company_data['city'] ?><br><br>
+                <?= $company_data['post_code'] ?> <?= $company_data['city'] ?><br><br>
                 Biuro czynne:<br>
                 <?= $company_data['opening_hours'] ?><br><br>
                 <a href='mailto:<?= $company_data['main_email'] ?>'><i class='fa fa-envelope' style='margin-right:5px;'></i><?= $company_data['main_email'] ?></a><br>

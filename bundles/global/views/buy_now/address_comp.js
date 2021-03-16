@@ -10,11 +10,11 @@
  *  phone: string
  *  email: string
  *  country: string
- *  postal_code: string
+ *  post_code: string
  *  city: string
  *  street: string
- *  house_number: string
- *  apartment_number: string
+ *  building_number: string
+ *  flat_number: string
  * }} AddressCompData
  *
  * @typedef {{
@@ -44,11 +44,11 @@ function addressComp(comp, parent, data = undefined) {
 			phone: "",
 			email: "",
 			country: "Polska",
-			postal_code: "",
+			post_code: "",
 			city: "",
 			street: "",
-			house_number: "",
-			apartment_number: "",
+			building_number: "",
+			flat_number: "",
 		};
 	}
 
@@ -116,7 +116,7 @@ function addressComp(comp, parent, data = undefined) {
 				</select>
 
 				<div class="label">Kod pocztowy</div>
-				<input type="text" class="field" autocomplete="postal-code" data-bind="{${data.postal_code}}" data-validate="string" />
+				<input type="text" class="field" autocomplete="postal-code" data-bind="{${data.post_code}}" data-validate="string" />
 
 				<div class="label">Miejscowość</div>
 				<input type="text" class="field" autocomplete="address-level2" data-bind="{${data.city}}" data-validate="string" />
@@ -127,12 +127,12 @@ function addressComp(comp, parent, data = undefined) {
 				<div class="form_columns">
 					<div class="form_column first">
 						<div class="label">Nr domu</div>
-						<input type="text" class="field" autocomplete="address-line2" data-bind="{${data.house_number}}" data-validate="string" />
+						<input type="text" class="field" autocomplete="address-line2" data-bind="{${data.building_number}}" data-validate="string" />
 					</div>
 
 					<div class="form_column">
 						<div class="label">Nr lokalu <span class="optional_label"></span></div>
-						<input type="text" class="field" autocomplete="address-line3" data-bind="{${data.apartment_number}}" />
+						<input type="text" class="field" autocomplete="address-line3" data-bind="{${data.flat_number}}" />
 					</div>
 				</div>
 			</form>

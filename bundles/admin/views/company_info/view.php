@@ -47,7 +47,7 @@
         <div class="form-header">Adres firmy</div>
 
         <div class="label">Kod pocztowy</div>
-        <input type="text" class="field" name="postal_code">
+        <input type="text" class="field" name="post_code">
 
         <div class="label">Miasto</div>
         <input type="text" class="field" name="city">

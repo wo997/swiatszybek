@@ -10,10 +10,10 @@ DB::createTable("address", [
     ["name" => "phone", "type" => "VARCHAR(255)"],
     ["name" => "email", "type" => "VARCHAR(255)"],
     ["name" => "country", "type" => "VARCHAR(255)"],
-    ["name" => "postal_code", "type" => "VARCHAR(255)"],
+    ["name" => "post_code", "type" => "VARCHAR(255)"],
     ["name" => "city", "type" => "VARCHAR(255)"],
     ["name" => "street", "type" => "VARCHAR(255)"],
-    ["name" => "house_number", "type" => "VARCHAR(255)"],
-    ["name" => "apartment_number", "type" => "VARCHAR(255)"],
+    ["name" => "building_number", "type" => "VARCHAR(255)"],
+    ["name" => "flat_number", "type" => "VARCHAR(255)"],
     ["name" => "__display_name", "type" => "VARCHAR(255)"],
 ]);

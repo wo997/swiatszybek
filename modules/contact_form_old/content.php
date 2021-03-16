@@ -11,7 +11,7 @@
 //         <div>
 //             <b>" . config('company_name') . "</b><br><br>
 //             " . config('company_street_name') . " " . config('company_street_number') . "<br>
-//             " . config('company_postal_code') . " " . config('company_city') . "<br><br>
+//             " . config('company_post_code') . " " . config('company_city') . "<br><br>
 //             Biuro czynne:<br>
 //             " . config('opening_hours') . "<br><br>
 //             <a href='mailto:" . config('main_email') . "'><i class='fa fa-envelope' style='margin-right:5px;'></i>" . config('main_email') . "</a><br>

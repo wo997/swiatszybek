@@ -4,6 +4,20 @@
 let buy_products_wrapper;
 /** @type {PiepNode} */
 let rebate_codes_list;
+/** @type {ParcelLock} */
+let choose_parcel_locker = undefined;
+
+/**
+ * @typedef {{
+ *	code: string,
+ *	country: string,
+ *	post_code: string,
+ *	city: string,
+ *	street: string,
+ *	building_number: string,
+ *	flat_number: string,
+ * }} ParcelLock
+ */
 
 domload(() => {
 	buy_products_wrapper = $(".buy_products_wrapper");
@@ -39,6 +53,8 @@ domload(() => {
 	const courier_address_different_input = buy_now_form._child(".courier_address_different");
 	const case_courier_address_different = buy_now_form._child(".case_courier_address_different");
 	const confirm_order_btn = buy_now_form._child(".confirm_order");
+	const pick_inpost_parcel_locker_btn = buy_now_form._child(".pick_inpost_parcel_locker_btn");
+	const accept_regulations_check = buy_now_form._child(".accept_regulations");
 
 	if (IS_LOGGED) {
 		expand(case_choosen_account, true);
@@ -77,13 +93,40 @@ domload(() => {
 	});
 
 	confirm_order_btn.addEventListener("click", () => {
+		let valid = true;
+
 		if (!main_address._validate()) {
-			return;
+			valid = false;
 		}
 
 		const data = { main_address: main_address._data, delivery: delivery_input._get_value() };
 		if (data.delivery === "courier") {
+			if (!courier_address._validate()) {
+				valid = false;
+			}
 			data.courier_address = courier_address._data;
+		}
+		if (data.delivery === "parcel_locker") {
+			if (!choose_parcel_locker) {
+				if (valid) {
+					showNotification(`Wybierz paczkomat`, { type: "error", one_line: true });
+					scrollIntoView(pick_inpost_parcel_locker_btn);
+				}
+				valid = false;
+			}
+			data.parcel_locker = choose_parcel_locker;
+		}
+
+		if (!accept_regulations_check._get_value()) {
+			if (valid) {
+				showNotification(`Musisz zaakceptować regulamin`, { type: "error", one_line: true });
+				scrollIntoView(accept_regulations_check);
+			}
+			valid = false;
+		}
+
+		if (!valid) {
+			return;
 		}
 
 		xhr({
@@ -97,7 +140,6 @@ domload(() => {
 		});
 	});
 
-	const pick_inpost_parcel_locker_btn = $(".pick_inpost_parcel_locker_btn");
 	if (pick_inpost_parcel_locker_btn) {
 		pick_inpost_parcel_locker_btn.addEventListener("click", () => {
 			showInpostParcelLockerPickerModal(pick_inpost_parcel_locker_btn);
@@ -252,8 +294,31 @@ window.easyPackAsyncInit = () => {
 	});
 	// @ts-ignore
 	const map = easyPack.mapWidget("easypack-map", (point) => {
-		console.log(point);
 		hideModal("InpostParcelLockerPicker");
+
+		const address_details = point.address_details;
+
+		choose_parcel_locker = {
+			code: point.name,
+			country: "Polska",
+			post_code: address_details.post_code,
+			city: address_details.city,
+			street: address_details.street,
+			building_number: address_details.building_number,
+			flat_number: address_details.flat_number,
+		};
+
+		const buy_now_form = $(".buy_now_form");
+		const choosen_parcel_locker = buy_now_form._child(".choosen_parcel_locker");
+		choosen_parcel_locker._set_content(html`
+			<div class="label">${choose_parcel_locker.code}</div>
+			<p>${choose_parcel_locker.street} ${choose_parcel_locker.building_number}, ${choose_parcel_locker.city}</p>
+		`);
+
+		const pick_inpost_parcel_locker_btn = buy_now_form._child(".pick_inpost_parcel_locker_btn");
+		pick_inpost_parcel_locker_btn._set_content(html`Wybierz inny <i class="fas fa-map-marker-alt"></i>`);
+		pick_inpost_parcel_locker_btn.classList.remove("primary");
+		pick_inpost_parcel_locker_btn.classList.add("subtle", "space_top");
 	});
 };
 
