@@ -183,3 +183,28 @@
 cart-products-comp.has_products {
 	margin: 5px 0 15px;
 }
+
+.createComment {
+	.submit_btn {
+		width: 100% /*170px*/;
+		margin-left: auto;
+		margin-right: auto;
+		display: block;
+		margin-top: 10px;
+	}
+	@media only screen and (max-width: 699px) {
+		.submit_btn {
+			width: 100%;
+		}
+	}
+	@media only screen and (max-width: 499px) {
+		.desktop {
+			display: none;
+		}
+	}
+	@media only screen and (min-width: 500px) {
+		.mobile {
+			display: none;
+		}
+	}
+}

@@ -17,7 +17,7 @@ function resetPassword() {
 				let body = html`Hasło zostało zresetowane`;
 				let footer = html`
 					<button class="btn subtle medium" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-					<button class="btn success medium" onclick='showModal("loginForm",{source:this});hideParentModal(this)'>
+					<button class="btn success medium" onclick='showModal("loginForm",{source:this});'>
 						Zaloguj się <i class="fas fa-user"></i>
 					</button>
 				`;

@@ -8,17 +8,6 @@
     echo getCMSPageHTML($page_footer);
     ?>
 </footer>
-<!--<footer style="line-height:1.5">
-  <div class="mobileRow" style="justify-content: space-evenly;">
-    © Świat Szybek. Wszelkie prawa zastrzeżone. Polityka Prywatności.
-  </div>
-</footer>-->
-<form action="/google/login" method="post" style="display:none" id="google-form">
-    <input type="text" name="id_token">
-</form>
-
-<div class="g-signin2" data-onsuccess="onSignIn" style="display:none"></div>
-<div id="fb-root"></div>
 
 <div class="offline"><i class="fas fa-exclamation-circle"></i> Brak połączenia z internetem!</div>
 <?php if (DEBUG_MODE) : ?>
@@ -44,35 +33,3 @@ if (isset($JS_files)) {
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-
-<link href="/src/quill.snow.css?v=<?= RELEASE ?>" rel="stylesheet">
-
-<div id="variantAdded" class="variantAdded" data-form data-modal data-dismissable>
-    <div class="modal_body">
-        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
-
-        <h3 class="modal_header">Dodano do koszyka</h3>
-
-        <div style="display:flex;padding: min(2vw,15px);align-items: center;" class="mobileRow">
-            <img class="variant_image" data-height="1w">
-            <div style="width: 55%;max-width: 300px;">
-                <div style="font-size: 14px;display: flex;align-items: center;min-height: 80px;">
-                    <div>
-                        <span class="variant_name" style="font-size:1.15em"></span>
-                        <div>
-                            <span class="variant_qty" style="font-size: 1.1em;word-spacing: -0.1em;"></span>
-                            <span style="margin: 3px">x</span>
-                            <span class="variant_price pln" style="font-size: 1.3em;"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="btn primary medium fill" style="margin: 10px 0" onclick="hideParentModal(this)">
-                    Kontynuuj zakupy
-                </div>
-                <a href="/kup-teraz" class="btn primary medium fill" style="margin-bottom: 6px">
-                    Kup teraz
-                </a>
-            </div>
-        </div>
-    </div>
-</div>

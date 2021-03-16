@@ -225,27 +225,6 @@ footer {
 	text-align: center;
 }
 
-@media only screen and (max-width: 799px) {
-	.hide-mobile {
-		display: none;
-	}
-	.full-width-mobile {
-		width: 100% !important;
-	}
-	.auto-width-mobile {
-		width: auto;
-	}
-}
-
-@media only screen and (min-width: 800px) {
-	.auto-width-desktop {
-		width: auto !important;
-	}
-	.hide-desktop {
-		display: none;
-	}
-}
-
 .align-middle {
 	vertical-align: middle;
 }
@@ -312,11 +291,11 @@ a {
 	cursor: pointer;
 }
 
-.title .btn,
-.label .btn,
-.label + .btn {
-	margin-left: 5px;
-}
+// .title .btn,
+// .label .btn,
+// .label + .btn {
+// 	margin-left: 5px;
+// }
 
 ul {
 	padding: 0;

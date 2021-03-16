@@ -289,75 +289,71 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
     </div>
 
     <div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
-        <div class="cms" style="margin:50px -10px;width: auto;"><?= "" //getCMSPageHTML($general_product_data["description"]); 
-                                                                ?></div>
+        <?= "MIEJSCE NA OPIS PRODUKTU" //getCMSPageHTML($general_product_data["description"]); 
+        ?>
 
-        <h3 style="margin:30px 0 30px;font-size:22px"><i class="fas fa-comments"></i> Komentarze</h3>
-
-        <div class="comments table-without-headers">
-            <?php
-            // $comments = DB::fetchArr("SELECT dodano, pseudonim, tresc, user_id, comment_id, rating, accepted FROM comments WHERE general_product_id = " . $general_product_data["general_product_id"] . " AND accepted = 1");
-
-            // foreach ($comments as $comment) {
-            //     echo '<div style="display:none">' . $comment["pseudonim"] . ' - ' . $comment["tresc"] . '</div>';
-            // }
-            ?>
-        </div>
+        <datatable-comp class="comments"></datatable-comp>
 
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
-            <?php
-            $pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()), "");
-            ?>
-            <div id="formComment" data-form>
-                <h4 style="font-size: 22px; margin: 70px 0 10px;">Podziel się swoją opinią</h4>
-                <?php
-                $can_user_get_comment_rebate = canUserGetCommentRebate($general_product_id);
-
-                if ($can_user_get_comment_rebate) {
-                    echo '<h4 class="rebate-info">W nagrodę otrzymasz kod rabatowy o wartości 25 zł <i class="fas fa-comments-dollar" style="font-size: 26px;margin: -8px 0;"></i></h4>';
-                }
-                ?>
-                <div style="height:10px"></div>
-                <div class="label">
-                    Ocena
-                </div>
-                <div class="rating my-rating" style="margin:0;font-size: 20px;">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-                <label>
-                    <div class="label">Pseudonim</div>
-                    <input type="text" class="field pseudonim" value="<?= $pseudonim ?>">
-                </label>
-
-                <label>
-                    <div class="label">Komentarz</div>
-                    <textarea class="field tresc" data-validate style=height:150px;min-height:100px;max-height:200px;"></textarea>
-                </label>
-
-                <button data-submit class="btn primary medium block full-width-mobile" onclick="newComment()" style="margin:8px 0 8px auto;width:170px">Wyślij <i class="fas fa-paper-plane"></i></button>
-            </div>
-            <div id="commentSent" style="display:none">
-                <p style="font-size:20px;font-weight:600;">Dziękujemy za przekazaną opinię!</p>
-            </div>
+            <div class="label medium">Podziel się swoją opinią</div>
+            <button class="btn primary" onclick="showModal(`createComment`,{source:this});">
+                Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
+            </button>
         <?php else : ?>
-            <p style="font-size:16px;">
-                Zeby móc dodać komentarz musisz się zalogować
-                <button class='btn subtle' onclick='showModal("loginForm",{source:this});hideParentModal(this)'>
-                    Zaloguj się <i class='fas fa-user'></i>
-                </button>
-            </p>
+            <div class="label medium">Musisz się zalogować by móc dodaj komentarz</div>
+            <button class="btn primary" onclick="showModal(`loginForm`,{source:this});">
+                Zaloguj się <i class="fas fa-user"></i>
+            </button>
         <?php endif ?>
     </div>
 
 <?php else : ?>
-    <div class="centerVerticallyMenu" style="text-align:center">
+
+    <div style="text-align:center">
         <h2>Produkt jest niedostępny!</h2>
         <p style="font-size:18px">Wróć na <a href="/" class="primary-link">stronę główną</a></p>
+    </div>
+
+<?php endif ?>
+
+<?php if (User::getCurrent()->isLoggedIn()) : ?>
+    <div id="createComment" data-modal data-dismissable>
+        <div class="modal_body" style="width: 600px;">
+            <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+
+            <h3 class="modal_header">
+                <span class="desktop">Napisz komentarz</span>
+                <span class="mobile">Komentarz</span>
+            </h3>
+
+            <div class="scroll_panel scroll_shadow panel_padding">
+
+                <?php
+                //$pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()), "");
+                ?>
+                <div id="commentForm">
+                    <div class="label">
+                        Ocena
+                    </div>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+
+                    <label>
+                        <div class="label">Pseudonim</div>
+                        <input type="text" class="field" value="<?= "" // $pseudonim 
+                                                                ?>">
+                    </label>
+
+                    <label>
+                        <div class="label">Komentarz</div>
+                        <textarea class="field" style="height:150px;min-height:100px;max-height:200px;"></textarea>
+                    </label>
+
+                    <button class="btn primary submit_btn">Wyślij <i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
     </div>
 <?php endif ?>
 
