@@ -103,6 +103,12 @@ $general_product_variants = array_values($general_product_variants);
     const general_product_products = <?= json_encode($general_product_products) ?>;
     const general_product_imgs = <?= $general_product_imgs_json ?>;
     const general_product_variants = <?= json_encode($general_product_variants) ?>;
+
+    <?php if (isset($_GET["komentarz"])) { ?>
+        domload(() => {
+            showModal(`createComment`);
+        })
+    <?php } ?>
 </script>
 
 <?php if ($general_product_data["cache_rating_count"] > 0) : ?>
@@ -320,18 +326,19 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <?php
                     //$pseudonim = def("SELECT pseudonim FROM users WHERE user_id = " . intval(User::getCurrent()->isLoggedIn()), "");
                     ?>
+                    <span class="label first">Określ wariant produktu lub pozostaw puste</span>
                     <div class="variants_container">
                         <?php
                         foreach ($general_product_variants as $general_product_variant) {
                         ?>
                             <span class="label"><?= $general_product_variant["name"] ?></span>
-                            <div class="variants radio_group boxes unselectable hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "50px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
+                            <div data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
                                 <?php
                                 foreach ($general_product_variant["variant_options"] as $variant_option) {
                                 ?>
-                                    <div class="box checkbox_area variant_option">
-                                        <div>
-                                            <p-checkbox data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
+                                    <div>
+                                        <div class="checkbox_area inline" style="margin-top: 7px;">
+                                            <p-checkbox class="square" data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
                                             <?= $variant_option["value"] ?>
                                         </div>
                                     </div>
@@ -345,9 +352,8 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <div class="label">
                         Ocena
                     </div>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <i class="far fa-star"></i>
+
+                    <div class="rating_picker"></div>
 
                     <label>
                         <div class="label">Pseudonim</div>

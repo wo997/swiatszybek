@@ -144,6 +144,6 @@ PHP;
 
     if ($any_changed) {
         triggerEvent("assets_change", ["css" => $css_changed, "js" => $js_changed]);
-        Request::reload(true);
+        //Request::reload(true);
     }
 }

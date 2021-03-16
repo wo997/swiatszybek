@@ -361,6 +361,54 @@ domload(() => {
 	});
 });
 
+domload(() => {
+	/**
+	 *
+	 * @param {PiepNode} rating_picker
+	 */
+	const generateRating = (rating_picker) => {
+		let rating_html = "";
+		const rating = +def(rating_picker.dataset.hover_rating, def(rating_picker.dataset.rating, ""));
+		for (let i = 1; i <= 5; i++) {
+			const cls = i <= rating ? "fas fa-star" : "far fa-star";
+			rating_html += html`<i class="${cls}" data-rating="${i}"></i>`;
+		}
+		rating_picker._set_content(rating_html);
+	};
+	generateRating($(".rating_picker"));
+
+	// <i class="fas fa-star"></i>
+	// <i class="fas fa-star-half-alt"></i>
+	// <i class="far fa-star"></i>
+
+	window.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+		const rating_picker_star = target._parent(".rating_picker > i", { skip: 0 });
+		if (rating_picker_star) {
+			const rating_picker = target._parent(".rating_picker");
+			rating_picker.dataset.rating = rating_picker_star.dataset.rating;
+			generateRating(rating_picker);
+		}
+	});
+
+	window.addEventListener("mousemove", (ev) => {
+		const target = $(ev.target);
+		const rating_picker_star = target._parent(".rating_picker > i", { skip: 0 });
+		const has_focus = $(".rating_picker.has_focus");
+		const rating_picker = target._parent(".rating_picker");
+		if (has_focus && has_focus !== rating_picker) {
+			has_focus.classList.remove("has_focus");
+			delete has_focus.dataset.hover_rating;
+			generateRating(has_focus);
+		}
+		if (rating_picker_star) {
+			rating_picker.classList.add("has_focus");
+			rating_picker.dataset.hover_rating = rating_picker_star.dataset.rating;
+			generateRating(rating_picker);
+		}
+	});
+});
+
 //window.addEventListener("modal_show", (event) => {
 // @ts-ignore
 // if (event.detail.node.id != "createComment") {

@@ -212,3 +212,30 @@ cart-products-comp.has_products {
 		display: none;
 	}
 }
+
+.rating_picker {
+	& {
+		font-size: 1.5em;
+	}
+	&:hover {
+		& {
+			filter: brightness(1.1);
+		}
+		& > i:not(.far.fa-star) {
+			filter: drop-shadow(0 1px 1px #0006);
+		}
+	}
+	.far.fa-star {
+		color: #555;
+	}
+	.fas.fa-star,
+	.fa-star-half-alt {
+		color: #fd2;
+	}
+
+	& > i {
+		& {
+			cursor: pointer;
+		}
+	}
+}
